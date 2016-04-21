@@ -17,7 +17,6 @@ else {
 }
 
 gulp.task('make-cocos2d-x', gulpSequence('gen-cocos2d-x', 'upload-cocos2d-x'));
-gulp.task('make-platform', gulpSequence('make-prebuilt', 'make-simulator'));
 gulp.task('make-prebuilt', gulpSequence('gen-libs', 'archive-prebuilt', 'upload-prebuilt'));
 gulp.task('make-simulator', gulpSequence('gen-simulator', 'archive-simulator', 'upload-simulator'));
 
