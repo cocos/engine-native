@@ -4,6 +4,8 @@ Thumbs.db
 # Ignore npm files
 /node_modules
 /tools/make-package/cocos2d-x.zip
+/simulator_*.zip
+/prebuilt_*.zip
 
 # Ignore files build by Visual Studio
 *.obj
