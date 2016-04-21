@@ -7,6 +7,14 @@ var Ftp = require('ftp');
 var ExecSync = require('child_process').execSync;
 var spawn = require('child_process').spawn;
 var Path = require('path');
+var cocosConsoleRoot = './tools/cocos2d-console/bin';
+var cocosConsoleBin;
+if (process.platform === 'darwin') {
+  cocosConsoleBin = Path.join(cocosConsoleRoot, 'cocos');
+}
+else {
+  cocosConsoleBin = Path.join(cocosConsoleRoot, 'cocos.bat');
+}
 
 gulp.task('make-cocos2d-x', gulpSequence('gen-cocos2d-x', 'upload-cocos2d-x'));
 gulp.task('make-platform', gulpSequence('make-prebuilt', 'make-simulator'));
@@ -71,7 +79,7 @@ gulp.task('init', function(cb) {
 });
 
 gulp.task('gen-libs', function(cb) {
-  execSync('./tools/cocos2d-console/bin/cocos gen-libs -m release', '.');
+  execSync( cocosConsoleBin + ' gen-libs -m release', './');
   cb();
 });
 
@@ -81,14 +89,6 @@ gulp.task('gen-cocos2d-x', function (cb) {
 });
 
 gulp.task('gen-simulator', function (cb) {
-  var cocosConsoleRoot = './tools/cocos2d-console/bin';
-  var cocosConsoleBin;
-  if (process.platform === 'darwin') {
-    cocosConsoleBin = Path.join(cocosConsoleRoot, 'cocos');
-  }
-  else {
-    cocosConsoleBin = Path.join(cocosConsoleRoot, 'cocos.bat');
-  }
   var args;
   if (process.platform === 'darwin') {
     args = ['gen-simulator', '-m', 'debug', '-p', 'mac'];
@@ -110,29 +110,6 @@ gulp.task('gen-simulator', function (cb) {
         cb();
         return;
       }
-
-      //var src, dest;
-
-      //if (process.platform === 'darwin') {
-      //  src = './cocos2d-x/simulator/mac/Simulator.app';
-      //  dest = './utils/simulator/mac/Simulator.app';
-      //}
-      //else {
-      //  src = './cocos2d-x/simulator/win32/';
-      //  dest = './utils/simulator/win32';
-      //}
-      //
-      //if (!Fs.existsSync(src)) {
-      //  console.error(`Can\'t find simulator [${src}]`);
-      //  cb();
-      //  return;
-      //}
-      //
-      //if (Fs.existsSync(dest)) {
-      //  Del.sync(dest, {force: true});
-      //}
-      //
-      //Fs.copySync(src, dest);
     });
     child.on('error', function () {
       console.error('Generate simulator failed');
