@@ -7,6 +7,9 @@ var Ftp = require('ftp');
 var ExecSync = require('child_process').execSync;
 var Path = require('path');
 
+gulp.task('make-cocos2d-x', gulpSequence('gen-cocos2d-x', 'upload-cocos2d-x'));
+gulp.task('make-prebuilt', gulpSequence('gen-libs', 'archive-prebuilt', 'upload-prebuilt'));
+
 function execSync(cmd, workPath) {
   var execOptions = {
     cwd : workPath,
