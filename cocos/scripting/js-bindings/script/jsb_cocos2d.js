@@ -1896,6 +1896,7 @@ cc.DrawNode = cc._DrawNode.extend({
     },
 
     drawPoly:function (verts, fillColor, borderWidth, borderColor) {
+        borderWidth = borderWidth || this._lineWidth;
         borderColor = borderColor || this._drawColor;
         if (fillColor)
             cc._DrawNode.prototype.drawPoly.call(this, verts, fillColor, borderWidth, borderColor);
