@@ -1901,7 +1901,14 @@ cc.DrawNode = cc._DrawNode.extend({
         if (fillColor)
             cc._DrawNode.prototype.drawPoly.call(this, verts, fillColor, borderWidth, borderColor);
         else {
-            verts.push(verts[0]);
+            var first = verts[0];
+            var last = verts[verts.length - 1];
+
+            if (first.x !== last.x || first.y !== last.y) {
+                verts = verts.slice(0, verts.length);
+                verts.push(verts[0]);
+            }
+            
             var drawSeg = cc._DrawNode.prototype.drawSegment;
             for (var i = 0, len = verts.length; i < len - 1; i++)
                 drawSeg.call(this, verts[i], verts[i + 1], borderWidth, borderColor);
