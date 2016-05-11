@@ -25,7 +25,6 @@ install_android_ndk()
     curl -O http://dl.google.com/android/repository/android-ndk-r11c-${HOST_NAME}-x86_64.zip
     echo "Decompress android-ndk-r11c-${HOST_NAME}-x86_64.zip ..."
     unzip -q android-ndk-r11c-${HOST_NAME}-x86_64.zip
-    # Rename ndk
     mv android-ndk-r11c android-ndk
 }
 
