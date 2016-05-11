@@ -12,7 +12,10 @@ if [ -z "$PYTHON_BIN" ]; then
     export PYTHON_BIN=/usr/bin/python
 fi
 
-if [ $TRAVIS_OS_NAME == 'osx' ]; then
+if [ $TRAVIS_OS_NAME == 'linux' ]; then
+    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+        exit 0
+    fi
     if [ -z "${GH_EMAIL}" ]; then
         echo "GH_EMAIL not set"
         exit 1
@@ -28,7 +31,10 @@ if [ $TRAVIS_OS_NAME == 'osx' ]; then
 
     cd $COCOS2DX_ROOT/tools/travis-scripts
     ./generate-bindings.sh $TRAVIS_BRANCH
-elif [ $TRAVIS_OS_NAME == 'linux' ]; then
+elif [ $TRAVIS_OS_NAME == 'osx' ]; then
+    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+        exit 0
+    fi
     if [ -z "${GH_EMAIL}" ]; then
         echo "GH_EMAIL not set"
         exit 1
