@@ -620,11 +620,13 @@ void Sprite::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     if(_insideBounds)
 #endif
     {
-        if (_texture == nullptr) {
+        CCASSERT(_glProgramState, "Sprite::draw error: _glProgramState should not null");
+        if (_texture == nullptr || _glProgramState == nullptr)
+        {
             return;
         }
 
-        _trianglesCommand.init(_globalZOrder, _texture->getName(), getGLProgramState(), _blendFunc, _polyInfo.triangles, transform, flags);
+        _trianglesCommand.init(_globalZOrder, _texture->getName(), _glProgramState, _blendFunc, _polyInfo.triangles, transform, flags);
         renderer->addCommand(&_trianglesCommand);
 
 #if CC_SPRITE_DEBUG_DRAW
