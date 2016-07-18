@@ -959,6 +959,9 @@ protected:
      */
     PositionType _positionType;
 
+    /** is the emitter paused */
+    bool _paused;
+
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(ParticleSystem);
 };
