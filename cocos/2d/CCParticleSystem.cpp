@@ -217,7 +217,8 @@ ParticleSystem::ParticleSystem()
 , _blendFunc(BlendFunc::ALPHA_PREMULTIPLIED)
 , _opacityModifyRGB(false)
 , _yCoordFlipped(1)
-, _positionType(PositionType::FREE)
+, _positionType(PositionType::FREE),
+, _paused(false)
 {
     modeA.gravity.setZero();
     modeA.speed = 0;
@@ -591,6 +592,9 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::addParticles(int count)
 {
+    if (_paused)
+        return;
+
     uint32_t RANDSEED = rand();
 
     int start = _particleCount;
@@ -1335,6 +1339,21 @@ void ParticleSystem::setScaleY(float newScaleY)
 {
     _transformSystemDirty = true;
     Node::setScaleY(newScaleY);
+}
+
+bool ParticleSystem::isPaused() const
+{
+    return _paused;
+}
+
+void ParticleSystem::pauseEmissions()
+{
+    _paused = true;
+}
+
+void ParticleSystem::resumeEmissions()
+{
+    _paused = false;
 }
 
 
