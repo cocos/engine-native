@@ -28,8 +28,12 @@
 using namespace anysdk::framework;
 #endif
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    #include "jsb_cocos2dx_cocosAds.hpp"
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#include "jsb_cocos2dx_cocosAds.hpp"
+#endif
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#include "ChanceAdWrapper.h"
 #endif
 
 
@@ -79,9 +83,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     ScriptingCore* sc = ScriptingCore::getInstance();
 
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-        sc->addRegisterCallback(register_all_cocos2dx_cocosAds);
-    #endif
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    sc->addRegisterCallback(register_all_cocos2dx_cocosAds);
+#endif
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && PACKAGE_AS    
     sc->addRegisterCallback(register_all_anysdk_framework);
@@ -94,6 +98,10 @@ bool AppDelegate::applicationDidFinishLaunching()
 #endif
     ScriptEngineManager::getInstance()->setScriptEngine(sc);
     ScriptingCore::getInstance()->runScript("main.js");
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+    ChanceAdWrapper::sharedWrapper()->startSession("");
+#endif
     
     return true;
 }

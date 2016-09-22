@@ -15,6 +15,16 @@
 		1AD7E0A918C9DBE3004817A6 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 1A6BF21418C9DB5900FB0E1C /* main.js */; };
 		1AE159EC18C9DF3600FCA372 /* project.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A1A081B18C9DF05005C6854 /* project.json */; };
 		294D7D7C1D0D667B002CE7B7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294D7D7B1D0D667B002CE7B7 /* CoreText.framework */; };
+		4D56009B1D93AAEC0016629A /* ChanceAdWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4D56008E1D93AAEC0016629A /* ChanceAdWrapper.mm */; };
+		4D56009C1D93AAEC0016629A /* ChanceAdRes.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D5600911D93AAEC0016629A /* ChanceAdRes.bundle */; };
+		4D56009D1D93AAEC0016629A /* libChanceAd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D56009A1D93AAEC0016629A /* libChanceAd.a */; };
+		4D5600A11D93ABEC0016629A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5600A01D93ABEC0016629A /* StoreKit.framework */; };
+		4D5600A31D93AC110016629A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5600A21D93AC100016629A /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4D5600A51D93AC280016629A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5600A41D93AC270016629A /* CoreMedia.framework */; };
+		4D5600A71D93AC400016629A /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5600A61D93AC400016629A /* AdSupport.framework */; };
+		4D5600A91D93AC6B0016629A /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5600A81D93AC6A0016629A /* CoreTelephony.framework */; };
+		4D5600AE1D93AD730016629A /* jsb_cocos2dx_cocosAds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D5600AC1D93AD730016629A /* jsb_cocos2dx_cocosAds.cpp */; };
+		4D5600BA1D93BFAB0016629A /* CocosAds-ios.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D5600B91D93BFAB0016629A /* CocosAds-ios.cpp */; };
 		4D697BDA1CBD301C00A5AF29 /* libjs_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D697BD91CBD301C00A5AF29 /* libjs_static.a */; };
 		4D697BDE1CBD303100A5AF29 /* libjs_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D697BDC1CBD303100A5AF29 /* libjs_static.a */; };
 		502380DC17EBB88200990C9B /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 502380DB17EBB88200990C9B /* libcurl.dylib */; };
@@ -251,6 +261,27 @@
 		1A96A4F2174A3432008653A9 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "../../cocos2d-x/cocos2dx/platform/third_party/ios/libraries/libcurl.a"; sourceTree = "<group>"; };
 		1AC6FB34180E9ACB004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = "../../cocos2d-x/build/cocos2d_libs.xcodeproj"; sourceTree = "<group>"; };
 		294D7D7B1D0D667B002CE7B7 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = DEVELOPER_DIR; };
+		4D56008D1D93AAEC0016629A /* ChanceAdWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChanceAdWrapper.h; sourceTree = "<group>"; };
+		4D56008E1D93AAEC0016629A /* ChanceAdWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ChanceAdWrapper.mm; sourceTree = "<group>"; };
+		4D5600901D93AAEC0016629A /* ChanceAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChanceAd.h; sourceTree = "<group>"; };
+		4D5600911D93AAEC0016629A /* ChanceAdRes.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ChanceAdRes.bundle; sourceTree = "<group>"; };
+		4D5600921D93AAEC0016629A /* CSADRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSADRequest.h; sourceTree = "<group>"; };
+		4D5600931D93AAEC0016629A /* CSBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSBannerView.h; sourceTree = "<group>"; };
+		4D5600941D93AAEC0016629A /* CSError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSError.h; sourceTree = "<group>"; };
+		4D5600951D93AAEC0016629A /* CSInterstitial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSInterstitial.h; sourceTree = "<group>"; };
+		4D5600961D93AAEC0016629A /* CSNativeFeeds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSNativeFeeds.h; sourceTree = "<group>"; };
+		4D5600971D93AAEC0016629A /* CSNativeFeedsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSNativeFeedsView.h; sourceTree = "<group>"; };
+		4D5600981D93AAEC0016629A /* CSSplashAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSplashAd.h; sourceTree = "<group>"; };
+		4D5600991D93AAEC0016629A /* CSVideoAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSVideoAD.h; sourceTree = "<group>"; };
+		4D56009A1D93AAEC0016629A /* libChanceAd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libChanceAd.a; sourceTree = "<group>"; };
+		4D5600A01D93ABEC0016629A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
+		4D5600A21D93AC100016629A /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
+		4D5600A41D93AC270016629A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
+		4D5600A61D93AC400016629A /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
+		4D5600A81D93AC6A0016629A /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
+		4D5600AC1D93AD730016629A /* jsb_cocos2dx_cocosAds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_cocos2dx_cocosAds.cpp; sourceTree = "<group>"; };
+		4D5600AD1D93AD730016629A /* jsb_cocos2dx_cocosAds.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jsb_cocos2dx_cocosAds.hpp; sourceTree = "<group>"; };
+		4D5600B91D93BFAB0016629A /* CocosAds-ios.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "CocosAds-ios.cpp"; sourceTree = "<group>"; };
 		4D697BD91CBD301C00A5AF29 /* libjs_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjs_static.a; path = "../../cocos2d-x/external/ios/libs/libjs_static.a"; sourceTree = "<group>"; };
 		4D697BDC1CBD303100A5AF29 /* libjs_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjs_static.a; path = "../../cocos2d-x/external/mac/libs/libjs_static.a"; sourceTree = "<group>"; };
 		502380DB17EBB88200990C9B /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = usr/lib/libcurl.dylib; sourceTree = SDKROOT; };
@@ -306,7 +337,7 @@
 		AB45A0FE1D34F7C000033ACB /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		AB45A1001D34F7CC00033ACB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		AB45A1021D34F7E100033ACB /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
-		ABE457001D35194300F1F400 /* libPluginProtocol.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPluginProtocol.a; path = ../../cocos2d-x/external/ios/libs//libPluginProtocol.a; sourceTree = "<group>"; };
+		ABE457001D35194300F1F400 /* libPluginProtocol.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPluginProtocol.a; path = "../../cocos2d-x/external/ios/libs//libPluginProtocol.a"; sourceTree = "<group>"; };
 		BA3A85EB1A724AE900924D24 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		BA4E718019EB6E3E00932425 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/MediaPlayer.framework; sourceTree = DEVELOPER_DIR; };
 		BA4E718219EB6E4600932425 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
@@ -353,12 +384,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D5600A91D93AC6B0016629A /* CoreTelephony.framework in Frameworks */,
+				4D5600A71D93AC400016629A /* AdSupport.framework in Frameworks */,
+				4D5600A51D93AC280016629A /* CoreMedia.framework in Frameworks */,
+				4D5600A31D93AC110016629A /* WebKit.framework in Frameworks */,
+				4D5600A11D93ABEC0016629A /* StoreKit.framework in Frameworks */,
 				AB45A1031D34F7E100033ACB /* GameController.framework in Frameworks */,
 				AB45A1011D34F7CC00033ACB /* SystemConfiguration.framework in Frameworks */,
 				AB45A0FF1D34F7C000033ACB /* MobileCoreServices.framework in Frameworks */,
 				AB45A0FD1D34F7B000033ACB /* CoreFoundation.framework in Frameworks */,
 				AB45A0FB1D34F7A400033ACB /* CFNetwork.framework in Frameworks */,
 				294D7D7C1D0D667B002CE7B7 /* CoreText.framework in Frameworks */,
+				4D56009D1D93AAEC0016629A /* libChanceAd.a in Frameworks */,
 				FA676C761C71AFA200E091E3 /* libiconv.dylib in Frameworks */,
 				BA3A85EC1A724AE900924D24 /* Security.framework in Frameworks */,
 				BA4E718119EB6E3F00932425 /* MediaPlayer.framework in Frameworks */,
@@ -409,6 +446,35 @@
 				1AC6FB5E180E9ACB004C840B /* libCocosDenshion iOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4D56008C1D93AAEC0016629A /* ChanceAd */ = {
+			isa = PBXGroup;
+			children = (
+				4D56008D1D93AAEC0016629A /* ChanceAdWrapper.h */,
+				4D56008E1D93AAEC0016629A /* ChanceAdWrapper.mm */,
+				4D56008F1D93AAEC0016629A /* libChanceAd */,
+			);
+			name = ChanceAd;
+			path = ios/ChanceAd;
+			sourceTree = "<group>";
+		};
+		4D56008F1D93AAEC0016629A /* libChanceAd */ = {
+			isa = PBXGroup;
+			children = (
+				4D5600901D93AAEC0016629A /* ChanceAd.h */,
+				4D5600911D93AAEC0016629A /* ChanceAdRes.bundle */,
+				4D5600921D93AAEC0016629A /* CSADRequest.h */,
+				4D5600931D93AAEC0016629A /* CSBannerView.h */,
+				4D5600941D93AAEC0016629A /* CSError.h */,
+				4D5600951D93AAEC0016629A /* CSInterstitial.h */,
+				4D5600961D93AAEC0016629A /* CSNativeFeeds.h */,
+				4D5600971D93AAEC0016629A /* CSNativeFeedsView.h */,
+				4D5600981D93AAEC0016629A /* CSSplashAd.h */,
+				4D5600991D93AAEC0016629A /* CSVideoAD.h */,
+				4D56009A1D93AAEC0016629A /* libChanceAd.a */,
+			);
+			path = libChanceAd;
 			sourceTree = "<group>";
 		};
 		5091732E17ECDF8A00D62437 /* Icons */ = {
@@ -469,6 +535,11 @@
 		A92275401517C094001B78AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D5600A81D93AC6A0016629A /* CoreTelephony.framework */,
+				4D5600A61D93AC400016629A /* AdSupport.framework */,
+				4D5600A41D93AC270016629A /* CoreMedia.framework */,
+				4D5600A21D93AC100016629A /* WebKit.framework */,
+				4D5600A01D93ABEC0016629A /* StoreKit.framework */,
 				ABE457001D35194300F1F400 /* libPluginProtocol.a */,
 				AB45A1021D34F7E100033ACB /* GameController.framework */,
 				AB45A1001D34F7CC00033ACB /* SystemConfiguration.framework */,
@@ -516,6 +587,7 @@
 		D45446CC156DE73F00887EB5 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				4D56008C1D93AAEC0016629A /* ChanceAd */,
 				509D4AAB17EBB2AB00697056 /* AppController.h */,
 				509D4AAC17EBB2AB00697056 /* AppController.mm */,
 				509D4AAD17EBB2AB00697056 /* Default-568h@2x.png */,
@@ -534,6 +606,9 @@
 		D4545214156E28EF00887EB5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				4D5600B91D93BFAB0016629A /* CocosAds-ios.cpp */,
+				4D5600AC1D93AD730016629A /* jsb_cocos2dx_cocosAds.cpp */,
+				4D5600AD1D93AD730016629A /* jsb_cocos2dx_cocosAds.hpp */,
 				AB2EB9DB1D34F56100695C92 /* jsb_anysdk_basic_conversions.cpp */,
 				AB2EB9DC1D34F56100695C92 /* jsb_anysdk_basic_conversions.h */,
 				AB2EB9DD1D34F56100695C92 /* jsb_anysdk_protocols_auto.cpp */,
@@ -742,6 +817,7 @@
 				1AD7E0A818C9DB93004817A6 /* main.js in Resources */,
 				509D4ABE17EBB2AB00697056 /* Default.png in Resources */,
 				5091731E17ECDF7A00D62437 /* Icon-80.png in Resources */,
+				4D56009C1D93AAEC0016629A /* ChanceAdRes.bundle in Resources */,
 				5091731F17ECDF7A00D62437 /* Icon-100.png in Resources */,
 				509D4AC117EBB2AB00697056 /* Icon-72.png in Resources */,
 				509D4AC017EBB2AB00697056 /* Icon-57.png in Resources */,
@@ -780,11 +856,14 @@
 				509D4AC917EBB2AB00697056 /* RootViewController.mm in Sources */,
 				AB2EB9E51D34F56100695C92 /* manualanysdkbindings.cpp in Sources */,
 				D4545227156E28EF00887EB5 /* AppDelegate.cpp in Sources */,
+				4D5600BA1D93BFAB0016629A /* CocosAds-ios.cpp in Sources */,
+				4D5600AE1D93AD730016629A /* jsb_cocos2dx_cocosAds.cpp in Sources */,
 				AB2EB9E41D34F56100695C92 /* jsb_anysdk_protocols_auto.cpp in Sources */,
 				AB2EB9E61D34F56100695C92 /* SDKManager.cpp in Sources */,
 				AB2EB9E31D34F56100695C92 /* jsb_anysdk_basic_conversions.cpp in Sources */,
 				509D4AC817EBB2AB00697056 /* main.m in Sources */,
 				509D4ABC17EBB2AB00697056 /* AppController.mm in Sources */,
+				4D56009B1D93AAEC0016629A /* ChanceAdWrapper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,7 +1043,10 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../cocos2d-x/external/ios/libs";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../cocos2d-x/external/ios/libs",
+					"$(PROJECT_DIR)/ios/ChanceAd/libChanceAd",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
@@ -993,7 +1075,10 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../cocos2d-x/external/ios/libs";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../cocos2d-x/external/ios/libs",
+					"$(PROJECT_DIR)/ios/ChanceAd/libChanceAd",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
