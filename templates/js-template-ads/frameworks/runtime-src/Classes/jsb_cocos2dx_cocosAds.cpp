@@ -60,6 +60,16 @@ bool js_cocos2dx_cocosAds_CocosAds_showBanner(JSContext *cx, uint32_t argc, jsva
         args.rval().setUndefined();
         return true;
     }
+    if (argc == 2) {
+        const char* arg0 = nullptr;
+        const char* arg1 = nullptr;
+        std::string arg0_tmp; ok &= jsval_to_std_string(cx, args.get(0), &arg0_tmp); arg0 = arg0_tmp.c_str();
+        std::string arg1_tmp; ok &= jsval_to_std_string(cx, args.get(1), &arg1_tmp); arg1 = arg1_tmp.c_str();
+        JSB_PRECONDITION2(ok, cx, false, "js_cocos2dx_cocosAds_CocosAds_showBanner : Error processing arguments");
+        cobj->showBanner(arg0, arg1);
+        args.rval().setUndefined();
+        return true;
+    }
 
     JS_ReportError(cx, "js_cocos2dx_cocosAds_CocosAds_showBanner : wrong number of arguments: %d, was expecting %d", argc, 0);
     return false;

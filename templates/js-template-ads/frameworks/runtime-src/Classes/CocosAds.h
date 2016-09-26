@@ -14,16 +14,16 @@ class CocosAds
 public:
     //获取CocosAds单例
     static CocosAds* getInstance();
-    
+
     //Banner 广告
-    void showBanner(const char* placementID = "");
-    
+    void showBanner(const char* placementID = "", const char* position = "CENTER_TOP");
+
     void hideBanner();
-    
+
 private:
-    
+
     CocosAds();
-    
+
     static CocosAds* _instance;
 };
 

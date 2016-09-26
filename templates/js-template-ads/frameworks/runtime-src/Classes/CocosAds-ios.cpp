@@ -32,9 +32,21 @@ CocosAds* CocosAds::getInstance()
 
 #pragma mark - Banner
 
-void CocosAds::showBanner(const char* placementID /*= ""*/)
+void CocosAds::showBanner(const char* placementID, const char* position)
 {
-    ChanceAdWrapper::sharedWrapper()->showBanner(placementID, BannerPosition_TopCenter, BannerMoveDirection_Null);
+    if (strcmp(position, "LEFT_TOP") == 0) {
+        ChanceAdWrapper::sharedWrapper()->showBanner(placementID, BannerPosition_LeftTop, BannerMoveDirection_Null);
+    } else if (strcmp(position, "CENTER_TOP") == 0) {
+        ChanceAdWrapper::sharedWrapper()->showBanner(placementID, BannerPosition_TopCenter, BannerMoveDirection_Null);
+    } else if (strcmp(position, "RIGHT_TOP") == 0) {
+        ChanceAdWrapper::sharedWrapper()->showBanner(placementID, BannerPosition_RightTop, BannerMoveDirection_Null);
+    } else if (strcmp(position, "LEFT_BOTTOM") == 0) {
+        ChanceAdWrapper::sharedWrapper()->showBanner(placementID, BannerPosition_LeftBottom, BannerMoveDirection_Null);
+    } else if (strcmp(position, "CENTER_BOTTOM") == 0) {
+        ChanceAdWrapper::sharedWrapper()->showBanner(placementID, BannerPosition_BottomCenter, BannerMoveDirection_Null);
+    } else if (strcmp(position, "RIGHT_BOTTOM") == 0) {
+        ChanceAdWrapper::sharedWrapper()->showBanner(placementID, BannerPosition_RightBottom, BannerMoveDirection_Null);
+    }
 }
 
 void CocosAds::hideBanner()
