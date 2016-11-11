@@ -3485,6 +3485,7 @@
         "tools/tojs/cocos2dx_studio.ini", 
         "tools/tojs/cocos2dx_ui.ini", 
         "tools/tojs/creator.ini", 
-        "tools/tojs/genbindings.py"
+        "tools/tojs/genbindings.py", 
+        "tools/tojs/userconf.ini"
     ]
 }
