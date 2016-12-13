@@ -29,13 +29,11 @@ bool js_cocos2dx_extension_Manifest_constructor(JSContext *cx, uint32_t argc, js
 void js_cocos2dx_extension_Manifest_finalize(JSContext *cx, JSObject *obj);
 void js_register_cocos2dx_extension_Manifest(JSContext *cx, JS::HandleObject global);
 void register_all_cocos2dx_extension(JSContext* cx, JS::HandleObject obj);
-bool js_cocos2dx_extension_Manifest_getManifestFileUrl(JSContext *cx, uint32_t argc, jsval *vp);
-bool js_cocos2dx_extension_Manifest_isVersionLoaded(JSContext *cx, uint32_t argc, jsval *vp);
-bool js_cocos2dx_extension_Manifest_isLoaded(JSContext *cx, uint32_t argc, jsval *vp);
-bool js_cocos2dx_extension_Manifest_getPackageUrl(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_extension_Manifest_getVersion(JSContext *cx, uint32_t argc, jsval *vp);
-bool js_cocos2dx_extension_Manifest_getVersionFileUrl(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_extension_Manifest_isVersionLoaded(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_cocos2dx_extension_Manifest_getSearchPaths(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_extension_Manifest_getEngineVersion(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_cocos2dx_extension_Manifest_isLoaded(JSContext *cx, uint32_t argc, jsval *vp);
 
 extern JSClass  *jsb_cocos2d_extension_AssetsManagerEx_class;
 extern JSObject *jsb_cocos2d_extension_AssetsManagerEx_prototype;

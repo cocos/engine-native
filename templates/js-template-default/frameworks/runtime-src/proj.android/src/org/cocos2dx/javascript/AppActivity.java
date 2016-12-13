@@ -26,13 +26,16 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.javascript;
 
+import org.baiyou.BaiyouPlugin;
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
+
 
 // For JS and JAVA reflection test, you can delete it if it's your own project
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+
 // -------------------------------------
 import org.cocos2dx.javascript.SDKWrapper;
 
@@ -49,6 +52,7 @@ public class AppActivity extends Cocos2dxActivity {
         super.onCreate(savedInstanceState);
         app = this;
         SDKWrapper.getInstance().init(this);
+        BaiyouPlugin.app = this;
     }
 	
     @Override
@@ -75,7 +79,7 @@ public class AppActivity extends Cocos2dxActivity {
             }
         });
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();

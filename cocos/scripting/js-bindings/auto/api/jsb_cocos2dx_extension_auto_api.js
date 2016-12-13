@@ -123,10 +123,10 @@ int
 cc.Manifest = {
 
 /**
- * @method getManifestFileUrl
+ * @method getVersion
  * @return {String}
  */
-getManifestFileUrl : function (
+getVersion : function (
 )
 {
     return ;
@@ -143,46 +143,6 @@ isVersionLoaded : function (
 },
 
 /**
- * @method isLoaded
- * @return {bool}
- */
-isLoaded : function (
-)
-{
-    return false;
-},
-
-/**
- * @method getPackageUrl
- * @return {String}
- */
-getPackageUrl : function (
-)
-{
-    return ;
-},
-
-/**
- * @method getVersion
- * @return {String}
- */
-getVersion : function (
-)
-{
-    return ;
-},
-
-/**
- * @method getVersionFileUrl
- * @return {String}
- */
-getVersionFileUrl : function (
-)
-{
-    return ;
-},
-
-/**
  * @method getSearchPaths
  * @return {Array}
  */
@@ -190,6 +150,26 @@ getSearchPaths : function (
 )
 {
     return new Array();
+},
+
+/**
+ * @method getEngineVersion
+ * @return {String}
+ */
+getEngineVersion : function (
+)
+{
+    return ;
+},
+
+/**
+ * @method isLoaded
+ * @return {bool}
+ */
+isLoaded : function (
+)
+{
+    return false;
 },
 
 };
@@ -267,9 +247,11 @@ downloadFailedAssets : function (
  * @method create
  * @param {String} arg0
  * @param {String} arg1
+ * @param {String} arg2
  * @return {cc.AssetsManagerEx}
  */
 create : function (
+str, 
 str, 
 str 
 )
@@ -282,8 +264,10 @@ str
  * @constructor
  * @param {String} arg0
  * @param {String} arg1
+ * @param {String} arg2
  */
 AssetsManagerEx : function (
+str, 
 str, 
 str 
 )

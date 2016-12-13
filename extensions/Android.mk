@@ -29,7 +29,9 @@ GUI/CCScrollView/CCScrollView.cpp \
 GUI/CCScrollView/CCTableView.cpp \
 GUI/CCScrollView/CCTableViewCell.cpp \
 physics-nodes/CCPhysicsDebugNode.cpp \
-physics-nodes/CCPhysicsSprite.cpp
+physics-nodes/CCPhysicsSprite.cpp \
+baiyou/BaiyouPlugin.cpp \
+baiyou/android/BaiyouPlugin_Android.cpp
 
 LOCAL_STATIC_LIBRARIES := cocos2dx_internal_static
 LOCAL_STATIC_LIBRARIES += cocos_chipmunk_static

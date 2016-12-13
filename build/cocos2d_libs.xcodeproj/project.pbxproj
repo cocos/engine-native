@@ -1124,6 +1124,14 @@
 		A679D0DA1C71D93200620A6C /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A554221C2A7C3100FDD954 /* libcrypto.a */; };
 		A6A5541F1C2A7BF700FDD954 /* libchipmunk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A5541E1C2A7BF700FDD954 /* libchipmunk.a */; };
 		A6A554211C2A7C1300FDD954 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A554201C2A7C1300FDD954 /* libcurl.a */; };
+		A6D40F8E1DE7E15B0049EA0B /* BaiyouPlugin_Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = A6D40F861DE7E15B0049EA0B /* BaiyouPlugin_Apple.h */; };
+		A6D40F8F1DE7E15B0049EA0B /* BaiyouPlugin_Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = A6D40F861DE7E15B0049EA0B /* BaiyouPlugin_Apple.h */; };
+		A6D40F901DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6D40F871DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm */; };
+		A6D40F911DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6D40F871DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm */; };
+		A6D40F921DE7E15B0049EA0B /* BaiyouPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D40F881DE7E15B0049EA0B /* BaiyouPlugin.cpp */; };
+		A6D40F931DE7E15B0049EA0B /* BaiyouPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D40F881DE7E15B0049EA0B /* BaiyouPlugin.cpp */; };
+		A6D40F941DE7E15B0049EA0B /* BaiyouPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = A6D40F891DE7E15B0049EA0B /* BaiyouPlugin.h */; };
+		A6D40F951DE7E15B0049EA0B /* BaiyouPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = A6D40F891DE7E15B0049EA0B /* BaiyouPlugin.h */; };
 		A6E018661CB7A7E000EC1419 /* CCDownloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50693C5C1B6BF2AE005C5820 /* CCDownloader.cpp */; };
 		A6F0D7A11C2796020029CC44 /* CCStencilStateManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F0D79F1C2796020029CC44 /* CCStencilStateManager.cpp */; };
 		A6F0D7A21C2796020029CC44 /* CCStencilStateManager.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A6F0D7A01C2796020029CC44 /* CCStencilStateManager.hpp */; };
@@ -2328,6 +2336,10 @@
 		A6A554201C2A7C1300FDD954 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../external/mac/libs/libcurl.a; sourceTree = "<group>"; };
 		A6A554221C2A7C3100FDD954 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../external/mac/libs/libcrypto.a; sourceTree = "<group>"; };
 		A6A554241C2A7C4400FDD954 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../external/mac/libs/libssl.a; sourceTree = "<group>"; };
+		A6D40F861DE7E15B0049EA0B /* BaiyouPlugin_Apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiyouPlugin_Apple.h; sourceTree = "<group>"; };
+		A6D40F871DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BaiyouPlugin_Apple.mm; sourceTree = "<group>"; };
+		A6D40F881DE7E15B0049EA0B /* BaiyouPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaiyouPlugin.cpp; sourceTree = "<group>"; };
+		A6D40F891DE7E15B0049EA0B /* BaiyouPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiyouPlugin.h; sourceTree = "<group>"; };
 		A6F0D79F1C2796020029CC44 /* CCStencilStateManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCStencilStateManager.cpp; path = ../base/CCStencilStateManager.cpp; sourceTree = "<group>"; };
 		A6F0D7A01C2796020029CC44 /* CCStencilStateManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CCStencilStateManager.hpp; path = ../base/CCStencilStateManager.hpp; sourceTree = "<group>"; };
 		A6F0D7A41C27964D0029CC44 /* UIPageViewIndicator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIPageViewIndicator.cpp; sourceTree = "<group>"; };
@@ -3564,6 +3576,7 @@
 		46A167981807AF4D005B8026 /* extensions */ = {
 			isa = PBXGroup;
 			children = (
+				A6D40F811DE7E15B0049EA0B /* baiyou */,
 				BA679B271CEC371100F875FA /* assets-manager */,
 				A60A9D5A1C200DD00070800A /* PhysicsSprite */,
 				46A167D21807AF4D005B8026 /* cocos-ext.h */,
@@ -3985,6 +3998,25 @@
 			name = Mac;
 			sourceTree = "<group>";
 		};
+		A6D40F811DE7E15B0049EA0B /* baiyou */ = {
+			isa = PBXGroup;
+			children = (
+				A6D40F851DE7E15B0049EA0B /* apple */,
+				A6D40F881DE7E15B0049EA0B /* BaiyouPlugin.cpp */,
+				A6D40F891DE7E15B0049EA0B /* BaiyouPlugin.h */,
+			);
+			path = baiyou;
+			sourceTree = "<group>";
+		};
+		A6D40F851DE7E15B0049EA0B /* apple */ = {
+			isa = PBXGroup;
+			children = (
+				A6D40F861DE7E15B0049EA0B /* BaiyouPlugin_Apple.h */,
+				A6D40F871DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm */,
+			);
+			path = apple;
+			sourceTree = "<group>";
+		};
 		B291B5151D4A0FE300BBB345 /* mac */ = {
 			isa = PBXGroup;
 			children = (
@@ -4316,6 +4348,7 @@
 				BAFF7DCC1D5C1CF80051B92F /* spine-cocos2dx.h in Headers */,
 				15AE1B9A19AADFDF00C27E9E /* UIHBox.h in Headers */,
 				1ABA68B01888D700007D1BB4 /* CCFontCharMap.h in Headers */,
+				A6D40F941DE7E15B0049EA0B /* BaiyouPlugin.h in Headers */,
 				FA6F1B4F1D80F858007DD223 /* TimelineState.h in Headers */,
 				15AE1B5219AADA9900C27E9E /* UIPageView.h in Headers */,
 				BAFF7DAC1D5C1CF80051B92F /* SkeletonBatch.h in Headers */,
@@ -4470,6 +4503,7 @@
 				BA68D78F1D62F4A500B7A3F9 /* sweep.h in Headers */,
 				15AE1B5E19AADA9900C27E9E /* UITextBMFont.h in Headers */,
 				1A5701E8180BCB8C0088DEC7 /* CCTransition.h in Headers */,
+				A6D40F8E1DE7E15B0049EA0B /* BaiyouPlugin_Apple.h in Headers */,
 				1A5701EC180BCB8C0088DEC7 /* CCTransitionPageTurn.h in Headers */,
 				FA6F1B871D80F858007DD223 /* ColorTransform.h in Headers */,
 				A60A9D621C200DE10070800A /* CCPhysicsSprite.h in Headers */,
@@ -5016,6 +5050,8 @@
 				50ABBE441925AB6F00A911A9 /* CCDirector.h in Headers */,
 				BAFF7DC91D5C1CF80051B92F /* SlotData.h in Headers */,
 				BAFF7DB91D5C1CF80051B92F /* SkeletonJson.h in Headers */,
+				A6D40F951DE7E15B0049EA0B /* BaiyouPlugin.h in Headers */,
+				A6D40F8F1DE7E15B0049EA0B /* BaiyouPlugin_Apple.h in Headers */,
 				BAFF7D711D5C1CF80051B92F /* BoundingBoxAttachment.h in Headers */,
 				FA6F1B5E1D80F858007DD223 /* IArmatureDisplay.h in Headers */,
 				5034CA4A191D591100CE6051 /* ccShader_Label_df.frag in Headers */,
@@ -5351,6 +5387,7 @@
 				1A570079180BC5A10088DEC7 /* CCActionInstant.cpp in Sources */,
 				15AE18A619AAD33D00C27E9E /* CCScrollViewLoader.cpp in Sources */,
 				50ABBE591925AB6F00A911A9 /* CCEventKeyboard.cpp in Sources */,
+				A6D40F901DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm in Sources */,
 				BA679B381CEC373000F875FA /* CCEventListenerAssetsManagerEx.cpp in Sources */,
 				1A57007D180BC5A10088DEC7 /* CCActionInterval.cpp in Sources */,
 				15AE189F19AAD33D00C27E9E /* CCNodeLoaderLibrary.cpp in Sources */,
@@ -5629,6 +5666,7 @@
 				BAFF7D721D5C1CF80051B92F /* Cocos2dAttachmentLoader.cpp in Sources */,
 				50ABC00D1926664800A911A9 /* CCFileUtils.cpp in Sources */,
 				50ABBE4D1925AB6F00A911A9 /* CCEventCustom.cpp in Sources */,
+				A6D40F921DE7E15B0049EA0B /* BaiyouPlugin.cpp in Sources */,
 				BAFF7D5A1D5C1CF80051B92F /* Attachment.c in Sources */,
 				A63CF0071CD9CF3500A6971D /* CCUIMultilineTextField.m in Sources */,
 				B5668D7D1B3838E4003CBD5E /* UIScrollViewBar.cpp in Sources */,
@@ -5966,6 +6004,7 @@
 				BAFF7C7B1D59E0DA0051B92F /* CCActionManagerEx.cpp in Sources */,
 				BAFF7DAF1D5C1CF80051B92F /* SkeletonBounds.c in Sources */,
 				2980F02C1BA9A5550059E678 /* UITextView+CCUITextInput.mm in Sources */,
+				A6D40F911DE7E15B0049EA0B /* BaiyouPlugin_Apple.mm in Sources */,
 				85505F061B60E3B6003F2CD4 /* CCSkeletonNode.cpp in Sources */,
 				50ABBE941925AB6F00A911A9 /* CCProfiling.cpp in Sources */,
 				50ABBE5E1925AB6F00A911A9 /* CCEventListener.cpp in Sources */,
@@ -6032,6 +6071,7 @@
 				BAFF7DD91D5C1CF80051B92F /* VertexAttachment.c in Sources */,
 				BAFF7C731D59E0DA0051B92F /* CCActionFrame.cpp in Sources */,
 				BAFF7C7F1D59E0DA0051B92F /* CCActionNode.cpp in Sources */,
+				A6D40F931DE7E15B0049EA0B /* BaiyouPlugin.cpp in Sources */,
 				50CB247819D9C5A100687767 /* AudioCache.mm in Sources */,
 				50ABBD5D1925AB0000A911A9 /* Vec3.cpp in Sources */,
 				50ABC0121926664800A911A9 /* CCGLView.cpp in Sources */,

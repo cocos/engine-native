@@ -27,6 +27,8 @@
 #include "json/stringbuffer.h"
 
 #include <fstream>
+#include <sstream>
+#include <stdlib.h>
 
 #define KEY_VERSION             "version"
 #define KEY_PACKAGE_URL         "packageUrl"
@@ -40,6 +42,7 @@
 
 #define KEY_PATH                "path"
 #define KEY_MD5                 "md5"
+#define KEY_SIZE                "size"
 #define KEY_GROUP               "group"
 #define KEY_COMPRESSED          "compressed"
 #define KEY_COMPRESSED_FILE     "compressedFile"
@@ -156,6 +159,42 @@ bool Manifest::versionEquals(const Manifest *b) const
     return true;
 }
 
+std::vector<int> splitVersion(std::string s, char delim){
+    std::stringstream ss(s);
+    std::string item;
+    std::vector<int> tokens;
+    while (getline(ss, item, delim)) {
+        tokens.push_back(atoi(item.c_str()));
+    }
+    return tokens;
+}
+
+int Manifest::compareVersion(std::string va, std::string vb) const{
+    std::vector<int> tokensA = splitVersion(va, '.');
+    std::vector<int> tokensB = splitVersion(vb, '.');
+    for (int i=0;i<tokensA.size();i++){
+        if (tokensA[i] == tokensB[i]){
+            continue;
+        }
+        if (i>=tokensB.size() || tokensA[i] > tokensB[i]){
+            return 1;
+        }else{
+            return -1;
+        }
+    }
+    return 0;
+}
+
+bool Manifest::versionGreater(const Manifest *b) const
+{
+    return compareVersion(this->getVersion(), b->getVersion()) == 1;
+}
+
+bool Manifest::engineVersionGreater(const Manifest *b) const
+{
+    return compareVersion(this->getEngineVersion(), b->getEngineVersion()) == 1;
+}
+
 std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Manifest *b) const
 {
     std::unordered_map<std::string, AssetDiff> diff_map;
@@ -265,25 +304,14 @@ void Manifest::prependSearchPaths()
     }
 }
 
-
-const std::string& Manifest::getPackageUrl() const
-{
-    return _packageUrl;
-}
-
-const std::string& Manifest::getManifestFileUrl() const
-{
-    return _remoteManifestUrl;
-}
-
-const std::string& Manifest::getVersionFileUrl() const
-{
-    return _remoteVersionUrl;
-}
-
 const std::string& Manifest::getVersion() const
 {
     return _version;
+}
+
+const std::string& Manifest::getEngineVersion() const
+{
+    return _engineVer;
 }
 
 const std::vector<std::string>& Manifest::getGroups() const
@@ -374,6 +402,12 @@ Manifest::Asset Manifest::parseAsset(const std::string &path, const rapidjson::V
         asset.md5 = json[KEY_MD5].GetString();
     }
     else asset.md5 = "";
+    
+    if ( json.HasMember(KEY_SIZE) && json[KEY_SIZE].IsInt() )
+    {
+        asset.size = json[KEY_SIZE].GetInt();
+    }
+    else asset.size = 0;
     
     if ( json.HasMember(KEY_PATH) && json[KEY_PATH].IsString() )
     {

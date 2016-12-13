@@ -143,6 +143,10 @@
 		A60A9D4D1C2008F60070800A /* js_bindings_chipmunk_registration.h in Headers */ = {isa = PBXBuildFile; fileRef = A60A9D431C2008F60070800A /* js_bindings_chipmunk_registration.h */; };
 		A60A9D561C200D520070800A /* js_bindings_chipmunk_manual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60A9D401C2008F60070800A /* js_bindings_chipmunk_manual.cpp */; };
 		A60A9D571C200D550070800A /* js_bindings_chipmunk_registration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60A9D421C2008F60070800A /* js_bindings_chipmunk_registration.cpp */; };
+		A6D40F981DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D40F961DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp */; };
+		A6D40F991DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D40F961DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp */; };
+		A6D40F9A1DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A6D40F971DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp */; };
+		A6D40F9B1DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A6D40F971DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp */; };
 		B38AD56A1B1D384A0057DD7F /* jsb_cocos2dx_experimental_video_manual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B38AD5681B1D384A0057DD7F /* jsb_cocos2dx_experimental_video_manual.cpp */; };
 		B38AD56B1B1D384A0057DD7F /* jsb_cocos2dx_experimental_video_manual.h in Headers */ = {isa = PBXBuildFile; fileRef = B38AD5691B1D384A0057DD7F /* jsb_cocos2dx_experimental_video_manual.h */; };
 		B38AD56E1B1D38700057DD7F /* jsb_cocos2dx_experimental_video_auto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B38AD56C1B1D38700057DD7F /* jsb_cocos2dx_experimental_video_auto.cpp */; };
@@ -269,6 +273,8 @@
 		A60A9D411C2008F60070800A /* js_bindings_chipmunk_manual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = js_bindings_chipmunk_manual.h; path = chipmunk/js_bindings_chipmunk_manual.h; sourceTree = "<group>"; };
 		A60A9D421C2008F60070800A /* js_bindings_chipmunk_registration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = js_bindings_chipmunk_registration.cpp; path = chipmunk/js_bindings_chipmunk_registration.cpp; sourceTree = "<group>"; };
 		A60A9D431C2008F60070800A /* js_bindings_chipmunk_registration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = js_bindings_chipmunk_registration.h; path = chipmunk/js_bindings_chipmunk_registration.h; sourceTree = "<group>"; };
+		A6D40F961DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_baiyou_plugin_auto.cpp; sourceTree = "<group>"; };
+		A6D40F971DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jsb_baiyou_plugin_auto.hpp; sourceTree = "<group>"; };
 		B38AD5681B1D384A0057DD7F /* jsb_cocos2dx_experimental_video_manual.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsb_cocos2dx_experimental_video_manual.cpp; path = experimental/jsb_cocos2dx_experimental_video_manual.cpp; sourceTree = "<group>"; };
 		B38AD5691B1D384A0057DD7F /* jsb_cocos2dx_experimental_video_manual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsb_cocos2dx_experimental_video_manual.h; path = experimental/jsb_cocos2dx_experimental_video_manual.h; sourceTree = "<group>"; };
 		B38AD56C1B1D38700057DD7F /* jsb_cocos2dx_experimental_video_auto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_cocos2dx_experimental_video_auto.cpp; sourceTree = "<group>"; };
@@ -344,6 +350,8 @@
 		1A119E2E18BDF19200352BAA /* auto */ = {
 			isa = PBXGroup;
 			children = (
+				A6D40F961DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp */,
+				A6D40F971DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp */,
 				FA6F1BB11D815C2C007DD223 /* jsb_cocos2dx_dragonbones_auto.cpp */,
 				FA6F1BB21D815C2C007DD223 /* jsb_cocos2dx_dragonbones_auto.hpp */,
 				BA127E611D791E21002C5B50 /* js_bindings_chipmunk_auto_classes_registration.h */,
@@ -591,6 +599,7 @@
 				BA4095C41A6F730A005E53F6 /* jsb_cocos2dx_studio_conversions.h in Headers */,
 				1A119EC718BDF19200352BAA /* jsb_cocos2dx_studio_manual.h in Headers */,
 				4DFA4C051CBCBC4E00E3B736 /* js-BindingsExport.h in Headers */,
+				A6D40F9A1DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp in Headers */,
 				BA9FD5D41BAC0A7600996C85 /* CCComponentJS.h in Headers */,
 				BAF638DE1B5F5DC900CDB43A /* jsb_cocos2dx_audioengine_auto.hpp in Headers */,
 				1A119EF118BDF19200352BAA /* js_bindings_system_functions_registration.h in Headers */,
@@ -626,6 +635,7 @@
 				1A119E8C18BDF19200352BAA /* jsb_cocos2dx_builder_auto.hpp in Headers */,
 				4BE089E51ADF965E00D65D4B /* jsb_cocos2dx_experimental_webView_auto.hpp in Headers */,
 				1A119E9E18BDF19200352BAA /* jsb_cocos2dx_spine_auto.hpp in Headers */,
+				A6D40F9B1DE7E1870049EA0B /* jsb_baiyou_plugin_auto.hpp in Headers */,
 				1A119EEC18BDF19200352BAA /* jsb_opengl_registration.h in Headers */,
 				1A119F0418BDF19200352BAA /* spidermonkey_specifics.h in Headers */,
 				1A119EE818BDF19200352BAA /* jsb_opengl_manual.h in Headers */,
@@ -728,6 +738,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6D40F981DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp in Sources */,
 				1A119E8918BDF19200352BAA /* jsb_cocos2dx_builder_auto.cpp in Sources */,
 				1A119EED18BDF19200352BAA /* js_bindings_system_functions.cpp in Sources */,
 				0541A7501973876100E45470 /* JavaScriptObjCBridge.mm in Sources */,
@@ -782,6 +793,7 @@
 				1A119EF818BDF19200352BAA /* jsb_websocket.cpp in Sources */,
 				FA6F1BB41D815C2C007DD223 /* jsb_cocos2dx_dragonbones_auto.cpp in Sources */,
 				1A119ED418BDF19200352BAA /* js_bindings_core.cpp in Sources */,
+				A6D40F991DE7E1870049EA0B /* jsb_baiyou_plugin_auto.cpp in Sources */,
 				1A119EC218BDF19200352BAA /* js_bindings_ccbreader.cpp in Sources */,
 				A60A9D571C200D550070800A /* js_bindings_chipmunk_registration.cpp in Sources */,
 				1A119EFC18BDF19200352BAA /* XMLHTTPRequest.cpp in Sources */,
