@@ -4382,6 +4382,16 @@ node
 },
 
 /**
+ * @method isEnabled
+ * @return {bool}
+ */
+isEnabled : function (
+)
+{
+    return false;
+},
+
+/**
  * @method addEventListenerWithFixedPriority
  * @param {cc.EventListener} arg0
  * @param {int} arg1
@@ -4394,23 +4404,23 @@ int
 },
 
 /**
- * @method removeEventListenersForTarget
-* @param {cc.Node|cc.EventListener::Type} node
-* @param {bool} bool
-*/
-removeEventListenersForTarget : function(
-node,
+ * @method resumeEventListenersForTarget
+ * @param {cc.Node} arg0
+ * @param {bool} arg1
+ */
+resumeEventListenersForTarget : function (
+node, 
 bool 
 )
 {
 },
 
 /**
- * @method resumeEventListenersForTarget
+ * @method removeEventListenersForTarget
  * @param {cc.Node} arg0
  * @param {bool} arg1
  */
-resumeEventListenersForTarget : function (
+removeEventListenersForTarget : function (
 node, 
 bool 
 )
@@ -4484,13 +4494,13 @@ eventlistener
 },
 
 /**
- * @method isEnabled
- * @return {bool}
+ * @method removeEventListenersForType
+ * @param {cc.EventListener::Type} arg0
  */
-isEnabled : function (
+removeEventListenersForType : function (
+type 
 )
 {
-    return false;
 },
 
 /**
