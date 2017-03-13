@@ -231,6 +231,38 @@ jsval spmeshattachment_to_jsval(JSContext* cx, spMeshAttachment& v)
     return JSVAL_NULL;
 }
 
+jsval spboundingboxattachment_to_jsval(JSContext* cx, spBoundingBoxAttachment& v)
+{
+    JS::RootedObject tmp(cx, JS_NewObject(cx, nullptr, JS::NullPtr(), JS::NullPtr()));
+    if (!tmp) return JSVAL_NULL;
+    
+    JS::RootedValue jsname(cx, c_string_to_jsval(cx, v.super.super.name));
+    
+    
+    std::vector<float> vertices;
+    
+    for (int i = 0; i < v.super.worldVerticesLength; ++i){
+        
+        vertices.push_back(v.super.vertices[i]);
+        
+    }
+    
+    JS::RootedValue jsvertices(cx, std_vector_float_to_jsval(cx,vertices));
+    
+    bool ok = JS_DefineProperty(cx, tmp, "name", jsname, JSPROP_ENUMERATE | JSPROP_PERMANENT) &&
+    JS_DefineProperty(cx, tmp, "type", v.super.super.type, JSPROP_ENUMERATE | JSPROP_PERMANENT) &&
+    JS_DefineProperty(cx, tmp, "vertices", jsvertices, JSPROP_ENUMERATE | JSPROP_PERMANENT) &&
+    JS_DefineProperty(cx, tmp, "worldVerticesLength", v.super.worldVerticesLength, JSPROP_ENUMERATE | JSPROP_PERMANENT);
+    
+    
+    if (ok)
+    {
+        return OBJECT_TO_JSVAL(tmp);
+    }
+    
+    return JSVAL_NULL;
+}
+
 jsval spslotdata_to_jsval(JSContext* cx, spSlotData& v)
 {
     JS::RootedObject tmp(cx, JS_NewObject(cx, nullptr, JS::NullPtr(), JS::NullPtr()));
@@ -262,7 +294,24 @@ jsval spslot_to_jsval(JSContext* cx, spSlot& v)
     if (!tmp) return JSVAL_NULL;
 
     JS::RootedValue jsbone(cx, spbone_to_jsval(cx, *v.bone));
-    JS::RootedValue jsattachment(cx, spattachment_to_jsval(cx, *v.attachment));
+    
+    jsval jstemp = JSVAL_NULL;
+    if (v.attachment->type == spAttachmentType::SP_ATTACHMENT_REGION) {
+        jstemp = spregionattachment_to_jsval(cx, *((spRegionAttachment*)(v.attachment)));
+    }
+    else if (v.attachment->type == spAttachmentType::SP_ATTACHMENT_MESH ||
+             v.attachment->type == spAttachmentType::SP_ATTACHMENT_LINKED_MESH) {
+        jstemp = spmeshattachment_to_jsval(cx, *((spMeshAttachment*)(v.attachment)));
+    }
+    else if (v.attachment->type == spAttachmentType::SP_ATTACHMENT_BOUNDING_BOX){
+        
+        jstemp = spboundingboxattachment_to_jsval(cx, *((spBoundingBoxAttachment*)(v.attachment)));
+    }
+    else {
+        jstemp = spattachment_to_jsval(cx, *(v.attachment));
+    }
+    JS::RootedValue jsattachment(cx, jstemp);
+    
     JS::RootedValue jsdata(cx, spslotdata_to_jsval(cx, *v.data));
     bool ok = JS_DefineProperty(cx, tmp, "r", v.r, JSPROP_ENUMERATE | JSPROP_PERMANENT) &&
         JS_DefineProperty(cx, tmp, "g", v.g, JSPROP_ENUMERATE | JSPROP_PERMANENT) &&
@@ -594,6 +643,10 @@ bool jsb_cocos2dx_spine_getAttachment(JSContext *cx, uint32_t argc, jsval *vp)
                 else if (ret->type == spAttachmentType::SP_ATTACHMENT_MESH ||
                          ret->type == spAttachmentType::SP_ATTACHMENT_LINKED_MESH) {
                     jsret = spmeshattachment_to_jsval(cx, *((spMeshAttachment*)ret));
+                }
+                else if (ret->type == spAttachmentType::SP_ATTACHMENT_BOUNDING_BOX){
+                    
+                    jsret = spboundingboxattachment_to_jsval(cx, *((spBoundingBoxAttachment*)(ret)));
                 }
                 else {
                     jsret = spattachment_to_jsval(cx, *ret);
