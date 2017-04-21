@@ -3279,6 +3279,12 @@
         "cocos/scripting/js-bindings/auto/jsb_cocos2dx_ui_auto.hpp", 
         "cocos/scripting/js-bindings/auto/jsb_creator_auto.cpp", 
         "cocos/scripting/js-bindings/auto/jsb_creator_auto.hpp", 
+        "cocos/scripting/js-bindings/backup/js_bindings_chipmunk_auto_classes.cpp", 
+        "cocos/scripting/js-bindings/backup/js_bindings_chipmunk_auto_classes.h", 
+        "cocos/scripting/js-bindings/backup/js_bindings_chipmunk_auto_classes_registration.h", 
+        "cocos/scripting/js-bindings/backup/js_bindings_chipmunk_functions.cpp", 
+        "cocos/scripting/js-bindings/backup/js_bindings_chipmunk_functions.h", 
+        "cocos/scripting/js-bindings/backup/js_bindings_chipmunk_functions_registration.h", 
         "cocos/scripting/js-bindings/manual/ScriptingCore.cpp", 
         "cocos/scripting/js-bindings/manual/ScriptingCore.h", 
         "cocos/scripting/js-bindings/manual/chipmunk/js_bindings_chipmunk_manual.cpp", 
@@ -3488,6 +3494,7 @@
         "tools/tojs/cocos2dx_studio.ini", 
         "tools/tojs/cocos2dx_ui.ini", 
         "tools/tojs/creator.ini", 
-        "tools/tojs/genbindings.py"
+        "tools/tojs/genbindings.py", 
+        "tools/tojs/userconf.ini"
     ]
 }
