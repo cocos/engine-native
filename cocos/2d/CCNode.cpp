@@ -976,14 +976,12 @@ void Node::postInsertChild(Node* child)
 
     if (_cascadeColorEnabled)
     {
-		if (_displayedColor.r < 255 || _displayedColor.g < 255 || _displayedColor.b < 255)
-			child->updateCascadeColor();
+        child->updateCascadeColor();
     }
 
     if (_cascadeOpacityEnabled)
     {
-		if (_displayedOpacity < 255)
-			child->updateCascadeOpacity();
+        child->updateCascadeOpacity();
     }
 }
 
