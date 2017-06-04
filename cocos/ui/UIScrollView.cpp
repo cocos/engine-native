@@ -572,6 +572,7 @@ void ScrollView::processAutoScrolling(float deltaTime)
     }
 
     moveInnerContainer(newPosition - getInnerContainerPosition(), reachedEnd);
+    processScrollingEvent();
 }
 
 void ScrollView::jumpToDestination(const Vec2 &des)
