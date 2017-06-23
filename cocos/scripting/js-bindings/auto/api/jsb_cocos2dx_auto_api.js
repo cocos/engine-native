@@ -1939,6 +1939,14 @@ touch
 },
 
 /**
+ * @method setTransformUpdated
+ */
+setTransformUpdated : function (
+)
+{
+},
+
+/**
  * @method update
  * @param {float} arg0
  */
