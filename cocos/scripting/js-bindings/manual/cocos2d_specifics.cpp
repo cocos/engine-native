@@ -2006,6 +2006,19 @@ bool js_cocos2dx_release(JSContext *cx, uint32_t argc, JS::Value *vp)
     return true;
 }
 
+bool js_cocos2dx_getReferenceCount(JSContext *cx, uint32_t argc, JS::Value *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    JS::RootedObject obj(cx, args.get(0).toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(cx, obj);
+    cocos2d::Ref* cobj = (cocos2d::Ref *)(proxy ? proxy->ptr : nullptr);
+    JSB_PRECONDITION2( cobj, cx, false, "js_cocos2dx_release : Invalid Native Object");
+    
+    int refCount = cobj->getReferenceCount();
+    args.rval().setInt32(refCount);
+    return true;
+}
+
 bool js_cocos2dx_Node_onEnter(JSContext *cx, uint32_t argc, JS::Value *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -4813,6 +4826,7 @@ void register_cocos2dx_js_core(JSContext* cx, JS::HandleObject global)
     tmpObj.set(jsb_cocos2d_Label_prototype->get());
     JS_DefineFunction(cx, tmpObj, "setTTFConfig", js_cocos2dx_Label_setTTFConfig, 1, JSPROP_ENUMERATE | JSPROP_PERMANENT);
 
+    JS_DefineFunction(cx, jsbObj, "getReferenceCount", js_cocos2dx_getReferenceCount, 1, JSPROP_ENUMERATE | JSPROP_PERMANENT);
     tmpObj.set(jsb_cocos2d_Node_prototype->get());
     JS_DefineFunction(cx, tmpObj, "retain", js_cocos2dx_retain, 0, JSPROP_ENUMERATE | JSPROP_PERMANENT);
     JS_DefineFunction(cx, tmpObj, "release", js_cocos2dx_release, 0, JSPROP_ENUMERATE | JSPROP_PERMANENT);
