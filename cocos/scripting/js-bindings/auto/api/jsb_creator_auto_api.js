@@ -1135,6 +1135,16 @@ b2fixture
 },
 
 /**
+ * @method getAllInstances
+ * @return {Array}
+ */
+getAllInstances : function (
+)
+{
+    return new Array();
+},
+
+/**
  * @method PhysicsContactListener
  * @constructor
  */

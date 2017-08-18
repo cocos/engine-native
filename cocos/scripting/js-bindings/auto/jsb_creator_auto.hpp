@@ -149,6 +149,7 @@ bool js_register_creator_PhysicsContactListener(se::Object* obj);
 bool register_all_creator(se::Object* obj);
 SE_DECLARE_FUNC(js_creator_PhysicsContactListener_unregisterContactFixture);
 SE_DECLARE_FUNC(js_creator_PhysicsContactListener_registerContactFixture);
+SE_DECLARE_FUNC(js_creator_PhysicsContactListener_getAllInstances);
 SE_DECLARE_FUNC(js_creator_PhysicsContactListener_PhysicsContactListener);
 
 extern se::Object* __jsb_creator_PhysicsAABBQueryCallback_proto;
