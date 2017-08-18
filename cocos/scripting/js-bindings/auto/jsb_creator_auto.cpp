@@ -2313,6 +2313,22 @@ static bool js_creator_PhysicsContactListener_registerContactFixture(se::State& 
 }
 SE_BIND_FUNC(js_creator_PhysicsContactListener_registerContactFixture)
 
+static bool js_creator_PhysicsContactListener_getAllInstances(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const std::vector<creator::PhysicsContactListener *, std::allocator<creator::PhysicsContactListener *> >& result = creator::PhysicsContactListener::getAllInstances();
+        ok &= native_ptr_to_seval<std::vector<creator::PhysicsContactListener , std::allocator<creator::PhysicsContactListener > >&>((std::vector<creator::PhysicsContactListener *, std::allocator<creator::PhysicsContactListener *> >&)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_creator_PhysicsContactListener_getAllInstances : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_creator_PhysicsContactListener_getAllInstances)
+
 SE_DECLARE_FINALIZE_FUNC(js_creator_PhysicsContactListener_finalize)
 
 static bool js_creator_PhysicsContactListener_constructor(se::State& s)
@@ -2348,6 +2364,7 @@ bool js_register_creator_PhysicsContactListener(se::Object* obj)
 
     cls->defineFunction("unregisterContactFixture", _SE(js_creator_PhysicsContactListener_unregisterContactFixture));
     cls->defineFunction("registerContactFixture", _SE(js_creator_PhysicsContactListener_registerContactFixture));
+    cls->defineStaticFunction("getAllInstances", _SE(js_creator_PhysicsContactListener_getAllInstances));
     cls->defineFinalizeFunction(_SE(js_creator_PhysicsContactListener_finalize));
     cls->install();
     JSBClassType::registerClass<creator::PhysicsContactListener>(cls);
