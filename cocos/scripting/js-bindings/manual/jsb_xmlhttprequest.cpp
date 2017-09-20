@@ -502,7 +502,7 @@ se::Class* __jsb_XMLHttpRequest_class = nullptr;
 static bool XMLHttpRequest_finalize(se::State& s)
 {
     XMLHttpRequest* request = (XMLHttpRequest*)s.nativeThisObject();
-    printf("XMLHttpRequest_finalize, %p ... \n", request);
+    LOGD("XMLHttpRequest_finalize, %p ... \n", request);
     if (request->getReferenceCount() == 1)
     {
         request->autorelease();

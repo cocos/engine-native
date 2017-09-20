@@ -178,7 +178,7 @@ namespace se {
 
             if (_rootCount > 0)
             {
-    //            printf("Object::_cleanup, (%p) rootCount: %u\n", this, _rootCount);
+    //            LOGD("Object::_cleanup, (%p) rootCount: %u\n", this, _rootCount);
                 // Don't unprotect if it's in cleanup, otherwise, it will trigger crash.
                 if (!se->isInCleanup() && !se->isGarbageCollecting())
                     JSValueUnprotect(__cx, _obj);
