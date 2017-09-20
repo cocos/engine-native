@@ -115,6 +115,7 @@ private:
     bool _errorFlag;
     bool _isAborted;
     bool _isLoadStart;
+    bool _isLoadEnd;
     bool _isDiscardedByReset;
 };
 
@@ -134,11 +135,16 @@ XMLHttpRequest::XMLHttpRequest()
 , _errorFlag(false)
 , _isAborted(false)
 , _isLoadStart(false)
+, _isLoadEnd(false)
 , _isDiscardedByReset(false)
 {
     _resetDirectorListener = cocos2d::Director::getInstance()->getEventDispatcher()->addCustomEventListener(cocos2d::Director::EVENT_RESET, [this](cocos2d::EventCustom*){
         _isDiscardedByReset = true;
-        retain();
+        if (!_isLoadEnd)
+        {
+            LOGD("XMLHttpRequest (%p) receives DIRECTOR::EVENT_RESET, retain self.\n", this);
+            retain();
+        }
     });
 }
 
@@ -221,6 +227,7 @@ void XMLHttpRequest::abort()
         onabort();
     }
 
+    _isLoadEnd = true;
     if (onloadend != nullptr)
     {
         onloadend();
@@ -315,7 +322,7 @@ void XMLHttpRequest::getHeader(const std::string& header)
 
 void XMLHttpRequest::onResponse(HttpClient* client, HttpResponse* response)
 {
-    if(_isAborted || _readyState == ReadyState::UNSENT)
+    if (_isAborted || _readyState == ReadyState::UNSENT)
     {
         return;
     }
@@ -336,7 +343,7 @@ void XMLHttpRequest::onResponse(HttpClient* client, HttpResponse* response)
     if (!response->isSucceed())
     {
         std::string errorBuffer = response->getErrorBuffer();
-        CCLOG("Response failed, error buffer: %s", errorBuffer.c_str());
+        LOGD("Response failed, error buffer: %s", errorBuffer.c_str());
         if (statusCode == 0 || statusCode == -1)
         {
             _errorFlag = true;
@@ -347,6 +354,7 @@ void XMLHttpRequest::onResponse(HttpClient* client, HttpResponse* response)
                 onerror();
             }
 
+            _isLoadEnd = true;
             if (onloadend != nullptr)
             {
                 onloadend();
@@ -388,6 +396,7 @@ void XMLHttpRequest::onResponse(HttpClient* client, HttpResponse* response)
         onload();
     }
 
+    _isLoadEnd = true;
     if (onloadend != nullptr)
     {
         onloadend();
@@ -552,11 +561,13 @@ static bool XMLHttpRequest_constructor(se::State& s)
     request->onloadend = [=](){
         if (!request->isDiscardedByReset())
         {
+//            LOGD("XMLHttpRequest (%p) onloadend ...\n", request);
             cb("onloadend");
             thiz.toObject()->unroot();
         }
         else
         {
+            LOGD("XMLHttpRequest (%p) onloadend after restart ScriptEngine.\n", request);
             request->release();
         }
     };
