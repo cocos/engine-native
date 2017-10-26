@@ -628,6 +628,7 @@
         "cocos/platform/android/java/libs/libcocosanalytics.jar", 
         "cocos/platform/android/java/proguard-project.txt", 
         "cocos/platform/android/java/project.properties", 
+        "cocos/platform/android/java/src/org/cocos2dx/lib/CAAgentWrapper.java", 
         "cocos/platform/android/java/src/org/cocos2dx/lib/Cocos2dxAccelerometer.java", 
         "cocos/platform/android/java/src/org/cocos2dx/lib/Cocos2dxActivity.java", 
         "cocos/platform/android/java/src/org/cocos2dx/lib/Cocos2dxAudioFocusManager.java", 
