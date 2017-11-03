@@ -773,11 +773,10 @@ cc.callFunc = function (selector, target, data) {
         };
     }
     if (target !== undefined) {
-        cc.CallFunc.create(callback);
+        return cc.CallFunc.create(callback);
     }
-    else {
-        cc.CallFunc.create(callback, target);
-    }
+
+    return cc.CallFunc.create(callback, target);
 }
 cc.actionInterval = cc.ActionInterval.create;
 cc.rotateTo = cc.RotateTo.create;
@@ -922,9 +921,9 @@ cc.Node.prototype.ignoreAnchorPointForPosition = cc.Node.prototype.setIgnoreAnch
 cc.Node.prototype._setNormalizedPosition = cc.Node.prototype.setNormalizedPosition;
 cc.Node.prototype.setNormalizedPosition = function(pos, y){
     if(y === undefined)
-        cc.Node.prototype._setNormalizedPosition.call(this, pos);
+        this._setNormalizedPosition(pos);
     else
-        cc.Node.prototype._setNormalizedPosition.call(this, cc.p(pos, y));
+        this._setNormalizedPosition(cc.p(pos, y));
 };
 
 /** returns a "world" axis aligned bounding box of the node. <br/>

@@ -38,7 +38,7 @@ var dummyCtor = function(){
 
 _p = cc.Layer.prototype;
 _p._ctor = function() {
-    cc.Layer.prototype.init.call(this);
+    this.init();
 };
 
 
@@ -48,7 +48,7 @@ _p._ctor = function(color, w, h) {
     w = w === undefined ? cc.winSize.width : w;
     h = h === undefined ? cc.winSize.height : h;
 
-    cc.LayerColor.prototype.init.call(this, color, w, h);
+    this.init(color, w, h);
 };
 
 
@@ -71,7 +71,7 @@ _p._ctor = function(start, end, v, colorStops) {
 _p = cc.Sprite.prototype;
 _p._ctor = function(fileName, rect) {
     if (fileName === undefined) {
-        cc.Sprite.prototype.init.call(this);
+        this.init();
     }
     else if (typeof(fileName) === 'string') {
         if (fileName[0] === '#') {
@@ -124,7 +124,7 @@ _p = cc.ParticleBatchNode.prototype;
 _p._ctor = function(fileImage, capacity){
     capacity = capacity || cc.PARTICLE_DEFAULT_CAPACITY;
     if (typeof(fileImage) == 'string') {
-        cc.ParticleBatchNode.prototype.init.call(this, fileImage, capacity);
+        this.init(fileImage, capacity);
     } else if (fileImage instanceof cc.Texture2D) {
         this.initWithTexture(fileImage, capacity);
     }
@@ -251,7 +251,7 @@ cc.EaseElasticOut.prototype._ctor = easeElasticCtor;
 cc.EaseElasticInOut.prototype._ctor = easeElasticCtor;
 
 cc.RemoveSelf.prototype._ctor = function(isNeedCleanUp) {
-    isNeedCleanUp !== undefined && cc.RemoveSelf.prototype.init.call(this, isNeedCleanUp);
+    isNeedCleanUp !== undefined && this.init(isNeedCleanUp);
 };
 
 cc.FlipX.prototype._ctor = function(flip) {
@@ -466,13 +466,13 @@ cc.targetedAction = cc.TargetedAction.create = function (target, action) {
 
 cc.ClippingNode.prototype._ctor = function(stencil) {
     if(stencil != undefined)
-        cc.ClippingNode.prototype.init.call(this, stencil);
+        this.init(stencil);
     else
-        cc.ClippingNode.prototype.init.call(this);
+        this.init();
 };
 
 cc.DrawNode.prototype._ctor = function() {
-    cc.DrawNode.prototype.init.call(this);
+    this.init();
 };
 
 cc.LabelTTF.prototype._ctor = function (text, fontName, fontSize, dimensions, hAlignment, vAlignment) {
@@ -500,16 +500,16 @@ cc.LabelTTF.prototype._ctor = function (text, fontName, fontSize, dimensions, hA
 /************************  Other classes  *************************/
 
 cc.EventTouch.prototype._ctor = function(touches) {
-    touches !== undefined && cc.EventTouch.prototype.setTouches.call(this, touches);
+    touches !== undefined && this.setTouches(touches);
 };
 cc.Touch.prototype._ctor = function(x, y, id) {
-    id !== undefined && cc.Touch.prototype.setTouchInfo.call(this, x, y, id);
+    id !== undefined && this.setTouchInfo(x, y, id);
 };
 
 cc.GLProgram.prototype._ctor = function(vShaderFileName, fShaderFileName) {
     if(vShaderFileName !== undefined && fShaderFileName !== undefined){
-        cc.GLProgram.prototype.init.call(this, vShaderFileName, fShaderFileName);
-        cc.GLProgram.prototype.link.call(this);
-        cc.GLProgram.prototype.updateUniforms.call(this);
+        this.init(vShaderFileName, fShaderFileName);
+        this.link();
+        this.updateUniforms();
     }
 };
