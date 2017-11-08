@@ -38,10 +38,6 @@ if (window.scriptEngineType == "JavaScriptCore") {
         return buffer;
     };
 
-    window.__jsc_createUint8TypedArray = function(arr) {
-        return new Uint8Array(arr);
-    };
-
     window.__jsc_getArrayBufferData = function(arrBuf) {
         var typedArr = new Uint8Array(arrBuf);
         var len = typedArr.length;
