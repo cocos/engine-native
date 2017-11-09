@@ -48,11 +48,12 @@ if (window.scriptEngineType == "JavaScriptCore") {
         return arr;
     };
 
-    window.__jsc_getUint8ArrayData = function(typedArr) {
-        var len = typedArr.length;
+    window.__jsc_getTypedArrayData = function(typedArr) {
+        var uint8Array = new Uint8Array(typedArr.buffer);
+        var len = uint8Array.length;
         var arr = new Array(len);
         for (var i = 0; i < len; ++i) {
-            arr[i] = typedArr[i];
+            arr[i] = uint8Array[i];
         }
         return arr;
     };

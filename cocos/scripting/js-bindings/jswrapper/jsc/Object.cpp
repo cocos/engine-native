@@ -411,7 +411,7 @@ namespace se {
 
             if (_rootCount > 0)
             {
-    //            SE_LOGD("Object::_cleanup, (%p) rootCount: %u\n", this, _rootCount);
+                //            SE_LOGD("Object::_cleanup, (%p) rootCount: %u\n", this, _rootCount);
                 // Don't unprotect if it's in cleanup, otherwise, it will trigger crash.
                 if (!se->isInCleanup() && !se->isGarbageCollecting())
                     JSValueUnprotect(__cx, _obj);
@@ -589,7 +589,7 @@ namespace se {
         return true;
     }
 
-    bool Object::getArrayElement(uint32_t index, Value* data) const 
+    bool Object::getArrayElement(uint32_t index, Value* data) const
     {
         assert(isArray());
         assert(data != nullptr);
@@ -857,7 +857,7 @@ namespace se {
 #endif
         {
             Value func;
-            bool ok = ScriptEngine::getInstance()->getGlobalObject()->getProperty("__jsc_getUint8ArrayData", &func);
+            bool ok = ScriptEngine::getInstance()->getGlobalObject()->getProperty("__jsc_getTypedArrayData", &func);
             if (ok && func.isObject() && func.toObject()->isFunction())
             {
                 ValueArray args;
@@ -928,7 +928,7 @@ namespace se {
         }
 #endif
         bool ret = isInstanceOfConstructor(__cx, _obj, "Array");
-          if (ret)
+        if (ret)
             _type = Type::ARRAY;
         return ret;
     }
@@ -1127,7 +1127,7 @@ namespace se {
             }
         }
     }
-    
+
     bool Object::isRooted() const
     {
         return _rootCount > 0;
@@ -1184,3 +1184,4 @@ namespace se {
 } // namespace se {
 
 #endif // #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_JSC
+
