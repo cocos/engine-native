@@ -467,14 +467,14 @@ ssize_t SpriteBatchNode::atlasIndexForChild(Sprite *sprite, int nZ)
     auto& siblings = sprite->getParent()->getChildren();
     auto childIndex = siblings.getIndex(sprite);
 
+    Sprite *prev = nullptr;
+    if (childIndex > 0)
+        prev = static_cast<Sprite*>(siblings.at(childIndex - 1));
+    else
+        return 0;
+
     // ignore parent Z if parent is spriteSheet
     bool ignoreParent = (SpriteBatchNode*)(sprite->getParent()) == this;
-    Sprite *prev = nullptr;
-    if (childIndex > 0 && childIndex != -1)
-    {
-        prev = static_cast<Sprite*>(siblings.at(childIndex - 1));
-    }
-
     // first child of the sprite sheet
     if (ignoreParent)
     {
