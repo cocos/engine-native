@@ -435,6 +435,10 @@ bool seval_to_ccvalue(const se::Value& v, cocos2d::Value* ret)
     {
         *ret = v.toBoolean();
     }
+    else if (v.isNullOrUndefined())
+    {
+        *ret = cocos2d::Value::Null;
+    }
     else
     {
         CCASSERT(false, "not supported type");
@@ -1358,6 +1362,12 @@ bool ccvalue_to_seval(const cocos2d::Value& v, se::Value* ret)
     bool ok = true;
     switch (v.getType())
     {
+        case cocos2d::Value::Type::NONE:
+            ret->setNull();
+            break;
+        case cocos2d::Value::Type::UNSIGNED:
+            ret->setUint32(v.asUnsignedInt());
+            break;
         case cocos2d::Value::Type::BOOLEAN:
             ret->setBoolean(v.asBool());
             break;
@@ -1381,6 +1391,7 @@ bool ccvalue_to_seval(const cocos2d::Value& v, se::Value* ret)
             ok = ccvaluemapintkey_to_seval(v.asIntKeyMap(), ret);
             break;
         default:
+            SE_LOGE("Could not the way to convert cocos2d::Value::Type (%d) type!", (int)v.getType());
             ok = false;
             break;
     }
