@@ -787,7 +787,15 @@ const Size& Director::getWinSize(void) const
 
 Size Director::getWinSizeInPixels() const
 {
-    return Size(_winSizeInPoints.width * _contentScaleFactor, _winSizeInPoints.height * _contentScaleFactor);
+    float _ViewScaleX = 1;
+    float _ViewScaleY = 1;
+
+    if (_openGLView) {
+        _ViewScaleX = _openGLView->getScaleX();
+        _ViewScaleY = _openGLView->getScaleY();
+    }
+
+    return Size(_winSizeInPoints.width * _ViewScaleX, _winSizeInPoints.height * _ViewScaleY);
 }
 
 Size Director::getVisibleSize() const
