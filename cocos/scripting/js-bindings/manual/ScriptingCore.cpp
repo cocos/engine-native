@@ -67,7 +67,7 @@ void ScriptingCore::retainScriptObject(Ref* owner, Ref* target)
         se::Class* cls = JSBClassType::findClass(target);
         if (cls == nullptr)
             return;
-        SE_LOGD("Couldn't find target se::Object by (%s, %p), create one.\n", typeid(*target).name(), target);
+
         targetObj = se::Object::createObjectWithClass(cls);
         targetVal.setObject(targetObj, true);
         targetObj->setPrivateData(target);
