@@ -59,15 +59,28 @@ void ScriptingCore::retainScriptObject(Ref* owner, Ref* target)
         return;
     }
 
+    se::Value targetVal;
+    se::Object* targetObj = nullptr;
     auto iterTarget = se::NativePtrToObjectMap::find(target);
     if (iterTarget == se::NativePtrToObjectMap::end())
     {
-        return;
+        se::Class* cls = JSBClassType::findClass(target);
+        if (cls == nullptr)
+            return;
+        SE_LOGD("Couldn't find target se::Object by (%s, %p), create one.\n", typeid(*target).name(), target);
+        targetObj = se::Object::createObjectWithClass(cls);
+        targetVal.setObject(targetObj, true);
+        targetObj->setPrivateData(target);
+        target->retain(); // Retain the native object to unify the logic in finalize method of js object.
+    }
+    else
+    {
+        targetObj = iterTarget->second;
     }
 
     se::ScriptEngine::getInstance()->clearException();
     se::AutoHandleScope hs;
-    iterOwner->second->attachObject(iterTarget->second);
+    iterOwner->second->attachObject(targetObj);
 }
 
 void ScriptingCore::rootScriptObject(Ref* target)
