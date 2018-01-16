@@ -113,7 +113,6 @@ public class Cocos2dxHelper {
             float level = current * 1.0f / total;
             // clamp to 0~1
             sBatteryLevel = Math.min(Math.max(level, 0.0f), 1.0f);
-            Log.d(TAG, "Battery level changed: " + sBatteryLevel);
         }
     }
 
