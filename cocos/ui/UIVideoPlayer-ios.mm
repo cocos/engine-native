@@ -196,8 +196,8 @@ using namespace cocos2d::experimental::ui;
             break;
         }
     }
-    [volumeView setFrame:CGRectMake(-1000, -100, 40, 40)];
-    [volumeView setHidded:No];
+    [volumeView setFrame:CGRectMake(-10000, -10000, 40, 40)];
+    [volumeView setHidded:NO];
 
     auto view = cocos2d::Director::getInstance()->getOpenGLView();
     auto eaglview = (CCEAGLView *) view->getEAGLView();
