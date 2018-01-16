@@ -33,6 +33,7 @@
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventAcceleration.h"
 #include "base/CCDirector.h"
+#include "CCReachability.h"
 #import <UIKit/UIKit.h>
 
 // Accelerometer
@@ -609,6 +610,31 @@ void Device::vibrate(float duration)
 float Device::getBatteryLevel()
 {
     return [UIDevice currentDevice].batteryLevel;
+}
+
+Device::NetworkStatus Device::getNetworkStatus()
+{
+    static Reachability* __reachability = nullptr;
+    if (__reachability == nullptr)
+    {
+        __reachability = Reachability::createForInternetConnection();
+        __reachability->retain();
+    }
+
+    NetworkStatus ret = NetworkStatus::NOT_REACHABLE;
+    Reachability::NetworkStatus status = __reachability->getCurrentReachabilityStatus();
+    switch (status) {
+        case Reachability::NetworkStatus::REACHABLE_VIA_WIFI:
+            ret = NetworkStatus::REACHABLE_VIA_WIFI;
+            break;
+        case Reachability::NetworkStatus::REACHABLE_VIA_WWAN:
+            ret = NetworkStatus::REACHABLE_VIA_WWAN;
+        default:
+            ret = NetworkStatus::NOT_REACHABLE;
+            break;
+    }
+
+    return ret;
 }
 
 NS_CC_END

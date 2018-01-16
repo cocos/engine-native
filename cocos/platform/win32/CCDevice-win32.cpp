@@ -560,6 +560,11 @@ float Device::getBatteryLevel()
     return 1.0f;
 }
 
+Device::NetworkStatus Device::getNetworkStatus()
+{
+    return Device::NetworkStatus::REACHABLE_VIA_WIFI;
+}
+
 NS_CC_END
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32

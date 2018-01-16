@@ -36,6 +36,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -128,6 +130,32 @@ public class Cocos2dxHelper {
 
     public static float getBatteryLevel() {
         return sBatteryReceiver.sBatteryLevel;
+    }
+
+    public static final int NETWORK_STATUS_NOT_REACHABLE = 0;
+    public static final int NETWORK_STATUS_VIA_WIFI      = 1;
+    public static final int NETWORK_STATUS_VIA_WWAN      = 2;
+
+    public static int getNetworkStatus() {
+        int status = NETWORK_STATUS_NOT_REACHABLE;
+        NetworkInfo networkInfo;
+        try {
+            ConnectivityManager connMgr = (ConnectivityManager) sActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+            networkInfo = connMgr.getActiveNetworkInfo();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return status;
+        }
+        if (networkInfo == null) {
+            return status;
+        }
+        int nType = networkInfo.getType();
+        if (nType == ConnectivityManager.TYPE_MOBILE) {
+            status = NETWORK_STATUS_VIA_WWAN;
+        } else if (nType == ConnectivityManager.TYPE_WIFI) {
+            status = NETWORK_STATUS_VIA_WIFI;
+        }
+        return status;
     }
 
     // ===========================================================

@@ -186,6 +186,11 @@ float Device::getBatteryLevel()
     return JniHelper::callStaticFloatMethod(helperClassName, "getBatteryLevel");
 }
 
+Device::NetworkStatus Device::getNetworkStatus()
+{
+    return (Device::NetworkStatus)JniHelper::callStaticIntMethod(helperClassName, "getNetworkStatus");
+}
+
 NS_CC_END
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID

@@ -33,6 +33,8 @@ THE SOFTWARE.
 #include "base/ccTypes.h"
 #include "platform/apple/CCDevice-apple.h"
 
+#include "CCReachability.h"
+
 NS_CC_BEGIN
 
 using FontUtils::tImageInfo;
@@ -445,6 +447,31 @@ void Device::vibrate(float duration)
 float Device::getBatteryLevel()
 {
     return 1.0f;
+}
+
+Device::NetworkStatus Device::getNetworkStatus()
+{
+    static Reachability* __reachability = nullptr;
+    if (__reachability == nullptr)
+    {
+        __reachability = Reachability::createForInternetConnection();
+        __reachability->retain();
+    }
+
+    NetworkStatus ret = NetworkStatus::NOT_REACHABLE;
+    Reachability::NetworkStatus status = __reachability->getCurrentReachabilityStatus();
+    switch (status) {
+        case Reachability::NetworkStatus::REACHABLE_VIA_WIFI:
+            ret = NetworkStatus::REACHABLE_VIA_WIFI;
+            break;
+        case Reachability::NetworkStatus::REACHABLE_VIA_WWAN:
+            ret = NetworkStatus::REACHABLE_VIA_WWAN;
+        default:
+            ret = NetworkStatus::NOT_REACHABLE;
+            break;
+    }
+
+    return ret;
 }
 
 NS_CC_END

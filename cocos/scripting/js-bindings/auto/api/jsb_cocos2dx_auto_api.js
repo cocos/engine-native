@@ -14484,6 +14484,16 @@ TextureCache : function (
 cc.Device = {
 
 /**
+ * @method getNetworkStatus
+ * @return {cc.Device::NetworkStatus}
+ */
+getNetworkStatus : function (
+)
+{
+    return 0;
+},
+
+/**
  * @method setAccelerometerEnabled
  * @param {bool} arg0
  */

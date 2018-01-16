@@ -33167,6 +33167,22 @@ bool js_register_cocos2dx_TextureCache(se::Object* obj)
 se::Object* __jsb_cocos2d_Device_proto = nullptr;
 se::Class* __jsb_cocos2d_Device_class = nullptr;
 
+static bool js_cocos2dx_Device_getNetworkStatus(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = (int)cocos2d::Device::getNetworkStatus();
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_Device_getNetworkStatus : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_Device_getNetworkStatus)
+
 static bool js_cocos2dx_Device_setAccelerometerEnabled(se::State& s)
 {
     const auto& args = s.args();
@@ -33274,6 +33290,7 @@ bool js_register_cocos2dx_Device(se::Object* obj)
 {
     auto cls = se::Class::create("Device", obj, nullptr, nullptr);
 
+    cls->defineStaticFunction("getNetworkStatus", _SE(js_cocos2dx_Device_getNetworkStatus));
     cls->defineStaticFunction("setAccelerometerEnabled", _SE(js_cocos2dx_Device_setAccelerometerEnabled));
     cls->defineStaticFunction("setAccelerometerInterval", _SE(js_cocos2dx_Device_setAccelerometerInterval));
     cls->defineStaticFunction("setKeepScreenOn", _SE(js_cocos2dx_Device_setKeepScreenOn));

@@ -34,7 +34,7 @@
 
 namespace {
 
-#define ShouldPrintReachabilityFlags 1
+#define ShouldPrintReachabilityFlags 0
 
     static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char* comment)
     {

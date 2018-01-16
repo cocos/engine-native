@@ -33,7 +33,7 @@ struct sockaddr;
 
 NS_CC_BEGIN
 
-class Reachability final : Ref
+class Reachability final : public Ref
 {
 public:
     enum class NetworkStatus : uint8_t
