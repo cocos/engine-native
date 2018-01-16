@@ -41,7 +41,11 @@ namespace {
 #if ShouldPrintReachabilityFlags
 
         printf("Reachability Flag Status: %c%c %c%c%c%c%c%c%c %s\n",
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
                (flags & kSCNetworkReachabilityFlagsIsWWAN)               ? 'W' : '-',
+#else
+               '-',
+#endif
                (flags & kSCNetworkReachabilityFlagsReachable)            ? 'R' : '-',
 
                (flags & kSCNetworkReachabilityFlagsTransientConnection)  ? 't' : '-',
@@ -91,6 +95,7 @@ namespace {
             }
         }
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
         if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
         {
             /*
@@ -98,6 +103,7 @@ namespace {
              */
             returnValue = cocos2d::Reachability::NetworkStatus::REACHABLE_VIA_WWAN;
         }
+#endif
 
         return returnValue;
     }
