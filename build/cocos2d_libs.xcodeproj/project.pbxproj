@@ -138,6 +138,8 @@
 		1A28FF9C1F20AFAB007A1D9D /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A28FF4B1F20AFAB007A1D9D /* SRWebSocket.h */; };
 		1A28FF9D1F20AFAB007A1D9D /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A28FF4C1F20AFAB007A1D9D /* SRWebSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		1A28FF9E1F20AFAB007A1D9D /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A28FF4C1F20AFAB007A1D9D /* SRWebSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		1A37E9C5200DD0680078AF72 /* CCReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A37E9C3200DD0680078AF72 /* CCReachability.h */; };
+		1A37E9C6200DD0680078AF72 /* CCReachability.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A37E9C4200DD0680078AF72 /* CCReachability.cpp */; };
 		1A570061180BC5A10088DEC7 /* CCAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A570047180BC5A10088DEC7 /* CCAction.cpp */; };
 		1A570062180BC5A10088DEC7 /* CCAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A570047180BC5A10088DEC7 /* CCAction.cpp */; };
 		1A570063180BC5A10088DEC7 /* CCAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A570048180BC5A10088DEC7 /* CCAction.h */; };
@@ -1595,6 +1597,8 @@
 		1A28FF4A1F20AFAB007A1D9D /* SRSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRSecurityPolicy.m; sourceTree = "<group>"; };
 		1A28FF4B1F20AFAB007A1D9D /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
 		1A28FF4C1F20AFAB007A1D9D /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
+		1A37E9C3200DD0680078AF72 /* CCReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCReachability.h; sourceTree = "<group>"; };
+		1A37E9C4200DD0680078AF72 /* CCReachability.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCReachability.cpp; sourceTree = "<group>"; };
 		1A570047180BC5A10088DEC7 /* CCAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCAction.cpp; sourceTree = "<group>"; };
 		1A570048180BC5A10088DEC7 /* CCAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAction.h; sourceTree = "<group>"; };
 		1A570049180BC5A10088DEC7 /* CCActionCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCActionCamera.cpp; sourceTree = "<group>"; };
@@ -3552,6 +3556,8 @@
 		503DD8CD1926736A00CD74DD /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				1A37E9C3200DD0680078AF72 /* CCReachability.h */,
+				1A37E9C4200DD0680078AF72 /* CCReachability.cpp */,
 				503DD8CE1926736A00CD74DD /* CCApplication-ios.h */,
 				503DD8CF1926736A00CD74DD /* CCApplication-ios.mm */,
 				503DD8D01926736A00CD74DD /* CCCommon-ios.mm */,
@@ -4614,6 +4620,7 @@
 				50ABBE9E1925AB6F00A911A9 /* CCRefPtr.h in Headers */,
 				1A5701CA180BCB5A0088DEC7 /* CCLabelTextFormatter.h in Headers */,
 				50643BDC19BFAF4400EF68ED /* CCStdC.h in Headers */,
+				1A37E9C5200DD0680078AF72 /* CCReachability.h in Headers */,
 				1A28FF761F20AFAB007A1D9D /* SRHTTPConnectMessage.h in Headers */,
 				BAFF7D6D1D5C1CF80051B92F /* BoneData.h in Headers */,
 				4DED48211DFFA4AF0070C5C4 /* b2ContactManager.h in Headers */,
@@ -5373,6 +5380,7 @@
 				1A28FF681F20AFAB007A1D9D /* SRPinningSecurityPolicy.m in Sources */,
 				BA679B3D1CEC373000F875FA /* Manifest.cpp in Sources */,
 				1A28FF9E1F20AFAB007A1D9D /* SRWebSocket.m in Sources */,
+				1A37E9C6200DD0680078AF72 /* CCReachability.cpp in Sources */,
 				50ABBE421925AB6F00A911A9 /* CCDirector.cpp in Sources */,
 				BAFF7D831D5C1CF80051B92F /* IkConstraint.c in Sources */,
 				BA679B311CEC373000F875FA /* AssetsManagerEx.cpp in Sources */,
