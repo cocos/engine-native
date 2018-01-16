@@ -33218,6 +33218,22 @@ static bool js_cocos2dx_Device_setKeepScreenOn(se::State& s)
 }
 SE_BIND_FUNC(js_cocos2dx_Device_setKeepScreenOn)
 
+static bool js_cocos2dx_Device_getBatteryLevel(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        float result = cocos2d::Device::getBatteryLevel();
+        ok &= float_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_Device_getBatteryLevel : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_Device_getBatteryLevel)
+
 static bool js_cocos2dx_Device_vibrate(se::State& s)
 {
     const auto& args = s.args();
@@ -33261,6 +33277,7 @@ bool js_register_cocos2dx_Device(se::Object* obj)
     cls->defineStaticFunction("setAccelerometerEnabled", _SE(js_cocos2dx_Device_setAccelerometerEnabled));
     cls->defineStaticFunction("setAccelerometerInterval", _SE(js_cocos2dx_Device_setAccelerometerInterval));
     cls->defineStaticFunction("setKeepScreenOn", _SE(js_cocos2dx_Device_setKeepScreenOn));
+    cls->defineStaticFunction("getBatteryLevel", _SE(js_cocos2dx_Device_getBatteryLevel));
     cls->defineStaticFunction("vibrate", _SE(js_cocos2dx_Device_vibrate));
     cls->defineStaticFunction("getDPI", _SE(js_cocos2dx_Device_getDPI));
     cls->install();

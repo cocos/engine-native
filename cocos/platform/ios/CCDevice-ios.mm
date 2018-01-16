@@ -606,6 +606,11 @@ void Device::vibrate(float duration)
     AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
 }
 
+float Device::getBatteryLevel()
+{
+    return [UIDevice currentDevice].batteryLevel;
+}
+
 NS_CC_END
 
 #endif // CC_PLATFORM_IOS

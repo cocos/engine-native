@@ -14514,6 +14514,16 @@ bool
 },
 
 /**
+ * @method getBatteryLevel
+ * @return {float}
+ */
+getBatteryLevel : function (
+)
+{
+    return 0;
+},
+
+/**
  * @method vibrate
  * @param {float} arg0
  */

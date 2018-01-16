@@ -24,22 +24,22 @@ THE SOFTWARE.
  ****************************************************************************/
 package org.cocos2dx.lib;
 
-import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.app.Activity;
-import android.content.ComponentName;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.media.AudioManager;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
-import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.os.Vibrator;
 import android.preference.PreferenceManager.OnActivityResultListener;
@@ -47,13 +47,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-import android.hardware.SensorManager;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -94,6 +93,42 @@ public class Cocos2dxHelper {
     
     // The OBB file
     private static ZipResourceFile sOBBFile = null;
+
+    /**
+     * Battery receiver to getting battery level.
+     */
+    static class BatteryReceiver extends BroadcastReceiver {
+        public float sBatteryLevel = 0.0f;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setBatteryLevelByIntent(intent);
+        }
+
+        public void setBatteryLevelByIntent(Intent intent) {
+            int current = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            int total = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
+            float level = current * 1.0f / total;
+            // clamp to 0~1
+            sBatteryLevel = Math.min(Math.max(level, 0.0f), 1.0f);
+            Log.d(TAG, "Battery level changed: " + sBatteryLevel);
+        }
+    }
+
+    private static BatteryReceiver sBatteryReceiver = new BatteryReceiver();
+
+    static void registerBatteryLevelReceiver(Context context) {
+        Intent intent = context.registerReceiver(sBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        sBatteryReceiver.setBatteryLevelByIntent(intent);
+    }
+
+    static void unregisterBatteryLevelReceiver(Context context) {
+        context.unregisterReceiver(sBatteryReceiver);
+    }
+
+    public static float getBatteryLevel() {
+        return sBatteryReceiver.sBatteryLevel;
+    }
 
     // ===========================================================
     // Constructors
@@ -489,7 +524,7 @@ public class Cocos2dxHelper {
         }
         return -1;
     }
-    
+
     // ===========================================================
     // Functions for CCUserDefault
     // ===========================================================

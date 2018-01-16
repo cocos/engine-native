@@ -2167,6 +2167,7 @@ bool register_all_cocos2dx(se::Object* obj);
 SE_DECLARE_FUNC(js_cocos2dx_Device_setAccelerometerEnabled);
 SE_DECLARE_FUNC(js_cocos2dx_Device_setAccelerometerInterval);
 SE_DECLARE_FUNC(js_cocos2dx_Device_setKeepScreenOn);
+SE_DECLARE_FUNC(js_cocos2dx_Device_getBatteryLevel);
 SE_DECLARE_FUNC(js_cocos2dx_Device_vibrate);
 SE_DECLARE_FUNC(js_cocos2dx_Device_getDPI);
 
