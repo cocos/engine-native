@@ -560,9 +560,9 @@ float Device::getBatteryLevel()
     return 1.0f;
 }
 
-Device::NetworkStatus Device::getNetworkStatus()
+Device::NetworkType Device::getNetworkStatus()
 {
-    return Device::NetworkStatus::REACHABLE_VIA_WIFI;
+    return Device::NetworkType::LAN;
 }
 
 NS_CC_END

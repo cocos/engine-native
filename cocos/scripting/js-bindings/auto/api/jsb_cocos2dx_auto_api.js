@@ -14484,10 +14484,10 @@ TextureCache : function (
 cc.Device = {
 
 /**
- * @method getNetworkStatus
- * @return {cc.Device::NetworkStatus}
+ * @method getNetworkType
+ * @return {cc.Device::NetworkType}
  */
-getNetworkStatus : function (
+getNetworkType : function (
 )
 {
     return 0;

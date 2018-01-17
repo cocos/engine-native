@@ -186,9 +186,9 @@ float Device::getBatteryLevel()
     return JniHelper::callStaticFloatMethod(helperClassName, "getBatteryLevel");
 }
 
-Device::NetworkStatus Device::getNetworkStatus()
+Device::NetworkType Device::getNetworkType()
 {
-    return (Device::NetworkStatus)JniHelper::callStaticIntMethod(helperClassName, "getNetworkStatus");
+    return (Device::NetworkType)JniHelper::callStaticIntMethod(helperClassName, "getNetworkType");
 }
 
 NS_CC_END

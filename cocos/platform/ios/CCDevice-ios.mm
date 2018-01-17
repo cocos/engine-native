@@ -612,7 +612,7 @@ float Device::getBatteryLevel()
     return [UIDevice currentDevice].batteryLevel;
 }
 
-Device::NetworkStatus Device::getNetworkStatus()
+Device::NetworkType Device::getNetworkType()
 {
     static Reachability* __reachability = nullptr;
     if (__reachability == nullptr)
@@ -621,16 +621,16 @@ Device::NetworkStatus Device::getNetworkStatus()
         __reachability->retain();
     }
 
-    NetworkStatus ret = NetworkStatus::NOT_REACHABLE;
+    NetworkType ret = NetworkType::NONE;
     Reachability::NetworkStatus status = __reachability->getCurrentReachabilityStatus();
     switch (status) {
         case Reachability::NetworkStatus::REACHABLE_VIA_WIFI:
-            ret = NetworkStatus::REACHABLE_VIA_WIFI;
+            ret = NetworkType::LAN;
             break;
         case Reachability::NetworkStatus::REACHABLE_VIA_WWAN:
-            ret = NetworkStatus::REACHABLE_VIA_WWAN;
+            ret = NetworkType::WWAN;
         default:
-            ret = NetworkStatus::NOT_REACHABLE;
+            ret = NetworkType::NONE;
             break;
     }
 

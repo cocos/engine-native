@@ -131,12 +131,12 @@ public class Cocos2dxHelper {
         return sBatteryReceiver.sBatteryLevel;
     }
 
-    public static final int NETWORK_STATUS_NOT_REACHABLE = 0;
-    public static final int NETWORK_STATUS_VIA_WIFI      = 1;
-    public static final int NETWORK_STATUS_VIA_WWAN      = 2;
+    public static final int NETWORK_TYPE_NONE = 0;
+    public static final int NETWORK_TYPE_LAN  = 1;
+    public static final int NETWORK_TYPE_WWAN = 2;
 
-    public static int getNetworkStatus() {
-        int status = NETWORK_STATUS_NOT_REACHABLE;
+    public static int getNetworkType() {
+        int status = NETWORK_TYPE_NONE;
         NetworkInfo networkInfo;
         try {
             ConnectivityManager connMgr = (ConnectivityManager) sActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -150,9 +150,9 @@ public class Cocos2dxHelper {
         }
         int nType = networkInfo.getType();
         if (nType == ConnectivityManager.TYPE_MOBILE) {
-            status = NETWORK_STATUS_VIA_WWAN;
+            status = NETWORK_TYPE_WWAN;
         } else if (nType == ConnectivityManager.TYPE_WIFI) {
-            status = NETWORK_STATUS_VIA_WIFI;
+            status = NETWORK_TYPE_LAN;
         }
         return status;
     }

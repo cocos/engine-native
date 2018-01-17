@@ -1141,10 +1141,10 @@ cc.Sprite.prototype.getTexture = function() {
     return texture;
 }
 
-cc.NetworkStatus = {
-    NOT_REACHABLE: 0,
-    REACHABLE_VIA_WIFI: 1,
-    REACHABLE_VIA_WWAN: 2
+cc.NetworkType = {
+    NONE: 0,
+    LAN: 1,
+    WWAN: 2
 };
 
 //

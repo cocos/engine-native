@@ -103,14 +103,14 @@ public:
      */
     static float getBatteryLevel();
 
-    enum class NetworkStatus
+    enum class NetworkType
     {
-        NOT_REACHABLE,
-        REACHABLE_VIA_WIFI,
-        REACHABLE_VIA_WWAN
+        NONE,
+        LAN,
+        WWAN
     };
 
-    static NetworkStatus getNetworkStatus();
+    static NetworkType getNetworkType();
 private:
     CC_DISALLOW_IMPLICIT_CONSTRUCTORS(Device);
 };
