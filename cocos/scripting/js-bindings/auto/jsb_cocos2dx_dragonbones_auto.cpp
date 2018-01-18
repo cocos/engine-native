@@ -24,6 +24,24 @@ static bool js_cocos2dx_dragonbones_BaseObject_getClassTypeIndex(se::State& s)
 }
 SE_BIND_FUNC(js_cocos2dx_dragonbones_BaseObject_getClassTypeIndex)
 
+static bool js_cocos2dx_dragonbones_BaseObject_isInPool(se::State& s)
+{
+    dragonBones::BaseObject* cobj = (dragonBones::BaseObject*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BaseObject_isInPool : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        bool result = cobj->isInPool();
+        ok &= boolean_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BaseObject_isInPool : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_BaseObject_isInPool)
+
 static bool js_cocos2dx_dragonbones_BaseObject_returnToPool(se::State& s)
 {
     dragonBones::BaseObject* cobj = (dragonBones::BaseObject*)s.nativeThisObject();
@@ -56,6 +74,22 @@ static bool js_cocos2dx_dragonbones_BaseObject_clearPool(se::State& s)
 }
 SE_BIND_FUNC(js_cocos2dx_dragonbones_BaseObject_clearPool)
 
+static bool js_cocos2dx_dragonbones_BaseObject_getAllObjects(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::vector<dragonBones::BaseObject *, std::allocator<dragonBones::BaseObject *> >& result = dragonBones::BaseObject::getAllObjects();
+        ok &= native_ptr_to_seval<std::vector<dragonBones::BaseObject , std::allocator<dragonBones::BaseObject > >&>((std::vector<dragonBones::BaseObject *, std::allocator<dragonBones::BaseObject *> >&)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BaseObject_getAllObjects : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_BaseObject_getAllObjects)
+
 static bool js_cocos2dx_dragonbones_BaseObject_setMaxCount(se::State& s)
 {
     const auto& args = s.args();
@@ -83,8 +117,10 @@ bool js_register_cocos2dx_dragonbones_BaseObject(se::Object* obj)
     auto cls = se::Class::create("BaseObject", obj, nullptr, nullptr);
 
     cls->defineFunction("getClassTypeIndex", _SE(js_cocos2dx_dragonbones_BaseObject_getClassTypeIndex));
+    cls->defineFunction("isInPool", _SE(js_cocos2dx_dragonbones_BaseObject_isInPool));
     cls->defineFunction("returnToPool", _SE(js_cocos2dx_dragonbones_BaseObject_returnToPool));
     cls->defineStaticFunction("clearPool", _SE(js_cocos2dx_dragonbones_BaseObject_clearPool));
+    cls->defineStaticFunction("getAllObjects", _SE(js_cocos2dx_dragonbones_BaseObject_getAllObjects));
     cls->defineStaticFunction("setMaxCount", _SE(js_cocos2dx_dragonbones_BaseObject_setMaxCount));
     cls->install();
     JSBClassType::registerClass<dragonBones::BaseObject>(cls);
