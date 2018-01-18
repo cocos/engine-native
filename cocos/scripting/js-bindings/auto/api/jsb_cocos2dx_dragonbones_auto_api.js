@@ -19,6 +19,16 @@ getClassTypeIndex : function (
 },
 
 /**
+ * @method isInPool
+ * @return {bool}
+ */
+isInPool : function (
+)
+{
+    return false;
+},
+
+/**
  * @method returnToPool
  */
 returnToPool : function (
@@ -34,6 +44,16 @@ clearPool : function (
 long 
 )
 {
+},
+
+/**
+ * @method getAllObjects
+ * @return {Array}
+ */
+getAllObjects : function (
+)
+{
+    return new Array();
 },
 
 /**

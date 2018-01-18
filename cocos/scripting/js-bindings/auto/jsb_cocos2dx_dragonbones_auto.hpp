@@ -9,8 +9,10 @@ extern se::Class* __jsb_dragonBones_BaseObject_class;
 bool js_register_dragonBones_BaseObject(se::Object* obj);
 bool register_all_cocos2dx_dragonbones(se::Object* obj);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BaseObject_getClassTypeIndex);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BaseObject_isInPool);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BaseObject_returnToPool);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BaseObject_clearPool);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BaseObject_getAllObjects);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BaseObject_setMaxCount);
 
 extern se::Object* __jsb_dragonBones_Matrix_proto;
