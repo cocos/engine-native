@@ -1141,11 +1141,5 @@ cc.Sprite.prototype.getTexture = function() {
     return texture;
 }
 
-cc.NetworkType = {
-    NONE: 0,
-    LAN: 1,
-    WWAN: 2
-};
-
 //
 
