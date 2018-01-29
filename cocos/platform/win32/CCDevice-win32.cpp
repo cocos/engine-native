@@ -560,7 +560,7 @@ float Device::getBatteryLevel()
     return 1.0f;
 }
 
-Device::NetworkType Device::getNetworkStatus()
+Device::NetworkType Device::getNetworkType()
 {
     return Device::NetworkType::LAN;
 }
