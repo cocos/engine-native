@@ -42,7 +42,7 @@ gulp.task('publish-source', gulpSequence('init', 'make-cocos2d-x'));
 gulp.task('publish-prebuilt', gulpSequence('init', 'make-simulator', 'make-prebuilt'));
 
 if (process.platform === 'darwin') {
-    gulp.task('publish', gulpSequence('init', 'make-cocos2d-x', 'make-simulator', 'make-prebuilt'));
+    gulp.task('publish', gulpSequence('init', 'make-cocos2d-x', 'make-simulator', 'make-prebuilt', 'push-tag'));
 }
 else {
     gulp.task('publish', gulpSequence('publish-prebuilt'));
@@ -300,4 +300,18 @@ gulp.task('upload-cocos2d-x', function(cb) {
 gulp.task('upload-simulator', function(cb) {
     var zipFileName = 'simulator_' + process.platform + '.zip';
     uploadZipFile(zipFileName, '.', cb);
+});
+
+gulp.task('push-tag', function () {
+    if (process.platform === 'darwin') {
+        if (process.env.COCOS_WORKFLOW_ROOT) {
+            execSync('npm run tag -- --path ' + process.cwd(), process.env.COCOS_WORKFLOW_ROOT);
+        }
+        else {
+            console.warn(Chalk.cyan('COCOS_WORKFLOW_ROOT is undefined in the environment, skip push-tag'));
+        }
+    }
+    else {
+        console.log('skip push-tag on Windows');
+    }
 });
