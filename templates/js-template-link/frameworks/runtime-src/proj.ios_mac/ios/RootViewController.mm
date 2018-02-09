@@ -67,8 +67,6 @@ return self;
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-
-    auto glview = cocos2d::Director::getInstance()->getOpenGLView();
 }
 
 //fix not hide status on ios7
