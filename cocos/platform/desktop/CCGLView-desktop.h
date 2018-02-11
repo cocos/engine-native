@@ -59,7 +59,6 @@ private:
     void onGLFWError(int errorID, const char* errorDesc);
     void onGLFWMouseCallBack(GLFWwindow* window, int button, int action, int modify);
     void onGLFWMouseMoveCallBack(GLFWwindow* window, double x, double y);
-    void onGLFWMouseScrollCallback(GLFWwindow* window, double x, double y);
     void onGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void onGLFWCharCallback(GLFWwindow* window, unsigned int character);
     void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified);
@@ -85,38 +84,27 @@ class CC_DLL GLFWEventHandler final
 public:
     static void onGLFWError(int errorID, const char* errorDesc)
     {
-        if (_view)
-            _view->onGLFWError(errorID, errorDesc);
+        _view->onGLFWError(errorID, errorDesc);
     }
 
     static void onGLFWMouseCallBack(GLFWwindow* window, int button, int action, int modify)
     {
-        if (_view)
-            _view->onGLFWMouseCallBack(window, button, action, modify);
+        _view->onGLFWMouseCallBack(window, button, action, modify);
     }
 
     static void onGLFWMouseMoveCallBack(GLFWwindow* window, double x, double y)
     {
-        if (_view)
-            _view->onGLFWMouseMoveCallBack(window, x, y);
-    }
-
-    static void onGLFWMouseScrollCallback(GLFWwindow* window, double x, double y)
-    {
-        if (_view)
-            _view->onGLFWMouseScrollCallback(window, x, y);
+        _view->onGLFWMouseMoveCallBack(window, x, y);
     }
 
     static void onGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        if (_view)
-            _view->onGLFWKeyCallback(window, key, scancode, action, mods);
+        _view->onGLFWKeyCallback(window, key, scancode, action, mods);
     }
 
     static void onGLFWCharCallback(GLFWwindow* window, unsigned int character)
     {
-        if (_view)
-            _view->onGLFWCharCallback(window, character);
+        _view->onGLFWCharCallback(window, character);
     }
 
     static void setGLView(GLView* view)
@@ -126,8 +114,7 @@ public:
 
     static void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified)
     {
-        if (_view)
-            _view->onGLFWWindowIconifyCallback(window, iconified);
+        _view->onGLFWWindowIconifyCallback(window, iconified);
     }
 
 private:

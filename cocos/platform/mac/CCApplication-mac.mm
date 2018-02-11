@@ -56,18 +56,18 @@ Application::Application(const std::string& name)
     
     renderer::DeviceGraphics::getInstance();
     se::ScriptEngine::getInstance();
+    
+    applicationDidFinishLaunching();
 }
 
 Application::~Application()
 {
-    delete CAST_VIEW(_view);
-    _view = nullptr;
-    
     // TODO: destroy DeviceGraphics
     
     se::ScriptEngine::destroyInstance();
     
-    applicationDidFinishLaunching();
+    delete CAST_VIEW(_view);
+    _view = nullptr;
 }
 
 void Application::start()
