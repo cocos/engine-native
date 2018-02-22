@@ -89,6 +89,9 @@ cc.eventManager._resizeListener = cc.eventManager.addCustomListener('window-resi
 cc.configuration = cc.Configuration.getInstance();
 cc.textureCache = cc.director.getTextureCache();
 cc.shaderCache = cc.ShaderCache.getInstance();
+// The first time we invoke cc.ShaderCache.getInstance, notifyAllGLProgramsCreated needs to be called.
+// It should be invoked only once.
+cc.shaderCache.notifyAllGLProgramsCreated();
 cc.plistParser = cc.PlistParser.getInstance();
 
 // File utils (Temporary, won't be accessible)
