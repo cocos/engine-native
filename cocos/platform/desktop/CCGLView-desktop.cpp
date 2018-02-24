@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <unordered_map>
 
 #include "scripting/js-bindings/event/EventDispatcher.h"
+#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "ccMacros.h"
 
 NS_CC_BEGIN
@@ -200,6 +201,17 @@ void GLView::pollEvents()
 void GLView::swapBuffers()
 {
     glfwSwapBuffers(_mainWindow);
+}
+
+float GLView::getScaleFactor() const
+{
+    int widthInPixel = 0;
+    glfwGetFramebufferSize(_mainWindow, &widthInPixel, nullptr);
+    
+    int width = 0;
+    glfwGetWindowSize(_mainWindow, &width, nullptr);
+    
+    return float(widthInPixel) / width;
 }
 
 void GLView::onGLFWError(int errorID, const char* errorDesc)
