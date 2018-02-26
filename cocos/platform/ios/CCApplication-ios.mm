@@ -277,9 +277,7 @@ void Application::setMultitouch(bool value)
     {
         _multiTouch = value;
         if (_view)
-        {
             [(CCEAGLView*)_view setMultipleTouchEnabled:_multiTouch];
-        }
     }
 }
 
