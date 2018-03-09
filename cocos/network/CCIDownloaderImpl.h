@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include <unordered_map>
 #include <memory>
 #include <vector>
+#include <functional>
 
 #include "base/ccMacros.h"
 

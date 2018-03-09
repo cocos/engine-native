@@ -44,8 +44,11 @@ extern "C" size_t __ctype_get_mb_cur_max(void)
 
 NS_CC_BEGIN
 
+Application* Application::_instance = nullptr;
+
 Application::Application(const std::string& name)
 {
+    Application::_instance = this;
     _scheduler = new Scheduler();
 }
 
@@ -53,6 +56,8 @@ Application::~Application()
 {
     delete _scheduler;
     _scheduler = nullptr;
+
+    Application::_instance = nullptr;
 }
 
 void Application::start()

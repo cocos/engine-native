@@ -60,7 +60,7 @@ Application* Application::_instance = nullptr;
 
 Application::Application(const std::string& name)
 {
-    _instance = this;
+    Application::_instance = this;
     
     _scheduler = new Scheduler();
     
@@ -82,7 +82,7 @@ Application::~Application()
     delete _scheduler;
     _scheduler = nullptr;
     
-    _instance = nullptr;
+    Application::_instance = nullptr;
 }
 
 void Application::start()

@@ -47,6 +47,8 @@ void EventDispatcher::dispatchTickEvent(float dt)
         se->runScript("src/renderer-test/src/basic.js", &tickVal);
         firstTime = false;
     }
+
+    printf("interval is %f\n", dt);
     
     se::ValueArray args;
     args.push_back(se::Value(dt));

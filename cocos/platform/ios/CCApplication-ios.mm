@@ -164,8 +164,11 @@ namespace
 
 NS_CC_BEGIN
 
+Application* Application::_instance = nullptr;
+
 Application::Application(const std::string& name)
 {
+    Application::_instance = this;
     _scheduler = new Scheduler();
 
     createView(name);
@@ -193,6 +196,8 @@ Application::~Application()
     [(MainLoop*)_delegate stopMainLoop];
     [(MainLoop*)_delegate release];
     _delegate = nullptr;
+
+    Application::_instance = nullptr;
 }
 
 void Application::start()
