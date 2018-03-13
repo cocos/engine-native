@@ -126,7 +126,7 @@ cocos2d::Size CanvasRenderingContext2D::measureText(const std::string& text)
     SE_LOGD("CanvasRenderingContext2D::measureText: %s\n", text.c_str());
     // CGSize size = [_impl measureText: [NSString stringWithUTF8String:text.c_str()]];
     // return cocos2d::Size(size.width, size.height);
-    return cocos2d::Size(0, 0);
+    return cocos2d::Size(100, 30);
 }
 
 CanvasGradient* CanvasRenderingContext2D::createLinearGradient(float x0, float y0, float x1, float y1)
