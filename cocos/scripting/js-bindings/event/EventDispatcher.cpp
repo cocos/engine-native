@@ -70,6 +70,7 @@ namespace cocos2d
 
 void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
 {
+    se::AutoHandleScope scope;
     assert(_inited);
     if (_jsbNameSpaceObj == nullptr)
     {
