@@ -71,6 +71,8 @@ static bool JSB_loadFont(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc >= 1) {
+        s.rval().setNull();
+
         std::string originalFamilyName;
         ok &= seval_to_std_string(args[0], &originalFamilyName);
         SE_PRECONDITION2(ok, false, "JSB_loadFont : Error processing argument: originalFamilyName");
@@ -91,15 +93,14 @@ static bool JSB_loadFont(se::State& s)
         if (fontFilePath.empty())
         {
             SE_LOGE("Font (%s) doesn't exist!", fontFilePath.c_str());
-            s.rval().setNull();
             return true;
         }
 
         NSURL* url = [NSURL fileURLWithPath: [NSString stringWithUTF8String:fontFilePath.c_str()]];
         NSData* dynamicFontData = [NSData dataWithContentsOfURL:url];
-        if (!dynamicFontData) {
+        if (!dynamicFontData)
+        {
             SE_LOGE("load font (%s) failed!", source.c_str());
-            s.rval().setNull();
             return true;
         }
 
@@ -127,14 +128,6 @@ static bool JSB_loadFont(se::State& s)
                 _fontFamilyNameMap.emplace(originalFamilyName, familyName);
                 s.rval().setString(familyName);
             }
-            else
-            {
-                s.rval().setNull();
-            }
-        }
-        else
-        {
-            s.rval().setNull();
         }
 
         CFRelease(font);
