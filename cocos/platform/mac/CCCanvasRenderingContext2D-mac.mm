@@ -234,12 +234,12 @@ namespace {
     NSUInteger textureSize = _image.size.width * _image.size.height * 4;
 
     // For text debugging ...
-    for (int i = 0; i < textureSize; i += 4) {
-        if (data[i+3] == 0)
-        {
-            data[i+3] = 255;
-        }
-    }
+//    for (int i = 0; i < textureSize; i += 4) {
+//        if (data[i+3] == 0)
+//        {
+//            data[i+3] = 255;
+//        }
+//    }
     //
 
     uint8_t* buffer = (uint8_t*)malloc(sizeof(uint8_t) * textureSize);
