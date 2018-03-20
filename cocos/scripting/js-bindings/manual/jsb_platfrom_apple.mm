@@ -20,7 +20,6 @@ const std::unordered_map<std::string, std::string>& getFontFamilyNameMap()
 
 static std::vector<std::string> getAvailableFontFamilyNames()
 {
-    printf("===================\n");
     std::vector<std::string> ret;
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
@@ -35,7 +34,6 @@ static std::vector<std::string> getAvailableFontFamilyNames()
         CFStringRef fontName = (CFStringRef)CFArrayGetValueAtIndex(allFamilyNames, i);
         if (CFStringGetCString(fontName, buf, sizeof(buf), kCFStringEncodingUTF8) != 0)
         {
-            printf("%s\n", buf);
             ret.push_back(buf);
         }
     }
