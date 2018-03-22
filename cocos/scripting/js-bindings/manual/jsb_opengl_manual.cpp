@@ -34,6 +34,8 @@
 
 namespace {
 
+    GLint __defaultFbo = 0;
+
     template<typename T>
     class GLData
     {
@@ -116,6 +118,19 @@ static bool JSB_jsval_typedarray_to_data(const se::Value& v, GLData<T>& data)
             uint8_t* ptr = nullptr;
 
             if (obj->getTypedArrayData(&ptr, &bytes) && bytes > 0)
+            {
+                data.setData((T*)ptr, bytes / sizeof(T), false);
+                return true;
+            }
+
+            SE_LOGE("Failed to get typed array data");
+        }
+        else if (obj->isArrayBuffer())
+        {
+            size_t bytes = 0;
+            uint8_t* ptr = nullptr;
+
+            if (obj->getArrayBufferData(&ptr, &bytes) && bytes > 0)
             {
                 data.setData((T*)ptr, bytes / sizeof(T), false);
                 return true;
@@ -260,8 +275,16 @@ static bool JSB_glBindFramebuffer(se::State& s) {
     uint32_t arg0; uint32_t arg1;
 
     ok &= seval_to_uint32(args[0], &arg0 );
-    ok &= seval_to_uint32(args[1], &arg1 );
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    if (args[1].isNullOrUndefined())
+    {
+        arg1 = __defaultFbo;
+    }
+    else
+    {
+        ok &= seval_to_uint32(args[1], &arg1 );
+        SE_PRECONDITION2(ok, false, "Error processing arguments");
+    }
 
     JSB_GL_CHECK(glBindFramebuffer((GLenum)arg0 , (GLuint)arg1  ));
     s.rval().setUndefined();
@@ -1355,7 +1378,7 @@ static bool JSB_glPixelStorei(se::State& s) {
 
     if (arg0 == GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL)
     {
-        //        SE_LOGE("cjh FIXME: support GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL\n");
+        SE_LOGE("cjh FIXME: support GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL\n");
         return true;
     }
 
@@ -2434,8 +2457,15 @@ static bool JSB_glDeleteFramebuffers(se::State& s) {
     bool ok = true;
     uint32_t arg0;
 
-    ok &= seval_to_uint32(args[0], &arg0 );
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
+    if (args[0].isNullOrUndefined())
+    {
+        arg0 = __defaultFbo;
+    }
+    else
+    {
+        ok &= seval_to_uint32(args[0], &arg0 );
+        SE_PRECONDITION2(ok, false, "Error processing arguments");
+    }
 
     JSB_GL_CHECK(glDeleteFramebuffers(1, &arg0));
 
@@ -2639,6 +2669,7 @@ static bool JSB_glGetActiveUniform(se::State& s) {
 
     GLsizei length;
     JSB_GL_CHECK(glGetProgramiv(arg0, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &length));
+    ++length;
     GLchar* buffer = new (std::nothrow) GLchar[length];
     GLint size = -1;
     GLenum type = -1;
@@ -3011,6 +3042,7 @@ static bool JSB_glGetParameter(se::State& s)
             break;
 
         case GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL:
+            SE_LOGD("GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL: ...\n");
             //        ret = JSValueMakeBoolean(ctx, premultiplyAlpha);
             break;
 
@@ -3038,7 +3070,6 @@ static bool JSB_glGetParameter(se::State& s)
 
             // single int/long/bool - everything else
         default:
-            printf("pname:0x%x\n", pname);
             JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
             ret.setInt32(intbuffer[0]);
             break;
@@ -3108,6 +3139,8 @@ SE_BIND_FUNC(JSB_glGetShaderPrecisionFormat)
 
 bool JSB_register_opengl(se::Object* obj)
 {
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &__defaultFbo);
+
     // New WebGL functions, not present on OpenGL ES 2.0
     __glObj->defineFunction("getSupportedExtensions", _SE(JSB_glGetSupportedExtensions));
     __glObj->defineFunction("activeTexture", _SE(JSB_glActiveTexture));
