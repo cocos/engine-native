@@ -154,20 +154,28 @@ static bool JSB_get_arraybufferview_dataptr(const se::Value& v, GLsizei *count, 
         se::Object* obj = v.toObject();
         if (obj->isTypedArray())
         {
-            if (obj->getTypedArrayData(&ptr, &length) && ptr != nullptr && length > 0)
+            if (obj->getTypedArrayData(&ptr, &length))
             {
                 *data = ptr;
                 *count = (GLsizei)length;
                 return true;
             }
+            else
+            {
+                assert(false);
+            }
         }
         else if (obj->isArrayBuffer())
         {
-            if (obj->getArrayBufferData(&ptr, &length) && ptr != nullptr && length > 0)
+            if (obj->getArrayBufferData(&ptr, &length))
             {
                 *data = ptr;
                 *count = (GLsizei)length;
                 return true;
+            }
+            else
+            {
+                assert(false);
             }
         }
         else
@@ -471,6 +479,7 @@ static bool JSB_glBufferSubData(se::State& s) {
 
     ok &= seval_to_uint32(args[0], &arg0 );
     ok &= seval_to_int32(args[1], &arg1 );
+
     if (args[2].isNumber())
     {
         count = args[2].toUint32();
@@ -3189,7 +3198,7 @@ bool JSB_register_opengl(se::Object* obj)
     __glObj->defineFunction("finish", _SE(JSB_glFinish));
     __glObj->defineFunction("flush", _SE(JSB_glFlush));
     __glObj->defineFunction("framebufferRenderbuffer", _SE(JSB_glFramebufferRenderbuffer));
-    __glObj->defineFunction("framebufferTexture2D", _SE(JSB_glFramebufferTexture2D));
+    __glObj->defineFunction("_framebufferTexture2D", _SE(JSB_glFramebufferTexture2D));
     __glObj->defineFunction("frontFace", _SE(JSB_glFrontFace));
     __glObj->defineFunction("_createBuffer", _SE(JSB_glGenBuffers));
     __glObj->defineFunction("_createFramebuffer", _SE(JSB_glGenFramebuffers));
