@@ -2668,8 +2668,7 @@ static bool JSB_glGetActiveUniform(se::State& s) {
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     GLsizei length;
-    JSB_GL_CHECK(glGetProgramiv(arg0, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &length));
-    ++length;
+    JSB_GL_CHECK(glGetProgramiv(arg0, GL_ACTIVE_UNIFORM_MAX_LENGTH, &length));
     GLchar* buffer = new (std::nothrow) GLchar[length];
     GLint size = -1;
     GLenum type = -1;
