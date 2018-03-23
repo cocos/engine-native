@@ -566,15 +566,9 @@ bool jsb_register_renderer_manual(se::Object* global)
     
     // Technique
     __jsb_cocos2d_renderer_Technique_proto->defineProperty("_passes", _SE(js_renderer_Technique_prop_getPasses), nullptr);
-    __jsb_cocos2d_renderer_Technique_proto->defineProperty("passes", _SE(js_renderer_Technique_prop_getPasses), nullptr);
-    __jsb_cocos2d_renderer_Technique_proto->defineFunction("setPass", _SE(js_renderer_Tehchnique_setPass));
     
-    // Pass
-    __jsb_cocos2d_renderer_Pass_proto->defineProperty("_stencilTest", _SE(js_renderer_Pass_prop_getStencilTest), _SE(js_renderer_Pass_prop_setStencilTest));
-
     // BaseRenderer
     __jsb_cocos2d_renderer_BaseRenderer_proto->defineProperty("_programLib", _SE(js_renderer_BaseRenderer_prop_getProgramLib), nullptr);
-
     
     // Config
     
