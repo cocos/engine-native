@@ -345,12 +345,12 @@ static bool JSB_glBlendColor(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 4, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3;
+    float arg0; float arg1; float arg2; float arg3;
 
-    ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
+    ok &= seval_to_float(args[0], &arg0 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
+    ok &= seval_to_float(args[3], &arg3 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glBlendColor((GLclampf)arg0 , (GLclampf)arg1 , (GLclampf)arg2 , (GLclampf)arg3  ));
@@ -541,12 +541,12 @@ static bool JSB_glClearColor(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 4, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3;
+    float arg0; float arg1; float arg2; float arg3;
 
-    ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
+    ok &= seval_to_float(args[0], &arg0 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
+    ok &= seval_to_float(args[3], &arg3 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glClearColor((GLclampf)arg0 , (GLclampf)arg1 , (GLclampf)arg2 , (GLclampf)arg3  ));
@@ -562,9 +562,9 @@ static bool JSB_glClearDepthf(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 1, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0;
+    float arg0;
 
-    ok &= seval_to_int32(args[0], &arg0 );
+    ok &= seval_to_float(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glClearDepthf((GLclampf)arg0  ));
@@ -863,10 +863,10 @@ static bool JSB_glDepthRangef(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 2, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1;
+    float arg0; float arg1;
 
-    ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
+    ok &= seval_to_float(args[0], &arg0 );
+    ok &= seval_to_float(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glDepthRangef((GLclampf)arg0 , (GLclampf)arg1  ));
@@ -1337,9 +1337,9 @@ static bool JSB_glLineWidth(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 1, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0;
+    float arg0;
 
-    ok &= seval_to_int32(args[0], &arg0 );
+    ok &= seval_to_float(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glLineWidth((GLfloat)arg0  ));
@@ -1404,10 +1404,10 @@ static bool JSB_glPolygonOffset(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 2, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1;
+    float arg0; float arg1;
 
-    ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
+    ok &= seval_to_float(args[0], &arg0 );
+    ok &= seval_to_float(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glPolygonOffset((GLfloat)arg0 , (GLfloat)arg1  ));
@@ -1481,9 +1481,9 @@ static bool JSB_glSampleCoverage(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 2, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; uint16_t arg1;
+    float arg0; uint16_t arg1;
 
-    ok &= seval_to_int32(args[0], &arg0 );
+    ok &= seval_to_float(args[0], &arg0 );
     ok &= seval_to_uint16(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
@@ -1667,11 +1667,11 @@ static bool JSB_glTexParameterf(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 3, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; uint32_t arg1; int32_t arg2;
+    uint32_t arg0; uint32_t arg1; float arg2;
 
     ok &= seval_to_uint32(args[0], &arg0 );
     ok &= seval_to_uint32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
+    ok &= seval_to_float(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glTexParameterf((GLenum)arg0 , (GLenum)arg1 , (GLfloat)arg2  ));
@@ -1734,13 +1734,13 @@ static bool JSB_glUniform1f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 2, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1;
+    int32_t arg0; float arg1;
 
     ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
+    ok &= seval_to_float(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glUniform1f((GLint)arg0 , (GLfloat)arg1  ));
+    JSB_GL_CHECK(glUniform1f(arg0, arg1));
     s.rval().setUndefined();
     return true;
 }
@@ -1812,14 +1812,14 @@ static bool JSB_glUniform2f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 3, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1; int32_t arg2;
+    int32_t arg0; float arg1; float arg2;
 
     ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glUniform2f((GLint)arg0 , (GLfloat)arg1 , (GLfloat)arg2  ));
+    JSB_GL_CHECK(glUniform2f(arg0 , arg1 , arg2));
     s.rval().setUndefined();
     return true;
 }
@@ -1892,15 +1892,15 @@ static bool JSB_glUniform3f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 4, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3;
+    GLint arg0; float arg1; float arg2; float arg3;
 
     ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
+    ok &= seval_to_float(args[3], &arg3 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glUniform3f((GLint)arg0 , (GLfloat)arg1 , (GLfloat)arg2 , (GLfloat)arg3  ));
+    JSB_GL_CHECK(glUniform3f(arg0 , arg1 , arg2 , arg3));
     s.rval().setUndefined();
     return true;
 }
@@ -1974,16 +1974,16 @@ static bool JSB_glUniform4f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 5, false, "Invalid number of arguments" );
     bool ok = true;
-    int32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3; int32_t arg4;
+    int32_t arg0; float arg1; float arg2; float arg3; float arg4;
 
     ok &= seval_to_int32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
-    ok &= seval_to_int32(args[4], &arg4 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
+    ok &= seval_to_float(args[3], &arg3 );
+    ok &= seval_to_float(args[4], &arg4 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glUniform4f((GLint)arg0 , (GLfloat)arg1 , (GLfloat)arg2 , (GLfloat)arg3 , (GLfloat)arg4  ));
+    JSB_GL_CHECK(glUniform4f((GLint)arg0 , (GLfloat)arg1 , (GLfloat)arg2 , (GLfloat)arg3 , (GLfloat)arg4));
     s.rval().setUndefined();
     return true;
 }
@@ -2157,10 +2157,10 @@ static bool JSB_glVertexAttrib1f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 2, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; int32_t arg1;
+    uint32_t arg0; float arg1;
 
     ok &= seval_to_uint32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
+    ok &= seval_to_float(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glVertexAttrib1f((GLuint)arg0 , (GLfloat)arg1  ));
@@ -2196,11 +2196,11 @@ static bool JSB_glVertexAttrib2f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 3, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; int32_t arg1; int32_t arg2;
+    uint32_t arg0; float arg1; float arg2;
 
     ok &= seval_to_uint32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glVertexAttrib2f((GLuint)arg0 , (GLfloat)arg1 , (GLfloat)arg2  ));
@@ -2236,12 +2236,12 @@ static bool JSB_glVertexAttrib3f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 4, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3;
+    uint32_t arg0; float arg1; float arg2; float arg3;
 
     ok &= seval_to_uint32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
+    ok &= seval_to_float(args[3], &arg3 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glVertexAttrib3f((GLuint)arg0 , (GLfloat)arg1 , (GLfloat)arg2 , (GLfloat)arg3  ));
@@ -2277,13 +2277,13 @@ static bool JSB_glVertexAttrib4f(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 5, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3; int32_t arg4;
+    uint32_t arg0; float arg1; float arg2; float arg3; float arg4;
 
     ok &= seval_to_uint32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
-    ok &= seval_to_int32(args[4], &arg4 );
+    ok &= seval_to_float(args[1], &arg1 );
+    ok &= seval_to_float(args[2], &arg2 );
+    ok &= seval_to_float(args[3], &arg3 );
+    ok &= seval_to_float(args[4], &arg4 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     JSB_GL_CHECK(glVertexAttrib4f((GLuint)arg0 , (GLfloat)arg1 , (GLfloat)arg2 , (GLfloat)arg3 , (GLfloat)arg4  ));
@@ -2495,7 +2495,7 @@ static bool JSB_glShaderSource(se::State& s) {
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-    shaderSource = std::regex_replace(shaderSource, std::regex("precision\\s+(lowp|mediump|highp)\\s+float\\s*?;"), "");
+    shaderSource = std::regex_replace(shaderSource, std::regex("precision\\s+(lowp|mediump|highp).*?;"), "");
     shaderSource = std::regex_replace(shaderSource, std::regex("\\s(lowp|mediump|highp)\\s"), " ");
 #endif
 
@@ -2911,10 +2911,6 @@ static bool JSB_glGetUniformfv(se::State& s) {
 }
 SE_BIND_FUNC(JSB_glGetUniformfv)
 
-#ifndef GL_MAX_FRAGMENT_UNIFORM_VECTORS
-#define GL_MAX_FRAGMENT_UNIFORM_VECTORS 0x8dfd
-#endif
-
 static bool JSB_glGetParameter(se::State& s)
 {
     const auto& args = s.args();
@@ -2944,6 +2940,28 @@ static bool JSB_glGetParameter(se::State& s)
             s.rval().setInt32(intbuffer[0] / 4);
 #else
             GL_CHECK(glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, intbuffer));
+            s.rval().setInt32(intbuffer[0]);
+#endif
+        }
+            break;
+        case GL_MAX_VERTEX_UNIFORM_VECTORS:
+        {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+            GL_CHECK(glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, intbuffer));
+            s.rval().setInt32(intbuffer[0] / 4);
+#else
+            GL_CHECK(glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, intbuffer));
+            s.rval().setInt32(intbuffer[0]);
+#endif
+        }
+            break;
+        case GL_MAX_VARYING_VECTORS:
+        {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+//            GL_CHECK(glGetIntegerv(GL_MAX_VARYING_COMPONENTS, intbuffer));
+            s.rval().setInt32(8);//FIXME:cjh: intbuffer[0] / 4);
+#else
+            GL_CHECK(glGetIntegerv(GL_MAX_VARYING_VECTORS, intbuffer));
             s.rval().setInt32(intbuffer[0]);
 #endif
         }
