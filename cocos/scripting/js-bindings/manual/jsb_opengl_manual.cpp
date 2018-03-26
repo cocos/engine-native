@@ -3100,10 +3100,11 @@ static bool JSB_glGetParameter(se::State& s)
         }
             break;
 
-            // WebGLBuffer
+            //FIXME:cjh: WebGLBuffer
         case GL_ARRAY_BUFFER_BINDING:
         case GL_ELEMENT_ARRAY_BUFFER_BINDING:
-            //        JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+//            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+//            ret.setInt32(intbuffer[0]);
             //        ret = [buffers[@(intbuffer[0])] pointerValue];
             break;
 
@@ -3132,19 +3133,12 @@ static bool JSB_glGetParameter(se::State& s)
             //        ret = [textures[@(intbuffer[0])] pointerValue];
             break;
 
-            // Ejecta/WebGL specific
-        case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
-            // device may support more, but we only map 8 here
-            //        ret = JSValueMakeNumber(ctx, EJ_CANVAS_MAX_TEXTURE_UNITS);
-            break;
-
         case GL_UNPACK_FLIP_Y_WEBGL:
-            //        ret = JSValueMakeBoolean(ctx, unpackFlipY);
+            ret.setBoolean(__unpackFlipY);
             break;
 
         case GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL:
-            SE_LOGD("GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL: ...\n");
-            //        ret = JSValueMakeBoolean(ctx, premultiplyAlpha);
+            ret.setBoolean(__premultiplyAlpha);
             break;
 
         case GL_UNPACK_COLORSPACE_CONVERSION_WEBGL:
@@ -3168,7 +3162,10 @@ static bool JSB_glGetParameter(se::State& s)
             JSB_GL_CHECK(glGetFloatv(pname, &floatvalue));
             ret.setFloat(floatvalue);
             break;
-
+        case GL_MAX_TEXTURE_IMAGE_UNITS:
+            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+            ret.setInt32(intbuffer[0]);
+            break;
             // single int/long/bool - everything else
         default:
             SE_LOGD("glGetIntegerv: pname: 0x%x\n", pname);
@@ -3291,7 +3288,7 @@ bool JSB_register_opengl(se::Object* obj)
     __glObj->defineFunction("enableVertexAttribArray", _SE(JSB_glEnableVertexAttribArray));
     __glObj->defineFunction("finish", _SE(JSB_glFinish));
     __glObj->defineFunction("flush", _SE(JSB_glFlush));
-    __glObj->defineFunction("framebufferRenderbuffer", _SE(JSB_glFramebufferRenderbuffer));
+    __glObj->defineFunction("_framebufferRenderbuffer", _SE(JSB_glFramebufferRenderbuffer));
     __glObj->defineFunction("_framebufferTexture2D", _SE(JSB_glFramebufferTexture2D));
     __glObj->defineFunction("frontFace", _SE(JSB_glFrontFace));
     __glObj->defineFunction("_createBuffer", _SE(JSB_glGenBuffers));
