@@ -34,7 +34,46 @@
 
 namespace {
 
+    bool __unpackFlipY = false;
+    bool __premultiplyAlpha = false;
+
     GLint __defaultFbo = 0;
+
+    //FIXME:cjh: ONLY SUPPORT RGBA format now.
+    void flipPixelsY(GLubyte *pixels, int bytesPerRow, int rows)
+    {
+        if( !pixels ) { return; }
+
+        GLuint middle = rows/2;
+        GLuint intsPerRow = bytesPerRow / sizeof(GLuint);
+        GLuint remainingBytes = bytesPerRow - intsPerRow * sizeof(GLuint);
+
+        for( GLuint rowTop = 0, rowBottom = rows-1; rowTop < middle; rowTop++, rowBottom-- ) {
+
+            // Swap bytes in packs of sizeof(GLuint) bytes
+            GLuint *iTop = (GLuint *)(pixels + rowTop * bytesPerRow);
+            GLuint *iBottom = (GLuint *)(pixels + rowBottom * bytesPerRow);
+
+            GLuint itmp;
+            GLint n = intsPerRow;
+            do {
+                itmp = *iTop;
+                *iTop++ = *iBottom;
+                *iBottom++ = itmp;
+            } while(--n > 0);
+
+            // Swap the remaining bytes
+            GLubyte *bTop = (GLubyte *)iTop;
+            GLubyte *bBottom = (GLubyte *)iBottom;
+
+            GLubyte btmp;
+            switch( remainingBytes ) {
+                case 3: btmp = *bTop; *bTop++ = *bBottom; *bBottom++ = btmp;
+                case 2: btmp = *bTop; *bTop++ = *bBottom; *bBottom++ = btmp;
+                case 1: btmp = *bTop; *bTop = *bBottom; *bBottom = btmp;
+            }
+        }
+    }
 
     template<typename T>
     class GLData
@@ -1381,13 +1420,14 @@ static bool JSB_glPixelStorei(se::State& s) {
 
     if (arg0 == GL_UNPACK_FLIP_Y_WEBGL)
     {
-        SE_LOGE("cjh FIXME: support GL_UNPACK_FLIP_Y_WEBGL\n");
+        __unpackFlipY = arg1 == 0 ? false : true;
+        SE_LOGE("cjh FIXME: support GL_UNPACK_FLIP_Y_WEBGL: %d\n", arg1);
         return true;
     }
 
     if (arg0 == GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL)
     {
-        SE_LOGE("cjh FIXME: support GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL\n");
+        SE_LOGE("cjh FIXME: support GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL: %d\n", arg1);
         return true;
     }
 
@@ -1640,21 +1680,39 @@ static bool JSB_glTexImage2D(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 9, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3; int32_t arg4; int32_t arg5; uint32_t arg6; uint32_t arg7; void* arg8;
 
-    ok &= seval_to_uint32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
-    ok &= seval_to_int32(args[4], &arg4 );
-    ok &= seval_to_int32(args[5], &arg5 );
-    ok &= seval_to_uint32(args[6], &arg6 );
-    ok &= seval_to_uint32(args[7], &arg7 );
+    uint32_t target; int32_t level; int32_t internalformat; int32_t width; int32_t height; int32_t border; uint32_t format; uint32_t type; void* pixels;
+
+    ok &= seval_to_uint32(args[0], &target );
+    ok &= seval_to_int32(args[1], &level );
+    ok &= seval_to_int32(args[2], &internalformat );
+    ok &= seval_to_int32(args[3], &width );
+    ok &= seval_to_int32(args[4], &height );
+    ok &= seval_to_int32(args[5], &border );
+    ok &= seval_to_uint32(args[6], &format );
+    ok &= seval_to_uint32(args[7], &type );
     GLsizei count;
-    ok &= JSB_get_arraybufferview_dataptr(args[8], &count, &arg8);
+    ok &= JSB_get_arraybufferview_dataptr(args[8], &count, &pixels);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glTexImage2D((GLenum)arg0 , (GLint)arg1 , (GLint)arg2 , (GLsizei)arg3 , (GLsizei)arg4 , (GLint)arg5 , (GLenum)arg6 , (GLenum)arg7 , (GLvoid*)arg8  ));
+    if (__unpackFlipY)
+    {
+        if (format == GL_RGBA)
+        {
+            flipPixelsY((GLubyte*)pixels, width * 4, height);
+        }
+        else if (format == GL_RGB)
+        {
+            flipPixelsY((GLubyte*)pixels, width * 3, height);
+        }
+        else
+        {
+            SE_LOGE("JSB_glTexImage2D: format: %d doesn't support upackFlipY!\n", format);
+            return false;
+        }
+    }
+
+    JSB_GL_CHECK(glTexImage2D((GLenum)target , (GLint)level , (GLint)internalformat , (GLsizei)width , (GLsizei)height , (GLint)border , (GLenum)format , (GLenum)type , (GLvoid*)pixels));
     s.rval().setUndefined();
     return true;
 }
@@ -1707,21 +1765,38 @@ static bool JSB_glTexSubImage2D(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 9, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; int32_t arg1; int32_t arg2; int32_t arg3; int32_t arg4; int32_t arg5; uint32_t arg6; uint32_t arg7; void* arg8;
+    uint32_t target; int32_t level; int32_t xoffset; int32_t yoffset; int32_t width; int32_t height; uint32_t format; uint32_t type; void* pixels;
 
-    ok &= seval_to_uint32(args[0], &arg0 );
-    ok &= seval_to_int32(args[1], &arg1 );
-    ok &= seval_to_int32(args[2], &arg2 );
-    ok &= seval_to_int32(args[3], &arg3 );
-    ok &= seval_to_int32(args[4], &arg4 );
-    ok &= seval_to_int32(args[5], &arg5 );
-    ok &= seval_to_uint32(args[6], &arg6 );
-    ok &= seval_to_uint32(args[7], &arg7 );
+    ok &= seval_to_uint32(args[0], &target );
+    ok &= seval_to_int32(args[1], &level );
+    ok &= seval_to_int32(args[2], &xoffset );
+    ok &= seval_to_int32(args[3], &yoffset );
+    ok &= seval_to_int32(args[4], &width );
+    ok &= seval_to_int32(args[5], &height );
+    ok &= seval_to_uint32(args[6], &format );
+    ok &= seval_to_uint32(args[7], &type );
     GLsizei count;
-    ok &= JSB_get_arraybufferview_dataptr(args[8], &count, &arg8);
+    ok &= JSB_get_arraybufferview_dataptr(args[8], &count, &pixels);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glTexSubImage2D((GLenum)arg0 , (GLint)arg1 , (GLint)arg2 , (GLint)arg3 , (GLsizei)arg4 , (GLsizei)arg5 , (GLenum)arg6 , (GLenum)arg7 , (GLvoid*)arg8  ));
+    if (__unpackFlipY)
+    {
+        if (format == GL_RGBA)
+        {
+            flipPixelsY((GLubyte*)pixels, width * 4, height);
+        }
+        else if (format == GL_RGB)
+        {
+            flipPixelsY((GLubyte*)pixels, width * 3, height);
+        }
+        else
+        {
+            SE_LOGE("JSB_glTexImage2D: format: %d doesn't support upackFlipY!\n", format);
+            return false;
+        }
+    }
+
+    JSB_GL_CHECK(glTexSubImage2D((GLenum)target , (GLint)level , (GLint)xoffset , (GLint)yoffset , (GLsizei)width , (GLsizei)height , (GLenum)format , (GLenum)type , (GLvoid*)pixels));
     s.rval().setUndefined();
     return true;
 }
@@ -3096,6 +3171,7 @@ static bool JSB_glGetParameter(se::State& s)
 
             // single int/long/bool - everything else
         default:
+            SE_LOGD("glGetIntegerv: pname: 0x%x\n", pname);
             JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
             ret.setInt32(intbuffer[0]);
             break;
