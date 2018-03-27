@@ -1508,14 +1508,16 @@ static bool JSB_glPixelStorei(se::State& s) {
     if (arg0 == GL_UNPACK_FLIP_Y_WEBGL)
     {
         __unpackFlipY = arg1 == 0 ? false : true;
-        SE_LOGE("cjh FIXME: support GL_UNPACK_FLIP_Y_WEBGL: %d\n", arg1);
         return true;
     }
-
-    if (arg0 == GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL)
+    else if (arg0 == GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL)
     {
         __premultiplyAlpha = arg1 == 0 ? false : true;
-        SE_LOGE("cjh FIXME: support GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL: %d\n", arg1);
+        return true;
+    }
+    else if (arg0 == GL_UNPACK_COLORSPACE_CONVERSION_WEBGL)
+    {
+        SE_LOGE("Warning: UNPACK_COLORSPACE_CONVERSION_WEBGL is unsupported\n");
         return true;
     }
 
@@ -3243,7 +3245,7 @@ static bool JSB_glGetParameter(se::State& s)
             break;
 
         case GL_UNPACK_COLORSPACE_CONVERSION_WEBGL:
-            //        ret = JSValueMakeBoolean(ctx, false);
+            ret.setBoolean(false);
             break;
 
             // string
