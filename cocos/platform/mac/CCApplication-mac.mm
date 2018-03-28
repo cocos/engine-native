@@ -67,8 +67,9 @@ Application::Application(const std::string& name)
     _scheduler = new Scheduler();
     
     createView(name);
-    
-    renderer::DeviceGraphics::getInstance()->setScaleFactor(CAST_VIEW(_view)->getScaleFactor());
+
+    //TODO: Runtime doesn't need renderer stuff temporarily.
+//    renderer::DeviceGraphics::getInstance()->setScaleFactor(CAST_VIEW(_view)->getScaleFactor());
     EventDispatcher::init();
     se::ScriptEngine::getInstance();
 }
@@ -206,8 +207,8 @@ void Application::onCreateView(int&x, int& y, int& width, int& height, PixelForm
 {
     x = 0;
     y = 0;
-    width = 960;
-    height = 640;
+    width = 800;
+    height = 600;
     
     pixelformat = PixelFormat::RGBA8;
     depthFormat = DepthFormat::DEPTH24_STENCIL8;
