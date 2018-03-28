@@ -207,8 +207,8 @@ void Application::onCreateView(int&x, int& y, int& width, int& height, PixelForm
 {
     x = 0;
     y = 0;
-    width = 800;
-    height = 600;
+    width = 960;
+    height = 640;
     
     pixelformat = PixelFormat::RGBA8;
     depthFormat = DepthFormat::DEPTH24_STENCIL8;
