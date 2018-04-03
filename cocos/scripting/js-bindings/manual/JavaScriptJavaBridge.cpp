@@ -508,10 +508,7 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State& s)
         {
             int count = argc - 3;
             jvalue* jargs = new jvalue[count];
-            int *toRelease = new int[count];
-            for (int i = 0; i < count; ++i){
-                toRelease[i] = 0;
-            }
+            std::vector<jobject> toReleaseObjects;
             for (int i = 0; i < count; ++i)
             {
                 int index = i + 3;
@@ -548,15 +545,14 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State& s)
                         std::string str;
                         seval_to_std_string(args[index], &str);
                         jargs[i].l = call.getEnv()->NewStringUTF(str.c_str());
-                        toRelease[i] = 1;
+                        toReleaseObjects.push_back(jargs[i].l);
                         break;
                 }
             }
             ok = call.executeWithArgs(jargs);
-            for (int i=0; i<count; ++i) {
-                if (toRelease[i] == 1) {
-                    call.getEnv()->DeleteLocalRef(args[i].l);
-                }
+            for (const auto& obj : toReleaseObject)
+            {
+                call.getEnv()->DeleteLocalRef(obj);
             }
             if (jargs)
                 delete[] jargs;
