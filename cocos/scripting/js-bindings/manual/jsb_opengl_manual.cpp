@@ -2688,7 +2688,8 @@ static bool JSB_glShaderSource(se::State& s) {
     size_t firstLinePos = shaderSource.find("\n");
     if (firstLinePos != std::string::npos)
     {
-        if (shaderSource.find("#version", 0, firstLinePos) == std::string::npos)
+        std::string firstLine = shaderSource.substr(0, firstLinePos);
+        if (firstLine.find("#version") == std::string::npos)
         {
             shaderSource = "#version 120\n" + shaderSource;
         }
