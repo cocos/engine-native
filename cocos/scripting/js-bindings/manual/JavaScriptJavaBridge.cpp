@@ -550,7 +550,7 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State& s)
                 }
             }
             ok = call.executeWithArgs(jargs);
-            for (const auto& obj : toReleaseObject)
+            for (const auto& obj : toReleaseObjects)
             {
                 call.getEnv()->DeleteLocalRef(obj);
             }
