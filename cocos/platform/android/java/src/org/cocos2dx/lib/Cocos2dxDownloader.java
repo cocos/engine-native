@@ -327,7 +327,7 @@ public class Cocos2dxDownloader {
                     catch (URISyntaxException e) {
                         break;
                     }
-                    if (domain == null) {
+                    catch (NullPointerException e) {
                         break;
                     }
                     final String host = domain.startsWith("www.") ? domain.substring(4) : domain;
