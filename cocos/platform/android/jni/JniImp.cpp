@@ -28,6 +28,7 @@
 #include <android/asset_manager_jni.h>
 #include <jni.h>
 #include <mutex>
+#include <audio/include/AudioEngine.h>
 #include "JniHelper.h"
 #include "platform/CCApplication.h"
 #include "scripting/js-bindings/jswrapper/v8/ScriptEngine.hpp"
@@ -76,6 +77,7 @@ namespace
     int g_deviceAudioBufferSizeInFrames = 192;
     int g_width = 0;
     int g_height = 0;
+    bool g_scriptEngineDone = false;
 
     cocos2d::Application* g_app = nullptr;
 
@@ -128,6 +130,7 @@ extern "C"
 
     JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h, jstring jDefaultResourcePath)
     {
+        g_scriptEngineDone = false;
         std::string defaultResourcePath = JniHelper::jstring2string(jDefaultResourcePath);
         LOGD("CocosRenderer.nativeInit: %d, %d, %s", w, h, defaultResourcePath.c_str());
         g_width = w;
@@ -144,8 +147,20 @@ extern "C"
         g_app->start();
     }
 
+    JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDone(JNIEnv*  env, jobject thiz)
+    {
+        g_scriptEngineDone = true;
+        LOGD("CocosRenderer.nativeExit");
+        se::ScriptEngine::destroyInstance();
+        cocos2d::experimental::AudioEngine::end();
+        JniHelper::callObjectVoidMethod(thiz, Cocos2dxRendererClassName, "onExitedJNI");
+    }
+
 	JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeRender(JNIEnv* env)
 	{
+        if (g_scriptEngineDone) {
+            return;
+        }
         static std::chrono::steady_clock::time_point prevTime;
         static std::chrono::steady_clock::time_point now;
         static float dt = 0.f;
@@ -162,12 +177,18 @@ extern "C"
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnPause()
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         if (g_app)
             g_app->applicationDidEnterBackground();
     }
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnResume()
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         if (g_app)
             g_app->applicationWillEnterForeground();
     }
@@ -207,6 +228,9 @@ extern "C"
 
     static void dispatchTouchEventWithOnePoint(JNIEnv* env, cocos2d::TouchEvent::Type type, jint id, jfloat x, jfloat y)
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         cocos2d::TouchEvent touchEvent;
         touchEvent.type = type;
 
@@ -221,6 +245,9 @@ extern "C"
 
     static void dispatchTouchEventWithPoints(JNIEnv* env, cocos2d::TouchEvent::Type type, jintArray ids, jfloatArray xs, jfloatArray ys)
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         cocos2d::TouchEvent touchEvent;
         touchEvent.type = type;
 
@@ -247,26 +274,41 @@ extern "C"
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesBegin(JNIEnv * env, jobject thiz, jint id, jfloat x, jfloat y)
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         dispatchTouchEventWithOnePoint(env, cocos2d::TouchEvent::Type::BEGAN, id, x, y);
     }
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesEnd(JNIEnv * env, jobject thiz, jint id, jfloat x, jfloat y)
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         dispatchTouchEventWithOnePoint(env, cocos2d::TouchEvent::Type::ENDED, id, x, y);
     }
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesMove(JNIEnv * env, jobject thiz, jintArray ids, jfloatArray xs, jfloatArray ys)
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         dispatchTouchEventWithPoints(env, cocos2d::TouchEvent::Type::MOVED, ids, xs, ys);
     }
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesCancel(JNIEnv * env, jobject thiz, jintArray ids, jfloatArray xs, jfloatArray ys)
     {
+        if (g_scriptEngineDone) {
+            return;
+        }
         dispatchTouchEventWithPoints(env, cocos2d::TouchEvent::Type::CANCELLED, ids, xs, ys);
     }
 
     JNIEXPORT jboolean JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyEvent(JNIEnv * env, jobject thiz, jint keyCode, jboolean isPressed)
     {
+        if (g_scriptEngineDone) {
+            return JNI_TRUE;
+        }
         //TODO
         return JNI_TRUE;
 
