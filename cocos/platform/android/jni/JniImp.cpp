@@ -28,7 +28,6 @@
 #include <android/asset_manager_jni.h>
 #include <jni.h>
 #include <mutex>
-#include <audio/include/AudioEngine.h>
 #include "JniHelper.h"
 #include "platform/CCApplication.h"
 #include "scripting/js-bindings/jswrapper/v8/ScriptEngine.hpp"
@@ -36,6 +35,7 @@
 #include "platform/android/CCFileUtils-android.h"
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
+#include "audio/include/AudioEngine.h"
 
 #define  JNI_IMP_LOG_TAG    "JniImp"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,JNI_IMP_LOG_TAG,__VA_ARGS__)
