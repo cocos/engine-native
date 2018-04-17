@@ -1194,7 +1194,6 @@ static bool js_renderer_InputAssembler_constructor(se::State& s)
 {
     cocos2d::renderer::InputAssembler* cobj = new (std::nothrow) cocos2d::renderer::InputAssembler();
     s.thisObject()->setPrivateData(cobj);
-    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
     return true;
 }
 SE_BIND_CTOR(js_renderer_InputAssembler_constructor, __jsb_cocos2d_renderer_InputAssembler_class, js_cocos2d_renderer_InputAssembler_finalize)
@@ -1206,13 +1205,11 @@ static bool js_cocos2d_renderer_InputAssembler_finalize(se::State& s)
 {
 
     CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::renderer::InputAssembler)", s.nativeThisObject());
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
-    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
-    {
-        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cocos2d::renderer::InputAssembler* cobj = (cocos2d::renderer::InputAssembler*)s.nativeThisObject();
-        delete cobj;
-    }
+    cocos2d::renderer::InputAssembler* cobj = (cocos2d::renderer::InputAssembler*)s.nativeThisObject();
+    if (cobj->getReferenceCount() == 1)
+        cobj->autorelease();
+    else
+        cobj->release();
 
     return true;
 }

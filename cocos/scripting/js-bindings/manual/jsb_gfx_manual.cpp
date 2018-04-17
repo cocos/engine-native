@@ -193,7 +193,8 @@ static bool js_gfx_VertexBuffer_init(se::State& s)
         cocos2d::renderer::DeviceGraphics* device;
         ok &= seval_to_native_ptr(args[0], &device);
 
-        VertexFormat* format = getVertexFormatFromValue(args[1]);
+//        VertexFormat* format = getVertexFormatFromValue(args[1]);
+        VertexFormat* format = static_cast<cocos2d::renderer::VertexFormat*>(args[1].toObject()->getPrivateData());
         Usage usage = (Usage) args[2].toUint16();
         uint8_t* data = nullptr;
         size_t dataByteLength = 0;
@@ -204,16 +205,16 @@ static bool js_gfx_VertexBuffer_init(se::State& s)
         if (arg3.isObject())
         {
             typedArr = arg3.toObject();
-            assert(typedArr->isTypedArray());
-            ok = typedArr->getTypedArrayData(&data, &dataByteLength);
+            assert(typedArr->isArrayBuffer());
+            ok = typedArr->getArrayBufferData(&data, &dataByteLength);
             assert(ok);
         }
 
         ok = seval_to_uint32(args[4], &numVertices);
         assert(ok);
 
-        cobj->init(device, *format, usage, data, dataByteLength, numVertices);
-        delete format;
+        cobj->init(device, format, usage, data, dataByteLength, numVertices);
+//        delete format;
 
         se::Object* thisObj = s.thisObject();
         cobj->setFetchDataCallback([thisObj](size_t* bytes) ->uint8_t* {
@@ -294,7 +295,7 @@ static bool js_gfx_VertexBuffer_prop_setFormat(se::State& s)
         se::Value formatVal;
         args[0].toObject()->getProperty("_nativeObj", &formatVal);
         auto format = static_cast<VertexFormat*>(formatVal.toObject()->getPrivateData());
-        cobj->setFormat(*format);
+        cobj->setFormat(format);
         return true;
     }
 
@@ -456,8 +457,8 @@ static bool js_gfx_IndexBuffer_init(se::State& s)
         if (arg3.isObject())
         {
             se::Object* typedArr = args[3].toObject();
-            assert(typedArr->isTypedArray());
-            ok = typedArr->getTypedArrayData(&data, &dataByteLength);
+            assert(typedArr->isArrayBuffer());
+            ok = typedArr->getArrayBufferData(&data, &dataByteLength);
             assert(ok);
         }
 
@@ -859,7 +860,6 @@ bool jsb_register_gfx_manual(se::Object* global)
 
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineFunction("init", _SE(js_gfx_VertexBuffer_init));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineFunction("update", _SE(js_gfx_VertexBuffer_update));
-//    __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_format", _SE(js_gfx_VertexBuffer_prop_getFormat), _SE(js_gfx_VertexBuffer_prop_setFormat));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_format", nullptr, _SE(js_gfx_VertexBuffer_prop_setFormat));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_usage", _SE(js_gfx_VertexBuffer_prop_getUsage), _SE(js_gfx_VertexBuffer_prop_setUsage));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_bytes", _SE(js_gfx_VertexBuffer_prop_getBytes), _SE(js_gfx_VertexBuffer_prop_setBytes));
