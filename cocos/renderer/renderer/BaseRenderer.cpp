@@ -129,16 +129,15 @@ void BaseRenderer::render(const View& view, const Scene* scene)
     _stageInfos.clear();
     StageItem stageItem;
     StageInfo stageInfo;
+    std::vector<StageItem> stageItems;
     for (const auto& stage : view.stages)
     {
-        std::vector<StageItem> stageItems;
         for (const auto& item : _drawItems)
         {
             auto tech = item.effect->getTechnique(stage);
             if (tech)
             {
                 stageItem.model = item.model;
-                stageItem.node = item.node;
                 stageItem.ia = item.ia;
                 stageItem.effect = item.effect;
                 stageItem.defines = item.defines;
@@ -150,7 +149,7 @@ void BaseRenderer::render(const View& view, const Scene* scene)
         }
         
         stageInfo.stage = stage;
-        stageInfo.items = std::move(stageItems);
+        stageInfo.items = &stageItems;
         _stageInfos.push_back(std::move(stageInfo));
     }
     
@@ -162,23 +161,16 @@ void BaseRenderer::render(const View& view, const Scene* scene)
         if (_stage2fn.end() != foundIter)
         {
             auto& fn = foundIter->second;
-            fn(view, stageInfo.items);
+            fn(view, *stageInfo.items);
         }
     }
 }
 
 void BaseRenderer::draw(const StageItem& item)
 {
-    //TODO: get world matrix of node
-//    const Mat4& worldMatrix =
-
-    // if 'useModel' is not defined in Effect, then the matrix is entity
-    Mat4 worldMatrix;
-//    if (item.effect->getDefineValue("useModel") != Value(false))
-//        worldMatrix = item.node->getWorldMatrix();
-    
+    Mat4 worldMatrix = item.model->getWorldMatrix();
     _device->setUniformMat4("model", worldMatrix.m);
-    
+
     //TODO: add Mat3
     worldMatrix.inverse();
     worldMatrix.transpose();

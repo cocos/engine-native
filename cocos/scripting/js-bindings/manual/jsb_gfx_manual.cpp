@@ -237,6 +237,17 @@ static bool js_gfx_VertexBuffer_init(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_VertexBuffer_init)
 
+static bool js_gfx_VertexBuffer_self(se::State& s)
+{
+    cocos2d::renderer::VertexBuffer* cobj = (cocos2d::renderer::VertexBuffer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_VertexBuffer_update : Invalid Native Object");
+    
+    auto addr = (unsigned long)cobj;
+    s.rval().setNumber(addr);
+    return true;
+}
+SE_BIND_FUNC(js_gfx_VertexBuffer_self)
+
 // uint32_t offset, const void* data, size_t dataByteLength
 static bool js_gfx_VertexBuffer_update(se::State& s)
 {
@@ -487,6 +498,17 @@ static bool js_gfx_IndexBuffer_init(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_gfx_IndexBuffer_init)
+
+static bool js_gfx_IndexBuffer_self(se::State& s)
+{
+    cocos2d::renderer::IndexBuffer* cobj = (cocos2d::renderer::IndexBuffer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_VertexBuffer_update : Invalid Native Object");
+    
+    auto addr = (unsigned long)cobj;
+    s.rval().setNumber(addr);
+    return true;
+}
+SE_BIND_FUNC(js_gfx_IndexBuffer_self);
 
 // uint32_t offset, const void* data, size_t dataByteLength
 static bool js_gfx_IndexBuffer_update(se::State& s)
@@ -864,6 +886,7 @@ bool jsb_register_gfx_manual(se::Object* global)
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_usage", _SE(js_gfx_VertexBuffer_prop_getUsage), _SE(js_gfx_VertexBuffer_prop_setUsage));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_bytes", _SE(js_gfx_VertexBuffer_prop_getBytes), _SE(js_gfx_VertexBuffer_prop_setBytes));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_numVertices", _SE(js_gfx_VertexBuffer_prop_getNumVertices), _SE(js_gfx_VertexBuffer_prop_setNumVertices));
+    __jsb_cocos2d_renderer_VertexBuffer_proto->defineFunction("self", _SE(js_gfx_VertexBuffer_self));
 
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineFunction("init", _SE(js_gfx_IndexBuffer_init));
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineFunction("update", _SE(js_gfx_IndexBuffer_update));
@@ -872,6 +895,7 @@ bool jsb_register_gfx_manual(se::Object* global)
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_bytesPerIndex", _SE(js_gfx_IndexBuffer_prop_getBytesPerIndex), _SE(js_gfx_IndexBuffer_prop_setBytesPerIndex));
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_bytes", _SE(js_gfx_IndexBuffer_prop_getBytes), _SE(js_gfx_IndexBuffer_prop_setBytes));
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_numIndices", _SE(js_gfx_IndexBuffer_prop_getNumIndices), _SE(js_gfx_IndexBuffer_prop_setNumIndices));
+    __jsb_cocos2d_renderer_IndexBuffer_proto->defineFunction("self", _SE(js_gfx_IndexBuffer_self));
 
     __jsb_cocos2d_renderer_Texture2D_proto->defineFunction("init", _SE(js_gfx_Texture2D_init));
     __jsb_cocos2d_renderer_FrameBuffer_proto->defineFunction("init", _SE(js_gfx_FrameBuffer_init));

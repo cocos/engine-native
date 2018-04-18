@@ -41,11 +41,10 @@ class INode;
 
 struct DrawItem
 {
-    INode* node = nullptr;
     Model* model = nullptr;
     InputAssembler* ia = nullptr;
     Effect* effect = nullptr;
-    ValueMap* defines;
+    ValueMap* defines = nullptr;
 };
 
 class Model;
@@ -66,37 +65,32 @@ public:
     Model();
     ~Model();
     
-    inline uint32_t getInputAssemblerCount() const { return (uint32_t)_inputAssemblers->num; }
+    inline uint32_t getInputAssemblerCount() const { return (uint32_t)_inputAssemblers.size(); }
     
     inline bool isDynamicIA() const { return _dynamicIA; }
     inline void setDynamicIA(bool value) { _dynamicIA =  value; }
     
-    inline uint32_t getDrawItemCount() const { return _dynamicIA ? 1 :  (uint32_t)_inputAssemblers->num; }
-    inline void setWorldMatix(const Mat4& matrix) { _worldMatrix = matrix; }
+    inline uint32_t getDrawItemCount() const { return _dynamicIA ? 1 :  (uint32_t)_inputAssemblers.size(); }
+    inline void setWorldMatix(const Mat4& matrix) { _worldMatrix = std::move(matrix); }
     inline const Mat4& getWorldMatrix() const { return _worldMatrix; }
     
     inline void setViewId(int val) { _viewID = val; }
     inline int getViewId() const { return _viewID; }
     
-    void addInputAssembler(InputAssembler* ia);
+    void addInputAssembler(const InputAssembler& ia);
     void clearInputAssemblers();
     void addEffect(Effect* effect);
     void clearEffects();
     void extractDrawItem(DrawItem& out, uint32_t index) const;
 
-    inline INode* getNode() const { return _node; }
-    inline void setNode(INode* node) { _node = node; }
-
 private:
     friend class ModelPool;
     void reset();
     
-    // Record world matrix instead of Node.
-    INode* _node = nullptr;
     Mat4 _worldMatrix;
     ccCArray* _effects = ccCArrayNew(2);
     
-    ccCArray* _inputAssemblers = ccCArrayNew(2);
+    std::vector<InputAssembler> _inputAssemblers;
     std::vector<ValueMap*> _defines;
     bool _dynamicIA = false;
     int _viewID = -1;

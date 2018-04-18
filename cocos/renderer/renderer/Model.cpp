@@ -62,6 +62,8 @@ void ModelPool::returnModel(Model *model)
 Model::Model()
 {
 //    RENDERER_LOGD("Model construction %p", this);
+    
+    _inputAssemblers.reserve(500);
 }
 
 Model::~Model()
@@ -70,20 +72,16 @@ Model::~Model()
     reset();
     
     ccCArrayFree(_effects);
-    ccCArrayFree(_inputAssemblers);
 }
 
-void Model::addInputAssembler(InputAssembler* ia)
+void Model::addInputAssembler(const InputAssembler& ia)
 {
-    if (ccCArrayContainsValue(_inputAssemblers, ia))
-        return;
-    
-    ccCArrayAppendValue(_inputAssemblers, ia);
+    _inputAssemblers.push_back(std::move(ia));
 }
 
 void Model::clearInputAssemblers()
 {
-    ccCArrayRemoveAllValues(_inputAssemblers);
+    _inputAssemblers.clear();
 }
 
 void Model::addEffect(Effect* effect)
@@ -107,7 +105,6 @@ void Model::extractDrawItem(DrawItem& out, uint32_t index) const
     if (_dynamicIA)
     {
         out.model = const_cast<Model*>(this);
-        out.node = _node;
         out.ia = nullptr;
         out.effect = static_cast<Effect*>(_effects->arr[0]);
         out.defines = out.effect->extractDefines();
@@ -115,12 +112,11 @@ void Model::extractDrawItem(DrawItem& out, uint32_t index) const
         return;
     }
     
-    if (index >= _inputAssemblers->num)
+    if (index >= _inputAssemblers.size())
         return;
     
     out.model = const_cast<Model*>(this);
-    out.node = _node;
-    out.ia = static_cast<InputAssembler*>(_inputAssemblers->arr[index]);
+    out.ia = const_cast<InputAssembler*>(&(_inputAssemblers[index]));
     
     auto effectsSize = _effects->num;
     if (index >= effectsSize)
@@ -133,11 +129,8 @@ void Model::extractDrawItem(DrawItem& out, uint32_t index) const
 
 void Model::reset()
 {
-    delete _node;
-    _node = nullptr;
-    
     ccCArrayRemoveAllValues(_effects);
-    ccCArrayRemoveAllValues(_inputAssemblers);
+    _inputAssemblers.clear();
     
     _defines.clear();
 }
