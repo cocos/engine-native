@@ -183,10 +183,11 @@ public:
         uint16_t y = 0;
         uint16_t width = 0;
         uint16_t height = 0;
+        uint16_t imageDataLength = 0;
+        uint8_t* imageData = nullptr;
         uint8_t level = 0;
         bool flipY = false;
         bool premultiplyAlpha = false;
-        cocos2d::Data image;
     };
 
     inline GLuint getTarget() const { return _target; }

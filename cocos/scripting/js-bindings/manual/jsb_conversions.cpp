@@ -1560,7 +1560,8 @@ bool seval_to_TextureSubImageOption(const se::Value& v, cocos2d::renderer::Textu
                                                      );
     
     uint16_t imageDataLength = *(ptr + 7);
-    ret->image.copy((uint8_t*)(ptr) + 16, imageDataLength);
+    ret->imageData = (uint8_t*)(ptr) + 16;
+    ret->imageDataLength = imageDataLength;
     return true;
 }
 
