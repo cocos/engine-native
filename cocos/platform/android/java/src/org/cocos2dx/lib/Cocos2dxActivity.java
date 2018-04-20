@@ -460,7 +460,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
                 Cocos2dxActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        fpsView.setText("FPS: " + String.format(Locale.ENGLISH, "%.1f", fps));
+                        fpsView.setText("FPS: " + (int)Math.ceil(fps));
                     }
                 });
             }
