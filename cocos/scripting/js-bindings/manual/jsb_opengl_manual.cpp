@@ -4234,7 +4234,7 @@ static bool JSB_glFlushCommand(se::State& s) {
             GLint* intBuf = (GLint*)malloc(elementCount * sizeof(GLint));
             for (GLsizei i = 0; i < elementCount; ++i)
             {
-                intBuf[i] = (GLint)p[3+i];
+                intBuf[i] = p[3+i];
             }
             JSB_GL_CHECK_VOID(glUniform1iv((GLint)p[1], elementCount, intBuf));
             free(intBuf);
