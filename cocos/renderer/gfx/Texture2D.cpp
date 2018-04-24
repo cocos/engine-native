@@ -40,7 +40,7 @@ Texture2D::~Texture2D()
 //    RENDERER_LOGD("Destruct Texture2D: %p", this);
 }
 
-bool Texture2D::init(DeviceGraphics* device, const Options& options)
+bool Texture2D::init(DeviceGraphics* device, Options& options)
 {
     bool ok = Texture::init(device);
     if (ok)
@@ -49,15 +49,7 @@ bool Texture2D::init(DeviceGraphics* device, const Options& options)
         GL_CHECK(glGenTextures(1, &_glID));
 
         if (options.images.empty())
-        {
-            int len = options.width * options.height * options.bpp / 8;
-            unsigned char* tmpData = new unsigned char[len];
-            memset(tmpData, 255, len);
-            Data data;
-            data.copy(tmpData, len);
-            delete [] tmpData;
-            const_cast<Options&>(options).images.push_back(data);
-        }
+            options.images.push_back(Image());
 
         update(options);
     }
@@ -101,9 +93,8 @@ void Texture2D::update(const Options& options)
 
     GL_CHECK(ccActiveTexture(GL_TEXTURE0));
     GL_CHECK(ccBindTexture(GL_TEXTURE_2D, _glID));
-    if (!options.images.empty()) {
+    if (!options.images.empty())
         setMipmap(options.images, options.flipY, options.premultiplyAlpha);
-    }
 
     setTexInfo();
 
@@ -206,8 +197,8 @@ void Texture2D::setImage(const ImageOption& option)
                                option.width,
                                option.height,
                                0,
-                               (GLsizei)img.getSize(),
-                               img.getBytes());
+                               (GLsizei)img.length,
+                               img.data);
     }
     else
     {
@@ -219,11 +210,11 @@ void Texture2D::setImage(const ImageOption& option)
                      0,
                      _glFormat,
                      _glType,
-                     img.getBytes()));
+                     img.data));
     }
 }
 
-void Texture2D::setMipmap(const std::vector<cocos2d::Data>& images, bool isFlipY, bool isPremultiplyAlpha)
+void Texture2D::setMipmap(const std::vector<Image>& images, bool isFlipY, bool isPremultiplyAlpha)
 {
     ImageOption options;
     options.width = _width;

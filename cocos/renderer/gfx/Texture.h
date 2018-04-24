@@ -94,10 +94,16 @@ public:
         END = 25
     //
     };
+    
+    struct Image
+    {
+        uint8_t* data = nullptr;
+        size_t length = 0;
+    };
 
     struct Options
     {
-        std::vector<cocos2d::Data> images;
+        std::vector<Image> images;
         int32_t anisotropy = 1;
         GLenum glInternalFormat = GL_RGBA;
         GLenum glFormat = GL_RGB;
@@ -120,38 +126,13 @@ public:
 
     struct ImageOption
     {
-        ImageOption()
-        : anisotropy(1)
-        , level(0)
-        , width(4)
-        , height(4)
-        , wrapS(WrapMode::REPEAT)
-        , wrapT(WrapMode::REPEAT)
-        , minFilter(Filter::LINEAR)
-        , magFilter(Filter::LINEAR)
-        , mipFilter(Filter::LINEAR)
-        , format(Format::RGBA8)
-        , hasMipmap(false)
-        , flipY(true)
-        , premultiplyAlpha(false)
-        {}
+        Image image;
+        int32_t level = 0;
+        uint16_t width = 4;
+        uint16_t height = 4;
 
-        cocos2d::Data image;
-        int32_t anisotropy;
-        int32_t level;
-        uint16_t width;
-        uint16_t height;
-
-        WrapMode wrapS;
-        WrapMode wrapT;
-
-        Filter minFilter;
-        Filter magFilter;
-        Filter mipFilter;
-        Format format;
-        bool hasMipmap;
-        bool flipY;
-        bool premultiplyAlpha;
+        bool flipY = false;
+        bool premultiplyAlpha = false;
     };
 
     struct SubImageOption
