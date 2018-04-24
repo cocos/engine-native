@@ -1491,9 +1491,19 @@ bool seval_to_TextureOptions(const se::Value& v, cocos2d::renderer::Texture::Opt
         seval_to_uint16(tmp, &ret->height);
     }
 
-    if (obj->getProperty("format", &tmp))
+    if (obj->getProperty("glInternalFormat", &tmp))
     {
-        seval_to_uint8(tmp, (uint8_t*)&ret->format);
+        seval_to_uint32(tmp, &ret->glInternalFormat);
+    }
+    
+    if (obj->getProperty("glFormat", &tmp))
+    {
+        seval_to_uint32(tmp, &ret->glFormat);
+    }
+    
+    if (obj->getProperty("glType", &tmp))
+    {
+        seval_to_uint32(tmp, &ret->glType);
     }
 
     if (obj->getProperty("anisotropy", &tmp))
@@ -1534,6 +1544,11 @@ bool seval_to_TextureOptions(const se::Value& v, cocos2d::renderer::Texture::Opt
     if (obj->getProperty("premultiplyAlpha", &tmp))
     {
         seval_to_boolean(tmp, &ret->premultiplyAlpha);
+    }
+    
+    if (obj->getProperty("compressed", &tmp))
+    {
+        seval_to_boolean(tmp, &ret->compressed);
     }
 
     return true;

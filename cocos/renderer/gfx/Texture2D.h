@@ -45,8 +45,8 @@ public:
     void updateImage(const ImageOption& option);
 
 private:
-    void setSubImage(const GLTextureFmt& glFmt, const SubImageOption& options);
-    void setImage(const GLTextureFmt& glFmt, const ImageOption& options);
+    void setSubImage(const SubImageOption& options);
+    void setImage(const ImageOption& options);
     void setMipmap(const std::vector<cocos2d::Data>& images, bool isFlipY, bool isPremultiplyAlpha);
     void setTexInfo();
 
