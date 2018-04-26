@@ -133,7 +133,6 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
                 if (listener != null) {
                     listener.onFPSUpdated((float) frameRate);
                 }
-                Log.d(TAG, "FPS:" + String.format("%.1f", frameRate));
                 mFrameCount = 0;
                 mOldNanoTime = System.nanoTime();
             }
