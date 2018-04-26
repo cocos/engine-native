@@ -190,7 +190,6 @@ extern "C"
 
             if (dtSum > 1.0f)
             {
-                LOGD("__jsbInvocationCount: %d", __jsbInvocationCount);
                 dtSum = 0.0f;
                 setJSBInvocationCountJNI(jsbInvocationTotalCount / jsbInvocationTotalFrames);
                 jsbInvocationTotalCount = 0;
