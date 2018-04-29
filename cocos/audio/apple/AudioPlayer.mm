@@ -43,6 +43,8 @@
 using namespace cocos2d;
 using namespace cocos2d::experimental;
 
+extern bool s_isAudioSessionInterrupted;
+
 namespace {
 unsigned int __idIndex = 0;
 }
@@ -143,6 +145,9 @@ void AudioPlayer::setCache(AudioCache* cache)
 
 bool AudioPlayer::play2d()
 {
+    if(s_isAudioSessionInterrupted)
+        return false;
+    
     _play2dMutex.lock();
     ALOGVV("AudioPlayer::play2d, _alSource: %u", _alSource);
 

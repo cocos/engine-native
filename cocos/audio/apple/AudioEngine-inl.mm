@@ -44,6 +44,7 @@ using namespace cocos2d::experimental;
 static ALCdevice* s_ALDevice = nullptr;
 static ALCcontext* s_ALContext = nullptr;
 static AudioEngineImpl* s_instance = nullptr;
+bool s_isAudioSessionInterrupted = false;
 
 typedef ALvoid (*alSourceNotificationProc)(ALuint sid, ALuint notificationID, ALvoid* userData);
 typedef ALenum (*alSourceAddNotificationProcPtr)(ALuint sid, ALuint notificationID, alSourceNotificationProc notifyProc, ALvoid* userData);
@@ -121,7 +122,6 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 
 -(void)handleInterruption:(NSNotification*)notification
 {
-    static bool isAudioSessionInterrupted = false;
     static bool resumeOnBecomingActive = false;
     static bool pauseOnResignActive = false;
 
@@ -130,7 +130,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         NSInteger reason = [[[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey] integerValue];
         if (reason == AVAudioSessionInterruptionTypeBegan)
         {
-            isAudioSessionInterrupted = true;
+            s_isAudioSessionInterrupted = true;
 
             if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive)
             {
@@ -146,7 +146,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
 
         if (reason == AVAudioSessionInterruptionTypeEnded)
         {
-            isAudioSessionInterrupted = false;
+            s_isAudioSessionInterrupted = false;
 
             if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive)
             {
@@ -154,11 +154,6 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
                 NSError *error = nil;
                 [[AVAudioSession sharedInstance] setActive:YES error:&error];
                 alcMakeContextCurrent(s_ALContext);
-                if (Director::getInstance()->isPaused())
-                {
-                    ALOGD("AVAudioSessionInterruptionTypeEnded, director was paused, try to resume it.");
-                    Director::getInstance()->resume();
-                }
             }
             else
             {
@@ -192,11 +187,6 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             }
             [[AVAudioSession sharedInstance] setActive:YES error:&error];
             alcMakeContextCurrent(s_ALContext);
-        }
-        else if (isAudioSessionInterrupted)
-        {
-            ALOGD("Audio session is still interrupted, pause director!");
-            Director::getInstance()->pause();
         }
     }
 }
