@@ -112,7 +112,7 @@ public:
         jbyte* jbarray = (jbyte *)malloc(len * sizeof(jbyte));
         JniHelper::getEnv()->GetByteArrayRegion(arr,0,len,jbarray);
         _data.fastSet((unsigned char*) jbarray, len);
-        JniHelper::getEnv()->DeleteLocalRef(jbarray);
+        JniHelper::getEnv()->DeleteLocalRef(arr);
     }
 
 private:
