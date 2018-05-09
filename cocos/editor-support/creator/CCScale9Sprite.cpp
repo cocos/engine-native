@@ -927,7 +927,13 @@ bool Scale9SpriteV2::setSpriteFrame(cocos2d::SpriteFrame* spriteFrame)
     CC_SAFE_RELEASE(this->_spriteFrame);
     this->_spriteFrame = spriteFrame;
     this->_quadsDirty = true;
-    if(!spriteFrame) return true;
+    
+    if(!spriteFrame)
+    {
+        this->setContentSize(cocos2d::Size::ZERO);
+         return true;
+    }
+
     CC_SAFE_RETAIN(spriteFrame);
     if(this->_contentSize.equals(cocos2d::Size::ZERO))
     {
