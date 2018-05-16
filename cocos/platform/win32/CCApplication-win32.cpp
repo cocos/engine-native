@@ -192,7 +192,7 @@ void Application::setPreferredFramesPerSecond(int fps)
 {
     LARGE_INTEGER nFreq;
     QueryPerformanceFrequency(&nFreq);
-    _animationInterval = (LONGLONG)(1.0 / interval * nFreq.QuadPart);
+    _animationInterval = (LONGLONG)(1.0 / fps * nFreq.QuadPart);
 }
 
 Application::LanguageType Application::getCurrentLanguage() const
