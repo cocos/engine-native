@@ -121,11 +121,11 @@ void RenderTexture::draw()
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glActiveTexture(GL_TEXTURE2);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _texture);
     
     glUseProgram(_program);
-    glUniform1i(_fragUniformTextureLocation, 2);
+    glUniform1i(_fragUniformTextureLocation, 0);
     
     if (supportVAO)
         glBindVertexArray(_VAO);
