@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "platform/CCPlatformConfig.h"
 #include "platform/CCPlatformDefine.h"
+#include "base/CCRenderTexture.h"
 
 NS_CC_BEGIN
 
@@ -99,7 +100,7 @@ public:
     // This class is useful for internal usage.
     static Application* getInstance() { return _instance; }
     
-    Application(const std::string& name);
+    Application(const std::string& name, int width, int height);
     virtual ~Application();
     
     virtual bool applicationDidFinishLaunching();
@@ -108,6 +109,7 @@ public:
     
     inline void* getView() const { return _view; }
     inline Scheduler* getScheduler() const { return _scheduler; }
+    inline RenderTexture* getRenderTexture() const { return _renderTexture; }
     
     void runOnMainThread();
     
@@ -169,6 +171,7 @@ private:
     void* _delegate = nullptr;
     float _animationInterval = 1.0f / 60;
     Scheduler* _scheduler = nullptr;
+    RenderTexture* _renderTexture = nullptr;
 };
 
 // end of platform group

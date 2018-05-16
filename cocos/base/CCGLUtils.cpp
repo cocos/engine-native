@@ -24,151 +24,188 @@
 
 #include "CCGLUtils.h"
 #include <stdio.h>
+#include <cfloat>
+#include <cassert>
 
 NS_CC_BEGIN
+
+// todo: use gl to get the supported number
+#define MAX_ATTRIBUTE_UNIT  16
 
 //FIXME: Consider to use variable to enable/disable cache state since using macro will not be able to close it if there're serious bugs.
 // #undef CC_ENABLE_GL_STATE_CACHE
 // #define CC_ENABLE_GL_STATE_CACHE 0
 
 #if CC_ENABLE_GL_STATE_CACHE
-
-namespace {
-    const int MAX_ACTIVE_TEXTURE = 16;
-    GLuint __currentArrayBufferId = -1;
-    GLuint __currentElementArrayBufferId = -1;
-    GLuint __activeTextureUnit = 0;
-    GLuint __currentBoundTexture[MAX_ACTIVE_TEXTURE] =  {
-        (GLuint)-1,(GLuint)-1,(GLuint)-1,(GLuint)-1,
-        (GLuint)-1,(GLuint)-1,(GLuint)-1,(GLuint)-1,
-        (GLuint)-1,(GLuint)-1,(GLuint)-1,(GLuint)-1,
-        (GLuint)-1,(GLuint)-1,(GLuint)-1,(GLuint)-1
-    };
+namespace
+{
+    GLint __currentVertexBuffer = -1;
+    GLint __currentIndexBuffer = -1;
+    GLint __currentVertexArray = -1;
+    
+    uint32_t __enabledVertexAttribArrayFlag = 0;
+    VertexAttributePointerInfo __enabledVertexAttribArrayInfo[MAX_ATTRIBUTE_UNIT];
 }
-
 #endif // CC_ENABLE_GL_STATE_CACHE
 
 //FIXME: need to consider invoking this after restarting game.
 void ccInvalidateStateCache()
 {
 #if CC_ENABLE_GL_STATE_CACHE
-    __currentArrayBufferId = -1;
-    __currentElementArrayBufferId = -1;
-    __activeTextureUnit = 0;
-    for (int i = 0; i < MAX_ACTIVE_TEXTURE; ++i)
-    {
-        __currentBoundTexture[i] = -1;
-    };
+    __currentVertexBuffer = -1;
+    __currentIndexBuffer = -1;
+    __currentVertexArray = -1;
+    
+    __enabledVertexAttribArrayFlag = 0;
+    for (int i = 0; i < MAX_ATTRIBUTE_UNIT; ++i)
+        __enabledVertexAttribArrayInfo[i] = VertexAttributePointerInfo();
 #endif
 }
+
+/****************************************************************************************
+ Buffer related
+ ***************************************************************************************/
 
 void ccBindBuffer(GLenum target, GLuint buffer)
 {
 #if CC_ENABLE_GL_STATE_CACHE
     if (target == GL_ARRAY_BUFFER)
     {
-        if (buffer == 0)
-            return;
-        if (__currentArrayBufferId != buffer)
+        if (__currentVertexBuffer != buffer)
         {
-            __currentArrayBufferId = buffer;
+            __currentVertexBuffer = buffer;
             glBindBuffer(target, buffer);
         }
-//        else
-//        {
-//            printf("glBindBuffer(GL_ARRAY_BUFFER, %u) isn't needed!\n", buffer);
-//        }
     }
     else if (target == GL_ELEMENT_ARRAY_BUFFER)
     {
-        if (buffer == 0)
-            return;
-        if (__currentElementArrayBufferId != buffer)
+        if (__currentIndexBuffer != buffer)
         {
-            __currentElementArrayBufferId = buffer;
+            __currentIndexBuffer = buffer;
             glBindBuffer(target, buffer);
         }
-//        else
-//        {
-//            printf("glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, %u) isn't needed!\n", buffer);
-//        }
     }
     else
     {
         glBindBuffer(target, buffer);
     }
+
+    CHECK_GL_ERROR_DEBUG();
 #else
     glBindBuffer(target, buffer);
 #endif
 }
 
-void ccDeleteBuffers(GLsizei n, const GLuint *buffers)
+GLint ccGetBoundVertexBuffer()
 {
 #if CC_ENABLE_GL_STATE_CACHE
-    for (GLsizei i = 0; i < n; ++i)
-    {
-        if (buffers[i] == __currentArrayBufferId)
-            __currentArrayBufferId = -1;
-        else if (buffers[i] == __currentElementArrayBufferId)
-            __currentElementArrayBufferId = -1;
-    }
+    return __currentVertexBuffer;
+#else
+    GLint VBO = 0;
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &VBO);
+    return VBO;
 #endif
-    glDeleteBuffers(n, buffers);
 }
 
-void ccActiveTexture(GLenum texture)
+GLint ccGetBoundIndexBuffer()
 {
 #if CC_ENABLE_GL_STATE_CACHE
-    GLuint newTextureUnit = texture - GL_TEXTURE0;
-    if (__activeTextureUnit != newTextureUnit)
+    return __currentIndexBuffer;
+#else
+    GLint VEO = 0;
+    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &VEO);
+    return VEO;
+#endif
+}
+
+void ccBindVertexArray(GLuint VAO)
+{
+#if CC_ENABLE_GL_STATE_CACHE
+    if (__currentVertexArray != VAO)
     {
-        __activeTextureUnit = newTextureUnit;
-        glActiveTexture(texture);
+        __currentVertexArray = VAO;
+        glBindVertexArray(VAO);
     }
 #else
-    glActiveTexture(texture);
+    glBindVertexArray(VAO);
 #endif
 }
 
-void ccBindTexture(GLenum target, GLuint texture)
+GLint ccGetBoundVertexArray()
 {
 #if CC_ENABLE_GL_STATE_CACHE
-    if (target == GL_TEXTURE_2D)
+    return __currentVertexArray;
+#else
+    return 0;
+#endif
+}
+
+/****************************************************************************************
+ Vertex attribute related
+ ***************************************************************************************/
+
+void ccEnableVertexAttribArray(GLuint index)
+{
+#if CC_ENABLE_GL_STATE_CACHE
+    assert(index < MAX_ATTRIBUTE_UNIT);
+    if (index >= MAX_ATTRIBUTE_UNIT)
+        return;
+
+    uint32_t flag = 1 << index;
+    if (__enabledVertexAttribArrayFlag & flag)
+        return;
+
+    __enabledVertexAttribArrayFlag |= flag;
+    glEnableVertexAttribArray(index);
+#else
+    glEnableVertexAttribArray(index);
+#endif
+}
+
+void ccDisableVertexAttribArray(GLuint index)
+{
+#if CC_ENABLE_GL_STATE_CACHE
+    if (index >= MAX_ATTRIBUTE_UNIT)
+        return;
+    uint32_t flag = 1 << index;
+    if (__enabledVertexAttribArrayFlag & flag)
     {
-        CCASSERT(__activeTextureUnit < MAX_ACTIVE_TEXTURE, "textureUnit is too big");
-        if (__currentBoundTexture[__activeTextureUnit] != texture)
-        {
-            __currentBoundTexture[__activeTextureUnit] = texture;
-            glBindTexture(target, texture);
-        }
-//        else
-//        {
-//            printf("glBindTexture(GL_TEXTURE_2D, %u) isn't needed!\n", texture);
-//        }
-    }
-    else
-    {
-        glBindTexture(target, texture);
+        glDisableVertexAttribArray(index);
+        __enabledVertexAttribArrayFlag &= !(1 << index);
     }
 #else
-    glBindTexture(target, texture);
+    glDisableVertexAttribArray(index);
 #endif
 }
 
-void ccDeleteTextures(GLsizei n, const GLuint *textures)
+void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
 {
-#if CC_ENABLE_GL_STATE_CACHE
-    for (size_t i = 0; i < MAX_ACTIVE_TEXTURE; ++i)
-    {
-        for (GLsizei j = 0; j < n; ++j)
-        {
-            if (__currentBoundTexture[i] == textures[j])
-                __currentBoundTexture[i] = -1;
-        }
-    }
-#endif // CC_ENABLE_GL_STATE_CACHE
+    assert(index < MAX_ATTRIBUTE_UNIT);
+    if (index >= MAX_ATTRIBUTE_UNIT)
+        return;
 
-    glDeleteTextures(n, textures);
+    // The index is not enabled, return.
+    if (! (__enabledVertexAttribArrayFlag & (1 << index)) )
+        return;
+    
+    __enabledVertexAttribArrayInfo[index] = VertexAttributePointerInfo(__currentVertexBuffer, index, size, type, normalized, stride, pointer);
+
+    // FIXME: should check all the values to determine if need to invoke glVertexAttribPointer or not?
+    // We don't know if it is a good idea to do it because it needs to compare so many parameters.
+    glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+}
+
+const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
+{
+    assert(index < MAX_ATTRIBUTE_UNIT);
+    if (index >= MAX_ATTRIBUTE_UNIT)
+        return nullptr;
+    
+    // The index is not enabled, return null.
+    if (! (__enabledVertexAttribArrayFlag & (1 << index)) )
+        return nullptr;
+    
+    return &__enabledVertexAttribArrayInfo[index];
 }
 
 NS_CC_END

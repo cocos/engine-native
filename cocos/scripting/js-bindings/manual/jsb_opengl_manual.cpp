@@ -256,7 +256,7 @@ namespace {
             if (_id != 0)
             {
                 SE_LOGD("Destroy WebGLTexture (%u) by GC\n", _id);
-                JSB_GL_CHECK_VOID(ccDeleteTextures(1, &_id));
+                JSB_GL_CHECK_VOID(glDeleteTextures(1, &_id));
                 safeRemoveElementFromGLObjectMap(__webglTextureMap, _id);
             }
         }
@@ -275,7 +275,7 @@ namespace {
             if (_id != 0)
             {
                 SE_LOGD("Destroy WebGLBuffer (%u) by GC\n", _id);
-                JSB_GL_CHECK_VOID(ccDeleteBuffers(1, &_id));
+                JSB_GL_CHECK_VOID(glDeleteBuffers(1, &_id));
                 safeRemoveElementFromGLObjectMap(__webglBufferMap, _id);
             }
         }
@@ -652,7 +652,7 @@ static bool JSB_glActiveTexture(se::State& s) {
     ok &= seval_to_uint32(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(ccActiveTexture((GLenum)arg0));
+    JSB_GL_CHECK(glActiveTexture((GLenum)arg0));
 
     return true;
 }
@@ -771,7 +771,7 @@ static bool JSB_glBindTexture(se::State& s) {
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     GLuint textureId = arg1 != nullptr ? arg1->_id : 0;
-    JSB_GL_CHECK(ccBindTexture((GLenum)arg0 , textureId));
+    JSB_GL_CHECK(glBindTexture((GLenum)arg0 , textureId));
     return true;
 }
 SE_BIND_FUNC(JSB_glBindTexture)
@@ -1392,7 +1392,7 @@ static bool JSB_glDisableVertexAttribArray(se::State& s) {
     ok &= seval_to_uint32(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glDisableVertexAttribArray((GLuint)arg0  ));
+    JSB_GL_CHECK(ccDisableVertexAttribArray((GLuint)arg0  ));
 
     return true;
 }
@@ -1482,7 +1482,7 @@ static bool JSB_glEnableVertexAttribArray(se::State& s) {
     ok &= seval_to_uint32(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glEnableVertexAttribArray((GLuint)arg0  ));
+    JSB_GL_CHECK(ccEnableVertexAttribArray((GLuint)arg0  ));
 
     return true;
 }
@@ -2865,7 +2865,7 @@ static bool JSB_glVertexAttribPointer(se::State& s) {
     ok &= seval_to_int32(args[5], &arg5 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glVertexAttribPointer((GLuint)arg0 , (GLint)arg1 , (GLenum)arg2 , (GLboolean)arg3 , (GLsizei)arg4 , (GLvoid*)(intptr_t)arg5  ));
+    JSB_GL_CHECK(ccVertexAttribPointer((GLuint)arg0 , (GLint)arg1 , (GLenum)arg2 , (GLboolean)arg3 , (GLsizei)arg4 , (GLvoid*)(intptr_t)arg5  ));
 
     return true;
 }
@@ -3073,7 +3073,7 @@ static bool JSB_glDeleteTextures(se::State& s) {
     ok &= seval_to_native_ptr(args[0], &arg0);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint id = arg0 != nullptr ? arg0->_id : 0;
-    JSB_GL_CHECK(ccDeleteTextures(1, &id));
+    JSB_GL_CHECK(glDeleteTextures(1, &id));
     safeRemoveElementFromGLObjectMap(__webglTextureMap, id);
     arg0->_id = 0;
     return true;
@@ -3090,7 +3090,7 @@ static bool JSB_glDeleteBuffer(se::State& s) {
     ok &= seval_to_native_ptr(args[0], &arg0);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint bufferId = arg0 != nullptr ? arg0->_id : 0;
-    JSB_GL_CHECK(ccDeleteBuffers(1, &bufferId));
+    JSB_GL_CHECK(glDeleteBuffers(1, &bufferId));
     safeRemoveElementFromGLObjectMap(__webglBufferMap, bufferId);
     arg0->_id = 0;
     return true;
@@ -3930,7 +3930,7 @@ static bool JSB_glFlushCommand(se::State& s) {
         testindex++;
         uint32_t commandID = (uint32_t)p[0];
         if (commandID == GL_COMMAND_ACTIVE_TEXTURE) {
-            JSB_GL_CHECK_VOID(ccActiveTexture((GLenum)p[1]));
+            JSB_GL_CHECK_VOID(glActiveTexture((GLenum)p[1]));
             p += 2;
         }
         else if (commandID == GL_COMMAND_ATTACH_SHADER) {
@@ -3954,7 +3954,7 @@ static bool JSB_glFlushCommand(se::State& s) {
             p += 3;
         }
         else if (commandID == GL_COMMAND_BIND_TEXTURE) {
-            JSB_GL_CHECK_VOID(ccBindTexture((GLenum)p[1], (GLuint)p[2]));
+            JSB_GL_CHECK_VOID(glBindTexture((GLenum)p[1], (GLuint)p[2]));
             p += 3;
         }
         else if (commandID == GL_COMMAND_BLEND_COLOR) {
@@ -4015,7 +4015,7 @@ static bool JSB_glFlushCommand(se::State& s) {
         }
         else if (commandID == GL_COMMAND_DELETE_BUFFER) {
             GLuint id = (GLuint)p[1];
-            JSB_GL_CHECK_VOID(ccDeleteBuffers(1, &id));
+            JSB_GL_CHECK_VOID(glDeleteBuffers(1, &id));
             safeRemoveElementFromGLObjectMap(__webglBufferMap, id);
             p += 2;
         }
@@ -4045,7 +4045,7 @@ static bool JSB_glFlushCommand(se::State& s) {
         }
         else if (commandID == GL_COMMAND_DELETE_TEXTURE) {
             GLuint id = (GLuint)p[1];
-            JSB_GL_CHECK_VOID(ccDeleteTextures(1, &id));
+            JSB_GL_CHECK_VOID(glDeleteTextures(1, &id));
             safeRemoveElementFromGLObjectMap(__webglTextureMap, id);
             p += 2;
         }
@@ -4070,7 +4070,7 @@ static bool JSB_glFlushCommand(se::State& s) {
             p += 2;
         }
         else if (commandID == GL_COMMAND_DISABLE_VERTEX_ATTRIB_ARRAY) {
-            JSB_GL_CHECK_VOID(glDisableVertexAttribArray((GLuint)p[1]));
+            JSB_GL_CHECK_VOID(ccDisableVertexAttribArray((GLuint)p[1]));
             p += 2;
         }
         else if (commandID == GL_COMMAND_DRAW_ARRAYS) {
@@ -4086,7 +4086,7 @@ static bool JSB_glFlushCommand(se::State& s) {
             p += 2;
         }
         else if (commandID == GL_COMMAND_ENABLE_VERTEX_ATTRIB_ARRAY) {
-            JSB_GL_CHECK_VOID(glEnableVertexAttribArray((GLuint)p[1]));
+            JSB_GL_CHECK_VOID(ccEnableVertexAttribArray((GLuint)p[1]));
             p += 2;
         }
         else if (commandID == GL_COMMAND_FINISH) {
@@ -4333,7 +4333,7 @@ static bool JSB_glFlushCommand(se::State& s) {
             p += (elementCount + 3);
         }
         else if (commandID == GL_COMMAND_VERTEX_ATTRIB_POINTER) {
-            JSB_GL_CHECK_VOID(glVertexAttribPointer((GLuint)p[1], (GLint)p[2], (GLenum)p[3], (GLboolean)p[4], (GLsizei)p[5], (const GLvoid*)(GLintptr)p[6]));
+            JSB_GL_CHECK_VOID(ccVertexAttribPointer((GLuint)p[1], (GLint)p[2], (GLenum)p[3], (GLboolean)p[4], (GLsizei)p[5], (const GLvoid*)(GLintptr)p[6]));
             p += 7;
         }
         else if (commandID == GL_COMMAND_VIEW_PORT) {

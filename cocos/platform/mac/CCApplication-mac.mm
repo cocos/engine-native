@@ -31,11 +31,11 @@ THE SOFTWARE.
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
 #include "base/CCGLUtils.h"
-#import "platform/CCApplication.h"
-#import "platform/desktop/CCGLView-desktop.h"
-#import "scripting/js-bindings/event/EventDispatcher.h"
-#import "renderer/gfx/DeviceGraphics.h"
-#import "scripting/js-bindings/jswrapper/SeApi.h"
+#include "platform/CCApplication.h"
+#include "platform/desktop/CCGLView-desktop.h"
+#include "scripting/js-bindings/event/EventDispatcher.h"
+#include "renderer/gfx/DeviceGraphics.h"
+#include "scripting/js-bindings/jswrapper/SeApi.h"
 
 NS_CC_BEGIN
 
@@ -48,10 +48,10 @@ namespace
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                g_width,
-                g_height);
+                g_width / 2,
+                g_height / 2);
         se->evalString(commandBuf);
-        glViewport(0, 0, g_width, g_height);
+        glViewport(0, 0, g_width / 2, g_height / 2);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -61,7 +61,7 @@ Application* Application::_instance = nullptr;
 
 #define CAST_VIEW(view)    ((GLView*)view)
 
-Application::Application(const std::string& name)
+Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
     
@@ -69,7 +69,11 @@ Application::Application(const std::string& name)
     
     createView(name);
     
-    renderer::DeviceGraphics::setScaleFactor(CAST_VIEW(_view)->getScaleFactor());
+    float scale = CAST_VIEW(_view)->getScaleFactor();
+    
+    _renderTexture = new RenderTexture(width * scale, height * scale, 2);
+    
+    renderer::DeviceGraphics::setScaleFactor(scale);
     EventDispatcher::init();
     se::ScriptEngine::getInstance();
 }
@@ -85,6 +89,9 @@ Application::~Application()
     
     delete _scheduler;
     _scheduler = nullptr;
+    
+    delete _renderTexture;
+    _renderTexture = nullptr;
     
     Application::_instance = nullptr;
 }
@@ -105,14 +112,19 @@ void Application::start()
     std::chrono::steady_clock::time_point prevTime;
     std::chrono::steady_clock::time_point now;
     float dt = 0.f;
-    
+
     while (!CAST_VIEW(_view)->windowShouldClose())
     {
         prevTime = std::chrono::steady_clock::now();
         
+        // should be invoked at the begin of rendering a frame
+        _renderTexture->prepare();
+        
         CAST_VIEW(_view)->pollEvents();
         _scheduler->update(dt);
         EventDispatcher::dispatchTickEvent(dt);
+        
+        _renderTexture->draw();
 
         CAST_VIEW(_view)->swapBuffers();
         PoolManager::getInstance()->getCurrentPool()->clear();

@@ -55,6 +55,7 @@ using namespace cocos2d;
 
 extern uint32_t __jsbInvocationCount;
 
+
 namespace
 {	
     bool __isOpenDebugView = false;
@@ -92,25 +93,23 @@ namespace
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                g_width,
-                g_height);
+                g_width / 2,
+                g_height / 2);
         se->evalString(commandBuf);
-        glViewport(0, 0, g_width, g_height);
-        glDepthMask(GL_TRUE);
+        glViewport(0, 0, g_width / 2, g_height / 2);
+       glDepthMask(GL_TRUE);
         
         return true;
     }
 }
 
-Application* cocos_android_app_init(JNIEnv* env);
+Application* cocos_android_app_init(JNIEnv* env, int width, int height);
 
 extern "C"
 {
     JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
     {
         JniHelper::setJavaVM(vm);
-        g_app = cocos_android_app_init(JniHelper::getEnv());
-
         return JNI_VERSION_1_4;
     }
 
@@ -135,12 +134,16 @@ extern "C"
 
     JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h, jstring jDefaultResourcePath)
     {
+        g_width = w;
+        g_height = h;
+        
+        g_app = cocos_android_app_init(env, w, h);
+
         g_isGameFinished = false;
         ccInvalidateStateCache();
         std::string defaultResourcePath = JniHelper::jstring2string(jDefaultResourcePath);
         LOGD("CocosRenderer.nativeInit: %d, %d, %s", w, h, defaultResourcePath.c_str());
-        g_width = w;
-        g_height = h;
+        
 
         if (!defaultResourcePath.empty())
             FileUtils::getInstance()->setDefaultResourceRootPath(defaultResourcePath);
@@ -164,9 +167,9 @@ extern "C"
 
 	JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeRender(JNIEnv* env)
 	{
-        if (g_isGameFinished) {
+        if (g_isGameFinished)
             return;
-        }
+
         static std::chrono::steady_clock::time_point prevTime;
         static std::chrono::steady_clock::time_point now;
         static float dt = 0.f;
@@ -174,8 +177,12 @@ extern "C"
         static uint32_t jsbInvocationTotalCount = 0;
         static uint32_t jsbInvocationTotalFrames = 0;
 
+        g_app->getRenderTexture()->prepare();
+
         g_app->getScheduler()->update(dt);
         EventDispatcher::dispatchTickEvent(dt);
+
+        g_app->getRenderTexture()->draw();
         PoolManager::getInstance()->getCurrentPool()->clear();
 
         now = std::chrono::steady_clock::now();

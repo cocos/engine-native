@@ -115,7 +115,7 @@ void IndexBuffer::destroy()
     if (_glID == 0)
         return;
     
-    ccDeleteBuffers(1, &_glID);
+    glDeleteBuffers(1, &_glID);
     //TODO:    _device._stats.ib -= _bytes;
     _glID = 0;
 }

@@ -32,24 +32,31 @@
 #include "scripting/js-bindings/jswrapper/jsc/ScriptEngine.hpp"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 
-#import "CCEAGLView-ios.h"
+#include "CCEAGLView-ios.h"
 #import <UIKit/UIKit.h>
 
 namespace
 {
-    bool setCanvasCallback(se::Object* global)
+    cocos2d::Vec2 getResolution()
     {
         CGRect bounds = [UIScreen mainScreen].bounds;
         float scale = [[UIScreen mainScreen] scale];
         float width = bounds.size.width * scale;
         float height = bounds.size.height * scale;
+        
+        return cocos2d::Vec2(width, height);
+    }
+    
+    bool setCanvasCallback(se::Object* global)
+    {
+        cocos2d::Vec2 resolution = getResolution();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                (int)(width),
-                (int)(height));
+                (int)(resolution.x / 2),
+                (int)(resolution.y / 2));
         se->evalString(commandBuf);
-        glViewport(0, 0, width, height);
+        glViewport(0, 0, resolution.x / 2, resolution.y / 2);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -131,8 +138,7 @@ namespace
         [self startMainLoop];
     }
     else
-        [self performSelector:@selector(firstStart:) withObject:view afterDelay:0];
-}
+        [self performSelector:@selector(firstStart:) withObject:view afterDelay:0];}
 
 -(void) startMainLoop
 {
@@ -168,8 +174,12 @@ namespace
 
     prevTime = std::chrono::steady_clock::now();
     
+    _application->getRenderTexture()->prepare();
+    
     _scheduler->update(dt);
     cocos2d::EventDispatcher::dispatchTickEvent(dt);
+    
+    _application->getRenderTexture()->draw();
     
     [(CCEAGLView*)(_application->getView()) swapBuffers];
     cocos2d::PoolManager::getInstance()->getCurrentPool()->clear();
@@ -184,12 +194,14 @@ NS_CC_BEGIN
 
 Application* Application::_instance = nullptr;
 
-Application::Application(const std::string& name)
+Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
     _scheduler = new Scheduler();
 
     createView(name);
+    
+    _renderTexture = new RenderTexture(width, height, 2);
     
     se::ScriptEngine::getInstance();
     EventDispatcher::init();
@@ -213,6 +225,9 @@ Application::~Application()
     [(MainLoop*)_delegate stopMainLoop];
     [(MainLoop*)_delegate release];
     _delegate = nullptr;
+    
+    delete _renderTexture;
+    _renderTexture = nullptr;
 
     Application::_instance = nullptr;
 }

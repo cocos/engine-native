@@ -52,7 +52,8 @@ FrameBuffer::~FrameBuffer()
         return;
     }
 
-    ccDeleteBuffers(1, &_glID);
+    glDeleteBuffers(1, &_glID);
+    _glID = 0;
     //TODO:    _device._stats.ib -= _bytes;
 }
 
