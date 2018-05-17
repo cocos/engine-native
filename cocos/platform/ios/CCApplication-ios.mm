@@ -51,12 +51,13 @@ namespace
     {
         cocos2d::Vec2 resolution = getResolution();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
+        uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                (int)(resolution.x / 2),
-                (int)(resolution.y / 2));
+                (int)(resolution.x / devicePixelRatio),
+                (int)(resolution.y / devicePixelRatio));
         se->evalString(commandBuf);
-        glViewport(0, 0, resolution.x / 2, resolution.y / 2);
+        glViewport(0, 0, resolution.x / devicePixelRatio, resolution.y / devicePixelRatio);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -174,12 +175,15 @@ namespace
 
     prevTime = std::chrono::steady_clock::now();
     
-    _application->getRenderTexture()->prepare();
+    bool downsampleEnabled = _application->isDownsampleEnabled();
+    if (downsampleEnabled)
+        _application->getRenderTexture()->prepare();
     
     _scheduler->update(dt);
     cocos2d::EventDispatcher::dispatchTickEvent(dt);
     
-    _application->getRenderTexture()->draw();
+    if (downsampleEnabled)
+        _application->getRenderTexture()->draw();
     
     [(CCEAGLView*)(_application->getView()) swapBuffers];
     cocos2d::PoolManager::getInstance()->getCurrentPool()->clear();
@@ -201,6 +205,8 @@ Application::Application(const std::string& name, int width, int height)
 
     createView(name);
     
+    // Shoule create _renderTexture here, then we don't have to consider how to
+    // revert the GL states. It is difficult to revert the states.
     _renderTexture = new RenderTexture(width, height, 2);
     
     se::ScriptEngine::getInstance();

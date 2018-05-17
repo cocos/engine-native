@@ -92,11 +92,12 @@ namespace
         se::AutoHandleScope scope;
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
+        uint8_t devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                g_width / 2,
-                g_height / 2);
+                g_width / devicePixelRatio,
+                g_height / devicePixelRatio);
         se->evalString(commandBuf);
-        glViewport(0, 0, g_width / 2, g_height / 2);
+        glViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
        glDepthMask(GL_TRUE);
         
         return true;
@@ -176,13 +177,17 @@ extern "C"
         static float dtSum = 0.f;
         static uint32_t jsbInvocationTotalCount = 0;
         static uint32_t jsbInvocationTotalFrames = 0;
-
-        g_app->getRenderTexture()->prepare();
+        bool downsampleEnabled = g_app->isDownsampleEnabled();
+        
+        if (downsampleEnabled)
+            g_app->getRenderTexture()->prepare();
 
         g_app->getScheduler()->update(dt);
         EventDispatcher::dispatchTickEvent(dt);
+       
+        if (downsampleEnabled)
+            g_app->getRenderTexture()->draw();
 
-        g_app->getRenderTexture()->draw();
         PoolManager::getInstance()->getCurrentPool()->clear();
 
         now = std::chrono::steady_clock::now();
@@ -292,12 +297,13 @@ extern "C"
         env->GetFloatArrayRegion(xs, 0, size, x);
         env->GetFloatArrayRegion(ys, 0, size, y);
 
+        uint8_t devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
         for(int i = 0; i < size; i++)
         {
             cocos2d::TouchInfo touchInfo;
             touchInfo.index = id[i];
-            touchInfo.x = x[i];
-            touchInfo.y = y[i];
+            touchInfo.x = x[i] / devicePixelRatio;
+            touchInfo.y = y[i] / devicePixelRatio;
             touchEvent.touches.push_back(touchInfo);
         }
 

@@ -116,10 +116,8 @@ public:
     void start();
     
     /**
-     * @brief    Callback by Director for limit FPS.
+     * @brief Callback by Director for limit FPS.
      * @param interval The time, expressed in seconds, between current frame and next.
-     * @js NA
-     * @lua NA
      */
     void setAnimationInterval(float interval);
     
@@ -128,23 +126,28 @@ public:
     /**
      @brief Get current language config.
      @return Current language config.
-     * @js NA
-     * @lua NA
      */
     LanguageType getCurrentLanguage() const;
     
     /**
      @brief Get current language iso 639-1 code.
      @return Current language iso 639-1 code.
-     * @js NA
-     * @lua NA
      */
     std::string getCurrentLanguageCode() const;
     
+    void setDevicePixelRatio(uint8_t ratio)
+    {
+        if (ratio <= 1)
+            return;
+        
+        _devicePixelRatio = ratio;
+        _isDownsampleEnabled = true;
+    }
+    inline uint8_t getDevicePixelRatio() const { return _devicePixelRatio; }
+    inline bool isDownsampleEnabled() const { return _isDownsampleEnabled; }
+    
     /**
      @brief Get target platform.
-     * @js NA
-     * @lua NA
      */
     Platform getPlatform() const;
     
@@ -152,8 +155,6 @@ public:
      @brief Open url in default browser.
      @param String with url to open.
      @return True if the resource located by the URL was successfully opened; otherwise false.
-     * @js NA
-     * @lua NA
      */
     bool openURL(const std::string &url);
     
@@ -171,7 +172,12 @@ private:
     void* _delegate = nullptr;
     float _animationInterval = 1.0f / 60;
     Scheduler* _scheduler = nullptr;
+    
     RenderTexture* _renderTexture = nullptr;
+    bool _isDownsampleEnabled = false;
+    // The ratio to downsample, for example, if its value is 2,
+    // then the rendering size of render texture is device_resolution/2.
+    uint8_t _devicePixelRatio = 1;
 };
 
 // end of platform group

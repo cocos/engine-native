@@ -61,6 +61,8 @@ Application::Application(const std::string& name, int width, int height)
     PFNGLBINDVERTEXARRAYOESPROC glBindVertexArrayOESEXT = (PFNGLBINDVERTEXARRAYOESPROC)eglGetProcAddress("glBindVertexArrayOES");
     PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = (PFNGLDELETEVERTEXARRAYSOESPROC)eglGetProcAddress("glDeleteVertexArraysOES");
 
+    // Shoule create _renderTexture here, then we don't have to consider how to
+    // revert the GL states. It is difficult to revert the states.
     _renderTexture = new RenderTexture(width, height, 2);
 }
 

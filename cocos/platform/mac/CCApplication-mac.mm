@@ -47,11 +47,12 @@ namespace
     {
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
+        int devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                g_width / 2,
-                g_height / 2);
+                g_width / devicePixelRatio,
+                g_height / devicePixelRatio);
         se->evalString(commandBuf);
-        glViewport(0, 0, g_width / 2, g_height / 2);
+        glViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -71,6 +72,8 @@ Application::Application(const std::string& name, int width, int height)
     
     float scale = CAST_VIEW(_view)->getScaleFactor();
     
+    // Shoule create _renderTexture here, then we don't have to consider how to
+    // revert the GL states. It is difficult to revert the states.
     _renderTexture = new RenderTexture(width * scale, height * scale, 2);
     
     renderer::DeviceGraphics::setScaleFactor(scale);
@@ -118,13 +121,15 @@ void Application::start()
         prevTime = std::chrono::steady_clock::now();
         
         // should be invoked at the begin of rendering a frame
-        _renderTexture->prepare();
+        if (_isDownsampleEnabled)
+            _renderTexture->prepare();
         
         CAST_VIEW(_view)->pollEvents();
         _scheduler->update(dt);
         EventDispatcher::dispatchTickEvent(dt);
         
-        _renderTexture->draw();
+        if (_isDownsampleEnabled)
+            _renderTexture->draw();
 
         CAST_VIEW(_view)->swapBuffers();
         PoolManager::getInstance()->getCurrentPool()->clear();
@@ -190,7 +195,6 @@ Application::LanguageType Application::getCurrentLanguage() const
     if ([languageCode isEqualToString:@"ro"]) return LanguageType::ROMANIAN;
     if ([languageCode isEqualToString:@"bg"]) return LanguageType::BULGARIAN;
     return LanguageType::ENGLISH;
-
 }
 
 bool Application::openURL(const std::string &url)
