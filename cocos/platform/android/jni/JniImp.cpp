@@ -98,7 +98,7 @@ namespace
                 g_height / devicePixelRatio);
         se->evalString(commandBuf);
         glViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
-       glDepthMask(GL_TRUE);
+        glDepthMask(GL_TRUE);
         
         return true;
     }
@@ -273,10 +273,11 @@ extern "C"
         cocos2d::TouchEvent touchEvent;
         touchEvent.type = type;
 
+        uint8_t devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
         cocos2d::TouchInfo touchInfo;
         touchInfo.index = id;
-        touchInfo.x = x;
-        touchInfo.y = y;
+        touchInfo.x = x / devicePixelRatio;
+        touchInfo.y = y / devicePixelRatio;
         touchEvent.touches.push_back(touchInfo);
         
         cocos2d::EventDispatcher::dispatchTouchEvent(touchEvent);

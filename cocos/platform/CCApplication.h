@@ -142,6 +142,7 @@ public:
         
         _devicePixelRatio = ratio;
         _isDownsampleEnabled = true;
+        _renderTexture->init(ratio);
     }
     inline uint8_t getDevicePixelRatio() const { return _devicePixelRatio; }
     inline bool isDownsampleEnabled() const { return _isDownsampleEnabled; }

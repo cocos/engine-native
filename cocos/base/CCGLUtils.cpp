@@ -89,8 +89,6 @@ void ccBindBuffer(GLenum target, GLuint buffer)
     {
         glBindBuffer(target, buffer);
     }
-
-    CHECK_GL_ERROR_DEBUG();
 #else
     glBindBuffer(target, buffer);
 #endif

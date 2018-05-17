@@ -32,8 +32,10 @@ NS_CC_BEGIN
 class RenderTexture
 {
 public:
-    RenderTexture(int width, int height, int factor);
+    RenderTexture(int width, int height);
     ~RenderTexture();
+    
+    void init(int factor);
     
     /** Do some work before draw, such as:
       * - bind frame buffer

@@ -33,22 +33,9 @@
 
 NS_CC_BEGIN
 
-RenderTexture::RenderTexture(int width, int height, int factor)
-: _width(width / factor)
-, _height(height / factor)
-, _deviceResolution({(float)width, (float)height})
-{    
-    if (! initProgram())
-        return;
-        
-    initTexture();
-    
-    if (Configuration::getInstance()->supportsShareableVAO())
-        initVBOAndVAO();
-    else
-        initVBO();
-    
-    initFramebuffer();
+RenderTexture::RenderTexture(int width, int height)
+: _deviceResolution( {(float)width, (float)height} )
+{
 }
 
 RenderTexture::~RenderTexture()
@@ -88,6 +75,24 @@ RenderTexture::~RenderTexture()
         glDeleteRenderbuffers(1, &_stencilBuffer);
         _stencilBuffer = 0;
     }
+}
+
+void RenderTexture::init(int factor)
+{
+    _width = _deviceResolution.x / factor;
+    _height = _deviceResolution.y / factor;
+    
+    if (! initProgram())
+        return;
+    
+    initTexture();
+    
+    if (Configuration::getInstance()->supportsShareableVAO())
+        initVBOAndVAO();
+    else
+        initVBO();
+    
+    initFramebuffer();
 }
 
 void RenderTexture::prepare()

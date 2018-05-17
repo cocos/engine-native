@@ -120,7 +120,8 @@ namespace
 
 -(void) firstStart:(id) view
 {
-    if ([view isReady]) {
+    if ([view isReady]) 
+    {
         cocos2d::ccInvalidateStateCache();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         se->addRegisterCallback(setCanvasCallback);
@@ -131,7 +132,8 @@ namespace
         [self startMainLoop];
     }
     else
-        [self performSelector:@selector(firstStart:) withObject:view afterDelay:0];}
+        [self performSelector:@selector(firstStart:) withObject:view afterDelay:0];
+}
 
 -(void) startMainLoop
 {
@@ -198,9 +200,7 @@ Application::Application(const std::string& name, int width, int height)
 
     createView(name);
     
-    // Shoule create _renderTexture here, then we don't have to consider how to
-    // revert the GL states. It is difficult to revert the states.
-    _renderTexture = new RenderTexture(width, height, 2);
+    _renderTexture = new RenderTexture(width, height);
     
     se::ScriptEngine::getInstance();
     EventDispatcher::init();
@@ -234,7 +234,7 @@ Application::~Application()
 void Application::start()
 {
     if (_delegate)
-        [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];
+        [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];    
 }
 
 void Application::setPreferredFramesPerSecond(int fps)

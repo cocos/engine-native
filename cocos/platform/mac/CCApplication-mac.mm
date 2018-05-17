@@ -71,10 +71,8 @@ Application::Application(const std::string& name, int width, int height)
     createView(name);
     
     float scale = CAST_VIEW(_view)->getScaleFactor();
-    
-    // Shoule create _renderTexture here, then we don't have to consider how to
-    // revert the GL states. It is difficult to revert the states.
-    _renderTexture = new RenderTexture(width * scale, height * scale, 2);
+
+    _renderTexture = new RenderTexture(width * scale, height * scale);
     
     renderer::DeviceGraphics::setScaleFactor(scale);
     EventDispatcher::init();
@@ -111,7 +109,7 @@ void Application::start()
 
     if (!_view)
         return;
-
+    
     std::chrono::steady_clock::time_point prevTime;
     std::chrono::steady_clock::time_point now;
     float dt = 0.f;
