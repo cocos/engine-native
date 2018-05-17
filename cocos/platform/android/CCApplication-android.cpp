@@ -103,10 +103,10 @@ void Application::applicationWillEnterForeground()
 
 }
 
-void Application::setAnimationInterval(float interval) 
+void Application::setPreferredFramesPerSecond(int fps) 
 {
-    _animationInterval = interval;
-    setAnimationIntervalJNI(_animationInterval);
+    _fps = fps;
+    setPreferredFramesPerSecondJNI(_fps);
 }
 
 std::string Application::getCurrentLanguageCode() const
@@ -214,6 +214,11 @@ void Application::onCreateView(int& /*x*/, int& /*y*/, int& /*width*/, int& /*he
 bool Application::openURL(const std::string &url)
 {
     return openURLJNI(url);
+}
+
+std::string Application::getSystemVersion()
+{
+    return getSystemVersionJNI();
 }
 
 NS_CC_END

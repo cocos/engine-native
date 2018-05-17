@@ -30,7 +30,7 @@
 #include <mutex>
 #include "JniHelper.h"
 #include "platform/CCApplication.h"
-#include "scripting/js-bindings/jswrapper/v8/ScriptEngine.hpp"
+#include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "platform/android/CCFileUtils-android.h"
 #include "base/CCScheduler.h"
@@ -118,7 +118,7 @@ extern "C"
      * Cocos2dxActivity native functions implementation.
      *****************************************************/
 
-    JNIEXPORT jintArray Java_org_cocos2dx_lib_Cocos2dxActivity_getGLContextAttrs(JNIEnv*  env, jobject thiz)
+    JNIEXPORT jintArray JNICALL Java_org_cocos2dx_lib_Cocos2dxActivity_getGLContextAttrs(JNIEnv*  env, jobject thiz)
     {
         //TODO
         int tmp[7] = {8, 8, 8,
@@ -133,7 +133,7 @@ extern "C"
 	 * Cocos2dxRenderer native functions implementation.
 	 *****************************************************/
 
-    JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h, jstring jDefaultResourcePath)
+    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h, jstring jDefaultResourcePath)
     {
         g_width = w;
         g_height = h;
@@ -157,11 +157,13 @@ extern "C"
         g_app->start();
     }
 
-    JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeFinish(JNIEnv*  env, jobject thiz)
+    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeFinish(JNIEnv*  env, jobject thiz)
     {
         g_isGameFinished = true;
         LOGD("CocosRenderer.nativeFinish");
-        se::ScriptEngine::destroyInstance();
+        g_app->getScheduler()->removeAllFunctionsToBePerformedInCocosThread();
+        EventDispatcher::destroy();
+        se::ScriptEngine::getInstance()->cleanup();
         cocos2d::experimental::AudioEngine::end();
         JniHelper::callObjectVoidMethod(thiz, Cocos2dxRendererClassName, "onGameFinished");
     }
@@ -245,7 +247,7 @@ extern "C"
         //TODO
     }
 
-    JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnSurfaceChanged(JNIEnv*  env, jobject thiz, jint w, jint h)
+    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnSurfaceChanged(JNIEnv*  env, jobject thiz, jint w, jint h)
     {
         //TODO
     }
@@ -404,7 +406,7 @@ extern "C"
      * Cocos2dxAudioFocusManager native functions implementation.
      ***********************************************************/
 
-    JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxAudioFocusManager_nativeOnAudioFocusChange(JNIEnv* env, jobject thiz, jint focusChange)
+    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxAudioFocusManager_nativeOnAudioFocusChange(JNIEnv* env, jobject thiz, jint focusChange)
     {
         // cocos_audioengine_focus_change(focusChange);
     }
@@ -502,14 +504,19 @@ std::string getCurrentLanguageJNI()
     return JniHelper::callStaticStringMethod(Cocos2dxHelperClassName, "getCurrentLanguage");
 }
 
+std::string getSystemVersionJNI()
+{
+    return JniHelper::callStaticStringMethod(Cocos2dxHelperClassName, "getSystemVersion");
+}
+
 bool openURLJNI(const std::string& url)
 {
     return JniHelper::callStaticBooleanMethod(Cocos2dxHelperClassName, "openURL", url);
 }
 
-void setAnimationIntervalJNI(float interval)
+void setPreferredFramesPerSecondJNI(int fps)
 {
-    JniHelper::callStaticVoidMethod(Cocos2dxRendererClassName, "setAnimationInterval", interval);
+    JniHelper::callStaticVoidMethod(Cocos2dxRendererClassName, "setPreferredFramesPerSecond", fps);
 }
 
 void setGameInfoDebugViewTextJNI(int index, const std::string& text)

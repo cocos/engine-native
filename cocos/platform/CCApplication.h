@@ -116,10 +116,10 @@ public:
     void start();
     
     /**
-     * @brief Callback by Director for limit FPS.
-     * @param interval The time, expressed in seconds, between current frame and next.
+     * @brief Sets the preferred frame rate for main loop callback.
+     * @param fps The preferred frame rate for main loop callback.
      */
-    void setAnimationInterval(float interval);
+    void setPreferredFramesPerSecond(int fps);
     
     void setMultitouch(bool value);
     
@@ -157,6 +157,8 @@ public:
      @return True if the resource located by the URL was successfully opened; otherwise false.
      */
     bool openURL(const std::string &url);
+
+    std::string getSystemVersion();
     
 protected:
     virtual void onCreateView(int& x, int& y, int& width, int& height, 
@@ -170,7 +172,7 @@ private:
     void* _view = nullptr;
     bool _multiTouch = false;
     void* _delegate = nullptr;
-    float _animationInterval = 1.0f / 60;
+    int _fps = 60;
     Scheduler* _scheduler = nullptr;
     
     RenderTexture* _renderTexture = nullptr;

@@ -139,9 +139,9 @@ void Application::start()
     }
 }
 
-void Application::setAnimationInterval(float interval)
+void Application::setPreferredFramesPerSecond(int fps)
 {
-    _animationInterval = interval * 1000.0f;
+    _fps = fps;
 }
 
 Application::Platform Application::getPlatform() const
@@ -256,6 +256,14 @@ void Application::createView(const std::string& name)
     
     g_width = width;
     g_height = height;
+}
+
+std::string Application::getSystemVersion()
+{
+    NSOperatingSystemVersion v = NSProcessInfo.processInfo.operatingSystemVersion;
+    char version[50] = {0};
+    snprintf(version, sizeof(version), "%d.%d.%d", (int)v.majorVersion, (int)v.minorVersion, (int)v.patchVersion);
+    return version;
 }
 
 NS_CC_END
