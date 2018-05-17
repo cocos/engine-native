@@ -114,7 +114,7 @@ void VertexBuffer::destroy()
     
     CC_SAFE_RELEASE_NULL(_format);
     
-    glDeleteBuffers(1, &_glID);
+    ccDeleteBuffers(1, &_glID);
     //TODO:    _device._stats.ib -= _bytes;
     
     _glID = 0;

@@ -281,7 +281,7 @@ namespace {
             if (_id != 0)
             {
                 SE_LOGD("Destroy WebGLBuffer (%u) by GC\n", _id);
-                JSB_GL_CHECK_VOID(glDeleteBuffers(1, &_id));
+                JSB_GL_CHECK_VOID(ccDeleteBuffers(1, &_id));
                 safeRemoveElementFromGLObjectMap(__webglBufferMap, _id);
             }
         }
@@ -3053,7 +3053,7 @@ static bool JSB_glDeleteBuffer(se::State& s) {
     ok &= seval_to_native_ptr(args[0], &arg0);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint bufferId = arg0 != nullptr ? arg0->_id : 0;
-    JSB_GL_CHECK(glDeleteBuffers(1, &bufferId));
+    JSB_GL_CHECK(ccDeleteBuffers(1, &bufferId));
     safeRemoveElementFromGLObjectMap(__webglBufferMap, bufferId);
     arg0->_id = 0;
     return true;
@@ -4005,7 +4005,7 @@ static bool JSB_glFlushCommand(se::State& s) {
         else if (commandID == GL_COMMAND_DELETE_BUFFER) {
             LOG_GL_COMMAND("Flush: DELETE_BUFFER\n");
             GLuint id = (GLuint)p[1];
-            JSB_GL_CHECK_VOID(glDeleteBuffers(1, &id));
+            JSB_GL_CHECK_VOID(ccDeleteBuffers(1, &id));
             safeRemoveElementFromGLObjectMap(__webglBufferMap, id);
             p += 2;
         }

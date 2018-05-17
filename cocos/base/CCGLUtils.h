@@ -32,6 +32,7 @@ NS_CC_BEGIN
 void ccInvalidateStateCache();
 
 void ccBindBuffer(GLenum target, GLuint buffer);
+void ccDeleteBuffers(GLsizei, const GLuint * buffers);
 GLint ccGetBoundVertexBuffer();
 GLint ccGetBoundIndexBuffer();
 void ccBindVertexArray(GLuint VAO);
