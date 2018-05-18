@@ -208,7 +208,6 @@ void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean norm
 
 const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
 {
-#if CC_ENABLE_GL_STATE_CACHE
     assert(index < MAX_ATTRIBUTE_UNIT);
     if (index >= MAX_ATTRIBUTE_UNIT)
         return nullptr;
@@ -218,9 +217,6 @@ const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
         return nullptr;
     
     return &__enabledVertexAttribArrayInfo[index];
-#else
-    return nullptr;
-#endif
 }
 
 /****************************************************************************************
