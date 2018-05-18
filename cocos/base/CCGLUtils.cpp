@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <cfloat>
 #include <cassert>
+#include "platform/CCApplication.h"
 
 NS_CC_BEGIN
 
@@ -39,7 +40,6 @@ NS_CC_BEGIN
 
 namespace
 {
-#if CC_ENABLE_GL_STATE_CACHE
     GLint __currentVertexBuffer = -1;
     GLint __currentIndexBuffer = -1;
     GLint __currentVertexArray = -1;
@@ -49,7 +49,6 @@ namespace
 
     GLint _currentUnpackAlignment = -1;
 
-#endif // CC_ENABLE_GL_STATE_CACHE
     bool __unpackFlipY = false;
     bool __premultiplyAlpha = false;
 }
@@ -58,7 +57,6 @@ namespace
 //FIXME: need to consider invoking this after restarting game.
 void ccInvalidateStateCache()
 {
-#if CC_ENABLE_GL_STATE_CACHE
     __currentVertexBuffer = -1;
     __currentIndexBuffer = -1;
     __currentVertexArray = -1;
@@ -68,7 +66,6 @@ void ccInvalidateStateCache()
         __enabledVertexAttribArrayInfo[i] = VertexAttributePointerInfo();
 
     _currentUnpackAlignment = -1;
-#endif
     __unpackFlipY = false;
     __premultiplyAlpha = false;
 }
@@ -101,6 +98,9 @@ void ccBindBuffer(GLenum target, GLuint buffer)
         glBindBuffer(target, buffer);
     }
 #else
+    // Should cache it, ccVertexAttribPointer depends on it.
+    __currentVertexBuffer = buffer;
+    
     glBindBuffer(target, buffer);
 #endif
 }
@@ -123,24 +123,12 @@ void ccDeleteBuffers(GLsizei n, const GLuint * buffers)
 
 GLint ccGetBoundVertexBuffer()
 {
-#if CC_ENABLE_GL_STATE_CACHE
     return __currentVertexBuffer;
-#else
-    GLint VBO = 0;
-    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &VBO);
-    return VBO;
-#endif
 }
 
 GLint ccGetBoundIndexBuffer()
 {
-#if CC_ENABLE_GL_STATE_CACHE
     return __currentIndexBuffer;
-#else
-    GLint VEO = 0;
-    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &VEO);
-    return VEO;
-#endif
 }
 
 void ccBindVertexArray(GLuint VAO)
@@ -152,17 +140,14 @@ void ccBindVertexArray(GLuint VAO)
         glBindVertexArray(VAO);
     }
 #else
+    __currentVertexArray = VAO;
     glBindVertexArray(VAO);
 #endif
 }
 
 GLint ccGetBoundVertexArray()
 {
-#if CC_ENABLE_GL_STATE_CACHE
     return __currentVertexArray;
-#else
-    return 0;
-#endif
 }
 
 /****************************************************************************************
@@ -196,7 +181,7 @@ void ccDisableVertexAttribArray(GLuint index)
     if (__enabledVertexAttribArrayFlag & flag)
     {
         glDisableVertexAttribArray(index);
-        __enabledVertexAttribArrayFlag &= !(1 << index);
+        __enabledVertexAttribArrayFlag &= ~(1 << index);
     }
 #else
     glDisableVertexAttribArray(index);
@@ -213,9 +198,9 @@ void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean norm
     // The index is not enabled, return.
     if (! (__enabledVertexAttribArrayFlag & (1 << index)) )
         return;
-    
-    __enabledVertexAttribArrayInfo[index] = VertexAttributePointerInfo(__currentVertexBuffer, index, size, type, normalized, stride, pointer);
 #endif
+    __enabledVertexAttribArrayInfo[index] = VertexAttributePointerInfo(__currentVertexBuffer, index, size, type, normalized, stride, pointer);
+
     // FIXME: should check all the values to determine if need to invoke glVertexAttribPointer or not?
     // We don't know if it is a good idea to do it because it needs to compare so many parameters.
     glVertexAttribPointer(index, size, type, normalized, stride, pointer);
@@ -236,6 +221,44 @@ const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
 #else
     return nullptr;
 #endif
+}
+
+/****************************************************************************************
+ Other functions.
+ ***************************************************************************************/
+
+void ccViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+    GLint currentFBO;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFBO);
+    if (currentFBO == Application::getInstance()->getMainFBO())
+    {
+        float scale = Application::getInstance()->getScreenScale();
+        x *= scale;
+        y *= scale;
+        width *= scale;
+        height *= scale;
+    }
+#endif
+    glViewport(x, y, width, height);
+}
+
+void ccScissor(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+    GLint currentFBO;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFBO);
+    if (currentFBO == Application::getInstance()->getMainFBO())
+    {
+        float scale = Application::getInstance()->getScreenScale();
+        x *= scale;
+        y *= scale;
+        width *= scale;
+        height *= scale;
+    }
+#endif
+    glScissor(x, y, width, height);
 }
 
 //FIXME:cjh: ONLY SUPPORT RGBA format now.
