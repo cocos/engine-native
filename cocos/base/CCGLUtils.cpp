@@ -33,20 +33,27 @@ NS_CC_BEGIN
 #define MAX_ATTRIBUTE_UNIT  16
 
 //FIXME: Consider to use variable to enable/disable cache state since using macro will not be able to close it if there're serious bugs.
-// #undef CC_ENABLE_GL_STATE_CACHE
-// #define CC_ENABLE_GL_STATE_CACHE 0
+//#undef CC_ENABLE_GL_STATE_CACHE
+//#define CC_ENABLE_GL_STATE_CACHE 0
 
-#if CC_ENABLE_GL_STATE_CACHE
+
 namespace
 {
+#if CC_ENABLE_GL_STATE_CACHE
     GLint __currentVertexBuffer = -1;
     GLint __currentIndexBuffer = -1;
     GLint __currentVertexArray = -1;
     
     uint32_t __enabledVertexAttribArrayFlag = 0;
     VertexAttributePointerInfo __enabledVertexAttribArrayInfo[MAX_ATTRIBUTE_UNIT];
-}
+
+    GLint _currentUnpackAlignment = -1;
+
 #endif // CC_ENABLE_GL_STATE_CACHE
+    bool __unpackFlipY = false;
+    bool __premultiplyAlpha = false;
+}
+
 
 //FIXME: need to consider invoking this after restarting game.
 void ccInvalidateStateCache()
@@ -59,7 +66,11 @@ void ccInvalidateStateCache()
     __enabledVertexAttribArrayFlag = 0;
     for (int i = 0; i < MAX_ATTRIBUTE_UNIT; ++i)
         __enabledVertexAttribArrayInfo[i] = VertexAttributePointerInfo();
+
+    _currentUnpackAlignment = -1;
 #endif
+    __unpackFlipY = false;
+    __premultiplyAlpha = false;
 }
 
 /****************************************************************************************
@@ -194,6 +205,7 @@ void ccDisableVertexAttribArray(GLuint index)
 
 void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
 {
+#if CC_ENABLE_GL_STATE_CACHE
     assert(index < MAX_ATTRIBUTE_UNIT);
     if (index >= MAX_ATTRIBUTE_UNIT)
         return;
@@ -203,7 +215,7 @@ void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean norm
         return;
     
     __enabledVertexAttribArrayInfo[index] = VertexAttributePointerInfo(__currentVertexBuffer, index, size, type, normalized, stride, pointer);
-
+#endif
     // FIXME: should check all the values to determine if need to invoke glVertexAttribPointer or not?
     // We don't know if it is a good idea to do it because it needs to compare so many parameters.
     glVertexAttribPointer(index, size, type, normalized, stride, pointer);
@@ -211,6 +223,7 @@ void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean norm
 
 const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
 {
+#if CC_ENABLE_GL_STATE_CACHE
     assert(index < MAX_ATTRIBUTE_UNIT);
     if (index >= MAX_ATTRIBUTE_UNIT)
         return nullptr;
@@ -220,6 +233,192 @@ const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
         return nullptr;
     
     return &__enabledVertexAttribArrayInfo[index];
+#else
+    return nullptr;
+#endif
+}
+
+//FIXME:cjh: ONLY SUPPORT RGBA format now.
+static void flipPixelsY(GLubyte *pixels, int bytesPerRow, int rows)
+{
+    if( !pixels ) { return; }
+
+    GLuint middle = rows/2;
+    GLuint intsPerRow = bytesPerRow / sizeof(GLuint);
+    GLuint remainingBytes = bytesPerRow - intsPerRow * sizeof(GLuint);
+
+    for( GLuint rowTop = 0, rowBottom = rows-1; rowTop < middle; rowTop++, rowBottom-- ) {
+
+        // Swap bytes in packs of sizeof(GLuint) bytes
+        GLuint *iTop = (GLuint *)(pixels + rowTop * bytesPerRow);
+        GLuint *iBottom = (GLuint *)(pixels + rowBottom * bytesPerRow);
+
+        GLuint itmp;
+        GLint n = intsPerRow;
+        do {
+            itmp = *iTop;
+            *iTop++ = *iBottom;
+            *iBottom++ = itmp;
+        } while(--n > 0);
+
+        // Swap the remaining bytes
+        GLubyte *bTop = (GLubyte *)iTop;
+        GLubyte *bBottom = (GLubyte *)iBottom;
+
+        GLubyte btmp;
+        switch( remainingBytes ) {
+            case 3: btmp = *bTop; *bTop++ = *bBottom; *bBottom++ = btmp;
+            case 2: btmp = *bTop; *bTop++ = *bBottom; *bBottom++ = btmp;
+            case 1: btmp = *bTop; *bTop = *bBottom; *bBottom = btmp;
+        }
+    }
+}
+
+static void flipPixelsYByFormat(GLubyte *pixels, GLenum format, uint32_t width, uint32_t height, uint32_t expectedTotalBytes)
+{
+    bool isSupportFlipY = true;
+    GLsizei bytesPerRow = 0;
+    switch (format) {
+        case GL_RGBA:
+            bytesPerRow = width * 4;
+            break;
+        case GL_RGB:
+            bytesPerRow = width * 3;
+            break;
+        case GL_LUMINANCE_ALPHA:
+            bytesPerRow = width * 2;
+            break;
+        case GL_LUMINANCE:
+            bytesPerRow = width;
+            break;
+        default:
+            isSupportFlipY = false;
+            break;
+    }
+
+    if (isSupportFlipY)
+    {
+        assert(expectedTotalBytes == bytesPerRow * height);
+        flipPixelsY((GLubyte*)pixels, bytesPerRow, height);
+    }
+    else
+    {
+        CCLOGERROR("flipPixelsYByFormat: format: 0x%X doesn't support upackFlipY!\n", format);
+    }
+}
+
+// Lookup tables for fast [un]premultiplied alpha color values
+// From https://bugzilla.mozilla.org/show_bug.cgi?id=662130
+static GLubyte* __premultiplyTable = nullptr;
+
+static const GLubyte* premultiplyTable()
+{
+    if( !__premultiplyTable ) {
+        __premultiplyTable = (GLubyte*)malloc(256*256);
+
+        unsigned char *data = __premultiplyTable;
+        for( int a = 0; a <= 255; a++ ) {
+            for( int c = 0; c <= 255; c++ ) {
+                data[a*256+c] = (a * c + 254) / 255;
+            }
+        }
+    }
+
+    return __premultiplyTable;
+}
+
+void premultiplyPixels(const GLubyte *inPixels, GLubyte *outPixels, GLenum format, uint32_t width, uint32_t height, uint32_t expectedTotalBytes)
+{
+    const GLubyte *table = premultiplyTable();
+    int byteLength = 0;
+    if( format == GL_RGBA )
+    {
+        byteLength = width * height * 4;
+        assert(byteLength == expectedTotalBytes);
+        for( int i = 0; i < byteLength; i += 4 ) {
+            unsigned short a = inPixels[i+3] * 256;
+            outPixels[i+0] = table[ a + inPixels[i+0] ];
+            outPixels[i+1] = table[ a + inPixels[i+1] ];
+            outPixels[i+2] = table[ a + inPixels[i+2] ];
+            outPixels[i+3] = inPixels[i+3];
+        }
+    }
+    else if ( format == GL_LUMINANCE_ALPHA )
+    {
+        byteLength = width * height * 2;
+        assert(byteLength == expectedTotalBytes);
+        for( int i = 0; i < byteLength; i += 2 ) {
+            unsigned short a = inPixels[i+1] * 256;
+            outPixels[i+0] = table[ a + inPixels[i+0] ];
+            outPixels[i+1] = inPixels[i+1];
+        }
+    }
+    else
+    {
+        CCLOGERROR("premultiplyPixels: format: 0x%X doesn't support upackFlipY!\n", format);
+    }
+}
+
+bool ccIsUnpackFlipY()
+{
+    return __unpackFlipY;
+}
+
+bool ccIsPremultiplyAlpha()
+{
+    return __premultiplyAlpha;
+}
+
+void ccPixelStorei(GLenum pname, GLint param)
+{
+    if (pname == GL_UNPACK_FLIP_Y_WEBGL)
+    {
+        __unpackFlipY = param == 0 ? false : true;
+        return;
+    }
+    else if (pname == GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL)
+    {
+        __premultiplyAlpha = param == 0 ? false : true;
+        return;
+    }
+    else if (pname == GL_UNPACK_COLORSPACE_CONVERSION_WEBGL)
+    {
+        CCLOGERROR("Warning: UNPACK_COLORSPACE_CONVERSION_WEBGL is unsupported\n");
+        return;
+    }
+    else if (pname == GL_UNPACK_ALIGNMENT)
+    {
+#if CC_ENABLE_GL_STATE_CACHE
+        if (_currentUnpackAlignment != param)
+        {
+            glPixelStorei(pname, param);
+            _currentUnpackAlignment = param;
+            CCLOG("pixel store changed: %d", param);
+        }
+#else
+        glPixelStorei(pname, param);
+#endif
+    }
+    else
+    {
+        glPixelStorei(pname, param);
+    }
+}
+
+void ccFlipYOrPremultiptyAlphaIfNeeded(GLenum format, GLsizei width, GLsizei height, uint32_t pixelBytes, GLvoid* pixels)
+{
+    if (pixels != nullptr)
+    {
+        if (__unpackFlipY)
+        {
+            flipPixelsYByFormat((GLubyte*)pixels, format, width, height, pixelBytes);
+        }
+
+        if (__premultiplyAlpha)
+        {
+            premultiplyPixels((GLubyte*)pixels, (GLubyte*)pixels, format, width, height, pixelBytes);
+        }
+    }
 }
 
 NS_CC_END
