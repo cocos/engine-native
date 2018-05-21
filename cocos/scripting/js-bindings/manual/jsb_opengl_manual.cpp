@@ -3184,6 +3184,7 @@ static bool JSB_glGetActiveAttrib(se::State& s) {
 
     se::Object* object = se::Object::createObjectWithClass(__jsb_WebGLActiveInfo_class);
     s.rval().setObject(object, true);
+    object->decRef();
 
     object->setProperty("size", se::Value((int32_t)size));
     object->setProperty("type", se::Value((int32_t)type));
