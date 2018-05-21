@@ -262,7 +262,7 @@ public class CanvasRenderingContext2DImpl {
     }
 
     private void setStrokeStyle(float r, float g, float b, float a) {
-        // Log.d(TAG, "setFillStyle: " + r + ", " + g + ", " + b + ", " + a);
+        // Log.d(TAG, "setStrokeStyle: " + r + ", " + g + ", " + b + ", " + a);
         mStrokeStyleR = (int)(r * 255.0f);
         mStrokeStyleG = (int)(g * 255.0f);
         mStrokeStyleB = (int)(b * 255.0f);
