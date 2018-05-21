@@ -163,8 +163,9 @@ using namespace cocos2d::experimental::ui;
         self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
         [self.moviePlayer setContentURL:[NSURL URLWithString:@(videoUrl.c_str())]];
     } else {
-        self.moviePlayer = [[[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:@(videoUrl.c_str())]] autorelease];
+        self.moviePlayer = [[[MPMoviePlayerController alloc] init] autorelease];
         self.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
+        [self.moviePlayer setContentURL:[NSURL fileURLWithPath:@(videoUrl.c_str())]];
     }
     self.moviePlayer.allowsAirPlay = NO;
     self.moviePlayer.controlStyle = MPMovieControlStyleNone;
