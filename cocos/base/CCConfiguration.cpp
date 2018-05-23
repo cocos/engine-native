@@ -111,7 +111,6 @@ void Configuration::gatherGPUInfo()
     _valueDict["gl.version"] = Value((const char*)glGetString(GL_VERSION));
 
     _glExtensions = (char *)glGetString(GL_EXTENSIONS);
-    CCLOG("OpenGL Extension: %s", _glExtensions);
 
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxTextureSize);
     _valueDict["gl.max_texture_size"] = Value((int)_maxTextureSize);

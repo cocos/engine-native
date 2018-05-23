@@ -28,6 +28,7 @@
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
 #include "base/CCGLUtils.h"
+#include "base/CCConfiguration.h"
 #include "renderer/gfx/DeviceGraphics.h"
 #include "scripting/js-bindings/jswrapper/jsc/ScriptEngine.hpp"
 #include "scripting/js-bindings/event/EventDispatcher.h"
@@ -203,6 +204,8 @@ Application* Application::_instance = nullptr;
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
+    Configuration::getInstance();
+    
     _scheduler = new Scheduler();
 
     createView(name, width, height);

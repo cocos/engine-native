@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
 #include "base/CCGLUtils.h"
+#include "base/CCConfiguration.h"
 #include "platform/desktop/CCGLView-desktop.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
@@ -63,6 +64,8 @@ Application* Application::_instance = nullptr;
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
+
+    Configuration::getInstance();
     
     g_width = width;
     g_height = height;
