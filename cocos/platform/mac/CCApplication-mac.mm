@@ -64,13 +64,13 @@ Application* Application::_instance = nullptr;
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
-
-    Configuration::getInstance();
     
     g_width = width;
     g_height = height;
     
     createView(name, width, height);
+
+    Configuration::getInstance();
 
     _renderTexture = new RenderTexture(width, height);
     _scheduler = new Scheduler();

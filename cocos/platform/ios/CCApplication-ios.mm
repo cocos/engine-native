@@ -204,11 +204,10 @@ Application* Application::_instance = nullptr;
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
-    Configuration::getInstance();
-    
     _scheduler = new Scheduler();
 
     createView(name, width, height);
+    Configuration::getInstance();
     
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_mainFBO);
     _renderTexture = new RenderTexture(width, height);
