@@ -242,26 +242,18 @@ void EventDispatcher::dispatchTickEvent(float dt)
         return;
 
     se::AutoHandleScope scope;
-
-    static std::chrono::steady_clock::time_point prevTime;
-    static std::chrono::steady_clock::time_point now;
-
     if (_tickVal.isUndefined())
     {
         se::ScriptEngine::getInstance()->getGlobalObject()->getProperty("gameTick", &_tickVal);
     }
 
+    static std::chrono::steady_clock::time_point prevTime;
     prevTime = std::chrono::steady_clock::now();
 
     se::ValueArray args;
-//    args.push_back(se::Value(dt));
     long long microSeconds = std::chrono::duration_cast<std::chrono::microseconds>(prevTime - se::ScriptEngine::getInstance()->getStartTime()).count();
-    args.push_back(se::Value((float)(microSeconds * 0.001f)));
-
+    args.push_back(se::Value((double)(microSeconds * 0.001)));
     _tickVal.toObject()->call(args, nullptr);
-
-    now = std::chrono::steady_clock::now();
-    dt = std::chrono::duration_cast<std::chrono::microseconds>(now - prevTime).count() / 1000000.f;
 }
 
 uint32_t EventDispatcher::addCustomEventListener(const std::string& eventName, const CustomEventListener& listener)
