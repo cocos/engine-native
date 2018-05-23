@@ -220,19 +220,19 @@ bool Configuration::supportsETC() const
 #endif
 }
 
-//bool Configuration::supportsS3TC() const
-//{
-//#ifdef GL_EXT_texture_compression_s3tc
-//    return _supportsS3TC;
-//#else
-//    return false;
-//#endif
-//}
-//
-//bool Configuration::supportsATITC() const
-//{
-//    return _supportsATITC;
-//}
+bool Configuration::supportsS3TC() const
+{
+#ifdef GL_EXT_texture_compression_s3tc
+    return _supportsS3TC;
+#else
+    return false;
+#endif
+}
+
+bool Configuration::supportsATITC() const
+{
+    return _supportsATITC;
+}
 
 bool Configuration::supportsBGRA8888() const
 {
