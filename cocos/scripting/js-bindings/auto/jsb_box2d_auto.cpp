@@ -2367,9 +2367,11 @@ static bool js_box2dclasses_b2Body_DestroyFixture(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         b2Fixture* arg0 = nullptr;
-        ok &= seval_to_native_ptr(args[0], &arg0);
+        auto& argv0 = args[0];
+        ok &= seval_to_native_ptr(argv0, &arg0);
         SE_PRECONDITION2(ok, false, "js_box2dclasses_b2Body_DestroyFixture : Error processing arguments");
         cobj->DestroyFixture(arg0);
+        argv0.toObject()->clearPrivateData();
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -3571,9 +3573,11 @@ static bool js_box2dclasses_b2World_DestroyJoint(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         b2Joint* arg0 = 0;
-        ok &= seval_to_native_ptr(args[0], &arg0);
+        auto& argv0 = args[0];
+        ok &= seval_to_native_ptr(argv0, &arg0);
         SE_PRECONDITION2(ok, false, "js_box2dclasses_b2World_DestroyJoint : Error processing arguments");
         cobj->DestroyJoint(arg0);
+        argv0.toObject()->clearPrivateData();
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -3683,9 +3687,11 @@ static bool js_box2dclasses_b2World_DestroyBody(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         b2Body* arg0 = nullptr;
-        ok &= seval_to_native_ptr(args[0], &arg0);
+        auto& argv0 = args[0];
+        ok &= seval_to_native_ptr(argv0, &arg0);
         SE_PRECONDITION2(ok, false, "js_box2dclasses_b2World_DestroyBody : Error processing arguments");
         cobj->DestroyBody(arg0);
+        argv0.toObject()->clearPrivateData();
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
