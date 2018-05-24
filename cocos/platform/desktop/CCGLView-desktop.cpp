@@ -275,9 +275,37 @@ void GLView::onGLFWMouseMoveCallBack(GLFWwindow* window, double x, double y)
     dispatchMouseEvent(_mouseX, _mouseY, 0, MouseEvent::Type::MOVE);
 }
 
-void GLView::onGLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/)
+void GLView::onGLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int mods)
 {
-    EventDispatcher::dispatchKeyEvent(key, action);
+    int keyInWeb = -1;
+    if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9)
+        keyInWeb = key;
+
+    if (key >= GLFW_KEY_A && key <= GLFW_KEY_Z)
+        keyInWeb = key;
+
+    if (key >= GLFW_KEY_F1 && key <= GLFW_KEY_F25)
+        keyInWeb -= 178;
+
+    KeyboardEvent event;
+    event.key = keyInWeb;
+    if (action == GLFW_PRESS)
+        event.action = KeyboardEvent::Action::PRESS;
+    else if (action == GLFW_RELEASE)
+        event.action = KeyboardEvent::Action::RELEASE;
+    else if (action == GLFW_REPEAT)
+        event.action = KeyboardEvent::Action::REPEAT;
+
+    if (mods & GLFW_MOD_SHIFT)
+        event.shiftKeyActive = true;
+    if (mods & GLFW_MOD_CONTROL)
+        event.ctrlKeyActive = true;
+    if (mods & GLFW_MOD_ALT)
+        event.altKeyActive = true;
+    if (mods & GLFW_MOD_SUPER)
+        event.metaKeyActive = true;
+
+    EventDispatcher::dispatchKeyEvent(event);
 }
 
 void GLView::onGLFWCharCallback(GLFWwindow* /*window*/, unsigned int character)
