@@ -287,6 +287,8 @@ void GLView::onGLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/
     if (key >= GLFW_KEY_F1 && key <= GLFW_KEY_F25)
         keyInWeb -= 178;
 
+    //TODO: Handle other key mapping.
+
     KeyboardEvent event;
     event.key = keyInWeb;
     if (action == GLFW_PRESS)
