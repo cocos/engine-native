@@ -929,9 +929,9 @@ SE_BIND_FUNC(JSB_glCompileShader)
 static bool JSB_glCompressedTexImage2D(se::State& s) {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SE_PRECONDITION2( argc == 8, false, "Invalid number of arguments" );
+    SE_PRECONDITION2( argc == 7, false, "Invalid number of arguments" );
     bool ok = true;
-    uint32_t arg0; int32_t arg1; uint32_t arg2; int32_t arg3; int32_t arg4; int32_t arg5; int32_t arg6; void* arg7;
+    uint32_t arg0; int32_t arg1; uint32_t arg2; int32_t arg3; int32_t arg4; int32_t arg5; void* arg6;
 
     ok &= seval_to_uint32(args[0], &arg0 );
     ok &= seval_to_int32(args[1], &arg1 );
@@ -939,12 +939,11 @@ static bool JSB_glCompressedTexImage2D(se::State& s) {
     ok &= seval_to_int32(args[3], &arg3 );
     ok &= seval_to_int32(args[4], &arg4 );
     ok &= seval_to_int32(args[5], &arg5 );
-    ok &= seval_to_int32(args[6], &arg6 );
     GLsizei count;
-    ok &= JSB_get_arraybufferview_dataptr(args[7], &count, &arg7);
+    ok &= JSB_get_arraybufferview_dataptr(args[6], &count, &arg6);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    JSB_GL_CHECK(glCompressedTexImage2D((GLenum)arg0 , (GLint)arg1 , (GLenum)arg2 , (GLsizei)arg3 , (GLsizei)arg4 , (GLint)arg5 , (GLsizei)arg6 , (GLvoid*)arg7  ));
+    JSB_GL_CHECK(glCompressedTexImage2D((GLenum)arg0 , (GLint)arg1 , (GLenum)arg2 , (GLsizei)arg3 , (GLsizei)arg4 , (GLint)arg5 , (GLsizei)count , (GLvoid*)arg6  ));
 
     return true;
 }
@@ -3297,7 +3296,15 @@ static bool JSB_glGetSupportedExtensions(se::State& s) {
         if( copy[i]==' ' || copy[i]==',' || i==len ) {
             copy[i] = 0;
 
-            jsobj->setArrayElement(element, se::Value((const char*)&copy[start_extension]));
+            const char* extensionName = (const char*)&copy[start_extension];
+            if (0 == strcmp(extensionName, "GL_EXT_texture_compression_s3tc"))
+                extensionName = "WEBGL_compressed_texture_s3tc";
+            else if (0 == strcmp(extensionName, "GL_OES_compressed_ETC1_RGB8_texture"))
+                extensionName = "WEBGL_compressed_texture_etc1";
+            else if (0 == strcmp(extensionName, "GL_IMG_texture_compression_pvrtc"))
+                extensionName = "WEBGL_compressed_texture_pvrtc";
+
+            jsobj->setArrayElement(element, se::Value(extensionName));
 
             start_extension = i+1;
             ++element;
@@ -3802,9 +3809,8 @@ static bool JSB_glFlushCommand(se::State& s) {
             p += 3;
         }
         else if (commandID == GL_COMMAND_BIND_BUFFER) {
-            LOG_GL_COMMAND("Flush: BIND_BUFFER\n");
-            GLuint bufferId = (GLuint)p[2];
-            JSB_GL_CHECK_VOID(ccBindBuffer((GLenum)p[1], bufferId));
+            LOG_GL_COMMAND("Flush: BIND_BUFFER, %u\n", (GLuint)p[2]);
+            JSB_GL_CHECK_VOID(ccBindBuffer((GLenum)p[1], (GLuint)p[2]));
             p += 3;
         }
         else if (commandID == GL_COMMAND_BIND_FRAME_BUFFER) {
@@ -3968,10 +3974,7 @@ static bool JSB_glFlushCommand(se::State& s) {
             p += 2;
         }
         else if (commandID == GL_COMMAND_DRAW_ARRAYS) {
-            LOG_GL_COMMAND("Flush: DRAW_ARRAYS\n");
-            GLenum a = (GLenum)p[1];
-            GLint b = (GLint)p[2];
-            GLsizei c = (GLsizei)p[3];
+            LOG_GL_COMMAND("Flush: DRAW_ARRAYS, %u, %d, %d\n", (GLenum)p[1], (GLint)p[2], (int)p[3]);
             JSB_GL_CHECK_VOID(glDrawArrays((GLenum)p[1], (GLint)p[2], (GLsizei)p[3]));
             p += 4;
         }
@@ -3986,7 +3989,7 @@ static bool JSB_glFlushCommand(se::State& s) {
             p += 2;
         }
         else if (commandID == GL_COMMAND_ENABLE_VERTEX_ATTRIB_ARRAY) {
-            LOG_GL_COMMAND("Flush: ENABLE_VERTEX_ATTRIB_ARRAY\n");
+            LOG_GL_COMMAND("Flush: ENABLE_VERTEX_ATTRIB_ARRAY, %u\n", (GLuint)p[1]);
             JSB_GL_CHECK_VOID(ccEnableVertexAttribArray((GLuint)p[1]));
             p += 2;
         }

@@ -190,15 +190,10 @@ void ccDisableVertexAttribArray(GLuint index)
 
 void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
 {
-#if CC_ENABLE_GL_STATE_CACHE
     assert(index < MAX_ATTRIBUTE_UNIT);
     if (index >= MAX_ATTRIBUTE_UNIT)
         return;
 
-    // The index is not enabled, return.
-    if (! (__enabledVertexAttribArrayFlag & (1 << index)) )
-        return;
-#endif
     __enabledVertexAttribArrayInfo[index] = VertexAttributePointerInfo(__currentVertexBuffer, index, size, type, normalized, stride, pointer);
 
     // FIXME: should check all the values to determine if need to invoke glVertexAttribPointer or not?
@@ -412,7 +407,6 @@ void ccPixelStorei(GLenum pname, GLint param)
         {
             glPixelStorei(pname, param);
             _currentUnpackAlignment = param;
-            CCLOG("pixel store changed: %d", param);
         }
 #else
         glPixelStorei(pname, param);
