@@ -277,15 +277,67 @@ void GLView::onGLFWMouseMoveCallBack(GLFWwindow* window, double x, double y)
 
 void GLView::onGLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int mods)
 {
+    //todo: use mapping.
+    printf("key: %d, action: %d, mods: %d\n", key, action, mods);
     int keyInWeb = -1;
     if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9)
         keyInWeb = key;
-
-    if (key >= GLFW_KEY_A && key <= GLFW_KEY_Z)
+    else if (key >= GLFW_KEY_A && key <= GLFW_KEY_Z)
         keyInWeb = key;
-
-    if (key >= GLFW_KEY_F1 && key <= GLFW_KEY_F25)
+    else if (key >= GLFW_KEY_F1 && key <= GLFW_KEY_F25)
         keyInWeb -= 178;
+    else if (key == GLFW_KEY_ESCAPE)
+        keyInWeb = 27;
+    else if (key == GLFW_KEY_MINUS)
+        keyInWeb = 189;
+    else if (key == GLFW_KEY_EQUAL)
+        keyInWeb = 187;
+    else if (key == GLFW_KEY_BACKSLASH)
+        keyInWeb = 220;
+    else if (key == GLFW_KEY_GRAVE_ACCENT)
+        keyInWeb = 192;
+    else if (key == GLFW_KEY_BACKSPACE)
+        keyInWeb = 8;
+    else if (key == GLFW_KEY_ENTER)
+        keyInWeb = 13;
+    else if (key == GLFW_KEY_LEFT_BRACKET)
+        keyInWeb = 219;
+    else if (key == GLFW_KEY_RIGHT_BRACKET)
+        keyInWeb = 221;
+    else if (key == GLFW_KEY_SEMICOLON)
+        keyInWeb = 186;
+    else if (key == GLFW_KEY_APOSTROPHE)
+        keyInWeb = 222;
+    else if (key == GLFW_KEY_TAB)
+        keyInWeb = 9;
+    else if (key == GLFW_KEY_LEFT_CONTROL)
+        keyInWeb = 17;
+    else if (key == GLFW_KEY_RIGHT_CONTROL)
+        keyInWeb = 17;
+    else if (key == GLFW_KEY_LEFT_SHIFT)
+        keyInWeb = 16;
+    else if (key == GLFW_KEY_RIGHT_SHIFT)
+        keyInWeb = 16;
+    else if (key == GLFW_KEY_LEFT_ALT)
+        keyInWeb = 18;
+    else if (key == GLFW_KEY_RIGHT_ALT)
+        keyInWeb = 18;
+    else if (key == GLFW_KEY_LEFT_SUPER)
+        keyInWeb = 91;
+    else if (key == GLFW_KEY_RIGHT_SUPER)
+        keyInWeb = 93;
+    else if (key == GLFW_KEY_RIGHT_ALT)
+        keyInWeb = 18;
+    else if (key == GLFW_KEY_UP)
+        keyInWeb = 38;
+    else if (key == GLFW_KEY_DOWN)
+        keyInWeb = 40;
+    else if (key == GLFW_KEY_LEFT)
+        keyInWeb = 37;
+    else if (key == GLFW_KEY_RIGHT)
+        keyInWeb = 39;
+    else if (key == GLFW_KEY_MENU)
+        keyInWeb = 93;
 
     //TODO: Handle other key mapping.
 
@@ -307,7 +359,7 @@ void GLView::onGLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/
     if (mods & GLFW_MOD_SUPER)
         event.metaKeyActive = true;
 
-    EventDispatcher::dispatchKeyEvent(event);
+    EventDispatcher::dispatchKeyboardEvent(event);
 }
 
 void GLView::onGLFWCharCallback(GLFWwindow* /*window*/, unsigned int character)

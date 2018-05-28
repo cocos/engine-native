@@ -112,7 +112,7 @@ public:
 
     static void dispatchTouchEvent(const struct TouchEvent& touchEvent);
     static void dispatchMouseEvent(const struct MouseEvent& mouseEvent);
-    static void dispatchKeyEvent(const struct KeyboardEvent& keyboardEvent);
+    static void dispatchKeyboardEvent(const struct KeyboardEvent& keyboardEvent);
     static void dispatchTickEvent(float dt);
     static void dispatchEnterBackgroundEvent();
     static void dispatchEnterForegroundEvent();

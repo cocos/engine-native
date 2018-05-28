@@ -139,7 +139,7 @@ void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
     }
 
     se::Value callbackVal;
-    if (__jsbObj->getProperty(eventName, &callbackVal))
+    if (__jsbObj->getProperty(eventName, &callbackVal) && !callbackVal.isNullOrUndefined())
     {
         se::ValueArray args;
         args.push_back(se::Value(_jsTouchObjArray));
@@ -200,7 +200,7 @@ void EventDispatcher::dispatchMouseEvent(const struct MouseEvent& mouseEvent)
     }
 
     se::Value callbackVal;
-    if (__jsbObj->getProperty(eventName, &callbackVal))
+    if (__jsbObj->getProperty(eventName, &callbackVal) && !callbackVal.isNullOrUndefined())
     {
         se::ValueArray args;
         args.push_back(se::Value(_jsMouseEventObj));
@@ -208,7 +208,7 @@ void EventDispatcher::dispatchMouseEvent(const struct MouseEvent& mouseEvent)
     }
 }
 
-void EventDispatcher::dispatchKeyEvent(const struct KeyboardEvent& keyboardEvent)
+void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent& keyboardEvent)
 {
     if (!se::ScriptEngine::getInstance()->isValid())
         return;
@@ -238,7 +238,7 @@ void EventDispatcher::dispatchKeyEvent(const struct KeyboardEvent& keyboardEvent
     }
 
     se::Value callbackVal;
-    if (__jsbObj->getProperty(eventName, &callbackVal))
+    if (__jsbObj->getProperty(eventName, &callbackVal) && !callbackVal.isNullOrUndefined())
     {
         _jsKeyboardEventObj->setProperty("altKey", se::Value(keyboardEvent.altKeyActive));
         _jsKeyboardEventObj->setProperty("ctrlKey", se::Value(keyboardEvent.ctrlKeyActive));
