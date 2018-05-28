@@ -76,13 +76,13 @@ struct MouseEvent
 
 struct KeyboardEvent
 {
-    enum class Action {
+    enum class Action : int8_t {
         UNKNOWN = -1,
         PRESS = 0,
         RELEASE,
         REPEAT
     };
-    
+
     int key = -1;
     Action action = Action::UNKNOWN;
     bool altKeyActive = false;
