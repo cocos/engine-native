@@ -174,16 +174,16 @@ namespace cocos2d { namespace network {
 
         return task;
     }
-        std::shared_ptr<const DownloadTask> Downloader::createDownloadFileTask(const std::string& srcUrl,
-                                                                               const std::string& storagePath,
-                                                                               const std::string& identifier/* = ""*/) {
-            const std::map<std::string, std::string> emptyHeader;
-            createDownloadFileTask(srcUrl, storagePath, emptyHeader, identifier);
-        }
+    std::shared_ptr<const DownloadTask> Downloader::createDownloadFileTask(const std::string& srcUrl,
+                                                                           const std::string& storagePath,
+                                                                           const std::string& identifier/* = ""*/) {
+        const std::map<std::string, std::string> emptyHeader;
+        return createDownloadFileTask(srcUrl, storagePath, emptyHeader, identifier);
+    }
 
-        void Downloader::abort(const std::shared_ptr<const DownloadTask>& task) {
-            _impl->abort(task->_coTask);
-        }
+    void Downloader::abort(const std::shared_ptr<const DownloadTask>& task) {
+        _impl->abort(task->_coTask);
+    }
 //std::string Downloader::getFileNameFromUrl(const std::string& srcUrl)
 //{
 //    // Find file name and file extension
