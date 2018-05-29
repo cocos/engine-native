@@ -119,8 +119,7 @@ namespace cocos2d { namespace network {
         return coTask;
     }
     void DownloaderApple::abort(const std::unique_ptr<IDownloadTask> &task) {
-        CCLOG("----jsb call abort task----");
-//        DLLOG("DownloaderAndroid:abort");
+        DLLOG("DownloaderApple:abort");
         DeclareDownloaderImplVar;
         cocos2d::network::DownloadTaskApple *downloadTask = (cocos2d::network::DownloadTaskApple *)task.get();
         NSURLSessionTask *taskOC = downloadTask->dataTask ? downloadTask->dataTask : downloadTask->downloadTask;
