@@ -643,27 +643,6 @@ namespace
     return NO;
 }
 
-- (void)insertText:(NSString *)text
-{
-    if (nil != _markedText) 
-    {
-        [_markedText release];
-        _markedText = nil;
-    }
-    const char * pszText = [text cStringUsingEncoding:NSUTF8StringEncoding];
-//    cocos2d::IMEDispatcher::sharedDispatcher()->dispatchInsertText(pszText, strlen(pszText));
-}
-
-- (void)deleteBackward
-{
-    if (nil != _markedText) 
-    {
-        [_markedText release];
-        _markedText = nil;
-    }
-//    cocos2d::IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
-}
-
 #pragma mark - UITextInputTrait protocol
 
 -(UITextAutocapitalizationType) autocapitalizationType
