@@ -486,7 +486,7 @@ void SIOClientImpl::handshakeResponse(HttpClient* /*sender*/, HttpResponse *resp
     std::string sid = "";
     int heartbeat = 0, timeout = 0;
 
-    if (res.at(res.size() - 1) == '}') {
+    if (res.find("sid") != std::string::npos) {
 
         CCLOGINFO("SIOClientImpl::handshake() Socket.IO 1.x detected");
         _version = SocketIOPacket::SocketIOVersion::V10x;
@@ -1037,6 +1037,12 @@ void SIOClient::onOpen()
     if (_path != "/")
     {
         _socket->connectToEndpoint(_path);
+    }
+    
+    if (!_connected)
+    {
+        onConnect();
+        fireEvent("connect", "");
     }
 }
 
