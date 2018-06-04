@@ -181,8 +181,8 @@ namespace cocos2d { namespace network {
         return createDownloadFileTask(srcUrl, storagePath, emptyHeader, identifier);
     }
 
-    void Downloader::abort(const std::shared_ptr<const DownloadTask>& task) {
-        _impl->abort(task->_coTask);
+    void Downloader::abort(const DownloadTask& task) {
+        _impl->abort(task._coTask);
     }
 //std::string Downloader::getFileNameFromUrl(const std::string& srcUrl)
 //{

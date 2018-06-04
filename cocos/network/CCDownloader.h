@@ -110,7 +110,7 @@ namespace cocos2d { namespace network {
 
         std::shared_ptr<const DownloadTask> createDownloadFileTask(const std::string& srcUrl, const std::string& storagePath, const std::map<std::string, std::string>& header, const std::string& identifier = "");
 
-        void abort(const std::shared_ptr<const DownloadTask>& task);
+        void abort(const DownloadTask& task);
 
     private:
         std::unique_ptr<IDownloaderImpl> _impl;

@@ -43,6 +43,7 @@
 #include "cocos/scripting/js-bindings/manual/jsb_xmlhttprequest.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_websocket.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_socketio.hpp"
+#include "cocos/scripting/js-bindings/manual/jsb_cocos2dx_network_manual.h"
 #endif // USE_NET_WORK
 
 #if USE_AUDIO
@@ -56,7 +57,6 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include "cocos/scripting/js-bindings/manual/JavaScriptJavaBridge.h"
 #endif
-
 
 #include "cocos2d.h"
 
@@ -94,6 +94,7 @@ bool jsb_register_all_modules()
 
 #if USE_NET_WORK
     se->addRegisterCallback(register_all_cocos2dx_network);
+    se->addRegisterCallback(register_all_cocos2dx_network_manual);
     se->addRegisterCallback(register_all_xmlhttprequest);
     se->addRegisterCallback(register_all_websocket);
     se->addRegisterCallback(register_all_socketio);

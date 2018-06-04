@@ -113,7 +113,6 @@ namespace cocos2d { namespace network {
                 methodInfo.env->DeleteLocalRef(jObj);
                 methodInfo.env->DeleteLocalRef(methodInfo.classID);
             }
-            _preloadJavaDownloaderClass();
         }
 
         DownloaderAndroid::~DownloaderAndroid()
