@@ -94,14 +94,14 @@ class HeadTaskHandler extends AsyncHttpResponseHandler {
     String _host;
     String _url;
     String _path;
-    String _header[];
+    String[] _header;
     private Cocos2dxDownloader _downloader;
 
     void LogD(String msg) {
         android.util.Log.d("Cocos2dxDownloader", msg);
     }
 
-    public HeadTaskHandler(Cocos2dxDownloader downloader, int id, String host, String url, String path, String header[]) {
+    public HeadTaskHandler(Cocos2dxDownloader downloader, int id, String host, String url, String path, String[] header) {
         super();
         _downloader = downloader;
         _id = id;
@@ -307,6 +307,7 @@ public class Cocos2dxDownloader {
         final int id = id_;
         final String url = url_;
         final String path = path_;
+        final String[] header = header_;
 
         Runnable taskRunnable = new Runnable() {
             @Override
@@ -319,7 +320,9 @@ public class Cocos2dxDownloader {
                 }
 
                 do {
-                    if (0 == path.length()) break;
+                    if (0 == path.length()) {
+                        break;
+                    }
 
                     String domain;
                     try {
@@ -339,12 +342,12 @@ public class Cocos2dxDownloader {
 
                     Header[] headers = null;
                     List<Header> listHeaders = new ArrayList<Header>();
-                    for (int i = 0; i < header_.length/2; i++) {
-                        listHeaders.add(new BasicHeader(header_[i*2], header_[(i*2)+1]));
+                    for (int i = 0; i < header.length/2; i++) {
+                        listHeaders.add(new BasicHeader(header[i*2], header[(i*2)+1]));
                     }
                     headers = listHeaders.toArray(new Header[listHeaders.size()]);
                     if (requestHeader) {
-                        task.handler = new HeadTaskHandler(downloader, id, host, url, path, header_);
+                        task.handler = new HeadTaskHandler(downloader, id, host, url, path, header);
                         task.handle = downloader._httpClient.head(Cocos2dxHelper.getActivity(), url, headers, null, task.handler);
                         break;
                     }
@@ -395,7 +398,7 @@ public class Cocos2dxDownloader {
         downloader.enqueueTask(taskRunnable);
     }
 
-    public static void abort(final Cocos2dxDownloader downloader, int id) {
+    public static void abort(final Cocos2dxDownloader downloader, final int id) {
         Cocos2dxHelper.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
