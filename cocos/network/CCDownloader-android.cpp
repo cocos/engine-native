@@ -153,16 +153,18 @@ namespace cocos2d { namespace network {
             {
                 jclass jclassString = methodInfo.env->FindClass("java/lang/String");
                 jstring jstrURL = methodInfo.env->NewStringUTF(task->requestURL.c_str());
-                jstring jstrPath= methodInfo.env->NewStringUTF(task->storagePath.c_str());
+                jstring jstrPath = methodInfo.env->NewStringUTF(task->storagePath.c_str());
                 jobjectArray jarrayHeader = methodInfo.env->NewObjectArray(task->header.size()*2, jclassString, NULL);
-                std::map<std::string, std::string> headMap = task->header;
-                std::map<std::string, std::string>::iterator it;
+                const std::map<std::string, std::string> &headMap = task->header;
                 int index = 0;
-                for (it = headMap.begin(); it != headMap.end(); ++it) {
+                for (auto it = headMap.cbegin(); it != headMap.cend(); ++it) {
                     methodInfo.env->SetObjectArrayElement(jarrayHeader, index++, methodInfo.env->NewStringUTF(it->first.c_str()));
                     methodInfo.env->SetObjectArrayElement(jarrayHeader, index++, methodInfo.env->NewStringUTF(it->second.c_str()));
                 }
                 methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, _impl, coTask->id, jstrURL, jstrPath, jarrayHeader);
+                for (int i = 0; i < index; ++i) {
+                    methodInfo.env->DeleteLocalRef(methodInfo.env->GetObjectArrayElement(jarrayHeader, i));
+                }
                 methodInfo.env->DeleteLocalRef(jclassString);
                 methodInfo.env->DeleteLocalRef(jstrURL);
                 methodInfo.env->DeleteLocalRef(jstrPath);
