@@ -11,9 +11,9 @@ fi
 cd $COCOS2DX_ROOT/tools/travis-scripts
 ./generate-bindings.sh $TRAVIS_BRANCH
 
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-  exit 0
-fi
+# if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+#   exit 0
+# fi
 
 if [ -z "${GH_EMAIL}" ]; then
   echo "GH_EMAIL not set"
