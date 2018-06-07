@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -32,6 +33,8 @@ THE SOFTWARE.
 #include <string>
 #include "base/ccTypes.h"
 #include "platform/apple/CCDevice-apple.h"
+
+#include "CCReachability.h"
 
 NS_CC_BEGIN
 
@@ -440,6 +443,36 @@ void Device::setKeepScreenOn(bool value)
 void Device::vibrate(float duration)
 {
     CC_UNUSED_PARAM(duration);
+}
+
+float Device::getBatteryLevel()
+{
+    return 1.0f;
+}
+
+Device::NetworkType Device::getNetworkType()
+{
+    static Reachability* __reachability = nullptr;
+    if (__reachability == nullptr)
+    {
+        __reachability = Reachability::createForInternetConnection();
+        __reachability->retain();
+    }
+
+    NetworkType ret = NetworkType::NONE;
+    Reachability::NetworkStatus status = __reachability->getCurrentReachabilityStatus();
+    switch (status) {
+        case Reachability::NetworkStatus::REACHABLE_VIA_WIFI:
+            ret = NetworkType::LAN;
+            break;
+        case Reachability::NetworkStatus::REACHABLE_VIA_WWAN:
+            ret = NetworkType::WWAN;
+        default:
+            ret = NetworkType::NONE;
+            break;
+    }
+
+    return ret;
 }
 
 NS_CC_END

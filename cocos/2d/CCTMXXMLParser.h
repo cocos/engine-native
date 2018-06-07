@@ -3,6 +3,7 @@ Copyright (c) 2009-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -179,6 +180,8 @@ public:
     int             _spacing;
     int             _margin;
     Vec2            _tileOffset;
+    // ! preloaded texture
+    Texture2D*      _preloadedTexture;
     //! filename containing the tiles (should be spritesheet / texture atlas)
     std::string     _sourceImage;
     //! size in pixels of the image
@@ -213,10 +216,17 @@ This information is obtained from the TMX file.
 class CC_DLL TMXMapInfo : public Ref, public SAXDelegator
 {
 public:
+    typedef cocos2d::Map<std::string, Texture2D*> TextureMap;
+    typedef std::map<std::string, std::string> TsxFileMap;
+
     /** creates a TMX Format with a tmx file */
     static TMXMapInfo * create(const std::string& tmxFile);
-    /** creates a TMX Format with an XML string and a TMX resource path */
-    static TMXMapInfo * createWithXML(const std::string& tmxString, const std::string& resourcePath);
+    /** creates a TMX Format with an XML string and a TMX resource path and an optional texture map */
+    static TMXMapInfo * createWithXML(const std::string& tmxString, const std::string& resourcePath,
+                                      const TextureMap* textures = nullptr);
+    /** creates a TMX Format with an XML string and a tsxFile map and an optional texture map */
+    static TMXMapInfo * createWithXML(const std::string& tmxString, const TsxFileMap* tsxFileMap,
+                                      const TextureMap* textures = nullptr);
 
     /**
      * @js ctor
@@ -230,8 +240,12 @@ public:
 
     /** initializes a TMX format with a  tmx file */
     bool initWithTMXFile(const std::string& tmxFile);
-    /** initializes a TMX format with an XML string and a TMX resource path */
-    bool initWithXML(const std::string& tmxString, const std::string& resourcePath);
+    /** initializes a TMX format with an XML string and a TMX resource path and an optional texture map */
+    bool initWithXML(const std::string& tmxString, const std::string& resourcePath,
+                     const TextureMap* textures = nullptr);
+    /** initializes a TMX format with an XML string and a tsxFile map and an optional texture map */
+    bool initWithXML(const std::string& tmxString, const TsxFileMap* tsxFileMap,
+                     const TextureMap* textures = nullptr);
     /** initializes parsing of an XML file, either a tmx (Map) file or tsx (Tileset) file */
     bool parseXMLFile(const std::string& xmlFilename);
     /* initializes parsing of an XML string, either a tmx (Map) string or tsx (Tileset) string */
@@ -341,7 +355,8 @@ public:
     inline const std::string& getExternalTilesetFileName() const { return _externalTilesetFilename; }
 
 protected:
-    void internalInit(const std::string& tmxFileName, const std::string& resourcePath);
+    void internalInit(const std::string& tmxFileName, const std::string& resourcePath, 
+                      const TsxFileMap* tsxFileMap, const TextureMap* textures);
 
     /// map orientation
     int    _orientation;
@@ -380,6 +395,10 @@ protected:
     std::string _TMXFileName;
     // tmx resource path
     std::string _resources;
+    // map of preloaded tsxFiles indexed by externalTilesetFilename
+    const TsxFileMap* _preloadedTsxFiles;
+    // map of preloaded textures indexed by name
+    const TextureMap* _preloadedTextures;
     //! current string
     std::string _currentString;
     //! tile properties

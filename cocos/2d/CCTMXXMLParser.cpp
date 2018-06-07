@@ -4,6 +4,7 @@ Copyright (c) 2009-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -81,6 +82,7 @@ TMXTilesetInfo::TMXTilesetInfo()
     ,_tileSize(Size::ZERO)
     ,_spacing(0)
     ,_margin(0)
+    ,_preloadedTexture(nullptr)
     ,_imageSize(Size::ZERO)
 {
 }
@@ -122,10 +124,11 @@ TMXMapInfo * TMXMapInfo::create(const std::string& tmxFile)
     return nullptr;
 }
 
-TMXMapInfo * TMXMapInfo::createWithXML(const std::string& tmxString, const std::string& resourcePath)
+TMXMapInfo * TMXMapInfo::createWithXML(const std::string& tmxString, const std::string& resourcePath,
+                                       const TMXMapInfo::TextureMap* textures)
 {
     TMXMapInfo *ret = new (std::nothrow) TMXMapInfo();
-    if (ret->initWithXML(tmxString, resourcePath))
+    if (ret->initWithXML(tmxString, resourcePath, textures))
     {
         ret->autorelease();
         return ret;
@@ -134,7 +137,21 @@ TMXMapInfo * TMXMapInfo::createWithXML(const std::string& tmxString, const std::
     return nullptr;
 }
 
-void TMXMapInfo::internalInit(const std::string& tmxFileName, const std::string& resourcePath)
+TMXMapInfo * TMXMapInfo::createWithXML(const std::string& tmxString, const TsxFileMap* tsxFileMap, 
+                                       const TextureMap* textures)
+{
+    TMXMapInfo *ret = new (std::nothrow) TMXMapInfo();
+    if (ret->initWithXML(tmxString, tsxFileMap, textures))
+    {
+	    ret->autorelease();
+	    return ret;
+    }
+    CC_SAFE_DELETE(ret);
+    return nullptr;
+}
+
+void TMXMapInfo::internalInit(const std::string& tmxFileName, const std::string& resourcePath, 
+                              const TsxFileMap* tsxFileMap, const TextureMap* textures)
 {
     if (!tmxFileName.empty())
     {
@@ -146,6 +163,10 @@ void TMXMapInfo::internalInit(const std::string& tmxFileName, const std::string&
         _resources = resourcePath;
     }
 
+    _preloadedTsxFiles = tsxFileMap;
+
+    _preloadedTextures = textures;
+
     _objectGroups.reserve(4);
 
     // tmp vars
@@ -156,15 +177,23 @@ void TMXMapInfo::internalInit(const std::string& tmxFileName, const std::string&
     _currentFirstGID = -1;
 }
 
-bool TMXMapInfo::initWithXML(const std::string& tmxString, const std::string& resourcePath)
+bool TMXMapInfo::initWithXML(const std::string& tmxString, const std::string& resourcePath,
+                             const TMXMapInfo::TextureMap* textures)
 {
-    internalInit("", resourcePath);
+    internalInit("", resourcePath, nullptr, textures);
+    return parseXMLString(tmxString);
+}
+
+bool TMXMapInfo::initWithXML(const std::string& tmxString, const TsxFileMap* tsxFileMap, 
+                             const TextureMap* textures)
+{
+    internalInit("", "", tsxFileMap, textures);
     return parseXMLString(tmxString);
 }
 
 bool TMXMapInfo::initWithTMXFile(const std::string& tmxFile)
 {
-    internalInit(tmxFile, "");
+    internalInit(tmxFile, "", nullptr, nullptr);
     return parseXMLFile(_TMXFileName);
 }
 
@@ -179,6 +208,7 @@ TMXMapInfo::TMXMapInfo()
 , _tileSize(Size::ZERO)
 , _layerAttribs(0)
 , _storingCharacters(false)
+, _preloadedTextures(nullptr)
 , _xmlTileIndex(0)
 , _currentFirstGID(-1)
 , _recordFirstGID(true)
@@ -297,18 +327,6 @@ void TMXMapInfo::startElement(void *ctx, const char *name, const char **atts)
         if (externalTilesetFilename != "")
         {
             _externalTilesetFilename = externalTilesetFilename;
-            // Tileset file will be relative to the map file. So we need to convert it to an absolute path
-            if (_TMXFileName.find_last_of("/") != string::npos)
-            {
-                string dir = _TMXFileName.substr(0, _TMXFileName.find_last_of("/") + 1);
-                externalTilesetFilename = dir + externalTilesetFilename;
-            }
-            else
-            {
-                externalTilesetFilename = _resources + "/" + externalTilesetFilename;
-            }
-            externalTilesetFilename = FileUtils::getInstance()->fullPathForFilename(externalTilesetFilename);
-
             _currentFirstGID = attributeDict["firstgid"].asInt();
             if (_currentFirstGID < 0)
             {
@@ -316,7 +334,26 @@ void TMXMapInfo::startElement(void *ctx, const char *name, const char **atts)
             }
             _recordFirstGID = false;
 
-            tmxMapInfo->parseXMLFile(externalTilesetFilename);
+            auto it = _preloadedTsxFiles->find(externalTilesetFilename);
+            if (it != _preloadedTsxFiles->end()) {
+	            tmxMapInfo->parseXMLString(it->second);
+            }
+            else 
+            {
+                // Tileset file will be relative to the map file. So we need to convert it to an absolute path
+                if (_TMXFileName.find_last_of("/") != std::string::npos)
+                {
+                    string dir = _TMXFileName.substr(0, _TMXFileName.find_last_of("/") + 1);
+                    externalTilesetFilename = dir + externalTilesetFilename;
+                }
+                else
+                {
+                    externalTilesetFilename = _resources + "/" + externalTilesetFilename;
+                }
+                externalTilesetFilename = FileUtils::getInstance()->fullPathForFilename(externalTilesetFilename);
+
+                tmxMapInfo->parseXMLFile(externalTilesetFilename);
+            }
         }
         else
         {
@@ -462,14 +499,29 @@ void TMXMapInfo::startElement(void *ctx, const char *name, const char **atts)
         std::string imagename = attributeDict["source"].asString();
         tileset->_originSourceImage = imagename;
 
-        if (_TMXFileName.find_last_of("/") != string::npos)
+        if (_preloadedTextures != nullptr)
         {
-            string dir = _TMXFileName.substr(0, _TMXFileName.find_last_of("/") + 1);
-            tileset->_sourceImage = dir + imagename;
+            auto it = _preloadedTextures->find(imagename);
+            if (it != _preloadedTextures->end())
+            {
+                tileset->_preloadedTexture = it->second;
+            }
+            else
+            {
+                CCLOG("cocos2d: TiledMap: Texture '%s' not found.", imagename.c_str());
+            }
         }
         else
         {
-            tileset->_sourceImage = _resources + (_resources.size() ? "/" : "") + imagename;
+            if (_TMXFileName.find_last_of("/") != string::npos)
+            {
+                string dir = _TMXFileName.substr(0, _TMXFileName.find_last_of("/") + 1);
+                tileset->_sourceImage = dir + imagename;
+            }
+            else
+            {
+                tileset->_sourceImage = _resources + (_resources.size() ? "/" : "") + imagename;
+            }
         }
     }
     else if (elementName == "data")

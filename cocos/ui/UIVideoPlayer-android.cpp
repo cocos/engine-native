@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -315,6 +316,11 @@ float VideoPlayer::currentTime() const
 float VideoPlayer::duration() const
 {
     return JniHelper::callStaticFloatMethod(videoHelperClassName, "getDuration", _videoPlayerIndex);
+}
+
+void VideoPlayer::setVolume(float volume)
+{
+    JniHelper::callStaticVoidMethod(videoHelperClassName, "setVolume", _videoPlayerIndex, volume);
 }
 
 #endif

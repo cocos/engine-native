@@ -2,7 +2,8 @@
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -59,7 +60,14 @@ bool TMXLayer::initWithTilesetInfo(TMXTilesetInfo *tilesetInfo, TMXLayerInfo *la
     Texture2D *texture = nullptr;
     if( tilesetInfo )
     {
-        texture = Director::getInstance()->getTextureCache()->addImage(tilesetInfo->_sourceImage);
+        if (nullptr != tilesetInfo->_preloadedTexture)
+        {
+            texture = tilesetInfo->_preloadedTexture;
+        }
+        else
+        {
+            texture = Director::getInstance()->getTextureCache()->addImage(tilesetInfo->_sourceImage);
+        }
     }
 
     if (nullptr == texture)

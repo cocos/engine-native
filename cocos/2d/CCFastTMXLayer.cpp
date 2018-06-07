@@ -1,5 +1,6 @@
 /****************************************************************************
 Copyright (c) 2014-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -66,7 +67,14 @@ bool TMXLayer::initWithTilesetInfo(TMXTilesetInfo *tilesetInfo, TMXLayerInfo *la
 {
     if( tilesetInfo )
     {
-        _texture = Director::getInstance()->getTextureCache()->addImage(tilesetInfo->_sourceImage);
+        if (nullptr != tilesetInfo->_preloadedTexture)
+        {
+            _texture = tilesetInfo->_preloadedTexture;
+        }
+        else
+        {
+            _texture = Director::getInstance()->getTextureCache()->addImage(tilesetInfo->_sourceImage);
+        }
         _texture->retain();
     }
 

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +44,7 @@ cc.view.convertToLocationInView = function (tx, ty, relatedPos) {
 cc.view.enableRetina = function(enabled) {};
 cc.view.isRetinaEnabled = function() {
     var sys = cc.sys;
-    return (sys.os === sys.OS_IOS || sys.os === sys.OS_OSX) ? true : false;
+    return (sys.os === sys.OS_IOS || sys.os === sys.OS_OSX);
 };
 cc.view.adjustViewPort = function() {};
 cc.view.resizeWithBrowserSize = function () {return;};
@@ -561,7 +562,7 @@ var _initSys = function () {
                     platform === sys.IPHONE || 
                     platform === sys.WP8 || 
                     platform === sys.TIZEN ||
-                    platform === sys.BLACKBERRY) ? true : false;
+                    platform === sys.BLACKBERRY);
     
     sys._application = cc.Application.getInstance();
 
@@ -604,6 +605,70 @@ var _initSys = function () {
     sys.browserVersion = null; //null in jsb
 
     sys.windowPixelResolution = cc.view.getFrameSize();
+
+    /**
+     * !#en
+     * Network type enumeration
+     * !#zh
+     * 网络类型枚举
+     *
+     * @enum NetworkType
+     */
+    sys.NetworkType = {
+        /**
+         * !#en
+         * Network is unreachable.
+         * !#zh
+         * 网络不通
+         *
+         * @property {Number} NONE
+         */
+        NONE: 0,
+        /**
+         * !#en
+         * Network is reachable via WiFi or cable.
+         * !#zh
+         * 通过无线或者有线本地网络连接因特网
+         *
+         * @property {Number} LAN
+         */
+        LAN: 1,
+        /**
+         * !#en
+         * Network is reachable via Wireless Wide Area Network
+         * !#zh
+         * 通过蜂窝移动网络连接因特网
+         *
+         * @property {Number} WWAN
+         */
+        WWAN: 2
+    };
+
+    /**
+     * !#en
+     * Get the battery level of current device, return 1.0 if failure.
+     * !#zh
+     * 获取当前设备的电池电量，如果电量无法获取，默认将返回 1
+     *
+     * @method getBatteryLevel
+     * @return {Number} - 0.0 ~ 1.0
+     */
+    sys.getBatteryLevel = function() {
+        return cc.Device.getBatteryLevel();
+    };
+
+    /**
+     * !#en
+     * Get the network type of current device, return cc.sys.NetworkType.LAN if failure.
+     * !#zh
+     * 获取当前设备的网络类型, 如果网络类型无法获取，默认将返回 cc.sys.NetworkType.LAN
+     *
+     * @method getNetworkType
+     * @return {NetworkType}
+     */
+    sys.getNetworkType = function() {
+        return cc.Device.getNetworkType();
+    };
 
     var capabilities = sys.capabilities = {
         "canvas": false,
@@ -730,9 +795,5 @@ _initSys();
 jsb.urlRegExp = new RegExp("^(?:https?|ftp)://\\S*$", "i");
 
 cc._engineLoaded = false;
-
-(function (config) {
-    require("script/jsb.js");
-    cc._engineLoaded = true;
-    console.log(cc.ENGINE_VERSION);
-})();
+require("script/jsb.js");
+cc._engineLoaded = true;

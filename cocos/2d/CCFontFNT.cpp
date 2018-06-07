@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2013      Zynga Inc.
  Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -800,8 +801,8 @@ int * FontFNT::getHorizontalKerningForTextUTF16(const std::u16string& text, int 
 
     for (int c = 0; c < outNumLetters; ++c)
     {
-        if (c < (outNumLetters-1))
-            sizes[c] = getHorizontalKerningForChars(text[c], text[c+1]);
+        if (c > 0)
+            sizes[c] = getHorizontalKerningForChars(text[c-1], text[c]);
         else
             sizes[c] = 0;
     }

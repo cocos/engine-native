@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2017 Chukong Technologies Inc.
+ Copyright (c) 2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -431,7 +432,7 @@ namespace se {
                 {
                     exceptionStr += "\nSTACK:\n" + exceptionInfo.stack;
                 }
-                SE_LOGD("ERROR: %s\n", exceptionStr.c_str());
+                SE_LOGE("ERROR: %s\n", exceptionStr.c_str());
 
                 if (_exceptionCallback != nullptr)
                 {

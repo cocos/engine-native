@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2017 Chukong Technologies Inc.
+ Copyright (c) 2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -706,7 +707,50 @@ namespace se {
             return ret;
         }
 #endif
-        return isInstanceOfConstructor(__cx, _obj, "__jscTypedArrayConstructor");
+
+        bool isTypedArray = true;
+        if (isInstanceOfConstructor(__cx, _obj, "Int8Array"))
+        {
+            _type = Type::TYPED_ARRAY_INT8;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Int16Array"))
+        {
+            _type = Type::TYPED_ARRAY_INT16;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Int32Array"))
+        {
+            _type = Type::TYPED_ARRAY_INT32;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Uint8Array"))
+        {
+            _type = Type::TYPED_ARRAY_UINT8;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Uint8ClampedArray"))
+        {
+            _type = Type::TYPED_ARRAY_UINT8_CLAMPED;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Uint16Array"))
+        {
+            _type = Type::TYPED_ARRAY_UINT16;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Uint32Array"))
+        {
+            _type = Type::TYPED_ARRAY_UINT32;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Float32Array"))
+        {
+            _type = Type::TYPED_ARRAY_FLOAT32;
+        }
+        else if (isInstanceOfConstructor(__cx, _obj, "Float64Array"))
+        {
+            _type = Type::TYPED_ARRAY_FLOAT64;
+        }
+        else
+        {
+            isTypedArray = false;
+        }
+
+        return isTypedArray;
     }
 
     Object::TypedArrayType Object::getTypedArrayType() const
@@ -912,7 +956,17 @@ namespace se {
                             }
                             return true;
                         }
+                        else
+                        {
+                            *length = 0;
+                            *ptr = nullptr;
+                            return true;
+                        }
                     }
+                }
+                else
+                {
+                    assert(false);
                 }
             }
         }
@@ -1070,12 +1124,12 @@ namespace se {
         _privateData = data;
     }
 
-    void Object::clearPrivateData()
+    void Object::clearPrivateData(bool clearMapping)
     {
         if (_privateData != nullptr)
         {
-            void* data = getPrivateData();
-            NativePtrToObjectMap::erase(data);
+            if (clearMapping)
+                NativePtrToObjectMap::erase(_privateData);
             internal::clearPrivate(_obj);
             _privateData = nullptr;
         }

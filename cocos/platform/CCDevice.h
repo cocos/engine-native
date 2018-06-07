@@ -1,6 +1,7 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -97,6 +98,20 @@ public:
      */
     static Data getTextureDataForText(const char * text, const FontDefinition& textDefinition, TextAlign align, int &width, int &height, bool& hasPremultipliedAlpha);
 
+    /**
+     * Gets battery level, only avaiable on iOS and Android.
+     * @return 0.0 ~ 1.0
+     */
+    static float getBatteryLevel();
+
+    enum class NetworkType
+    {
+        NONE,
+        LAN,
+        WWAN
+    };
+
+    static NetworkType getNetworkType();
 private:
     CC_DISALLOW_IMPLICIT_CONSTRUCTORS(Device);
 };

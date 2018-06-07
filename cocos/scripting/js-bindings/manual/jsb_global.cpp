@@ -1,3 +1,28 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+
+ http://www.cocos.com
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated engine source code (the "Software"), a limited,
+ worldwide, royalty-free, non-assignable, revocable and non-exclusive license
+ to use Cocos Creator solely to develop games on your target platforms. You shall
+ not use Cocos Creator software for developing other software or tools that's
+ used for developing games. You are not granted to publish, distribute,
+ sublicense, and/or sell copies of Cocos Creator.
+
+ The software or tools in this License Agreement are licensed, not sold.
+ Xiamen Yaji Software Co., Ltd. reserves all rights not expressly granted to you.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 //
 // Created by James Chen on 4/28/17.
 //
@@ -53,11 +78,10 @@ void jsb_init_file_operation_delegate()
                     return;
                 }
                 
-                ZipFile* zip = ZipFile::createWithBuffer(data, dataLen);
-                if (zip) {
-                    ssize_t unpackedLen = 0;
-                    uint8_t* unpackedData = zip->getFileData("encrypt.js", &unpackedLen);
-                    
+                if (ZipUtils::isGZipBuffer(data,dataLen)) {
+                    uint8_t* unpackedData;
+                    ssize_t unpackedLen = ZipUtils::inflateMemory(data, dataLen,&unpackedData);
+
                     if (unpackedData == nullptr) {
                         SE_REPORT_ERROR("Can't decrypt code for %s", byteCodePath.c_str());
                         return;
@@ -66,7 +90,6 @@ void jsb_init_file_operation_delegate()
                     readCallback(unpackedData, unpackedLen);
                     free(data);
                     free(unpackedData);
-                    delete zip;
                 }
                 else {
                     readCallback(data, dataLen);
@@ -95,11 +118,9 @@ void jsb_init_file_operation_delegate()
                     return "";
                 }
                 
-                ZipFile* zip = ZipFile::createWithBuffer(data, dataLen);
-                if (zip) {
-                    ssize_t unpackedLen = 0;
-                    uint8_t* unpackedData = zip->getFileData("encrypt.js", &unpackedLen);
-                    
+                if (ZipUtils::isGZipBuffer(data,dataLen)) {
+                    uint8_t* unpackedData;
+                    ssize_t unpackedLen = ZipUtils::inflateMemory(data, dataLen,&unpackedData);
                     if (unpackedData == nullptr) {
                         SE_REPORT_ERROR("Can't decrypt code for %s", byteCodePath.c_str());
                         return "";
@@ -108,7 +129,6 @@ void jsb_init_file_operation_delegate()
                     std::string ret(reinterpret_cast<const char*>(unpackedData), unpackedLen);
                     free(unpackedData);
                     free(data);
-                    delete zip;
                     
                     return ret;
                 }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013-2016 Chukong Technologies Inc.
+ * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -507,6 +508,7 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State& s)
         {
             int count = argc - 3;
             jvalue* jargs = new jvalue[count];
+            std::vector<jobject> toReleaseObjects;
             for (int i = 0; i < count; ++i)
             {
                 int index = i + 3;
@@ -543,10 +545,15 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State& s)
                         std::string str;
                         seval_to_std_string(args[index], &str);
                         jargs[i].l = call.getEnv()->NewStringUTF(str.c_str());
+                        toReleaseObjects.push_back(jargs[i].l);
                         break;
                 }
             }
             ok = call.executeWithArgs(jargs);
+            for (const auto& obj : toReleaseObjects)
+            {
+                call.getEnv()->DeleteLocalRef(obj);
+            }
             if (jargs)
                 delete[] jargs;
             int errorCode = call.getErrorCode();

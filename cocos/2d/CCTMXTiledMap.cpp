@@ -2,7 +2,8 @@
 Copyright (c) 2009-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -81,10 +82,25 @@ bool TMXTiledMap::initWithTMXFile(const std::string& tmxFile)
 bool TMXTiledMap::initWithXML(const std::string& tmxString, const std::string& resourcePath)
 {
     _tmxFile = tmxString;
+    
+    setContentSize(Size::ZERO);
+    
+    TMXMapInfo *mapInfo = TMXMapInfo::createWithXML(tmxString, resourcePath);
+    
+    CCASSERT( !mapInfo->getTilesets().empty(), "TMXTiledMap: Map not found. Please check the filename.");
+    buildWithMapInfo(mapInfo);
+    
+    return true;
+}
+
+bool TMXTiledMap::initWithXML(const std::string& tmxString, const std::map<std::string, std::string>& tsxFileMap,
+                              const cocos2d::Map<std::string, Texture2D*>& textures)
+{
+    _tmxFile = tmxString;
 
     setContentSize(Size::ZERO);
 
-    TMXMapInfo *mapInfo = TMXMapInfo::createWithXML(tmxString, resourcePath);
+    TMXMapInfo *mapInfo = TMXMapInfo::createWithXML(tmxString, &tsxFileMap, &textures);
 
     CCASSERT( !mapInfo->getTilesets().empty(), "TMXTiledMap: Map not found. Please check the filename.");
     buildWithMapInfo(mapInfo);

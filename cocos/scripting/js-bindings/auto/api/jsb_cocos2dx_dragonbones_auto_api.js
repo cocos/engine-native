@@ -1548,24 +1548,6 @@ str
 },
 
 /**
- * @method parseTextureAtlasData
- * @param {String} arg0
- * @param {String} arg1
- * @param {String} arg2
- * @param {float} arg3
- * @return {dragonBones::TextureAtlasData}
- */
-parseTextureAtlasData : function (
-str, 
-str, 
-str, 
-float 
-)
-{
-    return dragonBones::TextureAtlasData;
-},
-
-/**
  * @method destroyInstance
  */
 destroyInstance : function (

@@ -4804,57 +4804,6 @@ static bool js_cocos2dx_dragonbones_CCFactory_buildArmatureDisplay(se::State& s)
 }
 SE_BIND_FUNC(js_cocos2dx_dragonbones_CCFactory_buildArmatureDisplay)
 
-static bool js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData(se::State& s)
-{
-    dragonBones::CCFactory* cobj = (dragonBones::CCFactory*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        std::string arg0;
-        std::string arg1;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
-        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData : Error processing arguments");
-        dragonBones::TextureAtlasData* result = cobj->parseTextureAtlasData(arg0, arg1);
-        ok &= native_ptr_to_rooted_seval<dragonBones::TextureAtlasData>((dragonBones::TextureAtlasData*)result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData : Error processing arguments");
-        return true;
-    }
-    if (argc == 3) {
-        std::string arg0;
-        std::string arg1;
-        std::string arg2;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
-        ok &= seval_to_std_string(args[2], &arg2);
-        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData : Error processing arguments");
-        dragonBones::TextureAtlasData* result = cobj->parseTextureAtlasData(arg0, arg1, arg2);
-        ok &= native_ptr_to_rooted_seval<dragonBones::TextureAtlasData>((dragonBones::TextureAtlasData*)result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData : Error processing arguments");
-        return true;
-    }
-    if (argc == 4) {
-        std::string arg0;
-        std::string arg1;
-        std::string arg2;
-        float arg3 = 0;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
-        ok &= seval_to_std_string(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
-        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData : Error processing arguments");
-        dragonBones::TextureAtlasData* result = cobj->parseTextureAtlasData(arg0, arg1, arg2, arg3);
-        ok &= native_ptr_to_rooted_seval<dragonBones::TextureAtlasData>((dragonBones::TextureAtlasData*)result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
-    return false;
-}
-SE_BIND_FUNC(js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData)
-
 static bool js_cocos2dx_dragonbones_CCFactory_destroyInstance(se::State& s)
 {
     const auto& args = s.args();
@@ -4920,7 +4869,6 @@ bool js_register_cocos2dx_dragonbones_CCFactory(se::Object* obj)
     cls->defineFunction("getTextureDisplay", _SE(js_cocos2dx_dragonbones_CCFactory_getTextureDisplay));
     cls->defineFunction("getSoundEventManater", _SE(js_cocos2dx_dragonbones_CCFactory_getSoundEventManater));
     cls->defineFunction("buildArmatureDisplay", _SE(js_cocos2dx_dragonbones_CCFactory_buildArmatureDisplay));
-    cls->defineFunction("parseTextureAtlasData", _SE(js_cocos2dx_dragonbones_CCFactory_parseTextureAtlasData));
     cls->defineStaticFunction("destroyInstance", _SE(js_cocos2dx_dragonbones_CCFactory_destroyInstance));
     cls->defineStaticFunction("getInstance", _SE(js_cocos2dx_dragonbones_CCFactory_getInstance));
     cls->defineFinalizeFunction(_SE(js_dragonBones_CCFactory_finalize));

@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2017 Chukong Technologies Inc.
+ Copyright (c) 2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -254,11 +255,10 @@ namespace se {
         void* getPrivateData() const;
 
         /**
-         *  @brief Roots an object from garbage collection.
-         *  @note Use this method when you want to store an object in a global or on the heap, where the garbage collector will not be able to discover your reference to it.
-         *        An object may be rooted multiple times and must be unrooted an equal number of times before becoming eligible for garbage collection.
+         *  @brief Clears private data of an object.
+         *  @param clearMapping Whether to clear the mapping of native object & se::Object.
          */
-        void clearPrivateData();
+        void clearPrivateData(bool clearMapping = true);
 
         /**
          *  @brief Roots an object from garbage collection.

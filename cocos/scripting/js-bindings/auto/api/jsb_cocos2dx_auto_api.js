@@ -14500,6 +14500,16 @@ TextureCache : function (
 cc.Device = {
 
 /**
+ * @method getNetworkType
+ * @return {cc.Device::NetworkType}
+ */
+getNetworkType : function (
+)
+{
+    return 0;
+},
+
+/**
  * @method setAccelerometerEnabled
  * @param {bool} arg0
  */
@@ -14527,6 +14537,16 @@ setKeepScreenOn : function (
 bool 
 )
 {
+},
+
+/**
+ * @method getBatteryLevel
+ * @return {float}
+ */
+getBatteryLevel : function (
+)
+{
+    return 0;
 },
 
 /**
@@ -15915,13 +15935,15 @@ int
 
 /**
  * @method initWithXML
- * @param {String} arg0
- * @param {String} arg1
- * @return {bool}
- */
-initWithXML : function (
-str, 
-str 
+* @param {String|String} str
+* @param {map_object|String} map
+* @param {map_object|map_object} map
+* @return {bool|bool}
+*/
+initWithXML : function(
+str,
+str,
+map 
 )
 {
     return false;
@@ -16171,13 +16193,15 @@ str
 
 /**
  * @method createWithXML
- * @param {String} arg0
- * @param {String} arg1
- * @return {cc.TMXMapInfo}
- */
-createWithXML : function (
-str, 
-str 
+* @param {String|String} str
+* @param {map_object|String} map
+* @param {map_object|map_object} map
+* @return {cc.TMXMapInfo|cc.TMXMapInfo}
+*/
+createWithXML : function(
+str,
+str,
+map 
 )
 {
     return cc.TMXMapInfo;
@@ -16565,13 +16589,15 @@ getMapSize : function (
 
 /**
  * @method initWithXML
- * @param {String} arg0
- * @param {String} arg1
- * @return {bool}
- */
-initWithXML : function (
-str, 
-str 
+* @param {String|String} str
+* @param {map_object|String} map
+* @param {map_object} map
+* @return {bool|bool}
+*/
+initWithXML : function(
+str,
+map,
+map 
 )
 {
     return false;

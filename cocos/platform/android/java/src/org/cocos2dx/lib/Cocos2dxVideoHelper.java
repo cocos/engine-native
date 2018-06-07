@@ -1,5 +1,6 @@
 /****************************************************************************
 Copyright (c) 2014-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -72,6 +73,8 @@ public class Cocos2dxVideoHelper {
     private final static int VideoTaskRestart = 10;
     private final static int VideoTaskKeepRatio = 11;
     private final static int VideoTaskFullScreen = 12;
+    private final static int VideoTaskSetVolume = 13;
+
     final static int KeyEventBack = 1000;
 
     static class VideoHandler extends Handler{
@@ -153,6 +156,11 @@ public class Cocos2dxVideoHelper {
             }
             case KeyEventBack: {
                 helper.onBackKeyEvent();
+                break;
+            }
+            case VideoTaskSetVolume: {
+                float volume = (float) msg.arg2 / 10;
+                helper._setVolume(msg.arg1, volume);
                 break;
             }
             default:
@@ -498,4 +506,20 @@ public class Cocos2dxVideoHelper {
             videoView.setKeepRatio(enable);
         }
     }
+
+    private void _setVolume(final int index, final float volume) {
+        Cocos2dxVideoView videoView = sVideoViews.get(index);
+        if (videoView != null) {
+            videoView.setVolume(volume);
+        }
+    }
+
+    public static void setVolume(final int index, final float volume) {
+        Message msg = new Message();
+        msg.what = VideoTaskSetVolume;
+        msg.arg1 = index;
+        msg.arg2 = (int) (volume * 10);
+        mVideoHandler.sendMessage(msg);
+    }
+
 }

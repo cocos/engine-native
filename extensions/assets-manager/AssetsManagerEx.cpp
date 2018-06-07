@@ -1,5 +1,7 @@
 /****************************************************************************
  Copyright (c) 2014 cocos2d-x.org
+ Copyright (c) 2015-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -872,7 +874,12 @@ void AssetsManagerEx::prepareUpdate()
             for (auto it = diff_map.begin(); it != diff_map.end(); ++it)
             {
                 Manifest::AssetDiff diff = it->second;
-                if (diff.type != Manifest::DiffType::DELETED)
+                if (diff.type == Manifest::DiffType::DELETED)
+                {
+                    std::string exsitedPath = _storagePath + diff.asset.path;
+                    _fileUtils->removeFile(exsitedPath);
+                }
+                else
                 {
                     std::string path = diff.asset.path;
                     DownloadUnit unit;

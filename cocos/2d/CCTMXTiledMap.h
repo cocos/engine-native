@@ -2,7 +2,8 @@
 Copyright (c) 2009-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
 http://www.cocos2d-x.org
 
@@ -282,6 +283,10 @@ CC_CONSTRUCTOR_ACCESS:
     
     /** initializes a TMX Tiled Map with a TMX formatted XML string and a path to TMX resources */
     bool initWithXML(const std::string& tmxString, const std::string& resourcePath);
+    
+    /** initializes a TMX Tiled Map with a TMX formatted XML string and a tsxFile map and a texture map */
+    bool initWithXML(const std::string& tmxString, const std::map<std::string, std::string>& tsxFileMap,
+                     const cocos2d::Map<std::string, Texture2D*>& textures);
 
 protected:
     TMXLayer * parseLayer(TMXLayerInfo *layerInfo, TMXMapInfo *mapInfo);
