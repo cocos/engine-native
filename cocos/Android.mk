@@ -71,7 +71,7 @@ renderer/renderer/Light.cpp \
 renderer/renderer/Model.cpp \
 renderer/renderer/Pass.cpp \
 renderer/renderer/ProgramLib.cpp \
-renderer/renderer//Scene.cpp \
+renderer/renderer/Scene.cpp \
 renderer/renderer/Technique.cpp \
 renderer/renderer/View.cpp \
 renderer/renderer/ForwardRenderer.cpp \
