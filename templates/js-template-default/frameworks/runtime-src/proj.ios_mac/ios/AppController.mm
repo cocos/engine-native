@@ -32,8 +32,6 @@
 
 #import "cocos-analytics/CAAgent.h"
 
-using namespace cocos2d;
-
 @implementation AppController
 
 @synthesize window;
@@ -50,15 +48,8 @@ static AppDelegate* s_sharedApplication = nullptr;
 
     if (s_sharedApplication == nullptr)
     {
-        s_sharedApplication = new (std::nothrow) AppDelegate();
+        s_sharedApplication = new (std::nothrow) AppDelegate(960, 640);
     }
-    cocos2d::Application *app = cocos2d::Application::getInstance();
-
-    // Initialize the GLView attributes
-    app->initGLContextAttrs();
-    cocos2d::GLViewImpl::convertAttrs();
-
-    // Override point for customization after application launch.
 
     // Add the view controller's view to the window and display.
     window = [[UIWindow alloc] initWithFrame: [[UIScreen mainScreen] bounds]];
@@ -84,12 +75,8 @@ static AppDelegate* s_sharedApplication = nullptr;
 
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
-    // IMPORTANT: Setting the GLView should be done after creating the RootViewController
-    cocos2d::GLView *glview = cocos2d::GLViewImpl::createWithEAGLView((__bridge void *)_viewController.view);
-    cocos2d::Director::getInstance()->setOpenGLView(glview);
-
     //run the cocos2d-x game scene
-    app->run();
+    s_sharedApplication->start();
 
     return YES;
 }
@@ -125,7 +112,7 @@ static AppDelegate* s_sharedApplication = nullptr;
     /*
       Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
     */
-    auto glview = (__bridge CCEAGLView*)(Director::getInstance()->getOpenGLView()->getEAGLView());
+    auto glview = (__bridge CCEAGLView*)(cocos2d::Application::getInstance()->getView());
     auto currentView = [[[[UIApplication sharedApplication] keyWindow] subviews] lastObject];
     if (glview == currentView) {
         cocos2d::Application::getInstance()->applicationWillEnterForeground();
