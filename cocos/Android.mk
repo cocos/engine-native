@@ -165,7 +165,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dxandroid_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cpufeatures
 
 # define the macro to compile through support/zip_support/ioapi.c
-LOCAL_CFLAGS := -DUSE_FILE32API -fexceptions -DHAVE_INSPECTOR
+LOCAL_CFLAGS := -DUSE_FILE32API -fexceptions
 
 # Issues #9968
 #ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
