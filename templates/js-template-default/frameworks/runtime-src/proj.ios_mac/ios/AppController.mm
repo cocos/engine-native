@@ -141,15 +141,4 @@ Application* app = nullptr;
     */
 }
 
-
-#if __has_feature(objc_arc)
-#else
-- (void)dealloc {
-    [window release];
-    [_viewController release];
-    [super dealloc];
-}
-#endif
-
-
 @end
