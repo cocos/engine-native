@@ -29,6 +29,9 @@
 
 @interface TextViewDelegate : NSObject<NSTextViewDelegate>
 -(void) textDidChange:(NSNotification *)notification;
+-(BOOL) textView:(NSTextView *)textView
+shouldChangeTextInRange:(NSRange)affectedCharRange
+replacementString:(NSString *)replacementString;
 @end
 
 namespace
@@ -82,7 +85,7 @@ namespace
         g_textView.string =  [NSString stringWithUTF8String:showInfo.defaultValue.c_str()];
         g_textView.frame = rect;
         g_scrollView.frame = rect;
-                
+        
         auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
         NSWindow* nsWindow = glfwGetCocoaWindow(glfwWindow);
         [nsWindow.contentView addSubview:g_scrollView];
@@ -95,6 +98,20 @@ namespace
 -(void) textDidChange:(NSNotification *)notification
 {
     callJSFunc("input", [[g_textView.textStorage string] UTF8String]);
+}
+
+-(BOOL) textView:(NSTextView *)textView
+shouldChangeTextInRange:(NSRange)affectedCharRange
+replacementString:(NSString *)replacementString
+{
+    NSUInteger newLength = [textView.string length] + [replacementString length] - affectedCharRange.length;
+    if (newLength > g_maxLength)
+        return FALSE;
+    
+    if (!g_isMultiline && [replacementString containsString:@"\n"])
+        return FALSE;
+    
+    return TRUE;
 }
 
 @end
