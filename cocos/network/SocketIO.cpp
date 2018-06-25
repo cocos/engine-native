@@ -953,8 +953,8 @@ void SIOClientImpl::onMessage(WebSocket* /*ws*/, const WebSocket::Data& data)
                     CCLOGINFO("event name %s between %i and %i", eventname.c_str(),
                               payloadFirstSlashPos, payloadSecondSlashPos);
 
-                    payload = payload.substr(payloadSecondSlashPos + 5,
-                                             payload.size() - (payloadSecondSlashPos + 7));
+                    payload = payload.substr(payloadSecondSlashPos + 4,
+                                             payload.size() - (payloadSecondSlashPos + 5));
 
                     if (c) c->fireEvent(eventname, payload);
                     if (c) c->getDelegate()->onMessage(c, payload);
