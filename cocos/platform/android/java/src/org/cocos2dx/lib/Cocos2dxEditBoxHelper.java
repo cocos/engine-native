@@ -132,6 +132,14 @@ public class Cocos2dxEditBoxHelper {
                     @Override
                     public void afterTextChanged(final Editable s) {
                         if (!editBox.getChangedTextProgrammatically()) {
+
+                            // fix fireball/issues/7726
+                            // 先移除当前监听，避免死循环。
+                            editBox.removeTextChangedListener(this);
+                            editBox.setText(editBox.getText().toString());
+                            //操作完当前显示内容之后，再添加监听。
+                            editBox.addTextChangedListener(this);
+
                             if((Boolean)editBox.getTag()) {
                                 mCocos2dxActivity.runOnGLThread(new Runnable() {
                                     @Override
