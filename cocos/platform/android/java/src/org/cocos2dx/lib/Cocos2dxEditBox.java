@@ -351,6 +351,6 @@ public class Cocos2dxEditBox extends EditText {
     public void setText(String text) {
         String newText = updateDomTextCases(text);
         super.setText(newText);
-        this.setSelection(newText.length());// 让光标定位最后位置。
+        this.setSelection(newText.length());
     }
 }

@@ -134,10 +134,10 @@ public class Cocos2dxEditBoxHelper {
                         if (!editBox.getChangedTextProgrammatically()) {
 
                             // fix fireball/issues/7726
-                            // 先移除当前监听，避免死循环。
+                            // Remove the current listener first to avoid endless loops.
                             editBox.removeTextChangedListener(this);
                             editBox.setText(editBox.getText().toString());
-                            //操作完当前显示内容之后，再添加监听。
+                            // Resume listening.
                             editBox.addTextChangedListener(this);
 
                             if((Boolean)editBox.getTag()) {
