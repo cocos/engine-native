@@ -71,8 +71,9 @@ using namespace cocos2d::experimental::ui;
     int _top;
     int _width;
     int _height;
+    bool _fullscreen;
     bool _keepRatioEnabled;
-
+    CGRect _restoreRect;
     VideoPlayer* _videoPlayer;
 }
 
@@ -131,21 +132,36 @@ using namespace cocos2d::experimental::ui;
     _top = top;
     _height = height;
     if (self.moviePlayer != nullptr) {
-        [self.moviePlayer.view setFrame:CGRectMake(left, top, width, height)];
+        _restoreRect = self.moviePlayer.view.frame;
+        
+        if (_fullscreen)
+            [self.moviePlayer.view setFrame:[[UIScreen mainScreen] bounds]];
+        else
+            [self.moviePlayer.view setFrame:CGRectMake(left, top, width, height)];
     }
 }
 
 -(void) setFullScreenEnabled:(BOOL) enabled
 {
     if (self.moviePlayer != nullptr) {
-        [self.moviePlayer setFullscreen:enabled animated:NO];
+        if (enabled)
+        {
+            _fullscreen = enabled;
+            self.moviePlayer.scalingMode = MPMovieScalingModeFill;
+            [self.moviePlayer.view setFrame:[[UIScreen mainScreen] bounds]];
+        }
+        else
+        {
+            [self setKeepRatioEnabled:_keepRatioEnabled];
+            [self.moviePlayer.view setFrame:_restoreRect];
+        }
     }
 }
 
 -(BOOL) isFullScreenEnabled
 {
     if (self.moviePlayer != nullptr) {
-        return [self.moviePlayer isFullscreen];
+        return _fullscreen;
     }
 
     return false;
@@ -168,10 +184,12 @@ using namespace cocos2d::experimental::ui;
         self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
         [self.moviePlayer setContentURL:[NSURL URLWithString:@(videoUrl.c_str())]];
     } else {
-        self.moviePlayer = [[[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:@(videoUrl.c_str())]] autorelease];
+        self.moviePlayer = [[[MPMoviePlayerController alloc] init] autorelease];
         self.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
+        [self.moviePlayer setContentURL:[NSURL fileURLWithPath:@(videoUrl.c_str())]];
     }
     self.moviePlayer.allowsAirPlay = NO;
+    self.moviePlayer.shouldAutoplay = NO;
     self.moviePlayer.controlStyle = MPMovieControlStyleNone;
     self.moviePlayer.view.userInteractionEnabled = YES;
 
@@ -230,6 +248,7 @@ using namespace cocos2d::experimental::ui;
     UITapGestureRecognizer *singleFingerTap =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(handleSingleTap:)];
+    singleFingerTap.cancelsTouchesInView = YES;
 
     [self.moviePlayer.view addGestureRecognizer:singleFingerTap];
 
@@ -338,7 +357,7 @@ using namespace cocos2d::experimental::ui;
 {
     _keepRatioEnabled = enabled;
     if (self.moviePlayer != NULL) {
-        if (enabled) {
+        if (_keepRatioEnabled) {
             self.moviePlayer.scalingMode = MPMovieScalingModeAspectFit;
         } else {
             self.moviePlayer.scalingMode = MPMovieScalingModeFill;
@@ -349,7 +368,17 @@ using namespace cocos2d::experimental::ui;
 -(void) play
 {
     if (self.moviePlayer != NULL) {
-        [self.moviePlayer.view setFrame:CGRectMake(_left, _top, _width, _height)];
+        if (_fullscreen)
+        {
+            self.moviePlayer.scalingMode = MPMovieScalingModeFill;
+            [self.moviePlayer.view setFrame:[[UIScreen mainScreen] bounds]];
+        }
+        else
+        {
+            [self setKeepRatioEnabled:_keepRatioEnabled];
+            [self.moviePlayer.view setFrame:CGRectMake(_left, _top, _width, _height)];
+        }
+        
         [self.moviePlayer play];
     }
 }
@@ -377,9 +406,9 @@ using namespace cocos2d::experimental::ui;
 
 -(void) stop
 {
-    if (self.moviePlayer != NULL) {
-        [self.moviePlayer pause];
-        [self seekTo:0];
+    if (self.moviePlayer != NULL)
+    {
+        [self.moviePlayer stop];
         _videoPlayer->onPlayEvent((int)VideoPlayer::EventType::STOPPED);
     }
 }
