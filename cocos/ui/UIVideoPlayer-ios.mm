@@ -68,9 +68,8 @@ using namespace cocos2d::experimental::ui;
     int _top;
     int _width;
     int _height;
-    bool _fullscreen;
     bool _keepRatioEnabled;
-    CGRect _restoreRect;
+
     VideoPlayer* _videoPlayer;
 }
 
@@ -127,36 +126,21 @@ using namespace cocos2d::experimental::ui;
     _top = top;
     _height = height;
     if (self.moviePlayer != nullptr) {
-        _restoreRect = self.moviePlayer.view.frame;
-        
-        if (_fullscreen)
-            [self.moviePlayer.view setFrame:[[UIScreen mainScreen] bounds]];
-        else
-            [self.moviePlayer.view setFrame:CGRectMake(left, top, width, height)];
+        [self.moviePlayer.view setFrame:CGRectMake(left, top, width, height)];
     }
 }
 
 -(void) setFullScreenEnabled:(BOOL) enabled
 {
     if (self.moviePlayer != nullptr) {
-        if (enabled)
-        {
-            _fullscreen = enabled;
-            self.moviePlayer.scalingMode = MPMovieScalingModeFill;
-            [self.moviePlayer.view setFrame:[[UIScreen mainScreen] bounds]];
-        }
-        else
-        {
-            [self setKeepRatioEnabled:_keepRatioEnabled];
-            [self.moviePlayer.view setFrame:_restoreRect];
-        }
+        [self.moviePlayer setFullscreen:enabled animated:NO];
     }
 }
 
 -(BOOL) isFullScreenEnabled
 {
     if (self.moviePlayer != nullptr) {
-        return _fullscreen;
+        return [self.moviePlayer isFullscreen];
     }
 
     return false;
@@ -184,7 +168,6 @@ using namespace cocos2d::experimental::ui;
         [self.moviePlayer setContentURL:[NSURL fileURLWithPath:@(videoUrl.c_str())]];
     }
     self.moviePlayer.allowsAirPlay = NO;
-    self.moviePlayer.shouldAutoplay = NO;
     self.moviePlayer.controlStyle = MPMovieControlStyleNone;
     self.moviePlayer.view.userInteractionEnabled = YES;
 
@@ -230,7 +213,6 @@ using namespace cocos2d::experimental::ui;
     UITapGestureRecognizer *singleFingerTap =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(handleSingleTap:)];
-    singleFingerTap.cancelsTouchesInView = YES;
 
     [self.moviePlayer.view addGestureRecognizer:singleFingerTap];
 
@@ -332,7 +314,7 @@ using namespace cocos2d::experimental::ui;
 {
     _keepRatioEnabled = enabled;
     if (self.moviePlayer != NULL) {
-        if (_keepRatioEnabled) {
+        if (enabled) {
             self.moviePlayer.scalingMode = MPMovieScalingModeAspectFit;
         } else {
             self.moviePlayer.scalingMode = MPMovieScalingModeFill;
@@ -343,17 +325,7 @@ using namespace cocos2d::experimental::ui;
 -(void) play
 {
     if (self.moviePlayer != NULL) {
-        if (_fullscreen)
-        {
-            self.moviePlayer.scalingMode = MPMovieScalingModeFill;
-            [self.moviePlayer.view setFrame:[[UIScreen mainScreen] bounds]];
-        }
-        else
-        {
-            [self setKeepRatioEnabled:_keepRatioEnabled];
-            [self.moviePlayer.view setFrame:CGRectMake(_left, _top, _width, _height)];
-        }
-        
+        [self.moviePlayer.view setFrame:CGRectMake(_left, _top, _width, _height)];
         [self.moviePlayer play];
     }
 }
@@ -381,9 +353,9 @@ using namespace cocos2d::experimental::ui;
 
 -(void) stop
 {
-    if (self.moviePlayer != NULL)
-    {
-        [self.moviePlayer stop];
+    if (self.moviePlayer != NULL) {
+        [self.moviePlayer pause];
+        [self seekTo:0];
         _videoPlayer->onPlayEvent((int)VideoPlayer::EventType::STOPPED);
     }
 }
