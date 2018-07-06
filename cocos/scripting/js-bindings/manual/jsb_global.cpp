@@ -645,7 +645,7 @@ static bool js_performance_now(se::State& s)
 }
 SE_BIND_FUNC(js_performance_now)
 
-bool jsb_global_loadImage(std::string path, se::Value callbackVal) {
+bool jsb_global_load_image(std::string path, se::Value callbackVal) {
     if (path.empty())
     {
         SE_REPORT_ERROR("src is empty!");
@@ -791,7 +791,7 @@ static bool js_loadImage(se::State& s)
         assert(callbackVal.isObject());
         assert(callbackVal.toObject()->isFunction());
 
-        return jsb_global_loadImage(path, callbackVal);
+        return jsb_global_load_image(path, callbackVal);
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
