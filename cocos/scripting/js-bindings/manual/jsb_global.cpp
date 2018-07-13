@@ -905,36 +905,50 @@ static bool JSB_showInputBox(se::State& s)
 
         se::Value confirmHoldValue;
         obj->getProperty("confirmHold", &confirmHoldValue);
+        SE_PRECONDITION2((!confirmHoldValue.isNullOrUndefined() && confirmHoldValue.isBoolean()),
+                         false, "confirmHold is invalid!");
         if (confirmHoldValue.isBoolean())
             showInfo.confirmHold = confirmHoldValue.toBoolean();
 
         se::Value confirmTypeValue;
         obj->getProperty("confirmType", &confirmTypeValue);
+        SE_PRECONDITION2((confirmTypeValue.isNullOrUndefined() || confirmTypeValue.isString()),
+                         false, "confirmType is invalid!");
         if (confirmTypeValue.isString())
             showInfo.confirmType = confirmTypeValue.toString();
 
         se::Value inputTypeValue;
         obj->getProperty("inputType", &inputTypeValue);
+        SE_PRECONDITION2((inputTypeValue.isNullOrUndefined() || inputTypeValue.isString()),
+                         false, "inputType is invalid!");
         if (inputTypeValue.isString())
             showInfo.inputType = inputTypeValue.toString();
 
         se::Value originXValue;
         obj->getProperty("originX", &originXValue);
+        SE_PRECONDITION2((originXValue.isNullOrUndefined() || originXValue.isNumber()),
+                         false, "originX is invalid!");
         if (originXValue.isNumber())
             showInfo.x = originXValue.toInt32();
 
         se::Value originYValue;
         obj->getProperty("originY", &originYValue);
+        SE_PRECONDITION2((originYValue.isNullOrUndefined() || originYValue.isNumber()),
+                         false, "originY is invalid!");
         if (originYValue.isNumber())
             showInfo.y = originYValue.toInt32();
 
         se::Value widthValue;
         obj->getProperty("width", &widthValue);
+        SE_PRECONDITION2((widthValue.isNullOrUndefined() || widthValue.isNumber()),
+                         false, "width is invalid!");
         if (widthValue.isNumber())
             showInfo.width = widthValue.toInt32();
 
         se::Value heightValue;
         obj->getProperty("height", &heightValue);
+        SE_PRECONDITION2((heightValue.isNullOrUndefined() || heightValue.isNumber()),
+                         false, "height is invalid!");
         if (heightValue.isNumber())
             showInfo.height = heightValue.toInt32();
         
