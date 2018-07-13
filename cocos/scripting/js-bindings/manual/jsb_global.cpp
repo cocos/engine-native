@@ -885,48 +885,58 @@ static bool JSB_showInputBox(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1)
     {
-        se::Value tmp;
         const auto& obj = args[0].toObject();
-        
         cocos2d::EditBox::ShowInfo showInfo;
+
+        se::Value defaultValue;
+        obj->getProperty("defaultValue", &defaultValue);
+        SE_PRECONDITION2(defaultValue.isString(), false, "defaultValue is invalid!");
+        showInfo.defaultValue = defaultValue.toString();
         
-        obj->getProperty("defaultValue", &tmp);
-        showInfo.defaultValue = tmp.toString();
-        
-        
-        obj->getProperty("maxLength", &tmp);
-        showInfo.maxLength = tmp.toInt32();
-        
-        obj->getProperty("multiple", &tmp);
-        showInfo.isMultiline = tmp.toBoolean();
-        
-        obj->getProperty("confirmHold", &tmp);
-        if (! tmp.isUndefined())
-            showInfo.confirmHold = tmp.toBoolean();
-        
-        obj->getProperty("confirmType", &tmp);
-        if (! tmp.isUndefined())
-            showInfo.confirmType = tmp.toString();
-        
-        obj->getProperty("inputType", &tmp);
-        if (! tmp.isUndefined())
-            showInfo.inputType = tmp.toString();
-        
-        obj->getProperty("originX", &tmp);
-        if (! tmp.isUndefined())
-            showInfo.x = tmp.toInt32();
-        
-        obj->getProperty("originY", &tmp);
-        if (! tmp.isUndefined())
-            showInfo.y = tmp.toInt32();
-        
-        obj->getProperty("width", &tmp);
-        if (! tmp.isUndefined())
-            showInfo.width = tmp.toInt32();
-        
-        obj->getProperty("height", &tmp);
-        if (! tmp.isUndefined())
-            showInfo.height = tmp.toInt32();
+        se::Value maxLengthValue;
+        obj->getProperty("maxLength", &maxLengthValue);
+        SE_PRECONDITION2(maxLengthValue.isNumber(), false, "maxLength is invalid!");
+        showInfo.maxLength = maxLengthValue.toInt32();
+
+        se::Value multipleValue;
+        obj->getProperty("multiple", &multipleValue);
+        SE_PRECONDITION2(multipleValue.isBoolean(), false, "multiple is invalid!");
+        showInfo.isMultiline = multipleValue.toBoolean();
+
+        se::Value confirmHoldValue;
+        obj->getProperty("confirmHold", &confirmHoldValue);
+        if (confirmHoldValue.isBoolean())
+            showInfo.confirmHold = confirmHoldValue.toBoolean();
+
+        se::Value confirmTypeValue;
+        obj->getProperty("confirmType", &confirmTypeValue);
+        if (confirmTypeValue.isString())
+            showInfo.confirmType = confirmTypeValue.toString();
+
+        se::Value inputTypeValue;
+        obj->getProperty("inputType", &inputTypeValue);
+        if (inputTypeValue.isString())
+            showInfo.inputType = inputTypeValue.toString();
+
+        se::Value originXValue;
+        obj->getProperty("originX", &originXValue);
+        if (originXValue.isNumber())
+            showInfo.x = originXValue.toInt32();
+
+        se::Value originYValue;
+        obj->getProperty("originY", &originYValue);
+        if (originYValue.isNumber())
+            showInfo.y = originYValue.toInt32();
+
+        se::Value widthValue;
+        obj->getProperty("width", &widthValue);
+        if (widthValue.isNumber())
+            showInfo.width = widthValue.toInt32();
+
+        se::Value heightValue;
+        obj->getProperty("height", &heightValue);
+        if (heightValue.isNumber())
+            showInfo.height = heightValue.toInt32();
         
         EditBox::show(showInfo);
         
