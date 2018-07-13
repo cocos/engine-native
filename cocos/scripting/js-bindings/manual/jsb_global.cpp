@@ -905,7 +905,7 @@ static bool JSB_showInputBox(se::State& s)
 
         se::Value confirmHoldValue;
         obj->getProperty("confirmHold", &confirmHoldValue);
-        SE_PRECONDITION2((!confirmHoldValue.isNullOrUndefined() && confirmHoldValue.isBoolean()),
+        SE_PRECONDITION2((confirmHoldValue.isNullOrUndefined() && confirmHoldValue.isBoolean()),
                          false, "confirmHold is invalid!");
         if (confirmHoldValue.isBoolean())
             showInfo.confirmHold = confirmHoldValue.toBoolean();
