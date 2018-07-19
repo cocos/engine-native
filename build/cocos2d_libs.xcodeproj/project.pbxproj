@@ -1517,7 +1517,6 @@
 		B291B5191D4A106A00BBB345 /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = ../external/ios/libs/libtiff.a; sourceTree = "<group>"; };
 		B291B51A1D4A106A00BBB345 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../external/ios/libs/libwebp.a; sourceTree = "<group>"; };
 		BA0DAAEE1DB76F2C00EE23AD /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebp.a; path = ../external/mac/libs/libwebp.a; sourceTree = "<group>"; };
-		BA21050B21008AC200E19975 /* Android.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Android.mk; sourceTree = "<group>"; };
 		BA21054721008AC300E19975 /* AssetsManagerEx.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AssetsManagerEx.cpp; sourceTree = "<group>"; };
 		BA21054821008AC300E19975 /* AssetsManagerEx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssetsManagerEx.h; sourceTree = "<group>"; };
 		BA21054921008AC300E19975 /* CCEventAssetsManagerEx.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CCEventAssetsManagerEx.cpp; sourceTree = "<group>"; };
@@ -1527,7 +1526,6 @@
 		BA21054F21008AC300E19975 /* cocos-ext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cocos-ext.h"; sourceTree = "<group>"; };
 		BA21055021008AC300E19975 /* ExtensionExport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionExport.h; sourceTree = "<group>"; };
 		BA21055121008AC300E19975 /* ExtensionMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionMacros.h; sourceTree = "<group>"; };
-		BA21055321008AC300E19975 /* Android.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Android.mk; sourceTree = "<group>"; };
 		BA21055621008B6600E19975 /* jsb_cocos2dx_extension_auto.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = jsb_cocos2dx_extension_auto.hpp; sourceTree = "<group>"; };
 		BA21055721008B6600E19975 /* jsb_cocos2dx_extension_auto.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_cocos2dx_extension_auto.cpp; sourceTree = "<group>"; };
 		BA68D7701D62F4A500B7A3F9 /* shapes.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shapes.cc; sourceTree = "<group>"; };
@@ -2571,12 +2569,10 @@
 		BA21050A21008AC200E19975 /* extensions */ = {
 			isa = PBXGroup;
 			children = (
-				BA21050B21008AC200E19975 /* Android.mk */,
 				BA21054621008AC300E19975 /* assets-manager */,
 				BA21054F21008AC300E19975 /* cocos-ext.h */,
 				BA21055021008AC300E19975 /* ExtensionExport.h */,
 				BA21055121008AC300E19975 /* ExtensionMacros.h */,
-				BA21055221008AC300E19975 /* prebuilt-mk */,
 			);
 			name = extensions;
 			path = ../extensions;
@@ -2593,14 +2589,6 @@
 				BA21054E21008AC300E19975 /* Manifest.h */,
 			);
 			path = "assets-manager";
-			sourceTree = "<group>";
-		};
-		BA21055221008AC300E19975 /* prebuilt-mk */ = {
-			isa = PBXGroup;
-			children = (
-				BA21055321008AC300E19975 /* Android.mk */,
-			);
-			path = "prebuilt-mk";
 			sourceTree = "<group>";
 		};
 		BA68D76E1D62F4A500B7A3F9 /* poly2tri */ = {
