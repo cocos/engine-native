@@ -93,7 +93,6 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
     protected int mFullScreenHeight = 0;
 
     private int mViewTag = 0;
-    private int mViewVisible = INVISIBLE;
 
     public Cocos2dxVideoView(Cocos2dxActivity activity,int tag) {
         super(activity);
@@ -106,7 +105,7 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (mVideoWidth == 0 || mVideoHeight == 0) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            setMeasuredDimension(mViewWidth, mViewHeight);
             Log.i(TAG, ""+mViewWidth+ ":" +mViewHeight);
         }
         else {
@@ -171,13 +170,6 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
 
     @Override
     public void setVisibility(int visibility) {
-        if (mSurfaceHolder == null)
-        {
-            mViewVisible = visibility;
-            super.setVisibility(VISIBLE);
-            return;
-        }
-		
         if (visibility == INVISIBLE) {
             if(getCurrentPosition() > 0 && mSeekWhenPrepared == 0) {
                 mSeekWhenPrepared = getCurrentPosition();
@@ -565,7 +557,6 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
         public void surfaceCreated(SurfaceHolder holder)
         {
             mSurfaceHolder = holder;
-            setVisibility(mViewVisible);
             openVideo();
         }
 
