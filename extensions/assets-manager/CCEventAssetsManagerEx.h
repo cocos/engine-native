@@ -26,6 +26,7 @@
 #ifndef __cocos2d_libs__CCEventAssetsManagerEx__
 #define __cocos2d_libs__CCEventAssetsManagerEx__
 
+#include <string>
 #include "base/CCRef.h"
 #include "extensions/ExtensionMacros.h" 
 #include "extensions/ExtensionExport.h"
