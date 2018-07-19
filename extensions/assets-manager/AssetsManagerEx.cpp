@@ -24,7 +24,6 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "AssetsManagerEx.h"
-#include "CCEventListenerAssetsManagerEx.h"
 #include "base/ccUTF8.h"
 
 #include <stdio.h>
@@ -116,7 +115,7 @@ void AssetsManagerEx::init(const std::string& manifestUrl, const std::string& st
     // Init variables
 //    _eventDispatcher = Director::getInstance()->getEventDispatcher();
     std::string pointer = StringUtils::format("%p", this);
-    _eventName = EventListenerAssetsManagerEx::LISTENER_ID + pointer;
+    _eventName = "__cc_assets_manager_" + pointer;
     _fileUtils = FileUtils::getInstance();
 
     network::DownloaderHints hints =
@@ -1146,7 +1145,7 @@ void AssetsManagerEx::fileError(const std::string& identifier, const std::string
     dispatchUpdateEvent(EventAssetsManagerEx::EventCode::ERROR_UPDATING, identifier, errorStr, errorCode, errorCodeInternal);
     _tempManifest->setAssetDownloadState(identifier, Manifest::DownloadState::UNSTARTED);
     
-    _currConcurrentTask = MAX(0, _currConcurrentTask-1);
+    _currConcurrentTask = std::max(0, _currConcurrentTask-1);
     queueDowload();
 }
 
@@ -1176,7 +1175,7 @@ void AssetsManagerEx::fileSuccess(const std::string &customId, const std::string
     // Notify asset updated event
     dispatchUpdateEvent(EventAssetsManagerEx::EventCode::ASSET_UPDATED, customId);
     
-    _currConcurrentTask = MAX(0, _currConcurrentTask-1);
+    _currConcurrentTask = std::max(0, _currConcurrentTask-1);
     queueDowload();
 }
 
