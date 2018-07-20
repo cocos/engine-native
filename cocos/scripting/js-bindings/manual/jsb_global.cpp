@@ -740,12 +740,14 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                 loadSucceed = img->initWithImageData(imageData, imageBytes);
                 free(imageData);
             }
-            else {
+            else
+            {
                 loadSucceed = img->initWithImageFile(fullPath);
             }
 
             struct ImageInfo* imgInfo = nullptr;
-            if(loadSucceed) {
+            if(loadSucceed)
+            {
                 imgInfo = createImageInfo(img);
             }
 
