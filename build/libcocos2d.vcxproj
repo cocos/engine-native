@@ -430,7 +430,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\cocos;$(ProjectDir)..\external\sources;$(ProjectDir)..\cocos\renderer\gfx;$(ProjectDir)..\cocos\renderer;$(ProjectDir)..\cocos\platform;$(ProjectDir)..\external\win32\include\zlib;$(ProjectDir)..\external\win32\include\v8;$(ProjectDir)..\external\sources\firefox;$(projectDir)..;$(ProjectDir)..\external\win32\include;$(ProjectDir)..\external\win32\include\uv</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;CC_STATIC;_USRDLL;USING_V8_SHARED;_LIB;COCOS2D_DEBUG=1;JS_HAVE____INTN;JS_INTPTR_TYPE=int;COCOS2D_JAVASCRIPT=1;XP_WIN;_CRT_SECURE_NO_WARNINGS;_USRJSSTATIC;GLFW_EXPOSE_NATIVE_WIN32;GLFW_EXPOSE_NATIVE_WGL;HAVE_INSPECTOR;_WINDOWS;_WIN32;__MWERKS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;CC_STATIC;_USRDLL;USING_V8_SHARED;_LIB;COCOS2D_DEBUG=1;JS_HAVE____INTN;JS_INTPTR_TYPE=int;COCOS2D_JAVASCRIPT=1;XP_WIN;_CRT_SECURE_NO_WARNINGS;GLFW_EXPOSE_NATIVE_WIN32;GLFW_EXPOSE_NATIVE_WGL;_WINDOWS;_WIN32;__MWERKS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -471,7 +471,7 @@ xcopy /Y /Q "$(ProjectDir)..\external\win32\libs\Debug\*.*" "$(OutDir)"</Command
     </PreBuildEvent>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\cocos;$(ProjectDir)..\external\sources;$(ProjectDir)..\cocos\renderer\gfx;$(ProjectDir)..\cocos\renderer;$(ProjectDir)..\cocos\platform;$(ProjectDir)..\external\win32\include\zlib;$(ProjectDir)..\external\win32\include\v8;$(ProjectDir)..\external\sources\firefox;$(projectDir)..;$(ProjectDir)..\external\win32\include;$(ProjectDir)..\external\win32\include\uv;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;CC_STATIC;_USRDLL;USING_V8_SHARED;_LIB;JS_HAVE____INTN;JS_INTPTR_TYPE=int;COCOS2D_JAVASCRIPT=1;XP_WIN;_CRT_SECURE_NO_WARNINGS;_USRJSSTATIC;GLFW_EXPOSE_NATIVE_WIN32;GLFW_EXPOSE_NATIVE_WGL;HAVE_INSPECTOR;_WINDOWS;_WIN32;__MWERKS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;CC_STATIC;_USRDLL;USING_V8_SHARED;_LIB;JS_HAVE____INTN;JS_INTPTR_TYPE=int;COCOS2D_JAVASCRIPT=1;XP_WIN;_CRT_SECURE_NO_WARNINGS;GLFW_EXPOSE_NATIVE_WIN32;GLFW_EXPOSE_NATIVE_WGL;_WINDOWS;_WIN32;__MWERKS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
