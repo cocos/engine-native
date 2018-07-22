@@ -876,6 +876,52 @@ static bool js_cocos2dx_extension_AssetsManagerEx_setVersionCompareHandle(se::St
 }
 SE_BIND_FUNC(js_cocos2dx_extension_AssetsManagerEx_setVersionCompareHandle)
 
+static bool js_cocos2dx_extension_AssetsManagerEx_setEventCallback(se::State& s)
+{
+    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_extension_AssetsManagerEx_setVerifyCallback : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        std::function<void (cocos2d::extension::EventAssetsManagerEx *)> arg0;
+        do {
+            if (args[0].isObject() && args[0].toObject()->isFunction())
+            {
+                se::Value jsThis(s.thisObject());
+                se::Value jsFunc(args[0]);
+                jsThis.toObject()->attachObject(jsFunc.toObject());
+                auto lambda = [=](cocos2d::extension::EventAssetsManagerEx *larg0) -> void {
+                    se::ScriptEngine::getInstance()->clearException();
+                    se::AutoHandleScope hs;
+                    
+                    CC_UNUSED bool ok = true;
+                    se::ValueArray args;
+                    args.resize(1);
+                    ok &= native_ptr_to_seval<cocos2d::extension::EventAssetsManagerEx>((cocos2d::extension::EventAssetsManagerEx*)larg0, &args[0]);
+                    SE_PRECONDITION2_VOID(ok, "js_cocos2dx_extension_AssetsManagerEx_setEventCallback callback : Error processing arguments");
+                    se::Value rval;
+                    se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
+                    se::Object* funcObj = jsFunc.toObject();
+                    funcObj->call(args, thisObj, &rval);
+                };
+                arg0 = lambda;
+            }
+            else
+            {
+                arg0 = nullptr;
+            }
+        } while(false)
+            ;
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_extension_AssetsManagerEx_setEventCallback : Error processing arguments");
+        cobj->setEventCallback(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_extension_AssetsManagerEx_setEventCallback)
+
 static bool js_cocos2dx_extension_AssetsManagerEx_setMaxConcurrentTask(se::State& s)
 {
     cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
@@ -1164,6 +1210,7 @@ bool js_register_cocos2dx_extension_AssetsManagerEx(se::Object* obj)
     cls->defineFunction("getStoragePath", _SE(js_cocos2dx_extension_AssetsManagerEx_getStoragePath));
     cls->defineFunction("update", _SE(js_cocos2dx_extension_AssetsManagerEx_update));
     cls->defineFunction("setVersionCompareHandle", _SE(js_cocos2dx_extension_AssetsManagerEx_setVersionCompareHandle));
+    cls->defineFunction("setEventCallback", _SE(js_cocos2dx_extension_AssetsManagerEx_setEventCallback));
     cls->defineFunction("setMaxConcurrentTask", _SE(js_cocos2dx_extension_AssetsManagerEx_setMaxConcurrentTask));
     cls->defineFunction("getDownloadedBytes", _SE(js_cocos2dx_extension_AssetsManagerEx_getDownloadedBytes));
     cls->defineFunction("getLocalManifest", _SE(js_cocos2dx_extension_AssetsManagerEx_getLocalManifest));

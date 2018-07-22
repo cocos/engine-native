@@ -59,8 +59,6 @@ public:
     inline int getCURLECode() const { return _curle_code; };
     
     inline int getCURLMCode() const { return _curlm_code; };
-
-    inline const std::string& getEventName() const { return _eventName; };
     
     inline std::string getMessage() const { return _message; };
     
@@ -92,8 +90,6 @@ private:
     EventCode _code;
     
     cocos2d::extension::AssetsManagerEx *_manager;
-    
-    std::string _eventName;
     
     std::string _message;
     

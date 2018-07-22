@@ -25,6 +25,7 @@
  ****************************************************************************/
 #include "AssetsManagerEx.h"
 #include "base/ccUTF8.h"
+#include "base/CCAsyncTaskPool.h"
 
 #include <stdio.h>
 #include <errno.h>
@@ -106,6 +107,7 @@ AssetsManagerEx::AssetsManagerEx(const std::string& manifestUrl, const std::stri
 , _currConcurrentTask(0)
 , _versionCompareHandle(handle)
 , _verifyCallback(nullptr)
+, _eventCallback(nullptr)
 , _inited(false)
 {
     init(manifestUrl, storagePath);
@@ -114,7 +116,6 @@ AssetsManagerEx::AssetsManagerEx(const std::string& manifestUrl, const std::stri
 void AssetsManagerEx::init(const std::string& manifestUrl, const std::string& storagePath)
 {
     // Init variables
-//    _eventDispatcher = Director::getInstance()->getEventDispatcher();
     std::string pointer = StringUtils::format("%p", this);
     _eventName = "__cc_assets_manager_" + pointer;
     _fileUtils = FileUtils::getInstance();
@@ -411,7 +412,7 @@ bool AssetsManagerEx::loadRemoteManifest(Manifest* remoteManifest)
     _remoteManifest = remoteManifest;
     _remoteManifest->retain();
     // Compare manifest version and set state
-    if (_localManifest->versionGreater(_remoteManifest, _versionCompareHandle))
+    if (_localManifest->versionGreaterOrEquals(_remoteManifest, _versionCompareHandle))
     {
         _updateState = State::UP_TO_DATE;
         _fileUtils->removeDirectory(_tempStoragePath);
@@ -650,14 +651,14 @@ void AssetsManagerEx::decompressDownloadedZip(const std::string &customId, const
         }
         delete dataInner;
     };
-//    AsyncTaskPool::getInstance()->enqueue(AsyncTaskPool::TaskType::TASK_OTHER, decompressFinished, (void*)asyncData, [this, asyncData]() {
-//        // Decompress all compressed files
-//        if (decompress(asyncData->zipFile))
-//        {
-//            asyncData->succeed = true;
-//        }
-//        _fileUtils->removeFile(asyncData->zipFile);
-//    });
+    AsyncTaskPool::getInstance()->enqueue(AsyncTaskPool::TaskType::TASK_OTHER, decompressFinished, (void*)asyncData, [this, asyncData]() {
+        // Decompress all compressed files
+        if (decompress(asyncData->zipFile))
+        {
+            asyncData->succeed = true;
+        }
+        _fileUtils->removeFile(asyncData->zipFile);
+    });
 }
 
 void AssetsManagerEx::dispatchUpdateEvent(EventAssetsManagerEx::EventCode code, const std::string &assetId/* = ""*/, const std::string &message/* = ""*/, int curle_code/* = CURLE_OK*/, int curlm_code/* = CURLM_OK*/)
@@ -688,9 +689,11 @@ void AssetsManagerEx::dispatchUpdateEvent(EventAssetsManagerEx::EventCode code, 
             break;
     }
 
-    EventAssetsManagerEx* event = new (std::nothrow) EventAssetsManagerEx(_eventName, this, code, assetId, message, curle_code, curlm_code);
-//    _eventDispatcher->dispatchEvent(event);
-    event->release();
+    if (_eventCallback != nullptr) {
+        EventAssetsManagerEx* event = new (std::nothrow) EventAssetsManagerEx(_eventName, this, code, assetId, message, curle_code, curlm_code);
+        _eventCallback(event);
+        event->release();
+    }
 }
 
 AssetsManagerEx::State AssetsManagerEx::getState() const
@@ -735,7 +738,7 @@ void AssetsManagerEx::parseVersion()
     }
     else
     {
-        if (_localManifest->versionGreater(_remoteManifest, _versionCompareHandle))
+        if (_localManifest->versionGreaterOrEquals(_remoteManifest, _versionCompareHandle))
         {
             _updateState = State::UP_TO_DATE;
             _fileUtils->removeDirectory(_tempStoragePath);
@@ -798,7 +801,7 @@ void AssetsManagerEx::parseManifest()
     }
     else
     {
-        if (_localManifest->versionGreater(_remoteManifest, _versionCompareHandle))
+        if (_localManifest->versionGreaterOrEquals(_remoteManifest, _versionCompareHandle))
         {
             _updateState = State::UP_TO_DATE;
             _fileUtils->removeDirectory(_tempStoragePath);
