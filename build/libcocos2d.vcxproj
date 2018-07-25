@@ -443,7 +443,7 @@
       <DisableSpecificWarnings>4138;4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <CompileAs>Default</CompileAs>
-      <ObjectFileName>$(IntDir)/%(RelativeDir)</ObjectFileName>
+      <ObjectFileName>$(Configuration).win32\$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <PreLinkEvent>
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
@@ -484,7 +484,7 @@ xcopy /Y /Q "$(ProjectDir)..\external\win32\libs\Debug\*.*" "$(OutDir)"</Command
       <CompileAs>Default</CompileAs>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <Optimization>MinSpace</Optimization>
-      <ObjectFileName>$(IntDir)/%(RelativeDir)</ObjectFileName>
+      <ObjectFileName>$(Configuration).win32\$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <PreLinkEvent>
       <Command>
