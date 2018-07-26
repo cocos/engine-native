@@ -770,7 +770,8 @@ void CanvasRenderingContext2D::set_font(const std::string& font)
         std::string fontName = "Arial";
         std::string fontSizeStr = "30";
 
-        std::regex re("(bold)?\\s*(\\d+)px\\s+(\\w+)");
+        // support catch fontName with space, for example: "60px American Typewriter_LABEL"
+        std::regex re("(bold)?\\s*(\\d+)px\\s+([\\w ]+)");
         std::match_results<std::string::const_iterator> results;
         if (std::regex_search(_font.cbegin(), _font.cend(), results, re))
         {
