@@ -72,7 +72,9 @@ static bool JSB_loadFont(se::State& s)
             return true;
         }
 
-        // TODO: impl get font face by originalFamilyName and source info
+        // just put the path info, used at CanvasRenderingContext2DImpl::updateFont()
+        _fontFamilyNameMap.emplace(originalFamilyName, fontFilePath);
+        
 
         s.rval().setString(originalFamilyName);
         
