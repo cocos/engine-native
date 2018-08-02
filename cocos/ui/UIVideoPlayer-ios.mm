@@ -24,6 +24,7 @@
  ****************************************************************************/
 
 #include "ui/UIVideoPlayer.h"
+#import "AVFoundation/AVAudioSession.h"
 
 // No Available on tvOS
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS && !defined(CC_TARGET_OS_TVOS)
@@ -167,6 +168,7 @@ using namespace cocos2d::experimental::ui;
         self.moviePlayer = [[[MPMoviePlayerController alloc] init] autorelease];
         self.moviePlayer.movieSourceType = MPMovieSourceTypeStreaming;
         [self.moviePlayer setContentURL:[NSURL URLWithString:@(videoUrl.c_str())]];
+        [self.moviePlayer prepareToPlay];
     } else {
         self.moviePlayer = [[[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:@(videoUrl.c_str())]] autorelease];
         self.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
@@ -236,6 +238,7 @@ using namespace cocos2d::experimental::ui;
     singleFingerTap.delegate = self;
     [singleFingerTap release];
 
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
 }
 
 // this enables you to handle multiple recognizers on single view
