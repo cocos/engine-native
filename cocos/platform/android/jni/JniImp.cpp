@@ -35,7 +35,6 @@
 #include "platform/android/CCFileUtils-android.h"
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
-#include "audio/include/AudioEngine.h"
 #include "base/CCGLUtils.h"
 
 #define  JNI_IMP_LOG_TAG    "JniImp"

@@ -30,6 +30,9 @@ THE SOFTWARE.
 #include "platform/Android/CCGL-android.h"
 #include "base/CCScheduler.h"
 #include "base/CCConfiguration.h"
+#include "audio/include/AudioEngine.h"
+#include "scripting/js-bindings/jswrapper/SeApi.h"
+#include "scripting/js-bindings/event/EventDispatcher.h"
 
 #define  LOG_TAG    "CCApplication_android Debug"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
