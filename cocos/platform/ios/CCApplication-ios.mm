@@ -228,7 +228,6 @@ Application::~Application()
     delete _scheduler;
     _scheduler = nullptr;
     
-    // TODO: destroy DeviceGraphics
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
 
