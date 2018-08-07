@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "base/CCGLUtils.h"
+#include "audio/include/AudioEngine.h"
 
 NS_CC_BEGIN
 
@@ -84,6 +85,9 @@ Application::~Application()
     // TODO: destroy DeviceGraphics
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
+
+    // close audio device
+    cocos2d::experimental::AudioEngine::end();
     
     delete CAST_VIEW(_view);
     _view = nullptr;
