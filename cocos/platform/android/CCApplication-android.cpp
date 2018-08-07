@@ -67,6 +67,13 @@ Application::Application(const std::string& name, int width, int height)
 
 Application::~Application()
 {
+    // TODO: destroy DeviceGraphics
+    EventDispatcher::destroy();
+    se::ScriptEngine::destroyInstance();
+
+    // close audio device
+    cocos2d::experimental::AudioEngine::end();
+    
     delete _scheduler;
     _scheduler = nullptr;
 
