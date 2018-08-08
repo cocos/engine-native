@@ -163,7 +163,15 @@ extern "C"
 	JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeRender(JNIEnv* env)
 	{
         if (g_isGameFinished)
+        {
+            // with Application destructor called, native resource will be released
+            delete g_app;
+            g_app = nullptr;
+
+            JniHelper::callStaticVoidMethod(Cocos2dxHelperClassName, "endApplication");
             return;
+        }
+
 
         if (!g_isStarted)
         {
@@ -570,14 +578,7 @@ void disableBatchGLCommandsToNativeJNI()
     }
 }
 
-void exitApplicationJNI()
+void exitApplication()
 {
     g_isGameFinished = true;
-
-    // with Application destructor called, native resource will be released
-    delete g_app;
-    g_app = nullptr;
-    LOGD("exitApplicationJNI...");
-
-    JniHelper::callStaticVoidMethod(Cocos2dxHelperClassName, "endApplication");
 }
