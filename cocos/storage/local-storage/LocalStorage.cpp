@@ -98,7 +98,7 @@ void localStorageInit( const std::string& fullpath/* = "" */)
         ret |= sqlite3_prepare_v2(_db, sql_key, -1, &_stmt_key, nullptr);
 
         //count
-        const char *sql_count = "SELECT COUNT(*) FROM data";
+        const char *sql_count = "SELECT COUNT(*) FROM data;";
         ret |= sqlite3_prepare_v2(_db, sql_count, -1, &_stmt_count, nullptr);
 
         if( ret != SQLITE_OK ) {
