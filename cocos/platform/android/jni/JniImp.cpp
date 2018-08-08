@@ -160,15 +160,6 @@ extern "C"
         g_isStarted = true;
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeFinish(JNIEnv*  env, jobject thiz)
-    {
-        g_isGameFinished = true;
-        LOGD("CocosRenderer.nativeFinish");
-
-        g_app->end();
-        JniHelper::callObjectVoidMethod(thiz, Cocos2dxRendererClassName, "onGameFinished");
-    }
-
 	JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeRender(JNIEnv* env)
 	{
         if (g_isGameFinished)
@@ -581,5 +572,12 @@ void disableBatchGLCommandsToNativeJNI()
 
 void exitApplicationJNI()
 {
+    g_isGameFinished = true;
+
+    // with Application destructor called, native resource will be released
+    delete g_app;
+    g_app = nullptr;
+    LOGD("exitApplicationJNI...");
+
     JniHelper::callStaticVoidMethod(Cocos2dxHelperClassName, "endApplication");
 }
