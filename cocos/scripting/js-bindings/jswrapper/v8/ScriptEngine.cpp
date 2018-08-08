@@ -671,7 +671,12 @@ namespace se {
         return success;
     }
 
-    std::string ScriptEngine::getCurrentStackTrace(){
+    std::string ScriptEngine::getCurrentStackTrace()
+    {
+        if (!_isValid)
+            return std::string();
+
+        v8::HandleScope hs(_isolate);
         v8::Local<v8::StackTrace> stack = v8::StackTrace::CurrentStackTrace(_isolate, __jsbStackFrameLimit, v8::StackTrace::kOverview);
         return stackTraceToString(stack);
     }
