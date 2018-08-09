@@ -273,6 +273,22 @@ void EventDispatcher::dispatchTickEvent(float dt)
     _tickVal.toObject()->call(args, nullptr);
 }
 
+void EventDispatcher::dispatchResizeEvent()
+{
+    if (!se::ScriptEngine::getInstance()->isValid())
+        return;
+
+    se::AutoHandleScope scope;
+    assert(_inited);
+
+    se::Value func;
+    __jsbObj->getProperty("onResize", &func);
+    if (func.isObject() && func.toObject()->isFunction())
+    {
+        func.toObject()->call(se::EmptyValueArray, nullptr);
+    }
+}
+
 static void dispatchEnterBackgroundOrForegroundEvent(const char* funcName)
 {
     if (!se::ScriptEngine::getInstance()->isValid())
