@@ -110,7 +110,7 @@ AudioMixer::AudioMixer(size_t frameCount, uint32_t sampleRate, uint32_t maxNumTr
 //cjh    mState.mLog         = &mDummyLog;
     // mState.reserved
 
-    // IDEA Most of the following initialization is probably redundant since
+    // IDEA: Most of the following initialization is probably redundant since
     // tracks[i] should only be referenced if (mTrackNames & (1 << i)) != 0
     // and mTrackNames is initially 0.  However, leave it here until that's verified.
     track_t* t = mState.tracks;
@@ -642,7 +642,7 @@ void AudioMixer::setParameter(int name, int target, int param, void *value)
                 invalidateState(1 << name);
             }
             } break;
-        // IDEA do we want to support setting the downmix type from AudioMixerController?
+        // IDEA: do we want to support setting the downmix type from AudioMixerController?
         //         for a specific track? or per mixer?
         /* case DOWNMIX_TYPE:
             break          */
@@ -760,7 +760,7 @@ bool AudioMixer::track_t::setResampler(uint32_t trackSampleRate, uint32_t devSam
                         trackSampleRate, devSampleRate);
                 AudioResampler::src_quality quality;
                 // force lowest quality level resampler if use case isn't music or video
-                // IDEA this is flawed for dynamic sample rates, as we choose the resampler
+                // IDEA: this is flawed for dynamic sample rates, as we choose the resampler
                 // quality level based on the initial ratio, but that could change later.
                 // Should have a way to distinguish tracks with static ratios vs. dynamic ratios.
 //cjh                if (isMusicRate(trackSampleRate)) {
@@ -943,7 +943,7 @@ void AudioMixer::process__validate(state_t* state, int64_t pts)
         countActiveTracks++;
         track_t& t = state->tracks[i];
         uint32_t n = 0;
-        // IDEA can overflow (mask is only 3 bits)
+        // IDEA: can overflow (mask is only 3 bits)
         n |= NEEDS_CHANNEL_1 + t.channelCount - 1;
         if (t.doesResample()) {
             n |= NEEDS_RESAMPLE;
@@ -1945,7 +1945,7 @@ void AudioMixer::convertMixerFormat(void *out, audio_format_t mixerOutFormat,
     case AUDIO_FORMAT_PCM_FLOAT:
         switch (mixerOutFormat) {
         case AUDIO_FORMAT_PCM_FLOAT:
-            memcpy(out, in, sampleCount * sizeof(float)); // MEMCPY. REFINE optimize out
+            memcpy(out, in, sampleCount * sizeof(float)); // MEMCPY. REFINE: optimize out
             break;
         case AUDIO_FORMAT_PCM_16_BIT:
             memcpy_to_i16_from_float((int16_t*)out, (float*)in, sampleCount);

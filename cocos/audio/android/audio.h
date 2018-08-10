@@ -61,7 +61,7 @@ typedef enum {
 
     /* application does not specify an explicit session ID to be used,
      * and requests a new session ID to be allocated
-     * REFINE use unique values for AUDIO_SESSION_OUTPUT_MIX and AUDIO_SESSION_ALLOCATE,
+     * REFINE: use unique values for AUDIO_SESSION_OUTPUT_MIX and AUDIO_SESSION_ALLOCATE,
      * after all uses have been updated from 0 to the appropriate symbol, and have been tested.
      */
             AUDIO_SESSION_ALLOCATE = 0,
@@ -494,7 +494,7 @@ static inline audio_channel_mask_t audio_channel_out_mask_from_count(uint32_t ch
         case 8:
             bits = AUDIO_CHANNEL_OUT_7POINT1;
             break;
-            // IDEA FCC_8
+            // IDEA: FCC_8
         default:
             return AUDIO_CHANNEL_INVALID;
     }

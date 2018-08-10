@@ -267,7 +267,7 @@ namespace {
                                      kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
     if (nil == _context)
     {
-        CGColorSpaceRelease(_colorSpace); //REFINE HOWTO RELEASE?
+        CGColorSpaceRelease(_colorSpace); //REFINE: HOWTO RELEASE?
         _colorSpace = nil;
     }
 
