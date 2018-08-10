@@ -178,6 +178,7 @@ void Application::onResize(int width, int height)
         g_height = height;
 
         // set current g_width/g_height to window.innerWidth/innerHeight
+        se::AutoHandleScope hs;
         setCanvasCallback(nullptr);
         EventDispatcher::dispatchResizeEvent();
     }
