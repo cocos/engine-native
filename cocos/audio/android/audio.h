@@ -494,7 +494,7 @@ static inline audio_channel_mask_t audio_channel_out_mask_from_count(uint32_t ch
         case 8:
             bits = AUDIO_CHANNEL_OUT_7POINT1;
             break;
-            // FIXME FCC_8
+            // IDEA FCC_8
         default:
             return AUDIO_CHANNEL_INVALID;
     }

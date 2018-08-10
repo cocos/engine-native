@@ -709,7 +709,7 @@ namespace se {
 
     void ScriptEngine::clearException()
     {
-        //FIXME:
+        //IDEA:
     }
 
     void ScriptEngine::setExceptionCallback(const ExceptionCallback& cb)

@@ -165,7 +165,7 @@ public:
         jsize len  = JniHelper::getEnv()->GetArrayLength(arr);
         jbyte* jbarray = (jbyte *)malloc(len * sizeof(jbyte));
         JniHelper::getEnv()->GetByteArrayRegion(arr,0,len,jbarray);
-        _data.fastSet((unsigned char*) jbarray, len); //FIXME: DON'T create new jbarray every time.
+        _data.fastSet((unsigned char*) jbarray, len); //IDEA: DON'T create new jbarray every time.
         JniHelper::getEnv()->DeleteLocalRef(arr);
     }
 

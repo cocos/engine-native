@@ -250,7 +250,7 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks* cb, void* 
                 handle->callback.seek(stream, (long) (chunkSize - minSize), SEEK_CUR);
             }
             unsigned channels = little2u(&fmt[2]);
-            // FIXME FCC_8
+            // IDEA FCC_8
             if (channels != 1 && channels != 2 && channels != 4 && channels != 6 && channels != 8) {
 #ifdef HAVE_STDERR
                 ALOGE("unsupported channels %u\n", channels);

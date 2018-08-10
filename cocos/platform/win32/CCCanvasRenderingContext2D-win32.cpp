@@ -219,7 +219,7 @@ public:
                     int nFindPos = tmpFontPath.rfind("/");
                     tmpFontPath = &tmpFontPath[nFindPos + 1];
                     nFindPos = tmpFontPath.rfind(".");
-                    // FIXME: draw ttf failed if font file name not equal font face name
+                    // IDEA: draw ttf failed if font file name not equal font face name
                     // for example: "DejaVuSansMono-Oblique" not equal "DejaVu Sans Mono"  when using DejaVuSansMono-Oblique.ttf
                     _fontName = tmpFontPath.substr(0, nFindPos);
                 }

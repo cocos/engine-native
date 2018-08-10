@@ -110,7 +110,7 @@ AudioMixer::AudioMixer(size_t frameCount, uint32_t sampleRate, uint32_t maxNumTr
 //cjh    mState.mLog         = &mDummyLog;
     // mState.reserved
 
-    // FIXME Most of the following initialization is probably redundant since
+    // IDEA Most of the following initialization is probably redundant since
     // tracks[i] should only be referenced if (mTrackNames & (1 << i)) != 0
     // and mTrackNames is initially 0.  However, leave it here until that's verified.
     track_t* t = mState.tracks;
@@ -479,11 +479,11 @@ void AudioMixer::disable(int name)
  * Its value is typically one state framecount period, but may also be 0,
  * meaning "immediate."
  *
- * FIXME: 1) Volume ramp is enabled only if there is a nonzero integer increment
+ * IDEA: 1) Volume ramp is enabled only if there is a nonzero integer increment
  * even if there is a nonzero floating point increment (in that case, the volume
  * change is immediate).  This restriction should be changed when the legacy mixer
  * is removed (see #2).
- * FIXME: 2) Integer volume variables are used for Legacy mixing and should be removed
+ * IDEA: 2) Integer volume variables are used for Legacy mixing and should be removed
  * when no longer needed.
  *
  * @param newVolume set volume target in floating point [0.0, 1.0].
@@ -642,7 +642,7 @@ void AudioMixer::setParameter(int name, int target, int param, void *value)
                 invalidateState(1 << name);
             }
             } break;
-        // FIXME do we want to support setting the downmix type from AudioMixerController?
+        // IDEA do we want to support setting the downmix type from AudioMixerController?
         //         for a specific track? or per mixer?
         /* case DOWNMIX_TYPE:
             break          */
@@ -760,7 +760,7 @@ bool AudioMixer::track_t::setResampler(uint32_t trackSampleRate, uint32_t devSam
                         trackSampleRate, devSampleRate);
                 AudioResampler::src_quality quality;
                 // force lowest quality level resampler if use case isn't music or video
-                // FIXME this is flawed for dynamic sample rates, as we choose the resampler
+                // IDEA this is flawed for dynamic sample rates, as we choose the resampler
                 // quality level based on the initial ratio, but that could change later.
                 // Should have a way to distinguish tracks with static ratios vs. dynamic ratios.
 //cjh                if (isMusicRate(trackSampleRate)) {
@@ -815,7 +815,7 @@ bool AudioMixer::track_t::setPlaybackRate(const AudioPlaybackRate &playbackRate)
 /* Checks to see if the volume ramp has completed and clears the increment
  * variables appropriately.
  *
- * FIXME: There is code to handle int/float ramp variable switchover should it not
+ * IDEA: There is code to handle int/float ramp variable switchover should it not
  * complete within a mixer buffer processing call, but it is preferred to avoid switchover
  * due to precision issues.  The switchover code is included for legacy code purposes
  * and can be removed once the integer volume is removed.
@@ -943,7 +943,7 @@ void AudioMixer::process__validate(state_t* state, int64_t pts)
         countActiveTracks++;
         track_t& t = state->tracks[i];
         uint32_t n = 0;
-        // FIXME can overflow (mask is only 3 bits)
+        // IDEA can overflow (mask is only 3 bits)
         n |= NEEDS_CHANNEL_1 + t.channelCount - 1;
         if (t.doesResample()) {
             n |= NEEDS_RESAMPLE;

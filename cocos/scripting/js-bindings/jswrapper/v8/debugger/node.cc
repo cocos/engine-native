@@ -387,7 +387,7 @@ Local<Value> ErrnoException(Isolate* isolate,
 
     Local<String> path_string;
     if (path != nullptr) {
-        // FIXME(bnoordhuis) It's questionable to interpret the file path as UTF-8.
+        // IDEA(bnoordhuis) It's questionable to interpret the file path as UTF-8.
         path_string = String::NewFromUtf8(env->isolate(), path);
     }
 
@@ -862,12 +862,12 @@ void SetupProcessObject(Environment* env,
 //#endif
 
     // process.arch
-    READONLY_PROPERTY(process, "arch", OneByteString(env->isolate(), "x64")); //FIXME: cjh
+    READONLY_PROPERTY(process, "arch", OneByteString(env->isolate(), "x64")); //IDEA: cjh
 
     // process.platform
     READONLY_PROPERTY(process,
                       "platform",
-                      OneByteString(env->isolate(), "macOS")); //FIXME: cjh
+                      OneByteString(env->isolate(), "macOS")); //IDEA: cjh
 
     // process.release
     Local<Object> release = Object::New(env->isolate());
