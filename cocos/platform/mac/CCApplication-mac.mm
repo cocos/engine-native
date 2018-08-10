@@ -170,14 +170,14 @@ void Application::end()
     glfwSetWindowShouldClose(CAST_VIEW(_view)->getGLFWWindow(), 1);
 }
 
-void Application::resize(int width, int height)
+void Application::onResize(int width, int height)
 {
     if(g_width != width || g_height != height)
     {
         g_width = width;
         g_height = height;
 
-        // set current width/height to window.innerWidth/innerHeight
+        // set current g_width/g_height to window.innerWidth/innerHeight
         setCanvasCallback(nullptr);
         EventDispatcher::dispatchResizeEvent();
     }

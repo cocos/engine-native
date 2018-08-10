@@ -117,7 +117,11 @@ public:
     void restart();
     void end();
 
-    void resize(int width, int height);
+    /**
+     * @brief notify JavaScript Engine to adapt window size
+     */
+    void onResize(int width, int height);
+
     /**
      * @brief Sets the preferred frame rate for main loop callback.
      * @param fps The preferred frame rate for main loop callback.
