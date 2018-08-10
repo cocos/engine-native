@@ -168,7 +168,7 @@ private:
     struct track_t {
         uint32_t    needs;
 
-        // TODO: Eventually remove legacy integer volume settings
+        // REFINE: Eventually remove legacy integer volume settings
         union {
         int16_t     volume[MAX_NUM_VOLUMES]; // U4.12 fixed point (top bit should be zero)
         int32_t     volumeRL;
@@ -214,7 +214,7 @@ private:
 
         /* Buffer providers are constructed to translate the track input data as needed.
          *
-         * TODO: perhaps make a single PlaybackConverterProvider class to move
+         * REFINE: perhaps make a single PlaybackConverterProvider class to move
          * all pre-mixer track buffer conversions outside the AudioMixer class.
          *
          * 1) mInputBufferProvider: The AudioTrack buffer provider.

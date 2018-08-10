@@ -576,7 +576,7 @@ SE_BIND_FUNC(JSB_cleanScript)
 
 static bool JSB_core_restartVM(se::State& s)
 {
-    //TODO: release AudioEngine, waiting HttpClient & WebSocket threads to exit.
+    //REFINE: release AudioEngine, waiting HttpClient & WebSocket threads to exit.
     Application::getInstance()->restart();
     return true;
 }

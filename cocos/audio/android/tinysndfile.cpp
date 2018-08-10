@@ -439,7 +439,7 @@ sf_count_t sf_readf_float(SNDFILE *handle, float *ptr, sf_count_t desiredFrames)
     switch (format) {
         case SF_FORMAT_PCM_U8:
 #if 0
-            // TODO - implement
+            // REFINE - implement
             memcpy_to_float_from_u8(ptr, (const unsigned char *) temp,
                                     actualFrames * handle->info.channels);
 #endif
@@ -490,7 +490,7 @@ sf_count_t sf_readf_int(SNDFILE *handle, int *ptr, sf_count_t desiredFrames)
     switch (format) {
         case SF_FORMAT_PCM_U8:
 #if 0
-            // TODO - implement
+            // REFINE - implement
             memcpy_to_i32_from_u8(ptr, (const unsigned char *) temp,
                                   actualFrames * handle->info.channels);
 #endif

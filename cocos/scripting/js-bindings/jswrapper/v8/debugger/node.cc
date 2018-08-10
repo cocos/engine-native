@@ -755,7 +755,7 @@ static void ProcessTitleSetter(Local<Name> property,
                                Local<Value> value,
                                const PropertyCallbackInfo<void>& info) {
     node::Utf8Value title(info.GetIsolate(), value);
-    // TODO(piscisaureus): protect with a lock
+    // REFINE(piscisaureus): protect with a lock
     uv_set_process_title(*title);
 }
 
@@ -1017,7 +1017,7 @@ void SetupProcessObject(Environment* env,
 //        READONLY_PROPERTY(process, "traceDeprecation", True(env->isolate()));
 //    }
 //
-//    // TODO(refack): move the following 3 to `node_config`
+//    // REFINE(refack): move the following 3 to `node_config`
 //    // --inspect-brk
 //    if (debug_options.wait_for_connect()) {
 //        READONLY_DONT_ENUM_PROPERTY(process,

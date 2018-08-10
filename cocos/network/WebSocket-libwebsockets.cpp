@@ -432,7 +432,7 @@ void WsThreadHelper::onSubThreadLoop()
             {
                 auto msg = (*iter);
                 auto ws = (WebSocketImpl*)msg->user;
-                // TODO: ws may be a invalid pointer
+                // REFINE: ws may be a invalid pointer
                 if (msg->what == WS_MSG_TO_SUBTHREAD_CREATE_CONNECTION)
                 {
                     ws->onClientOpenConnectionRequest();

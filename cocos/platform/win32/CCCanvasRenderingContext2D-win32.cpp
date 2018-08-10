@@ -179,7 +179,7 @@ public:
     {
         if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        // TODO
+        // REFINE
     }
 
     cocos2d::Size measureText(const std::string& text)
@@ -824,7 +824,7 @@ void CanvasRenderingContext2D::set_textBaseline(const std::string& textBaseline)
     {
         _impl->setTextBaseline(CanvasTextBaseline::MIDDLE);
     }
-    else if (textBaseline == "bottom" || textBaseline == "alphabetic") //TODO:cjh, how to deal with alphabetic, currently we handle it as bottom mode.
+    else if (textBaseline == "bottom" || textBaseline == "alphabetic") //REFINE:cjh, how to deal with alphabetic, currently we handle it as bottom mode.
     {
         _impl->setTextBaseline(CanvasTextBaseline::BOTTOM);
     }
@@ -853,7 +853,7 @@ void CanvasRenderingContext2D::set_globalCompositeOperation(const std::string& g
 }
 
 // transform
-//TODO:
+//REFINE:
 
 void CanvasRenderingContext2D::translate(float x, float y)
 {
