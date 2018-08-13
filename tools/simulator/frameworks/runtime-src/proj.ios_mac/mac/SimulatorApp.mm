@@ -99,12 +99,7 @@ std::string getCurAppName(void)
     if (isDirectory)
     {
         // check src folder
-        if ([fm fileExistsAtPath:[path stringByAppendingString:@"/src/main.lua"]])
-        {
-            _project.setProjectDir([path cStringUsingEncoding:NSUTF8StringEncoding]);
-            _entryPath = "$(PROJDIR)/src/main.lua";
-        }
-        else if ([fm fileExistsAtPath:[path stringByAppendingString:@"/src/main.js"]])
+        if ([fm fileExistsAtPath:[path stringByAppendingString:@"/src/main.js"]])
         {
             _project.setProjectDir([path cStringUsingEncoding:NSUTF8StringEncoding]);
             _entryPath = "$(PROJDIR)/src/main.js";
@@ -383,7 +378,7 @@ std::string getCurAppName(void)
     _window = glfwGetCocoaWindow((GLFWwindow*)glfwWindow);
     [_window center];
 
-    // [self setZoom:_project.getFrameScale()];
+     [self setZoom:_project.getFrameScale()];
     if (pos.x != 0 && pos.y != 0)
     {
         [_window setFrameOrigin:NSMakePoint(pos.x, pos.y)];
@@ -431,7 +426,6 @@ std::string getCurAppName(void)
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     FileUtils::getInstance()->addSearchPath(resourcePath.UTF8String);
 
-//     not show the custom menu items
      [self setupUI];
      [self adjustEditMenuIndex];
 
@@ -463,6 +457,14 @@ std::string getCurAppName(void)
             menuItem->setChecked(true);
         }
     }
+
+    menuBar->addItem("DIRECTION_MENU_SEP", "-", "VIEW_MENU");
+    menuBar->addItem("DIRECTION_PORTRAIT_MENU", tr("Portrait"), "VIEW_MENU")
+    ->setChecked(_project.isPortraitFrame());
+    menuBar->addItem("DIRECTION_LANDSCAPE_MENU", tr("Landscape"), "VIEW_MENU")
+    ->setChecked(_project.isLandscapeFrame());
+
+    menuBar->addItem("VIEW_SCALE_MENU_SEP", "-", "VIEW_MENU");
 
     std::vector<player::PlayerMenuItem*> scaleMenuVector;
     auto scale100Menu = menuBar->addItem("VIEW_SCALE_MENU_100", tr("Zoom Out").append(" (100%)"), "VIEW_MENU");
@@ -509,7 +511,7 @@ std::string getCurAppName(void)
 
     ProjectConfig &project = _project;
 
-    EventDispatcher::CustomEventListener listener = [self, &project](const CustomEvent& event) mutable{
+    EventDispatcher::CustomEventListener listener = [self, &project, scaleMenuVector](const CustomEvent& event) mutable{
         auto menuEvent = dynamic_cast<const AppEvent&>(event);
         rapidjson::Document dArgParse;
         dArgParse.Parse<0>(menuEvent.getDataString().c_str());
@@ -535,6 +537,20 @@ std::string getCurAppName(void)
                     }
                     else if (data == "REFRESH_MENU")
                     {
+                        [SIMULATOR relaunch];
+                    }
+                    else if (data.find("VIEW_SCALE_MENU_") == 0) // begin with VIEW_SCALE_MENU_
+                    {
+                        string tmp = data.erase(0, strlen("VIEW_SCALE_MENU_"));
+                        float scale = atof(tmp.c_str()) / 100.0f;
+                        [SIMULATOR setZoom:scale];
+
+                        // update scale menu state
+                        for (auto &it : scaleMenuVector)
+                        {
+                            it->setChecked(false);
+                        }
+                        menuItem->setChecked(true);
                         [SIMULATOR relaunch];
                     }
                     else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
@@ -585,7 +601,6 @@ std::string getCurAppName(void)
     if (dup2(outfd, fileno(stderr)) != fileno(stderr) || dup2(outfd, fileno(stdout)) != fileno(stdout))
     {
         perror("Unable to redirect output");
-        //        [self showAlert:@"Unable to redirect output to console!" withTitle:@"player error"];
     }
     else
     {
@@ -624,6 +639,16 @@ std::string getCurAppName(void)
     }
 }
 
+- (void) setZoom:(float)scale
+{
+    _project.setFrameScale(scale);
+    std::stringstream title;
+    title << "Cocos " << tr("Simulator") << " (" << _project.getFrameScale() * 100 << "%)";
+    [_window setTitle:[NSString stringWithUTF8String:title.str().c_str()]];
+}
+
+
+
 - (BOOL) applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {
     return NO;
@@ -633,7 +658,7 @@ std::string getCurAppName(void)
 
 -(IBAction)onFileClose:(id)sender
 {
-    CC_SAFE_DELETE(_app);
+    _app->end();
    [[NSApplication sharedApplication] terminate:self];
 }
 
