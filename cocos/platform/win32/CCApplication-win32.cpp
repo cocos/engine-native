@@ -196,7 +196,13 @@ void Application::start()
         if (_isDownsampleEnabled)
             _renderTexture->prepare();
         CAST_VIEW(_view)->pollEvents();
-        _scheduler->update(dt);
+
+        //block until `dt` is reset, 
+        if(dt >= 0) 
+        {
+            _scheduler->update(dt);
+            dt = -1.0;
+        }
 
         if(_isStarted)
         {
