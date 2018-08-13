@@ -197,7 +197,7 @@ void Application::start()
             _renderTexture->prepare();
         CAST_VIEW(_view)->pollEvents();
 
-        if (firstUpdate){
+        if (firstUpdate)
         {
             firstUpdate = false;
             _scheduler->update(dt);
@@ -212,7 +212,7 @@ void Application::start()
                 nLast.QuadPart = nNow.QuadPart;
                 dt = (float)interval / freq.QuadPart;
                 _scheduler->update(dt);
-                
+
                 EventDispatcher::dispatchTickEvent(dt);
 
                 if (_isDownsampleEnabled)
