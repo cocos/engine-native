@@ -509,61 +509,57 @@ std::string getCurAppName(void)
 
     ProjectConfig &project = _project;
 
-    auto window = _window;
-    EventDispatcher::CustomEventListener listener = [&project, scaleMenuVector, window](CustomEvent* event){
-        auto menuEvent = dynamic_cast<AppEvent*>(event);
-//        auto menuEvent = AppEvent();
-        if (menuEvent)
+    EventDispatcher::CustomEventListener listener = [self, &project](const CustomEvent& event) mutable{
+        auto menuEvent = dynamic_cast<const AppEvent&>(event);
+        rapidjson::Document dArgParse;
+        dArgParse.Parse<0>(menuEvent.getDataString().c_str());
+
+        if (dArgParse.HasMember("name"))
         {
-            rapidjson::Document dArgParse;
-            dArgParse.Parse<0>(menuEvent->getDataString().c_str());
-            if (dArgParse.HasMember("name"))
+            string strcmd = dArgParse["name"].GetString();
+
+            if (strcmd == "menuClicked")
             {
-                string strcmd = dArgParse["name"].GetString();
-
-                if (strcmd == "menuClicked")
+                player::PlayerMenuItem *menuItem = static_cast<player::PlayerMenuItem*>(menuEvent.args[0].ptrVal);
+                if (menuItem)
                 {
-                    player::PlayerMenuItem *menuItem = static_cast<player::PlayerMenuItem*>(menuEvent->getUserData());
-                    if (menuItem)
+                    if (menuItem->isChecked())
                     {
-                        if (menuItem->isChecked())
+                        return ;
+                    }
+
+                    string data = dArgParse["data"].GetString();
+                    if ((data == "CLOSE_MENU") || (data == "EXIT_MENU"))
+                    {
+                        _app->end();
+                    }
+                    else if (data == "REFRESH_MENU")
+                    {
+                        [SIMULATOR relaunch];
+                    }
+                    else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
+                    {
+                        string tmp = data.erase(0, strlen("VIEWSIZE_ITEM_MENU_"));
+                        int index = atoi(tmp.c_str());
+                        SimulatorScreenSize size = SimulatorConfig::getInstance()->getScreenSize(index);
+
+                        if (project.isLandscapeFrame())
                         {
-                            return ;
+                            std::swap(size.width, size.height);
                         }
 
-                        string data = dArgParse["data"].GetString();
-                        if ((data == "CLOSE_MENU") || (data == "EXIT_MENU"))
-                        {
-                            _app->end();
-                        }
-                        else if (data == "REFRESH_MENU")
-                        {
-                            [SIMULATOR relaunch];
-                        }
-                        else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
-                        {
-                            string tmp = data.erase(0, strlen("VIEWSIZE_ITEM_MENU_"));
-                            int index = atoi(tmp.c_str());
-                            SimulatorScreenSize size = SimulatorConfig::getInstance()->getScreenSize(index);
-
-                            if (project.isLandscapeFrame())
-                            {
-                                std::swap(size.width, size.height);
-                            }
-
-                            project.setFrameSize(cocos2d::Size(size.width, size.height));
-                            [SIMULATOR relaunch];
-                        }
-                        else if (data == "DIRECTION_PORTRAIT_MENU")
-                        {
-                            project.changeFrameOrientationToPortait();
-                            [SIMULATOR relaunch];
-                        }
-                        else if (data == "DIRECTION_LANDSCAPE_MENU")
-                        {
-                            project.changeFrameOrientationToLandscape();
-                            [SIMULATOR relaunch];
-                        }
+                        project.setFrameSize(cocos2d::Size(size.width, size.height));
+                        [SIMULATOR relaunch];
+                    }
+                    else if (data == "DIRECTION_PORTRAIT_MENU")
+                    {
+                        project.changeFrameOrientationToPortait();
+                        [SIMULATOR relaunch];
+                    }
+                    else if (data == "DIRECTION_LANDSCAPE_MENU")
+                    {
+                        project.changeFrameOrientationToLandscape();
+                        [SIMULATOR relaunch];
                     }
                 }
             }
@@ -638,7 +634,7 @@ std::string getCurAppName(void)
 -(IBAction)onFileClose:(id)sender
 {
     CC_SAFE_DELETE(_app);
-    [[NSApplication sharedApplication] terminate:self];
+   [[NSApplication sharedApplication] terminate:self];
 }
 
 -(IBAction)onWindowAlwaysOnTop:(id)sender
