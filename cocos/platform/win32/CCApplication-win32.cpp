@@ -170,7 +170,7 @@ void Application::start()
     QueryPerformanceFrequency(&freq);
     
     se::ScriptEngine* se = se::ScriptEngine::getInstance();
-
+    bool firstUpdate = true;
     while (!CAST_VIEW(_view)->windowShouldClose())
     {       
         if (!_isStarted)
@@ -197,11 +197,10 @@ void Application::start()
             _renderTexture->prepare();
         CAST_VIEW(_view)->pollEvents();
 
-        //block until `dt` is reset, 
-        if(dt >= 0) 
+        if (firstUpdate){
         {
+            firstUpdate = false;
             _scheduler->update(dt);
-            dt = -1.0;
         }
 
         if(_isStarted)
@@ -212,6 +211,7 @@ void Application::start()
             {
                 nLast.QuadPart = nNow.QuadPart;
                 dt = (float)interval / freq.QuadPart;
+                _scheduler->update(dt);
                 
                 EventDispatcher::dispatchTickEvent(dt);
 
