@@ -445,7 +445,7 @@ void GLView::onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int heig
 {
     if (width && height)
     {
-        cocos2d::Application::getInstance()->onResize(width, height);
+        EventDispatcher::dispatchResizeEvent(width, height);
     }
 }
 

@@ -250,20 +250,6 @@ void Application::end()
     glfwSetWindowShouldClose(CAST_VIEW(_view)->getGLFWWindow(), 1);
 }
 
-void Application::onResize(int width, int height)
-{
-    if(g_width != width || g_height != height)
-    {
-        g_width = width;
-        g_height = height;
-
-        // set current g_width/g_height to window.innerWidth/innerHeight
-        se::AutoHandleScope hs;
-        setCanvasCallback(nullptr);
-        EventDispatcher::dispatchResizeEvent();
-    }
-}
-
 void Application::setPreferredFramesPerSecond(int fps)
 {
     _fps = fps;
