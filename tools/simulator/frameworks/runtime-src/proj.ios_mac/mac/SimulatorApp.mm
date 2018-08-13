@@ -76,17 +76,6 @@ std::string getCurAppName(void)
     return appName;
 }
 
-#if (PLAYER_SUPPORT_DROP > 0)
-static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
-{
-    AppEvent forwardEvent(kAppEventDropName, APP_EVENT_DROP);
-    std::string firstFile(files[0]);
-    forwardEvent.setDataString(firstFile);
-
-    EventDispatcher::dispatchCustomEvent(&forwardEvent);
-}
-#endif
-
 -(void) dealloc
 {
     delete _app;
@@ -399,10 +388,6 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     {
         [_window setFrameOrigin:NSMakePoint(pos.x, pos.y)];
     }
-
-#if (PLAYER_SUPPORT_DROP > 0)
-    glfwSetDropCallback((GLFWwindow*)glfwWindow, glfwDropFunc);
-#endif
 }
 
 - (void) adjustEditMenuIndex
@@ -446,9 +431,9 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     FileUtils::getInstance()->addSearchPath(resourcePath.UTF8String);
 
-    // not show the custom menu items
-    // [self setupUI];
-    // [self adjustEditMenuIndex];
+//     not show the custom menu items
+     [self setupUI];
+     [self adjustEditMenuIndex];
 
     RuntimeEngine::getInstance()->setProjectConfig(_project);
     _app->start();
@@ -457,7 +442,7 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     [NSApp terminate: self];
 }
 
-/*
+
 - (void) setupUI
 {
     auto menuBar = player::PlayerProtocol::getInstance()->getMenuService();
@@ -478,22 +463,6 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
             menuItem->setChecked(true);
         }
     }
-
-    menuBar->addItem("DIRECTION_MENU_SEP", "-", "VIEW_MENU");
-    menuBar->addItem("DIRECTION_PORTRAIT_MENU", tr("Portrait"), "VIEW_MENU")
-    ->setChecked(_project.isPortraitFrame());
-    menuBar->addItem("DIRECTION_LANDSCAPE_MENU", tr("Landscape"), "VIEW_MENU")
-    ->setChecked(_project.isLandscapeFrame());
-
-    menuBar->addItem("VIEW_SCALE_MENU_SEP", "-", "VIEW_MENU");
-
-    auto displayStats = Director::getInstance()->isDisplayStats();
-    string fpsItemName = displayStats ? tr("Hide FPS") : tr("Show FPS");
-    menuBar->addItem("VIEW_SHOW_FPS", fpsItemName, "VIEW_MENU")
-    ->setChecked(displayStats);
-
-    menuBar->addItem("VIEW_SHOW_FPS_SEP", "-", "VIEW_MENU");
-
 
     std::vector<player::PlayerMenuItem*> scaleMenuVector;
     auto scale100Menu = menuBar->addItem("VIEW_SCALE_MENU_100", tr("Zoom Out").append(" (100%)"), "VIEW_MENU");
@@ -540,10 +509,10 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
 
     ProjectConfig &project = _project;
 
-    auto dispatcher = Director::getInstance()->getEventDispatcher();
     auto window = _window;
-    dispatcher->addEventListenerWithFixedPriority(EventListenerCustom::create(kAppEventName, [&project, scaleMenuVector, window](EventCustom* event){
+    EventDispatcher::CustomEventListener listener = [&project, scaleMenuVector, window](CustomEvent* event){
         auto menuEvent = dynamic_cast<AppEvent*>(event);
+//        auto menuEvent = AppEvent();
         if (menuEvent)
         {
             rapidjson::Document dArgParse;
@@ -565,25 +534,11 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
                         string data = dArgParse["data"].GetString();
                         if ((data == "CLOSE_MENU") || (data == "EXIT_MENU"))
                         {
-                            delete _app;
-                            _app = nullptr
+                            _app->end();
                         }
                         else if (data == "REFRESH_MENU")
                         {
                             [SIMULATOR relaunch];
-                        }
-                        else if (data.find("VIEW_SCALE_MENU_") == 0) // begin with VIEW_SCALE_MENU_
-                        {
-                            string tmp = data.erase(0, strlen("VIEW_SCALE_MENU_"));
-                            float scale = atof(tmp.c_str()) / 100.0f;
-                            [SIMULATOR setZoom:scale];
-
-                            // update scale menu state
-                            for (auto &it : scaleMenuVector)
-                            {
-                                it->setChecked(false);
-                            }
-                            menuItem->setChecked(true);
                         }
                         else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
                         {
@@ -608,48 +563,15 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
                         {
                             project.changeFrameOrientationToLandscape();
                             [SIMULATOR relaunch];
-                        }else if (data == "VIEW_SHOW_FPS")
-                        {
-                            auto director = cocos2d::Director::getInstance();
-                            director->setDisplayStats(director->isDisplayStats() == false);
-                            menuItem->setTitle(director->isDisplayStats() ? tr("Hide FPS") : tr("Show FPS"));
-                            [SIMULATOR relaunch];
                         }
                     }
                 }
             }
         }
-    }), 1);
-
-    // drop
-    AppDelegate *app = _app;
-    auto listener = EventListenerCustom::create(kAppEventDropName, [&project, app](EventCustom* event)
-    {
-        AppEvent *dropEvent = dynamic_cast<AppEvent*>(event);
-        if (dropEvent)
-        {
-            string dirPath = dropEvent->getDataString() + "/";
-            string configFilePath = dirPath + CONFIG_FILE;
-
-            if (FileUtils::getInstance()->isDirectoryExist(dirPath) &&
-                FileUtils::getInstance()->isFileExist(configFilePath))
-            {
-                // parse config.json
-                ConfigParser::getInstance()->readConfig(configFilePath);
-
-                project.setProjectDir(dirPath);
-                project.setScriptFile(ConfigParser::getInstance()->getEntryFile());
-                project.setWritablePath(dirPath);
-
-                RuntimeEngine::getInstance()->setProjectConfig(project);
-//                app->setProjectConfig(project);
-//                app->reopenProject();
-            }
-        }
-    });
-    dispatcher->addEventListenerWithFixedPriority(listener, 1);
+    };
+    EventDispatcher::addCustomEventListener(kAppEventName, listener);
 }
-*/
+
 
 - (void) openConsoleWindow
 {
@@ -705,17 +627,6 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
         }
     }
 }
-
-/*
-- (void) setZoom:(float)scale
-{
-    Director::getInstance()->getOpenGLView()->setFrameZoomFactor(scale);
-    _project.setFrameScale(scale);
-    std::stringstream title;
-    title << "Cocos " << tr("Simulator") << " (" << _project.getFrameScale() * 100 << "%)";
-    [_window setTitle:[NSString stringWithUTF8String:title.str().c_str()]];
-}
-*/
 
 - (BOOL) applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {
