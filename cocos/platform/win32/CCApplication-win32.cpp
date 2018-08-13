@@ -170,7 +170,6 @@ void Application::start()
     QueryPerformanceFrequency(&freq);
     
     se::ScriptEngine* se = se::ScriptEngine::getInstance();
-    bool firstUpdate = true;
     while (!CAST_VIEW(_view)->windowShouldClose())
     {       
         if (!_isStarted)
@@ -196,13 +195,6 @@ void Application::start()
         if (_isDownsampleEnabled)
             _renderTexture->prepare();
         CAST_VIEW(_view)->pollEvents();
-
-        if (firstUpdate)
-        {
-            firstUpdate = false;
-            _scheduler->update(dt);
-        }
-
         if(_isStarted)
         {
             QueryPerformanceCounter(&nNow);
