@@ -466,6 +466,12 @@ std::string getCurAppName(void)
 
     menuBar->addItem("VIEW_SCALE_MENU_SEP", "-", "VIEW_MENU");
 
+    _isShowFPS = true; // assume creator default show FPS
+    string fpsItemName = _isShowFPS ? tr("Hide FPS") : tr("Show FPS");
+    menuBar->addItem("VIEW_SHOW_FPS", fpsItemName, "VIEW_MENU");
+
+    menuBar->addItem("VIEW_SHOW_FPS_SEP", "-", "VIEW_MENU");
+
     std::vector<player::PlayerMenuItem*> scaleMenuVector;
     auto scale100Menu = menuBar->addItem("VIEW_SCALE_MENU_100", tr("Zoom Out").append(" (100%)"), "VIEW_MENU");
     scale100Menu->setShortcut("super+0");
@@ -511,7 +517,7 @@ std::string getCurAppName(void)
 
     ProjectConfig &project = _project;
 
-    EventDispatcher::CustomEventListener listener = [self, &project, scaleMenuVector](const CustomEvent& event) mutable{
+    EventDispatcher::CustomEventListener listener = [self, &project, scaleMenuVector](const CustomEvent& event){
         auto menuEvent = dynamic_cast<const AppEvent&>(event);
         rapidjson::Document dArgParse;
         dArgParse.Parse<0>(menuEvent.getDataString().c_str());
@@ -577,6 +583,13 @@ std::string getCurAppName(void)
                         project.changeFrameOrientationToLandscape();
                         [SIMULATOR relaunch];
                     }
+                    else if (data == "VIEW_SHOW_FPS")
+                    {
+                        _isShowFPS = !_app->isDisplayStats();
+                        _app->setDisplayStats(_isShowFPS);
+                        menuItem->setTitle(_isShowFPS ? tr("Hide FPS") : tr("Show FPS"));
+                    }
+
                 }
             }
         }
