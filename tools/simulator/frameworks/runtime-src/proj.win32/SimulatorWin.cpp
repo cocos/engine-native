@@ -440,8 +440,7 @@ int SimulatorWin::run()
 
     // init player services
     setupUI();
-    BOOL isSuccess = DrawMenuBar(_hwnd);
-    CCLOG("DRAW AFTER setupUI, SUCCESS? %d:\n", isSuccess);
+    DrawMenuBar(_hwnd);
 
     // prepare
     FileUtils::getInstance()->setPopupNotify(false);
