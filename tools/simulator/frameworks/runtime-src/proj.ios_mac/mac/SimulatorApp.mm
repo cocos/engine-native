@@ -281,7 +281,7 @@ std::string getCurAppName(void)
 {
     NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
     NSMutableDictionary *configuration = [NSMutableDictionary dictionaryWithObject:args forKey:NSWorkspaceLaunchConfigurationArguments];
-    NSError *error = [[[NSError alloc] init] autorelease];
+    NSError *error = nil;
     [[NSWorkspace sharedWorkspace] launchApplicationAtURL:url
                                                   options:NSWorkspaceLaunchNewInstance
                                             configuration:configuration
