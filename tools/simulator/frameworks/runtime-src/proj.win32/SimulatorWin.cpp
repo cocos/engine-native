@@ -170,7 +170,6 @@ SimulatorWin::SimulatorWin()
 
 SimulatorWin::~SimulatorWin()
 {
-    CC_SAFE_DELETE(_app);
 	if (_writeDebugLogFile)
     {
         fclose(_writeDebugLogFile);
@@ -179,8 +178,7 @@ SimulatorWin::~SimulatorWin()
 
 void SimulatorWin::quit()
 {
-    delete _app;
-    _app = nullptr;
+	_app->end();
 }
 
 void SimulatorWin::relaunch()
@@ -422,11 +420,6 @@ int SimulatorWin::run()
     // path for looking Lang file, Studio Default images
     FileUtils::getInstance()->addSearchPath(getApplicationPath().c_str());
 
-    // auto director = Director::getInstance();
-    // director->setOpenGLView(glview);
-
-    // director->setAnimationInterval(1.0 / 60.0);
-
     // set window position
     if (_project.getProjectDir().length())
     {
@@ -452,7 +445,6 @@ int SimulatorWin::run()
     // prepare
     FileUtils::getInstance()->setPopupNotify(false);
     _project.dump();
-    // auto app = Application::getInstance();
 
     g_oldWindowProc = (WNDPROC)SetWindowLong(_hwnd, GWL_WNDPROC, (LONG)SimulatorWin::windowProc);
 
@@ -460,7 +452,7 @@ int SimulatorWin::run()
     updateWindowTitle();
 
 	_app->start();
-	//CC_SAFE_DELETE(_app);
+	CC_SAFE_DELETE(_app);
     return true;
 }
 
@@ -603,6 +595,9 @@ void SimulatorWin::setupUI()
 
                             _instance->setZoom(scale);
 
+							_instance->relaunch();
+
+							/*
                             // update scale menu state
                             for (auto &it : scaleMenuVector)
                             {
@@ -620,6 +615,10 @@ void SimulatorWin::setupUI()
 
                             // fix: can not update window on some windows system
                             ::SendMessage(hwnd, WM_MOVE, NULL, NULL);
+
+							_instance->relaunch();
+							*/
+
                         }
                         else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
                         {
@@ -672,7 +671,6 @@ void SimulatorWin::setupUI()
 void SimulatorWin::setZoom(float frameScale)
 {
     _project.setFrameScale(frameScale);
-	// relaunch or resize
 }
 
 void SimulatorWin::updateWindowTitle()
