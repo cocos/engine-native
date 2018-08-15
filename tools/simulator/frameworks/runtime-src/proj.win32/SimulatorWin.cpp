@@ -183,10 +183,11 @@ void SimulatorWin::quit()
 
 void SimulatorWin::relaunch()
 {
+	quit();
+	CC_SAFE_DELETE(_app);
+
     _project.setWindowOffset(Vec2(getPositionX(), getPositionY()));
     openNewPlayerWithProjectConfig(_project);
-
-    quit();
 }
 
 void SimulatorWin::openNewPlayer()
@@ -240,8 +241,8 @@ void SimulatorWin::openNewPlayerWithProjectConfig(const ProjectConfig &config)
 
 void SimulatorWin::openProjectWithProjectConfig(const ProjectConfig &config)
 {
+	quit();
     openNewPlayerWithProjectConfig(config);
-    quit();
 }
 
 int SimulatorWin::getPositionX()
@@ -358,7 +359,7 @@ int SimulatorWin::run()
 
     // check scale
     Size frameSize = _project.getFrameSize();
-    float frameScale = 1.0f;
+	float frameScale = _project.getFrameScale();
     if (_project.isRetinaDisplay())
     {
         frameSize.width *= screenScale;
@@ -366,7 +367,7 @@ int SimulatorWin::run()
     }
     else
     {
-        frameScale = screenScale;
+        frameScale *= screenScale;
     }
 
     // check screen workarea
@@ -498,33 +499,13 @@ void SimulatorWin::setupUI()
 
     menuBar->addItem("VIEW_SCALE_MENU_SEP", "-", "VIEW_MENU");
     std::vector<player::PlayerMenuItem*> scaleMenuVector;
-    auto scale200Menu = menuBar->addItem("VIEW_SCALE_MENU_200", tr("Zoom Out").append(" (200%)"), "VIEW_MENU");
-    auto scale175Menu = menuBar->addItem("VIEW_SCALE_MENU_175", tr("Zoom Out").append(" (175%)"), "VIEW_MENU");
-    auto scale150Menu = menuBar->addItem("VIEW_SCALE_MENU_150", tr("Zoom Out").append(" (150%)"), "VIEW_MENU");
-    auto scale125Menu = menuBar->addItem("VIEW_SCALE_MENU_125", tr("Zoom Out").append(" (125%)"), "VIEW_MENU");
     auto scale100Menu = menuBar->addItem("VIEW_SCALE_MENU_100", tr("Zoom Out").append(" (100%)"), "VIEW_MENU");
     auto scale75Menu = menuBar->addItem("VIEW_SCALE_MENU_75", tr("Zoom Out").append(" (75%)"), "VIEW_MENU");
     auto scale50Menu = menuBar->addItem("VIEW_SCALE_MENU_50", tr("Zoom Out").append(" (50%)"), "VIEW_MENU");
     auto scale25Menu = menuBar->addItem("VIEW_SCALE_MENU_25", tr("Zoom Out").append(" (25%)"), "VIEW_MENU");
     int frameScale = int(_project.getFrameScale() * 100);
 
-    if (frameScale == 200)
-    {
-        scale200Menu->setChecked(true);
-    }
-    else if (frameScale == 175)
-    {
-        scale175Menu->setChecked(true);
-    }
-    else if (frameScale == 150)
-    {
-        scale150Menu->setChecked(true);
-    }
-    else if (frameScale == 125)
-    {
-        scale125Menu->setChecked(true);
-    }
-    else if (frameScale == 100)
+	if (frameScale == 100)
     {
         scale100Menu->setChecked(true);
     }
@@ -545,10 +526,6 @@ void SimulatorWin::setupUI()
         scale100Menu->setChecked(true);
     }
 
-    scaleMenuVector.push_back(scale200Menu);
-    scaleMenuVector.push_back(scale175Menu);
-    scaleMenuVector.push_back(scale150Menu);
-    scaleMenuVector.push_back(scale125Menu);
     scaleMenuVector.push_back(scale100Menu);
     scaleMenuVector.push_back(scale75Menu);
     scaleMenuVector.push_back(scale50Menu);
@@ -593,32 +570,7 @@ void SimulatorWin::setupUI()
                             float scale = atof(tmp.c_str()) / 100.0f;
                             project.setFrameScale(scale);
 
-                            _instance->setZoom(scale);
-
-							_instance->relaunch();
-
-							/*
-                            // update scale menu state
-                            for (auto &it : scaleMenuVector)
-                            {
-                                it->setChecked(false);
-                            }
-                            menuItem->setChecked(true);
-
-                            // update window title
-                            _instance->updateWindowTitle();
-
-                            // update window size
-                            RECT rect;
-                            GetWindowRect(hwnd, &rect);
-                            MoveWindow(hwnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top + GetSystemMetrics(SM_CYMENU), FALSE);
-
-                            // fix: can not update window on some windows system
-                            ::SendMessage(hwnd, WM_MOVE, NULL, NULL);
-
-							_instance->relaunch();
-							*/
-
+							_instance->openProjectWithProjectConfig(project);
                         }
                         else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
                         {
