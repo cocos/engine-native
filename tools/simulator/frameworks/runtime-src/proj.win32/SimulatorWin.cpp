@@ -487,6 +487,11 @@ void SimulatorWin::setupUI()
         }
     }
 
+	// show FPs 
+	bool displayStats = true; // asume creator default show FPS
+	string fpsItemName = displayStats ? tr("Hide FPS") : tr("Show FPS");
+	menuBar->addItem("FPS_MENU", fpsItemName);
+
     // About
     menuBar->addItem("HELP_MENU", tr("Help"));
     menuBar->addItem("ABOUT_MENUITEM", tr("About"), "HELP_MENU");
@@ -536,7 +541,7 @@ void SimulatorWin::setupUI()
 
     HWND &hwnd = _hwnd;
     ProjectConfig &project = _project;
-	EventDispatcher::CustomEventListener listener = [&hwnd, &project, scaleMenuVector](const CustomEvent& event) {
+	EventDispatcher::CustomEventListener listener = [this, &hwnd, &project, scaleMenuVector](const CustomEvent& event) {
 		auto menuEvent = dynamic_cast<const AppEvent&>(event);
             rapidjson::Document dArgParse;
             dArgParse.Parse<0>(menuEvent.getDataString().c_str());
@@ -613,6 +618,12 @@ void SimulatorWin::setupUI()
                         {
                             onHelpAbout();
                         }
+						else if (data == "FPS_MENU")
+						{
+							bool displayStats = !_app->isDisplayStats();
+							_app->setDisplayStats(displayStats);
+							menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
+						}
                     }
                 }
             }
