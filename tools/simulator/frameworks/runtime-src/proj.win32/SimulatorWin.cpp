@@ -170,7 +170,7 @@ SimulatorWin::SimulatorWin()
 
 SimulatorWin::~SimulatorWin()
 {
-	if (_writeDebugLogFile)
+    if (_writeDebugLogFile)
     {
         fclose(_writeDebugLogFile);
     }
@@ -178,13 +178,13 @@ SimulatorWin::~SimulatorWin()
 
 void SimulatorWin::quit()
 {
-	_app->end();
+    _app->end();
 }
 
 void SimulatorWin::relaunch()
 {
-	quit();
-	CC_SAFE_DELETE(_app);
+    quit();
+    CC_SAFE_DELETE(_app);
 
     _project.setWindowOffset(Vec2(getPositionX(), getPositionY()));
     openNewPlayerWithProjectConfig(_project);
@@ -241,7 +241,7 @@ void SimulatorWin::openNewPlayerWithProjectConfig(const ProjectConfig &config)
 
 void SimulatorWin::openProjectWithProjectConfig(const ProjectConfig &config)
 {
-	quit();
+    quit();
     openNewPlayerWithProjectConfig(config);
 }
 
@@ -359,7 +359,7 @@ int SimulatorWin::run()
 
     // check scale
     Size frameSize = _project.getFrameSize();
-	float frameScale = _project.getFrameScale();
+    float frameScale = _project.getFrameScale();
     if (_project.isRetinaDisplay())
     {
         frameSize.width *= screenScale;
@@ -441,7 +441,7 @@ int SimulatorWin::run()
     // init player services
     setupUI();
     BOOL isSuccess = DrawMenuBar(_hwnd);
-	CCLOG("DRAW AFTER setupUI, SUCCESS? %d:\n", isSuccess);
+    CCLOG("DRAW AFTER setupUI, SUCCESS? %d:\n", isSuccess);
 
     // prepare
     FileUtils::getInstance()->setPopupNotify(false);
@@ -452,8 +452,8 @@ int SimulatorWin::run()
     // update window title
     updateWindowTitle();
 
-	_app->start();
-	CC_SAFE_DELETE(_app);
+    _app->start();
+    CC_SAFE_DELETE(_app);
     return true;
 }
 
@@ -465,9 +465,6 @@ void SimulatorWin::setupUI()
 
     // FILE
     menuBar->addItem("FILE_MENU", tr("File"));
-    menuBar->addItem("OPEN_FILE_MENU", tr("Open File") + "...", "FILE_MENU");
-    menuBar->addItem("OPEN_PROJECT_MENU", tr("Open Project") + "...", "FILE_MENU");
-    menuBar->addItem("FILE_MENU_SEP1", "-", "FILE_MENU");
     menuBar->addItem("EXIT_MENU", tr("Exit"), "FILE_MENU");
 
     // VIEW
@@ -487,10 +484,10 @@ void SimulatorWin::setupUI()
         }
     }
 
-	// show FPs 
-	bool displayStats = true; // asume creator default show FPS
-	string fpsItemName = displayStats ? tr("Hide FPS") : tr("Show FPS");
-	menuBar->addItem("FPS_MENU", fpsItemName);
+    // show FPs 
+    bool displayStats = true; // asume creator default show FPS
+    string fpsItemName = displayStats ? tr("Hide FPS") : tr("Show FPS");
+    menuBar->addItem("FPS_MENU", fpsItemName);
 
     // About
     menuBar->addItem("HELP_MENU", tr("Help"));
@@ -510,7 +507,7 @@ void SimulatorWin::setupUI()
     auto scale25Menu = menuBar->addItem("VIEW_SCALE_MENU_25", tr("Zoom Out").append(" (25%)"), "VIEW_MENU");
     int frameScale = int(_project.getFrameScale() * 100);
 
-	if (frameScale == 100)
+    if (frameScale == 100)
     {
         scale100Menu->setChecked(true);
     }
@@ -541,8 +538,8 @@ void SimulatorWin::setupUI()
 
     HWND &hwnd = _hwnd;
     ProjectConfig &project = _project;
-	EventDispatcher::CustomEventListener listener = [this, &hwnd, &project, scaleMenuVector](const CustomEvent& event) {
-		auto menuEvent = dynamic_cast<const AppEvent&>(event);
+    EventDispatcher::CustomEventListener listener = [this, &hwnd, &project, scaleMenuVector](const CustomEvent& event) {
+        auto menuEvent = dynamic_cast<const AppEvent&>(event);
             rapidjson::Document dArgParse;
             dArgParse.Parse<0>(menuEvent.getDataString().c_str());
             if (dArgParse.HasMember("name"))
@@ -575,7 +572,7 @@ void SimulatorWin::setupUI()
                             float scale = atof(tmp.c_str()) / 100.0f;
                             project.setFrameScale(scale);
 
-							_instance->openProjectWithProjectConfig(project);
+                            _instance->openProjectWithProjectConfig(project);
                         }
                         else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
                         {
@@ -602,33 +599,21 @@ void SimulatorWin::setupUI()
                             project.changeFrameOrientationToLandscape();
                             _instance->openProjectWithProjectConfig(project);
                         }
-                        else if (data == "OPEN_FILE_MENU")
-                        {
-                            auto fileDialog = player::PlayerProtocol::getInstance()->getFileDialogService();
-                            stringstream extensions;
-                            extensions << "All Support File|config.json,*.csd,*csd;"
-                                << "Project Config File|config.json;"
-                                << "Cocos Studio File|*.csd;"
-                                << "Cocos Studio Binary File|*.csb";
-                            auto entry = fileDialog->openFile(tr("Choose File"), "", extensions.str());
-
-                            _instance->onOpenFile(entry);
-                        }
                         else if (data == "ABOUT_MENUITEM")
                         {
                             onHelpAbout();
                         }
-						else if (data == "FPS_MENU")
-						{
-							bool displayStats = !_app->isDisplayStats();
-							_app->setDisplayStats(displayStats);
-							menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
-						}
+                        else if (data == "FPS_MENU")
+                        {
+                            bool displayStats = !_app->isDisplayStats();
+                            _app->setDisplayStats(displayStats);
+                            menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
+                        }
                     }
                 }
             }
     };
-	EventDispatcher::addCustomEventListener(kAppEventName, listener);
+    EventDispatcher::addCustomEventListener(kAppEventName, listener);
 }
 
 void SimulatorWin::setZoom(float frameScale)
@@ -846,8 +831,8 @@ LRESULT CALLBACK SimulatorWin::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, L
                 buf << "{\"data\":\"" << menuItem->getMenuId().c_str() << "\"";
                 buf << ",\"name\":" << "\"menuClicked\"" << "}";
                 event.setDataString(buf.str());
-				event.args[0].ptrVal = (void*)menuItem;
-				cocos2d::EventDispatcher::dispatchCustomEvent(event);
+                event.args[0].ptrVal = (void*)menuItem;
+                cocos2d::EventDispatcher::dispatchCustomEvent(event);
             }
 
             if (menuId == ID_HELP_ABOUT)
