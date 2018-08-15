@@ -41,7 +41,6 @@
     AppDelegate *_app;
     ProjectConfig _project;
     int _debugLogFile;
-    bool _isShowFPS;
     std::string _entryPath;
     
     //log file

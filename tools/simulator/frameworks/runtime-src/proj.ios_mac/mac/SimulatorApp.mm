@@ -466,8 +466,8 @@ std::string getCurAppName(void)
 
     menuBar->addItem("VIEW_SCALE_MENU_SEP", "-", "VIEW_MENU");
 
-    _isShowFPS = true; // assume creator default show FPS
-    string fpsItemName = _isShowFPS ? tr("Hide FPS") : tr("Show FPS");
+    bool displayStats = true; // asume creator default show FPS
+    string fpsItemName = displayStats ? tr("Hide FPS") : tr("Show FPS");
     menuBar->addItem("VIEW_SHOW_FPS", fpsItemName, "VIEW_MENU");
 
     menuBar->addItem("VIEW_SHOW_FPS_SEP", "-", "VIEW_MENU");
@@ -585,9 +585,9 @@ std::string getCurAppName(void)
                     }
                     else if (data == "VIEW_SHOW_FPS")
                     {
-                        _isShowFPS = !_app->isDisplayStats();
-                        _app->setDisplayStats(_isShowFPS);
-                        menuItem->setTitle(_isShowFPS ? tr("Hide FPS") : tr("Show FPS"));
+                        bool displayStats = !_app->isDisplayStats();
+                        _app->setDisplayStats(displayStats);
+                        menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
                     }
 
                 }
