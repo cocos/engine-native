@@ -55,7 +55,8 @@
 
 @interface TextFieldDelegate : NSObject<UITextFieldDelegate>
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
--(BOOL) textFieldShouldReturn:(UITextField *)textField;
+- (BOOL)textFieldShouldReturn:(UITextField *)textField;
+- (void)textFieldDidChange:(UITextField *)textField;
 @end
 
 @interface TextViewDelegate : NSObject<UITextViewDelegate>
@@ -222,6 +223,7 @@ namespace
             createButton(&g_textFieldConfirmButton, &g_textFieldConfirmButtonHandler, rect, showInfo.confirmType);
             g_textField.rightView = g_textFieldConfirmButton;
             g_textField.rightViewMode = UITextFieldViewModeAlways;
+            [g_textField addTarget:g_textFieldDelegate action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
         }
 
         g_textField.frame = rect;
@@ -324,8 +326,14 @@ namespace
 @implementation TextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    NSString *nineKeyCode = @"➋➌➍➎➏➐➑➒";
-    if([nineKeyCode rangeOfString:string].location != NSNotFound)
+//    NSString *nineKeyCode = @"➋➌➍➎➏➐➑➒";
+    NSString *lang = [[UITextInputMode currentInputMode] primaryLanguage];
+//    if([nineKeyCode rangeOfString:string].location != NSNotFound)
+//    {
+//        return YES;
+//    }
+//    else
+    if([lang isEqualToString:@"zh-Hans"])
     {
         return YES;
     }
@@ -334,6 +342,18 @@ namespace
         handleTextInput(string, range);
         return NO;
     }
+}
+
+- (void)textFieldDidChange:(UITextField *)textField
+{
+    if (textField.markedTextRange == nil)
+        return;
+
+    if (textField.text.length > g_maxLength)
+        textField.text = [textField.text substringToIndex:g_maxLength];
+
+    callJSFunc("input", [textField.text UTF8String]);
+    setText(textField.text);
 }
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField
