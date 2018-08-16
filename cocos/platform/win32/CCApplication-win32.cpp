@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 #include "platform/desktop/CCGLView-desktop.h"
 #include "renderer/gfx/DeviceGraphics.h"
-#include "scripting/js-bindings/jswrapper/v8/ScriptEngine.hpp"
+#include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
