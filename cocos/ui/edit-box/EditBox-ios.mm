@@ -55,8 +55,8 @@
 
 @interface TextFieldDelegate : NSObject<UITextFieldDelegate>
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
-- (BOOL)textFieldShouldReturn:(UITextField *)textField;
 - (void)textFieldDidChange:(UITextField *)textField;
+- (BOOL)textFieldShouldReturn:(UITextField *)textField;
 @end
 
 @interface TextViewDelegate : NSObject<UITextViewDelegate>
@@ -326,13 +326,7 @@ namespace
 @implementation TextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-//    NSString *nineKeyCode = @"➋➌➍➎➏➐➑➒";
-    NSString *lang = [[UITextInputMode currentInputMode] primaryLanguage];
-//    if([nineKeyCode rangeOfString:string].location != NSNotFound)
-//    {
-//        return YES;
-//    }
-//    else
+    NSString *lang = textField.textInputMode.primaryLanguage;
     if([lang isEqualToString:@"zh-Hans"])
     {
         return YES;
@@ -346,7 +340,7 @@ namespace
 
 - (void)textFieldDidChange:(UITextField *)textField
 {
-    if (textField.markedTextRange == nil)
+    if (textField.markedTextRange != nil)
         return;
 
     if (textField.text.length > g_maxLength)
