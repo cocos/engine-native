@@ -321,12 +321,19 @@ namespace
 }
 @end
 
-
 @implementation TextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    handleTextInput(string, range);
-    return NO;
+    NSString *nineKeyCode = @"➋➌➍➎➏➐➑➒";
+    if([nineKeyCode rangeOfString:string].location != NSNotFound)
+    {
+        return YES;
+    }
+    else
+    {
+        handleTextInput(string, range);
+        return NO;
+    }
 }
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField
