@@ -32,7 +32,8 @@ const Data Data::Null;
 
 Data::Data() :
 _bytes(nullptr),
-_size(0)
+_size(0),
+_needFree(false)
 {
     CCLOGINFO("In the empty constructor of Data.");
 }
@@ -107,6 +108,7 @@ void Data::copy(const unsigned char* bytes, const ssize_t size)
     {
         _size = size;
         _bytes = (unsigned char*)malloc(sizeof(unsigned char) * _size);
+        _needFree = true;
         memcpy(_bytes, bytes, _size);
     }
 }
@@ -120,8 +122,11 @@ void Data::fastSet(unsigned char* bytes, const ssize_t size)
 
 void Data::clear()
 {
-    free(_bytes);
-    _bytes = nullptr;
+    if (_needFree)
+    {
+        free(_bytes);
+        _bytes = nullptr;
+    }
     _size = 0;
 }
 
