@@ -148,7 +148,6 @@ private:
 private:
     unsigned char* _bytes;
     ssize_t _size;
-    bool _needFree;
 };
 
 
