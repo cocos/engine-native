@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--EditBox Confirm Button Name-->
+    <string name="editbox_confirm_type_done" translatable="false">完成</string>
+    <string name="editbox_confirm_type_next" translatable="false">下一个</string>
+    <string name="editbox_confirm_type_search" translatable="false">搜索</string>
+    <string name="editbox_confirm_type_go" translatable="false">前往</string>
+    <string name="editbox_confirm_type_send" translatable="false">发送</string>
+</resources>
