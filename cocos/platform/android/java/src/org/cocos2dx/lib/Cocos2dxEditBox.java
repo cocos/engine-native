@@ -272,9 +272,9 @@ public class Cocos2dxEditBox {
 
     private void show(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType) {
         mConfirmHold = confirmHold;
+        mButton.setVisibility(View.VISIBLE);
         mEditText.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType);
         mButton.setText(mButtonName);
-        mButton.setVisibility(View.VISIBLE);
         mActivity.getGLSurfaceView().setStopHandleTouchAndKeyEvents(true);
         this.openKeyboard();
     }
