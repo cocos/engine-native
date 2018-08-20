@@ -43,6 +43,10 @@ import android.widget.Button;
 import android.view.inputmethod.InputMethodManager;
 
 public class Cocos2dxEditBox {
+
+    // a color of dark green, was used for confirm button background
+    private static final int DARK_GREEN = Color.parseColor("#1fa014");
+
     private static Cocos2dxEditBox sThis = null;
     private Cocos2dxEditText mEditText = null;
     private Button mButton = null;
@@ -246,7 +250,7 @@ public class Cocos2dxEditBox {
         RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         buttonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         mButton.setTextColor(Color.WHITE);
-        mButton.setBackgroundColor(Color.parseColor("#1ea014"));
+        mButton.setBackgroundColor(DARK_GREEN);
         layout.addView(mButton, buttonParams);
 
         mButton.setOnClickListener(new View.OnClickListener() {
