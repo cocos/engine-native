@@ -76,7 +76,10 @@ namespace
     bool g_confirmHold = false;
     int g_maxLength = INT_MAX;
     KeyboardEventHandler* g_keyboardHandler = nil;
-    
+
+    // "#1fa014", a color of dark green, was used for confirm button background
+    static UIColor* darkGreen = [UIColor colorWithRed:31/255.0 green:160/255.0 blue:20/255.0 alpha:0.8];
+
     UITextField* g_textField = nil;
     TextFieldDelegate* g_textFieldDelegate = nil;
     UIButton* g_textFieldConfirmButton = nil;
@@ -152,9 +155,11 @@ namespace
         [btn addTarget:btnHandler action:@selector(buttonTapped:)
            forControlEvents:UIControlEventTouchUpInside];
         btn.frame = CGRectMake(0, 0, BUTTON_WIDTH, BUTTON_HIGHT);
-        btn.backgroundColor = [UIColor greenColor];
+        btn.backgroundColor = darkGreen;
         [btn setTitle: [NSString stringWithUTF8String:title.c_str()]
                 forState:UIControlStateNormal];
+        [btn setTitleColor: [UIColor whiteColor]
+             forState:UIControlStateNormal];
         
         *button = btn;
         *buttonHandler = btnHandler;
