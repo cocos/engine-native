@@ -102,6 +102,7 @@ public class Cocos2dxEditBox {
         public void show(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType) {
             mIsMultiLine = isMultiline;
             this.setText(defaultValue);
+            this.setSelection(defaultValue.length());
             this.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength) });
             this.setConfirmType(confirmType);
             this.setInputType(inputType, mIsMultiLine);
@@ -238,7 +239,8 @@ public class Cocos2dxEditBox {
         mButton.setVisibility(View.INVISIBLE);
         RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         buttonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        mButton.setBackgroundColor(Color.GREEN);
+        mButton.setTextColor(Color.WHITE);
+        mButton.setBackgroundColor(Color.parseColor("#1ea014"));
         layout.addView(mButton, buttonParams);
 
         mButton.setOnClickListener(new View.OnClickListener() {
