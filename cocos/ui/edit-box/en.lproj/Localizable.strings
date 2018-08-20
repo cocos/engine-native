@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  cocos2d_libs
+
+  Created by laptop on 2018/8/20.
+  
+*/
+
+"editbox_confirm_type_done" = "Done";
+"editbox_confirm_type_next" = "Next";
+"editbox_confirm_type_search" = "Search";
+"editbox_confirm_type_go" = "Go";
+"editbox_confirm_type_send" = "Send";
