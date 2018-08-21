@@ -78,7 +78,7 @@ namespace
     KeyboardEventHandler* g_keyboardHandler = nil;
 
     // "#1fa014", a color of dark green, was used for confirm button background
-    static UIColor* darkGreen = [UIColor colorWithRed:31/255.0 green:160/255.0 blue:20/255.0 alpha:0.8];
+    static UIColor* g_darkGreen = [UIColor colorWithRed:31/255.0 green:160/255.0 blue:20/255.0 alpha:0.8];
 
     UITextField* g_textField = nil;
     TextFieldDelegate* g_textFieldDelegate = nil;
@@ -89,7 +89,9 @@ namespace
     TextViewDelegate* g_textViewDelegate = nil;
     UIButton* g_textViewConfirmButton = nil;
     ButtonHandler* g_textViewConfirmButtonHander = nil;
-    
+
+    NSString *g_buttonName = nil;
+
     UIView* getCurrentView()
     {
         if (g_isMultiline)
@@ -155,7 +157,7 @@ namespace
         [btn addTarget:btnHandler action:@selector(buttonTapped:)
            forControlEvents:UIControlEventTouchUpInside];
         btn.frame = CGRectMake(0, 0, BUTTON_WIDTH, BUTTON_HIGHT);
-        btn.backgroundColor = darkGreen;
+        btn.backgroundColor = g_darkGreen;
         [btn setTitle: [NSString stringWithUTF8String:title.c_str()]
                 forState:UIControlStateNormal];
         [btn setTitleColor: [UIColor whiteColor]
@@ -189,15 +191,30 @@ namespace
     void setTextFieldReturnType(UITextField* textField, const std::string& returnType)
     {
         if (0 == returnType.compare("done"))
+        {
             textField.returnKeyType = UIReturnKeyDone;
+            g_buttonName = NSLocalizedString(@"editbox_confirm_type_done", nil);
+        }
         else if (0 == returnType.compare("next"))
+        {
             textField.returnKeyType = UIReturnKeyNext;
+            g_buttonName = NSLocalizedString(@"editbox_confirm_type_next", nil);
+        }
         else if (0 == returnType.compare("search"))
+        {
             textField.returnKeyType = UIReturnKeySearch;
+            g_buttonName = NSLocalizedString(@"editbox_confirm_type_search", nil);
+        }
         else if (0 == returnType.compare("go"))
+        {
             textField.returnKeyType = UIReturnKeyGo;
+            g_buttonName = NSLocalizedString(@"editbox_confirm_type_go", nil);
+        }
         else if (0 == returnType.compare("send"))
+        {
             textField.returnKeyType = UIReturnKeySend;
+            g_buttonName = NSLocalizedString(@"editbox_confirm_type_send", nil);
+        }
     }
     
     void initTextField(const CGRect& rect, const cocos2d::EditBox::ShowInfo& showInfo)
@@ -222,6 +239,7 @@ namespace
         setTextFieldReturnType(g_textField, showInfo.confirmType);
         setTexFiledKeyboardType(g_textField, showInfo.inputType);
         g_textField.text = [NSString stringWithUTF8String: showInfo.defaultValue.c_str()];
+        [g_textFieldConfirmButton setTitle:g_buttonName forState:UIControlStateNormal];
     }
     
     void initTextView(const CGRect& viewRect, const CGRect& btnRect, const cocos2d::EditBox::ShowInfo& showInfo)
@@ -240,6 +258,7 @@ namespace
         
         g_textView.frame = btnRect;
         g_textView.text = [NSString stringWithUTF8String: showInfo.defaultValue.c_str()];
+        [g_textFieldConfirmButton setTitle:g_buttonName forState:UIControlStateNormal];
     }
     
     void addTextInput(const cocos2d::EditBox::ShowInfo& showInfo)
