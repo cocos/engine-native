@@ -1767,7 +1767,7 @@ bool register_all_cocos2dx(se::Object* obj)
     se::Object* ns = nsVal.toObject();
 
     js_register_cocos2dx_FileUtils(ns);
-    js_register_cocos2dx_Device(ns);
+    js_register_cocos2dx_Device(obj);
     js_register_cocos2dx_CanvasGradient(ns);
     js_register_cocos2dx_CanvasRenderingContext2D(obj);
     js_register_cocos2dx_SAXParser(ns);
