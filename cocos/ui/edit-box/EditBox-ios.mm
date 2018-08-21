@@ -193,27 +193,27 @@ namespace
         if (0 == returnType.compare("done"))
         {
             textField.returnKeyType = UIReturnKeyDone;
-            g_buttonName = NSLocalizedString(@"editbox_confirm_type_done", nil);
+            g_buttonName = NSLocalizedString(@"done", nil);
         }
         else if (0 == returnType.compare("next"))
         {
             textField.returnKeyType = UIReturnKeyNext;
-            g_buttonName = NSLocalizedString(@"editbox_confirm_type_next", nil);
+            g_buttonName = NSLocalizedString(@"next", nil);
         }
         else if (0 == returnType.compare("search"))
         {
             textField.returnKeyType = UIReturnKeySearch;
-            g_buttonName = NSLocalizedString(@"editbox_confirm_type_search", nil);
+            g_buttonName = NSLocalizedString(@"search", nil);
         }
         else if (0 == returnType.compare("go"))
         {
             textField.returnKeyType = UIReturnKeyGo;
-            g_buttonName = NSLocalizedString(@"editbox_confirm_type_go", nil);
+            g_buttonName = NSLocalizedString(@"go", nil);
         }
         else if (0 == returnType.compare("send"))
         {
             textField.returnKeyType = UIReturnKeySend;
-            g_buttonName = NSLocalizedString(@"editbox_confirm_type_send", nil);
+            g_buttonName = NSLocalizedString(@"send", nil);
         }
     }
     
