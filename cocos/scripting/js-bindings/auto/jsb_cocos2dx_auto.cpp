@@ -1769,7 +1769,7 @@ bool register_all_cocos2dx(se::Object* obj)
     js_register_cocos2dx_FileUtils(ns);
     js_register_cocos2dx_Device(ns);
     js_register_cocos2dx_CanvasGradient(ns);
-    js_register_cocos2dx_CanvasRenderingContext2D(ns);
+    js_register_cocos2dx_CanvasRenderingContext2D(obj);
     js_register_cocos2dx_SAXParser(ns);
     return true;
 }
