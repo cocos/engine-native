@@ -50,7 +50,7 @@ public class Cocos2dxEditBox {
     private static Cocos2dxEditBox sThis = null;
     private Cocos2dxEditText mEditText = null;
     private Button mButton = null;
-    private String mButtonName = null;
+    private String mButtonTitle = null;
     private boolean mConfirmHold = true;
     private Cocos2dxActivity mActivity = null;
 
@@ -131,19 +131,19 @@ public class Cocos2dxEditBox {
         private void setConfirmType(final String confirmType) {
             if (confirmType.contentEquals("done")) {
                 this.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-                mButtonName = mActivity.getResources().getString(R.string.editbox_confirm_type_done);
+                mButtonTitle = mActivity.getResources().getString(R.string.done);
             } else if (confirmType.contentEquals("next")) {
                 this.setImeOptions(EditorInfo.IME_ACTION_NEXT | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-                mButtonName = mActivity.getResources().getString(R.string.editbox_confirm_type_next);
+                mButtonTitle = mActivity.getResources().getString(R.string.next);
             } else if (confirmType.contentEquals("search")) {
                 this.setImeOptions(EditorInfo.IME_ACTION_SEARCH | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-                mButtonName = mActivity.getResources().getString(R.string.editbox_confirm_type_search);
+                mButtonTitle = mActivity.getResources().getString(R.string.search);
             } else if (confirmType.contentEquals("go")) {
                 this.setImeOptions(EditorInfo.IME_ACTION_GO | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-                mButtonName = mActivity.getResources().getString(R.string.editbox_confirm_type_go);
+                mButtonTitle = mActivity.getResources().getString(R.string.go);
             } else if (confirmType.contentEquals("send")) {
                 this.setImeOptions(EditorInfo.IME_ACTION_SEND | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-                mButtonName = mActivity.getResources().getString(R.string.editbox_confirm_type_send);
+                mButtonTitle = mActivity.getResources().getString(R.string.send);
             } else
                 Log.e(TAG, "unknown confirm type " + confirmType);
         }
@@ -278,7 +278,7 @@ public class Cocos2dxEditBox {
         mConfirmHold = confirmHold;
         mButton.setVisibility(View.VISIBLE);
         mEditText.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType);
-        mButton.setText(mButtonName);
+        mButton.setText(mButtonTitle);
         mActivity.getGLSurfaceView().setStopHandleTouchAndKeyEvents(true);
         this.openKeyboard();
     }
