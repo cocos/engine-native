@@ -32,7 +32,7 @@
 #ifndef ORG_EDITBOX_CLASS_NAME
 #define ORG_EDITBOX_CLASS_NAME org_cocos2dx_lib_Cocos2dxEditBox
 #endif
-#define NAME(FUNC) JNI_METHOD1(ORG_EDITBOX_CLASS_NAME,FUNC)
+#define JNI_EDITBOX(FUNC) JNI_METHOD1(ORG_EDITBOX_CLASS_NAME,FUNC)
 
 
 NS_CC_BEGIN
@@ -87,17 +87,17 @@ namespace
 
 extern "C" 
 {
-	JNIEXPORT void JNICALL NAME(onKeyboardInputNative)(JNIEnv* env, jclass, jstring text)
+	JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardInputNative)(JNIEnv* env, jclass, jstring text)
 	{
 		callJSFunc("input", text);
 	}
 
-	JNIEXPORT void JNICALL NAME(onKeyboardCompleteNative)(JNIEnv* env, jclass, jstring text)
+	JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardCompleteNative)(JNIEnv* env, jclass, jstring text)
 	{
 		callJSFunc("complete", text);
 	}
 
-	JNIEXPORT void JNICALL NAME(onKeyboardConfirmNative)(JNIEnv* env, jclass, jstring text)
+	JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardConfirmNative)(JNIEnv* env, jclass, jstring text)
 	{
         callJSFunc("confirm", text);
 	}

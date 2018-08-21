@@ -40,11 +40,11 @@
 #ifndef ORG_JAVABRIDGE_CLASS_NAME
 #define ORG_JAVABRIDGE_CLASS_NAME org_cocos2dx_lib_Cocos2dxJavascriptJavaBridge
 #endif
-#define NAME(FUNC) JNI_METHOD1(ORG_JAVABRIDGE_CLASS_NAME,FUNC)
+#define JNI_JSJAVABRIDGE(FUNC) JNI_METHOD1(ORG_JAVABRIDGE_CLASS_NAME,FUNC)
 
 extern "C" {
 
-JNIEXPORT jint JNICALL NAME(evalString)
+JNIEXPORT jint JNICALL JNI_JSJAVABRIDGE(evalString)
         (JNIEnv *env, jclass cls, jstring value)
 {
     se::AutoHandleScope hs;

@@ -37,7 +37,7 @@
 #ifndef ORG_DOWNLOADER_CLASS_NAME
 #define ORG_DOWNLOADER_CLASS_NAME org_cocos2dx_lib_Cocos2dxDownloader
 #endif
-#define NAME(FUNC) JNI_METHOD1(ORG_DOWNLOADER_CLASS_NAME,FUNC)
+#define JNI_DOWNLOADER(FUNC) JNI_METHOD1(ORG_DOWNLOADER_CLASS_NAME,FUNC)
 
 std::unordered_map<int, cocos2d::network::DownloaderAndroid*> sDownloaderMap;
 std::mutex sDownloaderMutex;
@@ -259,7 +259,7 @@ namespace cocos2d { namespace network {
 
 extern "C" {
 
-JNIEXPORT void JNICALL NAME(nativeOnProgress)(JNIEnv *env, jclass clazz, jint id, jint taskId, jlong dl, jlong dlnow, jlong dltotal)
+JNIEXPORT void JNICALL JNI_DOWNLOADER(nativeOnProgress)(JNIEnv *env, jclass clazz, jint id, jint taskId, jlong dl, jlong dlnow, jlong dltotal)
 {
     DLLOG("_nativeOnProgress(id: %d, taskId: %d, dl: %lld, dlnow: %lld, dltotal: %lld)", id, taskId, dl, dlnow, dltotal);
     //It's not thread-safe here, use thread-safe method instead
@@ -272,7 +272,7 @@ JNIEXPORT void JNICALL NAME(nativeOnProgress)(JNIEnv *env, jclass clazz, jint id
     downloader->_onProcess((int)taskId, (int64_t)dl, (int64_t)dlnow, (int64_t)dltotal);
 }
 
-JNIEXPORT void JNICALL NAME(nativeOnFinish)(JNIEnv *env, jclass clazz, jint id, jint taskId, jint errCode, jstring errStr, jbyteArray data)
+JNIEXPORT void JNICALL JNI_DOWNLOADER(nativeOnFinish)(JNIEnv *env, jclass clazz, jint id, jint taskId, jint errCode, jstring errStr, jbyteArray data)
 {
     DLLOG("_nativeOnFinish(id: %d, taskId: %d)", id, taskId);
     //It's not thread-safe here, use thread-safe method instead

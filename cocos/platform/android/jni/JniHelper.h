@@ -34,8 +34,9 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "math/Vec3.h"
 
-#define JNI_METHOD2(CLASS3,FUNC3) Java_##CLASS3##_##FUNC3
-#define JNI_METHOD1(CLASS2,FUNC2) JNI_METHOD2(CLASS2,FUNC2)
+//The macro must be used this way to find the native method. The principle is not well understood.
+#define JNI_METHOD2(CLASS2,FUNC2) Java_##CLASS2##_##FUNC2
+#define JNI_METHOD1(CLASS1,FUNC1) JNI_METHOD2(CLASS1,FUNC1)
 
 NS_CC_BEGIN
 
