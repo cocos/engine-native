@@ -40,6 +40,26 @@
 #define  JNI_IMP_LOG_TAG    "JniImp"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,JNI_IMP_LOG_TAG,__VA_ARGS__)
 
+#ifndef ORG_RENDER_CLASS_NAME
+#define ORG_RENDER_CLASS_NAME org_cocos2dx_lib_Cocos2dxRenderer
+#endif
+#define RENDER_NAME(FUNC) JNI_METHOD1(ORG_RENDER_CLASS_NAME,FUNC)
+
+#ifndef ORG_ACCELEROMETER_CLASS_NAME
+#define ORG_ACCELEROMETER_CLASS_NAME org_cocos2dx_lib_Cocos2dxAccelerometer
+#endif
+#define ACCELEROMETER_NAME(FUNC) JNI_METHOD1(ORG_ACCELEROMETER_CLASS_NAME,FUNC)
+
+#ifndef ORG_HELPER_CLASS_NAME
+#define ORG_HELPER_CLASS_NAME org_cocos2dx_lib_Cocos2dxHelper
+#endif
+#define HELPER_NAME(FUNC) JNI_METHOD1(ORG_HELPER_CLASS_NAME,FUNC)
+
+#ifndef ORG_AUDIOFOCUS_CLASS_NAME
+#define ORG_AUDIOFOCUS_CLASS_NAME org_cocos2dx_lib_Cocos2dxAudioFocusManager
+#endif
+#define AUDIO_NAME(FUNC) JNI_METHOD1(ORG_AUDIOFOCUS_CLASS_NAME,FUNC)
+
 #define KEYCODE_BACK 0x04
 #define KEYCODE_MENU 0x52
 #define KEYCODE_DPAD_UP 0x13
@@ -106,7 +126,7 @@ extern "C"
      * Cocos2dxActivity native functions implementation.
      *****************************************************/
 
-    JNIEXPORT jintArray JNICALL Java_org_cocos2dx_lib_Cocos2dxActivity_getGLContextAttrs(JNIEnv*  env, jobject thiz)
+    JNIEXPORT jintArray JNICALL RENDER_NAME(getGLContextAttrs)(JNIEnv*  env, jobject thiz)
     {
         //REFINE
         int tmp[7] = {8, 8, 8,
@@ -121,7 +141,7 @@ extern "C"
 	 * Cocos2dxRenderer native functions implementation.
 	 *****************************************************/
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h, jstring jDefaultResourcePath)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeInit)(JNIEnv*  env, jobject thiz, jint w, jint h, jstring jDefaultResourcePath)
     {
         g_width = w;
         g_height = h;
@@ -146,7 +166,7 @@ extern "C"
         g_isStarted = true;
     }
 
-	JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeRender(JNIEnv* env)
+	JNIEXPORT void JNICALL RENDER_NAME(nativeRender)(JNIEnv* env)
 	{
         if (g_isGameFinished)
         {
@@ -227,7 +247,7 @@ extern "C"
         __jsbInvocationCount = 0;
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnPause()
+    JNIEXPORT void JNICALL RENDER_NAME(nativeOnPause)()
     {
         if (g_isGameFinished) {
             return;
@@ -236,7 +256,7 @@ extern "C"
             g_app->applicationDidEnterBackground();
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnResume()
+    JNIEXPORT void JNICALL RENDER_NAME(nativeOnResume)()
     {
         if (g_isGameFinished) {
             return;
@@ -245,22 +265,22 @@ extern "C"
             g_app->applicationWillEnterForeground();
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInsertText(JNIEnv* env, jobject thiz, jstring text)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeInsertText)(JNIEnv* env, jobject thiz, jstring text)
     {
         //REFINE
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward(JNIEnv* env, jobject thiz)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeDeleteBackward)(JNIEnv* env, jobject thiz)
     {
         //REFINE
     }
 
-    JNIEXPORT jstring JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeGetContentText()
+    JNIEXPORT jstring JNICALL RENDER_NAME(nativeGetContentText)()
     {
         //REFINE
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnSurfaceChanged(JNIEnv*  env, jobject thiz, jint w, jint h)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeOnSurfaceChanged)(JNIEnv*  env, jobject thiz, jint w, jint h)
     {
         //REFINE
     }
@@ -269,7 +289,7 @@ extern "C"
 	 * Cocos2dxAccelerometer native functions implementation.
 	 ***********************************************************/
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxAccelerometer_onSensorChanged(JNIEnv*  env, jobject thiz, jfloat x, jfloat y, jfloat z, jlong timeStamp)
+    JNIEXPORT void JNICALL ACCELEROMETER_NAME(onSensorChanged)(JNIEnv*  env, jobject thiz, jfloat x, jfloat y, jfloat z, jlong timeStamp)
     {
         //REFINE
     }
@@ -326,7 +346,7 @@ extern "C"
         cocos2d::EventDispatcher::dispatchTouchEvent(touchEvent);
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesBegin(JNIEnv * env, jobject thiz, jint id, jfloat x, jfloat y)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeTouchesBegin)(JNIEnv * env, jobject thiz, jint id, jfloat x, jfloat y)
     {
         if (g_isGameFinished) {
             return;
@@ -334,7 +354,7 @@ extern "C"
         dispatchTouchEventWithOnePoint(env, cocos2d::TouchEvent::Type::BEGAN, id, x, y);
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesEnd(JNIEnv * env, jobject thiz, jint id, jfloat x, jfloat y)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeTouchesEnd)(JNIEnv * env, jobject thiz, jint id, jfloat x, jfloat y)
     {
         if (g_isGameFinished) {
             return;
@@ -342,7 +362,7 @@ extern "C"
         dispatchTouchEventWithOnePoint(env, cocos2d::TouchEvent::Type::ENDED, id, x, y);
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesMove(JNIEnv * env, jobject thiz, jintArray ids, jfloatArray xs, jfloatArray ys)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeTouchesMove)(JNIEnv * env, jobject thiz, jintArray ids, jfloatArray xs, jfloatArray ys)
     {
         if (g_isGameFinished) {
             return;
@@ -350,7 +370,7 @@ extern "C"
         dispatchTouchEventWithPoints(env, cocos2d::TouchEvent::Type::MOVED, ids, xs, ys);
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesCancel(JNIEnv * env, jobject thiz, jintArray ids, jfloatArray xs, jfloatArray ys)
+    JNIEXPORT void JNICALL RENDER_NAME(nativeTouchesCancel)(JNIEnv * env, jobject thiz, jintArray ids, jfloatArray xs, jfloatArray ys)
     {
         if (g_isGameFinished) {
             return;
@@ -358,7 +378,7 @@ extern "C"
         dispatchTouchEventWithPoints(env, cocos2d::TouchEvent::Type::CANCELLED, ids, xs, ys);
     }
 
-    JNIEXPORT jboolean JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyEvent(JNIEnv * env, jobject thiz, jint keyCode, jboolean isPressed)
+    JNIEXPORT jboolean JNICALL RENDER_NAME(nativeKeyEvent)(JNIEnv * env, jobject thiz, jint keyCode, jboolean isPressed)
     {
         if (g_isGameFinished) {
             return JNI_TRUE;
@@ -407,25 +427,25 @@ extern "C"
      * Cocos2dxHelper native functions implementation.
      ***********************************************************/
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxHelper_nativeSetApkPath(JNIEnv* env, jobject thiz, jstring apkPath)
+    JNIEXPORT void JNICALL HELPER_NAME(nativeSetApkPath)(JNIEnv* env, jobject thiz, jstring apkPath)
     {
         g_apkPath = JniHelper::jstring2string(apkPath);
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxHelper_nativeSetContext(JNIEnv*  env, jobject thiz, jobject context, jobject assetManager)
+    JNIEXPORT void JNICALL HELPER_NAME(nativeSetContext)(JNIEnv*  env, jobject thiz, jobject context, jobject assetManager)
     {
         JniHelper::setClassLoaderFrom(context);
         FileUtilsAndroid::setassetmanager(AAssetManager_fromJava(env, assetManager));
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxHelper_nativeSetAudioDeviceInfo(JNIEnv*  env, jobject thiz, jboolean isSupportLowLatency, jint deviceSampleRate, jint deviceAudioBufferSizeInFrames)
+    JNIEXPORT void JNICALL HELPER_NAME(nativeSetAudioDeviceInfo)(JNIEnv*  env, jobject thiz, jboolean isSupportLowLatency, jint deviceSampleRate, jint deviceAudioBufferSizeInFrames)
     {
         g_deviceSampleRate = deviceSampleRate;
         g_deviceAudioBufferSizeInFrames = deviceAudioBufferSizeInFrames;
         LOGD("nativeSetAudioDeviceInfo: sampleRate: %d, bufferSizeInFrames: %d", g_deviceSampleRate, g_deviceAudioBufferSizeInFrames);
     }
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxHelper_nativeSetEditTextDialogResult(JNIEnv* env, jobject obj, jbyteArray text)
+    JNIEXPORT void JNICALL HELPER_NAME(nativeSetEditTextDialogResult)(JNIEnv* env, jobject obj, jbyteArray text)
     {
         jsize  size = env->GetArrayLength(text);
 
@@ -455,7 +475,7 @@ extern "C"
      * Cocos2dxAudioFocusManager native functions implementation.
      ***********************************************************/
 
-    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxAudioFocusManager_nativeOnAudioFocusChange(JNIEnv* env, jobject thiz, jint focusChange)
+    JNIEXPORT void JNICALL AUDIO_NAME(nativeOnAudioFocusChange)(JNIEnv* env, jobject thiz, jint focusChange)
     {
         // cocos_audioengine_focus_change(focusChange);
     }

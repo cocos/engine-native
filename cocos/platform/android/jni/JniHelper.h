@@ -34,6 +34,9 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "math/Vec3.h"
 
+#define JNI_METHOD2(CLASS3,FUNC3) Java_##CLASS3##_##FUNC3
+#define JNI_METHOD1(CLASS2,FUNC2) JNI_METHOD2(CLASS2,FUNC2)
+
 NS_CC_BEGIN
 
 typedef struct JniMethodInfo_
