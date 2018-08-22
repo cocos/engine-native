@@ -43,7 +43,6 @@ using namespace cocos2d;
 using namespace cocos2d::experimental;
 
 se::Object* __jscObj = nullptr;
-se::Object* __ccObj = nullptr;
 se::Object* __jsbObj = nullptr;
 se::Object* __glObj = nullptr;
 
@@ -1050,8 +1049,6 @@ bool jsb_register_global_variables(se::Object* global)
     global->defineFunction("require", _SE(require));
     global->defineFunction("requireModule", _SE(moduleRequire));
 
-    getOrCreatePlainObject_r("cc", global, &__ccObj);
-
     getOrCreatePlainObject_r("jsb", global, &__jsbObj);
     getOrCreatePlainObject_r("__jsc__", global, &__jscObj);
 
@@ -1103,7 +1100,6 @@ bool jsb_register_global_variables(se::Object* global)
 
         __moduleCache.clear();
 
-        SAFE_DEC_REF(__ccObj);
         SAFE_DEC_REF(__jsbObj);
         SAFE_DEC_REF(__jscObj);
         SAFE_DEC_REF(__glObj);

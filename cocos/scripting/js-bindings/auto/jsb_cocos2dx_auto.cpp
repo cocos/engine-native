@@ -1758,11 +1758,11 @@ bool register_all_cocos2dx(se::Object* obj)
 {
     // Get the ns
     se::Value nsVal;
-    if (!obj->getProperty("cc", &nsVal))
+    if (!obj->getProperty("jsb", &nsVal))
     {
         se::HandleObject jsobj(se::Object::createPlainObject());
         nsVal.setObject(jsobj);
-        obj->setProperty("cc", nsVal);
+        obj->setProperty("jsb", nsVal);
     }
     se::Object* ns = nsVal.toObject();
 
