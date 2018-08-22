@@ -42,7 +42,6 @@
 using namespace cocos2d;
 using namespace cocos2d::experimental;
 
-se::Object* __jscObj = nullptr;
 se::Object* __jsbObj = nullptr;
 se::Object* __glObj = nullptr;
 
@@ -1050,7 +1049,6 @@ bool jsb_register_global_variables(se::Object* global)
     global->defineFunction("requireModule", _SE(moduleRequire));
 
     getOrCreatePlainObject_r("jsb", global, &__jsbObj);
-    getOrCreatePlainObject_r("__jsc__", global, &__jscObj);
 
     auto glContextCls = se::Class::create("WebGLRenderingContext", global, nullptr, nullptr);
     glContextCls->install();
@@ -1059,8 +1057,8 @@ bool jsb_register_global_variables(se::Object* global)
     __glObj = se::Object::createObjectWithClass(glContextCls);
     global->setProperty("__gl", se::Value(__glObj));
 
-    __jscObj->defineFunction("garbageCollect", _SE(jsc_garbageCollect));
-    __jscObj->defineFunction("dumpNativePtrToSeObjectMap", _SE(jsc_dumpNativePtrToSeObjectMap));
+    __jsbObj->defineFunction("garbageCollect", _SE(jsc_garbageCollect));
+    __jsbObj->defineFunction("dumpNativePtrToSeObjectMap", _SE(jsc_dumpNativePtrToSeObjectMap));
 
     __jsbObj->defineFunction("loadImage", _SE(js_loadImage));
     __jsbObj->defineFunction("setDebugViewText", _SE(js_setDebugViewText));
@@ -1101,7 +1099,6 @@ bool jsb_register_global_variables(se::Object* global)
         __moduleCache.clear();
 
         SAFE_DEC_REF(__jsbObj);
-        SAFE_DEC_REF(__jscObj);
         SAFE_DEC_REF(__glObj);
     });
 
