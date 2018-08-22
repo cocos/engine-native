@@ -800,7 +800,7 @@ bool register_all_cocos2dx_audioengine(se::Object* obj)
     se::Object* ns = nsVal.toObject();
 
     js_register_cocos2dx_audioengine_AudioProfile(ns);
-    js_register_cocos2dx_audioengine_AudioEngine(ns);
+    js_register_cocos2dx_audioengine_AudioEngine(obj);
     return true;
 }
 
