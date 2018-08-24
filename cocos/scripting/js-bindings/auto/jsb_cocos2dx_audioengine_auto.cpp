@@ -423,7 +423,7 @@ static bool js_cocos2dx_audioengine_AudioEngine_preload(se::State& s)
                     auto lambda = [=](bool larg0) -> void {
                         se::ScriptEngine::getInstance()->clearException();
                         se::AutoHandleScope hs;
-
+            
                         CC_UNUSED bool ok = true;
                         se::ValueArray args;
                         args.resize(1);
@@ -663,7 +663,7 @@ static bool js_cocos2dx_audioengine_AudioEngine_setFinishCallback(se::State& s)
                 auto lambda = [=](int larg0, const std::string& larg1) -> void {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
-
+        
                     CC_UNUSED bool ok = true;
                     se::ValueArray args;
                     args.resize(2);
