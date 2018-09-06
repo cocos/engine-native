@@ -67,6 +67,7 @@ void AppDelegate::applicationDidEnterBackground()
     CustomEvent event;
     event.name = EVENT_COME_TO_BACKGROUND;
     EventDispatcher::dispatchCustomEvent(event);
+    EventDispatcher::dispatchEnterBackgroundEvent();
 }
 
 // this function will be called when the app is active again
@@ -75,4 +76,5 @@ void AppDelegate::applicationWillEnterForeground()
     CustomEvent event;
     event.name = EVENT_COME_TO_FOREGROUND;
     EventDispatcher::dispatchCustomEvent(event);
+    EventDispatcher::dispatchEnterForegroundEvent();
 }
