@@ -73,7 +73,7 @@ public:
     {
         _bufferWidth = w;
         _bufferHeight = h;
-        if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
+        if (!std::isnormal(w) || !std::isnormal(h))
         {
             _prepareBitmap(0, 0);
             return;
@@ -117,7 +117,7 @@ public:
     void stroke()
     {
         DeleteObject(_hpen);
-        if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
+        if (!std::isnormal(_bufferWidth) || !std::isnormal(_bufferHeight))
             return;
         _imageData = _getTextureData();
     }
@@ -138,7 +138,7 @@ public:
 
     void clearRect(float x, float y, float w, float h)
     {
-        if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
+        if (!std::isnormal(_bufferWidth) || !std::isnormal(_bufferHeight))
             return;
         if (_imageData.isNull())
             return;
@@ -148,7 +148,7 @@ public:
 
     void fillRect(float x, float y, float w, float h)
     {
-        if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
+        if (!std::isnormal(_bufferWidth) || !std::isnormal(_bufferHeight))
             return;
 
         //not filled all Bits in buffer? the buffer length is _bufferWidth * _bufferHeight * 4, but it filled _bufferWidth * _bufferHeight * 3?
@@ -164,7 +164,7 @@ public:
 
     void fillText(const std::string& text, float x, float y, float maxWidth)
     {
-        if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
+        if (text.empty() || !std::isnormal(_bufferWidth) || !std::isnormal(_bufferHeight))
             return;
 
         SIZE textSize = { 0, 0 };
@@ -177,7 +177,7 @@ public:
 
     void strokeText(const std::string& text, float x, float y, float maxWidth)
     {
-        if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
+        if (text.empty() || !std::isnormal(_bufferWidth) || !std::isnormal(_bufferHeight))
             return;
         // REFINE
     }
@@ -749,7 +749,7 @@ void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBuffer
 void CanvasRenderingContext2D::set__width(float width)
 {
     //SE_LOGD("CanvasRenderingContext2D::set__width: %f\n", width);
-    __width = width;
+    __width = std::isnormal(width) ? width : 1.0;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
 }
@@ -757,7 +757,7 @@ void CanvasRenderingContext2D::set__width(float width)
 void CanvasRenderingContext2D::set__height(float height)
 {
     //SE_LOGD("CanvasRenderingContext2D::set__height: %f\n", height);
-    __height = height;
+    __height = std::isnormal(height) ? height : 1.0;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
 }
