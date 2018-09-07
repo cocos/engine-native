@@ -298,10 +298,9 @@ Device::NetworkType Device::getNetworkType()
     return ret;
 }
 
-renderer::Rect Device::getSafeAreaRect()
+cocos2d::Vec4 Device::getSafeAreaEdge()
 {
     UIView* screenView = (UIView*)Application::getInstance()->getView();
-    CGSize screenSize = screenView.frame.size;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
     float version = [[UIDevice currentDevice].systemVersion floatValue];
@@ -309,42 +308,21 @@ renderer::Rect Device::getSafeAreaRect()
     {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
-        UIEdgeInsets safeAreaInsets = screenView.safeAreaInsets;
+        UIEdgeInsets safeAreaEdge = screenView.safeAreaInsets;
 #pragma clang diagnostic pop
 
         // Multiply contentScaleFactor since safeAreaInsets return points.
-        safeAreaInsets.left *= screenView.contentScaleFactor;
-        safeAreaInsets.right *= screenView.contentScaleFactor;
-        safeAreaInsets.top *= screenView.contentScaleFactor;
-        safeAreaInsets.bottom *= screenView.contentScaleFactor;
+        uint8_t scale = screenView.contentScaleFactor;
+        safeAreaEdge.left *= scale;
+        safeAreaEdge.right *= scale;
+        safeAreaEdge.top *= scale;
+        safeAreaEdge.bottom *= scale;
 
-        // Get leftBottom and rightTop point in UI coordinates
-        cocos2d::Vec2 leftBottom = Vec2(safeAreaInsets.left, screenSize.height - safeAreaInsets.bottom);
-        cocos2d::Vec2 rightTop = Vec2(screenSize.width - safeAreaInsets.right, safeAreaInsets.top);
-
-        // CHECK THIS
-        //        // Convert a point from UI coordinates to which in design resolution coordinate.
-        //        leftBottom.x = (leftBottom.x - _viewPortRect.origin.x) / _scaleX,
-        //        leftBottom.y = (leftBottom.y - _viewPortRect.origin.y) / _scaleY;
-        //        rightTop.x = (rightTop.x - _viewPortRect.origin.x) / _scaleX,
-        //        rightTop.y = (rightTop.y - _viewPortRect.origin.y) / _scaleY;
-        //
-        //        // Adjust points to make them inside design resolution
-        //        leftBottom.x = MAX(leftBottom.x, 0);
-        //        leftBottom.y = MIN(leftBottom.y, _designResolutionSize.height);
-        //        rightTop.x = MIN(rightTop.x, _designResolutionSize.width);
-        //        rightTop.y = MAX(rightTop.y, 0);
-        //
-        //        // Convert to GL coordinates
-        //        leftBottom = Director::getInstance()->convertToGL(leftBottom);
-        //        rightTop = Director::getInstance()->convertToGL(rightTop);
-
-        return renderer::Rect(leftBottom.x, leftBottom.y, rightTop.x - leftBottom.x, rightTop.y - leftBottom.y);
+        return cocos2d::Vec4(safeAreaEdge.top, safeAreaEdge.left, safeAreaEdge.bottom, safeAreaEdge.right);
     }
 #endif
 
-    // If running on iOS devices lower than 11.0, return visiable rect instead.
-    //    return GLView::getSafeAreaRect();
-    return renderer::Rect(0.0, 0.0, screenSize.width, screenSize.height);
+    // If running on iOS devices lower than 11.0, return ZERO Vec4.
+    return cocos2d::Vec4();
 }
 NS_CC_END

@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 #include "base/ccMacros.h"
 #include "base/CCData.h"
-#include "renderer/Types.h"
+#include "math/Vec4.h"
 
 NS_CC_BEGIN
 
@@ -130,7 +130,11 @@ public:
 
     static NetworkType getNetworkType();
 
-    static renderer::Rect getSafeAreaRect();
+    /*
+     * Gets the SafeArea edge.
+     * Vec4(x, y, z, w) means Edge(top, left, bottom, right)
+     */
+    static cocos2d::Vec4 getSafeAreaEdge();
 
 private:
 	Device();

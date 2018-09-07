@@ -598,13 +598,13 @@ getDPI : function (
 },
 
 /**
- * @method getSafeAreaRect
- * @return {cc.renderer::Rect}
+ * @method getSafeAreaEdge
+ * @return {vec4_object}
  */
-getSafeAreaRect : function (
+getSafeAreaEdge : function (
 )
 {
-    return cc.renderer::Rect;
+    return cc.Vec4;
 },
 
 /**
