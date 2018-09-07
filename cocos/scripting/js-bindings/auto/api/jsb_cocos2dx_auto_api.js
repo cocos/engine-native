@@ -598,6 +598,16 @@ getDPI : function (
 },
 
 /**
+ * @method getSafeAreaRect
+ * @return {cc.renderer::Rect}
+ */
+getSafeAreaRect : function (
+)
+{
+    return cc.renderer::Rect;
+},
+
+/**
  * @method getDeviceModel
  * @return {String}
  */

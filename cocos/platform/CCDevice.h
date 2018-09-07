@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 #include "base/ccMacros.h"
 #include "base/CCData.h"
-#include "math/CCMath.h"
+#include "renderer/Types.h"
 
 NS_CC_BEGIN
 
@@ -130,7 +130,7 @@ public:
 
     static NetworkType getNetworkType();
 
-    static Vec4 getSafeAreaRect();
+    static renderer::Rect getSafeAreaRect();
 
 private:
 	Device();

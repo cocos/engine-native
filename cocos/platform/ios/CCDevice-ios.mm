@@ -298,7 +298,7 @@ Device::NetworkType Device::getNetworkType()
     return ret;
 }
 
-Vec4 Device::getSafeAreaRect()
+renderer::Rect Device::getSafeAreaRect()
 {
     UIView* screenView = (UIView*)Application::getInstance()->getView();
     CGSize screenSize = screenView.frame.size;
@@ -339,12 +339,12 @@ Vec4 Device::getSafeAreaRect()
         //        leftBottom = Director::getInstance()->convertToGL(leftBottom);
         //        rightTop = Director::getInstance()->convertToGL(rightTop);
 
-        return Vec4(leftBottom.x, leftBottom.y, rightTop.x - leftBottom.x, rightTop.y - leftBottom.y);
+        return renderer::Rect(leftBottom.x, leftBottom.y, rightTop.x - leftBottom.x, rightTop.y - leftBottom.y);
     }
 #endif
 
     // If running on iOS devices lower than 11.0, return visiable rect instead.
     //    return GLView::getSafeAreaRect();
-    return Vec4(0.0, 0.0, screenSize.width, screenSize.height);
+    return renderer::Rect(0.0, 0.0, screenSize.width, screenSize.height);
 }
 NS_CC_END
