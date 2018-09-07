@@ -29,6 +29,7 @@ THE SOFTWARE.
 
 #include "base/ccMacros.h"
 #include "base/CCData.h"
+#include "math/CCMath.h"
 
 NS_CC_BEGIN
 
@@ -128,6 +129,9 @@ public:
     };
 
     static NetworkType getNetworkType();
+
+    static Vec4 getSafeAreaRect();
+
 private:
 	Device();
 	CC_DISALLOW_COPY_AND_ASSIGN(Device);
