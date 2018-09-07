@@ -1132,7 +1132,7 @@ static bool js_engine_Device_getSafeAreaEdge(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::Vec4 result = cocos2d::Device::getSafeAreaEdge();
-        ok &= Vec4_to_seval((cocos2d::Vec4)result, &s.rval());
+        ok &= Vec4_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_engine_Device_getSafeAreaEdge : Error processing arguments");
         return true;
     }
