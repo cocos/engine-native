@@ -86,6 +86,10 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
        return mCocos2dxGLSurfaceView;
        }
 
+       public static Cocos2dxRenderer getRenderer() { 
+           return mCocos2dxGLSurfaceView.mCocos2dxRenderer; 
+       }
+       
        public static void queueAccelerometer(final float x, final float y, final float z, final long timestamp) {
            mCocos2dxGLSurfaceView.queueEvent(new Runnable() {
             @Override

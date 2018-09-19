@@ -29,6 +29,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -172,5 +173,54 @@ public class Cocos2dxWebView extends WebView {
         layoutParams.height = maxHeight;
         layoutParams.gravity = Gravity.TOP | Gravity.LEFT;
         this.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public boolean onKeyDown(final int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                Cocos2dxVideoHelper.mVideoHandler.sendEmptyMessage(Cocos2dxVideoHelper.KeyEventBack);
+            case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+            case KeyEvent.KEYCODE_DPAD_UP:
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+            case KeyEvent.KEYCODE_ENTER:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                Cocos2dxGLSurfaceView.getInstance().queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                    Cocos2dxGLSurfaceView.getRenderer().handleKeyDown(keyCode);
+                    }
+                });
+                return true;
+            default:
+                return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(final int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+            case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+            case KeyEvent.KEYCODE_DPAD_UP:
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+            case KeyEvent.KEYCODE_ENTER:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                Cocos2dxGLSurfaceView.getInstance().queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                    Cocos2dxGLSurfaceView.getRenderer().handleKeyUp(keyCode);
+                    }
+                });
+                return true;
+            default:
+                return super.onKeyUp(keyCode, event);
+        }
     }
 }
