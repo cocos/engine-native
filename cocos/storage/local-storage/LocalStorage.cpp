@@ -115,7 +115,10 @@ void localStorageFree()
         sqlite3_finalize(_stmt_select);
         sqlite3_finalize(_stmt_remove);
         sqlite3_finalize(_stmt_update);
-
+        sqlite3_finalize(_stmt_clear);
+        sqlite3_finalize(_stmt_key);
+        sqlite3_finalize(_stmt_count);
+        
         sqlite3_close(_db);
 
         _initialized = 0;
