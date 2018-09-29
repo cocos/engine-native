@@ -142,6 +142,9 @@ namespace {
     const uint32_t GL_COMMAND_VERTEX_ATTRIB_POINTER = 96;
     const uint32_t GL_COMMAND_VIEW_PORT = 97;
 
+    const uint32_t GL_FLOAT_ARRAY = 1;
+    const uint32_t GL_INT_ARRAY = 2;
+
     GLint __defaultFbo = 0;
 
     se::Class* __jsb_WebGLObject_class = nullptr;
@@ -3457,27 +3460,27 @@ static bool JSB_glGetUniformfv(se::State& s) {
             break;
         case GL_FLOAT_MAT2:
             usize = 2 * 2;
-            utype = GL_FLOAT_VEC2;
+            utype = GL_FLOAT_ARRAY;
             break;
         case GL_FLOAT_MAT3:
             usize = 3 * 3;
-            utype = GL_FLOAT_VEC2;
+            utype = GL_FLOAT_ARRAY;
             break;
         case GL_FLOAT_MAT4:
             usize = 4 * 4;
-            utype = GL_FLOAT_VEC2;
+            utype = GL_FLOAT_ARRAY;
             break;
         case GL_FLOAT_VEC2:
             usize = 2;
-            utype = GL_FLOAT_VEC2;
+            utype = GL_FLOAT_ARRAY;
             break;
         case GL_FLOAT_VEC3:
             usize = 3;
-            utype = GL_FLOAT_VEC2;
+            utype = GL_FLOAT_ARRAY;
             break;
         case GL_FLOAT_VEC4:
             usize = 4;
-            utype = GL_FLOAT_VEC2;
+            utype = GL_FLOAT_ARRAY;
             break;
 
             // int
@@ -3487,15 +3490,15 @@ static bool JSB_glGetUniformfv(se::State& s) {
             break;
         case GL_INT_VEC2:
             usize = 2;
-            utype = GL_INT_VEC2;
+            utype = GL_INT_ARRAY;
             break;
         case GL_INT_VEC3:
             usize = 3;
-            utype = GL_INT_VEC2;
+            utype = GL_INT_ARRAY;
             break;
         case GL_INT_VEC4:
             usize = 4;
-            utype = GL_INT_VEC2;
+            utype = GL_INT_ARRAY;
             break;
 
         default:
@@ -3503,7 +3506,7 @@ static bool JSB_glGetUniformfv(se::State& s) {
             return false;
     }
 
-    if( utype == GL_FLOAT_VEC2)
+    if (utype == GL_FLOAT_ARRAY)
     {
         GLfloat* param = new (std::nothrow) GLfloat[usize];
         JSB_GL_CHECK(glGetUniformfv(id, arg1, param));
@@ -3513,7 +3516,7 @@ static bool JSB_glGetUniformfv(se::State& s) {
         CC_SAFE_DELETE_ARRAY(param);
         return true;
     }
-    else if( utype == GL_INT_VEC2 )
+    else if(utype == GL_INT_ARRAY)
     {
         GLint* param = new (std::nothrow) GLint[usize];
         JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
