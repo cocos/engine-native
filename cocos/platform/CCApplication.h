@@ -25,6 +25,8 @@ THE SOFTWARE.
 #pragma once
 
 #include <string>
+#include <memory>
+
 #include "base/ccMacros.h"
 #include "platform/CCPlatformConfig.h"
 #include "platform/CCPlatformDefine.h"
@@ -97,10 +99,21 @@ public:
         STENCIL_INDEX8
     };
     
+    static std::shared_ptr<Application> create(const std::string &name, int width, int height)
+    {
+        auto *app = new Application(name, width, height);
+        _instance = std::shared_ptr<Application>(app);
+        return _instance;
+    }
+    static void destroy(){ _instance.reset(); }
+
     // This class is useful for internal usage.
-    static Application* getInstance() { return _instance; }
-    
+    static std::shared_ptr<Application> getInstance() { return _instance; }
+
+protected:
     Application(const std::string& name, int width, int height);
+    
+public:
     virtual ~Application();
     
     virtual bool applicationDidFinishLaunching();
@@ -186,7 +199,7 @@ protected:
 private:
     void createView(const std::string& name, int width, int height);
     
-    static Application* _instance;
+    static std::shared_ptr<Application> _instance;
     
     void* _view = nullptr;
     void* _delegate = nullptr;

@@ -99,11 +99,10 @@ namespace
 
 NS_CC_BEGIN
 
-Application* Application::_instance = nullptr;
+std::shared_ptr<Application> Application::_instance = nullptr;
 
 Application::Application(const std::string& name, int width, int height)
 {
-    Application::_instance = this;
     _scheduler = new Scheduler();
 
     createView(name, width, height);
@@ -131,8 +130,6 @@ Application::~Application()
     
     delete _renderTexture;
     _renderTexture = nullptr;
-
-    Application::_instance = nullptr;
 }
 
 void Application::start()

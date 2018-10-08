@@ -63,9 +63,7 @@ Application* Application::_instance = nullptr;
 #define CAST_VIEW(view)    ((GLView*)view)
 
 Application::Application(const std::string& name, int width, int height)
-{
-    Application::_instance = this;
-    
+{   
     g_width = width;
     g_height = height;
     
@@ -96,8 +94,6 @@ Application::~Application()
     
     delete _renderTexture;
     _renderTexture = nullptr;
-    
-    Application::_instance = nullptr;
 }
 
 void Application::start()

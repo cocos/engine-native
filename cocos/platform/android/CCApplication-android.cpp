@@ -56,7 +56,6 @@ Application* Application::_instance = nullptr;
 
 Application::Application(const std::string& name, int width, int height)
 {
-    Application::_instance = this;
     Configuration::getInstance();
 
     _scheduler = new Scheduler();
@@ -81,8 +80,6 @@ Application::~Application()
 
     delete _renderTexture;
     _renderTexture = nullptr;
-
-    Application::_instance = nullptr;
 }
 
 void Application::start()
