@@ -111,8 +111,10 @@ public:
     static std::shared_ptr<Application> getInstance() { return _instance; }
 
 protected:
+    // The constructor is marked non-public to ensure that it can only be accessed by `std::shared_ptr`.
+    // Please use Application::create(...) instead. 
     Application(const std::string& name, int width, int height);
-    
+
 public:
     virtual ~Application();
     
