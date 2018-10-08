@@ -58,7 +58,7 @@ namespace
     }
 }
 
-Application* Application::_instance = nullptr;
+std::shared_ptr<Application> Application::_instance = nullptr;
 
 #define CAST_VIEW(view)    ((GLView*)view)
 
