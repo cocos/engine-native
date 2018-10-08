@@ -99,20 +99,30 @@ public:
         STENCIL_INDEX8
     };
     
+    /** Construct an `Application`.
+     */
     static std::shared_ptr<Application> create(const std::string &name, int width, int height)
     {
         auto *app = new Application(name, width, height);
         _instance = std::shared_ptr<Application>(app);
         return _instance;
     }
+
+    /** unlink `Application` singleton. 
+     *  Note: this method will not instantly free `_instance`, it is managed through `std::shared_ptr`.
+     */
     static void destroy(){ _instance.reset(); }
 
     // This class is useful for internal usage.
+
+    // https://github.com/cocos-creator/cocos2d-x-lite/pull/1529
+    // Using the smart pointer instead of the raw pointer to improve thread safety.
+    // Although this will not solve multi-thread problems, it does make the memory lifetime more reliable.
     static std::shared_ptr<Application> getInstance() { return _instance; }
 
 protected:
-    // The constructor is marked non-public to ensure that it can only be accessed by `std::shared_ptr`.
-    // Please use Application::create(...) instead. 
+    // The constructor is marked non-public to ensure that it can only be accessed through `std::shared_ptr`.
+    // Use Application::create(...) instead. 
     Application(const std::string& name, int width, int height);
 
 public:
