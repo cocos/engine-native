@@ -2740,6 +2740,9 @@ static bool JSB_glGetVertexAttrib(se::State& s)
             if (seObjIter != se::NativePtrToObjectMap::end()) {
                 s.rval().setObject(seObjIter->second);
             }
+            else {
+                s.rval().setNull();
+            }
         }
     }
     else if( pname == GL_CURRENT_VERTEX_ATTRIB ) {
@@ -2755,8 +2758,11 @@ static bool JSB_glGetVertexAttrib(se::State& s)
         if (pname == GL_VERTEX_ATTRIB_ARRAY_ENABLED || pname == GL_VERTEX_ATTRIB_ARRAY_NORMALIZED) {
             s.rval().setBoolean(value == 0 ? false : true);
         }
-        else if (pname == GL_VERTEX_ATTRIB_ARRAY_SIZE) {
+        else if (pname == GL_VERTEX_ATTRIB_ARRAY_SIZE || GL_VERTEX_ATTRIB_ARRAY_STRIDE || GL_VERTEX_ATTRIB_ARRAY_TYPE) {
             s.rval().setNumber(value);
+        }
+        else {
+            s.rval().setNull();
         }
     }
     return true;
@@ -3379,7 +3385,6 @@ static bool JSB_glGetFramebufferAttachmentParameter(se::State& s) {
 
     GLint param = 0;
     JSB_GL_CHECK(glGetFramebufferAttachmentParameteriv(target, attachment, pname, &param));
-
     if( pname == GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME ) {
         GLint ptype;
         glGetFramebufferAttachmentParameteriv(target, attachment, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &ptype);
@@ -3413,6 +3418,7 @@ static bool JSB_glGetFramebufferAttachmentParameter(se::State& s) {
     }
 
     s.rval().setInt32(param);
+
     return true;
 }
 SE_BIND_FUNC(JSB_glGetFramebufferAttachmentParameter)
