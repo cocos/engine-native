@@ -2042,7 +2042,7 @@ static bool JSB_glTexImage2D(se::State& s) {
         setUnpackAlignmentByWidthAndFormat(width, format);
 
     if (internalformat == GL_RGBA) {
-        SE_PRECONDITION5((width*height*4) == count, false, GL_INVALID_OPERATION);
+        SE_PRECONDITION4((width*height*4) == count, false, GL_INVALID_OPERATION);
     }
     JSB_GL_CHECK(glTexImage2D((GLenum)target , (GLint)level , (GLint)internalformat , (GLsizei)width , (GLsizei)height , (GLint)border , (GLenum)format , (GLenum)type , (GLvoid*)pixels));
 
