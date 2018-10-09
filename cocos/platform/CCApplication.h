@@ -37,6 +37,11 @@ NS_CC_BEGIN
 class Scheduler;
 class ApplicationImpl;
 
+
+/**
+ * @addtogroup platform
+ * @{
+ */
 class CC_DLL Application {
 public:
 
@@ -256,8 +261,6 @@ private:
     bool _isStarted = false;
     bool _isDownsampleEnabled = false;
 };
-
-
 
 // end of platform group
 /** @} */
