@@ -273,7 +273,10 @@ Application::Application(const std::string &appName, int width, int height)
     impl->setAppDeletate(this);
 }
 
-Application::~Application() {}
+Application::~Application() 
+{
+    ApplicationImpl::destroy();
+}
 
 void Application::start() { impl->start(); }
 

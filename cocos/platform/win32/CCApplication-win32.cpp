@@ -401,4 +401,27 @@ std::string ApplicationImpl::getSystemVersion()
     // REFINE
     return std::string("unknown Windows version");
 }
+
+std::shared_ptr<ApplicationImpl> Application::getInstance() 
+{ 
+    return ApplicationImpl::getInstance();
+}
+
+Application::Application(const std::string &appName, int width, int height) 
+{
+    impl = ApplicationImpl::create(appName, width, height);
+    impl->setAppDeletate(this);
+}
+
+Application::~Application() 
+{
+    ApplicationImpl::destroy();
+}
+
+void Application::start() { impl->start(); }
+
+void Application::restart() { impl->restart(); }
+
+void Application::end() { impl->end(); }
+
 NS_CC_END
