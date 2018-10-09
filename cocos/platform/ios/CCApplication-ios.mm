@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#import "CCApplicationImpl.h"
+#import "CCApplication.h"
 #import <UIKit/UIKit.h>
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
