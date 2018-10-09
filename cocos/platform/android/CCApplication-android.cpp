@@ -52,7 +52,7 @@ PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
 
 NS_CC_BEGIN
 
-std::shared_ptr<ApplicationImpl> _application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> ApplicationImpl::_instance = nullptr;
 
 ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
 {
@@ -99,21 +99,6 @@ void ApplicationImpl::end()
 }
 
 void ApplicationImpl::setMultitouch(bool /*value*/)
-{
-
-}
-
-bool ApplicationImpl::applicationDidFinishLaunching()
-{
-    return true;
-}
-
-void ApplicationImpl::applicationDidEnterBackground()
-{
-
-}
-
-void ApplicationImpl::applicationWillEnterForeground()
 {
 
 }
