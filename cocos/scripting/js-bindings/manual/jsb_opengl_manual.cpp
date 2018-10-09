@@ -712,6 +712,10 @@ static bool JSB_glBlendFunc(se::State& s) {
     ok &= seval_to_uint32(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(!((arg0 == GL_CONSTANT_COLOR && arg1 == GL_CONSTANT_ALPHA) || (arg0 == GL_ONE_MINUS_CONSTANT_COLOR && arg1 == GL_CONSTANT_ALPHA)
+                          || (arg0 == GL_CONSTANT_COLOR && arg1 == GL_ONE_MINUS_CONSTANT_ALPHA) || (arg0 == GL_ONE_MINUS_CONSTANT_COLOR && arg1 == GL_ONE_MINUS_CONSTANT_ALPHA)
+                          ||  (arg0 == GL_CONSTANT_ALPHA && arg1 == GL_CONSTANT_COLOR) || (arg0 == GL_CONSTANT_ALPHA && arg1 == GL_ONE_MINUS_CONSTANT_COLOR)
+                          || (arg0 == GL_ONE_MINUS_CONSTANT_ALPHA && arg1 == GL_CONSTANT_COLOR) || (arg0 == GL_ONE_MINUS_CONSTANT_ALPHA && arg1 == GL_ONE_MINUS_CONSTANT_COLOR)), false, GL_INVALID_OPERATION );
     JSB_GL_CHECK(glBlendFunc((GLenum)arg0 , (GLenum)arg1  ));
 
     return true;
@@ -733,6 +737,10 @@ static bool JSB_glBlendFuncSeparate(se::State& s) {
     ok &= seval_to_uint32(args[3], &arg3 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(!((arg0 == GL_CONSTANT_COLOR && arg1 == GL_CONSTANT_ALPHA) || (arg0 == GL_ONE_MINUS_CONSTANT_COLOR && arg1 == GL_CONSTANT_ALPHA)
+                      || (arg0 == GL_CONSTANT_COLOR && arg1 == GL_ONE_MINUS_CONSTANT_ALPHA) || (arg0 == GL_ONE_MINUS_CONSTANT_COLOR && arg1 == GL_ONE_MINUS_CONSTANT_ALPHA)
+                      ||  (arg0 == GL_CONSTANT_ALPHA && arg1 == GL_CONSTANT_COLOR) || (arg0 == GL_CONSTANT_ALPHA && arg1 == GL_ONE_MINUS_CONSTANT_COLOR)
+                      || (arg0 == GL_ONE_MINUS_CONSTANT_ALPHA && arg1 == GL_CONSTANT_COLOR) || (arg0 == GL_ONE_MINUS_CONSTANT_ALPHA && arg1 == GL_ONE_MINUS_CONSTANT_COLOR)), false, GL_INVALID_OPERATION );
     JSB_GL_CHECK(glBlendFuncSeparate((GLenum)arg0 , (GLenum)arg1 , (GLenum)arg2 , (GLenum)arg3  ));
 
     return true;
@@ -1200,6 +1208,7 @@ static bool JSB_glDepthRangef(se::State& s) {
     ok &= seval_to_float(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(arg0 <= arg1, false, GL_INVALID_OPERATION);
     JSB_GL_CHECK(glDepthRangef((GLclampf)arg0 , (GLclampf)arg1  ));
 
     return true;
