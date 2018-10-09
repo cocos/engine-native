@@ -145,94 +145,94 @@ void ApplicationImpl::setDisplayStats(bool isShow) {
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-ApplicationImpl::LanguageType ApplicationImpl::getCurrentLanguage() const
+Application::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     std::string languageName = getCurrentLanguageJNI();
     const char* pLanguageName = languageName.c_str();
-    LanguageType ret = LanguageType::ENGLISH;
+    Application::LanguageType ret = Application::LanguageType::ENGLISH;
 
     if (0 == strcmp("zh", pLanguageName))
     {
-        ret = LanguageType::CHINESE;
+        ret = Application::LanguageType::CHINESE;
     }
     else if (0 == strcmp("en", pLanguageName))
     {
-        ret = LanguageType::ENGLISH;
+        ret = Application::LanguageType::ENGLISH;
     }
     else if (0 == strcmp("fr", pLanguageName))
     {
-        ret = LanguageType::FRENCH;
+        ret = Application::LanguageType::FRENCH;
     }
     else if (0 == strcmp("it", pLanguageName))
     {
-        ret = LanguageType::ITALIAN;
+        ret = Application::LanguageType::ITALIAN;
     }
     else if (0 == strcmp("de", pLanguageName))
     {
-        ret = LanguageType::GERMAN;
+        ret = Application::LanguageType::GERMAN;
     }
     else if (0 == strcmp("es", pLanguageName))
     {
-        ret = LanguageType::SPANISH;
+        ret = Application::LanguageType::SPANISH;
     }
     else if (0 == strcmp("ru", pLanguageName))
     {
-        ret = LanguageType::RUSSIAN;
+        ret = Application::LanguageType::RUSSIAN;
     }
     else if (0 == strcmp("nl", pLanguageName))
     {
-        ret = LanguageType::DUTCH;
+        ret = Application::LanguageType::DUTCH;
     }
     else if (0 == strcmp("ko", pLanguageName))
     {
-        ret = LanguageType::KOREAN;
+        ret = Application::LanguageType::KOREAN;
     }
     else if (0 == strcmp("ja", pLanguageName))
     {
-        ret = LanguageType::JAPANESE;
+        ret = Application::LanguageType::JAPANESE;
     }
     else if (0 == strcmp("hu", pLanguageName))
     {
-        ret = LanguageType::HUNGARIAN;
+        ret = Application::LanguageType::HUNGARIAN;
     }
     else if (0 == strcmp("pt", pLanguageName))
     {
-        ret = LanguageType::PORTUGUESE;
+        ret = Application::LanguageType::PORTUGUESE;
     }
     else if (0 == strcmp("ar", pLanguageName))
     {
-        ret = LanguageType::ARABIC;
+        ret = Application::LanguageType::ARABIC;
     }
     else if (0 == strcmp("nb", pLanguageName))
     {
-        ret = LanguageType::NORWEGIAN;
+        ret = Application::LanguageType::NORWEGIAN;
     }
     else if (0 == strcmp("pl", pLanguageName))
     {
-        ret = LanguageType::POLISH;
+        ret = Application::LanguageType::POLISH;
     }
     else if (0 == strcmp("tr", pLanguageName))
     {
-        ret = LanguageType::TURKISH;
+        ret = Application::LanguageType::TURKISH;
     }
     else if (0 == strcmp("uk", pLanguageName))
     {
-        ret = LanguageType::UKRAINIAN;
+        ret = Application::LanguageType::UKRAINIAN;
     }
     else if (0 == strcmp("ro", pLanguageName))
     {
-        ret = LanguageType::ROMANIAN;
+        ret = Application::LanguageType::ROMANIAN;
     }
     else if (0 == strcmp("bg", pLanguageName))
     {
-        ret = LanguageType::BULGARIAN;
+        ret = Application::LanguageType::BULGARIAN;
     }
     return ret;
 }
 
-ApplicationImpl::Platform ApplicationImpl::getPlatform() const
+Application::Platform ApplicationImpl::getPlatform() const
 {
-    return Platform::ANDROIDOS;
+    return Application::Platform::ANDROIDOS;
 }
 
 float ApplicationImpl::getScreenScale() const
@@ -245,7 +245,7 @@ GLint ApplicationImpl::getMainFBO() const
     return _mainFBO;
 }
 
-void ApplicationImpl::onCreateView(PixelFormat& /*pixelformat*/, DepthFormat& /*depthFormat*/, int& /*multisamplingCount*/)
+void ApplicationImpl::onCreateView(Application::PixelFormat& /*pixelformat*/, Application::DepthFormat& /*depthFormat*/, int& /*multisamplingCount*/)
 {
 
 }
@@ -259,5 +259,26 @@ std::string ApplicationImpl::getSystemVersion()
 {
     return getSystemVersionJNI();
 }
+
+
+
+std::shared_ptr<ApplicationImpl> Application::getInstance() 
+{ 
+    return ApplicationImpl::getInstance();
+}
+
+Application::Application(const std::string &appName, int width, int height) 
+{
+    impl = ApplicationImpl::create(appName, width, height);
+}
+
+Application::~Application() {}
+
+void Application::start() { impl->start(); }
+
+void Application::restart() { impl->restart(); }
+
+void Application::end() { impl->end(); }
+
 
 NS_CC_END

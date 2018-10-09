@@ -453,4 +453,25 @@ std::string ApplicationImpl::getSystemVersion()
     return [systemVersion UTF8String];
 }
 
+
+
+std::shared_ptr<ApplicationImpl> Application::getInstance() 
+{ 
+    return ApplicationImpl::getInstance();
+}
+
+Application::Application(const std::string &appName, int width, int height) 
+{
+    impl = ApplicationImpl::create(appName, width, height);
+}
+
+Application::~Application() {}
+
+void Application::start() { impl->start(); }
+
+void Application::restart() { impl->restart(); }
+
+void Application::end() { impl->end(); }
+
+
 NS_CC_END
