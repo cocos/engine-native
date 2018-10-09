@@ -597,6 +597,7 @@ static bool JSB_glBindFramebuffer(se::State& s) {
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint frameBufferId = arg1 != nullptr ? arg1->_id : __defaultFbo;
 
+    SE_PRECONDITION4(arg0 == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
     JSB_GL_CHECK(glBindFramebuffer((GLenum)arg0 , frameBufferId));
     return true;
 }
@@ -813,6 +814,7 @@ static bool JSB_glCheckFramebufferStatus(se::State& s) {
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLenum ret_val;
 
+    SE_PRECONDITION4(arg0 == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
     ret_val = glCheckFramebufferStatus((GLenum)arg0);
     s.rval().setUint32((uint32_t)ret_val);
     return true;
@@ -1409,6 +1411,8 @@ static bool JSB_glFramebufferRenderbuffer(se::State& s) {
     ok &= seval_to_native_ptr(args[3], &arg3 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint renderBufferId = arg3 != nullptr ? arg3->_id : 0;
+    SE_PRECONDITION4(arg0 == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(arg1 == GL_COLOR_ATTACHMENT0 || arg1 == GL_DEPTH_ATTACHMENT || arg1 == GL_STENCIL_ATTACHMENT, false, GL_INVALID_ENUM);
     JSB_GL_CHECK(WEBGL_framebufferRenderbuffer((GLenum)arg0 , (GLenum)arg1 , (GLenum)arg2 , renderBufferId));
     return true;
 }
@@ -1431,6 +1435,9 @@ static bool JSB_glFramebufferTexture2D(se::State& s) {
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     GLuint textureId = arg3 != nullptr ? arg3->_id : 0;
+    SE_PRECONDITION4(arg0 == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(arg1 == GL_COLOR_ATTACHMENT0 || arg1 == GL_DEPTH_ATTACHMENT || arg1 == GL_STENCIL_ATTACHMENT, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(arg4 == 0, false, GL_INVALID_VALUE);
     JSB_GL_CHECK(glFramebufferTexture2D((GLenum)arg0 , (GLenum)arg1 , (GLenum)arg2 , textureId , (GLint)arg4  ));
 
     return true;
@@ -3426,6 +3433,9 @@ static bool JSB_glGetFramebufferAttachmentParameter(se::State& s) {
     ok &= seval_to_uint32(args[2], &pname );
 
     SE_PRECONDITION2(ok, false, "JSB_glGetFramebufferAttachmentParameter: Error processing arguments");
+    SE_PRECONDITION4(target == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(attachment == GL_COLOR_ATTACHMENT0 || attachment == GL_DEPTH_ATTACHMENT || attachment == GL_STENCIL_ATTACHMENT, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(pname == GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE || pname == GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME || pname == GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL || pname == GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, false, GL_INVALID_ENUM);
 
     GLint param = 0;
     JSB_GL_CHECK(glGetFramebufferAttachmentParameteriv(target, attachment, pname, &param));
