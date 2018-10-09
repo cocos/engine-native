@@ -145,6 +145,11 @@ namespace {
     const uint32_t GL_FLOAT_ARRAY = 1;
     const uint32_t GL_INT_ARRAY = 2;
     const uint32_t GL_MAX_STRIDE = 255;
+    const uint32_t UNPACK_FLIP_Y_WEBGL = 0x9240;
+    const uint32_t UNPACK_PREMULTIPLY_ALPHA_WEBGL = 0x9241;
+    const uint32_t CONTEXT_LOST_WEBGL = 0x9242;
+    const uint32_t UNPACK_COLORSPACE_CONVERSION_WEBGL = 0x9243;
+    const uint32_t BROWSER_DEFAULT_WEBGL = 0x9244;
 
     GLint __defaultFbo = 0;
 
@@ -636,6 +641,8 @@ static bool JSB_glBindTexture(se::State& s) {
     ok &= seval_to_native_ptr(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(arg0 == GL_TEXTURE_2D || arg0 == GL_TEXTURE_CUBE_MAP, false, GL_INVALID_ENUM);
+
     GLuint textureId = arg1 != nullptr ? arg1->_id : 0;
     JSB_GL_CHECK(glBindTexture((GLenum)arg0 , textureId));
     return true;
@@ -675,6 +682,9 @@ static bool JSB_glBlendEquation(se::State& s) {
     ok &= seval_to_uint32(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(arg0 == GL_FUNC_ADD || arg0 == GL_FUNC_SUBTRACT || arg0 == GL_FUNC_REVERSE_SUBTRACT,
+                     false, GL_INVALID_ENUM);
+
     JSB_GL_CHECK(glBlendEquation((GLenum)arg0  ));
 
     return true;
@@ -693,6 +703,12 @@ static bool JSB_glBlendEquationSeparate(se::State& s) {
     ok &= seval_to_uint32(args[0], &arg0 );
     ok &= seval_to_uint32(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    SE_PRECONDITION4(arg0 == GL_FUNC_ADD || arg0 == GL_FUNC_SUBTRACT || arg0 == GL_FUNC_REVERSE_SUBTRACT,
+                     false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4(arg1 == GL_FUNC_ADD || arg1 == GL_FUNC_SUBTRACT || arg1 == GL_FUNC_REVERSE_SUBTRACT,
+                     false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glBlendEquationSeparate((GLenum)arg0 , (GLenum)arg1  ));
 
@@ -770,6 +786,10 @@ static bool JSB_glBufferData(se::State& s) {
     }
     ok &= seval_to_uint32(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    SE_PRECONDITION4(arg0 == GL_ARRAY_BUFFER || arg0 == GL_ELEMENT_ARRAY_BUFFER, false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4(arg2 == GL_STREAM_DRAW || arg2 == GL_STATIC_DRAW || arg2 == GL_DYNAMIC_DRAW, false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glBufferData((GLenum)arg0 , count, (GLvoid*)arg1 , (GLenum)arg2  ));
 
@@ -1757,10 +1777,16 @@ static bool JSB_glPixelStorei(se::State& s) {
     bool ok = true;
     uint32_t arg0; int32_t arg1;
 
+    SE_PRECONDITION4(!args[0].isNullOrUndefined(), false, GL_INVALID_ENUM);
+
     ok &= seval_to_uint32(args[0], &arg0 );
     ok &= seval_to_int32(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(arg0 == GL_PACK_ALIGNMENT || arg0 == GL_UNPACK_ALIGNMENT || arg0 == UNPACK_FLIP_Y_WEBGL ||
+                             arg0 == UNPACK_PREMULTIPLY_ALPHA_WEBGL || arg0 == UNPACK_COLORSPACE_CONVERSION_WEBGL,
+                     false, GL_INVALID_ENUM);
+    
     JSB_GL_CHECK(ccPixelStorei((GLenum)arg0 , (GLint)arg1));
     return true;
 }
@@ -2103,6 +2129,12 @@ static bool JSB_glTexParameteri(se::State& s) {
     ok &= seval_to_uint32(args[1], &arg1 );
     ok &= seval_to_int32(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    SE_PRECONDITION4(arg0 == GL_TEXTURE_2D || arg0 == GL_TEXTURE_CUBE_MAP, false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4(arg1 == GL_TEXTURE_MIN_FILTER || arg1 == GL_TEXTURE_MAG_FILTER ||
+                             arg1 == GL_TEXTURE_WRAP_S || arg1 == GL_TEXTURE_WRAP_T, false, GL_INVALID_ENUM);
+
     JSB_GL_CHECK(glTexParameteri((GLenum)arg0 , (GLenum)arg1 , (GLint)arg2  ));
     return true;
 }
@@ -2481,6 +2513,10 @@ static bool JSB_glUniformMatrix2fv(se::State& s) {
     ok &= JSB_jsval_typedarray_to_data<float>(args[2], data);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(arg1 == GL_FALSE, false, GL_INVALID_VALUE);
+
+    SE_PRECONDITION4(data.count() % 4 == 0, false, GL_INVALID_VALUE);
+
     JSB_GL_CHECK(glUniformMatrix2fv(arg0, (GLsizei)(data.count()/4), (GLboolean)arg1 , (GLfloat*)data.data()));
 
     return true;
@@ -2502,6 +2538,10 @@ static bool JSB_glUniformMatrix3fv(se::State& s) {
     ok &= JSB_jsval_typedarray_to_data<float>(args[2], data);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(arg1 == GL_FALSE, false, GL_INVALID_VALUE);
+
+    SE_PRECONDITION4(data.count() % 9 == 0, false, GL_INVALID_VALUE);
+
     JSB_GL_CHECK(glUniformMatrix3fv(arg0, (GLsizei)(data.count()/9), (GLboolean)arg1 , (GLfloat*)data.data()));
 
     return true;
@@ -2522,6 +2562,10 @@ static bool JSB_glUniformMatrix4fv(se::State& s) {
     GLData<float> data;
     ok &= JSB_jsval_typedarray_to_data<float>(args[2], data);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    SE_PRECONDITION4(arg1 == GL_FALSE, false, GL_INVALID_VALUE);
+
+    SE_PRECONDITION4(data.count() % 16 == 0, false, GL_INVALID_VALUE);
 
     JSB_GL_CHECK(glUniformMatrix4fv(arg0, (GLsizei)(data.count()/16), (GLboolean)arg1 , (GLfloat*)data.data()));
 
