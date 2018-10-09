@@ -463,6 +463,7 @@ std::shared_ptr<ApplicationImpl> Application::getInstance()
 Application::Application(const std::string &appName, int width, int height) 
 {
     impl = ApplicationImpl::create(appName, width, height);
+    impl->setAppDeletate(this);
 }
 
 Application::~Application() {}
