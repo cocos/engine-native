@@ -153,9 +153,9 @@ private:
 public:
     virtual ~ApplicationImpl();
     
-    bool applicationDidFinishLaunching() { return _app->applicationDidFinishLaunching();}
-    void applicationDidEnterBackground() { _app->applicationDidEnterBackground();}
-    void applicationWillEnterForeground() { _app->applicationWillEnterForeground();}
+    bool applicationDidFinishLaunching() { return _app && _app->applicationDidFinishLaunching();}
+    void applicationDidEnterBackground() { _app && _app->applicationDidEnterBackground();}
+    void applicationWillEnterForeground() { _app && _app->applicationWillEnterForeground();}
     
     inline void* getView() const { return _view; }
     inline Scheduler* getScheduler() const { return _scheduler; }
