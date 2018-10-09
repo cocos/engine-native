@@ -147,6 +147,8 @@ namespace {
 
     GLint __defaultFbo = 0;
 
+    GLint __glErrorCode = GL_NO_ERROR;
+
     se::Class* __jsb_WebGLObject_class = nullptr;
     se::Class* __jsb_WebGLTexture_class = nullptr;
     se::Class* __jsb_WebGLBuffer_class = nullptr;
@@ -1482,8 +1484,13 @@ static bool JSB_glGetError(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2( argc == 0, false, "Invalid number of arguments" );
     GLenum ret_val;
+    if (__glErrorCode == GL_NO_ERROR) {
+        ret_val = glGetError();
+    } else {
+        ret_val = __glErrorCode;
+        __glErrorCode = GL_NO_ERROR;
+    }
 
-    ret_val = glGetError();
     s.rval().setUint32((uint32_t)ret_val);
     return true;
 }
@@ -2034,6 +2041,9 @@ static bool JSB_glTexImage2D(se::State& s) {
     else
         setUnpackAlignmentByWidthAndFormat(width, format);
 
+    if (internalformat == GL_RGBA) {
+        SE_PRECONDITION5((width*height*4) == count, false, GL_INVALID_OPERATION);
+    }
     JSB_GL_CHECK(glTexImage2D((GLenum)target , (GLint)level , (GLint)internalformat , (GLsizei)width , (GLsizei)height , (GLint)border , (GLenum)format , (GLenum)type , (GLvoid*)pixels));
 
     return true;

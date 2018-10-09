@@ -63,6 +63,25 @@
         } \
     } while(0)
 
+#define SE_PRECONDITION4(condition, ret_value, errorInfo) \
+    do { \
+        if ( ! (condition) ) { \
+            SE_LOGE("jsb: ERROR: File %s: Line: %d, Function: %s\n", __FILE__, __LINE__, __FUNCTION__ ); \
+            se::ScriptEngine* se = se::ScriptEngine::getInstance(); \
+            se->ThrowException(errorInfo); \
+            return (ret_value); \
+        } \
+    } while(0)
+
+#define SE_PRECONDITION5(condition, ret_value, errorCode) \
+    do { \
+        if ( ! (condition) ) { \
+            SE_LOGE("jsb: ERROR: File %s: Line: %d, Function: %s\n", __FILE__, __LINE__, __FUNCTION__ ); \
+            __glErrorCode = errorCode; \
+            return (ret_value); \
+        } \
+    } while(0)
+
 #define SE_PRECONDITION_ERROR_BREAK(condition, ...) \
     if ( ! (condition) ) { \
         SE_LOGE("jsb: ERROR: File %s: Line: %d, Function: %s\n", __FILE__, __LINE__, __FUNCTION__ ); \
