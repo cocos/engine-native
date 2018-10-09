@@ -94,10 +94,10 @@ namespace
         _application = ApplicationImpl;
         _scheduler = _application->getScheduler();
         
-        _isAppActive = [UIApplicationImpl sharedApplicationImpl].ApplicationImplState == UIApplicationImplStateActive;
+        _isAppActive = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationImplDidBecomeActiveNotification object:nil];
-        [nc addObserver:self selector:@selector(appDidBecomeInactive) name:UIApplicationImplWillResignActiveNotification object:nil];
+        [nc addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [nc addObserver:self selector:@selector(appDidBecomeInactive) name:UIApplicationWillResignActiveNotification object:nil];
     }
     return self;
 }
@@ -216,7 +216,7 @@ ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
     se::ScriptEngine::getInstance();
     EventDispatcher::init();
     
-    _delegate = [[MainLoop alloc] initWithApplicationImpl:this];
+    _delegate = [[MainLoop alloc] initWithApplication:this];
 }
 
 ApplicationImpl::~ApplicationImpl()
@@ -331,12 +331,12 @@ Application::LanguageType ApplicationImpl::getCurrentLanguage() const
     return Application::LanguageType::ENGLISH;
 }
 
-ApplicationImpl::Platform ApplicationImpl::getPlatform() const
+Application::Platform ApplicationImpl::getPlatform() const
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // idiom for iOS <= 3.2, otherwise: [UIDevice userInterfaceIdiom] is faster.
-        return Platform::IPAD;
+        return Application::Platform::IPAD;
     else
-        return Platform::IPHONE;
+        return Application::Platform::IPHONE;
 }
 
 float ApplicationImpl::getScreenScale() const
@@ -353,20 +353,7 @@ bool ApplicationImpl::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
-    return [[UIApplicationImpl sharedApplicationImpl] openURL:nsUrl];
-}
-
-bool ApplicationImpl::applicationDidFinishLaunching()
-{
-    return true;
-}
-
-void ApplicationImpl::applicationDidEnterBackground()
-{
-}
-
-void ApplicationImpl::applicationWillEnterForeground()
-{
+    return [[UIApplication sharedApplication] openURL:nsUrl];
 }
 
 void ApplicationImpl::setMultitouch(bool value)
@@ -400,7 +387,7 @@ namespace
         GL_DEPTH_STENCIL_OES      // STENCIL_INDEX8
     };
     
-    GLenum depthFormat2GLApplication::DepthFormat(cocos2d::Application::DepthFormat depthFormat)
+    GLenum depthFormat2GLDepthFormat(cocos2d::Application::DepthFormat depthFormat)
     {
         return depthFormatMap[(int)depthFormat];
     }
@@ -435,7 +422,7 @@ void ApplicationImpl::createView(const std::string& /*name*/, int width, int hei
     // create view
     CCEAGLView *eaglView = [CCEAGLView viewWithFrame: bounds
                                          pixelFormat: pixelString
-                                         depthFormat: depthFormat2GLApplication::DepthFormat(depthFormat)
+                                         depthFormat: depthFormat2GLDepthFormat(depthFormat)
                                   preserveBackbuffer: NO
                                           sharegroup: nil
                                        multiSampling: multisamplingCount != 0
