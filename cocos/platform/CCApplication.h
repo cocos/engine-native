@@ -252,7 +252,7 @@ private:
     int _fps = 60;
     GLint _mainFBO = 0;
 
-    Application *_app;
+    Application *_app = nullptr;
 
     // The ratio to downsample, for example, if its value is 2,
     // then the rendering size of render texture is device_resolution/2.
