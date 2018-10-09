@@ -186,9 +186,9 @@ void ApplicationImpl::setPreferredFramesPerSecond(int fps)
     _fps = fps;
 }
 
-ApplicationImpl::Platform ApplicationImpl::getPlatform() const
+Application::Platform ApplicationImpl::getPlatform() const
 {
-    return Platform::MAC;
+    return Application::Platform::MAC;
 }
 
 std::string ApplicationImpl::getCurrentLanguageCode() const
@@ -221,7 +221,7 @@ void ApplicationImpl::setDisplayStats(bool isShow) {
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-ApplicationImpl::LanguageType ApplicationImpl::getCurrentLanguage() const
+Application::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     // get the current language and country config
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -232,26 +232,26 @@ ApplicationImpl::LanguageType ApplicationImpl::getCurrentLanguage() const
     NSDictionary* temp = [NSLocale componentsFromLocaleIdentifier:currentLanguage];
     NSString * languageCode = [temp objectForKey:NSLocaleLanguageCode];
     
-    if ([languageCode isEqualToString:@"zh"]) return LanguageType::CHINESE;
-    if ([languageCode isEqualToString:@"en"]) return LanguageType::ENGLISH;
-    if ([languageCode isEqualToString:@"fr"]) return LanguageType::FRENCH;
-    if ([languageCode isEqualToString:@"it"]) return LanguageType::ITALIAN;
-    if ([languageCode isEqualToString:@"de"]) return LanguageType::GERMAN;
-    if ([languageCode isEqualToString:@"es"]) return LanguageType::SPANISH;
-    if ([languageCode isEqualToString:@"nl"]) return LanguageType::DUTCH;
-    if ([languageCode isEqualToString:@"ru"]) return LanguageType::RUSSIAN;
-    if ([languageCode isEqualToString:@"ko"]) return LanguageType::KOREAN;
-    if ([languageCode isEqualToString:@"ja"]) return LanguageType::JAPANESE;
-    if ([languageCode isEqualToString:@"hu"]) return LanguageType::HUNGARIAN;
-    if ([languageCode isEqualToString:@"pt"]) return LanguageType::PORTUGUESE;
-    if ([languageCode isEqualToString:@"ar"]) return LanguageType::ARABIC;
-    if ([languageCode isEqualToString:@"nb"]) return LanguageType::NORWEGIAN;
-    if ([languageCode isEqualToString:@"pl"]) return LanguageType::POLISH;
-    if ([languageCode isEqualToString:@"tr"]) return LanguageType::TURKISH;
-    if ([languageCode isEqualToString:@"uk"]) return LanguageType::UKRAINIAN;
-    if ([languageCode isEqualToString:@"ro"]) return LanguageType::ROMANIAN;
-    if ([languageCode isEqualToString:@"bg"]) return LanguageType::BULGARIAN;
-    return LanguageType::ENGLISH;
+    if ([languageCode isEqualToString:@"zh"]) return Application::LanguageType::CHINESE;
+    if ([languageCode isEqualToString:@"en"]) return Application::LanguageType::ENGLISH;
+    if ([languageCode isEqualToString:@"fr"]) return Application::LanguageType::FRENCH;
+    if ([languageCode isEqualToString:@"it"]) return Application::LanguageType::ITALIAN;
+    if ([languageCode isEqualToString:@"de"]) return Application::LanguageType::GERMAN;
+    if ([languageCode isEqualToString:@"es"]) return Application::LanguageType::SPANISH;
+    if ([languageCode isEqualToString:@"nl"]) return Application::LanguageType::DUTCH;
+    if ([languageCode isEqualToString:@"ru"]) return Application::LanguageType::RUSSIAN;
+    if ([languageCode isEqualToString:@"ko"]) return Application::LanguageType::KOREAN;
+    if ([languageCode isEqualToString:@"ja"]) return Application::LanguageType::JAPANESE;
+    if ([languageCode isEqualToString:@"hu"]) return Application::LanguageType::HUNGARIAN;
+    if ([languageCode isEqualToString:@"pt"]) return Application::LanguageType::PORTUGUESE;
+    if ([languageCode isEqualToString:@"ar"]) return Application::LanguageType::ARABIC;
+    if ([languageCode isEqualToString:@"nb"]) return Application::LanguageType::NORWEGIAN;
+    if ([languageCode isEqualToString:@"pl"]) return Application::LanguageType::POLISH;
+    if ([languageCode isEqualToString:@"tr"]) return Application::LanguageType::TURKISH;
+    if ([languageCode isEqualToString:@"uk"]) return Application::LanguageType::UKRAINIAN;
+    if ([languageCode isEqualToString:@"ro"]) return Application::LanguageType::ROMANIAN;
+    if ([languageCode isEqualToString:@"bg"]) return Application::LanguageType::BULGARIAN;
+    return Application::LanguageType::ENGLISH;
 }
 
 float ApplicationImpl::getScreenScale() const
@@ -271,27 +271,14 @@ bool ApplicationImpl::openURL(const std::string &url)
     return [[NSWorkspace sharedWorkspace] openURL:nsUrl];
 }
 
-bool ApplicationImpl::applicationDidFinishLaunching()
-{
-    return true;
-}
-
-void ApplicationImpl::applicationDidEnterBackground()
-{
-}
-
-void ApplicationImpl::applicationWillEnterForeground()
-{
-}
-
 void ApplicationImpl::setMultitouch(bool)
 {
 }
 
-void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount)
+void ApplicationImpl::onCreateView(Application::PixelFormat& pixelformat, Application::DepthFormat& depthFormat, int& multisamplingCount)
 {
-    pixelformat = PixelFormat::RGBA8;
-    depthFormat = DepthFormat::DEPTH24_STENCIL8;
+    pixelformat = Application::PixelFormat::RGBA8;
+    depthFormat = Application::DepthFormat::DEPTH24_STENCIL8;
 
     multisamplingCount = 0;
 }
@@ -299,14 +286,14 @@ void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthForma
 void ApplicationImpl::createView(const std::string& name, int width, int height)
 {
     int multisamplingCount = 0;
-    PixelFormat pixelformat;
-    DepthFormat depthFormat;
+    Application::PixelFormat pixelformat;
+    Application::DepthFormat depthFormat;
     
     onCreateView(pixelformat,
                  depthFormat,
                  multisamplingCount);
 
-    _view = new GLView(this, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
+    _view = new GLView(_app, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
 }
 
 std::string ApplicationImpl::getSystemVersion()
