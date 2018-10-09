@@ -451,7 +451,7 @@ int SimulatorWin::run()
     // update window title
     updateWindowTitle();
 
-    _app->start();
+    (*_app)->start();
     CC_SAFE_DELETE(_app);
     return true;
 }

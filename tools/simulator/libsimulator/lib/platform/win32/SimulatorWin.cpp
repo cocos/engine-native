@@ -263,7 +263,7 @@ int SimulatorWin::run()
 
     // create the application instance
     _app = new AppDelegate();
-    _app->setProjectConfig(_project);
+    (*_app)->setProjectConfig(_project);
 
     // create console window
     if (_project.isShowConsole())
@@ -574,8 +574,8 @@ void SimulatorWin::setupUI()
                 project.setScriptFile(ConfigParser::getInstance()->getEntryFile());
                 project.setWritablePath(dirPath);
 
-                app->setProjectConfig(project);
-                app->reopenProject();
+                (*app)->setProjectConfig(project);
+                (*app)->reopenProject();
             }
         }
     });
