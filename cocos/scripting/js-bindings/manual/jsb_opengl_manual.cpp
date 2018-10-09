@@ -144,6 +144,7 @@ namespace {
 
     const uint32_t GL_FLOAT_ARRAY = 1;
     const uint32_t GL_INT_ARRAY = 2;
+    const uint32_t GL_MAX_STRIDE = 255;
 
     GLint __defaultFbo = 0;
 
@@ -1327,8 +1328,14 @@ static bool JSB_glEnable(se::State& s) {
     bool ok = true;
     uint32_t arg0;
 
+    SE_PRECONDITION4(!args[0].isNullOrUndefined(), false, GL_INVALID_ENUM);
+
     ok &= seval_to_uint32(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    SE_PRECONDITION4(arg0 == GL_BLEND || arg0 == GL_CULL_FACE || arg0 == GL_DEPTH_TEST || arg0 == GL_DITHER ||
+            arg0 == GL_POLYGON_OFFSET_FILL || arg0 == GL_SAMPLE_ALPHA_TO_COVERAGE || arg0 == GL_SAMPLE_COVERAGE
+        || arg0 == GL_SCISSOR_TEST || arg0 == GL_STENCIL_TEST, false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glEnable((GLenum)arg0  ));
 
@@ -2717,6 +2724,27 @@ static bool JSB_glVertexAttribPointer(se::State& s) {
     ok &= seval_to_int32(args[4], &arg4 );
     ok &= seval_to_int32(args[5], &arg5 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    SE_PRECONDITION4(arg2 == GL_BYTE || arg2 == GL_UNSIGNED_BYTE || arg2 == GL_SHORT ||
+                             arg2 == GL_UNSIGNED_SHORT || arg2 == GL_FLOAT, false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4(arg4 >= 0 && arg4 <= GL_MAX_STRIDE, false, GL_INVALID_VALUE);
+
+    SE_PRECONDITION4(arg5 >= 0, false, GL_INVALID_VALUE);
+
+    switch (arg2) {
+        case GL_BYTE:
+        case GL_UNSIGNED_BYTE:
+            SE_PRECONDITION4(arg4 % sizeof(GLbyte) == 0 && arg5 % sizeof(GLbyte) == 0, false, GL_INVALID_OPERATION);
+            break;
+        case GL_SHORT:
+        case GL_UNSIGNED_SHORT:
+            SE_PRECONDITION4(arg4 % sizeof(GLshort) == 0 && arg5 % sizeof(GLshort) == 0, false, GL_INVALID_OPERATION);
+            break;
+        case GL_FLOAT:
+            SE_PRECONDITION4(arg4 % sizeof(GLclampf) == 0 && arg5 % sizeof(GLclampf) == 0, false, GL_INVALID_OPERATION);
+            break;
+    }
 
     JSB_GL_CHECK(ccVertexAttribPointer((GLuint)arg0 , (GLint)arg1 , (GLenum)arg2 , (GLboolean)arg3 , (GLsizei)arg4 , (GLvoid*)(intptr_t)arg5  ));
 
