@@ -99,9 +99,9 @@ namespace
 
 NS_CC_BEGIN
 
-std::shared_ptr<Application> Application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> ApplicationImpl::_instance = nullptr;
 
-Application::Application(const std::string& name, int width, int height)
+ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
 {
     _scheduler = new Scheduler();
 
@@ -114,7 +114,7 @@ Application::Application(const std::string& name, int width, int height)
     se::ScriptEngine::getInstance();
 }
 
-Application::~Application()
+ApplicationImpl::~ApplicationImpl()
 {
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
@@ -132,7 +132,7 @@ Application::~Application()
     _renderTexture = nullptr;
 }
 
-void Application::start()
+void ApplicationImpl::start()
 {
     if (!_view)
         return;
@@ -232,24 +232,24 @@ void Application::start()
         timeEndPeriod(wTimerRes);
 }
 
-void Application::restart()
+void ApplicationImpl::restart()
 {
     _isStarted = false;
 }
 
-void Application::end()
+void ApplicationImpl::end()
 {
     glfwSetWindowShouldClose(CAST_VIEW(_view)->getGLFWWindow(), 1);
 }
 
-void Application::setPreferredFramesPerSecond(int fps)
+void ApplicationImpl::setPreferredFramesPerSecond(int fps)
 {
     _fps = fps;
 }
 
-Application::LanguageType Application::getCurrentLanguage() const
+Application::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
-    LanguageType ret = LanguageType::ENGLISH;
+    Application::LanguageType ret = Application::LanguageType::ENGLISH;
 
     LCID localeID = GetUserDefaultLCID();
     unsigned short primaryLanguageID = localeID & 0xFF;
@@ -257,68 +257,68 @@ Application::LanguageType Application::getCurrentLanguage() const
     switch (primaryLanguageID)
     {
         case LANG_CHINESE:
-            ret = LanguageType::CHINESE;
+            ret = Application::LanguageType::CHINESE;
             break;
         case LANG_ENGLISH:
-            ret = LanguageType::ENGLISH;
+            ret = Application::LanguageType::ENGLISH;
             break;
         case LANG_FRENCH:
-            ret = LanguageType::FRENCH;
+            ret = Application::LanguageType::FRENCH;
             break;
         case LANG_ITALIAN:
-            ret = LanguageType::ITALIAN;
+            ret = Application::LanguageType::ITALIAN;
             break;
         case LANG_GERMAN:
-            ret = LanguageType::GERMAN;
+            ret = Application::LanguageType::GERMAN;
             break;
         case LANG_SPANISH:
-            ret = LanguageType::SPANISH;
+            ret = Application::LanguageType::SPANISH;
             break;
         case LANG_DUTCH:
-            ret = LanguageType::DUTCH;
+            ret = Application::LanguageType::DUTCH;
             break;
         case LANG_RUSSIAN:
-            ret = LanguageType::RUSSIAN;
+            ret = Application::LanguageType::RUSSIAN;
             break;
         case LANG_KOREAN:
-            ret = LanguageType::KOREAN;
+            ret = Application::LanguageType::KOREAN;
             break;
         case LANG_JAPANESE:
-            ret = LanguageType::JAPANESE;
+            ret = Application::LanguageType::JAPANESE;
             break;
         case LANG_HUNGARIAN:
-            ret = LanguageType::HUNGARIAN;
+            ret = Application::LanguageType::HUNGARIAN;
             break;
         case LANG_PORTUGUESE:
-            ret = LanguageType::PORTUGUESE;
+            ret = Application::LanguageType::PORTUGUESE;
             break;
         case LANG_ARABIC:
-            ret = LanguageType::ARABIC;
+            ret = Application::LanguageType::ARABIC;
             break;
         case LANG_NORWEGIAN:
-            ret = LanguageType::NORWEGIAN;
+            ret = Application::LanguageType::NORWEGIAN;
             break;
         case LANG_POLISH:
-            ret = LanguageType::POLISH;
+            ret = Application::LanguageType::POLISH;
             break;
         case LANG_TURKISH:
-            ret = LanguageType::TURKISH;
+            ret = Application::LanguageType::TURKISH;
             break;
         case LANG_UKRAINIAN:
-            ret = LanguageType::UKRAINIAN;
+            ret = Application::LanguageType::UKRAINIAN;
             break;
         case LANG_ROMANIAN:
-            ret = LanguageType::ROMANIAN;
+            ret = Application::LanguageType::ROMANIAN;
             break;
         case LANG_BULGARIAN:
-            ret = LanguageType::BULGARIAN;
+            ret = Application::LanguageType::BULGARIAN;
             break;
     }
 
     return ret;
 }
 
-std::string Application::getCurrentLanguageCode() const
+std::string ApplicationImpl::getCurrentLanguageCode() const
 {
     LANGID lid = GetUserDefaultUILanguage();
     const LCID locale_id = MAKELCID(lid, SORT_DEFAULT);
@@ -328,7 +328,7 @@ std::string Application::getCurrentLanguageCode() const
     return code;
 }
 
-bool Application::isDisplayStats() {
+bool ApplicationImpl::isDisplayStats() {
     se::AutoHandleScope hs;
     se::Value ret;
     char commandBuf[100] = "cc.debug.isDisplayStats();";
@@ -336,29 +336,29 @@ bool Application::isDisplayStats() {
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow) {
+void ApplicationImpl::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-float Application::getScreenScale() const
+float ApplicationImpl::getScreenScale() const
 {
     return CAST_VIEW(_view)->getScale();
 }
 
-GLint Application::getMainFBO() const
+GLint ApplicationImpl::getMainFBO() const
 {
     return CAST_VIEW(_view)->getMainFBO();
 }
 
-Application::Platform Application::getPlatform() const
+Application::Platform ApplicationImpl::getPlatform() const
 {
-    return Platform::WINDOWS;
+    return Application::Platform::WINDOWS;
 }
 
-bool Application::openURL(const std::string &url)
+bool ApplicationImpl::openURL(const std::string &url)
 {
     WCHAR *temp = new WCHAR[url.size() + 1];
     int wchars_num = MultiByteToWideChar(CP_UTF8, 0, url.c_str(), url.size() + 1, temp, url.size() + 1);
@@ -367,48 +367,36 @@ bool Application::openURL(const std::string &url)
     return (size_t)r>32;
 }
 
-bool Application::applicationDidFinishLaunching()
-{
-    return true;
-}
 
-void Application::applicationDidEnterBackground()
+void ApplicationImpl::setMultitouch(bool)
 {
 }
 
-void Application::applicationWillEnterForeground()
-{
-}
-
-void Application::setMultitouch(bool)
-{
-}
-
-void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount)
+void ApplicationImpl::onCreateView(Application::PixelFormat& pixelformat, Application::DepthFormat& depthFormat, int& multisamplingCount)
 {  
-    pixelformat = PixelFormat::RGBA8;
-    depthFormat = DepthFormat::DEPTH24_STENCIL8;
+    pixelformat = Application::PixelFormat::RGBA8;
+    depthFormat = Application::DepthFormat::DEPTH24_STENCIL8;
 
     multisamplingCount = 0;
 }
 
-void Application::createView(const std::string& name, int width, int height)
+void ApplicationImpl::createView(const std::string& name, int width, int height)
 {
     int multisamplingCount = 0;
-    PixelFormat pixelformat;
-    DepthFormat depthFormat;
+    Application::PixelFormat pixelformat;
+    Application::DepthFormat depthFormat;
     
     onCreateView(pixelformat,
                  depthFormat,
                  multisamplingCount);
 
-    _view = new GLView(this, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
+    _view = new GLView(_app, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
     
     g_width = width;
     g_height = height;
 }
 
-std::string Application::getSystemVersion()
+std::string ApplicationImpl::getSystemVersion()
 {
     // REFINE
     return std::string("unknown Windows version");

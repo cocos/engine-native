@@ -52,9 +52,9 @@ PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
 
 NS_CC_BEGIN
 
-std::shared_ptr<Application> Application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> _application::_instance = nullptr;
 
-Application::Application(const std::string& name, int width, int height)
+ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
 {
     Configuration::getInstance();
 
@@ -67,7 +67,7 @@ Application::Application(const std::string& name, int width, int height)
     _renderTexture = new RenderTexture(width, height);
 }
 
-Application::~Application()
+ApplicationImpl::~ApplicationImpl()
 {
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
@@ -82,55 +82,55 @@ Application::~Application()
     _renderTexture = nullptr;
 }
 
-void Application::start()
+void ApplicationImpl::start()
 {
     if(!applicationDidFinishLaunching())
         return;
 }
 
-void Application::restart()
+void ApplicationImpl::restart()
 {
     restartJSVM();
 }
 
-void Application::end()
+void ApplicationImpl::end()
 {
     exitApplication();
 }
 
-void Application::setMultitouch(bool /*value*/)
+void ApplicationImpl::setMultitouch(bool /*value*/)
 {
 
 }
 
-bool Application::applicationDidFinishLaunching()
+bool ApplicationImpl::applicationDidFinishLaunching()
 {
     return true;
 }
 
-void Application::applicationDidEnterBackground()
+void ApplicationImpl::applicationDidEnterBackground()
 {
 
 }
 
-void Application::applicationWillEnterForeground()
+void ApplicationImpl::applicationWillEnterForeground()
 {
 
 }
 
-void Application::setPreferredFramesPerSecond(int fps) 
+void ApplicationImpl::setPreferredFramesPerSecond(int fps) 
 {
     _fps = fps;
     setPreferredFramesPerSecondJNI(_fps);
 }
 
-std::string Application::getCurrentLanguageCode() const
+std::string ApplicationImpl::getCurrentLanguageCode() const
 {
     std::string language = getCurrentLanguageJNI();
     return language.substr(0, 2);
 }
 
-bool Application::isDisplayStats() {
+bool ApplicationImpl::isDisplayStats() {
     se::AutoHandleScope hs;
     se::Value ret;
     char commandBuf[100] = "cc.debug.isDisplayStats();";
@@ -138,14 +138,14 @@ bool Application::isDisplayStats() {
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow) {
+void ApplicationImpl::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-Application::LanguageType Application::getCurrentLanguage() const
+ApplicationImpl::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     std::string languageName = getCurrentLanguageJNI();
     const char* pLanguageName = languageName.c_str();
@@ -230,32 +230,32 @@ Application::LanguageType Application::getCurrentLanguage() const
     return ret;
 }
 
-Application::Platform Application::getPlatform() const
+ApplicationImpl::Platform ApplicationImpl::getPlatform() const
 {
     return Platform::ANDROIDOS;
 }
 
-float Application::getScreenScale() const
+float ApplicationImpl::getScreenScale() const
 {
     return 1.f;
 }
 
-GLint Application::getMainFBO() const
+GLint ApplicationImpl::getMainFBO() const
 {
     return _mainFBO;
 }
 
-void Application::onCreateView(PixelFormat& /*pixelformat*/, DepthFormat& /*depthFormat*/, int& /*multisamplingCount*/)
+void ApplicationImpl::onCreateView(PixelFormat& /*pixelformat*/, DepthFormat& /*depthFormat*/, int& /*multisamplingCount*/)
 {
 
 }
 
-bool Application::openURL(const std::string &url)
+bool ApplicationImpl::openURL(const std::string &url)
 {
     return openURLJNI(url);
 }
 
-std::string Application::getSystemVersion()
+std::string ApplicationImpl::getSystemVersion()
 {
     return getSystemVersionJNI();
 }

@@ -58,11 +58,11 @@ namespace
     }
 }
 
-std::shared_ptr<Application> Application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> ApplicationImpl::_instance = nullptr;
 
 #define CAST_VIEW(view)    ((GLView*)view)
 
-Application::Application(const std::string& name, int width, int height)
+ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
 {   
     g_width = width;
     g_height = height;
@@ -78,7 +78,7 @@ Application::Application(const std::string& name, int width, int height)
     se::ScriptEngine::getInstance();
 }
 
-Application::~Application()
+ApplicationImpl::~ApplicationImpl()
 {
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
@@ -96,7 +96,7 @@ Application::~Application()
     _renderTexture = nullptr;
 }
 
-void Application::start()
+void ApplicationImpl::start()
 {
     if (!_view)
         return;
@@ -171,27 +171,27 @@ void Application::start()
     }
 }
 
-void Application::restart()
+void ApplicationImpl::restart()
 {
     _isStarted = false;
 }
 
-void Application::end()
+void ApplicationImpl::end()
 {
     glfwSetWindowShouldClose(CAST_VIEW(_view)->getGLFWWindow(), 1);
 }
 
-void Application::setPreferredFramesPerSecond(int fps)
+void ApplicationImpl::setPreferredFramesPerSecond(int fps)
 {
     _fps = fps;
 }
 
-Application::Platform Application::getPlatform() const
+ApplicationImpl::Platform ApplicationImpl::getPlatform() const
 {
     return Platform::MAC;
 }
 
-std::string Application::getCurrentLanguageCode() const
+std::string ApplicationImpl::getCurrentLanguageCode() const
 {
     static char code[3]={0};
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -206,7 +206,7 @@ std::string Application::getCurrentLanguageCode() const
     return code;
 }
 
-bool Application::isDisplayStats() {
+bool ApplicationImpl::isDisplayStats() {
     se::AutoHandleScope hs;
     se::Value ret;
     char commandBuf[100] = "cc.debug.isDisplayStats();";
@@ -214,14 +214,14 @@ bool Application::isDisplayStats() {
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow) {
+void ApplicationImpl::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-Application::LanguageType Application::getCurrentLanguage() const
+ApplicationImpl::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     // get the current language and country config
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -254,37 +254,37 @@ Application::LanguageType Application::getCurrentLanguage() const
     return LanguageType::ENGLISH;
 }
 
-float Application::getScreenScale() const
+float ApplicationImpl::getScreenScale() const
 {
     return CAST_VIEW(_view)->getScale();
 }
 
-GLint Application::getMainFBO() const
+GLint ApplicationImpl::getMainFBO() const
 {
     return CAST_VIEW(_view)->getMainFBO();
 }
 
-bool Application::openURL(const std::string &url)
+bool ApplicationImpl::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
     return [[NSWorkspace sharedWorkspace] openURL:nsUrl];
 }
 
-bool Application::applicationDidFinishLaunching()
+bool ApplicationImpl::applicationDidFinishLaunching()
 {
     return true;
 }
 
-void Application::applicationDidEnterBackground()
+void ApplicationImpl::applicationDidEnterBackground()
 {
 }
 
-void Application::applicationWillEnterForeground()
+void ApplicationImpl::applicationWillEnterForeground()
 {
 }
 
-void Application::setMultitouch(bool)
+void ApplicationImpl::setMultitouch(bool)
 {
 }
 
@@ -296,7 +296,7 @@ void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthForma
     multisamplingCount = 0;
 }
 
-void Application::createView(const std::string& name, int width, int height)
+void ApplicationImpl::createView(const std::string& name, int width, int height)
 {
     int multisamplingCount = 0;
     PixelFormat pixelformat;
@@ -309,7 +309,7 @@ void Application::createView(const std::string& name, int width, int height)
     _view = new GLView(this, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
 }
 
-std::string Application::getSystemVersion()
+std::string ApplicationImpl::getSystemVersion()
 {
     NSOperatingSystemVersion v = NSProcessInfo.processInfo.operatingSystemVersion;
     char version[50] = {0};

@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#import "CCApplication.h"
+#import "CCApplicationImpl.h"
 #import <UIKit/UIKit.h>
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
@@ -71,7 +71,7 @@ namespace
     int _fps;
     float _systemVersion;
     BOOL _isAppActive;
-    cocos2d::Application* _application;
+    cocos2d::ApplicationImpl* _application;
     cocos2d::Scheduler* _scheduler;
 }
 -(void) startMainLoop;
@@ -83,7 +83,7 @@ namespace
 
 @implementation MainLoop
 
-- (instancetype)initWithApplication:(cocos2d::Application*) application
+- (instancetype)initWithApplication:(cocos2d::ApplicationImpl*) ApplicationImpl
 {
     self = [super init];
     if (self)
@@ -91,13 +91,13 @@ namespace
         _fps = 60;
         _systemVersion = [[UIDevice currentDevice].systemVersion floatValue];
     
-        _application = application;
+        _application = ApplicationImpl;
         _scheduler = _application->getScheduler();
         
-        _isAppActive = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
+        _isAppActive = [UIApplicationImpl sharedApplicationImpl].ApplicationImplState == UIApplicationImplStateActive;
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [nc addObserver:self selector:@selector(appDidBecomeInactive) name:UIApplicationWillResignActiveNotification object:nil];
+        [nc addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationImplDidBecomeActiveNotification object:nil];
+        [nc addObserver:self selector:@selector(appDidBecomeInactive) name:UIApplicationImplWillResignActiveNotification object:nil];
     }
     return self;
 }
@@ -201,9 +201,9 @@ namespace
 
 NS_CC_BEGIN
 
-std::shared_ptr<Application> Application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> ApplicationImpl::_instance = nullptr;
 
-Application::Application(const std::string& name, int width, int height)
+ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
 {
     _scheduler = new Scheduler();
 
@@ -216,10 +216,10 @@ Application::Application(const std::string& name, int width, int height)
     se::ScriptEngine::getInstance();
     EventDispatcher::init();
     
-    _delegate = [[MainLoop alloc] initWithApplication:this];
+    _delegate = [[MainLoop alloc] initWithApplicationImpl:this];
 }
 
-Application::~Application()
+ApplicationImpl::~ApplicationImpl()
 {
     [(CCEAGLView*)_view release];
     _view = nullptr;
@@ -242,13 +242,13 @@ Application::~Application()
     _renderTexture = nullptr;
 }
 
-void Application::start()
+void ApplicationImpl::start()
 {
     if (_delegate)
         [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];    
 }
 
-void Application::restart()
+void ApplicationImpl::restart()
 {
     if (_delegate) {
         [(MainLoop*)_delegate stopMainLoop];
@@ -256,19 +256,19 @@ void Application::restart()
     }
 }
 
-void Application::end()
+void ApplicationImpl::end()
 {
     delete this;
 
     exit(0);
 }
 
-void Application::setPreferredFramesPerSecond(int fps)
+void ApplicationImpl::setPreferredFramesPerSecond(int fps)
 {
     [(MainLoop*)_delegate setPreferredFPS: fps];
 }
 
-std::string Application::getCurrentLanguageCode() const
+std::string ApplicationImpl::getCurrentLanguageCode() const
 {
     char code[3]={0};
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -283,7 +283,7 @@ std::string Application::getCurrentLanguageCode() const
     return std::string(code);
 }
 
-bool Application::isDisplayStats() {
+bool ApplicationImpl::isDisplayStats() {
     se::AutoHandleScope hs;
     se::Value ret;
     char commandBuf[100] = "cc.debug.isDisplayStats();";
@@ -291,14 +291,14 @@ bool Application::isDisplayStats() {
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow) {
+void ApplicationImpl::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-Application::LanguageType Application::getCurrentLanguage() const
+ApplicationImpl::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     // get the current language and country config
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -331,7 +331,7 @@ Application::LanguageType Application::getCurrentLanguage() const
     return LanguageType::ENGLISH;
 }
 
-Application::Platform Application::getPlatform() const
+ApplicationImpl::Platform ApplicationImpl::getPlatform() const
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // idiom for iOS <= 3.2, otherwise: [UIDevice userInterfaceIdiom] is faster.
         return Platform::IPAD;
@@ -339,37 +339,37 @@ Application::Platform Application::getPlatform() const
         return Platform::IPHONE;
 }
 
-float Application::getScreenScale() const
+float ApplicationImpl::getScreenScale() const
 {
     return 1.f;
 }
 
-GLint Application::getMainFBO() const
+GLint ApplicationImpl::getMainFBO() const
 {
     return _mainFBO;
 }
 
-bool Application::openURL(const std::string &url)
+bool ApplicationImpl::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
-    return [[UIApplication sharedApplication] openURL:nsUrl];
+    return [[UIApplicationImpl sharedApplicationImpl] openURL:nsUrl];
 }
 
-bool Application::applicationDidFinishLaunching()
+bool ApplicationImpl::applicationDidFinishLaunching()
 {
     return true;
 }
 
-void Application::applicationDidEnterBackground()
+void ApplicationImpl::applicationDidEnterBackground()
 {
 }
 
-void Application::applicationWillEnterForeground()
+void ApplicationImpl::applicationWillEnterForeground()
 {
 }
 
-void Application::setMultitouch(bool value)
+void ApplicationImpl::setMultitouch(bool value)
 {
     if (value != _multiTouch)
     {
@@ -379,10 +379,10 @@ void Application::setMultitouch(bool value)
     }
 }
 
-void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount)
+void ApplicationImpl::onCreateView(Application::PixelFormat& pixelformat, Application::DepthFormat& depthFormat, int& multisamplingCount)
 {
-    pixelformat = PixelFormat::RGB565;
-    depthFormat = DepthFormat::DEPTH24_STENCIL8;
+    pixelformat = Application::PixelFormat::RGB565;
+    depthFormat = Application::DepthFormat::DEPTH24_STENCIL8;
 
     multisamplingCount = 0;
 }
@@ -400,16 +400,16 @@ namespace
         GL_DEPTH_STENCIL_OES      // STENCIL_INDEX8
     };
     
-    GLenum depthFormat2GLDepthFormat(cocos2d::Application::DepthFormat depthFormat)
+    GLenum depthFormat2GLApplication::DepthFormat(cocos2d::Application::DepthFormat depthFormat)
     {
         return depthFormatMap[(int)depthFormat];
     }
 }
 
-void Application::createView(const std::string& /*name*/, int width, int height)
+void ApplicationImpl::createView(const std::string& /*name*/, int width, int height)
 {
-    PixelFormat pixelFormat = PixelFormat::RGB565;
-    DepthFormat depthFormat = DepthFormat::DEPTH24_STENCIL8;
+    Application::PixelFormat pixelFormat = Application::PixelFormat::RGB565;
+    Application::DepthFormat depthFormat = Application::DepthFormat::DEPTH24_STENCIL8;
     int multisamplingCount = 0;
     
     onCreateView(pixelFormat,
@@ -426,16 +426,16 @@ void Application::createView(const std::string& /*name*/, int width, int height)
     // - RGB565
     // - RGBA8
     NSString *pixelString = kEAGLColorFormatRGB565;
-    if (PixelFormat::RGB565 != pixelFormat &&
-        PixelFormat::RGBA8 != pixelFormat)
+    if (Application::PixelFormat::RGB565 != pixelFormat &&
+        Application::PixelFormat::RGBA8 != pixelFormat)
         NSLog(@"Unsupported pixel format is set, iOS only support RGB565 or RGBA8. Change to use RGB565");
-    else if (PixelFormat::RGBA8 == pixelFormat)
+    else if (Application::PixelFormat::RGBA8 == pixelFormat)
         pixelString = kEAGLColorFormatRGBA8;
     
     // create view
     CCEAGLView *eaglView = [CCEAGLView viewWithFrame: bounds
                                          pixelFormat: pixelString
-                                         depthFormat: depthFormat2GLDepthFormat(depthFormat)
+                                         depthFormat: depthFormat2GLApplication::DepthFormat(depthFormat)
                                   preserveBackbuffer: NO
                                           sharegroup: nil
                                        multiSampling: multisamplingCount != 0
@@ -447,7 +447,7 @@ void Application::createView(const std::string& /*name*/, int width, int height)
     _view = eaglView;
 }
 
-std::string Application::getSystemVersion()
+std::string ApplicationImpl::getSystemVersion()
 {
     NSString* systemVersion = [UIDevice currentDevice].systemVersion;
     return [systemVersion UTF8String];
