@@ -124,7 +124,7 @@ Application::~Application()
     //close audio device
     cocos2d::experimental::AudioEngine::end();
 
-    _scheduler.reset();
+    //_scheduler.reset();
     
     delete CAST_VIEW(_view);
     _view = nullptr;
