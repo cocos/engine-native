@@ -52,11 +52,10 @@ PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
 
 NS_CC_BEGIN
 
-Application* Application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> ApplicationImpl::_instance = nullptr;
 
-Application::Application(const std::string& name, int width, int height)
+ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
 {
-    Application::_instance = this;
     Configuration::getInstance();
 
     _scheduler = new Scheduler();
@@ -68,7 +67,7 @@ Application::Application(const std::string& name, int width, int height)
     _renderTexture = new RenderTexture(width, height);
 }
 
-Application::~Application()
+ApplicationImpl::~ApplicationImpl()
 {
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
@@ -81,59 +80,42 @@ Application::~Application()
 
     delete _renderTexture;
     _renderTexture = nullptr;
-
-    Application::_instance = nullptr;
 }
 
-void Application::start()
+void ApplicationImpl::start()
 {
     if(!applicationDidFinishLaunching())
         return;
 }
 
-void Application::restart()
+void ApplicationImpl::restart()
 {
     restartJSVM();
 }
 
-void Application::end()
+void ApplicationImpl::end()
 {
     exitApplication();
 }
 
-void Application::setMultitouch(bool /*value*/)
+void ApplicationImpl::setMultitouch(bool /*value*/)
 {
 
 }
 
-bool Application::applicationDidFinishLaunching()
-{
-    return true;
-}
-
-void Application::applicationDidEnterBackground()
-{
-
-}
-
-void Application::applicationWillEnterForeground()
-{
-
-}
-
-void Application::setPreferredFramesPerSecond(int fps) 
+void ApplicationImpl::setPreferredFramesPerSecond(int fps) 
 {
     _fps = fps;
     setPreferredFramesPerSecondJNI(_fps);
 }
 
-std::string Application::getCurrentLanguageCode() const
+std::string ApplicationImpl::getCurrentLanguageCode() const
 {
     std::string language = getCurrentLanguageJNI();
     return language.substr(0, 2);
 }
 
-bool Application::isDisplayStats() {
+bool ApplicationImpl::isDisplayStats() {
     se::AutoHandleScope hs;
     se::Value ret;
     char commandBuf[100] = "cc.debug.isDisplayStats();";
@@ -141,126 +123,151 @@ bool Application::isDisplayStats() {
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow) {
+void ApplicationImpl::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-Application::LanguageType Application::getCurrentLanguage() const
+Application::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     std::string languageName = getCurrentLanguageJNI();
     const char* pLanguageName = languageName.c_str();
-    LanguageType ret = LanguageType::ENGLISH;
+    Application::LanguageType ret = Application::LanguageType::ENGLISH;
 
     if (0 == strcmp("zh", pLanguageName))
     {
-        ret = LanguageType::CHINESE;
+        ret = Application::LanguageType::CHINESE;
     }
     else if (0 == strcmp("en", pLanguageName))
     {
-        ret = LanguageType::ENGLISH;
+        ret = Application::LanguageType::ENGLISH;
     }
     else if (0 == strcmp("fr", pLanguageName))
     {
-        ret = LanguageType::FRENCH;
+        ret = Application::LanguageType::FRENCH;
     }
     else if (0 == strcmp("it", pLanguageName))
     {
-        ret = LanguageType::ITALIAN;
+        ret = Application::LanguageType::ITALIAN;
     }
     else if (0 == strcmp("de", pLanguageName))
     {
-        ret = LanguageType::GERMAN;
+        ret = Application::LanguageType::GERMAN;
     }
     else if (0 == strcmp("es", pLanguageName))
     {
-        ret = LanguageType::SPANISH;
+        ret = Application::LanguageType::SPANISH;
     }
     else if (0 == strcmp("ru", pLanguageName))
     {
-        ret = LanguageType::RUSSIAN;
+        ret = Application::LanguageType::RUSSIAN;
     }
     else if (0 == strcmp("nl", pLanguageName))
     {
-        ret = LanguageType::DUTCH;
+        ret = Application::LanguageType::DUTCH;
     }
     else if (0 == strcmp("ko", pLanguageName))
     {
-        ret = LanguageType::KOREAN;
+        ret = Application::LanguageType::KOREAN;
     }
     else if (0 == strcmp("ja", pLanguageName))
     {
-        ret = LanguageType::JAPANESE;
+        ret = Application::LanguageType::JAPANESE;
     }
     else if (0 == strcmp("hu", pLanguageName))
     {
-        ret = LanguageType::HUNGARIAN;
+        ret = Application::LanguageType::HUNGARIAN;
     }
     else if (0 == strcmp("pt", pLanguageName))
     {
-        ret = LanguageType::PORTUGUESE;
+        ret = Application::LanguageType::PORTUGUESE;
     }
     else if (0 == strcmp("ar", pLanguageName))
     {
-        ret = LanguageType::ARABIC;
+        ret = Application::LanguageType::ARABIC;
     }
     else if (0 == strcmp("nb", pLanguageName))
     {
-        ret = LanguageType::NORWEGIAN;
+        ret = Application::LanguageType::NORWEGIAN;
     }
     else if (0 == strcmp("pl", pLanguageName))
     {
-        ret = LanguageType::POLISH;
+        ret = Application::LanguageType::POLISH;
     }
     else if (0 == strcmp("tr", pLanguageName))
     {
-        ret = LanguageType::TURKISH;
+        ret = Application::LanguageType::TURKISH;
     }
     else if (0 == strcmp("uk", pLanguageName))
     {
-        ret = LanguageType::UKRAINIAN;
+        ret = Application::LanguageType::UKRAINIAN;
     }
     else if (0 == strcmp("ro", pLanguageName))
     {
-        ret = LanguageType::ROMANIAN;
+        ret = Application::LanguageType::ROMANIAN;
     }
     else if (0 == strcmp("bg", pLanguageName))
     {
-        ret = LanguageType::BULGARIAN;
+        ret = Application::LanguageType::BULGARIAN;
     }
     return ret;
 }
 
-Application::Platform Application::getPlatform() const
+Application::Platform ApplicationImpl::getPlatform() const
 {
-    return Platform::ANDROIDOS;
+    return Application::Platform::ANDROIDOS;
 }
 
-float Application::getScreenScale() const
+float ApplicationImpl::getScreenScale() const
 {
     return 1.f;
 }
 
-GLint Application::getMainFBO() const
+GLint ApplicationImpl::getMainFBO() const
 {
     return _mainFBO;
 }
 
-void Application::onCreateView(PixelFormat& /*pixelformat*/, DepthFormat& /*depthFormat*/, int& /*multisamplingCount*/)
+void ApplicationImpl::onCreateView(Application::PixelFormat& /*pixelformat*/, Application::DepthFormat& /*depthFormat*/, int& /*multisamplingCount*/)
 {
 
 }
 
-bool Application::openURL(const std::string &url)
+bool ApplicationImpl::openURL(const std::string &url)
 {
     return openURLJNI(url);
 }
 
-std::string Application::getSystemVersion()
+std::string ApplicationImpl::getSystemVersion()
 {
     return getSystemVersionJNI();
 }
+
+
+
+std::shared_ptr<ApplicationImpl> Application::getInstance() 
+{ 
+    return ApplicationImpl::getInstance();
+}
+
+Application::Application(const std::string &appName, int width, int height) 
+{
+    impl = ApplicationImpl::create(appName, width, height);
+    impl->setAppDeletate(this);
+}
+
+Application::~Application() 
+{
+    ApplicationImpl::destroy();
+}
+
+void Application::start() { impl->start(); }
+
+void Application::restart() { impl->restart(); }
+
+void Application::end() { impl->end(); }
+
 
 NS_CC_END

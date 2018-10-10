@@ -50,7 +50,7 @@ Application* app = nullptr;
 
     // cocos2d application instance
     app = new AppDelegate("Cocos Simulator",bounds.size.width * scale, bounds.size.height * scale);
-    app->setMultitouch(true);
+    (*app)->setMultitouch(true);
     
     // Use RootViewController to manage CCEAGLView
     _viewController = [[RootViewController alloc]init];

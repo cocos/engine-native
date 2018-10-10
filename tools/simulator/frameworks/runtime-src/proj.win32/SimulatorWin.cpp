@@ -451,7 +451,7 @@ int SimulatorWin::run()
     // update window title
     updateWindowTitle();
 
-    _app->start();
+    (*_app)->start();
     CC_SAFE_DELETE(_app);
     return true;
 }
@@ -604,8 +604,8 @@ void SimulatorWin::setupUI()
                         }
                         else if (data == "FPS_MENU")
                         {
-                            bool displayStats = !_app->isDisplayStats();
-                            _app->setDisplayStats(displayStats);
+                            bool displayStats = !(*_app)->isDisplayStats();
+                            (*_app)->setDisplayStats(displayStats);
                             menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
                         }
                     }

@@ -58,14 +58,12 @@ namespace
     }
 }
 
-Application* Application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> ApplicationImpl::_instance = nullptr;
 
 #define CAST_VIEW(view)    ((GLView*)view)
 
-Application::Application(const std::string& name, int width, int height)
-{
-    Application::_instance = this;
-    
+ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
+{   
     g_width = width;
     g_height = height;
     
@@ -80,7 +78,7 @@ Application::Application(const std::string& name, int width, int height)
     se::ScriptEngine::getInstance();
 }
 
-Application::~Application()
+ApplicationImpl::~ApplicationImpl()
 {
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
@@ -96,11 +94,9 @@ Application::~Application()
     
     delete _renderTexture;
     _renderTexture = nullptr;
-    
-    Application::_instance = nullptr;
 }
 
-void Application::start()
+void ApplicationImpl::start()
 {
     if (!_view)
         return;
@@ -175,27 +171,27 @@ void Application::start()
     }
 }
 
-void Application::restart()
+void ApplicationImpl::restart()
 {
     _isStarted = false;
 }
 
-void Application::end()
+void ApplicationImpl::end()
 {
     glfwSetWindowShouldClose(CAST_VIEW(_view)->getGLFWWindow(), 1);
 }
 
-void Application::setPreferredFramesPerSecond(int fps)
+void ApplicationImpl::setPreferredFramesPerSecond(int fps)
 {
     _fps = fps;
 }
 
-Application::Platform Application::getPlatform() const
+Application::Platform ApplicationImpl::getPlatform() const
 {
-    return Platform::MAC;
+    return Application::Platform::MAC;
 }
 
-std::string Application::getCurrentLanguageCode() const
+std::string ApplicationImpl::getCurrentLanguageCode() const
 {
     static char code[3]={0};
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -210,7 +206,7 @@ std::string Application::getCurrentLanguageCode() const
     return code;
 }
 
-bool Application::isDisplayStats() {
+bool ApplicationImpl::isDisplayStats() {
     se::AutoHandleScope hs;
     se::Value ret;
     char commandBuf[100] = "cc.debug.isDisplayStats();";
@@ -218,14 +214,14 @@ bool Application::isDisplayStats() {
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow) {
+void ApplicationImpl::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-Application::LanguageType Application::getCurrentLanguage() const
+Application::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     // get the current language and country config
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -236,89 +232,101 @@ Application::LanguageType Application::getCurrentLanguage() const
     NSDictionary* temp = [NSLocale componentsFromLocaleIdentifier:currentLanguage];
     NSString * languageCode = [temp objectForKey:NSLocaleLanguageCode];
     
-    if ([languageCode isEqualToString:@"zh"]) return LanguageType::CHINESE;
-    if ([languageCode isEqualToString:@"en"]) return LanguageType::ENGLISH;
-    if ([languageCode isEqualToString:@"fr"]) return LanguageType::FRENCH;
-    if ([languageCode isEqualToString:@"it"]) return LanguageType::ITALIAN;
-    if ([languageCode isEqualToString:@"de"]) return LanguageType::GERMAN;
-    if ([languageCode isEqualToString:@"es"]) return LanguageType::SPANISH;
-    if ([languageCode isEqualToString:@"nl"]) return LanguageType::DUTCH;
-    if ([languageCode isEqualToString:@"ru"]) return LanguageType::RUSSIAN;
-    if ([languageCode isEqualToString:@"ko"]) return LanguageType::KOREAN;
-    if ([languageCode isEqualToString:@"ja"]) return LanguageType::JAPANESE;
-    if ([languageCode isEqualToString:@"hu"]) return LanguageType::HUNGARIAN;
-    if ([languageCode isEqualToString:@"pt"]) return LanguageType::PORTUGUESE;
-    if ([languageCode isEqualToString:@"ar"]) return LanguageType::ARABIC;
-    if ([languageCode isEqualToString:@"nb"]) return LanguageType::NORWEGIAN;
-    if ([languageCode isEqualToString:@"pl"]) return LanguageType::POLISH;
-    if ([languageCode isEqualToString:@"tr"]) return LanguageType::TURKISH;
-    if ([languageCode isEqualToString:@"uk"]) return LanguageType::UKRAINIAN;
-    if ([languageCode isEqualToString:@"ro"]) return LanguageType::ROMANIAN;
-    if ([languageCode isEqualToString:@"bg"]) return LanguageType::BULGARIAN;
-    return LanguageType::ENGLISH;
+    if ([languageCode isEqualToString:@"zh"]) return Application::LanguageType::CHINESE;
+    if ([languageCode isEqualToString:@"en"]) return Application::LanguageType::ENGLISH;
+    if ([languageCode isEqualToString:@"fr"]) return Application::LanguageType::FRENCH;
+    if ([languageCode isEqualToString:@"it"]) return Application::LanguageType::ITALIAN;
+    if ([languageCode isEqualToString:@"de"]) return Application::LanguageType::GERMAN;
+    if ([languageCode isEqualToString:@"es"]) return Application::LanguageType::SPANISH;
+    if ([languageCode isEqualToString:@"nl"]) return Application::LanguageType::DUTCH;
+    if ([languageCode isEqualToString:@"ru"]) return Application::LanguageType::RUSSIAN;
+    if ([languageCode isEqualToString:@"ko"]) return Application::LanguageType::KOREAN;
+    if ([languageCode isEqualToString:@"ja"]) return Application::LanguageType::JAPANESE;
+    if ([languageCode isEqualToString:@"hu"]) return Application::LanguageType::HUNGARIAN;
+    if ([languageCode isEqualToString:@"pt"]) return Application::LanguageType::PORTUGUESE;
+    if ([languageCode isEqualToString:@"ar"]) return Application::LanguageType::ARABIC;
+    if ([languageCode isEqualToString:@"nb"]) return Application::LanguageType::NORWEGIAN;
+    if ([languageCode isEqualToString:@"pl"]) return Application::LanguageType::POLISH;
+    if ([languageCode isEqualToString:@"tr"]) return Application::LanguageType::TURKISH;
+    if ([languageCode isEqualToString:@"uk"]) return Application::LanguageType::UKRAINIAN;
+    if ([languageCode isEqualToString:@"ro"]) return Application::LanguageType::ROMANIAN;
+    if ([languageCode isEqualToString:@"bg"]) return Application::LanguageType::BULGARIAN;
+    return Application::LanguageType::ENGLISH;
 }
 
-float Application::getScreenScale() const
+float ApplicationImpl::getScreenScale() const
 {
     return CAST_VIEW(_view)->getScale();
 }
 
-GLint Application::getMainFBO() const
+GLint ApplicationImpl::getMainFBO() const
 {
     return CAST_VIEW(_view)->getMainFBO();
 }
 
-bool Application::openURL(const std::string &url)
+bool ApplicationImpl::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
     return [[NSWorkspace sharedWorkspace] openURL:nsUrl];
 }
 
-bool Application::applicationDidFinishLaunching()
-{
-    return true;
-}
-
-void Application::applicationDidEnterBackground()
+void ApplicationImpl::setMultitouch(bool)
 {
 }
 
-void Application::applicationWillEnterForeground()
+void ApplicationImpl::onCreateView(Application::PixelFormat& pixelformat, Application::DepthFormat& depthFormat, int& multisamplingCount)
 {
-}
-
-void Application::setMultitouch(bool)
-{
-}
-
-void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount)
-{
-    pixelformat = PixelFormat::RGBA8;
-    depthFormat = DepthFormat::DEPTH24_STENCIL8;
+    pixelformat = Application::PixelFormat::RGBA8;
+    depthFormat = Application::DepthFormat::DEPTH24_STENCIL8;
 
     multisamplingCount = 0;
 }
 
-void Application::createView(const std::string& name, int width, int height)
+void ApplicationImpl::createView(const std::string& name, int width, int height)
 {
     int multisamplingCount = 0;
-    PixelFormat pixelformat;
-    DepthFormat depthFormat;
+    Application::PixelFormat pixelformat;
+    Application::DepthFormat depthFormat;
     
     onCreateView(pixelformat,
                  depthFormat,
                  multisamplingCount);
 
-    _view = new GLView(this, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
+    _view = new GLView(_app, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
 }
 
-std::string Application::getSystemVersion()
+std::string ApplicationImpl::getSystemVersion()
 {
     NSOperatingSystemVersion v = NSProcessInfo.processInfo.operatingSystemVersion;
     char version[50] = {0};
     snprintf(version, sizeof(version), "%d.%d.%d", (int)v.majorVersion, (int)v.minorVersion, (int)v.patchVersion);
     return version;
 }
+
+
+
+std::shared_ptr<ApplicationImpl> Application::getInstance() 
+{ 
+    return ApplicationImpl::getInstance();
+}
+
+Application::Application(const std::string &appName, int width, int height) 
+{
+    impl = ApplicationImpl::create(appName, width, height);
+    impl->setAppDeletate(this);
+}
+
+Application::~Application() 
+{
+    ApplicationImpl::destroy();
+}
+
+void Application::start() { impl->start(); }
+
+void Application::restart() { impl->restart(); }
+
+void Application::end() { impl->end(); }
+
 
 NS_CC_END

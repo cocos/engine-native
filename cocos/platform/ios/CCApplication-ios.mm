@@ -71,7 +71,7 @@ namespace
     int _fps;
     float _systemVersion;
     BOOL _isAppActive;
-    cocos2d::Application* _application;
+    cocos2d::ApplicationImpl* _application;
     cocos2d::Scheduler* _scheduler;
 }
 -(void) startMainLoop;
@@ -83,7 +83,7 @@ namespace
 
 @implementation MainLoop
 
-- (instancetype)initWithApplication:(cocos2d::Application*) application
+- (instancetype)initWithApplication:(cocos2d::ApplicationImpl*) ApplicationImpl
 {
     self = [super init];
     if (self)
@@ -91,7 +91,7 @@ namespace
         _fps = 60;
         _systemVersion = [[UIDevice currentDevice].systemVersion floatValue];
     
-        _application = application;
+        _application = ApplicationImpl;
         _scheduler = _application->getScheduler();
         
         _isAppActive = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
@@ -201,11 +201,10 @@ namespace
 
 NS_CC_BEGIN
 
-Application* Application::_instance = nullptr;
+std::shared_ptr<ApplicationImpl> ApplicationImpl::_instance = nullptr;
 
-Application::Application(const std::string& name, int width, int height)
+ApplicationImpl::ApplicationImpl(const std::string& name, int width, int height)
 {
-    Application::_instance = this;
     _scheduler = new Scheduler();
 
     createView(name, width, height);
@@ -220,7 +219,7 @@ Application::Application(const std::string& name, int width, int height)
     _delegate = [[MainLoop alloc] initWithApplication:this];
 }
 
-Application::~Application()
+ApplicationImpl::~ApplicationImpl()
 {
     [(CCEAGLView*)_view release];
     _view = nullptr;
@@ -241,17 +240,15 @@ Application::~Application()
     
     delete _renderTexture;
     _renderTexture = nullptr;
-
-    Application::_instance = nullptr;
 }
 
-void Application::start()
+void ApplicationImpl::start()
 {
     if (_delegate)
         [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];    
 }
 
-void Application::restart()
+void ApplicationImpl::restart()
 {
     if (_delegate) {
         [(MainLoop*)_delegate stopMainLoop];
@@ -259,19 +256,19 @@ void Application::restart()
     }
 }
 
-void Application::end()
+void ApplicationImpl::end()
 {
     delete this;
 
     exit(0);
 }
 
-void Application::setPreferredFramesPerSecond(int fps)
+void ApplicationImpl::setPreferredFramesPerSecond(int fps)
 {
     [(MainLoop*)_delegate setPreferredFPS: fps];
 }
 
-std::string Application::getCurrentLanguageCode() const
+std::string ApplicationImpl::getCurrentLanguageCode() const
 {
     char code[3]={0};
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -286,7 +283,7 @@ std::string Application::getCurrentLanguageCode() const
     return std::string(code);
 }
 
-bool Application::isDisplayStats() {
+bool ApplicationImpl::isDisplayStats() {
     se::AutoHandleScope hs;
     se::Value ret;
     char commandBuf[100] = "cc.debug.isDisplayStats();";
@@ -294,14 +291,14 @@ bool Application::isDisplayStats() {
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow) {
+void ApplicationImpl::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-Application::LanguageType Application::getCurrentLanguage() const
+Application::LanguageType ApplicationImpl::getCurrentLanguage() const
 {
     // get the current language and country config
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -312,67 +309,54 @@ Application::LanguageType Application::getCurrentLanguage() const
     NSDictionary* temp = [NSLocale componentsFromLocaleIdentifier:currentLanguage];
     NSString * languageCode = [temp objectForKey:NSLocaleLanguageCode];
 
-    if ([languageCode isEqualToString:@"zh"]) return LanguageType::CHINESE;
-    if ([languageCode isEqualToString:@"en"]) return LanguageType::ENGLISH;
-    if ([languageCode isEqualToString:@"fr"]) return LanguageType::FRENCH;
-    if ([languageCode isEqualToString:@"it"]) return LanguageType::ITALIAN;
-    if ([languageCode isEqualToString:@"de"]) return LanguageType::GERMAN;
-    if ([languageCode isEqualToString:@"es"]) return LanguageType::SPANISH;
-    if ([languageCode isEqualToString:@"nl"]) return LanguageType::DUTCH;
-    if ([languageCode isEqualToString:@"ru"]) return LanguageType::RUSSIAN;
-    if ([languageCode isEqualToString:@"ko"]) return LanguageType::KOREAN;
-    if ([languageCode isEqualToString:@"ja"]) return LanguageType::JAPANESE;
-    if ([languageCode isEqualToString:@"hu"]) return LanguageType::HUNGARIAN;
-    if ([languageCode isEqualToString:@"pt"]) return LanguageType::PORTUGUESE;
-    if ([languageCode isEqualToString:@"ar"]) return LanguageType::ARABIC;
-    if ([languageCode isEqualToString:@"nb"]) return LanguageType::NORWEGIAN;
-    if ([languageCode isEqualToString:@"pl"]) return LanguageType::POLISH;
-    if ([languageCode isEqualToString:@"tr"]) return LanguageType::TURKISH;
-    if ([languageCode isEqualToString:@"uk"]) return LanguageType::UKRAINIAN;
-    if ([languageCode isEqualToString:@"ro"]) return LanguageType::ROMANIAN;
-    if ([languageCode isEqualToString:@"bg"]) return LanguageType::BULGARIAN;
-    return LanguageType::ENGLISH;
+    if ([languageCode isEqualToString:@"zh"]) return Application::LanguageType::CHINESE;
+    if ([languageCode isEqualToString:@"en"]) return Application::LanguageType::ENGLISH;
+    if ([languageCode isEqualToString:@"fr"]) return Application::LanguageType::FRENCH;
+    if ([languageCode isEqualToString:@"it"]) return Application::LanguageType::ITALIAN;
+    if ([languageCode isEqualToString:@"de"]) return Application::LanguageType::GERMAN;
+    if ([languageCode isEqualToString:@"es"]) return Application::LanguageType::SPANISH;
+    if ([languageCode isEqualToString:@"nl"]) return Application::LanguageType::DUTCH;
+    if ([languageCode isEqualToString:@"ru"]) return Application::LanguageType::RUSSIAN;
+    if ([languageCode isEqualToString:@"ko"]) return Application::LanguageType::KOREAN;
+    if ([languageCode isEqualToString:@"ja"]) return Application::LanguageType::JAPANESE;
+    if ([languageCode isEqualToString:@"hu"]) return Application::LanguageType::HUNGARIAN;
+    if ([languageCode isEqualToString:@"pt"]) return Application::LanguageType::PORTUGUESE;
+    if ([languageCode isEqualToString:@"ar"]) return Application::LanguageType::ARABIC;
+    if ([languageCode isEqualToString:@"nb"]) return Application::LanguageType::NORWEGIAN;
+    if ([languageCode isEqualToString:@"pl"]) return Application::LanguageType::POLISH;
+    if ([languageCode isEqualToString:@"tr"]) return Application::LanguageType::TURKISH;
+    if ([languageCode isEqualToString:@"uk"]) return Application::LanguageType::UKRAINIAN;
+    if ([languageCode isEqualToString:@"ro"]) return Application::LanguageType::ROMANIAN;
+    if ([languageCode isEqualToString:@"bg"]) return Application::LanguageType::BULGARIAN;
+    return Application::LanguageType::ENGLISH;
 }
 
-Application::Platform Application::getPlatform() const
+Application::Platform ApplicationImpl::getPlatform() const
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // idiom for iOS <= 3.2, otherwise: [UIDevice userInterfaceIdiom] is faster.
-        return Platform::IPAD;
+        return Application::Platform::IPAD;
     else
-        return Platform::IPHONE;
+        return Application::Platform::IPHONE;
 }
 
-float Application::getScreenScale() const
+float ApplicationImpl::getScreenScale() const
 {
     return 1.f;
 }
 
-GLint Application::getMainFBO() const
+GLint ApplicationImpl::getMainFBO() const
 {
     return _mainFBO;
 }
 
-bool Application::openURL(const std::string &url)
+bool ApplicationImpl::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];
     NSURL* nsUrl = [NSURL URLWithString:msg];
     return [[UIApplication sharedApplication] openURL:nsUrl];
 }
 
-bool Application::applicationDidFinishLaunching()
-{
-    return true;
-}
-
-void Application::applicationDidEnterBackground()
-{
-}
-
-void Application::applicationWillEnterForeground()
-{
-}
-
-void Application::setMultitouch(bool value)
+void ApplicationImpl::setMultitouch(bool value)
 {
     if (value != _multiTouch)
     {
@@ -382,10 +366,10 @@ void Application::setMultitouch(bool value)
     }
 }
 
-void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount)
+void ApplicationImpl::onCreateView(Application::PixelFormat& pixelformat, Application::DepthFormat& depthFormat, int& multisamplingCount)
 {
-    pixelformat = PixelFormat::RGB565;
-    depthFormat = DepthFormat::DEPTH24_STENCIL8;
+    pixelformat = Application::PixelFormat::RGB565;
+    depthFormat = Application::DepthFormat::DEPTH24_STENCIL8;
 
     multisamplingCount = 0;
 }
@@ -409,10 +393,10 @@ namespace
     }
 }
 
-void Application::createView(const std::string& /*name*/, int width, int height)
+void ApplicationImpl::createView(const std::string& /*name*/, int width, int height)
 {
-    PixelFormat pixelFormat = PixelFormat::RGB565;
-    DepthFormat depthFormat = DepthFormat::DEPTH24_STENCIL8;
+    Application::PixelFormat pixelFormat = Application::PixelFormat::RGB565;
+    Application::DepthFormat depthFormat = Application::DepthFormat::DEPTH24_STENCIL8;
     int multisamplingCount = 0;
     
     onCreateView(pixelFormat,
@@ -429,10 +413,10 @@ void Application::createView(const std::string& /*name*/, int width, int height)
     // - RGB565
     // - RGBA8
     NSString *pixelString = kEAGLColorFormatRGB565;
-    if (PixelFormat::RGB565 != pixelFormat &&
-        PixelFormat::RGBA8 != pixelFormat)
+    if (Application::PixelFormat::RGB565 != pixelFormat &&
+        Application::PixelFormat::RGBA8 != pixelFormat)
         NSLog(@"Unsupported pixel format is set, iOS only support RGB565 or RGBA8. Change to use RGB565");
-    else if (PixelFormat::RGBA8 == pixelFormat)
+    else if (Application::PixelFormat::RGBA8 == pixelFormat)
         pixelString = kEAGLColorFormatRGBA8;
     
     // create view
@@ -450,10 +434,35 @@ void Application::createView(const std::string& /*name*/, int width, int height)
     _view = eaglView;
 }
 
-std::string Application::getSystemVersion()
+std::string ApplicationImpl::getSystemVersion()
 {
     NSString* systemVersion = [UIDevice currentDevice].systemVersion;
     return [systemVersion UTF8String];
 }
+
+
+
+std::shared_ptr<ApplicationImpl> Application::getInstance() 
+{ 
+    return ApplicationImpl::getInstance();
+}
+
+Application::Application(const std::string &appName, int width, int height) 
+{
+    impl = ApplicationImpl::create(appName, width, height);
+    impl->setAppDeletate(this);
+}
+
+Application::~Application() 
+{
+    ApplicationImpl::destroy();
+}
+
+void Application::start() { impl->start(); }
+
+void Application::restart() { impl->restart(); }
+
+void Application::end() { impl->end(); }
+
 
 NS_CC_END

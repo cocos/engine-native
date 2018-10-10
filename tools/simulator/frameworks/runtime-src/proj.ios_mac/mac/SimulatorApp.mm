@@ -374,7 +374,7 @@ std::string getCurAppName(void)
     // this **MUST** be called after create opengl view, or crash will occur at 'gatherGPUInfo'
     CCLOG("%s\n",Configuration::getInstance()->getInfo().c_str());
 
-    auto glfwWindow = ((GLView*)_app->getView())->getGLFWWindow();
+    auto glfwWindow = ((GLView*)(*_app)->getView())->getGLFWWindow();
     _window = glfwGetCocoaWindow((GLFWwindow*)glfwWindow);
     [_window center];
 
@@ -585,8 +585,8 @@ std::string getCurAppName(void)
                     }
                     else if (data == "VIEW_SHOW_FPS")
                     {
-                        bool displayStats = !_app->isDisplayStats();
-                        _app->setDisplayStats(displayStats);
+                        bool displayStats = !(*_app)->isDisplayStats();
+                        (*_app)->setDisplayStats(displayStats);
                         menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
                     }
 

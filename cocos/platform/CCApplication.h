@@ -25,6 +25,8 @@ THE SOFTWARE.
 #pragma once
 
 #include <string>
+#include <memory>
+
 #include "base/ccMacros.h"
 #include "platform/CCPlatformConfig.h"
 #include "platform/CCPlatformDefine.h"
@@ -33,19 +35,19 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 class Scheduler;
+class ApplicationImpl;
+
 
 /**
  * @addtogroup platform
  * @{
  */
-
-class CC_DLL Application
-{
+class CC_DLL Application {
 public:
-    
+
     /** Since WINDOWS and ANDROID are defined as macros, we could not just use these keywords in enumeration(Platform).
-     *  Therefore, 'OS_' prefix is added to avoid conflicts with the definitions of system macros.
-     */
+    *  Therefore, 'OS_' prefix is added to avoid conflicts with the definitions of system macros.
+    */
     enum class Platform
     {
         WINDOWS,     /**< Windows */
@@ -55,7 +57,7 @@ public:
         IPHONE,      /**< iPhone */
         IPAD,        /**< iPad */
     };
-    
+
     enum class LanguageType
     {
         ENGLISH = 0,
@@ -78,14 +80,14 @@ public:
         ROMANIAN,
         BULGARIAN
     };
-    
+
     enum class PixelFormat
     {
         RGB8,
         RGB565,
         RGBA8
     };
-    
+
     enum class DepthFormat
     {
         NONE,                   // no depth and no stencil
@@ -96,16 +98,69 @@ public:
         DEPTH32F_STENCIL8,
         STENCIL_INDEX8
     };
-    
-    // This class is useful for internal usage.
-    static Application* getInstance() { return _instance; }
-    
-    Application(const std::string& name, int width, int height);
+
+    static std::shared_ptr<ApplicationImpl> getInstance();
+
+    Application(const std::string &appName, int width, int height);
+
     virtual ~Application();
+
+    void start();
+
+    void restart();
+    void end();
+
+    ApplicationImpl* operator ->() { return impl.get(); }
+
+    virtual bool applicationDidFinishLaunching() { return true; }
+    virtual void applicationDidEnterBackground() {}
+    virtual void applicationWillEnterForeground() {}
+
+
+private:
+    std::shared_ptr<ApplicationImpl> impl;
+};
+
+/**
+ * @addtogroup platform
+ * @{
+ */
+class CC_DLL ApplicationImpl
+{
+public:
+  
+    /** Construct an `Application`.
+     */
+    static std::shared_ptr<ApplicationImpl> create(const std::string &name, int width, int height)
+    {
+        auto *app = new ApplicationImpl(name, width, height);
+        _instance = std::shared_ptr<ApplicationImpl>(app);
+        return _instance;
+    }
+
+    /** unlink `Application` singleton. 
+     *  Note: this method will not instantly free `_instance`, it is managed through `std::shared_ptr`.
+     */
+    static void destroy(){ _instance.reset(); }
+
+    // This class is useful for internal usage.
+
+    // https://github.com/cocos-creator/cocos2d-x-lite/pull/1529
+    // Using the smart pointer instead of the raw pointer to improve thread safety.
+    // Although this will not solve multi-thread problems, it does make the memory lifetime more reliable.
+    static std::shared_ptr<ApplicationImpl> getInstance() { return _instance; }
+
+private:
+    // The constructor is marked non-public to ensure that it can only be accessed through `std::shared_ptr`.
+    // Use Application::create(...) instead. 
+    ApplicationImpl(const std::string& name, int width, int height);
+
+public:
+    virtual ~ApplicationImpl();
     
-    virtual bool applicationDidFinishLaunching();
-    virtual void applicationDidEnterBackground();
-    virtual void applicationWillEnterForeground();
+    bool applicationDidFinishLaunching() { return _app ? _app->applicationDidFinishLaunching() : true; }
+    void applicationDidEnterBackground() { if(_app) _app->applicationDidEnterBackground(); }
+    void applicationWillEnterForeground() { if(_app) _app->applicationWillEnterForeground(); }
     
     inline void* getView() const { return _view; }
     inline Scheduler* getScheduler() const { return _scheduler; }
@@ -129,7 +184,7 @@ public:
      @brief Get current language config.
      @return Current language config.
      */
-    LanguageType getCurrentLanguage() const;
+    Application::LanguageType getCurrentLanguage() const;
     
     /**
      @brief Get current language iso 639-1 code.
@@ -169,7 +224,7 @@ public:
     /**
      @brief Get target platform.
      */
-    Platform getPlatform() const;
+    Application::Platform getPlatform() const;
     
     /**
      @brief Open url in default browser.
@@ -179,14 +234,16 @@ public:
     bool openURL(const std::string &url);
 
     std::string getSystemVersion();
+
+    void setAppDeletate(Application *app) { _app = app;}
     
 protected:
-    virtual void onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount);
+    virtual void onCreateView(Application::PixelFormat& pixelformat, Application::DepthFormat& depthFormat, int& multisamplingCount);
     
 private:
     void createView(const std::string& name, int width, int height);
     
-    static Application* _instance;
+    static std::shared_ptr<ApplicationImpl> _instance;
     
     void* _view = nullptr;
     void* _delegate = nullptr;
@@ -194,6 +251,8 @@ private:
     RenderTexture* _renderTexture = nullptr;
     int _fps = 60;
     GLint _mainFBO = 0;
+
+    Application *_app = nullptr;
 
     // The ratio to downsample, for example, if its value is 2,
     // then the rendering size of render texture is device_resolution/2.
