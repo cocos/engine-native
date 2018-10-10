@@ -1432,7 +1432,7 @@ static bool JSB_glFramebufferRenderbuffer(se::State& s) {
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint renderBufferId = arg3 != nullptr ? arg3->_id : 0;
     SE_PRECONDITION4(arg0 == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
-    SE_PRECONDITION4(arg1 == GL_COLOR_ATTACHMENT0 || arg1 == GL_DEPTH_ATTACHMENT || arg1 == GL_STENCIL_ATTACHMENT, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(arg1 == GL_COLOR_ATTACHMENT0 || arg1 == GL_DEPTH_ATTACHMENT || arg1 == GL_STENCIL_ATTACHMENT || arg1 == GL_DEPTH_STENCIL_ATTACHMENT, false, GL_INVALID_ENUM);
     JSB_GL_CHECK(WEBGL_framebufferRenderbuffer((GLenum)arg0 , (GLenum)arg1 , (GLenum)arg2 , renderBufferId));
     return true;
 }
