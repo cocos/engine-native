@@ -202,11 +202,12 @@ namespace
 NS_CC_BEGIN
 
 Application* Application::_instance = nullptr;
+std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
-    _scheduler = new Scheduler();
+    _scheduler = std::make_shared<Scheduler>();
 
     createView(name, width, height);
     Configuration::getInstance();
@@ -225,8 +226,7 @@ Application::~Application()
     [(CCEAGLView*)_view release];
     _view = nullptr;
 
-    delete _scheduler;
-    _scheduler = nullptr;
+    _scheduler.reset();
     
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
