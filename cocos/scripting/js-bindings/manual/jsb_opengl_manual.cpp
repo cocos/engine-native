@@ -1022,6 +1022,8 @@ static bool JSB_glCopyTexImage2D(se::State& s) {
     ok &= seval_to_int32(args[6], &arg6 );
     ok &= seval_to_int32(args[7], &arg7 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(arg2 == GL_ALPHA || arg2 == GL_RGB || arg2 == GL_RGBA || arg2 == GL_LUMINANCE || arg2 == GL_LUMINANCE_ALPHA,
+                     false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glCopyTexImage2D((GLenum)arg0 , (GLint)arg1 , (GLenum)arg2 , (GLint)arg3 , (GLint)arg4 , (GLsizei)arg5 , (GLsizei)arg6 , (GLint)arg7  ));
 
@@ -2083,6 +2085,8 @@ static bool JSB_glTexImage2D(se::State& s) {
     ok &= JSB_get_arraybufferview_dataptr(args[8], &count, &pixels);
     ok &= seval_to_uint32(args[9], &alignment);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(type == GL_UNSIGNED_BYTE || type == GL_UNSIGNED_SHORT_5_6_5 || type == GL_UNSIGNED_SHORT_4_4_4_4 || type == GL_UNSIGNED_SHORT_5_5_5_1,
+                     false, GL_INVALID_ENUM);
 
     ccFlipYOrPremultiptyAlphaIfNeeded(format, width, height, count, pixels);
     if (alignment > 0)
@@ -2109,6 +2113,10 @@ static bool JSB_glTexParameterf(se::State& s) {
     ok &= seval_to_uint32(args[1], &arg1 );
     ok &= seval_to_float(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(arg0 == GL_TEXTURE_2D || arg0 == GL_TEXTURE_CUBE_MAP, false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4((!(arg1 == GL_TEXTURE_MIN_LOD)) || arg1 == GL_TEXTURE_MIN_FILTER || arg1 == GL_TEXTURE_MAG_FILTER ||
+                     arg1 == GL_TEXTURE_WRAP_S || arg1 == GL_TEXTURE_WRAP_T, false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glTexParameterf((GLenum)arg0 , (GLenum)arg1 , (GLfloat)arg2  ));
 
@@ -2132,7 +2140,7 @@ static bool JSB_glTexParameteri(se::State& s) {
 
     SE_PRECONDITION4(arg0 == GL_TEXTURE_2D || arg0 == GL_TEXTURE_CUBE_MAP, false, GL_INVALID_ENUM);
 
-    SE_PRECONDITION4(arg1 == GL_TEXTURE_MIN_FILTER || arg1 == GL_TEXTURE_MAG_FILTER ||
+    SE_PRECONDITION4((!(arg1 == GL_TEXTURE_MIN_LOD)) || arg1 == GL_TEXTURE_MIN_FILTER || arg1 == GL_TEXTURE_MAG_FILTER ||
                              arg1 == GL_TEXTURE_WRAP_S || arg1 == GL_TEXTURE_WRAP_T, false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glTexParameteri((GLenum)arg0 , (GLenum)arg1 , (GLint)arg2  ));
@@ -2161,6 +2169,10 @@ static bool JSB_glTexSubImage2D(se::State& s) {
     ok &= JSB_get_arraybufferview_dataptr(args[8], &count, &pixels);
     ok &= seval_to_uint32(args[9], &alignment);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(format == GL_ALPHA || format == GL_RGB || format == GL_RGBA || format == GL_LUMINANCE || format == GL_LUMINANCE_ALPHA,
+                     false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(type == GL_UNSIGNED_BYTE || type == GL_UNSIGNED_SHORT_5_6_5 || type == GL_UNSIGNED_SHORT_4_4_4_4 || type == GL_UNSIGNED_SHORT_5_5_5_1,
+                     false, GL_INVALID_ENUM);
 
     ccFlipYOrPremultiptyAlphaIfNeeded(format, width, height, count, pixels);
     if (alignment > 0)
@@ -3454,6 +3466,9 @@ static bool JSB_glGetTexParameterfv(se::State& s) {
     ok &= seval_to_uint32(args[1], &arg1 );
 
     SE_PRECONDITION2(ok, false, "JSB_glGetTexParameterfv: Error processing arguments");
+    SE_PRECONDITION4(arg0 == GL_TEXTURE_2D || arg0 == GL_TEXTURE_CUBE_MAP, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4((!(arg1 == GL_TEXTURE_MIN_LOD)) || arg1 == GL_TEXTURE_MIN_FILTER || arg1 == GL_TEXTURE_MAG_FILTER ||
+                     arg1 == GL_TEXTURE_WRAP_S || arg1 == GL_TEXTURE_WRAP_T, false, GL_INVALID_ENUM);
 
     GLfloat param;
     JSB_GL_CHECK(glGetTexParameterfv(arg0, arg1, &param));
