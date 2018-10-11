@@ -1831,6 +1831,7 @@ static bool JSB_glReadPixels(se::State& s) {
     GLsizei count;
     ok &= JSB_get_arraybufferview_dataptr(args[6], &count, &arg6);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(arg4 == GL_ALPHA || arg4 == GL_RGB || arg4 == GL_RGBA,false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glReadPixels((GLint)arg0 , (GLint)arg1 , (GLsizei)arg2 , (GLsizei)arg3 , (GLenum)arg4 , (GLenum)arg5 , (GLvoid*)arg6  ));
 
