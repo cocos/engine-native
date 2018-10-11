@@ -77,8 +77,6 @@ Application::~Application()
     // close audio device
     cocos2d::experimental::AudioEngine::end();
     
-    //_scheduler.reset();
-
     delete _renderTexture;
     _renderTexture = nullptr;
 

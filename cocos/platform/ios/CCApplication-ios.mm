@@ -226,8 +226,6 @@ Application::~Application()
     [(CCEAGLView*)_view release];
     _view = nullptr;
 
-    //_scheduler.reset();
-    
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
 

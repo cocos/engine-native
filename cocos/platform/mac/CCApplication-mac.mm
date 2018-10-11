@@ -91,9 +91,7 @@ Application::~Application()
     
     delete CAST_VIEW(_view);
     _view = nullptr;
-    
-    _scheduler.reset();
-    
+        
     delete _renderTexture;
     _renderTexture = nullptr;
     

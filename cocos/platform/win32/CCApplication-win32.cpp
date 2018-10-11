@@ -110,7 +110,6 @@ Application::Application(const std::string& name, int width, int height)
     createView(name, width, height);
     
     _renderTexture = new RenderTexture(width, height);
-    //_scheduler = new Scheduler(); // redundant alloc?
     
     EventDispatcher::init();
     se::ScriptEngine::getInstance();
@@ -124,7 +123,6 @@ Application::~Application()
     //close audio device
     cocos2d::experimental::AudioEngine::end();
 
-    //_scheduler.reset();
     
     delete CAST_VIEW(_view);
     _view = nullptr;
