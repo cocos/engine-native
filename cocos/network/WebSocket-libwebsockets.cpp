@@ -501,7 +501,10 @@ void WsThreadHelper::wsThreadEntryFunc()
 
 void WsThreadHelper::sendMessageToCocosThread(const std::function<void()>& cb)
 {
-    cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread(cb);
+    if (cocos2d::Application::getInstance() != nullptr &&
+        cocos2d::Application::getInstance()->getScheduler() != nullptr) {
+        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread(cb);
+    }
 }
 
 void WsThreadHelper::sendMessageToWebSocketThread(WsMessage *msg)
