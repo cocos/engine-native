@@ -145,11 +145,6 @@ namespace {
     const uint32_t GL_FLOAT_ARRAY = 1;
     const uint32_t GL_INT_ARRAY = 2;
     const uint32_t GL_MAX_STRIDE = 255;
-    const uint32_t UNPACK_FLIP_Y_WEBGL = 0x9240;
-    const uint32_t UNPACK_PREMULTIPLY_ALPHA_WEBGL = 0x9241;
-    const uint32_t CONTEXT_LOST_WEBGL = 0x9242;
-    const uint32_t UNPACK_COLORSPACE_CONVERSION_WEBGL = 0x9243;
-    const uint32_t BROWSER_DEFAULT_WEBGL = 0x9244;
 
     GLint __defaultFbo = 0;
 
@@ -1312,6 +1307,22 @@ static bool JSB_glDrawArrays(se::State& s) {
     ok &= seval_to_int32(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
+    SE_PRECONDITION4(arg0 == GL_POINTS || arg0 == GL_LINE_STRIP || arg0 == GL_LINE_LOOP ||
+                             arg0 == GL_LINES || arg0 == GL_TRIANGLE_STRIP ||
+                             arg0 == GL_TRIANGLE_FAN || arg0 == GL_TRIANGLES, false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4(arg1 >= 0 && arg2 >= 0, false, GL_INVALID_VALUE);
+
+    int intbuffer[4];
+    JSB_GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, intbuffer));
+    SE_PRECONDITION4(intbuffer[0] > 0, false, GL_INVALID_OPERATION);
+
+    GLint data = 0;
+    glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &data);
+    int64_t size = ccGetBufferDataSize(), first = arg1;
+    int64_t total = (int64_t)(size * (arg2 > 0 ? first + arg2 : arg2));
+    SE_PRECONDITION4(size < 0 || total <= data, false, GL_INVALID_OPERATION);
+
     JSB_GL_CHECK(glDrawArrays((GLenum)arg0 , (GLint)arg1 , (GLsizei)arg2  ));
 
     return true;
@@ -1785,8 +1796,8 @@ static bool JSB_glPixelStorei(se::State& s) {
     ok &= seval_to_int32(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    SE_PRECONDITION4(arg0 == GL_PACK_ALIGNMENT || arg0 == GL_UNPACK_ALIGNMENT || arg0 == UNPACK_FLIP_Y_WEBGL ||
-                             arg0 == UNPACK_PREMULTIPLY_ALPHA_WEBGL || arg0 == UNPACK_COLORSPACE_CONVERSION_WEBGL,
+    SE_PRECONDITION4(arg0 == GL_PACK_ALIGNMENT || arg0 == GL_UNPACK_ALIGNMENT || arg0 == GL_UNPACK_FLIP_Y_WEBGL ||
+                             arg0 == GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL || arg0 == GL_UNPACK_COLORSPACE_CONVERSION_WEBGL,
                      false, GL_INVALID_ENUM);
     
     JSB_GL_CHECK(ccPixelStorei((GLenum)arg0 , (GLint)arg1));

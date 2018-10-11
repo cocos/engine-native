@@ -434,4 +434,39 @@ void ccFlipYOrPremultiptyAlphaIfNeeded(GLenum format, GLsizei width, GLsizei hei
     }
 }
 
+GLint ccGetBufferDataSize()
+{
+#if CC_ENABLE_GL_STATE_CACHE
+    GLint result = 0, size = 0;
+    for( int i = 0; i < MAX_ATTRIBUTE_UNIT; i++ ) {
+        const VertexAttributePointerInfo *info = getVertexAttribPointerInfo(i);
+        if (info != nullptr && info->VBO == __currentVertexBuffer) {
+            switch (info->type)
+            {
+                case GL_BYTE:
+                case GL_UNSIGNED_BYTE:
+                    size = info->size * sizeof(GLbyte);
+                    break;
+                case GL_SHORT:
+                case GL_UNSIGNED_SHORT:
+                    size = info->size * sizeof(GLshort);
+                    break;
+                case GL_FLOAT:
+                    size = info->size * sizeof(GLclampf);
+                    break;
+                default:
+                    size = 0;
+                    break;
+            }
+
+            result += size;
+        }
+    }
+
+    return result;
+#else
+    return -1;
+#endif
+}
+
 NS_CC_END
