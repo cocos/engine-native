@@ -1321,7 +1321,7 @@ static bool JSB_glDrawArrays(se::State& s) {
     glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &data);
     int64_t size = ccGetBufferDataSize(), first = arg1;
     int64_t total = (int64_t)(size * (arg2 > 0 ? first + arg2 : arg2));
-    SE_PRECONDITION4(size < 0 || total <= data, false, GL_INVALID_OPERATION);
+    SE_PRECONDITION4(total <= data, false, GL_INVALID_OPERATION);
 
     JSB_GL_CHECK(glDrawArrays((GLenum)arg0 , (GLint)arg1 , (GLsizei)arg2  ));
 
