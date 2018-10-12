@@ -3943,6 +3943,64 @@ static bool JSB_glGetShaderPrecisionFormat(se::State& s)
 }
 SE_BIND_FUNC(JSB_glGetShaderPrecisionFormat)
 
+
+static bool JSB_glGetBufferParameter(se::State& s) {
+    const auto& args = s.args();
+    int argc = (int)args.size();
+    SE_PRECONDITION2(argc == 2, false, "Invalid number of arguments" );
+
+    bool ok = true;
+
+    uint32_t target; int32_t pname;
+    GLint ret = 0;
+
+    ok &= seval_to_uint32(args[0], &target );
+    ok &= seval_to_int32(args[1], &pname );
+    SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(target == GL_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(pname == GL_BUFFER_SIZE || pname == GL_BUFFER_USAGE, false, GL_INVALID_ENUM);
+
+    JSB_GL_CHECK(glGetBufferParameteriv((GLenum)target, (GLenum)pname, &ret));
+
+    if (ret > 0){
+        s.rval().setInt32(ret);
+    } else{
+        s.rval().setNull();
+    }
+
+    return true;
+}
+SE_BIND_FUNC(JSB_glGetBufferParameter)
+
+static bool JSB_glGetRenderbufferParameter(se::State& s) {
+    const auto& args = s.args();
+    int argc = (int)args.size();
+    SE_PRECONDITION2(argc == 2, false, "Invalid number of arguments" );
+
+    bool ok = true;
+
+    uint32_t target; int32_t pname;
+    GLint ret = 0;
+
+    ok &= seval_to_uint32(args[0], &target );
+    ok &= seval_to_int32(args[1], &pname );
+    SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(target == GL_RENDERBUFFER, false, GL_INVALID_ENUM);
+    SE_PRECONDITION4(pname == GL_RENDERBUFFER_WIDTH || pname == GL_RENDERBUFFER_HEIGHT || pname == GL_RENDERBUFFER_INTERNAL_FORMAT || pname == GL_RENDERBUFFER_RED_SIZE
+    || pname == GL_RENDERBUFFER_GREEN_SIZE  || pname == GL_RENDERBUFFER_BLUE_SIZE || pname == GL_RENDERBUFFER_ALPHA_SIZE || pname == GL_RENDERBUFFER_DEPTH_SIZE || pname == GL_RENDERBUFFER_STENCIL_SIZE, false, GL_INVALID_ENUM);
+
+    JSB_GL_CHECK(glGetRenderbufferParameteriv((GLenum)target, (GLenum)pname, &ret));
+
+    if (ret > 0){
+        s.rval().setInt32(ret);
+    } else{
+        s.rval().setNull();
+    }
+
+    return true;
+}
+SE_BIND_FUNC(JSB_glGetRenderbufferParameter)
+
 static bool JSB_glFlushCommand(se::State& s) {
     const auto& args = s.args();
     int argc = (int)args.size();
@@ -4647,6 +4705,8 @@ bool JSB_register_opengl(se::Object* obj)
     __glObj->defineFunction("viewport", _SE(JSB_glViewport));
     __glObj->defineFunction("getParameter", _SE(JSB_glGetParameter));
     __glObj->defineFunction("getShaderPrecisionFormat", _SE(JSB_glGetShaderPrecisionFormat));
+    __glObj->defineFunction("getBufferParameter", _SE(JSB_glGetBufferParameter));
+    __glObj->defineFunction("getRenderbufferParameter", _SE(JSB_glGetRenderbufferParameter));
 
     // NOT WEBGL standard functions
     __glObj->defineFunction("_flushCommands", _SE(JSB_glFlushCommand));
