@@ -107,7 +107,6 @@ void ccBindBuffer(GLenum target, GLuint buffer)
 
 void ccDeleteBuffers(GLsizei n, const GLuint * buffers)
 {
-#if CC_ENABLE_GL_STATE_CACHE
     for (GLsizei i = 0; i < n; ++i)
     {
         if (buffers[i] == __currentVertexBuffer)
@@ -116,9 +115,6 @@ void ccDeleteBuffers(GLsizei n, const GLuint * buffers)
             __currentIndexBuffer = -1;
     }
     glDeleteBuffers(n, buffers);
-#else
-    glDeleteBuffers(n, buffers);
-#endif
 }
 
 GLint ccGetBoundVertexBuffer()
