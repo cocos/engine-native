@@ -3835,6 +3835,9 @@ static bool JSB_glGetParameter(se::State& s)
                     if (objIter != se::NativePtrToObjectMap::end()) {
                         s.rval().setObject(objIter->second);
                     }
+                    else {
+                        s.rval().setNull();
+                    }
                 }
             } else {
                 ret.setNull();
@@ -3852,6 +3855,9 @@ static bool JSB_glGetParameter(se::State& s)
                     auto objIter = se::NativePtrToObjectMap::find(iter->second);
                     if (objIter != se::NativePtrToObjectMap::end()) {
                         s.rval().setObject(objIter->second);
+                    }
+                    else {
+                        s.rval().setNull();
                     }
                 }
             } else {
@@ -3871,6 +3877,9 @@ static bool JSB_glGetParameter(se::State& s)
                     if (objIter != se::NativePtrToObjectMap::end()) {
                         s.rval().setObject(objIter->second);
                     }
+                    else {
+                        s.rval().setNull();
+                    }
                 }
             } else {
                 ret.setNull();
@@ -3888,6 +3897,9 @@ static bool JSB_glGetParameter(se::State& s)
                     auto objIter = se::NativePtrToObjectMap::find(iter->second);
                     if (objIter != se::NativePtrToObjectMap::end()) {
                         s.rval().setObject(objIter->second);
+                    }
+                    else {
+                        s.rval().setNull();
                     }
                 }
             } else {
@@ -3907,6 +3919,9 @@ static bool JSB_glGetParameter(se::State& s)
                     auto objIter = se::NativePtrToObjectMap::find(iter->second);
                     if (objIter != se::NativePtrToObjectMap::end()) {
                         s.rval().setObject(objIter->second);
+                    }
+                    else {
+                        s.rval().setNull();
                     }
                 }
             } else {
