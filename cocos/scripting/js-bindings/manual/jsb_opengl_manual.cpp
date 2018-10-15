@@ -3764,6 +3764,22 @@ static bool JSB_glGetParameter(se::State& s)
         }
             break;
 
+        case GL_STENCIL_TEST:
+        case GL_SCISSOR_TEST:
+        case GL_SAMPLE_COVERAGE_INVERT:
+        case GL_POLYGON_OFFSET_FILL:
+        case GL_DITHER:
+        case GL_DEPTH_WRITEMASK:
+        case GL_DEPTH_TEST:
+        case GL_CULL_FACE:
+        case GL_BLEND:
+        {
+            GLboolean data;
+            JSB_GL_CHECK(glGetBooleanv(pname, &data));
+            ret.setBoolean(data);
+        }
+            break;
+
             // Float32Array (with 4 values)
         case GL_BLEND_COLOR:
         case GL_COLOR_CLEAR_VALUE:
@@ -3810,34 +3826,93 @@ static bool JSB_glGetParameter(se::State& s)
             //IDEA:: WebGLBuffer
         case GL_ARRAY_BUFFER_BINDING:
         case GL_ELEMENT_ARRAY_BUFFER_BINDING:
-//            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
-//            ret.setInt32(intbuffer[0]);
-            //        ret = [buffers[@(intbuffer[0])] pointerValue];
+        {
+            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+            if (intbuffer[0] > 0) {
+                auto iter = __webglBufferMap.find(intbuffer[0]);
+                if (iter != __webglBufferMap.end()) {
+                    auto objIter = se::NativePtrToObjectMap::find(iter->second);
+                    if (objIter != se::NativePtrToObjectMap::end()) {
+                        s.rval().setObject(objIter->second);
+                    }
+                }
+            } else {
+                ret.setNull();
+            }
+        }
             break;
 
             // WebGLProgram
         case GL_CURRENT_PROGRAM:
-            //        glGetIntegerv(pname, intbuffer);
-            //        ret = [programs[@(intbuffer[0])] pointerValue];
+        {
+            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+            if (intbuffer[0] > 0) {
+                auto iter = __webglProgramMap.find(intbuffer[0]);
+                if (iter != __webglProgramMap.end()) {
+                    auto objIter = se::NativePtrToObjectMap::find(iter->second);
+                    if (objIter != se::NativePtrToObjectMap::end()) {
+                        s.rval().setObject(objIter->second);
+                    }
+                }
+            } else {
+                ret.setNull();
+            }
+        }
             break;
 
             // WebGLFramebuffer
         case GL_FRAMEBUFFER_BINDING:
-            //        glGetIntegerv(pname, intbuffer);
-            //        ret = [framebuffers[@(intbuffer[0])] pointerValue];
+        {
+            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+            if (intbuffer[0] > 0) {
+                auto iter = __webglFramebufferMap.find(intbuffer[0]);
+                if (iter != __webglFramebufferMap.end()) {
+                    auto objIter = se::NativePtrToObjectMap::find(iter->second);
+                    if (objIter != se::NativePtrToObjectMap::end()) {
+                        s.rval().setObject(objIter->second);
+                    }
+                }
+            } else {
+                ret.setNull();
+            }
+        }
             break;
 
             // WebGLRenderbuffer
         case GL_RENDERBUFFER_BINDING:
-            //        glGetIntegerv(pname, intbuffer);
-            //        ret = [renderbuffers[@(intbuffer[0])] pointerValue];
+        {
+            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+            if (intbuffer[0] > 0) {
+                auto iter = __webglRenderbufferMap.find(intbuffer[0]);
+                if (iter != __webglRenderbufferMap.end()) {
+                    auto objIter = se::NativePtrToObjectMap::find(iter->second);
+                    if (objIter != se::NativePtrToObjectMap::end()) {
+                        s.rval().setObject(objIter->second);
+                    }
+                }
+            } else {
+                ret.setNull();
+            }
+        }
             break;
 
             // WebGLTexture
         case GL_TEXTURE_BINDING_2D:
         case GL_TEXTURE_BINDING_CUBE_MAP:
-            //        glGetIntegerv(pname, intbuffer);
-            //        ret = [textures[@(intbuffer[0])] pointerValue];
+        {
+            JSB_GL_CHECK(glGetIntegerv(pname, intbuffer));
+            if (intbuffer[0] > 0) {
+                auto iter = __webglTextureMap.find(intbuffer[0]);
+                if (iter != __webglTextureMap.end()) {
+                    auto objIter = se::NativePtrToObjectMap::find(iter->second);
+                    if (objIter != se::NativePtrToObjectMap::end()) {
+                        s.rval().setObject(objIter->second);
+                    }
+                }
+            } else {
+                ret.setNull();
+            }
+        }
             break;
 
         case GL_UNPACK_FLIP_Y_WEBGL:
