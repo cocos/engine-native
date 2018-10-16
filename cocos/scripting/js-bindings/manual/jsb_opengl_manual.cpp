@@ -4125,9 +4125,6 @@ static bool JSB_glGetRenderbufferParameter(se::State& s) {
     ok &= seval_to_uint32(args[0], &target );
     ok &= seval_to_int32(args[1], &pname );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
-    SE_PRECONDITION4(target == GL_RENDERBUFFER, false, GL_INVALID_ENUM);
-    SE_PRECONDITION4(pname == GL_RENDERBUFFER_WIDTH || pname == GL_RENDERBUFFER_HEIGHT || pname == GL_RENDERBUFFER_INTERNAL_FORMAT || pname == GL_RENDERBUFFER_RED_SIZE
-    || pname == GL_RENDERBUFFER_GREEN_SIZE  || pname == GL_RENDERBUFFER_BLUE_SIZE || pname == GL_RENDERBUFFER_ALPHA_SIZE || pname == GL_RENDERBUFFER_DEPTH_SIZE || pname == GL_RENDERBUFFER_STENCIL_SIZE, false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glGetRenderbufferParameteriv((GLenum)target, (GLenum)pname, &ret));
 
