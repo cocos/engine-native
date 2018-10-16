@@ -1343,20 +1343,60 @@ static bool JSB_glDrawElements(se::State& s) {
     ok &= seval_to_uint32(args[2], &arg2 );
 
     const se::Value& offsetVal = args[3];
+    int offset = 0;
 
     if (offsetVal.isNumber())
     {
-        int offset = 0;
         ok &= seval_to_int32(offsetVal, &offset);
         arg3 = (void*)(intptr_t)offset;
     }
-    else if (offsetVal.isObject())
-    {
-        GLsizei count;
-        ok &= JSB_get_arraybufferview_dataptr(args[3], &count, &arg3);
-    }
 
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+    SE_PRECONDITION4(arg0 == GL_POINTS || arg0 == GL_LINE_STRIP || arg0 == GL_LINE_LOOP ||
+                     arg0 == GL_LINES || arg0 == GL_TRIANGLE_STRIP ||
+                     arg0 == GL_TRIANGLE_FAN || arg0 == GL_TRIANGLES, false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4(arg2 == GL_UNSIGNED_BYTE || arg2 == GL_UNSIGNED_SHORT, false, GL_INVALID_ENUM);
+
+    SE_PRECONDITION4(arg1 >= 0 && offset >= 0, false, GL_INVALID_VALUE);
+
+    int size = 0;
+
+    switch (arg2)
+    {
+        case GL_UNSIGNED_BYTE:
+            size = sizeof(GLbyte);
+            break;
+        case GL_UNSIGNED_SHORT:
+            size = sizeof(GLshort);
+            break;
+    }
+
+    SE_PRECONDITION4(offset % size == 0, false, GL_INVALID_OPERATION);
+
+    int intbuffer[4];
+    JSB_GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, intbuffer));
+    SE_PRECONDITION4(intbuffer[0] > 0, false, GL_INVALID_OPERATION);
+
+    GLuint bindingId = 0;
+    JSB_GL_CHECK(glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, intbuffer));
+    if (intbuffer[0] > 0) {
+        auto iter = __webglBufferMap.find(intbuffer[0]);
+        if (iter != __webglBufferMap.end()) {
+            auto objIter = se::NativePtrToObjectMap::find(iter->second);
+            if (objIter != se::NativePtrToObjectMap::end()) {
+                s.rval().setObject(objIter->second);
+                bindingId = iter->second->_id;
+            }
+        }
+    }
+    SE_PRECONDITION4(bindingId > 0, false, GL_INVALID_OPERATION);
+
+    GLint elementSize = 0;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &elementSize);
+    SE_PRECONDITION4(arg1 == 0 || ((elementSize > offset) && arg1 <= ((elementSize - offset) / size)), false, GL_INVALID_OPERATION);
+
     JSB_GL_CHECK(glDrawElements((GLenum)arg0 , (GLsizei)arg1 , (GLenum)arg2 , (GLvoid*)arg3  ));
 
     return true;
