@@ -1307,11 +1307,7 @@ static bool JSB_glDrawArrays(se::State& s) {
     ok &= seval_to_int32(args[2], &arg2 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    SE_PRECONDITION4(arg0 == GL_POINTS || arg0 == GL_LINE_STRIP || arg0 == GL_LINE_LOOP ||
-                             arg0 == GL_LINES || arg0 == GL_TRIANGLE_STRIP ||
-                             arg0 == GL_TRIANGLE_FAN || arg0 == GL_TRIANGLES, false, GL_INVALID_ENUM);
-
-    SE_PRECONDITION4(arg1 >= 0 && arg2 >= 0, false, GL_INVALID_VALUE);
+    SE_PRECONDITION4(arg1 >= 0, false, GL_INVALID_VALUE);
 
     int intbuffer[4];
     JSB_GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, intbuffer));
@@ -1353,10 +1349,6 @@ static bool JSB_glDrawElements(se::State& s) {
 
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    SE_PRECONDITION4(arg0 == GL_POINTS || arg0 == GL_LINE_STRIP || arg0 == GL_LINE_LOOP ||
-                     arg0 == GL_LINES || arg0 == GL_TRIANGLE_STRIP ||
-                     arg0 == GL_TRIANGLE_FAN || arg0 == GL_TRIANGLES, false, GL_INVALID_ENUM);
-
     SE_PRECONDITION4(arg2 == GL_UNSIGNED_BYTE || arg2 == GL_UNSIGNED_SHORT, false, GL_INVALID_ENUM);
 
     SE_PRECONDITION4(arg1 >= 0 && offset >= 0, false, GL_INVALID_VALUE);
@@ -1379,19 +1371,8 @@ static bool JSB_glDrawElements(se::State& s) {
     JSB_GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, intbuffer));
     SE_PRECONDITION4(intbuffer[0] > 0, false, GL_INVALID_OPERATION);
 
-    GLuint bindingId = 0;
     JSB_GL_CHECK(glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, intbuffer));
-    if (intbuffer[0] > 0) {
-        auto iter = __webglBufferMap.find(intbuffer[0]);
-        if (iter != __webglBufferMap.end()) {
-            auto objIter = se::NativePtrToObjectMap::find(iter->second);
-            if (objIter != se::NativePtrToObjectMap::end()) {
-                s.rval().setObject(objIter->second);
-                bindingId = iter->second->_id;
-            }
-        }
-    }
-    SE_PRECONDITION4(bindingId > 0, false, GL_INVALID_OPERATION);
+    SE_PRECONDITION4(intbuffer[0] > 0, false, GL_INVALID_OPERATION);
 
     GLint elementSize = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &elementSize);
@@ -1484,8 +1465,6 @@ static bool JSB_glFramebufferRenderbuffer(se::State& s) {
     ok &= seval_to_native_ptr(args[3], &arg3 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint renderBufferId = arg3 != nullptr ? arg3->_id : 0;
-    SE_PRECONDITION4(arg0 == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
-    SE_PRECONDITION4(arg1 == GL_COLOR_ATTACHMENT0 || arg1 == GL_DEPTH_ATTACHMENT || arg1 == GL_STENCIL_ATTACHMENT || arg1 == GL_DEPTH_STENCIL_ATTACHMENT, false, GL_INVALID_ENUM);
     JSB_GL_CHECK(WEBGL_framebufferRenderbuffer((GLenum)arg0 , (GLenum)arg1 , (GLenum)arg2 , renderBufferId));
     return true;
 }
@@ -4120,8 +4099,6 @@ static bool JSB_glGetBufferParameter(se::State& s) {
     ok &= seval_to_uint32(args[0], &target );
     ok &= seval_to_int32(args[1], &pname );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
-    SE_PRECONDITION4(target == GL_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER, false, GL_INVALID_ENUM);
-    SE_PRECONDITION4(pname == GL_BUFFER_SIZE || pname == GL_BUFFER_USAGE, false, GL_INVALID_ENUM);
 
     JSB_GL_CHECK(glGetBufferParameteriv((GLenum)target, (GLenum)pname, &ret));
 
