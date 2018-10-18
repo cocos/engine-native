@@ -180,4 +180,4 @@ namespace cocos2d {
         return static_cast<uint32_t>(mpg123_tell(_mpg123handle));
     }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

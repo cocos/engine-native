@@ -516,4 +516,4 @@ void AudioPlayerProvider::resume()
     }
 }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

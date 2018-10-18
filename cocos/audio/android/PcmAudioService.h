@@ -78,4 +78,4 @@ private:
     friend class AudioPlayerProvider;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

@@ -117,4 +117,4 @@ protected:
     friend class AudioDecoderManager;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

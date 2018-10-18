@@ -117,4 +117,4 @@ private:
     AudioStreamBasicDescription _outputFormat;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

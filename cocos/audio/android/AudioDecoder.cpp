@@ -290,4 +290,4 @@ bool AudioDecoder::interleave()
     return false;
 }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

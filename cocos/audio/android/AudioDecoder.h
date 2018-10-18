@@ -61,4 +61,4 @@ protected:
     size_t _fileCurrPos;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

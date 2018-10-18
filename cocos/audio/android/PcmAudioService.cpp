@@ -190,4 +190,4 @@ void PcmAudioService::resume()
     SL_RETURN_IF_FAILED(r, "PcmAudioService::resume failed");
 }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

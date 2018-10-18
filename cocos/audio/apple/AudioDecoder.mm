@@ -226,4 +226,4 @@ namespace cocos2d {
         return _isOpened;
     }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

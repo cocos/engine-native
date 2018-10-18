@@ -446,5 +446,5 @@ inline void volumeMulti(TO* out, size_t frameCount,
     }
 }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 
 

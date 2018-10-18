@@ -94,4 +94,4 @@ private:
     friend class AudioDecoderProvider;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

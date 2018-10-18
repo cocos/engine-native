@@ -39,4 +39,4 @@ public:
     virtual std::thread::id getCallerThreadId() = 0;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

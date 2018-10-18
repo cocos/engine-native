@@ -85,4 +85,4 @@ private:
     std::atomic_bool _isMixingFrame;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

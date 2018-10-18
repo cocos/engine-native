@@ -39,5 +39,5 @@ private:
     int _assetFd;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 
 

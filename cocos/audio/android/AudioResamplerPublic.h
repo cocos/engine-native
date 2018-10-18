@@ -169,6 +169,6 @@ static inline bool isMusicRate(uint32_t sampleRate) {
     return sampleRate >= AUDIO_PROCESSING_MUSIC_RATE;
 }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 
 
 // ---------------------------------------------------------------------------

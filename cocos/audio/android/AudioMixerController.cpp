@@ -347,4 +347,4 @@ bool AudioMixerController::hasPlayingTacks()
     return false;
 }
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 

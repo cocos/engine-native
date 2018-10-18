@@ -63,4 +63,4 @@ struct PcmData
     std::string toString() const;
 };
 
-}} // namespace cocos2d { 
+} // namespace cocos2d { 
