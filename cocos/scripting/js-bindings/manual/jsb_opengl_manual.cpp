@@ -3569,6 +3569,10 @@ static bool JSB_glGetFramebufferAttachmentParameter(se::State& s) {
                 return true;
             }
         }
+        else {
+            s.rval().setNull();
+            return true;
+        }
     }
 
     s.rval().setInt32(param);
