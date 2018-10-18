@@ -2881,6 +2881,9 @@ static bool JSB_glGetVertexAttrib(se::State& s)
                 s.rval().setNull();
             }
         }
+        else {
+            s.rval().setNull();
+        }
     }
     else if( pname == GL_CURRENT_VERTEX_ATTRIB ) {
         float vertexAttrib[4] = {0.0f};
