@@ -144,6 +144,7 @@ namespace {
 
     const uint32_t GL_FLOAT_ARRAY = 1;
     const uint32_t GL_INT_ARRAY = 2;
+    const uint32_t GL_BOOL_ARRAY = 3;
     const uint32_t GL_MAX_STRIDE = 255;
 
     GLint __defaultFbo = 0;
@@ -1583,17 +1584,15 @@ static bool JSB_glGetUniformLocation(se::State& s) {
 
     ok &= seval_to_native_ptr(args[0], &arg0 );
     ok &= seval_to_std_string(args[1], &arg1 );
-
+    s.rval().setNull();
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     int ret_val = 0;
 
     GLuint programId = arg0 != nullptr ? arg0->_id : 0;
     ret_val = glGetUniformLocation(programId , arg1.c_str());
     JSB_GL_CHECK_ERROR();
-    if (ret_val < 0)
+    if(ret_val >= 0)
     {
-        s.rval().setNull();
-    } else {
         s.rval().setInt32(ret_val);
     }
     return true;
@@ -3178,6 +3177,8 @@ static bool JSB_glGetShaderParameter(se::State& s) {
     WebGLShader* arg0;
     uint32_t arg1;
 
+    s.rval().setNull();
+    SE_PRECONDITION2(!args[0].isNullOrUndefined(), false, "Error processing arguments");
     ok &= seval_to_native_ptr(args[0], &arg0);
     ok &= seval_to_uint32(args[1], &arg1);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
@@ -3207,6 +3208,8 @@ static bool JSB_glGetProgramParameter(se::State& s) {
     WebGLProgram* arg0;
     uint32_t arg1;
 
+    s.rval().setNull();
+    SE_PRECONDITION2(!args[0].isNullOrUndefined(), false, "Error processing arguments");
     ok &= seval_to_native_ptr(args[0], &arg0 );
     ok &= seval_to_uint32(args[1], &arg1 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
@@ -3230,6 +3233,7 @@ static bool JSB_glGetProgramInfoLog(se::State& s) {
     int argc = (int)args.size();
     SE_PRECONDITION2(argc == 1, false, "Invalid number of arguments" );
 
+    s.rval().setNull();
     bool ok = true;
     WebGLProgram* arg0;
     ok &= seval_to_native_ptr(args[0], &arg0 );
@@ -3239,7 +3243,7 @@ static bool JSB_glGetProgramInfoLog(se::State& s) {
     GLsizei length;
     JSB_GL_CHECK(glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &length));
 
-    if (length > 0)
+    if (length > 0 && glGetError() == 0)
     {
         GLchar* src = new (std::nothrow) GLchar[length];
         JSB_GL_CHECK(glGetProgramInfoLog(programId, length, nullptr, src));
@@ -3262,6 +3266,7 @@ static bool JSB_glGetShaderInfoLog(se::State& s) {
 
     bool ok = true;
     WebGLShader* arg0;
+    s.rval().setNull();
     ok &= seval_to_native_ptr(args[0], &arg0);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint shaderId = arg0 != nullptr ? arg0->_id : 0;
@@ -3269,7 +3274,7 @@ static bool JSB_glGetShaderInfoLog(se::State& s) {
     GLsizei length;
     JSB_GL_CHECK(glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length));
 
-    if (length > 0)
+    if (length > 0 && glGetError() == 0)
     {
         GLchar* src = new (std::nothrow) GLchar[length];
         JSB_GL_CHECK(glGetShaderInfoLog(shaderId, length, NULL, src));
@@ -3294,17 +3299,24 @@ static bool JSB_glGetShaderSource(se::State& s) {
     bool ok = true;
 
     WebGLShader* arg0;
+    s.rval().setNull();
     ok &= seval_to_native_ptr(args[0], &arg0);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint shaderId = arg0 != nullptr ? arg0->_id : 0;
 
     GLsizei length;
     JSB_GL_CHECK(glGetShaderiv(shaderId, GL_SHADER_SOURCE_LENGTH, &length));
-    GLchar* src = new (std::nothrow) GLchar[length];
-    JSB_GL_CHECK(glGetShaderSource(shaderId, length, NULL, src));
+    if (length > 0 && glGetError() == 0) {
+        GLchar* src = new (std::nothrow) GLchar[length];
+        JSB_GL_CHECK(glGetShaderSource(shaderId, length, NULL, src));
 
-    s.rval().setString(src);
-    CC_SAFE_DELETE_ARRAY(src);
+        s.rval().setString(src);
+        CC_SAFE_DELETE_ARRAY(src);
+    }
+    else
+    {
+        s.rval().setString("");
+    }
     return true;
 }
 SE_BIND_FUNC(JSB_glGetShaderSource)
@@ -3407,13 +3419,14 @@ static bool JSB_glGetAttachedShaders(se::State& s) {
     bool ok = true;
     WebGLProgram* arg0;
 
+    s.rval().setNull();
     ok &= seval_to_native_ptr(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint id = arg0 != nullptr ? arg0->_id : 0;
 
     GLsizei length;
     JSB_GL_CHECK(glGetProgramiv(id, GL_ATTACHED_SHADERS, &length));
-    SE_PRECONDITION2(glGetError() == 0, false, "Error processing arguments");
+    SE_PRECONDITION4(glGetError() == 0, false, arg0 != nullptr ? GL_NO_ERROR : GL_INVALID_VALUE);
     GLuint* buffer = new (std::nothrow) GLuint[length];
     memset(buffer, 0, length * sizeof(GLuint));
     //Fix bug 2448, it seems that glGetAttachedShaders will crash if we send NULL to the third parameter (eg Windows), same as in lua binding
@@ -3513,7 +3526,7 @@ SE_BIND_FUNC(JSB_glGetTexParameterfv)
 static bool JSB_glGetFramebufferAttachmentParameter(se::State& s) {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SE_PRECONDITION2(argc == 3, false,"JSB_glGetFramebufferAttachmentParameter: Invalid number of arguments" );
+    SE_PRECONDITION2(argc == 3, false,"Invalid number of arguments" );
 
     bool ok = true;
     uint32_t target, attachment, pname;
@@ -3522,10 +3535,7 @@ static bool JSB_glGetFramebufferAttachmentParameter(se::State& s) {
     ok &= seval_to_uint32(args[1], &attachment );
     ok &= seval_to_uint32(args[2], &pname );
 
-    SE_PRECONDITION2(ok, false, "JSB_glGetFramebufferAttachmentParameter: Error processing arguments");
-    SE_PRECONDITION4(target == GL_FRAMEBUFFER, false, GL_INVALID_ENUM);
-    SE_PRECONDITION4(attachment == GL_COLOR_ATTACHMENT0 || attachment == GL_DEPTH_ATTACHMENT || attachment == GL_STENCIL_ATTACHMENT, false, GL_INVALID_ENUM);
-    SE_PRECONDITION4(pname == GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE || pname == GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME || pname == GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL || pname == GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, false, GL_INVALID_ENUM);
+    SE_PRECONDITION2(ok, false, "Error processing arguments");
 
     GLint param = 0;
     JSB_GL_CHECK(glGetFramebufferAttachmentParameteriv(target, attachment, pname, &param));
@@ -3571,16 +3581,18 @@ SE_BIND_FUNC(JSB_glGetFramebufferAttachmentParameter)
 static bool JSB_glGetUniformfv(se::State& s) {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SE_PRECONDITION2(argc == 2, false,"JSB_glGetUniformfv: Invalid number of arguments" );
+    SE_PRECONDITION2(argc == 2, false,"Invalid number of arguments" );
 
     bool ok = true;
     WebGLProgram* arg0;
     uint32_t arg1;
 
+    s.rval().setNull();
+    SE_PRECONDITION2(!args[0].isNullOrUndefined(), false, "Error processing arguments");
+    SE_PRECONDITION2(!args[1].isNullOrUndefined(), false, "Error processing arguments");
     ok &= seval_to_native_ptr(args[0], &arg0 );
     ok &= seval_to_uint32(args[1], &arg1 );
-
-    SE_PRECONDITION2(ok, false, "JSB_glGetUniformfv: Error processing arguments");
+    SE_PRECONDITION2(ok, false, "Error processing arguments");
     SE_PRECONDITION2(arg0 != nullptr, false, "WebGLProgram is null!");
 
     GLuint id = arg0 != nullptr ? arg0->_id : 0;
@@ -3614,6 +3626,23 @@ static bool JSB_glGetUniformfv(se::State& s) {
     int usize = 0;
     int utype = 0;
     switch(type) {
+            //boolean
+        case GL_BOOL:
+            usize = 1;
+            utype = GL_BOOL;
+            break;
+        case GL_BOOL_VEC2:
+            usize = 2;
+            utype = GL_BOOL_ARRAY;
+            break;
+        case GL_BOOL_VEC3:
+            usize = 3;
+            utype = GL_BOOL_ARRAY;
+            break;
+        case GL_BOOL_VEC4:
+            usize = 4;
+            utype = GL_BOOL_ARRAY;
+            break;
 
         // float
         case GL_FLOAT:
@@ -3668,7 +3697,20 @@ static bool JSB_glGetUniformfv(se::State& s) {
             return false;
     }
 
-    if (utype == GL_FLOAT_ARRAY)
+    if( utype == GL_FLOAT_ARRAY)
+    {
+        GLint* param = new (std::nothrow) GLint[usize];
+        JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
+        se::HandleObject arrayObj(se::Object::createArrayObject((size_t)usize));
+        for (int i = 0; i < usize; ++i)
+        {
+            arrayObj->setArrayElement(i, se::Value(param[i] != 0));
+        }
+        s.rval().setObject(arrayObj);
+        CC_SAFE_DELETE_ARRAY(param);
+        return true;
+    }
+    else if( utype == GL_FLOAT_ARRAY)
     {
         GLfloat* param = new (std::nothrow) GLfloat[usize];
         JSB_GL_CHECK(glGetUniformfv(id, arg1, param));
@@ -3688,7 +3730,7 @@ static bool JSB_glGetUniformfv(se::State& s) {
         CC_SAFE_DELETE_ARRAY(param);
         return true;
     }
-    if (utype == GL_FLOAT)
+    if( utype == GL_FLOAT)
     {
         GLfloat* param = new (std::nothrow) GLfloat[usize];
         JSB_GL_CHECK(glGetUniformfv(id, arg1, param));
@@ -3703,6 +3745,14 @@ static bool JSB_glGetUniformfv(se::State& s) {
         JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
 
         s.rval().setInt32(param[0]);
+        CC_SAFE_DELETE_ARRAY(param);
+        return true;
+    }else if( utype == GL_BOOL )
+    {
+        GLint* param = new (std::nothrow) GLint[usize];
+        JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
+
+        s.rval().setBoolean(param[0] != 0);
         CC_SAFE_DELETE_ARRAY(param);
         return true;
     }
