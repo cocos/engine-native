@@ -3683,6 +3683,8 @@ static bool JSB_glGetUniformfv(se::State& s) {
 
             // int
         case GL_INT:
+        case GL_SAMPLER_2D:
+        case GL_SAMPLER_CUBE:
             usize = 1;
             utype = GL_INT;
             break;
