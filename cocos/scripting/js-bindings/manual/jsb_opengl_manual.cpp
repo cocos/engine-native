@@ -3709,62 +3709,55 @@ static bool JSB_glGetUniformfv(se::State& s) {
 
     if( utype == GL_BOOL_ARRAY)
     {
-        GLint* param = new (std::nothrow) GLint[usize];
-        JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
+        std::vector<GLint> param(usize);
+        JSB_GL_CHECK(glGetUniformiv(id, arg1, param.data()));
         se::HandleObject arrayObj(se::Object::createArrayObject((size_t)usize));
         for (int i = 0; i < usize; ++i)
         {
             arrayObj->setArrayElement(i, se::Value(param[i] != 0));
         }
         s.rval().setObject(arrayObj);
-        CC_SAFE_DELETE_ARRAY(param);
         return true;
     }
     else if( utype == GL_FLOAT_ARRAY)
     {
-        GLfloat* param = new (std::nothrow) GLfloat[usize];
-        JSB_GL_CHECK(glGetUniformfv(id, arg1, param));
-
-        se::HandleObject obj(se::Object::createTypedArray(se::Object::TypedArrayType::FLOAT32, param, usize * sizeof(GLfloat)));
+        std::vector<GLfloat> param(usize);
+        JSB_GL_CHECK(glGetUniformfv(id, arg1, param.data()));
+        se::HandleObject obj(se::Object::createTypedArray(se::Object::TypedArrayType::FLOAT32, param.data(), usize * sizeof(GLfloat)));
         s.rval().setObject(obj);
-        CC_SAFE_DELETE_ARRAY(param);
         return true;
     }
     else if(utype == GL_INT_ARRAY)
     {
-        GLint* param = new (std::nothrow) GLint[usize];
-        JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
-
-        se::HandleObject obj(se::Object::createTypedArray(se::Object::TypedArrayType::INT32, param, usize * sizeof(GLint)));
+        std::vector<GLint> param(usize);
+        JSB_GL_CHECK(glGetUniformiv(id, arg1, param.data()));
+        se::HandleObject obj(se::Object::createTypedArray(se::Object::TypedArrayType::INT32, param.data(), usize * sizeof(GLint)));
         s.rval().setObject(obj);
-        CC_SAFE_DELETE_ARRAY(param);
         return true;
     }
 
     if( utype == GL_FLOAT)
     {
-        GLfloat* param = new (std::nothrow) GLfloat[usize];
-        JSB_GL_CHECK(glGetUniformfv(id, arg1, param));
+        GLfloat param = 0;
+        JSB_GL_CHECK(glGetUniformfv(id, arg1, &param));
 
-        s.rval().setFloat(param[0]);
-        CC_SAFE_DELETE_ARRAY(param);
+        s.rval().setFloat(param);
         return true;
     }
     else if( utype == GL_INT )
     {
-        GLint* param = new (std::nothrow) GLint[usize];
-        JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
+        GLint param = 0;
+        JSB_GL_CHECK(glGetUniformiv(id, arg1, &param));
 
-        s.rval().setInt32(param[0]);
-        CC_SAFE_DELETE_ARRAY(param);
+        s.rval().setInt32(param);
         return true;
-    }else if( utype == GL_BOOL )
+    }
+    else if( utype == GL_BOOL )
     {
-        GLint* param = new (std::nothrow) GLint[usize];
-        JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
+        GLint param = 0;
+        JSB_GL_CHECK(glGetUniformiv(id, arg1, &param));
 
-        s.rval().setBoolean(param[0] != 0);
-        CC_SAFE_DELETE_ARRAY(param);
+        s.rval().setBoolean(param != 0);
         return true;
     }
 
