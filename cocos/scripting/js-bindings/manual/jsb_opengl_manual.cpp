@@ -3722,19 +3722,6 @@ static bool JSB_glGetUniformfv(se::State& s) {
     }
     else if( utype == GL_FLOAT_ARRAY)
     {
-        GLint* param = new (std::nothrow) GLint[usize];
-        JSB_GL_CHECK(glGetUniformiv(id, arg1, param));
-        se::HandleObject arrayObj(se::Object::createArrayObject((size_t)usize));
-        for (int i = 0; i < usize; ++i)
-        {
-            arrayObj->setArrayElement(i, se::Value(param[i] != 0));
-        }
-        s.rval().setObject(arrayObj);
-        CC_SAFE_DELETE_ARRAY(param);
-        return true;
-    }
-    else if( utype == GL_FLOAT_ARRAY)
-    {
         GLfloat* param = new (std::nothrow) GLfloat[usize];
         JSB_GL_CHECK(glGetUniformfv(id, arg1, param));
 
