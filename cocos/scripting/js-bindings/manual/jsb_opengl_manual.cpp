@@ -1090,6 +1090,7 @@ static bool JSB_glCreateShader(se::State& s) {
 
     ok &= seval_to_uint32(args[0], &arg0 );
     SE_PRECONDITION2(ok, false, "Error processing arguments");
+    SE_PRECONDITION4(arg0 == GL_VERTEX_SHADER || arg0 == GL_FRAGMENT_SHADER, false, GL_INVALID_ENUM);
     GLuint ret_val = glCreateShader((GLenum)arg0);
 
     se::Object* obj = se::Object::createObjectWithClass(__jsb_WebGLShader_class);
