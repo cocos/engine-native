@@ -228,6 +228,11 @@ public:
     size_t getBufferedAmount() const;
 
     /**
+    * @brief Returns the extensions selected by the server.
+    */
+    std::string getExtensions() const;
+
+    /**
      *  @brief Gets the protocol selected by websocket server.
      */
     const std::string& getProtocol() const;

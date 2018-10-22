@@ -489,6 +489,23 @@ static bool WebSocket_getBufferedAmount(se::State& s)
 }
 SE_BIND_PROP_GET(WebSocket_getBufferedAmount)
 
+static bool WebSocket_getExtensions(se::State& s)
+{
+    const auto& args = s.args();
+    int argc = (int)args.size();
+
+    if (argc == 0)
+    {
+        WebSocket* cobj = (WebSocket*)s.nativeThisObject();
+        s.rval().setString(cobj->getExtensions());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting 0", argc);
+    return false;
+}
+SE_BIND_PROP_GET(WebSocket_getExtensions)
+
+
 bool register_all_websocket(se::Object* obj)
 {
     se::Class* cls = se::Class::create("WebSocket", obj, nullptr, _SE(WebSocket_constructor));
@@ -498,6 +515,7 @@ bool register_all_websocket(se::Object* obj)
     cls->defineFunction("close", _SE(WebSocket_close));
     cls->defineProperty("readyState", _SE(WebSocket_getReadyState), nullptr);
     cls->defineProperty("bufferedAmount", _SE(WebSocket_getBufferedAmount), nullptr);
+    cls->defineProperty("extensions", _SE(WebSocket_getExtensions), nullptr);
 
     cls->install();
 

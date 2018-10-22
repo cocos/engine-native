@@ -198,6 +198,7 @@ public:
     cocos2d::network::WebSocket::Delegate* getDelegate() const;
 
     size_t getBufferedAmount() const;
+    std::string getExtensions() const;
 
 private:
     // The following callback functions are invoked in websocket thread
@@ -229,6 +230,8 @@ private:
 
     std::mutex _closeMutex;
     std::condition_variable _closeCondition;
+
+    std::vector<std::string> _enabledExtensions;
 
     enum class CloseState
     {
@@ -743,6 +746,16 @@ bool WebSocketImpl::init(const cocos2d::network::WebSocket::Delegate& delegate,
 size_t WebSocketImpl::getBufferedAmount() const
 {
     return __wsHelper->countBufferdBytes(this);
+}
+
+std::string WebSocketImpl::getExtensions() const
+{
+    //join vector with ";"
+    if (_enabledExtensions.empty()) return "";
+    std::string ret;
+    for (int i = 0; i < _enabledExtensions.size(); i++) ret += (_enabledExtensions[i] + "; ");
+    ret += _enabledExtensions[_enabledExtensions.size() - 1];
+    return ret;
 }
 
 void WebSocketImpl::send(const std::string& message)
@@ -1436,6 +1449,12 @@ int WebSocketImpl::onSocketCallback(struct lws *wsi, enum lws_callback_reasons r
             break;
         case LWS_CALLBACK_PROTOCOL_DESTROY:
             LOGD("protocol destroy...");
+            break;
+        case LWS_CALLBACK_CONFIRM_EXTENSION_OKAY:
+            if(in && len > 0)
+            {
+                _enabledExtensions.push_back(std::string((char*)in, 0, len));
+            }
             break;
         default:
             LOGD("WebSocket (%p) Unhandled websocket event: %d\n", this, reason);
