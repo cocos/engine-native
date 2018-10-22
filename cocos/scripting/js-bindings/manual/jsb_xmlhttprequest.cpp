@@ -324,10 +324,10 @@ void XMLHttpRequest::getHeader(const std::string& header)
 
                 // Get Response Status
                 pch = strtok (nullptr, " ");
-                mystream << pch;
+                //mystream << pch;    //ignore HTTP statusCode 
 
                 pch = strtok (nullptr, " ");
-                mystream << " " << pch;
+                mystream << pch;
 
                 _statusText = mystream.str();
                 
