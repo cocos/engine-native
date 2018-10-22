@@ -212,6 +212,16 @@ public:
     void closeAsync();
 
     /**
+    *  @brief Closes the connection to server asynchronously.
+    *  @note It's an asynchronous method, it just notifies websocket thread to exit and returns directly,
+    *        If using 'closeAsync' to close websocket connection,
+    *        be careful of not using destructed variables in the callback of 'onClose'.
+    *  @param code close reason
+    *  @param reason reason text description
+    */
+    void closeAsync(int code, const std::string &reason);
+
+    /**
      *  @brief Gets current state of connection.
      *  @return State the state value could be State::CONNECTING, State::OPEN, State::CLOSING or State::CLOSED
      */

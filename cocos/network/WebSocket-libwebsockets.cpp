@@ -192,6 +192,7 @@ public:
     void send(const unsigned char* binaryMsg, unsigned int len);
     void close();
     void closeAsync();
+    void closeAsync(int code, const std::string &reason);
     cocos2d::network::WebSocket::State getReadyState() const;
     const std::string& getUrl() const;
     const std::string& getProtocol() const;
@@ -848,6 +849,12 @@ void WebSocketImpl::close()
     // Wait 5 milliseconds for onConnectionClosed to exit!
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
     _delegate->onClose(_ws);
+}
+
+void WebSocketImpl::closeAsync(int code, const std::string &reason)
+{
+    lws_close_reason(_wsInstance, (lws_close_status)code, (unsigned char*)reason.c_str(), reason.length);
+    closeAsync();
 }
 
 void WebSocketImpl::closeAsync()
@@ -1509,6 +1516,11 @@ void WebSocket::closeAsync()
 {
     _impl->closeAsync();
 }
+void WebSocket::closeAsync(int code, const std::string &reason)
+{
+    _impl->closeAsync(code, reason);
+}
+
 
 WebSocket::State WebSocket::getReadyState() const
 {

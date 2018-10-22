@@ -442,8 +442,47 @@ SE_BIND_FUNC(WebSocket_send)
 
 static bool WebSocket_close(se::State& s)
 {
+    const auto& args = s.args();
+    int argc = (int)args.size();
+
     WebSocket* cobj = (WebSocket*)s.nativeThisObject();
-    cobj->closeAsync();
+    if(argc == 0)
+    {
+        cobj->closeAsync();
+    }
+    else if (argc == 1)
+    {
+        if (args[0].isNumber())
+        {
+            int reason;
+            seval_to_int32(args[0], &reason);
+            cobj->closeAsync(reason, "no_reason");
+        }
+        else if (args[0].isString())
+        {
+            std::string reason;
+            seval_to_std_string(args[0], &reason);
+            cobj->closeAsync(1005, reason);
+        }
+        else
+        {
+            assert(false);
+        }
+    }
+    else if (argc == 2)
+    {
+        assert(args[0].isNumber());
+        assert(args[1].isString());
+        int reasonCode;
+        std::string reasonString;
+        seval_to_int32(args[0], &reasonCode);
+        seval_to_std_string(args[1], &reasonString);
+        cobj->closeAsync(1005, reasonString);
+    }
+    else 
+    {
+        assert(false);
+    }
     // Attach current WebSocket instance to global object to prevent WebSocket instance
     // being garbage collected after "ws.close(); ws = null;"
     // There is a state that current WebSocket JS instance is being garbaged but its finalize
