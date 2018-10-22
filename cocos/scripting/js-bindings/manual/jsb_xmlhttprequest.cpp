@@ -1020,6 +1020,10 @@ static bool XMLHttpRequest_setResponseType(se::State& s)
         {
             xhr->setResponseType(XMLHttpRequest::ResponseType::JSON);
         }
+        else if (type == "document")
+        {
+            xhr->setResponseType(XMLHttpRequest::ResponseType::DOCUMENT);
+        }
         else
         {
             SE_PRECONDITION2(false, false, "The response type isn't supported!");
