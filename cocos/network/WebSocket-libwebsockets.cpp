@@ -1528,6 +1528,11 @@ WebSocket::State WebSocket::getReadyState() const
     return _impl->getReadyState();
 }
 
+std::string WebSocket::getExtensions() const
+{
+    return _impl->getExtensions();
+}
+
 size_t WebSocket::getBufferedAmount() const
 {
     return _impl->getBufferedAmount();
