@@ -197,6 +197,8 @@ public:
     const std::string& getProtocol() const;
     cocos2d::network::WebSocket::Delegate* getDelegate() const;
 
+    size_t getBufferedAmount() const;
+
 private:
     // The following callback functions are invoked in websocket thread
     void onClientOpenConnectionRequest();
@@ -316,7 +318,7 @@ public:
     WsMessage() : id(++__id), what(0), data(nullptr), user(nullptr){}
     unsigned int id;
     unsigned int what; // message type
-    void* data;
+    cocos2d::network::WebSocket::Data* data;
     void* user;
 
 private:
@@ -344,6 +346,8 @@ public:
 
     // Sends message to Websocket thread. It's needs to be invoked in Cocos thread.
     void sendMessageToWebSocketThread(WsMessage *msg);
+
+    size_t countBufferdBytes(const WebSocketImpl *ws);
 
     // Waits the sub-thread (websocket thread) to exit,
     void joinWebSocketThread();
@@ -509,6 +513,21 @@ void WsThreadHelper::sendMessageToWebSocketThread(WsMessage *msg)
     std::lock_guard<std::mutex> lk(_subThreadWsMessageQueueMutex);
     _subThreadWsMessageQueue->push_back(msg);
 }
+
+size_t WsThreadHelper::countBufferdBytes(const WebSocketImpl *ws)
+{
+    std::lock_guard<std::mutex> lk(_subThreadWsMessageQueueMutex);
+    size_t total = 0;
+    for (auto msg : *_subThreadWsMessageQueue)
+    {
+        if (msg->user == ws && msg->data && (msg->what == WS_MSG_TO_SUBTRHEAD_SENDING_STRING
+        || msg->what == WS_MSG_TO_SUBTRHEAD_SENDING_BINARY)) {
+            total += msg->data->getRemain();
+        }
+    }
+    return total;
+}
+
 
 void WsThreadHelper::joinWebSocketThread()
 {
@@ -719,6 +738,11 @@ bool WebSocketImpl::init(const cocos2d::network::WebSocket::Delegate& delegate,
     }
 
     return true;
+}
+
+size_t WebSocketImpl::getBufferedAmount() const
+{
+    return __wsHelper->countBufferdBytes(this);
 }
 
 void WebSocketImpl::send(const std::string& message)
@@ -1470,6 +1494,11 @@ void WebSocket::closeAsync()
 WebSocket::State WebSocket::getReadyState() const
 {
     return _impl->getReadyState();
+}
+
+size_t WebSocket::getBufferedAmount() const
+{
+    return _impl->getBufferedAmount();
 }
 
 const std::string& WebSocket::getUrl() const

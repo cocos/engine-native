@@ -33,6 +33,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #ifndef OBJC_CLASS
 #ifdef __OBJC__
@@ -52,6 +53,9 @@ OBJC_CLASS(WebSocketImpl);
 NS_CC_BEGIN
 
 namespace network {
+
+
+class WebSocketFrame;
 
 /**
  * WebSocket is wrapper of the libwebsockets-protocol, let the develop could call the websocket easily.
@@ -93,6 +97,7 @@ public:
         ssize_t len, issued;
         bool isBinary;
         void* ext;
+        ssize_t getRemain() { return std::max((ssize_t)0, len - issued); }
     };
 
     /**
@@ -216,6 +221,11 @@ public:
      *  @brief Gets the URL of websocket connection.
      */
     const std::string& getUrl() const;
+
+    /**
+    * @brief Returns the number of bytes of data that have been queued using calls to send() but not yet transmitted to the network.
+    */
+    size_t getBufferedAmount() const;
 
     /**
      *  @brief Gets the protocol selected by websocket server.
