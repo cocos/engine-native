@@ -877,17 +877,9 @@ SE_BIND_PROP_GET(XMLHttpRequest_getResponseText)
 
 static bool XMLHttpRequest_getResponseXML(se::State& s)
 {
-    // do not generate document object here, return a string instead.
-    // jsb-adapter will convert this into a document
-    XMLHttpRequest* xhr = (XMLHttpRequest*)s.nativeThisObject();
-    if (xhr->getResponseType() == XMLHttpRequest::ResponseType::DOCUMENT)
-    {
-        s.rval().setString(xhr->getResponseText());
-    }
-    else
-    {
-        s.rval().setNull();
-    }
+    // DOM API is not fully supported in cocos2d-x-lite.
+    // `.responseXML` requires a document object that is not possible to fulfill. 
+    s.rval().setNull();
     return true;
 }
 SE_BIND_PROP_GET(XMLHttpRequest_getResponseXML)
@@ -1061,7 +1053,7 @@ bool register_all_xmlhttprequest(se::Object* global)
     cls->defineProperty("status", _SE(XMLHttpRequest_getStatus), nullptr);
     cls->defineProperty("statusText", _SE(XMLHttpRequest_getStatusText), nullptr);
     cls->defineProperty("responseText", _SE(XMLHttpRequest_getResponseText), nullptr);
-    cls->defineProperty("__responseXML", _SE(XMLHttpRequest_getResponseXML), nullptr);
+    cls->defineProperty("responseXML", _SE(XMLHttpRequest_getResponseXML), nullptr);
     cls->defineProperty("response", _SE(XMLHttpRequest_getResponse), nullptr);
     cls->defineProperty("timeout", _SE(XMLHttpRequest_getTimeout), _SE(XMLHttpRequest_setTimeout));
     cls->defineProperty("responseType", _SE(XMLHttpRequest_getResponseType), _SE(XMLHttpRequest_setResponseType));
