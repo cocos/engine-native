@@ -853,8 +853,7 @@ void WebSocketImpl::close()
 
 void WebSocketImpl::closeAsync(int code, const std::string &reason)
 {
-    std::string tmp = reason;
-    lws_close_reason(_wsInstance, (lws_close_status)code, (unsigned char*)tmp.c_str(), tmp.length());
+    lws_close_reason(_wsInstance, (lws_close_status)code, (unsigned char*)const_cast<char*>(reason.c_str()), reason.length());
     closeAsync();
 }
 
