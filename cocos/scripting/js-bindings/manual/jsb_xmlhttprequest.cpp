@@ -257,7 +257,7 @@ void XMLHttpRequest::abort()
         onloadend();
     }
 
-    setReadyState(ReadyState::UNSENT);
+    _readyState = ReadyState::UNSENT;
 }
 
 void XMLHttpRequest::setReadyState(ReadyState readyState)
