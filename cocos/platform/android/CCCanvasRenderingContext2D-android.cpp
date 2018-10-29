@@ -421,11 +421,13 @@ void CanvasRenderingContext2D::set_lineWidth(float lineWidth)
 
 void CanvasRenderingContext2D::set_lineJoin(const std::string& lineJoin)
 {
+    if(lineJoin.empty()) return ;
     _impl->setLineJoin(lineJoin);
 }
 
 void CanvasRenderingContext2D::set_lineCap(const std::string& lineCap)
 {
+    if(lineCap.empty()) return ;
     _impl->setLineCap(lineCap);
 }
 

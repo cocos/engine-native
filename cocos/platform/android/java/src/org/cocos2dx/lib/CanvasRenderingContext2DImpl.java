@@ -32,7 +32,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Typeface;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
@@ -223,6 +222,7 @@ public class CanvasRenderingContext2DImpl {
     private void stroke() {
         if (mLinePaint == null) {
             mLinePaint = new Paint();
+            mLinePaint.setAntiAlias(true);
         }
 
         if(mLinePath == null) {
@@ -232,7 +232,6 @@ public class CanvasRenderingContext2DImpl {
         mLinePaint.setARGB(mStrokeStyleA, mStrokeStyleR, mStrokeStyleG, mStrokeStyleB);
         mLinePaint.setStyle(Paint.Style.STROKE);
         mLinePaint.setStrokeWidth(mLineWidth);
-        mLinePaint.setAntiAlias(true);
         this.setStrokeCap(mLinePaint);
         this.setStrokeJoin(mLinePaint);
         mCanvas.drawPath(mLinePath, mLinePaint);
@@ -288,12 +287,10 @@ public class CanvasRenderingContext2DImpl {
     }
 
     private void setLineCap(String lineCap) {
-        if(TextUtils.isEmpty(lineCap)) return;
         mLineCap = lineCap;
     }
 
     private void setLineJoin(String lineJoin) {
-        if(TextUtils.isEmpty(lineJoin)) return;
         mLineJoin = lineJoin;
     }
 
@@ -326,7 +323,7 @@ public class CanvasRenderingContext2DImpl {
             clearColor[i] = Color.TRANSPARENT;
         }
         mBitmap.setPixels(clearColor, 0, (int) w, (int) x, (int) y, (int) w, (int) h);
-}
+    }
 
     private void createTextPaintIfNeeded() {
         if (mTextPaint == null) {
