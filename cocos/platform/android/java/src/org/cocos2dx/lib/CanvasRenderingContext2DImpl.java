@@ -32,6 +32,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Typeface;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
@@ -74,6 +75,8 @@ public class CanvasRenderingContext2DImpl {
     private float mLineWidth = 0.0f;
     private boolean mIsBoldFont = false;
     private boolean mIsItalicFont = false;
+    private String mLineCap = "butt";
+    private String mLineJoin = "miter";
 
     private class Size {
         Size(float w, float h) {
@@ -229,7 +232,38 @@ public class CanvasRenderingContext2DImpl {
         mLinePaint.setARGB(mStrokeStyleA, mStrokeStyleR, mStrokeStyleG, mStrokeStyleB);
         mLinePaint.setStyle(Paint.Style.STROKE);
         mLinePaint.setStrokeWidth(mLineWidth);
+        mLinePaint.setAntiAlias(true);
+        this.setStrokeCap(mLinePaint);
+        this.setStrokeJoin(mLinePaint);
         mCanvas.drawPath(mLinePath, mLinePaint);
+    }
+
+    private void setStrokeCap(Paint paint) {
+        switch (mLineCap) {
+            case "butt":
+                paint.setStrokeCap(Paint.Cap.BUTT);
+                break;
+            case "round":
+                paint.setStrokeCap(Paint.Cap.ROUND);
+                break;
+            case "square":
+                paint.setStrokeCap(Paint.Cap.SQUARE);
+                break;
+        }
+    }
+
+    private void setStrokeJoin(Paint paint) {
+        switch (mLineJoin) {
+            case "bevel":
+                paint.setStrokeJoin(Paint.Join.BEVEL);
+                break;
+            case "round":
+                paint.setStrokeJoin(Paint.Join.ROUND);
+                break;
+            case "miter":
+                paint.setStrokeJoin(Paint.Join.MITER);
+                break;
+        }
     }
 
     private void fill() {
@@ -246,9 +280,21 @@ public class CanvasRenderingContext2DImpl {
         mCanvas.drawPath(mLinePath, mLinePaint);
         // workaround: draw a hairline to cover the border
         mLinePaint.setStrokeWidth(0);
+        this.setStrokeCap(mLinePaint);
+        this.setStrokeJoin(mLinePaint);
         mLinePaint.setStyle(Paint.Style.STROKE);
         mCanvas.drawPath(mLinePath, mLinePaint);
         mLinePaint.setStrokeWidth(mLineWidth);
+    }
+
+    private void setLineCap(String lineCap) {
+        if(TextUtils.isEmpty(lineCap)) return;
+        mLineCap = lineCap;
+    }
+
+    private void setLineJoin(String lineJoin) {
+        if(TextUtils.isEmpty(lineJoin)) return;
+        mLineJoin = lineJoin;
     }
 
     private void saveContext() {
