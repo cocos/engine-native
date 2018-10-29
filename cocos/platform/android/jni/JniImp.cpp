@@ -110,7 +110,9 @@ namespace
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         uint8_t devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
-        sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
+        sprintf(commandBuf,
+                "window.devicePixelRatio = %d; window.innerWidth = %d; window.innerHeight = %d;",
+                devicePixelRatio,
                 g_width / devicePixelRatio,
                 g_height / devicePixelRatio);
         se->evalString(commandBuf);
