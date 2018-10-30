@@ -198,12 +198,6 @@ public:
     void _fillImageData(const Data &imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) {
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        if (offsetX >= _bufferWidth || offsetY >= _bufferHeight)
-            return;
-        if (offsetX + imageWidth > _bufferWidth)
-            imageWidth = _bufferWidth - offsetX;
-        if (offsetY + imageHeight > _bufferHeight)
-            imageHeight = _bufferHeight - offsetY;
 
         jbyteArray arr = JniHelper::getEnv()->NewByteArray(imageData.getSize());
         JniHelper::getEnv()->SetByteArrayRegion(arr, 0, imageData.getSize(),
