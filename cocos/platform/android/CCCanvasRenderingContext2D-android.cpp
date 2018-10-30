@@ -110,6 +110,12 @@ public:
     {
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
+        if (x >= _bufferWidth || y >= _bufferHeight)
+            return;
+        if (x + w > _bufferWidth)
+            w = _bufferWidth - x;
+        if (y + h > _bufferHeight)
+            h = _bufferHeight - y;
         JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "clearRect", x, y, w, h);
         fillData();
     }
@@ -118,6 +124,12 @@ public:
     {
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
+        if (x >= _bufferWidth || y >= _bufferHeight)
+            return;
+        if (x + w > _bufferWidth)
+            w = _bufferWidth - x;
+        if (y + h > _bufferHeight)
+            h = _bufferHeight - y;
         JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "fillRect", x, y, w, h);
         fillData();
     }
@@ -186,6 +198,12 @@ public:
     void _fillImageData(const Data &imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) {
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
+        if (offsetX >= _bufferWidth || offsetY >= _bufferHeight)
+            return;
+        if (offsetX + imageWidth > _bufferWidth)
+            imageWidth = _bufferWidth - offsetX;
+        if (offsetY + imageHeight > _bufferHeight)
+            imageHeight = _bufferHeight - offsetY;
 
         jbyteArray arr = JniHelper::getEnv()->NewByteArray(imageData.getSize());
         JniHelper::getEnv()->SetByteArrayRegion(arr, 0, imageData.getSize(),
