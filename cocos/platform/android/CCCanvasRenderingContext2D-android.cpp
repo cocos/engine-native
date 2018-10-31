@@ -443,6 +443,11 @@ void CanvasRenderingContext2D::set_lineCap(const std::string& lineCap)
     _impl->setLineCap(lineCap);
 }
 
+/*
+ * support format e.g.: "oblique bold small-caps 18px Arial"
+ *                      "italic bold small-caps 25px Arial"
+ *                      "italic 25px Arial"
+ * */
 void CanvasRenderingContext2D::set_font(const std::string& font)
 {
     if (_font != font)
@@ -471,7 +476,11 @@ void CanvasRenderingContext2D::set_font(const std::string& font)
         bool isItalic = font.find("italic", 0) != std::string::npos;
         bool isSmallCaps = font.find("small-caps", 0) != std::string::npos;
         bool isOblique = font.find("oblique", 0) != std::string::npos;
+        //font-style: italic, oblique, normal
+        //font-weight: normal, bold
+        //font-variant: normal, small-caps
         _impl->updateFont(fontName, fontSize, isBold, isItalic, isOblique, isSmallCaps);
+
     }
 }
 

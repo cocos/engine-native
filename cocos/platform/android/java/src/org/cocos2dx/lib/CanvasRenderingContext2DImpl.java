@@ -31,6 +31,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.text.TextPaint;
 import android.util.Log;
 
@@ -72,6 +73,7 @@ public class CanvasRenderingContext2DImpl {
     private String mFontName = "Arial";
     private float mFontSize = 40.0f;
     private float mLineWidth = 0.0f;
+    private static float _sApproximatingOblique = -0.25f;//please check paint api documentation
     private boolean mIsBoldFont = false;
     private boolean mIsItalicFont = false;
     private boolean mIsObliqueFont = false;
@@ -187,9 +189,9 @@ public class CanvasRenderingContext2DImpl {
         }
         paint.setTypeface(typeFace);
         if(obliqueFont) {
-            paint.setTextSkewX(-0.25f);
+            paint.setTextSkewX(_sApproximatingOblique);
         }
-        if(smallCapsFontVariant && android.os.Build.VERSION.SDK_INT >= 21) {
+        if(smallCapsFontVariant && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             paint.setFontFeatureSettings("smcp");
         }
         return paint;
@@ -351,9 +353,9 @@ public class CanvasRenderingContext2DImpl {
     }
 
     private void scaleX(TextPaint textPaint, String text, float maxWidth) {
-        if(maxWidth < 0.001) return;
+        if(maxWidth < Float.MIN_VALUE) return;
         float measureWidth = this.measureText(text);
-        if((measureWidth - maxWidth) < 0.001) return;
+        if((measureWidth - maxWidth) < Float.MIN_VALUE) return;
         float scaleX = maxWidth/measureWidth;
         textPaint.setTextScaleX(scaleX);
     }
@@ -363,7 +365,7 @@ public class CanvasRenderingContext2DImpl {
         createTextPaintIfNeeded();
         mTextPaint.setARGB(mFillStyleA, mFillStyleR, mFillStyleG, mFillStyleB);
         mTextPaint.setStyle(Paint.Style.FILL);
-        this.scaleX(mTextPaint, text, maxWidth);
+        scaleX(mTextPaint, text, maxWidth);
         Point pt = convertDrawPoint(new Point(x, y), text);
         // Convert to baseline Y
         float baselineY = pt.y - mTextPaint.getFontMetrics().descent;
@@ -376,7 +378,7 @@ public class CanvasRenderingContext2DImpl {
         mTextPaint.setARGB(mStrokeStyleA, mStrokeStyleR, mStrokeStyleG, mStrokeStyleB);
         mTextPaint.setStyle(Paint.Style.STROKE);
         mTextPaint.setStrokeWidth(mLineWidth);
-        this.scaleX(mTextPaint, text, maxWidth);
+        scaleX(mTextPaint, text, maxWidth);
         Point pt = convertDrawPoint(new Point(x, y), text);
         // Convert to baseline Y
         float baselineY = pt.y - mTextPaint.getFontMetrics().descent;
