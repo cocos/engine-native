@@ -789,6 +789,11 @@ void CanvasRenderingContext2D::set_lineJoin(const std::string& lineJoin)
     //SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
 }
 
+void CanvasRenderingContext2D::set_lineCap(const std::string& lineCap)
+{
+    //
+}
+
 void CanvasRenderingContext2D::set_font(const std::string& font)
 {
     if (_font != font)

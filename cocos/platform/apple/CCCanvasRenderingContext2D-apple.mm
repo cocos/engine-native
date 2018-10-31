@@ -66,14 +66,14 @@ namespace {
     CGFloat _width;
     CGFloat _height;
     CGContextRef _context;
-    
+
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     NSGraphicsContext* _currentGraphicsContext;
     NSGraphicsContext* _oldGraphicsContext;
 #else
     CGContextRef _oldContext;
 #endif
-    
+
     CGColorSpaceRef _colorSpace;
     cocos2d::Data _imageData;
     NSBezierPath* _path;
@@ -366,7 +366,7 @@ namespace {
     CGContextBeginTransparencyLayerWithRect(_context, CGRectMake(0, 0, _width, _height), nullptr);
     CGContextSetTextDrawingMode(_context, kCGTextFill);
 
-    
+
 
     NSAttributedString *stringWithAttributes =[[[NSAttributedString alloc] initWithString:text
                                                                                attributes:_tokenAttributesDict] autorelease];
@@ -714,6 +714,11 @@ void CanvasRenderingContext2D::set_lineCap(const std::string& lineCap)
 void CanvasRenderingContext2D::set_lineJoin(const std::string& lineJoin)
 {
     //SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
+}
+
+void CanvasRenderingContext2D::set_lineCap(const std::string& lineCap)
+{
+    //
 }
 
 void CanvasRenderingContext2D::set_font(const std::string& font)
