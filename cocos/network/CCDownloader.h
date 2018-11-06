@@ -77,6 +77,8 @@ namespace cocos2d { namespace network {
         Downloader(const DownloaderHints& hints);
         ~Downloader();
 
+        static Downloader* getDefault();
+
         std::function<void(const DownloadTask& task,
                            std::vector<unsigned char>& data)> onDataTaskSuccess;
 

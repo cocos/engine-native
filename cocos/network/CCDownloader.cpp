@@ -24,6 +24,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include <memory>
+
 #include "network/CCDownloader.h"
 
 // include platform specific implement class
@@ -44,6 +46,9 @@
 
 #endif
 
+
+static std::shared_ptr<cocos2d::network::Downloader> _defaultDownloader = nullptr;
+
 namespace cocos2d { namespace network {
 
     DownloadTask::DownloadTask()
@@ -54,6 +59,15 @@ namespace cocos2d { namespace network {
     DownloadTask::~DownloadTask()
     {
         DLLOG("Destruct DownloadTask %p", this);
+    }
+
+    Downloader * Downloader::getDefault() 
+    {
+        if(!_defaultDownloader)
+        {
+            _defaultDownloader = std::make_shared<Downloader>();
+        }
+        return _defaultDownloader.get();
     }
 
 ////////////////////////////////////////////////////////////////////////////////

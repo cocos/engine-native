@@ -796,25 +796,24 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
     if (path.find("http://") == 0 || path.find("https://") == 0)
     {
 #if USE_NET_WORK
-        auto request = new cocos2d::network::HttpRequest();
-        request->setRequestType(cocos2d::network::HttpRequest::Type::GET);
-        request->setUrl(path);
-        request->setResponseCallback([=](cocos2d::network::HttpClient* client, cocos2d::network::HttpResponse* response){
-            auto data = response->getResponseData();
-            if (data != nullptr && !data->empty())
-            {
-                int imageBytes = (int)data->size();
-                unsigned char* imageData = (unsigned char*)malloc(imageBytes);
-                memcpy(imageData, data->data(), imageBytes);
-                initImageFunc("", imageData, imageBytes);
-            }
-            else
-            {
-                SE_REPORT_ERROR("Getting image from (%s) failed!", path.c_str());
-            }
-        });
-        cocos2d::network::HttpClient::getInstance()->send(request);
-        request->release();
+        auto downloader  = cocos2d::network::Downloader::getDefault();
+        auto task = downloader->createDownloadDataTask(path, "");
+        downloader->onDataTaskSuccess = [=](const cocos2d::network::DownloadTask& task,
+                                           std::vector<unsigned char>& data) {
+            int imageBytes = (int)data.size();
+            unsigned char* imageData = (unsigned char*)malloc(imageBytes);
+            memcpy(imageData, data.data(), imageBytes);
+            initImageFunc("", imageData, imageBytes);
+
+        };
+        downloader->onTaskError = [=](const cocos2d::network::DownloadTask& task,
+                                     int errorCode,
+                                     int errorCodeInternal,
+                                     const std::string& errorStr) {
+
+            SE_REPORT_ERROR("Getting image from (%s) failed!", path.c_str());
+        };
+
 #else
         SE_REPORT_ERROR("can't load remote image if you disable network module!");
 #endif // USE_NET_WORK
