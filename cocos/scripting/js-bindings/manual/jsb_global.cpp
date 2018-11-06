@@ -46,10 +46,20 @@ se::Object* __glObj = nullptr;
 
 static ThreadPool* __threadPool = nullptr;
 
+static std::shared_ptr<cocos2d::network::Downloader> _localDownloader = nullptr;
 static std::string xxteaKey = "";
 void jsb_set_xxtea_key(const std::string& key)
 {
     xxteaKey = key;
+}
+
+static cocos2d::network::Downloader *localDownloader()
+{
+    if(!_localDownloader)
+    {
+        _localDownloader = std::make_shared<cocos2d::network::Downloader>();
+    }
+    return _localDownloader.get();
 }
 
 static const char* BYTE_CODE_FILE_EXT = ".jsc";
@@ -796,7 +806,7 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
     if (path.find("http://") == 0 || path.find("https://") == 0)
     {
 #if USE_NET_WORK
-        auto downloader  = cocos2d::network::Downloader::getDefault();
+        auto downloader  = localDownloader();
         downloader->createDownloadDataTask(path, "");
         downloader->onDataTaskSuccess = [=](const cocos2d::network::DownloadTask& task,
                                            std::vector<unsigned char>& data) {
