@@ -810,6 +810,11 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
         downloader->createDownloadDataTask(path, "");
         downloader->onDataTaskSuccess = [=](const cocos2d::network::DownloadTask& task,
                                            std::vector<unsigned char>& data) {
+            if(data.empty())
+            {
+                SE_REPORT_ERROR("Getting image from (%s) failed!", path.c_str());
+                return;
+            }
             int imageBytes = (int)data.size();
             unsigned char* imageData = (unsigned char*)malloc(imageBytes);
             memcpy(imageData, data.data(), imageBytes);
