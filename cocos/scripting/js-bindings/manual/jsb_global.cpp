@@ -797,7 +797,7 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
     {
 #if USE_NET_WORK
         auto downloader  = cocos2d::network::Downloader::getDefault();
-        auto task = downloader->createDownloadDataTask(path, "");
+        downloader->createDownloadDataTask(path, "");
         downloader->onDataTaskSuccess = [=](const cocos2d::network::DownloadTask& task,
                                            std::vector<unsigned char>& data) {
             int imageBytes = (int)data.size();
