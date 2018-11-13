@@ -438,22 +438,23 @@ namespace
         }
     }
     
+#define TO_4BIT(a, b)  (((a * b) + 14) / 15)
     void premultiply4444(GLvoid* pixels, uint32_t pixelBytes)
     {
         uint16_t* pointer = (uint16_t*)pixels;
         uint8_t r = 0;
         uint8_t g = 0;
         uint8_t b = 0;
-        float a = 0.f;
+        uint8_t a = 0;
         for (int i = 0; i < pixelBytes; i += 2, pointer++)
         {
             r = (*pointer & 0xF000) >> 12;
             g = (*pointer & 0x0F00) >> 8;
             b = (*pointer & 0x00F0) >> 4;
-            a = (*pointer & 0xF) / 15.0f;
-            *pointer = ((uint8_t)(r * a) << 12 & 0xF000) |
-                       ((uint8_t)(g * a) << 8 & 0x0F00)  |
-                       ((uint8_t)(b * a) << 4 & 0x00F0)  |
+            a = *pointer & 0xF;
+            *pointer = (TO_4BIT(r, a) << 12 & 0xF000) |
+                       (TO_4BIT(g, a) << 8 & 0x0F00)  |
+                       (TO_4BIT(b, a) << 4 & 0x00F0)  |
                        (uint8_t)(*pointer & 0xF);
         }
     }
