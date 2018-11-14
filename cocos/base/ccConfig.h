@@ -59,11 +59,15 @@ THE SOFTWARE.
 #endif
 
 #ifndef USE_V8_DEBUGGER
-#if define(COCOS2D_DEBUG) && COCOS2D_DEBUG > 0
-#define USE_V8_DEBUGGER 1
-#else
-#define USE_V8_DEBUGGER 0
-#endif
+    #ifdef COCOS2D_DEBUG
+        #if COCOS2D_DEBUG > 0
+            #define USE_V8_DEBUGGER 1
+        #else
+            #define USE_V8_DEBUGGER 0
+        #endif
+    #else
+        #define USE_V8_DEBUGGER 0
+    #endif
 #endif
 
 /** @def CC_ENABLE_STACKABLE_ACTIONS
