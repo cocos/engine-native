@@ -58,18 +58,6 @@ THE SOFTWARE.
 #define USE_NET_WORK 1
 #endif
 
-#ifndef USE_V8_DEBUGGER
-    #ifdef COCOS2D_DEBUG
-        #if COCOS2D_DEBUG > 0
-            #define USE_V8_DEBUGGER 1
-        #else
-            #define USE_V8_DEBUGGER 0
-        #endif
-    #else
-        #define USE_V8_DEBUGGER 0
-    #endif
-#endif
-
 /** @def CC_ENABLE_STACKABLE_ACTIONS
  * If enabled, actions that alter the position property (eg: MoveBy, JumpBy, BezierBy, etc..) will be stacked.
  * If you run 2 or more 'position' actions at the same time on a node, then end position will be the sum of all the positions.
