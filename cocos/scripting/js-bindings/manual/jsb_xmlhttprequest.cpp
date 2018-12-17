@@ -306,43 +306,17 @@ void XMLHttpRequest::getHeader(const std::string& header)
     {
         // Get Header and Set StatusText
         // Split String into Tokens
-        char* cstr = new (std::nothrow) char [header.length()+1];
 
         // Seems like we have the response Code! Parse it and check for it.
-        char* pch;
-        strncpy(cstr, header.c_str(), header.length());
-        cstr[header.length()] = '\0';
-
-        pch = strtok(cstr, " ");
-        while (pch != nullptr)
+        if (header.find("HTTP") == 0)
         {
-            std::stringstream ss;
-            std::string val;
-
-            ss << pch;
-            val = ss.str();
-            size_t found_http = val.find("HTTP");
-
-            // Check for HTTP Header to set statusText
-            if (found_http != std::string::npos) {
-
-                std::stringstream mystream;
-
-                // Get Response Status
-                pch = strtok (nullptr, " ");
-                //mystream << pch;    //ignore HTTP statusCode 
-
-                pch = strtok (nullptr, " ");
-                mystream << pch;
-
-                _statusText = mystream.str();
-                
-            }
-            
-            pch = strtok (nullptr, " ");
+            std::stringstream mystream;
+            int _v1, _v2, code = 200;
+            sscanf(header.c_str(), "HTTP/%d.%d %d", &_v1, &_v2, &code);
+            mystream << code;
+            _statusText = mystream.str();
         }
 
-        CC_SAFE_DELETE_ARRAY(cstr);
     }
 }
 
