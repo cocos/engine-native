@@ -306,17 +306,13 @@ void XMLHttpRequest::getHeader(const std::string& header)
     {
         // Get Header and Set StatusText
         // Split String into Tokens
-
-        // Seems like we have the response Code! Parse it and check for it.
         if (header.find("HTTP") == 0)
         {
-            std::stringstream mystream;
-            int _v1, _v2, code = 200;
-            sscanf(header.c_str(), "HTTP/%d.%d %d", &_v1, &_v2, &code);
-            mystream << code;
-            _statusText = mystream.str();
+            int _v1, _v2;
+            char code[16] = {0};
+            sscanf(header.c_str(), "HTTP/%d.%d %s", &_v1, &_v2, code);
+            _statusText = code;
         }
-
     }
 }
 
