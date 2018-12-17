@@ -309,9 +309,10 @@ void XMLHttpRequest::getHeader(const std::string& header)
         if (header.find("HTTP") == 0)
         {
             int _v1, _v2;
-            char code[16] = {0};
-            sscanf(header.c_str(), "HTTP/%d.%d %s", &_v1, &_v2, code);
-            _statusText = code;
+            char _code[16] = {0};
+            char statusText[16] = {0};
+            sscanf(header.c_str(), "HTTP/%d.%d %s %s", &_v1, &_v2, _code, statusText);
+            _statusText = statusText;
         }
     }
 }
