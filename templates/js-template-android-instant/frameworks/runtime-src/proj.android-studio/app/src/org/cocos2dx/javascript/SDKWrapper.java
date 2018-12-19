@@ -68,8 +68,7 @@ public class SDKWrapper {
             String json = this.getJson(this.mainActive, "project.json");
             JSONObject jsonObject = new JSONObject(json);
             JSONArray serviceClassPath = jsonObject.getJSONArray("serviceClassPath");
-            if (serviceClassPath == null)
-                return;
+            if (serviceClassPath == null) return;
             int length = serviceClassPath.length();
             for (int i = 0; i < length; i++) {
                 String classPath = serviceClassPath.getString(i);
@@ -92,7 +91,6 @@ public class SDKWrapper {
                 sb.append(next);
             }
         } catch (IOException e) {
-            ;
             e.printStackTrace();
             sb.delete(0, sb.length());
         }
@@ -178,12 +176,4 @@ public class SDKWrapper {
             sdk.onStart();
         }
     }
-
 }
-
-    
-
-     
-
-            
-    
