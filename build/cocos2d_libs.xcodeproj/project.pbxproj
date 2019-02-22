@@ -1045,6 +1045,10 @@
 		46FDDC66202D504E00931238 /* CCApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 46FDDC65202D504D00931238 /* CCApplication.h */; };
 		46FDDC67202D504E00931238 /* CCApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 46FDDC65202D504D00931238 /* CCApplication.h */; };
 		46FDDC69202D733800931238 /* CCApplication-ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46FDDC68202D733700931238 /* CCApplication-ios.mm */; };
+		4D404B82221E93D600E96A3A /* etc2.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D404B80221E93D600E96A3A /* etc2.h */; };
+		4D404B83221E93D600E96A3A /* etc2.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D404B80221E93D600E96A3A /* etc2.h */; };
+		4D404B84221E93D600E96A3A /* etc2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D404B81221E93D600E96A3A /* etc2.cpp */; };
+		4D404B85221E93D600E96A3A /* etc2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D404B81221E93D600E96A3A /* etc2.cpp */; };
 		4DC57D211F7A58B5005B6546 /* xxtea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */; };
 		4DC57D331F7B840E005B6546 /* xxtea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */; };
 		5027253A190BF1B900AAF4ED /* cocos2d.h in Headers */ = {isa = PBXBuildFile; fileRef = 50272538190BF1B900AAF4ED /* cocos2d.h */; };
@@ -1734,6 +1738,8 @@
 		46FDDC62202D502E00931238 /* CCApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCApplication.h; path = ../CCApplication.h; sourceTree = "<group>"; };
 		46FDDC65202D504D00931238 /* CCApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCApplication.h; sourceTree = "<group>"; };
 		46FDDC68202D733700931238 /* CCApplication-ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CCApplication-ios.mm"; sourceTree = "<group>"; };
+		4D404B80221E93D600E96A3A /* etc2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = etc2.h; sourceTree = "<group>"; };
+		4D404B81221E93D600E96A3A /* etc2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = etc2.cpp; sourceTree = "<group>"; };
 		4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxtea.cpp; sourceTree = "<group>"; };
 		4DC57D201F7A58B5005B6546 /* xxtea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xxtea.h; sourceTree = "<group>"; };
 		50272538190BF1B900AAF4ED /* cocos2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cocos2d.h; path = ../cocos/cocos2d.h; sourceTree = "<group>"; };
@@ -2845,6 +2851,8 @@
 		46FDDAE9202ADDCE00931238 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				4D404B81221E93D600E96A3A /* etc2.cpp */,
+				4D404B80221E93D600E96A3A /* etc2.h */,
 				46FDDAFD202ADDCE00931238 /* base64.cpp */,
 				46FDDAFA202ADDCE00931238 /* base64.h */,
 				46FDDB0A202ADDCE00931238 /* CCAutoreleasePool.cpp */,
@@ -3105,6 +3113,7 @@
 				0430127921DCF2B80007084D /* Event.h in Headers */,
 				1A52DB5F205BCDC700350EE3 /* HelperMacros.h in Headers */,
 				46FDDACF202ACC6A00931238 /* RenderBuffer.h in Headers */,
+				4D404B82221E93D600E96A3A /* etc2.h in Headers */,
 				46FDDAAF202ACC6A00931238 /* Texture2D.h in Headers */,
 				5091A7A319BFABA800AC8789 /* CCPlatformDefine.h in Headers */,
 				046E06242185B37100B24E2D /* CCSlot.h in Headers */,
@@ -3617,6 +3626,7 @@
 				046E040021804E6B00B24E2D /* CreatorAttachmentLoader.h in Headers */,
 				1A52DB7C205BCDD000350EE3 /* SeApi.h in Headers */,
 				469303A92046AE05004A3D6C /* SeApi.h in Headers */,
+				4D404B83221E93D600E96A3A /* etc2.h in Headers */,
 				0430123621DCF2B80007084D /* extension.h in Headers */,
 				46FDDAAE202ACC6A00931238 /* Macro.h in Headers */,
 				0430123E21DCF2B80007084D /* spine.h in Headers */,
@@ -3825,6 +3835,7 @@
 				0430123721DCF2B80007084D /* BoneData.c in Sources */,
 				0430128321DCF2B80007084D /* Skin.c in Sources */,
 				1AAAC8EB205CB6E9005321B9 /* AudioCache.mm in Sources */,
+				4D404B84221E93D600E96A3A /* etc2.cpp in Sources */,
 				4648882720AC2BC900CD1E4A /* CCRenderTexture.cpp in Sources */,
 				46AE3FF92092F3A600F3A228 /* inspector_socket.cc in Sources */,
 				1A52DB61205BCDC700350EE3 /* Object.cpp in Sources */,
@@ -4299,6 +4310,7 @@
 				046E06CE2185B49F00B24E2D /* CanvasData.cpp in Sources */,
 				469303952046AE05004A3D6C /* RefCounter.cpp in Sources */,
 				46FDDABC202ACC6A00931238 /* VertexFormat.cpp in Sources */,
+				4D404B85221E93D600E96A3A /* etc2.cpp in Sources */,
 				046E061D2185B37100B24E2D /* CCFactory.cpp in Sources */,
 				50ABBD5D1925AB0000A911A9 /* Vec3.cpp in Sources */,
 				043012BC21DCF2B80007084D /* IkConstraintData.c in Sources */,
