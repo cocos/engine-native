@@ -3567,9 +3567,13 @@ static bool JSB_glGetSupportedExtensions(se::State& s) {
             ++i;
         }
     }
-    
+
     if (Configuration::getInstance()->supportsFloatTexture()) {
         jsobj->setArrayElement(element++, se::Value("OES_texture_float"));
+    }
+
+    if (Configuration::getInstance()->supportsETC2()) {
+        jsobj->setArrayElement(element++, se::Value("WEBGL_compressed_texture_etc"));
     }
 
     s.rval().setObject(jsobj.get());

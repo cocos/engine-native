@@ -28,6 +28,8 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 #include "base/CCLog.h"
 
+#include "base/etc2.h"
+
 #include <regex>
 
 NS_CC_BEGIN
@@ -43,6 +45,7 @@ Configuration::Configuration()
 , _maxModelviewStackDepth(0)
 , _supportsPVRTC(false)
 , _supportsETC1(false)
+, _supportsETC2(false)
 , _supportsS3TC(false)
 , _supportsATITC(false)
 , _supportsNPOT(false)
@@ -121,6 +124,9 @@ void Configuration::gatherGPUInfo()
     }
     
     _glExtensions = (char *)glGetString(GL_EXTENSIONS);
+    
+    _supportsETC2 = checkForEtc2();
+    _valueDict["gl.supports_ETC2"] = Value(_supportsETC2);
 
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxTextureSize);
     _valueDict["gl.max_texture_size"] = Value((int)_maxTextureSize);
@@ -154,7 +160,7 @@ void Configuration::gatherGPUInfo()
     _supportsDiscardFramebuffer = checkForGLExtension("GL_EXT_discard_framebuffer");
     _valueDict["gl.supports_discard_framebuffer"] = Value(_supportsDiscardFramebuffer);
 
-    _supportsShareableVAO = checkForGLExtension("vertex_array_object");
+    _supportsShareableVAO = checkForGLExtension("GL_OES_vertex_array_object");
     _valueDict["gl.supports_vertex_array_object"] = Value(_supportsShareableVAO);
 
     _supportsOESMapBuffer = checkForGLExtension("GL_OES_mapbuffer");
@@ -234,6 +240,29 @@ bool Configuration::supportsETC() const
 #else
     return false;
 #endif
+}
+
+bool Configuration::checkForEtc2() const
+{
+    GLint numFormats = 0;
+    glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &numFormats);
+    GLint* formats = new GLint[numFormats];
+    glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, formats);
+    
+    int supportNum = 0;
+    for (GLint i = 0; i < numFormats; ++i)
+    {
+        if (formats[i] == GL_COMPRESSED_RGB8_ETC2 || formats[i] == GL_COMPRESSED_RGBA8_ETC2_EAC)
+        supportNum++;
+    }
+    delete [] formats;
+    
+    return supportNum >= 2;
+}
+
+bool Configuration::supportsETC2() const
+{
+    return _supportsETC2;
 }
 
 bool Configuration::supportsS3TC() const
