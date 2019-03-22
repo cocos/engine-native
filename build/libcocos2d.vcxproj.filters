@@ -422,6 +422,9 @@
     <ClCompile Include="..\cocos\editor-support\IOBuffer.cpp">
       <Filter>editor-support</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\editor-support\RenderInfoMgr.cpp">
+      <Filter>editor-support</Filter>
+    </ClCompile>
     <ClCompile Include="..\cocos\editor-support\spine-creator-support\AttachmentVertices.cpp">
       <Filter>editor-support\spine-creator-support</Filter>
     </ClCompile>
@@ -435,6 +438,9 @@
       <Filter>editor-support\spine-creator-support</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\spine-creator-support\SpineRenderer.cpp">
+      <Filter>editor-support\spine-creator-support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\editor-support\spine-creator-support\SkeletonDataMgr.cpp">
       <Filter>editor-support\spine-creator-support</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\dragonbones\animation\Animation.cpp">
@@ -679,6 +685,9 @@
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\spine\PathConstraintData.c">
       <Filter>editor-support\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\editor-support\MeshBuffer.cpp">
+      <Filter>editor-support</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1226,6 +1235,9 @@
     <ClInclude Include="..\cocos\editor-support\spine-creator-support\SpineRenderer.h">
       <Filter>editor-support\spine-creator-support</Filter>
     </ClInclude>
+    <ClInclude Include="..\cocos\editor-support\spine-creator-support\SkeletonDataMgr.h">
+      <Filter>editor-support\spine-creator-support</Filter>
+    </ClInclude>
     <ClInclude Include="..\cocos\editor-support\dragonbones\animation\Animation.h">
       <Filter>editor-support\dragonbones\animation</Filter>
     </ClInclude>
@@ -1379,6 +1391,9 @@
     <ClInclude Include="..\cocos\editor-support\IOBuffer.h">
       <Filter>editor-support</Filter>
     </ClInclude>
+    <ClInclude Include="..\cocos\editor-support\RenderInfoMgr.h">
+      <Filter>editor-support</Filter>
+    </ClInclude>
     <ClInclude Include="..\cocos\editor-support\MiddlewareMacro.h">
       <Filter>editor-support</Filter>
     </ClInclude>
@@ -1507,6 +1522,9 @@
     </ClInclude>
     <ClInclude Include="..\cocos\editor-support\spine\PathConstraintData.h">
       <Filter>editor-support\spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\editor-support\MeshBuffer.h">
+      <Filter>editor-support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

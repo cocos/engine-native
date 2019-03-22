@@ -50,7 +50,7 @@ public:
     static CCArmatureDisplay* create();
     
 private:
-    void traverseArmature(Armature* armature);
+    void traverseArmature(Armature* armature, float parentOpacity = 1.0f);
     
 protected:
     bool _debugDraw = false;
@@ -121,21 +121,24 @@ public:
     }
     
     /**
-     * @return material data,it's a Uint32Array,
-     * format |material length|index offset|[texture index|blend src|blend dst|indice length|...loop...]
+     * @return render info offset,it's a Uint32Array,
+     * format |render info offset|
      */
-    se_object_ptr getMaterialData() const
+    se_object_ptr getRenderInfoOffset() const
     {
-        if (_materialBuffer)
+        if (_renderInfoOffset)
         {
-            return _materialBuffer->getTypeArray();
+            return _renderInfoOffset->getTypeArray();
         }
         return nullptr;
     }
     
     void setColor(cocos2d::Color4B& color)
     {
-        _nodeColor = color;
+        _nodeColor.r = color.r / 255.0f;
+        _nodeColor.g = color.g / 255.0f;
+        _nodeColor.b = color.b / 255.0f;
+        _nodeColor.a = color.a / 255.0f;
     }
     
     void setDebugBonesEnabled(bool enabled)
@@ -168,25 +171,24 @@ public:
     
 private:
     std::map<std::string,bool> _listenerIDMap;
-    cocos2d::middleware::IOTypedArray* _materialBuffer = nullptr;
+    cocos2d::middleware::IOTypedArray* _renderInfoOffset = nullptr;
     cocos2d::middleware::IOTypedArray* _debugBuffer = nullptr;
-    cocos2d::Color4B _nodeColor = cocos2d::Color4B::WHITE;
+    cocos2d::Color4F _nodeColor = cocos2d::Color4F::WHITE;
     
-    int _preBlendSrc = -1;
-    int _preBlendDst = -1;
+    int _preBlendMode = -1;
     int _preTextureIndex = -1;
+    int _curTextureIndex = -1;
     int _curBlendSrc = -1;
     int _curBlendDst = -1;
-    int _curTextureIndex = -1;
     
     int _preISegWritePos = -1;
     int _curISegLen = 0;
     
     int _debugSlotsLen = 0;
     int _materialLen = 0;
+    std::size_t _materialLenOffset = -1;
     
     bool _premultipliedAlpha = false;
-    cocos2d::Color4B _finalColor = cocos2d::Color4B::WHITE;
     dbEventCallback _dbEventCallback = nullptr;
 };
 

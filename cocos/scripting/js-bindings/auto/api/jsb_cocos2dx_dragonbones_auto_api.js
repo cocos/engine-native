@@ -2398,13 +2398,13 @@ func
 },
 
 /**
- * @method getMaterialData
- * @return {se::Object}
+ * @method getRootDisplay
+ * @return {dragonBones::CCArmatureDisplay}
  */
-getMaterialData : function (
+getRootDisplay : function (
 )
 {
-    return se::Object;
+    return dragonBones::CCArmatureDisplay;
 },
 
 /**
@@ -2436,6 +2436,16 @@ dispose : function (
 },
 
 /**
+ * @method getRenderInfoOffset
+ * @return {se::Object}
+ */
+getRenderInfoOffset : function (
+)
+{
+    return se::Object;
+},
+
+/**
  * @method setOpacityModifyRGB
  * @param {bool} arg0
  */
@@ -2443,16 +2453,6 @@ setOpacityModifyRGB : function (
 bool 
 )
 {
-},
-
-/**
- * @method getRootDisplay
- * @return {dragonBones::CCArmatureDisplay}
- */
-getRootDisplay : function (
-)
-{
-    return dragonBones::CCArmatureDisplay;
 },
 
 /**
@@ -2554,19 +2554,13 @@ CCArmatureDisplay : function (
 dragonBones.CCFactory = {
 
 /**
- * @method parseDragonBonesDataOnly
- * @param {String} arg0
- * @param {String} arg1
- * @param {float} arg2
- * @return {dragonBones::DragonBonesData}
+ * @method setTimeScale
+ * @param {float} arg0
  */
-parseDragonBonesDataOnly : function (
-str, 
-str, 
+setTimeScale : function (
 float 
 )
 {
-    return dragonBones::DragonBonesData;
 },
 
 /**
@@ -2580,15 +2574,13 @@ getSoundEventManager : function (
 },
 
 /**
- * @method handleTextureAtlasData
- * @param {bool} arg0
- * @param {String} arg1
- * @param {float} arg2
+ * @method removeDragonBonesDataByUUID
+ * @param {String} arg0
+ * @param {bool} arg1
  */
-handleTextureAtlasData : function (
-bool, 
+removeDragonBonesDataByUUID : function (
 str, 
-float 
+bool 
 )
 {
 },
@@ -2625,6 +2617,22 @@ int
 )
 {
     return dragonBones::CCTextureAtlasData;
+},
+
+/**
+ * @method parseDragonBonesDataByPath
+ * @param {String} arg0
+ * @param {String} arg1
+ * @param {float} arg2
+ * @return {dragonBones::DragonBonesData}
+ */
+parseDragonBonesDataByPath : function (
+str, 
+str, 
+float 
+)
+{
+    return dragonBones::DragonBonesData;
 },
 
 /**
