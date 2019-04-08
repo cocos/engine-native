@@ -28,6 +28,10 @@ package cz.msebera.android.httpclient.impl.conn;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import cz.msebera.android.httpclient.conn.DnsResolver;
 
@@ -40,9 +44,20 @@ public class SystemDefaultDnsResolver implements DnsResolver {
 
     public static final SystemDefaultDnsResolver INSTANCE = new SystemDefaultDnsResolver();
 
+    private DnsResolver.AddressesTransform transform = null;
+
     @Override
     public InetAddress[] resolve(final String host) throws UnknownHostException {
-        return InetAddress.getAllByName(host);
+        InetAddress[] addressArray = InetAddress.getAllByName(host);
+        if(this.transform != null) {
+            return this.transform.transform(addressArray);
+        }
+        return addressArray;
+    }
+
+    @Override
+    public void setTransform(AddressesTransform transMethod) {
+        this.transform = transMethod;
     }
 
 }

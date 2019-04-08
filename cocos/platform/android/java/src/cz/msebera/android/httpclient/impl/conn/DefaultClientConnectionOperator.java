@@ -107,7 +107,7 @@ public class DefaultClientConnectionOperator implements ClientConnectionOperator
     public DefaultClientConnectionOperator(final SchemeRegistry schemes) {
         Args.notNull(schemes, "Scheme registry");
         this.schemeRegistry = schemes;
-        this.dnsResolver = new SystemDefaultDnsResolver();
+        this.dnsResolver = SystemDefaultDnsResolver.INSTANCE;
     }
 
     /**

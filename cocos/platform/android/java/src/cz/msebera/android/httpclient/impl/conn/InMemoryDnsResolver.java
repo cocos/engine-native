@@ -92,4 +92,9 @@ public class InMemoryDnsResolver implements DnsResolver {
         return resolvedAddresses;
     }
 
+    @Override
+    public void setTransform(AddressesTransform transMethod) {
+        throw new UnsupportedOperationException("method is not implemented!");
+    }
+
 }

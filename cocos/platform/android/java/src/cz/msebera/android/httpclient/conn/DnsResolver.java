@@ -51,4 +51,12 @@ public interface DnsResolver {
      */
     InetAddress[] resolve(String host) throws UnknownHostException;
 
+    /**
+     * Do address filter and ordering.
+     */
+    interface AddressesTransform {
+        InetAddress[] transform(InetAddress[] addresses);
+    }
+
+    void setTransform(final AddressesTransform transMethod);
 }
