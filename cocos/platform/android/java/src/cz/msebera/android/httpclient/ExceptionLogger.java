@@ -29,7 +29,7 @@ package cz.msebera.android.httpclient;
 /**
  * @since 4.4
  */
-public interface ExceptionLogger {
+public abstract class ExceptionLogger {
 
     public static final ExceptionLogger NO_OP = new ExceptionLogger() {
 
@@ -48,6 +48,6 @@ public interface ExceptionLogger {
 
     };
 
-    void log(Exception ex);
+    public abstract void log(Exception ex);
 
 }
