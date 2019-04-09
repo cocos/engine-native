@@ -49,8 +49,8 @@ public class SystemDefaultDnsResolver implements DnsResolver {
     @Override
     public InetAddress[] resolve(final String host) throws UnknownHostException {
         InetAddress[] addressArray = InetAddress.getAllByName(host);
-        if(this.transform != null) {
-            return this.transform.transform(addressArray);
+        if(this.getTransform() != null) {
+            return this.getTransform().transform(addressArray);
         }
         return addressArray;
     }
@@ -60,4 +60,8 @@ public class SystemDefaultDnsResolver implements DnsResolver {
         this.transform = transMethod;
     }
 
+    @Override
+    public AddressesTransform getTransform() {
+        return transform;
+    }
 }

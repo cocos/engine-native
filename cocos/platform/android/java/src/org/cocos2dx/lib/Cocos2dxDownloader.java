@@ -263,9 +263,9 @@ public class Cocos2dxDownloader {
                 if(o1IsIpV6 == o2IsIpv6)
                     return 0;
                 else if(o1IsIpV6)
-                    return -1;
-                else
                     return 1;
+                else
+                    return -1;
             }
         };
         resolver.setTransform(new DnsResolver.AddressesTransform() {

@@ -59,4 +59,5 @@ public interface DnsResolver {
     }
 
     void setTransform(final AddressesTransform transMethod);
+    AddressesTransform getTransform();
 }

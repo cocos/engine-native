@@ -89,12 +89,22 @@ public class InMemoryDnsResolver implements DnsResolver {
         if(resolvedAddresses == null){
             throw new UnknownHostException(host + " cannot be resolved");
         }
+        if(this.getTransform()!=null) {
+            return this.getTransform().transform(resolvedAddresses);
+        }
         return resolvedAddresses;
     }
 
+    private AddressesTransform transform = null;
+
     @Override
     public void setTransform(AddressesTransform transMethod) {
-        throw new UnsupportedOperationException("method is not implemented!");
+        this.transform = transMethod;
+    }
+
+    @Override
+    public AddressesTransform getTransform() {
+        return transform;
     }
 
 }
