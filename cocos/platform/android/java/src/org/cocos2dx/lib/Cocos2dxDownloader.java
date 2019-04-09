@@ -254,6 +254,14 @@ public class Cocos2dxDownloader {
     private static HashMap<String, Boolean> _resumingSupport = new HashMap<String, Boolean>();
 
     static {
+        //To disable IP list sorting, just comment code below.
+        resortDnsResult();
+    }
+
+    /**
+     * Enable sorting IP list, move Inet6Address to the end of the list.
+     */
+    static void resortDnsResult() {
         DnsResolver resolver = SystemDefaultDnsResolver.INSTANCE;
         Comparator<InetAddress> comparator = new Comparator<InetAddress>() {
             @Override
@@ -277,7 +285,6 @@ public class Cocos2dxDownloader {
             }
         });
     }
-
 
     void onProgress(final int id, final long downloadBytes, final long downloadNow, final long downloadTotal) {
         DownloadTask task = (DownloadTask)_taskMap.get(id);

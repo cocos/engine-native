@@ -29,10 +29,18 @@ package cz.msebera.android.httpclient.impl.conn;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 import cz.msebera.android.httpclient.extras.HttpClientAndroidLog;
 /* LogFactory removed by HttpClient for Android script. */
@@ -141,6 +149,32 @@ public class DefaultClientConnectionOperator implements ClientConnectionOperator
         return reg;
     }
 
+    /**
+     * Collect ipv6 addresses from all network interfaces.
+     *
+     * Return the first item in the collection.
+     */
+    private Inet6Address getIPV6AddressLocal() throws SocketException {
+        Enumeration<NetworkInterface> list = NetworkInterface.getNetworkInterfaces();
+        List<Inet6Address> result = new ArrayList<>();
+        while (list.hasMoreElements()) {
+            NetworkInterface element = list.nextElement();
+            if(element.isLoopback() || element.getName().startsWith("dummy") || !element.isUp()) {
+                continue;
+            }
+
+            Enumeration<InetAddress> addresses = element.getInetAddresses();
+            while(addresses.hasMoreElements()) {
+                InetAddress addr = addresses.nextElement();
+                if(addr instanceof Inet6Address && !addr.isLoopbackAddress() && addr.isLinkLocalAddress()) {
+                    result.add((Inet6Address)addr);
+                }
+            }
+        }
+        //return first Inet6Address in list
+        return result.size() > 0 ? result.get(0) : null;
+    }
+
     public void openConnection(
             final OperatedClientConnection conn,
             final HttpHost target,
@@ -170,6 +204,13 @@ public class DefaultClientConnectionOperator implements ClientConnectionOperator
             if (local != null) {
                 localAddress = new InetSocketAddress(local, 0);
             }
+
+            // bind local IPV6 address
+            if(localAddress == null && address instanceof Inet6Address) {
+                Inet6Address localAddrIPV6 = getIPV6AddressLocal();
+                localAddress = new InetSocketAddress(localAddrIPV6, 0);
+            }
+
             if (this.log.isDebugEnabled()) {
                 this.log.debug("Connecting to " + remoteAddress);
             }

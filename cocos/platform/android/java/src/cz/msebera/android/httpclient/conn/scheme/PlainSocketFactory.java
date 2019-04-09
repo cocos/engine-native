@@ -28,11 +28,14 @@
 package cz.msebera.android.httpclient.conn.scheme;
 
 import java.io.IOException;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import cz.msebera.android.httpclient.annotation.Immutable;
 import cz.msebera.android.httpclient.conn.ConnectTimeoutException;
@@ -109,6 +112,7 @@ public class PlainSocketFactory implements SocketFactory, SchemeSocketFactory {
             sock.setReuseAddress(HttpConnectionParams.getSoReuseaddr(params));
             sock.bind(localAddress);
         }
+        
         final int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
         final int soTimeout = HttpConnectionParams.getSoTimeout(params);
 
