@@ -33,9 +33,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Cocos2dxGLSurfaceView extends GLSurfaceView {
     // ===========================================================
     // Constants
@@ -56,8 +53,6 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
 
     private Cocos2dxRenderer mCocos2dxRenderer;
     private boolean mStopHandleTouchAndKeyEvents = false;
-
-    private List<Runnable> mPendingTouchEvents = new ArrayList<Runnable>();
 
     // ===========================================================
     // Constructors
@@ -163,7 +158,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                 final float xPointerDown = pMotionEvent.getX(indexPointerDown);
                 final float yPointerDown = pMotionEvent.getY(indexPointerDown);
 
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleActionDown(idPointerDown, xPointerDown, yPointerDown);
@@ -182,7 +177,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                 final float xDown = xs[0];
                 final float yDown = ys[0];
 
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleActionDown(idDown, xDown, yDown);
@@ -191,7 +186,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleActionMove(ids, xs, ys);
@@ -205,7 +200,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                 final float xPointerUp = pMotionEvent.getX(indexPointUp);
                 final float yPointerUp = pMotionEvent.getY(indexPointUp);
 
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleActionUp(idPointerUp, xPointerUp, yPointerUp);
@@ -219,7 +214,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                 final float xUp = xs[0];
                 final float yUp = ys[0];
 
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleActionUp(idUp, xUp, yUp);
@@ -228,7 +223,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                 break;
 
             case MotionEvent.ACTION_CANCEL:
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleActionCancel(ids, xs, ys);
@@ -269,7 +264,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
             case KeyEvent.KEYCODE_ENTER:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
             case KeyEvent.KEYCODE_DPAD_CENTER:
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleKeyDown(pKeyCode);
@@ -293,7 +288,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
             case KeyEvent.KEYCODE_ENTER:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
             case KeyEvent.KEYCODE_DPAD_CENTER:
-                this.queueTouchEvent(new Runnable() {
+                this.queueEvent(new Runnable() {
                     @Override
                     public void run() {
                         Cocos2dxGLSurfaceView.this.mCocos2dxRenderer.handleKeyUp(keyCode);
@@ -304,29 +299,6 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
                 return super.onKeyUp(keyCode, event);
         }
     }
-
-    /**
-     * Cache event if renderer is not ready.
-     * @param r event callback
-     */
-    public void queueTouchEvent(Runnable r) {
-        if (this.mCocos2dxRenderer != null && this.mCocos2dxRenderer.isNativeInitCompleted()) {
-            queueEvent(r);
-        } else {
-            mPendingTouchEvents.add(r);
-        }
-    }
-
-    /**
-     * Re-queue cached events
-     */
-    public void flushPendingEvents() {
-        for (Runnable r : mPendingTouchEvents) {
-            queueEvent(r);
-        }
-        mPendingTouchEvents.clear();
-    }
-
 
     // ===========================================================
     // Methods

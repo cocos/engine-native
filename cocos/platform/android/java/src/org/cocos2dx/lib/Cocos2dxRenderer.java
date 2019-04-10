@@ -57,15 +57,9 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private long mOldNanoTime = 0;
     private long mFrameCount = 0;
 
-    private Cocos2dxGLSurfaceView mSurfaceView = null;
-
     // ===========================================================
     // Constructors
     // ===========================================================
-
-    public Cocos2dxRenderer(Cocos2dxGLSurfaceView view) {
-        mSurfaceView = view;
-    }
 
     // ===========================================================
     // Getter & Setter
@@ -110,7 +104,6 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         mOldNanoTime = System.nanoTime();
         this.mLastTickInNanoSeconds = System.nanoTime();
         mNativeInitCompleted = true;
-
         if (mGameEngineInitializedListener != null) {
             Cocos2dxHelper.getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -119,7 +112,6 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
                 }
             });
         }
-        mSurfaceView.flushPendingEvents();
     }
 
     @Override
@@ -186,26 +178,44 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private static native void nativeOnResume();
 
     public void handleActionDown(final int id, final float x, final float y) {
+        if (! mNativeInitCompleted)
+            return;
+
         Cocos2dxRenderer.nativeTouchesBegin(id, x, y);
     }
 
     public void handleActionUp(final int id, final float x, final float y) {
+        if (! mNativeInitCompleted)
+            return;
+
         Cocos2dxRenderer.nativeTouchesEnd(id, x, y);
     }
 
     public void handleActionCancel(final int[] ids, final float[] xs, final float[] ys) {
+        if (! mNativeInitCompleted)
+            return;
+
         Cocos2dxRenderer.nativeTouchesCancel(ids, xs, ys);
     }
 
     public void handleActionMove(final int[] ids, final float[] xs, final float[] ys) {
+        if (! mNativeInitCompleted)
+            return;
+
         Cocos2dxRenderer.nativeTouchesMove(ids, xs, ys);
     }
 
     public void handleKeyDown(final int keyCode) {
+        if (! mNativeInitCompleted)
+            return;
+
         Cocos2dxRenderer.nativeKeyEvent(keyCode, true);
     }
 
     public void handleKeyUp(final int keyCode) {
+        if (! mNativeInitCompleted)
+            return;
+
         Cocos2dxRenderer.nativeKeyEvent(keyCode, false);
     }
 
@@ -221,10 +231,6 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 
         Cocos2dxHelper.onEnterBackground();
         Cocos2dxRenderer.nativeOnPause();
-    }
-
-    public boolean isNativeInitCompleted() {
-        return mNativeInitCompleted;
     }
 
     public void handleOnResume() {
