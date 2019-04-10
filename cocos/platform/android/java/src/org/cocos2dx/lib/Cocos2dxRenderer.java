@@ -100,6 +100,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(final GL10 GL10, final EGLConfig EGLConfig) {
+        mNativeInitCompleted = false;
         Cocos2dxRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight, mDefaultResourcePath);
         mOldNanoTime = System.nanoTime();
         this.mLastTickInNanoSeconds = System.nanoTime();
