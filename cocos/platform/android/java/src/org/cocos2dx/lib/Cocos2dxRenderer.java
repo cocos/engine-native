@@ -57,9 +57,15 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private long mOldNanoTime = 0;
     private long mFrameCount = 0;
 
+    private Cocos2dxGLSurfaceView mSurfaceView = null;
+
     // ===========================================================
     // Constructors
     // ===========================================================
+
+    public Cocos2dxRenderer(Cocos2dxGLSurfaceView view) {
+        mSurfaceView = view;
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -104,6 +110,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         mOldNanoTime = System.nanoTime();
         this.mLastTickInNanoSeconds = System.nanoTime();
         mNativeInitCompleted = true;
+
         if (mGameEngineInitializedListener != null) {
             Cocos2dxHelper.getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -112,6 +119,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
                 }
             });
         }
+        mSurfaceView.flushPendingEvents();
     }
 
     @Override
@@ -213,6 +221,10 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 
         Cocos2dxHelper.onEnterBackground();
         Cocos2dxRenderer.nativeOnPause();
+    }
+
+    public boolean isNativeInitCompleted() {
+        return mNativeInitCompleted;
     }
 
     public void handleOnResume() {
