@@ -58,7 +58,6 @@ static bool js_network_Downloader_setOnTaskProgress(se::State& s)
 }
 SE_BIND_FUNC(js_network_Downloader_setOnTaskProgress)
 
-
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_network_Downloader_finalize)
 
 static bool js_network_Downloader_constructor(se::State& s)
