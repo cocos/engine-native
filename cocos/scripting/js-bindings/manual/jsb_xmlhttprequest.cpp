@@ -329,6 +329,9 @@ void XMLHttpRequest::abort()
     }
 
     _readyState = ReadyState::UNSENT;
+    
+    //request is aborted, no more callback needed.
+    _httpRequest->setResponseCallback(nullptr);
 }
 
 void XMLHttpRequest::setReadyState(ReadyState readyState)
