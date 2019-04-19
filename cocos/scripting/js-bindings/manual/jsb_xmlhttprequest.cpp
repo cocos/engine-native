@@ -214,6 +214,7 @@ private:
     bool _isLoadStart;
     bool _isLoadEnd;
     bool _isDiscardedByReset;
+    bool _isTimeout;
 };
 
 XMLHttpRequest::XMLHttpRequest()
@@ -235,6 +236,7 @@ XMLHttpRequest::XMLHttpRequest()
 , _isLoadStart(false)
 , _isLoadEnd(false)
 , _isDiscardedByReset(false)
+, _isTimeout(false)
 {
 }
 
@@ -271,6 +273,7 @@ bool XMLHttpRequest::open(const std::string& method, const std::string& url)
 
     _status = 0;
     _isAborted = false;
+    _isTimeout = false;
 
     setReadyState(ReadyState::OPENED);
 
@@ -399,7 +402,17 @@ void XMLHttpRequest::getHeader(const std::string& header)
 void XMLHttpRequest::onResponse(HttpClient* client, HttpResponse* response)
 {
     Application::getInstance()->getScheduler()->unscheduleAllForTarget(this);
-
+    
+    if(_isTimeout) {
+        _readyState = ReadyState::UNSENT;
+        _isLoadEnd = true;
+        if(onloadend)
+        {
+            onloadend();
+        }
+        return;
+    }
+    
     if (_isAborted || _readyState == ReadyState::UNSENT)
     {
         return;
@@ -497,18 +510,13 @@ std::string XMLHttpRequest::getMimeType() const
 
 void XMLHttpRequest::sendRequest()
 {
+    _isTimeout = false;
     if (_timeoutInMilliseconds > 0)
     {
         Application::getInstance()->getScheduler()->schedule([this](float dt){
             if (ontimeout != nullptr)
                 ontimeout();
-
-            _readyState = ReadyState::UNSENT;
-
-            _isLoadEnd = true;
-            if (onloadend != nullptr)
-                onloadend();
-
+            _isTimeout = true;
         }, this, _timeoutInMilliseconds / 1000.0f, 0, 0.0f, false, "XMLHttpRequest");
     }
     setHttpRequestHeader();
@@ -650,7 +658,7 @@ static bool XMLHttpRequest_constructor(se::State& s)
             func.toObject()->call(se::EmptyValueArray, thizObj);
         }
     };
-
+    
     request->onloadstart = [=](){
         if (!request->isDiscardedByReset())
         {
