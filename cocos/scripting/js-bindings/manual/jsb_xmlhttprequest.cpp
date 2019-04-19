@@ -404,7 +404,6 @@ void XMLHttpRequest::onResponse(HttpClient* client, HttpResponse* response)
     Application::getInstance()->getScheduler()->unscheduleAllForTarget(this);
     
     if(_isTimeout) {
-        _readyState = ReadyState::UNSENT;
         _isLoadEnd = true;
         if(onloadend)
         {
@@ -517,6 +516,7 @@ void XMLHttpRequest::sendRequest()
             if (ontimeout != nullptr)
                 ontimeout();
             _isTimeout = true;
+            _readyState = ReadyState::UNSENT;
         }, this, _timeoutInMilliseconds / 1000.0f, 0, 0.0f, false, "XMLHttpRequest");
     }
     setHttpRequestHeader();
