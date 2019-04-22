@@ -39,7 +39,7 @@ namespace {
                 *p++ = r;
                 *p++ = g;
                 *p++ = b;
-				*p++ = a;
+                *p++ = a;
             }
         }
     }
@@ -159,7 +159,7 @@ public:
             uint8_t r = _fillStyle.r * 255.0f;
             uint8_t g = _fillStyle.g * 255.0f;
             uint8_t b = _fillStyle.b * 255.0f;
-			uint8_t a = _fillStyle.a;
+            uint8_t a = _fillStyle.a;
             fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b, a);
         }
     }
