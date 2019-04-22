@@ -215,7 +215,7 @@ private:
     bool _isLoadEnd;
     bool _isDiscardedByReset;
     bool _isTimeout;
-    bool _isSend;
+    bool _isSending;
 };
 
 XMLHttpRequest::XMLHttpRequest()
@@ -238,7 +238,7 @@ XMLHttpRequest::XMLHttpRequest()
 , _isLoadEnd(false)
 , _isDiscardedByReset(false)
 , _isTimeout(false)
-, _isSend(false)
+, _isSending(false)
 {
 }
 
@@ -316,7 +316,7 @@ void XMLHttpRequest::abort()
         return;
 
     _isAborted = true;
-    _isSend = false;
+    _isSending = false;
 
     setReadyState(ReadyState::DONE);
 
@@ -408,7 +408,7 @@ void XMLHttpRequest::getHeader(const std::string& header)
 void XMLHttpRequest::onResponse(HttpClient* client, HttpResponse* response)
 {
     Application::getInstance()->getScheduler()->unscheduleAllForTarget(this);
-    _isSend = false;
+    _isSending = false;
     
     if(_isTimeout) {
         _isLoadEnd = true;
@@ -516,13 +516,13 @@ std::string XMLHttpRequest::getMimeType() const
 
 void XMLHttpRequest::sendRequest()
 {
-    if(_isSend)
+    if(_isSending)
     {
         //ref https://xhr.spec.whatwg.org/#the-send()-method
         //TODO: if send() flag is set, an exception should be thrown out.
         return;
     }
-    _isSend = true;
+    _isSending = true;
     _isTimeout = false;
     if (_timeoutInMilliseconds > 0)
     {
