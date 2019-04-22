@@ -25,13 +25,17 @@ THE SOFTWARE.
  ****************************************************************************/
 package org.cocos2dx.lib;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.SparseArray;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -129,6 +133,24 @@ public class Cocos2dxWebViewHelper {
                 Cocos2dxWebView webView = webViews.get(index);
                 if (webView != null) {
                     webView.setWebViewRect(left, top, maxWidth, maxHeight);
+                }
+            }
+        });
+    }
+
+    public static void setBackgroundTransparent(final int index, final boolean isTransparent) {
+        sCocos2dxActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Cocos2dxWebView webView = webViews.get(index);
+                if (webView != null) {
+                    webView.setBackgroundColor(isTransparent ? Color.TRANSPARENT : Color.WHITE);
+                    try {
+                        Method method = webView.getClass().getMethod("setLayerType",int.class,Paint.class);
+                        method.invoke(webView,WebView.LAYER_TYPE_SOFTWARE,null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
