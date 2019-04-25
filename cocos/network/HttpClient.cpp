@@ -115,8 +115,7 @@ void HttpClient::networkThread()
         _responseQueueMutex.unlock();
 
         _schedulerMutex.lock();
-        auto sche = _scheduler.lock();
-        if (sche)
+        if (auto sche = _scheduler.lock())
         {
             sche->performFunctionInCocosThread(CC_CALLBACK_0(HttpClient::dispatchResponseCallbacks, this));
         }
@@ -144,8 +143,7 @@ void HttpClient::networkThreadAlone(HttpRequest* request, HttpResponse* response
     processResponse(response, responseMessage);
 
     _schedulerMutex.lock();
-    auto sche = _scheduler.lock();
-    if (sche)
+    if (auto sche = _scheduler.lock())
     {
         sche->performFunctionInCocosThread([this, response, request]{
             const ccHttpRequestCallback& callback = request->getResponseCallback();
@@ -358,8 +356,7 @@ void HttpClient::destroyInstance()
     auto thiz = _httpClient;
     _httpClient = nullptr;
 
-    auto sche = thiz->_scheduler.lock();
-    if(sche)
+    if(auto sche = thiz->_scheduler.lock())
     {
         sche->unscheduleAllForTarget(thiz);
     }

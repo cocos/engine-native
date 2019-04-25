@@ -118,8 +118,7 @@ AudioEngineImpl::AudioEngineImpl()
 
 AudioEngineImpl::~AudioEngineImpl()
 {
-    auto sche = _scheduler.lock();
-    if (sche)
+    if (auto sche = _scheduler.lock())
     {
         sche->unschedule("AudioEngine", this);
     }
@@ -251,8 +250,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
 
     if (_lazyInitLoop) {
         _lazyInitLoop = false;
-        auto sche = _scheduler.lock();
-        if(sche)
+        if(auto sche = _scheduler.lock())
         {
             sche->schedule(CC_CALLBACK_1(AudioEngineImpl::update, this), this, 0.05f, false, "AudioEngine");
         }
@@ -269,8 +267,7 @@ void AudioEngineImpl::_play2d(AudioCache *cache, int audioID)
         _threadMutex.lock();
         auto playerIt = _audioPlayers.find(audioID);
         if (playerIt != _audioPlayers.end() && playerIt->second->play2d()) {
-            auto sche = _scheduler.lock();
-            if (sche)
+            if (auto sche = _scheduler.lock())
             {
                 sche->performFunctionInCocosThread([audioID]() {
 
@@ -521,8 +518,7 @@ void AudioEngineImpl::update(float dt)
 
     if(_audioPlayers.empty()){
         _lazyInitLoop = true;
-        auto sche = _scheduler.lock();
-        if(sche)
+        if(auto sche = _scheduler.lock())
         {
             sche->unschedule("AudioEngine", this);
         }
