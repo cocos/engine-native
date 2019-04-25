@@ -112,16 +112,16 @@ static ALCcontext *s_ALContext = nullptr;
 AudioEngineImpl::AudioEngineImpl()
 : _lazyInitLoop(true)
 , _currentAudioID(0)
-, _scheduler(nullptr)
 {
 
 }
 
 AudioEngineImpl::~AudioEngineImpl()
 {
-    if (_scheduler != nullptr)
+    auto sche = _scheduler.lock();
+    if (sche)
     {
-        _scheduler->unschedule("AudioEngine", this);
+        sche->unschedule("AudioEngine", this);
     }
 
     if (s_ALContext) {
@@ -251,7 +251,11 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
 
     if (_lazyInitLoop) {
         _lazyInitLoop = false;
-        _scheduler->schedule(CC_CALLBACK_1(AudioEngineImpl::update, this), this, 0.05f, false, "AudioEngine");
+        auto sche = _scheduler.lock();
+        if(sche)
+        {
+            sche->schedule(CC_CALLBACK_1(AudioEngineImpl::update, this), this, 0.05f, false, "AudioEngine");
+        }
     }
 
     return _currentAudioID++;
@@ -265,12 +269,16 @@ void AudioEngineImpl::_play2d(AudioCache *cache, int audioID)
         _threadMutex.lock();
         auto playerIt = _audioPlayers.find(audioID);
         if (playerIt != _audioPlayers.end() && playerIt->second->play2d()) {
-            _scheduler->performFunctionInCocosThread([audioID](){
+            auto sche = _scheduler.lock();
+            if (sche)
+            {
+                sche->performFunctionInCocosThread([audioID]() {
 
-                if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
-                    AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
-                }
-            });
+                    if (AudioEngine::_audioIDInfoMap.find(audioID) != AudioEngine::_audioIDInfoMap.end()) {
+                        AudioEngine::_audioIDInfoMap[audioID].state = AudioEngine::AudioState::PLAYING;
+                    }
+                });
+            }
         }
         _threadMutex.unlock();
     }
@@ -513,7 +521,11 @@ void AudioEngineImpl::update(float dt)
 
     if(_audioPlayers.empty()){
         _lazyInitLoop = true;
-        _scheduler->unschedule("AudioEngine", this);
+        auto sche = _scheduler.lock();
+        if(sche)
+        {
+            sche->unschedule("AudioEngine", this);
+        }
     }
 }
 
