@@ -301,10 +301,12 @@ enum class CanvasTextBaseline {
         point.y += _fontSize / 2.0f;
     }
 
-    // Since the web platform cannot get the baseline of the font, a special calculation is performed.
-    // The mac and ios only needs to add descender and ascender to calculate.
+    // Since the web platform cannot get the baseline of the font, an additive offset is performed for all platforms.
+    // That's why we should add baseline back again on other platforms
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     point.y -= _font.descender;
+
+    // The origin on macOS is bottom-left by default, so we need to convert y from top-left origin to bottom-left origin.
     point.y = _height - point.y;
 #else
     point.y -= _font.ascender;
