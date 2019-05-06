@@ -548,7 +548,7 @@ private:
             for (int y = 0; y < _bufferHeight; ++y)
             {
                 pPixel = (COLORREF *)dataBuf + y * (int)_bufferWidth;
-				pImage = (COLORREF *)imageBuf + y * (int)_bufferWidth;
+                pImage = (COLORREF *)imageBuf + y * (int)_bufferWidth;
                 for (int x = 0; x < _bufferWidth; ++x)
                 {
                     COLORREF& clr = *pPixel;
