@@ -156,10 +156,11 @@ public:
         uint8_t* buffer = _imageData.getBytes();
         if (buffer)
         {
-            uint8_t r = _fillStyle.r * 255.0f;
-            uint8_t g = _fillStyle.g * 255.0f;
-            uint8_t b = _fillStyle.b * 255.0f;
-            uint8_t a = _fillStyle.a;
+			float alpha = _fillStyle.a;
+            uint8_t r = _fillStyle.r * 255.0f * alpha;
+            uint8_t g = _fillStyle.g * 255.0f * alpha;
+            uint8_t b = _fillStyle.b * 255.0f * alpha;
+            uint8_t a = _fillStyle.a * 255.0f;
             fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b, a);
         }
     }
@@ -522,6 +523,8 @@ private:
             int dataLen = _bufferWidth * _bufferHeight * 4;
             unsigned char* dataBuf = (unsigned char*)malloc(sizeof(unsigned char) * dataLen);
             CC_BREAK_IF(!dataBuf);
+			unsigned char* imageBuf = _imageData.getBytes();
+			CC_BREAK_IF(!imageBuf);
 
             struct
             {
@@ -541,9 +544,11 @@ private:
             uint8_t r, g, b;
             float alpha = _fillStyle.a;
             COLORREF * pPixel = nullptr;
+			COLORREF * pImage = nullptr;
             for (int y = 0; y < _bufferHeight; ++y)
             {
                 pPixel = (COLORREF *)dataBuf + y * (int)_bufferWidth;
+				pImage = (COLORREF *)imageBuf + y * (int)_bufferWidth;
                 for (int x = 0; x < _bufferWidth; ++x)
                 {
                     COLORREF& clr = *pPixel;
@@ -558,7 +563,12 @@ private:
                         COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
                         clr = ((BYTE)(dirtyValue * alpha) << 24) | textColor;
                     }
+					else
+					{
+						clr = *pImage;
+					}
                     ++pPixel;
+					++pImage;
                 }
             }
 
