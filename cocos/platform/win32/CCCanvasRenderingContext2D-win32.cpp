@@ -156,7 +156,7 @@ public:
         uint8_t* buffer = _imageData.getBytes();
         if (buffer)
         {
-			float alpha = _fillStyle.a;
+            float alpha = _fillStyle.a;
             uint8_t r = _fillStyle.r * 255.0f * alpha;
             uint8_t g = _fillStyle.g * 255.0f * alpha;
             uint8_t b = _fillStyle.b * 255.0f * alpha;
@@ -523,8 +523,8 @@ private:
             int dataLen = _bufferWidth * _bufferHeight * 4;
             unsigned char* dataBuf = (unsigned char*)malloc(sizeof(unsigned char) * dataLen);
             CC_BREAK_IF(!dataBuf);
-			unsigned char* imageBuf = _imageData.getBytes();
-			CC_BREAK_IF(!imageBuf);
+            unsigned char* imageBuf = _imageData.getBytes();
+            CC_BREAK_IF(!imageBuf);
 
             struct
             {
@@ -544,7 +544,7 @@ private:
             uint8_t r, g, b;
             float alpha = _fillStyle.a;
             COLORREF * pPixel = nullptr;
-			COLORREF * pImage = nullptr;
+            COLORREF * pImage = nullptr;
             for (int y = 0; y < _bufferHeight; ++y)
             {
                 pPixel = (COLORREF *)dataBuf + y * (int)_bufferWidth;
@@ -563,12 +563,12 @@ private:
                         COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
                         clr = ((BYTE)(dirtyValue * alpha) << 24) | textColor;
                     }
-					else
-					{
-						clr = *pImage;
-					}
+                    else
+                    {
+                        clr = *pImage;
+                    }
                     ++pPixel;
-					++pImage;
+                    ++pImage;
                 }
             }
 
