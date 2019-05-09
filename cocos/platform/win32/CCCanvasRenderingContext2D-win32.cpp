@@ -120,7 +120,7 @@ public:
         DeleteObject(_hpen);
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        _imageData = _getTextureData();
+        _fillTextureData();
     }
 
     void saveContext()
@@ -174,7 +174,7 @@ public:
         Point offsetPoint = _convertDrawPoint(Point(x, y), text);
 
         _drawText(text, (int)offsetPoint.x, (int)offsetPoint.y);
-        _imageData = _getTextureData();
+        _fillTextureData();
 
     }
 
@@ -515,9 +515,8 @@ private:
         return true;
     }
 
-    Data _getTextureData()
+    void _fillTextureData()
     {
-        Data ret;
         do
         {
             int dataLen = _bufferWidth * _bufferHeight * 4;
@@ -552,6 +551,7 @@ private:
                 for (int x = 0; x < _bufferWidth; ++x)
                 {
                     COLORREF& clr = *pPixel;
+                    COLORREF& val = *pImage;
                     uint8_t dirtyValue = GetRValue(clr);
                     // "dirtyValue > 0" means pixel was covered when drawing text
                     if (dirtyValue > 0)
@@ -561,21 +561,13 @@ private:
                         g = _fillStyle.g * dirtyValue * alpha;
                         b = _fillStyle.b * dirtyValue * alpha;
                         COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
-                        clr = ((BYTE)(dirtyValue * alpha) << 24) | textColor;
-                    }
-                    else
-                    {
-                        clr = *pImage;
+                        val = ((BYTE)(dirtyValue * alpha) << 24) | textColor;
                     }
                     ++pPixel;
                     ++pImage;
                 }
             }
-
-            ret.fastSet(dataBuf, dataLen);
         } while (0);
-
-        return ret;
     }
 
     Point _convertDrawPoint(Point point, std::string text) {
