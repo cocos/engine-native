@@ -436,7 +436,6 @@ static bool js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback(se::State
                     se::ValueArray args;
                     args.resize(1);
                     ok &= Data_to_seval(larg0, &args[0]);
-                    args[0].toObject()->root();
                     se::Value rval;
                     se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     se::Object* funcObj = jsFunc.toObject();
@@ -444,7 +443,6 @@ static bool js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback(se::State
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
                     }
-                    args[0].toObject()->unroot();
                 };
                 arg0 = lambda;
             }

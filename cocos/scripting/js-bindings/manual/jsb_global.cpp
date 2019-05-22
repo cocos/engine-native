@@ -856,7 +856,6 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                     Data data;
                     data.copy(imgInfo->data, imgInfo->length);
                     Data_to_seval(data, &dataVal);
-                    dataVal.toObject()->root();
                     retObj->setProperty("data", dataVal);
                     retObj->setProperty("width", se::Value(imgInfo->width));
                     retObj->setProperty("height", se::Value(imgInfo->height));
@@ -894,11 +893,6 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
 
                 callbackVal.toObject()->call(seArgs, nullptr);
                 img->release();
-
-                if(dataVal.isObject() && dataVal.toObject()) 
-                {
-                    dataVal.toObject()->unroot();
-                }
             });
 
         });
