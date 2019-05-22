@@ -895,7 +895,7 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                 callbackVal.toObject()->call(seArgs, nullptr);
                 img->release();
 
-                if(dataVal.toObject()) 
+                if(dataVal.isObject() && dataVal.toObject()) 
                 {
                     dataVal.toObject()->unroot();
                 }
