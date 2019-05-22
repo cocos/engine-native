@@ -849,14 +849,14 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
             Application::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
                 se::AutoHandleScope hs;
                 se::ValueArray seArgs;
-
+                se::Value dataVal;
                 if (loadSucceed)
                 {
                     se::HandleObject retObj(se::Object::createPlainObject());
                     Data data;
                     data.copy(imgInfo->data, imgInfo->length);
-                    se::Value dataVal;
                     Data_to_seval(data, &dataVal);
+                    dataVal.toObject()->root();
                     retObj->setProperty("data", dataVal);
                     retObj->setProperty("width", se::Value(imgInfo->width));
                     retObj->setProperty("height", se::Value(imgInfo->height));
@@ -894,6 +894,11 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
 
                 callbackVal.toObject()->call(seArgs, nullptr);
                 img->release();
+
+                if(dataVal.toObject()) 
+                {
+                    dataVal.toObject()->unroot();
+                }
             });
 
         });
