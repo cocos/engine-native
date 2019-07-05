@@ -549,9 +549,11 @@ private:
         }
         else if (_textBaseLine == CanvasTextBaseline::MIDDLE)
         {
-             point.y += _fontSize / 2.0f;
+            point.y += _fontSize / 2.0f;
         }
 
+        // Since the web platform cannot get the baseline of the font, an additive offset is performed for all platforms.
+        // That's why we should add baseline back again on other platforms
         GetTextMetrics(_DC, &_tm);
         point.y -= _tm.tmAscent;
 
