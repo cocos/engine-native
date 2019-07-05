@@ -534,9 +534,6 @@ private:
 
     Point _convertDrawPoint(Point point, std::string text) {
         Size textSize = measureText(text);
-        // Convert from bottom left to top left.
-        point.y -= _fontSize;
-
         if (_textAlign == CanvasTextAlign::CENTER)
         {
             point.x -= textSize.width / 2.0f;
@@ -554,6 +551,9 @@ private:
         {
              point.y += _fontSize / 2.0f;
         }
+
+        GetTextMetrics(_DC, &_tm);
+        point.y -= _tm.tmAscent;
 
         return point;
     }
