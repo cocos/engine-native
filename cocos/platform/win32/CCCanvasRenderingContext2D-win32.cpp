@@ -521,11 +521,10 @@ private:
                     COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
 
                     // "dirtyValue > 0" means pixel was covered when drawing text
-                    // Set all transparent pixel to (255, 255, 255, 0)
                     if (dirtyValue > 0)
                         val = ((BYTE)(255 * alpha) << 24) | textColor;
                     else
-                        val = textColor;
+                        val = textColor; // Set all transparent pixels to the same color as font.
 
                     ++pPixel;
                     ++pImage;
