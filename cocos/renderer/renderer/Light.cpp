@@ -118,6 +118,11 @@ void Light::setWorldMatrix(const Mat4& worldMatrix)
 
 void Light::setNode(NodeProxy* node)
 {
+    if (_node == node)
+    {
+        return;
+    }
+    
     if (_node != nullptr)
     {
         _node->release();
