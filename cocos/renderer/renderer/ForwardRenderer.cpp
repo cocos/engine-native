@@ -44,7 +44,6 @@ RENDERER_BEGIN
 ForwardRenderer::ForwardRenderer()
 {
     _arrayPool = new RecyclePool<float>([]()mutable->float*{return new float[16];}, 8);
-
 }
 
 ForwardRenderer::~ForwardRenderer()
@@ -170,11 +169,34 @@ void ForwardRenderer::updateLights(Scene* scene)
 
 void ForwardRenderer::updateDefines()
 {
-    _defines.emplace(std::make_pair("CC_NUM_DIR_LIGHTS", Value(std::min(4, (int)_directionalLights.size()))));
-    _defines.emplace(std::make_pair("CC_NUM_POINT_LIGHTS", Value(std::min(4, (int)_pointLights.size()))));
-    _defines.emplace(std::make_pair("CC_NUM_SPOT_LIGHTS", Value(std::min(4, (int)_spotLights.size()))));
-    _defines.emplace(std::make_pair("CC_NUM_AMBIENT_LIGHTS", Value(std::min(4, (int)_ambientLights.size()))));
-    _defines.emplace(std::make_pair("CC_NUM_SHADOW_LIGHTS", Value(std::min(4, (int)_shadowLights.size()))));
+    static Value dirValue = Value();
+    static Value pointValue = Value();
+    static Value spotValue = Value();
+    static Value ambientValue = Value();
+    static Value shadowValue = Value();
+    
+    int dir = std::min(4, (int)_directionalLights.size());
+    dirValue = dir;
+    
+    int point = std::min(4, (int)_pointLights.size());
+    pointValue = point;
+    
+    int spot = std::min(4, (int)_spotLights.size());
+    spotValue = spot;
+    
+    int ambient = std::min(4, (int)_ambientLights.size());
+    ambientValue = ambient;
+    
+    int shadow = std::min(4, (int)_shadowLights.size());
+    shadowValue = shadow;
+    
+    _defines.emplace(std::make_pair("CC_NUM_DIR_LIGHTS", dirValue));
+    _defines.emplace(std::make_pair("CC_NUM_POINT_LIGHTS", pointValue));
+    _defines.emplace(std::make_pair("CC_NUM_SPOT_LIGHTS", spotValue));
+    _defines.emplace(std::make_pair("CC_NUM_AMBIENT_LIGHTS", ambientValue));
+    _defines.emplace(std::make_pair("CC_NUM_SHADOW_LIGHTS", shadowValue));
+
+    _definesKey = std::to_string(dir) + std::to_string(point) + std::to_string(spot) + std::to_string(ambient) + std::to_string(shadow);
 }
 
 void ForwardRenderer::submitLightsUniforms()
@@ -323,9 +345,10 @@ void ForwardRenderer::submitOtherStagesUniforms()
     _device->setUniformfv("cc_shadow_info", count * 4, shadowLightInfo);
 }
 
-void ForwardRenderer::updateShaderDefines(const StageItem& item)
+void ForwardRenderer::updateShaderDefines(StageItem& item)
 {
     item.defines->push_back(&_defines);
+    item.definesKey = item.definesKey + ":" + _definesKey;
 }
 
 bool ForwardRenderer::compareItems(const StageItem &a, const StageItem &b)
@@ -368,7 +391,7 @@ void ForwardRenderer::drawItems(const std::vector<StageItem>& items)
         shadowMaps.reserve(count);
         std::vector<int> slots;
         slots.reserve(count);
-        for (auto item : items)
+        for (const auto& item : items)
         {
             shadowMaps.clear();
             for(int i = 0; i < count; i++)
@@ -378,7 +401,7 @@ void ForwardRenderer::drawItems(const std::vector<StageItem>& items)
                 slots.push_back(allocTextureUnit());
             }
             _device->setTextureArray("cc_shadow_map", shadowMaps, slots);
-            updateShaderDefines(item);
+            updateShaderDefines(const_cast<StageItem&>(item));
             draw(item);
         }
     }
@@ -405,11 +428,11 @@ void ForwardRenderer::shadowStage(const View& view, const std::vector<StageItem>
     // update rendering
     submitShadowStageUniforms(view);
     
-    for (auto& item : items)
+    for (const auto& item : items)
     {
-        Value def = _programLib->getValueFromDefineList("CC_SHADOW_CASTING", *item.defines);
+        const Value& def = _programLib->getValueFromDefineList("CC_SHADOW_CASTING", *item.defines);
         if (def != Value::Null && def.asBool()) {
-            updateShaderDefines(item);
+            updateShaderDefines(const_cast<StageItem&>(item));
             draw(item);
         }
     }

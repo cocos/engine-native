@@ -28,6 +28,7 @@
 #include "../Macro.h"
 #include "Technique.h"
 #include "base/CCValue.h"
+#include "ProgramLib.h"
 
 RENDERER_BEGIN
 
@@ -45,12 +46,20 @@ public:
     Value getDefine(const std::string& name) const;
     std::unordered_map<std::string, Property>* extractProperties();
     ValueMap* extractDefines();
+    
+    const std::string& getDefinesKey() {return _definesKey;};
     const double getHash() const {return _hash; };
+    
+private:
+    void generateKey();
+    
 private:
     std::unordered_map<std::string, Property> _properties;
     ValueMap _defines;
     double _hash = 0;
     bool _dirty = false;
+    
+    std::string _definesKey = "";
 };
 
 RENDERER_END

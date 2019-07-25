@@ -75,18 +75,17 @@ public:
     /**
      *  @brief Gets unique key for the given program name and defines key.
      */
-    std::string getKey(const std::string& name, const std::vector<ValueMap*>& definesList);
+    const std::string& getKey(const std::string& name, const std::vector<ValueMap*>& definesList, const std::string& definesKey);
 
     /**
      *  @brief Gets program by template name, define settings and defines key.
      *  @note The return value needs to be released by its 'release' method.
      */
-    Program* getProgram(const std::string& name, const std::vector<ValueMap*>& definesList);
+    Program* getProgram(const std::string& name, const std::vector<ValueMap*>& definesList, const std::string& definesKey);
     
-    Value getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList);
+    const Value& getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList);
 
-private:
-    uint32_t getValueKey(const Value& v);
+    static uint32_t getValueKey(const Value& v);
     
 private:
     DeviceGraphics* _device = nullptr;
@@ -98,6 +97,8 @@ private:
     const char* _mediump = "mediump";
     const char* _lowpReplace = "fixed";
     const char* _lowp = "lowp";
+    
+    const std::string _nameStr = "name";
     
     std::unordered_map<std::string, Template> _templates;
     std::unordered_map<std::string, Program*> _cache;

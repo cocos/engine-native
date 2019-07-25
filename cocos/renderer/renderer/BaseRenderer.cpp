@@ -35,6 +35,7 @@
 #include "Pass.h"
 #include "Camera.h"
 #include "Model.h"
+#include "../gfx/Program.h"
 
 RENDERER_BEGIN
 
@@ -153,6 +154,7 @@ void BaseRenderer::render(const View& view, const Scene* scene)
                 stageItem.technique = tech;
                 stageItem.sortKey = -1;
                 stageItem.uniforms = item->uniforms;
+                stageItem.definesKey = item->definesKey;
                 
                 stageItems.push_back(stageItem);
             }
@@ -292,7 +294,11 @@ void BaseRenderer::draw(const StageItem& item)
         
         // set primitive type
         _device->setPrimitiveType(ia->_primitiveType);
-        _program = _programLib->getProgram(pass->_programName, *(item.defines));
+        if ( !_program || _programKey != item.definesKey)
+        {
+            _program = _programLib->getProgram(pass->getProgramName(), *(item.defines), item.definesKey);
+            _programKey = _program->getKey();
+        }
         _device->setProgram(_program);
         
         // cull mode

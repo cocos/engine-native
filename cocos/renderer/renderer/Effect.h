@@ -32,6 +32,7 @@
 #include "../Macro.h"
 #include "Technique.h"
 #include "Pass.h"
+#include "ProgramLib.h"
 
 RENDERER_BEGIN
 
@@ -190,14 +191,14 @@ public:
     /*
      *  @brief Gets the define key for the current define settings.
      */
-    const int32_t& getDefinesKey() { return _definesKey; };
+    const std::string& getDefinesKey() { return _definesKey; };
     /**
      *  @brief Deep copy from other effect.
      */
     void copy(const Effect* effect);
 private:
     double _hash;
-    int32_t _definesKey;
+    std::string _definesKey;
     Vector<Technique*> _techniques;
     std::vector<ValueMap> _defineTemplates;
     ValueMap _cachedNameValues;

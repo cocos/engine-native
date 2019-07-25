@@ -65,6 +65,7 @@ public:
         Technique* technique = nullptr;
         std::vector<ValueMap*>* defines = nullptr;
         std::vector<std::unordered_map<std::string, Effect::Property>*>* uniforms = nullptr;
+        std::string definesKey = "";
         int sortKey = -1;
     };
     typedef std::function<void(const View&, const std::vector<StageItem>&)> StageCallback;
@@ -119,8 +120,7 @@ protected:
     View* requestView();
     
     int _usedTextureUnits = 0;
-    std::string _programName;
-    int32_t _definesKey = 0;
+    std::string _programKey = "";
     DeviceGraphics* _device = nullptr;
     ProgramLib* _programLib = nullptr;
     Program* _program = nullptr;

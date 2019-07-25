@@ -64,6 +64,8 @@ void CustomProperties::define(const std::string& name, const Value& value)
 
     _dirty = true;
     _defines[name] = value;
+    
+    generateKey();
 }
 
 Value CustomProperties::getDefine(const std::string& name) const
@@ -76,6 +78,31 @@ Value CustomProperties::getDefine(const std::string& name) const
     
     RENDERER_LOGW("Failed to get CustomProperties define %s, define not found.", name.c_str());
     return Value::Null;
+}
+
+void CustomProperties::generateKey()
+{
+    _definesKey = "";
+    
+    uint32_t key = 0;
+    uint32_t offset = 0;
+    for (const auto& tmplDef : _defines)
+    {
+        uint32_t vkey = ProgramLib::getValueKey(tmplDef.second);
+        
+        key |= vkey << offset;
+        
+        if (tmplDef.second.getType() != Value::Type::BOOLEAN)
+        {
+            offset += ceil(log2(vkey));
+        }
+        else
+        {
+            offset += 1;
+        }
+    }
+    
+    _definesKey = std::to_string(key);
 }
 
 std::unordered_map<std::string, CustomProperties::Property>* CustomProperties::extractProperties()

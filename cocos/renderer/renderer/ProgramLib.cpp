@@ -268,44 +268,21 @@ void ProgramLib::define(const std::string& name, const std::string& vert, const 
     templ.defines = defines;
 }
 
-std::string ProgramLib::getKey(const std::string& name, const std::vector<ValueMap*>& definesList)
+const std::string& ProgramLib::getKey(const std::string& name, const std::vector<ValueMap*>& definesList, const std::string& definesKey)
 {
     auto iter = _templates.find(name);
     assert(iter != _templates.end());
     
-    uint32_t key = 0;
-    uint32_t offset = 0;
-    for (const auto& tmpl : iter->second.defines)
-    {
-        auto& temp = tmpl.asValueMap();
-        const Value& value = getValueFromDefineList(temp.find("name")->second.asString(), definesList);
-        if (value == Value::Null)
-        {
-            continue;
-        }
-        
-        uint32_t vkey = getValueKey(value);
-        
-        key |= vkey << offset;
-        
-        if (value.getType() != Value::Type::BOOLEAN)
-        {
-            offset += ceil(log2(vkey));
-        }
-        else
-        {
-            offset += 1;
-        }
-    }
-    
+    static std::string key = "";
     // return key << 8 | tmpl.id;
     // key number maybe bigger than 32 bit, need use string to store value.
-    return std::to_string(iter->second.id) + ":" + std::to_string(key);
+    key = std::to_string(iter->second.id) + ":" + definesKey;
+    return key;
 }
 
-Program* ProgramLib::getProgram(const std::string& name, const std::vector<ValueMap*>& definesList)
+Program* ProgramLib::getProgram(const std::string& name, const std::vector<ValueMap*>& definesList, const std::string& definesKey)
 {
-    std::string key = getKey(name, definesList);
+    const std::string& key = getKey(name, definesList, definesKey);
     auto iter = _cache.find(key);
     if (iter != _cache.end()) {
         iter->second->retain();
@@ -328,12 +305,13 @@ Program* ProgramLib::getProgram(const std::string& name, const std::vector<Value
         program->init(_device, vert.c_str(), frag.c_str());
         program->link();
         _cache.emplace(key, program);
+        program->setKey(key);
     }
 
     return program;
 }
 
-Value ProgramLib::getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList)
+const Value& ProgramLib::getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList)
 {
     for (int i = (int)definesList.size() - 1; i >= 0; i--)
     {

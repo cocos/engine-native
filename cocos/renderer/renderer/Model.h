@@ -54,6 +54,8 @@ struct DrawItem
     Effect* effect = nullptr;
     std::vector<ValueMap*>* defines = nullptr;
     std::vector<std::unordered_map<std::string, Effect::Property>*>* uniforms = nullptr;
+    
+    char* definesKey = nullptr;
 };
 
 class Model;
@@ -139,6 +141,8 @@ private:
     bool _dynamicIA = false;
     int _cullingMask = -1;
     int _userKey = -1;
+    
+    std::string _definesKey = "";
 };
 
 // end of renderer group

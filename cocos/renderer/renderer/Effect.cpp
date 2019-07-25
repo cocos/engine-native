@@ -32,7 +32,6 @@ std::vector<std::string> Effect::_sharedDefineList;
 
 Effect::Effect()
 : _hash(0)
-, _definesKey(0)
 {}
 
 void Effect::init(const Vector<Technique*>& techniques,
@@ -143,19 +142,27 @@ void Effect::_updateDefineBitOrder(const ValueMap& nameValues)
 
 void Effect::generateKey()
 {
-    // Update global order when has new define.
-    _updateDefineBitOrder(_cachedNameValues);
+    _definesKey = "";
     
-    _definesKey = 0;
-    for (auto& tmplDefs : _cachedNameValues) {
-        uint32_t value = tmplDefs.second.asUnsignedInt();
-        CCASSERT(value <= 1,"Define value can't greater than 1");
-        value <<= _defineBitOrder[tmplDefs.first];
-        _definesKey |= value;
+    uint32_t key = 0;
+    uint32_t offset = 0;
+    for (const auto& tmplDef : _cachedNameValues)
+    {
+        uint32_t vkey = ProgramLib::getValueKey(tmplDef.second);
+        
+        key |= vkey << offset;
+        
+        if (tmplDef.second.getType() != Value::Type::BOOLEAN)
+        {
+            offset += ceil(log2(vkey));
+        }
+        else
+        {
+            offset += 1;
+        }
     }
     
-    // Reserve 8 bit for the OR operation with program id in ProgramLib.
-    _definesKey <<= 8;
+    _definesKey = std::to_string(key);
 }
 
 void Effect::copy(const Effect* effect)

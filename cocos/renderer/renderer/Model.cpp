@@ -85,18 +85,26 @@ void Model::setEffect(Effect* effect, CustomProperties* customProperties)
     }
     
     _uniforms.clear();
+    _definesList.clear();
+    
+    _definesKey = "";
     
     if (effect != nullptr)
     {
         _definesList.push_back(effect->extractDefines());
         _uniforms.push_back(effect->extractProperties());
+        
+        _definesKey += effect->getDefinesKey();
     }
     
     if (customProperties != nullptr)
     {
         _definesList.push_back(customProperties->extractDefines());
         _uniforms.push_back(customProperties->extractProperties());
+        
+        _definesKey = _definesKey + ":" + customProperties->getDefinesKey();
     }
+    
 }
 
 void Model::setNode(NodeProxy* node)
@@ -117,7 +125,8 @@ void Model::extractDrawItem(DrawItem& out) const
         out.ia = nullptr;
         out.effect = _effect;
         out.defines = const_cast<std::vector<ValueMap*>*>(&_definesList);
-
+        out.definesKey = const_cast<char*>(_definesKey.c_str());
+        
         return;
     }
     
@@ -126,6 +135,7 @@ void Model::extractDrawItem(DrawItem& out) const
     out.effect = _effect;
     out.defines = const_cast<std::vector<ValueMap*>*>(&_definesList);
     out.uniforms = const_cast<std::vector<std::unordered_map<std::string, Effect::Property>*>*>(&_uniforms);
+    out.definesKey = const_cast<char*>(_definesKey.c_str());
 }
 
 void Model::reset()

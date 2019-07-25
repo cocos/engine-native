@@ -140,6 +140,9 @@ public:
      * Link the program with its shader sources
      */
     void link();
+    
+    inline void setKey(const std::string& key) { _key = key; }
+    inline const std::string& getKey() const { return _key; }
 private:
     DeviceGraphics* _device;
     std::vector<Attribute> _attributes;
@@ -148,6 +151,8 @@ private:
     std::string _fragSource;
     uint32_t _id;
     bool _linked;
+    
+    std::string _key;
 };
 
 // end of gfx group
