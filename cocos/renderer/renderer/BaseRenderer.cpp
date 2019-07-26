@@ -294,10 +294,11 @@ void BaseRenderer::draw(const StageItem& item)
         
         // set primitive type
         _device->setPrimitiveType(ia->_primitiveType);
-        if ( !_program || _programKey != item.definesKey)
+        if (!_program || pass->getProgramName() != _programName || _programKey != item.definesKey )
         {
             _program = _programLib->getProgram(pass->getProgramName(), *(item.defines), item.definesKey);
-            _programKey = _program->getKey();
+            _programName = pass->getProgramName();
+            _programKey = item.definesKey;
         }
         _device->setProgram(_program);
         

@@ -121,6 +121,7 @@ protected:
     
     int _usedTextureUnits = 0;
     std::string _programKey = "";
+    std::string _programName = "";
     DeviceGraphics* _device = nullptr;
     ProgramLib* _programLib = nullptr;
     Program* _program = nullptr;
