@@ -526,6 +526,7 @@ private:
                     ++pImage;
                 }
             }
+            free(dataBuf);
         } while (0);
     }
 
