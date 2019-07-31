@@ -439,6 +439,8 @@ static bool js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback(se::State
                     se::Value rval;
                     se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     se::Object* funcObj = jsFunc.toObject();
+                    thisObj->unroot();
+                    funcObj->unroot();
                     bool succeed = funcObj->call(args, thisObj, &rval);
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
