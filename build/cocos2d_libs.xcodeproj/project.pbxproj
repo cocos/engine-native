@@ -921,13 +921,11 @@
 		4648882620AC2BC900CD1E4A /* CCRenderTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 4648882320AC2BC800CD1E4A /* CCRenderTexture.h */; };
 		4648882720AC2BC900CD1E4A /* CCRenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4648882420AC2BC900CD1E4A /* CCRenderTexture.cpp */; };
 		4648882820AC2BC900CD1E4A /* CCRenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4648882420AC2BC900CD1E4A /* CCRenderTexture.cpp */; };
-		468A967E22F43F00005034BE /* libv8_monolith.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 468A967D22F43F00005034BE /* libv8_monolith.a */; };
 		468A967F22F43F4C005034BE /* Class.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DB19205BCD9200350EE3 /* Class.cpp */; };
 		468A968022F43F4F005034BE /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DB08205BCD9200350EE3 /* Object.cpp */; };
 		468A968122F43F53005034BE /* ObjectWrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DAFE205BCD9200350EE3 /* ObjectWrap.cpp */; };
 		468A968222F43F55005034BE /* ScriptEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DB0A205BCD9200350EE3 /* ScriptEngine.cpp */; };
 		468A968322F43F5A005034BE /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DB00205BCD9200350EE3 /* Utils.cpp */; };
-		468A968522F43F8F005034BE /* libv8_monolith.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 468A968422F43F8F005034BE /* libv8_monolith.a */; };
 		468A968722F440AC005034BE /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 468A968622F440AC005034BE /* libuv_a.a */; };
 		469301CF203FC696004A3D6C /* CCConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 469301CD203FC695004A3D6C /* CCConfiguration.h */; };
 		469301D0203FC696004A3D6C /* CCConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 469301CD203FC695004A3D6C /* CCConfiguration.h */; };
@@ -1272,6 +1270,12 @@
 		46FDDC69202D733800931238 /* CCApplication-ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46FDDC68202D733700931238 /* CCApplication-ios.mm */; };
 		4DC57D211F7A58B5005B6546 /* xxtea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */; };
 		4DC57D331F7B840E005B6546 /* xxtea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */; };
+		4DD65EFF2313F33400277E85 /* libv8_libplatform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED997666216C459E00A46923 /* libv8_libplatform.a */; };
+		4DD65F002313F33700277E85 /* libv8_libsampler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED997667216C459E00A46923 /* libv8_libsampler.a */; };
+		4DD65F012313F33C00277E85 /* libv8_base.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED99765E216C453D00A46923 /* libv8_base.a */; };
+		4DD65F022313F34000277E85 /* libv8_snapshot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40F373D921B67A7D0083E4E7 /* libv8_snapshot.a */; };
+		4DD65F032313F34B00277E85 /* libv8_libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED997660216C459D00A46923 /* libv8_libbase.a */; };
+		4DD65F042313F37200277E85 /* libinspector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED997664216C459D00A46923 /* libinspector.a */; };
 		5027253A190BF1B900AAF4ED /* cocos2d.h in Headers */ = {isa = PBXBuildFile; fileRef = 50272538190BF1B900AAF4ED /* cocos2d.h */; };
 		5027253B190BF1B900AAF4ED /* cocos2d.h in Headers */ = {isa = PBXBuildFile; fileRef = 50272538190BF1B900AAF4ED /* cocos2d.h */; };
 		5027253C190BF1B900AAF4ED /* cocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50272539190BF1B900AAF4ED /* cocos2d.cpp */; };
@@ -1892,8 +1896,6 @@
 		4626B1FE202D9BD800BE30B9 /* CCApplication-mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CCApplication-mac.mm"; sourceTree = "<group>"; };
 		4648882320AC2BC800CD1E4A /* CCRenderTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRenderTexture.h; sourceTree = "<group>"; };
 		4648882420AC2BC900CD1E4A /* CCRenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCRenderTexture.cpp; sourceTree = "<group>"; };
-		468A967D22F43F00005034BE /* libv8_monolith.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8_monolith.a; path = ../external/mac/libs/libv8_monolith.a; sourceTree = "<group>"; };
-		468A968422F43F8F005034BE /* libv8_monolith.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8_monolith.a; path = ../external/ios/libs/libv8_monolith.a; sourceTree = "<group>"; };
 		468A968622F440AC005034BE /* libuv_a.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv_a.a; path = ../external/ios/libs/libuv_a.a; sourceTree = "<group>"; };
 		469301CD203FC695004A3D6C /* CCConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCConfiguration.h; sourceTree = "<group>"; };
 		469301CE203FC695004A3D6C /* CCConfiguration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCConfiguration.cpp; sourceTree = "<group>"; };
@@ -2183,20 +2185,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				468A967E22F43F00005034BE /* libv8_monolith.a in Frameworks */,
 				40CEAEBA20CFDE19007A3281 /* SystemConfiguration.framework in Frameworks */,
 				A679D0DA1C71D93200620A6C /* libcrypto.a in Frameworks */,
 				A679D0D91C71D90A00620A6C /* libssl.a in Frameworks */,
+				4DD65F042313F37200277E85 /* libinspector.a in Frameworks */,
 				A6A554211C2A7C1300FDD954 /* libcurl.a in Frameworks */,
+				4DD65F032313F34B00277E85 /* libv8_libbase.a in Frameworks */,
 				ED3057CF1BEC7DA80083C3ED /* libglfw3.a in Frameworks */,
 				ED997669216C459E00A46923 /* libuv_a.a in Frameworks */,
 				ED3057D01BEC7DA80083C3ED /* libjpeg.a in Frameworks */,
 				ED3057D11BEC7DA80083C3ED /* libpng.a in Frameworks */,
+				4DD65F002313F33700277E85 /* libv8_libsampler.a in Frameworks */,
 				ED3057D21BEC7DA80083C3ED /* libtiff.a in Frameworks */,
 				ED3057D31BEC7DA80083C3ED /* libwebsockets.a in Frameworks */,
 				B21770471977ED34009EE11B /* QuartzCore.framework in Frameworks */,
 				B21770451977ED14009EE11B /* Cocoa.framework in Frameworks */,
+				4DD65EFF2313F33400277E85 /* libv8_libplatform.a in Frameworks */,
 				B21770421977ECF8009EE11B /* ApplicationServices.framework in Frameworks */,
+				4DD65F022313F34000277E85 /* libv8_snapshot.a in Frameworks */,
+				4DD65F012313F33C00277E85 /* libv8_base.a in Frameworks */,
 				BA0DAAEF1DB76F2C00EE23AD /* libwebp.a in Frameworks */,
 				B21770401977ECE6009EE11B /* OpenGL.framework in Frameworks */,
 				B217703C1977ECB4009EE11B /* IOKit.framework in Frameworks */,
@@ -2208,7 +2215,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				468A968722F440AC005034BE /* libuv_a.a in Frameworks */,
-				468A968522F43F8F005034BE /* libv8_monolith.a in Frameworks */,
 				EDE5DFF81C0D6B3F0014147A /* libwebsockets.a in Frameworks */,
 				1ACF6A3C1E4AFDC80033C137 /* libcrypto.a in Frameworks */,
 				1ACF6A3D1E4AFDC80033C137 /* libssl.a in Frameworks */,
@@ -2669,8 +2675,6 @@
 			isa = PBXGroup;
 			children = (
 				468A968622F440AC005034BE /* libuv_a.a */,
-				468A967D22F43F00005034BE /* libv8_monolith.a */,
-				468A968422F43F8F005034BE /* libv8_monolith.a */,
 				40F373D921B67A7D0083E4E7 /* libv8_snapshot.a */,
 				ED997664216C459D00A46923 /* libinspector.a */,
 				ED997661216C459D00A46923 /* libuv_a.a */,
