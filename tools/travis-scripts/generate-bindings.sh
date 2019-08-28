@@ -15,8 +15,6 @@
 #
 
 
-set -x
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$DIR/../.."
 TOJS_ROOT="$PROJECT_ROOT/tools/tojs"
@@ -120,8 +118,6 @@ git commit -m "$COMMITTAG"
 #Set remotes
 git remote add upstream "$COCOS_ROBOT_REMOTE" 2> /dev/null > /dev/null
 
-#git fetch --unshallow upstream
-#git fetch --unshallow origin
 
 echo "Pushing to Robot's repo ..."
 # git push -fq upstream "$COCOS_BRANCH" 2> /dev/null
