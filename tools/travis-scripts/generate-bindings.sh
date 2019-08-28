@@ -14,6 +14,9 @@
 #  * $NDK_ROOT
 #
 
+
+set -x
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$DIR/../.."
 TOJS_ROOT="$PROJECT_ROOT/tools/tojs"
