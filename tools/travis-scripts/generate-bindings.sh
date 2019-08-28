@@ -121,7 +121,7 @@ git commit -m "$COMMITTAG"
 git remote add upstream "$COCOS_ROBOT_REMOTE" 2> /dev/null > /dev/null
 
 #git fetch --unshallow upstream
-git fetch --unshallow origin
+#git fetch --unshallow origin
 
 echo "Pushing to Robot's repo ..."
 # git push -fq upstream "$COCOS_BRANCH" 2> /dev/null
