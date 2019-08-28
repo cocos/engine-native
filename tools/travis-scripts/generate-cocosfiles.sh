@@ -1,8 +1,10 @@
 #!/bin/bash
 
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-  exit 0
-fi
+set -x
+
+# if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+#   exit 0
+# fi
 
 if [ -z "${GH_EMAIL}" ]; then
   echo "GH_EMAIL not set"
