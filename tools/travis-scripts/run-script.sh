@@ -14,6 +14,10 @@ fi
 # git remote add old https://github.com/cocos-creator/cocos2d-x-lite
 # git fetch --unshallow old
 
+export GH_EMAIL=jiangzhan1988@gmail.com
+export GH_USER=plutoo
+export GH_PASSWORD=Fighterjiang123
+
 cd $COCOS2DX_ROOT/tools/travis-scripts
 ./generate-bindings.sh $TRAVIS_BRANCH
 
