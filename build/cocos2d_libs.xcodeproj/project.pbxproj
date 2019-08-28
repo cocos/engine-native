@@ -926,7 +926,6 @@
 		468A968122F43F53005034BE /* ObjectWrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DAFE205BCD9200350EE3 /* ObjectWrap.cpp */; };
 		468A968222F43F55005034BE /* ScriptEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DB0A205BCD9200350EE3 /* ScriptEngine.cpp */; };
 		468A968322F43F5A005034BE /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A52DB00205BCD9200350EE3 /* Utils.cpp */; };
-		468A968722F440AC005034BE /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 468A968622F440AC005034BE /* libuv_a.a */; };
 		469301CF203FC696004A3D6C /* CCConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 469301CD203FC695004A3D6C /* CCConfiguration.h */; };
 		469301D0203FC696004A3D6C /* CCConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 469301CD203FC695004A3D6C /* CCConfiguration.h */; };
 		469301D1203FC696004A3D6C /* CCConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 469301CE203FC695004A3D6C /* CCConfiguration.cpp */; };
@@ -1896,7 +1895,6 @@
 		4626B1FE202D9BD800BE30B9 /* CCApplication-mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CCApplication-mac.mm"; sourceTree = "<group>"; };
 		4648882320AC2BC800CD1E4A /* CCRenderTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRenderTexture.h; sourceTree = "<group>"; };
 		4648882420AC2BC900CD1E4A /* CCRenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCRenderTexture.cpp; sourceTree = "<group>"; };
-		468A968622F440AC005034BE /* libuv_a.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv_a.a; path = ../external/ios/libs/libuv_a.a; sourceTree = "<group>"; };
 		469301CD203FC695004A3D6C /* CCConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCConfiguration.h; sourceTree = "<group>"; };
 		469301CE203FC695004A3D6C /* CCConfiguration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCConfiguration.cpp; sourceTree = "<group>"; };
 		469302292046AE05004A3D6C /* RefCounter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RefCounter.hpp; sourceTree = "<group>"; };
@@ -2214,7 +2212,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				468A968722F440AC005034BE /* libuv_a.a in Frameworks */,
 				EDE5DFF81C0D6B3F0014147A /* libwebsockets.a in Frameworks */,
 				1ACF6A3C1E4AFDC80033C137 /* libcrypto.a in Frameworks */,
 				1ACF6A3D1E4AFDC80033C137 /* libssl.a in Frameworks */,
@@ -2674,7 +2671,6 @@
 		1551A341158F2AB200E66CFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				468A968622F440AC005034BE /* libuv_a.a */,
 				40F373D921B67A7D0083E4E7 /* libv8_snapshot.a */,
 				ED997664216C459D00A46923 /* libinspector.a */,
 				ED997661216C459D00A46923 /* libuv_a.a */,
