@@ -50,9 +50,9 @@ popd
 # 1. Generate js bindings
 generate_bindings_glue_codes
 
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-  exit 0
-fi
+# if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+#   exit 0
+# fi
 
 if [ -z "${GH_EMAIL}" ]; then
   echo "GH_EMAIL not set"
@@ -119,6 +119,9 @@ git commit -m "$COMMITTAG"
 
 #Set remotes
 git remote add upstream "$COCOS_ROBOT_REMOTE" 2> /dev/null > /dev/null
+
+git fetch --unshallow upstream
+git fetch --unshallow origin
 
 echo "Pushing to Robot's repo ..."
 # git push -fq upstream "$COCOS_BRANCH" 2> /dev/null
