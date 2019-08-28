@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COCOS2DX_ROOT="$DIR"/../..
@@ -11,7 +12,7 @@ fi
 # to fix git error: shallow update not allowed
 # https://stackoverflow.com/questions/28983842/remote-rejected-shallow-update-not-allowed-after-changing-git-remote-url
 git remote add old https://github.com/cocos-creator/cocos2d-x-lite
-git fetch --unshallow old
+#git fetch --unshallow old
 
 cd $COCOS2DX_ROOT/tools/travis-scripts
 ./generate-bindings.sh $TRAVIS_BRANCH
