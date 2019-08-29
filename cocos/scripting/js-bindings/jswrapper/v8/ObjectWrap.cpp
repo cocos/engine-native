@@ -79,8 +79,22 @@ namespace se {
     }
 
     void ObjectWrap::makeWeak() {
-        persistent().SetWeak(this, weakCallback, v8::WeakCallbackType::kFinalizer);
-//        persistent().MarkIndependent();
+//        persistent().SetWeak(this, weakCallback, v8::WeakCallbackType::kFinalizer);
+        persistent().SetWeak();
+
+//        assert(refs_ == 0);
+//        handle_.Reset();
+//        if (_finalizeCb != nullptr)
+//        {
+//            _finalizeCb(_nativeObj); // wrap will be destroyed in wrap->_finalizeCb, should not use any wrap object after this line.
+//        }
+//        else
+//        {
+//            assert(false);
+//        }
+
+
+        persistent().MarkIndependent();
     }
 
 
