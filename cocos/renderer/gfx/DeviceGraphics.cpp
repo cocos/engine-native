@@ -35,6 +35,8 @@
 #include "platform/CCPlatformConfig.h"
 #include "base/CCGLUtils.h"
 
+#include <regex>
+
 RENDERER_BEGIN
 
 static_assert(sizeof(int) == sizeof(GLint), "ERROR: GLint isn't equal to int!");
@@ -64,9 +66,17 @@ DeviceGraphics* DeviceGraphics::getInstance()
     return __instance;
 }
 
-bool DeviceGraphics::supportGLExtension(const std::string& extension) const
+bool DeviceGraphics::ext(const std::string& extension) const
 {
-    return  (_glExtensions && strstr(_glExtensions, extension.c_str() ) ) ? true : false;
+    const char* ext = extension.c_str();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    // https://www.khronos.org/opengl/wiki/OpenGL_Extension
+    std::regex pattern("OES_");
+    std::string tmp = std::regex_replace(extension, pattern, "GL_ARB_");
+    ext = tmp.c_str();
+#endif
+    
+    return  (_glExtensions && strstr(_glExtensions, ext ) ) ? true : false;
 }
 
 void DeviceGraphics::setFrameBuffer(const FrameBuffer* fb)
