@@ -71,9 +71,9 @@ bool DeviceGraphics::ext(const std::string& extension) const
     const char* ext = extension.c_str();
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
     // https://www.khronos.org/opengl/wiki/OpenGL_Extension
-    std::regex pattern("OES_");
-    std::string tmp = std::regex_replace(extension, pattern, "GL_ARB_");
-    ext = tmp.c_str();
+    if (strcmp(ext, "OES_texture_float") == 0) {
+        ext = "GL_ARB_texture_float";
+    }
 #endif
     
     return  (_glExtensions && strstr(_glExtensions, ext ) ) ? true : false;
