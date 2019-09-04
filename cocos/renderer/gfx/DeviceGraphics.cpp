@@ -35,8 +35,6 @@
 #include "platform/CCPlatformConfig.h"
 #include "base/CCGLUtils.h"
 
-#include <regex>
-
 RENDERER_BEGIN
 
 static_assert(sizeof(int) == sizeof(GLint), "ERROR: GLint isn't equal to int!");
@@ -70,6 +68,10 @@ bool DeviceGraphics::ext(const std::string& extension) const
 {
     const char* ext = extension.c_str();
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    // TODO:
+    // Opengl Es extension maybe different from Opengl extension,
+    // should change extension name if needed.
+    // https://www.khronos.org/registry/webgl/extensions/
     // https://www.khronos.org/opengl/wiki/OpenGL_Extension
     if (strcmp(ext, "OES_texture_float") == 0) {
         ext = "GL_ARB_texture_float";
