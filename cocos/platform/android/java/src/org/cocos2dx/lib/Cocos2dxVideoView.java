@@ -248,6 +248,14 @@ public class Cocos2dxVideoView extends SurfaceView {
             mCurrentState = State.STOPPED;
             mMediaPlayer.stop();
             this.sendEvent(EVENT_STOPPED);
+
+            // after the video is stop, it shall prepare before playing
+            if (mCurrentState == State.STOPPED) {
+                try {
+                    mMediaPlayer.prepare();
+                    this.showFirstFrame();
+                } catch (Exception ex) {}
+            }
         }
     }
 
