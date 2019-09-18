@@ -125,7 +125,7 @@ void Configuration::gatherGPUInfo()
     
     _glExtensions = (char *)glGetString(GL_EXTENSIONS);
     
-    _supportsETC2 = checkForEtc2();
+    _supportsETC2 = checkForETC2();
     _valueDict["gl.supports_ETC2"] = Value(_supportsETC2);
 
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxTextureSize);
@@ -242,7 +242,7 @@ bool Configuration::supportsETC() const
 #endif
 }
 
-bool Configuration::checkForEtc2() const
+bool Configuration::checkForETC2() const
 {
     GLint numFormats = 0;
     glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &numFormats);

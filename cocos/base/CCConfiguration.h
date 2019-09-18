@@ -108,7 +108,7 @@ public:
     /**
      * Check whether or not ETC2 Texture Compressed is supported.
      */
-    bool checkForEtc2() const;
+    bool checkForETC2() const;
     
     /** Whether or not ETC2 Texture Compressed is supported.
      *
