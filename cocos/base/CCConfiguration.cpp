@@ -28,6 +28,8 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 #include "base/CCLog.h"
 
+#include <regex>
+
 NS_CC_BEGIN
 
 //cjh extern const char* cocos2dVersion();
@@ -50,6 +52,8 @@ Configuration::Configuration()
 , _supportsOESDepth24(false)
 , _supportsOESPackedDepthStencil(false)
 , _supportsOESMapBuffer(false)
+, _supportsFloatTexture(false)
+, _isOpenglES3(false)
 , _maxSamplesAllowed(0)
 , _maxTextureUnits(0)
 , _glExtensions(nullptr)
@@ -108,8 +112,14 @@ void Configuration::gatherGPUInfo()
 {
     _valueDict["gl.vendor"] = Value((const char*)glGetString(GL_VENDOR));
     _valueDict["gl.renderer"] = Value((const char*)glGetString(GL_RENDERER));
-    _valueDict["gl.version"] = Value((const char*)glGetString(GL_VERSION));
 
+    const char* version = (const char*)glGetString(GL_VERSION);
+    _valueDict["gl.version"] = Value(version);
+    
+    if (std::regex_match(version, std::regex("OpenGL ES 3.*"))) {
+        _isOpenglES3 = true;
+    }
+    
     _glExtensions = (char *)glGetString(GL_EXTENSIONS);
 
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxTextureSize);
@@ -155,6 +165,13 @@ void Configuration::gatherGPUInfo()
 
     _supportsOESPackedDepthStencil = checkForGLExtension("GL_OES_packed_depth_stencil");
     _valueDict["gl.supports_OES_packed_depth_stencil"] = Value(_supportsOESPackedDepthStencil);
+    
+    if (_isOpenglES3) {
+        _supportsFloatTexture = true;
+    }
+    else {
+        _supportsFloatTexture = checkForGLExtension("GL_ARB_texture_float");
+    }
 
     CHECK_GL_ERROR_DEBUG();
 }
@@ -272,6 +289,11 @@ bool Configuration::supportsMapBuffer() const
 bool Configuration::supportsOESDepth24() const
 {
     return _supportsOESDepth24;
+}
+
+bool Configuration::supportsFloatTexture() const
+{
+    return _supportsFloatTexture;
 }
 
 bool Configuration::supportsOESPackedDepthStencil() const

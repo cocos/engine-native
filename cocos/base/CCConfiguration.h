@@ -150,6 +150,13 @@ public:
      * @since v3.9.0
      */
     bool supportsOESPackedDepthStencil() const;
+    
+    /** Whether or not float texture is supported.
+     *
+     * @return Is true if supports texture.
+     * @since v3.9.0
+     */
+    bool supportsFloatTexture() const;
 
     /** Whether or not glMapBuffer() is supported.
      *
@@ -248,6 +255,8 @@ protected:
     bool            _supportsOESMapBuffer;
     bool            _supportsOESDepth24;
     bool            _supportsOESPackedDepthStencil;
+    bool            _supportsFloatTexture;
+    bool            _isOpenglES3;
     GLint           _maxSamplesAllowed;
     GLint           _maxTextureUnits;
     char *          _glExtensions;
