@@ -160,8 +160,6 @@ void Configuration::gatherGPUInfo()
     _supportsDiscardFramebuffer = checkForGLExtension("GL_EXT_discard_framebuffer");
     _valueDict["gl.supports_discard_framebuffer"] = Value(_supportsDiscardFramebuffer);
 
-    _supportsShareableVAO = checkForGLExtension("GL_OES_vertex_array_object");
-    _valueDict["gl.supports_vertex_array_object"] = Value(_supportsShareableVAO);
 
     _supportsOESMapBuffer = checkForGLExtension("GL_OES_mapbuffer");
     _valueDict["gl.supports_OES_map_buffer"] = Value(_supportsOESMapBuffer);
@@ -174,9 +172,14 @@ void Configuration::gatherGPUInfo()
     
     if (_isOpenglES3) {
         _supportsFloatTexture = true;
+        _supportsShareableVAO = true;
     }
     else {
         _supportsFloatTexture = checkForGLExtension("GL_ARB_texture_float");
+        _valueDict["gl.supports_float_texture"] = Value(_supportsFloatTexture);
+        
+        _supportsShareableVAO = checkForGLExtension("vertex_array_object");
+        _valueDict["gl.supports_vertex_array_object"] = Value(_supportsShareableVAO);
     }
 
     CHECK_GL_ERROR_DEBUG();

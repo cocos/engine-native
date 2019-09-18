@@ -105,11 +105,6 @@ public:
      */
     bool supportsETC() const;
     
-    /**
-     * Check whether or not ETC2 Texture Compressed is supported.
-     */
-    bool checkForETC2() const;
-    
     /** Whether or not ETC2 Texture Compressed is supported.
      *
      *
@@ -252,7 +247,11 @@ private:
     Configuration(void);
     static Configuration    *s_sharedConfiguration;
     static std::string        s_configfile;
-
+    
+    /**
+     * Check whether or not ETC2 Texture Compressed is supported.
+     */
+    bool checkForETC2() const;
 protected:
     GLint           _maxTextureSize;
     GLint           _maxModelviewStackDepth;
