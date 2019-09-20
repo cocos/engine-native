@@ -225,7 +225,6 @@ bool AudioPlayer::play2d()
             //abort playing if the state is incorrect
             break;
         }
-        assert(state == AL_PLAYING);
         _ready = true;
         ret = true;
     } while (false);
