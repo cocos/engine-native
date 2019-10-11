@@ -175,6 +175,7 @@ public:
      */
     bool supportsMapBuffer() const;
 
+    bool supportsGLES3() const;
     
     /** Max support directional light in shader, for Sprite3D.
      *

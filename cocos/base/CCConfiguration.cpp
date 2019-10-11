@@ -318,6 +318,11 @@ bool Configuration::supportsMapBuffer() const
 #endif
 }
 
+bool Configuration::supportsGLES3() const
+{
+    return _isOpenglES3;
+}
+
 bool Configuration::supportsOESDepth24() const
 {
     return _supportsOESDepth24;

@@ -69,6 +69,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #include "platform/CCApplication.h"
 #include "base/ccMacros.h"
 #include "ui/edit-box/EditBox.h"
+#include "base/CCConfiguration.h"
 
 namespace
 {
@@ -255,7 +256,10 @@ namespace
                                     [NSNumber numberWithBool:_preserveBackbuffer], kEAGLDrawablePropertyRetainedBacking,
                                     _pixelformatString, kEAGLDrawablePropertyColorFormat, nil];
     
-    EAGLRenderingAPI renderingAPI = _multisampling ? kEAGLRenderingAPIOpenGLES2 : kEAGLRenderingAPIOpenGLES3;
+    EAGLRenderingAPI renderingAPI = kEAGLRenderingAPIOpenGLES3;
+    if (_multisampling || !cocos2d::Configuration::getInstance()->supportsGLES3() )
+        renderingAPI = kEAGLRenderingAPIOpenGLES2;
+    
     if(! _sharegroup)
         _context = [[EAGLContext alloc] initWithAPI:renderingAPI];
     else
