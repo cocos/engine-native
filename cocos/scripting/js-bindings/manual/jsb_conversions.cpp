@@ -1856,7 +1856,14 @@ bool seval_to_TechniqueParameter_not_constructor(const se::Value& v, cocos2d::re
             *ret = std::move(param);
             break;
         }
+        case cocos2d::renderer::Technique::Parameter::Type::FLOAT2:
+        case cocos2d::renderer::Technique::Parameter::Type::FLOAT3:
         case cocos2d::renderer::Technique::Parameter::Type::FLOAT4:
+        case cocos2d::renderer::Technique::Parameter::Type::MAT4:
+        case cocos2d::renderer::Technique::Parameter::Type::MAT3:
+        case cocos2d::renderer::Technique::Parameter::Type::MAT2:
+        case cocos2d::renderer::Technique::Parameter::Type::COLOR3:
+        case cocos2d::renderer::Technique::Parameter::Type::COLOR4:
         {
             se::Object* obj = v.toObject();
             SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
@@ -1877,25 +1884,6 @@ bool seval_to_TechniqueParameter_not_constructor(const se::Value& v, cocos2d::re
                 *ret = std::move(param);
             }
 
-            break;
-        }
-        case cocos2d::renderer::Technique::Parameter::Type::FLOAT2:
-        case cocos2d::renderer::Technique::Parameter::Type::FLOAT3:
-        case cocos2d::renderer::Technique::Parameter::Type::MAT4:
-        case cocos2d::renderer::Technique::Parameter::Type::MAT3:
-        case cocos2d::renderer::Technique::Parameter::Type::MAT2:
-        case cocos2d::renderer::Technique::Parameter::Type::COLOR3:
-        case cocos2d::renderer::Technique::Parameter::Type::COLOR4:
-        {
-            se::Object* obj = v.toObject();
-            SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
-            uint8_t* data = nullptr;
-            size_t len = 0;
-            obj->getTypedArrayData(&data, &len);
-            uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
-            uint8_t count = (len / sizeof(float)) / el;
-            cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, (float*)data, count);
-            *ret = std::move(param);
             break;
         }
         case cocos2d::renderer::Technique::Parameter::Type::TEXTURE_2D:
