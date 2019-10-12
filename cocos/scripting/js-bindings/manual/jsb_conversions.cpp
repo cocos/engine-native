@@ -1856,9 +1856,16 @@ bool seval_to_TechniqueParameter_not_constructor(const se::Value& v, cocos2d::re
             *ret = std::move(param);
             break;
         }
+        case cocos2d::renderer::Technique::Parameter::Type::FLOAT4:
+        {
+            se::Object* obj = v.toObject();
+            SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
+            cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, obj);
+            *ret = std::move(param);
+            break;
+        }
         case cocos2d::renderer::Technique::Parameter::Type::FLOAT2:
         case cocos2d::renderer::Technique::Parameter::Type::FLOAT3:
-        case cocos2d::renderer::Technique::Parameter::Type::FLOAT4:
         case cocos2d::renderer::Technique::Parameter::Type::MAT4:
         case cocos2d::renderer::Technique::Parameter::Type::MAT3:
         case cocos2d::renderer::Technique::Parameter::Type::MAT2:
