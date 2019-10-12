@@ -30,7 +30,11 @@
 #include "base/CCVector.h"
 #include "base/CCRef.h"
 #include "../Macro.h"
-#include "Value.hpp"
+
+namespace se {
+    class Object;
+    class HandleObject;
+}
 
 RENDERER_BEGIN
 
