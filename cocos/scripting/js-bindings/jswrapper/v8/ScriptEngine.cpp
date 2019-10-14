@@ -633,7 +633,7 @@ namespace se {
             sourceUrl = sourceUrl.substr(prefixPos + prefixKey.length());
         }
 
-        // It is needed, or will crash if invoked from non C++ context, such as invoked fron objective-c context(for example, handler of UIKit).
+        // It is needed, or will crash if invoked from non C++ context, such as invoked from objective-c context(for example, handler of UIKit).
         v8::HandleScope handle_scope(_isolate);
 
         std::string scriptStr(script, length);
