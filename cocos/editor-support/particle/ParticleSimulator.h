@@ -228,6 +228,7 @@ public:
 private:
     std::vector<Particle*>          _particles;
     bool                            _active = false;
+    bool                            _readyPlay = true;
     bool                            _finished = false;
     float                           _elapsed = 0;
     float                           _emitCounter = 0;
