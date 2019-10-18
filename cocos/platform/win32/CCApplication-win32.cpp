@@ -134,6 +134,15 @@ Application::~Application()
     Application::_instance = nullptr;
 }
 
+cocos2d::Vec2 Application::getResolution() {
+    auto res = Vec2();
+    int width, height;
+    CAST_VIEW(_view)->getWindowSize(width, height);
+    res.x = width;
+    res.y = height;
+    return res;
+}
+
 void Application::start()
 {
     if (!_view)
