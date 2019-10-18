@@ -65,6 +65,7 @@ public:
     void pollEvents();
     void swapBuffers();
     float getScale() const;
+    void getWindowSize(int &width, int &height);
     GLint getMainFBO() const;
     void setIsEditboxEditing(bool value);
 

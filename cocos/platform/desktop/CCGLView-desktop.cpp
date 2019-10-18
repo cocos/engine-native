@@ -215,6 +215,11 @@ float GLView::getScale() const
     return _scale;
 }
 
+void GLView::getWindowSize(int &width, int &height)
+{
+    glfwGetWindowSize(_mainWindow, &width, &height);
+}
+
 GLint GLView::getMainFBO() const
 {
     return _mainFBO;
