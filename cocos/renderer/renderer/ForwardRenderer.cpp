@@ -53,6 +53,8 @@ ForwardRenderer::ForwardRenderer()
     _defines["CC_NUM_AMBIENT_LIGHTS"] = Value(0);
     _defines["CC_NUM_SHADOW_LIGHTS"] = Value(0);
     
+    _onWindowResizeListenerID =  EventDispatcher::addCustomEventListener(EVENT_WINDOW_RESIZE, CC_CALLBACK_1(ForwardRenderer::onWindowResize, this));
+    
     _definesHash = 0;
 }
 
@@ -64,6 +66,10 @@ ForwardRenderer::~ForwardRenderer()
     _shadowLights.clear();
     _ambientLights.clear();
     _defines.clear();
+    
+    if (_onWindowResizeListenerID != 0) {
+        EventDispatcher::removeCustomEventListener(EVENT_WINDOW_RESIZE, _onWindowResizeListenerID);
+    }
     
     delete _arrayPool;
     _arrayPool = nullptr;
@@ -475,6 +481,12 @@ void ForwardRenderer::transparentStage(const View& view, const std::vector<Stage
     
     sortItems(const_cast<std::vector<StageItem>&>(items));
     drawItems(items);
+}
+
+
+void ForwardRenderer::onWindowResize(const CustomEvent&e){
+    _width = e.args[0].intVal;
+    _height = e.args[1].intVal;
 }
 
 RENDERER_END

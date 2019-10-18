@@ -28,6 +28,9 @@
 #include "Camera.h"
 #include "../memop/RecyclePool.hpp"
 
+#include "scripting/js-bindings/event/EventDispatcher.h"
+#include "scripting/js-bindings/event/CustomEventTypes.h"
+
 RENDERER_BEGIN
 
 /**
@@ -77,6 +80,9 @@ private:
     void transparentStage(const View& view, const std::vector<StageItem>& items);
     void resetData();
     static bool compareItems(const StageItem& a, const StageItem& b);
+    
+    void onWindowResize(const CustomEvent&);
+    int _onWindowResizeListenerID = 0;
     
     Vector<Light*> _directionalLights;
     Vector<Light*> _pointLights;

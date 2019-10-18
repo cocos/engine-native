@@ -307,6 +307,13 @@ void EventDispatcher::dispatchResizeEvent(int width, int height)
         args.push_back(se::Value(_jsResizeEventObj));
         func.toObject()->call(args, nullptr);
     }
+
+    
+    CustomEvent event;
+    event.name = EVENT_WINDOW_RESIZE;
+    event.args[0].intVal = width;
+    event.args[1].intVal = height;
+    EventDispatcher::dispatchCustomEvent(event);
 }
 
 static void dispatchEnterBackgroundOrForegroundEvent(const char* funcName)
