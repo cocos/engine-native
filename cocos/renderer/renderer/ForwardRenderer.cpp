@@ -39,6 +39,8 @@
 #include "Light.h"
 #include <algorithm>
 
+#include "CCApplication.h"
+
 #include "math/MathUtil.h"
 
 RENDERER_BEGIN
@@ -95,7 +97,8 @@ void ForwardRenderer::render(Scene* scene)
     for (auto& camera : cameras)
     {
         View* view = requestView();
-        camera->extractView(*view, _width, _height);
+        Vec2 res = Application::getInstance()->getResolution();
+        camera->extractView(*view, res.x, res.y);
     }
 
     for (size_t i = 0, len = _views->getLength(); i < len; ++i) {

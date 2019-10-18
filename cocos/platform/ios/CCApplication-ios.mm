@@ -39,19 +39,9 @@
 
 namespace
 {
-    cocos2d::Vec2 getResolution()
-    {
-        CGRect bounds = [UIScreen mainScreen].bounds;
-        float scale = [[UIScreen mainScreen] scale];
-        float width = bounds.size.width * scale;
-        float height = bounds.size.height * scale;
-        
-        return cocos2d::Vec2(width, height);
-    }
-    
     bool setCanvasCallback(se::Object* global)
     {
-        cocos2d::Vec2 resolution = getResolution();
+        cocos2d::Vec2 resolution = cocos2d::Application::getInstance()->getResolution();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
         char commandBuf[200] = {0};
@@ -243,6 +233,16 @@ Application::~Application()
     _renderTexture = nullptr;
 
     Application::_instance = nullptr;
+}
+
+cocos2d::Vec2 Application::getResolution()
+{
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    float scale = [[UIScreen mainScreen] scale];
+    float width = bounds.size.width * scale;
+    float height = bounds.size.height * scale ;
+    
+    return cocos2d::Vec2(width, height);
 }
 
 void Application::start()

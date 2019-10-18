@@ -137,6 +137,8 @@ public:
      @return Current language iso 639-1 code.
      */
     std::string getCurrentLanguageCode() const;
+    
+    cocos2d::Vec2 getResolution();
 
     /**
      @brief Get current display stats.
