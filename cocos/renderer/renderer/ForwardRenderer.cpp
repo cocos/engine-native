@@ -43,6 +43,8 @@
 
 RENDERER_BEGIN
 
+#define CC_MAX_LIGHTS 4
+
 ForwardRenderer::ForwardRenderer()
 {
     _arrayPool = new RecyclePool<float>([]()mutable->float*{return new float[16];}, 8);
@@ -179,11 +181,11 @@ void ForwardRenderer::updateLights(Scene* scene)
 
 void ForwardRenderer::updateDefines()
 {
-    _defines["CC_NUM_DIR_LIGHTS"]       = std::min(4, (int)_directionalLights.size());
-    _defines["CC_NUM_POINT_LIGHTS"]     = std::min(4, (int)_pointLights.size());
-    _defines["CC_NUM_SPOT_LIGHTS"]      = std::min(4, (int)_spotLights.size());
-    _defines["CC_NUM_AMBIENT_LIGHTS"]   = std::min(4, (int)_ambientLights.size());
-    _defines["CC_NUM_SHADOW_LIGHTS"]    = std::min(4, (int)_shadowLights.size());
+    _defines["CC_NUM_DIR_LIGHTS"]       = std::min(CC_MAX_LIGHTS, (int)_directionalLights.size());
+    _defines["CC_NUM_POINT_LIGHTS"]     = std::min(CC_MAX_LIGHTS, (int)_pointLights.size());
+    _defines["CC_NUM_SPOT_LIGHTS"]      = std::min(CC_MAX_LIGHTS, (int)_spotLights.size());
+    _defines["CC_NUM_AMBIENT_LIGHTS"]   = std::min(CC_MAX_LIGHTS, (int)_ambientLights.size());
+    _defines["CC_NUM_SHADOW_LIGHTS"]    = std::min(CC_MAX_LIGHTS, (int)_shadowLights.size());
     
     _definesKey =
         std::to_string(_directionalLights.size()) +
@@ -200,7 +202,7 @@ void ForwardRenderer::submitLightsUniforms()
 {
     if (_directionalLights.size() > 0)
     {
-        size_t count = _directionalLights.size();
+        size_t count = std::min(CC_MAX_LIGHTS, (int)_directionalLights.size());
         float* directions = _arrayPool->add();
         float* colors = _arrayPool->add();
         Vec3 lightVec3;
@@ -227,7 +229,7 @@ void ForwardRenderer::submitLightsUniforms()
     
     if (_pointLights.size() > 0)
     {
-        size_t count = _pointLights.size();
+        size_t count = std::min(CC_MAX_LIGHTS, (int)_pointLights.size());
         float* positionAndRanges = _arrayPool->add();
         float* colors = _arrayPool->add();
         Vec3 posVec3;
@@ -254,7 +256,7 @@ void ForwardRenderer::submitLightsUniforms()
     
     if (_spotLights.size() > 0)
     {
-        size_t count = _spotLights.size();
+        size_t count = std::min(CC_MAX_LIGHTS, (int)_spotLights.size());
         float* directions = _arrayPool->add();
         float* positionAndRanges = _arrayPool->add();
         float* colors = _arrayPool->add();
@@ -289,7 +291,7 @@ void ForwardRenderer::submitLightsUniforms()
     }
     
     if (_ambientLights.size() > 0) {
-        size_t count = _ambientLights.size();
+        size_t count = std::min(CC_MAX_LIGHTS, (int)_ambientLights.size());
         float* colors = _arrayPool->add();
         Vec3 colorVec3;
         for (int i = 0; i < count; ++i)
