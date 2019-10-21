@@ -47,6 +47,7 @@ const size_t BaseRenderer::cc_pointLightColor = std::hash<std::string>{}("cc_poi
 const size_t BaseRenderer::cc_spotLightDirection = std::hash<std::string>{}("cc_spotLightDirection");
 const size_t BaseRenderer::cc_spotLightPositionAndRange = std::hash<std::string>{}("cc_spotLightPositionAndRange");
 const size_t BaseRenderer::cc_spotLightColor = std::hash<std::string>{}("cc_spotLightColor");
+const size_t BaseRenderer::cc_ambientLightColor = std::hash<std::string>{}("cc_ambientColor");
 const size_t BaseRenderer::cc_shadow_map = std::hash<std::string>{}("cc_shadow_map");
 const size_t BaseRenderer::cc_shadow_map_lightViewProjMatrix = std::hash<std::string>{}("cc_shadow_map_lightViewProjMatrix");
 const size_t BaseRenderer::cc_shadow_map_info = std::hash<std::string>{}("cc_shadow_map_info");

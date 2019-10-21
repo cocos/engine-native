@@ -304,7 +304,7 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_pointLightColor, count * 4, colors);
+        _device->setUniformfv(cc_ambientLightColor, count * 4, colors);
     }
 }
 
