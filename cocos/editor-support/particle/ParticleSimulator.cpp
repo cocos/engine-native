@@ -213,6 +213,13 @@ void ParticleSimulator::onDisable()
 
 void ParticleSimulator::render(float dt)
 {
+    if (_lastFrameDt == 0) {
+        _lastFrameDt = dt;
+    }
+    else {
+        dt = fmin(_lastFrameDt, dt);
+    }
+
     if (_finished || _nodeProxy == nullptr || _effect == nullptr)
     {
         return;
