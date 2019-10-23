@@ -59,7 +59,7 @@ public:
         _data.clear();
     }
     
-    const T* getData(size_t index) const
+    T* getData(size_t index) const
     {
         if (index >= _count)
         {

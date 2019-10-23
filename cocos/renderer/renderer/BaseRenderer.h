@@ -110,7 +110,8 @@ protected:
     
     struct StageInfo
     {
-        std::vector<StageItem>* items;
+    public:
+        std::vector<StageItem> items;
         std::string stage = "";
     };
     
@@ -128,6 +129,7 @@ protected:
     RecyclePool<DrawItem>* _drawItems = nullptr;
     RecyclePool<StageInfo>* _stageInfos = nullptr;
     RecyclePool<View>* _views = nullptr;
+    RecyclePool<StageItem>* _stageItems = nullptr;
     
     cocos2d::Mat4* _tmpMat4 = nullptr;
 
