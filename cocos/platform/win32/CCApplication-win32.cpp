@@ -172,7 +172,7 @@ void Application::start()
     while (!CAST_VIEW(_view)->windowShouldClose())
     {       
         desiredInterval = (LONGLONG)(1.0 / _fps * nFreq.QuadPart);
-        maxFrameTime = (float)desiredInterval / nFreq.QuadPart;
+        maxFrameTime = (float)desiredInterval / nFreq.QuadPart * 1.5;
         if (!_isStarted)
         {
             auto scheduler = Application::getInstance()->getScheduler();
