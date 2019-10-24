@@ -211,8 +211,10 @@ void ParticleSimulator::onDisable()
     MiddlewareManager::getInstance()->removeTimer(this);
 }
 
+extern float maxFrameTime;
 void ParticleSimulator::render(float dt)
 {
+    dt = dt > maxFrameTime ? maxFrameTime : dt;
     if (_finished || _nodeProxy == nullptr || _effect == nullptr)
     {
         return;
