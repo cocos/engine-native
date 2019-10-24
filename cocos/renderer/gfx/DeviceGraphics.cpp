@@ -69,6 +69,9 @@ void DeviceGraphics::setFrameBuffer(const FrameBuffer* fb)
     if (fb == _frameBuffer)
         return;
     
+    // should reset view port rect when switch frame buffer
+    _vx = _vy = _vw = _vh = 0;
+    
     RENDERER_SAFE_RELEASE(_frameBuffer);
     _frameBuffer = const_cast<FrameBuffer*>(fb);
     RENDERER_SAFE_RETAIN(_frameBuffer);
