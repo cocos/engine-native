@@ -267,6 +267,10 @@ public:
      */
     virtual unsigned char* getFileDataFromZip(const std::string& zipFilePath, const std::string& filename, ssize_t *size);
 
+    virtual bool unzip(const std::string& zipFilePath,
+                       const std::string& outputDir,
+                       const std::string& password,
+                       const std::function<void (const std::string&,const std::string&,long,long)> &callback);
 
     /** Returns the fullpath for a given filename.
 

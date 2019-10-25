@@ -733,6 +733,111 @@ unsigned char* FileUtils::getFileDataFromZip(const std::string& zipFilePath, con
     return buffer;
 }
 
+bool FileUtils::unzip(const std::string& zipFilePath,
+                      const std::string& outputDir,
+                      const std::string& password,
+                      const std::function<void (const std::string&,const std::string&,long,long)> &callback)
+{
+    unzFile file = nullptr;
+    long entryIndex = 0;
+    long entryTotal = 0;
+    
+    do {
+        CC_BREAK_IF(zipFilePath.empty());
+        CC_BREAK_IF(outputDir.empty());
+        
+        auto fi = FileUtils::getInstance();
+        
+        std::string fixOutPutDir = outputDir;
+        if (outputDir[outputDir.length() - 1] != '/') {
+            fixOutPutDir += "/";
+            
+            if(!fi->isDirectoryExist(outputDir)) {
+                CC_BREAK_IF(!fi->createDirectory(outputDir));
+            }
+        } else {
+            auto tmp = outputDir.substr(0, outputDir.length() - 1);
+            if(!fi->isDirectoryExist(tmp)) {
+                CC_BREAK_IF(!fi->createDirectory(tmp));
+            }
+        }
+        
+        file = unzOpen(FileUtils::getInstance()->getSuitableFOpen(zipFilePath).c_str());
+        CC_BREAK_IF(!file);
+        
+        unz_global_info zipGI;
+        auto ret = unzGetGlobalInfo(file, &zipGI);
+        CC_BREAK_IF(UNZ_OK != ret);
+        
+        entryTotal = zipGI.number_entry;
+        
+        char filePathA[260];
+        unz_file_info fileInfo;
+        
+        do {
+            ret = unzGetCurrentFileInfo(file, &fileInfo, filePathA, sizeof(filePathA), nullptr, 0, nullptr, 0);
+            CC_BREAK_IF(UNZ_OK != ret);
+            
+            if (password.empty()) {
+                ret = unzOpenCurrentFile(file);
+            } else {
+                ret = unzOpenCurrentFilePassword(file,password.c_str());
+            }
+            CC_BREAK_IF(UNZ_OK != ret);
+            
+            entryIndex++;
+            
+            if (fileInfo.uncompressed_size < 1 ||
+                strstr((char *)filePathA, "__MACOSX") ||
+                strstr((char *)filePathA, ".DS_Store")) {
+                if (fileInfo.uncompressed_size < 1) {
+                    auto pos = strrchr((char *)filePathA, '/');
+                    if (pos) {
+                        auto tmpDir = fixOutPutDir +
+                        std::string(filePathA, pos - (char *)filePathA);
+                        if(!fi->isDirectoryExist(tmpDir)) {
+                            if(!fi->createDirectory(tmpDir)) {
+                                unzCloseCurrentFile(file);
+                                break;
+                            }
+                        }
+                    }
+                }
+                unzCloseCurrentFile(file);
+                ret = unzGoToNextFile(file);
+                
+                if (callback) {
+                    callback(zipFilePath, filePathA, entryIndex, entryTotal);
+                }
+                continue;
+            }
+            
+            auto buffer = (unsigned char*)malloc(fileInfo.uncompressed_size);
+            int CC_UNUSED readedSize = unzReadCurrentFile(file, buffer, static_cast<unsigned>(fileInfo.uncompressed_size));
+            CCASSERT(readedSize == 0 || readedSize == (int)fileInfo.uncompressed_size, "the file size is wrong");
+            
+            Data tmpData;
+            tmpData.fastSet(buffer, fileInfo.uncompressed_size);
+            fi->writeDataToFile(tmpData,  fixOutPutDir + filePathA);
+            
+            unzCloseCurrentFile(file);
+            ret = unzGoToNextFile(file);
+            
+            if (callback) {
+                callback(zipFilePath, filePathA, entryIndex, entryTotal);
+            }
+        } while (ret == UNZ_OK);
+    } while (false);
+    
+    if (file)
+    {
+        unzClose(file);
+        return entryTotal > 0 && entryIndex == entryTotal;
+    }
+    
+    return false;
+}
+
 std::string FileUtils::getNewFilename(const std::string &filename) const
 {
     std::string newFileName;
