@@ -211,10 +211,10 @@ void ParticleSimulator::onDisable()
     MiddlewareManager::getInstance()->removeTimer(this);
 }
 
-extern float maxDeltaTime;
+extern float maxParticleDeltaTime;
 void ParticleSimulator::render(float dt)
 {
-    dt = dt > maxDeltaTime ? maxDeltaTime : dt;
+    dt = dt > maxParticleDeltaTime ? maxParticleDeltaTime : dt;
     if (_finished || _nodeProxy == nullptr || _effect == nullptr)
     {
         return;
