@@ -134,7 +134,7 @@ Application::~Application()
     Application::_instance = nullptr;
 }
 
-float maxDeltaTime = 0.f;
+float maxParticleDeltaTime = 0.f;
 void Application::start()
 {
     if (!_view)
@@ -172,7 +172,9 @@ void Application::start()
     while (!CAST_VIEW(_view)->windowShouldClose())
     {       
         desiredInterval = (LONGLONG)(1.0 / _fps * nFreq.QuadPart);
-        maxDeltaTime = (float)desiredInterval / nFreq.QuadPart * 1.5;
+        if (maxParticleDeltaTime == 0) {
+            maxParticleDeltaTime = (float)desiredInterval / nFreq.QuadPart * 2;
+        }
         if (!_isStarted)
         {
             auto scheduler = Application::getInstance()->getScheduler();
