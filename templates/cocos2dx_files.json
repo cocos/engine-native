@@ -299,6 +299,8 @@
         "cocos/editor-support/spine/ColorTimeline.h", 
         "cocos/editor-support/spine/Constraint.cpp", 
         "cocos/editor-support/spine/Constraint.h", 
+        "cocos/editor-support/spine/ConstraintData.cpp", 
+        "cocos/editor-support/spine/ConstraintData.h", 
         "cocos/editor-support/spine/ContainerUtil.h", 
         "cocos/editor-support/spine/CurveTimeline.cpp", 
         "cocos/editor-support/spine/CurveTimeline.h", 
