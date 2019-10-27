@@ -54,6 +54,8 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
     private Cocos2dxRenderer mCocos2dxRenderer;
     private boolean mStopHandleTouchAndKeyEvents = false;
 
+    public static native void nativeOnSizeChanged(int width, int height);
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -250,6 +252,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
     protected void onSizeChanged(final int pNewSurfaceWidth, final int pNewSurfaceHeight, final int pOldSurfaceWidth, final int pOldSurfaceHeight) {
         if(!this.isInEditMode()) {
             this.mCocos2dxRenderer.setScreenWidthAndHeight(pNewSurfaceWidth, pNewSurfaceHeight);
+            nativeOnSizeChanged(pNewSurfaceWidth, pNewSurfaceHeight);
         }
     }
 

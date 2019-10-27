@@ -85,9 +85,6 @@ private:
     Vector<Light*> _ambientLights;
     
     RecyclePool<float>* _arrayPool = nullptr;
-    
-    int _width = 0;
-    int _height = 0;
     std::size_t _numLights = 0;
 };
 

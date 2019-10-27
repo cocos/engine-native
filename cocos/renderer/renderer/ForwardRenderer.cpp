@@ -74,8 +74,6 @@ ForwardRenderer::~ForwardRenderer()
 bool ForwardRenderer::init(DeviceGraphics* device, std::vector<ProgramLib::Template>& programTemplates, Texture2D* defaultTexture, int width, int height)
 {
     BaseRenderer::init(device, programTemplates, defaultTexture);
-    _width = width;
-    _height = height;
     registerStage("opaque", std::bind(&ForwardRenderer::opaqueStage, this, std::placeholders::_1, std::placeholders::_2));
     registerStage("shadowcast", std::bind(&ForwardRenderer::shadowStage, this, std::placeholders::_1, std::placeholders::_2));
     registerStage("transparent", std::bind(&ForwardRenderer::transparentStage, this, std::placeholders::_1, std::placeholders::_2));
@@ -94,10 +92,10 @@ void ForwardRenderer::render(Scene* scene)
     updateLights(scene);
     scene->sortCameras();
     auto& cameras = scene->getCameras();
+    Vec2 res = Application::getInstance()->getResolution();
     for (auto& camera : cameras)
     {
         View* view = requestView();
-        Vec2 res = Application::getInstance()->getResolution();
         camera->extractView(*view, res.x, res.y);
     }
 
@@ -112,8 +110,9 @@ void ForwardRenderer::render(Scene* scene)
 void ForwardRenderer::renderCamera(Camera* camera, Scene* scene)
 {
     reset();
-    int width = _width;
-    int height = _height;
+    Vec2 res = Application::getInstance()->getResolution();
+    int width = res.x;
+    int height = res.y;
     FrameBuffer* fb = camera->getFrameBuffer();
     if (nullptr != fb) {
         width = fb->getWidth();

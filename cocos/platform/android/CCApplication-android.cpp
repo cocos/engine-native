@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "platform/CCApplication.h"
 #include <EGL/egl.h>
 #include <cstring>
+#include <jni.h>
 #include "platform/android/jni/JniImp.h"
 #include "platform/android/CCGL-android.h"
 #include "base/CCScheduler.h"
@@ -51,6 +52,22 @@ PFNGLBINDVERTEXARRAYOESPROC glBindVertexArrayOESEXT = 0;
 PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
 
 NS_CC_BEGIN
+
+// _resolution can't be private member of Application
+// because _resolution updated before initiating Application
+cocos2d::Vec2 _resolution;
+
+void updateResolution(int width, int height)
+{
+    _resolution.x = width;
+    _resolution.y = height;
+}
+
+extern "C" {
+    void Java_org_cocos2dx_lib_Cocos2dxGLSurfaceView_nativeOnSizeChanged(JNIEnv * env, jobject obj, jint width, jint height) {
+        updateResolution(width, height);
+    }
+}
 
 Application* Application::_instance = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
@@ -264,6 +281,11 @@ void Application::copyTextToClipboard(const std::string &text)
 std::string Application::getSystemVersion()
 {
     return getSystemVersionJNI();
+}
+
+cocos2d::Vec2 Application::getResolution()
+{
+    return _resolution;
 }
 
 NS_CC_END
