@@ -53,19 +53,19 @@ PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
 
 NS_CC_BEGIN
 
-// _resolution can't be private member of Application
-// because _resolution updated before initiating Application
-cocos2d::Vec2 _resolution;
+// _viewSize can't be private member of Application
+// because _viewSize updated before initiating Application
+cocos2d::Vec2 _viewSize;
 
-void updateResolution(int width, int height)
+void updateViewSize(int width, int height)
 {
-    _resolution.x = width;
-    _resolution.y = height;
+    _viewSize.x = width;
+    _viewSize.y = height;
 }
 
 extern "C" {
     void Java_org_cocos2dx_lib_Cocos2dxGLSurfaceView_nativeOnSizeChanged(JNIEnv * env, jobject obj, jint width, jint height) {
-        updateResolution(width, height);
+        updateViewSize(width, height);
     }
 }
 
@@ -283,9 +283,9 @@ std::string Application::getSystemVersion()
     return getSystemVersionJNI();
 }
 
-cocos2d::Vec2 Application::getResolution()
+cocos2d::Vec2 Application::getViewSize()
 {
-    return _resolution;
+    return _viewSize;
 }
 
 NS_CC_END

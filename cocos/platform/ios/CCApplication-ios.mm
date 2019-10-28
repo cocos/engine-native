@@ -41,15 +41,15 @@ namespace
 {
     bool setCanvasCallback(se::Object* global)
     {
-        cocos2d::Vec2 resolution = cocos2d::Application::getInstance()->getResolution();
+        cocos2d::Vec2 viewSize = cocos2d::Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                (int)(resolution.x / devicePixelRatio),
-                (int)(resolution.y / devicePixelRatio));
+                (int)(viewSize.x / devicePixelRatio),
+                (int)(viewSize.y / devicePixelRatio));
         se->evalString(commandBuf);
-        cocos2d::ccViewport(0, 0, resolution.x / devicePixelRatio, resolution.y / devicePixelRatio);
+        cocos2d::ccViewport(0, 0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -235,7 +235,7 @@ Application::~Application()
     Application::_instance = nullptr;
 }
 
-cocos2d::Vec2 Application::getResolution()
+cocos2d::Vec2 Application::getViewSize()
 {
     CGRect bounds = [UIScreen mainScreen].bounds;
     float scale = [[UIScreen mainScreen] scale];

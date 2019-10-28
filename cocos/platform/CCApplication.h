@@ -138,7 +138,7 @@ public:
      */
     std::string getCurrentLanguageCode() const;
     
-    cocos2d::Vec2 getResolution();
+    cocos2d::Vec2 getViewSize();
 
     /**
      @brief Get current display stats.
