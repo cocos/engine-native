@@ -140,6 +140,13 @@ public:
     
     cocos2d::Vec2 getViewSize();
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    void updateViewSize();
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+    void updateViewSize(int width, int height);
+#endif
+
+
     /**
      @brief Get current display stats.
      @return bool, is displaying stats or not.
@@ -206,6 +213,11 @@ private:
     bool _multiTouch = false;
     bool _isStarted = false;
     bool _isDownsampleEnabled = false;
+
+
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)
+    cocos2d::Vec2 _viewSize;
+#endif
 };
 
 // end of platform group

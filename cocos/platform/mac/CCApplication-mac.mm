@@ -101,12 +101,12 @@ Application::~Application()
 }
 
 cocos2d::Vec2 Application::getViewSize() {
-    auto viewSize = Vec2();
-    int width, height;
-    CAST_VIEW(_view)->getWindowSize(width, height);
-    viewSize.x = width;
-    viewSize.y = height;
-    return viewSize;
+    return _viewSize;
+}
+
+void Application::updateViewSize(int width, int height) {
+    _viewSize.x = width;
+    _viewSize.y = height;
 }
 
 void Application::start()

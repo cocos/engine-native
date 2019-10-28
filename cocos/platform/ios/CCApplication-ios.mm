@@ -209,6 +209,8 @@ Application::Application(const std::string& name, int width, int height)
     EventDispatcher::init();
     
     _delegate = [[MainLoop alloc] initWithApplication:this];
+    
+    updateViewSize();
 }
 
 Application::~Application()
@@ -237,12 +239,17 @@ Application::~Application()
 
 cocos2d::Vec2 Application::getViewSize()
 {
+    return _viewSize;
+}
+
+void Application::updateViewSize()
+{
     CGRect bounds = [UIScreen mainScreen].bounds;
     float scale = [[UIScreen mainScreen] scale];
     float width = bounds.size.width * scale;
-    float height = bounds.size.height * scale ;
-    
-    return cocos2d::Vec2(width, height);
+    float height = bounds.size.height * scale;
+    _viewSize.x = width;
+    _viewSize.y = height;
 }
 
 void Application::start()

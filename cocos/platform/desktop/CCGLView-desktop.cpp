@@ -184,6 +184,7 @@ GLView::GLView(Application* application, const std::string& name, int x, int y, 
     computeScale();
     
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_mainFBO);
+    Application::getInstance()->updateViewSize(width, height);
 }
 
 GLView::~GLView()
@@ -213,11 +214,6 @@ void GLView::swapBuffers()
 float GLView::getScale() const
 {
     return _scale;
-}
-
-void GLView::getWindowSize(int &width, int &height)
-{
-    glfwGetWindowSize(_mainWindow, &width, &height);
 }
 
 GLint GLView::getMainFBO() const
@@ -448,6 +444,7 @@ void GLView::onGLFWWindowIconifyCallback(GLFWwindow* /*window*/, int iconified)
 
 void GLView::onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height)
 {
+    Application::getInstance()->updateViewSize(width, height);
     EventDispatcher::dispatchResizeEvent(width, height);
 }
 
