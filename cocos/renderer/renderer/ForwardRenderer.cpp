@@ -92,7 +92,7 @@ void ForwardRenderer::render(Scene* scene)
     updateLights(scene);
     scene->sortCameras();
     auto& cameras = scene->getCameras();
-    Vec2 viewSize = Application::getInstance()->getViewSize();
+    auto &viewSize = Application::getInstance()->getViewSize();
     for (auto& camera : cameras)
     {
         View* view = requestView();
@@ -110,7 +110,7 @@ void ForwardRenderer::render(Scene* scene)
 void ForwardRenderer::renderCamera(Camera* camera, Scene* scene)
 {
     reset();
-    Vec2 viewSize = Application::getInstance()->getViewSize();
+    auto &viewSize = Application::getInstance()->getViewSize();
     int width = viewSize.x;
     int height = viewSize.y;
     FrameBuffer* fb = camera->getFrameBuffer();

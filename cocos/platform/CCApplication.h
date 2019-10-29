@@ -138,7 +138,7 @@ public:
      */
     std::string getCurrentLanguageCode() const;
     
-    const cocos2d::Vec2& getViewSize();
+    const cocos2d::Vec2& getViewSize() const;
     void updateViewSize(int width, int height);
 
     /**

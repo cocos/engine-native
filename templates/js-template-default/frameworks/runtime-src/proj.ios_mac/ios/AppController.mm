@@ -78,11 +78,22 @@ Application* app = nullptr;
     [window makeKeyAndVisible];
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+        selector:@selector(statusBarOrientationChanged:)
+        name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
     
     //run the cocos2d-x game scene
     app->start();
     
     return YES;
+}
+
+- (void)statusBarOrientationChanged:(NSNotification *)notification {
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    float scale = [[UIScreen mainScreen] scale];
+    float width = bounds.size.width * scale;
+    float height = bounds.size.height * scale;
+    Application::getInstance()->updateViewSize(width, height);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

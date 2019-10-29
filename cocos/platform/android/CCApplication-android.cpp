@@ -284,7 +284,7 @@ std::string Application::getSystemVersion()
     return getSystemVersionJNI();
 }
 
-const cocos2d::Vec2& Application::getViewSize()
+const cocos2d::Vec2& Application::getViewSize() const
 {
     return _viewSize;
 }

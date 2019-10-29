@@ -41,7 +41,7 @@ namespace
 {
     bool setCanvasCallback(se::Object* global)
     {
-        cocos2d::Vec2 viewSize = cocos2d::Application::getInstance()->getViewSize();
+        auto &viewSize = cocos2d::Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
         char commandBuf[200] = {0};
@@ -237,7 +237,7 @@ Application::~Application()
     Application::_instance = nullptr;
 }
 
-const cocos2d::Vec2& Application::getViewSize()
+const cocos2d::Vec2& Application::getViewSize() const
 {
     return _viewSize;
 }
