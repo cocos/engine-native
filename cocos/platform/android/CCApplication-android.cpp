@@ -53,11 +53,7 @@ PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
 
 NS_CC_BEGIN
 
-// _viewSize can't be private member of Application
-// because _viewSize updated before initiating Application
-cocos2d::Vec2 _viewSize;
-
-void updateViewSize(int width, int height)
+void Application::updateViewSize(int width, int height)
 {
     _viewSize.x = width;
     _viewSize.y = height;
@@ -65,7 +61,11 @@ void updateViewSize(int width, int height)
 
 extern "C" {
     void Java_org_cocos2dx_lib_Cocos2dxGLSurfaceView_nativeOnSizeChanged(JNIEnv * env, jobject obj, jint width, jint height) {
-        updateViewSize(width, height);
+        auto inst = Application::getInstance();
+        // nativeOnSizeChanged is firstly called before Application initiating.
+        if (inst != nullptr) {
+            inst->updateViewSize(width, height);
+        }
     }
 }
 
@@ -84,6 +84,7 @@ Application::Application(const std::string& name, int width, int height)
     PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = (PFNGLDELETEVERTEXARRAYSOESPROC)eglGetProcAddress("glDeleteVertexArraysOES");
 
     _renderTexture = new RenderTexture(width, height);
+    updateViewSize(width, height);
 }
 
 Application::~Application()
@@ -283,7 +284,7 @@ std::string Application::getSystemVersion()
     return getSystemVersionJNI();
 }
 
-cocos2d::Vec2 Application::getViewSize()
+const cocos2d::Vec2& Application::getViewSize()
 {
     return _viewSize;
 }

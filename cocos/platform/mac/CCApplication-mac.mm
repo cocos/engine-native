@@ -100,7 +100,7 @@ Application::~Application()
     Application::_instance = nullptr;
 }
 
-cocos2d::Vec2 Application::getViewSize() {
+const cocos2d::Vec2& Application::getViewSize() {
     return _viewSize;
 }
 

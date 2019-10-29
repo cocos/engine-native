@@ -80,7 +80,11 @@ Application* app = nullptr;
 }
 
 - (void)statusBarOrientationChanged:(NSNotification *)notification {
-    Application::getInstance()->updateViewSize();
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    float scale = [[UIScreen mainScreen] scale];
+    float width = bounds.size.width * scale;
+    float height = bounds.size.height * scale;
+    Application::getInstance()->updateViewSize(width, height);
 }
 
 
