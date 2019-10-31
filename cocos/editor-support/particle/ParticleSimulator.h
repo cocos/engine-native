@@ -232,7 +232,7 @@ private:
     bool                            _finished = false;
     float                           _elapsed = 0;
     float                           _emitCounter = 0;
-    float							_maxParticleDeltaTime = 0;
+    float                           _maxParticleDeltaTime = 0.0333;  //ParticleSystem max step delta time
     std::size_t                     _uvFilled = 0;
     finishedCallback                _finishedCallback = nullptr;
     stopCallback                    _stopCallback = nullptr;
