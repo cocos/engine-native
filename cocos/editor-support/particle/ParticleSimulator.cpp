@@ -22,6 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "ParticleSimulator.h"
+#include "platform/CCStdC.h" // need it to include Windows.h
 #include "base/ccRandom.h"
 #include <algorithm>
 #include "base/ccMacros.h"
@@ -37,6 +38,7 @@ NS_CC_BEGIN
 
 // global particle pool
 static ParticlePool _pool;
+extern LONGLONG desiredInterval;
 
 void Particle::reset()
 {
@@ -205,7 +207,11 @@ void ParticleSimulator::emitParticle(cocos2d::Vec3 &pos)
 
 void ParticleSimulator::onEnable()
 {
+    LARGE_INTEGER nFreq;
+	QueryPerformanceFrequency(&nFreq);
+
     MiddlewareManager::getInstance()->addTimer(this);
+	_maxParticleDeltaTime = (float)desiredInterval / nFreq.QuadPart * 2;
 }
 
 void ParticleSimulator::onDisable()
@@ -215,6 +221,7 @@ void ParticleSimulator::onDisable()
 
 void ParticleSimulator::render(float dt)
 {
+    dt = dt > _maxParticleDeltaTime ? _maxParticleDeltaTime : dt;
     if (_finished || _nodeProxy == nullptr || _effect == nullptr)
     {
         return;
