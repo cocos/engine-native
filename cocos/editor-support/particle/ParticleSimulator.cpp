@@ -38,7 +38,7 @@ NS_CC_BEGIN
 // global particle pool
 static ParticlePool _pool;
 // particleSystem max step delta time
-static const float _maxParticleDeltaTime = 0.0333;  
+static const float _maxParticleDeltaTime = 0.0333f;  
 
 void Particle::reset()
 {
