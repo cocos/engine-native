@@ -1389,6 +1389,21 @@ static bool js_renderer_NodeProxy_disableVisit(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_NodeProxy_disableVisit)
 
+static bool js_renderer_NodeProxy_switchTraverseToRender(se::State& s)
+{
+    cocos2d::renderer::NodeProxy* cobj = (cocos2d::renderer::NodeProxy*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_NodeProxy_switchTraverseToRender : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->switchTraverseToRender();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_NodeProxy_switchTraverseToRender)
+
 static bool js_renderer_NodeProxy_notifyUpdateParent(se::State& s)
 {
     cocos2d::renderer::NodeProxy* cobj = (cocos2d::renderer::NodeProxy*)s.nativeThisObject();
@@ -1468,6 +1483,21 @@ static bool js_renderer_NodeProxy_clearAssembler(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_NodeProxy_clearAssembler)
 
+static bool js_renderer_NodeProxy_switchTraverseToVisit(se::State& s)
+{
+    cocos2d::renderer::NodeProxy* cobj = (cocos2d::renderer::NodeProxy*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_NodeProxy_switchTraverseToVisit : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->switchTraverseToVisit();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_NodeProxy_switchTraverseToVisit)
+
 static bool js_renderer_NodeProxy_setAssembler(se::State& s)
 {
     cocos2d::renderer::NodeProxy* cobj = (cocos2d::renderer::NodeProxy*)s.nativeThisObject();
@@ -1525,11 +1555,13 @@ bool js_register_renderer_NodeProxy(se::Object* obj)
     auto cls = se::Class::create("NodeProxy", obj, nullptr, _SE(js_renderer_NodeProxy_constructor));
 
     cls->defineFunction("disableVisit", _SE(js_renderer_NodeProxy_disableVisit));
+    cls->defineFunction("switchTraverseToRender", _SE(js_renderer_NodeProxy_switchTraverseToRender));
     cls->defineFunction("notifyUpdateParent", _SE(js_renderer_NodeProxy_notifyUpdateParent));
     cls->defineFunction("destroyImmediately", _SE(js_renderer_NodeProxy_destroyImmediately));
     cls->defineFunction("enableVisit", _SE(js_renderer_NodeProxy_enableVisit));
     cls->defineFunction("setName", _SE(js_renderer_NodeProxy_setName));
     cls->defineFunction("clearAssembler", _SE(js_renderer_NodeProxy_clearAssembler));
+    cls->defineFunction("switchTraverseToVisit", _SE(js_renderer_NodeProxy_switchTraverseToVisit));
     cls->defineFunction("setAssembler", _SE(js_renderer_NodeProxy_setAssembler));
     cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_NodeProxy_finalize));
     cls->install();
@@ -3530,7 +3562,7 @@ static bool js_renderer_NodeMemPool_updateNodeData(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 11) {
+    if (argc == 12) {
         size_t arg0 = 0;
         se_object_ptr arg1 = nullptr;
         se_object_ptr arg2 = nullptr;
@@ -3542,6 +3574,7 @@ static bool js_renderer_NodeMemPool_updateNodeData(se::State& s)
         se_object_ptr arg8 = nullptr;
         se_object_ptr arg9 = nullptr;
         se_object_ptr arg10 = nullptr;
+        se_object_ptr arg11 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
         arg1 = args[1].toObject();
         arg2 = args[2].toObject();
@@ -3553,11 +3586,12 @@ static bool js_renderer_NodeMemPool_updateNodeData(se::State& s)
         arg8 = args[8].toObject();
         arg9 = args[9].toObject();
         arg10 = args[10].toObject();
+        arg11 = args[11].toObject();
         SE_PRECONDITION2(ok, false, "js_renderer_NodeMemPool_updateNodeData : Error processing arguments");
-        cobj->updateNodeData(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+        cobj->updateNodeData(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 11);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 12);
     return false;
 }
 SE_BIND_FUNC(js_renderer_NodeMemPool_updateNodeData)

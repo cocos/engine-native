@@ -423,6 +423,14 @@ disableVisit : function (
 },
 
 /**
+ * @method switchTraverseToRender
+ */
+switchTraverseToRender : function (
+)
+{
+},
+
+/**
  * @method notifyUpdateParent
  */
 notifyUpdateParent : function (
@@ -460,6 +468,14 @@ str
  * @method clearAssembler
  */
 clearAssembler : function (
+)
+{
+},
+
+/**
+ * @method switchTraverseToVisit
+ */
+switchTraverseToVisit : function (
 )
 {
 },
@@ -1501,9 +1517,11 @@ int
  * @param {se::Object} arg8
  * @param {se::Object} arg9
  * @param {se::Object} arg10
+ * @param {se::Object} arg11
  */
 updateNodeData : function (
 int, 
+object, 
 object, 
 object, 
 object, 

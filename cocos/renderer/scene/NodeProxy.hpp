@@ -34,8 +34,8 @@
 #include "base/CCMap.h"
 #include "math/CCMath.h"
 #include "assembler/AssemblerBase.hpp"
-
 #include "MemPool.hpp"
+#include <functional>
 
 namespace se {
     class Object;
@@ -47,6 +47,7 @@ class ModelBatcher;
 class Scene;
 struct TRS;
 struct ParentInfo;
+struct Skew;
 
 /**
  * @addtogroup scene
@@ -66,6 +67,17 @@ struct ParentInfo;
 class NodeProxy : public Ref
 {
 public:
+    typedef std::function<void(NodeProxy*, ModelBatcher*, Scene*)> TraverseFunc;
+    
+    /*
+     *  @brief Visit the node but do not transform position.
+     */
+    static void render(NodeProxy* node, ModelBatcher* batcher, Scene* scene);
+    /*
+     *  @brief Visit the node as a ordinary node but not a root node.
+     */
+    static void visit(NodeProxy* node, ModelBatcher* batcher, Scene* scene);
+    
     /*
      * @brief The default constructor.
      */
@@ -232,14 +244,6 @@ public:
      */
     AssemblerBase* getAssembler() const;
     /*
-     *  @brief Visit the node as a ordinary node but not a root node.
-     */
-    void visit(ModelBatcher* batcher, Scene* scene);
-    /*
-     *  @brief Visit the node but do not transform position.
-     */
-    void render(ModelBatcher* batcher, Scene* scene);
-    /*
      *  @brief Enables visit.
      */
     void enableVisit() { _needVisit = true; }
@@ -284,6 +288,20 @@ public:
      *  @brief Is node flag dirty
      */
     bool isDirty(uint32_t flag) const { return *_dirty & flag; }
+    
+    /*
+     *  @brief switch traverse interface to visit
+     */
+    void switchTraverseToVisit() { traverseHandle = visit; }
+    /*
+     *  @brief switch traverse interface to render
+     */
+    void switchTraverseToRender() { traverseHandle = render; }
+
+    /*
+     *  @brief traverse handle
+     */
+    TraverseFunc traverseHandle = nullptr;
 protected:
     void updateLevel();
     void childrenAlloc();
@@ -308,6 +326,8 @@ private:
     int32_t* _cullingMask = nullptr;
     uint8_t* _opacity = nullptr;
     uint8_t* _is3DNode = nullptr;
+    Skew* _skew = nullptr;
+    
     std::size_t _unitID = 0;
     std::size_t _index = 0;
     

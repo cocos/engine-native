@@ -32,22 +32,27 @@ RENDERER_BEGIN
 class NodeProxy;
 
 struct TRS {
-    float x;
-    float y;
-    float z;
-    float qx;
-    float qy;
-    float qz;
-    float qw;
-    float sx;
-    float sy;
-    float sz;
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+    float qx = 0.0f;
+    float qy = 0.0f;
+    float qz = 0.0f;
+    float qw = 0.0f;
+    float sx = 0.0f;
+    float sy = 0.0f;
+    float sz = 0.0f;
 };
 
 #define PARENT_INVALID 0xffffffff
 struct ParentInfo {
-    uint32_t unitID;
-    uint32_t index;
+    uint32_t unitID = 0;
+    uint32_t index = 0;
+};
+
+struct Skew {
+    float_t x = 0.0f;
+    float_t y = 0.0f;
 };
 
 class UnitNode: public UnitBase {
@@ -65,55 +70,61 @@ public:
     void setIs3D(se::Object* jsData);
     void setNode(se::Object* jsData);
     void setLevel(se::Object* jsData);
+    void setSkew(se::Object* jsData);
     
-    uint32_t* getDirty(std::size_t index)
+    uint32_t* getDirty(std::size_t index) const
     {
         return dirtyData + index;
     }
     
-    TRS* getTRS(std::size_t index)
+    TRS* getTRS(std::size_t index) const
     {
         return (TRS*)trsData + index;
     }
     
-    cocos2d::Mat4* getLocalMat(std::size_t index)
+    cocos2d::Mat4* getLocalMat(std::size_t index) const
     {
         return (cocos2d::Mat4*)localMatData + index;
     }
     
-    cocos2d::Mat4* getWorldMat(std::size_t index)
+    cocos2d::Mat4* getWorldMat(std::size_t index) const
     {
         return (cocos2d::Mat4*)worldMatData + index;
     }
     
-    ParentInfo* getParent(std::size_t index)
+    ParentInfo* getParent(std::size_t index) const
     {
         return (ParentInfo*)parentData + index;
     }
     
-    int32_t* getZOrder(std::size_t index)
+    int32_t* getZOrder(std::size_t index) const
     {
         return zOrderData + index;
     }
     
-    int32_t* getCullingMask(std::size_t index)
+    int32_t* getCullingMask(std::size_t index) const
     {
         return cullingMaskData + index;
     }
     
-    uint8_t* getOpacity(std::size_t index)
+    uint8_t* getOpacity(std::size_t index) const
     {
         return opacityData + index;
     }
     
-    uint8_t* getIs3D(std::size_t index)
+    uint8_t* getIs3D(std::size_t index) const
     {
         return is3DData + index;
     }
     
-    uint64_t* getNode(std::size_t index)
+    uint64_t* getNode(std::size_t index) const
     {
         return nodeData + index;
+    }
+    
+    Skew* getSkew(std::size_t index) const
+    {
+        return (Skew*)skewData + index;
     }
 protected:
     se::Object* dirty = nullptr;
@@ -155,6 +166,10 @@ protected:
     se::Object* node = nullptr;
     uint64_t* nodeData = nullptr;
     std::size_t nodeLen = 0;
+    
+    se::Object* skew = nullptr;
+    float_t* skewData = nullptr;
+    std::size_t skewLen = 0;
 };
 
 class NodeMemPool: public MemPool {
@@ -169,7 +184,7 @@ public:
     
     void removeNodeData(std::size_t unitID);
 
-    void updateNodeData(std::size_t unitID, se_object_ptr dirty, se_object_ptr trs, se_object_ptr localMat, se_object_ptr worldMat, se_object_ptr parent, se_object_ptr zOrder, se_object_ptr cullingMask, se_object_ptr opacity, se_object_ptr is3D, se_object_ptr node);
+    void updateNodeData(std::size_t unitID, se_object_ptr dirty, se_object_ptr trs, se_object_ptr localMat, se_object_ptr worldMat, se_object_ptr parent, se_object_ptr zOrder, se_object_ptr cullingMask, se_object_ptr opacity, se_object_ptr is3D, se_object_ptr node, se_object_ptr skew);
     
     UnitNode* getUnit(std::size_t unitID) const;
     const std::vector<UnitNode*>& getNodePool() const;

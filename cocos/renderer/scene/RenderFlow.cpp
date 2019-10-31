@@ -357,7 +357,8 @@ void RenderFlow::render(NodeProxy* scene, float deltaTime)
         middleware::MiddlewareManager::getInstance()->render(deltaTime);
 #endif
         
-        scene->render(_batcher, _scene);
+        auto traverseHandle = scene->traverseHandle;
+        traverseHandle(scene, _batcher, _scene);
         _batcher->terminateBatch();
 
         _forward->render(_scene);
@@ -366,7 +367,7 @@ void RenderFlow::render(NodeProxy* scene, float deltaTime)
 
 void RenderFlow::visit(NodeProxy* rootNode)
 {
-    rootNode->visit(_batcher, _scene);
+    NodeProxy::visit(rootNode, _batcher, _scene);
 }
 
 RENDERER_END

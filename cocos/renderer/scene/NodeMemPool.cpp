@@ -44,6 +44,7 @@ UnitNode::~UnitNode()
     unset(&opacity, (uint8_t**)&opacityData, &opacityLen);
     unset(&is3D, (uint8_t**)&is3DData, &is3DLen);
     unset(&node, (uint8_t**)&nodeData, &nodeLen);
+    unset(&skew, (uint8_t**)&skewData, &skewLen);
 }
 
 void UnitNode::setDirty(se::Object* jsData)
@@ -96,6 +97,11 @@ void UnitNode::setNode(se::Object *jsData)
     set(&node, (uint8_t**)&nodeData, &nodeLen, jsData);
 }
 
+void UnitNode::setSkew(se::Object* jsData)
+{
+    set(&skew, (uint8_t**)&skewData, &skewLen, jsData);
+}
+
 NodeMemPool* NodeMemPool::_instance = nullptr;
 
 NodeMemPool::NodeMemPool()
@@ -138,7 +144,7 @@ UnitNode* NodeMemPool::getUnit(std::size_t unitID) const
     return _nodePool[unitID];
 }
 
-void NodeMemPool::updateNodeData(std::size_t unitID, se_object_ptr dirty, se_object_ptr trs, se_object_ptr localMat, se_object_ptr worldMat, se_object_ptr parent, se_object_ptr zOrder, se_object_ptr cullingMask, se_object_ptr opacity, se_object_ptr is3D, se_object_ptr node)
+void NodeMemPool::updateNodeData(std::size_t unitID, se_object_ptr dirty, se_object_ptr trs, se_object_ptr localMat, se_object_ptr worldMat, se_object_ptr parent, se_object_ptr zOrder, se_object_ptr cullingMask, se_object_ptr opacity, se_object_ptr is3D, se_object_ptr node, se_object_ptr skew)
 {
     // UnitID may equal to node pool size, then node pool must increase size.
     CCASSERT(unitID <= _nodePool.size(), "NodeMemPool updateNodeData unitID can not be rather than pool size");
@@ -174,6 +180,7 @@ void NodeMemPool::updateNodeData(std::size_t unitID, se_object_ptr dirty, se_obj
     unit->setOpacity(opacity);
     unit->setIs3D(is3D);
     unit->setNode(node);
+    unit->setSkew(skew);
 }
 
 RENDERER_END

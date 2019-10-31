@@ -82,11 +82,13 @@ extern se::Class* __jsb_cocos2d_renderer_NodeProxy_class;
 bool js_register_cocos2d_renderer_NodeProxy(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_disableVisit);
+SE_DECLARE_FUNC(js_renderer_NodeProxy_switchTraverseToRender);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_notifyUpdateParent);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_destroyImmediately);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_enableVisit);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_setName);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_clearAssembler);
+SE_DECLARE_FUNC(js_renderer_NodeProxy_switchTraverseToVisit);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_setAssembler);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_NodeProxy);
 
