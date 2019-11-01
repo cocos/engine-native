@@ -70,9 +70,6 @@ static bool WebSocketServer_constructor(se::State& s)
         WSSPTR cobj = new std::shared_ptr<WebSocketServer>(new WebSocketServer());
         obj->setPrivateData(cobj);
         (*cobj)->setData(obj);
-        //obj->root(); //TODO: no object should be rootted manually
-
-        //create connection here
 
         (*cobj)->setOnBegin([obj]() {
             obj->root();
@@ -101,7 +98,7 @@ static bool WebSocketServer_listen(se::State& s) {
 
     WSSPTR cobj = (WSSPTR)s.nativeThisObject();
     int arg_port = 0;
-    std::string arg_host = "0.0.0.0";
+    std::string arg_host = "";
     std::function<void(const std::string&)> arg_callback;
 
     bool ok;
@@ -172,11 +169,11 @@ static bool WebSocketServer_onconnection(se::State& s) {
         SE_REPORT_ERROR("wrong number of arguments: %d, was expecting 1 & function", argc);
         return false;
     }
+
     WSSPTR cobj = (WSSPTR)s.nativeThisObject();
-
-
     s.thisObject()->setProperty("__onconnection", args[0]);
     std::weak_ptr<WebSocketServer> serverWeak = *cobj;
+
     cobj->get()->setOnConnection([serverWeak](std::shared_ptr<WSServerConnection> conn) {
             se::AutoHandleScope hs;
 
@@ -209,7 +206,6 @@ static bool WebSocketServer_onconnection(se::State& s) {
             se::ValueArray args;
             args.push_back(se::Value(obj));
             bool success = callback.toObject()->call(args, sobj, nullptr);;
-            //bool success = funVal.toObject()->call(args, thsVal.toObject(), nullptr);;
             if (!success) {
                 se::ScriptEngine::getInstance()->clearException();
             }
@@ -231,14 +227,14 @@ static bool WebSocketServer_close(se::State& s)
 
 
     WSSPTR cobj = (WSSPTR)s.nativeThisObject();
-
     std::function<void(const std::string&)> callback;
 
     if (argc == 1) {
         if(args[0].isObject() && args[0].toObject()->isFunction()) {
-            auto funObj = args[0].toObject();
+            
             s.thisObject()->setProperty("__onclose", args[0]);
             std::weak_ptr<WebSocketServer> serverWeak = *cobj;
+
             callback = [serverWeak](const std::string& err) {
                 se::AutoHandleScope hs;
 
@@ -322,10 +318,7 @@ static bool WebSocketServer_Connection_constructor(se::State& s)
     if (argc == 0)
     {
         se::Object* obj = s.thisObject();
-        //WSCONNPTR cobj = new std::shared_ptr<WebSocketServer>(new WebSocketServer());
-        //obj->setPrivateData(cobj);
-        //(*cobj)->setData(obj);
-        //obj->root(); 
+        //private data should be set when connected
         return true;
     }
 
@@ -352,10 +345,8 @@ static bool WebSocketServer_Connection_send(se::State& s)
         std::function<void(const std::string & cb)> callback;
         if (args[argc - 1].isObject() && args[argc - 1].toObject()->isFunction()) 
         {
-            auto funObj = args[argc -1 ].toObject();
             std::string callbackId = gen_send_index();
             s.thisObject()->setProperty(callbackId.c_str(), args[argc - 1]);
-
             std::weak_ptr<WSServerConnection> connWeak = *cobj;
 
             callback = [callbackId, connWeak](const std::string& err) {
@@ -448,13 +439,10 @@ static bool WebSocketServer_Connection_close(se::State& s)
         SE_REPORT_ERROR("Connection is not constructed by WebSocketServer, invalidate format!!");
         return false;
     }
-;
 
     std::function<void(const std::string&)> callback;
-
     int arg_code = -1;
     std::string arg_reason;
-
     bool ok;
 
     if (argc >= 1) {
@@ -478,7 +466,6 @@ static bool WebSocketServer_Connection_close(se::State& s)
     else {
         (*cobj)->closeAsync();
     }
-    
     return true;
 }
 SE_BIND_FUNC(WebSocketServer_Connection_close)
@@ -492,8 +479,8 @@ static bool WebSocketServer_Connection_onconnect(se::State& s) {
         SE_REPORT_ERROR("wrong number of arguments: %d, was expecting 1 & function", argc);
         return false;
     }
-    WSCONNPTR cobj = (WSCONNPTR)s.nativeThisObject();
 
+    WSCONNPTR cobj = (WSCONNPTR)s.nativeThisObject();
     if (!cobj) {
         SE_REPORT_ERROR("Connection is not constructed by WebSocketServer, invalidate format!!");
         return false;
@@ -904,4 +891,4 @@ bool register_all_websocket_server(se::Object* obj)
 
     return true;
 }
-#endif //#if (USE_SOCKET > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#endif //#if (USE_SOCKET > 0) && (USE_WEBSOCKET_SERVER > 0)
