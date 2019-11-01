@@ -189,8 +189,10 @@ ifeq ($(USE_SOCKET),1)
 LOCAL_SRC_FILES += \
 network/SocketIO.cpp \
 network/WebSocket-libwebsockets.cpp \
+network/WebSocketServer.cpp \
 scripting/js-bindings/manual/jsb_socketio.cpp \
-scripting/js-bindings/manual/jsb_websocket.cpp
+scripting/js-bindings/manual/jsb_websocket.cpp \
+scripting/js-bindings/manual/jsb_websocket_server.cpp
 
 LOCAL_STATIC_LIBRARIES += libwebsockets_static
 LOCAL_STATIC_LIBRARIES += cocos_ssl_static

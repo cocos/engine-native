@@ -51,6 +51,9 @@
 #if USE_SOCKET
 #include "cocos/scripting/js-bindings/manual/jsb_websocket.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_socketio.hpp"
+#if USE_WEBSOCKET_SERVER
+#include "cocos/scripting/js-bindings/manual/jsb_websocket_server.hpp"
+#endif
 #endif // USE_SOCKET
 
 #if USE_AUDIO
@@ -147,6 +150,9 @@ bool jsb_register_all_modules()
 #if USE_SOCKET
     se->addRegisterCallback(register_all_websocket);
     se->addRegisterCallback(register_all_socketio);
+#if USE_WEBSOCKET_SERVER
+    se->addRegisterCallback(register_all_websocket_server);
+#endif
 #endif
 
 #if USE_GFX_RENDERER && USE_MIDDLEWARE
