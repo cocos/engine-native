@@ -42,7 +42,7 @@ namespace network {
     });\
     } while(0)
 
-#define DISPATCH_CALLBACK_IN_GAME_LOOP() do {\
+#define DISPATCH_CALLBACK_IN_GAMETHREAD() do {\
         data->setCallback([callback](const std::string& msg) { \
             auto wrapper = [callback, msg]() {callback(msg); }; \
             RUN_IN_GAMETHREAD(wrapper()); \
@@ -177,6 +177,9 @@ WebSocketServer::~WebSocketServer()
         lws_context_destroy2(_ctx);
         _ctx = nullptr;
     }
+    if (_async.data) {
+        delete (AsyncTaskData*)_async.data;
+    }
 }
 
 bool WebSocketServer::close(std::function<void(const std::string & errorMsg)> callback)
@@ -195,84 +198,82 @@ bool WebSocketServer::closeAsync(std::function<void(const std::string & errorMsg
 }
 
 
-bool WebSocketServer::listen(int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
+bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
 {
-    _serverState = ServerThreadState::RUNNING;
+    server->_serverState = ServerThreadState::RUNNING;
     lws_set_log_level(-1, nullptr);
 
-    if (_ctx) {
+    if (server->_ctx) {
         if (callback) {
             RUN_IN_GAMETHREAD(callback("Error: lws_context already created!"));
         }
-        RUN_IN_GAMETHREAD(if (_onerror)_onerror("websocket listen error!"));
-        _serverState = ServerThreadState::ST_ERROR;
+        RUN_IN_GAMETHREAD(if (server->_onerror) server->_onerror("websocket listen error!"));
+        server->_serverState = ServerThreadState::ST_ERROR;
         return false;
     }
 
-    _host = host;
+    server->_host = host;
 
     struct lws_context_creation_info info;
     memset(&info, 0, sizeof(info));
     info.port = port;
-    info.iface = _host.empty() ? nullptr : _host.c_str();
+    info.iface = server->_host.empty() ? nullptr : server->_host.c_str();
     info.protocols = protocols;
     info.gid = -1;
     info.uid = -1;
     info.extensions = exts;
-    // info.options = LWS_SERVER_OPTION_VALIDATE_UTF8
-    //     |LWS_SERVER_OPTION_LIBUV
-    //     |LWS_SERVER_OPTION_SKIP_SERVER_CANONICAL_NAME
-    //     ;
-    info.options = LWS_SERVER_OPTION_LIBUV
+    info.options = LWS_SERVER_OPTION_VALIDATE_UTF8
+        |LWS_SERVER_OPTION_LIBUV
+        |LWS_SERVER_OPTION_SKIP_SERVER_CANONICAL_NAME
         ;
     info.timeout_secs = 3; //
     info.max_http_header_pool = 1;
-    info.user = this;
+    info.user = server.get();
 
 
-    _ctx = lws_create_context(&info);
+    server->_ctx = lws_create_context(&info);
 
-    if (!_ctx) {
+    if (!server->_ctx) {
         if (callback) {
             RUN_IN_GAMETHREAD(callback("Error: Failed to create lws_context!"));
         }
-        RUN_IN_GAMETHREAD(if (_onerror)_onerror("websocket listen error!"));
-        _serverState = ServerThreadState::ST_ERROR;
+        RUN_IN_GAMETHREAD(if (server->_onerror)server->_onerror("websocket listen error!"));
+        server->_serverState = ServerThreadState::ST_ERROR;
         return false;
     }
     uv_loop_t* loop = nullptr;
-    if (lws_uv_initloop(_ctx, loop, 0)) {
+    if (lws_uv_initloop(server->_ctx, loop, 0)) {
         if (callback) {
             RUN_IN_GAMETHREAD(callback("Error: Failed to create libuv loop!"));
         }
-        RUN_IN_GAMETHREAD(if (_onerror)_onerror("websocket listen error, failed to create libuv loop!"));
-        _serverState = ServerThreadState::ST_ERROR;
+        RUN_IN_GAMETHREAD(if (server->_onerror)server->_onerror("websocket listen error, failed to create libuv loop!"));
+        server->_serverState = ServerThreadState::ST_ERROR;
         return false;
     }
 
-    loop = lws_uv_getloop(_ctx, 0);
-    async_init(loop, &_async);
-    RUN_IN_GAMETHREAD(if(_onlistening)_onlistening(""));
-    RUN_IN_GAMETHREAD(if(_onbegin)_onbegin());
+    loop = lws_uv_getloop(server->_ctx, 0);
+    async_init(loop, &server->_async);
+    RUN_IN_GAMETHREAD(if(server->_onlistening)server->_onlistening(""));
+    RUN_IN_GAMETHREAD(if(server->_onbegin)server->_onbegin());
     RUN_IN_GAMETHREAD(if(callback)callback(""));
 
-    lws_libuv_run(_ctx, 0);
-    uv_close((uv_handle_t*)&_async, nullptr);
+    lws_libuv_run(server->_ctx, 0);
+    uv_close((uv_handle_t*)&server->_async, nullptr);
 
-    RUN_IN_GAMETHREAD(if(_onend)_onend());
-    _serverState = ServerThreadState::STOPPED;
+    RUN_IN_GAMETHREAD(if(server->_onend)server->_onend());
+    server->_serverState = ServerThreadState::STOPPED;
 
     return true;
 }
 
-bool WebSocketServer::listenAsync(int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
+bool WebSocketServer::listenAsync(std::shared_ptr<WebSocketServer> server,int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
 {
-    if (_serverState != ServerThreadState::NOT_BOOTED) {
+    if (server->_serverState != ServerThreadState::NOT_BOOTED) {
         return false;
     }
 
     std::thread([=]() {
-        this->listen(port, host, callback);
+        WebSocketServer::listen(server, port, host, callback);
         }).detach();
 
     return true;
@@ -374,6 +375,9 @@ WSServerConnection::~WSServerConnection()
 {
     LOGE();
     //uv_close((uv_handle_t*)&_async, nullptr);
+    if (_async.data) {
+        delete (AsyncTaskData*)_async.data;
+    }
 }
 
 bool WSServerConnection::send(std::shared_ptr<DataFrag> data)
@@ -392,7 +396,7 @@ bool WSServerConnection::sendText(const std::string& text, std::function<void(co
     LOGE();
     std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(text);
     if (callback) {
-        DISPATCH_CALLBACK_IN_GAME_LOOP();
+        DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
     send(data);
     return true;
@@ -403,7 +407,7 @@ bool WSServerConnection::sendTextAsync(const std::string& text, std::function<vo
     LOGE();
     std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(text);
     if (callback) {
-        DISPATCH_CALLBACK_IN_GAME_LOOP();
+        DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
     schedule_async_task(&_async, [this, data]() {
         this->send(data);
@@ -417,7 +421,7 @@ bool WSServerConnection::sendBinary(const void* in, size_t len, std::function<vo
     LOGE();
     std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(in, len);
     if (callback) {
-        DISPATCH_CALLBACK_IN_GAME_LOOP();
+        DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
     send(data);
     return true;
@@ -429,7 +433,7 @@ bool WSServerConnection::sendBinaryAsync(const void* in, size_t len, std::functi
     LOGE();
     std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(in, len);
     if (callback) {
-        DISPATCH_CALLBACK_IN_GAME_LOOP();
+        DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
     schedule_async_task(&_async, [this, data]() {
         this->send(data);

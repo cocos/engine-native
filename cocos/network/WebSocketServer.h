@@ -238,10 +238,10 @@ namespace cocos2d {
 
             virtual ~WebSocketServer();
 
-            bool listen(int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
+            static bool listen(std::shared_ptr<WebSocketServer> server, int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
             bool close(std::function<void(const std::string & errorMsg)> callback = nullptr);
 
-            bool listenAsync(int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
+            static bool listenAsync(std::shared_ptr<WebSocketServer> server, int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
             bool closeAsync(std::function<void(const std::string & errorMsg)> callback = nullptr);
 
             std::vector<std::shared_ptr<WSServerConnection>> getConnections() const;

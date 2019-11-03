@@ -156,7 +156,7 @@ static bool WebSocketServer_listen(se::State& s) {
         }
     }
 
-    (*cobj)->listenAsync(arg_port, arg_host, arg_callback);
+    WebSocketServer::listenAsync(*cobj, arg_port, arg_host, arg_callback);
     return true;
 }
 SE_BIND_FUNC(WebSocketServer_listen)
@@ -374,8 +374,8 @@ static bool WebSocketServer_Connection_send(se::State& s)
                     se::ScriptEngine::getInstance()->clearException();
                 }
                 //remove callback, TODO: `delete property` 
-                sobj->setProperty(callbackId.c_str(), se::Value::Undefined);
-
+                //sobj->setProperty(callbackId.c_str(), se::Value::Undefined);
+                sobj->deleteProperty(callbackId.c_str());
             };
         }
 
