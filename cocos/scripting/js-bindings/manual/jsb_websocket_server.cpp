@@ -198,9 +198,13 @@ static bool WebSocketServer_onconnection(se::State& s) {
             obj->setPrivateData(prv);
             conn->setData(obj);
             std::weak_ptr<WSServerConnection> connWeak = conn;
-            prv->get()->setOnEnd([obj, connWeak]() {
+            prv->get()->setOnEnd([connWeak]() {
                 // release we connection is gone!
-                obj->unroot();
+                auto ptr = connWeak.lock();
+                if (ptr) {
+                    se::Object* sobj = (se::Object*)ptr->getData();
+                    sobj->unroot();
+                }
                 });
             se::ValueArray args;
             args.push_back(se::Value(obj));
