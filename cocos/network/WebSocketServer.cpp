@@ -289,15 +289,12 @@ void WebSocketServer::onCreateClient(struct lws* wsi)
 {
     LOGE();
     std::shared_ptr<WSServerConnection> conn = std::make_shared<WSServerConnection>(wsi);
-
-    char ip[221] = { 0 };
-    char addr[221] = { 0 };
+    //char ip[221] = { 0 };
+    //char addr[221] = { 0 };
     //lws_get_peer_addresses(wsi, lws_get_socket_fd(wsi), ip, 220, addr, 220);
-
+    //lws_get_peer_simple(wsi, ip, 220);
     _conns.emplace(wsi, conn);
-    
     RUN_IN_GAMETHREAD(if(_onconnection) _onconnection(conn));
-    
     conn->onConnected();
 }
 
@@ -557,14 +554,12 @@ int WSServerConnection::onDrainData()
         if (finish_len == 0)
         {
             frag->onFinish("Connection Closed");
-            return -1; // connection closed? can cause mainloop exit
-            //return 0; 
+            return -1;
         }
         else if (finish_len < 0)
         {
             frag->onFinish("Send Error!");
-            return -1; // connection closed? can cause mainloop exit
-            //return 0;
+            return -1; 
         }
         else
         {
@@ -647,7 +642,7 @@ void WSServerConnection::finallyClosed()
 std::vector<std::string> WSServerConnection::getProtocols() {
     std::vector<std::string> ret;
     if (_wsi) {
-        //TODO 
+        //TODO cause abort 
         //const struct lws_protocols* protos = lws_get_protocol(_wsi);
         //while (protos && protos->name != nullptr)
         //{
@@ -843,10 +838,7 @@ int WebSocketServer::websocket_server_callback(struct lws* wsi, enum lws_callbac
     return ret;
 }
 
-#ifndef WSS_EXTERNAL_TEST_BUILD
 } // namespace network
 } // namespace cocos2d
-#endif
-
 
 #endif

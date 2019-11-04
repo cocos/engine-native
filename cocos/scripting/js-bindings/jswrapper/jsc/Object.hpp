@@ -144,7 +144,7 @@ namespace se {
         /**
          *  @brief Delete a property of an object.
          *  @param[in] name A utf-8 string containing the property's name.
-         *  @return true if the property is set successfully, otherwise false.
+         *  @return true if the property is deleted successfully, otherwise false.
          */
         bool deleteProperty(const char *name);
         
