@@ -373,8 +373,6 @@ static bool WebSocketServer_Connection_send(se::State& s)
                 if (!success) {
                     se::ScriptEngine::getInstance()->clearException();
                 }
-                //remove callback, TODO: `delete property` 
-                //sobj->setProperty(callbackId.c_str(), se::Value::Undefined);
                 sobj->deleteProperty(callbackId.c_str());
             };
         }
