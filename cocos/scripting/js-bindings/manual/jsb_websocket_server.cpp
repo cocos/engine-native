@@ -201,7 +201,6 @@ static bool WebSocketServer_onconnection(se::State& s) {
             prv->get()->setOnEnd([obj, connWeak]() {
                 // release we connection is gone!
                 obj->unroot();
-                auto p = connWeak.lock();
                 });
             se::ValueArray args;
             args.push_back(se::Value(obj));
