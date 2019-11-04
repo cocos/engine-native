@@ -172,7 +172,6 @@ WebSocketServer::~WebSocketServer()
 {
 
     if (_ctx) {
-        RUN_IN_GAMETHREAD(if(_onclose) _onclose(""));
         lws_context_destroy(_ctx);
         lws_context_destroy2(_ctx);
         _ctx = nullptr;
@@ -184,6 +183,7 @@ WebSocketServer::~WebSocketServer()
 
 bool WebSocketServer::close(std::function<void(const std::string & errorMsg)> callback)
 {
+    _onclose_cb = callback;
     if(_ctx)
         lws_libuv_stop(_ctx);
     return true;
@@ -191,6 +191,9 @@ bool WebSocketServer::close(std::function<void(const std::string & errorMsg)> ca
 
 bool WebSocketServer::closeAsync(std::function<void(const std::string & errorMsg)> callback)
 {
+    if (_serverState != ServerThreadState::RUNNING) {
+        return false;
+    }
     schedule_async_task(&_async, [this, callback]() {
         this->close(callback);
         });
@@ -260,6 +263,8 @@ bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, 
     lws_libuv_run(server->_ctx, 0);
     uv_close((uv_handle_t*)&server->_async, nullptr);
 
+    RUN_IN_GAMETHREAD(if(server->_onclose)server->_onclose(""));
+    RUN_IN_GAMETHREAD(if(server->_onclose_cb)server->_onclose_cb(""));
     RUN_IN_GAMETHREAD(if(server->_onend)server->_onend());
     server->_serverState = ServerThreadState::STOPPED;
 

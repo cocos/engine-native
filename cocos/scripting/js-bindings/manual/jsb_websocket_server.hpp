@@ -39,6 +39,7 @@ SE_DECLARE_FUNC(WebSocketServer_constructor);
 SE_DECLARE_FUNC(WebSocketServer_listen);
 SE_DECLARE_FUNC(WebSocketServer_close);
 SE_DECLARE_FUNC(WebSocketServer_onconnection);
+SE_DECLARE_FUNC(WebSocketServer_onclose);
 SE_DECLARE_FUNC(WebSocketServer_connections);
 SE_DECLARE_FUNC(WebSocketServer_Connection_constructor);
 

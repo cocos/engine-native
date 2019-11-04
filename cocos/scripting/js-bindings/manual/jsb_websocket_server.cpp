@@ -217,6 +217,56 @@ static bool WebSocketServer_onconnection(se::State& s) {
 }
 SE_BIND_PROP_SET(WebSocketServer_onconnection)
 
+static bool WebSocketServer_onclose(se::State& s) {
+    const auto& args = s.args();
+    int argc = (int)args.size();
+    if (argc != 1)
+    {
+        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting 1", argc);
+        return false;
+    }
+    if(!(args[0].isObject() && args[0].toObject()->isFunction())){
+        SE_REPORT_ERROR("argument type error, function expected!");
+    }
+
+    WSSPTR cobj = (WSSPTR)s.nativeThisObject();
+    std::function<void(const std::string&)> callback;
+    std::weak_ptr<WebSocketServer> serverWeak = *cobj;
+    s.thisObject()->setProperty("__onclose", args[0]);
+
+    callback = [serverWeak](const std::string& err) {
+        se::AutoHandleScope hs;
+
+        auto server = serverWeak.lock();
+        if (!server) {
+            return;
+        }
+        se::Object* sobj = (se::Object*)server->getData();
+        if (!sobj) {
+            return;
+        }
+        se::Value callback;
+        if (!sobj->getProperty("__onclose", &callback)) {
+            SE_REPORT_ERROR("onclose callback not found!");
+            return;
+        }
+
+        se::ValueArray args;
+        if (!err.empty())
+        {
+            args.push_back(se::Value(err));
+        }
+        bool success = callback.toObject()->call(args, sobj, nullptr);
+        if (!success) {
+            se::ScriptEngine::getInstance()->clearException();
+        }
+    };
+    (*cobj)->setOnClose(callback);
+
+    return true;
+
+}
+SE_BIND_PROP_SET(WebSocketServer_onclose)
 
 static bool WebSocketServer_close(se::State& s)
 {
@@ -235,7 +285,7 @@ static bool WebSocketServer_close(se::State& s)
     if (argc == 1) {
         if(args[0].isObject() && args[0].toObject()->isFunction()) {
             
-            s.thisObject()->setProperty("__onclose", args[0]);
+            s.thisObject()->setProperty("__close", args[0]);
             std::weak_ptr<WebSocketServer> serverWeak = *cobj;
 
             callback = [serverWeak](const std::string& err) {
@@ -250,7 +300,7 @@ static bool WebSocketServer_close(se::State& s)
                     return;
                 }
                 se::Value callback;
-                if (!sobj->getProperty("__onclose", &callback)) {
+                if (!sobj->getProperty("__close", &callback)) {
                     SE_REPORT_ERROR("onclose callback not found!");
                     return;
                 }
@@ -851,6 +901,7 @@ bool register_all_websocket_server(se::Object* obj)
     cls->defineFunction("close", _SE(WebSocketServer_close));
     cls->defineFunction("listen", _SE(WebSocketServer_listen));
     cls->defineProperty("onconnection", nullptr, _SE(WebSocketServer_onconnection));
+    cls->defineProperty("onclose", nullptr, _SE(WebSocketServer_onclose));
     cls->defineProperty("connections", _SE(WebSocketServer_connections), nullptr);
     cls->install();
 

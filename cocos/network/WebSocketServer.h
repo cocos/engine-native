@@ -300,6 +300,7 @@ namespace cocos2d {
             std::function<void(const std::string&)> _onlistening;
             std::function<void(const std::string&)> _onerror;
             std::function<void(const std::string&)> _onclose;
+            std::function<void(const std::string&)> _onclose_cb;
             std::function<void()> _onend;
             std::function<void()> _onbegin;
             std::function<void(std::shared_ptr<WSServerConnection>)> _onconnection;
