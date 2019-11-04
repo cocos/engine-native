@@ -49,6 +49,11 @@ namespace network {
         }); \
     }while(0)
 
+#define RUN_IN_SERVERTHREAD(task) do {      \
+        schedule_async_task(&_async, [=](){ \
+            task;                           \
+        });                                 \
+    } while(0)
 
 //#define LOGE() CCLOG("WSS: %s", __FUNCTION__)
 #define LOGE()
@@ -62,6 +67,7 @@ struct AsyncTaskData {
     std::list<std::function<void()> > tasks;
 };
 
+// only run in server loop
 static void scheduler_task_cb(uv_async_t* asyn)
 {
     AsyncTaskData* data = (AsyncTaskData*)asyn->data;
@@ -80,6 +86,7 @@ static void async_init(uv_loop_t* loop, uv_async_t* async)
     async->data = new AsyncTaskData();
 }
 
+// run in game thread, dispatch runnable object into server loop
 static void schedule_async_task(uv_async_t* asyn, std::function<void()> func)
 {
 
@@ -194,9 +201,7 @@ bool WebSocketServer::closeAsync(std::function<void(const std::string & errorMsg
     if (_serverState != ServerThreadState::RUNNING) {
         return false;
     }
-    schedule_async_task(&_async, [this, callback]() {
-        this->close(callback);
-        });
+    RUN_IN_SERVERTHREAD(this->close(callback));
     return true;
 }
 
@@ -376,7 +381,6 @@ WSServerConnection::WSServerConnection(struct lws* wsi) : _wsi(wsi)
 WSServerConnection::~WSServerConnection()
 {
     LOGE();
-    //uv_close((uv_handle_t*)&_async, nullptr);
     if (_async.data) {
         delete (AsyncTaskData*)_async.data;
     }
@@ -384,10 +388,7 @@ WSServerConnection::~WSServerConnection()
 
 bool WSServerConnection::send(std::shared_ptr<DataFrag> data)
 {
-    {
-        std::lock_guard<std::mutex> guard(_sendQueueMtx);
-        _sendQueue.emplace_back(data);
-    }
+    _sendQueue.emplace_back(data);
     onDrainData();
     return true;
 }
@@ -411,9 +412,7 @@ bool WSServerConnection::sendTextAsync(const std::string& text, std::function<vo
     if (callback) {
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
-    schedule_async_task(&_async, [this, data]() {
-        this->send(data);
-        });
+    RUN_IN_SERVERTHREAD(this->send(data));
 
     return true;
 }
@@ -437,9 +436,7 @@ bool WSServerConnection::sendBinaryAsync(const void* in, size_t len, std::functi
     if (callback) {
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
-    schedule_async_task(&_async, [this, data]() {
-        this->send(data);
-        });
+    RUN_IN_SERVERTHREAD(this->send(data));
 
     return true;
 }
@@ -463,9 +460,7 @@ bool WSServerConnection::closeAsync(int code, std::string message)
     LOGE();
     _readyState = ReadyState::CLOSING;
     if (!_wsi) return false;
-    schedule_async_task(&_async, [this, code, message]() {
-        this->close(code, message);
-        });
+    RUN_IN_SERVERTHREAD(this->close(code, message));
     return true;
 }
 

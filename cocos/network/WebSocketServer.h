@@ -203,9 +203,7 @@ namespace cocos2d {
 
             struct lws* _wsi = nullptr;
             std::map<std::string, std::string> _headers;
-            std::mutex _sendQueueMtx;
             std::list<std::shared_ptr<DataFrag>> _sendQueue;
-            std::list<std::shared_ptr<DataFrag>> _recvQueus;
             std::shared_ptr<DataFrag> _prevPkg;
             bool _closed = false;
             std::string _closeReason = "close connection";
