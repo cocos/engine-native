@@ -33,22 +33,23 @@
 #include "platform/CCApplication.h"
 #include "base/CCScheduler.h"
 
-
-
 #define MAX_MSG_PAYLOAD 2048
 #define SEND_BUFF 1024
 
 namespace {
+
+    int _aliveServer = 0; //debug info
+
     struct lws_protocols protocols[] = {
-   {
-       "", //protocol name
-       cocos2d::network::WebSocketServer::_websocketServerCallback,
-       sizeof(int),
-       MAX_MSG_PAYLOAD
-   },
-   {
-       nullptr, nullptr, 0
-   }
+       {
+           "", //protocol name
+           cocos2d::network::WebSocketServer::_websocketServerCallback,
+           sizeof(int),
+           MAX_MSG_PAYLOAD
+       },
+       {
+           nullptr, nullptr, 0
+       }
     };
 
     const struct lws_extension exts[] = {
@@ -72,27 +73,29 @@ namespace {
         std::list<std::function<void()> > tasks;
     };
 
-    // only run in server loop
-    void scheduler_task_cb(uv_async_t* asyn)
+    // run in server thread loop
+    void flush_tasks_in_server_loop_cb(uv_async_t* asyn)
     {
         AsyncTaskData* data = (AsyncTaskData*)asyn->data;
         std::lock_guard<std::mutex> guard(data->mtx);
         while (!data->tasks.empty())
         {
+            // fetch task, run task
             data->tasks.front()();
+            // drop task
             data->tasks.pop_front();
         }
 
     }
-    void async_init(uv_loop_t* loop, uv_async_t* async)
+    void init_libuv_async_handle(uv_loop_t* loop, uv_async_t* async)
     {
         memset(async, 0, sizeof(uv_async_t));
-        uv_async_init(loop, async, scheduler_task_cb);
+        uv_async_init(loop, async, flush_tasks_in_server_loop_cb);
         async->data = new AsyncTaskData();
     }
 
     // run in game thread, dispatch runnable object into server loop
-    void schedule_async_task(uv_async_t* asyn, std::function<void()> func)
+    void schedule_task_into_server_thread_task_queue(uv_async_t* asyn, std::function<void()> func)
     {
 
         AsyncTaskData* data = (AsyncTaskData*)asyn->data;
@@ -100,6 +103,7 @@ namespace {
             std::lock_guard<std::mutex> guard(data->mtx);
             data->tasks.emplace_back(func);
         }
+        //notify server thread to invoke `flush_tasks_in_server_loop_cb()`
         uv_async_send(asyn);
     }
 
@@ -123,7 +127,7 @@ namespace network {
     }while(0)
 
 #define RUN_IN_SERVERTHREAD(task) do {      \
-        schedule_async_task(&_async, [=](){ \
+        schedule_task_into_server_thread_task_queue(&_async, [=](){ \
             task;                           \
         });                                 \
     } while(0)
@@ -151,7 +155,6 @@ DataFrame::~DataFrame()
 
 void DataFrame::append(unsigned char* p, int len)
 {
-    //_underlying_data.emplace_back(_underlying_data.end(), p, len);
     _underlyingData.insert(_underlyingData.end(), p, p + len);
 }
 
@@ -178,8 +181,15 @@ std::string DataFrame::toString()
     return std::string((char*)getData(), size());
 }
 
+WebSocketServer::WebSocketServer()
+{
+    _aliveServer += 1;
+}
+
+
 WebSocketServer::~WebSocketServer()
 {
+    _aliveServer -= 1;
     if (_ctx) {
         lws_context_destroy(_ctx);
         lws_context_destroy2(_ctx);
@@ -261,7 +271,7 @@ bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, 
     }
 
     loop = lws_uv_getloop(server->_ctx, 0);
-    async_init(loop, &server->_async);
+    init_libuv_async_handle(loop, &server->_async);
     RUN_IN_GAMETHREAD(if(server->_onlistening)server->_onlistening(""));
     RUN_IN_GAMETHREAD(if(server->_onbegin)server->_onbegin());
     RUN_IN_GAMETHREAD(if(callback)callback(""));
@@ -318,7 +328,7 @@ void WebSocketServer::onDestroyClient(struct lws* wsi)
     LOGE();
     auto itr = _conns.find(wsi);
     if (itr != _conns.end()) {
-        itr->second->finallyClosed();
+        itr->second->onDestroyClient();
         _conns.erase(itr);
     }
 }
@@ -327,7 +337,7 @@ void WebSocketServer::onCloseClient(struct lws* wsi)
     LOGE();
     auto itr = _conns.find(wsi);
     if (itr != _conns.end()) {
-        itr->second->setClosed();
+        itr->second->setCloseReason();
     }
 }
 
@@ -343,7 +353,7 @@ void WebSocketServer::onCloseClientInit(struct lws* wsi, void* in, int len)
             code = ntohs(*(int16_t*)in);
             msg = (char*)in + sizeof(code);
             std::string cp(msg, len - sizeof(code));
-            itr->second->onCloseInit(code, cp);
+            itr->second->onClientCloseInit(code, cp);
         }
     }
 }
@@ -379,7 +389,7 @@ WebSocketServerConnection::WebSocketServerConnection(struct lws* wsi) : _wsi(wsi
 {
     LOGE();
     uv_loop_t* loop = lws_uv_getloop(lws_get_context(wsi), 0);
-    async_init(loop, &_async);
+    init_libuv_async_handle(loop, &_async);
 }
 
 
@@ -397,7 +407,6 @@ bool WebSocketServerConnection::send(std::shared_ptr<DataFrame> data)
     onDrainData();
     return true;
 }
-
 
 bool WebSocketServerConnection::sendText(const std::string& text, std::function<void(const std::string&)> callback)
 {
@@ -453,7 +462,7 @@ bool WebSocketServerConnection::close(int code, std::string message)
     _readyState = ReadyState::CLOSING;
     _closeReason = message;
     _closeCode = code;
-    setClosed();
+    setCloseReason();
     lws_callback_on_writable(_wsi);
     return true;
 }
@@ -607,27 +616,27 @@ void WebSocketServerConnection::onHTTP()
             buf.resize(len + 1);
         }
         lws_hdr_copy(_wsi, buf.data(), buf.size(), idx);
-        buf[len + 1] = '\0';
+        buf[len] = '\0';
         _headers.emplace(std::string(c), std::string(buf.data()));
         n++;
     } while (c);
 
 }
 
-void WebSocketServerConnection::onCloseInit(int code, const std::string& msg)
+void WebSocketServerConnection::onClientCloseInit(int code, const std::string& msg)
 {
     _closeCode = code;
     _closeReason = msg;
 }
 
-void WebSocketServerConnection::setClosed()
+void WebSocketServerConnection::setCloseReason()
 {
     if (_closed) return;
     lws_close_reason(_wsi, (lws_close_status)_closeCode, (unsigned char*)_closeReason.c_str(), _closeReason.length());
     _closed = true;
 }
 
-void WebSocketServerConnection::finallyClosed()
+void WebSocketServerConnection::onDestroyClient()
 {
     _readyState = ReadyState::CLOSED;
     //on wsi destroied
@@ -701,7 +710,7 @@ int WebSocketServer::_websocketServerCallback(struct lws* wsi, enum lws_callback
     case LWS_CALLBACK_CLIENT_RECEIVE_PONG:
         break;
     case LWS_CALLBACK_CLIENT_WRITEABLE:
-        ret = server->onClientWritable(wsi);
+        //ret = server->onClientWritable(wsi);
         break;
     case LWS_CALLBACK_SERVER_WRITEABLE:
         ret = server->onClientWritable(wsi);
