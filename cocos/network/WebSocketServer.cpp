@@ -292,7 +292,11 @@ bool WebSocketServer::listenAsync(std::shared_ptr<WebSocketServer> server,int po
 
 std::vector<std::shared_ptr<WSServerConnection>> WebSocketServer::getConnections() const
 {
-    return {};
+    std::vector<std::shared_ptr<WSServerConnection> > ret;
+    for (auto itr : _conns) {
+        ret.emplace_back(itr.second);
+    }
+    return ret;
 }
 
 void WebSocketServer::onCreateClient(struct lws* wsi)
