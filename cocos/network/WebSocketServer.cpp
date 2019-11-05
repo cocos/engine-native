@@ -593,8 +593,6 @@ void WebSocketServerConnection::onHTTP()
 
     _headers.clear();
 
-    _readyState = ReadyState::CONNECTING;
-
     int n = 0, len;
     std::vector<char> buf(256);
     const char* c;
@@ -604,7 +602,7 @@ void WebSocketServerConnection::onHTTP()
         c = (const char*)lws_token_to_string(idx);
         if (!c) {
             n++;
-            continue;
+            break;
         }
         len = lws_hdr_total_length(_wsi, idx);
         if (!len) {
@@ -716,7 +714,6 @@ int WebSocketServer::_websocketServerCallback(struct lws* wsi, enum lws_callback
         ret = server->onClientWritable(wsi);
         break;
     case LWS_CALLBACK_HTTP:
-        server->onClientHTTP(wsi);
         break;
     case LWS_CALLBACK_HTTP_BODY:
         break;
@@ -803,6 +800,7 @@ int WebSocketServer::_websocketServerCallback(struct lws* wsi, enum lws_callback
     case LWS_CALLBACK_PROCESS_HTML:
         break;
     case LWS_CALLBACK_ADD_HEADERS:
+        server->onClientHTTP(wsi);
         break;
     case LWS_CALLBACK_SESSION_INFO:
         break;
