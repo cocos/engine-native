@@ -234,7 +234,7 @@ bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, 
         |LWS_SERVER_OPTION_LIBUV
         |LWS_SERVER_OPTION_SKIP_SERVER_CANONICAL_NAME
         ;
-    info.timeout_secs = 3; //
+    info.timeout_secs = 60; //
     info.max_http_header_pool = 1;
     info.user = server.get();
 
