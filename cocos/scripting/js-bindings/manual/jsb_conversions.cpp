@@ -1821,6 +1821,10 @@ bool seval_to_EffectDefineTemplate(const se::Value& v, std::vector<cocos2d::Valu
 
 bool seval_to_TechniqueParameter_not_constructor(const se::Value& v, cocos2d::renderer::Technique::Parameter* ret, bool directly)
 {
+    if(v.isNull())
+    {
+        return true;
+    }
     assert(ret != nullptr);
     auto paramType = ret->getType();
     switch (paramType)
