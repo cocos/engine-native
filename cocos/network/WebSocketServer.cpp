@@ -32,6 +32,79 @@
 #include "WebSocketServer.h"
 #include "platform/CCApplication.h"
 #include "base/CCScheduler.h"
+
+
+
+#define MAX_MSG_PAYLOAD 2048
+#define SEND_BUFF 1024
+
+namespace {
+    struct lws_protocols protocols[] = {
+   {
+       "", //protocol name
+       cocos2d::network::WebSocketServer::_websocketServerCallback,
+       sizeof(int),
+       MAX_MSG_PAYLOAD
+   },
+   {
+       nullptr, nullptr, 0
+   }
+    };
+
+    const struct lws_extension exts[] = {
+        {
+            "permessage-deflate",
+            lws_extension_callback_pm_deflate,
+            "permessage-deflate; client_on_context_takeover; client_max_window_bits"
+        },
+        {
+            "deflate-frame",
+            lws_extension_callback_pm_deflate,
+            "deflate-frame"
+        },
+        {
+            nullptr, nullptr, nullptr
+        }
+    };
+
+    struct AsyncTaskData {
+        std::mutex mtx;
+        std::list<std::function<void()> > tasks;
+    };
+
+    // only run in server loop
+    void scheduler_task_cb(uv_async_t* asyn)
+    {
+        AsyncTaskData* data = (AsyncTaskData*)asyn->data;
+        std::lock_guard<std::mutex> guard(data->mtx);
+        while (!data->tasks.empty())
+        {
+            data->tasks.front()();
+            data->tasks.pop_front();
+        }
+
+    }
+    void async_init(uv_loop_t* loop, uv_async_t* async)
+    {
+        memset(async, 0, sizeof(uv_async_t));
+        uv_async_init(loop, async, scheduler_task_cb);
+        async->data = new AsyncTaskData();
+    }
+
+    // run in game thread, dispatch runnable object into server loop
+    void schedule_async_task(uv_async_t* asyn, std::function<void()> func)
+    {
+
+        AsyncTaskData* data = (AsyncTaskData*)asyn->data;
+        {
+            std::lock_guard<std::mutex> guard(data->mtx);
+            data->tasks.emplace_back(func);
+        }
+        uv_async_send(asyn);
+    }
+
+}
+
 namespace cocos2d {
 namespace network {
 
@@ -59,68 +132,30 @@ namespace network {
 #define LOGE()
 
 
-#define MAX_MSG_PAYLOAD 2048
-#define SEND_BUFF 1024
 
-struct AsyncTaskData {
-    std::mutex mtx;
-    std::list<std::function<void()> > tasks;
-};
-
-// only run in server loop
-static void scheduler_task_cb(uv_async_t* asyn)
+DataFrame::DataFrame(const std::string& data) :_isBinary(false)
 {
-    AsyncTaskData* data = (AsyncTaskData*)asyn->data;
-    std::lock_guard<std::mutex> guard(data->mtx);
-    while (!data->tasks.empty())
-    {
-        data->tasks.front()();
-        data->tasks.pop_front();
-    }
-
-}
-static void async_init(uv_loop_t* loop, uv_async_t* async)
-{
-    memset(async, 0, sizeof(uv_async_t));
-    uv_async_init(loop, async, scheduler_task_cb);
-    async->data = new AsyncTaskData();
-}
-
-// run in game thread, dispatch runnable object into server loop
-static void schedule_async_task(uv_async_t* asyn, std::function<void()> func)
-{
-
-    AsyncTaskData* data = (AsyncTaskData*)asyn->data;
-    {
-        std::lock_guard<std::mutex> guard(data->mtx);
-        data->tasks.emplace_back(func);
-    }
-    uv_async_send(asyn);
-}
-
-DataFrag::DataFrag(const std::string& data) :_isBinary(false)
-{
-    _underlying_data.resize(data.size() + LWS_PRE);
+    _underlyingData.resize(data.size() + LWS_PRE);
     memcpy(getData(), data.c_str(), data.length());
 }
 
-DataFrag::DataFrag(const void* data, int len, bool isBinary) :_isBinary(isBinary)
+DataFrame::DataFrame(const void* data, int len, bool isBinary) :_isBinary(isBinary)
 {
-    _underlying_data.resize(len + LWS_PRE);
+    _underlyingData.resize(len + LWS_PRE);
     memcpy(getData(), data, len);
 }
 
-DataFrag::~DataFrag()
+DataFrame::~DataFrame()
 {
 }
 
-void DataFrag::append(unsigned char* p, int len)
+void DataFrame::append(unsigned char* p, int len)
 {
     //_underlying_data.emplace_back(_underlying_data.end(), p, len);
-    _underlying_data.insert(_underlying_data.end(), p, p + len);
+    _underlyingData.insert(_underlyingData.end(), p, p + len);
 }
 
-int DataFrag::slice(unsigned char** p, int len) {
+int DataFrame::slice(unsigned char** p, int len) {
     *p = getData() + _consumed;
     if (_consumed + len > size()) {
         return size() - _consumed;
@@ -128,56 +163,23 @@ int DataFrag::slice(unsigned char** p, int len) {
     return len;
 }
 
-int DataFrag::consume(int len) {
+int DataFrame::consume(int len) {
     _consumed = len + _consumed > size() ? size() : len + _consumed;
     return _consumed;
 }
 
-int DataFrag::remain() const {
+int DataFrame::remain() const {
     return size() - _consumed;
 }
 
 
-std::string DataFrag::toString()
+std::string DataFrame::toString()
 {
     return std::string((char*)getData(), size());
 }
 
-//static int websocket_server_callback(struct lws* wsi, enum lws_callback_reasons reason,
-//    void* user, void* in, size_t len);
-
-static struct lws_protocols protocols[] = {
-    {
-        "", //protocol name
-        WebSocketServer::websocket_server_callback,
-        sizeof(int),
-        MAX_MSG_PAYLOAD
-    },
-    {
-        nullptr, nullptr, 0
-    }
-};
-
-static const struct lws_extension exts[] = {
-    {
-        "permessage-deflate",
-        lws_extension_callback_pm_deflate,
-        "permessage-deflate; client_on_context_takeover; client_max_window_bits"
-    },
-    {
-        "deflate-frame",
-        lws_extension_callback_pm_deflate,
-        "deflate-frame"
-    },
-    {
-        nullptr, nullptr, nullptr
-    }
-};
-
-
 WebSocketServer::~WebSocketServer()
 {
-
     if (_ctx) {
         lws_context_destroy(_ctx);
         lws_context_destroy2(_ctx);
@@ -238,7 +240,6 @@ bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, 
     info.max_http_header_pool = 1;
     info.user = server.get();
 
-
     server->_ctx = lws_create_context(&info);
 
     if (!server->_ctx) {
@@ -290,9 +291,9 @@ bool WebSocketServer::listenAsync(std::shared_ptr<WebSocketServer> server,int po
 }
 
 
-std::vector<std::shared_ptr<WSServerConnection>> WebSocketServer::getConnections() const
+std::vector<std::shared_ptr<WebSocketServerConnection>> WebSocketServer::getConnections() const
 {
-    std::vector<std::shared_ptr<WSServerConnection> > ret;
+    std::vector<std::shared_ptr<WebSocketServerConnection> > ret;
     for (auto itr : _conns) {
         ret.emplace_back(itr.second);
     }
@@ -302,7 +303,7 @@ std::vector<std::shared_ptr<WSServerConnection>> WebSocketServer::getConnections
 void WebSocketServer::onCreateClient(struct lws* wsi)
 {
     LOGE();
-    std::shared_ptr<WSServerConnection> conn = std::make_shared<WSServerConnection>(wsi);
+    std::shared_ptr<WebSocketServerConnection> conn = std::make_shared<WebSocketServerConnection>(wsi);
     //char ip[221] = { 0 };
     //char addr[221] = { 0 };
     //lws_get_peer_addresses(wsi, lws_get_socket_fd(wsi), ip, 220, addr, 220);
@@ -374,7 +375,7 @@ void WebSocketServer::onClientHTTP(struct lws* wsi)
     }
 }
 
-WSServerConnection::WSServerConnection(struct lws* wsi) : _wsi(wsi)
+WebSocketServerConnection::WebSocketServerConnection(struct lws* wsi) : _wsi(wsi)
 {
     LOGE();
     uv_loop_t* loop = lws_uv_getloop(lws_get_context(wsi), 0);
@@ -382,7 +383,7 @@ WSServerConnection::WSServerConnection(struct lws* wsi) : _wsi(wsi)
 }
 
 
-WSServerConnection::~WSServerConnection()
+WebSocketServerConnection::~WebSocketServerConnection()
 {
     LOGE();
     if (_async.data) {
@@ -390,7 +391,7 @@ WSServerConnection::~WSServerConnection()
     }
 }
 
-bool WSServerConnection::send(std::shared_ptr<DataFrag> data)
+bool WebSocketServerConnection::send(std::shared_ptr<DataFrame> data)
 {
     _sendQueue.emplace_back(data);
     onDrainData();
@@ -398,10 +399,10 @@ bool WSServerConnection::send(std::shared_ptr<DataFrag> data)
 }
 
 
-bool WSServerConnection::sendText(const std::string& text, std::function<void(const std::string&)> callback)
+bool WebSocketServerConnection::sendText(const std::string& text, std::function<void(const std::string&)> callback)
 {
     LOGE();
-    std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(text);
+    std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(text);
     if (callback) {
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
@@ -409,10 +410,10 @@ bool WSServerConnection::sendText(const std::string& text, std::function<void(co
     return true;
 }
 
-bool WSServerConnection::sendTextAsync(const std::string& text, std::function<void(const std::string&)> callback)
+bool WebSocketServerConnection::sendTextAsync(const std::string& text, std::function<void(const std::string&)> callback)
 {
     LOGE();
-    std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(text);
+    std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(text);
     if (callback) {
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
@@ -421,10 +422,10 @@ bool WSServerConnection::sendTextAsync(const std::string& text, std::function<vo
     return true;
 }
 
-bool WSServerConnection::sendBinary(const void* in, size_t len, std::function<void(const std::string&)> callback)
+bool WebSocketServerConnection::sendBinary(const void* in, size_t len, std::function<void(const std::string&)> callback)
 {
     LOGE();
-    std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(in, len);
+    std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(in, len);
     if (callback) {
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
@@ -433,10 +434,10 @@ bool WSServerConnection::sendBinary(const void* in, size_t len, std::function<vo
 }
 
 
-bool WSServerConnection::sendBinaryAsync(const void* in, size_t len, std::function<void(const std::string&)> callback)
+bool WebSocketServerConnection::sendBinaryAsync(const void* in, size_t len, std::function<void(const std::string&)> callback)
 {
     LOGE();
-    std::shared_ptr<DataFrag> data = std::make_shared<DataFrag>(in, len);
+    std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(in, len);
     if (callback) {
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
@@ -445,8 +446,7 @@ bool WSServerConnection::sendBinaryAsync(const void* in, size_t len, std::functi
     return true;
 }
 
-
-bool WSServerConnection::close(int code, std::string message)
+bool WebSocketServerConnection::close(int code, std::string message)
 {
     LOGE();
     if (!_wsi) return false;
@@ -458,8 +458,7 @@ bool WSServerConnection::close(int code, std::string message)
     return true;
 }
 
-
-bool WSServerConnection::closeAsync(int code, std::string message)
+bool WebSocketServerConnection::closeAsync(int code, std::string message)
 {
     LOGE();
     _readyState = ReadyState::CLOSING;
@@ -468,13 +467,13 @@ bool WSServerConnection::closeAsync(int code, std::string message)
     return true;
 }
 
-void WSServerConnection::onConnected()
+void WebSocketServerConnection::onConnected()
 {
     _readyState = ReadyState::OPEN;
     RUN_IN_GAMETHREAD(if(_onconnect)_onconnect());
 }
 
-void WSServerConnection::onDataReceive(void* in, int len)
+void WebSocketServerConnection::onDataReceive(void* in, int len)
 {
     LOGE();
 
@@ -482,7 +481,7 @@ void WSServerConnection::onDataReceive(void* in, int len)
     bool isBinary = lws_frame_is_binary(_wsi);
 
     if (!_prevPkg) {
-        _prevPkg = std::make_shared<DataFrag>(in, len, isBinary);
+        _prevPkg = std::make_shared<DataFrame>(in, len, isBinary);
     }
     else {
         _prevPkg->append((unsigned char*)in, len);
@@ -490,7 +489,7 @@ void WSServerConnection::onDataReceive(void* in, int len)
 
     if (isFinal) {
         //trigger event
-        std::shared_ptr<DataFrag> fullpkg = _prevPkg;
+        std::shared_ptr<DataFrame> fullpkg = _prevPkg;
         if (isBinary)
         {
             RUN_IN_GAMETHREAD(if(_onbinary)_onbinary(fullpkg));
@@ -506,9 +505,7 @@ void WSServerConnection::onDataReceive(void* in, int len)
     }
 }
 
-
-
-int WSServerConnection::onDrainData()
+int WebSocketServerConnection::onDrainData()
 {
     LOGE();
     if (!_wsi) return -1;
@@ -526,7 +523,7 @@ int WSServerConnection::onDrainData()
 
     if (!_sendQueue.empty())
     {
-        std::shared_ptr<DataFrag> frag = _sendQueue.front();
+        std::shared_ptr<DataFrame> frag = _sendQueue.front();
 
         send_len = frag->slice(&p, SEND_BUFF);
 
@@ -569,8 +566,7 @@ int WSServerConnection::onDrainData()
         {
             frag->consume(finish_len);
         }
-
-
+ 
         if (frag->remain() == 0) {
             frag->onFinish("");
             _sendQueue.pop_front();
@@ -582,7 +578,7 @@ int WSServerConnection::onDrainData()
 
 }
 
-void WSServerConnection::onHTTP()
+void WebSocketServerConnection::onHTTP()
 {
     if (!_wsi) return;
 
@@ -618,20 +614,20 @@ void WSServerConnection::onHTTP()
 
 }
 
-void WSServerConnection::onCloseInit(int code, const std::string& msg)
+void WebSocketServerConnection::onCloseInit(int code, const std::string& msg)
 {
     _closeCode = code;
     _closeReason = msg;
 }
 
-void WSServerConnection::setClosed()
+void WebSocketServerConnection::setClosed()
 {
     if (_closed) return;
     lws_close_reason(_wsi, (lws_close_status)_closeCode, (unsigned char*)_closeReason.c_str(), _closeReason.length());
     _closed = true;
 }
 
-void WSServerConnection::finallyClosed()
+void WebSocketServerConnection::finallyClosed()
 {
     _readyState = ReadyState::CLOSED;
     //on wsi destroied
@@ -643,7 +639,7 @@ void WSServerConnection::finallyClosed()
 }
 
 
-std::vector<std::string> WSServerConnection::getProtocols() {
+std::vector<std::string> WebSocketServerConnection::getProtocols() {
     std::vector<std::string> ret;
     if (_wsi) {
         //TODO cause abort 
@@ -657,14 +653,14 @@ std::vector<std::string> WSServerConnection::getProtocols() {
     return ret;
 }
 
-std::map<std::string, std::string> WSServerConnection::getHeaders()
+std::map<std::string, std::string> WebSocketServerConnection::getHeaders()
 {
     if (!_wsi) return {};
     return _headers;
 }
 
 
-int WebSocketServer::websocket_server_callback(struct lws* wsi, enum lws_callback_reasons reason,
+int WebSocketServer::_websocketServerCallback(struct lws* wsi, enum lws_callback_reasons reason,
     void* user, void* in, size_t len)
 {
     int ret = 0;
@@ -679,8 +675,7 @@ int WebSocketServer::websocket_server_callback(struct lws* wsi, enum lws_callbac
     if (!server) {
         return 0;
     }
-    
-
+   
     switch (reason)
     {
     case LWS_CALLBACK_ESTABLISHED:
@@ -712,7 +707,7 @@ int WebSocketServer::websocket_server_callback(struct lws* wsi, enum lws_callbac
         ret = server->onClientWritable(wsi);
         break;
     case LWS_CALLBACK_HTTP:
-        //server->onClientHTTP(wsi);
+        server->onClientHTTP(wsi);
         break;
     case LWS_CALLBACK_HTTP_BODY:
         break;

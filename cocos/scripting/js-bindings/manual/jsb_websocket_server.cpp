@@ -41,7 +41,7 @@ se::Class* __jsb_WebSocketServer_class = nullptr;
 se::Class* __jsb_WebSocketServer_Connection_class = nullptr;
 
 typedef std::shared_ptr<WebSocketServer>* WSSPTR;
-typedef std::shared_ptr<WSServerConnection>* WSCONNPTR;
+typedef std::shared_ptr<WebSocketServerConnection>* WSCONNPTR;
 
 static int __sendIndex = 1;
 
@@ -174,7 +174,7 @@ static bool WebSocketServer_onconnection(se::State& s) {
     s.thisObject()->setProperty("__onconnection", args[0]);
     std::weak_ptr<WebSocketServer> serverWeak = *cobj;
 
-    cobj->get()->setOnConnection([serverWeak](std::shared_ptr<WSServerConnection> conn) {
+    cobj->get()->setOnConnection([serverWeak](std::shared_ptr<WebSocketServerConnection> conn) {
             se::AutoHandleScope hs;
 
             auto server = serverWeak.lock();
@@ -192,12 +192,12 @@ static bool WebSocketServer_onconnection(se::State& s) {
             }
 
             se::Object* obj = se::Object::createObjectWithClass(__jsb_WebSocketServer_Connection_class);
-            WSCONNPTR prv = new std::shared_ptr<WSServerConnection>(conn);
+            WSCONNPTR prv = new std::shared_ptr<WebSocketServerConnection>(conn);
             // a connection is dead only if no reference & closed!
             obj->root();
             obj->setPrivateData(prv);
             conn->setData(obj);
-            std::weak_ptr<WSServerConnection> connWeak = conn;
+            std::weak_ptr<WebSocketServerConnection> connWeak = conn;
             prv->get()->setOnEnd([connWeak]() {
                 // release we connection is gone!
                 auto ptr = connWeak.lock();
@@ -342,7 +342,7 @@ static bool WebSocketServer_connections(se::State& s) {
         auto conns = cobj->get()->getConnections();
         se::Object* ret = se::Object::createArrayObject(conns.size());
         for (auto i = 0;i < conns.size(); i++) {
-            std::shared_ptr<WSServerConnection>& con = conns[i];
+            std::shared_ptr<WebSocketServerConnection>& con = conns[i];
             se::Object *obj = (se::Object*)con->getData();
             ret->setArrayElement(i, se::Value(obj));
         }
@@ -400,7 +400,7 @@ static bool WebSocketServer_Connection_send(se::State& s)
         {
             std::string callbackId = gen_send_index();
             s.thisObject()->setProperty(callbackId.c_str(), args[argc - 1]);
-            std::weak_ptr<WSServerConnection> connWeak = *cobj;
+            std::weak_ptr<WebSocketServerConnection> connWeak = *cobj;
 
             callback = [callbackId, connWeak](const std::string& err) {
                 se::AutoHandleScope hs;
@@ -539,7 +539,7 @@ static bool WebSocketServer_Connection_onconnect(se::State& s) {
     
     s.thisObject()->setProperty("__onconnect", args[0]);
 
-    std::weak_ptr<WSServerConnection> connWeak = *cobj;
+    std::weak_ptr<WebSocketServerConnection> connWeak = *cobj;
 
     cobj->get()->setOnConnect([connWeak]() {
         se::AutoHandleScope hs;
@@ -583,7 +583,7 @@ static bool WebSocketServer_Connection_onerror(se::State& s) {
     }
 
     s.thisObject()->setProperty("__onerror", args[0]);
-    std::weak_ptr<WSServerConnection> connWeak = *cobj;
+    std::weak_ptr<WebSocketServerConnection> connWeak = *cobj;
 
     cobj->get()->setOnError([connWeak](const std::string &err) {
         se::AutoHandleScope hs;
@@ -631,7 +631,7 @@ static bool WebSocketServer_Connection_onclose(se::State& s) {
     }
 
     s.thisObject()->setProperty("__onclose", args[0]);
-    std::weak_ptr<WSServerConnection> connWeak = *cobj;
+    std::weak_ptr<WebSocketServerConnection> connWeak = *cobj;
     
     cobj->get()->setOnClose([connWeak](int code, const std::string& err) {
         se::AutoHandleScope hs;
@@ -681,9 +681,9 @@ static bool WebSocketServer_Connection_ontext(se::State& s) {
     }
 
     s.thisObject()->setProperty("__ontext", args[0]);
-    std::weak_ptr<WSServerConnection> connWeak = *cobj;
+    std::weak_ptr<WebSocketServerConnection> connWeak = *cobj;
 
-    cobj->get()->setOnText([connWeak](const std::shared_ptr<DataFrag> text) {
+    cobj->get()->setOnText([connWeak](const std::shared_ptr<DataFrame> text) {
         se::AutoHandleScope hs;
 
         auto conn = connWeak.lock();
@@ -727,9 +727,9 @@ static bool WebSocketServer_Connection_onbinary(se::State& s) {
     }
 
     s.thisObject()->setProperty("__onbinary", args[0]);
-    std::weak_ptr<WSServerConnection> connWeak = *cobj;
+    std::weak_ptr<WebSocketServerConnection> connWeak = *cobj;
 
-    cobj->get()->setOnBinary([connWeak](const std::shared_ptr<DataFrag> text) {
+    cobj->get()->setOnBinary([connWeak](const std::shared_ptr<DataFrame> text) {
         se::AutoHandleScope hs;
         auto conn = connWeak.lock();
         if (!conn) {
@@ -775,9 +775,9 @@ static bool WebSocketServer_Connection_ondata(se::State& s) {
     }
 
     s.thisObject()->setProperty("__ondata", args[0]);
-    std::weak_ptr<WSServerConnection> connWeak = *cobj;
+    std::weak_ptr<WebSocketServerConnection> connWeak = *cobj;
 
-    cobj->get()->setOnData([connWeak](const std::shared_ptr<DataFrag> text) {
+    cobj->get()->setOnData([connWeak](const std::shared_ptr<DataFrame> text) {
         se::AutoHandleScope hs;
 
         auto connPtr = connWeak.lock();
@@ -932,12 +932,12 @@ bool register_all_websocket_server(se::Object* obj)
 
     se::Value tmp;
     obj->getProperty("WebSocketServerConnection", &tmp);
-    tmp.toObject()->setProperty("CONNECTIONG", se::Value(WSServerConnection::CONNECTING));
-    tmp.toObject()->setProperty("OPEN", se::Value(WSServerConnection::OPEN));
-    tmp.toObject()->setProperty("CLOSING", se::Value(WSServerConnection::CLOSING));
-    tmp.toObject()->setProperty("CLOSED", se::Value(WSServerConnection::CLOSED));
+    tmp.toObject()->setProperty("CONNECTIONG", se::Value(WebSocketServerConnection::CONNECTING));
+    tmp.toObject()->setProperty("OPEN", se::Value(WebSocketServerConnection::OPEN));
+    tmp.toObject()->setProperty("CLOSING", se::Value(WebSocketServerConnection::CLOSING));
+    tmp.toObject()->setProperty("CLOSED", se::Value(WebSocketServerConnection::CLOSED));
 
-    JSBClassType::registerClass<WSServerConnection>(cls);
+    JSBClassType::registerClass<WebSocketServerConnection>(cls);
     __jsb_WebSocketServer_Connection_class = cls;
     se::ScriptEngine::getInstance()->clearException();
 

@@ -49,17 +49,20 @@
 namespace cocos2d {
     namespace network {
 
-        class WSServerConnection;
         class WebSocketServer;
+        class WebSocketServerConnection;
 
-        class DataFrag {
+        /**
+        * receive/send data buffer with reserved bytes
+        */
+        class DataFrame {
         public:
 
-            DataFrag(const std::string& data);
+            DataFrame(const std::string& data);
 
-            DataFrag(const void* data, int len, bool isBinary = true);
+            DataFrame(const void* data, int len, bool isBinary = true);
 
-            virtual ~DataFrag();
+            virtual ~DataFrame();
 
             void append(unsigned char* p, int len);
 
@@ -84,27 +87,26 @@ namespace cocos2d {
                 }
             }
 
-            inline int size() const { return _underlying_data.size() - LWS_PRE; }
+            inline int size() const { return _underlyingData.size() - LWS_PRE; }
 
             std::string toString();
 
-            unsigned char* getData() { return _underlying_data.data() + LWS_PRE; }
+            unsigned char* getData() { return _underlyingData.data() + LWS_PRE; }
 
         private:
 
-            std::vector<unsigned char> _underlying_data;
+            std::vector<unsigned char> _underlyingData;
             int _consumed = 0;
             bool _isBinary = false;
             std::function<void(const std::string&) > _callback;
 
         };
 
-
-        class CC_DLL WSServerConnection {
+        class CC_DLL WebSocketServerConnection {
         public:
 
-            WSServerConnection(struct lws* wsi);
-            virtual ~WSServerConnection();
+            WebSocketServerConnection(struct lws* wsi);
+            virtual ~WebSocketServerConnection();
 
             enum ReadyState {
                 CONNECTING = 1,
@@ -113,8 +115,7 @@ namespace cocos2d {
                 CLOSED = 4
             };
 
-            bool send(std::shared_ptr<DataFrag> data);
-
+            bool send(std::shared_ptr<DataFrame> data);
             bool sendText(const std::string&, std::function<void(const std::string&)> callback = nullptr);
             bool sendTextAsync(const std::string&, std::function<void(const std::string&)> callback = nullptr);
 
@@ -153,17 +154,17 @@ namespace cocos2d {
                 _onerror = cb;
             }
 
-            inline void setOnText(std::function<void(std::shared_ptr<DataFrag>)> cb)
+            inline void setOnText(std::function<void(std::shared_ptr<DataFrame>)> cb)
             {
                 _ontext = cb;
             }
 
-            inline void setOnBinary(std::function<void(std::shared_ptr<DataFrag>)> cb)
+            inline void setOnBinary(std::function<void(std::shared_ptr<DataFrame>)> cb)
             {
                 _onbinary = cb;
             }
 
-            inline void setOnData(std::function<void(std::shared_ptr<DataFrag>)> cb)
+            inline void setOnData(std::function<void(std::shared_ptr<DataFrame>)> cb)
             {
                 _ondata = cb;
             }
@@ -179,15 +180,11 @@ namespace cocos2d {
             }
 
             inline void scheduleSend() {
-                if (_wsi) {
-
+                if (_wsi) 
                     lws_callback_on_writable(_wsi);
-                }
             }
 
-
             void setClosed();
-
 
             inline void setData(void* d) { _data = d; }
             inline void* getData() const { return _data; }
@@ -203,8 +200,8 @@ namespace cocos2d {
 
             struct lws* _wsi = nullptr;
             std::map<std::string, std::string> _headers;
-            std::list<std::shared_ptr<DataFrag>> _sendQueue;
-            std::shared_ptr<DataFrag> _prevPkg;
+            std::list<std::shared_ptr<DataFrame>> _sendQueue;
+            std::shared_ptr<DataFrame> _prevPkg;
             bool _closed = false;
             std::string _closeReason = "close connection";
             int         _closeCode = 1000;
@@ -213,27 +210,21 @@ namespace cocos2d {
             // Attention: do not reference **this** in callbacks
             std::function<void(int, const std::string&)> _onclose;
             std::function<void(const std::string&)> _onerror;
-            std::function<void(std::shared_ptr<DataFrag>)> _ontext;
-            std::function<void(std::shared_ptr<DataFrag>)> _onbinary;
-            std::function<void(std::shared_ptr<DataFrag>)> _ondata;
+            std::function<void(std::shared_ptr<DataFrame>)> _ontext;
+            std::function<void(std::shared_ptr<DataFrame>)> _onbinary;
+            std::function<void(std::shared_ptr<DataFrame>)> _ondata;
             std::function<void()> _onconnect;
-            //std::function<void()> _onpong;
-
             std::function<void()> _onend;
-
-            friend class WebSocketServer;
-
-
             uv_async_t _async;
             void* _data = nullptr;
 
+            friend class WebSocketServer;
         };
 
         class CC_DLL WebSocketServer {
         public:
 
             WebSocketServer() = default;
-
             virtual ~WebSocketServer();
 
             static bool listen(std::shared_ptr<WebSocketServer> server, int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
@@ -242,7 +233,7 @@ namespace cocos2d {
             static bool listenAsync(std::shared_ptr<WebSocketServer> server, int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
             bool closeAsync(std::function<void(const std::string & errorMsg)> callback = nullptr);
 
-            std::vector<std::shared_ptr<WSServerConnection>> getConnections() const;
+            std::vector<std::shared_ptr<WebSocketServerConnection>> getConnections() const;
 
             void setOnListening(std::function<void(const std::string&)> cb)
             {
@@ -259,7 +250,7 @@ namespace cocos2d {
                 _onclose = cb;
             }
 
-            void setOnConnection(std::function<void(std::shared_ptr<WSServerConnection>)> cb)
+            void setOnConnection(std::function<void(std::shared_ptr<WebSocketServerConnection>)> cb)
             {
                 _onconnection = cb;
             }
@@ -292,7 +283,7 @@ namespace cocos2d {
             lws_context* _ctx = nullptr;
             uv_async_t _async;
 
-            std::unordered_map<struct lws*, std::shared_ptr<WSServerConnection> > _conns;
+            std::unordered_map<struct lws*, std::shared_ptr<WebSocketServerConnection> > _conns;
 
             // Attention: do not reference **this** in callbacks
             std::function<void(const std::string&)> _onlistening;
@@ -301,26 +292,21 @@ namespace cocos2d {
             std::function<void(const std::string&)> _onclose_cb;
             std::function<void()> _onend;
             std::function<void()> _onbegin;
-            std::function<void(std::shared_ptr<WSServerConnection>)> _onconnection;
+            std::function<void(std::shared_ptr<WebSocketServerConnection>)> _onconnection;
 
-            
             enum class ServerThreadState{
                 NOT_BOOTED,
                 ST_ERROR,
                 RUNNING,
                 STOPPED,
             };
-            ServerThreadState _serverState = ServerThreadState::NOT_BOOTED; // 0 - 
-
-
+            ServerThreadState _serverState = ServerThreadState::NOT_BOOTED;
             void* _data = nullptr;
 
         public:
-            static int websocket_server_callback(struct lws* wsi, enum lws_callback_reasons reason,
+            static int _websocketServerCallback(struct lws* wsi, enum lws_callback_reasons reason,
                 void* user, void* in, size_t len);
         };
-
-
     }
 }
 
