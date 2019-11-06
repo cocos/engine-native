@@ -41,6 +41,7 @@
 #include <unordered_map>
 #include <thread>
 #include <mutex>
+#include <atomic>
 
 #include "platform/CCPlatformDefine.h"
 
@@ -115,11 +116,11 @@ namespace cocos2d {
                 CLOSED = 4
             };
 
-            bool sendTextAsync(const std::string&, std::function<void(const std::string&)> callback = nullptr);
+            void sendTextAsync(const std::string&, std::function<void(const std::string&)> callback);
             
-            bool sendBinaryAsync(const void*, size_t len, std::function<void(const std::string&)> callback = nullptr);
+            void sendBinaryAsync(const void*, size_t len, std::function<void(const std::string&)> callback);
 
-            bool closeAsync(int code = 1000, std::string reasson = "close normal");
+            void closeAsync(int code, std::string reasson);
 
             /** stream is not implemented*/
             //bool beginBinary();
@@ -176,7 +177,7 @@ namespace cocos2d {
                 _onend = cb;
             }
 
-            void setCloseReason();
+            void onClientCloseInit();
 
             inline void setData(void* d) { _data = d; }
             inline void* getData() const { return _data; }
@@ -184,9 +185,7 @@ namespace cocos2d {
         private:
 
             bool send(std::shared_ptr<DataFrame> data);
-            bool sendText(const std::string&, std::function<void(const std::string&)> callback = nullptr);
-            bool sendBinary(const void*, size_t len, std::function<void(const std::string&)> callback = nullptr);
-            bool close(int code = 1000, std::string reasson = "close normal");
+            bool close(int code, std::string reasson);
 
             inline void scheduleSend() {
                 if (_wsi)
@@ -208,7 +207,7 @@ namespace cocos2d {
             bool _closed = false;
             std::string _closeReason = "close connection";
             int         _closeCode = 1000;
-            ReadyState  _readyState = ReadyState::CLOSED;
+            std::atomic<ReadyState>  _readyState = ReadyState::CLOSED;
 
             // Attention: do not reference **this** in callbacks
             std::function<void(int, const std::string&)> _onclose;
@@ -231,8 +230,8 @@ namespace cocos2d {
             virtual ~WebSocketServer();
 
 
-            static bool listenAsync(std::shared_ptr<WebSocketServer> server, int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
-            bool closeAsync(std::function<void(const std::string & errorMsg)> callback = nullptr);
+            static void listenAsync(std::shared_ptr<WebSocketServer>& server, int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback);
+            void closeAsync(std::function<void(const std::string & errorMsg)> callback = nullptr);
 
             std::vector<std::shared_ptr<WebSocketServerConnection>> getConnections() const;
 
@@ -270,7 +269,7 @@ namespace cocos2d {
             inline void* getData() const { return _data; }
 
         protected:
-            static bool listen(std::shared_ptr<WebSocketServer> server, int port, const std::string& host = "", std::function<void(const std::string & errorMsg)> callback = nullptr);
+            static void listen(std::shared_ptr<WebSocketServer> server, int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback);
             bool close(std::function<void(const std::string & errorMsg)> callback = nullptr);
 
             void onCreateClient(struct lws* wsi);
@@ -278,14 +277,18 @@ namespace cocos2d {
             void onCloseClient(struct lws* wsi);
             void onCloseClientInit(struct lws* wsi, void* in, int len);
             void onClientReceive(struct lws* wsi, void* in, int len);
-            int onClientWritable(struct lws* wsi);
+            int onServerWritable(struct lws* wsi);
             void onClientHTTP(struct lws* wsi);
         private:
+
+            std::shared_ptr<WebSocketServerConnection> findConnection(struct lws *wsi);
+            void destroyContext();
 
             std::string _host;
             lws_context* _ctx = nullptr;
             uv_async_t _async = {0};
 
+            mutable std::mutex _connsMtx;
             std::unordered_map<struct lws*, std::shared_ptr<WebSocketServerConnection> > _conns;
 
             // Attention: do not reference **this** in callbacks
@@ -303,7 +306,8 @@ namespace cocos2d {
                 RUNNING,
                 STOPPED,
             };
-            ServerThreadState _serverState = ServerThreadState::NOT_BOOTED;
+            std::atomic<ServerThreadState> _serverState = ServerThreadState::NOT_BOOTED;
+            std::mutex _serverLock;
             void* _data = nullptr;
 
         public:

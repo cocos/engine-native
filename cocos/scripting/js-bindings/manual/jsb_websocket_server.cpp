@@ -512,10 +512,10 @@ static bool WebSocketServer_Connection_close(se::State& s)
         (*cobj)->closeAsync(arg_code, arg_reason);
     }
     else if (arg_code > 0) {
-        (*cobj)->closeAsync(arg_code);
+        (*cobj)->closeAsync(arg_code, "unknown reason");
     }
     else {
-        (*cobj)->closeAsync();
+        (*cobj)->closeAsync(1000, "default close reason");
     }
     return true;
 }

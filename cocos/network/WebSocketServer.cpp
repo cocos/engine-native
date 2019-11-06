@@ -28,6 +28,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <atomic>
 
 #include "WebSocketServer.h"
 #include "platform/CCApplication.h"
@@ -38,7 +39,7 @@
 
 namespace {
 
-    int _aliveServer = 0; //debug info
+    std::atomic_int32_t _aliveServer = 0; //debug info
 
     struct lws_protocols protocols[] = {
        {
@@ -183,21 +184,14 @@ std::string DataFrame::toString()
 
 WebSocketServer::WebSocketServer()
 {
-    _aliveServer += 1;
+    _aliveServer.fetch_add(1);
 }
 
 
 WebSocketServer::~WebSocketServer()
 {
-    _aliveServer -= 1;
-    if (_ctx) {
-        lws_context_destroy(_ctx);
-        lws_context_destroy2(_ctx);
-        _ctx = nullptr;
-    }
-    if (_async.data) {
-        delete (AsyncTaskData*)_async.data;
-    }
+    _aliveServer.fetch_sub(1);
+    destroyContext();
 }
 
 bool WebSocketServer::close(std::function<void(const std::string & errorMsg)> callback)
@@ -208,28 +202,35 @@ bool WebSocketServer::close(std::function<void(const std::string & errorMsg)> ca
     return true;
 }
 
-bool WebSocketServer::closeAsync(std::function<void(const std::string & errorMsg)> callback)
+void WebSocketServer::closeAsync(std::function<void(const std::string & errorMsg)> callback)
 {
-    if (_serverState != ServerThreadState::RUNNING) {
-        return false;
-    }
     RUN_IN_SERVERTHREAD(this->close(callback));
-    return true;
 }
 
 
-bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
+void WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
 {
+    auto tryLock = server->_serverLock.try_lock();
+    if (!tryLock) {
+        CCLOG("websocketserver is already running!");
+        if (callback) {
+            RUN_IN_GAMETHREAD(callback("Error: Server is already running!"));
+        }
+        return;
+    }
+
     server->_serverState = ServerThreadState::RUNNING;
-    lws_set_log_level(-1, nullptr);
+    //lws_set_log_level(-1, nullptr);
 
     if (server->_ctx) {
+        server->destroyContext();
         if (callback) {
             RUN_IN_GAMETHREAD(callback("Error: lws_context already created!"));
         }
         RUN_IN_GAMETHREAD(if (server->_onerror) server->_onerror("websocket listen error!"));
         server->_serverState = ServerThreadState::ST_ERROR;
-        return false;
+        server->_serverLock.unlock();
+        return;
     }
 
     server->_host = host;
@@ -258,7 +259,8 @@ bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, 
         }
         RUN_IN_GAMETHREAD(if (server->_onerror)server->_onerror("websocket listen error!"));
         server->_serverState = ServerThreadState::ST_ERROR;
-        return false;
+        server->_serverLock.unlock();
+        return;
     }
     uv_loop_t* loop = nullptr;
     if (lws_uv_initloop(server->_ctx, loop, 0)) {
@@ -267,7 +269,9 @@ bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, 
         }
         RUN_IN_GAMETHREAD(if (server->_onerror)server->_onerror("websocket listen error, failed to create libuv loop!"));
         server->_serverState = ServerThreadState::ST_ERROR;
-        return false;
+        server->_serverLock.unlock();
+        server->destroyContext();
+        return;
     }
 
     loop = lws_uv_getloop(server->_ctx, 0);
@@ -283,26 +287,22 @@ bool WebSocketServer::listen(std::shared_ptr<WebSocketServer> server, int port, 
     RUN_IN_GAMETHREAD(if(server->_onclose_cb)server->_onclose_cb(""));
     RUN_IN_GAMETHREAD(if(server->_onend)server->_onend());
     server->_serverState = ServerThreadState::STOPPED;
-
-    return true;
+    server->destroyContext();
+    server->_serverLock.unlock();
+    return;
 }
 
-bool WebSocketServer::listenAsync(std::shared_ptr<WebSocketServer> server,int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
+void WebSocketServer::listenAsync(std::shared_ptr<WebSocketServer>& server,int port, const std::string& host, std::function<void(const std::string & errorMsg)> callback)
 {
-    if (server->_serverState != ServerThreadState::NOT_BOOTED) {
-        return false;
-    }
-
     std::thread([=]() {
         WebSocketServer::listen(server, port, host, callback);
         }).detach();
-
-    return true;
 }
 
 
 std::vector<std::shared_ptr<WebSocketServerConnection>> WebSocketServer::getConnections() const
 {
+    std::lock_guard<std::mutex> guard(_connsMtx);
     std::vector<std::shared_ptr<WebSocketServerConnection> > ret;
     for (auto itr : _conns) {
         ret.emplace_back(itr.second);
@@ -318,7 +318,10 @@ void WebSocketServer::onCreateClient(struct lws* wsi)
     //char addr[221] = { 0 };
     //lws_get_peer_addresses(wsi, lws_get_socket_fd(wsi), ip, 220, addr, 220);
     //lws_get_peer_simple(wsi, ip, 220);
-    _conns.emplace(wsi, conn);
+    {
+        std::lock_guard<std::mutex> guard(_connsMtx);
+        _conns.emplace(wsi, conn);
+    }
     RUN_IN_GAMETHREAD(if(_onconnection) _onconnection(conn));
     conn->onConnected();
 }
@@ -326,18 +329,19 @@ void WebSocketServer::onCreateClient(struct lws* wsi)
 void WebSocketServer::onDestroyClient(struct lws* wsi)
 {
     LOGE();
-    auto itr = _conns.find(wsi);
-    if (itr != _conns.end()) {
-        itr->second->onDestroyClient();
-        _conns.erase(itr);
+    std::shared_ptr<WebSocketServerConnection> conn = findConnection(wsi);
+    if( conn ){
+       conn->onDestroyClient();
     }
+    std::lock_guard<std::mutex> guard(_connsMtx);
+    _conns.erase(wsi);
 }
 void WebSocketServer::onCloseClient(struct lws* wsi)
 {
     LOGE();
-    auto itr = _conns.find(wsi);
-    if (itr != _conns.end()) {
-        itr->second->setCloseReason();
+    std::shared_ptr<WebSocketServerConnection> conn = findConnection(wsi);
+    if (conn) {
+        conn->onClientCloseInit();
     }
 }
 
@@ -347,31 +351,34 @@ void WebSocketServer::onCloseClientInit(struct lws* wsi, void* in, int len)
     int16_t code;
     char* msg = nullptr;
 
-    auto itr = _conns.find(wsi);
-    if (itr != _conns.end()) {
-        if (len > 2) {
-            code = ntohs(*(int16_t*)in);
-            msg = (char*)in + sizeof(code);
-            std::string cp(msg, len - sizeof(code));
-            itr->second->onClientCloseInit(code, cp);
-        }
+    std::shared_ptr<WebSocketServerConnection> conn = findConnection(wsi);
+
+    if (conn && len > 2) {
+        code = ntohs(*(int16_t*)in);
+        msg = (char*)in + sizeof(code);
+        std::string cp(msg, len - sizeof(code));
+        conn->onClientCloseInit(code, cp);
     }
+
 }
 
 void WebSocketServer::onClientReceive(struct lws* wsi, void* in, int len)
 {
     LOGE();
-    auto itr = _conns.find(wsi);
-    if (itr != _conns.end()) {
-        itr->second->onDataReceive(in, len);
+
+    std::shared_ptr<WebSocketServerConnection> conn = findConnection(wsi);
+    if (conn) 
+    {
+        conn->onDataReceive(in, len);
     }
 }
-int WebSocketServer::onClientWritable(struct lws* wsi)
+int WebSocketServer::onServerWritable(struct lws* wsi)
 {
     LOGE();
-    auto itr = _conns.find(wsi);
-    if (itr != _conns.end()) {
-        return itr->second->onDrainData();
+    std::shared_ptr<WebSocketServerConnection> conn = findConnection(wsi);
+    if (conn)
+    {
+        return conn->onDrainData();
     }
     return 0;
 }
@@ -379,9 +386,36 @@ int WebSocketServer::onClientWritable(struct lws* wsi)
 void WebSocketServer::onClientHTTP(struct lws* wsi)
 {
     LOGE();
-    auto itr = _conns.find(wsi);
-    if (itr != _conns.end()) {
-        itr->second->onHTTP();
+    std::shared_ptr<WebSocketServerConnection> conn = findConnection(wsi);
+    if(conn) 
+    {
+        conn->onHTTP();
+    }
+}
+
+std::shared_ptr<WebSocketServerConnection> WebSocketServer::findConnection(struct lws *wsi) {
+    
+    std::shared_ptr<WebSocketServerConnection> conn;
+    {
+        std::lock_guard<std::mutex> guard(_connsMtx);
+        auto itr = _conns.find(wsi);
+        if (itr != _conns.end()) {
+            conn = itr->second;
+        }
+    }
+    return conn;
+}
+
+void WebSocketServer::destroyContext()
+{
+    if (_ctx) {
+        lws_context_destroy(_ctx);
+        lws_context_destroy2(_ctx);
+        _ctx = nullptr;
+    }
+    if (_async.data) {
+        delete (AsyncTaskData*)_async.data;
+        _async.data = nullptr;
     }
 }
 
@@ -401,6 +435,7 @@ WebSocketServerConnection::~WebSocketServerConnection()
     }
 }
 
+
 bool WebSocketServerConnection::send(std::shared_ptr<DataFrame> data)
 {
     _sendQueue.emplace_back(data);
@@ -408,18 +443,8 @@ bool WebSocketServerConnection::send(std::shared_ptr<DataFrame> data)
     return true;
 }
 
-bool WebSocketServerConnection::sendText(const std::string& text, std::function<void(const std::string&)> callback)
-{
-    LOGE();
-    std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(text);
-    if (callback) {
-        DISPATCH_CALLBACK_IN_GAMETHREAD();
-    }
-    send(data);
-    return true;
-}
 
-bool WebSocketServerConnection::sendTextAsync(const std::string& text, std::function<void(const std::string&)> callback)
+void WebSocketServerConnection::sendTextAsync(const std::string& text, std::function<void(const std::string&)> callback)
 {
     LOGE();
     std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(text);
@@ -427,23 +452,9 @@ bool WebSocketServerConnection::sendTextAsync(const std::string& text, std::func
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
     RUN_IN_SERVERTHREAD(this->send(data));
-
-    return true;
 }
 
-bool WebSocketServerConnection::sendBinary(const void* in, size_t len, std::function<void(const std::string&)> callback)
-{
-    LOGE();
-    std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(in, len);
-    if (callback) {
-        DISPATCH_CALLBACK_IN_GAMETHREAD();
-    }
-    send(data);
-    return true;
-}
-
-
-bool WebSocketServerConnection::sendBinaryAsync(const void* in, size_t len, std::function<void(const std::string&)> callback)
+void WebSocketServerConnection::sendBinaryAsync(const void* in, size_t len, std::function<void(const std::string&)> callback)
 {
     LOGE();
     std::shared_ptr<DataFrame> data = std::make_shared<DataFrame>(in, len);
@@ -451,8 +462,6 @@ bool WebSocketServerConnection::sendBinaryAsync(const void* in, size_t len, std:
         DISPATCH_CALLBACK_IN_GAMETHREAD();
     }
     RUN_IN_SERVERTHREAD(this->send(data));
-
-    return true;
 }
 
 bool WebSocketServerConnection::close(int code, std::string message)
@@ -462,18 +471,16 @@ bool WebSocketServerConnection::close(int code, std::string message)
     _readyState = ReadyState::CLOSING;
     _closeReason = message;
     _closeCode = code;
-    setCloseReason();
+    onClientCloseInit();
+    //trigger callback to return -1 which indicates connection closed
     lws_callback_on_writable(_wsi);
     return true;
 }
 
-bool WebSocketServerConnection::closeAsync(int code, std::string message)
+void WebSocketServerConnection::closeAsync(int code, std::string message)
 {
     LOGE();
-    _readyState = ReadyState::CLOSING;
-    if (!_wsi) return false;
     RUN_IN_SERVERTHREAD(this->close(code, message));
-    return true;
 }
 
 void WebSocketServerConnection::onConnected()
@@ -486,8 +493,8 @@ void WebSocketServerConnection::onDataReceive(void* in, int len)
 {
     LOGE();
 
-    bool isFinal = lws_is_final_fragment(_wsi);
-    bool isBinary = lws_frame_is_binary(_wsi);
+    bool isFinal = (bool)lws_is_final_fragment(_wsi);
+    bool isBinary = (bool)lws_frame_is_binary(_wsi);
 
     if (!_prevPkg) {
         _prevPkg = std::make_shared<DataFrame>(in, len, isBinary);
@@ -627,7 +634,7 @@ void WebSocketServerConnection::onClientCloseInit(int code, const std::string& m
     _closeReason = msg;
 }
 
-void WebSocketServerConnection::setCloseReason()
+void WebSocketServerConnection::onClientCloseInit()
 {
     if (_closed) return;
     lws_close_reason(_wsi, (lws_close_status)_closeCode, (unsigned char*)_closeReason.c_str(), _closeReason.length());
@@ -642,6 +649,7 @@ void WebSocketServerConnection::onDestroyClient()
     {
         RUN_IN_GAMETHREAD(if(_onclose)_onclose(_closeCode, _closeReason));
         RUN_IN_GAMETHREAD(if(_onend) _onend());
+        uv_close((uv_handle_t*)&_async, nullptr);
     }
 }
 
@@ -711,7 +719,7 @@ int WebSocketServer::_websocketServerCallback(struct lws* wsi, enum lws_callback
         //ret = server->onClientWritable(wsi);
         break;
     case LWS_CALLBACK_SERVER_WRITEABLE:
-        ret = server->onClientWritable(wsi);
+        ret = server->onServerWritable(wsi);
         break;
     case LWS_CALLBACK_HTTP:
         break;
