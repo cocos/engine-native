@@ -344,6 +344,7 @@ void AudioEngine::onEnterBackground() {
         if (it->second.state == AudioState::PLAYING)
         {
             _audioEngineImpl->pause(it->first);
+            it->second.state = AudioState::PAUSED;
             _breakAudioID.push_back(it->first);
         }
     }
@@ -352,7 +353,7 @@ void AudioEngine::onEnterBackground() {
 void AudioEngine::onEnterForeground() {
     auto itEnd = _breakAudioID.end();
     for (auto it = _breakAudioID.begin(); it != itEnd; ++it) {
-        _audioEngineImpl->resume(*it);
+        AudioEngine::resume(*it);
     }
     _breakAudioID.clear();
 }
