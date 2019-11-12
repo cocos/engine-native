@@ -601,7 +601,7 @@ void DeviceGraphics::initCaps()
     GL_CHECK(glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &_caps.maxFragUniforms));
 #endif
 
-    GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_UNITS, &_caps.maxTextureUnits));
+    GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_caps.maxTextureUnits));
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     // IDEA: how to get these infomations
