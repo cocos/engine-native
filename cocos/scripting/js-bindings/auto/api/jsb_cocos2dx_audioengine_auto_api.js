@@ -149,6 +149,14 @@ int
 },
 
 /**
+ * @method onEnterForeground
+ */
+onEnterForeground : function (
+)
+{
+},
+
+/**
  * @method setMaxAudioInstance
  * @param {int} arg0
  * @return {bool}
@@ -268,6 +276,14 @@ int
  */
 stop : function (
 int 
+)
+{
+},
+
+/**
+ * @method onEnterBackground
+ */
+onEnterBackground : function (
 )
 {
 },
