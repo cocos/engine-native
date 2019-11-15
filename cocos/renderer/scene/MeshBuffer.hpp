@@ -154,6 +154,9 @@ public:
 protected:
     void reallocVBuffer();
     void reallocIBuffer();
+    void checkAndSwitchBuffer(uint32_t vertexCount);
+    void switchBuffer(uint32_t vertexCount);
+    void updateOffset(uint32_t vertexCount, uint32_t indiceCount, uint32_t byteOffset);
 private:
     uint32_t _byteStart = 0;
     uint32_t _byteOffset = 0;
@@ -174,6 +177,7 @@ private:
     ModelBatcher* _batcher = nullptr;
     std::size_t _vbPos = 0;
     cocos2d::Vector<VertexBuffer*> _vbArr;
+    cocos2d::Vector<IndexBuffer*> _ibArr;
     VertexBuffer* _vb = nullptr;
     IndexBuffer* _ib = nullptr;
     OffsetInfo _offsetInfo;
