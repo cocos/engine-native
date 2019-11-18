@@ -752,7 +752,6 @@
     <ClCompile Include="..\cocos\editor-support\MeshBuffer.cpp">
       <Filter>editor-support</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="..\cocos\renderer\scene\MemPool.cpp">
       <Filter>renderer\scene</Filter>
     </ClCompile>
@@ -845,13 +844,11 @@
     </ClCompile>
     <ClCompile Include="..\cocos\base\etc2.cpp">
       <Filter>base</Filter>
-=======
     <ClCompile Include="..\cocos\network\WebSocketServer.cpp">
       <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.cpp">
       <Filter>js-bindings\manual</Filter>
->>>>>>> compile on windows & android
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1804,7 +1801,6 @@
     <ClInclude Include="..\cocos\editor-support\MeshBuffer.h">
       <Filter>editor-support</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\cocos\renderer\scene\MemPool.hpp">
       <Filter>renderer\scene</Filter>
     </ClInclude>
@@ -1903,13 +1899,11 @@
     </ClInclude>
     <ClInclude Include="..\cocos\base\etc2.h">
       <Filter>base</Filter>
-=======
     <ClInclude Include="..\cocos\network\WebSocketServer.h">
       <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.hpp">
       <Filter>js-bindings\manual</Filter>
->>>>>>> compile on windows & android
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
