@@ -132,12 +132,14 @@ void Assembler::handle(NodeProxy *node, ModelBatcher* batcher, Scene* scene)
     batcher->commit(node, this, node->getCullingMask());
 }
 
-void Assembler::fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size_t index)
+void Assembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index)
 {
     if(!_datas || !_vfmt)
     {
         return;
     }
+    
+    MeshBuffer* buffer = batcher->getBuffer(_vfmt);
     
     const IARenderData& ia = _iaDatas[index];
     std::size_t meshIndex = ia.meshIndex >= 0 ? ia.meshIndex : index;

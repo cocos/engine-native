@@ -37,13 +37,15 @@ SimpleSprite2D::~SimpleSprite2D()
     
 }
 
-void SimpleSprite2D::fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size_t index)
+void SimpleSprite2D::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index)
 {
     RenderData* data = _datas->getRenderData(0);
     if (!data)
     {
         return;
     }
+    
+    MeshBuffer* buffer = batcher->getBuffer(_vfmt);
     
     // must retrieve offset before request
     auto& bufferOffset = buffer->request(4, 6);

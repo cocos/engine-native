@@ -151,6 +151,7 @@ renderer/scene/assembler/SlicedSprite2D.cpp \
 renderer/scene/assembler/SimpleSprite3D.cpp \
 renderer/scene/assembler/SlicedSprite3D.cpp \
 renderer/scene/assembler/MeshAssembler.cpp \
+renderer/scene/assembler/Particle3DAssembler.cpp \
 renderer/scene/MeshBuffer.cpp \
 renderer/scene/ModelBatcher.cpp \
 renderer/scene/NodeProxy.cpp \

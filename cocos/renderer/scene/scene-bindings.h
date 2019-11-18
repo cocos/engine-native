@@ -40,3 +40,4 @@
 #include "assembler/MeshAssembler.hpp"
 #include "assembler/SimpleSprite3D.hpp"
 #include "assembler/SlicedSprite3D.hpp"
+#include "assembler/Particle3DAssembler.hpp"

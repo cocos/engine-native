@@ -36,7 +36,7 @@ public:
     AssemblerSprite();
     virtual ~AssemblerSprite();
     virtual void setLocalData(se_object_ptr localData);
-    virtual void fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size_t index) override;
+    virtual void fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index) override;
     virtual void calculateWorldVertices(const Mat4& worldMat);
     virtual void generateWorldVertices() {};
 protected:

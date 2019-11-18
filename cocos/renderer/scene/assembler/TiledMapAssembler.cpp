@@ -80,9 +80,9 @@ void TiledMapAssembler::beforeFillBuffers(std::size_t index)
     }
 }
 
-void TiledMapAssembler::fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size_t index)
+void TiledMapAssembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index)
 {
-    Assembler::fillBuffers(node, buffer, index);
+    Assembler::fillBuffers(node, batcher, index);
 }
 
 RENDERER_END

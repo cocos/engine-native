@@ -4784,6 +4784,138 @@ bool js_register_renderer_SlicedSprite3D(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_cocos2d_renderer_Particle3DAssembler_proto = nullptr;
+se::Class* __jsb_cocos2d_renderer_Particle3DAssembler_class = nullptr;
+
+static bool js_renderer_Particle3DAssembler_setTrailSpace(se::State& s)
+{
+    cocos2d::renderer::Particle3DAssembler* cobj = (cocos2d::renderer::Particle3DAssembler*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_Particle3DAssembler_setTrailSpace : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        cocos2d::renderer::Space arg0;
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::Space)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_Particle3DAssembler_setTrailSpace : Error processing arguments");
+        cobj->setTrailSpace(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_Particle3DAssembler_setTrailSpace)
+
+static bool js_renderer_Particle3DAssembler_setTrailVertexFormat(se::State& s)
+{
+    cocos2d::renderer::Particle3DAssembler* cobj = (cocos2d::renderer::Particle3DAssembler*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_Particle3DAssembler_setTrailVertexFormat : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        cocos2d::renderer::VertexFormat* arg0 = nullptr;
+        ok &= seval_to_native_ptr(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_renderer_Particle3DAssembler_setTrailVertexFormat : Error processing arguments");
+        cobj->setTrailVertexFormat(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_Particle3DAssembler_setTrailVertexFormat)
+
+static bool js_renderer_Particle3DAssembler_setParticleSpace(se::State& s)
+{
+    cocos2d::renderer::Particle3DAssembler* cobj = (cocos2d::renderer::Particle3DAssembler*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_Particle3DAssembler_setParticleSpace : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        cocos2d::renderer::Space arg0;
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::Space)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_Particle3DAssembler_setParticleSpace : Error processing arguments");
+        cobj->setParticleSpace(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_Particle3DAssembler_setParticleSpace)
+
+static bool js_renderer_Particle3DAssembler_setTrailModuleEnable(se::State& s)
+{
+    cocos2d::renderer::Particle3DAssembler* cobj = (cocos2d::renderer::Particle3DAssembler*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_Particle3DAssembler_setTrailModuleEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        bool arg0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_renderer_Particle3DAssembler_setTrailModuleEnable : Error processing arguments");
+        cobj->setTrailModuleEnable(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_Particle3DAssembler_setTrailModuleEnable)
+
+SE_DECLARE_FINALIZE_FUNC(js_cocos2d_renderer_Particle3DAssembler_finalize)
+
+static bool js_renderer_Particle3DAssembler_constructor(se::State& s)
+{
+    cocos2d::renderer::Particle3DAssembler* cobj = new (std::nothrow) cocos2d::renderer::Particle3DAssembler();
+    s.thisObject()->setPrivateData(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_renderer_Particle3DAssembler_constructor, __jsb_cocos2d_renderer_Particle3DAssembler_class, js_cocos2d_renderer_Particle3DAssembler_finalize)
+
+static bool js_renderer_Particle3DAssembler_ctor(se::State& s)
+{
+    cocos2d::renderer::Particle3DAssembler* cobj = new (std::nothrow) cocos2d::renderer::Particle3DAssembler();
+    s.thisObject()->setPrivateData(cobj);
+    return true;
+}
+SE_BIND_SUB_CLS_CTOR(js_renderer_Particle3DAssembler_ctor, __jsb_cocos2d_renderer_Particle3DAssembler_class, js_cocos2d_renderer_Particle3DAssembler_finalize)
+
+
+    
+
+extern se::Object* __jsb_cocos2d_renderer_Assembler_proto;
+
+static bool js_cocos2d_renderer_Particle3DAssembler_finalize(se::State& s)
+{
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::renderer::Particle3DAssembler)", s.nativeThisObject());
+    cocos2d::renderer::Particle3DAssembler* cobj = (cocos2d::renderer::Particle3DAssembler*)s.nativeThisObject();
+    cobj->release();
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cocos2d_renderer_Particle3DAssembler_finalize)
+
+bool js_register_renderer_Particle3DAssembler(se::Object* obj)
+{
+    auto cls = se::Class::create("Particle3DAssembler", obj, __jsb_cocos2d_renderer_Assembler_proto, _SE(js_renderer_Particle3DAssembler_constructor));
+
+    cls->defineFunction("setTrailSpace", _SE(js_renderer_Particle3DAssembler_setTrailSpace));
+    cls->defineFunction("setTrailVertexFormat", _SE(js_renderer_Particle3DAssembler_setTrailVertexFormat));
+    cls->defineFunction("setParticleSpace", _SE(js_renderer_Particle3DAssembler_setParticleSpace));
+    cls->defineFunction("setTrailModuleEnable", _SE(js_renderer_Particle3DAssembler_setTrailModuleEnable));
+    cls->defineFunction("ctor", _SE(js_renderer_Particle3DAssembler_ctor));
+    cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_Particle3DAssembler_finalize));
+    cls->install();
+    JSBClassType::registerClass<cocos2d::renderer::Particle3DAssembler>(cls);
+
+    __jsb_cocos2d_renderer_Particle3DAssembler_proto = cls->getProto();
+    __jsb_cocos2d_renderer_Particle3DAssembler_class = cls;
+
+    jsb_set_extend_property("renderer", "Particle3DAssembler");
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 bool register_all_renderer(se::Object* obj)
 {
     // Get the ns
@@ -4813,6 +4945,7 @@ bool register_all_renderer(se::Object* obj)
     js_register_renderer_Light(ns);
     js_register_renderer_NodeMemPool(ns);
     js_register_renderer_TiledMapAssembler(ns);
+    js_register_renderer_Particle3DAssembler(ns);
     js_register_renderer_BaseRenderer(ns);
     js_register_renderer_ForwardRenderer(ns);
     js_register_renderer_View(ns);

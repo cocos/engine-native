@@ -338,4 +338,15 @@ bool js_register_cocos2d_renderer_SlicedSprite3D(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_SlicedSprite3D_SlicedSprite3D);
 
+extern se::Object* __jsb_cocos2d_renderer_Particle3DAssembler_proto;
+extern se::Class* __jsb_cocos2d_renderer_Particle3DAssembler_class;
+
+bool js_register_cocos2d_renderer_Particle3DAssembler(se::Object* obj);
+bool register_all_renderer(se::Object* obj);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setTrailSpace);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setTrailVertexFormat);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setParticleSpace);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setTrailModuleEnable);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_Particle3DAssembler);
+
 #endif //#if (USE_GFX_RENDERER > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

@@ -88,7 +88,7 @@ public:
      *  @param[in] index The index of render data to be updated
      *  @param[in] node
      */
-    virtual void fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size_t index);
+    virtual void fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index);
     
     /**
      *  @brief Sets IArenderDataList

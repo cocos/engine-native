@@ -122,12 +122,6 @@ void ModelBatcher::commit(NodeProxy* node, Assembler* assembler, int cullingMask
 {
     changeCommitState(CommitState::Common);
     
-    VertexFormat* vfmt = assembler->getVertexFormat();
-    if (!vfmt)
-    {
-        return;
-    }
-    
     bool useModel = assembler->getUseModel();
     bool ignoreWorldMatrix = assembler->isIgnoreWorldMatrix();
     const Mat4& nodeWorldMat = node->getWorldMatrix();
@@ -165,12 +159,7 @@ void ModelBatcher::commit(NodeProxy* node, Assembler* assembler, int cullingMask
             assembler->updateOpacity(i, node->getRealOpacity());
         }
         
-        MeshBuffer* buffer = _buffer;
-        if (!_buffer || vfmt != _buffer->_vertexFmt)
-        {
-            buffer = getBuffer(vfmt);
-        }
-        assembler->fillBuffers(node, buffer, i);
+        assembler->fillBuffers(node, this, i);
     }
 }
 
@@ -368,6 +357,11 @@ void ModelBatcher::setCurrentEffect(Effect* effect)
 
 MeshBuffer* ModelBatcher::getBuffer(VertexFormat* fmt)
 {
+    if (_buffer != nullptr && fmt == _buffer->_vertexFmt)
+    {
+        return _buffer;
+    }
+    
     MeshBuffer* buffer = nullptr;
     auto iter = _buffers.find(fmt);
     if (iter == _buffers.end())
@@ -379,6 +373,9 @@ MeshBuffer* ModelBatcher::getBuffer(VertexFormat* fmt)
     {
         buffer = iter->second;
     }
+    
+    _buffer = buffer;
+    
     return buffer;
 }
 

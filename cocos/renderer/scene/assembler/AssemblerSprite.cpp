@@ -60,7 +60,7 @@ void AssemblerSprite::setLocalData(se_object_ptr localData)
     _localObj->getTypedArrayData((uint8_t**)&_localData, (std::size_t*)&_localLen);
 }
 
-void AssemblerSprite::fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size_t index)
+void AssemblerSprite::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index)
 {
     if(!_datas || !_vfmt)
     {
@@ -71,6 +71,8 @@ void AssemblerSprite::fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size
     {
         return;
     }
+    
+    MeshBuffer* buffer = batcher->getBuffer(_vfmt);
     
     const IARenderData& ia = _iaDatas[index];
     std::size_t meshIndex = ia.meshIndex >= 0 ? ia.meshIndex : index;

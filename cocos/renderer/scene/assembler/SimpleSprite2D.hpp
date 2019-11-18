@@ -33,7 +33,7 @@ class SimpleSprite2D: public AssemblerSprite
 public:
     SimpleSprite2D();
     virtual ~SimpleSprite2D();
-    virtual void fillBuffers(NodeProxy* node, MeshBuffer* buffer, std::size_t index) override;
+    virtual void fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index) override;
 };
 
 RENDERER_END

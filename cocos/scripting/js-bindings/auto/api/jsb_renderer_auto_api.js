@@ -2022,3 +2022,59 @@ SlicedSprite3D : function (
 },
 
 };
+
+/**
+ * @class Particle3DAssembler
+ */
+renderer.Particle3DAssembler = {
+
+/**
+ * @method setTrailSpace
+ * @param {cc.renderer::Space} arg0
+ */
+setTrailSpace : function (
+space 
+)
+{
+},
+
+/**
+ * @method setTrailVertexFormat
+ * @param {cc.renderer::VertexFormat} arg0
+ */
+setTrailVertexFormat : function (
+vertexformat 
+)
+{
+},
+
+/**
+ * @method setParticleSpace
+ * @param {cc.renderer::Space} arg0
+ */
+setParticleSpace : function (
+space 
+)
+{
+},
+
+/**
+ * @method setTrailModuleEnable
+ * @param {bool} arg0
+ */
+setTrailModuleEnable : function (
+bool 
+)
+{
+},
+
+/**
+ * @method Particle3DAssembler
+ * @constructor
+ */
+Particle3DAssembler : function (
+)
+{
+},
+
+};
