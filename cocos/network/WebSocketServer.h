@@ -207,7 +207,7 @@ namespace cocos2d {
             bool _closed = false;
             std::string _closeReason = "close connection";
             int         _closeCode = 1000;
-            std::atomic<ReadyState>  _readyState = ReadyState::CLOSED;
+            std::atomic<ReadyState>  _readyState{ReadyState::CLOSED};
 
             // Attention: do not reference **this** in callbacks
             std::function<void(int, const std::string&)> _onclose;
@@ -306,7 +306,7 @@ namespace cocos2d {
                 RUNNING,
                 STOPPED,
             };
-            std::atomic<ServerThreadState> _serverState = ServerThreadState::NOT_BOOTED;
+            std::atomic<ServerThreadState> _serverState {ServerThreadState::NOT_BOOTED};
             std::mutex _serverLock;
             void* _data = nullptr;
 

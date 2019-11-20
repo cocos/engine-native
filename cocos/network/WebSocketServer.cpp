@@ -39,7 +39,7 @@
 
 namespace {
 
-    std::atomic_int32_t _aliveServer = 0; //debug info
+    std::atomic_int32_t _aliveServer{0}; //debug info
 
     struct lws_protocols protocols[] = {
        {
