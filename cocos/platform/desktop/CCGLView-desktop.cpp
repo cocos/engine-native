@@ -437,9 +437,9 @@ void GLView::onGLFWCharCallback(GLFWwindow* /*window*/, unsigned int character)
 void GLView::onGLFWWindowIconifyCallback(GLFWwindow* /*window*/, int iconified)
 {
     if (iconified == GL_TRUE)
-        _application->applicationDidEnterBackground();
+        _application->onPause();
     else
-        _application->applicationWillEnterForeground();
+        _application->onResume();
 }
 
 void GLView::onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height)

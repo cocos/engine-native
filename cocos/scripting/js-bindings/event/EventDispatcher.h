@@ -120,8 +120,8 @@ public:
     static void dispatchKeyboardEvent(const struct KeyboardEvent& keyboardEvent);
     static void dispatchTickEvent(float dt);
     static void dispatchResizeEvent(int width, int height);
-    static void dispatchEnterBackgroundEvent();
-    static void dispatchEnterForegroundEvent();
+    static void dispatchOnPauseEvent();
+    static void dispatchOnResumeEvent();
 
     using CustomEventListener = std::function<void(const CustomEvent&)>;
     static uint32_t addCustomEventListener(const std::string& eventName, const CustomEventListener& listener);

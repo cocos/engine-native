@@ -96,19 +96,13 @@ bool AppDelegate::applicationDidFinishLaunching()
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
-void AppDelegate::applicationDidEnterBackground()
+void AppDelegate::onPause()
 {
-    CustomEvent event;
-    event.name = EVENT_COME_TO_BACKGROUND;
-    EventDispatcher::dispatchCustomEvent(event);
-    EventDispatcher::dispatchEnterBackgroundEvent();
+    EventDispatcher::dispatchOnPauseEvent();
 }
 
 // this function will be called when the app is active again
-void AppDelegate::applicationWillEnterForeground()
+void AppDelegate::onResume()
 {
-    CustomEvent event;
-    event.name = EVENT_COME_TO_FOREGROUND;
-    EventDispatcher::dispatchCustomEvent(event);
-    EventDispatcher::dispatchEnterForegroundEvent();
+    EventDispatcher::dispatchOnResumeEvent();
 }
