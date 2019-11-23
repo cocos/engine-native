@@ -33,7 +33,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import org.cocos2dx.lib.Cocos2dxVideoView.OnVideoEventListener;
 
@@ -44,13 +44,13 @@ import java.util.concurrent.FutureTask;
 
 public class Cocos2dxVideoHelper {
 
-    private RelativeLayout mLayout = null;
+    private FrameLayout mLayout = null;
     private Cocos2dxActivity mActivity = null;  
     private static SparseArray<Cocos2dxVideoView> sVideoViews = null;
     static VideoHandler mVideoHandler = null;
     private static Handler sHandler = null;
     
-    Cocos2dxVideoHelper(Cocos2dxActivity activity,RelativeLayout layout)
+    Cocos2dxVideoHelper(Cocos2dxActivity activity, FrameLayout layout)
     {
         mActivity = activity;
         mLayout = layout;

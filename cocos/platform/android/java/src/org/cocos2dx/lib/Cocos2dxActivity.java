@@ -42,8 +42,8 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.cocos2dx.lib.Cocos2dxHelper.Cocos2dxHelperListener;
@@ -64,7 +64,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     // ===========================================================
     private static Cocos2dxActivity sContext = null;
 
-    protected RelativeLayout mFrameLayout = null;
+    protected FrameLayout mFrameLayout = null;
     
     private Cocos2dxGLSurfaceView mGLSurfaceView = null;
     private int[] mGLContextAttrs = null;
@@ -255,7 +255,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         ViewGroup.LayoutParams frameLayoutParams =
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                            ViewGroup.LayoutParams.MATCH_PARENT);
-        mFrameLayout = new RelativeLayout(this);
+        mFrameLayout = new FrameLayout(this);
         mFrameLayout.setLayoutParams(frameLayoutParams);
 
         Cocos2dxRenderer renderer = this.addSurfaceView();

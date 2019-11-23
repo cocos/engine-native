@@ -39,9 +39,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +49,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -243,12 +242,14 @@ public class Cocos2dxEditBox {
                             Cocos2dxEditBox.this.hide();
                         }
                     }
+
+                    Cocos2dxEditBox.this.adjustEditTextAndButtonTopMargin(r.bottom);
                 }
             });
         }
     }
 
-    public Cocos2dxEditBox(Cocos2dxActivity context, RelativeLayout layout) {
+    public Cocos2dxEditBox(Cocos2dxActivity context, FrameLayout layout) {
         Cocos2dxEditBox.sThis = this;
         mActivity = context;
         this.addItems(context, layout);
@@ -266,7 +267,7 @@ public class Cocos2dxEditBox {
     /***************************************************************************************
      Private functions.
      **************************************************************************************/
-    private void addItems(Cocos2dxActivity context, RelativeLayout layout) {
+    private void addItems(Cocos2dxActivity context, FrameLayout layout) {
         RelativeLayout myLayout = new RelativeLayout(context);
         this.addEditText(context, myLayout);
         this.addButton(context, myLayout);
@@ -325,6 +326,11 @@ public class Cocos2dxEditBox {
                     Cocos2dxEditBox.this.hide();
             }
         });
+    }
+
+    private void adjustEditTextAndButtonTopMargin(int topMargin) {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mEditText.getLayoutParams();
+        layoutParams.topMargin = topMargin;
     }
 
     private Drawable getRoundRectShape() {
