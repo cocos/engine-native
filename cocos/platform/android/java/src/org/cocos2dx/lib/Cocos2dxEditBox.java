@@ -82,6 +82,7 @@ public class Cocos2dxEditBox {
         private float mLineWidth = 2f;
         private boolean keyboardVisible = false;
         private int mScreenHeight;
+        private int mTopMargin = 0;
 
         public  Cocos2dxEditText(Cocos2dxActivity context){
             super(context);
@@ -243,9 +244,19 @@ public class Cocos2dxEditBox {
                         }
                     }
 
-                    Cocos2dxEditBox.this.adjustEditTextAndButtonTopMargin(r.bottom);
+                    if (Cocos2dxEditText.this.mTopMargin == 0 && r.bottom != getRootView().getHeight()) {
+                        Cocos2dxEditText.this.setTopMargin(r.bottom);
+                    }
                 }
             });
+        }
+
+        private void setTopMargin(int topMargin) {
+            mTopMargin = topMargin;
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mEditText.getLayoutParams();
+            layoutParams.topMargin = mTopMargin;
+            setLayoutParams(layoutParams);
+            requestLayout();
         }
     }
 
@@ -326,11 +337,6 @@ public class Cocos2dxEditBox {
                     Cocos2dxEditBox.this.hide();
             }
         });
-    }
-
-    private void adjustEditTextAndButtonTopMargin(int topMargin) {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mEditText.getLayoutParams();
-        layoutParams.topMargin = topMargin;
     }
 
     private Drawable getRoundRectShape() {
