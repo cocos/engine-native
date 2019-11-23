@@ -114,9 +114,19 @@ else()
 	target_link_libraries(${TARGET_NAME} ${COCOS_EXTERNAL_TARGETS})
 endif()
 
+if(MSVC)
+    set_property(TARGET ${TARGET_NAME} PROPERTY LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+    target_compile_options(${TARGET_NAME}
+        PUBLIC /MP
+    )
+	target_link_directories(${TARGET_NAME} PUBLIC ${COCOS_EXTERNAL_PATH}/win32/libs)
+	message("______COCOS_EXTERNAL_PATH = ${COCOS_EXTERNAL_PATH}")
+endif()
+
 target_include_directories(${TARGET_NAME} PUBLIC 
 	${COCOS_SRC_PATH}/renderer
 	${COCOS_SRC_PATH}
+	${COCOS_EXTERNAL_PATH}/win32/include
 )
 
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME CCCore)
