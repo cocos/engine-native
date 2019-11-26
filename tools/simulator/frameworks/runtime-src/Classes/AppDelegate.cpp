@@ -26,8 +26,6 @@
 #include "AppDelegate.h"
 
 #include "cocos2d.h"
-
-#include "cocos/audio/include/AudioEngine.h"
 #include "cocos/scripting/js-bindings/event/EventDispatcher.h"
 
 #include "ide-support/CodeIDESupport.h"
@@ -66,14 +64,10 @@ bool AppDelegate::applicationDidFinishLaunching()
 void AppDelegate::applicationDidEnterBackground()
 {
     EventDispatcher::dispatchEnterBackgroundEvent();
-    // Ensure that handle AudioEngine enter background after all enter background events are handled
-    AudioEngine::onEnterBackground();
 }
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground()
 {
-    // Ensure that handle AudioEngine enter foreground before all enter foreground events are handled
-    AudioEngine::onEnterForeground();
     EventDispatcher::dispatchEnterForegroundEvent();
 }

@@ -68,6 +68,8 @@ AudioEngine::ProfileHelper* AudioEngine::_defaultProfileHelper = nullptr;
 std::unordered_map<int, AudioEngine::AudioInfo> AudioEngine::_audioIDInfoMap;
 AudioEngineImpl* AudioEngine::_audioEngineImpl = nullptr;
 
+uint32_t AudioEngine::_onPauseListenerID = 0;
+uint32_t AudioEngine::_onResumeListenerID = 0;
 std::vector<int> AudioEngine::_breakAudioID;
 
 AudioEngine::AudioEngineThreadPool* AudioEngine::s_threadPool = nullptr;
@@ -169,6 +171,16 @@ void AudioEngine::end()
 
     delete _defaultProfileHelper;
     _defaultProfileHelper = nullptr;
+
+    if (_onPauseListenerID != 0)
+    {
+        EventDispatcher::removeCustomEventListener(EVENT_COME_TO_BACKGROUND, _onPauseListenerID);
+    }
+
+    if (_onResumeListenerID != 0)
+    {
+        EventDispatcher::removeCustomEventListener(EVENT_COME_TO_FOREGROUND, _onResumeListenerID);
+    }
 }
 
 bool AudioEngine::lazyInit()
@@ -189,6 +201,9 @@ bool AudioEngine::lazyInit()
         s_threadPool = new (std::nothrow) AudioEngineThreadPool();
     }
 #endif
+
+    _onPauseListenerID = EventDispatcher::addCustomEventListener(EVENT_COME_TO_BACKGROUND, AudioEngine::onEnterBackground);
+    _onResumeListenerID = EventDispatcher::addCustomEventListener(EVENT_COME_TO_FOREGROUND, AudioEngine::onEnterForeground);
 
     return true;
 }
@@ -337,23 +352,22 @@ void AudioEngine::resumeAll()
     }
 }
 
-void AudioEngine::onEnterBackground() {
+void AudioEngine::onEnterBackground(const CustomEvent &event) {
     auto itEnd = _audioIDInfoMap.end();
     for (auto it = _audioIDInfoMap.begin(); it != itEnd; ++it)
     {
         if (it->second.state == AudioState::PLAYING)
         {
             _audioEngineImpl->pause(it->first);
-            it->second.state = AudioState::PAUSED;
             _breakAudioID.push_back(it->first);
         }
     }
 }
 
-void AudioEngine::onEnterForeground() {
+void AudioEngine::onEnterForeground(const CustomEvent &event) {
     auto itEnd = _breakAudioID.end();
     for (auto it = _breakAudioID.begin(); it != itEnd; ++it) {
-        AudioEngine::resume(*it);
+        _audioEngineImpl->resume(*it);
     }
     _breakAudioID.clear();
 }
