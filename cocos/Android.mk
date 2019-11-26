@@ -197,6 +197,7 @@ scripting/js-bindings/manual/jsb_websocket_server.cpp
 LOCAL_STATIC_LIBRARIES += libwebsockets_static
 LOCAL_STATIC_LIBRARIES += cocos_ssl_static
 LOCAL_STATIC_LIBRARIES += cocos_crypto_static
+LOCAL_STATIC_LIBRARIES += uv_static
 endif # USE_SOCKET
 
 ifneq ($(USE_MIDDLEWARE),0)
