@@ -316,6 +316,11 @@ static bool js_cocos2d_VideoPlayer_destroy(se::State& s)
     CCLOGINFO("jsbindings: destory JS object %p (cocos2d::VideoPlayer)", s.nativeThisObject());
     cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
     cobj->release();
+    auto objIter = se::NativePtrToObjectMap::find(s.nativeThisObject());
+    if(objIter != se::NativePtrToObjectMap::end())
+    {
+        objIter->second->clearPrivateData(true);
+    }
     return true;
 }
 SE_BIND_FUNC(js_cocos2d_VideoPlayer_destroy)
