@@ -338,7 +338,7 @@ bool js_register_video_VideoPlayer(se::Object* obj)
     cls->defineFunction("duration", _SE(js_video_VideoPlayer_duration));
     cls->defineFunction("setVisible", _SE(js_video_VideoPlayer_setVisible));
     cls->defineFunction("seekTo", _SE(js_video_VideoPlayer_seekTo));
-    cls->defineFunction("nativeDestroy", _SE(js_cocos2d_VideoPlayer_destroy));
+    cls->defineFunction("destroy", _SE(js_cocos2d_VideoPlayer_destroy));
     cls->defineFinalizeFunction(_SE(js_cocos2d_VideoPlayer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::VideoPlayer>(cls);
