@@ -29,7 +29,7 @@
 
 #include "spine-creator-support/SkeletonAnimation.h"
 #include "spine-creator-support/spine-cocos2dx.h"
-#include "spine/extension.h"
+#include "spine/Extension.h"
 #include <algorithm>
 
 USING_NS_CC;

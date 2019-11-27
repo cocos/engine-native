@@ -1438,6 +1438,14 @@
 		ED3057D11BEC7DA80083C3ED /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3057CB1BEC7DA80083C3ED /* libpng.a */; };
 		ED3057D21BEC7DA80083C3ED /* libtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3057CC1BEC7DA80083C3ED /* libtiff.a */; };
 		ED3057D31BEC7DA80083C3ED /* libwebsockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED3057CD1BEC7DA80083C3ED /* libwebsockets.a */; };
+		ED5A63F8236C384C007A0CF0 /* WebSocketServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5A63F6236C384C007A0CF0 /* WebSocketServer.cpp */; };
+		ED5A63F9236C384C007A0CF0 /* WebSocketServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5A63F6236C384C007A0CF0 /* WebSocketServer.cpp */; };
+		ED5A63FA236C384C007A0CF0 /* WebSocketServer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5A63F7236C384C007A0CF0 /* WebSocketServer.h */; };
+		ED5A63FB236C384C007A0CF0 /* WebSocketServer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5A63F7236C384C007A0CF0 /* WebSocketServer.h */; };
+		ED5A63FE236C3860007A0CF0 /* jsb_websocket_server.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ED5A63FC236C3860007A0CF0 /* jsb_websocket_server.hpp */; };
+		ED5A63FF236C3860007A0CF0 /* jsb_websocket_server.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ED5A63FC236C3860007A0CF0 /* jsb_websocket_server.hpp */; };
+		ED5A6400236C3860007A0CF0 /* jsb_websocket_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5A63FD236C3860007A0CF0 /* jsb_websocket_server.cpp */; };
+		ED5A6401236C3860007A0CF0 /* jsb_websocket_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5A63FD236C3860007A0CF0 /* jsb_websocket_server.cpp */; };
 		ED997669216C459E00A46923 /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED997661216C459D00A46923 /* libuv_a.a */; };
 		EDE5DFF81C0D6B3F0014147A /* libwebsockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDE5DFF71C0D6B3F0014147A /* libwebsockets.a */; };
 /* End PBXBuildFile section */
@@ -2226,6 +2234,10 @@
 		ED3057CB1BEC7DA80083C3ED /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = ../external/mac/libs/libpng.a; sourceTree = "<group>"; };
 		ED3057CC1BEC7DA80083C3ED /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = ../external/mac/libs/libtiff.a; sourceTree = "<group>"; };
 		ED3057CD1BEC7DA80083C3ED /* libwebsockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebsockets.a; path = ../external/mac/libs/libwebsockets.a; sourceTree = "<group>"; };
+		ED5A63F6236C384C007A0CF0 /* WebSocketServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebSocketServer.cpp; sourceTree = "<group>"; };
+		ED5A63F7236C384C007A0CF0 /* WebSocketServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSocketServer.h; sourceTree = "<group>"; };
+		ED5A63FC236C3860007A0CF0 /* jsb_websocket_server.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jsb_websocket_server.hpp; sourceTree = "<group>"; };
+		ED5A63FD236C3860007A0CF0 /* jsb_websocket_server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_websocket_server.cpp; sourceTree = "<group>"; };
 		ED99765E216C453D00A46923 /* libv8_base.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8_base.a; path = ../external/mac/libs/libv8_base.a; sourceTree = "<group>"; };
 		ED997660216C459D00A46923 /* libv8_libbase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8_libbase.a; path = ../external/mac/libs/libv8_libbase.a; sourceTree = "<group>"; };
 		ED997661216C459D00A46923 /* libuv_a.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv_a.a; path = ../external/mac/libs/libuv_a.a; sourceTree = "<group>"; };
@@ -3046,6 +3058,8 @@
 		461785FD20522468008256E1 /* network */ = {
 			isa = PBXGroup;
 			children = (
+				ED5A63F6236C384C007A0CF0 /* WebSocketServer.cpp */,
+				ED5A63F7236C384C007A0CF0 /* WebSocketServer.h */,
 				4617860220522468008256E1 /* HttpCookie.cpp */,
 				4617861820522469008256E1 /* HttpCookie.h */,
 				4617860420522469008256E1 /* CCIDownloaderImpl.h */,
@@ -3186,6 +3200,8 @@
 		469302BE2046AE05004A3D6C /* manual */ = {
 			isa = PBXGroup;
 			children = (
+				ED5A63FD236C3860007A0CF0 /* jsb_websocket_server.cpp */,
+				ED5A63FC236C3860007A0CF0 /* jsb_websocket_server.hpp */,
 				403ACAD820CE4EB000BB433D /* jsb_module_register.cpp */,
 				046E070D218B01EF00B24E2D /* jsb_dragonbones_manual.cpp */,
 				046E070E218B01EF00B24E2D /* jsb_dragonbones_manual.hpp */,
@@ -3944,6 +3960,9 @@
 				1A52DB65205BCDC700350EE3 /* SeApi.h in Headers */,
 				046E06602185B41B00B24E2D /* DeformVertices.h in Headers */,
 				425D3FF322D86BEF00BCED11 /* Mat3.hpp in Headers */,
+				ED5A63FE236C3860007A0CF0 /* jsb_websocket_server.hpp in Headers */,
+				46D310C022AF5901001D4590 /* http_parser.h in Headers */,
+				0430129D21DCF2B80007084D /* IkConstraint.h in Headers */,
 				1A28FF6D1F20AFAB007A1D9D /* SRError.h in Headers */,
 				46AE3FE32092F3A600F3A228 /* inspector_agent.h in Headers */,
 				46AE3FEB2092F3A600F3A228 /* node_mutex.h in Headers */,
@@ -4005,6 +4024,7 @@
 				049B32092314DF1C0004909A /* SkeletonCache.h in Headers */,
 				4693045A2046AE06004A3D6C /* EventDispatcher.h in Headers */,
 				0494CFD622BEFC6D00B73B79 /* ParallelTask.hpp in Headers */,
+				ED5A63FA236C384C007A0CF0 /* WebSocketServer.h in Headers */,
 				1AAAC8F3205CB6E9005321B9 /* AudioEngine.h in Headers */,
 				1A52DB6E205BCDC700350EE3 /* Object.hpp in Headers */,
 				ED3057A21BEC77D50083C3ED /* xxhash.h in Headers */,
@@ -4048,6 +4068,7 @@
 			files = (
 				04DBD4BA22AE2DBD00DBE4CD /* Skeleton.h in Headers */,
 				4617862A20522469008256E1 /* Uri.h in Headers */,
+				ED5A63FF236C3860007A0CF0 /* jsb_websocket_server.hpp in Headers */,
 				046E069A2185B45300B24E2D /* Matrix.h in Headers */,
 				469303892046AE05004A3D6C /* HandleObject.hpp in Headers */,
 				503DD8EF1926736A00CD74DD /* CCPlatformDefine-ios.h in Headers */,
@@ -4393,6 +4414,8 @@
 				4617863220522469008256E1 /* SocketIO.h in Headers */,
 				46FDDAB8202ACC6A00931238 /* IndexBuffer.h in Headers */,
 				1A28FF5C1F20AFAB007A1D9D /* NSURLRequest+SRWebSocketPrivate.h in Headers */,
+				46D310B122AF5901001D4590 /* inspector_socket_server.h in Headers */,
+				ED5A63FB236C384C007A0CF0 /* WebSocketServer.h in Headers */,
 				1AAAC8F0205CB6E9005321B9 /* AudioEngine-inl.h in Headers */,
 				04DBD3D622AE2DBD00DBE4CD /* ColorTimeline.h in Headers */,
 				04DBD4C822AE2DBD00DBE4CD /* SkeletonBounds.h in Headers */,
@@ -4739,6 +4762,7 @@
 				046E06BF2185B49F00B24E2D /* BoundingBoxData.cpp in Sources */,
 				4617864720522469008256E1 /* CCDownloaderImpl-apple.mm in Sources */,
 				426947B9234ED0130044C66E /* SimpleSprite3D.cpp in Sources */,
+				ED5A63F8236C384C007A0CF0 /* WebSocketServer.cpp in Sources */,
 				1A52DB24205BCD9200350EE3 /* ObjectWrap.cpp in Sources */,
 				04DBD3ED22AE2DBD00DBE4CD /* Timeline.cpp in Sources */,
 				1AAAC8F1205CB6E9005321B9 /* AudioEngine.cpp in Sources */,
@@ -4807,6 +4831,7 @@
 				BA21055B21009A2900E19975 /* CCEventAssetsManagerEx.cpp in Sources */,
 				046E06822185B43B00B24E2D /* EventObject.cpp in Sources */,
 				046B68A621A292D300B33469 /* jsb_spine_manual.cpp in Sources */,
+				ED5A6400236C3860007A0CF0 /* jsb_websocket_server.cpp in Sources */,
 				BA21055C21009A2C00E19975 /* Manifest.cpp in Sources */,
 				049B32072314DF1C0004909A /* SkeletonCache.cpp in Sources */,
 				04DBD41B22AE2DBD00DBE4CD /* SlotData.cpp in Sources */,
@@ -4866,6 +4891,9 @@
 				46AE3FF22092F3A600F3A228 /* SHA1.cpp in Sources */,
 				04DBD3C422AE2DBD00DBE4CD /* VertexEffect.cpp in Sources */,
 				ED30579E1BEC77BD0083C3ED /* ConvertUTFWrapper.cpp in Sources */,
+				46E26C84229BC870006DC27A /* ScriptEngine.cpp in Sources */,
+				ED5A6401236C3860007A0CF0 /* jsb_websocket_server.cpp in Sources */,
+				0430122821DCF2B80007084D /* PathConstraint.c in Sources */,
 				046E06892185B44A00B24E2D /* BaseFactory.cpp in Sources */,
 				04DBD44022AE2DBD00DBE4CD /* DrawOrderTimeline.cpp in Sources */,
 				1A28FF801F20AFAB007A1D9D /* SRMutex.m in Sources */,
@@ -4923,6 +4951,9 @@
 				469303A12046AE05004A3D6C /* ScriptEngine.mm in Sources */,
 				046E06EA2185B4A500B24E2D /* JSONDataParser.cpp in Sources */,
 				04DBD42C22AE2DBD00DBE4CD /* IkConstraintData.cpp in Sources */,
+				043012AE21DCF2B80007084D /* MeshAttachment.c in Sources */,
+				0430123821DCF2B80007084D /* BoneData.c in Sources */,
+				ED5A63F9236C384C007A0CF0 /* WebSocketServer.cpp in Sources */,
 				046B688B219FA61200B33469 /* MiddlewareManager.cpp in Sources */,
 				46FDDB8C202ADDCE00931238 /* CCAutoreleasePool.cpp in Sources */,
 				461786622052607E008256E1 /* jsb_socketio.cpp in Sources */,

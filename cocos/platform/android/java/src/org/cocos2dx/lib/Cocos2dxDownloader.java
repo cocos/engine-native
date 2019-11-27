@@ -190,7 +190,7 @@ public class Cocos2dxDownloader {
 
                             try {
 
-                                if(response.code() != 200) {
+                                if(!(response.code() >= 200 && response.code() <= 206)) {
                                     downloader.onFinish(id, -2, response.message(), null);
                                     return;
                                 }

@@ -110,6 +110,8 @@ void Assembler::updateVerticesRange(std::size_t iaIndex, int start, int count)
     IARenderData& ia = _iaDatas[iaIndex];
     ia.verticesStart = start;
     ia.verticesCount = count;
+    
+    enableDirty(AssemblerBase::VERTICES_OPACITY_CHANGED);
 }
 
 void Assembler::updateEffect(std::size_t iaIndex, Effect* effect)

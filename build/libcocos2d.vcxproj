@@ -172,6 +172,7 @@
     <ClCompile Include="..\cocos\network\SocketIO.cpp" />
     <ClCompile Include="..\cocos\network\Uri.cpp" />
     <ClCompile Include="..\cocos\network\WebSocket-libwebsockets.cpp" />
+    <ClCompile Include="..\cocos\network\WebSocketServer.cpp" />
     <ClCompile Include="..\cocos\platform\CCFileUtils.cpp" />
     <ClCompile Include="..\cocos\platform\CCImage.cpp" />
     <ClCompile Include="..\cocos\platform\CCSAXParser.cpp" />
@@ -279,6 +280,7 @@
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_socketio.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_spine_manual.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_websocket.cpp" />
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_xmlhttprequest.cpp" />
     <ClCompile Include="..\cocos\storage\local-storage\LocalStorage.cpp" />
     <ClCompile Include="..\cocos\ui\edit-box\EditBox-win32.cpp" />
@@ -499,6 +501,7 @@
     <ClInclude Include="..\cocos\network\SocketIO.h" />
     <ClInclude Include="..\cocos\network\Uri.h" />
     <ClInclude Include="..\cocos\network\WebSocket.h" />
+    <ClInclude Include="..\cocos\network\WebSocketServer.h" />
     <ClInclude Include="..\cocos\platform\CCApplication.h" />
     <ClInclude Include="..\cocos\platform\CCCanvasRenderingContext2D.h" />
     <ClInclude Include="..\cocos\platform\CCDevice.h" />
@@ -628,6 +631,7 @@
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_socketio.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_spine_manual.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_websocket.hpp" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_xmlhttprequest.hpp" />
     <ClInclude Include="..\cocos\storage\local-storage\LocalStorage.h" />
     <ClInclude Include="..\cocos\ui\edit-box\EditBox.h" />

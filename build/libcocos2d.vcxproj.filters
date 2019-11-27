@@ -844,6 +844,11 @@
     </ClCompile>
     <ClCompile Include="..\cocos\base\etc2.cpp">
       <Filter>base</Filter>
+    <ClCompile Include="..\cocos\network\WebSocketServer.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.cpp">
+      <Filter>js-bindings\manual</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1894,6 +1899,11 @@
     </ClInclude>
     <ClInclude Include="..\cocos\base\etc2.h">
       <Filter>base</Filter>
+    <ClInclude Include="..\cocos\network\WebSocketServer.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.hpp">
+      <Filter>js-bindings\manual</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

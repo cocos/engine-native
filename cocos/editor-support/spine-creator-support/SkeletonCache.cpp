@@ -424,6 +424,7 @@ namespace spine {
                 
                 trianglesTwoColor.indexCount = (int)_clipper->getClippedTriangles().size();
                 ibSize = trianglesTwoColor.indexCount * sizeof(unsigned short);
+                ib.checkSpace(ibSize, true);
                 trianglesTwoColor.indices = (unsigned short*)ib.getCurBuffer();
                 memcpy(trianglesTwoColor.indices, _clipper->getClippedTriangles().buffer(), sizeof(unsigned short) * _clipper->getClippedTriangles().size());
                 
