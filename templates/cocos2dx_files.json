@@ -465,6 +465,8 @@
         "cocos/network/WebSocket-apple.mm", 
         "cocos/network/WebSocket-libwebsockets.cpp", 
         "cocos/network/WebSocket.h", 
+        "cocos/network/WebSocketServer.cpp", 
+        "cocos/network/WebSocketServer.h", 
         "cocos/platform/CCApplication.h", 
         "cocos/platform/CCCanvasRenderingContext2D.h", 
         "cocos/platform/CCDevice.h", 
@@ -3113,6 +3115,7 @@
         "external/win32/libs/nspr4.dll", 
         "external/win32/libs/sqlite3.dll", 
         "external/win32/libs/sqlite3.lib", 
+        "external/win32/libs/uv.dll", 
         "external/win32/libs/v8.dll", 
         "external/win32/libs/v8.dll.lib", 
         "external/win32/libs/v8_libbase.dll", 
@@ -3309,6 +3312,8 @@
         "cocos/scripting/js-bindings/manual/jsb_spine_manual.hpp", 
         "cocos/scripting/js-bindings/manual/jsb_websocket.cpp", 
         "cocos/scripting/js-bindings/manual/jsb_websocket.hpp", 
+        "cocos/scripting/js-bindings/manual/jsb_websocket_server.cpp", 
+        "cocos/scripting/js-bindings/manual/jsb_websocket_server.hpp", 
         "cocos/scripting/js-bindings/manual/jsb_xmlhttprequest.cpp", 
         "cocos/scripting/js-bindings/manual/jsb_xmlhttprequest.hpp"
     ]
