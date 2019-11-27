@@ -5,8 +5,8 @@ message(STATUS "Target: ${TARGET_NAME}...")
 # set include files
 
 set(INCLUDE_FILES 
-  ${COCOS_EXTERNAL_PATH}/glsl_optimizer/src
-  ${COCOS_EXTERNAL_PATH}/glsl_optimizer/src/mesa
+  ${GFX_EXTERNAL_PATH}/glsl_optimizer/src
+  ${GFX_EXTERNAL_PATH}/glsl_optimizer/src/mesa
   ${COCOS_SRC_PATH}/renderer/core
   ${COCOS_SRC_PATH}/renderer/gfx-gl
 )
@@ -27,8 +27,8 @@ file(GLOB_RECURSE SOURCE_CPP_FILES *.cpp *.cc)
 file(GLOB_RECURSE SOURCE_C_FILES *.c)
 
 set(GLEW_FILES
-	${COCOS_SRC_PATH}/${TARGET_NAME}/gl/glew.h
-	${COCOS_SRC_PATH}/${TARGET_NAME}/gl/wglew.h)
+	${COCOS_SRC_PATH}/renderer/gfx-gl/gl/glew.h
+	${COCOS_SRC_PATH}/renderer/gfx-gl/gl/wglew.h)
 	
 source_group("gl" FILES ${GLEW_FILES})
 

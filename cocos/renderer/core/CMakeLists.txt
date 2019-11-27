@@ -6,16 +6,16 @@ message(STATUS "Target: ${TARGET_NAME}...")
 # set include files
 
 set(INCLUDE_FILES 
-  ${COCOS_EXTERNAL_PATH}/nedmalloc
-  ${COCOS_EXTERNAL_PATH}/tommyds
+  ${GFX_EXTERNAL_PATH}/nedmalloc
+  ${GFX_EXTERNAL_PATH}/tommyds
   ${COCOS_SRC_PATH}/renderer/core
 )
 
 if(COCOS_PLATFORM_WIN32)
-  list(APPEND INCLUDE_FILES ${COCOS_EXTERNAL_PATH}/jemalloc/include-win)
-  list(APPEND INCLUDE_FILES ${COCOS_EXTERNAL_PATH}/jemalloc/include-win/msvc_compat)
+  list(APPEND INCLUDE_FILES ${GFX_EXTERNAL_PATH}/jemalloc/include-win)
+  list(APPEND INCLUDE_FILES ${GFX_EXTERNAL_PATH}/jemalloc/include-win/msvc_compat)
 else()
-  list(APPEND INCLUDE_FILES ${COCOS_EXTERNAL_PATH}/jemalloc/include-linux)
+  list(APPEND INCLUDE_FILES ${GFX_EXTERNAL_PATH}/jemalloc/include-linux)
 endif()
 
 include_directories( ${INCLUDE_FILES} )
@@ -120,7 +120,6 @@ if(MSVC)
         PUBLIC /MP
     )
 	target_link_directories(${TARGET_NAME} PUBLIC ${COCOS_EXTERNAL_PATH}/win32/libs)
-	message("______COCOS_EXTERNAL_PATH = ${COCOS_EXTERNAL_PATH}")
 endif()
 
 target_include_directories(${TARGET_NAME} PUBLIC 

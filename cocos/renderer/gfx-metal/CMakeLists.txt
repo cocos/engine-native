@@ -5,8 +5,8 @@ message(STATUS "Target: ${TARGET_NAME}...")
 # set include files
 
 set(INCLUDE_FILES 
-  ${COCOS_EXTERNAL_PATH}/glsl_optimizer/src
-  ${COCOS_EXTERNAL_PATH}/glsl_optimizer/src/mesa
+  ${GFX_EXTERNAL_PATH}/glsl_optimizer/src
+  ${GFX_EXTERNAL_PATH}/glsl_optimizer/src/mesa
   ${COCOS_SRC_PATH}/renderer/core
   ${COCOS_SRC_PATH}/renderer/gfx-metal
 )
