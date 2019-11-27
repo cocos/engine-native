@@ -1,7 +1,6 @@
 set(TARGET_NAME GFXGLES3)
 
 message(STATUS "Target: ${TARGET_NAME}...")
-
 # ---------------------------------------------------------------------
 # set include files
 
@@ -9,8 +8,8 @@ set(INCLUDE_FILES
   ${COCOS_EXTERNAL_PATH}/khronos
   ${COCOS_EXTERNAL_PATH}/glsl_optimizer/src
   ${COCOS_EXTERNAL_PATH}/glsl_optimizer/src/mesa
-  ${COCOS_SRC_PATH}/Core
-  ${COCOS_SRC_PATH}/${TARGET_NAME}
+  ${COCOS_SRC_PATH}/renderer/core
+  ${COCOS_SRC_PATH}/renderer/gfx-gles3
 )
 
 if(WIN32)

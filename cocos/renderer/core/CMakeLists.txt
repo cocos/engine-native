@@ -8,7 +8,7 @@ message(STATUS "Target: ${TARGET_NAME}...")
 set(INCLUDE_FILES 
   ${COCOS_EXTERNAL_PATH}/nedmalloc
   ${COCOS_EXTERNAL_PATH}/tommyds
-  ${COCOS_SRC_PATH}/Core
+  ${COCOS_SRC_PATH}/renderer/core
 )
 
 if(COCOS_PLATFORM_WIN32)
@@ -113,6 +113,11 @@ if (COCOS_PLATFORM_WIN32)
 else()
 	target_link_libraries(${TARGET_NAME} ${COCOS_EXTERNAL_TARGETS})
 endif()
+
+target_include_directories(${TARGET_NAME} PUBLIC 
+	${COCOS_SRC_PATH}/renderer
+	${COCOS_SRC_PATH}
+)
 
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME CCCore)
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME_DEBUG CCCore_d)
