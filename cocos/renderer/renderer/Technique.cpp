@@ -447,13 +447,9 @@ void Technique::Parameter::freeValue()
 
 uint32_t Technique::_genID = 0;
 
-Technique::Technique(const std::vector<std::string>& stages,
-                     const Vector<Pass*>& passes,
-                     int layer)
+Technique::Technique(const std::string& name, const Vector<Pass*>& passes)
 : _id(_genID++)
-, _stageIDs(Config::getStageIDs(stages))
 , _passes(passes)
-, _layer(layer)
 {
 //    RENDERER_LOGD("Technique construction: %p", this);
 }

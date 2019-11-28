@@ -25,8 +25,9 @@
 #include "CustomProperties.hpp"
 
 RENDERER_BEGIN
-CustomProperties::CustomProperties()
+CustomProperties::CustomProperties(Effect* effect)
 {
+    setEffect(effect);
 }
 
 CustomProperties::~CustomProperties()
@@ -35,66 +36,27 @@ CustomProperties::~CustomProperties()
     _defines.clear();
 }
 
-void CustomProperties::setProperty(const std::string name, const Property& property)
-{
-    auto iter = _properties.find(name);
-    if (iter != _properties.end() && iter->second == property)
-    {
-        return;
-    }
-    _properties[name] = property;
-    _dirty = true;
-}
-
-const CustomProperties::Property& CustomProperties::getProperty(std::string name) const
-{
-    static Property EMPTY_PROPERTY;
-    if (_properties.end() == _properties.find(name))
-        return EMPTY_PROPERTY;
-    else
-        return _properties.at(name);
-}
-
-void CustomProperties::define(const std::string& name, const Value& value)
-{
-    if (_defines[name] == value)
-    {
-        return;
-    };
-
-    _dirty = true;
-    _defines[name] = value;
-    
-    generateDefinesKey();
-}
-
-Value CustomProperties::getDefine(const std::string& name) const
-{
-    auto iter = _defines.find(name);
-    if (iter != _defines.end())
-    {
-        return iter->second;
-    }
-    
-    RENDERER_LOGW("Failed to get CustomProperties define %s, define not found.", name.c_str());
-    return Value::Null;
-}
-
-std::unordered_map<std::string, CustomProperties::Property>* CustomProperties::extractProperties()
-{
-    return &_properties;
-}
-
-ValueMap* CustomProperties::extractDefines()
-{
-    return &_defines;
-}
-
 void CustomProperties::generateDefinesKey()
 {
     _definesKey = "";
     for (auto& def : _defines) {
         _definesKey += def.first + def.second.asString();
+    }
+}
+
+void CustomProperties::setEffect(Effect *effect)
+{
+    _effect = effect;
+    
+    _defines.clear();
+    _properties.clear();
+    _dirty = true;
+    
+    auto& passes = effect->getPasses();
+    _passes.clear();
+    for (size_t i = 0, l = passes.size(); i < l; i++) {
+        Pass* pass = passes.at(i);
+        _passes.pushBack(new Pass(pass->getProgramName(), pass));
     }
 }
 

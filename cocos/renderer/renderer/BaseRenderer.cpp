@@ -168,20 +168,19 @@ void BaseRenderer::render(const View& view, const Scene* scene)
         for (size_t i = 0, len = _drawItems->getLength(); i < len; i++)
         {
             const DrawItem* item = _drawItems->getData(i);
-            auto tech = item->effect->getTechnique(stage);
-            if (tech)
-            {
-                stageItem.model = item->model;
-                stageItem.ia = item->ia;
-                stageItem.effect = item->effect;
-                stageItem.defines = item->defines;
-                stageItem.technique = tech;
-                stageItem.sortKey = -1;
-                stageItem.uniforms = item->uniforms;
-                stageItem.definesKeyHash = item->definesKeyHash;
-                
-                stageInfo->items.push_back(stageItem);
+            
+            stageItem.passes.clear();
+            for (const Pass* p : item->effect->getPasses()) {
+                stageItem.passes.push_back(p);
             }
+            
+            stageItem.model = item->model;
+            stageItem.ia = item->ia;
+            stageItem.effect = item->effect;
+            stageItem.sortKey = -1;
+            
+            stageInfo->items.push_back(stageItem);
+            
         }
     }
     
@@ -199,7 +198,7 @@ void BaseRenderer::render(const View& view, const Scene* scene)
     }
 }
 
-void BaseRenderer::setProperty (Effect::Property& prop)
+void BaseRenderer::setProperty (const Effect::Property& prop)
 {
     Technique::Parameter::Type propType = prop.getType();
     auto& propName = prop.getName();
@@ -210,15 +209,15 @@ void BaseRenderer::setProperty (Effect::Property& prop)
         return;
     }
     
-    if (nullptr == prop.getValue())
-    {
-        prop = Effect::Property(propName, propType);
-        
-        if (Effect::Property::Type::TEXTURE_2D == propType)
-        {
-            prop.setTexture(_defaultTexture);
-        }
-    }
+//    if (nullptr == prop.getValue())
+//    {
+//        prop = Effect::Property(propName, propType);
+//        
+//        if (Effect::Property::Type::TEXTURE_2D == propType)
+//        {
+//            prop.setTexture(_defaultTexture);
+//        }
+//    }
     
     if (nullptr == prop.getValue())
     {
@@ -275,18 +274,11 @@ void BaseRenderer::draw(const StageItem& item)
     _tmpMat4->transpose();
     _device->setUniformMat4(cc_matWorldIT, _tmpMat4->m);
     
-    // set technique uniforms
-    for (int i = 0, len = (int)item.uniforms->size(); i < len; i++)
-    {
-        std::unordered_map<std::string, Effect::Property>* properties = (*item.uniforms)[i];
-        for (auto& prop : *properties) {
-            setProperty(prop.second);
-        }
-    }
+    std::vector<const ValueMap*> defines;
     
     auto ia = item.ia;
     // for each pass
-    for (const auto& pass : item.technique->getPasses())
+    for (const auto& pass : item.passes)
     {
         // set vertex buffer
         _device->setVertexBuffer(0, ia->getVertexBuffer());
@@ -299,55 +291,68 @@ void BaseRenderer::draw(const StageItem& item)
         _device->setPrimitiveType(ia->_primitiveType);
         
         // get program
-        _program = _programLib->switchProgram(pass->getHashName(), item.definesKeyHash, *(item.defines));
+        defines.clear();
+        defines.push_back(&_defines);
+        size_t definesHash = _definesHash;
+        pass->extractDefines(definesHash, defines);
+        
+        _program = _programLib->switchProgram(pass->getHashName(), definesHash, defines);
         _device->setProgram(_program);
         
+        for (auto& uniform : _program->getUniforms())
+        {
+            auto prop = pass->getProperty(uniform.name);
+            if (prop) {
+                setProperty(*prop);
+            }
+        }
+        
         // cull mode
-        _device->setCullMode(pass->_cullMode);
+        _device->setCullMode(pass->getCullMode());
         
         // blend
-        if (pass->_blend)
+        if (pass->isBlend())
         {
             _device->enableBlend();
-            _device->setBlendFuncSeparate(pass->_blendSrc,
-                                          pass->_blendDst,
-                                          pass->_blendSrcAlpha,
-                                          pass->_blendDstAlpha);
-            _device->setBlendEquationSeparate(pass->_blendEq, pass->_blendAlphaEq);
-            _device->setBlendColor(pass->_blendColor);
+            _device->setBlendFuncSeparate(pass->getBlendSrc(),
+                                          pass->getBlendDst(),
+                                          pass->getBlendSrcAlpha(),
+                                          pass->getBlendDstAlpha());
+            _device->setBlendEquationSeparate(pass->getBlendEq(), pass->getBlendAlphaEq());
+            _device->setBlendColor(pass->getBlendColor());
         }
         
         // depth test & write
-        if (pass->_depthTest)
+        if (pass->isDepthTest())
         {
             _device->enableDepthTest();
-            _device->setDepthFunc(pass->_depthFunc);
+            _device->setDepthFunc(pass->getDepthFunc());
         }
-        if (pass->_depthWrite)
+        if (pass->isDepthWrite())
             _device->enableDepthWrite();
         
         // setencil
-        if (pass->_stencilTest)
+        if (pass->isStencilTest())
         {
             _device->enableStencilTest();
             
             // front
-            _device->setStencilFuncFront(pass->_stencilFuncFront,
-                                         pass->_stencilRefFront,
-                                         pass->_stencilMaskFront);
-            _device->setStencilOpFront(pass->_stencilFailOpFront,
-                                       pass->_stencilZFailOpFront,
-                                       pass->_stencilZPassOpFront,
-                                       pass->_stencilWriteMaskFront);
+            _device->setStencilFuncFront(pass->getStencilFuncFront(),
+                                         pass->getStencilRefFront(),
+                                         pass->getStencilMaskFront());
+            _device->setStencilOpFront(pass->getStencilFailOpFront(),
+                                       pass->getStencilZFailOpFront(),
+                                       pass->getStencilZPassOpFront(),
+                                       pass->getStencilWriteMaskFront());
             
             // back
-            _device->setStencilFuncBack(pass->_stencilFuncBack,
-                                        pass->_stencilRefBack,
-                                        pass->_stencilMaskBack);
-            _device->setStencilOpBack(pass->_stencilFailOpBack,
-                                      pass->_stencilZFailOpBack,
-                                      pass->_stencilZPassOpBack,
-                                      pass->_stencilWriteMaskBack);
+            _device->setStencilFuncBack(pass->getStencilFuncBack(),
+                                        pass->getStencilRefBack(),
+                                        pass->getStencilMaskBack());
+            _device->setStencilOpBack(pass->getStencilFailOpBack(),
+                                      pass->getStencilZFailOpBack(),
+                                      pass->getStencilZPassOpBack(),
+                                      pass->getStencilWriteMaskBack());
         }
         
         // draw pass

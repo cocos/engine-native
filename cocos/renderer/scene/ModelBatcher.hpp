@@ -127,7 +127,7 @@ public:
     
     void setNode(NodeProxy* node);
     void setCullingMask(int cullingMask) { _cullingMask = cullingMask; }
-    void setCurrentEffect(Effect* effect);
+    void setCurrentEffect(CustomProperties* effect);
     void setUseModel(bool useModel) { _useModel = useModel; }
     void setCustomProperties(CustomProperties* props) { _customProps = props; };
 private:
@@ -143,7 +143,7 @@ private:
     NodeProxy* _node = nullptr;
     
     MeshBuffer* _buffer = nullptr;
-    Effect* _currEffect = nullptr;
+    CustomProperties* _currEffect = nullptr;
     RenderFlow* _flow = nullptr;
     CustomProperties* _customProps = nullptr;
 

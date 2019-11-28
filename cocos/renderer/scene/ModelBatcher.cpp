@@ -141,7 +141,7 @@ void ModelBatcher::commit(NodeProxy* node, Assembler* assembler, int cullingMask
     {
         assembler->beforeFillBuffers(i);
         
-        Effect* effect = assembler->getEffect(i);
+        CustomProperties* effect = assembler->getEffect(i);
         CustomProperties* customProp = assembler->getCustomProperties();
         if (!effect) continue;
 
@@ -178,7 +178,7 @@ void ModelBatcher::commitIA(NodeProxy* node, CustomAssembler* assembler, int cul
 {
     changeCommitState(CommitState::Custom);
 
-    Effect* effect = assembler->getEffect(0);
+    CustomProperties* effect = assembler->getEffect(0);
     if (!effect) return;
 
     auto customIA = assembler->getIA(0);
@@ -355,7 +355,7 @@ void ModelBatcher::setNode(NodeProxy* node)
     CC_SAFE_RETAIN(_node);
 }
 
-void ModelBatcher::setCurrentEffect(Effect* effect)
+void ModelBatcher::setCurrentEffect(CustomProperties* effect)
 {
     if (_currEffect == effect)
     {

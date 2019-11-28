@@ -56,7 +56,7 @@ Assembler::IARenderData::~IARenderData()
     CC_SAFE_RELEASE(_effect);
 }
 
-void Assembler::IARenderData::setEffect(Effect* effect)
+void Assembler::IARenderData::setEffect(CustomProperties* effect)
 {
     if (effect == _effect) return;
     CC_SAFE_RELEASE(_effect);
@@ -64,7 +64,7 @@ void Assembler::IARenderData::setEffect(Effect* effect)
     CC_SAFE_RETAIN(_effect);
 }
 
-Effect* Assembler::IARenderData::getEffect() const
+CustomProperties* Assembler::IARenderData::getEffect() const
 {
     return _effect;
 }
@@ -112,7 +112,7 @@ void Assembler::updateVerticesRange(std::size_t iaIndex, int start, int count)
     ia.verticesCount = count;
 }
 
-void Assembler::updateEffect(std::size_t iaIndex, Effect* effect)
+void Assembler::updateEffect(std::size_t iaIndex, CustomProperties* effect)
 {
     if (iaIndex >= _iaDatas.size())
     {

@@ -12,48 +12,41 @@ bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_ProgramLib_define);
 SE_DECLARE_FUNC(js_renderer_ProgramLib_ProgramLib);
 
-extern se::Object* __jsb_cocos2d_renderer_CustomProperties_proto;
-extern se::Class* __jsb_cocos2d_renderer_CustomProperties_class;
+extern se::Object* __jsb_cocos2d_renderer_EffectBase_proto;
+extern se::Class* __jsb_cocos2d_renderer_EffectBase_class;
 
-bool js_register_cocos2d_renderer_CustomProperties(se::Object* obj);
+bool js_register_cocos2d_renderer_EffectBase(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_define);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_CustomProperties);
-
-extern se::Object* __jsb_cocos2d_renderer_Pass_proto;
-extern se::Class* __jsb_cocos2d_renderer_Pass_class;
-
-bool js_register_cocos2d_renderer_Pass(se::Object* obj);
-bool register_all_renderer(se::Object* obj);
-SE_DECLARE_FUNC(js_renderer_Pass_getStencilTest);
-SE_DECLARE_FUNC(js_renderer_Pass_setStencilBack);
-SE_DECLARE_FUNC(js_renderer_Pass_getProgramName);
-SE_DECLARE_FUNC(js_renderer_Pass_setCullMode);
-SE_DECLARE_FUNC(js_renderer_Pass_setBlend);
-SE_DECLARE_FUNC(js_renderer_Pass_setProgramName);
-SE_DECLARE_FUNC(js_renderer_Pass_disableStencilTest);
-SE_DECLARE_FUNC(js_renderer_Pass_setStencilFront);
-SE_DECLARE_FUNC(js_renderer_Pass_setDepth);
-SE_DECLARE_FUNC(js_renderer_Pass_Pass);
+SE_DECLARE_FUNC(js_renderer_EffectBase_getProperty);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setStencilTest);
+SE_DECLARE_FUNC(js_renderer_EffectBase_getDefine);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setCullMode);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setBlend);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setStencil);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setProperty);
+SE_DECLARE_FUNC(js_renderer_EffectBase_getPasses);
+SE_DECLARE_FUNC(js_renderer_EffectBase_define);
 
 extern se::Object* __jsb_cocos2d_renderer_Effect_proto;
 extern se::Class* __jsb_cocos2d_renderer_Effect_class;
 
 bool js_register_cocos2d_renderer_Effect(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
-SE_DECLARE_FUNC(js_renderer_Effect_getProperty);
-SE_DECLARE_FUNC(js_renderer_Effect_setStencilTest);
-SE_DECLARE_FUNC(js_renderer_Effect_getTechnique);
-SE_DECLARE_FUNC(js_renderer_Effect_getDefine);
-SE_DECLARE_FUNC(js_renderer_Effect_setCullMode);
-SE_DECLARE_FUNC(js_renderer_Effect_setStencil);
-SE_DECLARE_FUNC(js_renderer_Effect_setBlend);
-SE_DECLARE_FUNC(js_renderer_Effect_getHash);
-SE_DECLARE_FUNC(js_renderer_Effect_updateHash);
-SE_DECLARE_FUNC(js_renderer_Effect_copy);
 SE_DECLARE_FUNC(js_renderer_Effect_clear);
-SE_DECLARE_FUNC(js_renderer_Effect_define);
+SE_DECLARE_FUNC(js_renderer_Effect_switchTechnique);
+SE_DECLARE_FUNC(js_renderer_Effect_getPasses);
+SE_DECLARE_FUNC(js_renderer_Effect_copy);
 SE_DECLARE_FUNC(js_renderer_Effect_Effect);
+
+extern se::Object* __jsb_cocos2d_renderer_CustomProperties_proto;
+extern se::Class* __jsb_cocos2d_renderer_CustomProperties_class;
+
+bool js_register_cocos2d_renderer_CustomProperties(se::Object* obj);
+bool register_all_renderer(se::Object* obj);
+SE_DECLARE_FUNC(js_renderer_CustomProperties_setEffect);
+SE_DECLARE_FUNC(js_renderer_CustomProperties_updateHash);
+SE_DECLARE_FUNC(js_renderer_CustomProperties_getEffect);
+SE_DECLARE_FUNC(js_renderer_CustomProperties_CustomProperties);
 
 extern se::Object* __jsb_cocos2d_renderer_AssemblerBase_proto;
 extern se::Class* __jsb_cocos2d_renderer_AssemblerBase_class;

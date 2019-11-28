@@ -28,6 +28,7 @@
 #include <base/CCRef.h>
 #include "../Macro.h"
 #include "../Types.h"
+#include "Technique.h"
 
 RENDERER_BEGIN
 
@@ -54,29 +55,37 @@ RENDERER_BEGIN
 class Pass : public Ref
 {
 public:
-    /**
-     * @brief Constructor with linked program name.
-     * @param[in] programName Shader program name
-     */
-    Pass(const std::string& programName);
+
+    Pass(const std::string& programName, Pass* parent = nullptr);
+    Pass(const std::string& programName,
+         std::unordered_map<std::string, Technique::Parameter>& properties,
+         ValueMap& defines
+    );
     Pass() {};
     ~Pass();
     
-    /**
-     *  @brief Sets cull mode.
-     *  @param[in] cullMode Cull front or back or both.
-     */
+    inline void setProgramName(const std::string& programName) { _programName = programName; }
+    inline const std::string& getProgramName() const { return _programName; }
+    
+    inline size_t getHashName() const { return _hashName; }
+    
+    void copy(const Pass& pass);
+    
+    // cull mode
+    CullMode getCullMode() const { return (CullMode)getState(0); }
+    
     void setCullMode(CullMode cullMode);
-    /**
-     *  @brief Sets blend mode.
-     *  @param[in] blendEq RGB blend equation.
-     *  @param[in] blendSrc Src RGB blend factor.
-     *  @param[in] blendDst Dst RGB blend factor.
-     *  @param[in] blendAlphaEq Alpha blend equation.
-     *  @param[in] blendSrcAlpha Src Alpha blend equation.
-     *  @param[in] blendDstAlpha Dst Alpha blend equation.
-     *  @param[in] blendColor Blend constant color value.
-     */
+    
+    // blending
+    inline bool isBlend () const { return getState(1); };
+    inline BlendOp getBlendEq () const { return (BlendOp)getState(2); };
+    inline BlendFactor getBlendSrc () const { return (BlendFactor)getState(3); };
+    inline BlendFactor getBlendDst () const { return (BlendFactor)getState(4); };
+    inline BlendOp getBlendAlphaEq () const { return (BlendOp)getState(5); };
+    inline BlendFactor getBlendSrcAlpha () const { return (BlendFactor)getState(6); };
+    inline BlendFactor getBlendDstAlpha () const { return (BlendFactor)getState(7); };
+    inline uint32_t getBlendColor () const { return getState(8); };
+    
     void setBlend(BlendOp blendEq = BlendOp::ADD,
                   BlendFactor blendSrc = BlendFactor::ONE,
                   BlendFactor blendDst = BlendFactor::ZERO,
@@ -84,18 +93,30 @@ public:
                   BlendFactor blendSrcAlpha = BlendFactor::ONE,
                   BlendFactor blendDstAlpha = BlendFactor::ZERO,
                   uint32_t blendColor = 0xffffffff);
-    /**
-     *  @brief Switch depth test or write, and sets depth test function.
-     *  @param[in] depthTest Enable depth test or not.
-     *  @param[in] depthWrite Enable depth write or not.
-     *  @param[in] depthFunc Depth test function.
-     */
+    
+    // depth
+    inline bool isDepthTest () const { return getState(9); };
+    inline bool isDepthWrite () const { return getState(10); };
+    inline DepthFunc getDepthFunc () const { return (DepthFunc)getState(11); };
+    
     void setDepth(bool depthTest = false,
                   bool depthWrite = false,
                   DepthFunc depthFunc = DepthFunc::LESS);
-    /**
-     *  @brief Sets stencil front-facing function, reference, mask, fail operation, write mask.
-     */
+    
+    // stencil
+    inline void setStencilTest(bool value)     { _states[12] = value; }
+    inline void disableStencilTest()           { _states[12] = false; }
+    inline bool isStencilTest()                const { return getState(12); }
+    
+    // front
+    inline StencilFunc getStencilFuncFront()     const { return (StencilFunc)getState(13); }
+    inline uint32_t getStencilRefFront()         const { return getState(14); }
+    inline uint8_t getStencilMaskFront()         const { return getState(15); }
+    inline StencilOp getStencilFailOpFront()     const { return (StencilOp)getState(16); }
+    inline StencilOp getStencilZFailOpFront()    const { return (StencilOp)getState(17); }
+    inline StencilOp getStencilZPassOpFront()    const { return (StencilOp)getState(18); }
+    inline uint8_t getStencilWriteMaskFront()    const { return getState(19); }
+    
     void setStencilFront(StencilFunc stencilFunc = StencilFunc::ALWAYS,
                          uint32_t stencilRef = 0,
                          uint8_t stencilMask = 0xff,
@@ -103,9 +124,16 @@ public:
                          StencilOp stencilZFailOp = StencilOp::KEEP,
                          StencilOp stencilZPassOp = StencilOp::KEEP,
                          uint8_t stencilWriteMask = 0xff);
-    /**
-     *  @brief Sets stencil back-facing function, reference, mask, fail operation, write mask.
-     */
+    
+    // back
+    inline StencilFunc getStencilFuncBack()      const { return (StencilFunc)getState(20); }
+    inline uint32_t getStencilRefBack()          const { return getState(21); }
+    inline uint8_t getStencilMaskBack()          const { return getState(22); }
+    inline StencilOp getStencilFailOpBack()      const { return (StencilOp)getState(23); }
+    inline StencilOp getStencilZFailOpBack()     const { return (StencilOp)getState(24); }
+    inline StencilOp getStencilZPassOpBack()     const { return (StencilOp)getState(25); }
+    inline uint8_t getStencilWriteMaskBack()     const { return getState(26); }
+    
     void setStencilBack(StencilFunc stencilFunc = StencilFunc::ALWAYS,
                         uint32_t stencilRef = 0,
                         uint8_t stencilMask = 0xff,
@@ -113,75 +141,72 @@ public:
                         StencilOp stencilZFailOp = StencilOp::KEEP,
                         StencilOp stencilZPassOp = StencilOp::KEEP,
                         uint8_t stencilWriteMask = 0xff);
-    /*
-     *  @brief Sets stencil test enabled or not.
-     */
-    inline void setStencilTest(bool value) { _stencilTest = value; }
-    /**
-     *  @brief Gets stencil test enabled or not.
-     */
-    inline bool getStencilTest() const { return _stencilTest; }
-    /**
-     *  @brief Sets linked program name.
-     */
-    inline void setProgramName(const std::string& programName) { _programName = programName; }
-    /**
-     *  @brief Gets linked program name.
-     */
-    inline const std::string& getProgramName() const { return _programName; }
     
-    inline size_t getHashName() const { return _hashName; }
-    /**
-     *  @brief Disable stencil test.
-     */
-    inline void disableStencilTest() { _stencilTest = false; }
-    /**
-     *  @brief deep copy from other pass.
-     */
-    void copy(const Pass& pass);
+    uint32_t getState(uint32_t index) const;
     
+    inline void reset () { memset(_states, -1, PASS_VALUE_LENGTH * sizeof(uint32_t)); }
+    
+    inline void setParent(Pass* parent) { _parent = parent; }
+    inline const Pass* getParent() { return _parent; }
+    
+    void extractDefines (size_t& hash, std::vector<const ValueMap*>& defines) const;
+    void extractProperties(std::vector<const std::unordered_map<std::string, Technique::Parameter>*>& properties) const;
+    
+    void generateDefinesKey ();
+    
+    const Technique::Parameter* getProperty(const std::string& name) const
+    {
+        if (_properties.end() == _properties.find(name)) {
+            if (_parent) {
+                return _parent->getProperty(name);
+            }
+            return nullptr;
+        }
+        else
+            return &_properties.at(name);
+    }
+    
+    const Value* getDefine(const std::string& name) const
+    {
+        if (_defines.end() == _defines.find(name)) {
+            if (_parent) {
+                return _parent->getDefine(name);
+            }
+            return nullptr;
+        }
+        else
+            return &_defines.at(name);
+    }
+
+    void setProperty(const std::string& name, const Technique::Parameter& property)
+    {
+        _properties[name] = property;
+    }
+    void define(const std::string& name, const Value& value)
+    {
+        if (_defines[name] == value)
+        {
+            return;
+        };
+
+        _defines[name] = value;
+        
+        generateDefinesKey();
+    }
 private:
-    friend class BaseRenderer;
-    
-    // blending
-    bool _blend = false;
-    BlendOp _blendEq = BlendOp::ADD;
-    BlendOp _blendAlphaEq = BlendOp::ADD;
-    BlendFactor _blendSrc = BlendFactor::SRC_ALPHA;
-    BlendFactor _blendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-    BlendFactor _blendSrcAlpha = BlendFactor::SRC_ALPHA;
-    BlendFactor _blendDstAlpha = BlendFactor::ONE_MINUS_SRC_ALPHA;
-    uint32_t _blendColor = 0xffffffff;
-    
-    // depth
-    bool _depthTest = false;
-    bool _depthWrite = false;
-    DepthFunc _depthFunc = DepthFunc::LESS;
-    
-    // stencil
-    bool _stencilTest = false;
-    // front
-    uint32_t _stencilRefFront = 0;
-    StencilFunc _stencilFuncFront = StencilFunc::ALWAYS;
-    StencilOp _stencilFailOpFront = StencilOp::KEEP;
-    StencilOp _stencilZFailOpFront = StencilOp::KEEP;
-    StencilOp _stencilZPassOpFront = StencilOp::KEEP;
-    uint8_t _stencilWriteMaskFront = 0xff;
-    uint8_t _stencilMaskFront = 0xff;
-    // back
-    uint32_t _stencilRefBack = 0;
-    StencilFunc _stencilFuncBack = StencilFunc::ALWAYS;
-    StencilOp _stencilFailOpBack = StencilOp::KEEP;
-    StencilOp _stencilZFailOpBack = StencilOp::KEEP;
-    StencilOp _stencilZPassOpBack = StencilOp::KEEP;
-    uint8_t _stencilWriteMaskBack = 0xff;
-    uint8_t _stencilMaskBack = 0xff;
-    
-    // cull mode
-    CullMode _cullMode = CullMode::BACK;
-    
     std::string _programName = "";
     size_t _hashName = 0;
+    
+    Pass* _parent = nullptr;
+    
+    std::unordered_map<std::string, Technique::Parameter> _properties;
+    ValueMap _defines;
+    size_t _definesHash;
+    
+    static const int PASS_VALUE_LENGTH = 27;
+    
+    uint32_t _states[PASS_VALUE_LENGTH];
+    static uint32_t* DEFAULT_STATES;
 };
 
 // end of renderer group

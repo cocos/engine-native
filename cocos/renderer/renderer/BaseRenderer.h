@@ -61,11 +61,8 @@ public:
     {
         Model* model = nullptr;
         InputAssembler *ia = nullptr;
-        Effect* effect = nullptr;
-        Technique* technique = nullptr;
-        std::vector<ValueMap*>* defines = nullptr;
-        size_t definesKeyHash = 0;
-        std::vector<std::unordered_map<std::string, Effect::Property>*>* uniforms = nullptr;
+        CustomProperties* effect = nullptr;
+        std::vector<const Pass*> passes;
         int sortKey = -1;
     };
     typedef std::function<void(const View&, std::vector<StageItem>&)> StageCallback;
@@ -106,7 +103,7 @@ public:
 protected:
     void render(const View&, const Scene* scene);
     void draw(const StageItem& item);
-    void setProperty (Effect::Property& prop);
+    void setProperty (const Effect::Property& prop);
     
     struct StageInfo
     {

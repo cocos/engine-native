@@ -40,135 +40,9 @@ array
 };
 
 /**
- * @class CustomProperties
+ * @class EffectBase
  */
-renderer.CustomProperties = {
-
-/**
- * @method define
- * @param {String} arg0
- * @param {cc.Value} arg1
- */
-define : function (
-str, 
-value 
-)
-{
-},
-
-/**
- * @method CustomProperties
- * @constructor
- */
-CustomProperties : function (
-)
-{
-},
-
-};
-
-/**
- * @class Pass
- */
-renderer.PassNative = {
-
-/**
- * @method getStencilTest
- * @return {bool}
- */
-getStencilTest : function (
-)
-{
-    return false;
-},
-
-/**
- * @method setStencilBack
- */
-setStencilBack : function (
-)
-{
-},
-
-/**
- * @method getProgramName
- * @return {String}
- */
-getProgramName : function (
-)
-{
-    return ;
-},
-
-/**
- * @method setCullMode
- * @param {cc.renderer::CullMode} arg0
- */
-setCullMode : function (
-cullmode 
-)
-{
-},
-
-/**
- * @method setBlend
- */
-setBlend : function (
-)
-{
-},
-
-/**
- * @method setProgramName
- * @param {String} arg0
- */
-setProgramName : function (
-str 
-)
-{
-},
-
-/**
- * @method disableStencilTest
- */
-disableStencilTest : function (
-)
-{
-},
-
-/**
- * @method setStencilFront
- */
-setStencilFront : function (
-)
-{
-},
-
-/**
- * @method setDepth
- */
-setDepth : function (
-)
-{
-},
-
-/**
- * @method Pass
- * @constructor
-* @param {String} str
-*/
-Pass : function(
-str 
-)
-{
-},
-
-};
-
-/**
- * @class Effect
- */
-renderer.EffectNative = {
+renderer.EffectBase = {
 
 /**
  * @method getProperty
@@ -190,18 +64,6 @@ setStencilTest : function (
 bool 
 )
 {
-},
-
-/**
- * @method getTechnique
- * @param {String} arg0
- * @return {cc.renderer::Technique}
- */
-getTechnique : function (
-str 
-)
-{
-    return cc.renderer::Technique;
 },
 
 /**
@@ -227,14 +89,6 @@ cullmode
 },
 
 /**
- * @method setStencil
- */
-setStencil : function (
-)
-{
-},
-
-/**
  * @method setBlend
  */
 setBlend : function (
@@ -243,41 +97,33 @@ setBlend : function (
 },
 
 /**
- * @method getHash
- * @return {double}
+ * @method setStencil
  */
-getHash : function (
-)
-{
-    return 0;
-},
-
-/**
- * @method updateHash
- * @param {double} arg0
- */
-updateHash : function (
-double 
+setStencil : function (
 )
 {
 },
 
 /**
- * @method copy
- * @param {cc.renderer::Effect} arg0
+ * @method setProperty
+ * @param {String} arg0
+ * @param {cc.renderer::Technique::Parameter} arg1
  */
-copy : function (
-effect 
+setProperty : function (
+str, 
+parameter 
 )
 {
 },
 
 /**
- * @method clear
- */
-clear : function (
+ * @method getPasses
+* @return {Array|Array}
+*/
+getPasses : function(
 )
 {
+    return new Array();
 },
 
 /**
@@ -292,11 +138,104 @@ value
 {
 },
 
+};
+
+/**
+ * @class Effect
+ */
+renderer.EffectNative = {
+
+/**
+ * @method clear
+ */
+clear : function (
+)
+{
+},
+
+/**
+ * @method switchTechnique
+ * @param {int} arg0
+ */
+switchTechnique : function (
+int 
+)
+{
+},
+
+/**
+ * @method getPasses
+* @return {Array|Array}
+*/
+getPasses : function(
+)
+{
+    return new Array();
+},
+
+/**
+ * @method copy
+ * @param {cc.renderer::Effect} arg0
+ */
+copy : function (
+effect 
+)
+{
+},
+
 /**
  * @method Effect
  * @constructor
  */
 Effect : function (
+)
+{
+},
+
+};
+
+/**
+ * @class CustomProperties
+ */
+renderer.CustomProperties = {
+
+/**
+ * @method setEffect
+ * @param {cc.renderer::Effect} arg0
+ */
+setEffect : function (
+effect 
+)
+{
+},
+
+/**
+ * @method updateHash
+ * @param {double} arg0
+ */
+updateHash : function (
+double 
+)
+{
+},
+
+/**
+ * @method getEffect
+ * @return {cc.renderer::Effect}
+ */
+getEffect : function (
+)
+{
+    return cc.renderer::Effect;
+},
+
+/**
+ * @method CustomProperties
+ * @constructor
+ * @param {cc.renderer::Effect} arg0
+ */
+CustomProperties : function (
+effect 
 )
 {
 },
@@ -1657,11 +1596,11 @@ int
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::Effect} arg1
+ * @param {cc.renderer::CustomProperties} arg1
  */
 updateEffect : function (
 int, 
-effect 
+customproperties 
 )
 {
 },
@@ -1735,11 +1674,11 @@ clearEffect : function (
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::Effect} arg1
+ * @param {cc.renderer::CustomProperties} arg1
  */
 updateEffect : function (
 int, 
-effect 
+customproperties 
 )
 {
 },

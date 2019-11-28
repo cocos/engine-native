@@ -56,10 +56,10 @@ public:
         IARenderData();
         IARenderData(const IARenderData& o);
         ~IARenderData();
-        void setEffect(Effect* effect);
-        Effect* getEffect() const;
+        void setEffect(CustomProperties* effect);
+        CustomProperties* getEffect() const;
     private:
-        Effect* _effect = nullptr;
+        CustomProperties* _effect = nullptr;
     public:
         int meshIndex = -1;
         int verticesStart = 0;
@@ -152,7 +152,7 @@ public:
      *  @param[in] iaIndex Render data index.
      *  @param[in] effect Effect pointer.
      */
-    virtual void updateEffect(std::size_t iaIndex, Effect* effect);
+    virtual void updateEffect(std::size_t iaIndex, CustomProperties* effect);
     
     /**
      *  @brief Resets ia data.
@@ -164,7 +164,7 @@ public:
      *  @param[in] index Render data index.
      *  @return Effect pointer.
      */
-    inline Effect* getEffect(std::size_t index) const
+    inline CustomProperties* getEffect(std::size_t index) const
     {
         if (index >= _iaDatas.size())
         {
