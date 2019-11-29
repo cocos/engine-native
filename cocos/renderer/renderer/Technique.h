@@ -176,6 +176,7 @@ public:
          *  @brief Set the typed array.
          */
         void setShareValue(se::Object* jsValue);
+        void setValue(void* value);
         /*
          *  @brief Sets the texture pointer.
          */

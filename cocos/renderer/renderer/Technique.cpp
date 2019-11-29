@@ -405,6 +405,18 @@ void Technique::Parameter::setShareValue(se::Object *jsValue)
     _jsValue->getTypedArrayData(&_shareValue, (std::size_t*)&_bytes);
 }
 
+void Technique::Parameter::setValue(void* value)
+{
+    switch (_type) {
+        case Type::TEXTURE_2D:
+            setTexture((Texture*)value);
+            break;
+        default:
+            RENDERER_LOGD("Not support Parameter::setValue with type : %d", (int)_type);
+            break;
+    }
+}
+
 void Technique::Parameter::freeValue()
 {
     if (_value)

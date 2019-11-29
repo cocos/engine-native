@@ -383,21 +383,39 @@ SE_BIND_FUNC(js_renderer_EffectBase_setStencil)
 
 static bool js_renderer_EffectBase_setProperty(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cocos2d::renderer::EffectBase* cobj = (cocos2d::renderer::EffectBase*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_EffectBase_setProperty : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_renderer_EffectBase_setProperty : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        std::string arg0;
-        cocos2d::renderer::Technique::Parameter arg1;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_TechniqueParameter(args[1], &arg1);
-        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : Error processing arguments");
-        cobj->setProperty(arg0, arg1);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    do {
+        if (argc == 2) {
+            std::string arg0;
+            ok &= seval_to_std_string(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            void* arg1 = nullptr;
+            #pragma warning NO CONVERSION TO NATIVE FOR void*
+            ok = false;
+            if (!ok) { ok = true; break; }
+            cobj->setProperty(arg0, arg1);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 2) {
+            std::string arg0;
+            ok &= seval_to_std_string(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cocos2d::renderer::Technique::Parameter arg1;
+            ok &= seval_to_TechniqueParameter(args[1], &arg1);
+            if (!ok) { ok = true; break; }
+            cobj->setProperty(arg0, arg1);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_setProperty)
@@ -648,6 +666,25 @@ static bool js_renderer_CustomProperties_updateHash(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_CustomProperties_updateHash)
 
+static bool js_renderer_CustomProperties_copy(se::State& s)
+{
+    cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_CustomProperties_copy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        const cocos2d::renderer::CustomProperties* arg0 = nullptr;
+        ok &= seval_to_native_ptr(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_copy : Error processing arguments");
+        cobj->copy(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_CustomProperties_copy)
+
 static bool js_renderer_CustomProperties_getEffect(se::State& s)
 {
     cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
@@ -672,12 +709,26 @@ static bool js_renderer_CustomProperties_constructor(se::State& s)
 {
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
-    cocos2d::renderer::Effect* arg0 = nullptr;
-    ok &= seval_to_native_ptr(args[0], &arg0);
-    SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_constructor : Error processing arguments");
-    cocos2d::renderer::CustomProperties* cobj = new (std::nothrow) cocos2d::renderer::CustomProperties(arg0);
-    s.thisObject()->setPrivateData(cobj);
-    return true;
+    size_t argc = args.size();
+    do {
+        if (argc == 0) {
+            cocos2d::renderer::CustomProperties* cobj = new (std::nothrow) cocos2d::renderer::CustomProperties();
+            s.thisObject()->setPrivateData(cobj);
+            return true;
+        }
+    } while(false);
+    do {
+        if (argc == 1) {
+            cocos2d::renderer::Effect* arg0 = nullptr;
+            ok &= seval_to_native_ptr(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cocos2d::renderer::CustomProperties* cobj = new (std::nothrow) cocos2d::renderer::CustomProperties(arg0);
+            s.thisObject()->setPrivateData(cobj);
+            return true;
+        }
+    } while(false);
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
 }
 SE_BIND_CTOR(js_renderer_CustomProperties_constructor, __jsb_cocos2d_renderer_CustomProperties_class, js_cocos2d_renderer_CustomProperties_finalize)
 
@@ -700,6 +751,7 @@ bool js_register_renderer_CustomProperties(se::Object* obj)
 
     cls->defineFunction("setEffect", _SE(js_renderer_CustomProperties_setEffect));
     cls->defineFunction("updateHash", _SE(js_renderer_CustomProperties_updateHash));
+    cls->defineFunction("copy", _SE(js_renderer_CustomProperties_copy));
     cls->defineFunction("getEffect", _SE(js_renderer_CustomProperties_getEffect));
     cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_CustomProperties_finalize));
     cls->install();

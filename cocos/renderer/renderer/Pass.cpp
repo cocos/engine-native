@@ -202,11 +202,25 @@ uint32_t Pass::getState(uint32_t index) const {
     return DEFAULT_STATES[index];
 }
 
+const std::string& Pass::getStage() const {
+    const Pass* parent = this;
+    while (parent) {
+        if (parent->_stage != "") {
+            return parent->_stage;
+        }
+        parent = parent->_parent;
+    }
+    
+    return _stage;
+}
+
 void Pass::copy(const Pass& pass)
 {
     _programName = pass._programName;
     _hashName = pass._hashName;
     _parent = pass._parent;
+    
+    _stage = pass._stage;
     
     _defines = pass._defines;
     _properties = pass._properties;

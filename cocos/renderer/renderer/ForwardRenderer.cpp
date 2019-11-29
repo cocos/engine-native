@@ -417,7 +417,7 @@ void ForwardRenderer::shadowStage(const View& view, std::vector<StageItem>& item
     
     for (auto& item : items)
     {
-        const Value* def = item.effect->getDefine("CC_SHADOW_CASTING");
+        const Value* def = item.effect->getDefine("CC_CASTING_SHADOW");
         if (def && def->asBool()) {
             draw(item);
         }

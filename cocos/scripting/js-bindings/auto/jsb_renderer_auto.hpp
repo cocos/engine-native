@@ -45,6 +45,7 @@ bool js_register_cocos2d_renderer_CustomProperties(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_CustomProperties_setEffect);
 SE_DECLARE_FUNC(js_renderer_CustomProperties_updateHash);
+SE_DECLARE_FUNC(js_renderer_CustomProperties_copy);
 SE_DECLARE_FUNC(js_renderer_CustomProperties_getEffect);
 SE_DECLARE_FUNC(js_renderer_CustomProperties_CustomProperties);
 

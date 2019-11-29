@@ -106,11 +106,11 @@ setStencil : function (
 
 /**
  * @method setProperty
- * @param {String} arg0
- * @param {cc.renderer::Technique::Parameter} arg1
- */
-setProperty : function (
-str, 
+* @param {String|String} str
+* @param {void|cc.renderer::Technique::Parameter} void
+*/
+setProperty : function(
+str,
 parameter 
 )
 {
@@ -220,6 +220,16 @@ double
 },
 
 /**
+ * @method copy
+ * @param {cc.renderer::CustomProperties} arg0
+ */
+copy : function (
+customproperties 
+)
+{
+},
+
+/**
  * @method getEffect
  * @return {cc.renderer::Effect}
  */
@@ -232,9 +242,9 @@ getEffect : function (
 /**
  * @method CustomProperties
  * @constructor
- * @param {cc.renderer::Effect} arg0
- */
-CustomProperties : function (
+* @param {cc.renderer::Effect} effect
+*/
+CustomProperties : function(
 effect 
 )
 {

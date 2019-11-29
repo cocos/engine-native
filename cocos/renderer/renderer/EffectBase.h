@@ -68,6 +68,7 @@ public:
      *  @brief Sets uniform property value by name.
      */
     void setProperty(const std::string& name, const Property& property);
+    void setProperty(const std::string& name, void* value);
     /**
      *  @brief Sets cull mode.
      *  @param[in] cullMode Cull front or back or both.

@@ -138,20 +138,11 @@ void BaseRenderer::render(const View& view, const Scene* scene)
     
     // get all draw items
     _drawItems->reset();
-    int modelMask = -1;
     for (const auto& model : scene->getModels())
     {
-        modelMask = model->getCullingMask();
-        if (view.cullingByID)
-        {
-            if ((modelMask & view.cullingMask) == 0)
-                continue;
-        }
-        else
-        {
-            if (-1 != modelMask)
-                continue;
-        }
+        int modelMask = model->getCullingMask();
+        if ((modelMask & view.cullingMask) == 0)
+            continue;
         
         DrawItem* drawItem = _drawItems->add();
         model->extractDrawItem(*drawItem);
@@ -170,8 +161,16 @@ void BaseRenderer::render(const View& view, const Scene* scene)
             const DrawItem* item = _drawItems->getData(i);
             
             stageItem.passes.clear();
-            for (const Pass* p : item->effect->getPasses()) {
-                stageItem.passes.push_back(p);
+            for (const Pass* p : item->effect->getPasses())
+            {
+                if (p->getStage() == stage)
+                {
+                    stageItem.passes.push_back(p);
+                }
+            }
+            if (stageItem.passes.size() == 0)
+            {
+                continue;
             }
             
             stageItem.model = item->model;
@@ -180,7 +179,6 @@ void BaseRenderer::render(const View& view, const Scene* scene)
             stageItem.sortKey = -1;
             
             stageInfo->items.push_back(stageItem);
-            
         }
     }
     

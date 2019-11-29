@@ -1505,6 +1505,13 @@ bool ccvaluevector_to_EffectPass(const se::Object* v, cocos2d::Vector<cocos2d::r
             }
             cocos2d::renderer::Pass* cobj = new (std::nothrow) cocos2d::renderer::Pass(name, properties, defines);
             
+            // stage
+            std::string stage = "";
+            if (obj->getProperty("_stage", &passValue) && passValue.isString()) {
+                stage = passValue.toString();
+            }
+            cobj->setStage(stage);
+            
             // cull mode
             cocos2d::renderer::CullMode cullMode;
             if (obj->getProperty("_cullMode", &passValue) && passValue.isNumber()) {

@@ -84,6 +84,17 @@ void EffectBase::setProperty(const std::string& name, const Property& property)
     _dirty = true;
 }
 
+void EffectBase::setProperty(const std::string& name, void* value)
+{
+    auto& passes = getPasses();
+    for (auto& pass : passes)
+    {
+        pass->setProperty(name, value);
+    }
+
+    _dirty = true;
+}
+
 void EffectBase::setCullMode(CullMode cullMode)
 {
     auto& passes = getPasses();

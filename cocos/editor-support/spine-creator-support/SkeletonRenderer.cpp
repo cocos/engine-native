@@ -353,17 +353,12 @@ void SkeletonRenderer::render (float deltaTime) {
         }
         
 		double curHash = curTextureIndex + (curBlendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25);
-        Effect* renderEffect = assembler->getEffect(materialLen);
-        Technique::Parameter* param = nullptr;
-        Pass* pass = nullptr;
-        
+        CustomProperties* renderEffect = assembler->getEffect(materialLen);
+        bool needUpdate = false;
         if (renderEffect) {
             double renderHash = renderEffect->getHash();
             if (abs(renderHash - curHash) >= 0.01) {
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                Technique* tech = renderEffect->getTechnique(techStage);
-                cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
+                needUpdate = true;
             }
         }
         else {
@@ -372,28 +367,24 @@ void SkeletonRenderer::render (float deltaTime) {
                 assembler->reset();
                 return;
             }
-            auto effect = new cocos2d::renderer::Effect();
+            auto effect = new cocos2d::renderer::CustomProperties();
             effect->autorelease();
             effect->copy(_effect);
-            
-            Technique* tech = effect->getTechnique(techStage);
-            cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-            pass = *(passes.begin());
-            
+
             assembler->updateEffect(materialLen, effect);
             renderEffect = effect;
-            param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+            needUpdate = true;
         }
         
-        if (param) {
-            param->setTexture(texture->getNativeTexture());
+        if (needUpdate) {
+            renderEffect->setProperty(textureKey, texture->getNativeTexture());
         }
-        
-        if (pass) {
-            pass->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+
+        if (needUpdate) {
+            renderEffect->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
                            BlendOp::ADD, curBlendSrc, curBlendDst);
         }
-        
+
         renderEffect->updateHash(curHash);
 		
         // save new segment count pos field

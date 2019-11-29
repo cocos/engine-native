@@ -38,6 +38,7 @@ public:
     using Property = Technique::Parameter;
     
     CustomProperties(Effect* effect);
+    CustomProperties();
     ~CustomProperties();
     
     void updateHash(double hash) { _hash = hash; };
@@ -48,15 +49,11 @@ public:
     
     Vector<Pass*>& getPasses() { return _passes; }
     const Vector<Pass*>& getPasses() const { return _passes; }
-private:
     
-    std::unordered_map<std::string, Property> _properties;
-    ValueMap _defines;
+    void copy(const CustomProperties* effect);
+private:
     double _hash = 0;
     bool _dirty = false;
-    
-    void generateDefinesKey();
-    std::string _definesKey;
     
     Effect* _effect;
     Vector<Pass*> _passes;

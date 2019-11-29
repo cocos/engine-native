@@ -108,7 +108,7 @@ public:
     inline void disableStencilTest()           { _states[12] = false; }
     inline bool isStencilTest()                const { return getState(12); }
     
-    // front
+    // stencil front
     inline StencilFunc getStencilFuncFront()     const { return (StencilFunc)getState(13); }
     inline uint32_t getStencilRefFront()         const { return getState(14); }
     inline uint8_t getStencilMaskFront()         const { return getState(15); }
@@ -125,7 +125,7 @@ public:
                          StencilOp stencilZPassOp = StencilOp::KEEP,
                          uint8_t stencilWriteMask = 0xff);
     
-    // back
+    // stencil back
     inline StencilFunc getStencilFuncBack()      const { return (StencilFunc)getState(20); }
     inline uint32_t getStencilRefBack()          const { return getState(21); }
     inline uint8_t getStencilMaskBack()          const { return getState(22); }
@@ -143,6 +143,10 @@ public:
                         uint8_t stencilWriteMask = 0xff);
     
     uint32_t getState(uint32_t index) const;
+    
+    // stage
+    void setStage (const std::string& stage) { _stage = stage; }
+    const std::string& getStage() const;
     
     inline void reset () { memset(_states, -1, PASS_VALUE_LENGTH * sizeof(uint32_t)); }
     
@@ -182,6 +186,15 @@ public:
     {
         _properties[name] = property;
     }
+    void setProperty(const std::string& name, void* value)
+    {
+        if (_properties.end() == _properties.find(name)) {
+            return;
+        }
+        
+        auto& prop = _properties[name];
+        prop.setValue(value);
+    }
     void define(const std::string& name, const Value& value)
     {
         if (_defines[name] == value)
@@ -207,6 +220,8 @@ private:
     
     uint32_t _states[PASS_VALUE_LENGTH];
     static uint32_t* DEFAULT_STATES;
+    
+    std::string _stage = "";
 };
 
 // end of renderer group

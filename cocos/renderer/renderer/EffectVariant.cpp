@@ -29,27 +29,17 @@ CustomProperties::CustomProperties(Effect* effect)
 {
     setEffect(effect);
 }
+CustomProperties::CustomProperties()
+{
+}
 
 CustomProperties::~CustomProperties()
 {
-    _properties.clear();
-    _defines.clear();
-}
-
-void CustomProperties::generateDefinesKey()
-{
-    _definesKey = "";
-    for (auto& def : _defines) {
-        _definesKey += def.first + def.second.asString();
-    }
 }
 
 void CustomProperties::setEffect(Effect *effect)
 {
     _effect = effect;
-    
-    _defines.clear();
-    _properties.clear();
     _dirty = true;
     
     auto& passes = effect->getPasses();
@@ -57,6 +47,20 @@ void CustomProperties::setEffect(Effect *effect)
     for (size_t i = 0, l = passes.size(); i < l; i++) {
         Pass* pass = passes.at(i);
         _passes.pushBack(new Pass(pass->getProgramName(), pass));
+    }
+}
+
+void CustomProperties::copy(const CustomProperties* effect)
+{
+    _effect = effect->_effect;
+    _dirty = true;
+    
+    auto& passes = effect->getPasses();
+    _passes.clear();
+    for (size_t i = 0, l = passes.size(); i < l; i++) {
+        Pass* pass = new Pass();
+        pass->copy(*passes.at(i));
+        _passes.pushBack(pass);
     }
 }
 
