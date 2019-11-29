@@ -76,7 +76,7 @@ void Model::setInputAssembler(const InputAssembler& ia)
     _inputAssembler = ia;
 }
 
-void Model::setEffect(CustomProperties* effect, CustomProperties* customProperties)
+void Model::setEffect(EffectVariant* effect, EffectVariant* EffectVariant)
 {
     if (_effect != effect)
     {

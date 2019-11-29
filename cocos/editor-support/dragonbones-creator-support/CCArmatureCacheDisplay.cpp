@@ -278,7 +278,7 @@ void CCArmatureCacheDisplay::render(float dt)
         blendMode = (BlendMode)segment->blendMode;
 
         effectHash = textureHandle + ((uint8_t)blendMode << 16) + ((uint8_t)_batch << 24);
-        CustomProperties* renderEffect = assembler->getEffect(segIndex);
+        EffectVariant* renderEffect = assembler->getEffect(segIndex);
 
         bool needUpdate = false;
         if (renderEffect)
@@ -297,7 +297,7 @@ void CCArmatureCacheDisplay::render(float dt)
                 assembler->reset();
                 return;
             }
-            auto effect = new cocos2d::renderer::CustomProperties();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
 

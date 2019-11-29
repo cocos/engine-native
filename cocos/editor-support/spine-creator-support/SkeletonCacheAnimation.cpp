@@ -326,7 +326,7 @@ namespace spine {
             textureHandle = segment->getTexture()->getNativeTexture()->getHandle();
             blendMode = segment->blendMode;
             effectHash = textureHandle + (blendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25);
-            CustomProperties* renderEffect = assembler->getEffect(segIndex);
+            EffectVariant* renderEffect = assembler->getEffect(segIndex);
             bool needUpdate = false;
             if (renderEffect) {
                 double renderHash = renderEffect->getHash();
@@ -340,7 +340,7 @@ namespace spine {
                     assembler->reset();
                     return;
                 }
-                auto effect = new cocos2d::renderer::CustomProperties();
+                auto effect = new cocos2d::renderer::EffectVariant();
                 effect->autorelease();
                 effect->copy(_effect);
                 

@@ -353,7 +353,7 @@ void SkeletonRenderer::render (float deltaTime) {
         }
         
 		double curHash = curTextureIndex + (curBlendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25);
-        CustomProperties* renderEffect = assembler->getEffect(materialLen);
+        EffectVariant* renderEffect = assembler->getEffect(materialLen);
         bool needUpdate = false;
         if (renderEffect) {
             double renderHash = renderEffect->getHash();
@@ -367,7 +367,7 @@ void SkeletonRenderer::render (float deltaTime) {
                 assembler->reset();
                 return;
             }
-            auto effect = new cocos2d::renderer::CustomProperties();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
 

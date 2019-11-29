@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <vector>
 #include "../../base/CCVector.h"
-#include "renderer/CustomProperties.hpp"
+#include "renderer/EffectVariant.hpp"
 
 RENDERER_BEGIN
 
@@ -65,7 +65,7 @@ public:
     /**
      * Apply correct stencil states to the Effect
      */
-    CustomProperties* handleEffect(CustomProperties* effect);
+    EffectVariant* handleEffect(EffectVariant* effect);
     /**
      * Add a mask to the stack
      */

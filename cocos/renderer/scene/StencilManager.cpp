@@ -48,7 +48,7 @@ void StencilManager::reset ()
     _stage = Stage::DISABLED;
 }
 
-CustomProperties* StencilManager::handleEffect (CustomProperties* effect)
+EffectVariant* StencilManager::handleEffect (EffectVariant* effect)
 {
     Vector<Pass*>& passes = (Vector<Pass*>&)effect->getPasses();
     if (_stage == Stage::DISABLED)

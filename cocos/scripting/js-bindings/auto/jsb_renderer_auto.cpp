@@ -625,94 +625,94 @@ bool js_register_renderer_Effect(se::Object* obj)
     return true;
 }
 
-se::Object* __jsb_cocos2d_renderer_CustomProperties_proto = nullptr;
-se::Class* __jsb_cocos2d_renderer_CustomProperties_class = nullptr;
+se::Object* __jsb_cocos2d_renderer_EffectVariant_proto = nullptr;
+se::Class* __jsb_cocos2d_renderer_EffectVariant_class = nullptr;
 
-static bool js_renderer_CustomProperties_setEffect(se::State& s)
+static bool js_renderer_EffectVariant_setEffect(se::State& s)
 {
-    cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_CustomProperties_setEffect : Invalid Native Object");
+    cocos2d::renderer::EffectVariant* cobj = (cocos2d::renderer::EffectVariant*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_EffectVariant_setEffect : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         cocos2d::renderer::Effect* arg0 = nullptr;
         ok &= seval_to_native_ptr(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_setEffect : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setEffect : Error processing arguments");
         cobj->setEffect(arg0);
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_renderer_CustomProperties_setEffect)
+SE_BIND_FUNC(js_renderer_EffectVariant_setEffect)
 
-static bool js_renderer_CustomProperties_updateHash(se::State& s)
+static bool js_renderer_EffectVariant_updateHash(se::State& s)
 {
-    cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_CustomProperties_updateHash : Invalid Native Object");
+    cocos2d::renderer::EffectVariant* cobj = (cocos2d::renderer::EffectVariant*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_EffectVariant_updateHash : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         double arg0 = 0;
         ok &= seval_to_double(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_updateHash : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_updateHash : Error processing arguments");
         cobj->updateHash(arg0);
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_renderer_CustomProperties_updateHash)
+SE_BIND_FUNC(js_renderer_EffectVariant_updateHash)
 
-static bool js_renderer_CustomProperties_copy(se::State& s)
+static bool js_renderer_EffectVariant_copy(se::State& s)
 {
-    cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_CustomProperties_copy : Invalid Native Object");
+    cocos2d::renderer::EffectVariant* cobj = (cocos2d::renderer::EffectVariant*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_EffectVariant_copy : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        const cocos2d::renderer::CustomProperties* arg0 = nullptr;
+        const cocos2d::renderer::EffectVariant* arg0 = nullptr;
         ok &= seval_to_native_ptr(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_copy : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_copy : Error processing arguments");
         cobj->copy(arg0);
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_renderer_CustomProperties_copy)
+SE_BIND_FUNC(js_renderer_EffectVariant_copy)
 
-static bool js_renderer_CustomProperties_getEffect(se::State& s)
+static bool js_renderer_EffectVariant_getEffect(se::State& s)
 {
-    cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_CustomProperties_getEffect : Invalid Native Object");
+    cocos2d::renderer::EffectVariant* cobj = (cocos2d::renderer::EffectVariant*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_EffectVariant_getEffect : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::renderer::Effect* result = cobj->getEffect();
         ok &= native_ptr_to_seval<cocos2d::renderer::Effect>((cocos2d::renderer::Effect*)result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_getEffect : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_getEffect : Error processing arguments");
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_renderer_CustomProperties_getEffect)
+SE_BIND_FUNC(js_renderer_EffectVariant_getEffect)
 
-SE_DECLARE_FINALIZE_FUNC(js_cocos2d_renderer_CustomProperties_finalize)
+SE_DECLARE_FINALIZE_FUNC(js_cocos2d_renderer_EffectVariant_finalize)
 
-static bool js_renderer_CustomProperties_constructor(se::State& s)
+static bool js_renderer_EffectVariant_constructor(se::State& s)
 {
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
     size_t argc = args.size();
     do {
         if (argc == 0) {
-            cocos2d::renderer::CustomProperties* cobj = new (std::nothrow) cocos2d::renderer::CustomProperties();
+            cocos2d::renderer::EffectVariant* cobj = new (std::nothrow) cocos2d::renderer::EffectVariant();
             s.thisObject()->setPrivateData(cobj);
             return true;
         }
@@ -722,7 +722,7 @@ static bool js_renderer_CustomProperties_constructor(se::State& s)
             cocos2d::renderer::Effect* arg0 = nullptr;
             ok &= seval_to_native_ptr(args[0], &arg0);
             if (!ok) { ok = true; break; }
-            cocos2d::renderer::CustomProperties* cobj = new (std::nothrow) cocos2d::renderer::CustomProperties(arg0);
+            cocos2d::renderer::EffectVariant* cobj = new (std::nothrow) cocos2d::renderer::EffectVariant(arg0);
             s.thisObject()->setPrivateData(cobj);
             return true;
         }
@@ -730,35 +730,35 @@ static bool js_renderer_CustomProperties_constructor(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_CTOR(js_renderer_CustomProperties_constructor, __jsb_cocos2d_renderer_CustomProperties_class, js_cocos2d_renderer_CustomProperties_finalize)
+SE_BIND_CTOR(js_renderer_EffectVariant_constructor, __jsb_cocos2d_renderer_EffectVariant_class, js_cocos2d_renderer_EffectVariant_finalize)
 
 
 
 extern se::Object* __jsb_cocos2d_renderer_EffectBase_proto;
 
-static bool js_cocos2d_renderer_CustomProperties_finalize(se::State& s)
+static bool js_cocos2d_renderer_EffectVariant_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::renderer::CustomProperties)", s.nativeThisObject());
-    cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::renderer::EffectVariant)", s.nativeThisObject());
+    cocos2d::renderer::EffectVariant* cobj = (cocos2d::renderer::EffectVariant*)s.nativeThisObject();
     cobj->release();
     return true;
 }
-SE_BIND_FINALIZE_FUNC(js_cocos2d_renderer_CustomProperties_finalize)
+SE_BIND_FINALIZE_FUNC(js_cocos2d_renderer_EffectVariant_finalize)
 
-bool js_register_renderer_CustomProperties(se::Object* obj)
+bool js_register_renderer_EffectVariant(se::Object* obj)
 {
-    auto cls = se::Class::create("CustomProperties", obj, __jsb_cocos2d_renderer_EffectBase_proto, _SE(js_renderer_CustomProperties_constructor));
+    auto cls = se::Class::create("EffectVariant", obj, __jsb_cocos2d_renderer_EffectBase_proto, _SE(js_renderer_EffectVariant_constructor));
 
-    cls->defineFunction("setEffect", _SE(js_renderer_CustomProperties_setEffect));
-    cls->defineFunction("updateHash", _SE(js_renderer_CustomProperties_updateHash));
-    cls->defineFunction("copy", _SE(js_renderer_CustomProperties_copy));
-    cls->defineFunction("getEffect", _SE(js_renderer_CustomProperties_getEffect));
-    cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_CustomProperties_finalize));
+    cls->defineFunction("setEffect", _SE(js_renderer_EffectVariant_setEffect));
+    cls->defineFunction("updateHash", _SE(js_renderer_EffectVariant_updateHash));
+    cls->defineFunction("copy", _SE(js_renderer_EffectVariant_copy));
+    cls->defineFunction("getEffect", _SE(js_renderer_EffectVariant_getEffect));
+    cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_EffectVariant_finalize));
     cls->install();
-    JSBClassType::registerClass<cocos2d::renderer::CustomProperties>(cls);
+    JSBClassType::registerClass<cocos2d::renderer::EffectVariant>(cls);
 
-    __jsb_cocos2d_renderer_CustomProperties_proto = cls->getProto();
-    __jsb_cocos2d_renderer_CustomProperties_class = cls;
+    __jsb_cocos2d_renderer_EffectVariant_proto = cls->getProto();
+    __jsb_cocos2d_renderer_EffectVariant_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -3481,7 +3481,7 @@ static bool js_renderer_Assembler_updateEffect(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 2) {
         size_t arg0 = 0;
-        cocos2d::renderer::CustomProperties* arg1 = nullptr;
+        cocos2d::renderer::EffectVariant* arg1 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
         ok &= seval_to_native_ptr(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_renderer_Assembler_updateEffect : Error processing arguments");
@@ -3493,23 +3493,23 @@ static bool js_renderer_Assembler_updateEffect(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Assembler_updateEffect)
 
-static bool js_renderer_Assembler_getCustomProperties(se::State& s)
+static bool js_renderer_Assembler_getEffectVariant(se::State& s)
 {
     cocos2d::renderer::Assembler* cobj = (cocos2d::renderer::Assembler*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_Assembler_getCustomProperties : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_renderer_Assembler_getEffectVariant : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        cocos2d::renderer::CustomProperties* result = cobj->getCustomProperties();
-        ok &= native_ptr_to_seval<cocos2d::renderer::CustomProperties>((cocos2d::renderer::CustomProperties*)result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_renderer_Assembler_getCustomProperties : Error processing arguments");
+        cocos2d::renderer::EffectVariant* result = cobj->getEffectVariant();
+        ok &= native_ptr_to_seval<cocos2d::renderer::EffectVariant>((cocos2d::renderer::EffectVariant*)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_renderer_Assembler_getEffectVariant : Error processing arguments");
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_renderer_Assembler_getCustomProperties)
+SE_BIND_FUNC(js_renderer_Assembler_getEffectVariant)
 
 static bool js_renderer_Assembler_updateIndicesRange(se::State& s)
 {
@@ -3549,24 +3549,24 @@ static bool js_renderer_Assembler_ignoreOpacityFlag(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Assembler_ignoreOpacityFlag)
 
-static bool js_renderer_Assembler_setCustomProperties(se::State& s)
+static bool js_renderer_Assembler_setEffectVariant(se::State& s)
 {
     cocos2d::renderer::Assembler* cobj = (cocos2d::renderer::Assembler*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_Assembler_setCustomProperties : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_renderer_Assembler_setEffectVariant : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::renderer::CustomProperties* arg0 = nullptr;
+        cocos2d::renderer::EffectVariant* arg0 = nullptr;
         ok &= seval_to_native_ptr(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_Assembler_setCustomProperties : Error processing arguments");
-        cobj->setCustomProperties(arg0);
+        SE_PRECONDITION2(ok, false, "js_renderer_Assembler_setEffectVariant : Error processing arguments");
+        cobj->setEffectVariant(arg0);
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_renderer_Assembler_setCustomProperties)
+SE_BIND_FUNC(js_renderer_Assembler_setEffectVariant)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_renderer_Assembler_finalize)
 
@@ -3611,10 +3611,10 @@ bool js_register_renderer_Assembler(se::Object* obj)
     cls->defineFunction("setRenderDataList", _SE(js_renderer_Assembler_setRenderDataList));
     cls->defineFunction("updateMeshIndex", _SE(js_renderer_Assembler_updateMeshIndex));
     cls->defineFunction("updateEffect", _SE(js_renderer_Assembler_updateEffect));
-    cls->defineFunction("getCustomProperties", _SE(js_renderer_Assembler_getCustomProperties));
+    cls->defineFunction("getEffectVariant", _SE(js_renderer_Assembler_getEffectVariant));
     cls->defineFunction("updateIndicesRange", _SE(js_renderer_Assembler_updateIndicesRange));
     cls->defineFunction("ignoreOpacityFlag", _SE(js_renderer_Assembler_ignoreOpacityFlag));
-    cls->defineFunction("setCustomProperties", _SE(js_renderer_Assembler_setCustomProperties));
+    cls->defineFunction("setEffectVariant", _SE(js_renderer_Assembler_setEffectVariant));
     cls->defineFunction("ctor", _SE(js_renderer_Assembler_ctor));
     cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_Assembler_finalize));
     cls->install();
@@ -3655,7 +3655,7 @@ static bool js_renderer_CustomAssembler_updateEffect(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 2) {
         size_t arg0 = 0;
-        cocos2d::renderer::CustomProperties* arg1 = nullptr;
+        cocos2d::renderer::EffectVariant* arg1 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
         ok &= seval_to_native_ptr(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_renderer_CustomAssembler_updateEffect : Error processing arguments");
@@ -4441,7 +4441,7 @@ bool register_all_renderer(se::Object* obj)
     js_register_renderer_SlicedSprite3D(ns);
     js_register_renderer_Effect(ns);
     js_register_renderer_MeshAssembler(ns);
-    js_register_renderer_CustomProperties(ns);
+    js_register_renderer_EffectVariant(ns);
     js_register_renderer_MaskAssembler(ns);
     js_register_renderer_Light(ns);
     js_register_renderer_NodeMemPool(ns);

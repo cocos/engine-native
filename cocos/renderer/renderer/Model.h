@@ -33,7 +33,7 @@
 #include "../Macro.h"
 #include "InputAssembler.h"
 #include "../gfx/DeviceGraphics.h"
-#include "CustomProperties.hpp"
+#include "EffectVariant.hpp"
 #include "../scene/NodeProxy.hpp"
 
 RENDERER_BEGIN
@@ -51,7 +51,7 @@ struct DrawItem
 {
     Model* model = nullptr;
     InputAssembler* ia = nullptr;
-    CustomProperties* effect = nullptr;
+    EffectVariant* effect = nullptr;
 };
 
 class Model;
@@ -103,7 +103,7 @@ public:
     /**
      *  @brief Adds an effect.
      */
-    void setEffect(CustomProperties* effect, CustomProperties* customProperties);
+    void setEffect(EffectVariant* effect, EffectVariant* EffectVariant);
     /**
      *  @brief Set user key.
      */
@@ -129,7 +129,7 @@ private:
     
     NodeProxy* _node = nullptr;
     Mat4 _worldMatrix;
-    CustomProperties* _effect = nullptr;
+    EffectVariant* _effect = nullptr;
     
     InputAssembler _inputAssembler;
     bool _dynamicIA = false;

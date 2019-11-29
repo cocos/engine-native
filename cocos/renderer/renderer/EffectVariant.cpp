@@ -22,22 +22,22 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CustomProperties.hpp"
+#include "EffectVariant.hpp"
 
 RENDERER_BEGIN
-CustomProperties::CustomProperties(Effect* effect)
+EffectVariant::EffectVariant(Effect* effect)
 {
     setEffect(effect);
 }
-CustomProperties::CustomProperties()
+EffectVariant::EffectVariant()
 {
 }
 
-CustomProperties::~CustomProperties()
+EffectVariant::~EffectVariant()
 {
 }
 
-void CustomProperties::setEffect(Effect *effect)
+void EffectVariant::setEffect(Effect *effect)
 {
     _effect = effect;
     _dirty = true;
@@ -50,7 +50,7 @@ void CustomProperties::setEffect(Effect *effect)
     }
 }
 
-void CustomProperties::copy(const CustomProperties* effect)
+void EffectVariant::copy(const EffectVariant* effect)
 {
     _effect = effect->_effect;
     _dirty = true;

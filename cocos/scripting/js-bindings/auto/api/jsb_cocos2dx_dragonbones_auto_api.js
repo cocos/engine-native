@@ -2405,10 +2405,10 @@ func
 
 /**
  * @method setEffect
- * @param {cc.renderer::CustomProperties} arg0
+ * @param {cc.renderer::EffectVariant} arg0
  */
 setEffect : function (
-customproperties 
+EffectVariant 
 )
 {
 },
@@ -2912,10 +2912,10 @@ onEnable : function (
 
 /**
  * @method setEffect
- * @param {cc.renderer::CustomProperties} arg0
+ * @param {cc.renderer::EffectVariant} arg0
  */
 setEffect : function (
-customproperties 
+EffectVariant 
 )
 {
 },

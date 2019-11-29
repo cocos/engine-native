@@ -32,14 +32,14 @@
 
 RENDERER_BEGIN
 
-class CustomProperties : public EffectBase
+class EffectVariant : public EffectBase
 {
 public:
     using Property = Technique::Parameter;
     
-    CustomProperties(Effect* effect);
-    CustomProperties();
-    ~CustomProperties();
+    EffectVariant(Effect* effect);
+    EffectVariant();
+    ~EffectVariant();
     
     void updateHash(double hash) { _hash = hash; };
     const double getHash() const {return _hash; };
@@ -50,7 +50,7 @@ public:
     Vector<Pass*>& getPasses() { return _passes; }
     const Vector<Pass*>& getPasses() const { return _passes; }
     
-    void copy(const CustomProperties* effect);
+    void copy(const EffectVariant* effect);
 private:
     double _hash = 0;
     bool _dirty = false;

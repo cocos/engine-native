@@ -41,7 +41,7 @@
 #include "base/CCMap.h"
 #include "middleware-adapter.h"
 #include "base/ccMacros.h"
-#include "renderer/renderer/CustomProperties.hpp"
+#include "renderer/renderer/EffectVariant.hpp"
 
 namespace spine {
 
@@ -119,7 +119,7 @@ namespace spine {
             CC_SAFE_RETAIN(_nodeProxy);
         }
         
-        void setEffect(cocos2d::renderer::CustomProperties* effect) {
+        void setEffect(cocos2d::renderer::EffectVariant* effect) {
             if (effect == _effect) return;
             CC_SAFE_RELEASE(_effect);
             _effect = effect;
@@ -186,7 +186,7 @@ namespace spine {
         
         cocos2d::middleware::IOTypedArray* _debugBuffer = nullptr;
         cocos2d::renderer::NodeProxy* _nodeProxy = nullptr;
-        cocos2d::renderer::CustomProperties* _effect = nullptr;
+        cocos2d::renderer::EffectVariant* _effect = nullptr;
     };
 
 }

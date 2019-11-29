@@ -195,9 +195,9 @@ Effect : function (
 };
 
 /**
- * @class CustomProperties
+ * @class EffectVariant
  */
-renderer.CustomProperties = {
+renderer.EffectVariant = {
 
 /**
  * @method setEffect
@@ -221,10 +221,10 @@ double
 
 /**
  * @method copy
- * @param {cc.renderer::CustomProperties} arg0
+ * @param {cc.renderer::EffectVariant} arg0
  */
 copy : function (
-customproperties 
+EffectVariant 
 )
 {
 },
@@ -240,11 +240,11 @@ getEffect : function (
 },
 
 /**
- * @method CustomProperties
+ * @method EffectVariant
  * @constructor
 * @param {cc.renderer::Effect} effect
 */
-CustomProperties : function(
+EffectVariant : function(
 effect 
 )
 {
@@ -1606,23 +1606,23 @@ int
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::CustomProperties} arg1
+ * @param {cc.renderer::EffectVariant} arg1
  */
 updateEffect : function (
 int, 
-customproperties 
+EffectVariant 
 )
 {
 },
 
 /**
- * @method getCustomProperties
- * @return {cc.renderer::CustomProperties}
+ * @method getEffectVariant
+ * @return {cc.renderer::EffectVariant}
  */
-getCustomProperties : function (
+getEffectVariant : function (
 )
 {
-    return cc.renderer::CustomProperties;
+    return cc.renderer::EffectVariant;
 },
 
 /**
@@ -1648,11 +1648,11 @@ ignoreOpacityFlag : function (
 },
 
 /**
- * @method setCustomProperties
- * @param {cc.renderer::CustomProperties} arg0
+ * @method setEffectVariant
+ * @param {cc.renderer::EffectVariant} arg0
  */
-setCustomProperties : function (
-customproperties 
+setEffectVariant : function (
+EffectVariant 
 )
 {
 },
@@ -1684,11 +1684,11 @@ clearEffect : function (
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::CustomProperties} arg1
+ * @param {cc.renderer::EffectVariant} arg1
  */
 updateEffect : function (
 int, 
-customproperties 
+EffectVariant 
 )
 {
 },

@@ -38,16 +38,16 @@ SE_DECLARE_FUNC(js_renderer_Effect_getPasses);
 SE_DECLARE_FUNC(js_renderer_Effect_copy);
 SE_DECLARE_FUNC(js_renderer_Effect_Effect);
 
-extern se::Object* __jsb_cocos2d_renderer_CustomProperties_proto;
-extern se::Class* __jsb_cocos2d_renderer_CustomProperties_class;
+extern se::Object* __jsb_cocos2d_renderer_EffectVariant_proto;
+extern se::Class* __jsb_cocos2d_renderer_EffectVariant_class;
 
-bool js_register_cocos2d_renderer_CustomProperties(se::Object* obj);
+bool js_register_cocos2d_renderer_EffectVariant(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_setEffect);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_updateHash);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_copy);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_getEffect);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_CustomProperties);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_setEffect);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_updateHash);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_copy);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_getEffect);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_EffectVariant);
 
 extern se::Object* __jsb_cocos2d_renderer_AssemblerBase_proto;
 extern se::Class* __jsb_cocos2d_renderer_AssemblerBase_class;
@@ -243,10 +243,10 @@ SE_DECLARE_FUNC(js_renderer_Assembler_updateVerticesRange);
 SE_DECLARE_FUNC(js_renderer_Assembler_setRenderDataList);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateMeshIndex);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateEffect);
-SE_DECLARE_FUNC(js_renderer_Assembler_getCustomProperties);
+SE_DECLARE_FUNC(js_renderer_Assembler_getEffectVariant);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateIndicesRange);
 SE_DECLARE_FUNC(js_renderer_Assembler_ignoreOpacityFlag);
-SE_DECLARE_FUNC(js_renderer_Assembler_setCustomProperties);
+SE_DECLARE_FUNC(js_renderer_Assembler_setEffectVariant);
 SE_DECLARE_FUNC(js_renderer_Assembler_Assembler);
 
 extern se::Object* __jsb_cocos2d_renderer_CustomAssembler_proto;

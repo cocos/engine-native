@@ -61,7 +61,7 @@ public:
     {
         Model* model = nullptr;
         InputAssembler *ia = nullptr;
-        CustomProperties* effect = nullptr;
+        EffectVariant* effect = nullptr;
         std::vector<const Pass*> passes;
         int sortKey = -1;
     };

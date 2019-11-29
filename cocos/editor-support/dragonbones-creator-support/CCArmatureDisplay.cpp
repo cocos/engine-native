@@ -253,7 +253,7 @@ void CCArmatureDisplay::traverseArmature(Armature* armature, float parentOpacity
         
         double curHash = _curTextureIndex + ((uint8_t)slot->_blendMode << 16) + ((uint8_t)_batch << 24);
         
-        CustomProperties* renderEffect = _assembler->getEffect(_materialLen);
+        EffectVariant* renderEffect = _assembler->getEffect(_materialLen);
         bool needUpdate = false;
         if (renderEffect)
         {
@@ -271,7 +271,7 @@ void CCArmatureDisplay::traverseArmature(Armature* armature, float parentOpacity
                 _assembler->reset();
                 return;
             }
-            auto effect = new cocos2d::renderer::CustomProperties();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
             

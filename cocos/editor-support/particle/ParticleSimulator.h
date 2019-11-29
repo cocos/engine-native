@@ -28,7 +28,7 @@
 #include <vector>
 #include "IOBuffer.h"
 #include "renderer/scene/NodeProxy.hpp"
-#include "renderer/renderer/CustomProperties.hpp"
+#include "renderer/renderer/EffectVariant.hpp"
 #include "MiddlewareManager.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 
@@ -150,7 +150,7 @@ public:
         CC_SAFE_RETAIN(_nodeProxy);
     }
     
-    void setEffect(cocos2d::renderer::CustomProperties* effect)
+    void setEffect(cocos2d::renderer::EffectVariant* effect)
     {
         CC_SAFE_RELEASE(_effect);
         _effect = effect;
@@ -237,7 +237,7 @@ private:
     stopCallback                    _stopCallback = nullptr;
     cocos2d::renderer::NodeProxy*   _nodeProxy = nullptr;
     std::vector<float>              _uv;
-    cocos2d::renderer::CustomProperties*      _effect = nullptr;
+    cocos2d::renderer::EffectVariant*      _effect = nullptr;
     
     cocos2d::Vec3      _gravity;
     cocos2d::Vec3      _sourcePos;

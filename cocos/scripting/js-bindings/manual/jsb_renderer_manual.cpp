@@ -151,9 +151,9 @@ static bool js_renderer_Effect_setProperty(se::State& s)
     if (argc == 2) {
         std::string arg0;
         ok &= seval_to_std_string(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_setProperty : Name Error");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Name Error");
         ok &= seval_to_Effect_setProperty(arg0, args[1], cobj);
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_setProperty : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Error processing arguments");
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -413,26 +413,26 @@ static bool js_renderer_Effect_init(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Effect_init);
 
-static bool js_renderer_CustomProperties_setProperty(se::State& s)
+static bool js_renderer_EffectVariant_setProperty(se::State& s)
 {
-    cocos2d::renderer::CustomProperties* cobj = (cocos2d::renderer::CustomProperties*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_CustomProperties_setProperty : Invalid Native Object");
+    cocos2d::renderer::EffectVariant* cobj = (cocos2d::renderer::EffectVariant*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_EffectVariant_setProperty : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
         std::string arg0;
         ok &= seval_to_std_string(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_setProperty : Name Error");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Name Error");
         ok &= seval_to_Effect_setProperty(arg0, args[1], cobj);
-        SE_PRECONDITION2(ok, false, "js_renderer_CustomProperties_setProperty : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Error processing arguments");
         return true;
     }
     
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
-SE_BIND_FUNC(js_renderer_CustomProperties_setProperty);
+SE_BIND_FUNC(js_renderer_EffectVariant_setProperty);
 
 bool jsb_register_renderer_manual(se::Object* global)
 {
@@ -476,8 +476,8 @@ bool jsb_register_renderer_manual(se::Object* global)
 
     // Effect
     __jsb_cocos2d_renderer_Effect_proto->defineFunction("init", _SE(js_renderer_Effect_init));
-    // CustomProperties
-    __jsb_cocos2d_renderer_CustomProperties_proto->defineFunction("setProperty", _SE(js_renderer_CustomProperties_setProperty));
+    // EffectVariant
+    __jsb_cocos2d_renderer_EffectVariant_proto->defineFunction("setProperty", _SE(js_renderer_EffectVariant_setProperty));
     
     return true;
 }
