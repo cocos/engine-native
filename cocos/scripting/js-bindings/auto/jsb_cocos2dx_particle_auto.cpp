@@ -95,7 +95,7 @@ static bool js_cocos2dx_particle_ParticleSimulator_setEffect(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::renderer::Effect* arg0 = nullptr;
+        cocos2d::renderer::EffectVariant* arg0 = nullptr;
         ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_particle_ParticleSimulator_setEffect : Error processing arguments");
         cobj->setEffect(arg0);

@@ -77,9 +77,9 @@ public:
      *  @brief Gets program by template name, define settings and defines key.
      *  @note The return value needs to be released by its 'release' method.
      */
-    Program* switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<ValueMap*>& definesList);
+    Program* switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<const ValueMap*>& definesList);
     
-    const Value* getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList);
+    const Value* getValueFromDefineList(const std::string& name, const std::vector<const ValueMap*>& definesList);
 
 private:
     uint32_t getValueKey(const Value* v);

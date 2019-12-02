@@ -30,7 +30,7 @@
 #include "math/CCMath.h"
 #include "../../renderer/Effect.h"
 #include "RenderDataList.hpp"
-#include "../../renderer/CustomProperties.hpp"
+#include "../../renderer/EffectVariant.hpp"
 
 namespace se {
     class Object;
@@ -56,10 +56,10 @@ public:
         IARenderData();
         IARenderData(const IARenderData& o);
         ~IARenderData();
-        void setEffect(Effect* effect);
-        Effect* getEffect() const;
+        void setEffect(EffectVariant* effect);
+        EffectVariant* getEffect() const;
     private:
-        Effect* _effect = nullptr;
+        EffectVariant* _effect = nullptr;
     public:
         int meshIndex = -1;
         int verticesStart = 0;
@@ -152,7 +152,7 @@ public:
      *  @param[in] iaIndex Render data index.
      *  @param[in] effect Effect pointer.
      */
-    virtual void updateEffect(std::size_t iaIndex, Effect* effect);
+    virtual void updateEffect(std::size_t iaIndex, EffectVariant* effect);
     
     /**
      *  @brief Resets ia data.
@@ -164,7 +164,7 @@ public:
      *  @param[in] index Render data index.
      *  @return Effect pointer.
      */
-    inline Effect* getEffect(std::size_t index) const
+    inline EffectVariant* getEffect(std::size_t index) const
     {
         if (index >= _iaDatas.size())
         {
@@ -182,8 +182,8 @@ public:
         return _iaDatas.size();
     }
     
-    inline void setCustomProperties(CustomProperties* customProp) { _customProp = customProp;};
-    inline CustomProperties* getCustomProperties() { return _customProp;};
+    inline void setEffectVariant(EffectVariant* customProp) { _customProp = customProp;};
+    inline EffectVariant* getEffectVariant() { return _customProp;};
 protected:
     RenderDataList* _datas = nullptr;
     std::vector<IARenderData> _iaDatas;
@@ -198,7 +198,7 @@ protected:
     bool _ignoreWorldMatrix = false;
     bool _ignoreOpacityFlag = false;
     
-    CustomProperties* _customProp = nullptr;
+    EffectVariant* _customProp = nullptr;
 };
 
 // end of scene group

@@ -176,6 +176,7 @@ public:
          *  @brief Set the typed array.
          */
         void setShareValue(se::Object* jsValue);
+        void setValue(void* value);
         /*
          *  @brief Sets the texture pointer.
          */
@@ -211,9 +212,7 @@ public:
      *  @param[in] parameters All uniform parameters.
      *  @param[in] passes All passes.
      */
-    Technique(const std::vector<std::string>& stages,
-              const Vector<Pass*>& passes,
-              int layer = 0);
+    Technique(const std::string& name, const Vector<Pass*>& passes);
     
     /*
      *  @brief The default constructor.
@@ -236,6 +235,7 @@ public:
      *  @brief Gets all passes.
      */
     const Vector<Pass*>& getPasses() const { return _passes; }
+    Vector<Pass*>& getPasses() { return _passes; }
     /*
      *  @brief Gets all stageID.
      */

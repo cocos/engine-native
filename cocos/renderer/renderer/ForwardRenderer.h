@@ -69,7 +69,6 @@ private:
     void submitLightsUniforms();
     void submitShadowStageUniforms(const View& view);
     void submitOtherStagesUniforms();
-    void updateShaderDefines(StageItem& item);
     void sortItems(std::vector<StageItem>& items);
     void drawItems(const std::vector<StageItem>& items);
     void opaqueStage(const View& view, std::vector<StageItem>& items);

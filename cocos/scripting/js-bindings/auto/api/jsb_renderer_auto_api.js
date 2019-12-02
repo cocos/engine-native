@@ -40,135 +40,9 @@ array
 };
 
 /**
- * @class CustomProperties
+ * @class EffectBase
  */
-renderer.CustomProperties = {
-
-/**
- * @method define
- * @param {String} arg0
- * @param {cc.Value} arg1
- */
-define : function (
-str, 
-value 
-)
-{
-},
-
-/**
- * @method CustomProperties
- * @constructor
- */
-CustomProperties : function (
-)
-{
-},
-
-};
-
-/**
- * @class Pass
- */
-renderer.PassNative = {
-
-/**
- * @method getStencilTest
- * @return {bool}
- */
-getStencilTest : function (
-)
-{
-    return false;
-},
-
-/**
- * @method setStencilBack
- */
-setStencilBack : function (
-)
-{
-},
-
-/**
- * @method getProgramName
- * @return {String}
- */
-getProgramName : function (
-)
-{
-    return ;
-},
-
-/**
- * @method setCullMode
- * @param {cc.renderer::CullMode} arg0
- */
-setCullMode : function (
-cullmode 
-)
-{
-},
-
-/**
- * @method setBlend
- */
-setBlend : function (
-)
-{
-},
-
-/**
- * @method setProgramName
- * @param {String} arg0
- */
-setProgramName : function (
-str 
-)
-{
-},
-
-/**
- * @method disableStencilTest
- */
-disableStencilTest : function (
-)
-{
-},
-
-/**
- * @method setStencilFront
- */
-setStencilFront : function (
-)
-{
-},
-
-/**
- * @method setDepth
- */
-setDepth : function (
-)
-{
-},
-
-/**
- * @method Pass
- * @constructor
-* @param {String} str
-*/
-Pass : function(
-str 
-)
-{
-},
-
-};
-
-/**
- * @class Effect
- */
-renderer.EffectNative = {
+renderer.EffectBase = {
 
 /**
  * @method getProperty
@@ -190,18 +64,6 @@ setStencilTest : function (
 bool 
 )
 {
-},
-
-/**
- * @method getTechnique
- * @param {String} arg0
- * @return {cc.renderer::Technique}
- */
-getTechnique : function (
-str 
-)
-{
-    return cc.renderer::Technique;
 },
 
 /**
@@ -227,14 +89,6 @@ cullmode
 },
 
 /**
- * @method setStencil
- */
-setStencil : function (
-)
-{
-},
-
-/**
  * @method setBlend
  */
 setBlend : function (
@@ -243,41 +97,33 @@ setBlend : function (
 },
 
 /**
- * @method getHash
- * @return {double}
+ * @method setStencil
  */
-getHash : function (
-)
-{
-    return 0;
-},
-
-/**
- * @method updateHash
- * @param {double} arg0
- */
-updateHash : function (
-double 
+setStencil : function (
 )
 {
 },
 
 /**
- * @method copy
- * @param {cc.renderer::Effect} arg0
- */
-copy : function (
-effect 
+ * @method setProperty
+* @param {String|String} str
+* @param {void|cc.renderer::Technique::Parameter} void
+*/
+setProperty : function(
+str,
+parameter 
 )
 {
 },
 
 /**
- * @method clear
- */
-clear : function (
+ * @method getPasses
+* @return {Array|Array}
+*/
+getPasses : function(
 )
 {
+    return new Array();
 },
 
 /**
@@ -292,11 +138,114 @@ value
 {
 },
 
+};
+
+/**
+ * @class Effect
+ */
+renderer.EffectNative = {
+
+/**
+ * @method clear
+ */
+clear : function (
+)
+{
+},
+
+/**
+ * @method switchTechnique
+ * @param {int} arg0
+ */
+switchTechnique : function (
+int 
+)
+{
+},
+
+/**
+ * @method getPasses
+* @return {Array|Array}
+*/
+getPasses : function(
+)
+{
+    return new Array();
+},
+
+/**
+ * @method copy
+ * @param {cc.renderer::Effect} arg0
+ */
+copy : function (
+effect 
+)
+{
+},
+
 /**
  * @method Effect
  * @constructor
  */
 Effect : function (
+)
+{
+},
+
+};
+
+/**
+ * @class EffectVariant
+ */
+renderer.EffectVariant = {
+
+/**
+ * @method setEffect
+ * @param {cc.renderer::Effect} arg0
+ */
+setEffect : function (
+effect 
+)
+{
+},
+
+/**
+ * @method updateHash
+ * @param {double} arg0
+ */
+updateHash : function (
+double 
+)
+{
+},
+
+/**
+ * @method copy
+ * @param {cc.renderer::EffectVariant} arg0
+ */
+copy : function (
+EffectVariant 
+)
+{
+},
+
+/**
+ * @method getEffect
+ * @return {cc.renderer::Effect}
+ */
+getEffect : function (
+)
+{
+    return cc.renderer::Effect;
+},
+
+/**
+ * @method EffectVariant
+ * @constructor
+* @param {cc.renderer::Effect} effect
+*/
+EffectVariant : function(
+effect 
 )
 {
 },
@@ -1657,23 +1606,23 @@ int
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::Effect} arg1
+ * @param {cc.renderer::EffectVariant} arg1
  */
 updateEffect : function (
 int, 
-effect 
+EffectVariant 
 )
 {
 },
 
 /**
- * @method getCustomProperties
- * @return {cc.renderer::CustomProperties}
+ * @method getEffectVariant
+ * @return {cc.renderer::EffectVariant}
  */
-getCustomProperties : function (
+getEffectVariant : function (
 )
 {
-    return cc.renderer::CustomProperties;
+    return cc.renderer::EffectVariant;
 },
 
 /**
@@ -1699,11 +1648,11 @@ ignoreOpacityFlag : function (
 },
 
 /**
- * @method setCustomProperties
- * @param {cc.renderer::CustomProperties} arg0
+ * @method setEffectVariant
+ * @param {cc.renderer::EffectVariant} arg0
  */
-setCustomProperties : function (
-customproperties 
+setEffectVariant : function (
+EffectVariant 
 )
 {
 },
@@ -1735,11 +1684,11 @@ clearEffect : function (
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::Effect} arg1
+ * @param {cc.renderer::EffectVariant} arg1
  */
 updateEffect : function (
 int, 
-effect 
+EffectVariant 
 )
 {
 },

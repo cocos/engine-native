@@ -346,23 +346,10 @@ void ForwardRenderer::submitOtherStagesUniforms()
     _device->setUniformfv(cc_shadow_info, count * 4, shadowLightInfo);
 }
 
-void ForwardRenderer::updateShaderDefines(StageItem& item)
-{
-    item.defines->push_back(&_defines);
-    MathUtil::combineHash(item.definesKeyHash, _definesHash);
-}
-
 bool ForwardRenderer::compareItems(const StageItem &a, const StageItem &b)
 {
-    const Technique* techA = a.technique;
-    const Technique* techB = b.technique;
-    
-    if (techA->getLayer() != techB->getLayer()) {
-        return techA->getLayer() > techB->getLayer();
-    }
-    
-    size_t pa = techA->getPasses().size();
-    size_t pb = techB->getPasses().size();
+    size_t pa = a.passes.size();
+    size_t pb = b.passes.size();
     
     if (pa != pb) {
         return pa > pb;
@@ -381,9 +368,9 @@ void ForwardRenderer::drawItems(const std::vector<StageItem>& items)
     size_t count = _shadowLights.size();
     if (count == 0 && _numLights == 0)
     {
-        for (const auto& item : items)
+        for (size_t i = 0, l = items.size(); i < l; i++)
         {
-            draw(item);
+            draw(items.at(i));
         }
     }
     else
@@ -402,7 +389,6 @@ void ForwardRenderer::drawItems(const std::vector<StageItem>& items)
                 slots.push_back(allocTextureUnit());
             }
             _device->setTextureArray(cc_shadow_map, shadowMaps, slots);
-            updateShaderDefines(const_cast<StageItem&>(item));
             draw(item);
         }
     }
@@ -431,9 +417,8 @@ void ForwardRenderer::shadowStage(const View& view, std::vector<StageItem>& item
     
     for (auto& item : items)
     {
-        const Value* def = _programLib->getValueFromDefineList("CC_SHADOW_CASTING", *item.defines);
+        const Value* def = item.effect->getDefine("CC_CASTING_SHADOW");
         if (def && def->asBool()) {
-            updateShaderDefines(item);
             draw(item);
         }
     }

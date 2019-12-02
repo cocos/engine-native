@@ -127,9 +127,9 @@ public:
     
     void setNode(NodeProxy* node);
     void setCullingMask(int cullingMask) { _cullingMask = cullingMask; }
-    void setCurrentEffect(Effect* effect);
+    void setCurrentEffect(EffectVariant* effect);
     void setUseModel(bool useModel) { _useModel = useModel; }
-    void setCustomProperties(CustomProperties* props) { _customProps = props; };
+    void setEffectVariant(EffectVariant* props) { _customProps = props; };
 private:
     void changeCommitState(CommitState state);
 private:
@@ -143,9 +143,9 @@ private:
     NodeProxy* _node = nullptr;
     
     MeshBuffer* _buffer = nullptr;
-    Effect* _currEffect = nullptr;
+    EffectVariant* _currEffect = nullptr;
     RenderFlow* _flow = nullptr;
-    CustomProperties* _customProps = nullptr;
+    EffectVariant* _customProps = nullptr;
 
     StencilManager* _stencilMgr = nullptr;
     

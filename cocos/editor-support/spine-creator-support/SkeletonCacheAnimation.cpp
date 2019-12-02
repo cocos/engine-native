@@ -326,17 +326,12 @@ namespace spine {
             textureHandle = segment->getTexture()->getNativeTexture()->getHandle();
             blendMode = segment->blendMode;
             effectHash = textureHandle + (blendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25);
-            Effect* renderEffect = assembler->getEffect(segIndex);
-            Technique::Parameter* param = nullptr;
-            Pass* pass = nullptr;
-            
+            EffectVariant* renderEffect = assembler->getEffect(segIndex);
+            bool needUpdate = false;
             if (renderEffect) {
                 double renderHash = renderEffect->getHash();
                 if (abs(renderHash - effectHash) >= 0.01) {
-                    param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                    Technique* tech = renderEffect->getTechnique(techStage);
-                    cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                    pass = *(passes.begin());
+                    needUpdate = true;
                 }
             }
             else {
@@ -345,43 +340,38 @@ namespace spine {
                     assembler->reset();
                     return;
                 }
-                auto effect = new cocos2d::renderer::Effect();
+                auto effect = new cocos2d::renderer::EffectVariant();
                 effect->autorelease();
                 effect->copy(_effect);
                 
-                Technique* tech = effect->getTechnique(techStage);
-                cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
-                
                 assembler->updateEffect(segIndex, effect);
                 renderEffect = effect;
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+                needUpdate = true;
             }
             
-            if (param) {
-                param->setTexture(segment->getTexture()->getNativeTexture());
+            if (needUpdate) {
+                renderEffect->setProperty(textureKey, segment->getTexture()->getNativeTexture());
             }
             
-            switch (blendMode) {
-                case BlendMode_Additive:
-                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                    curBlendDst = BlendFactor::ONE;
-                    break;
-                case BlendMode_Multiply:
-                    curBlendSrc = BlendFactor::DST_COLOR;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-                    break;
-                case BlendMode_Screen:
-                    curBlendSrc = BlendFactor::ONE;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
-                    break;
-                default:
-                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-            }
-            
-            if (pass) {
-                pass->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+            if (needUpdate) {
+                switch (blendMode) {
+                    case BlendMode_Additive:
+                        curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                        curBlendDst = BlendFactor::ONE;
+                        break;
+                    case BlendMode_Multiply:
+                        curBlendSrc = BlendFactor::DST_COLOR;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                        break;
+                    case BlendMode_Screen:
+                        curBlendSrc = BlendFactor::ONE;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
+                        break;
+                    default:
+                        curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                }
+                renderEffect->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
                                BlendOp::ADD, curBlendSrc, curBlendDst);
             }
             

@@ -22,41 +22,46 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#pragma once
-
-#include <stdio.h>
-#include "../Macro.h"
-#include "Technique.h"
-#include "base/CCValue.h"
+#include "EffectVariant.hpp"
 
 RENDERER_BEGIN
-
-class CustomProperties
+EffectVariant::EffectVariant(Effect* effect)
 {
-public:
-    using Property = Technique::Parameter;
+    setEffect(effect);
+}
+EffectVariant::EffectVariant()
+{
+}
+
+EffectVariant::~EffectVariant()
+{
+}
+
+void EffectVariant::setEffect(Effect *effect)
+{
+    _effect = effect;
+    _dirty = true;
     
-    CustomProperties();
-    ~CustomProperties();
+    auto& passes = effect->getPasses();
+    _passes.clear();
+    for (size_t i = 0, l = passes.size(); i < l; i++) {
+        Pass* pass = passes.at(i);
+        _passes.pushBack(new Pass(pass->getProgramName(), pass));
+    }
+}
+
+void EffectVariant::copy(const EffectVariant* effect)
+{
+    _effect = effect->_effect;
+    _dirty = true;
     
-    void setProperty(const std::string name, const Property& property);
-    const Property& getProperty(std::string name) const;
-    void define(const std::string& name, const Value& value);
-    Value getDefine(const std::string& name) const;
-    std::unordered_map<std::string, Property>* extractProperties();
-    ValueMap* extractDefines();
-    const double getHash() const {return _hash; };
-    
-    const std::string& getDefinesKey() { return _definesKey; };
-private:
-    
-    std::unordered_map<std::string, Property> _properties;
-    ValueMap _defines;
-    double _hash = 0;
-    bool _dirty = false;
-    
-    void generateDefinesKey();
-    std::string _definesKey;
-};
+    auto& passes = effect->getPasses();
+    _passes.clear();
+    for (size_t i = 0, l = passes.size(); i < l; i++) {
+        Pass* pass = new Pass();
+        pass->copy(*passes.at(i));
+        _passes.pushBack(pass);
+    }
+}
 
 RENDERER_END

@@ -27,6 +27,7 @@
 #include "AssemblerBase.hpp"
 #include <vector>
 #include "../../renderer/InputAssembler.h"
+#include "../../renderer/EffectVariant.hpp"
 
 RENDERER_BEGIN
 
@@ -97,14 +98,14 @@ public:
      *  @param[in] index Render data index.
      *  @param[in] effect Effect pointer.
      */
-    virtual void updateEffect(std::size_t index, Effect* effect);
+    virtual void updateEffect(std::size_t index, EffectVariant* effect);
     
     /**
      *  @brief Gets the material for the given index.
      *  @param[in] index Render data index.
      *  @return Effect pointer.
      */
-    inline Effect* getEffect(std::size_t index) const
+    inline EffectVariant* getEffect(std::size_t index) const
     {
         if (index >= _effects.size())
         {
@@ -123,7 +124,7 @@ public:
     }
 protected:
     std::vector<cocos2d::renderer::InputAssembler*> _iaPool;
-    cocos2d::Vector<Effect*> _effects;
+    cocos2d::Vector<EffectVariant*> _effects;
     std::size_t _iaCount = 0;
 };
 

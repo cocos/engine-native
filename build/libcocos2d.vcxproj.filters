@@ -815,7 +815,7 @@
     <ClCompile Include="..\cocos\renderer\scene\assembler\MeshAssembler.cpp">
       <Filter>renderer\scene\assembler</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\renderer\renderer\CustomProperties.cpp">
+    <ClCompile Include="..\cocos\renderer\renderer\EffectVariant.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\particle\ParticleSimulator.cpp">
@@ -1873,7 +1873,7 @@
     <ClInclude Include="..\cocos\renderer\memop\RecyclePool.hpp">
       <Filter>renderer\scene\memop</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\renderer\renderer\CustomProperties.hpp">
+    <ClInclude Include="..\cocos\renderer\renderer\EffectVariant.hpp">
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\editor-support\particle\ParticleSimulator.h">

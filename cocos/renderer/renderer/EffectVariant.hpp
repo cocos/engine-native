@@ -1,6 +1,6 @@
 /****************************************************************************
  Copyright (c) 2018 Xiamen Yaji Software Co., Ltd.
-
+ 
  http://www.cocos2d-x.org
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,53 +22,41 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#pragma once
+
+#include <stdio.h>
+#include "../Macro.h"
+#include "Technique.h"
+#include "base/CCValue.h"
 #include "Effect.h"
-#include "Config.h"
 
 RENDERER_BEGIN
 
-Effect::Effect()
-{}
-
-void Effect::init(const Vector<Technique*>& techniques)
+class EffectVariant : public EffectBase
 {
-    _techniques = techniques;
-    switchTechnique(0);
-}
-
-Effect::~Effect()
-{
-//    RENDERER_LOGD("Effect destruction: %p", this);
-    clear();
-}
-
-void Effect::clear()
-{
-    _techniques.clear();
-}
-
-void Effect::copy(const Effect* effect)
-{
-    auto& otherTech = effect->_techniques;
-    for (auto it = otherTech.begin(); it != otherTech.end(); it ++)
-    {
-        auto tech = new Technique();
-        tech->autorelease();
-        tech->copy(**it);
-        _techniques.pushBack(tech);
-    }
+public:
+    using Property = Technique::Parameter;
     
-    switchTechnique(0);
-}
-
-void Effect::switchTechnique(int techniqueIndex)
-{
-    if (techniqueIndex >= _techniques.size())
-    {
-        CCLOGINFO("Can not switch to technique with index [%d]", techniqueIndex);
-        return;
-    }
-    _technique = _techniques.at(techniqueIndex);
-}
+    EffectVariant(Effect* effect);
+    EffectVariant();
+    ~EffectVariant();
+    
+    void updateHash(double hash) { _hash = hash; };
+    const double getHash() const {return _hash; };
+    
+    const Effect* getEffect () const { return _effect; }
+    void setEffect (Effect* effect);
+    
+    Vector<Pass*>& getPasses() { return _passes; }
+    const Vector<Pass*>& getPasses() const { return _passes; }
+    
+    void copy(const EffectVariant* effect);
+private:
+    double _hash = 0;
+    bool _dirty = false;
+    
+    Effect* _effect;
+    Vector<Pass*> _passes;
+};
 
 RENDERER_END

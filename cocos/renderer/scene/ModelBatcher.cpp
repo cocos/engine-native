@@ -114,7 +114,7 @@ void ModelBatcher::changeCommitState(CommitState state)
             break;
     }
     setCurrentEffect(nullptr);
-    setCustomProperties(nullptr);
+    setEffectVariant(nullptr);
     _commitState = state;
 }
 
@@ -141,8 +141,8 @@ void ModelBatcher::commit(NodeProxy* node, Assembler* assembler, int cullingMask
     {
         assembler->beforeFillBuffers(i);
         
-        Effect* effect = assembler->getEffect(i);
-        CustomProperties* customProp = assembler->getCustomProperties();
+        EffectVariant* effect = assembler->getEffect(i);
+        EffectVariant* customProp = assembler->getEffectVariant();
         if (!effect) continue;
 
         if (_currEffect == nullptr ||
@@ -154,7 +154,7 @@ void ModelBatcher::commit(NodeProxy* node, Assembler* assembler, int cullingMask
             
             setNode(_useModel ? node : nullptr);
             setCurrentEffect(effect);
-            setCustomProperties(customProp);
+            setEffectVariant(customProp);
             _modelMat.set(worldMat);
             _useModel = useModel;
             _cullingMask = cullingMask;
@@ -178,7 +178,7 @@ void ModelBatcher::commitIA(NodeProxy* node, CustomAssembler* assembler, int cul
 {
     changeCommitState(CommitState::Custom);
 
-    Effect* effect = assembler->getEffect(0);
+    EffectVariant* effect = assembler->getEffect(0);
     if (!effect) return;
 
     auto customIA = assembler->getIA(0);
@@ -355,7 +355,7 @@ void ModelBatcher::setNode(NodeProxy* node)
     CC_SAFE_RETAIN(_node);
 }
 
-void ModelBatcher::setCurrentEffect(Effect* effect)
+void ModelBatcher::setCurrentEffect(EffectVariant* effect)
 {
     if (_currEffect == effect)
     {

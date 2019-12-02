@@ -253,19 +253,14 @@ void CCArmatureDisplay::traverseArmature(Armature* armature, float parentOpacity
         
         double curHash = _curTextureIndex + ((uint8_t)slot->_blendMode << 16) + ((uint8_t)_batch << 24);
         
-        Effect* renderEffect = _assembler->getEffect(_materialLen);
-        Technique::Parameter* param = nullptr;
-        Pass* pass = nullptr;
-        
+        EffectVariant* renderEffect = _assembler->getEffect(_materialLen);
+        bool needUpdate = false;
         if (renderEffect)
         {
             double renderHash = renderEffect->getHash();
             if (abs(renderHash - curHash) >= 0.01)
             {
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                Technique* tech = renderEffect->getTechnique(techStage);
-                Vector<Pass*>& passes = (Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
+                needUpdate = true;
             }
         }
         else
@@ -276,27 +271,23 @@ void CCArmatureDisplay::traverseArmature(Armature* armature, float parentOpacity
                 _assembler->reset();
                 return;
             }
-            auto effect = new cocos2d::renderer::Effect();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
             
-            Technique* tech = effect->getTechnique(techStage);
-            Vector<Pass*>& passes = (Vector<Pass*>&)tech->getPasses();
-            pass = *(passes.begin());
-            
             _assembler->updateEffect(_materialLen, effect);
             renderEffect = effect;
-            param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+            needUpdate = true;
         }
         
-        if (param)
+        if (needUpdate)
         {
-            param->setTexture(texture->getNativeTexture());
+            renderEffect->setProperty(textureKey, texture->getNativeTexture());
         }
         
-        if (pass)
+        if (needUpdate)
         {
-            pass->setBlend(BlendOp::ADD, _curBlendSrc, _curBlendDst,
+            renderEffect->setBlend(BlendOp::ADD, _curBlendSrc, _curBlendDst,
                            BlendOp::ADD, _curBlendSrc, _curBlendDst);
         }
         

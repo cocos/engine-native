@@ -868,10 +868,10 @@
 		40FF7AA2216B29CC00E73029 /* VideoPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FF7A9F216B29CB00E73029 /* VideoPlayer.h */; };
 		4233799F22BB43B900E5D8A2 /* RecyclePool.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4233799C22BB43B900E5D8A2 /* RecyclePool.hpp */; };
 		423379A022BB43B900E5D8A2 /* RecyclePool.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4233799C22BB43B900E5D8A2 /* RecyclePool.hpp */; };
-		423379A322BB8DEA00E5D8A2 /* CustomProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 423379A122BB8DEA00E5D8A2 /* CustomProperties.cpp */; };
-		423379A422BB8DEA00E5D8A2 /* CustomProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 423379A122BB8DEA00E5D8A2 /* CustomProperties.cpp */; };
-		423379A522BB8DEA00E5D8A2 /* CustomProperties.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 423379A222BB8DEA00E5D8A2 /* CustomProperties.hpp */; };
-		423379A622BB8DEA00E5D8A2 /* CustomProperties.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 423379A222BB8DEA00E5D8A2 /* CustomProperties.hpp */; };
+		423379A322BB8DEA00E5D8A2 /* EffectVariant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 423379A122BB8DEA00E5D8A2 /* EffectVariant.cpp */; };
+		423379A422BB8DEA00E5D8A2 /* EffectVariant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 423379A122BB8DEA00E5D8A2 /* EffectVariant.cpp */; };
+		423379A522BB8DEA00E5D8A2 /* EffectVariant.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 423379A222BB8DEA00E5D8A2 /* EffectVariant.hpp */; };
+		423379A622BB8DEA00E5D8A2 /* EffectVariant.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 423379A222BB8DEA00E5D8A2 /* EffectVariant.hpp */; };
 		425D3FF122D86BEF00BCED11 /* Mat3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425D3FEF22D86BEF00BCED11 /* Mat3.cpp */; };
 		425D3FF222D86BEF00BCED11 /* Mat3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425D3FEF22D86BEF00BCED11 /* Mat3.cpp */; };
 		425D3FF322D86BEF00BCED11 /* Mat3.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 425D3FF022D86BEF00BCED11 /* Mat3.hpp */; };
@@ -1310,6 +1310,10 @@
 		46FDDC66202D504E00931238 /* CCApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 46FDDC65202D504D00931238 /* CCApplication.h */; };
 		46FDDC67202D504E00931238 /* CCApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 46FDDC65202D504D00931238 /* CCApplication.h */; };
 		46FDDC69202D733800931238 /* CCApplication-ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46FDDC68202D733700931238 /* CCApplication-ios.mm */; };
+		4D5296C8238F78C2007C0817 /* EffectBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D5296C6238F78C2007C0817 /* EffectBase.cpp */; };
+		4D5296C9238F78C2007C0817 /* EffectBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D5296C6238F78C2007C0817 /* EffectBase.cpp */; };
+		4D5296CA238F78C2007C0817 /* EffectBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D5296C7238F78C2007C0817 /* EffectBase.h */; };
+		4D5296CB238F78C2007C0817 /* EffectBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D5296C7238F78C2007C0817 /* EffectBase.h */; };
 		4DC57D211F7A58B5005B6546 /* xxtea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */; };
 		4DC57D331F7B840E005B6546 /* xxtea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */; };
 		4DCEC126233236D60020F8E3 /* etc2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4DCEC124233236D60020F8E3 /* etc2.cpp */; };
@@ -1917,8 +1921,8 @@
 		40FF7A9E216B29CB00E73029 /* VideoPlayer-ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "VideoPlayer-ios.mm"; sourceTree = "<group>"; };
 		40FF7A9F216B29CB00E73029 /* VideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayer.h; sourceTree = "<group>"; };
 		4233799C22BB43B900E5D8A2 /* RecyclePool.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RecyclePool.hpp; sourceTree = "<group>"; };
-		423379A122BB8DEA00E5D8A2 /* CustomProperties.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CustomProperties.cpp; sourceTree = "<group>"; };
-		423379A222BB8DEA00E5D8A2 /* CustomProperties.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CustomProperties.hpp; sourceTree = "<group>"; };
+		423379A122BB8DEA00E5D8A2 /* EffectVariant.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EffectVariant.cpp; sourceTree = "<group>"; };
+		423379A222BB8DEA00E5D8A2 /* EffectVariant.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EffectVariant.hpp; sourceTree = "<group>"; };
 		425D3FEF22D86BEF00BCED11 /* Mat3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mat3.cpp; sourceTree = "<group>"; };
 		425D3FF022D86BEF00BCED11 /* Mat3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Mat3.hpp; sourceTree = "<group>"; };
 		426947B7234ED0130044C66E /* SimpleSprite3D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleSprite3D.cpp; sourceTree = "<group>"; };
@@ -2139,6 +2143,8 @@
 		46FDDC62202D502E00931238 /* CCApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCApplication.h; path = ../CCApplication.h; sourceTree = "<group>"; };
 		46FDDC65202D504D00931238 /* CCApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCApplication.h; sourceTree = "<group>"; };
 		46FDDC68202D733700931238 /* CCApplication-ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CCApplication-ios.mm"; sourceTree = "<group>"; };
+		4D5296C6238F78C2007C0817 /* EffectBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectBase.cpp; sourceTree = "<group>"; };
+		4D5296C7238F78C2007C0817 /* EffectBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectBase.h; sourceTree = "<group>"; };
 		4DC57D1F1F7A58B5005B6546 /* xxtea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxtea.cpp; sourceTree = "<group>"; };
 		4DC57D201F7A58B5005B6546 /* xxtea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xxtea.h; sourceTree = "<group>"; };
 		4DCEC124233236D60020F8E3 /* etc2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = etc2.cpp; sourceTree = "<group>"; };
@@ -3348,38 +3354,40 @@
 		46FDDA2D202ACC6A00931238 /* renderer */ = {
 			isa = PBXGroup;
 			children = (
-				46FDDA2E202ACC6A00931238 /* INode.h */,
-				46FDDA2F202ACC6A00931238 /* Pass.cpp */,
-				46FDDA30202ACC6A00931238 /* Scene.cpp */,
-				46FDDA31202ACC6A00931238 /* ProgramLib.h */,
-				46FDDA32202ACC6A00931238 /* Config.h */,
-				46FDDA33202ACC6A00931238 /* Light.h */,
-				46FDDA34202ACC6A00931238 /* Camera.cpp */,
-				46FDDA35202ACC6A00931238 /* Camera.h */,
-				46FDDA36202ACC6A00931238 /* Light.cpp */,
 				46FDDA37202ACC6A00931238 /* Renderer.h */,
-				46FDDA38202ACC6A00931238 /* RendererUtils.h */,
+				4D5296C7238F78C2007C0817 /* EffectBase.h */,
+				4D5296C6238F78C2007C0817 /* EffectBase.cpp */,
+				46FDDA45202ACC6A00931238 /* Effect.h */,
+				46FDDA3C202ACC6A00931238 /* Effect.cpp */,
+				423379A222BB8DEA00E5D8A2 /* EffectVariant.hpp */,
+				423379A122BB8DEA00E5D8A2 /* EffectVariant.cpp */,
+				46FDDA40202ACC6A00931238 /* Pass.h */,
+				46FDDA2F202ACC6A00931238 /* Pass.cpp */,
 				46FDDA39202ACC6A00931238 /* Technique.h */,
+				46FDDA41202ACC6A00931238 /* Technique.cpp */,
+				46FDDA2E202ACC6A00931238 /* INode.h */,
+				46FDDA4A202ACC6A00931238 /* Scene.h */,
+				46FDDA30202ACC6A00931238 /* Scene.cpp */,
+				46FDDA32202ACC6A00931238 /* Config.h */,
+				46FDDA3E202ACC6A00931238 /* Config.cpp */,
+				46FDDA33202ACC6A00931238 /* Light.h */,
+				46FDDA36202ACC6A00931238 /* Light.cpp */,
+				46FDDA35202ACC6A00931238 /* Camera.h */,
+				46FDDA34202ACC6A00931238 /* Camera.cpp */,
+				46FDDA38202ACC6A00931238 /* RendererUtils.h */,
+				46FDDA42202ACC6A00931238 /* RendererUtils.cpp */,
 				46FDDA3A202ACC6A00931238 /* View.h */,
 				46FDDA3B202ACC6A00931238 /* View.cpp */,
-				46FDDA3C202ACC6A00931238 /* Effect.cpp */,
-				46FDDA3D202ACC6A00931238 /* ForwardRenderer.cpp */,
-				46FDDA3E202ACC6A00931238 /* Config.cpp */,
 				46FDDA3F202ACC6A00931238 /* BaseRenderer.h */,
-				46FDDA40202ACC6A00931238 /* Pass.h */,
-				46FDDA41202ACC6A00931238 /* Technique.cpp */,
-				46FDDA42202ACC6A00931238 /* RendererUtils.cpp */,
+				46FDDA46202ACC6A00931238 /* BaseRenderer.cpp */,
+				46FDDA4B202ACC6A00931238 /* ForwardRenderer.h */,
+				46FDDA3D202ACC6A00931238 /* ForwardRenderer.cpp */,
 				46FDDA43202ACC6A00931238 /* Model.h */,
 				46FDDA44202ACC6A00931238 /* Model.cpp */,
-				46FDDA45202ACC6A00931238 /* Effect.h */,
-				46FDDA46202ACC6A00931238 /* BaseRenderer.cpp */,
+				46FDDA31202ACC6A00931238 /* ProgramLib.h */,
 				46FDDA47202ACC6A00931238 /* ProgramLib.cpp */,
 				46FDDA48202ACC6A00931238 /* InputAssembler.h */,
 				46FDDA49202ACC6A00931238 /* InputAssembler.cpp */,
-				46FDDA4A202ACC6A00931238 /* Scene.h */,
-				46FDDA4B202ACC6A00931238 /* ForwardRenderer.h */,
-				423379A122BB8DEA00E5D8A2 /* CustomProperties.cpp */,
-				423379A222BB8DEA00E5D8A2 /* CustomProperties.hpp */,
 			);
 			path = renderer;
 			sourceTree = "<group>";
@@ -3387,34 +3395,34 @@
 		46FDDA50202ACC6A00931238 /* gfx */ = {
 			isa = PBXGroup;
 			children = (
+				46FDDA62202ACC6A00931238 /* Texture.h */,
+				46FDDA5A202ACC6A00931238 /* Texture.cpp */,
 				46FDDA51202ACC6A00931238 /* Texture2D.h */,
+				46FDDA63202ACC6A00931238 /* Texture2D.cpp */,
+				46FDDA58202ACC6A00931238 /* DeviceGraphics.h */,
 				46FDDA52202ACC6A00931238 /* DeviceGraphics.cpp */,
+				46FDDA68202ACC6A00931238 /* VertexBuffer.h */,
 				46FDDA53202ACC6A00931238 /* VertexBuffer.cpp */,
+				46FDDA66202ACC6A00931238 /* Program.h */,
 				46FDDA54202ACC6A00931238 /* Program.cpp */,
 				46FDDA55202ACC6A00931238 /* IndexBuffer.h */,
-				46FDDA56202ACC6A00931238 /* FrameBuffer.cpp */,
-				46FDDA57202ACC6A00931238 /* VertexFormat.cpp */,
-				46FDDA58202ACC6A00931238 /* DeviceGraphics.h */,
-				46FDDA59202ACC6A00931238 /* State.cpp */,
-				46FDDA5A202ACC6A00931238 /* Texture.cpp */,
+				46FDDA6C202ACC6A00931238 /* IndexBuffer.cpp */,
 				46FDDA5B202ACC6A00931238 /* FrameBuffer.h */,
+				46FDDA56202ACC6A00931238 /* FrameBuffer.cpp */,
+				46FDDA5F202ACC6A00931238 /* VertexFormat.h */,
+				46FDDA57202ACC6A00931238 /* VertexFormat.cpp */,
+				46FDDA67202ACC6A00931238 /* State.h */,
+				46FDDA59202ACC6A00931238 /* State.cpp */,
+				46FDDA69202ACC6A00931238 /* RenderTarget.h */,
 				46FDDA5C202ACC6A00931238 /* RenderTarget.cpp */,
 				46FDDA5D202ACC6A00931238 /* GFX.h */,
-				46FDDA5E202ACC6A00931238 /* RenderBuffer.cpp */,
-				46FDDA5F202ACC6A00931238 /* VertexFormat.h */,
-				46FDDA60202ACC6A00931238 /* GraphicsHandle.h */,
+				46FDDA6B202ACC6A00931238 /* GFX.cpp */,
 				46FDDA61202ACC6A00931238 /* RenderBuffer.h */,
-				46FDDA62202ACC6A00931238 /* Texture.h */,
-				46FDDA63202ACC6A00931238 /* Texture2D.cpp */,
+				46FDDA5E202ACC6A00931238 /* RenderBuffer.cpp */,
+				46FDDA60202ACC6A00931238 /* GraphicsHandle.h */,
 				46FDDA64202ACC6A00931238 /* GraphicsHandle.cpp */,
 				46FDDA65202ACC6A00931238 /* GFXUtils.h */,
-				46FDDA66202ACC6A00931238 /* Program.h */,
-				46FDDA67202ACC6A00931238 /* State.h */,
-				46FDDA68202ACC6A00931238 /* VertexBuffer.h */,
-				46FDDA69202ACC6A00931238 /* RenderTarget.h */,
 				46FDDA6A202ACC6A00931238 /* GFXUtils.cpp */,
-				46FDDA6B202ACC6A00931238 /* GFX.cpp */,
-				46FDDA6C202ACC6A00931238 /* IndexBuffer.cpp */,
 			);
 			path = gfx;
 			sourceTree = "<group>";
@@ -3747,7 +3755,6 @@
 				1A28FF751F20AFAB007A1D9D /* SRHTTPConnectMessage.h in Headers */,
 				46FDDADF202ACC6A00931238 /* RenderTarget.h in Headers */,
 				426947BB234ED0130044C66E /* SimpleSprite3D.hpp in Headers */,
-				04DBD43D22AE2DBD00DBE4CD /* SkeletonBinary.h in Headers */,
 				4617862920522469008256E1 /* Uri.h in Headers */,
 				469303902046AE05004A3D6C /* MappingUtils.hpp in Headers */,
 				1AAAC8F5205CB6E9005321B9 /* Export.h in Headers */,
@@ -3866,6 +3873,7 @@
 				1A52DB2D205BCD9200350EE3 /* ObjectWrap.h in Headers */,
 				04FB240B2328D42A0021DD02 /* ArmatureCacheMgr.h in Headers */,
 				042058CF22A61B340092DE5D /* RenderDataList.hpp in Headers */,
+				4D5296CA238F78C2007C0817 /* EffectBase.h in Headers */,
 				04F0AA02234F14BE002C3533 /* SpineObject.h in Headers */,
 				1A52DB6A205BCDC700350EE3 /* HelperMacros.h in Headers */,
 				40CEAEB120CFC86D007A3281 /* CustomEventTypes.h in Headers */,
@@ -3897,7 +3905,7 @@
 				46AE3FFF2092F3A600F3A228 /* v8_inspector_protocol_json.h in Headers */,
 				04F0A908234F14BE002C3533 /* LinkedMesh.h in Headers */,
 				046E06842185B43B00B24E2D /* EventObject.h in Headers */,
-				423379A522BB8DEA00E5D8A2 /* CustomProperties.hpp in Headers */,
+				423379A522BB8DEA00E5D8A2 /* EffectVariant.hpp in Headers */,
 				04F0A9F6234F14BE002C3533 /* ContainerUtil.h in Headers */,
 				046E06ED2185B4A500B24E2D /* JSONDataParser.h in Headers */,
 				046E06F32185B4A500B24E2D /* DataParser.h in Headers */,
@@ -4339,7 +4347,6 @@
 				1A28FF4E1F20AFAB007A1D9D /* SRDelegateController.h in Headers */,
 				04F0A9C9234F14BE002C3533 /* EventData.h in Headers */,
 				469301D0203FC696004A3D6C /* CCConfiguration.h in Headers */,
-				04DBD45A22AE2DBD00DBE4CD /* PointAttachment.h in Headers */,
 				426947BC234ED0130044C66E /* SimpleSprite3D.hpp in Headers */,
 				46FDDB6E202ADDCE00931238 /* etc1.h in Headers */,
 				461DCA3720BBFA2D00B22827 /* EditBox.h in Headers */,
@@ -4357,6 +4364,7 @@
 				50ABBD4B1925AB0000A911A9 /* Mat4.h in Headers */,
 				50ABBD531925AB0000A911A9 /* Quaternion.h in Headers */,
 				4617863E20522469008256E1 /* HttpResponse.h in Headers */,
+				4D5296CB238F78C2007C0817 /* EffectBase.h in Headers */,
 				461786542052301A008256E1 /* CCScheduler.h in Headers */,
 				04F0A98D234F14BE002C3533 /* TransformConstraintTimeline.h in Headers */,
 				046E065F2185B41B00B24E2D /* TransformObject.h in Headers */,
@@ -4457,7 +4465,7 @@
 				4617863820522469008256E1 /* HttpClient.h in Headers */,
 				423379A022BB43B900E5D8A2 /* RecyclePool.hpp in Headers */,
 				04F0A9AD234F14BE002C3533 /* EventTimeline.h in Headers */,
-				423379A622BB8DEA00E5D8A2 /* CustomProperties.hpp in Headers */,
+				423379A622BB8DEA00E5D8A2 /* EffectVariant.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4617,7 +4625,7 @@
 				1AAAC8E7205CB6E9005321B9 /* AudioEngine-inl.mm in Sources */,
 				46FDDB71202ADDCE00931238 /* base64.cpp in Sources */,
 				1AAAC873205CB647005321B9 /* jsb_cocos2dx_audioengine_auto.cpp in Sources */,
-				423379A322BB8DEA00E5D8A2 /* CustomProperties.cpp in Sources */,
+				423379A322BB8DEA00E5D8A2 /* EffectVariant.cpp in Sources */,
 				04F0AA1E234F14BE002C3533 /* AnimationStateData.cpp in Sources */,
 				04F0A9E6234F14BE002C3533 /* BoundingBoxAttachment.cpp in Sources */,
 				04F0A9E2234F14BE002C3533 /* IkConstraintTimeline.cpp in Sources */,
@@ -4659,6 +4667,7 @@
 				ED30577E1BEC76C90083C3ED /* ioapi_mem.cpp in Sources */,
 				461DCA5820C7E4BA00B22827 /* JavaScriptObjCBridge.mm in Sources */,
 				04F0A912234F14BE002C3533 /* PathConstraintPositionTimeline.cpp in Sources */,
+				4D5296C8238F78C2007C0817 /* EffectBase.cpp in Sources */,
 				4617861920522469008256E1 /* SocketIO.cpp in Sources */,
 				46FDDABF202ACC6A00931238 /* State.cpp in Sources */,
 				04F8563422ABCB9900063A20 /* TiledMapAssembler.cpp in Sources */,
@@ -4861,7 +4870,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0482F1B8228D87970019ECF7 /* StencilManager.cpp in Sources */,
-				423379A422BB8DEA00E5D8A2 /* CustomProperties.cpp in Sources */,
+				423379A422BB8DEA00E5D8A2 /* EffectVariant.cpp in Sources */,
 				04F0A953234F14BE002C3533 /* TranslateTimeline.cpp in Sources */,
 				ED30578D1BEC77550083C3ED /* unzip.cpp in Sources */,
 				46FDDA9E202ACC6A00931238 /* BaseRenderer.cpp in Sources */,
@@ -4881,7 +4890,6 @@
 				50ABC0161926664800A911A9 /* CCImage.cpp in Sources */,
 				04F0A94F234F14BE002C3533 /* IkConstraintData.cpp in Sources */,
 				425D3FF222D86BEF00BCED11 /* Mat3.cpp in Sources */,
-				04DBD40E22AE2DBD00DBE4CD /* VertexAttachment.cpp in Sources */,
 				426947BA234ED0130044C66E /* SimpleSprite3D.cpp in Sources */,
 				04F0A939234F14BE002C3533 /* Attachment.cpp in Sources */,
 				04F0AA1F234F14BE002C3533 /* AnimationStateData.cpp in Sources */,
@@ -5077,6 +5085,7 @@
 				046E06EC2185B4A500B24E2D /* DataParser.cpp in Sources */,
 				46FDDA7A202ACC6A00931238 /* Camera.cpp in Sources */,
 				461786602052607E008256E1 /* jsb_xmlhttprequest.cpp in Sources */,
+				4D5296C9238F78C2007C0817 /* EffectBase.cpp in Sources */,
 				46FDDAA0202ACC6A00931238 /* ProgramLib.cpp in Sources */,
 				4617863420522469008256E1 /* Uri.cpp in Sources */,
 				4008729520CE20C2002EB77B /* jsb_cocos2dx_network_manual.cpp in Sources */,

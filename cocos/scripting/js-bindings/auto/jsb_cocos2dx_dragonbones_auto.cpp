@@ -6355,7 +6355,7 @@ static bool js_cocos2dx_dragonbones_CCArmatureDisplay_setEffect(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::renderer::Effect* arg0 = nullptr;
+        cocos2d::renderer::EffectVariant* arg0 = nullptr;
         ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCArmatureDisplay_setEffect : Error processing arguments");
         cobj->setEffect(arg0);
@@ -7451,7 +7451,7 @@ static bool js_cocos2dx_dragonbones_CCArmatureCacheDisplay_setEffect(se::State& 
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::renderer::Effect* arg0 = nullptr;
+        cocos2d::renderer::EffectVariant* arg0 = nullptr;
         ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCArmatureCacheDisplay_setEffect : Error processing arguments");
         cobj->setEffect(arg0);

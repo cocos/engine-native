@@ -35,14 +35,14 @@
 namespace {
     uint32_t _shdID = 0;
 
-    std::string generateDefines(const std::vector<cocos2d::ValueMap*>& definesList)
+    std::string generateDefines(const std::vector<const cocos2d::ValueMap*>& definesList)
     {
         std::string ret;
         std::string v;
         cocos2d::ValueMap cache;
         for (int i = (int)definesList.size() - 1; i >= 0; i--)
         {
-            cocos2d::ValueMap* defMap = definesList[i];
+            const cocos2d::ValueMap* defMap = definesList[i];
             for (const auto& def : *defMap)
             {
                 if (cache.find(def.first) != cache.end())
@@ -68,13 +68,13 @@ namespace {
         return ret;
     }
 
-    std::string replaceMacroNums(const std::string str, const std::vector<cocos2d::ValueMap*>& definesList)
+    std::string replaceMacroNums(const std::string str, const std::vector<const cocos2d::ValueMap*>& definesList)
     {
         cocos2d::ValueMap cache;
         std::string tmp = str;
         for (int i = (int)definesList.size() - 1; i >= 0; i--)
         {
-            cocos2d::ValueMap* defMap = definesList[i];
+            const cocos2d::ValueMap* defMap = definesList[i];
 
             for (const auto& def : *defMap)
             {
@@ -271,7 +271,7 @@ void ProgramLib::define(const std::string& name, const std::string& vert, const 
     templ.defines = defines;
 }
 
-Program* ProgramLib::switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<ValueMap*>& definesList)
+Program* ProgramLib::switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<const ValueMap*>& definesList)
 {
     size_t programHash = 0;
     MathUtil::combineHash(programHash, programNameHash);
@@ -311,11 +311,11 @@ Program* ProgramLib::switchProgram(const size_t programNameHash, const size_t de
     return program;
 }
 
-const Value* ProgramLib::getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList)
+const Value* ProgramLib::getValueFromDefineList(const std::string& name, const std::vector<const ValueMap*>& definesList)
 {
     for (int i = (int)definesList.size() - 1; i >= 0; i--)
     {
-        ValueMap* defines = definesList[i];
+        const ValueMap* defines = definesList[i];
         auto iter = defines->find(name);
         if (iter != defines->end())
         {
