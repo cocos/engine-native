@@ -22,7 +22,7 @@ bool GLES2Shader::Initialize(const GFXShaderInfo &info) {
   gpu_shader_->name = name_;
   gpu_shader_->blocks = blocks_;
   gpu_shader_->samplers = samplers_;
-  for (auto stage : stages_)
+  for (const auto& stage : stages_)
   {
       GLES2GPUShaderStage gpuShaderStage = { stage.type, stage.source, stage.macros, 0};
       gpu_shader_->gpu_stages.emplace_back(std::move(gpuShaderStage));
