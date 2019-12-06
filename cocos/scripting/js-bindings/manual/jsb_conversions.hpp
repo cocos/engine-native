@@ -145,7 +145,7 @@ bool seval_to_std_vector_RenderTarget(const se::Value& v, std::vector<cocos2d::r
 bool seval_to_TextureOptions(const se::Value& v, cocos2d::renderer::Texture::Options* ret);
 bool seval_to_TextureSubImageOption(const se::Value& v, cocos2d::renderer::Texture::SubImageOption* ret);
 bool seval_to_TextureImageOption(const se::Value& v, cocos2d::renderer::Texture::ImageOption* ret);
-bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<std::string, cocos2d::renderer::Effect::Property>* ret);
+bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<size_t, cocos2d::renderer::Effect::Property>* ret);
 bool seval_to_EffectTechnique(const se::Value& v, cocos2d::renderer::Technique** ret);
 bool seval_to_EffectDefineTemplate(const se::Value& v, std::vector<cocos2d::ValueMap>* ret);
 bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d::renderer::EffectBase* effect, bool directly = false);

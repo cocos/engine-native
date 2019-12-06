@@ -58,7 +58,7 @@ public:
 
     Pass(const std::string& programName, Pass* parent = nullptr);
     Pass(const std::string& programName,
-         std::unordered_map<std::string, Technique::Parameter>& properties,
+         std::unordered_map<size_t, Technique::Parameter>& properties,
          ValueMap& defines
     );
     Pass() {};
@@ -154,65 +154,26 @@ public:
     inline const Pass* getParent() { return _parent; }
     
     void extractDefines (size_t& hash, std::vector<const ValueMap*>& defines) const;
-    void extractProperties(std::vector<const std::unordered_map<std::string, Technique::Parameter>*>& properties) const;
     
     void generateDefinesKey ();
     
-    const Technique::Parameter* getProperty(const std::string& name) const
-    {
-        if (_properties.end() == _properties.find(name)) {
-            if (_parent) {
-                return _parent->getProperty(name);
-            }
-            return nullptr;
-        }
-        else
-            return &_properties.at(name);
-    }
+    const Technique::Parameter* getProperty(const std::string& name) const;
+    void setProperty(const std::string& name, const Technique::Parameter& property);
+    void setProperty(const std::string& name, void* value);
     
-    const Value* getDefine(const std::string& name) const
-    {
-        if (_defines.end() == _defines.find(name)) {
-            if (_parent) {
-                return _parent->getDefine(name);
-            }
-            return nullptr;
-        }
-        else
-            return &_defines.at(name);
-    }
-
-    void setProperty(const std::string& name, const Technique::Parameter& property)
-    {
-        _properties[name] = property;
-    }
-    void setProperty(const std::string& name, void* value)
-    {
-        if (_properties.end() == _properties.find(name)) {
-            return;
-        }
-        
-        auto& prop = _properties[name];
-        prop.setValue(value);
-    }
-    void define(const std::string& name, const Value& value)
-    {
-        if (_defines[name] == value)
-        {
-            return;
-        };
-
-        _defines[name] = value;
-        
-        generateDefinesKey();
-    }
+    const Technique::Parameter* getProperty(size_t hashName) const;
+    void setProperty(size_t hashName, const Technique::Parameter& property);
+    void setProperty(size_t hashName, void* value);
+    
+    const Value* getDefine(const std::string& name) const;
+    void define(const std::string& name, const Value& value);
 private:
     std::string _programName = "";
     size_t _hashName = 0;
     
     Pass* _parent = nullptr;
     
-    std::unordered_map<std::string, Technique::Parameter> _properties;
+    std::unordered_map<size_t, Technique::Parameter> _properties;
     ValueMap _defines;
     size_t _definesHash;
     

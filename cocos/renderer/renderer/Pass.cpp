@@ -79,7 +79,7 @@ Pass::Pass(const std::string& programName, Pass* parent)
 
 Pass::Pass(
     const std::string& programName,
-    std::unordered_map<std::string, Technique::Parameter>& properties,
+    std::unordered_map<size_t, Technique::Parameter>& properties,
     ValueMap& defines
 ): _programName(programName)
 {
@@ -113,15 +113,6 @@ void Pass::extractDefines(size_t& hash, std::vector<const ValueMap*>& defines) c
     
     MathUtil::combineHash(hash, _definesHash);
     defines.push_back(&_defines);
-}
-
-void Pass::extractProperties(std::vector<const std::unordered_map<std::string, Technique::Parameter>*>& properties) const
-{
-    if (_parent) {
-        _parent->extractProperties(properties);
-    }
-    
-    properties.push_back(&_properties);
 }
 
 void Pass::setCullMode(CullMode cullMode)
@@ -227,6 +218,70 @@ void Pass::copy(const Pass& pass)
     _definesHash = pass._definesHash;
     
     memcpy(&_states, &pass._states, PASS_VALUE_LENGTH * sizeof(uint32_t));
+}
+
+const Technique::Parameter* Pass::getProperty(const std::string& name) const
+{
+    return getProperty(std::hash<std::string>{}(name));
+}
+
+const Technique::Parameter* Pass::getProperty(const size_t hashName) const
+{
+    const auto& iter = _properties.find(hashName);
+    if (_properties.end() == iter) {
+        if (_parent) {
+            return _parent->getProperty(hashName);
+        }
+        return nullptr;
+    }
+    else
+        return &iter->second;
+}
+
+const Value* Pass::getDefine(const std::string& name) const
+{
+    const auto& iter = _defines.find(name);
+    if (_defines.end() == iter) {
+        if (_parent) {
+            return _parent->getDefine(name);
+        }
+        return nullptr;
+    }
+    else
+        return &iter->second;
+}
+
+void Pass::setProperty(size_t hashName, const Technique::Parameter& property)
+{
+    _properties[hashName] = property;
+}
+void Pass::setProperty(size_t hashName, void* value)
+{
+    if (_properties.end() == _properties.find(hashName)) {
+        return;
+    }
+    
+    auto& prop = _properties[hashName];
+    prop.setValue(value);
+}
+void Pass::setProperty(const std::string& name, const Technique::Parameter& property)
+{
+    setProperty(std::hash<std::string>{}(name), property);
+}
+void Pass::setProperty(const std::string& name, void* value)
+{
+    setProperty(std::hash<std::string>{}(name), value);
+}
+void Pass::define(const std::string& name, const Value& value)
+{
+    if (_defines[name] == value)
+    {
+        return;
+    };
+
+    _defines[name] = value;
+    
+    generateDefinesKey();
 }
 
 RENDERER_END

@@ -1040,7 +1040,7 @@ void DeviceGraphics::commitVertexBuffer()
             for (int j = 0; j < usedAttriLen; ++j)
             {
                 const auto& attr = attributes[j];
-                const auto* el = vb->getFormat().getElement(attr.name);
+                const auto* el = vb->getFormat().getElement(attr.hashName);
                 if (!el || !el->isValid())
                 {
                     RENDERER_LOGW("Can not find vertex attribute: %s", attr.name.c_str());

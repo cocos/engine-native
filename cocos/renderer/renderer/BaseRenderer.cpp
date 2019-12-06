@@ -262,17 +262,17 @@ void BaseRenderer::setProperty (const Effect::Property& prop)
     }
 }
 
+
+std::vector<const ValueMap*> __tmp_defines__;
 void BaseRenderer::draw(const StageItem& item)
 {
     const Mat4& worldMatrix = item.model->getWorldMatrix();
-    _device->setUniformMat4(cc_matWorld, worldMatrix.m);
+    _device->setUniformMat4(cc_matWorld, worldMatrix);
     
     _tmpMat4->set(worldMatrix);
     _tmpMat4->inverse();
     _tmpMat4->transpose();
-    _device->setUniformMat4(cc_matWorldIT, _tmpMat4->m);
-    
-    std::vector<const ValueMap*> defines;
+    _device->setUniformMat4(cc_matWorldIT, *_tmpMat4);
     
     auto ia = item.ia;
     // for each pass
@@ -289,17 +289,17 @@ void BaseRenderer::draw(const StageItem& item)
         _device->setPrimitiveType(ia->_primitiveType);
         
         // get program
-        defines.clear();
-        defines.push_back(&_defines);
+        __tmp_defines__.clear();
+        __tmp_defines__.push_back(&_defines);
         size_t definesHash = _definesHash;
-        pass->extractDefines(definesHash, defines);
+        pass->extractDefines(definesHash, __tmp_defines__);
         
-        _program = _programLib->switchProgram(pass->getHashName(), definesHash, defines);
+        _program = _programLib->switchProgram(pass->getHashName(), definesHash, __tmp_defines__);
         _device->setProgram(_program);
         
         for (auto& uniform : _program->getUniforms())
         {
-            auto prop = pass->getProperty(uniform.name);
+            auto prop = pass->getProperty(uniform.hashName);
             if (prop) {
                 setProperty(*prop);
             }

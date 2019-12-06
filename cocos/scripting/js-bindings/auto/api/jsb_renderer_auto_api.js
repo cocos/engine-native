@@ -224,7 +224,7 @@ double
  * @param {cc.renderer::EffectVariant} arg0
  */
 copy : function (
-EffectVariant 
+effectvariant 
 )
 {
 },
@@ -1560,6 +1560,16 @@ isIgnoreOpacityFlag : function (
 },
 
 /**
+ * @method setEffectVariant
+ * @param {cc.renderer::EffectVariant} arg0
+ */
+setEffectVariant : function (
+effectvariant 
+)
+{
+},
+
+/**
  * @method ignoreWorldMatrix
  */
 ignoreWorldMatrix : function (
@@ -1610,19 +1620,9 @@ int
  */
 updateEffect : function (
 int, 
-EffectVariant 
+effectvariant 
 )
 {
-},
-
-/**
- * @method getEffectVariant
- * @return {cc.renderer::EffectVariant}
- */
-getEffectVariant : function (
-)
-{
-    return cc.renderer::EffectVariant;
 },
 
 /**
@@ -1643,16 +1643,6 @@ int
  * @method ignoreOpacityFlag
  */
 ignoreOpacityFlag : function (
-)
-{
-},
-
-/**
- * @method setEffectVariant
- * @param {cc.renderer::EffectVariant} arg0
- */
-setEffectVariant : function (
-EffectVariant 
 )
 {
 },
@@ -1688,7 +1678,7 @@ clearEffect : function (
  */
 updateEffect : function (
 int, 
-EffectVariant 
+effectvariant 
 )
 {
 },
@@ -1925,6 +1915,22 @@ renderer.MeshAssembler = {
  */
 setNode : function (
 nodeproxy 
+)
+{
+},
+
+/**
+ * @method updateIAData
+ * @param {unsigned int} arg0
+ * @param {cc.renderer::VertexFormat} arg1
+ * @param {se::Object} arg2
+ * @param {se::Object} arg3
+ */
+updateIAData : function (
+int, 
+vertexformat, 
+object, 
+object 
 )
 {
 },

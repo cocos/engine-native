@@ -2408,7 +2408,7 @@ func
  * @param {cc.renderer::EffectVariant} arg0
  */
 setEffect : function (
-EffectVariant 
+effectvariant 
 )
 {
 },
@@ -2915,7 +2915,7 @@ onEnable : function (
  * @param {cc.renderer::EffectVariant} arg0
  */
 setEffect : function (
-EffectVariant 
+effectvariant 
 )
 {
 },

@@ -59,7 +59,7 @@ onEnable : function (
  * @param {cc.renderer::EffectVariant} arg0
  */
 setEffect : function (
-EffectVariant 
+effectvariant 
 )
 {
 },

@@ -238,15 +238,14 @@ bool js_register_cocos2d_renderer_Assembler(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_Assembler_setVertexFormat);
 SE_DECLARE_FUNC(js_renderer_Assembler_isIgnoreOpacityFlag);
+SE_DECLARE_FUNC(js_renderer_Assembler_setEffectVariant);
 SE_DECLARE_FUNC(js_renderer_Assembler_ignoreWorldMatrix);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateVerticesRange);
 SE_DECLARE_FUNC(js_renderer_Assembler_setRenderDataList);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateMeshIndex);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateEffect);
-SE_DECLARE_FUNC(js_renderer_Assembler_getEffectVariant);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateIndicesRange);
 SE_DECLARE_FUNC(js_renderer_Assembler_ignoreOpacityFlag);
-SE_DECLARE_FUNC(js_renderer_Assembler_setEffectVariant);
 SE_DECLARE_FUNC(js_renderer_Assembler_Assembler);
 
 extern se::Object* __jsb_cocos2d_renderer_CustomAssembler_proto;
@@ -316,6 +315,7 @@ extern se::Class* __jsb_cocos2d_renderer_MeshAssembler_class;
 bool js_register_cocos2d_renderer_MeshAssembler(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_MeshAssembler_setNode);
+SE_DECLARE_FUNC(js_renderer_MeshAssembler_updateIAData);
 SE_DECLARE_FUNC(js_renderer_MeshAssembler_MeshAssembler);
 
 extern se::Object* __jsb_cocos2d_renderer_SimpleSprite3D_proto;

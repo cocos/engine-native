@@ -1491,7 +1491,7 @@ bool ccvaluevector_to_EffectPass(const se::Object* v, cocos2d::Vector<cocos2d::r
             se::Value passValue;
             
             std::string name = "";
-            std::unordered_map<std::string, cocos2d::renderer::Effect::Property> properties;
+            std::unordered_map<size_t, cocos2d::renderer::Effect::Property> properties;
             cocos2d::ValueMap defines;
             
             if (obj->getProperty("_properties", &passValue) && passValue.isObject()) {
@@ -1718,7 +1718,7 @@ bool seval_to_EffectAsset(const se::Value& v, cocos2d::Vector<cocos2d::renderer:
     return true;
 }
 
-bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<std::string, cocos2d::renderer::Effect::Property>* ret)
+bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<size_t, cocos2d::renderer::Effect::Property>* ret)
 {
     assert(ret != nullptr);
     if (v.isNullOrUndefined())
@@ -1740,7 +1740,8 @@ bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<std::string,
         {
             cocos2d::renderer::Technique::Parameter property;
             seval_to_TechniqueParameter(value, &property);
-            ret->emplace(key, property);
+            size_t hashName = std::hash<std::string>{}(key);
+            ret->emplace(hashName, property);
         }
     }
 
