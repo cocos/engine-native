@@ -139,7 +139,6 @@ bool seval_to_DownloaderHints(const se::Value& v, cocos2d::network::DownloaderHi
 
 #if USE_GFX_RENDERER
 bool seval_to_Rect(const se::Value& v, cocos2d::renderer::Rect* rect);
-bool seval_to_std_vector_Pass(const se::Value& v, cocos2d::Vector<cocos2d::renderer::Pass*>* ret);
 bool seval_to_std_vector_Texture(const se::Value& v, std::vector<cocos2d::renderer::Texture*>* ret);
 bool seval_to_std_vector_RenderTarget(const se::Value& v, std::vector<cocos2d::renderer::RenderTarget*>* ret);
 bool seval_to_TextureOptions(const se::Value& v, cocos2d::renderer::Texture::Options* ret);

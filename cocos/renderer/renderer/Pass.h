@@ -86,7 +86,8 @@ public:
     inline BlendFactor getBlendDstAlpha () const { return (BlendFactor)getState(7); };
     inline uint32_t getBlendColor () const { return getState(8); };
     
-    void setBlend(BlendOp blendEq = BlendOp::ADD,
+    void setBlend(bool blendTest = false,
+                  BlendOp blendEq = BlendOp::ADD,
                   BlendFactor blendSrc = BlendFactor::ONE,
                   BlendFactor blendDst = BlendFactor::ZERO,
                   BlendOp blendAlphaEq = BlendOp::ADD,

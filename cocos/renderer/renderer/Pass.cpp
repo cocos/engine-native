@@ -32,7 +32,7 @@ uint32_t* Pass::DEFAULT_STATES = new uint32_t[PASS_VALUE_LENGTH] {
     (uint32_t)GL_BACK,                              // 0 cullMode
     
     // blend
-    (uint32_t)true,                                 // 1 blend
+    (uint32_t)false,                                 // 1 blend
     (uint32_t)BlendOp::ADD,                         // 2 blendEq
     (uint32_t)BlendFactor::SRC_ALPHA,               // 3 blendSrc
     (uint32_t)BlendFactor::ONE_MINUS_SRC_ALPHA,     // 4 blendDst
@@ -120,7 +120,8 @@ void Pass::setCullMode(CullMode cullMode)
     _states[0] = (uint32_t)cullMode;
 }
 
-void Pass::setBlend(BlendOp blendEq,
+void Pass::setBlend(bool blendTest,
+                    BlendOp blendEq,
                     BlendFactor blendSrc,
                     BlendFactor blendDst,
                     BlendOp blendAlphaEq,
@@ -128,7 +129,7 @@ void Pass::setBlend(BlendOp blendEq,
                     BlendFactor blendDstAlpha,
                     uint32_t blendColor)
 {
-    _states[1] = (uint32_t)true;
+    _states[1] = (uint32_t)blendTest;
     _states[2] = (uint32_t)blendEq;
     _states[3] = (uint32_t)blendSrc;
     _states[4] = (uint32_t)blendDst;

@@ -287,7 +287,7 @@ void CCArmatureDisplay::traverseArmature(Armature* armature, float parentOpacity
         
         if (needUpdate)
         {
-            renderEffect->setBlend(BlendOp::ADD, _curBlendSrc, _curBlendDst,
+            renderEffect->setBlend(true, BlendOp::ADD, _curBlendSrc, _curBlendDst,
                            BlendOp::ADD, _curBlendSrc, _curBlendDst);
         }
         

@@ -381,7 +381,7 @@ void SkeletonRenderer::render (float deltaTime) {
         }
 
         if (needUpdate) {
-            renderEffect->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+            renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                            BlendOp::ADD, curBlendSrc, curBlendDst);
         }
 

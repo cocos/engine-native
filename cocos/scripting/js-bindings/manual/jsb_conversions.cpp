@@ -1233,31 +1233,6 @@ bool seval_to_Rect(const se::Value& v, cocos2d::renderer::Rect* rect)
     return true;
 }
 
-bool seval_to_std_vector_Pass(const se::Value& v, cocos2d::Vector<cocos2d::renderer::Pass*>* ret)
-{
-    assert(ret != nullptr);
-    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to vector of Pass failed!");
-    se::Object* obj = v.toObject();
-    assert(obj->isArray());
-    SE_PRECONDITION2(obj->isArray(), false, "Convert parameter to vector of Pass failed!");
-    uint32_t len = 0;
-    if (obj->getArrayLength(&len))
-    {
-        se::Value value;
-        cocos2d::renderer::Pass* pt = nullptr;
-        for (uint32_t i = 0; i < len; ++i)
-        {
-            SE_PRECONDITION3(obj->getArrayElement(i, &value), false, ret->clear());
-            pt = static_cast<cocos2d::renderer::Pass*>(value.toObject()->getPrivateData());
-            ret->pushBack(pt);
-        }
-        return true;
-    }
-
-    ret->clear();
-    return true;
-}
-
 bool seval_to_std_vector_Texture(const se::Value& v, std::vector<cocos2d::renderer::Texture*>* ret)
 {
     assert(ret != nullptr);
@@ -1520,6 +1495,7 @@ bool ccvaluevector_to_EffectPass(const se::Object* v, cocos2d::Vector<cocos2d::r
             cobj->setCullMode(cullMode);
             
             // blend
+            bool blendTest;
             cocos2d::renderer::BlendOp blendEq;
             cocos2d::renderer::BlendFactor blendSrc;
             cocos2d::renderer::BlendFactor blendDst;
@@ -1527,6 +1503,9 @@ bool ccvaluevector_to_EffectPass(const se::Object* v, cocos2d::Vector<cocos2d::r
             cocos2d::renderer::BlendFactor blendSrcAlpha;
             cocos2d::renderer::BlendFactor blendDstAlpha;
             uint32_t blendColor;
+            if (obj->getProperty("_blend", &passValue) && passValue.isBoolean()) {
+                blendTest = passValue.toBoolean();
+            }
             if (obj->getProperty("_blendEq", &passValue) && passValue.isNumber()) {
                 blendEq = (cocos2d::renderer::BlendOp)passValue.toUint32();
             }
@@ -1549,6 +1528,7 @@ bool ccvaluevector_to_EffectPass(const se::Object* v, cocos2d::Vector<cocos2d::r
                 blendColor = passValue.toUint32();
             }
             cobj->setBlend(
+                blendTest,
                 blendEq,
                 blendSrc,
                 blendDst,

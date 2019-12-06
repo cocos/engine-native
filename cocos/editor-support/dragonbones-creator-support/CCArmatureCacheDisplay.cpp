@@ -334,7 +334,7 @@ void CCArmatureCacheDisplay::render(float dt)
                     break;
             }
 
-            renderEffect->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+            renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                 BlendOp::ADD, curBlendSrc, curBlendDst);
         }
 

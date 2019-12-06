@@ -371,7 +371,7 @@ namespace spine {
                         curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
                         curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
                 }
-                renderEffect->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+                renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                                BlendOp::ADD, curBlendSrc, curBlendDst);
             }
             

@@ -179,97 +179,118 @@ static bool js_renderer_EffectBase_setBlend(se::State& s)
         return true;
     }
     if (argc == 1) {
-        cocos2d::renderer::BlendOp arg0;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::BlendOp)tmp; } while(false);
+        bool arg0;
+        ok &= seval_to_boolean(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
         cobj->setBlend(arg0);
         return true;
     }
     if (argc == 2) {
-        cocos2d::renderer::BlendOp arg0;
-        cocos2d::renderer::BlendFactor arg1;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
         cobj->setBlend(arg0, arg1);
         return true;
     }
     if (argc == 3) {
-        cocos2d::renderer::BlendOp arg0;
-        cocos2d::renderer::BlendFactor arg1;
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
         cocos2d::renderer::BlendFactor arg2;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
         cobj->setBlend(arg0, arg1, arg2);
         return true;
     }
     if (argc == 4) {
-        cocos2d::renderer::BlendOp arg0;
-        cocos2d::renderer::BlendFactor arg1;
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
         cocos2d::renderer::BlendFactor arg2;
-        cocos2d::renderer::BlendOp arg3;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        cocos2d::renderer::BlendFactor arg3;
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendOp)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
         cobj->setBlend(arg0, arg1, arg2, arg3);
         return true;
     }
     if (argc == 5) {
-        cocos2d::renderer::BlendOp arg0;
-        cocos2d::renderer::BlendFactor arg1;
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
         cocos2d::renderer::BlendFactor arg2;
-        cocos2d::renderer::BlendOp arg3;
-        cocos2d::renderer::BlendFactor arg4;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        cocos2d::renderer::BlendFactor arg3;
+        cocos2d::renderer::BlendOp arg4;
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
         cobj->setBlend(arg0, arg1, arg2, arg3, arg4);
         return true;
     }
     if (argc == 6) {
-        cocos2d::renderer::BlendOp arg0;
-        cocos2d::renderer::BlendFactor arg1;
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
         cocos2d::renderer::BlendFactor arg2;
-        cocos2d::renderer::BlendOp arg3;
-        cocos2d::renderer::BlendFactor arg4;
+        cocos2d::renderer::BlendFactor arg3;
+        cocos2d::renderer::BlendOp arg4;
         cocos2d::renderer::BlendFactor arg5;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
         cobj->setBlend(arg0, arg1, arg2, arg3, arg4, arg5);
         return true;
     }
     if (argc == 7) {
-        cocos2d::renderer::BlendOp arg0;
-        cocos2d::renderer::BlendFactor arg1;
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
         cocos2d::renderer::BlendFactor arg2;
-        cocos2d::renderer::BlendOp arg3;
-        cocos2d::renderer::BlendFactor arg4;
+        cocos2d::renderer::BlendFactor arg3;
+        cocos2d::renderer::BlendOp arg4;
         cocos2d::renderer::BlendFactor arg5;
-        unsigned int arg6 = 0;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        cocos2d::renderer::BlendFactor arg6;
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendOp)tmp; } while(false);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendOp)tmp; } while(false);
         do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
-        ok &= seval_to_uint32(args[6], (uint32_t*)&arg6);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[6], &tmp); arg6 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
         cobj->setBlend(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 7);
+    if (argc == 8) {
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
+        cocos2d::renderer::BlendFactor arg2;
+        cocos2d::renderer::BlendFactor arg3;
+        cocos2d::renderer::BlendOp arg4;
+        cocos2d::renderer::BlendFactor arg5;
+        cocos2d::renderer::BlendFactor arg6;
+        unsigned int arg7 = 0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendOp)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[6], &tmp); arg6 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        ok &= seval_to_uint32(args[7], (uint32_t*)&arg7);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
+        cobj->setBlend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 8);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_setBlend)

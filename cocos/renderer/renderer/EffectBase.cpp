@@ -104,12 +104,12 @@ void EffectBase::setCullMode(CullMode cullMode)
     }
 }
 
-void EffectBase::setBlend(BlendOp blendEq, BlendFactor blendSrc, BlendFactor blendDst, BlendOp blendAlphaEq, BlendFactor blendSrcAlpha, BlendFactor blendDstAlpha, uint32_t blendColor)
+void EffectBase::setBlend(bool blendTest, BlendOp blendEq, BlendFactor blendSrc, BlendFactor blendDst, BlendOp blendAlphaEq, BlendFactor blendSrcAlpha, BlendFactor blendDstAlpha, uint32_t blendColor)
 {
     auto& passes = getPasses();
     for (const auto& pass : passes)
     {
-        pass->setBlend(blendEq, blendSrc, blendDst, blendAlphaEq, blendSrcAlpha, blendDstAlpha, blendColor);
+        pass->setBlend(blendTest, blendEq, blendSrc, blendDst, blendAlphaEq, blendSrcAlpha, blendDstAlpha, blendColor);
     }
 }
 

@@ -84,23 +84,28 @@ public:
      *  @param[in] blendDstAlpha Dst Alpha blend equation.
      *  @param[in] blendColor Blend constant color value.
      */
-    void setBlend(BlendOp blendEq = BlendOp::ADD,
-                  BlendFactor blendSrc = BlendFactor::ONE,
-                  BlendFactor blendDst = BlendFactor::ZERO,
-                  BlendOp blendAlphaEq = BlendOp::ADD,
-                  BlendFactor blendSrcAlpha = BlendFactor::ONE,
-                  BlendFactor blendDstAlpha = BlendFactor::ZERO,
-                  uint32_t blendColor = 0xffffffff);
+    void setBlend(
+        bool blendTest = false,
+        BlendOp blendEq = BlendOp::ADD,
+        BlendFactor blendSrc = BlendFactor::ONE,
+        BlendFactor blendDst = BlendFactor::ZERO,
+        BlendOp blendAlphaEq = BlendOp::ADD,
+        BlendFactor blendSrcAlpha = BlendFactor::ONE,
+        BlendFactor blendDstAlpha = BlendFactor::ZERO,
+        uint32_t blendColor = 0xffffffff
+    );
     /**
      *  @brief Sets stencil front-facing function, reference, mask, fail operation, write mask.
      */
-    void setStencil(StencilFunc stencilFunc = StencilFunc::ALWAYS,
-                         uint32_t stencilRef = 0,
-                         uint8_t stencilMask = 0xff,
-                         StencilOp stencilFailOp = StencilOp::KEEP,
-                         StencilOp stencilZFailOp = StencilOp::KEEP,
-                         StencilOp stencilZPassOp = StencilOp::KEEP,
-                         uint8_t stencilWriteMask = 0xff);
+    void setStencil(
+        StencilFunc stencilFunc = StencilFunc::ALWAYS,
+        uint32_t stencilRef = 0,
+        uint8_t stencilMask = 0xff,
+        StencilOp stencilFailOp = StencilOp::KEEP,
+        StencilOp stencilZFailOp = StencilOp::KEEP,
+        StencilOp stencilZPassOp = StencilOp::KEEP,
+        uint8_t stencilWriteMask = 0xff
+    );
     /*
      *  @brief Sets stencil test enabled or not.
      */
