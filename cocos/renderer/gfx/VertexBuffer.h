@@ -137,6 +137,7 @@ private:
     Usage _usage;
     uint32_t _numVertices;
     uint32_t _bytes;
+    bool _needExpandDataStore = true;
 
     FetchDataCallback _fetchDataCallback;
 

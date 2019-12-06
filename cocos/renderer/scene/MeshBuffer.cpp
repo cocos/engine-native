@@ -86,7 +86,6 @@ void MeshBuffer::reallocVBuffer()
         delete[] oldVData;
         oldVData = nullptr;
     }
-    _vb->setBytes(_vDataCount * VDATA_BYTE);
 }
 
 void MeshBuffer::reallocIBuffer()
@@ -99,7 +98,6 @@ void MeshBuffer::reallocIBuffer()
         delete[] oldIData;
         oldIData = nullptr;
     }
-    _ib->setBytes(_iDataCount * IDATA_BYTE);
 }
 
 const MeshBuffer::OffsetInfo& MeshBuffer::request(uint32_t vertexCount, uint32_t indexCount)
@@ -130,7 +128,6 @@ const MeshBuffer::OffsetInfo& MeshBuffer::requestStatic(uint32_t vertexCount, ui
         {
             DeviceGraphics* device = _batcher->getFlow()->getDevice();
             _vb = VertexBuffer::create(device, _vertexFmt, Usage::DYNAMIC, nullptr, 0, 0);
-            _vb->setBytes(_vDataCount * VDATA_BYTE);
             _vbArr.pushBack(_vb);
         }
         else

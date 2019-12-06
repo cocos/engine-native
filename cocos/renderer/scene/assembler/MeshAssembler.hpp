@@ -25,12 +25,14 @@
 #pragma once
 
 #include "../../Macro.h"
-#include "Assembler.hpp"
+#include "CustomAssembler.hpp"
 #include "../NodeProxy.hpp"
+#include "../../gfx/VertexFormat.h"
+#include "RenderDataList.hpp"
 
 RENDERER_BEGIN
 
-class MeshAssembler: public Assembler
+class MeshAssembler: public CustomAssembler
 {
 public:
     MeshAssembler();
@@ -40,8 +42,12 @@ public:
      *  @brief Sets the related node proxy which provids model matrix for render.
      */
     void setNode(NodeProxy* node);
+    void updateIAData(std::size_t index, VertexFormat* vfmt, se_object_ptr vertices, se_object_ptr indices);
+    
+    virtual void reset() override;
 protected:
     NodeProxy* _renderNode = nullptr;
+    RenderDataList _datas;
 };
 
 RENDERER_END

@@ -214,9 +214,9 @@ void Assembler::setVertexFormat(VertexFormat* vfmt)
     if (_vfmt)
     {
         _bytesPerVertex = _vfmt->getBytes();
-        _vfPos = _vfmt->getElement(ATTRIB_NAME_POSITION);
+        _vfPos = _vfmt->getElement(ATTRIB_NAME_POSITION_HASH);
         _posOffset = _vfPos->offset / 4;
-        _vfColor = _vfmt->getElement(ATTRIB_NAME_COLOR);
+        _vfColor = _vfmt->getElement(ATTRIB_NAME_COLOR_HASH);
         if (_vfColor != nullptr)
         {
             _alphaOffset = _vfColor->offset + 3;
