@@ -142,16 +142,9 @@ void BaseRenderer::render(const View& view, const Scene* scene)
     for (const auto& model : scene->getModels())
     {
         modelMask = model->getCullingMask();
-        if (view.cullingByID)
-        {
-            if ((modelMask & view.cullingMask) == 0)
-                continue;
-        }
-        else
-        {
-            if (-1 != modelMask)
-                continue;
-        }
+        
+        if ((modelMask & view.cullingMask) == 0)
+            continue;
         
         DrawItem* drawItem = _drawItems->add();
         model->extractDrawItem(*drawItem);
