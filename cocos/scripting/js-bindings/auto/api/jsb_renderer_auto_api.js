@@ -47,10 +47,12 @@ renderer.EffectBase = {
 /**
  * @method getProperty
  * @param {String} arg0
+ * @param {int} arg1
  * @return {cc.renderer::Technique::Parameter}
  */
 getProperty : function (
-str 
+str, 
+int 
 )
 {
     return cc.renderer::Technique::Parameter;
@@ -59,9 +61,11 @@ str
 /**
  * @method setStencilTest
  * @param {bool} arg0
+ * @param {int} arg1
  */
 setStencilTest : function (
-bool 
+bool, 
+int 
 )
 {
 },
@@ -69,10 +73,12 @@ bool
 /**
  * @method getDefine
  * @param {String} arg0
+ * @param {int} arg1
  * @return {cc.Value}
  */
 getDefine : function (
-str 
+str, 
+int 
 )
 {
     return cc.Value;
@@ -81,9 +87,11 @@ str
 /**
  * @method setCullMode
  * @param {cc.renderer::CullMode} arg0
+ * @param {int} arg1
  */
 setCullMode : function (
-cullmode 
+cullmode, 
+int 
 )
 {
 },
@@ -105,18 +113,6 @@ setStencil : function (
 },
 
 /**
- * @method setProperty
-* @param {String|String} str
-* @param {void|cc.renderer::Technique::Parameter} void
-*/
-setProperty : function(
-str,
-parameter 
-)
-{
-},
-
-/**
  * @method getPasses
 * @return {Array|Array}
 */
@@ -127,13 +123,23 @@ getPasses : function(
 },
 
 /**
+ * @method setDepth
+ */
+setDepth : function (
+)
+{
+},
+
+/**
  * @method define
  * @param {String} arg0
  * @param {cc.Value} arg1
+ * @param {int} arg2
  */
 define : function (
 str, 
-value 
+value, 
+int 
 )
 {
 },

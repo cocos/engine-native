@@ -23,8 +23,8 @@ SE_DECLARE_FUNC(js_renderer_EffectBase_getDefine);
 SE_DECLARE_FUNC(js_renderer_EffectBase_setCullMode);
 SE_DECLARE_FUNC(js_renderer_EffectBase_setBlend);
 SE_DECLARE_FUNC(js_renderer_EffectBase_setStencil);
-SE_DECLARE_FUNC(js_renderer_EffectBase_setProperty);
 SE_DECLARE_FUNC(js_renderer_EffectBase_getPasses);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setDepth);
 SE_DECLARE_FUNC(js_renderer_EffectBase_define);
 
 extern se::Object* __jsb_cocos2d_renderer_Effect_proto;

@@ -141,30 +141,10 @@ static bool js_renderer_Camera_worldToScreen(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Camera_worldToScreen)
 
-static bool js_renderer_Effect_setProperty(se::State& s)
-{
-    cocos2d::renderer::Effect* cobj = (cocos2d::renderer::Effect*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_Effect_setProperty : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Name Error");
-        ok &= seval_to_Effect_setProperty(arg0, args[1], cobj);
-        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-    return false;
-}
-SE_BIND_FUNC(js_renderer_Effect_setProperty)
-
 static bool js_renderer_Effect_self(se::State& s)
 {
     cocos2d::renderer::Effect* cobj = (cocos2d::renderer::Effect*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_Effect_setProperty : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_renderer_Effect_self : Invalid Native Object");
     auto addr = (unsigned long)cobj;
     s.rval().setNumber(addr);
     return true;
@@ -413,26 +393,29 @@ static bool js_renderer_Effect_init(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Effect_init);
 
-static bool js_renderer_EffectVariant_setProperty(se::State& s)
+static bool js_renderer_EffectBase_setProperty(se::State& s)
 {
     cocos2d::renderer::EffectVariant* cobj = (cocos2d::renderer::EffectVariant*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_EffectVariant_setProperty : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_renderer_EffectBase_setProperty : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
+    if (argc == 3) {
         std::string arg0;
+        int passIdx;
         ok &= seval_to_std_string(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Name Error");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : Name Error");
+        ok &= seval_to_int32(args[2], &passIdx);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : passIdx Error");
         ok &= seval_to_Effect_setProperty(arg0, args[1], cobj);
-        SE_PRECONDITION2(ok, false, "js_renderer_EffectVariant_setProperty : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : Error processing arguments");
         return true;
     }
     
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
-SE_BIND_FUNC(js_renderer_EffectVariant_setProperty);
+SE_BIND_FUNC(js_renderer_EffectBase_setProperty);
 
 bool jsb_register_renderer_manual(se::Object* global)
 {
@@ -449,7 +432,6 @@ bool jsb_register_renderer_manual(se::Object* global)
     js_register_renderer_Config(ns);
 
     // Effect
-    __jsb_cocos2d_renderer_Effect_proto->defineFunction("setProperty", _SE(js_renderer_Effect_setProperty));
     __jsb_cocos2d_renderer_Effect_proto->defineFunction("self", _SE(js_renderer_Effect_self));
 
     // Light
@@ -477,7 +459,7 @@ bool jsb_register_renderer_manual(se::Object* global)
     // Effect
     __jsb_cocos2d_renderer_Effect_proto->defineFunction("init", _SE(js_renderer_Effect_init));
     // EffectVariant
-    __jsb_cocos2d_renderer_EffectVariant_proto->defineFunction("setProperty", _SE(js_renderer_EffectVariant_setProperty));
+    __jsb_cocos2d_renderer_EffectBase_proto->defineFunction("setProperty", _SE(js_renderer_EffectBase_setProperty));
     
     return true;
 }

@@ -1753,12 +1753,16 @@ bool seval_to_EffectDefineTemplate(const se::Value& v, std::vector<cocos2d::Valu
     return true;
 }
 
-bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d::renderer::EffectBase* effect, bool directly)
+bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d::renderer::EffectBase* effect, int passIdx, bool directly)
 {
-    auto&  passes = effect->getPasses();
-    
-    for (auto& pass : passes)
+    auto& passes = effect->getPasses();
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         auto prop = pass->getProperty(name);
         if (!prop) {
             continue;

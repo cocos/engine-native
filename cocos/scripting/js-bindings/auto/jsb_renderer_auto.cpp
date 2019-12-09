@@ -103,7 +103,18 @@ static bool js_renderer_EffectBase_getProperty(se::State& s)
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_getProperty : Error processing arguments");
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    if (argc == 2) {
+        std::string arg0;
+        int arg1 = 0;
+        ok &= seval_to_std_string(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_getProperty : Error processing arguments");
+        const cocos2d::renderer::Technique::Parameter* result = cobj->getProperty(arg0, arg1);
+        ok &= native_ptr_to_seval<cocos2d::renderer::Technique::Parameter>((cocos2d::renderer::Technique::Parameter*)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_getProperty : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_getProperty)
@@ -122,7 +133,16 @@ static bool js_renderer_EffectBase_setStencilTest(se::State& s)
         cobj->setStencilTest(arg0);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    if (argc == 2) {
+        bool arg0;
+        int arg1 = 0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setStencilTest : Error processing arguments");
+        cobj->setStencilTest(arg0, arg1);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_setStencilTest)
@@ -143,7 +163,18 @@ static bool js_renderer_EffectBase_getDefine(se::State& s)
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_getDefine : Error processing arguments");
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    if (argc == 2) {
+        std::string arg0;
+        int arg1 = 0;
+        ok &= seval_to_std_string(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_getDefine : Error processing arguments");
+        const cocos2d::Value* result = cobj->getDefine(arg0, arg1);
+        ok &= native_ptr_to_seval<cocos2d::Value>((cocos2d::Value*)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_getDefine : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_getDefine)
@@ -162,7 +193,16 @@ static bool js_renderer_EffectBase_setCullMode(se::State& s)
         cobj->setCullMode(arg0);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    if (argc == 2) {
+        cocos2d::renderer::CullMode arg0;
+        int arg1 = 0;
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::CullMode)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setCullMode : Error processing arguments");
+        cobj->setCullMode(arg0, arg1);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_setCullMode)
@@ -290,7 +330,30 @@ static bool js_renderer_EffectBase_setBlend(se::State& s)
         cobj->setBlend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 8);
+    if (argc == 9) {
+        bool arg0;
+        cocos2d::renderer::BlendOp arg1;
+        cocos2d::renderer::BlendFactor arg2;
+        cocos2d::renderer::BlendFactor arg3;
+        cocos2d::renderer::BlendOp arg4;
+        cocos2d::renderer::BlendFactor arg5;
+        cocos2d::renderer::BlendFactor arg6;
+        unsigned int arg7 = 0;
+        int arg8 = 0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (cocos2d::renderer::BlendOp)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::BlendOp)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[6], &tmp); arg6 = (cocos2d::renderer::BlendFactor)tmp; } while(false);
+        ok &= seval_to_uint32(args[7], (uint32_t*)&arg7);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[8], &tmp); arg8 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setBlend : Error processing arguments");
+        cobj->setBlend(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 9);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_setBlend)
@@ -397,49 +460,31 @@ static bool js_renderer_EffectBase_setStencil(se::State& s)
         cobj->setStencil(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 7);
+    if (argc == 8) {
+        cocos2d::renderer::ComparisonFunc arg0;
+        unsigned int arg1 = 0;
+        uint8_t arg2;
+        cocos2d::renderer::StencilOp arg3;
+        cocos2d::renderer::StencilOp arg4;
+        cocos2d::renderer::StencilOp arg5;
+        uint8_t arg6;
+        int arg7 = 0;
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cocos2d::renderer::ComparisonFunc)tmp; } while(false);
+        ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);
+        ok &= seval_to_uint8(args[2], (uint8_t*)&arg2);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (cocos2d::renderer::StencilOp)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[4], &tmp); arg4 = (cocos2d::renderer::StencilOp)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (cocos2d::renderer::StencilOp)tmp; } while(false);
+        ok &= seval_to_uint8(args[6], (uint8_t*)&arg6);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[7], &tmp); arg7 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setStencil : Error processing arguments");
+        cobj->setStencil(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 8);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_setStencil)
-
-static bool js_renderer_EffectBase_setProperty(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    cocos2d::renderer::EffectBase* cobj = (cocos2d::renderer::EffectBase*)s.nativeThisObject();
-    SE_PRECONDITION2( cobj, false, "js_renderer_EffectBase_setProperty : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    do {
-        if (argc == 2) {
-            std::string arg0;
-            ok &= seval_to_std_string(args[0], &arg0);
-            if (!ok) { ok = true; break; }
-            void* arg1 = nullptr;
-            #pragma warning NO CONVERSION TO NATIVE FOR void*
-            ok = false;
-            if (!ok) { ok = true; break; }
-            cobj->setProperty(arg0, arg1);
-            return true;
-        }
-    } while(false);
-
-    do {
-        if (argc == 2) {
-            std::string arg0;
-            ok &= seval_to_std_string(args[0], &arg0);
-            if (!ok) { ok = true; break; }
-            cocos2d::renderer::Technique::Parameter arg1;
-            ok &= seval_to_TechniqueParameter(args[1], &arg1);
-            if (!ok) { ok = true; break; }
-            cobj->setProperty(arg0, arg1);
-            return true;
-        }
-    } while(false);
-
-    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
-    return false;
-}
-SE_BIND_FUNC(js_renderer_EffectBase_setProperty)
 
 static bool js_renderer_EffectBase_getPasses(se::State& s)
 {
@@ -471,6 +516,62 @@ static bool js_renderer_EffectBase_getPasses(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_EffectBase_getPasses)
 
+static bool js_renderer_EffectBase_setDepth(se::State& s)
+{
+    cocos2d::renderer::EffectBase* cobj = (cocos2d::renderer::EffectBase*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_EffectBase_setDepth : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cobj->setDepth();
+        return true;
+    }
+    if (argc == 1) {
+        bool arg0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setDepth : Error processing arguments");
+        cobj->setDepth(arg0);
+        return true;
+    }
+    if (argc == 2) {
+        bool arg0;
+        bool arg1;
+        ok &= seval_to_boolean(args[0], &arg0);
+        ok &= seval_to_boolean(args[1], &arg1);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setDepth : Error processing arguments");
+        cobj->setDepth(arg0, arg1);
+        return true;
+    }
+    if (argc == 3) {
+        bool arg0;
+        bool arg1;
+        cocos2d::renderer::ComparisonFunc arg2;
+        ok &= seval_to_boolean(args[0], &arg0);
+        ok &= seval_to_boolean(args[1], &arg1);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::ComparisonFunc)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setDepth : Error processing arguments");
+        cobj->setDepth(arg0, arg1, arg2);
+        return true;
+    }
+    if (argc == 4) {
+        bool arg0;
+        bool arg1;
+        cocos2d::renderer::ComparisonFunc arg2;
+        int arg3 = 0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        ok &= seval_to_boolean(args[1], &arg1);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cocos2d::renderer::ComparisonFunc)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[3], &tmp); arg3 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setDepth : Error processing arguments");
+        cobj->setDepth(arg0, arg1, arg2, arg3);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_EffectBase_setDepth)
+
 static bool js_renderer_EffectBase_define(se::State& s)
 {
     cocos2d::renderer::EffectBase* cobj = (cocos2d::renderer::EffectBase*)s.nativeThisObject();
@@ -487,7 +588,18 @@ static bool js_renderer_EffectBase_define(se::State& s)
         cobj->define(arg0, arg1);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    if (argc == 3) {
+        std::string arg0;
+        cocos2d::Value arg1;
+        int arg2 = 0;
+        ok &= seval_to_std_string(args[0], &arg0);
+        ok &= seval_to_ccvalue(args[1], &arg1);
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_define : Error processing arguments");
+        cobj->define(arg0, arg1, arg2);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
     return false;
 }
 SE_BIND_FUNC(js_renderer_EffectBase_define)
@@ -505,8 +617,8 @@ bool js_register_renderer_EffectBase(se::Object* obj)
     cls->defineFunction("setCullMode", _SE(js_renderer_EffectBase_setCullMode));
     cls->defineFunction("setBlend", _SE(js_renderer_EffectBase_setBlend));
     cls->defineFunction("setStencil", _SE(js_renderer_EffectBase_setStencil));
-    cls->defineFunction("setProperty", _SE(js_renderer_EffectBase_setProperty));
     cls->defineFunction("getPasses", _SE(js_renderer_EffectBase_getPasses));
+    cls->defineFunction("setDepth", _SE(js_renderer_EffectBase_setDepth));
     cls->defineFunction("define", _SE(js_renderer_EffectBase_define));
     cls->install();
     JSBClassType::registerClass<cocos2d::renderer::EffectBase>(cls);

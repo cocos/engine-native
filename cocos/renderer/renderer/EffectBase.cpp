@@ -34,11 +34,16 @@ EffectBase::~EffectBase()
 {
 }
 
-const Value* EffectBase::getDefine(const std::string& name) const
+const Value* EffectBase::getDefine(const std::string& name, int passIdx) const
 {
     auto& passes = getPasses();
-    for (auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         auto value = pass->getDefine(name);
         if (value) {
             return value;
@@ -48,22 +53,32 @@ const Value* EffectBase::getDefine(const std::string& name) const
     return nullptr;
 }
 
-void EffectBase::define(const std::string& name, const Value& value)
+void EffectBase::define(const std::string& name, const Value& value, int passIdx)
 {
     auto& passes = getPasses();
-    for (auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         pass->define(name, value);
     }
 
     _dirty = true;
 }
 
-const EffectBase::Property* EffectBase::getProperty(const std::string& name) const
+const EffectBase::Property* EffectBase::getProperty(const std::string& name, int passIdx) const
 {
     auto& passes = getPasses();
-    for (auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         auto value = pass->getProperty(name);
         if (value) {
             return value;
@@ -73,62 +88,106 @@ const EffectBase::Property* EffectBase::getProperty(const std::string& name) con
     return nullptr;
 }
 
-void EffectBase::setProperty(const std::string& name, const Property& property)
+void EffectBase::setProperty(const std::string& name, const Property& property, int passIdx)
 {
     auto& passes = getPasses();
-    for (auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         pass->setProperty(name, property);
     }
 
     _dirty = true;
 }
 
-void EffectBase::setProperty(const std::string& name, void* value)
+void EffectBase::setProperty(const std::string& name, void* value, int passIdx)
 {
     auto& passes = getPasses();
-    for (auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         pass->setProperty(name, value);
     }
 
     _dirty = true;
 }
 
-void EffectBase::setCullMode(CullMode cullMode)
+void EffectBase::setCullMode(CullMode cullMode, int passIdx)
 {
     auto& passes = getPasses();
-    for (const auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         pass->setCullMode(cullMode);
     }
 }
 
-void EffectBase::setBlend(bool blendTest, BlendOp blendEq, BlendFactor blendSrc, BlendFactor blendDst, BlendOp blendAlphaEq, BlendFactor blendSrcAlpha, BlendFactor blendDstAlpha, uint32_t blendColor)
+void EffectBase::setBlend(bool blendTest, BlendOp blendEq, BlendFactor blendSrc, BlendFactor blendDst, BlendOp blendAlphaEq, BlendFactor blendSrcAlpha, BlendFactor blendDstAlpha, uint32_t blendColor, int passIdx)
 {
     auto& passes = getPasses();
-    for (const auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         pass->setBlend(blendTest, blendEq, blendSrc, blendDst, blendAlphaEq, blendSrcAlpha, blendDstAlpha, blendColor);
     }
 }
 
-void EffectBase::setStencilTest(bool value)
+void EffectBase::setStencilTest(bool value, int passIdx)
 {
     auto& passes = getPasses();
-    for (const auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         pass->setStencilTest(value);
     }
 }
 
-void EffectBase::setStencil(StencilFunc stencilFunc, uint32_t stencilRef, uint8_t stencilMask, StencilOp stencilFailOp, StencilOp stencilZFailOp, StencilOp stencilZPassOp, uint8_t stencilWriteMask)
+void EffectBase::setStencil(StencilFunc stencilFunc, uint32_t stencilRef, uint8_t stencilMask, StencilOp stencilFailOp, StencilOp stencilZFailOp, StencilOp stencilZPassOp, uint8_t stencilWriteMask, int passIdx)
 {
     auto& passes = getPasses();
-    for (const auto& pass : passes)
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
     {
+        const auto& pass = passes.at(i);
         pass->setStencilFront(stencilFunc, stencilRef, stencilMask, stencilFailOp, stencilZFailOp, stencilZPassOp, stencilWriteMask);
         pass->setStencilBack(stencilFunc, stencilRef, stencilMask, stencilFailOp, stencilZFailOp, stencilZPassOp, stencilWriteMask);
+    }
+}
+
+void EffectBase::setDepth(bool depthTest, bool depthWrite, DepthFunc depthFunc, int passIdx)
+{
+    auto& passes = getPasses();
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
+    }
+    for (size_t i = start; i < end; i++)
+    {
+        const auto& pass = passes.at(i);
+        pass->setDepth(depthTest, depthWrite, depthFunc);
     }
 }
 

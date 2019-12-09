@@ -55,25 +55,25 @@ public:
     /**
      *  @brief Gets define property value by name.
      */
-    const Value* getDefine(const std::string& name) const;
+    const Value* getDefine(const std::string& name, int passIdx = -1) const;
     /**
      *  @brief Sets a define's value.
      */
-    void define(const std::string& name, const Value& value);
+    void define(const std::string& name, const Value& value, int passIdx = -1);
     /**
      *  @brief Gets uniform property value by name.
      */
-    const Property* getProperty(const std::string& name) const;
+    const Property* getProperty(const std::string& name, int passIdx = -1) const;
     /**
      *  @brief Sets uniform property value by name.
      */
-    void setProperty(const std::string& name, const Property& property);
-    void setProperty(const std::string& name, void* value);
+    void setProperty(const std::string& name, const Property& property, int passIdx = -1);
+    void setProperty(const std::string& name, void* value, int passIdx = -1);
     /**
      *  @brief Sets cull mode.
      *  @param[in] cullMode Cull front or back or both.
      */
-    void setCullMode(CullMode cullMode);
+    void setCullMode(CullMode cullMode, int passIdx = -1);
     /**
      *  @brief Sets blend mode.
      *  @param[in] blendEq RGB blend equation.
@@ -92,7 +92,8 @@ public:
         BlendOp blendAlphaEq = BlendOp::ADD,
         BlendFactor blendSrcAlpha = BlendFactor::ONE,
         BlendFactor blendDstAlpha = BlendFactor::ZERO,
-        uint32_t blendColor = 0xffffffff
+        uint32_t blendColor = 0xffffffff,
+        int passIdx = -1
     );
     /**
      *  @brief Sets stencil front-facing function, reference, mask, fail operation, write mask.
@@ -104,13 +105,20 @@ public:
         StencilOp stencilFailOp = StencilOp::KEEP,
         StencilOp stencilZFailOp = StencilOp::KEEP,
         StencilOp stencilZPassOp = StencilOp::KEEP,
-        uint8_t stencilWriteMask = 0xff
+        uint8_t stencilWriteMask = 0xff,
+        int passIdx = -1
     );
     /*
      *  @brief Sets stencil test enabled or not.
      */
-    void setStencilTest(bool value);
+    void setStencilTest(bool value, int passIdx = -1);
     
+    void setDepth(
+        bool depthTest = false,
+        bool depthWrite = false,
+        DepthFunc depthFunc = DepthFunc::LESS,
+        int passIdx = -1
+    );
 protected:
     bool _dirty = true;
 };
