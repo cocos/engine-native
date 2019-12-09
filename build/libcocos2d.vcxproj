@@ -202,6 +202,7 @@
     <ClCompile Include="..\cocos\renderer\renderer\Config.cpp" />
     <ClCompile Include="..\cocos\renderer\renderer\EffectVariant.cpp" />
     <ClCompile Include="..\cocos\renderer\renderer\Effect.cpp" />
+    <ClCompile Include="..\cocos\renderer\renderer\EffectBase.cpp" />
     <ClCompile Include="..\cocos\renderer\renderer\ForwardRenderer.cpp" />
     <ClCompile Include="..\cocos\renderer\renderer\InputAssembler.cpp" />
     <ClCompile Include="..\cocos\renderer\renderer\Light.cpp" />
@@ -541,6 +542,7 @@
     <ClInclude Include="..\cocos\renderer\renderer\Config.h" />
     <ClInclude Include="..\cocos\renderer\renderer\EffectVariant.hpp" />
     <ClInclude Include="..\cocos\renderer\renderer\Effect.h" />
+    <ClInclude Include="..\cocos\renderer\renderer\EffectBase.h" />
     <ClInclude Include="..\cocos\renderer\renderer\ForwardRenderer.h" />
     <ClInclude Include="..\cocos\renderer\renderer\INode.h" />
     <ClInclude Include="..\cocos\renderer\renderer\InputAssembler.h" />

@@ -124,6 +124,9 @@
     <ClCompile Include="..\cocos\renderer\renderer\Effect.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\renderer\renderer\EffectBase.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
     <ClCompile Include="..\cocos\renderer\renderer\ForwardRenderer.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
@@ -1003,6 +1006,9 @@
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\renderer\renderer\Effect.h">
+      <Filter>renderer\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\renderer\renderer\EffectBase.h">
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\renderer\renderer\ForwardRenderer.h">
