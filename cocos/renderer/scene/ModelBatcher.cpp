@@ -40,7 +40,6 @@ ModelBatcher::ModelBatcher(RenderFlow* flow)
 , _currEffect(nullptr)
 , _buffer(nullptr)
 , _useModel(false)
-, _customProps(nullptr)
 , _node(nullptr)
 {
     for (int i = 0; i < INIT_MODEL_LENGTH; i++)
@@ -114,7 +113,6 @@ void ModelBatcher::changeCommitState(CommitState state)
             break;
     }
     setCurrentEffect(nullptr);
-    setEffectVariant(nullptr);
     _commitState = state;
 }
 
@@ -142,7 +140,6 @@ void ModelBatcher::commit(NodeProxy* node, Assembler* assembler, int cullingMask
         assembler->beforeFillBuffers(i);
         
         EffectVariant* effect = assembler->getEffect(i);
-        EffectVariant* customProp = assembler->getEffectVariant();
         if (!effect) continue;
 
         if (_currEffect == nullptr ||
@@ -154,7 +151,6 @@ void ModelBatcher::commit(NodeProxy* node, Assembler* assembler, int cullingMask
             
             setNode(_useModel ? node : nullptr);
             setCurrentEffect(effect);
-            setEffectVariant(customProp);
             _modelMat.set(worldMat);
             _useModel = useModel;
             _cullingMask = cullingMask;
@@ -263,7 +259,7 @@ void ModelBatcher::flushIA()
     _modelOffset++;
     model->setWorldMatix(_modelMat);
     model->setCullingMask(_cullingMask);
-    model->setEffect(_currEffect, _customProps);
+    model->setEffect(_currEffect);
     model->setNode(_node);
     model->setInputAssembler(_ia);
     
@@ -314,7 +310,7 @@ void ModelBatcher::flush()
     _modelOffset++;
     model->setWorldMatix(_modelMat);
     model->setCullingMask(_cullingMask);
-    model->setEffect(_currEffect, _customProps);
+    model->setEffect(_currEffect);
     model->setNode(_node);
     model->setInputAssembler(_ia);
     

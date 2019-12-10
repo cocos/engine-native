@@ -181,9 +181,6 @@ public:
     {
         return _iaDatas.size();
     }
-    
-    inline void setEffectVariant(EffectVariant* customProp) { _customProp = customProp;};
-    inline EffectVariant* getEffectVariant() { return _customProp;};
 protected:
     RenderDataList* _datas = nullptr;
     std::vector<IARenderData> _iaDatas;
@@ -197,8 +194,6 @@ protected:
     
     bool _ignoreWorldMatrix = false;
     bool _ignoreOpacityFlag = false;
-    
-    EffectVariant* _customProp = nullptr;
 };
 
 // end of scene group

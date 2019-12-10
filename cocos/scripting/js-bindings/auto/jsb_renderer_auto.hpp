@@ -34,7 +34,6 @@ bool js_register_cocos2d_renderer_Effect(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_Effect_clear);
 SE_DECLARE_FUNC(js_renderer_Effect_switchTechnique);
-SE_DECLARE_FUNC(js_renderer_Effect_getPasses);
 SE_DECLARE_FUNC(js_renderer_Effect_copy);
 SE_DECLARE_FUNC(js_renderer_Effect_Effect);
 
@@ -238,7 +237,6 @@ bool js_register_cocos2d_renderer_Assembler(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_Assembler_setVertexFormat);
 SE_DECLARE_FUNC(js_renderer_Assembler_isIgnoreOpacityFlag);
-SE_DECLARE_FUNC(js_renderer_Assembler_setEffectVariant);
 SE_DECLARE_FUNC(js_renderer_Assembler_ignoreWorldMatrix);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateVerticesRange);
 SE_DECLARE_FUNC(js_renderer_Assembler_setRenderDataList);

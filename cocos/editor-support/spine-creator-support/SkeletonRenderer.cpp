@@ -378,9 +378,6 @@ void SkeletonRenderer::render (float deltaTime) {
         
         if (needUpdate) {
             renderEffect->setProperty(textureKey, texture->getNativeTexture());
-        }
-
-        if (needUpdate) {
             renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                            BlendOp::ADD, curBlendSrc, curBlendDst);
         }

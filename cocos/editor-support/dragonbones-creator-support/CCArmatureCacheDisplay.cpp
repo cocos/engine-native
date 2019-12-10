@@ -309,11 +309,7 @@ void CCArmatureCacheDisplay::render(float dt)
 
         if (needUpdate)
         {
-            renderEffect->setProperty(textureKey, segment->getTexture()->getNativeTexture());
-        }
-
-        if (needUpdate)
-        {
+           renderEffect->setProperty(textureKey, segment->getTexture()->getNativeTexture());
            switch (blendMode)
            {
                 case BlendMode::Add:

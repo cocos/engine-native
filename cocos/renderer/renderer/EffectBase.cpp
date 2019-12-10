@@ -39,6 +39,10 @@ const Value* EffectBase::getDefine(const std::string& name, int passIdx) const
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::getDefine error passIdx [%d]", passIdx);
+            return nullptr;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -58,6 +62,10 @@ void EffectBase::define(const std::string& name, const Value& value, int passIdx
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::define error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -74,6 +82,10 @@ const EffectBase::Property* EffectBase::getProperty(const std::string& name, int
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::getProperty error passIdx [%d]", passIdx);
+            return nullptr;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -93,6 +105,10 @@ void EffectBase::setProperty(const std::string& name, const Property& property, 
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::setProperty error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -109,6 +125,10 @@ void EffectBase::setProperty(const std::string& name, void* value, int passIdx)
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::setProperty error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -125,6 +145,10 @@ void EffectBase::setCullMode(CullMode cullMode, int passIdx)
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::setCullMode error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -139,6 +163,10 @@ void EffectBase::setBlend(bool blendTest, BlendOp blendEq, BlendFactor blendSrc,
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::setBlend error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -153,6 +181,10 @@ void EffectBase::setStencilTest(bool value, int passIdx)
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::setStencilTest error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -167,6 +199,10 @@ void EffectBase::setStencil(StencilFunc stencilFunc, uint32_t stencilRef, uint8_
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::setStencil error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)
@@ -182,6 +218,10 @@ void EffectBase::setDepth(bool depthTest, bool depthWrite, DepthFunc depthFunc, 
     auto& passes = getPasses();
     size_t start = 0, end = passes.size();
     if (passIdx != -1) {
+        if (passIdx >= passes.size()) {
+            RENDERER_LOGD("EffectBase::setDepth error passIdx [%d]", passIdx);
+            return;
+        }
         start = passIdx; end = passIdx + 1;
     }
     for (size_t i = start; i < end; i++)

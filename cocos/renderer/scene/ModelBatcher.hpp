@@ -129,7 +129,6 @@ public:
     void setCullingMask(int cullingMask) { _cullingMask = cullingMask; }
     void setCurrentEffect(EffectVariant* effect);
     void setUseModel(bool useModel) { _useModel = useModel; }
-    void setEffectVariant(EffectVariant* props) { _customProps = props; };
 private:
     void changeCommitState(CommitState state);
 private:
@@ -145,7 +144,6 @@ private:
     MeshBuffer* _buffer = nullptr;
     EffectVariant* _currEffect = nullptr;
     RenderFlow* _flow = nullptr;
-    EffectVariant* _customProps = nullptr;
 
     StencilManager* _stencilMgr = nullptr;
     

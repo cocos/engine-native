@@ -170,16 +170,6 @@ int
 },
 
 /**
- * @method getPasses
-* @return {Array|Array}
-*/
-getPasses : function(
-)
-{
-    return new Array();
-},
-
-/**
  * @method copy
  * @param {cc.renderer::Effect} arg0
  */
@@ -1563,16 +1553,6 @@ isIgnoreOpacityFlag : function (
 )
 {
     return false;
-},
-
-/**
- * @method setEffectVariant
- * @param {cc.renderer::EffectVariant} arg0
- */
-setEffectVariant : function (
-effectvariant 
-)
-{
 },
 
 /**

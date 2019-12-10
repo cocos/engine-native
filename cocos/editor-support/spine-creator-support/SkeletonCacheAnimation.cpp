@@ -348,12 +348,9 @@ namespace spine {
                 renderEffect = effect;
                 needUpdate = true;
             }
-            
+
             if (needUpdate) {
                 renderEffect->setProperty(textureKey, segment->getTexture()->getNativeTexture());
-            }
-            
-            if (needUpdate) {
                 switch (blendMode) {
                     case BlendMode_Additive:
                         curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;

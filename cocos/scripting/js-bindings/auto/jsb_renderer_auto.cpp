@@ -667,36 +667,6 @@ static bool js_renderer_Effect_switchTechnique(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Effect_switchTechnique)
 
-static bool js_renderer_Effect_getPasses(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    cocos2d::renderer::Effect* cobj = (cocos2d::renderer::Effect*)s.nativeThisObject();
-    SE_PRECONDITION2( cobj, false, "js_renderer_Effect_getPasses : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    do {
-        if (argc == 0) {
-            const cocos2d::Vector<cocos2d::renderer::Pass *>& result = cobj->getPasses();
-            ok &= Vector_to_seval(result, &s.rval());
-            SE_PRECONDITION2(ok, false, "js_renderer_Effect_getPasses : Error processing arguments");
-            return true;
-        }
-    } while(false);
-
-    do {
-        if (argc == 0) {
-            cocos2d::Vector<cocos2d::renderer::Pass *>& result = cobj->getPasses();
-            ok &= Vector_to_seval(result, &s.rval());
-            SE_PRECONDITION2(ok, false, "js_renderer_Effect_getPasses : Error processing arguments");
-            return true;
-        }
-    } while(false);
-
-    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
-    return false;
-}
-SE_BIND_FUNC(js_renderer_Effect_getPasses)
-
 static bool js_renderer_Effect_copy(se::State& s)
 {
     cocos2d::renderer::Effect* cobj = (cocos2d::renderer::Effect*)s.nativeThisObject();
@@ -745,7 +715,6 @@ bool js_register_renderer_Effect(se::Object* obj)
 
     cls->defineFunction("clear", _SE(js_renderer_Effect_clear));
     cls->defineFunction("switchTechnique", _SE(js_renderer_Effect_switchTechnique));
-    cls->defineFunction("getPasses", _SE(js_renderer_Effect_getPasses));
     cls->defineFunction("copy", _SE(js_renderer_Effect_copy));
     cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_Effect_finalize));
     cls->install();
@@ -3527,25 +3496,6 @@ static bool js_renderer_Assembler_isIgnoreOpacityFlag(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Assembler_isIgnoreOpacityFlag)
 
-static bool js_renderer_Assembler_setEffectVariant(se::State& s)
-{
-    cocos2d::renderer::Assembler* cobj = (cocos2d::renderer::Assembler*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_renderer_Assembler_setEffectVariant : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        cocos2d::renderer::EffectVariant* arg0 = nullptr;
-        ok &= seval_to_native_ptr(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_renderer_Assembler_setEffectVariant : Error processing arguments");
-        cobj->setEffectVariant(arg0);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_renderer_Assembler_setEffectVariant)
-
 static bool js_renderer_Assembler_ignoreWorldMatrix(se::State& s)
 {
     cocos2d::renderer::Assembler* cobj = (cocos2d::renderer::Assembler*)s.nativeThisObject();
@@ -3721,7 +3671,6 @@ bool js_register_renderer_Assembler(se::Object* obj)
 
     cls->defineFunction("setVertexFormat", _SE(js_renderer_Assembler_setVertexFormat));
     cls->defineFunction("isIgnoreOpacityFlag", _SE(js_renderer_Assembler_isIgnoreOpacityFlag));
-    cls->defineFunction("setEffectVariant", _SE(js_renderer_Assembler_setEffectVariant));
     cls->defineFunction("ignoreWorldMatrix", _SE(js_renderer_Assembler_ignoreWorldMatrix));
     cls->defineFunction("updateVerticesRange", _SE(js_renderer_Assembler_updateVerticesRange));
     cls->defineFunction("setRenderDataList", _SE(js_renderer_Assembler_setRenderDataList));

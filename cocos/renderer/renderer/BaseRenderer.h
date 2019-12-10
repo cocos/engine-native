@@ -103,7 +103,7 @@ public:
 protected:
     void render(const View&, const Scene* scene);
     void draw(const StageItem& item);
-    void setProperty (const Effect::Property& prop);
+    void setProperty (const Effect::Property* prop);
     
     struct StageInfo
     {
@@ -155,6 +155,8 @@ protected:
     static const size_t cc_matpProj;
     static const size_t cc_matViewProj;
     static const size_t cc_cameraPos;
+    
+    static std::vector<const ValueMap*> __tmp_defines__;
 };
 
 // end of renderer group

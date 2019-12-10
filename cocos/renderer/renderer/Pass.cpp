@@ -218,7 +218,7 @@ void Pass::copy(const Pass& pass)
     _properties = pass._properties;
     _definesHash = pass._definesHash;
     
-    memcpy(&_states, &pass._states, PASS_VALUE_LENGTH * sizeof(uint32_t));
+    memcpy(_states, pass._states, PASS_VALUE_LENGTH * sizeof(uint32_t));
 }
 
 const Technique::Parameter* Pass::getProperty(const std::string& name) const

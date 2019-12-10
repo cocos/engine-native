@@ -103,7 +103,7 @@ public:
     /**
      *  @brief Adds an effect.
      */
-    void setEffect(EffectVariant* effect, EffectVariant* EffectVariant);
+    void setEffect(EffectVariant* effect);
     /**
      *  @brief Set user key.
      */

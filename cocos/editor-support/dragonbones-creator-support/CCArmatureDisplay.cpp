@@ -283,10 +283,6 @@ void CCArmatureDisplay::traverseArmature(Armature* armature, float parentOpacity
         if (needUpdate)
         {
             renderEffect->setProperty(textureKey, texture->getNativeTexture());
-        }
-        
-        if (needUpdate)
-        {
             renderEffect->setBlend(true, BlendOp::ADD, _curBlendSrc, _curBlendDst,
                            BlendOp::ADD, _curBlendSrc, _curBlendDst);
         }

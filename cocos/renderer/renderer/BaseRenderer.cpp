@@ -196,28 +196,28 @@ void BaseRenderer::render(const View& view, const Scene* scene)
     }
 }
 
-void BaseRenderer::setProperty (const Effect::Property& prop)
+void BaseRenderer::setProperty (const Effect::Property* prop)
 {
-    Technique::Parameter::Type propType = prop.getType();
-    auto& propName = prop.getName();
-    auto propHashName = prop.getHashName();
+    Technique::Parameter::Type propType = prop->getType();
+    auto& propName = prop->getName();
+    auto propHashName = prop->getHashName();
     if (Effect::Property::Type::UNKNOWN == propType)
     {
         RENDERER_LOGW("Failed to set technique property, type unknown");
         return;
     }
+  
+    if (nullptr == prop->getValue())
+    {
+        Effect::Property tmp(propName, propType);
+        prop = &tmp;
+        if (Effect::Property::Type::TEXTURE_2D == propType)
+        {
+            tmp.setTexture(_defaultTexture);
+        }
+    }
     
-//    if (nullptr == prop.getValue())
-//    {
-//        prop = Effect::Property(propName, propType);
-//        
-//        if (Effect::Property::Type::TEXTURE_2D == propType)
-//        {
-//            prop.setTexture(_defaultTexture);
-//        }
-//    }
-    
-    if (nullptr == prop.getValue())
+    if (nullptr == prop->getValue())
     {
         RENDERER_LOGW("Failed to set technique property %s, value not found", propName.c_str());
         return;
@@ -226,44 +226,44 @@ void BaseRenderer::setProperty (const Effect::Property& prop)
     if (Effect::Property::Type::TEXTURE_2D == propType ||
         Effect::Property::Type::TEXTURE_CUBE == propType)
     {
-        if (1 == prop.getCount())
+        if (1 == prop->getCount())
         {
             _device->setTexture(propHashName,
-                                (renderer::Texture *)(prop.getValue()),
+                                (renderer::Texture *)(prop->getValue()),
                                 allocTextureUnit());
         }
-        else if (0 < prop.getCount())
+        else if (0 < prop->getCount())
         {
             std::vector<int> slots;
             slots.reserve(10);
-            for (int i = 0; i < prop.getCount(); ++i)
+            for (int i = 0; i < prop->getCount(); ++i)
             {
                 slots.push_back(allocTextureUnit());
             }
             
             _device->setTextureArray(propHashName,
-                                     prop.getTextureArray(),
+                                     prop->getTextureArray(),
                                      slots);
         }
     }
     else
     {
-        uint16_t bytes = prop.getBytes();
+        uint16_t bytes = prop->getBytes();
         if (Effect::Property::Type::INT == propType ||
             Effect::Property::Type::INT2 == propType ||
             Effect::Property::Type::INT4 == propType)
         {
-            _device->setUniformiv(propHashName, bytes / sizeof(int), (const int*)prop.getValue());
+            _device->setUniformiv(propHashName, bytes / sizeof(int), (const int*)prop->getValue());
         }
         else
         {
-            _device->setUniformfv(propHashName, bytes / sizeof(float), (const float*)prop.getValue());
+            _device->setUniformfv(propHashName, bytes / sizeof(float), (const float*)prop->getValue());
         }
     }
 }
 
 
-std::vector<const ValueMap*> __tmp_defines__;
+std::vector<const ValueMap*> BaseRenderer::__tmp_defines__;
 void BaseRenderer::draw(const StageItem& item)
 {
     const Mat4& worldMatrix = item.model->getWorldMatrix();
@@ -301,7 +301,7 @@ void BaseRenderer::draw(const StageItem& item)
         {
             auto prop = pass->getProperty(uniform.hashName);
             if (prop) {
-                setProperty(*prop);
+                setProperty(prop);
             }
         }
         

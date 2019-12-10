@@ -76,7 +76,7 @@ void Model::setInputAssembler(const InputAssembler& ia)
     _inputAssembler = ia;
 }
 
-void Model::setEffect(EffectVariant* effect, EffectVariant* EffectVariant)
+void Model::setEffect(EffectVariant* effect)
 {
     if (_effect != effect)
     {
