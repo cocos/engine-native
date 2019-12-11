@@ -183,6 +183,7 @@ GFXCommandAllocator* GLES2Device::CreateGFXCommandAllocator(const GFXCommandAllo
         return gfx_cmd_allocator;
 
     CC_SAFE_DESTROY(gfx_cmd_allocator);
+
     return nullptr;
 }
 
