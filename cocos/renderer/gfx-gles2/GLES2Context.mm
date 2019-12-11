@@ -50,9 +50,7 @@ bool GLES2Context::Initialize(const GFXContextInfo &info) {
 
     if (!MakeCurrent())
         return false;
-    
-    // Initialize default frame buffer and attatch color/depth/stencil buffer.
-    
+
     return createCustomFrameBuffer();
 }
 
