@@ -482,7 +482,8 @@ void GLES2CmdFuncDestroyBuffer(GLES2Device* device, GLES2GPUBuffer* gpu_buffer)
     {
         glDeleteBuffers(1, &gpu_buffer->gl_buffer);
         gpu_buffer->gl_buffer = 0;
-        device->state_cache->gl_array_buffer = 0;
+        if(gpu_buffer->gl_target == GL_ARRAY_BUFFER)
+            device->state_cache->gl_array_buffer = 0;
     }
 
     CC_SAFE_FREE(gpu_buffer->buffer);
