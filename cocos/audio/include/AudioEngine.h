@@ -380,8 +380,8 @@ private:
     static uint32_t _onResumeListenerID;
     static std::vector<int> _breakAudioID;
     
-    static void onEnterBackground(const CustomEvent&);
-    static void onEnterForeground(const CustomEvent&);
+    static void onPause(const CustomEvent&);
+    static void onResume(const CustomEvent&);
     
     friend class AudioEngineImpl;
 };
