@@ -123,7 +123,8 @@ struct GLES2GPUUniform
                 CC_SAFE_FREE(buff);
                 buff = (uint8_t*)CC_MALLOC(size);
             }
-            memcpy(buff, rhs.buff, size);
+            if(buff && rhs.buff)
+                memcpy(buff, rhs.buff, size);
         }
         return *this;
     }
