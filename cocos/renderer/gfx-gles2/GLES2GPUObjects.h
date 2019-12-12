@@ -88,32 +88,21 @@ typedef vector<GLES2GPUInput>::type GLES2GPUInputList;
 
 struct GLES2GPUUniform
 {
-    uint binding;
+    uint binding = GFX_INVALID_BINDING;
     String name;
-    GFXType type;
-    uint stride;
-    uint count;
-    uint size;
-    uint offset;
+    GFXType type = GFXType::UNKNOWN;
+    uint stride = 0;
+    uint count = 0;
+    uint size = 0;
+    uint offset = 0;
     GLenum gl_type;
-    GLint gl_loc;
+    GLint gl_loc = -1;
     uint8_t* buff = nullptr;
 
     GLES2GPUUniform() {}
     GLES2GPUUniform(const GLES2GPUUniform& rhs)
-    :binding(rhs.binding),
-    name(rhs.name),
-    type(rhs.type),
-    stride(rhs.stride),
-    count(rhs.count),
-    size(rhs.size),
-    offset(rhs.offset),
-    gl_type(rhs.gl_type),
-    gl_loc(rhs.gl_loc)
     {
-        CC_SAFE_FREE(buff);
-        buff = (uint8_t*)CC_MALLOC(size);
-        memcpy(buff, rhs.buff, size);
+        *this = rhs;
     }
 
     GLES2GPUUniform& operator =(const GLES2GPUUniform& rhs)
@@ -125,12 +114,15 @@ struct GLES2GPUUniform
             type = rhs.type;
             stride = rhs.stride;
             count = rhs.count;
-            size = rhs.size;
             offset = rhs.offset;
             gl_type = rhs.gl_type;
             gl_loc = rhs.gl_loc;
-            CC_SAFE_FREE(buff);
-            buff = (uint8_t*)CC_MALLOC(size);
+            if(size != rhs.size)
+            {
+                size = rhs.size;
+                CC_SAFE_FREE(buff);
+                buff = (uint8_t*)CC_MALLOC(size);
+            }
             memcpy(buff, rhs.buff, size);
         }
         return *this;
