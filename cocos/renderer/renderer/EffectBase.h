@@ -47,7 +47,7 @@ public:
     /*
      *  @brief The default destructor.
      */
-    ~EffectBase();
+    virtual ~EffectBase();
     
     virtual Vector<Pass*>& getPasses() = 0;
     virtual const Vector<Pass*>& getPasses() const = 0;
