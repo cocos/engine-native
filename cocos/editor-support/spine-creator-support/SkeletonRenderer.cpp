@@ -987,16 +987,16 @@ Attachment* SkeletonRenderer::getAttachment (const std::string& slotName, const 
 
 bool SkeletonRenderer::setAttachment (const std::string& slotName, const std::string& attachmentName) {
     if (_skeleton) {
-        return _skeleton->getAttachment(slotName.c_str(), attachmentName.empty() ? 0 : attachmentName.c_str()) ? true : false;
+        _skeleton->setAttachment(slotName.c_str(), attachmentName.empty() ? 0 : attachmentName.c_str());
     }
-    return false;
+    return true;
 }
 
 bool SkeletonRenderer::setAttachment (const std::string& slotName, const char* attachmentName) {
     if (_skeleton) {
-        return _skeleton->getAttachment(slotName.c_str(), attachmentName) ? true : false;
+        _skeleton->setAttachment(slotName.c_str(), attachmentName);
     }
-    return false;
+    return true;
 }
 
 void SkeletonRenderer::setUseTint(bool enabled) {
