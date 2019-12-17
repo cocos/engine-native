@@ -131,6 +131,7 @@ bool GLES2Context::createCustomFrameBuffer()
             }
             default:;
         }
+        destroyCustomFrameBuffer();
         return false;
     }
 
