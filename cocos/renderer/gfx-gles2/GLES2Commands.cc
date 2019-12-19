@@ -595,10 +595,10 @@ void GLES2CmdFuncCreateTexture(GLES2Device* device, GLES2GPUTexture* gpu_texture
       gpu_texture->gl_target = GL_TEXTURE_2D;
       glGenTextures(1, &gpu_texture->gl_texture);
       if (gpu_texture->size > 0) {
-        GLuint gl_texture = device->state_cache->gl_textures[device->state_cache->tex_uint];
+        GLuint& gl_texture = device->state_cache->gl_textures[device->state_cache->tex_uint];
         if (gpu_texture->gl_texture != gl_texture) {
-          glBindTexture(GL_TEXTURE_2D, gl_texture);
-          gpu_texture->gl_texture = gl_texture;
+          glBindTexture(GL_TEXTURE_2D, gpu_texture->gl_texture);
+          gl_texture = gpu_texture->gl_texture;
         }
         uint w = gpu_texture->width;
         uint h = gpu_texture->height;
@@ -624,10 +624,10 @@ void GLES2CmdFuncCreateTexture(GLES2Device* device, GLES2GPUTexture* gpu_texture
       gpu_texture->gl_target = GL_TEXTURE_CUBE_MAP;
       glGenTextures(1, &gpu_texture->gl_texture);
       if (gpu_texture->size > 0) {
-        GLuint gl_texture = device->state_cache->gl_textures[device->state_cache->tex_uint];
+        GLuint& gl_texture = device->state_cache->gl_textures[device->state_cache->tex_uint];
         if (gpu_texture->gl_texture != gl_texture) {
-          glBindTexture(GL_TEXTURE_CUBE_MAP, gl_texture);
-          gpu_texture->gl_texture = gl_texture;
+          glBindTexture(GL_TEXTURE_CUBE_MAP, gpu_texture->gl_texture);
+          gl_texture = gpu_texture->gl_texture;
         }
         if (!GFX_FORMAT_INFOS[(int)gpu_texture->format].is_compressed) {
           for (uint f = 0; f < 6; ++f) {
@@ -968,7 +968,7 @@ void GLES2CmdFuncCreateShader(GLES2Device* device, GLES2GPUShader* gpu_shader) {
             gpu_sampler.units[u] = unit_idx + u;
           }
 
-          gpu_sampler.gl_loc = glGetAttribLocation(gpu_shader->gl_program, gl_name);
+          gpu_sampler.gl_loc = glGetUniformLocation(gpu_shader->gl_program, gl_name);
           unit_idx += gl_size;
 
           active_gpu_samplers.push_back(gpu_sampler);
