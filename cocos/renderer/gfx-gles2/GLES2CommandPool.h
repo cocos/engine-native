@@ -5,7 +5,7 @@
 
 NS_CC_BEGIN
 
-template <typename T, typename = std::enable_if<std::is_base_of<GLES2Cmd, T>::value>>
+template <typename T, typename = std::enable_if<std::is_base_of<GFXCmd, T>::value>>
 class GLES2CommandPool {
  public:
   GLES2CommandPool(): free_cmds_(1) {
