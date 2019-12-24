@@ -121,11 +121,11 @@ struct GLES3GPUUniformSampler {
 typedef vector<GLES3GPUUniformSampler>::type GLES3GPUUniformSamplerList;
 
 struct GLES3GPUShaderStage {
-  GLES3GPUShaderStage(GFXShaderType type, String source, GFXShaderMacroList macros, GLuint gl_shader = 0)
-    : type(type)
-    , source(source)
-    , macros(macros)
-    , gl_shader(gl_shader)
+  GLES3GPUShaderStage(GFXShaderType t, String s, GFXShaderMacroList m, GLuint shader = 0)
+    : type(t)
+    , source(s)
+    , macros(m)
+    , gl_shader(shader)
     {}
   GFXShaderType type;
   String source;
