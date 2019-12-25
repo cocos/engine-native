@@ -29,6 +29,7 @@ public:
     virtual GFXBindingLayout* CreateGFXBindingLayout(const GFXBindingLayoutInfo& info) override;
     virtual GFXPipelineState* CreateGFXPipelineState(const GFXPipelineStateInfo& info) override;
     virtual GFXPipelineLayout* CreateGFXPipelieLayout(const GFXPipelineLayoutInfo& info) override;
+    virtual void CopyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions) override;
     
     CC_INLINE void* getMTKView() const { return _mtkView; }
     CC_INLINE CCMTLStateCache* getStateCache() const { return _stateCache; }

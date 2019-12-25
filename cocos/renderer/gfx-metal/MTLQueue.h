@@ -21,7 +21,6 @@ private:
     
 private:
     id<MTLCommandQueue> _metalQueue = nil;
-    NSAutoreleasePool* _autoReleasePool = nil;
 };
 
 NS_CC_END

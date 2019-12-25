@@ -26,8 +26,6 @@ bool CCMTLQueue::Initialize(const GFXQueueInfo &info)
     _metalQueue = [mtkView.device newCommandQueue];
     type_ = info.type;
     
-    _autoReleasePool = [[NSAutoreleasePool alloc] init];
-    
     return _metalQueue != nil;
 }
 
@@ -42,11 +40,14 @@ void CCMTLQueue::Destroy()
 
 void CCMTLQueue::submit(GFXCommandBuffer** cmd_buffs, uint count)
 {
+    NSAutoreleasePool* autoReleasePool = [[NSAutoreleasePool alloc] init];
+    
     for (uint i = 0; i < count; ++i)
     {
         executeCommands(static_cast<CCMTLCommandBuffer*>(cmd_buffs[i])->getCommandPackage() );
-        [_autoReleasePool drain];
     }
+    
+    [autoReleasePool release];
 }
 
 void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage)
@@ -76,7 +77,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage)
                 cmdBeginRenderPass = commandPackage->beginRenderPassCmds[cmdIdx++];
                 
                 MTLRenderPassDescriptor* mtlRenderPassDescriptor;
-                if (cmdBeginRenderPass->frameBuffer->is_offscreen() )
+                if (!cmdBeginRenderPass->frameBuffer->is_offscreen() )
                 {
                     mtlRenderPassDescriptor = mtkView.currentRenderPassDescriptor;
                     mtlRenderPassDescriptor.colorAttachments[0].clearColor = mu::toMTLClearColor(cmdBeginRenderPass->clearColors[0]);

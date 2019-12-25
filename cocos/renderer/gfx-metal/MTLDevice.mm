@@ -34,7 +34,7 @@ bool CCMTLDevice::Initialize(const GFXDeviceInfo& info)
     
     _stateCache = CC_NEW(CCMTLStateCache);
     
-    _mtkView = ((MTKView*)window_handle_).device;
+    _mtkView = (MTKView*)window_handle_;
     
     GFXWindowInfo window_info;
     window_info.is_offscreen = false;
@@ -171,6 +171,11 @@ GFXPipelineState* CCMTLDevice::CreateGFXPipelineState(const GFXPipelineStateInfo
 }
 
 GFXPipelineLayout* CCMTLDevice::CreateGFXPipelieLayout(const GFXPipelineLayoutInfo& info)
+{
+    
+}
+
+void CCMTLDevice::CopyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions)
 {
     
 }

@@ -9,7 +9,7 @@ CCMTLCommandAllocator::~CCMTLCommandAllocator() { Destroy(); }
 
 bool CCMTLCommandAllocator::Initialize(const GFXCommandAllocatorInfo& info)
 {
-    
+    return true;
 }
 
 void CCMTLCommandAllocator::Destroy()

@@ -22,7 +22,6 @@ private:
     friend class CCMTLCommandBuffer;
     GFXCommandPool<CCMTLCmdBeginRenderPass> _beginRenderPassCmdPool;
     //TODO: add other pools.
-    
 };
 
 NS_CC_END
