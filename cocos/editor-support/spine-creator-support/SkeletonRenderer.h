@@ -41,11 +41,13 @@
 #include "base/CCMap.h"
 #include "middleware-adapter.h"
 #include "base/ccMacros.h"
+#include "renderer/renderer/EffectVariant.hpp"
 
 namespace spine {
 
     class AttachmentVertices;
-
+    class RealTimeAttachUtil;
+    
     /** Draws a skeleton.
      */
     class SkeletonRenderer: public cocos2d::middleware::IMiddleware, public cocos2d::Ref {
@@ -104,27 +106,10 @@ namespace spine {
          * @return debug data,it's a Float32Array,
          * format |debug bones length|[beginX|beginY|toX|toY|...loop...]
          */
-        se_object_ptr getDebugData() const {
-            if (_debugBuffer) {
-                return _debugBuffer->getTypeArray();
-            }
-            return nullptr;
-        }
-        
-        void bindNodeProxy(cocos2d::renderer::NodeProxy* node) {
-            if (node == _nodeProxy) return;
-            CC_SAFE_RELEASE(_nodeProxy);
-            _nodeProxy = node;
-            CC_SAFE_RETAIN(_nodeProxy);
-        }
-        
-        void setEffect(cocos2d::renderer::Effect* effect) {
-            if (effect == _effect) return;
-            CC_SAFE_RELEASE(_effect);
-            _effect = effect;
-            CC_SAFE_RETAIN(_effect);
-        }
-        
+        se_object_ptr getDebugData() const;
+        void bindNodeProxy(cocos2d::renderer::NodeProxy* node);
+        void setEffect(cocos2d::renderer::EffectVariant* effect);
+        void setAttachUtil(RealTimeAttachUtil* attachUtil);
         void setColor (cocos2d::Color4B& color);
         void setBatchEnabled (bool enabled);
         void setDebugBonesEnabled (bool enabled);
@@ -185,7 +170,8 @@ namespace spine {
         
         cocos2d::middleware::IOTypedArray* _debugBuffer = nullptr;
         cocos2d::renderer::NodeProxy* _nodeProxy = nullptr;
-        cocos2d::renderer::Effect* _effect = nullptr;
+        cocos2d::renderer::EffectVariant* _effect = nullptr;
+        RealTimeAttachUtil* _attachUtil = nullptr;
     };
 
 }

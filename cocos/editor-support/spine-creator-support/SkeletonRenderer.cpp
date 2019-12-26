@@ -38,6 +38,7 @@
 #include "renderer/scene/assembler/CustomAssembler.hpp"
 #include "SkeletonDataMgr.h"
 #include "renderer/gfx/Texture.h"
+#include "spine-creator-support/AttachUtil.h"
 
 USING_NS_CC;
 USING_NS_MW;
@@ -158,6 +159,7 @@ SkeletonRenderer::~SkeletonRenderer () {
         _debugBuffer = nullptr;
     }
     
+    CC_SAFE_RELEASE(_attachUtil);
     CC_SAFE_RELEASE(_nodeProxy);
     CC_SAFE_RELEASE(_effect);
     stopSchedule();
@@ -256,7 +258,7 @@ void SkeletonRenderer::initWithBinaryFile (const std::string& skeletonDataFile, 
 
 void SkeletonRenderer::render (float deltaTime) {
     
-    if (_nodeProxy == nullptr) {
+    if (!_nodeProxy || !_effect) {
         return;
     }
     
@@ -352,48 +354,31 @@ void SkeletonRenderer::render (float deltaTime) {
                 curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
         }
         
-		double curHash = curTextureIndex + (curBlendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25);
-        Effect* renderEffect = assembler->getEffect(materialLen);
-        Technique::Parameter* param = nullptr;
-        Pass* pass = nullptr;
-        
+        double curHash = curTextureIndex + (curBlendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25) + ((int)_effect->getHash() << 26);
+        EffectVariant* renderEffect = assembler->getEffect(materialLen);
+        bool needUpdate = false;
         if (renderEffect) {
             double renderHash = renderEffect->getHash();
             if (abs(renderHash - curHash) >= 0.01) {
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                Technique* tech = renderEffect->getTechnique(techStage);
-                cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
+                needUpdate = true;
             }
         }
         else {
-            if (_effect == nullptr) {
-                cocos2d::log("SkeletonRenderer:update get effect failed");
-                assembler->reset();
-                return;
-            }
-            auto effect = new cocos2d::renderer::Effect();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
-            
-            Technique* tech = effect->getTechnique(techStage);
-            cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-            pass = *(passes.begin());
-            
+
             assembler->updateEffect(materialLen, effect);
             renderEffect = effect;
-            param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+            needUpdate = true;
         }
         
-        if (param) {
-            param->setTexture(texture->getNativeTexture());
-        }
-        
-        if (pass) {
-            pass->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+        if (needUpdate) {
+            renderEffect->setProperty(textureKey, texture->getNativeTexture());
+            renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                            BlendOp::ADD, curBlendSrc, curBlendDst);
         }
-        
+
         renderEffect->updateHash(curHash);
 		
         // save new segment count pos field
@@ -890,6 +875,12 @@ void SkeletonRenderer::render (float deltaTime) {
         }
         _debugBuffer->writeFloat32(DebugType::None);
     }
+    
+    // Synchronize attach node transform
+    if (_attachUtil)
+    {
+        _attachUtil->syncAttachedNode(_nodeProxy, _skeleton);
+    }
 }
 
 cocos2d::Rect SkeletonRenderer::getBoundingBox () const {
@@ -985,16 +976,16 @@ Attachment* SkeletonRenderer::getAttachment (const std::string& slotName, const 
 
 bool SkeletonRenderer::setAttachment (const std::string& slotName, const std::string& attachmentName) {
     if (_skeleton) {
-        return _skeleton->getAttachment(slotName.c_str(), attachmentName.empty() ? 0 : attachmentName.c_str()) ? true : false;
+        _skeleton->setAttachment(slotName.c_str(), attachmentName.empty() ? 0 : attachmentName.c_str());
     }
-    return false;
+    return true;
 }
 
 bool SkeletonRenderer::setAttachment (const std::string& slotName, const char* attachmentName) {
     if (_skeleton) {
-        return _skeleton->getAttachment(slotName.c_str(), attachmentName) ? true : false;
+        _skeleton->setAttachment(slotName.c_str(), attachmentName);
     }
-    return false;
+    return true;
 }
 
 void SkeletonRenderer::setUseTint(bool enabled) {
@@ -1060,4 +1051,33 @@ void SkeletonRenderer::setOpacityModifyRGB (bool value) {
 
 bool SkeletonRenderer::isOpacityModifyRGB () const {
     return _premultipliedAlpha;
+}
+
+se_object_ptr SkeletonRenderer::getDebugData() const {
+    if (_debugBuffer) {
+        return _debugBuffer->getTypeArray();
+    }
+    return nullptr;
+}
+
+void SkeletonRenderer::bindNodeProxy(cocos2d::renderer::NodeProxy* node) {
+    if (node == _nodeProxy) return;
+    CC_SAFE_RELEASE(_nodeProxy);
+    _nodeProxy = node;
+    CC_SAFE_RETAIN(_nodeProxy);
+}
+
+void SkeletonRenderer::setEffect(cocos2d::renderer::EffectVariant* effect) {
+    if (effect == _effect) return;
+    CC_SAFE_RELEASE(_effect);
+    _effect = effect;
+    CC_SAFE_RETAIN(_effect);
+}
+
+void SkeletonRenderer::setAttachUtil(RealTimeAttachUtil* attachUtil)
+{
+    if (attachUtil == _attachUtil) return;
+    CC_SAFE_RELEASE(_attachUtil);
+    _attachUtil = attachUtil;
+    CC_SAFE_RETAIN(_attachUtil);
 }

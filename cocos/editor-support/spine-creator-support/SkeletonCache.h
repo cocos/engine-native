@@ -53,6 +53,10 @@ namespace spine {
             cocos2d::middleware::Texture2D* _texture = nullptr;
         };
         
+        struct BoneData {
+            cocos2d::Mat4 globalTransformMatrix;
+        };
+        
         struct ColorData {
             cocos2d::Color4F finalColor;
             cocos2d::Color4F darkColor;
@@ -64,6 +68,12 @@ namespace spine {
             
             FrameData ();
             ~FrameData ();
+            
+            const std::vector<BoneData*>& getBones() const
+            {
+                return _bones;
+            }
+            std::size_t getBoneCount() const;
             
             const std::vector<ColorData*>& getColors () const {
                 return _colors;
@@ -79,7 +89,10 @@ namespace spine {
             SegmentData* buildSegmentData (std::size_t index);
             // if color data is empty, it will build new one.
             ColorData* buildColorData (std::size_t index);
+            // if bone data is empty, it will build new one.
+            BoneData* buildBoneData(std::size_t index);
             
+            std::vector<BoneData*> _bones;
             std::vector<ColorData*> _colors;
             std::vector<SegmentData*> _segments;
         public:

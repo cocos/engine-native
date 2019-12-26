@@ -61,11 +61,8 @@ public:
     {
         Model* model = nullptr;
         InputAssembler *ia = nullptr;
-        Effect* effect = nullptr;
-        Technique* technique = nullptr;
-        std::vector<ValueMap*>* defines = nullptr;
-        size_t definesKeyHash = 0;
-        std::vector<std::unordered_map<std::string, Effect::Property>*>* uniforms = nullptr;
+        EffectVariant* effect = nullptr;
+        std::vector<const Pass*> passes;
         int sortKey = -1;
     };
     typedef std::function<void(const View&, std::vector<StageItem>&)> StageCallback;
@@ -106,7 +103,7 @@ public:
 protected:
     void render(const View&, const Scene* scene);
     void draw(const StageItem& item);
-    void setProperty (Effect::Property& prop);
+    void setProperty (const Effect::Property* prop);
     
     struct StageInfo
     {
@@ -146,7 +143,7 @@ protected:
     static const size_t cc_spotLightPositionAndRange;
     static const size_t cc_spotLightColor;
     static const size_t cc_ambientLightColor;
-    static const size_t cc_shadow_map;
+    static const size_t cc_shadow_map[4];
     static const size_t cc_shadow_map_lightViewProjMatrix;
     static const size_t cc_shadow_map_info;
     static const size_t cc_shadow_map_bias;
@@ -158,6 +155,8 @@ protected:
     static const size_t cc_matpProj;
     static const size_t cc_matViewProj;
     static const size_t cc_cameraPos;
+    
+    static std::vector<const ValueMap*> __tmp_defines__;
 };
 
 // end of renderer group

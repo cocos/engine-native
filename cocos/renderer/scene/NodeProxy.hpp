@@ -91,6 +91,11 @@ public:
      */
     void destroyImmediately();
     
+    /*
+     * @brief If js node has been destroy.
+     */
+    bool isValid() { return _trs != nullptr; }
+    
     /// @{
     /// @name Hierarchy
 
@@ -156,6 +161,13 @@ public:
      *  @return World matrix.
      */
     inline const cocos2d::Mat4& getWorldMatrix() const { return *_worldMat; };
+
+    /*
+     *  @brief Gets the local matrix.
+     *  @return Local matrix.
+     */
+    inline const cocos2d::Mat4& getLocalMatrix() const { return *_localMat; };
+    
     /*
      *  @brief Gets the position.
      *  @param[out] out The position vector
@@ -246,7 +258,7 @@ public:
     /*
      *  @brief Enables visit.
      */
-    void enableVisit() { _needVisit = true; }
+    void enableVisit(bool value) { _needVisit = value; }
     
     /*
      *  @brief Disables visit.
@@ -262,17 +274,13 @@ public:
      */
     void updateWorldMatrix();
     /*
-     *  @brief Updates the world matrix with parent matrix.
+     *  @brief Updates world matrix with provide matrix.
      */
-    void updateWorldMatrix(const cocos2d::Mat4& parentMatrix);
+    void updateWorldMatrix(const cocos2d::Mat4& worldMatrix);
     /*
      *  @brief Enables calc world matrix.
      */
-    void enableUpdateWorldMatrix() { _updateWorldMatrix = true; }
-    /*
-     *  @brief Disables calc world matrix.
-     */
-    void disaleUpdateWorldMatrix() { _updateWorldMatrix = false; }
+    void enableUpdateWorldMatrix(bool value) { _updateWorldMatrix = value; }
     
     /*
      *  @brief Gets node runtime id

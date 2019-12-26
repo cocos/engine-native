@@ -161,7 +161,8 @@ renderer/scene/MemPool.cpp \
 renderer/scene/NodeMemPool.cpp \
 renderer/scene/ParallelTask.cpp \
 renderer/memop/RecyclePool.hpp \
-renderer/renderer/CustomProperties.cpp \
+renderer/renderer/EffectVariant.cpp \
+renderer/renderer/EffectBase.cpp \
 scripting/js-bindings/auto/jsb_gfx_auto.cpp \
 scripting/js-bindings/auto/jsb_renderer_auto.cpp \
 scripting/js-bindings/manual/jsb_renderer_manual.cpp \
@@ -190,12 +191,15 @@ ifeq ($(USE_SOCKET),1)
 LOCAL_SRC_FILES += \
 network/SocketIO.cpp \
 network/WebSocket-libwebsockets.cpp \
+network/WebSocketServer.cpp \
 scripting/js-bindings/manual/jsb_socketio.cpp \
-scripting/js-bindings/manual/jsb_websocket.cpp
+scripting/js-bindings/manual/jsb_websocket.cpp \
+scripting/js-bindings/manual/jsb_websocket_server.cpp
 
 LOCAL_STATIC_LIBRARIES += libwebsockets_static
 LOCAL_STATIC_LIBRARIES += cocos_ssl_static
 LOCAL_STATIC_LIBRARIES += cocos_crypto_static
+LOCAL_STATIC_LIBRARIES += uv_static
 endif # USE_SOCKET
 
 ifneq ($(USE_MIDDLEWARE),0)

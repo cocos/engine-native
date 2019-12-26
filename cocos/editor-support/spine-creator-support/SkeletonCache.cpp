@@ -63,6 +63,12 @@ namespace spine {
     }
     
     SkeletonCache::FrameData::~FrameData () {
+        for (std::size_t i = 0, c = _bones.size(); i < c; i++)
+        {
+            delete _bones[i];
+        }
+        _bones.clear();
+        
         for (std::size_t i = 0, c = _colors.size(); i < c; i++) {
             delete _colors[i];
         }
@@ -73,6 +79,22 @@ namespace spine {
         }
         _segments.clear();
     }
+    
+    SkeletonCache::BoneData* SkeletonCache::FrameData::buildBoneData(std::size_t index)
+    {
+        if (index > _bones.size()) return nullptr;
+        if (index == _bones.size()) {
+            BoneData* boneData = new BoneData;
+            _bones.push_back(boneData);
+        }
+        return _bones[index];
+    }
+    
+    std::size_t SkeletonCache::FrameData::getBoneCount() const
+    {
+        return _bones.size();
+    }
+
     
     SkeletonCache::ColorData* SkeletonCache::FrameData::buildColorData (std::size_t index) {
         if (index > _colors.size()) return nullptr;
@@ -283,6 +305,20 @@ namespace spine {
             materialLen++;
         };
         
+        auto& bones = _skeleton->getBones();
+        for (std::size_t i = 0, n = bones.size(); i < n; i++) {
+            auto& bone = bones[i];
+            auto boneCount = frameData->getBoneCount();
+            BoneData* boneData = frameData->buildBoneData(boneCount);
+            auto& matm = boneData->globalTransformMatrix.m;
+            matm[0] = bone->getA();
+            matm[1] = bone->getC();
+            matm[4] = bone->getB();
+            matm[5] = bone->getD();
+            matm[12] = bone->getWorldX();
+            matm[13] = bone->getWorldY();
+        }
+        
         auto& drawOrder = _skeleton->getDrawOrder();
         for (size_t i = 0, n = drawOrder.size(); i < n; ++i) {
             slot = drawOrder[i];
@@ -424,6 +460,7 @@ namespace spine {
                 
                 trianglesTwoColor.indexCount = (int)_clipper->getClippedTriangles().size();
                 ibSize = trianglesTwoColor.indexCount * sizeof(unsigned short);
+                ib.checkSpace(ibSize, true);
                 trianglesTwoColor.indices = (unsigned short*)ib.getCurBuffer();
                 memcpy(trianglesTwoColor.indices, _clipper->getClippedTriangles().buffer(), sizeof(unsigned short) * _clipper->getClippedTriangles().size());
                 

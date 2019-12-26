@@ -35,6 +35,7 @@
 #include "spine-creator-support/SkeletonDataMgr.h"
 #include "spine-creator-support/SkeletonCacheMgr.h"
 #include "spine-creator-support/SkeletonCacheAnimation.h"
+#include "spine-creator-support/AttachUtil.h"
 #include "middleware-adapter.h"
 
 namespace spine {

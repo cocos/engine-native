@@ -1,4 +1,4 @@
-﻿/**
+/**
  * The MIT License (MIT)
  *
  * Copyright (c) 2012-2018 DragonBones team and other contributors
@@ -29,5 +29,6 @@
 #include "dragonbones-creator-support/CCFactory.h"
 #include "dragonbones-creator-support/ArmatureCacheMgr.h"
 #include "dragonbones-creator-support/CCArmatureCacheDisplay.h"
+#include "dragonbones-creator-support/AttachUtil.h"
 
 #endif // DRAGONBONES_CC_HEADERS_H

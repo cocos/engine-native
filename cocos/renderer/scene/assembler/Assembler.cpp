@@ -56,7 +56,7 @@ Assembler::IARenderData::~IARenderData()
     CC_SAFE_RELEASE(_effect);
 }
 
-void Assembler::IARenderData::setEffect(Effect* effect)
+void Assembler::IARenderData::setEffect(EffectVariant* effect)
 {
     if (effect == _effect) return;
     CC_SAFE_RELEASE(_effect);
@@ -64,7 +64,7 @@ void Assembler::IARenderData::setEffect(Effect* effect)
     CC_SAFE_RETAIN(_effect);
 }
 
-Effect* Assembler::IARenderData::getEffect() const
+EffectVariant* Assembler::IARenderData::getEffect() const
 {
     return _effect;
 }
@@ -110,9 +110,11 @@ void Assembler::updateVerticesRange(std::size_t iaIndex, int start, int count)
     IARenderData& ia = _iaDatas[iaIndex];
     ia.verticesStart = start;
     ia.verticesCount = count;
+    
+    enableDirty(AssemblerBase::VERTICES_OPACITY_CHANGED);
 }
 
-void Assembler::updateEffect(std::size_t iaIndex, Effect* effect)
+void Assembler::updateEffect(std::size_t iaIndex, EffectVariant* effect)
 {
     if (iaIndex >= _iaDatas.size())
     {
@@ -214,9 +216,9 @@ void Assembler::setVertexFormat(VertexFormat* vfmt)
     if (_vfmt)
     {
         _bytesPerVertex = _vfmt->getBytes();
-        _vfPos = _vfmt->getElement(ATTRIB_NAME_POSITION);
+        _vfPos = _vfmt->getElement(ATTRIB_NAME_POSITION_HASH);
         _posOffset = _vfPos->offset / 4;
-        _vfColor = _vfmt->getElement(ATTRIB_NAME_COLOR);
+        _vfColor = _vfmt->getElement(ATTRIB_NAME_COLOR_HASH);
         if (_vfColor != nullptr)
         {
             _alphaOffset = _vfColor->offset + 3;

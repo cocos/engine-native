@@ -905,6 +905,7 @@ SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_setUseTint);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_setTimeScale);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_render);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_initWithUUID);
+SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_setAttachUtil);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_setOpacityModifyRGB);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_paused);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonRenderer_setAttachment);
@@ -997,7 +998,7 @@ bool register_all_cocos2dx_spine(se::Object* obj);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_setUseTint);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_setTimeScale);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_findAnimation);
-SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_setCompleteListener);
+SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_setAttachUtil);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_paused);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_setAttachment);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_setAnimation);
@@ -1012,6 +1013,7 @@ SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_updateAllAnimationCache
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_addAnimation);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_update);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_getAttachment);
+SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_setCompleteListener);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_updateAnimationCache);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_getTimeScale);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_findBone);
@@ -1024,5 +1026,26 @@ SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_findSlot);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_getSkeleton);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_stopSchedule);
 SE_DECLARE_FUNC(js_cocos2dx_spine_SkeletonCacheAnimation_SkeletonCacheAnimation);
+
+extern se::Object* __jsb_spine_AttachUtilBase_proto;
+extern se::Class* __jsb_spine_AttachUtilBase_class;
+
+bool js_register_spine_AttachUtilBase(se::Object* obj);
+bool register_all_cocos2dx_spine(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_spine_AttachUtilBase_associateAttachedNode);
+
+extern se::Object* __jsb_spine_RealTimeAttachUtil_proto;
+extern se::Class* __jsb_spine_RealTimeAttachUtil_class;
+
+bool js_register_spine_RealTimeAttachUtil(se::Object* obj);
+bool register_all_cocos2dx_spine(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_spine_RealTimeAttachUtil_RealTimeAttachUtil);
+
+extern se::Object* __jsb_spine_CacheModeAttachUtil_proto;
+extern se::Class* __jsb_spine_CacheModeAttachUtil_class;
+
+bool js_register_spine_CacheModeAttachUtil(se::Object* obj);
+bool register_all_cocos2dx_spine(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_spine_CacheModeAttachUtil_CacheModeAttachUtil);
 
 #endif //#if USE_SPINE > 0

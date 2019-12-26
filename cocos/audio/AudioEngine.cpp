@@ -174,12 +174,14 @@ void AudioEngine::end()
 
     if (_onPauseListenerID != 0)
     {
-        EventDispatcher::removeCustomEventListener(EVENT_COME_TO_BACKGROUND, _onPauseListenerID);
+        EventDispatcher::removeCustomEventListener(EVENT_ON_PAUSE, _onPauseListenerID);
+        _onPauseListenerID = 0;
     }
 
     if (_onResumeListenerID != 0)
     {
-        EventDispatcher::removeCustomEventListener(EVENT_COME_TO_FOREGROUND, _onResumeListenerID);
+        EventDispatcher::removeCustomEventListener(EVENT_ON_RESUME, _onResumeListenerID);
+        _onResumeListenerID = 0;
     }
 }
 
@@ -193,6 +195,8 @@ bool AudioEngine::lazyInit()
             _audioEngineImpl = nullptr;
            return false;
         }
+        _onPauseListenerID = EventDispatcher::addCustomEventListener(EVENT_ON_PAUSE, AudioEngine::onPause);
+        _onResumeListenerID = EventDispatcher::addCustomEventListener(EVENT_ON_RESUME, AudioEngine::onResume);
     }
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)
@@ -201,9 +205,6 @@ bool AudioEngine::lazyInit()
         s_threadPool = new (std::nothrow) AudioEngineThreadPool();
     }
 #endif
-
-    _onPauseListenerID = EventDispatcher::addCustomEventListener(EVENT_COME_TO_BACKGROUND, AudioEngine::onEnterBackground);
-    _onResumeListenerID = EventDispatcher::addCustomEventListener(EVENT_COME_TO_FOREGROUND, AudioEngine::onEnterForeground);
 
     return true;
 }
@@ -352,7 +353,7 @@ void AudioEngine::resumeAll()
     }
 }
 
-void AudioEngine::onEnterBackground(const CustomEvent &event) {
+void AudioEngine::onPause(const CustomEvent &event) {
     auto itEnd = _audioIDInfoMap.end();
     for (auto it = _audioIDInfoMap.begin(); it != itEnd; ++it)
     {
@@ -364,7 +365,7 @@ void AudioEngine::onEnterBackground(const CustomEvent &event) {
     }
 }
 
-void AudioEngine::onEnterForeground(const CustomEvent &event) {
+void AudioEngine::onResume(const CustomEvent &event) {
     auto itEnd = _breakAudioID.end();
     for (auto it = _breakAudioID.begin(); it != itEnd; ++it) {
         _audioEngineImpl->resume(*it);

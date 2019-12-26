@@ -25,19 +25,13 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnErrorListener;
 import android.net.Uri;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
-import android.widget.MediaController.MediaPlayerControl;
-import android.widget.RelativeLayout;
-
 import java.io.IOException;
-import java.net.IDN;
 import java.util.Map;
 
 public class Cocos2dxVideoView extends SurfaceView {
@@ -337,8 +331,8 @@ public class Cocos2dxVideoView extends SurfaceView {
 
         getHolder().setFixedSize(mVisibleWidth, mVisibleHeight);
 
-        RelativeLayout.LayoutParams lParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams lParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
         lParams.leftMargin = mVisibleLeft;
         lParams.topMargin = mVisibleTop;
         setLayoutParams(lParams);

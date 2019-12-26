@@ -306,12 +306,24 @@ SE_BIND_CTOR(js_video_VideoPlayer_constructor, __jsb_cocos2d_VideoPlayer_class, 
 
 static bool js_cocos2d_VideoPlayer_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::VideoPlayer)", s.nativeThisObject());
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
-    cobj->release();
+    // destructor is skipped
     return true;
 }
 SE_BIND_FINALIZE_FUNC(js_cocos2d_VideoPlayer_finalize)
+
+static bool js_cocos2d_VideoPlayer_destroy(se::State& s)
+{
+    CCLOGINFO("jsbindings: destory JS object %p (cocos2d::VideoPlayer)", s.nativeThisObject());
+    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cobj->release();
+    auto objIter = se::NativePtrToObjectMap::find(s.nativeThisObject());
+    if(objIter != se::NativePtrToObjectMap::end())
+    {
+        objIter->second->clearPrivateData(true);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_cocos2d_VideoPlayer_destroy)
 
 bool js_register_video_VideoPlayer(se::Object* obj)
 {
@@ -331,6 +343,7 @@ bool js_register_video_VideoPlayer(se::Object* obj)
     cls->defineFunction("duration", _SE(js_video_VideoPlayer_duration));
     cls->defineFunction("setVisible", _SE(js_video_VideoPlayer_setVisible));
     cls->defineFunction("seekTo", _SE(js_video_VideoPlayer_seekTo));
+    cls->defineFunction("destroy", _SE(js_cocos2d_VideoPlayer_destroy));
     cls->defineFinalizeFunction(_SE(js_cocos2d_VideoPlayer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::VideoPlayer>(cls);

@@ -124,6 +124,9 @@
     <ClCompile Include="..\cocos\renderer\renderer\Effect.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\renderer\renderer\EffectBase.cpp">
+      <Filter>renderer\renderer</Filter>
+    </ClCompile>
     <ClCompile Include="..\cocos\renderer\renderer\ForwardRenderer.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
@@ -423,6 +426,9 @@
       <Filter>editor-support</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\spine-creator-support\AttachmentVertices.cpp">
+      <Filter>editor-support\spine-creator-support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\editor-support\spine-creator-support\AttachUtil.cpp">
       <Filter>editor-support\spine-creator-support</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\spine-creator-support\SkeletonAnimation.cpp">
@@ -818,7 +824,7 @@
     <ClCompile Include="..\cocos\renderer\scene\assembler\Particle3DAssembler.cpp">
       <Filter>renderer\scene\assembler</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\renderer\renderer\CustomProperties.cpp">
+    <ClCompile Include="..\cocos\renderer\renderer\EffectVariant.cpp">
       <Filter>renderer\renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\particle\ParticleSimulator.cpp">
@@ -842,11 +848,19 @@
     <ClCompile Include="..\cocos\editor-support\dragonbones-creator-support\ArmatureCache.cpp">
       <Filter>editor-support\dragonbones-creator-support</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\editor-support\dragonbones-creator-support\AttachUtil.cpp">
+      <Filter>editor-support\dragonbones-creator-support</Filter>
+    </ClCompile>
     <ClCompile Include="..\cocos\editor-support\dragonbones-creator-support\CCArmatureCacheDisplay.cpp">
       <Filter>editor-support\dragonbones-creator-support</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\base\etc2.cpp">
       <Filter>base</Filter>
+    <ClCompile Include="..\cocos\network\WebSocketServer.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.cpp">
+      <Filter>js-bindings\manual</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\editor-support\spine\ConstraintData.cpp">
       <Filter>editor-support\spine</Filter>
@@ -1001,6 +1015,9 @@
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\renderer\renderer\Effect.h">
+      <Filter>renderer\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\renderer\renderer\EffectBase.h">
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\renderer\renderer\ForwardRenderer.h">
@@ -1383,6 +1400,9 @@
       <Filter>js-bindings\manual</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\editor-support\spine-creator-support\AttachmentVertices.h">
+      <Filter>editor-support\spine-creator-support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\editor-support\spine-creator-support\AttachUtil.h">
       <Filter>editor-support\spine-creator-support</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\editor-support\spine-creator-support\SkeletonAnimation.h">
@@ -1874,7 +1894,7 @@
     <ClInclude Include="..\cocos\renderer\memop\RecyclePool.hpp">
       <Filter>renderer\scene\memop</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\renderer\renderer\CustomProperties.hpp">
+    <ClInclude Include="..\cocos\renderer\renderer\EffectVariant.hpp">
       <Filter>renderer\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\editor-support\particle\ParticleSimulator.h">
@@ -1898,11 +1918,19 @@
     <ClInclude Include="..\cocos\editor-support\dragonbones-creator-support\ArmatureCache.h">
       <Filter>editor-support\dragonbones-creator-support</Filter>
     </ClInclude>
+    <ClInclude Include="..\cocos\editor-support\dragonbones-creator-support\AttachUtil.h">
+      <Filter>editor-support\dragonbones-creator-support</Filter>
+    </ClInclude>
     <ClInclude Include="..\cocos\editor-support\dragonbones-creator-support\CCArmatureCacheDisplay.h">
       <Filter>editor-support\dragonbones-creator-support</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\base\etc2.h">
       <Filter>base</Filter>
+    <ClInclude Include="..\cocos\network\WebSocketServer.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_websocket_server.hpp">
+      <Filter>js-bindings\manual</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\editor-support\spine\ConstraintData.h">
       <Filter>editor-support\spine</Filter>

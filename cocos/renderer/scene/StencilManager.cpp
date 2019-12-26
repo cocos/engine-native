@@ -37,6 +37,10 @@ StencilManager::StencilManager ()
 {
 }
 
+StencilManager::~StencilManager ()
+{
+}
+
 void StencilManager::reset ()
 {
     // reset stack and stage
@@ -44,16 +48,14 @@ void StencilManager::reset ()
     _stage = Stage::DISABLED;
 }
 
-Effect* StencilManager::handleEffect (Effect* effect)
+EffectVariant* StencilManager::handleEffect (EffectVariant* effect)
 {
-    Technique* tech = effect->getTechnique(techStage);
-    if (!tech) return effect;
-    Vector<Pass*>& passes = (Vector<Pass*>&)tech->getPasses();
+    Vector<Pass*>& passes = (Vector<Pass*>&)effect->getPasses();
     if (_stage == Stage::DISABLED)
     {
         for (const auto& pass : passes)
         {
-            if (pass->getStencilTest()) {
+            if (pass->isStencilTest()) {
                 pass->disableStencilTest();
             }
         }

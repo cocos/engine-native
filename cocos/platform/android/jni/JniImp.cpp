@@ -285,7 +285,7 @@ extern "C"
             return;
         }
         if (g_app)
-            g_app->applicationDidEnterBackground();
+            g_app->onPause();
     }
 
     JNIEXPORT void JNICALL JNI_RENDER(nativeOnResume)()
@@ -294,7 +294,7 @@ extern "C"
             return;
         }
         if (g_app)
-            g_app->applicationWillEnterForeground();
+            g_app->onResume();
     }
 
     JNIEXPORT void JNICALL JNI_RENDER(nativeInsertText)(JNIEnv* env, jobject thiz, jstring text)

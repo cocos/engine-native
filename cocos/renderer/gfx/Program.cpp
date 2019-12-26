@@ -320,6 +320,7 @@ void Program::link()
                 glGetActiveAttrib(program, i, length, nullptr, &attribute.size, &attribute.type, attribName);
                 attribName[length] = '\0';
                 attribute.name = attribName;
+                attribute.hashName = std::hash<std::string>{}(attribName);
                 // Query the pre-assigned attribute location
                 attribute.location = glGetAttribLocation(program, attribName);
 

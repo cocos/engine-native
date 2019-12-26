@@ -59,6 +59,7 @@ void TiledMapAssembler::handle(NodeProxy *node, ModelBatcher* batcher, Scene* sc
 
 void TiledMapAssembler::beforeFillBuffers(std::size_t index)
 {
+    static cocos2d::Mat4 tempWorldMat;
     const auto& worldMat = _node->getWorldMatrix();
     auto it = _nodesMap.find(index);
     if (it != _nodesMap.end())
@@ -68,13 +69,15 @@ void TiledMapAssembler::beforeFillBuffers(std::size_t index)
             auto child = _node->getChildByID(id);
             if (child)
             {
-                child->enableVisit();
-                child->disaleUpdateWorldMatrix();
+                child->enableVisit(true);
+                child->enableUpdateWorldMatrix(false);
                 child->updateLocalMatrix();
-                child->updateWorldMatrix(worldMat);
+                auto& localMat = child->getLocalMatrix();
+                cocos2d::Mat4::multiply(worldMat, localMat, &tempWorldMat);
+                child->updateWorldMatrix(tempWorldMat);
                 flow->visit(child);
-                child->enableUpdateWorldMatrix();
-                child->disableVisit();
+                child->enableUpdateWorldMatrix(true);
+                child->enableVisit(false);
             }
         }
     }

@@ -57,6 +57,7 @@ public:
          * Attribute name
          */
         std::string name;
+        size_t hashName;
         /**
          * Number of components per attribute
          */

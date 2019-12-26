@@ -271,10 +271,13 @@ void NodeProxy::updateLevel()
 
 void NodeProxy::setLocalZOrder(int zOrder)
 {
-    *_localZOrder = zOrder;
-    if (_parent != nullptr)
+    if (*_localZOrder != zOrder)
     {
-        *_parent->_dirty |= RenderFlow::REORDER_CHILDREN;
+        *_localZOrder = zOrder;
+        if (_parent != nullptr)
+        {
+            *_parent->_dirty |= RenderFlow::REORDER_CHILDREN;
+        }
     }
 }
 
@@ -436,7 +439,9 @@ void NodeProxy::updateWorldMatrix()
     {
         if (selfWorldDirty || *_parent->_dirty & RenderFlow::WORLD_TRANSFORM_CHANGED)
         {
-            updateWorldMatrix(_parent->getWorldMatrix());
+            cocos2d::Mat4::multiply(_parent->getWorldMatrix(), *_localMat, _worldMat);
+            *_dirty &= ~RenderFlow::WORLD_TRANSFORM;
+            *_dirty |= RenderFlow::WORLD_TRANSFORM_CHANGED;
         }
     }
     else if (selfWorldDirty)
@@ -447,9 +452,9 @@ void NodeProxy::updateWorldMatrix()
     }
 }
 
-void NodeProxy::updateWorldMatrix(const cocos2d::Mat4& parentMatrix)
+void NodeProxy::updateWorldMatrix(const cocos2d::Mat4& worldMatrix)
 {
-    _worldMat->multiply(parentMatrix, *_localMat, _worldMat);
+    *_worldMat = worldMatrix;
     *_dirty &= ~RenderFlow::WORLD_TRANSFORM;
     *_dirty |= RenderFlow::WORLD_TRANSFORM_CHANGED;
 }

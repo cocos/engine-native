@@ -85,7 +85,6 @@ void MeshBuffer::uploadVB()
     if (length == 0) return;
 
     auto glVB = _glVBArr[_bufferPos];
-    glVB->setBytes((uint32_t)length);
     glVB->update(0, _vb.getBuffer(), length);
 }
 
@@ -95,7 +94,6 @@ void MeshBuffer::uploadIB()
     if (length == 0) return;
     
     auto glIB = _glIBArr[_bufferPos];
-    glIB->setBytes((uint32_t)length);
     glIB->update(0, _ib.getBuffer(), length);
 }
 

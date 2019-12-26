@@ -36,6 +36,9 @@
 #include <queue>
 
 namespace spine {
+    
+    class CacheModeAttachUtil;
+    
     class SkeletonCacheAnimation : public cocos2d::middleware::IMiddleware, public cocos2d::Ref {
     public:
         SkeletonCacheAnimation (const std::string& uuid, bool isShare);
@@ -60,21 +63,9 @@ namespace spine {
         Attachment* getAttachment (const std::string& slotName, const std::string& attachmentName) const;
         bool setAttachment (const std::string& slotName, const std::string& attachmentName);
         bool setAttachment (const std::string& slotName, const char* attachmentName);
-        
-        void bindNodeProxy(cocos2d::renderer::NodeProxy* node) {
-            if (node == _nodeProxy) return;
-            CC_SAFE_RELEASE(_nodeProxy);
-            _nodeProxy = node;
-            CC_SAFE_RETAIN(_nodeProxy);
-        }
-        
-        void setEffect(cocos2d::renderer::Effect* effect) {
-            if (effect == _effect) return;
-            CC_SAFE_RELEASE(_effect);
-            _effect = effect;
-            CC_SAFE_RETAIN(_effect);
-        }
-        
+        void setAttachUtil(CacheModeAttachUtil* attachUtil);
+        void bindNodeProxy(cocos2d::renderer::NodeProxy* node);
+        void setEffect(cocos2d::renderer::EffectVariant* effect);
         void setColor (cocos2d::Color4B& color);
         void setBatchEnabled (bool enabled);
         
@@ -106,7 +97,7 @@ namespace spine {
         bool _premultipliedAlpha = false;
         
         cocos2d::renderer::NodeProxy* _nodeProxy = nullptr;
-        cocos2d::renderer::Effect* _effect = nullptr;
+        cocos2d::renderer::EffectVariant* _effect = nullptr;
         
         CacheFrameEvent _startListener = nullptr;
         CacheFrameEvent _endListener = nullptr;
@@ -130,5 +121,6 @@ namespace spine {
         };
         std::queue<AniQueueData*> _animationQueue;
         AniQueueData* _headAnimation = nullptr;
+        CacheModeAttachUtil* _attachUtil = nullptr;
     };
 }

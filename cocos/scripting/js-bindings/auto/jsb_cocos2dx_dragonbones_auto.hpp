@@ -351,6 +351,7 @@ bool register_all_cocos2dx_dragonbones(se::Object* obj);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureDisplay_dbInit);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureDisplay_addDBEventListener);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureDisplay_getRootDisplay);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureDisplay_setAttachUtil);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureDisplay_removeDBEventListener);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureDisplay_setEffect);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureDisplay_dispose);
@@ -415,6 +416,7 @@ bool register_all_cocos2dx_dragonbones(se::Object* obj);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_setTimeScale);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_render);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_addDBEventListener);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_setAttachUtil);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_removeDBEventListener);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_onEnable);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_setEffect);
@@ -436,5 +438,26 @@ SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_setBatchEnabled);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_getArmature);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_stopSchedule);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CCArmatureCacheDisplay_CCArmatureCacheDisplay);
+
+extern se::Object* __jsb_dragonBones_AttachUtilBase_proto;
+extern se::Class* __jsb_dragonBones_AttachUtilBase_class;
+
+bool js_register_dragonBones_AttachUtilBase(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_AttachUtilBase_associateAttachedNode);
+
+extern se::Object* __jsb_dragonBones_RealTimeAttachUtil_proto;
+extern se::Class* __jsb_dragonBones_RealTimeAttachUtil_class;
+
+bool js_register_dragonBones_RealTimeAttachUtil(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_RealTimeAttachUtil_RealTimeAttachUtil);
+
+extern se::Object* __jsb_dragonBones_CacheModeAttachUtil_proto;
+extern se::Class* __jsb_dragonBones_CacheModeAttachUtil_class;
+
+bool js_register_dragonBones_CacheModeAttachUtil(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_CacheModeAttachUtil_CacheModeAttachUtil);
 
 #endif //#if USE_DRAGONBONES > 0

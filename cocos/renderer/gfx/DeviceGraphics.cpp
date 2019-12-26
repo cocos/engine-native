@@ -601,7 +601,7 @@ void DeviceGraphics::initCaps()
     GL_CHECK(glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &_caps.maxFragUniforms));
 #endif
 
-    GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_UNITS, &_caps.maxTextureUnits));
+    GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_caps.maxTextureUnits));
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     // IDEA: how to get these infomations
@@ -1040,7 +1040,7 @@ void DeviceGraphics::commitVertexBuffer()
             for (int j = 0; j < usedAttriLen; ++j)
             {
                 const auto& attr = attributes[j];
-                const auto* el = vb->getFormat().getElement(attr.name);
+                const auto* el = vb->getFormat().getElement(attr.hashName);
                 if (!el || !el->isValid())
                 {
                     RENDERER_LOGW("Can not find vertex attribute: %s", attr.name.c_str());

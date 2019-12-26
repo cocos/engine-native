@@ -105,8 +105,8 @@ public:
     virtual ~Application();
     
     virtual bool applicationDidFinishLaunching();
-    virtual void applicationDidEnterBackground();
-    virtual void applicationWillEnterForeground();
+    virtual void onPause();
+    virtual void onResume();
     
     inline void* getView() const { return _view; }
     inline std::shared_ptr<Scheduler> getScheduler() const { return _scheduler; }

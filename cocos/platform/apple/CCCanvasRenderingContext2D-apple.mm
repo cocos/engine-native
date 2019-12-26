@@ -271,9 +271,6 @@ enum class CanvasTextBaseline {
 
     NSSize dim = [stringWithAttributes boundingRectWithSize:textRect options:(NSStringDrawingOptions)(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
 
-    dim.width = ceilf(dim.width);
-    dim.height = ceilf(dim.height);
-
     return dim;
 }
 

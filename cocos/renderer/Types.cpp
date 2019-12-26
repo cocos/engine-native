@@ -45,6 +45,25 @@ const char* ATTRIB_NAME_UV5 = "a_uv5";
 const char* ATTRIB_NAME_UV6 = "a_uv6";
 const char* ATTRIB_NAME_UV7 = "a_uv7";
 
+const size_t ATTRIB_NAME_POSITION_HASH = std::hash<std::string>{}(ATTRIB_NAME_POSITION);
+const size_t ATTRIB_NAME_NORMAL_HASH = std::hash<std::string>{}(ATTRIB_NAME_NORMAL);
+const size_t ATTRIB_NAME_TANGENT_HASH = std::hash<std::string>{}(ATTRIB_NAME_TANGENT);
+const size_t ATTRIB_NAME_BITANGENT_HASH = std::hash<std::string>{}(ATTRIB_NAME_BITANGENT);
+const size_t ATTRIB_NAME_WEIGHTS_HASH = std::hash<std::string>{}(ATTRIB_NAME_WEIGHTS);
+const size_t ATTRIB_NAME_JOINTS_HASH = std::hash<std::string>{}(ATTRIB_NAME_JOINTS);
+const size_t ATTRIB_NAME_COLOR_HASH = std::hash<std::string>{}(ATTRIB_NAME_COLOR);
+const size_t ATTRIB_NAME_COLOR0_HASH = std::hash<std::string>{}(ATTRIB_NAME_COLOR0);
+const size_t ATTRIB_NAME_COLOR1_HASH = std::hash<std::string>{}(ATTRIB_NAME_COLOR1);
+const size_t ATTRIB_NAME_UV_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV);
+const size_t ATTRIB_NAME_UV0_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV0);
+const size_t ATTRIB_NAME_UV1_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV1);
+const size_t ATTRIB_NAME_UV2_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV2);
+const size_t ATTRIB_NAME_UV3_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV3);
+const size_t ATTRIB_NAME_UV4_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV4);
+const size_t ATTRIB_NAME_UV5_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV5);
+const size_t ATTRIB_NAME_UV6_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV6);
+const size_t ATTRIB_NAME_UV7_HASH = std::hash<std::string>{}(ATTRIB_NAME_UV7);
+
 Rect Rect::ZERO;
 
 Rect::Rect()

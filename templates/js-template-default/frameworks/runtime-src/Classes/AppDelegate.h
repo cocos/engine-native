@@ -44,14 +44,12 @@ public:
     virtual bool applicationDidFinishLaunching() override;
     
     /**
-     @brief  The function be called when the application enter background
-     @param  the pointer of the application
+     @brief  The function be called when the application is paused
      */
-    virtual void applicationDidEnterBackground() override;
+    virtual void onPause() override;
     
     /**
-     @brief  The function be called when the application enter foreground
-     @param  the pointer of the application
+     @brief  The function be called when the application is resumed
      */
-    virtual void applicationWillEnterForeground() override;
+    virtual void onResume() override;
 };

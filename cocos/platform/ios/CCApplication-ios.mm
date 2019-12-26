@@ -366,11 +366,11 @@ bool Application::applicationDidFinishLaunching()
     return true;
 }
 
-void Application::applicationDidEnterBackground()
+void Application::onPause()
 {
 }
 
-void Application::applicationWillEnterForeground()
+void Application::onResume()
 {
 }
 

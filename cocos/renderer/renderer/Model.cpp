@@ -76,34 +76,13 @@ void Model::setInputAssembler(const InputAssembler& ia)
     _inputAssembler = ia;
 }
 
-void Model::setEffect(Effect* effect, CustomProperties* customProperties)
+void Model::setEffect(EffectVariant* effect)
 {
     if (_effect != effect)
     {
         CC_SAFE_RELEASE(_effect);
         _effect = effect;
         CC_SAFE_RETAIN(_effect);
-    }
-    
-    _uniforms.clear();
-    _definesList.clear();
-    
-    _definesKeyHash = 0;
-    
-    if (effect != nullptr)
-    {
-        _definesList.push_back(effect->extractDefines());
-        _uniforms.push_back(effect->extractProperties());
-        
-        MathUtil::combineHash(_definesKeyHash, std::hash<std::string>{}(effect->getDefinesKey()));
-    }
-    
-    if (customProperties != nullptr)
-    {
-        _definesList.push_back(customProperties->extractDefines());
-        _uniforms.push_back(customProperties->extractProperties());
-        
-        MathUtil::combineHash(_definesKeyHash, std::hash<std::string>{}(customProperties->getDefinesKey()));
     }
 }
 
@@ -124,7 +103,6 @@ void Model::extractDrawItem(DrawItem& out) const
         out.model = const_cast<Model*>(this);
         out.ia = nullptr;
         out.effect = _effect;
-        out.defines = const_cast<std::vector<ValueMap*>*>(&_definesList);
 
         return;
     }
@@ -132,9 +110,6 @@ void Model::extractDrawItem(DrawItem& out) const
     out.model = const_cast<Model*>(this);
     out.ia = const_cast<InputAssembler*>(&_inputAssembler);
     out.effect = _effect;
-    out.defines = const_cast<std::vector<ValueMap*>*>(&_definesList);
-    out.uniforms = const_cast<std::vector<std::unordered_map<std::string, Effect::Property>*>*>(&_uniforms);
-    out.definesKeyHash = _definesKeyHash;
 }
 
 void Model::reset()
@@ -142,8 +117,6 @@ void Model::reset()
     CC_SAFE_RELEASE_NULL(_effect);
     CC_SAFE_RELEASE_NULL(_node);
     _inputAssembler.clear();
-    _uniforms.clear();
-    _definesList.clear();
 }
 
 RENDERER_END

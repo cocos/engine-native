@@ -34,6 +34,7 @@
 #include "renderer/renderer/Technique.h"
 #include "renderer/scene/assembler/CustomAssembler.hpp"
 #include "renderer/gfx/Texture.h"
+#include "spine-creator-support/AttachUtil.h"
 
 USING_NS_CC;
 USING_NS_MW;
@@ -66,6 +67,7 @@ namespace spine {
             _animationQueue.pop();
             delete ani;
         }
+        CC_SAFE_RELEASE_NULL(_attachUtil);
         CC_SAFE_RELEASE(_nodeProxy);
         CC_SAFE_RELEASE(_effect);
         stopSchedule();
@@ -139,7 +141,7 @@ namespace spine {
     
     void SkeletonCacheAnimation::render(float dt) {
         
-        if (_nodeProxy == nullptr) {
+        if (!_nodeProxy || !_effect) {
             return;
         }
         
@@ -325,67 +327,54 @@ namespace spine {
             // handle material
             textureHandle = segment->getTexture()->getNativeTexture()->getHandle();
             blendMode = segment->blendMode;
-            effectHash = textureHandle + (blendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25);
-            Effect* renderEffect = assembler->getEffect(segIndex);
-            Technique::Parameter* param = nullptr;
-            Pass* pass = nullptr;
-            
+            effectHash = textureHandle + (blendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25) + ((int)_effect->getHash() << 26);
+            EffectVariant* renderEffect = assembler->getEffect(segIndex);
+            bool needUpdate = false;
             if (renderEffect) {
                 double renderHash = renderEffect->getHash();
                 if (abs(renderHash - effectHash) >= 0.01) {
-                    param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                    Technique* tech = renderEffect->getTechnique(techStage);
-                    cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                    pass = *(passes.begin());
+                    needUpdate = true;
                 }
             }
             else {
-                if (_effect == nullptr) {
-                    cocos2d::log("SkeletonCacheAnimation:update get effect failed");
-                    assembler->reset();
-                    return;
-                }
-                auto effect = new cocos2d::renderer::Effect();
+                auto effect = new cocos2d::renderer::EffectVariant();
                 effect->autorelease();
                 effect->copy(_effect);
                 
-                Technique* tech = effect->getTechnique(techStage);
-                cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
-                
                 assembler->updateEffect(segIndex, effect);
                 renderEffect = effect;
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+                needUpdate = true;
             }
-            
-            if (param) {
-                param->setTexture(segment->getTexture()->getNativeTexture());
-            }
-            
-            switch (blendMode) {
-                case BlendMode_Additive:
-                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                    curBlendDst = BlendFactor::ONE;
-                    break;
-                case BlendMode_Multiply:
-                    curBlendSrc = BlendFactor::DST_COLOR;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-                    break;
-                case BlendMode_Screen:
-                    curBlendSrc = BlendFactor::ONE;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
-                    break;
-                default:
-                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-            }
-            
-            if (pass) {
-                pass->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+
+            if (needUpdate) {
+                renderEffect->setProperty(textureKey, segment->getTexture()->getNativeTexture());
+                switch (blendMode) {
+                    case BlendMode_Additive:
+                        curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                        curBlendDst = BlendFactor::ONE;
+                        break;
+                    case BlendMode_Multiply:
+                        curBlendSrc = BlendFactor::DST_COLOR;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                        break;
+                    case BlendMode_Screen:
+                        curBlendSrc = BlendFactor::ONE;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
+                        break;
+                    default:
+                        curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                }
+                renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                                BlendOp::ADD, curBlendSrc, curBlendDst);
             }
             
             renderEffect->updateHash(effectHash);
+        }
+        
+        if (_attachUtil)
+        {
+            _attachUtil->syncAttachedNode(_nodeProxy, frameData);
         }
     }
     
@@ -520,5 +509,26 @@ namespace spine {
     
     void SkeletonCacheAnimation::updateAllAnimationCache () {
         _skeletonCache->resetAllAnimationData();
+    }
+    
+    void SkeletonCacheAnimation::setAttachUtil(CacheModeAttachUtil* attachUtil) {
+        if (attachUtil == _attachUtil) return;
+        CC_SAFE_RELEASE(_attachUtil);
+        _attachUtil = attachUtil;
+        CC_SAFE_RETAIN(_attachUtil);
+    }
+    
+    void SkeletonCacheAnimation::bindNodeProxy(cocos2d::renderer::NodeProxy* node) {
+        if (node == _nodeProxy) return;
+        CC_SAFE_RELEASE(_nodeProxy);
+        _nodeProxy = node;
+        CC_SAFE_RETAIN(_nodeProxy);
+    }
+    
+    void SkeletonCacheAnimation::setEffect(cocos2d::renderer::EffectVariant* effect) {
+        if (effect == _effect) return;
+        CC_SAFE_RELEASE(_effect);
+        _effect = effect;
+        CC_SAFE_RETAIN(_effect);
     }
 }

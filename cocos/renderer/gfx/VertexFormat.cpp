@@ -95,8 +95,8 @@ VertexFormat::VertexFormat(const std::vector<Info>& infos)
         el.bytes = info._num * attrTypeBytes(info._type);
 
         _names.push_back(el.name);
-        _attr2el[el.name] = el;
-        elements.push_back(&_attr2el[el.name]);
+        _attr2el[std::hash<std::string>{}(el.name)] = el;
+        elements.push_back(&_attr2el[std::hash<std::string>{}(el.name)]);
 
         _bytes += el.bytes;
         offset += el.bytes;
@@ -150,10 +150,10 @@ VertexFormat& VertexFormat::operator=(VertexFormat&& o)
     return *this;
 }
 
-const VertexFormat::Element* VertexFormat::getElement(const std::string& attrName) const
+const VertexFormat::Element* VertexFormat::getElement(size_t hashName) const
 {
     static const Element* INVALID_ELEMENT_VALUE = nullptr;
-    const auto& iter = _attr2el.find(attrName);
+    const auto& iter = _attr2el.find(hashName);
     if (iter != _attr2el.end())
     {
         return &iter->second;

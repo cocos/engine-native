@@ -69,7 +69,7 @@ public:
     Color4F color = {0.3f, 0.3f, 0.3f, 1.f};
     int depth = 1;
     int stencil = 1;
-    int cullingMask = 1;
+    unsigned int cullingMask = 1;
     uint8_t clearFlags = ClearFlag::COLOR | ClearFlag::DEPTH;
     
     // matrix

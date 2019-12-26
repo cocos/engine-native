@@ -58,6 +58,10 @@ THE SOFTWARE.
 #define USE_SOCKET 1
 #endif
 
+#ifndef USE_WEBSOCKET_SERVER
+#define USE_WEBSOCKET_SERVER 0
+#endif
+
 #ifndef USE_MIDDLEWARE
 #define USE_MIDDLEWARE 1
 #endif

@@ -114,7 +114,7 @@ InputAssembler* CustomAssembler::getIA(std::size_t index) const
     return _iaPool[index];
 }
 
-void CustomAssembler::updateEffect(std::size_t index, Effect* effect)
+void CustomAssembler::updateEffect(std::size_t index, EffectVariant* effect)
 {
     auto size = _effects.size();
     if (index == size)
