@@ -25,4 +25,19 @@
  ****************************************************************************/
 
 #include "platform/apple/CCDevice-apple.h"
+#include "platform/CCApplication.h"
 
+
+NS_CC_BEGIN
+
+int Device::getDevicePixelRatio()
+{
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+    UIView *view = (UIView*) Application::getInstance()->getView();
+    return [view contentScaleFactor];
+#else
+    return 1;
+#endif
+}
+
+NS_CC_END
