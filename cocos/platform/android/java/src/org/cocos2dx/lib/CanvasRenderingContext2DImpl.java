@@ -474,7 +474,6 @@ public class CanvasRenderingContext2DImpl {
         }
 
         // Canvas.drawText accepts the y parameter as the baseline position, not the most bottom
-        // Log.d(TAG, "FontMetrics: " + fm.ascent + ", " + fm.descent);
         if (mTextBaseline == TEXT_BASELINE_TOP)
         {
             ret.y += -fm.ascent;
