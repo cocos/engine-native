@@ -180,12 +180,7 @@ void Configuration::gatherGPUInfo()
         _supportsShareableVAO = true;
     }
     else {
-        // implementation on these platforms will clamp the data to [0, 1], not suitable for our usage
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-		_supportsFloatTexture = false;
-#else
 		_supportsFloatTexture = checkForGLExtension("texture_float");
-#endif
         _valueDict["gl.supports_float_texture"] = Value(_supportsFloatTexture);
 
         _supportsShareableVAO = checkForGLExtension("vertex_array_object");
