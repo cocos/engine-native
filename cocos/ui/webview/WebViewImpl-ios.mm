@@ -26,7 +26,7 @@
 #include "platform/CCPlatformConfig.h"
 
 // Webview not available on tvOS
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && !defined(CC_TARGET_OS_TVOS)
+#if (USE_WEB_VIEW > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && !defined(CC_TARGET_OS_TVOS)
 
 #import <WebKit/WKWebView.h>
 #import <WebKit/WKUIDelegate.h>
@@ -392,4 +392,4 @@ namespace cocos2d {
     }
 } //namespace cocos2d
 
-#endif // CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#endif // (USE_WEB_VIEW > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && !defined(CC_TARGET_OS_TVOS)
