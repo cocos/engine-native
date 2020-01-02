@@ -35,7 +35,7 @@
 #include "CCEAGLView-ios.h"
 #include "base/CCGLUtils.h"
 #include "audio/include/AudioEngine.h"
-
+#include "platform/CCDevice.h"
 
 namespace
 {
@@ -44,12 +44,14 @@ namespace
         auto &viewSize = cocos2d::Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
+        int screenScale =  cocos2d::Device::getDevicePixelRatio();
         char commandBuf[200] = {0};
+        //set window.innerWidth/innerHeight in CSS pixel units, not physical pixel units.
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                (int)(viewSize.x / devicePixelRatio),
-                (int)(viewSize.y / devicePixelRatio));
+                (int)(viewSize.x / screenScale / devicePixelRatio),
+                (int)(viewSize.y / screenScale / devicePixelRatio));
         se->evalString(commandBuf);
-        cocos2d::ccViewport(0,0, viewSize.x, viewSize.y);
+        cocos2d::ccViewport(0,0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -340,7 +342,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return 1.f;
+    return [(UIView*)_view contentScaleFactor];
 }
 
 GLint Application::getMainFBO() const

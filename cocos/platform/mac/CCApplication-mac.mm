@@ -41,18 +41,18 @@ NS_CC_BEGIN
 
 namespace
 {
-    int g_width = 0;
-    int g_height = 0;
     bool setCanvasCallback(se::Object* global)
     {
+        auto viewSize = Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         int devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
+        //set window.innerWidth/innerHeight in CSS pixel units, not physical pixel units.
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                g_width / devicePixelRatio,
-                g_height / devicePixelRatio);
+                (int)(viewSize.x  / devicePixelRatio),
+                (int)(viewSize.y  / devicePixelRatio));
         se->evalString(commandBuf);
-        ccViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
+        ccViewport(0, 0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -66,9 +66,6 @@ std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
-    
-    g_width = width;
-    g_height = height;
     
     createView(name, width, height);
 

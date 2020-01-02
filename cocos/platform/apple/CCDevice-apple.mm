@@ -32,12 +32,7 @@ NS_CC_BEGIN
 
 int Device::getDevicePixelRatio()
 {
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-    UIView *view = (UIView*) Application::getInstance()->getView();
-    return [view contentScaleFactor];
-#else
-    return 1;
-#endif
+    return Application::getInstance()->getScreenScale();
 }
 
 NS_CC_END
