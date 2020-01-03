@@ -2133,9 +2133,9 @@ static GLenum convertFloatTextureInternalFormat(GLenum format, GLenum type)
         else if (type == GL_HALF_FLOAT_OES)
             return GL_RGB16F_EXT;
     }
-    
+
     //FIXME: support other types, such as GL_ALPHA32F_EXT, GL_LUMINANCE32F_EXT?
-    
+
     return format;
 }
 
@@ -3600,7 +3600,7 @@ static bool JSB_glGetSupportedExtensions(se::State& s) {
     if (config->supportsETC2()) {
         jsobj->setArrayElement(element++, se::Value("WEBGL_compressed_texture_etc"));
     }
-    
+
     if (config->supportsDepthTexture()) {
         jsobj->setArrayElement(element++, se::Value("WEBGL_depth_texture"));
     }
@@ -4181,6 +4181,7 @@ static bool JSB_glGetParameter(se::State& s)
         case GL_STENCIL_BACK_FUNC:
         case GL_STENCIL_BACK_FAIL:
         case GL_STENCIL_BITS:
+        case GL_DEPTH_BITS:
         case GL_GENERATE_MIPMAP_HINT:
         case GL_FRONT_FACE:
         case GL_DEPTH_FUNC:
