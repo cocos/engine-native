@@ -46,7 +46,7 @@ void Particle3DAssembler::setTrailVertexFormat(VertexFormat *vfmt)
     if (_trailVfmt)
     {
         _trailVertexBytes = _trailVfmt->getBytes();
-        const VertexFormat::Element* vfPos = _vfmt->getElement(ATTRIB_NAME_POSITION);
+        const VertexFormat::Element* vfPos = _vfmt->getElement(ATTRIB_NAME_POSITION_HASH);
         _trailPosOffset = vfPos->offset / 4;
     }
 }
