@@ -111,6 +111,7 @@ enum class GFXFormat : uint {
   RGBA32F,
   RGBA32UI,
   RGBA32I,
+  BGRA8UN,
   
   // Special Format
   R5G6B5,

@@ -199,9 +199,6 @@ void CCMTLPipelineState::setFormats(MTLRenderPipelineDescriptor* descriptor)
         ++i;
     }
     
-    //TODO: it is hack here.
-    descriptor.colorAttachments[0].pixelFormat = MTLPixelFormatBGRA8Unorm;
-    
     mtlPixelFormat = mu::toMTLPixelFormat(render_pass_->depth_stencil_attachment().format);
     if (mtlPixelFormat != MTLPixelFormatInvalid)
         descriptor.depthAttachmentPixelFormat = mtlPixelFormat;
