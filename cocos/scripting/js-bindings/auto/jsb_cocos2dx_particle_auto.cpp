@@ -1,5 +1,5 @@
-#include "scripting/js-bindings/auto/jsb_cocos2dx_particle_auto.hpp"
 #if USE_PARTICLE > 0
+#include "scripting/js-bindings/auto/jsb_cocos2dx_particle_auto.hpp"
 #include "scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "scripting/js-bindings/manual/jsb_global.h"
 #include "editor-support/particle/ParticleSimulator.h"
