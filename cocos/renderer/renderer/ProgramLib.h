@@ -86,15 +86,6 @@ private:
     
 private:
     DeviceGraphics* _device = nullptr;
-    const char* _precisionVert = "precision highp float;";
-    const char* _precisionVertReplace = "#ifdef GL_ES\nprecision highp float;\n#endif\n";
-    const char* _precisionFrag = "precision highp float;";
-    const char* _precisionFragReplace = "#ifdef GL_ES\nprecision mediump float;\n#endif\n";
-    const char* _mediumpReplace = "half";
-    const char* _mediump = "mediump";
-    const char* _lowpReplace = "fixed";
-    const char* _lowp = "lowp";
-    
     std::unordered_map<size_t, Template> _templates;
     std::unordered_map<uint64_t, Program*> _cache;
     
