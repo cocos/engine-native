@@ -400,14 +400,17 @@ static bool js_renderer_EffectBase_setProperty(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 3) {
+    if (argc == 4) {
         std::string arg0;
         int passIdx;
+        bool directly;
         ok &= seval_to_std_string(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : Name Error");
         ok &= seval_to_int32(args[2], &passIdx);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : passIdx Error");
-        ok &= seval_to_Effect_setProperty(arg0, args[1], cobj);
+        ok &= seval_to_boolean(args[3], &directly);
+        SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : directly Error");
+        ok &= seval_to_Effect_setProperty(arg0, args[1], cobj, passIdx, directly);
         SE_PRECONDITION2(ok, false, "js_renderer_EffectBase_setProperty : Error processing arguments");
         return true;
     }

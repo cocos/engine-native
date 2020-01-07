@@ -209,8 +209,6 @@ Technique::Parameter::Parameter(const std::string& name, Type type, se::Object* 
 {
     _hashName = std::hash<std::string>{}(name);
     
-    assert(_type == Type::FLOAT4);
-    
     se::ScriptEngine::getInstance()->clearException();
     se::AutoHandleScope hs;
     

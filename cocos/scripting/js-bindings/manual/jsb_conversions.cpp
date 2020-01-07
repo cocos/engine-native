@@ -1768,6 +1768,8 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
             continue;
         }
         
+        cocos2d::renderer::Technique::Parameter param;
+        
         auto paramType = prop->getType();
         switch (paramType)
         {
@@ -1775,8 +1777,14 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
             {
                 int32_t value;
                 seval_to_int32(v, &value);
-                cocos2d::renderer::Technique::Parameter param(name, paramType, &value);
-                pass->setProperty(name, param);
+                param = cocos2d::renderer::Technique::Parameter(name, paramType, &value);
+                break;
+            }
+            case cocos2d::renderer::Technique::Parameter::Type::FLOAT:
+            {
+                float value;
+                seval_to_float(v, &value);
+                param = cocos2d::renderer::Technique::Parameter(name, paramType, &value);
                 break;
             }
             case cocos2d::renderer::Technique::Parameter::Type::INT2:
@@ -1784,22 +1792,22 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
             case cocos2d::renderer::Technique::Parameter::Type::INT4:
             {
                 se::Object* obj = v.toObject();
-                SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
-                uint8_t* data = nullptr;
-                size_t len = 0;
-                obj->getTypedArrayData(&data, &len);
-                uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
-                uint8_t count = (len / sizeof(int)) / el;
-                cocos2d::renderer::Technique::Parameter param(name, paramType, (int*)data, count);
-                pass->setProperty(name, param);
-                break;
-            }
-            case cocos2d::renderer::Technique::Parameter::Type::FLOAT:
-            {
-                float value;
-                seval_to_float(v, &value);
-                cocos2d::renderer::Technique::Parameter param(name, paramType, &value);
-                pass->setProperty(name, param);
+                SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to int array failed!");
+                
+                if (directly)
+                {
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj);
+                }
+                else
+                {
+                    uint8_t* data = nullptr;
+                    size_t len = 0;
+                    obj->getTypedArrayData(&data, &len);
+                    uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
+                    uint8_t count = (len / sizeof(int)) / el;
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, (int*)data, count);
+                    
+                }
                 break;
             }
             case cocos2d::renderer::Technique::Parameter::Type::FLOAT2:
@@ -1816,8 +1824,7 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                 
                 if (directly)
                 {
-                    cocos2d::renderer::Technique::Parameter param(name, paramType, obj);
-                    pass->setProperty(name, param);
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj);
                 }
                 else
                 {
@@ -1826,8 +1833,8 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                     obj->getTypedArrayData(&data, &len);
                     uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
                     uint8_t count = (len / sizeof(float)) / el;
-                    cocos2d::renderer::Technique::Parameter param(name, paramType, (float*)data, count);
-                    pass->setProperty(name, param);
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, (float*)data, count);
+                    
                 }
 
                 break;
@@ -1837,8 +1844,7 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
             {
                 if (v.isNull()) {
                     cocos2d::renderer::Texture* texture = nullptr;
-                    cocos2d::renderer::Technique::Parameter param(name, paramType, texture);
-                    pass->setProperty(name, param);
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, texture);
                 }
                 else {
                     se::Object* obj = v.toObject();
@@ -1850,7 +1856,7 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                         {
                             cocos2d::renderer::Texture* texture = nullptr;
                             seval_to_native_ptr(v, &texture);
-                            cocos2d::renderer::Technique::Parameter param(name, paramType, texture);
+                            param = cocos2d::renderer::Technique::Parameter(name, paramType, texture);
                             pass->setProperty(name, param);
                         }
                         else
@@ -1864,7 +1870,7 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                                 seval_to_native_ptr(texVal, &tmpTex);
                                 textures.push_back(tmpTex);
                             }
-                            cocos2d::renderer::Technique::Parameter param(name, paramType, textures);
+                            param = cocos2d::renderer::Technique::Parameter(name, paramType, textures);
                             pass->setProperty(name, param);
                         }
                     }
@@ -1872,8 +1878,7 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                     {
                         cocos2d::renderer::Texture* texture = nullptr;
                         seval_to_native_ptr(v, &texture);
-                        cocos2d::renderer::Technique::Parameter param(name, paramType, texture);
-                        pass->setProperty(name, param);
+                        param = cocos2d::renderer::Technique::Parameter(name, paramType, texture);
                     }
                 }
                 
@@ -1883,6 +1888,8 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                 assert(false);
                 break;
         }
+        
+        pass->setProperty(name, param);
     }
     
     return true;
