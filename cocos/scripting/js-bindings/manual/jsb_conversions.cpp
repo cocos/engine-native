@@ -1857,7 +1857,6 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                             cocos2d::renderer::Texture* texture = nullptr;
                             seval_to_native_ptr(v, &texture);
                             param = cocos2d::renderer::Technique::Parameter(name, paramType, texture);
-                            pass->setProperty(name, param);
                         }
                         else
                         {
@@ -1871,7 +1870,6 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                                 textures.push_back(tmpTex);
                             }
                             param = cocos2d::renderer::Technique::Parameter(name, paramType, textures);
-                            pass->setProperty(name, param);
                         }
                     }
                     else
