@@ -46,6 +46,7 @@
 RENDERER_BEGIN
 
 #define CC_MAX_LIGHTS 4
+#define CC_MAX_SHADOW_LIGHTS 2
 
 ForwardRenderer::ForwardRenderer()
 {
@@ -141,7 +142,10 @@ void ForwardRenderer::updateLights(Scene* scene)
         light->update(_device);
         if (light->getShadowType() != Light::ShadowType::NONE)
         {
-            _shadowLights.pushBack(light);
+            if (_shadowLights.size() < CC_MAX_SHADOW_LIGHTS) {
+                _shadowLights.pushBack(light);
+            }
+            
             View* view = requestView();
             std::vector<std::string> stages;
             stages.push_back("shadowcast");
