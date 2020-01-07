@@ -215,10 +215,12 @@ void ProgramLib::define(const std::string& name, const std::string& vert, const 
     std::string newFrag = frag;
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-    newVert = std::regex_replace(newVert, std::regex("precision\\s+(lowp|mediump|highp).*?;"), "");
-    newVert = std::regex_replace(newVert, std::regex("(lowp|mediump|highp)\\s"), "");
-    newFrag = std::regex_replace(newFrag, std::regex("precision\\s+(lowp|mediump|highp).*?;"), "");
-    newFrag = std::regex_replace(newFrag, std::regex("(lowp|mediump|highp)\\s"), "");
+    static const std::regex precision("precision\\s+(lowp|mediump|highp).*?;");
+    static const std::regex accuracy("(lowp|mediump|highp)\\s");
+    newVert = std::regex_replace(newVert, precision, "");
+    newVert = std::regex_replace(newVert, accuracy, "");
+    newFrag = std::regex_replace(newFrag, precision, "");
+    newFrag = std::regex_replace(newFrag, accuracy, "");
 #endif
     
     // store it
