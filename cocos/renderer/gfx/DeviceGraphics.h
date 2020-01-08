@@ -233,7 +233,7 @@ public:
     /**
      * Sets a vector of integers to the specified uniform
      */
-    void setUniformiv(size_t hashName, size_t count, const int* value, size_t elementCount);
+    void setUniformiv(size_t hashName, size_t count, const int* value, size_t uniformCount);
     /**
      * Sets a float to the specified uniform
      */
@@ -253,7 +253,7 @@ public:
     /**
      * Sets a vector of floats to the specified uniform
      */
-    void setUniformfv(size_t hashName, size_t count, const float* value, size_t elementCount);
+    void setUniformfv(size_t hashName, size_t elementCount, const float* value, size_t uniformCount);
     /**
      * Sets a Vec2 to the specified uniform
      */
@@ -285,7 +285,7 @@ public:
     /**
      * Sets data specified by data pointer, type and bytes to the given uniform
      */
-    void setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType, size_t elementCount = 1);
+    void setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType, size_t uniformCount = 1);
 
     /**
      * Sets the primitive type for draw calls

@@ -438,18 +438,18 @@ void DeviceGraphics::draw(size_t base, GLsizei count)
     _nextState->reset();
 }
 
-void DeviceGraphics::setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType, size_t elementCount)
+void DeviceGraphics::setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType, size_t uniformCount)
 {
     auto iter = _uniforms.find(hashName);
     if (iter == _uniforms.end())
     {
-        _uniforms[hashName] = Uniform(v, bytes, elementType, elementCount);
+        _uniforms[hashName] = Uniform(v, bytes, elementType, uniformCount);
     }
     else
     {
         auto& uniform = iter->second;
         uniform.dirty = true;
-        uniform.setValue(v, bytes, elementCount);
+        uniform.setValue(v, bytes, uniformCount);
     }
 }
 
@@ -476,9 +476,9 @@ void DeviceGraphics::setUniformi(size_t hashName, int i1, int i2, int i3, int i4
     setUniform(hashName, tempValue, 4 * sizeof(int), UniformElementType::INT);
 }
 
-void DeviceGraphics::setUniformiv(size_t hashName, size_t count, const int* value, size_t elementCount)
+void DeviceGraphics::setUniformiv(size_t hashName, size_t count, const int* value, size_t uniformCount)
 {
-    setUniform(hashName, value, count * sizeof(int), UniformElementType::INT, elementCount);
+    setUniform(hashName, value, count * sizeof(int), UniformElementType::INT, uniformCount);
 }
 
 void DeviceGraphics::setUniformf(size_t hashName, float f1)
@@ -504,9 +504,9 @@ void DeviceGraphics::setUniformf(size_t hashName, float f1, float f2, float f3, 
     setUniform(hashName, tempValue, 4 * sizeof(float), UniformElementType::FLOAT);
 }
 
-void DeviceGraphics::setUniformfv(size_t hashName, size_t count, const float* value, size_t elementCount)
+void DeviceGraphics::setUniformfv(size_t hashName, size_t elementCount, const float* value, size_t uniformCount)
 {
-    setUniform(hashName, value, count * sizeof(float), UniformElementType::FLOAT, elementCount);
+    setUniform(hashName, value, elementCount * sizeof(float), UniformElementType::FLOAT, uniformCount);
 }
 
 void DeviceGraphics::setUniformVec2(size_t hashName, const cocos2d::Vec2& value)
@@ -1157,7 +1157,7 @@ DeviceGraphics::Uniform& DeviceGraphics::Uniform::operator=(Uniform&& h)
     return *this;
 }
 
-void DeviceGraphics::Uniform::setValue(const void* v, size_t valueBytes, size_t elementCount)
+void DeviceGraphics::Uniform::setValue(const void* v, size_t valueBytes, size_t uniformCount)
 {
     if (bytes != valueBytes || !value) {
         if (value)
@@ -1165,7 +1165,7 @@ void DeviceGraphics::Uniform::setValue(const void* v, size_t valueBytes, size_t 
         value = malloc(valueBytes);
         
         bytes = valueBytes;
-        count = elementCount;
+        count = uniformCount;
     }
     
     memcpy(value, v, valueBytes);

@@ -102,7 +102,7 @@ public:
         /**
          * Sets the uniform value
          */
-        void setUniform(const void* value, UniformElementType elementType, size_t elementCount) const;
+        void setUniform(const void* value, UniformElementType elementType, size_t uniformCount) const;
         /**
          * Sets the callback which will be called when uniform updated
          */

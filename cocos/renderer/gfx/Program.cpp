@@ -226,11 +226,11 @@ namespace {
 
 RENDERER_BEGIN
 
-void Program::Uniform::setUniform(const void* value, UniformElementType elementType, size_t elementCount) const
+void Program::Uniform::setUniform(const void* value, UniformElementType elementType, size_t uniformCount) const
 {
-    // elementCount may bigger than size.
-    if (size >= 1 && size < elementCount) elementCount = size;
-    GLsizei count = size == -1 ? 1 : (GLsizei)elementCount;
+    // uniformCount may bigger than size.
+    if (size >= 1 && size < uniformCount) uniformCount = size;
+    GLsizei count = size == -1 ? 1 : (GLsizei)uniformCount;
     _callback(location, count, value, elementType);
 }
 
