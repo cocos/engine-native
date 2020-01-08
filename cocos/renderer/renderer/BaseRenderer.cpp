@@ -259,11 +259,11 @@ void BaseRenderer::setProperty (const Effect::Property* prop)
             Effect::Property::Type::INT2 == propType ||
             Effect::Property::Type::INT4 == propType)
         {
-            _device->setUniformiv(propHashName, bytes / sizeof(int), (const int*)prop->getValue());
+            _device->setUniformiv(propHashName, bytes / sizeof(int), (const int*)prop->getValue(), prop->getCount());
         }
         else
         {
-            _device->setUniformfv(propHashName, bytes / sizeof(float), (const float*)prop->getValue());
+            _device->setUniformfv(propHashName, bytes / sizeof(float), (const float*)prop->getValue(), prop->getCount());
         }
     }
 }

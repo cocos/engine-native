@@ -229,8 +229,8 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_dirLightDirection, count * 4, directions);
-        _device->setUniformfv(cc_dirLightColor, count * 4, colors);
+        _device->setUniformfv(cc_dirLightDirection, count * 4, directions, count);
+        _device->setUniformfv(cc_dirLightColor, count * 4, colors, count);
     }
     
     if (_pointLights.size() > 0)
@@ -256,8 +256,8 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_pointLightPositionAndRange, count * 4, positionAndRanges);
-        _device->setUniformfv(cc_pointLightColor, count * 4, colors);
+        _device->setUniformfv(cc_pointLightPositionAndRange, count * 4, positionAndRanges, count);
+        _device->setUniformfv(cc_pointLightColor, count * 4, colors, count);
     }
     
     if (_spotLights.size() > 0)
@@ -291,9 +291,9 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_spotLightDirection, count * 4, directions);
-        _device->setUniformfv(cc_spotLightPositionAndRange, count * 4, positionAndRanges);
-        _device->setUniformfv(cc_spotLightColor, count * 4, colors);
+        _device->setUniformfv(cc_spotLightDirection, count * 4, directions, count);
+        _device->setUniformfv(cc_spotLightPositionAndRange, count * 4, positionAndRanges, count);
+        _device->setUniformfv(cc_spotLightColor, count * 4, colors, count);
     }
     
     if (_ambientLights.size() > 0) {
@@ -310,7 +310,7 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_ambientLightColor, count * 4, colors);
+        _device->setUniformfv(cc_ambientLightColor, count * 4, colors, count);
     }
 }
 
@@ -323,7 +323,7 @@ void ForwardRenderer::submitShadowStageUniforms(const View& view)
     shadowInfo[3] = view.shadowLight->getShadowDarkness();
     
     _device->setUniformMat4(cc_shadow_map_lightViewProjMatrix, view.matViewProj);
-    _device->setUniformfv(cc_shadow_map_info, 4, shadowInfo);
+    _device->setUniformfv(cc_shadow_map_info, 4, shadowInfo, 1);
     _device->setUniformf(cc_shadow_map_bias, view.shadowLight->getShadowBias());
 }
 
@@ -346,8 +346,8 @@ void ForwardRenderer::submitOtherStagesUniforms()
         *(shadowLightInfo + index + 3) = light->getShadowDarkness();
     }
     
-    _device->setUniformfv(cc_shadow_lightViewProjMatrix, count * 16, shadowLightProjs);
-    _device->setUniformfv(cc_shadow_info, count * 4, shadowLightInfo);
+    _device->setUniformfv(cc_shadow_lightViewProjMatrix, count * 16, shadowLightProjs, count);
+    _device->setUniformfv(cc_shadow_info, count * 4, shadowLightInfo, count);
 }
 
 bool ForwardRenderer::compareItems(const StageItem &a, const StageItem &b)
