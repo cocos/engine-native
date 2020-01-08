@@ -1794,17 +1794,18 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                 se::Object* obj = v.toObject();
                 SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to int array failed!");
                 
+                uint8_t* data = nullptr;
+                size_t len = 0;
+                obj->getTypedArrayData(&data, &len);
+                uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
+                uint8_t count = (len / sizeof(int)) / el;
+                
                 if (directly)
                 {
-                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj);
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj, count);
                 }
                 else
                 {
-                    uint8_t* data = nullptr;
-                    size_t len = 0;
-                    obj->getTypedArrayData(&data, &len);
-                    uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
-                    uint8_t count = (len / sizeof(int)) / el;
                     param = cocos2d::renderer::Technique::Parameter(name, paramType, (int*)data, count);
                     
                 }
@@ -1822,19 +1823,19 @@ bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d:
                 se::Object* obj = v.toObject();
                 SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
                 
+                uint8_t* data = nullptr;
+                size_t len = 0;
+                obj->getTypedArrayData(&data, &len);
+                uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
+                uint8_t count = (len / sizeof(float)) / el;
+                
                 if (directly)
                 {
-                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj);
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj, count);
                 }
                 else
                 {
-                    uint8_t* data = nullptr;
-                    size_t len = 0;
-                    obj->getTypedArrayData(&data, &len);
-                    uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
-                    uint8_t count = (len / sizeof(float)) / el;
                     param = cocos2d::renderer::Technique::Parameter(name, paramType, (float*)data, count);
-                    
                 }
 
                 break;

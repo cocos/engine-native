@@ -115,7 +115,7 @@ public:
         /*
          *  @brief Constructor with Object.
          */
-        Parameter(const std::string& name, Type type, se::Object* value);
+        Parameter(const std::string& name, Type type, se::Object* value, uint8_t count = 1);
         /*
          *  @brief Constructor with texture.
          */
