@@ -46,9 +46,7 @@ void CCMTLQueue::submit(GFXCommandBuffer** cmd_buffs, uint count)
     NSAutoreleasePool* autoReleasePool = [[NSAutoreleasePool alloc] init];
     
     for (uint i = 0; i < count; ++i)
-    {
         executeCommands(static_cast<CCMTLCommandBuffer*>(cmd_buffs[i])->getCommandPackage() );
-    }
     
     [autoReleasePool release];
 }
