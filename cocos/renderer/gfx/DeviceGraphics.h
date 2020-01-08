@@ -233,7 +233,7 @@ public:
     /**
      * Sets a vector of integers to the specified uniform
      */
-    void setUniformiv(size_t hashName, size_t count, const int* value, size_t uniformCount);
+    void setUniformiv(size_t hashName, size_t elementCount, const int* value, size_t uniformCount);
     /**
      * Sets a float to the specified uniform
      */

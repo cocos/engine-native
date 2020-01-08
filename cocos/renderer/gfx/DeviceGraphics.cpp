@@ -476,9 +476,9 @@ void DeviceGraphics::setUniformi(size_t hashName, int i1, int i2, int i3, int i4
     setUniform(hashName, tempValue, 4 * sizeof(int), UniformElementType::INT);
 }
 
-void DeviceGraphics::setUniformiv(size_t hashName, size_t count, const int* value, size_t uniformCount)
+void DeviceGraphics::setUniformiv(size_t hashName, size_t elementCount, const int* value, size_t uniformCount)
 {
-    setUniform(hashName, value, count * sizeof(int), UniformElementType::INT, uniformCount);
+    setUniform(hashName, value, elementCount * sizeof(int), UniformElementType::INT, uniformCount);
 }
 
 void DeviceGraphics::setUniformf(size_t hashName, float f1)
