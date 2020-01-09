@@ -123,6 +123,18 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage)
                     for (const auto& block : *(gpuPipelineState->fragmentUniformBlocks) )
                         [encoder setFragmentBuffer:block.buffer offset:0 atIndex:block.mtlBinding];
                     
+                    for (const auto& texture : *(gpuPipelineState->vertexTextureList) )
+                        [encoder setVertexTexture:texture.texture atIndex:texture.mtlBinding];
+                    
+                    for (const auto& texture : *(gpuPipelineState->fragmentTextureList) )
+                         [encoder setFragmentTexture:texture.texture atIndex:texture.mtlBinding];
+                    
+                    for (const auto& sampler : *(gpuPipelineState->vertexSampleStateList) )
+                        [encoder setVertexSamplerState:sampler.samplerState atIndex:sampler.mtlBinding];
+                    
+                    for (const auto& sampler : *(gpuPipelineState->fragmentSampleStateList) )
+                        [encoder setFragmentSamplerState:sampler.samplerState atIndex:sampler.mtlBinding];
+                    
                     primitiveType = gpuPipelineState->primitiveType;
                 }
                 

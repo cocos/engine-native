@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 #import <Metal/MTLRenderPass.h>
 #import <Metal/MTLVertexDescriptor.h>
 #import <Metal/MTLRenderPipeline.h>
@@ -16,6 +18,8 @@ namespace mu
     MTLClearColor toMTLClearColor(const GFXColor& clearColor);
     MTLVertexFormat toMTLVertexFormat(GFXFormat);
     MTLPixelFormat toMTLPixelFormat(GFXFormat);
+    // Because some pixel format is not supported on metal, so need to convert to supported pixel format.
+    GFXFormat convertGFXPixelFormat(GFXFormat);
     MTLColorWriteMask toMTLColorWriteMask(GFXColorMask);
     MTLBlendFactor toMTLBlendFactor(GFXBlendFactor);
     MTLBlendOperation toMTLBlendOperation(GFXBlendOp);

@@ -17,6 +17,7 @@ public:
     
 private:
     id<MTLTexture> _mtlTexture = nil;
+    GFXFormat _convertedFormat = GFXFormat::UNKNOWN;
 };
 
 NS_CC_END

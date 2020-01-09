@@ -98,6 +98,7 @@ bool CCMTLPipelineState::createGPUPipelineState()
     _GPUPipelieState->vertexUniformBlocks = &_vertexUniformBlocks;
     _GPUPipelieState->fragmentUniformBlocks = &_fragmentUniformBlocks;
     _GPUPipelieState->vertexTextureList = &_vertexTextures;
+    _GPUPipelieState->fragmentTextureList = &_fragmentTextures;
     _GPUPipelieState->vertexSampleStateList = &_vertexSamplerStates;
     _GPUPipelieState->fragmentSampleStateList = &_fragmentSamplerStates;
     

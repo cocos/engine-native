@@ -66,6 +66,14 @@ namespace mu
         }
     }
     
+    GFXFormat convertGFXPixelFormat(GFXFormat format)
+    {
+        switch (format) {
+            case GFXFormat::RGB8: return GFXFormat::RGBA8;
+            default: return format;
+        }
+    }
+    
     MTLPixelFormat toMTLPixelFormat(GFXFormat format)
     {
         switch (format) {
@@ -78,7 +86,7 @@ namespace mu
             case GFXFormat::R32UI: return MTLPixelFormatR32Uint;
             case GFXFormat::R32I: return MTLPixelFormatR32Sint;
                 
-            case GFXFormat::RG8: return MTLPixelFormatRG8Uint;
+            case GFXFormat::RG8: return MTLPixelFormatRG8Unorm;
             case GFXFormat::RG8SN: return MTLPixelFormatRG8Snorm;
             case GFXFormat::RG8UI: return MTLPixelFormatRG8Uint;
             case GFXFormat::RG8I: return MTLPixelFormatRG8Sint;
@@ -86,8 +94,6 @@ namespace mu
             case GFXFormat::RG16UI: return MTLPixelFormatRG16Uint;
             case GFXFormat::RG16I: return MTLPixelFormatRG16Sint;
                 
-            // RGB should convert to RGBA
-//            case GFXFormat::RGB8: return MTLPixelFormatRGBA8Uint;
 //            case GFXFormat::RGB8SN: return MTLPixelFormatRGBA8Snorm;
 //            case GFXFormat::RGB8UI: return MTLPixelFormatRGBA8Uint;
 //            case GFXFormat::RGB8I: return MTLPixelFormatRGBA8Sint;
@@ -98,7 +104,7 @@ namespace mu
 //            case GFXFormat::RGB32UI: return MTLPixelFormatRGBA32Uint;
 //            case GFXFormat::RGB32I: return MTLPixelFormatRGBA32Sint;
                 
-            case GFXFormat::RGBA8: return MTLPixelFormatRGBA8Uint;
+            case GFXFormat::RGBA8: return MTLPixelFormatRGBA8Unorm;
             case GFXFormat::RGBA8SN: return MTLPixelFormatRGBA8Snorm;
             case GFXFormat::RGBA8UI: return MTLPixelFormatRGBA8Uint;
             case GFXFormat::RGBA8I: return MTLPixelFormatRGBA8Sint;

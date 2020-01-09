@@ -219,7 +219,7 @@ GFXPipelineLayout* CCMTLDevice::CreateGFXPipelieLayout(const GFXPipelineLayoutIn
 
 void CCMTLDevice::CopyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions)
 {
-    
+    static_cast<CCMTLTexture*>(dst)->update(static_cast<CCMTLBuffer*>(src)->getTransferBuffer(), regions[0]);
 }
 
 NS_CC_END

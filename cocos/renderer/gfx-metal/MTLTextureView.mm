@@ -20,8 +20,10 @@ bool CCMTLTextureView::Initialize(const GFXTextureViewInfo& info)
     
     NSRange levels = NSMakeRange(base_level_, level_count_);
     NSRange slics = NSMakeRange(base_layer_, layer_count_);
-    id<MTLTexture> mtlTexture = static_cast<CCMTLTexture*>(texture_)->getMTLTexture();
-    _mtlTexture = [mtlTexture newTextureViewWithPixelFormat:mu::toMTLPixelFormat(format_)
+    auto ccmtlTexture = static_cast<CCMTLTexture*>(texture_);
+    id<MTLTexture> mtlTexture = ccmtlTexture->getMTLTexture();
+    _convertedFormat = ccmtlTexture->getConvertedFormat();
+    _mtlTexture = [mtlTexture newTextureViewWithPixelFormat:mu::toMTLPixelFormat(_convertedFormat)
                                                 textureType:mu::toMTLTextureType(type_)
                                                      levels:levels
                                                      slices:slics];

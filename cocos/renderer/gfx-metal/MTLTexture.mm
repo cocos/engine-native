@@ -5,6 +5,40 @@
 
 NS_CC_BEGIN
 
+namespace
+{
+    uint8_t* convertRGB8ToRGBA8(uint8_t* source, uint length)
+    {
+        uint finalLength = length * 4;
+        uint8* out = (uint8*)CC_MALLOC(finalLength);
+        if (!out)
+        {
+            CC_LOG_WARNING("Failed to alloc memory in convertRGB8ToRGBA8().");
+            return source;
+        }
+        
+        uint8_t* src = source;
+        uint8_t* dst = out;
+        for (uint i = 0; i < length; ++i)
+        {
+            *dst++ = *src++;
+            *dst++ = *src++;
+            *dst++ = *src++;
+            *dst++ = 255;
+        }
+        
+        return out;
+    }
+    
+    uint8_t* convertData(uint8_t* source, uint length, GFXFormat type)
+    {
+        switch (type) {
+            case GFXFormat::RGB8: return convertRGB8ToRGBA8(source, length);
+            default: return source;
+        }
+    }
+}
+
 CCMTLTexture::CCMTLTexture(GFXDevice* device) : GFXTexture(device) {}
 CCMTLTexture::~CCMTLTexture() { Destroy(); }
 
@@ -28,7 +62,12 @@ bool CCMTLTexture::Initialize(const GFXTextureInfo& info)
         device_->mem_status().texture_size += size_;
     }
     
-    MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mu::toMTLPixelFormat(format_)
+    _convertedFormat = mu::convertGFXPixelFormat(format_);
+    MTLPixelFormat mtlFormat = mu::toMTLPixelFormat(_convertedFormat);
+    if (mtlFormat == MTLPixelFormatInvalid)
+        return false;
+    
+    MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlFormat
                                                                                           width:width_
                                                                                          height:height_
                                                                                       mipmapped:flags_ & GFXTextureFlags::GEN_MIPMAP];
@@ -78,6 +117,30 @@ void CCMTLTexture::Destroy()
 void CCMTLTexture::Resize(uint width, uint height)
 {
     //TODO
+}
+
+void CCMTLTexture::update(uint8_t* data, const GFXBufferTextureCopy& region)
+{
+    if (!_mtlTexture)
+        return;
+    
+    uint8_t* convertedData = convertData(data,
+                                         region.tex_extent.width * region.tex_extent.height,
+                                         format_);
+    
+    MTLRegion mtlRegion =
+    {
+        {(uint)region.tex_offset.x, (uint)region.tex_offset.y, (uint)region.tex_offset.z},
+        {region.tex_extent.width, region.tex_extent.height, region.tex_extent.depth}
+    };
+    
+    [_mtlTexture replaceRegion:mtlRegion
+                   mipmapLevel:region.tex_subres.base_mip_level
+                     withBytes:convertedData
+                   bytesPerRow:GFX_FORMAT_INFOS[(uint)_convertedFormat].size * region.tex_extent.width];
+    
+    if (convertedData != data)
+        CC_FREE(convertedData);
 }
 
 NS_CC_END
