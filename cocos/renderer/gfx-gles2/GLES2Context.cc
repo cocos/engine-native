@@ -1,6 +1,8 @@
 #include "GLES2Std.h"
 #include "GLES2Context.h"
 #include "gles2w.h"
+#include "GLES2Device.h"
+#include "GLES2StateCache.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
 #include "android/native_window.h"
@@ -367,7 +369,7 @@ void GLES2Context::Present()
 bool GLES2Context::MakeCurrent() {
   if (MakeCurrentImpl()) {
     if (!is_initialized) {
-      
+        auto stateCache = static_cast<GLES2Device*>(device_)->state_cache;
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID)
       // Turn on or off the vertical sync depending on the input bool value.
       int interval = 1;
@@ -402,8 +404,10 @@ bool GLES2Context::MakeCurrent() {
 
       glEnable(GL_CULL_FACE);
       glCullFace(GL_BACK);
-
       glFrontFace(GL_CCW);
+        stateCache->is_cull_face_enabled = true;
+        stateCache->rs.is_front_face_ccw = true;
+        stateCache->rs.cull_mode = GFXCullMode::BACK;
 
       //glDisable(GL_MULTISAMPLE);
 
@@ -412,16 +416,27 @@ bool GLES2Context::MakeCurrent() {
       glEnable(GL_DEPTH_TEST);
       glDepthMask(GL_TRUE);
       glDepthFunc(GL_LESS);
+        stateCache->dss.depth_test = true;
+        stateCache->dss.depth_write = true;
+        stateCache->dss.depth_func = GFXComparisonFunc::LESS;
 
+        glDisable(GL_STENCIL_TEST);
       glStencilFuncSeparate(GL_FRONT, GL_ALWAYS, 1, 0xffffffff);
       glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
       glStencilMaskSeparate(GL_FRONT, 0xffffffff);
       glStencilFuncSeparate(GL_BACK, GL_ALWAYS, 1, 0xffffffff);
       glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
       glStencilMaskSeparate(GL_BACK, 0xffffffff);
-
-      glDisable(GL_STENCIL_TEST);
-
+        stateCache->is_stencil_test_enabled = false;
+        stateCache->dss.stencil_test_front = stateCache->dss.stencil_test_back = false;
+        stateCache->dss.stencil_func_front = stateCache->dss.stencil_func_back = GFXComparisonFunc::ALWAYS;
+        stateCache->dss.stencil_fail_op_front = stateCache->dss.stencil_fail_op_back = GFXStencilOp::KEEP;
+        stateCache->dss.stencil_z_fail_op_front = stateCache->dss.stencil_z_fail_op_back = GFXStencilOp::KEEP;
+        stateCache->dss.stencil_pass_op_front = stateCache->dss.stencil_pass_op_front = GFXStencilOp::KEEP;
+        stateCache->dss.stencil_read_mask_front = stateCache->dss.stencil_read_mask_back = 0xffffffff;
+        stateCache->dss.stencil_write_mask_front = stateCache->dss.stencil_write_mask_back = 0xffffffff;
+        stateCache->dss.stencil_ref_front = stateCache->dss.stencil_ref_back = 0x1;
+        
       //////////////////////////////////////////////////////////////////////////
       // BlendState
 
@@ -431,6 +446,19 @@ bool GLES2Context::MakeCurrent() {
       glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
       glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
       glBlendColor((GLclampf)0.0f, (GLclampf)0.0f, (GLclampf)0.0f, (GLclampf)0.0f);
+        stateCache->bs.is_a2c = false;
+        stateCache->bs.targets[0].is_blend = false;
+        stateCache->bs.targets[0].blend_eq = GFXBlendOp::ADD;
+        stateCache->bs.targets[0].blend_alpha_eq = GFXBlendOp::ADD;
+        stateCache->bs.targets[0].blend_src = GFXBlendFactor::ONE;
+        stateCache->bs.targets[0].blend_dst = GFXBlendFactor::ZERO;
+        stateCache->bs.targets[0].blend_src_alpha = GFXBlendFactor::ONE;
+        stateCache->bs.targets[0].blend_dst_alpha = GFXBlendFactor::ZERO;
+        stateCache->bs.targets[0].blend_color_mask = GFXColorMask::ALL;
+        stateCache->bs.blend_color.r = 0.0f;
+        stateCache->bs.blend_color.g = 0.0f;
+        stateCache->bs.blend_color.b = 0.0f;
+        stateCache->bs.blend_color.a = 0.0f;
 
       is_initialized = true;
     }
