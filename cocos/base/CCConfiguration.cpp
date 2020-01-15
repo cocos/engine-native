@@ -119,13 +119,13 @@ void Configuration::gatherGPUInfo()
 //    const char* version = (const char*)glGetString(GL_VERSION);
 //    _valueDict["gl.version"] = Value(version);
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    const char* version = (const char*)glGetString(GL_VERSION);
-    _valueDict["gl.version"] = Value(version);
-    if (std::regex_match(version, std::regex("OpenGL ES 3.*"))) {
-        _isOpenglES3 = true;
-    }
-#endif
+// #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//     const char* version = (const char*)glGetString(GL_VERSION);
+//     _valueDict["gl.version"] = Value(version);
+//     if (std::regex_match(version, std::regex("OpenGL ES 3.*"))) {
+//         _isOpenglES3 = true;
+//     }
+// #endif
 
 //    _glExtensions = (char *)glGetString(GL_EXTENSIONS);
 
@@ -138,10 +138,10 @@ void Configuration::gatherGPUInfo()
 //    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &_maxTextureUnits);
     _valueDict["gl.max_texture_units"] = Value((int)_maxTextureUnits);
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    glGetIntegerv(GL_MAX_SAMPLES_APPLE, &_maxSamplesAllowed);
-    _valueDict["gl.max_samples_allowed"] = Value((int)_maxSamplesAllowed);
-#endif
+// #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//     glGetIntegerv(GL_MAX_SAMPLES_APPLE, &_maxSamplesAllowed);
+//     _valueDict["gl.max_samples_allowed"] = Value((int)_maxSamplesAllowed);
+// #endif
 
     _supportsETC1 = checkForGLExtension("GL_OES_compressed_ETC1_RGB8_texture");
     _valueDict["gl.supports_ETC1"] = Value(_supportsETC1);
