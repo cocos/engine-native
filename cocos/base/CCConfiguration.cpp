@@ -274,6 +274,7 @@ bool Configuration::checkForETC2() const
 //    delete [] formats;
 
 //    return supportNum >= 2;
+    return false;
 }
 
 bool Configuration::supportsETC2() const
