@@ -257,8 +257,8 @@ private:
      */
     bool checkForETC2() const;
 protected:
-    GLint           _maxTextureSize;
-    GLint           _maxModelviewStackDepth;
+    int           _maxTextureSize;
+    int           _maxModelviewStackDepth;
     bool            _supportsPVRTC;
     bool            _supportsETC1;
     bool            _supportsETC2;
@@ -274,8 +274,8 @@ protected:
     bool            _supportsOESPackedDepthStencil;
     bool            _supportsFloatTexture;
     bool            _isOpenglES3;
-    GLint           _maxSamplesAllowed;
-    GLint           _maxTextureUnits;
+    int           _maxSamplesAllowed;
+    int           _maxTextureUnits;
     char *          _glExtensions;
     int             _maxDirLightInShader; //max support directional light in shader
     int             _maxPointLightInShader; // max support point light in shader
