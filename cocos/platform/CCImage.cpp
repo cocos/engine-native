@@ -113,60 +113,57 @@ namespace
     typedef Image::PixelFormatInfoMap::value_type PixelFormatInfoMapValue;
     static const PixelFormatInfoMapValue TexturePixelFormatInfoTablesValue[] =
     {
-        PixelFormatInfoMapValue(Image::PixelFormat::BGRA8888, Image::PixelFormatInfo(GL_BGRA, GL_BGRA, GL_UNSIGNED_BYTE, 32, false, true)),
-        PixelFormatInfoMapValue(Image::PixelFormat::RGBA8888, Image::PixelFormatInfo(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 32, false, true)),
-        PixelFormatInfoMapValue(Image::PixelFormat::RGBA4444, Image::PixelFormatInfo(GL_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, 16, false, true)),
-        PixelFormatInfoMapValue(Image::PixelFormat::RGB5A1, Image::PixelFormatInfo(GL_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, 16, false, true)),
-        PixelFormatInfoMapValue(Image::PixelFormat::RGB565, Image::PixelFormatInfo(GL_RGB, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, 16, false, false)),
-        PixelFormatInfoMapValue(Image::PixelFormat::RGB888, Image::PixelFormatInfo(GL_RGB, GL_RGB, GL_UNSIGNED_BYTE, 24, false, false)),
-        PixelFormatInfoMapValue(Image::PixelFormat::A8, Image::PixelFormatInfo(GL_ALPHA, GL_ALPHA, GL_UNSIGNED_BYTE, 8, false, false)),
-        PixelFormatInfoMapValue(Image::PixelFormat::I8, Image::PixelFormatInfo(GL_LUMINANCE, GL_LUMINANCE, GL_UNSIGNED_BYTE, 8, false, false)),
-        PixelFormatInfoMapValue(Image::PixelFormat::AI88, Image::PixelFormatInfo(GL_LUMINANCE_ALPHA, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, 16, false, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::BGRA8888, Image::PixelFormatInfo(32, false, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::RGBA8888, Image::PixelFormatInfo(32, false, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::RGBA4444, Image::PixelFormatInfo(16, false, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::RGB5A1, Image::PixelFormatInfo(16, false, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::RGB565, Image::PixelFormatInfo(16, false, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::RGB888, Image::PixelFormatInfo(24, false, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::A8, Image::PixelFormatInfo(8, false, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::I8, Image::PixelFormatInfo(8, false, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::AI88, Image::PixelFormatInfo(16, false, true)),
 
 #ifdef GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
-        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC2, Image::PixelFormatInfo(GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF, 2, true, false)),
-        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC2A, Image::PixelFormatInfo(GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF, 2, true, true)),
-        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC4, Image::PixelFormatInfo(GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF, 4, true, false)),
-        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC4A, Image::PixelFormatInfo(GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF, 4, true, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC2, Image::PixelFormatInfo(2, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC2A, Image::PixelFormatInfo(2, true, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC4, Image::PixelFormatInfo(4, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::PVRTC4A, Image::PixelFormatInfo(4, true, true)),
 #endif
 
 #ifdef GL_ETC1_RGB8_OES
-        PixelFormatInfoMapValue(Image::PixelFormat::ETC, Image::PixelFormatInfo(GL_ETC1_RGB8_OES, 0xFFFFFFFF, 0xFFFFFFFF, 4, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::ETC, Image::PixelFormatInfo(4, true, false)),
 #endif
 
 #ifdef GL_COMPRESSED_RGB8_ETC2
-        PixelFormatInfoMapValue(Image::PixelFormat::ETC2_RGB, Image::PixelFormatInfo(GL_COMPRESSED_RGB8_ETC2, 0xFFFFFFFF, 0xFFFFFFFF, 4, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::ETC2_RGB, Image::PixelFormatInfo(4, true, false)),
 #endif
 
 #ifdef GL_COMPRESSED_RGBA8_ETC2_EAC
-        PixelFormatInfoMapValue(Image::PixelFormat::ETC2_RGBA, Image::PixelFormatInfo(GL_COMPRESSED_RGBA8_ETC2_EAC, 0xFFFFFFFF, 0xFFFFFFFF, 8, true, true)),
+        PixelFormatInfoMapValue(Image::PixelFormat::ETC2_RGBA, Image::PixelFormatInfo(8, true, true)),
 #endif
         
 #ifdef GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
-        PixelFormatInfoMapValue(Image::PixelFormat::S3TC_DXT1, Image::PixelFormatInfo(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 0xFFFFFFFF, 0xFFFFFFFF, 4, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::S3TC_DXT1, Image::PixelFormatInfo(4, true, false)),
 #endif
 
 #ifdef GL_COMPRESSED_RGBA_S3TC_DXT3_EXT
-        PixelFormatInfoMapValue(Image::PixelFormat::S3TC_DXT3, Image::PixelFormatInfo(GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::S3TC_DXT3, Image::PixelFormatInfo(8, true, false)),
 #endif
 
 #ifdef GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
-        PixelFormatInfoMapValue(Image::PixelFormat::S3TC_DXT5, Image::PixelFormatInfo(GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, 0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::S3TC_DXT5, Image::PixelFormatInfo(8, true, false)),
 #endif
 
 #ifdef GL_ATC_RGB_AMD
-        PixelFormatInfoMapValue(Image::PixelFormat::ATC_RGB, Image::PixelFormatInfo(GL_ATC_RGB_AMD,
-                                                                                            0xFFFFFFFF, 0xFFFFFFFF, 4, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::ATC_RGB, Image::PixelFormatInfo(4, true, false)),
 #endif
 
 #ifdef GL_ATC_RGBA_EXPLICIT_ALPHA_AMD
-        PixelFormatInfoMapValue(Image::PixelFormat::ATC_EXPLICIT_ALPHA, Image::PixelFormatInfo(GL_ATC_RGBA_EXPLICIT_ALPHA_AMD,
-                                                                                                       0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::ATC_EXPLICIT_ALPHA, Image::PixelFormatInfo(8, true, false)),
 #endif
 
 #ifdef GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD
-        PixelFormatInfoMapValue(Image::PixelFormat::ATC_INTERPOLATED_ALPHA, Image::PixelFormatInfo(GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD,
-                                                                                                           0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
+        PixelFormatInfoMapValue(Image::PixelFormat::ATC_INTERPOLATED_ALPHA, Image::PixelFormatInfo(8, true, false)),
 #endif
     };
 

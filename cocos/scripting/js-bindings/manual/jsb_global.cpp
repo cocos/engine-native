@@ -746,6 +746,69 @@ namespace
         }
         return dst;
     }
+    
+    struct ToGLFormatInfo {
+        std::string name;
+        GLenum internalFormat;
+        GLenum format;
+        GLenum type;
+    };
+    
+    const ToGLFormatInfo GL_FORMAT_INFOS[] = {
+        { "AUTO", 0, 0, 0},
+        { "BGRA8888", GL_BGRA, GL_BGRA, GL_UNSIGNED_BYTE},
+        { "RGBA8888", GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE},
+        { "RGB888", GL_RGB, GL_RGB, GL_UNSIGNED_BYTE},
+        { "RGB565", GL_RGB, GL_RGB, GL_UNSIGNED_SHORT_5_6_5},
+        { "A8", GL_ALPHA, GL_ALPHA, GL_UNSIGNED_BYTE},
+        { "I8", GL_LUMINANCE, GL_LUMINANCE, GL_UNSIGNED_BYTE},
+        { "AI88", GL_LUMINANCE_ALPHA, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE},
+        { "RGBA4444", GL_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4},
+        { "RGB5A1", GL_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1},
+#ifdef GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
+        { "PVRTC4", GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF},
+        { "PVRTC4A", GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF},
+        { "PVRTC2", GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF},
+        { "PVRTC2A", GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        
+#ifdef GL_ETC1_RGB8_OES
+        { "ETC", GL_ETC1_RGB8_OES, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        
+#ifdef GL_COMPRESSED_RGB8_ETC2
+        { "ETC2_RGB", GL_COMPRESSED_RGB8_ETC2, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+  
+#ifdef GL_COMPRESSED_RGBA8_ETC2_EAC
+        { "ETC2_RGBA", GL_COMPRESSED_RGBA8_ETC2_EAC, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        
+#ifdef GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+        { "S3TC_DXT1", GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        
+#ifdef GL_COMPRESSED_RGBA_S3TC_DXT3_EXT
+        { "S3TC_DXT3", GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        
+#ifdef GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
+        { "S3TC_DXT5", GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, 0xFFFFFFFF, 0xFFFFFFF},
+#endif
+        
+#ifdef GL_ATC_RGB_AMD
+        { "ATC_RGB", GL_ATC_RGB_AMD, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        
+#ifdef GL_ATC_RGBA_EXPLICIT_ALPHA_AMD
+        { "ATC_EXPLICIT_ALPHA", GL_ATC_RGBA_EXPLICIT_ALPHA_AMD, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        
+#ifdef GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD
+        { "ATC_INTERPOLATED_ALPHA", GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD, 0xFFFFFFFF, 0xFFFFFFFF},
+#endif
+        { "DEFAULT", 0, 0, 0},
+    };
 
     struct ImageInfo* createImageInfo(const Image* img)
     {
@@ -755,10 +818,10 @@ namespace
         imgInfo->height = img->getHeight();
         imgInfo->data = img->getData();
 
-        const auto& pixelFormatInfo = img->getPixelFormatInfo();
-        imgInfo->glFormat = pixelFormatInfo.format;
-        imgInfo->glInternalFormat = pixelFormatInfo.internalFormat;
-        imgInfo->type = pixelFormatInfo.type;
+        int renderFormat = static_cast<int>(img->getRenderFormat());
+        imgInfo->glFormat = GL_FORMAT_INFOS[renderFormat].format;
+        imgInfo->glInternalFormat = GL_FORMAT_INFOS[renderFormat].internalFormat;
+        imgInfo->type = GL_FORMAT_INFOS[renderFormat].type;
 
         imgInfo->bpp = img->getBitPerPixel();
         imgInfo->numberOfMipmaps = img->getNumberOfMipmaps();
