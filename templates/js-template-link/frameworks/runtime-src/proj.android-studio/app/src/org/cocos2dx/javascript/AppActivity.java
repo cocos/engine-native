@@ -34,7 +34,6 @@ public class AppActivity extends NativeActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("AppActivity", "onCreate");
         super.onCreate(savedInstanceState);
         // Workaround in https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508
         if (!isTaskRoot()) {
