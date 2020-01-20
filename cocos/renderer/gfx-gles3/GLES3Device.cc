@@ -30,21 +30,21 @@ GLES3Device::~GLES3Device()
 
 bool GLES3Device::Initialize(const GFXDeviceInfo& info)
 {
-    api_ = GFXAPI::GLES3;
-    width_ = info.width;
-    height_ = info.height;
-    native_width_ = info.native_width;
-    native_height_ = info.native_height;
-    window_handle_ = info.window_handle;
+    _api = GFXAPI::GLES3;
+    _width = info.width;
+    _height = info.height;
+    _nativeWidth = info.native_width;
+    _nativeHeight = info.native_height;
+    _windowHandle = info.window_handle;
 
     state_cache = CC_NEW(GLES3StateCache);
 
     GFXContextInfo ctx_info;
-    ctx_info.window_handle = window_handle_;
+    ctx_info.window_handle = _windowHandle;
     ctx_info.shared_ctx = info.shared_ctx;
 
-    context_ = CC_NEW(GLES3Context(this));
-    if (!context_->Initialize(ctx_info))
+    _context = CC_NEW(GLES3Context(this));
+    if (!_context->Initialize(ctx_info))
     {
         Destroy();
         return false;
@@ -53,81 +53,81 @@ bool GLES3Device::Initialize(const GFXDeviceInfo& info)
     String extStr = (const char*)glGetString(GL_EXTENSIONS);
     extensions_ = StringUtil::Split(extStr, " ");
 
-    features_[(int)GFXFeature::TEXTURE_FLOAT] = true;
-    features_[(int)GFXFeature::TEXTURE_HALF_FLOAT] = true;
-    features_[(int)GFXFeature::FORMAT_R11G11B10F] = true;
-    features_[(int)GFXFeature::FORMAT_D24S8] = true;
-    features_[(int)GFXFeature::MSAA] = true;
+    _features[(int)GFXFeature::TEXTURE_FLOAT] = true;
+    _features[(int)GFXFeature::TEXTURE_HALF_FLOAT] = true;
+    _features[(int)GFXFeature::FORMAT_R11G11B10F] = true;
+    _features[(int)GFXFeature::FORMAT_D24S8] = true;
+    _features[(int)GFXFeature::MSAA] = true;
 
     if (CheckExtension("color_buffer_float"))
-        features_[(int)GFXFeature::COLOR_FLOAT] = true;
+        _features[(int)GFXFeature::COLOR_FLOAT] = true;
     
     if (CheckExtension("color_buffer_half_float"))
-        features_[(int)GFXFeature::COLOR_HALF_FLOAT] = true;
+        _features[(int)GFXFeature::COLOR_HALF_FLOAT] = true;
     
     if (CheckExtension("texture_float_linear"))
-        features_[(int)GFXFeature::TEXTURE_FLOAT_LINEAR] = true;
+        _features[(int)GFXFeature::TEXTURE_FLOAT_LINEAR] = true;
     
     if (CheckExtension("texture_half_float_linear"))
-        features_[(int)GFXFeature::TEXTURE_HALF_FLOAT_LINEAR] = true;
+        _features[(int)GFXFeature::TEXTURE_HALF_FLOAT_LINEAR] = true;
 
     String compressed_fmts;
 
     if (CheckExtension("compressed_ETC1"))
     {
-        features_[(int)GFXFeature::FORMAT_ETC1] = true;
+        _features[(int)GFXFeature::FORMAT_ETC1] = true;
         compressed_fmts += "etc1 ";
     }
 
-    features_[(int)GFXFeature::FORMAT_ETC2] = true;
+    _features[(int)GFXFeature::FORMAT_ETC2] = true;
     compressed_fmts += "etc2 ";
 
     if (CheckExtension("texture_compression_pvrtc"))
     {
-        features_[(int)GFXFeature::FORMAT_PVRTC] = true;
+        _features[(int)GFXFeature::FORMAT_PVRTC] = true;
         compressed_fmts += "pvrtc ";
     }
 
     if (CheckExtension("texture_compression_astc"))
     {
-        features_[(int)GFXFeature::FORMAT_ASTC] = true;
+        _features[(int)GFXFeature::FORMAT_ASTC] = true;
         compressed_fmts += "astc ";
     }
 
-    renderer_ = (const char*)glGetString(GL_RENDERER);
-    vendor_ = (const char*)glGetString(GL_VENDOR);
-    version_ = (const char*)glGetString(GL_VERSION);
+    _renderer = (const char*)glGetString(GL_RENDERER);
+    _vendor = (const char*)glGetString(GL_VENDOR);
+    _version = (const char*)glGetString(GL_VERSION);
 
-    CC_LOG_INFO("RENDERER: %s", renderer_.c_str());
-    CC_LOG_INFO("VENDOR: %s", vendor_.c_str());
-    CC_LOG_INFO("VERSION: %s", version_.c_str());
-    CC_LOG_INFO("SCREEN_SIZE: %d x %d", width_, height_);
-    CC_LOG_INFO("NATIVE_SIZE: %d x %d", native_width_, native_height_);
+    CC_LOG_INFO("RENDERER: %s", _renderer.c_str());
+    CC_LOG_INFO("VENDOR: %s", _vendor.c_str());
+    CC_LOG_INFO("VERSION: %s", _version.c_str());
+    CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);
+    CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
     CC_LOG_INFO("USE_VAO: %s", use_vao_ ? "true" : "false");
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressed_fmts.c_str());
 
     GFXWindowInfo window_info;
-    window_info.color_fmt = context_->color_fmt();
-    window_info.depth_stencil_fmt = context_->depth_stencil_fmt();
+    window_info.color_fmt = _context->color_fmt();
+    window_info.depth_stencil_fmt = _context->depth_stencil_fmt();
     window_info.is_offscreen = false;
-    window_ = CreateGFXWindow(window_info);
+    _window = CreateGFXWindow(window_info);
 
     GFXQueueInfo queue_info;
     queue_info.type = GFXQueueType::GRAPHICS;
-    queue_ = CreateGFXQueue(queue_info);
+    _queue = CreateGFXQueue(queue_info);
 
     GFXCommandAllocatorInfo cmd_alloc_info;
-    cmd_allocator_ = CreateGFXCommandAllocator(cmd_alloc_info);
+    _cmdAllocator = CreateGFXCommandAllocator(cmd_alloc_info);
 
     return true;
 }
 
 void GLES3Device::Destroy()
 {
-    CC_SAFE_DESTROY(cmd_allocator_);
-    CC_SAFE_DESTROY(queue_);
-    CC_SAFE_DESTROY(window_);
-    CC_SAFE_DESTROY(context_);
+    CC_SAFE_DESTROY(_cmdAllocator);
+    CC_SAFE_DESTROY(_queue);
+    CC_SAFE_DESTROY(_window);
+    CC_SAFE_DESTROY(_context);
     CC_SAFE_DELETE(state_cache);
 }
 
@@ -138,16 +138,16 @@ void GLES3Device::Resize(uint width, uint height)
 
 void GLES3Device::Present()
 {
-    ((GLES3CommandAllocator*)cmd_allocator_)->ReleaseCmds();
-    GLES3Queue* queue = (GLES3Queue*)queue_;
-    num_draw_calls_ += queue->num_draw_calls_;
-    num_tris_ += queue->num_tris_;
+    ((GLES3CommandAllocator*)_cmdAllocator)->ReleaseCmds();
+    GLES3Queue* queue = (GLES3Queue*)_queue;
+    _numDrawCalls += queue->_numDrawCalls;
+    _numTriangles += queue->_numTriangles;
 
-    context_->Present();
+    _context->Present();
 
     // Clear queue stats
-    queue->num_draw_calls_ = 0;
-    queue->num_tris_ = 0;
+    queue->_numDrawCalls = 0;
+    queue->_numTriangles = 0;
 }
 
 GFXWindow* GLES3Device::CreateGFXWindow(const GFXWindowInfo& info)

@@ -32,37 +32,41 @@ class CC_CORE_API GFXDevice : public Object {
   virtual GFXPipelineLayout* CreateGFXPipelieLayout(const GFXPipelineLayoutInfo& info) = 0;
   virtual void CopyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions) = 0;
   
-  CC_INLINE GFXAPI api() const { return api_; }
-  CC_INLINE GFXMemoryStatus& mem_status() { return mem_status_; }
-  CC_INLINE uint width() { return width_; }
-  CC_INLINE uint height() { return height_; }
-  CC_INLINE const GFXMemoryStatus& mem_status() const { return mem_status_; }
-  CC_INLINE GFXContext* context() const { return context_; }
-  CC_INLINE GFXWindow* window() const { return window_; }
-  CC_INLINE GFXQueue* queue() const { return queue_; }
-  CC_INLINE GFXCommandAllocator* cmd_allocator() const { return cmd_allocator_; }
-  
-  CC_INLINE bool HasFeature(GFXFeature feature) const { return features_[(int)feature]; }
+  CC_INLINE GFXAPI gfxAPI() const { return _api; }
+  CC_INLINE uint width() { return _width; }
+  CC_INLINE uint height() { return _height; }
+  CC_INLINE uint nativeWidth() { return _nativeWidth; }
+  CC_INLINE uint nativeHeight() { return _nativeHeight; }
+  CC_INLINE const GFXMemoryStatus& memoryStatus() const { return _memoryStatus; }
+  CC_INLINE GFXContext* context() const { return _context; }
+  CC_INLINE GFXWindow* mainWindow() const { return _window; }
+  CC_INLINE GFXQueue* queue() const { return _queue; }
+  CC_INLINE GFXCommandAllocator* commandAllocator() const { return _cmdAllocator; }
+  CC_INLINE String renderer() const { return _renderer; }
+  CC_INLINE String vendor() const { return _vendor; }
+  CC_INLINE uint numDrawCalls() const { return _numDrawCalls; }
+  CC_INLINE uint numTris() const { return _numTriangles; }
+  CC_INLINE bool HasFeature(GFXFeature feature) const { return _features[(int)feature]; }
   
  protected:
-  GFXAPI api_;
-  String device_name_;
-  String renderer_;
-  String vendor_;
-  String version_;
-  bool features_[(int)GFXFeature::COUNT];
-  uint width_;
-  uint height_;
-  uint native_width_;
-  uint native_height_;
-  GFXMemoryStatus mem_status_;
-  intptr_t window_handle_;
-  GFXContext* context_;
-  GFXWindow* window_;
-  GFXQueue* queue_;
-  GFXCommandAllocator* cmd_allocator_;
-  uint num_draw_calls_;
-  uint num_tris_;
+  GFXAPI _api = GFXAPI::UNKNOWN;
+  String _device_name;
+  String _renderer;
+  String _vendor;
+  String _version;
+  bool _features[(int)GFXFeature::COUNT];
+  uint _width = 0;
+  uint _height = 0;
+  uint _nativeWidth = 0;
+  uint _nativeHeight = 0;
+  GFXMemoryStatus _memoryStatus;
+  intptr_t _windowHandle = 0;
+  GFXContext* _context = nullptr;
+  GFXWindow* _window = nullptr;
+  GFXQueue* _queue = nullptr;
+  GFXCommandAllocator* _cmdAllocator = nullptr;
+  uint _numDrawCalls = 0;
+  uint _numTriangles = 0;
 };
 
 NS_CC_END

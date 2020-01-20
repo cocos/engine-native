@@ -305,8 +305,8 @@ void GLES2CommandBuffer::Execute(GFXCommandBuffer** cmd_buffs, uint count) {
     }
     cmd_package_->cmd_types.Concat(cmd_buff->cmd_package_->cmd_types);
     
-    num_draw_calls_ += cmd_buff->num_draw_calls();
-    num_tris_ += cmd_buff->num_tris();
+    num_draw_calls_ += cmd_buff->numDrawCalls();
+    num_tris_ += cmd_buff->numTris();
   }
 }
 
