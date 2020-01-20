@@ -11,7 +11,7 @@ public:
     CCMTLTexture(GFXDevice* device);
     ~CCMTLTexture();
     
-    virtual bool Initialize(const GFXTextureInfo& info) override;
+    virtual bool initialize(const GFXTextureInfo& info) override;
     virtual void destroy() override;
     virtual void Resize(uint width, uint height) override;
     

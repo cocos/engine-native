@@ -11,7 +11,7 @@ class CC_CORE_API GFXCommandBuffer : public Object {
   virtual ~GFXCommandBuffer();
   
 public:
-  virtual bool Initialize(const GFXCommandBufferInfo& info) = 0;
+  virtual bool initialize(const GFXCommandBufferInfo& info) = 0;
   virtual void destroy() = 0;
   virtual void Begin() = 0;
   virtual void End() = 0;

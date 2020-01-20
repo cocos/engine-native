@@ -11,7 +11,7 @@ class CC_CORE_API GFXFramebuffer : public Object {
   virtual ~GFXFramebuffer();
   
  public:
-  virtual bool Initialize(const GFXFramebufferInfo& info) = 0;
+  virtual bool initialize(const GFXFramebufferInfo& info) = 0;
   virtual void destroy() = 0;
   
   CC_INLINE GFXDevice* device() const { return device_; }

@@ -11,7 +11,7 @@ class CC_CORE_API GFXBuffer : public Object {
   virtual ~GFXBuffer();
   
  public:
-  virtual bool Initialize(const GFXBufferInfo& info) = 0;
+  virtual bool initialize(const GFXBufferInfo& info) = 0;
   virtual void destroy() = 0;
   virtual void Resize(uint size) = 0;
   virtual void Update(void* buffer, uint offset = 0, uint size = 0) = 0;

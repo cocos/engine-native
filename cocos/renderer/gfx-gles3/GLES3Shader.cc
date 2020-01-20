@@ -12,7 +12,7 @@ GLES3Shader::GLES3Shader(GFXDevice* device)
 GLES3Shader::~GLES3Shader() {
 }
 
-bool GLES3Shader::Initialize(const GFXShaderInfo &info)
+bool GLES3Shader::initialize(const GFXShaderInfo &info)
 {
     name_ = info.name;
     stages_ = info.stages;

@@ -9,7 +9,7 @@ NS_CC_BEGIN
 CCMTLInputAssembler::CCMTLInputAssembler(GFXDevice* device) : GFXInputAssembler(device) {}
 CCMTLInputAssembler::~CCMTLInputAssembler() { destroy(); }
 
-bool CCMTLInputAssembler::Initialize(const GFXInputAssemblerInfo& info)
+bool CCMTLInputAssembler::initialize(const GFXInputAssemblerInfo& info)
 {
     attributes_ = info.attributes;
     vertex_buffers_ = info.vertex_buffers;

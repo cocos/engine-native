@@ -6,7 +6,7 @@ NS_CC_BEGIN
 CCMTLFrameBuffer::CCMTLFrameBuffer(GFXDevice* device) : GFXFramebuffer(device) {}
 CCMTLFrameBuffer::~CCMTLFrameBuffer() { destroy(); }
 
-bool CCMTLFrameBuffer::Initialize(const GFXFramebufferInfo& info)
+bool CCMTLFrameBuffer::initialize(const GFXFramebufferInfo& info)
 {
     render_pass_ = info.render_pass;
     color_views_ = info.color_views;

@@ -23,7 +23,7 @@ CCMTLQueue::~CCMTLQueue()
     destroy();
 }
 
-bool CCMTLQueue::Initialize(const GFXQueueInfo &info)
+bool CCMTLQueue::initialize(const GFXQueueInfo &info)
 {
     MTKView* mtkView = (MTKView*)((CCMTLDevice*)device_)->getMTKView();
     _metalQueue = [mtkView.device newCommandQueue];

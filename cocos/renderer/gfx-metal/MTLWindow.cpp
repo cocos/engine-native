@@ -6,7 +6,7 @@ NS_CC_BEGIN
 CCMTLWindow::CCMTLWindow(GFXDevice* device) : GFXWindow(device) {}
 CCMTLWindow::~CCMTLWindow() { destroy(); }
 
-bool CCMTLWindow::Initialize(const GFXWindowInfo& info)
+bool CCMTLWindow::initialize(const GFXWindowInfo& info)
 {
     title_ = info.title;
     left_ = info.left;

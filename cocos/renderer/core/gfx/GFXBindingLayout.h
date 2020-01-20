@@ -11,7 +11,7 @@ class CC_CORE_API GFXBindingLayout : public Object {
   virtual ~GFXBindingLayout();
   
  public:
-  virtual bool Initialize(const GFXBindingLayoutInfo& info) = 0;
+  virtual bool initialize(const GFXBindingLayoutInfo& info) = 0;
   virtual void destroy() = 0;
   virtual void Update() = 0;
   

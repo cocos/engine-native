@@ -10,7 +10,7 @@ NS_CC_BEGIN
 CCMTLSampler::CCMTLSampler(GFXDevice* device) : GFXSampler(device) {}
 CCMTLSampler::~CCMTLSampler() { destroy(); }
 
-bool CCMTLSampler::Initialize(const GFXSamplerInfo& info)
+bool CCMTLSampler::initialize(const GFXSamplerInfo& info)
 {
     name_ = info.name;
     min_filter_ = info.min_filter;

@@ -16,7 +16,7 @@ public:
     CCMTLCommandBuffer(GFXDevice* device);
     ~CCMTLCommandBuffer();
     
-    virtual bool Initialize(const GFXCommandBufferInfo& info) override;
+    virtual bool initialize(const GFXCommandBufferInfo& info) override;
     virtual void destroy() override;
     virtual void Begin() override;
     virtual void End() override;

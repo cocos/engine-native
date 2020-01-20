@@ -12,7 +12,7 @@ GLES2Shader::GLES2Shader(GFXDevice* device)
 GLES2Shader::~GLES2Shader() {
 }
 
-bool GLES2Shader::Initialize(const GFXShaderInfo &info) {
+bool GLES2Shader::initialize(const GFXShaderInfo &info) {
   name_ = info.name;
   stages_ = info.stages;
   blocks_ = info.blocks;

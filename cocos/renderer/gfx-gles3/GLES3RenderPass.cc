@@ -12,7 +12,7 @@ GLES3RenderPass::GLES3RenderPass(GFXDevice* device)
 GLES3RenderPass::~GLES3RenderPass() {
 }
 
-bool GLES3RenderPass::Initialize(const GFXRenderPassInfo &info) {
+bool GLES3RenderPass::initialize(const GFXRenderPassInfo &info) {
   
   color_attachments_ = info.color_attachments;
   depth_stencil_attachment_ = info.depth_stencil_attachment;

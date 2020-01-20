@@ -15,7 +15,7 @@ class CC_GLES2_API GLES2CommandBuffer : public GFXCommandBuffer {
   friend class GLES2Queue;
   
  public:
-  bool Initialize(const GFXCommandBufferInfo& info);
+  bool initialize(const GFXCommandBufferInfo& info);
   void destroy();
   
   void Begin();

@@ -13,7 +13,7 @@ GLES2InputAssembler::GLES2InputAssembler(GFXDevice* device)
 GLES2InputAssembler::~GLES2InputAssembler() {
 }
 
-bool GLES2InputAssembler::Initialize(const GFXInputAssemblerInfo &info) {
+bool GLES2InputAssembler::initialize(const GFXInputAssemblerInfo &info) {
   
   attributes_ = info.attributes;
   vertex_buffers_ = info.vertex_buffers;

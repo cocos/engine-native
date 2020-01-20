@@ -11,7 +11,7 @@ class CC_GLES2_API GLES2Texture : public GFXTexture {
   ~GLES2Texture();
   
  public:
-  bool Initialize(const GFXTextureInfo& info);
+  bool initialize(const GFXTextureInfo& info);
   void destroy();
   void Resize(uint width, uint height);
   

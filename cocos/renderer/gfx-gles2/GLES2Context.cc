@@ -89,7 +89,7 @@ GLES2Context::~GLES2Context() {
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID)
 
-bool GLES2Context::Initialize(const GFXContextInfo &info) {
+bool GLES2Context::initialize(const GFXContextInfo &info) {
   
   vsync_mode_ = info.vsync_mode;
   window_handle_ = info.window_handle;

@@ -11,7 +11,7 @@ class CC_GLES3_API GLES3BindingLayout : public GFXBindingLayout {
   ~GLES3BindingLayout();
   
  public:
-  bool Initialize(const GFXBindingLayoutInfo& info);
+  bool initialize(const GFXBindingLayoutInfo& info);
   void destroy();
   void Update();
   

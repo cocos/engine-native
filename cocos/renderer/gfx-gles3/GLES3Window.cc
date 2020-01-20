@@ -10,7 +10,7 @@ GLES3Window::GLES3Window(GFXDevice* device)
 GLES3Window::~GLES3Window() {
 }
 
-bool GLES3Window::Initialize(const GFXWindowInfo &info) {
+bool GLES3Window::initialize(const GFXWindowInfo &info) {
   title_ = info.title;
   left_ = info.left;
   top_ = info.top;
@@ -129,7 +129,7 @@ void GLES3Window::Resize(uint width, uint height) {
       GFXTextureViewInfo color_tex_view_info;
       color_tex_view_info.type = GFXTextureViewType::TV2D;
       color_tex_view_info.format = color_fmt_;
-      color_tex_view_->Initialize(color_tex_view_info);
+      color_tex_view_->initialize(color_tex_view_info);
     }
 
     if (depth_stencil_texture_) {
@@ -139,7 +139,7 @@ void GLES3Window::Resize(uint width, uint height) {
       GFXTextureViewInfo depth_stencil_tex_view__info;
       depth_stencil_tex_view__info.type = GFXTextureViewType::TV2D;
       depth_stencil_tex_view__info.format = depth_stencil_fmt_;
-      depth_stencil_tex_view_->Initialize(depth_stencil_tex_view__info);
+      depth_stencil_tex_view_->initialize(depth_stencil_tex_view__info);
     }
 
     if (framebuffer_) {
@@ -149,7 +149,7 @@ void GLES3Window::Resize(uint width, uint height) {
       fbo_info.render_pass = render_pass_;
       fbo_info.color_views.push_back(color_tex_view_);
       fbo_info.depth_stencil_view = depth_stencil_tex_view_;
-      framebuffer_->Initialize(fbo_info);
+      framebuffer_->initialize(fbo_info);
     }
   }
 }

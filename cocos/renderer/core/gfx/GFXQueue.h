@@ -11,7 +11,7 @@ class CC_CORE_API GFXQueue : public Object {
   virtual ~GFXQueue();
   
 public:
-  virtual bool Initialize(const GFXQueueInfo& info) = 0;
+  virtual bool initialize(const GFXQueueInfo& info) = 0;
   virtual void destroy() = 0;
   virtual void submit(GFXCommandBuffer** cmd_buffs, uint count) = 0;
   

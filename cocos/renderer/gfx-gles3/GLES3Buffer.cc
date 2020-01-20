@@ -12,7 +12,7 @@ GLES3Buffer::GLES3Buffer(GFXDevice* device)
 GLES3Buffer::~GLES3Buffer() {
 }
 
-bool GLES3Buffer::Initialize(const GFXBufferInfo& info) {
+bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
   
   usage_ = info.usage;
   mem_usage_ = info.mem_usage;

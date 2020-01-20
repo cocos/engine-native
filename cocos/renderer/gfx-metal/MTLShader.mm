@@ -9,7 +9,7 @@ NS_CC_BEGIN
 CCMTLShader::CCMTLShader(GFXDevice* device) : GFXShader(device) {}
 CCMTLShader::~CCMTLShader() { destroy(); }
 
-bool CCMTLShader::Initialize(const GFXShaderInfo& info)
+bool CCMTLShader::initialize(const GFXShaderInfo& info)
 {
     name_ = info.name;
     stages_ = info.stages;

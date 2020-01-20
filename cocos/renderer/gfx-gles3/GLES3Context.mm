@@ -8,7 +8,7 @@ NS_CC_BEGIN
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
 
-bool GLES3Context::Initialize(const GFXContextInfo &info)
+bool GLES3Context::initialize(const GFXContextInfo &info)
 {
   
     vsync_mode_ = info.vsync_mode;

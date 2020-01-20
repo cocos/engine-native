@@ -13,7 +13,7 @@ GLES2TextureView::GLES2TextureView(GFXDevice* device)
 GLES2TextureView::~GLES2TextureView() {
 }
 
-bool GLES2TextureView::Initialize(const GFXTextureViewInfo &info) {
+bool GLES2TextureView::initialize(const GFXTextureViewInfo &info) {
   
   texture_ = info.texture;
   type_ = info.type;

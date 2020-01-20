@@ -6,7 +6,7 @@ NS_CC_BEGIN
 CCMTLPipelineLayout::CCMTLPipelineLayout(GFXDevice* device) : GFXPipelineLayout(device) {}
 CCMTLPipelineLayout::~CCMTLPipelineLayout() { destroy(); }
 
-bool CCMTLPipelineLayout::Initialize(const GFXPipelineLayoutInfo& info)
+bool CCMTLPipelineLayout::initialize(const GFXPipelineLayoutInfo& info)
 {
     layouts_ = info.layouts;
     push_constant_ranges_ = info.push_constant_ranges;

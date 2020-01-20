@@ -42,7 +42,7 @@ namespace
 CCMTLTexture::CCMTLTexture(GFXDevice* device) : GFXTexture(device) {}
 CCMTLTexture::~CCMTLTexture() { destroy(); }
 
-bool CCMTLTexture::Initialize(const GFXTextureInfo& info)
+bool CCMTLTexture::initialize(const GFXTextureInfo& info)
 {
     type_ = info.type;
     usage_ = info.usage;

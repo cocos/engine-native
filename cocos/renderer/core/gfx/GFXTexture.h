@@ -11,7 +11,7 @@ class CC_CORE_API GFXTexture : public Object {
   virtual ~GFXTexture();
   
  public:
-  virtual bool Initialize(const GFXTextureInfo& info) = 0;
+  virtual bool initialize(const GFXTextureInfo& info) = 0;
   virtual void destroy() = 0;
   virtual void Resize(uint width, uint height) = 0;
   

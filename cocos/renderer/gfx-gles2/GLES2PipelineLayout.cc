@@ -12,7 +12,7 @@ GLES2PipelineLayout::GLES2PipelineLayout(GFXDevice* device)
 GLES2PipelineLayout::~GLES2PipelineLayout() {
 }
 
-bool GLES2PipelineLayout::Initialize(const GFXPipelineLayoutInfo &info) {
+bool GLES2PipelineLayout::initialize(const GFXPipelineLayoutInfo &info) {
   
   layouts_ = info.layouts;
   push_constant_ranges_ = info.push_constant_ranges;

@@ -11,7 +11,7 @@ class CC_CORE_API GFXRenderPass : public Object {
   virtual ~GFXRenderPass();
   
  public:
-  virtual bool Initialize(const GFXRenderPassInfo& info) = 0;
+  virtual bool initialize(const GFXRenderPassInfo& info) = 0;
   virtual void destroy() = 0;
   
   CC_INLINE GFXDevice* device() const { return device_; }

@@ -11,7 +11,7 @@ class CC_CORE_API GFXPipelineLayout : public Object {
   virtual ~GFXPipelineLayout();
   
 public:
-  virtual bool Initialize(const GFXPipelineLayoutInfo& info) = 0;
+  virtual bool initialize(const GFXPipelineLayoutInfo& info) = 0;
   virtual void destroy() = 0;
   
   CC_INLINE GFXDevice* device() const { return device_; }

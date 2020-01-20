@@ -11,7 +11,7 @@ class CC_CORE_API GFXContext : public Object {
   virtual ~GFXContext();
   
  public:
-  virtual bool Initialize(const GFXContextInfo& info) = 0;
+  virtual bool initialize(const GFXContextInfo& info) = 0;
   virtual void destroy() = 0;
   virtual void Present() = 0;
 

@@ -8,7 +8,7 @@ NS_CC_BEGIN
 CCMTLRenderPass::CCMTLRenderPass(GFXDevice* device) : GFXRenderPass(device) {}
 CCMTLRenderPass::~CCMTLRenderPass() { destroy(); }
 
-bool CCMTLRenderPass::Initialize(const GFXRenderPassInfo& info)
+bool CCMTLRenderPass::initialize(const GFXRenderPassInfo& info)
 {
     color_attachments_ = info.color_attachments;
     depth_stencil_attachment_ = info.depth_stencil_attachment;

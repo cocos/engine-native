@@ -6,7 +6,7 @@ NS_CC_BEGIN
 CCMTLBindingLayout::CCMTLBindingLayout(GFXDevice* device) : GFXBindingLayout(device) {}
 CCMTLBindingLayout::~CCMTLBindingLayout() { destroy(); }
 
-bool CCMTLBindingLayout::Initialize(const GFXBindingLayoutInfo& info)
+bool CCMTLBindingLayout::initialize(const GFXBindingLayoutInfo& info)
 {
     if (info.bindings.size())
     {

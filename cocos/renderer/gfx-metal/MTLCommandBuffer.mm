@@ -14,7 +14,7 @@ NS_CC_BEGIN
 CCMTLCommandBuffer::CCMTLCommandBuffer(GFXDevice* device) : GFXCommandBuffer(device) {}
 CCMTLCommandBuffer::~CCMTLCommandBuffer() { destroy(); }
 
-bool CCMTLCommandBuffer::Initialize(const GFXCommandBufferInfo& info)
+bool CCMTLCommandBuffer::initialize(const GFXCommandBufferInfo& info)
 {
     if (!info.allocator)
         return false;

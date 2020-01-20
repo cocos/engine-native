@@ -11,7 +11,7 @@ class CC_GLES2_API GLES2BindingLayout : public GFXBindingLayout {
   ~GLES2BindingLayout();
   
  public:
-  bool Initialize(const GFXBindingLayoutInfo& info);
+  bool initialize(const GFXBindingLayoutInfo& info);
   void destroy();
   void Update();
   

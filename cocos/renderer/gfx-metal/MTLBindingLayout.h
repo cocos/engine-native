@@ -8,7 +8,7 @@ public:
     CCMTLBindingLayout(GFXDevice* device);
     virtual ~CCMTLBindingLayout();
     
-    virtual bool Initialize(const GFXBindingLayoutInfo& info) override;
+    virtual bool initialize(const GFXBindingLayoutInfo& info) override;
     virtual void destroy() override;
     virtual void Update() override;
 };

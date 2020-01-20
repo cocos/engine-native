@@ -17,7 +17,7 @@ NS_CC_BEGIN
 CCMTLPipelineState::CCMTLPipelineState(GFXDevice* device) : GFXPipelineState(device) {}
 CCMTLPipelineState::~CCMTLPipelineState() { destroy(); }
 
-bool CCMTLPipelineState::Initialize(const GFXPipelineStateInfo& info)
+bool CCMTLPipelineState::initialize(const GFXPipelineStateInfo& info)
 {
     primitive_ = info.primitive;
     shader_ = info.shader;

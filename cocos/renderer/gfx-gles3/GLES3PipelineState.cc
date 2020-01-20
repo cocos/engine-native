@@ -32,7 +32,7 @@ GLES3PipelineState::GLES3PipelineState(GFXDevice* device)
 GLES3PipelineState::~GLES3PipelineState() {
 }
 
-bool GLES3PipelineState::Initialize(const GFXPipelineStateInfo &info) {
+bool GLES3PipelineState::initialize(const GFXPipelineStateInfo &info) {
   
   primitive_ = info.primitive;
   shader_ = info.shader;

@@ -25,7 +25,7 @@ CCMTLBuffer::~CCMTLBuffer()
     destroy();
 }
 
-bool CCMTLBuffer::Initialize(const GFXBufferInfo& info)
+bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
 {
     usage_ = info.usage;
     mem_usage_ = info.mem_usage;

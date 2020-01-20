@@ -15,7 +15,7 @@ GLES2Framebuffer::GLES2Framebuffer(GFXDevice* device)
 GLES2Framebuffer::~GLES2Framebuffer() {
 }
 
-bool GLES2Framebuffer::Initialize(const GFXFramebufferInfo &info) {
+bool GLES2Framebuffer::initialize(const GFXFramebufferInfo &info) {
   
   render_pass_ = info.render_pass;
   color_views_ = info.color_views;

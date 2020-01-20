@@ -12,7 +12,7 @@ GLES2Sampler::GLES2Sampler(GFXDevice* device)
 GLES2Sampler::~GLES2Sampler() {
 }
 
-bool GLES2Sampler::Initialize(const GFXSamplerInfo &info) {
+bool GLES2Sampler::initialize(const GFXSamplerInfo &info) {
   name_ = info.name;
   min_filter_ = info.min_filter;
   mag_filter_ = info.mag_filter;

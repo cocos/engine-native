@@ -12,7 +12,7 @@ GLES3Texture::GLES3Texture(GFXDevice* device)
 GLES3Texture::~GLES3Texture() {
 }
 
-bool GLES3Texture::Initialize(const GFXTextureInfo &info) {
+bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   
   type_ = info.type;
   usage_ = info.usage;

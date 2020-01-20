@@ -15,7 +15,7 @@ GLES3BindingLayout::GLES3BindingLayout(GFXDevice* device)
 GLES3BindingLayout::~GLES3BindingLayout() {
 }
 
-bool GLES3BindingLayout::Initialize(const GFXBindingLayoutInfo &info) {
+bool GLES3BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
   
   if (info.bindings.size()) {
     binding_units_.resize(info.bindings.size());

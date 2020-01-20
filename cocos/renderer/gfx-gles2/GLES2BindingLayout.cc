@@ -15,7 +15,7 @@ GLES2BindingLayout::GLES2BindingLayout(GFXDevice* device)
 GLES2BindingLayout::~GLES2BindingLayout() {
 }
 
-bool GLES2BindingLayout::Initialize(const GFXBindingLayoutInfo &info) {
+bool GLES2BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
   
   if (info.bindings.size()) {
     binding_units_.resize(info.bindings.size());

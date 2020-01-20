@@ -13,7 +13,7 @@ GLES3TextureView::GLES3TextureView(GFXDevice* device)
 GLES3TextureView::~GLES3TextureView() {
 }
 
-bool GLES3TextureView::Initialize(const GFXTextureViewInfo &info) {
+bool GLES3TextureView::initialize(const GFXTextureViewInfo &info) {
   
   texture_ = info.texture;
   type_ = info.type;

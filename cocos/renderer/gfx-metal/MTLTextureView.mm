@@ -8,7 +8,7 @@ NS_CC_BEGIN
 CCMTLTextureView::CCMTLTextureView(GFXDevice* device) : GFXTextureView(device) {}
 CCMTLTextureView::~CCMTLTextureView() { destroy(); }
 
-bool CCMTLTextureView::Initialize(const GFXTextureViewInfo& info)
+bool CCMTLTextureView::initialize(const GFXTextureViewInfo& info)
 {
     texture_ = info.texture;
     type_ = info.type;

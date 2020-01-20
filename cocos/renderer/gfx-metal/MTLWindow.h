@@ -8,7 +8,7 @@ public:
     CCMTLWindow(GFXDevice* device);
     ~CCMTLWindow();
     
-    virtual bool Initialize(const GFXWindowInfo& info) override;
+    virtual bool initialize(const GFXWindowInfo& info) override;
     virtual void destroy() override;
     virtual void Resize(uint width, uint height) override;
 };

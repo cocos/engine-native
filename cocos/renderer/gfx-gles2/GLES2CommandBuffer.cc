@@ -25,7 +25,7 @@ GLES2CommandBuffer::GLES2CommandBuffer(GFXDevice* device)
 GLES2CommandBuffer::~GLES2CommandBuffer() {
 }
 
-bool GLES2CommandBuffer::Initialize(const GFXCommandBufferInfo& info) {
+bool GLES2CommandBuffer::initialize(const GFXCommandBufferInfo& info) {
   
   if (!info.allocator) {
     return false;

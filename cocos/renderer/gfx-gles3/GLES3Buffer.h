@@ -11,7 +11,7 @@ public:
   ~GLES3Buffer();
   
 public:
-  bool Initialize(const GFXBufferInfo& info);
+  bool initialize(const GFXBufferInfo& info);
   void destroy();
   void Resize(uint size);
   void Update(void* buffer, uint offset, uint size);

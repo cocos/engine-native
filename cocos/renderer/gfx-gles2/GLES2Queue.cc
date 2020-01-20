@@ -13,7 +13,7 @@ GLES2Queue::GLES2Queue(GFXDevice* device)
 GLES2Queue::~GLES2Queue() {
 }
 
-bool GLES2Queue::Initialize(const GFXQueueInfo &info) {
+bool GLES2Queue::initialize(const GFXQueueInfo &info) {
   type_ = info.type;
   
   return true;
