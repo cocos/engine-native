@@ -692,8 +692,8 @@ void AudioEngineImpl::update(float dt)
 
         if (player->_removeByAudioEngine)
         {
-            AudioEngine::remove(audioID);
             _threadMutex.lock();
+            AudioEngine::remove(audioID);
             it = _audioPlayers.erase(it);
             _threadMutex.unlock();
             delete player;
@@ -707,8 +707,8 @@ void AudioEngineImpl::update(float dt)
                 filePath = *audioInfo.filePath;
             }
 
-            AudioEngine::remove(audioID);
             _threadMutex.lock();
+            AudioEngine::remove(audioID);
             it = _audioPlayers.erase(it);
             _threadMutex.unlock();
 
