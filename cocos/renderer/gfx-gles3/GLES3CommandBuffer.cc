@@ -42,7 +42,7 @@ bool GLES3CommandBuffer::Initialize(const GFXCommandBufferInfo& info) {
 
 void GLES3CommandBuffer::Destroy() {
   if (gles3_allocator_) {
-    gles3_allocator_->ClearCmds(cmd_package_);
+    gles3_allocator_->clearCmds(cmd_package_);
     gles3_allocator_ = nullptr;
   }
   allocator_ = nullptr;
@@ -51,7 +51,7 @@ void GLES3CommandBuffer::Destroy() {
 }
 
 void GLES3CommandBuffer::Begin() {
-  gles3_allocator_->ClearCmds(cmd_package_);
+  gles3_allocator_->clearCmds(cmd_package_);
   cur_gpu_pso_ = nullptr;
   cur_gpu_bl_ = nullptr;
   cur_gpu_ia_ = nullptr;
@@ -69,7 +69,7 @@ void GLES3CommandBuffer::End() {
 void GLES3CommandBuffer::BeginRenderPass(GFXFramebuffer* fbo, const GFXRect& render_area, GFXClearFlags clear_flags, GFXColor* colors, uint count, float depth, int stencil) {
   is_in_render_pass_ = true;
   
-  GLES3CmdBeginRenderPass* cmd = gles3_allocator_->begin_render_pass_cmd_pool.Alloc();
+  GLES3CmdBeginRenderPass* cmd = gles3_allocator_->beginRenderPassCmdPool.Alloc();
   cmd->gpu_fbo = ((GLES3Framebuffer*)fbo)->gpu_fbo();
   cmd->render_area = render_area;
   cmd->clear_flags = clear_flags;
@@ -198,7 +198,7 @@ void GLES3CommandBuffer::Draw(GFXInputAssembler* ia) {
       BindStates();
     }
     
-    GLES3CmdDraw* cmd = gles3_allocator_->draw_cmd_pool.Alloc();
+    GLES3CmdDraw* cmd = gles3_allocator_->drawCmdPool.Alloc();
     ((GLES3InputAssembler*)ia)->ExtractCmdDraw(cmd);
     cmd_package_->draw_cmds.Push(cmd);
     cmd_package_->cmd_types.Push(GFXCmdType::DRAW);
@@ -229,7 +229,7 @@ void GLES3CommandBuffer::UpdateBuffer(GFXBuffer* buff, void* data, uint size, ui
       (type_ == GFXCommandBufferType::SECONDARY)) {
     GLES3GPUBuffer* gpu_buffer = ((GLES3Buffer*)buff)->gpu_buffer();
     if (gpu_buffer) {
-      GLES3CmdUpdateBuffer* cmd = gles3_allocator_->update_buffer_cmd_pool.Alloc();
+      GLES3CmdUpdateBuffer* cmd = gles3_allocator_->updateBufferCmdPool.Alloc();
       cmd->gpu_buffer = gpu_buffer;
       cmd->buffer = (uint8_t*)data;
       cmd->size = size;
@@ -249,7 +249,7 @@ void GLES3CommandBuffer::CopyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GF
     GLES3GPUBuffer* gpu_buffer = ((GLES3Buffer*)src)->gpu_buffer();
     GLES3GPUTexture* gpu_texture = ((GLES3Texture*)dst)->gpu_texture();
     if (gpu_buffer && gpu_texture) {
-      GLES3CmdCopyBufferToTexture* cmd = gles3_allocator_->copy_buffer_to_texture_cmd_pool.Alloc();
+      GLES3CmdCopyBufferToTexture* cmd = gles3_allocator_->copyBufferToTextureCmdPool.Alloc();
       cmd->gpu_buffer = gpu_buffer;
       cmd->gpu_texture = gpu_texture;
       cmd->dst_layout = layout;
@@ -303,7 +303,7 @@ void GLES3CommandBuffer::Execute(GFXCommandBuffer** cmd_buffs, uint count) {
 }
 
 void GLES3CommandBuffer::BindStates() {
-  GLES3CmdBindStates* cmd = gles3_allocator_->bind_states_cmd_pool.Alloc();
+  GLES3CmdBindStates* cmd = gles3_allocator_->bindStatesCmdPool.Alloc();
   cmd->gpu_pso = cur_gpu_pso_;
   cmd->gpu_binding_layout = cur_gpu_bl_;
   cmd->gpu_ia = cur_gpu_ia_;
