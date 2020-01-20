@@ -11,10 +11,10 @@ bool CCMTLWindow::Initialize(const GFXWindowInfo& info)
     title_ = info.title;
     left_ = info.left;
     top_ = info.top;
-    width_ = info.width;
-    height_ = info.height;
-    native_width_ = width_;
-    native_height_ = height_;
+    _width = info.width;
+    _height = info.height;
+    _nativeWidth = _width;
+    _nativeHeight = _height;
     color_fmt_ = info.color_fmt;
     depth_stencil_fmt_ = info.depth_stencil_fmt;
     is_offscreen_ = info.is_offscreen;

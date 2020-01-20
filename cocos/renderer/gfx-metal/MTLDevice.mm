@@ -24,7 +24,7 @@ NS_CC_BEGIN
 CCMTLDevice::CCMTLDevice() {}
 CCMTLDevice::~CCMTLDevice() {}
 
-bool CCMTLDevice::Initialize(const GFXDeviceInfo& info)
+bool CCMTLDevice::initialize(const GFXDeviceInfo& info)
 {
     api_ = GFXAPI::METAL;
     width_ = info.width;
@@ -40,94 +40,94 @@ bool CCMTLDevice::Initialize(const GFXDeviceInfo& info)
     
     GFXWindowInfo window_info;
     window_info.is_offscreen = false;
-    window_ = CreateGFXWindow(window_info);
+    window_ = createWindow(window_info);
     
     GFXQueueInfo queue_info;
     queue_info.type = GFXQueueType::GRAPHICS;
-    queue_ = CreateGFXQueue(queue_info);
+    queue_ = createQueue(queue_info);
     
     GFXCommandAllocatorInfo cmd_alloc_info;
-    cmd_allocator_ = CreateGFXCommandAllocator(cmd_alloc_info);
+    cmd_allocator_ = createCommandAllocator(cmd_alloc_info);
     
     return true;
 }
 
-void CCMTLDevice::Destroy()
+void CCMTLDevice::destroy()
 {
     CC_SAFE_DELETE(_stateCache);
 }
 
-void CCMTLDevice::Resize(uint width, uint height)
+void CCMTLDevice::resize(uint width, uint height)
 {
     
 }
 
-void CCMTLDevice::Present()
+void CCMTLDevice::present()
 {
     
 }
 
-GFXWindow* CCMTLDevice::CreateGFXWindow(const GFXWindowInfo& info)
+GFXWindow* CCMTLDevice::createWindow(const GFXWindowInfo& info)
 {
     auto window = CC_NEW(CCMTLWindow(this) );
-    if (window && window->Initialize(info) )
+    if (window && window->initialize(info) )
         return window;
     
     CC_SAFE_DESTROY(window);
     return nullptr;
 }
 
-GFXQueue* CCMTLDevice::CreateGFXQueue(const GFXQueueInfo& info)
+GFXQueue* CCMTLDevice::createQueue(const GFXQueueInfo& info)
 {
     auto queue = CC_NEW(CCMTLQueue(this) );
-    if (queue && queue->Initialize(info) )
+    if (queue && queue->initialize(info) )
         return queue;
     
     CC_SAFE_DESTROY(queue);
     return nullptr;
 }
 
-GFXCommandAllocator* CCMTLDevice::CreateGFXCommandAllocator(const GFXCommandAllocatorInfo& info)
+GFXCommandAllocator* CCMTLDevice::createCommandAllocator(const GFXCommandAllocatorInfo& info)
 {
     auto allocator = CC_NEW(CCMTLCommandAllocator(this) );
-    if (allocator && allocator->Initialize(info) )
+    if (allocator && allocator->initialize(info) )
         return allocator;
     
     CC_SAFE_DESTROY(allocator);
     return nullptr;
 }
 
-GFXCommandBuffer* CCMTLDevice::CreateGFXCommandBuffer(const GFXCommandBufferInfo& info)
+GFXCommandBuffer* CCMTLDevice::createCommandBuffer(const GFXCommandBufferInfo& info)
 {
     auto commandBuffer = CC_NEW(CCMTLCommandBuffer(this) );
-    if (commandBuffer && commandBuffer->Initialize(info) )
+    if (commandBuffer && commandBuffer->initialize(info) )
         return commandBuffer;
     
     CC_SAFE_DESTROY(commandBuffer);
     return nullptr;
 }
 
-GFXBuffer* CCMTLDevice::CreateGFXBuffer(const GFXBufferInfo& info)
+GFXBuffer* CCMTLDevice::createBuffer(const GFXBufferInfo& info)
 {
     auto buffer = CC_NEW(CCMTLBuffer(this) );
-    if (buffer && buffer->Initialize(info) )
+    if (buffer && buffer->initialize(info) )
         return buffer;
         
     CC_SAFE_DESTROY(buffer);
     return nullptr;
 }
 
-GFXTexture* CCMTLDevice::CreateGFXTexture(const GFXTextureInfo& info)
+GFXTexture* CCMTLDevice::createTexture(const GFXTextureInfo& info)
 {
     auto texture = CC_NEW(CCMTLTexture(this) );
-    if (texture && texture->Initialize(info) )
+    if (texture && texture->initialize(info) )
         return texture;
     
     CC_SAFE_DESTROY(texture);
     return nullptr;
 }
 
-GFXTextureView* CCMTLDevice::CreateGFXTextureView(const GFXTextureViewInfo& info)
+GFXTextureView* CCMTLDevice::createTextureView(const GFXTextureViewInfo& info)
 {
     auto textureView = CC_NEW(CCMTLTextureView(this) );
     if (textureView && textureView->Initialize(info) )
@@ -147,77 +147,77 @@ GFXSampler* CCMTLDevice::CreateGFXSampler(const GFXSamplerInfo& info)
     return sampler;
 }
 
-GFXShader* CCMTLDevice::CreateGFXShader(const GFXShaderInfo& info)
+GFXShader* CCMTLDevice::createShader(const GFXShaderInfo& info)
 {
     auto shader = CC_NEW(CCMTLShader(this) );
-    if (shader && shader->Initialize(info) )
+    if (shader && shader->initialize(info) )
         return shader;
     
     CC_SAFE_DESTROY(shader);
     return shader;
 }
 
-GFXInputAssembler* CCMTLDevice::CreateGFXInputAssembler(const GFXInputAssemblerInfo& info)
+GFXInputAssembler* CCMTLDevice::createInputAssembler(const GFXInputAssemblerInfo& info)
 {
     auto ia = CC_NEW(CCMTLInputAssembler(this) );
-    if (ia && ia->Initialize(info) )
+    if (ia && ia->initialize(info) )
         return ia;
     
     CC_SAFE_DESTROY(ia);
     return nullptr;
 }
 
-GFXRenderPass* CCMTLDevice::CreateGFXRenderPass(const GFXRenderPassInfo& info)
+GFXRenderPass* CCMTLDevice::createRenderPass(const GFXRenderPassInfo& info)
 {
     auto renderPass = CC_NEW(CCMTLRenderPass(this) );
-    if (renderPass && renderPass->Initialize(info) )
+    if (renderPass && renderPass->initialize(info) )
         return renderPass;
     
     CC_SAFE_DESTROY(renderPass);
     return nullptr;
 }
 
-GFXFramebuffer* CCMTLDevice::CreateGFXFramebuffer(const GFXFramebufferInfo& info)
+GFXFramebuffer* CCMTLDevice::createFramebuffer(const GFXFramebufferInfo& info)
 {
     auto frameBuffer = CC_NEW(CCMTLFrameBuffer(this) );
-    if (frameBuffer && frameBuffer->Initialize(info) )
+    if (frameBuffer && frameBuffer->initialize(info) )
         return frameBuffer;
     
     CC_SAFE_DESTROY(frameBuffer);
     return nullptr;
 }
 
-GFXBindingLayout* CCMTLDevice::CreateGFXBindingLayout(const GFXBindingLayoutInfo& info)
+GFXBindingLayout* CCMTLDevice::createBindingLayout(const GFXBindingLayoutInfo& info)
 {
     auto bl = CC_NEW(CCMTLBindingLayout(this) );
-    if (bl && bl->Initialize(info) )
+    if (bl && bl->initialize(info) )
         return bl;
     
     CC_SAFE_DESTROY(bl);
     return nullptr;
 }
 
-GFXPipelineState* CCMTLDevice::CreateGFXPipelineState(const GFXPipelineStateInfo& info)
+GFXPipelineState* CCMTLDevice::createPipelineState(const GFXPipelineStateInfo& info)
 {
     auto ps = CC_NEW(CCMTLPipelineState(this) );
-    if (ps && ps->Initialize(info) )
+    if (ps && ps->initialize(info) )
         return ps;
     
     CC_SAFE_DESTROY(ps);
     return nullptr;
 }
 
-GFXPipelineLayout* CCMTLDevice::CreateGFXPipelieLayout(const GFXPipelineLayoutInfo& info)
+GFXPipelineLayout* CCMTLDevice::createPipelieLayout(const GFXPipelineLayoutInfo& info)
 {
     auto pl = CC_NEW(CCMTLPipelineLayout(this) );
-    if (pl && pl->Initialize(info) )
+    if (pl && pl->initialize(info) )
         return pl;
     
     CC_SAFE_DESTROY(pl);
     return nullptr;
 }
 
-void CCMTLDevice::CopyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions)
+void CCMTLDevice::copyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions)
 {
     static_cast<CCMTLTexture*>(dst)->update(static_cast<CCMTLBuffer*>(src)->getTransferBuffer(), regions[0]);
 }
