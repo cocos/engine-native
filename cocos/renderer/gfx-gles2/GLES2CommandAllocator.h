@@ -24,11 +24,11 @@ public:
   void clearCmds(GLES2CmdPackage* cmd_package);
   
   CC_INLINE void releaseCmds() {
-    beginRenderPassCmdPool.Release();
-    bindStatesCmdPool.Release();
-    drawCmdPool.Release();
-    updateBufferCmdPool.Release();
-    copyBufferToTextureCmdPool.Release();
+    beginRenderPassCmdPool.release();
+    bindStatesCmdPool.release();
+    drawCmdPool.release();
+    updateBufferCmdPool.release();
+    copyBufferToTextureCmdPool.release();
   }
 };
 
