@@ -82,6 +82,7 @@ private:
 
     //audioID,AudioInfo
     std::unordered_map<int, AudioPlayer*>  _audioPlayers;
+    std::unordered_map<int, AudioPlayer*>  _threadAudioPlayers;
     std::mutex _threadMutex;
 
     bool _lazyInitLoop;

@@ -222,7 +222,7 @@ ALvoid AudioEngineImpl::myAlSourceNotificationCallback(ALuint sid, ALuint notifi
 
     AudioPlayer* player = nullptr;
     s_instance->_threadMutex.lock();
-    for (const auto& e : s_instance->_audioPlayers)
+    for (const auto& e : s_instance->_threadAudioPlayers)
     {
         player = e.second;
         if (player->_alSource == sid && player->_streamingSource)
@@ -423,6 +423,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
     player->setCache(audioCache);
     _threadMutex.lock();
     _audioPlayers[_currentAudioID] = player;
+    _threadAudioPlayers[_currentAudioID] = player;
     _threadMutex.unlock();
 
     audioCache->addPlayCallback(std::bind(&AudioEngineImpl::_play2d,this,audioCache,_currentAudioID));
@@ -693,8 +694,10 @@ void AudioEngineImpl::update(float dt)
         if (player->_removeByAudioEngine)
         {
             AudioEngine::remove(audioID);
+
             _threadMutex.lock();
             it = _audioPlayers.erase(it);
+            _threadAudioPlayers.erase(audioID);
             _threadMutex.unlock();
             delete player;
             _unusedSourcesPool.push_back(alSource);
@@ -708,7 +711,9 @@ void AudioEngineImpl::update(float dt)
             }
 
             AudioEngine::remove(audioID);
+
             _threadMutex.lock();
+            _threadAudioPlayers.erase(audioID);
             it = _audioPlayers.erase(it);
             _threadMutex.unlock();
 
