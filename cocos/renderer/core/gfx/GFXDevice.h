@@ -42,8 +42,8 @@ class CC_CORE_API GFXDevice : public Object {
   CC_INLINE GFXWindow* mainWindow() const { return _window; }
   CC_INLINE GFXQueue* queue() const { return _queue; }
   CC_INLINE GFXCommandAllocator* commandAllocator() const { return _cmdAllocator; }
-  CC_INLINE String renderer() const { return _renderer; }
-  CC_INLINE String vendor() const { return _vendor; }
+  CC_INLINE const String& renderer() const { return _renderer; }
+  CC_INLINE const String& vendor() const { return _vendor; }
   CC_INLINE uint numDrawCalls() const { return _numDrawCalls; }
   CC_INLINE uint numTris() const { return _numTriangles; }
   CC_INLINE bool HasFeature(GFXFeature feature) const { return _features[(int)feature]; }
