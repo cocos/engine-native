@@ -19,7 +19,7 @@ bool GLES2Queue::Initialize(const GFXQueueInfo &info) {
   return true;
 }
 
-void GLES2Queue::Destroy() {
+void GLES2Queue::destroy() {
 }
 
 void GLES2Queue::submit(GFXCommandBuffer** cmd_buffs, uint count) {

@@ -22,7 +22,7 @@ class GFXCommandPool {
     }
     delete [] (_frees);
 
-    for (uint i = 0; i < _freeCmds.Size(); ++i) {
+    for (uint i = 0; i < _freeCmds.size(); ++i) {
       CC_DELETE(_freeCmds[i]);
     }
     _freeCmds.clear();

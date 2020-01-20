@@ -40,7 +40,7 @@ bool GLES2CommandBuffer::Initialize(const GFXCommandBufferInfo& info) {
   return true;
 }
 
-void GLES2CommandBuffer::Destroy() {
+void GLES2CommandBuffer::destroy() {
   if (gles2_allocator_) {
     gles2_allocator_->clearCmds(cmd_package_);
     gles2_allocator_ = nullptr;
@@ -83,13 +83,13 @@ void GLES2CommandBuffer::BeginRenderPass(GFXFramebuffer* fbo, const GFXRect& ren
     cur_viewport_.top = render_area.y;
     cur_viewport_.width = render_area.width;
     cur_viewport_.height = render_area.height;
-  cmd_package_->begin_render_pass_cmds.Push(cmd);
-  cmd_package_->cmd_types.Push(GFXCmdType::BEGIN_RENDER_PASS);
+  cmd_package_->begin_render_pass_cmds.push(cmd);
+  cmd_package_->cmd_types.push(GFXCmdType::BEGIN_RENDER_PASS);
 }
 
 void GLES2CommandBuffer::EndRenderPass() {
   is_in_render_pass_ = false;
-  cmd_package_->cmd_types.Push(GFXCmdType::END_RENDER_PASS);
+  cmd_package_->cmd_types.push(GFXCmdType::END_RENDER_PASS);
 }
 
 void GLES2CommandBuffer::BindPipelineState(GFXPipelineState* pso) {
@@ -200,8 +200,8 @@ void GLES2CommandBuffer::Draw(GFXInputAssembler* ia) {
     
     GLES2CmdDraw* cmd = gles2_allocator_->drawCmdPool.alloc();
     ((GLES2InputAssembler*)ia)->ExtractCmdDraw(cmd);
-    cmd_package_->draw_cmds.Push(cmd);
-    cmd_package_->cmd_types.Push(GFXCmdType::DRAW);
+    cmd_package_->draw_cmds.push(cmd);
+    cmd_package_->cmd_types.push(GFXCmdType::DRAW);
     
     ++_numDrawCalls;
     if(cur_gpu_pso_) {
@@ -210,17 +210,17 @@ void GLES2CommandBuffer::Draw(GFXInputAssembler* ia) {
         {
             if (ia->index_buffer() == nullptr)
             {
-                num_tris_ += ia->vertex_count() / 3 * std::max(ia->instance_count(), 1U);
+                _numTriangles += ia->vertex_count() / 3 * std::max(ia->instance_count(), 1U);
             }
             else
             {
-                num_tris_ += ia->index_count() / 3 * std::max(ia->instance_count(), 1U);
+                _numTriangles += ia->index_count() / 3 * std::max(ia->instance_count(), 1U);
             }
           break;
         }
         case GL_TRIANGLE_STRIP:
         case GL_TRIANGLE_FAN: {
-          num_tris_ += (ia->vertex_count() - 2) * std::max(ia->instance_count(), 1U);
+          _numTriangles += (ia->vertex_count() - 2) * std::max(ia->instance_count(), 1U);
           break;
         }
         default:
@@ -243,8 +243,8 @@ void GLES2CommandBuffer::UpdateBuffer(GFXBuffer* buff, void* data, uint size, ui
       cmd->size = size;
       cmd->offset = offset;
       
-      cmd_package_->update_buffer_cmds.Push(cmd);
-      cmd_package_->cmd_types.Push(GFXCmdType::UPDATE_BUFFER);
+      cmd_package_->update_buffer_cmds.push(cmd);
+      cmd_package_->cmd_types.push(GFXCmdType::UPDATE_BUFFER);
     }
   } else {
     CC_LOG_ERROR("Command 'UpdateBuffer' must be recorded inside a render pass.");
@@ -266,8 +266,8 @@ void GLES2CommandBuffer::CopyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GF
         cmd->regions[i] = regions[i];
       }
       
-      cmd_package_->copy_buffer_to_texture_cmds.Push(cmd);
-      cmd_package_->cmd_types.Push(GFXCmdType::COPY_BUFFER_TO_TEXTURE);
+      cmd_package_->copy_buffer_to_texture_cmds.push(cmd);
+      cmd_package_->cmd_types.push(GFXCmdType::COPY_BUFFER_TO_TEXTURE);
     }
   } else {
     CC_LOG_ERROR("Command 'CopyBufferToTexture' must be recorded inside a render pass.");
@@ -278,32 +278,32 @@ void GLES2CommandBuffer::Execute(GFXCommandBuffer** cmd_buffs, uint count) {
   for (uint i = 0; i < count; ++i) {
     GLES2CommandBuffer* cmd_buff = (GLES2CommandBuffer*)cmd_buffs[i];
     
-    for (uint j = 0; j < cmd_buff->cmd_package_->begin_render_pass_cmds.Size(); ++j) {
+    for (uint j = 0; j < cmd_buff->cmd_package_->begin_render_pass_cmds.size(); ++j) {
       GLES2CmdBeginRenderPass* cmd = cmd_buff->cmd_package_->begin_render_pass_cmds[j];
       ++cmd->ref_count;
-      cmd_buff->cmd_package_->begin_render_pass_cmds.Push(cmd);
+      cmd_buff->cmd_package_->begin_render_pass_cmds.push(cmd);
     }
-    for (uint j = 0; j < cmd_buff->cmd_package_->bind_states_cmds.Size(); ++j) {
+    for (uint j = 0; j < cmd_buff->cmd_package_->bind_states_cmds.size(); ++j) {
       GLES2CmdBindStates* cmd = cmd_buff->cmd_package_->bind_states_cmds[j];
       ++cmd->ref_count;
-      cmd_buff->cmd_package_->bind_states_cmds.Push(cmd);
+      cmd_buff->cmd_package_->bind_states_cmds.push(cmd);
     }
-    for (uint j = 0; j < cmd_buff->cmd_package_->draw_cmds.Size(); ++j) {
+    for (uint j = 0; j < cmd_buff->cmd_package_->draw_cmds.size(); ++j) {
       GLES2CmdDraw* cmd = cmd_buff->cmd_package_->draw_cmds[j];
       ++cmd->ref_count;
-      cmd_buff->cmd_package_->draw_cmds.Push(cmd);
+      cmd_buff->cmd_package_->draw_cmds.push(cmd);
     }
-    for (uint j = 0; j < cmd_buff->cmd_package_->update_buffer_cmds.Size(); ++j) {
+    for (uint j = 0; j < cmd_buff->cmd_package_->update_buffer_cmds.size(); ++j) {
       GLES2CmdUpdateBuffer* cmd = cmd_buff->cmd_package_->update_buffer_cmds[j];
       ++cmd->ref_count;
-      cmd_buff->cmd_package_->update_buffer_cmds.Push(cmd);
+      cmd_buff->cmd_package_->update_buffer_cmds.push(cmd);
     }
-    for (uint j = 0; j < cmd_buff->cmd_package_->copy_buffer_to_texture_cmds.Size(); ++j) {
+    for (uint j = 0; j < cmd_buff->cmd_package_->copy_buffer_to_texture_cmds.size(); ++j) {
       GLES2CmdCopyBufferToTexture* cmd = cmd_buff->cmd_package_->copy_buffer_to_texture_cmds[j];
       ++cmd->ref_count;
-      cmd_buff->cmd_package_->copy_buffer_to_texture_cmds.Push(cmd);
+      cmd_buff->cmd_package_->copy_buffer_to_texture_cmds.push(cmd);
     }
-    cmd_package_->cmd_types.Concat(cmd_buff->cmd_package_->cmd_types);
+    cmd_package_->cmd_types.concat(cmd_buff->cmd_package_->cmd_types);
     
     _numDrawCalls += cmd_buff->numDrawCalls();
     _numTriangles += cmd_buff->numTris();
@@ -327,8 +327,8 @@ void GLES2CommandBuffer::BindStates() {
   cmd->stencil_write_mask = cur_stencil_write_mask_;
   cmd->stencil_compare_mask = cur_stencil_compare_mask_;
   
-  cmd_package_->bind_states_cmds.Push(cmd);
-  cmd_package_->cmd_types.Push(GFXCmdType::BIND_STATES);
+  cmd_package_->bind_states_cmds.push(cmd);
+  cmd_package_->cmd_types.push(GFXCmdType::BIND_STATES);
   is_state_invalid_ = false;
 }
 

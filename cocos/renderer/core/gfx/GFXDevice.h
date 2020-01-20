@@ -37,7 +37,7 @@ class CC_CORE_API GFXDevice : public Object {
   CC_INLINE uint height() { return _height; }
   CC_INLINE uint nativeWidth() { return _nativeWidth; }
   CC_INLINE uint nativeHeight() { return _nativeHeight; }
-  CC_INLINE const GFXMemoryStatus& memoryStatus() const { return _memoryStatus; }
+  CC_INLINE GFXMemoryStatus& memoryStatus() { return _memoryStatus; }
   CC_INLINE GFXContext* context() const { return _context; }
   CC_INLINE GFXWindow* mainWindow() const { return _window; }
   CC_INLINE GFXQueue* queue() const { return _queue; }

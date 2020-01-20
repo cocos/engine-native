@@ -31,7 +31,7 @@ public:
   GFXFramebuffer* createFramebuffer(const GFXFramebufferInfo& info);
   GFXBindingLayout* createBindingLayout(const GFXBindingLayoutInfo& info);
   virtual GFXPipelineState* createPipelineState(const GFXPipelineStateInfo& info) override;
-  virtual GFXPipelineLayout* createPipelieLayout(const GFXPipelineLayoutInfo& info) override;
+  virtual GFXPipelineLayout* createPipelineLayout(const GFXPipelineLayoutInfo& info) override;
     virtual void copyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions) override;
   
   CC_INLINE bool use_vao() const { return use_vao_; }

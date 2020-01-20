@@ -6,9 +6,8 @@ NS_CC_BEGIN
 GFXCommandBuffer::GFXCommandBuffer(GFXDevice* device)
     : device_(device),
       allocator_(nullptr),
-      type_(GFXCommandBufferType::PRIMARY),
-      _numDrawCalls(0),
-      _numTriangles(0) {
+      type_(GFXCommandBufferType::PRIMARY)
+{
 }
 
 GFXCommandBuffer::~GFXCommandBuffer() {

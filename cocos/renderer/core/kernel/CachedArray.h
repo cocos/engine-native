@@ -51,9 +51,9 @@ class CachedArray {
   }
   
   void concat(const CachedArray<T>& array) {
-    if (_size + array.Size() >= _capacity) {
+    if (_size + array.size() >= _capacity) {
       T* temp = _array;
-      uint size = std::max(_capacity*2, _size + array.Size());
+      uint size = std::max(_capacity*2, _size + array.size());
       _array = new T[size];
       for (uint i = 0; i < _capacity; ++i) {
         _array[i] = temp[i];
@@ -61,7 +61,7 @@ class CachedArray {
       _capacity = size;
       delete [] (temp);
     }
-    for (uint i = 0; i < array.Size(); ++i) {
+    for (uint i = 0; i < array.size(); ++i) {
       _array[_size++] = array[i];
     }
   }

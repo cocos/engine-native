@@ -28,7 +28,7 @@ public:
     virtual GFXFramebuffer* createFramebuffer(const GFXFramebufferInfo& info) override;
     virtual GFXBindingLayout* createBindingLayout(const GFXBindingLayoutInfo& info) override;
     virtual GFXPipelineState* createPipelineState(const GFXPipelineStateInfo& info) override;
-    virtual GFXPipelineLayout* createPipelieLayout(const GFXPipelineLayoutInfo& info) override;
+    virtual GFXPipelineLayout* createPipelineLayout(const GFXPipelineLayoutInfo& info) override;
     virtual void copyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions) override;
     
     CC_INLINE void* getMTKView() const { return _mtkView; }
