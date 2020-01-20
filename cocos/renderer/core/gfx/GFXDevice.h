@@ -11,27 +11,27 @@ class CC_CORE_API GFXDevice : public Object {
   virtual ~GFXDevice();
   
  public:
-  virtual bool Initialize(const GFXDeviceInfo& info) = 0;
-  virtual void Destroy() = 0;
-  virtual void Resize(uint width, uint height) = 0;
-  virtual void Present() = 0;
-  virtual GFXWindow* CreateGFXWindow(const GFXWindowInfo& info) = 0;
-  virtual GFXQueue* CreateGFXQueue(const GFXQueueInfo& info) = 0;
-  virtual GFXCommandAllocator* CreateGFXCommandAllocator(const GFXCommandAllocatorInfo& info) = 0;
-  virtual GFXCommandBuffer* CreateGFXCommandBuffer(const GFXCommandBufferInfo& info) = 0;
-  virtual GFXBuffer* CreateGFXBuffer(const GFXBufferInfo& info) = 0;
-  virtual GFXTexture* CreateGFXTexture(const GFXTextureInfo& info) = 0;
-  virtual GFXTextureView* CreateGFXTextureView(const GFXTextureViewInfo& info) = 0;
-  virtual GFXSampler* CreateGFXSampler(const GFXSamplerInfo& info) = 0;
-  virtual GFXShader* CreateGFXShader(const GFXShaderInfo& info) = 0;
-  virtual GFXInputAssembler* CreateGFXInputAssembler(const GFXInputAssemblerInfo& info) = 0;
-  virtual GFXRenderPass* CreateGFXRenderPass(const GFXRenderPassInfo& info) = 0;
-  virtual GFXFramebuffer* CreateGFXFramebuffer(const GFXFramebufferInfo& info) = 0;
-  virtual GFXBindingLayout* CreateGFXBindingLayout(const GFXBindingLayoutInfo& info) = 0;
-  virtual GFXPipelineState* CreateGFXPipelineState(const GFXPipelineStateInfo& info) = 0;
-  virtual GFXPipelineLayout* CreateGFXPipelieLayout(const GFXPipelineLayoutInfo& info) = 0;
-  virtual void CopyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions) = 0;
-  
+  virtual bool initialize(const GFXDeviceInfo& info) = 0;
+  virtual void destroy() = 0;
+  virtual void resize(uint width, uint height) = 0;
+  virtual void present() = 0;
+  virtual GFXWindow* createWindow(const GFXWindowInfo& info) = 0;
+  virtual GFXQueue* createQueue(const GFXQueueInfo& info) = 0;
+  virtual GFXCommandAllocator* createCommandAllocator(const GFXCommandAllocatorInfo& info) = 0;
+  virtual GFXCommandBuffer* createCommandBuffer(const GFXCommandBufferInfo& info) = 0;
+  virtual GFXBuffer* createBuffer(const GFXBufferInfo& info) = 0;
+  virtual GFXTexture* createTexture(const GFXTextureInfo& info) = 0;
+  virtual GFXTextureView* createTextureView(const GFXTextureViewInfo& info) = 0;
+  virtual GFXSampler* createSampler(const GFXSamplerInfo& info) = 0;
+  virtual GFXShader* createShader(const GFXShaderInfo& info) = 0;
+  virtual GFXInputAssembler* createInputAssembler(const GFXInputAssemblerInfo& info) = 0;
+  virtual GFXRenderPass* createRenderPass(const GFXRenderPassInfo& info) = 0;
+  virtual GFXFramebuffer* createFramebuffer(const GFXFramebufferInfo& info) = 0;
+  virtual GFXBindingLayout* createBindingLayout(const GFXBindingLayoutInfo& info) = 0;
+  virtual GFXPipelineState* createPipelineState(const GFXPipelineStateInfo& info) = 0;
+  virtual GFXPipelineLayout* createPipelineLayout(const GFXPipelineLayoutInfo& info) = 0;
+  virtual void copyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions) = 0;
+
   CC_INLINE GFXAPI gfxAPI() const { return _api; }
   CC_INLINE uint width() { return _width; }
   CC_INLINE uint height() { return _height; }
@@ -46,7 +46,7 @@ class CC_CORE_API GFXDevice : public Object {
   CC_INLINE const String& vendor() const { return _vendor; }
   CC_INLINE uint numDrawCalls() const { return _numDrawCalls; }
   CC_INLINE uint numTris() const { return _numTriangles; }
-  CC_INLINE bool HasFeature(GFXFeature feature) const { return _features[(int)feature]; }
+  CC_INLINE bool HasFeature(GFXFeature feature) const { return _features[static_cast<uint8_t>(feature)]; }
   
  protected:
   GFXAPI _api = GFXAPI::UNKNOWN;
@@ -54,7 +54,7 @@ class CC_CORE_API GFXDevice : public Object {
   String _renderer;
   String _vendor;
   String _version;
-  bool _features[(int)GFXFeature::COUNT];
+  bool _features[static_cast<uint8_t>(GFXFeature::COUNT)];
   uint _width = 0;
   uint _height = 0;
   uint _nativeWidth = 0;
