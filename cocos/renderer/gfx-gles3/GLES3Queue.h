@@ -19,8 +19,8 @@ class CC_GLES3_API GLES3Queue : public GFXQueue {
   
  private:
   bool is_async_;
-  uint num_draw_calls_;
-  uint num_tris_;
+  uint _numDrawCalls;
+  uint _numTriangles;
 };
 
 NS_CC_END

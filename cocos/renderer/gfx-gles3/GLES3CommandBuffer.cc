@@ -55,8 +55,8 @@ void GLES3CommandBuffer::Begin() {
   cur_gpu_pso_ = nullptr;
   cur_gpu_bl_ = nullptr;
   cur_gpu_ia_ = nullptr;
-  num_draw_calls_ = 0;
-  num_tris_ = 0;
+  _numDrawCalls = 0;
+  _numTriangles = 0;
 }
 
 void GLES3CommandBuffer::End() {
@@ -203,7 +203,7 @@ void GLES3CommandBuffer::Draw(GFXInputAssembler* ia) {
     cmd_package_->draw_cmds.Push(cmd);
     cmd_package_->cmd_types.Push(GFXCmdType::DRAW);
     
-    ++num_draw_calls_;
+    ++_numDrawCalls;
     if(cur_gpu_pso_) {
       switch (cur_gpu_pso_->gl_primitive) {
         case GL_TRIANGLES: {
