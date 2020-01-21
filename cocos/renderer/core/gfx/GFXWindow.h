@@ -21,8 +21,8 @@ class CC_CORE_API GFXWindow : public Object {
   CC_INLINE int top() const { return _top; }
   CC_INLINE uint width() const { return _width; }
   CC_INLINE uint height() const { return _height; }
-  CC_INLINE uint native_width() const { return native_width_; }
-  CC_INLINE uint native_height() const { return native_height_; }
+  CC_INLINE uint native_width() const { return _nativeWidth; }
+  CC_INLINE uint native_height() const { return _nativeHeight; }
   CC_INLINE GFXFormat color_fmt() const { return color_fmt_; }
   CC_INLINE GFXFormat depth_stencil_fmt() const { return depth_stencil_fmt_; }
   CC_INLINE bool is_offscreen() const { return is_offscreen_; }
@@ -40,8 +40,8 @@ class CC_CORE_API GFXWindow : public Object {
   int _top;
   uint _width;
   uint _height;
-  uint native_width_;
-  uint native_height_;
+  uint _nativeWidth;
+  uint _nativeHeight;
   GFXFormat color_fmt_;
   GFXFormat depth_stencil_fmt_;
   bool is_offscreen_;

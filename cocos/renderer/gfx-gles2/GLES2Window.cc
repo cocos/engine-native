@@ -16,8 +16,8 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
   _top = info.top;
   _width = info.width;
   _height = info.height;
-  native_width_ = _width;
-  native_height_ = _height;
+  _nativeWidth = _width;
+  _nativeHeight = _height;
   color_fmt_ = info.color_fmt;
   depth_stencil_fmt_ = info.depth_stencil_fmt;
   is_offscreen_ = info.is_offscreen;
@@ -118,9 +118,9 @@ void GLES2Window::destroy() {
 void GLES2Window::resize(uint width, uint height) {
   _width = width;
   _height = height;
-  if (width > native_width_ || height > native_height_) {
-    native_width_ = width;
-    native_height_ = height;
+  if (width > _nativeWidth || height > _nativeHeight) {
+    _nativeWidth = width;
+    _nativeHeight = height;
 
     if (color_texture_) {
       color_texture_->resize(width, height);
