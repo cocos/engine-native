@@ -20,8 +20,8 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
   _nativeHeight = _height;
   _colorFmt = info.color_fmt;
   _depthStencilFmt = info.depth_stencil_fmt;
-  is_offscreen_ = info.is_offscreen;
-  is_fullscreen_ = info.is_fullscreen;
+  _isOffscreen = info.is_offscreen;
+  _isFullscreen = info.is_fullscreen;
 
   // Create render pass
 
@@ -46,10 +46,10 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
   depth_stencil_attachment.begin_layout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
   depth_stencil_attachment.end_layout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-  render_pass_ = _device->createRenderPass(render_pass_info);
+  _renderPass = _device->createRenderPass(render_pass_info);
 
   // Create texture & texture views
-  if (is_offscreen_) {
+  if (_isOffscreen) {
     if (_colorFmt != GFXFormat::UNKNOWN) {
       GFXTextureInfo color_tex_info;
       color_tex_info.type = GFXTextureType::TEX2D;
@@ -96,18 +96,18 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
   }
 
   GFXFramebufferInfo fbo_info;
-  fbo_info.render_pass = render_pass_;
+  fbo_info.render_pass = _renderPass;
     if(color_tex_view_)
         fbo_info.color_views.push_back(color_tex_view_);
   fbo_info.depth_stencil_view = depth_stencil_tex_view_;
-  fbo_info.is_offscreen = is_offscreen_;
+  fbo_info.is_offscreen = _isOffscreen;
   framebuffer_ = _device->createFramebuffer(fbo_info);
 
   return true;
 }
 
 void GLES2Window::destroy() {
-  CC_SAFE_DESTROY(render_pass_);
+  CC_SAFE_DESTROY(_renderPass);
   CC_SAFE_DESTROY(color_tex_view_);
   CC_SAFE_DESTROY(color_texture_);
   CC_SAFE_DESTROY(depth_stencil_tex_view_);
@@ -146,8 +146,8 @@ void GLES2Window::resize(uint width, uint height) {
       framebuffer_->destroy();
 
       GFXFramebufferInfo fbo_info;
-      fbo_info.is_offscreen = is_offscreen_;
-      fbo_info.render_pass = render_pass_;
+      fbo_info.is_offscreen = _isOffscreen;
+      fbo_info.render_pass = _renderPass;
       fbo_info.color_views.push_back(color_tex_view_);
       fbo_info.depth_stencil_view = depth_stencil_tex_view_;
       framebuffer_->initialize(fbo_info);

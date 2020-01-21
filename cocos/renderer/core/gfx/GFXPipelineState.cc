@@ -8,7 +8,7 @@ GFXPipelineState::GFXPipelineState(GFXDevice* device)
       shader_(nullptr),
       primitive_(GFXPrimitiveMode::TRIANGLE_LIST),
       layout_(nullptr),
-      render_pass_(nullptr) {
+      _renderPass(nullptr) {
 }
 
 GFXPipelineState::~GFXPipelineState() {

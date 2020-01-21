@@ -42,7 +42,7 @@ bool GLES3PipelineState::initialize(const GFXPipelineStateInfo &info) {
   bs_ = info.bs;
   dynamic_states_ = info.dynamic_states;
   layout_ = info.layout;
-  render_pass_ = info.render_pass;
+  _renderPass = info.render_pass;
   
   gpu_pso_ = CC_NEW(GLES3GPUPipelineState);
   gpu_pso_->gl_primitive = GLES3Primitives[(int)primitive_];
@@ -52,7 +52,7 @@ bool GLES3PipelineState::initialize(const GFXPipelineStateInfo &info) {
   gpu_pso_->bs = bs_;
   gpu_pso_->dynamic_states = dynamic_states_;
   gpu_pso_->gpu_layout = ((GLES3PipelineLayout*)layout_)->gpu_pipeline_layout();
-  gpu_pso_->gpu_render_pass = ((GLES3RenderPass*)render_pass_)->gpu_render_pass();
+  gpu_pso_->gpu_render_pass = ((GLES3RenderPass*)_renderPass)->gpu_render_pass();
   
   return true;
 }

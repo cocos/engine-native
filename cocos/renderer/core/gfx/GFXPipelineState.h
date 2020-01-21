@@ -23,7 +23,7 @@ public:
   CC_INLINE const GFXBlendState& bs() const { return bs_; }
   CC_INLINE const GFXDynamicStateList& dynamic_states() const { return dynamic_states_; }
   CC_INLINE const GFXPipelineLayout* layout() const { return layout_; }
-  CC_INLINE const GFXRenderPass* render_pass() const { return render_pass_; }
+  CC_INLINE const GFXRenderPass* render_pass() const { return _renderPass; }
 
 protected:
   GFXDevice* _device;
@@ -35,7 +35,7 @@ protected:
   GFXBlendState bs_;
   GFXDynamicStateList dynamic_states_;
   GFXPipelineLayout* layout_;
-  GFXRenderPass* render_pass_;
+  GFXRenderPass* _renderPass;
 };
 
 NS_CC_END

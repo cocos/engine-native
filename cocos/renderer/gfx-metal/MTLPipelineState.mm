@@ -27,7 +27,7 @@ bool CCMTLPipelineState::initialize(const GFXPipelineStateInfo& info)
     bs_ = info.bs;
     dynamic_states_ = info.dynamic_states;
     layout_ = info.layout;
-    render_pass_ = info.render_pass;
+    _renderPass = info.render_pass;
     
     return  createGPUPipelineState();
 }
@@ -197,7 +197,7 @@ void CCMTLPipelineState::setFormats(MTLRenderPipelineDescriptor* descriptor)
 {
     int i = 0;
     MTLPixelFormat mtlPixelFormat;
-    for (const auto& colorAttachment : render_pass_->color_attachments())
+    for (const auto& colorAttachment : _renderPass->color_attachments())
     {
         mtlPixelFormat = mu::toMTLPixelFormat(colorAttachment.format);
         if (mtlPixelFormat != MTLPixelFormatInvalid)
@@ -206,11 +206,11 @@ void CCMTLPipelineState::setFormats(MTLRenderPipelineDescriptor* descriptor)
         ++i;
     }
     
-    mtlPixelFormat = mu::toMTLPixelFormat(render_pass_->depth_stencil_attachment().format);
+    mtlPixelFormat = mu::toMTLPixelFormat(_renderPass->depth_stencil_attachment().format);
     if (mtlPixelFormat != MTLPixelFormatInvalid)
         descriptor.depthAttachmentPixelFormat = mtlPixelFormat;
     
-    mtlPixelFormat = mu::toMTLPixelFormat(render_pass_->depth_stencil_attachment().format);
+    mtlPixelFormat = mu::toMTLPixelFormat(_renderPass->depth_stencil_attachment().format);
     if (mtlPixelFormat != MTLPixelFormatInvalid)
         descriptor.stencilAttachmentPixelFormat = mtlPixelFormat;
 }
