@@ -15,17 +15,17 @@ class CC_CORE_API GFXBindingLayout : public Object {
   virtual void destroy() = 0;
   virtual void update() = 0;
   
-  void BindBuffer(uint binding, GFXBuffer* buffer);
-  void BindTextureView(uint binding, GFXTextureView* tex_view);
-  void BindSampler(uint binding, GFXSampler* sampler);
+  void bindBuffer(uint binding, GFXBuffer* buffer);
+  void bindTextureView(uint binding, GFXTextureView* tex_view);
+  void bindSampler(uint binding, GFXSampler* sampler);
   
   CC_INLINE GFXDevice* device() const { return _device; }
-  CC_INLINE const GFXBindingUnitList& binding_units() const { return binding_units_; }
+  CC_INLINE const GFXBindingUnitList& bindingUnits() const { return _bindingUnits; }
   
  protected:
-  GFXDevice* _device;
-  GFXBindingUnitList binding_units_;
-  bool is_dirty_;
+  GFXDevice* _device = nullptr;
+  GFXBindingUnitList _bindingUnits;
+  bool _isDirty = false;
 };
 
 NS_CC_END

@@ -54,7 +54,7 @@ void CCMTLPipelineState::bindBuffer(GFXBindingLayout* bl)
     if (!bl)
         return;
     
-    for (const auto& bindingUnit : bl->binding_units() )
+    for (const auto& bindingUnit : bl->bindingUnits() )
     {
         for (auto& block : _vertexUniformBlocks)
         {
@@ -342,7 +342,7 @@ void CCMTLPipelineState::bindTextureAndSampler(MTLArgument* argument, bool isVer
     const char* argumentName = [argument.name UTF8String];
     for (auto bindingLayout : layout_->layouts() )
     {
-        for (const auto& bindingUnit : bindingLayout->binding_units() )
+        for (const auto& bindingUnit : bindingLayout->bindingUnits() )
         {
             if (bindingUnit.sampler)
             {
@@ -366,7 +366,7 @@ void CCMTLPipelineState::bindTexture(MTLArgument* argument, uint originBinding, 
 {
     for (auto bindingLayout : layout_->layouts() )
     {
-        for (const auto& bindingUnit : bindingLayout->binding_units() )
+        for (const auto& bindingUnit : bindingLayout->bindingUnits() )
         {
             if (bindingUnit.tex_view && bindingUnit.binding == originBinding)
             {
@@ -391,7 +391,7 @@ void CCMTLPipelineState::bindSamplerState(MTLArgument* argument, uint originBind
 {
     for (auto bindingLayout : layout_->layouts() )
     {
-        for (const auto& bindingUnit : bindingLayout->binding_units() )
+        for (const auto& bindingUnit : bindingLayout->bindingUnits() )
         {
             if (bindingUnit.sampler && bindingUnit.binding == originBinding)
             {

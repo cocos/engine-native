@@ -10,10 +10,10 @@ bool CCMTLBindingLayout::initialize(const GFXBindingLayoutInfo& info)
 {
     if (info.bindings.size())
     {
-        binding_units_.resize(info.bindings.size());
-        for (size_t i = 0; i < binding_units_.size(); ++i)
+        _bindingUnits.resize(info.bindings.size());
+        for (size_t i = 0; i < _bindingUnits.size(); ++i)
         {
-            GFXBindingUnit& binding_unit = binding_units_[i];
+            GFXBindingUnit& binding_unit = _bindingUnits[i];
             const GFXBinding& binding = info.bindings[i];
             binding_unit.binding = binding.binding;
             binding_unit.type = binding.type;
