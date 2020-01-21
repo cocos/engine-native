@@ -107,8 +107,8 @@ bool GLES3Device::initialize(const GFXDeviceInfo& info)
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressed_fmts.c_str());
 
     GFXWindowInfo window_info;
-    window_info.color_fmt = _context->color_fmt();
-    window_info.depth_stencil_fmt = _context->depth_stencil_fmt();
+    window_info.color_fmt = _context->colorFormat();
+    window_info.depth_stencil_fmt = _context->detphStencilFormat();
     window_info.is_offscreen = false;
     _window = createWindow(window_info);
 

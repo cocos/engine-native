@@ -81,7 +81,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage)
                 cmdBeginRenderPass = commandPackage->beginRenderPassCmds[cmdIdx++];
                 
                 MTLRenderPassDescriptor* mtlRenderPassDescriptor;
-                if (!cmdBeginRenderPass->frameBuffer->is_offscreen() )
+                if (!cmdBeginRenderPass->frameBuffer->isOffscreen() )
                 {
                     mtlRenderPassDescriptor = mtkView.currentRenderPassDescriptor;
                     mtlRenderPassDescriptor.colorAttachments[0].clearColor = mu::toMTLClearColor(cmdBeginRenderPass->clearColors[0]);

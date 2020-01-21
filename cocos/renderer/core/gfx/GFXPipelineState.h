@@ -23,7 +23,7 @@ public:
   CC_INLINE const GFXBlendState& bs() const { return bs_; }
   CC_INLINE const GFXDynamicStateList& dynamic_states() const { return dynamic_states_; }
   CC_INLINE const GFXPipelineLayout* layout() const { return layout_; }
-  CC_INLINE const GFXRenderPass* render_pass() const { return _renderPass; }
+  CC_INLINE const GFXRenderPass* renderPass() const { return _renderPass; }
 
 protected:
   GFXDevice* _device;

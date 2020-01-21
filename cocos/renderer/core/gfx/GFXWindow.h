@@ -21,16 +21,16 @@ class CC_CORE_API GFXWindow : public Object {
   CC_INLINE int top() const { return _top; }
   CC_INLINE uint width() const { return _width; }
   CC_INLINE uint height() const { return _height; }
-  CC_INLINE uint native_width() const { return _nativeWidth; }
-  CC_INLINE uint native_height() const { return _nativeHeight; }
-  CC_INLINE GFXFormat color_fmt() const { return _colorFmt; }
-  CC_INLINE GFXFormat depth_stencil_fmt() const { return _depthStencilFmt; }
-  CC_INLINE bool is_offscreen() const { return _isOffscreen; }
-  CC_INLINE GFXRenderPass* render_pass() const { return _renderPass; }
-  CC_INLINE GFXTexture* color_texture() const { return _colorTex; }
-  CC_INLINE GFXTextureView* color_tex_view() const { return _colorTexView; }
-  CC_INLINE GFXTexture* depth_stencil_texture() const { return _depthStencilTex; }
-  CC_INLINE GFXTextureView* depth_stencil_tex_view() const { return _depthStencilTexView; }
+  CC_INLINE uint nativeWidth() const { return _nativeWidth; }
+  CC_INLINE uint nativeHeight() const { return _nativeHeight; }
+  CC_INLINE GFXFormat colorFormat() const { return _colorFmt; }
+  CC_INLINE GFXFormat detphStencilFormat() const { return _depthStencilFmt; }
+  CC_INLINE bool isOffscreen() const { return _isOffscreen; }
+  CC_INLINE GFXRenderPass* renderPass() const { return _renderPass; }
+  CC_INLINE GFXTexture* colorTexture() const { return _colorTex; }
+  CC_INLINE GFXTextureView* colorTexView() const { return _colorTexView; }
+  CC_INLINE GFXTexture* depthStencilTexture() const { return _depthStencilTex; }
+  CC_INLINE GFXTextureView* depthStencilTexView() const { return _depthStencilTexView; }
   CC_INLINE GFXFramebuffer* framebuffer() const { return _framebuffer; }
   
  protected:
