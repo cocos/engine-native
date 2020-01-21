@@ -9,7 +9,7 @@ GFXTexture::GFXTexture(GFXDevice* device)
       usage_(GFXTextureUsageBit::NONE),
       format_(GFXFormat::UNKNOWN),
       _width(0),
-      height_(0),
+      _height(0),
       depth_(1),
       array_layer_(1),
       mip_level_(1),

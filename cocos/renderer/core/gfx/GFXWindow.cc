@@ -8,7 +8,7 @@ GFXWindow::GFXWindow(GFXDevice* device)
       _left(0),
       _top(0),
       _width(1024),
-      height_(768),
+      _height(768),
       native_width_(0),
       native_height_(0),
       color_fmt_(GFXFormat::UNKNOWN),
