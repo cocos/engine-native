@@ -15,16 +15,16 @@ GLES3TextureView::~GLES3TextureView() {
 
 bool GLES3TextureView::initialize(const GFXTextureViewInfo &info) {
   
-  texture_ = info.texture;
+  _texture = info.texture;
   _type = info.type;
   _format = info.format;
-  base_level_ = info.base_level;
-  level_count_ = info.level_count;
-  base_layer_ = info.base_layer;
-  layer_count_ = info.layer_count;
+  _baseLevel = info.base_level;
+  _levelCount = info.level_count;
+  _baseLayer = info.base_layer;
+  _layerCount = info.layer_count;
   
   gpu_tex_view_ = CC_NEW(GLES3GPUTextureView);
-  gpu_tex_view_->gpu_texture = static_cast<GLES3Texture*>(texture_)->gpu_texture();
+  gpu_tex_view_->gpu_texture = static_cast<GLES3Texture*>(_texture)->gpu_texture();
   gpu_tex_view_->type = _type;
   gpu_tex_view_->format = _format;
   gpu_tex_view_->base_level = info.base_level;
@@ -38,7 +38,7 @@ void GLES3TextureView::destroy() {
     CC_DELETE(gpu_tex_view_);
     gpu_tex_view_ = nullptr;
   }
-  texture_ = nullptr;
+  _texture = nullptr;
 }
 
 NS_CC_END
