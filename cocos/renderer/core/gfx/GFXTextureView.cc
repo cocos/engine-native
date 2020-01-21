@@ -7,7 +7,7 @@ GFXTextureView::GFXTextureView(GFXDevice* device)
     : _device(device),
       texture_(nullptr),
       _type(GFXTextureViewType::TV2D),
-      format_(GFXFormat::UNKNOWN),
+      _format(GFXFormat::UNKNOWN),
       base_level_(0),
       level_count_(1),
       base_layer_(0),

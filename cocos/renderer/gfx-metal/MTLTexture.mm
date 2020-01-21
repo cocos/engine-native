@@ -46,15 +46,15 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
 {
     _type = info.type;
     _usage = info.usage;
-    format_ = info.format;
+    _format = info.format;
     _width = info.width;
     _height = info.height;
-    depth_ = info.depth;
-    array_layer_ = info.array_layer;
-    mip_level_ = info.mip_level;
-    samples_ = info.samples;
+    _depth = info.depth;
+    _arrayLayer = info.array_layer;
+    _mipLevel = info.mip_level;
+    _samples = info.samples;
     _flags = info.flags;
-    _size = GFXFormatSize(format_, _width, _height, depth_);
+    _size = GFXFormatSize(_format, _width, _height, _depth);
     
     if (_flags & GFXTextureFlags::BAKUP_BUFFER)
     {
@@ -62,7 +62,7 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
         _device->memoryStatus().texture_size += _size;
     }
     
-    _convertedFormat = mu::convertGFXPixelFormat(format_);
+    _convertedFormat = mu::convertGFXPixelFormat(_format);
     MTLPixelFormat mtlFormat = mu::toMTLPixelFormat(_convertedFormat);
     if (mtlFormat == MTLPixelFormatInvalid)
         return false;
@@ -72,10 +72,10 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
                                                                                          height:_height
                                                                                       mipmapped:_flags & GFXTextureFlags::GEN_MIPMAP];
     descriptor.usage = mu::toMTLTextureUsage(_usage);
-    descriptor.textureType = mu::toMTLTextureType(_type, array_layer_, _flags & GFXTextureFlags::CUBEMAP);
-    descriptor.sampleCount = mu::toMTLSampleCount(samples_);
-    descriptor.mipmapLevelCount = mip_level_;
-    descriptor.arrayLength = array_layer_;
+    descriptor.textureType = mu::toMTLTextureType(_type, _arrayLayer, _flags & GFXTextureFlags::CUBEMAP);
+    descriptor.sampleCount = mu::toMTLSampleCount(_samples);
+    descriptor.mipmapLevelCount = _mipLevel;
+    descriptor.arrayLength = _arrayLayer;
     
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     //FIXME: is it correct here for performace optimization?
@@ -126,7 +126,7 @@ void CCMTLTexture::update(uint8_t* data, const GFXBufferTextureCopy& region)
     
     uint8_t* convertedData = convertData(data,
                                          region.tex_extent.width * region.tex_extent.height,
-                                         format_);
+                                         _format);
     
     MTLRegion mtlRegion =
     {

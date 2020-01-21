@@ -16,15 +16,15 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   
   _type = info.type;
   _usage = info.usage;
-  format_ = info.format;
+  _format = info.format;
   _width = info.width;
   _height = info.height;
-  depth_ = info.depth;
-  array_layer_ = info.array_layer;
-  mip_level_ = info.mip_level;
-  samples_ = info.samples;
+  _depth = info.depth;
+  _arrayLayer = info.array_layer;
+  _mipLevel = info.mip_level;
+  _samples = info.samples;
   _flags = info.flags;
-  _size = GFXFormatSize(format_, _width, _height, depth_);
+  _size = GFXFormatSize(_format, _width, _height, _depth);
   
   if (_flags & GFXTextureFlags::BAKUP_BUFFER) {
     _buffer = (uint8_t*)CC_MALLOC(_size);
@@ -36,16 +36,16 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   
   switch (_type) {
     case GFXTextureType::TEX1D: {
-      if (array_layer_) {
-        gpu_texture_->view_type = array_layer_ <= 1 ? GFXTextureViewType::TV1D : GFXTextureViewType::TV1D_ARRAY;
+      if (_arrayLayer) {
+        gpu_texture_->view_type = _arrayLayer <= 1 ? GFXTextureViewType::TV1D : GFXTextureViewType::TV1D_ARRAY;
       } else {
         gpu_texture_->view_type = GFXTextureViewType::TV1D;
       }
       break;
     }
     case GFXTextureType::TEX2D: {
-      if (array_layer_) {
-        if (array_layer_ <= 1) {
+      if (_arrayLayer) {
+        if (_arrayLayer <= 1) {
           gpu_texture_->view_type = GFXTextureViewType::TV2D;
         } else if (_flags & GFXTextureFlagBit::CUBEMAP) {
           gpu_texture_->view_type = GFXTextureViewType::CUBE;
@@ -66,15 +66,15 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
     }
   }
   
-  gpu_texture_->format = format_;
+  gpu_texture_->format = _format;
   gpu_texture_->usage = _usage;
   gpu_texture_->width = _width;
   gpu_texture_->height = _height;
-  gpu_texture_->depth = depth_;
+  gpu_texture_->depth = _depth;
   gpu_texture_->size = _size;
-  gpu_texture_->array_layer = array_layer_;
-  gpu_texture_->mip_level = mip_level_;
-  gpu_texture_->samples = samples_;
+  gpu_texture_->array_layer = _arrayLayer;
+  gpu_texture_->mip_level = _mipLevel;
+  gpu_texture_->samples = _samples;
   gpu_texture_->flags = _flags;
     gpu_texture_->is_pot = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
   
@@ -100,7 +100,7 @@ void GLES3Texture::destroy() {
 }
 
 void GLES3Texture::resize(uint width, uint height) {
-  uint size = GFXFormatSize(format_, width, height, depth_);
+  uint size = GFXFormatSize(_format, width, height, _depth);
   if (_size != size) {
     const uint old_size = _size;
     _width = width;

@@ -17,7 +17,7 @@ bool GLES3TextureView::initialize(const GFXTextureViewInfo &info) {
   
   texture_ = info.texture;
   _type = info.type;
-  format_ = info.format;
+  _format = info.format;
   base_level_ = info.base_level;
   level_count_ = info.level_count;
   base_layer_ = info.base_layer;
@@ -26,7 +26,7 @@ bool GLES3TextureView::initialize(const GFXTextureViewInfo &info) {
   gpu_tex_view_ = CC_NEW(GLES3GPUTextureView);
   gpu_tex_view_->gpu_texture = static_cast<GLES3Texture*>(texture_)->gpu_texture();
   gpu_tex_view_->type = _type;
-  gpu_tex_view_->format = format_;
+  gpu_tex_view_->format = _format;
   gpu_tex_view_->base_level = info.base_level;
   gpu_tex_view_->level_count = info.level_count;
   

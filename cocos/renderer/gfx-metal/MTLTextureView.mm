@@ -12,7 +12,7 @@ bool CCMTLTextureView::initialize(const GFXTextureViewInfo& info)
 {
     texture_ = info.texture;
     _type = info.type;
-    format_ = info.format;
+    _format = info.format;
     base_level_ = info.base_level;
     level_count_ = info.level_count;
     base_layer_ = info.base_layer;
