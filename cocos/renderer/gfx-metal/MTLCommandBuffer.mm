@@ -201,10 +201,10 @@ void CCMTLCommandBuffer::draw(GFXInputAssembler* ia)
         {
             switch (_currentGPUPipelineState->primitiveType) {
                 case MTLPrimitiveTypeTriangle:
-                    _numTriangles += ia->index_count() / 3 * std::max(ia->index_count(), 1U);
+                    _numTriangles += ia->indexCount() / 3 * std::max(ia->indexCount(), 1U);
                     break;
                 case MTLPrimitiveTypeTriangleStrip:
-                    _numTriangles += (ia->index_count() - 2) * std::max(ia->instance_count(), 1U);
+                    _numTriangles += (ia->indexCount() - 2) * std::max(ia->instanceCount(), 1U);
                     break;
                 default:
                     break;
