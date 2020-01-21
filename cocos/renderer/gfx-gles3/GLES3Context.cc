@@ -137,8 +137,8 @@ bool GLES3Context::initialize(const GFXContextInfo &info) {
       return false;
     }
 
-    color_fmt_ = GFXFormat::RGBA8;
-    depth_stencil_fmt_ = GFXFormat::D24S8;
+    _colorFmt = GFXFormat::RGBA8;
+    _depthStencilFmt = GFXFormat::D24S8;
 
     const EGLint attribs[] = {
       EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
@@ -175,25 +175,25 @@ bool GLES3Context::initialize(const GFXContextInfo &info) {
     CC_LOG_INFO("Setup EGLConfig: depth [%d] stencil [%d]", depth, stencil);
 
     if (depth == 16 && stencil == 0) {
-      depth_stencil_fmt_ = GFXFormat::D16;
+      _depthStencilFmt = GFXFormat::D16;
     } else if (depth == 16 && stencil == 8) {
-      depth_stencil_fmt_ = GFXFormat::D16S8;
+      _depthStencilFmt = GFXFormat::D16S8;
     } else if (depth == 24 && stencil == 0) {
-      depth_stencil_fmt_ = GFXFormat::D24;
+      _depthStencilFmt = GFXFormat::D24;
     } else if (depth == 24 && stencil == 8) {
-      depth_stencil_fmt_ = GFXFormat::D24S8;
+      _depthStencilFmt = GFXFormat::D24S8;
     } else if (depth == 32 && stencil == 0) {
-      depth_stencil_fmt_ = GFXFormat::D32F;
+      _depthStencilFmt = GFXFormat::D32F;
     } else if (depth == 32 && stencil == 8) {
-      depth_stencil_fmt_ = GFXFormat::D32F_S8;
+      _depthStencilFmt = GFXFormat::D32F_S8;
     } else {
       CC_LOG_ERROR("Unknown depth stencil format.");
       return false;
     }
 
     CC_LOG_INFO("Chosen EGLConfig: color [%s], depth stencil [%s].",
-      GFX_FORMAT_INFOS[(int)color_fmt_].name.c_str(),
-      GFX_FORMAT_INFOS[(int)depth_stencil_fmt_].name.c_str());
+      GFX_FORMAT_INFOS[(int)_colorFmt].name.c_str(),
+      GFX_FORMAT_INFOS[(int)_depthStencilFmt].name.c_str());
 
     /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
     * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
@@ -271,8 +271,8 @@ bool GLES3Context::initialize(const GFXContextInfo &info) {
     egl_display_ = shared_ctx->egl_display();
     egl_config_ = shared_ctx->egl_config();
     egl_shared_ctx_ = shared_ctx->egl_shared_ctx();
-    color_fmt_ = shared_ctx->color_fmt();
-    depth_stencil_fmt_ = shared_ctx->depth_stencil_fmt();
+    _colorFmt = shared_ctx->color_fmt();
+    _depthStencilFmt = shared_ctx->depth_stencil_fmt();
 
     EGLint pbuff_attribs[] =
     {

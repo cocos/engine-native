@@ -8,8 +8,8 @@ GFXContext::GFXContext(GFXDevice* device)
       window_handle_(0),
       shared_ctx_(nullptr),
       vsync_mode_(GFXVsyncMode::OFF),
-      color_fmt_(GFXFormat::UNKNOWN),
-      depth_stencil_fmt_(GFXFormat::UNKNOWN) {
+      _colorFmt(GFXFormat::UNKNOWN),
+      _depthStencilFmt(GFXFormat::UNKNOWN) {
 }
 
 GFXContext::~GFXContext() {

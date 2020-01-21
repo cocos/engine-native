@@ -18,8 +18,8 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
   _height = info.height;
   _nativeWidth = _width;
   _nativeHeight = _height;
-  color_fmt_ = info.color_fmt;
-  depth_stencil_fmt_ = info.depth_stencil_fmt;
+  _colorFmt = info.color_fmt;
+  _depthStencilFmt = info.depth_stencil_fmt;
   is_offscreen_ = info.is_offscreen;
   is_fullscreen_ = info.is_fullscreen;
 
@@ -28,7 +28,7 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
   GFXRenderPassInfo render_pass_info;
 
   GFXColorAttachment color_attachment;
-  color_attachment.format = color_fmt_;
+  color_attachment.format = _colorFmt;
   color_attachment.load_op = GFXLoadOp::CLEAR;
   color_attachment.store_op = GFXStoreOp::STORE;
   color_attachment.sample_count = 1;
@@ -37,7 +37,7 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
   render_pass_info.color_attachments.emplace_back(color_attachment);
 
   GFXDepthStencilAttachment& depth_stencil_attachment = render_pass_info.depth_stencil_attachment;
-  render_pass_info.depth_stencil_attachment.format = depth_stencil_fmt_;
+  render_pass_info.depth_stencil_attachment.format = _depthStencilFmt;
   depth_stencil_attachment.depth_load_op = GFXLoadOp::CLEAR;
   depth_stencil_attachment.depth_store_op = GFXStoreOp::STORE;
   depth_stencil_attachment.stencil_load_op = GFXLoadOp::CLEAR;
@@ -50,11 +50,11 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
 
   // Create texture & texture views
   if (is_offscreen_) {
-    if (color_fmt_ != GFXFormat::UNKNOWN) {
+    if (_colorFmt != GFXFormat::UNKNOWN) {
       GFXTextureInfo color_tex_info;
       color_tex_info.type = GFXTextureType::TEX2D;
       color_tex_info.usage = GFXTextureUsageBit::COLOR_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
-      color_tex_info.format = color_fmt_;
+      color_tex_info.format = _colorFmt;
       color_tex_info.width = _width;
       color_tex_info.height = _height;
       color_tex_info.depth = 1;
@@ -64,18 +64,18 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
 
       GFXTextureViewInfo color_tex_view_info;
       color_tex_view_info.type = GFXTextureViewType::TV2D;
-      color_tex_view_info.format = color_fmt_;
+      color_tex_view_info.format = _colorFmt;
       color_tex_view_info.base_level = 0;
       color_tex_view_info.level_count = 1;
       color_tex_view_info.base_layer = 0;
       color_tex_view_info.layer_count = 1;
       color_tex_view_ = _device->createTextureView(color_tex_view_info);
     }
-    if (depth_stencil_fmt_ != GFXFormat::UNKNOWN) {
+    if (_depthStencilFmt != GFXFormat::UNKNOWN) {
       GFXTextureInfo depth_stecnil_tex_info;
       depth_stecnil_tex_info.type = GFXTextureType::TEX2D;
       depth_stecnil_tex_info.usage = GFXTextureUsageBit::DEPTH_STENCIL_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
-      depth_stecnil_tex_info.format = depth_stencil_fmt_;
+      depth_stecnil_tex_info.format = _depthStencilFmt;
       depth_stecnil_tex_info.width = _width;
       depth_stecnil_tex_info.height = _height;
       depth_stecnil_tex_info.depth = 1;
@@ -86,7 +86,7 @@ bool GLES2Window::initialize(const GFXWindowInfo &info) {
       GFXTextureViewInfo depth_stecnil_tex_view_info;
         depth_stecnil_tex_view_info.texture = depth_stencil_texture_;
       depth_stecnil_tex_view_info.type = GFXTextureViewType::TV2D;
-      depth_stecnil_tex_view_info.format = color_fmt_;
+      depth_stecnil_tex_view_info.format = _colorFmt;
       depth_stecnil_tex_view_info.base_level = 0;
       depth_stecnil_tex_view_info.level_count = 1;
       depth_stecnil_tex_view_info.base_layer = 0;
@@ -128,7 +128,7 @@ void GLES2Window::resize(uint width, uint height) {
 
       GFXTextureViewInfo color_tex_view_info;
       color_tex_view_info.type = GFXTextureViewType::TV2D;
-      color_tex_view_info.format = color_fmt_;
+      color_tex_view_info.format = _colorFmt;
       color_tex_view_->initialize(color_tex_view_info);
     }
 
@@ -138,7 +138,7 @@ void GLES2Window::resize(uint width, uint height) {
 
       GFXTextureViewInfo depth_stencil_tex_view__info;
       depth_stencil_tex_view__info.type = GFXTextureViewType::TV2D;
-      depth_stencil_tex_view__info.format = depth_stencil_fmt_;
+      depth_stencil_tex_view__info.format = _depthStencilFmt;
       depth_stencil_tex_view_->initialize(depth_stencil_tex_view__info);
     }
 

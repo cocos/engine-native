@@ -48,8 +48,8 @@ bool GLES2Context::initialize(const GFXContextInfo &info) {
         }
     }
     
-    color_fmt_ = GFXFormat::RGBA8;
-    depth_stencil_fmt_ = GFXFormat::D24S8;
+    _colorFmt = GFXFormat::RGBA8;
+    _depthStencilFmt = GFXFormat::D24S8;
 
     if (!MakeCurrent())
         return false;
