@@ -48,7 +48,7 @@ void GLES3BindingLayout::destroy() {
   }
 }
 
-void GLES3BindingLayout::Update() {
+void GLES3BindingLayout::update() {
   if (is_dirty_ && gpu_binding_layout_) {
     for (size_t i = 0; i < binding_units_.size(); ++i) {
       GFXBindingUnit& binding_unit = binding_units_[i];

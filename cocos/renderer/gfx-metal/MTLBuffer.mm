@@ -111,7 +111,7 @@ void CCMTLBuffer::resize(uint size)
     //TODO
 }
 
-void CCMTLBuffer::Update(void* buffer, uint offset, uint size)
+void CCMTLBuffer::update(void* buffer, uint offset, uint size)
 {
     if (_mtlBuffer)
     {

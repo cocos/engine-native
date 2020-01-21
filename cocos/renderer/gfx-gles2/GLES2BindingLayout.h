@@ -13,7 +13,7 @@ class CC_GLES2_API GLES2BindingLayout : public GFXBindingLayout {
  public:
   bool initialize(const GFXBindingLayoutInfo& info);
   void destroy();
-  void Update();
+  void update();
   
   CC_INLINE GLES2GPUBindingLayout* gpu_binding_layout() const { return gpu_binding_layout_; }
   

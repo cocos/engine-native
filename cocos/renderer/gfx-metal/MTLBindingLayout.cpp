@@ -29,7 +29,7 @@ void CCMTLBindingLayout::destroy()
     
 }
 
-void CCMTLBindingLayout::Update()
+void CCMTLBindingLayout::update()
 {
     
 }

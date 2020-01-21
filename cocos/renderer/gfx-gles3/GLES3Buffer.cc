@@ -82,7 +82,7 @@ void GLES3Buffer::resize(uint size) {
   }
 }
 
-void GLES3Buffer::Update(void* buffer, uint offset, uint size) {
+void GLES3Buffer::update(void* buffer, uint offset, uint size) {
   if (buffer_) {
     memcpy(buffer_ + offset, buffer, size);
   }
