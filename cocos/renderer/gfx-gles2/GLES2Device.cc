@@ -141,7 +141,7 @@ void GLES2Device::resize(uint width, uint height)
 {
     _width = width;
     _height = height;
-    _window->Resize(width, height);
+    _window->resize(width, height);
 }
 
 void GLES2Device::present()

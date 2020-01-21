@@ -58,7 +58,7 @@ void GLES2Buffer::destroy() {
   }
 }
 
-void GLES2Buffer::Resize(uint size) {
+void GLES2Buffer::resize(uint size) {
   if (size_ != size) {
     const uint old_size = size_;
     size_ = size;

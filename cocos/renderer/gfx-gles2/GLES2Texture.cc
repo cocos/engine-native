@@ -99,7 +99,7 @@ void GLES2Texture::destroy() {
   }
 }
 
-void GLES2Texture::Resize(uint width, uint height) {
+void GLES2Texture::resize(uint width, uint height) {
   uint size = GFXFormatSize(format_, width, height, depth_);
   if (size_ != size) {
     const uint old_size = size_;

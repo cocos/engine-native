@@ -109,7 +109,7 @@ void CCMTLWindow::destroy()
     CC_SAFE_DESTROY(framebuffer_);
 }
 
-void CCMTLWindow::Resize(uint width, uint height)
+void CCMTLWindow::resize(uint width, uint height)
 {
     
 }

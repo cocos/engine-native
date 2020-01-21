@@ -12,7 +12,7 @@ public:
     
     virtual bool initialize(const GFXBufferInfo& info) override;
     virtual void destroy() override;
-    virtual void Resize(uint size) override;
+    virtual void resize(uint size) override;
     virtual void Update(void* buffer, uint offset, uint size) override;
     
     CC_INLINE id<MTLBuffer> getMTLBuffer() const { return _mtlBuffer; }

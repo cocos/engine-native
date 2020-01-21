@@ -13,7 +13,7 @@ public:
     
     virtual bool initialize(const GFXTextureInfo& info) override;
     virtual void destroy() override;
-    virtual void Resize(uint width, uint height) override;
+    virtual void resize(uint width, uint height) override;
     
     CC_INLINE id<MTLTexture> getMTLTexture() const { return _mtlTexture; }
     CC_INLINE GFXFormat getConvertedFormat() const { return _convertedFormat; }

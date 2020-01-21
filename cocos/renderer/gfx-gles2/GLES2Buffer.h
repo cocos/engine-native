@@ -13,7 +13,7 @@ public:
 public:
   bool initialize(const GFXBufferInfo& info);
   void destroy();
-  void Resize(uint size);
+  void resize(uint size);
   void Update(void* buffer, uint offset, uint size);
   
   CC_INLINE GLES2GPUBuffer* gpu_buffer() const { return gpu_buffer_; }

@@ -99,7 +99,7 @@ void GLES3Texture::destroy() {
   }
 }
 
-void GLES3Texture::Resize(uint width, uint height) {
+void GLES3Texture::resize(uint width, uint height) {
   uint size = GFXFormatSize(format_, width, height, depth_);
   if (size_ != size) {
     const uint old_size = size_;

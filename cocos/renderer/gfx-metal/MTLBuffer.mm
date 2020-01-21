@@ -106,7 +106,7 @@ void CCMTLBuffer::destroy()
     }
 }
 
-void CCMTLBuffer::Resize(uint size)
+void CCMTLBuffer::resize(uint size)
 {
     //TODO
 }

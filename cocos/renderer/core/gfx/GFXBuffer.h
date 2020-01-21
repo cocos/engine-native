@@ -13,7 +13,7 @@ class CC_CORE_API GFXBuffer : public Object {
  public:
   virtual bool initialize(const GFXBufferInfo& info) = 0;
   virtual void destroy() = 0;
-  virtual void Resize(uint size) = 0;
+  virtual void resize(uint size) = 0;
   virtual void Update(void* buffer, uint offset = 0, uint size = 0) = 0;
   
   CC_INLINE GFXDevice* device() const { return device_; }

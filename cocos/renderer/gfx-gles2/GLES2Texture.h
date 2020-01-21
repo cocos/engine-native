@@ -13,7 +13,7 @@ class CC_GLES2_API GLES2Texture : public GFXTexture {
  public:
   bool initialize(const GFXTextureInfo& info);
   void destroy();
-  void Resize(uint width, uint height);
+  void resize(uint width, uint height);
   
   CC_INLINE GLES2GPUTexture* gpu_texture() const { return gpu_texture_; }
 

@@ -13,7 +13,7 @@ class CC_CORE_API GFXTexture : public Object {
  public:
   virtual bool initialize(const GFXTextureInfo& info) = 0;
   virtual void destroy() = 0;
-  virtual void Resize(uint width, uint height) = 0;
+  virtual void resize(uint width, uint height) = 0;
   
   CC_INLINE GFXTextureType type() const { return type_; }
   CC_INLINE GFXTextureUsage usage() const { return usage_; }

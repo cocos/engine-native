@@ -115,7 +115,7 @@ void GLES2Window::destroy() {
   CC_SAFE_DESTROY(framebuffer_);
 }
 
-void GLES2Window::Resize(uint width, uint height) {
+void GLES2Window::resize(uint width, uint height) {
   width_ = width;
   height_ = height;
   if (width > native_width_ || height > native_height_) {
@@ -123,7 +123,7 @@ void GLES2Window::Resize(uint width, uint height) {
     native_height_ = height;
 
     if (color_texture_) {
-      color_texture_->Resize(width, height);
+      color_texture_->resize(width, height);
       color_tex_view_->destroy();
 
       GFXTextureViewInfo color_tex_view_info;
@@ -133,7 +133,7 @@ void GLES2Window::Resize(uint width, uint height) {
     }
 
     if (depth_stencil_texture_) {
-      depth_stencil_texture_->Resize(width, height);
+      depth_stencil_texture_->resize(width, height);
       depth_stencil_tex_view_->destroy();
 
       GFXTextureViewInfo depth_stencil_tex_view__info;

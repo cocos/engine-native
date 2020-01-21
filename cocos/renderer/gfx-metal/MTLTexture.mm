@@ -114,7 +114,7 @@ void CCMTLTexture::destroy()
     }
 }
 
-void CCMTLTexture::Resize(uint width, uint height)
+void CCMTLTexture::resize(uint width, uint height)
 {
     //TODO
 }
