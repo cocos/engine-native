@@ -14,15 +14,15 @@ GLES2Shader::~GLES2Shader() {
 
 bool GLES2Shader::initialize(const GFXShaderInfo &info) {
   _name = info.name;
-  stages_ = info.stages;
-  blocks_ = info.blocks;
-  samplers_ = info.samplers;
+  _stages = info.stages;
+  _blocks = info.blocks;
+  _samplers = info.samplers;
   
   gpu_shader_ = CC_NEW(GLES2GPUShader);
   gpu_shader_->name = _name;
-  gpu_shader_->blocks = blocks_;
-  gpu_shader_->samplers = samplers_;
-  for (const auto& stage : stages_)
+  gpu_shader_->blocks = _blocks;
+  gpu_shader_->samplers = _samplers;
+  for (const auto& stage : _stages)
   {
       GLES2GPUShaderStage gpuShaderStage = { stage.type, stage.source, stage.macros, 0};
       gpu_shader_->gpu_stages.emplace_back(std::move(gpuShaderStage));

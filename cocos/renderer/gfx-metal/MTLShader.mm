@@ -12,11 +12,11 @@ CCMTLShader::~CCMTLShader() { destroy(); }
 bool CCMTLShader::initialize(const GFXShaderInfo& info)
 {
     _name = info.name;
-    stages_ = info.stages;
-    blocks_ = info.blocks;
-    samplers_ = info.samplers;
+    _stages = info.stages;
+    _blocks = info.blocks;
+    _samplers = info.samplers;
     
-    for (const auto& stage : stages_)
+    for (const auto& stage : _stages)
     {
         if (! createMTLFunction(stage) )
         {
