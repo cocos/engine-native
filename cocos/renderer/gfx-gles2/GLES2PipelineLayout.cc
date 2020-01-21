@@ -14,8 +14,8 @@ GLES2PipelineLayout::~GLES2PipelineLayout() {
 
 bool GLES2PipelineLayout::initialize(const GFXPipelineLayoutInfo &info) {
   
-  layouts_ = info.layouts;
-  push_constant_ranges_ = info.push_constant_ranges;
+  _layouts = info.layouts;
+  _pushConstantsRanges = info.push_constant_ranges;
   
   gpu_pipeline_layout_ = CC_NEW(GLES2GPUPipelineLayout);
   return true;
