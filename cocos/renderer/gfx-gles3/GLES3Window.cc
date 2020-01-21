@@ -11,7 +11,7 @@ GLES3Window::~GLES3Window() {
 }
 
 bool GLES3Window::initialize(const GFXWindowInfo &info) {
-  title_ = info.title;
+  _title = info.title;
   left_ = info.left;
   top_ = info.top;
   width_ = info.width;

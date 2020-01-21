@@ -11,7 +11,7 @@ GLES2Window::~GLES2Window() {
 }
 
 bool GLES2Window::initialize(const GFXWindowInfo &info) {
-  title_ = info.title;
+  _title = info.title;
   left_ = info.left;
   top_ = info.top;
   width_ = info.width;

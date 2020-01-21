@@ -16,7 +16,7 @@ class CC_CORE_API GFXWindow : public Object {
   virtual void resize(uint width, uint height) = 0;
   
   CC_INLINE GFXDevice* device() const { return _device; }
-  CC_INLINE const String& title() const { return title_; }
+  CC_INLINE const String& title() const { return _title; }
   CC_INLINE int left() const { return left_; }
   CC_INLINE int top() const { return top_; }
   CC_INLINE uint width() const { return width_; }
@@ -35,7 +35,7 @@ class CC_CORE_API GFXWindow : public Object {
   
  protected:
   GFXDevice* _device;
-  String title_;
+  String _title;
   int left_;
   int top_;
   uint width_;
