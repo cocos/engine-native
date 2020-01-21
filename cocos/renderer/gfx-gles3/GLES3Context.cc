@@ -91,18 +91,18 @@ GLES3Context::~GLES3Context() {
 
 bool GLES3Context::initialize(const GFXContextInfo &info) {
   
-  vsync_mode_ = info.vsync_mode;
-  window_handle_ = info.window_handle;
+  _vsyncMode = info.vsync_mode;
+  _windowHandle = info.window_handle;
 
   //////////////////////////////////////////////////////////////////////////
 
   if (!info.shared_ctx)
   {
     is_primary_ctx_ = true;
-    window_handle_ = info.window_handle;
+    _windowHandle = info.window_handle;
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    native_display_ = (NativeDisplayType)GetDC((HWND)window_handle_);
+    native_display_ = (NativeDisplayType)GetDC((HWND)_windowHandle);
     if (!native_display_) {
       return false;
     }
@@ -209,10 +209,10 @@ bool GLES3Context::initialize(const GFXContextInfo &info) {
 
     uint width = _device->width();
     uint height = _device->height();
-    ANativeWindow_setBuffersGeometry((ANativeWindow*)window_handle_, width, height, n_fmt);
+    ANativeWindow_setBuffersGeometry((ANativeWindow*)_windowHandle, width, height, n_fmt);
 #endif
 
-    egl_surface_ = eglCreateWindowSurface(egl_display_, egl_config_, (EGLNativeWindowType)window_handle_, NULL);
+    egl_surface_ = eglCreateWindowSurface(egl_display_, egl_config_, (EGLNativeWindowType)_windowHandle, NULL);
     if (egl_surface_ == EGL_NO_SURFACE) {
       CC_LOG_ERROR("Window surface created failed.");
       return false;
@@ -353,14 +353,14 @@ void GLES3Context::destroy() {
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
   if (is_primary_ctx_ && native_display_)
   {
-    ReleaseDC((HWND)window_handle_, native_display_);
+    ReleaseDC((HWND)_windowHandle, native_display_);
   }
 #endif
 
   is_primary_ctx_ = false;
-  window_handle_ = 0;
+  _windowHandle = 0;
   native_display_ = 0;
-  vsync_mode_ = GFXVsyncMode::OFF;
+  _vsyncMode = GFXVsyncMode::OFF;
   is_initialized = false;
 }
 
@@ -368,7 +368,7 @@ bool GLES3Context::MakeCurrentImpl() {
   return eglMakeCurrent(egl_display_, egl_surface_, egl_surface_, egl_context_);
 }
 
-void GLES3Context::Present() {
+void GLES3Context::present() {
   eglSwapBuffers(egl_display_, egl_surface_);
 }
 
@@ -380,7 +380,7 @@ bool GLES3Context::MakeCurrent() {
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID)
       // Turn on or off the vertical sync depending on the input bool value.
       int interval = 1;
-      switch (vsync_mode_) {
+      switch (_vsyncMode) {
       case GFXVsyncMode::OFF: interval = 0; break;
       case GFXVsyncMode::ON: interval = 1; break;
       case GFXVsyncMode::RELAXED: interval = -1; break;

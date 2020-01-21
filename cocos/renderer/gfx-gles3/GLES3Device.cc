@@ -143,7 +143,7 @@ void GLES3Device::present()
     _numDrawCalls += queue->_numDrawCalls;
     _numTriangles += queue->_numTriangles;
 
-    _context->Present();
+    _context->present();
 
     // Clear queue stats
     queue->_numDrawCalls = 0;

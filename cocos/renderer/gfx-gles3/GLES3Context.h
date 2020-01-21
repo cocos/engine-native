@@ -38,7 +38,7 @@ class CC_GLES3_API GLES3Context : public GFXContext {
  public:
   bool initialize(const GFXContextInfo& info);
   void destroy();
-  void Present();
+  void present();
   bool MakeCurrent();
 
   bool CheckExtension(const String& extension) const;

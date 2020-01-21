@@ -11,16 +11,16 @@ NS_CC_BEGIN
 
 bool GLES2Context::initialize(const GFXContextInfo &info) {
   
-    vsync_mode_ = info.vsync_mode;
-    window_handle_ = info.window_handle;
+    _vsyncMode = info.vsync_mode;
+    _windowHandle = info.window_handle;
 
     //////////////////////////////////////////////////////////////////////////
 
     if (!info.shared_ctx) {
         is_primary_ctx_ = true;
-        window_handle_ = info.window_handle;
+        _windowHandle = info.window_handle;
         
-        CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(window_handle_)).layer);
+        CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(_windowHandle)).layer);
         eaglLayer.opaque = TRUE;
         
         EAGLContext* eagl_context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -75,7 +75,7 @@ bool GLES2Context::createCustomFrameBuffer()
     }
     glBindRenderbuffer(GL_RENDERBUFFER, _defaultColorBuffer);
     
-    CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(window_handle_)).layer);
+    CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(_windowHandle)).layer);
     
     //get the storage from iOS so it can be displayed in the view
     if (! [(EAGLContext*)eagl_context_ renderbufferStorage:GL_RENDERBUFFER
@@ -167,12 +167,12 @@ void GLES2Context::destroy() {
   }
 
   is_primary_ctx_ = false;
-  window_handle_ = 0;
-  vsync_mode_ = GFXVsyncMode::OFF;
+  _windowHandle = 0;
+  _vsyncMode = GFXVsyncMode::OFF;
   is_initialized = false;
 }
 
-void GLES2Context::Present() {
+void GLES2Context::present() {
   if (! [(EAGLContext*)eagl_context_ presentRenderbuffer:GL_RENDERBUFFER] )
   {
       CC_LOG_ERROR("Failed to present content.");

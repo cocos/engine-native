@@ -11,17 +11,17 @@ NS_CC_BEGIN
 bool GLES3Context::initialize(const GFXContextInfo &info)
 {
   
-    vsync_mode_ = info.vsync_mode;
-    window_handle_ = info.window_handle;
+    _vsyncMode = info.vsync_mode;
+    _windowHandle = info.window_handle;
 
     //////////////////////////////////////////////////////////////////////////
 
     if (!info.shared_ctx)
     {
         is_primary_ctx_ = true;
-        window_handle_ = info.window_handle;
+        _windowHandle = info.window_handle;
         
-        CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(window_handle_)).layer);
+        CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(_windowHandle)).layer);
         eaglLayer.opaque = TRUE;
 
         EAGLContext* eagl_context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenGLES3];
@@ -81,7 +81,7 @@ bool GLES3Context::createCustomFrameBuffer()
     }
     glBindRenderbuffer(GL_RENDERBUFFER, _defaultColorBuffer);
     
-    CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(window_handle_)).layer);
+    CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(_windowHandle)).layer);
     if (! [(EAGLContext*)eagl_context_ renderbufferStorage:GL_RENDERBUFFER
                                               fromDrawable:eaglLayer])
     {
@@ -174,12 +174,12 @@ void GLES3Context::destroy()
     }
 
     is_primary_ctx_ = false;
-    window_handle_ = 0;
-    vsync_mode_ = GFXVsyncMode::OFF;
+    _windowHandle = 0;
+    _vsyncMode = GFXVsyncMode::OFF;
     is_initialized = false;
 }
 
-void GLES3Context::Present()
+void GLES3Context::present()
 {
   
     if (! [(EAGLContext*)eagl_context_ presentRenderbuffer:GL_RENDERBUFFER] )
