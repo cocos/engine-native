@@ -17,8 +17,8 @@ class CC_CORE_API GFXWindow : public Object {
   
   CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE const String& title() const { return _title; }
-  CC_INLINE int left() const { return left_; }
-  CC_INLINE int top() const { return top_; }
+  CC_INLINE int left() const { return _left; }
+  CC_INLINE int top() const { return _top; }
   CC_INLINE uint width() const { return width_; }
   CC_INLINE uint height() const { return height_; }
   CC_INLINE uint native_width() const { return native_width_; }
@@ -36,8 +36,8 @@ class CC_CORE_API GFXWindow : public Object {
  protected:
   GFXDevice* _device;
   String _title;
-  int left_;
-  int top_;
+  int _left;
+  int _top;
   uint width_;
   uint height_;
   uint native_width_;

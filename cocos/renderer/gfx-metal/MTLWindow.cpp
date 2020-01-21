@@ -9,8 +9,8 @@ CCMTLWindow::~CCMTLWindow() { destroy(); }
 bool CCMTLWindow::initialize(const GFXWindowInfo& info)
 {
     _title = info.title;
-    left_ = info.left;
-    top_ = info.top;
+    _left = info.left;
+    _top = info.top;
     width_ = info.width;
     height_ = info.height;
     native_width_ = width_;
