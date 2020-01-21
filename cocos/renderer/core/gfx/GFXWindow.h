@@ -19,7 +19,7 @@ class CC_CORE_API GFXWindow : public Object {
   CC_INLINE const String& title() const { return _title; }
   CC_INLINE int left() const { return _left; }
   CC_INLINE int top() const { return _top; }
-  CC_INLINE uint width() const { return width_; }
+  CC_INLINE uint width() const { return _width; }
   CC_INLINE uint height() const { return height_; }
   CC_INLINE uint native_width() const { return native_width_; }
   CC_INLINE uint native_height() const { return native_height_; }
@@ -38,7 +38,7 @@ class CC_CORE_API GFXWindow : public Object {
   String _title;
   int _left;
   int _top;
-  uint width_;
+  uint _width;
   uint height_;
   uint native_width_;
   uint native_height_;

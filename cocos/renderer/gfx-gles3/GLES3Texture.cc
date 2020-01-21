@@ -17,14 +17,14 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   type_ = info.type;
   usage_ = info.usage;
   format_ = info.format;
-  width_ = info.width;
+  _width = info.width;
   height_ = info.height;
   depth_ = info.depth;
   array_layer_ = info.array_layer;
   mip_level_ = info.mip_level;
   samples_ = info.samples;
   flags_ = info.flags;
-  size_ = GFXFormatSize(format_, width_, height_, depth_);
+  size_ = GFXFormatSize(format_, _width, height_, depth_);
   
   if (flags_ & GFXTextureFlags::BAKUP_BUFFER) {
     buffer_ = (uint8_t*)CC_MALLOC(size_);
@@ -68,7 +68,7 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   
   gpu_texture_->format = format_;
   gpu_texture_->usage = usage_;
-  gpu_texture_->width = width_;
+  gpu_texture_->width = _width;
   gpu_texture_->height = height_;
   gpu_texture_->depth = depth_;
   gpu_texture_->size = size_;
@@ -76,7 +76,7 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   gpu_texture_->mip_level = mip_level_;
   gpu_texture_->samples = samples_;
   gpu_texture_->flags = flags_;
-    gpu_texture_->is_pot = math::IsPowerOfTwo(width_) && math::IsPowerOfTwo(height_);
+    gpu_texture_->is_pot = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(height_);
   
   GLES3CmdFuncCreateTexture((GLES3Device*)_device, gpu_texture_);
   _device->memoryStatus().texture_size += size_;
@@ -103,12 +103,12 @@ void GLES3Texture::resize(uint width, uint height) {
   uint size = GFXFormatSize(format_, width, height, depth_);
   if (size_ != size) {
     const uint old_size = size_;
-    width_ = width;
+    _width = width;
     height_ = height;
     size_ = size;
     
     GFXMemoryStatus& status = _device->memoryStatus();
-    gpu_texture_->width = width_;
+    gpu_texture_->width = _width;
     gpu_texture_->height = height_;
     gpu_texture_->size = size_;
     GLES3CmdFuncResizeTexture((GLES3Device*)_device, gpu_texture_);

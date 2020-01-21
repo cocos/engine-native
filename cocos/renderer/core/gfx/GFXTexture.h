@@ -18,7 +18,7 @@ class CC_CORE_API GFXTexture : public Object {
   CC_INLINE GFXTextureType type() const { return type_; }
   CC_INLINE GFXTextureUsage usage() const { return usage_; }
   CC_INLINE GFXFormat format() const { return format_; }
-  CC_INLINE uint width() const { return width_; }
+  CC_INLINE uint width() const { return _width; }
   CC_INLINE uint height() const { return height_; }
   CC_INLINE uint depth() const { return depth_; }
   CC_INLINE uint array_layer() const { return array_layer_; }
@@ -33,7 +33,7 @@ class CC_CORE_API GFXTexture : public Object {
   GFXTextureType type_;
   GFXTextureUsage usage_;
   GFXFormat format_;
-  uint width_;
+  uint _width;
   uint height_;
   uint depth_;
   uint array_layer_;

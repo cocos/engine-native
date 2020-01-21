@@ -47,14 +47,14 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
     type_ = info.type;
     usage_ = info.usage;
     format_ = info.format;
-    width_ = info.width;
+    _width = info.width;
     height_ = info.height;
     depth_ = info.depth;
     array_layer_ = info.array_layer;
     mip_level_ = info.mip_level;
     samples_ = info.samples;
     flags_ = info.flags;
-    size_ = GFXFormatSize(format_, width_, height_, depth_);
+    size_ = GFXFormatSize(format_, _width, height_, depth_);
     
     if (flags_ & GFXTextureFlags::BAKUP_BUFFER)
     {
@@ -68,7 +68,7 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
         return false;
     
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlFormat
-                                                                                          width:width_
+                                                                                          width:_width
                                                                                          height:height_
                                                                                       mipmapped:flags_ & GFXTextureFlags::GEN_MIPMAP];
     descriptor.usage = mu::toMTLTextureUsage(usage_);

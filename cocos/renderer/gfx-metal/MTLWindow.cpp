@@ -11,9 +11,9 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
     _title = info.title;
     _left = info.left;
     _top = info.top;
-    width_ = info.width;
+    _width = info.width;
     height_ = info.height;
-    native_width_ = width_;
+    native_width_ = _width;
     native_height_ = height_;
     color_fmt_ = info.color_fmt;
     depth_stencil_fmt_ = info.depth_stencil_fmt;
@@ -50,7 +50,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             color_tex_info.type = GFXTextureType::TEX2D;
             color_tex_info.usage = GFXTextureUsageBit::COLOR_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
             color_tex_info.format = color_fmt_;
-            color_tex_info.width = width_;
+            color_tex_info.width = _width;
             color_tex_info.height = height_;
             color_tex_info.depth = 1;
             color_tex_info.array_layer = 1;
@@ -71,7 +71,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             depth_stecnil_tex_info.type = GFXTextureType::TEX2D;
             depth_stecnil_tex_info.usage = GFXTextureUsageBit::DEPTH_STENCIL_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
             depth_stecnil_tex_info.format = depth_stencil_fmt_;
-            depth_stecnil_tex_info.width = width_;
+            depth_stecnil_tex_info.width = _width;
             depth_stecnil_tex_info.height = height_;
             depth_stecnil_tex_info.depth = 1;
             depth_stecnil_tex_info.array_layer = 1;

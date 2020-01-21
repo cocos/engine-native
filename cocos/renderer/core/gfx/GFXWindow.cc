@@ -7,7 +7,7 @@ GFXWindow::GFXWindow(GFXDevice* device)
     : _device(device),
       _left(0),
       _top(0),
-      width_(1024),
+      _width(1024),
       height_(768),
       native_width_(0),
       native_height_(0),
