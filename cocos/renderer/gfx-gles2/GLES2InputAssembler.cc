@@ -36,14 +36,14 @@ bool GLES2InputAssembler::initialize(const GFXInputAssemblerInfo &info) {
     if(info.index_buffer)
         gpu_input_assembler_->gpu_index_buffer = static_cast<GLES2Buffer*>(info.index_buffer)->gpu_buffer();
   
-  GLES2CmdFuncCreateInputAssembler((GLES2Device*)device_, gpu_input_assembler_);
+  GLES2CmdFuncCreateInputAssembler((GLES2Device*)_device, gpu_input_assembler_);
   
   return true;
 }
 
 void GLES2InputAssembler::destroy() {
   if (gpu_input_assembler_) {
-    GLES2CmdFuncDestroyInputAssembler((GLES2Device*)device_, gpu_input_assembler_);
+    GLES2CmdFuncDestroyInputAssembler((GLES2Device*)_device, gpu_input_assembler_);
     CC_DELETE(gpu_input_assembler_);
     gpu_input_assembler_ = nullptr;
   }

@@ -14,7 +14,7 @@ class CC_CORE_API GFXShader : public Object {
   virtual bool initialize(const GFXShaderInfo& info) = 0;
   virtual void destroy() = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE uint hash() const { return hash_; }
   CC_INLINE const String& name() const { return name_; }
   CC_INLINE const GFXShaderStageList& stages() const { return stages_; }
@@ -22,7 +22,7 @@ class CC_CORE_API GFXShader : public Object {
   CC_INLINE const GFXUniformSamplerList& samplers() const { return samplers_; }
   
  protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   uint hash_;
   String name_;
   GFXShaderStageList stages_;

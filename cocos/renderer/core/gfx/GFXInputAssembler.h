@@ -14,7 +14,7 @@ class CC_CORE_API GFXInputAssembler : public Object {
   virtual bool initialize(const GFXInputAssemblerInfo& info) = 0;
   virtual void destroy() = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE const GFXAttributeList& attributes() const { return attributes_; }
   CC_INLINE const GFXBufferList& vertex_buffers() const { return vertex_buffers_; }
   CC_INLINE GFXBuffer* index_buffer() const { return index_buffer_; }
@@ -36,7 +36,7 @@ class CC_CORE_API GFXInputAssembler : public Object {
   CC_INLINE void set_first_instance(uint first) { first_instance_ = first; }
 
  protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXAttributeList attributes_;
   GFXBufferList vertex_buffers_;
   GFXBuffer* index_buffer_;

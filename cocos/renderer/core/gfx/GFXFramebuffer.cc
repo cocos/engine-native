@@ -4,7 +4,7 @@
 NS_CC_BEGIN
 
 GFXFramebuffer::GFXFramebuffer(GFXDevice* device)
-    : device_(device),
+    : _device(device),
       render_pass_(nullptr),
       depth_stencil_view_(nullptr),
       is_offscreen_(true) {

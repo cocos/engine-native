@@ -14,7 +14,7 @@ class CC_CORE_API GFXSampler : public Object {
   virtual bool initialize(const GFXSamplerInfo& info) = 0;
   virtual void destroy() = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE const String& name() const { return name_; }
   CC_INLINE GFXFilter min_filter() const { return min_filter_; }
   CC_INLINE GFXFilter mag_filter() const { return mag_filter_; }
@@ -30,7 +30,7 @@ class CC_CORE_API GFXSampler : public Object {
   CC_INLINE float mip_lod_bias() const { return mip_lod_bias_; }
   
  protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   String name_;
   GFXFilter min_filter_;
   GFXFilter mag_filter_;

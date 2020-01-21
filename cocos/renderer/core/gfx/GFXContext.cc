@@ -4,7 +4,7 @@
 NS_CC_BEGIN
 
 GFXContext::GFXContext(GFXDevice* device)
-    : device_(device),
+    : _device(device),
       window_handle_(0),
       shared_ctx_(nullptr),
       vsync_mode_(GFXVsyncMode::OFF),

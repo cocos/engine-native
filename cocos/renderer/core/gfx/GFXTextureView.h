@@ -14,7 +14,7 @@ class CC_CORE_API GFXTextureView : public Object {
   virtual bool initialize(const GFXTextureViewInfo& info) = 0;
   virtual void destroy() = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXTexture* texture() const { return texture_; }
   CC_INLINE GFXTextureViewType type() const { return type_; }
   CC_INLINE GFXFormat format() const { return format_; }
@@ -24,7 +24,7 @@ class CC_CORE_API GFXTextureView : public Object {
   CC_INLINE uint layer_count() const { return layer_count_; }
   
  protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXTexture* texture_;
   GFXTextureViewType type_;
   GFXFormat format_;

@@ -23,7 +23,7 @@ bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
   
   if ((flags_ & GFXBufferFlagBit::BAKUP_BUFFER) && size_ > 0) {
     buffer_ = (uint8_t*)CC_MALLOC(size_);
-    device_->memoryStatus().buffer_size += size_;
+    _device->memoryStatus().buffer_size += size_;
   }
   
   gpu_buffer_ = CC_NEW(GLES3GPUBuffer);
@@ -37,23 +37,23 @@ bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
     gpu_buffer_->buffer = buffer_;
   }
   
-  GLES3CmdFuncCreateBuffer((GLES3Device*)device_, gpu_buffer_);
-  device_->memoryStatus().buffer_size += size_;
+  GLES3CmdFuncCreateBuffer((GLES3Device*)_device, gpu_buffer_);
+  _device->memoryStatus().buffer_size += size_;
   
   return true;
 }
 
 void GLES3Buffer::destroy() {
   if (gpu_buffer_) {
-    GLES3CmdFuncDestroyBuffer((GLES3Device*)device_, gpu_buffer_);
-    device_->memoryStatus().buffer_size -= size_;
+    GLES3CmdFuncDestroyBuffer((GLES3Device*)_device, gpu_buffer_);
+    _device->memoryStatus().buffer_size -= size_;
     CC_DELETE(gpu_buffer_);
     gpu_buffer_ = nullptr;
   }
   
   if (buffer_) {
     CC_FREE(buffer_);
-    device_->memoryStatus().buffer_size -= size_;
+    _device->memoryStatus().buffer_size -= size_;
     buffer_ = nullptr;
   }
 }
@@ -64,10 +64,10 @@ void GLES3Buffer::resize(uint size) {
     size_ = size;
     count_ = size_ / stride_;
     
-    GFXMemoryStatus& status = device_->memoryStatus();
+    GFXMemoryStatus& status = _device->memoryStatus();
     gpu_buffer_->size = size_;
     gpu_buffer_->count = count_;
-    GLES3CmdFuncResizeBuffer((GLES3Device*)device_, gpu_buffer_);
+    GLES3CmdFuncResizeBuffer((GLES3Device*)_device, gpu_buffer_);
     status.buffer_size -= old_size;
     status.buffer_size += size_;
 
@@ -86,7 +86,7 @@ void GLES3Buffer::update(void* buffer, uint offset, uint size) {
   if (buffer_) {
     memcpy(buffer_ + offset, buffer, size);
   }
-  GLES3CmdFuncUpdateBuffer((GLES3Device*)device_, gpu_buffer_, buffer, offset, size);
+  GLES3CmdFuncUpdateBuffer((GLES3Device*)_device, gpu_buffer_, buffer, offset, size);
 }
 
 NS_CC_END

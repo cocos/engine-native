@@ -15,7 +15,7 @@ class CC_CORE_API GFXWindow : public Object {
   virtual void destroy() = 0;
   virtual void resize(uint width, uint height) = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE const String& title() const { return title_; }
   CC_INLINE int left() const { return left_; }
   CC_INLINE int top() const { return top_; }
@@ -34,7 +34,7 @@ class CC_CORE_API GFXWindow : public Object {
   CC_INLINE GFXFramebuffer* framebuffer() const { return framebuffer_; }
   
  protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   String title_;
   int left_;
   int top_;

@@ -4,7 +4,7 @@
 NS_CC_BEGIN
 
 GFXBuffer::GFXBuffer(GFXDevice* device)
-    : device_(device),
+    : _device(device),
       usage_(GFXBufferUsageBit::NONE),
       mem_usage_(GFXMemoryUsageBit::NONE),
       stride_(0),

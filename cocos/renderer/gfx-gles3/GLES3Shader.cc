@@ -29,14 +29,14 @@ bool GLES3Shader::initialize(const GFXShaderInfo &info)
         gpu_shader_->gpu_stages.emplace_back(std::move(gpuShaderStage));
     }
 
-    GLES3CmdFuncCreateShader((GLES3Device*)device_, gpu_shader_);
+    GLES3CmdFuncCreateShader((GLES3Device*)_device, gpu_shader_);
 
     return true;
 }
 
 void GLES3Shader::destroy() {
   if (gpu_shader_) {
-    GLES3CmdFuncDestroyShader((GLES3Device*)device_, gpu_shader_);
+    GLES3CmdFuncDestroyShader((GLES3Device*)_device, gpu_shader_);
     CC_DELETE(gpu_shader_);
     gpu_shader_ = nullptr;
   }

@@ -39,7 +39,7 @@ bool CCMTLSampler::initialize(const GFXSamplerInfo& info)
     descriptor.lodMinClamp = min_lod_;
     descriptor.lodMaxClamp = max_lod_;
     
-    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice*>(device_)->getMTLDevice() );
+    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice*>(_device)->getMTLDevice() );
     _mtlSamplerState = [mtlDevice newSamplerStateWithDescriptor:descriptor];
     
     [descriptor release];

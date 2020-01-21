@@ -37,14 +37,14 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
     if ((flags_ & GFXBufferFlagBit::BAKUP_BUFFER) && size_ > 0)
     {
         buffer_ = (uint8_t*)CC_MALLOC(size_);
-        device_->memoryStatus().buffer_size += size_;
+        _device->memoryStatus().buffer_size += size_;
     }
     
     switch (info.usage) {
         case GFXBufferUsage::VERTEX:
         case GFXBufferUsage::INDEX:
         case GFXBufferUsage::UNIFORM:
-            _mtlBuffer = [id<MTLDevice>(((CCMTLDevice*)device_)->getMTLDevice() ) newBufferWithLength:size_ options:toMTLResourseOption(info.mem_usage)];
+            _mtlBuffer = [id<MTLDevice>(((CCMTLDevice*)_device)->getMTLDevice() ) newBufferWithLength:size_ options:toMTLResourseOption(info.mem_usage)];
             if (_mtlBuffer == nil)
             {
                 CCASSERT(false, "Failed to create MTLBuffer.");
@@ -59,7 +59,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
                 CCASSERT(false, "CCMTLBuffer: failed to create memory for transfer buffer.");
                 return false;
             }
-            device_->memoryStatus().buffer_size += size_;
+            _device->memoryStatus().buffer_size += size_;
             break;
             
         case GFXBufferUsage::STORAGE:
@@ -77,7 +77,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
         if (!buffer_)
             CCLOG("CCMTLBuffer: failed to create backup memory.");
         else
-            device_->memoryStatus().buffer_size += size_;
+            _device->memoryStatus().buffer_size += size_;
     }
     
     return true;
@@ -95,13 +95,13 @@ void CCMTLBuffer::destroy()
     {
         CC_FREE(_transferBuffer);
         _transferBuffer = nullptr;
-        device_->memoryStatus().buffer_size -= size_;
+        _device->memoryStatus().buffer_size -= size_;
     }
     
     if (buffer_)
     {
         CC_FREE(buffer_);
-        device_->memoryStatus().buffer_size -= size_;
+        _device->memoryStatus().buffer_size -= size_;
         buffer_ = nullptr;
     }
 }

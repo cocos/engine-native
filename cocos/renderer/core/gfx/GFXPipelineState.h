@@ -14,7 +14,7 @@ public:
   virtual bool initialize(const GFXPipelineStateInfo& info) = 0;
   virtual void destroy() = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXShader* shader() const { return shader_; }
   CC_INLINE GFXPrimitiveMode primitive() const { return primitive_; }
   CC_INLINE const GFXInputState& is() const { return is_; }
@@ -26,7 +26,7 @@ public:
   CC_INLINE const GFXRenderPass* render_pass() const { return render_pass_; }
 
 protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXShader* shader_;
   GFXPrimitiveMode primitive_;
   GFXInputState is_;

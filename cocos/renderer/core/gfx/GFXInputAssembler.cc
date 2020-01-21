@@ -4,7 +4,7 @@
 NS_CC_BEGIN
 
 GFXInputAssembler::GFXInputAssembler(GFXDevice* device)
-    : device_(device),
+    : _device(device),
       index_buffer_(nullptr),
       indirect_buffer_(nullptr),
       vertex_count_(0),

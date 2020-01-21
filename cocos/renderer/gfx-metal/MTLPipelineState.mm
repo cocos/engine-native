@@ -143,7 +143,7 @@ void CCMTLPipelineState::createMTLDepthStencilState()
         descriptor.backFaceStencil.depthStencilPassOperation = mu::toMTLStencilOperation(dss_.stencil_pass_op_back);
     }
     
-    id<MTLDevice> mtlDevice = id<MTLDevice>( ((CCMTLDevice*)device_)->getMTLDevice() );
+    id<MTLDevice> mtlDevice = id<MTLDevice>( ((CCMTLDevice*)_device)->getMTLDevice() );
     _mtlDepthStencilState = [mtlDevice newDepthStencilStateWithDescriptor:descriptor];
     
     if (!_mtlDepthStencilState)  CC_LOG_ERROR("Failed to create MTLDepthStencilState.");
@@ -245,7 +245,7 @@ void CCMTLPipelineState::setBlendStates(MTLRenderPipelineDescriptor* descriptor)
 
 bool CCMTLPipelineState::createMTLRenderPipeline(MTLRenderPipelineDescriptor* descriptor)
 {
-    id<MTLDevice> mtlDevice = id<MTLDevice>( ((CCMTLDevice*)device_)->getMTLDevice() );
+    id<MTLDevice> mtlDevice = id<MTLDevice>( ((CCMTLDevice*)_device)->getMTLDevice() );
     MTLRenderPipelineReflection* reflection;
     NSError* nsError;
     _mtlRenderPipelineState = [mtlDevice newRenderPipelineStateWithDescriptor: descriptor

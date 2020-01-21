@@ -4,7 +4,7 @@
 NS_CC_BEGIN
 
 GFXSampler::GFXSampler(GFXDevice* device)
-    : device_(device),
+    : _device(device),
       min_filter_(GFXFilter::NONE),
       mag_filter_(GFXFilter::NONE),
       mip_filter_(GFXFilter::NONE),

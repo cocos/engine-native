@@ -207,8 +207,8 @@ bool GLES3Context::initialize(const GFXContextInfo &info) {
       return false;
     }
 
-    uint width = device_->width();
-    uint height = device_->height();
+    uint width = _device->width();
+    uint height = _device->height();
     ANativeWindow_setBuffersGeometry((ANativeWindow*)window_handle_, width, height, n_fmt);
 #endif
 

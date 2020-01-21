@@ -45,7 +45,7 @@ void CCMTLShader::destroy()
 
 bool CCMTLShader::createMTLFunction(const GFXShaderStage& stage)
 {
-    id<MTLDevice> mtlDevice = id<MTLDevice>(((CCMTLDevice*)device_)->getMTLDevice());
+    id<MTLDevice> mtlDevice = id<MTLDevice>(((CCMTLDevice*)_device)->getMTLDevice());
     
     NSString* shader = [NSString stringWithUTF8String:stage.source.c_str()];
     NSError* error;

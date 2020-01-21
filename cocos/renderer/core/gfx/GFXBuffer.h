@@ -16,7 +16,7 @@ class CC_CORE_API GFXBuffer : public Object {
   virtual void resize(uint size) = 0;
   virtual void update(void* buffer, uint offset = 0, uint size = 0) = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXBufferUsage usage() const { return usage_; }
   CC_INLINE GFXMemoryUsage memUsage() const { return mem_usage_; }
   CC_INLINE uint stride() const { return stride_; }
@@ -26,7 +26,7 @@ class CC_CORE_API GFXBuffer : public Object {
   CC_INLINE uint8_t* buffer() const { return buffer_; }
   
  protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXBufferUsage usage_;
   GFXMemoryUsage mem_usage_;
   uint stride_;

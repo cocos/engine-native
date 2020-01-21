@@ -29,7 +29,7 @@ class CC_CORE_API GFXTexture : public Object {
   CC_INLINE uint8_t* buffer() const { return buffer_; }
   
  protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXTextureType type_;
   GFXTextureUsage usage_;
   GFXFormat format_;

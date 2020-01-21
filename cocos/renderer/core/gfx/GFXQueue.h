@@ -15,11 +15,11 @@ public:
   virtual void destroy() = 0;
   virtual void submit(GFXCommandBuffer** cmd_buffs, uint count) = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXQueueType type() const { return type_; }
   
 protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXQueueType type_;
 };
 

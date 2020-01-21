@@ -26,7 +26,7 @@ void GLES3Queue::submit(GFXCommandBuffer** cmd_buffs, uint count) {
   if (!is_async_) {
     for (uint i = 0; i < count; ++i) {
       GLES3CommandBuffer* cmd_buff = (GLES3CommandBuffer*)cmd_buffs[i];
-      GLES3CmdFuncExecuteCmds((GLES3Device*)device_, cmd_buff->cmd_package_);
+      GLES3CmdFuncExecuteCmds((GLES3Device*)_device, cmd_buff->cmd_package_);
       _numDrawCalls += cmd_buff->_numDrawCalls;
       _numTriangles += cmd_buff->_numTriangles;
     }

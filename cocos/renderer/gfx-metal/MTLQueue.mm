@@ -25,7 +25,7 @@ CCMTLQueue::~CCMTLQueue()
 
 bool CCMTLQueue::initialize(const GFXQueueInfo &info)
 {
-    MTKView* mtkView = (MTKView*)((CCMTLDevice*)device_)->getMTKView();
+    MTKView* mtkView = (MTKView*)((CCMTLDevice*)_device)->getMTKView();
     _metalQueue = [mtkView.device newCommandQueue];
     type_ = info.type;
     
@@ -64,7 +64,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage)
     id<MTLCommandBuffer> mtlCommandBuffer = [_metalQueue commandBuffer];
     [mtlCommandBuffer enqueue];
     id<MTLRenderCommandEncoder> encoder;
-    MTKView* mtkView = (MTKView*)((CCMTLDevice*)device_)->getMTKView();
+    MTKView* mtkView = (MTKView*)((CCMTLDevice*)_device)->getMTKView();
     GFXCmdType commandType;
     CCMTLCmdBeginRenderPass* cmdBeginRenderPass = nullptr;
     CCMTLGPUPipelineState* gpuPipelineState = nullptr;

@@ -37,14 +37,14 @@ bool GLES2Sampler::initialize(const GFXSamplerInfo &info) {
   gpu_sampler_->min_lod = min_lod_;
   gpu_sampler_->max_lod = max_lod_;
   
-  GLES2CmdFuncCreateSampler((GLES2Device*)device_, gpu_sampler_);
+  GLES2CmdFuncCreateSampler((GLES2Device*)_device, gpu_sampler_);
   
   return true;
 }
 
 void GLES2Sampler::destroy() {
   if (gpu_sampler_) {
-    GLES2CmdFuncDestroySampler((GLES2Device*)device_, gpu_sampler_);
+    GLES2CmdFuncDestroySampler((GLES2Device*)_device, gpu_sampler_);
     CC_DELETE(gpu_sampler_);
     gpu_sampler_ = nullptr;
   }

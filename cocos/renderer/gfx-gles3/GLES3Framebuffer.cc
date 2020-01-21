@@ -38,12 +38,12 @@ bool GLES3Framebuffer::initialize(const GFXFramebufferInfo &info) {
     
     gpu_fbo_->is_offscreen = is_offscreen_;
     
-    GLES3CmdFuncCreateFramebuffer((GLES3Device*)device_, gpu_fbo_);
+    GLES3CmdFuncCreateFramebuffer((GLES3Device*)_device, gpu_fbo_);
   }
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
   else
   {
-      gpu_fbo_->gl_fbo = static_cast<GLES3Context*>(device_->context())->getDefaultFramebuffer();
+      gpu_fbo_->gl_fbo = static_cast<GLES3Context*>(_device->context())->getDefaultFramebuffer();
   }
 #endif
 
@@ -53,7 +53,7 @@ bool GLES3Framebuffer::initialize(const GFXFramebufferInfo &info) {
 void GLES3Framebuffer::destroy() {
   if (gpu_fbo_) {
       if(is_offscreen())
-          GLES3CmdFuncDestroyFramebuffer((GLES3Device*)device_, gpu_fbo_);
+          GLES3CmdFuncDestroyFramebuffer((GLES3Device*)_device, gpu_fbo_);
       CC_DELETE(gpu_fbo_);
       gpu_fbo_ = nullptr;
   }

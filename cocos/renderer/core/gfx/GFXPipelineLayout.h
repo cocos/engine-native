@@ -14,12 +14,12 @@ public:
   virtual bool initialize(const GFXPipelineLayoutInfo& info) = 0;
   virtual void destroy() = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE const GFXPushConstantRangeList& push_constant_ranges() const { return push_constant_ranges_; }
   CC_INLINE const GFXBindingLayoutList& layouts() const { return layouts_; }
   
 protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXPushConstantRangeList push_constant_ranges_;
   GFXBindingLayoutList layouts_;
 };

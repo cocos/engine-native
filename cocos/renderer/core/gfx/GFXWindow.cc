@@ -4,7 +4,7 @@
 NS_CC_BEGIN
 
 GFXWindow::GFXWindow(GFXDevice* device)
-    : device_(device),
+    : _device(device),
       left_(0),
       top_(0),
       width_(1024),

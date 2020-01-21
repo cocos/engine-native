@@ -33,14 +33,14 @@ public:
   virtual void CopyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, GFXBufferTextureCopy* regions, uint count) = 0;
   virtual void Execute(GFXCommandBuffer** cmd_buffs, uint count) = 0;
   
-  CC_INLINE GFXDevice* device() const { return device_; }
+  CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXCommandAllocator* allocator() const { return allocator_; }
   CC_INLINE GFXCommandBufferType type() const { return type_; }
   CC_INLINE uint numDrawCalls() const { return _numDrawCalls; }
   CC_INLINE uint numTris() const { return _numTriangles; }
   
 protected:
-  GFXDevice* device_;
+  GFXDevice* _device;
   GFXCommandAllocator* allocator_;
   GFXCommandBufferType type_;
   uint _numDrawCalls = 0;

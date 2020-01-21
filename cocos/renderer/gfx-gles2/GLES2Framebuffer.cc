@@ -38,12 +38,12 @@ bool GLES2Framebuffer::initialize(const GFXFramebufferInfo &info) {
     
     gpu_fbo_->is_offscreen = is_offscreen_;
     
-    GLES2CmdFuncCreateFramebuffer((GLES2Device*)device_, gpu_fbo_);
+    GLES2CmdFuncCreateFramebuffer((GLES2Device*)_device, gpu_fbo_);
   }
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     else
     {
-        gpu_fbo_->gl_fbo = static_cast<GLES2Context*>(device_->context())->getDefaultFramebuffer();
+        gpu_fbo_->gl_fbo = static_cast<GLES2Context*>(_device->context())->getDefaultFramebuffer();
     }
 #endif
   return true;
@@ -52,7 +52,7 @@ bool GLES2Framebuffer::initialize(const GFXFramebufferInfo &info) {
 void GLES2Framebuffer::destroy() {
   if (gpu_fbo_) {
     if(is_offscreen())
-        GLES2CmdFuncDestroyFramebuffer((GLES2Device*)device_, gpu_fbo_);
+        GLES2CmdFuncDestroyFramebuffer((GLES2Device*)_device, gpu_fbo_);
       CC_DELETE(gpu_fbo_);
       gpu_fbo_ = nullptr;
   }
