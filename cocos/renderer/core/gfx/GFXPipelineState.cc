@@ -4,11 +4,8 @@
 NS_CC_BEGIN
 
 GFXPipelineState::GFXPipelineState(GFXDevice* device)
-    : _device(device),
-      shader_(nullptr),
-      primitive_(GFXPrimitiveMode::TRIANGLE_LIST),
-      layout_(nullptr),
-      _renderPass(nullptr) {
+: _device(device)
+{
 }
 
 GFXPipelineState::~GFXPipelineState() {
