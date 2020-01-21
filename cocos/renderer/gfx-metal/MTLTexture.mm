@@ -44,7 +44,7 @@ CCMTLTexture::~CCMTLTexture() { destroy(); }
 
 bool CCMTLTexture::initialize(const GFXTextureInfo& info)
 {
-    type_ = info.type;
+    _type = info.type;
     _usage = info.usage;
     format_ = info.format;
     _width = info.width;
@@ -72,7 +72,7 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
                                                                                          height:_height
                                                                                       mipmapped:_flags & GFXTextureFlags::GEN_MIPMAP];
     descriptor.usage = mu::toMTLTextureUsage(_usage);
-    descriptor.textureType = mu::toMTLTextureType(type_, array_layer_, _flags & GFXTextureFlags::CUBEMAP);
+    descriptor.textureType = mu::toMTLTextureType(_type, array_layer_, _flags & GFXTextureFlags::CUBEMAP);
     descriptor.sampleCount = mu::toMTLSampleCount(samples_);
     descriptor.mipmapLevelCount = mip_level_;
     descriptor.arrayLength = array_layer_;

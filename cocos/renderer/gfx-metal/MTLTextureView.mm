@@ -11,7 +11,7 @@ CCMTLTextureView::~CCMTLTextureView() { destroy(); }
 bool CCMTLTextureView::initialize(const GFXTextureViewInfo& info)
 {
     texture_ = info.texture;
-    type_ = info.type;
+    _type = info.type;
     format_ = info.format;
     base_level_ = info.base_level;
     level_count_ = info.level_count;
@@ -24,7 +24,7 @@ bool CCMTLTextureView::initialize(const GFXTextureViewInfo& info)
     id<MTLTexture> mtlTexture = ccmtlTexture->getMTLTexture();
     _convertedFormat = ccmtlTexture->getConvertedFormat();
     _mtlTexture = [mtlTexture newTextureViewWithPixelFormat:mu::toMTLPixelFormat(_convertedFormat)
-                                                textureType:mu::toMTLTextureType(type_)
+                                                textureType:mu::toMTLTextureType(_type)
                                                      levels:levels
                                                      slices:slics];
     

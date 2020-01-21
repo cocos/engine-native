@@ -4,9 +4,7 @@
 NS_CC_BEGIN
 
 GFXCommandBuffer::GFXCommandBuffer(GFXDevice* device)
-    : _device(device),
-      allocator_(nullptr),
-      type_(GFXCommandBufferType::PRIMARY)
+: _device(device)
 {
 }
 

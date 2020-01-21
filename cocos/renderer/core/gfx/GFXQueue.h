@@ -16,11 +16,11 @@ public:
   virtual void submit(GFXCommandBuffer** cmd_buffs, uint count) = 0;
   
   CC_INLINE GFXDevice* device() const { return _device; }
-  CC_INLINE GFXQueueType type() const { return type_; }
+  CC_INLINE GFXQueueType type() const { return _type; }
   
 protected:
   GFXDevice* _device;
-  GFXQueueType type_;
+  GFXQueueType _type;
 };
 
 NS_CC_END

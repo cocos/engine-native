@@ -5,7 +5,7 @@ NS_CC_BEGIN
 
 GFXTexture::GFXTexture(GFXDevice* device)
     : _device(device),
-      type_(GFXTextureType::TEX2D),
+      _type(GFXTextureType::TEX2D),
       _usage(GFXTextureUsageBit::NONE),
       format_(GFXFormat::UNKNOWN),
       _width(0),

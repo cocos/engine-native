@@ -14,7 +14,7 @@ GLES3Queue::~GLES3Queue() {
 }
 
 bool GLES3Queue::initialize(const GFXQueueInfo &info) {
-  type_ = info.type;
+  _type = info.type;
   
   return true;
 }

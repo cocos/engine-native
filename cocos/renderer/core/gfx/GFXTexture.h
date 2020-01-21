@@ -15,7 +15,7 @@ class CC_CORE_API GFXTexture : public Object {
   virtual void destroy() = 0;
   virtual void resize(uint width, uint height) = 0;
   
-  CC_INLINE GFXTextureType type() const { return type_; }
+  CC_INLINE GFXTextureType type() const { return _type; }
   CC_INLINE GFXTextureUsage usage() const { return _usage; }
   CC_INLINE GFXFormat format() const { return format_; }
   CC_INLINE uint width() const { return _width; }
@@ -30,7 +30,7 @@ class CC_CORE_API GFXTexture : public Object {
   
  protected:
   GFXDevice* _device;
-  GFXTextureType type_;
+  GFXTextureType _type;
   GFXTextureUsage _usage;
   GFXFormat format_;
   uint _width;

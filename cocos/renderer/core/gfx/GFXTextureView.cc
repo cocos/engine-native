@@ -6,7 +6,7 @@ NS_CC_BEGIN
 GFXTextureView::GFXTextureView(GFXDevice* device)
     : _device(device),
       texture_(nullptr),
-      type_(GFXTextureViewType::TV2D),
+      _type(GFXTextureViewType::TV2D),
       format_(GFXFormat::UNKNOWN),
       base_level_(0),
       level_count_(1),

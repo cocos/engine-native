@@ -16,7 +16,7 @@ class CC_CORE_API GFXTextureView : public Object {
   
   CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXTexture* texture() const { return texture_; }
-  CC_INLINE GFXTextureViewType type() const { return type_; }
+  CC_INLINE GFXTextureViewType type() const { return _type; }
   CC_INLINE GFXFormat format() const { return format_; }
   CC_INLINE uint base_level() const { return base_level_; }
   CC_INLINE uint level_count() const { return level_count_; }
@@ -26,7 +26,7 @@ class CC_CORE_API GFXTextureView : public Object {
  protected:
   GFXDevice* _device;
   GFXTexture* texture_;
-  GFXTextureViewType type_;
+  GFXTextureViewType _type;
   GFXFormat format_;
   uint base_level_;
   uint level_count_;

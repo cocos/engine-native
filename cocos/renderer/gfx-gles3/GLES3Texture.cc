@@ -14,7 +14,7 @@ GLES3Texture::~GLES3Texture() {
 
 bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   
-  type_ = info.type;
+  _type = info.type;
   _usage = info.usage;
   format_ = info.format;
   _width = info.width;
@@ -32,9 +32,9 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   }
   
   gpu_texture_ = CC_NEW(GLES3GPUTexture);
-  gpu_texture_->type = type_;
+  gpu_texture_->type = _type;
   
-  switch (type_) {
+  switch (_type) {
     case GFXTextureType::TEX1D: {
       if (array_layer_) {
         gpu_texture_->view_type = array_layer_ <= 1 ? GFXTextureViewType::TV1D : GFXTextureViewType::TV1D_ARRAY;

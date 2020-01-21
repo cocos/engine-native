@@ -14,7 +14,7 @@ GLES2Queue::~GLES2Queue() {
 }
 
 bool GLES2Queue::initialize(const GFXQueueInfo &info) {
-  type_ = info.type;
+  _type = info.type;
   
   return true;
 }
