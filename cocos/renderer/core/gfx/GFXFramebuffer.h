@@ -16,16 +16,16 @@ class CC_CORE_API GFXFramebuffer : public Object {
   
   CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXRenderPass* renderPass() const { return _renderPass; }
-  CC_INLINE const GFXTextureViewList& color_views() const { return color_views_; }
-  CC_INLINE GFXTextureView* depth_stencil_view() const { return depth_stencil_view_; }
+  CC_INLINE const GFXTextureViewList& colorViews() const { return _colorViews; }
+  CC_INLINE GFXTextureView* depthStencilView() const { return _depthStencilView; }
   CC_INLINE bool isOffscreen() const { return _isOffscreen; }
   
  protected:
-  GFXDevice* _device;
-  GFXRenderPass* _renderPass;
-  GFXTextureViewList color_views_;
-  GFXTextureView* depth_stencil_view_;
-  bool _isOffscreen;
+  GFXDevice* _device = nullptr;
+  GFXRenderPass* _renderPass = nullptr;
+  GFXTextureViewList _colorViews;
+  GFXTextureView* _depthStencilView = nullptr;
+  bool _isOffscreen = true;
 };
 
 NS_CC_END

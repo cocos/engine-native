@@ -18,22 +18,22 @@ GLES3Framebuffer::~GLES3Framebuffer() {
 bool GLES3Framebuffer::initialize(const GFXFramebufferInfo &info) {
   
   _renderPass = info.render_pass;
-  color_views_ = info.color_views;
-  depth_stencil_view_ = info.depth_stencil_view;
+  _colorViews = info.color_views;
+  _depthStencilView = info.depth_stencil_view;
   _isOffscreen = info.is_offscreen;
   
   gpu_fbo_ = CC_NEW(GLES3GPUFramebuffer);
   gpu_fbo_->gpu_render_pass = ((GLES3RenderPass*)_renderPass)->gpu_render_pass();
   
   if (_isOffscreen) {
-    gpu_fbo_->gpu_color_views.resize(color_views_.size());
-    for (size_t i = 0; i < color_views_.size(); ++i) {
-      GLES3TextureView* color_view = (GLES3TextureView*)color_views_[i];
+    gpu_fbo_->gpu_color_views.resize(_colorViews.size());
+    for (size_t i = 0; i < _colorViews.size(); ++i) {
+      GLES3TextureView* color_view = (GLES3TextureView*)_colorViews[i];
       gpu_fbo_->gpu_color_views[i] = color_view->gpu_tex_view();
     }
     
-    if (depth_stencil_view_) {
-      gpu_fbo_->gpu_depth_stencil_view = ((GLES3TextureView*)depth_stencil_view_)->gpu_tex_view();
+    if (_depthStencilView) {
+      gpu_fbo_->gpu_depth_stencil_view = ((GLES3TextureView*)_depthStencilView)->gpu_tex_view();
     }
     
     gpu_fbo_->is_offscreen = _isOffscreen;

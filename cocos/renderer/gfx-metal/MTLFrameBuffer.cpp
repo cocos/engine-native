@@ -9,8 +9,8 @@ CCMTLFrameBuffer::~CCMTLFrameBuffer() { destroy(); }
 bool CCMTLFrameBuffer::initialize(const GFXFramebufferInfo& info)
 {
     _renderPass = info.render_pass;
-    color_views_ = info.color_views;
-    depth_stencil_view_ = info.depth_stencil_view;
+    _colorViews = info.color_views;
+    _depthStencilView = info.depth_stencil_view;
     _isOffscreen = info.is_offscreen;
     
     return true;
