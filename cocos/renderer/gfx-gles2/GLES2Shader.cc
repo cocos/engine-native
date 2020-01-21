@@ -13,13 +13,13 @@ GLES2Shader::~GLES2Shader() {
 }
 
 bool GLES2Shader::initialize(const GFXShaderInfo &info) {
-  name_ = info.name;
+  _name = info.name;
   stages_ = info.stages;
   blocks_ = info.blocks;
   samplers_ = info.samplers;
   
   gpu_shader_ = CC_NEW(GLES2GPUShader);
-  gpu_shader_->name = name_;
+  gpu_shader_->name = _name;
   gpu_shader_->blocks = blocks_;
   gpu_shader_->samplers = samplers_;
   for (const auto& stage : stages_)
