@@ -6,17 +6,17 @@ NS_CC_BEGIN
 GFXTexture::GFXTexture(GFXDevice* device)
     : _device(device),
       type_(GFXTextureType::TEX2D),
-      usage_(GFXTextureUsageBit::NONE),
+      _usage(GFXTextureUsageBit::NONE),
       format_(GFXFormat::UNKNOWN),
       _width(0),
       _height(0),
       depth_(1),
       array_layer_(1),
       mip_level_(1),
-      size_(0),
+      _size(0),
       samples_(GFXSampleCount::X1),
-      flags_(GFXTextureFlagBit::NONE),
-      buffer_(nullptr) {
+      _flags(GFXTextureFlagBit::NONE),
+      _buffer(nullptr) {
 }
 
 GFXTexture::~GFXTexture() {
