@@ -197,7 +197,7 @@ void CCMTLPipelineState::setFormats(MTLRenderPipelineDescriptor* descriptor)
 {
     int i = 0;
     MTLPixelFormat mtlPixelFormat;
-    for (const auto& colorAttachment : _renderPass->color_attachments())
+    for (const auto& colorAttachment : _renderPass->colorAttachments())
     {
         mtlPixelFormat = mu::toMTLPixelFormat(colorAttachment.format);
         if (mtlPixelFormat != MTLPixelFormatInvalid)
@@ -206,11 +206,11 @@ void CCMTLPipelineState::setFormats(MTLRenderPipelineDescriptor* descriptor)
         ++i;
     }
     
-    mtlPixelFormat = mu::toMTLPixelFormat(_renderPass->depth_stencil_attachment().format);
+    mtlPixelFormat = mu::toMTLPixelFormat(_renderPass->depthStencilAttachment().format);
     if (mtlPixelFormat != MTLPixelFormatInvalid)
         descriptor.depthAttachmentPixelFormat = mtlPixelFormat;
     
-    mtlPixelFormat = mu::toMTLPixelFormat(_renderPass->depth_stencil_attachment().format);
+    mtlPixelFormat = mu::toMTLPixelFormat(_renderPass->depthStencilAttachment().format);
     if (mtlPixelFormat != MTLPixelFormatInvalid)
         descriptor.stencilAttachmentPixelFormat = mtlPixelFormat;
 }
