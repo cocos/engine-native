@@ -27,31 +27,31 @@ class CC_CORE_API GFXWindow : public Object {
   CC_INLINE GFXFormat depth_stencil_fmt() const { return _depthStencilFmt; }
   CC_INLINE bool is_offscreen() const { return _isOffscreen; }
   CC_INLINE GFXRenderPass* render_pass() const { return _renderPass; }
-  CC_INLINE GFXTexture* color_texture() const { return color_texture_; }
-  CC_INLINE GFXTextureView* color_tex_view() const { return color_tex_view_; }
-  CC_INLINE GFXTexture* depth_stencil_texture() const { return depth_stencil_texture_; }
-  CC_INLINE GFXTextureView* depth_stencil_tex_view() const { return depth_stencil_tex_view_; }
-  CC_INLINE GFXFramebuffer* framebuffer() const { return framebuffer_; }
+  CC_INLINE GFXTexture* color_texture() const { return _colorTex; }
+  CC_INLINE GFXTextureView* color_tex_view() const { return _colorTexView; }
+  CC_INLINE GFXTexture* depth_stencil_texture() const { return _depthStencilTex; }
+  CC_INLINE GFXTextureView* depth_stencil_tex_view() const { return _depthStencilTexView; }
+  CC_INLINE GFXFramebuffer* framebuffer() const { return _framebuffer; }
   
  protected:
-  GFXDevice* _device;
+  GFXDevice* _device = nullptr;
   String _title;
-  int _left;
-  int _top;
-  uint _width;
-  uint _height;
-  uint _nativeWidth;
-  uint _nativeHeight;
-  GFXFormat _colorFmt;
-  GFXFormat _depthStencilFmt;
-  bool _isOffscreen;
-  bool _isFullscreen;
-  GFXRenderPass* _renderPass;
-  GFXTexture* color_texture_;
-  GFXTextureView* color_tex_view_;
-  GFXTexture* depth_stencil_texture_;
-  GFXTextureView* depth_stencil_tex_view_;
-  GFXFramebuffer* framebuffer_;
+  int _left = 0;
+  int _top = 0;
+  uint _width = 0;
+  uint _height = 0;
+  uint _nativeWidth = 0;
+  uint _nativeHeight = 0;
+  GFXFormat _colorFmt = GFXFormat::UNKNOWN;
+  GFXFormat _depthStencilFmt = GFXFormat::UNKNOWN;
+  bool _isOffscreen = false;
+  bool _isFullscreen = false;
+  GFXRenderPass* _renderPass = nullptr;
+  GFXTexture* _colorTex = nullptr;
+  GFXTextureView* _colorTexView = nullptr;
+  GFXTexture* _depthStencilTex = nullptr;
+  GFXTextureView* _depthStencilTexView = nullptr;
+  GFXFramebuffer* _framebuffer = nullptr;
 };
 
 NS_CC_END

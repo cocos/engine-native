@@ -55,7 +55,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             color_tex_info.depth = 1;
             color_tex_info.array_layer = 1;
             color_tex_info.mip_level = 1;
-            color_texture_ = _device->createTexture(color_tex_info);
+            _colorTex = _device->createTexture(color_tex_info);
             
             GFXTextureViewInfo color_tex_view_info;
             color_tex_view_info.type = GFXTextureViewType::TV2D;
@@ -64,7 +64,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             color_tex_view_info.level_count = 1;
             color_tex_view_info.base_layer = 0;
             color_tex_view_info.layer_count = 1;
-            color_tex_view_ = _device->createTextureView(color_tex_view_info);
+            _colorTexView = _device->createTextureView(color_tex_view_info);
         }
         if (_depthStencilFmt != GFXFormat::UNKNOWN) {
             GFXTextureInfo depth_stecnil_tex_info;
@@ -76,7 +76,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             depth_stecnil_tex_info.depth = 1;
             depth_stecnil_tex_info.array_layer = 1;
             depth_stecnil_tex_info.mip_level = 1;
-            depth_stencil_texture_ = _device->createTexture(depth_stecnil_tex_info);
+            _depthStencilTex = _device->createTexture(depth_stecnil_tex_info);
             
             GFXTextureViewInfo depth_stecnil_tex_view_info;
             depth_stecnil_tex_view_info.type = GFXTextureViewType::TV2D;
@@ -85,16 +85,16 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             depth_stecnil_tex_view_info.level_count = 1;
             depth_stecnil_tex_view_info.base_layer = 0;
             depth_stecnil_tex_view_info.layer_count = 1;
-            depth_stencil_tex_view_ = _device->createTextureView(depth_stecnil_tex_view_info);
+            _depthStencilTexView = _device->createTextureView(depth_stecnil_tex_view_info);
         }
     }
 
     GFXFramebufferInfo fbo_info;
     fbo_info.render_pass = _renderPass;
-    fbo_info.color_views.push_back(color_tex_view_);
-    fbo_info.depth_stencil_view = depth_stencil_tex_view_;
+    fbo_info.color_views.push_back(_colorTexView);
+    fbo_info.depth_stencil_view = _depthStencilTexView;
     fbo_info.is_offscreen = _isOffscreen;
-    framebuffer_ = _device->createFramebuffer(fbo_info);
+    _framebuffer = _device->createFramebuffer(fbo_info);
     
     return true;
 }
@@ -102,11 +102,11 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
 void CCMTLWindow::destroy()
 {
     CC_SAFE_DESTROY(_renderPass);
-    CC_SAFE_DESTROY(color_tex_view_);
-    CC_SAFE_DESTROY(color_texture_);
-    CC_SAFE_DESTROY(depth_stencil_tex_view_);
-    CC_SAFE_DESTROY(depth_stencil_texture_);
-    CC_SAFE_DESTROY(framebuffer_);
+    CC_SAFE_DESTROY(_colorTexView);
+    CC_SAFE_DESTROY(_colorTex);
+    CC_SAFE_DESTROY(_depthStencilTexView);
+    CC_SAFE_DESTROY(_depthStencilTex);
+    CC_SAFE_DESTROY(_framebuffer);
 }
 
 void CCMTLWindow::resize(uint width, uint height)
