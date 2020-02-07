@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "platform/CCFileUtils.h"
 #include <string>
+#include <mutex>
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include "platform/android/CCFileUtils-android.h"
@@ -287,6 +288,7 @@ typedef struct unz_file_info_s unz_file_info;
 
         /** Internal data like zip file pointer / file list array and so on */
         ZipFilePrivate *_data;
+        std::mutex _readMutex;
     };
 } // end of namespace cocos2d
 
