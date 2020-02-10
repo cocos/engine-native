@@ -865,6 +865,27 @@
     <ClCompile Include="..\cocos\editor-support\spine\ConstraintData.cpp">
       <Filter>editor-support\spine</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\2d\CCFontAtlas.cpp">
+      <Filter>cocos\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\2d\CCFontFreetype.cpp">
+      <Filter>cocos\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\2d\CCLabelLayout.cpp">
+      <Filter>cocos\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\2d\CCTTFLabelAtlasCache.cpp">
+      <ClCompile>cocos\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\2d\CCTTFLabelRenderer.cpp">
+      <Filter>cocos\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\2d\CCTTFTypes.cpp">
+      <Filter>cocos\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\edtaa3func\edtaa3func.cpp">
+      <Filter>external\sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos\base\base64.h">
@@ -1935,177 +1956,51 @@
     <ClInclude Include="..\cocos\editor-support\spine\ConstraintData.h">
       <Filter>editor-support\spine</Filter>
     </ClInclude>
+    <ClInclude Include="..\cocos\2d\CCFontAtlas.h">
+      <Filter>cocos\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\2d\CCFontFreetype.h">
+      <Filter>cocos\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\2d\CCLabelLayout.h">
+      <Filter>cocos\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\2d\CCTTFLabelAtlasCache.h">
+      <Filter>cocos\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\2d\CCTTFLabelRenderer.h">
+      <Filter>cocos\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\2d\CCTTFTypes.h">
+      <Filter>cocos\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\sources\edtaa3func\edtaa3func.h">
+      <Filter>external\sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="base">
-      <UniqueIdentifier>{6a5f69d8-d02d-47cc-8131-8db6fe039a50}</UniqueIdentifier>
+    <None Include="..\cocos\math\Mat4.inl" />
+    <None Include="..\cocos\math\MathUtil.inl" />
+    <None Include="..\cocos\math\MathUtilNeon.inl" />
+    <None Include="..\cocos\math\MathUtilNeon64.inl" />
+    <None Include="..\cocos\math\MathUtilSSE.inl" />
+    <None Include="..\cocos\math\Quaternion.inl" />
+    <None Include="..\cocos\math\Vec2.inl" />
+    <None Include="..\cocos\math\Vec3.inl" />
+    <None Include="..\cocos\math\Vec4.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="cocos">
+      <UniqueIdentifier>{634b5b20-269c-4172-aaa9-a5d9e8c6ae1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{e46822d9-b9c5-478a-bc5c-58f05596ae33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer">
-      <UniqueIdentifier>{f1074b9e-05d1-449e-a4fe-231be0b0f471}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\gfx">
-      <UniqueIdentifier>{f777a81c-1489-45b5-b779-1863c8c1ca24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\renderer">
-      <UniqueIdentifier>{584857a2-7316-45cd-855e-c978b7ba49f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="js-bindings">
-      <UniqueIdentifier>{b1ea90ed-adb4-4b5c-8909-d47a94d4cd69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="js-bindings\auto">
-      <UniqueIdentifier>{c7fe8b88-0a77-47a2-a6f6-1ba6c0780e3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="js-bindings\manual">
-      <UniqueIdentifier>{766b04cb-29df-45b0-9cf6-0cf34e0a8946}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="js-bindings\event">
-      <UniqueIdentifier>{2fb73413-4163-4cb7-84f9-04999528a918}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="js-bindings\jswrapper">
-      <UniqueIdentifier>{99e2f021-bb2f-4066-b5d3-f325c4d58780}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="js-bindings\jswrapper\v8">
-      <UniqueIdentifier>{7979edde-e9e2-4380-9b85-1c4e179007ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="platform">
-      <UniqueIdentifier>{01e3df91-f31a-4667-9168-4243137023c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="platform\win32">
-      <UniqueIdentifier>{72a6823d-4c79-4918-b029-f0a82c6eb46a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="platform\compat">
-      <UniqueIdentifier>{f88e61be-1179-4b36-955d-abf72181fa9e}</UniqueIdentifier>
+    <Filter Include="cocos\2d">
+      <UniqueIdentifier>{d9b80790-5144-41f6-864c-0b7cc915fcde}</UniqueIdentifier>
     </Filter>
     <Filter Include="external">
-      <UniqueIdentifier>{aaf34557-236c-4e37-b157-1b20593e359f}</UniqueIdentifier>
+      <UniqueIdentifier>{71458db4-ac70-40e4-8c0c-48c3f6c7fd21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="external\unzip">
-      <UniqueIdentifier>{bb37b797-0707-4912-8e2f-c2b090878e88}</UniqueIdentifier>
+    <Filter Include="external\sources">
+      <UniqueIdentifier>{388ec926-9454-467f-aadd-6dcb37d9e1e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="external\tinyxml2">
-      <UniqueIdentifier>{08f33107-f626-45a4-a2e6-af4a7875808d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="external\ConvertUTF">
-      <UniqueIdentifier>{cd4028d4-9f5d-4b3a-85f1-e2f8c3b7885d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="external\xxtea">
-      <UniqueIdentifier>{9198c362-43e7-4445-affb-225d0257dea7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="network">
-      <UniqueIdentifier>{8553d9e7-36b8-413a-bef4-e21d498ffeca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="js-bindings\jswrapper\v8\debugger">
-      <UniqueIdentifier>{bc60b25a-96ac-44c4-b41d-1cd54b7ced67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ui">
-      <UniqueIdentifier>{762b2921-c270-4c06-8c20-f1610fe6f2e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ui\edit-box">
-      <UniqueIdentifier>{22012012-8bc2-45cf-9c45-ea226dec0069}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="storage">
-      <UniqueIdentifier>{7150bd34-60ba-4140-afa6-3d09517bd600}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="storage\local-storage">
-      <UniqueIdentifier>{edff1dc7-36e1-4978-a197-d7a5daa8f0a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="audio">
-      <UniqueIdentifier>{c32501cd-4b8f-4bf2-b009-b77550c7f4c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="audio\win32">
-      <UniqueIdentifier>{b06d91ac-f060-4eeb-ae08-0e7dc0d3b195}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="audio\include">
-      <UniqueIdentifier>{d1b8a7c4-28cc-45b3-8276-494fbcf958d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="extensions">
-      <UniqueIdentifier>{e6a42324-ff8d-469a-97e5-2579bf1396db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="extensions\assets-manager">
-      <UniqueIdentifier>{92ccd96e-a37d-42db-8c6b-ca683b0373ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support">
-      <UniqueIdentifier>{8fa49f64-71ec-4e73-929a-5560ddc43dc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\spine">
-      <UniqueIdentifier>{ef8ae632-2316-46bd-9b18-ae9414d6028b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\spine-creator-support">
-      <UniqueIdentifier>{114fa741-97f8-4fb6-b6ba-da80116305a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones">
-      <UniqueIdentifier>{34a2f7fb-8c84-4b6f-9b5f-bd7c8fc2b2e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones-creator-support">
-      <UniqueIdentifier>{93241d9d-c0ea-4dbe-af16-bcf1dec6b8ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\animation">
-      <UniqueIdentifier>{246339aa-844e-413e-86d5-49a4450f33b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\armature">
-      <UniqueIdentifier>{c3667516-b42c-47a7-8ad3-d9ea26ff0899}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\core">
-      <UniqueIdentifier>{a93871e2-d4f4-49e8-b65a-ebfbc8ad1baf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\event">
-      <UniqueIdentifier>{d8be0abb-73c2-4938-a318-2b7c118062cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\factory">
-      <UniqueIdentifier>{231bc464-adf2-46e8-9a16-ef0e239a1430}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\geom">
-      <UniqueIdentifier>{684619bb-7651-4137-ab2f-441763969f5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\model">
-      <UniqueIdentifier>{eee07273-7865-4677-bab7-887903ed30b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\dragonbones\parser">
-      <UniqueIdentifier>{adc17345-7ade-411b-abef-14ca3ae30e9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\scene">
-      <UniqueIdentifier>{092e6c27-6094-4ee8-a5fc-7082059c8f93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\scene\assembler">
-      <UniqueIdentifier>{6c380106-a041-45b9-90ee-d4b8194c1e2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\scene\memop">
-      <UniqueIdentifier>{241728db-2151-42d2-a002-3fb1fd260a78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor-support\particle">
-      <UniqueIdentifier>{333e24f4-af65-4a68-96a9-a5cccd0b4b81}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\cocos\math\Mat4.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\MathUtil.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\MathUtilNeon.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\MathUtilNeon64.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\MathUtilSSE.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\Quaternion.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\Vec2.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\Vec3.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\cocos\math\Vec4.inl">
-      <Filter>math</Filter>
-    </None>
   </ItemGroup>
 </Project>

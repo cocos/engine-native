@@ -111,3 +111,31 @@ SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_createLinearGradient);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_closePath);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_CanvasRenderingContext2D);
 
+extern se::Object* __jsb_cocos2d_LabelRenderer_proto;
+extern se::Class* __jsb_cocos2d_LabelRenderer_class;
+
+bool js_register_cocos2d_LabelRenderer(se::Object* obj);
+bool register_all_engine(se::Object* obj);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setAnchorPoint);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_render);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setShadowColor);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setItalic);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setVerticalAlign);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setEffect);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setBold);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setOutlineColor);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setString);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setEnableWrap);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setFontPath);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setShadow);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setOutline);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setHorizontalAlign);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setFontSize);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setContentSize);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setOverFlow);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setLineHeight);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setColor);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_bindNodeProxy);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setUnderline);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_LabelRenderer);
+

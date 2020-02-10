@@ -42,6 +42,10 @@ class CmdError(Exception):
     pass
 
 
+def fix_path(p):
+    return p.replace('\\', r'/')
+
+
 @contextmanager
 def _pushd(newDir):
     previousDir = os.getcwd()
@@ -113,13 +117,15 @@ def main():
     jsb_root = os.path.abspath(os.path.join(project_root, 'js-bindings'))
     cxx_generator_root = os.path.abspath(os.path.join(project_root, 'tools/bindings-generator'))
 
+
+
     # save config to file
     config = ConfigParser.ConfigParser()
-    config.set('DEFAULT', 'androidndkdir', ndk_root)
-    config.set('DEFAULT', 'clangllvmdir', llvm_path)
-    config.set('DEFAULT', 'gcc_toolchain_dir', gcc_toolchain_path)
-    config.set('DEFAULT', 'cocosdir', cocos_root)
-    config.set('DEFAULT', 'cxxgeneratordir', cxx_generator_root)
+    config.set('DEFAULT', 'androidndkdir', fix_path(ndk_root))
+    config.set('DEFAULT', 'clangllvmdir', fix_path(llvm_path))
+    config.set('DEFAULT', 'gcc_toolchain_dir', fix_path(gcc_toolchain_path))
+    config.set('DEFAULT', 'cocosdir',fix_path(cocos_root))
+    config.set('DEFAULT', 'cxxgeneratordir', fix_path(cxx_generator_root))
     config.set('DEFAULT', 'extra_flags', '')
     
     conf_ini_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'userconf.ini'))

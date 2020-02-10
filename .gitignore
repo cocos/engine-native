@@ -165,6 +165,5 @@ tests/cpp-tests/Resources/audio
 /tools/simulator/simulator
 
 
-next*.zip
-
 cocos2d-x-lite-external-*
+*.zip

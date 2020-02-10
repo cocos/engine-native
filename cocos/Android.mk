@@ -86,7 +86,21 @@ scripting/js-bindings/event/EventDispatcher.cpp \
 ../external/sources/unzip/unzip.cpp \
 ../external/sources/ConvertUTF/ConvertUTFWrapper.cpp \
 ../external/sources/ConvertUTF/ConvertUTF.c \
-ui/edit-box/EditBox-android.cpp
+../external/sources/edtaa3func/edtaa3func.cpp \
+../external/sources/edtaa3func/edtaa3func.h \
+ui/edit-box/EditBox-android.cpp \
+2d/CCFontAtlas.cpp \
+2d/CCFontAtlas.h \
+2d/CCFontFreetype.cpp \
+2d/CCFontFreetype.h \
+2d/CCLabelLayout.cpp \
+2d/CCLabelLayout.h \
+2d/CCTTFLabelAtlasCache.cpp \
+2d/CCTTFLabelAtlasCache.h \
+2d/CCTTFLabelRenderer.cpp \
+2d/CCTTFLabelRenderer.h \
+2d/CCTTFTypes.cpp \
+2d/CCTTFTypes.h 
 
 # v8 debugger source files, always enable it
 LOCAL_SRC_FILES += \
@@ -237,6 +251,7 @@ endif
 LOCAL_STATIC_LIBRARIES += cocos_webp_static
 LOCAL_STATIC_LIBRARIES += cocos_zlib_static
 LOCAL_STATIC_LIBRARIES += v8_static
+LOCAL_STATIC_LIBRARIES += cocos_freetype_static
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dxandroid_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cpufeatures 

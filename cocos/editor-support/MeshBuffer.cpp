@@ -72,8 +72,8 @@ MeshBuffer::~MeshBuffer()
     auto num = _glVBArr.size();
     for (auto i = 0; i < num; i++)
     {
-        delete _glIBArr[i];
-        delete _glVBArr[i];
+        _glIBArr[i]->release();
+        _glVBArr[i]->release();
     }
     _glIBArr.clear();
     _glVBArr.clear();

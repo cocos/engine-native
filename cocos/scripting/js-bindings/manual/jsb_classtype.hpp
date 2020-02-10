@@ -26,7 +26,7 @@
 #pragma once
 
 #include "scripting/js-bindings/jswrapper/SeApi.h"
-
+#include "2d/CCTTFLabelRenderer.h"
 #include <typeinfo>
 
 class JSBClassType
