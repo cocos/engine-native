@@ -41,18 +41,18 @@ NS_CC_BEGIN
 
 namespace
 {
-    int g_width = 0;
-    int g_height = 0;
     bool setCanvasCallback(se::Object* global)
     {
+        auto viewSize = Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         int devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
+        //set window.innerWidth/innerHeight in CSS pixel units, not physical pixel units.
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                g_width / devicePixelRatio,
-                g_height / devicePixelRatio);
+                (int)(viewSize.x  / devicePixelRatio),
+                (int)(viewSize.y  / devicePixelRatio));
         se->evalString(commandBuf);
-        ccViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
+        ccViewport(0, 0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -66,9 +66,6 @@ std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
-
-    g_width = width;
-    g_height = height;
 
     createView(name, width, height);
 
@@ -98,6 +95,17 @@ Application::~Application()
     _renderTexture = nullptr;
 
     Application::_instance = nullptr;
+}
+
+const cocos2d::Vec2& Application::getViewSize() const
+{
+    return _viewSize;
+}
+
+void Application::updateViewSize(int width, int height)
+{
+    _viewSize.x = width;
+    _viewSize.y = height;
 }
 
 void Application::start()
@@ -212,17 +220,14 @@ bool Application::isDisplayStats()
     return ret.toBoolean();
 }
 
-void Application::setDisplayStats(bool isShow)
-{
+void Application::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
-void Application::setCursorEnabled(bool value)
-{
-    glfwSetInputMode(CAST_VIEW(_view)->getGLFWWindow(), GLFW_CURSOR, value ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+void Application::setCursorEnabled(bool value){
 }
 
 Application::LanguageType Application::getCurrentLanguage() const

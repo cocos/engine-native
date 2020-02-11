@@ -177,13 +177,14 @@ GLView::GLView(Application* application, const std::string& name, int x, int y, 
 
     // Enable point size by default.
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-    
+
     if(multisamplingCount > 0)
         glEnable(GL_MULTISAMPLE);
-    
+
     computeScale();
-    
+
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_mainFBO);
+    Application::getInstance()->updateViewSize(width * _scale, height * _scale);
 }
 
 GLView::~GLView()
@@ -443,6 +444,7 @@ void GLView::onGLFWWindowIconifyCallback(GLFWwindow* /*window*/, int iconified)
 
 void GLView::onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height)
 {
+    Application::getInstance()->updateViewSize(width * _scale, height * _scale);
     EventDispatcher::dispatchResizeEvent(width, height);
 }
 

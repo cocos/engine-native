@@ -518,10 +518,10 @@ getInstance : function (
 jsb.Device = {
 
 /**
- * @method getNetworkType
- * @return {cc.Device::NetworkType}
+ * @method getDevicePixelRatio
+ * @return {int}
  */
-getNetworkType : function (
+getDevicePixelRatio : function (
 )
 {
     return 0;
@@ -565,6 +565,16 @@ setKeepScreenOn : function (
 bool 
 )
 {
+},
+
+/**
+ * @method getNetworkType
+ * @return {cc.Device::NetworkType}
+ */
+getNetworkType : function (
+)
+{
+    return 0;
 },
 
 /**

@@ -133,6 +133,17 @@ Application::~Application()
     Application::_instance = nullptr;
 }
 
+const cocos2d::Vec2& Application::getViewSize() const
+{
+    return _viewSize;
+}
+
+void Application::updateViewSize(int width, int height)
+{
+    _viewSize.x = width;
+    _viewSize.y = height;
+}
+
 void Application::start()
 {
     if (!_view)

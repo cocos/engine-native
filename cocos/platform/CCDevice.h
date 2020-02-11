@@ -100,6 +100,11 @@ public:
     static std::string getDeviceModel();
 
     /**
+     * Get device pixel ratio.
+     */
+    static int getDevicePixelRatio();
+    
+    /**
      * Controls whether the screen should remain on.
      *
      * @param keepScreenOn One flag indicating that the screen should remain on.

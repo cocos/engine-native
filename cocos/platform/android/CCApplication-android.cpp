@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "platform/CCApplication.h"
 #include <EGL/egl.h>
 #include <cstring>
+#include <jni.h>
 #include "platform/android/jni/JniImp.h"
 #include "platform/android/CCGL-android.h"
 #include "base/CCScheduler.h"
@@ -52,6 +53,22 @@ PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
 
 NS_CC_BEGIN
 
+void Application::updateViewSize(int width, int height)
+{
+    _viewSize.x = width;
+    _viewSize.y = height;
+}
+
+extern "C" {
+    void Java_org_cocos2dx_lib_Cocos2dxGLSurfaceView_nativeOnSizeChanged(JNIEnv * env, jobject obj, jint width, jint height) {
+        auto inst = Application::getInstance();
+        // nativeOnSizeChanged is firstly called before Application initiating.
+        if (inst != nullptr) {
+            inst->updateViewSize(width, height);
+        }
+    }
+}
+
 Application* Application::_instance = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
@@ -67,6 +84,7 @@ Application::Application(const std::string& name, int width, int height)
     PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = (PFNGLDELETEVERTEXARRAYSOESPROC)eglGetProcAddress("glDeleteVertexArraysOES");
 
     _renderTexture = new RenderTexture(width, height);
+    updateViewSize(width, height);
 }
 
 Application::~Application()
@@ -270,6 +288,11 @@ void Application::copyTextToClipboard(const std::string &text)
 std::string Application::getSystemVersion()
 {
     return getSystemVersionJNI();
+}
+
+const cocos2d::Vec2& Application::getViewSize() const
+{
+    return _viewSize;
 }
 
 NS_CC_END

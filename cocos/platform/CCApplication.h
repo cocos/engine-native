@@ -138,6 +138,10 @@ public:
      */
     std::string getCurrentLanguageCode() const;
 
+    const cocos2d::Vec2& getViewSize() const;
+
+    void updateViewSize(int width, int height);
+
     /**
      @brief Get current display stats.
      @return bool, is displaying stats or not.
@@ -209,6 +213,7 @@ private:
     bool _multiTouch = false;
     bool _isStarted = false;
     bool _isDownsampleEnabled = false;
+    cocos2d::Vec2 _viewSize;
 };
 
 // end of platform group
