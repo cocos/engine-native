@@ -166,3 +166,5 @@ tests/cpp-tests/Resources/audio
 
 
 next*.zip
+
+tools/cmake-generator/node_modules/
