@@ -18,6 +18,9 @@
         <meta-data android:name="android.app.lib_name"
             android:value="cocos2djs" />
 
+        <meta-data android:name="android.max_aspect"
+                    android:value="2.2" />
+
         <activity
             android:name="org.cocos2dx.javascript.AppActivity"
             android:screenOrientation="sensorLandscape"
