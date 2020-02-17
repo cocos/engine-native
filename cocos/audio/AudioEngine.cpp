@@ -363,6 +363,10 @@ void AudioEngine::onPause(const CustomEvent &event) {
             _breakAudioID.push_back(it->first);
         }
     }
+    
+    if (_audioEngineImpl) {
+        _audioEngineImpl->onPause();
+    }
 }
 
 void AudioEngine::onResume(const CustomEvent &event) {
@@ -371,6 +375,10 @@ void AudioEngine::onResume(const CustomEvent &event) {
         _audioEngineImpl->resume(*it);
     }
     _breakAudioID.clear();
+    
+    if (_audioEngineImpl) {
+        _audioEngineImpl->onResume();
+    }
 }
 
 void AudioEngine::stop(int audioID)

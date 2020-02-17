@@ -746,4 +746,14 @@ bool AudioEngineImpl::_checkAudioIdValid(int audioID) {
     return _audioPlayers.find(audioID) != _audioPlayers.end();
 }
 
+void AudioEngineImpl::onPause()
+{
+
+}
+
+void AudioEngineImpl::onResume()
+{
+
+}
+
 #endif

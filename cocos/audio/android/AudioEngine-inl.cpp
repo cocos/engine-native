@@ -420,6 +420,22 @@ void AudioEngineImpl::uncacheAll()
     }
 }
 
+void AudioEngineImpl::onPause()
+{
+    if (_audioPlayerProvider != nullptr)
+    {
+        _audioPlayerProvider->pause();
+    }
+}
+
+void AudioEngineImpl::onResume() 
+{
+    if (_audioPlayerProvider != nullptr)
+    {
+        _audioPlayerProvider->resume();
+    }
+}
+
 // It's invoked from javaactivity-android.cpp
 void cocos_audioengine_focus_change(int focusChange)
 {
