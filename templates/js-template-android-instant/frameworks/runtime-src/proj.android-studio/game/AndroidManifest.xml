@@ -19,7 +19,7 @@
             android:value="cocos2djs" />
 
         <meta-data android:name="android.max_aspect"
-                    android:value="2.2" />
+                    android:value="2.4" />
 
         <activity
             android:name="org.cocos2dx.javascript.AppActivity"
