@@ -258,6 +258,7 @@ void Application::updateViewSize(int width, int height)
 {
     _viewSize.x = width;
     _viewSize.y = height;
+    cocos2d::EventDispatcher::dispatchResizeEvent(width, height);
 }
 
 void Application::start()
