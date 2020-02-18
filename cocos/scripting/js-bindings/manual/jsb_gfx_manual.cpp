@@ -2,6 +2,8 @@
 #if (USE_GFX_RENDERER > 0) && (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_WINDOWS)
 #include "scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "scripting/js-bindings/manual/jsb_global.h"
+#include "scripting/js-bindings/jswrapper/SeApi.h"
+#include "scripting/js-bindings/auto/jsb_gfx_auto.hpp"
 #include "renderer/gfx-gles2/GFXGLES2.h"
 
 #define GFX_MAX_VERTEX_ATTRIBUTES 16
@@ -13,7 +15,6 @@
 
 se::Object* __jsb_cocos2d_GFXSubPass_proto = nullptr;
 se::Class* __jsb_cocos2d_GFXSubPass_class = nullptr;
-
 
 static bool js_gfx_GFXSubPass_get_bind_point(se::State& s)
 {
@@ -329,6 +330,12 @@ bool js_register_gfx_GFXSubPass(se::Object* obj)
     __jsb_cocos2d_GFXSubPass_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+bool register_all_gfx_manual(se::Object* obj)
+{
+    js_register_gfx_GFXSubPass(obj);
     return true;
 }
 
