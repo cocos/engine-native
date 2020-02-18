@@ -48,6 +48,8 @@ import android.widget.TextView;
 
 import org.cocos2dx.lib.Cocos2dxHelper.Cocos2dxHelperListener;
 
+import java.lang.reflect.Field;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
@@ -261,11 +263,27 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         Cocos2dxRenderer renderer = this.addSurfaceView();
         this.addDebugInfo(renderer);
 
+
         // Should create EditBox after adding SurfaceView, or EditBox will be hidden by SurfaceView.
         mEditBox = new Cocos2dxEditBox(this, mFrameLayout);
 
         // Set frame layout as the content view
         setContentView(mFrameLayout);
+
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        try {
+            Field field = lp.getClass().getField("layoutInDisplayCutoutMode");
+            if(field != null) {
+                //Field constValue = lp.getClass().getDeclaredField("LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER");
+                Field constValue = lp.getClass().getDeclaredField("LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES");
+                field.setInt(lp, constValue.getInt(null));
+            }
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setKeepScreenOn(boolean value) {

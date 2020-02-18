@@ -311,14 +311,6 @@ cocos2d::Vec4 Device::getSafeAreaEdge()
 #pragma clang diagnostic ignored "-Wpartial-availability"
         UIEdgeInsets safeAreaEdge = screenView.safeAreaInsets;
 #pragma clang diagnostic pop
-
-        // Multiply contentScaleFactor since safeAreaInsets return points.
-        uint8_t scale = screenView.contentScaleFactor;
-        safeAreaEdge.left *= scale;
-        safeAreaEdge.right *= scale;
-        safeAreaEdge.top *= scale;
-        safeAreaEdge.bottom *= scale;
-
         return cocos2d::Vec4(safeAreaEdge.top, safeAreaEdge.left, safeAreaEdge.bottom, safeAreaEdge.right);
     }
 #endif

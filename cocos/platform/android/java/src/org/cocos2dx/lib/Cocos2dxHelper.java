@@ -25,10 +25,10 @@ THE SOFTWARE.
  ****************************************************************************/
 package org.cocos2dx.lib;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -51,6 +51,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
@@ -599,5 +600,46 @@ public class Cocos2dxHelper {
             e.printStackTrace();
         }
         return Surface.ROTATION_0;
+    }
+
+    public static float[] getSafeArea() {
+
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+
+            do {
+                Object windowInsectObj = getActivity().getWindow().getDecorView().getRootWindowInsets();
+
+                if(windowInsectObj == null) break;
+
+                Class<?> windowInsets = WindowInsets.class;
+                try {
+                    Method wiGetDisplayCutout = windowInsets.getMethod("getDisplayCutout");
+                    Object cutout = wiGetDisplayCutout.invoke(windowInsectObj);
+
+                    if(cutout == null) break;
+
+                    Class<?> displayCutout = cutout.getClass();
+                    Method dcGetLeft = displayCutout.getMethod("getSafeInsetLeft");
+                    Method dcGetRight = displayCutout.getMethod("getSafeInsetRight");
+                    Method dcGetBottom = displayCutout.getMethod("getSafeInsetBottom");
+                    Method dcGetTop = displayCutout.getMethod("getSafeInsetTop");
+
+                    if (dcGetLeft != null && dcGetRight != null && dcGetBottom != null && dcGetTop != null) {
+                        int left = (Integer) dcGetLeft.invoke(cutout);
+                        int right = (Integer) dcGetRight.invoke(cutout);
+                        int top = (Integer) dcGetTop.invoke(cutout);
+                        int bottom = (Integer) dcGetBottom.invoke(cutout);
+                        return new float[]{top, left, bottom, right};
+                    }
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }while(false);
+        }
+        return new float[]{0,0,0,0};
     }
 }
