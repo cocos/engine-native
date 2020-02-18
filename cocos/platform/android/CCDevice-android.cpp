@@ -122,7 +122,6 @@ Device::NetworkType Device::getNetworkType()
 
 cocos2d::Vec4 Device::getSafeAreaEdge()
 {
-    // no SafeArea concept on android, return ZERO Vec4.
     float *data = JniHelper::callStaticFloatArrayMethod(JCLS_HELPER, "getSafeArea");
     return cocos2d::Vec4(data[0], data[1], data[2],data[3]);
 }
