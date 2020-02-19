@@ -6500,8 +6500,8 @@ static bool js_cocos2dx_dragonbones_CCArmatureDisplay_getDebugData(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        se_object_ptr result = cobj->getDebugData();
-        s.rval().setObject(result);
+        se::Object* result = cobj->getDebugData();
+        ok &= native_ptr_to_seval<se_object_ptr>((se_object_ptr)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_CCArmatureDisplay_getDebugData : Error processing arguments");
         return true;
     }
