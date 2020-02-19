@@ -277,7 +277,7 @@ static bool js_cocos2dx_particle_ParticleSimulator_updateUVs(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         std::vector<float> arg0;
-        ok &= seval_to_std_vector_float(args[0], &arg0);
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_particle_ParticleSimulator_updateUVs : Error processing arguments");
         cobj->updateUVs(arg0);
         return true;

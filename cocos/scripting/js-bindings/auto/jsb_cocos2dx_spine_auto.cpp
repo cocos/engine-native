@@ -16,7 +16,7 @@ static bool js_cocos2dx_spine_Animation_getTimelines(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Timeline *>& result = cobj->getTimelines();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Animation_getTimelines : Error processing arguments");
         return true;
     }
@@ -55,7 +55,7 @@ static bool js_cocos2dx_spine_Animation_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Animation_getName : Error processing arguments");
         return true;
     }
@@ -970,7 +970,7 @@ static bool js_cocos2dx_spine_AnimationState_addAnimation(se::State& s)
             ok &= seval_to_size(args[0], &arg0);
             if (!ok) { ok = true; break; }
             spine::String arg1;
-            arg1 = args[1].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[1], &arg1);
             if (!ok) { ok = true; break; }
             bool arg2;
             ok &= seval_to_boolean(args[2], &arg2);
@@ -1144,7 +1144,7 @@ static bool js_cocos2dx_spine_AnimationState_getTracks(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::TrackEntry *>& result = cobj->getTracks();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_AnimationState_getTracks : Error processing arguments");
         return true;
     }
@@ -1202,7 +1202,7 @@ static bool js_cocos2dx_spine_AnimationState_setAnimation(se::State& s)
             ok &= seval_to_size(args[0], &arg0);
             if (!ok) { ok = true; break; }
             spine::String arg1;
-            arg1 = args[1].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[1], &arg1);
             if (!ok) { ok = true; break; }
             bool arg2;
             ok &= seval_to_boolean(args[2], &arg2);
@@ -1363,10 +1363,10 @@ static bool js_cocos2dx_spine_AnimationStateData_setMix(se::State& s)
     do {
         if (argc == 3) {
             spine::String arg0;
-            arg0 = args[0].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[0], &arg0);
             if (!ok) { ok = true; break; }
             spine::String arg1;
-            arg1 = args[1].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[1], &arg1);
             if (!ok) { ok = true; break; }
             float arg2 = 0;
             ok &= seval_to_float(args[2], &arg2);
@@ -1485,7 +1485,7 @@ static bool js_cocos2dx_spine_Attachment_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Attachment_getName : Error processing arguments");
         return true;
     }
@@ -1600,7 +1600,7 @@ static bool js_cocos2dx_spine_AttachmentTimeline_getAttachmentNames(se::State& s
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::Vector<spine::String>& result = cobj->getAttachmentNames();
-        ok &= spine_Vector_String_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_AttachmentTimeline_getAttachmentNames : Error processing arguments");
         return true;
     }
@@ -1659,7 +1659,7 @@ static bool js_cocos2dx_spine_AttachmentTimeline_setFrame(se::State& s)
         spine::String arg2;
         do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (int)tmp; } while(false);
         ok &= seval_to_float(args[1], &arg1);
-        arg2 = args[2].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[2], &arg2);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_AttachmentTimeline_setFrame : Error processing arguments");
         cobj->setFrame(arg0, arg1, arg2);
         return true;
@@ -1714,7 +1714,7 @@ static bool js_cocos2dx_spine_AttachmentTimeline_getFrames(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::Vector<float>& result = cobj->getFrames();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_AttachmentTimeline_getFrames : Error processing arguments");
         return true;
     }
@@ -1944,7 +1944,7 @@ static bool js_cocos2dx_spine_Bone_getChildren(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Bone *>& result = cobj->getChildren();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Bone_getChildren : Error processing arguments");
         return true;
     }
@@ -2250,7 +2250,7 @@ static bool js_cocos2dx_spine_Bone_getData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::BoneData& result = cobj->getData();
-        ok &= native_ptr_to_rooted_seval<spine::BoneData>((spine::BoneData*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::BoneData&>((spine::BoneData&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Bone_getData : Error processing arguments");
         return true;
     }
@@ -2832,7 +2832,7 @@ static bool js_cocos2dx_spine_Bone_getSkeleton(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Skeleton& result = cobj->getSkeleton();
-        ok &= native_ptr_to_rooted_seval<spine::Skeleton>((spine::Skeleton*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Skeleton&>((spine::Skeleton&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Bone_getSkeleton : Error processing arguments");
         return true;
     }
@@ -3107,7 +3107,7 @@ static bool js_cocos2dx_spine_BoneData_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_BoneData_getName : Error processing arguments");
         return true;
     }
@@ -3430,7 +3430,7 @@ static bool js_cocos2dx_spine_VertexAttachment_getVertices(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getVertices();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_VertexAttachment_getVertices : Error processing arguments");
         return true;
     }
@@ -3706,7 +3706,7 @@ static bool js_cocos2dx_spine_Color_clamp(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->clamp();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Color_clamp : Error processing arguments");
         return true;
     }
@@ -4118,7 +4118,7 @@ static bool js_cocos2dx_spine_ColorTimeline_getFrames(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getFrames();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_ColorTimeline_getFrames : Error processing arguments");
         return true;
     }
@@ -4181,7 +4181,7 @@ static bool js_cocos2dx_spine_ConstraintData_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_ConstraintData_getName : Error processing arguments");
         return true;
     }
@@ -4371,7 +4371,7 @@ static bool js_cocos2dx_spine_DeformTimeline_getFrames(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getFrames();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_DeformTimeline_getFrames : Error processing arguments");
         return true;
     }
@@ -4452,7 +4452,7 @@ static bool js_cocos2dx_spine_DrawOrderTimeline_getFrames(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getFrames();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_DrawOrderTimeline_getFrames : Error processing arguments");
         return true;
     }
@@ -4530,7 +4530,7 @@ static bool js_cocos2dx_spine_Event_getStringValue(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getStringValue();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Event_getStringValue : Error processing arguments");
         return true;
     }
@@ -4659,7 +4659,7 @@ static bool js_cocos2dx_spine_Event_getData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::EventData& result = cobj->getData();
-        ok &= native_ptr_to_rooted_seval<spine::EventData>((spine::EventData*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::EventData&>((spine::EventData&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Event_getData : Error processing arguments");
         return true;
     }
@@ -4677,7 +4677,7 @@ static bool js_cocos2dx_spine_Event_setStringValue(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Event_setStringValue : Error processing arguments");
         cobj->setStringValue(arg0);
         return true;
@@ -4747,7 +4747,7 @@ static bool js_cocos2dx_spine_EventData_getAudioPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getAudioPath();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_EventData_getAudioPath : Error processing arguments");
         return true;
     }
@@ -4783,7 +4783,7 @@ static bool js_cocos2dx_spine_EventData_getStringValue(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getStringValue();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_EventData_getStringValue : Error processing arguments");
         return true;
     }
@@ -4819,7 +4819,7 @@ static bool js_cocos2dx_spine_EventData_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_EventData_getName : Error processing arguments");
         return true;
     }
@@ -4931,7 +4931,7 @@ static bool js_cocos2dx_spine_EventData_setStringValue(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_EventData_setStringValue : Error processing arguments");
         cobj->setStringValue(arg0);
         return true;
@@ -4968,7 +4968,7 @@ static bool js_cocos2dx_spine_EventData_setAudioPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_EventData_setAudioPath : Error processing arguments");
         cobj->setAudioPath(arg0);
         return true;
@@ -5077,7 +5077,7 @@ static bool js_cocos2dx_spine_EventTimeline_getFrames(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float> result = cobj->getFrames();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_EventTimeline_getFrames : Error processing arguments");
         return true;
     }
@@ -5095,7 +5095,7 @@ static bool js_cocos2dx_spine_EventTimeline_getEvents(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Event *>& result = cobj->getEvents();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_EventTimeline_getEvents : Error processing arguments");
         return true;
     }
@@ -5212,7 +5212,7 @@ static bool js_cocos2dx_spine_IkConstraint_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Bone *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_IkConstraint_getBones : Error processing arguments");
         return true;
     }
@@ -5412,7 +5412,7 @@ static bool js_cocos2dx_spine_IkConstraint_getData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::IkConstraintData& result = cobj->getData();
-        ok &= native_ptr_to_rooted_seval<spine::IkConstraintData>((spine::IkConstraintData*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::IkConstraintData&>((spine::IkConstraintData&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_IkConstraint_getData : Error processing arguments");
         return true;
     }
@@ -5579,7 +5579,7 @@ static bool js_cocos2dx_spine_IkConstraintData_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::BoneData *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_IkConstraintData_getBones : Error processing arguments");
         return true;
     }
@@ -6077,7 +6077,7 @@ static bool js_cocos2dx_spine_MeshAttachment_getUVs(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getUVs();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_MeshAttachment_getUVs : Error processing arguments");
         return true;
     }
@@ -6167,7 +6167,7 @@ static bool js_cocos2dx_spine_MeshAttachment_getPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getPath();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_MeshAttachment_getPath : Error processing arguments");
         return true;
     }
@@ -6242,7 +6242,7 @@ static bool js_cocos2dx_spine_MeshAttachment_setPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_MeshAttachment_setPath : Error processing arguments");
         cobj->setPath(arg0);
         return true;
@@ -6299,7 +6299,7 @@ static bool js_cocos2dx_spine_MeshAttachment_getColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->getColor();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_MeshAttachment_getColor : Error processing arguments");
         return true;
     }
@@ -6335,7 +6335,7 @@ static bool js_cocos2dx_spine_MeshAttachment_getEdges(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<unsigned short>& result = cobj->getEdges();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_MeshAttachment_getEdges : Error processing arguments");
         return true;
     }
@@ -6353,7 +6353,7 @@ static bool js_cocos2dx_spine_MeshAttachment_getRegionUVs(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getRegionUVs();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_MeshAttachment_getRegionUVs : Error processing arguments");
         return true;
     }
@@ -6534,7 +6534,7 @@ static bool js_cocos2dx_spine_MeshAttachment_getTriangles(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<unsigned short>& result = cobj->getTriangles();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_MeshAttachment_getTriangles : Error processing arguments");
         return true;
     }
@@ -6797,7 +6797,7 @@ static bool js_cocos2dx_spine_PathAttachment_getLengths(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getLengths();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_PathAttachment_getLengths : Error processing arguments");
         return true;
     }
@@ -6916,7 +6916,7 @@ static bool js_cocos2dx_spine_PathConstraint_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Bone *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_PathConstraint_getBones : Error processing arguments");
         return true;
     }
@@ -7111,7 +7111,7 @@ static bool js_cocos2dx_spine_PathConstraint_getData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::PathConstraintData& result = cobj->getData();
-        ok &= native_ptr_to_rooted_seval<spine::PathConstraintData>((spine::PathConstraintData*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::PathConstraintData&>((spine::PathConstraintData&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_PathConstraint_getData : Error processing arguments");
         return true;
     }
@@ -7314,7 +7314,7 @@ static bool js_cocos2dx_spine_PathConstraintData_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::BoneData *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_PathConstraintData_getBones : Error processing arguments");
         return true;
     }
@@ -8089,7 +8089,7 @@ static bool js_cocos2dx_spine_RegionAttachment_getUVs(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getUVs();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_RegionAttachment_getUVs : Error processing arguments");
         return true;
     }
@@ -8179,7 +8179,7 @@ static bool js_cocos2dx_spine_RegionAttachment_getPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getPath();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_RegionAttachment_getPath : Error processing arguments");
         return true;
     }
@@ -8216,7 +8216,7 @@ static bool js_cocos2dx_spine_RegionAttachment_setPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_RegionAttachment_setPath : Error processing arguments");
         cobj->setPath(arg0);
         return true;
@@ -8310,7 +8310,7 @@ static bool js_cocos2dx_spine_RegionAttachment_getColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->getColor();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_RegionAttachment_getColor : Error processing arguments");
         return true;
     }
@@ -8421,7 +8421,7 @@ static bool js_cocos2dx_spine_RegionAttachment_getOffset(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getOffset();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_RegionAttachment_getOffset : Error processing arguments");
         return true;
     }
@@ -8623,7 +8623,7 @@ static bool js_cocos2dx_spine_RotateTimeline_getFrames(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getFrames();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_RotateTimeline_getFrames : Error processing arguments");
         return true;
     }
@@ -8901,7 +8901,7 @@ static bool js_cocos2dx_spine_Skeleton_findTransformConstraint(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_findTransformConstraint : Error processing arguments");
         spine::TransformConstraint* result = cobj->findTransformConstraint(arg0);
         ok &= native_ptr_to_rooted_seval<spine::TransformConstraint>((spine::TransformConstraint*)result, &s.rval());
@@ -8923,8 +8923,8 @@ static bool js_cocos2dx_spine_Skeleton_setAttachment(se::State& s)
     if (argc == 2) {
         spine::String arg0;
         spine::String arg1;
-        arg0 = args[0].toStringForce().c_str();
-        arg1 = args[1].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
+        ok &= seval_to_native_ptr(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_setAttachment : Error processing arguments");
         cobj->setAttachment(arg0, arg1);
         return true;
@@ -8943,7 +8943,7 @@ static bool js_cocos2dx_spine_Skeleton_findIkConstraint(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_findIkConstraint : Error processing arguments");
         spine::IkConstraint* result = cobj->findIkConstraint(arg0);
         ok &= native_ptr_to_rooted_seval<spine::IkConstraint>((spine::IkConstraint*)result, &s.rval());
@@ -9015,7 +9015,7 @@ static bool js_cocos2dx_spine_Skeleton_findBoneIndex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_findBoneIndex : Error processing arguments");
         int result = cobj->findBoneIndex(arg0);
         ok &= int32_to_seval(result, &s.rval());
@@ -9051,7 +9051,7 @@ static bool js_cocos2dx_spine_Skeleton_getDrawOrder(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Slot *>& result = cobj->getDrawOrder();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getDrawOrder : Error processing arguments");
         return true;
     }
@@ -9087,7 +9087,7 @@ static bool js_cocos2dx_spine_Skeleton_getColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->getColor();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getColor : Error processing arguments");
         return true;
     }
@@ -9105,7 +9105,7 @@ static bool js_cocos2dx_spine_Skeleton_getIkConstraints(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::IkConstraint *>& result = cobj->getIkConstraints();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getIkConstraints : Error processing arguments");
         return true;
     }
@@ -9141,7 +9141,7 @@ static bool js_cocos2dx_spine_Skeleton_getUpdateCacheList(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Updatable *>& result = cobj->getUpdateCacheList();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getUpdateCacheList : Error processing arguments");
         return true;
     }
@@ -9197,7 +9197,7 @@ static bool js_cocos2dx_spine_Skeleton_getPathConstraints(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::PathConstraint *>& result = cobj->getPathConstraints();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getPathConstraints : Error processing arguments");
         return true;
     }
@@ -9215,7 +9215,7 @@ static bool js_cocos2dx_spine_Skeleton_getSlots(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Slot *>& result = cobj->getSlots();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getSlots : Error processing arguments");
         return true;
     }
@@ -9271,7 +9271,7 @@ static bool js_cocos2dx_spine_Skeleton_getAttachment(se::State& s)
             do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (int)tmp; } while(false);
             if (!ok) { ok = true; break; }
             spine::String arg1;
-            arg1 = args[1].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[1], &arg1);
             if (!ok) { ok = true; break; }
             spine::Attachment* result = cobj->getAttachment(arg0, arg1);
             ok &= native_ptr_to_rooted_seval<spine::Attachment>((spine::Attachment*)result, &s.rval());
@@ -9283,10 +9283,10 @@ static bool js_cocos2dx_spine_Skeleton_getAttachment(se::State& s)
     do {
         if (argc == 2) {
             spine::String arg0;
-            arg0 = args[0].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[0], &arg0);
             if (!ok) { ok = true; break; }
             spine::String arg1;
-            arg1 = args[1].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[1], &arg1);
             if (!ok) { ok = true; break; }
             spine::Attachment* result = cobj->getAttachment(arg0, arg1);
             ok &= native_ptr_to_rooted_seval<spine::Attachment>((spine::Attachment*)result, &s.rval());
@@ -9387,7 +9387,7 @@ static bool js_cocos2dx_spine_Skeleton_findBone(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_findBone : Error processing arguments");
         spine::Bone* result = cobj->findBone(arg0);
         ok &= native_ptr_to_rooted_seval<spine::Bone>((spine::Bone*)result, &s.rval());
@@ -9426,7 +9426,7 @@ static bool js_cocos2dx_spine_Skeleton_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Bone *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getBones : Error processing arguments");
         return true;
     }
@@ -9477,7 +9477,7 @@ static bool js_cocos2dx_spine_Skeleton_findSlotIndex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_findSlotIndex : Error processing arguments");
         int result = cobj->findSlotIndex(arg0);
         ok &= int32_to_seval(result, &s.rval());
@@ -9498,7 +9498,7 @@ static bool js_cocos2dx_spine_Skeleton_getTransformConstraints(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::TransformConstraint *>& result = cobj->getTransformConstraints();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_getTransformConstraints : Error processing arguments");
         return true;
     }
@@ -9527,7 +9527,7 @@ static bool js_cocos2dx_spine_Skeleton_setSkin(se::State& s)
     do {
         if (argc == 1) {
             spine::String arg0;
-            arg0 = args[0].toStringForce().c_str();
+            ok &= seval_to_native_ptr(args[0], &arg0);
             if (!ok) { ok = true; break; }
             cobj->setSkin(arg0);
             return true;
@@ -9548,7 +9548,7 @@ static bool js_cocos2dx_spine_Skeleton_findSlot(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_findSlot : Error processing arguments");
         spine::Slot* result = cobj->findSlot(arg0);
         ok &= native_ptr_to_rooted_seval<spine::Slot>((spine::Slot*)result, &s.rval());
@@ -9584,7 +9584,7 @@ static bool js_cocos2dx_spine_Skeleton_findPathConstraint(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skeleton_findPathConstraint : Error processing arguments");
         spine::PathConstraint* result = cobj->findPathConstraint(arg0);
         ok &= native_ptr_to_rooted_seval<spine::PathConstraint>((spine::PathConstraint*)result, &s.rval());
@@ -9920,7 +9920,7 @@ static bool js_cocos2dx_spine_SkeletonData_findEvent(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findEvent : Error processing arguments");
         spine::EventData* result = cobj->findEvent(arg0);
         ok &= native_ptr_to_rooted_seval<spine::EventData>((spine::EventData*)result, &s.rval());
@@ -9941,7 +9941,7 @@ static bool js_cocos2dx_spine_SkeletonData_findAnimation(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findAnimation : Error processing arguments");
         spine::Animation* result = cobj->findAnimation(arg0);
         ok &= native_ptr_to_rooted_seval<spine::Animation>((spine::Animation*)result, &s.rval());
@@ -9980,7 +9980,7 @@ static bool js_cocos2dx_spine_SkeletonData_findTransformConstraint(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findTransformConstraint : Error processing arguments");
         spine::TransformConstraintData* result = cobj->findTransformConstraint(arg0);
         ok &= native_ptr_to_rooted_seval<spine::TransformConstraintData>((spine::TransformConstraintData*)result, &s.rval());
@@ -10020,7 +10020,7 @@ static bool js_cocos2dx_spine_SkeletonData_findIkConstraint(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findIkConstraint : Error processing arguments");
         spine::IkConstraintData* result = cobj->findIkConstraint(arg0);
         ok &= native_ptr_to_rooted_seval<spine::IkConstraintData>((spine::IkConstraintData*)result, &s.rval());
@@ -10059,7 +10059,7 @@ static bool js_cocos2dx_spine_SkeletonData_getSkins(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Skin *>& result = cobj->getSkins();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getSkins : Error processing arguments");
         return true;
     }
@@ -10096,7 +10096,7 @@ static bool js_cocos2dx_spine_SkeletonData_setVersion(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_setVersion : Error processing arguments");
         cobj->setVersion(arg0);
         return true;
@@ -10115,7 +10115,7 @@ static bool js_cocos2dx_spine_SkeletonData_setHash(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_setHash : Error processing arguments");
         cobj->setHash(arg0);
         return true;
@@ -10134,7 +10134,7 @@ static bool js_cocos2dx_spine_SkeletonData_findBoneIndex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findBoneIndex : Error processing arguments");
         int result = cobj->findBoneIndex(arg0);
         ok &= int32_to_seval(result, &s.rval());
@@ -10210,7 +10210,7 @@ static bool js_cocos2dx_spine_SkeletonData_getHash(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getHash();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getHash : Error processing arguments");
         return true;
     }
@@ -10228,7 +10228,7 @@ static bool js_cocos2dx_spine_SkeletonData_getAnimations(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Animation *>& result = cobj->getAnimations();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getAnimations : Error processing arguments");
         return true;
     }
@@ -10246,7 +10246,7 @@ static bool js_cocos2dx_spine_SkeletonData_setImagesPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_setImagesPath : Error processing arguments");
         cobj->setImagesPath(arg0);
         return true;
@@ -10265,7 +10265,7 @@ static bool js_cocos2dx_spine_SkeletonData_getIkConstraints(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::IkConstraintData *>& result = cobj->getIkConstraints();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getIkConstraints : Error processing arguments");
         return true;
     }
@@ -10283,7 +10283,7 @@ static bool js_cocos2dx_spine_SkeletonData_getImagesPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getImagesPath();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getImagesPath : Error processing arguments");
         return true;
     }
@@ -10301,7 +10301,7 @@ static bool js_cocos2dx_spine_SkeletonData_getEvents(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::EventData *>& result = cobj->getEvents();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getEvents : Error processing arguments");
         return true;
     }
@@ -10319,7 +10319,7 @@ static bool js_cocos2dx_spine_SkeletonData_findBone(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findBone : Error processing arguments");
         spine::BoneData* result = cobj->findBone(arg0);
         ok &= native_ptr_to_rooted_seval<spine::BoneData>((spine::BoneData*)result, &s.rval());
@@ -10340,7 +10340,7 @@ static bool js_cocos2dx_spine_SkeletonData_setName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_setName : Error processing arguments");
         cobj->setName(arg0);
         return true;
@@ -10359,7 +10359,7 @@ static bool js_cocos2dx_spine_SkeletonData_getPathConstraints(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::PathConstraintData *>& result = cobj->getPathConstraints();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getPathConstraints : Error processing arguments");
         return true;
     }
@@ -10377,7 +10377,7 @@ static bool js_cocos2dx_spine_SkeletonData_getAudioPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getAudioPath();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getAudioPath : Error processing arguments");
         return true;
     }
@@ -10395,7 +10395,7 @@ static bool js_cocos2dx_spine_SkeletonData_getVersion(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getVersion();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getVersion : Error processing arguments");
         return true;
     }
@@ -10488,7 +10488,7 @@ static bool js_cocos2dx_spine_SkeletonData_getSlots(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::SlotData *>& result = cobj->getSlots();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getSlots : Error processing arguments");
         return true;
     }
@@ -10506,7 +10506,7 @@ static bool js_cocos2dx_spine_SkeletonData_findSkin(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findSkin : Error processing arguments");
         spine::Skin* result = cobj->findSkin(arg0);
         ok &= native_ptr_to_rooted_seval<spine::Skin>((spine::Skin*)result, &s.rval());
@@ -10545,7 +10545,7 @@ static bool js_cocos2dx_spine_SkeletonData_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::BoneData *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getBones : Error processing arguments");
         return true;
     }
@@ -10563,7 +10563,7 @@ static bool js_cocos2dx_spine_SkeletonData_findPathConstraintIndex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findPathConstraintIndex : Error processing arguments");
         int result = cobj->findPathConstraintIndex(arg0);
         ok &= int32_to_seval(result, &s.rval());
@@ -10584,7 +10584,7 @@ static bool js_cocos2dx_spine_SkeletonData_findSlotIndex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findSlotIndex : Error processing arguments");
         int result = cobj->findSlotIndex(arg0);
         ok &= int32_to_seval(result, &s.rval());
@@ -10605,7 +10605,7 @@ static bool js_cocos2dx_spine_SkeletonData_getTransformConstraints(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::TransformConstraintData *>& result = cobj->getTransformConstraints();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getTransformConstraints : Error processing arguments");
         return true;
     }
@@ -10623,7 +10623,7 @@ static bool js_cocos2dx_spine_SkeletonData_findSlot(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findSlot : Error processing arguments");
         spine::SlotData* result = cobj->findSlot(arg0);
         ok &= native_ptr_to_rooted_seval<spine::SlotData>((spine::SlotData*)result, &s.rval());
@@ -10644,7 +10644,7 @@ static bool js_cocos2dx_spine_SkeletonData_setAudioPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_setAudioPath : Error processing arguments");
         cobj->setAudioPath(arg0);
         return true;
@@ -10663,7 +10663,7 @@ static bool js_cocos2dx_spine_SkeletonData_findPathConstraint(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_findPathConstraint : Error processing arguments");
         spine::PathConstraintData* result = cobj->findPathConstraint(arg0);
         ok &= native_ptr_to_rooted_seval<spine::PathConstraintData>((spine::PathConstraintData*)result, &s.rval());
@@ -10684,7 +10684,7 @@ static bool js_cocos2dx_spine_SkeletonData_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonData_getName : Error processing arguments");
         return true;
     }
@@ -10765,7 +10765,7 @@ static bool js_cocos2dx_spine_Skin_findNamesForSlot(se::State& s)
         size_t arg0 = 0;
         spine::Vector<spine::String> arg1;
         ok &= seval_to_size(args[0], &arg0);
-        ok &= seval_to_spine_Vector_String(args[1], &arg1);
+        ok &= seval_to_Vector(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_findNamesForSlot : Error processing arguments");
         cobj->findNamesForSlot(arg0, arg1);
         return true;
@@ -10784,7 +10784,7 @@ static bool js_cocos2dx_spine_Skin_getConstraints(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::ConstraintData *>& result = cobj->getConstraints();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_getConstraints : Error processing arguments");
         return true;
     }
@@ -10804,7 +10804,7 @@ static bool js_cocos2dx_spine_Skin_removeAttachment(se::State& s)
         size_t arg0 = 0;
         spine::String arg1;
         ok &= seval_to_size(args[0], &arg0);
-        arg1 = args[1].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_removeAttachment : Error processing arguments");
         cobj->removeAttachment(arg0, arg1);
         return true;
@@ -10823,7 +10823,7 @@ static bool js_cocos2dx_spine_Skin_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::BoneData *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_getBones : Error processing arguments");
         return true;
     }
@@ -10841,7 +10841,7 @@ static bool js_cocos2dx_spine_Skin_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_getName : Error processing arguments");
         return true;
     }
@@ -10861,7 +10861,7 @@ static bool js_cocos2dx_spine_Skin_getAttachment(se::State& s)
         size_t arg0 = 0;
         spine::String arg1;
         ok &= seval_to_size(args[0], &arg0);
-        arg1 = args[1].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_getAttachment : Error processing arguments");
         spine::Attachment* result = cobj->getAttachment(arg0, arg1);
         ok &= native_ptr_to_rooted_seval<spine::Attachment>((spine::Attachment*)result, &s.rval());
@@ -10904,7 +10904,7 @@ static bool js_cocos2dx_spine_Skin_setAttachment(se::State& s)
         spine::String arg1;
         spine::Attachment* arg2 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
-        arg1 = args[1].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[1], &arg1);
         ok &= seval_to_native_ptr(args[2], &arg2);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_setAttachment : Error processing arguments");
         cobj->setAttachment(arg0, arg1, arg2);
@@ -10945,7 +10945,7 @@ static bool js_cocos2dx_spine_Skin_findAttachmentsForSlot(se::State& s)
         size_t arg0 = 0;
         spine::Vector<spine::Attachment *> arg1;
         ok &= seval_to_size(args[0], &arg0);
-        ok &= seval_to_spine_Vector_T_ptr(args[1], &arg1);
+        ok &= seval_to_Vector(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Skin_findAttachmentsForSlot : Error processing arguments");
         cobj->findAttachmentsForSlot(arg0, arg1);
         return true;
@@ -10994,7 +10994,7 @@ static bool js_cocos2dx_spine_Slot_getBone(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Bone& result = cobj->getBone();
-        ok &= native_ptr_to_rooted_seval<spine::Bone>((spine::Bone*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Bone&>((spine::Bone&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Slot_getBone : Error processing arguments");
         return true;
     }
@@ -11031,7 +11031,7 @@ static bool js_cocos2dx_spine_Slot_getDarkColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->getDarkColor();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Slot_getDarkColor : Error processing arguments");
         return true;
     }
@@ -11049,7 +11049,7 @@ static bool js_cocos2dx_spine_Slot_getColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->getColor();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Slot_getColor : Error processing arguments");
         return true;
     }
@@ -11155,7 +11155,7 @@ static bool js_cocos2dx_spine_Slot_getDeform(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<float>& result = cobj->getDeform();
-        ok &= spine_Vector_T_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Slot_getDeform : Error processing arguments");
         return true;
     }
@@ -11173,7 +11173,7 @@ static bool js_cocos2dx_spine_Slot_getSkeleton(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Skeleton& result = cobj->getSkeleton();
-        ok &= native_ptr_to_rooted_seval<spine::Skeleton>((spine::Skeleton*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Skeleton&>((spine::Skeleton&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Slot_getSkeleton : Error processing arguments");
         return true;
     }
@@ -11191,7 +11191,7 @@ static bool js_cocos2dx_spine_Slot_getData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::SlotData& result = cobj->getData();
-        ok &= native_ptr_to_rooted_seval<spine::SlotData>((spine::SlotData*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::SlotData&>((spine::SlotData&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_Slot_getData : Error processing arguments");
         return true;
     }
@@ -11259,7 +11259,7 @@ static bool js_cocos2dx_spine_SlotData_getDarkColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->getDarkColor();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SlotData_getDarkColor : Error processing arguments");
         return true;
     }
@@ -11277,7 +11277,7 @@ static bool js_cocos2dx_spine_SlotData_getAttachmentName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getAttachmentName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SlotData_getAttachmentName : Error processing arguments");
         return true;
     }
@@ -11295,7 +11295,7 @@ static bool js_cocos2dx_spine_SlotData_getColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Color& result = cobj->getColor();
-        ok &= native_ptr_to_rooted_seval<spine::Color>((spine::Color*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::Color&>((spine::Color&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SlotData_getColor : Error processing arguments");
         return true;
     }
@@ -11313,7 +11313,7 @@ static bool js_cocos2dx_spine_SlotData_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const spine::String& result = cobj->getName();
-        s.rval().setString(result.buffer());
+        ok &= native_ptr_to_seval<spine::String&>((spine::String&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SlotData_getName : Error processing arguments");
         return true;
     }
@@ -11405,7 +11405,7 @@ static bool js_cocos2dx_spine_SlotData_setAttachmentName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         spine::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SlotData_setAttachmentName : Error processing arguments");
         cobj->setAttachmentName(arg0);
         return true;
@@ -11424,7 +11424,7 @@ static bool js_cocos2dx_spine_SlotData_getBoneData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::BoneData& result = cobj->getBoneData();
-        ok &= native_ptr_to_rooted_seval<spine::BoneData>((spine::BoneData*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::BoneData&>((spine::BoneData&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SlotData_getBoneData : Error processing arguments");
         return true;
     }
@@ -11547,7 +11547,7 @@ static bool js_cocos2dx_spine_TransformConstraint_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::Bone *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_TransformConstraint_getBones : Error processing arguments");
         return true;
     }
@@ -11724,7 +11724,7 @@ static bool js_cocos2dx_spine_TransformConstraint_getData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::TransformConstraintData& result = cobj->getData();
-        ok &= native_ptr_to_rooted_seval<spine::TransformConstraintData>((spine::TransformConstraintData*)&result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<spine::TransformConstraintData&>((spine::TransformConstraintData&)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_TransformConstraint_getData : Error processing arguments");
         return true;
     }
@@ -11870,7 +11870,7 @@ static bool js_cocos2dx_spine_TransformConstraintData_getBones(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         spine::Vector<spine::BoneData *>& result = cobj->getBones();
-        ok &= spine_Vector_T_ptr_to_seval(result, &s.rval());
+        ok &= Vector_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_TransformConstraintData_getBones : Error processing arguments");
         return true;
     }
@@ -13381,8 +13381,8 @@ static bool js_cocos2dx_spine_SkeletonRenderer_getDebugData(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        se_object_ptr result = cobj->getDebugData();
-        s.rval().setObject(result);
+        se::Object* result = cobj->getDebugData();
+        ok &= native_ptr_to_seval<se_object_ptr>((se_object_ptr)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_spine_SkeletonRenderer_getDebugData : Error processing arguments");
         return true;
     }

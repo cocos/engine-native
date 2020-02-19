@@ -951,8 +951,8 @@ static bool js_renderer_AssemblerBase_setDirty(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        se_object_ptr arg0 = nullptr;
-        arg0 = args[0].toObject();
+        se::Object* arg0 = nullptr;
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_renderer_AssemblerBase_setDirty : Error processing arguments");
         cobj->setDirty(arg0);
         return true;
@@ -1046,11 +1046,11 @@ static bool js_renderer_MemPool_updateCommonData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 3) {
         size_t arg0 = 0;
-        se_object_ptr arg1 = nullptr;
-        se_object_ptr arg2 = nullptr;
+        se::Object* arg1 = nullptr;
+        se::Object* arg2 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
-        arg1 = args[1].toObject();
-        arg2 = args[2].toObject();
+        ok &= seval_to_native_ptr(args[1], &arg1);
+        ok &= seval_to_native_ptr(args[2], &arg2);
         SE_PRECONDITION2(ok, false, "js_renderer_MemPool_updateCommonData : Error processing arguments");
         cobj->updateCommonData(arg0, arg1, arg2);
         return true;
@@ -3340,29 +3340,29 @@ static bool js_renderer_NodeMemPool_updateNodeData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 12) {
         size_t arg0 = 0;
-        se_object_ptr arg1 = nullptr;
-        se_object_ptr arg2 = nullptr;
-        se_object_ptr arg3 = nullptr;
-        se_object_ptr arg4 = nullptr;
-        se_object_ptr arg5 = nullptr;
-        se_object_ptr arg6 = nullptr;
-        se_object_ptr arg7 = nullptr;
-        se_object_ptr arg8 = nullptr;
-        se_object_ptr arg9 = nullptr;
-        se_object_ptr arg10 = nullptr;
-        se_object_ptr arg11 = nullptr;
+        se::Object* arg1 = nullptr;
+        se::Object* arg2 = nullptr;
+        se::Object* arg3 = nullptr;
+        se::Object* arg4 = nullptr;
+        se::Object* arg5 = nullptr;
+        se::Object* arg6 = nullptr;
+        se::Object* arg7 = nullptr;
+        se::Object* arg8 = nullptr;
+        se::Object* arg9 = nullptr;
+        se::Object* arg10 = nullptr;
+        se::Object* arg11 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
-        arg1 = args[1].toObject();
-        arg2 = args[2].toObject();
-        arg3 = args[3].toObject();
-        arg4 = args[4].toObject();
-        arg5 = args[5].toObject();
-        arg6 = args[6].toObject();
-        arg7 = args[7].toObject();
-        arg8 = args[8].toObject();
-        arg9 = args[9].toObject();
-        arg10 = args[10].toObject();
-        arg11 = args[11].toObject();
+        ok &= seval_to_native_ptr(args[1], &arg1);
+        ok &= seval_to_native_ptr(args[2], &arg2);
+        ok &= seval_to_native_ptr(args[3], &arg3);
+        ok &= seval_to_native_ptr(args[4], &arg4);
+        ok &= seval_to_native_ptr(args[5], &arg5);
+        ok &= seval_to_native_ptr(args[6], &arg6);
+        ok &= seval_to_native_ptr(args[7], &arg7);
+        ok &= seval_to_native_ptr(args[8], &arg8);
+        ok &= seval_to_native_ptr(args[9], &arg9);
+        ok &= seval_to_native_ptr(args[10], &arg10);
+        ok &= seval_to_native_ptr(args[11], &arg11);
         SE_PRECONDITION2(ok, false, "js_renderer_NodeMemPool_updateNodeData : Error processing arguments");
         cobj->updateNodeData(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
         return true;
@@ -3430,11 +3430,11 @@ static bool js_renderer_RenderDataList_updateMesh(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 3) {
         size_t arg0 = 0;
-        se_object_ptr arg1 = nullptr;
-        se_object_ptr arg2 = nullptr;
+        se::Object* arg1 = nullptr;
+        se::Object* arg2 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
-        arg1 = args[1].toObject();
-        arg2 = args[2].toObject();
+        ok &= seval_to_native_ptr(args[1], &arg1);
+        ok &= seval_to_native_ptr(args[2], &arg2);
         SE_PRECONDITION2(ok, false, "js_renderer_RenderDataList_updateMesh : Error processing arguments");
         cobj->updateMesh(arg0, arg1, arg2);
         return true;
@@ -3935,8 +3935,8 @@ static bool js_renderer_AssemblerSprite_setLocalData(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        se_object_ptr arg0 = nullptr;
-        arg0 = args[0].toObject();
+        se::Object* arg0 = nullptr;
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_renderer_AssemblerSprite_setLocalData : Error processing arguments");
         cobj->setLocalData(arg0);
         return true;
@@ -4377,12 +4377,12 @@ static bool js_renderer_MeshAssembler_updateIAData(se::State& s)
     if (argc == 4) {
         size_t arg0 = 0;
         cocos2d::renderer::VertexFormat* arg1 = nullptr;
-        se_object_ptr arg2 = nullptr;
-        se_object_ptr arg3 = nullptr;
+        se::Object* arg2 = nullptr;
+        se::Object* arg3 = nullptr;
         ok &= seval_to_size(args[0], &arg0);
         ok &= seval_to_native_ptr(args[1], &arg1);
-        arg2 = args[2].toObject();
-        arg3 = args[3].toObject();
+        ok &= seval_to_native_ptr(args[2], &arg2);
+        ok &= seval_to_native_ptr(args[3], &arg3);
         SE_PRECONDITION2(ok, false, "js_renderer_MeshAssembler_updateIAData : Error processing arguments");
         cobj->updateIAData(arg0, arg1, arg2, arg3);
         return true;
