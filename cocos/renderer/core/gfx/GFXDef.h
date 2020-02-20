@@ -696,7 +696,7 @@ struct GFXTextureViewInfo {
   GFXFormat format = GFXFormat::UNKNOWN;
   uint baseLevel = 0;
   uint levelCount = 1;
-  uint baseArrayLayer = 0;
+  uint baseLayer = 0;
   uint layerCount = 1;
 };
 
@@ -794,10 +794,10 @@ typedef vector<GFXColorAttachment>::type GFXColorAttachmentList;
 
 struct GFXDepthStencilAttachment {
   GFXFormat format = GFXFormat::UNKNOWN;
-  GFXLoadOp depth_load_op = GFXLoadOp::CLEAR;
-  GFXStoreOp depth_store_op = GFXStoreOp::STORE;
-  GFXLoadOp stencil_load_op = GFXLoadOp::CLEAR;
-  GFXStoreOp stencil_store_op = GFXStoreOp::STORE;
+  GFXLoadOp depthLoadOp = GFXLoadOp::CLEAR;
+  GFXStoreOp depthStoreOp = GFXStoreOp::STORE;
+  GFXLoadOp stencilLoadOp = GFXLoadOp::CLEAR;
+  GFXStoreOp stencilStoreOp = GFXStoreOp::STORE;
   uint sampleCount = 1;
   GFXTextureLayout beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
   GFXTextureLayout endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -808,12 +808,11 @@ struct GFXSubPass {
   uint8_t inputs[GFX_MAX_ATTACHMENTS];
   uint8_t colors[GFX_MAX_ATTACHMENTS];
   uint8_t resolves[GFX_MAX_ATTACHMENTS];
-  uint8_t depthStencil;
+  uint8_t depthStencil = GFX_INVALID_BINDING;
   uint8_t preserves[GFX_MAX_ATTACHMENTS];
   
   GFXSubPass()
-    : bindPoint(GFXPipelineBindPoint::GRAPHICS),
-      depthStencil(GFX_INVALID_BINDING) {
+  {
     memset(inputs, -1, sizeof(inputs));
     memset(colors, -1, sizeof(colors));
     memset(resolves, -1, sizeof(resolves));

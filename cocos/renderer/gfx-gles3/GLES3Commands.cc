@@ -1355,7 +1355,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package) 
           if (gpu_render_pass->depthStencilAttachment.format != GFXFormat::UNKNOWN) {
             bool hasDepth = GFX_FORMAT_INFOS[(int)gpu_render_pass->depthStencilAttachment.format].hasDepth;
             if (hasDepth) {
-              switch (gpu_render_pass->depthStencilAttachment.depth_load_op) {
+              switch (gpu_render_pass->depthStencilAttachment.depthLoadOp) {
                 case GFXLoadOp::LOAD: break; // GL default behaviour
                 case GFXLoadOp::CLEAR: {
                     glDepthMask(true);
@@ -1374,7 +1374,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package) 
             } // if (hasDepth)
             bool has_stencils = GFX_FORMAT_INFOS[(int)gpu_render_pass->depthStencilAttachment.format].hasStencil;
             if (has_stencils) {
-              switch (gpu_render_pass->depthStencilAttachment.depth_load_op) {
+              switch (gpu_render_pass->depthStencilAttachment.depthLoadOp) {
                 case GFXLoadOp::LOAD: break; // GL default behaviour
                 case GFXLoadOp::CLEAR: {
                   if (!cache->dss.stencilWriteMaskFront) {
@@ -1453,7 +1453,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package) 
         if (gpu_render_pass->depthStencilAttachment.format != GFXFormat::UNKNOWN) {
           bool hasDepth = GFX_FORMAT_INFOS[(int)gpu_render_pass->depthStencilAttachment.format].hasDepth;
           if (hasDepth) {
-            switch (gpu_render_pass->depthStencilAttachment.depth_load_op) {
+            switch (gpu_render_pass->depthStencilAttachment.depthLoadOp) {
               case GFXLoadOp::LOAD: break; // GL default behaviour
               case GFXLoadOp::CLEAR: break;
               case GFXLoadOp::DISCARD: {
@@ -1466,7 +1466,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package) 
           } // if (hasDepth)
           bool has_stencils = GFX_FORMAT_INFOS[(int)gpu_render_pass->depthStencilAttachment.format].hasStencil;
           if (has_stencils) {
-            switch (gpu_render_pass->depthStencilAttachment.depth_load_op) {
+            switch (gpu_render_pass->depthStencilAttachment.depthLoadOp) {
               case GFXLoadOp::LOAD: break; // GL default behaviour
               case GFXLoadOp::CLEAR: break;
               case GFXLoadOp::DISCARD: {

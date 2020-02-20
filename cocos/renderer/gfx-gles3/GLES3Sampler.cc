@@ -23,9 +23,9 @@ bool GLES3Sampler::initialize(const GFXSamplerInfo &info) {
   _maxAnisotropy = info.maxAnisotropy;
   _cmpFunc = info.cmpFunc;
   _borderColor = info.borderColor;
-  _minLod = info.minLOD;
-  _maxLod = info.maxLOD;
-  _mipLodBias = info.mipLODBias;
+  _minLOD = info.minLOD;
+  _maxLOD = info.maxLOD;
+  _mipLODBias = info.mipLODBias;
   
   gpu_sampler_ = CC_NEW(GLES3GPUSampler);
   gpu_sampler_->minFilter = _minFilter;
@@ -34,8 +34,8 @@ bool GLES3Sampler::initialize(const GFXSamplerInfo &info) {
   gpu_sampler_->addressU = _addressU;
   gpu_sampler_->addressV = _addressV;
   gpu_sampler_->addressW = _addressW;
-  gpu_sampler_->minLOD = _minLod;
-  gpu_sampler_->maxLOD = _maxLod;
+  gpu_sampler_->minLOD = _minLOD;
+  gpu_sampler_->maxLOD = _maxLOD;
   
   GLES3CmdFuncCreateSampler((GLES3Device*)_device, gpu_sampler_);
   

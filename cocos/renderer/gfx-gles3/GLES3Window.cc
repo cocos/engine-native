@@ -38,10 +38,10 @@ bool GLES3Window::initialize(const GFXWindowInfo &info) {
 
   GFXDepthStencilAttachment& depthStencilAttachment = render_pass_info.depthStencilAttachment;
   render_pass_info.depthStencilAttachment.format = _depthStencilFmt;
-  depthStencilAttachment.depth_load_op = GFXLoadOp::CLEAR;
-  depthStencilAttachment.depth_store_op = GFXStoreOp::STORE;
-  depthStencilAttachment.stencil_load_op = GFXLoadOp::CLEAR;
-  depthStencilAttachment.stencil_store_op = GFXStoreOp::STORE;
+  depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
+  depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
+  depthStencilAttachment.stencilLoadOp = GFXLoadOp::CLEAR;
+  depthStencilAttachment.stencilStoreOp = GFXStoreOp::STORE;
   depthStencilAttachment.sampleCount = 1;
   depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
   depthStencilAttachment.endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -67,7 +67,7 @@ bool GLES3Window::initialize(const GFXWindowInfo &info) {
       color_tex_view_info.format = _colorFmt;
       color_tex_view_info.baseLevel = 0;
       color_tex_view_info.levelCount = 1;
-      color_tex_view_info.baseArrayLayer = 0;
+      color_tex_view_info.baseLayer = 0;
       color_tex_view_info.layerCount = 1;
       _colorTexView = _device->createTextureView(color_tex_view_info);
     }
@@ -89,7 +89,7 @@ bool GLES3Window::initialize(const GFXWindowInfo &info) {
       depth_stecnil_tex_view_info.format = _colorFmt;
       depth_stecnil_tex_view_info.baseLevel = 0;
       depth_stecnil_tex_view_info.levelCount = 1;
-      depth_stecnil_tex_view_info.baseArrayLayer = 0;
+      depth_stecnil_tex_view_info.baseLayer = 0;
       depth_stecnil_tex_view_info.layerCount = 1;
       _depthStencilTexView = _device->createTextureView(depth_stecnil_tex_view_info);
     }

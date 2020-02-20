@@ -41,10 +41,10 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
     
     GFXDepthStencilAttachment& depthStencilAttachment = render_pass_info.depthStencilAttachment;
     render_pass_info.depthStencilAttachment.format = GFXFormat::D24S8;
-    depthStencilAttachment.depth_load_op = GFXLoadOp::CLEAR;
-    depthStencilAttachment.depth_store_op = GFXStoreOp::STORE;
-    depthStencilAttachment.stencil_load_op = GFXLoadOp::CLEAR;
-    depthStencilAttachment.stencil_store_op = GFXStoreOp::STORE;
+    depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
+    depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
+    depthStencilAttachment.stencilLoadOp = GFXLoadOp::CLEAR;
+    depthStencilAttachment.stencilStoreOp = GFXStoreOp::STORE;
     depthStencilAttachment.sampleCount = 1;
     depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     depthStencilAttachment.endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;

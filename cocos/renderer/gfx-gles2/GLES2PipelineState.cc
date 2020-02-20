@@ -36,22 +36,22 @@ bool GLES2PipelineState::initialize(const GFXPipelineStateInfo &info) {
   
   _primitive = info.primitive;
   _shader = info.shader;
-  _is = info.inputState;
-  _rs = info.rasterizerState;
-  _dss = info.depthStencilState;
-  _bs = info.blendState;
+  _inputState = info.inputState;
+  _rasterizerState = info.rasterizerState;
+  _depthStencilState = info.depthStencilState;
+  _blendState = info.blendState;
   _dynamicStates = info.dynamicStates;
-  layout_ = info.layout;
+  _layout = info.layout;
   _renderPass = info.renderPass;
   
   gpu_pso_ = CC_NEW(GLES2GPUPipelineState);
   gpu_pso_->gl_primitive = GLES2Primitives[(int)_primitive];
   gpu_pso_->gpu_shader = ((GLES2Shader*)_shader)->gpu_shader();
-  gpu_pso_->rs = _rs;
-  gpu_pso_->dss = _dss;
-  gpu_pso_->bs = _bs;
+  gpu_pso_->rs = _rasterizerState;
+  gpu_pso_->dss = _depthStencilState;
+  gpu_pso_->bs = _blendState;
   gpu_pso_->dynamicStates = _dynamicStates;
-  gpu_pso_->gpu_layout = ((GLES2PipelineLayout*)layout_)->gpu_pipeline_layout();
+  gpu_pso_->gpu_layout = ((GLES2PipelineLayout*)_layout)->gpu_pipeline_layout();
   gpu_pso_->gpu_render_pass = ((GLES2RenderPass*)_renderPass)->gpu_render_pass();
   
   return true;

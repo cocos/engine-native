@@ -28,9 +28,9 @@ private:
   uint _maxAnisotropy = 16;
   GFXComparisonFunc _cmpFunc = GFXComparisonFunc::NEVER;
   GFXColor _borderColor;
-  uint _minLod = 0;
-  uint _maxLod = 1000;
-  float _mipLodBias = 0.0f;
+  uint minLOD = 0;
+  uint maxLOD = 1000;
+  float _mipLODBias = 0.0f;
 };
 
 NS_CC_END

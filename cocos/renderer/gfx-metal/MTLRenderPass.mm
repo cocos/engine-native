@@ -24,10 +24,10 @@ bool CCMTLRenderPass::initialize(const GFXRenderPassInfo& info)
         
         ++i;
     }
-    _mtlRenderPassDescriptor.depthAttachment.loadAction =  mu::toMTLLoadAction(_depthStencilAttachment.depth_load_op);
-    _mtlRenderPassDescriptor.depthAttachment.storeAction = mu::toMTLStoreAction(_depthStencilAttachment.depth_store_op);
-    _mtlRenderPassDescriptor.stencilAttachment.loadAction = mu::toMTLLoadAction(_depthStencilAttachment.depth_load_op);
-    _mtlRenderPassDescriptor.stencilAttachment.storeAction = mu::toMTLStoreAction(_depthStencilAttachment.depth_store_op);
+    _mtlRenderPassDescriptor.depthAttachment.loadAction =  mu::toMTLLoadAction(_depthStencilAttachment.depthLoadOp);
+    _mtlRenderPassDescriptor.depthAttachment.storeAction = mu::toMTLStoreAction(_depthStencilAttachment.depthStoreOp);
+    _mtlRenderPassDescriptor.stencilAttachment.loadAction = mu::toMTLLoadAction(_depthStencilAttachment.depthLoadOp);
+    _mtlRenderPassDescriptor.stencilAttachment.storeAction = mu::toMTLStoreAction(_depthStencilAttachment.depthStoreOp);
     
     return true;
 }

@@ -25,9 +25,9 @@ class CC_CORE_API GFXSampler : public Object {
   CC_INLINE uint maxAnisotropy() const { return _maxAnisotropy; }
   CC_INLINE GFXComparisonFunc cmpFunc() const { return _cmpFunc; }
   CC_INLINE const GFXColor& borderColor() const { return _borderColor; }
-  CC_INLINE uint minLod() const { return _minLod; }
-  CC_INLINE uint maxLOD() const { return _maxLod; }
-  CC_INLINE float mipLodBias() const { return _mipLodBias; }
+  CC_INLINE uint minLOD() const { return _minLOD; }
+  CC_INLINE uint maxLOD() const { return _maxLOD; }
+  CC_INLINE float mipLODBias() const { return _mipLODBias; }
   
  protected:
   GFXDevice* _device = nullptr;
@@ -41,9 +41,9 @@ class CC_CORE_API GFXSampler : public Object {
   uint _maxAnisotropy = 0;
   GFXComparisonFunc _cmpFunc = GFXComparisonFunc::ALWAYS;
   GFXColor _borderColor;
-  uint _minLod = 0;
-  uint _maxLod = 0;
-  float _mipLodBias = 0.0f;
+  uint _minLOD = 0;
+  uint _maxLOD = 0;
+  float _mipLODBias = 0.0f;
 };
 
 NS_CC_END

@@ -18,9 +18,9 @@ bool GLES2TextureView::initialize(const GFXTextureViewInfo &info) {
   _texture = info.texture;
   _type = info.type;
   _format = info.format;
-  _baseLayer = info.baseArrayLayer;
+  _baseLevel = info.baseLevel;
   _levelCount = info.levelCount;
-  _baseLayer = info.baseArrayLayer;
+  _baseLayer = info.baseLayer;
   _layerCount = info.layerCount;
   
   gpu_tex_view_ = CC_NEW(GLES2GPUTextureView);

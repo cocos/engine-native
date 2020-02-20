@@ -20,11 +20,11 @@ bool GLES2BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
   if (info.bindings.size()) {
     _bindingUnits.resize(info.bindings.size());
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-      GFXBindingUnit& binding_unit = _bindingUnits[i];
+      GFXBindingUnit& bindingUnit = _bindingUnits[i];
       const GFXBinding& binding = info.bindings[i];
-      binding_unit.binding = binding.binding;
-      binding_unit.type = binding.type;
-      binding_unit.name = binding.name;
+      bindingUnit.binding = binding.binding;
+      bindingUnit.type = binding.type;
+      bindingUnit.name = binding.name;
     }
   }
   
@@ -32,10 +32,10 @@ bool GLES2BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
   gpu_binding_layout_->gpu_bindings.resize(_bindingUnits.size());
   for (size_t i = 0; i < gpu_binding_layout_->gpu_bindings.size(); ++i) {
     GLES2GPUBinding& gpu_binding = gpu_binding_layout_->gpu_bindings[i];
-    const GFXBindingUnit& binding_unit = _bindingUnits[i];
-    gpu_binding.binding = binding_unit.binding;
-    gpu_binding.type = binding_unit.type;
-    gpu_binding.name = binding_unit.name;
+    const GFXBindingUnit& bindingUnit = _bindingUnits[i];
+    gpu_binding.binding = bindingUnit.binding;
+    gpu_binding.type = bindingUnit.type;
+    gpu_binding.name = bindingUnit.name;
   }
   
   return true;
@@ -51,20 +51,20 @@ void GLES2BindingLayout::destroy() {
 void GLES2BindingLayout::update() {
   if (_isDirty && gpu_binding_layout_) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-      GFXBindingUnit& binding_unit = _bindingUnits[i];
-      switch (binding_unit.type) {
+      GFXBindingUnit& bindingUnit = _bindingUnits[i];
+      switch (bindingUnit.type) {
         case GFXBindingType::UNIFORM_BUFFER: {
-          if (binding_unit.buffer) {
-            gpu_binding_layout_->gpu_bindings[i].gpu_buffer = ((GLES2Buffer*)binding_unit.buffer)->gpu_buffer();
+          if (bindingUnit.buffer) {
+            gpu_binding_layout_->gpu_bindings[i].gpu_buffer = ((GLES2Buffer*)bindingUnit.buffer)->gpu_buffer();
           }
           break;
         }
         case GFXBindingType::SAMPLER: {
-          if (binding_unit.texView) {
-            gpu_binding_layout_->gpu_bindings[i].gpu_tex_view = ((GLES2TextureView*)binding_unit.texView)->gpu_tex_view();
+          if (bindingUnit.texView) {
+            gpu_binding_layout_->gpu_bindings[i].gpu_tex_view = ((GLES2TextureView*)bindingUnit.texView)->gpu_tex_view();
           }
-          if (binding_unit.sampler) {
-            gpu_binding_layout_->gpu_bindings[i].gpu_sampler = ((GLES2Sampler*)binding_unit.sampler)->gpu_sampler();
+          if (bindingUnit.sampler) {
+            gpu_binding_layout_->gpu_bindings[i].gpu_sampler = ((GLES2Sampler*)bindingUnit.sampler)->gpu_sampler();
           }
           break;
         }
