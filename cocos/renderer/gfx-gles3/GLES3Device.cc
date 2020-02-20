@@ -51,7 +51,7 @@ bool GLES3Device::initialize(const GFXDeviceInfo& info)
     }
 
     String extStr = (const char*)glGetString(GL_EXTENSIONS);
-    extensions_ = StringUtil::Split(extStr, " ");
+    _extensions = StringUtil::Split(extStr, " ");
 
     _features[(int)GFXFeature::TEXTURE_FLOAT] = true;
     _features[(int)GFXFeature::TEXTURE_HALF_FLOAT] = true;
@@ -103,7 +103,7 @@ bool GLES3Device::initialize(const GFXDeviceInfo& info)
     CC_LOG_INFO("VERSION: %s", _version.c_str());
     CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);
     CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
-    CC_LOG_INFO("USE_VAO: %s", use_vao_ ? "true" : "false");
+    CC_LOG_INFO("USE_VAO: %s", _useVAO ? "true" : "false");
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressed_fmts.c_str());
 
     GFXWindowInfo window_info;
@@ -304,7 +304,7 @@ GFXPipelineLayout* GLES3Device::createPipelineLayout(const GFXPipelineLayoutInfo
 void GLES3Device::copyBuffersToTexture(GFXBuffer* src, GFXTexture* dst, const GFXBufferTextureCopyList& regions)
 {
     
-    GLES3CmdFuncCopyBuffersToTexture(this, &((GLES3Buffer*)src)->gpu_buffer()->buffer, 1, ((GLES3Texture*)dst)->gpu_texture(), regions);
+    GLES3CmdFuncCopyBuffersToTexture(this, &((GLES3Buffer*)src)->gpuBuffer()->buffer, 1, ((GLES3Texture*)dst)->gpuTexture(), regions);
 }
 
 NS_CC_END

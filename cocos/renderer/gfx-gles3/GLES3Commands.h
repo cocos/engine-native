@@ -110,7 +110,7 @@ class GLES3CmdDraw : public GFXCmd {
 
 class GLES3CmdUpdateBuffer : public GFXCmd {
  public:
-  GLES3GPUBuffer* gpu_buffer = nullptr;
+  GLES3GPUBuffer* gpuBuffer = nullptr;
   uint8_t* buffer = nullptr;
   uint size = 0;
   uint offset = 0;
@@ -118,23 +118,23 @@ class GLES3CmdUpdateBuffer : public GFXCmd {
   GLES3CmdUpdateBuffer() : GFXCmd(GFXCmdType::UPDATE_BUFFER) {}
   
   void clear() {
-    gpu_buffer = nullptr;
+    gpuBuffer = nullptr;
     buffer = nullptr;
   }
 };
 
 class GLES3CmdCopyBufferToTexture : public GFXCmd {
  public:
-  GLES3GPUBuffer* gpu_buffer = nullptr;
-  GLES3GPUTexture* gpu_texture = nullptr;
+  GLES3GPUBuffer* gpuBuffer = nullptr;
+  GLES3GPUTexture* gpuTexture = nullptr;
   GFXTextureLayout dst_layout;
   GFXBufferTextureCopyList regions;
   
   GLES3CmdCopyBufferToTexture() : GFXCmd(GFXCmdType::COPY_BUFFER_TO_TEXTURE) {}
   
   void clear() {
-    gpu_buffer = nullptr;
-    gpu_texture = nullptr;
+    gpuBuffer = nullptr;
+    gpuTexture = nullptr;
     regions.clear();
   }
 };
@@ -149,23 +149,23 @@ class GLES3CmdPackage : public Object {
   CachedArray<GLES3CmdCopyBufferToTexture*> copy_buffer_to_texture_cmds;
 };
 
-CC_GLES3_API void GLES3CmdFuncCreateBuffer(GLES3Device* device, GLES3GPUBuffer* gpu_buffer);
-CC_GLES3_API void GLES3CmdFuncDestroyBuffer(GLES3Device* device, GLES3GPUBuffer* gpu_buffer);
-CC_GLES3_API void GLES3CmdFuncResizeBuffer(GLES3Device* device, GLES3GPUBuffer* gpu_buffer);
-CC_GLES3_API void GLES3CmdFuncUpdateBuffer(GLES3Device* device, GLES3GPUBuffer* gpu_buffer, void* buffer, uint offset, uint size);
-CC_GLES3_API void GLES3CmdFuncCreateTexture(GLES3Device* device, GLES3GPUTexture* gpu_texture);
-CC_GLES3_API void GLES3CmdFuncDestroyTexture(GLES3Device* device, GLES3GPUTexture* gpu_texture);
-CC_GLES3_API void GLES3CmdFuncResizeTexture(GLES3Device* device, GLES3GPUTexture* gpu_texture);
-CC_GLES3_API void GLES3CmdFuncCreateSampler(GLES3Device* device, GLES3GPUSampler* gpu_sampler);
-CC_GLES3_API void GLES3CmdFuncDestroySampler(GLES3Device* device, GLES3GPUSampler* gpu_sampler);
-CC_GLES3_API void GLES3CmdFuncCreateShader(GLES3Device* device, GLES3GPUShader* gpu_shader);
-CC_GLES3_API void GLES3CmdFuncDestroyShader(GLES3Device* device, GLES3GPUShader* gpu_shader);
+CC_GLES3_API void GLES3CmdFuncCreateBuffer(GLES3Device* device, GLES3GPUBuffer* gpuBuffer);
+CC_GLES3_API void GLES3CmdFuncDestroyBuffer(GLES3Device* device, GLES3GPUBuffer* gpuBuffer);
+CC_GLES3_API void GLES3CmdFuncResizeBuffer(GLES3Device* device, GLES3GPUBuffer* gpuBuffer);
+CC_GLES3_API void GLES3CmdFuncUpdateBuffer(GLES3Device* device, GLES3GPUBuffer* gpuBuffer, void* buffer, uint offset, uint size);
+CC_GLES3_API void GLES3CmdFuncCreateTexture(GLES3Device* device, GLES3GPUTexture* gpuTexture);
+CC_GLES3_API void GLES3CmdFuncDestroyTexture(GLES3Device* device, GLES3GPUTexture* gpuTexture);
+CC_GLES3_API void GLES3CmdFuncResizeTexture(GLES3Device* device, GLES3GPUTexture* gpuTexture);
+CC_GLES3_API void GLES3CmdFuncCreateSampler(GLES3Device* device, GLES3GPUSampler* gpuSampler);
+CC_GLES3_API void GLES3CmdFuncDestroySampler(GLES3Device* device, GLES3GPUSampler* gpuSampler);
+CC_GLES3_API void GLES3CmdFuncCreateShader(GLES3Device* device, GLES3GPUShader* gpuShader);
+CC_GLES3_API void GLES3CmdFuncDestroyShader(GLES3Device* device, GLES3GPUShader* gpuShader);
 CC_GLES3_API void GLES3CmdFuncCreateInputAssembler(GLES3Device* device, GLES3GPUInputAssembler* gpu_ia);
 CC_GLES3_API void GLES3CmdFuncDestroyInputAssembler(GLES3Device* device, GLES3GPUInputAssembler* gpu_ia);
 CC_GLES3_API void GLES3CmdFuncCreateFramebuffer(GLES3Device* device, GLES3GPUFramebuffer* gpu_fbo);
 CC_GLES3_API void GLES3CmdFuncDestroyFramebuffer(GLES3Device* device, GLES3GPUFramebuffer* gpu_fbo);
 CC_GLES3_API void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package);
-CC_GLES3_API void GLES3CmdFuncCopyBuffersToTexture(GLES3Device* device, uint8_t** buffers, uint count, GLES3GPUTexture* gpu_texture, const GFXBufferTextureCopyList& regions);
+CC_GLES3_API void GLES3CmdFuncCopyBuffersToTexture(GLES3Device* device, uint8_t** buffers, uint count, GLES3GPUTexture* gpuTexture, const GFXBufferTextureCopyList& regions);
 
 NS_CC_END
 

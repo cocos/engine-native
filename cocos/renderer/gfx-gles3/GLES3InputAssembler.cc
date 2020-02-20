@@ -6,8 +6,7 @@
 NS_CC_BEGIN
 
 GLES3InputAssembler::GLES3InputAssembler(GFXDevice* device)
-    : GFXInputAssembler(device),
-      gpu_input_assembler_(nullptr) {
+    : GFXInputAssembler(device) {
 }
 
 GLES3InputAssembler::~GLES3InputAssembler() {
@@ -26,26 +25,26 @@ bool GLES3InputAssembler::initialize(const GFXInputAssemblerInfo &info) {
     _vertexCount = _vertexBuffers[0]->count();
   }
   
-  gpu_input_assembler_ = CC_NEW(GLES3GPUInputAssembler);
-  gpu_input_assembler_->attribs = _attributes;
-  gpu_input_assembler_->gpu_vertex_buffers.resize(_vertexBuffers.size());
-  for (size_t i = 0; i < gpu_input_assembler_->gpu_vertex_buffers.size(); ++i) {
+  _gpuInputAssembler = CC_NEW(GLES3GPUInputAssembler);
+  _gpuInputAssembler->attributes = _attributes;
+  _gpuInputAssembler->gpuVertexBuffers.resize(_vertexBuffers.size());
+  for (size_t i = 0; i < _gpuInputAssembler->gpuVertexBuffers.size(); ++i) {
     GLES3Buffer* vb = (GLES3Buffer*)_vertexBuffers[i];
-    gpu_input_assembler_->gpu_vertex_buffers[i] = vb->gpu_buffer();
+    _gpuInputAssembler->gpuVertexBuffers[i] = vb->gpuBuffer();
   }
     if(info.indexBuffer)
-        gpu_input_assembler_->gpu_index_buffer = static_cast<GLES3Buffer*>(info.indexBuffer)->gpu_buffer();
+        _gpuInputAssembler->gpuIndexBuffer = static_cast<GLES3Buffer*>(info.indexBuffer)->gpuBuffer();
   
-  GLES3CmdFuncCreateInputAssembler((GLES3Device*)_device, gpu_input_assembler_);
+  GLES3CmdFuncCreateInputAssembler((GLES3Device*)_device, _gpuInputAssembler);
   
   return true;
 }
 
 void GLES3InputAssembler::destroy() {
-  if (gpu_input_assembler_) {
-    GLES3CmdFuncDestroyInputAssembler((GLES3Device*)_device, gpu_input_assembler_);
-    CC_DELETE(gpu_input_assembler_);
-    gpu_input_assembler_ = nullptr;
+  if (_gpuInputAssembler) {
+    GLES3CmdFuncDestroyInputAssembler((GLES3Device*)_device, _gpuInputAssembler);
+    CC_DELETE(_gpuInputAssembler);
+    _gpuInputAssembler = nullptr;
   }
 }
 

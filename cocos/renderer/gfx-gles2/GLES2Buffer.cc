@@ -5,8 +5,7 @@
 NS_CC_BEGIN
 
 GLES2Buffer::GLES2Buffer(GFXDevice* device)
-    : GFXBuffer(device),
-      gpu_buffer_(nullptr) {
+    : GFXBuffer(device){
 }
 
 GLES2Buffer::~GLES2Buffer() {
@@ -26,29 +25,29 @@ bool GLES2Buffer::initialize(const GFXBufferInfo& info) {
     _device->memoryStatus().bufferSize += _size;
   }
   
-  gpu_buffer_ = CC_NEW(GLES2GPUBuffer);
-  gpu_buffer_->usage = _usage;
-  gpu_buffer_->memUsage = _memUsage;
-  gpu_buffer_->size = _size;
-  gpu_buffer_->stride = _stride;
-  gpu_buffer_->count = _count;
+  _gpuBuffer = CC_NEW(GLES2GPUBuffer);
+  _gpuBuffer->usage = _usage;
+  _gpuBuffer->memUsage = _memUsage;
+  _gpuBuffer->size = _size;
+  _gpuBuffer->stride = _stride;
+  _gpuBuffer->count = _count;
   
   if (!(_usage & GFXBufferUsageBit::INDIRECT)) {
-    gpu_buffer_->buffer = _buffer;
+    _gpuBuffer->buffer = _buffer;
   }
   
-  GLES2CmdFuncCreateBuffer((GLES2Device*)_device, gpu_buffer_);
+  GLES2CmdFuncCreateBuffer((GLES2Device*)_device, _gpuBuffer);
   _device->memoryStatus().bufferSize += _size;
   
   return true;
 }
 
 void GLES2Buffer::destroy() {
-  if (gpu_buffer_) {
-    GLES2CmdFuncDestroyBuffer((GLES2Device*)_device, gpu_buffer_);
+  if (_gpuBuffer) {
+    GLES2CmdFuncDestroyBuffer((GLES2Device*)_device, _gpuBuffer);
     _device->memoryStatus().bufferSize -= _size;
-    CC_DELETE(gpu_buffer_);
-    gpu_buffer_ = nullptr;
+    CC_DELETE(_gpuBuffer);
+    _gpuBuffer = nullptr;
   }
   
   if (_buffer) {
@@ -65,9 +64,9 @@ void GLES2Buffer::resize(uint size) {
     _count = _size / _stride;
     
     GFXMemoryStatus& status = _device->memoryStatus();
-    gpu_buffer_->size = _size;
-    gpu_buffer_->count = _count;
-    GLES2CmdFuncResizeBuffer((GLES2Device*)_device, gpu_buffer_);
+    _gpuBuffer->size = _size;
+    _gpuBuffer->count = _count;
+    GLES2CmdFuncResizeBuffer((GLES2Device*)_device, _gpuBuffer);
     status.bufferSize -= old_size;
     status.bufferSize += _size;
 
@@ -86,7 +85,7 @@ void GLES2Buffer::update(void* buffer, uint offset, uint size) {
   if (_buffer) {
     memcpy(_buffer + offset, buffer, size);
   }
-  GLES2CmdFuncUpdateBuffer((GLES2Device*)_device, gpu_buffer_, buffer, offset, size);
+  GLES2CmdFuncUpdateBuffer((GLES2Device*)_device, _gpuBuffer, buffer, offset, size);
 }
 
 NS_CC_END

@@ -5,8 +5,7 @@
 NS_CC_BEGIN
 
 GLES3Sampler::GLES3Sampler(GFXDevice* device)
-    : GFXSampler(device),
-      gpu_sampler_(nullptr) {
+    : GFXSampler(device) {
 }
 
 GLES3Sampler::~GLES3Sampler() {
@@ -27,26 +26,26 @@ bool GLES3Sampler::initialize(const GFXSamplerInfo &info) {
   _maxLOD = info.maxLOD;
   _mipLODBias = info.mipLODBias;
   
-  gpu_sampler_ = CC_NEW(GLES3GPUSampler);
-  gpu_sampler_->minFilter = _minFilter;
-  gpu_sampler_->magFilter = _magFilter;
-  gpu_sampler_->mipFilter = _mipFilter;
-  gpu_sampler_->addressU = _addressU;
-  gpu_sampler_->addressV = _addressV;
-  gpu_sampler_->addressW = _addressW;
-  gpu_sampler_->minLOD = _minLOD;
-  gpu_sampler_->maxLOD = _maxLOD;
+  _gpuSampler = CC_NEW(GLES3GPUSampler);
+  _gpuSampler->minFilter = _minFilter;
+  _gpuSampler->magFilter = _magFilter;
+  _gpuSampler->mipFilter = _mipFilter;
+  _gpuSampler->addressU = _addressU;
+  _gpuSampler->addressV = _addressV;
+  _gpuSampler->addressW = _addressW;
+  _gpuSampler->minLOD = _minLOD;
+  _gpuSampler->maxLOD = _maxLOD;
   
-  GLES3CmdFuncCreateSampler((GLES3Device*)_device, gpu_sampler_);
+  GLES3CmdFuncCreateSampler((GLES3Device*)_device, _gpuSampler);
   
   return true;
 }
 
 void GLES3Sampler::destroy() {
-  if (gpu_sampler_) {
-    GLES3CmdFuncDestroySampler((GLES3Device*)_device, gpu_sampler_);
-    CC_DELETE(gpu_sampler_);
-    gpu_sampler_ = nullptr;
+  if (_gpuSampler) {
+    GLES3CmdFuncDestroySampler((GLES3Device*)_device, _gpuSampler);
+    CC_DELETE(_gpuSampler);
+    _gpuSampler = nullptr;
   }
 }
 

@@ -8,8 +8,7 @@
 NS_CC_BEGIN
 
 GLES2BindingLayout::GLES2BindingLayout(GFXDevice* device)
-    : GFXBindingLayout(device),
-      gpu_binding_layout_(nullptr) {
+    : GFXBindingLayout(device){
 }
 
 GLES2BindingLayout::~GLES2BindingLayout() {
@@ -28,10 +27,10 @@ bool GLES2BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
     }
   }
   
-  gpu_binding_layout_ = CC_NEW(GLES2GPUBindingLayout);
-  gpu_binding_layout_->gpu_bindings.resize(_bindingUnits.size());
-  for (size_t i = 0; i < gpu_binding_layout_->gpu_bindings.size(); ++i) {
-    GLES2GPUBinding& gpu_binding = gpu_binding_layout_->gpu_bindings[i];
+  _gpuBindingLayout = CC_NEW(GLES2GPUBindingLayout);
+  _gpuBindingLayout->gpuBindings.resize(_bindingUnits.size());
+  for (size_t i = 0; i < _gpuBindingLayout->gpuBindings.size(); ++i) {
+    GLES2GPUBinding& gpu_binding = _gpuBindingLayout->gpuBindings[i];
     const GFXBindingUnit& bindingUnit = _bindingUnits[i];
     gpu_binding.binding = bindingUnit.binding;
     gpu_binding.type = bindingUnit.type;
@@ -42,29 +41,29 @@ bool GLES2BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
 }
 
 void GLES2BindingLayout::destroy() {
-  if (gpu_binding_layout_) {
-    CC_DELETE(gpu_binding_layout_);
-    gpu_binding_layout_ = nullptr;
+  if (_gpuBindingLayout) {
+    CC_DELETE(_gpuBindingLayout);
+    _gpuBindingLayout = nullptr;
   }
 }
 
 void GLES2BindingLayout::update() {
-  if (_isDirty && gpu_binding_layout_) {
+  if (_isDirty && _gpuBindingLayout) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
       GFXBindingUnit& bindingUnit = _bindingUnits[i];
       switch (bindingUnit.type) {
         case GFXBindingType::UNIFORM_BUFFER: {
           if (bindingUnit.buffer) {
-            gpu_binding_layout_->gpu_bindings[i].gpu_buffer = ((GLES2Buffer*)bindingUnit.buffer)->gpu_buffer();
+            _gpuBindingLayout->gpuBindings[i].gpuBuffer = ((GLES2Buffer*)bindingUnit.buffer)->gpuBuffer();
           }
           break;
         }
         case GFXBindingType::SAMPLER: {
           if (bindingUnit.texView) {
-            gpu_binding_layout_->gpu_bindings[i].gpu_tex_view = ((GLES2TextureView*)bindingUnit.texView)->gpu_tex_view();
+            _gpuBindingLayout->gpuBindings[i].gpuTexView = ((GLES2TextureView*)bindingUnit.texView)->gpuTexView();
           }
           if (bindingUnit.sampler) {
-            gpu_binding_layout_->gpu_bindings[i].gpu_sampler = ((GLES2Sampler*)bindingUnit.sampler)->gpu_sampler();
+            _gpuBindingLayout->gpuBindings[i].gpuSampler = ((GLES2Sampler*)bindingUnit.sampler)->gpuSampler();
           }
           break;
         }

@@ -12,17 +12,17 @@ class GLES2GPUBuffer : public Object {
   uint size = 0;
   uint stride = 0;
   uint count = 0;
-  GLenum gl_target = 0;
-  GLuint gl_buffer = 0;
+  GLenum glTarget = 0;
+  GLuint glBuffer = 0;
   uint8_t* buffer = nullptr;
-  GFXIndirectBuffer indirect_buff;
+  GFXIndirectBuffer indirectBuff;
 };
 typedef vector<GLES2GPUBuffer*>::type GLES2GPUBufferList;
 
 class GLES2GPUTexture : public Object {
  public:
   GFXTextureType type = GFXTextureType::TEX2D;
-  GFXTextureViewType view_type = GFXTextureViewType::TV2D;
+  GFXTextureViewType viewType = GFXTextureViewType::TV2D;
   GFXFormat format = GFXFormat::UNKNOWN;
   GFXTextureUsage usage = GFXTextureUsageBit::NONE;
   uint width = 0;
@@ -33,22 +33,22 @@ class GLES2GPUTexture : public Object {
   uint mipLevel = 1;
   GFXSampleCount samples = GFXSampleCount::X1;
   GFXTextureFlags flags = GFXTextureFlagBit::NONE;
-  bool is_pot = false;
-  GLenum gl_target = 0;
-  GLenum gl_internal_fmt = 0;
-  GLenum gl_format = 0;
-  GLenum gl_type = 0;
-  GLenum gl_usage = 0;
-  GLuint gl_texture = 0;
-  GLenum gl_wrap_s = 0;
-  GLenum gl_wrap_t = 0;
-  GLenum gl_min_filter = 0;
-  GLenum gl_mag_filter = 0;
+  bool isPowerOf2 = false;
+  GLenum glTarget = 0;
+  GLenum glInternelFmt = 0;
+  GLenum glFormat = 0;
+  GLenum glType = 0;
+  GLenum glUsage = 0;
+  GLuint glTexture = 0;
+  GLenum glWrapS = 0;
+  GLenum glWrapT = 0;
+  GLenum glMinFilter = 0;
+  GLenum glMagFilter = 0;
 };
 
 class GLES2GPUTextureView : public Object {
  public:
-  GLES2GPUTexture* gpu_texture = nullptr;
+  GLES2GPUTexture* gpuTexture = nullptr;
   GFXTextureViewType type = GFXTextureViewType::TV2D;
   GFXFormat format = GFXFormat::UNKNOWN;
   uint baseLevel = 0;
@@ -67,22 +67,22 @@ class GLES2GPUSampler : public Object {
   GFXAddress addressW = GFXAddress::CLAMP;
   uint minLOD = 0;
   uint maxLOD = 1000;
-  GLenum gl_min_filter = 0;
-  GLenum gl_mag_filter = 0;
-  GLenum gl_wrap_s = 0;
-  GLenum gl_wrap_t = 0;
-  GLenum gl_wrap_r = 0;
+  GLenum glMinFilter = 0;
+  GLenum glMagFilter = 0;
+  GLenum glWrapS = 0;
+  GLenum glWrapT = 0;
+  GLenum glWrapR = 0;
 };
 
 struct GLES2GPUInput {
-  uint binding;
+  uint binding = 0;
   String name;
-  GFXType type;
-  uint stride;
-  uint count;
-  uint size;
-  GLenum gl_type;
-  GLint gl_loc;
+  GFXType type = GFXType::UNKNOWN;
+  uint stride = 0;
+  uint count = 0;
+  uint size = 0;
+  GLenum glType = 0;
+  GLint glLoc = -1;
 };
 typedef vector<GLES2GPUInput>::type GLES2GPUInputList;
 
@@ -95,8 +95,8 @@ struct GLES2GPUUniform
     uint count = 0;
     uint size = 0;
     uint offset = 0;
-    GLenum gl_type;
-    GLint gl_loc = -1;
+    GLenum glType = 0;
+    GLint glLoc = -1;
     uint8_t* buff = nullptr;
 
     GLES2GPUUniform() {}
@@ -115,8 +115,8 @@ struct GLES2GPUUniform
             stride = rhs.stride;
             count = rhs.count;
             offset = rhs.offset;
-            gl_type = rhs.gl_type;
-            gl_loc = rhs.gl_loc;
+            glType = rhs.glType;
+            glLoc = rhs.glLoc;
             if(size != rhs.size)
             {
                 size = rhs.size;
@@ -137,22 +137,22 @@ struct GLES2GPUUniform
 typedef vector<GLES2GPUUniform>::type GLES2GPUUniformList;
 
 struct GLES2GPUUniformBlock {
-  uint binding;
-  uint idx;
+  uint binding = 0;
+  uint idx = 0;
   String name;
-  uint size;
-  GLES2GPUUniformList uniforms;
-  GLES2GPUUniformList active_uniforms;
+  uint size = 0;
+  GLES2GPUUniformList glUniforms;
+  GLES2GPUUniformList glActiveUniforms;
 };
 typedef vector<GLES2GPUUniformBlock>::type GLES2GPUUniformBlockList;
 
 struct GLES2GPUUniformSampler {
-  uint binding;
+  uint binding = 0;
   String name;
-  GFXType type;
+  GFXType type = GFXType::UNKNOWN;
   vector<int>::type units;
-  GLenum gl_type;
-  GLint gl_loc;
+  GLenum glType = 0;
+  GLint glLoc = -1;
 };
 typedef vector<GLES2GPUUniformSampler>::type GLES2GPUUniformSamplerList;
 
@@ -161,12 +161,12 @@ struct GLES2GPUShaderStage {
     : type(t)
     , source(s)
     , macros(m)
-    , gl_shader(shader)
+    , glShader(shader)
     {}
   GFXShaderType type;
   String source;
   GFXShaderMacroList macros;
-  GLuint gl_shader = 0;
+  GLuint glShader = 0;
 };
 typedef vector<GLES2GPUShaderStage>::type GLES2GPUShaderStageList;
 
@@ -175,21 +175,21 @@ public:
   String name;
   GFXUniformBlockList blocks;
   GFXUniformSamplerList samplers;
-  GLuint gl_program = 0;
-  GLES2GPUShaderStageList gpu_stages;
-  GLES2GPUInputList gpu_inputs;
-  GLES2GPUUniformBlockList gpu_blocks;
-  GLES2GPUUniformSamplerList gpu_samplers;
+  GLuint glProgram = 0;
+  GLES2GPUShaderStageList gpuStages;
+  GLES2GPUInputList glInputs;
+  GLES2GPUUniformBlockList glBlocks;
+  GLES2GPUUniformSamplerList glSamplers;
 };
 
 struct GLES2GPUAttribute {
   String name;
-  GLuint gl_buffer = 0;
-  GLenum gl_type = 0;
+  GLuint glBuffer = 0;
+  GLenum glType = 0;
   uint size = 0;
   uint count = 0;
   uint stride = 1;
-  uint component_count = 1;
+  uint componentCount = 1;
   bool isNormalized = false;
   bool isInstanced = false;
   uint offset = 0;
@@ -198,13 +198,13 @@ typedef vector<GLES2GPUAttribute>::type GLES2GPUAttributeList;
 
 class GLES2GPUInputAssembler : public Object {
  public:
-  GFXAttributeList attribs;
-  GLES2GPUBufferList gpu_vertex_buffers;
-  GLES2GPUBuffer* gpu_index_buffer = nullptr;
-  GLES2GPUBuffer* gpu_indirect_buffer = nullptr;
-  GLES2GPUAttributeList gpu_attribs;
-  GLenum gl_index_type;
-  map<GLuint, GLuint>::type gl_vaos;
+  GFXAttributeList attributes;
+  GLES2GPUBufferList gpuVertexBuffers;
+  GLES2GPUBuffer* gpuIndexBuffer = nullptr;
+  GLES2GPUBuffer* gpuIndirectBuffer = nullptr;
+  GLES2GPUAttributeList glAttribs;
+  GLenum glIndexType = 0;
+  map<GLuint, GLuint>::type glVAOs;
 };
 
 class GLES2GPURenderPass : public Object {
@@ -215,11 +215,11 @@ class GLES2GPURenderPass : public Object {
 
 class GLES2GPUFramebuffer : public Object {
  public:
-  GLES2GPURenderPass* gpu_render_pass = nullptr;
-  GLES2GPUTextureViewList gpu_color_views;
-  GLES2GPUTextureView* gpu_depth_stencil_view = nullptr;
+  GLES2GPURenderPass* gpuRenderPass = nullptr;
+  GLES2GPUTextureViewList gpuColorViews;
+  GLES2GPUTextureView* gpuDepthStencilView = nullptr;
   bool isOffscreen = false;
-  GLuint gl_fbo = 0;
+  GLuint glFramebuffer = 0;
 };
 
 class GLES2GPUPipelineLayout : public Object {
@@ -228,29 +228,29 @@ class GLES2GPUPipelineLayout : public Object {
 
 class GLES2GPUPipelineState : public Object {
  public:
-  GLenum gl_primitive = GL_TRIANGLES;
-  GLES2GPUShader* gpu_shader = nullptr;
+  GLenum glPrimitive = GL_TRIANGLES;
+  GLES2GPUShader* gpuShader = nullptr;
   GFXRasterizerState rs;
   GFXDepthStencilState dss;
   GFXBlendState bs;
   GFXDynamicStateList dynamicStates;
-  GLES2GPUPipelineLayout* gpu_layout = nullptr;
-  GLES2GPURenderPass* gpu_render_pass = nullptr;
+  GLES2GPUPipelineLayout* gpuLayout = nullptr;
+  GLES2GPURenderPass* gpuRenderPass = nullptr;
 };
 
 struct GLES2GPUBinding {
   uint binding = GFX_INVALID_BINDING;
   GFXBindingType type = GFXBindingType::UNKNOWN;
   String name;
-  GLES2GPUBuffer* gpu_buffer = nullptr;
-  GLES2GPUTextureView* gpu_tex_view = nullptr;
-  GLES2GPUSampler* gpu_sampler = nullptr;
+  GLES2GPUBuffer* gpuBuffer = nullptr;
+  GLES2GPUTextureView* gpuTexView = nullptr;
+  GLES2GPUSampler* gpuSampler = nullptr;
 };
 typedef vector<GLES2GPUBinding>::type GLES2GPUBindingList;
 
 class GLES2GPUBindingLayout : public Object {
  public:
-  GLES2GPUBindingList gpu_bindings;
+  GLES2GPUBindingList gpuBindings;
 };
 
 NS_CC_END

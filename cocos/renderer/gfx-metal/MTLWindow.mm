@@ -71,7 +71,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             color_tex_view_info.format = _colorFmt;
             color_tex_view_info.baseLevel = 0;
             color_tex_view_info.levelCount = 1;
-            color_tex_view_info.baseArrayLayer = 0;
+            color_tex_view_info.baseLayer = 0;
             color_tex_view_info.layerCount = 1;
             _colorTexView = _device->createTextureView(color_tex_view_info);
             
@@ -95,7 +95,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             depth_stecnil_tex_view_info.format = _colorFmt;
             depth_stecnil_tex_view_info.baseLevel = 0;
             depth_stecnil_tex_view_info.levelCount = 1;
-            depth_stecnil_tex_view_info.baseArrayLayer = 0;
+            depth_stecnil_tex_view_info.baseLayer = 0;
             depth_stecnil_tex_view_info.layerCount = 1;
             _depthStencilTexView = _device->createTextureView(depth_stecnil_tex_view_info);
             

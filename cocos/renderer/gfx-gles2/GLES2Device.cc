@@ -51,7 +51,7 @@ bool GLES2Device::initialize(const GFXDeviceInfo& info)
     }
 
     String extStr = (const char*)glGetString(GL_EXTENSIONS);
-    extensions_ = StringUtil::Split(extStr, " ");
+    _extensions = StringUtil::Split(extStr, " ");
 
     _features[(int)GFXFeature::TEXTURE_FLOAT] = true;
     _features[(int)GFXFeature::TEXTURE_HALF_FLOAT] = true;
@@ -72,10 +72,10 @@ bool GLES2Device::initialize(const GFXDeviceInfo& info)
         _features[(int)GFXFeature::TEXTURE_HALF_FLOAT_LINEAR] = true;
     
 
-    use_vao_ = checkExtension("GL_OES_depth_texture");
-    use_draw_instanced_ = checkExtension("draw_instanced_");
-    use_instanced_arrays_ = checkExtension("instanced_arrays");
-    use_discard_framebuffer_ = checkExtension("discard_framebuffer");
+    _useVAO = checkExtension("GL_OES_depth_texture");
+    _useDrawInstanced = checkExtension("draw_instanced_");
+    _useInstancedArrays = checkExtension("instanced_arrays");
+    _useDiscardFramebuffer = checkExtension("discard_framebuffer");
 
     String compressed_fmts;
 
@@ -109,7 +109,7 @@ bool GLES2Device::initialize(const GFXDeviceInfo& info)
     CC_LOG_INFO("VERSION: %s", _version.c_str());
     CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);
     CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
-    CC_LOG_INFO("USE_VAO: %s", use_vao_ ? "true" : "false");
+    CC_LOG_INFO("USE_VAO: %s", _useVAO ? "true" : "false");
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressed_fmts.c_str());
 
     GFXWindowInfo window_info;
@@ -311,7 +311,7 @@ GFXPipelineLayout* GLES2Device::createPipelineLayout(const GFXPipelineLayoutInfo
 
 void GLES2Device::copyBuffersToTexture(GFXBuffer *src, GFXTexture *dst, const GFXBufferTextureCopyList &regions)
 {
-    GLES2CmdFuncCopyBuffersToTexture(this, &((GLES2Buffer*)src)->gpu_buffer()->buffer, 1, ((GLES2Texture*)dst)->gpu_texture(), regions);
+    GLES2CmdFuncCopyBuffersToTexture(this, &((GLES2Buffer*)src)->gpuBuffer()->buffer, 1, ((GLES2Texture*)dst)->gpuTexture(), regions);
 }
 
 NS_CC_END

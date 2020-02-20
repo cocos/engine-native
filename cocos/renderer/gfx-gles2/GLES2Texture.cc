@@ -5,8 +5,7 @@
 NS_CC_BEGIN
 
 GLES2Texture::GLES2Texture(GFXDevice* device)
-    : GFXTexture(device),
-      gpu_texture_(nullptr) {
+    : GFXTexture(device) {
 }
 
 GLES2Texture::~GLES2Texture() {
@@ -31,65 +30,65 @@ bool GLES2Texture::initialize(const GFXTextureInfo &info) {
     _device->memoryStatus().textureSize += _size;
   }
   
-  gpu_texture_ = CC_NEW(GLES2GPUTexture);
-  gpu_texture_->type = _type;
+  _gpuTexture = CC_NEW(GLES2GPUTexture);
+  _gpuTexture->type = _type;
   
   switch (_type) {
     case GFXTextureType::TEX1D: {
       if (_arrayLayer) {
-        gpu_texture_->view_type = _arrayLayer <= 1 ? GFXTextureViewType::TV1D : GFXTextureViewType::TV1D_ARRAY;
+        _gpuTexture->viewType = _arrayLayer <= 1 ? GFXTextureViewType::TV1D : GFXTextureViewType::TV1D_ARRAY;
       } else {
-        gpu_texture_->view_type = GFXTextureViewType::TV1D;
+        _gpuTexture->viewType = GFXTextureViewType::TV1D;
       }
       break;
     }
     case GFXTextureType::TEX2D: {
       if (_arrayLayer) {
         if (_arrayLayer <= 1) {
-          gpu_texture_->view_type = GFXTextureViewType::TV2D;
+          _gpuTexture->viewType = GFXTextureViewType::TV2D;
         } else if (_flags & GFXTextureFlagBit::CUBEMAP) {
-          gpu_texture_->view_type = GFXTextureViewType::CUBE;
+          _gpuTexture->viewType = GFXTextureViewType::CUBE;
         } else {
-          gpu_texture_->view_type = GFXTextureViewType::TV2D_ARRAY;
+          _gpuTexture->viewType = GFXTextureViewType::TV2D_ARRAY;
         }
       } else {
-        gpu_texture_->view_type = GFXTextureViewType::TV2D;
+        _gpuTexture->viewType = GFXTextureViewType::TV2D;
       }
       break;
     }
     case GFXTextureType::TEX3D: {
-      gpu_texture_->view_type = GFXTextureViewType::TV3D;
+      _gpuTexture->viewType = GFXTextureViewType::TV3D;
       break;
     }
     default: {
-      gpu_texture_->view_type = GFXTextureViewType::TV2D;
+      _gpuTexture->viewType = GFXTextureViewType::TV2D;
     }
   }
   
-  gpu_texture_->format = _format;
-  gpu_texture_->usage = _usage;
-  gpu_texture_->width = _width;
-  gpu_texture_->height = _height;
-  gpu_texture_->depth = _depth;
-  gpu_texture_->size = _size;
-  gpu_texture_->arrayLayer = _arrayLayer;
-  gpu_texture_->mipLevel = _mipLevel;
-  gpu_texture_->samples = _samples;
-  gpu_texture_->flags = _flags;
-    gpu_texture_->is_pot = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
+  _gpuTexture->format = _format;
+  _gpuTexture->usage = _usage;
+  _gpuTexture->width = _width;
+  _gpuTexture->height = _height;
+  _gpuTexture->depth = _depth;
+  _gpuTexture->size = _size;
+  _gpuTexture->arrayLayer = _arrayLayer;
+  _gpuTexture->mipLevel = _mipLevel;
+  _gpuTexture->samples = _samples;
+  _gpuTexture->flags = _flags;
+    _gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
   
-  GLES2CmdFuncCreateTexture((GLES2Device*)_device, gpu_texture_);
+  GLES2CmdFuncCreateTexture((GLES2Device*)_device, _gpuTexture);
   _device->memoryStatus().textureSize += _size;
   
   return true;
 }
 
 void GLES2Texture::destroy() {
-  if (gpu_texture_) {
-    GLES2CmdFuncDestroyTexture((GLES2Device*)_device, gpu_texture_);
+  if (_gpuTexture) {
+    GLES2CmdFuncDestroyTexture((GLES2Device*)_device, _gpuTexture);
     _device->memoryStatus().textureSize -= _size;
-    CC_DELETE(gpu_texture_);
-    gpu_texture_ = nullptr;
+    CC_DELETE(_gpuTexture);
+    _gpuTexture = nullptr;
   }
   
   if (_buffer) {
@@ -108,10 +107,10 @@ void GLES2Texture::resize(uint width, uint height) {
     _size = size;
     
     GFXMemoryStatus& status = _device->memoryStatus();
-    gpu_texture_->width = _width;
-    gpu_texture_->height = _height;
-    gpu_texture_->size = _size;
-    GLES2CmdFuncResizeTexture((GLES2Device*)_device, gpu_texture_);
+    _gpuTexture->width = _width;
+    _gpuTexture->height = _height;
+    _gpuTexture->size = _size;
+    GLES2CmdFuncResizeTexture((GLES2Device*)_device, _gpuTexture);
     status.bufferSize -= old_size;
     status.bufferSize += _size;
     
