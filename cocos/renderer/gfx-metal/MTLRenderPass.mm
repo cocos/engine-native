@@ -11,16 +11,16 @@ CCMTLRenderPass::~CCMTLRenderPass() { destroy(); }
 
 bool CCMTLRenderPass::initialize(const GFXRenderPassInfo& info)
 {
-    _colorAttachments = info.color_attachments;
-    _depthStencilAttachment = info.depth_stencil_attachment;
+    _colorAttachments = info.colorAttachments;
+    _depthStencilAttachment = info.depthStencilAttachment;
     
     _mtlRenderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
     
     int i = 0;
     for (const auto& colorAttachment: _colorAttachments)
     {
-        _mtlRenderPassDescriptor.colorAttachments[i].loadAction = mu::toMTLLoadAction(colorAttachment.load_op);
-        _mtlRenderPassDescriptor.colorAttachments[i].storeAction = mu::toMTLStoreAction(colorAttachment.store_op);
+        _mtlRenderPassDescriptor.colorAttachments[i].loadAction = mu::toMTLLoadAction(colorAttachment.loadOp);
+        _mtlRenderPassDescriptor.colorAttachments[i].storeAction = mu::toMTLStoreAction(colorAttachment.storeOp);
         
         ++i;
     }

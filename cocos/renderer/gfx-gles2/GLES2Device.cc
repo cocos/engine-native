@@ -33,15 +33,15 @@ bool GLES2Device::initialize(const GFXDeviceInfo& info)
     _api = GFXAPI::GLES2;
     _width = info.width;
     _height = info.height;
-    _nativeWidth = info.native_width;
-    _nativeHeight = info.native_height;
-    _windowHandle = info.window_handle;
+    _nativeWidth = info.nativeWidth;
+    _nativeHeight = info.nativeHeight;
+    _windowHandle = info.windowHandle;
 
     state_cache = CC_NEW(GLES2StateCache);
 
     GFXContextInfo ctx_info;
-    ctx_info.window_handle = _windowHandle;
-    ctx_info.shared_ctx = info.shared_ctx;
+    ctx_info.windowHandle = _windowHandle;
+    ctx_info.sharedCtx = info.sharedCtx;
 
     _context = CC_NEW(GLES2Context(this));
     if (!_context->initialize(ctx_info))
@@ -113,9 +113,9 @@ bool GLES2Device::initialize(const GFXDeviceInfo& info)
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressed_fmts.c_str());
 
     GFXWindowInfo window_info;
-    window_info.color_fmt = _context->colorFormat();
-    window_info.depth_stencil_fmt = _context->detphStencilFormat();
-    window_info.is_offscreen = false;
+    window_info.colorFmt = _context->colorFormat();
+    window_info.depthStencilFmt = _context->detphStencilFormat();
+    window_info.isOffscreen = false;
     _window = createWindow(window_info);
 
     GFXQueueInfo queue_info;

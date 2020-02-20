@@ -14,28 +14,28 @@ GLES2Sampler::~GLES2Sampler() {
 
 bool GLES2Sampler::initialize(const GFXSamplerInfo &info) {
   _name = info.name;
-  _minFilter = info.min_filter;
-  _magFilter = info.mag_filter;
-  _mipFilter = info.mip_filter;
-  _addressU = info.address_u;
-  _addressV = info.address_v;
-  _addressW = info.address_w;
-  _maxAnisotropy = info.max_anisotropy;
-  _cmpFunc = info.cmp_func;
-  _borderColor = info.border_color;
-  _minLod = info.min_lod;
-  _maxLod = info.max_lod;
-  _mipLodBias = info.mip_lod_bias;
+  _minFilter = info.minFilter;
+  _magFilter = info.magFilter;
+  _mipFilter = info.mipFilter;
+  _addressU = info.addressU;
+  _addressV = info.addressV;
+  _addressW = info.addressW;
+  _maxAnisotropy = info.maxAnisotropy;
+  _cmpFunc = info.cmpFunc;
+  _borderColor = info.borderColor;
+  _minLod = info.minLOD;
+  _maxLod = info.maxLOD;
+  _mipLodBias = info.mipLODBias;
   
   gpu_sampler_ = CC_NEW(GLES2GPUSampler);
-  gpu_sampler_->min_filter = _minFilter;
-  gpu_sampler_->mag_filter = _magFilter;
-  gpu_sampler_->mip_filter = _mipFilter;
-  gpu_sampler_->address_u = _addressU;
-  gpu_sampler_->address_v = _addressV;
-  gpu_sampler_->address_w = _addressW;
-  gpu_sampler_->min_lod = _minLod;
-  gpu_sampler_->max_lod = _maxLod;
+  gpu_sampler_->minFilter = _minFilter;
+  gpu_sampler_->magFilter = _magFilter;
+  gpu_sampler_->mipFilter = _mipFilter;
+  gpu_sampler_->addressU = _addressU;
+  gpu_sampler_->addressV = _addressV;
+  gpu_sampler_->addressW = _addressW;
+  gpu_sampler_->minLOD = _minLod;
+  gpu_sampler_->maxLOD = _maxLod;
   
   GLES2CmdFuncCreateSampler((GLES2Device*)_device, gpu_sampler_);
   

@@ -309,8 +309,8 @@ void GLES3CommandBuffer::BindStates() {
   cmd->gpu_ia = cur_gpu_ia_;
   cmd->viewport = cur_viewport_;
   cmd->scissor = cur_scissor_;
-  cmd->line_width = cur_line_width_;
-  cmd->depth_bias = cur_depth_bias_;
+  cmd->lineWidth = cur_line_width_;
+  cmd->depthBias = cur_depth_bias_;
   cmd->blend_constants.r = cur_blend_constants_.r;
   cmd->blend_constants.g = cur_blend_constants_.g;
   cmd->blend_constants.b = cur_blend_constants_.b;

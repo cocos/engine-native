@@ -18,7 +18,7 @@ class CC_CORE_API GFXSampler : public Object {
   CC_INLINE const String& name() const { return _name; }
   CC_INLINE GFXFilter minFilter() const { return _minFilter; }
   CC_INLINE GFXFilter magFilter() const { return _magFilter; }
-  CC_INLINE GFXFilter mip_filter() const { return _mipFilter; }
+  CC_INLINE GFXFilter mipFilter() const { return _mipFilter; }
   CC_INLINE GFXAddress addressU() const { return _addressU; }
   CC_INLINE GFXAddress addressV() const { return _addressV; }
   CC_INLINE GFXAddress addressW() const { return _addressW; }
@@ -26,7 +26,7 @@ class CC_CORE_API GFXSampler : public Object {
   CC_INLINE GFXComparisonFunc cmpFunc() const { return _cmpFunc; }
   CC_INLINE const GFXColor& borderColor() const { return _borderColor; }
   CC_INLINE uint minLod() const { return _minLod; }
-  CC_INLINE uint max_lod() const { return _maxLod; }
+  CC_INLINE uint maxLOD() const { return _maxLod; }
   CC_INLINE float mipLodBias() const { return _mipLodBias; }
   
  protected:

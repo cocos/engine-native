@@ -11,15 +11,15 @@ NS_CC_BEGIN
 bool GLES3Context::initialize(const GFXContextInfo &info)
 {
   
-    _vsyncMode = info.vsync_mode;
-    _windowHandle = info.window_handle;
+    _vsyncMode = info.vsyncMode;
+    _windowHandle = info.windowHandle;
 
     //////////////////////////////////////////////////////////////////////////
 
-    if (!info.shared_ctx)
+    if (!info.sharedCtx)
     {
         is_primary_ctx_ = true;
-        _windowHandle = info.window_handle;
+        _windowHandle = info.windowHandle;
         
         CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(_windowHandle)).layer);
         eaglLayer.opaque = TRUE;
@@ -41,8 +41,8 @@ bool GLES3Context::initialize(const GFXContextInfo &info)
     }
     else
     {
-        GLES3Context* shared_ctx = (GLES3Context*)info.shared_ctx;
-        EAGLContext* eagl_shared_context = (EAGLContext*)shared_ctx->eagl_shared_ctx();
+        GLES3Context* sharedCtx = (GLES3Context*)info.sharedCtx;
+        EAGLContext* eagl_shared_context = (EAGLContext*)sharedCtx->eagl_shared_ctx();
         EAGLContext* eagl_context = [[EAGLContext alloc] initWithAPI: [eagl_shared_context API] sharegroup: [eagl_shared_context sharegroup]];
         if (!eagl_context)
         {

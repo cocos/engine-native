@@ -17,10 +17,10 @@ GLES3Framebuffer::~GLES3Framebuffer() {
 
 bool GLES3Framebuffer::initialize(const GFXFramebufferInfo &info) {
   
-  _renderPass = info.render_pass;
-  _colorViews = info.color_views;
-  _depthStencilView = info.depth_stencil_view;
-  _isOffscreen = info.is_offscreen;
+  _renderPass = info.renderPass;
+  _colorViews = info.colorViews;
+  _depthStencilView = info.depthStencilView;
+  _isOffscreen = info.isOffscreen;
   
   gpu_fbo_ = CC_NEW(GLES3GPUFramebuffer);
   gpu_fbo_->gpu_render_pass = ((GLES3RenderPass*)_renderPass)->gpu_render_pass();
@@ -36,7 +36,7 @@ bool GLES3Framebuffer::initialize(const GFXFramebufferInfo &info) {
       gpu_fbo_->gpu_depth_stencil_view = ((GLES3TextureView*)_depthStencilView)->gpu_tex_view();
     }
     
-    gpu_fbo_->is_offscreen = _isOffscreen;
+    gpu_fbo_->isOffscreen = _isOffscreen;
     
     GLES3CmdFuncCreateFramebuffer((GLES3Device*)_device, gpu_fbo_);
   }

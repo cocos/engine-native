@@ -16,9 +16,9 @@ GLES3InputAssembler::~GLES3InputAssembler() {
 bool GLES3InputAssembler::initialize(const GFXInputAssemblerInfo &info) {
   
   _attributes = info.attributes;
-  _vertexBuffers = info.vertex_buffers;
-  _indexBuffer = info.index_buffer;
-  _indirectBuffer = info.indirect_buffer;
+  _vertexBuffers = info.vertexBuffers;
+  _indexBuffer = info.indexBuffer;
+  _indirectBuffer = info.indirectBuffer;
   
   if (_indexBuffer) {
     _indexCount = _indexBuffer->count();
@@ -33,8 +33,8 @@ bool GLES3InputAssembler::initialize(const GFXInputAssemblerInfo &info) {
     GLES3Buffer* vb = (GLES3Buffer*)_vertexBuffers[i];
     gpu_input_assembler_->gpu_vertex_buffers[i] = vb->gpu_buffer();
   }
-    if(info.index_buffer)
-        gpu_input_assembler_->gpu_index_buffer = static_cast<GLES3Buffer*>(info.index_buffer)->gpu_buffer();
+    if(info.indexBuffer)
+        gpu_input_assembler_->gpu_index_buffer = static_cast<GLES3Buffer*>(info.indexBuffer)->gpu_buffer();
   
   GLES3CmdFuncCreateInputAssembler((GLES3Device*)_device, gpu_input_assembler_);
   
@@ -50,13 +50,13 @@ void GLES3InputAssembler::destroy() {
 }
 
 void GLES3InputAssembler::ExtractCmdDraw(GLES3CmdDraw* cmd) {
-  cmd->draw_info.vertex_count = _vertexCount;
-  cmd->draw_info.first_vertex = _firstVertex;
-  cmd->draw_info.index_count = _indexCount;
-  cmd->draw_info.first_index = _firstIndex;
-  cmd->draw_info.vertex_offset = _vertexOffset;
-  cmd->draw_info.instance_count = _instanceCount;
-  cmd->draw_info.first_instance = _firstInstance;
+  cmd->draw_info.vertexCount = _vertexCount;
+  cmd->draw_info.firstVertex = _firstVertex;
+  cmd->draw_info.indexCount = _indexCount;
+  cmd->draw_info.firstIndex = _firstIndex;
+  cmd->draw_info.vertexOffset = _vertexOffset;
+  cmd->draw_info.instanceCount = _instanceCount;
+  cmd->draw_info.firstInstance = _firstInstance;
 }
 
 NS_CC_END

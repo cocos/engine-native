@@ -11,14 +11,14 @@ NS_CC_BEGIN
 
 bool GLES2Context::initialize(const GFXContextInfo &info) {
   
-    _vsyncMode = info.vsync_mode;
-    _windowHandle = info.window_handle;
+    _vsyncMode = info.vsyncMode;
+    _windowHandle = info.windowHandle;
 
     //////////////////////////////////////////////////////////////////////////
 
-    if (!info.shared_ctx) {
+    if (!info.sharedCtx) {
         is_primary_ctx_ = true;
-        _windowHandle = info.window_handle;
+        _windowHandle = info.windowHandle;
         
         CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(_windowHandle)).layer);
         eaglLayer.opaque = TRUE;
@@ -35,8 +35,8 @@ bool GLES2Context::initialize(const GFXContextInfo &info) {
         if (!gles2wInit())
             return false;
     } else {
-        GLES2Context* shared_ctx = (GLES2Context*)info.shared_ctx;
-        EAGLContext* eagl_shared_context = (EAGLContext*)shared_ctx->eagl_shared_ctx();
+        GLES2Context* sharedCtx = (GLES2Context*)info.sharedCtx;
+        EAGLContext* eagl_shared_context = (EAGLContext*)sharedCtx->eagl_shared_ctx();
         EAGLContext* eagl_context = [[EAGLContext alloc] initWithAPI: [eagl_shared_context API] sharegroup: [eagl_shared_context sharegroup]];
         if (!eagl_context) {
             CC_LOG_ERROR("Create EGL context with share context [0x%p] failed.", eagl_shared_context);

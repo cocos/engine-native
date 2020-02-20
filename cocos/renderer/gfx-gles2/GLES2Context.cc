@@ -91,15 +91,15 @@ GLES2Context::~GLES2Context() {
 
 bool GLES2Context::initialize(const GFXContextInfo &info) {
   
-  _vsyncMode = info.vsync_mode;
-  _windowHandle = info.window_handle;
+  _vsyncMode = info.vsyncMode;
+  _windowHandle = info.windowHandle;
 
   //////////////////////////////////////////////////////////////////////////
 
-  if (!info.shared_ctx)
+  if (!info.sharedCtx)
   {
     is_primary_ctx_ = true;
-    _windowHandle = info.window_handle;
+    _windowHandle = info.windowHandle;
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     native_display_ = (NativeDisplayType)GetDC((HWND)_windowHandle);
@@ -255,16 +255,16 @@ bool GLES2Context::initialize(const GFXContextInfo &info) {
 
     egl_shared_ctx_ = egl_context_;
   } else {
-    GLES2Context* shared_ctx = (GLES2Context*)info.shared_ctx;
+    GLES2Context* sharedCtx = (GLES2Context*)info.sharedCtx;
 
-    major_ver_ = shared_ctx->major_ver();
-    minor_ver_ = shared_ctx->minor_ver();
-    native_display_ = shared_ctx->native_display();
-    egl_display_ = shared_ctx->egl_display();
-    egl_config_ = shared_ctx->egl_config();
-    egl_shared_ctx_ = shared_ctx->egl_shared_ctx();
-    _colorFmt = shared_ctx->colorFormat();
-    _depthStencilFmt = shared_ctx->detphStencilFormat();
+    major_ver_ = sharedCtx->major_ver();
+    minor_ver_ = sharedCtx->minor_ver();
+    native_display_ = sharedCtx->native_display();
+    egl_display_ = sharedCtx->egl_display();
+    egl_config_ = sharedCtx->egl_config();
+    egl_shared_ctx_ = sharedCtx->egl_shared_ctx();
+    _colorFmt = sharedCtx->colorFormat();
+    _depthStencilFmt = sharedCtx->detphStencilFormat();
 
     EGLint pbuff_attribs[] =
     {

@@ -15,7 +15,7 @@ GLES3Buffer::~GLES3Buffer() {
 bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
   
   _usage = info.usage;
-  _memUsage = info.mem_usage;
+  _memUsage = info.memUsage;
   _size = info.size;
   _stride = std::max(info.stride, 1U);
   _count = _size / _stride;
@@ -23,12 +23,12 @@ bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
   
   if ((_flags & GFXBufferFlagBit::BAKUP_BUFFER) && _size > 0) {
     _buffer = (uint8_t*)CC_MALLOC(_size);
-    _device->memoryStatus().buffer_size += _size;
+    _device->memoryStatus().bufferSize += _size;
   }
   
   gpu_buffer_ = CC_NEW(GLES3GPUBuffer);
   gpu_buffer_->usage = _usage;
-  gpu_buffer_->mem_usage = _memUsage;
+  gpu_buffer_->memUsage = _memUsage;
   gpu_buffer_->size = _size;
   gpu_buffer_->stride = _stride;
   gpu_buffer_->count = _count;
@@ -38,7 +38,7 @@ bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
   }
   
   GLES3CmdFuncCreateBuffer((GLES3Device*)_device, gpu_buffer_);
-  _device->memoryStatus().buffer_size += _size;
+  _device->memoryStatus().bufferSize += _size;
   
   return true;
 }
@@ -46,14 +46,14 @@ bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
 void GLES3Buffer::destroy() {
   if (gpu_buffer_) {
     GLES3CmdFuncDestroyBuffer((GLES3Device*)_device, gpu_buffer_);
-    _device->memoryStatus().buffer_size -= _size;
+    _device->memoryStatus().bufferSize -= _size;
     CC_DELETE(gpu_buffer_);
     gpu_buffer_ = nullptr;
   }
   
   if (_buffer) {
     CC_FREE(_buffer);
-    _device->memoryStatus().buffer_size -= _size;
+    _device->memoryStatus().bufferSize -= _size;
     _buffer = nullptr;
   }
 }
@@ -68,16 +68,16 @@ void GLES3Buffer::resize(uint size) {
     gpu_buffer_->size = _size;
     gpu_buffer_->count = _count;
     GLES3CmdFuncResizeBuffer((GLES3Device*)_device, gpu_buffer_);
-    status.buffer_size -= old_size;
-    status.buffer_size += _size;
+    status.bufferSize -= old_size;
+    status.bufferSize += _size;
 
     if (_buffer) {
       const uint8_t* old_buff = _buffer;
       _buffer = (uint8_t*)CC_MALLOC(_size);
       memcpy(_buffer, old_buff, old_size);
       CC_FREE(_buffer);
-      status.buffer_size -= old_size;
-      status.buffer_size += _size;
+      status.bufferSize -= old_size;
+      status.bufferSize += _size;
     }
   }
 }

@@ -8,7 +8,7 @@ NS_CC_BEGIN
 class GLES2GPUBuffer : public Object {
  public:
   GFXBufferUsage usage = GFXBufferUsage::NONE;
-  GFXMemoryUsage mem_usage = GFXMemoryUsage::NONE;
+  GFXMemoryUsage memUsage = GFXMemoryUsage::NONE;
   uint size = 0;
   uint stride = 0;
   uint count = 0;
@@ -29,8 +29,8 @@ class GLES2GPUTexture : public Object {
   uint height = 0;
   uint depth = 1;
   uint size = 0;
-  uint array_layer = 1;
-  uint mip_level = 1;
+  uint arrayLayer = 1;
+  uint mipLevel = 1;
   GFXSampleCount samples = GFXSampleCount::X1;
   GFXTextureFlags flags = GFXTextureFlagBit::NONE;
   bool is_pot = false;
@@ -51,22 +51,22 @@ class GLES2GPUTextureView : public Object {
   GLES2GPUTexture* gpu_texture = nullptr;
   GFXTextureViewType type = GFXTextureViewType::TV2D;
   GFXFormat format = GFXFormat::UNKNOWN;
-  uint base_level = 0;
-  uint level_count = 1;
+  uint baseLevel = 0;
+  uint levelCount = 1;
 };
 
 typedef vector<GLES2GPUTextureView*>::type GLES2GPUTextureViewList;
 
 class GLES2GPUSampler : public Object {
  public:
-  GFXFilter min_filter = GFXFilter::NONE;
-  GFXFilter mag_filter = GFXFilter::NONE;
-  GFXFilter mip_filter = GFXFilter::NONE;
-  GFXAddress address_u = GFXAddress::CLAMP;
-  GFXAddress address_v = GFXAddress::CLAMP;
-  GFXAddress address_w = GFXAddress::CLAMP;
-  uint min_lod = 0;
-  uint max_lod = 1000;
+  GFXFilter minFilter = GFXFilter::NONE;
+  GFXFilter magFilter = GFXFilter::NONE;
+  GFXFilter mipFilter = GFXFilter::NONE;
+  GFXAddress addressU = GFXAddress::CLAMP;
+  GFXAddress addressV = GFXAddress::CLAMP;
+  GFXAddress addressW = GFXAddress::CLAMP;
+  uint minLOD = 0;
+  uint maxLOD = 1000;
   GLenum gl_min_filter = 0;
   GLenum gl_mag_filter = 0;
   GLenum gl_wrap_s = 0;
@@ -190,8 +190,8 @@ struct GLES2GPUAttribute {
   uint count = 0;
   uint stride = 1;
   uint component_count = 1;
-  bool is_normalized = false;
-  bool is_instanced = false;
+  bool isNormalized = false;
+  bool isInstanced = false;
   uint offset = 0;
 };
 typedef vector<GLES2GPUAttribute>::type GLES2GPUAttributeList;
@@ -209,8 +209,8 @@ class GLES2GPUInputAssembler : public Object {
 
 class GLES2GPURenderPass : public Object {
  public:
-  GFXColorAttachmentList color_attachments;
-  GFXDepthStencilAttachment depth_stencil_attachment;
+  GFXColorAttachmentList colorAttachments;
+  GFXDepthStencilAttachment depthStencilAttachment;
 };
 
 class GLES2GPUFramebuffer : public Object {
@@ -218,7 +218,7 @@ class GLES2GPUFramebuffer : public Object {
   GLES2GPURenderPass* gpu_render_pass = nullptr;
   GLES2GPUTextureViewList gpu_color_views;
   GLES2GPUTextureView* gpu_depth_stencil_view = nullptr;
-  bool is_offscreen = false;
+  bool isOffscreen = false;
   GLuint gl_fbo = 0;
 };
 
@@ -233,7 +233,7 @@ class GLES2GPUPipelineState : public Object {
   GFXRasterizerState rs;
   GFXDepthStencilState dss;
   GFXBlendState bs;
-  GFXDynamicStateList dynamic_states;
+  GFXDynamicStateList dynamicStates;
   GLES2GPUPipelineLayout* gpu_layout = nullptr;
   GLES2GPURenderPass* gpu_render_pass = nullptr;
 };

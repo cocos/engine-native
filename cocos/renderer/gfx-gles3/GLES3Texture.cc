@@ -20,15 +20,15 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   _width = info.width;
   _height = info.height;
   _depth = info.depth;
-  _arrayLayer = info.array_layer;
-  _mipLevel = info.mip_level;
+  _arrayLayer = info.arrayLayer;
+  _mipLevel = info.mipLevel;
   _samples = info.samples;
   _flags = info.flags;
   _size = GFXFormatSize(_format, _width, _height, _depth);
   
   if (_flags & GFXTextureFlags::BAKUP_BUFFER) {
     _buffer = (uint8_t*)CC_MALLOC(_size);
-    _device->memoryStatus().texture_size += _size;
+    _device->memoryStatus().textureSize += _size;
   }
   
   gpu_texture_ = CC_NEW(GLES3GPUTexture);
@@ -72,14 +72,14 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
   gpu_texture_->height = _height;
   gpu_texture_->depth = _depth;
   gpu_texture_->size = _size;
-  gpu_texture_->array_layer = _arrayLayer;
-  gpu_texture_->mip_level = _mipLevel;
+  gpu_texture_->arrayLayer = _arrayLayer;
+  gpu_texture_->mipLevel = _mipLevel;
   gpu_texture_->samples = _samples;
   gpu_texture_->flags = _flags;
     gpu_texture_->is_pot = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
   
   GLES3CmdFuncCreateTexture((GLES3Device*)_device, gpu_texture_);
-  _device->memoryStatus().texture_size += _size;
+  _device->memoryStatus().textureSize += _size;
   
   return true;
 }
@@ -87,14 +87,14 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
 void GLES3Texture::destroy() {
   if (gpu_texture_) {
     GLES3CmdFuncDestroyTexture((GLES3Device*)_device, gpu_texture_);
-    _device->memoryStatus().texture_size -= _size;
+    _device->memoryStatus().textureSize -= _size;
     CC_DELETE(gpu_texture_);
     gpu_texture_ = nullptr;
   }
   
   if (_buffer) {
     CC_FREE(_buffer);
-    _device->memoryStatus().texture_size -= _size;
+    _device->memoryStatus().textureSize -= _size;
     _buffer = nullptr;
   }
 }
@@ -112,16 +112,16 @@ void GLES3Texture::resize(uint width, uint height) {
     gpu_texture_->height = _height;
     gpu_texture_->size = _size;
     GLES3CmdFuncResizeTexture((GLES3Device*)_device, gpu_texture_);
-    status.buffer_size -= old_size;
-    status.buffer_size += _size;
+    status.bufferSize -= old_size;
+    status.bufferSize += _size;
     
     if (_buffer) {
       const uint8_t* old_buff = _buffer;
       _buffer = (uint8_t*)CC_MALLOC(_size);
       memcpy(_buffer, old_buff, old_size);
       CC_FREE(_buffer);
-      status.buffer_size -= old_size;
-      status.buffer_size += _size;
+      status.bufferSize -= old_size;
+      status.bufferSize += _size;
     }
   }
 }

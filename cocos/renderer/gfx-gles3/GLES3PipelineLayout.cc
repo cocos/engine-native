@@ -15,7 +15,7 @@ GLES3PipelineLayout::~GLES3PipelineLayout() {
 bool GLES3PipelineLayout::initialize(const GFXPipelineLayoutInfo &info) {
   
   _layouts = info.layouts;
-  _pushConstantsRanges = info.push_constant_ranges;
+  _pushConstantsRanges = info.pushConstantsRanges;
   
   gpu_pipeline_layout_ = CC_NEW(GLES3GPUPipelineLayout);
   return true;

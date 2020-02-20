@@ -30,19 +30,19 @@ struct GLES3StencilCompareMask {
 };
 
 struct GLES3TextureSubres {
-  uint base_mip_level = 0;
-  uint level_count = 1;
-  uint base_array_layer = 0;
-  uint layer_count = 1;
+  uint baseMipLevel = 0;
+  uint levelCount = 1;
+  uint baseArrayLayer = 0;
+  uint layerCount = 1;
 };
 
 struct GLES3BufferTextureCopy {
-  uint buff_offset = 0;
-  uint buff_stride = 0;
-  uint buff_tex_height = 0;
-  uint tex_offset[3] = {0};
-  uint tex_extent[3] = {0};
-  GLES3TextureSubres tex_subres;
+  uint buffOffset = 0;
+  uint buffStride = 0;
+  uint buffTexHeight = 0;
+  uint texOffset[3] = {0};
+  uint texExtent[3] = {0};
+  GLES3TextureSubres texSubres;
 };
 
 class GLES3CmdBeginRenderPass : public GFXCmd {
@@ -83,8 +83,8 @@ class GLES3CmdBindStates : public GFXCmd {
   uint8_t state_flags[(int)GLES3State::COUNT] = {0};
   GFXViewport viewport;
   GFXRect scissor;
-  float line_width = 1.0f;
-  GLES3DepthBias depth_bias;
+  float lineWidth = 1.0f;
+  GLES3DepthBias depthBias;
   GFXColor blend_constants;
   GLES3DepthBounds depth_bounds;
   GLES3StencilWriteMask stencil_write_mask;

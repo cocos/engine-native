@@ -14,12 +14,12 @@ GLES2RenderPass::~GLES2RenderPass() {
 
 bool GLES2RenderPass::initialize(const GFXRenderPassInfo &info) {
   
-  _colorAttachments = info.color_attachments;
-  _depthStencilAttachment = info.depth_stencil_attachment;
+  _colorAttachments = info.colorAttachments;
+  _depthStencilAttachment = info.depthStencilAttachment;
   
   gpu_render_pass_ = CC_NEW(GLES2GPURenderPass);
-  gpu_render_pass_->color_attachments = _colorAttachments;
-  gpu_render_pass_->depth_stencil_attachment = _depthStencilAttachment;
+  gpu_render_pass_->colorAttachments = _colorAttachments;
+  gpu_render_pass_->depthStencilAttachment = _depthStencilAttachment;
   
   return true;
 }

@@ -60,8 +60,8 @@ void GLES2BindingLayout::update() {
           break;
         }
         case GFXBindingType::SAMPLER: {
-          if (binding_unit.tex_view) {
-            gpu_binding_layout_->gpu_bindings[i].gpu_tex_view = ((GLES2TextureView*)binding_unit.tex_view)->gpu_tex_view();
+          if (binding_unit.texView) {
+            gpu_binding_layout_->gpu_bindings[i].gpu_tex_view = ((GLES2TextureView*)binding_unit.texView)->gpu_tex_view();
           }
           if (binding_unit.sampler) {
             gpu_binding_layout_->gpu_bindings[i].gpu_sampler = ((GLES2Sampler*)binding_unit.sampler)->gpu_sampler();
