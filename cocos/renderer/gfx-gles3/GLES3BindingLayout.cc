@@ -30,11 +30,11 @@ bool GLES3BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
   _gpuBindingLayout = CC_NEW(GLES3GPUBindingLayout);
   _gpuBindingLayout->gpuBindings.resize(_bindingUnits.size());
   for (size_t i = 0; i < _gpuBindingLayout->gpuBindings.size(); ++i) {
-    GLES3GPUBinding& gpu_binding = _gpuBindingLayout->gpuBindings[i];
+    GLES3GPUBinding& gpuBinding = _gpuBindingLayout->gpuBindings[i];
     const GFXBindingUnit& bindingUnit = _bindingUnits[i];
-    gpu_binding.binding = bindingUnit.binding;
-    gpu_binding.type = bindingUnit.type;
-    gpu_binding.name = bindingUnit.name;
+    gpuBinding.binding = bindingUnit.binding;
+    gpuBinding.type = bindingUnit.type;
+    gpuBinding.name = bindingUnit.name;
   }
   
   return true;

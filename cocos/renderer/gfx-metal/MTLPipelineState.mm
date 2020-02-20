@@ -384,6 +384,11 @@ std::tuple<uint,uint> CCMTLPipelineState::getBufferBinding(MTLArgument* argument
             }
         }
     }
+    
+    if(std::strcmp([argument.name UTF8String], "_12") == 0)
+    {
+        return std::make_tuple( (int)argument.index, 0);
+    }
                     
     return std::make_tuple(UINT_MAX, UINT_MAX);
 }

@@ -10,7 +10,7 @@ public:
   GLES3Device();
   ~GLES3Device();
   
-  GLES3StateCache* state_cache = nullptr;
+  GLES3StateCache* stateCache = nullptr;
   
 public:
   bool initialize(const GFXDeviceInfo& info);

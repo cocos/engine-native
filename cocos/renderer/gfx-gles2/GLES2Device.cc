@@ -37,7 +37,7 @@ bool GLES2Device::initialize(const GFXDeviceInfo& info)
     _nativeHeight = info.nativeHeight;
     _windowHandle = info.windowHandle;
 
-    state_cache = CC_NEW(GLES2StateCache);
+    stateCache = CC_NEW(GLES2StateCache);
 
     GFXContextInfo ctx_info;
     ctx_info.windowHandle = _windowHandle;
@@ -134,7 +134,7 @@ void GLES2Device::destroy()
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_window);
     CC_SAFE_DESTROY(_context);
-    CC_SAFE_DELETE(state_cache);
+    CC_SAFE_DELETE(stateCache);
 }
 
 void GLES2Device::resize(uint width, uint height)

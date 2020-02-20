@@ -47,7 +47,7 @@ struct GLES2BufferTextureCopy {
 
 class GLES2CmdBeginRenderPass : public GFXCmd {
  public:
-  GLES2GPUFramebuffer* gpu_fbo = nullptr;
+  GLES2GPUFramebuffer* gpuFBO = nullptr;
   GFXRect render_area;
   GFXClearFlags clear_flags = GFXClearFlagBit::NONE;
   uint num_clear_colors = 0;
@@ -58,7 +58,7 @@ class GLES2CmdBeginRenderPass : public GFXCmd {
   GLES2CmdBeginRenderPass() : GFXCmd(GFXCmdType::BEGIN_RENDER_PASS) {}
   
   void clear() {
-    gpu_fbo = nullptr;
+    gpuFBO = nullptr;
     num_clear_colors = 0;
   }
 };
@@ -77,25 +77,25 @@ enum class GLES2State : uint8_t {
 
 class GLES2CmdBindStates : public GFXCmd {
  public:
-  GLES2GPUPipelineState* gpu_pso = nullptr;
-  GLES2GPUBindingLayout* gpu_binding_layout = nullptr;
-  GLES2GPUInputAssembler* gpu_ia = nullptr;
+  GLES2GPUPipelineState* gpuPipelineState = nullptr;
+  GLES2GPUBindingLayout* gpuBindingLayout = nullptr;
+  GLES2GPUInputAssembler* gpuInputAssembler = nullptr;
   uint8_t state_flags[(int)GLES2State::COUNT] = {0};
   GFXViewport viewport;
   GFXRect scissor;
   float lineWidth = 1.0f;
   GLES2DepthBias depthBias;
-  GFXColor blend_constants;
-  GLES2DepthBounds depth_bounds;
-  GLES2StencilWriteMask stencil_write_mask;
-  GLES2StencilCompareMask stencil_compare_mask;
+  GFXColor blendConstants;
+  GLES2DepthBounds depthBounds;
+  GLES2StencilWriteMask stencilWriteMask;
+  GLES2StencilCompareMask stencilCompareMask;
   
   GLES2CmdBindStates() : GFXCmd(GFXCmdType::BIND_STATES) {}
   
   void clear() {
-    gpu_pso = nullptr;
-    gpu_binding_layout = nullptr;
-    gpu_ia = nullptr;
+    gpuPipelineState = nullptr;
+    gpuBindingLayout = nullptr;
+    gpuInputAssembler = nullptr;
     memset(state_flags, 0, sizeof(state_flags));
   }
 };
@@ -141,12 +141,12 @@ class GLES2CmdCopyBufferToTexture : public GFXCmd {
 
 class GLES2CmdPackage : public Object {
  public:
-  CachedArray<GFXCmdType> cmd_types;
-  CachedArray<GLES2CmdBeginRenderPass*> begin_render_pass_cmds;
-  CachedArray<GLES2CmdBindStates*> bind_states_cmds;
-  CachedArray<GLES2CmdDraw*> draw_cmds;
-  CachedArray<GLES2CmdUpdateBuffer*> update_buffer_cmds;
-  CachedArray<GLES2CmdCopyBufferToTexture*> copy_buffer_to_texture_cmds;
+  CachedArray<GFXCmdType> cmds;
+  CachedArray<GLES2CmdBeginRenderPass*> beginRenderPassCmds;
+  CachedArray<GLES2CmdBindStates*> bindStatesCmds;
+  CachedArray<GLES2CmdDraw*> drawCmds;
+  CachedArray<GLES2CmdUpdateBuffer*> updateBufferCmds;
+  CachedArray<GLES2CmdCopyBufferToTexture*> copyBufferToTextureCmds;
 };
 
 CC_GLES2_API void GLES2CmdFuncCreateBuffer(GLES2Device* device, GLES2GPUBuffer* gpuBuffer);
@@ -160,10 +160,10 @@ CC_GLES2_API void GLES2CmdFuncCreateSampler(GLES2Device* device, GLES2GPUSampler
 CC_GLES2_API void GLES2CmdFuncDestroySampler(GLES2Device* device, GLES2GPUSampler* gpuSampler);
 CC_GLES2_API void GLES2CmdFuncCreateShader(GLES2Device* device, GLES2GPUShader* gpuShader);
 CC_GLES2_API void GLES2CmdFuncDestroyShader(GLES2Device* device, GLES2GPUShader* gpuShader);
-CC_GLES2_API void GLES2CmdFuncCreateInputAssembler(GLES2Device* device, GLES2GPUInputAssembler* gpu_ia);
-CC_GLES2_API void GLES2CmdFuncDestroyInputAssembler(GLES2Device* device, GLES2GPUInputAssembler* gpu_ia);
-CC_GLES2_API void GLES2CmdFuncCreateFramebuffer(GLES2Device* device, GLES2GPUFramebuffer* gpu_fbo);
-CC_GLES2_API void GLES2CmdFuncDestroyFramebuffer(GLES2Device* device, GLES2GPUFramebuffer* gpu_fbo);
+CC_GLES2_API void GLES2CmdFuncCreateInputAssembler(GLES2Device* device, GLES2GPUInputAssembler* gpuInputAssembler);
+CC_GLES2_API void GLES2CmdFuncDestroyInputAssembler(GLES2Device* device, GLES2GPUInputAssembler* gpuInputAssembler);
+CC_GLES2_API void GLES2CmdFuncCreateFramebuffer(GLES2Device* device, GLES2GPUFramebuffer* gpuFBO);
+CC_GLES2_API void GLES2CmdFuncDestroyFramebuffer(GLES2Device* device, GLES2GPUFramebuffer* gpuFBO);
 CC_GLES2_API void GLES2CmdFuncExecuteCmds(GLES2Device* device, GLES2CmdPackage* cmd_package);
 CC_GLES2_API void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t** buffers, uint count, GLES2GPUTexture* gpuTexture, const GFXBufferTextureCopyList& regions);
 

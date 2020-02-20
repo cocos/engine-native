@@ -43,7 +43,7 @@ class CC_GLES2_API GLES2CommandBuffer : public GFXCommandBuffer {
   
  private:
   GLES2CmdPackage* _cmdPackage = nullptr;
-  GLES2CommandAllocator* gles2_allocator_ = nullptr;
+  GLES2CommandAllocator* _gles2Allocator = nullptr;
   bool _isInRenderPass = false;
   GLES2GPUPipelineState* _curGPUPipelineState = nullptr;
   GLES2GPUBindingLayout* _curGPUBlendLayout = nullptr;
