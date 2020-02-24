@@ -989,6 +989,12 @@
 		EDAD7A4623FFDE040014B660 /* jsb_gfx_manual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD7A4323FFDE040014B660 /* jsb_gfx_manual.cpp */; };
 		EDAD7A4723FFDE040014B660 /* jsb_gfx_manual.hpp in Headers */ = {isa = PBXBuildFile; fileRef = EDAD7A4423FFDE040014B660 /* jsb_gfx_manual.hpp */; };
 		EDAD7A4823FFDE040014B660 /* jsb_gfx_manual.hpp in Headers */ = {isa = PBXBuildFile; fileRef = EDAD7A4423FFDE040014B660 /* jsb_gfx_manual.hpp */; };
+		EDAD7A4E24039A690014B660 /* GLES2Context.h in Headers */ = {isa = PBXBuildFile; fileRef = EDAD7A4B24039A690014B660 /* GLES2Context.h */; };
+		EDAD7A5224039FE90014B660 /* GLES2Context.cc in Sources */ = {isa = PBXBuildFile; fileRef = EDAD7A5124039FE90014B660 /* GLES2Context.cc */; };
+		EDAD7A5424039FFD0014B660 /* GLES2Context.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAD7A5324039FFD0014B660 /* GLES2Context.mm */; };
+		EDAD7A582403A3F70014B660 /* GLES3Context.cc in Sources */ = {isa = PBXBuildFile; fileRef = EDAD7A552403A3F70014B660 /* GLES3Context.cc */; };
+		EDAD7A592403A3F70014B660 /* GLES3Context.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDAD7A562403A3F70014B660 /* GLES3Context.mm */; };
+		EDAD7A5A2403A3F70014B660 /* GLES3Context.h in Headers */ = {isa = PBXBuildFile; fileRef = EDAD7A572403A3F70014B660 /* GLES3Context.h */; };
 		EDE5DFF81C0D6B3F0014147A /* libwebsockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDE5DFF71C0D6B3F0014147A /* libwebsockets.a */; };
 /* End PBXBuildFile section */
 
@@ -1612,6 +1618,12 @@
 		EDAD7A3E23FFDDEC0014B660 /* jsb_gfx_auto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_gfx_auto.cpp; sourceTree = "<group>"; };
 		EDAD7A4323FFDE040014B660 /* jsb_gfx_manual.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_gfx_manual.cpp; sourceTree = "<group>"; };
 		EDAD7A4423FFDE040014B660 /* jsb_gfx_manual.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jsb_gfx_manual.hpp; sourceTree = "<group>"; };
+		EDAD7A4B24039A690014B660 /* GLES2Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLES2Context.h; sourceTree = "<group>"; };
+		EDAD7A5124039FE90014B660 /* GLES2Context.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLES2Context.cc; sourceTree = "<group>"; };
+		EDAD7A5324039FFD0014B660 /* GLES2Context.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLES2Context.mm; sourceTree = "<group>"; };
+		EDAD7A552403A3F70014B660 /* GLES3Context.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLES3Context.cc; sourceTree = "<group>"; };
+		EDAD7A562403A3F70014B660 /* GLES3Context.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLES3Context.mm; sourceTree = "<group>"; };
+		EDAD7A572403A3F70014B660 /* GLES3Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLES3Context.h; sourceTree = "<group>"; };
 		EDE5DFF71C0D6B3F0014147A /* libwebsockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebsockets.a; path = ../external/ios/libs/libwebsockets.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2454,6 +2466,9 @@
 		BA06A6F823583DFD007740C5 /* gfx-gles2 */ = {
 			isa = PBXGroup;
 			children = (
+				EDAD7A5324039FFD0014B660 /* GLES2Context.mm */,
+				EDAD7A5124039FE90014B660 /* GLES2Context.cc */,
+				EDAD7A4B24039A690014B660 /* GLES2Context.h */,
 				BA06A6F923583DFD007740C5 /* gles2w.mm */,
 				BA06A6FA23583DFD007740C5 /* GLES2GPUObjects.h */,
 				BA06A6FB23583DFD007740C5 /* GLES2CommandAllocator.h */,
@@ -2553,6 +2568,9 @@
 		BA06A73123583DFD007740C5 /* gfx-gles3 */ = {
 			isa = PBXGroup;
 			children = (
+				EDAD7A552403A3F70014B660 /* GLES3Context.cc */,
+				EDAD7A572403A3F70014B660 /* GLES3Context.h */,
+				EDAD7A562403A3F70014B660 /* GLES3Context.mm */,
 				BA06A73223583DFD007740C5 /* GLES3Window.h */,
 				BA06A73423583DFD007740C5 /* GLES3InputAssembler.cc */,
 				BA06A73523583DFD007740C5 /* GLES3Sampler.cc */,
@@ -3255,6 +3273,7 @@
 				BAC32B6E236C28C600F3D55F /* tommyhashlin.h in Headers */,
 				50ABBD4B1925AB0000A911A9 /* Mat4.h in Headers */,
 				BA06A7EA23583DFE007740C5 /* GLES3Texture.h in Headers */,
+				EDAD7A5A2403A3F70014B660 /* GLES3Context.h in Headers */,
 				50ABBD531925AB0000A911A9 /* Quaternion.h in Headers */,
 				BA06A7E623583DFE007740C5 /* GLES3PipelineLayout.h in Headers */,
 				BA39055B23B1BFD600CAFB49 /* CCCoreMath.h in Headers */,
@@ -3274,6 +3293,7 @@
 				1AAAC876205CB647005321B9 /* jsb_cocos2dx_audioengine_auto.hpp in Headers */,
 				BA06A84523584B92007740C5 /* gl31.h in Headers */,
 				BA06A6D723583DBD007740C5 /* GFXBuffer.h in Headers */,
+				EDAD7A4E24039A690014B660 /* GLES2Context.h in Headers */,
 				BA06A78823583DFE007740C5 /* GLES2Device.h in Headers */,
 				1A52DB7B205BCDD000350EE3 /* ScriptEngine.hpp in Headers */,
 				1A29D772205665D200168D9A /* jsb_cocos2dx_manual.hpp in Headers */,
@@ -3620,6 +3640,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDAD7A592403A3F70014B660 /* GLES3Context.mm in Sources */,
 				BA06A6F123583DBD007740C5 /* Assertion.cc in Sources */,
 				ED30578D1BEC77550083C3ED /* unzip.cpp in Sources */,
 				1A586C462064C90500B47573 /* EJConvertTypedArray.m in Sources */,
@@ -3654,6 +3675,7 @@
 				ED30579E1BEC77BD0083C3ED /* ConvertUTFWrapper.cpp in Sources */,
 				1A28FF801F20AFAB007A1D9D /* SRMutex.m in Sources */,
 				46AE400C2092F3A600F3A228 /* env.cc in Sources */,
+				EDAD7A5424039FFD0014B660 /* GLES2Context.mm in Sources */,
 				ED3057C21BEC78A80083C3ED /* xxhash.c in Sources */,
 				4037F5CF2108751E001C205C /* CCAsyncTaskPool.cpp in Sources */,
 				ED30578C1BEC77510083C3ED /* ioapi.cpp in Sources */,
@@ -3761,6 +3783,7 @@
 				1A28FF6C1F20AFAB007A1D9D /* SRConstants.m in Sources */,
 				BA06A78423583DFE007740C5 /* GLES2Std.cc in Sources */,
 				1AAAC8E8205CB6E9005321B9 /* AudioEngine-inl.mm in Sources */,
+				EDAD7A582403A3F70014B660 /* GLES3Context.cc in Sources */,
 				4617862220522469008256E1 /* HttpCookie.cpp in Sources */,
 				1A586C4C2064C97800B47573 /* EJConvert.m in Sources */,
 				469304272046AE06004A3D6C /* jsb_conversions.cpp in Sources */,
@@ -3785,6 +3808,7 @@
 				5027253D190BF1B900AAF4ED /* cocos2d.cpp in Sources */,
 				BA06A80223583DFE007740C5 /* GLES3PipelineLayout.cc in Sources */,
 				1A28FF781F20AFAB007A1D9D /* SRHTTPConnectMessage.m in Sources */,
+				EDAD7A5224039FE90014B660 /* GLES2Context.cc in Sources */,
 				1A28FF881F20AFAB007A1D9D /* SRSIMDHelpers.m in Sources */,
 				50ABBD451925AB0000A911A9 /* CCVertex.cpp in Sources */,
 				BA06A6BB23583DBD007740C5 /* GFXDef.cc in Sources */,
