@@ -310,8 +310,6 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         Log.d(TAG, "Cocos2dxActivity onCreate: " + this + ", savedInstanceState: " + savedInstanceState);
         super.onCreate(savedInstanceState);
 
-        Utils.setActivity(this);
-
         // Workaround in https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508
         if (!isTaskRoot()) {
             // Android launched another instance of the root activity into an existing task
@@ -321,6 +319,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             Log.w(TAG, "[Workaround] Ignore the activity started from icon!");
             return;
         }
+
+        Utils.setActivity(this);
 
         Utils.hideVirtualButton();
 
@@ -391,12 +391,17 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
+
+        // Workaround in https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508
+        if (!isTaskRoot()) {
+            return;
+        }
+
         if(gainAudioFocus)
             Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         Cocos2dxHelper.unregisterBatteryLevelReceiver(this);;
         CanvasRenderingContext2DImpl.destroy();
-
-        super.onDestroy();
 
         Log.d(TAG, "Cocos2dxActivity onDestroy: " + this + ", mGLSurfaceView" + mGLSurfaceView);
         if (mGLSurfaceView != null) {
