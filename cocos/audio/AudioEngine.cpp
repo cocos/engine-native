@@ -364,9 +364,11 @@ void AudioEngine::onPause(const CustomEvent &event) {
         }
     }
     
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     if (_audioEngineImpl) {
         _audioEngineImpl->onPause();
     }
+#endif    
 }
 
 void AudioEngine::onResume(const CustomEvent &event) {
@@ -376,9 +378,11 @@ void AudioEngine::onResume(const CustomEvent &event) {
     }
     _breakAudioID.clear();
     
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID    
     if (_audioEngineImpl) {
         _audioEngineImpl->onResume();
     }
+#endif 
 }
 
 void AudioEngine::stop(int audioID)
