@@ -77,11 +77,8 @@ private:
     void resetData();
     static bool compareItems(const StageItem& a, const StageItem& b);
     
-    Vector<Light*> _directionalLights;
-    Vector<Light*> _pointLights;
-    Vector<Light*> _spotLights;
+    Vector<Light*> _lights;
     Vector<Light*> _shadowLights;
-    Vector<Light*> _ambientLights;
     
     RecyclePool<float>* _arrayPool = nullptr;
     std::size_t _numLights = 0;

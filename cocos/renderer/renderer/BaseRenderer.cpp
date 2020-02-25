@@ -40,14 +40,9 @@
 
 RENDERER_BEGIN
 
-const size_t BaseRenderer::cc_dirLightDirection = std::hash<std::string>{}("cc_dirLightDirection");
-const size_t BaseRenderer::cc_dirLightColor = std::hash<std::string>{}("cc_dirLightColor");
-const size_t BaseRenderer::cc_pointLightPositionAndRange = std::hash<std::string>{}("cc_pointLightPositionAndRange");
-const size_t BaseRenderer::cc_pointLightColor = std::hash<std::string>{}("cc_pointLightColor");
-const size_t BaseRenderer::cc_spotLightDirection = std::hash<std::string>{}("cc_spotLightDirection");
-const size_t BaseRenderer::cc_spotLightPositionAndRange = std::hash<std::string>{}("cc_spotLightPositionAndRange");
-const size_t BaseRenderer::cc_spotLightColor = std::hash<std::string>{}("cc_spotLightColor");
-const size_t BaseRenderer::cc_ambientLightColor = std::hash<std::string>{}("cc_ambientColor");
+const size_t BaseRenderer::cc_lightDirection = std::hash<std::string>{}("cc_lightDirection");
+const size_t BaseRenderer::cc_lightColor = std::hash<std::string>{}("cc_lightColor");
+const size_t BaseRenderer::cc_lightPositionAndRange = std::hash<std::string>{}("cc_lightPositionAndRange");
 const size_t BaseRenderer::cc_shadow_map_lightViewProjMatrix = std::hash<std::string>{}("cc_shadow_map_lightViewProjMatrix");
 const size_t BaseRenderer::cc_shadow_map_info = std::hash<std::string>{}("cc_shadow_map_info");
 const size_t BaseRenderer::cc_shadow_map_bias = std::hash<std::string>{}("cc_shadow_map_bias");
