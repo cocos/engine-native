@@ -209,14 +209,6 @@ public class Cocos2dxHelper {
         return Cocos2dxHelper.sOBBFile;
     }
 
-//    public static void addOnActivityResultListener(OnActivityResultListener listener) {
-//        onActivityResultListeners.add(listener);
-//    }
-//
-//    public static Set<OnActivityResultListener> getOnActivityResultListeners() {
-//        return onActivityResultListeners;
-//    }
-
     // ===========================================================
     // Getter & Setter
     // ===========================================================
