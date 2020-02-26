@@ -159,18 +159,23 @@ void ForwardRenderer::updateLights(Scene* scene)
 
 void ForwardRenderer::updateDefines()
 {
+    _definesKey = "";
     for (int i = 0; i < _lights.size(); i++)
     {
-        _defines["CC_LIGHT_" + std::to_string(i)+ "_TYPE"] = (int)_lights.at(i)->getType();
+        Light* light = _lights.at(i);
+        
+        _defines["CC_LIGHT_" + std::to_string(i)+ "_TYPE"] = (int)light->getType();
+        _defines["CC_SHADOW_" + std::to_string(i)+ "_TYPE"] = (int)light->getShadowType();
+        
+        _definesKey += std::to_string((int)light->getType());
+        _definesKey += std::to_string((int)light->getShadowType());
     }
     
     _defines["CC_NUM_LIGHTS"] = std::min(CC_MAX_LIGHTS, (int)_lights.size());
     _defines["CC_NUM_SHADOW_LIGHTS"] = std::min(CC_MAX_LIGHTS, (int)_shadowLights.size());
     
-    _definesKey =
-        std::to_string(_lights.size()) +
-        std::to_string(_shadowLights.size())
-    ;
+    _definesKey += std::to_string(_lights.size());
+    _definesKey += std::to_string(_shadowLights.size());
 
     _definesHash = std::hash<std::string>{}(_definesKey);
 }
@@ -243,13 +248,13 @@ void ForwardRenderer::submitOtherStagesUniforms()
     for (int i = 0; i < count; ++i)
     {
         Light* light = _shadowLights.at(i);
-        const Mat4 view = light->getViewProjMatrix();
+        const Mat4& view = light->getViewProjMatrix();
         memcpy(shadowLightProjs + i * 16, view.m, sizeof(float) * 16);
         
         int index = i * 4;
         *(shadowLightInfo + index) = light->getShadowMinDepth();
         *(shadowLightInfo + index + 1) = light->getShadowMaxDepth();
-        *(shadowLightInfo + index + 2) = light->getShadowDepthScale();
+        *(shadowLightInfo + index + 2) = light->getShadowResolution();
         *(shadowLightInfo + index + 3) = light->getShadowDarkness();
     }
     

@@ -291,10 +291,9 @@ void BaseRenderer::draw(const StageItem& item)
         
         // get program
         __tmp_defines__.clear();
-        __tmp_defines__.push_back(&_defines);
         size_t definesHash = _definesHash;
         pass->extractDefines(definesHash, __tmp_defines__);
-        
+        __tmp_defines__.push_back(&_defines);
         _program = _programLib->switchProgram(pass->getHashName(), definesHash, __tmp_defines__);
         _device->setProgram(_program);
         
