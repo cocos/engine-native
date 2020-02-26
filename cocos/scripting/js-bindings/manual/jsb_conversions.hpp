@@ -402,14 +402,9 @@ bool std_vector_string_to_seval(const std::vector<std::string>& v, se::Value* re
 bool std_vector_int_to_seval(const std::vector<int>& v, se::Value* ret);
 bool std_vector_uint16_to_seval(const std::vector<uint16_t>& v, se::Value* ret);
 bool std_vector_float_to_seval(const std::vector<float>& v, se::Value* ret);
-//bool std_vector_Touch_to_seval(const std::vector<cocos2d::Touch*>& v, se::Value* ret);
 bool std_map_string_string_to_seval(const std::map<std::string, std::string>& v, se::Value* ret);
 
-//bool uniform_to_seval(const cocos2d::Uniform* v, se::Value* ret);
-//bool Quaternion_to_seval(const cocos2d::Quaternion& v, se::Value* ret);
 bool ManifestAsset_to_seval(const cocos2d::extension::ManifestAsset& v, se::Value* ret);
-//bool AffineTransform_to_seval(const cocos2d::AffineTransform& v, se::Value* ret);
-////bool Viewport_to_seval(const cocos2d::experimental::Viewport& v, se::Value* ret);
 bool Data_to_seval(const cocos2d::Data& v, se::Value* ret);
 bool DownloadTask_to_seval(const cocos2d::network::DownloadTask& v, se::Value* ret);
 bool std_vector_EffectDefine_to_seval(const std::vector<cocos2d::ValueMap>& v, se::Value* ret);
