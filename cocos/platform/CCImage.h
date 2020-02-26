@@ -237,9 +237,6 @@ protected:
     bool initWithETC2Data(const unsigned char * data, ssize_t dataLen);
     bool initWithS3TCData(const unsigned char * data, ssize_t dataLen);
 
-    typedef struct sImageTGA tImageTGA;
-    bool initWithTGAData(tImageTGA* tgaData);
-
     bool saveImageToPNG(const std::string& filePath, bool isToRGB = true);
     bool saveImageToJPG(const std::string& filePath);
 

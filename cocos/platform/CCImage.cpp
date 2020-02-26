@@ -82,8 +82,6 @@ extern "C"
 #endif // CC_USE_WEBP
 
 #include "base/pvr.h"
-#include "base/TGAlib.h"
-
 #include "base/ccMacros.h"
 #include "platform/CCStdC.h"
 #include "platform/CCFileUtils.h"
@@ -590,22 +588,7 @@ bool Image::initWithImageData(const unsigned char * data, ssize_t dataLen)
             ret = initWithS3TCData(unpackedData, unpackedLen);
             break;
         default:
-            {
-                // load and detect image format
-                tImageTGA* tgaData = tgaLoadBuffer(unpackedData, unpackedLen);
-
-                if (tgaData != nullptr && tgaData->status == TGA_OK)
-                {
-                    ret = initWithTGAData(tgaData);
-                }
-                else
-                {
-                    CCLOG("Image: unsupported image format!");
-                }
-
-                free(tgaData);
-                break;
-            }
+            break;
         }
 
         if(unpackedData != data)
@@ -1412,82 +1395,6 @@ bool Image::initWithETC2Data(const unsigned char * data, ssize_t dataLen)
     memcpy(_data, static_cast<const unsigned char*>(data) + ETC2_PKM_HEADER_SIZE, _dataLen);
     
     return true;
-}
-
-bool Image::initWithTGAData(tImageTGA* tgaData)
-{
-    bool ret = false;
-
-    do
-    {
-        CC_BREAK_IF(tgaData == nullptr);
-
-        // tgaLoadBuffer only support type 2, 3, 10
-        if (2 == tgaData->type || 10 == tgaData->type)
-        {
-            // true color
-            // unsupported RGB555
-            if (tgaData->pixelDepth == 16)
-            {
-                _renderFormat = Image::PixelFormat::RGB5A1;
-            }
-            else if(tgaData->pixelDepth == 24)
-            {
-                _renderFormat = Image::PixelFormat::RGB888;
-            }
-            else if(tgaData->pixelDepth == 32)
-            {
-                _renderFormat = Image::PixelFormat::RGBA8888;
-            }
-            else
-            {
-                CCLOG("Image WARNING: unsupported true color tga data pixel format. FILE: %s", _filePath.c_str());
-                break;
-            }
-        }
-        else if(3 == tgaData->type)
-        {
-            // gray
-            if (8 == tgaData->pixelDepth)
-            {
-                _renderFormat = Image::PixelFormat::I8;
-            }
-            else
-            {
-                // actually this won't happen, if it happens, maybe the image file is not a tga
-                CCLOG("Image WARNING: unsupported gray tga data pixel format. FILE: %s", _filePath.c_str());
-                break;
-            }
-        }
-
-        _width = tgaData->width;
-        _height = tgaData->height;
-        _data = tgaData->imageData;
-        _dataLen = _width * _height * tgaData->pixelDepth / 8;
-        _fileType = Format::TGA;
-
-        _hasPremultipliedAlpha = false;
-        ret = true;
-
-    }while(false);
-
-    if (ret)
-    {
-        if (FileUtils::getInstance()->getFileExtension(_filePath) != ".tga")
-        {
-            CCLOG("Image WARNING: the image file suffix is not tga, but parsed as a tga image file. FILE: %s", _filePath.c_str());
-        }
-    }
-    else
-    {
-        if (tgaData && tgaData->imageData != nullptr)
-        {
-            free(tgaData->imageData);
-            _data = nullptr;
-        }
-    }
-
-    return ret;
 }
 
 static uint32_t makeFourCC(char ch0, char ch1, char ch2, char ch3)
