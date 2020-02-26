@@ -83,12 +83,6 @@ public:
         ETC,
         //! ETC2
         ETC2,
-        //! S3TC
-        S3TC,
-        //! ATITC
-//        ATITC,
-        //! TGA
-        TGA,
         //! Raw Data
         RAW_DATA,
         //! Unknown format
@@ -134,13 +128,6 @@ public:
         ETC2_RGB,
         //! ETC-compressed texture: GL_COMPRESSED_RGBA8_ETC2
         ETC2_RGBA,
-        //! S3TC-compressed texture: S3TC_Dxt1
-        S3TC_DXT1,
-        //! S3TC-compressed texture: S3TC_Dxt3
-        S3TC_DXT3,
-        //! S3TC-compressed texture: S3TC_Dxt5
-        S3TC_DXT5,
-        //! ATITC-compressed texture: ATC_RGB
         ATC_RGB,
         //! ATITC-compressed texture: ATC_EXPLICIT_ALPHA
         ATC_EXPLICIT_ALPHA,
@@ -235,7 +222,6 @@ protected:
     bool initWithPVRv3Data(const unsigned char * data, ssize_t dataLen);
     bool initWithETCData(const unsigned char * data, ssize_t dataLen);
     bool initWithETC2Data(const unsigned char * data, ssize_t dataLen);
-    bool initWithS3TCData(const unsigned char * data, ssize_t dataLen);
 
     bool saveImageToPNG(const std::string& filePath, bool isToRGB = true);
     bool saveImageToJPG(const std::string& filePath);
@@ -286,7 +272,6 @@ protected:
     bool isPvr(const unsigned char * data, ssize_t dataLen);
     bool isEtc(const unsigned char * data, ssize_t dataLen);
     bool isEtc2(const unsigned char * data, ssize_t dataLen);
-    bool isS3TC(const unsigned char * data,ssize_t dataLen);
 };
 
 // end of platform group
