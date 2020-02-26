@@ -442,7 +442,7 @@
 		46BFE00023CC573500CC5F8E /* MTLInputAssembler.h in Headers */ = {isa = PBXBuildFile; fileRef = 46BFDFD623CC573300CC5F8E /* MTLInputAssembler.h */; };
 		46BFE00123CC573500CC5F8E /* MTLBindingLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46BFDFD723CC573300CC5F8E /* MTLBindingLayout.cpp */; };
 		46BFE00223CC573500CC5F8E /* MTLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 46BFDFD823CC573300CC5F8E /* MTLUtils.h */; };
-		46BFE00323CC573500CC5F8E /* MTLWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46BFDFD923CC573300CC5F8E /* MTLWindow.cpp */; };
+		46BFE00323CC573500CC5F8E /* MTLWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46BFDFD923CC573300CC5F8E /* MTLWindow.mm */; };
 		46BFE00423CC573500CC5F8E /* GFXMTL.h in Headers */ = {isa = PBXBuildFile; fileRef = 46BFDFDA23CC573300CC5F8E /* GFXMTL.h */; };
 		46BFE00523CC573500CC5F8E /* MTLBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46BFDFDB23CC573300CC5F8E /* MTLBuffer.mm */; };
 		46BFE00623CC573500CC5F8E /* MTLSampler.h in Headers */ = {isa = PBXBuildFile; fileRef = 46BFDFDC23CC573300CC5F8E /* MTLSampler.h */; };
@@ -1234,7 +1234,7 @@
 		46BFDFD623CC573300CC5F8E /* MTLInputAssembler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLInputAssembler.h; sourceTree = "<group>"; };
 		46BFDFD723CC573300CC5F8E /* MTLBindingLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MTLBindingLayout.cpp; sourceTree = "<group>"; };
 		46BFDFD823CC573300CC5F8E /* MTLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLUtils.h; sourceTree = "<group>"; };
-		46BFDFD923CC573300CC5F8E /* MTLWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MTLWindow.cpp; sourceTree = "<group>"; };
+		46BFDFD923CC573300CC5F8E /* MTLWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MTLWindow.mm; sourceTree = "<group>"; };
 		46BFDFDA23CC573300CC5F8E /* GFXMTL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFXMTL.h; sourceTree = "<group>"; };
 		46BFDFDB23CC573300CC5F8E /* MTLBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MTLBuffer.mm; sourceTree = "<group>"; };
 		46BFDFDC23CC573300CC5F8E /* MTLSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLSampler.h; sourceTree = "<group>"; };
@@ -2531,7 +2531,7 @@
 				46BFDFD823CC573300CC5F8E /* MTLUtils.h */,
 				46BFDFE423CC573400CC5F8E /* MTLUtils.hpp */,
 				46BFDFD323CC573300CC5F8E /* MTLUtils.mm */,
-				46BFDFD923CC573300CC5F8E /* MTLWindow.cpp */,
+				46BFDFD923CC573300CC5F8E /* MTLWindow.mm */,
 				46BFDFD223CC573300CC5F8E /* MTLWindow.h */,
 			);
 			path = "gfx-metal";
@@ -3429,7 +3429,7 @@
 				BA06A68A23583DBD007740C5 /* Memory.cc in Sources */,
 				ED30579A1BEC77B70083C3ED /* ConvertUTF.c in Sources */,
 				4617863320522469008256E1 /* Uri.cpp in Sources */,
-				46BFE00323CC573500CC5F8E /* MTLWindow.cpp in Sources */,
+				46BFE00323CC573500CC5F8E /* MTLWindow.mm in Sources */,
 				1A28FF6B1F20AFAB007A1D9D /* SRConstants.m in Sources */,
 				294D7D9C1D0E93A2002CE7B7 /* CCDevice-apple.mm in Sources */,
 				1A586C452064C90500B47573 /* EJConvertTypedArray.m in Sources */,
