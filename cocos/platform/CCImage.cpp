@@ -74,8 +74,6 @@ extern "C"
 #endif // CC_USE_WEBP
 
 #include "base/pvr.h"
-#include "base/ccMacros.h"
-#include "platform/CCStdC.h"
 #include "platform/CCFileUtils.h"
 #include "base/ZipUtils.h"
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
