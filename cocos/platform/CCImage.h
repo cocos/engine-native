@@ -154,8 +154,6 @@ public:
     bool                     hasAlpha() const;
     bool                     isCompressed() const;
 
-    const PixelFormatInfo& getPixelFormatInfo() const;
-
     /**
      @brief    Save Image data to the specified file, with specified format.
      @param    filename        the file's absolute path, including file suffix.

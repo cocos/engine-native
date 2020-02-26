@@ -92,36 +92,6 @@ NS_CC_BEGIN
 
 namespace
 {
-    typedef Image::PixelFormatInfoMap::value_type PixelFormatInfoMapValue;
-    static const PixelFormatInfoMapValue TexturePixelFormatInfoTablesValue[] =
-    {
-        PixelFormatInfoMapValue(GFXFormat::BGRA8UN, Image::PixelFormatInfo(32, false, true)),
-        PixelFormatInfoMapValue(GFXFormat::RGBA8, Image::PixelFormatInfo(32, false, true)),
-        PixelFormatInfoMapValue(GFXFormat::RGBA4, Image::PixelFormatInfo(16, false, true)),
-        PixelFormatInfoMapValue(GFXFormat::RGB5A1, Image::PixelFormatInfo(16, false, true)),
-        PixelFormatInfoMapValue(GFXFormat::R5G6B5, Image::PixelFormatInfo(16, false, false)),
-        PixelFormatInfoMapValue(GFXFormat::RGB8, Image::PixelFormatInfo(24, false, false)),
-        PixelFormatInfoMapValue(GFXFormat::A8, Image::PixelFormatInfo(8, false, false)),
-        PixelFormatInfoMapValue(GFXFormat::PVRTC_RGB2, Image::PixelFormatInfo(2, true, false)),
-        PixelFormatInfoMapValue(GFXFormat::PVRTC_RGBA2, Image::PixelFormatInfo(2, true, true)),
-        PixelFormatInfoMapValue(GFXFormat::PVRTC_RGB4, Image::PixelFormatInfo(4, true, false)),
-        PixelFormatInfoMapValue(GFXFormat::PVRTC_RGBA4, Image::PixelFormatInfo(4, true, true)),
-        PixelFormatInfoMapValue(GFXFormat::ETC_RGB8, Image::PixelFormatInfo(4, true, false)),
-        PixelFormatInfoMapValue(GFXFormat::ETC2_RGB8, Image::PixelFormatInfo(4, true, false)),
-        PixelFormatInfoMapValue(GFXFormat::ETC2_RGBA8, Image::PixelFormatInfo(8, true, true)),
-    };
-
-    //CLASS IMPLEMENTATIONS:
-
-    //The PixpelFormat corresponding information
-    const Image::PixelFormatInfoMap _pixelFormatInfoTables(TexturePixelFormatInfoTablesValue,
-                                                                          TexturePixelFormatInfoTablesValue + sizeof(TexturePixelFormatInfoTablesValue) / sizeof(TexturePixelFormatInfoTablesValue[0]));
-
-    const Image::PixelFormatInfoMap& getPixelFormatInfoMap()
-    {
-        return _pixelFormatInfoTables;
-    }
-
     static const int PVR_TEXTURE_FLAG_TYPE_MASK = 0xff;
 
     static bool _PVRHaveAlphaPremultiplied = false;
@@ -517,17 +487,12 @@ Image::Format Image::detectFormat(const unsigned char * data, ssize_t dataLen)
 
 bool Image::hasAlpha() const
 {
-    return getPixelFormatInfoMap().at(_renderFormat).alpha;
+    return GFX_FORMAT_INFOS[static_cast<int>(_renderFormat)].hasAlpha;
 }
 
 bool Image::isCompressed() const
 {
-    return getPixelFormatInfoMap().at(_renderFormat).compressed;
-}
-
-const Image::PixelFormatInfo& Image::getPixelFormatInfo() const
-{
-    return getPixelFormatInfoMap().at(_renderFormat);
+    return GFX_FORMAT_INFOS[static_cast<int>(_renderFormat)].isCompressed;
 }
 
 namespace
@@ -908,16 +873,15 @@ bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
         return false;
     }
 
-    auto it = getPixelFormatInfoMap().find(v2_pixel_formathash.at(formatFlags));
-
-    if (it == getPixelFormatInfoMap().end())
+    auto it = v2_pixel_formathash.find(formatFlags);
+    if (it == v2_pixel_formathash.end() )
     {
         CCLOG("initWithPVRv2Data: WARNING: Unsupported PVR Pixel Format: 0x%02X. Re-encode it with a OpenGL pixel format variant", (int)formatFlags);
         return false;
     }
 
-    _renderFormat = it->first;
-    int bpp = it->second.bpp;
+    _renderFormat = it->second;
+    int bpp = GFX_FORMAT_INFOS[static_cast<int>(_renderFormat)].size;
 
     //Reset num of mipmaps
     _numberOfMipmaps = 0;
@@ -1027,17 +991,16 @@ bool Image::initWithPVRv3Data(const unsigned char * data, ssize_t dataLen)
         return false;
     }
 
-    auto it = getPixelFormatInfoMap().find(v3_pixel_formathash.at(pixelFormat));
-
-    if (it == getPixelFormatInfoMap().end())
+    auto it = v3_pixel_formathash.find(pixelFormat);
+    if (it == v3_pixel_formathash.end() )
     {
         CCLOG("initWithPVRv3Data: WARNING: Unsupported PVR Pixel Format: 0x%016llX. Re-encode it with a OpenGL pixel format variant",
               static_cast<unsigned long long>(pixelFormat));
         return false;
     }
 
-    _renderFormat = it->first;
-    int bpp = it->second.bpp;
+    _renderFormat = it->second;
+    int bpp = GFX_FORMAT_INFOS[static_cast<int>(_renderFormat)].size;;
 
     // flags
     int flags = CC_SWAP_INT32_LITTLE_TO_HOST(header->flags);
