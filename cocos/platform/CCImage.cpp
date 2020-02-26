@@ -34,14 +34,6 @@ THE SOFTWARE.
 #include "base/ccConfig.h" // CC_USE_JPEG, CC_USE_WEBP
 #include "base/ccUtils.h"
 
-#ifndef MIN
-#define MIN(x,y) (((x) > (y)) ? (y) : (x))
-#endif  // MIN
-
-#ifndef MAX
-#define MAX(x,y) (((x) < (y)) ? (y) : (x))
-#endif  // MAX
-
 extern "C"
 {
     // To resolve link error when building 32bits with Xcode 6.
@@ -92,10 +84,6 @@ extern "C"
 #endif
 
 #include <map>
-
-#define CC_GL_ATC_RGB_AMD                                          0x8C92
-#define CC_GL_ATC_RGBA_EXPLICIT_ALPHA_AMD                          0x8C93
-#define CC_GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD                      0x87EE
 
 NS_CC_BEGIN
 
