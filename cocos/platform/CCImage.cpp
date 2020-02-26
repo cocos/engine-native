@@ -77,7 +77,6 @@ extern "C"
 #include "base/ccMacros.h"
 #include "platform/CCStdC.h"
 #include "platform/CCFileUtils.h"
-#include "base/CCConfiguration.h"
 #include "base/ZipUtils.h"
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
 #include "platform/android/CCFileUtils-android.h"
@@ -791,40 +790,6 @@ bool Image::initWithPngData(const unsigned char * data, ssize_t dataLen)
 #endif //CC_USE_PNG
 }
 
-namespace
-{
-    bool testFormatForPvr2TCSupport(PVR2TexturePixelFormat format)
-    {
-        return true;
-    }
-
-    bool testFormatForPvr3TCSupport(PVR3TexturePixelFormat format)
-    {
-        switch (format) {
-            case PVR3TexturePixelFormat::BGRA8888:
-                return Configuration::getInstance()->supportsBGRA8888();
-
-            case PVR3TexturePixelFormat::PVRTC2BPP_RGB:
-            case PVR3TexturePixelFormat::PVRTC2BPP_RGBA:
-            case PVR3TexturePixelFormat::PVRTC4BPP_RGB:
-            case PVR3TexturePixelFormat::PVRTC4BPP_RGBA:
-            case PVR3TexturePixelFormat::ETC1:
-            case PVR3TexturePixelFormat::RGBA8888:
-            case PVR3TexturePixelFormat::RGBA4444:
-            case PVR3TexturePixelFormat::RGBA5551:
-            case PVR3TexturePixelFormat::RGB565:
-            case PVR3TexturePixelFormat::RGB888:
-            case PVR3TexturePixelFormat::A8:
-            case PVR3TexturePixelFormat::L8:
-            case PVR3TexturePixelFormat::LA88:
-                return true;
-
-            default:
-                return false;
-        }
-    }
-}
-
 bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
 {
     int dataLength = 0, dataOffset = 0, dataSize = 0;
@@ -840,8 +805,6 @@ bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
         return false;
     }
 
-    Configuration *configuration = Configuration::getInstance();
-
     //can not detect the premultiplied alpha from pvr file, use _PVRHaveAlphaPremultiplied instead.
     _hasPremultipliedAlpha = _PVRHaveAlphaPremultiplied;
 
@@ -851,20 +814,6 @@ bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
     if (flipped)
     {
         CCLOG("initWithPVRv2Data: WARNING: Image is flipped. Regenerate it using PVRTexTool");
-    }
-
-    if (! configuration->supportsNPOT() &&
-        (static_cast<int>(header->width) != utils::nextPOT(header->width)
-            || static_cast<int>(header->height) != utils::nextPOT(header->height)))
-    {
-        CCLOG("initWithPVRv2Data: ERROR: Loading an NPOT texture (%dx%d) but is not supported on this device", header->width, header->height);
-        return false;
-    }
-
-    if (!testFormatForPvr2TCSupport(formatFlags))
-    {
-        CCLOG("initWithPVRv2Data: WARNING: Unsupported PVR Pixel Format: 0x%02X. Re-encode it with a OpenGL pixel format variant", (int)formatFlags);
-        return false;
     }
 
     if (v2_pixel_formathash.find(formatFlags) == v2_pixel_formathash.end())
@@ -893,8 +842,6 @@ bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
     //Get ptr to where data starts..
     dataLength = CC_SWAP_INT32_LITTLE_TO_HOST(header->dataLength);
 
-    assert(Configuration::getInstance()->supportsPVRTC());
-
     //Move by size of header
     _dataLen = dataLen - sizeof(PVRv2TexHeader);
     _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));
@@ -914,12 +861,6 @@ bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
                 widthBlocks = width / 4;
                 heightBlocks = height / 4;
                 break;
-            case PVR2TexturePixelFormat::BGRA8888:
-                if (Configuration::getInstance()->supportsBGRA8888() == false)
-                {
-                    CCLOG("initWithPVRv2Data: Image. BGRA8888 not supported on this device");
-                    return false;
-                }
             default:
                 blockSize = 1;
                 widthBlocks = width;
@@ -976,14 +917,6 @@ bool Image::initWithPVRv3Data(const unsigned char * data, ssize_t dataLen)
     // parse pixel format
     PVR3TexturePixelFormat pixelFormat = static_cast<PVR3TexturePixelFormat>(header->pixelFormat);
 
-    if (!testFormatForPvr3TCSupport(pixelFormat))
-    {
-        CCLOG("initWithPVRv3Data: WARNING: Unsupported PVR Pixel Format: 0x%016llX. Re-encode it with a OpenGL pixel format variant",
-              static_cast<unsigned long long>(pixelFormat));
-        return false;
-    }
-
-
     if (v3_pixel_formathash.find(pixelFormat) == v3_pixel_formathash.end())
     {
         CCLOG("initWithPVRv3Data: WARNING: Unsupported PVR Pixel Format: 0x%016llX. Re-encode it with a OpenGL pixel format variant",
@@ -1023,8 +956,6 @@ bool Image::initWithPVRv3Data(const unsigned char * data, ssize_t dataLen)
     int dataOffset = 0, dataSize = 0;
     int blockSize = 0, widthBlocks = 0, heightBlocks = 0;
 
-    assert(Configuration::getInstance()->supportsPVRTC());
-
     _dataLen = dataLen - (sizeof(PVRv3TexHeader) + header->metadataLength);
     _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));
     memcpy(_data, static_cast<const unsigned char*>(data) + sizeof(PVRv3TexHeader) + header->metadataLength, _dataLen);
@@ -1053,12 +984,6 @@ bool Image::initWithPVRv3Data(const unsigned char * data, ssize_t dataLen)
                 widthBlocks = width / 4;
                 heightBlocks = height / 4;
                 break;
-            case PVR3TexturePixelFormat::BGRA8888:
-                if (! Configuration::getInstance()->supportsBGRA8888())
-                {
-                    CCLOG("initWithPVRv3Data: Image. BGRA8888 not supported on this device");
-                    return false;
-                }
             default:
                 blockSize = 1;
                 widthBlocks = width;
@@ -1113,18 +1038,11 @@ bool Image::initWithETCData(const unsigned char * data, ssize_t dataLen)
         return false;
     }
 
-    assert(Configuration::getInstance()->supportsETC());
-
-    //old opengl version has no define for GL_ETC1_RGB8_OES, add macro to make compiler happy.
-#ifdef GL_ETC1_RGB8_OES
-    _renderFormat = Image::PixelFormat::ETC;
+    _renderFormat = GFXFormat::ETC_RGB8;
     _dataLen = dataLen - ETC_PKM_HEADER_SIZE;
     _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));
     memcpy(_data, static_cast<const unsigned char*>(data) + ETC_PKM_HEADER_SIZE, _dataLen);
     return true;
-#endif
-
-    return false;
 }
 
 bool Image::initWithETC2Data(const unsigned char * data, ssize_t dataLen)
