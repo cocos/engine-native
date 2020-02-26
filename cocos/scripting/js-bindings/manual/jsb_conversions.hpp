@@ -110,22 +110,11 @@ bool seval_to_std_vector_int(const se::Value& v, std::vector<int>* ret);
 bool seval_to_std_vector_uint16(const se::Value& v, std::vector<uint16_t>* ret);
 bool seval_to_std_vector_float(const se::Value& v, std::vector<float>* ret);
 bool seval_to_std_vector_Vec2(const se::Value& v, std::vector<cocos2d::Vec2>* ret);
-//bool seval_to_Rect(const se::Value& v, cocos2d::Rect* rect);
 bool seval_to_Uint8Array(const se::Value& v, uint8_t* ret);
 
-
-//bool seval_to_std_vector_Touch(const se::Value& v, std::vector<cocos2d::Touch*>* ret);
 bool seval_to_std_map_string_string(const se::Value& v, std::map<std::string, std::string>* ret);
-//bool seval_to_Quaternion(const se::Value& v, cocos2d::Quaternion* ret);
-//bool seval_to_AffineTransform(const se::Value& v, cocos2d::AffineTransform* ret);
-////bool seval_to_Viewport(const se::Value& v, cocos2d::experimental::Viewport* ret);
 bool seval_to_Data(const se::Value& v, cocos2d::Data* ret);
 bool seval_to_DownloaderHints(const se::Value& v, cocos2d::network::DownloaderHints* ret);
-//bool seval_to_TTFConfig(const se::Value& v, cocos2d::TTFConfig* ret);
-
-//box2d seval to native convertion
-//bool seval_to_b2Vec2(const se::Value& v, b2Vec2* ret);
-//bool seval_to_b2AABB(const se::Value& v, b2AABB* ret);
 
 #if USE_GFX_RENDERER
 #endif
@@ -769,24 +758,6 @@ bool Vector_to_seval(const cocos2d::Vector<T*>& v, se::Value* ret)
 
     return ok;
 }
-//
-//template<typename T>
-//bool Map_string_key_to_seval(const cocos2d::Map<std::string, T*>& v, se::Value* ret)
-//{
-//    assert(ret != nullptr);
-//
-//    se::HandleObject obj(se::Object::createPlainObject());
-//
-//    se::Value tmp;
-//    for (const auto& e : v)
-//    {
-//        native_ptr_to_seval<T>(e.second, &tmp);
-//        obj->setProperty(e.first.c_str(), tmp);
-//    }
-//
-//    ret->setObject(obj, true);
-//    return false;
-//}
 
 template<typename T>
 bool seval_to_reference(const se::Value& v, T** ret)
