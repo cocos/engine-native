@@ -9,8 +9,8 @@
             "to": "res"
         },
         {
-            "from": "../../../subpackages",
-            "to": "subpackages"
+            "from": "../../../assets",
+            "to": "assets"
         },
         {
             "from": "../../../main.js",
