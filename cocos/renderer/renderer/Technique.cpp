@@ -202,14 +202,12 @@ Technique::Parameter::Parameter(const std::string& name, Type type, float* value
     }
 }
 
-Technique::Parameter::Parameter(const std::string& name, Type type, se::Object* jsValue)
+Technique::Parameter::Parameter(const std::string& name, Type type, se::Object* jsValue, uint8_t count)
 :_name(name)
-,_count(1)
+,_count(count)
 ,_type(type)
 {
     _hashName = std::hash<std::string>{}(name);
-    
-    assert(_type == Type::FLOAT4);
     
     se::ScriptEngine::getInstance()->clearException();
     se::AutoHandleScope hs;
@@ -405,6 +403,18 @@ void Technique::Parameter::setShareValue(se::Object *jsValue)
     _jsValue->getTypedArrayData(&_shareValue, (std::size_t*)&_bytes);
 }
 
+void Technique::Parameter::setValue(void* value)
+{
+    switch (_type) {
+        case Type::TEXTURE_2D:
+            setTexture((Texture*)value);
+            break;
+        default:
+            RENDERER_LOGD("Not support Parameter::setValue with type : %d", (int)_type);
+            break;
+    }
+}
+
 void Technique::Parameter::freeValue()
 {
     if (_value)
@@ -447,13 +457,9 @@ void Technique::Parameter::freeValue()
 
 uint32_t Technique::_genID = 0;
 
-Technique::Technique(const std::vector<std::string>& stages,
-                     const Vector<Pass*>& passes,
-                     int layer)
+Technique::Technique(const std::string& name, const Vector<Pass*>& passes)
 : _id(_genID++)
-, _stageIDs(Config::getStageIDs(stages))
 , _passes(passes)
-, _layer(layer)
 {
 //    RENDERER_LOGD("Technique construction: %p", this);
 }

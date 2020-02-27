@@ -12,48 +12,41 @@ bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_ProgramLib_define);
 SE_DECLARE_FUNC(js_renderer_ProgramLib_ProgramLib);
 
-extern se::Object* __jsb_cocos2d_renderer_CustomProperties_proto;
-extern se::Class* __jsb_cocos2d_renderer_CustomProperties_class;
+extern se::Object* __jsb_cocos2d_renderer_EffectBase_proto;
+extern se::Class* __jsb_cocos2d_renderer_EffectBase_class;
 
-bool js_register_cocos2d_renderer_CustomProperties(se::Object* obj);
+bool js_register_cocos2d_renderer_EffectBase(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_define);
-SE_DECLARE_FUNC(js_renderer_CustomProperties_CustomProperties);
-
-extern se::Object* __jsb_cocos2d_renderer_Pass_proto;
-extern se::Class* __jsb_cocos2d_renderer_Pass_class;
-
-bool js_register_cocos2d_renderer_Pass(se::Object* obj);
-bool register_all_renderer(se::Object* obj);
-SE_DECLARE_FUNC(js_renderer_Pass_getStencilTest);
-SE_DECLARE_FUNC(js_renderer_Pass_setStencilBack);
-SE_DECLARE_FUNC(js_renderer_Pass_getProgramName);
-SE_DECLARE_FUNC(js_renderer_Pass_setCullMode);
-SE_DECLARE_FUNC(js_renderer_Pass_setBlend);
-SE_DECLARE_FUNC(js_renderer_Pass_setProgramName);
-SE_DECLARE_FUNC(js_renderer_Pass_disableStencilTest);
-SE_DECLARE_FUNC(js_renderer_Pass_setStencilFront);
-SE_DECLARE_FUNC(js_renderer_Pass_setDepth);
-SE_DECLARE_FUNC(js_renderer_Pass_Pass);
+SE_DECLARE_FUNC(js_renderer_EffectBase_getProperty);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setStencilTest);
+SE_DECLARE_FUNC(js_renderer_EffectBase_getDefine);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setCullMode);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setBlend);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setStencil);
+SE_DECLARE_FUNC(js_renderer_EffectBase_getPasses);
+SE_DECLARE_FUNC(js_renderer_EffectBase_setDepth);
+SE_DECLARE_FUNC(js_renderer_EffectBase_define);
 
 extern se::Object* __jsb_cocos2d_renderer_Effect_proto;
 extern se::Class* __jsb_cocos2d_renderer_Effect_class;
 
 bool js_register_cocos2d_renderer_Effect(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
-SE_DECLARE_FUNC(js_renderer_Effect_getProperty);
-SE_DECLARE_FUNC(js_renderer_Effect_setStencilTest);
-SE_DECLARE_FUNC(js_renderer_Effect_getTechnique);
-SE_DECLARE_FUNC(js_renderer_Effect_getDefine);
-SE_DECLARE_FUNC(js_renderer_Effect_setCullMode);
-SE_DECLARE_FUNC(js_renderer_Effect_setStencil);
-SE_DECLARE_FUNC(js_renderer_Effect_setBlend);
-SE_DECLARE_FUNC(js_renderer_Effect_getHash);
-SE_DECLARE_FUNC(js_renderer_Effect_updateHash);
-SE_DECLARE_FUNC(js_renderer_Effect_copy);
 SE_DECLARE_FUNC(js_renderer_Effect_clear);
-SE_DECLARE_FUNC(js_renderer_Effect_define);
+SE_DECLARE_FUNC(js_renderer_Effect_switchTechnique);
+SE_DECLARE_FUNC(js_renderer_Effect_copy);
 SE_DECLARE_FUNC(js_renderer_Effect_Effect);
+
+extern se::Object* __jsb_cocos2d_renderer_EffectVariant_proto;
+extern se::Class* __jsb_cocos2d_renderer_EffectVariant_class;
+
+bool js_register_cocos2d_renderer_EffectVariant(se::Object* obj);
+bool register_all_renderer(se::Object* obj);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_setEffect);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_updateHash);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_copy);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_getEffect);
+SE_DECLARE_FUNC(js_renderer_EffectVariant_EffectVariant);
 
 extern se::Object* __jsb_cocos2d_renderer_AssemblerBase_proto;
 extern se::Class* __jsb_cocos2d_renderer_AssemblerBase_class;
@@ -85,7 +78,9 @@ SE_DECLARE_FUNC(js_renderer_NodeProxy_disableVisit);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_switchTraverseToRender);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_notifyUpdateParent);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_destroyImmediately);
+SE_DECLARE_FUNC(js_renderer_NodeProxy_isValid);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_enableVisit);
+SE_DECLARE_FUNC(js_renderer_NodeProxy_getLocalMatrix);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_setName);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_clearAssembler);
 SE_DECLARE_FUNC(js_renderer_NodeProxy_switchTraverseToVisit);
@@ -249,10 +244,8 @@ SE_DECLARE_FUNC(js_renderer_Assembler_updateVerticesRange);
 SE_DECLARE_FUNC(js_renderer_Assembler_setRenderDataList);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateMeshIndex);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateEffect);
-SE_DECLARE_FUNC(js_renderer_Assembler_getCustomProperties);
 SE_DECLARE_FUNC(js_renderer_Assembler_updateIndicesRange);
 SE_DECLARE_FUNC(js_renderer_Assembler_ignoreOpacityFlag);
-SE_DECLARE_FUNC(js_renderer_Assembler_setCustomProperties);
 SE_DECLARE_FUNC(js_renderer_Assembler_Assembler);
 
 extern se::Object* __jsb_cocos2d_renderer_CustomAssembler_proto;
@@ -322,6 +315,7 @@ extern se::Class* __jsb_cocos2d_renderer_MeshAssembler_class;
 bool js_register_cocos2d_renderer_MeshAssembler(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_MeshAssembler_setNode);
+SE_DECLARE_FUNC(js_renderer_MeshAssembler_updateIAData);
 SE_DECLARE_FUNC(js_renderer_MeshAssembler_MeshAssembler);
 
 extern se::Object* __jsb_cocos2d_renderer_SimpleSprite3D_proto;
@@ -337,5 +331,16 @@ extern se::Class* __jsb_cocos2d_renderer_SlicedSprite3D_class;
 bool js_register_cocos2d_renderer_SlicedSprite3D(se::Object* obj);
 bool register_all_renderer(se::Object* obj);
 SE_DECLARE_FUNC(js_renderer_SlicedSprite3D_SlicedSprite3D);
+
+extern se::Object* __jsb_cocos2d_renderer_Particle3DAssembler_proto;
+extern se::Class* __jsb_cocos2d_renderer_Particle3DAssembler_class;
+
+bool js_register_cocos2d_renderer_Particle3DAssembler(se::Object* obj);
+bool register_all_renderer(se::Object* obj);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setTrailSpace);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setTrailVertexFormat);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setParticleSpace);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_setTrailModuleEnable);
+SE_DECLARE_FUNC(js_renderer_Particle3DAssembler_Particle3DAssembler);
 
 #endif //#if (USE_GFX_RENDERER > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

@@ -388,9 +388,21 @@ void ParticleSimulator::render(float dt)
             }
             
             auto x = newPos.x, y = newPos.y;
-            auto size_2 = particle.size * 0.5;
-            auto x1 = -size_2, y1 = -size_2;
-            auto x2 = size_2, y2 = size_2;
+            auto width = particle.size;
+            auto height = width;
+            if (aspectRatio > 1.0f)
+            {
+                height = width / aspectRatio;
+            }
+            else
+            {
+                width = height * aspectRatio;
+            }
+            
+            auto halfW = width * 0.5;
+            auto halfH = height * 0.5;
+            auto x1 = -halfW, y1 = -halfH;
+            auto x2 = halfW, y2 = halfH;
             
             auto rad = -CC_DEGREES_TO_RADIANS(particle.rotation);
             auto cr = cos(rad), sr = sin(rad);
@@ -464,6 +476,12 @@ void ParticleSimulator::render(float dt)
             _finishedCallback();
         }
     }
+}
+
+uint32_t ParticleSimulator::getRenderOrder() const
+{
+    if (!_nodeProxy) return 0;
+    return _nodeProxy->getRenderOrder();
 }
 
 NS_CC_END

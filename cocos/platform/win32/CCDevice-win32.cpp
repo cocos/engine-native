@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "platform/CCDevice.h"
 #include "platform/CCFileUtils.h"
 #include "platform/CCStdC.h"
+#include "platform/CCApplication.h"
 
 NS_CC_BEGIN
 
@@ -94,6 +95,11 @@ cocos2d::Vec4 Device::getSafeAreaEdge()
 {
     // no SafeArea concept on win32, return ZERO Vec4.
     return cocos2d::Vec4();
+}
+
+int Device::getDevicePixelRatio()
+{
+    return 1;
 }
 
 NS_CC_END

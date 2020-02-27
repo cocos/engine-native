@@ -57,6 +57,11 @@ void Application::updateViewSize(int width, int height)
 {
     _viewSize.x = width;
     _viewSize.y = height;
+    
+    // handle resize event
+    Application::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+        EventDispatcher::dispatchResizeEvent(width, height);
+    });
 }
 
 extern "C" {
@@ -128,12 +133,12 @@ bool Application::applicationDidFinishLaunching()
     return true;
 }
 
-void Application::applicationDidEnterBackground()
+void Application::onPause()
 {
 
 }
 
-void Application::applicationWillEnterForeground()
+void Application::onResume()
 {
 
 }

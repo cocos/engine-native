@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated May 1, 2019. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2019, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -15,16 +15,16 @@
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
  *
- * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
- * NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS
- * INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #include "spine-creator-support/SkeletonRenderer.h"
@@ -38,6 +38,7 @@
 #include "renderer/scene/assembler/CustomAssembler.hpp"
 #include "SkeletonDataMgr.h"
 #include "renderer/gfx/Texture.h"
+#include "spine-creator-support/AttachUtil.h"
 
 USING_NS_CC;
 USING_NS_MW;
@@ -158,6 +159,7 @@ SkeletonRenderer::~SkeletonRenderer () {
         _debugBuffer = nullptr;
     }
     
+    CC_SAFE_RELEASE(_attachUtil);
     CC_SAFE_RELEASE(_nodeProxy);
     CC_SAFE_RELEASE(_effect);
     stopSchedule();
@@ -192,11 +194,10 @@ void SkeletonRenderer::initWithJsonFile (const std::string& skeletonDataFile, At
     _atlas = atlas;
     _attachmentLoader = new (__FILE__, __LINE__) Cocos2dAtlasAttachmentLoader(_atlas);
 
-    SkeletonJson* json = new (__FILE__, __LINE__) SkeletonJson(_attachmentLoader);
-    json->setScale(scale);
-    SkeletonData* skeletonData = json->readSkeletonDataFile(skeletonDataFile.c_str());
-    CCASSERT(skeletonData, !json->getError().isEmpty() ? json->getError().buffer() : "Error reading skeleton data.");
-    delete json;
+    SkeletonJson json(_attachmentLoader);
+    json.setScale(scale);
+    SkeletonData* skeletonData = json.readSkeletonDataFile(skeletonDataFile.c_str());
+    CCASSERT(skeletonData, !json.getError().isEmpty() ? json.getError().buffer() : "Error reading skeleton data.");
 
     _ownsSkeleton = true;
     setSkeletonData(skeletonData, true);
@@ -210,11 +211,10 @@ void SkeletonRenderer::initWithJsonFile (const std::string& skeletonDataFile, co
 
     _attachmentLoader = new (__FILE__, __LINE__) Cocos2dAtlasAttachmentLoader(_atlas);
 
-    SkeletonJson* json = new (__FILE__, __LINE__) SkeletonJson(_attachmentLoader);
-    json->setScale(scale);
-    SkeletonData* skeletonData = json->readSkeletonDataFile(skeletonDataFile.c_str());
-    CCASSERT(skeletonData, !json->getError().isEmpty() ? json->getError().buffer() : "Error reading skeleton data.");
-    delete json;
+    SkeletonJson json(_attachmentLoader);
+    json.setScale(scale);
+    SkeletonData* skeletonData = json.readSkeletonDataFile(skeletonDataFile.c_str());
+    CCASSERT(skeletonData, !json.getError().isEmpty() ? json.getError().buffer() : "Error reading skeleton data.");
 
     _ownsSkeleton = true;
     _ownsAtlas = true;
@@ -227,11 +227,11 @@ void SkeletonRenderer::initWithBinaryFile (const std::string& skeletonDataFile, 
     _atlas = atlas;
     _attachmentLoader = new (__FILE__, __LINE__) Cocos2dAtlasAttachmentLoader(_atlas);
     
-    SkeletonBinary* binary = new (__FILE__, __LINE__) SkeletonBinary(_attachmentLoader);
-    binary->setScale(scale);
-    SkeletonData* skeletonData = binary->readSkeletonDataFile(skeletonDataFile.c_str());
-    CCASSERT(skeletonData, !binary->getError().isEmpty() ? binary->getError().buffer() : "Error reading skeleton data.");
-    delete binary;
+    SkeletonBinary binary(_attachmentLoader);
+    binary.setScale(scale);
+    SkeletonData* skeletonData = binary.readSkeletonDataFile(skeletonDataFile.c_str());
+    CCASSERT(skeletonData, !binary.getError().isEmpty() ? binary.getError().buffer() : "Error reading skeleton data.");
+    
     _ownsSkeleton = true;
     setSkeletonData(skeletonData, true);
     
@@ -244,11 +244,11 @@ void SkeletonRenderer::initWithBinaryFile (const std::string& skeletonDataFile, 
     
     _attachmentLoader = new (__FILE__, __LINE__) Cocos2dAtlasAttachmentLoader(_atlas);
     
-    SkeletonBinary* binary = new (__FILE__, __LINE__) SkeletonBinary(_attachmentLoader);
-    binary->setScale(scale);
-    SkeletonData* skeletonData = binary->readSkeletonDataFile(skeletonDataFile.c_str());
-    CCASSERT(skeletonData, !binary->getError().isEmpty() ? binary->getError().buffer() : "Error reading skeleton data.");
-    delete binary;
+    SkeletonBinary binary(_attachmentLoader);
+    binary.setScale(scale);
+    SkeletonData* skeletonData = binary.readSkeletonDataFile(skeletonDataFile.c_str());
+    CCASSERT(skeletonData, !binary.getError().isEmpty() ? binary.getError().buffer() : "Error reading skeleton data.");
+    
     _ownsSkeleton = true;
     _ownsAtlas = true;
     setSkeletonData(skeletonData, true);
@@ -258,7 +258,7 @@ void SkeletonRenderer::initWithBinaryFile (const std::string& skeletonDataFile, 
 
 void SkeletonRenderer::render (float deltaTime) {
     
-    if (_nodeProxy == nullptr) {
+    if (!_nodeProxy || !_effect) {
         return;
     }
     
@@ -354,48 +354,31 @@ void SkeletonRenderer::render (float deltaTime) {
                 curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
         }
         
-		double curHash = curTextureIndex + (curBlendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25);
-        Effect* renderEffect = assembler->getEffect(materialLen);
-        Technique::Parameter* param = nullptr;
-        Pass* pass = nullptr;
-        
+        double curHash = curTextureIndex + (curBlendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25) + ((int)_effect->getHash() << 26);
+        EffectVariant* renderEffect = assembler->getEffect(materialLen);
+        bool needUpdate = false;
         if (renderEffect) {
             double renderHash = renderEffect->getHash();
             if (abs(renderHash - curHash) >= 0.01) {
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                Technique* tech = renderEffect->getTechnique(techStage);
-                cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
+                needUpdate = true;
             }
         }
         else {
-            if (_effect == nullptr) {
-                cocos2d::log("SkeletonRenderer:update get effect failed");
-                assembler->reset();
-                return;
-            }
-            auto effect = new cocos2d::renderer::Effect();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
-            
-            Technique* tech = effect->getTechnique(techStage);
-            cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-            pass = *(passes.begin());
-            
+
             assembler->updateEffect(materialLen, effect);
             renderEffect = effect;
-            param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+            needUpdate = true;
         }
         
-        if (param) {
-            param->setTexture(texture->getNativeTexture());
-        }
-        
-        if (pass) {
-            pass->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+        if (needUpdate) {
+            renderEffect->setProperty(textureKey, texture->getNativeTexture());
+            renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                            BlendOp::ADD, curBlendSrc, curBlendDst);
         }
-        
+
         renderEffect->updateHash(curHash);
 		
         // save new segment count pos field
@@ -892,6 +875,12 @@ void SkeletonRenderer::render (float deltaTime) {
         }
         _debugBuffer->writeFloat32(DebugType::None);
     }
+    
+    // Synchronize attach node transform
+    if (_attachUtil)
+    {
+        _attachUtil->syncAttachedNode(_nodeProxy, _skeleton);
+    }
 }
 
 cocos2d::Rect SkeletonRenderer::getBoundingBox () const {
@@ -968,14 +957,16 @@ Slot* SkeletonRenderer::findSlot (const std::string& slotName) const {
 
 void SkeletonRenderer::setSkin (const std::string& skinName) {
     if (_skeleton) {
-    	_skeleton->setSkin(skinName.empty() ? 0 : skinName.c_str());
-	}
+        _skeleton->setSkin(skinName.empty() ? 0 : skinName.c_str());
+        _skeleton->setSlotsToSetupPose();
+    }
 }
 
 void SkeletonRenderer::setSkin (const char* skinName) {
-	if (_skeleton) {
-	    _skeleton->setSkin(skinName);
-	}
+    if (_skeleton) {
+        _skeleton->setSkin(skinName);
+        _skeleton->setSlotsToSetupPose();
+    }
 }
 
 Attachment* SkeletonRenderer::getAttachment (const std::string& slotName, const std::string& attachmentName) const {
@@ -987,16 +978,16 @@ Attachment* SkeletonRenderer::getAttachment (const std::string& slotName, const 
 
 bool SkeletonRenderer::setAttachment (const std::string& slotName, const std::string& attachmentName) {
     if (_skeleton) {
-        return _skeleton->getAttachment(slotName.c_str(), attachmentName.empty() ? 0 : attachmentName.c_str()) ? true : false;
+        _skeleton->setAttachment(slotName.c_str(), attachmentName.empty() ? 0 : attachmentName.c_str());
     }
-    return false;
+    return true;
 }
 
 bool SkeletonRenderer::setAttachment (const std::string& slotName, const char* attachmentName) {
     if (_skeleton) {
-        return _skeleton->getAttachment(slotName.c_str(), attachmentName) ? true : false;
+        _skeleton->setAttachment(slotName.c_str(), attachmentName);
     }
-    return false;
+    return true;
 }
 
 void SkeletonRenderer::setUseTint(bool enabled) {
@@ -1062,4 +1053,39 @@ void SkeletonRenderer::setOpacityModifyRGB (bool value) {
 
 bool SkeletonRenderer::isOpacityModifyRGB () const {
     return _premultipliedAlpha;
+}
+
+se_object_ptr SkeletonRenderer::getDebugData() const {
+    if (_debugBuffer) {
+        return _debugBuffer->getTypeArray();
+    }
+    return nullptr;
+}
+
+void SkeletonRenderer::bindNodeProxy(cocos2d::renderer::NodeProxy* node) {
+    if (node == _nodeProxy) return;
+    CC_SAFE_RELEASE(_nodeProxy);
+    _nodeProxy = node;
+    CC_SAFE_RETAIN(_nodeProxy);
+}
+
+void SkeletonRenderer::setEffect(cocos2d::renderer::EffectVariant* effect) {
+    if (effect == _effect) return;
+    CC_SAFE_RELEASE(_effect);
+    _effect = effect;
+    CC_SAFE_RETAIN(_effect);
+}
+
+void SkeletonRenderer::setAttachUtil(RealTimeAttachUtil* attachUtil)
+{
+    if (attachUtil == _attachUtil) return;
+    CC_SAFE_RELEASE(_attachUtil);
+    _attachUtil = attachUtil;
+    CC_SAFE_RETAIN(_attachUtil);
+}
+
+uint32_t SkeletonRenderer::getRenderOrder() const
+{
+    if (!_nodeProxy) return 0;
+    return _nodeProxy->getRenderOrder();
 }

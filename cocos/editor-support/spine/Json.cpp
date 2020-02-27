@@ -1,39 +1,32 @@
-/******************************************************************************
-* Spine Runtimes Software License v2.5
-*
-* Copyright (c) 2013-2016, Esoteric Software
-* All rights reserved.
-*
-* You are granted a perpetual, non-exclusive, non-sublicensable, and
-* non-transferable license to use, install, execute, and perform the Spine
-* Runtimes software and derivative works solely for personal or internal
-* use. Without the written permission of Esoteric Software (see Section 2 of
-* the Spine Software License Agreement), you may not (a) modify, translate,
-* adapt, or develop new applications using the Spine Runtimes or otherwise
-* create derivative works or improvements of the Spine Runtimes or (b) remove,
-* delete, alter, or obscure any trademarks or any copyright, trademark, patent,
-* or other intellectual property or proprietary rights notices on or in the
-* Software, including any copy thereof. Redistributions in binary or source
-* form must include this license and terms.
-*
-* THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
-* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
-* EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
-* USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-* IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-* POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************/
+/*
+Copyright (c) 2009, Dave Gamble
+Copyright (c) 2013, Esoteric Software
+
+Permission is hereby granted, dispose of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
 
 #ifdef SPINE_UE4
 #include "SpinePluginPrivatePCH.h"
 #endif
 
 /* Json */
-/* JSON parser in CPP, shamelessly ripped from json.c in the spine-c runtime */
+/* JSON parser in CPP, from json.c in the spine-c runtime */
 
 #ifndef _DEFAULT_SOURCE
 /* Bring strings.h definitions into string.h, where appropriate */
@@ -91,6 +84,18 @@ int Json::getInt(Json *value, const char *name, int defaultValue) {
 	return value ? value->_valueInt : defaultValue;
 }
 
+bool Json::getBoolean(spine::Json *value, const char *name, bool defaultValue) {
+	value = getItem(value, name);
+	if (value) {
+		if (value->_valueString) return strcmp(value->_valueString, "true") == 0;
+		if (value->_type == JSON_NULL) return false;
+		if (value->_type == JSON_NUMBER) return value->_valueFloat != 0;
+		return defaultValue;
+	} else {
+		return defaultValue;
+	}
+}
+
 const char *Json::getError() {
 	return _error;
 }
@@ -115,17 +120,23 @@ Json::Json(const char *value) :
 }
 
 Json::~Json() {
-	delete _child;
+    spine::Json* curr = nullptr;
+    spine::Json* next = _child;
+    do {
+        curr = next;
+        if (curr) {
+            next = curr->_next;
+        }
+        delete curr;
+    } while(next);
 
-	if (_valueString) {
-		SpineExtension::free(_valueString, __FILE__, __LINE__);
-	}
+    if (_valueString) {
+        SpineExtension::free(_valueString, __FILE__, __LINE__);
+    }
 
-	if (_name) {
-		SpineExtension::free(_name, __FILE__, __LINE__);
-	}
-
-	delete _next;
+    if (_name) {
+        SpineExtension::free(_name, __FILE__, __LINE__);
+    }
 }
 
 const char *Json::skip(const char *inValue) {
@@ -152,49 +163,49 @@ const char *Json::parseValue(Json *item, const char *value) {
 #endif
 
 	switch (*value) {
-		case 'n': {
-			if (!strncmp(value + 1, "ull", 3)) {
-				item->_type = JSON_NULL;
-				return value + 4;
-			}
-			break;
+	case 'n': {
+		if (!strncmp(value + 1, "ull", 3)) {
+			item->_type = JSON_NULL;
+			return value + 4;
 		}
-		case 'f': {
-			if (!strncmp(value + 1, "alse", 4)) {
-				item->_type = JSON_FALSE;
-				/* calloc prevents us needing item->_type = JSON_FALSE or valueInt = 0 here */
-				return value + 5;
-			}
-			break;
+		break;
+	}
+	case 'f': {
+		if (!strncmp(value + 1, "alse", 4)) {
+			item->_type = JSON_FALSE;
+			/* calloc prevents us needing item->_type = JSON_FALSE or valueInt = 0 here */
+			return value + 5;
 		}
-		case 't': {
-			if (!strncmp(value + 1, "rue", 3)) {
-				item->_type = JSON_TRUE;
-				item->_valueInt = 1;
-				return value + 4;
-			}
-			break;
+		break;
+	}
+	case 't': {
+		if (!strncmp(value + 1, "rue", 3)) {
+			item->_type = JSON_TRUE;
+			item->_valueInt = 1;
+			return value + 4;
 		}
-		case '\"':
-			return parseString(item, value);
-		case '[':
-			return parseArray(item, value);
-		case '{':
-			return parseObject(item, value);
-		case '-': /* fallthrough */
-		case '0': /* fallthrough */
-		case '1': /* fallthrough */
-		case '2': /* fallthrough */
-		case '3': /* fallthrough */
-		case '4': /* fallthrough */
-		case '5': /* fallthrough */
-		case '6': /* fallthrough */
-		case '7': /* fallthrough */
-		case '8': /* fallthrough */
-		case '9':
-			return parseNumber(item, value);
-		default:
-			break;
+		break;
+	}
+	case '\"':
+		return parseString(item, value);
+	case '[':
+		return parseArray(item, value);
+	case '{':
+		return parseObject(item, value);
+	case '-': /* fallthrough */
+	case '0': /* fallthrough */
+	case '1': /* fallthrough */
+	case '2': /* fallthrough */
+	case '3': /* fallthrough */
+	case '4': /* fallthrough */
+	case '5': /* fallthrough */
+	case '6': /* fallthrough */
+	case '7': /* fallthrough */
+	case '8': /* fallthrough */
+	case '9':
+		return parseNumber(item, value);
+	default:
+		break;
 	}
 
 	_error = value;
@@ -255,18 +266,18 @@ const char *Json::parseString(Json *item, const char *str) {
 					ptr += 4; /* get the unicode char. */
 
 					if ((uc >= 0xDC00 && uc <= 0xDFFF) || uc == 0) {
-						break; /* check for invalid.    */
+						break; /* check for invalid.	*/
 					}
 
 					/* TODO provide an option to ignore surrogates, use unicode replacement character? */
-					if (uc >= 0xD800 && uc <= 0xDBFF) /* UTF16 surrogate pairs.    */ {
+					if (uc >= 0xD800 && uc <= 0xDBFF) /* UTF16 surrogate pairs.	*/ {
 						if (ptr[1] != '\\' || ptr[2] != 'u') {
-							break; /* missing second-half of surrogate.    */
+							break; /* missing second-half of surrogate.	*/
 						}
 						sscanf(ptr + 3, "%4x", &uc2);
 						ptr += 6;
 						if (uc2 < 0xDC00 || uc2 > 0xDFFF) {
-							break; /* invalid second-half of surrogate.    */
+							break; /* invalid second-half of surrogate.	*/
 						}
 						uc = 0x10000 + (((uc & 0x3FF) << 10) | (uc2 & 0x3FF));
 					}
@@ -538,7 +549,7 @@ int Json::json_strcasecmp(const char *s1, const char *s2) {
 		} else if (s1 == s2) {
 			return 0; /* both are null */
 		} else {
-			return 1; /* s2 is nul    s1 is not */
+			return 1; /* s2 is nul	s1 is not */
 		}
 	}
 }

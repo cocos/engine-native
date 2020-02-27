@@ -127,20 +127,24 @@ void Cocos2dTextureLoader::load(AtlasPage& page, const spine::String& path) {
         texture = spine::_customTextureLoader(path.buffer());
     }
     CCASSERT(texture != nullptr, "Invalid image");
-    texture->retain();
-
-    Texture2D::TexParams textureParams = {filter(page.minFilter), filter(page.magFilter), wrap(page.uWrap), wrap(page.vWrap)};
-    texture->setTexParameters(textureParams);
-
-    page.setRendererObject(texture);
-    page.width = texture->getPixelsWide();
-    page.height = texture->getPixelsHigh();
+    
+    if (texture) {
+        texture->retain();
+        
+        Texture2D::TexParams textureParams = {filter(page.minFilter), filter(page.magFilter), wrap(page.uWrap), wrap(page.vWrap)};
+        texture->setTexParameters(textureParams);
+        
+        page.setRendererObject(texture);
+        page.width = texture->getPixelsWide();
+        page.height = texture->getPixelsHigh();
+    }
 }
 
 void Cocos2dTextureLoader::unload(void* texture) {
-    ((Texture2D*)texture)->release();
+    if (texture) {
+        ((Texture2D*)texture)->release();
+    }
 }
-
 
 Cocos2dExtension::Cocos2dExtension() : DefaultSpineExtension() { }
     

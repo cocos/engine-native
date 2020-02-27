@@ -982,16 +982,6 @@ bool
 },
 
 /**
- * @method getArmatureData
- * @return {dragonBones::ArmatureData}
- */
-getArmatureData : function (
-)
-{
-    return dragonBones::ArmatureData;
-},
-
-/**
  * @method _addSlot
  * @param {dragonBones::Slot} arg0
  */
@@ -1029,6 +1019,16 @@ getParent : function (
 )
 {
     return dragonBones::Slot;
+},
+
+/**
+ * @method getArmatureData
+ * @return {dragonBones::ArmatureData}
+ */
+getArmatureData : function (
+)
+{
+    return dragonBones::ArmatureData;
 },
 
 /**
@@ -2392,6 +2392,16 @@ getRootDisplay : function (
 },
 
 /**
+ * @method setAttachUtil
+ * @param {dragonBones::RealTimeAttachUtil} arg0
+ */
+setAttachUtil : function (
+realtimeattachutil 
+)
+{
+},
+
+/**
  * @method removeDBEventListener
  * @param {String} arg0
  * @param {function} arg1
@@ -2405,10 +2415,10 @@ func
 
 /**
  * @method setEffect
- * @param {cc.renderer::Effect} arg0
+ * @param {cc.renderer::EffectVariant} arg0
  */
 setEffect : function (
-effect 
+effectvariant 
 )
 {
 },
@@ -2893,6 +2903,16 @@ str
 },
 
 /**
+ * @method setAttachUtil
+ * @param {dragonBones::CacheModeAttachUtil} arg0
+ */
+setAttachUtil : function (
+cachemodeattachutil 
+)
+{
+},
+
+/**
  * @method removeDBEventListener
  * @param {String} arg0
  */
@@ -2912,10 +2932,10 @@ onEnable : function (
 
 /**
  * @method setEffect
- * @param {cc.renderer::Effect} arg0
+ * @param {cc.renderer::EffectVariant} arg0
  */
 setEffect : function (
-effect 
+effectvariant 
 )
 {
 },
@@ -3097,6 +3117,57 @@ str,
 str, 
 str, 
 bool 
+)
+{
+},
+
+};
+
+/**
+ * @class AttachUtilBase
+ */
+dragonBones.AttachUtilBase = {
+
+/**
+ * @method associateAttachedNode
+ * @param {dragonBones::Armature} arg0
+ * @param {cc.renderer::NodeProxy} arg1
+ */
+associateAttachedNode : function (
+armature, 
+nodeproxy 
+)
+{
+},
+
+};
+
+/**
+ * @class RealTimeAttachUtil
+ */
+dragonBones.RealTimeAttachUtil = {
+
+/**
+ * @method RealTimeAttachUtil
+ * @constructor
+ */
+RealTimeAttachUtil : function (
+)
+{
+},
+
+};
+
+/**
+ * @class CacheModeAttachUtil
+ */
+dragonBones.CacheModeAttachUtil = {
+
+/**
+ * @method CacheModeAttachUtil
+ * @constructor
+ */
+CacheModeAttachUtil : function (
 )
 {
 },

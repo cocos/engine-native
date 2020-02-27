@@ -77,6 +77,10 @@ public:
      *  @brief Visit the node as a ordinary node but not a root node.
      */
     static void visit(NodeProxy* node, ModelBatcher* batcher, Scene* scene);
+    /*
+     *  @brief Reset global render order.
+     */
+    static void resetGlobalRenderOrder() { _globalRenderOrder = 0; }
     
     /*
      * @brief The default constructor.
@@ -90,6 +94,11 @@ public:
      * @brief destroy node data immediately .
      */
     void destroyImmediately();
+    
+    /*
+     * @brief If js node has been destroy.
+     */
+    bool isValid() { return _trs != nullptr; }
     
     /// @{
     /// @name Hierarchy
@@ -156,6 +165,13 @@ public:
      *  @return World matrix.
      */
     inline const cocos2d::Mat4& getWorldMatrix() const { return *_worldMat; };
+
+    /*
+     *  @brief Gets the local matrix.
+     *  @return Local matrix.
+     */
+    inline const cocos2d::Mat4& getLocalMatrix() const { return *_localMat; };
+    
     /*
      *  @brief Gets the position.
      *  @param[out] out The position vector
@@ -246,7 +262,7 @@ public:
     /*
      *  @brief Enables visit.
      */
-    void enableVisit() { _needVisit = true; }
+    void enableVisit(bool value) { _needVisit = value; }
     
     /*
      *  @brief Disables visit.
@@ -262,17 +278,13 @@ public:
      */
     void updateWorldMatrix();
     /*
-     *  @brief Updates the world matrix with parent matrix.
+     *  @brief Updates world matrix with provide matrix.
      */
-    void updateWorldMatrix(const cocos2d::Mat4& parentMatrix);
+    void updateWorldMatrix(const cocos2d::Mat4& worldMatrix);
     /*
      *  @brief Enables calc world matrix.
      */
-    void enableUpdateWorldMatrix() { _updateWorldMatrix = true; }
-    /*
-     *  @brief Disables calc world matrix.
-     */
-    void disaleUpdateWorldMatrix() { _updateWorldMatrix = false; }
+    void enableUpdateWorldMatrix(bool value) { _updateWorldMatrix = value; }
     
     /*
      *  @brief Gets node runtime id
@@ -288,6 +300,11 @@ public:
      *  @brief Is node flag dirty
      */
     bool isDirty(uint32_t flag) const { return *_dirty & flag; }
+    
+    /*
+     *  @brief Gets render order
+     */
+    uint32_t getRenderOrder () { return _renderOrder; }
     
     /*
      *  @brief switch traverse interface to visit
@@ -336,6 +353,9 @@ private:
     cocos2d::Vector<NodeProxy*> _children;        ///< array of children nodes
 
     AssemblerBase* _assembler = nullptr;
+    
+    uint32_t _renderOrder = 0;
+    static uint32_t _globalRenderOrder;
 };
 
 // end of scene group

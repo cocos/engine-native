@@ -70,17 +70,18 @@ public:
     
     struct Uniform
     {
-        Uniform(const void* v, size_t bytes, UniformElementType elementType_);
+        Uniform(const void* v, size_t bytes, UniformElementType elementType_, size_t count);
         Uniform(Uniform&& h);
         Uniform();
         ~Uniform();
         
         Uniform& operator=(Uniform&& h);
         
-        void setValue(const void* v, size_t bytes);
+        void setValue(const void* v, size_t bytes, size_t count = 1);
         
         void* value = nullptr;
         size_t bytes = 0;
+        size_t count = 0;
         
         bool dirty;
         UniformElementType elementType;
@@ -232,7 +233,7 @@ public:
     /**
      * Sets a vector of integers to the specified uniform
      */
-    void setUniformiv(size_t hashName, size_t count, const int* value);
+    void setUniformiv(size_t hashName, size_t elementCount, const int* value, size_t uniformCount);
     /**
      * Sets a float to the specified uniform
      */
@@ -252,7 +253,7 @@ public:
     /**
      * Sets a vector of floats to the specified uniform
      */
-    void setUniformfv(size_t hashName, size_t count, const float* value);
+    void setUniformfv(size_t hashName, size_t elementCount, const float* value, size_t uniformCount);
     /**
      * Sets a Vec2 to the specified uniform
      */
@@ -284,7 +285,7 @@ public:
     /**
      * Sets data specified by data pointer, type and bytes to the given uniform
      */
-    void setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType);
+    void setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType, size_t uniformCount = 1);
 
     /**
      * Sets the primitive type for draw calls

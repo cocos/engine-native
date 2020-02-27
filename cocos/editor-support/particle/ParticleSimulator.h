@@ -28,7 +28,7 @@
 #include <vector>
 #include "IOBuffer.h"
 #include "renderer/scene/NodeProxy.hpp"
-#include "renderer/renderer/Effect.h"
+#include "renderer/renderer/EffectVariant.hpp"
 #include "MiddlewareManager.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 
@@ -123,11 +123,14 @@ class ParticleSimulator : public cocos2d::middleware::IMiddleware, public cocos2
 public:
     ParticleSimulator();
     ~ParticleSimulator();
+    
+    virtual void update(float dt) override {}
+    virtual void render(float dt) override;
+    virtual uint32_t getRenderOrder() const override;
+    
     void stop();
     void reset();
     void emitParticle(cocos2d::Vec3& pos);
-    void update(float dt) override {}
-    void render(float dt) override;
     void onEnable();
     void onDisable();
     
@@ -150,7 +153,7 @@ public:
         CC_SAFE_RETAIN(_nodeProxy);
     }
     
-    void setEffect(cocos2d::renderer::Effect* effect)
+    void setEffect(cocos2d::renderer::EffectVariant* effect)
     {
         CC_SAFE_RELEASE(_effect);
         _effect = effect;
@@ -236,8 +239,8 @@ private:
     finishedCallback                _finishedCallback = nullptr;
     stopCallback                    _stopCallback = nullptr;
     cocos2d::renderer::NodeProxy*   _nodeProxy = nullptr;
-    cocos2d::renderer::Effect*      _effect = nullptr;
     std::vector<float>              _uv;
+    cocos2d::renderer::EffectVariant*      _effect = nullptr;
     
     cocos2d::Vec3      _gravity;
     cocos2d::Vec3      _sourcePos;
@@ -277,6 +280,7 @@ public:
     float               endRadiusVar        = 0.0f;
     float               rotatePerS          = 0.0f;
     float               rotatePerSVar       = 0.0f;
+    float               aspectRatio         = 1.0f;
 };
 
 NS_CC_END

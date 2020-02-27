@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include "platform/android/jni/JniHelper.h"
 #include "platform/CCFileUtils.h"
 #include "base/ccUTF8.h"
+#include "platform/CCApplication.h"
 
 #ifndef JCLS_HELPER
 #define JCLS_HELPER "org/cocos2dx/lib/Cocos2dxHelper"
@@ -123,6 +124,11 @@ cocos2d::Vec4 Device::getSafeAreaEdge()
 {
     // no SafeArea concept on android, return ZERO Vec4.
     return cocos2d::Vec4();
+}
+
+int Device::getDevicePixelRatio()
+{
+    return 1;
 }
 
 NS_CC_END

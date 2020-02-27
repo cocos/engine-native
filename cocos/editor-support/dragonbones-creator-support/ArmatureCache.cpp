@@ -64,6 +64,12 @@ ArmatureCache::FrameData::FrameData()
 
 ArmatureCache::FrameData::~FrameData() 
 {
+    for (std::size_t i = 0, c = _bones.size(); i < c; i++)
+    {
+        delete _bones[i];
+    }
+    _bones.clear();
+    
     for (std::size_t i = 0, c = _colors.size(); i < c; i++) 
     {
         delete _colors[i];
@@ -75,6 +81,21 @@ ArmatureCache::FrameData::~FrameData()
         delete _segments[i];
     }
     _segments.clear();
+}
+
+ArmatureCache::BoneData* ArmatureCache::FrameData::buildBoneData(std::size_t index)
+{
+    if (index > _bones.size()) return nullptr;
+    if (index == _bones.size()) {
+        BoneData* boneData = new BoneData;
+        _bones.push_back(boneData);
+    }
+    return _bones[index];
+}
+
+std::size_t ArmatureCache::FrameData::getBoneCount() const
+{
+    return _bones.size();
 }
 
 ArmatureCache::ColorData* ArmatureCache::FrameData::buildColorData(std::size_t index) 
@@ -304,6 +325,8 @@ void ArmatureCache::traverseArmature(Armature* armature, float parentOpacity/*= 
     middleware::IOBuffer& vb = _frameData->vb;
     middleware::IOBuffer& ib = _frameData->ib;
 
+    auto& bones = armature->getBones();
+    Bone* bone = nullptr;
     auto& slots = armature->getSlots();
     CCSlot* slot = nullptr;
     // range [0.0, 1.0]
@@ -339,15 +362,33 @@ void ArmatureCache::traverseArmature(Armature* armature, float parentOpacity/*= 
         _materialLen++;
     };
 
+    for (std::size_t i = 0, len = bones.size(); i < len; i++)
+    {
+        bone = bones[i];
+        auto boneCount = _frameData->getBoneCount();
+        BoneData* boneData = _frameData->buildBoneData(boneCount);
+        auto& boneOriginMat = bone->globalTransformMatrix;
+        auto& matm = boneData->globalTransformMatrix.m;
+        matm[0] = boneOriginMat.a;
+        matm[1] = boneOriginMat.b;
+        matm[4] = -boneOriginMat.c;
+        matm[5] = -boneOriginMat.d;
+        matm[12] = boneOriginMat.tx;
+        matm[13] = boneOriginMat.ty;
+    }
+    
     for (std::size_t i = 0, len = slots.size(); i < len; i++)
     {
         slot = (CCSlot*)slots[i];
+        
         if (!slot->getVisible())
         {
             continue;
         }
         slot->updateWorldMatrix();
-
+        
+        cocos2d::Mat4* worldMatrix = &slot->worldMatrix;
+        
         // If slots has child armature,will traverse child first.
         Armature* childArmature = slot->getChildArmature();
         if (childArmature != nullptr)
@@ -388,9 +429,8 @@ void ArmatureCache::traverseArmature(Armature* armature, float parentOpacity/*= 
 
         // Transform component matrix to global matrix
         middleware::Triangles& triangles = slot->triangles;
-        cocos2d::Mat4* worldMatrix = &slot->worldMatrix;
         middleware::V2F_T2F_C4B* worldTriangles = slot->worldVerts;
-
+        
         for (int v = 0, w = 0, vn = triangles.vertCount; v < vn; ++v, w += 2)
         {
             middleware::V2F_T2F_C4B* vertex = triangles.verts + v;

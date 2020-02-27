@@ -1,31 +1,30 @@
 /******************************************************************************
- * Spine Runtimes Software License v2.5
+ * Spine Runtimes License Agreement
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2016, Esoteric Software
- * All rights reserved.
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
- * You are granted a perpetual, non-exclusive, non-sublicensable, and
- * non-transferable license to use, install, execute, and perform the Spine
- * Runtimes software and derivative works solely for personal or internal
- * use. Without the written permission of Esoteric Software (see Section 2 of
- * the Spine Software License Agreement), you may not (a) modify, translate,
- * adapt, or develop new applications using the Spine Runtimes or otherwise
- * create derivative works or improvements of the Spine Runtimes or (b) remove,
- * delete, alter, or obscure any trademarks or any copyright, trademark, patent,
- * or other intellectual property or proprietary rights notices on or in the
- * Software, including any copy thereof. Redistributions in binary or source
- * form must include this license and terms.
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
  *
- * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
- * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
- * USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
- * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #ifdef SPINE_UE4
@@ -40,7 +39,7 @@
 
 using namespace spine;
 
-Atlas::Atlas(const String &path, TextureLoader *textureLoader) : _textureLoader(textureLoader) {
+Atlas::Atlas(const String &path, TextureLoader *textureLoader, bool createTexture) : _textureLoader(textureLoader) {
 	int dirLength;
 	char *dir;
 	int length;
@@ -58,16 +57,16 @@ Atlas::Atlas(const String &path, TextureLoader *textureLoader) : _textureLoader(
 
 	data = SpineExtension::readFile(path, &length);
 	if (data) {
-		load(data, length, dir);
+		load(data, length, dir, createTexture);
 	}
 
 	SpineExtension::free(data, __FILE__, __LINE__);
 	SpineExtension::free(dir, __FILE__, __LINE__);
 }
 
-Atlas::Atlas(const char *data, int length, const char *dir, TextureLoader *textureLoader) : _textureLoader(
+Atlas::Atlas(const char *data, int length, const char *dir, TextureLoader *textureLoader, bool createTexture) : _textureLoader(
 		textureLoader) {
-	load(data, length, dir);
+	load(data, length, dir, createTexture);
 }
 
 Atlas::~Atlas() {
@@ -90,12 +89,8 @@ void Atlas::flipV() {
 }
 
 AtlasRegion *Atlas::findRegion(const String &name) {
-	for (size_t i = 0, n = _regions.size(); i < n; ++i) {
-		if (_regions[i]->name == name) {
-			return _regions[i];
-		}
-	}
-
+	for (size_t i = 0, n = _regions.size(); i < n; ++i)
+		if (_regions[i]->name == name) return _regions[i];
 	return NULL;
 }
 
@@ -103,12 +98,10 @@ Vector<AtlasPage*> &Atlas::getPages() {
 	return _pages;
 }
 
-void Atlas::load(const char *begin, int length, const char *dir) {
-	static const char *formatNames[] = {"", "Alpha", "Intensity", "LuminanceAlpha", "RGB565", "RGBA4444", "RGB888",
-										"RGBA8888"};
-	static const char *textureFilterNames[] = {"", "Nearest", "Linear", "MipMap", "MipMapNearestNearest",
-											   "MipMapLinearNearest",
-											   "MipMapNearestLinear", "MipMapLinearLinear"};
+void Atlas::load(const char *begin, int length, const char *dir, bool createTexture) {
+	static const char *formatNames[] = {"", "Alpha", "Intensity", "LuminanceAlpha", "RGB565", "RGBA4444", "RGB888", "RGBA8888"};
+	static const char *textureFilterNames[] = {"", "Nearest", "Linear", "MipMap", "MipMapNearestNearest", "MipMapLinearNearest",
+		"MipMapNearestLinear", "MipMapLinearLinear"};
 
 	int count;
 	const char *end = begin + length;
@@ -126,9 +119,7 @@ void Atlas::load(const char *begin, int length, const char *dir) {
 			char *name = mallocString(&str);
 			char *path = SpineExtension::calloc<char>(dirLength + needsSlash + strlen(name) + 1, __FILE__, __LINE__);
 			memcpy(path, dir, dirLength);
-			if (needsSlash) {
-				path[dirLength] = '/';
-			}
+			if (needsSlash) path[dirLength] = '/';
 			strcpy(path + dirLength + needsSlash, name);
 
 			page = new(__FILE__, __LINE__) AtlasPage(String(name, true));
@@ -164,9 +155,11 @@ void Atlas::load(const char *begin, int length, const char *dir) {
 				}
 			}
 
-			if (_textureLoader) _textureLoader->load(*page, String(path));
-
-			SpineExtension::free(path, __FILE__, __LINE__);
+			if (createTexture) {
+				if (_textureLoader) _textureLoader->load(*page, String(path));
+				SpineExtension::free(path, __FILE__, __LINE__);
+			} else
+				page->texturePath = String(path, true);
 
 			_pages.add(page);
 		} else {
@@ -176,7 +169,10 @@ void Atlas::load(const char *begin, int length, const char *dir) {
 			region->name = String(mallocString(&str), true);
 
 			readValue(&begin, end, &str);
-			region->rotate = equals(&str, "true") ? true : false;
+			if (equals(&str, "true")) region->degrees = 90;
+			else if (equals(&str, "false")) region->degrees = 0;
+			else region->degrees = toInt(&str);
+			region->rotate = region->degrees == 90;
 
 			readTuple(&begin, end, tuple);
 			region->x = toInt(tuple);
@@ -239,41 +235,32 @@ void Atlas::load(const char *begin, int length, const char *dir) {
 }
 
 void Atlas::trim(Str *str) {
-	while (isspace((unsigned char) *str->begin) && str->begin < str->end) {
+	while (isspace((unsigned char) *str->begin) && str->begin < str->end)
 		(str->begin)++;
-	}
 
-	if (str->begin == str->end) {
-		return;
-	}
+	if (str->begin == str->end) return;
 
 	str->end--;
 
-	while (((unsigned char)*str->end == '\r') && str->end >= str->begin) {
+	while (((unsigned char)*str->end == '\r') && str->end >= str->begin)
 		str->end--;
-	}
 
 	str->end++;
 }
 
 int Atlas::readLine(const char **begin, const char *end, Str *str) {
-	if (*begin == end) {
-		return 0;
-	}
+	if (*begin == end) return 0;
 
 	str->begin = *begin;
 
 	/* Find next delimiter. */
-	while (*begin != end && **begin != '\n') {
+	while (*begin != end && **begin != '\n')
 		(*begin)++;
-	}
 
 	str->end = *begin;
 	trim(str);
 
-	if (*begin != end) {
-		(*begin)++;
-	}
+	if (*begin != end) (*begin)++;
 
 	return 1;
 }
@@ -282,13 +269,9 @@ int Atlas::beginPast(Str *str, char c) {
 	const char *begin = str->begin;
 	while (true) {
 		char lastSkippedChar = *begin;
-		if (begin == str->end) {
-			return 0;
-		}
+		if (begin == str->end) return 0;
 		begin++;
-		if (lastSkippedChar == c) {
-			break;
-		}
+		if (lastSkippedChar == c) break;
 	}
 	str->begin = begin;
 	return 1;
@@ -296,10 +279,7 @@ int Atlas::beginPast(Str *str, char c) {
 
 int Atlas::readValue(const char **begin, const char *end, Str *str) {
 	readLine(begin, end, str);
-	if (!beginPast(str, ':')) {
-		return 0;
-	}
-
+	if (!beginPast(str, ':')) return 0;
 	trim(str);
 	return 1;
 }
@@ -308,16 +288,11 @@ int Atlas::readTuple(const char **begin, const char *end, Str tuple[]) {
 	int i;
 	Str str = {NULL, NULL};
 	readLine(begin, end, &str);
-	if (!beginPast(&str, ':')) {
-		return 0;
-	}
+	if (!beginPast(&str, ':')) return 0;
 
 	for (i = 0; i < 3; ++i) {
 		tuple[i].begin = str.begin;
-		if (!beginPast(&str, ',')) {
-			break;
-		}
-
+		if (!beginPast(&str, ',')) break;
 		tuple[i].end = str.begin - 2;
 		trim(&tuple[i]);
 	}
@@ -340,11 +315,8 @@ char *Atlas::mallocString(Str *str) {
 int Atlas::indexOf(const char **array, int count, Str *str) {
 	int length = (int) (str->end - str->begin);
 	int i;
-	for (i = count - 1; i >= 0; i--) {
-		if (strncmp(array[i], str->begin, length) == 0) {
-			return i;
-		}
-	}
+	for (i = count - 1; i >= 0; i--)
+		if (strncmp(array[i], str->begin, length) == 0) return i;
 	return 0;
 }
 

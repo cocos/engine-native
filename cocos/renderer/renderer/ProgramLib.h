@@ -77,24 +77,15 @@ public:
      *  @brief Gets program by template name, define settings and defines key.
      *  @note The return value needs to be released by its 'release' method.
      */
-    Program* switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<ValueMap*>& definesList);
+    Program* switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<const ValueMap*>& definesList);
     
-    const Value* getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList);
+    const Value* getValueFromDefineList(const std::string& name, const std::vector<const ValueMap*>& definesList);
 
 private:
     uint32_t getValueKey(const Value* v);
     
 private:
     DeviceGraphics* _device = nullptr;
-    const char* _precisionVert = "precision highp float;";
-    const char* _precisionVertReplace = "#ifdef GL_ES\nprecision highp float;\n#endif\n";
-    const char* _precisionFrag = "precision highp float;";
-    const char* _precisionFragReplace = "#ifdef GL_ES\nprecision mediump float;\n#endif\n";
-    const char* _mediumpReplace = "half";
-    const char* _mediump = "mediump";
-    const char* _lowpReplace = "fixed";
-    const char* _lowp = "lowp";
-    
     std::unordered_map<size_t, Template> _templates;
     std::unordered_map<uint64_t, Program*> _cache;
     

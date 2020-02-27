@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated May 1, 2019. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2019, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -15,16 +15,16 @@
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
  *
- * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
- * NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS
- * INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #pragma once
@@ -41,11 +41,13 @@
 #include "base/CCMap.h"
 #include "middleware-adapter.h"
 #include "base/ccMacros.h"
+#include "renderer/renderer/EffectVariant.hpp"
 
 namespace spine {
 
     class AttachmentVertices;
-
+    class RealTimeAttachUtil;
+    
     /** Draws a skeleton.
      */
     class SkeletonRenderer: public cocos2d::middleware::IMiddleware, public cocos2d::Ref {
@@ -59,6 +61,7 @@ namespace spine {
         virtual void update (float deltaTime) override {}
         virtual void render (float deltaTime) override;
         virtual cocos2d::Rect getBoundingBox () const;
+        virtual uint32_t getRenderOrder() const override;
         
         Skeleton* getSkeleton() const;
 
@@ -104,27 +107,10 @@ namespace spine {
          * @return debug data,it's a Float32Array,
          * format |debug bones length|[beginX|beginY|toX|toY|...loop...]
          */
-        se_object_ptr getDebugData() const {
-            if (_debugBuffer) {
-                return _debugBuffer->getTypeArray();
-            }
-            return nullptr;
-        }
-        
-        void bindNodeProxy(cocos2d::renderer::NodeProxy* node) {
-            if (node == _nodeProxy) return;
-            CC_SAFE_RELEASE(_nodeProxy);
-            _nodeProxy = node;
-            CC_SAFE_RETAIN(_nodeProxy);
-        }
-        
-        void setEffect(cocos2d::renderer::Effect* effect) {
-            if (effect == _effect) return;
-            CC_SAFE_RELEASE(_effect);
-            _effect = effect;
-            CC_SAFE_RETAIN(_effect);
-        }
-        
+        se_object_ptr getDebugData() const;
+        void bindNodeProxy(cocos2d::renderer::NodeProxy* node);
+        void setEffect(cocos2d::renderer::EffectVariant* effect);
+        void setAttachUtil(RealTimeAttachUtil* attachUtil);
         void setColor (cocos2d::Color4B& color);
         void setBatchEnabled (bool enabled);
         void setDebugBonesEnabled (bool enabled);
@@ -185,7 +171,8 @@ namespace spine {
         
         cocos2d::middleware::IOTypedArray* _debugBuffer = nullptr;
         cocos2d::renderer::NodeProxy* _nodeProxy = nullptr;
-        cocos2d::renderer::Effect* _effect = nullptr;
+        cocos2d::renderer::EffectVariant* _effect = nullptr;
+        RealTimeAttachUtil* _attachUtil = nullptr;
     };
 
 }

@@ -21,6 +21,7 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "dragonbones-creator-support/AttachUtil.h"
 #include "CCArmatureCacheDisplay.h"
 #include "MiddlewareManager.h"
 #include "ArmatureCacheMgr.h"
@@ -73,6 +74,7 @@ void CCArmatureCacheDisplay::dispose()
         _eventObject->returnToPool();
         _eventObject = nullptr;
     }
+    CC_SAFE_RELEASE_NULL(_attachUtil);
     CC_SAFE_RELEASE_NULL(_nodeProxy);
     CC_SAFE_RELEASE_NULL(_effect);
     stopSchedule();
@@ -132,7 +134,7 @@ void CCArmatureCacheDisplay::update(float dt)
 
 void CCArmatureCacheDisplay::render(float dt) 
 {
-    if (_nodeProxy == nullptr)
+    if (!_nodeProxy || !_effect)
     {
         return;
     }
@@ -277,74 +279,63 @@ void CCArmatureCacheDisplay::render(float dt)
         textureHandle = segment->getTexture()->getNativeTexture()->getHandle();
         blendMode = (BlendMode)segment->blendMode;
 
-        effectHash = textureHandle + ((uint8_t)blendMode << 16) + ((uint8_t)_batch << 24);
-        Effect* renderEffect = assembler->getEffect(segIndex);
-        Technique::Parameter* param = nullptr;
-        Pass* pass = nullptr;
+        effectHash = textureHandle + ((uint8_t)blendMode << 16) + ((uint8_t)_batch << 24) + ((uint32_t)_effect->getHash() << 25);
+        EffectVariant* renderEffect = assembler->getEffect(segIndex);
 
-        if (renderEffect) 
+        bool needUpdate = false;
+        if (renderEffect)
         {
             double renderHash = renderEffect->getHash();
-            if (abs(renderHash - effectHash) >= 0.01) 
+            if (abs(renderHash - effectHash) >= 0.01)
             {
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                Technique* tech = renderEffect->getTechnique(techStage);
-                cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
+                needUpdate = true;
             }
         }
-        else 
+        else
         {
-            if (_effect == nullptr) 
-            {
-                cocos2d::log("ArmatureCacheAnimation:update get effect failed");
-                assembler->reset();
-                return;
-            }
-            auto effect = new cocos2d::renderer::Effect();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
 
-            Technique* tech = effect->getTechnique(techStage);
-            cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-            pass = *(passes.begin());
-
             assembler->updateEffect(segIndex, effect);
             renderEffect = effect;
-            param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+            
+            needUpdate = true;
         }
 
-        if (param) 
+        if (needUpdate)
         {
-            param->setTexture(segment->getTexture()->getNativeTexture());
-        }
+           renderEffect->setProperty(textureKey, segment->getTexture()->getNativeTexture());
+           switch (blendMode)
+           {
+                case BlendMode::Add:
+                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                    curBlendDst = BlendFactor::ONE;
+                    break;
+                case BlendMode::Multiply:
+                    curBlendSrc = BlendFactor::DST_COLOR;
+                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                    break;
+                case BlendMode::Screen:
+                    curBlendSrc = BlendFactor::ONE;
+                    curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
+                    break;
+                default:
+                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                    break;
+            }
 
-        switch (blendMode) 
-        {
-            case BlendMode::Add:
-                curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                curBlendDst = BlendFactor::ONE;
-                break;
-            case BlendMode::Multiply:
-                curBlendSrc = BlendFactor::DST_COLOR;
-                curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-                break;
-            case BlendMode::Screen:
-                curBlendSrc = BlendFactor::ONE;
-                curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
-                break;
-            default:
-                curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-                break;
-        }
-
-        if (pass) {
-            pass->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+            renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                 BlendOp::ADD, curBlendSrc, curBlendDst);
         }
 
         renderEffect->updateHash(effectHash);
+    }
+    
+    if (_attachUtil)
+    {
+        _attachUtil->syncAttachedNode(_nodeProxy, frameData);
     }
 }
 
@@ -427,6 +418,43 @@ void CCArmatureCacheDisplay::updateAnimationCache (const std::string& animationN
 void CCArmatureCacheDisplay::updateAllAnimationCache ()
 {
     _armatureCache->resetAllAnimationData();
+}
+
+void CCArmatureCacheDisplay::bindNodeProxy(cocos2d::renderer::NodeProxy* node)
+{
+    CC_SAFE_RELEASE(_nodeProxy);
+    _nodeProxy = node;
+    CC_SAFE_RETAIN(_nodeProxy);
+}
+
+void CCArmatureCacheDisplay::setEffect(cocos2d::renderer::EffectVariant* effect)
+{
+    if (effect == _effect) return;
+    CC_SAFE_RELEASE(_effect);
+    _effect = effect;
+    CC_SAFE_RETAIN(_effect);
+}
+
+void CCArmatureCacheDisplay::setAttachUtil(CacheModeAttachUtil* attachUtil)
+{
+    if (attachUtil == _attachUtil) return;
+    CC_SAFE_RELEASE(_attachUtil);
+    _attachUtil = attachUtil;
+    CC_SAFE_RETAIN(_attachUtil);
+}
+
+void CCArmatureCacheDisplay::setColor(cocos2d::Color4B& color)
+{
+    _nodeColor.r = color.r / 255.0f;
+    _nodeColor.g = color.g / 255.0f;
+    _nodeColor.b = color.b / 255.0f;
+    _nodeColor.a = color.a / 255.0f;
+}
+
+uint32_t CCArmatureCacheDisplay::getRenderOrder() const
+{
+    if (!_nodeProxy) return 0;
+    return _nodeProxy->getRenderOrder();
 }
 
 DRAGONBONES_NAMESPACE_END

@@ -68,6 +68,8 @@ AudioEngine::ProfileHelper* AudioEngine::_defaultProfileHelper = nullptr;
 std::unordered_map<int, AudioEngine::AudioInfo> AudioEngine::_audioIDInfoMap;
 AudioEngineImpl* AudioEngine::_audioEngineImpl = nullptr;
 
+uint32_t AudioEngine::_onPauseListenerID = 0;
+uint32_t AudioEngine::_onResumeListenerID = 0;
 std::vector<int> AudioEngine::_breakAudioID;
 
 AudioEngine::AudioEngineThreadPool* AudioEngine::s_threadPool = nullptr;
@@ -169,6 +171,18 @@ void AudioEngine::end()
 
     delete _defaultProfileHelper;
     _defaultProfileHelper = nullptr;
+
+    if (_onPauseListenerID != 0)
+    {
+        EventDispatcher::removeCustomEventListener(EVENT_ON_PAUSE, _onPauseListenerID);
+        _onPauseListenerID = 0;
+    }
+
+    if (_onResumeListenerID != 0)
+    {
+        EventDispatcher::removeCustomEventListener(EVENT_ON_RESUME, _onResumeListenerID);
+        _onResumeListenerID = 0;
+    }
 }
 
 bool AudioEngine::lazyInit()
@@ -181,6 +195,8 @@ bool AudioEngine::lazyInit()
             _audioEngineImpl = nullptr;
            return false;
         }
+        _onPauseListenerID = EventDispatcher::addCustomEventListener(EVENT_ON_PAUSE, AudioEngine::onPause);
+        _onResumeListenerID = EventDispatcher::addCustomEventListener(EVENT_ON_RESUME, AudioEngine::onResume);
     }
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)
@@ -337,25 +353,36 @@ void AudioEngine::resumeAll()
     }
 }
 
-void AudioEngine::onEnterBackground() {
+void AudioEngine::onPause(const CustomEvent &event) {
     auto itEnd = _audioIDInfoMap.end();
     for (auto it = _audioIDInfoMap.begin(); it != itEnd; ++it)
     {
         if (it->second.state == AudioState::PLAYING)
         {
             _audioEngineImpl->pause(it->first);
-            it->second.state = AudioState::PAUSED;
             _breakAudioID.push_back(it->first);
         }
     }
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    if (_audioEngineImpl) {
+        _audioEngineImpl->onPause();
+    }
+#endif    
 }
 
-void AudioEngine::onEnterForeground() {
+void AudioEngine::onResume(const CustomEvent &event) {
     auto itEnd = _breakAudioID.end();
     for (auto it = _breakAudioID.begin(); it != itEnd; ++it) {
-        AudioEngine::resume(*it);
+        _audioEngineImpl->resume(*it);
     }
     _breakAudioID.clear();
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID    
+    if (_audioEngineImpl) {
+        _audioEngineImpl->onResume();
+    }
+#endif 
 }
 
 void AudioEngine::stop(int audioID)

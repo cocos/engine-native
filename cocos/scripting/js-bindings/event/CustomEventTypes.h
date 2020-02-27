@@ -26,3 +26,6 @@
 
 #define EVENT_COME_TO_FOREGROUND    "event_come_to_foreground"
 #define EVENT_COME_TO_BACKGROUND    "event_come_to_background"
+
+#define EVENT_ON_PAUSE    "event_on_pause"
+#define EVENT_ON_RESUME   "event_on_resume"

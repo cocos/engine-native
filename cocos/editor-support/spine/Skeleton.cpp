@@ -1,32 +1,31 @@
 /******************************************************************************
-* Spine Runtimes Software License v2.5
-*
-* Copyright (c) 2013-2016, Esoteric Software
-* All rights reserved.
-*
-* You are granted a perpetual, non-exclusive, non-sublicensable, and
-* non-transferable license to use, install, execute, and perform the Spine
-* Runtimes software and derivative works solely for personal or internal
-* use. Without the written permission of Esoteric Software (see Section 2 of
-* the Spine Software License Agreement), you may not (a) modify, translate,
-* adapt, or develop new applications using the Spine Runtimes or otherwise
-* create derivative works or improvements of the Spine Runtimes or (b) remove,
-* delete, alter, or obscure any trademarks or any copyright, trademark, patent,
-* or other intellectual property or proprietary rights notices on or in the
-* Software, including any copy thereof. Redistributions in binary or source
-* form must include this license and terms.
-*
-* THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
-* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
-* EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
-* USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-* IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-* POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************/
+ * Spine Runtimes License Agreement
+ * Last updated January 1, 2020. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2020, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #ifdef SPINE_UE4
 #include "SpinePluginPrivatePCH.h"
@@ -53,6 +52,8 @@
 #include <spine/PathAttachment.h>
 
 #include <spine/ContainerUtil.h>
+
+#include <float.h>
 
 using namespace spine;
 
@@ -136,7 +137,21 @@ void Skeleton::updateCache() {
 	_updateCacheReset.clear();
 
 	for (size_t i = 0, n = _bones.size(); i < n; ++i) {
-		_bones[i]->_sorted = false;
+		Bone* bone = _bones[i];
+		bone->_sorted = bone->_data.isSkinRequired();
+		bone->_active = !bone->_sorted;
+	}
+
+	if (_skin) {
+		Vector<BoneData*>& skinBones = _skin->getBones();
+		for (size_t i = 0, n = skinBones.size(); i < n; i++) {
+			Bone* bone = _bones[skinBones[i]->getIndex()];
+			do {
+				bone->_sorted = false;
+				bone->_active = true;
+				bone = bone->_parent;
+			} while (bone);
+		}
 	}
 
 	size_t ikCount = _ikConstraints.size();
@@ -159,7 +174,7 @@ void Skeleton::updateCache() {
 
 		for (size_t ii = 0; ii < transformCount; ++ii) {
 			TransformConstraint *constraint = _transformConstraints[ii];
-			if (constraint->getData().getOrder() == (int)i) {
+			if (constraint->getData().getOrder() == i) {
 				sortTransformConstraint(constraint);
 				i++;
 				goto continue_outer;
@@ -168,7 +183,7 @@ void Skeleton::updateCache() {
 
 		for (size_t ii = 0; ii < pathCount; ++ii) {
 			PathConstraint *constraint = _pathConstraints[ii];
-			if (constraint->getData().getOrder() == (int)i) {
+			if (constraint->getData().getOrder() == i) {
 				sortPathConstraint(constraint);
 				i++;
 				goto continue_outer;
@@ -234,6 +249,7 @@ void Skeleton::setBonesToSetupPose() {
 		constraint._compress = constraint._data._compress;
 		constraint._stretch = constraint._data._stretch;
 		constraint._mix = constraint._data._mix;
+		constraint._softness = constraint._data._softness;
 	}
 
 	for (size_t i = 0, n = _transformConstraints.size(); i < n; ++i) {
@@ -295,6 +311,7 @@ void Skeleton::setSkin(const String &skinName) {
 }
 
 void Skeleton::setSkin(Skin *newSkin) {
+	if (_skin == newSkin) return;
 	if (newSkin != NULL) {
 		if (_skin != NULL) {
 			Skeleton &thisRef = *this;
@@ -315,6 +332,7 @@ void Skeleton::setSkin(Skin *newSkin) {
 	}
 
 	_skin = newSkin;
+	updateCache();
 }
 
 Attachment *Skeleton::getAttachment(const String &slotName, const String &attachmentName) {
@@ -401,13 +419,14 @@ void Skeleton::update(float delta) {
 }
 
 void Skeleton::getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Vector<float> &outVertexBuffer) {
-	float minX = std::numeric_limits<float>::max();
-	float minY = std::numeric_limits<float>::max();
-	float maxX = std::numeric_limits<float>::min();
-	float maxY = std::numeric_limits<float>::min();
+	float minX = FLT_MAX;
+	float minY = FLT_MAX;
+	float maxX = FLT_MIN;
+	float maxY = FLT_MIN;
 
 	for (size_t i = 0; i < _drawOrder.size(); ++i) {
 		Slot *slot = _drawOrder[i];
+		if (!slot->_bone._active) continue;
 		size_t verticesLength = 0;
 		Attachment *attachment = slot->getAttachment();
 
@@ -537,6 +556,9 @@ void Skeleton::setScaleY(float inValue) {
 }
 
 void Skeleton::sortIkConstraint(IkConstraint *constraint) {
+	constraint->_active = constraint->_target->_active && (!constraint->_data.isSkinRequired() || (_skin && _skin->_constraints.contains(&constraint->_data)));
+	if (!constraint->_active) return;
+
 	Bone *target = constraint->getTarget();
 	sortBone(target);
 
@@ -556,6 +578,9 @@ void Skeleton::sortIkConstraint(IkConstraint *constraint) {
 }
 
 void Skeleton::sortPathConstraint(PathConstraint *constraint) {
+	constraint->_active = constraint->_target->_bone._active && (!constraint->_data.isSkinRequired() || (_skin && _skin->_constraints.contains(&constraint->_data)));
+	if (!constraint->_active) return;
+
 	Slot *slot = constraint->getTarget();
 	int slotIndex = slot->getData().getIndex();
 	Bone &slotBone = slot->getBone();
@@ -584,6 +609,9 @@ void Skeleton::sortPathConstraint(PathConstraint *constraint) {
 }
 
 void Skeleton::sortTransformConstraint(TransformConstraint *constraint) {
+	constraint->_active = constraint->_target->_active && (!constraint->_data.isSkinRequired() || (_skin && _skin->_constraints.contains(&constraint->_data)));
+	if (!constraint->_active) return;
+
 	sortBone(constraint->getTarget());
 
 	Vector<Bone *> &constrained = constraint->getBones();
@@ -647,6 +675,7 @@ void Skeleton::sortBone(Bone *bone) {
 void Skeleton::sortReset(Vector<Bone *> &bones) {
 	for (size_t i = 0, n = bones.size(); i < n; ++i) {
 		Bone *bone = bones[i];
+		if (!bone->_active) continue;
 		if (bone->_sorted) sortReset(bone->getChildren());
 		bone->_sorted = false;
 	}

@@ -80,18 +80,17 @@ namespace
         RegCloseKey(hKey);
     }
 
-    int g_width = 0;
-    int g_height = 0;
     bool setCanvasCallback(se::Object* global)
     {
+        auto viewSize = cocos2d::Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-          (int)(g_width / devicePixelRatio),
-          (int)(g_height / devicePixelRatio));
+          (int)(viewSize.x / devicePixelRatio),
+          (int)(viewSize.y / devicePixelRatio));
         se->evalString(commandBuf);
-        cocos2d::ccViewport(0, 0, g_width, g_height);
+        cocos2d::ccViewport(0, 0, viewSize.x, viewSize.y);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -395,11 +394,11 @@ bool Application::applicationDidFinishLaunching()
     return true;
 }
 
-void Application::applicationDidEnterBackground()
+void Application::onPause()
 {
 }
 
-void Application::applicationWillEnterForeground()
+void Application::onResume()
 {
 }
 
@@ -426,9 +425,6 @@ void Application::createView(const std::string& name, int width, int height)
                  multisamplingCount);
 
     _view = new GLView(this, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
-    
-    g_width = width;
-    g_height = height;
 }
 
 std::string Application::getSystemVersion()

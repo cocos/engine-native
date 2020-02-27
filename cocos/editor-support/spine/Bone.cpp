@@ -1,32 +1,31 @@
 /******************************************************************************
-* Spine Runtimes Software License v2.5
-*
-* Copyright (c) 2013-2016, Esoteric Software
-* All rights reserved.
-*
-* You are granted a perpetual, non-exclusive, non-sublicensable, and
-* non-transferable license to use, install, execute, and perform the Spine
-* Runtimes software and derivative works solely for personal or internal
-* use. Without the written permission of Esoteric Software (see Section 2 of
-* the Spine Software License Agreement), you may not (a) modify, translate,
-* adapt, or develop new applications using the Spine Runtimes or otherwise
-* create derivative works or improvements of the Spine Runtimes or (b) remove,
-* delete, alter, or obscure any trademarks or any copyright, trademark, patent,
-* or other intellectual property or proprietary rights notices on or in the
-* Software, including any copy thereof. Redistributions in binary or source
-* form must include this license and terms.
-*
-* THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
-* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
-* EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS INTERRUPTION, OR LOSS OF
-* USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-* IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-* POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************/
+ * Spine Runtimes License Agreement
+ * Last updated January 1, 2020. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2020, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #ifdef SPINE_UE4
 #include "SpinePluginPrivatePCH.h"
@@ -52,31 +51,33 @@ bool Bone::isYDown() {
 }
 
 Bone::Bone(BoneData &data, Skeleton &skeleton, Bone *parent) : Updatable(),
-															   _data(data),
-															   _skeleton(skeleton),
-															   _parent(parent),
-															   _x(0),
-															   _y(0),
-															   _rotation(0),
-															   _scaleX(0),
-															   _scaleY(0),
-															   _shearX(0),
-															   _shearY(0),
-															   _ax(0),
-															   _ay(0),
-															   _arotation(0),
-															   _ascaleX(0),
-															   _ascaleY(0),
-															   _ashearX(0),
-															   _ashearY(0),
-															   _appliedValid(false),
-															   _a(1),
-															   _b(0),
-															   _worldX(0),
-															   _c(0),
-															   _d(1),
-															   _worldY(0),
-															   _sorted(false) {
+	_data(data),
+	_skeleton(skeleton),
+	_parent(parent),
+	_x(0),
+	_y(0),
+	_rotation(0),
+	_scaleX(0),
+	_scaleY(0),
+	_shearX(0),
+	_shearY(0),
+	_ax(0),
+	_ay(0),
+	_arotation(0),
+	_ascaleX(0),
+	_ascaleY(0),
+	_ashearX(0),
+	_ashearY(0),
+	_appliedValid(false),
+	_a(1),
+	_b(0),
+	_worldX(0),
+	_c(0),
+	_d(1),
+	_worldY(0),
+	_sorted(false),
+	_active(false)
+{
 	setToSetupPose();
 }
 
@@ -88,8 +89,7 @@ void Bone::updateWorldTransform() {
 	updateWorldTransform(_x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY);
 }
 
-void
-Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY) {
+void Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY) {
 	float cosine, sine;
 	float pa, pb, pc, pd;
 	Bone *parent = _parent;
@@ -108,8 +108,8 @@ Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, float
 		float sx = _skeleton.getScaleX();
 		float sy = _skeleton.getScaleY();
 		_a = MathUtil::cosDeg(rotation + shearX) * scaleX * sx;
-		_b = MathUtil::cosDeg(rotationY) * scaleY * sy;
-		_c = MathUtil::sinDeg(rotation + shearX) * scaleX * sx;
+		_b = MathUtil::cosDeg(rotationY) * scaleY * sx;
+		_c = MathUtil::sinDeg(rotation + shearX) * scaleX * sy;
 		_d = MathUtil::sinDeg(rotationY) * scaleY * sy;
 		_worldX = x * sx + _skeleton.getX();
 		_worldY = y * sy + _skeleton.getY();
@@ -125,80 +125,80 @@ Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, float
 	_worldY = pc * x + pd * y + parent->_worldY;
 
 	switch (_data.getTransformMode()) {
-		case TransformMode_Normal: {
-			float rotationY = rotation + 90 + shearY;
-			float la = MathUtil::cosDeg(rotation + shearX) * scaleX;
-			float lb = MathUtil::cosDeg(rotationY) * scaleY;
-			float lc = MathUtil::sinDeg(rotation + shearX) * scaleX;
-			float ld = MathUtil::sinDeg(rotationY) * scaleY;
-			_a = pa * la + pb * lc;
-			_b = pa * lb + pb * ld;
-			_c = pc * la + pd * lc;
-			_d = pc * lb + pd * ld;
-			return;
+	case TransformMode_Normal: {
+		float rotationY = rotation + 90 + shearY;
+		float la = MathUtil::cosDeg(rotation + shearX) * scaleX;
+		float lb = MathUtil::cosDeg(rotationY) * scaleY;
+		float lc = MathUtil::sinDeg(rotation + shearX) * scaleX;
+		float ld = MathUtil::sinDeg(rotationY) * scaleY;
+		_a = pa * la + pb * lc;
+		_b = pa * lb + pb * ld;
+		_c = pc * la + pd * lc;
+		_d = pc * lb + pd * ld;
+		return;
+	}
+	case TransformMode_OnlyTranslation: {
+		float rotationY = rotation + 90 + shearY;
+		_a = MathUtil::cosDeg(rotation + shearX) * scaleX;
+		_b = MathUtil::cosDeg(rotationY) * scaleY;
+		_c = MathUtil::sinDeg(rotation + shearX) * scaleX;
+		_d = MathUtil::sinDeg(rotationY) * scaleY;
+		break;
+	}
+	case TransformMode_NoRotationOrReflection: {
+		float s = pa * pa + pc * pc;
+		float prx, rx, ry, la, lb, lc, ld;
+		if (s > 0.0001f) {
+			s = MathUtil::abs(pa * pd - pb * pc) / s;
+			pb = pc * s;
+			pd = pa * s;
+			prx = MathUtil::atan2(pc, pa) * MathUtil::Rad_Deg;
+		} else {
+			pa = 0;
+			pc = 0;
+			prx = 90 - MathUtil::atan2(pd, pb) * MathUtil::Rad_Deg;
 		}
-		case TransformMode_OnlyTranslation: {
-			float rotationY = rotation + 90 + shearY;
-			_a = MathUtil::cosDeg(rotation + shearX) * scaleX;
-			_b = MathUtil::cosDeg(rotationY) * scaleY;
-			_c = MathUtil::sinDeg(rotation + shearX) * scaleX;
-			_d = MathUtil::sinDeg(rotationY) * scaleY;
-			break;
-		}
-		case TransformMode_NoRotationOrReflection: {
-			float s = pa * pa + pc * pc;
-			float prx, rx, ry, la, lb, lc, ld;
-			if (s > 0.0001f) {
-				s = MathUtil::abs(pa * pd - pb * pc) / s;
-				pb = pc * s;
-				pd = pa * s;
-				prx = MathUtil::atan2(pc, pa) * MathUtil::Rad_Deg;
-			} else {
-				pa = 0;
-				pc = 0;
-				prx = 90 - MathUtil::atan2(pd, pb) * MathUtil::Rad_Deg;
-			}
-			rx = rotation + shearX - prx;
-			ry = rotation + shearY - prx + 90;
-			la = MathUtil::cosDeg(rx) * scaleX;
-			lb = MathUtil::cosDeg(ry) * scaleY;
-			lc = MathUtil::sinDeg(rx) * scaleX;
-			ld = MathUtil::sinDeg(ry) * scaleY;
-			_a = pa * la - pb * lc;
-			_b = pa * lb - pb * ld;
-			_c = pc * la + pd * lc;
-			_d = pc * lb + pd * ld;
-			break;
-		}
-		case TransformMode_NoScale:
-		case TransformMode_NoScaleOrReflection: {
-			float za, zc, s;
-			float r, zb, zd, la, lb, lc, ld;
-			cosine = MathUtil::cosDeg(rotation);
-			sine = MathUtil::sinDeg(rotation);
-			za = (pa * cosine + pb * sine) / _skeleton.getScaleX();
-			zc = (pc * cosine + pd * sine) / _skeleton.getScaleY();
-			s = MathUtil::sqrt(za * za + zc * zc);
-			if (s > 0.00001f) s = 1 / s;
-			za *= s;
-			zc *= s;
-			s = MathUtil::sqrt(za * za + zc * zc);
-			if (_data.getTransformMode() == TransformMode_NoScale
-				&& (pa * pd - pb * pc < 0) != (_skeleton.getScaleX() < 0 != _skeleton.getScaleY() < 0))
-				s = -s;
-			r = MathUtil::Pi / 2 + MathUtil::atan2(zc, za);
-			zb = MathUtil::cos(r) * s;
-			zd = MathUtil::sin(r) * s;
-			la = MathUtil::cosDeg(shearX) * scaleX;
-			lb = MathUtil::cosDeg(90 + shearY) * scaleY;
-			lc = MathUtil::sinDeg(shearX) * scaleX;
-			ld = MathUtil::sinDeg(90 + shearY) * scaleY;
-			_a = za * la + zb * lc;
-			_b = za * lb + zb * ld;
-			_c = zc * la + zd * lc;
-			_d = zc * lb + zd * ld;
-			break;
-		}
+		rx = rotation + shearX - prx;
+		ry = rotation + shearY - prx + 90;
+		la = MathUtil::cosDeg(rx) * scaleX;
+		lb = MathUtil::cosDeg(ry) * scaleY;
+		lc = MathUtil::sinDeg(rx) * scaleX;
+		ld = MathUtil::sinDeg(ry) * scaleY;
+		_a = pa * la - pb * lc;
+		_b = pa * lb - pb * ld;
+		_c = pc * la + pd * lc;
+		_d = pc * lb + pd * ld;
+		break;
+	}
+	case TransformMode_NoScale:
+	case TransformMode_NoScaleOrReflection: {
+		float za, zc, s;
+		float r, zb, zd, la, lb, lc, ld;
+		cosine = MathUtil::cosDeg(rotation);
+		sine = MathUtil::sinDeg(rotation);
+		za = (pa * cosine + pb * sine) / _skeleton.getScaleX();
+		zc = (pc * cosine + pd * sine) / _skeleton.getScaleY();
+		s = MathUtil::sqrt(za * za + zc * zc);
+		if (s > 0.00001f) s = 1 / s;
+		za *= s;
+		zc *= s;
+		s = MathUtil::sqrt(za * za + zc * zc);
+		if (_data.getTransformMode() == TransformMode_NoScale
+			&& (pa * pd - pb * pc < 0) != (_skeleton.getScaleX() < 0 != _skeleton.getScaleY() < 0))
+			s = -s;
+		r = MathUtil::Pi / 2 + MathUtil::atan2(zc, za);
+		zb = MathUtil::cos(r) * s;
+		zd = MathUtil::sin(r) * s;
+		la = MathUtil::cosDeg(shearX) * scaleX;
+		lb = MathUtil::cosDeg(90 + shearY) * scaleY;
+		lc = MathUtil::sinDeg(shearX) * scaleX;
+		ld = MathUtil::sinDeg(90 + shearY) * scaleY;
+		_a = za * la + zb * lc;
+		_b = za * lb + zb * ld;
+		_c = zc * la + zd * lc;
+		_d = zc * lb + zd * ld;
+		break;
+	}
 	}
 	_a *= _skeleton.getScaleX();
 	_b *= _skeleton.getScaleX();
@@ -538,4 +538,12 @@ void Bone::updateAppliedTransform() {
 			_arotation = 90 - MathUtil::atan2(rd, rb) * MathUtil::Rad_Deg;
 		}
 	}
+}
+
+bool Bone::isActive() {
+	return _active;
+}
+
+void Bone::setActive(bool inValue) {
+	_active = inValue;
 }

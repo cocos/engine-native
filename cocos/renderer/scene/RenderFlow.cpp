@@ -356,6 +356,7 @@ void RenderFlow::render(NodeProxy* scene, float deltaTime)
         // render middleware
         middleware::MiddlewareManager::getInstance()->render(deltaTime);
 #endif
+        scene->resetGlobalRenderOrder();
         
         auto traverseHandle = scene->traverseHandle;
         traverseHandle(scene, _batcher, _scene);

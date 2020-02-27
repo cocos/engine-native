@@ -25,4 +25,14 @@
  ****************************************************************************/
 
 #include "platform/apple/CCDevice-apple.h"
+#include "platform/CCApplication.h"
 
+
+NS_CC_BEGIN
+
+int Device::getDevicePixelRatio()
+{
+    return Application::getInstance()->getScreenScale();
+}
+
+NS_CC_END

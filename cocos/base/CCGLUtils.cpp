@@ -271,35 +271,11 @@ const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
 
 void ccViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
-    GLint currentFBO;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFBO);
-    if (currentFBO == Application::getInstance()->getMainFBO())
-    {
-        float scale = Application::getInstance()->getScreenScale();
-        x *= scale;
-        y *= scale;
-        width *= scale;
-        height *= scale;
-    }
-#endif
     glViewport(x, y, width, height);
 }
 
 void ccScissor(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
-    GLint currentFBO;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFBO);
-    if (currentFBO == Application::getInstance()->getMainFBO())
-    {
-        float scale = Application::getInstance()->getScreenScale();
-        x *= scale;
-        y *= scale;
-        width *= scale;
-        height *= scale;
-    }
-#endif
     glScissor(x, y, width, height);
 }
 

@@ -111,11 +111,31 @@ static bool js_register_spine_initSkeletonData (se::State& s)
     spine::spAtlasPage_setCustomTextureLoader(nullptr);
     
     spine::AttachmentLoader* attachmentLoader = new (__FILE__, __LINE__) spine::Cocos2dAtlasAttachmentLoader(atlas);
-    spine::SkeletonJson* json = new (__FILE__, __LINE__) spine::SkeletonJson(attachmentLoader);
-    json->setScale(scale);
-    spine::SkeletonData* skeletonData = json->readSkeletonData(skeletonDataFile.c_str());
-    CCASSERT(skeletonData, !json->getError().isEmpty() ? json->getError().buffer() : "Error reading skeleton data.");
-    delete json;
+    spine::SkeletonData* skeletonData = nullptr;
+
+    std::size_t length = skeletonDataFile.length();
+    auto binPos = skeletonDataFile.find(".skel", length - 5);
+    if (binPos == std::string::npos) binPos = skeletonDataFile.find(".bin", length - 4);
+
+    if (binPos != std::string::npos) {
+        auto fileUtils = cocos2d::FileUtils::getInstance();
+        if (fileUtils->isFileExist(skeletonDataFile))
+        {
+            cocos2d::Data cocos2dData;
+            const auto fullpath = fileUtils->fullPathForFilename(skeletonDataFile);
+            fileUtils->getContents(fullpath, &cocos2dData);
+            
+            spine::SkeletonBinary binary(attachmentLoader);
+            binary.setScale(scale);
+            skeletonData = binary.readSkeletonData(cocos2dData.getBytes(), (int)cocos2dData.getSize());
+            CCASSERT(skeletonData, !binary.getError().isEmpty() ? binary.getError().buffer() : "Error reading binary skeleton data.");
+        }
+    } else {
+        spine::SkeletonJson json(attachmentLoader);
+        json.setScale(scale);
+        skeletonData = json.readSkeletonData(skeletonDataFile.c_str());
+        CCASSERT(skeletonData, !json.getError().isEmpty() ? json.getError().buffer() : "Error reading json skeleton data.");
+    }
     
     if (skeletonData) {
         std::vector<int> texturesIndex;

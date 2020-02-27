@@ -95,7 +95,7 @@ static bool js_cocos2dx_particle_ParticleSimulator_setEffect(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::renderer::Effect* arg0 = nullptr;
+        cocos2d::renderer::EffectVariant* arg0 = nullptr;
         ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_cocos2dx_particle_ParticleSimulator_setEffect : Error processing arguments");
         cobj->setEffect(arg0);
@@ -1314,6 +1314,34 @@ static bool js_cocos2dx_particle_ParticleSimulator_set_rotatePerSVar(se::State& 
 }
 SE_BIND_PROP_SET(js_cocos2dx_particle_ParticleSimulator_set_rotatePerSVar)
 
+static bool js_cocos2dx_particle_ParticleSimulator_get_aspectRatio(se::State& s)
+{
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_get_aspectRatio : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= float_to_seval(cobj->aspectRatio, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_particle_ParticleSimulator_get_aspectRatio)
+
+static bool js_cocos2dx_particle_ParticleSimulator_set_aspectRatio(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_set_aspectRatio : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    float arg0 = 0;
+    ok &= seval_to_float(args[0], &arg0);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_particle_ParticleSimulator_set_aspectRatio : Error processing new value");
+    cobj->aspectRatio = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_particle_ParticleSimulator_set_aspectRatio)
+
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_ParticleSimulator_finalize)
 
 static bool js_cocos2dx_particle_ParticleSimulator_constructor(se::State& s)
@@ -1379,6 +1407,7 @@ bool js_register_cocos2dx_particle_ParticleSimulator(se::Object* obj)
     cls->defineProperty("endRadiusVar", _SE(js_cocos2dx_particle_ParticleSimulator_get_endRadiusVar), _SE(js_cocos2dx_particle_ParticleSimulator_set_endRadiusVar));
     cls->defineProperty("rotatePerS", _SE(js_cocos2dx_particle_ParticleSimulator_get_rotatePerS), _SE(js_cocos2dx_particle_ParticleSimulator_set_rotatePerS));
     cls->defineProperty("rotatePerSVar", _SE(js_cocos2dx_particle_ParticleSimulator_get_rotatePerSVar), _SE(js_cocos2dx_particle_ParticleSimulator_set_rotatePerSVar));
+    cls->defineProperty("aspectRatio", _SE(js_cocos2dx_particle_ParticleSimulator_get_aspectRatio), _SE(js_cocos2dx_particle_ParticleSimulator_set_aspectRatio));
     cls->defineFunction("setGravity", _SE(js_cocos2dx_particle_ParticleSimulator_setGravity));
     cls->defineFunction("render", _SE(js_cocos2dx_particle_ParticleSimulator_render));
     cls->defineFunction("setSourcePos", _SE(js_cocos2dx_particle_ParticleSimulator_setSourcePos));

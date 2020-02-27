@@ -31,6 +31,8 @@
 #include "Base.h"
 #include "../Value.hpp"
 
+#include <thread>
+
 #if SE_ENABLE_INSPECTOR
 namespace node {
     namespace inspector {
@@ -320,6 +322,8 @@ namespace se {
         node::Environment* _env;
         node::IsolateData* _isolateData;
 #endif
+
+        std::thread::id _engineThreadId;
 
         std::string _debuggerServerAddr;
         uint32_t _debuggerServerPort;

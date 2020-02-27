@@ -35,14 +35,14 @@
 namespace {
     uint32_t _shdID = 0;
 
-    std::string generateDefines(const std::vector<cocos2d::ValueMap*>& definesList)
+    std::string generateDefines(const std::vector<const cocos2d::ValueMap*>& definesList)
     {
         std::string ret;
         std::string v;
         cocos2d::ValueMap cache;
         for (int i = (int)definesList.size() - 1; i >= 0; i--)
         {
-            cocos2d::ValueMap* defMap = definesList[i];
+            const cocos2d::ValueMap* defMap = definesList[i];
             for (const auto& def : *defMap)
             {
                 if (cache.find(def.first) != cache.end())
@@ -68,13 +68,13 @@ namespace {
         return ret;
     }
 
-    std::string replaceMacroNums(const std::string str, const std::vector<cocos2d::ValueMap*>& definesList)
+    std::string replaceMacroNums(const std::string str, const std::vector<const cocos2d::ValueMap*>& definesList)
     {
         cocos2d::ValueMap cache;
         std::string tmp = str;
         for (int i = (int)definesList.size() - 1; i >= 0; i--)
         {
-            cocos2d::ValueMap* defMap = definesList[i];
+            const cocos2d::ValueMap* defMap = definesList[i];
 
             for (const auto& def : *defMap)
             {
@@ -215,51 +215,12 @@ void ProgramLib::define(const std::string& name, const std::string& vert, const 
     std::string newFrag = frag;
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-    std::string::size_type pos = 0;
-    pos = newVert.find(_precisionVert);
-    if (pos != std::string::npos)
-    {
-        newVert.replace(pos, strlen(_precisionVert), "");
-    }
-    
-    pos = newFrag.find(_precisionFrag);
-    if (pos != std::string::npos)
-    {
-        newFrag.replace(pos, strlen(_precisionFrag), "");
-    }
-    
-    while((pos = newVert.find(_mediump)) != std::string::npos)
-    {
-        newVert.replace(pos, strlen(_mediump), "");
-    }
-    
-    while((pos = newFrag.find(_mediump)) != std::string::npos)
-    {
-        newFrag.replace(pos, strlen(_mediump), "");
-    }
-    
-    while((pos = newVert.find(_lowp)) != std::string::npos)
-    {
-        newVert.replace(pos, strlen(_lowp), "");
-    }
-    
-    while((pos = newFrag.find(_lowp)) != std::string::npos)
-    {
-        newFrag.replace(pos, strlen(_lowp), "");
-    }
-#else
-    std::string::size_type pos = 0;
-    pos = newVert.find(_precisionVert);
-    if (pos == std::string::npos)
-    {
-        newVert = _precisionVertReplace + vert;
-    }
-    
-    pos = newVert.find(_precisionFrag);
-    if (pos == std::string::npos)
-    {
-        newFrag = _precisionFragReplace + frag;
-    }
+    static const std::regex precision("precision\\s+(lowp|mediump|highp).*?;");
+    static const std::regex accuracy("(lowp|mediump|highp)\\s");
+    newVert = std::regex_replace(newVert, precision, "");
+    newVert = std::regex_replace(newVert, accuracy, "");
+    newFrag = std::regex_replace(newFrag, precision, "");
+    newFrag = std::regex_replace(newFrag, accuracy, "");
 #endif
     
     // store it
@@ -271,7 +232,7 @@ void ProgramLib::define(const std::string& name, const std::string& vert, const 
     templ.defines = defines;
 }
 
-Program* ProgramLib::switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<ValueMap*>& definesList)
+Program* ProgramLib::switchProgram(const size_t programNameHash, const size_t definesKeyHash, const std::vector<const ValueMap*>& definesList)
 {
     size_t programHash = 0;
     MathUtil::combineHash(programHash, programNameHash);
@@ -311,11 +272,11 @@ Program* ProgramLib::switchProgram(const size_t programNameHash, const size_t de
     return program;
 }
 
-const Value* ProgramLib::getValueFromDefineList(const std::string& name, const std::vector<ValueMap*>& definesList)
+const Value* ProgramLib::getValueFromDefineList(const std::string& name, const std::vector<const ValueMap*>& definesList)
 {
     for (int i = (int)definesList.size() - 1; i >= 0; i--)
     {
-        ValueMap* defines = definesList[i];
+        const ValueMap* defines = definesList[i];
         auto iter = defines->find(name);
         if (iter != defines->end())
         {

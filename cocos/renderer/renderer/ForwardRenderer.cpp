@@ -46,6 +46,7 @@
 RENDERER_BEGIN
 
 #define CC_MAX_LIGHTS 4
+#define CC_MAX_SHADOW_LIGHTS 2
 
 ForwardRenderer::ForwardRenderer()
 {
@@ -141,7 +142,10 @@ void ForwardRenderer::updateLights(Scene* scene)
         light->update(_device);
         if (light->getShadowType() != Light::ShadowType::NONE)
         {
-            _shadowLights.pushBack(light);
+            if (_shadowLights.size() < CC_MAX_SHADOW_LIGHTS) {
+                _shadowLights.pushBack(light);
+            }
+            
             View* view = requestView();
             std::vector<std::string> stages;
             stages.push_back("shadowcast");
@@ -225,8 +229,8 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_dirLightDirection, count * 4, directions);
-        _device->setUniformfv(cc_dirLightColor, count * 4, colors);
+        _device->setUniformfv(cc_dirLightDirection, count * 4, directions, count);
+        _device->setUniformfv(cc_dirLightColor, count * 4, colors, count);
     }
     
     if (_pointLights.size() > 0)
@@ -252,8 +256,8 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_pointLightPositionAndRange, count * 4, positionAndRanges);
-        _device->setUniformfv(cc_pointLightColor, count * 4, colors);
+        _device->setUniformfv(cc_pointLightPositionAndRange, count * 4, positionAndRanges, count);
+        _device->setUniformfv(cc_pointLightColor, count * 4, colors, count);
     }
     
     if (_spotLights.size() > 0)
@@ -287,9 +291,9 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_spotLightDirection, count * 4, directions);
-        _device->setUniformfv(cc_spotLightPositionAndRange, count * 4, positionAndRanges);
-        _device->setUniformfv(cc_spotLightColor, count * 4, colors);
+        _device->setUniformfv(cc_spotLightDirection, count * 4, directions, count);
+        _device->setUniformfv(cc_spotLightPositionAndRange, count * 4, positionAndRanges, count);
+        _device->setUniformfv(cc_spotLightColor, count * 4, colors, count);
     }
     
     if (_ambientLights.size() > 0) {
@@ -306,7 +310,7 @@ void ForwardRenderer::submitLightsUniforms()
             *(colors + index + 2) = colorVec3.z;
             *(colors + index + 3) = 0;
         }
-        _device->setUniformfv(cc_ambientLightColor, count * 4, colors);
+        _device->setUniformfv(cc_ambientLightColor, count * 4, colors, count);
     }
 }
 
@@ -319,7 +323,7 @@ void ForwardRenderer::submitShadowStageUniforms(const View& view)
     shadowInfo[3] = view.shadowLight->getShadowDarkness();
     
     _device->setUniformMat4(cc_shadow_map_lightViewProjMatrix, view.matViewProj);
-    _device->setUniformfv(cc_shadow_map_info, 4, shadowInfo);
+    _device->setUniformfv(cc_shadow_map_info, 4, shadowInfo, 1);
     _device->setUniformf(cc_shadow_map_bias, view.shadowLight->getShadowBias());
 }
 
@@ -342,27 +346,14 @@ void ForwardRenderer::submitOtherStagesUniforms()
         *(shadowLightInfo + index + 3) = light->getShadowDarkness();
     }
     
-    _device->setUniformfv(cc_shadow_lightViewProjMatrix, count * 16, shadowLightProjs);
-    _device->setUniformfv(cc_shadow_info, count * 4, shadowLightInfo);
-}
-
-void ForwardRenderer::updateShaderDefines(StageItem& item)
-{
-    item.defines->push_back(&_defines);
-    MathUtil::combineHash(item.definesKeyHash, _definesHash);
+    _device->setUniformfv(cc_shadow_lightViewProjMatrix, count * 16, shadowLightProjs, count);
+    _device->setUniformfv(cc_shadow_info, count * 4, shadowLightInfo, count);
 }
 
 bool ForwardRenderer::compareItems(const StageItem &a, const StageItem &b)
 {
-    const Technique* techA = a.technique;
-    const Technique* techB = b.technique;
-    
-    if (techA->getLayer() != techB->getLayer()) {
-        return techA->getLayer() > techB->getLayer();
-    }
-    
-    size_t pa = techA->getPasses().size();
-    size_t pb = techB->getPasses().size();
+    size_t pa = a.passes.size();
+    size_t pb = b.passes.size();
     
     if (pa != pb) {
         return pa > pb;
@@ -381,28 +372,20 @@ void ForwardRenderer::drawItems(const std::vector<StageItem>& items)
     size_t count = _shadowLights.size();
     if (count == 0 && _numLights == 0)
     {
-        for (const auto& item : items)
+        for (size_t i = 0, l = items.size(); i < l; i++)
         {
-            draw(item);
+            draw(items.at(i));
         }
     }
     else
     {
-        std::vector<Texture*> shadowMaps;
-        shadowMaps.reserve(count);
-        std::vector<int> slots;
-        slots.reserve(count);
         for (const auto& item : items)
         {
-            shadowMaps.clear();
             for(int i = 0; i < count; i++)
             {
                 Light* light = _shadowLights.at(i);
-                shadowMaps.push_back(light->getShadowMap());
-                slots.push_back(allocTextureUnit());
+                _device->setTexture(cc_shadow_map[i], light->getShadowMap(), allocTextureUnit());
             }
-            _device->setTextureArray(cc_shadow_map, shadowMaps, slots);
-            updateShaderDefines(const_cast<StageItem&>(item));
             draw(item);
         }
     }
@@ -431,9 +414,8 @@ void ForwardRenderer::shadowStage(const View& view, std::vector<StageItem>& item
     
     for (auto& item : items)
     {
-        const Value* def = _programLib->getValueFromDefineList("CC_SHADOW_CASTING", *item.defines);
+        const Value* def = item.effect->getDefine("CC_CASTING_SHADOW");
         if (def && def->asBool()) {
-            updateShaderDefines(item);
             draw(item);
         }
     }

@@ -113,20 +113,34 @@ void MiddlewareManager::render(float dt)
     
     isRendering = true;
     
+    auto isOrderDirty = false;
+    uint32_t maxRenderOrder = 0;
     for (std::size_t i = 0, n = _updateList.size(); i < n; i++)
     {
         auto editor = _updateList[i];
+        uint32_t renderOrder = maxRenderOrder;
         if (_removeList.size() > 0)
         {
             auto removeIt = std::find(_removeList.begin(), _removeList.end(), editor);
             if (removeIt == _removeList.end())
             {
                 editor->render(dt);
+                renderOrder = editor->getRenderOrder();
             }
         }
         else
         {
             editor->render(dt);
+            renderOrder = editor->getRenderOrder();
+        }
+        
+        if (maxRenderOrder > renderOrder)
+        {
+            isOrderDirty =  true;
+        }
+        else
+        {
+            maxRenderOrder = renderOrder;
         }
     }
     
@@ -143,6 +157,14 @@ void MiddlewareManager::render(float dt)
     }
     
     _clearRemoveList();
+    
+    if (isOrderDirty)
+    {
+        std::sort(_updateList.begin(), _updateList.end(), [](IMiddleware* it1, IMiddleware* it2)
+        {
+            return it1->getRenderOrder() < it2->getRenderOrder();
+        });
+    }
 }
 
 void MiddlewareManager::addTimer(IMiddleware* editor)

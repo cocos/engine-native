@@ -160,7 +160,7 @@ public:
     /**
      * Getes an attribute element by name
      */
-    const Element* getElement(const std::string& attrName) const;
+    const Element* getElement(size_t hashName) const;
     
     /**
      * Gets total byte size of a vertex
@@ -182,7 +182,7 @@ public:
 
 private:
     std::vector<std::string> _names;
-    std::unordered_map<std::string, Element> _attr2el;
+    std::unordered_map<size_t, Element> _attr2el;
 #if GFX_DEBUG > 0
     std::vector<Element> _elements;
 #endif

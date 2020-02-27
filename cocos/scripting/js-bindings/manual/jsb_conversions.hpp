@@ -139,21 +139,20 @@ bool seval_to_DownloaderHints(const se::Value& v, cocos2d::network::DownloaderHi
 
 #if USE_GFX_RENDERER
 bool seval_to_Rect(const se::Value& v, cocos2d::renderer::Rect* rect);
-bool seval_to_std_vector_Pass(const se::Value& v, cocos2d::Vector<cocos2d::renderer::Pass*>* ret);
 bool seval_to_std_vector_Texture(const se::Value& v, std::vector<cocos2d::renderer::Texture*>* ret);
 bool seval_to_std_vector_RenderTarget(const se::Value& v, std::vector<cocos2d::renderer::RenderTarget*>* ret);
 bool seval_to_TextureOptions(const se::Value& v, cocos2d::renderer::Texture::Options* ret);
 bool seval_to_TextureSubImageOption(const se::Value& v, cocos2d::renderer::Texture::SubImageOption* ret);
 bool seval_to_TextureImageOption(const se::Value& v, cocos2d::renderer::Texture::ImageOption* ret);
-bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<std::string, cocos2d::renderer::Effect::Property>* ret);
+bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<size_t, cocos2d::renderer::Effect::Property>* ret);
 bool seval_to_EffectTechnique(const se::Value& v, cocos2d::renderer::Technique** ret);
 bool seval_to_EffectDefineTemplate(const se::Value& v, std::vector<cocos2d::ValueMap>* ret);
-bool seval_to_TechniqueParameter_not_constructor(const se::Value& v, cocos2d::renderer::Technique::Parameter* ret, bool directly);
+bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d::renderer::EffectBase* effect, int passIdx = -1, bool directly = false);
 bool seval_to_TechniqueParameter(const se::Value& v, cocos2d::renderer::Technique::Parameter* ret);
 bool seval_to_std_vector_TechniqueParameter(const se::Value& v, std::vector<cocos2d::renderer::Technique::Parameter>* ret);
 bool seval_to_std_vector_ProgramLib_Template(const se::Value& v, std::vector<cocos2d::renderer::ProgramLib::Template>* ret);
 bool std_vector_RenderTarget_to_seval(const std::vector<cocos2d::renderer::RenderTarget*>& v, se::Value* ret);
-bool seval_to_EffectAsset(const std::string& s, cocos2d::Vector<cocos2d::renderer::Technique*>* ret);
+bool seval_to_EffectAsset(const se::Value& v, cocos2d::Vector<cocos2d::renderer::Technique*>* ret);
 bool ccvaluevector_to_EffectPass(const cocos2d::ValueVector& v, cocos2d::Vector<cocos2d::renderer::Pass*>* passes);
 #endif
 

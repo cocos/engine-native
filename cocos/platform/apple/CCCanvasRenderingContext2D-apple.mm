@@ -271,9 +271,6 @@ enum class CanvasTextBaseline {
 
     NSSize dim = [stringWithAttributes boundingRectWithSize:textRect options:(NSStringDrawingOptions)(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
 
-    dim.width = ceilf(dim.width);
-    dim.height = ceilf(dim.height);
-
     return dim;
 }
 
@@ -596,7 +593,13 @@ void CanvasRenderingContext2D::fillText(const std::string& text, float x, float 
 
     recreateBufferIfNeeded();
 
-    [_impl fillText:[NSString stringWithUTF8String:text.c_str()] x:x y:y maxWidth:maxWidth];
+    auto textUtf8 = [NSString stringWithUTF8String:text.c_str()];
+    if(textUtf8 == nullptr) {
+        SE_LOGE("CanvasRenderingContext2D::fillText failed to convert text to UTF8\n  text:\"%s\"", text.c_str());
+        return;
+    }
+    
+    [_impl fillText:textUtf8 x:x y:y maxWidth:maxWidth];
     SEND_DATA_TO_JS(_canvasBufferUpdatedCB, _impl);
 }
 
@@ -607,14 +610,24 @@ void CanvasRenderingContext2D::strokeText(const std::string& text, float x, floa
         return;
     recreateBufferIfNeeded();
 
-    [_impl strokeText:[NSString stringWithUTF8String:text.c_str()] x:x y:y maxWidth:maxWidth];
+    auto textUtf8 = [NSString stringWithUTF8String:text.c_str()];
+    if(textUtf8 == nullptr) {
+        SE_LOGE("CanvasRenderingContext2D::strokeText failed to convert text to UTF8\n  text:\"%s\"", text.c_str());
+        return;
+    }
+    
+    [_impl strokeText:textUtf8 x:x y:y maxWidth:maxWidth];
     SEND_DATA_TO_JS(_canvasBufferUpdatedCB, _impl);
 }
 
 cocos2d::Size CanvasRenderingContext2D::measureText(const std::string& text)
 {
+    auto cStr = [NSString stringWithUTF8String:text.c_str()];
+    if (!cStr) {
+        return cocos2d::Size::ZERO;
+    }
 //    SE_LOGD("CanvasRenderingContext2D::measureText: %s\n", text.c_str());
-    CGSize size = [_impl measureText: [NSString stringWithUTF8String:text.c_str()]];
+    CGSize size = [_impl measureText: cStr];
     return cocos2d::Size(size.width, size.height);
 }
 

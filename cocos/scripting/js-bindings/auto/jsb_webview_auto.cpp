@@ -638,12 +638,24 @@ SE_BIND_CTOR(js_webview_WebView_constructor, __jsb_cocos2d_WebView_class, js_coc
 
 static bool js_cocos2d_WebView_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::WebView)", s.nativeThisObject());
-    cocos2d::WebView* cobj = (cocos2d::WebView*)s.nativeThisObject();
-    cobj->release();
+    // destructor is skipped
     return true;
 }
 SE_BIND_FINALIZE_FUNC(js_cocos2d_WebView_finalize)
+
+static bool js_cocos2d_WebView_destroy(se::State& s)
+{
+    CCLOGINFO("jsbindings: destory JS object %p (cocos2d::WebView)", s.nativeThisObject());
+    cocos2d::WebView* cobj = (cocos2d::WebView*)s.nativeThisObject();
+    cobj->release();
+    auto objIter = se::NativePtrToObjectMap::find(s.nativeThisObject());
+    if(objIter != se::NativePtrToObjectMap::end())
+    {
+        objIter->second->clearPrivateData(true);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_cocos2d_WebView_destroy)
 
 bool js_register_webview_WebView(se::Object* obj)
 {
@@ -674,6 +686,7 @@ bool js_register_webview_WebView(se::Object* obj)
     cls->defineFunction("setJavascriptInterfaceScheme", _SE(js_webview_WebView_setJavascriptInterfaceScheme));
     cls->defineFunction("setOnDidFinishLoading", _SE(js_webview_WebView_setOnDidFinishLoading));
     cls->defineFunction("getOnDidFinishLoading", _SE(js_webview_WebView_getOnDidFinishLoading));
+    cls->defineFunction("destroy", _SE(js_cocos2d_WebView_destroy));
     cls->defineStaticFunction("create", _SE(js_webview_WebView_create));
     cls->defineFinalizeFunction(_SE(js_cocos2d_WebView_finalize));
     cls->install();

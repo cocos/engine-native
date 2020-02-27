@@ -33,7 +33,7 @@
 #include "../Macro.h"
 #include "InputAssembler.h"
 #include "../gfx/DeviceGraphics.h"
-#include "CustomProperties.hpp"
+#include "EffectVariant.hpp"
 #include "../scene/NodeProxy.hpp"
 
 RENDERER_BEGIN
@@ -51,10 +51,7 @@ struct DrawItem
 {
     Model* model = nullptr;
     InputAssembler* ia = nullptr;
-    Effect* effect = nullptr;
-    std::vector<ValueMap*>* defines = nullptr;
-    size_t definesKeyHash = 0;
-    std::vector<std::unordered_map<std::string, Effect::Property>*>* uniforms = nullptr;
+    EffectVariant* effect = nullptr;
 };
 
 class Model;
@@ -106,7 +103,7 @@ public:
     /**
      *  @brief Adds an effect.
      */
-    void setEffect(Effect* effect, CustomProperties* customProperties);
+    void setEffect(EffectVariant* effect);
     /**
      *  @brief Set user key.
      */
@@ -132,16 +129,12 @@ private:
     
     NodeProxy* _node = nullptr;
     Mat4 _worldMatrix;
-    Effect* _effect = nullptr;
+    EffectVariant* _effect = nullptr;
     
     InputAssembler _inputAssembler;
-    std::vector<ValueMap*> _definesList;
-    std::vector<std::unordered_map<std::string, Effect::Property>*> _uniforms;
     bool _dynamicIA = false;
     int _cullingMask = -1;
     int _userKey = -1;
-    
-    size_t _definesKeyHash = 0;
 };
 
 // end of renderer group

@@ -39,6 +39,9 @@
 #include "renderer/Types.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
+
+class RealTimeAttachUtil;
+
 /**
  * CCArmatureDisplay is a armature tree.It can add or remove a childArmature.
  * It will not save vertices and indices.Only CCSlot will save these info.
@@ -101,7 +104,11 @@ public:
      * @inheritDoc
      */
     virtual void removeDBEventListener(const std::string& type, const std::function<void(EventObject*)>& listener) override;
-
+    /**
+     * @inheritDoc
+     */
+    virtual uint32_t getRenderOrder() const override;
+    
 	typedef std::function<void(EventObject*)> dbEventCallback;
 	void setDBEventCallback(dbEventCallback callback)
 	{
@@ -127,37 +134,15 @@ public:
      * @return debug data,it's a Float32Array,
      * format |debug bones length|[beginX|beginY|toX|toY|...loop...]
      */
-    se_object_ptr getDebugData() const
-    {
-        if (_debugBuffer)
-        {
-            return _debugBuffer->getTypeArray();
-        }
-        return nullptr;
-    }
+    se_object_ptr getDebugData() const;
     
-    void bindNodeProxy(cocos2d::renderer::NodeProxy* node)
-    {
-        CC_SAFE_RELEASE(_nodeProxy);
-        _nodeProxy = node;
-        CC_SAFE_RETAIN(_nodeProxy);
-    }
+    void bindNodeProxy(cocos2d::renderer::NodeProxy* node);
     
-    void setEffect(cocos2d::renderer::Effect* effect)
-    {
-        if (effect == _effect) return;
-        CC_SAFE_RELEASE(_effect);
-        _effect = effect;
-        CC_SAFE_RETAIN(_effect);
-    }
+    void setEffect(cocos2d::renderer::EffectVariant* effect);
     
-    void setColor(cocos2d::Color4B& color)
-    {
-        _nodeColor.r = color.r / 255.0f;
-        _nodeColor.g = color.g / 255.0f;
-        _nodeColor.b = color.b / 255.0f;
-        _nodeColor.a = color.a / 255.0f;
-    }
+    void setAttachUtil(RealTimeAttachUtil* attachUtil);
+    
+    void setColor(cocos2d::Color4B& color);
     
     void setDebugBonesEnabled(bool enabled)
     {
@@ -186,7 +171,7 @@ public:
      */
     CCArmatureDisplay* getRootDisplay();
 private:
-    std::map<std::string,bool> _listenerIDMap;
+    std::map<std::string, bool> _listenerIDMap;
     cocos2d::middleware::IOTypedArray* _debugBuffer = nullptr;
     cocos2d::Color4F _nodeColor = cocos2d::Color4F::WHITE;
     
@@ -206,8 +191,9 @@ private:
     bool _premultipliedAlpha = false;
     dbEventCallback _dbEventCallback = nullptr;
     cocos2d::renderer::NodeProxy* _nodeProxy = nullptr;
-    cocos2d::renderer::Effect* _effect = nullptr;
+    cocos2d::renderer::EffectVariant* _effect = nullptr;
     cocos2d::renderer::CustomAssembler* _assembler = nullptr;
+    RealTimeAttachUtil* _attachUtil = nullptr;
 };
 
 DRAGONBONES_NAMESPACE_END

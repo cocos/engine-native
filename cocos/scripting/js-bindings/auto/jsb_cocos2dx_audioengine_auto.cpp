@@ -339,19 +339,6 @@ static bool js_audioengine_AudioEngine_getCurrentTime(se::State& s)
 }
 SE_BIND_FUNC(js_audioengine_AudioEngine_getCurrentTime)
 
-static bool js_audioengine_AudioEngine_onEnterForeground(se::State& s)
-{
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        cocos2d::AudioEngine::onEnterForeground();
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_audioengine_AudioEngine_onEnterForeground)
-
 static bool js_audioengine_AudioEngine_setMaxAudioInstance(se::State& s)
 {
     const auto& args = s.args();
@@ -623,19 +610,6 @@ static bool js_audioengine_AudioEngine_stop(se::State& s)
 }
 SE_BIND_FUNC(js_audioengine_AudioEngine_stop)
 
-static bool js_audioengine_AudioEngine_onEnterBackground(se::State& s)
-{
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        cocos2d::AudioEngine::onEnterBackground();
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_audioengine_AudioEngine_onEnterBackground)
-
 static bool js_audioengine_AudioEngine_getDuration(se::State& s)
 {
     const auto& args = s.args();
@@ -806,7 +780,6 @@ bool js_register_audioengine_AudioEngine(se::Object* obj)
     cls->defineStaticFunction("isEnabled", _SE(js_audioengine_AudioEngine_isEnabled));
     cls->defineStaticFunction("getDurationFromFile", _SE(js_audioengine_AudioEngine_getDurationFromFile));
     cls->defineStaticFunction("getCurrentTime", _SE(js_audioengine_AudioEngine_getCurrentTime));
-    cls->defineStaticFunction("onEnterForeground", _SE(js_audioengine_AudioEngine_onEnterForeground));
     cls->defineStaticFunction("setMaxAudioInstance", _SE(js_audioengine_AudioEngine_setMaxAudioInstance));
     cls->defineStaticFunction("isLoop", _SE(js_audioengine_AudioEngine_isLoop));
     cls->defineStaticFunction("pauseAll", _SE(js_audioengine_AudioEngine_pauseAll));
@@ -818,7 +791,6 @@ bool js_register_audioengine_AudioEngine(se::Object* obj)
     cls->defineStaticFunction("getState", _SE(js_audioengine_AudioEngine_getState));
     cls->defineStaticFunction("resume", _SE(js_audioengine_AudioEngine_resume));
     cls->defineStaticFunction("stop", _SE(js_audioengine_AudioEngine_stop));
-    cls->defineStaticFunction("onEnterBackground", _SE(js_audioengine_AudioEngine_onEnterBackground));
     cls->defineStaticFunction("getDuration", _SE(js_audioengine_AudioEngine_getDuration));
     cls->defineStaticFunction("setLoop", _SE(js_audioengine_AudioEngine_setLoop));
     cls->defineStaticFunction("getDefaultProfile", _SE(js_audioengine_AudioEngine_getDefaultProfile));

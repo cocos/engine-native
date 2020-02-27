@@ -26,6 +26,7 @@
 #include "renderer/renderer/Pass.h"
 #include "renderer/renderer/Technique.h"
 #include "renderer/gfx/Texture.h"
+#include "dragonbones-creator-support/AttachUtil.h"
 
 USING_NS_CC;
 USING_NS_MW;
@@ -64,7 +65,8 @@ CCArmatureDisplay::~CCArmatureDisplay()
         delete _debugBuffer;
         _debugBuffer = nullptr;
     }
-    
+ 
+    CC_SAFE_RELEASE(_attachUtil);
     CC_SAFE_RELEASE(_nodeProxy);
     CC_SAFE_RELEASE(_effect);
 }
@@ -93,7 +95,7 @@ void CCArmatureDisplay::dbUpdate() {}
 
 void CCArmatureDisplay::dbRender()
 {
-    if (_nodeProxy == nullptr)
+    if (!_nodeProxy || !_effect)
     {
         return;
     }
@@ -128,6 +130,12 @@ void CCArmatureDisplay::dbRender()
 		_assembler->updateIARange(_materialLen - 1, _preISegWritePos, _curISegLen);
     }
     
+    // Synchronize attach node transform
+    if (_attachUtil)
+    {
+        _attachUtil->syncAttachedNode(_nodeProxy);
+    }
+    
     if (_debugDraw)
     {
         // If enable debug draw,then init debug buffer.
@@ -152,9 +160,9 @@ void CCArmatureDisplay::dbRender()
             }
             
             float bx = bone->globalTransformMatrix.tx;
-            float by = -bone->globalTransformMatrix.ty;
+            float by = bone->globalTransformMatrix.ty;
             float endx = bx + bone->globalTransformMatrix.a * boneLen;
-            float endy = by - bone->globalTransformMatrix.b * boneLen;
+            float endy = by + bone->globalTransformMatrix.b * boneLen;
             
             _debugBuffer->writeFloat32(bx);
             _debugBuffer->writeFloat32(by);
@@ -251,52 +259,33 @@ void CCArmatureDisplay::traverseArmature(Armature* armature, float parentOpacity
                 break;
         }
         
-        double curHash = _curTextureIndex + ((uint8_t)slot->_blendMode << 16) + ((uint8_t)_batch << 24);
+        double curHash = _curTextureIndex + ((uint8_t)slot->_blendMode << 16) + ((uint8_t)_batch << 24) + ((uint32_t)_effect->getHash() << 25);
         
-        Effect* renderEffect = _assembler->getEffect(_materialLen);
-        Technique::Parameter* param = nullptr;
-        Pass* pass = nullptr;
-        
+        EffectVariant* renderEffect = _assembler->getEffect(_materialLen);
+        bool needUpdate = false;
         if (renderEffect)
         {
             double renderHash = renderEffect->getHash();
             if (abs(renderHash - curHash) >= 0.01)
             {
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                Technique* tech = renderEffect->getTechnique(techStage);
-                Vector<Pass*>& passes = (Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
+                needUpdate = true;
             }
         }
         else
         {
-            if (_effect == nullptr)
-            {
-                cocos2d::log("ArmatureDisplay:update get effect failed");
-                _assembler->reset();
-                return;
-            }
-            auto effect = new cocos2d::renderer::Effect();
+            auto effect = new cocos2d::renderer::EffectVariant();
             effect->autorelease();
             effect->copy(_effect);
             
-            Technique* tech = effect->getTechnique(techStage);
-            Vector<Pass*>& passes = (Vector<Pass*>&)tech->getPasses();
-            pass = *(passes.begin());
-            
             _assembler->updateEffect(_materialLen, effect);
             renderEffect = effect;
-            param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+            needUpdate = true;
         }
         
-        if (param)
+        if (needUpdate)
         {
-            param->setTexture(texture->getNativeTexture());
-        }
-        
-        if (pass)
-        {
-            pass->setBlend(BlendOp::ADD, _curBlendSrc, _curBlendDst,
+            renderEffect->setProperty(textureKey, texture->getNativeTexture());
+            renderEffect->setBlend(true, BlendOp::ADD, _curBlendSrc, _curBlendDst,
                            BlendOp::ADD, _curBlendSrc, _curBlendDst);
         }
         
@@ -435,6 +424,53 @@ void CCArmatureDisplay::removeDBEventListener(const std::string& type, const std
     {
         _listenerIDMap.erase(it);
     }
+}
+
+se_object_ptr CCArmatureDisplay::getDebugData() const
+{
+    if (_debugBuffer)
+    {
+        return _debugBuffer->getTypeArray();
+    }
+    return nullptr;
+}
+
+void CCArmatureDisplay::bindNodeProxy(cocos2d::renderer::NodeProxy* node)
+{
+    if (node == _nodeProxy) return;
+    CC_SAFE_RELEASE(_nodeProxy);
+    _nodeProxy = node;
+    CC_SAFE_RETAIN(_nodeProxy);
+}
+
+void CCArmatureDisplay::setEffect(cocos2d::renderer::EffectVariant* effect)
+{
+    if (effect == _effect) return;
+    CC_SAFE_RELEASE(_effect);
+    _effect = effect;
+    CC_SAFE_RETAIN(_effect);
+}
+
+void CCArmatureDisplay::setAttachUtil(RealTimeAttachUtil* attachUtil)
+{
+    if (attachUtil == _attachUtil) return;
+    CC_SAFE_RELEASE(_attachUtil);
+    _attachUtil = attachUtil;
+    CC_SAFE_RETAIN(_attachUtil);
+}
+
+void CCArmatureDisplay::setColor(cocos2d::Color4B& color)
+{
+    _nodeColor.r = color.r / 255.0f;
+    _nodeColor.g = color.g / 255.0f;
+    _nodeColor.b = color.b / 255.0f;
+    _nodeColor.a = color.a / 255.0f;
+}
+
+uint32_t CCArmatureDisplay::getRenderOrder() const
+{
+    if (!_nodeProxy) return 0;
+    return _nodeProxy->getRenderOrder();
 }
 
 DRAGONBONES_NAMESPACE_END

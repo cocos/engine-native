@@ -57,6 +57,7 @@ public:
          * Attribute name
          */
         std::string name;
+        size_t hashName;
         /**
          * Number of components per attribute
          */
@@ -101,7 +102,7 @@ public:
         /**
          * Sets the uniform value
          */
-        void setUniform(const void* value, UniformElementType elementType) const;
+        void setUniform(const void* value, UniformElementType elementType, size_t uniformCount) const;
         /**
          * Sets the callback which will be called when uniform updated
          */

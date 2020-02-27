@@ -317,9 +317,6 @@ public:
      */
     static bool isEnabled();
     
-    static void onEnterBackground();
-    static void onEnterForeground();
-    
 protected:
     static void addTask(const std::function<void()>& task);
     static void remove(int audioID);
@@ -379,7 +376,12 @@ protected:
     static bool _isEnabled;
     
 private:
+    static uint32_t _onPauseListenerID;
+    static uint32_t _onResumeListenerID;
     static std::vector<int> _breakAudioID;
+    
+    static void onPause(const CustomEvent&);
+    static void onResume(const CustomEvent&);
     
     friend class AudioEngineImpl;
 };

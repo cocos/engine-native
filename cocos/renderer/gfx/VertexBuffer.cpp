@@ -48,6 +48,7 @@ bool VertexBuffer::init(DeviceGraphics* device, VertexFormat* format, Usage usag
     setFormat(format);
     _usage = usage;
     _numVertices = numVertices;
+    _needExpandDataStore = true;
 
     // calculate bytes
     _bytes = _format->_bytes * numVertices;
@@ -81,27 +82,29 @@ void VertexBuffer::update(uint32_t offset, const void* data, size_t dataByteLeng
         return;
     }
 
-    if (data && dataByteLength + offset > _bytes) {
-        RENDERER_LOGE("Failed to update vertex buffer data, bytes exceed.");
-        return;
+    if (data && dataByteLength + offset > _bytes)
+    {
+        if (offset) {
+            RENDERER_LOGE("Failed to update index buffer data, bytes exceed.");
+            return;
+        }
+        else {
+            _needExpandDataStore = true;
+            _bytes = offset + dataByteLength;
+            _numVertices = _bytes / _format->_bytes;
+        }
     }
 
     GLenum glUsage = (GLenum)_usage;
     ccBindBuffer(GL_ARRAY_BUFFER, _glID);
-    if (!data)
+    if (_needExpandDataStore)
     {
-        glBufferData(GL_ARRAY_BUFFER, _bytes, nullptr, glUsage);
+        glBufferData(GL_ARRAY_BUFFER, _bytes, (const GLvoid*)data, glUsage);
+        _needExpandDataStore = false;
     }
     else
     {
-        if (offset > 0)
-        {
-            glBufferSubData(GL_ARRAY_BUFFER, (GLintptr)offset, (GLsizeiptr)dataByteLength, (const GLvoid*)data);
-        }
-        else
-        {
-            glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)dataByteLength, data, glUsage);
-        }
+        glBufferSubData(GL_ARRAY_BUFFER, (GLintptr)offset, (GLsizeiptr)dataByteLength, (const GLvoid*)data);
     }
     ccBindBuffer(GL_ARRAY_BUFFER, 0);
 }

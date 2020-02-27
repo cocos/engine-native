@@ -1233,31 +1233,6 @@ bool seval_to_Rect(const se::Value& v, cocos2d::renderer::Rect* rect)
     return true;
 }
 
-bool seval_to_std_vector_Pass(const se::Value& v, cocos2d::Vector<cocos2d::renderer::Pass*>* ret)
-{
-    assert(ret != nullptr);
-    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to vector of Pass failed!");
-    se::Object* obj = v.toObject();
-    assert(obj->isArray());
-    SE_PRECONDITION2(obj->isArray(), false, "Convert parameter to vector of Pass failed!");
-    uint32_t len = 0;
-    if (obj->getArrayLength(&len))
-    {
-        se::Value value;
-        cocos2d::renderer::Pass* pt = nullptr;
-        for (uint32_t i = 0; i < len; ++i)
-        {
-            SE_PRECONDITION3(obj->getArrayElement(i, &value), false, ret->clear());
-            pt = static_cast<cocos2d::renderer::Pass*>(value.toObject()->getPrivateData());
-            ret->pushBack(pt);
-        }
-        return true;
-    }
-
-    ret->clear();
-    return true;
-}
-
 bool seval_to_std_vector_Texture(const se::Value& v, std::vector<cocos2d::renderer::Texture*>* ret)
 {
     assert(ret != nullptr);
@@ -1476,214 +1451,198 @@ bool seval_to_TextureImageOption(const se::Value& v, cocos2d::renderer::Texture:
     return true;
 }
 
-bool ccvaluevector_to_EffectPass(const cocos2d::ValueVector& v, cocos2d::Vector<cocos2d::renderer::Pass*>* ret)
+bool ccvaluevector_to_EffectPass(const se::Object* v, cocos2d::Vector<cocos2d::renderer::Pass*>* ret)
 {
     assert(ret != nullptr);
+    assert(v->isArray());
     
-    for (const auto& value : v)
-    {
-        cocos2d::ValueMap valMap;
-        valMap = value.asValueMap();
-        cocos2d::renderer::Pass* cobj = new (std::nothrow) cocos2d::renderer::Pass(valMap["program"].asString());
-        
-        // cull mode
-        const auto& iter0 = valMap.find("rasterizerState");
-        uint32_t cullMode = 0;
-        if (iter0 != valMap.end())
-        {
-            const cocos2d::Value& val0 = iter0->second;
-            const cocos2d::ValueMap& valMap0 = val0.asValueMap();
-            const auto& it0 = valMap0.find("cullMode");
-            
-            if (it0 != valMap0.end())
-            {
-                cullMode = it0->second.asUnsignedInt();
-            }
-        }
-        cobj->setCullMode(static_cast<cocos2d::renderer::CullMode>(cullMode));
-
-        // blend
-        const auto& iter1 = valMap.find("blendState");
-        cocos2d::renderer::BlendOp blendEq = cocos2d::renderer::BlendOp::ADD, blendAlphaEq = cocos2d::renderer::BlendOp::ADD;
-        cocos2d::renderer::BlendFactor blendSrc = cocos2d::renderer::BlendFactor::SRC_ALPHA, blendDst = cocos2d::renderer::BlendFactor::ONE_MINUS_SRC_ALPHA, blendSrcAlpha = cocos2d::renderer::BlendFactor::SRC_ALPHA, blendDstAlpha = cocos2d::renderer::BlendFactor::ONE_MINUS_SRC_ALPHA;
-        uint32_t blendColor = 0xffffffff;
-        if (iter1 != valMap.end())
-        {
-            const cocos2d::Value& val1 = iter1->second;
-            const cocos2d::ValueMap& valMap1 = val1.asValueMap();
-            const auto& it1 = valMap1.find("targets");
-            
-            if (it1 != valMap1.end())
-            {
-                const cocos2d::ValueVector& vec1 = it1->second.asValueVector();
-                
-                for (const auto &e : vec1)
-                {
-                    cocos2d::ValueMap target = e.asValueMap();
-                    if(target.find("blendEq") != target.end())
-                    {
-                        blendEq = static_cast<cocos2d::renderer::BlendOp>(target.at("blendEq").asUnsignedInt());
-                    }
-                    
-                    if(target.find("blendSrc") != target.end())
-                    {
-                        blendDst = static_cast<cocos2d::renderer::BlendFactor>(target.at("blendSrc").asUnsignedInt());
-                    }
-                    
-                    if(target.find("blendDst") != target.end())
-                    {
-                        blendDst = static_cast<cocos2d::renderer::BlendFactor>(target.at("blendDst").asUnsignedInt());
-                    }
-                    
-                    if(target.find("blendAlphaEq") != target.end())
-                    {
-                        blendAlphaEq = static_cast<cocos2d::renderer::BlendOp>(target.at("blendAlphaEq").asUnsignedInt());
-                    }
-                    
-                    if(target.find("blendSrcAlpha") != target.end())
-                    {
-                        blendSrcAlpha = static_cast<cocos2d::renderer::BlendFactor>(target.at("blendSrcAlpha").asUnsignedInt());
-                    }
-                    
-                    if(target.find("blendDstAlpha") != target.end())
-                    {
-                        blendDstAlpha = static_cast<cocos2d::renderer::BlendFactor>(target.at("blendDstAlpha").asUnsignedInt());
-                    }
-                    
-                    if(target.find("blendColor") != target.end())
-                    {
-                        blendColor = target.at("blendColor").asUnsignedInt();
-                    }
-                    
-                    break;
-                }
-            }
-            
-            cobj->setBlend(blendEq, blendSrc, blendDst, blendAlphaEq, blendSrcAlpha, blendDstAlpha, blendColor);
-        }
-       
+    uint32_t len;
+    v->getArrayLength(&len);
     
-        // depth
-        const auto& iter2 = valMap.find("depthStencilState");
-        bool depthTest = false, depthWrite = false;
-        cocos2d::renderer::DepthFunc depthFunc = cocos2d::renderer::DepthFunc::LESS;
-        
-        bool stencilTest = false;
-        uint8_t stencilMaskFront = 0xff, stencilWriteMaskFront = 0xff, stencilMaskBack = 0xff, stencilWriteMaskBack = 0xff;
-        uint32_t stencilRefFront = 0, stencilRefBack = 0;
-        cocos2d::renderer::StencilFunc stencilFuncFront = cocos2d::renderer::StencilFunc::ALWAYS, stencilFuncBack = cocos2d::renderer::StencilFunc::ALWAYS;
-        cocos2d::renderer::StencilOp stencilFailOpFront = cocos2d::renderer::StencilOp::KEEP, stencilFailOpBack = cocos2d::renderer::StencilOp::KEEP, stencilZFailOpFront = cocos2d::renderer::StencilOp::KEEP, stencilZFailOpBack = cocos2d::renderer::StencilOp::KEEP, stencilZPassOpFront = cocos2d::renderer::StencilOp::KEEP, stencilZPassOpBack = cocos2d::renderer::StencilOp::KEEP;
-        
-        if (iter2 != valMap.end())
-        {
-            const cocos2d::Value& val2 = iter2->second;
-            cocos2d::ValueMap state = val2.asValueMap();
+    for (uint32_t i = 0; i < len; i++) {
+        se::Value value;
+        if (v->getArrayElement(i, &value) && value.isObject()) {
+            se::Object* obj = value.toObject();
+            se::Value passValue;
             
+            std::string name = "";
+            std::unordered_map<size_t, cocos2d::renderer::Effect::Property> properties;
+            cocos2d::ValueMap defines;
+            
+            if (obj->getProperty("_properties", &passValue) && passValue.isObject()) {
+                seval_to_EffectProperty(passValue, &properties);
+            }
+            if (obj->getProperty("_defines", &passValue) && passValue.isObject()) {
+                seval_to_ccvaluemap(passValue, &defines);
+            }
+            if (obj->getProperty("_programName", &passValue) && passValue.isString()) {
+                name = passValue.toString();
+            }
+            cocos2d::renderer::Pass* cobj = new (std::nothrow) cocos2d::renderer::Pass(name, properties, defines);
+            
+            // stage
+            std::string stage = "";
+            if (obj->getProperty("_stage", &passValue) && passValue.isString()) {
+                stage = passValue.toString();
+            }
+            cobj->setStage(stage);
+            
+            // cull mode
+            cocos2d::renderer::CullMode cullMode;
+            if (obj->getProperty("_cullMode", &passValue) && passValue.isNumber()) {
+                cullMode = (cocos2d::renderer::CullMode)passValue.toUint32();
+            }
+            cobj->setCullMode(cullMode);
+            
+            // blend
+            bool blendTest;
+            cocos2d::renderer::BlendOp blendEq;
+            cocos2d::renderer::BlendFactor blendSrc;
+            cocos2d::renderer::BlendFactor blendDst;
+            cocos2d::renderer::BlendOp blendAlphaEq;
+            cocos2d::renderer::BlendFactor blendSrcAlpha;
+            cocos2d::renderer::BlendFactor blendDstAlpha;
+            uint32_t blendColor;
+            if (obj->getProperty("_blend", &passValue) && passValue.isBoolean()) {
+                blendTest = passValue.toBoolean();
+            }
+            if (obj->getProperty("_blendEq", &passValue) && passValue.isNumber()) {
+                blendEq = (cocos2d::renderer::BlendOp)passValue.toUint32();
+            }
+            if (obj->getProperty("_blendSrc", &passValue) && passValue.isNumber()) {
+                blendSrc = (cocos2d::renderer::BlendFactor)passValue.toUint32();
+            }
+            if (obj->getProperty("_blendDst", &passValue) && passValue.isNumber()) {
+                blendDst = (cocos2d::renderer::BlendFactor)passValue.toUint32();
+            }
+            if (obj->getProperty("_blendAlphaEq", &passValue) && passValue.isNumber()) {
+                blendAlphaEq = (cocos2d::renderer::BlendOp)passValue.toUint32();
+            }
+            if (obj->getProperty("_blendSrcAlpha", &passValue) && passValue.isNumber()) {
+                blendSrcAlpha = (cocos2d::renderer::BlendFactor)passValue.toUint32();
+            }
+            if (obj->getProperty("_blendDstAlpha", &passValue) && passValue.isNumber()) {
+                blendDstAlpha = (cocos2d::renderer::BlendFactor)passValue.toUint32();
+            }
+            if (obj->getProperty("_blendColor", &passValue) && passValue.isNumber()) {
+                blendColor = passValue.toUint32();
+            }
+            cobj->setBlend(
+                blendTest,
+                blendEq,
+                blendSrc,
+                blendDst,
+                blendAlphaEq,
+                blendSrcAlpha,
+                blendDstAlpha,
+                blendColor
+            );
+        
             // depth
-            if(state.find("depthTest") != state.end())
-            {
-                depthTest = state.at("depthTest").asBool();
+            bool depthTest;
+            bool depthWrite;
+            cocos2d::renderer::DepthFunc depthFunc;
+            if (obj->getProperty("_depthTest", &passValue) && passValue.isBoolean()) {
+                depthTest = passValue.toBoolean();
             }
+            if (obj->getProperty("_depthWrite", &passValue) && passValue.isBoolean()) {
+                depthWrite = passValue.toBoolean();
+            }
+            if (obj->getProperty("_depthFunc", &passValue) && passValue.isNumber()) {
+                depthFunc = (cocos2d::renderer::DepthFunc)passValue.toUint32();
+            }
+            cobj->setDepth(
+                depthTest,
+                depthWrite,
+                depthFunc
+            );
             
-            if(state.find("depthWrite") != state.end())
-            {
-                depthWrite = state.at("depthWrite").asBool();
-            }
-            
-            if(state.find("depthFunc") != state.end())
-            {
-                depthFunc = static_cast<cocos2d::renderer::DepthFunc>(state.at("depthFunc").asUnsignedInt());
-            }
-            
-            if(state.find("stencilTest") != state.end())
-            {
-                stencilTest = state.at("stencilTest").asBool();
-            }
+            // stencil
             
             // front
-            if(state.find("stencilFuncFront") != state.end())
-            {
-                stencilFuncFront = static_cast<cocos2d::renderer::StencilFunc>(state.at("stencilFuncFront").asUnsignedInt());
-            }
+            cocos2d::renderer::StencilFunc stencilFuncFront;
+            uint32_t stencilRefFront;
+            uint32_t stencilMaskFront;
+            cocos2d::renderer::StencilOp stencilFailOpFront;
+            cocos2d::renderer::StencilOp stencilZFailOpFront;
+            cocos2d::renderer::StencilOp stencilZPassOpFront;
+            uint32_t stencilWriteMaskFront;
             
-            if(state.find("stencilRefFront") != state.end())
-            {
-                stencilRefFront = state.at("stencilRefFront").asUnsignedInt();
+            if (obj->getProperty("_stencilFuncFront", &passValue) && passValue.isNumber()) {
+                stencilFuncFront = (cocos2d::renderer::StencilFunc)passValue.toUint32();
             }
+            if (obj->getProperty("_stencilRefFront", &passValue) && passValue.isNumber()) {
+                stencilRefFront = passValue.toUint32();
+            }
+            if (obj->getProperty("_stencilMaskFront", &passValue) && passValue.isNumber()) {
+                stencilMaskFront = passValue.toUint32();
+            }
+            if (obj->getProperty("_stencilFailOpFront", &passValue) && passValue.isNumber()) {
+                stencilFailOpFront = (cocos2d::renderer::StencilOp)passValue.toUint32();
+            }
+            if (obj->getProperty("_stencilZFailOpFront", &passValue) && passValue.isNumber()) {
+                stencilZFailOpFront = (cocos2d::renderer::StencilOp)passValue.toUint32();
+            }
+            if (obj->getProperty("_stencilZPassOpFront", &passValue) && passValue.isNumber()) {
+                stencilZPassOpFront = (cocos2d::renderer::StencilOp)passValue.toUint32();
+            }
+            if (obj->getProperty("_stencilWriteMaskFront", &passValue) && passValue.isNumber()) {
+                stencilWriteMaskFront = passValue.toUint32();
+            }
+            cobj->setStencilFront(
+                stencilFuncFront,
+                stencilRefFront,
+                stencilMaskFront,
+                stencilFailOpFront,
+                stencilZFailOpFront,
+                stencilZPassOpFront,
+                stencilWriteMaskFront
+            );
             
-            if(state.find("stencilMaskFront") != state.end())
-            {
-                stencilMaskFront = state.at("stencilMaskFront").asUnsignedInt();
-            }
-            
-            if(state.find("stencilFailOpFront") != state.end())
-            {
-                stencilFailOpFront = static_cast<cocos2d::renderer::StencilOp>(state.at("stencilFailOpFront").asUnsignedInt());
-            }
-            
-            if(state.find("stencilZFailOpFront") != state.end())
-            {
-                stencilZFailOpFront = static_cast<cocos2d::renderer::StencilOp>(state.at("stencilZFailOpFront").asUnsignedInt());
-            }
-            
-            if(state.find("stencilZPassOpFront") != state.end())
-            {
-                stencilZPassOpFront = static_cast<cocos2d::renderer::StencilOp>(state.at("stencilZPassOpFront").asUnsignedInt());
-            }
-            
-            if(state.find("stencilWriteMaskFront") != state.end())
-            {
-                stencilWriteMaskFront = state.at("stencilWriteMaskFront").asUnsignedInt();
-            }
             
             // back
-            if(state.find("stencilFuncBack") != state.end())
-            {
-                stencilFuncBack = static_cast<cocos2d::renderer::StencilFunc>(state.at("stencilFuncBack").asUnsignedInt());
+            cocos2d::renderer::StencilFunc stencilFuncBack;
+            uint32_t stencilRefBack;
+            uint32_t stencilMaskBack;
+            cocos2d::renderer::StencilOp stencilFailOpBack;
+            cocos2d::renderer::StencilOp stencilZFailOpBack;
+            cocos2d::renderer::StencilOp stencilZPassOpBack;
+            uint32_t stencilWriteMaskBack;
+
+            if (obj->getProperty("_stencilFuncBack", &passValue) && passValue.isNumber()) {
+                stencilFuncBack = (cocos2d::renderer::StencilFunc)passValue.toUint32();
             }
-            
-            if(state.find("stencilRefBack") != state.end())
-            {
-                stencilRefBack = state.at("stencilRefBack").asUnsignedInt();
+            if (obj->getProperty("_stencilRefBack", &passValue) && passValue.isNumber()) {
+                stencilRefBack = passValue.toUint32();
             }
-            
-            if(state.find("stencilMaskBack") != state.end())
-            {
-                stencilMaskBack = state.at("stencilMaskBack").asUnsignedInt();
+            if (obj->getProperty("_stencilMaskBack", &passValue) && passValue.isNumber()) {
+                stencilMaskBack = passValue.toUint32();
             }
-            
-            if(state.find("stencilFailOpBack") != state.end())
-            {
-                stencilFailOpBack = static_cast<cocos2d::renderer::StencilOp>(state.at("stencilFailOpBack").asUnsignedInt());
+            if (obj->getProperty("_stencilFailOpBack", &passValue) && passValue.isNumber()) {
+                stencilFailOpBack = (cocos2d::renderer::StencilOp)passValue.toUint32();
             }
-            
-            if(state.find("stencilZFailOpBack") != state.end())
-            {
-                stencilZFailOpBack = static_cast<cocos2d::renderer::StencilOp>(state.at("stencilZFailOpBack").asUnsignedInt());
+            if (obj->getProperty("_stencilZFailOpBack", &passValue) && passValue.isNumber()) {
+                stencilZFailOpBack = (cocos2d::renderer::StencilOp)passValue.toUint32();
             }
-            
-            if(state.find("stencilZPassOpBack") != state.end())
-            {
-                stencilZPassOpBack = static_cast<cocos2d::renderer::StencilOp>(state.at("stencilZPassOpBack").asUnsignedInt());
+            if (obj->getProperty("_stencilZPassOpBack", &passValue) && passValue.isNumber()) {
+                stencilZPassOpBack = (cocos2d::renderer::StencilOp)passValue.toUint32();
             }
-            
-            if(state.find("stencilWriteMaskBack") != state.end())
-            {
-                stencilWriteMaskBack = state.at("stencilWriteMaskBack").asUnsignedInt();
+            if (obj->getProperty("_stencilWriteMaskBack", &passValue) && passValue.isNumber()) {
+                stencilWriteMaskBack = passValue.toUint32();
             }
+            cobj->setStencilBack(
+                stencilFuncBack,
+                stencilRefBack,
+                stencilMaskBack,
+                stencilFailOpBack,
+                stencilZFailOpBack,
+                stencilZPassOpBack,
+                stencilWriteMaskBack
+            );
             
-            cobj->setDepth(depthTest, depthWrite, depthFunc); // depth func
-            
-            if (stencilTest) {
-                // stencil front
-                cobj->setStencilFront(stencilFuncFront, stencilRefFront, stencilMaskFront, stencilFailOpFront, stencilZFailOpFront, stencilZPassOpFront, stencilWriteMaskFront);
-                // stencil back
-                cobj->setStencilBack(stencilFuncBack, stencilRefBack, stencilMaskBack, stencilFailOpBack, stencilZFailOpBack, stencilZPassOpBack, stencilWriteMaskBack);
-            }
+            cobj->autorelease();
+            ret->pushBack(cobj);
         }
-        
-        cobj->autorelease();
-        ret->pushBack(cobj);
     }
     
     return true;
@@ -1693,59 +1652,33 @@ bool seval_to_EffectTechnique(const se::Value& v, cocos2d::renderer::Technique**
 {
     SE_PRECONDITION2(v.isObject(), false, "Convert Effect Technique failed!");
     
-    cocos2d::ValueMap valMap;
-    if (seval_to_ccvaluemap(v, &valMap))
-    {
-        std::vector<std::string> stages;
-        const auto& iter0 = valMap.find("stages");
-        if (iter0 != valMap.end())
-        {
-            const cocos2d::Value& val = iter0->second;
-            const cocos2d::ValueVector &vector = val.asValueVector();
-            
-            for (const auto &e : vector)
-            {
-                stages.push_back(e.asString());
-            }
-        }
-        else
-        {
-            stages.push_back("opaque");
-        }
-        
-        int layer = 0;
-        const auto& iter1 = valMap.find("layer");
-        if (iter1 != valMap.end())
-        {
-            const cocos2d::Value& val = iter1->second;
-            layer = val.asInt();
-        }
-        
-        cocos2d::Vector<cocos2d::renderer::Pass*> passes;
-        const auto& iter2 = valMap.find("passes");
-        if (iter2 != valMap.end())
-        {
-            const cocos2d::Value& val = iter2->second;
-            const cocos2d::ValueVector &vector = val.asValueVector();
-            ccvaluevector_to_EffectPass(vector, &passes);
-        }
-        
-        *ret = new (std::nothrow) cocos2d::renderer::Technique(stages, passes, layer);
-        
+    se::Object* obj = v.toObject();
+    
+    std::vector<std::string> allKeys;
+    obj->getAllKeys(&allKeys);
+    
+    
+    se::Value value;
+    
+    std::string name = "";
+    if (obj->getProperty("_name", &value) && value.isObject()) {
+        name = value.toString();
+    }
+    
+    cocos2d::Vector<cocos2d::renderer::Pass*> passes;
+    if (obj->getProperty("_passes", &value) && value.isObject()) {
+        ccvaluevector_to_EffectPass(value.toObject(), &passes);
+        *ret = new (std::nothrow) cocos2d::renderer::Technique(name, passes);
         return true;
     }
     
     return false;
 }
 
-bool seval_to_EffectAsset(const std::string& e, cocos2d::Vector<cocos2d::renderer::Technique*>* ret)
+bool seval_to_EffectAsset(const se::Value& v, cocos2d::Vector<cocos2d::renderer::Technique*>* ret)
 {
-    se::Object* asset = se::Object::createJSONObject(e);
-    asset = se::Object::createJSONObject(e);
     // techniques
-    se::Value techniques;
-    asset->getProperty("techniques", &techniques);
-    se::Object* techs = techniques.toObject();
+    se::Object* techs = v.toObject();
     bool ok = techs->isArray();
     SE_PRECONDITION2(ok, false, "Convert Effect Asset Failed!");
     
@@ -1765,7 +1698,7 @@ bool seval_to_EffectAsset(const std::string& e, cocos2d::Vector<cocos2d::rendere
     return true;
 }
 
-bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<std::string, cocos2d::renderer::Effect::Property>* ret)
+bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<size_t, cocos2d::renderer::Effect::Property>* ret)
 {
     assert(ret != nullptr);
     if (v.isNullOrUndefined())
@@ -1787,7 +1720,8 @@ bool seval_to_EffectProperty(const se::Value& v, std::unordered_map<std::string,
         {
             cocos2d::renderer::Technique::Parameter property;
             seval_to_TechniqueParameter(value, &property);
-            ret->emplace(key, property);
+            size_t hashName = std::hash<std::string>{}(key);
+            ret->emplace(hashName, property);
         }
     }
 
@@ -1819,119 +1753,142 @@ bool seval_to_EffectDefineTemplate(const se::Value& v, std::vector<cocos2d::Valu
     return true;
 }
 
-bool seval_to_TechniqueParameter_not_constructor(const se::Value& v, cocos2d::renderer::Technique::Parameter* ret, bool directly)
+bool seval_to_Effect_setProperty(std::string& name, const se::Value& v, cocos2d::renderer::EffectBase* effect, int passIdx, bool directly)
 {
-    if(v.isNull())
-    {
-        return true;
+    auto& passes = effect->getPasses();
+    size_t start = 0, end = passes.size();
+    if (passIdx != -1) {
+        start = passIdx; end = passIdx + 1;
     }
-    assert(ret != nullptr);
-    auto paramType = ret->getType();
-    switch (paramType)
+    for (size_t i = start; i < end; i++)
     {
-        case cocos2d::renderer::Technique::Parameter::Type::INT:
-        {
-            int32_t value;
-            seval_to_int32(v, &value);
-            cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, &value);
-            *ret = std::move(param);
-            break;
+        const auto& pass = passes.at(i);
+        auto prop = pass->getProperty(name);
+        if (!prop) {
+            continue;
         }
-        case cocos2d::renderer::Technique::Parameter::Type::INT2:
-        case cocos2d::renderer::Technique::Parameter::Type::INT3:
-        case cocos2d::renderer::Technique::Parameter::Type::INT4:
+        
+        cocos2d::renderer::Technique::Parameter param;
+        
+        auto paramType = prop->getType();
+        switch (paramType)
         {
-            se::Object* obj = v.toObject();
-            SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
-            uint8_t* data = nullptr;
-            size_t len = 0;
-            obj->getTypedArrayData(&data, &len);
-            uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
-            uint8_t count = (len / sizeof(int)) / el;
-            cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, (int*)data, count);
-            *ret = std::move(param);
-            break;
-        }
-        case cocos2d::renderer::Technique::Parameter::Type::FLOAT:
-        {
-            float value;
-            seval_to_float(v, &value);
-            cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, &value);
-            *ret = std::move(param);
-            break;
-        }
-        case cocos2d::renderer::Technique::Parameter::Type::FLOAT2:
-        case cocos2d::renderer::Technique::Parameter::Type::FLOAT3:
-        case cocos2d::renderer::Technique::Parameter::Type::FLOAT4:
-        case cocos2d::renderer::Technique::Parameter::Type::MAT4:
-        case cocos2d::renderer::Technique::Parameter::Type::MAT3:
-        case cocos2d::renderer::Technique::Parameter::Type::MAT2:
-        case cocos2d::renderer::Technique::Parameter::Type::COLOR3:
-        case cocos2d::renderer::Technique::Parameter::Type::COLOR4:
-        {
-            se::Object* obj = v.toObject();
-            SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
-            
-            if (directly)
+            case cocos2d::renderer::Technique::Parameter::Type::INT:
             {
-                cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, obj);
-                *ret = std::move(param);
+                int32_t value;
+                seval_to_int32(v, &value);
+                param = cocos2d::renderer::Technique::Parameter(name, paramType, &value);
+                break;
             }
-            else
+            case cocos2d::renderer::Technique::Parameter::Type::FLOAT:
             {
+                float value;
+                seval_to_float(v, &value);
+                param = cocos2d::renderer::Technique::Parameter(name, paramType, &value);
+                break;
+            }
+            case cocos2d::renderer::Technique::Parameter::Type::INT2:
+            case cocos2d::renderer::Technique::Parameter::Type::INT3:
+            case cocos2d::renderer::Technique::Parameter::Type::INT4:
+            {
+                se::Object* obj = v.toObject();
+                SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to int array failed!");
+                
+                uint8_t* data = nullptr;
+                size_t len = 0;
+                obj->getTypedArrayData(&data, &len);
+                uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
+                uint8_t count = (len / sizeof(int)) / el;
+                
+                if (directly)
+                {
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj, count);
+                }
+                else
+                {
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, (int*)data, count);
+                    
+                }
+                break;
+            }
+            case cocos2d::renderer::Technique::Parameter::Type::FLOAT2:
+            case cocos2d::renderer::Technique::Parameter::Type::FLOAT3:
+            case cocos2d::renderer::Technique::Parameter::Type::FLOAT4:
+            case cocos2d::renderer::Technique::Parameter::Type::MAT4:
+            case cocos2d::renderer::Technique::Parameter::Type::MAT3:
+            case cocos2d::renderer::Technique::Parameter::Type::MAT2:
+            case cocos2d::renderer::Technique::Parameter::Type::COLOR3:
+            case cocos2d::renderer::Technique::Parameter::Type::COLOR4:
+            {
+                se::Object* obj = v.toObject();
+                SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to float array failed!");
+                
                 uint8_t* data = nullptr;
                 size_t len = 0;
                 obj->getTypedArrayData(&data, &len);
                 uint8_t el = cocos2d::renderer::Technique::Parameter::getElements(paramType);
                 uint8_t count = (len / sizeof(float)) / el;
-                cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, (float*)data, count);
-                *ret = std::move(param);
-            }
-
-            break;
-        }
-        case cocos2d::renderer::Technique::Parameter::Type::TEXTURE_2D:
-        case cocos2d::renderer::Technique::Parameter::Type::TEXTURE_CUBE:
-        {
-            se::Object* obj = v.toObject();
-            if (obj->isArray())
-            {
-                uint32_t arrLen = 0;
-                obj->getArrayLength(&arrLen);
-                if (arrLen == 1)
+                
+                if (directly)
                 {
-                    cocos2d::renderer::Texture* texture = nullptr;
-                    seval_to_native_ptr(v, &texture);
-                    cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, texture);
-                    *ret = std::move(param);
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, obj, count);
                 }
                 else
                 {
-                    std::vector<cocos2d::renderer::Texture*> textures;
-                    for (uint32_t i = 0; i < arrLen; ++i)
-                    {
-                        se::Value texVal;
-                        obj->getArrayElement(i, &texVal);
-                        cocos2d::renderer::Texture* tmpTex = nullptr;
-                        seval_to_native_ptr(texVal, &tmpTex);
-                        textures.push_back(tmpTex);
-                    }
-                    cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, textures);
-                    *ret = std::move(param);
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, (float*)data, count);
                 }
+
+                break;
             }
-            else
+            case cocos2d::renderer::Technique::Parameter::Type::TEXTURE_2D:
+            case cocos2d::renderer::Technique::Parameter::Type::TEXTURE_CUBE:
             {
-                cocos2d::renderer::Texture* texture = nullptr;
-                seval_to_native_ptr(v, &texture);
-                cocos2d::renderer::Technique::Parameter param(ret->getName(), paramType, texture);
-                *ret = std::move(param);
+                if (v.isNull()) {
+                    cocos2d::renderer::Texture* texture = nullptr;
+                    param = cocos2d::renderer::Technique::Parameter(name, paramType, texture);
+                }
+                else {
+                    se::Object* obj = v.toObject();
+                    if (obj->isArray())
+                    {
+                        uint32_t arrLen = 0;
+                        obj->getArrayLength(&arrLen);
+                        if (arrLen == 1)
+                        {
+                            cocos2d::renderer::Texture* texture = nullptr;
+                            seval_to_native_ptr(v, &texture);
+                            param = cocos2d::renderer::Technique::Parameter(name, paramType, texture);
+                        }
+                        else
+                        {
+                            std::vector<cocos2d::renderer::Texture*> textures;
+                            for (uint32_t i = 0; i < arrLen; ++i)
+                            {
+                                se::Value texVal;
+                                obj->getArrayElement(i, &texVal);
+                                cocos2d::renderer::Texture* tmpTex = nullptr;
+                                seval_to_native_ptr(texVal, &tmpTex);
+                                textures.push_back(tmpTex);
+                            }
+                            param = cocos2d::renderer::Technique::Parameter(name, paramType, textures);
+                        }
+                    }
+                    else
+                    {
+                        cocos2d::renderer::Texture* texture = nullptr;
+                        seval_to_native_ptr(v, &texture);
+                        param = cocos2d::renderer::Technique::Parameter(name, paramType, texture);
+                    }
+                }
+                
+                break;
             }
-            break;
+            default:
+                assert(false);
+                break;
         }
-        default:
-            assert(false);
-            break;
+        
+        pass->setProperty(name, param);
     }
     
     return true;
@@ -1995,6 +1952,8 @@ bool seval_to_TechniqueParameter(const se::Value& v, cocos2d::renderer::Techniqu
             if (tmp.isNumber())
             {
                 number = tmp.toNumber();
+                size = 1;
+                len = 4;
             }
             else if (tmp.isObject())
             {

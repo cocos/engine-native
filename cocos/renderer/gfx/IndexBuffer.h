@@ -145,6 +145,7 @@ private:
     uint32_t _numIndices;
     uint32_t _bytesPerIndex;
     uint32_t _bytes;
+    bool _needExpandDataStore = true;
 
     FetchDataCallback _fetchDataCallback;
 

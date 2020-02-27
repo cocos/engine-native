@@ -362,7 +362,7 @@ void DeviceGraphics::setTextureArray(size_t hashName, const std::vector<Texture*
         _nextState->setTexture(slot, textures[i]);
     }
     
-    setUniformiv(hashName, slots.size(), slots.data());
+    setUniformiv(hashName, slots.size(), slots.data(), slots.size());
 }
 
 void DeviceGraphics::setPrimitiveType(PrimitiveType type)
@@ -413,7 +413,7 @@ void DeviceGraphics::draw(size_t base, GLsizei count)
             continue;
         
         uniform.dirty = false;
-        uniformInfo.setUniform(uniform.value, uniform.elementType);
+        uniformInfo.setUniform(uniform.value, uniform.elementType, uniform.count);
     }
     
     // draw primitives
@@ -438,18 +438,18 @@ void DeviceGraphics::draw(size_t base, GLsizei count)
     _nextState->reset();
 }
 
-void DeviceGraphics::setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType)
+void DeviceGraphics::setUniform(size_t hashName, const void* v, size_t bytes, UniformElementType elementType, size_t uniformCount)
 {
     auto iter = _uniforms.find(hashName);
     if (iter == _uniforms.end())
     {
-        _uniforms[hashName] = Uniform(v, bytes, elementType);
+        _uniforms[hashName] = Uniform(v, bytes, elementType, uniformCount);
     }
     else
     {
         auto& uniform = iter->second;
         uniform.dirty = true;
-        uniform.setValue(v, bytes);
+        uniform.setValue(v, bytes, uniformCount);
     }
 }
 
@@ -476,9 +476,9 @@ void DeviceGraphics::setUniformi(size_t hashName, int i1, int i2, int i3, int i4
     setUniform(hashName, tempValue, 4 * sizeof(int), UniformElementType::INT);
 }
 
-void DeviceGraphics::setUniformiv(size_t hashName, size_t count, const int* value)
+void DeviceGraphics::setUniformiv(size_t hashName, size_t elementCount, const int* value, size_t uniformCount)
 {
-    setUniform(hashName, value, count * sizeof(int), UniformElementType::INT);
+    setUniform(hashName, value, elementCount * sizeof(int), UniformElementType::INT, uniformCount);
 }
 
 void DeviceGraphics::setUniformf(size_t hashName, float f1)
@@ -504,9 +504,9 @@ void DeviceGraphics::setUniformf(size_t hashName, float f1, float f2, float f3, 
     setUniform(hashName, tempValue, 4 * sizeof(float), UniformElementType::FLOAT);
 }
 
-void DeviceGraphics::setUniformfv(size_t hashName, size_t count, const float* value)
+void DeviceGraphics::setUniformfv(size_t hashName, size_t elementCount, const float* value, size_t uniformCount)
 {
-    setUniform(hashName, value, count * sizeof(float), UniformElementType::FLOAT);
+    setUniform(hashName, value, elementCount * sizeof(float), UniformElementType::FLOAT, uniformCount);
 }
 
 void DeviceGraphics::setUniformVec2(size_t hashName, const cocos2d::Vec2& value)
@@ -1040,7 +1040,7 @@ void DeviceGraphics::commitVertexBuffer()
             for (int j = 0; j < usedAttriLen; ++j)
             {
                 const auto& attr = attributes[j];
-                const auto* el = vb->getFormat().getElement(attr.name);
+                const auto* el = vb->getFormat().getElement(attr.hashName);
                 if (!el || !el->isValid())
                 {
                     RENDERER_LOGW("Can not find vertex attribute: %s", attr.name.c_str());
@@ -1105,11 +1105,11 @@ DeviceGraphics::Uniform::Uniform()
 , elementType(UniformElementType::FLOAT)
 {}
 
-DeviceGraphics::Uniform::Uniform(const void* v, size_t bytes, UniformElementType elementType_)
+DeviceGraphics::Uniform::Uniform(const void* v, size_t bytes, UniformElementType elementType_, size_t count)
 : dirty(true)
 , elementType(elementType_)
 {
-    setValue(v, bytes);
+    setValue(v, bytes, count);
 }
 
 DeviceGraphics::Uniform::Uniform(Uniform&& h)
@@ -1122,6 +1122,7 @@ DeviceGraphics::Uniform::Uniform(Uniform&& h)
         free(value);
     }
     value = h.value;
+    count = h.count;
     h.value = nullptr;
     
     dirty = h.dirty;
@@ -1149,13 +1150,14 @@ DeviceGraphics::Uniform& DeviceGraphics::Uniform::operator=(Uniform&& h)
         free(value);
     }
     value = h.value;
+    count = h.count;
     h.value = nullptr;
     elementType = h.elementType;
     
     return *this;
 }
 
-void DeviceGraphics::Uniform::setValue(const void* v, size_t valueBytes)
+void DeviceGraphics::Uniform::setValue(const void* v, size_t valueBytes, size_t uniformCount)
 {
     if (bytes != valueBytes || !value) {
         if (value)
@@ -1163,6 +1165,7 @@ void DeviceGraphics::Uniform::setValue(const void* v, size_t valueBytes)
         value = malloc(valueBytes);
         
         bytes = valueBytes;
+        count = uniformCount;
     }
     
     memcpy(value, v, valueBytes);

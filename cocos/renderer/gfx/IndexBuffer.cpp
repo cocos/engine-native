@@ -49,6 +49,8 @@ bool IndexBuffer::init(DeviceGraphics* device, IndexFormat format, Usage usage, 
     _usage = usage;
     _numIndices = numIndices;
     _bytesPerIndex = 0;
+    
+    _needExpandDataStore = true;
 
     // calculate bytes
     if (format == IndexFormat::UINT8)
@@ -83,30 +85,35 @@ void IndexBuffer::update(uint32_t offset, const void* data, size_t dataByteLengt
         RENDERER_LOGE("The buffer is destroyed");
         return;
     }
+    
+    if (dataByteLength == 0) return;
 
     if (data && dataByteLength + offset > _bytes)
     {
-        RENDERER_LOGE("Failed to update index buffer data, bytes exceed.");
-        return;
+        if (offset) {
+            RENDERER_LOGE("Failed to update index buffer data, bytes exceed.");
+            return;
+        }
+        else {
+            _needExpandDataStore = true;
+            _bytes = offset + dataByteLength;
+            _numIndices = _bytes / _bytesPerIndex;
+        }
     }
 
     GLenum glUsage = (GLenum)_usage;
     ccBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _glID);
-    if (!data)
+    if (_needExpandDataStore)
     {
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _bytes, nullptr, glUsage);
+//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)dataByteLength, data, glUsage);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _bytes, (const GLvoid*)data, glUsage);
+        _needExpandDataStore = false;
     }
     else
     {
-        if (offset > 0)
-        {
-            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (GLintptr)offset, (GLsizeiptr)dataByteLength, (const GLvoid*)data);
-        }
-        else
-        {
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)dataByteLength, data, glUsage);
-        }
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (GLintptr)offset, (GLsizeiptr)dataByteLength, (const GLvoid*)data);
     }
+    
     _device->restoreIndexBuffer();
 }
 

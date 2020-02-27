@@ -325,26 +325,26 @@ static void dispatchEnterBackgroundOrForegroundEvent(const char* funcName)
     }
 }
 
-void EventDispatcher::dispatchEnterBackgroundEvent()
+void EventDispatcher::dispatchOnPauseEvent()
 {
     // dispatch to Native
     CustomEvent event;
-    event.name = EVENT_COME_TO_BACKGROUND;
+    event.name = EVENT_ON_PAUSE;
     EventDispatcher::dispatchCustomEvent(event);
 
     // dispatch to JavaScript
-    dispatchEnterBackgroundOrForegroundEvent("onHide");
+    dispatchEnterBackgroundOrForegroundEvent("onPause");
 }
 
-void EventDispatcher::dispatchEnterForegroundEvent()
+void EventDispatcher::dispatchOnResumeEvent()
 {
     // dispatch to Native
     CustomEvent event;
-    event.name = EVENT_COME_TO_FOREGROUND;
+    event.name = EVENT_ON_RESUME;
     EventDispatcher::dispatchCustomEvent(event);
 
     // dispatch to JavaScript
-    dispatchEnterBackgroundOrForegroundEvent("onShow");
+    dispatchEnterBackgroundOrForegroundEvent("onResume");
 }
 
 uint32_t EventDispatcher::addCustomEventListener(const std::string& eventName, const CustomEventListener& listener)

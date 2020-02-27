@@ -345,6 +345,7 @@ namespace
 
 -(void)keyboardWillHide: (NSNotification*) notification
 {
+    cocos2d::EditBox::complete();
     cocos2d::EditBox::hide();
 }
 @end

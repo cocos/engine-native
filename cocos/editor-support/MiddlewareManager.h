@@ -40,6 +40,7 @@ public:
     virtual ~IMiddleware() {}
     virtual void update(float dt) = 0;
     virtual void render(float dt) = 0;
+    virtual uint32_t getRenderOrder() const = 0;
 };
 
 /**
@@ -108,7 +109,6 @@ public:
 private:
     void _clearRemoveList();
 private:
-
     std::vector<IMiddleware*> _updateList;
     std::vector<IMiddleware*> _removeList;
     std::map<int, MeshBuffer*> _mbMap;

@@ -117,4 +117,5 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 -(BOOL) isReady;
 -(void) setPreventTouchEvent:(BOOL) flag;
+-(EAGLContext*) getContext;
 @end

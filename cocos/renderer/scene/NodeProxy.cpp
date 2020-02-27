@@ -39,6 +39,8 @@
 
 RENDERER_BEGIN
 
+uint32_t NodeProxy::_globalRenderOrder = 0;
+
 NodeProxy::NodeProxy(std::size_t unitID, std::size_t index, const std::string& id, const std::string& name)
 {
     traverseHandle = render;
@@ -271,10 +273,13 @@ void NodeProxy::updateLevel()
 
 void NodeProxy::setLocalZOrder(int zOrder)
 {
-    *_localZOrder = zOrder;
-    if (_parent != nullptr)
+    if (*_localZOrder != zOrder)
     {
-        *_parent->_dirty |= RenderFlow::REORDER_CHILDREN;
+        *_localZOrder = zOrder;
+        if (_parent != nullptr)
+        {
+            *_parent->_dirty |= RenderFlow::REORDER_CHILDREN;
+        }
     }
 }
 
@@ -436,7 +441,9 @@ void NodeProxy::updateWorldMatrix()
     {
         if (selfWorldDirty || *_parent->_dirty & RenderFlow::WORLD_TRANSFORM_CHANGED)
         {
-            updateWorldMatrix(_parent->getWorldMatrix());
+            cocos2d::Mat4::multiply(_parent->getWorldMatrix(), *_localMat, _worldMat);
+            *_dirty &= ~RenderFlow::WORLD_TRANSFORM;
+            *_dirty |= RenderFlow::WORLD_TRANSFORM_CHANGED;
         }
     }
     else if (selfWorldDirty)
@@ -447,9 +454,9 @@ void NodeProxy::updateWorldMatrix()
     }
 }
 
-void NodeProxy::updateWorldMatrix(const cocos2d::Mat4& parentMatrix)
+void NodeProxy::updateWorldMatrix(const cocos2d::Mat4& worldMatrix)
 {
-    _worldMat->multiply(parentMatrix, *_localMat, _worldMat);
+    *_worldMat = worldMatrix;
     *_dirty &= ~RenderFlow::WORLD_TRANSFORM;
     *_dirty |= RenderFlow::WORLD_TRANSFORM_CHANGED;
 }
@@ -498,6 +505,8 @@ void NodeProxy::updateLocalMatrix()
 
 void NodeProxy::render(NodeProxy* node, ModelBatcher* batcher, Scene* scene)
 {
+    node->_renderOrder = _globalRenderOrder++;
+    
     if (!node->_needVisit || node->_realOpacity == 0) return;
 
     bool needRender = *node->_dirty & RenderFlow::RENDER;
@@ -524,6 +533,8 @@ void NodeProxy::render(NodeProxy* node, ModelBatcher* batcher, Scene* scene)
 
 void NodeProxy::visit(NodeProxy* node, ModelBatcher* batcher, Scene* scene)
 {
+    node->_renderOrder = _globalRenderOrder++;
+    
     if (!node->_needVisit) return;
 
     node->updateRealOpacity();

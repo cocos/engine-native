@@ -31,6 +31,9 @@
 #include "ArmatureCache.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
+
+class CacheModeAttachUtil;
+
 class CCArmatureCacheDisplay : public cocos2d::middleware::IMiddleware, public cocos2d::Ref
 {
 public:
@@ -40,7 +43,8 @@ public:
 
     virtual void update(float dt) override;
     virtual void render(float dt) override;
-
+    virtual uint32_t getRenderOrder() const override;
+    
     void setTimeScale(float scale)
     {
         _timeScale = scale;
@@ -59,28 +63,13 @@ public:
     Armature* getArmature() const;
     Animation* getAnimation() const;
 
-    void bindNodeProxy(cocos2d::renderer::NodeProxy* node)
-    {
-        CC_SAFE_RELEASE(_nodeProxy);
-        _nodeProxy = node;
-        CC_SAFE_RETAIN(_nodeProxy);
-    }
+    void bindNodeProxy(cocos2d::renderer::NodeProxy* node);
+    
+    void setEffect(cocos2d::renderer::EffectVariant* effect);
 
-    void setEffect(cocos2d::renderer::Effect* effect)
-    {
-        if (effect == _effect) return;
-        CC_SAFE_RELEASE(_effect);
-        _effect = effect;
-        CC_SAFE_RETAIN(_effect);
-    }
-
-    void setColor(cocos2d::Color4B& color)
-    {
-        _nodeColor.r = color.r / 255.0f;
-        _nodeColor.g = color.g / 255.0f;
-        _nodeColor.b = color.b / 255.0f;
-        _nodeColor.a = color.a / 255.0f;
-    }
+    void setAttachUtil(CacheModeAttachUtil* attachUtil);
+    
+    void setColor(cocos2d::Color4B& color);
 
     void setBatchEnabled(bool enabled)
     {
@@ -122,10 +111,11 @@ private:
     bool _premultipliedAlpha = false;
     dbEventCallback _dbEventCallback = nullptr;
     cocos2d::renderer::NodeProxy* _nodeProxy = nullptr;
-    cocos2d::renderer::Effect* _effect = nullptr;
+    cocos2d::renderer::EffectVariant* _effect = nullptr;
     cocos2d::renderer::CustomAssembler* _assembler = nullptr;
     ArmatureCache* _armatureCache = nullptr;
     EventObject* _eventObject;
+    CacheModeAttachUtil* _attachUtil = nullptr;
 };
 
 DRAGONBONES_NAMESPACE_END

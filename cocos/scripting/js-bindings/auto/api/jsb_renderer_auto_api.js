@@ -40,143 +40,19 @@ array
 };
 
 /**
- * @class CustomProperties
+ * @class EffectBase
  */
-renderer.CustomProperties = {
-
-/**
- * @method define
- * @param {String} arg0
- * @param {cc.Value} arg1
- */
-define : function (
-str, 
-value 
-)
-{
-},
-
-/**
- * @method CustomProperties
- * @constructor
- */
-CustomProperties : function (
-)
-{
-},
-
-};
-
-/**
- * @class Pass
- */
-renderer.PassNative = {
-
-/**
- * @method getStencilTest
- * @return {bool}
- */
-getStencilTest : function (
-)
-{
-    return false;
-},
-
-/**
- * @method setStencilBack
- */
-setStencilBack : function (
-)
-{
-},
-
-/**
- * @method getProgramName
- * @return {String}
- */
-getProgramName : function (
-)
-{
-    return ;
-},
-
-/**
- * @method setCullMode
- * @param {cc.renderer::CullMode} arg0
- */
-setCullMode : function (
-cullmode 
-)
-{
-},
-
-/**
- * @method setBlend
- */
-setBlend : function (
-)
-{
-},
-
-/**
- * @method setProgramName
- * @param {String} arg0
- */
-setProgramName : function (
-str 
-)
-{
-},
-
-/**
- * @method disableStencilTest
- */
-disableStencilTest : function (
-)
-{
-},
-
-/**
- * @method setStencilFront
- */
-setStencilFront : function (
-)
-{
-},
-
-/**
- * @method setDepth
- */
-setDepth : function (
-)
-{
-},
-
-/**
- * @method Pass
- * @constructor
-* @param {String} str
-*/
-Pass : function(
-str 
-)
-{
-},
-
-};
-
-/**
- * @class Effect
- */
-renderer.EffectNative = {
+renderer.EffectBase = {
 
 /**
  * @method getProperty
  * @param {String} arg0
+ * @param {int} arg1
  * @return {cc.renderer::Technique::Parameter}
  */
 getProperty : function (
-str 
+str, 
+int 
 )
 {
     return cc.renderer::Technique::Parameter;
@@ -185,32 +61,24 @@ str
 /**
  * @method setStencilTest
  * @param {bool} arg0
+ * @param {int} arg1
  */
 setStencilTest : function (
-bool 
+bool, 
+int 
 )
 {
-},
-
-/**
- * @method getTechnique
- * @param {String} arg0
- * @return {cc.renderer::Technique}
- */
-getTechnique : function (
-str 
-)
-{
-    return cc.renderer::Technique;
 },
 
 /**
  * @method getDefine
  * @param {String} arg0
+ * @param {int} arg1
  * @return {cc.Value}
  */
 getDefine : function (
-str 
+str, 
+int 
 )
 {
     return cc.Value;
@@ -219,9 +87,19 @@ str
 /**
  * @method setCullMode
  * @param {cc.renderer::CullMode} arg0
+ * @param {int} arg1
  */
 setCullMode : function (
-cullmode 
+cullmode, 
+int 
+)
+{
+},
+
+/**
+ * @method setBlend
+ */
+setBlend : function (
 )
 {
 },
@@ -235,29 +113,58 @@ setStencil : function (
 },
 
 /**
- * @method setBlend
+ * @method getPasses
+* @return {Array|Array}
+*/
+getPasses : function(
+)
+{
+    return new Array();
+},
+
+/**
+ * @method setDepth
  */
-setBlend : function (
+setDepth : function (
 )
 {
 },
 
 /**
- * @method getHash
- * @return {double}
+ * @method define
+ * @param {String} arg0
+ * @param {cc.Value} arg1
+ * @param {int} arg2
  */
-getHash : function (
+define : function (
+str, 
+value, 
+int 
 )
 {
-    return 0;
+},
+
+};
+
+/**
+ * @class Effect
+ */
+renderer.EffectNative = {
+
+/**
+ * @method clear
+ */
+clear : function (
+)
+{
 },
 
 /**
- * @method updateHash
- * @param {double} arg0
+ * @method switchTechnique
+ * @param {int} arg0
  */
-updateHash : function (
-double 
+switchTechnique : function (
+int 
 )
 {
 },
@@ -273,30 +180,68 @@ effect
 },
 
 /**
- * @method clear
- */
-clear : function (
-)
-{
-},
-
-/**
- * @method define
- * @param {String} arg0
- * @param {cc.Value} arg1
- */
-define : function (
-str, 
-value 
-)
-{
-},
-
-/**
  * @method Effect
  * @constructor
  */
 Effect : function (
+)
+{
+},
+
+};
+
+/**
+ * @class EffectVariant
+ */
+renderer.EffectVariant = {
+
+/**
+ * @method setEffect
+ * @param {cc.renderer::Effect} arg0
+ */
+setEffect : function (
+effect 
+)
+{
+},
+
+/**
+ * @method updateHash
+ * @param {double} arg0
+ */
+updateHash : function (
+double 
+)
+{
+},
+
+/**
+ * @method copy
+ * @param {cc.renderer::EffectVariant} arg0
+ */
+copy : function (
+effectvariant 
+)
+{
+},
+
+/**
+ * @method getEffect
+ * @return {cc.renderer::Effect}
+ */
+getEffect : function (
+)
+{
+    return cc.renderer::Effect;
+},
+
+/**
+ * @method EffectVariant
+ * @constructor
+* @param {cc.renderer::Effect} effect
+*/
+EffectVariant : function(
+effect 
 )
 {
 },
@@ -447,11 +392,33 @@ destroyImmediately : function (
 },
 
 /**
- * @method enableVisit
+ * @method isValid
+ * @return {bool}
  */
-enableVisit : function (
+isValid : function (
 )
 {
+    return false;
+},
+
+/**
+ * @method enableVisit
+ * @param {bool} arg0
+ */
+enableVisit : function (
+bool 
+)
+{
+},
+
+/**
+ * @method getLocalMatrix
+ * @return {mat4_object}
+ */
+getLocalMatrix : function (
+)
+{
+    return cc.Mat4;
 },
 
 /**
@@ -1657,23 +1624,13 @@ int
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::Effect} arg1
+ * @param {cc.renderer::EffectVariant} arg1
  */
 updateEffect : function (
 int, 
-effect 
+effectvariant 
 )
 {
-},
-
-/**
- * @method getCustomProperties
- * @return {cc.renderer::CustomProperties}
- */
-getCustomProperties : function (
-)
-{
-    return cc.renderer::CustomProperties;
 },
 
 /**
@@ -1694,16 +1651,6 @@ int
  * @method ignoreOpacityFlag
  */
 ignoreOpacityFlag : function (
-)
-{
-},
-
-/**
- * @method setCustomProperties
- * @param {cc.renderer::CustomProperties} arg0
- */
-setCustomProperties : function (
-customproperties 
 )
 {
 },
@@ -1735,11 +1682,11 @@ clearEffect : function (
 /**
  * @method updateEffect
  * @param {unsigned int} arg0
- * @param {cc.renderer::Effect} arg1
+ * @param {cc.renderer::EffectVariant} arg1
  */
 updateEffect : function (
 int, 
-effect 
+effectvariant 
 )
 {
 },
@@ -1981,6 +1928,22 @@ nodeproxy
 },
 
 /**
+ * @method updateIAData
+ * @param {unsigned int} arg0
+ * @param {cc.renderer::VertexFormat} arg1
+ * @param {se::Object} arg2
+ * @param {se::Object} arg3
+ */
+updateIAData : function (
+int, 
+vertexformat, 
+object, 
+object 
+)
+{
+},
+
+/**
  * @method MeshAssembler
  * @constructor
  */
@@ -2017,6 +1980,62 @@ renderer.SlicedSprite3D = {
  * @constructor
  */
 SlicedSprite3D : function (
+)
+{
+},
+
+};
+
+/**
+ * @class Particle3DAssembler
+ */
+renderer.Particle3DAssembler = {
+
+/**
+ * @method setTrailSpace
+ * @param {cc.renderer::Space} arg0
+ */
+setTrailSpace : function (
+space 
+)
+{
+},
+
+/**
+ * @method setTrailVertexFormat
+ * @param {cc.renderer::VertexFormat} arg0
+ */
+setTrailVertexFormat : function (
+vertexformat 
+)
+{
+},
+
+/**
+ * @method setParticleSpace
+ * @param {cc.renderer::Space} arg0
+ */
+setParticleSpace : function (
+space 
+)
+{
+},
+
+/**
+ * @method setTrailModuleEnable
+ * @param {bool} arg0
+ */
+setTrailModuleEnable : function (
+bool 
+)
+{
+},
+
+/**
+ * @method Particle3DAssembler
+ * @constructor
+ */
+Particle3DAssembler : function (
 )
 {
 },

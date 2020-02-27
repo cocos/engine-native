@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated May 1, 2019. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2019, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -15,16 +15,16 @@
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
  *
- * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
- * NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, BUSINESS
- * INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #include "SkeletonCacheAnimation.h"
@@ -34,6 +34,7 @@
 #include "renderer/renderer/Technique.h"
 #include "renderer/scene/assembler/CustomAssembler.hpp"
 #include "renderer/gfx/Texture.h"
+#include "spine-creator-support/AttachUtil.h"
 
 USING_NS_CC;
 USING_NS_MW;
@@ -66,6 +67,7 @@ namespace spine {
             _animationQueue.pop();
             delete ani;
         }
+        CC_SAFE_RELEASE_NULL(_attachUtil);
         CC_SAFE_RELEASE(_nodeProxy);
         CC_SAFE_RELEASE(_effect);
         stopSchedule();
@@ -139,7 +141,7 @@ namespace spine {
     
     void SkeletonCacheAnimation::render(float dt) {
         
-        if (_nodeProxy == nullptr) {
+        if (!_nodeProxy || !_effect) {
             return;
         }
         
@@ -163,11 +165,24 @@ namespace spine {
         
         _nodeColor.a = _nodeProxy->getRealOpacity() / (float)255;
         
-        middleware::MeshBuffer* mb = mgr->getMeshBuffer(VF_XYUVCC);
+        auto vertexFormat = _useTint? VF_XYUVCC : VF_XYUVC;
+        middleware::MeshBuffer* mb = mgr->getMeshBuffer(vertexFormat);
         middleware::IOBuffer& vb = mb->getVB();
         middleware::IOBuffer& ib = mb->getIB();
         const auto& srcVB = frameData->vb;
         const auto& srcIB = frameData->ib;
+        
+        // vertex size int bytes with one color
+        int vbs1 = sizeof(V2F_T2F_C4B);
+        // vertex size in floats with one color
+        int vs1 = vbs1 / sizeof(float);
+        // vertex size int bytes with two color
+        int vbs2 = sizeof(V2F_T2F_C4B_C4B);
+        // vertex size in floats with two color
+        int vs2 = vbs2 / sizeof(float);
+        
+        int vs = _useTint ? vs2 : vs1;
+        int vbs = _useTint ? vbs2 : vbs1;
         
         const cocos2d::Mat4& nodeWorldMat = _nodeProxy->getWorldMatrix();
 
@@ -180,7 +195,10 @@ namespace spine {
         float tempR = 0.0f, tempG = 0.0f, tempB = 0.0f, tempA = 0.0f;
         float multiplier = 1.0f;
         int srcVertexBytesOffset = 0;
+        int srcVertexBytes = 0;
         int vertexBytes = 0;
+        int vertexFloats = 0;
+        int tintBytes = 0;
         int srcIndexBytesOffset = 0;
         int indexBytes = 0;
         GLuint textureHandle = 0;
@@ -224,20 +242,35 @@ namespace spine {
         
         for (std::size_t segIndex = 0, segLen = segments.size(); segIndex < segLen; segIndex++) {
             auto segment = segments[segIndex];
-            vertexBytes = segment->vertexFloatCount * sizeof(float);
+            srcVertexBytes = segment->vertexFloatCount * sizeof(float);
+            if (!_useTint) {
+                tintBytes = segment->vertexFloatCount / vs2 * sizeof(float);
+                vertexBytes = srcVertexBytes - tintBytes;
+                vertexFloats = vertexBytes / sizeof(float);
+            } else {
+                vertexBytes = srcVertexBytes;
+                vertexFloats = segment->vertexFloatCount;
+            }
 
             // fill vertex buffer
             vb.checkSpace(vertexBytes, true);
-            dstVertexOffset = (int)vb.getCurPos() / sizeof(V2F_T2F_C4B_C4B);
+            dstVertexOffset = (int)vb.getCurPos() / vbs;
             dstVertexBuffer = (float*)vb.getCurBuffer();
             dstColorBuffer = (unsigned int*)vb.getCurBuffer();
-            vb.writeBytes((char*)srcVB.getBuffer() + srcVertexBytesOffset, vertexBytes);
+            if (!_useTint) {
+                char* srcBuffer = (char*)srcVB.getBuffer() + srcVertexBytesOffset;
+                for (std::size_t srcBufferIdx = 0; srcBufferIdx < srcVertexBytes; srcBufferIdx += vbs2) {
+                    vb.writeBytes(srcBuffer + srcBufferIdx, vbs);
+                }
+            } else {
+                vb.writeBytes((char*)srcVB.getBuffer() + srcVertexBytesOffset, vertexBytes);
+            }
             
             // batch handle
             if (_batch) {
                 cocos2d::Vec3* point = nullptr;
                 float tempZ = 0.0f;
-                for (auto posIndex = 0; posIndex < segment->vertexFloatCount; posIndex += 6)
+                for (auto posIndex = 0; posIndex < vertexFloats; posIndex += vs)
                 {
                     point = (cocos2d::Vec3*)(dstVertexBuffer + posIndex);
                     tempZ = point->z;
@@ -249,21 +282,33 @@ namespace spine {
             
             // handle vertex color
             if (needColor) {
-                int frameFloatOffset = srcVertexBytesOffset / sizeof(float);
-                for (auto colorIndex = 0; colorIndex < segment->vertexFloatCount; colorIndex += 6, frameFloatOffset += 6)
-                {
-                    if (frameFloatOffset >= maxVFOffset) {
-                        nowColor = colors[colorOffset++];
-                        handleColor(nowColor);
-                        maxVFOffset = nowColor->vertexFloatOffset;
+                int srcVertexFloatOffset = srcVertexBytesOffset / sizeof(float);
+                if (_useTint) {
+                    for (auto colorIndex = 0; colorIndex < vertexFloats; colorIndex += vs, srcVertexFloatOffset += vs2)
+                    {
+                        if (srcVertexFloatOffset >= maxVFOffset) {
+                            nowColor = colors[colorOffset++];
+                            handleColor(nowColor);
+                            maxVFOffset = nowColor->vertexFloatOffset;
+                        }
+                        memcpy(dstColorBuffer + colorIndex + 4, &finalColor, sizeof(finalColor));
+                        memcpy(dstColorBuffer + colorIndex + 5, &darkColor, sizeof(darkColor));
                     }
-                    memcpy(dstColorBuffer + colorIndex + 4, &finalColor, sizeof(finalColor));
-                    memcpy(dstColorBuffer + colorIndex + 5, &darkColor, sizeof(darkColor));
+                } else {
+                    for (auto colorIndex = 0; colorIndex < vertexFloats; colorIndex += vs, srcVertexFloatOffset += vs2)
+                    {
+                        if (srcVertexFloatOffset >= maxVFOffset) {
+                            nowColor = colors[colorOffset++];
+                            handleColor(nowColor);
+                            maxVFOffset = nowColor->vertexFloatOffset;
+                        }
+                        memcpy(dstColorBuffer + colorIndex + 4, &finalColor, sizeof(finalColor));
+                    }
                 }
             }
             
             // move src vertex buffer offset
-            srcVertexBytesOffset += vertexBytes;
+            srcVertexBytesOffset += srcVertexBytes;
             
             // fill index buffer
             indexBytes = segment->indexCount * sizeof(unsigned short);
@@ -282,67 +327,54 @@ namespace spine {
             // handle material
             textureHandle = segment->getTexture()->getNativeTexture()->getHandle();
             blendMode = segment->blendMode;
-            effectHash = textureHandle + (blendMode << 16) + (1/*_useTint*/ << 24) + ((int)_batch << 25);
-            Effect* renderEffect = assembler->getEffect(segIndex);
-            Technique::Parameter* param = nullptr;
-            Pass* pass = nullptr;
-            
+            effectHash = textureHandle + (blendMode << 16) + ((int)_useTint << 24) + ((int)_batch << 25) + ((int)_effect->getHash() << 26);
+            EffectVariant* renderEffect = assembler->getEffect(segIndex);
+            bool needUpdate = false;
             if (renderEffect) {
                 double renderHash = renderEffect->getHash();
                 if (abs(renderHash - effectHash) >= 0.01) {
-                    param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
-                    Technique* tech = renderEffect->getTechnique(techStage);
-                    cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                    pass = *(passes.begin());
+                    needUpdate = true;
                 }
             }
             else {
-                if (_effect == nullptr) {
-                    cocos2d::log("SkeletonCacheAnimation:update get effect failed");
-                    assembler->reset();
-                    return;
-                }
-                auto effect = new cocos2d::renderer::Effect();
+                auto effect = new cocos2d::renderer::EffectVariant();
                 effect->autorelease();
                 effect->copy(_effect);
                 
-                Technique* tech = effect->getTechnique(techStage);
-                cocos2d::Vector<Pass*>& passes = (cocos2d::Vector<Pass*>&)tech->getPasses();
-                pass = *(passes.begin());
-                
                 assembler->updateEffect(segIndex, effect);
                 renderEffect = effect;
-                param = (Technique::Parameter*)&(renderEffect->getProperty(textureKey));
+                needUpdate = true;
             }
-            
-            if (param) {
-                param->setTexture(segment->getTexture()->getNativeTexture());
-            }
-            
-            switch (blendMode) {
-                case BlendMode_Additive:
-                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                    curBlendDst = BlendFactor::ONE;
-                    break;
-                case BlendMode_Multiply:
-                    curBlendSrc = BlendFactor::DST_COLOR;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-                    break;
-                case BlendMode_Screen:
-                    curBlendSrc = BlendFactor::ONE;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
-                    break;
-                default:
-                    curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
-                    curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
-            }
-            
-            if (pass) {
-                pass->setBlend(BlendOp::ADD, curBlendSrc, curBlendDst,
+
+            if (needUpdate) {
+                renderEffect->setProperty(textureKey, segment->getTexture()->getNativeTexture());
+                switch (blendMode) {
+                    case BlendMode_Additive:
+                        curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                        curBlendDst = BlendFactor::ONE;
+                        break;
+                    case BlendMode_Multiply:
+                        curBlendSrc = BlendFactor::DST_COLOR;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                        break;
+                    case BlendMode_Screen:
+                        curBlendSrc = BlendFactor::ONE;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_COLOR;
+                        break;
+                    default:
+                        curBlendSrc = _premultipliedAlpha ? BlendFactor::ONE : BlendFactor::SRC_ALPHA;
+                        curBlendDst = BlendFactor::ONE_MINUS_SRC_ALPHA;
+                }
+                renderEffect->setBlend(true, BlendOp::ADD, curBlendSrc, curBlendDst,
                                BlendOp::ADD, curBlendSrc, curBlendDst);
             }
             
             renderEffect->updateHash(effectHash);
+        }
+        
+        if (_attachUtil)
+        {
+            _attachUtil->syncAttachedNode(_nodeProxy, frameData);
         }
     }
     
@@ -372,13 +404,11 @@ namespace spine {
     
     void SkeletonCacheAnimation::setSkin (const std::string& skinName) {
         _skeletonCache->setSkin(skinName);
-        _skeletonCache->setToSetupPose();
         _skeletonCache->resetAllAnimationData();
     }
 
     void SkeletonCacheAnimation::setSkin (const char* skinName) {
         _skeletonCache->setSkin(skinName);
-        _skeletonCache->setToSetupPose();
         _skeletonCache->resetAllAnimationData();
     }
     
@@ -433,6 +463,10 @@ namespace spine {
         stopSchedule();
     }
     
+    void SkeletonCacheAnimation::setUseTint(bool enabled) {
+        _useTint = enabled;
+    }
+    
     void SkeletonCacheAnimation::setAnimation (const std::string& name, bool loop) {
         _playTimes = loop ? 0 : 1;
         _animationName = name;
@@ -473,5 +507,49 @@ namespace spine {
     
     void SkeletonCacheAnimation::updateAllAnimationCache () {
         _skeletonCache->resetAllAnimationData();
+    }
+    
+    void SkeletonCacheAnimation::setAttachUtil(CacheModeAttachUtil* attachUtil) {
+        if (attachUtil == _attachUtil) return;
+        CC_SAFE_RELEASE(_attachUtil);
+        _attachUtil = attachUtil;
+        CC_SAFE_RETAIN(_attachUtil);
+    }
+    
+    void SkeletonCacheAnimation::bindNodeProxy(cocos2d::renderer::NodeProxy* node) {
+        if (node == _nodeProxy) return;
+        CC_SAFE_RELEASE(_nodeProxy);
+        _nodeProxy = node;
+        CC_SAFE_RETAIN(_nodeProxy);
+    }
+    
+    void SkeletonCacheAnimation::setEffect(cocos2d::renderer::EffectVariant* effect) {
+        if (effect == _effect) return;
+        CC_SAFE_RELEASE(_effect);
+        _effect = effect;
+        CC_SAFE_RETAIN(_effect);
+    }
+    
+    uint32_t SkeletonCacheAnimation::getRenderOrder() const {
+        if (!_nodeProxy) return 0;
+        return _nodeProxy->getRenderOrder();
+    }
+    
+    void SkeletonCacheAnimation::setToSetupPose () {
+        if (_skeletonCache) {
+            _skeletonCache->setToSetupPose();
+        }
+    }
+    
+    void SkeletonCacheAnimation::setBonesToSetupPose () {
+        if (_skeletonCache) {
+            _skeletonCache->setBonesToSetupPose();
+        }
+    }
+    
+    void SkeletonCacheAnimation::setSlotsToSetupPose () {
+        if (_skeletonCache) {
+            _skeletonCache->setSlotsToSetupPose();
+        }
     }
 }
