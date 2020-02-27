@@ -5,10 +5,6 @@
             "to": "src"
         },
         {
-            "from": "../../../res",
-            "to": "res"
-        },
-        {
             "from": "../../../assets",
             "to": "assets"
         },

@@ -105,11 +105,6 @@ android.applicationVariants.all { variant ->
         def sourceDir = "${buildDir}/../../../../.."
 
         copy {
-            from "${sourceDir}/res"
-            into "${outputDir}/res"
-        }
-
-        copy {
             from "${sourceDir}/assets"
             into "${outputDir}/assets"
         }

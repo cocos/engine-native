@@ -68,8 +68,6 @@
 		C03780EB18BEE0E400FE4F13 /* src in Resources */ = {isa = PBXBuildFile; fileRef = C03780EA18BEE0E400FE4F13 /* src */; };
 		C03780EC18BEE0E400FE4F13 /* src in Resources */ = {isa = PBXBuildFile; fileRef = C03780EA18BEE0E400FE4F13 /* src */; };
 		C06E23CC18CEFE680093C81A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C06E23CB18CEFE680093C81A /* main.cpp */; };
-		C0799CB918BAE62000E9C828 /* res in Resources */ = {isa = PBXBuildFile; fileRef = C0799CB518BAE62000E9C828 /* res */; };
-		C0799CBA18BAE62000E9C828 /* res in Resources */ = {isa = PBXBuildFile; fileRef = C0799CB518BAE62000E9C828 /* res */; };
 		D454520C156E22BD00887EB5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D454520B156E22BD00887EB5 /* libz.dylib */; };
 		D4545227156E28EF00887EB5 /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4545215156E28EF00887EB5 /* AppDelegate.cpp */; };
 		D6B061241803AB9F0077942B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B061231803AB9F0077942B /* CoreMotion.framework */; };
@@ -491,7 +489,6 @@
 				1AC22EDE18CA0E11007112B9 /* project.json in Resources */,
 				1AD7E0A918C9DBE3004817A6 /* main.js in Resources */,
 				4033CDBD20E4935100DAA37B /* jsb-adapter in Resources */,
-				C0799CBA18BAE62000E9C828 /* res in Resources */,
 				509D4ACF17EBB2BE00697056 /* Icon.icns in Resources */,
 				C03780EC18BEE0E400FE4F13 /* src in Resources */,
 			);
@@ -508,7 +505,6 @@
 				1AE159EC18C9DF3600FCA372 /* project.json in Resources */,
 				1AD7E0A818C9DB93004817A6 /* main.js in Resources */,
 				C03780EB18BEE0E400FE4F13 /* src in Resources */,
-				C0799CB918BAE62000E9C828 /* res in Resources */,
 				4011F9CF212BD6750091CC5B /* LaunchScreen.storyboard in Resources */,
 				4011F9D5212BD7050091CC5B /* Localizable.strings in Resources */,
 			);
