@@ -4,6 +4,7 @@
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/auto/jsb_gfx_auto.hpp"
 #include "renderer/gfx-gles2/GFXGLES2.h"
+#include "cocos/base/CCData.h"
 
 #define GFX_MAX_VERTEX_ATTRIBUTES 16
 #define GFX_MAX_TEXTURE_UNITS 16
@@ -332,8 +333,54 @@ bool js_register_gfx_GFXSubPass(se::Object* obj)
     return true;
 }
 
+
+
+static bool js_gfx_GFXBuffer_update(se::State& s)
+{
+    cocos2d::GFXBuffer* cobj = (cocos2d::GFXBuffer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXBuffer_update : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+
+    auto typedArray = args[0].toObject();
+    uint8_t* data = nullptr;
+    size_t dataBytes = 0;
+//    se::Object::TypedArrayType type = typedArray->getTypedArrayType();
+    ok = typedArray->getArrayBufferData(&data, &dataBytes);
+    cocos2d::Data arg0;
+    arg0.copy(data, dataBytes);
+    
+    if (argc == 1) {
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_update : Error processing arguments");
+        cobj->update(arg0.getBytes());
+        return true;
+    }
+    if (argc == 2) {
+        unsigned int arg1 = 0;
+        ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_update : Error processing arguments");
+        cobj->update(arg0.getBytes(), arg1);
+        return true;
+    }
+    if (argc == 3) {
+        unsigned int arg1 = 0;
+        unsigned int arg2 = 0;
+        ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);
+        ok &= seval_to_uint32(args[2], (uint32_t*)&arg2);
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_update : Error processing arguments");
+        cobj->update(arg0.getBytes(), arg1, arg2);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXBuffer_update)
+
 bool register_all_gfx_manual(se::Object* obj)
 {
     js_register_gfx_GFXSubPass(obj);
+
+    __jsb_cocos2d_GFXBuffer_proto->defineFunction("update", _SE(js_gfx_GFXBuffer_update));
     return true;
 }
