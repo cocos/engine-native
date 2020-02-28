@@ -584,6 +584,10 @@ struct GFXBufferTextureCopy {
 };
 typedef vector<GFXBufferTextureCopy>::type GFXBufferTextureCopyList;
 
+struct GFXArrayBufferView{
+    std::vector<uint8_t*> buffer;
+};
+
 struct GFXViewport {
   int left = 0;
   int top = 0;
