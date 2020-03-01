@@ -12,9 +12,6 @@
 #define GFX_INVALID_BINDING ((uint8_t)-1)
 #define GFX_INVALID_HANDLE ((uint)-1)
 
-se::Object* __jsb_cocos2d_GFXSubPass_proto = nullptr;
-se::Class* __jsb_cocos2d_GFXSubPass_class = nullptr;
-
 static bool js_gfx_GLES2Device_copyBuffersToTexture(se::State& s)
 {
     cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
@@ -35,22 +32,21 @@ static bool js_gfx_GLES2Device_copyBuffersToTexture(se::State& s)
             arg0.buffer.resize(length);
 
             se::Value value;
-            uint8_t data = 0;
             for (uint32_t i = 0; i < length; ++i)
             {
                 if (dataObj->getArrayElement(i, &value))
                 {
                     uint8_t* ptr = nullptr;
-                    size_t length = 0;
+                    CC_UNUSED size_t dataLength = 0;
                     se::Object* obj = value.toObject();
                     if (obj->isArrayBuffer())
                     {
-                        ok = obj->getArrayBufferData(&ptr, &length);
+                        ok = obj->getArrayBufferData(&ptr, &dataLength);
                         SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
                     }
                     else if (obj->isTypedArray())
                     {
-                        ok = obj->getTypedArrayData(&ptr, &length);
+                        ok = obj->getTypedArrayData(&ptr, &dataLength);
                         SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
                     }
                     else
@@ -71,10 +67,9 @@ static bool js_gfx_GLES2Device_copyBuffersToTexture(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_gfx_GLES2Device_copyBuffersToTexture)
-bool js_register_gfx_GLES2Device(se::Object* obj)
-{
-    __jsb_cocos2d_GLES2Device_class->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES2Device_copyBuffersToTexture));
-}
+
+se::Object* __jsb_cocos2d_GFXSubPass_proto = nullptr;
+se::Class* __jsb_cocos2d_GFXSubPass_class = nullptr;
 
 static bool js_gfx_GFXSubPass_get_bind_point(se::State& s)
 {
@@ -395,7 +390,8 @@ bool js_register_gfx_GFXSubPass(se::Object* obj)
 
 bool register_all_gfx_manual(se::Object* obj)
 {
-    js_register_gfx_GLES2Device(obj);
+    __jsb_cocos2d_GLES2Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES2Device_copyBuffersToTexture));
+    
     js_register_gfx_GFXSubPass(obj);
     return true;
 }
