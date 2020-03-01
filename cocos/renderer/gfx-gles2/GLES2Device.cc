@@ -310,9 +310,9 @@ GFXPipelineLayout* GLES2Device::createPipelineLayout(const GFXPipelineLayoutInfo
     return nullptr;
 }
 
-void GLES2Device::copyBuffersToTexture(const GFXArrayBufferView& buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions)
+void GLES2Device::copyBuffersToTexture(const GFXBuffers& buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions)
 {
-    GLES2CmdFuncCopyBuffersToTexture(this, buffers.buffer.data(), ((GLES2Texture*)dst)->gpuTexture(), regions);
+    GLES2CmdFuncCopyBuffersToTexture(this, buffers.bufferArray.data(), ((GLES2Texture*)dst)->gpuTexture(), regions);
 }
 
 NS_CC_END

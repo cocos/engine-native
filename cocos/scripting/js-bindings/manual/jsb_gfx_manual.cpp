@@ -20,16 +20,16 @@ static bool js_gfx_GLES2Device_copyBuffersToTexture(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        cocos2d::GFXArrayBufferView arg0;
+        cocos2d::GFXBuffers arg0;
         cocos2d::GFXTexture* arg1 = nullptr;
         std::vector<cocos2d::GFXBufferTextureCopy> arg2;
         if (args[0].isObject())
         {
             se::Object* dataObj = args[0].toObject();
-            SE_PRECONDITION2(dataObj->isArray(), false, "GFXArrayBufferView must be an array!");
+            SE_PRECONDITION2(dataObj->isArray(), false, "Buffers must be an array!");
             uint32_t length = 0;
             dataObj->getArrayLength(&length);
-            arg0.buffer.resize(length);
+            arg0.bufferArray.resize(length);
 
             se::Value value;
             for (uint32_t i = 0; i < length; ++i)
@@ -53,7 +53,7 @@ static bool js_gfx_GLES2Device_copyBuffersToTexture(se::State& s)
                     {
                         assert(false);
                     }
-                    arg0.buffer.emplace_back(ptr);
+                    arg0.bufferArray.emplace_back(ptr);
                 }
             }
         }
