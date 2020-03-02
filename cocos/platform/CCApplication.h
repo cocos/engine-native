@@ -93,12 +93,14 @@ public:
     {
         static std::chrono::steady_clock::time_point prevTime;
         static std::chrono::steady_clock::time_point now;
+        static std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         static float dt = 0.f;
-
+        
         prevTime = std::chrono::steady_clock::now();
+        double milli = std::chrono::duration_cast<std::chrono::milliseconds>(prevTime - start).count();
 
         _scheduler->update(dt);
-        cocos2d::EventDispatcher::dispatchTickEvent(dt);
+        cocos2d::EventDispatcher::dispatchTickEvent(milli);
 
         PoolManager::getInstance()->getCurrentPool()->clear();
 

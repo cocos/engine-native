@@ -26,6 +26,7 @@
 
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
+#include "cocos/scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "cocos/scripting/js-bindings/event/CustomEventTypes.h"
 
 namespace {
@@ -262,7 +263,7 @@ void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent& keyboard
     }
 }
 
-void EventDispatcher::dispatchTickEvent(float dt)
+void EventDispatcher::dispatchTickEvent(double nowMilliSeconds)
 {
     if (!se::ScriptEngine::getInstance()->isValid())
         return;
@@ -274,7 +275,12 @@ void EventDispatcher::dispatchTickEvent(float dt)
     }
 
     se::ValueArray args;
-    args.push_back(se::Value(dt) );
+    se::Value jsNow;
+    if (!float_to_seval(nowMilliSeconds, &jsNow))
+    {
+        CCLOGWARN("WARNING: time argument conversion failed!");
+    }
+    args.push_back(jsNow);
     _tickVal.toObject()->call(args, nullptr);
 }
 
