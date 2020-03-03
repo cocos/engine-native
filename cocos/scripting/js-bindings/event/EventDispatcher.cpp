@@ -263,7 +263,7 @@ void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent& keyboard
     }
 }
 
-void EventDispatcher::dispatchTickEvent(double nowMilliSeconds)
+void EventDispatcher::dispatchTickEvent(float dt)
 {
     if (!se::ScriptEngine::getInstance()->isValid())
         return;
@@ -273,14 +273,15 @@ void EventDispatcher::dispatchTickEvent(double nowMilliSeconds)
     {
         se::ScriptEngine::getInstance()->getGlobalObject()->getProperty("gameTick", &_tickVal);
     }
+    
+
+    static std::chrono::steady_clock::time_point prevTime;
+    prevTime = std::chrono::steady_clock::now();
 
     se::ValueArray args;
-    se::Value jsNow;
-    if (!float_to_seval(nowMilliSeconds, &jsNow))
-    {
-        CCLOGWARN("WARNING: time argument conversion failed!");
-    }
-    args.push_back(jsNow);
+    long long milliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(prevTime - se::ScriptEngine::getInstance()->getStartTime()).count();
+    args.push_back(se::Value((double)milliSeconds));
+    
     _tickVal.toObject()->call(args, nullptr);
 }
 
