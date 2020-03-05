@@ -220,7 +220,7 @@ void CCMTLCommandBuffer::updateBuffer(GFXBuffer* buff, void* data, uint size, ui
     
 }
 
-void CCMTLCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, GFXBufferTextureCopy* regions, uint count)
+void CCMTLCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions)
 {
     if ( (_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
          (_type == GFXCommandBufferType::SECONDARY) )
@@ -229,7 +229,7 @@ void CCMTLCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GF
     }
 }
 
-void CCMTLCommandBuffer::execute(GFXCommandBuffer** cmd_buffs, uint count)
+void CCMTLCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmd_buffs)
 {
     
 }

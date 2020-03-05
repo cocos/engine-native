@@ -30,8 +30,8 @@ public:
   virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) = 0;
   virtual void draw(GFXInputAssembler* ia) = 0;
   virtual void updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset = 0) = 0;
-  virtual void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, GFXBufferTextureCopy* regions, uint count) = 0;
-  virtual void execute(GFXCommandBuffer** cmd_buffs, uint count) = 0;
+  virtual void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions) = 0;
+  virtual void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs) = 0;
   
   CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXCommandAllocator* allocator() const { return _allocator; }

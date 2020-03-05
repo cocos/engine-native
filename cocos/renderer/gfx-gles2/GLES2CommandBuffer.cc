@@ -243,7 +243,7 @@ void GLES2CommandBuffer::updateBuffer(GFXBuffer* buff, void* data, uint size, ui
   }
 }
 
-void GLES2CommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, GFXBufferTextureCopy* regions, uint count) {
+void GLES2CommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions) {
   if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
       (_type == GFXCommandBufferType::SECONDARY)) {
     GLES2GPUBuffer* gpuBuffer = ((GLES2Buffer*)src)->gpuBuffer();
@@ -253,8 +253,8 @@ void GLES2CommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GF
       cmd->gpuBuffer = gpuBuffer;
       cmd->gpuTexture = gpuTexture;
       cmd->dst_layout = layout;
-      cmd->regions.resize(count);
-      for (uint i = 0; i < count; ++i) {
+      cmd->regions.resize(regions.size());
+      for (uint i = 0; i < static_cast<uint>(regions.size()); ++i) {
         cmd->regions[i] = regions[i];
       }
       
@@ -266,7 +266,8 @@ void GLES2CommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GF
   }
 }
 
-void GLES2CommandBuffer::execute(GFXCommandBuffer** cmd_buffs, uint count) {
+void GLES2CommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmd_buffs) {
+  uint count = static_cast<uint>(cmd_buffs.size());
   for (uint i = 0; i < count; ++i) {
     GLES2CommandBuffer* cmd_buff = (GLES2CommandBuffer*)cmd_buffs[i];
     

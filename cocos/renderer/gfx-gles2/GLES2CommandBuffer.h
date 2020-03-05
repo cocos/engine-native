@@ -35,8 +35,8 @@ class CC_GLES2_API GLES2CommandBuffer : public GFXCommandBuffer {
   void setStencilCompareMask(GFXStencilFace face, int ref, uint mask);
   void draw(GFXInputAssembler* ia);
   void updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset);
-  void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, GFXBufferTextureCopy* regions, uint count);
-  void execute(GFXCommandBuffer** cmd_buffs, uint count);
+  void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions);
+  void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs);
   
  private:
   void BindStates();
