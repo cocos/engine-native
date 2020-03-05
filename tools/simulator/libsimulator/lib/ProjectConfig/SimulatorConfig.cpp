@@ -55,10 +55,10 @@ SimulatorConfig::SimulatorConfig()
     _screenSizeArray.push_back(SimulatorScreenSize("Huawei P9 (1080x1920)", 1080, 1920));
     _screenSizeArray.push_back(SimulatorScreenSize("Huawei Mate9 Pro (1440x2560)", 1440, 2560));
 
-    _screenSizeArray.push_back(SimulatorScreenSize("Goolge Nexus 5 (1080x2880)", 1080, 2880));
-    _screenSizeArray.push_back(SimulatorScreenSize("Goolge Nexus 5X (1079x1919)", 1079, 1919));
-    _screenSizeArray.push_back(SimulatorScreenSize("Goolge Nexus 6 (1442x2562)", 1442, 2562));
-    _screenSizeArray.push_back(SimulatorScreenSize("Goolge Nexus 7 (1920x1200)", 1920, 1200));
+    _screenSizeArray.push_back(SimulatorScreenSize("Google Nexus 5 (1080x2880)", 1080, 2880));
+    _screenSizeArray.push_back(SimulatorScreenSize("Google Nexus 5X (1079x1919)", 1079, 1919));
+    _screenSizeArray.push_back(SimulatorScreenSize("Google Nexus 6 (1442x2562)", 1442, 2562));
+    _screenSizeArray.push_back(SimulatorScreenSize("Google Nexus 7 (1920x1200)", 1920, 1200));
 }
 
 int SimulatorConfig::getScreenSizeCount() const
