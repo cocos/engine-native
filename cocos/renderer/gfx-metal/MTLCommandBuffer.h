@@ -36,7 +36,7 @@ public:
     virtual void draw(GFXInputAssembler* ia) override;
     virtual void updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset = 0) override;
     virtual void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions) override;
-    virtual void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs) override;
+    virtual void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs, uint32_t count) override;
     
     CC_INLINE const CCMTLCommandPackage* getCommandPackage() const { return _commandPackage; }
     

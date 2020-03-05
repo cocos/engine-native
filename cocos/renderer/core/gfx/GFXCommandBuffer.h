@@ -31,7 +31,7 @@ public:
   virtual void draw(GFXInputAssembler* ia) = 0;
   virtual void updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset = 0) = 0;
   virtual void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions) = 0;
-  virtual void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs) = 0;
+  virtual void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs, uint32_t count) = 0;
   
   CC_INLINE GFXDevice* device() const { return _device; }
   CC_INLINE GFXCommandAllocator* allocator() const { return _allocator; }

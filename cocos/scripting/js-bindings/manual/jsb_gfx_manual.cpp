@@ -555,6 +555,54 @@ static bool js_gfx_GFXBlendState_set_targets(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_GFXBlendState_set_targets)
 
+static bool js_gfx_GFXCommandBuffer_execute(se::State& s)
+{
+    cocos2d::GFXCommandBuffer* cobj = (cocos2d::GFXCommandBuffer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXCommandBuffer_execute : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        std::vector<cocos2d::GFXCommandBuffer *> cmdBufs;
+        unsigned int count = 0;
+        ok &= seval_to_uint32(args[1], (uint32_t*)&count);
+        
+        se::Object* jsarr = args[0].toObject();
+        assert(jsarr->isArray());
+        uint32_t len = 0;
+        ok &= jsarr->getArrayLength(&len);
+        if (len < count)
+        {
+            ok = false;
+        }
+        if (ok)
+        {
+            cmdBufs.resize(count);
+            
+            se::Value tmp;
+            for (uint32_t i = 0; i < count; ++i)
+            {
+                ok = jsarr->getArrayElement(i, &tmp);
+                if (!ok || !tmp.isObject())
+                {
+                    cmdBufs.clear();
+                    break;
+                }
+                
+                cocos2d::GFXCommandBuffer *cmdBuf = (cocos2d::GFXCommandBuffer*)tmp.toObject()->getPrivateData();
+                cmdBufs[i] = cmdBuf;
+            }
+        }
+        
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_execute : Error processing arguments");
+        cobj->execute(cmdBufs, count);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_execute)
+
 bool register_all_gfx_manual(se::Object* obj)
 {
     __jsb_cocos2d_GLES2Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES2Device_copyBuffersToTexture));
@@ -565,6 +613,8 @@ bool register_all_gfx_manual(se::Object* obj)
     __jsb_cocos2d_GFXPipelineLayout_proto->defineProperty("layouts", _SE(js_gfx_GFXPipelineLayout_get_layouts), nullptr);
     
     __jsb_cocos2d_GFXBlendState_proto->defineProperty("targets", _SE(js_gfx_GFXBlendState_get_targets), _SE(js_gfx_GFXBlendState_set_targets));
+    
+    __jsb_cocos2d_GFXCommandBuffer_proto->defineFunction("execute", _SE(js_gfx_GFXCommandBuffer_execute));
     
     js_register_gfx_GFXSubPass(obj);
     return true;

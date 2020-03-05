@@ -266,35 +266,34 @@ void GLES2CommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GF
   }
 }
 
-void GLES2CommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmd_buffs) {
-  uint count = static_cast<uint>(cmd_buffs.size());
+void GLES2CommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmd_buffs, uint32_t count) {
   for (uint i = 0; i < count; ++i) {
     GLES2CommandBuffer* cmd_buff = (GLES2CommandBuffer*)cmd_buffs[i];
     
     for (uint j = 0; j < cmd_buff->_cmdPackage->beginRenderPassCmds.size(); ++j) {
       GLES2CmdBeginRenderPass* cmd = cmd_buff->_cmdPackage->beginRenderPassCmds[j];
       ++cmd->ref_count;
-      cmd_buff->_cmdPackage->beginRenderPassCmds.push(cmd);
+      _cmdPackage->beginRenderPassCmds.push(cmd);
     }
     for (uint j = 0; j < cmd_buff->_cmdPackage->bindStatesCmds.size(); ++j) {
       GLES2CmdBindStates* cmd = cmd_buff->_cmdPackage->bindStatesCmds[j];
       ++cmd->ref_count;
-      cmd_buff->_cmdPackage->bindStatesCmds.push(cmd);
+      _cmdPackage->bindStatesCmds.push(cmd);
     }
     for (uint j = 0; j < cmd_buff->_cmdPackage->drawCmds.size(); ++j) {
       GLES2CmdDraw* cmd = cmd_buff->_cmdPackage->drawCmds[j];
       ++cmd->ref_count;
-      cmd_buff->_cmdPackage->drawCmds.push(cmd);
+      _cmdPackage->drawCmds.push(cmd);
     }
     for (uint j = 0; j < cmd_buff->_cmdPackage->updateBufferCmds.size(); ++j) {
       GLES2CmdUpdateBuffer* cmd = cmd_buff->_cmdPackage->updateBufferCmds[j];
       ++cmd->ref_count;
-      cmd_buff->_cmdPackage->updateBufferCmds.push(cmd);
+      _cmdPackage->updateBufferCmds.push(cmd);
     }
     for (uint j = 0; j < cmd_buff->_cmdPackage->copyBufferToTextureCmds.size(); ++j) {
       GLES2CmdCopyBufferToTexture* cmd = cmd_buff->_cmdPackage->copyBufferToTextureCmds[j];
       ++cmd->ref_count;
-      cmd_buff->_cmdPackage->copyBufferToTextureCmds.push(cmd);
+      _cmdPackage->copyBufferToTextureCmds.push(cmd);
     }
     _cmdPackage->cmds.concat(cmd_buff->_cmdPackage->cmds);
     

@@ -229,7 +229,7 @@ void CCMTLCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GF
     }
 }
 
-void CCMTLCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmd_buffs)
+void CCMTLCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmd_buffs, uint32_t count)
 {
     
 }

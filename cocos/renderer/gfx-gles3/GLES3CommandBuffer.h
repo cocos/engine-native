@@ -36,7 +36,7 @@ class CC_GLES3_API GLES3CommandBuffer : public GFXCommandBuffer {
   void draw(GFXInputAssembler* ia);
   void updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset);
   void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions);
-  void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs);
+  void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs, uint32_t count);
   
  private:
   void BindStates();
