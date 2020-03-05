@@ -569,7 +569,9 @@ public class Cocos2dxHelper {
         Cocos2dxAccelerometer.DeviceMotionEvent event = Cocos2dxHelper.sCocos2dxAccelerometer.getDeviceMotionEvent();
         sDeviceMotionValues[0] = event.acceleration.x;
         sDeviceMotionValues[1] = event.acceleration.y;
-        sDeviceMotionValues[2] = event.acceleration.z;
+        // Issue https://github.com/cocos-creator/2d-tasks/issues/2532
+        // use negative event.acceleration.z to match iOS value
+        sDeviceMotionValues[2] = - event.acceleration.z;
 
         sDeviceMotionValues[3] = event.accelerationIncludingGravity.x;
         sDeviceMotionValues[4] = event.accelerationIncludingGravity.y;
