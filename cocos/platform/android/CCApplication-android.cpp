@@ -59,16 +59,6 @@ void Application::updateViewSize(int width, int height)
     _viewSize.y = height;
 }
 
-extern "C" {
-    void Java_org_cocos2dx_lib_Cocos2dxGLSurfaceView_nativeOnSizeChanged(JNIEnv * env, jobject obj, jint width, jint height) {
-        auto inst = Application::getInstance();
-        // nativeOnSizeChanged is firstly called before Application initiating.
-        if (inst != nullptr) {
-            inst->updateViewSize(width, height);
-        }
-    }
-}
-
 Application* Application::_instance = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
