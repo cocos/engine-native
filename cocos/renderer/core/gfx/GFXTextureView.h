@@ -19,7 +19,7 @@ class CC_CORE_API GFXTextureView : public Object {
   CC_INLINE GFXTextureViewType getType() const { return _type; }
   CC_INLINE GFXFormat getFormat() const { return _format; }
   CC_INLINE uint getBaseLevel() const { return _baseLevel; }
-  CC_INLINE uint getVevelCount() const { return _levelCount; }
+  CC_INLINE uint getLevelCount() const { return _levelCount; }
   CC_INLINE uint getBaseLayer() const { return _baseLayer; }
   CC_INLINE uint getLayerCount() const { return _layerCount; }
   
