@@ -733,7 +733,7 @@ void GLES3CmdFuncCreateTexture(GLES3Device* device, GLES3GPUTexture* gpuTexture)
             for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
               glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternelFmt, w, h, 0, gpuTexture->glFormat, gpuTexture->glType, nullptr);
               w = std::max(1U, w >> 1);
-              h = std::max(1U, w >> 1);
+              h = std::max(1U, h >> 1);
             }
           }
         } else {

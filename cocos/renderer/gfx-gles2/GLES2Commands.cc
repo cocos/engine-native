@@ -657,7 +657,7 @@ void GLES2CmdFuncCreateTexture(GLES2Device* device, GLES2GPUTexture* gpuTexture)
               uint img_size = GFXFormatSize(gpuTexture->format, w, h, 1);
               glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternelFmt, w, h, 0, img_size, nullptr);
               w = std::max(1U, w >> 1);
-              h = std::max(1U, w >> 1);
+              h = std::max(1U, h >> 1);
             }
           }
         }
