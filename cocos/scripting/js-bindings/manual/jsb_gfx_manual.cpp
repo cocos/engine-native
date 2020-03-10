@@ -603,6 +603,67 @@ static bool js_gfx_GFXCommandBuffer_execute(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_GFXCommandBuffer_execute)
 
+static bool js_gfx_GFXRenderPass_getColorAttachments(se::State& s)
+{
+    cocos2d::GFXRenderPass* cobj = (cocos2d::GFXRenderPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXRenderPass_getColorAttachments : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const std::vector<cocos2d::GFXColorAttachment>& result = cobj->getColorAttachments();
+        
+        se::Value *attachment = &s.rval();
+        se::HandleObject arr(se::Object::createArrayObject(result.size()));
+        attachment->setObject(arr);
+        
+        uint32_t i  = 0;
+        for (const auto&attach : result)
+        {
+            se::Value out = se::Value::Null;
+            native_ptr_to_seval(attach, &out);
+            arr->setArrayElement(i, out);
+            
+            ++i;
+        }
+        
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_getColorAttachments : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_gfx_GFXRenderPass_getColorAttachments)
+
+static bool js_gfx_GFXRenderPass_getSubPasses(se::State& s)
+{
+    cocos2d::GFXRenderPass* cobj = (cocos2d::GFXRenderPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXRenderPass_getSubPasses : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const std::vector<cocos2d::GFXSubPass>& result = cobj->getSubPasses();
+        se::Value *subpass = &s.rval();
+        se::HandleObject arr(se::Object::createArrayObject(result.size()));
+        subpass->setObject(arr);
+
+        uint32_t i = 0;
+        for(const auto& pass : result)
+        {
+            se::Value value = se::Value::Null;
+            ok &= native_ptr_to_seval(pass, &value);
+            arr->setArrayElement(i, value);
+            i++;
+        }
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_getSubPasses : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_gfx_GFXRenderPass_getSubPasses)
+
 bool register_all_gfx_manual(se::Object* obj)
 {
     __jsb_cocos2d_GLES2Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES2Device_copyBuffersToTexture));
@@ -615,6 +676,9 @@ bool register_all_gfx_manual(se::Object* obj)
     __jsb_cocos2d_GFXBlendState_proto->defineProperty("targets", _SE(js_gfx_GFXBlendState_get_targets), _SE(js_gfx_GFXBlendState_set_targets));
     
     __jsb_cocos2d_GFXCommandBuffer_proto->defineFunction("execute", _SE(js_gfx_GFXCommandBuffer_execute));
+    
+    __jsb_cocos2d_GFXRenderPass_proto->defineProperty("colorAttachments", _SE(js_gfx_GFXRenderPass_getColorAttachments), nullptr);
+    __jsb_cocos2d_GFXRenderPass_proto->defineProperty("subPasses", _SE(js_gfx_GFXRenderPass_getSubPasses), nullptr);
     
     js_register_gfx_GFXSubPass(obj);
     return true;
