@@ -79,6 +79,7 @@ void MeshAssembler::updateIAData(std::size_t index, VertexFormat* vfmt, se_objec
     auto ib = ia->getIndexBuffer();
     if (!ib) {
         ib = new IndexBuffer();
+        ib->autorelease();
         ib->init(DeviceGraphics::getInstance(), IndexFormat::UINT16, Usage::STATIC, data->getIndices(), data->getIBytes(), (uint32_t)data->getIBytes() / sizeof(unsigned short));
         ia->setIndexBuffer(ib);
     }
@@ -89,6 +90,7 @@ void MeshAssembler::updateIAData(std::size_t index, VertexFormat* vfmt, se_objec
     auto vb = ia->getVertexBuffer();
     if (!vb) {
         vb = new VertexBuffer();
+        vb->autorelease();
         vb->init(DeviceGraphics::getInstance(), vfmt, Usage::STATIC, data->getVertices(), data->getVBytes(), (uint32_t)data->getVBytes() / vfmt->getBytes());
         ia->setVertexBuffer(vb);
     }
