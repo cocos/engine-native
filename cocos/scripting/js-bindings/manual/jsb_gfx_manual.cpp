@@ -653,8 +653,11 @@ static bool js_gfx_GFXInputAssembler_extractDrawInfo(se::State& s)
         attrValue.setUint32(nativeDrawInfo.firstIndex);
         drawInfo->setProperty("firstIndex", attrValue);
         
+        attrValue.setUint32(nativeDrawInfo.vertexOffset);
+        drawInfo->setProperty("firstInstance", attrValue);
+        
         attrValue.setUint32(nativeDrawInfo.instanceCount);
-        drawInfo->setProperty("instanceCount", attrValue);
+        drawInfo->setProperty("vertexOffset", attrValue);
         
         attrValue.setUint32(nativeDrawInfo.firstInstance);
         drawInfo->setProperty("firstInstance", attrValue);
