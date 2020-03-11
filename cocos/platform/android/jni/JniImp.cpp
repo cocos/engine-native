@@ -314,20 +314,7 @@ extern "C"
 
     JNIEXPORT void JNICALL JNI_RENDER(nativeOnSurfaceChanged)(JNIEnv*  env, jobject thiz, jint w, jint h)
     {
-        auto inst = Application::getInstance();
-        // nativeOnSizeChanged is firstly called before Application initiating.
-        if (inst != nullptr) {
-            inst->updateViewSize(w, h);
-        }
-    }
-
-    JNIEXPORT void JNICALL JNI_RENDER(nativeOnSizeChanged)(JNIEnv*  env, jobject thiz, jint w, jint h)
-    {
-        auto inst = Application::getInstance();
-        // nativeOnSizeChanged is firstly called before Application initiating.
-        if (inst != nullptr) {
-            inst->updateViewSize(w, h);
-        }
+        //REFINE
     }
 
     /***********************************************************
