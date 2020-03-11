@@ -317,7 +317,7 @@ extern "C"
         auto inst = Application::getInstance();
         // nativeOnSizeChanged is firstly called before Application initiating.
         if (inst != nullptr) {
-            inst->updateViewSize(width, height);
+            inst->updateViewSize(w, h);
         }
     }
 
@@ -326,7 +326,7 @@ extern "C"
         auto inst = Application::getInstance();
         // nativeOnSizeChanged is firstly called before Application initiating.
         if (inst != nullptr) {
-            inst->updateViewSize(width, height);
+            inst->updateViewSize(w, h);
         }
     }
 
