@@ -228,6 +228,7 @@ void Application::setDisplayStats(bool isShow) {
 }
 
 void Application::setCursorEnabled(bool value){
+    glfwSetInputMode(CAST_VIEW(_view)->getGLFWWindow(), GLFW_CURSOR, value ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
 Application::LanguageType Application::getCurrentLanguage() const

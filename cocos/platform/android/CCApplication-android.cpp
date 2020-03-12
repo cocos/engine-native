@@ -26,7 +26,6 @@ THE SOFTWARE.
 #include "platform/CCApplication.h"
 #include <EGL/egl.h>
 #include <cstring>
-#include <jni.h>
 #include "platform/android/jni/JniImp.h"
 #include "platform/android/CCGL-android.h"
 #include "base/CCScheduler.h"
