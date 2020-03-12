@@ -90,7 +90,7 @@ public:
     virtual void onPause();
     virtual void onResume();
     
-    void tick()
+    CC_DLL inline void tick()
     {
         static std::chrono::steady_clock::time_point prevTime;
         static std::chrono::steady_clock::time_point now;
@@ -114,6 +114,11 @@ public:
      * @param fps The preferred frame rate for main loop callback.
      */
     void setPreferredFramesPerSecond(int fps);
+
+    /**
+     * @brief Get the preferred frame rate for main loop callback.
+     */
+    inline int getPreferredFramesPerSecond() const { return _fps; }
 
     /**
      @brief Get current language config.

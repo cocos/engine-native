@@ -23,7 +23,6 @@
  ****************************************************************************/
 #include "EditBox.h"
 #include "platform/CCApplication.h"
-#include "platform/desktop/CCGLView-desktop.h"
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include <windows.h>
@@ -37,6 +36,9 @@ NS_CC_BEGIN
  Global variables and functions.
 ************************************************************************/
 
+extern HWND get_application_window();
+
+
 namespace
 {
     HWND g_hwndEditBox = nullptr;
@@ -45,8 +47,7 @@ namespace
 
     HWND getCocosWindow()
     {
-        auto glfwWindow = ((GLView*)Application::getInstance()->getView())->getGLFWWindow();
-        return glfwGetWin32Window(glfwWindow);
+        return cocos2d::get_application_window();
     }
 
     int getCocosWindowHeight()

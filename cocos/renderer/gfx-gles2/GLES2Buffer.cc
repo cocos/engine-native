@@ -82,6 +82,8 @@ void GLES2Buffer::resize(uint size) {
 }
 
 void GLES2Buffer::update(void* buffer, uint offset, uint size) {
+  CCASSERT(size != 0, "Should not update buffer with 0 bytes of data");
+  CCASSERT(buffer, "Buffer should not be nullptr");
   if (_buffer) {
     memcpy(_buffer + offset, buffer, size);
   }
