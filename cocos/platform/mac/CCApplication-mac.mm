@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "scripting/js-bindings/event/CustomEventTypes.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "audio/include/AudioEngine.h"
+#include "platform/CCDevice.h"
 
 NS_CC_BEGIN
 
@@ -40,12 +41,12 @@ namespace
     bool setCanvasCallback(se::Object* global)
     {
         auto viewSize = Application::getInstance()->getViewSize();
-        auto devicePixelRatio = Device::getInstance()->getDevicePixelRatio();
+        auto devicePixelRatio = Device::getDevicePixelRatio();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
                 (int)(viewSize.x  / devicePixelRatio),
-                (int)(viewSize.y  / devicePixelRatio)
+                (int)(viewSize.y  / devicePixelRatio),
                 (uintptr_t)[NSApplication sharedApplication].mainWindow.contentView);
         se->evalString(commandBuf);
         

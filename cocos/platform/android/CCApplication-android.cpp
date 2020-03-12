@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "platform/android/jni/JniHelper.h"
+#include "platform/CCDevice.h"
 
 #define  LOG_APP_TAG    "CCApplication_android Debug"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_APP_TAG,__VA_ARGS__)
@@ -53,10 +54,10 @@ namespace
         se::AutoHandleScope scope;
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
-        int devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
+        int devicePixelRatio = Device::getDevicePixelRatio();
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
                 (int)(viewSize.x  / devicePixelRatio),
-                (int)(viewSize.y  / devicePixelRatio)
+                (int)(viewSize.y  / devicePixelRatio),
                 (uintptr_t)cocos2d::JniHelper::getAndroidApp()->window);
         se->evalString(commandBuf);
 
