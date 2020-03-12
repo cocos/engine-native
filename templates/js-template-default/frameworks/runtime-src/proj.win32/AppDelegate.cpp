@@ -8,6 +8,8 @@
 #include "platform/CCStdC.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 
+
+
 namespace
 {
     std::weak_ptr<View> gView;
@@ -65,6 +67,14 @@ namespace
 
         se->evalString(ss.str().c_str());
         return true;
+    }
+}
+
+
+
+extern "C" {
+    HWND cc_get_application_window() {
+        return gView.lock()->getWindowHandler();
     }
 }
 

@@ -68,6 +68,12 @@ namespace
     }
 }
 
+extern "C" {
+    HWND cc_get_application_window() {
+        return gView.lock()->getWindowHandler();
+    }
+}
+
 
 AppDelegage::AppDelegage(const std::string &name, int width, int height) 
 {

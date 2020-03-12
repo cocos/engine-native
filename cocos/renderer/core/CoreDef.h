@@ -148,7 +148,6 @@
 #if CC_COMPILER == CC_COMPILER_MSVC
 #   if CC_COMPILER_VERSION >= 120
 #       define CC_INLINE __forceinline
-//#       define CC_INLINE 
 #	else
 #       define CC_INLINE inline
 #   endif
@@ -275,19 +274,18 @@ Note:
 #else
 #endif
 
-#undef CC_MEMORY_TRACKER
-
 // use simd
 //#define CC_USE_SIMD
 
 // Memory Allocator
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-#if defined(CC_MEMORY_TRACKER)
+#  define CC_MEMORY_ALLOCATOR  CC_MEMORY_ALLOCATOR_STD
+#  undef CC_MEMORY_TRACKER
+//#if defined(CC_MEMORY_TRACKER)
 //#	define CC_MEMORY_ALLOCATOR  CC_MEMORY_ALLOCATOR_JEMALLOC
-#	define CC_MEMORY_ALLOCATOR  CC_MEMORY_ALLOCATOR_STD
-#else
-#	define CC_MEMORY_ALLOCATOR  CC_MEMORY_ALLOCATOR_STD
-#endif
+//#else
+//#	define CC_MEMORY_ALLOCATOR  CC_MEMORY_ALLOCATOR_STD
+//#endif
 #elif (CC_PLATFORM == CC_PLATFORM_ANDROID)
 #if defined(CC_MEMORY_TRACKER)
 #	define CC_MEMORY_ALLOCATOR	CC_MEMORY_ALLOCATOR_JEMALLOC

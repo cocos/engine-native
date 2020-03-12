@@ -377,175 +377,175 @@
     <ClCompile Include="..\cocos\renderer\core\math\CCCoreMath.cc">
       <Filter>renderer\core\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommy.c">
+    <ClCompile Include="..\external\sources\tommyds\tommy.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyalloc.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyalloc.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarray.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyarray.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarrayblk.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyarrayblk.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarrayblkof.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyarrayblkof.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarrayof.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyarrayof.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhash.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyhash.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhashdyn.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyhashdyn.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhashlin.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyhashlin.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhashtbl.c">
+    <ClCompile Include="..\external\sources\tommyds\tommyhashtbl.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommylist.c">
+    <ClCompile Include="..\external\sources\tommyds\tommylist.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommytree.c">
+    <ClCompile Include="..\external\sources\tommyds\tommytree.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommytrie.c">
+    <ClCompile Include="..\external\sources\tommyds\tommytrie.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommytrieinp.c">
+    <ClCompile Include="..\external\sources\tommyds\tommytrieinp.c">
       <Filter>external\tommy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\scripting\js-bindings\auto\jsb_gfx_auto.cpp">
+    <ClCompile Include="..\cocos\scripting\js-bindings\auto\jsb_gfx_auto.cpp">
       <Filter>js-bindings\auto</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\scripting\js-bindings\manual\jsb_gfx_manual.cpp">
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_gfx_manual.cpp">
       <Filter>js-bindings\manual</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\platform\win32\CCCanvasRenderingContext2D-win32.cpp">
+    <ClCompile Include="..\cocos\platform\win32\CCCanvasRenderingContext2D-win32.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2BindingLayout.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2BindingLayout.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Buffer.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Buffer.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2CommandAllocator.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2CommandAllocator.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2CommandBuffer.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2CommandBuffer.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Commands.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Commands.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Context.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Context.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Device.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Device.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Framebuffer.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Framebuffer.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2InputAssembler.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2InputAssembler.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2PipelineLayout.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2PipelineLayout.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2PipelineState.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2PipelineState.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Queue.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Queue.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2RenderPass.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2RenderPass.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Sampler.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Sampler.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Shader.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Shader.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Std.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Std.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Texture.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Texture.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2TextureView.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2TextureView.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\gles2w.c">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\gles2w.c">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Window.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles2\GLES2Window.cc">
       <Filter>renderer\gfx-gles2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3BindingLayout.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3BindingLayout.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Buffer.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Buffer.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3CommandAllocator.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3CommandAllocator.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3CommandBuffer.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3CommandBuffer.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Commands.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Commands.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Context.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Context.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Device.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Device.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Framebuffer.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Framebuffer.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3InputAssembler.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3InputAssembler.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3PipelineLayout.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3PipelineLayout.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3PipelineState.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3PipelineState.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Queue.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Queue.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3RenderPass.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3RenderPass.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Sampler.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Sampler.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Shader.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Shader.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Std.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Std.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Texture.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Texture.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3TextureView.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3TextureView.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\gles3w.c">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\gles3w.c">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Window.cc">
+    <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Window.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1055,199 +1055,199 @@
     <ClInclude Include="..\cocos\renderer\core\math\CCCoreMath.h">
       <Filter>renderer\core\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\platform\CCStdC.h">
+    <ClInclude Include="..\cocos\platform\CCStdC.h">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommy.h">
+    <ClInclude Include="..\external\sources\tommyds\tommy.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyalloc.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyalloc.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarray.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyarray.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarrayblk.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyarrayblk.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarrayblkof.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyarrayblkof.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyarrayof.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyarrayof.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommychain.h">
+    <ClInclude Include="..\external\sources\tommyds\tommychain.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhash.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyhash.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhashdyn.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyhashdyn.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhashlin.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyhashlin.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommyhashtbl.h">
+    <ClInclude Include="..\external\sources\tommyds\tommyhashtbl.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommylist.h">
+    <ClInclude Include="..\external\sources\tommyds\tommylist.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommytree.h">
+    <ClInclude Include="..\external\sources\tommyds\tommytree.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommytrie.h">
+    <ClInclude Include="..\external\sources\tommyds\tommytrie.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommytrieinp.h">
+    <ClInclude Include="..\external\sources\tommyds\tommytrieinp.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\external\sources\tommyds\tommytypes.h">
+    <ClInclude Include="..\external\sources\tommyds\tommytypes.h">
       <Filter>external\tommy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\scripting\js-bindings\auto\jsb_gfx_auto.hpp">
+    <ClInclude Include="..\cocos\scripting\js-bindings\auto\jsb_gfx_auto.hpp">
       <Filter>js-bindings\auto</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\scripting\js-bindings\manual\jsb_gfx_manual.hpp">
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_gfx_manual.hpp">
       <Filter>js-bindings\manual</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GFXGLES2.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GFXGLES2.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2BindingLayout.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2BindingLayout.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Buffer.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Buffer.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2CommandAllocator.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2CommandAllocator.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2CommandBuffer.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2CommandBuffer.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Commands.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Commands.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Context.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Context.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Device.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Device.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Framebuffer.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Framebuffer.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2GPUObjects.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2GPUObjects.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2InputAssembler.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2InputAssembler.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2PipelineLayout.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2PipelineLayout.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2PipelineState.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2PipelineState.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Queue.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Queue.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2RenderPass.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2RenderPass.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Sampler.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Sampler.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Shader.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Shader.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2StateCache.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2StateCache.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Std.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Std.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Texture.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Texture.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2TextureView.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2TextureView.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\gles2w.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\gles2w.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles2\GLES2Window.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles2\GLES2Window.h">
       <Filter>renderer\gfx-gles2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GFXGLES3.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GFXGLES3.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3BindingLayout.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3BindingLayout.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Buffer.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Buffer.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3CommandAllocator.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3CommandAllocator.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3CommandBuffer.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3CommandBuffer.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Commands.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Commands.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Context.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Context.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Device.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Device.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Framebuffer.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Framebuffer.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3GPUObjects.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3GPUObjects.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3InputAssembler.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3InputAssembler.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3PipelineLayout.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3PipelineLayout.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3PipelineState.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3PipelineState.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Queue.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Queue.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3RenderPass.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3RenderPass.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Sampler.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Sampler.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Shader.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Shader.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3StateCache.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3StateCache.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Std.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Std.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Texture.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Texture.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3TextureView.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3TextureView.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\gles3w.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\gles3w.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\renderer\gfx-gles3\GLES3Window.h">
+    <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Window.h">
       <Filter>renderer\gfx-gles3</Filter>
     </ClInclude>
   </ItemGroup>

@@ -36,7 +36,7 @@ NS_CC_BEGIN
  Global variables and functions.
 ************************************************************************/
 
-extern HWND get_application_window();
+extern HWND cc_get_application_window();
 
 
 namespace
@@ -45,14 +45,9 @@ namespace
     WNDPROC g_prevMainWindowProc = nullptr;
     se::Value g_textInputCallback;
 
-    HWND getCocosWindow()
+     int getCocosWindowHeight()
     {
-        return cocos2d::get_application_window();
-    }
-
-    int getCocosWindowHeight()
-    {
-        HWND parent = getCocosWindow();
+        HWND parent = cc_get_application_window();
         RECT rect;
         GetClientRect(parent, &rect);
         return (rect.bottom - rect.top);
@@ -117,7 +112,7 @@ namespace
           case WM_LBUTTONDOWN:
               EditBox::complete();
               EditBox::hide();
-              SetFocus(getCocosWindow());
+              SetFocus(cc_get_application_window());
               break;
           case WM_COMMAND:
               if (EN_CHANGE == HIWORD(wParam))
@@ -140,7 +135,7 @@ void EditBox::show(const EditBox::ShowInfo& showInfo)
     int windowHeight = getCocosWindowHeight();
     if (! g_hwndEditBox)
     {
-        HWND parent = getCocosWindow();
+        HWND parent = cc_get_application_window();
         g_prevMainWindowProc = (WNDPROC)SetWindowLongPtr(parent, GWL_WNDPROC, (LONG_PTR)mainWindowProc);
 
         UINT32 flags = WS_CHILD | ES_LEFT | WS_TABSTOP | ES_AUTOHSCROLL;
@@ -198,7 +193,7 @@ void EditBox::hide()
     DestroyWindow(g_hwndEditBox);
     g_hwndEditBox = nullptr;
 
-    SetWindowLongPtr(getCocosWindow(), GWL_WNDPROC, (LONG_PTR)g_prevMainWindowProc);
+    SetWindowLongPtr(cc_get_application_window(), GWL_WNDPROC, (LONG_PTR)g_prevMainWindowProc);
 }
 
 void EditBox::complete()

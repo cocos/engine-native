@@ -538,7 +538,7 @@ private:
         }
         else if (_textAlign == CanvasTextAlign::RIGHT)
         {
-            point[0] -= textSize[1];
+            point[0] -= textSize[0];
         }
 
         if (_textBaseLine == CanvasTextBaseline::TOP)

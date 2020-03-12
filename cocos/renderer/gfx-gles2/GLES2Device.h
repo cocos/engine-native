@@ -39,7 +39,7 @@ public:
   CC_INLINE bool useInstancedArrays() const { return _useInstancedArrays; }
   CC_INLINE bool useDiscardFramebuffer() const { return _useDiscardFramebuffer; }
 
-  bool checkExtension(const String& extension) const {
+  CC_INLINE bool checkExtension(const String& extension) const {
     for (size_t i = 0; i < _extensions.size(); ++i) {
       if (_extensions[i].find(extension) != String::npos) {
         return true;

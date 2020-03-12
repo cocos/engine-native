@@ -90,7 +90,7 @@ public:
     virtual void onPause();
     virtual void onResume();
     
-    CC_DLL inline void tick()
+    void tick()
     {
         static std::chrono::steady_clock::time_point prevTime;
         static std::chrono::steady_clock::time_point now;
