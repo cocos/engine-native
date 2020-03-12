@@ -47,16 +47,16 @@ extern "C" size_t __ctype_get_mb_cur_max(void)
 
 namespace
 {
-    int g_width = 0;
-    int g_height = 0;
     bool setCanvasCallback(se::Object* global)
     {
+        auto viewSize = Application::getInstance()->getViewSize();
         se::AutoHandleScope scope;
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
+        int devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
-                g_width,
-                g_height,
+                (int)(viewSize.x  / devicePixelRatio),
+                (int)(viewSize.y  / devicePixelRatio)
                 (uintptr_t)cocos2d::JniHelper::getAndroidApp()->window);
         se->evalString(commandBuf);
 
@@ -74,8 +74,7 @@ Application::Application(int width, int height)
 {
     Application::_instance = this;
     _scheduler = std::make_shared<Scheduler>();
-    g_width = width;
-    g_height = height;
+    updateViewSize(width, height);
 }
 
 Application::~Application()

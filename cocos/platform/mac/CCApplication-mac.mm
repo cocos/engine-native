@@ -37,15 +37,15 @@ NS_CC_BEGIN
 
 namespace
 {
-    int g_width = 0;
-    int g_height = 0;
     bool setCanvasCallback(se::Object* global)
     {
+        auto viewSize = Application::getInstance()->getViewSize();
+        auto devicePixelRatio = Device::getInstance()->getDevicePixelRatio();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
-                g_width,
-                g_height,
+                (int)(viewSize.x  / devicePixelRatio),
+                (int)(viewSize.y  / devicePixelRatio)
                 (uintptr_t)[NSApplication sharedApplication].mainWindow.contentView);
         se->evalString(commandBuf);
         
@@ -64,9 +64,6 @@ std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 Application::Application(int width, int height)
 {
     Application::_instance = this;
-
-    g_width = width;
-    g_height = height;
 
     _scheduler = std::make_shared<Scheduler>();
 

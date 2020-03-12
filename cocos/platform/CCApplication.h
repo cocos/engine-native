@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
+#include "math/Vec2.h"
 
 NS_CC_BEGIN
 /**
@@ -162,11 +163,15 @@ public:
 
     std::string getSystemVersion();
 
+    inline void updateViewSize(int width, int height) { _viewSize.x = width; _viewSize.y = height; }
+    inline const cocos2d::Vec2& getViewSize() const { return _viewSize; }
+
 private:
     static Application* _instance;
     static std::shared_ptr<Scheduler> _scheduler;
     void* _delegate = nullptr;
     int _fps = 60;
+    cocos2d::Vec2 _viewSize;
 };
 
 // end of platform group
