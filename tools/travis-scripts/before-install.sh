@@ -38,7 +38,7 @@ function install_clang()
         tar xpf ./clang+llvm-5.0.0-linux-x86_64-ubuntu14.04.tar.xz
         cp ./clang+llvm-5.0.0-linux-x86_64-ubuntu14.04/lib/libclang.so.5.0 $COCOS2DX_ROOT/tools/bindings-generator/libclang/libclang.so
     else
-        echo "Skip downloading ${clang}"
+        echo "Skip downloading clang"
         echo "  file $COCOS2DX_ROOT/tools/bindings-generator/libclang/libclang.so exists!"
     fi
 }
