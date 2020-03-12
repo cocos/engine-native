@@ -34,23 +34,31 @@
 #include "CCEAGLView-ios.h"
 #include "base/CCGLUtils.h"
 #include "audio/include/AudioEngine.h"
-#include "platform/CCDevice.h"
+
 
 namespace
 {
+    cocos2d::Vec2 getResolution()
+    {
+        CGRect bounds = [UIScreen mainScreen].bounds;
+        float scale = [[UIScreen mainScreen] scale];
+        float width = bounds.size.width * scale;
+        float height = bounds.size.height * scale;
+
+        return cocos2d::Vec2(width, height);
+    }
+
     bool setCanvasCallback(se::Object* global)
     {
-        auto &viewSize = cocos2d::Application::getInstance()->getViewSize();
+        cocos2d::Vec2 resolution = getResolution();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
-        int screenScale =  cocos2d::Device::getDevicePixelRatio();
         char commandBuf[200] = {0};
-        //set window.innerWidth/innerHeight in CSS pixel units, not physical pixel units.
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
-                (int)(viewSize.x / screenScale / devicePixelRatio),
-                (int)(viewSize.y / screenScale / devicePixelRatio));
+                (int)(resolution.x / devicePixelRatio),
+                (int)(resolution.y / devicePixelRatio));
         se->evalString(commandBuf);
-        cocos2d::ccViewport(0,0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
+        cocos2d::ccViewport(0, 0, resolution.x / devicePixelRatio, resolution.y / devicePixelRatio);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -189,7 +197,7 @@ namespace
 
         if (downsampleEnabled)
             _application->getRenderTexture()->draw();
-
+        
         [(CCEAGLView*)(_application->getView()) swapBuffers];
         cocos2d::PoolManager::getInstance()->getCurrentPool()->clear();
 
@@ -220,7 +228,6 @@ Application::Application(const std::string& name, int width, int height)
     EventDispatcher::init();
 
     _delegate = [[MainLoop alloc] initWithApplication:this];
-    updateViewSize(width, height);
 }
 
 Application::~Application()
@@ -245,17 +252,6 @@ Application::~Application()
     _renderTexture = nullptr;
 
     Application::_instance = nullptr;
-}
-
-const cocos2d::Vec2& Application::getViewSize() const
-{
-    return _viewSize;
-}
-
-void Application::updateViewSize(int width, int height)
-{
-    _viewSize.x = width;
-    _viewSize.y = height;
 }
 
 void Application::start()
@@ -284,9 +280,6 @@ void Application::setPreferredFramesPerSecond(int fps)
     [(MainLoop*)_delegate setPreferredFPS: fps];
 }
 
-void Application::setCursorEnabled(bool value){
-}
-
 std::string Application::getCurrentLanguageCode() const
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -310,6 +303,10 @@ void Application::setDisplayStats(bool isShow)
     char commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
+}
+
+void Application::setCursorEnabled(bool value)
+{
 }
 
 Application::LanguageType Application::getCurrentLanguage() const
@@ -355,7 +352,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return [(UIView*)_view contentScaleFactor];
+    return 1.f;
 }
 
 GLint Application::getMainFBO() const
