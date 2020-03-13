@@ -516,12 +516,7 @@ private:
                     // so the red value is equal to alpha value. And we should keep this value
                     // as it includes anti-atlas information.
                     uint8_t alpha = GetRValue(clr);
-#if 0
-                    val = (255 << 24) | (alpha << 16) | (alpha << 8) | alpha;
-#else
                     val = (alpha << 24) | textColor;
-#endif
-
                     ++pPixel;
                     ++pImage;
                 }
