@@ -49,6 +49,9 @@ extern "C" size_t __ctype_get_mb_cur_max(void)
 PFNGLGENVERTEXARRAYSOESPROC glGenVertexArraysOESEXT = 0;
 PFNGLBINDVERTEXARRAYOESPROC glBindVertexArrayOESEXT = 0;
 PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = 0;
+PFNGLVERTEXATTRIBDIVISOREXTPROC glVertexAttribDivisorEXTEXT = 0;
+PFNGLDRAWARRAYSINSTANCEDEXTPROC glDrawArraysInstancedEXTEXT = 0;
+PFNGLDRAWELEMENTSINSTANCEDEXTPROC glDrawElementsInstancedEXTEXT = 0;
 
 NS_CC_BEGIN
 
@@ -64,13 +67,16 @@ std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 Application::Application(const std::string& name, int width, int height)
 {
     Application::_instance = this;
-    Configuration::getInstance();
 
+    ::glGenVertexArraysOESEXT = (PFNGLGENVERTEXARRAYSOESPROC)eglGetProcAddress("glGenVertexArraysOES");
+    ::glBindVertexArrayOESEXT = (PFNGLBINDVERTEXARRAYOESPROC)eglGetProcAddress("glBindVertexArrayOES");
+    ::glDeleteVertexArraysOESEXT = (PFNGLDELETEVERTEXARRAYSOESPROC)eglGetProcAddress("glDeleteVertexArraysOES");
+    ::glVertexAttribDivisorEXTEXT = (PFNGLVERTEXATTRIBDIVISOREXTPROC)eglGetProcAddress("glVertexAttribDivisor");
+    ::glDrawArraysInstancedEXTEXT = (PFNGLDRAWARRAYSINSTANCEDEXTPROC)eglGetProcAddress("glDrawArraysInstanced");
+    ::glDrawElementsInstancedEXTEXT = (PFNGLDRAWELEMENTSINSTANCEDEXTPROC)eglGetProcAddress("glDrawElementsInstanced");
+
+    Configuration::getInstance(); // extension detection depends on the preceding functions
     _scheduler = std::make_shared<Scheduler>();
-
-    PFNGLGENVERTEXARRAYSOESPROC glGenVertexArraysOESEXT = (PFNGLGENVERTEXARRAYSOESPROC)eglGetProcAddress("glGenVertexArraysOES");
-    PFNGLBINDVERTEXARRAYOESPROC glBindVertexArrayOESEXT = (PFNGLBINDVERTEXARRAYOESPROC)eglGetProcAddress("glBindVertexArrayOES");
-    PFNGLDELETEVERTEXARRAYSOESPROC glDeleteVertexArraysOESEXT = (PFNGLDELETEVERTEXARRAYSOESPROC)eglGetProcAddress("glDeleteVertexArraysOES");
 
     _renderTexture = new RenderTexture(width, height);
     updateViewSize(width, height);

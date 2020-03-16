@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 #include "base/CCConfiguration.h"
 #include "platform/CCFileUtils.h"
+#include "platform/CCGL.h"
 #include "base/CCLog.h"
 
 #include "base/etc2.h"
@@ -51,6 +52,7 @@ Configuration::Configuration()
 , _supportsNPOT(false)
 , _supportsBGRA8888(false)
 , _supportsDiscardFramebuffer(false)
+, _supportsInstancing(false)
 , _supportsShareableVAO(false)
 , _supportsOESDepth24(false)
 , _supportsOESPackedDepthStencil(false)
@@ -178,14 +180,21 @@ void Configuration::gatherGPUInfo()
     if (_isOpenglES3) {
         _supportsFloatTexture = true;
         _supportsShareableVAO = true;
+        _supportsInstancing = true;
     }
     else {
         _supportsFloatTexture = checkForGLExtension("texture_float");
         _valueDict["gl.supports_float_texture"] = Value(_supportsFloatTexture);
-        // todo: half float
+
+        _supportsHalfFloatTexture = checkForGLExtension("texture_half_float");
+        _valueDict["gl.supports_half_float_texture"] = Value(_supportsHalfFloatTexture);
 
         _supportsShareableVAO = checkForGLExtension("vertex_array_object");
         _valueDict["gl.supports_vertex_array_object"] = Value(_supportsShareableVAO);
+
+        _supportsInstancing = checkForGLExtension("draw_instanced");
+        if (!_supportsInstancing) { _supportsInstancing = glDrawElementsInstanced != 0; }
+        _valueDict["gl.supports_instancing"] = Value(_supportsInstancing);
     }
 
     CHECK_GL_ERROR_DEBUG();
@@ -312,6 +321,11 @@ bool Configuration::supportsShareableVAO() const
 #endif
 }
 
+bool Configuration::supportsInstancing() const
+{
+    return _supportsInstancing;
+}
+
 bool Configuration::supportsMapBuffer() const
 {
     // Fixes Github issue #16123
@@ -337,6 +351,11 @@ bool Configuration::supportsOESDepth24() const
 bool Configuration::supportsFloatTexture() const
 {
     return _supportsFloatTexture;
+}
+
+bool Configuration::supportsHalfFloatTexture() const
+{
+    return _supportsHalfFloatTexture;
 }
 
 bool Configuration::supportsOESPackedDepthStencil() const

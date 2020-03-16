@@ -150,6 +150,13 @@ public:
      */
     bool supportsShareableVAO() const;
 
+    /** Whether or not instanced drawing are supported.
+     *
+     * @return Is true if supports instanced drawing.
+     * @since v3.9.0
+     */
+    bool supportsInstancing() const;
+
     /** Whether or not OES_depth24 is supported.
      *
      * @return Is true if supports OES_depth24.
@@ -166,10 +173,17 @@ public:
     
     /** Whether or not float texture is supported.
      *
-     * @return Is true if supports texture.
+     * @return Is true if supports float texture.
      * @since v3.9.0
      */
     bool supportsFloatTexture() const;
+
+    /** Whether or not half-float texture is supported.
+     *
+     * @return Is true if supports half-float texture.
+     * @since v3.9.0
+     */
+    bool supportsHalfFloatTexture() const;
 
     /** Whether or not glMapBuffer() is supported.
      *
@@ -269,10 +283,12 @@ protected:
     bool            _supportsDepthTexture;
     bool            _supportsBGRA8888;
     bool            _supportsDiscardFramebuffer;
+    bool            _supportsInstancing;
     bool            _supportsShareableVAO;
     bool            _supportsOESMapBuffer;
     bool            _supportsOESDepth24;
     bool            _supportsOESPackedDepthStencil;
+    bool            _supportsHalfFloatTexture;
     bool            _supportsFloatTexture;
     bool            _isOpenglES3;
     GLint           _maxSamplesAllowed;
