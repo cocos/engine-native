@@ -353,7 +353,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return [[UIScreen mainScreen] scale];;
+    return [[UIScreen mainScreen] scale];
 }
 
 GLint Application::getMainFBO() const

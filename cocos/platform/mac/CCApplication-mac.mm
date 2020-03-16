@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "base/CCGLUtils.h"
 #include "audio/include/AudioEngine.h"
+#include "platform/CCDevice.h"
 
 NS_CC_BEGIN
 
@@ -46,7 +47,7 @@ namespace
         auto viewSize = Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
-        int devicePixelRatio = Application::getInstance()->getScreenScale();
+        int devicePixelRatio = Device::getDevicePixelRatio();
         //set window.innerWidth/innerHeight in CSS pixel units, not physical pixel units.
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
                 (int)(viewSize.x  / devicePixelRatio),
