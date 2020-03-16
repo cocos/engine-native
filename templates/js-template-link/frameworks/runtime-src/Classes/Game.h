@@ -33,7 +33,7 @@
 class Game : public cocos2d::Application
 {
 public:
-    Game(int width, int height);
+    Game(int width, int height, float devicePixelRatio);
     virtual bool init() override;
     virtual void onPause() override;
     virtual void onResume() override;

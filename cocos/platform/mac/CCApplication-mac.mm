@@ -45,8 +45,8 @@ namespace
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
-                (int)(viewSize.x  / devicePixelRatio),
-                (int)(viewSize.y  / devicePixelRatio),
+                (int)(viewSize.x / devicePixelRatio ),
+                (int)(viewSize.y / devicePixelRatio ),
                 (uintptr_t)[NSApplication sharedApplication].mainWindow.contentView);
         se->evalString(commandBuf);
         
@@ -62,14 +62,17 @@ std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
 #define CAST_VIEW(view)    ((GLView*)view)
 
-Application::Application(int width, int height)
+Application::Application(int width, int height, float devicePixelRatio)
 {
     Application::_instance = this;
-
+    
+    updateViewSize(width, height);
+    _devicePixelRatio = devicePixelRatio;
+    
     _scheduler = std::make_shared<Scheduler>();
-
     EventDispatcher::init();
     se::ScriptEngine::getInstance();
+    
 }
 
 Application::~Application()
@@ -167,7 +170,7 @@ Application::LanguageType Application::getCurrentLanguage() const
 
 float Application::getScreenScale() const
 {
-    return 1.f;
+    return _devicePixelRatio;
 }
 
 bool Application::openURL(const std::string &url)

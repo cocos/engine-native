@@ -52,7 +52,7 @@ Game* game = nullptr;
     [self.window setRootViewController:_viewController];
     
     // cocos2d application instance
-    game = new Game(bounds.size.width * scale, bounds.size.height * scale);
+    game = new Game(bounds.size.width * scale, bounds.size.height * scale, scale);
     game->init();
     
     [self.window makeKeyAndVisible];

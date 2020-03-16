@@ -29,6 +29,7 @@
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "audio/include/AudioEngine.h"
+#include "platform/CCDevice.h"
 
 NS_CC_BEGIN
 
@@ -37,14 +38,15 @@ namespace
     bool setCanvasCallback(se::Object* global)
     {
         auto viewSize = cocos2d::Application::getInstance()->getViewSize();
+        int devicePixelRatio = cocos2d::Device::getDevicePixelRatio();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         // https://stackoverflow.com/questions/5795978/string-format-for-intptr-t-and-uintptr-t/41897226#41897226
         // format intptr_t
-        //set window.innerWidth/innerHeight in physical pixel units
+        //set window.innerWidth/innerHeight in css pixel units
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
-                (int)(viewSize.x),
-                (int)(viewSize.y),
+                (int)(viewSize.x) / devicePixelRatio,
+                (int)(viewSize.y) / devicePixelRatio,
                 (uintptr_t)(UIApplication.sharedApplication.delegate.window.rootViewController.view) );
         se->evalString(commandBuf);
         return true;
@@ -54,12 +56,13 @@ namespace
 Application* Application::_instance = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
-Application::Application(int width, int height)
+Application::Application(int width, int height, float devicePixelRatio)
 {
     Application::_instance = this;
     _scheduler = std::make_shared<Scheduler>();
     EventDispatcher::init();
     updateViewSize(width, height);
+    _devicePixelRatio = devicePixelRatio;
 }
 
 Application::~Application()
@@ -146,7 +149,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return [[UIScreen mainScreen] scale];
+    return _devicePixelRatio;
 }
 
 bool Application::openURL(const std::string &url)

@@ -55,10 +55,11 @@ namespace
     _window.contentViewController = viewController;
     _window.contentView = viewController.view;
     [_window makeKeyAndOrderFront:nil];
+    CGFloat scale = _window.backingScaleFactor;
     
     cocos2d::EventDispatcher::addCustomEventListener(EVENT_APPLICATION_READY, applicationReady);
     
-    _game = new Game(rect.size.width, rect.size.height);
+    _game = new Game(rect.size.width * scale, rect.size.height * scale, scale);
     _game->init();
 }
 
