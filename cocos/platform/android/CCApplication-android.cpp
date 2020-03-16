@@ -50,14 +50,13 @@ namespace
 {
     bool setCanvasCallback(se::Object* global)
     {
-        auto viewSize = Application::getInstance()->getViewSize();
+        auto viewLogicalSize = Application::getInstance()->getViewLogicalSize();
         se::AutoHandleScope scope;
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
-        int devicePixelRatio = Device::getDevicePixelRatio();
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
-                (int)(viewSize.x  / devicePixelRatio),
-                (int)(viewSize.y  / devicePixelRatio),
+                (int)(viewLogicalSize.x),
+                (int)(viewLogicalSize.y),
                 (uintptr_t)cocos2d::JniHelper::getAndroidApp()->window);
         se->evalString(commandBuf);
 
@@ -75,7 +74,8 @@ Application::Application(int width, int height, float devicePixelRatio;)
 {
     Application::_instance = this;
     _scheduler = std::make_shared<Scheduler>();
-    updateViewSize(width, height);
+    _viewLogicalSize.x = width;
+    _viewLogicalSize.y = height;
     _devicePixelRatio = devicePixelRatio;
 }
 

@@ -163,15 +163,15 @@ public:
 
     std::string getSystemVersion();
 
-    inline void updateViewSize(int width, int height) { _viewSize.x = width; _viewSize.y = height; }
-    inline const cocos2d::Vec2& getViewSize() const { return _viewSize; }
+    // return size in logical pixel unit.
+    inline const cocos2d::Vec2& getViewLogicalSize() const { return _viewLogicalSize; }
 
 private:
     static Application* _instance;
     static std::shared_ptr<Scheduler> _scheduler;
     void* _delegate = nullptr;
     int _fps = 60;
-    cocos2d::Vec2 _viewSize;
+    cocos2d::Vec2 _viewLogicalSize;
     float _devicePixelRatio = 1.0f;
 };
 

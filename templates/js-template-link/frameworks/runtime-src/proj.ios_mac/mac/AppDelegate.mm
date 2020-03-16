@@ -59,7 +59,7 @@ namespace
     
     cocos2d::EventDispatcher::addCustomEventListener(EVENT_APPLICATION_READY, applicationReady);
     
-    _game = new Game(rect.size.width * scale, rect.size.height * scale, scale);
+    _game = new Game(rect.size.width, rect.size.height, scale);
     _game->init();
 }
 

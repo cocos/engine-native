@@ -37,16 +37,15 @@ namespace
 {
     bool setCanvasCallback(se::Object* global)
     {
-        auto viewSize = cocos2d::Application::getInstance()->getViewSize();
-        int devicePixelRatio = cocos2d::Device::getDevicePixelRatio();
+        auto viewLogicalSize = cocos2d::Application::getInstance()->getViewLogicalSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
         // https://stackoverflow.com/questions/5795978/string-format-for-intptr-t-and-uintptr-t/41897226#41897226
         // format intptr_t
         //set window.innerWidth/innerHeight in css pixel units
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
-                (int)(viewSize.x) / devicePixelRatio,
-                (int)(viewSize.y) / devicePixelRatio,
+                (int)(viewLogicalSize.x),
+                (int)(viewLogicalSize.y),
                 (uintptr_t)(UIApplication.sharedApplication.delegate.window.rootViewController.view) );
         se->evalString(commandBuf);
         return true;
@@ -61,7 +60,8 @@ Application::Application(int width, int height, float devicePixelRatio)
     Application::_instance = this;
     _scheduler = std::make_shared<Scheduler>();
     EventDispatcher::init();
-    updateViewSize(width, height);
+    _viewLogicalSize.x = width;
+    _viewLogicalSize.y = height;
     _devicePixelRatio = devicePixelRatio;
 }
 
@@ -149,7 +149,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return _devicePixelRatio;
+    return [[UIScreen mainScreen] scale];
 }
 
 bool Application::openURL(const std::string &url)
