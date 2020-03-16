@@ -66,7 +66,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "platform/ios/OpenGL_Internal-ios.h"
-#include "platform/CCApplication.h"
+#include "platform/CCDevice.h"
 #include "base/ccMacros.h"
 #include "ui/edit-box/EditBox.h"
 
@@ -484,7 +484,7 @@ namespace
     
     cocos2d::TouchInfo createTouchInfo(int index, UITouch* touch, float contentScaleFactor)
     {
-        uint8_t deviceRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
+        uint8_t deviceRatio = cocos2d::Device::getDevicePixelRatio();
         cocos2d::TouchInfo touchInfo;
         touchInfo.index = index;
         touchInfo.x = [touch locationInView: [touch view]].x * contentScaleFactor / deviceRatio;
