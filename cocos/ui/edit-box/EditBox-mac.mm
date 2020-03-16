@@ -22,7 +22,6 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "EditBox.h"
-#include "platform/desktop/CCGLView-desktop.h"
 #include "platform/CCApplication.h"
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
@@ -202,8 +201,7 @@ namespace
         g_textView.frame = rect;
         g_scrollView.frame = rect;
         
-        auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
-        NSWindow* nsWindow = glfwGetCocoaWindow(glfwWindow);
+        NSWindow* nsWindow = NSApplication.sharedApplication.mainWindow;
         [nsWindow.contentView addSubview:g_scrollView];
         [nsWindow makeFirstResponder:g_scrollView];
     }
@@ -216,8 +214,7 @@ namespace
         textField.stringValue = [NSString stringWithUTF8String:showInfo.defaultValue.c_str()];
         [(TextFieldFormatter*)textField.formatter setMaximumLength: showInfo.maxLength];
         
-        auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
-        NSWindow* nsWindow = glfwGetCocoaWindow(glfwWindow);
+        NSWindow* nsWindow = NSApplication.sharedApplication.mainWindow;
         [nsWindow.contentView addSubview:textField];
         [textField becomeFirstResponder];
     }
@@ -275,7 +272,7 @@ void EditBox::show(const ShowInfo& showInfo)
     g_isPassword = showInfo.inputType == "password";
     
     init(showInfo);
-    ((GLView*)Application::getInstance()->getView())->setIsEditboxEditing(true);
+//    ((GLView*)Application::getInstance()->getView())->setIsEditboxEditing(true);
 }
 
 
@@ -296,7 +293,7 @@ void EditBox::hide()
         [g_secureTextField removeFromSuperview];
     }
     
-    ((GLView*)Application::getInstance()->getView())->setIsEditboxEditing(false);
+//    ((GLView*)Application::getInstance()->getView())->setIsEditboxEditing(false);
 }
 
 void EditBox::complete()
