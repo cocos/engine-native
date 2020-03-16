@@ -582,7 +582,7 @@ SE_BIND_FUNC(JSB_glAttachShader)
 static bool JSB_glBindVertexArray(se::State& s) {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SE_PRECONDITION2(argc == 2, false, "Invalid number of arguments");
+    SE_PRECONDITION2(argc == 1, false, "Invalid number of arguments");
     bool ok = true;
     WebGLVertexArrayObject* arg0;
     ok &= seval_to_native_ptr(args[0], &arg0);
@@ -1432,20 +1432,20 @@ static bool JSB_glDrawElements(se::State& s) {
     ok &= seval_to_int32(args[1], &arg1 );
     ok &= seval_to_uint32(args[2], &arg2 );
 
-    const se::Value& offsetVal = args[3];
-    int offset = 0;
+    const se::Value& indicesVal = args[3];
+    int indices = 0;
 
-    if (offsetVal.isNumber())
+    if (indicesVal.isNumber())
     {
-        ok &= seval_to_int32(offsetVal, &offset);
-        arg3 = (void*)(intptr_t)offset;
+        ok &= seval_to_int32(indicesVal, &indices);
+        arg3 = (void*)(intptr_t)indices;
     }
 
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 #if OPENGL_PARAMETER_CHECK
     SE_PRECONDITION4(arg2 == GL_UNSIGNED_BYTE || arg2 == GL_UNSIGNED_SHORT, false, GL_INVALID_ENUM);
 
-    SE_PRECONDITION4(arg1 >= 0 && offset >= 0, false, GL_INVALID_VALUE);
+    SE_PRECONDITION4(arg1 >= 0 && indices >= 0, false, GL_INVALID_VALUE);
 
     int size = 0;
 
@@ -1459,7 +1459,7 @@ static bool JSB_glDrawElements(se::State& s) {
             break;
     }
 
-    SE_PRECONDITION4(offset % size == 0, false, GL_INVALID_OPERATION);
+    SE_PRECONDITION4(indices % size == 0, false, GL_INVALID_OPERATION);
 
     int buffer = 0;
     JSB_GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, &buffer));
@@ -1470,7 +1470,7 @@ static bool JSB_glDrawElements(se::State& s) {
 
     GLint elementSize = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &elementSize);
-    SE_PRECONDITION4(arg1 == 0 || ((elementSize > offset) && arg1 <= ((elementSize - offset) / size)), false, GL_INVALID_OPERATION);
+    SE_PRECONDITION4(arg1 == 0 || ((elementSize > indices) && arg1 <= ((elementSize - indices) / size)), false, GL_INVALID_OPERATION);
 #endif
     JSB_GL_CHECK(glDrawElements((GLenum)arg0 , (GLsizei)arg1 , (GLenum)arg2 , (GLvoid*)arg3  ));
 
@@ -1492,20 +1492,20 @@ static bool JSB_glDrawElementsInstanced(se::State& s) {
     ok &= seval_to_uint32(args[2], &arg2);
     ok &= seval_to_int32(args[4], &arg4);
 
-    const se::Value& offsetVal = args[3];
-    int offset = 0;
+    const se::Value& indicesVal = args[3];
+    int indices = 0;
 
-    if (offsetVal.isNumber())
+    if (indicesVal.isNumber())
     {
-        ok &= seval_to_int32(offsetVal, &offset);
-        arg3 = (void*)(intptr_t)offset;
+        ok &= seval_to_int32(indicesVal, &indices);
+        arg3 = (void*)(intptr_t)indices;
     }
 
     SE_PRECONDITION2(ok, false, "Error processing arguments");
 #if OPENGL_PARAMETER_CHECK
     SE_PRECONDITION4(arg2 == GL_UNSIGNED_BYTE || arg2 == GL_UNSIGNED_SHORT, false, GL_INVALID_ENUM);
 
-    SE_PRECONDITION4(arg1 >= 0 && offset >= 0 && arg4 >= 0, false, GL_INVALID_VALUE);
+    SE_PRECONDITION4(arg1 >= 0 && indices >= 0 && arg4 >= 0, false, GL_INVALID_VALUE);
 
     int size = 0;
 
@@ -1519,7 +1519,7 @@ static bool JSB_glDrawElementsInstanced(se::State& s) {
         break;
     }
 
-    SE_PRECONDITION4(offset % size == 0, false, GL_INVALID_OPERATION);
+    SE_PRECONDITION4(indices % size == 0, false, GL_INVALID_OPERATION);
 
     int buffer = 0;
     JSB_GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, &buffer));
@@ -1530,7 +1530,7 @@ static bool JSB_glDrawElementsInstanced(se::State& s) {
 
     GLint elementSize = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &elementSize);
-    SE_PRECONDITION4(arg1 == 0 || ((elementSize > offset) && arg1 <= ((elementSize - offset) / size)), false, GL_INVALID_OPERATION);
+    SE_PRECONDITION4(arg1 == 0 || ((elementSize > indices) && arg1 <= ((elementSize - indices) / size)), false, GL_INVALID_OPERATION);
 #endif
     JSB_GL_CHECK(glDrawElementsInstanced((GLenum)arg0, (GLsizei)arg1, (GLenum)arg2, (GLvoid*)arg3, (GLsizei)arg4));
 
