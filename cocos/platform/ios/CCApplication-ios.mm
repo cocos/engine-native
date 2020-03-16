@@ -52,7 +52,8 @@ namespace
     {
         cocos2d::Vec2 resolution = getResolution();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
-        uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
+//        uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
+        uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getScreenScale();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
                 (int)(resolution.x / devicePixelRatio),
@@ -352,7 +353,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return 1.f;
+    return [[UIScreen mainScreen] scale];;
 }
 
 GLint Application::getMainFBO() const
