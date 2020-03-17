@@ -81,14 +81,14 @@ namespace
         }
     }
 
-    void callJSFunc(const std::string& type, const jstring& text)
+    void callJSFunc(const std::string& type, const std::string& text)
     {
         getTextInputCallback();
 
         se::AutoHandleScope scope;
         se::ValueArray args;
         args.push_back(se::Value(type));
-        args.push_back(se::Value(cocos2d::JniHelper::jstring2string(text)));
+        args.push_back(se::Value(text));
         textInputCallback.toObject()->call(args, nullptr);
     }
 }
@@ -97,25 +97,26 @@ extern "C"
 {
     JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardInputNative)(JNIEnv* env, jclass, jstring text)
     {
-        auto func = [=]() {
-            callJSFunc("input", text);
-        };
-        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread(func);
+        auto textStr = cocos2d::JniHelper::jstring2string(text);
+        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
+            callJSFunc("input", textStr);
+        });
+
     }
 
     JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardCompleteNative)(JNIEnv* env, jclass, jstring text)
     {
-        auto func = [=]() {
-            callJSFunc("complete", text);
-        };
-        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread(func);
+        auto textStr = cocos2d::JniHelper::jstring2string(text);
+        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
+            callJSFunc("complete", textStr);
+        });
     }
 
     JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardConfirmNative)(JNIEnv* env, jclass, jstring text)
     {
-        auto func = [=]() {
-            callJSFunc("confirm", text);
-        };
-        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread(func);
+        auto textStr = cocos2d::JniHelper::jstring2string(text);
+        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
+            callJSFunc("confirm", textStr);
+        });
     }
 }

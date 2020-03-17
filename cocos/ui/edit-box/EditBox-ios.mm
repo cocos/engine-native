@@ -23,7 +23,6 @@
  ****************************************************************************/
 #include "EditBox.h"
 #include "platform/CCApplication.h"
-#include "platform/ios/CCEAGLView-ios.h"
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 
@@ -259,7 +258,7 @@ namespace
 
     CGRect getSafeAreaRect()
     {
-        UIView* view = (UIView*)cocos2d::Application::getInstance()->getView();
+        UIView* view = UIApplication.sharedApplication.delegate.window.rootViewController.view;
         CGRect viewRect = view.frame;
 
         // safeAreaInsets is avaible since iOS 11.
@@ -287,7 +286,7 @@ namespace
             initTextField(rect, showInfo);
         
         UIView* textInput = getCurrentView();
-        UIView* view = (UIView*)cocos2d::Application::getInstance()->getView();
+        UIView* view = UIApplication.sharedApplication.delegate.window.rootViewController.view;
         [view addSubview:textInput];
         [textInput becomeFirstResponder];
     }
@@ -425,7 +424,8 @@ void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
     g_isMultiline = showInfo.isMultiline;
     g_confirmHold = showInfo.confirmHold;
     
-    [(CCEAGLView*)cocos2d::Application::getInstance()->getView() setPreventTouchEvent:true];
+    UIView* view = UIApplication.sharedApplication.delegate.window.rootViewController.view;
+    [view setPreventTouchEvent: TRUE];
     addKeyboardEventLisnters();
     addTextInput(showInfo);
 }
@@ -441,7 +441,8 @@ void EditBox::hide()
         [view resignFirstResponder];
     }
     
-    [(CCEAGLView*)cocos2d::Application::getInstance()->getView() setPreventTouchEvent:false];
+    UIView* mainView = UIApplication.sharedApplication.delegate.window.rootViewController.view;
+    [mainView setPreventTouchEvent: FALSE];
 }
 
 void EditBox::complete()
