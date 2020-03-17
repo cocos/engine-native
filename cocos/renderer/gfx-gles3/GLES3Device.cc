@@ -140,8 +140,8 @@ void GLES3Device::present()
 {
     ((GLES3CommandAllocator*)_cmdAllocator)->releaseCmds();
     GLES3Queue* queue = (GLES3Queue*)_queue;
-    _numDrawCalls += queue->_numDrawCalls;
-    _numTriangles += queue->_numTriangles;
+    _numDrawCalls = queue->_numDrawCalls;
+    _numTriangles = queue->_numTriangles;
 
     _context->present();
 
