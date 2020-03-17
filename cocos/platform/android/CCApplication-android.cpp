@@ -32,7 +32,6 @@ THE SOFTWARE.
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "platform/android/jni/JniHelper.h"
-#include "platform/CCDevice.h"
 
 #define  LOG_APP_TAG    "CCApplication_android Debug"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_APP_TAG,__VA_ARGS__)
@@ -232,7 +231,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return 1.0;
+    return 1.0f;
 }
 
 bool Application::openURL(const std::string &url)

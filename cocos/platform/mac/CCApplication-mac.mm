@@ -32,7 +32,6 @@ THE SOFTWARE.
 #include "scripting/js-bindings/event/CustomEventTypes.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "audio/include/AudioEngine.h"
-#include "platform/CCDevice.h"
 
 NS_CC_BEGIN
 
