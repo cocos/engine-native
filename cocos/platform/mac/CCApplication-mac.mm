@@ -61,18 +61,16 @@ std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
 #define CAST_VIEW(view)    ((GLView*)view)
 
-Application::Application(int width, int height, float devicePixelRatio)
+Application::Application(int width, int height)
 {
     Application::_instance = this;
     
     _viewLogicalSize.x = width;
     _viewLogicalSize.y = height;
-    _devicePixelRatio = devicePixelRatio;
     
     _scheduler = std::make_shared<Scheduler>();
     EventDispatcher::init();
     se::ScriptEngine::getInstance();
-    
 }
 
 Application::~Application()
@@ -170,7 +168,7 @@ Application::LanguageType Application::getCurrentLanguage() const
 
 float Application::getScreenScale() const
 {
-    return _devicePixelRatio;
+    return [[[NSApplication sharedApplication] keyWindow] backingScaleFactor];
 }
 
 bool Application::openURL(const std::string &url)

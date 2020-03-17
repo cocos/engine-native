@@ -70,13 +70,12 @@ NS_CC_BEGIN
 Application* Application::_instance = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
-Application::Application(int width, int height, float devicePixelRatio;)
+Application::Application(int width, int height)
 {
     Application::_instance = this;
     _scheduler = std::make_shared<Scheduler>();
     _viewLogicalSize.x = width;
     _viewLogicalSize.y = height;
-    _devicePixelRatio = devicePixelRatio;
 }
 
 Application::~Application()
@@ -233,7 +232,7 @@ Application::Platform Application::getPlatform() const
 
 float Application::getScreenScale() const
 {
-    return _devicePixelRatio;
+    return 1.0;
 }
 
 bool Application::openURL(const std::string &url)

@@ -36,7 +36,7 @@ public:
     /**
      * width and height in logical pixel unit
      */
-    Game(int width, int height, float devicePixelRatio);
+    Game(int width, int height);
     virtual bool init() override;
     virtual void onPause() override;
     virtual void onResume() override;

@@ -31,7 +31,7 @@
 #include "cocos/scripting/js-bindings/event/EventDispatcher.h"
 #include "cocos/scripting/js-bindings/manual/jsb_classtype.hpp"
 
-Game::Game(int width, int height, float devicePixelRatio) : cocos2d::Application(width, height, devicePixelRatio) {}
+Game::Game(int width, int height) : cocos2d::Application(width, height) {}
 
 bool Game::init()
 {

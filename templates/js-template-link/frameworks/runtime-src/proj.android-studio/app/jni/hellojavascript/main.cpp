@@ -62,7 +62,7 @@ namespace
                 {
                     state->width = ANativeWindow_getWidth(app->window);
                     state->height = ANativeWindow_getHeight(app->window);
-                    game = new Game(state->width, state->height, 1.0f);
+                    game = new Game(state->width, state->height);
                     game->init();
                     state->initialized = true;
                 }
@@ -110,6 +110,7 @@ namespace
         }
 
         cocos2d::EventDispatcher::dispatchTouchEvent(touchEvent);
+        touchEvent.touches.clear();
     }
 
     // key values in web, refer to http://docs.cocos.com/creator/api/en/enums/KEY.html

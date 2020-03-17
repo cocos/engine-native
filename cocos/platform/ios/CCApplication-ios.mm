@@ -55,14 +55,13 @@ namespace
 Application* Application::_instance = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
-Application::Application(int width, int height, float devicePixelRatio)
+Application::Application(int width, int height)
 {
     Application::_instance = this;
     _scheduler = std::make_shared<Scheduler>();
     EventDispatcher::init();
     _viewLogicalSize.x = width;
     _viewLogicalSize.y = height;
-    _devicePixelRatio = devicePixelRatio;
 }
 
 Application::~Application()

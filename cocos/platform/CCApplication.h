@@ -83,7 +83,7 @@ public:
     // This class is useful for internal usage.
     static Application* getInstance() { return _instance; }
 
-    Application(int width, int height, float devicePixelRatio);
+    Application(int width, int height);
     virtual ~Application();
 
     virtual bool init();
@@ -172,7 +172,6 @@ private:
     void* _delegate = nullptr;
     int _fps = 60;
     cocos2d::Vec2 _viewLogicalSize;
-    float _devicePixelRatio = 1.0f;
 };
 
 // end of platform group
