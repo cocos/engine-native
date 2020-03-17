@@ -151,6 +151,7 @@ namespace {
     const uint32_t GL_COMMAND_VERTEX_ATTRIB_DIVISOR = 99;
     const uint32_t GL_COMMAND_DRAW_ARRAYS_INSTANCED = 100;
     const uint32_t GL_COMMAND_DRAW_ELEMENTS_INSTANCED = 101;
+    const uint32_t GL_COMMAND_DELETE_VERTEX_ARRAY = 102;
 
     const uint32_t GL_FLOAT_ARRAY = 1;
     const uint32_t GL_INT_ARRAY = 2;
@@ -588,7 +589,7 @@ static bool JSB_glBindVertexArray(se::State& s) {
     ok &= seval_to_native_ptr(args[0], &arg0);
     SE_PRECONDITION2(ok, false, "Error processing arguments");
     GLuint vaoId = arg0 != nullptr ? arg0->_id : 0;
-    JSB_GL_CHECK(glBindVertexArray((GLuint)arg0));
+    JSB_GL_CHECK(ccBindVertexArray((GLuint)arg0));
     return true;
 }
 SE_BIND_FUNC(JSB_glBindVertexArray)
@@ -4589,7 +4590,7 @@ static bool JSB_glFlushCommand(se::State& s) {
                 break;
             case GL_COMMAND_BIND_VERTEX_ARRAY:
                 LOG_GL_COMMAND("Flush: BIND_VERTEX_ARRAY, %u\n", (GLuint)p[1]);
-                JSB_GL_CHECK_VOID(glBindVertexArray((GLuint)p[1]));
+                JSB_GL_CHECK_VOID(ccBindVertexArray((GLuint)p[1]));
                 p += 2;
                 break;
             case GL_COMMAND_BIND_BUFFER:
@@ -4690,6 +4691,15 @@ static bool JSB_glFlushCommand(se::State& s) {
                 JSB_GL_CHECK_VOID(glCullFace((GLenum)p[1]));
                 p += 2;
                 break;
+            case GL_COMMAND_DELETE_VERTEX_ARRAY:
+            {
+                LOG_GL_COMMAND("Flush: DELETE_VERTEX_ARRAY\n");
+                GLuint id = (GLuint)p[1];
+                JSB_GL_CHECK_VOID(glDeleteVertexArrays(1, &id));
+                safeRemoveElementFromGLObjectMap(__webglVertexArrayMap, id);
+                p += 2;
+                break;
+            }
             case GL_COMMAND_DELETE_BUFFER:
             {
                 LOG_GL_COMMAND("Flush: DELETE_BUFFER\n");

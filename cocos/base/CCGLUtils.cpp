@@ -34,20 +34,19 @@ NS_CC_BEGIN
 #define MAX_ATTRIBUTE_UNIT  16
 #define MAX_TEXTURE_UNIT 32
 
-//IDEA: Consider to use variable to enable/disable cache state since using macro will not be able to close it if there're serious bugs.
-//#undef CC_ENABLE_GL_STATE_CACHE
-//#define CC_ENABLE_GL_STATE_CACHE 0
-
+// No need to cache anything now, all done in GFX
+#undef CC_ENABLE_GL_STATE_CACHE
+#define CC_ENABLE_GL_STATE_CACHE 0
 
 namespace
 {
     GLint __currentVertexBuffer = -1;
     GLint __currentIndexBuffer = -1;
     GLint __currentVertexArray = -1;
-    
+
     uint32_t __enabledVertexAttribArrayFlag = 0;
     VertexAttributePointerInfo __enabledVertexAttribArrayInfo[MAX_ATTRIBUTE_UNIT];
-    
+
     uint8_t __currentActiveTextureUnit = 0;
     std::array<BoundTextureInfo, MAX_TEXTURE_UNIT> __boundTextureInfos;
 
@@ -66,7 +65,7 @@ void ccInvalidateStateCache()
     __currentVertexBuffer = -1;
     __currentIndexBuffer = -1;
     __currentVertexArray = -1;
-    
+
     __enabledVertexAttribArrayFlag = 0;
     for (int i = 0; i < MAX_ATTRIBUTE_UNIT; ++i)
         __enabledVertexAttribArrayInfo[i] = VertexAttributePointerInfo();
@@ -144,6 +143,7 @@ void ccBindBuffer(GLenum target, GLuint buffer)
     {
         if (__currentVertexBuffer != buffer)
         {
+            __enabledVertexAttribArrayFlag = 0; // attributes are buffer-dependent
             __currentVertexBuffer = buffer;
             glBindBuffer(target, buffer);
         }
@@ -162,8 +162,15 @@ void ccBindBuffer(GLenum target, GLuint buffer)
     }
 #else
     // Should cache it, ccVertexAttribPointer depends on it.
-    __currentVertexBuffer = buffer;
-    
+    if (target == GL_ARRAY_BUFFER)
+    {
+        __currentVertexBuffer = buffer;
+    }
+    else if (target == GL_ELEMENT_ARRAY_BUFFER)
+    {
+        __currentIndexBuffer = buffer;
+    }
+
     glBindBuffer(target, buffer);
 #endif
 }
@@ -220,8 +227,11 @@ void ccEnableVertexAttribArray(GLuint index)
         return;
 
     uint32_t flag = 1 << index;
+
+#if CC_ENABLE_GL_STATE_CACHE
     if (__enabledVertexAttribArrayFlag & flag)
         return;
+#endif
 
     __enabledVertexAttribArrayFlag |= flag;
     glEnableVertexAttribArray(index);
@@ -232,11 +242,16 @@ void ccDisableVertexAttribArray(GLuint index)
     if (index >= MAX_ATTRIBUTE_UNIT)
         return;
     uint32_t flag = 1 << index;
+#if CC_ENABLE_GL_STATE_CACHE
     if (__enabledVertexAttribArrayFlag & flag)
     {
         glDisableVertexAttribArray(index);
-        __enabledVertexAttribArrayFlag &= ~(1 << index);
+        __enabledVertexAttribArrayFlag &= ~flag;
     }
+#else
+    glDisableVertexAttribArray(index);
+    __enabledVertexAttribArrayFlag &= ~flag;
+#endif
 }
 
 void ccVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
@@ -257,11 +272,11 @@ const VertexAttributePointerInfo* getVertexAttribPointerInfo(GLuint index)
     assert(index < MAX_ATTRIBUTE_UNIT);
     if (index >= MAX_ATTRIBUTE_UNIT)
         return nullptr;
-    
+
     // The index is not enabled, return null.
     if (! (__enabledVertexAttribArrayFlag & (1 << index)) )
         return nullptr;
-    
+
     return &__enabledVertexAttribArrayInfo[index];
 }
 
