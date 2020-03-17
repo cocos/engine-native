@@ -38,11 +38,11 @@ THE SOFTWARE.
 #include "base/CCAutoreleasePool.h"
 #include "audio/include/AudioEngine.h"
 
-
+extern "C" {
+  void cc_set_cursor_enabled(bool enabled);
+}
 
 NS_CC_BEGIN
-
-
 
 Application* Application::_instance = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
@@ -191,7 +191,7 @@ void Application::setDisplayStats(bool isShow)
 
 void Application::setCursorEnabled(bool value)
 {
-    //glfwSetInputMode(CAST_VIEW(_view)->getGLFWWindow(), GLFW_CURSOR, value ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+  cc_set_cursor_enabled(value);
 }
 
 Application::Platform Application::getPlatform() const

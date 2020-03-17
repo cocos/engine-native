@@ -209,7 +209,5 @@ HWND View::getWindowHandler()
 
 void View::setCursorEnabeld(bool enable)
 {
-    if (enable) {
-        SDL_RaiseWindow(_window);
-    }
+    SDL_SetRelativeMouseMode(enable ? SDL_FALSE : SDL_TRUE);
 }
