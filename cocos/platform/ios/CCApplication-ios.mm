@@ -145,11 +145,6 @@ Application::Platform Application::getPlatform() const
         return Platform::IPHONE;
 }
 
-float Application::getScreenScale() const
-{
-    return [[UIScreen mainScreen] scale];
-}
-
 bool Application::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];

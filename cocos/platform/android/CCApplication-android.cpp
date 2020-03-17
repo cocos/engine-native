@@ -229,11 +229,6 @@ Application::Platform Application::getPlatform() const
     return Platform::ANDROIDOS;
 }
 
-float Application::getScreenScale() const
-{
-    return 1.0f;
-}
-
 bool Application::openURL(const std::string &url)
 {
     return openURLJNI(url);

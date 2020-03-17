@@ -143,10 +143,6 @@ public:
      */
     void setCursorEnabled(bool value);
 
-    /** The value is (framebuffer size) / (window size), but on iOS, it is special, its value is 1.
-     */
-    float getScreenScale() const;
-
     /**
      @brief Get target platform.
      */

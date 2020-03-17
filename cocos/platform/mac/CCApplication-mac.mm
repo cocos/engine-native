@@ -165,11 +165,6 @@ Application::LanguageType Application::getCurrentLanguage() const
     return LanguageType::ENGLISH;
 }
 
-float Application::getScreenScale() const
-{
-    return [[[NSApplication sharedApplication] keyWindow] backingScaleFactor];
-}
-
 bool Application::openURL(const std::string &url)
 {
     NSString* msg = [NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding];

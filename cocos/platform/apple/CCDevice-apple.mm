@@ -30,7 +30,11 @@ NS_CC_BEGIN
 
 int Device::getDevicePixelRatio()
 {
-    return Application::getInstance()->getScreenScale();
+#if(CC_PLATFORM == CC_PLATFORM_MAC_IOS)
+    return [[UIScreen mainScreen] scale];
+#else
+    return [[[NSApplication sharedApplication] keyWindow] backingScaleFactor];
+#endif
 }
 
 NS_CC_END
