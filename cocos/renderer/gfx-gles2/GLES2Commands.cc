@@ -1768,77 +1768,27 @@ void GLES2CmdFuncExecuteCmds(GLES2Device* device, GLES2CmdPackage* cmd_package) 
             (is_shader_changed || gpuInputAssembler != cmd->gpuInputAssembler)) {
           gpuInputAssembler = cmd->gpuInputAssembler;
           if (device->useVAO()) {
-            const auto it = gpuInputAssembler->glVAOs.find(gpuPipelineState->gpuShader->glProgram);
-            if (it != gpuInputAssembler->glVAOs.end()) {
-              GLuint glVAO = it->second;
-              if (!glVAO) {
-                glGenVertexArraysOES(1, &glVAO);
-                gpuInputAssembler->glVAOs.insert(std::make_pair(gpuPipelineState->gpuShader->glProgram, glVAO));
-                glBindVertexArrayOES(glVAO);
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-                
-                for (size_t j = 0; j < gpuPipelineState->gpuShader->glInputs.size(); ++j) {
-                  const GLES2GPUInput& gpuInput = gpuPipelineState->gpuShader->glInputs[j];
-                  for (size_t a = 0; a < gpuInputAssembler->attributes.size(); ++a) {
-                    const GLES2GPUAttribute& gpuAttribute = gpuInputAssembler->glAttribs[a];
-                    if (gpuAttribute.name == gpuInput.name) {
-                      glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer);
-                      
-                      for (uint c = 0; c < gpuAttribute.componentCount; ++c) {
-                        GLint glLoc = gpuInput.glLoc + c;
-                        uint attrib_offset = gpuAttribute.offset + gpuAttribute.size * c;
-                        glEnableVertexAttribArray(glLoc);
-                        
-                        cache->glEnabledAttribLocs[glLoc] = true;
-                        glVertexAttribPointer(glLoc, gpuAttribute.count, gpuAttribute.glType, gpuAttribute.isNormalized, gpuAttribute.stride, BUFFER_OFFSET(attrib_offset));
-
-                        if (device->useInstancedArrays()) {
-                          glVertexAttribDivisorEXT(glLoc, gpuAttribute.isInstanced ? 1 : 0);
-                        }
-                      }
-                      break;
-                    }
-                  } // for
-                } // for
-                
-                if (gpuInputAssembler->gpuIndexBuffer) {
-                  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gpuInputAssembler->gpuIndexBuffer->glBuffer);
-                }
-                
-                glBindVertexArrayOES(0);
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-                cache->glVAO = 0;
-                cache->glArrayBuffer = 0;
-                cache->glElementArrayBuffer = 0;
-              }
-              
-              if (cache->glVAO != glVAO) {
-                glBindVertexArrayOES(glVAO);
-                cache->glVAO = glVAO;
-              }
-            } else {
-              for (uint a = 0; a < GFX_MAX_VERTEX_ATTRIBUTES; ++a) {
-                cache->glCurrentAttribLocs[a] = false;
-              }
+            GLuint glVAO = gpuInputAssembler->glVAOs[gpuPipelineState->gpuShader->glProgram];
+            if (!glVAO) {
+              glGenVertexArraysOES(1, &glVAO);
+              gpuInputAssembler->glVAOs[gpuPipelineState->gpuShader->glProgram] = glVAO;
+              glBindVertexArrayOES(glVAO);
+              glBindBuffer(GL_ARRAY_BUFFER, 0);
+              glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
               for (size_t j = 0; j < gpuPipelineState->gpuShader->glInputs.size(); ++j) {
                 const GLES2GPUInput& gpuInput = gpuPipelineState->gpuShader->glInputs[j];
                 for (size_t a = 0; a < gpuInputAssembler->attributes.size(); ++a) {
                   const GLES2GPUAttribute& gpuAttribute = gpuInputAssembler->glAttribs[a];
                   if (gpuAttribute.name == gpuInput.name) {
-                    if (cache->glArrayBuffer != gpuAttribute.glBuffer) {
-                      glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer);
-                      cache->glArrayBuffer = gpuAttribute.glBuffer;
-                    }
+                    glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer);
 
                     for (uint c = 0; c < gpuAttribute.componentCount; ++c) {
                       GLint glLoc = gpuInput.glLoc + c;
                       uint attrib_offset = gpuAttribute.offset + gpuAttribute.size * c;
                       glEnableVertexAttribArray(glLoc);
+
                       cache->glEnabledAttribLocs[glLoc] = true;
-                      cache->glCurrentAttribLocs[glLoc] = true;
                       glVertexAttribPointer(glLoc, gpuAttribute.count, gpuAttribute.glType, gpuAttribute.isNormalized, gpuAttribute.stride, BUFFER_OFFSET(attrib_offset));
 
                       if (device->useInstancedArrays()) {
@@ -1851,17 +1801,64 @@ void GLES2CmdFuncExecuteCmds(GLES2Device* device, GLES2CmdPackage* cmd_package) 
               } // for
 
               if (gpuInputAssembler->gpuIndexBuffer) {
-                if (cache->glElementArrayBuffer != gpuInputAssembler->gpuIndexBuffer->glBuffer) {
-                  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gpuInputAssembler->gpuIndexBuffer->glBuffer);
-                  cache->glElementArrayBuffer = gpuInputAssembler->gpuIndexBuffer->glBuffer;
-                }
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gpuInputAssembler->gpuIndexBuffer->glBuffer);
               }
 
-              for (uint a = 0; a < GFX_MAX_VERTEX_ATTRIBUTES; ++a) {
-                if (cache->glEnabledAttribLocs[a] != cache->glCurrentAttribLocs[a]) {
-                  glDisableVertexAttribArray(a);
-                  cache->glEnabledAttribLocs[a] = false;
+              glBindVertexArrayOES(0);
+              glBindBuffer(GL_ARRAY_BUFFER, 0);
+              glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+              cache->glVAO = 0;
+              cache->glArrayBuffer = 0;
+              cache->glElementArrayBuffer = 0;
+            }
+
+            if (cache->glVAO != glVAO) {
+              glBindVertexArrayOES(glVAO);
+              cache->glVAO = glVAO;
+            }
+          } else {
+            for (uint a = 0; a < GFX_MAX_VERTEX_ATTRIBUTES; ++a) {
+              cache->glCurrentAttribLocs[a] = false;
+            }
+
+            for (size_t j = 0; j < gpuPipelineState->gpuShader->glInputs.size(); ++j) {
+              const GLES2GPUInput& gpuInput = gpuPipelineState->gpuShader->glInputs[j];
+              for (size_t a = 0; a < gpuInputAssembler->attributes.size(); ++a) {
+                const GLES2GPUAttribute& gpuAttribute = gpuInputAssembler->glAttribs[a];
+                if (gpuAttribute.name == gpuInput.name) {
+                  if (cache->glArrayBuffer != gpuAttribute.glBuffer) {
+                    glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer);
+                    cache->glArrayBuffer = gpuAttribute.glBuffer;
+                  }
+
+                  for (uint c = 0; c < gpuAttribute.componentCount; ++c) {
+                    GLint glLoc = gpuInput.glLoc + c;
+                    uint attrib_offset = gpuAttribute.offset + gpuAttribute.size * c;
+                    glEnableVertexAttribArray(glLoc);
+                    cache->glEnabledAttribLocs[glLoc] = true;
+                    cache->glCurrentAttribLocs[glLoc] = true;
+                    glVertexAttribPointer(glLoc, gpuAttribute.count, gpuAttribute.glType, gpuAttribute.isNormalized, gpuAttribute.stride, BUFFER_OFFSET(attrib_offset));
+
+                    if (device->useInstancedArrays()) {
+                      glVertexAttribDivisorEXT(glLoc, gpuAttribute.isInstanced ? 1 : 0);
+                    }
+                  }
+                  break;
                 }
+              } // for
+            } // for
+
+            if (gpuInputAssembler->gpuIndexBuffer) {
+              if (cache->glElementArrayBuffer != gpuInputAssembler->gpuIndexBuffer->glBuffer) {
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gpuInputAssembler->gpuIndexBuffer->glBuffer);
+                cache->glElementArrayBuffer = gpuInputAssembler->gpuIndexBuffer->glBuffer;
+              }
+            }
+
+            for (uint a = 0; a < GFX_MAX_VERTEX_ATTRIBUTES; ++a) {
+              if (cache->glEnabledAttribLocs[a] != cache->glCurrentAttribLocs[a]) {
+                glDisableVertexAttribArray(a);
+                cache->glEnabledAttribLocs[a] = false;
               }
             }
           } // if
