@@ -194,8 +194,8 @@ copy "$(ProjectDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
   <ItemGroup>
     <ClInclude Include="main.h" />
     <ClInclude Include="..\Classes\Game.h" />
-    <ClCompile Include="View-win32.h" />
-    <ClCompile Include="AppDelegate.h" />
+    <ClInclude Include="View-win32.h" />
+    <ClInclude Include="AppDelegate.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
