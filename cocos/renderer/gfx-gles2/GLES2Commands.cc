@@ -1828,7 +1828,10 @@ void GLES2CmdFuncExecuteCmds(GLES2Device* device, GLES2CmdPackage* cmd_package) 
                 for (size_t a = 0; a < gpuInputAssembler->attributes.size(); ++a) {
                   const GLES2GPUAttribute& gpuAttribute = gpuInputAssembler->glAttribs[a];
                   if (gpuAttribute.name == gpuInput.name) {
-                    glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer);
+                    if (cache->glArrayBuffer != gpuAttribute.glBuffer) {
+                      glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer);
+                      cache->glArrayBuffer = gpuAttribute.glBuffer;
+                    }
 
                     for (uint c = 0; c < gpuAttribute.componentCount; ++c) {
                       GLint glLoc = gpuInput.glLoc + c;
