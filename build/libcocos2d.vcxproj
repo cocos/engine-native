@@ -123,6 +123,7 @@
     <ClCompile Include="..\cocos\renderer\core\gfx\GFXCommandBuffer.cc" />
     <ClCompile Include="..\cocos\renderer\core\gfx\GFXContext.cc" />
     <ClCompile Include="..\cocos\renderer\core\gfx\GFXDef.cc" />
+    <ClCompile Include="..\cocos\renderer\core\gfx\GFXObject.cc" />
     <ClCompile Include="..\cocos\renderer\core\gfx\GFXDevice.cc" />
     <ClCompile Include="..\cocos\renderer\core\gfx\GFXFramebuffer.cc" />
     <ClCompile Include="..\cocos\renderer\core\gfx\GFXInputAssembler.cc" />
@@ -339,6 +340,7 @@
     <ClInclude Include="..\cocos\renderer\core\gfx\GFXCommandBuffer.h" />
     <ClInclude Include="..\cocos\renderer\core\gfx\GFXContext.h" />
     <ClInclude Include="..\cocos\renderer\core\gfx\GFXDef.h" />
+    <ClInclude Include="..\cocos\renderer\core\gfx\GFXObject.h" />
     <ClInclude Include="..\cocos\renderer\core\gfx\GFXDevice.h" />
     <ClInclude Include="..\cocos\renderer\core\gfx\GFXFramebuffer.h" />
     <ClInclude Include="..\cocos\renderer\core\gfx\GFXInputAssembler.h" />
