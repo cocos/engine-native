@@ -55,7 +55,6 @@ namespace
     _window.contentViewController = viewController;
     _window.contentView = viewController.view;
     [_window makeKeyAndOrderFront:nil];
-    CGFloat scale = _window.backingScaleFactor;
     
     cocos2d::EventDispatcher::addCustomEventListener(EVENT_APPLICATION_READY, applicationReady);
     
