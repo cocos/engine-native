@@ -327,7 +327,6 @@
     <ClInclude Include="..\cocos\platform\CCPlatformDefine.h" />
     <ClInclude Include="..\cocos\platform\CCSAXParser.h" />
     <ClInclude Include="..\cocos\platform\win32\CCFileUtils-win32.h" />
-    <ClInclude Include="..\cocos\platform\win32\CCGL-win32.h" />
     <ClInclude Include="..\cocos\platform\win32\CCPlatformDefine-win32.h" />
     <ClInclude Include="..\cocos\platform\win32\CCUtils-win32.h" />
     <ClInclude Include="..\cocos\platform\win32\compat\stdint.h" />

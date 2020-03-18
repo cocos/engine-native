@@ -548,6 +548,9 @@
     <ClCompile Include="..\cocos\renderer\gfx-gles3\GLES3Window.cc">
       <Filter>renderer\gfx-gles3</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\renderer\core\gfx\GFXObject.cc" >
+      <Filter>renderer\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos\base\base64.h">
@@ -717,9 +720,6 @@
       <Filter>platform</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\platform\win32\CCFileUtils-win32.h">
-      <Filter>platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\platform\win32\CCGL-win32.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\platform\win32\CCPlatformDefine-win32.h">
@@ -1249,6 +1249,9 @@
     </ClInclude>
     <ClInclude Include="..\cocos\renderer\gfx-gles3\GLES3Window.h">
       <Filter>renderer\gfx-gles3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\renderer\core\gfx\GFXObject.h" >
+      <Filter>renderer\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
