@@ -679,7 +679,7 @@ void GLES3CmdFuncUpdateBuffer(GLES3Device* device, GLES3GPUBuffer* gpuBuffer, vo
         break;
       }
       default:
-            CCASSERT(false, "Unsupported GFXBufferType, update buffer failed.");
+        CCASSERT(false, "Unsupported GFXBufferType, update buffer failed.");
         break;
     }
   }
@@ -1667,6 +1667,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package) 
           } else {
             glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
           }
+          cache->bs.isA2C = gpuPipelineState->bs.isA2C;
         }
         if (cache->bs.blendColor.r != gpuPipelineState->bs.blendColor.r ||
             cache->bs.blendColor.g != gpuPipelineState->bs.blendColor.g ||
@@ -1932,10 +1933,10 @@ void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package) 
 }
 
 void GLES3CmdFuncCopyBuffersToTexture(GLES3Device* device, uint8_t* const* buffers, GLES3GPUTexture* gpuTexture, const GFXBufferTextureCopyList& regions) {
-  GLuint glTexture = device->stateCache->glTextures[device->stateCache->texUint];
+  GLuint& glTexture = device->stateCache->glTextures[device->stateCache->texUint];
   if (glTexture != gpuTexture->glTexture) {
     glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture);
-    device->stateCache->glTextures[device->stateCache->texUint] = glTexture;
+    glTexture = gpuTexture->glTexture;
   }
 
   bool isCompressed = GFX_FORMAT_INFOS[(int)gpuTexture->format].isCompressed;

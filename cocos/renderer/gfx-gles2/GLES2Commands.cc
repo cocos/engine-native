@@ -1538,6 +1538,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device* device, GLES2CmdPackage* cmd_package) 
           } else {
             glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
           }
+          cache->bs.isA2C = gpuPipelineState->bs.isA2C;
         }
         if (cache->bs.blendColor.r != gpuPipelineState->bs.blendColor.r ||
             cache->bs.blendColor.g != gpuPipelineState->bs.blendColor.g ||
@@ -1967,10 +1968,10 @@ void GLES2CmdFuncExecuteCmds(GLES2Device* device, GLES2CmdPackage* cmd_package) 
 }
 
 void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffers, GLES2GPUTexture* gpuTexture, const GFXBufferTextureCopyList& regions) {
-  GLuint glTexture = device->stateCache->glTextures[device->stateCache->texUint];
+  GLuint& glTexture = device->stateCache->glTextures[device->stateCache->texUint];
   if (glTexture != gpuTexture->glTexture) {
     glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture);
-    device->stateCache->glTextures[device->stateCache->texUint] = glTexture;
+    glTexture = gpuTexture->glTexture;
   }
 
   bool isCompressed = GFX_FORMAT_INFOS[(int)gpuTexture->format].isCompressed;
