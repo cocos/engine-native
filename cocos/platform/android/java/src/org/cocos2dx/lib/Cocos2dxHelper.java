@@ -155,9 +155,6 @@ public class Cocos2dxHelper {
             
             Cocos2dxHelper.sPackageName = applicationInfo.packageName;
             Cocos2dxHelper.sFileDirectory = activity.getFilesDir().getAbsolutePath();
-            
-            Cocos2dxHelper.nativeSetApkPath(Cocos2dxHelper.getAssetsPath());
-
             Cocos2dxHelper.sVibrateService = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
 
             sInited = true;
@@ -202,36 +199,18 @@ public class Cocos2dxHelper {
     {
         return Cocos2dxHelper.sOBBFile;
     }
-
-    // ===========================================================
-    // Getter & Setter
-    // ===========================================================
-
-    // ===========================================================
-    // Methods for/from SuperClass/Interfaces
-    // ===========================================================
-
-    // ===========================================================
-    // Methods
-    // ===========================================================
-
-    private static native void nativeSetApkPath(final String pApkPath);
-
     public static String getPackageName() {
         return Cocos2dxHelper.sPackageName;
     }
     public static String getWritablePath() {
         return Cocos2dxHelper.sFileDirectory;
     }
-
     public static String getCurrentLanguage() {
         return Locale.getDefault().getLanguage();
     }
-
     public static String getCurrentLanguageCode() {
         return Locale.getDefault().toString();
     }
-
     public static String getDeviceModel(){
         return Build.MODEL;
     }

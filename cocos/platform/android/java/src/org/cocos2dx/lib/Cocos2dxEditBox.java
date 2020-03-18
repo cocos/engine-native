@@ -257,11 +257,6 @@ public class Cocos2dxEditBox {
      Public functions.
      **************************************************************************************/
 
-    // Invoked by surface view to send a complete message to CPP.
-    public static void complete() {
-        Cocos2dxEditBox.sThis.hide();
-    }
-
     /***************************************************************************************
      Private functions.
      **************************************************************************************/
@@ -399,6 +394,7 @@ public class Cocos2dxEditBox {
             Cocos2dxEditBox.sThis.mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
                     Cocos2dxEditBox.sThis.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType);
                 }
             });

@@ -29,6 +29,7 @@ import android.app.NativeActivity;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -48,7 +49,6 @@ public abstract class Cocos2dxActivity extends NativeActivity {
     // ===========================================================
     protected RelativeLayout mFrameLayout = null;
     
-    private Cocos2dxHandler mHandler = null;
     private Cocos2dxVideoHelper mVideoHelper = null;
     private Cocos2dxWebViewHelper mWebViewHelper = null;
     private boolean hasFocus = false;
@@ -104,8 +104,6 @@ public abstract class Cocos2dxActivity extends NativeActivity {
         // Load native library to enable invoke native API.
         onLoadNativeLibraries();
 
-        this.mHandler = new Cocos2dxHandler(this);
-        
         Cocos2dxHelper.init(this);
         CanvasRenderingContext2DImpl.init(this);
         
@@ -120,7 +118,7 @@ public abstract class Cocos2dxActivity extends NativeActivity {
         }
 
         Window window = this.getWindow();
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 

@@ -38,28 +38,6 @@
 #endif
 #define JNI_EDITBOX(FUNC) JNI_METHOD1(ORG_EDITBOX_CLASS_NAME,FUNC)
 
-
-NS_CC_BEGIN
-
-void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
-{
-    JniHelper::callStaticVoidMethod(JCLS_EDITBOX,
-                                    "showNative",
-                                    showInfo.defaultValue,
-                                    showInfo.maxLength,
-                                    showInfo.isMultiline,
-                                    showInfo.confirmHold,
-                                    showInfo.confirmType,
-                                    showInfo.inputType);
-}
-
-void EditBox::hide()
-{
-    JniHelper::callStaticVoidMethod(JCLS_EDITBOX, "hideNative");
-}
-
-NS_CC_END
-
 namespace
 {
     se::Value textInputCallback;
@@ -92,6 +70,41 @@ namespace
         textInputCallback.toObject()->call(args, nullptr);
     }
 }
+
+NS_CC_BEGIN
+
+bool EditBox::_isShown = false;
+
+void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
+{
+    JniHelper::callStaticVoidMethod(JCLS_EDITBOX,
+                                    "showNative",
+                                    showInfo.defaultValue,
+                                    showInfo.maxLength,
+                                    showInfo.isMultiline,
+                                    showInfo.confirmHold,
+                                    showInfo.confirmType,
+                                    showInfo.inputType);
+    _isShown = true;
+}
+
+void EditBox::hide()
+{
+    JniHelper::callStaticVoidMethod(JCLS_EDITBOX, "hideNative");
+    _isShown = false;
+}
+
+bool EditBox::complete()
+{
+    if (!_isShown)
+        return false;
+
+    EditBox::hide();
+
+    return true;
+}
+
+NS_CC_END
 
 extern "C" 
 {

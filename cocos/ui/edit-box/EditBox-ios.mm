@@ -417,6 +417,8 @@ namespace
 
 NS_CC_BEGIN
 
+bool EditBox::_isShown = false;
+
 void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
 {
     // Should initialize them at first.
@@ -424,10 +426,10 @@ void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
     g_isMultiline = showInfo.isMultiline;
     g_confirmHold = showInfo.confirmHold;
     
-    UIView* view = UIApplication.sharedApplication.delegate.window.rootViewController.view;
-    [view setPreventTouchEvent: TRUE];
     addKeyboardEventLisnters();
     addTextInput(showInfo);
+    
+    _isShown = true;
 }
 
 void EditBox::hide()
@@ -441,15 +443,19 @@ void EditBox::hide()
         [view resignFirstResponder];
     }
     
-    UIView* mainView = UIApplication.sharedApplication.delegate.window.rootViewController.view;
-    [mainView setPreventTouchEvent: FALSE];
+    _isShown = false;
 }
 
-void EditBox::complete()
+bool EditBox::complete()
 {
+    if (!_isShown)
+        return false;
+    
     NSString* text = getCurrentText();
     callJSFunc("complete", [text UTF8String]);
     EditBox::hide();
+    
+    return true;
 }
 
 NS_CC_END

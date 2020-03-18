@@ -265,6 +265,8 @@ namespace
 
 NS_CC_BEGIN
 
+bool EditBox::_isShown = false;
+
 void EditBox::show(const ShowInfo& showInfo)
 {
     g_isMultiline = showInfo.isMultiline;
@@ -272,7 +274,8 @@ void EditBox::show(const ShowInfo& showInfo)
     g_isPassword = showInfo.inputType == "password";
     
     init(showInfo);
-//    ((GLView*)Application::getInstance()->getView())->setIsEditboxEditing(true);
+    
+    EditBox::_isShown = true;
 }
 
 
@@ -293,11 +296,14 @@ void EditBox::hide()
         [g_secureTextField removeFromSuperview];
     }
     
-//    ((GLView*)Application::getInstance()->getView())->setIsEditboxEditing(false);
+    EditBox::_isShown = false;
 }
 
-void EditBox::complete()
+bool EditBox::complete()
 {
+    if (!_isShown)
+        return false;
+    
     if (g_isMultiline)
         callJSFunc("complete", [[g_textView.textStorage string] UTF8String]);
     else
@@ -309,6 +315,8 @@ void EditBox::complete()
     }
     
     EditBox::hide();
+    
+    return true;
 }
 
 NS_CC_END
