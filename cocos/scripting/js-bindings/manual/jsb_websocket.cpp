@@ -558,7 +558,6 @@ static bool full_name(se::State& s) \
     int argc = (int)args.size(); \
     if (argc == 0) \
     { \
-        CC_UNUSED WebSocket* cobj = (WebSocket*)s.nativeThisObject(); \
         s.rval().setInt32(value); \
         return true; \
     } \
