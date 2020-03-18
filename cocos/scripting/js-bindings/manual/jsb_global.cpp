@@ -827,8 +827,10 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
         callbackVal.toObject()->call(seArgs, nullptr);
         return true;
     }
+    
+    std::shared_ptr<se::Value> callbackPtr = std::make_shared<se::Value>(callbackVal);
 
-    auto initImageFunc = [path, callbackVal](const std::string& fullPath, unsigned char* imageData, int imageBytes, const std::string& errorMsg){
+    auto initImageFunc = [path, callbackPtr](const std::string& fullPath, unsigned char* imageData, int imageBytes, const std::string& errorMsg){
         Image* img = new (std::nothrow) Image();
 
         __threadPool->pushTask([=](int tid){
@@ -911,7 +913,7 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                     seArgs.push_back(se::Value(retObj));
                 }
 
-                callbackVal.toObject()->call(seArgs, nullptr);
+                callbackPtr->toObject()->call(seArgs, nullptr);
                 img->release();
             });
 
