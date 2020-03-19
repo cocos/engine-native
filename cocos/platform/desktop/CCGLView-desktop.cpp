@@ -238,11 +238,9 @@ namespace
 {
     void dispatchMouseEvent(double x, double y, unsigned short button, cocos2d::MouseEvent::Type type)
     {
-        uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
-
         cocos2d::MouseEvent mouseEvent;
-        mouseEvent.x = x / devicePixelRatio;
-        mouseEvent.y = y / devicePixelRatio;
+        mouseEvent.x = x;
+        mouseEvent.y = y;
         mouseEvent.button = button;
         mouseEvent.type = type;
         cocos2d::EventDispatcher::dispatchMouseEvent(mouseEvent);
