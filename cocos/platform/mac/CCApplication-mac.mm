@@ -46,7 +46,7 @@ namespace
         auto viewSize = Application::getInstance()->getViewSize();
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
-        int devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
+        int devicePixelRatio = Application::getInstance()->getScreenScale();
         //set window.innerWidth/innerHeight in CSS pixel units, not physical pixel units.
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
                 (int)(viewSize.x  / devicePixelRatio),
