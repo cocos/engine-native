@@ -702,6 +702,10 @@ struct GFXDrawInfo {
 
 typedef vector<GFXDrawInfo>::type GFXDrawInfoList;
 
+struct GFXIndirectBuffer {
+  GFXDrawInfoList drawInfos;
+};
+
 struct GFXTextureInfo {
   GFXTextureType type = GFXTextureType::TEX2D;
   GFXTextureUsage usage = GFXTextureUsageBit::NONE;
