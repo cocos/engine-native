@@ -648,15 +648,15 @@ SE_BIND_FUNC(JSB_isObjectValid)
 
 static bool JSB_setCursorEnabled(se::State& s)
 {
-    const auto& args = s.args();
-    int argc = (int)args.size();
-    SE_PRECONDITION2(argc == 1, false, "Invalid number of arguments");
-    bool ok = true, value = true;
-    ok &= seval_to_boolean(args[0], &value);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
+   const auto& args = s.args();
+   int argc = (int)args.size();
+   SE_PRECONDITION2(argc == 1, false, "Invalid number of arguments");
+   bool ok = true, value = true;
+   ok &= seval_to_boolean(args[0], &value);
+   SE_PRECONDITION2(ok, false, "Error processing arguments");
 
-    Application::getInstance()->setCursorEnabled(value);
-    return true;
+   Application::getInstance()->setCursorEnabled(value);
+   return true;
 }
 SE_BIND_FUNC(JSB_setCursorEnabled)
 
@@ -1176,12 +1176,10 @@ bool jsb_register_global_variables(se::Object* global)
 //    __jsbObj->defineFunction("openDebugView", _SE(js_openDebugView));
     __jsbObj->defineFunction("openURL", _SE(JSB_openURL));
     __jsbObj->defineFunction("copyTextToClipboard", _SE(JSB_copyTextToClipboard));
-
    __jsbObj->defineFunction("setPreferredFramesPerSecond", _SE(JSB_setPreferredFramesPerSecond));
     __jsbObj->defineFunction("showInputBox", _SE(JSB_showInputBox));
     __jsbObj->defineFunction("hideInputBox", _SE(JSB_hideInputBox));
     __jsbObj->defineFunction("setCursorEnabled", _SE(JSB_setCursorEnabled));
-
     global->defineFunction("__getPlatform", _SE(JSBCore_platform));
     global->defineFunction("__getOS", _SE(JSBCore_os));
     global->defineFunction("__getOSVersion", _SE(JSB_getOSVersion));
