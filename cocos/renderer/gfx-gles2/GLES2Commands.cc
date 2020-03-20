@@ -1991,7 +1991,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
     uint h;
     for (size_t i = 0; i < regions.size(); ++i) {
       const GFXBufferTextureCopy& region = regions[i];
-      n = 0;
       w = region.texExtent.width;
       h = region.texExtent.height;
       for (uint m = region.texSubres.baseMipLevel; m < region.texSubres.baseMipLevel + region.texSubres.levelCount; ++m) {
@@ -2014,7 +2013,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
     uint h;
     for (size_t i = 0; i < regions.size(); ++i) {
       const GFXBufferTextureCopy& region = regions[i];
-      n = 0;
       uint d = region.texSubres.layerCount;
       uint layerCount = d + region.texSubres.baseArrayLayer;
 
@@ -2046,7 +2044,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
     uint d;
     for (size_t i = 0; i < regions.size(); ++i) {
       const GFXBufferTextureCopy& region = regions[i];
-      n = 0;
       w = region.texExtent.width;
       h = region.texExtent.height;
       d = region.texExtent.depth;
@@ -2075,8 +2072,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
     uint f;
     for (size_t i = 0; i < regions.size(); ++i) {
       const GFXBufferTextureCopy& region = regions[i];
-      n = 0;
-      
       uint face_count = region.texSubres.baseArrayLayer + region.texSubres.layerCount;
       for (f = region.texSubres.baseArrayLayer; f < face_count; ++f) {
         w = region.texExtent.width;
