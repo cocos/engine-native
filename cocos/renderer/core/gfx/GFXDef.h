@@ -128,10 +128,10 @@ enum class GFXFormat : uint {
   RGB32I,
   
   RGBA8,
+  BGRA8,
   SRGB8_A8,
   RGBA8SN,
   RGBA8UI,
-  BGRA8UN,
   RGBA8I,
   RGBA16F,
   RGBA16UI,
