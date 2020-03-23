@@ -551,7 +551,7 @@
     <ClCompile Include="..\cocos\renderer\core\gfx\GFXObject.cc">
       <Filter>renderer\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\cocos2d-x-lite\cocos\platform\win32\View-win32.cpp">
+    <ClCompile Include="..\cocos\platform\win32\View-win32.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1256,7 +1256,7 @@
     <ClInclude Include="..\cocos\renderer\core\gfx\GFXObject.h">
       <Filter>renderer\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\cocos2d-x-lite\cocos\platform\win32\View-win32.h">
+    <ClInclude Include="..\cocos\platform\win32\View-win32.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
   </ItemGroup>
