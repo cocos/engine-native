@@ -932,8 +932,9 @@ void GLES3CmdFuncCreateShader(GLES3Device* device, GLES3GPUShader* gpuShader) {
     }
     
     gpu_stage.glShader = glCreateShader(gl_shader_type);
-    const char* shader_src = gpu_stage.source.c_str();
-    glShaderSource(gpu_stage.glShader, 1, (const GLchar**)&shader_src, nullptr);
+    String shaderSource = "#version 300 es\n" + gpu_stage.source;
+    const char* source = shaderSource.c_str();
+    glShaderSource(gpu_stage.glShader, 1, (const GLchar**)&source, nullptr);
     glCompileShader(gpu_stage.glShader);
     
     glGetShaderiv(gpu_stage.glShader, GL_COMPILE_STATUS, &status);
