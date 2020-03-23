@@ -61,8 +61,6 @@ public:
     
     void setCursorEnabeld(bool);
 
-    void setTitle(const char *title);
-
 private:
     std::string _title;
     int _width = 0;

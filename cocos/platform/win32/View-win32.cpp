@@ -300,10 +300,4 @@ void View::setCursorEnabeld(bool enable)
     SDL_SetRelativeMouseMode(enable ? SDL_FALSE : SDL_TRUE);
 }
 
-void View::setTitle(const char *title)
-{
-    assert(_window);
-    SDL_SetWindowTitle(_window, title);
-}
-
 NS_CC_END
