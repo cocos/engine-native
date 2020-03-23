@@ -21,10 +21,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#import "View.h"
+#import "CCView.h"
 #import <AppKit/NSTouch.h>
 #import <AppKit/NSEvent.h>
-#import "KeyCodeHelper.h"
+#import "CCKeyCodeHelper.h"
 #import "scripting/js-bindings/event/EventDispatcher.h"
 
 @implementation View {

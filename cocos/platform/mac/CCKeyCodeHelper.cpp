@@ -21,7 +21,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "KeyCodeHelper.h"
+#include "CCKeyCodeHelper.h"
 #include <mutex>
 
 // Copy from glfw3.h

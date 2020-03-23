@@ -1,5 +1,5 @@
 #import "ViewController.h"
-#import "platform/mac/View.h"
+#import "platform/mac/CCView.h"
 
 @implementation ViewController
 {
