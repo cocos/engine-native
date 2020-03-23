@@ -23,11 +23,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-
 #import "ViewController.h"
-#import "cocos2d.h"
-
-#import "View.h"
 
 @interface ViewController ()
 
