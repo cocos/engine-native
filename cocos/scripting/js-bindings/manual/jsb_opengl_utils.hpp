@@ -53,7 +53,7 @@
                 do { \
                     GLenum gl_err = glGetError(); \
                     if (0 != gl_err) { \
-                        cocos2d::log("line: %d: GL error 0x%x: %s", __LINE__, gl_err, glEnumName(gl_err)); \
+                        SE_REPORT_ERROR("line: %d: GL error 0x%x: %s", __LINE__, gl_err, glEnumName(gl_err)); \
                         return false; \
                     } \
                 } while(false)
