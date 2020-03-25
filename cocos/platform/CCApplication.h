@@ -170,7 +170,6 @@ public:
 private:
     static Application* _instance;
     static std::shared_ptr<Scheduler> _scheduler;
-    void* _delegate = nullptr;
     int _fps = 60;
     cocos2d::Vec2 _viewLogicalSize;
 };
