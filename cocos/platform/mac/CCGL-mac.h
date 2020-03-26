@@ -43,6 +43,10 @@ THE SOFTWARE.
 #define glClearDepthf                   glClearDepth
 #define glDepthRangef                   glDepthRange
 #define glReleaseShaderCompiler(xxx)
+#define glDrawArraysInstanced           glDrawArraysInstancedARB
+#define glDrawElementsInstanced         glDrawElementsInstancedARB
+#define glIsVertexArray                 glIsVertexArrayAPPLE
+#define glVertexAttribDivisor           glVertexAttribDivisorARB
 
 #define GL_RGBA32F_EXT              0x8814
 #define GL_RGB32F_EXT               0x8815
