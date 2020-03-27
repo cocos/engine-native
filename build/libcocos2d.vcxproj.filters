@@ -407,6 +407,99 @@
     <ClCompile Include="..\cocos\renderer\core\math\CCCoreMath.cc">
       <Filter>renderer\core\math</Filter>
     </ClCompile>
+    <ClCompile Include="..\external\sources\tommyds\tommyhash.c">
+      <Filter>external\tommyds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\tommyds\tommyhashdyn.c">
+      <Filter>external\tommyds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\tommyds\tommylist.c">
+      <Filter>external\tommyds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_arena.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_atomic.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_base.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_bitmap.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_chunk.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_chunk_dss.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_chunk_mmap.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_ckh.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_ctl.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_extent.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_hash.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_huge.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_jemalloc.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_mb.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_mutex.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_nstime.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_pages.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_prng.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_prof.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_quarantine.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_rtree.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_spin.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_stats.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_tcache.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_ticker.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_tsd.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_util.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\sources\jemalloc\src\je_witness.c">
+      <Filter>external\jemalloc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos\base\base64.h">
@@ -944,6 +1037,21 @@
     <ClInclude Include="..\cocos\renderer\core\math\CCCoreMath.h">
       <Filter>renderer\core\math</Filter>
     </ClInclude>
+    <ClInclude Include="..\external\sources\tommyds\tommychain.h">
+      <Filter>external\tommyds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\sources\tommyds\tommyhash.h">
+      <Filter>external\tommyds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\sources\tommyds\tommyhashdyn.h">
+      <Filter>external\tommyds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\sources\tommyds\tommylist.h">
+      <Filter>external\tommyds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\sources\tommyds\tommytypes.h">
+      <Filter>external\tommyds</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -1047,6 +1155,12 @@
     </Filter>
     <Filter Include="renderer\core\util">
       <UniqueIdentifier>{3f8bf350-0419-4ee5-852c-68f85e45397c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\tommyds">
+      <UniqueIdentifier>{e4e775dc-21bf-43b4-b660-e72d6830bafb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\jemalloc">
+      <UniqueIdentifier>{e3e2c172-0978-4e02-b24a-d56464535028}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
