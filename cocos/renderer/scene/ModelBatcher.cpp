@@ -370,8 +370,6 @@ MeshBuffer* ModelBatcher::getBuffer(VertexFormat* fmt)
         buffer = iter->second;
     }
     
-    _buffer = buffer;
-    
     return buffer;
 }
 
