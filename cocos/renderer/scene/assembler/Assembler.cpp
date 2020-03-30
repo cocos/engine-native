@@ -256,10 +256,27 @@ void Assembler::updateOpacity(std::size_t index, uint8_t opacity)
     
     size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
     uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
-    for (uint32_t i = 0; i < vertexCount; ++i)
+    const Vector<Pass*>& passes = ia.getEffect()->getPasses();
+    if (passes.at(0)->getBlendSrc() == BlendFactor::ONE)
     {
-        *ptrAlpha = opacity;
-        ptrAlpha += dataPerVertex;
+        float alpha = opacity / 255.0;
+        for (uint32_t i = 0; i < vertexCount; ++i)
+        {
+           *(ptrAlpha-1) *= alpha;
+           *(ptrAlpha-2) *= alpha;
+           *(ptrAlpha-3) *= alpha;
+           
+           *ptrAlpha = opacity;
+           ptrAlpha += dataPerVertex;
+        }
+    }
+    else
+    {
+        for (uint32_t i = 0; i < vertexCount; ++i)
+        {
+           *ptrAlpha = opacity;
+           ptrAlpha += dataPerVertex;
+        }
     }
     
     *_dirty &= ~VERTICES_OPACITY_CHANGED;

@@ -80,15 +80,15 @@ namespace {
         {
             GLsizei length;
             GL_CHECK(glGetShaderiv(shader, GL_SHADER_SOURCE_LENGTH, &length));
-            GLchar* src = (GLchar *)malloc(sizeof(GLchar) * length);
+            GLchar* source = (GLchar *)malloc(sizeof(GLchar) * length);
 
-            GL_CHECK(glGetShaderSource(shader, length, nullptr, src));
-            RENDERER_LOGE("ERROR: Failed to compile shader:\n%s", src);
+            GL_CHECK(glGetShaderSource(shader, length, nullptr, source));
+            RENDERER_LOGE("ERROR: Failed to compile shader:\n%s", source);
 
             std::string shaderLog = logForOpenGLShader(shader);
             RENDERER_LOGE("%s", shaderLog.c_str());
 
-            free(src);
+            free(source);
 
             *outShader = 0;
             return false;

@@ -160,7 +160,7 @@ void ForwardRenderer::updateLights(Scene* scene)
 void ForwardRenderer::updateDefines()
 {
     _definesKey = "";
-    for (int i = 0; i < _lights.size(); i++)
+    for (size_t i = 0; i < _lights.size(); i++)
     {
         Light* light = _lights.at(i);
         
@@ -182,9 +182,10 @@ void ForwardRenderer::updateDefines()
 
 void ForwardRenderer::submitLightsUniforms()
 {
-    if (_lights.size() > 0)
+    size_t lCount = _lights.size();
+    if (lCount > 0)
     {
-        size_t count = std::min(CC_MAX_LIGHTS, (int)_lights.size());
+        size_t count = std::min(CC_MAX_LIGHTS, (int)lCount);
         float* directions = _arrayPool->add();
         float* colors = _arrayPool->add();
         float* positionAndRanges = _arrayPool->add();
@@ -245,13 +246,13 @@ void ForwardRenderer::submitOtherStagesUniforms()
     float* shadowLightInfo = _arrayPool->add();
     static float* shadowLightProjs = new float[4 * 16];
     
-    for (int i = 0; i < count; ++i)
+    for (size_t i = 0; i < count; ++i)
     {
         Light* light = _shadowLights.at(i);
         const Mat4& view = light->getViewProjMatrix();
         memcpy(shadowLightProjs + i * 16, view.m, sizeof(float) * 16);
         
-        int index = i * 4;
+        int index = (int)i * 4;
         *(shadowLightInfo + index) = light->getShadowMinDepth();
         *(shadowLightInfo + index + 1) = light->getShadowMaxDepth();
         *(shadowLightInfo + index + 2) = light->getShadowResolution();
@@ -293,7 +294,7 @@ void ForwardRenderer::drawItems(const std::vector<StageItem>& items)
     {
         for (const auto& item : items)
         {
-            for(int i = 0; i < count; i++)
+            for(size_t i = 0; i < count; i++)
             {
                 Light* light = _shadowLights.at(i);
                 _device->setTexture(cc_shadow_map[i], light->getShadowMap(), allocTextureUnit());
