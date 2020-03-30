@@ -1,7 +1,11 @@
 #include "StringUtil.h"
 #include "base/ccMacros.h"
+#include "platform/CCPlatformConfig.h"
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
+#include <string>
+#include <vector>
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #  ifndef WIN32_LEAN_AND_MEAN
 #    define WIN32_LEAN_AND_MEAN
 #  endif

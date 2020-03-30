@@ -749,9 +749,6 @@
     <ClInclude Include="..\cocos\renderer\core\util\StringUtil.h">
       <Filter>renderer\core\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\CoreDef.h">
-      <Filter>renderer\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\renderer\core\util\Utils.h">
       <Filter>renderer\core\util</Filter>
     </ClInclude>

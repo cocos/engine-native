@@ -197,7 +197,6 @@
     <ClInclude Include="..\cocos\platform\win32\CCPlatformDefine-win32.h" />
     <ClInclude Include="..\cocos\platform\win32\CCUtils-win32.h" />
     <ClInclude Include="..\cocos\platform\win32\compat\stdint.h" />
-    <ClInclude Include="..\cocos\renderer\core\CoreDef.h" />
     <ClInclude Include="..\cocos\renderer\core\util\Utils.h" />
     <ClInclude Include="..\cocos\renderer\core\util\StringUtil.h" />
     <ClInclude Include="..\cocos\renderer\Macro.h" />

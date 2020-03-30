@@ -103,39 +103,9 @@ scripting/js-bindings/jswrapper/v8/debugger/http_parser.c
 LOCAL_STATIC_LIBRARIES += v8_inspector
 LOCAL_STATIC_LIBRARIES += cocos_extension_static
 
-ifeq ($(USE_GFX_RENDERER),1)
 LOCAL_SRC_FILES += \
-renderer/core/CoreStd.cc \
-renderer/core/gfx/GFXBindingLayout.cc \
-renderer/core/gfx/GFXDevice.cc \
-renderer/core/gfx/GFXRenderPass.cc \
-renderer/core/gfx/GFXBuffer.cc \
-renderer/core/gfx/GFXFramebuffer.cc \
-renderer/core/gfx/GFXSampler.cc \
-renderer/core/gfx/GFXCommandAllocator.cc \
-renderer/core/gfx/GFXInputAssembler.cc \
-renderer/core/gfx/GFXShader.cc \
-renderer/core/gfx/GFXCommandBuffer.cc \
-renderer/core/gfx/GFXPipelineLayout.cc \
-renderer/core/gfx/GFXTexture.cc \
-renderer/core/gfx/GFXContext.cc \
-renderer/core/gfx/GFXPipelineState.cc \
-renderer/core/gfx/GFXTextureView.cc \
-renderer/core/gfx/GFXDef.cc \
-renderer/core/gfx/GFXQueue.cc \
-renderer/core/gfx/GFXWindow.cc \
-renderer/core/kernel/Assertion.cc \
-renderer/core/kernel/Log.cc \
-renderer/core/kernel/UTFString.cc \
-renderer/core/memory/AllocatedObj.cc \
-renderer/core/memory/JeAlloc.cc \
-renderer/core/memory/Memory.cc \
-renderer/core/memory/MemTracker.cc \
-renderer/core/memory/NedPooling.cc \
-renderer/core/math/CCCoreMath.cc \
 renderer/core/util/StringUtil.cc \
-renderer/core/util/GFXUtils.cpp
-endif # USE_GFX_RENDERER
+renderer/core/util/Utils.cpp
 
 ifeq ($(USE_VIDEO),1)
 LOCAL_SRC_FILES += \
