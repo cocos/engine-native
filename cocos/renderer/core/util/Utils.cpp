@@ -22,7 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "GFXUtils.h"
+#include "Utils.h"
 #include "Macro.h"
 
 #include <stdio.h>

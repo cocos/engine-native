@@ -1,5 +1,5 @@
-#include "CoreStd.h"
 #include "StringUtil.h"
+#include "base/ccMacros.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
 #  ifndef WIN32_LEAN_AND_MEAN
@@ -49,7 +49,7 @@ int StringUtil::Printf(char* buf, char* last, const char* fmt, ...) {
 	return ret;
 }
 
-String StringUtil::Format(const char* fmt, ...) {
+std::string StringUtil::Format(const char* fmt, ...) {
 	char sz[4096];
 	va_list args;
 	va_start(args, fmt);
@@ -58,15 +58,15 @@ String StringUtil::Format(const char* fmt, ...) {
 	return sz;
 }
 
-StringArray StringUtil::Split(const String &str, const String &delims, uint max_splits) {
-  StringArray strs;
+std::vector<std::string> StringUtil::Split(const std::string &str, const std::string &delims, uint32_t max_splits) {
+  std::vector<std::string> strs;
   if (str.empty())
     return strs;
 
   // Pre-allocate some space for performance
   strs.reserve(max_splits ? max_splits + 1 : 16);    // 16 is guessed capacity for most case
 
-  uint num_splits = 0;
+  uint32_t num_splits = 0;
 
   // Use STL methods
   size_t start, pos;
@@ -76,7 +76,7 @@ StringArray StringUtil::Split(const String &str, const String &delims, uint max_
     if (pos == start) {
       // Do nothing
       start = pos + 1;
-    } else if (pos == String::npos || (max_splits && num_splits == max_splits)) {
+    } else if (pos == std::string::npos || (max_splits && num_splits == max_splits)) {
       // Copy the rest of the string
       strs.push_back(str.substr(start));
       break;
@@ -88,7 +88,7 @@ StringArray StringUtil::Split(const String &str, const String &delims, uint max_
     // parse up to next real data
     start = str.find_first_not_of(delims, start);
     ++num_splits;
-  } while (pos != String::npos);
+  } while (pos != std::string::npos);
 
   return strs;
 }

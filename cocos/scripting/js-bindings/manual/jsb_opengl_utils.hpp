@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "util/GFXUtils.h"
+#include "util/Utils.h"
 
 #define _JSB_GL_CHECK(_call) \
                 do { \

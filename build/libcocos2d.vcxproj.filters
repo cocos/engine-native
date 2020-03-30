@@ -317,95 +317,11 @@
     <ClCompile Include="..\cocos\base\etc2.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXBindingLayout.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXBuffer.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXCommandAllocator.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXCommandBuffer.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXContext.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXDef.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXDevice.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXFramebuffer.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXInputAssembler.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXPipelineLayout.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXPipelineState.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXQueue.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXRenderPass.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXSampler.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXShader.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXTexture.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXTextureView.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\gfx\GFXWindow.cc">
-      <Filter>renderer\core\gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\kernel\Assertion.cc">
-      <Filter>renderer\core\kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\kernel\Log.cc">
-      <Filter>renderer\core\kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\kernel\UTFString.cc">
-      <Filter>renderer\core\kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\util\GFXUtils.cpp">
-      <Filter>renderer\core\util</Filter>
-    </ClCompile>
     <ClCompile Include="..\cocos\renderer\core\util\StringUtil.cc">
       <Filter>renderer\core\util</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\memory\AllocatedObj.cc">
-      <Filter>renderer\core\memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\memory\JeAlloc.cc">
-      <Filter>renderer\core\memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\memory\Memory.cc">
-      <Filter>renderer\core\memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\memory\MemTracker.cc">
-      <Filter>renderer\core\memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\memory\NedPooling.cc">
-      <Filter>renderer\core\memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\CoreStd.cc">
-      <Filter>renderer\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\renderer\core\math\CCCoreMath.cc">
-      <Filter>renderer\core\math</Filter>
+    <ClCompile Include="..\cocos\renderer\core\util\Utils.cpp">
+      <Filter>renderer\core\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -830,119 +746,14 @@
     <ClInclude Include="..\cocos\base\etc2.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXBindingLayout.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXBuffer.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXCommandAllocator.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXCommandBuffer.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXContext.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXDef.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXDevice.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXFramebuffer.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXInputAssembler.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXPipelineLayout.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXPipelineState.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXQueue.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXRenderPass.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXSampler.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXShader.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXTexture.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXTextureView.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\gfx\GFXWindow.h">
-      <Filter>renderer\core\gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\kernel\Assertion.h">
-      <Filter>renderer\core\kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\kernel\CachedArray.h">
-      <Filter>renderer\core\kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\kernel\Log.h">
-      <Filter>renderer\core\kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\kernel\Object.h">
-      <Filter>renderer\core\kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\kernel\UTFString.h">
-      <Filter>renderer\core\kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\util\GFXUtils.h">
-      <Filter>renderer\core\util</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\renderer\core\util\StringUtil.h">
       <Filter>renderer\core\util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\AllocatedObj.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\JeAlloc.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\MemDef.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\Memory.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\MemTracker.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\NedPooling.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\StdAlloc.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\memory\StlAlloc.h">
-      <Filter>renderer\core\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\Core.h">
-      <Filter>renderer\core</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\renderer\core\CoreDef.h">
       <Filter>renderer\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\CoreStd.h">
-      <Filter>renderer\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\TypeDef.h">
-      <Filter>renderer\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\renderer\core\math\CCCoreMath.h">
-      <Filter>renderer\core\math</Filter>
+    <ClInclude Include="..\cocos\renderer\core\util\Utils.h">
+      <Filter>renderer\core\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1032,18 +843,6 @@
     </Filter>
     <Filter Include="renderer\core">
       <UniqueIdentifier>{f563f02a-d4b8-4d8c-a25e-98a9f2b7f959}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\core\gfx">
-      <UniqueIdentifier>{3206479a-86b1-4287-9ba4-fcfbc81d4b80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\core\kernel">
-      <UniqueIdentifier>{d51857b5-edf7-4394-8a0d-ad312442268a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\core\math">
-      <UniqueIdentifier>{1e76726a-2205-45ae-9a95-d49075abbc42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\core\memory">
-      <UniqueIdentifier>{878f35fc-86a1-460f-b1d6-a2d957fad623}</UniqueIdentifier>
     </Filter>
     <Filter Include="renderer\core\util">
       <UniqueIdentifier>{3f8bf350-0419-4ee5-852c-68f85e45397c}</UniqueIdentifier>
