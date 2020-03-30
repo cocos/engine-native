@@ -469,18 +469,6 @@ str
 },
 
 /**
- * @method listFilesRecursively
- * @param {String} arg0
- * @param {Array} arg1
- */
-listFilesRecursively : function (
-str, 
-array 
-)
-{
-},
-
-/**
  * @method getWritablePath
  * @return {String}
  */

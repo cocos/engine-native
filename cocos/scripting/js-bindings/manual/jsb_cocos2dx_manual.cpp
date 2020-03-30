@@ -35,6 +35,8 @@
 
 using namespace cocos2d;
 
+extern se::Object* __jsb_cocos2d_FileUtils_proto;
+
 static bool jsb_cocos2dx_empty_func(se::State& s)
 {
     return true;
@@ -534,12 +536,44 @@ static bool register_canvas_context2d(se::Object* obj)
     return true;
 }
 
+static bool js_engine_FileUtils_listFilesRecursively(se::State& s)
+{
+    cocos2d::FileUtils* cobj = (cocos2d::FileUtils*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_engine_FileUtils_listFilesRecursively : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        std::string arg0;
+        std::vector<std::string> arg1;
+        ok &= seval_to_std_string(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_engine_FileUtils_listFilesRecursively : Error processing arguments");
+        cobj->listFilesRecursively(arg0, &arg1);
+        se::Object *list = args[1].toObject();
+        SE_PRECONDITION2(args[1].isObject() && list->isArray(), false, "js_engine_FileUtils_listFilesRecursively : 2nd argument should be an Array");
+        for(int i = 0; i < arg1.size(); i++ ) {
+            list->setArrayElement(i, se::Value(arg1[i]));
+        }
+        list->setProperty("length", se::Value(arg1.size()));
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_engine_FileUtils_listFilesRecursively)
+
+static bool register_filetuils_ext(se::Object* obj) {
+    __jsb_cocos2d_FileUtils_proto->defineFunction("listFilesRecursively", _SE(js_engine_FileUtils_listFilesRecursively));
+    return true;
+}
+
 bool register_all_cocos2dx_manual(se::Object* obj)
 {
     register_plist_parser(obj);
     register_sys_localStorage(obj);
     register_device(obj);
     register_canvas_context2d(obj);
+    register_filetuils_ext(obj);
     return true;
 }
 
