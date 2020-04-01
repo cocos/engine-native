@@ -53,7 +53,7 @@ namespace
                 (int)(viewSize.x  / devicePixelRatio),
                 (int)(viewSize.y  / devicePixelRatio));
         se->evalString(commandBuf);
-        ccViewport(0, 0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
+        ccViewport(0, 0, viewSize.x, viewSize.y);
         glDepthMask(GL_TRUE);
         return true;
     }

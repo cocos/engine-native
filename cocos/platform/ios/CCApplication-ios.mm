@@ -58,7 +58,7 @@ namespace
                 (int)(resolution.x / devicePixelRatio),
                 (int)(resolution.y / devicePixelRatio));
         se->evalString(commandBuf);
-        cocos2d::ccViewport(0, 0, resolution.x / devicePixelRatio, resolution.y / devicePixelRatio);
+        cocos2d::ccViewport(0, 0, resolution.x, resolution.y);
         glDepthMask(GL_TRUE);
         return true;
     }

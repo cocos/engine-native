@@ -30,6 +30,7 @@
 #include <mutex>
 #include "JniHelper.h"
 #include "platform/CCApplication.h"
+#include "platform/CCDevice.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "platform/android/CCFileUtils-android.h"
@@ -110,12 +111,12 @@ namespace
         se::AutoHandleScope scope;
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
-        uint8_t devicePixelRatio = Application::getInstance()->getDevicePixelRatio();
+        uint8_t devicePixelRatio = cocos2d::Device::getDevicePixelRatio();
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
                 g_width / devicePixelRatio,
                 g_height / devicePixelRatio);
         se->evalString(commandBuf);
-        glViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
+        glViewport(0, 0, g_width, g_height);
         glDepthMask(GL_TRUE);
         
         return true;
