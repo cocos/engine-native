@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <MMSystem.h>
 #include "platform/CCFileUtils.h"
 #include "platform/desktop/CCGLView-desktop.h"
+#include "platform/CCDevice.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "base/CCScheduler.h"
@@ -84,7 +85,7 @@ namespace
     bool setCanvasCallback(se::Object* global)
     {
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
-        uint8_t devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
+        uint8_t devicePixelRatio = cocos2d::Device::getDevicePixelRatio();
         char commandBuf[200] = {0};
         sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d;",
           (int)(g_width / devicePixelRatio),
