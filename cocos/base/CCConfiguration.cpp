@@ -172,6 +172,18 @@ void Configuration::gatherGPUInfo()
     _supportsOESPackedDepthStencil = checkForGLExtension("GL_OES_packed_depth_stencil");
     _valueDict["gl.supports_OES_packed_depth_stencil"] = Value(_supportsOESPackedDepthStencil);
     
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+        _supportsStandardDerivatives = true;
+    #else
+        if (_isOpenglES3) {
+            _supportsStandardDerivatives = true;
+        }
+        else {
+            _supportsStandardDerivatives = checkForGLExtension("OES_standard_derivatives");
+            _valueDict["gl.supports_standard_derivatives"] = Value(_supportsStandardDerivatives);
+        }
+    #endif
+    
     if (_isOpenglES3) {
         _supportsFloatTexture = true;
         _supportsShareableVAO = true;
@@ -328,6 +340,11 @@ bool Configuration::supportsOESDepth24() const
 bool Configuration::supportsFloatTexture() const
 {
     return _supportsFloatTexture;
+}
+
+bool Configuration::supportsStandardDerivatives() const
+{
+    return _supportsStandardDerivatives;
 }
 
 bool Configuration::supportsOESPackedDepthStencil() const

@@ -164,6 +164,13 @@ public:
      * @since v3.9.0
      */
     bool supportsFloatTexture() const;
+    
+    /** Whether or not standard derivatives is supported.
+     *
+     * @return Is true if tandard derivatives.
+     * @since v3.9.0
+    */
+    bool supportsStandardDerivatives() const;
 
     /** Whether or not glMapBuffer() is supported.
      *
@@ -267,6 +274,7 @@ protected:
     bool            _supportsOESDepth24;
     bool            _supportsOESPackedDepthStencil;
     bool            _supportsFloatTexture;
+    bool            _supportsStandardDerivatives;
     bool            _isOpenglES3;
     GLint           _maxSamplesAllowed;
     GLint           _maxTextureUnits;

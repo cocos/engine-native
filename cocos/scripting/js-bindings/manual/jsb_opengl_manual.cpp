@@ -3575,6 +3575,10 @@ static bool JSB_glGetSupportedExtensions(se::State& s) {
     if (Configuration::getInstance()->supportsETC2()) {
         jsobj->setArrayElement(element++, se::Value("WEBGL_compressed_texture_etc"));
     }
+    
+    if (Configuration::getInstance()->supportsStandardDerivatives()) {
+        jsobj->setArrayElement(element++, se::Value("OES_standard_derivatives"));
+    }
 
     s.rval().setObject(jsobj.get());
     CC_SAFE_DELETE_ARRAY(copy);
