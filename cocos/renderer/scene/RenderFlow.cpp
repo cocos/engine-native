@@ -299,7 +299,7 @@ void RenderFlow::calculateWorldMatrix()
     }
 }
 
-void RenderFlow::render(NodeProxy* scene, float deltaTime)
+void RenderFlow::render(NodeProxy* scene, float deltaTime, Camera *camera)
 {
     if (scene != nullptr)
     {
@@ -362,7 +362,12 @@ void RenderFlow::render(NodeProxy* scene, float deltaTime)
         traverseHandle(scene, _batcher, _scene);
         _batcher->terminateBatch();
 
-        _forward->render(_scene);
+        if (camera) {
+            _forward->renderCamera(camera, _scene);
+        }
+        else {
+            _forward->render(_scene);
+        }
     }
 }
 

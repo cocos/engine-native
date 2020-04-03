@@ -3866,7 +3866,18 @@ static bool js_renderer_RenderFlow_render(se::State& s)
         cobj->render(arg0, arg1);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    if (argc == 3) {
+        cocos2d::renderer::NodeProxy* arg0 = nullptr;
+        float arg1 = 0;
+        cocos2d::renderer::Camera* arg2 = nullptr;
+        ok &= seval_to_native_ptr(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_native_ptr(args[2], &arg2);
+        SE_PRECONDITION2(ok, false, "js_renderer_RenderFlow_render : Error processing arguments");
+        cobj->render(arg0, arg1, arg2);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
     return false;
 }
 SE_BIND_FUNC(js_renderer_RenderFlow_render)

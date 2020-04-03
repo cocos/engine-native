@@ -106,18 +106,17 @@ void ForwardRenderer::render(Scene* scene)
 
 void ForwardRenderer::renderCamera(Camera* camera, Scene* scene)
 {
-    reset();
+    resetData();
+    updateLights(scene);
+    
     auto &viewSize = Application::getInstance()->getViewSize();
-    int width = viewSize.x;
-    int height = viewSize.y;
-    FrameBuffer* fb = camera->getFrameBuffer();
-    if (nullptr != fb) {
-        width = fb->getWidth();
-        height = fb->getHeight();
+    View* cameraView = requestView();
+    camera->extractView(*cameraView, viewSize.x, viewSize.y);
+
+    for (size_t i = 0, len = _views->getLength(); i < len; ++i) {
+        const View* view = _views->getData(i);
+        BaseRenderer::render(*view, scene);
     }
-    View* view = requestView();
-    camera->extractView(*view, width, height);
-    BaseRenderer::render(*view, scene);
     
     scene->removeModels();
 }

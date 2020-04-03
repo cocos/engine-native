@@ -1725,10 +1725,12 @@ renderer.RenderFlow = {
  * @method render
  * @param {cc.renderer::NodeProxy} arg0
  * @param {float} arg1
+ * @param {cc.renderer::Camera} arg2
  */
 render : function (
 nodeproxy, 
-float 
+float, 
+camera 
 )
 {
 },

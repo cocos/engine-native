@@ -131,7 +131,7 @@ public:
      *  @brief Render the scene specified by its root node.
      *  @param[in] scene The root node.
      */
-    void render(NodeProxy* scene, float deltaTime);
+    void render(NodeProxy* scene, float deltaTime, Camera *camera = nullptr);
     /**
      *  @brief Visit a node tree.
      */
