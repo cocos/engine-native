@@ -24,6 +24,7 @@
 
 #include "Pass.h"
 #include "math/MathUtil.h"
+#include "Texture2D.h"
 
 RENDERER_BEGIN
 
@@ -275,6 +276,17 @@ void Pass::setProperty(size_t hashName, void* value)
     }
     
     prop->setValue(value);
+    
+    if (prop->getType() == Technique::Parameter::Type::TEXTURE_2D) {
+        if (prop->getTexture()) {
+            bool isAlphaAtlas = prop->getTexture()->isAlphaAtlas();
+            auto key = "CC_USE_ALPHA_ATLAS_" + prop->getName();
+            auto def = getDefine(key);
+            if (isAlphaAtlas || def) {
+                define(key, Value(isAlphaAtlas));
+            }
+        }
+    }
 }
 
 void Pass::setProperty(const std::string& name, const Technique::Parameter& property)

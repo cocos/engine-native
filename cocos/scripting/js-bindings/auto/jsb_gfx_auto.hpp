@@ -108,7 +108,9 @@ extern se::Class* __jsb_cocos2d_renderer_Texture_class;
 bool js_register_cocos2d_renderer_Texture(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 SE_DECLARE_FUNC(js_gfx_Texture_getWidth);
+SE_DECLARE_FUNC(js_gfx_Texture_setAlphaAtlas);
 SE_DECLARE_FUNC(js_gfx_Texture_getHeight);
+SE_DECLARE_FUNC(js_gfx_Texture_isAlphaAtlas);
 SE_DECLARE_FUNC(js_gfx_Texture_getTarget);
 
 extern se::Object* __jsb_cocos2d_renderer_Texture2D_proto;

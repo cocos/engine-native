@@ -254,6 +254,10 @@ public:
      */
     inline uint16_t getHeight() const { return _height; }
 
+    
+    inline void setAlphaAtlas(bool value) { _useAlphaAtlas = value; }
+    inline bool isAlphaAtlas() const { return _useAlphaAtlas; }
+    
 protected:
     
     static GLenum glFilter(Filter filter, Filter mipFilter = Filter::NONE);
@@ -286,6 +290,8 @@ protected:
 
     bool _hasMipmap;
     bool _compressed;
+    
+    bool _useAlphaAtlas = false;
 };
 
 // end of gfx group

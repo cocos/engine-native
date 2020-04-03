@@ -1360,6 +1360,25 @@ static bool js_gfx_Texture_getWidth(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_Texture_getWidth)
 
+static bool js_gfx_Texture_setAlphaAtlas(se::State& s)
+{
+    cocos2d::renderer::Texture* cobj = (cocos2d::renderer::Texture*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_Texture_setAlphaAtlas : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        bool arg0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_gfx_Texture_setAlphaAtlas : Error processing arguments");
+        cobj->setAlphaAtlas(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_Texture_setAlphaAtlas)
+
 static bool js_gfx_Texture_getHeight(se::State& s)
 {
     cocos2d::renderer::Texture* cobj = (cocos2d::renderer::Texture*)s.nativeThisObject();
@@ -1377,6 +1396,24 @@ static bool js_gfx_Texture_getHeight(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_gfx_Texture_getHeight)
+
+static bool js_gfx_Texture_isAlphaAtlas(se::State& s)
+{
+    cocos2d::renderer::Texture* cobj = (cocos2d::renderer::Texture*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_Texture_isAlphaAtlas : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        bool result = cobj->isAlphaAtlas();
+        ok &= boolean_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_Texture_isAlphaAtlas : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_Texture_isAlphaAtlas)
 
 static bool js_gfx_Texture_getTarget(se::State& s)
 {
@@ -1413,7 +1450,9 @@ bool js_register_gfx_Texture(se::Object* obj)
     auto cls = se::Class::create("Texture", obj, __jsb_cocos2d_renderer_RenderTarget_proto, nullptr);
 
     cls->defineFunction("getWidth", _SE(js_gfx_Texture_getWidth));
+    cls->defineFunction("setAlphaAtlas", _SE(js_gfx_Texture_setAlphaAtlas));
     cls->defineFunction("getHeight", _SE(js_gfx_Texture_getHeight));
+    cls->defineFunction("isAlphaAtlas", _SE(js_gfx_Texture_isAlphaAtlas));
     cls->defineFunction("getTarget", _SE(js_gfx_Texture_getTarget));
     cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_Texture_finalize));
     cls->install();
