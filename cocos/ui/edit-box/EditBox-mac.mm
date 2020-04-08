@@ -27,6 +27,8 @@
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 
+#import <AppKit/AppKit.h>
+
 /*************************************************************************
  Forward declaration of global functions.
  ************************************************************************/

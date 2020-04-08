@@ -38,6 +38,7 @@
 #include <condition_variable>
 #include <vector>
 #include <atomic>
+#include <chrono>
 
 namespace cocos2d {
 
@@ -225,7 +226,7 @@ private:
     int _maxThreadNum;
     int _initedThreadNum;
 
-    struct timeval _lastShrinkTime;
+    std::chrono::time_point<std::chrono::high_resolution_clock> _lastShrinkTime;
     float _shrinkInterval;
     int _shrinkStep;
     int _stretchStep;

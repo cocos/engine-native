@@ -29,9 +29,12 @@ THE SOFTWARE.
 #include <string>
 #include <ctype.h>
 #include <assert.h>
+#include "base/ccConfig.h" // CC_USE_JPEG, CC_USE_WEBP
+#if CC_USE_JPEG
+#include "jpeg/jpeglib.h"
+#endif // CC_USE_JPEG
 
 #include "base/CCData.h"
-#include "base/ccConfig.h" // CC_USE_JPEG, CC_USE_TIFF, CC_USE_WEBP
 #include "base/ccUtils.h"
 
 #ifndef MIN
@@ -76,6 +79,7 @@ extern "C"
 #if CC_USE_JPEG
 #include "jpeg/jpeglib.h"
 #endif // CC_USE_JPEG
+
 
 #include "base/etc1.h"
 #include "base/etc2.h"
