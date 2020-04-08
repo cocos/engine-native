@@ -173,9 +173,14 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage, id<M
                 if (inputAssembler)
                 {
                     gpuInputAssembler = inputAssembler->getGPUInputAssembler();
-                    [encoder setVertexBuffer:gpuInputAssembler->mtlVertexBufers[0]
-                                      offset:0
-                                     atIndex:30];
+                    
+                    for (const auto& layout : gpuPipelineState->layouts) {
+                        auto steam = std::get<static_cast<uint>(LayoutIndex::STEAM)>(layout);
+                        auto bufferIndex = std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout);
+                        [encoder setVertexBuffer:gpuInputAssembler->mtlVertexBufers[steam]
+                                          offset:0
+                                         atIndex:bufferIndex];
+                    }
                 }
                 
                 break;
@@ -189,20 +194,24 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage, id<M
                     {
                         if (gpuInputAssembler->mtlIndexBuffer && cmd->drawInfo.indexCount >= 0)
                         {
-                            uint8_t* offset = 0;
+                            NSUInteger offset = 0;
                             offset += cmd->drawInfo.firstIndex * inputAssembler->getIndexBuffer()->getStride();
                             if (cmd->drawInfo.instanceCount == 0)
                             {
                                 [encoder drawIndexedPrimitives:primitiveType
                                                     indexCount:cmd->drawInfo.indexCount
-                                                     // TODO: remove static_cast<>.
-                                                     indexType:static_cast<CCMTLBuffer*>(inputAssembler->getIndexBuffer() )->getIndexType()
+                                                     indexType:gpuInputAssembler->mtlIndexType
                                                    indexBuffer:gpuInputAssembler->mtlIndexBuffer
-                                             indexBufferOffset:0];
+                                             indexBufferOffset:offset];
                             }
                             else
                             {
-                                
+                                [encoder drawIndexedPrimitives:primitiveType
+                                                    indexCount:cmd->drawInfo.indexCount
+                                                     indexType:gpuInputAssembler->mtlIndexType
+                                                   indexBuffer:gpuInputAssembler->mtlIndexBuffer
+                                             indexBufferOffset:offset
+                                                 instanceCount:cmd->drawInfo.instanceCount];
                             }
                         }
                         else

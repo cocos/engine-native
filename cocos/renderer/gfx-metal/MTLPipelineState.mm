@@ -224,42 +224,33 @@ bool CCMTLPipelineState::createMTLRenderPipelineState()
 void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descriptor)
 {
     // attributes
-
-    auto mtlAttributes = static_cast<CCMTLShader*>(_shader)->getVertMTLFunction().vertexAttributes;
-    if (mtlAttributes == nil)
-        return;
-    
-    uint stride = 0;
-    bool matched = false;
-    for (MTLVertexAttribute* attrib in mtlAttributes)
+		int i = 0;
+			i++;
+    int i = 0;
+    //steam, offset, buffer index, isInstancing
+    std::vector<std::tuple<uint, uint, uint, bool>> layouts(GFX_MAX_VERTEX_ATTRIBUTES, std::make_tuple(0, 0, 0, false));
+    const uint defaultVertexBufferIndex = 30;
+    for (const auto& attrib : _inputState.attributes)
     {
-        auto attributeIndex = attrib.attributeIndex;
-        matched = false;
-        for (const auto& inputAttrib : _inputState.attributes)
-        {
-            if (inputAttrib.name.compare([attrib.name UTF8String]) == 0)
-            {
-                descriptor.vertexDescriptor.attributes[attributeIndex].format = mu::toMTLVertexFormat(inputAttrib.format);
-                descriptor.vertexDescriptor.attributes[attributeIndex].offset = stride;
-                //FIXME: because translated metal shader binds argument buffers from 0. So bind vertex buffer to max buffer index: 30.
-                descriptor.vertexDescriptor.attributes[attributeIndex].bufferIndex = 30;
-                
-                stride += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
-                matched = true;
-                break;
-            }
-        }
-        if (!matched)
-        {
-            CC_LOG_ERROR("Attribute %s is missing.", [attrib.name UTF8String]);
-            assert(false);
-        }
+        descriptor.vertexDescriptor.attributes[i].format = mu::toMTLVertexFormat(attrib.format);
+        descriptor.vertexDescriptor.attributes[i].offset = std::get<static_cast<uint>(LayoutIndex::STRIDE)>(layouts[attrib.stream]);
+        //FIXME: because translated metal shader binds argument buffers from 0. So bind vertex buffer to max buffer index: 30.
+        descriptor.vertexDescriptor.attributes[i].bufferIndex = defaultVertexBufferIndex - attrib.stream;
+        
+        std::get<static_cast<uint>(LayoutIndex::STEAM)>(layouts[attrib.stream]) = attrib.stream;
+        std::get<static_cast<uint>(LayoutIndex::STRIDE)>(layouts[attrib.stream]) += GFX_FORMAT_INFOS[(int)attrib.format].size;
+        std::get<static_cast<uint>(LayoutIndex::INDEX)>(layouts[attrib.stream]) = descriptor.vertexDescriptor.attributes[i].bufferIndex;
+        std::get<static_cast<uint>(LayoutIndex::INSTANCED)>(layouts[attrib.stream]) = attrib.isInstanced;
+        ++i;
     }
     
     // layouts
-    descriptor.vertexDescriptor.layouts[30].stride = stride;
-    descriptor.vertexDescriptor.layouts[30].stepFunction = MTLVertexStepFunctionPerVertex;
-    descriptor.vertexDescriptor.layouts[30].stepRate = 1;
+    for (const auto& layout : layouts) {
+        descriptor.vertexDescriptor.layouts[std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout)].stride = std::get<static_cast<uint>(LayoutIndex::STRIDE)>(layout);
+        descriptor.vertexDescriptor.layouts[std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout)].stepFunction = std::get<static_cast<uint>(LayoutIndex::INSTANCED)>(layout) ? MTLVertexStepFunctionPerInstance : MTLVertexStepFunctionPerVertex;
+        descriptor.vertexDescriptor.layouts[std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout)].stepRate = 1;
+    }
+    _GPUPipelieState->layouts = std::move(layouts);
 }
 
 void CCMTLPipelineState::setMTLFunctions(MTLRenderPipelineDescriptor* descriptor)

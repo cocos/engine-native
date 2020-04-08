@@ -26,7 +26,10 @@ bool CCMTLInputAssembler::initialize(const GFXInputAssemblerInfo& info)
         return false;
     
     if (info.indexBuffer)
+    {
         _GPUInputAssembler->mtlIndexBuffer = static_cast<CCMTLBuffer*>(info.indexBuffer)->getMTLBuffer();
+        _GPUInputAssembler->mtlIndexType =  static_cast<CCMTLBuffer*>(info.indexBuffer)->getIndexType();
+    }
     if (info.indirectBuffer)
         _GPUInputAssembler->mtlIndirectBuffer = static_cast<CCMTLBuffer*>(info.indirectBuffer)->getMTLBuffer();
     

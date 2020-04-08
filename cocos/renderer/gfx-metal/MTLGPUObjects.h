@@ -59,6 +59,7 @@ struct CCMTLGPUPipelineState
     CCMTLGPUTextureList* fragmentTextureList = nullptr;
     CCMTLGPUSamplerStateList* vertexSampleStateList = nullptr;
     CCMTLGPUSamplerStateList* fragmentSampleStateList = nullptr;
+    std::vector<std::tuple<uint, uint, uint, bool>> layouts;
 };
 
 class CCMTLGPUInputAssembler : public Object
@@ -67,6 +68,14 @@ public:
     id<MTLBuffer> mtlIndexBuffer = nil;
     id<MTLBuffer> mtlIndirectBuffer = nil;
     std::vector<id<MTLBuffer>> mtlVertexBufers;
+    MTLIndexType mtlIndexType = MTLIndexTypeUInt16;
+};
+
+enum class LayoutIndex : uint8_t{
+    STEAM,
+    STRIDE,
+    INDEX,
+    INSTANCED
 };
 
 NS_CC_END
