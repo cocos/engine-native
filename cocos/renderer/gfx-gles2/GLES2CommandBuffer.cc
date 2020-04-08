@@ -196,23 +196,17 @@ void GLES2CommandBuffer::draw(GFXInputAssembler* ia) {
     
     ++_numDrawCalls;
     _numInstances += ia->getInstanceCount();
+    auto vertexCount = ia->getIndexCount() ? ia->getIndexCount() : ia->getVertexCount();
     if(_curGPUPipelineState) {
       switch (_curGPUPipelineState->glPrimitive) {
         case GL_TRIANGLES: 
-        {
-            if (ia->getIndexBuffer() == nullptr)
-            {
-                _numTriangles += ia->getVertexCount() / 3 * std::max(ia->getInstanceCount(), 1U);
-            }
-            else
-            {
-                _numTriangles += ia->getIndexCount() / 3 * std::max(ia->getInstanceCount(), 1U);
-            }
+        { 
+          _numTriangles += vertexCount / 3 * std::max(ia->getInstanceCount(), 1U);
           break;
         }
         case GL_TRIANGLE_STRIP:
         case GL_TRIANGLE_FAN: {
-          _numTriangles += (ia->getVertexCount() - 2) * std::max(ia->getInstanceCount(), 1U);
+          _numTriangles += (vertexCount - 2) * std::max(ia->getInstanceCount(), 1U);
           break;
         }
         default:
