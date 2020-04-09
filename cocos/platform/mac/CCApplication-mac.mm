@@ -27,6 +27,7 @@ THE SOFTWARE.
 #import <Cocoa/Cocoa.h>
 #include <algorithm>
 #include <mutex>
+#include <thread>
 #include "base/CCScheduler.h"
 #include "base/CCAutoreleasePool.h"
 #include "base/CCGLUtils.h"

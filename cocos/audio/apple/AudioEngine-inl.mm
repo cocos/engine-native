@@ -32,9 +32,6 @@
 
 #import <OpenAL/alc.h>
 #import <AVFoundation/AVFoundation.h>
-#if CC_PLATFORM == CC_PLATFORM_MAC_IOS
-#import <UIKit/UIApplication.h>
-#endif
 
 #include "audio/include/AudioEngine.h"
 #include "platform/CCFileUtils.h"

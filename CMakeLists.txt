@@ -190,8 +190,12 @@ cocos_source_files(
     cocos/base/ccCArray.cpp
     cocos/base/ccCArray.h
     cocos/base/ccConfig.h
+    cocos/base/CCConfiguration.cpp
+    cocos/base/CCConfiguration.h
     cocos/base/CCData.cpp
     cocos/base/CCData.h
+    cocos/base/CCGLUtils.h
+    cocos/base/CCGLUtils.cpp
     cocos/base/CCLog.cpp
     cocos/base/CCLog.h
     cocos/base/ccMacros.h
@@ -201,12 +205,14 @@ cocos_source_files(
     cocos/base/CCRef.cpp
     cocos/base/CCRef.h
     cocos/base/CCRefPtr.h
-    #cocos/base/CCRenderTexture.cpp
-    #cocos/base/CCRenderTexture.h
+    cocos/base/CCRenderTexture.cpp
+    cocos/base/CCRenderTexture.h
     cocos/base/CCScheduler.cpp
     cocos/base/CCScheduler.h
     cocos/base/CCThreadPool.cpp
     cocos/base/CCThreadPool.h
+    cocos/base/ccTypes.h
+    cocos/base/ccTypes.cpp
     cocos/base/ccUTF8.cpp
     cocos/base/ccUTF8.h
     cocos/base/ccUtils.cpp
@@ -222,6 +228,8 @@ cocos_source_files(
     cocos/base/etc2.h
     cocos/base/pvr.cpp
     cocos/base/pvr.h
+    cocos/base/TGAlib.h
+    cocos/base/TGAlib.cpp
     cocos/base/uthash.h
     cocos/base/utlist.h
     cocos/base/ZipUtils.cpp
@@ -336,6 +344,14 @@ cocos_source_files(
     cocos/platform/CCSAXParser.h
     cocos/platform/CCStdC.h
 )
+
+if(WINDOWS OR MACOSX)
+    cocos_source_files(
+        cocos/platform/desktop/CCGLView-desktop.cpp
+        cocos/platform/desktop/CCGLView-desktop.h
+    )
+endif()
+
 if(WINDOWS)
     cocos_source_files(
         cocos/platform/win32/CCApplication-win32.cpp
@@ -344,11 +360,11 @@ if(WINDOWS)
         cocos/platform/win32/CCFileUtils-win32.cpp
         cocos/platform/win32/CCFileUtils-win32.h
         cocos/platform/win32/CCPlatformDefine-win32.h
+        cocos/platform/win32/CCGL-win32.h
         cocos/platform/win32/CCUtils-win32.cpp
         cocos/platform/win32/CCUtils-win32.h
-        cocos/platform/win32/View-win32.cpp
-        cocos/platform/win32/View-win32.h
-        cocos/platform/win32/compat
+        cocos/platform/win32/CCStdC-win32.cpp
+        cocos/platform/win32/CCStdC-win32.h
         cocos/platform/win32/compat/stdint.h
         cocos/platform/win32/inet_pton_mingw.cpp
         cocos/platform/win32/inet_pton_mingw.h
@@ -361,8 +377,7 @@ elseif(ANDROID)
         cocos/platform/android/CCFileUtils-android.cpp
         cocos/platform/android/CCFileUtils-android.h
         cocos/platform/android/CCPlatformDefine-android.h
-        cocos/platform/android/CCView.cpp
-        cocos/platform/android/CCView.h
+        cocos/platform/android/CCGL-android.h
         cocos/platform/android/jni/JniHelper.cpp
         cocos/platform/android/jni/JniHelper.h
         cocos/platform/android/jni/JniImp.cpp
@@ -383,227 +398,33 @@ elseif(APPLE)
     )
     if(MACOSX)
         cocos_source_files(
-            cocos/platform/mac/CCView.h
-            cocos/platform/mac/CCKeyCodeHelper.h
-            cocos/platform/mac/CCView.mm
-            cocos/platform/mac/CCModuleConfigMac.debug.xcconfig
-            cocos/platform/mac/cocos2d-prefix.pch
             cocos/platform/mac/CCPlatformDefine-mac.h
             cocos/platform/mac/CCDevice-mac.mm
+            cocos/platform/mac/CCGL-mac.h
             cocos/platform/mac/CCApplication-mac.mm
-            cocos/platform/mac/CCModuleConfigMac.release.xcconfig
-            cocos/platform/mac/CCKeyCodeHelper.cpp
         )
     elseif(IOS)
         cocos_source_files(
-            cocos/platform/ios/CCView.h
-            cocos/platform/ios/CCView.mm
+            cocos/platform/ios/CCGL-ios.h
+            cocos/platform/ios/CCEAGLView-ios.h
+            cocos/platform/ios/CCEAGLView-ios.mm
             cocos/platform/ios/CCApplication-ios.mm
-            cocos/platform/ios/cocos2d-prefix.pch
             cocos/platform/ios/CCDevice-ios.mm
             cocos/platform/ios/CCPlatformDefine-ios.h
             cocos/platform/ios/CCImage-ios.mm
+            cocos/platform/ios/OpenGL_Internal-ios.h
         )
     endif()
 endif()
 
 ##### renderer
 cocos_source_files(
-    cocos/renderer/core/Core.h
-    cocos/renderer/core/CoreDef.h
-    cocos/renderer/core/CoreStd.cc
-    cocos/renderer/core/CoreStd.h
-    cocos/renderer/core/gfx/GFXObject.h
-    cocos/renderer/core/gfx/GFXObject.cc
-    cocos/renderer/core/gfx/GFXBindingLayout.cc
-    cocos/renderer/core/gfx/GFXBindingLayout.h
-    cocos/renderer/core/gfx/GFXBuffer.cc
-    cocos/renderer/core/gfx/GFXBuffer.h
-    cocos/renderer/core/gfx/GFXCommand.h
-    cocos/renderer/core/gfx/GFXCommandAllocator.cc
-    cocos/renderer/core/gfx/GFXCommandAllocator.h
-    cocos/renderer/core/gfx/GFXCommandBuffer.cc
-    cocos/renderer/core/gfx/GFXCommandBuffer.h
-    cocos/renderer/core/gfx/GFXCommandPool.h
-    cocos/renderer/core/gfx/GFXContext.cc
-    cocos/renderer/core/gfx/GFXContext.h
-    cocos/renderer/core/gfx/GFXDef.cc
-    cocos/renderer/core/gfx/GFXDef.h
-    cocos/renderer/core/gfx/GFXDevice.cc
-    cocos/renderer/core/gfx/GFXDevice.h
-    cocos/renderer/core/gfx/GFXFramebuffer.cc
-    cocos/renderer/core/gfx/GFXFramebuffer.h
-    cocos/renderer/core/gfx/GFXInputAssembler.cc
-    cocos/renderer/core/gfx/GFXInputAssembler.h
-    cocos/renderer/core/gfx/GFXPipelineLayout.cc
-    cocos/renderer/core/gfx/GFXPipelineLayout.h
-    cocos/renderer/core/gfx/GFXPipelineState.cc
-    cocos/renderer/core/gfx/GFXPipelineState.h
-    cocos/renderer/core/gfx/GFXQueue.cc
-    cocos/renderer/core/gfx/GFXQueue.h
-    cocos/renderer/core/gfx/GFXRenderPass.cc
-    cocos/renderer/core/gfx/GFXRenderPass.h
-    cocos/renderer/core/gfx/GFXSampler.cc
-    cocos/renderer/core/gfx/GFXSampler.h
-    cocos/renderer/core/gfx/GFXShader.cc
-    cocos/renderer/core/gfx/GFXShader.h
-    cocos/renderer/core/gfx/GFXTexture.cc
-    cocos/renderer/core/gfx/GFXTexture.h
-    cocos/renderer/core/gfx/GFXTextureView.cc
-    cocos/renderer/core/gfx/GFXTextureView.h
-    cocos/renderer/core/gfx/GFXWindow.cc
-    cocos/renderer/core/gfx/GFXWindow.h
-    cocos/renderer/core/kernel/Assertion.cc
-    cocos/renderer/core/kernel/Assertion.h
-    cocos/renderer/core/kernel/CachedArray.h
-    cocos/renderer/core/kernel/Log.cc
-    cocos/renderer/core/kernel/Log.h
-    cocos/renderer/core/kernel/Object.h
-    cocos/renderer/core/kernel/UTFString.cc
-    cocos/renderer/core/kernel/UTFString.h
-    cocos/renderer/core/math/CCCoreMath.cc
-    cocos/renderer/core/math/CCCoreMath.h
-    cocos/renderer/core/memory/AllocatedObj.cc
-    cocos/renderer/core/memory/AllocatedObj.h
-    cocos/renderer/core/memory/JeAlloc.cc
-    cocos/renderer/core/memory/JeAlloc.h
-    cocos/renderer/core/memory/MemDef.h
-    cocos/renderer/core/memory/Memory.cc
-    cocos/renderer/core/memory/Memory.h
-    cocos/renderer/core/memory/MemTracker.cc
-    cocos/renderer/core/memory/MemTracker.h
-    cocos/renderer/core/memory/NedPooling.cc
-    cocos/renderer/core/memory/NedPooling.h
-    cocos/renderer/core/memory/StdAlloc.h
-    cocos/renderer/core/memory/StlAlloc.h
-    cocos/renderer/core/TypeDef.h
-    cocos/renderer/core/util/StringUtil.cc
+    cocos/renderer/core/util/Utils.h
+    cocos/renderer/core/util/Utils.cpp
     cocos/renderer/core/util/StringUtil.h
+    cocos/renderer/core/util/StringUtil.cc
+    cocos/renderer/Macro.h
 )
-
-if(CC_USE_GLES2)
-    cocos_source_files(
-        cocos/renderer/gfx-gles2/GFXGLES2.h
-        cocos/renderer/gfx-gles2/GLES2BindingLayout.cc
-        cocos/renderer/gfx-gles2/GLES2BindingLayout.h
-        cocos/renderer/gfx-gles2/GLES2Buffer.cc
-        cocos/renderer/gfx-gles2/GLES2Buffer.h
-        cocos/renderer/gfx-gles2/GLES2CommandAllocator.cc
-        cocos/renderer/gfx-gles2/GLES2CommandAllocator.h
-        cocos/renderer/gfx-gles2/GLES2CommandBuffer.cc
-        cocos/renderer/gfx-gles2/GLES2CommandBuffer.h
-        cocos/renderer/gfx-gles2/GLES2Commands.cc
-        cocos/renderer/gfx-gles2/GLES2Commands.h
-        cocos/renderer/gfx-gles2/GLES2Context.h
-        cocos/renderer/gfx-gles2/GLES2Device.cc
-        cocos/renderer/gfx-gles2/GLES2Device.h
-        cocos/renderer/gfx-gles2/GLES2Framebuffer.cc
-        cocos/renderer/gfx-gles2/GLES2Framebuffer.h
-        cocos/renderer/gfx-gles2/GLES2GPUObjects.h
-        cocos/renderer/gfx-gles2/GLES2InputAssembler.cc
-        cocos/renderer/gfx-gles2/GLES2InputAssembler.h
-        cocos/renderer/gfx-gles2/GLES2PipelineLayout.cc
-        cocos/renderer/gfx-gles2/GLES2PipelineLayout.h
-        cocos/renderer/gfx-gles2/GLES2PipelineState.cc
-        cocos/renderer/gfx-gles2/GLES2PipelineState.h
-        cocos/renderer/gfx-gles2/GLES2Queue.cc
-        cocos/renderer/gfx-gles2/GLES2Queue.h
-        cocos/renderer/gfx-gles2/GLES2RenderPass.cc
-        cocos/renderer/gfx-gles2/GLES2RenderPass.h
-        cocos/renderer/gfx-gles2/GLES2Sampler.cc
-        cocos/renderer/gfx-gles2/GLES2Sampler.h
-        cocos/renderer/gfx-gles2/GLES2Shader.cc
-        cocos/renderer/gfx-gles2/GLES2Shader.h
-        cocos/renderer/gfx-gles2/GLES2StateCache.h
-        cocos/renderer/gfx-gles2/GLES2Std.cc
-        cocos/renderer/gfx-gles2/GLES2Std.h
-        cocos/renderer/gfx-gles2/GLES2Texture.cc
-        cocos/renderer/gfx-gles2/GLES2Texture.h
-        cocos/renderer/gfx-gles2/GLES2TextureView.cc
-        cocos/renderer/gfx-gles2/GLES2TextureView.h
-        cocos/renderer/gfx-gles2/gles2w.h
-        cocos/renderer/gfx-gles2/GLES2Window.cc
-        cocos/renderer/gfx-gles2/GLES2Window.h
-    )
-
-    if(APPLE) 
-        cocos_source_files(
-            cocos/renderer/gfx-gles2/GLES2Context.mm
-            cocos/renderer/gfx-gles2/gles2w.mm
-        )
-    else()
-        cocos_source_files(
-            cocos/renderer/gfx-gles2/GLES2Context.cc
-            cocos/renderer/gfx-gles2/gles2w.c
-        )
-    endif()
-
-endif()
-
-if(CC_USE_GLES3)
-    cocos_source_files(
-        cocos/renderer/gfx-gles3/GFXGLES3.h
-        cocos/renderer/gfx-gles3/GLES3BindingLayout.cc
-        cocos/renderer/gfx-gles3/GLES3BindingLayout.h
-        cocos/renderer/gfx-gles3/GLES3Buffer.cc
-        cocos/renderer/gfx-gles3/GLES3Buffer.h
-        cocos/renderer/gfx-gles3/GLES3CommandAllocator.cc
-        cocos/renderer/gfx-gles3/GLES3CommandAllocator.h
-        cocos/renderer/gfx-gles3/GLES3CommandBuffer.cc
-        cocos/renderer/gfx-gles3/GLES3CommandBuffer.h
-        cocos/renderer/gfx-gles3/GLES3Commands.cc
-        cocos/renderer/gfx-gles3/GLES3Commands.h
-        cocos/renderer/gfx-gles3/GLES3Context.cc
-        cocos/renderer/gfx-gles3/GLES3Context.h
-        cocos/renderer/gfx-gles3/GLES3Device.cc
-        cocos/renderer/gfx-gles3/GLES3Device.h
-        cocos/renderer/gfx-gles3/GLES3Framebuffer.cc
-        cocos/renderer/gfx-gles3/GLES3Framebuffer.h
-        cocos/renderer/gfx-gles3/GLES3GPUObjects.h
-        cocos/renderer/gfx-gles3/GLES3InputAssembler.cc
-        cocos/renderer/gfx-gles3/GLES3InputAssembler.h
-        cocos/renderer/gfx-gles3/GLES3PipelineLayout.cc
-        cocos/renderer/gfx-gles3/GLES3PipelineLayout.h
-        cocos/renderer/gfx-gles3/GLES3PipelineState.cc
-        cocos/renderer/gfx-gles3/GLES3PipelineState.h
-        cocos/renderer/gfx-gles3/GLES3Queue.cc
-        cocos/renderer/gfx-gles3/GLES3Queue.h
-        cocos/renderer/gfx-gles3/GLES3RenderPass.cc
-        cocos/renderer/gfx-gles3/GLES3RenderPass.h
-        cocos/renderer/gfx-gles3/GLES3Sampler.cc
-        cocos/renderer/gfx-gles3/GLES3Sampler.h
-        cocos/renderer/gfx-gles3/GLES3Shader.cc
-        cocos/renderer/gfx-gles3/GLES3Shader.h
-        cocos/renderer/gfx-gles3/GLES3StateCache.h
-        cocos/renderer/gfx-gles3/GLES3Std.cc
-        cocos/renderer/gfx-gles3/GLES3Std.h
-        cocos/renderer/gfx-gles3/GLES3Texture.cc
-        cocos/renderer/gfx-gles3/GLES3Texture.h
-        cocos/renderer/gfx-gles3/GLES3TextureView.cc
-        cocos/renderer/gfx-gles3/GLES3TextureView.h
-        cocos/renderer/gfx-gles3/gles3w.h
-        cocos/renderer/gfx-gles3/GLES3Window.cc
-        cocos/renderer/gfx-gles3/GLES3Window.h
-    )
-    if(APPLE) 
-        cocos_source_files(
-            cocos/renderer/gfx-gles3/gles3w.mm
-        )
-    else()
-        cocos_source_files(
-            cocos/renderer/gfx-gles3/gles3w.c
-        )
-    endif()
-    if(IOS)
-        cocos_source_files(
-            cocos/renderer/gfx-gles3/GLES3Context.mm
-        )
-    endif()
-endif()
-
-if(CC_USE_GLES3 AND CC_USE_GLES2)
-    message(FATAL_ERROR "CC_USE_GLES3 & CC_USE_GLES3 should not be enabled at the same time!")
-endif()
 
 ##### script bindings
 ######## auto
@@ -616,8 +437,6 @@ cocos_source_files(
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_extension_auto.hpp
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.cpp
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.hpp
-    cocos/scripting/js-bindings/auto/jsb_gfx_auto.cpp
-    cocos/scripting/js-bindings/auto/jsb_gfx_auto.hpp
     cocos/scripting/js-bindings/auto/jsb_video_auto.cpp
     cocos/scripting/js-bindings/auto/jsb_video_auto.hpp
     cocos/scripting/js-bindings/auto/jsb_webview_auto.cpp
@@ -635,14 +454,14 @@ cocos_source_files(
     cocos/scripting/js-bindings/manual/jsb_cocos2dx_network_manual.h
     cocos/scripting/js-bindings/manual/jsb_conversions.cpp
     cocos/scripting/js-bindings/manual/jsb_conversions.hpp
-    cocos/scripting/js-bindings/manual/jsb_gfx_manual.cpp
-    cocos/scripting/js-bindings/manual/jsb_gfx_manual.hpp
     cocos/scripting/js-bindings/manual/jsb_global.cpp
     cocos/scripting/js-bindings/manual/jsb_global.h
     cocos/scripting/js-bindings/manual/jsb_helper.cpp
     cocos/scripting/js-bindings/manual/jsb_helper.hpp
     # cocos/scripting/js-bindings/manual/jsb_module_register.cpp
     cocos/scripting/js-bindings/manual/jsb_module_register.hpp
+    cocos/scripting/js-bindings/manual/jsb_opengl_manual.hpp
+    cocos/scripting/js-bindings/manual/jsb_opengl_manual.cpp
     cocos/scripting/js-bindings/manual/jsb_platform.h
     cocos/scripting/js-bindings/manual/jsb_socketio.cpp
     cocos/scripting/js-bindings/manual/jsb_socketio.hpp
@@ -667,19 +486,6 @@ elseif(APPLE)
 elseif(WIN32)
     cocos_source_files(
         cocos/scripting/js-bindings/manual/jsb_platfrom_win32.cpp
-    )
-endif()
-
-if(CC_USE_GLES2)
-    cocos_source_files(
-        cocos/scripting/js-bindings/auto/jsb_gles2_auto.hpp
-        cocos/scripting/js-bindings/auto/jsb_gles2_auto.cpp
-    )
-endif()
-if(CC_USE_GLES3)
-    cocos_source_files(
-        cocos/scripting/js-bindings/auto/jsb_gles3_auto.hpp
-        cocos/scripting/js-bindings/auto/jsb_gles3_auto.cpp
     )
 endif()
 
@@ -927,13 +733,15 @@ endif()
 
 if(APPLE) 
 
-    target_compile_options(cocos2d PRIVATE 
-        -Wno-objc-method-access
+    target_compile_options(cocos2d 
+        PRIVATE  -Wno-objc-method-access 
+        PUBLIC -DUSE_FILE32API
     )
 
     target_include_directories(cocos2d PUBLIC
         ${CWD}/cocos/platform/ios
     )
+
     find_library(ICONV_LIBRARY iconv)
     find_library(AUDIOTOOLBOX_LIBRARY AudioToolBox)
     find_library(FOUNDATION_LIBRARY Foundation)
@@ -960,9 +768,13 @@ if(APPLE)
     if(MACOSX)
         find_library(OPENGL_LIBRARY OpenGL)
         find_library(APPKIT_LIBRARY AppKit)
+        find_library(IOKIT_LIBRARY IOKit)
+        find_library(COREVIDEO_LIBRARY CoreVideo)
         target_link_libraries(cocos2d PUBLIC
             ${OPENGL_LIBRARY}
             ${APPKIT_LIBRARY}
+            ${IOKIT_LIBRARY}
+            ${COREVIDEO_LIBRARY}
         )
         target_compile_definitions(cocos2d PUBLIC 
             CC_KEYBOARD_SUPPORT

@@ -59,8 +59,8 @@ set(GAME_RES_ALL
 set(UI_RESOURCES)
 set(PROJ_EXTRA_SOURCE)
 set(PROJ_SOURCES 
-    Classes/Game.h
-    Classes/Game.cpp
+    Classes/AppDelegate.h
+    Classes/AppDelegate.cpp
 )
 
 if(EXISTS  Classes/jsb_module_register.cpp)
@@ -76,51 +76,38 @@ endif()
 
 if(WINDOWS)
     list(APPEND PROJ_SOURCES
-        proj.win32/AppDelegate.h
-        proj.win32/AppDelegate.cpp
         proj.win32/main.h
         proj.win32/main.cpp
         proj.win32/resource.h
     )
 elseif(MACOSX)
     set(UI_RESOURCES
-        proj.ios_mac/mac/Assets.xcassets
-       # proj.ios_mac/mac/UserConfigMac.release.xcconfig
-       # proj.ios_mac/mac/UserConfigMac.debug.xcconfig
+        #proj.ios_mac/mac/Assets.xcassets
         proj.ios_mac/mac/Icon.icns
     )
     list(APPEND PROJ_SOURCES
-        proj.ios_mac/mac/main.m
-        proj.ios_mac/mac/ViewController.mm
-        proj.ios_mac/mac/ViewController.h
-        proj.ios_mac/mac/Prefix.pch
-        proj.ios_mac/mac/AppDelegate.mm
-        proj.ios_mac/mac/AppDelegate.h
+        proj.ios_mac/mac/main.cpp
         ${UI_RESOURCES}
     )
 elseif(IOS)
 
     set(UI_RESOURCES
         #proj.ios_mac/ios/zh-Hans.lproj/Localizable.strings
-        #proj.ios_mac/ios/UserConfigIOS.release.xcconfig
-        #proj.ios_mac/ios/UserConfigIOS.debug.xcconfig
-        #proj.ios_mac/ios/Prefix.pch
         proj.ios_mac/ios/LaunchScreenBackground.png
-        #proj.ios_mac/ios/Info.plist
         proj.ios_mac/ios/Images.xcassets
         proj.ios_mac/ios/Base.lproj/Localizable.strings
         proj.ios_mac/ios/Base.lproj/LaunchScreen.storyboard
     )
 
     list(APPEND PROJ_SOURCES
-        proj.ios_mac/ios/AppDelegate.mm
-        proj.ios_mac/ios/AppDelegate.h
+        proj.ios_mac/ios/AppController.mm
+        proj.ios_mac/ios/AppController.h
         proj.ios_mac/ios/SDKWrapper.m
         proj.ios_mac/ios/SDKWrapper.h
         proj.ios_mac/ios/service/SDKDelegate.h
         proj.ios_mac/ios/main.m
-        proj.ios_mac/ios/ViewController.mm
-        proj.ios_mac/ios/ViewController.h
+        proj.ios_mac/ios/RootViewController.mm
+        proj.ios_mac/ios/RootViewController.h
         ${UI_RESOURCES}
     )
 
@@ -173,13 +160,6 @@ if(APPLE)
         set_target_properties(${LIB_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/proj.ios_mac/mac/Info.plist")
         set_target_properties(${LIB_NAME} PROPERTIES
             MACOSX_DEPLOYMENT_TARGET 10.10
-        )
-        get_property(gles2_loc TARGET GLESv2 PROPERTY IMPORTED_LOCATION)
-        get_property(egl_loc TARGET EGL PROPERTY IMPORTED_LOCATION)
-        add_custom_command(TARGET ${LIB_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${LIB_NAME}>/../Frameworks
-            COMMAND ${CMAKE_COMMAND} -E copy ${gles2_loc} $<TARGET_FILE_DIR:${LIB_NAME}>/../Frameworks
-            COMMAND ${CMAKE_COMMAND} -E copy ${egl_loc} $<TARGET_FILE_DIR:${LIB_NAME}>/../Frameworks
         )
     elseif(IOS)
         set(EXECUTABLE_NAME ${LIB_NAME}) # referenced in Info.plist
