@@ -176,6 +176,8 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage* commandPackage, id<M
                     
                     for (const auto& layout : gpuPipelineState->layouts) {
                         auto steam = std::get<static_cast<uint>(LayoutIndex::STEAM)>(layout);
+                        if(steam == -1)
+                            continue;
                         auto bufferIndex = std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout);
                         [encoder setVertexBuffer:gpuInputAssembler->mtlVertexBufers[steam]
                                           offset:0

@@ -225,10 +225,10 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
 {
     // attributes
 		int i = 0;
-			i++;
-    int i = 0;
+		
     //steam, offset, buffer index, isInstancing
-    std::vector<std::tuple<uint, uint, uint, bool>> layouts(GFX_MAX_VERTEX_ATTRIBUTES, std::make_tuple(0, 0, 0, false));
+    std::vector<std::tuple<int, uint, uint, bool>> layouts(GFX_MAX_VERTEX_ATTRIBUTES, std::make_tuple(-1, 0, 0, false));
+
     const uint defaultVertexBufferIndex = 30;
     for (const auto& attrib : _inputState.attributes)
     {
@@ -246,6 +246,8 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
     
     // layouts
     for (const auto& layout : layouts) {
+        if(std::get<static_cast<uint>(LayoutIndex::STEAM)>(layout) == -1)
+            continue;
         descriptor.vertexDescriptor.layouts[std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout)].stride = std::get<static_cast<uint>(LayoutIndex::STRIDE)>(layout);
         descriptor.vertexDescriptor.layouts[std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout)].stepFunction = std::get<static_cast<uint>(LayoutIndex::INSTANCED)>(layout) ? MTLVertexStepFunctionPerInstance : MTLVertexStepFunctionPerVertex;
         descriptor.vertexDescriptor.layouts[std::get<static_cast<uint>(LayoutIndex::INDEX)>(layout)].stepRate = 1;

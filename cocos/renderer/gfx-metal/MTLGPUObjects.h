@@ -59,7 +59,7 @@ struct CCMTLGPUPipelineState
     CCMTLGPUTextureList* fragmentTextureList = nullptr;
     CCMTLGPUSamplerStateList* vertexSampleStateList = nullptr;
     CCMTLGPUSamplerStateList* fragmentSampleStateList = nullptr;
-    std::vector<std::tuple<uint, uint, uint, bool>> layouts;
+    std::vector<std::tuple<int, uint, uint, bool>> layouts;
 };
 
 class CCMTLGPUInputAssembler : public Object
