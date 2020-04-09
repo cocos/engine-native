@@ -224,7 +224,7 @@ Mat4& Camera::worldMatrixToScreen(Mat4& out, const Mat4& worldMatrix, int width,
     _temp_mat4.translate(halfWidth, halfHeight, 0, &_temp_mat4);
     _temp_mat4.scale(halfWidth, halfHeight, 1, &_temp_mat4);
 
-    out.multiply(_temp_mat4);
+    Mat4::multiply(_temp_mat4, out, &out);
 
     return out;
 }
