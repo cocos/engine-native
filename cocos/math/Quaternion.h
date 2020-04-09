@@ -223,6 +223,14 @@ public:
      * @param q The quaternion to multiply.
      */
     void multiply(const Quaternion& q);
+    
+    /**
+     * Multiplies this quaternion by the specified one and stores the result in dst quaternion.
+     *
+     * @param q The quaternion to multiply.
+     * @param dst A quaternion to store the result in.
+     */
+    void multiply(const Quaternion& q, Quaternion* dst);
 
     /**
      * Multiplies the specified quaternions and stores the result in dst.

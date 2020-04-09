@@ -155,7 +155,12 @@ Quaternion Quaternion::getInversed() const
 
 void Quaternion::multiply(const Quaternion& q)
 {
-    multiply(q, *this, this);
+    multiply(*this, q, this);
+}
+
+void Quaternion::multiply(const Quaternion& q, Quaternion* dst)
+{
+    multiply(*this, q, dst);
 }
 
 void Quaternion::multiply(const Quaternion& q1, const Quaternion& q2, Quaternion* dst)
