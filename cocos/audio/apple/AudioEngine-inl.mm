@@ -39,6 +39,10 @@
 #include "base/CCScheduler.h"
 #include "base/ccUtils.h"
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#import <UIKit/UIKit.h>
+#endif
+
 using namespace cocos2d;
 
 static ALCdevice* s_ALDevice = nullptr;
