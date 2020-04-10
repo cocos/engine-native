@@ -40,7 +40,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 ################################# options ############################################
 
 if(ANDROID) 
-    set(CC_USE_GLES3 OFF)
+    set(CC_USE_GLES3 ON)
     set(CC_USE_GLES2 ON)
 else()
     set(CC_USE_GLES2 OFF)
@@ -599,10 +599,6 @@ if(CC_USE_GLES3)
             cocos/renderer/gfx-gles3/GLES3Context.mm
         )
     endif()
-endif()
-
-if(CC_USE_GLES3 AND CC_USE_GLES2)
-    message(FATAL_ERROR "CC_USE_GLES3 & CC_USE_GLES3 should not be enabled at the same time!")
 endif()
 
 ##### script bindings

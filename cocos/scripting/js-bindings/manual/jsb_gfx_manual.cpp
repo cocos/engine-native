@@ -4,6 +4,8 @@
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/auto/jsb_gfx_auto.hpp"
 #include "platform/CCPlatformConfig.h"
+#include "scripting/js-bindings/auto/jsb_gles3_auto.hpp"
+#include "renderer/gfx-gles3/GFXGLES3.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
 #define USE_GLES2
@@ -12,9 +14,6 @@
 #ifdef USE_GLES2
 #include "scripting/js-bindings/auto/jsb_gles2_auto.hpp"
 #include "renderer/gfx-gles2/GFXGLES2.h"
-#else
-#include "scripting/js-bindings/auto/jsb_gles3_auto.hpp"
-#include "renderer/gfx-gles3/GFXGLES3.h"
 #endif
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
@@ -145,7 +144,7 @@ static bool js_gfx_GLES2Device_copyTexImagesToTexture(se::State& s)
     return js_GFXDevice_copyTexImagesToTexture(s, cobj);
 }
 SE_BIND_FUNC(js_gfx_GLES2Device_copyTexImagesToTexture);
-#else
+#endif // USE_GLES2
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 static bool js_gfx_CCMTLDevice_copyBuffersToTexture(se::State& s)
@@ -180,8 +179,6 @@ static bool js_gfx_GLES3Device_copyTexImagesToTexture(se::State& s)
     return js_GFXDevice_copyTexImagesToTexture(s, cobj);
 }
 SE_BIND_FUNC(js_gfx_GLES3Device_copyTexImagesToTexture);
-
-#endif // USE_GLES2
 
 static bool js_gfx_GFXBuffer_update(se::State& s)
 {
@@ -729,13 +726,12 @@ bool register_all_gfx_manual(se::Object* obj)
     register_all_gles2(obj);
     __jsb_cocos2d_GLES2Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES2Device_copyBuffersToTexture));
     __jsb_cocos2d_GLES2Device_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_GLES2Device_copyTexImagesToTexture));
-
-#else
+#endif // USE_GLES2
+    
     register_all_gles3(obj);
     __jsb_cocos2d_GLES3Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES3Device_copyBuffersToTexture));
     __jsb_cocos2d_GLES3Device_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_GLES3Device_copyTexImagesToTexture));
-#endif // USE_GLES2    
-
+    
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     register_all_mtl(obj);
     __jsb_cocos2d_CCMTLDevice_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_CCMTLDevice_copyBuffersToTexture));
