@@ -50,8 +50,7 @@ function build_android()
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" app/build.gradle
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" settings.gradle
     sed -i "s/^RELEASE_/#RELEASE_/g" gradle.properties
-    # use ndk-build
-    # echo "PROP_USE_CMAKE = true" >> gradle.properties 
+    echo "PROP_USE_CMAKE = true" >> gradle.properties 
     echo "ANDORID_NDK ${ANDROID_NDK} or ${ANDROID_NDK_HOME}" 
     ./gradlew assembleDebug --quiet
     echo "Compile Android Done!"
