@@ -50,8 +50,11 @@ function build_android()
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" app/build.gradle
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" settings.gradle
     sed -i "s/^RELEASE_/#RELEASE_/g" gradle.properties
-    # use ndk-build
-    # echo "PROP_USE_CMAKE = true" >> gradle.properties 
+
+    echo "Compile Android - ndk-build ..."
+    ./gradlew assembleDebug --quiet
+    echo "PROP_USE_CMAKE = true" >> gradle.properties 
+    echo "Compile Android - cmake ..."
     echo "ANDORID_NDK ${ANDROID_NDK} or ${ANDROID_NDK_HOME}" 
     ./gradlew assembleDebug --quiet
     echo "Compile Android Done!"
@@ -118,6 +121,15 @@ function build_ios()
 
 function build_windows()
 {
+    echo "Compile build/libcocos2d.vcxproj ..."
+
+    if ! [ -x "$(command -v MSBuild)" ]; then
+        echo 'Error: MSBuild is not located!' 
+    else
+        cd $COCOS2DX_ROOT/build
+        MSBuild /nologo /t:Build libcocos2d.vcxproj
+    fi
+
     echo "Compiling Win32 ... "
     cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
     mkdir build-win32 

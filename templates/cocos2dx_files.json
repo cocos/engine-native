@@ -300,8 +300,6 @@
         "cocos/platform/win32/CCFileUtils-win32.h", 
         "cocos/platform/win32/CCGL-win32.h", 
         "cocos/platform/win32/CCPlatformDefine-win32.h", 
-        "cocos/platform/win32/CCStdC-win32.cpp", 
-        "cocos/platform/win32/CCStdC-win32.h", 
         "cocos/platform/win32/CCUtils-win32.cpp", 
         "cocos/platform/win32/CCUtils-win32.h", 
         "cocos/platform/win32/compat/stdint.h", 
