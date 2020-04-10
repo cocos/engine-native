@@ -39,7 +39,7 @@ THE SOFTWARE.
 // disable module if you didn't need it, this will reduce package size
 
 #ifndef USE_GFX_RENDERER
-#define USE_GFX_RENDERER 1
+#define USE_GFX_RENDERER 0
 #endif
 
 #ifndef USE_VIDEO

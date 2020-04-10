@@ -24,6 +24,7 @@
 
 #include "EventDispatcher.h"
 
+#include "cocos/base/CCLog.h"
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include "cocos/scripting/js-bindings/event/CustomEventTypes.h"
@@ -271,6 +272,14 @@ void EventDispatcher::dispatchTickEvent(float dt)
     if (_tickVal.isUndefined())
     {
         se::ScriptEngine::getInstance()->getGlobalObject()->getProperty("gameTick", &_tickVal);
+        if (_tickVal.isUndefined()) {
+            static int suppressLog = 0;
+            suppressLog++;
+            if(suppressLog < 3 || suppressLog % 120 == 111){ // log every other 120 frames
+                cocos2d::log("[ERROR] The entrance function is not defined, most likely scripts are not successfully loaded or error occurs in scripts." );
+            }
+            return;
+        }
     }
 
     static std::chrono::steady_clock::time_point prevTime;

@@ -20,7 +20,7 @@
  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
+  THE SOFTWARE.
  ****************************************************************************/
 #include "ScriptEngine.hpp"
 #include "platform/CCPlatformConfig.h"
@@ -39,6 +39,8 @@
 #include "debugger/env.h"
 #include "debugger/node.h"
 #endif
+
+#include "platform/CCFileUtils.h"
 
 uint32_t __jsbInvocationCount = 0;
 uint32_t __jsbStackFrameLimit = 20;
@@ -708,6 +710,12 @@ namespace se {
     {
         assert(!path.empty());
         assert(_fileOperationDelegate.isValid());
+
+        if (!cocos2d::FileUtils::getInstance()->isFileExist(path))
+        {
+            SE_LOGE("[ERROR] runScript: file \"%s\" not found in resource folder!\n", path.c_str());
+            return false;
+        }
 
         std::string scriptBuffer = _fileOperationDelegate.onGetStringFromFile(path);
 

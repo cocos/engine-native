@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 set(APP_NAME MyGame)
 project(${APP_NAME} CXX)
 
-enable_language(C ASM)
+enable_language(C)
 
 set(CMAKE_CXX_STANDARD 14)
 option(USE_SE_V8        "USE V8 JavaScript Engine"          ON)
@@ -26,7 +26,12 @@ set(cocosdir "${COCOS_X_ROOT}")
 if(NOT cocosdir)
     message(FATAL_ERROR "COCOS_X_ROOT is not set!")
 endif()
+
 include(${cocosdir}/CMakeLists.txt)
+
+if(ANDROID) 
+    enable_language(ASM)
+endif()
 
 if(ANDROID)
     set(LIB_NAME cocos2djs)

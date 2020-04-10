@@ -13,7 +13,7 @@ USE_ARM_MODE := 1
 
 # MUST be careful to modify this manually
 # disable module will speed up compile time, and reduce package size
-USE_GFX_RENDERER := 1
+USE_GFX_RENDERER := 0
 USE_VIDEO := 1
 USE_WEB_VIEW := 1
 USE_AUDIO := 1

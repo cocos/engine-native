@@ -3,6 +3,7 @@
 
 #include "base/ccMacros.h"
 #include <vector>
+#include <string>
 
 NS_CC_BEGIN
 
