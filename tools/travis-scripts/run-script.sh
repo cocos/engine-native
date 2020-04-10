@@ -86,7 +86,10 @@ function mac_download_cmake()
 
 function build_macosx()
 {
-    
+    echo "Compile build/cocos2d_libs.xcodeproj ..."
+    cd $COCOS2DX_ROOT/build
+    xcodebuild -project cocos2d_libs.xcodeproj -target "libcocos2d Mac" build  -quiet 
+
     echo "Compiling MacOSX ... "
     cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
     mkdir build-mac 
@@ -98,7 +101,10 @@ function build_macosx()
 
 function build_ios()
 {
-    
+    echo "Compile build/cocos2d_libs.xcodeproj ..."
+    cd $COCOS2DX_ROOT/build
+    xcodebuild -project cocos2d_libs.xcodeproj -target "libcocos2d iOS" build  -quiet 
+
     echo "Compiling iOS ... "
     cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
     mkdir build-ios 
@@ -136,7 +142,7 @@ function run_compile()
 
     if [ "$BUILD_TARGET" == "ios_cmake" ]; then
         mac_download_cmake
-        build_macosx
+        build_ios
     fi
 
     if [ "$BUILD_TARGET" == "windows_cmake" ]; then
