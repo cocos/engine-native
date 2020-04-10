@@ -683,7 +683,9 @@ target_compile_definitions(cocos2d PUBLIC
     $<$<CONFIG:Debug>:COCOS2D_DEBUG=1>
 )
 
-
+target_compile_definitions(cocos2d 
+    PUBLIC USE_FILE32API
+)
 
 target_include_directories(cocos2d PUBLIC 
     ${CC_EXTERNAL_INCLUDES}
@@ -735,7 +737,6 @@ if(APPLE)
 
     target_compile_options(cocos2d 
         PRIVATE  -Wno-objc-method-access 
-        PUBLIC -DUSE_FILE32API
     )
 
     target_include_directories(cocos2d PUBLIC

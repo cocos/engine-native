@@ -80,6 +80,10 @@ if(WINDOWS)
         proj.win32/main.cpp
         proj.win32/resource.h
     )
+elseif(ANDROID)
+    list(APPEND PROJ_SOURCES
+        proj.android-studio/app/jni/hellojavascript/main.cpp
+    )
 elseif(MACOSX)
     set(UI_RESOURCES
         #proj.ios_mac/mac/Assets.xcassets
