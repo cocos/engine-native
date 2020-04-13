@@ -206,6 +206,7 @@ class CocosZipInstaller(object):
             fo.close()
             # if downloaded from different url, remove the file
             if line.strip() != self._url and os.path.exists(self._filename):
+                print("==> Url has changed, delete previous file %s" % self._filename)
                 os.remove(self._filename)
 
         fw = open(download_url, 'wt')
