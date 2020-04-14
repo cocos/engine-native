@@ -90,24 +90,28 @@ function mac_download_cmake()
 
 function build_macosx()
 {
+    NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
+
     echo "Compile build/cocos2d_libs.xcodeproj ..."
     cd $COCOS2DX_ROOT/build
-    xcodebuild -project cocos2d_libs.xcodeproj -target "libcocos2d Mac" build  -quiet 
+    xcodebuild -project cocos2d_libs.xcodeproj -target "libcocos2d Mac" -jobs $NUM_OF_CORES -quiet build 
 
     echo "Compiling MacOSX ... "
     cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
     mkdir build-mac 
     cd build-mac
     cmake .. -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT
-    cmake --build . --config Release -- -quiet
+    cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORE
     echo "Compile MacOSX Done!"
 }
 
 function build_ios()
 {
+    NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
+
     echo "Compile build/cocos2d_libs.xcodeproj ..."
     cd $COCOS2DX_ROOT/build
-    xcodebuild -project cocos2d_libs.xcodeproj -target "libcocos2d iOS" build  -quiet 
+    xcodebuild -project cocos2d_libs.xcodeproj -target "libcocos2d iOS" -jobs $NUM_OF_CORES -quiet build 
 
     echo "Compiling iOS ... "
     cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
@@ -116,7 +120,7 @@ function build_ios()
     cmake .. -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT -DCMAKE_SYSTEM_NAME=iOS \
         -DCMAKE_OSX_SYSROOT=iphonesimulator \
         -DCMAKE_CXX_FLAGS="-DSCRIPT_ENGINE_TYPE=3"
-    cmake --build . --config Debug -- -quiet
+    cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORE
     echo "Compile iOS Done!"
 }
 
