@@ -101,7 +101,7 @@ function build_macosx()
     mkdir build-mac 
     cd build-mac
     cmake .. -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT
-    cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORE
+    cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORES
     echo "Compile MacOSX Done!"
 }
 
@@ -120,7 +120,7 @@ function build_ios()
     cmake .. -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT -DCMAKE_SYSTEM_NAME=iOS \
         -DCMAKE_OSX_SYSROOT=iphonesimulator \
         -DCMAKE_CXX_FLAGS="-DSCRIPT_ENGINE_TYPE=3"
-    cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORE
+    cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORES
     echo "Compile iOS Done!"
 }
 
