@@ -7,6 +7,8 @@ NS_CC_BEGIN
 class CCMTLFrameBuffer;
 struct CCMTLGPUPipelineState;
 class CCMTLInputAssembler;
+class CCMTLBindingLayout;
+class CCMTLPipelineState;
 
 struct CCMTLDepthBias
 {
@@ -43,10 +45,11 @@ public:
 class CCMTLCmdBindStates : public GFXCmd
 {
 public:
-    CCMTLGPUPipelineState* gpuPipelineState = nullptr;
+    GFXBindingLayout* bindingLayout = nullptr;
+    CCMTLPipelineState* pipelineState = nullptr;
     CCMTLInputAssembler* inputAssembler = nullptr;
-    MTLViewport viewport;
-    MTLScissorRect scissorRect;
+    MTLViewport viewport = {};
+    MTLScissorRect scissorRect = {};
     CCMTLDepthBias depthBias;
     CCMTLDepthBounds depthBounds;
     GFXColor blendConstants;
