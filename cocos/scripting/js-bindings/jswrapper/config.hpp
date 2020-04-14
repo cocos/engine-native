@@ -32,6 +32,8 @@
 
 #define SCRIPT_ENGINE_V8_ON_MAC      1 // default using v8 on macOS, set 0 to disable
 
+#ifndef SCRIPT_ENGINE_TYPE
+
 #if defined(__APPLE__)
     #include <TargetConditionals.h>
     #if TARGET_OS_OSX
@@ -54,6 +56,8 @@
     // which means it will build armv7, but v8 doesn't support armv7.
 #else
     #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_V8
+#endif
+
 #endif
 
 
