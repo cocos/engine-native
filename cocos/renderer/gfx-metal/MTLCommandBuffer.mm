@@ -25,12 +25,22 @@ bool CCMTLCommandBuffer::initialize(const GFXCommandBufferInfo& info)
     
     _currentDepthBias = CC_NEW(CCMTLDepthBias);
     if (_currentDepthBias == nullptr)
+    {
+        destroy();
         return false;
+    }
+    
+    _currentDepthBounds = CC_NEW(CCMTLDepthBounds);
+    if (_currentDepthBounds == nullptr)
+    {
+        destroy();
+        return false;
+    }
     
     _commandPackage = CC_NEW(CCMTLCommandPackage);
     if (_commandPackage == nullptr)
     {
-        CC_SAFE_DELETE(_currentDepthBias);
+        destroy();
         return false;
     }
     
@@ -51,6 +61,7 @@ void CCMTLCommandBuffer::destroy()
     
     CC_SAFE_DELETE(_commandPackage);
     CC_SAFE_DELETE(_currentDepthBias);
+    CC_SAFE_DELETE(_currentDepthBounds);
 }
 
 void CCMTLCommandBuffer::begin()
@@ -159,9 +170,15 @@ void CCMTLCommandBuffer::setBlendConstants(const GFXColor& constants)
     }
 }
 
-void CCMTLCommandBuffer::setDepthBound(float min_bounds, float max_bounds)
+void CCMTLCommandBuffer::setDepthBound(float minBounds, float maxBounds)
 {
-    
+    if (math::IsNotEqualF(minBounds, _currentDepthBounds->minBounds) ||
+        math::IsNotEqualF(maxBounds, _currentDepthBounds->maxBounds))
+    {
+        _currentDepthBounds->minBounds = minBounds;
+        _currentDepthBounds->maxBounds = maxBounds;
+        _isStateInValid = true;
+    }
 }
 
 void CCMTLCommandBuffer::setStencilWriteMask(GFXStencilFace face, uint mask)
@@ -275,6 +292,7 @@ void CCMTLCommandBuffer::bindStates()
 
     commandBindState->depthBias = *_currentDepthBias;
     commandBindState->blendConstants = _currentBlendConstants;
+    commandBindState->depthBounds = *_currentDepthBounds;
     
     if ( (commandBindState->viewportDirty = _isViewportDirty) )
         commandBindState->viewport = mu::toMTLViewport(_currentViewport);

@@ -15,6 +15,12 @@ struct CCMTLDepthBias
     float clamp = 0.0f;
 };
 
+struct CCMTLDepthBounds
+{
+    float minBounds = 0.0f;
+    float maxBounds = 0.0f;
+};
+
 class CCMTLCmdBeginRenderPass : public GFXCmd
 {
 public:
@@ -42,6 +48,7 @@ public:
     MTLViewport viewport;
     MTLScissorRect scissorRect;
     CCMTLDepthBias depthBias;
+    CCMTLDepthBounds depthBounds;
     GFXColor blendConstants;
     bool viewportDirty = false;
     bool scissorDirty = false;
