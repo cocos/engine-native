@@ -80,6 +80,8 @@ private:
     Vector<Light*> _lights;
     Vector<Light*> _shadowLights;
     
+    float _time[4];
+    
     RecyclePool<float>* _arrayPool = nullptr;
     std::size_t _numLights = 0;
 };

@@ -151,6 +151,7 @@ protected:
     static const size_t cc_matpProj;
     static const size_t cc_matViewProj;
     static const size_t cc_cameraPos;
+    static const size_t cc_time;
     
     static std::vector<const ValueMap*> __tmp_defines__;
 };

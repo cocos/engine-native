@@ -55,6 +55,7 @@ const size_t BaseRenderer::cc_matWorldIT = std::hash<std::string>{}("cc_matWorld
 const size_t BaseRenderer::cc_matpProj = std::hash<std::string>{}("cc_matpProj");
 const size_t BaseRenderer::cc_matViewProj = std::hash<std::string>{}("cc_matViewProj");
 const size_t BaseRenderer::cc_cameraPos = std::hash<std::string>{}("cc_cameraPos");
+const size_t BaseRenderer::cc_time = std::hash<std::string>{}("cc_time");
 
 const size_t BaseRenderer::cc_shadow_map[4] = {
     std::hash<std::string>{}("cc_shadow_map_0"),
