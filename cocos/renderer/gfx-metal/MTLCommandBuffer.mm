@@ -138,6 +138,8 @@ void CCMTLCommandBuffer::setDepthBias(float constant, float clamp, float slope)
         math::IsNotEqualF(slope, _currentDepthBias->slopeScale))
     {
         _currentDepthBias->depthBias = constant;
+        _currentDepthBias->slopeScale = slope;
+        _currentDepthBias->clamp = clamp;
         _isStateInValid = true;
     }
 }
