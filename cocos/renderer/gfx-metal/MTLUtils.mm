@@ -74,7 +74,8 @@ namespace mu
     GFXFormat convertGFXPixelFormat(GFXFormat format)
     {
         switch (format) {
-            case GFXFormat::RGB8: return GFXFormat::RGBA8;
+            case GFXFormat::RGB8:   return GFXFormat::RGBA8;
+            case GFXFormat::RGB32F: return GFXFormat::RGBA32F;
             default: return format;
         }
     }
