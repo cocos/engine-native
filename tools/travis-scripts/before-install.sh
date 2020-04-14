@@ -40,7 +40,9 @@ function install_android_ndk()
         HOST_NAME="windows"
     fi
     echo "Download android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
-    curl -O http://dl.google.com/android/repository/android-ndk-r16b-${HOST_NAME}-x86_64.zip
+    #curl -O http://dl.google.com/android/repository/android-ndk-r16b-${HOST_NAME}-x86_64.zip
+    wget -T 60 -t 5 -c http://dl.google.com/android/repository/android-ndk-r16b-${HOST_NAME}-x86_64.zip \
+        -O android-ndk-r16b-${HOST_NAME}-x86_64.zip
     echo "Decompress android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
     unzip -q android-ndk-r16b-${HOST_NAME}-x86_64.zip
     # Rename ndk
