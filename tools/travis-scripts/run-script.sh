@@ -119,7 +119,7 @@ function build_ios()
     cd build-ios
     cmake .. -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT -DCMAKE_SYSTEM_NAME=iOS \
         -DCMAKE_OSX_SYSROOT=iphonesimulator \
-        -DCMAKE_CXX_FLAGS="-DSCRIPT_ENGINE_TYPE=3"
+        -DUSE_SE_JSC=ON
     cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORES
     echo "Compile iOS Done!"
 }

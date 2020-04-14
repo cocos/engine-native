@@ -47,7 +47,10 @@ else()
     set(CC_USE_GLES3 ON)
 endif()
 
-
+if(USE_SE_JSC)
+    set(USE_SE_V8 OFF)
+    set(USE_V8_DEBUGGER OFF)
+endif()
 ################################# external source code ################################
 
 
