@@ -183,12 +183,12 @@ void CCMTLCommandBuffer::setDepthBound(float minBounds, float maxBounds)
 
 void CCMTLCommandBuffer::setStencilWriteMask(GFXStencilFace face, uint mask)
 {
-    
+    CC_LOG_ERROR("Don't support change stencil write mask here.");
 }
 
 void CCMTLCommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uint mask)
 {
-    
+    CC_LOG_ERROR("Don't support change stencil compare mask here.");
 }
 
 void CCMTLCommandBuffer::draw(GFXInputAssembler* ia)
