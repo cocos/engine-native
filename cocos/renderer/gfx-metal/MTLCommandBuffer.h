@@ -59,6 +59,7 @@ private:
     GFXRect _currentScissor;
     // Just don't want to include "Commands.h", because "Commands.h" includes Objective-C codes.
     CCMTLDepthBias* _currentDepthBias = nullptr;
+    GFXColor _currentBlendConstants;
 };
 
 NS_CC_END

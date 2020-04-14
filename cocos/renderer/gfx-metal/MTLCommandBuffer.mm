@@ -146,7 +146,17 @@ void CCMTLCommandBuffer::setDepthBias(float constant, float clamp, float slope)
 
 void CCMTLCommandBuffer::setBlendConstants(const GFXColor& constants)
 {
-    
+    if (math::IsNotEqualF(constants.r, _currentBlendConstants.r) ||
+        math::IsNotEqualF(constants.g, _currentBlendConstants.g) ||
+        math::IsNotEqualF(constants.b, _currentBlendConstants.b) ||
+        math::IsNotEqualF(constants.a, _currentBlendConstants.a))
+    {
+        _currentBlendConstants.r = constants.r;
+        _currentBlendConstants.g = constants.g;
+        _currentBlendConstants.b = constants.b;
+        _currentBlendConstants.a = constants.a;
+        _isStateInValid = true;
+    }
 }
 
 void CCMTLCommandBuffer::setDepthBound(float min_bounds, float max_bounds)
@@ -264,6 +274,7 @@ void CCMTLCommandBuffer::bindStates()
     commandBindState->inputAssembler = _currentInputAssembler;
 
     commandBindState->depthBias = *_currentDepthBias;
+    commandBindState->blendConstants = _currentBlendConstants;
     
     if ( (commandBindState->viewportDirty = _isViewportDirty) )
         commandBindState->viewport = mu::toMTLViewport(_currentViewport);

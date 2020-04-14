@@ -42,6 +42,7 @@ public:
     MTLViewport viewport;
     MTLScissorRect scissorRect;
     CCMTLDepthBias depthBias;
+    GFXColor blendConstants;
     bool viewportDirty = false;
     bool scissorDirty = false;
     
