@@ -229,6 +229,9 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
     if (mtlAttributes == nil)
         return;
     
+    std::vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stram*/>> layouts;
+    std::unordered_map<int /**vertexBufferBindingIndex*/, std::tuple<uint /**stride*/, bool /**isInstanced*/>> map;
+    const uint DEFAULT_VERTEX_BUFFER_INDEX = 30;
     uint stride = 0;
     bool matched = false;
     for (MTLVertexAttribute* attrib in mtlAttributes)
@@ -242,10 +245,13 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
                 descriptor.vertexDescriptor.attributes[attributeIndex].format = mu::toMTLVertexFormat(inputAttrib.format);
                 descriptor.vertexDescriptor.attributes[attributeIndex].offset = stride;
                 //FIXME: because translated metal shader binds argument buffers from 0. So bind vertex buffer to max buffer index: 30.
-                descriptor.vertexDescriptor.attributes[attributeIndex].bufferIndex = 30;
+                auto bufferIndex = DEFAULT_VERTEX_BUFFER_INDEX - inputAttrib.stream;
+                descriptor.vertexDescriptor.attributes[attributeIndex].bufferIndex = bufferIndex;
                 
                 stride += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
                 matched = true;
+                layouts.emplace_back(std::make_tuple(bufferIndex, inputAttrib.stream));
+                map[bufferIndex] = std::make_tuple(stride, inputAttrib.isInstanced);
                 break;
             }
         }
@@ -257,9 +263,13 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
     }
     
     // layouts
-    descriptor.vertexDescriptor.layouts[30].stride = stride;
-    descriptor.vertexDescriptor.layouts[30].stepFunction = MTLVertexStepFunctionPerVertex;
-    descriptor.vertexDescriptor.layouts[30].stepRate = 1;
+    for (const auto& layout : layouts) {
+        auto index = std::get<0>(layout);
+        descriptor.vertexDescriptor.layouts[index].stride = std::get<0>(map[index]);
+        descriptor.vertexDescriptor.layouts[index].stepFunction = std::get<1>(map[index]) ? MTLVertexStepFunctionPerInstance : MTLVertexStepFunctionPerVertex;
+        descriptor.vertexDescriptor.layouts[index].stepRate = 1;
+    }
+    _GPUPipelieState->vertexBufferBindingInfo = std::move(layouts);
 }
 
 void CCMTLPipelineState::setMTLFunctions(MTLRenderPipelineDescriptor* descriptor)
