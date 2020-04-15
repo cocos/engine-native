@@ -9,7 +9,7 @@ APP_LDFLAGS := -latomic
 # To solve windows commands char length too long
 APP_SHORT_COMMANDS := true
 
-USE_ARM_MODE := 0
+USE_ARM_MODE := 1
 
 # MUST be careful to modify this manually
 # disable module will speed up compile time, and reduce package size
