@@ -777,6 +777,101 @@ bool seval_to_reference(const se::Value& v, T** ret)
 /////////////////////////////////// helpers //////////////////////////////////////////////////////////
 
 template<typename T>
+struct HolderType_impl {
+    using type = T;
+    using value_type = typename std::remove_pointer_t<T>;
+    static constexpr inline auto & value(type & arg) {
+        if constexpr (std::is_pointer_v<T>) {
+            return *arg; 
+        }
+        else if constexpr (std::is_enum_v<T>) {
+            return arg;
+        }
+        else {
+            static_assert(std::is_pointer_v<T>, "Default HolderType should be pointer or enum!");
+        }
+    }
+};
+
+
+//template<template<class ,class> class C, class V>
+//struct HolderType_impl {
+//    using type = C<V, std::allocator<V>>;
+//    using value_type = type;
+//    static constexpr inline auto& value(type& arg) {
+//        return arg;
+//    }
+//};
+
+
+
+template<typename T, bool is_reference >
+struct HolderType : HolderType_impl<T> {
+    static constexpr auto value(type & arg) 
+    { 
+        if constexpr (!is_reference)
+            return arg;
+        else 
+            return HolderType_impl<T>::value(arg);
+    }
+};
+
+
+template<>
+struct HolderType_impl<std::string *> {
+    using type = std::string;
+    using value_type = std::string;
+    static constexpr inline std::string & value(type & arg) { return arg; }
+};
+
+template<>
+struct HolderType_impl<float> {
+    using type = float;
+    static constexpr inline float value(type & arg) { return arg;}
+};
+template<>
+struct HolderType_impl<uint32_t> {
+    using type = uint32_t;
+    static constexpr inline uint32_t value(type & arg) { return arg; }
+};
+template<>
+struct HolderType_impl<int32_t> {
+    using type = int32_t;
+    static constexpr inline int32_t value(type & arg) { return arg; }
+};
+template<>
+struct HolderType_impl<uint16_t> {
+    using type = uint16_t;
+    static constexpr inline uint16_t value(type & arg) { return arg; }
+};
+template<>
+struct HolderType_impl<int16_t> {
+    using type = int16_t;
+    static constexpr inline int16_t value(type & arg) { return arg; }
+};
+template<>
+struct HolderType_impl<uint8_t> {
+    using type = uint8_t;
+    static constexpr inline uint16_t value(type & arg) { return arg; }
+};
+template<>
+struct HolderType_impl<int8_t> {
+    using type = int8_t;
+    static constexpr inline int8_t value(type & arg) { return arg; }
+};
+template<>
+struct HolderType_impl<bool> {
+    using type = bool;
+    static constexpr inline type value(type& arg) { return arg; }
+};
+template<>
+struct HolderType_impl<void *> {
+    using type = void*;
+    static constexpr inline type value(type& arg) { return arg; }
+};
+
+
+template<typename T>
 struct is_jsb_object : std::false_type
 {};
 
@@ -921,10 +1016,11 @@ template<typename T>
 bool sevalue_to_native(const se::Value &from,  T ** to)
 {
     static_assert(is_jsb_object_v<T>, "Only JSB object are accepted!");
-    if (!from.isObject()) {
-        const std::string stack = se::ScriptEngine::getInstance()->getCurrentStackTrace();
-        SE_LOGE("[ERROR] sevalue_to_native: %s\nstack: %s", typeid(T).name(), stack.c_str());
-        return false;
+    if (from.isNullOrUndefined()) {
+        //const std::string stack = se::ScriptEngine::getInstance()->getCurrentStackTrace();
+        //SE_LOGE("[ERROR] sevalue_to_native jsval is null/undefined: %s\nstack: %s", typeid(T).name(), stack.c_str());
+        *to = nullptr;
+        return true;
     }
     *to = (T*) from.toObject()->getPrivateData();
     return true;
@@ -933,12 +1029,89 @@ bool sevalue_to_native(const se::Value &from,  T ** to)
 template<>
 bool sevalue_to_native(const se::Value &from, void ** to);
 
+template<>
+bool sevalue_to_native(const se::Value &from, std::string ** to);
+
+///////////////////////////////////////////////////////////////////
+
+template<typename T>
+bool nativevalue_to_se(const T &from, se::Value &to) {
+    if constexpr (is_jsb_object_v<T>) {
+        static_assert(false, "Convert ptr to seobject???");
+    }
+    else
+    {
+        static_assert(false, "nativevalue_to_se not implemented for type");
+    }
+    return false;
+}
+
+template<>
+inline bool nativevalue_to_se(const int32_t &from, se::Value &to)
+{
+    to.setInt32(from);
+    return true;
+}
+template<>
+inline bool nativevalue_to_se(const uint32_t &from, se::Value &to)
+{
+    to.setUint32(from);
+    return true;
+}
+template<>
+inline bool nativevalue_to_se(const int16_t &from, se::Value &to)
+{
+    to.setInt16(from);
+    return true;
+}
+template<>
+inline bool nativevalue_to_se(const uint16_t &from, se::Value &to)
+{
+    to.setUint16(from);
+    return true;
+}
+
+template<>
+inline bool nativevalue_to_se(const int8_t &from, se::Value &to)
+{
+    to.setInt8(from);
+    return true;
+}
+
+template<>
+inline bool nativevalue_to_se(const uint8_t &from, se::Value &to)
+{
+    to.setUint8(from);
+    return true;
+}
+
+template<>
+inline bool nativevalue_to_se(const std::string &from, se::Value &to)
+{
+    to.setString(from);
+    return true;
+}
+template<>
+inline bool nativevalue_to_se(const float &from, se::Value &to)
+{
+    to.setFloat(from);
+    return true;
+}
+
+template<typename T, typename std::enable_if_t<is_jsb_object_v<T>>>
+bool nativevalue_to_se(const T &from, se::Value &to) {
+
+    return false;
+}
+
+
 /////////////////////// FIXME: remove all code bellow
 ///////////////// gfx type
 namespace cocos2d {
     struct GFXCommandAllocatorInfo;
     class GFXContext;
 }
-template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo* to);
+//template<>
+//bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo** to);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXContext);
+JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandAllocatorInfo);
