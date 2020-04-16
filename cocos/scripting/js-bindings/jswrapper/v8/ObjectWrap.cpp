@@ -19,6 +19,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ObjectWrap.h"
+#include "cocos/base/CCLog.h"
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
@@ -75,6 +76,8 @@ namespace se {
     void ObjectWrap::wrap(void *nativeObj) {
         assert(handle()->InternalFieldCount() > 0);
         _nativeObj = nativeObj;
+       // uint32_t mmm = reinterpret_cast<uint32_t>(nativeObj);
+       // cocos2d::log("wrap ptr %p", nativeObj);
         handle()->SetAlignedPointerInInternalField(0, nativeObj);
     }
 

@@ -1427,3 +1427,78 @@ bool std_vector_EffectDefine_to_seval(const std::vector<cocos2d::ValueMap>& v, s
 
 #if USE_GFX_RENDERER
 #endif // USE_GFX_RENDERER > 0
+
+///////////////////////////////////convertion//////////////////////////////////////////////////////////
+
+template<>
+bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to)
+{
+    assert(from.toObject());
+    se::Object *array = from.toObject();
+    assert(array->isArrayBuffer() || array->isTypedArray() || array->isArray());
+
+    if (array->isArray())
+    {
+        uint32_t len = 0;
+        array->getArrayLength(&len);
+        to->resize(len);
+        se::Value tmp;
+        for (uint32_t i = 0; i < len; i++)
+        {
+            array->getArrayElement(i, &tmp);
+            sevalue_to_native(tmp, &(*to)[i]);
+        }
+    }
+    else if (array->isArrayBuffer())
+    {
+        uint8_t *buffer = nullptr;
+        size_t len = 0;
+        array->getArrayBufferData(&buffer, &len);
+        to->assign(buffer, buffer + len);
+    }
+    else if (array->isTypedArray())
+    {
+        uint8_t *buffer = nullptr;
+        size_t len = 0;
+        array->getTypedArrayData(&buffer, &len);
+        to->assign(buffer, buffer + len);
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
+
+////////////////// pointer types
+
+template<>
+bool sevalue_to_native(const se::Value &from, void ** to)
+{
+    assert(from.isObject()); // JS value should be arraybuffer or typedarray
+    se::Object *data = from.toObject();
+    assert(data->isArrayBuffer() || data->isTypedArray());
+    uint8_t *buffer = nullptr;
+    CC_UNUSED size_t len = 0;
+    if (data->isArrayBuffer())
+    {
+        data->getArrayBufferData(&buffer, &len);
+    }
+    else if (data->isTypedArray())
+    {
+        data->getTypedArrayData(&buffer, &len);
+    }
+    *to = (void*)buffer;
+    return true;
+}
+
+
+/////////////////////// FIXME: remove all code bellow
+///////////////// gfx type
+template<>
+bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo* to)
+{
+    return true;
+}

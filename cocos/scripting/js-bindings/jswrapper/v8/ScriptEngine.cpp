@@ -652,8 +652,17 @@ namespace se {
 
         if (!maybeScript.IsEmpty())
         {
+            v8::TryCatch try_catch(_isolate); 
             v8::Local<v8::Script> v8Script = maybeScript.ToLocalChecked();
             v8::MaybeLocal<v8::Value> maybeResult = v8Script->Run(_context.Get(_isolate));
+
+            if (try_catch.HasCaught()) {
+                    v8::String::Utf8Value stack(
+                        _isolate, 
+                        try_catch.StackTrace(_isolate->GetCurrentContext()).ToLocalChecked()); 
+                //try_catch.Message()->
+                SE_LOGE("[ERROR] run script error: trace: %s\n", *stack); 
+            }
 
             if (!maybeResult.IsEmpty())
             {
