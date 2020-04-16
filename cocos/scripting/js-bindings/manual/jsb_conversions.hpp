@@ -32,6 +32,11 @@
 #include "network/CCDownloader.h"
 #include "extensions/cocos-ext.h"
 
+#include <typeinfo>
+//#include "renderer/core/TypeDef.h"
+//#include "cocos/renderer/core/gfx/GFXContext.h"
+//#include "renderer/core/memory/StlAlloc.h"
+
 //#include "Box2D/Box2D.h"
 
 #define SE_PRECONDITION2_VOID(condition, ...) \
@@ -767,3 +772,225 @@ bool seval_to_reference(const se::Value& v, T** ret)
     *ret = (T*)v.toObject()->getPrivateData();
     return true;
 }
+
+/////////////////////////////////// helpers //////////////////////////////////////////////////////////
+
+template<typename T>
+struct is_jsb_object : std::false_type
+{};
+
+template<typename T>
+constexpr bool is_jsb_object_v = is_jsb_object<T>::value;
+
+#define JSB_REGISTER_OBJECT_TYPE(T) \
+    template<> \
+    struct is_jsb_object<T> : std::true_type {}\
+///////////////////////////////////convertion//////////////////////////////////////////////////////////
+
+
+template<typename T>
+bool sevalue_to_native(const se::Value &from, T* to)
+{
+    static_assert(std::is_same_v<T, int>, "sevalue_to_native not implemented for type");
+    //static_assert(std::is_class_v<T> || std::is_s)
+    return false;
+}
+
+
+template<typename T>
+bool sevalue_to_native(const se::Value &from, std::enable_if_t<std::is_enum_v<T>, T>* to)
+{
+    typename std::underlying_type_t<T> tmp;
+    *to = static_cast<T>sevalue_to_native(from, &tmp);
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, std::string * to)
+{
+    *to = from.toString();
+    return true;
+}
+
+///// integers
+template<>
+bool sevalue_to_native(const se::Value &from, bool* to)
+{
+    *to = from.toBoolean();
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, int32_t * to)
+{
+    *to = from.toInt32();
+    return true;
+}
+template<>
+bool sevalue_to_native(const se::Value &from, uint32_t * to)
+{
+    *to = from.toUint32();
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, int16_t * to)
+{
+    *to = from.toInt16();
+    return true;
+}
+template<>
+bool sevalue_to_native(const se::Value &from, uint16_t * to)
+{
+    *to = from.toUint16();
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, int8_t * to)
+{
+    *to = from.toInt8();
+    return true;
+}
+template<>
+bool sevalue_to_native(const se::Value &from, uint8_t * to)
+{
+    *to = from.toUint8();
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, uint64_t *to)
+{
+    *to = from.toUIntptr_t();
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, float * to)
+{
+    *to = from.toFloat();
+    return true;
+}
+//////////////// vector type
+
+template<typename T, size_t CNT>
+bool sevalue_to_native(const se::Value &from, std::array<T, CNT>* to)
+{
+    assert(from.toObject());
+    se::Object *array = from.toObject();
+    assert(array->isArray());
+    uint32_t len = 0;
+    array->getArrayLength(&len);
+    se::Value tmp;
+    assert(len >= CNT);
+    for (uint32_t i = 0; i < CNT; i++)
+    {
+        array->getArrayElement(i, &tmp);
+        sevalue_to_native(tmp, &(*to)[i]);
+    }
+    return true;
+}
+
+
+template<typename T>
+bool sevalue_to_native(const se::Value &from, std::vector<T>* to)
+{
+    assert(from.toObject());
+    se::Object *array = from.toObject();
+    assert(array->isArray());
+    uint32_t len = 0;
+    array->getArrayLength(&len);
+    to->resize(len);
+    se::Value tmp;
+    for(uint32_t i = 0; i < len; i++)
+    {
+        array->getArrayElement(i, &tmp);
+        sevalue_to_native(tmp, &(*to)[i]);
+    }
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to)
+{
+    assert(from.toObject());
+    se::Object *array = from.toObject();
+    assert(array->isArrayBuffer() || array->isTypedArray() || array->isArray());
+
+    if (array->isArray())
+    {
+        uint32_t len = 0;
+        array->getArrayLength(&len);
+        to->resize(len);
+        se::Value tmp;
+        for (uint32_t i = 0; i < len; i++)
+        {
+            array->getArrayElement(i, &tmp);
+            sevalue_to_native(tmp, &(*to)[i]);
+        }
+    }
+    else if (array->isArrayBuffer())
+    {
+        uint8_t *buffer = nullptr;
+        size_t len = 0;
+        array->getArrayBufferData(&buffer, &len);
+        to->assign(buffer, buffer + len);
+    } 
+    else if (array->isTypedArray())
+    {
+        uint8_t *buffer = nullptr;
+        size_t len = 0;
+        array->getTypedArrayData(&buffer, &len);
+        to->assign(buffer, buffer + len);
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
+////////////////// pointer types
+
+template<typename T>
+bool sevalue_to_native(const se::Value &from,  T ** to)
+{
+    static_assert(is_jsb_object_v<T>, "Only JSB object are accepted!");
+    *to = (T*) from.toObject()->getPrivateData();
+    return true;
+}
+
+template<>
+bool sevalue_to_native(const se::Value &from, void ** to)
+{
+    assert(from.isObject()); // JS value should be arraybuffer or typedarray
+    se::Object *data = from.toObject();
+    assert(data->isArrayBuffer() || data->isTypedArray());
+    uint8_t *buffer = nullptr;
+    CC_UNUSED size_t len = 0;
+    if (data->isArrayBuffer()) 
+    {
+        data->getArrayBufferData(&buffer, &len);
+    }
+    else if (data->isTypedArray())
+    {
+        data->getTypedArrayData(&buffer, &len);
+    }
+    *to = (void*)buffer;
+    return true;
+}
+
+/////////////////////// FIXME: remove all code bellow
+///////////////// gfx type
+namespace cocos2d {
+    struct GFXCommandAllocatorInfo;
+    class GFXContext;
+}
+template<>
+bool sevalue_to_native(const se::Value &from,  cocos2d::GFXCommandAllocatorInfo* to)
+{
+    return true;
+}
+JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXContext);

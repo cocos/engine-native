@@ -1,6 +1,8 @@
 #ifndef CC_CORE_GFX_DEF_H_
 #define CC_CORE_GFX_DEF_H_
 
+#include <array>
+
 NS_CC_BEGIN
 
 class GFXDevice;
@@ -836,18 +838,18 @@ struct GFXDepthStencilAttachment {
 
 struct GFXSubPass {
   GFXPipelineBindPoint bindPoint = GFXPipelineBindPoint::GRAPHICS;
-  uint8_t inputs[GFX_MAX_ATTACHMENTS];
-  uint8_t colors[GFX_MAX_ATTACHMENTS];
-  uint8_t resolves[GFX_MAX_ATTACHMENTS];
+  std::array<uint8_t, GFX_MAX_ATTACHMENTS> inputs;
+  std::array<uint8_t, GFX_MAX_ATTACHMENTS> colors;
+  std::array<uint8_t, GFX_MAX_ATTACHMENTS> resolves;
   uint8_t depthStencil = GFX_INVALID_BINDING;
-  uint8_t preserves[GFX_MAX_ATTACHMENTS];
+  std::array<uint8_t, GFX_MAX_ATTACHMENTS> preserves;
   
   GFXSubPass()
   {
-    memset(inputs, -1, sizeof(inputs));
-    memset(colors, -1, sizeof(colors));
-    memset(resolves, -1, sizeof(resolves));
-    memset(preserves, -1, sizeof(preserves));
+    memset(inputs.data(), -1, sizeof(inputs));
+    memset(colors.data(), -1, sizeof(colors));
+    memset(resolves.data(), -1, sizeof(resolves));
+    memset(colors.data(), -1, sizeof(preserves));
   }
 };
 
