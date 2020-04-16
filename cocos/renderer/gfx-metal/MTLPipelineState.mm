@@ -229,10 +229,10 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
     if (mtlAttributes == nil)
         return;
     
-    std::vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stram*/>> layouts;
+    std::vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stream*/>> layouts;
     std::unordered_map<int /**vertexBufferBindingIndex*/, std::tuple<uint /**stride*/, bool /**isInstanced*/>> map;
     const uint DEFAULT_VERTEX_BUFFER_INDEX = 30;
-    uint stride = 0;
+    uint streamOffsets[GFX_MAX_VERTEX_ATTRIBUTES] = {0};
     bool matched = false;
     for (MTLVertexAttribute* attrib in mtlAttributes)
     {
@@ -243,15 +243,15 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
             if (inputAttrib.name.compare([attrib.name UTF8String]) == 0)
             {
                 descriptor.vertexDescriptor.attributes[attributeIndex].format = mu::toMTLVertexFormat(inputAttrib.format);
-                descriptor.vertexDescriptor.attributes[attributeIndex].offset = stride;
+                descriptor.vertexDescriptor.attributes[attributeIndex].offset = streamOffsets[inputAttrib.stream];
                 //FIXME: because translated metal shader binds argument buffers from 0. So bind vertex buffer to max buffer index: 30.
                 auto bufferIndex = DEFAULT_VERTEX_BUFFER_INDEX - inputAttrib.stream;
                 descriptor.vertexDescriptor.attributes[attributeIndex].bufferIndex = bufferIndex;
                 
-                stride += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
-                matched = true;
+                streamOffsets[inputAttrib.stream] += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
                 layouts.emplace_back(std::make_tuple(bufferIndex, inputAttrib.stream));
-                map[bufferIndex] = std::make_tuple(stride, inputAttrib.isInstanced);
+                map[bufferIndex] = std::make_tuple(streamOffsets[inputAttrib.stream], inputAttrib.isInstanced);
+                matched = true;
                 break;
             }
         }
