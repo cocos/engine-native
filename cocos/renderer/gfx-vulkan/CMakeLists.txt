@@ -6,11 +6,20 @@ message(STATUS "Target: ${TARGET_NAME}...")
 
 set(INCLUDE_FILES
   ${GFX_EXTERNAL_PATH}/khronos
+  ${GFX_EXTERNAL_PATH}/volk
   ${GFX_EXTERNAL_PATH}/glsl_optimizer/src
   ${GFX_EXTERNAL_PATH}/glsl_optimizer/src/mesa
   ${COCOS_SRC_PATH}/renderer/core
   ${COCOS_SRC_PATH}/renderer/gfx-vulkan
 )
+
+if(WIN32)
+	add_definitions("-DVK_USE_PLATFORM_WIN32_KHR")
+elseif(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
+	add_definitions("-DVK_USE_PLATFORM_MACOS_MVK")
+else()
+	add_definitions("-DVK_USE_PLATFORM_XLIB_KHR")
+endif()
 
 if(WIN32)
   list(APPEND INCLUDE_FILES ${GFX_EXTERNAL_PATH}/pvrsdk/include)
@@ -46,12 +55,12 @@ if(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
 endif()
 
 if(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
-	list(REMOVE_ITEM ALL_FILES "${COCOS_SRC_PATH}/renderer/gfx-CCVK/CCVKw.c")
+	list(REMOVE_ITEM ALL_FILES "${COCOS_SRC_PATH}/renderer/gfx-vulkan/gles3w.c")
 else()
-	list(REMOVE_ITEM ALL_FILES "${COCOS_SRC_PATH}/renderer/gfx-CCVK/CCVKw.mm")
+	list(REMOVE_ITEM ALL_FILES "${COCOS_SRC_PATH}/renderer/gfx-vulkan/gles3w.mm")
 endif()
 	
-add_definitions("-DCC_CCVK_EXPORTS")
+add_definitions("-DCC_VK_EXPORTS")
 if(WIN32)
 	add_definitions("-DGLEW_BUILD")
 endif()
@@ -67,9 +76,9 @@ endif()
 
 target_link_libraries(${TARGET_NAME} Core)
 
-set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME CCGFXCCVK)
-set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME_DEBUG CCGFXCCVK_d)
+set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME CCGFXVulkan)
+set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME_DEBUG CCGFXVulkan_d)
 
-use_precompiled_header("${CMAKE_CURRENT_SOURCE_DIR}/CCVKStd.h" "${CMAKE_CURRENT_SOURCE_DIR}/CCVKStd.cpp" SOURCE_CPP_FILES)
+use_precompiled_header("${CMAKE_CURRENT_SOURCE_DIR}/VKStd.h" "${CMAKE_CURRENT_SOURCE_DIR}/VKStd.cpp" SOURCE_CPP_FILES)
 
 message(STATUS "${TARGET_NAME} configuration completed.") 

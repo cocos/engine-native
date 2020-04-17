@@ -1,12 +1,12 @@
-#include "CCVKStd.h"
-#include "CCVKCommandBuffer.h"
-#include "CCVKCommandAllocator.h"
-#include "CCVKFramebuffer.h"
-#include "CCVKPipelineState.h"
-#include "CCVKBindingLayout.h"
-#include "CCVKInputAssembler.h"
-#include "CCVKBuffer.h"
-#include "CCVKTexture.h"
+#include "VKStd.h"
+#include "VKCommandBuffer.h"
+#include "VKCommandAllocator.h"
+#include "VKFramebuffer.h"
+#include "VKPipelineState.h"
+#include "VKBindingLayout.h"
+#include "VKInputAssembler.h"
+#include "VKBuffer.h"
+#include "VKTexture.h"
 
 NS_CC_BEGIN
 

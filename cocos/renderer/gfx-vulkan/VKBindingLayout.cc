@@ -1,9 +1,9 @@
-#include "CCVKStd.h"
-#include "CCVKBindingLayout.h"
-#include "CCVKCommands.h"
-#include "CCVKBuffer.h"
-#include "CCVKTextureView.h"
-#include "CCVKSampler.h"
+#include "VKStd.h"
+#include "VKBindingLayout.h"
+#include "VKCommands.h"
+#include "VKBuffer.h"
+#include "VKTextureView.h"
+#include "VKSampler.h"
 
 NS_CC_BEGIN
 

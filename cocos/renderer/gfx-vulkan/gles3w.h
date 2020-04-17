@@ -7,16 +7,16 @@
             // Prevent Apple's non-standard extension header from being included
         #   define __gl_es30ext_h_
     #else
-        #    include<gles3/gl3.h>
+        #    include<GLES3/gl3.h>
     #endif
 #else
-    #   include <gles3/gl3.h>
+    #   include <GLES3/gl3.h>
 #endif
 
 #include <KHR/khrplatform.h>
-#include <gles3/gl3platform.h>
+#include <GLES3/gl3platform.h>
 #include <GLES2/gl2ext.h>
-#include <gles3/gl3ext.h>
+#include <GLES3/gl3ext.h>
 
 #ifndef __gl3_h_
 #define __gl3_h_

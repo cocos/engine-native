@@ -1,7 +1,7 @@
 #ifndef CC_GFXCCVK_COMMANDS_H_
 #define CC_GFXCCVK_COMMANDS_H_
 
-#include "CCVKGPUObjects.h"
+#include "VKGPUObjects.h"
 
 NS_CC_BEGIN
 

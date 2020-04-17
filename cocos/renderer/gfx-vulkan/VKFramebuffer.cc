@@ -1,9 +1,9 @@
-#include "CCVKStd.h"
-#include "CCVKFramebuffer.h"
-#include "CCVKRenderPass.h"
-#include "CCVKCommands.h"
-#include "CCVKTextureView.h"
-#include "CCVKContext.h"
+#include "VKStd.h"
+#include "VKFramebuffer.h"
+#include "VKRenderPass.h"
+#include "VKCommands.h"
+#include "VKTextureView.h"
+#include "VKContext.h"
 
 NS_CC_BEGIN
 

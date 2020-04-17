@@ -1,7 +1,7 @@
-#ifndef CC_GFXCCVK_CCVK_H_
-#define CC_GFXCCVK_CCVK_H_
+#ifndef CC_GFXVULKAN_VK_H_
+#define CC_GFXVULKAN_VK_H_
 
-#include "CCVKStd.h"
-#include "CCVKDevice.h"
+#include "VKStd.h"
+#include "VKDevice.h"
 
 #endif

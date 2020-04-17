@@ -1,7 +1,7 @@
-#include "CCVKStd.h"
-#include "CCVKQueue.h"
-#include "CCVKCommands.h"
-#include "CCVKCommandBuffer.h"
+#include "VKStd.h"
+#include "VKQueue.h"
+#include "VKCommands.h"
+#include "VKCommandBuffer.h"
 
 NS_CC_BEGIN
 

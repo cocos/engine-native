@@ -2,7 +2,7 @@
 #define CC_GFXCCVK_CCVK_COMMAND_ALLOCATOR_H_
 
 #include "gfx/GFXCommandPool.h"
-#include "CCVKCommands.h"
+#include "VKCommands.h"
 
 NS_CC_BEGIN
 

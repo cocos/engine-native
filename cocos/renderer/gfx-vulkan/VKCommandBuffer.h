@@ -1,7 +1,7 @@
 #ifndef CC_GFXCCVK_CCVK_COMMAND_BUFFER_H_
 #define CC_GFXCCVK_CCVK_COMMAND_BUFFER_H_
 
-#include "CCVKCommands.h"
+#include "VKCommands.h"
 
 NS_CC_BEGIN
 

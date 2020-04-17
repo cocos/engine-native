@@ -1,5 +1,5 @@
-#include "CCVKStd.h"
-#include "CCVKCommandAllocator.h"
+#include "VKStd.h"
+#include "VKCommandAllocator.h"
 
 NS_CC_BEGIN
 

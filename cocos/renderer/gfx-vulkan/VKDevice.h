@@ -1,5 +1,5 @@
-#ifndef CC_GFXCCVK_CCVK_DEVICE_H_
-#define CC_GFXCCVK_CCVK_DEVICE_H_
+#ifndef CC_GFXVULKAN_CCVK_DEVICE_H_
+#define CC_GFXVULKAN_CCVK_DEVICE_H_
 
 NS_CC_BEGIN
 
@@ -52,4 +52,4 @@ public:
 
 NS_CC_END
 
-#endif
+#endif // CC_GFXVULKAN_CCVK_DEVICE_H_

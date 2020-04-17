@@ -1,9 +1,9 @@
-#include "CCVKStd.h"
-#include "CCVKPipelineState.h"
-#include "CCVKCommands.h"
-#include "CCVKShader.h"
-#include "CCVKRenderPass.h"
-#include "CCVKPipelineLayout.h"
+#include "VKStd.h"
+#include "VKPipelineState.h"
+#include "VKCommands.h"
+#include "VKShader.h"
+#include "VKRenderPass.h"
+#include "VKPipelineLayout.h"
 
 NS_CC_BEGIN
 

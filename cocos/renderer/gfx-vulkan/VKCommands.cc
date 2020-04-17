@@ -1,7 +1,7 @@
-#include "CCVKStd.h"
-#include "CCVKCommands.h"
-#include "CCVKDevice.h"
-#include "CCVKStateCache.h"
+#include "VKStd.h"
+#include "VKCommands.h"
+#include "VKDevice.h"
+#include "VKStateCache.h"
 
 #define BUFFER_OFFSET(idx) (static_cast<char*>(0) + (idx))
 

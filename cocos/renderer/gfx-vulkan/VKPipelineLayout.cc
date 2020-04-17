@@ -1,6 +1,6 @@
-#include "CCVKStd.h"
-#include "CCVKPipelineLayout.h"
-#include "CCVKCommands.h"
+#include "VKStd.h"
+#include "VKPipelineLayout.h"
+#include "VKCommands.h"
 
 NS_CC_BEGIN
 

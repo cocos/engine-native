@@ -1,6 +1,6 @@
-#include "CCVKStd.h"
-#include "CCVKRenderPass.h"
-#include "CCVKCommands.h"
+#include "VKStd.h"
+#include "VKRenderPass.h"
+#include "VKCommands.h"
 
 NS_CC_BEGIN
 

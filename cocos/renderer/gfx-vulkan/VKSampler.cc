@@ -1,6 +1,6 @@
-#include "CCVKStd.h"
-#include "CCVKSampler.h"
-#include "CCVKCommands.h"
+#include "VKStd.h"
+#include "VKSampler.h"
+#include "VKCommands.h"
 
 NS_CC_BEGIN
 

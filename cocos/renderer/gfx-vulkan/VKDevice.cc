@@ -1,22 +1,22 @@
-#include "CCVKStd.h"
-#include "CCVKDevice.h"
-#include "CCVKStateCache.h"
-#include "CCVKContext.h"
-#include "CCVKWindow.h"
-#include "CCVKQueue.h"
-#include "CCVKCommandAllocator.h"
-#include "CCVKCommandBuffer.h"
-#include "CCVKBuffer.h"
-#include "CCVKTexture.h"
-#include "CCVKTextureView.h"
-#include "CCVKSampler.h"
-#include "CCVKShader.h"
-#include "CCVKInputAssembler.h"
-#include "CCVKRenderPass.h"
-#include "CCVKFramebuffer.h"
-#include "CCVKBindingLayout.h"
-#include "CCVKPipelineLayout.h"
-#include "CCVKPipelineState.h"
+#include "VKStd.h"
+#include "VKDevice.h"
+#include "VKStateCache.h"
+#include "VKContext.h"
+#include "VKWindow.h"
+#include "VKQueue.h"
+#include "VKCommandAllocator.h"
+#include "VKCommandBuffer.h"
+#include "VKBuffer.h"
+#include "VKTexture.h"
+#include "VKTextureView.h"
+#include "VKSampler.h"
+#include "VKShader.h"
+#include "VKInputAssembler.h"
+#include "VKRenderPass.h"
+#include "VKFramebuffer.h"
+#include "VKBindingLayout.h"
+#include "VKPipelineLayout.h"
+#include "VKPipelineState.h"
 
 NS_CC_BEGIN
 
@@ -51,6 +51,149 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
         return false;
     }
 
+    auto physicalDevices = ((CCVKContext*)_context)->physicalDevices();
+    auto &physicalDevice = physicalDevices[0];
+    for (auto &device : physicalDevices)
+    {
+        VkPhysicalDeviceProperties properties;
+        vkGetPhysicalDeviceProperties(device, &properties);
+        CC_LOG_INFO(StringUtil::Format("Found Physical Device: %s", properties.deviceName).c_str());
+        if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+            physicalDevice = device;
+        }
+    }
+
+    // Prepare the device queues
+    /*
+    uint32_t                             queue_family_properties_count = to_u32(gpu.get_queue_family_properties().size());
+    std::vector<VkDeviceQueueCreateInfo> queue_create_infos(queue_family_properties_count, { VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO });
+    std::vector<std::vector<float>>      queue_priorities(queue_family_properties_count);
+
+    for (uint32_t queue_family_index = 0U; queue_family_index < queue_family_properties_count; ++queue_family_index)
+    {
+        const VkQueueFamilyProperties &queue_family_property = gpu.get_queue_family_properties()[queue_family_index];
+
+        queue_priorities[queue_family_index].resize(queue_family_property.queueCount, 1.0f);
+
+        VkDeviceQueueCreateInfo &queue_create_info = queue_create_infos[queue_family_index];
+
+        queue_create_info.queueFamilyIndex = queue_family_index;
+        queue_create_info.queueCount = queue_family_property.queueCount;
+        queue_create_info.pQueuePriorities = queue_priorities[queue_family_index].data();
+    }
+
+    // Check extensions to enable Vma Dedicated Allocation
+    uint32_t device_extension_count;
+    VK_CHECK(vkEnumerateDeviceExtensionProperties(gpu.get_handle(), nullptr, &device_extension_count, nullptr));
+    device_extensions = std::vector<VkExtensionProperties>(device_extension_count);
+    VK_CHECK(vkEnumerateDeviceExtensionProperties(gpu.get_handle(), nullptr, &device_extension_count, device_extensions.data()));
+
+    // Display supported extensions
+    if (device_extensions.size() > 0)
+    {
+        LOGD("Device supports the following extensions:");
+        for (auto &extension : device_extensions)
+        {
+            LOGD("  \t{}", extension.extensionName);
+        }
+    }
+
+    bool can_get_memory_requirements = is_extension_supported("VK_KHR_get_memory_requirements2");
+    bool has_dedicated_allocation = is_extension_supported("VK_KHR_dedicated_allocation");
+
+    if (can_get_memory_requirements && has_dedicated_allocation)
+    {
+        enabled_extensions.push_back("VK_KHR_get_memory_requirements2");
+        enabled_extensions.push_back("VK_KHR_dedicated_allocation");
+        LOGI("Dedicated Allocation enabled");
+    }
+
+    // Check that extensions are supported before trying to create the device
+    std::vector<const char *> unsupported_extensions{};
+    for (auto &extension : requested_extensions)
+    {
+        if (is_extension_supported(extension.first))
+        {
+            enabled_extensions.emplace_back(extension.first);
+        }
+        else
+        {
+            unsupported_extensions.emplace_back(extension.first);
+        }
+    }
+
+    if (enabled_extensions.size() > 0)
+    {
+        LOGI("Device supports the following requested extensions:");
+        for (auto &extension : enabled_extensions)
+        {
+            LOGI("  \t{}", extension);
+        }
+    }
+
+    if (unsupported_extensions.size() > 0)
+    {
+        auto error = false;
+        for (auto &extension : unsupported_extensions)
+        {
+            auto extension_is_optional = requested_extensions[extension];
+            if (extension_is_optional)
+            {
+                LOGW("Optional device extension {} not available, some features may be disabled", extension);
+            }
+            else
+            {
+                LOGE("Required device extension {} not available, cannot run", extension);
+            }
+            error = !extension_is_optional;
+        }
+
+        if (error)
+        {
+            throw VulkanException(VK_ERROR_EXTENSION_NOT_PRESENT, "Extensions not present");
+        }
+    }
+
+    VkDeviceCreateInfo create_info{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
+
+    // Latest requested feature will have the pNext's all set up for device creation.
+    create_info.pNext = gpu.get_requested_extension_features();
+
+    create_info.pQueueCreateInfos = queue_create_infos.data();
+    create_info.queueCreateInfoCount = to_u32(queue_create_infos.size());
+    const auto requested_gpu_features = gpu.get_requested_features();
+    create_info.pEnabledFeatures = &requested_gpu_features;
+    create_info.enabledExtensionCount = to_u32(enabled_extensions.size());
+    create_info.ppEnabledExtensionNames = enabled_extensions.data();
+
+    VkResult result = vkCreateDevice(gpu.get_handle(), &create_info, nullptr, &handle);
+
+    if (result != VK_SUCCESS)
+    {
+        throw VulkanException{ result, "Cannot create device" };
+    }
+
+    queues.resize(queue_family_properties_count);
+
+    for (uint32_t queue_family_index = 0U; queue_family_index < queue_family_properties_count; ++queue_family_index)
+    {
+        const VkQueueFamilyProperties &queue_family_property = gpu.get_queue_family_properties()[queue_family_index];
+
+        VkBool32 present_supported = gpu.is_present_supported(surface, queue_family_index);
+
+        // Only check if surface is valid to allow for headless applications
+        if (surface != VK_NULL_HANDLE)
+        {
+            VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(gpu.get_handle(), queue_family_index, surface, &present_supported));
+        }
+
+        for (uint32_t queue_index = 0U; queue_index < queue_family_property.queueCount; ++queue_index)
+        {
+            queues[queue_family_index].emplace_back(*this, queue_family_index, queue_family_property, present_supported, queue_index);
+        }
+    }
+    */
+    /*
     String extStr = (const char*)glGetString(GL_EXTENSIONS);
     _extensions = StringUtil::Split(extStr, " ");
 
@@ -131,7 +274,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     glGetIntegerv(GL_DEPTH_BITS, &_depthBits);
     glGetIntegerv(GL_STENCIL_BITS, &_stencilBits);
     glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &_maxCubeMapTextureSize);
-
+    */
     return true;
 }
 

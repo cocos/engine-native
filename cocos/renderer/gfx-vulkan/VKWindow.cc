@@ -1,5 +1,5 @@
-#include "CCVKStd.h"
-#include "CCVKWindow.h"
+#include "VKStd.h"
+#include "VKWindow.h"
 
 NS_CC_BEGIN
 

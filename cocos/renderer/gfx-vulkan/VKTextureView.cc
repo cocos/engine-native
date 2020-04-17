@@ -1,7 +1,7 @@
-#include "CCVKStd.h"
-#include "CCVKTextureView.h"
-#include "CCVKTexture.h"
-#include "CCVKCommands.h"
+#include "VKStd.h"
+#include "VKTextureView.h"
+#include "VKTexture.h"
+#include "VKCommands.h"
 
 NS_CC_BEGIN
 

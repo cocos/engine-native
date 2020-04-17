@@ -1,5 +1,5 @@
-#include "CCVKStd.h"
-#include "CCVKContext.h"
+#include "VKStd.h"
+#include "VKContext.h"
 #include "gles3w.h"
 #import <QuartzCore/CAEAGLLayer.h>
 #import <UIKit/UIScreen.h>
@@ -8,7 +8,7 @@ NS_CC_BEGIN
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
 
-bool CCVKContext::initialize(const GFXContextInfo &info)
+bool VKContext::initialize(const GFXContextInfo &info)
 {
   
     _vsyncMode = info.vsyncMode;
@@ -24,7 +24,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info)
         CAEAGLLayer* eaglLayer = (CAEAGLLayer*)( ((UIView*)(_windowHandle)).layer);
         eaglLayer.opaque = TRUE;
 
-        EAGLContext* eagl_context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenCCVK];
+        EAGLContext* eagl_context = [[EAGLContext alloc]initWithAPI:kEAGLRenderingAPIOpenVK];
         if (!eagl_context)
         {
           CC_LOG_ERROR("Create EAGL context failed.");
@@ -34,14 +34,14 @@ bool CCVKContext::initialize(const GFXContextInfo &info)
         _eaglContext = (intptr_t)eagl_context;
         _eaglSharedContext = (intptr_t)eagl_context;
 
-        if (!CCVKwInit())
+        if (!VKwInit())
         {
           return false;
         }
     }
     else
     {
-        CCVKContext* sharedCtx = (CCVKContext*)info.sharedCtx;
+        VKContext* sharedCtx = (VKContext*)info.sharedCtx;
         EAGLContext* eagl_shared_context = (EAGLContext*)sharedCtx->eagl_shared_ctx();
         EAGLContext* eagl_context = [[EAGLContext alloc] initWithAPI: [eagl_shared_context API] sharegroup: [eagl_shared_context sharegroup]];
         if (!eagl_context)
@@ -63,7 +63,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info)
     return createCustomFrameBuffer();
 }
 
-bool CCVKContext::createCustomFrameBuffer()
+bool VKContext::createCustomFrameBuffer()
 {
     glGenFramebuffers(1, &_defaultFBO);
     if (0 == _defaultFBO)
@@ -144,7 +144,7 @@ bool CCVKContext::createCustomFrameBuffer()
     return true;
 }
 
-void CCVKContext::destroyCustomFrameBuffer()
+void VKContext::destroyCustomFrameBuffer()
 {
     if (_defaultColorBuffer)
     {
@@ -164,7 +164,7 @@ void CCVKContext::destroyCustomFrameBuffer()
     }
 }
 
-void CCVKContext::destroy()
+void VKContext::destroy()
 {
     destroyCustomFrameBuffer();
     
@@ -179,7 +179,7 @@ void CCVKContext::destroy()
     _isInitialized = false;
 }
 
-void CCVKContext::present()
+void VKContext::present()
 {
   
     if (! [(EAGLContext*)_eaglContext presentRenderbuffer:GL_RENDERBUFFER] )
@@ -188,7 +188,7 @@ void CCVKContext::present()
     }
 }
 
-bool CCVKContext::MakeCurrentImpl()
+bool VKContext::MakeCurrentImpl()
 {
   return [EAGLContext setCurrentContext:(EAGLContext*)_eaglContext];
 }
