@@ -169,13 +169,25 @@ void CCMTLBuffer::resizeBuffer(uint8_t** buffer, uint size, uint oldSize)
 
 void CCMTLBuffer::update(void* buffer, uint offset, uint size)
 {
-    if (_mtlBuffer)
+    if (_usage & GFXBufferUsageBit::INDIRECT)
+    {
+        auto count = size / sizeof(GFXDrawInfo);
+        if(_indirects.size() < count)
+        {
+            _indirects.resize(count);
+        }
+        memcpy((uint8_t*)_indirects.data() + offset, buffer, size);
+    }
+    else if (_transferBuffer && _usage & GFXBufferUsageBit::TRANSFER_SRC)
+    {
+        memcpy(_transferBuffer + offset, buffer, size);
+    }
+    else if (_mtlBuffer)
     {
         uint8_t* dst = (uint8_t*)(_mtlBuffer.contents) + offset;
         memcpy(dst, buffer, size);
     }
-    if (_transferBuffer)
-        memcpy(_transferBuffer + offset, buffer, size);
+    
     if (_buffer)
         memcpy(_buffer + offset, buffer, size);
 }

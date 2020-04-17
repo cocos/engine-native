@@ -27,6 +27,7 @@ private:
     uint8_t* _transferBuffer = nullptr;
     MTLIndexType _indexType = MTLIndexTypeUInt16;
     MTLResourceOptions _mtlResourceOptions = MTLResourceStorageModePrivate;
+    GFXDrawInfoList _indirects;
 };
 
 NS_CC_END
