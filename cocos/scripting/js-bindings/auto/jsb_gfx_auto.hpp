@@ -624,7 +624,6 @@ bool js_register_cocos2d_GFXPipelineLayout(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXPipelineLayout);
-SE_DECLARE_FUNC(js_gfx_GFXPipelineLayout_getLayouts);
 SE_DECLARE_FUNC(js_gfx_GFXPipelineLayout_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXPipelineLayout_destroy);
 SE_DECLARE_FUNC(js_gfx_GFXPipelineLayout_getPushConstantsRanges);

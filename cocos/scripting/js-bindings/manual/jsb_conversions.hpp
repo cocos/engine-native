@@ -814,16 +814,7 @@ constexpr Out holder_convert_to(In& input) {
     }
 }
 
-//template<typename T>
-//struct HolderType_impl {
-//    using type = T;
-//    using local_type = T;
-//    static constexpr inline auto value(local_type& arg) {
-//        return holder_convert_to<type, local_type>(arg);
-//    }
-//};
-
-template<typename T, bool is_reference >
+template<typename T, bool is_reference>
 struct HolderType {
 
     using type = T;
@@ -831,10 +822,7 @@ struct HolderType {
 
     static constexpr inline auto value(local_type & arg) 
     { 
-        /*if constexpr (!is_reference)
-            return HolderType_impl<T>::value(arg);
-        else*/
-            return holder_convert_to<T, local_type>(arg);
+        return holder_convert_to<T, local_type>(arg);
     }
 };
 
@@ -844,8 +832,7 @@ struct HolderType {
 template<typename T>
 inline bool sevalue_to_native(const se::Value &from, T* to)
 {
-    static_assert(std::is_same_v<T, int>, "sevalue_to_native not implemented for type");
-    //static_assert(std::is_class_v<T> || std::is_s)
+    static_assert(false, "sevalue_to_native not implemented for type");
     return false;
 }
 

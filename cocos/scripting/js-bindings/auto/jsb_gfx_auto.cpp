@@ -12548,6 +12548,32 @@ static bool js_gfx_GFXBlendState_set_blendColor(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_GFXBlendState_set_blendColor)
 
+static bool js_gfx_GFXBlendState_get_targets(se::State& s)
+{
+    cocos2d::GFXBlendState* cobj = (cocos2d::GFXBlendState*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_get_targets : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->targets, jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_gfx_GFXBlendState_get_targets)
+
+static bool js_gfx_GFXBlendState_set_targets(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::GFXBlendState* cobj = (cocos2d::GFXBlendState*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_set_targets : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->targets); //is_reference False;
+    SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendState_set_targets : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_gfx_GFXBlendState_set_targets)
+
 
 template<>
 bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendState * to)
@@ -12676,6 +12702,7 @@ bool js_register_gfx_GFXBlendState(se::Object* obj)
     cls->defineProperty("isA2C", _SE(js_gfx_GFXBlendState_get_isA2C), _SE(js_gfx_GFXBlendState_set_isA2C));
     cls->defineProperty("isIndepend", _SE(js_gfx_GFXBlendState_get_isIndepend), _SE(js_gfx_GFXBlendState_set_isIndepend));
     cls->defineProperty("blendColor", _SE(js_gfx_GFXBlendState_get_blendColor), _SE(js_gfx_GFXBlendState_set_blendColor));
+    cls->defineProperty("targets", _SE(js_gfx_GFXBlendState_get_targets), _SE(js_gfx_GFXBlendState_set_targets));
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBlendState_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBlendState>(cls);
@@ -17932,7 +17959,7 @@ static bool js_gfx_GFXPipelineLayout_getLayouts(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXPipelineLayout_getLayouts)
+SE_BIND_PROP_GET(js_gfx_GFXPipelineLayout_getLayouts)
 
 static bool js_gfx_GFXPipelineLayout_initialize(se::State& s)
 {
@@ -18039,7 +18066,7 @@ bool js_register_gfx_GFXPipelineLayout(se::Object* obj)
     auto cls = se::Class::create("GFXPipelineLayout", obj, __jsb_cocos2d_GFXObject_proto, _SE(js_gfx_GFXPipelineLayout_constructor));
 
     cls->defineProperty("device", _SE(js_gfx_GFXPipelineLayout_getDevice), nullptr);
-    cls->defineFunction("getLayouts", _SE(js_gfx_GFXPipelineLayout_getLayouts));
+    cls->defineProperty("layouts", _SE(js_gfx_GFXPipelineLayout_getLayouts), nullptr);
     cls->defineFunction("initialize", _SE(js_gfx_GFXPipelineLayout_initialize));
     cls->defineFunction("destroy", _SE(js_gfx_GFXPipelineLayout_destroy));
     cls->defineFunction("getPushConstantsRanges", _SE(js_gfx_GFXPipelineLayout_getPushConstantsRanges));
