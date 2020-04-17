@@ -249,7 +249,9 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor* descri
                 descriptor.vertexDescriptor.attributes[attributeIndex].bufferIndex = bufferIndex;
                 
                 streamOffsets[inputAttrib.stream] += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
-                layouts.emplace_back(std::make_tuple(bufferIndex, inputAttrib.stream));
+                auto tuple = std::make_tuple(bufferIndex, inputAttrib.stream);
+                if(std::find(layouts.begin(), layouts.end(), tuple) == layouts.end())
+                    layouts.emplace_back(tuple);
                 map[bufferIndex] = std::make_tuple(streamOffsets[inputAttrib.stream], inputAttrib.isInstanced);
                 matched = true;
                 break;
