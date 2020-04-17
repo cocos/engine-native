@@ -461,8 +461,6 @@ extern se::Class* __jsb_cocos2d_GFXObject_class;
 bool js_register_cocos2d_GFXObject(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXObject *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXObject);
 SE_DECLARE_FUNC(js_gfx_GFXObject_GFXObject);
 
@@ -472,8 +470,6 @@ extern se::Class* __jsb_cocos2d_GFXDevice_class;
 bool js_register_cocos2d_GFXDevice(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXDevice *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXDevice);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_hasFeature);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_getDepthStencilFormat);
@@ -504,8 +500,6 @@ extern se::Class* __jsb_cocos2d_GFXWindow_class;
 bool js_register_cocos2d_GFXWindow(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXWindow *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXWindow);
 SE_DECLARE_FUNC(js_gfx_GFXWindow_getDepthStencilFormat);
 SE_DECLARE_FUNC(js_gfx_GFXWindow_initialize);
@@ -519,8 +513,6 @@ extern se::Class* __jsb_cocos2d_GFXBuffer_class;
 bool js_register_cocos2d_GFXBuffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBuffer *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBuffer);
 SE_DECLARE_FUNC(js_gfx_GFXBuffer_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXBuffer_destroy);
@@ -533,8 +525,6 @@ extern se::Class* __jsb_cocos2d_GFXTexture_class;
 bool js_register_cocos2d_GFXTexture(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXTexture *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXTexture);
 SE_DECLARE_FUNC(js_gfx_GFXTexture_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXTexture_destroy);
@@ -547,8 +537,6 @@ extern se::Class* __jsb_cocos2d_GFXTextureView_class;
 bool js_register_cocos2d_GFXTextureView(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXTextureView *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXTextureView);
 SE_DECLARE_FUNC(js_gfx_GFXTextureView_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXTextureView_destroy);
@@ -560,8 +548,6 @@ extern se::Class* __jsb_cocos2d_GFXSampler_class;
 bool js_register_cocos2d_GFXSampler(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXSampler *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXSampler);
 SE_DECLARE_FUNC(js_gfx_GFXSampler_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXSampler_destroy);
@@ -573,8 +559,6 @@ extern se::Class* __jsb_cocos2d_GFXShader_class;
 bool js_register_cocos2d_GFXShader(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXShader *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXShader);
 SE_DECLARE_FUNC(js_gfx_GFXShader_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXShader_destroy);
@@ -586,8 +570,6 @@ extern se::Class* __jsb_cocos2d_GFXInputAssembler_class;
 bool js_register_cocos2d_GFXInputAssembler(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXInputAssembler *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXInputAssembler);
 SE_DECLARE_FUNC(js_gfx_GFXInputAssembler_destroy);
 SE_DECLARE_FUNC(js_gfx_GFXInputAssembler_initialize);
@@ -599,8 +581,6 @@ extern se::Class* __jsb_cocos2d_GFXRenderPass_class;
 bool js_register_cocos2d_GFXRenderPass(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXRenderPass *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXRenderPass);
 SE_DECLARE_FUNC(js_gfx_GFXRenderPass_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXRenderPass_destroy);
@@ -612,8 +592,6 @@ extern se::Class* __jsb_cocos2d_GFXFramebuffer_class;
 bool js_register_cocos2d_GFXFramebuffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXFramebuffer *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXFramebuffer);
 SE_DECLARE_FUNC(js_gfx_GFXFramebuffer_getDepthStencilView);
 SE_DECLARE_FUNC(js_gfx_GFXFramebuffer_isOffscreen);
@@ -630,8 +608,6 @@ extern se::Class* __jsb_cocos2d_GFXBindingLayout_class;
 bool js_register_cocos2d_GFXBindingLayout(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBindingLayout *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBindingLayout);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_bindTextureView);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_bindBuffer);
@@ -647,8 +623,6 @@ extern se::Class* __jsb_cocos2d_GFXPipelineLayout_class;
 bool js_register_cocos2d_GFXPipelineLayout(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXPipelineLayout *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXPipelineLayout);
 SE_DECLARE_FUNC(js_gfx_GFXPipelineLayout_getLayouts);
 SE_DECLARE_FUNC(js_gfx_GFXPipelineLayout_initialize);
@@ -662,8 +636,6 @@ extern se::Class* __jsb_cocos2d_GFXPipelineState_class;
 bool js_register_cocos2d_GFXPipelineState(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXPipelineState *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXPipelineState);
 SE_DECLARE_FUNC(js_gfx_GFXPipelineState_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXPipelineState_destroy);
@@ -676,8 +648,6 @@ extern se::Class* __jsb_cocos2d_GFXCommandAllocator_class;
 bool js_register_cocos2d_GFXCommandAllocator(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXCommandAllocator *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandAllocator);
 SE_DECLARE_FUNC(js_gfx_GFXCommandAllocator_destroy);
 SE_DECLARE_FUNC(js_gfx_GFXCommandAllocator_getDevice);
@@ -689,8 +659,6 @@ extern se::Class* __jsb_cocos2d_GFXCommandBuffer_class;
 bool js_register_cocos2d_GFXCommandBuffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXCommandBuffer *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandBuffer);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_draw);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setBlendConstants);
@@ -720,8 +688,6 @@ extern se::Class* __jsb_cocos2d_GFXQueue_class;
 bool js_register_cocos2d_GFXQueue(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXQueue *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXQueue);
 SE_DECLARE_FUNC(js_gfx_GFXQueue_submit);
 SE_DECLARE_FUNC(js_gfx_GFXQueue_initialize);

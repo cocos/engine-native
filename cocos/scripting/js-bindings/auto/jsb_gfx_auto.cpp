@@ -1233,25 +1233,7 @@ static bool js_gfx_GFXOffset_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXOffset* cobj = JSB_ALLOC(cocos2d::GFXOffset);
-        int arg0 = {};
-        json->getProperty("x", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->x = arg0;
-        }
-        int arg1 = {};
-        json->getProperty("y", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->y = arg1;
-        }
-        int arg2 = {};
-        json->getProperty("z", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->z = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -1492,31 +1474,7 @@ static bool js_gfx_GFXRect_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXRect* cobj = JSB_ALLOC(cocos2d::GFXRect);
-        int arg0 = {};
-        json->getProperty("x", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->x = arg0;
-        }
-        int arg1 = {};
-        json->getProperty("y", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->y = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("width", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->width = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("height", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->height = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -1733,25 +1691,7 @@ static bool js_gfx_GFXExtent_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXExtent* cobj = JSB_ALLOC(cocos2d::GFXExtent);
-        unsigned int arg0 = {};
-        json->getProperty("width", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->width = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("height", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->height = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("depth", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->depth = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -1992,31 +1932,7 @@ static bool js_gfx_GFXTextureSubres_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureSubres* cobj = JSB_ALLOC(cocos2d::GFXTextureSubres);
-        unsigned int arg0 = {};
-        json->getProperty("baseMipLevel", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->baseMipLevel = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("levelCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->levelCount = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("baseArrayLayer", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->baseArrayLayer = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("layerCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->layerCount = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -2293,37 +2209,7 @@ static bool js_gfx_GFXTextureCopy_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureCopy* cobj = JSB_ALLOC(cocos2d::GFXTextureCopy);
-        cocos2d::GFXTextureSubres arg0;
-        json->getProperty("srcSubres", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->srcSubres = arg0;
-        }
-        cocos2d::GFXOffset arg1;
-        json->getProperty("srcOffset", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->srcOffset = arg1;
-        }
-        cocos2d::GFXTextureSubres arg2;
-        json->getProperty("dstSubres", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->dstSubres = arg2;
-        }
-        cocos2d::GFXOffset arg3;
-        json->getProperty("dstOffset", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->dstOffset = arg3;
-        }
-        cocos2d::GFXExtent arg4;
-        json->getProperty("extent", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->extent = arg4;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -2636,43 +2522,7 @@ static bool js_gfx_GFXBufferTextureCopy_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBufferTextureCopy* cobj = JSB_ALLOC(cocos2d::GFXBufferTextureCopy);
-        unsigned int arg0 = {};
-        json->getProperty("buffOffset", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->buffOffset = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("buffStride", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->buffStride = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("buffTexHeight", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->buffTexHeight = arg2;
-        }
-        cocos2d::GFXOffset arg3;
-        json->getProperty("texOffset", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->texOffset = arg3;
-        }
-        cocos2d::GFXExtent arg4;
-        json->getProperty("texExtent", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->texExtent = arg4;
-        }
-        cocos2d::GFXTextureSubres arg5;
-        json->getProperty("texSubres", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->texSubres = arg5;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -2991,43 +2841,7 @@ static bool js_gfx_GFXViewport_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXViewport* cobj = JSB_ALLOC(cocos2d::GFXViewport);
-        int arg0 = {};
-        json->getProperty("left", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->left = arg0;
-        }
-        int arg1 = {};
-        json->getProperty("top", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->top = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("width", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->width = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("height", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->height = arg3;
-        }
-        float arg4 = {};
-        json->getProperty("minDepth", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->minDepth = arg4;
-        }
-        float arg5 = {};
-        json->getProperty("maxDepth", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->maxDepth = arg5;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -3286,31 +3100,7 @@ static bool js_gfx_GFXColor_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXColor* cobj = JSB_ALLOC(cocos2d::GFXColor);
-        float arg0 = {};
-        json->getProperty("r", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->r = arg0;
-        }
-        float arg1 = {};
-        json->getProperty("g", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->g = arg1;
-        }
-        float arg2 = {};
-        json->getProperty("b", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->b = arg2;
-        }
-        float arg3 = {};
-        json->getProperty("a", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->a = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -3591,43 +3381,7 @@ static bool js_gfx_GFXDeviceInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDeviceInfo* cobj = JSB_ALLOC(cocos2d::GFXDeviceInfo);
-        uintptr_t arg0 = {};
-        json->getProperty("windowHandle", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->windowHandle = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("width", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->width = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("height", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->height = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("nativeWidth", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->nativeWidth = arg3;
-        }
-        unsigned int arg4 = {};
-        json->getProperty("nativeHeight", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->nativeHeight = arg4;
-        }
-        cocos2d::GFXContext* arg5 = nullptr;
-        json->getProperty("sharedCtx", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->sharedCtx = arg5;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -4095,73 +3849,7 @@ static bool js_gfx_GFXWindowInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXWindowInfo* cobj = JSB_ALLOC(cocos2d::GFXWindowInfo);
-        cocos2d::String arg0;
-        json->getProperty("title", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->title = arg0;
-        }
-        int arg1 = {};
-        json->getProperty("left", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->left = arg1;
-        }
-        int arg2 = {};
-        json->getProperty("top", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->top = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("width", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->width = arg3;
-        }
-        unsigned int arg4 = {};
-        json->getProperty("height", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->height = arg4;
-        }
-        cocos2d::GFXFormat arg5;
-        json->getProperty("colorFmt", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->colorFmt = arg5;
-        }
-        cocos2d::GFXFormat arg6;
-        json->getProperty("depthStencilFmt", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->depthStencilFmt = arg6;
-        }
-        bool arg7;
-        json->getProperty("isOffscreen", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->isOffscreen = arg7;
-        }
-        bool arg8;
-        json->getProperty("isFullscreen", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg8); //is_reference False;
-            cobj->isFullscreen = arg8;
-        }
-        cocos2d::GFXVsyncMode arg9;
-        json->getProperty("vsyncMode", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg9); //is_reference False;
-            cobj->vsyncMode = arg9;
-        }
-        uintptr_t arg10 = {};
-        json->getProperty("windowHandle", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg10); //is_reference False;
-            cobj->windowHandle = arg10;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -4394,25 +4082,7 @@ static bool js_gfx_GFXContextInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXContextInfo* cobj = JSB_ALLOC(cocos2d::GFXContextInfo);
-        uintptr_t arg0 = {};
-        json->getProperty("windowHandle", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->windowHandle = arg0;
-        }
-        cocos2d::GFXContext* arg1 = nullptr;
-        json->getProperty("sharedCtx", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->sharedCtx = arg1;
-        }
-        cocos2d::GFXVsyncMode arg2;
-        json->getProperty("vsyncMode", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->vsyncMode = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -4682,37 +4352,7 @@ static bool js_gfx_GFXBufferInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBufferInfo* cobj = JSB_ALLOC(cocos2d::GFXBufferInfo);
-        cocos2d::GFXBufferUsageBit arg0;
-        json->getProperty("usage", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->usage = arg0;
-        }
-        cocos2d::GFXMemoryUsageBit arg1;
-        json->getProperty("memUsage", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->memUsage = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("stride", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->stride = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("size", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->size = arg3;
-        }
-        cocos2d::GFXBufferFlagBit arg4;
-        json->getProperty("flags", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->flags = arg4;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -5055,49 +4695,7 @@ static bool js_gfx_GFXDrawInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDrawInfo* cobj = JSB_ALLOC(cocos2d::GFXDrawInfo);
-        unsigned int arg0 = {};
-        json->getProperty("vertexCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->vertexCount = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("firstVertex", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->firstVertex = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("indexCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->indexCount = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("firstIndex", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->firstIndex = arg3;
-        }
-        unsigned int arg4 = {};
-        json->getProperty("vertexOffset", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->vertexOffset = arg4;
-        }
-        unsigned int arg5 = {};
-        json->getProperty("instanceCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->instanceCount = arg5;
-        }
-        unsigned int arg6 = {};
-        json->getProperty("firstInstance", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->firstInstance = arg6;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -5664,67 +5262,7 @@ static bool js_gfx_GFXTextureInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureInfo* cobj = JSB_ALLOC(cocos2d::GFXTextureInfo);
-        cocos2d::GFXTextureType arg0;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->type = arg0;
-        }
-        cocos2d::GFXTextureUsageBit arg1;
-        json->getProperty("usage", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->usage = arg1;
-        }
-        cocos2d::GFXFormat arg2;
-        json->getProperty("format", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->format = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("width", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->width = arg3;
-        }
-        unsigned int arg4 = {};
-        json->getProperty("height", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->height = arg4;
-        }
-        unsigned int arg5 = {};
-        json->getProperty("depth", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->depth = arg5;
-        }
-        unsigned int arg6 = {};
-        json->getProperty("arrayLayer", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->arrayLayer = arg6;
-        }
-        unsigned int arg7 = {};
-        json->getProperty("mipLevel", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->mipLevel = arg7;
-        }
-        cocos2d::GFXSampleCount arg8;
-        json->getProperty("samples", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg8); //is_reference False;
-            cobj->samples = arg8;
-        }
-        cocos2d::GFXTextureFlagBit arg9;
-        json->getProperty("flags", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg9); //is_reference False;
-            cobj->flags = arg9;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -6097,49 +5635,7 @@ static bool js_gfx_GFXTextureViewInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureViewInfo* cobj = JSB_ALLOC(cocos2d::GFXTextureViewInfo);
-        cocos2d::GFXTexture* arg0 = nullptr;
-        json->getProperty("texture", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->texture = arg0;
-        }
-        cocos2d::GFXTextureViewType arg1;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->type = arg1;
-        }
-        cocos2d::GFXFormat arg2;
-        json->getProperty("format", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->format = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("baseLevel", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->baseLevel = arg3;
-        }
-        unsigned int arg4 = {};
-        json->getProperty("levelCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->levelCount = arg4;
-        }
-        unsigned int arg5 = {};
-        json->getProperty("baseLayer", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->baseLayer = arg5;
-        }
-        unsigned int arg6 = {};
-        json->getProperty("layerCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->layerCount = arg6;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -6674,85 +6170,7 @@ static bool js_gfx_GFXSamplerInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXSamplerInfo* cobj = JSB_ALLOC(cocos2d::GFXSamplerInfo);
-        cocos2d::String arg0;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->name = arg0;
-        }
-        cocos2d::GFXFilter arg1;
-        json->getProperty("minFilter", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->minFilter = arg1;
-        }
-        cocos2d::GFXFilter arg2;
-        json->getProperty("magFilter", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->magFilter = arg2;
-        }
-        cocos2d::GFXFilter arg3;
-        json->getProperty("mipFilter", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->mipFilter = arg3;
-        }
-        cocos2d::GFXAddress arg4;
-        json->getProperty("addressU", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->addressU = arg4;
-        }
-        cocos2d::GFXAddress arg5;
-        json->getProperty("addressV", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->addressV = arg5;
-        }
-        cocos2d::GFXAddress arg6;
-        json->getProperty("addressW", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->addressW = arg6;
-        }
-        unsigned int arg7 = {};
-        json->getProperty("maxAnisotropy", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->maxAnisotropy = arg7;
-        }
-        cocos2d::GFXComparisonFunc arg8;
-        json->getProperty("cmpFunc", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg8); //is_reference False;
-            cobj->cmpFunc = arg8;
-        }
-        cocos2d::GFXColor arg9;
-        json->getProperty("borderColor", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg9); //is_reference False;
-            cobj->borderColor = arg9;
-        }
-        unsigned int arg10 = {};
-        json->getProperty("minLOD", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg10); //is_reference False;
-            cobj->minLOD = arg10;
-        }
-        unsigned int arg11 = {};
-        json->getProperty("maxLOD", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg11); //is_reference False;
-            cobj->maxLOD = arg11;
-        }
-        float arg12 = {};
-        json->getProperty("mipLODBias", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg12); //is_reference False;
-            cobj->mipLODBias = arg12;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -6993,19 +6411,7 @@ static bool js_gfx_GFXShaderMacro_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXShaderMacro* cobj = JSB_ALLOC(cocos2d::GFXShaderMacro);
-        cocos2d::String arg0;
-        json->getProperty("macro", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->macro = arg0;
-        }
-        cocos2d::String arg1;
-        json->getProperty("value", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->value = arg1;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7210,25 +6616,7 @@ static bool js_gfx_GFXUniform_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXUniform* cobj = JSB_ALLOC(cocos2d::GFXUniform);
-        cocos2d::String arg0;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->name = arg0;
-        }
-        cocos2d::GFXType arg1;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->type = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("count", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->count = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7439,25 +6827,7 @@ static bool js_gfx_GFXUniformBlock_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXUniformBlock* cobj = JSB_ALLOC(cocos2d::GFXUniformBlock);
-        unsigned int arg0 = {};
-        json->getProperty("binding", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->binding = arg0;
-        }
-        cocos2d::String arg1;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->name = arg1;
-        }
-        std::vector<cocos2d::GFXUniform> arg2;
-        json->getProperty("uniforms", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->uniforms = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7698,31 +7068,7 @@ static bool js_gfx_GFXUniformSampler_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXUniformSampler* cobj = JSB_ALLOC(cocos2d::GFXUniformSampler);
-        unsigned int arg0 = {};
-        json->getProperty("binding", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->binding = arg0;
-        }
-        cocos2d::String arg1;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->name = arg1;
-        }
-        cocos2d::GFXType arg2;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->type = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("count", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->count = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7939,25 +7285,7 @@ static bool js_gfx_GFXShaderStage_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXShaderStage* cobj = JSB_ALLOC(cocos2d::GFXShaderStage);
-        cocos2d::GFXShaderType arg0;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->type = arg0;
-        }
-        cocos2d::String arg1;
-        json->getProperty("source", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->source = arg1;
-        }
-        std::vector<cocos2d::GFXShaderMacro> arg2;
-        json->getProperty("macros", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->macros = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -8198,31 +7526,7 @@ static bool js_gfx_GFXShaderInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXShaderInfo* cobj = JSB_ALLOC(cocos2d::GFXShaderInfo);
-        cocos2d::String arg0;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->name = arg0;
-        }
-        std::vector<cocos2d::GFXShaderStage> arg1;
-        json->getProperty("stages", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->stages = arg1;
-        }
-        std::vector<cocos2d::GFXUniformBlock> arg2;
-        json->getProperty("blocks", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->blocks = arg2;
-        }
-        std::vector<cocos2d::GFXUniformSampler> arg3;
-        json->getProperty("samplers", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->samplers = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -8499,37 +7803,7 @@ static bool js_gfx_GFXAttribute_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXAttribute* cobj = JSB_ALLOC(cocos2d::GFXAttribute);
-        cocos2d::String arg0;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->name = arg0;
-        }
-        cocos2d::GFXFormat arg1;
-        json->getProperty("format", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->format = arg1;
-        }
-        bool arg2;
-        json->getProperty("isNormalized", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->isNormalized = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("stream", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->stream = arg3;
-        }
-        bool arg4;
-        json->getProperty("isInstanced", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->isInstanced = arg4;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -8782,31 +8056,7 @@ static bool js_gfx_GFXInputAssemblerInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXInputAssemblerInfo* cobj = JSB_ALLOC(cocos2d::GFXInputAssemblerInfo);
-        std::vector<cocos2d::GFXAttribute> arg0;
-        json->getProperty("attributes", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->attributes = arg0;
-        }
-        std::vector<cocos2d::GFXBuffer *> arg1;
-        json->getProperty("vertexBuffers", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->vertexBuffers = arg1;
-        }
-        cocos2d::GFXBuffer* arg2 = nullptr;
-        json->getProperty("indexBuffer", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->indexBuffer = arg2;
-        }
-        cocos2d::GFXBuffer* arg3 = nullptr;
-        json->getProperty("indirectBuffer", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->indirectBuffer = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -9113,43 +8363,7 @@ static bool js_gfx_GFXColorAttachment_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXColorAttachment* cobj = JSB_ALLOC(cocos2d::GFXColorAttachment);
-        cocos2d::GFXFormat arg0;
-        json->getProperty("format", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->format = arg0;
-        }
-        cocos2d::GFXLoadOp arg1;
-        json->getProperty("loadOp", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->loadOp = arg1;
-        }
-        cocos2d::GFXStoreOp arg2;
-        json->getProperty("storeOp", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->storeOp = arg2;
-        }
-        unsigned int arg3 = {};
-        json->getProperty("sampleCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->sampleCount = arg3;
-        }
-        cocos2d::GFXTextureLayout arg4;
-        json->getProperty("beginLayout", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->beginLayout = arg4;
-        }
-        cocos2d::GFXTextureLayout arg5;
-        json->getProperty("endLayout", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->endLayout = arg5;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -9528,55 +8742,7 @@ static bool js_gfx_GFXDepthStencilAttachment_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDepthStencilAttachment* cobj = JSB_ALLOC(cocos2d::GFXDepthStencilAttachment);
-        cocos2d::GFXFormat arg0;
-        json->getProperty("format", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->format = arg0;
-        }
-        cocos2d::GFXLoadOp arg1;
-        json->getProperty("depthLoadOp", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->depthLoadOp = arg1;
-        }
-        cocos2d::GFXStoreOp arg2;
-        json->getProperty("depthStoreOp", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->depthStoreOp = arg2;
-        }
-        cocos2d::GFXLoadOp arg3;
-        json->getProperty("stencilLoadOp", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->stencilLoadOp = arg3;
-        }
-        cocos2d::GFXStoreOp arg4;
-        json->getProperty("stencilStoreOp", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->stencilStoreOp = arg4;
-        }
-        unsigned int arg5 = {};
-        json->getProperty("sampleCount", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->sampleCount = arg5;
-        }
-        cocos2d::GFXTextureLayout arg6;
-        json->getProperty("beginLayout", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->beginLayout = arg6;
-        }
-        cocos2d::GFXTextureLayout arg7;
-        json->getProperty("endLayout", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->endLayout = arg7;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -9907,43 +9073,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXSubPass* cobj = JSB_ALLOC(cocos2d::GFXSubPass);
-        cocos2d::GFXPipelineBindPoint arg0 = {};
-        json->getProperty("bindPoint", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->bindPoint = arg0;
-        }
-        std::array<unsigned char, 4> arg1;
-        json->getProperty("inputs", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->inputs = arg1;
-        }
-        std::array<unsigned char, 4> arg2;
-        json->getProperty("colors", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->colors = arg2;
-        }
-        std::array<unsigned char, 4> arg3;
-        json->getProperty("resolves", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->resolves = arg3;
-        }
-        uint8_t arg4;
-        json->getProperty("depthStencil", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->depthStencil = arg4;
-        }
-        std::array<unsigned char, 4> arg5;
-        json->getProperty("preserves", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->preserves = arg5;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -10172,25 +9302,7 @@ static bool js_gfx_GFXRenderPassInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXRenderPassInfo* cobj = JSB_ALLOC(cocos2d::GFXRenderPassInfo);
-        std::vector<cocos2d::GFXColorAttachment> arg0;
-        json->getProperty("colorAttachments", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->colorAttachments = arg0;
-        }
-        cocos2d::GFXDepthStencilAttachment arg1;
-        json->getProperty("depthStencilAttachment", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->depthStencilAttachment = arg1;
-        }
-        std::vector<cocos2d::GFXSubPass> arg2;
-        json->getProperty("subPasses", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->subPasses = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -10431,31 +9543,7 @@ static bool js_gfx_GFXFramebufferInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXFramebufferInfo* cobj = JSB_ALLOC(cocos2d::GFXFramebufferInfo);
-        cocos2d::GFXRenderPass* arg0 = nullptr;
-        json->getProperty("renderPass", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->renderPass = arg0;
-        }
-        std::vector<cocos2d::GFXTextureView *> arg1;
-        json->getProperty("colorViews", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->colorViews = arg1;
-        }
-        cocos2d::GFXTextureView* arg2 = nullptr;
-        json->getProperty("depthStencilView", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->depthStencilView = arg2;
-        }
-        bool arg3;
-        json->getProperty("isOffscreen", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->isOffscreen = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -10672,25 +9760,7 @@ static bool js_gfx_GFXBinding_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBinding* cobj = JSB_ALLOC(cocos2d::GFXBinding);
-        unsigned int arg0 = {};
-        json->getProperty("binding", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->binding = arg0;
-        }
-        cocos2d::GFXBindingType arg1;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->type = arg1;
-        }
-        cocos2d::String arg2;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->name = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -11113,43 +10183,7 @@ static bool js_gfx_GFXBindingUnit_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBindingUnit* cobj = JSB_ALLOC(cocos2d::GFXBindingUnit);
-        unsigned int arg0 = {};
-        json->getProperty("binding", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->binding = arg0;
-        }
-        cocos2d::GFXBindingType arg1;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->type = arg1;
-        }
-        cocos2d::String arg2;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->name = arg2;
-        }
-        cocos2d::GFXBuffer* arg3 = nullptr;
-        json->getProperty("buffer", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->buffer = arg3;
-        }
-        cocos2d::GFXTextureView* arg4 = nullptr;
-        json->getProperty("texView", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->texView = arg4;
-        }
-        cocos2d::GFXSampler* arg5 = nullptr;
-        json->getProperty("sampler", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->sampler = arg5;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -11378,25 +10412,7 @@ static bool js_gfx_GFXPushConstantRange_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXPushConstantRange* cobj = JSB_ALLOC(cocos2d::GFXPushConstantRange);
-        cocos2d::GFXShaderType arg0;
-        json->getProperty("shaderType", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->shaderType = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("offset", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->offset = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("count", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->count = arg2;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -11577,19 +10593,7 @@ static bool js_gfx_GFXPipelineLayoutInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXPipelineLayoutInfo* cobj = JSB_ALLOC(cocos2d::GFXPipelineLayoutInfo);
-        std::vector<cocos2d::GFXPushConstantRange> arg0;
-        json->getProperty("pushConstantsRanges", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->pushConstantsRanges = arg0;
-        }
-        std::vector<cocos2d::GFXBindingLayout *> arg1;
-        json->getProperty("layouts", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->layouts = arg1;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -12156,73 +11160,7 @@ static bool js_gfx_GFXRasterizerState_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXRasterizerState* cobj = JSB_ALLOC(cocos2d::GFXRasterizerState);
-        bool arg0;
-        json->getProperty("isDiscard", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->isDiscard = arg0;
-        }
-        cocos2d::GFXPolygonMode arg1;
-        json->getProperty("polygonMode", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->polygonMode = arg1;
-        }
-        cocos2d::GFXShadeModel arg2;
-        json->getProperty("shadeModel", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->shadeModel = arg2;
-        }
-        cocos2d::GFXCullMode arg3;
-        json->getProperty("cullMode", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->cullMode = arg3;
-        }
-        bool arg4;
-        json->getProperty("isFrontFaceCCW", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->isFrontFaceCCW = arg4;
-        }
-        float arg5 = {};
-        json->getProperty("depthBias", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->depthBias = arg5;
-        }
-        float arg6 = {};
-        json->getProperty("depthBiasClamp", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->depthBiasClamp = arg6;
-        }
-        float arg7 = {};
-        json->getProperty("depthBiasSlop", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->depthBiasSlop = arg7;
-        }
-        bool arg8;
-        json->getProperty("isDepthClip", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg8); //is_reference False;
-            cobj->isDepthClip = arg8;
-        }
-        bool arg9;
-        json->getProperty("isMultisample", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg9); //is_reference False;
-            cobj->isMultisample = arg9;
-        }
-        float arg10 = {};
-        json->getProperty("lineWidth", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg10); //is_reference False;
-            cobj->lineWidth = arg10;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -12961,121 +11899,7 @@ static bool js_gfx_GFXDepthStencilState_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDepthStencilState* cobj = JSB_ALLOC(cocos2d::GFXDepthStencilState);
-        bool arg0;
-        json->getProperty("depthTest", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->depthTest = arg0;
-        }
-        bool arg1;
-        json->getProperty("depthWrite", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->depthWrite = arg1;
-        }
-        cocos2d::GFXComparisonFunc arg2;
-        json->getProperty("depthFunc", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->depthFunc = arg2;
-        }
-        bool arg3;
-        json->getProperty("stencilTestFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->stencilTestFront = arg3;
-        }
-        cocos2d::GFXComparisonFunc arg4;
-        json->getProperty("stencilFuncFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->stencilFuncFront = arg4;
-        }
-        unsigned int arg5 = {};
-        json->getProperty("stencilReadMaskFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->stencilReadMaskFront = arg5;
-        }
-        unsigned int arg6 = {};
-        json->getProperty("stencilWriteMaskFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->stencilWriteMaskFront = arg6;
-        }
-        cocos2d::GFXStencilOp arg7;
-        json->getProperty("stencilFailOpFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->stencilFailOpFront = arg7;
-        }
-        cocos2d::GFXStencilOp arg8;
-        json->getProperty("stencilZFailOpFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg8); //is_reference False;
-            cobj->stencilZFailOpFront = arg8;
-        }
-        cocos2d::GFXStencilOp arg9;
-        json->getProperty("stencilPassOpFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg9); //is_reference False;
-            cobj->stencilPassOpFront = arg9;
-        }
-        unsigned int arg10 = {};
-        json->getProperty("stencilRefFront", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg10); //is_reference False;
-            cobj->stencilRefFront = arg10;
-        }
-        bool arg11;
-        json->getProperty("stencilTestBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg11); //is_reference False;
-            cobj->stencilTestBack = arg11;
-        }
-        cocos2d::GFXComparisonFunc arg12;
-        json->getProperty("stencilFuncBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg12); //is_reference False;
-            cobj->stencilFuncBack = arg12;
-        }
-        unsigned int arg13 = {};
-        json->getProperty("stencilReadMaskBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg13); //is_reference False;
-            cobj->stencilReadMaskBack = arg13;
-        }
-        unsigned int arg14 = {};
-        json->getProperty("stencilWriteMaskBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg14); //is_reference False;
-            cobj->stencilWriteMaskBack = arg14;
-        }
-        cocos2d::GFXStencilOp arg15;
-        json->getProperty("stencilFailOpBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg15); //is_reference False;
-            cobj->stencilFailOpBack = arg15;
-        }
-        cocos2d::GFXStencilOp arg16;
-        json->getProperty("stencilZFailOpBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg16); //is_reference False;
-            cobj->stencilZFailOpBack = arg16;
-        }
-        cocos2d::GFXStencilOp arg17;
-        json->getProperty("stencilPassOpBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg17); //is_reference False;
-            cobj->stencilPassOpBack = arg17;
-        }
-        unsigned int arg18 = {};
-        json->getProperty("stencilRefBack", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg18); //is_reference False;
-            cobj->stencilRefBack = arg18;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -13532,55 +12356,7 @@ static bool js_gfx_GFXBlendTarget_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBlendTarget* cobj = JSB_ALLOC(cocos2d::GFXBlendTarget);
-        bool arg0;
-        json->getProperty("blend", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->blend = arg0;
-        }
-        cocos2d::GFXBlendFactor arg1;
-        json->getProperty("blendSrc", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->blendSrc = arg1;
-        }
-        cocos2d::GFXBlendFactor arg2;
-        json->getProperty("blendDst", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->blendDst = arg2;
-        }
-        cocos2d::GFXBlendOp arg3;
-        json->getProperty("blendEq", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->blendEq = arg3;
-        }
-        cocos2d::GFXBlendFactor arg4;
-        json->getProperty("blendSrcAlpha", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->blendSrcAlpha = arg4;
-        }
-        cocos2d::GFXBlendFactor arg5;
-        json->getProperty("blendDstAlpha", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->blendDstAlpha = arg5;
-        }
-        cocos2d::GFXBlendOp arg6;
-        json->getProperty("blendAlphaEq", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->blendAlphaEq = arg6;
-        }
-        cocos2d::GFXColorMask arg7;
-        json->getProperty("blendColorMask", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->blendColorMask = arg7;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -13825,31 +12601,7 @@ static bool js_gfx_GFXBlendState_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBlendState* cobj = JSB_ALLOC(cocos2d::GFXBlendState);
-        bool arg0;
-        json->getProperty("isA2C", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->isA2C = arg0;
-        }
-        bool arg1;
-        json->getProperty("isIndepend", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->isIndepend = arg1;
-        }
-        cocos2d::GFXColor arg2;
-        json->getProperty("blendColor", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->blendColor = arg2;
-        }
-        std::vector<cocos2d::GFXBlendTarget> arg3;
-        json->getProperty("targets", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->targets = arg3;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -14245,61 +12997,7 @@ static bool js_gfx_GFXPipelineStateInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXPipelineStateInfo* cobj = JSB_ALLOC(cocos2d::GFXPipelineStateInfo);
-        cocos2d::GFXPrimitiveMode arg0;
-        json->getProperty("primitive", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->primitive = arg0;
-        }
-        cocos2d::GFXShader* arg1 = nullptr;
-        json->getProperty("shader", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->shader = arg1;
-        }
-        cocos2d::GFXInputState arg2;
-        json->getProperty("inputState", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->inputState = arg2;
-        }
-        cocos2d::GFXRasterizerState arg3;
-        json->getProperty("rasterizerState", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->rasterizerState = arg3;
-        }
-        cocos2d::GFXDepthStencilState arg4;
-        json->getProperty("depthStencilState", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->depthStencilState = arg4;
-        }
-        cocos2d::GFXBlendState arg5;
-        json->getProperty("blendState", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->blendState = arg5;
-        }
-        std::vector<cocos2d::GFXDynamicState> arg6;
-        json->getProperty("dynamicStates", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->dynamicStates = arg6;
-        }
-        cocos2d::GFXPipelineLayout* arg7 = nullptr;
-        json->getProperty("layout", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->layout = arg7;
-        }
-        cocos2d::GFXRenderPass* arg8 = nullptr;
-        json->getProperty("renderPass", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg8); //is_reference False;
-            cobj->renderPass = arg8;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -14516,19 +13214,7 @@ static bool js_gfx_GFXCommandBufferInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXCommandBufferInfo* cobj = JSB_ALLOC(cocos2d::GFXCommandBufferInfo);
-        cocos2d::GFXCommandAllocator* arg0 = nullptr;
-        json->getProperty("allocator", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->allocator = arg0;
-        }
-        cocos2d::GFXCommandBufferType arg1;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->type = arg1;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -15005,55 +13691,7 @@ static bool js_gfx_GFXFormatInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXFormatInfo* cobj = JSB_ALLOC(cocos2d::GFXFormatInfo);
-        cocos2d::String arg0;
-        json->getProperty("name", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->name = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("size", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->size = arg1;
-        }
-        unsigned int arg2 = {};
-        json->getProperty("count", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg2); //is_reference False;
-            cobj->count = arg2;
-        }
-        cocos2d::GFXFormatType arg3;
-        json->getProperty("type", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg3); //is_reference False;
-            cobj->type = arg3;
-        }
-        bool arg4;
-        json->getProperty("hasAlpha", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg4); //is_reference False;
-            cobj->hasAlpha = arg4;
-        }
-        bool arg5;
-        json->getProperty("hasDepth", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg5); //is_reference False;
-            cobj->hasDepth = arg5;
-        }
-        bool arg6;
-        json->getProperty("hasStencil", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg6); //is_reference False;
-            cobj->hasStencil = arg6;
-        }
-        bool arg7;
-        json->getProperty("isCompressed", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg7); //is_reference False;
-            cobj->isCompressed = arg7;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -15264,19 +13902,7 @@ static bool js_gfx_GFXMemoryStatus_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXMemoryStatus* cobj = JSB_ALLOC(cocos2d::GFXMemoryStatus);
-        unsigned int arg0 = {};
-        json->getProperty("bufferSize", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg0); //is_reference False;
-            cobj->bufferSize = arg0;
-        }
-        unsigned int arg1 = {};
-        json->getProperty("textureSize", &field);
-        if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &arg1); //is_reference False;
-            cobj->textureSize = arg1;
-        }
-
+        ok &= sevalue_to_native(args[0], cobj);
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");

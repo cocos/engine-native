@@ -21,11 +21,11 @@ static bool js_gles3_GLES3Device_checkExtension(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        HolderType<cocos2d::String, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gles3_GLES3Device_checkExtension : Error processing arguments");
-        bool result = cobj->checkExtension(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->checkExtension(HolderType<cocos2d::String, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gles3_GLES3Device_checkExtension : Error processing arguments");
         return true;
     }
@@ -43,7 +43,7 @@ static bool js_gles3_GLES3Device_useVAO(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useVAO();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gles3_GLES3Device_useVAO : Error processing arguments");
         return true;
     }
