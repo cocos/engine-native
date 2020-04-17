@@ -14045,7 +14045,7 @@ SE_BIND_PROP_GET(js_gfx_GFXObject_getStatus)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXObject_finalize)
 
-static bool js_gfx_GFXObject_constructor(se::State& s)
+static bool js_gfx_GFXObject_constructor(se::State& s) // constructor.c
 {
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
@@ -15517,7 +15517,7 @@ SE_BIND_PROP_GET(js_gfx_GFXWindow_getDepthStencilTexView)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXWindow_finalize)
 
-static bool js_gfx_GFXWindow_constructor(se::State& s)
+static bool js_gfx_GFXWindow_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXWindow: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXWindow constructor is skipped\")");
@@ -15782,7 +15782,7 @@ SE_BIND_FUNC(js_gfx_GFXBuffer_resize)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXBuffer_finalize)
 
-static bool js_gfx_GFXBuffer_constructor(se::State& s)
+static bool js_gfx_GFXBuffer_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXBuffer: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXBuffer constructor is skipped\")");
@@ -16112,7 +16112,7 @@ SE_BIND_FUNC(js_gfx_GFXTexture_resize)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXTexture_finalize)
 
-static bool js_gfx_GFXTexture_constructor(se::State& s)
+static bool js_gfx_GFXTexture_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXTexture: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXTexture constructor is skipped\")");
@@ -16353,7 +16353,7 @@ SE_BIND_PROP_GET(js_gfx_GFXTextureView_getLevelCount)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXTextureView_finalize)
 
-static bool js_gfx_GFXTextureView_constructor(se::State& s)
+static bool js_gfx_GFXTextureView_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXTextureView: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXTextureView constructor is skipped\")");
@@ -16697,7 +16697,7 @@ SE_BIND_PROP_GET(js_gfx_GFXSampler_getMaxLOD)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXSampler_finalize)
 
-static bool js_gfx_GFXSampler_constructor(se::State& s)
+static bool js_gfx_GFXSampler_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXSampler: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXSampler constructor is skipped\")");
@@ -16903,7 +16903,7 @@ SE_BIND_PROP_GET(js_gfx_GFXShader_getBlocks)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXShader_finalize)
 
-static bool js_gfx_GFXShader_constructor(se::State& s)
+static bool js_gfx_GFXShader_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXShader: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXShader constructor is skipped\")");
@@ -17342,7 +17342,7 @@ SE_BIND_PROP_GET(js_gfx_GFXInputAssembler_getFirstInstance)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXInputAssembler_finalize)
 
-static bool js_gfx_GFXInputAssembler_constructor(se::State& s)
+static bool js_gfx_GFXInputAssembler_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXInputAssembler: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXInputAssembler constructor is skipped\")");
@@ -17510,7 +17510,7 @@ SE_BIND_PROP_GET(js_gfx_GFXRenderPass_getDepthStencilAttachment)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXRenderPass_finalize)
 
-static bool js_gfx_GFXRenderPass_constructor(se::State& s)
+static bool js_gfx_GFXRenderPass_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXRenderPass: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXRenderPass constructor is skipped\")");
@@ -17688,7 +17688,7 @@ SE_BIND_FUNC(js_gfx_GFXFramebuffer_getDevice)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXFramebuffer_finalize)
 
-static bool js_gfx_GFXFramebuffer_constructor(se::State& s)
+static bool js_gfx_GFXFramebuffer_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXFramebuffer: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXFramebuffer constructor is skipped\")");
@@ -17891,7 +17891,7 @@ SE_BIND_PROP_GET(js_gfx_GFXBindingLayout_getDevice)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXBindingLayout_finalize)
 
-static bool js_gfx_GFXBindingLayout_constructor(se::State& s)
+static bool js_gfx_GFXBindingLayout_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXBindingLayout: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXBindingLayout constructor is skipped\")");
@@ -18035,7 +18035,7 @@ SE_BIND_FUNC(js_gfx_GFXPipelineLayout_getPushConstantsRanges)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXPipelineLayout_finalize)
 
-static bool js_gfx_GFXPipelineLayout_constructor(se::State& s)
+static bool js_gfx_GFXPipelineLayout_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXPipelineLayout: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXPipelineLayout constructor is skipped\")");
@@ -18302,7 +18302,7 @@ SE_BIND_FUNC(js_gfx_GFXPipelineState_getDynamicStates)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXPipelineState_finalize)
 
-static bool js_gfx_GFXPipelineState_constructor(se::State& s)
+static bool js_gfx_GFXPipelineState_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXPipelineState: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXPipelineState constructor is skipped\")");
@@ -18393,7 +18393,7 @@ SE_BIND_FUNC(js_gfx_GFXCommandAllocator_getDevice)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXCommandAllocator_finalize)
 
-static bool js_gfx_GFXCommandAllocator_constructor(se::State& s)
+static bool js_gfx_GFXCommandAllocator_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXCommandAllocator: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXCommandAllocator constructor is skipped\")");
@@ -18960,7 +18960,7 @@ SE_BIND_PROP_GET(js_gfx_GFXCommandBuffer_getNumDrawCalls)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXCommandBuffer_finalize)
 
-static bool js_gfx_GFXCommandBuffer_constructor(se::State& s)
+static bool js_gfx_GFXCommandBuffer_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXCommandBuffer: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXCommandBuffer constructor is skipped\")");
@@ -19123,7 +19123,7 @@ SE_BIND_PROP_GET(js_gfx_GFXQueue_getDevice)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXQueue_finalize)
 
-static bool js_gfx_GFXQueue_constructor(se::State& s)
+static bool js_gfx_GFXQueue_constructor(se::State& s) // constructor.c
 {
     //#3 cocos2d::GFXQueue: is_skip_construtor True
     se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXQueue constructor is skipped\")");

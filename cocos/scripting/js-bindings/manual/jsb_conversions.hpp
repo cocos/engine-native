@@ -845,6 +845,53 @@ inline bool sevalue_to_native(const se::Value &from, std::enable_if_t<std::is_en
     return true;
 }
 
+
+template<int i, typename T>
+bool nativevalue_to_se_args(se::ValueArray& array, T& x)
+{
+    return nativevalue_to_se(x, array[i]);
+}
+template<int i, typename T, typename ...Args>
+bool nativevalue_to_se_args(se::ValueArray& array, T &x,  Args &... args)
+{
+    return nativevalue_to_se_args<i, T>(array, x) && nativevalue_to_se_args<i + 1, Args...>(array, args...);
+}
+
+template<typename ...Args>
+bool nativevalue_to_se_args_v(se::ValueArray& array, Args&... args)
+{
+    return nativevalue_to_se_args<0, Args...>(array, args ...);
+}
+
+template<typename ...Args>
+bool sevalue_to_native(const se::Value& from, std::function<void( Args...)>* func)
+{
+    if (from.isObject() && from.toObject()->isFunction())
+    {
+        se::Object* callback = from.toObject();
+        *func = [callback](Args ...inargs) {
+            se::AutoHandleScope hs;
+            bool ok = true;
+            se::ValueArray args;
+            int idx = 0;
+            args.resize(sizeof...(Args));
+            nativevalue_to_se_args_v(args, inargs...);
+            se::Value rval;
+          //  se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
+            //se::Object* funcObj = jsFunc.toObject();
+            bool succeed = callback->call(args, nullptr, &rval);
+            if (!succeed) {
+                se::ScriptEngine::getInstance()->clearException();
+            }
+        };
+    }
+    else 
+    {
+        return false;
+    }
+    return true;
+}
+
 //////////////// vector type
 
 template<typename T, size_t CNT>

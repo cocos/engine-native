@@ -21,11 +21,11 @@ static bool js_gles2_GLES2Device_checkExtension(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::String arg0;
-        arg0 = args[0].toStringForce().c_str();
+        HolderType<cocos2d::String, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_checkExtension : Error processing arguments");
-        bool result = cobj->checkExtension(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->checkExtension(HolderType<cocos2d::String, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_checkExtension : Error processing arguments");
         return true;
     }
@@ -43,7 +43,7 @@ static bool js_gles2_GLES2Device_useInstancedArrays(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useInstancedArrays();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useInstancedArrays : Error processing arguments");
         return true;
     }
@@ -61,7 +61,7 @@ static bool js_gles2_GLES2Device_useVAO(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useVAO();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useVAO : Error processing arguments");
         return true;
     }
@@ -79,7 +79,7 @@ static bool js_gles2_GLES2Device_useDrawInstanced(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useDrawInstanced();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useDrawInstanced : Error processing arguments");
         return true;
     }
@@ -97,7 +97,7 @@ static bool js_gles2_GLES2Device_useDiscardFramebuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useDiscardFramebuffer();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useDiscardFramebuffer : Error processing arguments");
         return true;
     }
@@ -108,7 +108,7 @@ SE_BIND_FUNC(js_gles2_GLES2Device_useDiscardFramebuffer)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GLES2Device_finalize)
 
-static bool js_gles2_GLES2Device_constructor(se::State& s)
+static bool js_gles2_GLES2Device_constructor(se::State& s) // constructor.c
 {
     cocos2d::GLES2Device* cobj = JSB_ALLOC(cocos2d::GLES2Device);
     s.thisObject()->setPrivateData(cobj);

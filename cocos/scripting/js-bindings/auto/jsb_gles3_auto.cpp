@@ -54,7 +54,7 @@ SE_BIND_FUNC(js_gles3_GLES3Device_useVAO)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GLES3Device_finalize)
 
-static bool js_gles3_GLES3Device_constructor(se::State& s)
+static bool js_gles3_GLES3Device_constructor(se::State& s) // constructor.c
 {
     cocos2d::GLES3Device* cobj = JSB_ALLOC(cocos2d::GLES3Device);
     s.thisObject()->setPrivateData(cobj);
