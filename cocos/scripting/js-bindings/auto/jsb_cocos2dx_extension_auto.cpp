@@ -256,9 +256,9 @@ static bool js_extension_EventAssetsManagerEx_constructor(se::State& s) // const
     std::string arg0;
     cocos2d::extension::AssetsManagerEx* arg1 = nullptr;
     cocos2d::extension::EventAssetsManagerEx::EventCode arg2;
-    ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
-    ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
-    ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference True;
+    ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
+    ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject()); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[2], &arg2, s.thisObject()); //is_reference True;
     SE_PRECONDITION2(ok, false, "js_extension_EventAssetsManagerEx_constructor : Error processing arguments");
     cocos2d::extension::EventAssetsManagerEx* cobj = JSB_ALLOC(cocos2d::extension::EventAssetsManagerEx, arg0, arg1, arg2);
     s.thisObject()->setPrivateData(cobj);
@@ -540,10 +540,10 @@ static bool js_extension_Manifest_constructor(se::State& s)  // constructor_over
     do {
         if (argc == 2) {
             HolderType<std::string, true>::local_type arg0 = {};
-            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             HolderType<std::string, true>::local_type arg1 = {};
-            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             cocos2d::extension::Manifest* cobj = JSB_ALLOC(cocos2d::extension::Manifest, HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1));
             s.thisObject()->setPrivateData(cobj);
@@ -560,7 +560,7 @@ static bool js_extension_Manifest_constructor(se::State& s)  // constructor_over
     do {
         if (argc == 1) {
             HolderType<std::string, true>::local_type arg0 = {};
-            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             cocos2d::extension::Manifest* cobj = JSB_ALLOC(cocos2d::extension::Manifest, HolderType<std::string, true>::value(arg0));
             s.thisObject()->setPrivateData(cobj);
@@ -769,10 +769,10 @@ static bool js_extension_AssetsManagerEx_loadLocalManifest(se::State& s)
     do {
         if (argc == 1) {
             std::string arg0;
-            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             bool result = cobj->loadLocalManifest(arg0);
-            ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+            ok &= NATIVEVALUE_TO_SE(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_extension_AssetsManagerEx_loadLocalManifest : Error processing arguments");
             return true;
         }
@@ -781,13 +781,13 @@ static bool js_extension_AssetsManagerEx_loadLocalManifest(se::State& s)
     do {
         if (argc == 2) {
             cocos2d::extension::Manifest* arg0 = nullptr;
-            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference False;
             if (!ok) { ok = true; break; }
             std::string arg1;
-            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             bool result = cobj->loadLocalManifest(arg0, arg1);
-            ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+            ok &= NATIVEVALUE_TO_SE(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_extension_AssetsManagerEx_loadLocalManifest : Error processing arguments");
             return true;
         }
@@ -1023,13 +1023,13 @@ static bool js_extension_AssetsManagerEx_constructor(se::State& s)  // construct
     do {
         if (argc == 3) {
             HolderType<std::string, true>::local_type arg0 = {};
-            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             HolderType<std::string, true>::local_type arg1 = {};
-            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             HolderType<std::function<int (const std::string&, const std::string&)>, true>::local_type arg2 = {};
-            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             cocos2d::extension::AssetsManagerEx* cobj = JSB_ALLOC(cocos2d::extension::AssetsManagerEx, HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1), HolderType<std::function<int (const std::string&, const std::string&)>, true>::value(arg2));
             s.thisObject()->setPrivateData(cobj);
@@ -1039,10 +1039,10 @@ static bool js_extension_AssetsManagerEx_constructor(se::State& s)  // construct
     do {
         if (argc == 2) {
             HolderType<std::string, true>::local_type arg0 = {};
-            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             HolderType<std::string, true>::local_type arg1 = {};
-            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             cocos2d::extension::AssetsManagerEx* cobj = JSB_ALLOC(cocos2d::extension::AssetsManagerEx, HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1));
             s.thisObject()->setPrivateData(cobj);

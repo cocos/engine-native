@@ -810,7 +810,7 @@ constexpr Out holder_convert_to(In& input) {
         return (Out)input;
     }
     else {
-        static_assert(false, "types are not convertiable!");
+        static_assert(!std::is_same_v<In, int>, "types are not convertiable!");
     }
 }
 
@@ -832,7 +832,7 @@ struct HolderType {
 template<typename T>
 inline bool sevalue_to_native(const se::Value &from, T* to, se::Object *)
 {
-    static_assert(false, "sevalue_to_native not implemented for type");
+    static_assert(!std::is_same_v<T, int>, "sevalue_to_native not implemented for type");
     return false;
 }
 
@@ -1070,24 +1070,35 @@ bool sevalue_to_native(const se::Value &from, std::string ** to, se::Object *);
 
 template<typename T>
 bool nativevalue_to_se(const T &from, se::Value &to, se::Object *) {
-    if constexpr (std::is_enum_v<T>) {
+    if constexpr (std::is_enum_v<T>)
+    {
         typedef typename std::underlying_type_t<T> enum_type;
         enum_type tmp = static_cast<enum_type>(from);
         //nativevalue_to_se(from, to);
         to.setInt32((int32_t)tmp);
         return true;
+    } 
+    else if constexpr (std::is_integral_v<T>)
+    {
+        if constexpr (std::is_signed_v<T>) {
+            to.setLong((int64_t)from);
+        }else{
+            to.setUlong((uint64_t)from);
+        }
     }
-    else if constexpr (std::is_pointer_v<T>) {
+    else if constexpr (std::is_pointer_v<T>)
+    {
         //static_assert(false, "Convert ptr to seobject???");
         return native_ptr_to_seval(from, &to);
     }
-    else if constexpr (is_jsb_object_v<T>) {
+    else if constexpr (is_jsb_object_v<T>)
+    {
         //static_assert(false, "Convert ref to seobject???");
         return native_ptr_to_seval(from, &to);
     }
     else
     {
-        static_assert(false, "nativevalue_to_se not implemented for type");
+        static_assert(std::is_same_v<T, int>, "nativevalue_to_se not implemented for type");
     }
     return false;
 }
@@ -1160,7 +1171,19 @@ inline bool nativevalue_to_se(const std::array<float, N>& from, se::Value& to, s
     return true;
 }
 
+template<>
+inline bool nativevalue_to_se(const int64_t &from, se::Value &to, se::Object *)
+{
+    to.setLong(from);
+    return true;
+}
 
+template<>
+inline bool nativevalue_to_se(const uint64_t &from, se::Value &to, se::Object *)
+{
+    to.setUlong(from);
+    return true;
+}
 template<>
 inline bool nativevalue_to_se(const int32_t &from, se::Value &to, se::Object *)
 {
@@ -1211,6 +1234,12 @@ template<>
 inline bool nativevalue_to_se(const float &from, se::Value &to, se::Object *)
 {
     to.setFloat(from);
+    return true;
+}
+template<>
+inline bool nativevalue_to_se(const double &from, se::Value &to, se::Object *)
+{
+    to.setFloat((float)from);
     return true;
 }
 template<>

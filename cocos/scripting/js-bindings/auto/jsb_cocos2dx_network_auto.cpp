@@ -300,7 +300,7 @@ static bool js_network_Downloader_constructor(se::State& s)  // constructor_over
     do {
         if (argc == 1) {
             HolderType<cocos2d::network::DownloaderHints, true>::local_type arg0 = {};
-            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
             cocos2d::network::Downloader* cobj = JSB_ALLOC(cocos2d::network::Downloader, HolderType<cocos2d::network::DownloaderHints, true>::value(arg0));
             s.thisObject()->setPrivateData(cobj);

@@ -74,8 +74,8 @@ bool js_GFXDevice_copyBuffersToTexture(se::State& s, cocos2d::GFXDevice* cobj)
                 }
             }
         }
-        ok &= sevalue_to_native(args[1], &arg1);
-        ok &= sevalue_to_native(args[2], &arg2);
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject());
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_copyBuffersToTexture : Error processing arguments");
         cobj->copyBuffersToTexture(arg0, arg1, arg2);
         return true;
@@ -118,8 +118,8 @@ bool js_GFXDevice_copyTexImagesToTexture(se::State& s, cocos2d::GFXDevice* cobj)
         {
             ok &= false;
         }
-        ok &= sevalue_to_native(args[1], &arg1);
-        ok &= sevalue_to_native(args[2], &arg2);
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject());
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_copyBuffersToTexture : Error processing arguments");
         cobj->copyBuffersToTexture(arg0, arg1, arg2);
         return true;
@@ -213,7 +213,7 @@ static bool js_gfx_GFXBuffer_update(se::State& s)
     }
     if (argc == 2) {
         unsigned int arg1 = 0;
-        ok &= sevalue_to_native(args[1], &arg1);
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_update : Error processing arguments");
         cobj->update(arg0, arg1, static_cast<uint>(dataLength));
         return true;
@@ -221,8 +221,8 @@ static bool js_gfx_GFXBuffer_update(se::State& s)
     if (argc == 3) {
         unsigned int arg1 = 0;
         unsigned int arg2 = 0;
-        ok &= sevalue_to_native(args[1], &arg1);
-        ok &= sevalue_to_native(args[2], &arg2);
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, s.thisObject());
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_update : Error processing arguments");
         cobj->update(arg0, arg1, arg2);
         return true;
@@ -242,7 +242,7 @@ static bool js_gfx_GFXCommandBuffer_execute(se::State& s)
     if (argc == 2) {
         std::vector<cocos2d::GFXCommandBuffer *> cmdBufs;
         unsigned int count = 0;
-        ok &= sevalue_to_native(args[1], &count);
+        ok &= SEVALUE_TO_NATIVE(args[1], &count, s.thisObject());
         
         se::Object* jsarr = args[0].toObject();
         assert(jsarr->isArray());

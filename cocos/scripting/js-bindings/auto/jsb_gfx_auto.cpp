@@ -14050,7 +14050,7 @@ static bool js_gfx_GFXObject_constructor(se::State& s) // constructor.c
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
     cocos2d::GFXObjectType arg0;
-    ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXObject_constructor : Error processing arguments");
     cocos2d::GFXObject* cobj = JSB_ALLOC(cocos2d::GFXObject, arg0);
     s.thisObject()->setPrivateData(cobj);
