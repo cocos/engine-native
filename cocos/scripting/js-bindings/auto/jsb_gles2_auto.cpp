@@ -22,7 +22,7 @@ static bool js_gles2_GLES2Device_checkExtension(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::String, true>::local_type arg0 = {};
-        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_checkExtension : Error processing arguments");
         bool result = cobj->checkExtension(HolderType<cocos2d::String, true>::value(arg0));
         ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
