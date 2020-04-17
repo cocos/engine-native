@@ -5,6 +5,20 @@
 #include <vector>
 
 NS_CC_BEGIN
+namespace {
+    enum class GPUFamily : uint
+    {
+        Apple1,
+        Apple2,
+        Apple3,
+        Apple4,
+        Apple5,
+        Apple6,
+        
+        Mac1,
+        Mac2,
+    };
+}
 
 namespace mu
 {
@@ -510,6 +524,312 @@ namespace mu
         
         return out;
     }
+
+    NSUInteger highestSupportedFeatureSet(id<MTLDevice> device)
+    {
+        NSUInteger maxKnownFeatureSet;
+        if (@available(macOS 10.14, *)) {
+            maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily2_v1;
+        }
+        else if(@available(macOS 10.13, *)){
+            maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily1_v3;
+        }
+        else{
+            maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily1_v2;
+        }
+        for (auto featureSet = maxKnownFeatureSet; featureSet >= 0; --featureSet)
+        {
+            if ([device supportsFeatureSet:MTLFeatureSet(featureSet)])
+            {
+                return featureSet;
+            }
+        }
+        return MTLFeatureSet_macOS_GPUFamily1_v1;
+    }
+
+    uint getGPUFamily(MTLFeatureSet featureSet)
+    {
+        GPUFamily gpuFamily = GPUFamily::Mac1;
+        switch (featureSet) {
+            case MTLFeatureSet_macOS_GPUFamily1_v1:
+            case MTLFeatureSet_macOS_GPUFamily1_v2:
+            case MTLFeatureSet_macOS_GPUFamily1_v3:
+            case MTLFeatureSet_macOS_GPUFamily1_v4:
+                gpuFamily = GPUFamily::Mac1;
+            case MTLFeatureSet_macOS_GPUFamily2_v1:
+                gpuFamily = GPUFamily::Mac2;
+            default:
+                break;
+        }
+        return static_cast<uint>(gpuFamily);
+    }
+    
+    int getMaxVertexAttributes(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return 31;
+            default:
+                return 31;
+        }
+    }
+
+    int getMaxEntriesInBufferArgumentTable(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return 31;
+            default:
+                return 31;
+        }
+    }
+
+    int getMaxEntriesInTextureArgumentTable(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+                return 31;
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+                return 96;
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return 128;
+            default:
+                return 31;
+        }
+    }
+
+    int getMaxEntriesInSamplerStateArgumentTable(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return 16;
+            default:
+                return 16;
+        }
+    }
+
+    int getMaxTexture2DWidthHeight(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+                return 8192;
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return 16384;
+            default:
+                return 8192;
+        }
+    }
+
+    int getMaxCubeMapTextureWidthHeight(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+                return 8192;
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return 16384;
+            default:
+                return 8192;
+        }
+    }
+
+    int getMaxColorRenderTarget(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+                return 4;
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return 8;
+            default:
+                return 4;
+        }
+    }
+
+    bool isPVRTCSuppported(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+                return true;
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    bool isEAC_ETCCSuppported(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+                return true;
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    bool isASTCSuppported(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+                return false;
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+                return true;
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    bool isBCSupported(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+                return false;
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    bool isColorBufferFloatSupported(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    bool isColorBufferHalfFloatSupported(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    bool isLinearTextureSupported(uint family)
+    {
+        switch (static_cast<GPUFamily>(family)) {
+            case GPUFamily::Apple1:
+            case GPUFamily::Apple2:
+            case GPUFamily::Apple3:
+            case GPUFamily::Apple4:
+            case GPUFamily::Apple5:
+            case GPUFamily::Apple6:
+            case GPUFamily::Mac1:
+            case GPUFamily::Mac2:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    const char* featureSetToString(MTLFeatureSet featureSet)
+    {
+        switch (featureSet) {
+            case MTLFeatureSet_macOS_GPUFamily1_v1:
+                return "MTLFeatureSet_macOS_GPUFamily1_v1";
+            case MTLFeatureSet_macOS_GPUFamily1_v2:
+                return "MTLFeatureSet_macOS_GPUFamily1_v2";
+            case MTLFeatureSet_macOS_GPUFamily1_v3:
+                return "MTLFeatureSet_macOS_GPUFamily1_v3";
+            case MTLFeatureSet_macOS_GPUFamily1_v4:
+                return "MTLFeatureSet_macOS_GPUFamily1_v4";
+            case MTLFeatureSet_macOS_GPUFamily2_v1:
+                return "MTLFeatureSet_macOS_GPUFamily2_v1";
+            default:
+                return "MTLFeatureSet_macOS_GPUFamily1_v1";
+        }
+    }
+
 } //namespace mu
 
 NS_CC_END
