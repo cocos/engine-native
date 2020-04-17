@@ -55,7 +55,8 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
     
     if (_usage & GFXBufferUsage::VERTEX ||
         _usage & GFXBufferUsage::INDEX ||
-        _usage & GFXBufferUsage::UNIFORM)
+        _usage & GFXBufferUsage::UNIFORM ||
+        _usage & GFXBufferUsageBit::TRANSFER_DST)
     {
         _mtlResourceOptions = toMTLResourseOption(info.memUsage);
         if (_size > 0)
@@ -73,8 +74,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
     {
         // do nothing
     }
-    else if (_usage & GFXBufferUsageBit::TRANSFER_DST ||
-             _usage & GFXBufferUsageBit::TRANSFER_SRC)
+    else if (_usage & GFXBufferUsageBit::TRANSFER_SRC)
     {
         _transferBuffer = (uint8_t*)CC_MALLOC(_size);
         if (!_transferBuffer)
@@ -178,18 +178,20 @@ void CCMTLBuffer::update(void* buffer, uint offset, uint size)
         }
         memcpy((uint8_t*)_indirects.data() + offset, buffer, size);
     }
-    else if (_transferBuffer && _usage & GFXBufferUsageBit::TRANSFER_SRC)
+    else if(_usage & GFXBufferUsageBit::TRANSFER_SRC)
     {
         memcpy(_transferBuffer + offset, buffer, size);
     }
-    else if (_mtlBuffer)
+    else
     {
         uint8_t* dst = (uint8_t*)(_mtlBuffer.contents) + offset;
         memcpy(dst, buffer, size);
     }
     
-    if (_buffer)
+    if (_flags & GFXBufferFlagBit::BAKUP_BUFFER)
+    {
         memcpy(_buffer + offset, buffer, size);
+    }
 }
 
 NS_CC_END
