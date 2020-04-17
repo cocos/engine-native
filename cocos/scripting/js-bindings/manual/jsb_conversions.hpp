@@ -814,79 +814,29 @@ constexpr Out holder_convert_to(In& input) {
     }
 }
 
-template<typename T>
-struct HolderType_impl {
-    using type = T;
-    using local_type = T;
-    static constexpr inline auto value(local_type& arg) {
-        return holder_convert_to<type, local_type>(arg);
-    }
-};
+//template<typename T>
+//struct HolderType_impl {
+//    using type = T;
+//    using local_type = T;
+//    static constexpr inline auto value(local_type& arg) {
+//        return holder_convert_to<type, local_type>(arg);
+//    }
+//};
 
 template<typename T, bool is_reference >
-struct HolderType : HolderType_impl<T> {
+struct HolderType {
 
+    using type = T;
     using local_type = typename std::conditional_t<is_reference && is_jsb_object_v<T>, std::add_pointer_t<T>, T>;
 
-    static constexpr auto value(local_type & arg) 
+    static constexpr inline auto value(local_type & arg) 
     { 
-        if constexpr (!is_reference)
+        /*if constexpr (!is_reference)
             return HolderType_impl<T>::value(arg);
-        else
+        else*/
             return holder_convert_to<T, local_type>(arg);
     }
 };
-
-#define HolderType_IMPL(__type) \
-    using type = __type; \
-    using local_type = __type; \
-    static inline auto value(local_type& arg) { \
-        return holder_convert_to<type, local_type>(arg); \
-    }
-
-template<>
-struct HolderType_impl<std::string *> {
-    HolderType_IMPL(std::string)
-};
-
-template<>
-struct HolderType_impl<float> {
-    HolderType_IMPL(float)
-};
-template<>
-struct HolderType_impl<uint32_t> {
-    HolderType_IMPL(uint32_t)
-};
-template<>
-struct HolderType_impl<int32_t> {
-    HolderType_IMPL(int32_t)
-};
-template<>
-struct HolderType_impl<uint16_t> {
-    HolderType_IMPL(uint16_t)
-};
-template<>
-struct HolderType_impl<int16_t> {
-    HolderType_IMPL(int16_t)
-};
-template<>
-struct HolderType_impl<uint8_t> {
-    HolderType_IMPL(uint8_t)
-};
-template<>
-struct HolderType_impl<int8_t> {
-    HolderType_IMPL(int8_t)
-};
-template<>
-struct HolderType_impl<bool> {
-    HolderType_IMPL(bool)
-};
-template<>
-struct HolderType_impl<void *> {
-    HolderType_IMPL(void *)
-};
-
-#undef HolderType_IMPL
 
 ///////////////////////////////////convertion//////////////////////////////////////////////////////////
 
@@ -924,6 +874,49 @@ bool sevalue_to_native(const se::Value &from, std::array<T, CNT>* to)
     {
         array->getArrayElement(i, &tmp);
         sevalue_to_native(tmp, &(*to)[i]);
+    }
+    return true;
+}
+
+template<size_t CNT>
+bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to)
+{
+    assert(from.toObject());
+    se::Object* array = from.toObject();
+    assert(array->isArray() || array->isArrayBuffer() ||array->isTypedArray());
+    if (array->isTypedArray())
+    {
+        uint8_t* data = nullptr;
+        size_t size = 0;
+        array->getTypedArrayData(&data, &size);
+        for (int i = 0; i < std::min(size, CNT); i++) {
+            (*to)[i] = data[i];
+        }
+    }
+    else if (array->isArrayBuffer())
+    {
+        uint8_t* data = nullptr;
+        size_t size = 0;
+        array->getArrayBufferData(&data, &size);
+        for (int i = 0; i < std::min(size, CNT); i++) {
+            (*to)[i] = data[i];
+        }
+    }
+    else if(array->isArray())
+    {
+        uint32_t len = 0;
+        array->getArrayLength(&len);
+        se::Value tmp;
+        assert(len >= CNT);
+        for (uint32_t i = 0; i < CNT; i++)
+        {
+            array->getArrayElement(i, &tmp);
+            sevalue_to_native(tmp, &(*to)[i]);
+        }
+    }
+    else 
+    {
+        return false;
     }
     return true;
 }
@@ -1211,9 +1204,3 @@ namespace cocos2d {
 //bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo** to);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXContext);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandAllocatorInfo);
-
-template<>
-struct HolderType_impl<std::vector<cocos2d::GFXBufferTextureCopy>*> {
-    using type = std::vector<cocos2d::GFXBufferTextureCopy>;
-    static constexpr inline auto& value(type& arg) { return arg; }
-};
