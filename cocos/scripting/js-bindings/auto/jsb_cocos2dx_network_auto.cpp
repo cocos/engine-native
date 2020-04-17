@@ -280,7 +280,7 @@ static bool js_network_Downloader_setOnTaskProgress(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<std::function<void (const cocos2d::network::DownloadTask &, long long, long long, long long)>, true>::local_type arg0 = {};
-        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_network_Downloader_setOnTaskProgress : Error processing arguments");
         cobj->setOnTaskProgress(HolderType<std::function<void (const cocos2d::network::DownloadTask &, long long, long long, long long)>, true>::value(arg0));
         return true;
