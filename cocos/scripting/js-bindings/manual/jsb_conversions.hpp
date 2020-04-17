@@ -830,7 +830,7 @@ struct HolderType {
 
 
 template<typename T>
-inline bool sevalue_to_native(const se::Value &from, T* to)
+inline bool sevalue_to_native(const se::Value &from, T* to, se::Object *)
 {
     static_assert(false, "sevalue_to_native not implemented for type");
     return false;
@@ -838,10 +838,10 @@ inline bool sevalue_to_native(const se::Value &from, T* to)
 
 
 template<typename T>
-inline bool sevalue_to_native(const se::Value &from, std::enable_if_t<std::is_enum_v<T>, T>* to)
+inline bool sevalue_to_native(const se::Value &from, std::enable_if_t<std::is_enum_v<T>, T>* to, se::Object *ctx)
 {
     typename std::underlying_type_t<T> tmp;
-    *to = static_cast<T>sevalue_to_native(from, &tmp);
+    *to = static_cast<T>(sevalue_to_native(from, &tmp, ctx));
     return true;
 }
 
@@ -895,7 +895,7 @@ bool sevalue_to_native(const se::Value& from, std::function<void( Args...)>* fun
 //////////////// vector type
 
 template<typename T, size_t CNT>
-bool sevalue_to_native(const se::Value &from, std::array<T, CNT>* to)
+bool sevalue_to_native(const se::Value &from, std::array<T, CNT>* to, se::Object *ctx)
 {
     assert(from.toObject());
     se::Object *array = from.toObject();
@@ -907,13 +907,13 @@ bool sevalue_to_native(const se::Value &from, std::array<T, CNT>* to)
     for (uint32_t i = 0; i < CNT; i++)
     {
         array->getArrayElement(i, &tmp);
-        sevalue_to_native(tmp, &(*to)[i]);
+        sevalue_to_native(tmp, &(*to)[i], ctx);
     }
     return true;
 }
 
 template<size_t CNT>
-bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to)
+bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to, se::Object *ctx)
 {
     assert(from.toObject());
     se::Object* array = from.toObject();
@@ -945,7 +945,7 @@ bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to)
         for (uint32_t i = 0; i < CNT; i++)
         {
             array->getArrayElement(i, &tmp);
-            sevalue_to_native(tmp, &(*to)[i]);
+            sevalue_to_native(tmp, &(*to)[i], ctx);
         }
     }
     else 
@@ -957,7 +957,7 @@ bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to)
 
 
 template<typename T>
-bool sevalue_to_native(const se::Value &from, std::vector<T>* to)
+bool sevalue_to_native(const se::Value &from, std::vector<T>* to, se::Object *ctx)
 {
     assert(from.toObject());
     se::Object *array = from.toObject();
@@ -969,12 +969,12 @@ bool sevalue_to_native(const se::Value &from, std::vector<T>* to)
     for(uint32_t i = 0; i < len; i++)
     {
         array->getArrayElement(i, &tmp);
-        sevalue_to_native(tmp, &(*to)[i]);
+        sevalue_to_native(tmp, &(*to)[i], ctx);
     }
     return true;
 }
 template<>
-inline bool sevalue_to_native(const se::Value &from, std::string * to)
+inline bool sevalue_to_native(const se::Value &from, std::string * to, se::Object *)
 {
     *to = from.toString();
     return true;
@@ -982,60 +982,60 @@ inline bool sevalue_to_native(const se::Value &from, std::string * to)
 
 ///// integers
 template<>
-inline bool sevalue_to_native(const se::Value &from, bool* to)
+inline bool sevalue_to_native(const se::Value &from, bool* to, se::Object *)
 {
     *to = from.toBoolean();
     return true;
 }
 
 template<>
-inline bool sevalue_to_native(const se::Value &from, int32_t * to)
+inline bool sevalue_to_native(const se::Value &from, int32_t * to, se::Object *)
 {
     *to = from.toInt32();
     return true;
 }
 template<>
-inline bool sevalue_to_native(const se::Value &from, uint32_t * to)
+inline bool sevalue_to_native(const se::Value &from, uint32_t * to, se::Object *)
 {
     *to = from.toUint32();
     return true;
 }
 
 template<>
-inline bool sevalue_to_native(const se::Value &from, int16_t * to)
+inline bool sevalue_to_native(const se::Value &from, int16_t * to, se::Object *)
 {
     *to = from.toInt16();
     return true;
 }
 template<>
-inline bool sevalue_to_native(const se::Value &from, uint16_t * to)
+inline bool sevalue_to_native(const se::Value &from, uint16_t * to, se::Object *)
 {
     *to = from.toUint16();
     return true;
 }
 
 template<>
-inline bool sevalue_to_native(const se::Value &from, int8_t * to)
+inline bool sevalue_to_native(const se::Value &from, int8_t * to, se::Object *)
 {
     *to = from.toInt8();
     return true;
 }
 template<>
-inline bool sevalue_to_native(const se::Value &from, uint8_t * to)
+inline bool sevalue_to_native(const se::Value &from, uint8_t * to, se::Object *)
 {
     *to = from.toUint8();
     return true;
 }
 
 template<>
-inline bool sevalue_to_native(const se::Value &from, uint64_t *to)
+inline bool sevalue_to_native(const se::Value &from, uint64_t *to, se::Object *)
 {
     *to = from.toUIntptr_t();
     return true;
 }
 
 template<>
-inline bool sevalue_to_native(const se::Value &from, float * to)
+inline bool sevalue_to_native(const se::Value &from, float * to, se::Object *)
 {
     *to = from.toFloat();
     return true;
@@ -1043,11 +1043,11 @@ inline bool sevalue_to_native(const se::Value &from, float * to)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to);
+bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to, se::Object *);
 ////////////////// pointer types
 
 template<typename T>
-bool sevalue_to_native(const se::Value &from,  T ** to)
+bool sevalue_to_native(const se::Value &from,  T ** to, se::Object *)
 {
     static_assert(is_jsb_object_v<T>, "Only JSB object are accepted!");
     if (from.isNullOrUndefined()) {
@@ -1061,15 +1061,15 @@ bool sevalue_to_native(const se::Value &from,  T ** to)
 }
 
 template<>
-bool sevalue_to_native(const se::Value &from, void ** to);
+bool sevalue_to_native(const se::Value &from, void ** to, se::Object *);
 
 template<>
-bool sevalue_to_native(const se::Value &from, std::string ** to);
+bool sevalue_to_native(const se::Value &from, std::string ** to, se::Object *);
 
 ///////////////////////////////////////////////////////////////////
 
 template<typename T>
-bool nativevalue_to_se(const T &from, se::Value &to) {
+bool nativevalue_to_se(const T &from, se::Value &to, se::Object *) {
     if constexpr (std::is_enum_v<T>) {
         typedef typename std::underlying_type_t<T> enum_type;
         enum_type tmp = static_cast<enum_type>(from);
@@ -1092,19 +1092,13 @@ bool nativevalue_to_se(const T &from, se::Value &to) {
     return false;
 }
 
-
-namespace cocos2d{
-    struct GFXDrawInfo;
-    struct GFXUniform;
-}
-
 template<typename T>
-inline bool nativevalue_to_se(const std::vector<T>& from, se::Value& to)
+inline bool nativevalue_to_se(const std::vector<T>& from, se::Value& to, se::Object *ctx)
 {
     se::Object* array = se::Object::createArrayObject(from.size());
     se::Value tmp;
     for (size_t i = 0; i < from.size(); i++) {
-        nativevalue_to_se(from[i], tmp);
+        nativevalue_to_se(from[i], tmp, ctx);
         array->setArrayElement(i, tmp);
     }
     to.setObject(array);
@@ -1112,7 +1106,7 @@ inline bool nativevalue_to_se(const std::vector<T>& from, se::Value& to)
 }
 
 template<>
-inline bool nativevalue_to_se(const std::vector<int8_t>& from, se::Value& to)
+inline bool nativevalue_to_se(const std::vector<int8_t>& from, se::Value& to, se::Object *)
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::INT8, from.data(), from.size());
     to.setObject(array);
@@ -1120,7 +1114,7 @@ inline bool nativevalue_to_se(const std::vector<int8_t>& from, se::Value& to)
 }
 
 template<>
-inline bool nativevalue_to_se(const std::vector<uint8_t>& from, se::Value& to)
+inline bool nativevalue_to_se(const std::vector<uint8_t>& from, se::Value& to, se::Object *)
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::UINT8, from.data(), from.size());
     to.setObject(array);
@@ -1130,12 +1124,12 @@ inline bool nativevalue_to_se(const std::vector<uint8_t>& from, se::Value& to)
 
 
 template<typename T, size_t N>
-inline bool nativevalue_to_se(const std::array<T, N>& from, se::Value& to)
+inline bool nativevalue_to_se(const std::array<T, N>& from, se::Value& to, se::Object *ctx)
 {
     se::Object* array = se::Object::createArrayObject(N);
     se::Value tmp;
     for (size_t i = 0; i < N; i++) {
-        nativevalue_to_se(from[i], tmp);
+        nativevalue_to_se(from[i], tmp, ctx);
         array->setArrayElement(i, tmp);
     }
     to.setObject(array);
@@ -1143,15 +1137,15 @@ inline bool nativevalue_to_se(const std::array<T, N>& from, se::Value& to)
 }
 
 template<size_t N>
-inline bool nativevalue_to_se(const std::array<uint8_t, N>& from, se::Value& to)
+inline bool nativevalue_to_se(const std::array<uint8_t, N>& from, se::Value& to, se::Object *)
 {
-    se::Object* array = se::Object::createUint8TypedArray(from.data(), N);
+    se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::UINT8, from.data(), N);
     to.setObject(array);
     return true;
 }
 
 template<size_t N>
-inline bool nativevalue_to_se(const std::array<uint16_t, N>& from, se::Value& to)
+inline bool nativevalue_to_se(const std::array<uint16_t, N>& from, se::Value& to, se::Object *)
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::INT16, from.data(), N * sizeof(uint16_t));
     to.setObject(array);
@@ -1159,7 +1153,7 @@ inline bool nativevalue_to_se(const std::array<uint16_t, N>& from, se::Value& to
 }
 
 template<size_t N>
-inline bool nativevalue_to_se(const std::array<float, N>& from, se::Value& to)
+inline bool nativevalue_to_se(const std::array<float, N>& from, se::Value& to, se::Object *)
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::FLOAT32, from.data(), N * sizeof(float));
     to.setObject(array);
@@ -1168,59 +1162,59 @@ inline bool nativevalue_to_se(const std::array<float, N>& from, se::Value& to)
 
 
 template<>
-inline bool nativevalue_to_se(const int32_t &from, se::Value &to)
+inline bool nativevalue_to_se(const int32_t &from, se::Value &to, se::Object *)
 {
     to.setInt32(from);
     return true;
 }
 
 template<>
-inline bool nativevalue_to_se(const uint32_t &from, se::Value &to)
+inline bool nativevalue_to_se(const uint32_t &from, se::Value &to, se::Object *)
 {
     to.setUint32(from);
     return true;
 }
 template<>
-inline bool nativevalue_to_se(const int16_t &from, se::Value &to)
+inline bool nativevalue_to_se(const int16_t &from, se::Value &to, se::Object *)
 {
     to.setInt16(from);
     return true;
 }
 template<>
-inline bool nativevalue_to_se(const uint16_t &from, se::Value &to)
+inline bool nativevalue_to_se(const uint16_t &from, se::Value &to, se::Object *)
 {
     to.setUint16(from);
     return true;
 }
 
 template<>
-inline bool nativevalue_to_se(const int8_t &from, se::Value &to)
+inline bool nativevalue_to_se(const int8_t &from, se::Value &to, se::Object *)
 {
     to.setInt8(from);
     return true;
 }
 
 template<>
-inline bool nativevalue_to_se(const uint8_t &from, se::Value &to)
+inline bool nativevalue_to_se(const uint8_t &from, se::Value &to, se::Object *)
 {
     to.setUint8(from);
     return true;
 }
 
 template<>
-inline bool nativevalue_to_se(const std::string &from, se::Value &to)
+inline bool nativevalue_to_se(const std::string &from, se::Value &to, se::Object *)
 {
     to.setString(from);
     return true;
 }
 template<>
-inline bool nativevalue_to_se(const float &from, se::Value &to)
+inline bool nativevalue_to_se(const float &from, se::Value &to, se::Object *)
 {
     to.setFloat(from);
     return true;
 }
 template<>
-inline bool nativevalue_to_se(const bool& from, se::Value& to)
+inline bool nativevalue_to_se(const bool& from, se::Value& to, se::Object *)
 {
     to.setBoolean(from);
     return true;
@@ -1238,3 +1232,6 @@ namespace cocos2d {
 //bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo** to);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXContext);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandAllocatorInfo);
+
+#define SEVALUE_TO_NATIVE(a, b, c) sevalue_to_native(a, b, c)
+#define NATIVEVALUE_TO_SE(a, b, c) nativevalue_to_se(a, b, c)

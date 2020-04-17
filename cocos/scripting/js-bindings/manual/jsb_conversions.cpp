@@ -1431,7 +1431,7 @@ bool std_vector_EffectDefine_to_seval(const std::vector<cocos2d::ValueMap>& v, s
 ///////////////////////////////////convertion//////////////////////////////////////////////////////////
 
 template<>
-bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to)
+bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to, se::Object *ctx)
 {
     assert(from.toObject());
     se::Object *array = from.toObject();
@@ -1446,7 +1446,7 @@ bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to)
         for (uint32_t i = 0; i < len; i++)
         {
             array->getArrayElement(i, &tmp);
-            sevalue_to_native(tmp, &(*to)[i]);
+            sevalue_to_native(tmp, &(*to)[i], ctx);
         }
     }
     else if (array->isArrayBuffer())
@@ -1475,7 +1475,7 @@ bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to)
 ////////////////// pointer types
 
 template<>
-bool sevalue_to_native(const se::Value &from, void ** to)
+bool sevalue_to_native(const se::Value &from, void ** to, se::Object *)
 {
     assert(from.isObject()); // JS value should be arraybuffer or typedarray
     se::Object *data = from.toObject();
@@ -1491,14 +1491,5 @@ bool sevalue_to_native(const se::Value &from, void ** to)
         data->getTypedArrayData(&buffer, &len);
     }
     *to = (void*)buffer;
-    return true;
-}
-
-
-/////////////////////// FIXME: remove all code bellow
-///////////////// gfx type
-template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo* to)
-{
     return true;
 }

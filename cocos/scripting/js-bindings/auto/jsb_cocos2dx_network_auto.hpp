@@ -21,6 +21,8 @@ extern se::Class* __jsb_cocos2d_network_DownloaderHints_class;
 bool js_register_cocos2d_network_DownloaderHints(se::Object* obj);
 bool register_all_network(se::Object* obj);
 
+template<>
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::network::DownloaderHints *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::network::DownloaderHints);
 
 extern se::Object* __jsb_cocos2d_network_Downloader_proto;

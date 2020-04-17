@@ -13,11 +13,11 @@
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXObjectType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXObjectType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXObjectType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXObjectType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXObjectType>(tmp); return true;}
     return false;
 }
 
@@ -48,11 +48,11 @@ int js_register_gfx_GFXObjectType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXStatus *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXStatus *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXStatus>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXStatus>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXStatus>(tmp); return true;}
     return false;
 }
 
@@ -70,11 +70,11 @@ int js_register_gfx_GFXStatus(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXAPI *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXAPI *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXAPI>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXAPI>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXAPI>(tmp); return true;}
     return false;
 }
 
@@ -98,11 +98,11 @@ int js_register_gfx_GFXAPI(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXFeature *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXFeature *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXFeature>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXFeature>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXFeature>(tmp); return true;}
     return false;
 }
 
@@ -134,11 +134,11 @@ int js_register_gfx_GFXFeature(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXFormat *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXFormat *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXFormat>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXFormat>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXFormat>(tmp); return true;}
     return false;
 }
 
@@ -247,11 +247,11 @@ int js_register_gfx_GFXFormat(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXFormatType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXFormatType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXFormatType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXFormatType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXFormatType>(tmp); return true;}
     return false;
 }
 
@@ -273,11 +273,11 @@ int js_register_gfx_GFXFormatType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXType>(tmp); return true;}
     return false;
 }
 
@@ -325,11 +325,11 @@ int js_register_gfx_GFXType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferUsageBit *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBufferUsageBit *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXBufferUsageBit>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXBufferUsageBit>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXBufferUsageBit>(tmp); return true;}
     return false;
 }
 
@@ -352,11 +352,11 @@ int js_register_gfx_GFXBufferUsageBit(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferFlagBit *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBufferFlagBit *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXBufferFlagBit>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXBufferFlagBit>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXBufferFlagBit>(tmp); return true;}
     return false;
 }
 
@@ -373,11 +373,11 @@ int js_register_gfx_GFXBufferFlagBit(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferAccessBit *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBufferAccessBit *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXBufferAccessBit>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXBufferAccessBit>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXBufferAccessBit>(tmp); return true;}
     return false;
 }
 
@@ -395,11 +395,11 @@ int js_register_gfx_GFXBufferAccessBit(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXMemoryUsageBit *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXMemoryUsageBit *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXMemoryUsageBit>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXMemoryUsageBit>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXMemoryUsageBit>(tmp); return true;}
     return false;
 }
 
@@ -417,11 +417,11 @@ int js_register_gfx_GFXMemoryUsageBit(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXTextureType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXTextureType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXTextureType>(tmp); return true;}
     return false;
 }
 
@@ -439,11 +439,11 @@ int js_register_gfx_GFXTextureType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureUsageBit *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureUsageBit *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXTextureUsageBit>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXTextureUsageBit>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXTextureUsageBit>(tmp); return true;}
     return false;
 }
 
@@ -467,11 +467,11 @@ int js_register_gfx_GFXTextureUsageBit(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureFlagBit *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureFlagBit *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXTextureFlagBit>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXTextureFlagBit>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXTextureFlagBit>(tmp); return true;}
     return false;
 }
 
@@ -490,11 +490,11 @@ int js_register_gfx_GFXTextureFlagBit(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXSampleCount *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXSampleCount *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXSampleCount>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXSampleCount>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXSampleCount>(tmp); return true;}
     return false;
 }
 
@@ -516,11 +516,11 @@ int js_register_gfx_GFXSampleCount(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureViewType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureViewType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXTextureViewType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXTextureViewType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXTextureViewType>(tmp); return true;}
     return false;
 }
 
@@ -541,11 +541,11 @@ int js_register_gfx_GFXTextureViewType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXFilter *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXFilter *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXFilter>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXFilter>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXFilter>(tmp); return true;}
     return false;
 }
 
@@ -564,11 +564,11 @@ int js_register_gfx_GFXFilter(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXAddress *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXAddress *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXAddress>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXAddress>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXAddress>(tmp); return true;}
     return false;
 }
 
@@ -587,11 +587,11 @@ int js_register_gfx_GFXAddress(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXComparisonFunc *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXComparisonFunc *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXComparisonFunc>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXComparisonFunc>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXComparisonFunc>(tmp); return true;}
     return false;
 }
 
@@ -614,11 +614,11 @@ int js_register_gfx_GFXComparisonFunc(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXStencilOp *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXStencilOp *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXStencilOp>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXStencilOp>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXStencilOp>(tmp); return true;}
     return false;
 }
 
@@ -641,11 +641,11 @@ int js_register_gfx_GFXStencilOp(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendFactor *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBlendFactor *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXBlendFactor>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXBlendFactor>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXBlendFactor>(tmp); return true;}
     return false;
 }
 
@@ -675,11 +675,11 @@ int js_register_gfx_GFXBlendFactor(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendOp *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBlendOp *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXBlendOp>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXBlendOp>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXBlendOp>(tmp); return true;}
     return false;
 }
 
@@ -699,11 +699,11 @@ int js_register_gfx_GFXBlendOp(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXColorMask *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXColorMask *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXColorMask>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXColorMask>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXColorMask>(tmp); return true;}
     return false;
 }
 
@@ -724,11 +724,11 @@ int js_register_gfx_GFXColorMask(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXShaderType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXShaderType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXShaderType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXShaderType>(tmp); return true;}
     return false;
 }
 
@@ -750,11 +750,11 @@ int js_register_gfx_GFXShaderType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXLoadOp *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXLoadOp *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXLoadOp>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXLoadOp>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXLoadOp>(tmp); return true;}
     return false;
 }
 
@@ -772,11 +772,11 @@ int js_register_gfx_GFXLoadOp(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXStoreOp *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXStoreOp *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXStoreOp>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXStoreOp>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXStoreOp>(tmp); return true;}
     return false;
 }
 
@@ -793,11 +793,11 @@ int js_register_gfx_GFXStoreOp(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureLayout *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureLayout *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXTextureLayout>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXTextureLayout>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXTextureLayout>(tmp); return true;}
     return false;
 }
 
@@ -822,11 +822,11 @@ int js_register_gfx_GFXTextureLayout(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXPipelineBindPoint *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXPipelineBindPoint *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXPipelineBindPoint>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXPipelineBindPoint>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXPipelineBindPoint>(tmp); return true;}
     return false;
 }
 
@@ -844,11 +844,11 @@ int js_register_gfx_GFXPipelineBindPoint(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXPrimitiveMode *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXPrimitiveMode *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXPrimitiveMode>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXPrimitiveMode>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXPrimitiveMode>(tmp); return true;}
     return false;
 }
 
@@ -877,11 +877,11 @@ int js_register_gfx_GFXPrimitiveMode(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXPolygonMode *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXPolygonMode *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXPolygonMode>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXPolygonMode>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXPolygonMode>(tmp); return true;}
     return false;
 }
 
@@ -899,11 +899,11 @@ int js_register_gfx_GFXPolygonMode(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXShadeModel *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXShadeModel *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXShadeModel>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXShadeModel>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXShadeModel>(tmp); return true;}
     return false;
 }
 
@@ -920,11 +920,11 @@ int js_register_gfx_GFXShadeModel(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXCullMode *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXCullMode *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXCullMode>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXCullMode>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXCullMode>(tmp); return true;}
     return false;
 }
 
@@ -942,11 +942,11 @@ int js_register_gfx_GFXCullMode(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXDynamicState *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXDynamicState *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXDynamicState>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXDynamicState>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXDynamicState>(tmp); return true;}
     return false;
 }
 
@@ -969,11 +969,11 @@ int js_register_gfx_GFXDynamicState(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXStencilFace *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXStencilFace *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXStencilFace>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXStencilFace>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXStencilFace>(tmp); return true;}
     return false;
 }
 
@@ -991,11 +991,11 @@ int js_register_gfx_GFXStencilFace(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBindingType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBindingType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXBindingType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXBindingType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXBindingType>(tmp); return true;}
     return false;
 }
 
@@ -1014,11 +1014,11 @@ int js_register_gfx_GFXBindingType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXQueueType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXQueueType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXQueueType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXQueueType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXQueueType>(tmp); return true;}
     return false;
 }
 
@@ -1036,11 +1036,11 @@ int js_register_gfx_GFXQueueType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandBufferType *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXCommandBufferType *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXCommandBufferType>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXCommandBufferType>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXCommandBufferType>(tmp); return true;}
     return false;
 }
 
@@ -1057,11 +1057,11 @@ int js_register_gfx_GFXCommandBufferType(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXClearFlagBit *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXClearFlagBit *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXClearFlagBit>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXClearFlagBit>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXClearFlagBit>(tmp); return true;}
     return false;
 }
 
@@ -1082,11 +1082,11 @@ int js_register_gfx_GFXClearFlagBit(se::Object* obj)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXVsyncMode *to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXVsyncMode *to, se::Object *ctx)
 {
     typedef typename std::underlying_type_t<cocos2d::GFXVsyncMode>  under_type;
     under_type tmp;
-    if(sevalue_to_native(from, &tmp)) { *to = static_cast<cocos2d::GFXVsyncMode>(tmp); return true;}
+    if(SEVALUE_TO_NATIVE(from, &tmp, ctx)) { *to = static_cast<cocos2d::GFXVsyncMode>(tmp); return true;}
     return false;
 }
 
@@ -1113,7 +1113,7 @@ static bool js_gfx_GFXOffset_get_x(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->x, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->x, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1126,7 +1126,7 @@ static bool js_gfx_GFXOffset_set_x(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXOffset_set_x : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->x); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->x, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXOffset_set_x : Error processing new value");
     return true;
 }
@@ -1139,7 +1139,7 @@ static bool js_gfx_GFXOffset_get_y(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->y, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->y, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1152,7 +1152,7 @@ static bool js_gfx_GFXOffset_set_y(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXOffset_set_y : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->y); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->y, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXOffset_set_y : Error processing new value");
     return true;
 }
@@ -1165,7 +1165,7 @@ static bool js_gfx_GFXOffset_get_z(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->z, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->z, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1178,7 +1178,7 @@ static bool js_gfx_GFXOffset_set_z(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXOffset_set_z : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->z); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->z, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXOffset_set_z : Error processing new value");
     return true;
 }
@@ -1186,7 +1186,7 @@ SE_BIND_PROP_SET(js_gfx_GFXOffset_set_z)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXOffset * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXOffset * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -1199,15 +1199,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXOffset * to)
     bool ok = true;
     json->getProperty("x", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->x));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->x), ctx);
     }
     json->getProperty("y", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->y));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->y), ctx);
     }
     json->getProperty("z", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->z));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->z), ctx);
     }
     return ok;
 }
@@ -1233,7 +1233,7 @@ static bool js_gfx_GFXOffset_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXOffset* cobj = JSB_ALLOC(cocos2d::GFXOffset);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -1249,17 +1249,17 @@ static bool js_gfx_GFXOffset_constructor(se::State& s)
         cocos2d::GFXOffset* cobj = JSB_ALLOC(cocos2d::GFXOffset);
         int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->x = arg0;
         }
         int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->y = arg1;
         }
         int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->z = arg2;
         }
 
@@ -1324,7 +1324,7 @@ static bool js_gfx_GFXRect_get_x(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->x, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->x, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1337,7 +1337,7 @@ static bool js_gfx_GFXRect_set_x(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRect_set_x : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->x); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->x, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRect_set_x : Error processing new value");
     return true;
 }
@@ -1350,7 +1350,7 @@ static bool js_gfx_GFXRect_get_y(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->y, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->y, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1363,7 +1363,7 @@ static bool js_gfx_GFXRect_set_y(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRect_set_y : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->y); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->y, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRect_set_y : Error processing new value");
     return true;
 }
@@ -1376,7 +1376,7 @@ static bool js_gfx_GFXRect_get_width(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->width, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->width, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1389,7 +1389,7 @@ static bool js_gfx_GFXRect_set_width(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRect_set_width : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->width); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->width, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRect_set_width : Error processing new value");
     return true;
 }
@@ -1402,7 +1402,7 @@ static bool js_gfx_GFXRect_get_height(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->height, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->height, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1415,7 +1415,7 @@ static bool js_gfx_GFXRect_set_height(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRect_set_height : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->height); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->height, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRect_set_height : Error processing new value");
     return true;
 }
@@ -1423,7 +1423,7 @@ SE_BIND_PROP_SET(js_gfx_GFXRect_set_height)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXRect * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXRect * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -1436,19 +1436,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXRect * to)
     bool ok = true;
     json->getProperty("x", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->x));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->x), ctx);
     }
     json->getProperty("y", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->y));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->y), ctx);
     }
     json->getProperty("width", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->width));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->width), ctx);
     }
     json->getProperty("height", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->height));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->height), ctx);
     }
     return ok;
 }
@@ -1474,7 +1474,7 @@ static bool js_gfx_GFXRect_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXRect* cobj = JSB_ALLOC(cocos2d::GFXRect);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -1490,22 +1490,22 @@ static bool js_gfx_GFXRect_constructor(se::State& s)
         cocos2d::GFXRect* cobj = JSB_ALLOC(cocos2d::GFXRect);
         int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->x = arg0;
         }
         int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->y = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->width = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->height = arg3;
         }
 
@@ -1571,7 +1571,7 @@ static bool js_gfx_GFXExtent_get_width(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->width, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->width, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1584,7 +1584,7 @@ static bool js_gfx_GFXExtent_set_width(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXExtent_set_width : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->width); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->width, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXExtent_set_width : Error processing new value");
     return true;
 }
@@ -1597,7 +1597,7 @@ static bool js_gfx_GFXExtent_get_height(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->height, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->height, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1610,7 +1610,7 @@ static bool js_gfx_GFXExtent_set_height(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXExtent_set_height : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->height); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->height, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXExtent_set_height : Error processing new value");
     return true;
 }
@@ -1623,7 +1623,7 @@ static bool js_gfx_GFXExtent_get_depth(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depth, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depth, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1636,7 +1636,7 @@ static bool js_gfx_GFXExtent_set_depth(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXExtent_set_depth : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depth); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depth, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXExtent_set_depth : Error processing new value");
     return true;
 }
@@ -1644,7 +1644,7 @@ SE_BIND_PROP_SET(js_gfx_GFXExtent_set_depth)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXExtent * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXExtent * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -1657,15 +1657,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXExtent * to)
     bool ok = true;
     json->getProperty("width", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->width));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->width), ctx);
     }
     json->getProperty("height", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->height));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->height), ctx);
     }
     json->getProperty("depth", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depth));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depth), ctx);
     }
     return ok;
 }
@@ -1691,7 +1691,7 @@ static bool js_gfx_GFXExtent_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXExtent* cobj = JSB_ALLOC(cocos2d::GFXExtent);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -1707,17 +1707,17 @@ static bool js_gfx_GFXExtent_constructor(se::State& s)
         cocos2d::GFXExtent* cobj = JSB_ALLOC(cocos2d::GFXExtent);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->width = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->height = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->depth = arg2;
         }
 
@@ -1782,7 +1782,7 @@ static bool js_gfx_GFXTextureSubres_get_baseMipLevel(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->baseMipLevel, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->baseMipLevel, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1795,7 +1795,7 @@ static bool js_gfx_GFXTextureSubres_set_baseMipLevel(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureSubres_set_baseMipLevel : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->baseMipLevel); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->baseMipLevel, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureSubres_set_baseMipLevel : Error processing new value");
     return true;
 }
@@ -1808,7 +1808,7 @@ static bool js_gfx_GFXTextureSubres_get_levelCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->levelCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->levelCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1821,7 +1821,7 @@ static bool js_gfx_GFXTextureSubres_set_levelCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureSubres_set_levelCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->levelCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->levelCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureSubres_set_levelCount : Error processing new value");
     return true;
 }
@@ -1834,7 +1834,7 @@ static bool js_gfx_GFXTextureSubres_get_baseArrayLayer(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->baseArrayLayer, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->baseArrayLayer, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1847,7 +1847,7 @@ static bool js_gfx_GFXTextureSubres_set_baseArrayLayer(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureSubres_set_baseArrayLayer : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->baseArrayLayer); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->baseArrayLayer, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureSubres_set_baseArrayLayer : Error processing new value");
     return true;
 }
@@ -1860,7 +1860,7 @@ static bool js_gfx_GFXTextureSubres_get_layerCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->layerCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->layerCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -1873,7 +1873,7 @@ static bool js_gfx_GFXTextureSubres_set_layerCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureSubres_set_layerCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->layerCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->layerCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureSubres_set_layerCount : Error processing new value");
     return true;
 }
@@ -1881,7 +1881,7 @@ SE_BIND_PROP_SET(js_gfx_GFXTextureSubres_set_layerCount)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureSubres * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureSubres * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -1894,19 +1894,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureSubres * to)
     bool ok = true;
     json->getProperty("baseMipLevel", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->baseMipLevel));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->baseMipLevel), ctx);
     }
     json->getProperty("levelCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->levelCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->levelCount), ctx);
     }
     json->getProperty("baseArrayLayer", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->baseArrayLayer));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->baseArrayLayer), ctx);
     }
     json->getProperty("layerCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->layerCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->layerCount), ctx);
     }
     return ok;
 }
@@ -1932,7 +1932,7 @@ static bool js_gfx_GFXTextureSubres_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureSubres* cobj = JSB_ALLOC(cocos2d::GFXTextureSubres);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -1948,22 +1948,22 @@ static bool js_gfx_GFXTextureSubres_constructor(se::State& s)
         cocos2d::GFXTextureSubres* cobj = JSB_ALLOC(cocos2d::GFXTextureSubres);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->baseMipLevel = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->levelCount = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->baseArrayLayer = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->layerCount = arg3;
         }
 
@@ -2029,7 +2029,7 @@ static bool js_gfx_GFXTextureCopy_get_srcSubres(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->srcSubres, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->srcSubres, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2042,7 +2042,7 @@ static bool js_gfx_GFXTextureCopy_set_srcSubres(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureCopy_set_srcSubres : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->srcSubres); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->srcSubres, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureCopy_set_srcSubres : Error processing new value");
     return true;
 }
@@ -2055,7 +2055,7 @@ static bool js_gfx_GFXTextureCopy_get_srcOffset(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->srcOffset, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->srcOffset, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2068,7 +2068,7 @@ static bool js_gfx_GFXTextureCopy_set_srcOffset(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureCopy_set_srcOffset : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->srcOffset); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->srcOffset, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureCopy_set_srcOffset : Error processing new value");
     return true;
 }
@@ -2081,7 +2081,7 @@ static bool js_gfx_GFXTextureCopy_get_dstSubres(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->dstSubres, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->dstSubres, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2094,7 +2094,7 @@ static bool js_gfx_GFXTextureCopy_set_dstSubres(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureCopy_set_dstSubres : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->dstSubres); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->dstSubres, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureCopy_set_dstSubres : Error processing new value");
     return true;
 }
@@ -2107,7 +2107,7 @@ static bool js_gfx_GFXTextureCopy_get_dstOffset(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->dstOffset, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->dstOffset, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2120,7 +2120,7 @@ static bool js_gfx_GFXTextureCopy_set_dstOffset(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureCopy_set_dstOffset : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->dstOffset); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->dstOffset, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureCopy_set_dstOffset : Error processing new value");
     return true;
 }
@@ -2133,7 +2133,7 @@ static bool js_gfx_GFXTextureCopy_get_extent(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->extent, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->extent, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2146,7 +2146,7 @@ static bool js_gfx_GFXTextureCopy_set_extent(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureCopy_set_extent : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->extent); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->extent, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureCopy_set_extent : Error processing new value");
     return true;
 }
@@ -2154,7 +2154,7 @@ SE_BIND_PROP_SET(js_gfx_GFXTextureCopy_set_extent)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureCopy * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureCopy * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -2167,23 +2167,23 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureCopy * to)
     bool ok = true;
     json->getProperty("srcSubres", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->srcSubres));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->srcSubres), ctx);
     }
     json->getProperty("srcOffset", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->srcOffset));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->srcOffset), ctx);
     }
     json->getProperty("dstSubres", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->dstSubres));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->dstSubres), ctx);
     }
     json->getProperty("dstOffset", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->dstOffset));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->dstOffset), ctx);
     }
     json->getProperty("extent", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->extent));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->extent), ctx);
     }
     return ok;
 }
@@ -2209,7 +2209,7 @@ static bool js_gfx_GFXTextureCopy_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureCopy* cobj = JSB_ALLOC(cocos2d::GFXTextureCopy);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -2225,27 +2225,27 @@ static bool js_gfx_GFXTextureCopy_constructor(se::State& s)
         cocos2d::GFXTextureCopy* cobj = JSB_ALLOC(cocos2d::GFXTextureCopy);
         cocos2d::GFXTextureSubres arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->srcSubres = arg0;
         }
         cocos2d::GFXOffset arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->srcOffset = arg1;
         }
         cocos2d::GFXTextureSubres arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->dstSubres = arg2;
         }
         cocos2d::GFXOffset arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->dstOffset = arg3;
         }
         cocos2d::GFXExtent arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->extent = arg4;
         }
 
@@ -2312,7 +2312,7 @@ static bool js_gfx_GFXBufferTextureCopy_get_buffOffset(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->buffOffset, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->buffOffset, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2325,7 +2325,7 @@ static bool js_gfx_GFXBufferTextureCopy_set_buffOffset(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferTextureCopy_set_buffOffset : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->buffOffset); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->buffOffset, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferTextureCopy_set_buffOffset : Error processing new value");
     return true;
 }
@@ -2338,7 +2338,7 @@ static bool js_gfx_GFXBufferTextureCopy_get_buffStride(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->buffStride, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->buffStride, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2351,7 +2351,7 @@ static bool js_gfx_GFXBufferTextureCopy_set_buffStride(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferTextureCopy_set_buffStride : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->buffStride); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->buffStride, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferTextureCopy_set_buffStride : Error processing new value");
     return true;
 }
@@ -2364,7 +2364,7 @@ static bool js_gfx_GFXBufferTextureCopy_get_buffTexHeight(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->buffTexHeight, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->buffTexHeight, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2377,7 +2377,7 @@ static bool js_gfx_GFXBufferTextureCopy_set_buffTexHeight(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferTextureCopy_set_buffTexHeight : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->buffTexHeight); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->buffTexHeight, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferTextureCopy_set_buffTexHeight : Error processing new value");
     return true;
 }
@@ -2390,7 +2390,7 @@ static bool js_gfx_GFXBufferTextureCopy_get_texOffset(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->texOffset, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->texOffset, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2403,7 +2403,7 @@ static bool js_gfx_GFXBufferTextureCopy_set_texOffset(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferTextureCopy_set_texOffset : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->texOffset); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->texOffset, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferTextureCopy_set_texOffset : Error processing new value");
     return true;
 }
@@ -2416,7 +2416,7 @@ static bool js_gfx_GFXBufferTextureCopy_get_texExtent(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->texExtent, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->texExtent, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2429,7 +2429,7 @@ static bool js_gfx_GFXBufferTextureCopy_set_texExtent(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferTextureCopy_set_texExtent : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->texExtent); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->texExtent, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferTextureCopy_set_texExtent : Error processing new value");
     return true;
 }
@@ -2442,7 +2442,7 @@ static bool js_gfx_GFXBufferTextureCopy_get_texSubres(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->texSubres, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->texSubres, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2455,7 +2455,7 @@ static bool js_gfx_GFXBufferTextureCopy_set_texSubres(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferTextureCopy_set_texSubres : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->texSubres); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->texSubres, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferTextureCopy_set_texSubres : Error processing new value");
     return true;
 }
@@ -2463,7 +2463,7 @@ SE_BIND_PROP_SET(js_gfx_GFXBufferTextureCopy_set_texSubres)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferTextureCopy * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBufferTextureCopy * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -2476,27 +2476,27 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferTextureCopy * to
     bool ok = true;
     json->getProperty("buffOffset", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->buffOffset));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->buffOffset), ctx);
     }
     json->getProperty("buffStride", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->buffStride));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->buffStride), ctx);
     }
     json->getProperty("buffTexHeight", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->buffTexHeight));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->buffTexHeight), ctx);
     }
     json->getProperty("texOffset", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->texOffset));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->texOffset), ctx);
     }
     json->getProperty("texExtent", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->texExtent));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->texExtent), ctx);
     }
     json->getProperty("texSubres", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->texSubres));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->texSubres), ctx);
     }
     return ok;
 }
@@ -2522,7 +2522,7 @@ static bool js_gfx_GFXBufferTextureCopy_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBufferTextureCopy* cobj = JSB_ALLOC(cocos2d::GFXBufferTextureCopy);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -2538,32 +2538,32 @@ static bool js_gfx_GFXBufferTextureCopy_constructor(se::State& s)
         cocos2d::GFXBufferTextureCopy* cobj = JSB_ALLOC(cocos2d::GFXBufferTextureCopy);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->buffOffset = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->buffStride = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->buffTexHeight = arg2;
         }
         cocos2d::GFXOffset arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->texOffset = arg3;
         }
         cocos2d::GFXExtent arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->texExtent = arg4;
         }
         cocos2d::GFXTextureSubres arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->texSubres = arg5;
         }
 
@@ -2631,7 +2631,7 @@ static bool js_gfx_GFXViewport_get_left(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->left, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->left, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2644,7 +2644,7 @@ static bool js_gfx_GFXViewport_set_left(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXViewport_set_left : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->left); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->left, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXViewport_set_left : Error processing new value");
     return true;
 }
@@ -2657,7 +2657,7 @@ static bool js_gfx_GFXViewport_get_top(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->top, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->top, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2670,7 +2670,7 @@ static bool js_gfx_GFXViewport_set_top(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXViewport_set_top : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->top); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->top, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXViewport_set_top : Error processing new value");
     return true;
 }
@@ -2683,7 +2683,7 @@ static bool js_gfx_GFXViewport_get_width(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->width, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->width, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2696,7 +2696,7 @@ static bool js_gfx_GFXViewport_set_width(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXViewport_set_width : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->width); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->width, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXViewport_set_width : Error processing new value");
     return true;
 }
@@ -2709,7 +2709,7 @@ static bool js_gfx_GFXViewport_get_height(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->height, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->height, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2722,7 +2722,7 @@ static bool js_gfx_GFXViewport_set_height(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXViewport_set_height : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->height); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->height, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXViewport_set_height : Error processing new value");
     return true;
 }
@@ -2735,7 +2735,7 @@ static bool js_gfx_GFXViewport_get_minDepth(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->minDepth, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->minDepth, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2748,7 +2748,7 @@ static bool js_gfx_GFXViewport_set_minDepth(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXViewport_set_minDepth : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->minDepth); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->minDepth, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXViewport_set_minDepth : Error processing new value");
     return true;
 }
@@ -2761,7 +2761,7 @@ static bool js_gfx_GFXViewport_get_maxDepth(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->maxDepth, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->maxDepth, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2774,7 +2774,7 @@ static bool js_gfx_GFXViewport_set_maxDepth(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXViewport_set_maxDepth : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->maxDepth); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->maxDepth, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXViewport_set_maxDepth : Error processing new value");
     return true;
 }
@@ -2782,7 +2782,7 @@ SE_BIND_PROP_SET(js_gfx_GFXViewport_set_maxDepth)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXViewport * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXViewport * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -2795,27 +2795,27 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXViewport * to)
     bool ok = true;
     json->getProperty("left", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->left));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->left), ctx);
     }
     json->getProperty("top", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->top));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->top), ctx);
     }
     json->getProperty("width", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->width));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->width), ctx);
     }
     json->getProperty("height", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->height));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->height), ctx);
     }
     json->getProperty("minDepth", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->minDepth));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->minDepth), ctx);
     }
     json->getProperty("maxDepth", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->maxDepth));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->maxDepth), ctx);
     }
     return ok;
 }
@@ -2841,7 +2841,7 @@ static bool js_gfx_GFXViewport_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXViewport* cobj = JSB_ALLOC(cocos2d::GFXViewport);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -2857,32 +2857,32 @@ static bool js_gfx_GFXViewport_constructor(se::State& s)
         cocos2d::GFXViewport* cobj = JSB_ALLOC(cocos2d::GFXViewport);
         int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->left = arg0;
         }
         int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->top = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->width = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->height = arg3;
         }
         float arg4 = {};
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->minDepth = arg4;
         }
         float arg5 = {};
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->maxDepth = arg5;
         }
 
@@ -2950,7 +2950,7 @@ static bool js_gfx_GFXColor_get_r(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->r, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->r, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2963,7 +2963,7 @@ static bool js_gfx_GFXColor_set_r(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColor_set_r : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->r); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->r, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColor_set_r : Error processing new value");
     return true;
 }
@@ -2976,7 +2976,7 @@ static bool js_gfx_GFXColor_get_g(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->g, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->g, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -2989,7 +2989,7 @@ static bool js_gfx_GFXColor_set_g(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColor_set_g : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->g); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->g, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColor_set_g : Error processing new value");
     return true;
 }
@@ -3002,7 +3002,7 @@ static bool js_gfx_GFXColor_get_b(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->b, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->b, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3015,7 +3015,7 @@ static bool js_gfx_GFXColor_set_b(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColor_set_b : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->b); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->b, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColor_set_b : Error processing new value");
     return true;
 }
@@ -3028,7 +3028,7 @@ static bool js_gfx_GFXColor_get_a(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->a, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->a, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3041,7 +3041,7 @@ static bool js_gfx_GFXColor_set_a(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColor_set_a : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->a); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->a, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColor_set_a : Error processing new value");
     return true;
 }
@@ -3049,7 +3049,7 @@ SE_BIND_PROP_SET(js_gfx_GFXColor_set_a)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXColor * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXColor * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -3062,19 +3062,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXColor * to)
     bool ok = true;
     json->getProperty("r", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->r));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->r), ctx);
     }
     json->getProperty("g", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->g));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->g), ctx);
     }
     json->getProperty("b", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->b));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->b), ctx);
     }
     json->getProperty("a", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->a));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->a), ctx);
     }
     return ok;
 }
@@ -3100,7 +3100,7 @@ static bool js_gfx_GFXColor_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXColor* cobj = JSB_ALLOC(cocos2d::GFXColor);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -3116,22 +3116,22 @@ static bool js_gfx_GFXColor_constructor(se::State& s)
         cocos2d::GFXColor* cobj = JSB_ALLOC(cocos2d::GFXColor);
         float arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->r = arg0;
         }
         float arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->g = arg1;
         }
         float arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->b = arg2;
         }
         float arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->a = arg3;
         }
 
@@ -3197,7 +3197,7 @@ static bool js_gfx_GFXDeviceInfo_get_windowHandle(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->windowHandle, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->windowHandle, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3210,7 +3210,7 @@ static bool js_gfx_GFXDeviceInfo_set_windowHandle(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDeviceInfo_set_windowHandle : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->windowHandle); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->windowHandle, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDeviceInfo_set_windowHandle : Error processing new value");
     return true;
 }
@@ -3223,7 +3223,7 @@ static bool js_gfx_GFXDeviceInfo_get_width(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->width, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->width, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3236,7 +3236,7 @@ static bool js_gfx_GFXDeviceInfo_set_width(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDeviceInfo_set_width : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->width); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->width, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDeviceInfo_set_width : Error processing new value");
     return true;
 }
@@ -3249,7 +3249,7 @@ static bool js_gfx_GFXDeviceInfo_get_height(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->height, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->height, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3262,7 +3262,7 @@ static bool js_gfx_GFXDeviceInfo_set_height(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDeviceInfo_set_height : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->height); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->height, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDeviceInfo_set_height : Error processing new value");
     return true;
 }
@@ -3275,7 +3275,7 @@ static bool js_gfx_GFXDeviceInfo_get_nativeWidth(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->nativeWidth, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->nativeWidth, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3288,7 +3288,7 @@ static bool js_gfx_GFXDeviceInfo_set_nativeWidth(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDeviceInfo_set_nativeWidth : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->nativeWidth); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->nativeWidth, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDeviceInfo_set_nativeWidth : Error processing new value");
     return true;
 }
@@ -3301,7 +3301,7 @@ static bool js_gfx_GFXDeviceInfo_get_nativeHeight(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->nativeHeight, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->nativeHeight, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3314,7 +3314,7 @@ static bool js_gfx_GFXDeviceInfo_set_nativeHeight(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDeviceInfo_set_nativeHeight : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->nativeHeight); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->nativeHeight, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDeviceInfo_set_nativeHeight : Error processing new value");
     return true;
 }
@@ -3322,7 +3322,7 @@ SE_BIND_PROP_SET(js_gfx_GFXDeviceInfo_set_nativeHeight)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXDeviceInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXDeviceInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -3335,27 +3335,27 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXDeviceInfo * to)
     bool ok = true;
     json->getProperty("windowHandle", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->windowHandle));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->windowHandle), ctx);
     }
     json->getProperty("width", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->width));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->width), ctx);
     }
     json->getProperty("height", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->height));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->height), ctx);
     }
     json->getProperty("nativeWidth", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->nativeWidth));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->nativeWidth), ctx);
     }
     json->getProperty("nativeHeight", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->nativeHeight));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->nativeHeight), ctx);
     }
     json->getProperty("sharedCtx", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->sharedCtx));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->sharedCtx), ctx);
     }
     return ok;
 }
@@ -3381,7 +3381,7 @@ static bool js_gfx_GFXDeviceInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDeviceInfo* cobj = JSB_ALLOC(cocos2d::GFXDeviceInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -3397,32 +3397,32 @@ static bool js_gfx_GFXDeviceInfo_constructor(se::State& s)
         cocos2d::GFXDeviceInfo* cobj = JSB_ALLOC(cocos2d::GFXDeviceInfo);
         uintptr_t arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->windowHandle = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->width = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->height = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->nativeWidth = arg3;
         }
         unsigned int arg4 = {};
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->nativeHeight = arg4;
         }
         cocos2d::GFXContext* arg5 = nullptr;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->sharedCtx = arg5;
         }
 
@@ -3489,7 +3489,7 @@ static bool js_gfx_GFXWindowInfo_get_title(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->title, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->title, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3502,7 +3502,7 @@ static bool js_gfx_GFXWindowInfo_set_title(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_title : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->title); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->title, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_title : Error processing new value");
     return true;
 }
@@ -3515,7 +3515,7 @@ static bool js_gfx_GFXWindowInfo_get_left(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->left, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->left, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3528,7 +3528,7 @@ static bool js_gfx_GFXWindowInfo_set_left(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_left : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->left); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->left, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_left : Error processing new value");
     return true;
 }
@@ -3541,7 +3541,7 @@ static bool js_gfx_GFXWindowInfo_get_top(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->top, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->top, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3554,7 +3554,7 @@ static bool js_gfx_GFXWindowInfo_set_top(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_top : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->top); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->top, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_top : Error processing new value");
     return true;
 }
@@ -3567,7 +3567,7 @@ static bool js_gfx_GFXWindowInfo_get_width(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->width, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->width, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3580,7 +3580,7 @@ static bool js_gfx_GFXWindowInfo_set_width(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_width : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->width); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->width, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_width : Error processing new value");
     return true;
 }
@@ -3593,7 +3593,7 @@ static bool js_gfx_GFXWindowInfo_get_height(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->height, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->height, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3606,7 +3606,7 @@ static bool js_gfx_GFXWindowInfo_set_height(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_height : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->height); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->height, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_height : Error processing new value");
     return true;
 }
@@ -3619,7 +3619,7 @@ static bool js_gfx_GFXWindowInfo_get_colorFmt(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->colorFmt, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->colorFmt, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3632,7 +3632,7 @@ static bool js_gfx_GFXWindowInfo_set_colorFmt(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_colorFmt : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->colorFmt); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->colorFmt, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_colorFmt : Error processing new value");
     return true;
 }
@@ -3645,7 +3645,7 @@ static bool js_gfx_GFXWindowInfo_get_depthStencilFmt(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthStencilFmt, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthStencilFmt, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3658,7 +3658,7 @@ static bool js_gfx_GFXWindowInfo_set_depthStencilFmt(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_depthStencilFmt : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthStencilFmt); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthStencilFmt, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_depthStencilFmt : Error processing new value");
     return true;
 }
@@ -3671,7 +3671,7 @@ static bool js_gfx_GFXWindowInfo_get_isOffscreen(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isOffscreen, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isOffscreen, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3684,7 +3684,7 @@ static bool js_gfx_GFXWindowInfo_set_isOffscreen(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_isOffscreen : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isOffscreen); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isOffscreen, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_isOffscreen : Error processing new value");
     return true;
 }
@@ -3697,7 +3697,7 @@ static bool js_gfx_GFXWindowInfo_get_isFullscreen(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isFullscreen, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isFullscreen, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3710,7 +3710,7 @@ static bool js_gfx_GFXWindowInfo_set_isFullscreen(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_isFullscreen : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isFullscreen); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isFullscreen, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_isFullscreen : Error processing new value");
     return true;
 }
@@ -3723,7 +3723,7 @@ static bool js_gfx_GFXWindowInfo_get_vsyncMode(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->vsyncMode, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->vsyncMode, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3736,7 +3736,7 @@ static bool js_gfx_GFXWindowInfo_set_vsyncMode(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_vsyncMode : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->vsyncMode); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->vsyncMode, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_vsyncMode : Error processing new value");
     return true;
 }
@@ -3749,7 +3749,7 @@ static bool js_gfx_GFXWindowInfo_get_windowHandle(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->windowHandle, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->windowHandle, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -3762,7 +3762,7 @@ static bool js_gfx_GFXWindowInfo_set_windowHandle(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindowInfo_set_windowHandle : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->windowHandle); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->windowHandle, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXWindowInfo_set_windowHandle : Error processing new value");
     return true;
 }
@@ -3770,7 +3770,7 @@ SE_BIND_PROP_SET(js_gfx_GFXWindowInfo_set_windowHandle)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXWindowInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXWindowInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -3783,47 +3783,47 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXWindowInfo * to)
     bool ok = true;
     json->getProperty("title", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->title));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->title), ctx);
     }
     json->getProperty("left", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->left));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->left), ctx);
     }
     json->getProperty("top", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->top));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->top), ctx);
     }
     json->getProperty("width", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->width));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->width), ctx);
     }
     json->getProperty("height", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->height));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->height), ctx);
     }
     json->getProperty("colorFmt", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->colorFmt));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->colorFmt), ctx);
     }
     json->getProperty("depthStencilFmt", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthStencilFmt));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthStencilFmt), ctx);
     }
     json->getProperty("isOffscreen", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isOffscreen));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isOffscreen), ctx);
     }
     json->getProperty("isFullscreen", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isFullscreen));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isFullscreen), ctx);
     }
     json->getProperty("vsyncMode", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->vsyncMode));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->vsyncMode), ctx);
     }
     json->getProperty("windowHandle", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->windowHandle));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->windowHandle), ctx);
     }
     return ok;
 }
@@ -3849,7 +3849,7 @@ static bool js_gfx_GFXWindowInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXWindowInfo* cobj = JSB_ALLOC(cocos2d::GFXWindowInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -3865,57 +3865,57 @@ static bool js_gfx_GFXWindowInfo_constructor(se::State& s)
         cocos2d::GFXWindowInfo* cobj = JSB_ALLOC(cocos2d::GFXWindowInfo);
         cocos2d::String arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->title = arg0;
         }
         int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->left = arg1;
         }
         int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->top = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->width = arg3;
         }
         unsigned int arg4 = {};
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->height = arg4;
         }
         cocos2d::GFXFormat arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->colorFmt = arg5;
         }
         cocos2d::GFXFormat arg6;
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->depthStencilFmt = arg6;
         }
         bool arg7;
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->isOffscreen = arg7;
         }
         bool arg8;
         if (!args[8].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[8], &arg8); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[8], &arg8, nullptr); //is_reference False;
             cobj->isFullscreen = arg8;
         }
         cocos2d::GFXVsyncMode arg9;
         if (!args[9].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[9], &arg9); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[9], &arg9, nullptr); //is_reference False;
             cobj->vsyncMode = arg9;
         }
         uintptr_t arg10 = {};
         if (!args[10].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[10], &arg10); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[10], &arg10, nullptr); //is_reference False;
             cobj->windowHandle = arg10;
         }
 
@@ -3988,7 +3988,7 @@ static bool js_gfx_GFXContextInfo_get_windowHandle(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->windowHandle, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->windowHandle, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4001,7 +4001,7 @@ static bool js_gfx_GFXContextInfo_set_windowHandle(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXContextInfo_set_windowHandle : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->windowHandle); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->windowHandle, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXContextInfo_set_windowHandle : Error processing new value");
     return true;
 }
@@ -4014,7 +4014,7 @@ static bool js_gfx_GFXContextInfo_get_vsyncMode(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->vsyncMode, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->vsyncMode, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4027,7 +4027,7 @@ static bool js_gfx_GFXContextInfo_set_vsyncMode(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXContextInfo_set_vsyncMode : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->vsyncMode); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->vsyncMode, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXContextInfo_set_vsyncMode : Error processing new value");
     return true;
 }
@@ -4035,7 +4035,7 @@ SE_BIND_PROP_SET(js_gfx_GFXContextInfo_set_vsyncMode)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXContextInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXContextInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -4048,15 +4048,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXContextInfo * to)
     bool ok = true;
     json->getProperty("windowHandle", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->windowHandle));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->windowHandle), ctx);
     }
     json->getProperty("sharedCtx", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->sharedCtx));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->sharedCtx), ctx);
     }
     json->getProperty("vsyncMode", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->vsyncMode));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->vsyncMode), ctx);
     }
     return ok;
 }
@@ -4082,7 +4082,7 @@ static bool js_gfx_GFXContextInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXContextInfo* cobj = JSB_ALLOC(cocos2d::GFXContextInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -4098,17 +4098,17 @@ static bool js_gfx_GFXContextInfo_constructor(se::State& s)
         cocos2d::GFXContextInfo* cobj = JSB_ALLOC(cocos2d::GFXContextInfo);
         uintptr_t arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->windowHandle = arg0;
         }
         cocos2d::GFXContext* arg1 = nullptr;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->sharedCtx = arg1;
         }
         cocos2d::GFXVsyncMode arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->vsyncMode = arg2;
         }
 
@@ -4172,7 +4172,7 @@ static bool js_gfx_GFXBufferInfo_get_usage(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->usage, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->usage, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4185,7 +4185,7 @@ static bool js_gfx_GFXBufferInfo_set_usage(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferInfo_set_usage : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->usage); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->usage, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferInfo_set_usage : Error processing new value");
     return true;
 }
@@ -4198,7 +4198,7 @@ static bool js_gfx_GFXBufferInfo_get_memUsage(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->memUsage, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->memUsage, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4211,7 +4211,7 @@ static bool js_gfx_GFXBufferInfo_set_memUsage(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferInfo_set_memUsage : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->memUsage); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->memUsage, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferInfo_set_memUsage : Error processing new value");
     return true;
 }
@@ -4224,7 +4224,7 @@ static bool js_gfx_GFXBufferInfo_get_stride(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stride, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stride, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4237,7 +4237,7 @@ static bool js_gfx_GFXBufferInfo_set_stride(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferInfo_set_stride : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stride); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stride, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferInfo_set_stride : Error processing new value");
     return true;
 }
@@ -4250,7 +4250,7 @@ static bool js_gfx_GFXBufferInfo_get_size(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->size, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->size, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4263,7 +4263,7 @@ static bool js_gfx_GFXBufferInfo_set_size(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferInfo_set_size : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->size); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->size, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferInfo_set_size : Error processing new value");
     return true;
 }
@@ -4276,7 +4276,7 @@ static bool js_gfx_GFXBufferInfo_get_flags(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->flags, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->flags, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4289,7 +4289,7 @@ static bool js_gfx_GFXBufferInfo_set_flags(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBufferInfo_set_flags : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->flags); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->flags, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBufferInfo_set_flags : Error processing new value");
     return true;
 }
@@ -4297,7 +4297,7 @@ SE_BIND_PROP_SET(js_gfx_GFXBufferInfo_set_flags)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBufferInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -4310,23 +4310,23 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferInfo * to)
     bool ok = true;
     json->getProperty("usage", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->usage));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->usage), ctx);
     }
     json->getProperty("memUsage", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->memUsage));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->memUsage), ctx);
     }
     json->getProperty("stride", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stride));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stride), ctx);
     }
     json->getProperty("size", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->size));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->size), ctx);
     }
     json->getProperty("flags", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->flags));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->flags), ctx);
     }
     return ok;
 }
@@ -4352,7 +4352,7 @@ static bool js_gfx_GFXBufferInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBufferInfo* cobj = JSB_ALLOC(cocos2d::GFXBufferInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -4368,27 +4368,27 @@ static bool js_gfx_GFXBufferInfo_constructor(se::State& s)
         cocos2d::GFXBufferInfo* cobj = JSB_ALLOC(cocos2d::GFXBufferInfo);
         cocos2d::GFXBufferUsageBit arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->usage = arg0;
         }
         cocos2d::GFXMemoryUsageBit arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->memUsage = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->stride = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->size = arg3;
         }
         cocos2d::GFXBufferFlagBit arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->flags = arg4;
         }
 
@@ -4455,7 +4455,7 @@ static bool js_gfx_GFXDrawInfo_get_vertexCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->vertexCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->vertexCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4468,7 +4468,7 @@ static bool js_gfx_GFXDrawInfo_set_vertexCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDrawInfo_set_vertexCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->vertexCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->vertexCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDrawInfo_set_vertexCount : Error processing new value");
     return true;
 }
@@ -4481,7 +4481,7 @@ static bool js_gfx_GFXDrawInfo_get_firstVertex(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->firstVertex, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->firstVertex, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4494,7 +4494,7 @@ static bool js_gfx_GFXDrawInfo_set_firstVertex(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDrawInfo_set_firstVertex : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->firstVertex); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->firstVertex, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDrawInfo_set_firstVertex : Error processing new value");
     return true;
 }
@@ -4507,7 +4507,7 @@ static bool js_gfx_GFXDrawInfo_get_indexCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->indexCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->indexCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4520,7 +4520,7 @@ static bool js_gfx_GFXDrawInfo_set_indexCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDrawInfo_set_indexCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->indexCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->indexCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDrawInfo_set_indexCount : Error processing new value");
     return true;
 }
@@ -4533,7 +4533,7 @@ static bool js_gfx_GFXDrawInfo_get_firstIndex(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->firstIndex, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->firstIndex, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4546,7 +4546,7 @@ static bool js_gfx_GFXDrawInfo_set_firstIndex(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDrawInfo_set_firstIndex : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->firstIndex); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->firstIndex, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDrawInfo_set_firstIndex : Error processing new value");
     return true;
 }
@@ -4559,7 +4559,7 @@ static bool js_gfx_GFXDrawInfo_get_vertexOffset(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->vertexOffset, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->vertexOffset, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4572,7 +4572,7 @@ static bool js_gfx_GFXDrawInfo_set_vertexOffset(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDrawInfo_set_vertexOffset : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->vertexOffset); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->vertexOffset, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDrawInfo_set_vertexOffset : Error processing new value");
     return true;
 }
@@ -4585,7 +4585,7 @@ static bool js_gfx_GFXDrawInfo_get_instanceCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->instanceCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->instanceCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4598,7 +4598,7 @@ static bool js_gfx_GFXDrawInfo_set_instanceCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDrawInfo_set_instanceCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->instanceCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->instanceCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDrawInfo_set_instanceCount : Error processing new value");
     return true;
 }
@@ -4611,7 +4611,7 @@ static bool js_gfx_GFXDrawInfo_get_firstInstance(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->firstInstance, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->firstInstance, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4624,7 +4624,7 @@ static bool js_gfx_GFXDrawInfo_set_firstInstance(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDrawInfo_set_firstInstance : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->firstInstance); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->firstInstance, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDrawInfo_set_firstInstance : Error processing new value");
     return true;
 }
@@ -4632,7 +4632,7 @@ SE_BIND_PROP_SET(js_gfx_GFXDrawInfo_set_firstInstance)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXDrawInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXDrawInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -4645,31 +4645,31 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXDrawInfo * to)
     bool ok = true;
     json->getProperty("vertexCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->vertexCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->vertexCount), ctx);
     }
     json->getProperty("firstVertex", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->firstVertex));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->firstVertex), ctx);
     }
     json->getProperty("indexCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->indexCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->indexCount), ctx);
     }
     json->getProperty("firstIndex", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->firstIndex));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->firstIndex), ctx);
     }
     json->getProperty("vertexOffset", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->vertexOffset));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->vertexOffset), ctx);
     }
     json->getProperty("instanceCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->instanceCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->instanceCount), ctx);
     }
     json->getProperty("firstInstance", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->firstInstance));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->firstInstance), ctx);
     }
     return ok;
 }
@@ -4695,7 +4695,7 @@ static bool js_gfx_GFXDrawInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDrawInfo* cobj = JSB_ALLOC(cocos2d::GFXDrawInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -4711,37 +4711,37 @@ static bool js_gfx_GFXDrawInfo_constructor(se::State& s)
         cocos2d::GFXDrawInfo* cobj = JSB_ALLOC(cocos2d::GFXDrawInfo);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->vertexCount = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->firstVertex = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->indexCount = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->firstIndex = arg3;
         }
         unsigned int arg4 = {};
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->vertexOffset = arg4;
         }
         unsigned int arg5 = {};
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->instanceCount = arg5;
         }
         unsigned int arg6 = {};
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->firstInstance = arg6;
         }
 
@@ -4810,7 +4810,7 @@ static bool js_gfx_GFXIndirectBuffer_get_drawInfos(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->drawInfos, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->drawInfos, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4823,7 +4823,7 @@ static bool js_gfx_GFXIndirectBuffer_set_drawInfos(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXIndirectBuffer_set_drawInfos : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->drawInfos); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->drawInfos, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXIndirectBuffer_set_drawInfos : Error processing new value");
     return true;
 }
@@ -4831,7 +4831,7 @@ SE_BIND_PROP_SET(js_gfx_GFXIndirectBuffer_set_drawInfos)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXIndirectBuffer * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXIndirectBuffer * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -4844,7 +4844,7 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXIndirectBuffer * to)
     bool ok = true;
     json->getProperty("drawInfos", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->drawInfos));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->drawInfos), ctx);
     }
     return ok;
 }
@@ -4869,7 +4869,7 @@ static bool js_gfx_GFXIndirectBuffer_constructor(se::State& s)
         cocos2d::GFXIndirectBuffer* cobj = JSB_ALLOC(cocos2d::GFXIndirectBuffer);
         std::vector<cocos2d::GFXDrawInfo> arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->drawInfos = arg0;
         }
 
@@ -4932,7 +4932,7 @@ static bool js_gfx_GFXTextureInfo_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4945,7 +4945,7 @@ static bool js_gfx_GFXTextureInfo_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_type : Error processing new value");
     return true;
 }
@@ -4958,7 +4958,7 @@ static bool js_gfx_GFXTextureInfo_get_usage(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->usage, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->usage, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4971,7 +4971,7 @@ static bool js_gfx_GFXTextureInfo_set_usage(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_usage : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->usage); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->usage, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_usage : Error processing new value");
     return true;
 }
@@ -4984,7 +4984,7 @@ static bool js_gfx_GFXTextureInfo_get_format(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->format, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->format, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -4997,7 +4997,7 @@ static bool js_gfx_GFXTextureInfo_set_format(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_format : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->format); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->format, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_format : Error processing new value");
     return true;
 }
@@ -5010,7 +5010,7 @@ static bool js_gfx_GFXTextureInfo_get_width(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->width, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->width, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5023,7 +5023,7 @@ static bool js_gfx_GFXTextureInfo_set_width(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_width : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->width); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->width, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_width : Error processing new value");
     return true;
 }
@@ -5036,7 +5036,7 @@ static bool js_gfx_GFXTextureInfo_get_height(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->height, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->height, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5049,7 +5049,7 @@ static bool js_gfx_GFXTextureInfo_set_height(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_height : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->height); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->height, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_height : Error processing new value");
     return true;
 }
@@ -5062,7 +5062,7 @@ static bool js_gfx_GFXTextureInfo_get_depth(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depth, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depth, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5075,7 +5075,7 @@ static bool js_gfx_GFXTextureInfo_set_depth(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_depth : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depth); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depth, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_depth : Error processing new value");
     return true;
 }
@@ -5088,7 +5088,7 @@ static bool js_gfx_GFXTextureInfo_get_arrayLayer(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->arrayLayer, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->arrayLayer, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5101,7 +5101,7 @@ static bool js_gfx_GFXTextureInfo_set_arrayLayer(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_arrayLayer : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->arrayLayer); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->arrayLayer, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_arrayLayer : Error processing new value");
     return true;
 }
@@ -5114,7 +5114,7 @@ static bool js_gfx_GFXTextureInfo_get_mipLevel(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->mipLevel, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->mipLevel, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5127,7 +5127,7 @@ static bool js_gfx_GFXTextureInfo_set_mipLevel(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_mipLevel : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->mipLevel); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->mipLevel, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_mipLevel : Error processing new value");
     return true;
 }
@@ -5140,7 +5140,7 @@ static bool js_gfx_GFXTextureInfo_get_samples(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->samples, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->samples, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5153,7 +5153,7 @@ static bool js_gfx_GFXTextureInfo_set_samples(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_samples : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->samples); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->samples, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_samples : Error processing new value");
     return true;
 }
@@ -5166,7 +5166,7 @@ static bool js_gfx_GFXTextureInfo_get_flags(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->flags, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->flags, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5179,7 +5179,7 @@ static bool js_gfx_GFXTextureInfo_set_flags(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureInfo_set_flags : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->flags); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->flags, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureInfo_set_flags : Error processing new value");
     return true;
 }
@@ -5187,7 +5187,7 @@ SE_BIND_PROP_SET(js_gfx_GFXTextureInfo_set_flags)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -5200,43 +5200,43 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureInfo * to)
     bool ok = true;
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("usage", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->usage));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->usage), ctx);
     }
     json->getProperty("format", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->format));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->format), ctx);
     }
     json->getProperty("width", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->width));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->width), ctx);
     }
     json->getProperty("height", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->height));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->height), ctx);
     }
     json->getProperty("depth", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depth));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depth), ctx);
     }
     json->getProperty("arrayLayer", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->arrayLayer));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->arrayLayer), ctx);
     }
     json->getProperty("mipLevel", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->mipLevel));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->mipLevel), ctx);
     }
     json->getProperty("samples", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->samples));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->samples), ctx);
     }
     json->getProperty("flags", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->flags));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->flags), ctx);
     }
     return ok;
 }
@@ -5262,7 +5262,7 @@ static bool js_gfx_GFXTextureInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureInfo* cobj = JSB_ALLOC(cocos2d::GFXTextureInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -5278,52 +5278,52 @@ static bool js_gfx_GFXTextureInfo_constructor(se::State& s)
         cocos2d::GFXTextureInfo* cobj = JSB_ALLOC(cocos2d::GFXTextureInfo);
         cocos2d::GFXTextureType arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->type = arg0;
         }
         cocos2d::GFXTextureUsageBit arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->usage = arg1;
         }
         cocos2d::GFXFormat arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->format = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->width = arg3;
         }
         unsigned int arg4 = {};
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->height = arg4;
         }
         unsigned int arg5 = {};
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->depth = arg5;
         }
         unsigned int arg6 = {};
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->arrayLayer = arg6;
         }
         unsigned int arg7 = {};
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->mipLevel = arg7;
         }
         cocos2d::GFXSampleCount arg8;
         if (!args[8].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[8], &arg8); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[8], &arg8, nullptr); //is_reference False;
             cobj->samples = arg8;
         }
         cocos2d::GFXTextureFlagBit arg9;
         if (!args[9].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[9], &arg9); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[9], &arg9, nullptr); //is_reference False;
             cobj->flags = arg9;
         }
 
@@ -5395,7 +5395,7 @@ static bool js_gfx_GFXTextureViewInfo_get_texture(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->texture, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->texture, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5408,7 +5408,7 @@ static bool js_gfx_GFXTextureViewInfo_set_texture(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureViewInfo_set_texture : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->texture); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->texture, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureViewInfo_set_texture : Error processing new value");
     return true;
 }
@@ -5421,7 +5421,7 @@ static bool js_gfx_GFXTextureViewInfo_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5434,7 +5434,7 @@ static bool js_gfx_GFXTextureViewInfo_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureViewInfo_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureViewInfo_set_type : Error processing new value");
     return true;
 }
@@ -5447,7 +5447,7 @@ static bool js_gfx_GFXTextureViewInfo_get_format(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->format, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->format, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5460,7 +5460,7 @@ static bool js_gfx_GFXTextureViewInfo_set_format(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureViewInfo_set_format : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->format); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->format, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureViewInfo_set_format : Error processing new value");
     return true;
 }
@@ -5473,7 +5473,7 @@ static bool js_gfx_GFXTextureViewInfo_get_baseLevel(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->baseLevel, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->baseLevel, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5486,7 +5486,7 @@ static bool js_gfx_GFXTextureViewInfo_set_baseLevel(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureViewInfo_set_baseLevel : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->baseLevel); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->baseLevel, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureViewInfo_set_baseLevel : Error processing new value");
     return true;
 }
@@ -5499,7 +5499,7 @@ static bool js_gfx_GFXTextureViewInfo_get_levelCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->levelCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->levelCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5512,7 +5512,7 @@ static bool js_gfx_GFXTextureViewInfo_set_levelCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureViewInfo_set_levelCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->levelCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->levelCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureViewInfo_set_levelCount : Error processing new value");
     return true;
 }
@@ -5525,7 +5525,7 @@ static bool js_gfx_GFXTextureViewInfo_get_baseLayer(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->baseLayer, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->baseLayer, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5538,7 +5538,7 @@ static bool js_gfx_GFXTextureViewInfo_set_baseLayer(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureViewInfo_set_baseLayer : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->baseLayer); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->baseLayer, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureViewInfo_set_baseLayer : Error processing new value");
     return true;
 }
@@ -5551,7 +5551,7 @@ static bool js_gfx_GFXTextureViewInfo_get_layerCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->layerCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->layerCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5564,7 +5564,7 @@ static bool js_gfx_GFXTextureViewInfo_set_layerCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXTextureViewInfo_set_layerCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->layerCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->layerCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureViewInfo_set_layerCount : Error processing new value");
     return true;
 }
@@ -5572,7 +5572,7 @@ SE_BIND_PROP_SET(js_gfx_GFXTextureViewInfo_set_layerCount)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureViewInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXTextureViewInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -5585,31 +5585,31 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureViewInfo * to)
     bool ok = true;
     json->getProperty("texture", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->texture));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->texture), ctx);
     }
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("format", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->format));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->format), ctx);
     }
     json->getProperty("baseLevel", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->baseLevel));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->baseLevel), ctx);
     }
     json->getProperty("levelCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->levelCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->levelCount), ctx);
     }
     json->getProperty("baseLayer", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->baseLayer));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->baseLayer), ctx);
     }
     json->getProperty("layerCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->layerCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->layerCount), ctx);
     }
     return ok;
 }
@@ -5635,7 +5635,7 @@ static bool js_gfx_GFXTextureViewInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXTextureViewInfo* cobj = JSB_ALLOC(cocos2d::GFXTextureViewInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -5651,37 +5651,37 @@ static bool js_gfx_GFXTextureViewInfo_constructor(se::State& s)
         cocos2d::GFXTextureViewInfo* cobj = JSB_ALLOC(cocos2d::GFXTextureViewInfo);
         cocos2d::GFXTexture* arg0 = nullptr;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->texture = arg0;
         }
         cocos2d::GFXTextureViewType arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->type = arg1;
         }
         cocos2d::GFXFormat arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->format = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->baseLevel = arg3;
         }
         unsigned int arg4 = {};
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->levelCount = arg4;
         }
         unsigned int arg5 = {};
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->baseLayer = arg5;
         }
         unsigned int arg6 = {};
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->layerCount = arg6;
         }
 
@@ -5750,7 +5750,7 @@ static bool js_gfx_GFXSamplerInfo_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5763,7 +5763,7 @@ static bool js_gfx_GFXSamplerInfo_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_name : Error processing new value");
     return true;
 }
@@ -5776,7 +5776,7 @@ static bool js_gfx_GFXSamplerInfo_get_minFilter(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->minFilter, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->minFilter, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5789,7 +5789,7 @@ static bool js_gfx_GFXSamplerInfo_set_minFilter(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_minFilter : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->minFilter); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->minFilter, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_minFilter : Error processing new value");
     return true;
 }
@@ -5802,7 +5802,7 @@ static bool js_gfx_GFXSamplerInfo_get_magFilter(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->magFilter, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->magFilter, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5815,7 +5815,7 @@ static bool js_gfx_GFXSamplerInfo_set_magFilter(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_magFilter : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->magFilter); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->magFilter, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_magFilter : Error processing new value");
     return true;
 }
@@ -5828,7 +5828,7 @@ static bool js_gfx_GFXSamplerInfo_get_mipFilter(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->mipFilter, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->mipFilter, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5841,7 +5841,7 @@ static bool js_gfx_GFXSamplerInfo_set_mipFilter(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_mipFilter : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->mipFilter); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->mipFilter, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_mipFilter : Error processing new value");
     return true;
 }
@@ -5854,7 +5854,7 @@ static bool js_gfx_GFXSamplerInfo_get_addressU(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->addressU, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->addressU, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5867,7 +5867,7 @@ static bool js_gfx_GFXSamplerInfo_set_addressU(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_addressU : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->addressU); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->addressU, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_addressU : Error processing new value");
     return true;
 }
@@ -5880,7 +5880,7 @@ static bool js_gfx_GFXSamplerInfo_get_addressV(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->addressV, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->addressV, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5893,7 +5893,7 @@ static bool js_gfx_GFXSamplerInfo_set_addressV(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_addressV : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->addressV); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->addressV, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_addressV : Error processing new value");
     return true;
 }
@@ -5906,7 +5906,7 @@ static bool js_gfx_GFXSamplerInfo_get_addressW(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->addressW, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->addressW, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5919,7 +5919,7 @@ static bool js_gfx_GFXSamplerInfo_set_addressW(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_addressW : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->addressW); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->addressW, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_addressW : Error processing new value");
     return true;
 }
@@ -5932,7 +5932,7 @@ static bool js_gfx_GFXSamplerInfo_get_maxAnisotropy(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->maxAnisotropy, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->maxAnisotropy, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5945,7 +5945,7 @@ static bool js_gfx_GFXSamplerInfo_set_maxAnisotropy(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_maxAnisotropy : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->maxAnisotropy); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->maxAnisotropy, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_maxAnisotropy : Error processing new value");
     return true;
 }
@@ -5958,7 +5958,7 @@ static bool js_gfx_GFXSamplerInfo_get_cmpFunc(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->cmpFunc, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->cmpFunc, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5971,7 +5971,7 @@ static bool js_gfx_GFXSamplerInfo_set_cmpFunc(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_cmpFunc : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->cmpFunc); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->cmpFunc, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_cmpFunc : Error processing new value");
     return true;
 }
@@ -5984,7 +5984,7 @@ static bool js_gfx_GFXSamplerInfo_get_borderColor(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->borderColor, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->borderColor, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -5997,7 +5997,7 @@ static bool js_gfx_GFXSamplerInfo_set_borderColor(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_borderColor : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->borderColor); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->borderColor, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_borderColor : Error processing new value");
     return true;
 }
@@ -6010,7 +6010,7 @@ static bool js_gfx_GFXSamplerInfo_get_minLOD(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->minLOD, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->minLOD, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6023,7 +6023,7 @@ static bool js_gfx_GFXSamplerInfo_set_minLOD(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_minLOD : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->minLOD); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->minLOD, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_minLOD : Error processing new value");
     return true;
 }
@@ -6036,7 +6036,7 @@ static bool js_gfx_GFXSamplerInfo_get_maxLOD(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->maxLOD, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->maxLOD, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6049,7 +6049,7 @@ static bool js_gfx_GFXSamplerInfo_set_maxLOD(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_maxLOD : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->maxLOD); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->maxLOD, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_maxLOD : Error processing new value");
     return true;
 }
@@ -6062,7 +6062,7 @@ static bool js_gfx_GFXSamplerInfo_get_mipLODBias(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->mipLODBias, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->mipLODBias, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6075,7 +6075,7 @@ static bool js_gfx_GFXSamplerInfo_set_mipLODBias(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSamplerInfo_set_mipLODBias : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->mipLODBias); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->mipLODBias, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSamplerInfo_set_mipLODBias : Error processing new value");
     return true;
 }
@@ -6083,7 +6083,7 @@ SE_BIND_PROP_SET(js_gfx_GFXSamplerInfo_set_mipLODBias)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXSamplerInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXSamplerInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -6096,55 +6096,55 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXSamplerInfo * to)
     bool ok = true;
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("minFilter", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->minFilter));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->minFilter), ctx);
     }
     json->getProperty("magFilter", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->magFilter));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->magFilter), ctx);
     }
     json->getProperty("mipFilter", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->mipFilter));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->mipFilter), ctx);
     }
     json->getProperty("addressU", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->addressU));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->addressU), ctx);
     }
     json->getProperty("addressV", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->addressV));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->addressV), ctx);
     }
     json->getProperty("addressW", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->addressW));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->addressW), ctx);
     }
     json->getProperty("maxAnisotropy", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->maxAnisotropy));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->maxAnisotropy), ctx);
     }
     json->getProperty("cmpFunc", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->cmpFunc));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->cmpFunc), ctx);
     }
     json->getProperty("borderColor", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->borderColor));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->borderColor), ctx);
     }
     json->getProperty("minLOD", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->minLOD));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->minLOD), ctx);
     }
     json->getProperty("maxLOD", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->maxLOD));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->maxLOD), ctx);
     }
     json->getProperty("mipLODBias", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->mipLODBias));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->mipLODBias), ctx);
     }
     return ok;
 }
@@ -6170,7 +6170,7 @@ static bool js_gfx_GFXSamplerInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXSamplerInfo* cobj = JSB_ALLOC(cocos2d::GFXSamplerInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -6186,67 +6186,67 @@ static bool js_gfx_GFXSamplerInfo_constructor(se::State& s)
         cocos2d::GFXSamplerInfo* cobj = JSB_ALLOC(cocos2d::GFXSamplerInfo);
         cocos2d::String arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->name = arg0;
         }
         cocos2d::GFXFilter arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->minFilter = arg1;
         }
         cocos2d::GFXFilter arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->magFilter = arg2;
         }
         cocos2d::GFXFilter arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->mipFilter = arg3;
         }
         cocos2d::GFXAddress arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->addressU = arg4;
         }
         cocos2d::GFXAddress arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->addressV = arg5;
         }
         cocos2d::GFXAddress arg6;
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->addressW = arg6;
         }
         unsigned int arg7 = {};
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->maxAnisotropy = arg7;
         }
         cocos2d::GFXComparisonFunc arg8;
         if (!args[8].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[8], &arg8); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[8], &arg8, nullptr); //is_reference False;
             cobj->cmpFunc = arg8;
         }
         cocos2d::GFXColor arg9;
         if (!args[9].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[9], &arg9); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[9], &arg9, nullptr); //is_reference False;
             cobj->borderColor = arg9;
         }
         unsigned int arg10 = {};
         if (!args[10].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[10], &arg10); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[10], &arg10, nullptr); //is_reference False;
             cobj->minLOD = arg10;
         }
         unsigned int arg11 = {};
         if (!args[11].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[11], &arg11); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[11], &arg11, nullptr); //is_reference False;
             cobj->maxLOD = arg11;
         }
         float arg12 = {};
         if (!args[12].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[12], &arg12); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[12], &arg12, nullptr); //is_reference False;
             cobj->mipLODBias = arg12;
         }
 
@@ -6321,7 +6321,7 @@ static bool js_gfx_GFXShaderMacro_get_macro(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->macro, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->macro, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6334,7 +6334,7 @@ static bool js_gfx_GFXShaderMacro_set_macro(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderMacro_set_macro : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->macro); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->macro, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderMacro_set_macro : Error processing new value");
     return true;
 }
@@ -6347,7 +6347,7 @@ static bool js_gfx_GFXShaderMacro_get_value(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->value, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->value, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6360,7 +6360,7 @@ static bool js_gfx_GFXShaderMacro_set_value(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderMacro_set_value : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->value); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->value, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderMacro_set_value : Error processing new value");
     return true;
 }
@@ -6368,7 +6368,7 @@ SE_BIND_PROP_SET(js_gfx_GFXShaderMacro_set_value)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderMacro * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXShaderMacro * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -6381,11 +6381,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderMacro * to)
     bool ok = true;
     json->getProperty("macro", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->macro));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->macro), ctx);
     }
     json->getProperty("value", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->value));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->value), ctx);
     }
     return ok;
 }
@@ -6411,7 +6411,7 @@ static bool js_gfx_GFXShaderMacro_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXShaderMacro* cobj = JSB_ALLOC(cocos2d::GFXShaderMacro);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -6427,12 +6427,12 @@ static bool js_gfx_GFXShaderMacro_constructor(se::State& s)
         cocos2d::GFXShaderMacro* cobj = JSB_ALLOC(cocos2d::GFXShaderMacro);
         cocos2d::String arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->macro = arg0;
         }
         cocos2d::String arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->value = arg1;
         }
 
@@ -6496,7 +6496,7 @@ static bool js_gfx_GFXUniform_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6509,7 +6509,7 @@ static bool js_gfx_GFXUniform_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniform_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniform_set_name : Error processing new value");
     return true;
 }
@@ -6522,7 +6522,7 @@ static bool js_gfx_GFXUniform_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6535,7 +6535,7 @@ static bool js_gfx_GFXUniform_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniform_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniform_set_type : Error processing new value");
     return true;
 }
@@ -6548,7 +6548,7 @@ static bool js_gfx_GFXUniform_get_count(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->count, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->count, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6561,7 +6561,7 @@ static bool js_gfx_GFXUniform_set_count(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniform_set_count : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->count); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->count, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniform_set_count : Error processing new value");
     return true;
 }
@@ -6569,7 +6569,7 @@ SE_BIND_PROP_SET(js_gfx_GFXUniform_set_count)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniform * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXUniform * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -6582,15 +6582,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniform * to)
     bool ok = true;
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("count", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->count));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->count), ctx);
     }
     return ok;
 }
@@ -6616,7 +6616,7 @@ static bool js_gfx_GFXUniform_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXUniform* cobj = JSB_ALLOC(cocos2d::GFXUniform);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -6632,17 +6632,17 @@ static bool js_gfx_GFXUniform_constructor(se::State& s)
         cocos2d::GFXUniform* cobj = JSB_ALLOC(cocos2d::GFXUniform);
         cocos2d::String arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->name = arg0;
         }
         cocos2d::GFXType arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->type = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->count = arg2;
         }
 
@@ -6707,7 +6707,7 @@ static bool js_gfx_GFXUniformBlock_get_binding(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->binding, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->binding, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6720,7 +6720,7 @@ static bool js_gfx_GFXUniformBlock_set_binding(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniformBlock_set_binding : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->binding); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->binding, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniformBlock_set_binding : Error processing new value");
     return true;
 }
@@ -6733,7 +6733,7 @@ static bool js_gfx_GFXUniformBlock_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6746,7 +6746,7 @@ static bool js_gfx_GFXUniformBlock_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniformBlock_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniformBlock_set_name : Error processing new value");
     return true;
 }
@@ -6759,7 +6759,7 @@ static bool js_gfx_GFXUniformBlock_get_uniforms(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->uniforms, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->uniforms, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6772,7 +6772,7 @@ static bool js_gfx_GFXUniformBlock_set_uniforms(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniformBlock_set_uniforms : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->uniforms); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->uniforms, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniformBlock_set_uniforms : Error processing new value");
     return true;
 }
@@ -6780,7 +6780,7 @@ SE_BIND_PROP_SET(js_gfx_GFXUniformBlock_set_uniforms)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniformBlock * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXUniformBlock * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -6793,15 +6793,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniformBlock * to)
     bool ok = true;
     json->getProperty("binding", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->binding));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->binding), ctx);
     }
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("uniforms", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->uniforms));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->uniforms), ctx);
     }
     return ok;
 }
@@ -6827,7 +6827,7 @@ static bool js_gfx_GFXUniformBlock_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXUniformBlock* cobj = JSB_ALLOC(cocos2d::GFXUniformBlock);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -6843,17 +6843,17 @@ static bool js_gfx_GFXUniformBlock_constructor(se::State& s)
         cocos2d::GFXUniformBlock* cobj = JSB_ALLOC(cocos2d::GFXUniformBlock);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->binding = arg0;
         }
         cocos2d::String arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->name = arg1;
         }
         std::vector<cocos2d::GFXUniform> arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->uniforms = arg2;
         }
 
@@ -6918,7 +6918,7 @@ static bool js_gfx_GFXUniformSampler_get_binding(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->binding, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->binding, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6931,7 +6931,7 @@ static bool js_gfx_GFXUniformSampler_set_binding(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniformSampler_set_binding : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->binding); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->binding, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniformSampler_set_binding : Error processing new value");
     return true;
 }
@@ -6944,7 +6944,7 @@ static bool js_gfx_GFXUniformSampler_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6957,7 +6957,7 @@ static bool js_gfx_GFXUniformSampler_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniformSampler_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniformSampler_set_name : Error processing new value");
     return true;
 }
@@ -6970,7 +6970,7 @@ static bool js_gfx_GFXUniformSampler_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -6983,7 +6983,7 @@ static bool js_gfx_GFXUniformSampler_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniformSampler_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniformSampler_set_type : Error processing new value");
     return true;
 }
@@ -6996,7 +6996,7 @@ static bool js_gfx_GFXUniformSampler_get_count(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->count, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->count, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7009,7 +7009,7 @@ static bool js_gfx_GFXUniformSampler_set_count(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXUniformSampler_set_count : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->count); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->count, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXUniformSampler_set_count : Error processing new value");
     return true;
 }
@@ -7017,7 +7017,7 @@ SE_BIND_PROP_SET(js_gfx_GFXUniformSampler_set_count)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniformSampler * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXUniformSampler * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -7030,19 +7030,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniformSampler * to)
     bool ok = true;
     json->getProperty("binding", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->binding));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->binding), ctx);
     }
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("count", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->count));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->count), ctx);
     }
     return ok;
 }
@@ -7068,7 +7068,7 @@ static bool js_gfx_GFXUniformSampler_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXUniformSampler* cobj = JSB_ALLOC(cocos2d::GFXUniformSampler);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7084,22 +7084,22 @@ static bool js_gfx_GFXUniformSampler_constructor(se::State& s)
         cocos2d::GFXUniformSampler* cobj = JSB_ALLOC(cocos2d::GFXUniformSampler);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->binding = arg0;
         }
         cocos2d::String arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->name = arg1;
         }
         cocos2d::GFXType arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->type = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->count = arg3;
         }
 
@@ -7165,7 +7165,7 @@ static bool js_gfx_GFXShaderStage_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7178,7 +7178,7 @@ static bool js_gfx_GFXShaderStage_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderStage_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderStage_set_type : Error processing new value");
     return true;
 }
@@ -7191,7 +7191,7 @@ static bool js_gfx_GFXShaderStage_get_source(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->source, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->source, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7204,7 +7204,7 @@ static bool js_gfx_GFXShaderStage_set_source(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderStage_set_source : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->source); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->source, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderStage_set_source : Error processing new value");
     return true;
 }
@@ -7217,7 +7217,7 @@ static bool js_gfx_GFXShaderStage_get_macros(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->macros, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->macros, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7230,7 +7230,7 @@ static bool js_gfx_GFXShaderStage_set_macros(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderStage_set_macros : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->macros); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->macros, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderStage_set_macros : Error processing new value");
     return true;
 }
@@ -7238,7 +7238,7 @@ SE_BIND_PROP_SET(js_gfx_GFXShaderStage_set_macros)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderStage * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXShaderStage * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -7251,15 +7251,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderStage * to)
     bool ok = true;
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("source", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->source));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->source), ctx);
     }
     json->getProperty("macros", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->macros));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->macros), ctx);
     }
     return ok;
 }
@@ -7285,7 +7285,7 @@ static bool js_gfx_GFXShaderStage_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXShaderStage* cobj = JSB_ALLOC(cocos2d::GFXShaderStage);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7301,17 +7301,17 @@ static bool js_gfx_GFXShaderStage_constructor(se::State& s)
         cocos2d::GFXShaderStage* cobj = JSB_ALLOC(cocos2d::GFXShaderStage);
         cocos2d::GFXShaderType arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->type = arg0;
         }
         cocos2d::String arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->source = arg1;
         }
         std::vector<cocos2d::GFXShaderMacro> arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->macros = arg2;
         }
 
@@ -7376,7 +7376,7 @@ static bool js_gfx_GFXShaderInfo_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7389,7 +7389,7 @@ static bool js_gfx_GFXShaderInfo_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderInfo_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderInfo_set_name : Error processing new value");
     return true;
 }
@@ -7402,7 +7402,7 @@ static bool js_gfx_GFXShaderInfo_get_stages(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stages, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stages, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7415,7 +7415,7 @@ static bool js_gfx_GFXShaderInfo_set_stages(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderInfo_set_stages : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stages); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stages, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderInfo_set_stages : Error processing new value");
     return true;
 }
@@ -7428,7 +7428,7 @@ static bool js_gfx_GFXShaderInfo_get_blocks(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blocks, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blocks, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7441,7 +7441,7 @@ static bool js_gfx_GFXShaderInfo_set_blocks(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderInfo_set_blocks : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blocks); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blocks, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderInfo_set_blocks : Error processing new value");
     return true;
 }
@@ -7454,7 +7454,7 @@ static bool js_gfx_GFXShaderInfo_get_samplers(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->samplers, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->samplers, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7467,7 +7467,7 @@ static bool js_gfx_GFXShaderInfo_set_samplers(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXShaderInfo_set_samplers : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->samplers); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->samplers, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXShaderInfo_set_samplers : Error processing new value");
     return true;
 }
@@ -7475,7 +7475,7 @@ SE_BIND_PROP_SET(js_gfx_GFXShaderInfo_set_samplers)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXShaderInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -7488,19 +7488,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderInfo * to)
     bool ok = true;
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("stages", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stages));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stages), ctx);
     }
     json->getProperty("blocks", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blocks));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blocks), ctx);
     }
     json->getProperty("samplers", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->samplers));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->samplers), ctx);
     }
     return ok;
 }
@@ -7526,7 +7526,7 @@ static bool js_gfx_GFXShaderInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXShaderInfo* cobj = JSB_ALLOC(cocos2d::GFXShaderInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7542,22 +7542,22 @@ static bool js_gfx_GFXShaderInfo_constructor(se::State& s)
         cocos2d::GFXShaderInfo* cobj = JSB_ALLOC(cocos2d::GFXShaderInfo);
         cocos2d::String arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->name = arg0;
         }
         std::vector<cocos2d::GFXShaderStage> arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->stages = arg1;
         }
         std::vector<cocos2d::GFXUniformBlock> arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->blocks = arg2;
         }
         std::vector<cocos2d::GFXUniformSampler> arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->samplers = arg3;
         }
 
@@ -7623,7 +7623,7 @@ static bool js_gfx_GFXAttribute_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7636,7 +7636,7 @@ static bool js_gfx_GFXAttribute_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXAttribute_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXAttribute_set_name : Error processing new value");
     return true;
 }
@@ -7649,7 +7649,7 @@ static bool js_gfx_GFXAttribute_get_format(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->format, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->format, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7662,7 +7662,7 @@ static bool js_gfx_GFXAttribute_set_format(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXAttribute_set_format : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->format); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->format, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXAttribute_set_format : Error processing new value");
     return true;
 }
@@ -7675,7 +7675,7 @@ static bool js_gfx_GFXAttribute_get_isNormalized(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isNormalized, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isNormalized, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7688,7 +7688,7 @@ static bool js_gfx_GFXAttribute_set_isNormalized(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXAttribute_set_isNormalized : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isNormalized); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isNormalized, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXAttribute_set_isNormalized : Error processing new value");
     return true;
 }
@@ -7701,7 +7701,7 @@ static bool js_gfx_GFXAttribute_get_stream(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stream, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stream, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7714,7 +7714,7 @@ static bool js_gfx_GFXAttribute_set_stream(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXAttribute_set_stream : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stream); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stream, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXAttribute_set_stream : Error processing new value");
     return true;
 }
@@ -7727,7 +7727,7 @@ static bool js_gfx_GFXAttribute_get_isInstanced(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isInstanced, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isInstanced, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7740,7 +7740,7 @@ static bool js_gfx_GFXAttribute_set_isInstanced(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXAttribute_set_isInstanced : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isInstanced); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isInstanced, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXAttribute_set_isInstanced : Error processing new value");
     return true;
 }
@@ -7748,7 +7748,7 @@ SE_BIND_PROP_SET(js_gfx_GFXAttribute_set_isInstanced)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXAttribute * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXAttribute * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -7761,23 +7761,23 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXAttribute * to)
     bool ok = true;
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("format", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->format));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->format), ctx);
     }
     json->getProperty("isNormalized", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isNormalized));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isNormalized), ctx);
     }
     json->getProperty("stream", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stream));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stream), ctx);
     }
     json->getProperty("isInstanced", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isInstanced));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isInstanced), ctx);
     }
     return ok;
 }
@@ -7803,7 +7803,7 @@ static bool js_gfx_GFXAttribute_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXAttribute* cobj = JSB_ALLOC(cocos2d::GFXAttribute);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -7819,27 +7819,27 @@ static bool js_gfx_GFXAttribute_constructor(se::State& s)
         cocos2d::GFXAttribute* cobj = JSB_ALLOC(cocos2d::GFXAttribute);
         cocos2d::String arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->name = arg0;
         }
         cocos2d::GFXFormat arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->format = arg1;
         }
         bool arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->isNormalized = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->stream = arg3;
         }
         bool arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->isInstanced = arg4;
         }
 
@@ -7906,7 +7906,7 @@ static bool js_gfx_GFXInputAssemblerInfo_get_attributes(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->attributes, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->attributes, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7919,7 +7919,7 @@ static bool js_gfx_GFXInputAssemblerInfo_set_attributes(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputAssemblerInfo_set_attributes : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->attributes); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->attributes, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssemblerInfo_set_attributes : Error processing new value");
     return true;
 }
@@ -7932,7 +7932,7 @@ static bool js_gfx_GFXInputAssemblerInfo_get_vertexBuffers(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->vertexBuffers, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->vertexBuffers, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7945,7 +7945,7 @@ static bool js_gfx_GFXInputAssemblerInfo_set_vertexBuffers(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputAssemblerInfo_set_vertexBuffers : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->vertexBuffers); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->vertexBuffers, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssemblerInfo_set_vertexBuffers : Error processing new value");
     return true;
 }
@@ -7958,7 +7958,7 @@ static bool js_gfx_GFXInputAssemblerInfo_get_indexBuffer(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->indexBuffer, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->indexBuffer, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7971,7 +7971,7 @@ static bool js_gfx_GFXInputAssemblerInfo_set_indexBuffer(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputAssemblerInfo_set_indexBuffer : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->indexBuffer); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->indexBuffer, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssemblerInfo_set_indexBuffer : Error processing new value");
     return true;
 }
@@ -7984,7 +7984,7 @@ static bool js_gfx_GFXInputAssemblerInfo_get_indirectBuffer(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->indirectBuffer, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->indirectBuffer, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -7997,7 +7997,7 @@ static bool js_gfx_GFXInputAssemblerInfo_set_indirectBuffer(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputAssemblerInfo_set_indirectBuffer : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->indirectBuffer); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->indirectBuffer, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssemblerInfo_set_indirectBuffer : Error processing new value");
     return true;
 }
@@ -8005,7 +8005,7 @@ SE_BIND_PROP_SET(js_gfx_GFXInputAssemblerInfo_set_indirectBuffer)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXInputAssemblerInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXInputAssemblerInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -8018,19 +8018,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXInputAssemblerInfo * t
     bool ok = true;
     json->getProperty("attributes", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->attributes));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->attributes), ctx);
     }
     json->getProperty("vertexBuffers", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->vertexBuffers));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->vertexBuffers), ctx);
     }
     json->getProperty("indexBuffer", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->indexBuffer));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->indexBuffer), ctx);
     }
     json->getProperty("indirectBuffer", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->indirectBuffer));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->indirectBuffer), ctx);
     }
     return ok;
 }
@@ -8056,7 +8056,7 @@ static bool js_gfx_GFXInputAssemblerInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXInputAssemblerInfo* cobj = JSB_ALLOC(cocos2d::GFXInputAssemblerInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -8072,22 +8072,22 @@ static bool js_gfx_GFXInputAssemblerInfo_constructor(se::State& s)
         cocos2d::GFXInputAssemblerInfo* cobj = JSB_ALLOC(cocos2d::GFXInputAssemblerInfo);
         std::vector<cocos2d::GFXAttribute> arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->attributes = arg0;
         }
         std::vector<cocos2d::GFXBuffer *> arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->vertexBuffers = arg1;
         }
         cocos2d::GFXBuffer* arg2 = nullptr;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->indexBuffer = arg2;
         }
         cocos2d::GFXBuffer* arg3 = nullptr;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->indirectBuffer = arg3;
         }
 
@@ -8153,7 +8153,7 @@ static bool js_gfx_GFXColorAttachment_get_format(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->format, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->format, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8166,7 +8166,7 @@ static bool js_gfx_GFXColorAttachment_set_format(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColorAttachment_set_format : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->format); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->format, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColorAttachment_set_format : Error processing new value");
     return true;
 }
@@ -8179,7 +8179,7 @@ static bool js_gfx_GFXColorAttachment_get_loadOp(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->loadOp, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->loadOp, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8192,7 +8192,7 @@ static bool js_gfx_GFXColorAttachment_set_loadOp(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColorAttachment_set_loadOp : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->loadOp); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->loadOp, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColorAttachment_set_loadOp : Error processing new value");
     return true;
 }
@@ -8205,7 +8205,7 @@ static bool js_gfx_GFXColorAttachment_get_storeOp(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->storeOp, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->storeOp, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8218,7 +8218,7 @@ static bool js_gfx_GFXColorAttachment_set_storeOp(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColorAttachment_set_storeOp : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->storeOp); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->storeOp, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColorAttachment_set_storeOp : Error processing new value");
     return true;
 }
@@ -8231,7 +8231,7 @@ static bool js_gfx_GFXColorAttachment_get_sampleCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->sampleCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->sampleCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8244,7 +8244,7 @@ static bool js_gfx_GFXColorAttachment_set_sampleCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColorAttachment_set_sampleCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->sampleCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->sampleCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColorAttachment_set_sampleCount : Error processing new value");
     return true;
 }
@@ -8257,7 +8257,7 @@ static bool js_gfx_GFXColorAttachment_get_beginLayout(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->beginLayout, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->beginLayout, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8270,7 +8270,7 @@ static bool js_gfx_GFXColorAttachment_set_beginLayout(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColorAttachment_set_beginLayout : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->beginLayout); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->beginLayout, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColorAttachment_set_beginLayout : Error processing new value");
     return true;
 }
@@ -8283,7 +8283,7 @@ static bool js_gfx_GFXColorAttachment_get_endLayout(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->endLayout, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->endLayout, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8296,7 +8296,7 @@ static bool js_gfx_GFXColorAttachment_set_endLayout(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXColorAttachment_set_endLayout : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->endLayout); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->endLayout, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXColorAttachment_set_endLayout : Error processing new value");
     return true;
 }
@@ -8304,7 +8304,7 @@ SE_BIND_PROP_SET(js_gfx_GFXColorAttachment_set_endLayout)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXColorAttachment * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXColorAttachment * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -8317,27 +8317,27 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXColorAttachment * to)
     bool ok = true;
     json->getProperty("format", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->format));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->format), ctx);
     }
     json->getProperty("loadOp", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->loadOp));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->loadOp), ctx);
     }
     json->getProperty("storeOp", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->storeOp));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->storeOp), ctx);
     }
     json->getProperty("sampleCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->sampleCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->sampleCount), ctx);
     }
     json->getProperty("beginLayout", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->beginLayout));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->beginLayout), ctx);
     }
     json->getProperty("endLayout", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->endLayout));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->endLayout), ctx);
     }
     return ok;
 }
@@ -8363,7 +8363,7 @@ static bool js_gfx_GFXColorAttachment_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXColorAttachment* cobj = JSB_ALLOC(cocos2d::GFXColorAttachment);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -8379,32 +8379,32 @@ static bool js_gfx_GFXColorAttachment_constructor(se::State& s)
         cocos2d::GFXColorAttachment* cobj = JSB_ALLOC(cocos2d::GFXColorAttachment);
         cocos2d::GFXFormat arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->format = arg0;
         }
         cocos2d::GFXLoadOp arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->loadOp = arg1;
         }
         cocos2d::GFXStoreOp arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->storeOp = arg2;
         }
         unsigned int arg3 = {};
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->sampleCount = arg3;
         }
         cocos2d::GFXTextureLayout arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->beginLayout = arg4;
         }
         cocos2d::GFXTextureLayout arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->endLayout = arg5;
         }
 
@@ -8472,7 +8472,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_format(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->format, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->format, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8485,7 +8485,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_format(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_format : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->format); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->format, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_format : Error processing new value");
     return true;
 }
@@ -8498,7 +8498,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_depthLoadOp(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthLoadOp, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthLoadOp, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8511,7 +8511,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_depthLoadOp(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_depthLoadOp : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthLoadOp); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthLoadOp, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_depthLoadOp : Error processing new value");
     return true;
 }
@@ -8524,7 +8524,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_depthStoreOp(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthStoreOp, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthStoreOp, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8537,7 +8537,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_depthStoreOp(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_depthStoreOp : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthStoreOp); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthStoreOp, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_depthStoreOp : Error processing new value");
     return true;
 }
@@ -8550,7 +8550,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_stencilLoadOp(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilLoadOp, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilLoadOp, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8563,7 +8563,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_stencilLoadOp(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_stencilLoadOp : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilLoadOp); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilLoadOp, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_stencilLoadOp : Error processing new value");
     return true;
 }
@@ -8576,7 +8576,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_stencilStoreOp(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilStoreOp, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilStoreOp, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8589,7 +8589,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_stencilStoreOp(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_stencilStoreOp : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilStoreOp); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilStoreOp, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_stencilStoreOp : Error processing new value");
     return true;
 }
@@ -8602,7 +8602,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_sampleCount(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->sampleCount, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->sampleCount, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8615,7 +8615,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_sampleCount(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_sampleCount : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->sampleCount); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->sampleCount, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_sampleCount : Error processing new value");
     return true;
 }
@@ -8628,7 +8628,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_beginLayout(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->beginLayout, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->beginLayout, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8641,7 +8641,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_beginLayout(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_beginLayout : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->beginLayout); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->beginLayout, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_beginLayout : Error processing new value");
     return true;
 }
@@ -8654,7 +8654,7 @@ static bool js_gfx_GFXDepthStencilAttachment_get_endLayout(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->endLayout, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->endLayout, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8667,7 +8667,7 @@ static bool js_gfx_GFXDepthStencilAttachment_set_endLayout(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilAttachment_set_endLayout : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->endLayout); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->endLayout, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilAttachment_set_endLayout : Error processing new value");
     return true;
 }
@@ -8675,7 +8675,7 @@ SE_BIND_PROP_SET(js_gfx_GFXDepthStencilAttachment_set_endLayout)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXDepthStencilAttachment * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXDepthStencilAttachment * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -8688,35 +8688,35 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXDepthStencilAttachment
     bool ok = true;
     json->getProperty("format", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->format));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->format), ctx);
     }
     json->getProperty("depthLoadOp", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthLoadOp));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthLoadOp), ctx);
     }
     json->getProperty("depthStoreOp", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthStoreOp));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthStoreOp), ctx);
     }
     json->getProperty("stencilLoadOp", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilLoadOp));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilLoadOp), ctx);
     }
     json->getProperty("stencilStoreOp", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilStoreOp));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilStoreOp), ctx);
     }
     json->getProperty("sampleCount", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->sampleCount));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->sampleCount), ctx);
     }
     json->getProperty("beginLayout", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->beginLayout));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->beginLayout), ctx);
     }
     json->getProperty("endLayout", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->endLayout));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->endLayout), ctx);
     }
     return ok;
 }
@@ -8742,7 +8742,7 @@ static bool js_gfx_GFXDepthStencilAttachment_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDepthStencilAttachment* cobj = JSB_ALLOC(cocos2d::GFXDepthStencilAttachment);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -8758,42 +8758,42 @@ static bool js_gfx_GFXDepthStencilAttachment_constructor(se::State& s)
         cocos2d::GFXDepthStencilAttachment* cobj = JSB_ALLOC(cocos2d::GFXDepthStencilAttachment);
         cocos2d::GFXFormat arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->format = arg0;
         }
         cocos2d::GFXLoadOp arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->depthLoadOp = arg1;
         }
         cocos2d::GFXStoreOp arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->depthStoreOp = arg2;
         }
         cocos2d::GFXLoadOp arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->stencilLoadOp = arg3;
         }
         cocos2d::GFXStoreOp arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->stencilStoreOp = arg4;
         }
         unsigned int arg5 = {};
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->sampleCount = arg5;
         }
         cocos2d::GFXTextureLayout arg6;
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->beginLayout = arg6;
         }
         cocos2d::GFXTextureLayout arg7;
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->endLayout = arg7;
         }
 
@@ -8863,7 +8863,7 @@ static bool js_gfx_GFXSubPass_get_bindPoint(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->bindPoint, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->bindPoint, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8876,7 +8876,7 @@ static bool js_gfx_GFXSubPass_set_bindPoint(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_bindPoint : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->bindPoint); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->bindPoint, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_bindPoint : Error processing new value");
     return true;
 }
@@ -8889,7 +8889,7 @@ static bool js_gfx_GFXSubPass_get_inputs(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->inputs, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->inputs, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8902,7 +8902,7 @@ static bool js_gfx_GFXSubPass_set_inputs(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_inputs : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->inputs); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->inputs, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_inputs : Error processing new value");
     return true;
 }
@@ -8915,7 +8915,7 @@ static bool js_gfx_GFXSubPass_get_colors(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->colors, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->colors, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8928,7 +8928,7 @@ static bool js_gfx_GFXSubPass_set_colors(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_colors : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->colors); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->colors, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_colors : Error processing new value");
     return true;
 }
@@ -8941,7 +8941,7 @@ static bool js_gfx_GFXSubPass_get_resolves(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->resolves, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->resolves, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8954,7 +8954,7 @@ static bool js_gfx_GFXSubPass_set_resolves(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_resolves : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->resolves); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->resolves, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_resolves : Error processing new value");
     return true;
 }
@@ -8967,7 +8967,7 @@ static bool js_gfx_GFXSubPass_get_depthStencil(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthStencil, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthStencil, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -8980,7 +8980,7 @@ static bool js_gfx_GFXSubPass_set_depthStencil(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_depthStencil : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthStencil); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthStencil, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_depthStencil : Error processing new value");
     return true;
 }
@@ -8993,7 +8993,7 @@ static bool js_gfx_GFXSubPass_get_preserves(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->preserves, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->preserves, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9006,7 +9006,7 @@ static bool js_gfx_GFXSubPass_set_preserves(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_preserves : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->preserves); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->preserves, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_preserves : Error processing new value");
     return true;
 }
@@ -9014,7 +9014,7 @@ SE_BIND_PROP_SET(js_gfx_GFXSubPass_set_preserves)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXSubPass * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXSubPass * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -9027,27 +9027,27 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXSubPass * to)
     bool ok = true;
     json->getProperty("bindPoint", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->bindPoint));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->bindPoint), ctx);
     }
     json->getProperty("inputs", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->inputs));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->inputs), ctx);
     }
     json->getProperty("colors", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->colors));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->colors), ctx);
     }
     json->getProperty("resolves", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->resolves));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->resolves), ctx);
     }
     json->getProperty("depthStencil", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthStencil));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthStencil), ctx);
     }
     json->getProperty("preserves", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->preserves));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->preserves), ctx);
     }
     return ok;
 }
@@ -9073,7 +9073,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXSubPass* cobj = JSB_ALLOC(cocos2d::GFXSubPass);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -9089,32 +9089,32 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
         cocos2d::GFXSubPass* cobj = JSB_ALLOC(cocos2d::GFXSubPass);
         cocos2d::GFXPipelineBindPoint arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->bindPoint = arg0;
         }
         std::array<unsigned char, 4> arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->inputs = arg1;
         }
         std::array<unsigned char, 4> arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->colors = arg2;
         }
         std::array<unsigned char, 4> arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->resolves = arg3;
         }
         uint8_t arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->depthStencil = arg4;
         }
         std::array<unsigned char, 4> arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->preserves = arg5;
         }
 
@@ -9182,7 +9182,7 @@ static bool js_gfx_GFXRenderPassInfo_get_colorAttachments(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->colorAttachments, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->colorAttachments, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9195,7 +9195,7 @@ static bool js_gfx_GFXRenderPassInfo_set_colorAttachments(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRenderPassInfo_set_colorAttachments : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->colorAttachments); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->colorAttachments, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPassInfo_set_colorAttachments : Error processing new value");
     return true;
 }
@@ -9208,7 +9208,7 @@ static bool js_gfx_GFXRenderPassInfo_get_depthStencilAttachment(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthStencilAttachment, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthStencilAttachment, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9221,7 +9221,7 @@ static bool js_gfx_GFXRenderPassInfo_set_depthStencilAttachment(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRenderPassInfo_set_depthStencilAttachment : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthStencilAttachment); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthStencilAttachment, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPassInfo_set_depthStencilAttachment : Error processing new value");
     return true;
 }
@@ -9234,7 +9234,7 @@ static bool js_gfx_GFXRenderPassInfo_get_subPasses(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->subPasses, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->subPasses, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9247,7 +9247,7 @@ static bool js_gfx_GFXRenderPassInfo_set_subPasses(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRenderPassInfo_set_subPasses : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->subPasses); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->subPasses, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPassInfo_set_subPasses : Error processing new value");
     return true;
 }
@@ -9255,7 +9255,7 @@ SE_BIND_PROP_SET(js_gfx_GFXRenderPassInfo_set_subPasses)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXRenderPassInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXRenderPassInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -9268,15 +9268,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXRenderPassInfo * to)
     bool ok = true;
     json->getProperty("colorAttachments", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->colorAttachments));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->colorAttachments), ctx);
     }
     json->getProperty("depthStencilAttachment", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthStencilAttachment));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthStencilAttachment), ctx);
     }
     json->getProperty("subPasses", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->subPasses));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->subPasses), ctx);
     }
     return ok;
 }
@@ -9302,7 +9302,7 @@ static bool js_gfx_GFXRenderPassInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXRenderPassInfo* cobj = JSB_ALLOC(cocos2d::GFXRenderPassInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -9318,17 +9318,17 @@ static bool js_gfx_GFXRenderPassInfo_constructor(se::State& s)
         cocos2d::GFXRenderPassInfo* cobj = JSB_ALLOC(cocos2d::GFXRenderPassInfo);
         std::vector<cocos2d::GFXColorAttachment> arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->colorAttachments = arg0;
         }
         cocos2d::GFXDepthStencilAttachment arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->depthStencilAttachment = arg1;
         }
         std::vector<cocos2d::GFXSubPass> arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->subPasses = arg2;
         }
 
@@ -9393,7 +9393,7 @@ static bool js_gfx_GFXFramebufferInfo_get_renderPass(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->renderPass, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->renderPass, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9406,7 +9406,7 @@ static bool js_gfx_GFXFramebufferInfo_set_renderPass(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFramebufferInfo_set_renderPass : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->renderPass); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->renderPass, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebufferInfo_set_renderPass : Error processing new value");
     return true;
 }
@@ -9419,7 +9419,7 @@ static bool js_gfx_GFXFramebufferInfo_get_colorViews(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->colorViews, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->colorViews, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9432,7 +9432,7 @@ static bool js_gfx_GFXFramebufferInfo_set_colorViews(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFramebufferInfo_set_colorViews : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->colorViews); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->colorViews, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebufferInfo_set_colorViews : Error processing new value");
     return true;
 }
@@ -9445,7 +9445,7 @@ static bool js_gfx_GFXFramebufferInfo_get_depthStencilView(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthStencilView, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthStencilView, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9458,7 +9458,7 @@ static bool js_gfx_GFXFramebufferInfo_set_depthStencilView(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFramebufferInfo_set_depthStencilView : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthStencilView); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthStencilView, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebufferInfo_set_depthStencilView : Error processing new value");
     return true;
 }
@@ -9471,7 +9471,7 @@ static bool js_gfx_GFXFramebufferInfo_get_isOffscreen(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isOffscreen, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isOffscreen, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9484,7 +9484,7 @@ static bool js_gfx_GFXFramebufferInfo_set_isOffscreen(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFramebufferInfo_set_isOffscreen : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isOffscreen); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isOffscreen, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebufferInfo_set_isOffscreen : Error processing new value");
     return true;
 }
@@ -9492,7 +9492,7 @@ SE_BIND_PROP_SET(js_gfx_GFXFramebufferInfo_set_isOffscreen)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXFramebufferInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXFramebufferInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -9505,19 +9505,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXFramebufferInfo * to)
     bool ok = true;
     json->getProperty("renderPass", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->renderPass));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->renderPass), ctx);
     }
     json->getProperty("colorViews", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->colorViews));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->colorViews), ctx);
     }
     json->getProperty("depthStencilView", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthStencilView));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthStencilView), ctx);
     }
     json->getProperty("isOffscreen", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isOffscreen));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isOffscreen), ctx);
     }
     return ok;
 }
@@ -9543,7 +9543,7 @@ static bool js_gfx_GFXFramebufferInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXFramebufferInfo* cobj = JSB_ALLOC(cocos2d::GFXFramebufferInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -9559,22 +9559,22 @@ static bool js_gfx_GFXFramebufferInfo_constructor(se::State& s)
         cocos2d::GFXFramebufferInfo* cobj = JSB_ALLOC(cocos2d::GFXFramebufferInfo);
         cocos2d::GFXRenderPass* arg0 = nullptr;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->renderPass = arg0;
         }
         std::vector<cocos2d::GFXTextureView *> arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->colorViews = arg1;
         }
         cocos2d::GFXTextureView* arg2 = nullptr;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->depthStencilView = arg2;
         }
         bool arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->isOffscreen = arg3;
         }
 
@@ -9640,7 +9640,7 @@ static bool js_gfx_GFXBinding_get_binding(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->binding, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->binding, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9653,7 +9653,7 @@ static bool js_gfx_GFXBinding_set_binding(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBinding_set_binding : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->binding); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->binding, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBinding_set_binding : Error processing new value");
     return true;
 }
@@ -9666,7 +9666,7 @@ static bool js_gfx_GFXBinding_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9679,7 +9679,7 @@ static bool js_gfx_GFXBinding_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBinding_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBinding_set_type : Error processing new value");
     return true;
 }
@@ -9692,7 +9692,7 @@ static bool js_gfx_GFXBinding_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9705,7 +9705,7 @@ static bool js_gfx_GFXBinding_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBinding_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBinding_set_name : Error processing new value");
     return true;
 }
@@ -9713,7 +9713,7 @@ SE_BIND_PROP_SET(js_gfx_GFXBinding_set_name)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBinding * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBinding * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -9726,15 +9726,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBinding * to)
     bool ok = true;
     json->getProperty("binding", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->binding));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->binding), ctx);
     }
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     return ok;
 }
@@ -9760,7 +9760,7 @@ static bool js_gfx_GFXBinding_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBinding* cobj = JSB_ALLOC(cocos2d::GFXBinding);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -9776,17 +9776,17 @@ static bool js_gfx_GFXBinding_constructor(se::State& s)
         cocos2d::GFXBinding* cobj = JSB_ALLOC(cocos2d::GFXBinding);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->binding = arg0;
         }
         cocos2d::GFXBindingType arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->type = arg1;
         }
         cocos2d::String arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->name = arg2;
         }
 
@@ -9851,7 +9851,7 @@ static bool js_gfx_GFXBindingLayoutInfo_get_bindings(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->bindings, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->bindings, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9864,7 +9864,7 @@ static bool js_gfx_GFXBindingLayoutInfo_set_bindings(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBindingLayoutInfo_set_bindings : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->bindings); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->bindings, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayoutInfo_set_bindings : Error processing new value");
     return true;
 }
@@ -9872,7 +9872,7 @@ SE_BIND_PROP_SET(js_gfx_GFXBindingLayoutInfo_set_bindings)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBindingLayoutInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBindingLayoutInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -9885,7 +9885,7 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBindingLayoutInfo * to
     bool ok = true;
     json->getProperty("bindings", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->bindings));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->bindings), ctx);
     }
     return ok;
 }
@@ -9910,7 +9910,7 @@ static bool js_gfx_GFXBindingLayoutInfo_constructor(se::State& s)
         cocos2d::GFXBindingLayoutInfo* cobj = JSB_ALLOC(cocos2d::GFXBindingLayoutInfo);
         std::vector<cocos2d::GFXBinding> arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->bindings = arg0;
         }
 
@@ -9973,7 +9973,7 @@ static bool js_gfx_GFXBindingUnit_get_binding(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->binding, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->binding, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -9986,7 +9986,7 @@ static bool js_gfx_GFXBindingUnit_set_binding(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBindingUnit_set_binding : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->binding); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->binding, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingUnit_set_binding : Error processing new value");
     return true;
 }
@@ -9999,7 +9999,7 @@ static bool js_gfx_GFXBindingUnit_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10012,7 +10012,7 @@ static bool js_gfx_GFXBindingUnit_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBindingUnit_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingUnit_set_type : Error processing new value");
     return true;
 }
@@ -10025,7 +10025,7 @@ static bool js_gfx_GFXBindingUnit_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10038,7 +10038,7 @@ static bool js_gfx_GFXBindingUnit_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBindingUnit_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingUnit_set_name : Error processing new value");
     return true;
 }
@@ -10051,7 +10051,7 @@ static bool js_gfx_GFXBindingUnit_get_buffer(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->buffer, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->buffer, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10064,7 +10064,7 @@ static bool js_gfx_GFXBindingUnit_set_buffer(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBindingUnit_set_buffer : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->buffer); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->buffer, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingUnit_set_buffer : Error processing new value");
     return true;
 }
@@ -10077,7 +10077,7 @@ static bool js_gfx_GFXBindingUnit_get_texView(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->texView, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->texView, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10090,7 +10090,7 @@ static bool js_gfx_GFXBindingUnit_set_texView(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBindingUnit_set_texView : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->texView); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->texView, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingUnit_set_texView : Error processing new value");
     return true;
 }
@@ -10103,7 +10103,7 @@ static bool js_gfx_GFXBindingUnit_get_sampler(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->sampler, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->sampler, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10116,7 +10116,7 @@ static bool js_gfx_GFXBindingUnit_set_sampler(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBindingUnit_set_sampler : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->sampler); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->sampler, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingUnit_set_sampler : Error processing new value");
     return true;
 }
@@ -10124,7 +10124,7 @@ SE_BIND_PROP_SET(js_gfx_GFXBindingUnit_set_sampler)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBindingUnit * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBindingUnit * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -10137,27 +10137,27 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBindingUnit * to)
     bool ok = true;
     json->getProperty("binding", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->binding));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->binding), ctx);
     }
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("buffer", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->buffer));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->buffer), ctx);
     }
     json->getProperty("texView", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->texView));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->texView), ctx);
     }
     json->getProperty("sampler", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->sampler));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->sampler), ctx);
     }
     return ok;
 }
@@ -10183,7 +10183,7 @@ static bool js_gfx_GFXBindingUnit_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBindingUnit* cobj = JSB_ALLOC(cocos2d::GFXBindingUnit);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -10199,32 +10199,32 @@ static bool js_gfx_GFXBindingUnit_constructor(se::State& s)
         cocos2d::GFXBindingUnit* cobj = JSB_ALLOC(cocos2d::GFXBindingUnit);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->binding = arg0;
         }
         cocos2d::GFXBindingType arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->type = arg1;
         }
         cocos2d::String arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->name = arg2;
         }
         cocos2d::GFXBuffer* arg3 = nullptr;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->buffer = arg3;
         }
         cocos2d::GFXTextureView* arg4 = nullptr;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->texView = arg4;
         }
         cocos2d::GFXSampler* arg5 = nullptr;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->sampler = arg5;
         }
 
@@ -10292,7 +10292,7 @@ static bool js_gfx_GFXPushConstantRange_get_shaderType(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->shaderType, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->shaderType, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10305,7 +10305,7 @@ static bool js_gfx_GFXPushConstantRange_set_shaderType(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPushConstantRange_set_shaderType : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->shaderType); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->shaderType, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPushConstantRange_set_shaderType : Error processing new value");
     return true;
 }
@@ -10318,7 +10318,7 @@ static bool js_gfx_GFXPushConstantRange_get_offset(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->offset, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->offset, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10331,7 +10331,7 @@ static bool js_gfx_GFXPushConstantRange_set_offset(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPushConstantRange_set_offset : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->offset); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->offset, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPushConstantRange_set_offset : Error processing new value");
     return true;
 }
@@ -10344,7 +10344,7 @@ static bool js_gfx_GFXPushConstantRange_get_count(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->count, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->count, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10357,7 +10357,7 @@ static bool js_gfx_GFXPushConstantRange_set_count(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPushConstantRange_set_count : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->count); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->count, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPushConstantRange_set_count : Error processing new value");
     return true;
 }
@@ -10365,7 +10365,7 @@ SE_BIND_PROP_SET(js_gfx_GFXPushConstantRange_set_count)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXPushConstantRange * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXPushConstantRange * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -10378,15 +10378,15 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXPushConstantRange * to
     bool ok = true;
     json->getProperty("shaderType", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->shaderType));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->shaderType), ctx);
     }
     json->getProperty("offset", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->offset));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->offset), ctx);
     }
     json->getProperty("count", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->count));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->count), ctx);
     }
     return ok;
 }
@@ -10412,7 +10412,7 @@ static bool js_gfx_GFXPushConstantRange_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXPushConstantRange* cobj = JSB_ALLOC(cocos2d::GFXPushConstantRange);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -10428,17 +10428,17 @@ static bool js_gfx_GFXPushConstantRange_constructor(se::State& s)
         cocos2d::GFXPushConstantRange* cobj = JSB_ALLOC(cocos2d::GFXPushConstantRange);
         cocos2d::GFXShaderType arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->shaderType = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->offset = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->count = arg2;
         }
 
@@ -10503,7 +10503,7 @@ static bool js_gfx_GFXPipelineLayoutInfo_get_pushConstantsRanges(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->pushConstantsRanges, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->pushConstantsRanges, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10516,7 +10516,7 @@ static bool js_gfx_GFXPipelineLayoutInfo_set_pushConstantsRanges(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineLayoutInfo_set_pushConstantsRanges : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->pushConstantsRanges); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->pushConstantsRanges, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayoutInfo_set_pushConstantsRanges : Error processing new value");
     return true;
 }
@@ -10529,7 +10529,7 @@ static bool js_gfx_GFXPipelineLayoutInfo_get_layouts(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->layouts, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->layouts, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10542,7 +10542,7 @@ static bool js_gfx_GFXPipelineLayoutInfo_set_layouts(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineLayoutInfo_set_layouts : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->layouts); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->layouts, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayoutInfo_set_layouts : Error processing new value");
     return true;
 }
@@ -10550,7 +10550,7 @@ SE_BIND_PROP_SET(js_gfx_GFXPipelineLayoutInfo_set_layouts)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXPipelineLayoutInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXPipelineLayoutInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -10563,11 +10563,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXPipelineLayoutInfo * t
     bool ok = true;
     json->getProperty("pushConstantsRanges", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->pushConstantsRanges));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->pushConstantsRanges), ctx);
     }
     json->getProperty("layouts", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->layouts));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->layouts), ctx);
     }
     return ok;
 }
@@ -10593,7 +10593,7 @@ static bool js_gfx_GFXPipelineLayoutInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXPipelineLayoutInfo* cobj = JSB_ALLOC(cocos2d::GFXPipelineLayoutInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -10609,12 +10609,12 @@ static bool js_gfx_GFXPipelineLayoutInfo_constructor(se::State& s)
         cocos2d::GFXPipelineLayoutInfo* cobj = JSB_ALLOC(cocos2d::GFXPipelineLayoutInfo);
         std::vector<cocos2d::GFXPushConstantRange> arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->pushConstantsRanges = arg0;
         }
         std::vector<cocos2d::GFXBindingLayout *> arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->layouts = arg1;
         }
 
@@ -10678,7 +10678,7 @@ static bool js_gfx_GFXInputState_get_attributes(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->attributes, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->attributes, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10691,7 +10691,7 @@ static bool js_gfx_GFXInputState_set_attributes(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputState_set_attributes : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->attributes); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->attributes, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXInputState_set_attributes : Error processing new value");
     return true;
 }
@@ -10699,7 +10699,7 @@ SE_BIND_PROP_SET(js_gfx_GFXInputState_set_attributes)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXInputState * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXInputState * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -10712,7 +10712,7 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXInputState * to)
     bool ok = true;
     json->getProperty("attributes", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->attributes));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->attributes), ctx);
     }
     return ok;
 }
@@ -10737,7 +10737,7 @@ static bool js_gfx_GFXInputState_constructor(se::State& s)
         cocos2d::GFXInputState* cobj = JSB_ALLOC(cocos2d::GFXInputState);
         std::vector<cocos2d::GFXAttribute> arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->attributes = arg0;
         }
 
@@ -10800,7 +10800,7 @@ static bool js_gfx_GFXRasterizerState_get_isDiscard(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isDiscard, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isDiscard, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10813,7 +10813,7 @@ static bool js_gfx_GFXRasterizerState_set_isDiscard(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_isDiscard : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isDiscard); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isDiscard, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_isDiscard : Error processing new value");
     return true;
 }
@@ -10826,7 +10826,7 @@ static bool js_gfx_GFXRasterizerState_get_polygonMode(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->polygonMode, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->polygonMode, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10839,7 +10839,7 @@ static bool js_gfx_GFXRasterizerState_set_polygonMode(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_polygonMode : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->polygonMode); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->polygonMode, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_polygonMode : Error processing new value");
     return true;
 }
@@ -10852,7 +10852,7 @@ static bool js_gfx_GFXRasterizerState_get_shadeModel(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->shadeModel, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->shadeModel, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10865,7 +10865,7 @@ static bool js_gfx_GFXRasterizerState_set_shadeModel(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_shadeModel : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->shadeModel); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->shadeModel, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_shadeModel : Error processing new value");
     return true;
 }
@@ -10878,7 +10878,7 @@ static bool js_gfx_GFXRasterizerState_get_cullMode(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->cullMode, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->cullMode, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10891,7 +10891,7 @@ static bool js_gfx_GFXRasterizerState_set_cullMode(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_cullMode : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->cullMode); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->cullMode, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_cullMode : Error processing new value");
     return true;
 }
@@ -10904,7 +10904,7 @@ static bool js_gfx_GFXRasterizerState_get_isFrontFaceCCW(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isFrontFaceCCW, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isFrontFaceCCW, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10917,7 +10917,7 @@ static bool js_gfx_GFXRasterizerState_set_isFrontFaceCCW(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_isFrontFaceCCW : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isFrontFaceCCW); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isFrontFaceCCW, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_isFrontFaceCCW : Error processing new value");
     return true;
 }
@@ -10930,7 +10930,7 @@ static bool js_gfx_GFXRasterizerState_get_depthBias(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthBias, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthBias, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10943,7 +10943,7 @@ static bool js_gfx_GFXRasterizerState_set_depthBias(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_depthBias : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthBias); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthBias, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_depthBias : Error processing new value");
     return true;
 }
@@ -10956,7 +10956,7 @@ static bool js_gfx_GFXRasterizerState_get_depthBiasClamp(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthBiasClamp, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthBiasClamp, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10969,7 +10969,7 @@ static bool js_gfx_GFXRasterizerState_set_depthBiasClamp(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_depthBiasClamp : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthBiasClamp); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthBiasClamp, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_depthBiasClamp : Error processing new value");
     return true;
 }
@@ -10982,7 +10982,7 @@ static bool js_gfx_GFXRasterizerState_get_depthBiasSlop(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthBiasSlop, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthBiasSlop, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -10995,7 +10995,7 @@ static bool js_gfx_GFXRasterizerState_set_depthBiasSlop(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_depthBiasSlop : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthBiasSlop); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthBiasSlop, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_depthBiasSlop : Error processing new value");
     return true;
 }
@@ -11008,7 +11008,7 @@ static bool js_gfx_GFXRasterizerState_get_isDepthClip(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isDepthClip, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isDepthClip, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11021,7 +11021,7 @@ static bool js_gfx_GFXRasterizerState_set_isDepthClip(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_isDepthClip : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isDepthClip); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isDepthClip, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_isDepthClip : Error processing new value");
     return true;
 }
@@ -11034,7 +11034,7 @@ static bool js_gfx_GFXRasterizerState_get_isMultisample(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isMultisample, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isMultisample, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11047,7 +11047,7 @@ static bool js_gfx_GFXRasterizerState_set_isMultisample(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_isMultisample : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isMultisample); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isMultisample, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_isMultisample : Error processing new value");
     return true;
 }
@@ -11060,7 +11060,7 @@ static bool js_gfx_GFXRasterizerState_get_lineWidth(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->lineWidth, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->lineWidth, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11073,7 +11073,7 @@ static bool js_gfx_GFXRasterizerState_set_lineWidth(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_lineWidth : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->lineWidth); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->lineWidth, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_lineWidth : Error processing new value");
     return true;
 }
@@ -11081,7 +11081,7 @@ SE_BIND_PROP_SET(js_gfx_GFXRasterizerState_set_lineWidth)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXRasterizerState * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXRasterizerState * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -11094,47 +11094,47 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXRasterizerState * to)
     bool ok = true;
     json->getProperty("isDiscard", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isDiscard));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isDiscard), ctx);
     }
     json->getProperty("polygonMode", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->polygonMode));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->polygonMode), ctx);
     }
     json->getProperty("shadeModel", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->shadeModel));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->shadeModel), ctx);
     }
     json->getProperty("cullMode", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->cullMode));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->cullMode), ctx);
     }
     json->getProperty("isFrontFaceCCW", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isFrontFaceCCW));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isFrontFaceCCW), ctx);
     }
     json->getProperty("depthBias", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthBias));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthBias), ctx);
     }
     json->getProperty("depthBiasClamp", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthBiasClamp));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthBiasClamp), ctx);
     }
     json->getProperty("depthBiasSlop", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthBiasSlop));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthBiasSlop), ctx);
     }
     json->getProperty("isDepthClip", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isDepthClip));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isDepthClip), ctx);
     }
     json->getProperty("isMultisample", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isMultisample));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isMultisample), ctx);
     }
     json->getProperty("lineWidth", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->lineWidth));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->lineWidth), ctx);
     }
     return ok;
 }
@@ -11160,7 +11160,7 @@ static bool js_gfx_GFXRasterizerState_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXRasterizerState* cobj = JSB_ALLOC(cocos2d::GFXRasterizerState);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -11176,57 +11176,57 @@ static bool js_gfx_GFXRasterizerState_constructor(se::State& s)
         cocos2d::GFXRasterizerState* cobj = JSB_ALLOC(cocos2d::GFXRasterizerState);
         bool arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->isDiscard = arg0;
         }
         cocos2d::GFXPolygonMode arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->polygonMode = arg1;
         }
         cocos2d::GFXShadeModel arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->shadeModel = arg2;
         }
         cocos2d::GFXCullMode arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->cullMode = arg3;
         }
         bool arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->isFrontFaceCCW = arg4;
         }
         float arg5 = {};
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->depthBias = arg5;
         }
         float arg6 = {};
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->depthBiasClamp = arg6;
         }
         float arg7 = {};
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->depthBiasSlop = arg7;
         }
         bool arg8;
         if (!args[8].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[8], &arg8); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[8], &arg8, nullptr); //is_reference False;
             cobj->isDepthClip = arg8;
         }
         bool arg9;
         if (!args[9].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[9], &arg9); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[9], &arg9, nullptr); //is_reference False;
             cobj->isMultisample = arg9;
         }
         float arg10 = {};
         if (!args[10].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[10], &arg10); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[10], &arg10, nullptr); //is_reference False;
             cobj->lineWidth = arg10;
         }
 
@@ -11299,7 +11299,7 @@ static bool js_gfx_GFXDepthStencilState_get_depthTest(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthTest, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthTest, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11312,7 +11312,7 @@ static bool js_gfx_GFXDepthStencilState_set_depthTest(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_depthTest : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthTest); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthTest, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_depthTest : Error processing new value");
     return true;
 }
@@ -11325,7 +11325,7 @@ static bool js_gfx_GFXDepthStencilState_get_depthWrite(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthWrite, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthWrite, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11338,7 +11338,7 @@ static bool js_gfx_GFXDepthStencilState_set_depthWrite(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_depthWrite : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthWrite); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthWrite, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_depthWrite : Error processing new value");
     return true;
 }
@@ -11351,7 +11351,7 @@ static bool js_gfx_GFXDepthStencilState_get_depthFunc(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthFunc, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthFunc, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11364,7 +11364,7 @@ static bool js_gfx_GFXDepthStencilState_set_depthFunc(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_depthFunc : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthFunc); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthFunc, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_depthFunc : Error processing new value");
     return true;
 }
@@ -11377,7 +11377,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilTestFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilTestFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilTestFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11390,7 +11390,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilTestFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilTestFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilTestFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilTestFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilTestFront : Error processing new value");
     return true;
 }
@@ -11403,7 +11403,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilFuncFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilFuncFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilFuncFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11416,7 +11416,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilFuncFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilFuncFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilFuncFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilFuncFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilFuncFront : Error processing new value");
     return true;
 }
@@ -11429,7 +11429,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilReadMaskFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilReadMaskFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilReadMaskFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11442,7 +11442,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilReadMaskFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilReadMaskFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilReadMaskFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilReadMaskFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilReadMaskFront : Error processing new value");
     return true;
 }
@@ -11455,7 +11455,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilWriteMaskFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilWriteMaskFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilWriteMaskFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11468,7 +11468,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilWriteMaskFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilWriteMaskFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilWriteMaskFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilWriteMaskFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilWriteMaskFront : Error processing new value");
     return true;
 }
@@ -11481,7 +11481,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilFailOpFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilFailOpFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilFailOpFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11494,7 +11494,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilFailOpFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilFailOpFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilFailOpFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilFailOpFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilFailOpFront : Error processing new value");
     return true;
 }
@@ -11507,7 +11507,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilZFailOpFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilZFailOpFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilZFailOpFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11520,7 +11520,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilZFailOpFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilZFailOpFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilZFailOpFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilZFailOpFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilZFailOpFront : Error processing new value");
     return true;
 }
@@ -11533,7 +11533,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilPassOpFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilPassOpFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilPassOpFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11546,7 +11546,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilPassOpFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilPassOpFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilPassOpFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilPassOpFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilPassOpFront : Error processing new value");
     return true;
 }
@@ -11559,7 +11559,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilRefFront(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilRefFront, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilRefFront, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11572,7 +11572,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilRefFront(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilRefFront : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilRefFront); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilRefFront, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilRefFront : Error processing new value");
     return true;
 }
@@ -11585,7 +11585,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilTestBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilTestBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilTestBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11598,7 +11598,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilTestBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilTestBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilTestBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilTestBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilTestBack : Error processing new value");
     return true;
 }
@@ -11611,7 +11611,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilFuncBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilFuncBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilFuncBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11624,7 +11624,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilFuncBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilFuncBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilFuncBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilFuncBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilFuncBack : Error processing new value");
     return true;
 }
@@ -11637,7 +11637,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilReadMaskBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilReadMaskBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilReadMaskBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11650,7 +11650,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilReadMaskBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilReadMaskBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilReadMaskBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilReadMaskBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilReadMaskBack : Error processing new value");
     return true;
 }
@@ -11663,7 +11663,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilWriteMaskBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilWriteMaskBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilWriteMaskBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11676,7 +11676,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilWriteMaskBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilWriteMaskBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilWriteMaskBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilWriteMaskBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilWriteMaskBack : Error processing new value");
     return true;
 }
@@ -11689,7 +11689,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilFailOpBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilFailOpBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilFailOpBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11702,7 +11702,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilFailOpBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilFailOpBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilFailOpBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilFailOpBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilFailOpBack : Error processing new value");
     return true;
 }
@@ -11715,7 +11715,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilZFailOpBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilZFailOpBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilZFailOpBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11728,7 +11728,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilZFailOpBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilZFailOpBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilZFailOpBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilZFailOpBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilZFailOpBack : Error processing new value");
     return true;
 }
@@ -11741,7 +11741,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilPassOpBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilPassOpBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilPassOpBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11754,7 +11754,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilPassOpBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilPassOpBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilPassOpBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilPassOpBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilPassOpBack : Error processing new value");
     return true;
 }
@@ -11767,7 +11767,7 @@ static bool js_gfx_GFXDepthStencilState_get_stencilRefBack(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->stencilRefBack, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->stencilRefBack, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -11780,7 +11780,7 @@ static bool js_gfx_GFXDepthStencilState_set_stencilRefBack(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXDepthStencilState_set_stencilRefBack : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->stencilRefBack); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->stencilRefBack, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXDepthStencilState_set_stencilRefBack : Error processing new value");
     return true;
 }
@@ -11788,7 +11788,7 @@ SE_BIND_PROP_SET(js_gfx_GFXDepthStencilState_set_stencilRefBack)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXDepthStencilState * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXDepthStencilState * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -11801,79 +11801,79 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXDepthStencilState * to
     bool ok = true;
     json->getProperty("depthTest", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthTest));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthTest), ctx);
     }
     json->getProperty("depthWrite", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthWrite));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthWrite), ctx);
     }
     json->getProperty("depthFunc", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthFunc));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthFunc), ctx);
     }
     json->getProperty("stencilTestFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilTestFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilTestFront), ctx);
     }
     json->getProperty("stencilFuncFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilFuncFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilFuncFront), ctx);
     }
     json->getProperty("stencilReadMaskFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilReadMaskFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilReadMaskFront), ctx);
     }
     json->getProperty("stencilWriteMaskFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilWriteMaskFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilWriteMaskFront), ctx);
     }
     json->getProperty("stencilFailOpFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilFailOpFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilFailOpFront), ctx);
     }
     json->getProperty("stencilZFailOpFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilZFailOpFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilZFailOpFront), ctx);
     }
     json->getProperty("stencilPassOpFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilPassOpFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilPassOpFront), ctx);
     }
     json->getProperty("stencilRefFront", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilRefFront));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilRefFront), ctx);
     }
     json->getProperty("stencilTestBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilTestBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilTestBack), ctx);
     }
     json->getProperty("stencilFuncBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilFuncBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilFuncBack), ctx);
     }
     json->getProperty("stencilReadMaskBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilReadMaskBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilReadMaskBack), ctx);
     }
     json->getProperty("stencilWriteMaskBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilWriteMaskBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilWriteMaskBack), ctx);
     }
     json->getProperty("stencilFailOpBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilFailOpBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilFailOpBack), ctx);
     }
     json->getProperty("stencilZFailOpBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilZFailOpBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilZFailOpBack), ctx);
     }
     json->getProperty("stencilPassOpBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilPassOpBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilPassOpBack), ctx);
     }
     json->getProperty("stencilRefBack", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->stencilRefBack));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->stencilRefBack), ctx);
     }
     return ok;
 }
@@ -11899,7 +11899,7 @@ static bool js_gfx_GFXDepthStencilState_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXDepthStencilState* cobj = JSB_ALLOC(cocos2d::GFXDepthStencilState);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -11915,97 +11915,97 @@ static bool js_gfx_GFXDepthStencilState_constructor(se::State& s)
         cocos2d::GFXDepthStencilState* cobj = JSB_ALLOC(cocos2d::GFXDepthStencilState);
         bool arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->depthTest = arg0;
         }
         bool arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->depthWrite = arg1;
         }
         cocos2d::GFXComparisonFunc arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->depthFunc = arg2;
         }
         bool arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->stencilTestFront = arg3;
         }
         cocos2d::GFXComparisonFunc arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->stencilFuncFront = arg4;
         }
         unsigned int arg5 = {};
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->stencilReadMaskFront = arg5;
         }
         unsigned int arg6 = {};
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->stencilWriteMaskFront = arg6;
         }
         cocos2d::GFXStencilOp arg7;
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->stencilFailOpFront = arg7;
         }
         cocos2d::GFXStencilOp arg8;
         if (!args[8].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[8], &arg8); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[8], &arg8, nullptr); //is_reference False;
             cobj->stencilZFailOpFront = arg8;
         }
         cocos2d::GFXStencilOp arg9;
         if (!args[9].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[9], &arg9); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[9], &arg9, nullptr); //is_reference False;
             cobj->stencilPassOpFront = arg9;
         }
         unsigned int arg10 = {};
         if (!args[10].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[10], &arg10); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[10], &arg10, nullptr); //is_reference False;
             cobj->stencilRefFront = arg10;
         }
         bool arg11;
         if (!args[11].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[11], &arg11); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[11], &arg11, nullptr); //is_reference False;
             cobj->stencilTestBack = arg11;
         }
         cocos2d::GFXComparisonFunc arg12;
         if (!args[12].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[12], &arg12); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[12], &arg12, nullptr); //is_reference False;
             cobj->stencilFuncBack = arg12;
         }
         unsigned int arg13 = {};
         if (!args[13].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[13], &arg13); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[13], &arg13, nullptr); //is_reference False;
             cobj->stencilReadMaskBack = arg13;
         }
         unsigned int arg14 = {};
         if (!args[14].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[14], &arg14); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[14], &arg14, nullptr); //is_reference False;
             cobj->stencilWriteMaskBack = arg14;
         }
         cocos2d::GFXStencilOp arg15;
         if (!args[15].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[15], &arg15); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[15], &arg15, nullptr); //is_reference False;
             cobj->stencilFailOpBack = arg15;
         }
         cocos2d::GFXStencilOp arg16;
         if (!args[16].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[16], &arg16); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[16], &arg16, nullptr); //is_reference False;
             cobj->stencilZFailOpBack = arg16;
         }
         cocos2d::GFXStencilOp arg17;
         if (!args[17].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[17], &arg17); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[17], &arg17, nullptr); //is_reference False;
             cobj->stencilPassOpBack = arg17;
         }
         unsigned int arg18 = {};
         if (!args[18].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[18], &arg18); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[18], &arg18, nullptr); //is_reference False;
             cobj->stencilRefBack = arg18;
         }
 
@@ -12086,7 +12086,7 @@ static bool js_gfx_GFXBlendTarget_get_blend(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blend, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blend, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12099,7 +12099,7 @@ static bool js_gfx_GFXBlendTarget_set_blend(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blend : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blend); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blend, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blend : Error processing new value");
     return true;
 }
@@ -12112,7 +12112,7 @@ static bool js_gfx_GFXBlendTarget_get_blendSrc(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendSrc, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendSrc, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12125,7 +12125,7 @@ static bool js_gfx_GFXBlendTarget_set_blendSrc(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blendSrc : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendSrc); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendSrc, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blendSrc : Error processing new value");
     return true;
 }
@@ -12138,7 +12138,7 @@ static bool js_gfx_GFXBlendTarget_get_blendDst(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendDst, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendDst, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12151,7 +12151,7 @@ static bool js_gfx_GFXBlendTarget_set_blendDst(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blendDst : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendDst); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendDst, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blendDst : Error processing new value");
     return true;
 }
@@ -12164,7 +12164,7 @@ static bool js_gfx_GFXBlendTarget_get_blendEq(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendEq, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendEq, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12177,7 +12177,7 @@ static bool js_gfx_GFXBlendTarget_set_blendEq(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blendEq : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendEq); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendEq, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blendEq : Error processing new value");
     return true;
 }
@@ -12190,7 +12190,7 @@ static bool js_gfx_GFXBlendTarget_get_blendSrcAlpha(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendSrcAlpha, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendSrcAlpha, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12203,7 +12203,7 @@ static bool js_gfx_GFXBlendTarget_set_blendSrcAlpha(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blendSrcAlpha : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendSrcAlpha); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendSrcAlpha, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blendSrcAlpha : Error processing new value");
     return true;
 }
@@ -12216,7 +12216,7 @@ static bool js_gfx_GFXBlendTarget_get_blendDstAlpha(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendDstAlpha, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendDstAlpha, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12229,7 +12229,7 @@ static bool js_gfx_GFXBlendTarget_set_blendDstAlpha(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blendDstAlpha : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendDstAlpha); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendDstAlpha, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blendDstAlpha : Error processing new value");
     return true;
 }
@@ -12242,7 +12242,7 @@ static bool js_gfx_GFXBlendTarget_get_blendAlphaEq(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendAlphaEq, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendAlphaEq, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12255,7 +12255,7 @@ static bool js_gfx_GFXBlendTarget_set_blendAlphaEq(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blendAlphaEq : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendAlphaEq); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendAlphaEq, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blendAlphaEq : Error processing new value");
     return true;
 }
@@ -12268,7 +12268,7 @@ static bool js_gfx_GFXBlendTarget_get_blendColorMask(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendColorMask, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendColorMask, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12281,7 +12281,7 @@ static bool js_gfx_GFXBlendTarget_set_blendColorMask(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendTarget_set_blendColorMask : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendColorMask); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendColorMask, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendTarget_set_blendColorMask : Error processing new value");
     return true;
 }
@@ -12289,7 +12289,7 @@ SE_BIND_PROP_SET(js_gfx_GFXBlendTarget_set_blendColorMask)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendTarget * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBlendTarget * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -12302,35 +12302,35 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendTarget * to)
     bool ok = true;
     json->getProperty("blend", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blend));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blend), ctx);
     }
     json->getProperty("blendSrc", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendSrc));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendSrc), ctx);
     }
     json->getProperty("blendDst", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendDst));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendDst), ctx);
     }
     json->getProperty("blendEq", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendEq));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendEq), ctx);
     }
     json->getProperty("blendSrcAlpha", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendSrcAlpha));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendSrcAlpha), ctx);
     }
     json->getProperty("blendDstAlpha", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendDstAlpha));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendDstAlpha), ctx);
     }
     json->getProperty("blendAlphaEq", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendAlphaEq));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendAlphaEq), ctx);
     }
     json->getProperty("blendColorMask", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendColorMask));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendColorMask), ctx);
     }
     return ok;
 }
@@ -12356,7 +12356,7 @@ static bool js_gfx_GFXBlendTarget_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBlendTarget* cobj = JSB_ALLOC(cocos2d::GFXBlendTarget);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -12372,42 +12372,42 @@ static bool js_gfx_GFXBlendTarget_constructor(se::State& s)
         cocos2d::GFXBlendTarget* cobj = JSB_ALLOC(cocos2d::GFXBlendTarget);
         bool arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->blend = arg0;
         }
         cocos2d::GFXBlendFactor arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->blendSrc = arg1;
         }
         cocos2d::GFXBlendFactor arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->blendDst = arg2;
         }
         cocos2d::GFXBlendOp arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->blendEq = arg3;
         }
         cocos2d::GFXBlendFactor arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->blendSrcAlpha = arg4;
         }
         cocos2d::GFXBlendFactor arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->blendDstAlpha = arg5;
         }
         cocos2d::GFXBlendOp arg6;
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->blendAlphaEq = arg6;
         }
         cocos2d::GFXColorMask arg7;
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->blendColorMask = arg7;
         }
 
@@ -12477,7 +12477,7 @@ static bool js_gfx_GFXBlendState_get_isA2C(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isA2C, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isA2C, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12490,7 +12490,7 @@ static bool js_gfx_GFXBlendState_set_isA2C(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_set_isA2C : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isA2C); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isA2C, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendState_set_isA2C : Error processing new value");
     return true;
 }
@@ -12503,7 +12503,7 @@ static bool js_gfx_GFXBlendState_get_isIndepend(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isIndepend, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isIndepend, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12516,7 +12516,7 @@ static bool js_gfx_GFXBlendState_set_isIndepend(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_set_isIndepend : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isIndepend); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isIndepend, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendState_set_isIndepend : Error processing new value");
     return true;
 }
@@ -12529,7 +12529,7 @@ static bool js_gfx_GFXBlendState_get_blendColor(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendColor, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendColor, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12542,7 +12542,7 @@ static bool js_gfx_GFXBlendState_set_blendColor(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_set_blendColor : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendColor); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendColor, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendState_set_blendColor : Error processing new value");
     return true;
 }
@@ -12555,7 +12555,7 @@ static bool js_gfx_GFXBlendState_get_targets(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->targets, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->targets, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12568,7 +12568,7 @@ static bool js_gfx_GFXBlendState_set_targets(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_set_targets : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->targets); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->targets, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendState_set_targets : Error processing new value");
     return true;
 }
@@ -12576,7 +12576,7 @@ SE_BIND_PROP_SET(js_gfx_GFXBlendState_set_targets)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendState * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXBlendState * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -12589,19 +12589,19 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendState * to)
     bool ok = true;
     json->getProperty("isA2C", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isA2C));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isA2C), ctx);
     }
     json->getProperty("isIndepend", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isIndepend));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isIndepend), ctx);
     }
     json->getProperty("blendColor", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendColor));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendColor), ctx);
     }
     json->getProperty("targets", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->targets));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->targets), ctx);
     }
     return ok;
 }
@@ -12627,7 +12627,7 @@ static bool js_gfx_GFXBlendState_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXBlendState* cobj = JSB_ALLOC(cocos2d::GFXBlendState);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -12643,22 +12643,22 @@ static bool js_gfx_GFXBlendState_constructor(se::State& s)
         cocos2d::GFXBlendState* cobj = JSB_ALLOC(cocos2d::GFXBlendState);
         bool arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->isA2C = arg0;
         }
         bool arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->isIndepend = arg1;
         }
         cocos2d::GFXColor arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->blendColor = arg2;
         }
         std::vector<cocos2d::GFXBlendTarget> arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->targets = arg3;
         }
 
@@ -12724,7 +12724,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_primitive(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->primitive, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->primitive, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12737,7 +12737,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_primitive(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_primitive : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->primitive); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->primitive, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_primitive : Error processing new value");
     return true;
 }
@@ -12750,7 +12750,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_shader(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->shader, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->shader, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12763,7 +12763,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_shader(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_shader : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->shader); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->shader, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_shader : Error processing new value");
     return true;
 }
@@ -12776,7 +12776,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_inputState(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->inputState, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->inputState, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12789,7 +12789,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_inputState(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_inputState : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->inputState); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->inputState, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_inputState : Error processing new value");
     return true;
 }
@@ -12802,7 +12802,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_rasterizerState(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->rasterizerState, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->rasterizerState, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12815,7 +12815,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_rasterizerState(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_rasterizerState : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->rasterizerState); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->rasterizerState, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_rasterizerState : Error processing new value");
     return true;
 }
@@ -12828,7 +12828,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_depthStencilState(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthStencilState, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->depthStencilState, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12841,7 +12841,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_depthStencilState(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_depthStencilState : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthStencilState); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->depthStencilState, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_depthStencilState : Error processing new value");
     return true;
 }
@@ -12854,7 +12854,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_blendState(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->blendState, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->blendState, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12867,7 +12867,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_blendState(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_blendState : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->blendState); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->blendState, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_blendState : Error processing new value");
     return true;
 }
@@ -12880,7 +12880,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_dynamicStates(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->dynamicStates, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->dynamicStates, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12893,7 +12893,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_dynamicStates(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_dynamicStates : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->dynamicStates); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->dynamicStates, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_dynamicStates : Error processing new value");
     return true;
 }
@@ -12906,7 +12906,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_layout(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->layout, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->layout, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12919,7 +12919,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_layout(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_layout : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->layout); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->layout, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_layout : Error processing new value");
     return true;
 }
@@ -12932,7 +12932,7 @@ static bool js_gfx_GFXPipelineStateInfo_get_renderPass(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->renderPass, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->renderPass, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -12945,7 +12945,7 @@ static bool js_gfx_GFXPipelineStateInfo_set_renderPass(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineStateInfo_set_renderPass : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->renderPass); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->renderPass, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineStateInfo_set_renderPass : Error processing new value");
     return true;
 }
@@ -12953,7 +12953,7 @@ SE_BIND_PROP_SET(js_gfx_GFXPipelineStateInfo_set_renderPass)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXPipelineStateInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXPipelineStateInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -12966,39 +12966,39 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXPipelineStateInfo * to
     bool ok = true;
     json->getProperty("primitive", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->primitive));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->primitive), ctx);
     }
     json->getProperty("shader", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->shader));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->shader), ctx);
     }
     json->getProperty("inputState", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->inputState));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->inputState), ctx);
     }
     json->getProperty("rasterizerState", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->rasterizerState));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->rasterizerState), ctx);
     }
     json->getProperty("depthStencilState", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthStencilState));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->depthStencilState), ctx);
     }
     json->getProperty("blendState", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->blendState));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->blendState), ctx);
     }
     json->getProperty("dynamicStates", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->dynamicStates));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->dynamicStates), ctx);
     }
     json->getProperty("layout", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->layout));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->layout), ctx);
     }
     json->getProperty("renderPass", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->renderPass));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->renderPass), ctx);
     }
     return ok;
 }
@@ -13024,7 +13024,7 @@ static bool js_gfx_GFXPipelineStateInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXPipelineStateInfo* cobj = JSB_ALLOC(cocos2d::GFXPipelineStateInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -13040,47 +13040,47 @@ static bool js_gfx_GFXPipelineStateInfo_constructor(se::State& s)
         cocos2d::GFXPipelineStateInfo* cobj = JSB_ALLOC(cocos2d::GFXPipelineStateInfo);
         cocos2d::GFXPrimitiveMode arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->primitive = arg0;
         }
         cocos2d::GFXShader* arg1 = nullptr;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->shader = arg1;
         }
         cocos2d::GFXInputState arg2;
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->inputState = arg2;
         }
         cocos2d::GFXRasterizerState arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->rasterizerState = arg3;
         }
         cocos2d::GFXDepthStencilState arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->depthStencilState = arg4;
         }
         cocos2d::GFXBlendState arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->blendState = arg5;
         }
         std::vector<cocos2d::GFXDynamicState> arg6;
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->dynamicStates = arg6;
         }
         cocos2d::GFXPipelineLayout* arg7 = nullptr;
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->layout = arg7;
         }
         cocos2d::GFXRenderPass* arg8 = nullptr;
         if (!args[8].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[8], &arg8); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[8], &arg8, nullptr); //is_reference False;
             cobj->renderPass = arg8;
         }
 
@@ -13151,7 +13151,7 @@ static bool js_gfx_GFXCommandBufferInfo_get_allocator(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->allocator, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->allocator, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13164,7 +13164,7 @@ static bool js_gfx_GFXCommandBufferInfo_set_allocator(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXCommandBufferInfo_set_allocator : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->allocator); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->allocator, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBufferInfo_set_allocator : Error processing new value");
     return true;
 }
@@ -13177,7 +13177,7 @@ static bool js_gfx_GFXCommandBufferInfo_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13190,7 +13190,7 @@ static bool js_gfx_GFXCommandBufferInfo_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXCommandBufferInfo_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBufferInfo_set_type : Error processing new value");
     return true;
 }
@@ -13198,7 +13198,7 @@ SE_BIND_PROP_SET(js_gfx_GFXCommandBufferInfo_set_type)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandBufferInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXCommandBufferInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -13211,11 +13211,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandBufferInfo * to
     bool ok = true;
     json->getProperty("allocator", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->allocator));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->allocator), ctx);
     }
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     return ok;
 }
@@ -13241,7 +13241,7 @@ static bool js_gfx_GFXCommandBufferInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXCommandBufferInfo* cobj = JSB_ALLOC(cocos2d::GFXCommandBufferInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -13257,12 +13257,12 @@ static bool js_gfx_GFXCommandBufferInfo_constructor(se::State& s)
         cocos2d::GFXCommandBufferInfo* cobj = JSB_ALLOC(cocos2d::GFXCommandBufferInfo);
         cocos2d::GFXCommandAllocator* arg0 = nullptr;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->allocator = arg0;
         }
         cocos2d::GFXCommandBufferType arg1;
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->type = arg1;
         }
 
@@ -13326,7 +13326,7 @@ static bool js_gfx_GFXQueueInfo_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13339,7 +13339,7 @@ static bool js_gfx_GFXQueueInfo_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXQueueInfo_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXQueueInfo_set_type : Error processing new value");
     return true;
 }
@@ -13347,7 +13347,7 @@ SE_BIND_PROP_SET(js_gfx_GFXQueueInfo_set_type)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXQueueInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXQueueInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -13360,7 +13360,7 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXQueueInfo * to)
     bool ok = true;
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     return ok;
 }
@@ -13385,7 +13385,7 @@ static bool js_gfx_GFXQueueInfo_constructor(se::State& s)
         cocos2d::GFXQueueInfo* cobj = JSB_ALLOC(cocos2d::GFXQueueInfo);
         cocos2d::GFXQueueType arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->type = arg0;
         }
 
@@ -13448,7 +13448,7 @@ static bool js_gfx_GFXFormatInfo_get_name(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->name, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->name, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13461,7 +13461,7 @@ static bool js_gfx_GFXFormatInfo_set_name(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->name); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->name, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_name : Error processing new value");
     return true;
 }
@@ -13474,7 +13474,7 @@ static bool js_gfx_GFXFormatInfo_get_size(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->size, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->size, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13487,7 +13487,7 @@ static bool js_gfx_GFXFormatInfo_set_size(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_size : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->size); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->size, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_size : Error processing new value");
     return true;
 }
@@ -13500,7 +13500,7 @@ static bool js_gfx_GFXFormatInfo_get_count(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->count, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->count, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13513,7 +13513,7 @@ static bool js_gfx_GFXFormatInfo_set_count(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_count : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->count); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->count, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_count : Error processing new value");
     return true;
 }
@@ -13526,7 +13526,7 @@ static bool js_gfx_GFXFormatInfo_get_type(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->type, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->type, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13539,7 +13539,7 @@ static bool js_gfx_GFXFormatInfo_set_type(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_type : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->type); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->type, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_type : Error processing new value");
     return true;
 }
@@ -13552,7 +13552,7 @@ static bool js_gfx_GFXFormatInfo_get_hasAlpha(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->hasAlpha, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->hasAlpha, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13565,7 +13565,7 @@ static bool js_gfx_GFXFormatInfo_set_hasAlpha(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_hasAlpha : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->hasAlpha); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->hasAlpha, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_hasAlpha : Error processing new value");
     return true;
 }
@@ -13578,7 +13578,7 @@ static bool js_gfx_GFXFormatInfo_get_hasDepth(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->hasDepth, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->hasDepth, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13591,7 +13591,7 @@ static bool js_gfx_GFXFormatInfo_set_hasDepth(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_hasDepth : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->hasDepth); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->hasDepth, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_hasDepth : Error processing new value");
     return true;
 }
@@ -13604,7 +13604,7 @@ static bool js_gfx_GFXFormatInfo_get_hasStencil(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->hasStencil, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->hasStencil, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13617,7 +13617,7 @@ static bool js_gfx_GFXFormatInfo_set_hasStencil(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_hasStencil : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->hasStencil); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->hasStencil, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_hasStencil : Error processing new value");
     return true;
 }
@@ -13630,7 +13630,7 @@ static bool js_gfx_GFXFormatInfo_get_isCompressed(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->isCompressed, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->isCompressed, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13643,7 +13643,7 @@ static bool js_gfx_GFXFormatInfo_set_isCompressed(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXFormatInfo_set_isCompressed : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->isCompressed); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->isCompressed, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXFormatInfo_set_isCompressed : Error processing new value");
     return true;
 }
@@ -13651,7 +13651,7 @@ SE_BIND_PROP_SET(js_gfx_GFXFormatInfo_set_isCompressed)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXFormatInfo * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXFormatInfo * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -13664,35 +13664,35 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXFormatInfo * to)
     bool ok = true;
     json->getProperty("name", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->name));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->name), ctx);
     }
     json->getProperty("size", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->size));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->size), ctx);
     }
     json->getProperty("count", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->count));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->count), ctx);
     }
     json->getProperty("type", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->type));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->type), ctx);
     }
     json->getProperty("hasAlpha", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->hasAlpha));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->hasAlpha), ctx);
     }
     json->getProperty("hasDepth", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->hasDepth));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->hasDepth), ctx);
     }
     json->getProperty("hasStencil", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->hasStencil));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->hasStencil), ctx);
     }
     json->getProperty("isCompressed", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->isCompressed));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->isCompressed), ctx);
     }
     return ok;
 }
@@ -13718,7 +13718,7 @@ static bool js_gfx_GFXFormatInfo_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXFormatInfo* cobj = JSB_ALLOC(cocos2d::GFXFormatInfo);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -13734,42 +13734,42 @@ static bool js_gfx_GFXFormatInfo_constructor(se::State& s)
         cocos2d::GFXFormatInfo* cobj = JSB_ALLOC(cocos2d::GFXFormatInfo);
         cocos2d::String arg0;
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->name = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->size = arg1;
         }
         unsigned int arg2 = {};
         if (!args[2].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
             cobj->count = arg2;
         }
         cocos2d::GFXFormatType arg3;
         if (!args[3].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
             cobj->type = arg3;
         }
         bool arg4;
         if (!args[4].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
             cobj->hasAlpha = arg4;
         }
         bool arg5;
         if (!args[5].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
             cobj->hasDepth = arg5;
         }
         bool arg6;
         if (!args[6].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[6], &arg6); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[6], &arg6, nullptr); //is_reference False;
             cobj->hasStencil = arg6;
         }
         bool arg7;
         if (!args[7].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[7], &arg7); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[7], &arg7, nullptr); //is_reference False;
             cobj->isCompressed = arg7;
         }
 
@@ -13839,7 +13839,7 @@ static bool js_gfx_GFXMemoryStatus_get_bufferSize(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->bufferSize, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->bufferSize, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13852,7 +13852,7 @@ static bool js_gfx_GFXMemoryStatus_set_bufferSize(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXMemoryStatus_set_bufferSize : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->bufferSize); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->bufferSize, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXMemoryStatus_set_bufferSize : Error processing new value");
     return true;
 }
@@ -13865,7 +13865,7 @@ static bool js_gfx_GFXMemoryStatus_get_textureSize(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->textureSize, jsret);
+    ok &= NATIVEVALUE_TO_SE(cobj->textureSize, jsret, nullptr /*ctx*/);
     s.rval() = jsret;
     return true;
 }
@@ -13878,7 +13878,7 @@ static bool js_gfx_GFXMemoryStatus_set_textureSize(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXMemoryStatus_set_textureSize : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->textureSize); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->textureSize, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXMemoryStatus_set_textureSize : Error processing new value");
     return true;
 }
@@ -13886,7 +13886,7 @@ SE_BIND_PROP_SET(js_gfx_GFXMemoryStatus_set_textureSize)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cocos2d::GFXMemoryStatus * to)
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::GFXMemoryStatus * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
@@ -13899,11 +13899,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXMemoryStatus * to)
     bool ok = true;
     json->getProperty("bufferSize", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->bufferSize));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->bufferSize), ctx);
     }
     json->getProperty("textureSize", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->textureSize));
+        ok &= SEVALUE_TO_NATIVE(field, &(to->textureSize), ctx);
     }
     return ok;
 }
@@ -13929,7 +13929,7 @@ static bool js_gfx_GFXMemoryStatus_constructor(se::State& s)
         se::Value field;
 
         cocos2d::GFXMemoryStatus* cobj = JSB_ALLOC(cocos2d::GFXMemoryStatus);
-        ok &= sevalue_to_native(args[0], cobj);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
             SE_REPORT_ERROR("argument convertion error");
@@ -13945,12 +13945,12 @@ static bool js_gfx_GFXMemoryStatus_constructor(se::State& s)
         cocos2d::GFXMemoryStatus* cobj = JSB_ALLOC(cocos2d::GFXMemoryStatus);
         unsigned int arg0 = {};
         if (!args[0].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
             cobj->bufferSize = arg0;
         }
         unsigned int arg1 = {};
         if (!args[1].isNullOrUndefined()) {
-            ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
             cobj->textureSize = arg1;
         }
 
@@ -14016,7 +14016,7 @@ static bool js_gfx_GFXObject_getType(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getType();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXObject_getType : Error processing arguments");
         return true;
     }
@@ -14034,7 +14034,7 @@ static bool js_gfx_GFXObject_getStatus(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getStatus();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXObject_getStatus : Error processing arguments");
         return true;
     }
@@ -14050,7 +14050,7 @@ static bool js_gfx_GFXObject_constructor(se::State& s) // constructor.c
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
     cocos2d::GFXObjectType arg0;
-    ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+    ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_gfx_GFXObject_constructor : Error processing arguments");
     cocos2d::GFXObject* cobj = JSB_ALLOC(cocos2d::GFXObject, arg0);
     s.thisObject()->setPrivateData(cobj);
@@ -14105,7 +14105,7 @@ static bool js_gfx_GFXDevice_getMaxUniformBlockSize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxUniformBlockSize();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxUniformBlockSize : Error processing arguments");
         return true;
     }
@@ -14123,7 +14123,7 @@ static bool js_gfx_GFXDevice_getMaxVertexTextureUnits(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxVertexTextureUnits();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxVertexTextureUnits : Error processing arguments");
         return true;
     }
@@ -14141,7 +14141,7 @@ static bool js_gfx_GFXDevice_getNumInstances(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNumInstances();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getNumInstances : Error processing arguments");
         return true;
     }
@@ -14159,7 +14159,7 @@ static bool js_gfx_GFXDevice_getMaxVertexUniformVectors(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxVertexUniformVectors();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxVertexUniformVectors : Error processing arguments");
         return true;
     }
@@ -14177,7 +14177,7 @@ static bool js_gfx_GFXDevice_getGfxAPI(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getGfxAPI();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getGfxAPI : Error processing arguments");
         return true;
     }
@@ -14195,7 +14195,7 @@ static bool js_gfx_GFXDevice_getCommandAllocator(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXCommandAllocator* result = cobj->getCommandAllocator();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getCommandAllocator : Error processing arguments");
         return true;
     }
@@ -14213,10 +14213,10 @@ static bool js_gfx_GFXDevice_hasFeature(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXFeature, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_hasFeature : Error processing arguments");
         bool result = cobj->hasFeature(HolderType<cocos2d::GFXFeature, false>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_hasFeature : Error processing arguments");
         return true;
     }
@@ -14234,7 +14234,7 @@ static bool js_gfx_GFXDevice_getContext(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXContext* result = cobj->getContext();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getContext : Error processing arguments");
         return true;
     }
@@ -14252,7 +14252,7 @@ static bool js_gfx_GFXDevice_getWidth(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getWidth();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getWidth : Error processing arguments");
         return true;
     }
@@ -14270,7 +14270,7 @@ static bool js_gfx_GFXDevice_setReverseCW(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<bool, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_setReverseCW : Error processing arguments");
         cobj->setReverseCW(HolderType<bool, false>::value(arg0));
         return true;
@@ -14289,7 +14289,7 @@ static bool js_gfx_GFXDevice_getQueue(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXQueue* result = cobj->getQueue();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getQueue : Error processing arguments");
         return true;
     }
@@ -14307,7 +14307,7 @@ static bool js_gfx_GFXDevice_getMaxVertexAttributes(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxVertexAttributes();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxVertexAttributes : Error processing arguments");
         return true;
     }
@@ -14325,7 +14325,7 @@ static bool js_gfx_GFXDevice_getDepthStencilFormat(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getDepthStencilFormat();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getDepthStencilFormat : Error processing arguments");
         return true;
     }
@@ -14343,7 +14343,7 @@ static bool js_gfx_GFXDevice_getNumTris(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNumTris();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getNumTris : Error processing arguments");
         return true;
     }
@@ -14361,7 +14361,7 @@ static bool js_gfx_GFXDevice_getRenderer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::String& result = cobj->getRenderer();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getRenderer : Error processing arguments");
         return true;
     }
@@ -14379,7 +14379,7 @@ static bool js_gfx_GFXDevice_getStencilBits(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getStencilBits();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getStencilBits : Error processing arguments");
         return true;
     }
@@ -14397,7 +14397,7 @@ static bool js_gfx_GFXDevice_getDeviceName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::String& result = cobj->getDeviceName();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getDeviceName : Error processing arguments");
         return true;
     }
@@ -14415,7 +14415,7 @@ static bool js_gfx_GFXDevice_getVendor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::String& result = cobj->getVendor();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getVendor : Error processing arguments");
         return true;
     }
@@ -14433,7 +14433,7 @@ static bool js_gfx_GFXDevice_getHeight(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getHeight();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getHeight : Error processing arguments");
         return true;
     }
@@ -14451,7 +14451,7 @@ static bool js_gfx_GFXDevice_getMaxFragmentUniformVectors(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxFragmentUniformVectors();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxFragmentUniformVectors : Error processing arguments");
         return true;
     }
@@ -14469,10 +14469,10 @@ static bool js_gfx_GFXDevice_createPipelineState(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXPipelineStateInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineState : Error processing arguments");
         cocos2d::GFXPipelineState* result = cobj->createPipelineState(HolderType<cocos2d::GFXPipelineStateInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineState : Error processing arguments");
         return true;
     }
@@ -14490,10 +14490,10 @@ static bool js_gfx_GFXDevice_createCommandBuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXCommandBufferInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createCommandBuffer : Error processing arguments");
         cocos2d::GFXCommandBuffer* result = cobj->createCommandBuffer(HolderType<cocos2d::GFXCommandBufferInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createCommandBuffer : Error processing arguments");
         return true;
     }
@@ -14526,10 +14526,10 @@ static bool js_gfx_GFXDevice_createTexture(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXTextureInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTexture : Error processing arguments");
         cocos2d::GFXTexture* result = cobj->createTexture(HolderType<cocos2d::GFXTextureInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTexture : Error processing arguments");
         return true;
     }
@@ -14562,7 +14562,7 @@ static bool js_gfx_GFXDevice_getColorFormat(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getColorFormat();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getColorFormat : Error processing arguments");
         return true;
     }
@@ -14580,10 +14580,10 @@ static bool js_gfx_GFXDevice_createFramebuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXFramebufferInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createFramebuffer : Error processing arguments");
         cocos2d::GFXFramebuffer* result = cobj->createFramebuffer(HolderType<cocos2d::GFXFramebufferInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createFramebuffer : Error processing arguments");
         return true;
     }
@@ -14601,7 +14601,7 @@ static bool js_gfx_GFXDevice_getMaxTextureSize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxTextureSize();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxTextureSize : Error processing arguments");
         return true;
     }
@@ -14619,10 +14619,10 @@ static bool js_gfx_GFXDevice_createRenderPass(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXRenderPassInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createRenderPass : Error processing arguments");
         cocos2d::GFXRenderPass* result = cobj->createRenderPass(HolderType<cocos2d::GFXRenderPassInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createRenderPass : Error processing arguments");
         return true;
     }
@@ -14640,10 +14640,10 @@ static bool js_gfx_GFXDevice_createPipelineLayout(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXPipelineLayoutInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineLayout : Error processing arguments");
         cocos2d::GFXPipelineLayout* result = cobj->createPipelineLayout(HolderType<cocos2d::GFXPipelineLayoutInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineLayout : Error processing arguments");
         return true;
     }
@@ -14661,10 +14661,10 @@ static bool js_gfx_GFXDevice_createWindow(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXWindowInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createWindow : Error processing arguments");
         cocos2d::GFXWindow* result = cobj->createWindow(HolderType<cocos2d::GFXWindowInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createWindow : Error processing arguments");
         return true;
     }
@@ -14682,7 +14682,7 @@ static bool js_gfx_GFXDevice_getMaxCubeMapTextureSize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxCubeMapTextureSize();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxCubeMapTextureSize : Error processing arguments");
         return true;
     }
@@ -14700,7 +14700,7 @@ static bool js_gfx_GFXDevice_getShaderIdGen(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getShaderIdGen();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getShaderIdGen : Error processing arguments");
         return true;
     }
@@ -14718,7 +14718,7 @@ static bool js_gfx_GFXDevice_getMaxUniformBufferBindings(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxUniformBufferBindings();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxUniformBufferBindings : Error processing arguments");
         return true;
     }
@@ -14736,10 +14736,10 @@ static bool js_gfx_GFXDevice_createShader(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXShaderInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createShader : Error processing arguments");
         cocos2d::GFXShader* result = cobj->createShader(HolderType<cocos2d::GFXShaderInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createShader : Error processing arguments");
         return true;
     }
@@ -14757,10 +14757,10 @@ static bool js_gfx_GFXDevice_createInputAssembler(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXInputAssemblerInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createInputAssembler : Error processing arguments");
         cocos2d::GFXInputAssembler* result = cobj->createInputAssembler(HolderType<cocos2d::GFXInputAssemblerInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createInputAssembler : Error processing arguments");
         return true;
     }
@@ -14779,8 +14779,8 @@ static bool js_gfx_GFXDevice_defineMacro(se::State& s)
     if (argc == 2) {
         HolderType<cocos2d::String, true>::local_type arg0 = {};
         HolderType<cocos2d::String, true>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_defineMacro : Error processing arguments");
         cobj->defineMacro(HolderType<cocos2d::String, true>::value(arg0), HolderType<cocos2d::String, true>::value(arg1));
         return true;
@@ -14799,10 +14799,10 @@ static bool js_gfx_GFXDevice_createSampler(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXSamplerInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createSampler : Error processing arguments");
         cocos2d::GFXSampler* result = cobj->createSampler(HolderType<cocos2d::GFXSamplerInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createSampler : Error processing arguments");
         return true;
     }
@@ -14820,10 +14820,10 @@ static bool js_gfx_GFXDevice_createBuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXBufferInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBuffer : Error processing arguments");
         cocos2d::GFXBuffer* result = cobj->createBuffer(HolderType<cocos2d::GFXBufferInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBuffer : Error processing arguments");
         return true;
     }
@@ -14841,7 +14841,7 @@ static bool js_gfx_GFXDevice_getNativeHeight(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNativeHeight();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getNativeHeight : Error processing arguments");
         return true;
     }
@@ -14859,10 +14859,10 @@ static bool js_gfx_GFXDevice_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXDeviceInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXDeviceInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_initialize : Error processing arguments");
         return true;
     }
@@ -14881,8 +14881,8 @@ static bool js_gfx_GFXDevice_resize(se::State& s)
     if (argc == 2) {
         HolderType<unsigned int, false>::local_type arg0 = {};
         HolderType<unsigned int, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_resize : Error processing arguments");
         cobj->resize(HolderType<unsigned int, false>::value(arg0), HolderType<unsigned int, false>::value(arg1));
         return true;
@@ -14901,10 +14901,10 @@ static bool js_gfx_GFXDevice_createQueue(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXQueueInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createQueue : Error processing arguments");
         cocos2d::GFXQueue* result = cobj->createQueue(HolderType<cocos2d::GFXQueueInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createQueue : Error processing arguments");
         return true;
     }
@@ -14922,7 +14922,7 @@ static bool js_gfx_GFXDevice_getDepthBits(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getDepthBits();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getDepthBits : Error processing arguments");
         return true;
     }
@@ -14940,7 +14940,7 @@ static bool js_gfx_GFXDevice_getMemoryStatus(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXMemoryStatus& result = cobj->getMemoryStatus();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMemoryStatus : Error processing arguments");
         return true;
     }
@@ -14958,7 +14958,7 @@ static bool js_gfx_GFXDevice_getMaxTextureUnits(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getMaxTextureUnits();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMaxTextureUnits : Error processing arguments");
         return true;
     }
@@ -14976,7 +14976,7 @@ static bool js_gfx_GFXDevice_getReverseCW(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->getReverseCW();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getReverseCW : Error processing arguments");
         return true;
     }
@@ -14994,7 +14994,7 @@ static bool js_gfx_GFXDevice_getMainWindow(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXWindow* result = cobj->getMainWindow();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getMainWindow : Error processing arguments");
         return true;
     }
@@ -15012,7 +15012,7 @@ static bool js_gfx_GFXDevice_getNumDrawCalls(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNumDrawCalls();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getNumDrawCalls : Error processing arguments");
         return true;
     }
@@ -15030,7 +15030,7 @@ static bool js_gfx_GFXDevice_getNativeWidth(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNativeWidth();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_getNativeWidth : Error processing arguments");
         return true;
     }
@@ -15048,10 +15048,10 @@ static bool js_gfx_GFXDevice_createBindingLayout(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXBindingLayoutInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBindingLayout : Error processing arguments");
         cocos2d::GFXBindingLayout* result = cobj->createBindingLayout(HolderType<cocos2d::GFXBindingLayoutInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBindingLayout : Error processing arguments");
         return true;
     }
@@ -15069,10 +15069,10 @@ static bool js_gfx_GFXDevice_createTextureView(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXTextureViewInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTextureView : Error processing arguments");
         cocos2d::GFXTextureView* result = cobj->createTextureView(HolderType<cocos2d::GFXTextureViewInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTextureView : Error processing arguments");
         return true;
     }
@@ -15161,7 +15161,7 @@ static bool js_gfx_GFXWindow_getTop(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getTop();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getTop : Error processing arguments");
         return true;
     }
@@ -15179,7 +15179,7 @@ static bool js_gfx_GFXWindow_getDepthStencilTexture(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXTexture* result = cobj->getDepthStencilTexture();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getDepthStencilTexture : Error processing arguments");
         return true;
     }
@@ -15197,7 +15197,7 @@ static bool js_gfx_GFXWindow_getDepthStencilFormat(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getDepthStencilFormat();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getDepthStencilFormat : Error processing arguments");
         return true;
     }
@@ -15205,6 +15205,24 @@ static bool js_gfx_GFXWindow_getDepthStencilFormat(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_gfx_GFXWindow_getDepthStencilFormat)
+
+static bool js_gfx_GFXWindow_getFramebuffer(se::State& s)
+{
+    cocos2d::GFXWindow* cobj = (cocos2d::GFXWindow*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindow_getFramebuffer : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cocos2d::GFXFramebuffer* result = cobj->getFramebuffer();
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getFramebuffer : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_gfx_GFXWindow_getFramebuffer)
 
 static bool js_gfx_GFXWindow_getLeft(se::State& s)
 {
@@ -15215,7 +15233,7 @@ static bool js_gfx_GFXWindow_getLeft(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cobj->getLeft();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getLeft : Error processing arguments");
         return true;
     }
@@ -15233,7 +15251,7 @@ static bool js_gfx_GFXWindow_getColorTexView(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXTextureView* result = cobj->getColorTexView();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getColorTexView : Error processing arguments");
         return true;
     }
@@ -15251,7 +15269,7 @@ static bool js_gfx_GFXWindow_getColorFormat(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getColorFormat();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getColorFormat : Error processing arguments");
         return true;
     }
@@ -15269,7 +15287,7 @@ static bool js_gfx_GFXWindow_getNativeHeight(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNativeHeight();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getNativeHeight : Error processing arguments");
         return true;
     }
@@ -15287,7 +15305,7 @@ static bool js_gfx_GFXWindow_getHeight(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getHeight();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getHeight : Error processing arguments");
         return true;
     }
@@ -15305,7 +15323,7 @@ static bool js_gfx_GFXWindow_getColorTexture(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXTexture* result = cobj->getColorTexture();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getColorTexture : Error processing arguments");
         return true;
     }
@@ -15323,7 +15341,7 @@ static bool js_gfx_GFXWindow_getWidth(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getWidth();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getWidth : Error processing arguments");
         return true;
     }
@@ -15341,7 +15359,7 @@ static bool js_gfx_GFXWindow_isOffscreen(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->isOffscreen();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_isOffscreen : Error processing arguments");
         return true;
     }
@@ -15349,24 +15367,6 @@ static bool js_gfx_GFXWindow_isOffscreen(se::State& s)
     return false;
 }
 SE_BIND_PROP_GET(js_gfx_GFXWindow_isOffscreen)
-
-static bool js_gfx_GFXWindow_getFramebuffer(se::State& s)
-{
-    cocos2d::GFXWindow* cobj = (cocos2d::GFXWindow*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXWindow_getFramebuffer : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        cocos2d::GFXFramebuffer* result = cobj->getFramebuffer();
-        ok &= nativevalue_to_se(result, s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getFramebuffer : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_PROP_GET(js_gfx_GFXWindow_getFramebuffer)
 
 static bool js_gfx_GFXWindow_getTitle(se::State& s)
 {
@@ -15377,7 +15377,7 @@ static bool js_gfx_GFXWindow_getTitle(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::String& result = cobj->getTitle();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getTitle : Error processing arguments");
         return true;
     }
@@ -15395,10 +15395,10 @@ static bool js_gfx_GFXWindow_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXWindowInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXWindowInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_initialize : Error processing arguments");
         return true;
     }
@@ -15431,7 +15431,7 @@ static bool js_gfx_GFXWindow_getRenderPass(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXRenderPass* result = cobj->getRenderPass();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getRenderPass : Error processing arguments");
         return true;
     }
@@ -15449,7 +15449,7 @@ static bool js_gfx_GFXWindow_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getDevice : Error processing arguments");
         return true;
     }
@@ -15467,7 +15467,7 @@ static bool js_gfx_GFXWindow_getNativeWidth(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNativeWidth();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getNativeWidth : Error processing arguments");
         return true;
     }
@@ -15486,8 +15486,8 @@ static bool js_gfx_GFXWindow_resize(se::State& s)
     if (argc == 2) {
         HolderType<unsigned int, false>::local_type arg0 = {};
         HolderType<unsigned int, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_resize : Error processing arguments");
         cobj->resize(HolderType<unsigned int, false>::value(arg0), HolderType<unsigned int, false>::value(arg1));
         return true;
@@ -15506,7 +15506,7 @@ static bool js_gfx_GFXWindow_getDepthStencilTexView(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXTextureView* result = cobj->getDepthStencilTexView();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_getDepthStencilTexView : Error processing arguments");
         return true;
     }
@@ -15590,7 +15590,7 @@ static bool js_gfx_GFXBuffer_getBufferView(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned char* result = cobj->getBufferView();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getBufferView : Error processing arguments");
         return true;
     }
@@ -15608,7 +15608,7 @@ static bool js_gfx_GFXBuffer_getUsage(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getUsage();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getUsage : Error processing arguments");
         return true;
     }
@@ -15626,7 +15626,7 @@ static bool js_gfx_GFXBuffer_getMemUsage(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getMemUsage();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getMemUsage : Error processing arguments");
         return true;
     }
@@ -15644,7 +15644,7 @@ static bool js_gfx_GFXBuffer_getSize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getSize();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getSize : Error processing arguments");
         return true;
     }
@@ -15662,7 +15662,7 @@ static bool js_gfx_GFXBuffer_getCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getCount();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getCount : Error processing arguments");
         return true;
     }
@@ -15680,10 +15680,10 @@ static bool js_gfx_GFXBuffer_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXBufferInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXBufferInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_initialize : Error processing arguments");
         return true;
     }
@@ -15716,7 +15716,7 @@ static bool js_gfx_GFXBuffer_getStride(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getStride();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getStride : Error processing arguments");
         return true;
     }
@@ -15734,7 +15734,7 @@ static bool js_gfx_GFXBuffer_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getDevice : Error processing arguments");
         return true;
     }
@@ -15752,7 +15752,7 @@ static bool js_gfx_GFXBuffer_getFlags(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getFlags();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_getFlags : Error processing arguments");
         return true;
     }
@@ -15770,7 +15770,7 @@ static bool js_gfx_GFXBuffer_resize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_resize : Error processing arguments");
         cobj->resize(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -15846,7 +15846,7 @@ static bool js_gfx_GFXTexture_getSize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getSize();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getSize : Error processing arguments");
         return true;
     }
@@ -15864,7 +15864,7 @@ static bool js_gfx_GFXTexture_getDepth(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getDepth();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getDepth : Error processing arguments");
         return true;
     }
@@ -15882,7 +15882,7 @@ static bool js_gfx_GFXTexture_getType(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getType();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getType : Error processing arguments");
         return true;
     }
@@ -15900,7 +15900,7 @@ static bool js_gfx_GFXTexture_getHeight(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getHeight();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getHeight : Error processing arguments");
         return true;
     }
@@ -15918,7 +15918,7 @@ static bool js_gfx_GFXTexture_getBuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned char* result = cobj->getBuffer();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getBuffer : Error processing arguments");
         return true;
     }
@@ -15936,7 +15936,7 @@ static bool js_gfx_GFXTexture_getWidth(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getWidth();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getWidth : Error processing arguments");
         return true;
     }
@@ -15954,7 +15954,7 @@ static bool js_gfx_GFXTexture_getMipLevel(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getMipLevel();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getMipLevel : Error processing arguments");
         return true;
     }
@@ -15972,7 +15972,7 @@ static bool js_gfx_GFXTexture_getArrayLayer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getArrayLayer();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getArrayLayer : Error processing arguments");
         return true;
     }
@@ -15990,7 +15990,7 @@ static bool js_gfx_GFXTexture_getUsage(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getUsage();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getUsage : Error processing arguments");
         return true;
     }
@@ -16008,10 +16008,10 @@ static bool js_gfx_GFXTexture_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXTextureInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXTextureInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_initialize : Error processing arguments");
         return true;
     }
@@ -16044,7 +16044,7 @@ static bool js_gfx_GFXTexture_getSamples(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getSamples();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getSamples : Error processing arguments");
         return true;
     }
@@ -16062,7 +16062,7 @@ static bool js_gfx_GFXTexture_getFormat(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getFormat();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getFormat : Error processing arguments");
         return true;
     }
@@ -16080,7 +16080,7 @@ static bool js_gfx_GFXTexture_getFlags(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getFlags();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_getFlags : Error processing arguments");
         return true;
     }
@@ -16099,8 +16099,8 @@ static bool js_gfx_GFXTexture_resize(se::State& s)
     if (argc == 2) {
         HolderType<unsigned int, false>::local_type arg0 = {};
         HolderType<unsigned int, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_resize : Error processing arguments");
         cobj->resize(HolderType<unsigned int, false>::value(arg0), HolderType<unsigned int, false>::value(arg1));
         return true;
@@ -16180,7 +16180,7 @@ static bool js_gfx_GFXTextureView_getTexture(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXTexture* result = cobj->getTexture();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getTexture : Error processing arguments");
         return true;
     }
@@ -16198,7 +16198,7 @@ static bool js_gfx_GFXTextureView_getType(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getType();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getType : Error processing arguments");
         return true;
     }
@@ -16216,7 +16216,7 @@ static bool js_gfx_GFXTextureView_getBaseLevel(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getBaseLevel();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getBaseLevel : Error processing arguments");
         return true;
     }
@@ -16234,10 +16234,10 @@ static bool js_gfx_GFXTextureView_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXTextureViewInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXTextureViewInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_initialize : Error processing arguments");
         return true;
     }
@@ -16270,7 +16270,7 @@ static bool js_gfx_GFXTextureView_getBaseLayer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getBaseLayer();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getBaseLayer : Error processing arguments");
         return true;
     }
@@ -16288,7 +16288,7 @@ static bool js_gfx_GFXTextureView_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getDevice : Error processing arguments");
         return true;
     }
@@ -16306,7 +16306,7 @@ static bool js_gfx_GFXTextureView_getFormat(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getFormat();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getFormat : Error processing arguments");
         return true;
     }
@@ -16324,7 +16324,7 @@ static bool js_gfx_GFXTextureView_getLayerCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getLayerCount();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getLayerCount : Error processing arguments");
         return true;
     }
@@ -16342,7 +16342,7 @@ static bool js_gfx_GFXTextureView_getLevelCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getLevelCount();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_getLevelCount : Error processing arguments");
         return true;
     }
@@ -16416,7 +16416,7 @@ static bool js_gfx_GFXSampler_getAddressW(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getAddressW();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getAddressW : Error processing arguments");
         return true;
     }
@@ -16434,7 +16434,7 @@ static bool js_gfx_GFXSampler_getMaxAnisotropy(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getMaxAnisotropy();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getMaxAnisotropy : Error processing arguments");
         return true;
     }
@@ -16452,7 +16452,7 @@ static bool js_gfx_GFXSampler_getMipLODBias(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         float result = cobj->getMipLODBias();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getMipLODBias : Error processing arguments");
         return true;
     }
@@ -16470,7 +16470,7 @@ static bool js_gfx_GFXSampler_getCmpFunc(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getCmpFunc();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getCmpFunc : Error processing arguments");
         return true;
     }
@@ -16488,7 +16488,7 @@ static bool js_gfx_GFXSampler_getBorderColor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXColor& result = cobj->getBorderColor();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getBorderColor : Error processing arguments");
         return true;
     }
@@ -16506,7 +16506,7 @@ static bool js_gfx_GFXSampler_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::String& result = cobj->getName();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getName : Error processing arguments");
         return true;
     }
@@ -16524,7 +16524,7 @@ static bool js_gfx_GFXSampler_getMipFilter(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getMipFilter();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getMipFilter : Error processing arguments");
         return true;
     }
@@ -16542,7 +16542,7 @@ static bool js_gfx_GFXSampler_getAddressV(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getAddressV();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getAddressV : Error processing arguments");
         return true;
     }
@@ -16560,7 +16560,7 @@ static bool js_gfx_GFXSampler_getAddressU(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getAddressU();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getAddressU : Error processing arguments");
         return true;
     }
@@ -16578,7 +16578,7 @@ static bool js_gfx_GFXSampler_getMagFilter(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getMagFilter();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getMagFilter : Error processing arguments");
         return true;
     }
@@ -16596,10 +16596,10 @@ static bool js_gfx_GFXSampler_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXSamplerInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXSamplerInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_initialize : Error processing arguments");
         return true;
     }
@@ -16632,7 +16632,7 @@ static bool js_gfx_GFXSampler_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getDevice : Error processing arguments");
         return true;
     }
@@ -16650,7 +16650,7 @@ static bool js_gfx_GFXSampler_getMinLOD(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getMinLOD();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getMinLOD : Error processing arguments");
         return true;
     }
@@ -16668,7 +16668,7 @@ static bool js_gfx_GFXSampler_getMinFilter(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getMinFilter();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getMinFilter : Error processing arguments");
         return true;
     }
@@ -16686,7 +16686,7 @@ static bool js_gfx_GFXSampler_getMaxLOD(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getMaxLOD();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_getMaxLOD : Error processing arguments");
         return true;
     }
@@ -16766,7 +16766,7 @@ static bool js_gfx_GFXShader_getStages(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXShaderStage>& result = cobj->getStages();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_getStages : Error processing arguments");
         return true;
     }
@@ -16784,7 +16784,7 @@ static bool js_gfx_GFXShader_getName(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::String& result = cobj->getName();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_getName : Error processing arguments");
         return true;
     }
@@ -16802,7 +16802,7 @@ static bool js_gfx_GFXShader_getHash(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getHash();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_getHash : Error processing arguments");
         return true;
     }
@@ -16820,7 +16820,7 @@ static bool js_gfx_GFXShader_getSamplers(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXUniformSampler>& result = cobj->getSamplers();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_getSamplers : Error processing arguments");
         return true;
     }
@@ -16838,10 +16838,10 @@ static bool js_gfx_GFXShader_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXShaderInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXShaderInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_initialize : Error processing arguments");
         return true;
     }
@@ -16874,7 +16874,7 @@ static bool js_gfx_GFXShader_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_getDevice : Error processing arguments");
         return true;
     }
@@ -16892,7 +16892,7 @@ static bool js_gfx_GFXShader_getBlocks(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXUniformBlock>& result = cobj->getBlocks();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_getBlocks : Error processing arguments");
         return true;
     }
@@ -16964,7 +16964,7 @@ static bool js_gfx_GFXInputAssembler_getFirstIndex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getFirstIndex();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getFirstIndex : Error processing arguments");
         return true;
     }
@@ -16982,7 +16982,7 @@ static bool js_gfx_GFXInputAssembler_getVertexOffset(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getVertexOffset();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getVertexOffset : Error processing arguments");
         return true;
     }
@@ -17000,7 +17000,7 @@ static bool js_gfx_GFXInputAssembler_getVertexCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getVertexCount();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getVertexCount : Error processing arguments");
         return true;
     }
@@ -17018,7 +17018,7 @@ static bool js_gfx_GFXInputAssembler_setIndexCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setIndexCount : Error processing arguments");
         cobj->setIndexCount(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -17037,7 +17037,7 @@ static bool js_gfx_GFXInputAssembler_setFirstInstance(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setFirstInstance : Error processing arguments");
         cobj->setFirstInstance(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -17071,7 +17071,7 @@ static bool js_gfx_GFXInputAssembler_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getDevice : Error processing arguments");
         return true;
     }
@@ -17089,7 +17089,7 @@ static bool js_gfx_GFXInputAssembler_setVertexOffset(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setVertexOffset : Error processing arguments");
         cobj->setVertexOffset(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -17108,7 +17108,7 @@ static bool js_gfx_GFXInputAssembler_getInstanceCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getInstanceCount();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getInstanceCount : Error processing arguments");
         return true;
     }
@@ -17126,7 +17126,7 @@ static bool js_gfx_GFXInputAssembler_getIndexCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getIndexCount();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getIndexCount : Error processing arguments");
         return true;
     }
@@ -17144,7 +17144,7 @@ static bool js_gfx_GFXInputAssembler_getIndirectBuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXBuffer* result = cobj->getIndirectBuffer();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getIndirectBuffer : Error processing arguments");
         return true;
     }
@@ -17162,7 +17162,7 @@ static bool js_gfx_GFXInputAssembler_getVertexBuffers(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXBuffer *>& result = cobj->getVertexBuffers();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getVertexBuffers : Error processing arguments");
         return true;
     }
@@ -17180,10 +17180,10 @@ static bool js_gfx_GFXInputAssembler_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXInputAssemblerInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXInputAssemblerInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_initialize : Error processing arguments");
         return true;
     }
@@ -17201,7 +17201,7 @@ static bool js_gfx_GFXInputAssembler_setFirstVertex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setFirstVertex : Error processing arguments");
         cobj->setFirstVertex(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -17220,7 +17220,7 @@ static bool js_gfx_GFXInputAssembler_getFirstVertex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getFirstVertex();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getFirstVertex : Error processing arguments");
         return true;
     }
@@ -17238,7 +17238,7 @@ static bool js_gfx_GFXInputAssembler_setVertexCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setVertexCount : Error processing arguments");
         cobj->setVertexCount(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -17257,7 +17257,7 @@ static bool js_gfx_GFXInputAssembler_getAttributes(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXAttribute>& result = cobj->getAttributes();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getAttributes : Error processing arguments");
         return true;
     }
@@ -17275,7 +17275,7 @@ static bool js_gfx_GFXInputAssembler_getIndexBuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXBuffer* result = cobj->getIndexBuffer();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getIndexBuffer : Error processing arguments");
         return true;
     }
@@ -17293,7 +17293,7 @@ static bool js_gfx_GFXInputAssembler_setFirstIndex(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setFirstIndex : Error processing arguments");
         cobj->setFirstIndex(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -17312,7 +17312,7 @@ static bool js_gfx_GFXInputAssembler_setInstanceCount(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<unsigned int, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setInstanceCount : Error processing arguments");
         cobj->setInstanceCount(HolderType<unsigned int, false>::value(arg0));
         return true;
@@ -17331,7 +17331,7 @@ static bool js_gfx_GFXInputAssembler_getFirstInstance(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getFirstInstance();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getFirstInstance : Error processing arguments");
         return true;
     }
@@ -17409,7 +17409,7 @@ static bool js_gfx_GFXRenderPass_getColorAttachments(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXColorAttachment>& result = cobj->getColorAttachments();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_getColorAttachments : Error processing arguments");
         return true;
     }
@@ -17427,7 +17427,7 @@ static bool js_gfx_GFXRenderPass_getSubPasses(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXSubPass>& result = cobj->getSubPasses();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_getSubPasses : Error processing arguments");
         return true;
     }
@@ -17445,10 +17445,10 @@ static bool js_gfx_GFXRenderPass_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXRenderPassInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXRenderPassInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_initialize : Error processing arguments");
         return true;
     }
@@ -17481,7 +17481,7 @@ static bool js_gfx_GFXRenderPass_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_getDevice : Error processing arguments");
         return true;
     }
@@ -17499,7 +17499,7 @@ static bool js_gfx_GFXRenderPass_getDepthStencilAttachment(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXDepthStencilAttachment& result = cobj->getDepthStencilAttachment();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_getDepthStencilAttachment : Error processing arguments");
         return true;
     }
@@ -17569,7 +17569,7 @@ static bool js_gfx_GFXFramebuffer_getDepthStencilView(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXTextureView* result = cobj->getDepthStencilView();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_getDepthStencilView : Error processing arguments");
         return true;
     }
@@ -17587,7 +17587,7 @@ static bool js_gfx_GFXFramebuffer_isOffscreen(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->isOffscreen();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_isOffscreen : Error processing arguments");
         return true;
     }
@@ -17605,7 +17605,7 @@ static bool js_gfx_GFXFramebuffer_getColorViews(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXTextureView *>& result = cobj->getColorViews();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_getColorViews : Error processing arguments");
         return true;
     }
@@ -17623,10 +17623,10 @@ static bool js_gfx_GFXFramebuffer_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXFramebufferInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXFramebufferInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_initialize : Error processing arguments");
         return true;
     }
@@ -17659,7 +17659,7 @@ static bool js_gfx_GFXFramebuffer_getRenderPass(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXRenderPass* result = cobj->getRenderPass();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_getRenderPass : Error processing arguments");
         return true;
     }
@@ -17677,7 +17677,7 @@ static bool js_gfx_GFXFramebuffer_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_getDevice : Error processing arguments");
         return true;
     }
@@ -17749,8 +17749,8 @@ static bool js_gfx_GFXBindingLayout_bindTextureView(se::State& s)
     if (argc == 2) {
         HolderType<unsigned int, false>::local_type arg0 = {};
         HolderType<cocos2d::GFXTextureView*, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_bindTextureView : Error processing arguments");
         cobj->bindTextureView(HolderType<unsigned int, false>::value(arg0), HolderType<cocos2d::GFXTextureView*, false>::value(arg1));
         return true;
@@ -17770,8 +17770,8 @@ static bool js_gfx_GFXBindingLayout_bindBuffer(se::State& s)
     if (argc == 2) {
         HolderType<unsigned int, false>::local_type arg0 = {};
         HolderType<cocos2d::GFXBuffer*, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_bindBuffer : Error processing arguments");
         cobj->bindBuffer(HolderType<unsigned int, false>::value(arg0), HolderType<cocos2d::GFXBuffer*, false>::value(arg1));
         return true;
@@ -17790,7 +17790,7 @@ static bool js_gfx_GFXBindingLayout_getBindingUnits(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXBindingUnit>& result = cobj->getBindingUnits();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_getBindingUnits : Error processing arguments");
         return true;
     }
@@ -17809,8 +17809,8 @@ static bool js_gfx_GFXBindingLayout_bindSampler(se::State& s)
     if (argc == 2) {
         HolderType<unsigned int, false>::local_type arg0 = {};
         HolderType<cocos2d::GFXSampler*, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_bindSampler : Error processing arguments");
         cobj->bindSampler(HolderType<unsigned int, false>::value(arg0), HolderType<cocos2d::GFXSampler*, false>::value(arg1));
         return true;
@@ -17844,10 +17844,10 @@ static bool js_gfx_GFXBindingLayout_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXBindingLayoutInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXBindingLayoutInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_initialize : Error processing arguments");
         return true;
     }
@@ -17880,7 +17880,7 @@ static bool js_gfx_GFXBindingLayout_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_getDevice : Error processing arguments");
         return true;
     }
@@ -17952,7 +17952,7 @@ static bool js_gfx_GFXPipelineLayout_getLayouts(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXBindingLayout *>& result = cobj->getLayouts();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayout_getLayouts : Error processing arguments");
         return true;
     }
@@ -17970,10 +17970,10 @@ static bool js_gfx_GFXPipelineLayout_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXPipelineLayoutInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayout_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXPipelineLayoutInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayout_initialize : Error processing arguments");
         return true;
     }
@@ -18006,7 +18006,7 @@ static bool js_gfx_GFXPipelineLayout_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayout_getDevice : Error processing arguments");
         return true;
     }
@@ -18024,7 +18024,7 @@ static bool js_gfx_GFXPipelineLayout_getPushConstantsRanges(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXPushConstantRange>& result = cobj->getPushConstantsRanges();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayout_getPushConstantsRanges : Error processing arguments");
         return true;
     }
@@ -18093,7 +18093,7 @@ static bool js_gfx_GFXPipelineState_getRasterizerState(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXRasterizerState& result = cobj->getRasterizerState();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getRasterizerState : Error processing arguments");
         return true;
     }
@@ -18111,7 +18111,7 @@ static bool js_gfx_GFXPipelineState_getShader(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXShader* result = cobj->getShader();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getShader : Error processing arguments");
         return true;
     }
@@ -18129,7 +18129,7 @@ static bool js_gfx_GFXPipelineState_getInputState(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXInputState& result = cobj->getInputState();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getInputState : Error processing arguments");
         return true;
     }
@@ -18147,7 +18147,7 @@ static bool js_gfx_GFXPipelineState_getPrimitive(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getPrimitive();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getPrimitive : Error processing arguments");
         return true;
     }
@@ -18165,7 +18165,7 @@ static bool js_gfx_GFXPipelineState_getDepthStencilState(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXDepthStencilState& result = cobj->getDepthStencilState();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getDepthStencilState : Error processing arguments");
         return true;
     }
@@ -18183,7 +18183,7 @@ static bool js_gfx_GFXPipelineState_getBlendState(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXBlendState& result = cobj->getBlendState();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getBlendState : Error processing arguments");
         return true;
     }
@@ -18201,7 +18201,7 @@ static bool js_gfx_GFXPipelineState_getPipelineLayout(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXPipelineLayout* result = cobj->getPipelineLayout();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getPipelineLayout : Error processing arguments");
         return true;
     }
@@ -18219,10 +18219,10 @@ static bool js_gfx_GFXPipelineState_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXPipelineStateInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXPipelineStateInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_initialize : Error processing arguments");
         return true;
     }
@@ -18255,7 +18255,7 @@ static bool js_gfx_GFXPipelineState_getRenderPass(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const cocos2d::GFXRenderPass* result = cobj->getRenderPass();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getRenderPass : Error processing arguments");
         return true;
     }
@@ -18273,7 +18273,7 @@ static bool js_gfx_GFXPipelineState_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getDevice : Error processing arguments");
         return true;
     }
@@ -18291,7 +18291,7 @@ static bool js_gfx_GFXPipelineState_getDynamicStates(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<cocos2d::GFXDynamicState>& result = cobj->getDynamicStates();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_getDynamicStates : Error processing arguments");
         return true;
     }
@@ -18382,7 +18382,7 @@ static bool js_gfx_GFXCommandAllocator_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandAllocator_getDevice : Error processing arguments");
         return true;
     }
@@ -18448,7 +18448,7 @@ static bool js_gfx_GFXCommandBuffer_draw(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXInputAssembler*, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_draw : Error processing arguments");
         cobj->draw(HolderType<cocos2d::GFXInputAssembler*, false>::value(arg0));
         return true;
@@ -18467,7 +18467,7 @@ static bool js_gfx_GFXCommandBuffer_setBlendConstants(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXColor, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setBlendConstants : Error processing arguments");
         cobj->setBlendConstants(HolderType<cocos2d::GFXColor, true>::value(arg0));
         return true;
@@ -18487,8 +18487,8 @@ static bool js_gfx_GFXCommandBuffer_setDepthBound(se::State& s)
     if (argc == 2) {
         HolderType<float, false>::local_type arg0 = {};
         HolderType<float, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setDepthBound : Error processing arguments");
         cobj->setDepthBound(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1));
         return true;
@@ -18507,7 +18507,7 @@ static bool js_gfx_GFXCommandBuffer_getAllocator(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXCommandAllocator* result = cobj->getAllocator();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_getAllocator : Error processing arguments");
         return true;
     }
@@ -18528,10 +18528,10 @@ static bool js_gfx_GFXCommandBuffer_copyBufferToTexture(se::State& s)
         HolderType<cocos2d::GFXTexture*, false>::local_type arg1 = {};
         HolderType<cocos2d::GFXTextureLayout, false>::local_type arg2 = {};
         HolderType<std::vector<cocos2d::GFXBufferTextureCopy>, true>::local_type arg3 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
-        ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
-        ok &= sevalue_to_native(args[3], &arg3); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_copyBufferToTexture : Error processing arguments");
         cobj->copyBufferToTexture(HolderType<cocos2d::GFXBuffer*, false>::value(arg0), HolderType<cocos2d::GFXTexture*, false>::value(arg1), HolderType<cocos2d::GFXTextureLayout, false>::value(arg2), HolderType<std::vector<cocos2d::GFXBufferTextureCopy>, true>::value(arg3));
         return true;
@@ -18550,7 +18550,7 @@ static bool js_gfx_GFXCommandBuffer_setLineWidth(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<float, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setLineWidth : Error processing arguments");
         cobj->setLineWidth(HolderType<float, false>::value(arg0));
         return true;
@@ -18571,9 +18571,9 @@ static bool js_gfx_GFXCommandBuffer_updateBuffer(se::State& s)
         HolderType<cocos2d::GFXBuffer*, false>::local_type arg0 = {};
         HolderType<void*, false>::local_type arg1 = {};
         HolderType<unsigned int, false>::local_type arg2 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
-        ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_updateBuffer : Error processing arguments");
         cobj->updateBuffer(HolderType<cocos2d::GFXBuffer*, false>::value(arg0), HolderType<void*, false>::value(arg1), HolderType<unsigned int, false>::value(arg2));
         return true;
@@ -18583,10 +18583,10 @@ static bool js_gfx_GFXCommandBuffer_updateBuffer(se::State& s)
         HolderType<void*, false>::local_type arg1 = {};
         HolderType<unsigned int, false>::local_type arg2 = {};
         HolderType<unsigned int, false>::local_type arg3 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
-        ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
-        ok &= sevalue_to_native(args[3], &arg3); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_updateBuffer : Error processing arguments");
         cobj->updateBuffer(HolderType<cocos2d::GFXBuffer*, false>::value(arg0), HolderType<void*, false>::value(arg1), HolderType<unsigned int, false>::value(arg2), HolderType<unsigned int, false>::value(arg3));
         return true;
@@ -18621,8 +18621,8 @@ static bool js_gfx_GFXCommandBuffer_setStencilWriteMask(se::State& s)
     if (argc == 2) {
         HolderType<cocos2d::GFXStencilFace, false>::local_type arg0 = {};
         HolderType<unsigned int, false>::local_type arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setStencilWriteMask : Error processing arguments");
         cobj->setStencilWriteMask(HolderType<cocos2d::GFXStencilFace, false>::value(arg0), HolderType<unsigned int, false>::value(arg1));
         return true;
@@ -18641,7 +18641,7 @@ static bool js_gfx_GFXCommandBuffer_getNumInstances(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNumInstances();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_getNumInstances : Error processing arguments");
         return true;
     }
@@ -18661,9 +18661,9 @@ static bool js_gfx_GFXCommandBuffer_setStencilCompareMask(se::State& s)
         HolderType<cocos2d::GFXStencilFace, false>::local_type arg0 = {};
         HolderType<int, false>::local_type arg1 = {};
         HolderType<unsigned int, false>::local_type arg2 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
-        ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setStencilCompareMask : Error processing arguments");
         cobj->setStencilCompareMask(HolderType<cocos2d::GFXStencilFace, false>::value(arg0), HolderType<int, false>::value(arg1), HolderType<unsigned int, false>::value(arg2));
         return true;
@@ -18682,7 +18682,7 @@ static bool js_gfx_GFXCommandBuffer_bindInputAssembler(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXInputAssembler*, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_bindInputAssembler : Error processing arguments");
         cobj->bindInputAssembler(HolderType<cocos2d::GFXInputAssembler*, false>::value(arg0));
         return true;
@@ -18701,7 +18701,7 @@ static bool js_gfx_GFXCommandBuffer_bindPipelineState(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXPipelineState*, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_bindPipelineState : Error processing arguments");
         cobj->bindPipelineState(HolderType<cocos2d::GFXPipelineState*, false>::value(arg0));
         return true;
@@ -18735,7 +18735,7 @@ static bool js_gfx_GFXCommandBuffer_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_getDevice : Error processing arguments");
         return true;
     }
@@ -18753,7 +18753,7 @@ static bool js_gfx_GFXCommandBuffer_getNumTris(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNumTris();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_getNumTris : Error processing arguments");
         return true;
     }
@@ -18771,7 +18771,7 @@ static bool js_gfx_GFXCommandBuffer_setViewport(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXViewport, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setViewport : Error processing arguments");
         cobj->setViewport(HolderType<cocos2d::GFXViewport, true>::value(arg0));
         return true;
@@ -18792,9 +18792,9 @@ static bool js_gfx_GFXCommandBuffer_setDepthBias(se::State& s)
         HolderType<float, false>::local_type arg0 = {};
         HolderType<float, false>::local_type arg1 = {};
         HolderType<float, false>::local_type arg2 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
-        ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setDepthBias : Error processing arguments");
         cobj->setDepthBias(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2));
         return true;
@@ -18828,7 +18828,7 @@ static bool js_gfx_GFXCommandBuffer_getType(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getType();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_getType : Error processing arguments");
         return true;
     }
@@ -18846,7 +18846,7 @@ static bool js_gfx_GFXCommandBuffer_bindBindingLayout(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXBindingLayout*, false>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_bindBindingLayout : Error processing arguments");
         cobj->bindBindingLayout(HolderType<cocos2d::GFXBindingLayout*, false>::value(arg0));
         return true;
@@ -18880,10 +18880,10 @@ static bool js_gfx_GFXCommandBuffer_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXCommandBufferInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXCommandBufferInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_initialize : Error processing arguments");
         return true;
     }
@@ -18901,7 +18901,7 @@ static bool js_gfx_GFXCommandBuffer_setScissor(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXRect, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setScissor : Error processing arguments");
         cobj->setScissor(HolderType<cocos2d::GFXRect, true>::value(arg0));
         return true;
@@ -18925,12 +18925,12 @@ static bool js_gfx_GFXCommandBuffer_beginRenderPass(se::State& s)
         HolderType<std::vector<cocos2d::GFXColor>, true>::local_type arg3 = {};
         HolderType<float, false>::local_type arg4 = {};
         HolderType<int, false>::local_type arg5 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
-        ok &= sevalue_to_native(args[1], &arg1); //is_reference True;
-        ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
-        ok &= sevalue_to_native(args[3], &arg3); //is_reference True;
-        ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
-        ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
+        ok &= SEVALUE_TO_NATIVE(args[5], &arg5, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_beginRenderPass : Error processing arguments");
         cobj->beginRenderPass(HolderType<cocos2d::GFXFramebuffer*, false>::value(arg0), HolderType<cocos2d::GFXRect, true>::value(arg1), HolderType<cocos2d::GFXClearFlagBit, false>::value(arg2), HolderType<std::vector<cocos2d::GFXColor>, true>::value(arg3), HolderType<float, false>::value(arg4), HolderType<int, false>::value(arg5));
         return true;
@@ -18949,7 +18949,7 @@ static bool js_gfx_GFXCommandBuffer_getNumDrawCalls(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         unsigned int result = cobj->getNumDrawCalls();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_getNumDrawCalls : Error processing arguments");
         return true;
     }
@@ -19039,7 +19039,7 @@ static bool js_gfx_GFXQueue_getType(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cobj->getType();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_getType : Error processing arguments");
         return true;
     }
@@ -19057,7 +19057,7 @@ static bool js_gfx_GFXQueue_submit(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<std::vector<cocos2d::GFXCommandBuffer *>, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_submit : Error processing arguments");
         cobj->submit(HolderType<std::vector<cocos2d::GFXCommandBuffer *>, true>::value(arg0));
         return true;
@@ -19076,10 +19076,10 @@ static bool js_gfx_GFXQueue_initialize(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::GFXQueueInfo, true>::local_type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
+        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_initialize : Error processing arguments");
         bool result = cobj->initialize(HolderType<cocos2d::GFXQueueInfo, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_initialize : Error processing arguments");
         return true;
     }
@@ -19112,7 +19112,7 @@ static bool js_gfx_GFXQueue_getDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::GFXDevice* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval());
+        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_getDevice : Error processing arguments");
         return true;
     }

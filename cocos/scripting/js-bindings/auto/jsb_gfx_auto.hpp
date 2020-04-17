@@ -12,7 +12,7 @@ bool js_register_cocos2d_GFXOffset(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXOffset *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXOffset *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXOffset);
 
 extern se::Object* __jsb_cocos2d_GFXRect_proto;
@@ -22,7 +22,7 @@ bool js_register_cocos2d_GFXRect(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXRect *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXRect *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXRect);
 
 extern se::Object* __jsb_cocos2d_GFXExtent_proto;
@@ -32,7 +32,7 @@ bool js_register_cocos2d_GFXExtent(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXExtent *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXExtent *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXExtent);
 
 extern se::Object* __jsb_cocos2d_GFXTextureSubres_proto;
@@ -42,7 +42,7 @@ bool js_register_cocos2d_GFXTextureSubres(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXTextureSubres *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXTextureSubres *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXTextureSubres);
 
 extern se::Object* __jsb_cocos2d_GFXTextureCopy_proto;
@@ -52,7 +52,7 @@ bool js_register_cocos2d_GFXTextureCopy(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXTextureCopy *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXTextureCopy *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXTextureCopy);
 
 extern se::Object* __jsb_cocos2d_GFXBufferTextureCopy_proto;
@@ -62,7 +62,7 @@ bool js_register_cocos2d_GFXBufferTextureCopy(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBufferTextureCopy *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXBufferTextureCopy *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBufferTextureCopy);
 
 extern se::Object* __jsb_cocos2d_GFXViewport_proto;
@@ -72,7 +72,7 @@ bool js_register_cocos2d_GFXViewport(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXViewport *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXViewport *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXViewport);
 
 extern se::Object* __jsb_cocos2d_GFXColor_proto;
@@ -82,7 +82,7 @@ bool js_register_cocos2d_GFXColor(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXColor *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXColor *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXColor);
 
 extern se::Object* __jsb_cocos2d_GFXDeviceInfo_proto;
@@ -92,7 +92,7 @@ bool js_register_cocos2d_GFXDeviceInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXDeviceInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXDeviceInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXDeviceInfo);
 
 extern se::Object* __jsb_cocos2d_GFXWindowInfo_proto;
@@ -102,7 +102,7 @@ bool js_register_cocos2d_GFXWindowInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXWindowInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXWindowInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXWindowInfo);
 
 extern se::Object* __jsb_cocos2d_GFXContextInfo_proto;
@@ -112,7 +112,7 @@ bool js_register_cocos2d_GFXContextInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXContextInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXContextInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXContextInfo);
 
 extern se::Object* __jsb_cocos2d_GFXBufferInfo_proto;
@@ -122,7 +122,7 @@ bool js_register_cocos2d_GFXBufferInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBufferInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXBufferInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBufferInfo);
 
 extern se::Object* __jsb_cocos2d_GFXDrawInfo_proto;
@@ -132,7 +132,7 @@ bool js_register_cocos2d_GFXDrawInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXDrawInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXDrawInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXDrawInfo);
 
 extern se::Object* __jsb_cocos2d_GFXIndirectBuffer_proto;
@@ -142,7 +142,7 @@ bool js_register_cocos2d_GFXIndirectBuffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXIndirectBuffer *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXIndirectBuffer *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXIndirectBuffer);
 
 extern se::Object* __jsb_cocos2d_GFXTextureInfo_proto;
@@ -152,7 +152,7 @@ bool js_register_cocos2d_GFXTextureInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXTextureInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXTextureInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXTextureInfo);
 
 extern se::Object* __jsb_cocos2d_GFXTextureViewInfo_proto;
@@ -162,7 +162,7 @@ bool js_register_cocos2d_GFXTextureViewInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXTextureViewInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXTextureViewInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXTextureViewInfo);
 
 extern se::Object* __jsb_cocos2d_GFXSamplerInfo_proto;
@@ -172,7 +172,7 @@ bool js_register_cocos2d_GFXSamplerInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXSamplerInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXSamplerInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXSamplerInfo);
 
 extern se::Object* __jsb_cocos2d_GFXShaderMacro_proto;
@@ -182,7 +182,7 @@ bool js_register_cocos2d_GFXShaderMacro(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXShaderMacro *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXShaderMacro *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXShaderMacro);
 
 extern se::Object* __jsb_cocos2d_GFXUniform_proto;
@@ -192,7 +192,7 @@ bool js_register_cocos2d_GFXUniform(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXUniform *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXUniform *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXUniform);
 
 extern se::Object* __jsb_cocos2d_GFXUniformBlock_proto;
@@ -202,7 +202,7 @@ bool js_register_cocos2d_GFXUniformBlock(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXUniformBlock *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXUniformBlock *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXUniformBlock);
 
 extern se::Object* __jsb_cocos2d_GFXUniformSampler_proto;
@@ -212,7 +212,7 @@ bool js_register_cocos2d_GFXUniformSampler(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXUniformSampler *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXUniformSampler *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXUniformSampler);
 
 extern se::Object* __jsb_cocos2d_GFXShaderStage_proto;
@@ -222,7 +222,7 @@ bool js_register_cocos2d_GFXShaderStage(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXShaderStage *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXShaderStage *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXShaderStage);
 
 extern se::Object* __jsb_cocos2d_GFXShaderInfo_proto;
@@ -232,7 +232,7 @@ bool js_register_cocos2d_GFXShaderInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXShaderInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXShaderInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXShaderInfo);
 
 extern se::Object* __jsb_cocos2d_GFXAttribute_proto;
@@ -242,7 +242,7 @@ bool js_register_cocos2d_GFXAttribute(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXAttribute *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXAttribute *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXAttribute);
 
 extern se::Object* __jsb_cocos2d_GFXInputAssemblerInfo_proto;
@@ -252,7 +252,7 @@ bool js_register_cocos2d_GFXInputAssemblerInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXInputAssemblerInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXInputAssemblerInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXInputAssemblerInfo);
 
 extern se::Object* __jsb_cocos2d_GFXColorAttachment_proto;
@@ -262,7 +262,7 @@ bool js_register_cocos2d_GFXColorAttachment(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXColorAttachment *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXColorAttachment *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXColorAttachment);
 
 extern se::Object* __jsb_cocos2d_GFXDepthStencilAttachment_proto;
@@ -272,7 +272,7 @@ bool js_register_cocos2d_GFXDepthStencilAttachment(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXDepthStencilAttachment *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXDepthStencilAttachment *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXDepthStencilAttachment);
 
 extern se::Object* __jsb_cocos2d_GFXSubPass_proto;
@@ -282,7 +282,7 @@ bool js_register_cocos2d_GFXSubPass(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXSubPass *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXSubPass *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXSubPass);
 
 extern se::Object* __jsb_cocos2d_GFXRenderPassInfo_proto;
@@ -292,7 +292,7 @@ bool js_register_cocos2d_GFXRenderPassInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXRenderPassInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXRenderPassInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXRenderPassInfo);
 
 extern se::Object* __jsb_cocos2d_GFXFramebufferInfo_proto;
@@ -302,7 +302,7 @@ bool js_register_cocos2d_GFXFramebufferInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXFramebufferInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXFramebufferInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXFramebufferInfo);
 
 extern se::Object* __jsb_cocos2d_GFXBinding_proto;
@@ -312,7 +312,7 @@ bool js_register_cocos2d_GFXBinding(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBinding *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXBinding *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBinding);
 
 extern se::Object* __jsb_cocos2d_GFXBindingLayoutInfo_proto;
@@ -322,7 +322,7 @@ bool js_register_cocos2d_GFXBindingLayoutInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBindingLayoutInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXBindingLayoutInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBindingLayoutInfo);
 
 extern se::Object* __jsb_cocos2d_GFXBindingUnit_proto;
@@ -332,7 +332,7 @@ bool js_register_cocos2d_GFXBindingUnit(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBindingUnit *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXBindingUnit *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBindingUnit);
 
 extern se::Object* __jsb_cocos2d_GFXPushConstantRange_proto;
@@ -342,7 +342,7 @@ bool js_register_cocos2d_GFXPushConstantRange(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXPushConstantRange *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXPushConstantRange *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXPushConstantRange);
 
 extern se::Object* __jsb_cocos2d_GFXPipelineLayoutInfo_proto;
@@ -352,7 +352,7 @@ bool js_register_cocos2d_GFXPipelineLayoutInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXPipelineLayoutInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXPipelineLayoutInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXPipelineLayoutInfo);
 
 extern se::Object* __jsb_cocos2d_GFXInputState_proto;
@@ -362,7 +362,7 @@ bool js_register_cocos2d_GFXInputState(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXInputState *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXInputState *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXInputState);
 
 extern se::Object* __jsb_cocos2d_GFXRasterizerState_proto;
@@ -372,7 +372,7 @@ bool js_register_cocos2d_GFXRasterizerState(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXRasterizerState *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXRasterizerState *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXRasterizerState);
 
 extern se::Object* __jsb_cocos2d_GFXDepthStencilState_proto;
@@ -382,7 +382,7 @@ bool js_register_cocos2d_GFXDepthStencilState(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXDepthStencilState *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXDepthStencilState *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXDepthStencilState);
 
 extern se::Object* __jsb_cocos2d_GFXBlendTarget_proto;
@@ -392,7 +392,7 @@ bool js_register_cocos2d_GFXBlendTarget(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBlendTarget *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXBlendTarget *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBlendTarget);
 
 extern se::Object* __jsb_cocos2d_GFXBlendState_proto;
@@ -402,7 +402,7 @@ bool js_register_cocos2d_GFXBlendState(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXBlendState *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXBlendState *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXBlendState);
 
 extern se::Object* __jsb_cocos2d_GFXPipelineStateInfo_proto;
@@ -412,7 +412,7 @@ bool js_register_cocos2d_GFXPipelineStateInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXPipelineStateInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXPipelineStateInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXPipelineStateInfo);
 
 extern se::Object* __jsb_cocos2d_GFXCommandBufferInfo_proto;
@@ -422,7 +422,7 @@ bool js_register_cocos2d_GFXCommandBufferInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXCommandBufferInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXCommandBufferInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandBufferInfo);
 
 extern se::Object* __jsb_cocos2d_GFXQueueInfo_proto;
@@ -432,7 +432,7 @@ bool js_register_cocos2d_GFXQueueInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXQueueInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXQueueInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXQueueInfo);
 
 extern se::Object* __jsb_cocos2d_GFXFormatInfo_proto;
@@ -442,7 +442,7 @@ bool js_register_cocos2d_GFXFormatInfo(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXFormatInfo *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXFormatInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXFormatInfo);
 
 extern se::Object* __jsb_cocos2d_GFXMemoryStatus_proto;
@@ -452,7 +452,7 @@ bool js_register_cocos2d_GFXMemoryStatus(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cocos2d::GFXMemoryStatus *);
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::GFXMemoryStatus *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXMemoryStatus);
 
 extern se::Object* __jsb_cocos2d_GFXObject_proto;
