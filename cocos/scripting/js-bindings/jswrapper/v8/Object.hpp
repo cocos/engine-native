@@ -70,7 +70,7 @@ namespace se {
          *  @note The return value (non-null) has to be released manually.
          *  @deprecated This method is deprecated, please use `se::Object::createTypedArray` instead.
          */
-        SE_DEPRECATED_ATTRIBUTE static Object* createUint8TypedArray(uint8_t* bytes, size_t byteLength);
+        SE_DEPRECATED_ATTRIBUTE static Object* createUint8TypedArray(const uint8_t* bytes, size_t byteLength);
 
         enum class TypedArrayType
         {
@@ -95,7 +95,7 @@ namespace se {
          *  @return A JavaScript Typed Array Object whose backing store is the same as the one pointed data, or nullptr if there is an error.
          *  @note The return value (non-null) has to be released manually.
          */
-        static Object* createTypedArray(TypedArrayType type, void* data, size_t byteLength);
+        static Object* createTypedArray(TypedArrayType type, const void* data, size_t byteLength);
 
         /**
          *  @brief Creates a JavaScript Array Buffer object from an existing pointer.
@@ -104,7 +104,7 @@ namespace se {
          *  @return A Array Buffer Object whose backing store is the same as the one pointed to data, or nullptr if there is an error.
          *  @note The return value (non-null) has to be released manually.
          */
-        static Object* createArrayBufferObject(void* bytes, size_t byteLength);
+        static Object* createArrayBufferObject(const void* bytes, size_t byteLength);
 
         /**
          *  @brief Creates a JavaScript Object from a JSON formatted string.

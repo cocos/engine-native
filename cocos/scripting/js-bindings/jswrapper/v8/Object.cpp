@@ -202,7 +202,7 @@ namespace se {
         return obj;
     }
 
-    Object* Object::createArrayBufferObject(void* data, size_t byteLength)
+    Object* Object::createArrayBufferObject(const void* data, size_t byteLength)
     {
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
         if (data)
@@ -217,7 +217,7 @@ namespace se {
         return obj;
     }
     
-    Object* Object::createTypedArray(TypedArrayType type, void* data, size_t byteLength)
+    Object* Object::createTypedArray(TypedArrayType type, const void* data, size_t byteLength)
     {
         if (type == TypedArrayType::NONE)
         {
@@ -274,7 +274,7 @@ namespace se {
         return obj;
     }
 
-    Object* Object::createUint8TypedArray(uint8_t* data, size_t dataCount)
+    Object* Object::createUint8TypedArray(const uint8_t* data, size_t dataCount)
     {
         return createTypedArray(TypedArrayType::UINT8, data, dataCount);
     }
@@ -450,6 +450,18 @@ namespace se {
     void Object::setPrivateData(void* data)
     {
         assert(_privateData == nullptr);
+
+#if COCOS2D_DEBUG
+        {
+            auto iter = NativePtrToObjectMap::find(data);
+            if (iter != NativePtrToObjectMap::end()) {
+                auto prevName = iter->second->_getClass()->getName();
+                auto currentName = _getClass()->getName();
+                SE_LOGE("Object::setPrivateData duplicate addr %p, previouse object %s, new object %s ",
+                    data, prevName, currentName);
+            }
+        }
+#endif
         assert(NativePtrToObjectMap::find(data) == NativePtrToObjectMap::end());
         internal::setPrivate(__isolate, _obj, data, &_internalData);
         NativePtrToObjectMap::emplace(data, this);

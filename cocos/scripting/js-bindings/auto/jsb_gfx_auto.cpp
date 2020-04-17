@@ -1190,6 +1190,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXOffset * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXOffset*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("x", &field);
@@ -1440,6 +1445,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXRect * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXRect*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("x", &field);
@@ -1680,6 +1690,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXExtent * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXExtent*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("width", &field);
@@ -1930,6 +1945,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureSubres * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXTextureSubres*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("baseMipLevel", &field);
@@ -2222,6 +2242,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureCopy * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXTextureCopy*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("srcSubres", &field);
@@ -2556,6 +2581,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferTextureCopy * to
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXBufferTextureCopy*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("buffOffset", &field);
@@ -2906,6 +2936,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXViewport * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXViewport*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("left", &field);
@@ -3204,6 +3239,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXColor * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXColor*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("r", &field);
@@ -3490,38 +3530,17 @@ static bool js_gfx_GFXDeviceInfo_set_nativeHeight(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_GFXDeviceInfo_set_nativeHeight)
 
-static bool js_gfx_GFXDeviceInfo_get_sharedCtx(se::State& s)
-{
-    cocos2d::GFXDeviceInfo* cobj = (cocos2d::GFXDeviceInfo*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXDeviceInfo_get_sharedCtx : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= nativevalue_to_se(cobj->sharedCtx, jsret);
-    s.rval() = jsret;
-    return true;
-}
-SE_BIND_PROP_GET(js_gfx_GFXDeviceInfo_get_sharedCtx)
-
-static bool js_gfx_GFXDeviceInfo_set_sharedCtx(se::State& s)
-{
-    const auto& args = s.args();
-    cocos2d::GFXDeviceInfo* cobj = (cocos2d::GFXDeviceInfo*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXDeviceInfo_set_sharedCtx : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->sharedCtx); //is_reference False;
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXDeviceInfo_set_sharedCtx : Error processing new value");
-    return true;
-}
-SE_BIND_PROP_SET(js_gfx_GFXDeviceInfo_set_sharedCtx)
-
 
 template<>
 bool sevalue_to_native(const se::Value &from, cocos2d::GFXDeviceInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXDeviceInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("windowHandle", &field);
@@ -3695,7 +3714,6 @@ bool js_register_gfx_GFXDeviceInfo(se::Object* obj)
     cls->defineProperty("height", _SE(js_gfx_GFXDeviceInfo_get_height), _SE(js_gfx_GFXDeviceInfo_set_height));
     cls->defineProperty("nativeWidth", _SE(js_gfx_GFXDeviceInfo_get_nativeWidth), _SE(js_gfx_GFXDeviceInfo_set_nativeWidth));
     cls->defineProperty("nativeHeight", _SE(js_gfx_GFXDeviceInfo_get_nativeHeight), _SE(js_gfx_GFXDeviceInfo_set_nativeHeight));
-    cls->defineProperty("sharedCtx", _SE(js_gfx_GFXDeviceInfo_get_sharedCtx), _SE(js_gfx_GFXDeviceInfo_set_sharedCtx));
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXDeviceInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXDeviceInfo>(cls);
@@ -4002,6 +4020,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXWindowInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXWindowInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("title", &field);
@@ -4296,32 +4319,6 @@ static bool js_gfx_GFXContextInfo_set_windowHandle(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_GFXContextInfo_set_windowHandle)
 
-static bool js_gfx_GFXContextInfo_get_sharedCtx(se::State& s)
-{
-    cocos2d::GFXContextInfo* cobj = (cocos2d::GFXContextInfo*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXContextInfo_get_sharedCtx : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= nativevalue_to_se(cobj->sharedCtx, jsret);
-    s.rval() = jsret;
-    return true;
-}
-SE_BIND_PROP_GET(js_gfx_GFXContextInfo_get_sharedCtx)
-
-static bool js_gfx_GFXContextInfo_set_sharedCtx(se::State& s)
-{
-    const auto& args = s.args();
-    cocos2d::GFXContextInfo* cobj = (cocos2d::GFXContextInfo*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXContextInfo_set_sharedCtx : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->sharedCtx); //is_reference False;
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXContextInfo_set_sharedCtx : Error processing new value");
-    return true;
-}
-SE_BIND_PROP_SET(js_gfx_GFXContextInfo_set_sharedCtx)
-
 static bool js_gfx_GFXContextInfo_get_vsyncMode(se::State& s)
 {
     cocos2d::GFXContextInfo* cobj = (cocos2d::GFXContextInfo*)s.nativeThisObject();
@@ -4354,6 +4351,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXContextInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXContextInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("windowHandle", &field);
@@ -4478,7 +4480,6 @@ bool js_register_gfx_GFXContextInfo(se::Object* obj)
     auto cls = se::Class::create("GFXContextInfo", obj, nullptr, _SE(js_gfx_GFXContextInfo_constructor));
 
     cls->defineProperty("windowHandle", _SE(js_gfx_GFXContextInfo_get_windowHandle), _SE(js_gfx_GFXContextInfo_set_windowHandle));
-    cls->defineProperty("sharedCtx", _SE(js_gfx_GFXContextInfo_get_sharedCtx), _SE(js_gfx_GFXContextInfo_set_sharedCtx));
     cls->defineProperty("vsyncMode", _SE(js_gfx_GFXContextInfo_get_vsyncMode), _SE(js_gfx_GFXContextInfo_set_vsyncMode));
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXContextInfo_finalize));
     cls->install();
@@ -4630,6 +4631,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBufferInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXBufferInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("usage", &field);
@@ -4990,6 +4996,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXDrawInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXDrawInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("vertexCount", &field);
@@ -5226,6 +5237,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXIndirectBuffer * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXIndirectBuffer*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("drawInfos", &field);
@@ -5577,6 +5593,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXTextureInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("type", &field);
@@ -6017,6 +6038,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXTextureViewInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXTextureViewInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("texture", &field);
@@ -6565,6 +6591,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXSamplerInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXSamplerInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("name", &field);
@@ -6923,6 +6954,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderMacro * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXShaderMacro*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("macro", &field);
@@ -7131,6 +7167,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniform * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXUniform*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("name", &field);
@@ -7355,6 +7396,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniformBlock * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXUniformBlock*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("binding", &field);
@@ -7605,6 +7651,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXUniformSampler * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXUniformSampler*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("binding", &field);
@@ -7845,6 +7896,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderStage * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXShaderStage*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("type", &field);
@@ -8095,6 +8151,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXShaderInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXShaderInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("name", &field);
@@ -8387,6 +8448,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXAttribute * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXAttribute*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("name", &field);
@@ -8669,6 +8735,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXInputAssemblerInfo * t
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXInputAssemblerInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("attributes", &field);
@@ -8987,6 +9058,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXColorAttachment * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXColorAttachment*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("format", &field);
@@ -9389,6 +9465,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXDepthStencilAttachment
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXDepthStencilAttachment*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("format", &field);
@@ -9771,6 +9852,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXSubPass * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXSubPass*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("bindPoint", &field);
@@ -10043,6 +10129,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXRenderPassInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXRenderPassInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("colorAttachments", &field);
@@ -10293,6 +10384,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXFramebufferInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXFramebufferInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("renderPass", &field);
@@ -10533,6 +10629,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBinding * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXBinding*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("binding", &field);
@@ -10705,6 +10806,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBindingLayoutInfo * to
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXBindingLayoutInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("bindings", &field);
@@ -10952,6 +11058,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBindingUnit * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXBindingUnit*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("binding", &field);
@@ -11224,6 +11335,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXPushConstantRange * to
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXPushConstantRange*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("shaderType", &field);
@@ -11422,6 +11538,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXPipelineLayoutInfo * t
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXPipelineLayoutInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("pushConstantsRanges", &field);
@@ -11578,6 +11699,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXInputState * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXInputState*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("attributes", &field);
@@ -11955,6 +12081,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXRasterizerState * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXRasterizerState*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("isDiscard", &field);
@@ -12723,6 +12854,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXDepthStencilState * to
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXDepthStencilState*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("depthTest", &field);
@@ -13333,6 +13469,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendTarget * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXBlendTarget*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("blend", &field);
@@ -13637,6 +13778,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXBlendState * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXBlendState*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("isA2C", &field);
@@ -14032,6 +14178,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXPipelineStateInfo * to
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXPipelineStateInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("primitive", &field);
@@ -14326,6 +14477,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandBufferInfo * to
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXCommandBufferInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("allocator", &field);
@@ -14482,6 +14638,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXQueueInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXQueueInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("type", &field);
@@ -14781,6 +14942,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXFormatInfo * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXFormatInfo*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("name", &field);
@@ -15059,6 +15225,11 @@ bool sevalue_to_native(const se::Value &from, cocos2d::GFXMemoryStatus * to)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
+    auto* data = (cocos2d::GFXMemoryStatus*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
     se::Value field;
     bool ok = true;
     json->getProperty("bufferSize", &field);
@@ -15388,7 +15559,7 @@ static bool js_gfx_GFXDevice_hasFeature(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXFeature, false>::type arg0 = {};
+        HolderType<cocos2d::GFXFeature, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_hasFeature : Error processing arguments");
         bool result = cobj->hasFeature(HolderType<cocos2d::GFXFeature, false>::value(arg0));
@@ -15445,7 +15616,7 @@ static bool js_gfx_GFXDevice_setReverseCW(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<bool, false>::type arg0 = {};
+        HolderType<bool, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_setReverseCW : Error processing arguments");
         cobj->setReverseCW(HolderType<bool, false>::value(arg0));
@@ -15455,27 +15626,6 @@ static bool js_gfx_GFXDevice_setReverseCW(se::State& s)
     return false;
 }
 SE_BIND_PROP_SET(js_gfx_GFXDevice_setReverseCW)
-
-static bool js_gfx_GFXDevice_createCommandAllocator(se::State& s)
-{
-    cocos2d::GFXDevice* cobj = (cocos2d::GFXDevice*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXDevice_createCommandAllocator : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<cocos2d::GFXCommandAllocatorInfo*, true>::type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createCommandAllocator : Error processing arguments");
-        cocos2d::GFXCommandAllocator* result = cobj->createCommandAllocator(HolderType<cocos2d::GFXCommandAllocatorInfo*, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createCommandAllocator : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_gfx_GFXDevice_createCommandAllocator)
 
 static bool js_gfx_GFXDevice_getQueue(se::State& s)
 {
@@ -15665,10 +15815,10 @@ static bool js_gfx_GFXDevice_createPipelineState(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXPipelineStateInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXPipelineStateInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineState : Error processing arguments");
-        cocos2d::GFXPipelineState* result = cobj->createPipelineState(HolderType<cocos2d::GFXPipelineStateInfo*, true>::value(arg0));
+        cocos2d::GFXPipelineState* result = cobj->createPipelineState(HolderType<cocos2d::GFXPipelineStateInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineState : Error processing arguments");
         return true;
@@ -15686,10 +15836,10 @@ static bool js_gfx_GFXDevice_createCommandBuffer(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXCommandBufferInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXCommandBufferInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createCommandBuffer : Error processing arguments");
-        cocos2d::GFXCommandBuffer* result = cobj->createCommandBuffer(HolderType<cocos2d::GFXCommandBufferInfo*, true>::value(arg0));
+        cocos2d::GFXCommandBuffer* result = cobj->createCommandBuffer(HolderType<cocos2d::GFXCommandBufferInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createCommandBuffer : Error processing arguments");
         return true;
@@ -15722,10 +15872,10 @@ static bool js_gfx_GFXDevice_createTexture(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXTextureInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXTextureInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTexture : Error processing arguments");
-        cocos2d::GFXTexture* result = cobj->createTexture(HolderType<cocos2d::GFXTextureInfo*, true>::value(arg0));
+        cocos2d::GFXTexture* result = cobj->createTexture(HolderType<cocos2d::GFXTextureInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTexture : Error processing arguments");
         return true;
@@ -15776,10 +15926,10 @@ static bool js_gfx_GFXDevice_createFramebuffer(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXFramebufferInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXFramebufferInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createFramebuffer : Error processing arguments");
-        cocos2d::GFXFramebuffer* result = cobj->createFramebuffer(HolderType<cocos2d::GFXFramebufferInfo*, true>::value(arg0));
+        cocos2d::GFXFramebuffer* result = cobj->createFramebuffer(HolderType<cocos2d::GFXFramebufferInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createFramebuffer : Error processing arguments");
         return true;
@@ -15815,10 +15965,10 @@ static bool js_gfx_GFXDevice_createRenderPass(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXRenderPassInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXRenderPassInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createRenderPass : Error processing arguments");
-        cocos2d::GFXRenderPass* result = cobj->createRenderPass(HolderType<cocos2d::GFXRenderPassInfo*, true>::value(arg0));
+        cocos2d::GFXRenderPass* result = cobj->createRenderPass(HolderType<cocos2d::GFXRenderPassInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createRenderPass : Error processing arguments");
         return true;
@@ -15836,10 +15986,10 @@ static bool js_gfx_GFXDevice_createPipelineLayout(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXPipelineLayoutInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXPipelineLayoutInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineLayout : Error processing arguments");
-        cocos2d::GFXPipelineLayout* result = cobj->createPipelineLayout(HolderType<cocos2d::GFXPipelineLayoutInfo*, true>::value(arg0));
+        cocos2d::GFXPipelineLayout* result = cobj->createPipelineLayout(HolderType<cocos2d::GFXPipelineLayoutInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createPipelineLayout : Error processing arguments");
         return true;
@@ -15857,10 +16007,10 @@ static bool js_gfx_GFXDevice_createWindow(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXWindowInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXWindowInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createWindow : Error processing arguments");
-        cocos2d::GFXWindow* result = cobj->createWindow(HolderType<cocos2d::GFXWindowInfo*, true>::value(arg0));
+        cocos2d::GFXWindow* result = cobj->createWindow(HolderType<cocos2d::GFXWindowInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createWindow : Error processing arguments");
         return true;
@@ -15932,10 +16082,10 @@ static bool js_gfx_GFXDevice_createShader(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXShaderInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXShaderInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createShader : Error processing arguments");
-        cocos2d::GFXShader* result = cobj->createShader(HolderType<cocos2d::GFXShaderInfo*, true>::value(arg0));
+        cocos2d::GFXShader* result = cobj->createShader(HolderType<cocos2d::GFXShaderInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createShader : Error processing arguments");
         return true;
@@ -15953,10 +16103,10 @@ static bool js_gfx_GFXDevice_createInputAssembler(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXInputAssemblerInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXInputAssemblerInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createInputAssembler : Error processing arguments");
-        cocos2d::GFXInputAssembler* result = cobj->createInputAssembler(HolderType<cocos2d::GFXInputAssemblerInfo*, true>::value(arg0));
+        cocos2d::GFXInputAssembler* result = cobj->createInputAssembler(HolderType<cocos2d::GFXInputAssemblerInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createInputAssembler : Error processing arguments");
         return true;
@@ -15974,12 +16124,12 @@ static bool js_gfx_GFXDevice_defineMacro(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<cocos2d::String*, true>::type arg0 = {};
-        HolderType<cocos2d::String*, true>::type arg1 = {};
+        HolderType<cocos2d::String, true>::local_type arg0 = {};
+        HolderType<cocos2d::String, true>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_defineMacro : Error processing arguments");
-        cobj->defineMacro(HolderType<cocos2d::String*, true>::value(arg0), HolderType<cocos2d::String*, true>::value(arg1));
+        cobj->defineMacro(HolderType<cocos2d::String, true>::value(arg0), HolderType<cocos2d::String, true>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -15995,10 +16145,10 @@ static bool js_gfx_GFXDevice_createSampler(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXSamplerInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXSamplerInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createSampler : Error processing arguments");
-        cocos2d::GFXSampler* result = cobj->createSampler(HolderType<cocos2d::GFXSamplerInfo*, true>::value(arg0));
+        cocos2d::GFXSampler* result = cobj->createSampler(HolderType<cocos2d::GFXSamplerInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createSampler : Error processing arguments");
         return true;
@@ -16016,10 +16166,10 @@ static bool js_gfx_GFXDevice_createBuffer(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXBufferInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXBufferInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBuffer : Error processing arguments");
-        cocos2d::GFXBuffer* result = cobj->createBuffer(HolderType<cocos2d::GFXBufferInfo*, true>::value(arg0));
+        cocos2d::GFXBuffer* result = cobj->createBuffer(HolderType<cocos2d::GFXBufferInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBuffer : Error processing arguments");
         return true;
@@ -16055,10 +16205,10 @@ static bool js_gfx_GFXDevice_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXDeviceInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXDeviceInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXDeviceInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXDeviceInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_initialize : Error processing arguments");
         return true;
@@ -16076,8 +16226,8 @@ static bool js_gfx_GFXDevice_resize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<unsigned int, false>::type arg0 = {};
-        HolderType<unsigned int, false>::type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_resize : Error processing arguments");
@@ -16097,10 +16247,10 @@ static bool js_gfx_GFXDevice_createQueue(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXQueueInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXQueueInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createQueue : Error processing arguments");
-        cocos2d::GFXQueue* result = cobj->createQueue(HolderType<cocos2d::GFXQueueInfo*, true>::value(arg0));
+        cocos2d::GFXQueue* result = cobj->createQueue(HolderType<cocos2d::GFXQueueInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createQueue : Error processing arguments");
         return true;
@@ -16244,10 +16394,10 @@ static bool js_gfx_GFXDevice_createBindingLayout(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXBindingLayoutInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXBindingLayoutInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBindingLayout : Error processing arguments");
-        cocos2d::GFXBindingLayout* result = cobj->createBindingLayout(HolderType<cocos2d::GFXBindingLayoutInfo*, true>::value(arg0));
+        cocos2d::GFXBindingLayout* result = cobj->createBindingLayout(HolderType<cocos2d::GFXBindingLayoutInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createBindingLayout : Error processing arguments");
         return true;
@@ -16265,10 +16415,10 @@ static bool js_gfx_GFXDevice_createTextureView(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXTextureViewInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXTextureViewInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTextureView : Error processing arguments");
-        cocos2d::GFXTextureView* result = cobj->createTextureView(HolderType<cocos2d::GFXTextureViewInfo*, true>::value(arg0));
+        cocos2d::GFXTextureView* result = cobj->createTextureView(HolderType<cocos2d::GFXTextureViewInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createTextureView : Error processing arguments");
         return true;
@@ -16315,7 +16465,6 @@ bool js_register_gfx_GFXDevice(se::Object* obj)
     cls->defineProperty("context", _SE(js_gfx_GFXDevice_getContext), nullptr);
     cls->defineProperty("mainWindow", _SE(js_gfx_GFXDevice_getMainWindow), nullptr);
     cls->defineFunction("hasFeature", _SE(js_gfx_GFXDevice_hasFeature));
-    cls->defineFunction("createCommandAllocator", _SE(js_gfx_GFXDevice_createCommandAllocator));
     cls->defineFunction("getDepthStencilFormat", _SE(js_gfx_GFXDevice_getDepthStencilFormat));
     cls->defineFunction("createPipelineState", _SE(js_gfx_GFXDevice_createPipelineState));
     cls->defineFunction("createCommandBuffer", _SE(js_gfx_GFXDevice_createCommandBuffer));
@@ -16592,10 +16741,10 @@ static bool js_gfx_GFXWindow_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXWindowInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXWindowInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXWindowInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXWindowInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_initialize : Error processing arguments");
         return true;
@@ -16682,8 +16831,8 @@ static bool js_gfx_GFXWindow_resize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<unsigned int, false>::type arg0 = {};
-        HolderType<unsigned int, false>::type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXWindow_resize : Error processing arguments");
@@ -16877,10 +17026,10 @@ static bool js_gfx_GFXBuffer_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXBufferInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXBufferInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXBufferInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXBufferInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_initialize : Error processing arguments");
         return true;
@@ -16967,7 +17116,7 @@ static bool js_gfx_GFXBuffer_resize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBuffer_resize : Error processing arguments");
         cobj->resize(HolderType<unsigned int, false>::value(arg0));
@@ -17205,10 +17354,10 @@ static bool js_gfx_GFXTexture_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXTextureInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXTextureInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXTextureInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXTextureInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_initialize : Error processing arguments");
         return true;
@@ -17295,8 +17444,8 @@ static bool js_gfx_GFXTexture_resize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<unsigned int, false>::type arg0 = {};
-        HolderType<unsigned int, false>::type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_resize : Error processing arguments");
@@ -17431,10 +17580,10 @@ static bool js_gfx_GFXTextureView_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXTextureViewInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXTextureViewInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXTextureViewInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXTextureViewInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXTextureView_initialize : Error processing arguments");
         return true;
@@ -17793,10 +17942,10 @@ static bool js_gfx_GFXSampler_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXSamplerInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXSamplerInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXSamplerInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXSamplerInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXSampler_initialize : Error processing arguments");
         return true;
@@ -18035,10 +18184,10 @@ static bool js_gfx_GFXShader_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXShaderInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXShaderInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXShaderInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXShaderInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXShader_initialize : Error processing arguments");
         return true;
@@ -18215,7 +18364,7 @@ static bool js_gfx_GFXInputAssembler_setIndexCount(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setIndexCount : Error processing arguments");
         cobj->setIndexCount(HolderType<unsigned int, false>::value(arg0));
@@ -18234,7 +18383,7 @@ static bool js_gfx_GFXInputAssembler_setFirstInstance(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setFirstInstance : Error processing arguments");
         cobj->setFirstInstance(HolderType<unsigned int, false>::value(arg0));
@@ -18286,7 +18435,7 @@ static bool js_gfx_GFXInputAssembler_setVertexOffset(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setVertexOffset : Error processing arguments");
         cobj->setVertexOffset(HolderType<unsigned int, false>::value(arg0));
@@ -18377,10 +18526,10 @@ static bool js_gfx_GFXInputAssembler_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXInputAssemblerInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXInputAssemblerInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXInputAssemblerInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXInputAssemblerInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_initialize : Error processing arguments");
         return true;
@@ -18398,7 +18547,7 @@ static bool js_gfx_GFXInputAssembler_setFirstVertex(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setFirstVertex : Error processing arguments");
         cobj->setFirstVertex(HolderType<unsigned int, false>::value(arg0));
@@ -18435,7 +18584,7 @@ static bool js_gfx_GFXInputAssembler_setVertexCount(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setVertexCount : Error processing arguments");
         cobj->setVertexCount(HolderType<unsigned int, false>::value(arg0));
@@ -18490,7 +18639,7 @@ static bool js_gfx_GFXInputAssembler_setFirstIndex(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setFirstIndex : Error processing arguments");
         cobj->setFirstIndex(HolderType<unsigned int, false>::value(arg0));
@@ -18509,7 +18658,7 @@ static bool js_gfx_GFXInputAssembler_setInstanceCount(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, false>::type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_setInstanceCount : Error processing arguments");
         cobj->setInstanceCount(HolderType<unsigned int, false>::value(arg0));
@@ -18642,10 +18791,10 @@ static bool js_gfx_GFXRenderPass_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXRenderPassInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXRenderPassInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXRenderPassInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXRenderPassInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_initialize : Error processing arguments");
         return true;
@@ -18820,10 +18969,10 @@ static bool js_gfx_GFXFramebuffer_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXFramebufferInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXFramebufferInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXFramebufferInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXFramebufferInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXFramebuffer_initialize : Error processing arguments");
         return true;
@@ -18945,8 +19094,8 @@ static bool js_gfx_GFXBindingLayout_bindTextureView(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<unsigned int, false>::type arg0 = {};
-        HolderType<cocos2d::GFXTextureView*, false>::type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
+        HolderType<cocos2d::GFXTextureView*, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_bindTextureView : Error processing arguments");
@@ -18966,8 +19115,8 @@ static bool js_gfx_GFXBindingLayout_bindBuffer(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<unsigned int, false>::type arg0 = {};
-        HolderType<cocos2d::GFXBuffer*, false>::type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
+        HolderType<cocos2d::GFXBuffer*, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_bindBuffer : Error processing arguments");
@@ -19005,8 +19154,8 @@ static bool js_gfx_GFXBindingLayout_bindSampler(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<unsigned int, false>::type arg0 = {};
-        HolderType<cocos2d::GFXSampler*, false>::type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg0 = {};
+        HolderType<cocos2d::GFXSampler*, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_bindSampler : Error processing arguments");
@@ -19041,10 +19190,10 @@ static bool js_gfx_GFXBindingLayout_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXBindingLayoutInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXBindingLayoutInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXBindingLayoutInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXBindingLayoutInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXBindingLayout_initialize : Error processing arguments");
         return true;
@@ -19167,10 +19316,10 @@ static bool js_gfx_GFXPipelineLayout_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXPipelineLayoutInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXPipelineLayoutInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayout_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXPipelineLayoutInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXPipelineLayoutInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineLayout_initialize : Error processing arguments");
         return true;
@@ -19416,10 +19565,10 @@ static bool js_gfx_GFXPipelineState_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXPipelineStateInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXPipelineStateInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXPipelineStateInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXPipelineStateInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXPipelineState_initialize : Error processing arguments");
         return true;
@@ -19556,27 +19705,6 @@ bool js_register_gfx_GFXPipelineState(se::Object* obj)
 se::Object* __jsb_cocos2d_GFXCommandAllocator_proto = nullptr;
 se::Class* __jsb_cocos2d_GFXCommandAllocator_class = nullptr;
 
-static bool js_gfx_GFXCommandAllocator_initialize(se::State& s)
-{
-    cocos2d::GFXCommandAllocator* cobj = (cocos2d::GFXCommandAllocator*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXCommandAllocator_initialize : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<cocos2d::GFXCommandAllocatorInfo*, true>::type arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandAllocator_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXCommandAllocatorInfo*, true>::value(arg0));
-        ok &= nativevalue_to_se(result, s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandAllocator_initialize : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_gfx_GFXCommandAllocator_initialize)
-
 static bool js_gfx_GFXCommandAllocator_destroy(se::State& s)
 {
     cocos2d::GFXCommandAllocator* cobj = (cocos2d::GFXCommandAllocator*)s.nativeThisObject();
@@ -19642,7 +19770,6 @@ bool js_register_gfx_GFXCommandAllocator(se::Object* obj)
 {
     auto cls = se::Class::create("GFXCommandAllocator", obj, __jsb_cocos2d_GFXObject_proto, _SE(js_gfx_GFXCommandAllocator_constructor));
 
-    cls->defineFunction("initialize", _SE(js_gfx_GFXCommandAllocator_initialize));
     cls->defineFunction("destroy", _SE(js_gfx_GFXCommandAllocator_destroy));
     cls->defineFunction("getDevice", _SE(js_gfx_GFXCommandAllocator_getDevice));
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXCommandAllocator_finalize));
@@ -19667,7 +19794,7 @@ static bool js_gfx_GFXCommandBuffer_draw(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXInputAssembler*, false>::type arg0 = {};
+        HolderType<cocos2d::GFXInputAssembler*, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_draw : Error processing arguments");
         cobj->draw(HolderType<cocos2d::GFXInputAssembler*, false>::value(arg0));
@@ -19686,10 +19813,10 @@ static bool js_gfx_GFXCommandBuffer_setBlendConstants(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXColor*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXColor, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setBlendConstants : Error processing arguments");
-        cobj->setBlendConstants(HolderType<cocos2d::GFXColor*, true>::value(arg0));
+        cobj->setBlendConstants(HolderType<cocos2d::GFXColor, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -19705,8 +19832,8 @@ static bool js_gfx_GFXCommandBuffer_setDepthBound(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<float, false>::type arg0 = {};
-        HolderType<float, false>::type arg1 = {};
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setDepthBound : Error processing arguments");
@@ -19744,16 +19871,16 @@ static bool js_gfx_GFXCommandBuffer_copyBufferToTexture(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        HolderType<cocos2d::GFXBuffer*, false>::type arg0 = {};
-        HolderType<cocos2d::GFXTexture*, false>::type arg1 = {};
-        HolderType<cocos2d::GFXTextureLayout, false>::type arg2 = {};
-        HolderType_impl<std::vector<cocos2d::GFXBufferTextureCopy>*>::type arg3 = {};
+        HolderType<cocos2d::GFXBuffer*, false>::local_type arg0 = {};
+        HolderType<cocos2d::GFXTexture*, false>::local_type arg1 = {};
+        HolderType<cocos2d::GFXTextureLayout, false>::local_type arg2 = {};
+        HolderType<std::vector<cocos2d::GFXBufferTextureCopy>, true>::local_type arg3 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
         ok &= sevalue_to_native(args[3], &arg3); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_copyBufferToTexture : Error processing arguments");
-        cobj->copyBufferToTexture(HolderType<cocos2d::GFXBuffer*, false>::value(arg0), HolderType<cocos2d::GFXTexture*, false>::value(arg1), HolderType<cocos2d::GFXTextureLayout, false>::value(arg2), HolderType<std::vector<cocos2d::GFXBufferTextureCopy>*, true>::value(arg3));
+        cobj->copyBufferToTexture(HolderType<cocos2d::GFXBuffer*, false>::value(arg0), HolderType<cocos2d::GFXTexture*, false>::value(arg1), HolderType<cocos2d::GFXTextureLayout, false>::value(arg2), HolderType<std::vector<cocos2d::GFXBufferTextureCopy>, true>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -19769,7 +19896,7 @@ static bool js_gfx_GFXCommandBuffer_setLineWidth(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<float, false>::type arg0 = {};
+        HolderType<float, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setLineWidth : Error processing arguments");
         cobj->setLineWidth(HolderType<float, false>::value(arg0));
@@ -19788,9 +19915,9 @@ static bool js_gfx_GFXCommandBuffer_updateBuffer(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        HolderType<cocos2d::GFXBuffer*, false>::type arg0 = {};
-        HolderType<void*, false>::type arg1 = {};
-        HolderType<unsigned int, false>::type arg2 = {};
+        HolderType<cocos2d::GFXBuffer*, false>::local_type arg0 = {};
+        HolderType<void*, false>::local_type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg2 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
@@ -19799,10 +19926,10 @@ static bool js_gfx_GFXCommandBuffer_updateBuffer(se::State& s)
         return true;
     }
     if (argc == 4) {
-        HolderType<cocos2d::GFXBuffer*, false>::type arg0 = {};
-        HolderType<void*, false>::type arg1 = {};
-        HolderType<unsigned int, false>::type arg2 = {};
-        HolderType<unsigned int, false>::type arg3 = {};
+        HolderType<cocos2d::GFXBuffer*, false>::local_type arg0 = {};
+        HolderType<void*, false>::local_type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg2 = {};
+        HolderType<unsigned int, false>::local_type arg3 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
@@ -19839,8 +19966,8 @@ static bool js_gfx_GFXCommandBuffer_setStencilWriteMask(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        HolderType<cocos2d::GFXStencilFace, false>::type arg0 = {};
-        HolderType<unsigned int, false>::type arg1 = {};
+        HolderType<cocos2d::GFXStencilFace, false>::local_type arg0 = {};
+        HolderType<unsigned int, false>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setStencilWriteMask : Error processing arguments");
@@ -19878,9 +20005,9 @@ static bool js_gfx_GFXCommandBuffer_setStencilCompareMask(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        HolderType<cocos2d::GFXStencilFace, false>::type arg0 = {};
-        HolderType<int, false>::type arg1 = {};
-        HolderType<unsigned int, false>::type arg2 = {};
+        HolderType<cocos2d::GFXStencilFace, false>::local_type arg0 = {};
+        HolderType<int, false>::local_type arg1 = {};
+        HolderType<unsigned int, false>::local_type arg2 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
@@ -19901,7 +20028,7 @@ static bool js_gfx_GFXCommandBuffer_bindInputAssembler(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXInputAssembler*, false>::type arg0 = {};
+        HolderType<cocos2d::GFXInputAssembler*, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_bindInputAssembler : Error processing arguments");
         cobj->bindInputAssembler(HolderType<cocos2d::GFXInputAssembler*, false>::value(arg0));
@@ -19920,7 +20047,7 @@ static bool js_gfx_GFXCommandBuffer_bindPipelineState(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXPipelineState*, false>::type arg0 = {};
+        HolderType<cocos2d::GFXPipelineState*, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_bindPipelineState : Error processing arguments");
         cobj->bindPipelineState(HolderType<cocos2d::GFXPipelineState*, false>::value(arg0));
@@ -19990,10 +20117,10 @@ static bool js_gfx_GFXCommandBuffer_setViewport(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXViewport*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXViewport, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setViewport : Error processing arguments");
-        cobj->setViewport(HolderType<cocos2d::GFXViewport*, true>::value(arg0));
+        cobj->setViewport(HolderType<cocos2d::GFXViewport, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -20009,9 +20136,9 @@ static bool js_gfx_GFXCommandBuffer_setDepthBias(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        HolderType<float, false>::type arg0 = {};
-        HolderType<float, false>::type arg1 = {};
-        HolderType<float, false>::type arg2 = {};
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference False;
         ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
@@ -20065,7 +20192,7 @@ static bool js_gfx_GFXCommandBuffer_bindBindingLayout(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXBindingLayout*, false>::type arg0 = {};
+        HolderType<cocos2d::GFXBindingLayout*, false>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_bindBindingLayout : Error processing arguments");
         cobj->bindBindingLayout(HolderType<cocos2d::GFXBindingLayout*, false>::value(arg0));
@@ -20099,10 +20226,10 @@ static bool js_gfx_GFXCommandBuffer_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXCommandBufferInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXCommandBufferInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXCommandBufferInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXCommandBufferInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_initialize : Error processing arguments");
         return true;
@@ -20120,10 +20247,10 @@ static bool js_gfx_GFXCommandBuffer_setScissor(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXRect*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXRect, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_setScissor : Error processing arguments");
-        cobj->setScissor(HolderType<cocos2d::GFXRect*, true>::value(arg0));
+        cobj->setScissor(HolderType<cocos2d::GFXRect, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -20139,12 +20266,12 @@ static bool js_gfx_GFXCommandBuffer_beginRenderPass(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 6) {
-        HolderType<cocos2d::GFXFramebuffer*, false>::type arg0 = {};
-        HolderType<cocos2d::GFXRect*, true>::type arg1 = {};
-        HolderType<cocos2d::GFXClearFlagBit, false>::type arg2 = {};
-        HolderType<std::vector<cocos2d::GFXColor>*, true>::type arg3 = {};
-        HolderType<float, false>::type arg4 = {};
-        HolderType<int, false>::type arg5 = {};
+        HolderType<cocos2d::GFXFramebuffer*, false>::local_type arg0 = {};
+        HolderType<cocos2d::GFXRect, true>::local_type arg1 = {};
+        HolderType<cocos2d::GFXClearFlagBit, false>::local_type arg2 = {};
+        HolderType<std::vector<cocos2d::GFXColor>, true>::local_type arg3 = {};
+        HolderType<float, false>::local_type arg4 = {};
+        HolderType<int, false>::local_type arg5 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference False;
         ok &= sevalue_to_native(args[1], &arg1); //is_reference True;
         ok &= sevalue_to_native(args[2], &arg2); //is_reference False;
@@ -20152,7 +20279,7 @@ static bool js_gfx_GFXCommandBuffer_beginRenderPass(se::State& s)
         ok &= sevalue_to_native(args[4], &arg4); //is_reference False;
         ok &= sevalue_to_native(args[5], &arg5); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_beginRenderPass : Error processing arguments");
-        cobj->beginRenderPass(HolderType<cocos2d::GFXFramebuffer*, false>::value(arg0), HolderType<cocos2d::GFXRect*, true>::value(arg1), HolderType<cocos2d::GFXClearFlagBit, false>::value(arg2), HolderType<std::vector<cocos2d::GFXColor>*, true>::value(arg3), HolderType<float, false>::value(arg4), HolderType<int, false>::value(arg5));
+        cobj->beginRenderPass(HolderType<cocos2d::GFXFramebuffer*, false>::value(arg0), HolderType<cocos2d::GFXRect, true>::value(arg1), HolderType<cocos2d::GFXClearFlagBit, false>::value(arg2), HolderType<std::vector<cocos2d::GFXColor>, true>::value(arg3), HolderType<float, false>::value(arg4), HolderType<int, false>::value(arg5));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
@@ -20276,10 +20403,10 @@ static bool js_gfx_GFXQueue_submit(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<std::vector<cocos2d::GFXCommandBuffer *>*, true>::type arg0 = {};
+        HolderType<std::vector<cocos2d::GFXCommandBuffer *>, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_submit : Error processing arguments");
-        cobj->submit(HolderType<std::vector<cocos2d::GFXCommandBuffer *>*, true>::value(arg0));
+        cobj->submit(HolderType<std::vector<cocos2d::GFXCommandBuffer *>, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -20295,10 +20422,10 @@ static bool js_gfx_GFXQueue_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cocos2d::GFXQueueInfo*, true>::type arg0 = {};
+        HolderType<cocos2d::GFXQueueInfo, true>::local_type arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_initialize : Error processing arguments");
-        bool result = cobj->initialize(HolderType<cocos2d::GFXQueueInfo*, true>::value(arg0));
+        bool result = cobj->initialize(HolderType<cocos2d::GFXQueueInfo, true>::value(arg0));
         ok &= nativevalue_to_se(result, s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_initialize : Error processing arguments");
         return true;

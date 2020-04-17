@@ -476,7 +476,6 @@ template<>
 bool sevalue_to_native(const se::Value &, cocos2d::GFXDevice *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXDevice);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_hasFeature);
-SE_DECLARE_FUNC(js_gfx_GFXDevice_createCommandAllocator);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_getDepthStencilFormat);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createPipelineState);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createCommandBuffer);
@@ -680,7 +679,6 @@ bool register_all_gfx(se::Object* obj);
 template<>
 bool sevalue_to_native(const se::Value &, cocos2d::GFXCommandAllocator *);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandAllocator);
-SE_DECLARE_FUNC(js_gfx_GFXCommandAllocator_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXCommandAllocator_destroy);
 SE_DECLARE_FUNC(js_gfx_GFXCommandAllocator_getDevice);
 SE_DECLARE_FUNC(js_gfx_GFXCommandAllocator_GFXCommandAllocator);
