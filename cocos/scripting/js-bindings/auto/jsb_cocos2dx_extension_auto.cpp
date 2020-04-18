@@ -306,6 +306,289 @@ bool js_register_extension_EventAssetsManagerEx(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_cocos2d_extension_ManifestAsset_proto = nullptr;
+se::Class* __jsb_cocos2d_extension_ManifestAsset_class = nullptr;
+
+static bool js_extension_ManifestAsset_get_md5(se::State& s)
+{
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_md5 : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= NATIVEVALUE_TO_SE(cobj->md5, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_extension_ManifestAsset_get_md5)
+
+static bool js_extension_ManifestAsset_set_md5(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_md5 : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->md5, s.thisObject()); //is_reference False;
+    SE_PRECONDITION2(ok, false, "js_extension_ManifestAsset_set_md5 : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_extension_ManifestAsset_set_md5)
+
+static bool js_extension_ManifestAsset_get_path(se::State& s)
+{
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_path : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= NATIVEVALUE_TO_SE(cobj->path, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_extension_ManifestAsset_get_path)
+
+static bool js_extension_ManifestAsset_set_path(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_path : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->path, s.thisObject()); //is_reference False;
+    SE_PRECONDITION2(ok, false, "js_extension_ManifestAsset_set_path : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_extension_ManifestAsset_set_path)
+
+static bool js_extension_ManifestAsset_get_compressed(se::State& s)
+{
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_compressed : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= NATIVEVALUE_TO_SE(cobj->compressed, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_extension_ManifestAsset_get_compressed)
+
+static bool js_extension_ManifestAsset_set_compressed(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_compressed : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->compressed, s.thisObject()); //is_reference False;
+    SE_PRECONDITION2(ok, false, "js_extension_ManifestAsset_set_compressed : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_extension_ManifestAsset_set_compressed)
+
+static bool js_extension_ManifestAsset_get_size(se::State& s)
+{
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_size : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= NATIVEVALUE_TO_SE(cobj->size, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_extension_ManifestAsset_get_size)
+
+static bool js_extension_ManifestAsset_set_size(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_size : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->size, s.thisObject()); //is_reference False;
+    SE_PRECONDITION2(ok, false, "js_extension_ManifestAsset_set_size : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_extension_ManifestAsset_set_size)
+
+static bool js_extension_ManifestAsset_get_downloadState(se::State& s)
+{
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_downloadState : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= NATIVEVALUE_TO_SE(cobj->downloadState, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_extension_ManifestAsset_get_downloadState)
+
+static bool js_extension_ManifestAsset_set_downloadState(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_downloadState : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= SEVALUE_TO_NATIVE(args[0], &cobj->downloadState, s.thisObject()); //is_reference False;
+    SE_PRECONDITION2(ok, false, "js_extension_ManifestAsset_set_downloadState : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_extension_ManifestAsset_set_downloadState)
+
+
+template<>
+bool SEVALUE_TO_NATIVE(const se::Value &from, cocos2d::extension::ManifestAsset * to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto* data = (cocos2d::extension::ManifestAsset*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
+    se::Value field;
+    bool ok = true;
+    json->getProperty("md5", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= SEVALUE_TO_NATIVE(field, &(to->md5), ctx);
+    }
+    json->getProperty("path", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= SEVALUE_TO_NATIVE(field, &(to->path), ctx);
+    }
+    json->getProperty("compressed", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= SEVALUE_TO_NATIVE(field, &(to->compressed), ctx);
+    }
+    json->getProperty("size", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= SEVALUE_TO_NATIVE(field, &(to->size), ctx);
+    }
+    json->getProperty("downloadState", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= SEVALUE_TO_NATIVE(field, &(to->downloadState), ctx);
+    }
+    return ok;
+}
+
+SE_DECLARE_FINALIZE_FUNC(js_cocos2d_extension_ManifestAsset_finalize)
+
+static bool js_extension_ManifestAsset_constructor(se::State& s)
+{
+    CC_UNUSED bool ok = true;
+    const auto& args = s.args();
+    size_t argc = args.size();
+
+    if(argc == 0) 
+    {
+        cocos2d::extension::ManifestAsset* cobj = JSB_ALLOC(cocos2d::extension::ManifestAsset);
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+    else if(argc == 1 && args[0].isObject())
+    {
+        se::Object *json = args[0].toObject();
+        se::Value field;
+
+        cocos2d::extension::ManifestAsset* cobj = JSB_ALLOC(cocos2d::extension::ManifestAsset);
+        ok &= SEVALUE_TO_NATIVE(args[0], cobj, s.thisObject());
+        if(!ok) {
+            JSB_FREE(cobj);
+            SE_REPORT_ERROR("argument convertion error");
+            return false;
+        }
+
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+    else if(argc == 5)
+    {
+        cocos2d::extension::ManifestAsset* cobj = JSB_ALLOC(cocos2d::extension::ManifestAsset);
+        std::string arg0;
+        if (!args[0].isNullOrUndefined()) {
+            ok &= SEVALUE_TO_NATIVE(args[0], &arg0, nullptr); //is_reference False;
+            cobj->md5 = arg0;
+        }
+        std::string arg1;
+        if (!args[1].isNullOrUndefined()) {
+            ok &= SEVALUE_TO_NATIVE(args[1], &arg1, nullptr); //is_reference False;
+            cobj->path = arg1;
+        }
+        bool arg2;
+        if (!args[2].isNullOrUndefined()) {
+            ok &= SEVALUE_TO_NATIVE(args[2], &arg2, nullptr); //is_reference False;
+            cobj->compressed = arg2;
+        }
+        float arg3 = {};
+        if (!args[3].isNullOrUndefined()) {
+            ok &= SEVALUE_TO_NATIVE(args[3], &arg3, nullptr); //is_reference False;
+            cobj->size = arg3;
+        }
+        int arg4 = {};
+        if (!args[4].isNullOrUndefined()) {
+            ok &= SEVALUE_TO_NATIVE(args[4], &arg4, nullptr); //is_reference False;
+            cobj->downloadState = arg4;
+        }
+
+        if(!ok) {
+            JSB_FREE(cobj);
+            SE_REPORT_ERROR("Argument convertion error");
+            return false;
+        }
+
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
+}
+SE_BIND_CTOR(js_extension_ManifestAsset_constructor, __jsb_cocos2d_extension_ManifestAsset_class, js_cocos2d_extension_ManifestAsset_finalize)
+
+
+
+
+static bool js_cocos2d_extension_ManifestAsset_finalize(se::State& s)
+{
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::ManifestAsset)", s.nativeThisObject());
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cocos2d_extension_ManifestAsset_finalize)
+
+bool js_register_extension_ManifestAsset(se::Object* obj)
+{
+    auto cls = se::Class::create("ManifestAsset", obj, nullptr, _SE(js_extension_ManifestAsset_constructor));
+
+    cls->defineProperty("md5", _SE(js_extension_ManifestAsset_get_md5), _SE(js_extension_ManifestAsset_set_md5));
+    cls->defineProperty("path", _SE(js_extension_ManifestAsset_get_path), _SE(js_extension_ManifestAsset_set_path));
+    cls->defineProperty("compressed", _SE(js_extension_ManifestAsset_get_compressed), _SE(js_extension_ManifestAsset_set_compressed));
+    cls->defineProperty("size", _SE(js_extension_ManifestAsset_get_size), _SE(js_extension_ManifestAsset_set_size));
+    cls->defineProperty("downloadState", _SE(js_extension_ManifestAsset_get_downloadState), _SE(js_extension_ManifestAsset_set_downloadState));
+    cls->defineFinalizeFunction(_SE(js_cocos2d_extension_ManifestAsset_finalize));
+    cls->install();
+    JSBClassType::registerClass<cocos2d::extension::ManifestAsset>(cls);
+
+    __jsb_cocos2d_extension_ManifestAsset_proto = cls->getProto();
+    __jsb_cocos2d_extension_ManifestAsset_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 se::Object* __jsb_cocos2d_extension_Manifest_proto = nullptr;
 se::Class* __jsb_cocos2d_extension_Manifest_class = nullptr;
 
@@ -1116,6 +1399,7 @@ bool register_all_extension(se::Object* obj)
 
     js_register_extension_AssetsManagerEx(ns);
     js_register_extension_EventAssetsManagerEx(ns);
+    js_register_extension_ManifestAsset(ns);
     js_register_extension_Manifest(ns);
     return true;
 }

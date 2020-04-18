@@ -1223,8 +1223,8 @@ bool nativevalue_to_se_args_v(se::ValueArray& array, Args&... args)
     return nativevalue_to_se_args<0, Args...>(array, args ...);
 }
 
-template<typename ...Args>
-bool sevalue_to_native(const se::Value& from, std::function<void( Args...)>* func, se::Object *self)
+template<typename R, typename ...Args>
+bool sevalue_to_native(const se::Value& from, std::function<R( Args...)>* func, se::Object *self)
 {
     if (from.isObject() && from.toObject()->isFunction())
     {
@@ -1242,6 +1242,12 @@ bool sevalue_to_native(const se::Value& from, std::function<void( Args...)>* fun
             if (!succeed) {
                 se::ScriptEngine::getInstance()->clearException();
             }
+            if constexpr (!std::is_same_v<R, void>) {
+                R raw_ret = {};
+                sevalue_to_native(rval, &raw_ret, self);
+                return raw_ret;
+            }
+                
         };
     }
     else

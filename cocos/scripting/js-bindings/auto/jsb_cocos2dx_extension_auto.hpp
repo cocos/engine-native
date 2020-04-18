@@ -27,6 +27,16 @@ SE_DECLARE_FUNC(js_extension_EventAssetsManagerEx_getPercent);
 SE_DECLARE_FUNC(js_extension_EventAssetsManagerEx_isResuming);
 SE_DECLARE_FUNC(js_extension_EventAssetsManagerEx_EventAssetsManagerEx);
 
+extern se::Object* __jsb_cocos2d_extension_ManifestAsset_proto;
+extern se::Class* __jsb_cocos2d_extension_ManifestAsset_class;
+
+bool js_register_cocos2d_extension_ManifestAsset(se::Object* obj);
+bool register_all_extension(se::Object* obj);
+
+template<>
+bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::extension::ManifestAsset *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cocos2d::extension::ManifestAsset);
+
 extern se::Object* __jsb_cocos2d_extension_Manifest_proto;
 extern se::Class* __jsb_cocos2d_extension_Manifest_class;
 
