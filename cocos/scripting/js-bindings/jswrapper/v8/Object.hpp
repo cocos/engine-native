@@ -309,7 +309,7 @@ namespace se {
              ```c++
                 static bool SomeObject_setCallback(se::State& s)
                 {
-                    SomeObject* cobj = (SomeObject*)s.nativeThisObject();
+                    SomeObject* cobj = SE_THIS_OBJECT<SomeObject>(s);
                     const auto& args = s.args();
                     size_t argc = args.size();
                     if (argc == 2) {

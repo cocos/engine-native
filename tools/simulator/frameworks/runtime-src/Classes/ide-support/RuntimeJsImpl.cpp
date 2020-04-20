@@ -67,7 +67,7 @@ static bool runtime_FileUtils_addSearchPath(se::State& s)
     const auto& args = s.args();
     int argc = (int)args.size();
     bool ok = true;
-    cocos2d::FileUtils* cobj = (cocos2d::FileUtils *)s.nativeThisObject();
+    cocos2d::FileUtils* cobj = SE_THIS_OBJECT<cocos2d::FileUtils >(s);
     if (argc == 1 || argc == 2) {
         std::string arg0;
         bool arg1 = false;
@@ -109,7 +109,7 @@ static bool runtime_FileUtils_setSearchPaths(se::State& s)
     const auto& args = s.args();
     int argc = (int)args.size();
     bool ok = true;
-    cocos2d::FileUtils* cobj = (cocos2d::FileUtils *)s.nativeThisObject();
+    cocos2d::FileUtils* cobj = SE_THIS_OBJECT<cocos2d::FileUtils >(s);
     if (argc == 1) {
         std::vector<std::string> vecPaths, writePaths;
         ok &= seval_to_std_vector_string(args[0], &vecPaths);

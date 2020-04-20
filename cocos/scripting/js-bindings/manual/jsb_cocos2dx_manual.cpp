@@ -370,7 +370,7 @@ static bool register_sys_localStorage(se::Object* obj)
 #define BIND_PROP_WITH_TYPE__CONV_FUNC__RETURN(cls, property, type, convertFunc, returnFunc) \
 static bool js_##cls_set_##property(se::State& s) \
 { \
-    cocos2d::cls* cobj = (cocos2d::cls*)s.nativeThisObject(); \
+    cocos2d::cls* cobj = SE_THIS_OBJECT<cocos2d::cls>(s); \
     SE_PRECONDITION2(cobj, false, "js_#cls_set_#property : Invalid Native Object"); \
     const auto& args = s.args(); \
     size_t argc = args.size(); \
@@ -389,7 +389,7 @@ SE_BIND_PROP_SET(js_##cls_set_##property) \
 \
 static bool js_##cls_get_##property(se::State& s) \
 { \
-    cocos2d::cls* cobj = (cocos2d::cls*)s.nativeThisObject(); \
+    cocos2d::cls* cobj = SE_THIS_OBJECT<cocos2d::cls>(s); \
     SE_PRECONDITION2(cobj, false, "js_#cls_get_#property : Invalid Native Object"); \
     s.rval().returnFunc(cobj->_##property); \
     return true; \
@@ -415,7 +415,7 @@ BIND_PROP_WITH_TYPE__CONV_FUNC__RETURN(CanvasRenderingContext2D, globalComposite
 //IDEA:  move to auto bindings.
 static bool js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback(se::State& s)
 {
-    cocos2d::CanvasRenderingContext2D* cobj = (cocos2d::CanvasRenderingContext2D*)s.nativeThisObject();
+    cocos2d::CanvasRenderingContext2D* cobj = SE_THIS_OBJECT<cocos2d::CanvasRenderingContext2D>(s);
     SE_PRECONDITION2(cobj, false, "js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();

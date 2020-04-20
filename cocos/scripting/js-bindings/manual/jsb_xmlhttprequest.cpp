@@ -1013,7 +1013,7 @@ SE_BIND_PROP_GET(XMLHttpRequest_getResponse)
 
 static bool XMLHttpRequest_getTimeout(se::State& s)
 {
-    XMLHttpRequest* cobj = (XMLHttpRequest*)s.nativeThisObject();
+    XMLHttpRequest* cobj = SE_THIS_OBJECT<XMLHttpRequest>(s);
     s.rval().setUlong(cobj->getTimeout());
     return true;
 }
@@ -1025,7 +1025,7 @@ static bool XMLHttpRequest_setTimeout(se::State& s)
     int argc = (int)args.size();
     if (argc > 0)
     {
-        XMLHttpRequest* cobj = (XMLHttpRequest*)s.nativeThisObject();
+        XMLHttpRequest* cobj = SE_THIS_OBJECT<XMLHttpRequest>(s);
         unsigned long timeoutInMilliseconds = 0;
         bool ok = seval_to_ulong(args[0], &timeoutInMilliseconds);
         SE_PRECONDITION2(ok, false, "args[0] isn't a number");

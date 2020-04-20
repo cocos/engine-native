@@ -131,7 +131,7 @@ bool js_GFXDevice_copyTexImagesToTexture(se::State& s, cocos2d::GFXDevice* cobj)
 #ifdef USE_GLES2
 static bool js_gfx_GLES2Device_copyBuffersToTexture(se::State& s)
 {
-    cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+    cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_GLES2Device_copyBuffersToTexture : Invalid Native Object");
     return js_GFXDevice_copyBuffersToTexture(s, cobj);
 }
@@ -139,7 +139,7 @@ SE_BIND_FUNC(js_gfx_GLES2Device_copyBuffersToTexture)
 
 static bool js_gfx_GLES2Device_copyTexImagesToTexture(se::State& s)
 {
-    cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+    cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_GLES2Device_copyTexImagesToTexture : Invalid Native Object");
     return js_GFXDevice_copyTexImagesToTexture(s, cobj);
 }
@@ -149,7 +149,7 @@ SE_BIND_FUNC(js_gfx_GLES2Device_copyTexImagesToTexture);
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 static bool js_gfx_CCMTLDevice_copyBuffersToTexture(se::State& s)
 {
-    cocos2d::CCMTLDevice* cobj = (cocos2d::CCMTLDevice*)s.nativeThisObject();
+    cocos2d::CCMTLDevice* cobj = SE_THIS_OBJECT<cocos2d::CCMTLDevice>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_CCMTLDevice_copyBuffersToTexture : Invalid Native Object");
     return js_GFXDevice_copyBuffersToTexture(s, cobj);
 }
@@ -157,7 +157,7 @@ SE_BIND_FUNC(js_gfx_CCMTLDevice_copyBuffersToTexture)
 
 static bool js_gfx_CCMTLDevice_copyTexImagesToTexture(se::State& s)
 {
-    cocos2d::CCMTLDevice* cobj = (cocos2d::CCMTLDevice*)s.nativeThisObject();
+    cocos2d::CCMTLDevice* cobj = SE_THIS_OBJECT<cocos2d::CCMTLDevice>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_CCMTLDevice_copyTexImagesToTexture : Invalid Native Object");
     return js_GFXDevice_copyTexImagesToTexture(s, cobj);
 }
@@ -166,7 +166,7 @@ SE_BIND_FUNC(js_gfx_CCMTLDevice_copyTexImagesToTexture);
 
 static bool js_gfx_GLES3Device_copyBuffersToTexture(se::State& s)
 {
-    cocos2d::GLES3Device* cobj = (cocos2d::GLES3Device*)s.nativeThisObject();
+    cocos2d::GLES3Device* cobj = SE_THIS_OBJECT<cocos2d::GLES3Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_GLES3Device_copyBuffersToTexture : Invalid Native Object");
     return js_GFXDevice_copyBuffersToTexture(s, cobj);
 }
@@ -174,7 +174,7 @@ SE_BIND_FUNC(js_gfx_GLES3Device_copyBuffersToTexture)
 
 static bool js_gfx_GLES3Device_copyTexImagesToTexture(se::State& s)
 {
-    cocos2d::GLES3Device* cobj = (cocos2d::GLES3Device*)s.nativeThisObject();
+    cocos2d::GLES3Device* cobj = SE_THIS_OBJECT<cocos2d::GLES3Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_GLES3Device_copyTexImagesToTexture : Invalid Native Object");
     return js_GFXDevice_copyTexImagesToTexture(s, cobj);
 }
@@ -182,7 +182,7 @@ SE_BIND_FUNC(js_gfx_GLES3Device_copyTexImagesToTexture);
 
 static bool js_gfx_GFXBuffer_update(se::State& s)
 {
-    cocos2d::GFXBuffer* cobj = (cocos2d::GFXBuffer*)s.nativeThisObject();
+    cocos2d::GFXBuffer* cobj = SE_THIS_OBJECT<cocos2d::GFXBuffer>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBuffer_update : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -234,7 +234,7 @@ SE_BIND_FUNC(js_gfx_GFXBuffer_update)
 
 static bool js_gfx_GFXCommandBuffer_execute(se::State& s)
 {
-    cocos2d::GFXCommandBuffer* cobj = (cocos2d::GFXCommandBuffer*)s.nativeThisObject();
+    cocos2d::GFXCommandBuffer* cobj = SE_THIS_OBJECT<cocos2d::GFXCommandBuffer>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXCommandBuffer_execute : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -282,7 +282,7 @@ SE_BIND_FUNC(js_gfx_GFXCommandBuffer_execute)
 
 static bool js_gfx_GFXInputAssembler_extractDrawInfo(se::State& s)
 {
-    cocos2d::GFXInputAssembler* cobj = (cocos2d::GFXInputAssembler*)s.nativeThisObject();
+    cocos2d::GFXInputAssembler* cobj = SE_THIS_OBJECT<cocos2d::GFXInputAssembler>(s);
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputAssembler_extractDrawInfo : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();

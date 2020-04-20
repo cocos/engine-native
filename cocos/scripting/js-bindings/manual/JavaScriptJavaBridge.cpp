@@ -460,7 +460,7 @@ se::Class* __jsb_JavaScriptJavaBridge_class = nullptr;
 
 static bool JavaScriptJavaBridge_finalize(se::State& s)
 {
-    JavaScriptJavaBridge* cobj = (JavaScriptJavaBridge*)s.nativeThisObject();
+    JavaScriptJavaBridge* cobj = SE_THIS_OBJECT<JavaScriptJavaBridge>(s);
     delete cobj;
     return true;
 }

@@ -81,7 +81,7 @@ SE_BIND_FUNC(js_cocos2dx_network_Downloader_createDownloadFileTask)
 
 static bool js_network_Downloader_setOnFileTaskSuccess(se::State& s)
 {
-    cocos2d::network::Downloader* cobj = (cocos2d::network::Downloader*)s.nativeThisObject();
+    cocos2d::network::Downloader* cobj = SE_THIS_OBJECT<cocos2d::network::Downloader>(s);
     SE_PRECONDITION2(cobj, false, "js_network_Downloader_setOnFileTaskSuccess : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -131,7 +131,7 @@ SE_BIND_FUNC(js_network_Downloader_setOnFileTaskSuccess)
 
 static bool js_network_Downloader_setOnTaskError(se::State& s)
 {
-    cocos2d::network::Downloader* cobj = (cocos2d::network::Downloader*)s.nativeThisObject();
+    cocos2d::network::Downloader* cobj = SE_THIS_OBJECT<cocos2d::network::Downloader>(s);
     SE_PRECONDITION2(cobj, false, "js_network_Downloader_setOnTaskError : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();

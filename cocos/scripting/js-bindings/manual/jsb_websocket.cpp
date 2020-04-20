@@ -262,7 +262,7 @@ void JSB_WebSocketDelegate::setJSDelegate(const se::Value& jsDelegate)
 
 static bool WebSocket_finalize(se::State& s)
 {
-    WebSocket* cobj = (WebSocket*)s.nativeThisObject();
+    WebSocket* cobj = SE_THIS_OBJECT<WebSocket>(s);
     CCLOGINFO("jsbindings: finalizing JS object %p (WebSocket)", cobj);
 
     // Manually close if web socket is not closed
@@ -395,7 +395,7 @@ static bool WebSocket_send(se::State& s)
 
     if (argc == 1)
     {
-        WebSocket* cobj = (WebSocket*)s.nativeThisObject();
+        WebSocket* cobj = SE_THIS_OBJECT<WebSocket>(s);
         bool ok = false;
         if (args[0].isString())
         {
@@ -452,7 +452,7 @@ static bool WebSocket_close(se::State& s)
     const auto& args = s.args();
     int argc = (int)args.size();
 
-    WebSocket* cobj = (WebSocket*)s.nativeThisObject();
+    WebSocket* cobj = SE_THIS_OBJECT<WebSocket>(s);
     if(argc == 0)
     {
         cobj->closeAsync();
@@ -510,7 +510,7 @@ static bool WebSocket_getReadyState(se::State& s)
 
     if (argc == 0)
     {
-        WebSocket* cobj = (WebSocket*)s.nativeThisObject();
+        WebSocket* cobj = SE_THIS_OBJECT<WebSocket>(s);
         s.rval().setInt32((int)cobj->getReadyState());
         return true;
     }
@@ -526,7 +526,7 @@ static bool WebSocket_getBufferedAmount(se::State& s)
 
     if (argc == 0)
     {
-        WebSocket* cobj = (WebSocket*)s.nativeThisObject();
+        WebSocket* cobj = SE_THIS_OBJECT<WebSocket>(s);
         s.rval().setUint32((uint32_t)cobj->getBufferedAmount());
         return true;
     }
@@ -542,7 +542,7 @@ static bool WebSocket_getExtensions(se::State& s)
 
     if (argc == 0)
     {
-        WebSocket* cobj = (WebSocket*)s.nativeThisObject();
+        WebSocket* cobj = SE_THIS_OBJECT<WebSocket>(s);
         s.rval().setString(cobj->getExtensions());
         return true;
     }

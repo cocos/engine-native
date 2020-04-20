@@ -157,7 +157,7 @@ private:
 
 static bool SocketIO_finalize(se::State& s)
 {
-    SIOClient* cobj = (SIOClient*)s.nativeThisObject();
+    SIOClient* cobj = SE_THIS_OBJECT<SIOClient>(s);
     CCLOGINFO("jsbindings: finalizing JS object %p (SocketIO)", cobj);
     cobj->disconnect();
     JSB_SocketIODelegate* delegate = static_cast<JSB_SocketIODelegate*>(cobj->getDelegate());
@@ -177,7 +177,7 @@ SE_BIND_FINALIZE_FUNC(SocketIO_finalize)
 
 static bool SocketIO_prop_getTag(se::State& s)
 {
-    SIOClient* cobj = (SIOClient*)s.nativeThisObject();
+    SIOClient* cobj = SE_THIS_OBJECT<SIOClient>(s);
     s.rval().setString(cobj->getTag());
     return true;
 }
@@ -185,7 +185,7 @@ SE_BIND_PROP_GET(SocketIO_prop_getTag)
 
 static bool SocketIO_prop_setTag(se::State& s)
 {
-    SIOClient* cobj = (SIOClient*)s.nativeThisObject();
+    SIOClient* cobj = SE_THIS_OBJECT<SIOClient>(s);
     cobj->setTag(s.args()[0].toString().c_str());
     return true;
 }
@@ -195,7 +195,7 @@ static bool SocketIO_send(se::State& s)
 {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SIOClient* cobj = (SIOClient*)s.nativeThisObject();
+    SIOClient* cobj = SE_THIS_OBJECT<SIOClient>(s);
 
     if (argc == 1)
     {
@@ -216,7 +216,7 @@ static bool SocketIO_emit(se::State& s)
 {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SIOClient* cobj = (SIOClient*)s.nativeThisObject();
+    SIOClient* cobj = SE_THIS_OBJECT<SIOClient>(s);
 
     if (argc >= 1)
     {
@@ -253,7 +253,7 @@ static bool SocketIO_disconnect(se::State& s)
 {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SIOClient* cobj = (SIOClient*)s.nativeThisObject();
+    SIOClient* cobj = SE_THIS_OBJECT<SIOClient>(s);
 
     if (argc == 0)
     {
@@ -270,7 +270,7 @@ static bool SocketIO_on(se::State& s)
 {
     const auto& args = s.args();
     int argc = (int)args.size();
-    SIOClient* cobj = (SIOClient*)s.nativeThisObject();
+    SIOClient* cobj = SE_THIS_OBJECT<SIOClient>(s);
 
     if (argc == 2)
     {
