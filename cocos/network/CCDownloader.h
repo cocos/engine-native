@@ -73,7 +73,7 @@ namespace cocos2d { namespace network {
     {
     public:
         Downloader();
-        Downloader(const DownloaderHints& hints);
+        Downloader(DownloaderHints hints);
         ~Downloader();
 
         std::function<void(const DownloadTask& task,

@@ -299,10 +299,10 @@ static bool js_network_Downloader_constructor(se::State& s)  // constructor_over
     size_t argc = args.size();
     do {
         if (argc == 1) {
-            HolderType<cocos2d::network::DownloaderHints, true>::local_type arg0 = {};
-            ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+            HolderType<cocos2d::network::DownloaderHints, false>::local_type arg0 = {};
+            ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
             if (!ok) { ok = true; break; }
-            cocos2d::network::Downloader* cobj = JSB_ALLOC(cocos2d::network::Downloader, HolderType<cocos2d::network::DownloaderHints, true>::value(arg0));
+            cocos2d::network::Downloader* cobj = JSB_ALLOC(cocos2d::network::Downloader, HolderType<cocos2d::network::DownloaderHints, false>::value(arg0));
             s.thisObject()->setPrivateData(cobj);
             se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
             return true;

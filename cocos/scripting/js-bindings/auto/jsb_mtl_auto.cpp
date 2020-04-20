@@ -22,7 +22,7 @@ static bool js_mtl_CCMTLDevice_getMTKView(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         void* result = cobj->getMTKView();
-        #pragma warning NO CONVERSION FROM NATIVE FOR void*;
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_mtl_CCMTLDevice_getMTKView : Error processing arguments");
         return true;
     }
@@ -40,7 +40,7 @@ static bool js_mtl_CCMTLDevice_getMTLDevice(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         void* result = cobj->getMTLDevice();
-        #pragma warning NO CONVERSION FROM NATIVE FOR void*;
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_mtl_CCMTLDevice_getMTLDevice : Error processing arguments");
         return true;
     }
@@ -51,7 +51,7 @@ SE_BIND_FUNC(js_mtl_CCMTLDevice_getMTLDevice)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_CCMTLDevice_finalize)
 
-static bool js_mtl_CCMTLDevice_constructor(se::State& s)
+static bool js_mtl_CCMTLDevice_constructor(se::State& s) // constructor.c
 {
     cocos2d::CCMTLDevice* cobj = JSB_ALLOC(cocos2d::CCMTLDevice);
     s.thisObject()->setPrivateData(cobj);
