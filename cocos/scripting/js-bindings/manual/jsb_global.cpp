@@ -455,7 +455,7 @@ static bool jsc_dumpNativePtrToSeObjectMap(se::State& s)
 
     for (const auto& e : se::NativePtrToObjectMap::instance())
     {
-        se::Object* jsobj = e.second;
+        se::Object* jsobj = std::get<1>(e.second);
         assert(jsobj->_getClass() != nullptr);
         NamePtrStruct tmp;
         tmp.name = jsobj->_getClass()->getName();

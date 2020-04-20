@@ -253,7 +253,8 @@ namespace se {
          *  @note This method will associate private data with se::Object by std::unordered_map::emplace.
          *        It's used for search a se::Object via a void* private data.
          */
-        void setPrivateData(void* data);
+        template<typename T>
+        void setPrivateData(T* data);
 
         /**
          *  @brief Gets an object's private data.
@@ -391,6 +392,28 @@ namespace se {
     };
 
     extern std::unordered_map<Object*, void*> __objectMap; // Currently, the value `void*` is always nullptr
+
+    template<typename T>
+    void Object::setPrivateData(T* data)
+    {
+        assert(_privateData == nullptr);
+
+#if COCOS2D_DEBUG
+        {
+            auto iter = NativePtrToObjectMap::find(data);
+            if (iter != NativePtrToObjectMap::end()) {
+                auto prevName = std::get<1>(iter->second)->_getClass()->getName();
+                auto currentName = _getClass()->getName();
+                SE_LOGE("Object::setPrivateData duplicate addr %p, previouse object %s, new object %s ",
+                    data, prevName, currentName);
+            }
+        }
+#endif
+        assert(NativePtrToObjectMap::find(data) == NativePtrToObjectMap::end());
+        internal::setPrivate(v8::Isolate::GetCurrent(), _obj, data, &_internalData);
+        NativePtrToObjectMap::emplace(data, this);
+        _privateData = data;
+    }
 
 } // namespace se {
 

@@ -25,6 +25,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <typeinfo>
 
 namespace se {
 
@@ -34,7 +35,7 @@ namespace se {
     {
     public:
         // key: native ptr, value: se::Object
-        using Map = std::unordered_map<void*, Object*>;
+        using Map = std::unordered_map<void*, std::tuple<decltype(typeid(int).hash_code()), Object*>>;
 
         static bool init();
         static void destroy();
@@ -51,11 +52,20 @@ namespace se {
         static Map::iterator end();
 
     private:
-        static void emplace(void* nativeObj, Object* seObj);
+        template<typename T>
+        static void emplace(T* nativeObj, Object* seObj);
         static Map* __nativePtrToObjectMap;
 
         friend class Object;
     };
+
+    template<typename T>
+    void NativePtrToObjectMap::emplace(T* nativeObj, Object* seObj)
+    {
+        static_assert(!std::is_same_v<void, T>, "Private data should not be void*");
+        __nativePtrToObjectMap->emplace(nativeObj, std::tuple(typeid(T).hash_code(), seObj));
+    }
+
 
     class NonRefNativePtrCreatedByCtorMap
     {

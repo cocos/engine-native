@@ -69,7 +69,7 @@ public:
         auto iter = se::NativePtrToObjectMap::find(client);
         if (iter != se::NativePtrToObjectMap::end())
         {
-            iter->second->unroot();
+            std::get<1>(iter->second)->unroot();
         }
 
         if (getReferenceCount() == 1)
@@ -90,7 +90,7 @@ public:
         auto iter = se::NativePtrToObjectMap::find(client);
         if (iter != se::NativePtrToObjectMap::end())
         {
-            iter->second->unroot();
+            std::get<1>(iter->second)->unroot();
         }
     }
 

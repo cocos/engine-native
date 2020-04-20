@@ -439,7 +439,8 @@ native_ptr_to_seval(T* v_c, se::Value* ret, bool* isReturnCachedValue = nullptr)
     }
     else
     {
-        obj = iter->second;
+        assert(typeid(DecayT).hash_code() == std::get<0>(iter->second));
+        obj = std::get<1>(iter->second);
         if (isReturnCachedValue != nullptr)
         {
             *isReturnCachedValue = true;
@@ -482,7 +483,8 @@ native_ptr_to_seval(T& v_ref, se::Value* ret, bool* isReturnCachedValue = nullpt
     }
     else
     {
-        obj = iter->second;
+        assert(typeid(DecayT).hash_code() == std::get<0>(iter->second));
+        obj = std::get<1>(iter->second);
         if (isReturnCachedValue != nullptr)
         {
             *isReturnCachedValue = true;
@@ -647,7 +649,8 @@ bool native_ptr_to_rooted_seval(typename std::enable_if<!std::is_base_of<cocos2d
     }
     else
     {
-        obj = iter->second;
+        assert(typeid(T).hash_code() == std::get<0>(iter->second));
+        obj = std::get<1>(iter->second);
         assert(obj->isRooted());
         if (isReturnCachedValue != nullptr)
         {
@@ -691,7 +694,8 @@ native_ptr_to_seval(T* vp, se::Value* ret, bool* isReturnCachedValue = nullptr)
     }
     else
     {
-        obj = iter->second;
+        assert(typeid(DecayT).hash_code() == std::get<0>(iter->second));
+        obj = std::get<1>(iter->second);
 //        CCLOG("INFO: Found Ref type: (%s, native: %p, se: %p) from cache!", typeid(*v).name(), v, obj);
         if (isReturnCachedValue != nullptr)
         {
@@ -733,6 +737,7 @@ native_ptr_to_seval(T* vp, se::Class* cls, se::Value* ret, bool* isReturnCachedV
     }
     else
     {
+        assert(typeid(DecayT).hash_code() == std::get<0>(iter->second))
         obj = iter->second;
         if (isReturnCachedValue != nullptr)
         {

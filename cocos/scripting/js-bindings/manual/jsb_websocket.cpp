@@ -84,7 +84,7 @@ void JSB_WebSocketDelegate::onOpen(WebSocket* ws)
     if (iter == se::NativePtrToObjectMap::end())
         return;
 
-    se::Object* wsObj = iter->second;
+    se::Object* wsObj = std::get<1>(iter->second);
     wsObj->setProperty("protocol", se::Value(ws->getProtocol()));
 
     se::HandleObject jsObj(se::Object::createPlainObject());
@@ -119,7 +119,7 @@ void JSB_WebSocketDelegate::onMessage(WebSocket* ws, const WebSocket::Data& data
     if (iter == se::NativePtrToObjectMap::end())
         return;
 
-    se::Object* wsObj = iter->second;
+    se::Object* wsObj = std::get<1>(iter->second);
     se::HandleObject jsObj(se::Object::createPlainObject());
     jsObj->setProperty("type", se::Value("message"));
     se::Value target;
@@ -186,7 +186,7 @@ void JSB_WebSocketDelegate::onClose(WebSocket* ws)
             break;
         }
 
-        se::Object* wsObj = iter->second;
+        se::Object* wsObj = std::get<1>(iter->second);
         se::HandleObject jsObj(se::Object::createPlainObject());
         jsObj->setProperty("type", se::Value("close"));
         se::Value target;
@@ -231,7 +231,7 @@ void JSB_WebSocketDelegate::onError(WebSocket* ws, const WebSocket::ErrorCode& e
     if (iter == se::NativePtrToObjectMap::end())
         return;
 
-    se::Object* wsObj = iter->second;
+    se::Object* wsObj = std::get<1>(iter->second);
     se::HandleObject jsObj(se::Object::createPlainObject());
     jsObj->setProperty("type", se::Value("error"));
     se::Value target;

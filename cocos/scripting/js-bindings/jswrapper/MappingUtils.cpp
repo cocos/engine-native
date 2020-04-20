@@ -46,11 +46,6 @@ void NativePtrToObjectMap::destroy()
     }
 }
 
-void NativePtrToObjectMap::emplace(void* nativeObj, Object* seObj)
-{
-    __nativePtrToObjectMap->emplace(nativeObj, seObj);
-}
-
 NativePtrToObjectMap::Map::iterator NativePtrToObjectMap::find(void* nativeObj)
 {
     return __nativePtrToObjectMap->find(nativeObj);

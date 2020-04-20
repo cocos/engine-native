@@ -70,7 +70,7 @@ namespace se {
         auto iter = NativePtrToObjectMap::find(nativeObj);
         if (iter != NativePtrToObjectMap::end())
         {
-            Object* obj = iter->second;
+            Object* obj = std::get<1>(iter->second);
             if (obj->_finalizeCb != nullptr)
             {
                 obj->_finalizeCb(nativeObj);
@@ -107,7 +107,7 @@ namespace se {
         for (const auto& e : nativePtrToObjectMap)
         {
             nativeObj = e.first;
-            obj = e.second;
+            obj = std::get<1>(e.second);
 
             if (obj->_finalizeCb != nullptr)
             {
@@ -171,7 +171,7 @@ namespace se {
         auto iter = NativePtrToObjectMap::find(ptr);
         if (iter != NativePtrToObjectMap::end())
         {
-            obj = iter->second;
+            obj = std::get<1>(iter->second);
             obj->incRef();
         }
         return obj;
@@ -447,26 +447,7 @@ namespace se {
         return true;
     }
 
-    void Object::setPrivateData(void* data)
-    {
-        assert(_privateData == nullptr);
 
-#if COCOS2D_DEBUG
-        {
-            auto iter = NativePtrToObjectMap::find(data);
-            if (iter != NativePtrToObjectMap::end()) {
-                auto prevName = iter->second->_getClass()->getName();
-                auto currentName = _getClass()->getName();
-                SE_LOGE("Object::setPrivateData duplicate addr %p, previouse object %s, new object %s ",
-                    data, prevName, currentName);
-            }
-        }
-#endif
-        assert(NativePtrToObjectMap::find(data) == NativePtrToObjectMap::end());
-        internal::setPrivate(__isolate, _obj, data, &_internalData);
-        NativePtrToObjectMap::emplace(data, this);
-        _privateData = data;
-    }
 
     void* Object::getPrivateData() const
     {
