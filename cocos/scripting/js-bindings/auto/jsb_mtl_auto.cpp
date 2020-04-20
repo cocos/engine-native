@@ -15,7 +15,7 @@ se::Class* __jsb_cocos2d_CCMTLDevice_class = nullptr;
 
 static bool js_mtl_CCMTLDevice_getMTKView(se::State& s)
 {
-    cocos2d::CCMTLDevice* cobj = (cocos2d::CCMTLDevice*)s.nativeThisObject();
+    cocos2d::CCMTLDevice* cobj = SE_THIS_OBJECT<cocos2d::CCMTLDevice>(s);
     SE_PRECONDITION2(cobj, false, "js_mtl_CCMTLDevice_getMTKView : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -33,7 +33,7 @@ SE_BIND_FUNC(js_mtl_CCMTLDevice_getMTKView)
 
 static bool js_mtl_CCMTLDevice_getMTLDevice(se::State& s)
 {
-    cocos2d::CCMTLDevice* cobj = (cocos2d::CCMTLDevice*)s.nativeThisObject();
+    cocos2d::CCMTLDevice* cobj = SE_THIS_OBJECT<cocos2d::CCMTLDevice>(s);
     SE_PRECONDITION2(cobj, false, "js_mtl_CCMTLDevice_getMTLDevice : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -66,12 +66,12 @@ extern se::Object* __jsb_cocos2d_GFXDevice_proto;
 
 static bool js_cocos2d_CCMTLDevice_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::CCMTLDevice)", s.nativeThisObject());
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::CCMTLDevice)", SE_THIS_OBJECT<cocos2d::CCMTLDevice>(s););
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cocos2d::CCMTLDevice>(s));
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cocos2d::CCMTLDevice* cobj = (cocos2d::CCMTLDevice*)s.nativeThisObject();
+        cocos2d::CCMTLDevice* cobj = SE_THIS_OBJECT<cocos2d::CCMTLDevice>(s);
         JSB_FREE(cobj);
     }
     return true;

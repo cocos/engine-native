@@ -16,7 +16,7 @@ se::Class* __jsb_cocos2d_AudioProfile_class = nullptr;
 
 static bool js_audioengine_AudioProfile_get_name(se::State& s)
 {
-    cocos2d::AudioProfile* cobj = (cocos2d::AudioProfile*)s.nativeThisObject();
+    cocos2d::AudioProfile* cobj = SE_THIS_OBJECT<cocos2d::AudioProfile>(s);
     SE_PRECONDITION2(cobj, false, "js_audioengine_AudioProfile_get_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -30,7 +30,7 @@ SE_BIND_PROP_GET(js_audioengine_AudioProfile_get_name)
 static bool js_audioengine_AudioProfile_set_name(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::AudioProfile* cobj = (cocos2d::AudioProfile*)s.nativeThisObject();
+    cocos2d::AudioProfile* cobj = SE_THIS_OBJECT<cocos2d::AudioProfile>(s);
     SE_PRECONDITION2(cobj, false, "js_audioengine_AudioProfile_set_name : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -42,7 +42,7 @@ SE_BIND_PROP_SET(js_audioengine_AudioProfile_set_name)
 
 static bool js_audioengine_AudioProfile_get_maxInstances(se::State& s)
 {
-    cocos2d::AudioProfile* cobj = (cocos2d::AudioProfile*)s.nativeThisObject();
+    cocos2d::AudioProfile* cobj = SE_THIS_OBJECT<cocos2d::AudioProfile>(s);
     SE_PRECONDITION2(cobj, false, "js_audioengine_AudioProfile_get_maxInstances : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -56,7 +56,7 @@ SE_BIND_PROP_GET(js_audioengine_AudioProfile_get_maxInstances)
 static bool js_audioengine_AudioProfile_set_maxInstances(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::AudioProfile* cobj = (cocos2d::AudioProfile*)s.nativeThisObject();
+    cocos2d::AudioProfile* cobj = SE_THIS_OBJECT<cocos2d::AudioProfile>(s);
     SE_PRECONDITION2(cobj, false, "js_audioengine_AudioProfile_set_maxInstances : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -68,7 +68,7 @@ SE_BIND_PROP_SET(js_audioengine_AudioProfile_set_maxInstances)
 
 static bool js_audioengine_AudioProfile_get_minDelay(se::State& s)
 {
-    cocos2d::AudioProfile* cobj = (cocos2d::AudioProfile*)s.nativeThisObject();
+    cocos2d::AudioProfile* cobj = SE_THIS_OBJECT<cocos2d::AudioProfile>(s);
     SE_PRECONDITION2(cobj, false, "js_audioengine_AudioProfile_get_minDelay : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -82,7 +82,7 @@ SE_BIND_PROP_GET(js_audioengine_AudioProfile_get_minDelay)
 static bool js_audioengine_AudioProfile_set_minDelay(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::AudioProfile* cobj = (cocos2d::AudioProfile*)s.nativeThisObject();
+    cocos2d::AudioProfile* cobj = SE_THIS_OBJECT<cocos2d::AudioProfile>(s);
     SE_PRECONDITION2(cobj, false, "js_audioengine_AudioProfile_set_minDelay : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -108,12 +108,12 @@ SE_BIND_CTOR(js_audioengine_AudioProfile_constructor, __jsb_cocos2d_AudioProfile
 
 static bool js_cocos2d_AudioProfile_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::AudioProfile)", s.nativeThisObject());
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::AudioProfile)", SE_THIS_OBJECT<cocos2d::AudioProfile>(s););
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cocos2d::AudioProfile>(s));
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cocos2d::AudioProfile* cobj = (cocos2d::AudioProfile*)s.nativeThisObject();
+        cocos2d::AudioProfile* cobj = SE_THIS_OBJECT<cocos2d::AudioProfile>(s);
         JSB_FREE(cobj);
     }
     return true;

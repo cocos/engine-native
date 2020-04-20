@@ -15,7 +15,7 @@ se::Class* __jsb_cocos2d_GLES3Device_class = nullptr;
 
 static bool js_gles3_GLES3Device_checkExtension(se::State& s)
 {
-    cocos2d::GLES3Device* cobj = (cocos2d::GLES3Device*)s.nativeThisObject();
+    cocos2d::GLES3Device* cobj = SE_THIS_OBJECT<cocos2d::GLES3Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gles3_GLES3Device_checkExtension : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -36,7 +36,7 @@ SE_BIND_FUNC(js_gles3_GLES3Device_checkExtension)
 
 static bool js_gles3_GLES3Device_useVAO(se::State& s)
 {
-    cocos2d::GLES3Device* cobj = (cocos2d::GLES3Device*)s.nativeThisObject();
+    cocos2d::GLES3Device* cobj = SE_THIS_OBJECT<cocos2d::GLES3Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gles3_GLES3Device_useVAO : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -69,12 +69,12 @@ extern se::Object* __jsb_cocos2d_GFXDevice_proto;
 
 static bool js_cocos2d_GLES3Device_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::GLES3Device)", s.nativeThisObject());
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::GLES3Device)", SE_THIS_OBJECT<cocos2d::GLES3Device>(s););
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cocos2d::GLES3Device>(s));
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cocos2d::GLES3Device* cobj = (cocos2d::GLES3Device*)s.nativeThisObject();
+        cocos2d::GLES3Device* cobj = SE_THIS_OBJECT<cocos2d::GLES3Device>(s);
         JSB_FREE(cobj);
     }
     return true;

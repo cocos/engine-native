@@ -15,7 +15,7 @@ se::Class* __jsb_cocos2d_GLES2Device_class = nullptr;
 
 static bool js_gles2_GLES2Device_checkExtension(se::State& s)
 {
-    cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+    cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gles2_GLES2Device_checkExtension : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -36,7 +36,7 @@ SE_BIND_FUNC(js_gles2_GLES2Device_checkExtension)
 
 static bool js_gles2_GLES2Device_useInstancedArrays(se::State& s)
 {
-    cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+    cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gles2_GLES2Device_useInstancedArrays : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -54,7 +54,7 @@ SE_BIND_FUNC(js_gles2_GLES2Device_useInstancedArrays)
 
 static bool js_gles2_GLES2Device_useVAO(se::State& s)
 {
-    cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+    cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gles2_GLES2Device_useVAO : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -72,7 +72,7 @@ SE_BIND_FUNC(js_gles2_GLES2Device_useVAO)
 
 static bool js_gles2_GLES2Device_useDrawInstanced(se::State& s)
 {
-    cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+    cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gles2_GLES2Device_useDrawInstanced : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -90,7 +90,7 @@ SE_BIND_FUNC(js_gles2_GLES2Device_useDrawInstanced)
 
 static bool js_gles2_GLES2Device_useDiscardFramebuffer(se::State& s)
 {
-    cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+    cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
     SE_PRECONDITION2(cobj, false, "js_gles2_GLES2Device_useDiscardFramebuffer : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -123,12 +123,12 @@ extern se::Object* __jsb_cocos2d_GFXDevice_proto;
 
 static bool js_cocos2d_GLES2Device_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::GLES2Device)", s.nativeThisObject());
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::GLES2Device)", SE_THIS_OBJECT<cocos2d::GLES2Device>(s););
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cocos2d::GLES2Device>(s));
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cocos2d::GLES2Device* cobj = (cocos2d::GLES2Device*)s.nativeThisObject();
+        cocos2d::GLES2Device* cobj = SE_THIS_OBJECT<cocos2d::GLES2Device>(s);
         JSB_FREE(cobj);
     }
     return true;

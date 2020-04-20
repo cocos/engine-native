@@ -16,7 +16,7 @@ se::Class* __jsb_cocos2d_VideoPlayer_class = nullptr;
 
 static bool js_video_VideoPlayer_setFrame(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setFrame : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -41,7 +41,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_setFrame)
 
 static bool js_video_VideoPlayer_play(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_play : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -56,7 +56,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_play)
 
 static bool js_video_VideoPlayer_pause(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_pause : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -71,7 +71,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_pause)
 
 static bool js_video_VideoPlayer_setKeepAspectRatioEnabled(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setKeepAspectRatioEnabled : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -90,7 +90,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_setKeepAspectRatioEnabled)
 
 static bool js_video_VideoPlayer_currentTime(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_currentTime : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -108,7 +108,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_currentTime)
 
 static bool js_video_VideoPlayer_setFullScreenEnabled(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setFullScreenEnabled : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -127,7 +127,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_setFullScreenEnabled)
 
 static bool js_video_VideoPlayer_addEventListener(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_addEventListener : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -148,7 +148,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_addEventListener)
 
 static bool js_video_VideoPlayer_stop(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_stop : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -163,7 +163,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_stop)
 
 static bool js_video_VideoPlayer_setURL(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setURL : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -182,7 +182,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_setURL)
 
 static bool js_video_VideoPlayer_isKeepAspectRatioEnabled(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_isKeepAspectRatioEnabled : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -200,7 +200,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_isKeepAspectRatioEnabled)
 
 static bool js_video_VideoPlayer_onPlayEvent(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_onPlayEvent : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -219,7 +219,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_onPlayEvent)
 
 static bool js_video_VideoPlayer_duration(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_duration : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -237,7 +237,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_duration)
 
 static bool js_video_VideoPlayer_setVisible(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setVisible : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -256,7 +256,7 @@ SE_BIND_FUNC(js_video_VideoPlayer_setVisible)
 
 static bool js_video_VideoPlayer_seekTo(se::State& s)
 {
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    cocos2d::VideoPlayer* cobj = SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_seekTo : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -288,8 +288,8 @@ SE_BIND_CTOR(js_video_VideoPlayer_constructor, __jsb_cocos2d_VideoPlayer_class, 
 
 static bool js_cocos2d_VideoPlayer_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::VideoPlayer)", s.nativeThisObject());
-    cocos2d::VideoPlayer* cobj = (cocos2d::VideoPlayer*)s.nativeThisObject();
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::VideoPlayer)", SE_THIS_OBJECT<cocos2d::VideoPlayer>(s););
+    cocos2d::VideoPlayer* cobj =SE_THIS_OBJECT<cocos2d::VideoPlayer>(s);
     cobj->release();
     return true;
 }

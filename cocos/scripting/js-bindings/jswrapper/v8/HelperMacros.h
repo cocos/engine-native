@@ -45,6 +45,14 @@ extern uint32_t __jsbInvocationCount;
     void funcName##Registry(const v8::FunctionCallbackInfo<v8::Value>& v8args)
 
 
+namespace se {
+    class State;
+}
+
+template<typename T>
+constexpr inline T * SE_THIS_OBJECT(se::State& s) { return (T*) s.nativeThisObject();}
+
+
 #define SE_BIND_FUNC(funcName) \
     void funcName##Registry(const v8::FunctionCallbackInfo<v8::Value>& _v8args) \
     { \

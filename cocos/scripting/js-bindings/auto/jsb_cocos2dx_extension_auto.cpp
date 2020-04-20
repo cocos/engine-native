@@ -15,7 +15,7 @@ se::Class* __jsb_cocos2d_extension_EventAssetsManagerEx_class = nullptr;
 
 static bool js_extension_EventAssetsManagerEx_getAssetsManagerEx(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getAssetsManagerEx : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -33,7 +33,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getAssetsManagerEx)
 
 static bool js_extension_EventAssetsManagerEx_getDownloadedFiles(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getDownloadedFiles : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -51,7 +51,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getDownloadedFiles)
 
 static bool js_extension_EventAssetsManagerEx_getTotalFiles(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getTotalFiles : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -69,7 +69,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getTotalFiles)
 
 static bool js_extension_EventAssetsManagerEx_getAssetId(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getAssetId : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -87,7 +87,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getAssetId)
 
 static bool js_extension_EventAssetsManagerEx_getTotalBytes(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getTotalBytes : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -105,7 +105,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getTotalBytes)
 
 static bool js_extension_EventAssetsManagerEx_getCURLECode(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getCURLECode : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -123,7 +123,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getCURLECode)
 
 static bool js_extension_EventAssetsManagerEx_getMessage(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getMessage : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -141,7 +141,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getMessage)
 
 static bool js_extension_EventAssetsManagerEx_getCURLMCode(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getCURLMCode : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -159,7 +159,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getCURLMCode)
 
 static bool js_extension_EventAssetsManagerEx_getDownloadedBytes(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getDownloadedBytes : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -177,7 +177,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getDownloadedBytes)
 
 static bool js_extension_EventAssetsManagerEx_getPercentByFile(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getPercentByFile : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -195,7 +195,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getPercentByFile)
 
 static bool js_extension_EventAssetsManagerEx_getEventCode(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getEventCode : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -213,7 +213,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getEventCode)
 
 static bool js_extension_EventAssetsManagerEx_getPercent(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_getPercent : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -231,7 +231,7 @@ SE_BIND_FUNC(js_extension_EventAssetsManagerEx_getPercent)
 
 static bool js_extension_EventAssetsManagerEx_isResuming(se::State& s)
 {
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::EventAssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_EventAssetsManagerEx_isResuming : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -271,8 +271,8 @@ SE_BIND_CTOR(js_extension_EventAssetsManagerEx_constructor, __jsb_cocos2d_extens
 
 static bool js_cocos2d_extension_EventAssetsManagerEx_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::EventAssetsManagerEx)", s.nativeThisObject());
-    cocos2d::extension::EventAssetsManagerEx* cobj = (cocos2d::extension::EventAssetsManagerEx*)s.nativeThisObject();
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::EventAssetsManagerEx)", SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s););
+    cocos2d::extension::EventAssetsManagerEx* cobj =SE_THIS_OBJECT<cocos2d::extension::EventAssetsManagerEx>(s);
     cobj->release();
     return true;
 }
@@ -311,7 +311,7 @@ se::Class* __jsb_cocos2d_extension_ManifestAsset_class = nullptr;
 
 static bool js_extension_ManifestAsset_get_md5(se::State& s)
 {
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_md5 : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -325,7 +325,7 @@ SE_BIND_PROP_GET(js_extension_ManifestAsset_get_md5)
 static bool js_extension_ManifestAsset_set_md5(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_md5 : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -337,7 +337,7 @@ SE_BIND_PROP_SET(js_extension_ManifestAsset_set_md5)
 
 static bool js_extension_ManifestAsset_get_path(se::State& s)
 {
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_path : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -351,7 +351,7 @@ SE_BIND_PROP_GET(js_extension_ManifestAsset_get_path)
 static bool js_extension_ManifestAsset_set_path(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_path : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -363,7 +363,7 @@ SE_BIND_PROP_SET(js_extension_ManifestAsset_set_path)
 
 static bool js_extension_ManifestAsset_get_compressed(se::State& s)
 {
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_compressed : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -377,7 +377,7 @@ SE_BIND_PROP_GET(js_extension_ManifestAsset_get_compressed)
 static bool js_extension_ManifestAsset_set_compressed(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_compressed : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -389,7 +389,7 @@ SE_BIND_PROP_SET(js_extension_ManifestAsset_set_compressed)
 
 static bool js_extension_ManifestAsset_get_size(se::State& s)
 {
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_size : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -403,7 +403,7 @@ SE_BIND_PROP_GET(js_extension_ManifestAsset_get_size)
 static bool js_extension_ManifestAsset_set_size(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_size : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -415,7 +415,7 @@ SE_BIND_PROP_SET(js_extension_ManifestAsset_set_size)
 
 static bool js_extension_ManifestAsset_get_downloadState(se::State& s)
 {
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_get_downloadState : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -429,7 +429,7 @@ SE_BIND_PROP_GET(js_extension_ManifestAsset_get_downloadState)
 static bool js_extension_ManifestAsset_set_downloadState(se::State& s)
 {
     const auto& args = s.args();
-    cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+    cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_ManifestAsset_set_downloadState : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
@@ -557,12 +557,12 @@ SE_BIND_CTOR(js_extension_ManifestAsset_constructor, __jsb_cocos2d_extension_Man
 
 static bool js_cocos2d_extension_ManifestAsset_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::ManifestAsset)", s.nativeThisObject());
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::ManifestAsset)", SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s););
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s));
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cocos2d::extension::ManifestAsset* cobj = (cocos2d::extension::ManifestAsset*)s.nativeThisObject();
+        cocos2d::extension::ManifestAsset* cobj = SE_THIS_OBJECT<cocos2d::extension::ManifestAsset>(s);
         JSB_FREE(cobj);
     }
     return true;
@@ -594,7 +594,7 @@ se::Class* __jsb_cocos2d_extension_Manifest_class = nullptr;
 
 static bool js_extension_Manifest_getManifestRoot(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_getManifestRoot : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -612,7 +612,7 @@ SE_BIND_FUNC(js_extension_Manifest_getManifestRoot)
 
 static bool js_extension_Manifest_setUpdating(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_setUpdating : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -631,7 +631,7 @@ SE_BIND_FUNC(js_extension_Manifest_setUpdating)
 
 static bool js_extension_Manifest_getManifestFileUrl(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_getManifestFileUrl : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -649,7 +649,7 @@ SE_BIND_FUNC(js_extension_Manifest_getManifestFileUrl)
 
 static bool js_extension_Manifest_isVersionLoaded(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_isVersionLoaded : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -667,7 +667,7 @@ SE_BIND_FUNC(js_extension_Manifest_isVersionLoaded)
 
 static bool js_extension_Manifest_parseFile(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_parseFile : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -686,7 +686,7 @@ SE_BIND_FUNC(js_extension_Manifest_parseFile)
 
 static bool js_extension_Manifest_isLoaded(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_isLoaded : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -704,7 +704,7 @@ SE_BIND_FUNC(js_extension_Manifest_isLoaded)
 
 static bool js_extension_Manifest_getPackageUrl(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_getPackageUrl : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -722,7 +722,7 @@ SE_BIND_FUNC(js_extension_Manifest_getPackageUrl)
 
 static bool js_extension_Manifest_isUpdating(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_isUpdating : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -740,7 +740,7 @@ SE_BIND_FUNC(js_extension_Manifest_isUpdating)
 
 static bool js_extension_Manifest_getVersion(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_getVersion : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -758,7 +758,7 @@ SE_BIND_FUNC(js_extension_Manifest_getVersion)
 
 static bool js_extension_Manifest_parseJSONString(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_parseJSONString : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -779,7 +779,7 @@ SE_BIND_FUNC(js_extension_Manifest_parseJSONString)
 
 static bool js_extension_Manifest_getVersionFileUrl(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_getVersionFileUrl : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -797,7 +797,7 @@ SE_BIND_FUNC(js_extension_Manifest_getVersionFileUrl)
 
 static bool js_extension_Manifest_getSearchPaths(se::State& s)
 {
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    cocos2d::extension::Manifest* cobj = SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_Manifest_getSearchPaths : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -860,8 +860,8 @@ SE_BIND_CTOR(js_extension_Manifest_constructor, __jsb_cocos2d_extension_Manifest
 
 static bool js_cocos2d_extension_Manifest_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::Manifest)", s.nativeThisObject());
-    cocos2d::extension::Manifest* cobj = (cocos2d::extension::Manifest*)s.nativeThisObject();
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::Manifest)", SE_THIS_OBJECT<cocos2d::extension::Manifest>(s););
+    cocos2d::extension::Manifest* cobj =SE_THIS_OBJECT<cocos2d::extension::Manifest>(s);
     cobj->release();
     return true;
 }
@@ -899,7 +899,7 @@ se::Class* __jsb_cocos2d_extension_AssetsManagerEx_class = nullptr;
 
 static bool js_extension_AssetsManagerEx_setVerifyCallback(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_setVerifyCallback : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -918,7 +918,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_setVerifyCallback)
 
 static bool js_extension_AssetsManagerEx_getDownloadedFiles(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getDownloadedFiles : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -936,7 +936,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getDownloadedFiles)
 
 static bool js_extension_AssetsManagerEx_getState(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getState : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -954,7 +954,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getState)
 
 static bool js_extension_AssetsManagerEx_getMaxConcurrentTask(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getMaxConcurrentTask : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -972,7 +972,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getMaxConcurrentTask)
 
 static bool js_extension_AssetsManagerEx_getTotalFiles(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getTotalFiles : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -990,7 +990,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getTotalFiles)
 
 static bool js_extension_AssetsManagerEx_loadRemoteManifest(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_loadRemoteManifest : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1011,7 +1011,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_loadRemoteManifest)
 
 static bool js_extension_AssetsManagerEx_checkUpdate(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_checkUpdate : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1026,7 +1026,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_checkUpdate)
 
 static bool js_extension_AssetsManagerEx_getTotalBytes(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getTotalBytes : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1045,7 +1045,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getTotalBytes)
 static bool js_extension_AssetsManagerEx_loadLocalManifest(se::State& s)
 {
     CC_UNUSED bool ok = true;
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2( cobj, false, "js_extension_AssetsManagerEx_loadLocalManifest : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1085,7 +1085,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_loadLocalManifest)
 
 static bool js_extension_AssetsManagerEx_getStoragePath(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getStoragePath : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1103,7 +1103,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getStoragePath)
 
 static bool js_extension_AssetsManagerEx_update(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_update : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1118,7 +1118,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_update)
 
 static bool js_extension_AssetsManagerEx_setEventCallback(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_setEventCallback : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1137,7 +1137,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_setEventCallback)
 
 static bool js_extension_AssetsManagerEx_setVersionCompareHandle(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_setVersionCompareHandle : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1156,7 +1156,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_setVersionCompareHandle)
 
 static bool js_extension_AssetsManagerEx_setMaxConcurrentTask(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_setMaxConcurrentTask : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1175,7 +1175,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_setMaxConcurrentTask)
 
 static bool js_extension_AssetsManagerEx_getDownloadedBytes(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getDownloadedBytes : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1193,7 +1193,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getDownloadedBytes)
 
 static bool js_extension_AssetsManagerEx_getLocalManifest(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getLocalManifest : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1211,7 +1211,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getLocalManifest)
 
 static bool js_extension_AssetsManagerEx_getRemoteManifest(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_getRemoteManifest : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1229,7 +1229,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_getRemoteManifest)
 
 static bool js_extension_AssetsManagerEx_prepareUpdate(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_prepareUpdate : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1244,7 +1244,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_prepareUpdate)
 
 static bool js_extension_AssetsManagerEx_downloadFailedAssets(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_downloadFailedAssets : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1259,7 +1259,7 @@ SE_BIND_FUNC(js_extension_AssetsManagerEx_downloadFailedAssets)
 
 static bool js_extension_AssetsManagerEx_isResuming(se::State& s)
 {
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    cocos2d::extension::AssetsManagerEx* cobj = SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     SE_PRECONDITION2(cobj, false, "js_extension_AssetsManagerEx_isResuming : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
@@ -1344,8 +1344,8 @@ SE_BIND_CTOR(js_extension_AssetsManagerEx_constructor, __jsb_cocos2d_extension_A
 
 static bool js_cocos2d_extension_AssetsManagerEx_finalize(se::State& s)
 {
-    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::AssetsManagerEx)", s.nativeThisObject());
-    cocos2d::extension::AssetsManagerEx* cobj = (cocos2d::extension::AssetsManagerEx*)s.nativeThisObject();
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::extension::AssetsManagerEx)", SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s););
+    cocos2d::extension::AssetsManagerEx* cobj =SE_THIS_OBJECT<cocos2d::extension::AssetsManagerEx>(s);
     cobj->release();
     return true;
 }
