@@ -886,17 +886,17 @@ bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to, se::
         uint8_t* data = nullptr;
         size_t size = 0;
         array->getArrayBufferData(&data, &size);
-        for (int i = 0; i < std::min(size, CNT); i++) {
+        for (size_t i = 0; i < std::min(size, CNT); i++) {
             (*to)[i] = data[i];
         }
     }
     else if(array->isArray())
     {
-        uint32_t len = 0;
+        size_t len = 0;
         array->getArrayLength(&len);
         se::Value tmp;
         assert(len >= CNT);
-        for (uint32_t i = 0; i < CNT; i++)
+        for (size_t i = 0; i < CNT; i++)
         {
             array->getArrayElement(i, &tmp);
             sevalue_to_native(tmp, &(*to)[i], ctx);
@@ -1128,14 +1128,14 @@ inline bool nativevalue_to_se(const std::array<float, N>& from, se::Value& to, s
 template<>
 inline bool nativevalue_to_se(const int64_t &from, se::Value &to, se::Object *)
 {
-    to.setLong(from);
+    to.setLong((long)from);
     return true;
 }
 
 template<>
 inline bool nativevalue_to_se(const uint64_t &from, se::Value &to, se::Object *)
 {
-    to.setUlong(from);
+    to.setUlong((unsigned long)from);
     return true;
 }
 template<>
@@ -1260,14 +1260,8 @@ bool sevalue_to_native(const se::Value& from, std::function<R( Args...)>* func, 
 /////////////////////// FIXME: remove all code bellow
 ///////////////// gfx type
 namespace cocos2d {
-    struct GFXCommandAllocatorInfo;
     class GFXContext;
-    struct GFXBufferTextureCopy;
 }
 //template<>
 //bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo** to);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXContext);
-JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXCommandAllocatorInfo);
-
-#define SEVALUE_TO_NATIVE(a, b, c) sevalue_to_native(a, b, c)
-#define NATIVEVALUE_TO_SE(a, b, c) nativevalue_to_se(a, b, c)
