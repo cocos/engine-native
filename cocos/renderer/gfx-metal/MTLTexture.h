@@ -19,11 +19,12 @@ public:
     CC_INLINE GFXFormat getConvertedFormat() const { return _convertedFormat; }
     
 private:
-    void update(uint8_t* const* data, const GFXBufferTextureCopy& region);
+    void update(uint8_t* const* datas, const GFXBufferTextureCopyList& regions);
     
 private:
     id<MTLTexture> _mtlTexture = nil;
     GFXFormat _convertedFormat = GFXFormat::UNKNOWN;
+    GFXTextureViewType _viewType = GFXTextureViewType::TV2D;
 };
 
 NS_CC_END
