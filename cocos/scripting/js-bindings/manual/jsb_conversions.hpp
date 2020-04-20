@@ -1003,7 +1003,7 @@ bool sevalue_to_native(const se::Value &from, std::vector<uint8_t>* to, se::Obje
 template<typename T>
 bool sevalue_to_native(const se::Value &from,  T ** to, se::Object *)
 {
-    static_assert(is_jsb_object_v<T>, "Only JSB object are accepted!");
+    static_assert(is_jsb_object_v<std::remove_const_t<T>>, "Only JSB object are accepted!");
     if (from.isNullOrUndefined()) {
         //const std::string stack = se::ScriptEngine::getInstance()->getCurrentStackTrace();
         //SE_LOGE("[ERROR] sevalue_to_native jsval is null/undefined: %s\nstack: %s", typeid(T).name(), stack.c_str());

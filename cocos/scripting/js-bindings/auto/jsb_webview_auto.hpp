@@ -1,14 +1,18 @@
 #pragma once
 #include "base/ccConfig.h"
 #if (USE_WEB_VIEW > 0) && (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS) && !defined(CC_TARGET_OS_TVOS)
-
+#include <type_traits>
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
+#include "cocos/scripting/js-bindings/manual/jsb_conversions.hpp"
+#include "cocos/ui/webview/WebView.h"
 
 extern se::Object* __jsb_cocos2d_WebView_proto;
 extern se::Class* __jsb_cocos2d_WebView_class;
 
 bool js_register_cocos2d_WebView(se::Object* obj);
 bool register_all_webview(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cocos2d::WebView);
 SE_DECLARE_FUNC(js_webview_WebView_setOnShouldStartLoading);
 SE_DECLARE_FUNC(js_webview_WebView_setOnDidFailLoading);
 SE_DECLARE_FUNC(js_webview_WebView_canGoBack);

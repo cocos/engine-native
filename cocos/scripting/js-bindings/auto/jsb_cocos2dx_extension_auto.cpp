@@ -1279,12 +1279,12 @@ static bool js_extension_AssetsManagerEx_create(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        std::string arg0;
-        std::string arg1;
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0, nullptr); //is_reference True;
         ok &= sevalue_to_native(args[1], &arg1, nullptr); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_extension_AssetsManagerEx_create : Error processing arguments");
-        auto result = cocos2d::extension::AssetsManagerEx::create(arg0, arg1);
+        auto result = cocos2d::extension::AssetsManagerEx::create(HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1));
         result->retain();
         auto obj = se::Object::createObjectWithClass(__jsb_cocos2d_extension_AssetsManagerEx_class);
         obj->setPrivateData(result);

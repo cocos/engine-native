@@ -1,14 +1,18 @@
 #pragma once
 #include "base/ccConfig.h"
 #if (USE_VIDEO > 0) && (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS) && !defined(CC_TARGET_OS_TVOS)
-
+#include <type_traits>
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
+#include "cocos/scripting/js-bindings/manual/jsb_conversions.hpp"
+#include "cocos/ui/videoplayer/VideoPlayer.h"
 
 extern se::Object* __jsb_cocos2d_VideoPlayer_proto;
 extern se::Class* __jsb_cocos2d_VideoPlayer_class;
 
 bool js_register_cocos2d_VideoPlayer(se::Object* obj);
 bool register_all_video(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cocos2d::VideoPlayer);
 SE_DECLARE_FUNC(js_video_VideoPlayer_setFrame);
 SE_DECLARE_FUNC(js_video_VideoPlayer_play);
 SE_DECLARE_FUNC(js_video_VideoPlayer_pause);

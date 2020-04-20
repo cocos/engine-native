@@ -1,14 +1,18 @@
 #pragma once
 #include "base/ccConfig.h"
 #if (USE_AUDIO > 0) && (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_WINDOWS)
-
+#include <type_traits>
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
+#include "cocos/scripting/js-bindings/manual/jsb_conversions.hpp"
+#include "cocos/audio/include/AudioEngine.h"
 
 extern se::Object* __jsb_cocos2d_AudioProfile_proto;
 extern se::Class* __jsb_cocos2d_AudioProfile_class;
 
 bool js_register_cocos2d_AudioProfile(se::Object* obj);
 bool register_all_audioengine(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cocos2d::AudioProfile);
 SE_DECLARE_FUNC(js_audioengine_AudioProfile_AudioProfile);
 
 extern se::Object* __jsb_cocos2d_AudioEngine_proto;
@@ -16,6 +20,8 @@ extern se::Class* __jsb_cocos2d_AudioEngine_class;
 
 bool js_register_cocos2d_AudioEngine(se::Object* obj);
 bool register_all_audioengine(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cocos2d::AudioEngine);
 SE_DECLARE_FUNC(js_audioengine_AudioEngine_lazyInit);
 SE_DECLARE_FUNC(js_audioengine_AudioEngine_setCurrentTime);
 SE_DECLARE_FUNC(js_audioengine_AudioEngine_getVolume);

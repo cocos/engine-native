@@ -22,44 +22,10 @@ static bool js_webview_WebView_setOnShouldStartLoading(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::function<bool (cocos2d::WebView *, const std::string&)> arg0;
-        do {
-            if (args[0].isObject() && args[0].toObject()->isFunction())
-            {
-                se::Value jsThis(s.thisObject());
-                se::Value jsFunc(args[0]);
-                jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](cocos2d::WebView* larg0, const std::string& larg1) -> bool {
-                    se::ScriptEngine::getInstance()->clearException();
-                    se::AutoHandleScope hs;
-        
-                    CC_UNUSED bool ok = true;
-                    se::ValueArray args;
-                    args.resize(2);
-                    ok &= native_ptr_to_seval(larg0, &args[0]);
-                    ok &= std_string_to_seval(larg1, &args[1]);
-                    se::Value rval;
-                    se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
-                    se::Object* funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(args, thisObj, &rval);
-                    if (!succeed) {
-                        se::ScriptEngine::getInstance()->clearException();
-                    }
-                    bool result;
-                    ok &= seval_to_boolean(rval, &result);
-                    SE_PRECONDITION2(ok, result, "lambda function : Error processing return value with type bool");
-                    return result;
-                };
-                arg0 = lambda;
-            }
-            else
-            {
-                arg0 = nullptr;
-            }
-        } while(false)
-        ;
+        HolderType<std::function<bool (cocos2d::WebView *, const std::string&)>, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setOnShouldStartLoading : Error processing arguments");
-        cobj->setOnShouldStartLoading(arg0);
+        cobj->setOnShouldStartLoading(HolderType<std::function<bool (cocos2d::WebView *, const std::string&)>, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -75,40 +41,10 @@ static bool js_webview_WebView_setOnDidFailLoading(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::function<void (cocos2d::WebView *, const std::string&)> arg0;
-        do {
-            if (args[0].isObject() && args[0].toObject()->isFunction())
-            {
-                se::Value jsThis(s.thisObject());
-                se::Value jsFunc(args[0]);
-                jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](cocos2d::WebView* larg0, const std::string& larg1) -> void {
-                    se::ScriptEngine::getInstance()->clearException();
-                    se::AutoHandleScope hs;
-        
-                    CC_UNUSED bool ok = true;
-                    se::ValueArray args;
-                    args.resize(2);
-                    ok &= native_ptr_to_seval(larg0, &args[0]);
-                    ok &= std_string_to_seval(larg1, &args[1]);
-                    se::Value rval;
-                    se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
-                    se::Object* funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(args, thisObj, &rval);
-                    if (!succeed) {
-                        se::ScriptEngine::getInstance()->clearException();
-                    }
-                };
-                arg0 = lambda;
-            }
-            else
-            {
-                arg0 = nullptr;
-            }
-        } while(false)
-        ;
+        HolderType<std::function<void (cocos2d::WebView *, const std::string&)>, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setOnDidFailLoading : Error processing arguments");
-        cobj->setOnDidFailLoading(arg0);
+        cobj->setOnDidFailLoading(HolderType<std::function<void (cocos2d::WebView *, const std::string&)>, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -125,7 +61,7 @@ static bool js_webview_WebView_canGoBack(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->canGoBack();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_webview_WebView_canGoBack : Error processing arguments");
         return true;
     }
@@ -142,19 +78,19 @@ static bool js_webview_WebView_loadHTMLString(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_loadHTMLString : Error processing arguments");
-        cobj->loadHTMLString(arg0);
+        cobj->loadHTMLString(HolderType<std::string, true>::value(arg0));
         return true;
     }
     if (argc == 2) {
-        std::string arg0;
-        std::string arg1;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_loadHTMLString : Error processing arguments");
-        cobj->loadHTMLString(arg0, arg1);
+        cobj->loadHTMLString(HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -200,10 +136,10 @@ static bool js_webview_WebView_setScalesPageToFit(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
+        HolderType<bool, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setScalesPageToFit : Error processing arguments");
-        cobj->setScalesPageToFit(arg0);
+        cobj->setScalesPageToFit(HolderType<bool, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -220,7 +156,7 @@ static bool js_webview_WebView_getOnDidFailLoading(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::WebView::ccWebViewCallback result = cobj->getOnDidFailLoading();
-        #pragma warning NO CONVERSION FROM NATIVE FOR std::function;
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_webview_WebView_getOnDidFailLoading : Error processing arguments");
         return true;
     }
@@ -237,10 +173,10 @@ static bool js_webview_WebView_loadFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_loadFile : Error processing arguments");
-        cobj->loadFile(arg0);
+        cobj->loadFile(HolderType<std::string, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -256,10 +192,10 @@ static bool js_webview_WebView_loadURL(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_loadURL : Error processing arguments");
-        cobj->loadURL(arg0);
+        cobj->loadURL(HolderType<std::string, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -275,10 +211,10 @@ static bool js_webview_WebView_setBounces(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
+        HolderType<bool, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setBounces : Error processing arguments");
-        cobj->setBounces(arg0);
+        cobj->setBounces(HolderType<bool, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -294,10 +230,10 @@ static bool js_webview_WebView_evaluateJS(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_evaluateJS : Error processing arguments");
-        cobj->evaluateJS(arg0);
+        cobj->evaluateJS(HolderType<std::string, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -313,40 +249,10 @@ static bool js_webview_WebView_setOnJSCallback(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::function<void (cocos2d::WebView *, const std::string&)> arg0;
-        do {
-            if (args[0].isObject() && args[0].toObject()->isFunction())
-            {
-                se::Value jsThis(s.thisObject());
-                se::Value jsFunc(args[0]);
-                jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](cocos2d::WebView* larg0, const std::string& larg1) -> void {
-                    se::ScriptEngine::getInstance()->clearException();
-                    se::AutoHandleScope hs;
-        
-                    CC_UNUSED bool ok = true;
-                    se::ValueArray args;
-                    args.resize(2);
-                    ok &= native_ptr_to_seval(larg0, &args[0]);
-                    ok &= std_string_to_seval(larg1, &args[1]);
-                    se::Value rval;
-                    se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
-                    se::Object* funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(args, thisObj, &rval);
-                    if (!succeed) {
-                        se::ScriptEngine::getInstance()->clearException();
-                    }
-                };
-                arg0 = lambda;
-            }
-            else
-            {
-                arg0 = nullptr;
-            }
-        } while(false)
-        ;
+        HolderType<std::function<void (cocos2d::WebView *, const std::string&)>, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setOnJSCallback : Error processing arguments");
-        cobj->setOnJSCallback(arg0);
+        cobj->setOnJSCallback(HolderType<std::function<void (cocos2d::WebView *, const std::string&)>, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -362,10 +268,10 @@ static bool js_webview_WebView_setBackgroundTransparent(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
+        HolderType<bool, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setBackgroundTransparent : Error processing arguments");
-        cobj->setBackgroundTransparent(arg0);
+        cobj->setBackgroundTransparent(HolderType<bool, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -381,10 +287,10 @@ static bool js_webview_WebView_setJavascriptInterfaceScheme(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setJavascriptInterfaceScheme : Error processing arguments");
-        cobj->setJavascriptInterfaceScheme(arg0);
+        cobj->setJavascriptInterfaceScheme(HolderType<std::string, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -401,7 +307,7 @@ static bool js_webview_WebView_getOnJSCallback(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::WebView::ccWebViewCallback result = cobj->getOnJSCallback();
-        #pragma warning NO CONVERSION FROM NATIVE FOR std::function;
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_webview_WebView_getOnJSCallback : Error processing arguments");
         return true;
     }
@@ -419,7 +325,7 @@ static bool js_webview_WebView_canGoForward(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->canGoForward();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_webview_WebView_canGoForward : Error processing arguments");
         return true;
     }
@@ -437,7 +343,7 @@ static bool js_webview_WebView_getOnShouldStartLoading(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         std::function<bool (cocos2d::WebView *, const std::string&)> result = cobj->getOnShouldStartLoading();
-        #pragma warning NO CONVERSION FROM NATIVE FOR std::function;
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_webview_WebView_getOnShouldStartLoading : Error processing arguments");
         return true;
     }
@@ -469,16 +375,16 @@ static bool js_webview_WebView_setFrame(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        float arg0 = 0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setFrame : Error processing arguments");
-        cobj->setFrame(arg0, arg1, arg2, arg3);
+        cobj->setFrame(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -494,10 +400,10 @@ static bool js_webview_WebView_setVisible(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
+        HolderType<bool, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setVisible : Error processing arguments");
-        cobj->setVisible(arg0);
+        cobj->setVisible(HolderType<bool, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -528,16 +434,16 @@ static bool js_webview_WebView_loadData(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        cocos2d::Data arg0;
-        std::string arg1;
-        std::string arg2;
-        std::string arg3;
-        ok &= seval_to_Data(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
-        ok &= seval_to_std_string(args[2], &arg2);
-        ok &= seval_to_std_string(args[3], &arg3);
+        HolderType<cocos2d::Data, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        HolderType<std::string, true>::local_type arg2 = {};
+        HolderType<std::string, true>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_loadData : Error processing arguments");
-        cobj->loadData(arg0, arg1, arg2, arg3);
+        cobj->loadData(HolderType<cocos2d::Data, true>::value(arg0), HolderType<std::string, true>::value(arg1), HolderType<std::string, true>::value(arg2), HolderType<std::string, true>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -553,40 +459,10 @@ static bool js_webview_WebView_setOnDidFinishLoading(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::function<void (cocos2d::WebView *, const std::string&)> arg0;
-        do {
-            if (args[0].isObject() && args[0].toObject()->isFunction())
-            {
-                se::Value jsThis(s.thisObject());
-                se::Value jsFunc(args[0]);
-                jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](cocos2d::WebView* larg0, const std::string& larg1) -> void {
-                    se::ScriptEngine::getInstance()->clearException();
-                    se::AutoHandleScope hs;
-        
-                    CC_UNUSED bool ok = true;
-                    se::ValueArray args;
-                    args.resize(2);
-                    ok &= native_ptr_to_seval(larg0, &args[0]);
-                    ok &= std_string_to_seval(larg1, &args[1]);
-                    se::Value rval;
-                    se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
-                    se::Object* funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(args, thisObj, &rval);
-                    if (!succeed) {
-                        se::ScriptEngine::getInstance()->clearException();
-                    }
-                };
-                arg0 = lambda;
-            }
-            else
-            {
-                arg0 = nullptr;
-            }
-        } while(false)
-        ;
+        HolderType<std::function<void (cocos2d::WebView *, const std::string&)>, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_webview_WebView_setOnDidFinishLoading : Error processing arguments");
-        cobj->setOnDidFinishLoading(arg0);
+        cobj->setOnDidFinishLoading(HolderType<std::function<void (cocos2d::WebView *, const std::string&)>, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -603,7 +479,7 @@ static bool js_webview_WebView_getOnDidFinishLoading(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::WebView::ccWebViewCallback result = cobj->getOnDidFinishLoading();
-        #pragma warning NO CONVERSION FROM NATIVE FOR std::function;
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_webview_WebView_getOnDidFinishLoading : Error processing arguments");
         return true;
     }
@@ -632,7 +508,7 @@ SE_BIND_FUNC(js_webview_WebView_create)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_WebView_finalize)
 
-static bool js_webview_WebView_constructor(se::State& s)
+static bool js_webview_WebView_constructor(se::State& s) // constructor.c
 {
     cocos2d::WebView* cobj = JSB_ALLOC(cocos2d::WebView);
     s.thisObject()->setPrivateData(cobj);
