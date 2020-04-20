@@ -1079,6 +1079,7 @@ inline bool nativevalue_to_se(const std::vector<T>& from, se::Value& to, se::Obj
         array->setArrayElement(i, tmp);
     }
     to.setObject(array);
+    array->decRef();
     return true;
 }
 
@@ -1087,6 +1088,7 @@ inline bool nativevalue_to_se(const std::vector<int8_t>& from, se::Value& to, se
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::INT8, from.data(), from.size());
     to.setObject(array);
+    array->decRef();
     return true;
 }
 
@@ -1095,6 +1097,7 @@ inline bool nativevalue_to_se(const std::vector<uint8_t>& from, se::Value& to, s
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::UINT8, from.data(), from.size());
     to.setObject(array);
+    array->decRef();
     return true;
 }
 
@@ -1110,6 +1113,7 @@ inline bool nativevalue_to_se(const std::array<T, N>& from, se::Value& to, se::O
         array->setArrayElement(i, tmp);
     }
     to.setObject(array);
+    array->decRef();
     return true;
 }
 
@@ -1118,6 +1122,7 @@ inline bool nativevalue_to_se(const std::array<uint8_t, N>& from, se::Value& to,
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::UINT8, from.data(), N);
     to.setObject(array);
+    array->decRef();
     return true;
 }
 
@@ -1126,6 +1131,7 @@ inline bool nativevalue_to_se(const std::array<uint16_t, N>& from, se::Value& to
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::INT16, from.data(), N * sizeof(uint16_t));
     to.setObject(array);
+    array->decRef();
     return true;
 }
 
@@ -1134,6 +1140,7 @@ inline bool nativevalue_to_se(const std::array<float, N>& from, se::Value& to, s
 {
     se::Object* array = se::Object::createTypedArray(se::Object::TypedArrayType::FLOAT32, from.data(), N * sizeof(float));
     to.setObject(array);
+    array->decRef();
     return true;
 }
 
