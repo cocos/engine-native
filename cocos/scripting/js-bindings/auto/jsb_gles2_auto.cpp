@@ -22,10 +22,10 @@ static bool js_gles2_GLES2Device_checkExtension(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 1) {
         HolderType<cocos2d::String, true>::local_type arg0 = {};
-        ok &= SEVALUE_TO_NATIVE(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_checkExtension : Error processing arguments");
         bool result = cobj->checkExtension(HolderType<cocos2d::String, true>::value(arg0));
-        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_checkExtension : Error processing arguments");
         return true;
     }
@@ -43,7 +43,7 @@ static bool js_gles2_GLES2Device_useInstancedArrays(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useInstancedArrays();
-        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useInstancedArrays : Error processing arguments");
         return true;
     }
@@ -61,7 +61,7 @@ static bool js_gles2_GLES2Device_useVAO(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useVAO();
-        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useVAO : Error processing arguments");
         return true;
     }
@@ -79,7 +79,7 @@ static bool js_gles2_GLES2Device_useDrawInstanced(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useDrawInstanced();
-        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useDrawInstanced : Error processing arguments");
         return true;
     }
@@ -97,7 +97,7 @@ static bool js_gles2_GLES2Device_useDiscardFramebuffer(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->useDiscardFramebuffer();
-        ok &= NATIVEVALUE_TO_SE(result, s.rval(), nullptr /*ctx*/);
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gles2_GLES2Device_useDiscardFramebuffer : Error processing arguments");
         return true;
     }

@@ -34,7 +34,7 @@ bool js_register_cocos2d_extension_ManifestAsset(se::Object* obj);
 bool register_all_extension(se::Object* obj);
 
 template<>
-bool SEVALUE_TO_NATIVE(const se::Value &, cocos2d::extension::ManifestAsset *, se::Object *ctx);
+bool sevalue_to_native(const se::Value &, cocos2d::extension::ManifestAsset *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::extension::ManifestAsset);
 
 extern se::Object* __jsb_cocos2d_extension_Manifest_proto;

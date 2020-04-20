@@ -34,7 +34,7 @@ namespace cocos2d {
 namespace cocos2d { namespace network
 {
     class DownloadTaskCURL;
-    class DownloaderHints;
+    struct DownloaderHints;
 
     class DownloaderCURL : public IDownloaderImpl
     {
