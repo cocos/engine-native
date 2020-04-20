@@ -1051,10 +1051,11 @@ static bool js_extension_AssetsManagerEx_loadLocalManifest(se::State& s)
     size_t argc = args.size();
     do {
         if (argc == 1) {
-            std::string arg0;
+            HolderType<std::string, true>::local_type arg0 = {};
+
             ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
-            bool result = cobj->loadLocalManifest(arg0);
+            bool result = cobj->loadLocalManifest(HolderType<std::string, true>::value(arg0));
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_extension_AssetsManagerEx_loadLocalManifest : Error processing arguments");
             return true;
@@ -1063,13 +1064,14 @@ static bool js_extension_AssetsManagerEx_loadLocalManifest(se::State& s)
 
     do {
         if (argc == 2) {
-            cocos2d::extension::Manifest* arg0 = nullptr;
+            HolderType<cocos2d::extension::Manifest*, false>::local_type arg0 = {};
+            HolderType<std::string, true>::local_type arg1 = {};
+
             ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
             if (!ok) { ok = true; break; }
-            std::string arg1;
             ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
-            bool result = cobj->loadLocalManifest(arg0, arg1);
+            bool result = cobj->loadLocalManifest(HolderType<cocos2d::extension::Manifest*, false>::value(arg0), HolderType<std::string, true>::value(arg1));
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_extension_AssetsManagerEx_loadLocalManifest : Error processing arguments");
             return true;

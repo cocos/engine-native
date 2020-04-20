@@ -21,13 +21,13 @@ static bool js_engine_FileUtils_writeDataToFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        cocos2d::Data arg0;
-        std::string arg1;
-        ok &= seval_to_Data(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<cocos2d::Data, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeDataToFile : Error processing arguments");
-        bool result = cobj->writeDataToFile(arg0, arg1);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->writeDataToFile(HolderType<cocos2d::Data, true>::value(arg0), HolderType<std::string, true>::value(arg1));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeDataToFile : Error processing arguments");
         return true;
     }
@@ -44,11 +44,11 @@ static bool js_engine_FileUtils_fullPathForFilename(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_fullPathForFilename : Error processing arguments");
-        std::string result = cobj->fullPathForFilename(arg0);
-        ok &= std_string_to_seval(result, &s.rval());
+        std::string result = cobj->fullPathForFilename(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_fullPathForFilename : Error processing arguments");
         return true;
     }
@@ -65,11 +65,11 @@ static bool js_engine_FileUtils_getStringFromFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getStringFromFile : Error processing arguments");
-        std::string result = cobj->getStringFromFile(arg0);
-        ok &= std_string_to_seval(result, &s.rval());
+        std::string result = cobj->getStringFromFile(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getStringFromFile : Error processing arguments");
         return true;
     }
@@ -86,11 +86,11 @@ static bool js_engine_FileUtils_removeFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_removeFile : Error processing arguments");
-        bool result = cobj->removeFile(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->removeFile(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_removeFile : Error processing arguments");
         return true;
     }
@@ -107,11 +107,11 @@ static bool js_engine_FileUtils_getDataFromFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getDataFromFile : Error processing arguments");
-        cocos2d::Data result = cobj->getDataFromFile(arg0);
-        ok &= Data_to_seval(result, &s.rval());
+        cocos2d::Data result = cobj->getDataFromFile(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getDataFromFile : Error processing arguments");
         return true;
     }
@@ -128,11 +128,11 @@ static bool js_engine_FileUtils_isAbsolutePath(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_isAbsolutePath : Error processing arguments");
-        bool result = cobj->isAbsolutePath(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->isAbsolutePath(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_isAbsolutePath : Error processing arguments");
         return true;
     }
@@ -150,14 +150,15 @@ static bool js_engine_FileUtils_renameFile(se::State& s)
     size_t argc = args.size();
     do {
         if (argc == 2) {
-            std::string arg0;
-            ok &= seval_to_std_string(args[0], &arg0);
+            HolderType<std::string, true>::local_type arg0 = {};
+            HolderType<std::string, true>::local_type arg1 = {};
+
+            ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
-            std::string arg1;
-            ok &= seval_to_std_string(args[1], &arg1);
+            ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
-            bool result = cobj->renameFile(arg0, arg1);
-            ok &= boolean_to_seval(result, &s.rval());
+            bool result = cobj->renameFile(HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1));
+            ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_engine_FileUtils_renameFile : Error processing arguments");
             return true;
         }
@@ -165,17 +166,18 @@ static bool js_engine_FileUtils_renameFile(se::State& s)
 
     do {
         if (argc == 3) {
-            std::string arg0;
-            ok &= seval_to_std_string(args[0], &arg0);
+            HolderType<std::string, true>::local_type arg0 = {};
+            HolderType<std::string, true>::local_type arg1 = {};
+            HolderType<std::string, true>::local_type arg2 = {};
+
+            ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
-            std::string arg1;
-            ok &= seval_to_std_string(args[1], &arg1);
+            ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
-            std::string arg2;
-            ok &= seval_to_std_string(args[2], &arg2);
+            ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference True;
             if (!ok) { ok = true; break; }
-            bool result = cobj->renameFile(arg0, arg1, arg2);
-            ok &= boolean_to_seval(result, &s.rval());
+            bool result = cobj->renameFile(HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1), HolderType<std::string, true>::value(arg2));
+            ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_engine_FileUtils_renameFile : Error processing arguments");
             return true;
         }
@@ -194,11 +196,11 @@ static bool js_engine_FileUtils_normalizePath(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_normalizePath : Error processing arguments");
-        std::string result = cobj->normalizePath(arg0);
-        ok &= std_string_to_seval(result, &s.rval());
+        std::string result = cobj->normalizePath(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_normalizePath : Error processing arguments");
         return true;
     }
@@ -216,7 +218,7 @@ static bool js_engine_FileUtils_getDefaultResourceRootPath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::string& result = cobj->getDefaultResourceRootPath();
-        ok &= std_string_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getDefaultResourceRootPath : Error processing arguments");
         return true;
     }
@@ -233,10 +235,10 @@ static bool js_engine_FileUtils_loadFilenameLookupDictionaryFromFile(se::State& 
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_loadFilenameLookupDictionaryFromFile : Error processing arguments");
-        cobj->loadFilenameLookupDictionaryFromFile(arg0);
+        cobj->loadFilenameLookupDictionaryFromFile(HolderType<std::string, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -253,7 +255,7 @@ static bool js_engine_FileUtils_isPopupNotify(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         bool result = cobj->isPopupNotify();
-        ok &= boolean_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_isPopupNotify : Error processing arguments");
         return true;
     }
@@ -270,11 +272,11 @@ static bool js_engine_FileUtils_getValueVectorFromFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getValueVectorFromFile : Error processing arguments");
-        cocos2d::ValueVector result = cobj->getValueVectorFromFile(arg0);
-        ok &= ccvaluevector_to_seval(result, &s.rval());
+        cocos2d::ValueVector result = cobj->getValueVectorFromFile(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getValueVectorFromFile : Error processing arguments");
         return true;
     }
@@ -292,7 +294,7 @@ static bool js_engine_FileUtils_getSearchPaths(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<std::string>& result = cobj->getSearchPaths();
-        ok &= std_vector_string_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getSearchPaths : Error processing arguments");
         return true;
     }
@@ -309,11 +311,11 @@ static bool js_engine_FileUtils_getFileDir(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getFileDir : Error processing arguments");
-        std::string result = cobj->getFileDir(arg0);
-        ok &= std_string_to_seval(result, &s.rval());
+        std::string result = cobj->getFileDir(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getFileDir : Error processing arguments");
         return true;
     }
@@ -330,13 +332,13 @@ static bool js_engine_FileUtils_writeToFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        cocos2d::ValueMap arg0;
-        std::string arg1;
-        ok &= seval_to_ccvaluemap(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<cocos2d::ValueMap, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeToFile : Error processing arguments");
-        bool result = cobj->writeToFile(arg0, arg1);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->writeToFile(HolderType<cocos2d::ValueMap, true>::value(arg0), HolderType<std::string, true>::value(arg1));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeToFile : Error processing arguments");
         return true;
     }
@@ -354,7 +356,7 @@ static bool js_engine_FileUtils_getOriginalSearchPaths(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<std::string>& result = cobj->getOriginalSearchPaths();
-        ok &= std_vector_string_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getOriginalSearchPaths : Error processing arguments");
         return true;
     }
@@ -371,11 +373,11 @@ static bool js_engine_FileUtils_listFiles(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_listFiles : Error processing arguments");
-        std::vector<std::string> result = cobj->listFiles(arg0);
-        ok &= std_vector_string_to_seval(result, &s.rval());
+        std::vector<std::string> result = cobj->listFiles(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_listFiles : Error processing arguments");
         return true;
     }
@@ -392,11 +394,11 @@ static bool js_engine_FileUtils_getValueMapFromFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getValueMapFromFile : Error processing arguments");
-        cocos2d::ValueMap result = cobj->getValueMapFromFile(arg0);
-        ok &= ccvaluemap_to_seval(result, &s.rval());
+        cocos2d::ValueMap result = cobj->getValueMapFromFile(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getValueMapFromFile : Error processing arguments");
         return true;
     }
@@ -413,11 +415,11 @@ static bool js_engine_FileUtils_getFileSize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getFileSize : Error processing arguments");
-        long result = cobj->getFileSize(arg0);
-        ok &= long_to_seval(result, &s.rval());
+        long result = cobj->getFileSize(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getFileSize : Error processing arguments");
         return true;
     }
@@ -434,13 +436,13 @@ static bool js_engine_FileUtils_getValueMapFromData(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        const char* arg0 = nullptr;
-        int arg1 = 0;
-        std::string arg0_tmp; ok &= seval_to_std_string(args[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[1], &tmp); arg1 = (int)tmp; } while(false);
+        HolderType<const char*, false>::local_type arg0 = {};
+        HolderType<int, false>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getValueMapFromData : Error processing arguments");
-        cocos2d::ValueMap result = cobj->getValueMapFromData(arg0, arg1);
-        ok &= ccvaluemap_to_seval(result, &s.rval());
+        cocos2d::ValueMap result = cobj->getValueMapFromData(HolderType<const char*, false>::value(arg0), HolderType<int, false>::value(arg1));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getValueMapFromData : Error processing arguments");
         return true;
     }
@@ -457,11 +459,11 @@ static bool js_engine_FileUtils_removeDirectory(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_removeDirectory : Error processing arguments");
-        bool result = cobj->removeDirectory(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->removeDirectory(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_removeDirectory : Error processing arguments");
         return true;
     }
@@ -478,10 +480,10 @@ static bool js_engine_FileUtils_setSearchPaths(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::vector<std::string> arg0;
-        ok &= seval_to_std_vector(args[0], &arg0);
+        HolderType<std::vector<std::string>, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_setSearchPaths : Error processing arguments");
-        cobj->setSearchPaths(arg0);
+        cobj->setSearchPaths(HolderType<std::vector<std::string>, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -497,13 +499,13 @@ static bool js_engine_FileUtils_writeStringToFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        std::string arg0;
-        std::string arg1;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeStringToFile : Error processing arguments");
-        bool result = cobj->writeStringToFile(arg0, arg1);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->writeStringToFile(HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeStringToFile : Error processing arguments");
         return true;
     }
@@ -520,10 +522,10 @@ static bool js_engine_FileUtils_setSearchResolutionsOrder(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::vector<std::string> arg0;
-        ok &= seval_to_std_vector(args[0], &arg0);
+        HolderType<std::vector<std::string>, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_setSearchResolutionsOrder : Error processing arguments");
-        cobj->setSearchResolutionsOrder(arg0);
+        cobj->setSearchResolutionsOrder(HolderType<std::vector<std::string>, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -539,19 +541,19 @@ static bool js_engine_FileUtils_addSearchResolutionsOrder(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_addSearchResolutionsOrder : Error processing arguments");
-        cobj->addSearchResolutionsOrder(arg0);
+        cobj->addSearchResolutionsOrder(HolderType<std::string, true>::value(arg0));
         return true;
     }
     if (argc == 2) {
-        std::string arg0;
-        bool arg1;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_boolean(args[1], &arg1);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<bool, false>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_addSearchResolutionsOrder : Error processing arguments");
-        cobj->addSearchResolutionsOrder(arg0, arg1);
+        cobj->addSearchResolutionsOrder(HolderType<std::string, true>::value(arg0), HolderType<bool, false>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -567,19 +569,19 @@ static bool js_engine_FileUtils_addSearchPath(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_addSearchPath : Error processing arguments");
-        cobj->addSearchPath(arg0);
+        cobj->addSearchPath(HolderType<std::string, true>::value(arg0));
         return true;
     }
     if (argc == 2) {
-        std::string arg0;
-        bool arg1;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_boolean(args[1], &arg1);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<bool, false>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_addSearchPath : Error processing arguments");
-        cobj->addSearchPath(arg0, arg1);
+        cobj->addSearchPath(HolderType<std::string, true>::value(arg0), HolderType<bool, false>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -595,13 +597,13 @@ static bool js_engine_FileUtils_writeValueVectorToFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        cocos2d::ValueVector arg0;
-        std::string arg1;
-        ok &= seval_to_ccvaluevector(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<cocos2d::ValueVector, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeValueVectorToFile : Error processing arguments");
-        bool result = cobj->writeValueVectorToFile(arg0, arg1);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->writeValueVectorToFile(HolderType<cocos2d::ValueVector, true>::value(arg0), HolderType<std::string, true>::value(arg1));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeValueVectorToFile : Error processing arguments");
         return true;
     }
@@ -618,11 +620,11 @@ static bool js_engine_FileUtils_isFileExist(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_isFileExist : Error processing arguments");
-        bool result = cobj->isFileExist(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->isFileExist(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_isFileExist : Error processing arguments");
         return true;
     }
@@ -654,13 +656,13 @@ static bool js_engine_FileUtils_fullPathFromRelativeFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        std::string arg0;
-        std::string arg1;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_fullPathFromRelativeFile : Error processing arguments");
-        std::string result = cobj->fullPathFromRelativeFile(arg0, arg1);
-        ok &= std_string_to_seval(result, &s.rval());
+        std::string result = cobj->fullPathFromRelativeFile(HolderType<std::string, true>::value(arg0), HolderType<std::string, true>::value(arg1));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_fullPathFromRelativeFile : Error processing arguments");
         return true;
     }
@@ -677,11 +679,11 @@ static bool js_engine_FileUtils_getSuitableFOpen(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getSuitableFOpen : Error processing arguments");
-        std::string result = cobj->getSuitableFOpen(arg0);
-        ok &= std_string_to_seval(result, &s.rval());
+        std::string result = cobj->getSuitableFOpen(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getSuitableFOpen : Error processing arguments");
         return true;
     }
@@ -698,13 +700,13 @@ static bool js_engine_FileUtils_writeValueMapToFile(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        cocos2d::ValueMap arg0;
-        std::string arg1;
-        ok &= seval_to_ccvaluemap(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<cocos2d::ValueMap, true>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeValueMapToFile : Error processing arguments");
-        bool result = cobj->writeValueMapToFile(arg0, arg1);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->writeValueMapToFile(HolderType<cocos2d::ValueMap, true>::value(arg0), HolderType<std::string, true>::value(arg1));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_writeValueMapToFile : Error processing arguments");
         return true;
     }
@@ -721,11 +723,11 @@ static bool js_engine_FileUtils_getFileExtension(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getFileExtension : Error processing arguments");
-        std::string result = cobj->getFileExtension(arg0);
-        ok &= std_string_to_seval(result, &s.rval());
+        std::string result = cobj->getFileExtension(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getFileExtension : Error processing arguments");
         return true;
     }
@@ -742,10 +744,10 @@ static bool js_engine_FileUtils_setWritablePath(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_setWritablePath : Error processing arguments");
-        cobj->setWritablePath(arg0);
+        cobj->setWritablePath(HolderType<std::string, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -761,10 +763,10 @@ static bool js_engine_FileUtils_setPopupNotify(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
+        HolderType<bool, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_setPopupNotify : Error processing arguments");
-        cobj->setPopupNotify(arg0);
+        cobj->setPopupNotify(HolderType<bool, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -780,11 +782,11 @@ static bool js_engine_FileUtils_isDirectoryExist(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_isDirectoryExist : Error processing arguments");
-        bool result = cobj->isDirectoryExist(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->isDirectoryExist(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_isDirectoryExist : Error processing arguments");
         return true;
     }
@@ -801,10 +803,10 @@ static bool js_engine_FileUtils_setDefaultResourceRootPath(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_setDefaultResourceRootPath : Error processing arguments");
-        cobj->setDefaultResourceRootPath(arg0);
+        cobj->setDefaultResourceRootPath(HolderType<std::string, true>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -821,7 +823,7 @@ static bool js_engine_FileUtils_getSearchResolutionsOrder(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         const std::vector<std::string>& result = cobj->getSearchResolutionsOrder();
-        ok &= std_vector_string_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getSearchResolutionsOrder : Error processing arguments");
         return true;
     }
@@ -838,11 +840,11 @@ static bool js_engine_FileUtils_createDirectory(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_createDirectory : Error processing arguments");
-        bool result = cobj->createDirectory(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->createDirectory(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_createDirectory : Error processing arguments");
         return true;
     }
@@ -850,27 +852,6 @@ static bool js_engine_FileUtils_createDirectory(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_engine_FileUtils_createDirectory)
-
-static bool js_engine_FileUtils_listFilesRecursively(se::State& s)
-{
-    cocos2d::FileUtils* cobj = (cocos2d::FileUtils*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_engine_FileUtils_listFilesRecursively : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        std::string arg0;
-        std::vector<std::string>* arg1 = nullptr;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        SE_PRECONDITION2(ok, false, "js_engine_FileUtils_listFilesRecursively : Error processing arguments");
-        cobj->listFilesRecursively(arg0, arg1);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-    return false;
-}
-SE_BIND_FUNC(js_engine_FileUtils_listFilesRecursively)
 
 static bool js_engine_FileUtils_getWritablePath(se::State& s)
 {
@@ -881,7 +862,7 @@ static bool js_engine_FileUtils_getWritablePath(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         std::string result = cobj->getWritablePath();
-        ok &= std_string_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getWritablePath : Error processing arguments");
         return true;
     }
@@ -896,10 +877,10 @@ static bool js_engine_FileUtils_setDelegate(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        cocos2d::FileUtils* arg0 = nullptr;
-        ok &= seval_to_native_ptr(args[0], &arg0);
+        HolderType<cocos2d::FileUtils*, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_setDelegate : Error processing arguments");
-        cocos2d::FileUtils::setDelegate(arg0);
+        cocos2d::FileUtils::setDelegate(HolderType<cocos2d::FileUtils*, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -914,7 +895,7 @@ static bool js_engine_FileUtils_getInstance(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::FileUtils* result = cocos2d::FileUtils::getInstance();
-        ok &= native_ptr_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_getInstance : Error processing arguments");
         return true;
     }
@@ -982,7 +963,6 @@ bool js_register_engine_FileUtils(se::Object* obj)
     cls->defineFunction("setDefaultResourceRootPath", _SE(js_engine_FileUtils_setDefaultResourceRootPath));
     cls->defineFunction("getSearchResolutionsOrder", _SE(js_engine_FileUtils_getSearchResolutionsOrder));
     cls->defineFunction("createDirectory", _SE(js_engine_FileUtils_createDirectory));
-    cls->defineFunction("listFilesRecursively", _SE(js_engine_FileUtils_listFilesRecursively));
     cls->defineFunction("getWritablePath", _SE(js_engine_FileUtils_getWritablePath));
     cls->defineStaticFunction("setDelegate", _SE(js_engine_FileUtils_setDelegate));
     cls->defineStaticFunction("getInstance", _SE(js_engine_FileUtils_getInstance));
@@ -1007,7 +987,7 @@ static bool js_engine_Device_getDevicePixelRatio(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cocos2d::Device::getDevicePixelRatio();
-        ok &= int32_to_seval((int)result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_Device_getDevicePixelRatio : Error processing arguments");
         return true;
     }
@@ -1022,10 +1002,10 @@ static bool js_engine_Device_setAccelerometerEnabled(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
+        HolderType<bool, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_Device_setAccelerometerEnabled : Error processing arguments");
-        cocos2d::Device::setAccelerometerEnabled(arg0);
+        cocos2d::Device::setAccelerometerEnabled(HolderType<bool, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -1039,10 +1019,10 @@ static bool js_engine_Device_setAccelerometerInterval(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        float arg0 = 0;
-        ok &= seval_to_float(args[0], &arg0);
+        HolderType<float, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_Device_setAccelerometerInterval : Error processing arguments");
-        cocos2d::Device::setAccelerometerInterval(arg0);
+        cocos2d::Device::setAccelerometerInterval(HolderType<float, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -1056,10 +1036,10 @@ static bool js_engine_Device_vibrate(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        float arg0 = 0;
-        ok &= seval_to_float(args[0], &arg0);
+        HolderType<float, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_Device_vibrate : Error processing arguments");
-        cocos2d::Device::vibrate(arg0);
+        cocos2d::Device::vibrate(HolderType<float, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -1073,10 +1053,10 @@ static bool js_engine_Device_setKeepScreenOn(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
+        HolderType<bool, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_Device_setKeepScreenOn : Error processing arguments");
-        cocos2d::Device::setKeepScreenOn(arg0);
+        cocos2d::Device::setKeepScreenOn(HolderType<bool, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -1091,7 +1071,7 @@ static bool js_engine_Device_getNetworkType(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cocos2d::Device::getNetworkType();
-        ok &= int32_to_seval((int)result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_Device_getNetworkType : Error processing arguments");
         return true;
     }
@@ -1107,7 +1087,7 @@ static bool js_engine_Device_getBatteryLevel(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         float result = cocos2d::Device::getBatteryLevel();
-        ok &= float_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_Device_getBatteryLevel : Error processing arguments");
         return true;
     }
@@ -1123,7 +1103,7 @@ static bool js_engine_Device_getDeviceRotation(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = (int)cocos2d::Device::getDeviceRotation();
-        ok &= int32_to_seval((int)result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_Device_getDeviceRotation : Error processing arguments");
         return true;
     }
@@ -1139,7 +1119,7 @@ static bool js_engine_Device_getDPI(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         int result = cocos2d::Device::getDPI();
-        ok &= int32_to_seval((int)result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_Device_getDPI : Error processing arguments");
         return true;
     }
@@ -1155,7 +1135,7 @@ static bool js_engine_Device_getSafeAreaEdge(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         cocos2d::Vec4 result = cocos2d::Device::getSafeAreaEdge();
-        ok &= Vec4_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_Device_getSafeAreaEdge : Error processing arguments");
         return true;
     }
@@ -1171,7 +1151,7 @@ static bool js_engine_Device_getDeviceModel(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         std::string result = cocos2d::Device::getDeviceModel();
-        ok &= std_string_to_seval(result, &s.rval());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_Device_getDeviceModel : Error processing arguments");
         return true;
     }
@@ -1219,11 +1199,11 @@ static bool js_engine_SAXParser_init(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        const char* arg0 = nullptr;
-        std::string arg0_tmp; ok &= seval_to_std_string(args[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
+        HolderType<const char*, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_SAXParser_init : Error processing arguments");
-        bool result = cobj->init(arg0);
-        ok &= boolean_to_seval(result, &s.rval());
+        bool result = cobj->init(HolderType<const char*, false>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_SAXParser_init : Error processing arguments");
         return true;
     }
@@ -1261,12 +1241,12 @@ static bool js_engine_CanvasGradient_addColorStop(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        float arg0 = 0;
-        std::string arg1;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_std_string(args[1], &arg1);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<std::string, true>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasGradient_addColorStop : Error processing arguments");
-        cobj->addColorStop(arg0, arg1);
+        cobj->addColorStop(HolderType<float, false>::value(arg0), HolderType<std::string, true>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -1276,7 +1256,7 @@ SE_BIND_FUNC(js_engine_CanvasGradient_addColorStop)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_CanvasGradient_finalize)
 
-static bool js_engine_CanvasGradient_constructor(se::State& s)
+static bool js_engine_CanvasGradient_constructor(se::State& s) // constructor.c
 {
     cocos2d::CanvasGradient* cobj = JSB_ALLOC(cocos2d::CanvasGradient);
     s.thisObject()->setPrivateData(cobj);
@@ -1344,12 +1324,12 @@ static bool js_engine_CanvasRenderingContext2D_moveTo(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        float arg0 = 0;
-        float arg1 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_moveTo : Error processing arguments");
-        cobj->moveTo(arg0, arg1);
+        cobj->moveTo(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -1365,12 +1345,12 @@ static bool js_engine_CanvasRenderingContext2D_lineTo(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        float arg0 = 0;
-        float arg1 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_lineTo : Error processing arguments");
-        cobj->lineTo(arg0, arg1);
+        cobj->lineTo(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -1386,20 +1366,20 @@ static bool js_engine_CanvasRenderingContext2D_setTransform(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 6) {
-        float arg0 = 0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        float arg4 = 0;
-        float arg5 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
-        ok &= seval_to_float(args[4], &arg4);
-        ok &= seval_to_float(args[5], &arg5);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        HolderType<float, false>::local_type arg4 = {};
+        HolderType<float, false>::local_type arg5 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_setTransform : Error processing arguments");
-        cobj->setTransform(arg0, arg1, arg2, arg3, arg4, arg5);
+        cobj->setTransform(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3), HolderType<float, false>::value(arg4), HolderType<float, false>::value(arg5));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
@@ -1430,11 +1410,11 @@ static bool js_engine_CanvasRenderingContext2D_measureText(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        std::string arg0;
-        ok &= seval_to_std_string(args[0], &arg0);
+        HolderType<std::string, true>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_measureText : Error processing arguments");
-        cocos2d::Size result = cobj->measureText(arg0);
-        ok &= Size_to_seval(result, &s.rval());
+        cocos2d::Size result = cobj->measureText(HolderType<std::string, true>::value(arg0));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_measureText : Error processing arguments");
         return true;
     }
@@ -1466,18 +1446,18 @@ static bool js_engine_CanvasRenderingContext2D__fillImageData(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 5) {
-        cocos2d::Data arg0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        float arg4 = 0;
-        ok &= seval_to_Data(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
-        ok &= seval_to_float(args[4], &arg4);
+        HolderType<cocos2d::Data, true>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        HolderType<float, false>::local_type arg4 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D__fillImageData : Error processing arguments");
-        cobj->_fillImageData(arg0, arg1, arg2, arg3, arg4);
+        cobj->_fillImageData(HolderType<cocos2d::Data, true>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3), HolderType<float, false>::value(arg4));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 5);
@@ -1493,12 +1473,12 @@ static bool js_engine_CanvasRenderingContext2D_scale(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        float arg0 = 0;
-        float arg1 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_scale : Error processing arguments");
-        cobj->scale(arg0, arg1);
+        cobj->scale(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -1514,16 +1494,16 @@ static bool js_engine_CanvasRenderingContext2D_clearRect(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        float arg0 = 0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_clearRect : Error processing arguments");
-        cobj->clearRect(arg0, arg1, arg2, arg3);
+        cobj->clearRect(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -1539,20 +1519,20 @@ static bool js_engine_CanvasRenderingContext2D_transform(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 6) {
-        float arg0 = 0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        float arg4 = 0;
-        float arg5 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
-        ok &= seval_to_float(args[4], &arg4);
-        ok &= seval_to_float(args[5], &arg5);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        HolderType<float, false>::local_type arg4 = {};
+        HolderType<float, false>::local_type arg5 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_transform : Error processing arguments");
-        cobj->transform(arg0, arg1, arg2, arg3, arg4, arg5);
+        cobj->transform(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3), HolderType<float, false>::value(arg4), HolderType<float, false>::value(arg5));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
@@ -1568,27 +1548,27 @@ static bool js_engine_CanvasRenderingContext2D_fillText(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        std::string arg0;
-        float arg1 = 0;
-        float arg2 = 0;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_fillText : Error processing arguments");
-        cobj->fillText(arg0, arg1, arg2);
+        cobj->fillText(HolderType<std::string, true>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2));
         return true;
     }
     if (argc == 4) {
-        std::string arg0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_fillText : Error processing arguments");
-        cobj->fillText(arg0, arg1, arg2, arg3);
+        cobj->fillText(HolderType<std::string, true>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -1604,27 +1584,27 @@ static bool js_engine_CanvasRenderingContext2D_strokeText(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        std::string arg0;
-        float arg1 = 0;
-        float arg2 = 0;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_strokeText : Error processing arguments");
-        cobj->strokeText(arg0, arg1, arg2);
+        cobj->strokeText(HolderType<std::string, true>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2));
         return true;
     }
     if (argc == 4) {
-        std::string arg0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        ok &= seval_to_std_string(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
+        HolderType<std::string, true>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference True;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_strokeText : Error processing arguments");
-        cobj->strokeText(arg0, arg1, arg2, arg3);
+        cobj->strokeText(HolderType<std::string, true>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -1655,16 +1635,16 @@ static bool js_engine_CanvasRenderingContext2D_fillRect(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        float arg0 = 0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_fillRect : Error processing arguments");
-        cobj->fillRect(arg0, arg1, arg2, arg3);
+        cobj->fillRect(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -1680,10 +1660,10 @@ static bool js_engine_CanvasRenderingContext2D_rotate(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        float arg0 = 0;
-        ok &= seval_to_float(args[0], &arg0);
+        HolderType<float, false>::local_type arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_rotate : Error processing arguments");
-        cobj->rotate(arg0);
+        cobj->rotate(HolderType<float, false>::value(arg0));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -1714,16 +1694,16 @@ static bool js_engine_CanvasRenderingContext2D_rect(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        float arg0 = 0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_rect : Error processing arguments");
-        cobj->rect(arg0, arg1, arg2, arg3);
+        cobj->rect(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
@@ -1739,12 +1719,12 @@ static bool js_engine_CanvasRenderingContext2D_translate(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        float arg0 = 0;
-        float arg1 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_translate : Error processing arguments");
-        cobj->translate(arg0, arg1);
+        cobj->translate(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1));
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
@@ -1760,17 +1740,17 @@ static bool js_engine_CanvasRenderingContext2D_createLinearGradient(se::State& s
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        float arg0 = 0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
-        ok &= seval_to_float(args[0], &arg0);
-        ok &= seval_to_float(args[1], &arg1);
-        ok &= seval_to_float(args[2], &arg2);
-        ok &= seval_to_float(args[3], &arg3);
+        HolderType<float, false>::local_type arg0 = {};
+        HolderType<float, false>::local_type arg1 = {};
+        HolderType<float, false>::local_type arg2 = {};
+        HolderType<float, false>::local_type arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject()); //is_reference False;
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject()); //is_reference False;
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_createLinearGradient : Error processing arguments");
-        cocos2d::CanvasGradient* result = cobj->createLinearGradient(arg0, arg1, arg2, arg3);
-        ok &= native_ptr_to_seval(result, &s.rval());
+        cocos2d::CanvasGradient* result = cobj->createLinearGradient(HolderType<float, false>::value(arg0), HolderType<float, false>::value(arg1), HolderType<float, false>::value(arg2), HolderType<float, false>::value(arg3));
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_createLinearGradient : Error processing arguments");
         return true;
     }
@@ -1796,14 +1776,14 @@ SE_BIND_FUNC(js_engine_CanvasRenderingContext2D_closePath)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_CanvasRenderingContext2D_finalize)
 
-static bool js_engine_CanvasRenderingContext2D_constructor(se::State& s)
+static bool js_engine_CanvasRenderingContext2D_constructor(se::State& s) // constructor.c
 {
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
     float arg0 = 0;
     float arg1 = 0;
-    ok &= seval_to_float(args[0], &arg0);
-    ok &= seval_to_float(args[1], &arg1);
+    ok &= sevalue_to_native(args[0], &arg0, s.thisObject()); //is_reference False;
+    ok &= sevalue_to_native(args[1], &arg1, s.thisObject()); //is_reference False;
     SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_constructor : Error processing arguments");
     cocos2d::CanvasRenderingContext2D* cobj = JSB_ALLOC(cocos2d::CanvasRenderingContext2D, arg0, arg1);
     s.thisObject()->setPrivateData(cobj);

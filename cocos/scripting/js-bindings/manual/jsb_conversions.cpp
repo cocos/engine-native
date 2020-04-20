@@ -1493,3 +1493,36 @@ bool sevalue_to_native(const se::Value &from, void ** to, se::Object *)
     *to = (void*)buffer;
     return true;
 }
+
+////////////////// custom types
+
+template<>
+bool nativevalue_to_se(const cocos2d::Data& from, se::Value& to, se::Object*)
+{
+    se::Object* buffer = se::Object::createArrayBufferObject(from.getBytes(), from.getSize());
+    to.setObject(buffer);
+    return true;
+}
+
+template<>
+bool nativevalue_to_se(const cocos2d::Value& from, se::Value& to, se::Object*)
+{
+    return ccvalue_to_seval(from, &to);
+}
+
+template<>
+bool nativevalue_to_se(const std::unordered_map<std::string, cocos2d::Value>& from, se::Value& to, se::Object*)
+{
+    return ccvaluemap_to_seval(from, &to);
+}
+
+template<>
+bool nativevalue_to_se(const cocos2d::Vec4& from, se::Value& to, se::Object*)
+{
+    return Vec4_to_seval(from, &to);
+}
+template<>
+bool nativevalue_to_se(const cocos2d::Size& from, se::Value& to, se::Object*)
+{
+    return Size_to_seval(from, &to);
+}

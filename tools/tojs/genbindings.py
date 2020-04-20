@@ -144,7 +144,7 @@ def main():
         output_dir = '%s/cocos/scripting/js-bindings/auto' % project_root
 
         cmd_args = {
-                 #   'cocos2dx.ini' : ('cocos2d-x', 'jsb_cocos2dx_auto'),
+                    'cocos2dx.ini' : ('cocos2d-x', 'jsb_cocos2dx_auto'),
                     'cocos2dx_webview.ini': ('webview', 'jsb_webview_auto'),
                     'cocos2dx_video.ini': ('video', 'jsb_video_auto'),
                     'cocos2dx_audioengine.ini' : ('cocos2dx_audioengine', 'jsb_cocos2dx_audioengine_auto'),

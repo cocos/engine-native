@@ -826,6 +826,13 @@ struct HolderType {
     }
 };
 
+template<>
+struct HolderType<const char*, false> {
+    using type = const char*;
+    using local_type = std::string;
+    static type value(local_type& arg) { return arg.c_str(); }
+};
+
 ///////////////////////////////////convertion//////////////////////////////////////////////////////////
 
 
@@ -1261,7 +1268,27 @@ bool sevalue_to_native(const se::Value& from, std::function<R( Args...)>* func, 
 ///////////////// gfx type
 namespace cocos2d {
     class GFXContext;
+    class Data;
+    class Value;
+    class Vec4;
+    class Size;
 }
 //template<>
 //bool sevalue_to_native(const se::Value &from, cocos2d::GFXCommandAllocatorInfo** to);
 JSB_REGISTER_OBJECT_TYPE(cocos2d::GFXContext);
+JSB_REGISTER_OBJECT_TYPE(cocos2d::Data);
+
+template<>
+bool nativevalue_to_se(const cocos2d::Data& from, se::Value& to, se::Object*);
+
+template<>
+bool nativevalue_to_se(const cocos2d::Value& from, se::Value& to, se::Object*);
+
+template<>
+bool nativevalue_to_se(const std::unordered_map<std::string, cocos2d::Value> & from, se::Value& to, se::Object*);
+
+template<>
+bool nativevalue_to_se(const cocos2d::Vec4& from, se::Value& to, se::Object*);
+
+template<>
+bool nativevalue_to_se(const cocos2d::Size& from, se::Value& to, se::Object*);
