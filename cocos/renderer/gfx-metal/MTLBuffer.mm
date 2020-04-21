@@ -55,8 +55,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
     
     if (_usage & GFXBufferUsage::VERTEX ||
         _usage & GFXBufferUsage::INDEX ||
-        _usage & GFXBufferUsage::UNIFORM ||
-        _usage & GFXBufferUsageBit::TRANSFER_DST)
+        _usage & GFXBufferUsage::UNIFORM)
     {
         _mtlResourceOptions = toMTLResourseOption(info.memUsage);
         if (_size > 0)
@@ -74,7 +73,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo& info)
     {
         // do nothing
     }
-    else if (_usage & GFXBufferUsageBit::TRANSFER_SRC)
+    else if (_usage & GFXBufferUsageBit::TRANSFER_DST)
     {
         _transferBuffer = (uint8_t*)CC_MALLOC(_size);
         if (!_transferBuffer)
