@@ -8,12 +8,12 @@ NS_CC_BEGIN
 namespace {
     enum class GPUFamily : uint
     {
-        Apple1,
-        Apple2,
-        Apple3,
-        Apple4,
-        Apple5,
-        Apple6,
+        Apple1, // A7,
+        Apple2, // A8
+        Apple3, // A9, A10
+        Apple4, // A11
+        Apple5, // A12
+        Apple6, // A13
         
         Mac1,
         Mac2,
@@ -528,6 +528,26 @@ namespace mu
     NSUInteger highestSupportedFeatureSet(id<MTLDevice> device)
     {
         NSUInteger maxKnownFeatureSet;
+        NSUInteger defaultFeatureSet;
+#if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+        defaultFeatureSet = MTLFeatureSet_iOS_GPUFamily1_v1;
+        if(@available(iOS 12.0, *)) {
+            maxKnownFeatureSet = MTLFeatureSet_iOS_GPUFamily4_v2;
+        }
+        else if(@available(iOS 11.0, *)) {
+            maxKnownFeatureSet = MTLFeatureSet_iOS_GPUFamily4_v1;
+        }
+        else if(@available(iOS 10.0, *)) {
+            maxKnownFeatureSet = MTLFeatureSet_iOS_GPUFamily3_v2;
+        }
+        else if(@available(iOS 9.0, *)) {
+            maxKnownFeatureSet = MTLFeatureSet_iOS_GPUFamily3_v1;
+        }
+        else {
+            maxKnownFeatureSet = MTLFeatureSet_iOS_GPUFamily2_v1;
+        }
+#else
+        defaultFeatureSet = MTLFeatureSet_macOS_GPUFamily1_v1;
         if (@available(macOS 10.14, *)) {
             maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily2_v1;
         }
@@ -537,6 +557,7 @@ namespace mu
         else{
             maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily1_v2;
         }
+#endif
         for (auto featureSet = maxKnownFeatureSet; featureSet >= 0; --featureSet)
         {
             if ([device supportsFeatureSet:MTLFeatureSet(featureSet)])
@@ -547,21 +568,92 @@ namespace mu
         return MTLFeatureSet_macOS_GPUFamily1_v1;
     }
 
+#if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+    GPUFamily getIOSGPUFamily(MTLFeatureSet featureSet)
+    {
+        if(@available(iOS 12.0, *)) {
+            switch (featureSet) {
+                case MTLFeatureSet_iOS_GPUFamily1_v5:
+                    return GPUFamily::Apple1;
+                case MTLFeatureSet_iOS_GPUFamily2_v5:
+                    return GPUFamily::Apple2;
+                case MTLFeatureSet_iOS_GPUFamily3_v4:
+                    return GPUFamily::Apple3;
+                case MTLFeatureSet_iOS_GPUFamily4_v2:
+                    return GPUFamily::Apple4;
+                default:
+                   break;
+            }
+        }
+        if(@available(iOS 11.0, *)) {
+            switch (featureSet) {
+                case MTLFeatureSet_iOS_GPUFamily1_v4:
+                    return GPUFamily::Apple1;
+                case MTLFeatureSet_iOS_GPUFamily2_v4:
+                    return GPUFamily::Apple2;
+                case MTLFeatureSet_iOS_GPUFamily3_v3:
+                    return GPUFamily::Apple3;
+                case MTLFeatureSet_iOS_GPUFamily4_v1:
+                    return GPUFamily::Apple4;
+                default:
+                    break;
+            }
+        }
+        if(@available(iOS 10.0, *)) {
+            switch (featureSet) {
+                case MTLFeatureSet_iOS_GPUFamily1_v3:
+                    return GPUFamily::Apple1;
+                case MTLFeatureSet_iOS_GPUFamily2_v3:
+                    return GPUFamily::Apple2;
+                case MTLFeatureSet_iOS_GPUFamily3_v2:
+                    return GPUFamily::Apple3;
+                default:
+                    break;
+            }
+        }
+        if(@available(iOS 9.0, *)) {
+            switch (featureSet) {
+                case MTLFeatureSet_iOS_GPUFamily1_v2:
+                    return GPUFamily::Apple1;
+                case MTLFeatureSet_iOS_GPUFamily2_v2:
+                    return GPUFamily::Apple2;
+                case MTLFeatureSet_iOS_GPUFamily3_v1:
+                    return GPUFamily::Apple3;
+                default:
+                    break;
+            }
+        }
+        if (@available(iOS 8.0, *)) {
+            switch (featureSet) {
+                case MTLFeatureSet_iOS_GPUFamily1_v1:
+                    return GPUFamily::Apple1;
+                case MTLFeatureSet_iOS_GPUFamily2_v1:
+                    return GPUFamily::Apple2;
+                default:
+                    break;
+            }
+        }
+        return GPUFamily::Apple1;
+    }
+#else
+    GPUFamily getMacGPUFamily(MTLFeatureSet featureSet)
+    {
+        if(@available(macOS 10.14, *)) {
+            if (MTLFeatureSet_macOS_GPUFamily2_v1 <= featureSet) {
+                return GPUFamily::Mac2;
+            }
+        }
+        return GPUFamily::Mac1;
+    }
+#endif
+
     uint getGPUFamily(MTLFeatureSet featureSet)
     {
-        GPUFamily gpuFamily = GPUFamily::Mac1;
-        switch (featureSet) {
-            case MTLFeatureSet_macOS_GPUFamily1_v1:
-            case MTLFeatureSet_macOS_GPUFamily1_v2:
-            case MTLFeatureSet_macOS_GPUFamily1_v3:
-            case MTLFeatureSet_macOS_GPUFamily1_v4:
-                gpuFamily = GPUFamily::Mac1;
-            case MTLFeatureSet_macOS_GPUFamily2_v1:
-                gpuFamily = GPUFamily::Mac2;
-            default:
-                break;
-        }
-        return static_cast<uint>(gpuFamily);
+#if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+        return static_cast<uint>(getIOSGPUFamily(featureSet));
+#else
+        return static_cast<uint>(getMacGPUFamily(featureSet));
+#endif
     }
     
     int getMaxVertexAttributes(uint family)
