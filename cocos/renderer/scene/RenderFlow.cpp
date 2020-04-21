@@ -362,7 +362,7 @@ void RenderFlow::render(NodeProxy* scene, float deltaTime)
         traverseHandle(scene, _batcher, _scene);
         _batcher->terminateBatch();
 
-        _forward->render(_scene);
+        _forward->render(_scene, deltaTime);
     }
 }
 
