@@ -316,6 +316,14 @@ bool js_register_video_VideoPlayer(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_VideoPlayer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::VideoPlayer>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::VideoPlayer>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_VideoPlayer", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_VideoPlayer_proto = cls->getProto();
     __jsb_cocos2d_VideoPlayer_class = cls;

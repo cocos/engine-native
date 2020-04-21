@@ -889,7 +889,7 @@ bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to, se::
         uint8_t* data = nullptr;
         size_t size = 0;
         array->getTypedArrayData(&data, &size);
-        for (int i = 0; i < std::min(size, CNT); i++) {
+        for (size_t i = 0; i < std::min(size, CNT); i++) {
             (*to)[i] = data[i];
         }
     }

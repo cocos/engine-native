@@ -561,6 +561,14 @@ bool js_register_webview_WebView(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_WebView_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::WebView>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::WebView>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_WebView", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_WebView_proto = cls->getProto();
     __jsb_cocos2d_WebView_class = cls;

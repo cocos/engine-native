@@ -130,6 +130,47 @@ bool js_register_audioengine_AudioProfile(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_AudioProfile_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::AudioProfile>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::AudioProfile>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::AudioProfile::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::AudioProfile, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //maxInstances : unsigned int
+            using field_type = decltype(cocos2d::AudioProfile::maxInstances);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("maxInstances"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::AudioProfile, maxInstances)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //minDelay : double
+            using field_type = decltype(cocos2d::AudioProfile::minDelay);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("minDelay"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::AudioProfile, minDelay)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_AudioProfile", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_AudioProfile_proto = cls->getProto();
     __jsb_cocos2d_AudioProfile_class = cls;
@@ -741,6 +782,14 @@ bool js_register_audioengine_AudioEngine(se::Object* obj)
     cls->defineStaticFunction("getPlayingAudioCount", _SE(js_audioengine_AudioEngine_getPlayingAudioCount));
     cls->install();
     JSBClassType::registerClass<cocos2d::AudioEngine>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::AudioEngine>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_AudioEngine", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_AudioEngine_proto = cls->getProto();
     __jsb_cocos2d_AudioEngine_class = cls;

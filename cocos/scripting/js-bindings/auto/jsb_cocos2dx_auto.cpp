@@ -969,6 +969,14 @@ bool js_register_engine_FileUtils(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_FileUtils_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::FileUtils>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::FileUtils>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_FileUtils", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_FileUtils_proto = cls->getProto();
     __jsb_cocos2d_FileUtils_class = cls;
@@ -1180,6 +1188,14 @@ bool js_register_engine_Device(se::Object* obj)
     cls->defineStaticFunction("getDeviceModel", _SE(js_engine_Device_getDeviceModel));
     cls->install();
     JSBClassType::registerClass<cocos2d::Device>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::Device>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_Device", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_Device_proto = cls->getProto();
     __jsb_cocos2d_Device_class = cls;
@@ -1222,6 +1238,14 @@ bool js_register_engine_SAXParser(se::Object* obj)
     cls->defineFunction("init", _SE(js_engine_SAXParser_init));
     cls->install();
     JSBClassType::registerClass<cocos2d::SAXParser>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::SAXParser>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_PlistParser", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_SAXParser_proto = cls->getProto();
     __jsb_cocos2d_SAXParser_class = cls;
@@ -1290,6 +1314,14 @@ bool js_register_engine_CanvasGradient(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_CanvasGradient_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::CanvasGradient>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::CanvasGradient>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_CanvasGradient", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_CanvasGradient_proto = cls->getProto();
     __jsb_cocos2d_CanvasGradient_class = cls;
@@ -1837,6 +1869,135 @@ bool js_register_engine_CanvasRenderingContext2D(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_CanvasRenderingContext2D_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::CanvasRenderingContext2D>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::CanvasRenderingContext2D>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //__width : float
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::__width);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("__width"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, __width)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //__height : float
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::__height);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("__height"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, __height)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_lineWidth : float
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_lineWidth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_lineWidth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _lineWidth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_lineJoin : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_lineJoin);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_lineJoin"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _lineJoin)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_lineCap : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_lineCap);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_lineCap"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _lineCap)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_font : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_font);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_font"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _font)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_textAlign : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_textAlign);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_textAlign"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _textAlign)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_textBaseline : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_textBaseline);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_textBaseline"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _textBaseline)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_fillStyle : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_fillStyle);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_fillStyle"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _fillStyle)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_strokeStyle : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_strokeStyle);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_strokeStyle"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _strokeStyle)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //_globalCompositeOperation : basic_string
+            using field_type = decltype(cocos2d::CanvasRenderingContext2D::_globalCompositeOperation);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("_globalCompositeOperation"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::CanvasRenderingContext2D, _globalCompositeOperation)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_CanvasRenderingContext2D", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_CanvasRenderingContext2D_proto = cls->getProto();
     __jsb_cocos2d_CanvasRenderingContext2D_class = cls;

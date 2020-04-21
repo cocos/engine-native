@@ -147,6 +147,25 @@ bool js_register_gles2_GLES2Device(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GLES2Device_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GLES2Device>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GLES2Device>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //stateCache : GLES2StateCache*
+            using field_type = decltype(cocos2d::GLES2Device::stateCache);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stateCache"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GLES2Device, stateCache)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GLES2Device", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GLES2Device_proto = cls->getProto();
     __jsb_cocos2d_GLES2Device_class = cls;

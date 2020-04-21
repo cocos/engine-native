@@ -28,6 +28,9 @@
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
+#include <typeinfo>
+#include <type_traits>
+
 extern uint32_t __jsbInvocationCount;
 
 #ifdef __GNUC__
@@ -52,6 +55,15 @@ namespace se {
 template<typename T>
 constexpr inline T * SE_THIS_OBJECT(se::State& s) { return (T*) s.nativeThisObject();}
 
+template<typename T>
+constexpr const char* SE_UNDERLYING_TYPE_NAME() {
+    if constexpr (std::is_enum_v<T>) {
+        return typeid(std::underlying_type_t<T>).name();
+    }
+    else {
+        return typeid(T).name();
+    }
+}
 
 #define SE_BIND_FUNC(funcName) \
     void funcName##Registry(const v8::FunctionCallbackInfo<v8::Value>& _v8args) \

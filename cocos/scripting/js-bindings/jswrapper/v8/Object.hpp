@@ -105,6 +105,15 @@ namespace se {
          *  @note The return value (non-null) has to be released manually.
          */
         static Object* createArrayBufferObject(const void* bytes, size_t byteLength);
+        
+        /**
+         *  @brief Creates a JavaScript Array Buffer object from an existing pointer.
+         *  @param[in] bytes A pointer to the byte buffer to be used as the backing store of the Typed Array object.
+         *  @param[in] byteLength The number of bytes pointed to by the parameter bytes.
+         *  @return A Array Buffer Object whose backing store is the same as the one pointed to data, or nullptr if there is an error.
+         *  @note The return value (non-null) has to be released manually.
+         */
+        static Object* createExternalArrayBufferObject(void* bytes, size_t byteLength);
 
         /**
          *  @brief Creates a JavaScript Object from a JSON formatted string.
@@ -113,6 +122,13 @@ namespace se {
          *  @note The return value (non-null) has to be released manually.
          */
         static Object* createJSONObject(const std::string& jsonStr);
+
+        /**
+         *  @brief Creates a JavaScript DataView object from an external byte array.
+         *  @return A DataView object 
+         *  @note The return value has to be released manually.
+         */
+        Object* Object::createDataView(void* data, size_t dataCount);
 
         /**
          *  @brief Creates a JavaScript Native Binding Object from an existing se::Class instance.
@@ -409,6 +425,12 @@ namespace se {
             }
         }
 #endif
+        if constexpr (std::is_standard_layout_v<T>)
+        {
+            se::HandleObject scope(createDataView((void*)data, sizeof(T)));
+            this->setProperty("__dataView", se::Value(scope.get()));
+        }
+
         assert(NativePtrToObjectMap::find(data) == NativePtrToObjectMap::end());
         internal::setPrivate(v8::Isolate::GetCurrent(), _obj, data, &_internalData);
         NativePtrToObjectMap::emplace(data, this);

@@ -216,6 +216,13 @@ namespace se {
         Object* obj = Object::_createJSObject(nullptr, jsobj);
         return obj;
     }
+
+    Object* Object::createExternalArrayBufferObject(void* data, size_t byteLength)
+    {
+        v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, data, byteLength, v8::ArrayBufferCreationMode::kExternalized);
+        Object* obj = Object::_createJSObject(nullptr, jsobj);
+        return obj;
+    }
     
     Object* Object::createTypedArray(TypedArrayType type, const void* data, size_t byteLength)
     {
@@ -277,6 +284,13 @@ namespace se {
     Object* Object::createUint8TypedArray(const uint8_t* data, size_t dataCount)
     {
         return createTypedArray(TypedArrayType::UINT8, data, dataCount);
+    }
+
+    Object* Object::createDataView(void* data, size_t dataCount)
+    {
+        v8::Local<v8::ArrayBuffer> buffer = v8::ArrayBuffer::New(__isolate, data, dataCount);
+        v8::Local<v8::DataView> dv = v8::DataView::New(buffer, 0, dataCount);
+        return Object::_createJSObject(nullptr, dv);
     }
 
     Object* Object::createJSONObject(const std::string& jsonStr)

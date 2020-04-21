@@ -298,6 +298,14 @@ bool js_register_extension_EventAssetsManagerEx(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_extension_EventAssetsManagerEx_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::extension::EventAssetsManagerEx>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::extension::EventAssetsManagerEx>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_EventAssetsManager", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_extension_EventAssetsManagerEx_proto = cls->getProto();
     __jsb_cocos2d_extension_EventAssetsManagerEx_class = cls;
@@ -581,6 +589,69 @@ bool js_register_extension_ManifestAsset(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_extension_ManifestAsset_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::extension::ManifestAsset>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::extension::ManifestAsset>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //md5 : basic_string
+            using field_type = decltype(cocos2d::extension::ManifestAsset::md5);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("md5"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::extension::ManifestAsset, md5)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //path : basic_string
+            using field_type = decltype(cocos2d::extension::ManifestAsset::path);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("path"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::extension::ManifestAsset, path)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //compressed : bool
+            using field_type = decltype(cocos2d::extension::ManifestAsset::compressed);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("compressed"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::extension::ManifestAsset, compressed)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //size : float
+            using field_type = decltype(cocos2d::extension::ManifestAsset::size);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("size"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::extension::ManifestAsset, size)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //downloadState : int
+            using field_type = decltype(cocos2d::extension::ManifestAsset::downloadState);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("downloadState"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::extension::ManifestAsset, downloadState)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_ManifestAsset", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_extension_ManifestAsset_proto = cls->getProto();
     __jsb_cocos2d_extension_ManifestAsset_class = cls;
@@ -886,6 +957,14 @@ bool js_register_extension_Manifest(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_extension_Manifest_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::extension::Manifest>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::extension::Manifest>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_Manifest", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_extension_Manifest_proto = cls->getProto();
     __jsb_cocos2d_extension_Manifest_class = cls;
@@ -1379,6 +1458,14 @@ bool js_register_extension_AssetsManagerEx(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_extension_AssetsManagerEx_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::extension::AssetsManagerEx>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::extension::AssetsManagerEx>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_AssetsManager", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_extension_AssetsManagerEx_proto = cls->getProto();
     __jsb_cocos2d_extension_AssetsManagerEx_class = cls;

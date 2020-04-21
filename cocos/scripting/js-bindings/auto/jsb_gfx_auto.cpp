@@ -1306,6 +1306,47 @@ bool js_register_gfx_GFXOffset(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXOffset_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXOffset>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXOffset>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //x : int
+            using field_type = decltype(cocos2d::GFXOffset::x);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("x"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXOffset, x)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //y : int
+            using field_type = decltype(cocos2d::GFXOffset::y);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("y"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXOffset, y)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //z : int
+            using field_type = decltype(cocos2d::GFXOffset::z);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("z"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXOffset, z)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXOffset", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXOffset_proto = cls->getProto();
     __jsb_cocos2d_GFXOffset_class = cls;
@@ -1553,6 +1594,58 @@ bool js_register_gfx_GFXRect(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXRect_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXRect>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXRect>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //x : int
+            using field_type = decltype(cocos2d::GFXRect::x);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("x"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRect, x)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //y : int
+            using field_type = decltype(cocos2d::GFXRect::y);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("y"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRect, y)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //width : unsigned int
+            using field_type = decltype(cocos2d::GFXRect::width);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("width"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRect, width)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //height : unsigned int
+            using field_type = decltype(cocos2d::GFXRect::height);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("height"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRect, height)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXRect", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXRect_proto = cls->getProto();
     __jsb_cocos2d_GFXRect_class = cls;
@@ -1764,6 +1857,47 @@ bool js_register_gfx_GFXExtent(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXExtent_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXExtent>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXExtent>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //width : unsigned int
+            using field_type = decltype(cocos2d::GFXExtent::width);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("width"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXExtent, width)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //height : unsigned int
+            using field_type = decltype(cocos2d::GFXExtent::height);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("height"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXExtent, height)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depth : unsigned int
+            using field_type = decltype(cocos2d::GFXExtent::depth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXExtent, depth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXExtent", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXExtent_proto = cls->getProto();
     __jsb_cocos2d_GFXExtent_class = cls;
@@ -2011,6 +2145,58 @@ bool js_register_gfx_GFXTextureSubres(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXTextureSubres_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXTextureSubres>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXTextureSubres>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //baseMipLevel : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureSubres::baseMipLevel);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("baseMipLevel"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureSubres, baseMipLevel)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //levelCount : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureSubres::levelCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("levelCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureSubres, levelCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //baseArrayLayer : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureSubres::baseArrayLayer);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("baseArrayLayer"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureSubres, baseArrayLayer)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //layerCount : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureSubres::layerCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("layerCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureSubres, layerCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXTextureSubres", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXTextureSubres_proto = cls->getProto();
     __jsb_cocos2d_GFXTextureSubres_class = cls;
@@ -2294,6 +2480,69 @@ bool js_register_gfx_GFXTextureCopy(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXTextureCopy_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXTextureCopy>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXTextureCopy>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //srcSubres : GFXTextureSubres
+            using field_type = decltype(cocos2d::GFXTextureCopy::srcSubres);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("srcSubres"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureCopy, srcSubres)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //srcOffset : GFXOffset
+            using field_type = decltype(cocos2d::GFXTextureCopy::srcOffset);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("srcOffset"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureCopy, srcOffset)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //dstSubres : GFXTextureSubres
+            using field_type = decltype(cocos2d::GFXTextureCopy::dstSubres);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("dstSubres"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureCopy, dstSubres)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //dstOffset : GFXOffset
+            using field_type = decltype(cocos2d::GFXTextureCopy::dstOffset);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("dstOffset"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureCopy, dstOffset)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //extent : GFXExtent
+            using field_type = decltype(cocos2d::GFXTextureCopy::extent);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("extent"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureCopy, extent)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXTextureCopy", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXTextureCopy_proto = cls->getProto();
     __jsb_cocos2d_GFXTextureCopy_class = cls;
@@ -2613,6 +2862,80 @@ bool js_register_gfx_GFXBufferTextureCopy(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBufferTextureCopy_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBufferTextureCopy>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBufferTextureCopy>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //buffOffset : unsigned int
+            using field_type = decltype(cocos2d::GFXBufferTextureCopy::buffOffset);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("buffOffset"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferTextureCopy, buffOffset)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //buffStride : unsigned int
+            using field_type = decltype(cocos2d::GFXBufferTextureCopy::buffStride);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("buffStride"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferTextureCopy, buffStride)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //buffTexHeight : unsigned int
+            using field_type = decltype(cocos2d::GFXBufferTextureCopy::buffTexHeight);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("buffTexHeight"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferTextureCopy, buffTexHeight)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //texOffset : GFXOffset
+            using field_type = decltype(cocos2d::GFXBufferTextureCopy::texOffset);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("texOffset"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferTextureCopy, texOffset)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //texExtent : GFXExtent
+            using field_type = decltype(cocos2d::GFXBufferTextureCopy::texExtent);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("texExtent"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferTextureCopy, texExtent)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //texSubres : GFXTextureSubres
+            using field_type = decltype(cocos2d::GFXBufferTextureCopy::texSubres);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("texSubres"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferTextureCopy, texSubres)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBufferTextureCopy", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBufferTextureCopy_proto = cls->getProto();
     __jsb_cocos2d_GFXBufferTextureCopy_class = cls;
@@ -2932,6 +3255,80 @@ bool js_register_gfx_GFXViewport(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXViewport_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXViewport>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXViewport>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //left : int
+            using field_type = decltype(cocos2d::GFXViewport::left);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("left"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXViewport, left)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //top : int
+            using field_type = decltype(cocos2d::GFXViewport::top);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("top"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXViewport, top)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //width : unsigned int
+            using field_type = decltype(cocos2d::GFXViewport::width);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("width"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXViewport, width)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //height : unsigned int
+            using field_type = decltype(cocos2d::GFXViewport::height);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("height"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXViewport, height)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //minDepth : float
+            using field_type = decltype(cocos2d::GFXViewport::minDepth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("minDepth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXViewport, minDepth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //maxDepth : float
+            using field_type = decltype(cocos2d::GFXViewport::maxDepth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("maxDepth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXViewport, maxDepth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXViewport", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXViewport_proto = cls->getProto();
     __jsb_cocos2d_GFXViewport_class = cls;
@@ -3179,6 +3576,58 @@ bool js_register_gfx_GFXColor(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXColor_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXColor>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXColor>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //r : float
+            using field_type = decltype(cocos2d::GFXColor::r);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("r"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColor, r)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //g : float
+            using field_type = decltype(cocos2d::GFXColor::g);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("g"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColor, g)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //b : float
+            using field_type = decltype(cocos2d::GFXColor::b);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("b"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColor, b)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //a : float
+            using field_type = decltype(cocos2d::GFXColor::a);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("a"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColor, a)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXColor", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXColor_proto = cls->getProto();
     __jsb_cocos2d_GFXColor_class = cls;
@@ -3471,6 +3920,80 @@ bool js_register_gfx_GFXDeviceInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXDeviceInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXDeviceInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXDeviceInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //windowHandle : unsigned int
+            using field_type = decltype(cocos2d::GFXDeviceInfo::windowHandle);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("windowHandle"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDeviceInfo, windowHandle)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //width : unsigned int
+            using field_type = decltype(cocos2d::GFXDeviceInfo::width);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("width"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDeviceInfo, width)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //height : unsigned int
+            using field_type = decltype(cocos2d::GFXDeviceInfo::height);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("height"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDeviceInfo, height)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //nativeWidth : unsigned int
+            using field_type = decltype(cocos2d::GFXDeviceInfo::nativeWidth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("nativeWidth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDeviceInfo, nativeWidth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //nativeHeight : unsigned int
+            using field_type = decltype(cocos2d::GFXDeviceInfo::nativeHeight);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("nativeHeight"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDeviceInfo, nativeHeight)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //sharedCtx : GFXContext*
+            using field_type = decltype(cocos2d::GFXDeviceInfo::sharedCtx);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("sharedCtx"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDeviceInfo, sharedCtx)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXDeviceInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXDeviceInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXDeviceInfo_class = cls;
@@ -3970,6 +4493,135 @@ bool js_register_gfx_GFXWindowInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXWindowInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXWindowInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXWindowInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //title : basic_string
+            using field_type = decltype(cocos2d::GFXWindowInfo::title);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("title"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, title)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //left : int
+            using field_type = decltype(cocos2d::GFXWindowInfo::left);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("left"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, left)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //top : int
+            using field_type = decltype(cocos2d::GFXWindowInfo::top);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("top"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, top)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //width : unsigned int
+            using field_type = decltype(cocos2d::GFXWindowInfo::width);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("width"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, width)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //height : unsigned int
+            using field_type = decltype(cocos2d::GFXWindowInfo::height);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("height"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, height)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //colorFmt : GFXFormat
+            using field_type = decltype(cocos2d::GFXWindowInfo::colorFmt);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("colorFmt"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, colorFmt)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthStencilFmt : GFXFormat
+            using field_type = decltype(cocos2d::GFXWindowInfo::depthStencilFmt);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthStencilFmt"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, depthStencilFmt)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isOffscreen : bool
+            using field_type = decltype(cocos2d::GFXWindowInfo::isOffscreen);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isOffscreen"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, isOffscreen)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isFullscreen : bool
+            using field_type = decltype(cocos2d::GFXWindowInfo::isFullscreen);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isFullscreen"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, isFullscreen)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //vsyncMode : GFXVsyncMode
+            using field_type = decltype(cocos2d::GFXWindowInfo::vsyncMode);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("vsyncMode"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, vsyncMode)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //windowHandle : unsigned int
+            using field_type = decltype(cocos2d::GFXWindowInfo::windowHandle);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("windowHandle"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXWindowInfo, windowHandle)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXWindowInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXWindowInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXWindowInfo_class = cls;
@@ -4154,6 +4806,47 @@ bool js_register_gfx_GFXContextInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXContextInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXContextInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXContextInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //windowHandle : unsigned int
+            using field_type = decltype(cocos2d::GFXContextInfo::windowHandle);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("windowHandle"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXContextInfo, windowHandle)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //sharedCtx : GFXContext*
+            using field_type = decltype(cocos2d::GFXContextInfo::sharedCtx);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("sharedCtx"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXContextInfo, sharedCtx)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //vsyncMode : GFXVsyncMode
+            using field_type = decltype(cocos2d::GFXContextInfo::vsyncMode);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("vsyncMode"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXContextInfo, vsyncMode)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXContextInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXContextInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXContextInfo_class = cls;
@@ -4437,6 +5130,69 @@ bool js_register_gfx_GFXBufferInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBufferInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBufferInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBufferInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //usage : GFXBufferUsageBit
+            using field_type = decltype(cocos2d::GFXBufferInfo::usage);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("usage"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferInfo, usage)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //memUsage : GFXMemoryUsageBit
+            using field_type = decltype(cocos2d::GFXBufferInfo::memUsage);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("memUsage"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferInfo, memUsage)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stride : unsigned int
+            using field_type = decltype(cocos2d::GFXBufferInfo::stride);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stride"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferInfo, stride)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //size : unsigned int
+            using field_type = decltype(cocos2d::GFXBufferInfo::size);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("size"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferInfo, size)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //flags : GFXBufferFlagBit
+            using field_type = decltype(cocos2d::GFXBufferInfo::flags);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("flags"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBufferInfo, flags)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBufferInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBufferInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXBufferInfo_class = cls;
@@ -4792,6 +5548,91 @@ bool js_register_gfx_GFXDrawInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXDrawInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXDrawInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXDrawInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //vertexCount : unsigned int
+            using field_type = decltype(cocos2d::GFXDrawInfo::vertexCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("vertexCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDrawInfo, vertexCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //firstVertex : unsigned int
+            using field_type = decltype(cocos2d::GFXDrawInfo::firstVertex);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("firstVertex"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDrawInfo, firstVertex)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //indexCount : unsigned int
+            using field_type = decltype(cocos2d::GFXDrawInfo::indexCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("indexCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDrawInfo, indexCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //firstIndex : unsigned int
+            using field_type = decltype(cocos2d::GFXDrawInfo::firstIndex);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("firstIndex"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDrawInfo, firstIndex)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //vertexOffset : unsigned int
+            using field_type = decltype(cocos2d::GFXDrawInfo::vertexOffset);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("vertexOffset"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDrawInfo, vertexOffset)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //instanceCount : unsigned int
+            using field_type = decltype(cocos2d::GFXDrawInfo::instanceCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("instanceCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDrawInfo, instanceCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //firstInstance : unsigned int
+            using field_type = decltype(cocos2d::GFXDrawInfo::firstInstance);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("firstInstance"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDrawInfo, firstInstance)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXDrawInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXDrawInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXDrawInfo_class = cls;
@@ -4914,6 +5755,25 @@ bool js_register_gfx_GFXIndirectBuffer(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXIndirectBuffer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXIndirectBuffer>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXIndirectBuffer>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //drawInfos : vector<cocos2d::GFXDrawInfo>
+            using field_type = decltype(cocos2d::GFXIndirectBuffer::drawInfos);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("drawInfos"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXIndirectBuffer, drawInfos)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXIndirectBuffer", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXIndirectBuffer_proto = cls->getProto();
     __jsb_cocos2d_GFXIndirectBuffer_class = cls;
@@ -5377,6 +6237,124 @@ bool js_register_gfx_GFXTextureInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXTextureInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXTextureInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXTextureInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //type : GFXTextureType
+            using field_type = decltype(cocos2d::GFXTextureInfo::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //usage : GFXTextureUsageBit
+            using field_type = decltype(cocos2d::GFXTextureInfo::usage);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("usage"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, usage)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //format : GFXFormat
+            using field_type = decltype(cocos2d::GFXTextureInfo::format);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("format"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, format)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //width : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureInfo::width);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("width"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, width)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //height : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureInfo::height);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("height"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, height)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depth : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureInfo::depth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, depth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //arrayLayer : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureInfo::arrayLayer);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("arrayLayer"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, arrayLayer)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //mipLevel : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureInfo::mipLevel);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("mipLevel"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, mipLevel)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //samples : GFXSampleCount
+            using field_type = decltype(cocos2d::GFXTextureInfo::samples);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("samples"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, samples)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //flags : GFXTextureFlagBit
+            using field_type = decltype(cocos2d::GFXTextureInfo::flags);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("flags"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureInfo, flags)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXTextureInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXTextureInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXTextureInfo_class = cls;
@@ -5732,6 +6710,91 @@ bool js_register_gfx_GFXTextureViewInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXTextureViewInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXTextureViewInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXTextureViewInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //texture : GFXTexture*
+            using field_type = decltype(cocos2d::GFXTextureViewInfo::texture);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("texture"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureViewInfo, texture)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //type : GFXTextureViewType
+            using field_type = decltype(cocos2d::GFXTextureViewInfo::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureViewInfo, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //format : GFXFormat
+            using field_type = decltype(cocos2d::GFXTextureViewInfo::format);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("format"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureViewInfo, format)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //baseLevel : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureViewInfo::baseLevel);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("baseLevel"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureViewInfo, baseLevel)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //levelCount : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureViewInfo::levelCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("levelCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureViewInfo, levelCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //baseLayer : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureViewInfo::baseLayer);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("baseLayer"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureViewInfo, baseLayer)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //layerCount : unsigned int
+            using field_type = decltype(cocos2d::GFXTextureViewInfo::layerCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("layerCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXTextureViewInfo, layerCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXTextureViewInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXTextureViewInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXTextureViewInfo_class = cls;
@@ -6303,6 +7366,157 @@ bool js_register_gfx_GFXSamplerInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXSamplerInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXSamplerInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXSamplerInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXSamplerInfo::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //minFilter : GFXFilter
+            using field_type = decltype(cocos2d::GFXSamplerInfo::minFilter);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("minFilter"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, minFilter)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //magFilter : GFXFilter
+            using field_type = decltype(cocos2d::GFXSamplerInfo::magFilter);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("magFilter"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, magFilter)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //mipFilter : GFXFilter
+            using field_type = decltype(cocos2d::GFXSamplerInfo::mipFilter);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("mipFilter"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, mipFilter)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //addressU : GFXAddress
+            using field_type = decltype(cocos2d::GFXSamplerInfo::addressU);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("addressU"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, addressU)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //addressV : GFXAddress
+            using field_type = decltype(cocos2d::GFXSamplerInfo::addressV);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("addressV"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, addressV)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //addressW : GFXAddress
+            using field_type = decltype(cocos2d::GFXSamplerInfo::addressW);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("addressW"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, addressW)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //maxAnisotropy : unsigned int
+            using field_type = decltype(cocos2d::GFXSamplerInfo::maxAnisotropy);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("maxAnisotropy"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, maxAnisotropy)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //cmpFunc : GFXComparisonFunc
+            using field_type = decltype(cocos2d::GFXSamplerInfo::cmpFunc);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("cmpFunc"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, cmpFunc)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //borderColor : GFXColor
+            using field_type = decltype(cocos2d::GFXSamplerInfo::borderColor);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("borderColor"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, borderColor)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //minLOD : unsigned int
+            using field_type = decltype(cocos2d::GFXSamplerInfo::minLOD);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("minLOD"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, minLOD)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //maxLOD : unsigned int
+            using field_type = decltype(cocos2d::GFXSamplerInfo::maxLOD);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("maxLOD"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, maxLOD)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //mipLODBias : float
+            using field_type = decltype(cocos2d::GFXSamplerInfo::mipLODBias);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("mipLODBias"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSamplerInfo, mipLODBias)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXSamplerInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXSamplerInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXSamplerInfo_class = cls;
@@ -6478,6 +7692,36 @@ bool js_register_gfx_GFXShaderMacro(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXShaderMacro_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXShaderMacro>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXShaderMacro>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //macro : basic_string
+            using field_type = decltype(cocos2d::GFXShaderMacro::macro);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("macro"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderMacro, macro)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //value : basic_string
+            using field_type = decltype(cocos2d::GFXShaderMacro::value);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("value"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderMacro, value)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXShaderMacro", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXShaderMacro_proto = cls->getProto();
     __jsb_cocos2d_GFXShaderMacro_class = cls;
@@ -6689,6 +7933,47 @@ bool js_register_gfx_GFXUniform(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXUniform_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXUniform>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXUniform>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXUniform::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniform, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //type : GFXType
+            using field_type = decltype(cocos2d::GFXUniform::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniform, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //count : unsigned int
+            using field_type = decltype(cocos2d::GFXUniform::count);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("count"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniform, count)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXUniform", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXUniform_proto = cls->getProto();
     __jsb_cocos2d_GFXUniform_class = cls;
@@ -6900,6 +8185,47 @@ bool js_register_gfx_GFXUniformBlock(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXUniformBlock_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXUniformBlock>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXUniformBlock>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //binding : unsigned int
+            using field_type = decltype(cocos2d::GFXUniformBlock::binding);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("binding"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniformBlock, binding)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXUniformBlock::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniformBlock, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //uniforms : vector<cocos2d::GFXUniform>
+            using field_type = decltype(cocos2d::GFXUniformBlock::uniforms);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("uniforms"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniformBlock, uniforms)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXUniformBlock", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXUniformBlock_proto = cls->getProto();
     __jsb_cocos2d_GFXUniformBlock_class = cls;
@@ -7147,6 +8473,58 @@ bool js_register_gfx_GFXUniformSampler(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXUniformSampler_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXUniformSampler>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXUniformSampler>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //binding : unsigned int
+            using field_type = decltype(cocos2d::GFXUniformSampler::binding);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("binding"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniformSampler, binding)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXUniformSampler::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniformSampler, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //type : GFXType
+            using field_type = decltype(cocos2d::GFXUniformSampler::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniformSampler, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //count : unsigned int
+            using field_type = decltype(cocos2d::GFXUniformSampler::count);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("count"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXUniformSampler, count)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXUniformSampler", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXUniformSampler_proto = cls->getProto();
     __jsb_cocos2d_GFXUniformSampler_class = cls;
@@ -7358,6 +8736,47 @@ bool js_register_gfx_GFXShaderStage(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXShaderStage_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXShaderStage>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXShaderStage>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //type : GFXShaderType
+            using field_type = decltype(cocos2d::GFXShaderStage::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderStage, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //source : basic_string
+            using field_type = decltype(cocos2d::GFXShaderStage::source);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("source"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderStage, source)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //macros : vector<cocos2d::GFXShaderMacro>
+            using field_type = decltype(cocos2d::GFXShaderStage::macros);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("macros"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderStage, macros)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXShaderStage", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXShaderStage_proto = cls->getProto();
     __jsb_cocos2d_GFXShaderStage_class = cls;
@@ -7605,6 +9024,58 @@ bool js_register_gfx_GFXShaderInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXShaderInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXShaderInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXShaderInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXShaderInfo::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderInfo, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stages : vector<cocos2d::GFXShaderStage>
+            using field_type = decltype(cocos2d::GFXShaderInfo::stages);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stages"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderInfo, stages)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blocks : vector<cocos2d::GFXUniformBlock>
+            using field_type = decltype(cocos2d::GFXShaderInfo::blocks);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blocks"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderInfo, blocks)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //samplers : vector<cocos2d::GFXUniformSampler>
+            using field_type = decltype(cocos2d::GFXShaderInfo::samplers);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("samplers"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXShaderInfo, samplers)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXShaderInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXShaderInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXShaderInfo_class = cls;
@@ -7888,6 +9359,69 @@ bool js_register_gfx_GFXAttribute(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXAttribute_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXAttribute>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXAttribute>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXAttribute::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXAttribute, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //format : GFXFormat
+            using field_type = decltype(cocos2d::GFXAttribute::format);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("format"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXAttribute, format)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isNormalized : bool
+            using field_type = decltype(cocos2d::GFXAttribute::isNormalized);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isNormalized"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXAttribute, isNormalized)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stream : unsigned int
+            using field_type = decltype(cocos2d::GFXAttribute::stream);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stream"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXAttribute, stream)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isInstanced : bool
+            using field_type = decltype(cocos2d::GFXAttribute::isInstanced);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isInstanced"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXAttribute, isInstanced)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXAttribute", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXAttribute_proto = cls->getProto();
     __jsb_cocos2d_GFXAttribute_class = cls;
@@ -8135,6 +9669,58 @@ bool js_register_gfx_GFXInputAssemblerInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXInputAssemblerInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXInputAssemblerInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXInputAssemblerInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //attributes : vector<cocos2d::GFXAttribute>
+            using field_type = decltype(cocos2d::GFXInputAssemblerInfo::attributes);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("attributes"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXInputAssemblerInfo, attributes)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //vertexBuffers : vector<cocos2d::GFXBuffer *>
+            using field_type = decltype(cocos2d::GFXInputAssemblerInfo::vertexBuffers);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("vertexBuffers"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXInputAssemblerInfo, vertexBuffers)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //indexBuffer : GFXBuffer*
+            using field_type = decltype(cocos2d::GFXInputAssemblerInfo::indexBuffer);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("indexBuffer"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXInputAssemblerInfo, indexBuffer)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //indirectBuffer : GFXBuffer*
+            using field_type = decltype(cocos2d::GFXInputAssemblerInfo::indirectBuffer);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("indirectBuffer"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXInputAssemblerInfo, indirectBuffer)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXInputAssemblerInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXInputAssemblerInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXInputAssemblerInfo_class = cls;
@@ -8454,6 +10040,80 @@ bool js_register_gfx_GFXColorAttachment(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXColorAttachment_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXColorAttachment>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXColorAttachment>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //format : GFXFormat
+            using field_type = decltype(cocos2d::GFXColorAttachment::format);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("format"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColorAttachment, format)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //loadOp : GFXLoadOp
+            using field_type = decltype(cocos2d::GFXColorAttachment::loadOp);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("loadOp"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColorAttachment, loadOp)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //storeOp : GFXStoreOp
+            using field_type = decltype(cocos2d::GFXColorAttachment::storeOp);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("storeOp"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColorAttachment, storeOp)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //sampleCount : unsigned int
+            using field_type = decltype(cocos2d::GFXColorAttachment::sampleCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("sampleCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColorAttachment, sampleCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //beginLayout : GFXTextureLayout
+            using field_type = decltype(cocos2d::GFXColorAttachment::beginLayout);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("beginLayout"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColorAttachment, beginLayout)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //endLayout : GFXTextureLayout
+            using field_type = decltype(cocos2d::GFXColorAttachment::endLayout);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("endLayout"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXColorAttachment, endLayout)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXColorAttachment", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXColorAttachment_proto = cls->getProto();
     __jsb_cocos2d_GFXColorAttachment_class = cls;
@@ -8845,6 +10505,102 @@ bool js_register_gfx_GFXDepthStencilAttachment(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXDepthStencilAttachment_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXDepthStencilAttachment>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXDepthStencilAttachment>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //format : GFXFormat
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::format);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("format"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, format)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthLoadOp : GFXLoadOp
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::depthLoadOp);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthLoadOp"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, depthLoadOp)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthStoreOp : GFXStoreOp
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::depthStoreOp);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthStoreOp"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, depthStoreOp)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilLoadOp : GFXLoadOp
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::stencilLoadOp);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilLoadOp"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, stencilLoadOp)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilStoreOp : GFXStoreOp
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::stencilStoreOp);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilStoreOp"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, stencilStoreOp)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //sampleCount : unsigned int
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::sampleCount);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("sampleCount"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, sampleCount)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //beginLayout : GFXTextureLayout
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::beginLayout);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("beginLayout"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, beginLayout)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //endLayout : GFXTextureLayout
+            using field_type = decltype(cocos2d::GFXDepthStencilAttachment::endLayout);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("endLayout"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilAttachment, endLayout)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXDepthStencilAttachment", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXDepthStencilAttachment_proto = cls->getProto();
     __jsb_cocos2d_GFXDepthStencilAttachment_class = cls;
@@ -9164,6 +10920,80 @@ bool js_register_gfx_GFXSubPass(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXSubPass_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXSubPass>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXSubPass>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //bindPoint : GFXPipelineBindPoint
+            using field_type = decltype(cocos2d::GFXSubPass::bindPoint);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("bindPoint"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSubPass, bindPoint)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //inputs : array
+            using field_type = decltype(cocos2d::GFXSubPass::inputs);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("inputs"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSubPass, inputs)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //colors : array
+            using field_type = decltype(cocos2d::GFXSubPass::colors);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("colors"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSubPass, colors)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //resolves : array
+            using field_type = decltype(cocos2d::GFXSubPass::resolves);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("resolves"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSubPass, resolves)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthStencil : unsigned char
+            using field_type = decltype(cocos2d::GFXSubPass::depthStencil);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthStencil"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSubPass, depthStencil)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //preserves : array
+            using field_type = decltype(cocos2d::GFXSubPass::preserves);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("preserves"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXSubPass, preserves)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXSubPass", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXSubPass_proto = cls->getProto();
     __jsb_cocos2d_GFXSubPass_class = cls;
@@ -9375,6 +11205,47 @@ bool js_register_gfx_GFXRenderPassInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXRenderPassInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXRenderPassInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXRenderPassInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //colorAttachments : vector<cocos2d::GFXColorAttachment>
+            using field_type = decltype(cocos2d::GFXRenderPassInfo::colorAttachments);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("colorAttachments"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRenderPassInfo, colorAttachments)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthStencilAttachment : GFXDepthStencilAttachment
+            using field_type = decltype(cocos2d::GFXRenderPassInfo::depthStencilAttachment);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthStencilAttachment"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRenderPassInfo, depthStencilAttachment)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //subPasses : vector<cocos2d::GFXSubPass>
+            using field_type = decltype(cocos2d::GFXRenderPassInfo::subPasses);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("subPasses"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRenderPassInfo, subPasses)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXRenderPassInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXRenderPassInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXRenderPassInfo_class = cls;
@@ -9622,6 +11493,58 @@ bool js_register_gfx_GFXFramebufferInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXFramebufferInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXFramebufferInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXFramebufferInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //renderPass : GFXRenderPass*
+            using field_type = decltype(cocos2d::GFXFramebufferInfo::renderPass);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("renderPass"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFramebufferInfo, renderPass)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //colorViews : vector<cocos2d::GFXTextureView *>
+            using field_type = decltype(cocos2d::GFXFramebufferInfo::colorViews);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("colorViews"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFramebufferInfo, colorViews)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthStencilView : GFXTextureView*
+            using field_type = decltype(cocos2d::GFXFramebufferInfo::depthStencilView);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthStencilView"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFramebufferInfo, depthStencilView)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isOffscreen : bool
+            using field_type = decltype(cocos2d::GFXFramebufferInfo::isOffscreen);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isOffscreen"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFramebufferInfo, isOffscreen)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXFramebufferInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXFramebufferInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXFramebufferInfo_class = cls;
@@ -9833,6 +11756,47 @@ bool js_register_gfx_GFXBinding(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBinding_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBinding>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBinding>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //binding : unsigned int
+            using field_type = decltype(cocos2d::GFXBinding::binding);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("binding"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBinding, binding)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //type : GFXBindingType
+            using field_type = decltype(cocos2d::GFXBinding::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBinding, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXBinding::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBinding, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBinding", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBinding_proto = cls->getProto();
     __jsb_cocos2d_GFXBinding_class = cls;
@@ -9955,6 +11919,25 @@ bool js_register_gfx_GFXBindingLayoutInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBindingLayoutInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBindingLayoutInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBindingLayoutInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //bindings : vector<cocos2d::GFXBinding>
+            using field_type = decltype(cocos2d::GFXBindingLayoutInfo::bindings);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("bindings"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBindingLayoutInfo, bindings)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBindingLayoutInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBindingLayoutInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXBindingLayoutInfo_class = cls;
@@ -10274,6 +12257,80 @@ bool js_register_gfx_GFXBindingUnit(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBindingUnit_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBindingUnit>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBindingUnit>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //binding : unsigned int
+            using field_type = decltype(cocos2d::GFXBindingUnit::binding);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("binding"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBindingUnit, binding)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //type : GFXBindingType
+            using field_type = decltype(cocos2d::GFXBindingUnit::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBindingUnit, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXBindingUnit::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBindingUnit, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //buffer : GFXBuffer*
+            using field_type = decltype(cocos2d::GFXBindingUnit::buffer);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("buffer"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBindingUnit, buffer)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //texView : GFXTextureView*
+            using field_type = decltype(cocos2d::GFXBindingUnit::texView);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("texView"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBindingUnit, texView)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //sampler : GFXSampler*
+            using field_type = decltype(cocos2d::GFXBindingUnit::sampler);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("sampler"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBindingUnit, sampler)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBindingUnit", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBindingUnit_proto = cls->getProto();
     __jsb_cocos2d_GFXBindingUnit_class = cls;
@@ -10485,6 +12542,47 @@ bool js_register_gfx_GFXPushConstantRange(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXPushConstantRange_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXPushConstantRange>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXPushConstantRange>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //shaderType : GFXShaderType
+            using field_type = decltype(cocos2d::GFXPushConstantRange::shaderType);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("shaderType"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPushConstantRange, shaderType)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //offset : unsigned int
+            using field_type = decltype(cocos2d::GFXPushConstantRange::offset);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("offset"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPushConstantRange, offset)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //count : unsigned int
+            using field_type = decltype(cocos2d::GFXPushConstantRange::count);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("count"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPushConstantRange, count)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXPushConstantRange", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXPushConstantRange_proto = cls->getProto();
     __jsb_cocos2d_GFXPushConstantRange_class = cls;
@@ -10660,6 +12758,36 @@ bool js_register_gfx_GFXPipelineLayoutInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXPipelineLayoutInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXPipelineLayoutInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXPipelineLayoutInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //pushConstantsRanges : vector<cocos2d::GFXPushConstantRange>
+            using field_type = decltype(cocos2d::GFXPipelineLayoutInfo::pushConstantsRanges);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("pushConstantsRanges"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineLayoutInfo, pushConstantsRanges)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //layouts : vector<cocos2d::GFXBindingLayout *>
+            using field_type = decltype(cocos2d::GFXPipelineLayoutInfo::layouts);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("layouts"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineLayoutInfo, layouts)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXPipelineLayoutInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXPipelineLayoutInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXPipelineLayoutInfo_class = cls;
@@ -10782,6 +12910,25 @@ bool js_register_gfx_GFXInputState(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXInputState_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXInputState>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXInputState>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //attributes : vector<cocos2d::GFXAttribute>
+            using field_type = decltype(cocos2d::GFXInputState::attributes);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("attributes"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXInputState, attributes)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXInputState", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXInputState_proto = cls->getProto();
     __jsb_cocos2d_GFXInputState_class = cls;
@@ -11281,6 +13428,135 @@ bool js_register_gfx_GFXRasterizerState(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXRasterizerState_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXRasterizerState>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXRasterizerState>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //isDiscard : bool
+            using field_type = decltype(cocos2d::GFXRasterizerState::isDiscard);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isDiscard"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, isDiscard)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //polygonMode : GFXPolygonMode
+            using field_type = decltype(cocos2d::GFXRasterizerState::polygonMode);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("polygonMode"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, polygonMode)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //shadeModel : GFXShadeModel
+            using field_type = decltype(cocos2d::GFXRasterizerState::shadeModel);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("shadeModel"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, shadeModel)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //cullMode : GFXCullMode
+            using field_type = decltype(cocos2d::GFXRasterizerState::cullMode);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("cullMode"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, cullMode)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isFrontFaceCCW : bool
+            using field_type = decltype(cocos2d::GFXRasterizerState::isFrontFaceCCW);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isFrontFaceCCW"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, isFrontFaceCCW)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthBias : float
+            using field_type = decltype(cocos2d::GFXRasterizerState::depthBias);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthBias"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, depthBias)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthBiasClamp : float
+            using field_type = decltype(cocos2d::GFXRasterizerState::depthBiasClamp);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthBiasClamp"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, depthBiasClamp)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthBiasSlop : float
+            using field_type = decltype(cocos2d::GFXRasterizerState::depthBiasSlop);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthBiasSlop"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, depthBiasSlop)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isDepthClip : bool
+            using field_type = decltype(cocos2d::GFXRasterizerState::isDepthClip);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isDepthClip"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, isDepthClip)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isMultisample : bool
+            using field_type = decltype(cocos2d::GFXRasterizerState::isMultisample);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isMultisample"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, isMultisample)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //lineWidth : float
+            using field_type = decltype(cocos2d::GFXRasterizerState::lineWidth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("lineWidth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXRasterizerState, lineWidth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXRasterizerState", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXRasterizerState_proto = cls->getProto();
     __jsb_cocos2d_GFXRasterizerState_class = cls;
@@ -12068,6 +14344,223 @@ bool js_register_gfx_GFXDepthStencilState(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXDepthStencilState_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXDepthStencilState>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXDepthStencilState>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //depthTest : bool
+            using field_type = decltype(cocos2d::GFXDepthStencilState::depthTest);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthTest"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, depthTest)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthWrite : bool
+            using field_type = decltype(cocos2d::GFXDepthStencilState::depthWrite);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthWrite"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, depthWrite)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthFunc : GFXComparisonFunc
+            using field_type = decltype(cocos2d::GFXDepthStencilState::depthFunc);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthFunc"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, depthFunc)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilTestFront : bool
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilTestFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilTestFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilTestFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilFuncFront : GFXComparisonFunc
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilFuncFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilFuncFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilFuncFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilReadMaskFront : unsigned int
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilReadMaskFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilReadMaskFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilReadMaskFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilWriteMaskFront : unsigned int
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilWriteMaskFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilWriteMaskFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilWriteMaskFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilFailOpFront : GFXStencilOp
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilFailOpFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilFailOpFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilFailOpFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilZFailOpFront : GFXStencilOp
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilZFailOpFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilZFailOpFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilZFailOpFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilPassOpFront : GFXStencilOp
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilPassOpFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilPassOpFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilPassOpFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilRefFront : unsigned int
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilRefFront);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilRefFront"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilRefFront)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilTestBack : bool
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilTestBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilTestBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilTestBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilFuncBack : GFXComparisonFunc
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilFuncBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilFuncBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilFuncBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilReadMaskBack : unsigned int
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilReadMaskBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilReadMaskBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilReadMaskBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilWriteMaskBack : unsigned int
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilWriteMaskBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilWriteMaskBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilWriteMaskBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilFailOpBack : GFXStencilOp
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilFailOpBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilFailOpBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilFailOpBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilZFailOpBack : GFXStencilOp
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilZFailOpBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilZFailOpBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilZFailOpBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilPassOpBack : GFXStencilOp
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilPassOpBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilPassOpBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilPassOpBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //stencilRefBack : unsigned int
+            using field_type = decltype(cocos2d::GFXDepthStencilState::stencilRefBack);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("stencilRefBack"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXDepthStencilState, stencilRefBack)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXDepthStencilState", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXDepthStencilState_proto = cls->getProto();
     __jsb_cocos2d_GFXDepthStencilState_class = cls;
@@ -12459,6 +14952,102 @@ bool js_register_gfx_GFXBlendTarget(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBlendTarget_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBlendTarget>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBlendTarget>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //blend : bool
+            using field_type = decltype(cocos2d::GFXBlendTarget::blend);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blend"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blend)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendSrc : GFXBlendFactor
+            using field_type = decltype(cocos2d::GFXBlendTarget::blendSrc);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendSrc"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blendSrc)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendDst : GFXBlendFactor
+            using field_type = decltype(cocos2d::GFXBlendTarget::blendDst);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendDst"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blendDst)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendEq : GFXBlendOp
+            using field_type = decltype(cocos2d::GFXBlendTarget::blendEq);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendEq"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blendEq)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendSrcAlpha : GFXBlendFactor
+            using field_type = decltype(cocos2d::GFXBlendTarget::blendSrcAlpha);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendSrcAlpha"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blendSrcAlpha)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendDstAlpha : GFXBlendFactor
+            using field_type = decltype(cocos2d::GFXBlendTarget::blendDstAlpha);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendDstAlpha"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blendDstAlpha)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendAlphaEq : GFXBlendOp
+            using field_type = decltype(cocos2d::GFXBlendTarget::blendAlphaEq);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendAlphaEq"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blendAlphaEq)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendColorMask : GFXColorMask
+            using field_type = decltype(cocos2d::GFXBlendTarget::blendColorMask);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendColorMask"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendTarget, blendColorMask)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBlendTarget", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBlendTarget_proto = cls->getProto();
     __jsb_cocos2d_GFXBlendTarget_class = cls;
@@ -12706,6 +15295,58 @@ bool js_register_gfx_GFXBlendState(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBlendState_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBlendState>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBlendState>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //isA2C : bool
+            using field_type = decltype(cocos2d::GFXBlendState::isA2C);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isA2C"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendState, isA2C)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isIndepend : bool
+            using field_type = decltype(cocos2d::GFXBlendState::isIndepend);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isIndepend"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendState, isIndepend)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendColor : GFXColor
+            using field_type = decltype(cocos2d::GFXBlendState::blendColor);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendColor"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendState, blendColor)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //targets : vector<cocos2d::GFXBlendTarget>
+            using field_type = decltype(cocos2d::GFXBlendState::targets);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("targets"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXBlendState, targets)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBlendState", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBlendState_proto = cls->getProto();
     __jsb_cocos2d_GFXBlendState_class = cls;
@@ -13133,6 +15774,113 @@ bool js_register_gfx_GFXPipelineStateInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXPipelineStateInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXPipelineStateInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXPipelineStateInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //primitive : GFXPrimitiveMode
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::primitive);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("primitive"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, primitive)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //shader : GFXShader*
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::shader);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("shader"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, shader)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //inputState : GFXInputState
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::inputState);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("inputState"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, inputState)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //rasterizerState : GFXRasterizerState
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::rasterizerState);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("rasterizerState"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, rasterizerState)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //depthStencilState : GFXDepthStencilState
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::depthStencilState);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("depthStencilState"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, depthStencilState)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //blendState : GFXBlendState
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::blendState);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("blendState"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, blendState)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //dynamicStates : vector<cocos2d::GFXDynamicState>
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::dynamicStates);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("dynamicStates"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, dynamicStates)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //layout : GFXPipelineLayout*
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::layout);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("layout"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, layout)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //renderPass : GFXRenderPass*
+            using field_type = decltype(cocos2d::GFXPipelineStateInfo::renderPass);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("renderPass"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXPipelineStateInfo, renderPass)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXPipelineStateInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXPipelineStateInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXPipelineStateInfo_class = cls;
@@ -13308,6 +16056,36 @@ bool js_register_gfx_GFXCommandBufferInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXCommandBufferInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXCommandBufferInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXCommandBufferInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //allocator : GFXCommandAllocator*
+            using field_type = decltype(cocos2d::GFXCommandBufferInfo::allocator);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("allocator"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXCommandBufferInfo, allocator)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //type : GFXCommandBufferType
+            using field_type = decltype(cocos2d::GFXCommandBufferInfo::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXCommandBufferInfo, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXCommandBufferInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXCommandBufferInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXCommandBufferInfo_class = cls;
@@ -13430,6 +16208,25 @@ bool js_register_gfx_GFXQueueInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXQueueInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXQueueInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXQueueInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //type : GFXQueueType
+            using field_type = decltype(cocos2d::GFXQueueInfo::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXQueueInfo, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXQueueInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXQueueInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXQueueInfo_class = cls;
@@ -13821,6 +16618,102 @@ bool js_register_gfx_GFXFormatInfo(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXFormatInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXFormatInfo>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXFormatInfo>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //name : basic_string
+            using field_type = decltype(cocos2d::GFXFormatInfo::name);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("name"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, name)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //size : unsigned int
+            using field_type = decltype(cocos2d::GFXFormatInfo::size);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("size"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, size)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //count : unsigned int
+            using field_type = decltype(cocos2d::GFXFormatInfo::count);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("count"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, count)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //type : GFXFormatType
+            using field_type = decltype(cocos2d::GFXFormatInfo::type);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("type"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, type)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //hasAlpha : bool
+            using field_type = decltype(cocos2d::GFXFormatInfo::hasAlpha);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("hasAlpha"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, hasAlpha)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //hasDepth : bool
+            using field_type = decltype(cocos2d::GFXFormatInfo::hasDepth);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("hasDepth"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, hasDepth)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //hasStencil : bool
+            using field_type = decltype(cocos2d::GFXFormatInfo::hasStencil);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("hasStencil"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, hasStencil)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //isCompressed : bool
+            using field_type = decltype(cocos2d::GFXFormatInfo::isCompressed);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("isCompressed"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXFormatInfo, isCompressed)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXFormatInfo", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXFormatInfo_proto = cls->getProto();
     __jsb_cocos2d_GFXFormatInfo_class = cls;
@@ -13996,6 +16889,36 @@ bool js_register_gfx_GFXMemoryStatus(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXMemoryStatus_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXMemoryStatus>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXMemoryStatus>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //bufferSize : unsigned int
+            using field_type = decltype(cocos2d::GFXMemoryStatus::bufferSize);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("bufferSize"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXMemoryStatus, bufferSize)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //textureSize : unsigned int
+            using field_type = decltype(cocos2d::GFXMemoryStatus::textureSize);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("textureSize"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::GFXMemoryStatus, textureSize)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXMemoryStatus", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXMemoryStatus_proto = cls->getProto();
     __jsb_cocos2d_GFXMemoryStatus_class = cls;
@@ -14085,6 +17008,14 @@ bool js_register_gfx_GFXObject(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXObject_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXObject>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXObject>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXObject", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXObject_proto = cls->getProto();
     __jsb_cocos2d_GFXObject_class = cls;
@@ -15141,6 +18072,14 @@ bool js_register_gfx_GFXDevice(se::Object* obj)
     cls->defineFunction("createTextureView", _SE(js_gfx_GFXDevice_createTextureView));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXDevice>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXDevice>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXDevice", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXDevice_proto = cls->getProto();
     __jsb_cocos2d_GFXDevice_class = cls;
@@ -15570,6 +18509,14 @@ bool js_register_gfx_GFXWindow(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXWindow_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXWindow>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXWindow>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXWindow", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXWindow_proto = cls->getProto();
     __jsb_cocos2d_GFXWindow_class = cls;
@@ -15826,6 +18773,14 @@ bool js_register_gfx_GFXBuffer(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBuffer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBuffer>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBuffer>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBuffer", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBuffer_proto = cls->getProto();
     __jsb_cocos2d_GFXBuffer_class = cls;
@@ -16160,6 +19115,14 @@ bool js_register_gfx_GFXTexture(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXTexture_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXTexture>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXTexture>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXTexture", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXTexture_proto = cls->getProto();
     __jsb_cocos2d_GFXTexture_class = cls;
@@ -16396,6 +19359,14 @@ bool js_register_gfx_GFXTextureView(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXTextureView_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXTextureView>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXTextureView>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXTextureView", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXTextureView_proto = cls->getProto();
     __jsb_cocos2d_GFXTextureView_class = cls;
@@ -16746,6 +19717,14 @@ bool js_register_gfx_GFXSampler(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXSampler_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXSampler>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXSampler>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXSampler", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXSampler_proto = cls->getProto();
     __jsb_cocos2d_GFXSampler_class = cls;
@@ -16944,6 +19923,14 @@ bool js_register_gfx_GFXShader(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXShader_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXShader>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXShader>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXShader", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXShader_proto = cls->getProto();
     __jsb_cocos2d_GFXShader_class = cls;
@@ -17389,6 +20376,14 @@ bool js_register_gfx_GFXInputAssembler(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXInputAssembler_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXInputAssembler>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXInputAssembler>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXInputAssembler", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXInputAssembler_proto = cls->getProto();
     __jsb_cocos2d_GFXInputAssembler_class = cls;
@@ -17549,6 +20544,14 @@ bool js_register_gfx_GFXRenderPass(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXRenderPass_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXRenderPass>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXRenderPass>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXRenderPass", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXRenderPass_proto = cls->getProto();
     __jsb_cocos2d_GFXRenderPass_class = cls;
@@ -17728,6 +20731,14 @@ bool js_register_gfx_GFXFramebuffer(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXFramebuffer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXFramebuffer>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXFramebuffer>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXFramebuffer", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXFramebuffer_proto = cls->getProto();
     __jsb_cocos2d_GFXFramebuffer_class = cls;
@@ -17932,6 +20943,14 @@ bool js_register_gfx_GFXBindingLayout(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXBindingLayout_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXBindingLayout>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXBindingLayout>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXBindingLayout", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXBindingLayout_proto = cls->getProto();
     __jsb_cocos2d_GFXBindingLayout_class = cls;
@@ -18073,6 +21092,14 @@ bool js_register_gfx_GFXPipelineLayout(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXPipelineLayout_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXPipelineLayout>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXPipelineLayout>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXPipelineLayout", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXPipelineLayout_proto = cls->getProto();
     __jsb_cocos2d_GFXPipelineLayout_class = cls;
@@ -18347,6 +21374,14 @@ bool js_register_gfx_GFXPipelineState(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXPipelineState_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXPipelineState>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXPipelineState>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXPipelineState", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXPipelineState_proto = cls->getProto();
     __jsb_cocos2d_GFXPipelineState_class = cls;
@@ -18428,6 +21463,14 @@ bool js_register_gfx_GFXCommandAllocator(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXCommandAllocator_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXCommandAllocator>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXCommandAllocator>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXCommandAllocator", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXCommandAllocator_proto = cls->getProto();
     __jsb_cocos2d_GFXCommandAllocator_class = cls;
@@ -19019,6 +22062,14 @@ bool js_register_gfx_GFXCommandBuffer(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXCommandBuffer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXCommandBuffer>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXCommandBuffer>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXCommandBuffer", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXCommandBuffer_proto = cls->getProto();
     __jsb_cocos2d_GFXCommandBuffer_class = cls;
@@ -19161,6 +22212,14 @@ bool js_register_gfx_GFXQueue(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXQueue_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXQueue>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::GFXQueue>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_GFXQueue", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_GFXQueue_proto = cls->getProto();
     __jsb_cocos2d_GFXQueue_class = cls;

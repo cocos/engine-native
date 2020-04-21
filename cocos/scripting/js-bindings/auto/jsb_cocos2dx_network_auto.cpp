@@ -49,6 +49,58 @@ bool js_register_network_DownloadTask(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_network_DownloadTask_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::network::DownloadTask>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::network::DownloadTask>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //identifier : basic_string
+            using field_type = decltype(cocos2d::network::DownloadTask::identifier);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("identifier"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::DownloadTask, identifier)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //requestURL : basic_string
+            using field_type = decltype(cocos2d::network::DownloadTask::requestURL);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("requestURL"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::DownloadTask, requestURL)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //storagePath : basic_string
+            using field_type = decltype(cocos2d::network::DownloadTask::storagePath);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("storagePath"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::DownloadTask, storagePath)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //header : map<std::string, std::string>
+            using field_type = decltype(cocos2d::network::DownloadTask::header);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("header"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::DownloadTask, header)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_DownloadTask", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_network_DownloadTask_proto = cls->getProto();
     __jsb_cocos2d_network_DownloadTask_class = cls;
@@ -260,6 +312,47 @@ bool js_register_network_DownloaderHints(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_network_DownloaderHints_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::network::DownloaderHints>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::network::DownloaderHints>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //countOfMaxProcessingTasks : unsigned int
+            using field_type = decltype(cocos2d::network::DownloaderHints::countOfMaxProcessingTasks);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("countOfMaxProcessingTasks"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::DownloaderHints, countOfMaxProcessingTasks)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //timeoutInSeconds : unsigned int
+            using field_type = decltype(cocos2d::network::DownloaderHints::timeoutInSeconds);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("timeoutInSeconds"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::DownloaderHints, timeoutInSeconds)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //tempFileNameSuffix : basic_string
+            using field_type = decltype(cocos2d::network::DownloaderHints::tempFileNameSuffix);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("tempFileNameSuffix"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::DownloaderHints, tempFileNameSuffix)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_DownloaderHints", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_network_DownloaderHints_proto = cls->getProto();
     __jsb_cocos2d_network_DownloaderHints_class = cls;
@@ -346,6 +439,58 @@ bool js_register_network_Downloader(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_network_Downloader_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::network::Downloader>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::network::Downloader>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        {
+            //onDataTaskSuccess : std::function
+            using field_type = decltype(cocos2d::network::Downloader::onDataTaskSuccess);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("onDataTaskSuccess"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::Downloader, onDataTaskSuccess)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //onFileTaskSuccess : std::function
+            using field_type = decltype(cocos2d::network::Downloader::onFileTaskSuccess);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("onFileTaskSuccess"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::Downloader, onFileTaskSuccess)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //onTaskProgress : std::function
+            using field_type = decltype(cocos2d::network::Downloader::onTaskProgress);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("onTaskProgress"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::Downloader, onTaskProgress)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        {
+            //onTaskError : std::function
+            using field_type = decltype(cocos2d::network::Downloader::onTaskError);
+            auto attr = se::Object::createPlainObject();
+            attr->setProperty("name", se::Value("onTaskError"));
+            attr->setProperty("offset", se::Value(offsetof(cocos2d::network::Downloader, onTaskError)));
+            attr->setProperty("size", se::Value(sizeof(field_type)));
+            attr->setProperty("type", se::Value(SE_UNDERLYING_TYPE_NAME<field_type>()));
+            array->setArrayElement(idx++, se::Value(attr));
+            attr->decRef();
+        }
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_Downloader", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_network_Downloader_proto = cls->getProto();
     __jsb_cocos2d_network_Downloader_class = cls;

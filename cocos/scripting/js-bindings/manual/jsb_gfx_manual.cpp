@@ -320,7 +320,18 @@ static bool js_gfx_GFXInputAssembler_extractDrawInfo(se::State& s)
 SE_BIND_FUNC(js_gfx_GFXInputAssembler_extractDrawInfo)
 
 bool register_all_gfx_manual(se::Object* obj)
-{    
+{   
+    {
+        union endianess_test
+        {
+            uint16_t u16;
+            uint8_t c2[2];
+        };
+        endianess_test v;
+        v.u16 = 0x0001;
+        obj->setProperty("__littleEndian", se::Value(v.c2[0]  == 1));
+    }
+
     __jsb_cocos2d_GFXBuffer_proto->defineFunction("update", _SE(js_gfx_GFXBuffer_update));
             
     __jsb_cocos2d_GFXCommandBuffer_proto->defineFunction("execute", _SE(js_gfx_GFXCommandBuffer_execute));

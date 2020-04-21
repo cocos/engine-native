@@ -87,6 +87,14 @@ bool js_register_mtl_CCMTLDevice(se::Object* obj)
     cls->defineFinalizeFunction(_SE(js_cocos2d_CCMTLDevice_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::CCMTLDevice>(cls);
+    
+    if constexpr (std::is_standard_layout_v<cocos2d::CCMTLDevice>) {
+        auto array = se::Object::createArrayObject(0);
+        int idx = 0;
+        cls->getProto()->setProperty("__attrMeta", se::Value(array));
+        //obj->setProperty("__attrMeta_CCMTLDevice", se::Value(array));
+        array->decRef();
+    }
 
     __jsb_cocos2d_CCMTLDevice_proto = cls->getProto();
     __jsb_cocos2d_CCMTLDevice_class = cls;
