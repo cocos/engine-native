@@ -78,9 +78,7 @@ bool GLES2Texture::initialize(const GFXTextureInfo &info) {
   _gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
   
   GLES2CmdFuncCreateTexture((GLES2Device*)_device, _gpuTexture);
-  _device->getMemoryStatus().textureSize += _size;
-    _status = GFXStatus::SUCCESS;
-  
+  _device->getMemoryStatus().textureSize += _size;  
   return true;
 }
 

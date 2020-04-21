@@ -95,6 +95,9 @@ bool CCMTLTexture::createMTLTexture()
             break;
     }
     
+    if(descriptor == nullptr)
+        return false;
+    
     descriptor.usage = mu::toMTLTextureUsage(_usage);
     descriptor.textureType = mu::toMTLTextureType(_type, _arrayLayer, _flags);
     descriptor.sampleCount = mu::toMTLSampleCount(_samples);
@@ -136,13 +139,32 @@ void CCMTLTexture::destroy()
 
 void CCMTLTexture::resize(uint width, uint height)
 {
+    if(_width == width && _height == height)
+        return;
+    
     auto oldSize = _size;
-    if(oldSize)
-        _device->getMemoryStatus().textureSize -= oldSize;
+    auto oldWidth = _width;
+    auto oldHeight = _height;
+    id<MTLTexture> oldMTLTexture = _mtlTexture;
     
     _width = width;
     _height = height;
     _size = GFXFormatSize(_format, _width, _height, _depth);
+    if(!createMTLTexture())
+    {
+        _width = oldWidth;
+        _height = oldHeight;
+        _size = oldSize;
+        _mtlTexture = oldMTLTexture;
+        return;
+    }
+    
+    if(oldMTLTexture)
+    {
+        [oldMTLTexture release];
+    }
+    
+    _device->getMemoryStatus().textureSize -= oldSize;
     if (_flags & GFXTextureFlags::BAKUP_BUFFER)
     {
         _device->getMemoryStatus().textureSize -= oldSize;
@@ -150,15 +172,9 @@ void CCMTLTexture::resize(uint width, uint height)
         _buffer = (uint8_t*)CC_MALLOC(_size);
         _device->getMemoryStatus().textureSize += _size;
     }
-    if(_mtlTexture)
-    {
-        [_mtlTexture release];
-        _mtlTexture = nil;
-    }
-    if(createMTLTexture())
-    {
-        _device->getMemoryStatus().textureSize += _size;
-    }
+    
+    _device->getMemoryStatus().textureSize += _size;
+    _status = GFXStatus::SUCCESS;
 }
 
 void CCMTLTexture::update(uint8_t* const* datas, const GFXBufferTextureCopyList& regions)

@@ -126,8 +126,6 @@ void GLES3Texture::resize(uint width, uint height) {
       status.bufferSize += _size;
     }
   }
-    
-    _status = GFXStatus::UNREADY;
 }
 
 NS_CC_END
