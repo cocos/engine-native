@@ -40,24 +40,6 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
         _device->getMemoryStatus().textureSize += _size;
     }
     
-    auto isArray = _arrayLayer > 1;
-    switch (_type) {
-        case GFXTextureType::TEX1D:
-            _viewType = isArray ? GFXTextureViewType::TV1D_ARRAY : GFXTextureViewType::TV1D;
-            break;
-        case GFXTextureType::TEX2D:
-            if(_flags & GFXTextureFlagBit::CUBEMAP)
-                _viewType = GFXTextureViewType::CUBE;
-            else
-                _viewType = isArray ? GFXTextureViewType::TV2D_ARRAY : GFXTextureViewType::TV2D;
-            break;
-        case GFXTextureType::TEX3D:
-            _viewType = GFXTextureViewType::TV3D;
-            break;
-        default:
-            break;
-    }
-    
     if (!createMTLTexture())
     {
         _status = GFXStatus::FAILED;
@@ -77,21 +59,22 @@ bool CCMTLTexture::createMTLTexture()
         return false;
     
     MTLTextureDescriptor* descriptor = nullptr;
-    switch (_viewType) {
-        case GFXTextureViewType::TV2D:
-        case GFXTextureViewType::TV2D_ARRAY:
+    auto mtlTextureType = mu::toMTLTextureType(_type, _arrayLayer, _flags);
+    switch (mtlTextureType) {
+        case MTLTextureType2D:
+        case MTLTextureType2DArray:
             descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlFormat
                                                                             width:_width
                                                                            height:_height
                                                                         mipmapped:_flags & GFXTextureFlags::GEN_MIPMAP];
             break;
-        case GFXTextureViewType::CUBE:
+        case MTLTextureTypeCube:
             descriptor = [MTLTextureDescriptor textureCubeDescriptorWithPixelFormat:mtlFormat
                                                                                size:_width
                                                                           mipmapped:_flags & GFXTextureFlags::GEN_MIPMAP];
             break;
         default:
-            CCASSERT(false, "Unsupported GFXTextureViewType, create MTLTextureDescriptor failed.");
+            CCASSERT(false, "Unsupported MTLTextureType, create MTLTextureDescriptor failed.");
             break;
     }
     
@@ -185,8 +168,9 @@ void CCMTLTexture::update(uint8_t* const* datas, const GFXBufferTextureCopyList&
     uint n = 0;
     uint w = 0;
     uint h = 0;
-    switch (_viewType) {
-        case GFXTextureViewType::TV2D:
+    auto mtlTextureType = mu::toMTLTextureType(_type, _arrayLayer, _flags);
+    switch (mtlTextureType) {
+        case MTLTextureType2D:
             for (size_t i = 0; i < regions.size(); i++) {
                 const auto& region = regions[i];
                 w = region.texExtent.width;
@@ -209,8 +193,8 @@ void CCMTLTexture::update(uint8_t* const* datas, const GFXBufferTextureCopyList&
                 }
             }
             break;
-        case GFXTextureViewType::TV2D_ARRAY:
-        case GFXTextureViewType::CUBE:
+        case MTLTextureType2DArray:
+        case MTLTextureTypeCube:
             for (size_t i = 0; i < regions.size(); i++) {
                 const auto& region = regions[i];
                 auto layer = region.texSubres.baseArrayLayer;
@@ -239,7 +223,7 @@ void CCMTLTexture::update(uint8_t* const* datas, const GFXBufferTextureCopyList&
             }
             break;
         default:
-            CCASSERT(false, "Unsupported GFXTextureViewType, metal texture update failed.");
+            CCASSERT(false, "Unsupported MTLTextureType, metal texture update failed.");
             break;
     }
 }

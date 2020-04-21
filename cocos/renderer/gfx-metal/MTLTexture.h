@@ -25,7 +25,6 @@ private:
 private:
     id<MTLTexture> _mtlTexture = nil;
     GFXFormat _convertedFormat = GFXFormat::UNKNOWN;
-    GFXTextureViewType _viewType = GFXTextureViewType::TV2D;
 };
 
 NS_CC_END
