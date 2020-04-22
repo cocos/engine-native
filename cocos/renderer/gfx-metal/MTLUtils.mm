@@ -34,7 +34,7 @@ namespace mu
         return MTLClearColorMake(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
     }
     
-    MTLVertexFormat toMTLVertexFormat(GFXFormat format)
+    MTLVertexFormat toMTLVertexFormat(GFXFormat format, bool isNormalized)
     {
         switch (format) {
             case GFXFormat::R32F: return MTLVertexFormatFloat;
@@ -55,7 +55,7 @@ namespace mu
             case GFXFormat::RGB32I: return MTLVertexFormatInt3;
             case GFXFormat::RGB32UI: return MTLVertexFormatUInt3;
             case GFXFormat::RGB32F: return MTLVertexFormatFloat3;
-            case GFXFormat::RGBA8: return MTLVertexFormatUChar4;
+            case GFXFormat::RGBA8: return isNormalized ? MTLVertexFormatUChar4Normalized : MTLVertexFormatUChar4;
             case GFXFormat::RGBA8I: return MTLVertexFormatChar4;
             case GFXFormat::RGBA16I: return MTLVertexFormatShort4;
             case GFXFormat::RGBA16UI: return MTLVertexFormatUShort4;

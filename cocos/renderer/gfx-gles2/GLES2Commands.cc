@@ -1942,15 +1942,15 @@ void GLES2CmdFuncExecuteCmds(GLES2Device* device, GLES2CmdPackage* cmd_package) 
                   glDrawElements(glPrimitive, draw.indexCount, gpuInputAssembler->glIndexType, offset);
                 } else {
                   if (device->useDrawInstanced()) {
-                    glDrawElementsInstancedEXT(glPrimitive, draw.indexCount, gpuInputAssembler->glIndexType, offset, cmd->draw_info.instanceCount);
+                    glDrawElementsInstancedEXT(glPrimitive, draw.indexCount, gpuInputAssembler->glIndexType, offset, draw.instanceCount);
                   }
                 }
               } else {
-                if (cmd->draw_info.instanceCount == 0) {
+                if (draw.instanceCount == 0) {
                   glDrawArrays(glPrimitive, draw.firstIndex, draw.vertexCount);
                 } else {
                   if (device->useDrawInstanced()) {
-                    glDrawArraysInstancedEXT(glPrimitive, draw.firstIndex, draw.vertexCount, cmd->draw_info.instanceCount);
+                    glDrawArraysInstancedEXT(glPrimitive, draw.firstIndex, draw.vertexCount, draw.instanceCount);
                   }
                 }
               }
