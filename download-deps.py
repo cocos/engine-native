@@ -148,7 +148,7 @@ class UnrecognizedFormat:
 
 
 class CocosZipInstaller(object):
-    def __init__(self, workpath, config_path, version_path, remote_version_key=None):
+    def __init__(self, workpath, config_path, version_path, remote_version_key, mirror):
         self._workpath = workpath
         self._config_path = config_path
         self._version_path = version_path
@@ -166,10 +166,13 @@ class CocosZipInstaller(object):
         self._zip_file_size = int(data["zip_file_size"])
         # 'v' letter was swallowed by github, so we need to substring it from the 2nd letter
         self._extracted_folder_name = os.path.join(self._workpath, self._repo_name + '-' + self._current_version[1:])
-
+        
         mirror_repo_url = "http://gitlab.cocos.net:8929/publics/%s/-/archive/%s/%s-%s.zip" % (self._repo_name, self._current_version, self._repo_name, self._current_version)
-
-        self._url = select_fastest_url([self._url, mirror_repo_url])
+        if mirror is None:
+            self._url = select_fastest_url([self._url, mirror_repo_url])
+        elif mirror == "gitlab":
+            self._url = mirror_repo_url
+        
         try:
             data = self.load_json_file(version_path)
             if remote_version_key is None:
@@ -423,12 +426,26 @@ def main():
                       action="store_true", dest="download_only", default=False,
                       help="Only download zip file of the third party libraries, will not extract it")
 
+    parser.add_option("--github", 
+                     action="store_true", dest="from_github", default=False,
+                     help="Download zip from github.com" )
+
+    parser.add_option("--gitlab", 
+                     action="store_true", dest="from_gitlab", default=False,
+                     help="Download zip from gitlab.cocos.net" )
+
     (opts, args) = parser.parse_args()
+
+    mirror = None
+    if opts.from_github:
+        mirror = "github"
+    if opts.from_gitlab:
+        mirror = "gitlab"
 
     print("=======================================================")
     print("==> Prepare to download external libraries!")
     external_path = os.path.join(workpath, 'external')
-    installer = CocosZipInstaller(workpath, os.path.join(workpath, 'external', 'config.json'), os.path.join(workpath, 'external', 'version.json'), "prebuilt_libs_version")
+    installer = CocosZipInstaller(workpath, os.path.join(workpath, 'external', 'config.json'), os.path.join(workpath, 'external', 'version.json'), "prebuilt_libs_version", mirror)
     installer.run(workpath, external_path, opts.remove_downloaded, opts.force_update, opts.download_only)
 
 # -------------- main --------------
