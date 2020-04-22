@@ -872,9 +872,11 @@ int
 /**
  * @method render
  * @param {cc.renderer::Scene} arg0
+ * @param {float} arg1
  */
 render : function (
-scene 
+scene, 
+float 
 )
 {
 },

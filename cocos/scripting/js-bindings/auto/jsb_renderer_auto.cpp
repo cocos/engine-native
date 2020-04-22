@@ -2142,7 +2142,16 @@ static bool js_renderer_ForwardRenderer_render(se::State& s)
         cobj->render(arg0);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    if (argc == 2) {
+        cocos2d::renderer::Scene* arg0 = nullptr;
+        float arg1 = 0;
+        ok &= seval_to_native_ptr(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        SE_PRECONDITION2(ok, false, "js_renderer_ForwardRenderer_render : Error processing arguments");
+        cobj->render(arg0, arg1);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
 SE_BIND_FUNC(js_renderer_ForwardRenderer_render)
