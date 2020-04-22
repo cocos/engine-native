@@ -1,6 +1,7 @@
 #include "platform/CCCanvasRenderingContext2D.h"
 #include "base/ccTypes.h"
 #include "base/csscolorparser.hpp"
+#include "base/ccUTF8.h"
 
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_platform.h"
@@ -622,12 +623,13 @@ void CanvasRenderingContext2D::strokeText(const std::string& text, float x, floa
 
 cocos2d::Size CanvasRenderingContext2D::measureText(const std::string& text)
 {
-    auto cStr = [NSString stringWithUTF8String:text.c_str()];
-    if (!cStr) {
-        return cocos2d::Size::ZERO;
+    NSString *str =[NSString stringWithUTF8String:text.c_str()];
+    if(str == nil) {
+        std::string textNew;
+        cocos2d::StringUtils::UTF8LooseFix(text, textNew);
+        str = [NSString stringWithUTF8String:textNew.c_str()];
     }
-//    SE_LOGD("CanvasRenderingContext2D::measureText: %s\n", text.c_str());
-    CGSize size = [_impl measureText: cStr];
+    CGSize size = [_impl measureText: str];
     return cocos2d::Size(size.width, size.height);
 }
 
