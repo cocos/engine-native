@@ -99,7 +99,7 @@ def select_fastest_url(url_list):
     sorted_list = []
     while len(writable_sockets) > 0:
         ready_to_read, ready_to_write, in_error = select.select(
-            [], writable_sockets, writable_sockets, 30)
+            [], writable_sockets, writable_sockets, 5.0)
         t2 = time()
         for socket in ready_to_write:
             index = clients.index(socket)

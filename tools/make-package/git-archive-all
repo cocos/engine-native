@@ -256,7 +256,7 @@ class GitArchiver(object):
             zip_file_path = os.path.join(zip_file["zip_file_path"], zip_file_name)
             # 'v' letter was swallowed by github, so we need to substring it from the 2nd letter
             extra_folder_name = self.zip_folder_name(zip_file_path, zip_config["repo_name"]) 
-            print("extra_folder_name %s " % extra_folder_name)
+            print(" - found folder \"%s\" in %s" % (extra_folder_name, zip_file_name))
             extra_folder_path = os.path.join(self.main_repo_abspath, extra_folder_name)
             extra_folders.append(extra_folder_path)
             extra_file_paths = self.unpack_zipfile(zip_file_path, self.main_repo_abspath)
@@ -293,7 +293,6 @@ class GitArchiver(object):
                         file_path = path.join(root,f)
                         path_in_zip = file_path[(len(self.main_repo_abspath)+1):]
                         try:
-                            print("add file %s" % (path_in_zip))
                             add(file_path, path_in_zip)
                         except:
                             print('add %s failed.' % file_path)
