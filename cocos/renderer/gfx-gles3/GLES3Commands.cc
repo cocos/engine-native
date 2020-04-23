@@ -639,11 +639,6 @@ void GLES3CmdFuncResizeBuffer(GLES3Device* device, GLES3GPUBuffer* gpuBuffer) {
 
 void GLES3CmdFuncUpdateBuffer(GLES3Device* device, GLES3GPUBuffer* gpuBuffer, void* buffer, uint offset, uint size) {
   if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
-    auto count = size / sizeof(GFXDrawInfo);
-    if(gpuBuffer->indirects.size() < count)
-    {
-        gpuBuffer->indirects.resize(count);
-    }
     memcpy((uint8_t*)gpuBuffer->indirects.data() + offset, buffer, size);
   }
   else if (gpuBuffer->usage & GFXBufferUsageBit::TRANSFER_SRC)

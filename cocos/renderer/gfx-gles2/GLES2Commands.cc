@@ -568,11 +568,6 @@ void GLES2CmdFuncUpdateBuffer(GLES2Device* device, GLES2GPUBuffer* gpuBuffer, vo
   if (gpuBuffer->usage & GFXBufferUsageBit::UNIFORM) {
     memcpy(gpuBuffer->buffer + offset, buffer, size);
   } else if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
-      auto count = size / sizeof(GFXDrawInfo);
-      if(gpuBuffer->indirects.size() < count)
-      {
-          gpuBuffer->indirects.resize(count);
-      }
     memcpy((uint8_t*)gpuBuffer->indirects.data() + offset, buffer, size);
   } else if (gpuBuffer->usage & GFXBufferUsageBit::TRANSFER_SRC) {
       memcpy(gpuBuffer->buffer + offset, buffer, size);
