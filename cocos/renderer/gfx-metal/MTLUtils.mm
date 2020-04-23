@@ -66,24 +66,38 @@ namespace mu
             case GFXFormat::RGBA32F: return MTLVertexFormatFloat4;
             case GFXFormat::RGB10A2: return isNormalized ? MTLVertexFormatInt1010102Normalized : MTLVertexFormatInvalid;
             case GFXFormat::RGB10A2UI: return isNormalized ? MTLVertexFormatUInt1010102Normalized : MTLVertexFormatInvalid;
+            case GFXFormat::BGRA8:
+            {
+                #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+                    if(@available(iOS 11.0, *))
+                    {
+                        if(isNormalized)
+                        {
+                            return MTLVertexFormatUChar4Normalized_BGRA;
+                        }
+                        else
+                        {
+                            CC_LOG_ERROR("Invalid metal vertex format %u", format);
+                            return MTLVertexFormatInvalid;
+                        }
+                    }
+                #else
+                    if(@available(macOS 10.13, *))
+                    {
+                        if(isNormalized)
+                        {
+                            return MTLVertexFormatUChar4Normalized_BGRA;
+                        }
+                        else
+                        {
+                            CC_LOG_ERROR("Invalid metal vertex format %u", format);
+                            return MTLVertexFormatInvalid;
+                        }
+                    }
+                #endif
+            }
             default:
             {
-            #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
-                if(@available(iOS 11.0, *))
-                {
-                    switch(format) {
-                        case GFXFormat::BGRA8: return isNormalized ? MTLVertexFormatUChar4Normalized_BGRA : MTLVertexFormatInvalid;
-                        default: break;
-                    }
-                }
-            #else
-                if(@available(macOS 10.13, *))
-                {
-                    switch(format) {
-                        case GFXFormat::BGRA8: return isNormalized ? MTLVertexFormatUChar4Normalized_BGRA : MTLVertexFormatInvalid;
-                    }
-                }
-            #endif
                 CC_LOG_ERROR("Invalid vertex format %u", format);
                 return MTLVertexFormatInvalid;
             }
