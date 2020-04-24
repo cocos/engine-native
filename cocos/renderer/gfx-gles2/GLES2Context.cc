@@ -331,7 +331,8 @@ bool GLES2Context::initialize(const GFXContextInfo &info) {
 
         _eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL);
         if (_eglSurface == EGL_NO_SURFACE) {
-            CC_LOG_ERROR("Window surface created failed.");
+            CC_LOG_ERROR("Recreate window surface failed.");
+            return;
         }
 
         MakeCurrent();
