@@ -1900,16 +1900,16 @@ void GLES3CmdFuncExecuteCmds(GLES3Device* device, GLES3CmdPackage* cmd_package) 
               if (gpuInputAssembler->gpuIndexBuffer && draw.indexCount >= 0) {
                 uint8_t* offset = 0;
                 offset += draw.firstIndex * gpuInputAssembler->gpuIndexBuffer->stride;
-                if (cmd->draw_info.instanceCount == 0) {
+                if (draw.instanceCount == 0) {
                   glDrawElements(glPrimitive, draw.indexCount, gpuInputAssembler->glIndexType, offset);
                 } else {
-                  glDrawElementsInstanced(glPrimitive, draw.indexCount, gpuInputAssembler->glIndexType, offset, cmd->draw_info.instanceCount);
+                  glDrawElementsInstanced(glPrimitive, draw.indexCount, gpuInputAssembler->glIndexType, offset, draw.instanceCount);
                 }
               } else {
-                if (cmd->draw_info.instanceCount == 0) {
+                if (draw.instanceCount == 0) {
                   glDrawArrays(glPrimitive, draw.firstIndex, draw.vertexCount);
                 } else {
-                  glDrawArraysInstanced(glPrimitive, draw.firstIndex, draw.vertexCount, cmd->draw_info.instanceCount);
+                  glDrawArraysInstanced(glPrimitive, draw.firstIndex, draw.vertexCount, draw.instanceCount);
                 }
               }
             }

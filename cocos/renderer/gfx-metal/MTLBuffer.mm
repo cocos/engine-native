@@ -276,6 +276,9 @@ void CCMTLBuffer::update(void* buffer, uint offset, uint size)
     
     if (_buffer)
         memcpy(_buffer + offset, buffer, size);
+    
+    if(_usage & GFXBufferUsageBit::INDIRECT)
+        memcpy((uint8_t*)_indirects.data() + offset, buffer, size);
 }
 
 NS_CC_END

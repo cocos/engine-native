@@ -19,6 +19,7 @@ public:
     CC_INLINE id<MTLBuffer> getMTLBuffer() const { return _mtlBuffer; }
     CC_INLINE uint8_t* getTransferBuffer() const { return _transferBuffer; }
     CC_INLINE MTLIndexType getIndexType() const { return _indexType; }
+    CC_INLINE const GFXDrawInfoList& getIndirects() const { return _indirects; }
     
 private:
     bool resizeBuffer(uint size, uint count, uint oldSize, uint8_t* backupBuffer, bool needBackup);
