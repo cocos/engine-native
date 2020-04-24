@@ -15,6 +15,7 @@ set(INCLUDE_FILES
 
 if(WIN32)
 	add_definitions("-DVK_USE_PLATFORM_WIN32_KHR")
+	add_definitions("-DNOMINMAX")
 elseif(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
 	add_definitions("-DVK_USE_PLATFORM_MACOS_MVK")
 else()

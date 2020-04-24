@@ -7,22 +7,22 @@
 
 NS_CC_BEGIN
 
-const GLenum CCVKPrimitives []  = {
-  GL_POINTS,
-  GL_LINES,
-  GL_LINE_STRIP,
-  GL_LINE_LOOP,
-  GL_NONE,
-  GL_NONE,
-  GL_NONE,
-  GL_TRIANGLES,
-  GL_TRIANGLE_STRIP,
-  GL_TRIANGLE_FAN,
-  GL_NONE,
-  GL_NONE,
-  GL_NONE,
-  GL_NONE,
-};
+//const GLenum CCVKPrimitives []  = {
+//  GL_POINTS,
+//  GL_LINES,
+//  GL_LINE_STRIP,
+//  GL_LINE_LOOP,
+//  GL_NONE,
+//  GL_NONE,
+//  GL_NONE,
+//  GL_TRIANGLES,
+//  GL_TRIANGLE_STRIP,
+//  GL_TRIANGLE_FAN,
+//  GL_NONE,
+//  GL_NONE,
+//  GL_NONE,
+//  GL_NONE,
+//};
 
 CCVKPipelineState::CCVKPipelineState(GFXDevice* device)
     : GFXPipelineState(device) {
@@ -44,7 +44,7 @@ bool CCVKPipelineState::initialize(const GFXPipelineStateInfo &info) {
   _renderPass = info.renderPass;
   
   _gpuPipelineState = CC_NEW(CCVKGPUPipelineState);
-  _gpuPipelineState->glPrimitive = CCVKPrimitives[(int)_primitive];
+  //_gpuPipelineState->glPrimitive = CCVKPrimitives[(int)_primitive];
   _gpuPipelineState->gpuShader = ((CCVKShader*)_shader)->gpuShader();
   _gpuPipelineState->rs = _rasterizerState;
   _gpuPipelineState->dss = _depthStencilState;

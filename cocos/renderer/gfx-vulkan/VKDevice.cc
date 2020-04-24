@@ -1,5 +1,6 @@
 #include "VKStd.h"
 #include "VKDevice.h"
+#include "VKUtils.h"
 #include "VKStateCache.h"
 #include "VKContext.h"
 #include "VKWindow.h"
@@ -40,241 +41,139 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     stateCache = CC_NEW(CCVKStateCache);
 
-    GFXContextInfo ctx_info;
-    ctx_info.windowHandle = _windowHandle;
-    ctx_info.sharedCtx = info.sharedCtx;
+    GFXContextInfo contextCreateInfo;
+    contextCreateInfo.windowHandle = _windowHandle;
+    contextCreateInfo.sharedCtx = info.sharedCtx;
 
     _context = CC_NEW(CCVKContext(this));
-    if (!_context->initialize(ctx_info))
+    if (!_context->initialize(contextCreateInfo))
     {
         destroy();
         return false;
     }
+    auto context = ((CCVKContext*)_context)->gpuContext();
+    auto &deviceFeatures = context->physicalDeviceFeatures;
 
-    auto physicalDevices = ((CCVKContext*)_context)->physicalDevices();
-    auto &physicalDevice = physicalDevices[0];
-    for (auto &device : physicalDevices)
+    // only enable the absolute essentials for now
+    std::vector<const char *> requestedValidationLayers
     {
-        VkPhysicalDeviceProperties properties;
-        vkGetPhysicalDeviceProperties(device, &properties);
-        CC_LOG_INFO(StringUtil::Format("Found Physical Device: %s", properties.deviceName).c_str());
-        if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
-            physicalDevice = device;
-        }
-    }
 
-    // Prepare the device queues
-    /*
-    uint32_t                             queue_family_properties_count = to_u32(gpu.get_queue_family_properties().size());
-    std::vector<VkDeviceQueueCreateInfo> queue_create_infos(queue_family_properties_count, { VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO });
-    std::vector<std::vector<float>>      queue_priorities(queue_family_properties_count);
-
-    for (uint32_t queue_family_index = 0U; queue_family_index < queue_family_properties_count; ++queue_family_index)
+    };
+    std::vector<const char *> requestedExtensions
     {
-        const VkQueueFamilyProperties &queue_family_property = gpu.get_queue_family_properties()[queue_family_index];
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+    };
+    VkPhysicalDeviceFeatures requestedFeatures{};
+    // features should be enabled like this
+    requestedFeatures.textureCompressionETC2 = deviceFeatures.textureCompressionETC2;
 
-        queue_priorities[queue_family_index].resize(queue_family_property.queueCount, 1.0f);
+    ///////////////////// Device Creation /////////////////////
 
-        VkDeviceQueueCreateInfo &queue_create_info = queue_create_infos[queue_family_index];
+    _gpuDevice = CC_NEW(CCVKGPUDevice);
 
-        queue_create_info.queueFamilyIndex = queue_family_index;
-        queue_create_info.queueCount = queue_family_property.queueCount;
-        queue_create_info.pQueuePriorities = queue_priorities[queue_family_index].data();
-    }
+    // check extensions
+    uint32_t availableLayerCount;
+    VK_CHECK(vkEnumerateDeviceLayerProperties(context->physicalDevice, &availableLayerCount, nullptr));
+    _gpuDevice->layers.resize(availableLayerCount);
+    VK_CHECK(vkEnumerateDeviceLayerProperties(context->physicalDevice, &availableLayerCount, _gpuDevice->layers.data()));
 
-    // Check extensions to enable Vma Dedicated Allocation
-    uint32_t device_extension_count;
-    VK_CHECK(vkEnumerateDeviceExtensionProperties(gpu.get_handle(), nullptr, &device_extension_count, nullptr));
-    device_extensions = std::vector<VkExtensionProperties>(device_extension_count);
-    VK_CHECK(vkEnumerateDeviceExtensionProperties(gpu.get_handle(), nullptr, &device_extension_count, device_extensions.data()));
+    uint32_t availableExtensionCount;
+    VK_CHECK(vkEnumerateDeviceExtensionProperties(context->physicalDevice, nullptr, &availableExtensionCount, nullptr));
+    _gpuDevice->extensions.resize(availableExtensionCount);
+    VK_CHECK(vkEnumerateDeviceExtensionProperties(context->physicalDevice, nullptr, &availableExtensionCount, _gpuDevice->extensions.data()));
 
-    // Display supported extensions
-    if (device_extensions.size() > 0)
+    // just filter out the unsupported layers & extensions
+    for (auto &layer : requestedValidationLayers)
     {
-        LOGD("Device supports the following extensions:");
-        for (auto &extension : device_extensions)
+        if (isLayerSupported(layer, _gpuDevice->layers))
         {
-            LOGD("  \t{}", extension.extensionName);
+            _layers.push_back(layer);
         }
     }
-
-    bool can_get_memory_requirements = is_extension_supported("VK_KHR_get_memory_requirements2");
-    bool has_dedicated_allocation = is_extension_supported("VK_KHR_dedicated_allocation");
-
-    if (can_get_memory_requirements && has_dedicated_allocation)
+    for (auto &extension : requestedExtensions)
     {
-        enabled_extensions.push_back("VK_KHR_get_memory_requirements2");
-        enabled_extensions.push_back("VK_KHR_dedicated_allocation");
-        LOGI("Dedicated Allocation enabled");
-    }
-
-    // Check that extensions are supported before trying to create the device
-    std::vector<const char *> unsupported_extensions{};
-    for (auto &extension : requested_extensions)
-    {
-        if (is_extension_supported(extension.first))
+        if (isExtensionSupported(extension, _gpuDevice->extensions))
         {
-            enabled_extensions.emplace_back(extension.first);
-        }
-        else
-        {
-            unsupported_extensions.emplace_back(extension.first);
+            _extensions.push_back(extension);
         }
     }
 
-    if (enabled_extensions.size() > 0)
+    // prepare the device queues
+    uint32_t                             queueFamilyPropertiesCount = toU32(context->queueFamilyProperties.size());
+    std::vector<VkDeviceQueueCreateInfo> queueCreateInfos(queueFamilyPropertiesCount, { VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO });
+    std::vector<std::vector<float>>      queuePriorities(queueFamilyPropertiesCount);
+
+    for (uint32_t queueFamilyIndex = 0u; queueFamilyIndex < queueFamilyPropertiesCount; ++queueFamilyIndex)
     {
-        LOGI("Device supports the following requested extensions:");
-        for (auto &extension : enabled_extensions)
-        {
-            LOGI("  \t{}", extension);
-        }
+        const VkQueueFamilyProperties &queueFamilyProperty = context->queueFamilyProperties[queueFamilyIndex];
+
+        queuePriorities[queueFamilyIndex].resize(queueFamilyProperty.queueCount, 1.0f);
+
+        VkDeviceQueueCreateInfo &queueCreateInfo = queueCreateInfos[queueFamilyIndex];
+
+        queueCreateInfo.queueFamilyIndex = queueFamilyIndex;
+        queueCreateInfo.queueCount = queueFamilyProperty.queueCount;
+        queueCreateInfo.pQueuePriorities = queuePriorities[queueFamilyIndex].data();
     }
 
-    if (unsupported_extensions.size() > 0)
-    {
-        auto error = false;
-        for (auto &extension : unsupported_extensions)
-        {
-            auto extension_is_optional = requested_extensions[extension];
-            if (extension_is_optional)
-            {
-                LOGW("Optional device extension {} not available, some features may be disabled", extension);
-            }
-            else
-            {
-                LOGE("Required device extension {} not available, cannot run", extension);
-            }
-            error = !extension_is_optional;
-        }
+    VkDeviceCreateInfo deviceCreateInfo{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
 
-        if (error)
-        {
-            throw VulkanException(VK_ERROR_EXTENSION_NOT_PRESENT, "Extensions not present");
-        }
-    }
+    deviceCreateInfo.queueCreateInfoCount = toU32(queueCreateInfos.size());
+    deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
+    deviceCreateInfo.enabledLayerCount = toU32(_layers.size());
+    deviceCreateInfo.ppEnabledLayerNames = _layers.data();
+    deviceCreateInfo.enabledExtensionCount = toU32(_extensions.size());
+    deviceCreateInfo.ppEnabledExtensionNames = _extensions.data();
+    deviceCreateInfo.pEnabledFeatures = &requestedFeatures;
+    deviceCreateInfo.pNext = nullptr;
 
-    VkDeviceCreateInfo create_info{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
+    VK_CHECK(vkCreateDevice(context->physicalDevice, &deviceCreateInfo, nullptr, &_gpuDevice->vkDevice));
 
-    // Latest requested feature will have the pNext's all set up for device creation.
-    create_info.pNext = gpu.get_requested_extension_features();
+    ///////////////////// Resource Initialization /////////////////////
 
-    create_info.pQueueCreateInfos = queue_create_infos.data();
-    create_info.queueCreateInfoCount = to_u32(queue_create_infos.size());
-    const auto requested_gpu_features = gpu.get_requested_features();
-    create_info.pEnabledFeatures = &requested_gpu_features;
-    create_info.enabledExtensionCount = to_u32(enabled_extensions.size());
-    create_info.ppEnabledExtensionNames = enabled_extensions.data();
+    buildSwapchain();
 
-    VkResult result = vkCreateDevice(gpu.get_handle(), &create_info, nullptr, &handle);
+    GFXWindowInfo windowInfo;
+    windowInfo.colorFmt = _context->getColorFormat();
+    windowInfo.depthStencilFmt = _context->getDepthStencilFormat();
+    windowInfo.isOffscreen = false;
+    _window = createWindow(windowInfo);
 
-    if (result != VK_SUCCESS)
-    {
-        throw VulkanException{ result, "Cannot create device" };
-    }
-
-    queues.resize(queue_family_properties_count);
-
-    for (uint32_t queue_family_index = 0U; queue_family_index < queue_family_properties_count; ++queue_family_index)
-    {
-        const VkQueueFamilyProperties &queue_family_property = gpu.get_queue_family_properties()[queue_family_index];
-
-        VkBool32 present_supported = gpu.is_present_supported(surface, queue_family_index);
-
-        // Only check if surface is valid to allow for headless applications
-        if (surface != VK_NULL_HANDLE)
-        {
-            VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(gpu.get_handle(), queue_family_index, surface, &present_supported));
-        }
-
-        for (uint32_t queue_index = 0U; queue_index < queue_family_property.queueCount; ++queue_index)
-        {
-            queues[queue_family_index].emplace_back(*this, queue_family_index, queue_family_property, present_supported, queue_index);
-        }
-    }
-    */
-    /*
-    String extStr = (const char*)glGetString(GL_EXTENSIONS);
-    _extensions = StringUtil::Split(extStr, " ");
-
-    _features[(int)GFXFeature::TEXTURE_FLOAT] = true;
-    _features[(int)GFXFeature::TEXTURE_HALF_FLOAT] = true;
-    _features[(int)GFXFeature::FORMAT_R11G11B10F] = true;
-    _features[(int)GFXFeature::FORMAT_D24S8] = true;
-    _features[(int)GFXFeature::MSAA] = true;
-    _features[(int)GFXFeature::INSTANCED_ARRAYS] = true;
-
-    if (checkExtension("color_buffer_float"))
-        _features[(int)GFXFeature::COLOR_FLOAT] = true;
-    
-    if (checkExtension("color_buffer_half_float"))
-        _features[(int)GFXFeature::COLOR_HALF_FLOAT] = true;
-    
-    if (checkExtension("texture_float_linear"))
-        _features[(int)GFXFeature::TEXTURE_FLOAT_LINEAR] = true;
-    
-    if (checkExtension("texture_half_float_linear"))
-        _features[(int)GFXFeature::TEXTURE_HALF_FLOAT_LINEAR] = true;
-
-    String compressed_fmts;
-
-    if (checkExtension("compressed_ETC1"))
-    {
-        _features[(int)GFXFeature::FORMAT_ETC1] = true;
-        compressed_fmts += "etc1 ";
-    }
-
-    _features[(int)GFXFeature::FORMAT_ETC2] = true;
-    compressed_fmts += "etc2 ";
-
-    if (checkExtension("texture_compression_pvrtc"))
-    {
-        _features[(int)GFXFeature::FORMAT_PVRTC] = true;
-        compressed_fmts += "pvrtc ";
-    }
-
-    if (checkExtension("texture_compression_astc"))
-    {
-        _features[(int)GFXFeature::FORMAT_ASTC] = true;
-        compressed_fmts += "astc ";
-    }
-
-    _renderer = (const char*)glGetString(GL_RENDERER);
-    _vendor = (const char*)glGetString(GL_VENDOR);
-    _version = (const char*)glGetString(GL_VERSION);
-
-    CC_LOG_INFO("RENDERER: %s", _renderer.c_str());
-    CC_LOG_INFO("VENDOR: %s", _vendor.c_str());
-    CC_LOG_INFO("VERSION: %s", _version.c_str());
-    CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);
-    CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
-    CC_LOG_INFO("USE_VAO: %s", _useVAO ? "true" : "false");
-    CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressed_fmts.c_str());
-
-    GFXWindowInfo window_info;
-    window_info.colorFmt = _context->getColorFormat();
-    window_info.depthStencilFmt = _context->getDepthStencilFormat();
-    window_info.isOffscreen = false;
-    _window = createWindow(window_info);
-
-    GFXQueueInfo queue_info;
-    queue_info.type = GFXQueueType::GRAPHICS;
-    _queue = createQueue(queue_info);
+    GFXQueueInfo queueInfo;
+    queueInfo.type = GFXQueueType::GRAPHICS;
+    _queue = createQueue(queueInfo);
 
     GFXCommandAllocatorInfo cmd_alloc_info;
     _cmdAllocator = createCommandAllocator(cmd_alloc_info);
 
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &_maxVertexAttributes);
-    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &_maxVertexUniformVectors);
-    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &_maxFragmentUniformVectors);
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_maxTextureUnits);
-    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &_maxVertexTextureUnits);
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxTextureSize);
-    glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &_maxCubeMapTextureSize);
-    glGetIntegerv(GL_DEPTH_BITS, &_depthBits);
-    glGetIntegerv(GL_STENCIL_BITS, &_stencilBits);
-    glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &_maxCubeMapTextureSize);
-    */
+    String instanceLayers, instanceExtensions, deviceLayers, deviceExtensions;
+    for (auto layer : ((CCVKContext*)_context)->getLayers())
+    {
+        instanceLayers += layer + String(" ");
+    }
+    for (auto extension : ((CCVKContext*)_context)->getExtensions())
+    {
+        instanceExtensions += extension + String(" ");
+    }
+    for (auto layer : _layers)
+    {
+        deviceLayers += layer + String(" ");
+    }
+    for (auto extension : _extensions)
+    {
+        deviceExtensions += extension + String(" ");
+    }
+
+    CC_LOG_INFO("Vulkan device initialized.");
+    CC_LOG_INFO("DEVICE_NAME: %s", context->physicalDeviceProperties.deviceName);
+    CC_LOG_INFO("VULKAN_VERSION: %d.%d", ((CCVKContext*)_context)->majorVersion(), ((CCVKContext*)_context)->minorVersion());
+    CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);
+    CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
+    CC_LOG_INFO("INSTANCE_LAYERS: %s", instanceLayers.c_str());
+    CC_LOG_INFO("INSTANCE_EXTENSIONS: %s", instanceExtensions.c_str());
+    CC_LOG_INFO("DEVICE_LAYERS: %s", deviceLayers.c_str());
+    CC_LOG_INFO("DEVICE_EXTENSIONS: %s", deviceExtensions.c_str());
+
     return true;
 }
 
@@ -283,8 +182,31 @@ void CCVKDevice::destroy()
     CC_SAFE_DESTROY(_cmdAllocator);
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_window);
-    CC_SAFE_DESTROY(_context);
-    CC_SAFE_DELETE(stateCache);
+
+    if (_gpuDevice)
+    {
+        if (_gpuDevice->vkSwapchain != VK_NULL_HANDLE)
+        {
+            for (uint32_t i = 0; i < _gpuDevice->vkSwapchainImageViews.size(); i++)
+            {
+                vkDestroyImageView(_gpuDevice->vkDevice, _gpuDevice->vkSwapchainImageViews[i], nullptr);
+            }
+            vkDestroySwapchainKHR(_gpuDevice->vkDevice, _gpuDevice->vkSwapchain, nullptr);
+
+            _gpuDevice->vkSwapchainImages.clear();
+            _gpuDevice->vkSwapchainImageViews.clear();
+            _gpuDevice->vkSwapchain = VK_NULL_HANDLE;
+        }
+
+        if (_gpuDevice->vkDevice != VK_NULL_HANDLE)
+        {
+            vkDestroyDevice(_gpuDevice->vkDevice, nullptr);
+            _gpuDevice->vkDevice = VK_NULL_HANDLE;
+        }
+
+        CC_DELETE(_gpuDevice);
+        _gpuDevice = nullptr;
+    }
 }
 
 void CCVKDevice::resize(uint width, uint height)
@@ -294,7 +216,7 @@ void CCVKDevice::resize(uint width, uint height)
 
 void CCVKDevice::present()
 {
-    ((CCVKCommandAllocator*)_cmdAllocator)->releaseCmds();
+    //((CCVKCommandAllocator*)_cmdAllocator)->releaseCmds();
     CCVKQueue* queue = (CCVKQueue*)_queue;
     _numDrawCalls = queue->_numDrawCalls;
     _numInstances = queue->_numInstances;
@@ -306,6 +228,67 @@ void CCVKDevice::present()
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
+}
+
+void CCVKDevice::buildSwapchain()
+{
+    auto context = ((CCVKContext*)_context)->gpuContext();
+    context->swapchainCreateInfo.oldSwapchain = _gpuDevice->vkSwapchain;
+
+    VkSurfaceCapabilitiesKHR surfaceCapabilities;
+    VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(context->physicalDevice, context->vkSurface, &surfaceCapabilities));
+    if (surfaceCapabilities.currentExtent.width == (uint32_t)-1)
+    {
+        context->swapchainCreateInfo.imageExtent.width = _width;
+        context->swapchainCreateInfo.imageExtent.height = _height;
+    }
+    else
+    {
+        _width = context->swapchainCreateInfo.imageExtent.width = surfaceCapabilities.currentExtent.width;
+        _height = context->swapchainCreateInfo.imageExtent.height = surfaceCapabilities.currentExtent.height;
+    }
+    VK_CHECK(vkCreateSwapchainKHR(_gpuDevice->vkDevice, &context->swapchainCreateInfo, nullptr, &_gpuDevice->vkSwapchain));
+
+    if (context->swapchainCreateInfo.oldSwapchain != VK_NULL_HANDLE)
+    {
+        for (uint32_t i = 0; i < _gpuDevice->vkSwapchainImageViews.size(); i++)
+        {
+            vkDestroyImageView(_gpuDevice->vkDevice, _gpuDevice->vkSwapchainImageViews[i]->vkImageView, nullptr);
+            CC_DELETE(_gpuDevice->vkSwapchainImageViews[i]->gpuTexture);
+            CC_DELETE(_gpuDevice->vkSwapchainImageViews[i]);
+        }
+        vkDestroySwapchainKHR(_gpuDevice->vkDevice, context->swapchainCreateInfo.oldSwapchain, nullptr);
+    }
+
+    uint32_t imageCount;
+    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuDevice->vkSwapchain, &imageCount, nullptr));
+    _gpuDevice->vkSwapchainImages.resize(imageCount);
+    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuDevice->vkSwapchain, &imageCount, _gpuDevice->vkSwapchainImages.data()));
+
+    _gpuDevice->vkSwapchainImageViews.resize(imageCount);
+    for (uint32_t i = 0; i < imageCount; i++)
+    {
+        auto format = ((CCVKContext*)_context)->getColorFormat();
+        auto gpuTexture = CC_NEW(CCVKGPUTexture);
+        gpuTexture->width = _width;
+        gpuTexture->height = _height;
+        gpuTexture->size = GFXFormatSize(format, _width, _height, 1);
+        gpuTexture->format = format;
+        gpuTexture->usage = GFXTextureUsageBit::COLOR_ATTACHMENT;
+        gpuTexture->vkImage = _gpuDevice->vkSwapchainImages[i];
+        gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
+        auto gpuTextureView = CC_NEW(CCVKGPUTextureView);
+        gpuTextureView->gpuTexture = gpuTexture;
+        gpuTextureView->format = format;
+        VkImageViewCreateInfo colorAttachmentView{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
+        colorAttachmentView.image = _gpuDevice->vkSwapchainImages[i];
+        colorAttachmentView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        colorAttachmentView.format = context->swapchainCreateInfo.imageFormat;
+        colorAttachmentView.components = { VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A };
+        colorAttachmentView.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+        VK_CHECK(vkCreateImageView(_gpuDevice->vkDevice, &colorAttachmentView, nullptr, &gpuTextureView->vkImageView));
+        _gpuDevice->vkSwapchainImageViews[i] = gpuTextureView;
+    }
 }
 
 GFXWindow* CCVKDevice::createWindow(const GFXWindowInfo& info)

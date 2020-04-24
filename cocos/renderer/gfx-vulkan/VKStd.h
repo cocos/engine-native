@@ -23,7 +23,7 @@
 		VkResult err = x;                                           \
 		if (err)                                                    \
 		{                                                           \
-			CC_LOG_ERROR("Detected Vulkan error: ", err);           \
+			CC_LOG_ERROR("Detected Vulkan error: %d", err);         \
 			abort();                                                \
 		}                                                           \
 	} while (0)

@@ -1,9 +1,10 @@
 #ifndef CC_GFXVULKAN_CCVK_CONTEXT_H_
 #define CC_GFXVULKAN_CCVK_CONTEXT_H_
 
-#include <volk.h>
-
 NS_CC_BEGIN
+
+class CCVKDevice;
+class CCVKGPUContext;
 
 class CC_VULKAN_API CCVKContext : public GFXContext {
 public:
@@ -14,41 +15,30 @@ public:
     bool initialize(const GFXContextInfo& info);
     void destroy();
     void present();
-    bool MakeCurrent();
 
-    bool CheckExtension(const String& extension) const;
+    CC_INLINE bool checkExtension(const String& extension) const
+    {
+        return std::find_if(_extensions.begin(), _extensions.end(),
+            [extension](auto &device_extension)
+        {
+            return std::strcmp(device_extension, extension.c_str()) == 0;
+        }) != _extensions.end();
+    }
 
     CC_INLINE int majorVersion() const { return _majorVersion; }
     CC_INLINE int minorVersion() const { return _minorVersion; }
-    CC_INLINE const std::vector<VkPhysicalDevice>& physicalDevices() const { return _physicalDevices; }
+    CC_INLINE CCVKGPUContext* gpuContext() { return _gpuContext; }
+    CC_INLINE const std::vector<const char *>& getLayers() const { return _layers; }
+    CC_INLINE const std::vector<const char *>& getExtensions() const { return _extensions; }
 
 private:
-    bool MakeCurrentImpl();
-
-private:
-    struct SwapchainDimensions
-    {
-        uint32_t width = 0;
-        uint32_t height = 0;
-        VkFormat format = VK_FORMAT_UNDEFINED;
-    };
-    VkInstance _instance = VK_NULL_HANDLE;
-    std::vector<VkPhysicalDevice> _physicalDevices;
-    VkDevice _device = VK_NULL_HANDLE;
-    VkQueue _queue = VK_NULL_HANDLE;
-    VkSwapchainKHR _swapchain = VK_NULL_HANDLE;
-    SwapchainDimensions _swapchainDimensions;
-    VkSurfaceKHR _surface = VK_NULL_HANDLE;
-    std::vector<VkImageView> _swapchainImageViews;
-    std::vector<VkFramebuffer> _swapchainFramebuffers;
-    VkDebugUtilsMessengerEXT _debugUtilsMessenger = VK_NULL_HANDLE;
-    VkDebugReportCallbackEXT _debugReport = VK_NULL_HANDLE;
+    CCVKGPUContext* _gpuContext = nullptr;
 
     bool _isPrimaryContex = false;
     int _majorVersion = 0;
     int _minorVersion = 0;
-    StringArray _extensions;
-    bool _isInitialized = false;
+    std::vector<const char *> _layers;
+    std::vector<const char *> _extensions;
 };
 
 NS_CC_END
