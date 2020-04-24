@@ -6,6 +6,7 @@
 
 NS_CC_BEGIN
 namespace {
+    //See more details at https://developer.apple.com/documentation/metal/mtlfeatureset
     enum class GPUFamily : uint
     {
         Apple1, // A7,
@@ -551,11 +552,14 @@ namespace mu
         if (@available(macOS 10.14, *)) {
             maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily2_v1;
         }
-        else if(@available(macOS 10.13, *)){
+        else if(@available(macOS 10.13, *)) {
             maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily1_v3;
         }
-        else{
+        else if(@available(macOS 10.12, *)) {
             maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily1_v2;
+        }
+        else {
+            maxKnownFeatureSet = MTLFeatureSet_macOS_GPUFamily1_v1;
         }
 #endif
         for (auto featureSet = maxKnownFeatureSet; featureSet >= 0; --featureSet)
@@ -565,10 +569,82 @@ namespace mu
                 return featureSet;
             }
         }
-        return MTLFeatureSet_macOS_GPUFamily1_v1;
+        return defaultFeatureSet;
     }
 
 #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+    const char* getIOSFeatureSetToString(MTLFeatureSet featureSet)
+    {
+        if(@available(iOS 8.0, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_iOS_GPUFamily1_v1:
+                return "MTLFeatureSet_iOS_GPUFamily1_v1";
+            case MTLFeatureSet_iOS_GPUFamily2_v1:
+                return "MTLFeatureSet_iOS_GPUFamily2_v1";
+            default:
+                break;
+            }
+        }
+        if(@available(iOS 9.0, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_iOS_GPUFamily1_v2:
+                return "MTLFeatureSet_iOS_GPUFamily1_v2";
+            case MTLFeatureSet_iOS_GPUFamily2_v2:
+                return "MTLFeatureSet_iOS_GPUFamily2_v2";
+            case MTLFeatureSet_iOS_GPUFamily3_v1:
+                return "MTLFeatureSet_iOS_GPUFamily3_v1";
+            default:
+                break;
+            }
+        }
+        if(@available(iOS 10.0, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_iOS_GPUFamily1_v3:
+                return "MTLFeatureSet_iOS_GPUFamily1_v3";
+            case MTLFeatureSet_iOS_GPUFamily2_v3:
+                return "MTLFeatureSet_iOS_GPUFamily2_v3";
+            case MTLFeatureSet_iOS_GPUFamily3_v2:
+                return "MTLFeatureSet_iOS_GPUFamily3_v2";
+            default:
+                break;
+            }
+        }
+        if(@available(iOS 11.0, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_iOS_GPUFamily1_v4:
+                return "MTLFeatureSet_iOS_GPUFamily2_v4";
+            case MTLFeatureSet_iOS_GPUFamily2_v3:
+                return "MTLFeatureSet_iOS_GPUFamily2_v3";
+            case MTLFeatureSet_iOS_GPUFamily3_v3:
+                return "MTLFeatureSet_iOS_GPUFamily3_v3";
+            case MTLFeatureSet_iOS_GPUFamily4_v1:
+                return "MTLFeatureSet_iOS_GPUFamily4_v1";
+            default:
+                break;
+            }
+        }
+        if(@available(iOS 12.0, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_iOS_GPUFamily1_v5:
+                return "MTLFeatureSet_iOS_GPUFamily1_v5";
+            case MTLFeatureSet_iOS_GPUFamily2_v5:
+                return "MTLFeatureSet_iOS_GPUFamily2_v5";
+            case MTLFeatureSet_iOS_GPUFamily3_v4:
+                return "MTLFeatureSet_iOS_GPUFamily3_v4";
+            case MTLFeatureSet_iOS_GPUFamily4_v2:
+                return "MTLFeatureSet_iOS_GPUFamily4_v2";
+            default:
+                break;
+            }
+        }
+        return "Invalid metal feature set";
+    }
+
     GPUFamily getIOSGPUFamily(MTLFeatureSet featureSet)
     {
         if(@available(iOS 12.0, *)) {
@@ -636,6 +712,49 @@ namespace mu
         return GPUFamily::Apple1;
     }
 #else
+    const char* getMacFeatureSetToString(MTLFeatureSet featureSet)
+    {
+        if(@available(macOS 10.11, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_macOS_GPUFamily1_v1:
+                return "MTLFeatureSet_macOS_GPUFamily1_v1";
+            default:
+                return break;
+            }
+        }
+        if(@available(macOS 10.12, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_macOS_GPUFamily1_v2:
+                return "MTLFeatureSet_macOS_GPUFamily1_v2";
+            default:
+                return break;
+            }
+        }
+        if(@available(macOS 10.13, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_macOS_GPUFamily1_v3:
+                return "MTLFeatureSet_macOS_GPUFamily1_v3";
+            default:
+                return break;
+            }
+        }
+        if(@available(macOS 10.14, *))
+        {
+            switch (featureSet) {
+            case MTLFeatureSet_macOS_GPUFamily1_v4:
+                return "MTLFeatureSet_macOS_GPUFamily1_v4";
+            case MTLFeatureSet_macOS_GPUFamily2_v1:
+                return "MTLFeatureSet_macOS_GPUFamily2_v1";
+            default:
+                return break;
+            }
+        }
+        return "Invalid metal feature set";
+    }
+
     GPUFamily getMacGPUFamily(MTLFeatureSet featureSet)
     {
         if(@available(macOS 10.14, *)) {
@@ -904,22 +1023,14 @@ namespace mu
         }
     }
 
+    
     const char* featureSetToString(MTLFeatureSet featureSet)
     {
-        switch (featureSet) {
-            case MTLFeatureSet_macOS_GPUFamily1_v1:
-                return "MTLFeatureSet_macOS_GPUFamily1_v1";
-            case MTLFeatureSet_macOS_GPUFamily1_v2:
-                return "MTLFeatureSet_macOS_GPUFamily1_v2";
-            case MTLFeatureSet_macOS_GPUFamily1_v3:
-                return "MTLFeatureSet_macOS_GPUFamily1_v3";
-            case MTLFeatureSet_macOS_GPUFamily1_v4:
-                return "MTLFeatureSet_macOS_GPUFamily1_v4";
-            case MTLFeatureSet_macOS_GPUFamily2_v1:
-                return "MTLFeatureSet_macOS_GPUFamily2_v1";
-            default:
-                return "MTLFeatureSet_macOS_GPUFamily1_v1";
-        }
+    #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+        return getIOSFeatureSetToString(featureSet);
+    #else
+        return getMacFeatureSetToString(featureSet);
+    #endif
     }
 
 } //namespace mu
