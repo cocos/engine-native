@@ -22,10 +22,22 @@ bool GLES2Buffer::initialize(const GFXBufferInfo& info) {
   
   if ((_flags & GFXBufferFlagBit::BAKUP_BUFFER) && _size > 0) {
     _buffer = (uint8_t*)CC_MALLOC(_size);
-    _device->getMemoryStatus().bufferSize += _size;
+    if(!_buffer)
+    {
+      _status = GFXStatus::FAILED;
+      CCASSERT(false, "GLES2Buffer: backup buffer allocated faild.");
+      return false;
+    }
+      _device->getMemoryStatus().bufferSize += _size;
   }
   
   _gpuBuffer = CC_NEW(GLES2GPUBuffer);
+  if(!_gpuBuffer)
+  {
+      _status = GFXStatus::FAILED;
+      CCASSERT(false, "GLES2Buffer: CC_NEW GLES2GPUBuffer failed.");
+      return false;
+  }
   _gpuBuffer->usage = _usage;
   _gpuBuffer->memUsage = _memUsage;
   _gpuBuffer->size = _size;
@@ -67,26 +79,38 @@ void GLES2Buffer::destroy() {
 }
 
 void GLES2Buffer::resize(uint size) {
-  if (_size != size) {
-    const uint old_size = _size;
-    _size = size;
-    _count = _size / _stride;
-    
+  if (_size < size) {
+    const uint oldSize = _size;
+    const auto count = size / _stride;
     GFXMemoryStatus& status = _device->getMemoryStatus();
-    _gpuBuffer->size = _size;
-    _gpuBuffer->count = _count;
+    _gpuBuffer->size = size;
+    _gpuBuffer->count = count;
     GLES2CmdFuncResizeBuffer((GLES2Device*)_device, _gpuBuffer);
-    status.bufferSize -= old_size;
-    status.bufferSize += _size;
 
     if (_buffer) {
-      const uint8_t* old_buff = _buffer;
-      _buffer = (uint8_t*)CC_MALLOC(_size);
-      memcpy(_buffer, old_buff, old_size);
-      CC_FREE(_buffer);
-      status.bufferSize -= old_size;
+      const uint8_t* oldBuffer = _buffer;
+      uint8_t* buffer = (uint8_t*)CC_MALLOC(_size);
+      if(!buffer)
+      {
+        _gpuBuffer->size = oldSize;
+        _gpuBuffer->count = oldSize / _stride;
+        GLES2CmdFuncResizeBuffer((GLES2Device*)_device, _gpuBuffer);
+        _status = GFXStatus::FAILED;
+        CCASSERT(false, "GLES2Buffer: resize backup buffer failed.");
+        return;
+      }
+      memcpy(buffer, oldBuffer, oldSize);
+      CC_FREE(oldBuffer);
+      _buffer = buffer;
+      status.bufferSize -= oldSize;
       status.bufferSize += _size;
     }
+
+    _size = size;
+    _count = count;
+    status.bufferSize -= oldSize;
+    status.bufferSize += size;
+    _status = GFXStatus::SUCCESS;
   }
 }
 

@@ -21,7 +21,7 @@ public:
     CC_INLINE MTLIndexType getIndexType() const { return _indexType; }
     
 private:
-    void resizeBuffer(uint8_t**, uint, uint);
+    bool resizeBuffer(uint size, uint count, uint oldSize, uint8_t* backupBuffer, bool needBackup);
     
     id<MTLBuffer> _mtlBuffer = nullptr;
     uint8_t* _transferBuffer = nullptr;
