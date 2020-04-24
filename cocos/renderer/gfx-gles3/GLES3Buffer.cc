@@ -25,7 +25,7 @@ bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
     if(!_buffer)
     {
       _status = GFXStatus::FAILED;
-      CCASSERT(false, "GLES3Buffer: CC_MALLOC backup buffer failed.");
+      CC_LOG_ERROR("GLES3Buffer: CC_MALLOC backup buffer failed.");
       return false;
     }
     _device->getMemoryStatus().bufferSize += _size;
@@ -35,7 +35,7 @@ bool GLES3Buffer::initialize(const GFXBufferInfo& info) {
   if(!_gpuBuffer)
   {
     _status = GFXStatus::FAILED;
-    CCASSERT(false, "GLES3Buffer: CC_NEW GLES3GPUBuffer failed.");
+    CC_LOG_ERROR("GLES3Buffer: CC_NEW GLES3GPUBuffer failed.");
     return false;
   }
   _gpuBuffer->usage = _usage;
@@ -76,37 +76,32 @@ void GLES3Buffer::destroy() {
 }
 
 void GLES3Buffer::resize(uint size) {
-  if (_size < size) {
-    const uint oldSize = _size;
-    const uint count = size / _stride;
+  if (_size != size) {
+    const uint old_size = _size;
+    _size = size;
+    _count = _size / _stride;
     
     GFXMemoryStatus& status = _device->getMemoryStatus();
-    _gpuBuffer->size = size;
-    _gpuBuffer->count = count;
+    _gpuBuffer->size = _size;
+    _gpuBuffer->count = _count;
     GLES3CmdFuncResizeBuffer((GLES3Device*)_device, _gpuBuffer);
+    status.bufferSize -= old_size;
+    status.bufferSize += _size;
 
     if (_buffer) {
-      const uint8_t* oldBuffer = _buffer;
-      uint8_t* buffer = (uint8_t*)CC_MALLOC(_size);
-      if(!buffer)
+      const uint8_t* old_buff = _buffer;
+      _buffer = (uint8_t*)CC_MALLOC(_size);
+      if(_buffer)
       {
-        _gpuBuffer->size = oldSize;
-        _gpuBuffer->count = oldSize / _stride;
-        GLES3CmdFuncResizeBuffer((GLES3Device*)_device, _gpuBuffer);
         _status = GFXStatus::FAILED;
-        CCASSERT(false, "GLES3Buffer: resize backup buffer failed.");
+        CC_LOG_ERROR("GLES3Buffer: CC_MALLOC resize backup buffer failed.");
         return;
       }
-      memcpy(buffer, oldBuffer, oldSize);
-      CC_FREE(oldBuffer);
-      _buffer = buffer;
-      status.bufferSize -= oldSize;
+      memcpy(_buffer, old_buff, std::min(old_size, size));
+      CC_FREE(old_buff);
+      status.bufferSize -= old_size;
       status.bufferSize += _size;
     }
-    _size = size;
-    _count = count;
-    status.bufferSize -= oldSize;
-    status.bufferSize += _size;
     _status = GFXStatus::SUCCESS;
   }
 }
