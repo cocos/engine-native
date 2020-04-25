@@ -13,6 +13,22 @@ CCVKTexture::~CCVKTexture()
 {
 }
 
+void CCVKTexture::setSwapchainImage(CCVKGPUTexture* swapchainImage)
+{
+    _gpuTexture = swapchainImage;
+    _format = _gpuTexture->format;
+    _width = _gpuTexture->width;
+    _height = _gpuTexture->height;
+    _type = _gpuTexture->type = GFXTextureType::TEX2D;
+    _usage = _gpuTexture->usage = GFXTextureUsage::COLOR_ATTACHMENT;
+    _size = _gpuTexture->size = GFXFormatSize(_format, _width, _height, _depth);
+    _gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
+    _isSwapchainImage = true;
+
+    _device->getMemoryStatus().textureSize += _size;
+    _status = GFXStatus::SUCCESS;
+}
+
 bool CCVKTexture::initialize(const GFXTextureInfo &info)
 {
     _type = info.type;
@@ -107,7 +123,10 @@ void CCVKTexture::destroy()
 {
     if (_gpuTexture)
     {
-        CCVKCmdFuncDestroyTexture((CCVKDevice*)_device, _gpuTexture);
+        if (!_isSwapchainImage)
+        {
+            CCVKCmdFuncDestroyTexture((CCVKDevice*)_device, _gpuTexture);
+        }
         _device->getMemoryStatus().textureSize -= _size;
         CC_DELETE(_gpuTexture);
         _gpuTexture = nullptr;

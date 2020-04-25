@@ -11,11 +11,9 @@ public:
     VkDevice vkDevice{ VK_NULL_HANDLE };
     std::vector<VkLayerProperties> layers;
     std::vector<VkExtensionProperties> extensions;
-
+    uint32_t curImageIndex = 0;
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
-    std::vector<VkImage> vkSwapchainImages;
-    CCVKGPUTextureViewList vkSwapchainImageViews;
-    //std::vector<VkFramebuffer> swapchainFramebuffers;
+    std::vector<VkSemaphore> vkSemaphores;
 };
 
 class CCVKGPUContext
@@ -83,6 +81,7 @@ public:
     GFXTextureFlags flags = GFXTextureFlagBit::NONE;
     bool isPowerOf2 = false;
     VkImage vkImage = VK_NULL_HANDLE;
+    VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
     //GLenum glTarget = 0;
     //GLenum glInternelFmt = 0;
     //GLenum glFormat = 0;

@@ -65,6 +65,8 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     };
     VkPhysicalDeviceFeatures requestedFeatures{};
     // features should be enabled like this
+    requestedFeatures.textureCompressionASTC_LDR = deviceFeatures.textureCompressionASTC_LDR;
+    requestedFeatures.textureCompressionBC = deviceFeatures.textureCompressionBC;
     requestedFeatures.textureCompressionETC2 = deviceFeatures.textureCompressionETC2;
 
     ///////////////////// Device Creation /////////////////////
@@ -185,19 +187,6 @@ void CCVKDevice::destroy()
 
     if (_gpuDevice)
     {
-        if (_gpuDevice->vkSwapchain != VK_NULL_HANDLE)
-        {
-            for (uint32_t i = 0; i < _gpuDevice->vkSwapchainImageViews.size(); i++)
-            {
-                vkDestroyImageView(_gpuDevice->vkDevice, _gpuDevice->vkSwapchainImageViews[i], nullptr);
-            }
-            vkDestroySwapchainKHR(_gpuDevice->vkDevice, _gpuDevice->vkSwapchain, nullptr);
-
-            _gpuDevice->vkSwapchainImages.clear();
-            _gpuDevice->vkSwapchainImageViews.clear();
-            _gpuDevice->vkSwapchain = VK_NULL_HANDLE;
-        }
-
         if (_gpuDevice->vkDevice != VK_NULL_HANDLE)
         {
             vkDestroyDevice(_gpuDevice->vkDevice, nullptr);
@@ -214,6 +203,12 @@ void CCVKDevice::resize(uint width, uint height)
   
 }
 
+void CCVKDevice::begin()
+{
+    //uint32_t imageIndex = 0;
+    //VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuDevice.vkSwapchain, ~0ull, acquireSemaphore, VK_NULL_HANDLE, &imageIndex));
+}
+
 void CCVKDevice::present()
 {
     //((CCVKCommandAllocator*)_cmdAllocator)->releaseCmds();
@@ -221,8 +216,6 @@ void CCVKDevice::present()
     _numDrawCalls = queue->_numDrawCalls;
     _numInstances = queue->_numInstances;
     _numTriangles = queue->_numTriangles;
-
-    _context->present();
 
     // Clear queue stats
     queue->_numDrawCalls = 0;
@@ -251,45 +244,10 @@ void CCVKDevice::buildSwapchain()
 
     if (context->swapchainCreateInfo.oldSwapchain != VK_NULL_HANDLE)
     {
-        for (uint32_t i = 0; i < _gpuDevice->vkSwapchainImageViews.size(); i++)
-        {
-            vkDestroyImageView(_gpuDevice->vkDevice, _gpuDevice->vkSwapchainImageViews[i]->vkImageView, nullptr);
-            CC_DELETE(_gpuDevice->vkSwapchainImageViews[i]->gpuTexture);
-            CC_DELETE(_gpuDevice->vkSwapchainImageViews[i]);
-        }
         vkDestroySwapchainKHR(_gpuDevice->vkDevice, context->swapchainCreateInfo.oldSwapchain, nullptr);
     }
-
-    uint32_t imageCount;
-    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuDevice->vkSwapchain, &imageCount, nullptr));
-    _gpuDevice->vkSwapchainImages.resize(imageCount);
-    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuDevice->vkSwapchain, &imageCount, _gpuDevice->vkSwapchainImages.data()));
-
-    _gpuDevice->vkSwapchainImageViews.resize(imageCount);
-    for (uint32_t i = 0; i < imageCount; i++)
-    {
-        auto format = ((CCVKContext*)_context)->getColorFormat();
-        auto gpuTexture = CC_NEW(CCVKGPUTexture);
-        gpuTexture->width = _width;
-        gpuTexture->height = _height;
-        gpuTexture->size = GFXFormatSize(format, _width, _height, 1);
-        gpuTexture->format = format;
-        gpuTexture->usage = GFXTextureUsageBit::COLOR_ATTACHMENT;
-        gpuTexture->vkImage = _gpuDevice->vkSwapchainImages[i];
-        gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
-        auto gpuTextureView = CC_NEW(CCVKGPUTextureView);
-        gpuTextureView->gpuTexture = gpuTexture;
-        gpuTextureView->format = format;
-        VkImageViewCreateInfo colorAttachmentView{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
-        colorAttachmentView.image = _gpuDevice->vkSwapchainImages[i];
-        colorAttachmentView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        colorAttachmentView.format = context->swapchainCreateInfo.imageFormat;
-        colorAttachmentView.components = { VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A };
-        colorAttachmentView.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-        VK_CHECK(vkCreateImageView(_gpuDevice->vkDevice, &colorAttachmentView, nullptr, &gpuTextureView->vkImageView));
-        _gpuDevice->vkSwapchainImageViews[i] = gpuTextureView;
-    }
 }
+
 
 GFXWindow* CCVKDevice::createWindow(const GFXWindowInfo& info)
 {

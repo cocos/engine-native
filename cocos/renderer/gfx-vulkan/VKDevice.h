@@ -5,6 +5,7 @@ NS_CC_BEGIN
 
 class CCVKStateCache;
 class CCVKGPUDevice;
+class CCVKGPUSwapchain;
 
 class CC_VULKAN_API CCVKDevice : public GFXDevice
 {
@@ -18,6 +19,7 @@ public:
     bool initialize(const GFXDeviceInfo& info) override;
     void destroy() override;
     void resize(uint width, uint height) override;
+    void begin() override;
     void present() override;
     GFXWindow* createWindow(const GFXWindowInfo& info) override;
     GFXQueue* createQueue(const GFXQueueInfo& info) override;

@@ -3,6 +3,8 @@
 #include "VKUtils.h"
 #include "VKGPUObjects.h"
 #include "VKDevice.h"
+#define WIN32_LEAN_AND_MEAN
+#include "windows.h"
 
 #define CC_GFX_DEBUG
 
@@ -17,11 +19,11 @@ namespace
         // Log debug messge
         if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
         {
-            CC_LOG_WARNING("%s - %s: %s", callbackData->messageIdNumber, callbackData->pMessageIdName, callbackData->pMessage);
+            CC_LOG_WARNING("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
         }
         else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
         {
-            CC_LOG_ERROR("%s - %s: %s", callbackData->messageIdNumber, callbackData->pMessageIdName, callbackData->pMessage);
+            CC_LOG_ERROR("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
             assert(0);
         }
         return VK_FALSE;
@@ -303,6 +305,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
 
         _gpuContext->physicalDevice = physicalDeviceHandles[deviceIndex];
         _gpuContext->physicalDeviceProperties = physicalDeviceProperties[deviceIndex];
+        vkGetPhysicalDeviceFeatures(_gpuContext->physicalDevice, &_gpuContext->physicalDeviceFeatures);
         vkGetPhysicalDeviceMemoryProperties(_gpuContext->physicalDevice, &_gpuContext->physicalDeviceMemoryProperties);
         uint32_t queueFamilyPropertiesCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(_gpuContext->physicalDevice, &queueFamilyPropertiesCount, nullptr);
@@ -317,7 +320,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
 
         ///////////////////// Swapchain Preperation /////////////////////
 
-        _colorFmt = GFXFormat::RGBA8;
+        _colorFmt = GFXFormat::BGRA8;
         _depthStencilFmt = GFXFormat::D32F_S8;
 
         VkSurfaceCapabilitiesKHR surfaceCapabilities{};
@@ -522,8 +525,6 @@ void CCVKContext::destroy()
     }
 }
 
-void CCVKContext::present() {
-  //eglSwapBuffers(_eglDisplay, _eglSurface);
-}
+void CCVKContext::present() {}
 
 NS_CC_END

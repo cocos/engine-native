@@ -15,10 +15,13 @@ class CC_VULKAN_API CCVKTexture : public GFXTexture {
   void destroy();
   void resize(uint width, uint height);
   
+  void setSwapchainImage(CCVKGPUTexture* swapchainImage);
+
   CC_INLINE CCVKGPUTexture* gpuTexture() const { return _gpuTexture; }
 
  private:
   CCVKGPUTexture* _gpuTexture = nullptr;
+  bool _isSwapchainImage = false;
 };
 
 NS_CC_END

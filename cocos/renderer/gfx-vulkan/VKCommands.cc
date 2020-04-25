@@ -28,6 +28,7 @@ namespace
         case GFXFormat::RGB8UI: return VK_FORMAT_R8G8B8_UINT;
         case GFXFormat::RGB8I: return VK_FORMAT_R8G8B8_SINT;
         case GFXFormat::RGBA8: return VK_FORMAT_R8G8B8A8_UNORM;
+        case GFXFormat::BGRA8: return VK_FORMAT_B8G8R8A8_UNORM;
         case GFXFormat::RGBA8SN: return VK_FORMAT_R8G8B8A8_SNORM;
         case GFXFormat::RGBA8UI: return VK_FORMAT_R8G8B8A8_UINT;
         case GFXFormat::RGBA8I: return VK_FORMAT_R8G8B8A8_SINT;
@@ -114,15 +115,14 @@ namespace
 
     VkSampleCountFlagBits MapVkSampleCount(uint sampleCount)
     {
-        uint32_t count = 0;
-        if (sampleCount |  1) count |= VK_SAMPLE_COUNT_1_BIT;
-        if (sampleCount |  2) count |= VK_SAMPLE_COUNT_2_BIT;
-        if (sampleCount |  4) count |= VK_SAMPLE_COUNT_4_BIT;
-        if (sampleCount |  8) count |= VK_SAMPLE_COUNT_8_BIT;
-        if (sampleCount | 16) count |= VK_SAMPLE_COUNT_16_BIT;
-        if (sampleCount | 32) count |= VK_SAMPLE_COUNT_32_BIT;
-        if (sampleCount | 64) count |= VK_SAMPLE_COUNT_64_BIT;
-        return (VkSampleCountFlagBits)count;
+        if      (sampleCount ==  1) return VK_SAMPLE_COUNT_1_BIT;
+        else if (sampleCount ==  2) return VK_SAMPLE_COUNT_2_BIT;
+        else if (sampleCount ==  4) return VK_SAMPLE_COUNT_4_BIT;
+        else if (sampleCount ==  8) return VK_SAMPLE_COUNT_8_BIT;
+        else if (sampleCount == 16) return VK_SAMPLE_COUNT_16_BIT;
+        else if (sampleCount == 32) return VK_SAMPLE_COUNT_32_BIT;
+        else if (sampleCount == 64) return VK_SAMPLE_COUNT_64_BIT;
+        else                        return VK_SAMPLE_COUNT_1_BIT;
     }
 
     VkAttachmentLoadOp MapVkLoadOp(GFXLoadOp loadOp)
@@ -190,12 +190,110 @@ namespace
         }
         }
     }
+
+    VkImageType MapVkImageType(GFXTextureType type)
+    {
+        switch (type)
+        {
+        case GFXTextureType::TEX1D: return VK_IMAGE_TYPE_1D;
+        case GFXTextureType::TEX2D: return VK_IMAGE_TYPE_2D;
+        case GFXTextureType::TEX3D: return VK_IMAGE_TYPE_3D;
+        default:
+        {
+            CCASSERT(false, "Unsupported GFXTextureType, convert to VkImageType failed.");
+            return VK_IMAGE_TYPE_2D;
+        }
+        }
+    }
+
+    VkSampleCountFlagBits MapVkSampleCount(GFXSampleCount count)
+    {
+        switch (count)
+        {
+        case GFXSampleCount::X1: return VK_SAMPLE_COUNT_1_BIT;
+        case GFXSampleCount::X2: return VK_SAMPLE_COUNT_2_BIT;
+        case GFXSampleCount::X4: return VK_SAMPLE_COUNT_4_BIT;
+        case GFXSampleCount::X8: return VK_SAMPLE_COUNT_8_BIT;
+        case GFXSampleCount::X16: return VK_SAMPLE_COUNT_16_BIT;
+        case GFXSampleCount::X32: return VK_SAMPLE_COUNT_32_BIT;
+        default:
+        {
+            CCASSERT(false, "Unsupported GFXTextureType, convert to VkImageType failed.");
+            return VK_SAMPLE_COUNT_1_BIT;
+        }
+        }
+    }
+
+    VkImageUsageFlagBits MapVkImageUsageFlagBits(GFXTextureUsage usage)
+    {
+        switch (usage)
+        {
+        case GFXTextureUsage::TRANSFER_SRC: return VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        case GFXTextureUsage::TRANSFER_DST: return VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        case GFXTextureUsage::SAMPLED: return VK_IMAGE_USAGE_SAMPLED_BIT;
+        case GFXTextureUsage::STORAGE: return VK_IMAGE_USAGE_STORAGE_BIT;
+        case GFXTextureUsage::COLOR_ATTACHMENT: return VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        case GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT: return VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        case GFXTextureUsage::TRANSIENT_ATTACHMENT: return VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
+        case GFXTextureUsage::INPUT_ATTACHMENT: return VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+        default:
+        {
+            CCASSERT(false, "Unsupported GFXTextureType, convert to VkImageType failed.");
+            return VK_IMAGE_USAGE_SAMPLED_BIT;
+        }
+        }
+    }
+
+    uint32_t selectMemoryType(const VkPhysicalDeviceMemoryProperties& memoryProperties, uint32_t memoryTypeBits, VkMemoryPropertyFlags flags)
+    {
+        for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
+            if ((memoryTypeBits & (1 << i)) != 0 && (memoryProperties.memoryTypes[i].propertyFlags & flags) == flags)
+                return i;
+
+        CCASSERT(false, "No compatible memory type found.");
+        return ~0u;
+    }
+
+    VkImageViewType MapVkImageViewType(GFXTextureViewType viewType)
+    {
+        switch (viewType)
+        {
+        case GFXTextureViewType::TV1D: return VK_IMAGE_VIEW_TYPE_1D;
+        case GFXTextureViewType::TV1D_ARRAY: return VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+        case GFXTextureViewType::TV2D: return VK_IMAGE_VIEW_TYPE_2D;
+        case GFXTextureViewType::TV2D_ARRAY: return VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+        case GFXTextureViewType::TV3D: return VK_IMAGE_VIEW_TYPE_3D;
+        case GFXTextureViewType::CUBE: return VK_IMAGE_VIEW_TYPE_CUBE;
+        default:
+        {
+            CCASSERT(false, "Unsupported GFXTextureViewType, convert to VkImageViewType failed.");
+            return VK_IMAGE_VIEW_TYPE_2D;
+        }
+        }
+    }
+
+    VkImageAspectFlags MapVkImageAspectFlags(GFXFormat format)
+    {
+        switch (format)
+        {
+        case GFXFormat::D16:
+        case GFXFormat::D24:
+        case GFXFormat::D32F:
+            return VK_IMAGE_ASPECT_DEPTH_BIT;
+        case GFXFormat::D16S8:
+        case GFXFormat::D24S8:
+        case GFXFormat::D32F_S8:
+            return VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+        default: 
+            return VK_IMAGE_ASPECT_COLOR_BIT;
+        }
+    }
 }
 
 void CCVKCmdFuncCreateRenderPass(CCVKDevice* device, CCVKGPURenderPass* gpuRenderPass)
 {
     uint32_t colorAttachmentCount = gpuRenderPass->colorAttachments.size();
-    std::vector<VkAttachmentDescription> attachmentDescriptions(colorAttachmentCount + 1);
+    std::vector<VkAttachmentDescription> attachmentDescriptions(colorAttachmentCount/* + 1*/);
     for (uint32_t i = 0u; i < colorAttachmentCount; i++)
     {
         auto &attachment = gpuRenderPass->colorAttachments[i];
@@ -208,15 +306,15 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice* device, CCVKGPURenderPass* gpuRende
         attachmentDescriptions[i].initialLayout = MapVkImageLayout(attachment.beginLayout);
         attachmentDescriptions[i].finalLayout = MapVkImageLayout(attachment.endLayout);
     }
-    auto &depthStencilAttachment = gpuRenderPass->depthStencilAttachment;
-    attachmentDescriptions[colorAttachmentCount].format = MapVkFormat(depthStencilAttachment.format);
-    attachmentDescriptions[colorAttachmentCount].samples = MapVkSampleCount(depthStencilAttachment.sampleCount);
-    attachmentDescriptions[colorAttachmentCount].loadOp = MapVkLoadOp(depthStencilAttachment.depthLoadOp);
-    attachmentDescriptions[colorAttachmentCount].storeOp = MapVkStoreOp(depthStencilAttachment.depthStoreOp);
-    attachmentDescriptions[colorAttachmentCount].stencilLoadOp = MapVkLoadOp(depthStencilAttachment.stencilLoadOp);
-    attachmentDescriptions[colorAttachmentCount].stencilStoreOp = MapVkStoreOp(depthStencilAttachment.stencilStoreOp);
-    attachmentDescriptions[colorAttachmentCount].initialLayout = MapVkImageLayout(depthStencilAttachment.beginLayout);
-    attachmentDescriptions[colorAttachmentCount].finalLayout = MapVkImageLayout(depthStencilAttachment.endLayout);
+    //auto &depthStencilAttachment = gpuRenderPass->depthStencilAttachment;
+    //attachmentDescriptions[colorAttachmentCount].format = MapVkFormat(depthStencilAttachment.format);
+    //attachmentDescriptions[colorAttachmentCount].samples = MapVkSampleCount(depthStencilAttachment.sampleCount);
+    //attachmentDescriptions[colorAttachmentCount].loadOp = MapVkLoadOp(depthStencilAttachment.depthLoadOp);
+    //attachmentDescriptions[colorAttachmentCount].storeOp = MapVkStoreOp(depthStencilAttachment.depthStoreOp);
+    //attachmentDescriptions[colorAttachmentCount].stencilLoadOp = MapVkLoadOp(depthStencilAttachment.stencilLoadOp);
+    //attachmentDescriptions[colorAttachmentCount].stencilStoreOp = MapVkStoreOp(depthStencilAttachment.stencilStoreOp);
+    //attachmentDescriptions[colorAttachmentCount].initialLayout = MapVkImageLayout(depthStencilAttachment.beginLayout);
+    //attachmentDescriptions[colorAttachmentCount].finalLayout = MapVkImageLayout(depthStencilAttachment.endLayout);
 
     uint32_t subpassCount = gpuRenderPass->subPasses.size();
     std::vector<VkSubpassDescription> subpassDescriptions(1, { VK_PIPELINE_BIND_POINT_GRAPHICS });
@@ -237,10 +335,10 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice* device, CCVKGPURenderPass* gpuRende
         {
             attachmentReferences.push_back({ i, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
         }
-        attachmentReferences.push_back({ colorAttachmentCount, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL });
-        subpassDescriptions[0].colorAttachmentCount = attachmentReferences.size() - 1;
+        //attachmentReferences.push_back({ colorAttachmentCount, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL });
+        subpassDescriptions[0].colorAttachmentCount = attachmentReferences.size()/* - 1*/;
         subpassDescriptions[0].pColorAttachments = attachmentReferences.data();
-        subpassDescriptions[0].pDepthStencilAttachment = &attachmentReferences.back();
+        //subpassDescriptions[0].pDepthStencilAttachment = &attachmentReferences.back();
     }
 
     VkRenderPassCreateInfo renderPassCreateInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO };
@@ -288,6 +386,22 @@ void CCVKCmdFuncGetDeviceQueue(CCVKDevice* device, CCVKGPUQueue* gpuQueue)
     }
 }
 
+void CCVKCmdFuncGetSwapchainTextures(CCVKDevice* device, std::vector<CCVKGPUTexture*>& textures)
+{
+    auto gpuDevice = device->gpuDevice();
+    uint32_t imageCount;
+    VK_CHECK(vkGetSwapchainImagesKHR(gpuDevice->vkDevice, gpuDevice->vkSwapchain, &imageCount, nullptr));
+    std::vector<VkImage> swapchainImages(imageCount);
+    VK_CHECK(vkGetSwapchainImagesKHR(gpuDevice->vkDevice, gpuDevice->vkSwapchain, &imageCount, swapchainImages.data()));
+    
+    for (uint32_t i = 0; i < imageCount; i++)
+    {
+        auto gpuTexture = CC_NEW(CCVKGPUTexture);
+        gpuTexture->vkImage = swapchainImages[i];
+        textures.push_back(gpuTexture);
+    }
+}
+
 void CCVKCmdFuncCreateCommandPool(CCVKDevice* device, CCVKGPUCommandPool* gpuCommandPool)
 {
     VkCommandPoolCreateInfo createInfo{ VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO };
@@ -328,17 +442,81 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer, void*
 
 void CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
 {
+    auto vkDevice = device->gpuDevice()->vkDevice;
 
+    VkImageCreateInfo createInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
+    createInfo.imageType = MapVkImageType(gpuTexture->type);
+    createInfo.format = MapVkFormat(gpuTexture->format);
+    createInfo.extent = { gpuTexture->width, gpuTexture->height, gpuTexture->depth };
+    createInfo.mipLevels = gpuTexture->mipLevel;
+    createInfo.arrayLayers = gpuTexture->arrayLayer;
+    createInfo.samples = MapVkSampleCount(gpuTexture->samples);
+    createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    createInfo.usage = MapVkImageUsageFlagBits(gpuTexture->usage);
+    createInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    VK_CHECK(vkCreateImage(vkDevice, &createInfo, nullptr, &gpuTexture->vkImage));
+
+    VkMemoryRequirements memoryRequirements;
+    vkGetImageMemoryRequirements(vkDevice, gpuTexture->vkImage, &memoryRequirements);
+
+    uint32_t memoryTypeIndex = selectMemoryType(
+        ((CCVKContext*)device->getContext())->gpuContext()->physicalDeviceMemoryProperties,
+        memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+    VkMemoryAllocateInfo allocateInfo{ VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO };
+    allocateInfo.allocationSize = memoryRequirements.size;
+    allocateInfo.memoryTypeIndex = memoryTypeIndex;
+
+    VK_CHECK(vkAllocateMemory(vkDevice, &allocateInfo, nullptr, &gpuTexture->vkDeviceMemory));
+
+    VK_CHECK(vkBindImageMemory(vkDevice, gpuTexture->vkImage, gpuTexture->vkDeviceMemory, 0));
 }
 
 void CCVKCmdFuncDestroyTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
 {
+    auto vkDevice = device->gpuDevice()->vkDevice;
 
+    if (gpuTexture->vkImage)
+    {
+        vkDestroyImage(vkDevice, gpuTexture->vkImage, nullptr);
+        gpuTexture->vkImage = VK_NULL_HANDLE;
+    }
+
+    if (gpuTexture->vkDeviceMemory)
+    {
+        vkFreeMemory(vkDevice, gpuTexture->vkDeviceMemory, nullptr);
+        gpuTexture->vkDeviceMemory = VK_NULL_HANDLE;
+    }
 }
 
 void CCVKCmdFuncResizeTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
 {
 
+}
+
+void CCVKCmdFuncCreateTextureView(CCVKDevice* device, CCVKGPUTextureView* gpuTextureView)
+{
+    VkImageViewCreateInfo createInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
+    createInfo.image = gpuTextureView->gpuTexture->vkImage;
+    createInfo.viewType = MapVkImageViewType(gpuTextureView->type);
+    createInfo.format = MapVkFormat(gpuTextureView->format);
+    createInfo.subresourceRange.aspectMask = MapVkImageAspectFlags(gpuTextureView->format);
+    createInfo.subresourceRange.baseMipLevel = gpuTextureView->baseLevel;
+    createInfo.subresourceRange.levelCount = gpuTextureView->levelCount;
+    createInfo.subresourceRange.baseArrayLayer = 0;
+    createInfo.subresourceRange.layerCount = 1;
+
+    VK_CHECK(vkCreateImageView(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuTextureView->vkImageView));
+}
+
+void CCVKCmdFuncDestroyTextureView(CCVKDevice* device, CCVKGPUTextureView* gpuTextureView)
+{
+    if (gpuTextureView->vkImageView != VK_NULL_HANDLE)
+    {
+        vkDestroyImageView(device->gpuDevice()->vkDevice, gpuTextureView->vkImageView, nullptr);
+        gpuTextureView->vkImageView = VK_NULL_HANDLE;
+    }
 }
 
 void CCVKCmdFuncCreateSampler(CCVKDevice* device, CCVKGPUSampler* gpuSampler)
@@ -388,8 +566,8 @@ void CCVKCmdFuncCreateFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFBO
     createInfo.renderPass = gpuFBO->gpuRenderPass->vkRenderPass;
     createInfo.attachmentCount = attachments.size();
     createInfo.pAttachments = attachments.data();
-    createInfo.width = gpuFBO->gpuColorViews[0]->gpuTexture->width;
-    createInfo.height = gpuFBO->gpuColorViews[0]->gpuTexture->height;
+    createInfo.width = colorViewCount ? gpuFBO->gpuColorViews[0]->gpuTexture->width : 1;
+    createInfo.height = colorViewCount ? gpuFBO->gpuColorViews[0]->gpuTexture->height : 1;
     createInfo.layers = 1;
 
     VkFramebuffer framebuffer = 0;
