@@ -591,6 +591,7 @@ namespace se {
 
     void ScriptEngine::garbageCollect()
     {
+        if (__objectMap == nullptr) return;
         SE_LOGD("GC begin ..., (js->native map) size: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap->size());
         const double kLongIdlePauseInSeconds = 1.0;
         _isolate->ContextDisposedNotification();
