@@ -155,7 +155,7 @@ namespace se {
             else if (status == JSGC_END)
             {
                 if (__objectMap == nullptr) {
-                    SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), 0;
+                    SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), 0);
                 } else {
                     SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap->size());
                 }                
