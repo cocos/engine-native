@@ -149,11 +149,11 @@ namespace se {
             if (status == JSGC_BEGIN)
             {
                 ScriptEngine::getInstance()->_setGarbageCollecting(true);
-                SE_LOGD("on_garbage_collect: begin, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap.size());
+                SE_LOGD("on_garbage_collect: begin, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap->size());
             }
             else if (status == JSGC_END)
             {
-                SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap.size());
+                SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap->size());
                 ScriptEngine::getInstance()->_setGarbageCollecting(false);
             }
         }
