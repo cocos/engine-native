@@ -33,7 +33,7 @@
 
 namespace se {
  
-    std::unordered_map<Object*, void*> __objectMap; // Currently, the value `void*` is always nullptr
+    std::unordered_map<Object*, void*>* __objectMap; // Currently, the value `void*` is always nullptr
 
     namespace {
         JSContext *__cx = nullptr;
@@ -59,6 +59,7 @@ namespace se {
     , _finalizeCb(nullptr)
     , _rootCount(0)
     {
+        __objectMap = new std::unordered_map<Object*, void*>();
         _currentVMId = ScriptEngine::getInstance()->getVMId();
     }
 
@@ -69,11 +70,16 @@ namespace se {
             unprotect();
         }
 
-        auto iter = __objectMap.find(this);
-        if (iter != __objectMap.end())
-        {
-            __objectMap.erase(iter);
+        if (__objectMap == nullptr) {
+            return;
         }
+        auto iter = __objectMap->find(this);
+        if (iter != __objectMap->end())
+        {
+            __objectMap->erase(iter);
+        }
+        delete(__objectMap);
+        __objectMap = nullptr;
     }
 
     bool Object::init(Class* cls, JSObject* obj)
@@ -81,8 +87,8 @@ namespace se {
         _cls = cls;
         _heap = obj;
 
-        assert(__objectMap.find(this) == __objectMap.end());
-        __objectMap.emplace(this, nullptr);
+        assert(__objectMap->find(this) == __objectMap->end());
+        __objectMap->emplace(this, nullptr);
 
         return true;
     }
@@ -522,13 +528,17 @@ namespace se {
     // static
     void Object::cleanup()
     {
-        for (const auto& e : __objectMap)
-        {
-            e.first->reset();
+        if (__objectMap != nullptr) {
+            for (const auto& e : *__objectMap)
+            {
+                e.first->reset();
+            }
         }
 
         ScriptEngine::getInstance()->addAfterCleanupHook([](){
-            __objectMap.clear();
+            if (__objectMap != nullptr) {
+                __objectMap->clear();
+            }
             const auto& instance = NativePtrToObjectMap::instance();
             for (const auto& e : instance)
             {

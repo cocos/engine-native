@@ -397,7 +397,7 @@ namespace se {
         friend class ScriptEngine;
     };
 
-    extern std::unordered_map<Object*, void*> __objectMap; // Currently, the value `void*` is always nullptr
+    extern std::unordered_map<Object*, void*> *__objectMap; // Currently, the value `void*` is always nullptr
 
 } // namespace se {
 
