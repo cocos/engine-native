@@ -146,6 +146,7 @@ namespace se {
              * so that we can collect the JS wrapper objects, and in order to minimize
              * the chances of objects having a pending toggle up queued when they are
              * garbage collected. */
+            if (__objectMap == nullptr) return;
             if (status == JSGC_BEGIN)
             {
                 ScriptEngine::getInstance()->_setGarbageCollecting(true);
@@ -153,7 +154,11 @@ namespace se {
             }
             else if (status == JSGC_END)
             {
-                SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap->size());
+                if (__objectMap == nullptr) {
+                    SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), 0;
+                } else {
+                    SE_LOGD("on_garbage_collect: end, Native -> JS map count: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), (int)__objectMap->size());
+                }                
                 ScriptEngine::getInstance()->_setGarbageCollecting(false);
             }
         }
