@@ -573,7 +573,7 @@ namespace mu
     }
 
 #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
-    const char* getIOSFeatureSetToString(MTLFeatureSet featureSet)
+    String getIOSFeatureSetToString(MTLFeatureSet featureSet)
     {
         if(@available(iOS 8.0, *))
         {
@@ -712,7 +712,7 @@ namespace mu
         return GPUFamily::Apple1;
     }
 #else
-    const char* getMacFeatureSetToString(MTLFeatureSet featureSet)
+    String getMacFeatureSetToString(MTLFeatureSet featureSet)
     {
         if(@available(macOS 10.11, *))
         {
@@ -720,7 +720,7 @@ namespace mu
             case MTLFeatureSet_macOS_GPUFamily1_v1:
                 return "MTLFeatureSet_macOS_GPUFamily1_v1";
             default:
-                return break;
+                break;
             }
         }
         if(@available(macOS 10.12, *))
@@ -729,7 +729,7 @@ namespace mu
             case MTLFeatureSet_macOS_GPUFamily1_v2:
                 return "MTLFeatureSet_macOS_GPUFamily1_v2";
             default:
-                return break;
+                break;
             }
         }
         if(@available(macOS 10.13, *))
@@ -738,7 +738,7 @@ namespace mu
             case MTLFeatureSet_macOS_GPUFamily1_v3:
                 return "MTLFeatureSet_macOS_GPUFamily1_v3";
             default:
-                return break;
+                break;
             }
         }
         if(@available(macOS 10.14, *))
@@ -749,7 +749,7 @@ namespace mu
             case MTLFeatureSet_macOS_GPUFamily2_v1:
                 return "MTLFeatureSet_macOS_GPUFamily2_v1";
             default:
-                return break;
+                break;
             }
         }
         return "Invalid metal feature set";
@@ -1024,7 +1024,7 @@ namespace mu
     }
 
     
-    const char* featureSetToString(MTLFeatureSet featureSet)
+    String featureSetToString(MTLFeatureSet featureSet)
     {
     #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
         return getIOSFeatureSetToString(featureSet);

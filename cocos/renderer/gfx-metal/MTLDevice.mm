@@ -100,7 +100,7 @@ bool CCMTLDevice::initialize(const GFXDeviceInfo& info)
     _features[(int)GFXFeature::MSAA] = true;
     _features[(int)GFXFeature::INSTANCED_ARRAYS] = true;
     
-    CC_LOG_INFO("Metal Feature Set: %s", mu::featureSetToString(MTLFeatureSet(_mtlFeatureSet)));
+    CC_LOG_INFO("Metal Feature Set: %s", mu::featureSetToString(MTLFeatureSet(_mtlFeatureSet)).c_str());
     
     return true;
 }

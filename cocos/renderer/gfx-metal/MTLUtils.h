@@ -59,7 +59,7 @@ namespace mu
     bool isColorBufferFloatSupported(uint family);
     bool isColorBufferHalfFloatSupported(uint family);
     bool isLinearTextureSupported(uint family);
-    const char* featureSetToString(MTLFeatureSet featureSet);
+    String featureSetToString(MTLFeatureSet featureSet);
 }
 
 NS_CC_END
