@@ -149,23 +149,24 @@ void CCMTLBuffer::resize(uint size)
     const uint oldSize = _size;
     _size = size;
     _count = _size / _stride;
-    resizeBuffer(_transferBuffer, _size, oldSize);
-    resizeBuffer(_buffer, _size, oldSize);
+    resizeBuffer(&_transferBuffer, _size, oldSize);
+    resizeBuffer(&_buffer, _size, oldSize);
     _indirects.resize(_count);
     _status = GFXStatus::SUCCESS;
 }
 
-void CCMTLBuffer::resizeBuffer(uint8_t* buffer, uint size, uint oldSize)
+void CCMTLBuffer::resizeBuffer(uint8_t** buffer, uint size, uint oldSize)
 {
-    if (!buffer)
+    if (!(*buffer))
         return;
     
     GFXMemoryStatus& status = _device->getMemoryStatus();
-    const uint8_t* oldBuff = buffer;
-    buffer = (uint8_t*)CC_MALLOC(size);
-    if (buffer)
+    const uint8_t* oldBuffer = *buffer;
+    uint8_t* temp = (uint8_t*)CC_MALLOC(size);
+    if (temp)
     {
-        memcpy(buffer, oldBuff, std::min(oldSize, size) );
+        memcpy(temp, oldBuffer, std::min(oldSize, size) );
+        *buffer = temp;
         status.bufferSize += size;
     }
     else
@@ -175,7 +176,7 @@ void CCMTLBuffer::resizeBuffer(uint8_t* buffer, uint size, uint oldSize)
         return;
     }
     
-    CC_FREE(oldBuff);
+    CC_FREE(oldBuffer);
     status.bufferSize -= oldSize;
     _status = GFXStatus::SUCCESS;
 }

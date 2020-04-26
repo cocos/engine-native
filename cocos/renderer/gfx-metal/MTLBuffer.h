@@ -22,7 +22,7 @@ public:
     CC_INLINE const GFXDrawInfoList& getIndirects() const { return _indirects; }
     
 private:
-    void resizeBuffer(uint8_t*, uint, uint);
+    void resizeBuffer(uint8_t**, uint, uint);
     
     id<MTLBuffer> _mtlBuffer = nullptr;
     uint8_t* _transferBuffer = nullptr;

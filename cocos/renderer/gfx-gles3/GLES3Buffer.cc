@@ -77,7 +77,7 @@ void GLES3Buffer::destroy() {
 
 void GLES3Buffer::resize(uint size) {
   if (_size != size) {
-    const uint old_size = _size;
+    const uint oldSize = _size;
     _size = size;
     _count = _size / _stride;
     
@@ -85,21 +85,22 @@ void GLES3Buffer::resize(uint size) {
     _gpuBuffer->size = _size;
     _gpuBuffer->count = _count;
     GLES3CmdFuncResizeBuffer((GLES3Device*)_device, _gpuBuffer);
-    status.bufferSize -= old_size;
+    status.bufferSize -= oldSize;
     status.bufferSize += _size;
 
     if (_buffer) {
-      const uint8_t* old_buff = _buffer;
-      _buffer = (uint8_t*)CC_MALLOC(_size);
-      if(_buffer)
+      const uint8_t* oldBuffer = _buffer;
+      uint8_t* buffer = (uint8_t*)CC_MALLOC(_size);
+      if(!buffer)
       {
         _status = GFXStatus::FAILED;
         CC_LOG_ERROR("GLES3Buffer: CC_MALLOC resize backup buffer failed.");
         return;
       }
-      memcpy(_buffer, old_buff, std::min(old_size, size));
-      CC_FREE(old_buff);
-      status.bufferSize -= old_size;
+      memcpy(buffer, oldBuffer, std::min(oldSize, size));
+      _buffer = buffer;
+      CC_FREE(oldBuffer);
+      status.bufferSize -= oldSize;
       status.bufferSize += _size;
     }
     _status = GFXStatus::SUCCESS;

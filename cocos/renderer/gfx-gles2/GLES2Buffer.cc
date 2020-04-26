@@ -92,16 +92,17 @@ void GLES2Buffer::resize(uint size) {
     status.bufferSize += _size;
 
     if (_buffer) {
-      const uint8_t* old_buff = _buffer;
-      _buffer = (uint8_t*)CC_MALLOC(_size);
-      if(!_buffer)
+      const uint8_t* oldBuffer = _buffer;
+      uint8_t* buffer = (uint8_t*)CC_MALLOC(_size);
+      if(!buffer)
       {
         _status = GFXStatus::FAILED;
         CC_LOG_ERROR("GLES2Buffer: CC_MALLOC backup buffer failed.");
         return;
       }
-      memcpy(_buffer, old_buff, std::min(oldSize, size));
-      CC_FREE(old_buff);
+      memcpy(buffer, oldBuffer, std::min(oldSize, size));
+      _buffer = buffer;
+      CC_FREE(oldBuffer);
       status.bufferSize -= oldSize;
       status.bufferSize += _size;
     }
