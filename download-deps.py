@@ -44,6 +44,9 @@ import traceback
 import distutils
 import fileinput
 import json
+import socket
+import urlparse
+import select
 
 from optparse import OptionParser
 from time import time
@@ -68,6 +71,74 @@ def delete_folder_except(folder_path, excepts):
             os.remove(full_path)
 
 
+def connect_by_url(uri):
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.setblocking(0) # make non-blocking
+    url = urlparse.urlparse(uri)
+    scheme = url.scheme
+    hostname = url.hostname
+    port = url.port
+    if port is None:
+        if scheme == "https":
+            port = 443
+        else:
+            port = 80
+    print("==>  Connecting %s:%s" %(hostname, port))
+    try:
+        client.connect_ex((hostname, port))
+    except Exception as e:
+        print("[error] connect %s" % e)
+        return None
+    return client
+
+def select_fastest_url(url_list):
+    clients = filter(None, [connect_by_url(url) for url in url_list])
+    writable_sockets =  clients[:]
+    # ping servers
+    t1 = time()
+    sorted_list = []
+    while len(writable_sockets) > 0:
+        ready_to_read, ready_to_write, in_error = select.select(
+            [], writable_sockets, writable_sockets, 5.0)
+        t2 = time()
+        for socket in ready_to_write:
+            index = clients.index(socket)
+            url = url_list[index]
+            sorted_list.append(url)
+            print("==>   Takes %ss to connect to #%s" % (t2 - t1, index))
+            writable_sockets.remove(socket)
+        for socket in in_error:
+            writable_sockets.remove(socket)
+
+        if len(ready_to_read) == 0 and len(ready_to_write) == 0 and len(in_error):
+            print("[error] timeout occurs!")
+
+    # close all tcp connections
+    for i in clients:
+        try:
+            i.close()
+        except:
+            pass
+        
+    # skip if url is 404 or other errors
+    import urllib2
+    for url in sorted_list:
+        u = None
+        try:
+            print("==>   Try fetch %s" % url)
+            u = urllib2.urlopen(url)
+            print("==>     Response code: %s " % u.getcode())
+            return url
+        except urllib2.HTTPError as e:
+            print("==>     Http request failed, error code: " + str(e.code))
+        finally:
+            if u is not None:
+                u.close()
+    # fallback case 
+    if len(sorted_list) == 0:
+        return url_list[0]
+
+
 class UnrecognizedFormat:
     def __init__(self, prompt):
         self._prompt = prompt
@@ -77,7 +148,7 @@ class UnrecognizedFormat:
 
 
 class CocosZipInstaller(object):
-    def __init__(self, workpath, config_path, version_path, remote_version_key=None):
+    def __init__(self, workpath, config_path, version_path, remote_version_key, mirror):
         self._workpath = workpath
         self._config_path = config_path
         self._version_path = version_path
@@ -95,7 +166,13 @@ class CocosZipInstaller(object):
         self._zip_file_size = int(data["zip_file_size"])
         # 'v' letter was swallowed by github, so we need to substring it from the 2nd letter
         self._extracted_folder_name = os.path.join(self._workpath, self._repo_name + '-' + self._current_version[1:])
-
+        
+        mirror_repo_url = "http://gitlab.cocos.net:8929/publics/%s/-/archive/%s/%s-%s.zip" % (self._repo_name, self._current_version, self._repo_name, self._current_version)
+        if mirror is None:
+            self._url = select_fastest_url([self._url, mirror_repo_url])
+        elif mirror == "gitlab":
+            self._url = mirror_repo_url
+        
         try:
             data = self.load_json_file(version_path)
             if remote_version_key is None:
@@ -120,6 +197,24 @@ class CocosZipInstaller(object):
                 print("==> Error: Could not find the file from url: '%s'" % (self._url))
             print("==> Http request failed, error code: " + str(e.code) + ", reason: " + e.read())
             sys.exit(1)
+
+        # record previous download url
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        download_url = os.path.join(script_dir, "external", ".download_link")
+        line = ""
+        if os.path.exists(download_url):
+            fo = open(download_url, "rt")
+            # read previous url
+            line = fo.readline()
+            fo.close()
+            # if downloaded from different url, remove the file
+            if line.strip() != self._url and os.path.exists(self._filename):
+                print("==> Url has changed, delete previous file %s" % self._filename)
+                os.remove(self._filename)
+
+        fw = open(download_url, 'wt')
+        fw.write(self._url+"\n")
+        fw.close()
 
         f = open(self._filename, 'wb')
         meta = u.info()
@@ -192,6 +287,10 @@ class CocosZipInstaller(object):
                 if name.startswith('/') or '..' in name:
                     continue
 
+                # anchor file, may change
+                if name.endswith("versions.txt"):
+                    self._extracted_folder_name = os.path.basename(os.path.dirname(name))
+                   
                 target = os.path.join(extract_dir, *name.split('/'))
                 if not target:
                     continue
@@ -327,12 +426,26 @@ def main():
                       action="store_true", dest="download_only", default=False,
                       help="Only download zip file of the third party libraries, will not extract it")
 
+    parser.add_option("--github", 
+                     action="store_true", dest="from_github", default=False,
+                     help="Download zip from github.com" )
+
+    parser.add_option("--gitlab", 
+                     action="store_true", dest="from_gitlab", default=False,
+                     help="Download zip from gitlab.cocos.net" )
+
     (opts, args) = parser.parse_args()
+
+    mirror = None
+    if opts.from_github:
+        mirror = "github"
+    if opts.from_gitlab:
+        mirror = "gitlab"
 
     print("=======================================================")
     print("==> Prepare to download external libraries!")
     external_path = os.path.join(workpath, 'external')
-    installer = CocosZipInstaller(workpath, os.path.join(workpath, 'external', 'config.json'), os.path.join(workpath, 'external', 'version.json'), "prebuilt_libs_version")
+    installer = CocosZipInstaller(workpath, os.path.join(workpath, 'external', 'config.json'), os.path.join(workpath, 'external', 'version.json'), "prebuilt_libs_version", mirror)
     installer.run(workpath, external_path, opts.remove_downloaded, opts.force_update, opts.download_only)
 
 # -------------- main --------------

@@ -58,7 +58,7 @@ public:
     /**
      *  @brief Renders the given render scene.
      */
-    void render(Scene* scene);
+    void render(Scene* scene, float deltaTime = 0);
     /**
      *  @brief Renders the given render scene with a given camera setting.
      */
@@ -79,6 +79,8 @@ private:
     
     Vector<Light*> _lights;
     Vector<Light*> _shadowLights;
+    
+    float _time[4] = { 0, 0, 0, 0 };
     
     RecyclePool<float>* _arrayPool = nullptr;
     std::size_t _numLights = 0;

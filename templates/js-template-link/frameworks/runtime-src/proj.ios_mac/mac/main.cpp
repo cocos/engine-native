@@ -25,10 +25,11 @@
  ****************************************************************************/
 
 #include "AppDelegate.h"
+#include "NativeConfig.h"
 
 int main(int argc, char *argv[])
 {
-    AppDelegate app(960, 640);
+    AppDelegate app(MACOS_WIN_SIZE_WIDTH, MACOS_WIN_SIZE_HEIGHT);
     app.start();
     return 0;
 }

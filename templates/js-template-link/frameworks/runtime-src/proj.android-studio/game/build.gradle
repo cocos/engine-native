@@ -127,6 +127,7 @@ android.featureVariants.all { variant ->
 }
 
 dependencies {
+    implementation fileTree(dir: '../libs', include: ['*.jar','*.aar'])
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation fileTree(dir: "${COCOS_X_ROOT}/cocos/platform/android/java/libs", include: ['*.jar'])
     implementation 'com.google.android.instantapps:instantapps:1.1.0'

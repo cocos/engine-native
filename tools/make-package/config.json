@@ -4,12 +4,18 @@
         {
             "zip_config_path": "../../external/config.json",
             "zip_file_path": "../../",
-            "extract_to_zip_path": "external"
+            "extract_to_zip_path": "external",
+            "script":"download-deps.py",
+            "pwd":"",
+            "script_args":"-f -d"
         },
         {
             "zip_config_path": "../cocos2d-console/config.json",
             "zip_file_path": "../cocos2d-console",
-            "extract_to_zip_path": "tools/cocos2d-console"
+            "extract_to_zip_path": "tools/cocos2d-console",
+            "script":"tools/cocos2d-console/download-bin.py",
+            "pwd":"tools/cocos2d-console",
+            "script_args":"-f -d"
         }
     ]
 }

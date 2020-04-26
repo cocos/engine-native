@@ -83,9 +83,16 @@ void ForwardRenderer::resetData()
     reset();
 }
 
-void ForwardRenderer::render(Scene* scene)
+void ForwardRenderer::render(Scene* scene, float deltaTime)
 {
     resetData();
+    
+    
+    _time[0] += deltaTime;
+    _time[1] = deltaTime;
+    _time[2] ++;
+    _device->setUniformfv(cc_time, 4, _time, 4);
+    
     updateLights(scene);
     scene->sortCameras();
     auto& cameras = scene->getCameras();

@@ -25,6 +25,7 @@
 
 #include "main.h"
 #include "AppDelegate.h"
+#include "NativeConfig.h"
 
 USING_NS_CC;
 
@@ -47,7 +48,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 #endif
 
     // create the application instance
-    AppDelegate app(960, 640);
+    AppDelegate app(WINDOWS_WIN_SIZE_WIDTH, WINDOWS_WIN_SIZE_HEIGHT);
     app.start();
 
 #ifdef USE_WIN32_CONSOLE

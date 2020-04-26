@@ -687,6 +687,16 @@ getWidth : function (
 },
 
 /**
+ * @method setAlphaAtlas
+ * @param {bool} arg0
+ */
+setAlphaAtlas : function (
+bool 
+)
+{
+},
+
+/**
  * @method getHeight
  * @return {unsigned short}
  */
@@ -694,6 +704,16 @@ getHeight : function (
 )
 {
     return 0;
+},
+
+/**
+ * @method isAlphaAtlas
+ * @return {bool}
+ */
+isAlphaAtlas : function (
+)
+{
+    return false;
 },
 
 /**

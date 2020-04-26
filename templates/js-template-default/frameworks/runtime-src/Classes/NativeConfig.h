@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -22,38 +22,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+//window size for mac
+#define MACOS_WIN_SIZE_WIDTH 960
+#define MACOS_WIN_SIZE_HEIGHT 640
 
-#include "main.h"
-#include "AppDelegate.h"
-#include "NativeConfig.h"
-
-USING_NS_CC;
-
-// uncomment below line, open debug console
-// #define USE_WIN32_CONSOLE
-
-int APIENTRY _tWinMain(HINSTANCE hInstance,
-                       HINSTANCE hPrevInstance,
-                       LPTSTR    lpCmdLine,
-                       int       nCmdShow)
-{
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-
-#ifdef USE_WIN32_CONSOLE
-    AllocConsole();
-    freopen("CONIN$", "r", stdin);
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
-#endif
-
-    // create the application instance
-    AppDelegate app(WINDOWS_WIN_SIZE_WIDTH, WINDOWS_WIN_SIZE_HEIGHT);
-    app.start();
-
-#ifdef USE_WIN32_CONSOLE
-    FreeConsole();
-#endif
-
-    return 0;
-}
+//window size for win32
+#define WINDOWS_WIN_SIZE_WIDTH 960
+#define WINDOWS_WIN_SIZE_HEIGHT 640

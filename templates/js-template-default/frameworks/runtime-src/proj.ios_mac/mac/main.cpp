@@ -26,12 +26,13 @@
 
 #include "AppDelegate.h"
 #include "cocos2d.h"
+#include "NativeConfig.h"
 
 USING_NS_CC;
 
 int main(int argc, char *argv[])
 {
-    AppDelegate app(960, 640);
+    AppDelegate app(MACOS_WIN_SIZE_WIDTH, MACOS_WIN_SIZE_HEIGHT);
     app.start();
     return 0;
 }

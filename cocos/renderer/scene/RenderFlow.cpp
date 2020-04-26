@@ -366,7 +366,7 @@ void RenderFlow::render(NodeProxy* scene, float deltaTime, Camera *camera)
             _forward->renderCamera(camera, _scene);
         }
         else {
-            _forward->render(_scene);
+            _forward->render(_scene, deltaTime);
         }
     }
 }

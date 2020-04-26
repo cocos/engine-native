@@ -404,7 +404,7 @@ void NodeProxy::getWorldRT(cocos2d::Mat4* out) const
         opos.multiply(scale);
         opos.transformQuat(rot);
         opos.add(pos);
-        orot.multiply(rot);
+        Quaternion::multiply(rot, orot, &orot);
         curr = curr->getParent();
     }
     out->setIdentity();
