@@ -73,7 +73,6 @@ public class Cocos2dxHelper {
     private static String sFileDirectory;
     private static Activity sActivity;
     private static Vibrator sVibrateService;
-    private static String sVersion = "";
     private static BatteryReceiver sBatteryReceiver = new BatteryReceiver();
 
     public static final int NETWORK_TYPE_NONE = 0;
@@ -153,7 +152,6 @@ public class Cocos2dxHelper {
             Cocos2dxHelper.sFileDirectory = activity.getFilesDir().getAbsolutePath();
             Cocos2dxHelper.sVibrateService = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
             Cocos2dxHelper.initObbFilePath();
-            Cocos2dxHelper.initializeVersion();
             Cocos2dxHelper.initializeOBBFile();
 
             sInited = true;
@@ -176,7 +174,6 @@ public class Cocos2dxHelper {
     public static String getDeviceModel(){
         return Build.MODEL;
     }
-    public static String getVersion() { return sVersion; }
     public static String getSystemVersion() {
         return Build.VERSION.RELEASE;
     }
@@ -283,13 +280,6 @@ public class Cocos2dxHelper {
         File obbFile = new File(pathToOBB);
         if (obbFile.exists())
             Cocos2dxHelper.sObbFilePath = pathToOBB;
-    }
-
-    private static void initializeVersion() {
-        try {
-            sVersion = sActivity.getPackageManager().getPackageInfo(sActivity.getPackageName(), 0).versionName;
-        } catch(Exception e) {
-        }
     }
 
     private static void initializeOBBFile() {
