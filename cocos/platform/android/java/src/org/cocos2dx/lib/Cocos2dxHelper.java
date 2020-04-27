@@ -69,7 +69,6 @@ public class Cocos2dxHelper {
     // Fields
     // ===========================================================
 
-    private static String sPackageName;
     private static Activity sActivity;
     private static Vibrator sVibrateService;
     private static BatteryReceiver sBatteryReceiver = new BatteryReceiver();
@@ -145,9 +144,6 @@ public class Cocos2dxHelper {
     public static void init(final Activity activity) {
         sActivity = activity;
         if (!sInited) {
-            final ApplicationInfo applicationInfo = activity.getApplicationInfo();
-            Cocos2dxHelper.sPackageName = applicationInfo.packageName;
-
             Cocos2dxHelper.sVibrateService = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
             Cocos2dxHelper.initObbFilePath();
             Cocos2dxHelper.initializeOBBFile();
@@ -156,9 +152,7 @@ public class Cocos2dxHelper {
         }
     }
 
-    public static float getBatteryLevel() {
-        return sBatteryReceiver.sBatteryLevel;
-    }
+    public static float getBatteryLevel() { return sBatteryReceiver.sBatteryLevel; }
     public static String getObbFilePath() { return Cocos2dxHelper.sObbFilePath; }
     public static String getWritablePath() {
         return sActivity.getFilesDir().getAbsolutePath();
@@ -269,12 +263,13 @@ public class Cocos2dxHelper {
     // - else empty string.
     private static void initObbFilePath() {
         int versionCode = 1;
+        final ApplicationInfo applicationInfo = sActivity.getApplicationInfo();
         try {
-            versionCode = Cocos2dxHelper.sActivity.getPackageManager().getPackageInfo(Cocos2dxHelper.sPackageName, 0).versionCode;
+            versionCode = Cocos2dxHelper.sActivity.getPackageManager().getPackageInfo(applicationInfo.packageName, 0).versionCode;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        String pathToOBB = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" + Cocos2dxHelper.sPackageName + "/main." + versionCode + "." + Cocos2dxHelper.sPackageName + ".obb";
+        String pathToOBB = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" + applicationInfo.packageName + "/main." + versionCode + "." + applicationInfo.packageName + ".obb";
         File obbFile = new File(pathToOBB);
         if (obbFile.exists())
             Cocos2dxHelper.sObbFilePath = pathToOBB;
@@ -282,8 +277,9 @@ public class Cocos2dxHelper {
 
     private static void initializeOBBFile() {
         int versionCode = 1;
+        final ApplicationInfo applicationInfo = sActivity.getApplicationInfo();
         try {
-            versionCode = sActivity.getPackageManager().getPackageInfo(Cocos2dxHelper.sPackageName, 0).versionCode;
+            versionCode = sActivity.getPackageManager().getPackageInfo(applicationInfo.packageName, 0).versionCode;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
