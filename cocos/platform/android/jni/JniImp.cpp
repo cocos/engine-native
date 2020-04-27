@@ -83,9 +83,9 @@ extern "C"
  * Functions invoke from cpp to Java.
  ***********************************************************/
 
-std::string getApkPathJNI() 
+std::string getObbFilePathJNI() 
 {
-    return JniHelper::callStaticStringMethod(JCLS_HELPER, "getAssetsPath");
+    return JniHelper::callStaticStringMethod(JCLS_HELPER, "getObbFilePath");
 }
 
 std::string getPackageNameJNI() 

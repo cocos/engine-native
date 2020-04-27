@@ -30,7 +30,7 @@ typedef void (*EditTextCallback)(const std::string& text, void* ctx);
 
 extern bool getApplicationExited();
 
-extern std::string getApkPathJNI();
+extern std::string getObbFilePathJNI();
 extern std::string getPackageNameJNI();
 extern int getObbAssetFileDescriptorJNI(const std::string& path, long* startOffset, long* size);
 extern void convertEncodingJNI(const std::string& src, int byteSize, const std::string& fromCharset, std::string& dst, const std::string& newCharset);

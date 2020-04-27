@@ -80,8 +80,8 @@ public class Cocos2dxHelper {
     public static final int NETWORK_TYPE_LAN  = 1;
     public static final int NETWORK_TYPE_WWAN = 2;
 
-    // The absolute path to the OBB if it exists, else the absolute path to the APK.
-    private static String sAssetsPath = "";
+    // The absolute path to the OBB if it exists.
+    private static String sObbFilePath = "";
     
     // The OBB file
     private static ZipResourceFile sOBBFile = null;
@@ -152,7 +152,7 @@ public class Cocos2dxHelper {
 
             Cocos2dxHelper.sFileDirectory = activity.getFilesDir().getAbsolutePath();
             Cocos2dxHelper.sVibrateService = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
-            Cocos2dxHelper.initAssetsPath();
+            Cocos2dxHelper.initObbFilePath();
             Cocos2dxHelper.initializeVersion();
             Cocos2dxHelper.initializeOBBFile();
 
@@ -163,11 +163,7 @@ public class Cocos2dxHelper {
     public static float getBatteryLevel() {
         return sBatteryReceiver.sBatteryLevel;
     }
-    public static String getAssetsPath() { return Cocos2dxHelper.sAssetsPath; }
-    public static ZipResourceFile getObbFile()
-    {
-        return Cocos2dxHelper.sOBBFile;
-    }
+    public static String getObbFilePath() { return Cocos2dxHelper.sObbFilePath; }
     public static String getPackageName() {
         return Cocos2dxHelper.sPackageName;
     }
@@ -294,7 +290,7 @@ public class Cocos2dxHelper {
     // Initialize asset path:
     // - absolute path to the OBB if it exists,
     // - else the absolute path to the APK.
-    private static void initAssetsPath() {
+    private static void initObbFilePath() {
         int versionCode = 1;
         try {
             versionCode = Cocos2dxHelper.sActivity.getPackageManager().getPackageInfo(Cocos2dxHelper.sPackageName, 0).versionCode;
@@ -304,9 +300,7 @@ public class Cocos2dxHelper {
         String pathToOBB = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" + Cocos2dxHelper.sPackageName + "/main." + versionCode + "." + Cocos2dxHelper.sPackageName + ".obb";
         File obbFile = new File(pathToOBB);
         if (obbFile.exists())
-            Cocos2dxHelper.sAssetsPath = pathToOBB;
-        else
-            Cocos2dxHelper.sAssetsPath = Cocos2dxHelper.sActivity.getApplicationInfo().sourceDir;
+            Cocos2dxHelper.sObbFilePath = pathToOBB;
     }
 
     private static void initializeVersion() {
