@@ -70,7 +70,6 @@ public class Cocos2dxHelper {
     // ===========================================================
 
     private static String sPackageName;
-    private static String sFileDirectory;
     private static Activity sActivity;
     private static Vibrator sVibrateService;
     private static BatteryReceiver sBatteryReceiver = new BatteryReceiver();
@@ -149,7 +148,6 @@ public class Cocos2dxHelper {
             final ApplicationInfo applicationInfo = activity.getApplicationInfo();
             Cocos2dxHelper.sPackageName = applicationInfo.packageName;
 
-            Cocos2dxHelper.sFileDirectory = activity.getFilesDir().getAbsolutePath();
             Cocos2dxHelper.sVibrateService = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
             Cocos2dxHelper.initObbFilePath();
             Cocos2dxHelper.initializeOBBFile();
@@ -163,7 +161,7 @@ public class Cocos2dxHelper {
     }
     public static String getObbFilePath() { return Cocos2dxHelper.sObbFilePath; }
     public static String getWritablePath() {
-        return Cocos2dxHelper.sFileDirectory;
+        return sActivity.getFilesDir().getAbsolutePath();
     }
     public static String getCurrentLanguage() {
         return Locale.getDefault().getLanguage();
@@ -268,7 +266,7 @@ public class Cocos2dxHelper {
 
     // Initialize asset path:
     // - absolute path to the OBB if it exists,
-    // - else the absolute path to the APK.
+    // - else empty string.
     private static void initObbFilePath() {
         int versionCode = 1;
         try {
