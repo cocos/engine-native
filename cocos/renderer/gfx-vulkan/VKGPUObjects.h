@@ -5,16 +5,6 @@
 
 NS_CC_BEGIN
 
-class CCVKGPUDevice : public Object
-{
-public:
-    VkDevice vkDevice = VK_NULL_HANDLE;
-    vector<VkLayerProperties>::type layers;
-    vector<VkExtensionProperties>::type extensions;
-
-    uint32_t curImageIndex;
-};
-
 class CCVKGPUContext
 {
 public:
@@ -34,9 +24,18 @@ public:
     VkSwapchainCreateInfoKHR swapchainCreateInfo{ VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR };
 };
 
+class CCVKGPUDevice : public Object
+{
+public:
+    VkDevice vkDevice = VK_NULL_HANDLE;
+    vector<VkLayerProperties>::type layers;
+    vector<VkExtensionProperties>::type extensions;
+};
+
 class CCVKGPUSwapchain
 {
 public:
+    uint32_t curImageIndex;
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
     vector<VkImage>::type swapchainImages;
     vector<VkImageView>::type vkSwapchainImageViews;
@@ -266,8 +265,9 @@ public:
     CCVKGPURenderPass* gpuRenderPass = nullptr;
     CCVKGPUTextureViewList gpuColorViews;
     CCVKGPUTextureView* gpuDepthStencilView = nullptr;
-    bool isOffscreen = false;
     VkFramebuffer vkFramebuffer = VK_NULL_HANDLE;
+    bool isOffscreen = false;
+    CCVKGPUSwapchain* swapchain = nullptr;
 };
 
 class CCVKGPUPipelineLayout : public Object

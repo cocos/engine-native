@@ -28,7 +28,7 @@ namespace
         else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
         {
             CC_LOG_ERROR("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
-            assert(false);
+            //assert(false);
         }
         return VK_FALSE;
     }
@@ -495,94 +495,6 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
     return true;
 }
 
-void CCVKContext::initDeviceResource(CCVKDevice* device)
-{
-    _gpuDevice = device->gpuDevice();
-
-    for (uint32_t i = 0; i < _gpuContext->swapchainCreateInfo.minImageCount; i++)
-    {
-        GFXTextureInfo depthStecnilTexInfo;
-        depthStecnilTexInfo.type = GFXTextureType::TEX2D;
-        depthStecnilTexInfo.usage = GFXTextureUsageBit::DEPTH_STENCIL_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
-        depthStecnilTexInfo.format = _depthStencilFmt;
-        depthStecnilTexInfo.width = 1;
-        depthStecnilTexInfo.height = 1;
-        auto texture = device->createTexture(depthStecnilTexInfo);
-        _depthStencilTextures.push_back((CCVKTexture*)texture);
-
-        GFXTextureViewInfo depthStecnilTexViewInfo;
-        depthStecnilTexViewInfo.texture = texture;
-        depthStecnilTexViewInfo.type = GFXTextureViewType::TV2D;
-        depthStecnilTexViewInfo.format = _depthStencilFmt;
-        _depthStencilTextureViews.push_back((CCVKTextureView*)device->createTextureView(depthStecnilTexViewInfo));
-    }
-
-    GFXRenderPassInfo renderPassInfo;
-    GFXColorAttachment colorAttachment;
-    colorAttachment.format = _colorFmt;
-    colorAttachment.loadOp = GFXLoadOp::CLEAR;
-    colorAttachment.storeOp = GFXStoreOp::STORE;
-    colorAttachment.sampleCount = 1;
-    colorAttachment.beginLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
-    colorAttachment.endLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
-    renderPassInfo.colorAttachments.emplace_back(colorAttachment);
-
-    GFXDepthStencilAttachment& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
-    renderPassInfo.depthStencilAttachment.format = _depthStencilFmt;
-    depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
-    depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
-    depthStencilAttachment.stencilLoadOp = GFXLoadOp::CLEAR;
-    depthStencilAttachment.stencilStoreOp = GFXStoreOp::STORE;
-    depthStencilAttachment.sampleCount = 1;
-    depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    depthStencilAttachment.endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-    _renderPass = (CCVKRenderPass*)device->createRenderPass(renderPassInfo);
-
-    _gpuSwapchain = CC_NEW(CCVKGPUSwapchain);
-}
-
-void CCVKContext::destroyDeviceResource()
-{
-    CC_SAFE_DESTROY(_renderPass);
-
-    for (auto textureView : _depthStencilTextureViews)
-    {
-        CC_SAFE_DESTROY(textureView);
-    }
-    for (auto texture : _depthStencilTextures)
-    {
-        CC_SAFE_DESTROY(texture);
-    }
-
-    if (_gpuSwapchain)
-    {
-        if (_gpuSwapchain->vkSwapchain != VK_NULL_HANDLE)
-        {
-            for (auto framebuffer : _gpuSwapchain->vkSwapchainFramebuffers)
-            {
-                vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
-            }
-            _gpuSwapchain->vkSwapchainFramebuffers.clear();
-
-            for (auto imageView : _gpuSwapchain->vkSwapchainImageViews)
-            {
-                vkDestroyImageView(_gpuDevice->vkDevice, imageView, nullptr);
-            }
-            _gpuSwapchain->vkSwapchainImageViews.clear();
-            _gpuSwapchain->swapchainImages.clear();
-
-            vkDestroySwapchainKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, nullptr);
-            _gpuSwapchain->vkSwapchain = VK_NULL_HANDLE;
-        }
-
-        CC_DELETE(_gpuSwapchain);
-        _gpuSwapchain = nullptr;
-    }
-
-    _gpuDevice = nullptr;
-}
-
 void CCVKContext::destroy()
 {
     if (_gpuContext)
@@ -614,84 +526,6 @@ void CCVKContext::destroy()
 
         CC_DELETE(_gpuContext);
         _gpuContext = nullptr;
-    }
-}
-
-void CCVKContext::buildSwapchain(uint32_t& width, uint32_t& height)
-{
-    _gpuContext->swapchainCreateInfo.oldSwapchain = _gpuSwapchain->vkSwapchain;
-
-    VkSurfaceCapabilitiesKHR surfaceCapabilities;
-    VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_gpuContext->physicalDevice, _gpuContext->vkSurface, &surfaceCapabilities));
-    if (surfaceCapabilities.currentExtent.width == (uint32_t)-1)
-    {
-        _gpuContext->swapchainCreateInfo.imageExtent.width = width;
-        _gpuContext->swapchainCreateInfo.imageExtent.height = height;
-    }
-    else
-    {
-        width = _gpuContext->swapchainCreateInfo.imageExtent.width = surfaceCapabilities.currentExtent.width;
-        height = _gpuContext->swapchainCreateInfo.imageExtent.height = surfaceCapabilities.currentExtent.height;
-    }
-    VK_CHECK(vkCreateSwapchainKHR(_gpuDevice->vkDevice, &_gpuContext->swapchainCreateInfo, nullptr, &_gpuSwapchain->vkSwapchain));
-
-    if (_gpuContext->swapchainCreateInfo.oldSwapchain != VK_NULL_HANDLE)
-    {
-        for (auto framebuffer : _gpuSwapchain->vkSwapchainFramebuffers)
-        {
-            vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
-        }
-        _gpuSwapchain->vkSwapchainFramebuffers.clear();
-
-        for (auto imageView : _gpuSwapchain->vkSwapchainImageViews)
-        {
-            vkDestroyImageView(_gpuDevice->vkDevice, imageView, nullptr);
-        }
-        _gpuSwapchain->vkSwapchainImageViews.clear();
-        _gpuSwapchain->swapchainImages.clear();
-
-        vkDestroySwapchainKHR(_gpuDevice->vkDevice, _gpuContext->swapchainCreateInfo.oldSwapchain, nullptr);
-    }
-
-    uint32_t imageCount;
-    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, nullptr));
-    _gpuSwapchain->swapchainImages.resize(imageCount);
-    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, _gpuSwapchain->swapchainImages.data()));
-    assert(imageCount == _gpuContext->swapchainCreateInfo.minImageCount); // broken swapchain image count assumption
-
-    _gpuSwapchain->vkSwapchainImageViews.resize(imageCount);
-    _gpuSwapchain->vkSwapchainFramebuffers.resize(imageCount);
-    for (uint32_t i = 0; i < imageCount; i++)
-    {
-        _depthStencilTextures[i]->resize(width, height);
-        _depthStencilTextureViews[i]->destroy();
-        GFXTextureViewInfo textureViewInfo;
-        textureViewInfo.texture = _depthStencilTextures[i];
-        textureViewInfo.type = GFXTextureViewType::TV2D;
-        textureViewInfo.format = _depthStencilFmt;
-        _depthStencilTextureViews[i]->initialize(textureViewInfo);
-
-        VkImageViewCreateInfo imageViewCreateInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
-        imageViewCreateInfo.image = _gpuSwapchain->swapchainImages[i];
-        imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        imageViewCreateInfo.format = _gpuContext->swapchainCreateInfo.imageFormat;
-        imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        imageViewCreateInfo.subresourceRange.levelCount = 1;
-        imageViewCreateInfo.subresourceRange.layerCount = 1;
-
-        VK_CHECK(vkCreateImageView(_gpuDevice->vkDevice, &imageViewCreateInfo, nullptr, &_gpuSwapchain->vkSwapchainImageViews[i]));
-
-        VkImageView attachments[] = { _gpuSwapchain->vkSwapchainImageViews[i], _depthStencilTextureViews[i]->gpuTexView()->vkImageView };
-
-        VkFramebufferCreateInfo framebufferCreateInfo{ VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO };
-        framebufferCreateInfo.renderPass = _renderPass->gpuRenderPass()->vkRenderPass;
-        framebufferCreateInfo.attachmentCount = COUNTOF(attachments);
-        framebufferCreateInfo.pAttachments = attachments;
-        framebufferCreateInfo.width = width;
-        framebufferCreateInfo.height = height;
-        framebufferCreateInfo.layers = 1;
-
-        VK_CHECK(vkCreateFramebuffer(_gpuDevice->vkDevice, &framebufferCreateInfo, 0, &_gpuSwapchain->vkSwapchainFramebuffers[i]));
     }
 }
 

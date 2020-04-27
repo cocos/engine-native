@@ -89,73 +89,26 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
 {
     _isInRenderPass = true;
 
-    //CCVKGPUFramebuffer* gpuFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
-    //CCVKDevice* device = (CCVKDevice*)_device;
-    //CCVKContext* context = (CCVKContext*)device->getContext();
+    CCVKGPUFramebuffer* gpuFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
 
-    //VkRenderPassBeginInfo passBeginInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
-    //passBeginInfo.renderPass = gpuFBO->gpuRenderPass->vkRenderPass;
-    //passBeginInfo.framebuffer = gpuFBO->isOffscreen ? gpuFBO->vkFramebuffer : device->gpuDevice()->curImageIndex;
-    //passBeginInfo.renderArea.extent.width = swapchain.width;
-    //passBeginInfo.renderArea.extent.height = swapchain.height;
-    //passBeginInfo.clearValueCount = 1;
-    //passBeginInfo.pClearValues = &clearColor;
-    //vkCmdBeginRenderPass(gpuCommandBuffer()->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    VkClearValue clearValues[2];
+    clearValues[0].color = { colors[0].r, colors[0].g, colors[0].b, colors[0].a };
+    clearValues[1].depthStencil = { depth, (uint32_t)stencil };
 
-    /*
-    std::vector<SubpassInfo> subpass_infos(subpasses.size());
-    auto                     subpass_info_it = subpass_infos.begin();
-    for (auto &subpass : subpasses)
-    {
-        subpass_info_it->input_attachments = subpass->get_input_attachments();
-        subpass_info_it->output_attachments = subpass->get_output_attachments();
-        subpass_info_it->color_resolve_attachments = subpass->get_color_resolve_attachments();
-        subpass_info_it->disable_depth_stencil_attachment = subpass->get_disable_depth_stencil_attachment();
-        subpass_info_it->depth_stencil_resolve_mode = subpass->get_depth_stencil_resolve_mode();
-        subpass_info_it->depth_stencil_resolve_attachment = subpass->get_depth_stencil_resolve_attachment();
-
-        ++subpass_info_it;
-    }
-    current_render_pass.render_pass = &get_device().get_resource_cache().request_render_pass(render_target.get_attachments(), load_store_infos, subpass_infos);
-    current_render_pass.framebuffer = &get_device().get_resource_cache().request_framebuffer(render_target, *current_render_pass.render_pass);
-
-    // Begin render pass
-    VkRenderPassBeginInfo begin_info{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
-    begin_info.renderPass = current_render_pass.render_pass->get_handle();
-    begin_info.framebuffer = current_render_pass.framebuffer->get_handle();
-    begin_info.renderArea.extent = render_target.get_extent();
-    begin_info.clearValueCount = to_u32(clear_values.size());
-    begin_info.pClearValues = clear_values.data();
-
-    const auto &framebuffer_extent = current_render_pass.framebuffer->get_extent();
-
-    // Test the requested render area to confirm that it is optimal and could not cause a performance reduction
-    if (!is_render_size_optimal(framebuffer_extent, begin_info.renderArea))
-    {
-        // Only prints the warning if the framebuffer or render area are different since the last time the render size was not optimal
-        if (framebuffer_extent.width != last_framebuffer_extent.width || framebuffer_extent.height != last_framebuffer_extent.height ||
-            begin_info.renderArea.extent.width != last_render_area_extent.width || begin_info.renderArea.extent.height != last_render_area_extent.height)
-        {
-            LOGW("Render target extent is not an optimal size, this may result in reduced performance.");
-        }
-
-        last_framebuffer_extent = current_render_pass.framebuffer->get_extent();
-        last_render_area_extent = begin_info.renderArea.extent;
-    }
-
-    vkCmdBeginRenderPass(get_handle(), &begin_info, contents);
-
-    // Update blend state attachments for first subpass
-    auto blend_state = pipeline_state.get_color_blend_state();
-    blend_state.attachments.resize(current_render_pass.render_pass->get_color_output_count(pipeline_state.get_subpass_index()));
-    pipeline_state.set_color_blend_state(blend_state);
-    */
-
+    VkRenderPassBeginInfo passBeginInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
+    passBeginInfo.renderPass = gpuFBO->gpuRenderPass->vkRenderPass;
+    passBeginInfo.framebuffer = gpuFBO->isOffscreen ? gpuFBO->vkFramebuffer : gpuFBO->swapchain->vkSwapchainFramebuffers[gpuFBO->swapchain->curImageIndex];
+    passBeginInfo.renderArea.extent.width = render_area.width;
+    passBeginInfo.renderArea.extent.height = render_area.height;
+    passBeginInfo.clearValueCount = 2;
+    passBeginInfo.pClearValues = clearValues;
+    vkCmdBeginRenderPass(gpuCommandBuffer()->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
 
 void CCVKCommandBuffer::endRenderPass()
 {
-    _isInRenderPass = false;
+    _isInRenderPass = false;		
+    vkCmdEndRenderPass(_gpuCommandBuffer->vkCommandBuffer);
 }
 
 void CCVKCommandBuffer::bindPipelineState(GFXPipelineState* pso)

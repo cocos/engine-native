@@ -42,8 +42,9 @@ bool CCVKFramebuffer::initialize(const GFXFramebufferInfo &info)
 
         _gpuFBO->isOffscreen = _isOffscreen;
 
-        CCVKCmdFuncCreateFramebuffer((CCVKDevice*)_device, _gpuFBO);
     }
+
+    CCVKCmdFuncCreateFramebuffer((CCVKDevice*)_device, _gpuFBO);
 
     _status = GFXStatus::SUCCESS;
 

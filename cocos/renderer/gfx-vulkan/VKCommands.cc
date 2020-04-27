@@ -579,6 +579,12 @@ void CCVKCmdFuncDestroyInputAssembler(CCVKDevice* device, CCVKGPUInputAssembler*
 
 void CCVKCmdFuncCreateFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFBO)
 {
+    if (!gpuFBO->isOffscreen)
+    {
+        gpuFBO->swapchain = device->gpuSwapchain();
+        return;
+    }
+
     uint32_t colorViewCount = gpuFBO->gpuColorViews.size();
     std::vector<VkImageView> attachments(colorViewCount + (gpuFBO->gpuDepthStencilView ? 1 : 0));
     for (uint32_t i = 0u; i < colorViewCount; i++)

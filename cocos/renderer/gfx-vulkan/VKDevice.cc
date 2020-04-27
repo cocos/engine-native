@@ -134,8 +134,48 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     ///////////////////// Resource Initialization /////////////////////
 
-    ((CCVKContext*)_context)->initDeviceResource(this);
-    ((CCVKContext*)_context)->buildSwapchain(_width, _height);
+    for (uint32_t i = 0; i < context->swapchainCreateInfo.minImageCount; i++)
+    {
+        GFXTextureInfo depthStecnilTexInfo;
+        depthStecnilTexInfo.type = GFXTextureType::TEX2D;
+        depthStecnilTexInfo.usage = GFXTextureUsageBit::DEPTH_STENCIL_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
+        depthStecnilTexInfo.format = _context->getDepthStencilFormat();
+        depthStecnilTexInfo.width = 1;
+        depthStecnilTexInfo.height = 1;
+        auto texture = createTexture(depthStecnilTexInfo);
+        _depthStencilTextures.push_back((CCVKTexture*)texture);
+
+        GFXTextureViewInfo depthStecnilTexViewInfo;
+        depthStecnilTexViewInfo.texture = texture;
+        depthStecnilTexViewInfo.type = GFXTextureViewType::TV2D;
+        depthStecnilTexViewInfo.format = _context->getDepthStencilFormat();
+        _depthStencilTextureViews.push_back((CCVKTextureView*)createTextureView(depthStecnilTexViewInfo));
+    }
+
+    GFXRenderPassInfo renderPassInfo;
+    GFXColorAttachment colorAttachment;
+    colorAttachment.format = _context->getColorFormat();
+    colorAttachment.loadOp = GFXLoadOp::CLEAR;
+    colorAttachment.storeOp = GFXStoreOp::STORE;
+    colorAttachment.sampleCount = 1;
+    colorAttachment.beginLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
+    colorAttachment.endLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
+    renderPassInfo.colorAttachments.emplace_back(colorAttachment);
+
+    GFXDepthStencilAttachment& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
+    renderPassInfo.depthStencilAttachment.format = _context->getDepthStencilFormat();
+    depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
+    depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
+    depthStencilAttachment.stencilLoadOp = GFXLoadOp::CLEAR;
+    depthStencilAttachment.stencilStoreOp = GFXStoreOp::STORE;
+    depthStencilAttachment.sampleCount = 1;
+    depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    depthStencilAttachment.endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    _renderPass = (CCVKRenderPass*)createRenderPass(renderPassInfo);
+    _gpuSwapchain = CC_NEW(CCVKGPUSwapchain);
+
+    buildSwapchain();
 
     GFXWindowInfo windowInfo;
     windowInfo.colorFmt = _context->getColorFormat();
@@ -188,13 +228,47 @@ void CCVKDevice::destroy()
     CC_SAFE_DESTROY(_cmdAllocator);
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_window);
+    CC_SAFE_DESTROY(_renderPass);
     CC_SAFE_DELETE(_gpuSemaphorePool);
+
+    for (auto textureView : _depthStencilTextureViews)
+    {
+        CC_SAFE_DESTROY(textureView);
+    }
+    for (auto texture : _depthStencilTextures)
+    {
+        CC_SAFE_DESTROY(texture);
+    }
+
+    if (_gpuSwapchain)
+    {
+        if (_gpuSwapchain->vkSwapchain != VK_NULL_HANDLE)
+        {
+            for (auto framebuffer : _gpuSwapchain->vkSwapchainFramebuffers)
+            {
+                vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
+            }
+            _gpuSwapchain->vkSwapchainFramebuffers.clear();
+
+            for (auto imageView : _gpuSwapchain->vkSwapchainImageViews)
+            {
+                vkDestroyImageView(_gpuDevice->vkDevice, imageView, nullptr);
+            }
+            _gpuSwapchain->vkSwapchainImageViews.clear();
+            _gpuSwapchain->swapchainImages.clear();
+
+            vkDestroySwapchainKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, nullptr);
+            _gpuSwapchain->vkSwapchain = VK_NULL_HANDLE;
+        }
+
+        CC_DELETE(_gpuSwapchain);
+        _gpuSwapchain = nullptr;
+    }
 
     if (_gpuDevice)
     {
         if (_gpuDevice->vkDevice != VK_NULL_HANDLE)
         {
-            ((CCVKContext*)_context)->destroyDeviceResource();
             vkDestroyDevice(_gpuDevice->vkDevice, nullptr);
             _gpuDevice->vkDevice = VK_NULL_HANDLE;
         }
@@ -210,19 +284,97 @@ void CCVKDevice::resize(uint width, uint height)
 {
     _width = width;
     _height = height;
-    _window->resize(width, height);
-    ((CCVKContext*)_context)->buildSwapchain(_width, _height);
+    buildSwapchain();
+    _window->resize(_width, _height);
+}
+
+void CCVKDevice::buildSwapchain()
+{
+    auto context = ((CCVKContext*)_context)->gpuContext();
+    context->swapchainCreateInfo.oldSwapchain = _gpuSwapchain->vkSwapchain;
+
+    VkSurfaceCapabilitiesKHR surfaceCapabilities;
+    VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(context->physicalDevice, context->vkSurface, &surfaceCapabilities));
+    if (surfaceCapabilities.currentExtent.width == (uint32_t)-1)
+    {
+        context->swapchainCreateInfo.imageExtent.width = _width;
+        context->swapchainCreateInfo.imageExtent.height = _height;
+    }
+    else
+    {
+        _width = context->swapchainCreateInfo.imageExtent.width = surfaceCapabilities.currentExtent.width;
+        _height = context->swapchainCreateInfo.imageExtent.height = surfaceCapabilities.currentExtent.height;
+    }
+    VK_CHECK(vkCreateSwapchainKHR(_gpuDevice->vkDevice, &context->swapchainCreateInfo, nullptr, &_gpuSwapchain->vkSwapchain));
+
+    if (context->swapchainCreateInfo.oldSwapchain != VK_NULL_HANDLE)
+    {
+        for (auto framebuffer : _gpuSwapchain->vkSwapchainFramebuffers)
+        {
+            vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
+        }
+        _gpuSwapchain->vkSwapchainFramebuffers.clear();
+
+        for (auto imageView : _gpuSwapchain->vkSwapchainImageViews)
+        {
+            vkDestroyImageView(_gpuDevice->vkDevice, imageView, nullptr);
+        }
+        _gpuSwapchain->vkSwapchainImageViews.clear();
+        _gpuSwapchain->swapchainImages.clear();
+
+        vkDestroySwapchainKHR(_gpuDevice->vkDevice, context->swapchainCreateInfo.oldSwapchain, nullptr);
+    }
+
+    uint32_t imageCount;
+    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, nullptr));
+    _gpuSwapchain->swapchainImages.resize(imageCount);
+    VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, _gpuSwapchain->swapchainImages.data()));
+    assert(imageCount == context->swapchainCreateInfo.minImageCount); // broken swapchain image count assumption
+
+    _gpuSwapchain->vkSwapchainImageViews.resize(imageCount);
+    _gpuSwapchain->vkSwapchainFramebuffers.resize(imageCount);
+    for (uint32_t i = 0; i < imageCount; i++)
+    {
+        _depthStencilTextures[i]->resize(_width, _height);
+        _depthStencilTextureViews[i]->destroy();
+        GFXTextureViewInfo textureViewInfo;
+        textureViewInfo.texture = _depthStencilTextures[i];
+        textureViewInfo.type = GFXTextureViewType::TV2D;
+        textureViewInfo.format = _context->getDepthStencilFormat();
+        _depthStencilTextureViews[i]->initialize(textureViewInfo);
+
+        VkImageViewCreateInfo imageViewCreateInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
+        imageViewCreateInfo.image = _gpuSwapchain->swapchainImages[i];
+        imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        imageViewCreateInfo.format = context->swapchainCreateInfo.imageFormat;
+        imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageViewCreateInfo.subresourceRange.levelCount = 1;
+        imageViewCreateInfo.subresourceRange.layerCount = 1;
+
+        VK_CHECK(vkCreateImageView(_gpuDevice->vkDevice, &imageViewCreateInfo, nullptr, &_gpuSwapchain->vkSwapchainImageViews[i]));
+
+        VkImageView attachments[] = { _gpuSwapchain->vkSwapchainImageViews[i], _depthStencilTextureViews[i]->gpuTexView()->vkImageView };
+
+        VkFramebufferCreateInfo framebufferCreateInfo{ VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO };
+        framebufferCreateInfo.renderPass = _renderPass->gpuRenderPass()->vkRenderPass;
+        framebufferCreateInfo.attachmentCount = COUNTOF(attachments);
+        framebufferCreateInfo.pAttachments = attachments;
+        framebufferCreateInfo.width = _width;
+        framebufferCreateInfo.height = _height;
+        framebufferCreateInfo.layers = 1;
+
+        VK_CHECK(vkCreateFramebuffer(_gpuDevice->vkDevice, &framebufferCreateInfo, 0, &_gpuSwapchain->vkSwapchainFramebuffers[i]));
+    }
 }
 
 void CCVKDevice::begin()
 {
-    CCVKContext* context = (CCVKContext*)_context;
     CCVKGPUQueue* queue = ((CCVKQueue*)_queue)->gpuQueue();
 
     _gpuSemaphorePool->clear();
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
-    VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, context->gpuSwapchain()->vkSwapchain,
-        ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuDevice->curImageIndex));
+    VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
+        ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
     queue->waitSemaphore = acquireSemaphore;
     queue->signalSemaphore = _gpuSemaphorePool->alloc();
@@ -236,13 +388,12 @@ void CCVKDevice::present()
     _numInstances = queue->_numInstances;
     _numTriangles = queue->_numTriangles;
 
-    CCVKGPUSwapchain* swapchain = ((CCVKContext*)_context)->gpuSwapchain();
     VkPresentInfoKHR presentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
     presentInfo.waitSemaphoreCount = 1;
     presentInfo.pWaitSemaphores = &queue->gpuQueue()->waitSemaphore;
     presentInfo.swapchainCount = 1;
-    presentInfo.pSwapchains = &swapchain->vkSwapchain;
-    presentInfo.pImageIndices = &_gpuDevice->curImageIndex;
+    presentInfo.pSwapchains = &_gpuSwapchain->vkSwapchain;
+    presentInfo.pImageIndices = &_gpuSwapchain->curImageIndex;
 
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
 
