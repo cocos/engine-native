@@ -352,7 +352,6 @@ namespace se {
         v8::V8::InitializePlatform(_platform);
         bool ok = v8::V8::Initialize();
         assert(ok);
-        Object::setup();
     }
 
     ScriptEngine::~ScriptEngine()
@@ -396,7 +395,8 @@ namespace se {
 
         NativePtrToObjectMap::init();
         NonRefNativePtrCreatedByCtorMap::init();
-
+        
+        Object::setup();
         Class::setIsolate(_isolate);
         Object::setIsolate(_isolate);
 
