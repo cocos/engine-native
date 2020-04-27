@@ -255,18 +255,6 @@ public class Cocos2dxHelper {
         return array;
     }
 
-    public static byte[] conversionEncoding(byte[] text, String fromCharset,String newCharset)
-    {
-        try {
-            String str = new String(text,fromCharset);
-            return str.getBytes(newCharset);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public static int getDeviceRotation() {
         try {
             Display display = ((WindowManager) sActivity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();

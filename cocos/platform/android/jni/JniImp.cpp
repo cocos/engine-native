@@ -73,30 +73,6 @@ int getObbAssetFileDescriptorJNI(const std::string& path, long* startOffset, lon
     return fd;
 }
 
-void convertEncodingJNI(const std::string& src, int byteSize, const std::string& fromCharset, std::string& dst, const std::string& newCharset)
-{
-    JniMethodInfo methodInfo;
-
-    if (JniHelper::getStaticMethodInfo(methodInfo, JCLS_HELPER, "conversionEncoding", "([BLjava/lang/String;Ljava/lang/String;)[B"))
-    {
-        jbyteArray strArray = methodInfo.env->NewByteArray(byteSize);
-        methodInfo.env->SetByteArrayRegion(strArray, 0, byteSize, reinterpret_cast<const jbyte*>(src.c_str()));
-
-        jstring stringArg1 = methodInfo.env->NewStringUTF(fromCharset.c_str());
-        jstring stringArg2 = methodInfo.env->NewStringUTF(newCharset.c_str());
-
-        jbyteArray newArray = (jbyteArray)methodInfo.env->CallStaticObjectMethod(methodInfo.classID, methodInfo.methodID, strArray, stringArg1, stringArg2);
-        jsize theArrayLen = methodInfo.env->GetArrayLength(newArray);
-        methodInfo.env->GetByteArrayRegion(newArray, 0, theArrayLen, (jbyte*)dst.c_str());
-
-        methodInfo.env->DeleteLocalRef(strArray);
-        methodInfo.env->DeleteLocalRef(stringArg1);
-        methodInfo.env->DeleteLocalRef(stringArg2);
-        methodInfo.env->DeleteLocalRef(newArray);
-        methodInfo.env->DeleteLocalRef(methodInfo.classID);
-    }
-}
-
 std::string getCurrentLanguageJNI()
 {
     return JniHelper::callStaticStringMethod(JCLS_HELPER, "getCurrentLanguage");
