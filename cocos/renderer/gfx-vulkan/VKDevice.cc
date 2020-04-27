@@ -329,7 +329,7 @@ void CCVKDevice::buildSwapchain()
     VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, nullptr));
     _gpuSwapchain->swapchainImages.resize(imageCount);
     VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, _gpuSwapchain->swapchainImages.data()));
-    assert(imageCount == context->swapchainCreateInfo.minImageCount); // broken swapchain image count assumption
+    assert(imageCount == context->swapchainCreateInfo.minImageCount); // assert if swapchain image count assumption is broken
 
     _gpuSwapchain->vkSwapchainImageViews.resize(imageCount);
     _gpuSwapchain->vkSwapchainFramebuffers.resize(imageCount);
@@ -375,6 +375,7 @@ void CCVKDevice::begin()
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
         ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
+    VK_CHECK(vkResetCommandPool(_gpuDevice->vkDevice, ((CCVKCommandAllocator*)_cmdAllocator)->gpuCommandPool()->vkCommandPool, 0));
 
     queue->waitSemaphore = acquireSemaphore;
     queue->signalSemaphore = _gpuSemaphorePool->alloc();
@@ -396,6 +397,8 @@ void CCVKDevice::present()
     presentInfo.pImageIndices = &_gpuSwapchain->curImageIndex;
 
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
+
+    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
 
     // Clear queue stats
     queue->_numDrawCalls = 0;
@@ -558,7 +561,7 @@ GFXPipelineLayout* CCVKDevice::createPipelineLayout(const GFXPipelineLayoutInfo&
 
 void CCVKDevice::copyBuffersToTexture(const GFXDataArray& buffers, GFXTexture* dst, const GFXBufferTextureCopyList& regions)
 {
-    
+
    CCVKCmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((CCVKTexture*)dst)->gpuTexture(), regions);
 }
 

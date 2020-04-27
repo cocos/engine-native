@@ -5,9 +5,6 @@
 
 NS_CC_BEGIN
 
-class CCVKCommandAllocator;
-class CCVKGPUCommandBuffer;
-
 class CC_VULKAN_API CCVKCommandBuffer : public GFXCommandBuffer
 {
 public:
@@ -48,10 +45,11 @@ private:
 private:
     CCVKGPUCommandBuffer* _gpuCommandBuffer = nullptr;
 
-    bool _isInRenderPass = false;
     CCVKGPUPipelineState* _curGPUPipelineState = nullptr;
     CCVKGPUBindingLayout* _curGPUBlendLayout = nullptr;
     CCVKGPUInputAssembler* _curGPUInputAssember = nullptr;
+
+    CCVKGPUFramebuffer* _curGPUFBO = nullptr;
 
     GFXViewport _curViewport;
     GFXRect _curScissor;

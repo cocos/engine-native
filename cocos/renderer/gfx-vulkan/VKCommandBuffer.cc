@@ -79,36 +79,72 @@ void CCVKCommandBuffer::end()
     {
         BindStates();
     }
-    _isInRenderPass = false;
+    _curGPUFBO = nullptr;
 
     VK_CHECK(vkEndCommandBuffer(_gpuCommandBuffer->vkCommandBuffer));
 }
 
-void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& render_area,
-    GFXClearFlags clear_flags, const std::vector<GFXColor>& colors, float depth, int stencil)
+void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& renderArea,
+    GFXClearFlags clearFlags, const std::vector<GFXColor>& colors, float depth, int stencil)
 {
-    _isInRenderPass = true;
+    _curGPUFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
 
-    CCVKGPUFramebuffer* gpuFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
+    VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
+    barrier.srcAccessMask = 0;
+    barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    barrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->vkImage :
+        _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
+    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &barrier);
 
     VkClearValue clearValues[2];
     clearValues[0].color = { colors[0].r, colors[0].g, colors[0].b, colors[0].a };
     clearValues[1].depthStencil = { depth, (uint32_t)stencil };
 
     VkRenderPassBeginInfo passBeginInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
-    passBeginInfo.renderPass = gpuFBO->gpuRenderPass->vkRenderPass;
-    passBeginInfo.framebuffer = gpuFBO->isOffscreen ? gpuFBO->vkFramebuffer : gpuFBO->swapchain->vkSwapchainFramebuffers[gpuFBO->swapchain->curImageIndex];
-    passBeginInfo.renderArea.extent.width = render_area.width;
-    passBeginInfo.renderArea.extent.height = render_area.height;
+    passBeginInfo.renderPass = _curGPUFBO->gpuRenderPass->vkRenderPass;
+    passBeginInfo.framebuffer = _curGPUFBO->isOffscreen ? _curGPUFBO->vkFramebuffer :
+        _curGPUFBO->swapchain->vkSwapchainFramebuffers[_curGPUFBO->swapchain->curImageIndex];
+    passBeginInfo.renderArea.extent.width = renderArea.width;
+    passBeginInfo.renderArea.extent.height = renderArea.height;
     passBeginInfo.clearValueCount = 2;
     passBeginInfo.pClearValues = clearValues;
-    vkCmdBeginRenderPass(gpuCommandBuffer()->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    vkCmdBeginRenderPass(_gpuCommandBuffer->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+    //VkViewport viewport = { 0, 0, float(renderArea.width), float(renderArea.height), 0, 1 };
+    //VkRect2D scissor = { { 0, 0 }, { uint32_t(renderArea.width), uint32_t(renderArea.height) } };
+
+    //vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
+    //vkCmdSetScissor(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &scissor);
 }
 
 void CCVKCommandBuffer::endRenderPass()
 {
-    _isInRenderPass = false;		
     vkCmdEndRenderPass(_gpuCommandBuffer->vkCommandBuffer);
+
+    VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
+    barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    barrier.dstAccessMask = 0;
+    barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    barrier.image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->vkImage :
+        _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
+    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &barrier);
+
+    _curGPUFBO = nullptr;
 }
 
 void CCVKCommandBuffer::bindPipelineState(GFXPipelineState* pso)
@@ -230,7 +266,7 @@ void CCVKCommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uint
 
 void CCVKCommandBuffer::draw(GFXInputAssembler* ia)
 {
-    if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
+    if ((_type == GFXCommandBufferType::PRIMARY && _curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
         if (_isStateInvalid)
@@ -247,7 +283,7 @@ void CCVKCommandBuffer::draw(GFXInputAssembler* ia)
 
 void CCVKCommandBuffer::updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset)
 {
-    if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
+    if ((_type == GFXCommandBufferType::PRIMARY && _curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
     }
@@ -259,7 +295,7 @@ void CCVKCommandBuffer::updateBuffer(GFXBuffer* buff, void* data, uint size, uin
 
 void CCVKCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions)
 {
-    if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
+    if ((_type == GFXCommandBufferType::PRIMARY && _curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
     }

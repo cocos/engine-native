@@ -47,7 +47,7 @@ void CCVKQueue::submit(const std::vector<GFXCommandBuffer*>& cmdBuffs)
         for (uint32_t i = 0u; i < count; ++i)
         {
             CCVKCommandBuffer* cmdBuffer = (CCVKCommandBuffer*)cmdBuffs[i];
-            //_gpuQueue->commandBuffers.push(cmdBuffer->_gpuCommandBuffer->vkCommandBuffer);
+            _gpuQueue->commandBuffers.push(cmdBuffer->_gpuCommandBuffer->vkCommandBuffer);
             _numDrawCalls += cmdBuffer->_numDrawCalls;
             _numInstances += cmdBuffer->_numInstances;
             _numTriangles += cmdBuffer->_numTriangles;
@@ -57,7 +57,7 @@ void CCVKQueue::submit(const std::vector<GFXCommandBuffer*>& cmdBuffs)
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = &_gpuQueue->waitSemaphore;
         submitInfo.pWaitDstStageMask = &_gpuQueue->submitStageMask;
-        submitInfo.commandBufferCount = _gpuQueue->commandBuffers.size();
+        submitInfo.commandBufferCount = count;
         submitInfo.pCommandBuffers = &_gpuQueue->commandBuffers[0];
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = &_gpuQueue->signalSemaphore;

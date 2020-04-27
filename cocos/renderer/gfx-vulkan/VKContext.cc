@@ -28,7 +28,7 @@ namespace
         else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
         {
             CC_LOG_ERROR("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
-            //assert(false);
+            assert(false);
         }
         return VK_FALSE;
     }
@@ -66,7 +66,7 @@ CCVKContext::~CCVKContext() {
 }
 
 bool CCVKContext::initialize(const GFXContextInfo &info) {
-  
+
     _vsyncMode = info.vsyncMode;
     _windowHandle = info.windowHandle;
 
@@ -398,7 +398,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
                 }
             }
         }
-        
+
         // Select a present mode for the swapchain
 
         std::vector<VkPresentModeKHR> presentModePriorityList;
