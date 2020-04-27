@@ -56,28 +56,7 @@ namespace
     std::string g_apkPath;
     int g_width = 0;
     int g_height = 0;
-    int g_SDKInt = 0;
 }
-
-extern "C"
-{
-    void getSDKInt(JNIEnv* env)
-    {
-        if (env && g_SDKInt == 0)
-        {
-            // VERSION is a nested class within android.os.Build (hence "$" rather than "/")
-            jclass versionClass = env->FindClass("android/os/Build$VERSION");
-            if (NULL == versionClass)
-                return;
-
-            jfieldID sdkIntFieldID = env->GetStaticFieldID(versionClass, "SDK_INT", "I");
-            if (NULL == sdkIntFieldID)
-                return;
-
-            g_SDKInt = env->GetStaticIntField(versionClass, sdkIntFieldID);
-        }
-    }
-} // end of extern "C"
 
 /***********************************************************
  * Functions invoke from cpp to Java.
@@ -164,10 +143,3 @@ void copyTextToClipboardJNI(const std::string& text)
 {
     JniHelper::callStaticVoidMethod(JCLS_HELPER, "copyTextToClipboard", text);
 }
-
-int getAndroidSDKInt()
-{
-    return g_SDKInt;
-}
-
-

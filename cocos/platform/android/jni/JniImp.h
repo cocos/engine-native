@@ -37,4 +37,3 @@ extern std::string getCurrentLanguageCodeJNI();
 extern std::string getSystemVersionJNI();
 extern bool openURLJNI(const std::string& url);
 extern void copyTextToClipboardJNI(const std::string& text);
-extern int getAndroidSDKInt();
