@@ -30,33 +30,11 @@
 #define  JNI_IMP_LOG_TAG    "JniImp"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,JNI_IMP_LOG_TAG,__VA_ARGS__)
 
-#ifndef ORG_ACTIVITY_CLASS_NAME
-#define ORG_ACTIVITY_CLASS_NAME org_cocos2dx_lib_Cocos2dxActivity
-#endif
-#define JNI_ACTIVITY(FUNC) JNI_METHOD1(ORG_ACTIVITY_CLASS_NAME,FUNC)
-
-#ifndef ORG_HELPER_CLASS_NAME
-#define ORG_HELPER_CLASS_NAME org_cocos2dx_lib_Cocos2dxHelper
-#endif
-#define JNI_HELPER(FUNC) JNI_METHOD1(ORG_HELPER_CLASS_NAME,FUNC)
-
-#ifndef ORG_AUDIOFOCUS_CLASS_NAME
-#define ORG_AUDIOFOCUS_CLASS_NAME org_cocos2dx_lib_Cocos2dxAudioFocusManager
-#endif
-#define JNI_AUDIO(FUNC) JNI_METHOD1(ORG_AUDIOFOCUS_CLASS_NAME,FUNC)
-
 #ifndef JCLS_HELPER
 #define JCLS_HELPER "org/cocos2dx/lib/Cocos2dxHelper"
 #endif
 
 using namespace cocos2d;
-
-namespace
-{
-    std::string g_apkPath;
-    int g_width = 0;
-    int g_height = 0;
-}
 
 /***********************************************************
  * Functions invoke from cpp to Java.
