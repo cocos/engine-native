@@ -25,21 +25,25 @@ bool CCVKFramebuffer::initialize(const GFXFramebufferInfo &info)
 
     _gpuFBO = CC_NEW(CCVKGPUFramebuffer);
     _gpuFBO->gpuRenderPass = ((CCVKRenderPass*)_renderPass)->gpuRenderPass();
-    _gpuFBO->isOffscreen = _isOffscreen;
 
-    _gpuFBO->gpuColorViews.resize(_colorViews.size());
-    for (size_t i = 0; i < _colorViews.size(); ++i)
+    if (_isOffscreen)
     {
-        CCVKTextureView* color_view = (CCVKTextureView*)_colorViews[i];
-        _gpuFBO->gpuColorViews[i] = color_view->gpuTexView();
-    }
+        _gpuFBO->gpuColorViews.resize(_colorViews.size());
+        for (size_t i = 0; i < _colorViews.size(); ++i)
+        {
+            CCVKTextureView* colorview = (CCVKTextureView*)_colorViews[i];
+            _gpuFBO->gpuColorViews[i] = colorview->gpuTexView();
+        }
 
-    if (_depthStencilView)
-    {
-        //_gpuFBO->gpuDepthStencilView = ((CCVKTextureView*)_depthStencilView)->gpuTexView();
-    }
+        if (_depthStencilView)
+        {
+            _gpuFBO->gpuDepthStencilView = ((CCVKTextureView*)_depthStencilView)->gpuTexView();
+        }
 
-    CCVKCmdFuncCreateFramebuffer((CCVKDevice*)_device, _gpuFBO);
+        _gpuFBO->isOffscreen = _isOffscreen;
+
+        CCVKCmdFuncCreateFramebuffer((CCVKDevice*)_device, _gpuFBO);
+    }
 
     _status = GFXStatus::SUCCESS;
 
@@ -50,7 +54,10 @@ void CCVKFramebuffer::destroy()
 {
     if (_gpuFBO)
     {
-        CCVKCmdFuncDestroyFramebuffer((CCVKDevice*)_device, _gpuFBO);
+        if (_isOffscreen)
+        {
+            CCVKCmdFuncDestroyFramebuffer((CCVKDevice*)_device, _gpuFBO);
+        }
         CC_DELETE(_gpuFBO);
         _gpuFBO = nullptr;
     }

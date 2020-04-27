@@ -72,6 +72,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     ///////////////////// Device Creation /////////////////////
 
     _gpuDevice = CC_NEW(CCVKGPUDevice);
+    _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
 
     // check extensions
     uint32_t availableLayerCount;
@@ -133,7 +134,8 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     ///////////////////// Resource Initialization /////////////////////
 
-    buildSwapchain();
+    ((CCVKContext*)_context)->initDeviceResource(this);
+    ((CCVKContext*)_context)->buildSwapchain(_width, _height);
 
     GFXWindowInfo windowInfo;
     windowInfo.colorFmt = _context->getColorFormat();
@@ -176,6 +178,8 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     CC_LOG_INFO("DEVICE_LAYERS: %s", deviceLayers.c_str());
     CC_LOG_INFO("DEVICE_EXTENSIONS: %s", deviceExtensions.c_str());
 
+    this->begin();
+
     return true;
 }
 
@@ -184,11 +188,13 @@ void CCVKDevice::destroy()
     CC_SAFE_DESTROY(_cmdAllocator);
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_window);
+    CC_SAFE_DELETE(_gpuSemaphorePool);
 
     if (_gpuDevice)
     {
         if (_gpuDevice->vkDevice != VK_NULL_HANDLE)
         {
+            ((CCVKContext*)_context)->destroyDeviceResource();
             vkDestroyDevice(_gpuDevice->vkDevice, nullptr);
             _gpuDevice->vkDevice = VK_NULL_HANDLE;
         }
@@ -196,17 +202,30 @@ void CCVKDevice::destroy()
         CC_DELETE(_gpuDevice);
         _gpuDevice = nullptr;
     }
+
+    CC_SAFE_DESTROY(_context);
 }
 
 void CCVKDevice::resize(uint width, uint height)
 {
-  
+    _width = width;
+    _height = height;
+    _window->resize(width, height);
+    ((CCVKContext*)_context)->buildSwapchain(_width, _height);
 }
 
 void CCVKDevice::begin()
 {
-    //uint32_t imageIndex = 0;
-    //VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuDevice.vkSwapchain, ~0ull, acquireSemaphore, VK_NULL_HANDLE, &imageIndex));
+    CCVKContext* context = (CCVKContext*)_context;
+    CCVKGPUQueue* queue = ((CCVKQueue*)_queue)->gpuQueue();
+
+    _gpuSemaphorePool->clear();
+    VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
+    VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, context->gpuSwapchain()->vkSwapchain,
+        ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuDevice->curImageIndex));
+
+    queue->waitSemaphore = acquireSemaphore;
+    queue->signalSemaphore = _gpuSemaphorePool->alloc();
 }
 
 void CCVKDevice::present()
@@ -217,37 +236,23 @@ void CCVKDevice::present()
     _numInstances = queue->_numInstances;
     _numTriangles = queue->_numTriangles;
 
+    CCVKGPUSwapchain* swapchain = ((CCVKContext*)_context)->gpuSwapchain();
+    VkPresentInfoKHR presentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores = &queue->gpuQueue()->waitSemaphore;
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = &swapchain->vkSwapchain;
+    presentInfo.pImageIndices = &_gpuDevice->curImageIndex;
+
+    VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
+
     // Clear queue stats
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
+
+    this->begin();
 }
-
-void CCVKDevice::buildSwapchain()
-{
-    auto context = ((CCVKContext*)_context)->gpuContext();
-    context->swapchainCreateInfo.oldSwapchain = _gpuDevice->vkSwapchain;
-
-    VkSurfaceCapabilitiesKHR surfaceCapabilities;
-    VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(context->physicalDevice, context->vkSurface, &surfaceCapabilities));
-    if (surfaceCapabilities.currentExtent.width == (uint32_t)-1)
-    {
-        context->swapchainCreateInfo.imageExtent.width = _width;
-        context->swapchainCreateInfo.imageExtent.height = _height;
-    }
-    else
-    {
-        _width = context->swapchainCreateInfo.imageExtent.width = surfaceCapabilities.currentExtent.width;
-        _height = context->swapchainCreateInfo.imageExtent.height = surfaceCapabilities.currentExtent.height;
-    }
-    VK_CHECK(vkCreateSwapchainKHR(_gpuDevice->vkDevice, &context->swapchainCreateInfo, nullptr, &_gpuDevice->vkSwapchain));
-
-    if (context->swapchainCreateInfo.oldSwapchain != VK_NULL_HANDLE)
-    {
-        vkDestroySwapchainKHR(_gpuDevice->vkDevice, context->swapchainCreateInfo.oldSwapchain, nullptr);
-    }
-}
-
 
 GFXWindow* CCVKDevice::createWindow(const GFXWindowInfo& info)
 {

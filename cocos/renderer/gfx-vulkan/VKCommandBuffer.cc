@@ -1,13 +1,12 @@
 #include "VKStd.h"
 #include "VKCommandBuffer.h"
+#include "VKCommands.h"
 #include "VKCommandAllocator.h"
 #include "VKFramebuffer.h"
+
 #include "VKPipelineState.h"
 #include "VKBindingLayout.h"
 #include "VKInputAssembler.h"
-#include "VKDevice.h"
-#include "VKBuffer.h"
-#include "VKTexture.h"
 
 NS_CC_BEGIN
 
@@ -28,22 +27,12 @@ bool CCVKCommandBuffer::initialize(const GFXCommandBufferInfo& info)
     }
 
     _allocator = info.allocator;
-    _vkAllocator = (CCVKCommandAllocator*)info.allocator;
     _type = info.type;
 
-    //VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
-    //switch (_type)
-    //{
-    //case GFXCommandBufferType::PRIMARY: level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; break;
-    //case GFXCommandBufferType::SECONDARY: level = VK_COMMAND_BUFFER_LEVEL_SECONDARY; break;
-    //}
-
-    //VkCommandBufferAllocateInfo allocateInfo{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO };
-    //allocateInfo.commandPool = _vkAllocator->getCommandPool();
-    //allocateInfo.commandBufferCount = 1;
-    //allocateInfo.level = level;
-
-    //VK_CHECK(vkAllocateCommandBuffers(((CCVKDevice*)_device)->getHandle(), &allocateInfo, &_handle));
+    _gpuCommandBuffer = CC_NEW(CCVKGPUCommandBuffer);
+    _gpuCommandBuffer->type = _type;
+    _gpuCommandBuffer->commandPool = ((CCVKCommandAllocator*)_allocator)->gpuCommandPool();
+    CCVKCmdFuncAllocateCommandBuffer((CCVKDevice*)_device, _gpuCommandBuffer);
 
     _status = GFXStatus::SUCCESS;
     return true;
@@ -51,11 +40,13 @@ bool CCVKCommandBuffer::initialize(const GFXCommandBufferInfo& info)
 
 void CCVKCommandBuffer::destroy()
 {
-    //if (_vkAllocator)
-    //{
-    //    vkFreeCommandBuffers(((CCVKDevice*)_device)->getHandle(), _vkAllocator->getCommandPool(), 1, &_handle);
-    //    _vkAllocator = nullptr;
-    //}
+    if (_gpuCommandBuffer)
+    {
+        CCVKCmdFuncFreeCommandBuffer((CCVKDevice*)_device, _gpuCommandBuffer);
+        CC_DELETE(_gpuCommandBuffer);
+        _gpuCommandBuffer = nullptr;
+    }
+
     _allocator = nullptr;
     _status = GFXStatus::UNREADY;
 }
@@ -69,17 +60,17 @@ void CCVKCommandBuffer::begin()
     _numInstances = 0;
     _numTriangles = 0;
 
-    //VkCommandBufferBeginInfo beginInfo{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO };
-    //beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    VkCommandBufferBeginInfo beginInfo{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO };
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-    //if (_type == GFXCommandBufferType::SECONDARY)
-    //{
-    //    VkCommandBufferInheritanceInfo inheritance{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO };
-    //    // TODO
-    //    //beginInfo.pInheritanceInfo = &inheritance;
-    //}
+    if (_type == GFXCommandBufferType::SECONDARY)
+    {
+        VkCommandBufferInheritanceInfo inheritance{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO };
+        // TODO
+        //beginInfo.pInheritanceInfo = &inheritance;
+    }
 
-    //VK_CHECK(vkBeginCommandBuffer(_handle, &beginInfo));
+    VK_CHECK(vkBeginCommandBuffer(_gpuCommandBuffer->vkCommandBuffer, &beginInfo));
 }
 
 void CCVKCommandBuffer::end()
@@ -90,12 +81,27 @@ void CCVKCommandBuffer::end()
     }
     _isInRenderPass = false;
 
-    //vkEndCommandBuffer(_handle);
+    VK_CHECK(vkEndCommandBuffer(_gpuCommandBuffer->vkCommandBuffer));
 }
 
-void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& render_area, GFXClearFlags clear_flags, const std::vector<GFXColor>& colors, float depth, int stencil)
+void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& render_area,
+    GFXClearFlags clear_flags, const std::vector<GFXColor>& colors, float depth, int stencil)
 {
     _isInRenderPass = true;
+
+    //CCVKGPUFramebuffer* gpuFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
+    //CCVKDevice* device = (CCVKDevice*)_device;
+    //CCVKContext* context = (CCVKContext*)device->getContext();
+
+    //VkRenderPassBeginInfo passBeginInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
+    //passBeginInfo.renderPass = gpuFBO->gpuRenderPass->vkRenderPass;
+    //passBeginInfo.framebuffer = gpuFBO->isOffscreen ? gpuFBO->vkFramebuffer : device->gpuDevice()->curImageIndex;
+    //passBeginInfo.renderArea.extent.width = swapchain.width;
+    //passBeginInfo.renderArea.extent.height = swapchain.height;
+    //passBeginInfo.clearValueCount = 1;
+    //passBeginInfo.pClearValues = &clearColor;
+    //vkCmdBeginRenderPass(gpuCommandBuffer()->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
     /*
     std::vector<SubpassInfo> subpass_infos(subpasses.size());
     auto                     subpass_info_it = subpass_infos.begin();

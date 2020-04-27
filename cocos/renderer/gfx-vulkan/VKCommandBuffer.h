@@ -1,11 +1,12 @@
-#ifndef CC_GFXCCVK_CCVK_COMMAND_BUFFER_H_
-#define CC_GFXCCVK_CCVK_COMMAND_BUFFER_H_
+#ifndef CC_GFXVULKAN_CCVK_COMMAND_BUFFER_H_
+#define CC_GFXVULKAN_CCVK_COMMAND_BUFFER_H_
 
 #include "VKCommands.h"
 
 NS_CC_BEGIN
 
 class CCVKCommandAllocator;
+class CCVKGPUCommandBuffer;
 
 class CC_VULKAN_API CCVKCommandBuffer : public GFXCommandBuffer
 {
@@ -39,11 +40,14 @@ public:
     void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions);
     void execute(const std::vector<GFXCommandBuffer*>& cmd_buffs, uint32_t count);
 
+    CCVKGPUCommandBuffer* gpuCommandBuffer() const { return _gpuCommandBuffer; }
+
 private:
     void BindStates();
 
 private:
-    CCVKCommandAllocator* _vkAllocator = nullptr;
+    CCVKGPUCommandBuffer* _gpuCommandBuffer = nullptr;
+
     bool _isInRenderPass = false;
     CCVKGPUPipelineState* _curGPUPipelineState = nullptr;
     CCVKGPUBindingLayout* _curGPUBlendLayout = nullptr;

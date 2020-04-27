@@ -1,6 +1,8 @@
 #include "VKStd.h"
 #include "VKQueue.h"
+#include "VKDevice.h"
 #include "VKCommands.h"
+#include "VKCommandBuffer.h"
 
 NS_CC_BEGIN
 
@@ -36,17 +38,34 @@ void CCVKQueue::destroy()
     _status = GFXStatus::UNREADY;
 }
 
-void CCVKQueue::submit(const std::vector<GFXCommandBuffer*>& cmd_buffs)
+void CCVKQueue::submit(const std::vector<GFXCommandBuffer*>& cmdBuffs)
 {
-    if (!_isAsync) {
-        uint count = static_cast<uint>(cmd_buffs.size());
-        for (uint i = 0; i < count; ++i) {
-            //CCVKCommandBuffer* cmd_buff = (CCVKCommandBuffer*)cmd_buffs[i];
-            //CCVKCmdFuncExecuteCmds((CCVKDevice*)_device, cmd_buff->_cmdPackage);
-            //_numDrawCalls += cmd_buff->_numDrawCalls;
-            //_numInstances += cmd_buff->_numInstances;
-            //_numTriangles += cmd_buff->_numTriangles;
+    if (!_isAsync)
+    {
+        _gpuQueue->commandBuffers.clear();
+        uint32_t count = cmdBuffs.size();
+        for (uint32_t i = 0u; i < count; ++i)
+        {
+            CCVKCommandBuffer* cmdBuffer = (CCVKCommandBuffer*)cmdBuffs[i];
+            //_gpuQueue->commandBuffers.push(cmdBuffer->_gpuCommandBuffer->vkCommandBuffer);
+            _numDrawCalls += cmdBuffer->_numDrawCalls;
+            _numInstances += cmdBuffer->_numInstances;
+            _numTriangles += cmdBuffer->_numTriangles;
         }
+
+        VkSubmitInfo submitInfo{ VK_STRUCTURE_TYPE_SUBMIT_INFO };
+        submitInfo.waitSemaphoreCount = 1;
+        submitInfo.pWaitSemaphores = &_gpuQueue->waitSemaphore;
+        submitInfo.pWaitDstStageMask = &_gpuQueue->submitStageMask;
+        submitInfo.commandBufferCount = _gpuQueue->commandBuffers.size();
+        submitInfo.pCommandBuffers = &_gpuQueue->commandBuffers[0];
+        submitInfo.signalSemaphoreCount = 1;
+        submitInfo.pSignalSemaphores = &_gpuQueue->signalSemaphore;
+
+        VK_CHECK(vkQueueSubmit(_gpuQueue->vkQueue, 1, &submitInfo, VK_NULL_HANDLE));
+
+        _gpuQueue->waitSemaphore = _gpuQueue->signalSemaphore;
+        _gpuQueue->signalSemaphore = ((CCVKDevice*)_device)->gpuSemaphorePool()->alloc();
     }
 }
 

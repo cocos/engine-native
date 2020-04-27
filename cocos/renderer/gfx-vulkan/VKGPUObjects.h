@@ -1,5 +1,5 @@
-#ifndef CC_GFXCCVK_GPU_OBJECTS_H_
-#define CC_GFXCCVK_GPU_OBJECTS_H_
+#ifndef CC_GFXVULKAN_GPU_OBJECTS_H_
+#define CC_GFXVULKAN_GPU_OBJECTS_H_
 
 #include "volk.h"
 
@@ -8,12 +8,11 @@ NS_CC_BEGIN
 class CCVKGPUDevice : public Object
 {
 public:
-    VkDevice vkDevice{ VK_NULL_HANDLE };
-    std::vector<VkLayerProperties> layers;
-    std::vector<VkExtensionProperties> extensions;
-    uint32_t curImageIndex = 0;
-    VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
-    std::vector<VkSemaphore> vkSemaphores;
+    VkDevice vkDevice = VK_NULL_HANDLE;
+    vector<VkLayerProperties>::type layers;
+    vector<VkExtensionProperties>::type extensions;
+
+    uint32_t curImageIndex;
 };
 
 class CCVKGPUContext
@@ -27,18 +26,36 @@ public:
     VkPhysicalDeviceFeatures physicalDeviceFeatures{};
     VkPhysicalDeviceProperties physicalDeviceProperties{};
     VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties{};
-    std::vector<VkQueueFamilyProperties> queueFamilyProperties;
-    std::vector<VkBool32> queueFamilyPresentables;
+    vector<VkQueueFamilyProperties>::type queueFamilyProperties;
+    vector<VkBool32>::type queueFamilyPresentables;
 
     VkSurfaceKHR vkSurface = VK_NULL_HANDLE;
 
     VkSwapchainCreateInfoKHR swapchainCreateInfo{ VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR };
 };
 
+class CCVKGPUSwapchain
+{
+public:
+    VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
+    vector<VkImage>::type swapchainImages;
+    vector<VkImageView>::type vkSwapchainImageViews;
+    vector<VkFramebuffer>::type vkSwapchainFramebuffers;
+};
+
 class CCVKGPUCommandPool : public Object
 {
 public:
-    VkCommandPool vkCommandPool{ VK_NULL_HANDLE };
+    VkCommandPool vkCommandPool = VK_NULL_HANDLE;
+    map<VkCommandBufferLevel, CachedArray<VkCommandBuffer>>::type commandBuffers;
+};
+
+class CCVKGPUCommandBuffer : public Object
+{
+public:
+    GFXCommandBufferType type;
+    CCVKGPUCommandPool* commandPool = nullptr;
+    VkCommandBuffer vkCommandBuffer = VK_NULL_HANDLE;
 };
 
 class CCVKGPUQueue : public Object
@@ -47,6 +64,10 @@ public:
     GFXQueueType type;
     VkQueue vkQueue;
     uint32_t queueFamilyIndex;
+    VkSemaphore waitSemaphore = VK_NULL_HANDLE;
+    VkSemaphore signalSemaphore = VK_NULL_HANDLE;
+    VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    CachedArray<VkCommandBuffer> commandBuffers;
 };
 
 class CCVKGPUBuffer : public Object
@@ -283,6 +304,57 @@ class CCVKGPUBindingLayout : public Object
 public:
     CCVKGPUBindingList gpuBindings;
 };
+
+class CCVKGPUSemaphorePool
+{
+public:
+    CCVKGPUSemaphorePool(CCVKGPUDevice* device)
+        : _device(device)
+    {
+    }
+
+    ~CCVKGPUSemaphorePool()
+    {
+        for (auto semaphore : _semaphores)
+        {
+            vkDestroySemaphore(_device->vkDevice, semaphore, nullptr);
+        }
+        _semaphores.clear();
+        _count = 0;
+    }
+
+    VkSemaphore alloc()
+    {
+        if (_count < _semaphores.size())
+        {
+            return _semaphores[_count++];
+        }
+
+        VkSemaphore semaphore = VK_NULL_HANDLE;
+        VkSemaphoreCreateInfo createInfo{ VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO };
+        VK_CHECK(vkCreateSemaphore(_device->vkDevice, &createInfo, nullptr, &semaphore));
+        _semaphores.push_back(semaphore);
+        _count++;
+
+        return semaphore;
+    }
+
+    void clear()
+    {
+        _count = 0;
+    }
+
+    uint size()
+    {
+        return _count;
+    }
+
+private:
+    CCVKGPUDevice* _device;
+    uint _count = 0;
+    vector<VkSemaphore>::type _semaphores;
+};
+
 
 NS_CC_END
 

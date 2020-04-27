@@ -1,5 +1,5 @@
-#ifndef CC_GFXCCVK_COMMANDS_H_
-#define CC_GFXCCVK_COMMANDS_H_
+#ifndef CC_GFXVULKAN_COMMANDS_H_
+#define CC_GFXVULKAN_COMMANDS_H_
 
 #include "VKGPUObjects.h"
 
@@ -160,6 +160,8 @@ CC_VULKAN_API void CCVKCmdFuncGetDeviceQueue(CCVKDevice* device, CCVKGPUQueue* g
 CC_VULKAN_API void CCVKCmdFuncGetSwapchainTextures(CCVKDevice* device, std::vector<CCVKGPUTexture*>& gpuTextures);
 CC_VULKAN_API void CCVKCmdFuncCreateCommandPool(CCVKDevice* device, CCVKGPUCommandPool* gpuCommandPool);
 CC_VULKAN_API void CCVKCmdFuncDestroyCommandPool(CCVKDevice* device, CCVKGPUCommandPool* gpuCommandPool);
+CC_VULKAN_API void CCVKCmdFuncAllocateCommandBuffer(CCVKDevice* device, CCVKGPUCommandBuffer* gpuCommandBuffer);
+CC_VULKAN_API void CCVKCmdFuncFreeCommandBuffer(CCVKDevice* device, CCVKGPUCommandBuffer* gpuCommandBuffer);
 
 CC_VULKAN_API void CCVKCmdFuncCreateBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer);
 CC_VULKAN_API void CCVKCmdFuncDestroyBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer);
@@ -178,6 +180,11 @@ CC_VULKAN_API void CCVKCmdFuncCreateInputAssembler(CCVKDevice* device, CCVKGPUIn
 CC_VULKAN_API void CCVKCmdFuncDestroyInputAssembler(CCVKDevice* device, CCVKGPUInputAssembler* gpuInputAssembler);
 CC_VULKAN_API void CCVKCmdFuncCreateFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFBO);
 CC_VULKAN_API void CCVKCmdFuncDestroyFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFBO);
+
+CC_VULKAN_API void CCVKCmdFuncBegin(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
+CC_VULKAN_API void CCVKCmdFuncBeginRenderPass(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
+CC_VULKAN_API void CCVKCmdFuncEndRenderPass(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
+CC_VULKAN_API void CCVKCmdFuncEnd(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
 CC_VULKAN_API void CCVKCmdFuncExecuteCmds(CCVKDevice* device, CCVKCmdPackage* cmd_package);
 CC_VULKAN_API void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers, CCVKGPUTexture* gpuTexture, const GFXBufferTextureCopyList& regions);
 

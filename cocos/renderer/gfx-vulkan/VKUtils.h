@@ -5,6 +5,12 @@
 
 namespace
 {
+
+    template <typename T, size_t Size>
+    char(*countof_helper(T(&_Array)[Size]))[Size];
+
+    #define COUNTOF(array) (sizeof(*countof_helper(array)) + 0)
+
     template <class T>
     uint32_t toU32(T value)
     {

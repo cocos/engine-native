@@ -6,6 +6,7 @@ NS_CC_BEGIN
 class CCVKStateCache;
 class CCVKGPUDevice;
 class CCVKGPUSwapchain;
+class CCVKGPUSemaphorePool;
 
 class CC_VULKAN_API CCVKDevice : public GFXDevice
 {
@@ -46,13 +47,13 @@ public:
     }
 
     CC_INLINE CCVKGPUDevice* gpuDevice() const { return _gpuDevice; }
+    CC_INLINE CCVKGPUSemaphorePool* gpuSemaphorePool() { return _gpuSemaphorePool; }
     CC_INLINE const std::vector<const char *>& getLayers() const { return _layers; }
     CC_INLINE const std::vector<const char *>& getExtensions() const { return _extensions; }
 
 private:
-    void buildSwapchain();
-
     CCVKGPUDevice* _gpuDevice = nullptr;
+    CCVKGPUSemaphorePool* _gpuSemaphorePool = nullptr;
     std::vector<const char *> _layers;
     std::vector<const char *> _extensions;
 };

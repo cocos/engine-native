@@ -1,5 +1,5 @@
-#ifndef CC_GFXCCVK_STATE_CACHE_H_
-#define CC_GFXCCVK_STATE_CACHE_H_
+#ifndef CC_GFXVULKAN_STATE_CACHE_H_
+#define CC_GFXVULKAN_STATE_CACHE_H_
 
 #include "volk.h"
 
