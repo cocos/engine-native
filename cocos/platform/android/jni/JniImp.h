@@ -26,9 +26,6 @@
 
 #include <string>
 
-typedef void (*EditTextCallback)(const std::string& text, void* ctx);
-
-extern bool getApplicationExited();
 extern std::string getObbFilePathJNI();
 extern int getObbAssetFileDescriptorJNI(const std::string& path, long* startOffset, long* size);
 extern std::string getCurrentLanguageJNI();
