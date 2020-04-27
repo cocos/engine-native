@@ -37,12 +37,19 @@ bool CCMTLTexture::initialize(const GFXTextureInfo& info)
     if (_flags & GFXTextureFlags::BAKUP_BUFFER)
     {
         _buffer = (uint8_t*)CC_MALLOC(_size);
+        if(!_buffer)
+        {
+            _status = GFXStatus::FAILED;
+            CC_LOG_ERROR("CCMTLTexture: CC_MALLOC backup buffer failed.");
+            return false;
+        }
         _device->getMemoryStatus().textureSize += _size;
     }
     
     if (!createMTLTexture())
     {
         _status = GFXStatus::FAILED;
+        CC_LOG_ERROR("CCMTLTexture: create MTLTexture failed.");
         return false;
     }
     
@@ -135,10 +142,12 @@ void CCMTLTexture::resize(uint width, uint height)
     _size = GFXFormatSize(_format, _width, _height, _depth);
     if(!createMTLTexture())
     {
+        _status = GFXStatus::FAILED;
         _width = oldWidth;
         _height = oldHeight;
         _size = oldSize;
         _mtlTexture = oldMTLTexture;
+        CC_LOG_ERROR("CCMTLTexture: create MTLTexture failed when try to resize the texture.");
         return;
     }
     
@@ -150,9 +159,17 @@ void CCMTLTexture::resize(uint width, uint height)
     _device->getMemoryStatus().textureSize -= oldSize;
     if (_flags & GFXTextureFlags::BAKUP_BUFFER)
     {
+        const uint8_t* oldBuffer = _buffer;
+        uint8_t* buffer = (uint8_t*)CC_MALLOC(_size);
+        if(!buffer)
+        {
+            _status = GFXStatus::FAILED;
+            CC_LOG_ERROR("CCMTLTexture: CC_MALLOC backup buffer failed when try to resize the texture.");
+            return;
+        }
+        CC_FREE(oldBuffer);
+        _buffer = buffer;
         _device->getMemoryStatus().textureSize -= oldSize;
-        CC_FREE(_buffer);
-        _buffer = (uint8_t*)CC_MALLOC(_size);
         _device->getMemoryStatus().textureSize += _size;
     }
     
