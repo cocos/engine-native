@@ -88,11 +88,6 @@ std::string getObbFilePathJNI()
     return JniHelper::callStaticStringMethod(JCLS_HELPER, "getObbFilePath");
 }
 
-std::string getPackageNameJNI() 
-{
-    return JniHelper::callStaticStringMethod(JCLS_HELPER, "getPackageName");
-}
-
 int getObbAssetFileDescriptorJNI(const std::string& path, long* startOffset, long* size) 
 {
     JniMethodInfo methodInfo;

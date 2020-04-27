@@ -164,9 +164,6 @@ public class Cocos2dxHelper {
         return sBatteryReceiver.sBatteryLevel;
     }
     public static String getObbFilePath() { return Cocos2dxHelper.sObbFilePath; }
-    public static String getPackageName() {
-        return Cocos2dxHelper.sPackageName;
-    }
     public static String getWritablePath() {
         return Cocos2dxHelper.sFileDirectory;
     }
@@ -313,7 +310,7 @@ public class Cocos2dxHelper {
     private static void initializeOBBFile() {
         int versionCode = 1;
         try {
-            versionCode = sActivity.getPackageManager().getPackageInfo(Cocos2dxHelper.getPackageName(), 0).versionCode;
+            versionCode = sActivity.getPackageManager().getPackageInfo(Cocos2dxHelper.sPackageName, 0).versionCode;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
