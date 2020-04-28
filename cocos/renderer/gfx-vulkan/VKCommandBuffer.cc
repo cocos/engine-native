@@ -88,21 +88,22 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
     GFXClearFlags clearFlags, const std::vector<GFXColor>& colors, float depth, int stencil)
 {
     _curGPUFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
+    auto barriers = (_curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass)->beginBarriers;
+    auto barriersCount = barriers.size();
 
-    VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
-    barrier.srcAccessMask = 0;
-    barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    barrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barrier.image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->vkImage :
-        _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
-    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    barrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-    barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &barrier);
+    if (barriersCount)
+    {
+        for (uint32_t i = 0u; i < barriersCount - 1; i++)
+        {
+            barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
+                _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
+        }
+        barriers[barriersCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
+            _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
+        vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+            VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, barriers.size(), barriers.data());
+    }
 
     VkClearValue clearValues[2];
     clearValues[0].color = { colors[0].r, colors[0].g, colors[0].b, colors[0].a };
@@ -129,20 +130,23 @@ void CCVKCommandBuffer::endRenderPass()
 {
     vkCmdEndRenderPass(_gpuCommandBuffer->vkCommandBuffer);
 
-    VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
-    barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    barrier.dstAccessMask = 0;
-    barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-    barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barrier.image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->vkImage :
-        _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
-    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    barrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-    barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &barrier);
+    auto barriers = (_curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass)->endBarriers;
+    auto barriersCount = barriers.size();
+
+    if (barriers.size())
+    {
+        for (uint32_t i = 0u; i < barriersCount - 1; i++)
+        {
+            barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
+                _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
+        }
+        barriers[barriersCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
+            _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
+        vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+            0, nullptr, 0, nullptr, barriers.size(), barriers.data());
+    }
 
     _curGPUFBO = nullptr;
 }

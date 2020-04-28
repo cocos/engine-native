@@ -142,14 +142,15 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
         depthStecnilTexInfo.format = _context->getDepthStencilFormat();
         depthStecnilTexInfo.width = 1;
         depthStecnilTexInfo.height = 1;
-        auto texture = createTexture(depthStecnilTexInfo);
-        _depthStencilTextures.push_back((CCVKTexture*)texture);
+        auto texture = (CCVKTexture*)createTexture(depthStecnilTexInfo);
+        _depthStencilTextures.push_back(texture);
 
         GFXTextureViewInfo depthStecnilTexViewInfo;
         depthStecnilTexViewInfo.texture = texture;
         depthStecnilTexViewInfo.type = GFXTextureViewType::TV2D;
         depthStecnilTexViewInfo.format = _context->getDepthStencilFormat();
-        _depthStencilTextureViews.push_back((CCVKTextureView*)createTextureView(depthStecnilTexViewInfo));
+        auto textureView = (CCVKTextureView*)createTextureView(depthStecnilTexViewInfo);
+        _depthStencilTextureViews.push_back(textureView);
     }
 
     GFXRenderPassInfo renderPassInfo;
@@ -159,21 +160,22 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     colorAttachment.storeOp = GFXStoreOp::STORE;
     colorAttachment.sampleCount = 1;
     colorAttachment.beginLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
-    colorAttachment.endLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
+    colorAttachment.endLayout = GFXTextureLayout::PRESENT_SRC;
     renderPassInfo.colorAttachments.emplace_back(colorAttachment);
 
     GFXDepthStencilAttachment& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
-    renderPassInfo.depthStencilAttachment.format = _context->getDepthStencilFormat();
+    depthStencilAttachment.format = _context->getDepthStencilFormat();
     depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
     depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
     depthStencilAttachment.stencilLoadOp = GFXLoadOp::CLEAR;
     depthStencilAttachment.stencilStoreOp = GFXStoreOp::STORE;
     depthStencilAttachment.sampleCount = 1;
     depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    depthStencilAttachment.endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    depthStencilAttachment.endLayout = GFXTextureLayout::PRESENT_SRC;
 
     _renderPass = (CCVKRenderPass*)createRenderPass(renderPassInfo);
     _gpuSwapchain = CC_NEW(CCVKGPUSwapchain);
+    _gpuSwapchain->renderPass = _renderPass->gpuRenderPass();
 
     buildSwapchain();
 
@@ -244,6 +246,9 @@ void CCVKDevice::destroy()
     {
         if (_gpuSwapchain->vkSwapchain != VK_NULL_HANDLE)
         {
+            _gpuSwapchain->depthStencilImageViews.clear();
+            _gpuSwapchain->depthStencilImages.clear();
+
             for (auto framebuffer : _gpuSwapchain->vkSwapchainFramebuffers)
             {
                 vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
@@ -309,6 +314,9 @@ void CCVKDevice::buildSwapchain()
 
     if (context->swapchainCreateInfo.oldSwapchain != VK_NULL_HANDLE)
     {
+        _gpuSwapchain->depthStencilImageViews.clear();
+        _gpuSwapchain->depthStencilImages.clear();
+
         for (auto framebuffer : _gpuSwapchain->vkSwapchainFramebuffers)
         {
             vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
@@ -336,12 +344,15 @@ void CCVKDevice::buildSwapchain()
     for (uint32_t i = 0; i < imageCount; i++)
     {
         _depthStencilTextures[i]->resize(_width, _height);
+        _gpuSwapchain->depthStencilImages.push_back(((CCVKTexture*)_depthStencilTextures[i])->gpuTexture()->vkImage);
+
         _depthStencilTextureViews[i]->destroy();
         GFXTextureViewInfo textureViewInfo;
         textureViewInfo.texture = _depthStencilTextures[i];
         textureViewInfo.type = GFXTextureViewType::TV2D;
         textureViewInfo.format = _context->getDepthStencilFormat();
         _depthStencilTextureViews[i]->initialize(textureViewInfo);
+        _gpuSwapchain->depthStencilImageViews.push_back(((CCVKTextureView*)_depthStencilTextureViews[i])->gpuTexView()->vkImageView);
 
         VkImageViewCreateInfo imageViewCreateInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
         imageViewCreateInfo.image = _gpuSwapchain->swapchainImages[i];

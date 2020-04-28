@@ -37,18 +37,18 @@ bool CCVKWindow::initialize(const GFXWindowInfo &info)
     colorAttachment.storeOp = GFXStoreOp::STORE;
     colorAttachment.sampleCount = 1;
     colorAttachment.beginLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
-    colorAttachment.endLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
+    colorAttachment.endLayout = GFXTextureLayout::PRESENT_SRC;
     renderPassInfo.colorAttachments.emplace_back(colorAttachment);
 
     GFXDepthStencilAttachment& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
-    renderPassInfo.depthStencilAttachment.format = _depthStencilFmt;
+    depthStencilAttachment.format = _depthStencilFmt;
     depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
     depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
     depthStencilAttachment.stencilLoadOp = GFXLoadOp::CLEAR;
     depthStencilAttachment.stencilStoreOp = GFXStoreOp::STORE;
     depthStencilAttachment.sampleCount = 1;
     depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    depthStencilAttachment.endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    depthStencilAttachment.endLayout = GFXTextureLayout::PRESENT_SRC;
 
     _renderPass = _device->createRenderPass(renderPassInfo);
 

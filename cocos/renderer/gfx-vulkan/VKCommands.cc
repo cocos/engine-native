@@ -176,6 +176,28 @@ namespace
         }
     }
 
+    VkAccessFlags MapVkAccessFlags(GFXTextureLayout layout)
+    {
+        switch (layout)
+        {
+        case GFXTextureLayout::UNDEFINED: return 0;
+        case GFXTextureLayout::GENERAL: return 0;
+        case GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL: return VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        case GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL: return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        case GFXTextureLayout::DEPTH_STENCIL_READONLY_OPTIMAL: return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+        case GFXTextureLayout::SHADER_READONLY_OPTIMAL: return VK_ACCESS_SHADER_READ_BIT;
+        case GFXTextureLayout::TRANSFER_SRC_OPTIMAL: return VK_ACCESS_TRANSFER_READ_BIT;
+        case GFXTextureLayout::TRANSFER_DST_OPTIMAL: return VK_ACCESS_TRANSFER_WRITE_BIT;
+        case GFXTextureLayout::PREINITIALIZED: return 0;
+        case GFXTextureLayout::PRESENT_SRC: return 0;
+        default:
+        {
+            CCASSERT(false, "Unsupported GFXTextureLayout, convert to VkImageLayout failed.");
+            return 0;
+        }
+        }
+    }
+
     VkPipelineBindPoint MapVkPipelineBindPoint(GFXPipelineBindPoint bindPoint)
     {
         switch (bindPoint)
@@ -301,20 +323,54 @@ namespace
 void CCVKCmdFuncCreateRenderPass(CCVKDevice* device, CCVKGPURenderPass* gpuRenderPass)
 {
     uint32_t colorAttachmentCount = gpuRenderPass->colorAttachments.size();
-    std::vector<VkAttachmentDescription> attachmentDescriptions(colorAttachmentCount + 1);
+    vector<VkAttachmentDescription>::type attachmentDescriptions(colorAttachmentCount + 1);
+    gpuRenderPass->beginBarriers.resize(colorAttachmentCount + 1, { VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER });
+    gpuRenderPass->endBarriers.resize(colorAttachmentCount + 1, { VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER });
     for (uint32_t i = 0u; i < colorAttachmentCount; i++)
     {
         auto &attachment = gpuRenderPass->colorAttachments[i];
+        auto beginLayout = MapVkImageLayout(attachment.beginLayout);
+        auto endLayout = MapVkImageLayout(attachment.endLayout);
+        auto beginAccessMask = MapVkAccessFlags(attachment.beginLayout);
+        auto endAccessMask = MapVkAccessFlags(attachment.endLayout);
         attachmentDescriptions[i].format = MapVkFormat(attachment.format);
         attachmentDescriptions[i].samples = MapVkSampleCount(attachment.sampleCount);
         attachmentDescriptions[i].loadOp = MapVkLoadOp(attachment.loadOp);
         attachmentDescriptions[i].storeOp = MapVkStoreOp(attachment.storeOp);
         attachmentDescriptions[i].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         attachmentDescriptions[i].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        attachmentDescriptions[i].initialLayout = MapVkImageLayout(attachment.beginLayout);
-        attachmentDescriptions[i].finalLayout = MapVkImageLayout(attachment.endLayout);
+        attachmentDescriptions[i].initialLayout = beginLayout;
+        attachmentDescriptions[i].finalLayout = endLayout;
+
+        auto &beginBarrier = gpuRenderPass->beginBarriers[i];
+        beginBarrier.srcAccessMask = 0;
+        beginBarrier.dstAccessMask = beginAccessMask;
+        beginBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        beginBarrier.newLayout = beginLayout;
+        beginBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        beginBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        beginBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        beginBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+        beginBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+
+        auto &endBarrier = gpuRenderPass->endBarriers[i];
+        endBarrier.srcAccessMask = beginAccessMask;
+        endBarrier.dstAccessMask = endAccessMask;
+        endBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED; // TODO: we get a layout mismatch validation error if pass beginLayout here, probably a bug in the validation layer
+        endBarrier.newLayout = endLayout;
+        endBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        endBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        endBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        endBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+        endBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
     }
     auto &depthStencilAttachment = gpuRenderPass->depthStencilAttachment;
+    auto beginLayout = MapVkImageLayout(depthStencilAttachment.beginLayout);
+    auto endLayout = MapVkImageLayout(depthStencilAttachment.endLayout);
+    auto beginAccessMask = MapVkAccessFlags(depthStencilAttachment.beginLayout);
+    auto endAccessMask = MapVkAccessFlags(depthStencilAttachment.endLayout);
+    auto aspectMask = GFX_FORMAT_INFOS[(uint)depthStencilAttachment.format].hasStencil ?
+        VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT : VK_IMAGE_ASPECT_DEPTH_BIT;
     attachmentDescriptions[colorAttachmentCount].format = MapVkFormat(depthStencilAttachment.format);
     attachmentDescriptions[colorAttachmentCount].samples = MapVkSampleCount(depthStencilAttachment.sampleCount);
     attachmentDescriptions[colorAttachmentCount].loadOp = MapVkLoadOp(depthStencilAttachment.depthLoadOp);
@@ -324,9 +380,31 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice* device, CCVKGPURenderPass* gpuRende
     attachmentDescriptions[colorAttachmentCount].initialLayout = MapVkImageLayout(depthStencilAttachment.beginLayout);
     attachmentDescriptions[colorAttachmentCount].finalLayout = MapVkImageLayout(depthStencilAttachment.endLayout);
 
+    auto &beginBarrier = gpuRenderPass->beginBarriers[colorAttachmentCount];
+    beginBarrier.srcAccessMask = 0;
+    beginBarrier.dstAccessMask = beginAccessMask;
+    beginBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    beginBarrier.newLayout = beginLayout;
+    beginBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    beginBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    beginBarrier.subresourceRange.aspectMask = aspectMask;
+    beginBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    beginBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+
+    auto &endBarrier = gpuRenderPass->endBarriers[colorAttachmentCount];
+    endBarrier.srcAccessMask = beginAccessMask;
+    endBarrier.dstAccessMask = endAccessMask;
+    endBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED; // TODO: we get a layout mismatch validation error if pass beginLayout here, probably a bug in the validation layer
+    endBarrier.newLayout = endLayout;
+    endBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    endBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    endBarrier.subresourceRange.aspectMask = aspectMask;
+    endBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+    endBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+
     uint32_t subpassCount = gpuRenderPass->subPasses.size();
-    std::vector<VkSubpassDescription> subpassDescriptions(1, { VK_PIPELINE_BIND_POINT_GRAPHICS });
-    std::vector<VkAttachmentReference> attachmentReferences;
+    vector<VkSubpassDescription>::type subpassDescriptions(1, { VK_PIPELINE_BIND_POINT_GRAPHICS });
+    vector<VkAttachmentReference>::type attachmentReferences;
     if (subpassCount) // pass on user-specified subpasses
     {
         subpassDescriptions.resize(subpassCount);
@@ -392,10 +470,6 @@ void CCVKCmdFuncGetDeviceQueue(CCVKDevice* device, CCVKGPUQueue* gpuQueue)
             break;
         }
     }
-}
-
-void CCVKCmdFuncGetSwapchainTextures(CCVKDevice* device, std::vector<CCVKGPUTexture*>& textures)
-{
 }
 
 void CCVKCmdFuncCreateCommandPool(CCVKDevice* device, CCVKGPUCommandPool* gpuCommandPool)
@@ -586,7 +660,7 @@ void CCVKCmdFuncCreateFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFBO
     }
 
     uint32_t colorViewCount = gpuFBO->gpuColorViews.size();
-    std::vector<VkImageView> attachments(colorViewCount + (gpuFBO->gpuDepthStencilView ? 1 : 0));
+    vector<VkImageView>::type attachments(colorViewCount + (gpuFBO->gpuDepthStencilView ? 1 : 0));
     for (uint32_t i = 0u; i < colorViewCount; i++)
     {
         attachments[i] = gpuFBO->gpuColorViews[i]->vkImageView;

@@ -32,14 +32,29 @@ public:
     vector<VkExtensionProperties>::type extensions;
 };
 
+class CCVKGPURenderPass : public Object
+{
+public:
+    GFXColorAttachmentList colorAttachments;
+    GFXDepthStencilAttachment depthStencilAttachment;
+    GFXSubPassList subPasses;
+    VkRenderPass vkRenderPass;
+    vector<VkImageMemoryBarrier>::type beginBarriers;
+    vector<VkImageMemoryBarrier>::type endBarriers;
+};
+
 class CCVKGPUSwapchain
 {
 public:
     uint32_t curImageIndex;
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
-    vector<VkImage>::type swapchainImages;
     vector<VkImageView>::type vkSwapchainImageViews;
     vector<VkFramebuffer>::type vkSwapchainFramebuffers;
+    // external references
+    vector<VkImage>::type swapchainImages;
+    vector<VkImage>::type depthStencilImages;
+    vector<VkImageView>::type depthStencilImageViews;
+    CCVKGPURenderPass* renderPass;
 };
 
 class CCVKGPUCommandPool : public Object
@@ -250,15 +265,6 @@ public:
     //map<GLuint, GLuint>::type glVAOs;
 };
 
-class CCVKGPURenderPass : public Object
-{
-public:
-    GFXColorAttachmentList colorAttachments;
-    GFXDepthStencilAttachment depthStencilAttachment;
-    GFXSubPassList subPasses;
-    VkRenderPass vkRenderPass;
-};
-
 class CCVKGPUFramebuffer : public Object
 {
 public:
@@ -354,7 +360,6 @@ private:
     uint _count = 0;
     vector<VkSemaphore>::type _semaphores;
 };
-
 
 NS_CC_END
 
