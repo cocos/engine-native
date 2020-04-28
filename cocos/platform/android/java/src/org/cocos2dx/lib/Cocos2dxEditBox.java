@@ -26,6 +26,7 @@ THE SOFTWARE.
 package org.cocos2dx.lib;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -83,6 +84,7 @@ public class Cocos2dxEditBox {
         private boolean keyboardVisible = false;
         private int mScreenHeight;
         private int mTopMargin = 0;
+        private int mOrientation;
 
         public  Cocos2dxEditText(Cocos2dxActivity context){
             super(context);
@@ -95,6 +97,7 @@ public class Cocos2dxEditBox {
             mPaint.setStrokeWidth(mLineWidth);
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setColor(mLineColor);
+            mOrientation = this.getResources().getConfiguration().orientation;
 
             mTextWatcher = new TextWatcher() {
                 @Override
@@ -128,6 +131,16 @@ public class Cocos2dxEditBox {
                     getScrollX() + this.getWidth(),
                     this.getHeight() - padB / 2 - mLineWidth, mPaint);
             super.onDraw(canvas);
+        }
+
+        @Override
+        protected void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+            int newOrientation = newConfig.orientation;
+            if (mOrientation != newOrientation) {
+                mOrientation = newOrientation;
+                mTopMargin = 0;  // clear top margin cache
+            }
         }
 
         /***************************************************************************************
