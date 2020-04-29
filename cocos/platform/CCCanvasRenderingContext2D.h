@@ -78,7 +78,8 @@ public:
     // callback
     using CanvasBufferUpdatedCallback = std::function<void(const Data&)>;
     void setCanvasBufferUpdatedCallback(const CanvasBufferUpdatedCallback& cb);
-
+    void setPremultiply(bool multiply);
+    
     // functions for properties
     void set__width(float width);
     void set__height(float height);
@@ -134,6 +135,7 @@ private:
     CanvasRenderingContext2DImpl* _impl = nullptr;
 
     bool _isBufferSizeDirty = true;
+    bool _premultiply = false;
 };
 
 NS_CC_END

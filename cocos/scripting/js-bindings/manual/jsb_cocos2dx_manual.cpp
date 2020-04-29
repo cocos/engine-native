@@ -469,6 +469,25 @@ static bool js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback(se::State
 }
 SE_BIND_FUNC(js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback)
 
+static bool js_CanvasRenderingContext2D_setPremultiply(se::State& s)
+{
+    cocos2d::CanvasRenderingContext2D* cobj = (cocos2d::CanvasRenderingContext2D*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_CanvasRenderingContext2D_setPremultiply : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        bool arg0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_CanvasRenderingContext2D_setPremultiply : Error processing arguments");
+        cobj->setPremultiply(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_CanvasRenderingContext2D_setPremultiply)
+
 static se::Object* __deviceMotionObject = nullptr;
 static bool JSB_getDeviceMotionValue(se::State& s)
 {
@@ -530,6 +549,8 @@ static bool register_canvas_context2d(se::Object* obj)
     _SE_DEFINE_PROP(CanvasRenderingContext2D, globalCompositeOperation)
 
     __jsb_cocos2d_CanvasRenderingContext2D_proto->defineFunction("_setCanvasBufferUpdatedCallback", _SE(js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback));
+    
+    __jsb_cocos2d_CanvasRenderingContext2D_proto->defineFunction("_setPremultiply", _SE(js_CanvasRenderingContext2D_setPremultiply));
 
     se::ScriptEngine::getInstance()->clearException();
 

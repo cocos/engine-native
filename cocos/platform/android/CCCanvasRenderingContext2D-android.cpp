@@ -214,6 +214,11 @@ public:
     {
         return _data;
     }
+
+    void setPremultiply(bool multiply)
+    {
+        _premultiply = multiply;
+    }
     
 #define CLAMP(V, HI) std::min( (V), (HI) )
     void unMultiplyAlpha(unsigned char* ptr, ssize_t size)
@@ -243,7 +248,10 @@ public:
         jsize len  = JniHelper::getEnv()->GetArrayLength(arr);
         jbyte* jbarray = (jbyte *)malloc(len * sizeof(jbyte));
         JniHelper::getEnv()->GetByteArrayRegion(arr,0,len,jbarray);
-        unMultiplyAlpha( (unsigned char*) jbarray, len);
+        if (!_premultiply)
+        {
+            unMultiplyAlpha( (unsigned char*) jbarray, len);
+        }
         _data.fastSet((unsigned char*) jbarray, len); //IDEA: DON'T create new jbarray every time.
         JniHelper::getEnv()->DeleteLocalRef(arr);
     }
@@ -253,6 +261,7 @@ private:
     Data _data;
     float _bufferWidth = 0.0f;
     float _bufferHeight = 0.0f;
+    bool _premultiply = true;
 };
 
 namespace {
@@ -431,6 +440,11 @@ void CanvasRenderingContext2D::restore()
 void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBufferUpdatedCallback& cb)
 {
     _canvasBufferUpdatedCB = cb;
+}
+
+void CanvasRenderingContext2D::setPremultiply(bool multiply)
+{
+    _impl->setPremultiply(multiply);
 }
 
 void CanvasRenderingContext2D::set__width(float width)
