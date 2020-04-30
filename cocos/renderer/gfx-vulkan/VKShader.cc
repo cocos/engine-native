@@ -5,10 +5,12 @@
 NS_CC_BEGIN
 
 CCVKShader::CCVKShader(GFXDevice* device)
-    : GFXShader(device) {
+    : GFXShader(device)
+{
 }
 
-CCVKShader::~CCVKShader() {
+CCVKShader::~CCVKShader()
+{
 }
 
 bool CCVKShader::initialize(const GFXShaderInfo &info)
@@ -29,19 +31,21 @@ bool CCVKShader::initialize(const GFXShaderInfo &info)
     }
 
     CCVKCmdFuncCreateShader((CCVKDevice*)_device, _gpuShader);
-    
+
     _status = GFXStatus::SUCCESS;
 
     return true;
 }
 
-void CCVKShader::destroy() {
-  if (_gpuShader) {
-    CCVKCmdFuncDestroyShader((CCVKDevice*)_device, _gpuShader);
-    CC_DELETE(_gpuShader);
-    _gpuShader = nullptr;
-  }
-    
+void CCVKShader::destroy()
+{
+    if (_gpuShader)
+    {
+        CCVKCmdFuncDestroyShader((CCVKDevice*)_device, _gpuShader);
+        CC_DELETE(_gpuShader);
+        _gpuShader = nullptr;
+    }
+
     _status = GFXStatus::UNREADY;
 }
 

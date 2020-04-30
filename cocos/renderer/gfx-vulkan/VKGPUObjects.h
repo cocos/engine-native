@@ -39,6 +39,7 @@ public:
     GFXDepthStencilAttachment depthStencilAttachment;
     GFXSubPassList subPasses;
     VkRenderPass vkRenderPass;
+    vector<VkClearValue>::type clearValues;
     vector<VkImageMemoryBarrier>::type beginBarriers;
     vector<VkImageMemoryBarrier>::type endBarriers;
 };
@@ -92,9 +93,9 @@ public:
     uint size = 0;
     uint stride = 0;
     uint count = 0;
-    //GLenum glTarget = 0;
-    //GLuint glBuffer = 0;
-    uint8_t* buffer = nullptr;
+    VkBuffer vkBuffer = VK_NULL_HANDLE;
+    VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
+    void* buffer = nullptr;
     GFXDrawInfoList indirects;
 };
 typedef vector<CCVKGPUBuffer*>::type CCVKGPUBufferList;
@@ -215,13 +216,12 @@ struct CCVKGPUShaderStage
         : type(t)
         , source(s)
         , macros(m)
-        //, glShader(shader)
     {
     }
     GFXShaderType type;
     String source;
     GFXShaderMacroList macros;
-    //GLuint glShader = 0;
+    VkShaderModule vkShader = VK_NULL_HANDLE;
 };
 typedef vector<CCVKGPUShaderStage>::type CCVKGPUShaderStageList;
 
@@ -231,11 +231,10 @@ public:
     String name;
     GFXUniformBlockList blocks;
     GFXUniformSamplerList samplers;
-    //GLuint glProgram = 0;
     CCVKGPUShaderStageList gpuStages;
-    CCVKGPUInputList glInputs;
-    CCVKGPUUniformBlockList glBlocks;
-    CCVKGPUUniformSamplerList glSamplers;
+    CCVKGPUInputList gpuInputs;
+    CCVKGPUUniformBlockList gpuBlocks;
+    CCVKGPUUniformSamplerList gpuSamplers;
 };
 
 struct CCVKGPUAttribute
@@ -260,9 +259,8 @@ public:
     CCVKGPUBufferList gpuVertexBuffers;
     CCVKGPUBuffer* gpuIndexBuffer = nullptr;
     CCVKGPUBuffer* gpuIndirectBuffer = nullptr;
-    CCVKGPUAttributeList glAttribs;
-    //GLenum glIndexType = 0;
-    //map<GLuint, GLuint>::type glVAOs;
+    vector<VkBuffer>::type vertexBuffers;
+    vector<VkDeviceSize>::type vertexBufferOffsets;
 };
 
 class CCVKGPUFramebuffer : public Object
@@ -274,24 +272,6 @@ public:
     VkFramebuffer vkFramebuffer = VK_NULL_HANDLE;
     bool isOffscreen = false;
     CCVKGPUSwapchain* swapchain = nullptr;
-};
-
-class CCVKGPUPipelineLayout : public Object
-{
-public:
-};
-
-class CCVKGPUPipelineState : public Object
-{
-public:
-    //GLenum glPrimitive = GL_TRIANGLES;
-    CCVKGPUShader* gpuShader = nullptr;
-    GFXRasterizerState rs;
-    GFXDepthStencilState dss;
-    GFXBlendState bs;
-    GFXDynamicStateList dynamicStates;
-    CCVKGPUPipelineLayout* gpuLayout = nullptr;
-    CCVKGPURenderPass* gpuRenderPass = nullptr;
 };
 
 struct CCVKGPUBinding
@@ -309,6 +289,31 @@ class CCVKGPUBindingLayout : public Object
 {
 public:
     CCVKGPUBindingList gpuBindings;
+    VkDescriptorSetLayout vkDescriptorSetLayout;
+};
+
+class CCVKGPUPipelineLayout : public Object
+{
+public:
+    GFXPushConstantRangeList pushConstantRanges;
+    vector<CCVKGPUBindingLayout*>::type gpuBindingLayouts;
+    VkPipelineLayout vkPipelineLayout;
+};
+
+class CCVKGPUPipelineState : public Object
+{
+public:
+    GFXPrimitiveMode primitive = GFXPrimitiveMode::TRIANGLE_LIST;
+    CCVKGPUShader* gpuShader = nullptr;
+    GFXInputState inputState;
+    GFXRasterizerState rs;
+    GFXDepthStencilState dss;
+    GFXBlendState bs;
+    GFXDynamicStateList dynamicStates;
+    CCVKGPUPipelineLayout* gpuLayout = nullptr;
+    CCVKGPURenderPass* gpuRenderPass = nullptr;
+    VkPipeline vkPipeline = VK_NULL_HANDLE;
+    VkPipelineCache vkPipelineCache = VK_NULL_HANDLE;
 };
 
 class CCVKGPUSemaphorePool

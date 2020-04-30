@@ -210,6 +210,18 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
         deviceExtensions += extension + String(" ");
     }
 
+    String compressedFmts;
+    if (deviceFeatures.textureCompressionETC2)
+    {
+        _features[(int)GFXFeature::FORMAT_ETC2] = true;
+        compressedFmts += "etc2 ";
+    }
+    if (deviceFeatures.textureCompressionASTC_LDR)
+    {
+        _features[(int)GFXFeature::FORMAT_ASTC] = true;
+        compressedFmts += "astc ";
+    }
+
     CC_LOG_INFO("Vulkan device initialized.");
     CC_LOG_INFO("DEVICE_NAME: %s", context->physicalDeviceProperties.deviceName);
     CC_LOG_INFO("VULKAN_VERSION: %d.%d", ((CCVKContext*)_context)->majorVersion(), ((CCVKContext*)_context)->minorVersion());
@@ -219,6 +231,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     CC_LOG_INFO("INSTANCE_EXTENSIONS: %s", instanceExtensions.c_str());
     CC_LOG_INFO("DEVICE_LAYERS: %s", deviceLayers.c_str());
     CC_LOG_INFO("DEVICE_EXTENSIONS: %s", deviceExtensions.c_str());
+    CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressedFmts.c_str());
 
     this->begin();
 

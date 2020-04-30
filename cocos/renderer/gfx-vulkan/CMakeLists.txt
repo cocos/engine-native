@@ -6,17 +6,19 @@ message(STATUS "Target: ${TARGET_NAME}...")
 
 set(INCLUDE_FILES
   ${GFX_EXTERNAL_PATH}/khronos
-  ${GFX_EXTERNAL_PATH}/volk
-  ${GFX_EXTERNAL_PATH}/glsl_optimizer/src
-  ${GFX_EXTERNAL_PATH}/glsl_optimizer/src/mesa
+  ${GFX_EXTERNAL_PATH}/glslang
   ${COCOS_SRC_PATH}/renderer/core
   ${COCOS_SRC_PATH}/renderer/gfx-vulkan
 )
 
+add_subdirectory(${GFX_EXTERNAL_PATH}/glslang glslang)
+
 if(WIN32)
 	add_definitions("-DVK_USE_PLATFORM_WIN32_KHR")
 	add_definitions("-DNOMINMAX")
-elseif(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
+elseif(COCOS_PLATFORM_IOS)
+	add_definitions("-DVK_USE_PLATFORM_IOS_MVK")
+elseif(COCOS_PLATFORM_OSX)
 	add_definitions("-DVK_USE_PLATFORM_MACOS_MVK")
 else()
 	add_definitions("-DVK_USE_PLATFORM_XLIB_KHR")
@@ -75,7 +77,7 @@ else()
 	add_library(${TARGET_NAME} SHARED ${HEADER_FILES} ${ALL_FILES})
 endif()
 
-target_link_libraries(${TARGET_NAME} Core)
+target_link_libraries(${TARGET_NAME} Core glslang SPIRV)
 
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME CCGFXVulkan)
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME_DEBUG CCGFXVulkan_d)

@@ -31,7 +31,7 @@ public:
     void setBlendConstants(const GFXColor& constants);
     void setDepthBound(float min_bounds, float max_bounds);
     void setStencilWriteMask(GFXStencilFace face, uint mask);
-    void setStencilCompareMask(GFXStencilFace face, int ref, uint mask);
+    void setStencilCompareMask(GFXStencilFace face, int reference, uint mask);
     void draw(GFXInputAssembler* ia);
     void updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset);
     void copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions);

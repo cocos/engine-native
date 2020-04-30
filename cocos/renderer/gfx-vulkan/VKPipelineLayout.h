@@ -5,18 +5,19 @@ NS_CC_BEGIN
 
 class CCVKGPUPipelineLayout;
 
-class CC_VULKAN_API CCVKPipelineLayout : public GFXPipelineLayout {
- public:
-  CCVKPipelineLayout(GFXDevice* device);
-  ~CCVKPipelineLayout();
-  
- public:
-  bool initialize(const GFXPipelineLayoutInfo& info);
-  void destroy();
-  
-  CC_INLINE CCVKGPUPipelineLayout* gpuPipelineLayout() const { return _gpuPipelineLayout; }
- private:
-  CCVKGPUPipelineLayout* _gpuPipelineLayout = nullptr;
+class CC_VULKAN_API CCVKPipelineLayout : public GFXPipelineLayout
+{
+public:
+    CCVKPipelineLayout(GFXDevice* device);
+    ~CCVKPipelineLayout();
+
+public:
+    bool initialize(const GFXPipelineLayoutInfo& info);
+    void destroy();
+
+    CC_INLINE CCVKGPUPipelineLayout* gpuPipelineLayout() const { return _gpuPipelineLayout; }
+private:
+    CCVKGPUPipelineLayout* _gpuPipelineLayout = nullptr;
 };
 
 NS_CC_END

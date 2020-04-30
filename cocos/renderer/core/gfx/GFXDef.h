@@ -621,7 +621,7 @@ struct GFXViewport {
   uint width = 0;
   uint height = 0;
   float minDepth = 0.0f;
-  float maxDepth = 0.0f;
+  float maxDepth = 1.0f;
     
     bool operator ==(const GFXViewport& rs)
     {

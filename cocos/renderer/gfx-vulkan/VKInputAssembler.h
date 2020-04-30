@@ -4,23 +4,21 @@
 NS_CC_BEGIN
 
 class CCVKGPUInputAssembler;
-class CCVKCmdDraw;
 
-class CC_VULKAN_API CCVKInputAssembler : public GFXInputAssembler {
- public:
-  CCVKInputAssembler(GFXDevice* device);
-  ~CCVKInputAssembler();
-  
- public:
-  bool initialize(const GFXInputAssemblerInfo& info);
-  void destroy();
-  
-  void ExtractCmdDraw(CCVKCmdDraw* cmd);
-  
-  CC_INLINE CCVKGPUInputAssembler* gpuInputAssembler() const { return _gpuInputAssembler; }
-  
- private:
-  CCVKGPUInputAssembler* _gpuInputAssembler = nullptr;
+class CC_VULKAN_API CCVKInputAssembler : public GFXInputAssembler
+{
+public:
+    CCVKInputAssembler(GFXDevice* device);
+    ~CCVKInputAssembler();
+
+public:
+    bool initialize(const GFXInputAssemblerInfo& info);
+    void destroy();
+
+    CC_INLINE CCVKGPUInputAssembler* gpuInputAssembler() const { return _gpuInputAssembler; }
+
+private:
+    CCVKGPUInputAssembler* _gpuInputAssembler = nullptr;
 };
 
 NS_CC_END

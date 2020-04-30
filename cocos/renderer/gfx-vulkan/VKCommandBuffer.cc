@@ -88,26 +88,27 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
     GFXClearFlags clearFlags, const std::vector<GFXColor>& colors, float depth, int stencil)
 {
     _curGPUFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
-    auto barriers = (_curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass)->beginBarriers;
-    auto barriersCount = barriers.size();
+    auto &renderPass = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass;
+    auto &barriers = renderPass->beginBarriers;
+    auto &clearValues = renderPass->clearValues;
+    auto attachmentCount = barriers.size();
 
-    if (barriersCount)
+    if (attachmentCount)
     {
-        for (uint32_t i = 0u; i < barriersCount - 1; i++)
+        for (uint32_t i = 0u; i < attachmentCount - 1; i++)
         {
             barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
                 _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
+            clearValues[i].color = { colors[i].r, colors[i].g, colors[i].b, colors[i].a };
         }
-        barriers[barriersCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
+        barriers[attachmentCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
             _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
+        clearValues[attachmentCount - 1].depthStencil = { depth, (uint32_t)stencil };
+
         vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
             VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, barriers.size(), barriers.data());
     }
-
-    VkClearValue clearValues[2];
-    clearValues[0].color = { colors[0].r, colors[0].g, colors[0].b, colors[0].a };
-    clearValues[1].depthStencil = { depth, (uint32_t)stencil };
 
     VkRenderPassBeginInfo passBeginInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
     passBeginInfo.renderPass = _curGPUFBO->gpuRenderPass->vkRenderPass;
@@ -115,33 +116,36 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
         _curGPUFBO->swapchain->vkSwapchainFramebuffers[_curGPUFBO->swapchain->curImageIndex];
     passBeginInfo.renderArea.extent.width = renderArea.width;
     passBeginInfo.renderArea.extent.height = renderArea.height;
-    passBeginInfo.clearValueCount = 2;
-    passBeginInfo.pClearValues = clearValues;
+    passBeginInfo.clearValueCount = clearValues.size();
+    passBeginInfo.pClearValues = clearValues.data();
+
     vkCmdBeginRenderPass(_gpuCommandBuffer->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    //VkViewport viewport = { 0, 0, float(renderArea.width), float(renderArea.height), 0, 1 };
-    //VkRect2D scissor = { { 0, 0 }, { uint32_t(renderArea.width), uint32_t(renderArea.height) } };
+    VkViewport viewport{ (float)renderArea.x, (float)(renderArea.height - renderArea.y), (float)renderArea.width, -(float)renderArea.height, 0, 1 };
+    vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
 
-    //vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
-    //vkCmdSetScissor(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &scissor);
+    VkRect2D scissor{ { renderArea.x, renderArea.y }, { renderArea.width, renderArea.height } };
+    vkCmdSetScissor(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &scissor);
 }
 
 void CCVKCommandBuffer::endRenderPass()
 {
     vkCmdEndRenderPass(_gpuCommandBuffer->vkCommandBuffer);
 
-    auto barriers = (_curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass)->endBarriers;
-    auto barriersCount = barriers.size();
+    auto &renderPass = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass;
+    auto &barriers = renderPass->endBarriers;
+    auto attachmentCount = barriers.size();
 
-    if (barriers.size())
+    if (attachmentCount)
     {
-        for (uint32_t i = 0u; i < barriersCount - 1; i++)
+        for (uint32_t i = 0u; i < attachmentCount - 1; i++)
         {
             barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
                 _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
         }
-        barriers[barriersCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
+        barriers[attachmentCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
             _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
+
         vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
             VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
@@ -154,9 +158,9 @@ void CCVKCommandBuffer::endRenderPass()
 void CCVKCommandBuffer::bindPipelineState(GFXPipelineState* pso)
 {
     _curGPUPipelineState = ((CCVKPipelineState*)pso)->gpuPipelineState();
+    vkCmdBindPipeline(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _curGPUPipelineState->vkPipeline);
     _isStateInvalid = true;
 }
-
 
 void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout* layout)
 {
@@ -166,33 +170,35 @@ void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout* layout)
 
 void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler* ia)
 {
-    _curGPUInputAssember = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
-    _isStateInvalid = true;
+    auto gpuInputAssembler = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
+
+    vkCmdBindVertexBuffers(_gpuCommandBuffer->vkCommandBuffer, 0, gpuInputAssembler->vertexBuffers.size(),
+        gpuInputAssembler->vertexBuffers.data(), gpuInputAssembler->vertexBufferOffsets.data());
+
+    if (gpuInputAssembler->gpuIndexBuffer)
+    {
+        vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->vkBuffer, 0,
+            gpuInputAssembler->gpuIndexBuffer->stride == 32 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
+    }
 }
 
 void CCVKCommandBuffer::setViewport(const GFXViewport& vp)
 {
-    if ((_curViewport.left != vp.left) ||
-        (_curViewport.top != vp.top) ||
-        (_curViewport.width != vp.width) ||
-        (_curViewport.height != vp.height) ||
-        math::IsNotEqualF(_curViewport.minDepth, vp.minDepth) ||
-        math::IsNotEqualF(_curViewport.maxDepth, vp.maxDepth))
+    if (_curViewport != vp)
     {
         _curViewport = vp;
-        _isStateInvalid = true;
+        VkViewport viewport{ (float)vp.left, (float)vp.top, (float)vp.width, (float)vp.height, vp.minDepth, vp.maxDepth };
+        vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
     }
 }
 
 void CCVKCommandBuffer::setScissor(const GFXRect& rect)
 {
-    if ((_curScissor.x != rect.x) ||
-        (_curScissor.y != rect.y) ||
-        (_curScissor.width != rect.width) ||
-        (_curScissor.height != rect.height))
+    if (_curScissor != rect)
     {
         _curScissor = rect;
-        _isStateInvalid = true;
+        VkRect2D scissor{ { rect.x, rect.y }, { rect.width, rect.height } };
+        vkCmdSetScissor(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &scissor);
     }
 }
 
@@ -201,7 +207,7 @@ void CCVKCommandBuffer::setLineWidth(const float width)
     if (math::IsNotEqualF(_curLineWidth, width))
     {
         _curLineWidth = width;
-        _isStateInvalid = true;
+        vkCmdSetLineWidth(_gpuCommandBuffer->vkCommandBuffer, width);
     }
 }
 
@@ -214,7 +220,7 @@ void CCVKCommandBuffer::setDepthBias(float constant, float clamp, float slope)
         _curDepthBias.constant = constant;
         _curDepthBias.clamp = clamp;
         _curDepthBias.slope = slope;
-        _isStateInvalid = true;
+        vkCmdSetDepthBias(_gpuCommandBuffer->vkCommandBuffer, constant, clamp, slope);
     }
 }
 
@@ -229,18 +235,18 @@ void CCVKCommandBuffer::setBlendConstants(const GFXColor& constants)
         _curBlendConstants.g = constants.g;
         _curBlendConstants.b = constants.b;
         _curBlendConstants.a = constants.a;
-        _isStateInvalid = true;
+        vkCmdSetBlendConstants(_gpuCommandBuffer->vkCommandBuffer, reinterpret_cast<const float*>(&constants));
     }
 }
 
-void CCVKCommandBuffer::setDepthBound(float min_bounds, float max_bounds)
+void CCVKCommandBuffer::setDepthBound(float minBounds, float maxBounds)
 {
-    if (math::IsNotEqualF(_curDepthBounds.min_bounds, min_bounds) ||
-        math::IsNotEqualF(_curDepthBounds.max_bounds, max_bounds))
+    if (math::IsNotEqualF(_curDepthBounds.minBounds, minBounds) ||
+        math::IsNotEqualF(_curDepthBounds.maxBounds, maxBounds))
     {
-        _curDepthBounds.min_bounds = min_bounds;
-        _curDepthBounds.max_bounds = max_bounds;
-        _isStateInvalid = true;
+        _curDepthBounds.minBounds = minBounds;
+        _curDepthBounds.maxBounds = maxBounds;
+        vkCmdSetDepthBounds(_gpuCommandBuffer->vkCommandBuffer, minBounds, maxBounds);
     }
 }
 
@@ -251,20 +257,24 @@ void CCVKCommandBuffer::setStencilWriteMask(GFXStencilFace face, uint mask)
     {
         _curStencilWriteMask.face = face;
         _curStencilWriteMask.write_mask = mask;
-        _isStateInvalid = true;
+        vkCmdSetStencilWriteMask(_gpuCommandBuffer->vkCommandBuffer,
+            face == GFXStencilFace::FRONT ? VK_STENCIL_FACE_FRONT_BIT : VK_STENCIL_FACE_BACK_BIT, mask);
     }
 }
 
-void CCVKCommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uint mask)
+void CCVKCommandBuffer::setStencilCompareMask(GFXStencilFace face, int reference, uint mask)
 {
     if ((_curStencilCompareMask.face != face) ||
-        (_curStencilCompareMask.refrence != ref) ||
-        (_curStencilCompareMask.compare_mask != mask))
+        (_curStencilCompareMask.reference != reference) ||
+        (_curStencilCompareMask.compareMask != mask))
     {
         _curStencilCompareMask.face = face;
-        _curStencilCompareMask.refrence = ref;
-        _curStencilCompareMask.compare_mask = mask;
-        _isStateInvalid = true;
+        _curStencilCompareMask.reference = reference;
+        _curStencilCompareMask.compareMask = mask;
+
+        VkStencilFaceFlagBits vkFace = (face == GFXStencilFace::FRONT ? VK_STENCIL_FACE_FRONT_BIT : VK_STENCIL_FACE_BACK_BIT);
+        vkCmdSetStencilReference(_gpuCommandBuffer->vkCommandBuffer, vkFace, reference);
+        vkCmdSetStencilCompareMask(_gpuCommandBuffer->vkCommandBuffer, vkFace, mask);
     }
 }
 
@@ -278,6 +288,28 @@ void CCVKCommandBuffer::draw(GFXInputAssembler* ia)
             BindStates();
         }
 
+        CCVKGPUInputAssembler* gpuInputAssembler = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
+        GFXDrawInfo drawInfo;
+
+        if (gpuInputAssembler->gpuIndirectBuffer)
+        {
+            // TODO
+        }
+        else
+        {
+            ((CCVKInputAssembler*)ia)->extractDrawInfo(drawInfo);
+
+            if (gpuInputAssembler->gpuIndexBuffer && drawInfo.indexCount >= 0)
+            {
+                vkCmdDrawIndexed(_gpuCommandBuffer->vkCommandBuffer, drawInfo.indexCount, std::max(drawInfo.instanceCount, 1u),
+                    drawInfo.firstIndex, drawInfo.vertexOffset, drawInfo.firstInstance);
+            }
+            else
+            {
+                vkCmdDraw(_gpuCommandBuffer->vkCommandBuffer, drawInfo.vertexCount, std::max(drawInfo.instanceCount, 1u),
+                    drawInfo.firstVertex, drawInfo.firstInstance);
+            }
+        }
     }
     else
     {

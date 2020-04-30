@@ -7,36 +7,42 @@ NS_CC_BEGIN
 
 class CCVKDevice;
 
-struct CCVKDepthBias {
+struct CCVKDepthBias
+{
     float constant = 0.0f;
     float clamp = 0.0f;
     float slope = 0.0f;
 };
 
-struct CCVKDepthBounds {
-    float min_bounds = 0.0f;
-    float max_bounds = 0.0f;
+struct CCVKDepthBounds
+{
+    float minBounds = 0.0f;
+    float maxBounds = 0.0f;
 };
 
-struct CCVKStencilWriteMask {
+struct CCVKStencilWriteMask
+{
     GFXStencilFace face = GFXStencilFace::FRONT;
     uint32_t write_mask = 0;
 };
 
-struct CCVKStencilCompareMask {
+struct CCVKStencilCompareMask
+{
     GFXStencilFace face = GFXStencilFace::FRONT;
-    int refrence = 0;
-    uint32_t compare_mask = 0;
+    int reference = 0;
+    uint32_t compareMask = 0;
 };
 
-struct CCVKTextureSubres {
+struct CCVKTextureSubres
+{
     uint baseMipLevel = 0;
     uint levelCount = 1;
     uint baseArrayLayer = 0;
     uint layerCount = 1;
 };
 
-struct CCVKBufferTextureCopy {
+struct CCVKBufferTextureCopy
+{
     uint buffOffset = 0;
     uint buffStride = 0;
     uint buffTexHeight = 0;
@@ -45,7 +51,8 @@ struct CCVKBufferTextureCopy {
     CCVKTextureSubres texSubres;
 };
 
-class CCVKCmdBeginRenderPass : public GFXCmd {
+class CCVKCmdBeginRenderPass : public GFXCmd
+{
 public:
     CCVKGPUFramebuffer* gpuFBO = nullptr;
     GFXRect render_area;
@@ -77,7 +84,8 @@ enum class CCVKState : uint8_t
     COUNT,
 };
 
-class CCVKCmdBindStates : public GFXCmd {
+class CCVKCmdBindStates : public GFXCmd
+{
 public:
     CCVKGPUPipelineState* gpuPipelineState = nullptr;
     CCVKGPUBindingLayout* gpuBindingLayout = nullptr;
@@ -103,7 +111,8 @@ public:
     }
 };
 
-class CCVKCmdDraw : public GFXCmd {
+class CCVKCmdDraw : public GFXCmd
+{
 public:
     GFXDrawInfo draw_info;
 
@@ -111,7 +120,8 @@ public:
     void clear() {}
 };
 
-class CCVKCmdUpdateBuffer : public GFXCmd {
+class CCVKCmdUpdateBuffer : public GFXCmd
+{
 public:
     CCVKGPUBuffer* gpuBuffer = nullptr;
     uint8_t* buffer = nullptr;
@@ -127,7 +137,8 @@ public:
     }
 };
 
-class CCVKCmdCopyBufferToTexture : public GFXCmd {
+class CCVKCmdCopyBufferToTexture : public GFXCmd
+{
 public:
     CCVKGPUBuffer* gpuBuffer = nullptr;
     CCVKGPUTexture* gpuTexture = nullptr;
@@ -144,7 +155,8 @@ public:
     }
 };
 
-class CCVKCmdPackage : public Object {
+class CCVKCmdPackage : public Object
+{
 public:
     CachedArray<GFXCmdType> cmds;
     CachedArray<CCVKCmdBeginRenderPass*> beginRenderPassCmds;
@@ -177,14 +189,15 @@ CC_VULKAN_API void CCVKCmdFuncCreateShader(CCVKDevice* device, CCVKGPUShader* gp
 CC_VULKAN_API void CCVKCmdFuncDestroyShader(CCVKDevice* device, CCVKGPUShader* gpuShader);
 CC_VULKAN_API void CCVKCmdFuncCreateInputAssembler(CCVKDevice* device, CCVKGPUInputAssembler* gpuInputAssembler);
 CC_VULKAN_API void CCVKCmdFuncDestroyInputAssembler(CCVKDevice* device, CCVKGPUInputAssembler* gpuInputAssembler);
-CC_VULKAN_API void CCVKCmdFuncCreateFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFBO);
-CC_VULKAN_API void CCVKCmdFuncDestroyFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFBO);
+CC_VULKAN_API void CCVKCmdFuncCreateFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFramebuffer);
+CC_VULKAN_API void CCVKCmdFuncDestroyFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFramebuffer);
+CC_VULKAN_API void CCVKCmdFuncCreateBindingLayout(CCVKDevice* device, CCVKGPUBindingLayout* gpuBindingLayout);
+CC_VULKAN_API void CCVKCmdFuncDestroyBindingLayout(CCVKDevice* device, CCVKGPUBindingLayout* gpuBindingLayout);
+CC_VULKAN_API void CCVKCmdFuncCreatePipelineLayout(CCVKDevice* device, CCVKGPUPipelineLayout* gpuPipelineLayout);
+CC_VULKAN_API void CCVKCmdFuncDestroyPipelineLayout(CCVKDevice* device, CCVKGPUPipelineLayout* gpuPipelineLayout);
+CC_VULKAN_API void CCVKCmdFuncCreatePipelineState(CCVKDevice* device, CCVKGPUPipelineState* gpuPipelineState);
+CC_VULKAN_API void CCVKCmdFuncDestroyPipelineState(CCVKDevice* device, CCVKGPUPipelineState* gpuPipelineState);
 
-CC_VULKAN_API void CCVKCmdFuncBegin(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
-CC_VULKAN_API void CCVKCmdFuncBeginRenderPass(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
-CC_VULKAN_API void CCVKCmdFuncEndRenderPass(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
-CC_VULKAN_API void CCVKCmdFuncEnd(CCVKDevice* device, CCVKGPUCommandBuffer* commandBuffer);
-CC_VULKAN_API void CCVKCmdFuncExecuteCmds(CCVKDevice* device, CCVKCmdPackage* cmd_package);
 CC_VULKAN_API void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers, CCVKGPUTexture* gpuTexture, const GFXBufferTextureCopyList& regions);
 
 NS_CC_END
