@@ -28,8 +28,8 @@ namespace {
         assert(x + width <= totalWidth);
         assert(y + height <= totalHeight);
 
-        uint32_t y0 = totalHeight - (y + height);
-        uint32_t y1 = totalHeight - y;
+        uint32_t y0 = y;
+        uint32_t y1 = y + height;
         uint8_t* p;
         for (uint32_t offsetY = y0; offsetY < y1; ++offsetY)
         {
@@ -558,8 +558,11 @@ private:
                         // as it includes anti-atlas information.
                         uint8_t alpha = GetRValue(clr);
 
-                        val = (alpha << 24) | textColor;
-
+                        if (alpha > 0)
+                        {
+                            val = (alpha << 24) | textColor;
+                        }
+                        
                         ++pPixel;
                         ++pImage;
                     }
