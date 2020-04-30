@@ -39,8 +39,6 @@
 #include "debugger/node.h"
 #endif
 
-#include "platform/CCFileUtils.h"
-
 uint32_t __jsbInvocationCount = 0;
 uint32_t __jsbStackFrameLimit = 20;
 
@@ -644,9 +642,6 @@ namespace se {
             sourceUrl = sourceUrl.substr(prefixPos + prefixKey.length());
         }
 
-        
-        sourceUrl = cocos2d::FileUtils::getInstance()->fullPathForFilename(sourceUrl);
-        
         // It is needed, or will crash if invoked from non C++ context, such as invoked from objective-c context(for example, handler of UIKit).
         v8::HandleScope handle_scope(_isolate);
 

@@ -144,11 +144,9 @@ SkeletonAnimation::~SkeletonAnimation () {
     }
 }
 
-static float _deltaTime = 0.0f;
 void SkeletonAnimation::update (float deltaTime) {
 	if (!_skeleton) return;
     if (!_paused) {
-        _deltaTime = _deltaTime * 0.3 + 0.7 * deltaTime;
         deltaTime *= _timeScale * GlobalTimeScale;
         if (_ownsSkeleton) _skeleton->update(deltaTime);
         _state->update(deltaTime);
