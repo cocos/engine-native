@@ -42,6 +42,8 @@
 #include <spine/SlotData.h>
 #include <spine/BoneData.h>
 
+#include <chrono>
+
 using namespace spine;
 
 RTTI_IMPL(PathConstraint, Updatable)
@@ -74,12 +76,25 @@ void PathConstraint::apply() {
 	update();
 }
 
+static std::chrono::time_point<std::chrono::high_resolution_clock> _prev;
+
+static float _update_interval = 0;
+
 void PathConstraint::update() {
+    
 	Attachment *baseAttachment = _target->getAttachment();
 	if (baseAttachment == NULL || !baseAttachment->getRTTI().instanceOf(PathAttachment::rtti)) {
 		return;
 	}
+    auto now = std::chrono::high_resolution_clock::now();
 
+    if(_prev.time_since_epoch().count() == 0){
+        _prev = now;
+    }
+    auto pass = std::chrono::duration_cast<std::chrono::milliseconds>(now - _prev).count();
+    _prev = now;
+    _update_interval = _update_interval * 0.5  +  0.5 * pass;
+    
 	PathAttachment *attachment = static_cast<PathAttachment *>(baseAttachment);
 
 	float rotateMix = _rotateMix;
