@@ -481,8 +481,15 @@ public class Cocos2dxHelper {
                 Display d = wm.getDefaultDisplay();
                 if (d != null)
                 {
+                    try {
+                        Method getRealMetrics = d.getClass().getMethod("getRealMetrics", metrics.getClass());
+                        getRealMetrics.invoke(d, metrics);
+                        return (int)((metrics.xdpi + metrics.ydpi) / 2.0 );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     d.getMetrics(metrics);
-                    return (int)(metrics.density*160.0f);
+                    return (int)((metrics.xdpi + metrics.ydpi) / 2.0 );
                 }
             }
         }
