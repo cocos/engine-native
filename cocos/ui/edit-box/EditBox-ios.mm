@@ -445,6 +445,11 @@ void EditBox::hide()
     [(CCEAGLView*)cocos2d::Application::getInstance()->getView() setPreventTouchEvent:false];
 }
 
+void EditBox::updateRect(int x, int y, int width, int height)
+{
+    // not supported ...
+}
+
 void EditBox::complete()
 {
     NSString* text = getCurrentText();
