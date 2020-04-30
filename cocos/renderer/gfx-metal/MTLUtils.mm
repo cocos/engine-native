@@ -160,23 +160,24 @@ namespace {
         }
     }
 
-    bool glslangInitialized = false;
     const std::vector<unsigned int> GLSL2SPIRV(GFXShaderType type, const String& source, int vulkanMinorVersion = 2)
     {
+        static bool glslangInitialized = false;
         if (!glslangInitialized)
         {
             glslang::InitializeProcess();
             glslangInitialized = true;
         }
-
+        std::vector<unsigned int> spirv;
         auto stage = getShaderStage(type);
         auto string = source.c_str();
         glslang::TShader shader(stage);
         shader.setStrings(&string, 1);
 
-        int clientInputSemanticsVersion = 100 + vulkanMinorVersion * 10;
-        glslang::EShTargetClientVersion clientVersion = getClientVersion(vulkanMinorVersion);
-        glslang::EShTargetLanguageVersion targetVersion = getTargetVersion(vulkanMinorVersion);
+        //Set up Vulkan/SpirV Environment
+        int clientInputSemanticsVersion = 100 + vulkanMinorVersion * 10; // maps to, say, #define VULKAN 120
+        glslang::EShTargetClientVersion clientVersion = getClientVersion(vulkanMinorVersion); // map to, say, Vulkan 1.2
+        glslang::EShTargetLanguageVersion targetVersion = getTargetVersion(vulkanMinorVersion); // maps to, say, SPIR-V 1.5
 
         shader.setEnvInput(glslang::EShSourceGlsl, stage, glslang::EShClientVulkan, clientInputSemanticsVersion);
         shader.setEnvClient(glslang::EShClientVulkan, clientVersion);
@@ -187,6 +188,8 @@ namespace {
         if (!shader.parse(&DefaultTBuiltInResource, clientInputSemanticsVersion, false, messages))
         {
             CC_LOG_ERROR("GLSL Parsing Failed:\n%s\n%s", shader.getInfoLog(), shader.getInfoDebugLog());
+            CC_LOG_ERROR("%s", string);
+            return spirv;
         }
 
         glslang::TProgram program;
@@ -195,13 +198,19 @@ namespace {
         if (!program.link(messages))
         {
             CC_LOG_ERROR("GLSL Linking Failed:\n%s\n%s", program.getInfoLog(), program.getInfoDebugLog());
+            CC_LOG_ERROR("%s", string);
+            return spirv;
         }
 
-        std::vector<unsigned int> spirv;
         spv::SpvBuildLogger logger;
         glslang::SpvOptions spvOptions;
         glslang::GlslangToSpv(*program.getIntermediate(stage), spirv, &logger, &spvOptions);
-
+        if(!spirv.size())
+        {
+            CC_LOG_ERROR("GlslangToSpv Failed:\n%s\n%s", program.getInfoLog(), program.getInfoDebugLog());
+            CC_LOG_ERROR("%s", string);
+            return spirv;
+        }
         return spirv;
     }
 
@@ -676,18 +685,27 @@ namespace mu
         shaderSource.append(src);
         auto type = isVertexShader ? GFXShaderType::VERTEX : GFXShaderType::FRAGMENT;
         const auto& spv = GLSL2SPIRV(type, shaderSource);
+        if(spv.size() == 0)
+            return "";
+        
         spirv_cross::CompilerMSL msl(std::move(spv));
     
-        // The SPIR-V is now parsed, and we can perform reflection on it.
-        spirv_cross::ShaderResources resources = msl.get_shader_resources();
-
         // Set some options.
         spirv_cross::CompilerMSL::Options options;
+#if(CC_PLATFORM == CC_PLATFORM_MAC_IOS)
+        options.platform = spirv_cross::CompilerMSL::Options::Platform::iOS;
+#else
         options.platform = spirv_cross::CompilerMSL::Options::Platform::macOS;
+#endif
         msl.set_msl_options(options);
 
         // Compile to MSL, ready to give to metal driver.
         std::string output = msl.compile();
+        if(!output.size())
+        {
+            CC_LOG_ERROR("Compile to MSL failed.");
+            CC_LOG_ERROR("%s", shaderSource.c_str());
+        }
         return output;
 #else
         return src;
