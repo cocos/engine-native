@@ -1195,6 +1195,34 @@ static bool JSB_showInputBox(se::State& s)
 }
 SE_BIND_FUNC(JSB_showInputBox);
 
+static bool JSB_updateInputBoxRect(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 4)
+    {
+        SE_PRECONDITION2(args[0].isNumber(), false, "x is invalid!");
+        const auto& x = args[0].toInt32();
+        
+        SE_PRECONDITION2(args[1].isNumber(), false, "y is invalid!");
+        const auto& y = args[1].toInt32();
+        
+        SE_PRECONDITION2(args[2].isNumber(), false, "width is invalid!");
+        const auto& width = args[2].toInt32();
+        
+        
+        SE_PRECONDITION2(args[3].isNumber(), false, "height is invalid!");
+        const auto& height = args[3].toInt32();
+        
+        EditBox::updateRect(x, y, width, height);
+        return true;
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
+    return false;
+}
+SE_BIND_FUNC(JSB_updateInputBoxRect);
+
 static bool JSB_hideInputBox(se::State& s)
 {
     EditBox::hide();
@@ -1232,6 +1260,7 @@ bool jsb_register_global_variables(se::Object* global)
     __jsbObj->defineFunction("setPreferredFramesPerSecond", _SE(JSB_setPreferredFramesPerSecond));
     __jsbObj->defineFunction("showInputBox", _SE(JSB_showInputBox));
     __jsbObj->defineFunction("hideInputBox", _SE(JSB_hideInputBox));
+    __jsbObj->defineFunction("updateInputBoxRect", _SE(JSB_updateInputBoxRect));
 
     global->defineFunction("__getPlatform", _SE(JSBCore_platform));
     global->defineFunction("__getOS", _SE(JSBCore_os));

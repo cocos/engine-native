@@ -207,7 +207,7 @@ namespace
         [nsWindow.contentView addSubview:g_scrollView];
         [nsWindow makeFirstResponder:g_scrollView];
     }
-    
+
     void doInitTextField(NSTextField* textField, const CGRect& rect, const cocos2d::EditBox::ShowInfo& showInfo)
     {
         textField.editable = TRUE;
@@ -312,6 +312,29 @@ void EditBox::complete()
     }
     
     EditBox::hide();
+}
+
+void EditBox::updateRect(int x, int y, int width, int height) {
+    CGRect rect = CGRectMake(x, y, width, height);
+    auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
+    NSWindow* nsWindow = glfwGetCocoaWindow(glfwWindow);
+    const auto& subviews = [nsWindow.contentView subviews];
+    if (g_scrollView && [subviews containsObject:g_scrollView])
+    {
+        g_scrollView.frame = rect;
+        if (g_textView)
+        {
+            g_textView.frame = rect;
+        }
+    }
+    else if (g_textField && [subviews containsObject:g_textField])
+    {
+        g_textField.frame = rect;
+    }
+    else if (g_secureTextField && [subviews containsObject:g_secureTextField])
+    {
+        g_secureTextField.frame = rect;
+    }
 }
 
 NS_CC_END
