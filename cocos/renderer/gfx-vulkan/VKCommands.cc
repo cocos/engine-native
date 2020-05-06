@@ -284,6 +284,17 @@ namespace
         return ~0u;
     }
 
+    VkImageCreateFlags MapVkImageCreateFlags(GFXTextureViewType type)
+    {
+        uint32_t res = 0;
+        switch (type)
+        {
+        case cocos2d::GFXTextureViewType::CUBE: res |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; break;
+        case cocos2d::GFXTextureViewType::TV2D_ARRAY: res |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT; break;
+        }
+        return (VkImageCreateFlags)res;
+    }
+
     VkImageViewType MapVkImageViewType(GFXTextureViewType viewType)
     {
         switch (viewType)
@@ -739,6 +750,7 @@ void CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
     auto vkDevice = device->gpuDevice()->vkDevice;
 
     VkImageCreateInfo createInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
+    createInfo.flags = MapVkImageCreateFlags(gpuTexture->viewType);
     createInfo.imageType = MapVkImageType(gpuTexture->type);
     createInfo.format = MapVkFormat(gpuTexture->format);
     createInfo.extent = { gpuTexture->width, gpuTexture->height, gpuTexture->depth };
@@ -805,7 +817,7 @@ void CCVKCmdFuncCreateTextureView(CCVKDevice* device, CCVKGPUTextureView* gpuTex
     createInfo.subresourceRange.baseMipLevel = gpuTextureView->baseLevel;
     createInfo.subresourceRange.levelCount = gpuTextureView->levelCount;
     createInfo.subresourceRange.baseArrayLayer = 0;
-    createInfo.subresourceRange.layerCount = 1;
+    createInfo.subresourceRange.layerCount = gpuTextureView->gpuTexture->arrayLayer;
 
     VK_CHECK(vkCreateImageView(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuTextureView->vkImageView));
 }

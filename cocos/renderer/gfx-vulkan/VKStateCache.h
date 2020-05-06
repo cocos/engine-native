@@ -1,8 +1,6 @@
 #ifndef CC_GFXVULKAN_STATE_CACHE_H_
 #define CC_GFXVULKAN_STATE_CACHE_H_
 
-#include "volk.h"
-
 NS_CC_BEGIN
 
 class CCVKStateCache : public Object {
