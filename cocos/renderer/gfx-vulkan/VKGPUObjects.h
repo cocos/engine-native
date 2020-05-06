@@ -47,7 +47,7 @@ public:
 class CCVKGPUSwapchain
 {
 public:
-    uint32_t curImageIndex;
+    uint curImageIndex;
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
     vector<VkImageView>::type vkSwapchainImageViews;
     vector<VkFramebuffer>::type vkSwapchainFramebuffers;
@@ -78,7 +78,7 @@ class CCVKGPUQueue : public Object
 public:
     GFXQueueType type;
     VkQueue vkQueue;
-    uint32_t queueFamilyIndex;
+    uint queueFamilyIndex;
     VkSemaphore waitSemaphore = VK_NULL_HANDLE;
     VkSemaphore signalSemaphore = VK_NULL_HANDLE;
     VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -153,12 +153,7 @@ class CCVKGPUSampler : public Object {
   GFXAddress addressW = GFXAddress::CLAMP;
   uint minLOD = 0;
   uint maxLOD = 1000;
-  //GLuint gl_sampler = 0;
-  //GLenum glMinFilter = 0;
-  //GLenum glMagFilter = 0;
-  //GLenum glWrapS = 0;
-  //GLenum glWrapT = 0;
-  //GLenum glWrapR = 0;
+  VkSampler vkSampler;
 };
 
 struct CCVKGPUInput
@@ -274,22 +269,13 @@ public:
     CCVKGPUSwapchain* swapchain = nullptr;
 };
 
-struct CCVKGPUBinding
-{
-    uint binding = GFX_INVALID_BINDING;
-    GFXBindingType type = GFXBindingType::UNKNOWN;
-    String name;
-    CCVKGPUBuffer* gpuBuffer = nullptr;
-    CCVKGPUTextureView* gpuTexView = nullptr;
-    CCVKGPUSampler* gpuSampler = nullptr;
-};
-typedef vector<CCVKGPUBinding>::type CCVKGPUBindingList;
-
 class CCVKGPUBindingLayout : public Object
 {
 public:
-    CCVKGPUBindingList gpuBindings;
-    VkDescriptorSetLayout vkDescriptorSetLayout;
+    vector<VkWriteDescriptorSet>::type bindings;
+    VkDescriptorSetLayout vkDescriptorSetLayout = VK_NULL_HANDLE;
+    VkDescriptorPool vkDescriptorPool = VK_NULL_HANDLE;
+    VkDescriptorSet vkDescriptorSet = VK_NULL_HANDLE;
 };
 
 class CCVKGPUPipelineLayout : public Object

@@ -75,12 +75,12 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
 
     // check extensions
-    uint32_t availableLayerCount;
+    uint availableLayerCount;
     VK_CHECK(vkEnumerateDeviceLayerProperties(context->physicalDevice, &availableLayerCount, nullptr));
     _gpuDevice->layers.resize(availableLayerCount);
     VK_CHECK(vkEnumerateDeviceLayerProperties(context->physicalDevice, &availableLayerCount, _gpuDevice->layers.data()));
 
-    uint32_t availableExtensionCount;
+    uint availableExtensionCount;
     VK_CHECK(vkEnumerateDeviceExtensionProperties(context->physicalDevice, nullptr, &availableExtensionCount, nullptr));
     _gpuDevice->extensions.resize(availableExtensionCount);
     VK_CHECK(vkEnumerateDeviceExtensionProperties(context->physicalDevice, nullptr, &availableExtensionCount, _gpuDevice->extensions.data()));
@@ -102,11 +102,11 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     }
 
     // prepare the device queues
-    uint32_t                             queueFamilyPropertiesCount = toU32(context->queueFamilyProperties.size());
+    uint                             queueFamilyPropertiesCount = toU32(context->queueFamilyProperties.size());
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos(queueFamilyPropertiesCount, { VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO });
     std::vector<std::vector<float>>      queuePriorities(queueFamilyPropertiesCount);
 
-    for (uint32_t queueFamilyIndex = 0u; queueFamilyIndex < queueFamilyPropertiesCount; ++queueFamilyIndex)
+    for (uint queueFamilyIndex = 0u; queueFamilyIndex < queueFamilyPropertiesCount; ++queueFamilyIndex)
     {
         const VkQueueFamilyProperties &queueFamilyProperty = context->queueFamilyProperties[queueFamilyIndex];
 
@@ -134,7 +134,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     ///////////////////// Resource Initialization /////////////////////
 
-    for (uint32_t i = 0; i < context->swapchainCreateInfo.minImageCount; i++)
+    for (uint i = 0; i < context->swapchainCreateInfo.minImageCount; i++)
     {
         GFXTextureInfo depthStecnilTexInfo;
         depthStecnilTexInfo.type = GFXTextureType::TEX2D;
@@ -313,7 +313,7 @@ void CCVKDevice::buildSwapchain()
 
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(context->physicalDevice, context->vkSurface, &surfaceCapabilities));
-    if (surfaceCapabilities.currentExtent.width == (uint32_t)-1)
+    if (surfaceCapabilities.currentExtent.width == (uint)-1)
     {
         context->swapchainCreateInfo.imageExtent.width = _width;
         context->swapchainCreateInfo.imageExtent.height = _height;
@@ -346,7 +346,7 @@ void CCVKDevice::buildSwapchain()
         vkDestroySwapchainKHR(_gpuDevice->vkDevice, context->swapchainCreateInfo.oldSwapchain, nullptr);
     }
 
-    uint32_t imageCount;
+    uint imageCount;
     VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, nullptr));
     _gpuSwapchain->swapchainImages.resize(imageCount);
     VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, _gpuSwapchain->swapchainImages.data()));
@@ -354,7 +354,7 @@ void CCVKDevice::buildSwapchain()
 
     _gpuSwapchain->vkSwapchainImageViews.resize(imageCount);
     _gpuSwapchain->vkSwapchainFramebuffers.resize(imageCount);
-    for (uint32_t i = 0; i < imageCount; i++)
+    for (uint i = 0; i < imageCount; i++)
     {
         _depthStencilTextures[i]->resize(_width, _height);
         _gpuSwapchain->depthStencilImages.push_back(((CCVKTexture*)_depthStencilTextures[i])->gpuTexture()->vkImage);

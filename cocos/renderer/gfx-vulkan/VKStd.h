@@ -18,24 +18,24 @@
 #endif
 
 #define VK_CHECK(x)                                                 \
-	do                                                              \
-	{                                                               \
-		VkResult err = x;                                           \
-		if (err)                                                    \
-		{                                                           \
-			CC_LOG_ERROR("Detected Vulkan error: %d", err);         \
-			abort();                                                \
-		}                                                           \
-	} while (0)
+    do                                                              \
+    {                                                               \
+        VkResult err = x;                                           \
+        if (err)                                                    \
+        {                                                           \
+            CC_LOG_ERROR("Detected Vulkan error: %d", err);         \
+            abort();                                                \
+        }                                                           \
+    } while (0)
 
 #define ASSERT_VK_HANDLE(handle)            \
-	do                                      \
-	{                                       \
-		if ((handle) == VK_NULL_HANDLE)     \
-		{                                   \
-			CC_LOG_ERROR("Handle is NULL"); \
-			abort();                        \
-		}                                   \
-	} while (0)
+    do                                      \
+    {                                       \
+	    if ((handle) == VK_NULL_HANDLE)     \
+	    {                                   \
+		    CC_LOG_ERROR("Handle is NULL"); \
+		    abort();                        \
+	    }                                   \
+    } while (0)
 
 #endif
