@@ -324,25 +324,25 @@ void CCVKCommandBuffer::draw(GFXInputAssembler* ia)
 
 void CCVKCommandBuffer::updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset)
 {
-    if ((_type == GFXCommandBufferType::PRIMARY && _curGPUFBO) ||
+    if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
     }
     else
     {
-        CC_LOG_ERROR("Command 'updateBuffer' must be recorded inside a render pass.");
+        CC_LOG_ERROR("Command 'updateBuffer' must be recorded outside a render pass.");
     }
 }
 
 void CCVKCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFXTextureLayout layout, const GFXBufferTextureCopyList& regions)
 {
-    if ((_type == GFXCommandBufferType::PRIMARY && _curGPUFBO) ||
+    if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
     }
     else
     {
-        CC_LOG_ERROR("Command 'copyBufferToTexture' must be recorded inside a render pass.");
+        CC_LOG_ERROR("Command 'copyBufferToTexture' must be recorded outside a render pass.");
     }
 }
 

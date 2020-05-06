@@ -233,8 +233,6 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     CC_LOG_INFO("DEVICE_EXTENSIONS: %s", deviceExtensions.c_str());
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressedFmts.c_str());
 
-    this->begin();
-
     return true;
 }
 
@@ -310,9 +308,17 @@ void CCVKDevice::buildSwapchain()
 {
     auto context = ((CCVKContext*)_context)->gpuContext();
     context->swapchainCreateInfo.oldSwapchain = _gpuSwapchain->vkSwapchain;
+    _gpuSwapchain->curImageIndex = 0;
 
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(context->physicalDevice, context->vkSurface, &surfaceCapabilities));
+
+    if (context->swapchainCreateInfo.imageExtent.width == surfaceCapabilities.currentExtent.width &&
+        context->swapchainCreateInfo.imageExtent.height == surfaceCapabilities.currentExtent.height)
+    {
+        return;
+    }
+
     if (surfaceCapabilities.currentExtent.width == (uint)-1)
     {
         context->swapchainCreateInfo.imageExtent.width = _width;
@@ -407,7 +413,6 @@ void CCVKDevice::begin()
 
 void CCVKDevice::present()
 {
-    //((CCVKCommandAllocator*)_cmdAllocator)->releaseCmds();
     CCVKQueue* queue = (CCVKQueue*)_queue;
     _numDrawCalls = queue->_numDrawCalls;
     _numInstances = queue->_numInstances;
@@ -428,8 +433,6 @@ void CCVKDevice::present()
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
-
-    this->begin();
 }
 
 GFXWindow* CCVKDevice::createWindow(const GFXWindowInfo& info)

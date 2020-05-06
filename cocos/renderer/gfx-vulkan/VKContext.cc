@@ -340,7 +340,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
         std::vector<VkPresentModeKHR> presentModes(presentModeCount);
         VK_CHECK(vkGetPhysicalDeviceSurfacePresentModesKHR(_gpuContext->physicalDevice, _gpuContext->vkSurface, &presentModeCount, presentModes.data()));
 
-        VkExtent2D imageExtent{ surfaceCapabilities.currentExtent.width, surfaceCapabilities.currentExtent.height };
+        VkExtent2D imageExtent{ 1u, 1u };
 
         VkFormat colorFormat = VK_FORMAT_B8G8R8A8_UNORM;
         VkColorSpaceKHR colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
