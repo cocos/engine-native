@@ -118,16 +118,7 @@ public:
     bool isPowerOf2 = false;
     VkImage vkImage = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
-    //GLenum glTarget = 0;
-    //GLenum glInternelFmt = 0;
-    //GLenum glFormat = 0;
-    //GLenum glType = 0;
-    //GLenum glUsage = 0;
-    //GLuint glTexture = 0;
-    //GLenum glWrapS = 0;
-    //GLenum glWrapT = 0;
-    //GLenum glMinFilter = 0;
-    //GLenum glMagFilter = 0;
+    void* buffer = nullptr;
 };
 
 class CCVKGPUTextureView : public Object
@@ -143,17 +134,22 @@ public:
 
 typedef vector<CCVKGPUTextureView*>::type CCVKGPUTextureViewList;
 
-class CCVKGPUSampler : public Object {
- public:
-  GFXFilter minFilter = GFXFilter::NONE;
-  GFXFilter magFilter = GFXFilter::NONE;
-  GFXFilter mipFilter = GFXFilter::NONE;
-  GFXAddress addressU = GFXAddress::CLAMP;
-  GFXAddress addressV = GFXAddress::CLAMP;
-  GFXAddress addressW = GFXAddress::CLAMP;
-  uint minLOD = 0;
-  uint maxLOD = 1000;
-  VkSampler vkSampler;
+class CCVKGPUSampler : public Object
+{
+public:
+    GFXFilter minFilter = GFXFilter::LINEAR;
+    GFXFilter magFilter = GFXFilter::LINEAR;
+    GFXFilter mipFilter = GFXFilter::NONE;
+    GFXAddress addressU = GFXAddress::WRAP;
+    GFXAddress addressV = GFXAddress::WRAP;
+    GFXAddress addressW = GFXAddress::WRAP;
+    uint maxAnisotropy = 16;
+    GFXComparisonFunc cmpFunc = GFXComparisonFunc::NEVER;
+    GFXColor borderColor;
+    uint minLOD = 0;
+    uint maxLOD = 1000;
+    float mipLODBias = 0.0f;
+    VkSampler vkSampler;
 };
 
 struct CCVKGPUInput

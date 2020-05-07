@@ -260,6 +260,20 @@ namespace
         }
     }
 
+    VkFormatFeatureFlags MapVkFormatFeatureFlags(GFXTextureUsage usage)
+    {
+        uint flags = 0;
+        if (usage & GFXTextureUsage::TRANSFER_SRC) flags |= VK_FORMAT_FEATURE_TRANSFER_SRC_BIT;
+        if (usage & GFXTextureUsage::TRANSFER_DST) flags |= VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
+        if (usage & GFXTextureUsage::SAMPLED) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+        if (usage & GFXTextureUsage::STORAGE) flags |= VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT;
+        if (usage & GFXTextureUsage::COLOR_ATTACHMENT) flags |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+        if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        if (usage & GFXTextureUsage::TRANSIENT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+        if (usage & GFXTextureUsage::INPUT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+        return (VkFormatFeatureFlags)flags;
+    }
+
     VkImageUsageFlagBits MapVkImageUsageFlagBits(GFXTextureUsage usage)
     {
         uint flags = 0;
@@ -332,7 +346,7 @@ namespace
         switch (type)
         {
         case cocos2d::GFXBindingType::UNIFORM_BUFFER: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        case cocos2d::GFXBindingType::SAMPLER: return VK_DESCRIPTOR_TYPE_SAMPLER;
+        case cocos2d::GFXBindingType::SAMPLER: return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         case cocos2d::GFXBindingType::STORAGE_BUFFER: return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
         default:
         {
@@ -471,6 +485,30 @@ namespace
         VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR,
         VK_BLEND_FACTOR_CONSTANT_ALPHA,
         VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA,
+    };
+
+    const VkFilter VK_FILTERS[] =
+    {
+        (VkFilter)0,        // NONE
+        VK_FILTER_NEAREST,  // POINT
+        VK_FILTER_LINEAR,   // LINEAR
+        (VkFilter)0,        // ANISOTROPIC
+    };
+
+    const VkSamplerMipmapMode VK_SAMPLER_MIPMAP_MODES[] =
+    {
+        (VkSamplerMipmapMode)0,         // NONE
+        VK_SAMPLER_MIPMAP_MODE_NEAREST, // POINT
+        VK_SAMPLER_MIPMAP_MODE_LINEAR,  // LINEAR
+        (VkSamplerMipmapMode)0,         // ANISOTROPIC
+    };
+
+    const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODES[] =
+    {
+        VK_SAMPLER_ADDRESS_MODE_REPEAT,          // WRAP
+        VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT, // MIRROR
+        VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,   // CLAMP
+        VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, // BORDER
     };
 }
 
@@ -746,19 +784,38 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer, void*
     }
 }
 
-void CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
+bool CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
 {
+    auto format = MapVkFormat(gpuTexture->format);
+    auto features = MapVkFormatFeatureFlags(gpuTexture->usage);
+    VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
+
+    VkFormatProperties formatProperties;
+    vkGetPhysicalDeviceFormatProperties(((CCVKContext*)device->getContext())->gpuContext()->physicalDevice, format, &formatProperties);
+
+    if (!(formatProperties.optimalTilingFeatures & features))
+    {
+        if (formatProperties.linearTilingFeatures & features)
+        {
+            tiling = VK_IMAGE_TILING_LINEAR;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     auto vkDevice = device->gpuDevice()->vkDevice;
 
     VkImageCreateInfo createInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
     createInfo.flags = MapVkImageCreateFlags(gpuTexture->viewType);
     createInfo.imageType = MapVkImageType(gpuTexture->type);
-    createInfo.format = MapVkFormat(gpuTexture->format);
+    createInfo.format = format;
     createInfo.extent = { gpuTexture->width, gpuTexture->height, gpuTexture->depth };
     createInfo.mipLevels = gpuTexture->mipLevel;
     createInfo.arrayLayers = gpuTexture->arrayLayer;
     createInfo.samples = MapVkSampleCount(gpuTexture->samples);
-    createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    createInfo.tiling = tiling;
     createInfo.usage = MapVkImageUsageFlagBits(gpuTexture->usage);
     createInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
@@ -769,7 +826,7 @@ void CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
 
     uint memoryTypeIndex = selectMemoryType(
         ((CCVKContext*)device->getContext())->gpuContext()->physicalDeviceMemoryProperties,
-        memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
     VkMemoryAllocateInfo allocateInfo{ VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO };
     allocateInfo.allocationSize = memoryRequirements.size;
@@ -778,6 +835,10 @@ void CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
     VK_CHECK(vkAllocateMemory(vkDevice, &allocateInfo, nullptr, &gpuTexture->vkDeviceMemory));
 
     VK_CHECK(vkBindImageMemory(vkDevice, gpuTexture->vkImage, gpuTexture->vkDeviceMemory, 0));
+
+    VK_CHECK(vkMapMemory(vkDevice, gpuTexture->vkDeviceMemory, 0, gpuTexture->size, 0, &gpuTexture->buffer));
+
+    return true;
 }
 
 void CCVKCmdFuncDestroyTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
@@ -834,12 +895,33 @@ void CCVKCmdFuncDestroyTextureView(CCVKDevice* device, CCVKGPUTextureView* gpuTe
 
 void CCVKCmdFuncCreateSampler(CCVKDevice* device, CCVKGPUSampler* gpuSampler)
 {
+    VkSamplerCreateInfo createInfo{ VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };
 
+    createInfo.magFilter = VK_FILTERS[(uint)gpuSampler->magFilter];
+    createInfo.minFilter = VK_FILTERS[(uint)gpuSampler->minFilter];
+    createInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODES[(uint)gpuSampler->mipFilter];
+    createInfo.addressModeU = VK_SAMPLER_ADDRESS_MODES[(uint)gpuSampler->addressU];
+    createInfo.addressModeV = VK_SAMPLER_ADDRESS_MODES[(uint)gpuSampler->addressV];
+    createInfo.addressModeW = VK_SAMPLER_ADDRESS_MODES[(uint)gpuSampler->addressW];
+    createInfo.mipLodBias = gpuSampler->mipLODBias;
+    createInfo.anisotropyEnable = VK_TRUE;
+    createInfo.maxAnisotropy = (float)gpuSampler->maxAnisotropy;
+    createInfo.compareEnable = VK_TRUE;
+    createInfo.compareOp = VK_CMP_FUNCS[(uint)gpuSampler->cmpFunc];
+    createInfo.minLod = (float)gpuSampler->minLOD;
+    createInfo.maxLod = (float)gpuSampler->maxLOD;
+    //createInfo.borderColor; // TODO
+
+    VK_CHECK(vkCreateSampler(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuSampler->vkSampler));
 }
 
 void CCVKCmdFuncDestroySampler(CCVKDevice* device, CCVKGPUSampler* gpuSampler)
 {
-
+    if (gpuSampler->vkSampler!= VK_NULL_HANDLE)
+    {
+        vkDestroySampler(device->gpuDevice()->vkDevice, gpuSampler->vkSampler, nullptr);
+        gpuSampler->vkSampler = VK_NULL_HANDLE;
+    }
 }
 
 void CCVKCmdFuncCreateShader(CCVKDevice* device, CCVKGPUShader* gpuShader)
@@ -943,12 +1025,28 @@ void CCVKCmdFuncCreateBindingLayout(CCVKDevice* device, CCVKGPUBindingLayout* gp
 
     VK_CHECK(vkCreateDescriptorSetLayout(device->gpuDevice()->vkDevice, &setCreateInfo, nullptr, &gpuBindingLayout->vkDescriptorSetLayout));
 
-    VkDescriptorPoolSize poolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER };
-    poolSize.descriptorCount = count;
+    vector<VkDescriptorPoolSize>::type poolSizes;
+    for (auto & binding : setBindings)
+    {
+        bool found = false;
+        for (auto &poolSize : poolSizes)
+        {
+            if (poolSize.type == binding.descriptorType)
+            {
+                poolSize.descriptorCount++;
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            poolSizes.push_back({ binding.descriptorType, 1 });
+        }
+    }
 
     VkDescriptorPoolCreateInfo poolInfo{ VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO };
-    poolInfo.poolSizeCount = 1;
-    poolInfo.pPoolSizes = &poolSize;
+    poolInfo.poolSizeCount = poolSizes.size();
+    poolInfo.pPoolSizes = poolSizes.data();
     poolInfo.maxSets = 1;
 
     VK_CHECK(vkCreateDescriptorPool(device->gpuDevice()->vkDevice, &poolInfo, nullptr, &gpuBindingLayout->vkDescriptorPool));
@@ -1241,7 +1339,24 @@ void CCVKCmdFuncDestroyPipelineState(CCVKDevice* device, CCVKGPUPipelineState* g
 
 void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers, CCVKGPUTexture* gpuTexture, const GFXBufferTextureCopyList& regions)
 {
+    //bool isCompressed = GFX_FORMAT_INFOS[(int)gpuTexture->format].isCompressed;
+    uint n = 0, w, h;
 
+    // TODO
+    for (size_t i = 0; i < regions.size(); ++i)
+    {
+        const GFXBufferTextureCopy& region = regions[i];
+        w = region.texExtent.width;
+        h = region.texExtent.height;
+        for (uint m = region.texSubres.baseMipLevel; m < region.texSubres.baseMipLevel + region.texSubres.levelCount; ++m)
+        {
+            uint8_t* buff = region.buffOffset + region.buffTexHeight * region.buffStride + buffers[n++];
+            memcpy(gpuTexture->buffer, buff, w * h * 4);
+
+            w = std::max(w >> 1, 1U);
+            h = std::max(h >> 1, 1U);
+        }
+    }
 }
 
 

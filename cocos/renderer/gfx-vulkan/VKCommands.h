@@ -45,7 +45,7 @@ CC_VULKAN_API void CCVKCmdFuncCreateBuffer(CCVKDevice* device, CCVKGPUBuffer* gp
 CC_VULKAN_API void CCVKCmdFuncDestroyBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer);
 CC_VULKAN_API void CCVKCmdFuncResizeBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer);
 CC_VULKAN_API void CCVKCmdFuncUpdateBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer, void* buffer, uint offset, uint size);
-CC_VULKAN_API void CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture);
+CC_VULKAN_API bool CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture);
 CC_VULKAN_API void CCVKCmdFuncDestroyTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture);
 CC_VULKAN_API void CCVKCmdFuncCreateTextureView(CCVKDevice* device, CCVKGPUTextureView* gpuTextureView);
 CC_VULKAN_API void CCVKCmdFuncDestroyTextureView(CCVKDevice* device, CCVKGPUTextureView* gpuTextureView);

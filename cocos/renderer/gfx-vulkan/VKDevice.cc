@@ -68,6 +68,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     requestedFeatures.textureCompressionASTC_LDR = deviceFeatures.textureCompressionASTC_LDR;
     requestedFeatures.textureCompressionBC = deviceFeatures.textureCompressionBC;
     requestedFeatures.textureCompressionETC2 = deviceFeatures.textureCompressionETC2;
+    requestedFeatures.samplerAnisotropy = deviceFeatures.samplerAnisotropy;
 
     ///////////////////// Device Creation /////////////////////
 
@@ -588,7 +589,6 @@ GFXPipelineLayout* CCVKDevice::createPipelineLayout(const GFXPipelineLayoutInfo&
 
 void CCVKDevice::copyBuffersToTexture(const GFXDataArray& buffers, GFXTexture* dst, const GFXBufferTextureCopyList& regions)
 {
-
    CCVKCmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((CCVKTexture*)dst)->gpuTexture(), regions);
 }
 

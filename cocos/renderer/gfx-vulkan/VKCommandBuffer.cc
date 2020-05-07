@@ -167,10 +167,17 @@ void CCVKCommandBuffer::bindPipelineState(GFXPipelineState* pso)
 
 void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout* layout)
 {
-    _curGPUBindingLayout = ((CCVKBindingLayout*)layout)->gpuBindingLayout();
-    vkCmdBindDescriptorSets(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-        _curGPUPipelineState->gpuLayout->vkPipelineLayout, 0, 1, &_curGPUBindingLayout->vkDescriptorSet, 0, nullptr);
-    _isStateInvalid = true;
+    if (_curGPUPipelineState)
+    {
+        _curGPUBindingLayout = ((CCVKBindingLayout*)layout)->gpuBindingLayout();
+        vkCmdBindDescriptorSets(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+            _curGPUPipelineState->gpuLayout->vkPipelineLayout, 0, 1, &_curGPUBindingLayout->vkDescriptorSet, 0, nullptr);
+        _isStateInvalid = true;
+    }
+    else
+    {
+        CC_LOG_ERROR("Command 'bindBindingLayout' must be recorded after 'bindPipelineState'.");
+    }
 }
 
 void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler* ia)
