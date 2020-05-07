@@ -103,7 +103,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     }
 
     // prepare the device queues
-    uint                             queueFamilyPropertiesCount = toU32(context->queueFamilyProperties.size());
+    uint                             queueFamilyPropertiesCount = toUint(context->queueFamilyProperties.size());
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos(queueFamilyPropertiesCount, { VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO });
     std::vector<std::vector<float>>      queuePriorities(queueFamilyPropertiesCount);
 
@@ -122,11 +122,11 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     VkDeviceCreateInfo deviceCreateInfo{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
 
-    deviceCreateInfo.queueCreateInfoCount = toU32(queueCreateInfos.size());
+    deviceCreateInfo.queueCreateInfoCount = toUint(queueCreateInfos.size());
     deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
-    deviceCreateInfo.enabledLayerCount = toU32(_layers.size());
+    deviceCreateInfo.enabledLayerCount = toUint(_layers.size());
     deviceCreateInfo.ppEnabledLayerNames = _layers.data();
-    deviceCreateInfo.enabledExtensionCount = toU32(_extensions.size());
+    deviceCreateInfo.enabledExtensionCount = toUint(_extensions.size());
     deviceCreateInfo.ppEnabledExtensionNames = _extensions.data();
     deviceCreateInfo.pEnabledFeatures = &requestedFeatures;
     deviceCreateInfo.pNext = nullptr;

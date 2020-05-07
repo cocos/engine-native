@@ -28,7 +28,7 @@ namespace
         else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
         {
             CC_LOG_ERROR("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
-            //assert(false);
+            assert(false);
         }
         return VK_FALSE;
     }
@@ -198,9 +198,9 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
 
         VkInstanceCreateInfo instanceInfo{ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };
         instanceInfo.pApplicationInfo = &app;
-        instanceInfo.enabledExtensionCount = toU32(_extensions.size());
+        instanceInfo.enabledExtensionCount = toUint(_extensions.size());
         instanceInfo.ppEnabledExtensionNames = _extensions.data();
-        instanceInfo.enabledLayerCount = toU32(_layers.size());
+        instanceInfo.enabledLayerCount = toUint(_layers.size());
         instanceInfo.ppEnabledLayerNames = _layers.data();
 
 #ifdef CC_GFX_DEBUG

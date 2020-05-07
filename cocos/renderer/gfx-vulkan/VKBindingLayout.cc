@@ -29,6 +29,8 @@ bool CCVKBindingLayout::initialize(const GFXBindingLayoutInfo &info)
             bindingUnit.binding = binding.binding;
             bindingUnit.type = binding.type;
             bindingUnit.name = binding.name;
+            bindingUnit.count = binding.count;
+            bindingUnit.shaderStages = binding.shaderStages;
         }
     }
 

@@ -47,7 +47,7 @@ public:
 class CCVKGPUSwapchain
 {
 public:
-    uint curImageIndex;
+    uint curImageIndex = 0;
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
     vector<VkImageView>::type vkSwapchainImageViews;
     vector<VkFramebuffer>::type vkSwapchainFramebuffers;

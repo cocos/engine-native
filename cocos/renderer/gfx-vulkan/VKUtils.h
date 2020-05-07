@@ -12,7 +12,7 @@ namespace
     #define COUNTOF(array) (sizeof(*countof_helper(array)) + 0)
 
     template <class T>
-    uint toU32(T value)
+    uint toUint(T value)
     {
         static_assert(std::is_arithmetic<T>::value, "T must be numeric");
 

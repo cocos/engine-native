@@ -95,7 +95,7 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
 
     if (attachmentCount)
     {
-        for (uint i = 0u; i < attachmentCount - 1; i++)
+        for (size_t i = 0u; i < attachmentCount - 1; i++)
         {
             barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
                 _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
@@ -141,7 +141,7 @@ void CCVKCommandBuffer::endRenderPass()
 
     if (attachmentCount)
     {
-        for (uint i = 0u; i < attachmentCount - 1; i++)
+        for (size_t i = 0u; i < attachmentCount - 1; i++)
         {
             barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
                 _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];

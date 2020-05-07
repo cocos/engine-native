@@ -105,6 +105,7 @@ bool CCVKTexture::initialize(const GFXTextureInfo &info)
     {
         CC_DELETE(_gpuTexture);
         _gpuTexture = nullptr;
+        _status = GFXStatus::FAILED;
         return false;
     }
 
