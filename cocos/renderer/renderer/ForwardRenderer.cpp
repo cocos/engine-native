@@ -314,7 +314,7 @@ void ForwardRenderer::opaqueStage(const View& view, std::vector<StageItem>& item
     // update uniforms
     _device->setUniformMat4(cc_matView, view.matView);
     _device->setUniformMat4(cc_matViewInv,view.matViewInv);
-    _device->setUniformMat4(cc_matpProj, view.matProj);
+    _device->setUniformMat4(cc_matProj, view.matProj);
     _device->setUniformMat4(cc_matViewProj, view.matViewProj);
     static Vec3 cameraPos3;
     static Vec4 cameraPos4;
@@ -345,7 +345,7 @@ void ForwardRenderer::transparentStage(const View& view, const std::vector<Stage
     // update uniforms
     _device->setUniformMat4(cc_matView, view.matView);
     _device->setUniformMat4(cc_matViewInv,view.matViewInv);
-    _device->setUniformMat4(cc_matpProj, view.matProj);
+    _device->setUniformMat4(cc_matProj, view.matProj);
     _device->setUniformMat4(cc_matViewProj, view.matViewProj);
     static Vec3 cameraPos3;
     static Vec4 cameraPos4;

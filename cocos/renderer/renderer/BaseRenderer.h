@@ -148,7 +148,7 @@ protected:
     static const size_t cc_matViewInv;
     static const size_t cc_matWorld;
     static const size_t cc_matWorldIT;
-    static const size_t cc_matpProj;
+    static const size_t cc_matProj;
     static const size_t cc_matViewProj;
     static const size_t cc_cameraPos;
     static const size_t cc_time;
