@@ -536,8 +536,10 @@ ZipFile::ZipFile()
 ZipFile::ZipFile(const std::string &zipFile, const std::string &filter)
 : _data(new ZipFilePrivate)
 {
-    std::lock_guard<std::mutex> lock(_readMutex);
-    _data->zipFile = unzOpen(FileUtils::getInstance()->getSuitableFOpen(zipFile).c_str());
+    {
+        std::lock_guard<std::mutex> lock(_readMutex);
+        _data->zipFile = unzOpen(FileUtils::getInstance()->getSuitableFOpen(zipFile).c_str());
+    }
     setFilter(filter);
 }
 
@@ -559,7 +561,7 @@ bool ZipFile::setFilter(const std::string &filter)
     {
         CC_BREAK_IF(!_data);
         CC_BREAK_IF(!_data->zipFile);
-
+        std::lock_guard<std::mutex> lock(_readMutex);
         // clear existing file list
         _data->fileList.clear();
 
@@ -680,8 +682,10 @@ bool ZipFile::getFileData(const std::string &fileName, ResizableBuffer* buffer)
 
 std::string ZipFile::getFirstFilename()
 {
-    std::lock_guard<std::mutex> lock(_readMutex);
-    if (unzGoToFirstFile(_data->zipFile) != UNZ_OK) return emptyFilename;
+    {
+        std::lock_guard<std::mutex> lock(_readMutex);
+        if (unzGoToFirstFile(_data->zipFile) != UNZ_OK) return emptyFilename;
+    }
     std::string path;
     unz_file_info info;
     getCurrentFileInfo(&path, &info);
@@ -690,8 +694,10 @@ std::string ZipFile::getFirstFilename()
 
 std::string ZipFile::getNextFilename()
 {
-    std::lock_guard<std::mutex> lock(_readMutex);
-    if (unzGoToNextFile(_data->zipFile) != UNZ_OK) return emptyFilename;
+    {
+        std::lock_guard<std::mutex> lock(_readMutex);
+        if (unzGoToNextFile(_data->zipFile) != UNZ_OK) return emptyFilename;
+    }
     std::string path;
     unz_file_info info;
     getCurrentFileInfo(&path, &info);
@@ -714,8 +720,10 @@ int ZipFile::getCurrentFileInfo(std::string *filename, unz_file_info *info)
 bool ZipFile::initWithBuffer(const void *buffer, uLong size)
 {
     if (!buffer || size == 0) return false;
-    std::lock_guard<std::mutex> lock(_readMutex);
-    _data->zipFile = unzOpenBuffer(buffer, size);
+    {
+        std::lock_guard<std::mutex> lock(_readMutex);
+        _data->zipFile = unzOpenBuffer(buffer, size);
+    }
     if (!_data->zipFile) return false;
 
     setFilter(emptyFilename);
