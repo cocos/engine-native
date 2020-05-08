@@ -118,7 +118,7 @@ public:
     bool isPowerOf2 = false;
     VkImage vkImage = VK_NULL_HANDLE;
     VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
-    void* buffer = nullptr;
+    VkImageLayout currentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 };
 
 class CCVKGPUTextureView : public Object
@@ -346,6 +346,60 @@ private:
     CCVKGPUDevice* _device;
     uint _count = 0;
     vector<VkSemaphore>::type _semaphores;
+};
+
+class CCVKGPUFencePool
+{
+public:
+    CCVKGPUFencePool(CCVKGPUDevice* device)
+        : _device(device)
+    {
+    }
+
+    ~CCVKGPUFencePool()
+    {
+        for (auto fence : _fences)
+        {
+            vkDestroyFence(_device->vkDevice, fence, nullptr);
+        }
+        _fences.clear();
+        _count = 0;
+    }
+
+    VkFence alloc()
+    {
+        if (_count < _fences.size())
+        {
+            return _fences[_count++];
+        }
+
+        VkFence fence = VK_NULL_HANDLE;
+        VkFenceCreateInfo createInfo{ VK_STRUCTURE_TYPE_FENCE_CREATE_INFO };
+        VK_CHECK(vkCreateFence(_device->vkDevice, &createInfo, nullptr, &fence));
+        _fences.push_back(fence);
+        _count++;
+
+        return fence;
+    }
+
+    void clear()
+    {
+        if (_count)
+        {
+            VK_CHECK(vkResetFences(_device->vkDevice, _count, _fences.data()));
+            _count = 0;
+        }
+    }
+
+    uint size()
+    {
+        return _count;
+    }
+
+private:
+    CCVKGPUDevice* _device;
+    uint _count = 0;
+    vector<VkFence>::type _fences;
 };
 
 NS_CC_END

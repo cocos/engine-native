@@ -106,7 +106,9 @@ bool CCVKWindow::initialize(const GFXWindowInfo &info)
     GFXFramebufferInfo fboInfo;
     fboInfo.renderPass = _renderPass;
     if (_colorTexView)
+    {
         fboInfo.colorViews.push_back(_colorTexView);
+    }
     fboInfo.depthStencilView = _depthStencilTexView;
     fboInfo.isOffscreen = _isOffscreen;
     _framebuffer = _device->createFramebuffer(fboInfo);

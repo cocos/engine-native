@@ -29,6 +29,11 @@ CCVKDevice::~CCVKDevice()
 {
 }
 
+CCVKGPUContext* CCVKDevice::gpuContext() const
+{
+    return ((CCVKContext*)_context)->gpuContext();
+}
+
 bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 {
     _gfxAPI = GFXAPI::VULKAN;
@@ -74,6 +79,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     _gpuDevice = CC_NEW(CCVKGPUDevice);
     _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
+    _gpuFencePool = CC_NEW(CCVKGPUFencePool(_gpuDevice));
 
     // check extensions
     uint availableLayerCount;
@@ -244,6 +250,7 @@ void CCVKDevice::destroy()
     CC_SAFE_DESTROY(_window);
     CC_SAFE_DESTROY(_renderPass);
     CC_SAFE_DELETE(_gpuSemaphorePool);
+    CC_SAFE_DELETE(_gpuFencePool);
 
     for (auto textureView : _depthStencilTextureViews)
     {
@@ -400,14 +407,16 @@ void CCVKDevice::buildSwapchain()
 
 void CCVKDevice::begin()
 {
-    CCVKGPUQueue* queue = ((CCVKQueue*)_queue)->gpuQueue();
-
     _gpuSemaphorePool->clear();
-    VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
+    _gpuFencePool->clear();
+    auto commandPool = ((CCVKCommandAllocator*)_cmdAllocator)->gpuCommandPool()->vkCommandPool;
+    VK_CHECK(vkResetCommandPool(_gpuDevice->vkDevice, commandPool, 0));
+
+    auto acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
         ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
-    VK_CHECK(vkResetCommandPool(_gpuDevice->vkDevice, ((CCVKCommandAllocator*)_cmdAllocator)->gpuCommandPool()->vkCommandPool, 0));
 
+    auto queue = ((CCVKQueue*)_queue)->gpuQueue();
     queue->waitSemaphore = acquireSemaphore;
     queue->signalSemaphore = _gpuSemaphorePool->alloc();
 }
