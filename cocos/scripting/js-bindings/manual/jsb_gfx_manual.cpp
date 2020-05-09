@@ -728,9 +728,11 @@ bool register_all_gfx_manual(se::Object* obj)
     __jsb_cocos2d_GLES2Device_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_GLES2Device_copyTexImagesToTexture));
 #endif // USE_GLES2
     
+#ifdef USE_GLES3
     register_all_gles3(obj);
     __jsb_cocos2d_GLES3Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES3Device_copyBuffersToTexture));
     __jsb_cocos2d_GLES3Device_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_GLES3Device_copyTexImagesToTexture));
+#endif // USE_GLES3
     
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     register_all_mtl(obj);
