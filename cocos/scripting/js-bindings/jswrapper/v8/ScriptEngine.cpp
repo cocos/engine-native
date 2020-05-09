@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  Copyright (c) 2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
@@ -33,6 +33,8 @@
 #include "../State.hpp"
 #include "../MappingUtils.hpp"
 #include "platform/CCFileUtils.h"
+
+#include <sstream>
 
 #if SE_ENABLE_INSPECTOR
 #include "debugger/inspector_agent.h"
@@ -374,10 +376,14 @@ namespace se {
         }
         _beforeInitHookArray.clear();
 
+        std::string flags;
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-        std::string flags("--jitless");
-        v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
+        flags.append(" --jitless");
 #endif
+        flags.append(" --no-flush-bytecode --no-lazy");
+        if (flags.size() > 0) {
+            v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
+        }
         v8::Isolate::CreateParams create_params;
         create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
         _isolate = v8::Isolate::New(create_params);
@@ -707,10 +713,167 @@ namespace se {
         return _fileOperationDelegate;
     }
 
+
+    bool ScriptEngine::saveByteCodeToFile(const std::string& path, const std::string& path_bc)
+    {
+
+        auto fu = cocos2d::FileUtils::getInstance();
+
+        if (path_bc.length() > 3 && path_bc.substr(path_bc.length() - 3) != ".bc") {
+            SE_LOGE("ScriptEngine::generateByteCode bytecode file path should endwith \".bc\"\n");;
+            return false;
+        }
+
+        bool success = false;
+
+        if (fu->isFileExist(path_bc))
+        {
+            SE_LOGE("ScriptEngine::generateByteCode file already exists!\n");;
+            return false;
+        }
+
+        cocos2d::Data sourceData;
+        cocos2d::FileUtils::getInstance()->getContents(path, &sourceData);
+
+        v8::Local<v8::String> code = v8::String::NewFromUtf8(_isolate, (char*)sourceData.getBytes(), v8::NewStringType::kNormal, sourceData.getSize()).ToLocalChecked();
+        v8::Local<v8::Value> scriptPath = v8::String::NewFromUtf8(_isolate, path.data(), v8::NewStringType::kNormal).ToLocalChecked();
+
+        v8::ScriptOrigin origin(scriptPath);
+        v8::ScriptCompiler::Source source(code, origin);
+
+        v8::Local<v8::Context> parsing_context = v8::Local<v8::Context>::New(_isolate, _context);
+        v8::Context::Scope parsing_scope(parsing_context);
+
+        v8::TryCatch tryCatch(_isolate);
+        v8::Local<v8::UnboundScript> v8_script = v8::ScriptCompiler::CompileUnboundScript(_isolate, &source, v8::ScriptCompiler::kEagerCompile)
+            .ToLocalChecked();
+
+        v8::ScriptCompiler::CachedData *cd = v8::ScriptCompiler::CreateCodeCache(v8_script);
+        cocos2d::Data writeData;
+        writeData.copy(cd->data, cd->length);
+
+        int last_sep = path_bc.size() - 1;
+        while (last_sep >= 0 && path_bc[last_sep] != '/') {
+            last_sep -= 1;
+        }
+
+        if (last_sep == 0) {
+            SE_LOGE("ScriptEngine::generateByteCode no directory component found in path %s\n", path.c_str());
+            return false;
+        }
+
+        std::string path_bc_dir = path_bc.substr(0, last_sep);
+        success = fu->createDirectory(path_bc_dir);
+        if (!success) {
+            SE_LOGE("ScriptEngine::generateByteCode failed to create bytecode for %s\n", path.c_str());
+            return success;
+        }
+        success = fu->writeDataToFile(writeData, path_bc);
+        if (!success) {
+            SE_LOGE("ScriptEngine::generateByteCode write %s\n", path_bc.c_str());
+        }
+        return success;
+    }
+
+    bool ScriptEngine::runByteCodeFile(const std::string &path_bc, Value* ret/* = nullptr */)
+    {
+        auto fu = cocos2d::FileUtils::getInstance();
+
+        cocos2d::Data cachedData;
+        fu->getContents(path_bc, &cachedData);
+        v8::Local<v8::Value> scriptPath = v8::String::NewFromUtf8(_isolate, path_bc.data(), v8::NewStringType::kNormal).ToLocalChecked();
+
+        uint8_t *p = cachedData.getBytes() + 8;
+        int filesize = p[0] + (p[1] << 8) + (p[2] << 16) + (p[3] << 24);
+
+        {
+            // fix bytecode
+            v8::HandleScope scope(_isolate);
+            v8::Local<v8::String> dummyBytecodeSource = v8::String::NewFromUtf8(_isolate, "\" \"", v8::NewStringType::kNormal).ToLocalChecked();
+            v8::ScriptCompiler::Source dummySource(dummyBytecodeSource);
+            v8::Local<v8::UnboundScript> dummyFunction = v8::ScriptCompiler::CompileUnboundScript(_isolate, &dummySource, v8::ScriptCompiler::kEagerCompile).ToLocalChecked();
+            v8::ScriptCompiler::CachedData* dummyData = v8::ScriptCompiler::CreateCodeCache(dummyFunction);
+            memcpy(p + 4, dummyData->data + 12, 4);
+            // delete dummyData; //NOTE: managed by v8
+        }
+
+        v8::Local<v8::Integer> offset = v8::Int32::New(_isolate, 0);
+        v8::Local<v8::Integer> column = v8::Int32::New(_isolate, 0);
+        v8::Local<v8::Boolean> crossOrigin = v8::Boolean::New(_isolate, true);;
+        v8::ScriptOrigin origin(scriptPath, offset, column, crossOrigin);
+
+        v8::ScriptCompiler::CachedData* v8_cache_data = new v8::ScriptCompiler::CachedData(cachedData.getBytes(), cachedData.getSize());
+        v8::Local<v8::String> fakeCode;
+        if (filesize > 0) {
+            std::vector<char> codeBuffer;
+            codeBuffer.resize(filesize + 1);
+            std::fill(codeBuffer.begin(), codeBuffer.end(), ' ');
+            codeBuffer[0] = '\"';
+            codeBuffer[filesize - 1] = '\"';
+            codeBuffer[filesize] = '\0';
+            fakeCode = v8::String::NewFromUtf8(_isolate, codeBuffer.data(), v8::NewStringType::kNormal, filesize).ToLocalChecked();
+
+            assert(fakeCode->Length() == filesize);
+        }
+
+        v8::ScriptCompiler::Source source(fakeCode, origin, v8_cache_data);
+
+        if (source.GetCachedData() == nullptr) {
+            SE_LOGE("ScriptEngine::runByteCodeFile can not load cacheData for %s", path_bc.c_str());
+            return false;
+        }
+
+        v8::TryCatch tryCatch(_isolate);
+        v8::Local<v8::UnboundScript> v8_script = v8::ScriptCompiler::CompileUnboundScript(_isolate, &source, v8::ScriptCompiler::kConsumeCodeCache)
+            .ToLocalChecked();
+
+        if (v8_script.IsEmpty())
+        {
+            SE_LOGE("ScriptEngine::runByteCodeFile can not compile %s!\n", path_bc.c_str());
+            return false;
+        }
+
+        if (source.GetCachedData()->rejected)
+        {
+            SE_LOGE("ScriptEngine::runByteCodeFile cache rejected %s!\n", path_bc.c_str());
+            return false;
+        }
+
+        v8::Local<v8::Script>  runnable_script = v8_script->BindToCurrentContext();
+        v8::MaybeLocal<v8::Value> result = runnable_script->Run(_context.Get(_isolate));
+
+        if (result.IsEmpty())
+        {
+            SE_LOGE("ScriptEngine::runByteCodeFile script %s, failed!\n", path_bc.c_str());
+            return false;
+        }
+
+        if (!result.ToLocalChecked()->IsUndefined() && ret != nullptr)
+        {
+            internal::jsToSeValue(_isolate, result.ToLocalChecked(), ret);
+        }
+
+        SE_LOGE("ScriptEngine::runByteCodeFile success %s!\n", path_bc.c_str());
+
+        return true;
+    }
+
     bool ScriptEngine::runScript(const std::string& path, Value* ret/* = nullptr */)
     {
         assert(!path.empty());
         assert(_fileOperationDelegate.isValid());
+
+        if (!cocos2d::FileUtils::getInstance()->isFileExist(path)) {
+            std::stringstream ss;
+            ss << "throw new Error(\"Failed to require file '"
+                << path << "'\, not found!\");";
+            evalString(ss.str().c_str());
+            return false;
+        }
+
+        if (path.length() > 3 && path.substr(path.length() - 3) == ".bc") {
+            return runByteCodeFile(path, ret);
+        }
 
         std::string scriptBuffer = _fileOperationDelegate.onGetStringFromFile(path);
 
