@@ -123,7 +123,10 @@ elseif(IOS)
         proj.ios_mac/ios/ViewController.h
         ${UI_RESOURCES}
     )
-
+elseif(ANDROID)
+    list(APPEND PROJ_SOURCES
+        proj.android-studio/app/jni/hellojavascript/main.cpp
+    )
 endif()
 
 set(asset_files)
