@@ -5,7 +5,7 @@
 
 NS_CC_BEGIN
 
-class CCVKGPUContext
+class CCVKGPUContext : public Object
 {
 public:
     VkInstance vkInstance = VK_NULL_HANDLE;
@@ -44,7 +44,7 @@ public:
     vector<VkImageMemoryBarrier>::type endBarriers;
 };
 
-class CCVKGPUSwapchain
+class CCVKGPUSwapchain : public Object
 {
 public:
     uint curImageIndex = 0;
@@ -62,7 +62,8 @@ class CCVKGPUCommandPool : public Object
 {
 public:
     VkCommandPool vkCommandPool = VK_NULL_HANDLE;
-    map<VkCommandBufferLevel, CachedArray<VkCommandBuffer>>::type commandBuffers;
+    CachedArray<VkCommandBuffer> commandBuffers[2];
+    CachedArray<VkCommandBuffer> usedCommandBuffers[2];
 };
 
 class CCVKGPUCommandBuffer : public Object
@@ -298,7 +299,7 @@ public:
     VkPipelineCache vkPipelineCache = VK_NULL_HANDLE;
 };
 
-class CCVKGPUSemaphorePool
+class CCVKGPUSemaphorePool : public Object
 {
 public:
     CCVKGPUSemaphorePool(CCVKGPUDevice* device)
@@ -332,7 +333,7 @@ public:
         return semaphore;
     }
 
-    void clear()
+    void reset()
     {
         _count = 0;
     }
@@ -348,7 +349,7 @@ private:
     vector<VkSemaphore>::type _semaphores;
 };
 
-class CCVKGPUFencePool
+class CCVKGPUFencePool : public Object
 {
 public:
     CCVKGPUFencePool(CCVKGPUDevice* device)
@@ -382,7 +383,7 @@ public:
         return fence;
     }
 
-    void clear()
+    void reset()
     {
         if (_count)
         {

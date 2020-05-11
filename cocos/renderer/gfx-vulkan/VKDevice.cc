@@ -141,6 +141,13 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     ///////////////////// Resource Initialization /////////////////////
 
+    GFXQueueInfo queueInfo;
+    queueInfo.type = GFXQueueType::GRAPHICS;
+    _queue = createQueue(queueInfo);
+
+    GFXCommandAllocatorInfo cmd_alloc_info;
+    _cmdAllocator = createCommandAllocator(cmd_alloc_info);
+
     for (uint i = 0; i < context->swapchainCreateInfo.minImageCount; i++)
     {
         GFXTextureInfo depthStecnilTexInfo;
@@ -191,13 +198,6 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     windowInfo.depthStencilFmt = _context->getDepthStencilFormat();
     windowInfo.isOffscreen = false;
     _window = createWindow(windowInfo);
-
-    GFXQueueInfo queueInfo;
-    queueInfo.type = GFXQueueType::GRAPHICS;
-    _queue = createQueue(queueInfo);
-
-    GFXCommandAllocatorInfo cmd_alloc_info;
-    _cmdAllocator = createCommandAllocator(cmd_alloc_info);
 
     String instanceLayers, instanceExtensions, deviceLayers, deviceExtensions;
     for (auto layer : ((CCVKContext*)_context)->getLayers())
@@ -407,11 +407,6 @@ void CCVKDevice::buildSwapchain()
 
 void CCVKDevice::begin()
 {
-    _gpuSemaphorePool->clear();
-    _gpuFencePool->clear();
-    auto commandPool = ((CCVKCommandAllocator*)_cmdAllocator)->gpuCommandPool()->vkCommandPool;
-    VK_CHECK(vkResetCommandPool(_gpuDevice->vkDevice, commandPool, 0));
-
     auto acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
         ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
@@ -438,6 +433,10 @@ void CCVKDevice::present()
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
 
     VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
+
+    _gpuSemaphorePool->reset();
+    _gpuFencePool->reset();
+    ((CCVKCommandAllocator*)_cmdAllocator)->reset();
 
     // Clear queue stats
     queue->_numDrawCalls = 0;

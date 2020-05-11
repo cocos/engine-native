@@ -28,7 +28,7 @@ namespace
         else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
         {
             CC_LOG_ERROR("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
-            assert(false);
+            CCASSERT(0, "Validation Error");
         }
         return VK_FALSE;
     }
@@ -39,7 +39,7 @@ namespace
         if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT)
         {
             CC_LOG_ERROR("VError: %s: %s", layerPrefix, message);
-            assert(false);
+            CCASSERT(0, "Validation Error");
         }
         else if (flags & VK_DEBUG_REPORT_WARNING_BIT_EXT)
         {

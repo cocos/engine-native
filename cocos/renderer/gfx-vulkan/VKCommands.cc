@@ -203,25 +203,17 @@ namespace
 
     VkAccessFlags MapVkAccessFlags(GFXTextureUsage usage, GFXFormat format)
     {
-        auto &info = GFX_FORMAT_INFOS[(uint)format];
-        switch (usage)
+        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_ACCESS_TRANSFER_READ_BIT;
+        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_ACCESS_TRANSFER_WRITE_BIT;
+        if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        if (usage & GFXTextureUsage::INPUT_ATTACHMENT) return VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
+        if (usage & GFXTextureUsage::SAMPLED)
         {
-        case GFXTextureUsage::TRANSFER_SRC: return VK_ACCESS_TRANSFER_READ_BIT;
-        case GFXTextureUsage::TRANSFER_DST: return VK_ACCESS_TRANSFER_WRITE_BIT;
-        case GFXTextureUsage::SAMPLED:
-            if (info.hasDepth) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+            if (GFX_FORMAT_INFOS[(uint)format].hasDepth) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
             else return VK_ACCESS_SHADER_READ_BIT;
-        case GFXTextureUsage::STORAGE: return VK_ACCESS_SHADER_READ_BIT;
-        case GFXTextureUsage::COLOR_ATTACHMENT: return VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        case GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT: return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-        case GFXTextureUsage::TRANSIENT_ATTACHMENT: return VK_ACCESS_SHADER_READ_BIT;
-        case GFXTextureUsage::INPUT_ATTACHMENT: return VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
-        default:
-        {
-            CCASSERT(false, "Unsupported GFXTextureUsage, convert to VkAccessFlags failed.");
-            return VK_ACCESS_SHADER_READ_BIT;
         }
-        }
+        return VK_ACCESS_SHADER_READ_BIT;
     }
 
     VkPipelineBindPoint MapVkPipelineBindPoint(GFXPipelineBindPoint bindPoint)
@@ -316,27 +308,21 @@ namespace
     VkImageLayout MapVkImageLayout(GFXTextureUsage usage, GFXFormat format)
     {
         auto &info = GFX_FORMAT_INFOS[(uint)format];
-        switch (usage)
+        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT)
         {
-        case GFXTextureUsage::TRANSFER_SRC: return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-        case GFXTextureUsage::TRANSFER_DST: return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        case GFXTextureUsage::SAMPLED:
+            if (info.hasStencil) return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            else return VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
+        }
+        if (usage & GFXTextureUsage::SAMPLED)
+        {
             if (info.hasDepth && info.hasStencil) return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
             else if (info.hasDepth) return VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
             else return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        case GFXTextureUsage::STORAGE: return VK_IMAGE_LAYOUT_UNDEFINED;
-        case GFXTextureUsage::COLOR_ATTACHMENT: return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        case GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT:
-            if (info.hasStencil) return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-            else return VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
-        case GFXTextureUsage::TRANSIENT_ATTACHMENT: return VK_IMAGE_LAYOUT_UNDEFINED;
-        case GFXTextureUsage::INPUT_ATTACHMENT: return VK_IMAGE_LAYOUT_UNDEFINED;
-        default:
-        {
-            CCASSERT(false, "Unsupported GFXTextureUsage, convert to VkImageLayout failed.");
-            return VK_IMAGE_LAYOUT_UNDEFINED;
         }
-        }
+        return VK_IMAGE_LAYOUT_UNDEFINED;
     }
 
     VkImageAspectFlags MapVkImageAspectFlags(GFXFormat format)
@@ -346,6 +332,16 @@ namespace
         if (info.hasDepth) { aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT; }
         if (info.hasStencil) { aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT; }
         return aspectMask;
+    }
+
+    VkPipelineStageFlags MapVkPipelineStageFlags(GFXTextureUsage usage)
+    {
+        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_PIPELINE_STAGE_TRANSFER_BIT;
+        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_PIPELINE_STAGE_TRANSFER_BIT;
+        if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+        if (usage & GFXTextureUsage::SAMPLED) return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
+        return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
     }
 
     uint selectMemoryType(const VkPhysicalDeviceMemoryProperties& memoryProperties, uint memoryTypeBits, VkMemoryPropertyFlags flags)
@@ -792,18 +788,18 @@ void CCVKCmdFuncDestroyCommandPool(CCVKDevice* device, CCVKGPUCommandPool* gpuCo
 void CCVKCmdFuncAllocateCommandBuffer(CCVKDevice* device, CCVKGPUCommandBuffer* gpuCommandBuffer)
 {
     CCVKGPUCommandPool* commandPool = gpuCommandBuffer->commandPool;
-    VkCommandBufferLevel level = MapVkCommandBufferLevel(gpuCommandBuffer->type);
+    auto &availableList = commandPool->commandBuffers[(uint)gpuCommandBuffer->type];
 
-    if (commandPool->commandBuffers[level].size())
+    if (availableList.size())
     {
-        gpuCommandBuffer->vkCommandBuffer = commandPool->commandBuffers[level].pop();
+        gpuCommandBuffer->vkCommandBuffer = availableList.pop();
     }
     else
     {
         VkCommandBufferAllocateInfo allocateInfo{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO };
         allocateInfo.commandPool = commandPool->vkCommandPool;
         allocateInfo.commandBufferCount = 1;
-        allocateInfo.level = level;
+        allocateInfo.level = MapVkCommandBufferLevel(gpuCommandBuffer->type);
 
         VK_CHECK(vkAllocateCommandBuffers(device->gpuDevice()->vkDevice, &allocateInfo, &gpuCommandBuffer->vkCommandBuffer));
     }
@@ -811,11 +807,9 @@ void CCVKCmdFuncAllocateCommandBuffer(CCVKDevice* device, CCVKGPUCommandBuffer* 
 
 void CCVKCmdFuncFreeCommandBuffer(CCVKDevice* device, CCVKGPUCommandBuffer* gpuCommandBuffer)
 {
-    VkCommandBufferLevel level = MapVkCommandBufferLevel(gpuCommandBuffer->type);
-
     if (gpuCommandBuffer->vkCommandBuffer)
     {
-        gpuCommandBuffer->commandPool->commandBuffers[level].push(gpuCommandBuffer->vkCommandBuffer);
+        gpuCommandBuffer->commandPool->usedCommandBuffers[(uint)gpuCommandBuffer->type].push(gpuCommandBuffer->vkCommandBuffer);
         gpuCommandBuffer->vkCommandBuffer = VK_NULL_HANDLE;
     }
 }
@@ -958,7 +952,7 @@ bool CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
         barrier.subresourceRange.aspectMask = MapVkImageAspectFlags(gpuTexture->format);
         barrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
         barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-        vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_VERTEX_SHADER_BIT, 0,
+        vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, VK_PIPELINE_STAGE_HOST_BIT, MapVkPipelineStageFlags(gpuTexture->usage), 0,
             0, nullptr, 0, nullptr, 1, &barrier);
 
         endOneTimeCommands(device, &cmdBuff);
@@ -996,7 +990,7 @@ void CCVKCmdFuncCreateTextureView(CCVKDevice* device, CCVKGPUTextureView* gpuTex
     createInfo.image = gpuTextureView->gpuTexture->vkImage;
     createInfo.viewType = MapVkImageViewType(gpuTextureView->type);
     createInfo.format = MapVkFormat(gpuTextureView->format);
-    createInfo.subresourceRange.aspectMask = MapVkImageAspectFlags(gpuTextureView->format);
+    createInfo.subresourceRange.aspectMask = GFX_FORMAT_INFOS[(uint)gpuTextureView->format].hasDepth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
     createInfo.subresourceRange.baseMipLevel = gpuTextureView->baseLevel;
     createInfo.subresourceRange.levelCount = gpuTextureView->levelCount;
     createInfo.subresourceRange.baseArrayLayer = 0;
@@ -1113,8 +1107,7 @@ void CCVKCmdFuncCreateFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFra
     createInfo.height = colorViewCount ? gpuFramebuffer->gpuColorViews[0]->gpuTexture->height : 1;
     createInfo.layers = 1;
 
-    VkFramebuffer framebuffer = 0;
-    VK_CHECK(vkCreateFramebuffer(device->gpuDevice()->vkDevice, &createInfo, nullptr, &framebuffer));
+    VK_CHECK(vkCreateFramebuffer(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuFramebuffer->vkFramebuffer));
 }
 
 void CCVKCmdFuncDestroyFramebuffer(CCVKDevice* device, CCVKGPUFramebuffer* gpuFramebuffer)

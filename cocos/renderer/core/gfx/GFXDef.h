@@ -891,7 +891,6 @@ struct GFXBindingUnit {
   uint binding = 0;
   GFXBindingType type = GFXBindingType::UNKNOWN;
   String name;
-  GFXShaderType shaderStages = GFXShaderType::NONE;
   uint count = 0;
   GFXBuffer* buffer = nullptr;
   GFXTextureView* texView = nullptr;

@@ -24,7 +24,7 @@
         if (err)                                            \
         {                                                   \
             CC_LOG_ERROR("Detected Vulkan error: %d", err); \
-            CC_ASSERT(0);                                   \
+            CCASSERT(0, "Vulkan Error");                    \
         }                                                   \
     } while (0)
 
@@ -34,7 +34,7 @@
 	    if ((handle) == VK_NULL_HANDLE)     \
 	    {                                   \
 		    CC_LOG_ERROR("Handle is NULL"); \
-		    CC_ASSERT(0);                   \
+		    CCASSERT(0);                    \
 	    }                                   \
     } while (0)
 
