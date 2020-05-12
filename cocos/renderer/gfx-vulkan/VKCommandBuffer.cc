@@ -4,6 +4,9 @@
 #include "VKCommandAllocator.h"
 #include "VKFramebuffer.h"
 
+#include "VKBuffer.h"
+#include "VKTexture.h"
+#include "VKRenderpass.h"
 #include "VKPipelineState.h"
 #include "VKBindingLayout.h"
 #include "VKInputAssembler.h"
@@ -51,7 +54,7 @@ void CCVKCommandBuffer::destroy()
     _status = GFXStatus::UNREADY;
 }
 
-void CCVKCommandBuffer::begin()
+void CCVKCommandBuffer::begin(GFXRenderPass* renderPass, uint subpass, GFXFramebuffer* frameBuffer)
 {
     _curGPUPipelineState = nullptr;
     _curGPUBindingLayout = nullptr;
@@ -65,9 +68,11 @@ void CCVKCommandBuffer::begin()
 
     if (_type == GFXCommandBufferType::SECONDARY)
     {
-        VkCommandBufferInheritanceInfo inheritance{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO };
-        // TODO
-        //beginInfo.pInheritanceInfo = &inheritance;
+        VkCommandBufferInheritanceInfo inheritanceInfo{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO };
+        inheritanceInfo.renderPass = ((CCVKRenderPass*)renderPass)->gpuRenderPass()->vkRenderPass;
+        inheritanceInfo.subpass = subpass;
+        inheritanceInfo.framebuffer = ((CCVKFramebuffer*)frameBuffer)->gpuFBO()->vkFramebuffer;
+        beginInfo.pInheritanceInfo = &inheritanceInfo;
     }
 
     VK_CHECK(vkBeginCommandBuffer(_gpuCommandBuffer->vkCommandBuffer, &beginInfo));
@@ -88,10 +93,17 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
     GFXClearFlags clearFlags, const std::vector<GFXColor>& colors, float depth, int stencil)
 {
     _curGPUFBO = ((CCVKFramebuffer*)fbo)->gpuFBO();
-    auto &renderPass = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass;
-    auto &barriers = renderPass->beginBarriers;
-    auto &clearValues = renderPass->clearValues;
-    auto attachmentCount = barriers.size();
+    CCVKGPURenderPass *renderPass = _curGPUFBO->gpuRenderPass;
+    VkFramebuffer framebuffer = _curGPUFBO->vkFramebuffer;
+    if (!_curGPUFBO->isOffscreen)
+    {
+        renderPass = _curGPUFBO->swapchain->renderPass;
+        framebuffer = _curGPUFBO->swapchain->vkSwapchainFramebuffers[_curGPUFBO->swapchain->curImageIndex];
+    }
+
+    vector<VkImageMemoryBarrier>::type &barriers = renderPass->beginBarriers;
+    vector<VkClearValue>::type &clearValues = renderPass->clearValues;
+    size_t attachmentCount = barriers.size();
 
     if (attachmentCount)
     {
@@ -111,9 +123,8 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
     }
 
     VkRenderPassBeginInfo passBeginInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
-    passBeginInfo.renderPass = _curGPUFBO->gpuRenderPass->vkRenderPass;
-    passBeginInfo.framebuffer = _curGPUFBO->isOffscreen ? _curGPUFBO->vkFramebuffer :
-        _curGPUFBO->swapchain->vkSwapchainFramebuffers[_curGPUFBO->swapchain->curImageIndex];
+    passBeginInfo.renderPass = renderPass->vkRenderPass;
+    passBeginInfo.framebuffer = framebuffer;
     passBeginInfo.renderArea.offset.x = renderArea.x;
     passBeginInfo.renderArea.offset.y = renderArea.y;
     passBeginInfo.renderArea.extent.width = renderArea.width;
@@ -135,25 +146,25 @@ void CCVKCommandBuffer::endRenderPass()
 {
     vkCmdEndRenderPass(_gpuCommandBuffer->vkCommandBuffer);
 
-    auto &renderPass = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass;
-    auto &barriers = renderPass->endBarriers;
-    auto attachmentCount = barriers.size();
+    //CCVKGPURenderPass *renderPass = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass;
+    //vector<VkImageMemoryBarrier>::type &barriers = renderPass->endBarriers;
+    //size_t attachmentCount = barriers.size();
 
-    if (attachmentCount)
-    {
-        for (size_t i = 0u; i < attachmentCount - 1; i++)
-        {
-            barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
-                _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
-        }
-        barriers[attachmentCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
-            _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
+    //if (attachmentCount)
+    //{
+    //    for (size_t i = 0u; i < attachmentCount - 1; i++)
+    //    {
+    //        barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
+    //            _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
+    //    }
+    //    barriers[attachmentCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
+    //        _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
 
-        vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer,
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
-            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
-            0, nullptr, 0, nullptr, barriers.size(), barriers.data());
-    }
+    //    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer,
+    //        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+    //        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+    //        0, nullptr, 0, nullptr, barriers.size(), barriers.data());
+    //}
 
     _curGPUFBO = nullptr;
 }
@@ -182,7 +193,7 @@ void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout* layout)
 
 void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler* ia)
 {
-    auto gpuInputAssembler = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
+    const CCVKGPUInputAssembler* gpuInputAssembler = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
 
     vkCmdBindVertexBuffers(_gpuCommandBuffer->vkCommandBuffer, 0, gpuInputAssembler->vertexBuffers.size(),
         gpuInputAssembler->vertexBuffers.data(), gpuInputAssembler->vertexBufferOffsets.data());
@@ -334,6 +345,7 @@ void CCVKCommandBuffer::updateBuffer(GFXBuffer* buff, void* data, uint size, uin
     if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
+        CCVKCmdFuncUpdateBuffer((CCVKDevice*)_device, ((CCVKBuffer*)buff)->gpuBuffer(), data, offset, size);
     }
     else
     {
@@ -346,6 +358,10 @@ void CCVKCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFX
     if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
+        //const CCVKGPUBuffer* gpuBuffer = ((CCVKBuffer*)src)->gpuBuffer();
+        //const CCVKGPUTexture* gpuTexture = ((CCVKTexture*)dst)->gpuTexture();
+        //vkCmdCopyBufferToImage(_gpuCommandBuffer->vkCommandBuffer, gpuBuffer->vkBuffer, gpuTexture->vkImage, MapVkImageLayout(layout),
+        //    regions.size(), regions.data());
     }
     else
     {
@@ -353,16 +369,21 @@ void CCVKCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFX
     }
 }
 
-void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmd_buffs, uint count)
+void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmdBuffs, uint count)
 {
+    vector<VkCommandBuffer>::type vkCmdBuffs(count);
+
     for (uint i = 0; i < count; ++i)
     {
-        CCVKCommandBuffer* cmd_buff = (CCVKCommandBuffer*)cmd_buffs[i];
+        CCVKCommandBuffer* cmdBuff = (CCVKCommandBuffer*)cmdBuffs[i];
+        vkCmdBuffs[i] = cmdBuff->_gpuCommandBuffer->vkCommandBuffer;
 
-        _numDrawCalls += cmd_buff->getNumDrawCalls();
-        _numInstances += cmd_buff->getNumInstances();
-        _numTriangles += cmd_buff->getNumTris();
+        _numDrawCalls += cmdBuff->getNumDrawCalls();
+        _numInstances += cmdBuff->getNumInstances();
+        _numTriangles += cmdBuff->getNumTris();
     }
+
+    vkCmdExecuteCommands(_gpuCommandBuffer->vkCommandBuffer, count, vkCmdBuffs.data());
 }
 
 void CCVKCommandBuffer::BindStates()

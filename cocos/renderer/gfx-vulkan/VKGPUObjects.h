@@ -1,7 +1,7 @@
 #ifndef CC_GFXVULKAN_GPU_OBJECTS_H_
 #define CC_GFXVULKAN_GPU_OBJECTS_H_
 
-#include "volk.h"
+#include "VKUtils.h"
 
 NS_CC_BEGIN
 
@@ -30,6 +30,7 @@ public:
     VkDevice vkDevice = VK_NULL_HANDLE;
     vector<VkLayerProperties>::type layers;
     vector<VkExtensionProperties>::type extensions;
+    VmaAllocator memoryAllocator = VK_NULL_HANDLE;
 };
 
 class CCVKGPURenderPass : public Object
@@ -94,10 +95,13 @@ public:
     uint size = 0;
     uint stride = 0;
     uint count = 0;
-    VkBuffer vkBuffer = VK_NULL_HANDLE;
-    VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
     void* buffer = nullptr;
     GFXDrawInfoList indirects;
+
+    VkBuffer vkBuffer = VK_NULL_HANDLE;
+    VkDeviceSize startOffset = 0u;
+    uint8_t* mappedData = nullptr;
+    VmaAllocation vmaAllocation = VK_NULL_HANDLE;
 };
 typedef vector<CCVKGPUBuffer*>::type CCVKGPUBufferList;
 
@@ -117,9 +121,13 @@ public:
     GFXSampleCount samples = GFXSampleCount::X1;
     GFXTextureFlags flags = GFXTextureFlagBit::NONE;
     bool isPowerOf2 = false;
+
     VkImage vkImage = VK_NULL_HANDLE;
-    VkDeviceMemory vkDeviceMemory = VK_NULL_HANDLE;
+    VmaAllocation vmaAllocation = VK_NULL_HANDLE;
     VkImageLayout currentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    VkAccessFlags accessMask = VK_ACCESS_SHADER_READ_BIT;
+    VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    VkPipelineStageFlags targetStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 };
 
 class CCVKGPUTextureView : public Object
@@ -309,7 +317,7 @@ public:
 
     ~CCVKGPUSemaphorePool()
     {
-        for (auto semaphore : _semaphores)
+        for (VkBuffer semaphore : _semaphores)
         {
             vkDestroySemaphore(_device->vkDevice, semaphore, nullptr);
         }
@@ -359,7 +367,7 @@ public:
 
     ~CCVKGPUFencePool()
     {
-        for (auto fence : _fences)
+        for (VkFence fence : _fences)
         {
             vkDestroyFence(_device->vkDevice, fence, nullptr);
         }
