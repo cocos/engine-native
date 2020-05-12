@@ -75,7 +75,6 @@ extern "C" {
 }
 
 Application* Application::_instance = nullptr;
-std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
 Application::Application(const std::string& name, int width, int height)
 {

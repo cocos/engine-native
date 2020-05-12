@@ -59,7 +59,6 @@ namespace
 }
 
 Application* Application::_instance = nullptr;
-std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
 #define CAST_VIEW(view)    ((GLView*)view)
 

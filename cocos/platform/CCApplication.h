@@ -193,7 +193,7 @@ private:
     void createView(const std::string& name, int width, int height);
     
     static Application* _instance;
-    static std::shared_ptr<Scheduler> _scheduler;
+    std::shared_ptr<Scheduler> _scheduler;
     
     void* _view = nullptr;
     void* _delegate = nullptr;
