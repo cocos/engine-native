@@ -159,6 +159,7 @@ endforeach()
 
 if(ANDROID)
     add_library(${LIB_NAME} SHARED ${PROJ_SOURCES} ${PROJ_EXTRA_SOURCE})
+    set_property(TARGET ${LIB_NAME} APPEND_STRING PROPERTY LINK_FLAGS "-u ANativeActivity_onCreate")
 elseif(APPLE OR MSVC)
     add_executable(${LIB_NAME} ${PROJ_SOURCES} ${asset_files} ${PROJ_EXTRA_SOURCE})
     source_group(TREE ${GAME_RES_ROOT} PREFIX "Resources" FILES ${asset_files})
