@@ -56,7 +56,7 @@ function build_android()
     
     echo "Compile Android - cmake ..."
     echo "ANDORID_NDK ${ANDROID_NDK} or ${ANDROID_NDK_HOME}" 
-    ./gradlew packageDebug --quiet
+    ./gradlew assembleDebug --quiet
     echo "Compile Android Done!"
 }
 
