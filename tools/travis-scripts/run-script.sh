@@ -57,7 +57,7 @@ function build_android()
     echo "Compile Android - cmake ..."
     echo "PROP_USE_CMAKE = true" >> gradle.properties 
     echo "ANDORID_NDK ${ANDROID_NDK} or ${ANDROID_NDK_HOME}" 
-    ./gradlew assembleDebug --quiet
+    ./gradlew packageDebug --quiet
     echo "Compile Android Done!"
 }
 
