@@ -56,6 +56,11 @@ void EditBox::hide()
     JniHelper::callStaticVoidMethod(JCLS_EDITBOX, "hideNative");
 }
 
+void EditBox::updateRect(int x, int y, int width, int height)
+{
+    // not supported ...
+}
+
 NS_CC_END
 
 namespace

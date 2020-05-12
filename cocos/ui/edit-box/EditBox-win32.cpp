@@ -200,6 +200,18 @@ void EditBox::hide()
     SetWindowLongPtr(getCocosWindow(), GWL_WNDPROC, (LONG_PTR)g_prevMainWindowProc);
 }
 
+void EditBox::updateRect(int x, int y, int width, int height)
+{
+    int windowHeight = getCocosWindowHeight();
+    SetWindowPos(g_hwndEditBox,
+        HWND_NOTOPMOST,
+        x,
+        windowHeight - y - height,
+        width,
+        height,
+        SWP_NOZORDER);
+}
+
 void EditBox::complete()
 {
     callJSFunc("complete", getText(g_hwndEditBox).c_str());
