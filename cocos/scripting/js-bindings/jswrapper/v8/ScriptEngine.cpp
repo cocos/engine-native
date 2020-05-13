@@ -726,8 +726,7 @@ namespace se {
 
         if (fu->isFileExist(path_bc))
         {
-            SE_LOGE("ScriptEngine::generateByteCode file already exists!\n");;
-            return false;
+            SE_LOGE("ScriptEngine::generateByteCode file already exists, it will be rewrite!\n");
         }
         
         //create directory for .bc file
