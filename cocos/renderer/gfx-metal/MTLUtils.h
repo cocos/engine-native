@@ -58,6 +58,7 @@ namespace mu
     bool isColorBufferFloatSupported(uint family);
     bool isColorBufferHalfFloatSupported(uint family);
     bool isLinearTextureSupported(uint family);
+    bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet);
     String featureSetToString(MTLFeatureSet featureSet);
 }
 

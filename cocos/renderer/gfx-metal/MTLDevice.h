@@ -36,6 +36,8 @@ public:
     CC_INLINE void* getMTLDevice() const { return _mtlDevice; }
     CC_INLINE CCMTLStateCache* getStateCache() const { return _stateCache; }
     CC_INLINE int getMaximumSamplerUnits() const { return _maxSamplerUnits; }
+    CC_INLINE int getMaximumColorRenderTargets() const { return _maxColorRenderTargets; }
+    CC_INLINE bool isIndirectCommandBufferSupported() const { return _icbSuppored; }
     
 private:
     void* _mtkView= nullptr;
@@ -43,6 +45,8 @@ private:
     CCMTLStateCache* _stateCache = nullptr;
     unsigned long _mtlFeatureSet = 0;
     int _maxSamplerUnits = -1;
+    int _maxColorRenderTargets = -1;
+    bool _icbSuppored = false;
 };
 
 NS_CC_END

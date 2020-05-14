@@ -1303,7 +1303,20 @@ namespace mu
         }
     }
 
-    
+    bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet)
+    {
+    #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+        if (@available(iOS 12.0, *)) {
+            return featureSet >= MTLFeatureSet_iOS_GPUFamily3_v4;
+        }
+    #else
+        if (@available(macOS 10.14, *)) {
+            return featureSet >= MTLFeatureSet_macOS_GPUFamily2_v1;
+        }
+    #endif
+        return false;
+    }
+
     String featureSetToString(MTLFeatureSet featureSet)
     {
     #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
