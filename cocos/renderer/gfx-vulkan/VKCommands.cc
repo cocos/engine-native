@@ -3,7 +3,6 @@
 #include "VKDevice.h"
 #include "VKQueue.h"
 #include "VKContext.h"
-#include "VKStateCache.h"
 #include "VKCommandAllocator.h"
 #include "VKSPIRV.h"
 #include "VKBuffer.h"
@@ -926,6 +925,11 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers
         barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
         vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, gpuTexture->targetStage, 0,
             0, nullptr, 0, nullptr, 1, &barrier);
+    }
+
+    if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
+    {
+
     }
 
     endOneTimeCommands(device, &cmdBuff);

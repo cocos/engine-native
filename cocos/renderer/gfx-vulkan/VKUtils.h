@@ -574,7 +574,7 @@ namespace
         (VkSamplerMipmapMode)0,         // NONE
         VK_SAMPLER_MIPMAP_MODE_NEAREST, // POINT
         VK_SAMPLER_MIPMAP_MODE_LINEAR,  // LINEAR
-        (VkSamplerMipmapMode)0,         // ANISOTROPIC
+        VK_SAMPLER_MIPMAP_MODE_LINEAR,  // ANISOTROPIC
     };
 
     const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODES[] =

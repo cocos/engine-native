@@ -161,55 +161,6 @@ public:
     VkSampler vkSampler;
 };
 
-struct CCVKGPUInput
-{
-    uint binding = 0;
-    String name;
-    GFXType type = GFXType::UNKNOWN;
-    uint stride = 0;
-    uint count = 0;
-    uint size = 0;
-    //GLenum glType = 0;
-    //GLint glLoc = -1;
-};
-typedef vector<CCVKGPUInput>::type CCVKGPUInputList;
-
-struct CCVKGPUUniform
-{
-    uint binding = GFX_INVALID_BINDING;
-    String name;
-    GFXType type = GFXType::UNKNOWN;
-    uint stride = 0;
-    uint count = 0;
-    uint size = 0;
-    uint offset = 0;
-    //GLenum glType = 0;
-    //GLint glLoc = -1;
-};
-typedef vector<CCVKGPUUniform>::type CCVKGPUUniformList;
-
-struct CCVKGPUUniformBlock
-{
-    uint binding = 0;
-    uint idx = 0;
-    String name;
-    uint size = 0;
-    CCVKGPUUniformList glUniforms;
-    CCVKGPUUniformList glActiveUniforms;
-};
-typedef vector<CCVKGPUUniformBlock>::type CCVKGPUUniformBlockList;
-
-struct CCVKGPUUniformSampler
-{
-    uint binding = 0;
-    String name;
-    GFXType type = GFXType::UNKNOWN;
-    vector<int>::type units;
-    //GLenum glType = 0;
-    //GLint glLoc = -1;
-};
-typedef vector<CCVKGPUUniformSampler>::type CCVKGPUUniformSamplerList;
-
 struct CCVKGPUShaderStage
 {
     CCVKGPUShaderStage(GFXShaderType t, String s, GFXShaderMacroList m)
@@ -232,25 +183,7 @@ public:
     GFXUniformBlockList blocks;
     GFXUniformSamplerList samplers;
     CCVKGPUShaderStageList gpuStages;
-    CCVKGPUInputList gpuInputs;
-    CCVKGPUUniformBlockList gpuBlocks;
-    CCVKGPUUniformSamplerList gpuSamplers;
 };
-
-struct CCVKGPUAttribute
-{
-    String name;
-    //GLuint glBuffer = 0;
-    //GLenum glType = 0;
-    uint size = 0;
-    uint count = 0;
-    uint stride = 1;
-    uint componentCount = 1;
-    bool isNormalized = false;
-    bool isInstanced = false;
-    uint offset = 0;
-};
-typedef vector<CCVKGPUAttribute>::type CCVKGPUAttributeList;
 
 class CCVKGPUInputAssembler : public Object
 {

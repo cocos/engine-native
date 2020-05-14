@@ -1,7 +1,6 @@
 #include "VKStd.h"
 #include "VKDevice.h"
 #include "VKUtils.h"
-#include "VKStateCache.h"
 #include "VKContext.h"
 #include "VKWindow.h"
 #include "VKQueue.h"
@@ -28,8 +27,8 @@ NS_CC_BEGIN
 
 CCVKDevice::CCVKDevice()
 {
-    _minClipZ = 0;
-    _projectionSignY = -1;
+    _minClipZ = 0.0f;
+    _projectionSignY = -1.0f;
 }
 
 CCVKDevice::~CCVKDevice()
@@ -50,8 +49,6 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     _nativeWidth = info.nativeWidth;
     _nativeHeight = info.nativeHeight;
     _windowHandle = info.windowHandle;
-
-    stateCache = CC_NEW(CCVKStateCache);
 
     GFXContextInfo contextCreateInfo;
     contextCreateInfo.windowHandle = _windowHandle;

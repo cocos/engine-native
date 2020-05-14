@@ -134,8 +134,12 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
 
     vkCmdBeginRenderPass(_gpuCommandBuffer->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    //VkViewport viewport{ (float)renderArea.x, (float)renderArea.y, (float)renderArea.width, (float)renderArea.height, 0, 1 };
-    VkViewport viewport{ (float)renderArea.x, (float)renderArea.height - renderArea.y, (float)renderArea.width, -(float)renderArea.height, 0, 1 };
+    /* */
+    VkViewport viewport{ (float)renderArea.x, (float)renderArea.y, (float)renderArea.width, (float)renderArea.height, 0, 1 };
+    /* *
+    uint h = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->height : _device->getHeight();
+    VkViewport viewport{ (float)renderArea.x, (float)h - renderArea.y, (float)renderArea.width, -(float)renderArea.height, 0, 1 };
+    /* */
     vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
 
     VkRect2D scissor{ { renderArea.x, renderArea.y }, { renderArea.width, renderArea.height } };
@@ -210,7 +214,12 @@ void CCVKCommandBuffer::setViewport(const GFXViewport& vp)
     if (_curViewport != vp)
     {
         _curViewport = vp;
+        /* */
         VkViewport viewport{ (float)vp.left, (float)vp.top, (float)vp.width, (float)vp.height, vp.minDepth, vp.maxDepth };
+        /* *
+        uint h = _curGPUFBO && _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->height : _device->getHeight();
+        VkViewport viewport{ (float)vp.left, (float)h - vp.top, (float)vp.width, -(float)vp.height, vp.minDepth, vp.maxDepth };
+        /* */
         vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
     }
 }

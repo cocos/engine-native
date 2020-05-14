@@ -3,7 +3,6 @@
 
 NS_CC_BEGIN
 
-class CCVKStateCache;
 class CCVKGPUContext;
 class CCVKGPUDevice;
 class CCVKGPUSwapchain;
@@ -19,8 +18,6 @@ class CC_VULKAN_API CCVKDevice : public GFXDevice
 public:
     CCVKDevice();
     ~CCVKDevice();
-
-    CCVKStateCache* stateCache = nullptr;
 
 public:
     bool initialize(const GFXDeviceInfo& info) override;
