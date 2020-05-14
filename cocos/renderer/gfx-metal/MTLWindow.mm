@@ -134,7 +134,59 @@ void CCMTLWindow::destroy()
 
 void CCMTLWindow::resize(uint width, uint height)
 {
+    if(!_isOffscreen)
+        return;
     
+    _width = width;
+    _height = height;
+    // no need to resize the window when resized width/height less than natived width/height,
+    // since we can use viewport instead.
+    if(width <= _nativeWidth && height <= _nativeHeight)
+    {
+        return;
+    }
+    
+    if(_colorTexView && _colorTex)
+    {
+        _colorTex->resize(width, height);
+        _colorTexView->destroy();
+        GFXTextureViewInfo colorTexViewInfo;
+        colorTexViewInfo.texture = _colorTex;
+        colorTexViewInfo.type = GFXTextureViewType::TV2D;
+        colorTexViewInfo.format = _colorFmt;
+        colorTexViewInfo.baseLevel = 0;
+        colorTexViewInfo.levelCount = 1;
+        colorTexViewInfo.baseLayer = 0;
+        colorTexViewInfo.layerCount = 1;
+        _colorTexView = _device->createTextureView(colorTexViewInfo);
+    }
+    if(_depthStencilTexView && _depthStencilTex)
+    {
+        _depthStencilTex->resize(width, height);
+        _depthStencilTexView->destroy();
+        GFXTextureViewInfo depthStecnilTexViewInfo;
+        depthStecnilTexViewInfo.texture = _depthStencilTex;
+        depthStecnilTexViewInfo.type = GFXTextureViewType::TV2D;
+        depthStecnilTexViewInfo.format = _depthStencilFmt;
+        depthStecnilTexViewInfo.baseLevel = 0;
+        depthStecnilTexViewInfo.levelCount = 1;
+        depthStecnilTexViewInfo.baseLayer = 0;
+        depthStecnilTexViewInfo.layerCount = 1;
+        _depthStencilTexView = _device->createTextureView(depthStecnilTexViewInfo);
+    }
+    if(_framebuffer)
+    {
+        _framebuffer->destroy();
+        GFXFramebufferInfo fboInfo;
+        fboInfo.renderPass = _renderPass;
+        fboInfo.colorViews.push_back(_colorTexView);
+        fboInfo.depthStencilView = _depthStencilTexView;
+        fboInfo.isOffscreen = _isOffscreen;
+        _framebuffer = _device->createFramebuffer(fboInfo);
+    }
+    
+    _nativeWidth = width;
+    _nativeHeight = height;
 }
 
 NS_CC_END

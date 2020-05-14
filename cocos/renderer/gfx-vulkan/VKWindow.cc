@@ -131,47 +131,53 @@ void CCVKWindow::destroy()
 
 void CCVKWindow::resize(uint width, uint height)
 {
+    if(!_isOffscreen)
+        return;
+
     _width = width;
     _height = height;
-
-    if (width > _nativeWidth || height > _nativeHeight)
+    if(width <= _nativeWidth && height <= _nativeHeight)
     {
-        _nativeWidth = width;
-        _nativeHeight = height;
+        return;
+    }
 
-        if (_colorTex)
-        {
-            _colorTex->resize(width, height);
-            _colorTexView->destroy();
+    _nativeWidth = width;
+    _nativeHeight = height;
 
-            GFXTextureViewInfo colorTexViewInfo;
-            colorTexViewInfo.type = GFXTextureViewType::TV2D;
-            colorTexViewInfo.format = _colorFmt;
-            _colorTexView->initialize(colorTexViewInfo);
-        }
+    if (_colorTex && _colorTexView)
+    {
+        _colorTex->resize(width, height);
+        _colorTexView->destroy();
 
-        if (_depthStencilTex)
-        {
-            _depthStencilTex->resize(width, height);
-            _depthStencilTexView->destroy();
+        GFXTextureViewInfo colorTexViewInfo;
+        colorTexViewInfo.type = GFXTextureViewType::TV2D;
+        colorTexViewInfo.format = _colorFmt;
+        colorTexViewInfo.texture = _colorTex;
+        _colorTexView->initialize(colorTexViewInfo);
+    }
 
-            GFXTextureViewInfo depth_stencil_tex_view__info;
-            depth_stencil_tex_view__info.type = GFXTextureViewType::TV2D;
-            depth_stencil_tex_view__info.format = _depthStencilFmt;
-            _depthStencilTexView->initialize(depth_stencil_tex_view__info);
-        }
+    if (_depthStencilTex && _depthStencilTexView)
+    {
+        _depthStencilTex->resize(width, height);
+        _depthStencilTexView->destroy();
 
-        if (_framebuffer)
-        {
-            _framebuffer->destroy();
+        GFXTextureViewInfo depth_stencil_tex_view_info;
+        depth_stencil_tex_view_info.type = GFXTextureViewType::TV2D;
+        depth_stencil_tex_view_info.format = _depthStencilFmt;
+        depth_stencil_tex_view_info.texture = _depthStencilTex;
+        _depthStencilTexView->initialize(depth_stencil_tex_view__info);
+    }
 
-            GFXFramebufferInfo fboInfo;
-            fboInfo.isOffscreen = _isOffscreen;
-            fboInfo.renderPass = _renderPass;
-            fboInfo.colorViews.push_back(_colorTexView);
-            fboInfo.depthStencilView = _depthStencilTexView;
-            _framebuffer->initialize(fboInfo);
-        }
+    if (_framebuffer)
+    {
+        _framebuffer->destroy();
+
+        GFXFramebufferInfo fboInfo;
+        fboInfo.isOffscreen = _isOffscreen;
+        fboInfo.renderPass = _renderPass;
+        fboInfo.colorViews.push_back(_colorTexView);
+        fboInfo.depthStencilView = _depthStencilTexView;
+        _framebuffer->initialize(fboInfo);
     }
 }
 
