@@ -306,6 +306,9 @@ void CCVKDevice::destroy()
 
 void CCVKDevice::resize(uint width, uint height)
 {
+    if(_width == width && _height == height)
+        return;
+        
     _width = width;
     _height = height;
     buildSwapchain();
