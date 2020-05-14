@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "cocos/editor-support/MiddlewareManager.h"
 #include "cocos/platform/CCApplication.h"
 #include "cocos/platform/CCFileUtils.h"
-
+#include "scripting/js-bindings/jswrapper/SeApi.h"
 
 #include "CCLabelLayout.h"
 #include "base/ccConfig.h"
@@ -68,165 +68,33 @@ namespace cocos2d {
         CC_SAFE_RELEASE(_effect);
         _effect = arg;
         CC_SAFE_RETAIN(arg);
-        _updateFlags |= UPDATE_EFFECT;
-    }
-    
-    void LabelRenderer::setString(const std::string &str)
-    {
-        if (str == _string || str.empty()) return;
-        _string = str;
-        _updateFlags |= UPDATE_CONTENT;
+        _cfg->updateFlags |= UPDATE_EFFECT;
     }
 
-    void LabelRenderer::setFontPath(const std::string &path)
+    void LabelRenderer::bindSharedBlock(se::Object * selfObj, void *cfg, void *layout)
     {
-        if (path == _fontPath || path.empty()) return;
-
-        _fontPath = path;
-        _updateFlags |= UPDATE_FONT;
-    }
-
-
-    void LabelRenderer::setFontSize(float fontSize, float fontSizeRetina)
-    {
-        if (fontSize == _fontSize) return;
-        _fontSize = fontSize;
-        _fontSizeRetina = fontSizeRetina;
-
-        _updateFlags |= UPDATE_FONT;
-    }
-
-
-    void LabelRenderer::setOutline(float outline)
-    {
-        if ((_layoutInfo.outlineSize > 0) != (outline > 0))
-        {
-            _updateFlags |= UPDATE_FONT;
-        }
-        if (_layoutInfo.outlineSize != outline)
-        {
-            _updateFlags |= UPDATE_CONTENT;
-        }
-        _layoutInfo.outlineSize = outline;
-    }
-
-    void LabelRenderer::setOutlineColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-    {
-        _layoutInfo.outlineColor = Color4B(r, g, b, a);
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setLineHeight(float lineHeight)
-    {
-        _layoutInfo.lineHeight = lineHeight;
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setOverFlow(int overflow)
-    {
-        _layoutInfo.overflow = static_cast<LabelOverflow>(overflow);
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setEnableWrap(bool wrap)
-    {
-        _layoutInfo.wrap= wrap;
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setVerticalAlign(int vAlign)
-    {
-        _layoutInfo.valign= static_cast<LabelAlignmentV>(vAlign);
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setHorizontalAlign(int hAlign)
-    {
-        _layoutInfo.halign = static_cast<LabelAlignmentH>(hAlign);
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-
-    void LabelRenderer::setContentSize(float width, float height)
-    {
-        _layoutInfo.width = width;
-        _layoutInfo.height = height;
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-
-    void LabelRenderer::setAnchorPoint(float x, float y)
-    {
-        _layoutInfo.anchorX = x;
-        _layoutInfo.anchorY = y;
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-    {
-        _layoutInfo.color = Color4B(r, g, b, a);
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setShadow(float x, float y, int blur)
-    {
-        if((_layoutInfo.shadowBlur > 0) != (blur > 0)) 
-        {
-            _updateFlags |= UPDATE_FONT;
-        }
-
-        _layoutInfo.shadowX = x;
-        _layoutInfo.shadowY = y;
-        _layoutInfo.shadowBlur = blur;
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setShadowColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-    {
-        _layoutInfo.shadowColor = Color4B(r, g, b, a);
-        _updateFlags |= UPDATE_CONTENT;
-    }
-
-    void LabelRenderer::setItalic(bool italic)
-    {
-        if (_layoutInfo.italic != italic)
-        {
-            _updateFlags |= UPDATE_CONTENT;
-        }
-        _layoutInfo.italic = italic;
-    }
-
-    void LabelRenderer::setBold(bool bold)
-    {
-        if (_layoutInfo.bold != bold)
-        {
-            _updateFlags |= UPDATE_FONT;
-        }
-        _layoutInfo.bold = bold;
-    }
-
-    void LabelRenderer::setUnderline(bool underline)
-    {
-        if (_layoutInfo.underline != underline)
-        {
-            _updateFlags |= UPDATE_CONTENT;
-        }
-        _layoutInfo.underline = underline;
+        _selfObj = selfObj;
+        _cfg = static_cast<decltype(_cfg)>(cfg);
+        _layoutInfo = static_cast<decltype(_layoutInfo)>(layout);
     }
 
 
     void LabelRenderer::genStringLayout()
     {
-        if (!_fontPath.empty() && !_string.empty() && !_stringLayout)
+        std::string fontPath = getFontPath();
+        std::string text = getString();
+        if (!fontPath.empty() && !text.empty() && !_stringLayout)
         {
             _stringLayout = std::make_shared<LabelLayout>();
-            _stringLayout->init(_fontPath, _string, _fontSize, _fontSizeRetina, &_layoutInfo);
+            _stringLayout->init(fontPath, text, _cfg->fontSize, _cfg->fontSizeRetina, _layoutInfo);
         }
     }
 
     void LabelRenderer::render()
     {
-        if (!_effect || _string.empty() || _fontPath.empty()) return;
+        std::string text = getString();
+        std::string fontPath = getFontPath();
+        if (!_effect || text.empty() || fontPath.empty()) return;
 
         genStringLayout();
 
@@ -238,7 +106,7 @@ namespace cocos2d {
     {
         if (!_stringLayout) return;
 
-        if (_updateFlags & UPDATE_FONT || _updateFlags & UPDATE_EFFECT)
+        if (_cfg->updateFlags & UPDATE_FONT || _cfg->updateFlags & UPDATE_EFFECT)
         {
             // update font & string
             _stringLayout.reset();
@@ -246,17 +114,17 @@ namespace cocos2d {
 
             doRender();            
         }
-        else if (_updateFlags & UPDATE_CONTENT)
+        else if (_cfg->updateFlags & UPDATE_CONTENT)
         {
-            // update content only
+            std::string text = getString();            // update content only
             if (_stringLayout->isInited())
             {
-                _stringLayout->setString(_string, true);
+                _stringLayout->setString(text, true);
                 doRender();
             }
         }
 
-        _updateFlags = 0;
+        _cfg->updateFlags = 0;
     }
 
     void LabelRenderer::doRender()
@@ -266,6 +134,20 @@ namespace cocos2d {
             auto *assembler = (CustomAssembler*)_nodeProxy->getAssembler();
             _stringLayout->fillAssembler(assembler, _effect);
         }
+    }
+
+    std::string LabelRenderer::getString() {
+        se::Value str;
+        assert(_selfObj);
+        _selfObj->getProperty("string", &str);
+        return str.toString();
+    }
+
+    std::string LabelRenderer::getFontPath() {
+        se::Value str;
+        assert(_selfObj);
+        _selfObj->getProperty("fontPath", &str);
+        return str.toString();
     }
 }
 #endif

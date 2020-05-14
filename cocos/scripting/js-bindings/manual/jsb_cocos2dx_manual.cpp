@@ -32,6 +32,7 @@
 
 #include "storage/local-storage/LocalStorage.h"
 #include "cocos2d.h"
+#include <sstream>
 
 using namespace cocos2d;
 
@@ -567,6 +568,149 @@ static bool register_filetuils_ext(se::Object* obj) {
     return true;
 }
 
+
+#define DESCRIPT_FIELD(kls, field, field_type) do {\
+    ss << "\"" << #field <<  "\": " << "{" ; \
+    ss << "\"type\": \"" << field_type << "\"," ;  \
+    ss << "\"offset\": " << offsetof(kls, field) << ",";   \
+    ss << "\"size\": " << sizeof(((kls*)nullptr)->field);   \
+    ss << "}";} while(false)
+
+static bool js_engine_LabelRenderer_init(se::State& s)
+{
+    cocos2d::LabelRenderer* cobj = (cocos2d::LabelRenderer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_engine_LabelRenderer_init : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    se::Object *self = s.thisObject();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+                
+        cocos2d::LabelRenderer::LabelRendererConfig config;
+        cocos2d::LabelLayoutInfo layout;
+        
+        se::Object *cfgBufferObj = se::Object::createArrayBufferObject(nullptr, sizeof(config));
+        se::Object *layoutBufferObj = se::Object::createArrayBufferObject(nullptr, sizeof(layout));
+        
+        // attach to js object
+        self->setProperty("_cfg", se::Value(cfgBufferObj));
+        self->setProperty("_layout", se::Value(layoutBufferObj));
+        
+    
+        // attach to C++ object
+        size_t len;
+        uint8_t *pcfg = nullptr, *playout = nullptr;
+        cfgBufferObj->getArrayBufferData(&pcfg, &len);
+        layoutBufferObj->getArrayBufferData(&playout, &len);
+        new (pcfg) cocos2d::LabelRenderer::LabelRendererConfig();
+        new (playout) cocos2d::LabelLayoutInfo();
+        cobj->bindSharedBlock(self, pcfg, playout);
+        
+        
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_engine_LabelRenderer_init)
+
+static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
+{
+    // Get the ns
+    se::Value nsVal;
+    if (!obj->getProperty("jsb", &nsVal))
+    {
+        se::HandleObject jsobj(se::Object::createPlainObject());
+        nsVal.setObject(jsobj);
+        obj->setProperty("jsb", nsVal);
+    }
+    se::Object* ns = nsVal.toObject();
+ 
+    se::Value labelRenderValue;
+    ns->getProperty("LabelRenderer", &labelRenderValue);
+    
+    assert(labelRenderValue.isObject());
+    se::Object *self = labelRenderValue.toObject();
+    
+    {
+        union endianess_union {
+            int32_t i32;
+            uint8_t bytes[4];
+        } test_value;
+        test_value = {.i32 = 0x01020304};
+        bool isLittleEndian  = test_value .bytes[0] == 0x04;
+        ns->setProperty("__isLittleEndian__", se::Value(isLittleEndian));
+    }
+    {
+        std::stringstream ss;
+        ss << "{";
+        DESCRIPT_FIELD(cocos2d::LabelRenderer::LabelRendererConfig, updateFlags, "int32");
+        ss << ",";
+        DESCRIPT_FIELD(cocos2d::LabelRenderer::LabelRendererConfig, fontSize, "float");
+        ss << ",";
+        DESCRIPT_FIELD(cocos2d::LabelRenderer::LabelRendererConfig, fontSizeRetina, "float");
+        ss << "}";
+        se::Object *cfgFields = se::Object::createJSONObject(ss.str());
+        assert(cfgFields);
+        self->setProperty("_cfgFields", se::Value(cfgFields));
+    }
+    {
+        std::stringstream ss;
+        ss << "{";
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, lineHeight, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, outlineSize, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, spaceX, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, width, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, height, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, anchorX, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, anchorY, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, shadowX, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, shadowY, "float");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, shadowBlur, "int32");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, shadowColor, "Color4B");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, color, "Color4B");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, outlineColor, "Color4B");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, wrap, "bool");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, bold, "bool");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, italic, "bool");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, underline, "bool");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, valign, "int8");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, halign, "int8");
+        ss << "," ;
+        DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, overflow, "int8");
+        ss << "}";
+        se::Object *cfgFields = se::Object::createJSONObject(ss.str());
+        assert(cfgFields);
+        self->setProperty("_layoutFields", se::Value(cfgFields));
+    }
+    
+}
+
+static bool register_labelrenderer_ext(se::Object *obj)
+{
+    __jsb_cocos2d_LabelRenderer_proto->defineFunction("init", _SE(js_engine_LabelRenderer_init));
+    js_engine_LabelRenderer_export_structs_info(obj);
+    return true;
+}
+
 bool register_all_cocos2dx_manual(se::Object* obj)
 {
     register_plist_parser(obj);
@@ -574,6 +718,7 @@ bool register_all_cocos2dx_manual(se::Object* obj)
     register_device(obj);
     register_canvas_context2d(obj);
     register_filetuils_ext(obj);
+    register_labelrenderer_ext(obj);
     return true;
 }
 
