@@ -27,9 +27,9 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "2d/CCTTFTypes.h"
 #include "base/ccConfig.h"
+#include <memory>
 
 #if CC_ENABLE_TTF_LABEL_RENDERER
-
 
 namespace se {
     class Object;
@@ -85,7 +85,7 @@ namespace cocos2d {
         std::string getString();
         std::string getFontPath();
         
-        std::shared_ptr<LabelLayout> _stringLayout = nullptr;
+        std::unique_ptr<LabelLayout> _stringLayout;
         se::Object *_selfObj = nullptr;
         //export arraybuffer to js
         LabelRendererConfig *_cfg =  nullptr;

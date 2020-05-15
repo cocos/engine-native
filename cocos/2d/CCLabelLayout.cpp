@@ -532,8 +532,8 @@ namespace cocos2d {
         //LabelCursor cursor;
         float cursorX = 0;
 
-        TextSpaceArray spaces;
-        TextRowSpace space;
+        TextSpaceArray textSpaces;
+        TextRowSpace rowSpace;
 
         Rect letterRect;
 
@@ -557,7 +557,7 @@ namespace cocos2d {
 
             if (ch == u'\n')
             {
-                spaces.addSpace(space);
+                textSpaces.addSpace(rowSpace);
                 cursorX = 0;
                 continue;
             }
@@ -577,10 +577,10 @@ namespace cocos2d {
             float left = cursorX - letterDef->outline * _fontScale + letterRect.getMinX();
             float bottom = letterDef->outline * _fontScale - letterRect.getMaxY();
 
-            if ((ResizeHeight || ClampAndWrap) && space.getExtentedWidth(left, left + letterRect.size.width) > ContentWidth)
+            if ((ResizeHeight || ClampAndWrap) && rowSpace.getExtentedWidth(left, left + letterRect.size.width) > ContentWidth)
             {
                 // RESIZE_HEIGHT or (CLAMP & Enable Wrap)
-                spaces.addSpace(space);
+                textSpaces.addSpace(rowSpace);
                 cursorX = 0;
                 left = cursorX - letterDef->outline * _fontScale + letterRect.getMinX();
             }
@@ -591,14 +591,14 @@ namespace cocos2d {
             Rect letterRectInline(left, bottom, width, height);
             Rect letterTexture(letterDef->texX, letterDef->texY, letterDef->texWidth, letterDef->texHeight);
 
-            space.fillRect(letterDef->textureID, letterRectInline, letterTexture);
+            rowSpace.fillRect(letterDef->textureID, letterRectInline, letterTexture);
 
             cursorX += SpaceX + letterDef->xAdvance * _fontScale;
         }
 
-        spaces.addSpace(space);
+        textSpaces.addSpace(rowSpace);
 
-        auto& list = spaces._data;
+        auto& list = textSpaces._data;
 
         //add underline
         if(Underline){
@@ -620,8 +620,8 @@ namespace cocos2d {
         Vec2 newCenter;
         Vec2 delta;
         // default value in LabelOverflow::None mode
-        float maxLineWidth = spaces._maxWidth;
-        const float TotalTextHeight = spaces._data.size() * LineHeight;
+        float maxLineWidth = textSpaces._maxWidth;
+        const float TotalTextHeight = textSpaces._data.size() * LineHeight;
         float topMost = (TotalTextHeight - LineHeight) * (1.0f - AnchorY);
         float leftMost =  - AnchorX * maxLineWidth;
         float rightMost = (1.0f - AnchorX) * maxLineWidth;
@@ -704,7 +704,7 @@ namespace cocos2d {
 
             delta = Vec2(tPosX, tPosY) - centerArea;
 
-            for (auto &textSpace : spaces._data) {
+            for (auto &textSpace : textSpaces._data) {
                 textSpace.translate(delta.x, delta.y);
             }
 
@@ -712,7 +712,7 @@ namespace cocos2d {
             {
                 // clipping 
                 Rect displayRegion(-ContentWidth * AnchorX, -ContentHeight * AnchorY, ContentWidth, ContentHeight);
-                for (auto &textSpace : spaces._data) {
+                for (auto &textSpace : textSpaces._data) {
                     textSpace.clip(displayRegion);
                 }
 
@@ -759,13 +759,13 @@ namespace cocos2d {
                 assert(false);
             }
             delta = Vec2(tPosXScale/ _scale, tPosYScale/_scale) - centerArea;
-            for (auto &textSpace : spaces._data) {
+            for (auto &textSpace : textSpaces._data) {
                 textSpace.translate(delta.x, delta.y);
             }
         }
 
 
-        _textSpace = std::move(spaces._data);
+        _textSpace = std::move(textSpaces._data);
 
         return true;
     }

@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "base/ccConfig.h"
 #if CC_ENABLE_TTF_LABEL_RENDERER
 
-#define CC_TTF_LABELATLAS_ENABLE_GC 0
+#define CC_TTF_LABELATLAS_ENABLE_GC 1
 
 namespace cocos2d {
 

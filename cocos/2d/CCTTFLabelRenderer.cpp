@@ -85,7 +85,7 @@ namespace cocos2d {
         std::string text = getString();
         if (!fontPath.empty() && !text.empty() && !_stringLayout)
         {
-            _stringLayout = std::make_shared<LabelLayout>();
+            _stringLayout.reset(new LabelLayout());
             _stringLayout->init(fontPath, text, _cfg->fontSize, _cfg->fontSizeRetina, _layoutInfo);
         }
     }
