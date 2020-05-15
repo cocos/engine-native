@@ -637,8 +637,8 @@ static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
             int32_t i32;
             uint8_t bytes[4];
         } test_value;
-        test_value = {.i32 = 0x01020304};
-        bool isLittleEndian  = test_value .bytes[0] == 0x04;
+        test_value.i32 = 0x01020304;
+        bool isLittleEndian  = test_value.bytes[0] == 0x04;
         ns->setProperty("__isLittleEndian__", se::Value(isLittleEndian));
     }
     {
