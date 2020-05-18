@@ -354,10 +354,10 @@ namespace se {
         v8::V8::InitializePlatform(_platform);
 
         std::string flags;
-        //NOTICE: spaces required between flags
+        //NOTICE: spaces are required between flags
         flags.append(" --expose-gc-as=" EXPOSE_GC);
-        flags.append(" --trace-gc"); // v8 trace gc
         flags.append(" --no-flush-bytecode --no-lazy"); // for bytecode support
+        // flags.append(" --trace-gc"); // v8 trace gc
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
         flags.append(" --jitless");
 #endif
@@ -443,6 +443,12 @@ namespace se {
         _globalObj->defineFunction("forceGC", __forceGC);
         
         
+        _globalObj->getProperty(EXPOSE_GC, &_gcFuncValue);
+        if(_gcFuncValue.isObject() && _gcFuncValue.toObject()->isFunction()) {
+            _gcFunc = _gcFuncValue.toObject();
+        } else {
+            _gcFunc = nullptr;
+        }
         
 
         __jsb_CCPrivateData_class = Class::create("__PrivateData", _globalObj, nullptr, nullptr);
@@ -607,21 +613,21 @@ namespace se {
     {
         int objSize = __objectMap ? (int)__objectMap->size() : -1;
         SE_LOGD("GC begin ..., (js->native map) size: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), objSize);
-        const double kLongIdlePauseInSeconds = 1.0;
-        _isolate->ContextDisposedNotification();
-        _isolate->IdleNotificationDeadline(_platform->MonotonicallyIncreasingTime() + kLongIdlePauseInSeconds);
-        // By sending a low memory notifications, we will try hard to collect all
-        // garbage and will therefore also invoke all weak callbacks of actually
-        // unreachable persistent handles.
-        _isolate->LowMemoryNotification();
         
-        
-        se::Value gcObj;
-        getGlobalObject()->getProperty(EXPOSE_GC, &gcObj);
-        if(gcObj.isObject() && gcObj.toObject()->isFunction()) {
-            gcObj.toObject()->call({}, nullptr);
+        if(_gcFunc == nullptr)
+        {
+            const double kLongIdlePauseInSeconds = 1.0;
+            _isolate->ContextDisposedNotification();
+            _isolate->IdleNotificationDeadline(_platform->MonotonicallyIncreasingTime() + kLongIdlePauseInSeconds);
+            // By sending a low memory notifications, we will try hard to collect all
+            // garbage and will therefore also invoke all weak callbacks of actually
+            // unreachable persistent handles.
+            _isolate->LowMemoryNotification();
         }
-        
+        else
+        {
+            _gcFunc->call({}, nullptr);
+        }
         objSize = __objectMap ? (int)__objectMap->size() : -1;
         
         SE_LOGD("GC end ..., (js->native map) size: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), objSize);
