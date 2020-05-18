@@ -39,6 +39,8 @@
 #include "debugger/node.h"
 #endif
 
+#define EXPOSE_GC "__jsb_gc__"
+
 uint32_t __jsbInvocationCount = 0;
 uint32_t __jsbStackFrameLimit = 20;
 
@@ -345,10 +347,21 @@ namespace se {
     , _isInCleanup(false)
     , _isErrorHandleWorking(false)
     {
-        //        RETRUN_VAL_IF_FAIL(v8::V8::InitializeICUDefaultLocation(nullptr, "/Users/james/Project/v8/out.gn/x64.debug/icudtl.dat"), false);
-        //        v8::V8::InitializeExternalStartupData("/Users/james/Project/v8/out.gn/x64.debug/natives_blob.bin", "/Users/james/Project/v8/out.gn/x64.debug/snapshot_blob.bin"); //REFINE
         _platform = v8::platform::NewDefaultPlatform().release();
         v8::V8::InitializePlatform(_platform);
+
+        std::string flags;
+        //NOTICE: spaces required between flags
+        flags.append(" --expose-gc-as=" EXPOSE_GC);
+        flags.append(" --trace-gc"); // v8 trace gc
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        flags.append(" --jitless");
+#endif
+        if(!flags.empty())
+        {
+            v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
+        }
+        
         bool ok = v8::V8::Initialize();
         assert(ok);
     }
@@ -374,11 +387,6 @@ namespace se {
             hook();
         }
         _beforeInitHookArray.clear();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        std::string flags("--jitless");
-        v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
-#endif
         v8::Isolate::CreateParams create_params;
         create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
         _isolate = v8::Isolate::New(create_params);
@@ -431,6 +439,9 @@ namespace se {
 
         _globalObj->defineFunction("log", __log);
         _globalObj->defineFunction("forceGC", __forceGC);
+        
+        
+        
 
         __jsb_CCPrivateData_class = Class::create("__PrivateData", _globalObj, nullptr, nullptr);
         __jsb_CCPrivateData_class->defineFinalizeFunction(privateDataFinalize);
@@ -601,7 +612,16 @@ namespace se {
         // garbage and will therefore also invoke all weak callbacks of actually
         // unreachable persistent handles.
         _isolate->LowMemoryNotification();
+        
+        
+        se::Value gcObj;
+        getGlobalObject()->getProperty(EXPOSE_GC, &gcObj);
+        if(gcObj.isObject() && gcObj.toObject()->isFunction()) {
+            gcObj.toObject()->call({}, nullptr);
+        }
+        
         objSize = __objectMap ? (int)__objectMap->size() : -1;
+        
         SE_LOGD("GC end ..., (js->native map) size: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), objSize);
     }
 
