@@ -69,9 +69,9 @@ void CCVKCommandBuffer::begin(GFXRenderPass* renderPass, uint subpass, GFXFrameb
     if (_type == GFXCommandBufferType::SECONDARY)
     {
         VkCommandBufferInheritanceInfo inheritanceInfo{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO };
-        inheritanceInfo.renderPass = ((CCVKRenderPass*)renderPass)->gpuRenderPass()->vkRenderPass;
+        if (renderPass) inheritanceInfo.renderPass = ((CCVKRenderPass*)renderPass)->gpuRenderPass()->vkRenderPass;
         inheritanceInfo.subpass = subpass;
-        inheritanceInfo.framebuffer = ((CCVKFramebuffer*)frameBuffer)->gpuFBO()->vkFramebuffer;
+        if (frameBuffer) inheritanceInfo.framebuffer = ((CCVKFramebuffer*)frameBuffer)->gpuFBO()->vkFramebuffer;
         beginInfo.pInheritanceInfo = &inheritanceInfo;
     }
 
