@@ -532,7 +532,7 @@ namespace se {
         _isInCleanup = false;
         NativePtrToObjectMap::destroy();
         NonRefNativePtrCreatedByCtorMap::destroy();
-
+        _gcFunc = nullptr;
         SE_LOGD("ScriptEngine::cleanup end ...\n");
     }
 
