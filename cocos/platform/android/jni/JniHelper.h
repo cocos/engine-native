@@ -330,8 +330,6 @@ private:
         return x;
     }
 
-    static std::unordered_map<JNIEnv*, std::vector<jobject>> localRefs;
-
     static void deleteLocalRefs(JNIEnv* env, LocalRefMapType &localRefs);
 
     static std::string getJNISignature() {

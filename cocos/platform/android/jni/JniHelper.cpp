@@ -71,7 +71,6 @@ namespace cocos2d {
     std::function<void()> JniHelper::classloaderCallback = nullptr;
     
     jobject JniHelper::_activity = nullptr;
-    std::unordered_map<JNIEnv*, std::vector<jobject>> JniHelper::localRefs;
 
     JavaVM* JniHelper::getJavaVM() {
         pthread_t thisthread = pthread_self();
