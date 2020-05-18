@@ -302,12 +302,12 @@ void CCVKDevice::destroy()
     CC_SAFE_DELETE(_gpuSemaphorePool);
     CC_SAFE_DELETE(_gpuFencePool);
 
-    for (CCVKTextureView* &textureView : _depthStencilTextureViews)
+    for (CCVKTextureView* textureView : _depthStencilTextureViews)
     {
         CC_SAFE_DESTROY(textureView);
     }
     _depthStencilTextureViews.clear();
-    for (CCVKTexture* &texture : _depthStencilTextures)
+    for (CCVKTexture* texture : _depthStencilTextures)
     {
         CC_SAFE_DESTROY(texture);
     }

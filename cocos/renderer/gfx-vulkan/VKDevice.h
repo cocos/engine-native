@@ -67,8 +67,8 @@ private:
     CCVKGPUSwapchain* _gpuSwapchain = nullptr;
     std::vector<CCVKTextureView*> _depthStencilTextureViews;
     std::vector<CCVKTexture*> _depthStencilTextures;
-    CCVKRenderPass* _renderPass;
-    CCVKBuffer* _stagingBuffer;
+    CCVKRenderPass* _renderPass = nullptr;
+    CCVKBuffer* _stagingBuffer = nullptr;
 
     uint32_t _defaultStagingBufferSize = 1024;
 
