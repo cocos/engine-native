@@ -467,7 +467,7 @@ void CCVKDevice::buildSwapchain()
     }
 }
 
-void CCVKDevice::begin()
+void CCVKDevice::acquire()
 {
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
