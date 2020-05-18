@@ -104,8 +104,8 @@ protected:
     bool _reverseCW = false;
     uint _shaderIdGen = 0;
     std::unordered_map<String, String> _macros;
-    float _minClipZ = -1;
-    float _projectionSignY = 1;
+    float _minClipZ = -1.0f;
+    float _projectionSignY = 1.0f;
 };
 
 NS_CC_END

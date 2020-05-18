@@ -164,7 +164,7 @@ namespace
         /* .generalConstantMatrixVectorIndexing = */ 1,
     } };
 
-    const vector<unsigned int>::type GLSL2SPIRV(GFXShaderType type, String source, int vulkanMinorVersion = 2)
+    const vector<unsigned int>::type GLSL2SPIRV(GFXShaderType type, const String &source, int vulkanMinorVersion = 2)
     {
         if (!glslangInitialized)
         {
