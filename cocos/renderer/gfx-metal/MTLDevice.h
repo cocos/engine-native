@@ -35,8 +35,8 @@ public:
     CC_INLINE void* getMTKView() const { return _mtkView; }
     CC_INLINE void* getMTLDevice() const { return _mtlDevice; }
     CC_INLINE CCMTLStateCache* getStateCache() const { return _stateCache; }
-    CC_INLINE int getMaximumSamplerUnits() const { return _maxSamplerUnits; }
-    CC_INLINE int getMaximumColorRenderTargets() const { return _maxColorRenderTargets; }
+    CC_INLINE uint getMaximumSamplerUnits() const { return _maxSamplerUnits; }
+    CC_INLINE uint getMaximumColorRenderTargets() const { return _maxColorRenderTargets; }
     CC_INLINE bool isIndirectCommandBufferSupported() const { return _icbSuppored; }
     
 private:
@@ -44,8 +44,8 @@ private:
     void* _mtlDevice = nullptr;
     CCMTLStateCache* _stateCache = nullptr;
     unsigned long _mtlFeatureSet = 0;
-    int _maxSamplerUnits = -1;
-    int _maxColorRenderTargets = -1;
+    uint _maxSamplerUnits = 0;
+    uint _maxColorRenderTargets = 0;
     bool _icbSuppored = false;
 };
 
