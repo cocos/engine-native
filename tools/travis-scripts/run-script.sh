@@ -19,9 +19,9 @@ cd $COCOS2DX_ROOT/tools/travis-scripts
 ./generate-bindings.sh $TRAVIS_BRANCH
 
 
-mkdir -p $HOME/android
+mkdir -p $HOME/bin/android
 
-ANDROID_SDK=$HOME/android/android_sdk
+ANDROID_SDK=$HOME/bin/android/android_sdk
 export ANDROID_HOME=$ANDROID_SDK
 export ANDROID_NDK=$NDK_ROOT       #installed in generate-bindings.sh
 export ANDROID_NDK_HOME=$NDK_ROOT
@@ -31,7 +31,7 @@ function setup_linux_andorid_sdk()
 {
     echo "Download Android SDK... "
     cmake_dir=$ANDROID_SDK/cmake/3.10.2.4988404/bin
-    cd $HOME/android
+    cd $HOME/bin/android
     if [ ! -d "$cmake_bin" ]; then
         wget -t 5 -q https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
         unzip *.zip

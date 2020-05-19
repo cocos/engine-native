@@ -10,6 +10,7 @@ matrix:
         directories:
           - $HOME/AppData/Local/Temp/chocolatey
           - /c/Python27
+          - $HOME/bin
         pip: true
     - os: osx
       env:
@@ -19,6 +20,8 @@ matrix:
       sudo: required
       cache:
         pip: true
+        directories:
+          - $HOME/bin
     - os: osx
       env:
         - BUILD_TARGET=ios_cmake
@@ -27,6 +30,8 @@ matrix:
       sudo: required
       cache:
         pip: true
+        directories:
+          - $HOME/bin
     - os: linux
       dist: xenial
       sudo: required
@@ -35,6 +40,8 @@ matrix:
       language: cpp
       cache:
         pip: true
+        directories:
+          - $HOME/bin
 node_js:
   - "7"
 jdk:
@@ -44,9 +51,6 @@ script:
 before_install:
   - tools/travis-scripts/before-install.sh
 
-cache:
-  directories:
-    - $HOME/bin
 
 # blocklist
 # branches:
