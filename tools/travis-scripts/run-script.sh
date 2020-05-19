@@ -19,7 +19,9 @@ cd $COCOS2DX_ROOT/tools/travis-scripts
 ./generate-bindings.sh $TRAVIS_BRANCH
 
 
-ANDROID_SDK=$COCOS2DX_ROOT/../android/android_sdk
+mkdir -p $HOME/android
+
+ANDROID_SDK=$HOME/android/android_sdk
 export ANDROID_HOME=$ANDROID_SDK
 export ANDROID_NDK=$NDK_ROOT       #installed in generate-bindings.sh
 export ANDROID_NDK_HOME=$NDK_ROOT
@@ -28,18 +30,20 @@ export ANDROID_NDK_HOME=$NDK_ROOT
 function setup_linux_andorid_sdk()
 {
     echo "Download Android SDK... "
-    cd $COCOS2DX_ROOT/..
-    mkdir android
-    cd android
-    wget -t 5 -q https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
-    unzip *.zip
-    yes | ./tools/bin/sdkmanager  --sdk_root="$ANDROID_SDK" \
-            "platforms;android-27" \
-            "build-tools;28.0.3" \
-            "platform-tools" \
-            "tools"  \
-            "cmake;3.10.2.4988404"
     cmake_dir=$ANDROID_SDK/cmake/3.10.2.4988404/bin
+    cd $HOME/android
+    if [ -d "$cmake_bin" ]; then
+        wget -t 5 -q https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
+        unzip *.zip
+        yes | ./tools/bin/sdkmanager  --sdk_root="$ANDROID_SDK" \
+                "platforms;android-27" \
+                "build-tools;28.0.3" \
+                "platform-tools" \
+                "tools"  \
+                "cmake;3.10.2.4988404"
+    else
+        echo " Android SDK found! Skip downloading!"
+    fi
     export PATH=$cmake_dir:$PATH
 }
 
@@ -63,25 +67,34 @@ function build_android()
 function mac_install_cmake()
 {   
     echo "Compiling CMake ... "
-    NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
-    cd $HOME/bin
-    cmake_source=https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0.tar.gz
-    wget -t 5 --no-check-certificate $cmake_source -O cmake-mac.tar.gz -q
-    tar xf cmake-mac.tar.gz 2>/dev/null
-    cd cmake-3.17.0
-    ./configure --prefix=$HOME/bin/cmake > /dev/null
-    make -j $NUM_OF_CORES >/dev/null
-    make install >/dev/null
-    ls $HOME/bin/cmake
+    if [ -d $HOME/bin/cmake/bin ]; then
+        cd $HOME/bin
+        NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
+        cmake_source=https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0.tar.gz
+        wget -t 5 --no-check-certificate $cmake_source -O cmake-mac.tar.gz -q
+        tar xf cmake-mac.tar.gz 2>/dev/null
+        cd cmake-3.17.0
+        ./configure --prefix=$HOME/bin/cmake > /dev/null
+        make -j $NUM_OF_CORES >/dev/null
+        make install >/dev/null
+        ls $HOME/bin/cmake
+    else
+        echo " CMake found! Skip Compiling!"
+    fi
+
     export PATH=$HOME/bin/cmake/bin:$PATH
 }
 
 function mac_download_cmake()
 {
     echo "Download CMake ..."
-    cmake_binary=https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-Darwin-x86_64.tar.gz
-    wget -t 3 --no-check-certificate $cmake_binary -O cmake_bin.tar.gz -q
-    tar xf cmake_bin.tar.gz 2>/dev/null
+    if [ -f cmake_bin.tar.gz ]; then
+        cmake_binary=https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-Darwin-x86_64.tar.gz
+        wget -t 3 --no-check-certificate $cmake_binary -O cmake_bin.tar.gz -q
+        tar xf cmake_bin.tar.gz 2>/dev/null
+    else
+        echo " CMake found! Skip downloading!"
+    fi
     cmake_bin_dir=`dirname $(find . -name cmake-gui)`
     cmake_bin_dir="$PWD/$cmake_bin_dir"
     export PATH=$cmake_bin_dir:$PATH

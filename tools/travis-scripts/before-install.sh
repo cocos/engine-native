@@ -39,12 +39,16 @@ function install_android_ndk()
     else
         HOST_NAME="windows"
     fi
-    echo "Download android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
-    curl -O http://dl.google.com/android/repository/android-ndk-r16b-${HOST_NAME}-x86_64.zip
-    echo "Decompress android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
-    unzip -q android-ndk-r16b-${HOST_NAME}-x86_64.zip
-    # Rename ndk
-    mv android-ndk-r16b android-ndk
+    if [ -d android-ndk ]; then
+      echo "Download android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
+      curl -O http://dl.google.com/android/repository/android-ndk-r16b-${HOST_NAME}-x86_64.zip
+      echo "Decompress android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
+      unzip -q android-ndk-r16b-${HOST_NAME}-x86_64.zip
+      # Rename ndk
+      mv android-ndk-r16b android-ndk
+    else
+      echo "AndroidNDK $HOME/bin/android-ndk exists! Skip downloading."
+    fi
 }
 
 function install_python_win32()

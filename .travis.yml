@@ -6,25 +6,35 @@ matrix:
       env: 
         - BUILD_TARGET=windows_cmake
       language: cpp
+      cache:
+        directories:
+          - $HOME/AppData/Local/Temp/chocolatey
+          - /c/Python27
+        pip: true
     - os: osx
       env:
         - BUILD_TARGET=macosx_cmake
       language: cpp
       osx_image: xcode10.3
       sudo: required
+      cache:
+        pip: true
     - os: osx
       env:
         - BUILD_TARGET=ios_cmake
       language: cpp
       osx_image: xcode10.3
       sudo: required
+      cache:
+        pip: true
     - os: linux
       dist: xenial
       sudo: required
       env: 
         - BUILD_TARGET=android_cmake
       language: cpp
-
+      cache:
+        pip: true
 node_js:
   - "7"
 jdk:
@@ -33,6 +43,10 @@ script:
   - tools/travis-scripts/run-script.sh
 before_install:
   - tools/travis-scripts/before-install.sh
+
+cache:
+  directories:
+    - $HOME/bin
 
 # blocklist
 # branches:
