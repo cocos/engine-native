@@ -186,13 +186,13 @@ if(APPLE)
 
 elseif(WINDOWS)
     
-    if(EXISTS ../../../jsb-adapter)
+    if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/../../jsb-adapter)
         add_custom_command(TARGET ${LIB_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ../../../jsb-adapter $<TARGET_FILE_DIR:${LIB_NAME}>/jsb-adapter
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ../../../res $<TARGET_FILE_DIR:${LIB_NAME}>/res
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ../../../src $<TARGET_FILE_DIR:${LIB_NAME}>/src
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ../../../main.js $<TARGET_FILE_DIR:${LIB_NAME}>/main.js
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ../../../project.json $<TARGET_FILE_DIR:${LIB_NAME}>/project.json
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../../jsb-adapter $<TARGET_FILE_DIR:${LIB_NAME}>/jsb-adapter
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../../res $<TARGET_FILE_DIR:${LIB_NAME}>/res
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../../src $<TARGET_FILE_DIR:${LIB_NAME}>/src
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_LIST_DIR}/../../main.js $<TARGET_FILE_DIR:${LIB_NAME}>/main.js
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_LIST_DIR}/../../project.json $<TARGET_FILE_DIR:${LIB_NAME}>/project.json
         )
     endif()
     
