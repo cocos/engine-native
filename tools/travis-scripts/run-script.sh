@@ -32,7 +32,7 @@ function setup_linux_andorid_sdk()
     echo "Download Android SDK... "
     cmake_dir=$ANDROID_SDK/cmake/3.10.2.4988404/bin
     cd $HOME/android
-    if [ -d "$cmake_bin" ]; then
+    if ! [ -d "$cmake_bin" ]; then
         wget -t 5 -q https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip
         unzip *.zip
         yes | ./tools/bin/sdkmanager  --sdk_root="$ANDROID_SDK" \
@@ -67,7 +67,7 @@ function build_android()
 function mac_install_cmake()
 {   
     echo "Compiling CMake ... "
-    if [ -d $HOME/bin/cmake/bin ]; then
+    if ! [ -d $HOME/bin/cmake/bin ]; then
         cd $HOME/bin
         NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
         cmake_source=https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0.tar.gz
@@ -88,7 +88,7 @@ function mac_install_cmake()
 function mac_download_cmake()
 {
     echo "Download CMake ..."
-    if [ -f cmake_bin.tar.gz ]; then
+    if ! [ -f cmake_bin.tar.gz ]; then
         cmake_binary=https://github.com/Kitware/CMake/releases/download/v3.17.0/cmake-3.17.0-Darwin-x86_64.tar.gz
         wget -t 3 --no-check-certificate $cmake_binary -O cmake_bin.tar.gz -q
         tar xf cmake_bin.tar.gz 2>/dev/null
