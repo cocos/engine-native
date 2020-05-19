@@ -39,7 +39,7 @@ function install_android_ndk()
     else
         HOST_NAME="windows"
     fi
-    if ! [ -d android-ndk/toolchains/llvm ]; then
+    if [ ! -d android-ndk/toolchains/llvm ]; then
       echo "Download android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
       curl -O http://dl.google.com/android/repository/android-ndk-r16b-${HOST_NAME}-x86_64.zip
       echo "Decompress android-ndk-r16b-${HOST_NAME}-x86_64.zip ..."
