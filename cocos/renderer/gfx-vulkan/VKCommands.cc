@@ -239,6 +239,8 @@ void CCVKCmdFuncFreeCommandBuffer(CCVKDevice* device, CCVKGPUCommandBuffer* gpuC
 
 void CCVKCmdFuncCreateBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer)
 {
+    if (!gpuBuffer->size) { return; }
+
     VkBufferCreateInfo bufferInfo{ VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
     bufferInfo.size = gpuBuffer->size;
     bufferInfo.usage = MapVkBufferUsageFlagBits(gpuBuffer->usage);
@@ -308,6 +310,8 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer, void*
 
 bool CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
 {
+    if (!gpuTexture->width || !gpuTexture->height) { return true; }
+
     VkFormat format = MapVkFormat(gpuTexture->format);
     VkFormatFeatureFlags features = MapVkFormatFeatureFlags(gpuTexture->usage);
     VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;

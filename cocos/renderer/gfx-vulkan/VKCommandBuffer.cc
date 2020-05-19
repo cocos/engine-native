@@ -6,7 +6,7 @@
 
 #include "VKBuffer.h"
 #include "VKTexture.h"
-#include "VKRenderpass.h"
+#include "VKRenderPass.h"
 #include "VKPipelineState.h"
 #include "VKBindingLayout.h"
 #include "VKInputAssembler.h"
@@ -330,16 +330,35 @@ void CCVKCommandBuffer::draw(GFXInputAssembler* ia)
         else
         {
             ((CCVKInputAssembler*)ia)->extractDrawInfo(drawInfo);
+            uint instanceCount = std::max(drawInfo.instanceCount, 1u);
+            bool hasIndexBuffer = gpuInputAssembler->gpuIndexBuffer && drawInfo.indexCount >= 0;
 
-            if (gpuInputAssembler->gpuIndexBuffer && drawInfo.indexCount >= 0)
+            if (hasIndexBuffer)
             {
-                vkCmdDrawIndexed(_gpuCommandBuffer->vkCommandBuffer, drawInfo.indexCount, std::max(drawInfo.instanceCount, 1u),
+                vkCmdDrawIndexed(_gpuCommandBuffer->vkCommandBuffer, drawInfo.indexCount, instanceCount,
                     drawInfo.firstIndex, drawInfo.vertexOffset, drawInfo.firstInstance);
             }
             else
             {
-                vkCmdDraw(_gpuCommandBuffer->vkCommandBuffer, drawInfo.vertexCount, std::max(drawInfo.instanceCount, 1u),
+                vkCmdDraw(_gpuCommandBuffer->vkCommandBuffer, drawInfo.vertexCount, instanceCount,
                     drawInfo.firstVertex, drawInfo.firstInstance);
+            }
+
+            ++_numDrawCalls;
+            _numInstances += drawInfo.instanceCount;
+            if (_curGPUPipelineState)
+            {
+                uint indexCount = hasIndexBuffer ? drawInfo.indexCount : drawInfo.vertexCount;
+                switch (_curGPUPipelineState->primitive)
+                {
+                case GFXPrimitiveMode::TRIANGLE_LIST:
+                    _numTriangles += indexCount / 3 * instanceCount;
+                    break;
+                case GFXPrimitiveMode::TRIANGLE_STRIP:
+                case GFXPrimitiveMode::TRIANGLE_FAN:
+                    _numTriangles += (indexCount - 2) * instanceCount;
+                    break;
+                }
             }
         }
     }

@@ -469,13 +469,21 @@ void CCVKDevice::buildSwapchain()
 
 void CCVKDevice::acquire()
 {
+    _gpuSemaphorePool->reset();
+    _gpuFencePool->reset();
+    ((CCVKCommandAllocator*)_cmdAllocator)->reset();
+
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
         ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
-    CCVKGPUQueue* queue = ((CCVKQueue*)_queue)->gpuQueue();
-    queue->waitSemaphore = acquireSemaphore;
-    queue->signalSemaphore = _gpuSemaphorePool->alloc();
+    // Clear queue stats
+    CCVKQueue* queue = (CCVKQueue*)_queue;
+    queue->_numDrawCalls = 0;
+    queue->_numInstances = 0;
+    queue->_numTriangles = 0;
+    queue->gpuQueue()->nextWaitSemaphore = acquireSemaphore;
+    queue->gpuQueue()->nextSignalSemaphore = _gpuSemaphorePool->alloc();
 }
 
 void CCVKDevice::present()
@@ -487,7 +495,7 @@ void CCVKDevice::present()
 
     VkPresentInfoKHR presentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
     presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores = &queue->gpuQueue()->waitSemaphore;
+    presentInfo.pWaitSemaphores = &queue->gpuQueue()->nextWaitSemaphore;
     presentInfo.swapchainCount = 1;
     presentInfo.pSwapchains = &_gpuSwapchain->vkSwapchain;
     presentInfo.pImageIndices = &_gpuSwapchain->curImageIndex;
@@ -495,15 +503,6 @@ void CCVKDevice::present()
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
 
     VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
-
-    _gpuSemaphorePool->reset();
-    _gpuFencePool->reset();
-    ((CCVKCommandAllocator*)_cmdAllocator)->reset();
-
-    // Clear queue stats
-    queue->_numDrawCalls = 0;
-    queue->_numInstances = 0;
-    queue->_numTriangles = 0;
 }
 
 GFXWindow* CCVKDevice::createWindow(const GFXWindowInfo& info)

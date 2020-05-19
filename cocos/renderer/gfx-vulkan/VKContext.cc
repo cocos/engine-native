@@ -17,6 +17,12 @@ namespace
     VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
         VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT *callbackData, void * user_data)
     {
+        // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/1818
+        if (!strcmp(callbackData->pMessageIdName, "VUID-vkQueuePresentKHR-pWaitSemaphores-03268"))
+        {
+            return VK_FALSE;
+        }
+
         // Log debug messge
         if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
         {

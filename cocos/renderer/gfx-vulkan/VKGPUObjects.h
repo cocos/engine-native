@@ -81,8 +81,8 @@ public:
     GFXQueueType type;
     VkQueue vkQueue;
     uint queueFamilyIndex;
-    VkSemaphore waitSemaphore = VK_NULL_HANDLE;
-    VkSemaphore signalSemaphore = VK_NULL_HANDLE;
+    VkSemaphore nextWaitSemaphore = VK_NULL_HANDLE;
+    VkSemaphore nextSignalSemaphore = VK_NULL_HANDLE;
     VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     CachedArray<VkCommandBuffer> commandBuffers;
 };
