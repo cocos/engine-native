@@ -709,8 +709,6 @@ namespace se {
 
             if (block.HasCaught()) {
                 v8::Local<v8::Message> message = block.Message();
-                v8::Local<v8::String> str = message->Get();
-                v8::String::Utf8Value utf8(_isolate, str);
                 SE_LOGE("ScriptEngine::evalString catch exception:\n");
                 onMessageCallback(message, v8::Undefined(_isolate));
             }
