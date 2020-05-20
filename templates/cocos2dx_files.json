@@ -1,5 +1,6 @@
 {
     "common": [
+        ".browserslistrc", 
         "CMakeLists.txt", 
         "build/cocos2d_headers.props", 
         "build/cocos2d_libs.xcodeproj/project.pbxproj", 
