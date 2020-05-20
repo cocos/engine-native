@@ -22,6 +22,11 @@ namespace
         {
             return VK_FALSE;
         }
+        // TODO: handle the few frames with no command submission at start up
+        if (!strcmp(callbackData->pMessageIdName, "VUID-VkPresentInfoKHR-pImageIndices-01296"))
+        {
+            return VK_FALSE;
+        }
 
         // Log debug messge
         if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)

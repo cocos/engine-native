@@ -80,12 +80,7 @@ void CCVKCommandBuffer::begin(GFXRenderPass* renderPass, uint subpass, GFXFrameb
 
 void CCVKCommandBuffer::end()
 {
-    if (_isStateInvalid)
-    {
-        BindStates();
-    }
     _curGPUFBO = nullptr;
-
     VK_CHECK(vkEndCommandBuffer(_gpuCommandBuffer->vkCommandBuffer));
 }
 
@@ -177,7 +172,6 @@ void CCVKCommandBuffer::bindPipelineState(GFXPipelineState* pso)
 {
     _curGPUPipelineState = ((CCVKPipelineState*)pso)->gpuPipelineState();
     vkCmdBindPipeline(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _curGPUPipelineState->vkPipeline);
-    _isStateInvalid = true;
 }
 
 void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout* layout)
@@ -187,7 +181,6 @@ void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout* layout)
         _curGPUBindingLayout = ((CCVKBindingLayout*)layout)->gpuBindingLayout();
         vkCmdBindDescriptorSets(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
             _curGPUPipelineState->gpuLayout->vkPipelineLayout, 0, 1, &_curGPUBindingLayout->vkDescriptorSet, 0, nullptr);
-        _isStateInvalid = true;
     }
     else
     {
@@ -315,11 +308,6 @@ void CCVKCommandBuffer::draw(GFXInputAssembler* ia)
     if ((_type == GFXCommandBufferType::PRIMARY && _curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY))
     {
-        if (_isStateInvalid)
-        {
-            BindStates();
-        }
-
         CCVKGPUInputAssembler* gpuInputAssembler = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
         GFXDrawInfo drawInfo;
 
@@ -399,6 +387,8 @@ void CCVKCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFX
 
 void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmdBuffs, uint count)
 {
+    if (!count) { return; }
+
     vector<VkCommandBuffer>::type vkCmdBuffs(count);
 
     for (uint i = 0; i < count; ++i)
@@ -412,11 +402,6 @@ void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmdBuffs, 
     }
 
     vkCmdExecuteCommands(_gpuCommandBuffer->vkCommandBuffer, count, vkCmdBuffs.data());
-}
-
-void CCVKCommandBuffer::BindStates()
-{
-    _isStateInvalid = false;
 }
 
 NS_CC_END

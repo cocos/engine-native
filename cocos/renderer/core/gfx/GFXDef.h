@@ -802,7 +802,7 @@ struct GFXAttribute {
   bool isNormalized = false;
   uint stream = 0;
   bool isInstanced = false;
-    uint location = 0;
+  uint location = 0;
 };
 
 typedef vector<GFXAttribute>::type GFXAttributeList;

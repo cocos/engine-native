@@ -11,6 +11,32 @@
 
 NS_CC_BEGIN
 
+void InsertVkDynamicStates(vector<VkDynamicState>::type& out, const vector<GFXDynamicState>::type& dynamicStates)
+{
+    for (GFXDynamicState dynamicState : dynamicStates)
+    {
+        switch (dynamicState)
+        {
+        case GFXDynamicState::VIEWPORT: break; // we make this dynamic by default
+        case GFXDynamicState::SCISSOR: break; // we make this dynamic by default
+        case GFXDynamicState::LINE_WIDTH: out.push_back(VK_DYNAMIC_STATE_LINE_WIDTH); break;
+        case GFXDynamicState::DEPTH_BIAS: out.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS); break;
+        case GFXDynamicState::BLEND_CONSTANTS: out.push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS); break;
+        case GFXDynamicState::DEPTH_BOUNDS: out.push_back(VK_DYNAMIC_STATE_DEPTH_BOUNDS); break;
+        case GFXDynamicState::STENCIL_WRITE_MASK: out.push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK); break;
+        case GFXDynamicState::STENCIL_COMPARE_MASK:
+            out.push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);
+            out.push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
+            break;
+        default:
+        {
+            CCASSERT(false, "Unsupported GFXPrimitiveMode, convert to VkPrimitiveTopology failed.");
+            break;
+        }
+        }
+    }
+}
+
 void beginOneTimeCommands(CCVKDevice* device, CCVKGPUCommandBuffer* cmdBuff)
 {
     cmdBuff->commandPool = ((CCVKCommandAllocator*)device->getCommandAllocator())->gpuCommandPool();
@@ -711,7 +737,7 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice* device, CCVKGPUPipelineState* gp
     for (size_t i = 0u; i < attributeCount; i++)
     {
         const GFXAttribute &attr = attributes[i];
-        attributeDescriptions[i].location = i;
+        attributeDescriptions[i].location = attr.location;
         attributeDescriptions[i].binding = attr.stream;
         attributeDescriptions[i].format = MapVkFormat(attr.format);
         attributeDescriptions[i].offset = offsets[attr.stream];

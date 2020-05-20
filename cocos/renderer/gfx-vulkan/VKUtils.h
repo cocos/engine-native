@@ -410,32 +410,6 @@ namespace
         }
     }
 
-    void InsertVkDynamicStates(vector<VkDynamicState>::type& out, const vector<GFXDynamicState>::type& dynamicStates)
-    {
-        for (GFXDynamicState dynamicState : dynamicStates)
-        {
-            switch (dynamicState)
-            {
-            case GFXDynamicState::VIEWPORT: break; // we make this dynamic by default
-            case GFXDynamicState::SCISSOR: break; // we make this dynamic by default
-            case GFXDynamicState::LINE_WIDTH: out.push_back(VK_DYNAMIC_STATE_LINE_WIDTH); break;
-            case GFXDynamicState::DEPTH_BIAS: out.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS); break;
-            case GFXDynamicState::BLEND_CONSTANTS: out.push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS); break;
-            case GFXDynamicState::DEPTH_BOUNDS: out.push_back(VK_DYNAMIC_STATE_DEPTH_BOUNDS); break;
-            case GFXDynamicState::STENCIL_WRITE_MASK: out.push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK); break;
-            case GFXDynamicState::STENCIL_COMPARE_MASK:
-                out.push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);
-                out.push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
-                break;
-            default:
-            {
-                CCASSERT(false, "Unsupported GFXPrimitiveMode, convert to VkPrimitiveTopology failed.");
-                break;
-            }
-            }
-        }
-    }
-
     VkColorComponentFlags MapVkColorComponentFlags(GFXColorMask colorMask)
     {
         uint flags = 0u;
