@@ -201,8 +201,6 @@ namespace
 
     VkAccessFlags MapVkAccessFlags(GFXTextureUsage usage, GFXFormat format)
     {
-        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_ACCESS_TRANSFER_READ_BIT;
-        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_ACCESS_TRANSFER_WRITE_BIT;
         if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
         if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
         if (usage & GFXTextureUsage::INPUT_ATTACHMENT) return VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
@@ -211,6 +209,8 @@ namespace
             if (GFX_FORMAT_INFOS[(uint)format].hasDepth) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
             else return VK_ACCESS_SHADER_READ_BIT;
         }
+        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_ACCESS_TRANSFER_READ_BIT;
+        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_ACCESS_TRANSFER_WRITE_BIT;
         return VK_ACCESS_SHADER_READ_BIT;
     }
 
@@ -306,8 +306,6 @@ namespace
     VkImageLayout MapVkImageLayout(GFXTextureUsage usage, GFXFormat format)
     {
         const GFXFormatInfo &info = GFX_FORMAT_INFOS[(uint)format];
-        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT)
         {
@@ -320,6 +318,8 @@ namespace
             else if (info.hasDepth) return VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
             else return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         }
+        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         return VK_IMAGE_LAYOUT_UNDEFINED;
     }
 
@@ -334,11 +334,11 @@ namespace
 
     VkPipelineStageFlags MapVkPipelineStageFlags(GFXTextureUsage usage)
     {
-        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_PIPELINE_STAGE_TRANSFER_BIT;
-        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_PIPELINE_STAGE_TRANSFER_BIT;
         if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
         if (usage & GFXTextureUsage::SAMPLED) return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
+        if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_PIPELINE_STAGE_TRANSFER_BIT;
+        if (usage & GFXTextureUsage::TRANSFER_DST) return VK_PIPELINE_STAGE_TRANSFER_BIT;
         return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
     }
 

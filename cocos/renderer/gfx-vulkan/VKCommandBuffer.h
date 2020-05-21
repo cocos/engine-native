@@ -45,7 +45,6 @@ private:
     CCVKGPUPipelineState* _curGPUPipelineState = nullptr;
     CCVKGPUBindingLayout* _curGPUBindingLayout = nullptr;
     CCVKGPUInputAssembler* _curGPUInputAssember = nullptr;
-
     CCVKGPUFramebuffer* _curGPUFBO = nullptr;
 
     GFXViewport _curViewport;

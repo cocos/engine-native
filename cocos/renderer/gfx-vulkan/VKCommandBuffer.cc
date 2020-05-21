@@ -170,35 +170,48 @@ void CCVKCommandBuffer::endRenderPass()
 
 void CCVKCommandBuffer::bindPipelineState(GFXPipelineState* pso)
 {
-    _curGPUPipelineState = ((CCVKPipelineState*)pso)->gpuPipelineState();
-    vkCmdBindPipeline(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _curGPUPipelineState->vkPipeline);
+    CCVKGPUPipelineState* gpuPipelineState = ((CCVKPipelineState*)pso)->gpuPipelineState();
+
+    if (_curGPUPipelineState != gpuPipelineState)
+    {
+        vkCmdBindPipeline(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gpuPipelineState->vkPipeline);
+        _curGPUPipelineState = gpuPipelineState;
+    }
 }
 
 void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout* layout)
 {
-    if (_curGPUPipelineState)
-    {
-        _curGPUBindingLayout = ((CCVKBindingLayout*)layout)->gpuBindingLayout();
-        vkCmdBindDescriptorSets(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-            _curGPUPipelineState->gpuLayout->vkPipelineLayout, 0, 1, &_curGPUBindingLayout->vkDescriptorSet, 0, nullptr);
-    }
-    else
+    if (!_curGPUPipelineState)
     {
         CC_LOG_ERROR("Command 'bindBindingLayout' must be recorded after 'bindPipelineState'.");
+        return;
+    }
+
+    CCVKGPUBindingLayout* gpuBindingLayout = ((CCVKBindingLayout*)layout)->gpuBindingLayout();
+
+    if (_curGPUBindingLayout != gpuBindingLayout)
+    {
+        vkCmdBindDescriptorSets(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+            _curGPUPipelineState->gpuLayout->vkPipelineLayout, 0, 1, &gpuBindingLayout->vkDescriptorSet, 0, nullptr);
+        _curGPUBindingLayout = gpuBindingLayout;
     }
 }
 
 void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler* ia)
 {
-    const CCVKGPUInputAssembler* gpuInputAssembler = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
+    CCVKGPUInputAssembler* gpuInputAssembler = ((CCVKInputAssembler*)ia)->gpuInputAssembler();
 
-    vkCmdBindVertexBuffers(_gpuCommandBuffer->vkCommandBuffer, 0, gpuInputAssembler->vertexBuffers.size(),
-        gpuInputAssembler->vertexBuffers.data(), gpuInputAssembler->vertexBufferOffsets.data());
-
-    if (gpuInputAssembler->gpuIndexBuffer)
+    if (_curGPUInputAssember != gpuInputAssembler)
     {
-        vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->vkBuffer, 0,
-            gpuInputAssembler->gpuIndexBuffer->stride == 32 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
+        vkCmdBindVertexBuffers(_gpuCommandBuffer->vkCommandBuffer, 0, gpuInputAssembler->vertexBuffers.size(),
+            gpuInputAssembler->vertexBuffers.data(), gpuInputAssembler->vertexBufferOffsets.data());
+
+        if (gpuInputAssembler->gpuIndexBuffer)
+        {
+            vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->vkBuffer, 0,
+                gpuInputAssembler->gpuIndexBuffer->stride == 32 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
+        }
+        _curGPUInputAssember = gpuInputAssembler;
     }
 }
 
@@ -356,6 +369,25 @@ void CCVKCommandBuffer::draw(GFXInputAssembler* ia)
     }
 }
 
+void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmdBuffs, uint count)
+{
+    if (!count) { return; }
+
+    vector<VkCommandBuffer>::type vkCmdBuffs(count);
+
+    for (uint i = 0; i < count; ++i)
+    {
+        CCVKCommandBuffer* cmdBuff = (CCVKCommandBuffer*)cmdBuffs[i];
+        vkCmdBuffs[i] = cmdBuff->_gpuCommandBuffer->vkCommandBuffer;
+
+        _numDrawCalls += cmdBuff->getNumDrawCalls();
+        _numInstances += cmdBuff->getNumInstances();
+        _numTriangles += cmdBuff->getNumTris();
+    }
+
+    vkCmdExecuteCommands(_gpuCommandBuffer->vkCommandBuffer, count, vkCmdBuffs.data());
+}
+
 void CCVKCommandBuffer::updateBuffer(GFXBuffer* buff, void* data, uint size, uint offset)
 {
     if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
@@ -383,25 +415,6 @@ void CCVKCommandBuffer::copyBufferToTexture(GFXBuffer* src, GFXTexture* dst, GFX
     {
         CC_LOG_ERROR("Command 'copyBufferToTexture' must be recorded outside a render pass.");
     }
-}
-
-void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer*>& cmdBuffs, uint count)
-{
-    if (!count) { return; }
-
-    vector<VkCommandBuffer>::type vkCmdBuffs(count);
-
-    for (uint i = 0; i < count; ++i)
-    {
-        CCVKCommandBuffer* cmdBuff = (CCVKCommandBuffer*)cmdBuffs[i];
-        vkCmdBuffs[i] = cmdBuff->_gpuCommandBuffer->vkCommandBuffer;
-
-        _numDrawCalls += cmdBuff->getNumDrawCalls();
-        _numInstances += cmdBuff->getNumInstances();
-        _numTriangles += cmdBuff->getNumTris();
-    }
-
-    vkCmdExecuteCommands(_gpuCommandBuffer->vkCommandBuffer, count, vkCmdBuffs.data());
 }
 
 NS_CC_END
