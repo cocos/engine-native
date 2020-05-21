@@ -31,6 +31,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <map>
 
 /**
  * @addtogroup base
@@ -42,6 +43,7 @@ NS_CC_BEGIN
 class Value;
 
 typedef std::vector<Value> ValueVector;
+typedef std::map<std::string, Value> OrderedValueMap;
 typedef std::unordered_map<std::string, Value> ValueMap;
 typedef std::unordered_map<int, Value> ValueMapIntKey;
 

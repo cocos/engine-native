@@ -86,7 +86,7 @@ Pass::Pass(
 {
     _hashName = std::hash<std::string>{}(programName);
     _properties = properties;
-    _defines = defines;
+    _defines.insert(defines.begin(), defines.end());
     generateDefinesKey();
     reset();
 }
@@ -101,12 +101,12 @@ void Pass::generateDefinesKey()
     for (auto& def : _defines) {
         key += def.first + std::to_string(def.second.asUnsignedInt());
     }
-    
+
     _definesHash = 0;
     MathUtil::combineHash(_definesHash, std::hash<std::string>{}(key));
 }
 
-void Pass::extractDefines(size_t& hash, std::vector<const ValueMap*>& defines) const
+void Pass::extractDefines(size_t& hash, std::vector<const OrderedValueMap*>& defines) const
 {
     if (_parent) {
         _parent->extractDefines(hash, defines);

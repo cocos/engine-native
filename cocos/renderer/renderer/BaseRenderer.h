@@ -131,7 +131,7 @@ protected:
 
     CC_DISALLOW_COPY_ASSIGN_AND_MOVE(BaseRenderer);
     
-    ValueMap _defines;
+    OrderedValueMap _defines;
     size_t _definesHash = 0;
     std::string _definesKey = "";
     
@@ -153,7 +153,7 @@ protected:
     static const size_t cc_cameraPos;
     static const size_t cc_time;
     
-    static std::vector<const ValueMap*> __tmp_defines__;
+    static std::vector<const OrderedValueMap*> __tmp_defines__;
 };
 
 // end of renderer group

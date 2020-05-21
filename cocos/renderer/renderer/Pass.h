@@ -154,9 +154,10 @@ public:
     inline void setParent(Pass* parent) { _parent = parent; }
     inline const Pass* getParent() { return _parent; }
     
-    void extractDefines (size_t& hash, std::vector<const ValueMap*>& defines) const;
+    void extractDefines (size_t& hash, std::vector<const OrderedValueMap*>& defines) const;
     
     void generateDefinesKey ();
+    inline size_t getDefinesHash() const {return _definesHash;}
     
     const Technique::Parameter* getProperty(const std::string& name) const;
     void setProperty(const std::string& name, const Technique::Parameter& property);
@@ -175,7 +176,7 @@ private:
     Pass* _parent = nullptr;
     
     std::unordered_map<size_t, Technique::Parameter> _properties;
-    ValueMap _defines;
+    OrderedValueMap _defines;
     size_t _definesHash = 0;
     
     static const int PASS_VALUE_LENGTH = 27;

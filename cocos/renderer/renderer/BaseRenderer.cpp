@@ -266,7 +266,7 @@ void BaseRenderer::setProperty (const Effect::Property* prop)
 }
 
 
-std::vector<const ValueMap*> BaseRenderer::__tmp_defines__;
+std::vector<const OrderedValueMap*> BaseRenderer::__tmp_defines__;
 void BaseRenderer::draw(const StageItem& item)
 {
     const Mat4& worldMatrix = item.model->getWorldMatrix();

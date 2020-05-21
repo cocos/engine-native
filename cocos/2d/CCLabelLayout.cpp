@@ -317,6 +317,10 @@ namespace cocos2d {
                     effect->copy(templateEffect);
                     assembler->updateEffect(groupIndex, effect);
                 }
+                
+                if(effect->getPasses().at(0)->getDefinesHash() != templateEffect->getPasses().at(0)->getDefinesHash()){
+                    effect->copy(templateEffect);
+                }
 
                 if (effect) {
                     effect->setProperty(textureKey, it.first);
