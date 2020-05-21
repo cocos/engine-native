@@ -56,10 +56,10 @@ function build_android()
     
     echo "Compile Android - cmake ..."
     echo "ANDORID_NDK ${ANDROID_NDK} or ${ANDROID_NDK_HOME}" 
-    #./gradlew assembleDebug # --quiet
-    #echo "Compile Android Debug Done!"
-    ./gradlew assembleRelease # --quiet
-    echo "Compile Android Release Done!"
+    ./gradlew assembleDebug --quiet
+    echo "Compile Android Debug Done!"
+    # ./gradlew assembleRelease # --quiet
+    # echo "Compile Android Release Done!"
 }
 
 function mac_install_cmake()
