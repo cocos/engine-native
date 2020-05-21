@@ -221,6 +221,8 @@ void CCMTLBuffer::update(void* buffer, uint offset, uint size)
         {
             uint8_t* dst = (uint8_t*)(_mtlBuffer.contents) + offset;
             memcpy(dst, buffer, size);
+            if(_mtlResourceOptions == MTLResourceStorageModeManaged)
+                [_mtlBuffer didModifyRange:NSMakeRange(0, _size)]; // Synchronize the managed buffer.
         }
         return;
     }
