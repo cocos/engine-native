@@ -202,7 +202,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
 
         VkApplicationInfo app{ VK_STRUCTURE_TYPE_APPLICATION_INFO };
         app.pEngineName = "Cocos Creator";
-        app.apiVersion = apiVersion;
+        app.apiVersion = VK_API_VERSION_1_0;
 
         VkInstanceCreateInfo instanceInfo{ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };
         instanceInfo.pApplicationInfo = &app;
@@ -248,7 +248,7 @@ bool CCVKContext::initialize(const GFXContextInfo &info) {
 #endif
 
         _majorVersion = VK_VERSION_MAJOR(apiVersion);
-        _minorVersion = VK_VERSION_MINOR(apiVersion);
+        _minorVersion = 0;// VK_VERSION_MINOR(apiVersion);
 
         ///////////////////// Surface Creation /////////////////////
 

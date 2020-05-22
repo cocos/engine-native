@@ -940,6 +940,11 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers
     vkCmdCopyBufferToImage(cmdBuff.vkCommandBuffer, stagingBuffer->vkBuffer, gpuTexture->vkImage,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
 
+    if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
+    {
+
+    }
+
     if (gpuTexture->currentLayout != VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
     {
         VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
@@ -955,11 +960,6 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers
         barrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
         vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, gpuTexture->targetStage, 0,
             0, nullptr, 0, nullptr, 1, &barrier);
-    }
-
-    if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
-    {
-
     }
 
     endOneTimeCommands(device, &cmdBuff);

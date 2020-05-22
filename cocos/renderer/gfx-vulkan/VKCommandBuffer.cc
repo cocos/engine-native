@@ -111,11 +111,66 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
         barriers[attachmentCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
             _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
         clearValues[attachmentCount - 1].depthStencil = { depth, (uint)stencil };
-
-        vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
-            VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, barriers.size(), barriers.data());
     }
+
+    /* use clear command for now instead of clear loadop to be compatible with clearFlags usage *
+    if (clearFlags & GFXClearFlags::ALL)
+    {
+        vector<VkImageMemoryBarrier>::type transferBarriers(renderPass->beginBarriers);
+        for (size_t i = 0u; i < attachmentCount; i++)
+        {
+            transferBarriers[i].newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            transferBarriers[i].dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            barriers[i].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            barriers[i].srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        }
+        vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, transferBarriers.size(), transferBarriers.data());
+
+        if (clearFlags & GFXClearFlags::COLOR)
+        {
+            VkImageSubresourceRange range = {};
+            range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            range.levelCount = 1;
+            range.layerCount = 1;
+
+            for (size_t i = 0u; i < attachmentCount - 1; i++)
+            {
+                vkCmdClearColorImage(_gpuCommandBuffer->vkCommandBuffer, barriers[i].image,
+                    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clearValues[i].color, 1, &range);
+            }
+        }
+        if (clearFlags & GFXClearFlags::DEPTH_STENCIL)
+        {
+            VkImageAspectFlags mask = 0;
+            if (clearFlags & GFXClearFlags::DEPTH) mask |= VK_IMAGE_ASPECT_DEPTH_BIT;
+            if (clearFlags & GFXClearFlags::STENCIL) mask |= VK_IMAGE_ASPECT_STENCIL_BIT;
+
+            VkImageSubresourceRange range{};
+            range.aspectMask = mask;
+            range.levelCount = 1;
+            range.layerCount = 1;
+
+            vkCmdClearDepthStencilImage(_gpuCommandBuffer->vkCommandBuffer, barriers[attachmentCount - 1].image,
+                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clearValues[attachmentCount - 1].depthStencil, 1, &range);
+        }
+    }
+    else
+    {
+        for (size_t i = 0u; i < attachmentCount - 1; i++)
+        {
+            barriers[i].oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+            barriers[i].srcAccessMask = 0;
+        }
+        barriers[attachmentCount - 1].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        barriers[attachmentCount - 1].srcAccessMask = 0;
+    }
+    /* */
+
+    // transition to COLOR_ATTACHMENT_OPTIMAL
+    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+        VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, barriers.size(), barriers.data());
 
     VkRenderPassBeginInfo passBeginInfo{ VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
     passBeginInfo.renderPass = renderPass->vkRenderPass;
@@ -129,12 +184,7 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer* fbo, const GFXRect& rend
 
     vkCmdBeginRenderPass(_gpuCommandBuffer->vkCommandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    /* */
     VkViewport viewport{ (float)renderArea.x, (float)renderArea.y, (float)renderArea.width, (float)renderArea.height, 0, 1 };
-    /* *
-    uint h = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->height : _device->getHeight();
-    VkViewport viewport{ (float)renderArea.x, (float)h - renderArea.y, (float)renderArea.width, -(float)renderArea.height, 0, 1 };
-    /* */
     vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
 
     VkRect2D scissor{ { renderArea.x, renderArea.y }, { renderArea.width, renderArea.height } };
@@ -160,7 +210,7 @@ void CCVKCommandBuffer::endRenderPass()
     //        _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
 
     //    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer,
-    //        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+    //        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
     //        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
     //        0, nullptr, 0, nullptr, barriers.size(), barriers.data());
     //}
@@ -220,12 +270,7 @@ void CCVKCommandBuffer::setViewport(const GFXViewport& vp)
     if (_curViewport != vp)
     {
         _curViewport = vp;
-        /* */
         VkViewport viewport{ (float)vp.left, (float)vp.top, (float)vp.width, (float)vp.height, vp.minDepth, vp.maxDepth };
-        /* *
-        uint h = _curGPUFBO && _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[0]->gpuTexture->height : _device->getHeight();
-        VkViewport viewport{ (float)vp.left, (float)h - vp.top, (float)vp.width, -(float)vp.height, vp.minDepth, vp.maxDepth };
-        /* */
         vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
     }
 }
