@@ -219,7 +219,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     GFXRenderPassInfo renderPassInfo;
     GFXColorAttachment colorAttachment;
     colorAttachment.format = _context->getColorFormat();
-    colorAttachment.loadOp = GFXLoadOp::LOAD;
+    colorAttachment.loadOp = GFXLoadOp::CLEAR;
     colorAttachment.storeOp = GFXStoreOp::STORE;
     colorAttachment.sampleCount = 1;
     colorAttachment.beginLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
@@ -228,9 +228,9 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
 
     GFXDepthStencilAttachment& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
     depthStencilAttachment.format = _context->getDepthStencilFormat();
-    depthStencilAttachment.depthLoadOp = GFXLoadOp::LOAD;
+    depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
     depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
-    depthStencilAttachment.stencilLoadOp = GFXLoadOp::LOAD;
+    depthStencilAttachment.stencilLoadOp = GFXLoadOp::CLEAR;
     depthStencilAttachment.stencilStoreOp = GFXStoreOp::STORE;
     depthStencilAttachment.sampleCount = 1;
     depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
