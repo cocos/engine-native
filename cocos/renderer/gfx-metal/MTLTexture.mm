@@ -2,6 +2,7 @@
 #include "MTLTexture.h"
 #include "MTLUtils.h"
 #include "MTLDevice.h"
+#include <platform/mac/CCView.h>
 
 NS_CC_BEGIN
 
@@ -238,6 +239,19 @@ void CCMTLTexture::update(uint8_t* const* datas, const GFXBufferTextureCopyList&
             CCASSERT(false, "Unsupported MTLTextureType, metal texture update failed.");
             break;
     }
+    if(_flags & GFXTextureFlags::GEN_MIPMAP)
+        generateMipmaps();
+}
+
+void CCMTLTexture::generateMipmaps()
+{
+    id<MTLCommandQueue> commandQueue = ((View*)(((CCMTLDevice*)_device)->getMTKView())).mtlCommandQueue;
+    id<MTLCommandBuffer> mtlCommandBuffer = [commandQueue commandBuffer];
+    [mtlCommandBuffer enqueue];
+    id<MTLBlitCommandEncoder> commandEncoder = [mtlCommandBuffer blitCommandEncoder];
+    [commandEncoder generateMipmapsForTexture:_mtlTexture];
+    [commandEncoder endEncoding];
+    [mtlCommandBuffer commit];
 }
 
 NS_CC_END
