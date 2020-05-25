@@ -2011,8 +2011,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
                         (GLvoid*)buff);
       }
     }
-    if(!isCompressed && (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP))
-        glGenerateMipmap(GL_TEXTURE_2D);
     break;
   }
   case GL_TEXTURE_2D_ARRAY: {
@@ -2048,8 +2046,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
                              gpuTexture->glFormat, 
                              gpuTexture->glType, 
                              (GLvoid*)buff);
-          if(gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
-            glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
         }
       }
     }
@@ -2089,8 +2085,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
                            (GLvoid*)buff);
       }
     }
-    if(!isCompressed && (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP))
-        glGenerateMipmap(GL_TEXTURE_3D);
     break;
   }
   case GL_TEXTURE_CUBE_MAP: {
@@ -2123,8 +2117,6 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
                           gpuTexture->glFormat, 
                           gpuTexture->glType, 
                           (GLvoid*)buff);
-          if(gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
-            glGenerateMipmap(GL_TEXTURE_3D);
         }
       }
     }
@@ -2135,7 +2127,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
     break;
   }
     
-    if(gpuTexture->flags & GFXTextureFlagBit::GEN_MIPMAP)
+    if(!isCompressed && (gpuTexture->flags & GFXTextureFlagBit::GEN_MIPMAP))
     {
         glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture);
         glGenerateMipmap(gpuTexture->glTarget);
