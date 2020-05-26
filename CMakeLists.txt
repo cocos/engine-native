@@ -1194,12 +1194,11 @@ if(MSVC)
         ${CWD}/external/win32/libs/*.dll 
         ${CWD}/external/win32/libs/Debug/*.dll
     )
+    target_compile_options(cocos2d PUBLIC /MP)
 endif()
 
 if(COMMAND target_precompile_headers)
     target_precompile_headers(cocos2d PUBLIC 
         $<$<COMPILE_LANGUAGE:CXX>:${CWD}/cocos/cocos2d.h>
     )
-elseif(MSVC)
-    target_compile_options(cocos2d PUBLIC /MP)
 endif()
