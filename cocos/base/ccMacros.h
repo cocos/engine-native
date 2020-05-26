@@ -38,7 +38,7 @@ THE SOFTWARE.
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
 #include <BaseTsd.h>
-#ifndef __SSIZE_T
+#if !defined(__SSIZE_T) && !defined(_SSIZE_T_)
 #define __SSIZE_T
 typedef SSIZE_T ssize_t;
 #endif // __SSIZE_T
