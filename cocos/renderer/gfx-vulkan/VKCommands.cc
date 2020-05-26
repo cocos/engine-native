@@ -914,7 +914,7 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers
         stagingRegion.imageExtent = { region.texExtent.width, region.texExtent.height, region.texExtent.depth };
 
         memcpy(stagingBuffer->mappedData + offset, buffers[i], regionSizes[i]);
-        offset += regionSizes[i++];
+        offset += regionSizes[i];
     }
 
     CCVKGPUCommandBuffer cmdBuff;
