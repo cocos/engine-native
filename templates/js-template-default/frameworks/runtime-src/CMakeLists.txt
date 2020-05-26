@@ -200,12 +200,14 @@ if(APPLE)
 elseif(WINDOWS)
     
     if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/../../jsb-adapter)
-        add_custom_command(TARGET ${LIB_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../../jsb-adapter $<TARGET_FILE_DIR:${LIB_NAME}>/jsb-adapter
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../../res $<TARGET_FILE_DIR:${LIB_NAME}>/res
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../../src $<TARGET_FILE_DIR:${LIB_NAME}>/src
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_LIST_DIR}/../../main.js $<TARGET_FILE_DIR:${LIB_NAME}>/main.js
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_LIST_DIR}/../../project.json $<TARGET_FILE_DIR:${LIB_NAME}>/project.json
+        set(bin_dir $<TARGET_FILE_DIR:${LIB_NAME}>)
+        add_custom_command(TARGET ${LIB_NAME} PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E echo "Linking resources for ${LIB_NAME} ..."
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_LIST_DIR}/../../jsb-adapter ${bin_dir}/jsb-adapter
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_LIST_DIR}/../../res ${bin_dir}/res
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_LIST_DIR}/../../src ${bin_dir}/src
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_LIST_DIR}/../../main.js ${bin_dir}/main.js
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_LIST_DIR}/../../project.json ${bin_dir}/project.json
         )
     endif()
     
