@@ -3,6 +3,7 @@
 #include "VKUtils.h"
 #include "VKContext.h"
 #include "VKWindow.h"
+#include "VKFence.h"
 #include "VKQueue.h"
 #include "VKCommandAllocator.h"
 #include "VKCommandBuffer.h"
@@ -70,14 +71,13 @@ bool CCVKDevice::initialize(const GFXDeviceInfo& info)
     // only enable the absolute essentials for now
     std::vector<const char *> requestedValidationLayers
     {
-
+        "VK_LAYER_KHRONOS_validation",
     };
     std::vector<const char *> requestedExtensions
     {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME,
         VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME,
         VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME,
-        VK_KHR_16BIT_STORAGE_EXTENSION_NAME,
     };
     VkPhysicalDeviceFeatures2 requestedFeatures2{ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 };
     VkPhysicalDeviceVulkan11Features requestedVulkan11Features{ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES };
@@ -485,6 +485,7 @@ void CCVKDevice::buildSwapchain()
 
 void CCVKDevice::acquire()
 {
+    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
     _gpuSemaphorePool->reset();
     _gpuFencePool->reset();
     ((CCVKCommandAllocator*)_cmdAllocator)->reset();
@@ -517,8 +518,6 @@ void CCVKDevice::present()
     presentInfo.pImageIndices = &_gpuSwapchain->curImageIndex;
 
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
-
-    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
 }
 
 GFXWindow* CCVKDevice::createWindow(const GFXWindowInfo& info)
@@ -528,6 +527,16 @@ GFXWindow* CCVKDevice::createWindow(const GFXWindowInfo& info)
         return window;
 
     CC_SAFE_DESTROY(window);
+    return nullptr;
+}
+
+GFXFence* CCVKDevice::createFence(const GFXFenceInfo& info)
+{
+    GFXFence* fence = CC_NEW(CCVKFence(this));
+    if (fence->initialize(info))
+        return fence;
+
+    CC_SAFE_DESTROY(fence);
     return nullptr;
 }
 

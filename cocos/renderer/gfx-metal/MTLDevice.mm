@@ -145,6 +145,16 @@ GFXWindow* CCMTLDevice::createWindow(const GFXWindowInfo& info)
     return nullptr;
 }
 
+GFXFence* CCMTLDevice::createFence(const GFXFenceInfo& info)
+{
+    auto fence = CC_NEW(CCMTLFence(this) );
+    if (fence && fence->initialize(info) )
+        return fence;
+    
+    CC_SAFE_DESTROY(fence);
+    return nullptr;
+}
+
 GFXQueue* CCMTLDevice::createQueue(const GFXQueueInfo& info)
 {
     auto queue = CC_NEW(CCMTLQueue(this) );

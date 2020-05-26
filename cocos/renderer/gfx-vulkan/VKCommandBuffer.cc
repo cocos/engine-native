@@ -79,7 +79,6 @@ void CCVKCommandBuffer::begin(GFXRenderPass* renderPass, uint subpass, GFXFrameb
         if (frameBuffer) inheritanceInfo.framebuffer = ((CCVKFramebuffer*)frameBuffer)->gpuFBO()->vkFramebuffer;
         beginInfo.pInheritanceInfo = &inheritanceInfo;
     }
-
     VK_CHECK(vkBeginCommandBuffer(_gpuCommandBuffer->vkCommandBuffer, &beginInfo));
 }
 
@@ -204,7 +203,21 @@ void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler* ia)
 
     if (_curGPUInputAssember != gpuInputAssembler)
     {
-        vkCmdBindVertexBuffers(_gpuCommandBuffer->vkCommandBuffer, 0, gpuInputAssembler->vertexBuffers.size(),
+        // buffers may be rebuilt(e.g. resize event) without IA's acknowledge
+        size_t vbCount = gpuInputAssembler->gpuVertexBuffers.size();
+        if (gpuInputAssembler->vertexBuffers.size() < vbCount)
+        {
+            gpuInputAssembler->vertexBuffers.resize(vbCount);
+            gpuInputAssembler->vertexBufferOffsets.resize(vbCount);
+        }
+
+        for (size_t i = 0; i < vbCount; i++)
+        {
+            gpuInputAssembler->vertexBuffers[i] = gpuInputAssembler->gpuVertexBuffers[i]->vkBuffer;
+            gpuInputAssembler->vertexBufferOffsets[i] = gpuInputAssembler->gpuVertexBuffers[i]->startOffset;
+        }
+
+        vkCmdBindVertexBuffers(_gpuCommandBuffer->vkCommandBuffer, 0, vbCount,
             gpuInputAssembler->vertexBuffers.data(), gpuInputAssembler->vertexBufferOffsets.data());
 
         if (gpuInputAssembler->gpuIndexBuffer)

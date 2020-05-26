@@ -220,7 +220,7 @@ void CCVKCmdFuncCreateCommandPool(CCVKDevice* device, CCVKGPUCommandPool* gpuCom
 {
     VkCommandPoolCreateInfo createInfo{ VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO };
     createInfo.queueFamilyIndex = ((CCVKQueue*)device->getQueue())->gpuQueue()->queueFamilyIndex;
-    createInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    createInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
     VK_CHECK(vkCreateCommandPool(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuCommandPool->vkCommandPool));
 }
@@ -291,7 +291,7 @@ void CCVKCmdFuncCreateBuffer(CCVKDevice* device, CCVKGPUBuffer* gpuBuffer)
 
     VmaAllocationInfo res;
     VK_CHECK(vmaCreateBuffer(device->gpuDevice()->memoryAllocator, &bufferInfo, &allocInfo, &gpuBuffer->vkBuffer, &gpuBuffer->vmaAllocation, &res));
-    CC_LOG_DEBUG("Allocated buffer: %llu, %llx %llx %llu", res.size, gpuBuffer->vkBuffer, res.deviceMemory, res.offset);
+    //CC_LOG_DEBUG("Allocated buffer: %llu, %llx %llx %llu", res.size, gpuBuffer->vkBuffer, res.deviceMemory, res.offset);
     gpuBuffer->mappedData = (uint8_t*)res.pMappedData;
 }
 
@@ -367,7 +367,7 @@ bool CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
 
     VmaAllocationInfo res;
     VK_CHECK(vmaCreateImage(device->gpuDevice()->memoryAllocator, &createInfo, &allocInfo, &gpuTexture->vkImage, &gpuTexture->vmaAllocation, &res));
-    CC_LOG_DEBUG("Allocated texture: %llu %llx %llx %llu", res.size, gpuTexture->vkImage, res.deviceMemory, res.offset);
+    //CC_LOG_DEBUG("Allocated texture: %llu %llx %llx %llu", res.size, gpuTexture->vkImage, res.deviceMemory, res.offset);
 
     gpuTexture->currentLayout = MapVkImageLayout(gpuTexture->usage, gpuTexture->format);
     gpuTexture->accessMask = MapVkAccessFlags(gpuTexture->usage, gpuTexture->format);

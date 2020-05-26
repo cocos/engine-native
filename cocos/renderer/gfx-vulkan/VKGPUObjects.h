@@ -243,6 +243,12 @@ public:
     VkPipelineCache vkPipelineCache = VK_NULL_HANDLE;
 };
 
+class CCVKGPUFence : public Object
+{
+public:
+    VkFence vkFence;
+};
+
 class CCVKGPUSemaphorePool : public Object
 {
 public:

@@ -13,7 +13,7 @@ class CC_CORE_API GFXQueue : public GFXObject {
 public:
   virtual bool initialize(const GFXQueueInfo& info) = 0;
   virtual void destroy() = 0;
-  virtual void submit(const std::vector<GFXCommandBuffer*>& cmd_buffs) = 0;
+  virtual void submit(const std::vector<GFXCommandBuffer*>& cmd_buffs, GFXFence* fence = nullptr) = 0;
   
   CC_INLINE GFXDevice* getDevice() const { return _device; }
   CC_INLINE GFXQueueType getType() const { return _type; }
