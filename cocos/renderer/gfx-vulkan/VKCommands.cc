@@ -64,76 +64,6 @@ void insertImageMemoryBarrior(
         0, nullptr,
         1, &barrier);
 }
-bool generateMipmaps(CCVKGPUTexture* gpuTexture, CCVKDevice* device)
-{
-    if (!(gpuTexture->formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
-    {
-        CC_LOG_ERROR("GenerateMipmaps: texture image format does not support linear blitting.");
-        return false;
-    }
-
-    CCVKGPUCommandBuffer cmdBuff;
-    beginOneTimeCommands(device, &cmdBuff);
-
-    VkImageSubresourceRange mipSubRange{};
-    mipSubRange.aspectMask = gpuTexture->aspectMask;
-    mipSubRange.levelCount = VK_REMAINING_MIP_LEVELS;
-    mipSubRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-
-    int32_t mipWidth = gpuTexture->width;
-    int32_t mipHeight = gpuTexture->height;
-
-    for (auto i = 1; i < gpuTexture->mipLevel; i++)
-    {
-        mipSubRange.baseMipLevel = i - 1;
-        insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
-            gpuTexture->vkImage,
-            gpuTexture->accessMask,
-            VK_ACCESS_TRANSFER_READ_BIT,
-            gpuTexture->currentLayout,
-            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-            gpuTexture->targetStage,
-            VK_PIPELINE_STAGE_TRANSFER_BIT,
-            mipSubRange);
-
-        VkImageBlit blit{};
-
-        //Source
-        blit.srcOffsets[1] = { mipWidth, mipHeight, 1 };
-        blit.srcSubresource.aspectMask = gpuTexture->aspectMask;
-        blit.srcSubresource.mipLevel = i - 1;
-        blit.srcSubresource.layerCount = 1;
-
-        //Destination
-        blit.dstOffsets[1] = { mipWidth > 1 ? mipWidth >> 1 : 1, mipHeight > 1 ? mipHeight >> 1 : 1, 1 };
-        blit.dstSubresource.aspectMask = gpuTexture->aspectMask;
-        blit.dstSubresource.mipLevel = i;
-        blit.dstSubresource.layerCount = 1;
-
-        vkCmdBlitImage(cmdBuff.vkCommandBuffer,
-            gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-            gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            1, &blit,
-            VK_FILTER_LINEAR);
-
-        insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
-            gpuTexture->vkImage,
-            VK_ACCESS_TRANSFER_READ_BIT,
-            gpuTexture->accessMask,
-            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-            gpuTexture->currentLayout,
-            VK_PIPELINE_STAGE_TRANSFER_BIT,
-            gpuTexture->targetStage,
-            mipSubRange);
-
-        if (mipWidth > 1) mipWidth = mipWidth >> 1;
-        if (mipHeight > 1) mipHeight = mipHeight >> 1;
-    }
-
-    endOneTimeCommands(device, &cmdBuff);
-
-    return true;
-}
 
 void CCVKCmdFuncCreateRenderPass(CCVKDevice* device, CCVKGPURenderPass* gpuRenderPass)
 {
@@ -413,20 +343,18 @@ bool CCVKCmdFuncCreateTexture(CCVKDevice* device, CCVKGPUTexture* gpuTexture)
     VkFormat format = MapVkFormat(gpuTexture->format);
     VkFormatFeatureFlags features = MapVkFormatFeatureFlags(gpuTexture->usage);
     VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
-    auto usageFlags = MapVkImageUsageFlagBits(gpuTexture->usage) | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    VkImageUsageFlags usageFlags = MapVkImageUsageFlagBits(gpuTexture->usage) | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
     VkFormatProperties formatProperties;
     vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, format, &formatProperties);
-    if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
-    {
-        features |= VK_FORMAT_FEATURE_BLIT_SRC_BIT;
-        features |= VK_FORMAT_FEATURE_BLIT_DST_BIT;
-        usageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-    }
-    gpuTexture->formatFeatureFlags = features;
-    gpuTexture->formatProperties = formatProperties;
+    
     if (!(formatProperties.optimalTilingFeatures & features))
     {
+        CC_LOG_ERROR("CCVKCmdFuncCreateTexture: unsupported feature set in optimalTilingFeatures.");
         return false;
+    }
+    if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
+    {
+        usageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     }
 
     VkImageCreateInfo createInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
@@ -993,20 +921,100 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice* device, uint8_t* const* buffers
     vkCmdCopyBufferToImage(cmdBuff.vkCommandBuffer, stagingBuffer->vkBuffer, gpuTexture->vkImage,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
 
-    insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
-        gpuTexture->vkImage,
-        VK_ACCESS_TRANSFER_WRITE_BIT,
-        gpuTexture->accessMask,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        gpuTexture->currentLayout,
-        VK_PIPELINE_STAGE_TRANSFER_BIT,
-        gpuTexture->targetStage,
-        subresoureceRange);
-
-    endOneTimeCommands(device, &cmdBuff);
-
     if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP)
-        generateMipmaps(gpuTexture, device);
+    {
+        VkFormatProperties formatProperties;
+        vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, MapVkFormat(gpuTexture->format), &formatProperties);
+        VkFormatFeatureFlags mipmapFeatures;
+        mipmapFeatures |= VK_FORMAT_FEATURE_BLIT_SRC_BIT;
+        mipmapFeatures |= VK_FORMAT_FEATURE_BLIT_DST_BIT;
+        mipmapFeatures |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+        if (formatProperties.optimalTilingFeatures & mipmapFeatures)
+        {
+            VkImageSubresourceRange mipSubRange{};
+            mipSubRange.aspectMask = gpuTexture->aspectMask;
+            mipSubRange.levelCount = VK_REMAINING_MIP_LEVELS;
+            mipSubRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+
+            int32_t mipWidth = gpuTexture->width;
+            int32_t mipHeight = gpuTexture->height;
+
+            for (auto i = 1; i < gpuTexture->mipLevel; i++)
+            {
+                mipSubRange.baseMipLevel = i - 1;
+                insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
+                    gpuTexture->vkImage,
+                    VK_ACCESS_TRANSFER_WRITE_BIT,
+                    VK_ACCESS_TRANSFER_READ_BIT,
+                    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                    VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                    VK_PIPELINE_STAGE_TRANSFER_BIT,
+                    VK_PIPELINE_STAGE_TRANSFER_BIT,
+                    mipSubRange);
+
+                VkImageBlit blit{};
+
+                //Source
+                blit.srcOffsets[1] = { mipWidth, mipHeight, 1 };
+                blit.srcSubresource.aspectMask = gpuTexture->aspectMask;
+                blit.srcSubresource.mipLevel = i - 1;
+                blit.srcSubresource.layerCount = 1;
+
+                //Destination
+                blit.dstOffsets[1] = { mipWidth > 1 ? mipWidth >> 1 : 1, mipHeight > 1 ? mipHeight >> 1 : 1, 1 };
+                blit.dstSubresource.aspectMask = gpuTexture->aspectMask;
+                blit.dstSubresource.mipLevel = i;
+                blit.dstSubresource.layerCount = 1;
+
+                vkCmdBlitImage(cmdBuff.vkCommandBuffer,
+                    gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                    gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                    1, &blit,
+                    VK_FILTER_LINEAR);
+
+                insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
+                    gpuTexture->vkImage,
+                    VK_ACCESS_TRANSFER_READ_BIT,
+                    gpuTexture->accessMask,
+                    VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                    gpuTexture->currentLayout,
+                    VK_PIPELINE_STAGE_TRANSFER_BIT,
+                    gpuTexture->targetStage,
+                    mipSubRange);
+
+                if (mipWidth > 1) mipWidth = mipWidth >> 1;
+                if (mipHeight > 1) mipHeight = mipHeight >> 1;
+            }
+
+            mipSubRange.baseMipLevel = gpuTexture->mipLevel - 1;
+            insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
+                gpuTexture->vkImage,
+                VK_ACCESS_TRANSFER_WRITE_BIT,
+                gpuTexture->accessMask,
+                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                gpuTexture->currentLayout,
+                VK_PIPELINE_STAGE_TRANSFER_BIT,
+                gpuTexture->targetStage,
+                mipSubRange);
+        }
+        else
+        {
+            CC_LOG_WARNING("CCVKCmdFuncCopyBuffersToTexture: unsupported mipmap feature in optimal tiling.");
+        }
+    }
+    else
+    {
+        insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
+            gpuTexture->vkImage,
+            VK_ACCESS_TRANSFER_WRITE_BIT,
+            gpuTexture->accessMask,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            gpuTexture->currentLayout,
+            VK_PIPELINE_STAGE_TRANSFER_BIT,
+            gpuTexture->targetStage,
+            subresoureceRange);
+    }
+    endOneTimeCommands(device, &cmdBuff);
 }
 
 NS_CC_END

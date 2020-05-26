@@ -128,8 +128,6 @@ public:
     VkAccessFlags accessMask = VK_ACCESS_SHADER_READ_BIT;
     VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     VkPipelineStageFlags targetStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-    VkFormatFeatureFlags formatFeatureFlags = 0;
-    VkFormatProperties formatProperties = {};
 };
 
 class CCVKGPUTextureView : public Object

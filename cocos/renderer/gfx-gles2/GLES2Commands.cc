@@ -2002,7 +2002,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
                                   (GLvoid*)buff);
       } else {
         glTexSubImage2D(GL_TEXTURE_2D, 
-                        0, 
+                        region.texSubres.mipLevel, 
                         region.texOffset.x, 
                         region.texOffset.y, 
                         w, h,
@@ -2038,7 +2038,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
         }
         else {
           glTexSubImage3DOES(GL_TEXTURE_2D_ARRAY, 
-                             0, 
+                             region.texSubres.mipLevel, 
                              region.texOffset.x, 
                              region.texOffset.y, 
                              z,
@@ -2075,7 +2075,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
       }
       else {
         glTexSubImage3DOES(GL_TEXTURE_3D, 
-                           0,
+                           region.texSubres.mipLevel,
                            region.texOffset.x, 
                            region.texOffset.y, 
                            region.texOffset.z, 
@@ -2111,7 +2111,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device* device, uint8_t* const* buffe
         }
         else {
           glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, 
-                          0,
+                          region.texSubres.mipLevel,
                           region.texOffset.x, region.texOffset.y, 
                           w, h, 
                           gpuTexture->glFormat, 
