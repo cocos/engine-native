@@ -45,15 +45,16 @@ THE SOFTWARE.
 #endif
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-// `thread_local` can not compile on 8.0 iOS device
-#   define FFT_SDF_TMP_VECTOR 0 
+// `thread_local` can not compile on iOS 9.0 below device
+#   define FFT_SDF_TMP_VECTOR (__IPHONE_OS_VERSION_MIN_REQUIRED >= 90000)
 #else
 #   define FFT_SDF_TMP_VECTOR 1
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 
 #if FFT_SDF_TMP_VECTOR
 namespace {
-    //cache vector in thread    thread_local std::vector<short> xdistV;
+    //cache vector in thread
+    thread_local std::vector<short> xdistV;
     thread_local std::vector<short> ydistV;
     thread_local std::vector<double> gxV;
     thread_local std::vector<double> gyV;
