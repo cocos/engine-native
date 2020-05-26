@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-set(APP_NAME MyGame)
+set(APP_NAME HelloJavascript)
 project(${APP_NAME} CXX)
 
 enable_language(C ASM)
@@ -8,12 +8,14 @@ enable_language(C ASM)
 set(CMAKE_CXX_STANDARD 14)
 option(USE_SE_V8        "USE V8 JavaScript Engine"          ON)
 option(USE_V8_DEBUGGER  "Enable Chrome Remote inspector"    ON)
+option(USE_SOCKET       "Enable WebSocket & SocketIO"       ON)
+option(USE_AUDIO        "Enable Audio"                      ON)     #Enable AudioEngine
+option(USE_EDIT_BOX     "Enable EditBox"                    ON)
 option(USE_SE_JSC       "USE JavaScriptCore on MacOSX/iOS"  OFF)
 option(USE_VIDEOPLAYER  "Enable VideoPlayer Component"      OFF)
 option(USE_WEBVIEW      "Enable WebView Component"          OFF)
-option(USE_SOCKET       "Enable WebSocket & SocketIO"       ON)
-option(USE_TIFF         "Support TIFF image format"         ON)
-option(USE_AUDIO        "Enable Audio"                      ON)     #Enable AudioEngine
+option(USE_DRAGONBONES  "Enable Dragonbones"                OFF)
+option(USE_SPINE        "Enable Spine"                      OFF)
 
 if(USE_SE_JSC AND APPLE)
     set(USE_SE_V8 OFF)
@@ -67,16 +69,12 @@ set(PROJ_SOURCES
     Classes/Game.cpp
 )
 
-if(EXISTS  Classes/jsb_module_register.cpp)
-    list(APPEND PROJ_SOURCES
-        Classes/jsb_module_register.cpp
-        )
-else()
-    list(APPEND PROJ_EXTRA_SOURCE
-        "${cocosdir}/cocos/scripting/js-bindings/manual/jsb_module_register.cpp"
-        )
-    source_group("Source Files\\Classes" FILES ${PROJ_EXTRA_SOURCE})
+if(NOT EXISTS Classes/jsb_module_register.cpp)
+    file(COPY "${cocosdir}/cocos/scripting/js-bindings/manual/jsb_module_register.cpp" 
+        DESTINATION ${CMAKE_CURRENT_LIST_DIR}/Classes/)
 endif()
+list(APPEND PROJ_SOURCES ${CMAKE_CURRENT_LIST_DIR}/Classes/jsb_module_register.cpp)
+
 
 if(WINDOWS)
     list(APPEND PROJ_SOURCES
@@ -89,15 +87,12 @@ if(WINDOWS)
 elseif(MACOSX)
     set(UI_RESOURCES
         proj.ios_mac/mac/Assets.xcassets
-       # proj.ios_mac/mac/UserConfigMac.release.xcconfig
-       # proj.ios_mac/mac/UserConfigMac.debug.xcconfig
         proj.ios_mac/mac/Icon.icns
     )
     list(APPEND PROJ_SOURCES
         proj.ios_mac/mac/main.m
         proj.ios_mac/mac/ViewController.mm
         proj.ios_mac/mac/ViewController.h
-        proj.ios_mac/mac/Prefix.pch
         proj.ios_mac/mac/AppDelegate.mm
         proj.ios_mac/mac/AppDelegate.h
         ${UI_RESOURCES}
@@ -105,12 +100,7 @@ elseif(MACOSX)
 elseif(IOS)
 
     set(UI_RESOURCES
-        #proj.ios_mac/ios/zh-Hans.lproj/Localizable.strings
-        #proj.ios_mac/ios/UserConfigIOS.release.xcconfig
-        #proj.ios_mac/ios/UserConfigIOS.debug.xcconfig
-        #proj.ios_mac/ios/Prefix.pch
         proj.ios_mac/ios/LaunchScreenBackground.png
-        #proj.ios_mac/ios/Info.plist
         proj.ios_mac/ios/Images.xcassets
         proj.ios_mac/ios/Base.lproj/Localizable.strings
         proj.ios_mac/ios/Base.lproj/LaunchScreen.storyboard
@@ -177,7 +167,10 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} PREFIX "Source Files" FILES ${PROJ_S
 if(APPLE)
     set_target_properties(${LIB_NAME} PROPERTIES MACOSX_BUNDLE 1)
     set_target_properties(${LIB_NAME} PROPERTIES RESOURCE "${UI_RESOURCES}")
+    set(EXECUTABLE_NAME ${LIB_NAME}) # referenced in Info.plist
+    set(PRODUCT_NAME ${APP_NAME})
     if(MACOSX)
+        set(MACOSX_BUNDLE_GUI_IDENTIFIER org.cocos2dx.hellojavascript.mac)
         set_target_properties(${LIB_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/proj.ios_mac/mac/Info.plist")
         set_target_properties(${LIB_NAME} PROPERTIES
             MACOSX_DEPLOYMENT_TARGET 10.10
@@ -190,10 +183,10 @@ if(APPLE)
             COMMAND ${CMAKE_COMMAND} -E copy ${egl_loc} $<TARGET_FILE_DIR:${LIB_NAME}>/../Frameworks
         )
     elseif(IOS)
-        set(EXECUTABLE_NAME ${LIB_NAME}) # referenced in Info.plist
-        set(PRODUCT_NAME ${APP_NAME})
-        set(MACOSX_BUNDLE_GUI_IDENTIFIER org.cocos2dx.test-cases-3d)
+        set(MACOSX_BUNDLE_GUI_IDENTIFIER org.cocos2dx.hellojavascript.ios)
+
         target_include_directories(${LIB_NAME} PRIVATE proj.ios_mac/ios/service )
+
         set_target_properties(${LIB_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/proj.ios_mac/ios/Info.plist")
         set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "")
         set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer")
@@ -228,8 +221,6 @@ elseif(WINDOWS)
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different ${abs} $<TARGET_FILE_DIR:${LIB_NAME}>/${filename}
             )
         endforeach()
-        target_compile_options(${LIB_NAME} PUBLIC /MP)
         target_link_options(${LIB_NAME} PRIVATE /SUBSYSTEM:WINDOWS)
     endif()
 endif()
-
