@@ -51,9 +51,9 @@ THE SOFTWARE.
 #   define FFT_SDF_TMP_VECTOR 1
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 
+#if FFT_SDF_TMP_VECTOR
 namespace {
-    //cache vector in thread
-    thread_local std::vector<short> xdistV;
+    //cache vector in thread    thread_local std::vector<short> xdistV;
     thread_local std::vector<short> ydistV;
     thread_local std::vector<double> gxV;
     thread_local std::vector<double> gyV;
@@ -61,6 +61,7 @@ namespace {
     thread_local std::vector<double> outsideV;
     thread_local std::vector<double> insideV;
 }
+#endif
 
 namespace cocos2d {
 
