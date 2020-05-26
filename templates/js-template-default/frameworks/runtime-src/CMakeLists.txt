@@ -69,7 +69,7 @@ set(PROJ_SOURCES
     Classes/Game.cpp
 )
 
-if(NOT EXISTS Classes/jsb_module_register.cpp)
+if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/Classes/jsb_module_register.cpp)
     file(COPY "${cocosdir}/cocos/scripting/js-bindings/manual/jsb_module_register.cpp" 
         DESTINATION Classes/)
 endif()

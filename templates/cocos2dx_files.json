@@ -1,12 +1,6 @@
 {
     "common": [
         "CMakeLists.txt", 
-        "build/cocos2d_headers.props", 
-        "build/cocos2d_libs.xcodeproj/project.pbxproj", 
-        "build/cocos2d_libs.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist", 
-        "build/cocos2dx.props", 
-        "build/libcocos2d.vcxproj", 
-        "build/libcocos2d.vcxproj.filters", 
         "cocos/audio/AudioEngine.cpp", 
         "cocos/audio/android/AssetFd.cpp", 
         "cocos/audio/android/AssetFd.h", 
