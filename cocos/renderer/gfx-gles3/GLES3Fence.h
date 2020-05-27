@@ -11,13 +11,13 @@ public:
     ~GLES3Fence();
 
 public:
-    bool initialize(const GFXFenceInfo& info);
-    void destroy();
-    void wait();
-    void reset();
+    virtual bool initialize(const GFXFenceInfo& info) override;
+    virtual void destroy() override;
+    virtual void wait() override;
+    virtual void reset() override;
 
 private:
-    GLES3GPUFence* _gpuFence;
+    GLES3GPUFence* _gpuFence = nullptr;
 };
 
 NS_CC_END

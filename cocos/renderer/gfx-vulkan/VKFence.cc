@@ -17,6 +17,11 @@ CCVKFence::~CCVKFence()
 bool CCVKFence::initialize(const GFXFenceInfo &info)
 {
     _gpuFence = CC_NEW(CCVKGPUFence);
+    if (!_gpuFence)
+    {
+        CC_LOG_ERROR("GLES2Fence: CC_NEW CCVKGPUFence failed.");
+        return false;
+    }
 
     VkFenceCreateInfo createInfo{ VK_STRUCTURE_TYPE_FENCE_CREATE_INFO };
     VK_CHECK(vkCreateFence(((CCVKDevice*)_device)->gpuDevice()->vkDevice, &createInfo, nullptr, &_gpuFence->vkFence));

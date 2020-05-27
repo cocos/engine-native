@@ -18345,28 +18345,35 @@ SE_BIND_PROP_GET(js_gfx_GFXQueue_getType)
 
 static bool js_gfx_GFXQueue_submit(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cocos2d::GFXQueue* cobj = (cocos2d::GFXQueue*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXQueue_submit : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_gfx_GFXQueue_submit : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        std::vector<cocos2d::GFXCommandBuffer *> arg0;
-        ok &= seval_to_std_vector(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_submit : Error processing arguments");
-        cobj->submit(arg0);
-        return true;
-    }
-    if (argc == 2) {
-        std::vector<cocos2d::GFXCommandBuffer *> arg0;
-        cocos2d::GFXFence* arg1 = nullptr;
-        ok &= seval_to_std_vector(args[0], &arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_submit : Error processing arguments");
-        cobj->submit(arg0, arg1);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    do {
+        if (argc == 1) {
+            std::vector<cocos2d::GFXCommandBuffer *> arg0;
+            ok &= seval_to_std_vector(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cobj->submit(arg0);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 2) {
+            std::vector<cocos2d::GFXCommandBuffer *> arg0;
+            ok &= seval_to_std_vector(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cocos2d::GFXFence* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);
+            if (!ok) { ok = true; break; }
+            cobj->submit(arg0, arg1);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_gfx_GFXQueue_submit)

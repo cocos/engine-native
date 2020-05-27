@@ -8,18 +8,18 @@ class CCVKGPUFence;
 class CC_VULKAN_API CCVKFence : public GFXFence {
 public:
     CCVKFence(GFXDevice* device);
-    ~CCVKFence();
+    virtual ~CCVKFence() override;
 
 public:
-    bool initialize(const GFXFenceInfo& info);
-    void destroy();
-    void wait();
-    void reset();
+    virtual bool initialize(const GFXFenceInfo& info) override;
+    virtual void destroy() override;
+    virtual void wait() override;
+    virtual void reset() override;
 
     CC_INLINE CCVKGPUFence* gpuFence() { return _gpuFence; }
 
 private:
-    CCVKGPUFence* _gpuFence;
+    CCVKGPUFence* _gpuFence = nullptr;
 };
 
 NS_CC_END

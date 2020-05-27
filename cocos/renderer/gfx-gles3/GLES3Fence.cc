@@ -17,6 +17,11 @@ GLES3Fence::~GLES3Fence()
 bool GLES3Fence::initialize(const GFXFenceInfo &info)
 {
     _gpuFence = CC_NEW(GLES3GPUFence);
+    if (!_gpuFence)
+    {
+        CC_LOG_ERROR("GLES2Fence: CC_NEW GLES3GPUFence failed.");
+        return false;
+    }
 
     // TODO
 
