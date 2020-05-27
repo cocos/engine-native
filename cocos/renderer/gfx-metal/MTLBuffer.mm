@@ -152,15 +152,20 @@ void CCMTLBuffer::resize(uint size)
         _usage & GFXBufferUsage::INDEX ||
         _usage & GFXBufferUsage::UNIFORM)
     {
-        if (_useOptimizedBufferEncoder && size < MINIMUMR_REQUIRED_SIZE_4KB)
+        if (_useOptimizedBufferEncoder)
         {
-            resizeBuffer(&_bufferBytes, size, _size);
+            if(size < MINIMUMR_REQUIRED_SIZE_4KB)
+                resizeBuffer(&_bufferBytes, size, _size);
+            else
+            {
+                if(_bufferBytes)
+                    CC_SAFE_FREE(_bufferBytes);
+                _useOptimizedBufferEncoder = false;
+                createMTLBuffer(size, _memUsage);
+            }   
         }
         else
         {
-            if(_bufferBytes)
-                CC_SAFE_FREE(_bufferBytes);
-            _useOptimizedBufferEncoder = false;
             createMTLBuffer(size, _memUsage);
         }
     }
