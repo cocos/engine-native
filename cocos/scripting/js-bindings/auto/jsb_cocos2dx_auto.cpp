@@ -1350,6 +1350,25 @@ static bool js_engine_CanvasRenderingContext2D_lineTo(se::State& s)
 }
 SE_BIND_FUNC(js_engine_CanvasRenderingContext2D_lineTo)
 
+static bool js_engine_CanvasRenderingContext2D_setPremultiply(se::State& s)
+{
+    cocos2d::CanvasRenderingContext2D* cobj = (cocos2d::CanvasRenderingContext2D*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_engine_CanvasRenderingContext2D_setPremultiply : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        bool arg0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_engine_CanvasRenderingContext2D_setPremultiply : Error processing arguments");
+        cobj->setPremultiply(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_engine_CanvasRenderingContext2D_setPremultiply)
+
 static bool js_engine_CanvasRenderingContext2D_setTransform(se::State& s)
 {
     cocos2d::CanvasRenderingContext2D* cobj = (cocos2d::CanvasRenderingContext2D*)s.nativeThisObject();
@@ -1808,6 +1827,7 @@ bool js_register_engine_CanvasRenderingContext2D(se::Object* obj)
     cls->defineFunction("restore", _SE(js_engine_CanvasRenderingContext2D_restore));
     cls->defineFunction("moveTo", _SE(js_engine_CanvasRenderingContext2D_moveTo));
     cls->defineFunction("lineTo", _SE(js_engine_CanvasRenderingContext2D_lineTo));
+    cls->defineFunction("setPremultiply", _SE(js_engine_CanvasRenderingContext2D_setPremultiply));
     cls->defineFunction("setTransform", _SE(js_engine_CanvasRenderingContext2D_setTransform));
     cls->defineFunction("stroke", _SE(js_engine_CanvasRenderingContext2D_stroke));
     cls->defineFunction("measureText", _SE(js_engine_CanvasRenderingContext2D_measureText));

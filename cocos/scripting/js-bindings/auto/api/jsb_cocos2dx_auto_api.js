@@ -702,6 +702,16 @@ float
 },
 
 /**
+ * @method setPremultiply
+ * @param {bool} arg0
+ */
+setPremultiply : function (
+bool 
+)
+{
+},
+
+/**
  * @method setTransform
  * @param {float} arg0
  * @param {float} arg1
