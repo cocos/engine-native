@@ -44,7 +44,7 @@ THE SOFTWARE.
 #define SCALE_BY_DPI(x) (int)(x)
 #endif
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 // `thread_local` can not compile on iOS 9.0 below device
 #   define FFT_SDF_TMP_VECTOR (__IPHONE_OS_VERSION_MIN_REQUIRED >= 90000)
 #else
