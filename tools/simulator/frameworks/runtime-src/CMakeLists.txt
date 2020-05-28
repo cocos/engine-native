@@ -5,7 +5,7 @@ project(${APP_NAME} CXX)
 
 enable_language(C ASM)
 if(APPLE)
-enable_language(OBJC OBJCXX)
+    enable_language(OBJC OBJCXX)
 endif()
 
 set(CMAKE_CXX_STANDARD 14)
@@ -81,12 +81,20 @@ endif()
 
 
 if(WINDOWS)
+    set(UI_RESOURCES
+        proj.win32/game.rc
+        proj.win32/res/game.ico
+    )
     list(APPEND PROJ_SOURCES
-        proj.win32/AppDelegate.h
-        proj.win32/AppDelegate.cpp
-        proj.win32/main.h
         proj.win32/main.cpp
+        proj.win32/main.h
         proj.win32/resource.h
+        proj.win32/SimulatorWin.cpp
+        proj.win32/SimulatorWin.h
+        # proj.win32/stdafx.cpp
+        # proj.win32/stdafx.h
+        # proj.win32/targetver.h
+        ${UI_RESOURCES}
     )
 elseif(MACOSX)
     set(UI_RESOURCES
@@ -109,30 +117,6 @@ elseif(MACOSX)
         proj.ios_mac/mac/ConsoleWindowController.h
         proj.ios_mac/mac/ConsoleWindowController.m
         ${UI_RESOURCES}
-    )
-elseif(IOS)
-
-    set(UI_RESOURCES
-        proj.ios_mac/ios/LaunchScreenBackground.png
-        proj.ios_mac/ios/Images.xcassets
-        proj.ios_mac/ios/Base.lproj/Localizable.strings
-        proj.ios_mac/ios/Base.lproj/LaunchScreen.storyboard
-    )
-
-    list(APPEND PROJ_SOURCES
-        proj.ios_mac/ios/AppDelegate.mm
-        proj.ios_mac/ios/AppDelegate.h
-        proj.ios_mac/ios/SDKWrapper.m
-        proj.ios_mac/ios/SDKWrapper.h
-        proj.ios_mac/ios/service/SDKDelegate.h
-        proj.ios_mac/ios/main.m
-        proj.ios_mac/ios/ViewController.mm
-        proj.ios_mac/ios/ViewController.h
-        ${UI_RESOURCES}
-    )
-elseif(ANDROID)
-    list(APPEND PROJ_SOURCES
-        proj.android-studio/app/jni/hellojavascript/main.cpp
     )
 endif()
 
@@ -192,23 +176,12 @@ if(APPLE)
             COMMAND ${CMAKE_COMMAND} -E copy ${gles2_loc} $<TARGET_FILE_DIR:${LIB_NAME}>/../Frameworks
             COMMAND ${CMAKE_COMMAND} -E copy ${egl_loc} $<TARGET_FILE_DIR:${LIB_NAME}>/../Frameworks
         )
-    elseif(IOS)
-        set(MACOSX_BUNDLE_GUI_IDENTIFIER org.cocos2dx.hellojavascript.ios)
-
-        target_include_directories(${LIB_NAME} PRIVATE proj.ios_mac/ios/service )
-
-        set_target_properties(${LIB_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/proj.ios_mac/ios/Info.plist")
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "")
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer")
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHSTORYBOARD_NAME "LaunchScreen")
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${TARGET_IOS_VERSION})
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "YES")
     endif()
 
 elseif(WINDOWS)
     
+    set_target_properties(${LIB_NAME} PROPERTIES RESOURCE "${UI_RESOURCES}")
+
     if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/../../jsb-adapter)
         set(bin_dir $<TARGET_FILE_DIR:${LIB_NAME}>)
         add_custom_command(TARGET ${LIB_NAME} PRE_BUILD

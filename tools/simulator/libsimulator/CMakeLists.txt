@@ -141,6 +141,27 @@ if(MACOSX)
         lib/platform/mac/PlayerTaskServiceMac.mm
         lib/platform/mac/Runtime_ios-mac.mm
     )
+elseif(WINDOWS)
+    libsimulator_source_files(
+        lib/platform/win32/DeviceEx-win32.cpp
+        lib/platform/win32/PlayerEditBoxServiceWin.cpp
+        lib/platform/win32/PlayerEditBoxServiceWin.h
+        lib/platform/win32/PlayerFileDialogServiceWin.cpp
+        lib/platform/win32/PlayerFileDialogServiceWin.h
+        lib/platform/win32/PlayerMenuServiceWin.cpp
+        lib/platform/win32/PlayerMenuServiceWin.h
+        lib/platform/win32/PlayerMessageBoxServiceWin.cpp
+        lib/platform/win32/PlayerMessageBoxServiceWin.h
+        lib/platform/win32/PlayerTaskServiceWin.cpp
+        lib/platform/win32/PlayerTaskServiceWin.h
+        lib/platform/win32/PlayerWin.cpp
+        lib/platform/win32/PlayerWin.h
+        #lib/platform/win32/SimulatorWin.cpp
+        proj.win32/Runtime_win32.cpp
+        proj.win32/stdafx.cpp
+        proj.win32/stdafx.h
+        proj.win32/targetver.h
+    )
 endif()
 
 
@@ -149,6 +170,27 @@ add_library(${libsimulator_name} ${LIBSIMULATOR_SOURCE_LIST})
 target_compile_definitions(${libsimulator_name}
     PRIVATE $<IF:$<CONFIG:Debug>,COCOS2D_DEBUG=1,COCOS2D_DEBUG=0>
 )
+
+if(WINDOWS)
+    target_compile_definitions(${libsimulator_name}
+        PRIVATE _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
+        PUBLIC _USRLIBSIMSTATIC
+        PUBLIC _USRDLL
+        # PUBLIC NOMINMAX
+    )
+    target_include_directories(${libsimulator_name} PRIVATE 
+        ${CMAKE_CURRENT_LIST_DIR}/proj.win32
+        ${CMAKE_CURRENT_LIST_DIR}/../simulator/frameworks/runtime-src/proj.win32
+        PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../../../external/win32/include
+        PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../../../external/win32/include/zlib
+    )
+    if(COMMAND target_precompile_headers)
+        target_precompile_headers(${libsimulator_name}
+            PRIVATE ${CMAKE_CURRENT_LIST_DIR}/proj.win32/stdafx.h
+        )
+    endif()
+    target_compile_options(cocos2d PUBLIC /MP)
+endif()
 
 target_include_directories(${libsimulator_name}
     PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib
@@ -165,6 +207,8 @@ set_property(TARGET ${libsimulator_name} PROPERTY
 
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} PREFIX "Source Files" FILES ${LIBSIMULATOR_SOURCE_LIST})
 
+if(MACOSX)
+    find_library(AppKitLibrary AppKit)
+    target_link_libraries(${libsimulator_name} ${AppKitLibrary})
+endif()
 
-find_library(AppKitLibrary AppKit)
-target_link_libraries(${libsimulator_name} ${AppKitLibrary})
