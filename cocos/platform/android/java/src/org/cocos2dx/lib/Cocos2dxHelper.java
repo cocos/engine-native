@@ -365,14 +365,15 @@ public class Cocos2dxHelper {
         }
     }
 
- 	public static String getVersion() {
- 		try {
- 			String version = Cocos2dxActivity.getContext().getPackageManager().getPackageInfo(Cocos2dxActivity.getContext().getPackageName(), 0).versionName;
- 			return version;
- 		} catch(Exception e) {
- 			return "";
- 		}
- 	}
+    public static String getVersion() {
+        try {
+            Context context = Cocos2dxActivity.getContext();
+            String version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+            return version;
+        } catch(Exception e) {
+            return "";
+        }
+    }
 
     public static boolean openURL(String url) { 
         boolean ret = false;

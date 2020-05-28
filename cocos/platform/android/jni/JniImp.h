@@ -44,6 +44,7 @@ extern int getDeviceAudioBufferSizeInFramesJNI();
 extern std::string getCurrentLanguageJNI();
 extern std::string getCurrentLanguageCodeJNI();
 extern std::string getSystemVersionJNI();
+extern std::string getAppVersionJNI();
 extern bool openURLJNI(const std::string& url);
 extern void copyTextToClipboardJNI(const std::string& text);
 extern void setPreferredFramesPerSecondJNI(int fps);

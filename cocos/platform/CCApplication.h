@@ -185,6 +185,8 @@ public:
     void copyTextToClipboard(const std::string &text);
 
     std::string getSystemVersion();
+
+    std::string getAppVersion();
     
 protected:
     virtual void onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount);

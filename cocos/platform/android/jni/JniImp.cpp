@@ -609,6 +609,11 @@ std::string getSystemVersionJNI()
     return JniHelper::callStaticStringMethod(JCLS_HELPER, "getSystemVersion");
 }
 
+std::string getAppVersionJNI()
+{
+    return JniHelper::callStaticStringMethod(JCLS_HELPER, "getVersion");
+}
+
 bool openURLJNI(const std::string& url)
 {
     return JniHelper::callStaticBooleanMethod(JCLS_HELPER, "openURL", url);

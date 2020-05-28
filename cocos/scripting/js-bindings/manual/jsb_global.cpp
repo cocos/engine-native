@@ -637,6 +637,14 @@ static bool JSB_getOSVersion(se::State& s)
 }
 SE_BIND_FUNC(JSB_getOSVersion)
 
+static bool JSB_getAppVersion(se::State& s)
+{
+    std::string appVersion = Application::getInstance()->getAppVersion();
+    s.rval().setString(appVersion);
+    return true;
+}
+SE_BIND_FUNC(JSB_getAppVersion)
+
 static bool JSB_cleanScript(se::State& s)
 {
     assert(false); //IDEA:
@@ -1265,6 +1273,7 @@ bool jsb_register_global_variables(se::Object* global)
     global->defineFunction("__getPlatform", _SE(JSBCore_platform));
     global->defineFunction("__getOS", _SE(JSBCore_os));
     global->defineFunction("__getOSVersion", _SE(JSB_getOSVersion));
+    global->defineFunction("__getAppVersion", _SE(JSB_getAppVersion));
     global->defineFunction("__getCurrentLanguage", _SE(JSBCore_getCurrentLanguage));
     global->defineFunction("__getCurrentLanguageCode", _SE(JSBCore_getCurrentLanguageCode));
     global->defineFunction("__getVersion", _SE(JSBCore_version));

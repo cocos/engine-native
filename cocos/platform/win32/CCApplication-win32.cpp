@@ -432,4 +432,11 @@ std::string Application::getSystemVersion()
     // REFINE
     return std::string("unknown Windows version");
 }
+
+std::string Application::getAppVersion()
+{
+    // REFINE
+    return std::string("unknown App version");
+}
+
 NS_CC_END

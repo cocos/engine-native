@@ -471,4 +471,11 @@ std::string Application::getSystemVersion()
     return [systemVersion UTF8String];
 }
 
+std::string Application::getAppVersion()
+{
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    NSString* version = [info objectForKey:@"CFBundleShortVersionString"];
+    return [version UTF8String];
+}
+
 NS_CC_END
