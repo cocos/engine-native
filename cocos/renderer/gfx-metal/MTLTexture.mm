@@ -80,12 +80,12 @@ bool CCMTLTexture::createMTLTexture()
             descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlFormat
                                                                             width:_width
                                                                            height:_height
-                                                                        mipmapped:_flags & GFXTextureFlags::GEN_MIPMAP];
+                                                                        mipmapped:NO];
             break;
         case MTLTextureTypeCube:
             descriptor = [MTLTextureDescriptor textureCubeDescriptorWithPixelFormat:mtlFormat
                                                                                size:_width
-                                                                          mipmapped:_flags & GFXTextureFlags::GEN_MIPMAP];
+                                                                          mipmapped:NO];
             break;
         default:
             CCASSERT(false, "Unsupported MTLTextureType, create MTLTextureDescriptor failed.");
