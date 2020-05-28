@@ -91,6 +91,7 @@ bool register_all_engine(se::Object* obj);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_restore);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_moveTo);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_lineTo);
+SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_setPremultiply);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_setTransform);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_stroke);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_measureText);
