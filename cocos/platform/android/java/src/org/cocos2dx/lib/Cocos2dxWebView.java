@@ -27,6 +27,8 @@ package org.cocos2dx.lib;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -57,11 +59,72 @@ class ShouldStartLoadingWorker implements Runnable {
     }
 }
 
+class CocosWebChromeClient extends WebChromeClient {
+
+    private static final String TAG = Cocos2dxWebViewHelper.class.getSimpleName();
+
+    static ValueCallback<Uri> sValueCallback = null;
+    static ValueCallback<Uri[]> sValueCallback2 = null;
+
+    private void chooseFile(final String chooseType) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType(chooseType);
+
+        Cocos2dxActivity activity = (Cocos2dxActivity)getContext();
+        activity.startActivityForResult(
+                Intent.createChooser(intent, "File Chooser"),
+                Cocos2dxWebView.ActivityRequestCode);
+    }
+
+    @Override
+    public void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType, String capture) {
+        Log.i(TAG, "openFileChooser " + s + s1);
+        if (sValueCallback != null) {
+            sValueCallback.onReceiveValue(null);
+        }
+        sValueCallback = valueCallback;
+
+        String chooseType = "*/*";
+        if (acceptType != null && !acceptType.isEmpty()) {
+            if (capture != null && !capture.isEmpty()) {
+                chooseType = acceptType + s1;
+            } else {
+                chooseType = acceptType;
+            }
+        }
+
+        this.chooseFile(chooseType);
+    }
+
+    @Override
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> valueCallback, FileChooserParams fileChooserParams) {
+        Log.i(TAG, "onShowFileChooser " + fileChooserParams);
+        if (sValueCallback2 != null) {
+            sValueCallback2.onReceiveValue(null);
+        }
+        sValueCallback2 = valueCallback;
+
+        String chooseType = "*/*";
+        if (fileChooserParams != null && fileChooserParams.getAcceptTypes() != null
+                && fileChooserParams.getAcceptTypes().length > 0) {
+            chooseType = fileChooserParams.getAcceptTypes()[0];
+        }
+        this.chooseFile(chooseType);
+
+        return true;
+    }
+}
+
 public class Cocos2dxWebView extends WebView {
     private static final String TAG = Cocos2dxWebViewHelper.class.getSimpleName();
 
     private int mViewTag;
     private String mJSScheme;
+
+    public static final int FileChooseRequestCode = 1590038040;
+
+    private static PreferenceManager.OnActivityResultListener sActivityResultListener = null;
 
     public Cocos2dxWebView(Context context) {
         this(context, -1);
@@ -90,7 +153,38 @@ public class Cocos2dxWebView extends WebView {
         }
 
         this.setWebViewClient(new Cocos2dxWebViewClient());
-        this.setWebChromeClient(new WebChromeClient());
+
+        this.setWebChromeClient(new CocosWebChromeClient());
+        if (sActivityResultListener == null) {
+            sActivityResultListener = new PreferenceManager.OnActivityResultListener() {
+                @Override
+                public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+                    if (requestCode == Cocos2dxWebView.FileChooseRequestCode) {
+                        Uri result = (data == null || resultCode != Activity.RESULT_OK) ? null : data.getData();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            if (CocosWebChromeClient.sValueCallback2 == null) {
+                                return true;
+                            }
+                            CocosWebChromeClient.sValueCallback2.onReceiveValue(new Uri[]{result});
+                            CocosWebChromeClient.sValueCallback2 = null;
+                        } else {
+                            if (CocosWebChromeClient.sValueCallback == null) {
+                                return true;
+                            }
+                            CocosWebChromeClient.sValueCallback.onReceiveValue(result);
+                            CocosWebChromeClient.sValueCallback = null;
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                }
+            };
+
+            Cocos2dxHelper.addOnActivityResultListener(sActivityResultListener);
+        }
     }
 
     public void setJavascriptInterfaceScheme(String scheme) {
