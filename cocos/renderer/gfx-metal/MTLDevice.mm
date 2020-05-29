@@ -17,6 +17,7 @@
 #include "MTLTextureView.h"
 #include "MTLSampler.h"
 #include "MTLUtils.h"
+#include "MTLFence.h"
 #include <platform/mac/CCView.h>
 #import <MetalKit/MTKView.h>
 
