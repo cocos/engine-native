@@ -9849,6 +9849,34 @@ static bool js_gfx_GFXRasterizerState_set_isFrontFaceCCW(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_GFXRasterizerState_set_isFrontFaceCCW)
 
+static bool js_gfx_GFXRasterizerState_get_depthBiasEnabled(se::State& s)
+{
+    cocos2d::GFXRasterizerState* cobj = (cocos2d::GFXRasterizerState*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_get_depthBiasEnabled : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= boolean_to_seval(cobj->depthBiasEnabled, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_gfx_GFXRasterizerState_get_depthBiasEnabled)
+
+static bool js_gfx_GFXRasterizerState_set_depthBiasEnabled(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::GFXRasterizerState* cobj = (cocos2d::GFXRasterizerState*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXRasterizerState_set_depthBiasEnabled : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    bool arg0;
+    ok &= seval_to_boolean(args[0], &arg0);
+    SE_PRECONDITION2(ok, false, "js_gfx_GFXRasterizerState_set_depthBiasEnabled : Error processing new value");
+    cobj->depthBiasEnabled = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_gfx_GFXRasterizerState_set_depthBiasEnabled)
+
 static bool js_gfx_GFXRasterizerState_get_depthBias(se::State& s)
 {
     cocos2d::GFXRasterizerState* cobj = (cocos2d::GFXRasterizerState*)s.nativeThisObject();
@@ -10068,41 +10096,47 @@ static bool js_gfx_GFXRasterizerState_constructor(se::State& s)
             ok &= seval_to_boolean(field, &arg4);
             cobj->isFrontFaceCCW = arg4;
         }
-        float arg5 = 0;
-        json->getProperty("depthBias", &field);
+        bool arg5;
+        json->getProperty("depthBiasEnabled", &field);
         if(!field.isUndefined()) {
-            ok &= seval_to_float(field, &arg5);
-            cobj->depthBias = arg5;
+            ok &= seval_to_boolean(field, &arg5);
+            cobj->depthBiasEnabled = arg5;
         }
         float arg6 = 0;
-        json->getProperty("depthBiasClamp", &field);
+        json->getProperty("depthBias", &field);
         if(!field.isUndefined()) {
             ok &= seval_to_float(field, &arg6);
-            cobj->depthBiasClamp = arg6;
+            cobj->depthBias = arg6;
         }
         float arg7 = 0;
-        json->getProperty("depthBiasSlop", &field);
+        json->getProperty("depthBiasClamp", &field);
         if(!field.isUndefined()) {
             ok &= seval_to_float(field, &arg7);
-            cobj->depthBiasSlop = arg7;
+            cobj->depthBiasClamp = arg7;
         }
-        bool arg8;
-        json->getProperty("isDepthClip", &field);
+        float arg8 = 0;
+        json->getProperty("depthBiasSlop", &field);
         if(!field.isUndefined()) {
-            ok &= seval_to_boolean(field, &arg8);
-            cobj->isDepthClip = arg8;
+            ok &= seval_to_float(field, &arg8);
+            cobj->depthBiasSlop = arg8;
         }
         bool arg9;
-        json->getProperty("isMultisample", &field);
+        json->getProperty("isDepthClip", &field);
         if(!field.isUndefined()) {
             ok &= seval_to_boolean(field, &arg9);
-            cobj->isMultisample = arg9;
+            cobj->isDepthClip = arg9;
         }
-        float arg10 = 0;
+        bool arg10;
+        json->getProperty("isMultisample", &field);
+        if(!field.isUndefined()) {
+            ok &= seval_to_boolean(field, &arg10);
+            cobj->isMultisample = arg10;
+        }
+        float arg11 = 0;
         json->getProperty("lineWidth", &field);
         if(!field.isUndefined()) {
-            ok &= seval_to_float(field, &arg10);
-            cobj->lineWidth = arg10;
+            ok &= seval_to_float(field, &arg11);
+            cobj->lineWidth = arg11;
         }
 
         if(!ok) {
@@ -10115,7 +10149,7 @@ static bool js_gfx_GFXRasterizerState_constructor(se::State& s)
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
         return true;
     }
-    else if(argc == 11)
+    else if(argc == 12)
     {
         cocos2d::GFXRasterizerState* cobj = JSB_ALLOC(cocos2d::GFXRasterizerState);
         bool arg0;
@@ -10143,35 +10177,40 @@ static bool js_gfx_GFXRasterizerState_constructor(se::State& s)
             ok &= seval_to_boolean(args[4], &arg4);
             cobj->isFrontFaceCCW = arg4;
         }
-        float arg5 = 0;
+        bool arg5;
         if (!args[5].isUndefined()) {
-            ok &= seval_to_float(args[5], &arg5);
-            cobj->depthBias = arg5;
+            ok &= seval_to_boolean(args[5], &arg5);
+            cobj->depthBiasEnabled = arg5;
         }
         float arg6 = 0;
         if (!args[6].isUndefined()) {
             ok &= seval_to_float(args[6], &arg6);
-            cobj->depthBiasClamp = arg6;
+            cobj->depthBias = arg6;
         }
         float arg7 = 0;
         if (!args[7].isUndefined()) {
             ok &= seval_to_float(args[7], &arg7);
-            cobj->depthBiasSlop = arg7;
+            cobj->depthBiasClamp = arg7;
         }
-        bool arg8;
+        float arg8 = 0;
         if (!args[8].isUndefined()) {
-            ok &= seval_to_boolean(args[8], &arg8);
-            cobj->isDepthClip = arg8;
+            ok &= seval_to_float(args[8], &arg8);
+            cobj->depthBiasSlop = arg8;
         }
         bool arg9;
         if (!args[9].isUndefined()) {
             ok &= seval_to_boolean(args[9], &arg9);
-            cobj->isMultisample = arg9;
+            cobj->isDepthClip = arg9;
         }
-        float arg10 = 0;
+        bool arg10;
         if (!args[10].isUndefined()) {
-            ok &= seval_to_float(args[10], &arg10);
-            cobj->lineWidth = arg10;
+            ok &= seval_to_boolean(args[10], &arg10);
+            cobj->isMultisample = arg10;
+        }
+        float arg11 = 0;
+        if (!args[11].isUndefined()) {
+            ok &= seval_to_float(args[11], &arg11);
+            cobj->lineWidth = arg11;
         }
 
         if(!ok) {
@@ -10216,6 +10255,7 @@ bool js_register_gfx_GFXRasterizerState(se::Object* obj)
     cls->defineProperty("shadeModel", _SE(js_gfx_GFXRasterizerState_get_shadeModel), _SE(js_gfx_GFXRasterizerState_set_shadeModel));
     cls->defineProperty("cullMode", _SE(js_gfx_GFXRasterizerState_get_cullMode), _SE(js_gfx_GFXRasterizerState_set_cullMode));
     cls->defineProperty("isFrontFaceCCW", _SE(js_gfx_GFXRasterizerState_get_isFrontFaceCCW), _SE(js_gfx_GFXRasterizerState_set_isFrontFaceCCW));
+    cls->defineProperty("depthBiasEnabled", _SE(js_gfx_GFXRasterizerState_get_depthBiasEnabled), _SE(js_gfx_GFXRasterizerState_set_depthBiasEnabled));
     cls->defineProperty("depthBias", _SE(js_gfx_GFXRasterizerState_get_depthBias), _SE(js_gfx_GFXRasterizerState_set_depthBias));
     cls->defineProperty("depthBiasClamp", _SE(js_gfx_GFXRasterizerState_get_depthBiasClamp), _SE(js_gfx_GFXRasterizerState_set_depthBiasClamp));
     cls->defineProperty("depthBiasSlop", _SE(js_gfx_GFXRasterizerState_get_depthBiasSlop), _SE(js_gfx_GFXRasterizerState_set_depthBiasSlop));
@@ -13218,6 +13258,27 @@ static bool js_gfx_GFXDevice_hasFeature(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_GFXDevice_hasFeature)
 
+static bool js_gfx_GFXDevice_createFence(se::State& s)
+{
+    cocos2d::GFXDevice* cobj = (cocos2d::GFXDevice*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXDevice_createFence : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        cocos2d::GFXFenceInfo* arg0 = nullptr;
+        ok &= seval_to_reference(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createFence : Error processing arguments");
+        cocos2d::GFXFence* result = cobj->createFence(*arg0);
+        ok &= native_ptr_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXDevice_createFence : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXDevice_createFence)
+
 static bool js_gfx_GFXDevice_getContext(se::State& s)
 {
     cocos2d::GFXDevice* cobj = (cocos2d::GFXDevice*)s.nativeThisObject();
@@ -14185,6 +14246,7 @@ bool js_register_gfx_GFXDevice(se::Object* obj)
     cls->defineProperty("context", _SE(js_gfx_GFXDevice_getContext), nullptr);
     cls->defineProperty("mainWindow", _SE(js_gfx_GFXDevice_getMainWindow), nullptr);
     cls->defineFunction("hasFeature", _SE(js_gfx_GFXDevice_hasFeature));
+    cls->defineFunction("createFence", _SE(js_gfx_GFXDevice_createFence));
     cls->defineFunction("createCommandAllocator", _SE(js_gfx_GFXDevice_createCommandAllocator));
     cls->defineFunction("getDepthStencilFormat", _SE(js_gfx_GFXDevice_getDepthStencilFormat));
     cls->defineFunction("createPipelineState", _SE(js_gfx_GFXDevice_createPipelineState));
@@ -16097,6 +16159,24 @@ static bool js_gfx_GFXInputAssembler_setIndexCount(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_GFXInputAssembler_setIndexCount)
 
+static bool js_gfx_GFXInputAssembler_getAttributesHash(se::State& s)
+{
+    cocos2d::GFXInputAssembler* cobj = (cocos2d::GFXInputAssembler*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputAssembler_getAttributesHash : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getAttributesHash();
+        ok &= uint32_to_seval((unsigned int)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXInputAssembler_getAttributesHash : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_gfx_GFXInputAssembler_getAttributesHash)
+
 static bool js_gfx_GFXInputAssembler_setFirstInstance(se::State& s)
 {
     cocos2d::GFXInputAssembler* cobj = (cocos2d::GFXInputAssembler*)s.nativeThisObject();
@@ -16443,6 +16523,7 @@ bool js_register_gfx_GFXInputAssembler(se::Object* obj)
 
     cls->defineProperty("instanceCount", _SE(js_gfx_GFXInputAssembler_getInstanceCount), _SE(js_gfx_GFXInputAssembler_setInstanceCount));
     cls->defineProperty("vertexBuffers", _SE(js_gfx_GFXInputAssembler_getVertexBuffers), nullptr);
+    cls->defineProperty("attributesHash", _SE(js_gfx_GFXInputAssembler_getAttributesHash), nullptr);
     cls->defineProperty("firstInstance", _SE(js_gfx_GFXInputAssembler_getFirstInstance), _SE(js_gfx_GFXInputAssembler_setFirstInstance));
     cls->defineProperty("vertexOffset", _SE(js_gfx_GFXInputAssembler_getVertexOffset), _SE(js_gfx_GFXInputAssembler_setVertexOffset));
     cls->defineProperty("vertexCount", _SE(js_gfx_GFXInputAssembler_getVertexCount), _SE(js_gfx_GFXInputAssembler_setVertexCount));
@@ -16504,6 +16585,24 @@ static bool js_gfx_GFXRenderPass_getSubPasses(se::State& s)
     return false;
 }
 SE_BIND_PROP_GET(js_gfx_GFXRenderPass_getSubPasses)
+
+static bool js_gfx_GFXRenderPass_getHash(se::State& s)
+{
+    cocos2d::GFXRenderPass* cobj = (cocos2d::GFXRenderPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXRenderPass_getHash : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getHash();
+        ok &= uint32_to_seval((unsigned int)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXRenderPass_getHash : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_gfx_GFXRenderPass_getHash)
 
 static bool js_gfx_GFXRenderPass_initialize(se::State& s)
 {
@@ -16612,6 +16711,7 @@ bool js_register_gfx_GFXRenderPass(se::Object* obj)
     cls->defineProperty("device", _SE(js_gfx_GFXRenderPass_getDevice), nullptr);
     cls->defineProperty("colorAttachments", _SE(js_gfx_GFXRenderPass_getColorAttachments), nullptr);
     cls->defineProperty("depthStencilAttachment", _SE(js_gfx_GFXRenderPass_getDepthStencilAttachment), nullptr);
+    cls->defineProperty("hash", _SE(js_gfx_GFXRenderPass_getHash), nullptr);
     cls->defineProperty("subPasses", _SE(js_gfx_GFXRenderPass_getSubPasses), nullptr);
     cls->defineFunction("initialize", _SE(js_gfx_GFXRenderPass_initialize));
     cls->defineFunction("destroy", _SE(js_gfx_GFXRenderPass_destroy));
@@ -16645,7 +16745,7 @@ static bool js_gfx_GFXFramebuffer_getDepthStencilView(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXFramebuffer_getDepthStencilView)
+SE_BIND_PROP_GET(js_gfx_GFXFramebuffer_getDepthStencilView)
 
 static bool js_gfx_GFXFramebuffer_isOffscreen(se::State& s)
 {
@@ -16663,7 +16763,7 @@ static bool js_gfx_GFXFramebuffer_isOffscreen(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXFramebuffer_isOffscreen)
+SE_BIND_PROP_GET(js_gfx_GFXFramebuffer_isOffscreen)
 
 static bool js_gfx_GFXFramebuffer_getColorViews(se::State& s)
 {
@@ -16681,7 +16781,7 @@ static bool js_gfx_GFXFramebuffer_getColorViews(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXFramebuffer_getColorViews)
+SE_BIND_PROP_GET(js_gfx_GFXFramebuffer_getColorViews)
 
 static bool js_gfx_GFXFramebuffer_initialize(se::State& s)
 {
@@ -16735,7 +16835,7 @@ static bool js_gfx_GFXFramebuffer_getRenderPass(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXFramebuffer_getRenderPass)
+SE_BIND_PROP_GET(js_gfx_GFXFramebuffer_getRenderPass)
 
 static bool js_gfx_GFXFramebuffer_getDevice(se::State& s)
 {
@@ -16753,7 +16853,7 @@ static bool js_gfx_GFXFramebuffer_getDevice(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXFramebuffer_getDevice)
+SE_BIND_PROP_GET(js_gfx_GFXFramebuffer_getDevice)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXFramebuffer_finalize)
 
@@ -16787,13 +16887,13 @@ bool js_register_gfx_GFXFramebuffer(se::Object* obj)
 {
     auto cls = se::Class::create("GFXFramebuffer", obj, __jsb_cocos2d_GFXObject_proto, _SE(js_gfx_GFXFramebuffer_constructor));
 
-    cls->defineFunction("getDepthStencilView", _SE(js_gfx_GFXFramebuffer_getDepthStencilView));
-    cls->defineFunction("isOffscreen", _SE(js_gfx_GFXFramebuffer_isOffscreen));
-    cls->defineFunction("getColorViews", _SE(js_gfx_GFXFramebuffer_getColorViews));
+    cls->defineProperty("device", _SE(js_gfx_GFXFramebuffer_getDevice), nullptr);
+    cls->defineProperty("renderPass", _SE(js_gfx_GFXFramebuffer_getRenderPass), nullptr);
+    cls->defineProperty("depthStencilView", _SE(js_gfx_GFXFramebuffer_getDepthStencilView), nullptr);
+    cls->defineProperty("colorViews", _SE(js_gfx_GFXFramebuffer_getColorViews), nullptr);
+    cls->defineProperty("isOffscreen", _SE(js_gfx_GFXFramebuffer_isOffscreen), nullptr);
     cls->defineFunction("initialize", _SE(js_gfx_GFXFramebuffer_initialize));
     cls->defineFunction("destroy", _SE(js_gfx_GFXFramebuffer_destroy));
-    cls->defineFunction("getRenderPass", _SE(js_gfx_GFXFramebuffer_getRenderPass));
-    cls->defineFunction("getDevice", _SE(js_gfx_GFXFramebuffer_getDevice));
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXFramebuffer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXFramebuffer>(cls);
@@ -17605,7 +17705,7 @@ static bool js_gfx_GFXCommandBuffer_getAllocator(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_GFXCommandBuffer_getAllocator)
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_getAllocator)
 
 static bool js_gfx_GFXCommandBuffer_copyBufferToTexture(se::State& s)
 {
@@ -17650,6 +17750,25 @@ static bool js_gfx_GFXCommandBuffer_setLineWidth(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_gfx_GFXCommandBuffer_setLineWidth)
+
+static bool js_gfx_GFXCommandBuffer_enableDepthBias(se::State& s)
+{
+    cocos2d::GFXCommandBuffer* cobj = (cocos2d::GFXCommandBuffer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXCommandBuffer_enableDepthBias : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        bool arg0;
+        ok &= seval_to_boolean(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_enableDepthBias : Error processing arguments");
+        cobj->enableDepthBias(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_enableDepthBias)
 
 static bool js_gfx_GFXCommandBuffer_updateBuffer(se::State& s)
 {
@@ -17739,7 +17858,7 @@ static bool js_gfx_GFXCommandBuffer_getNumInstances(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_GFXCommandBuffer_getNumInstances)
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_getNumInstances)
 
 static bool js_gfx_GFXCommandBuffer_setStencilCompareMask(se::State& s)
 {
@@ -17833,7 +17952,7 @@ static bool js_gfx_GFXCommandBuffer_getDevice(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_GFXCommandBuffer_getDevice)
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_getDevice)
 
 static bool js_gfx_GFXCommandBuffer_getNumTris(se::State& s)
 {
@@ -17851,7 +17970,7 @@ static bool js_gfx_GFXCommandBuffer_getNumTris(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_GFXCommandBuffer_getNumTris)
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_getNumTris)
 
 static bool js_gfx_GFXCommandBuffer_setViewport(se::State& s)
 {
@@ -17954,7 +18073,7 @@ static bool js_gfx_GFXCommandBuffer_getType(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_GFXCommandBuffer_getType)
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_getType)
 
 static bool js_gfx_GFXCommandBuffer_bindBindingLayout(se::State& s)
 {
@@ -18075,7 +18194,7 @@ static bool js_gfx_GFXCommandBuffer_getNumDrawCalls(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_GFXCommandBuffer_getNumDrawCalls)
+SE_BIND_FUNC(js_gfx_GFXCommandBuffer_getNumDrawCalls)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXCommandBuffer_finalize)
 
@@ -18109,38 +18228,155 @@ bool js_register_gfx_GFXCommandBuffer(se::Object* obj)
 {
     auto cls = se::Class::create("GFXCommandBuffer", obj, __jsb_cocos2d_GFXObject_proto, _SE(js_gfx_GFXCommandBuffer_constructor));
 
-    cls->defineProperty("numInstances", _SE(js_gfx_GFXCommandBuffer_getNumInstances), nullptr);
-    cls->defineProperty("numDrawCalls", _SE(js_gfx_GFXCommandBuffer_getNumDrawCalls), nullptr);
-    cls->defineProperty("numTris", _SE(js_gfx_GFXCommandBuffer_getNumTris), nullptr);
-    cls->defineProperty("device", _SE(js_gfx_GFXCommandBuffer_getDevice), nullptr);
-    cls->defineProperty("type", _SE(js_gfx_GFXCommandBuffer_getType), nullptr);
-    cls->defineProperty("allocator", _SE(js_gfx_GFXCommandBuffer_getAllocator), nullptr);
     cls->defineFunction("draw", _SE(js_gfx_GFXCommandBuffer_draw));
     cls->defineFunction("setBlendConstants", _SE(js_gfx_GFXCommandBuffer_setBlendConstants));
     cls->defineFunction("setDepthBound", _SE(js_gfx_GFXCommandBuffer_setDepthBound));
+    cls->defineFunction("getAllocator", _SE(js_gfx_GFXCommandBuffer_getAllocator));
     cls->defineFunction("copyBufferToTexture", _SE(js_gfx_GFXCommandBuffer_copyBufferToTexture));
     cls->defineFunction("setLineWidth", _SE(js_gfx_GFXCommandBuffer_setLineWidth));
+    cls->defineFunction("enableDepthBias", _SE(js_gfx_GFXCommandBuffer_enableDepthBias));
     cls->defineFunction("updateBuffer", _SE(js_gfx_GFXCommandBuffer_updateBuffer));
     cls->defineFunction("end", _SE(js_gfx_GFXCommandBuffer_end));
     cls->defineFunction("setStencilWriteMask", _SE(js_gfx_GFXCommandBuffer_setStencilWriteMask));
+    cls->defineFunction("getNumInstances", _SE(js_gfx_GFXCommandBuffer_getNumInstances));
     cls->defineFunction("setStencilCompareMask", _SE(js_gfx_GFXCommandBuffer_setStencilCompareMask));
     cls->defineFunction("bindInputAssembler", _SE(js_gfx_GFXCommandBuffer_bindInputAssembler));
     cls->defineFunction("bindPipelineState", _SE(js_gfx_GFXCommandBuffer_bindPipelineState));
     cls->defineFunction("destroy", _SE(js_gfx_GFXCommandBuffer_destroy));
+    cls->defineFunction("getDevice", _SE(js_gfx_GFXCommandBuffer_getDevice));
+    cls->defineFunction("getNumTris", _SE(js_gfx_GFXCommandBuffer_getNumTris));
     cls->defineFunction("setViewport", _SE(js_gfx_GFXCommandBuffer_setViewport));
     cls->defineFunction("setDepthBias", _SE(js_gfx_GFXCommandBuffer_setDepthBias));
     cls->defineFunction("begin", _SE(js_gfx_GFXCommandBuffer_begin));
+    cls->defineFunction("getType", _SE(js_gfx_GFXCommandBuffer_getType));
     cls->defineFunction("bindBindingLayout", _SE(js_gfx_GFXCommandBuffer_bindBindingLayout));
     cls->defineFunction("endRenderPass", _SE(js_gfx_GFXCommandBuffer_endRenderPass));
     cls->defineFunction("initialize", _SE(js_gfx_GFXCommandBuffer_initialize));
     cls->defineFunction("setScissor", _SE(js_gfx_GFXCommandBuffer_setScissor));
     cls->defineFunction("beginRenderPass", _SE(js_gfx_GFXCommandBuffer_beginRenderPass));
+    cls->defineFunction("getNumDrawCalls", _SE(js_gfx_GFXCommandBuffer_getNumDrawCalls));
     cls->defineFinalizeFunction(_SE(js_cocos2d_GFXCommandBuffer_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::GFXCommandBuffer>(cls);
 
     __jsb_cocos2d_GFXCommandBuffer_proto = cls->getProto();
     __jsb_cocos2d_GFXCommandBuffer_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_cocos2d_GFXFence_proto = nullptr;
+se::Class* __jsb_cocos2d_GFXFence_class = nullptr;
+
+static bool js_gfx_GFXFence_initialize(se::State& s)
+{
+    cocos2d::GFXFence* cobj = (cocos2d::GFXFence*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXFence_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        cocos2d::GFXFenceInfo* arg0 = nullptr;
+        ok &= seval_to_reference(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXFence_initialize : Error processing arguments");
+        bool result = cobj->initialize(*arg0);
+        ok &= boolean_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_GFXFence_initialize : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXFence_initialize)
+
+static bool js_gfx_GFXFence_destroy(se::State& s)
+{
+    cocos2d::GFXFence* cobj = (cocos2d::GFXFence*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXFence_destroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->destroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXFence_destroy)
+
+static bool js_gfx_GFXFence_wait(se::State& s)
+{
+    cocos2d::GFXFence* cobj = (cocos2d::GFXFence*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXFence_wait : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->wait();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXFence_wait)
+
+static bool js_gfx_GFXFence_reset(se::State& s)
+{
+    cocos2d::GFXFence* cobj = (cocos2d::GFXFence*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_GFXFence_reset : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->reset();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_GFXFence_reset)
+
+SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXFence_finalize)
+
+static bool js_gfx_GFXFence_constructor(se::State& s)
+{
+    //#3 cocos2d::GFXFence: is_skip_construtor True
+    se::ScriptEngine::getInstance()->evalString("throw new Error(\"cocos2d::GFXFence constructor is skipped\")");
+    return false;
+}
+SE_BIND_CTOR(js_gfx_GFXFence_constructor, __jsb_cocos2d_GFXFence_class, js_cocos2d_GFXFence_finalize)
+
+
+
+extern se::Object* __jsb_cocos2d_GFXObject_proto;
+
+static bool js_cocos2d_GFXFence_finalize(se::State& s)
+{
+    CCLOGINFO("jsbindings: finalizing JS object %p (cocos2d::GFXFence)", s.nativeThisObject());
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cocos2d::GFXFence* cobj = (cocos2d::GFXFence*)s.nativeThisObject();
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cocos2d_GFXFence_finalize)
+
+bool js_register_gfx_GFXFence(se::Object* obj)
+{
+    auto cls = se::Class::create("GFXFence", obj, __jsb_cocos2d_GFXObject_proto, _SE(js_gfx_GFXFence_constructor));
+
+    cls->defineFunction("initialize", _SE(js_gfx_GFXFence_initialize));
+    cls->defineFunction("destroy", _SE(js_gfx_GFXFence_destroy));
+    cls->defineFunction("wait", _SE(js_gfx_GFXFence_wait));
+    cls->defineFunction("reset", _SE(js_gfx_GFXFence_reset));
+    cls->defineFinalizeFunction(_SE(js_cocos2d_GFXFence_finalize));
+    cls->install();
+    JSBClassType::registerClass<cocos2d::GFXFence>(cls);
+
+    __jsb_cocos2d_GFXFence_proto = cls->getProto();
+    __jsb_cocos2d_GFXFence_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -18169,19 +18405,35 @@ SE_BIND_PROP_GET(js_gfx_GFXQueue_getType)
 
 static bool js_gfx_GFXQueue_submit(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cocos2d::GFXQueue* cobj = (cocos2d::GFXQueue*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXQueue_submit : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_gfx_GFXQueue_submit : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        std::vector<cocos2d::GFXCommandBuffer *> arg0;
-        ok &= seval_to_std_vector(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXQueue_submit : Error processing arguments");
-        cobj->submit(arg0);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    do {
+        if (argc == 1) {
+            std::vector<cocos2d::GFXCommandBuffer *> arg0;
+            ok &= seval_to_std_vector(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cobj->submit(arg0);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 2) {
+            std::vector<cocos2d::GFXCommandBuffer *> arg0;
+            ok &= seval_to_std_vector(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cocos2d::GFXFence* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);
+            if (!ok) { ok = true; break; }
+            cobj->submit(arg0, arg1);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_gfx_GFXQueue_submit)
@@ -18354,6 +18606,7 @@ bool register_all_gfx(se::Object* obj)
     js_register_gfx_GFXSamplerInfo(ns);
     js_register_gfx_GFXRect(ns);
     js_register_gfx_GFXShaderMacro(ns);
+    js_register_gfx_GFXFence(ns);
     js_register_gfx_GFXRenderPassInfo(ns);
     js_register_gfx_GFXFramebuffer(ns);
     js_register_gfx_GFXCommandAllocator(ns);
