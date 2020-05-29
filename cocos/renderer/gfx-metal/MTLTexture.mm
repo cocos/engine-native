@@ -77,6 +77,7 @@ bool CCMTLTexture::createMTLTexture()
     switch (mtlTextureType) {
         case MTLTextureType2D:
         case MTLTextureType2DArray:
+            //No need to set mipmapped flag since mipmapLevelCount was explicty set via `_mipLevel`.
             descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mtlFormat
                                                                             width:_width
                                                                            height:_height
