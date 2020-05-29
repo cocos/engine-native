@@ -280,6 +280,7 @@ extern se::Class* __jsb_cocos2d_GFXDevice_class;
 bool js_register_cocos2d_GFXDevice(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_hasFeature);
+SE_DECLARE_FUNC(js_gfx_GFXDevice_createFence);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createCommandAllocator);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_getDepthStencilFormat);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createPipelineState);
@@ -444,6 +445,7 @@ SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setDepthBound);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_getAllocator);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_copyBufferToTexture);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setLineWidth);
+SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_enableDepthBias);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_updateBuffer);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_end);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setStencilWriteMask);
@@ -465,6 +467,17 @@ SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setScissor);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_beginRenderPass);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_getNumDrawCalls);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_GFXCommandBuffer);
+
+extern se::Object* __jsb_cocos2d_GFXFence_proto;
+extern se::Class* __jsb_cocos2d_GFXFence_class;
+
+bool js_register_cocos2d_GFXFence(se::Object* obj);
+bool register_all_gfx(se::Object* obj);
+SE_DECLARE_FUNC(js_gfx_GFXFence_initialize);
+SE_DECLARE_FUNC(js_gfx_GFXFence_destroy);
+SE_DECLARE_FUNC(js_gfx_GFXFence_wait);
+SE_DECLARE_FUNC(js_gfx_GFXFence_reset);
+SE_DECLARE_FUNC(js_gfx_GFXFence_GFXFence);
 
 extern se::Object* __jsb_cocos2d_GFXQueue_proto;
 extern se::Class* __jsb_cocos2d_GFXQueue_class;
