@@ -340,27 +340,28 @@ private:
         return "Z";
     }
 
+    // jchar is unsigned 16 bits, we do char => jchar conversion on purpose
     static std::string getJNISignature(char) {
         return "C";
     }
 
-    static std::string getJNISignature(short) {
+    static std::string getJNISignature(jshort) {
         return "S";
     }
 
-    static std::string getJNISignature(int) {
+    static std::string getJNISignature(jint) {
         return "I";
     }
 
-    static std::string getJNISignature(long) {
+    static std::string getJNISignature(jlong) {
         return "J";
     }
 
-    static std::string getJNISignature(float) {
+    static std::string getJNISignature(jfloat) {
         return "F";
     }
 
-    static std::string getJNISignature(double) {
+    static std::string getJNISignature(jdouble) {
         return "D";
     }
 
