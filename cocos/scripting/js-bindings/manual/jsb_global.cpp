@@ -44,7 +44,7 @@ using namespace cocos2d;
 se::Object* __jsbObj = nullptr;
 se::Object* __glObj = nullptr;
 
-static ThreadPool* __threadPool = nullptr;
+static std::shared_ptr<ThreadPool> __threadPool;
 
 static std::shared_ptr<cocos2d::network::Downloader> _localDownloader = nullptr;
 static std::map<std::string, std::function<void(const std::string&, unsigned char*, int ,const std::string&)>> _localDownloaderHandlers;
@@ -833,7 +833,10 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
     auto initImageFunc = [path, callbackPtr](const std::string& fullPath, unsigned char* imageData, int imageBytes, const std::string& errorMsg){
         std::shared_ptr<uint8_t> imageDataGuard(imageData, free);
 
-        __threadPool->pushTask([=](int tid) mutable {
+        auto pool = __threadPool;
+        if (!pool)
+            return;
+        pool->pushTask([=](int tid) mutable {
             // NOTE: FileUtils::getInstance()->fullPathForFilename isn't a threadsafe method,
             // Image::initWithImageFile will call fullPathForFilename internally which may
             // cause thread race issues. Therefore, we get the full path of file before
@@ -1235,7 +1238,7 @@ SE_BIND_FUNC(JSB_hideInputBox)
 
 bool jsb_register_global_variables(se::Object* global)
 {
-    __threadPool = ThreadPool::newFixedThreadPool(3);
+    __threadPool.reset(ThreadPool::newFixedThreadPool(3));
 
     global->defineFunction("require", _SE(require));
     global->defineFunction("requireModule", _SE(moduleRequire));
@@ -1283,7 +1286,6 @@ bool jsb_register_global_variables(se::Object* global)
     se::ScriptEngine::getInstance()->clearException();
 
     se::ScriptEngine::getInstance()->addBeforeCleanupHook([](){
-        delete __threadPool;
         __threadPool = nullptr;
 
         PoolManager::getInstance()->getCurrentPool()->clear();
