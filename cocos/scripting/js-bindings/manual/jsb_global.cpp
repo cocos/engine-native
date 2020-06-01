@@ -831,36 +831,39 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
     std::shared_ptr<se::Value> callbackPtr = std::make_shared<se::Value>(callbackVal);
 
     auto initImageFunc = [path, callbackPtr](const std::string& fullPath, unsigned char* imageData, int imageBytes, const std::string& errorMsg){
-        Image* img = new (std::nothrow) Image();
+        std::shared_ptr<uint8_t> imageDataGuard(imageData, free);
 
-        __threadPool->pushTask([=](int tid){
+        __threadPool->pushTask([=](int tid) mutable {
             // NOTE: FileUtils::getInstance()->fullPathForFilename isn't a threadsafe method,
             // Image::initWithImageFile will call fullPathForFilename internally which may
             // cause thread race issues. Therefore, we get the full path of file before
             // going into task callback.
             // Be careful of invoking any Cocos2d-x interface in a sub-thread.
             bool loadSucceed = false;
+            std::shared_ptr<Image> img(new Image(), [](Image *image) {
+                image->release();
+            });
 
             if (!errorMsg.empty()) {
                 loadSucceed = false;
             }
             else if (fullPath.empty())
             {
-                loadSucceed = img->initWithImageData(imageData, imageBytes);
-                free(imageData);
+                loadSucceed = img->initWithImageData(imageDataGuard.get(), imageBytes);
+                imageDataGuard = nullptr;
             }
             else
             {
                 loadSucceed = img->initWithImageFile(fullPath);
             }
 
-            struct ImageInfo* imgInfo = nullptr;
+            std::shared_ptr<ImageInfo> imgInfo;
             if(loadSucceed)
             {
-                imgInfo = createImageInfo(img);
+                imgInfo.reset(createImageInfo(img.get()));
             }
 
-            Application::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
+            Application::getInstance()->getScheduler()->performFunctionInCocosThread([=]() mutable {
                 se::AutoHandleScope hs;
                 se::ValueArray seArgs;
                 se::Value dataVal;
@@ -900,7 +903,7 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
 
                     seArgs.push_back(se::Value(retObj));
 
-                    delete imgInfo;
+                    imgInfo = nullptr;
                 }
                 else
                 {
@@ -914,7 +917,7 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                 }
 
                 callbackPtr->toObject()->call(seArgs, nullptr);
-                img->release();
+                img = nullptr;
             });
 
         });
