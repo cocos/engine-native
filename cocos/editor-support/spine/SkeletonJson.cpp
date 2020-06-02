@@ -120,7 +120,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 	_error = "";
 	_linkedMeshes.clear();
 
-	root = new Json(json);
+	root = new(__FILE__, __LINE__) Json(json);
 
 	if (!root) {
 		setError(NULL, "Invalid skeleton JSON: ", Json::getError());
@@ -133,6 +133,11 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 	if (skeleton) {
 		skeletonData->_hash = Json::getString(skeleton, "hash", 0);
 		skeletonData->_version = Json::getString(skeleton, "spine", 0);
+		if ("3.8.75" == skeletonData->_version) {
+            delete skeletonData;
+            setError(root, "Unsupported skeleton data, please export with a newer version of Spine.", "");
+            return NULL;
+        }
 		skeletonData->_x = Json::getFloat(skeleton, "x", 0);
 		skeletonData->_y = Json::getFloat(skeleton, "y", 0);
 		skeletonData->_width = Json::getFloat(skeleton, "width", 0);
@@ -413,8 +418,8 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
             if (strlen(skinName) == 0) {
                 skinName = skinMap->_name;
             }
-            skin = new(__FILE__, __LINE__) Skin(skinName);
-            
+			skin = new(__FILE__, __LINE__) Skin(skinName);
+
 			Json *item = Json::getItem(skinMap, "bones");
 			if (item) {
 				for (item = item->_child; item; item = item->_next) {
@@ -468,11 +473,11 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 			}
 
 			skeletonData->_skins[skinsIndex++] = skin;
-			if (strcmp(skinName, "default") == 0) {
+			if (strcmp(Json::getString(skinMap, "name", ""), "default") == 0) {
 				skeletonData->_defaultSkin = skin;
 			}
-
-            auto attachmentsData = Json::getItem(skinMap, "attachments");
+			
+			auto attachmentsData = Json::getItem(skinMap, "attachments");
             if (!attachmentsData) {
                 attachmentsData = skinMap;
             }
