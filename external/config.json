@@ -1,6 +1,10 @@
 {
-    "version": "v3d-12",
-    "zip_file_size": "115677698",
-    "repo_name": "cocos2d-x-lite-external",
-    "repo_parent": "https://github.com/cocos-creator/"
+    "version": "v3d-13",
+    "from": {
+        "type": "gitlab",
+        "origin": "http://gitlab.cocos.net:8929",
+        "owner": "publics",
+        "name": "cocos2d-x-lite-external",
+        "checkout": "v3d-13"
+    }
 }

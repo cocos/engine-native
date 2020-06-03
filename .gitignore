@@ -166,3 +166,7 @@ tests/cpp-tests/Resources/audio
 
 
 next*.zip
+
+out
+
+CMakeSettings.json
