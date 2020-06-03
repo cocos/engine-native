@@ -139,7 +139,7 @@ void StencilManager::enableMask ()
 void StencilManager::exitMask ()
 {
     if (_maskStack.size() == 0) {
-        cocos2d::log("StencilManager:exitMask _maskStack:%lu size is 0", _maskStack.size());
+        cocos2d::log("StencilManager:exitMask _maskStack:%zu size is 0", _maskStack.size());
     }
     _maskStack.pop_back();
     if (_maskStack.size() == 0) {

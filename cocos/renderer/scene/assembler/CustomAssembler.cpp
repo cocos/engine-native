@@ -91,7 +91,7 @@ InputAssembler* CustomAssembler::adjustIA(std::size_t index)
     }
     else
     {
-        cocos2d::log("CustomAssembler:updateIA index:%lu is out of range", index);
+        cocos2d::log("CustomAssembler:updateIA index:%zu is out of range", index);
         return nullptr;
     }
     
@@ -127,7 +127,7 @@ void CustomAssembler::updateEffect(std::size_t index, EffectVariant* effect)
         _effects.replace(index, effect);
         return;
     }
-    cocos2d::log("CustomAssembler:updateEffect index:%lu out of range", index);
+    cocos2d::log("CustomAssembler:updateEffect index:%zu out of range", index);
 }
 
 RENDERER_END
