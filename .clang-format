@@ -12,7 +12,6 @@ IndentCaseLabels: true
 
 ObjCBlockIndentWidth: 4
 
-
 ObjCSpaceAfterProperty: true
 
 ColumnLimit: 0
