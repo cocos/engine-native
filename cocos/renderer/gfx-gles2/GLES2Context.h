@@ -39,7 +39,7 @@ public:
     virtual bool initialize(const GFXContextInfo &info) override;
     virtual void destroy() override;
     virtual void present() override;
-    virtual bool MakeCurrent() override;
+    bool MakeCurrent();
 
     bool CheckExtension(const String &extension) const;
 
