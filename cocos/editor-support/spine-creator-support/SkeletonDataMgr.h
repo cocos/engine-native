@@ -39,6 +39,8 @@
 
 namespace spine {
 
+class SkeletonDataInfo;
+
 /**
  * Cache skeleton data.
  */
@@ -73,6 +75,7 @@ public:
 private:
     static SkeletonDataMgr* _instance;
     destroyCallback _destroyCallback = nullptr;
+    std::map<std::string, SkeletonDataInfo*> _dataMap;
 };
 
 }

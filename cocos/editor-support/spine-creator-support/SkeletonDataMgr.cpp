@@ -33,38 +33,36 @@
 
 using namespace spine;
 
-class SkeletonDataInfo;
-static std::map<std::string, SkeletonDataInfo*> _dataMap;
+namespace spine {
 
 class SkeletonDataInfo : public cocos2d::Ref {
 public:
-    SkeletonDataInfo (const std::string& uuid) {
-        _uuid = uuid;
-    }
-    
-    ~SkeletonDataInfo () {
+    SkeletonDataInfo() = default;
+
+    ~SkeletonDataInfo() {
         if (data) {
             delete data;
             data = nullptr;
         }
-        
+
         if (atlas) {
             delete atlas;
             atlas = nullptr;
         }
-        
+
         if (attachmentLoader) {
             delete attachmentLoader;
             attachmentLoader = nullptr;
         }
     }
-    
-    SkeletonData* data = nullptr;
-    Atlas* atlas = nullptr;
-    AttachmentLoader* attachmentLoader = nullptr;
+
+    SkeletonData *data = nullptr;
+    Atlas *atlas = nullptr;
+    AttachmentLoader *attachmentLoader = nullptr;
     std::vector<int> texturesIndex;
-    std::string _uuid;
 };
+
+} // namespace spine
 
 SkeletonDataMgr* SkeletonDataMgr::_instance = nullptr;
 
@@ -78,7 +76,7 @@ void SkeletonDataMgr::setSkeletonData (const std::string& uuid, SkeletonData* da
     if (it != _dataMap.end()) {
         releaseByUUID(uuid);
     }
-    SkeletonDataInfo* info = new SkeletonDataInfo(uuid);
+    SkeletonDataInfo* info = new SkeletonDataInfo();
     info->data = data;
     info->atlas = atlas;
     info->attachmentLoader = attachmentLoader;
