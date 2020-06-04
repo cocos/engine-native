@@ -60,6 +60,7 @@ namespace mu
     bool isColorBufferHalfFloatSupported(uint family);
     bool isLinearTextureSupported(uint family);
     bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet);
+    bool isDepthStencilFormatSupported(GFXFormat format, uint family);
     String featureSetToString(MTLFeatureSet featureSet);
 }
 
