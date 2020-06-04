@@ -12,6 +12,7 @@ jobs:
         - choco install --forcex86 -y python2
         - export PATH="/C/Program Files/nodejs":$PATH
         - export PATH="/C/Python27":$PATH
+        - tools/travis-scripts/before-install.sh
     - os: osx
       name: MacOSX
       env:
@@ -21,6 +22,7 @@ jobs:
       sudo: required
       before_install:
         - nvm install 12
+        - tools/travis-scripts/before-install.sh
     - os: osx
       name: iOS
       env:
@@ -30,6 +32,7 @@ jobs:
       sudo: required
       before_install:
         - nvm install 12
+        - tools/travis-scripts/before-install.sh
     - os: linux
       name: Android
       dist: xenial
@@ -39,18 +42,12 @@ jobs:
       language: cpp
       before_install:
         - nvm install 12
+        - tools/travis-scripts/before-install.sh
 
-node_js:
-  - "7"
 jdk:
   - oraclejdk8  
 script:
   - tools/travis-scripts/run-script.sh
-# before_install:
-#   - tools/travis-scripts/before-install.sh
-
-# before_install:
-#    - nvm install 12
 
 # blocklist
 # branches:
