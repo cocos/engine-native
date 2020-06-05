@@ -1336,47 +1336,74 @@ bool seval_to_TextureOptions(const se::Value& v, cocos2d::renderer::Texture::Opt
 
     if (obj->getProperty("anisotropy", &tmp))
     {
-        seval_to_int32(tmp, &ret->anisotropy);
+        if (!tmp.isUndefined())
+        {
+            seval_to_int32(tmp, &ret->anisotropy);
+        }
     }
 
     if (obj->getProperty("minFilter", &tmp))
     {
-        seval_to_int8(tmp, (int8_t*)&ret->minFilter);
+        if (!tmp.isUndefined())
+        {
+            seval_to_int8(tmp, (int8_t*)&ret->minFilter);
+        }
     }
 
     if (obj->getProperty("magFilter", &tmp))
     {
-        seval_to_int8(tmp, (int8_t*)&ret->magFilter);
+        if (!tmp.isUndefined())
+        {
+            seval_to_int8(tmp, (int8_t*)&ret->magFilter);
+        }
     }
 
     if (obj->getProperty("mipFilter", &tmp))
     {
-        seval_to_int8(tmp, (int8_t*)&ret->mipFilter);
+        if (!tmp.isUndefined())
+        {
+            seval_to_int8(tmp, (int8_t*)&ret->mipFilter);
+        }
     }
 
     if (obj->getProperty("wrapS", &tmp))
     {
-        seval_to_uint16(tmp, (uint16_t*)&ret->wrapS);
+        if (!tmp.isUndefined())
+        {
+            seval_to_uint16(tmp, (uint16_t*)&ret->wrapS);
+        }
     }
 
     if (obj->getProperty("wrapT", &tmp))
     {
-        seval_to_uint16(tmp, (uint16_t*)&ret->wrapT);
+        if (!tmp.isUndefined())
+        {
+            seval_to_uint16(tmp, (uint16_t*)&ret->wrapT);
+        }
     }
 
     if (obj->getProperty("flipY", &tmp))
     {
-        seval_to_boolean(tmp, &ret->flipY);
+        if (!tmp.isUndefined())
+        {
+            seval_to_boolean(tmp, &ret->flipY);
+        }
     }
 
     if (obj->getProperty("premultiplyAlpha", &tmp))
     {
-        seval_to_boolean(tmp, &ret->premultiplyAlpha);
+        if (!tmp.isUndefined())
+        {
+            seval_to_boolean(tmp, &ret->premultiplyAlpha);
+        }
     }
     
     if (obj->getProperty("compressed", &tmp))
     {
-        seval_to_boolean(tmp, &ret->compressed);
+        if (!tmp.isUndefined())
+        {
+            seval_to_boolean(tmp, &ret->compressed);
+        }
     }
 
     return true;
