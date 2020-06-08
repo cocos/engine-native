@@ -3369,7 +3369,6 @@
 				GCC_PREFIX_HEADER = "../cocos/platform/ios/cocos2d-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					V8_COMPRESS_POINTERS,
 					"V8_TYPED_ARRAY_MAX_SIZE_IN_HEAP=64",
 					ENABLE_MINOR_MC,
 					V8_CONCURRENT_MARKING,

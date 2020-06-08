@@ -222,6 +222,11 @@ namespace se {
     {
         v8::MaybeLocal<v8::Object> ret = cls->_ctorTemplate.Get(__isolate)->InstanceTemplate()->NewInstance(__isolate->GetCurrentContext());
         assert(!ret.IsEmpty());
+        if(cls->_ctor == nullptr) {
+            v8::Local<v8::Object> local = ret.ToLocalChecked();
+            local->SetAlignedPointerInInternalField(0, nullptr);
+            return local;
+        }
         return ret.ToLocalChecked();
     }
 
