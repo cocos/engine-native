@@ -4,6 +4,7 @@
 NS_CC_BEGIN
 
 class CCVKGPUTexture;
+class CCVKGPUTextureView;
 
 class CC_VULKAN_API CCVKTexture : public GFXTexture {
 public:
@@ -17,9 +18,13 @@ public:
     void resize(uint width, uint height);
 
     CC_INLINE CCVKGPUTexture *gpuTexture() const { return _gpuTexture; }
-
+    CC_INLINE CCVKGPUTextureView *gpuTextureView() const { return _gpuTextureView; }
+    
 private:
+    bool createTextureView(const GFXTextureViewInfo& info);
+    
     CCVKGPUTexture *_gpuTexture = nullptr;
+    CCVKGPUTextureView* _gpuTextureView = nullptr;
 };
 
 NS_CC_END

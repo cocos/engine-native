@@ -6,7 +6,6 @@ NS_CC_BEGIN
 class GFXDevice;
 class GFXBuffer;
 class GFXTexture;
-class GFXTextureView;
 class GFXSampler;
 class GFXShader;
 class GFXInputAssembler;

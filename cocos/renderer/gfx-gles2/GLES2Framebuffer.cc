@@ -26,7 +26,7 @@ bool GLES2Framebuffer::initialize(const GFXFramebufferInfo &info) {
     }
     if (info.colorMipmapLevels.size() > 0) {
         int i = 0;
-        for (const mipmapLevel : colorMipmapLevels) {
+        for (const auto mipmapLevel : info.colorMipmapLevels) {
             if (mipmapLevel != 0) {
                 CC_LOG_WARNING("Mipmap level of color attachment %d should be 0 in GLES2. Convert to 0.", i);
             }

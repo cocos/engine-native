@@ -714,8 +714,6 @@ if(CC_USE_VULKAN)
         cocos/renderer/gfx-vulkan/VKStd.h
         cocos/renderer/gfx-vulkan/VKTexture.cc
         cocos/renderer/gfx-vulkan/VKTexture.h
-        cocos/renderer/gfx-vulkan/VKTextureView.cc
-        cocos/renderer/gfx-vulkan/VKTextureView.h
         cocos/renderer/gfx-vulkan/VKUtils.h
         cocos/renderer/gfx-vulkan/VKWindow.cc
         cocos/renderer/gfx-vulkan/VKWindow.h
