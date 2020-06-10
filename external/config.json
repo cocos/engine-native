@@ -1,9 +1,8 @@
 {
     "version": "v3d-gfx-15",
     "from": {
-        "type": "gitlab",
-        "origin": "http://gitlab.cocos.net:8929",
-        "owner": "publics",
+        "type": "github",
+        "owner": "cocos-creator",
         "name": "cocos2d-x-lite-external",
         "checkout": "v3d-gfx-15"
     }
