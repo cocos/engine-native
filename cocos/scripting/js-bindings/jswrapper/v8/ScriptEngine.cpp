@@ -664,7 +664,7 @@ namespace se {
         }
 
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
         if(strncmp("(no filename)", sourceUrl.c_str(), sizeof("(no filename)") )!= 0)
         {
             sourceUrl = cocos2d::FileUtils::getInstance()->fullPathForFilename(sourceUrl);
