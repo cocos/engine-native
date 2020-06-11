@@ -36,6 +36,16 @@ struct CC_DLL RenderTargetInfo {
     uint height = 0;
 };
 
+struct CC_DLL InstancedItem {
+    cocos2d::GFXBuffer *vb = nullptr;
+    uint8_t *data = nullptr;
+    cocos2d::GFXInputAssembler *ia = nullptr;
+    uint count = 0;
+    uint capacity = 0;
+    uint stride = 0;
+};
+typedef cocos2d::vector<InstancedItem>::type InstancedItemList;
+
 typedef cocos2d::vector<RenderStage *>::type RenderStageList;
 typedef cocos2d::vector<RenderFlow *>::type RenderFlowList;
 
