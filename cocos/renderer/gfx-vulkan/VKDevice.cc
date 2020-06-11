@@ -197,7 +197,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
     GFXCommandAllocatorInfo cmdAllocInfo;
     _cmdAllocator = createCommandAllocator(cmdAllocInfo);
 
-    for (uint i = 0; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
+    for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
         GFXTextureInfo depthStecnilTexInfo;
         depthStecnilTexInfo.type = GFXTextureType::TEX2D;
         depthStecnilTexInfo.usage = GFXTextureUsageBit::DEPTH_STENCIL_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
@@ -228,10 +228,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
     depthStencilAttachment.beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     depthStencilAttachment.endLayout = GFXTextureLayout::PRESENT_SRC;
 
-    _renderPass = (CCVKRenderPass *)createRenderPass(renderPassInfo);
     _gpuSwapchain = CC_NEW(CCVKGPUSwapchain);
-    _gpuSwapchain->renderPass = _renderPass->gpuRenderPass();
-
     buildSwapchain();
 
     GFXWindowInfo windowInfo;
@@ -296,6 +293,17 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
         _features[(int)GFXFeature::FORMAT_ASTC] = true;
         compressedFmts += "astc ";
     }
+    _features[static_cast<uint>(GFXFeature::DEPTH_BOUNDS)] = deviceFeatures.depthBounds;
+    _features[static_cast<uint>(GFXFeature::LINE_WIDTH)] = true;
+    _features[static_cast<uint>(GFXFeature::STENCIL_COMPARE_MASK)] = true;
+    _features[static_cast<uint>(GFXFeature::STENCIL_WRITE_MASK)] = true;
+    _features[static_cast<uint>(GFXFeature::FORMAT_RGB8)] = findSupportedFormat({ GFXFormat::RGB8, VK_FORMAT_R8G8B8_UNORM }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, gpuContext->physicalDevice);
+    _features[static_cast<uint>(GFXFeature::FORMAT_D16)] = findSupportedFormat({ GFXFormat::D16, VK_FORMAT_D16_UNORM }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
+    _features[static_cast<uint>(GFXFeature::FORMAT_D16S8)] = findSupportedFormat({ GFXFormat::D16S8, VK_FORMAT_D16_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
+    _features[static_cast<uint>(GFXFeature::FORMAT_D24)] = false;
+    _features[static_cast<uint>(GFXFeature::FORMAT_D24S8)] = findSupportedFormat({ GFXFormat::D24S8, VK_FORMAT_D24_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
+    _features[static_cast<uint>(GFXFeature::FORMAT_D32F)] = findSupportedFormat({ GFXFormat::D32F, VK_FORMAT_D32_SFLOAT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
+    _features[static_cast<uint>(GFXFeature::FORMAT_D32FS8)] = findSupportedFormat({ GFXFormat::D32F_S8, VK_FORMAT_D32_SFLOAT_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
 
     uint32_t apiVersion = gpuContext->physicalDeviceProperties.apiVersion;
     _renderer = gpuContext->physicalDeviceProperties.deviceName;
@@ -323,12 +331,10 @@ void CCVKDevice::destroy() {
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_stagingBuffer);
     CC_SAFE_DESTROY(_window);
-    CC_SAFE_DESTROY(_renderPass);
     CC_SAFE_DELETE(_gpuSemaphorePool);
     CC_SAFE_DELETE(_gpuFencePool);
 
-    for (CCVKTexture* texture : _depthStencilTextures)
-    {
+    for (CCVKTexture *texture : _depthStencilTextures) {
         CC_SAFE_DESTROY(texture);
     }
     _depthStencilTextures.clear();
@@ -338,10 +344,13 @@ void CCVKDevice::destroy() {
             _gpuSwapchain->depthStencilImageViews.clear();
             _gpuSwapchain->depthStencilImages.clear();
 
-            for (VkFramebuffer framebuffer : _gpuSwapchain->vkSwapchainFramebuffers) {
-                vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
+            for (FramebufferListMapPair pair : _gpuSwapchain->vkSwapchainFramebufferListMap) {
+                for (VkFramebuffer framebuffer : pair.second) {
+                    vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
+                }
+                pair.second.clear();
             }
-            _gpuSwapchain->vkSwapchainFramebuffers.clear();
+            _gpuSwapchain->vkSwapchainFramebufferListMap.clear();
 
             for (VkImageView imageView : _gpuSwapchain->vkSwapchainImageViews) {
                 vkDestroyImageView(_gpuDevice->vkDevice, imageView, nullptr);
@@ -412,10 +421,12 @@ void CCVKDevice::buildSwapchain() {
         _gpuSwapchain->depthStencilImageViews.clear();
         _gpuSwapchain->depthStencilImages.clear();
 
-        for (VkFramebuffer framebuffer : _gpuSwapchain->vkSwapchainFramebuffers) {
-            vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
+        for (FramebufferListMapPair pair : _gpuSwapchain->vkSwapchainFramebufferListMap) {
+            for (VkFramebuffer framebuffer : pair.second) {
+                vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
+            }
+            pair.second.clear();
         }
-        _gpuSwapchain->vkSwapchainFramebuffers.clear();
 
         for (VkImageView imageView : _gpuSwapchain->vkSwapchainImageViews) {
             vkDestroyImageView(_gpuDevice->vkDevice, imageView, nullptr);
@@ -433,8 +444,7 @@ void CCVKDevice::buildSwapchain() {
     assert(imageCount == context->swapchainCreateInfo.minImageCount); // assert if swapchain image count assumption is broken
 
     _gpuSwapchain->vkSwapchainImageViews.resize(imageCount);
-    _gpuSwapchain->vkSwapchainFramebuffers.resize(imageCount);
-    for (uint i = 0; i < imageCount; i++) {
+    for (uint i = 0u; i < imageCount; i++) {
         _depthStencilTextures[i]->resize(_width, _height);
         _gpuSwapchain->depthStencilImages.push_back(((CCVKTexture *)_depthStencilTextures[i])->gpuTexture()->vkImage);
 
@@ -454,18 +464,10 @@ void CCVKDevice::buildSwapchain() {
         imageViewCreateInfo.subresourceRange.layerCount = 1;
 
         VK_CHECK(vkCreateImageView(_gpuDevice->vkDevice, &imageViewCreateInfo, nullptr, &_gpuSwapchain->vkSwapchainImageViews[i]));
+    }
 
-        VkImageView attachments[] = {_gpuSwapchain->vkSwapchainImageViews[i], _depthStencilTextures[i]->gpuTextureView()->vkImageView};
-
-        VkFramebufferCreateInfo framebufferCreateInfo{VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO};
-        framebufferCreateInfo.renderPass = _renderPass->gpuRenderPass()->vkRenderPass;
-        framebufferCreateInfo.attachmentCount = COUNTOF(attachments);
-        framebufferCreateInfo.pAttachments = attachments;
-        framebufferCreateInfo.width = _width;
-        framebufferCreateInfo.height = _height;
-        framebufferCreateInfo.layers = 1;
-
-        VK_CHECK(vkCreateFramebuffer(_gpuDevice->vkDevice, &framebufferCreateInfo, 0, &_gpuSwapchain->vkSwapchainFramebuffers[i]));
+    for (FramebufferListMapPair pair : _gpuSwapchain->vkSwapchainFramebufferListMap) {
+        CCVKCmdFuncCreateFramebuffer(this, pair.first);
     }
 }
 
@@ -567,8 +569,8 @@ GFXTexture *CCVKDevice::createTexture(const GFXTextureInfo &info) {
     return nullptr;
 }
 
-GFXTexture* CCVKDevice::createTexture(const GFXTextureViewInfo& info) {
-    GFXTexture* texture = CC_NEW(CCVKTexture(this));
+GFXTexture *CCVKDevice::createTexture(const GFXTextureViewInfo &info) {
+    GFXTexture *texture = CC_NEW(CCVKTexture(this));
     if (texture->initialize(info))
         return texture;
 
