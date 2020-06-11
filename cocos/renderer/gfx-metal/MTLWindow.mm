@@ -1,16 +1,15 @@
 #include "MTLStd.h"
 #include "MTLWindow.h"
 #include "MTLRenderPass.h"
-#include "MTLTextureView.h"
+#include "MTLTexture.h"
 #include "MTLDevice.h"
 
 NS_CC_BEGIN
 
-CCMTLWindow::CCMTLWindow(GFXDevice* device) : GFXWindow(device) {}
+CCMTLWindow::CCMTLWindow(GFXDevice *device) : GFXWindow(device) {}
 CCMTLWindow::~CCMTLWindow() { destroy(); }
 
-bool CCMTLWindow::initialize(const GFXWindowInfo& info)
-{
+bool CCMTLWindow::initialize(const GFXWindowInfo &info) {
     _title = info.title;
     _left = info.left;
     _top = info.top;
@@ -41,7 +40,7 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
     colorAttachment.endLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
     renderPassInfo.colorAttachments.emplace_back(colorAttachment);
     
-    GFXDepthStencilAttachment& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
+    GFXDepthStencilAttachment &depthStencilAttachment = renderPassInfo.depthStencilAttachment;
     renderPassInfo.depthStencilAttachment.format = GFXFormat::D24S8;
     depthStencilAttachment.depthLoadOp = GFXLoadOp::CLEAR;
     depthStencilAttachment.depthStoreOp = GFXStoreOp::STORE;
@@ -67,20 +66,9 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             colorTexInfo.mipLevel = 1;
             _colorTex = _device->createTexture(colorTexInfo);
             
-            GFXTextureViewInfo colorTexViewInfo;
-            colorTexViewInfo.texture = _colorTex;
-            colorTexViewInfo.type = GFXTextureViewType::TV2D;
-            colorTexViewInfo.format = _colorFmt;
-            colorTexViewInfo.baseLevel = 0;
-            colorTexViewInfo.levelCount = 1;
-            colorTexViewInfo.baseLayer = 0;
-            colorTexViewInfo.layerCount = 1;
-            _colorTexView = _device->createTextureView(colorTexViewInfo);
-            
-            if (_colorTexView)
-            {
-                id<MTLTexture> mtlTexture = static_cast<CCMTLTextureView*>(_colorTexView)->getMTLTexture();
-                static_cast<CCMTLRenderPass*>(_renderPass)->setColorAttachment(mtlTexture, 0);
+            if (_colorTex) {
+                id<MTLTexture> mtlTexture = static_cast<CCMTLTexture*>(_colorTex)->getMTLTexture();
+                static_cast<CCMTLRenderPass*>(_renderPass)->setColorAttachment(0, mtlTexture, 0);
             }
         }
         if (_depthStencilFmt != GFXFormat::UNKNOWN) {
@@ -95,45 +83,31 @@ bool CCMTLWindow::initialize(const GFXWindowInfo& info)
             depthStecnilTexInfo.mipLevel = 1;
             _depthStencilTex = _device->createTexture(depthStecnilTexInfo);
             
-            GFXTextureViewInfo depthStecnilTexViewInfo;
-            depthStecnilTexViewInfo.texture = _depthStencilTex;
-            depthStecnilTexViewInfo.type = GFXTextureViewType::TV2D;
-            depthStecnilTexViewInfo.format = _depthStencilFmt;
-            depthStecnilTexViewInfo.baseLevel = 0;
-            depthStecnilTexViewInfo.levelCount = 1;
-            depthStecnilTexViewInfo.baseLayer = 0;
-            depthStecnilTexViewInfo.layerCount = 1;
-            _depthStencilTexView = _device->createTextureView(depthStecnilTexViewInfo);
-            if (_depthStencilTexView)
-            {
-                id<MTLTexture> mtlTexture = static_cast<CCMTLTextureView*>(_depthStencilTexView)->getMTLTexture();
-                static_cast<CCMTLRenderPass*>(_renderPass)->setDepthStencilAttachment(mtlTexture);
+            if (_depthStencilTex) {
+                id<MTLTexture> mtlTexture = static_cast<CCMTLTexture*>(_depthStencilTex)->getMTLTexture();
+                static_cast<CCMTLRenderPass*>(_renderPass)->setDepthStencilAttachment(mtlTexture, 0);
             }
         }
     }
 
     GFXFramebufferInfo fboInfo;
     fboInfo.renderPass = _renderPass;
-    fboInfo.colorViews.push_back(_colorTexView);
-    fboInfo.depthStencilView = _depthStencilTexView;
+    fboInfo.colorTextures.push_back(_colorTex);
+    fboInfo.depthStencilTexture = _depthStencilTex;
     fboInfo.isOffscreen = _isOffscreen;
     _framebuffer = _device->createFramebuffer(fboInfo);
     
     return true;
 }
 
-void CCMTLWindow::destroy()
-{
+void CCMTLWindow::destroy() {
     CC_SAFE_DESTROY(_renderPass);
-    CC_SAFE_DESTROY(_colorTexView);
     CC_SAFE_DESTROY(_colorTex);
-    CC_SAFE_DESTROY(_depthStencilTexView);
     CC_SAFE_DESTROY(_depthStencilTex);
     CC_SAFE_DESTROY(_framebuffer);
 }
 
-void CCMTLWindow::resize(uint width, uint height)
-{
+void CCMTLWindow::resize(uint width, uint height) {
     
 }
 

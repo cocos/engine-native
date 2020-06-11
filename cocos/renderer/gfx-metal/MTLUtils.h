@@ -33,8 +33,7 @@ MTLCompareFunction toMTLCompareFunction(GFXComparisonFunc);
 MTLStencilOperation toMTLStencilOperation(GFXStencilOp);
 MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode);
 MTLTextureUsage toMTLTextureUsage(GFXTextureUsage);
-MTLTextureType toMTLTextureType(GFXTextureType type, uint arrayLength, GFXTextureFlags flags);
-MTLTextureType toMTLTextureType(GFXTextureViewType type);
+MTLTextureType toMTLTextureType(GFXTextureType type);
 NSUInteger toMTLSampleCount(GFXSampleCount);
 MTLSamplerAddressMode toMTLSamplerAddressMode(GFXAddress);
 MTLSamplerBorderColor toMTLSamplerBorderColor(const GFXColor &);
@@ -62,6 +61,6 @@ bool isLinearTextureSupported(uint family);
 bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet);
 bool isDepthStencilFormatSupported(GFXFormat format, uint family);
 String featureSetToString(MTLFeatureSet featureSet);
-}
+} // namespace mu
 
 NS_CC_END

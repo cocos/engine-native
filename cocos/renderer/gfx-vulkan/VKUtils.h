@@ -231,8 +231,11 @@ VkBufferUsageFlagBits MapVkBufferUsageFlagBits(GFXBufferUsage usage) {
 
 VkImageType MapVkImageType(GFXTextureType type) {
     switch (type) {
-        case GFXTextureType::TEX1D: return VK_IMAGE_TYPE_1D;
-        case GFXTextureType::TEX2D: return VK_IMAGE_TYPE_2D;
+        case GFXTextureType::TEX1D:
+        case GFXTextureType::TEX1D_ARRAY: return VK_IMAGE_TYPE_1D;
+        case GFXTextureType::CUBE:
+        case GFXTextureType::TEX2D:
+        case GFXTextureType::TEX2D_ARRAY: return VK_IMAGE_TYPE_2D;
         case GFXTextureType::TEX3D: return VK_IMAGE_TYPE_3D;
         default: {
             CCASSERT(false, "Unsupported GFXTextureType, convert to VkImageType failed.");
@@ -334,23 +337,23 @@ uint selectMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProperties, 
     return ~0u;
 }
 
-VkImageCreateFlags MapVkImageCreateFlags(GFXTextureViewType type) {
+VkImageCreateFlags MapVkImageCreateFlags(GFXTextureType type) {
     uint res = 0u;
     switch (type) {
-        case cocos2d::GFXTextureViewType::CUBE: res |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; break;
-        case cocos2d::GFXTextureViewType::TV2D_ARRAY: res |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT; break;
+        case cocos2d::GFXTextureType::CUBE: res |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; break;
+        case cocos2d::GFXTextureType::TEX2D_ARRAY: res |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT; break;
     }
     return (VkImageCreateFlags)res;
 }
 
-VkImageViewType MapVkImageViewType(GFXTextureViewType viewType) {
+VkImageViewType MapVkImageViewType(GFXTextureType viewType) {
     switch (viewType) {
-        case GFXTextureViewType::TV1D: return VK_IMAGE_VIEW_TYPE_1D;
-        case GFXTextureViewType::TV1D_ARRAY: return VK_IMAGE_VIEW_TYPE_1D_ARRAY;
-        case GFXTextureViewType::TV2D: return VK_IMAGE_VIEW_TYPE_2D;
-        case GFXTextureViewType::TV2D_ARRAY: return VK_IMAGE_VIEW_TYPE_2D_ARRAY;
-        case GFXTextureViewType::TV3D: return VK_IMAGE_VIEW_TYPE_3D;
-        case GFXTextureViewType::CUBE: return VK_IMAGE_VIEW_TYPE_CUBE;
+        case GFXTextureType::TEX1D: return VK_IMAGE_VIEW_TYPE_1D;
+        case GFXTextureType::TEX1D_ARRAY: return VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+        case GFXTextureType::TEX2D: return VK_IMAGE_VIEW_TYPE_2D;
+        case GFXTextureType::TEX2D_ARRAY: return VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+        case GFXTextureType::TEX3D: return VK_IMAGE_VIEW_TYPE_3D;
+        case GFXTextureType::CUBE: return VK_IMAGE_VIEW_TYPE_CUBE;
         default: {
             CCASSERT(false, "Unsupported GFXTextureViewType, convert to VkImageViewType failed.");
             return VK_IMAGE_VIEW_TYPE_2D;
@@ -417,118 +420,108 @@ VkShaderStageFlags MapVkShaderStageFlags(GFXShaderType stages) {
     return (VkShaderStageFlags)flags;
 }
 
-const VkPrimitiveTopology VK_PRIMITIVE_MODES[] =
-    {
-        VK_PRIMITIVE_TOPOLOGY_POINT_LIST,                    // POINT_LIST
-        VK_PRIMITIVE_TOPOLOGY_LINE_LIST,                     // LINE_LIST
-        VK_PRIMITIVE_TOPOLOGY_LINE_STRIP,                    // LINE_STRIP
-        (VkPrimitiveTopology)0,                              // LINE_LOOP
-        VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY,      // LINE_LIST_ADJACENCY
-        VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY,     // LINE_STRIP_ADJACENCY
-        (VkPrimitiveTopology)0,                              // ISO_LINE_LIST
-        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,                 // TRIANGLE_LIST
-        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,                // TRIANGLE_STRIP
-        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN,                  // TRIANGLE_FAN
-        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY,  // TRIANGLE_LIST_ADJACENCY
-        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY, // TRIANGLE_STRIP_ADJACENCY,
-        (VkPrimitiveTopology)0,                              // TRIANGLE_PATCH_ADJACENCY,
-        VK_PRIMITIVE_TOPOLOGY_PATCH_LIST,                    // QUAD_PATCH_LIST,
+const VkPrimitiveTopology VK_PRIMITIVE_MODES[] = {
+    VK_PRIMITIVE_TOPOLOGY_POINT_LIST,                    // POINT_LIST
+    VK_PRIMITIVE_TOPOLOGY_LINE_LIST,                     // LINE_LIST
+    VK_PRIMITIVE_TOPOLOGY_LINE_STRIP,                    // LINE_STRIP
+    (VkPrimitiveTopology)0,                              // LINE_LOOP
+    VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY,      // LINE_LIST_ADJACENCY
+    VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY,     // LINE_STRIP_ADJACENCY
+    (VkPrimitiveTopology)0,                              // ISO_LINE_LIST
+    VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,                 // TRIANGLE_LIST
+    VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,                // TRIANGLE_STRIP
+    VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN,                  // TRIANGLE_FAN
+    VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY,  // TRIANGLE_LIST_ADJACENCY
+    VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY, // TRIANGLE_STRIP_ADJACENCY,
+    (VkPrimitiveTopology)0,                              // TRIANGLE_PATCH_ADJACENCY,
+    VK_PRIMITIVE_TOPOLOGY_PATCH_LIST,                    // QUAD_PATCH_LIST,
 };
 
-const VkCullModeFlags VK_CULL_MODES[] =
-    {
-        VK_CULL_MODE_NONE,
-        VK_CULL_MODE_FRONT_BIT,
-        VK_CULL_MODE_BACK_BIT,
+const VkCullModeFlags VK_CULL_MODES[] = {
+    VK_CULL_MODE_NONE,
+    VK_CULL_MODE_FRONT_BIT,
+    VK_CULL_MODE_BACK_BIT,
 };
 
-const VkPolygonMode VK_POLYGON_MODES[] =
-    {
-        VK_POLYGON_MODE_FILL,
-        VK_POLYGON_MODE_LINE,
-        VK_POLYGON_MODE_POINT,
+const VkPolygonMode VK_POLYGON_MODES[] = {
+    VK_POLYGON_MODE_FILL,
+    VK_POLYGON_MODE_LINE,
+    VK_POLYGON_MODE_POINT,
 };
 
-const VkCompareOp VK_CMP_FUNCS[] =
-    {
-        VK_COMPARE_OP_NEVER,
-        VK_COMPARE_OP_LESS,
-        VK_COMPARE_OP_EQUAL,
-        VK_COMPARE_OP_LESS_OR_EQUAL,
-        VK_COMPARE_OP_GREATER,
-        VK_COMPARE_OP_NOT_EQUAL,
-        VK_COMPARE_OP_GREATER_OR_EQUAL,
-        VK_COMPARE_OP_ALWAYS,
+const VkCompareOp VK_CMP_FUNCS[] = {
+    VK_COMPARE_OP_NEVER,
+    VK_COMPARE_OP_LESS,
+    VK_COMPARE_OP_EQUAL,
+    VK_COMPARE_OP_LESS_OR_EQUAL,
+    VK_COMPARE_OP_GREATER,
+    VK_COMPARE_OP_NOT_EQUAL,
+    VK_COMPARE_OP_GREATER_OR_EQUAL,
+    VK_COMPARE_OP_ALWAYS,
 };
 
-const VkStencilOp VK_STENCIL_OPS[] =
-    {
-        VK_STENCIL_OP_ZERO,
-        VK_STENCIL_OP_KEEP,
-        VK_STENCIL_OP_REPLACE,
-        VK_STENCIL_OP_INCREMENT_AND_CLAMP,
-        VK_STENCIL_OP_DECREMENT_AND_CLAMP,
-        VK_STENCIL_OP_INVERT,
-        VK_STENCIL_OP_INCREMENT_AND_WRAP,
-        VK_STENCIL_OP_DECREMENT_AND_WRAP,
+const VkStencilOp VK_STENCIL_OPS[] = {
+    VK_STENCIL_OP_ZERO,
+    VK_STENCIL_OP_KEEP,
+    VK_STENCIL_OP_REPLACE,
+    VK_STENCIL_OP_INCREMENT_AND_CLAMP,
+    VK_STENCIL_OP_DECREMENT_AND_CLAMP,
+    VK_STENCIL_OP_INVERT,
+    VK_STENCIL_OP_INCREMENT_AND_WRAP,
+    VK_STENCIL_OP_DECREMENT_AND_WRAP,
 };
 
-const VkBlendOp VK_BLEND_OPS[] =
-    {
-        VK_BLEND_OP_ADD,
-        VK_BLEND_OP_SUBTRACT,
-        VK_BLEND_OP_REVERSE_SUBTRACT,
-        VK_BLEND_OP_ADD,
-        VK_BLEND_OP_ADD,
+const VkBlendOp VK_BLEND_OPS[] = {
+    VK_BLEND_OP_ADD,
+    VK_BLEND_OP_SUBTRACT,
+    VK_BLEND_OP_REVERSE_SUBTRACT,
+    VK_BLEND_OP_ADD,
+    VK_BLEND_OP_ADD,
 };
 
-const VkBlendFactor VK_BLEND_FACTORS[] =
-    {
-        VK_BLEND_FACTOR_ZERO,
-        VK_BLEND_FACTOR_ONE,
-        VK_BLEND_FACTOR_SRC_ALPHA,
-        VK_BLEND_FACTOR_DST_ALPHA,
-        VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-        VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA,
-        VK_BLEND_FACTOR_SRC_COLOR,
-        VK_BLEND_FACTOR_DST_COLOR,
-        VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR,
-        VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR,
-        VK_BLEND_FACTOR_SRC_ALPHA_SATURATE,
-        VK_BLEND_FACTOR_CONSTANT_COLOR,
-        VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR,
-        VK_BLEND_FACTOR_CONSTANT_ALPHA,
-        VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA,
+const VkBlendFactor VK_BLEND_FACTORS[] = {
+    VK_BLEND_FACTOR_ZERO,
+    VK_BLEND_FACTOR_ONE,
+    VK_BLEND_FACTOR_SRC_ALPHA,
+    VK_BLEND_FACTOR_DST_ALPHA,
+    VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+    VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA,
+    VK_BLEND_FACTOR_SRC_COLOR,
+    VK_BLEND_FACTOR_DST_COLOR,
+    VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR,
+    VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR,
+    VK_BLEND_FACTOR_SRC_ALPHA_SATURATE,
+    VK_BLEND_FACTOR_CONSTANT_COLOR,
+    VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR,
+    VK_BLEND_FACTOR_CONSTANT_ALPHA,
+    VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA,
 };
 
-const VkFilter VK_FILTERS[] =
-    {
-        (VkFilter)0,       // NONE
-        VK_FILTER_NEAREST, // POINT
-        VK_FILTER_LINEAR,  // LINEAR
-        (VkFilter)0,       // ANISOTROPIC
+const VkFilter VK_FILTERS[] = {
+    (VkFilter)0,       // NONE
+    VK_FILTER_NEAREST, // POINT
+    VK_FILTER_LINEAR,  // LINEAR
+    (VkFilter)0,       // ANISOTROPIC
 };
 
-const VkSamplerMipmapMode VK_SAMPLER_MIPMAP_MODES[] =
-    {
-        (VkSamplerMipmapMode)0,         // NONE
-        VK_SAMPLER_MIPMAP_MODE_NEAREST, // POINT
-        VK_SAMPLER_MIPMAP_MODE_LINEAR,  // LINEAR
-        VK_SAMPLER_MIPMAP_MODE_LINEAR,  // ANISOTROPIC
+const VkSamplerMipmapMode VK_SAMPLER_MIPMAP_MODES[] = {
+    (VkSamplerMipmapMode)0,         // NONE
+    VK_SAMPLER_MIPMAP_MODE_NEAREST, // POINT
+    VK_SAMPLER_MIPMAP_MODE_LINEAR,  // LINEAR
+    VK_SAMPLER_MIPMAP_MODE_LINEAR,  // ANISOTROPIC
 };
 
-const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODES[] =
-    {
-        VK_SAMPLER_ADDRESS_MODE_REPEAT,          // WRAP
-        VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT, // MIRROR
-        VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,   // CLAMP
-        VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, // BORDER
+const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODES[] = {
+    VK_SAMPLER_ADDRESS_MODE_REPEAT,          // WRAP
+    VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT, // MIRROR
+    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,   // CLAMP
+    VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, // BORDER
 };
 
 template <typename T, size_t Size>
-char (*countof_helper(T (&_Array)[Size]))[Size];
+char (*countofHelper(T (&_Array)[Size]))[Size];
 
-#define COUNTOF(array) (sizeof(*countof_helper(array)) + 0)
+#define COUNTOF(array) (sizeof(*countofHelper(array)) + 0)
 
 template <class T>
 uint toUint(T value) {
@@ -549,6 +542,18 @@ uint nextPowerOf2(uint v) {
     v |= v >> 8;
     v |= v >> 16;
     return ++v;
+}
+
+const char *MapVendorName(uint32_t vendorID) {
+    switch (vendorID) {
+        case 0x1002: return "Advanced Micro Devices, Inc.";
+        case 0x1010: return "Imagination Technologies";
+        case 0x10DE: return "Nvidia Corporation";
+        case 0x13B5: return "Arm Limited";
+        case 0x5143: return "Qualcomm Incorporated";
+        case 0x8086: return "Intel Corporation";
+    }
+    return "Unknown";
 }
 
 bool isLayerSupported(const char *required, const std::vector<VkLayerProperties> &available) {

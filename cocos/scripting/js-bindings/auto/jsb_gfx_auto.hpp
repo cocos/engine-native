@@ -282,13 +282,10 @@ bool register_all_gfx(se::Object* obj);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_hasFeature);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createFence);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createCommandAllocator);
-SE_DECLARE_FUNC(js_gfx_GFXDevice_getDepthStencilFormat);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createPipelineState);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createCommandBuffer);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_present);
-SE_DECLARE_FUNC(js_gfx_GFXDevice_createTexture);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_destroy);
-SE_DECLARE_FUNC(js_gfx_GFXDevice_getColorFormat);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createFramebuffer);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createRenderPass);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createPipelineLayout);
@@ -303,7 +300,6 @@ SE_DECLARE_FUNC(js_gfx_GFXDevice_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_resize);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createQueue);
 SE_DECLARE_FUNC(js_gfx_GFXDevice_createBindingLayout);
-SE_DECLARE_FUNC(js_gfx_GFXDevice_createTextureView);
 
 extern se::Object* __jsb_cocos2d_GFXWindow_proto;
 extern se::Class* __jsb_cocos2d_GFXWindow_class;
@@ -331,19 +327,9 @@ extern se::Class* __jsb_cocos2d_GFXTexture_class;
 
 bool js_register_cocos2d_GFXTexture(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
-SE_DECLARE_FUNC(js_gfx_GFXTexture_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXTexture_destroy);
 SE_DECLARE_FUNC(js_gfx_GFXTexture_resize);
 SE_DECLARE_FUNC(js_gfx_GFXTexture_GFXTexture);
-
-extern se::Object* __jsb_cocos2d_GFXTextureView_proto;
-extern se::Class* __jsb_cocos2d_GFXTextureView_class;
-
-bool js_register_cocos2d_GFXTextureView(se::Object* obj);
-bool register_all_gfx(se::Object* obj);
-SE_DECLARE_FUNC(js_gfx_GFXTextureView_initialize);
-SE_DECLARE_FUNC(js_gfx_GFXTextureView_destroy);
-SE_DECLARE_FUNC(js_gfx_GFXTextureView_GFXTextureView);
 
 extern se::Object* __jsb_cocos2d_GFXSampler_proto;
 extern se::Class* __jsb_cocos2d_GFXSampler_class;
@@ -395,10 +381,10 @@ extern se::Class* __jsb_cocos2d_GFXBindingLayout_class;
 
 bool js_register_cocos2d_GFXBindingLayout(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
-SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_bindTextureView);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_bindBuffer);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_bindSampler);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_update);
+SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_bindTexture);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_initialize);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_destroy);
 SE_DECLARE_FUNC(js_gfx_GFXBindingLayout_GFXBindingLayout);
@@ -445,7 +431,6 @@ SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setDepthBound);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_getAllocator);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_copyBufferToTexture);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setLineWidth);
-SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_enableDepthBias);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_updateBuffer);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_end);
 SE_DECLARE_FUNC(js_gfx_GFXCommandBuffer_setStencilWriteMask);

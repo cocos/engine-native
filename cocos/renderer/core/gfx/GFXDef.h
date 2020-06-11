@@ -6,7 +6,6 @@ NS_CC_BEGIN
 class GFXDevice;
 class GFXBuffer;
 class GFXTexture;
-class GFXTextureView;
 class GFXSampler;
 class GFXShader;
 class GFXInputAssembler;
@@ -309,6 +308,9 @@ enum class GFXTextureType {
     TEX1D,
     TEX2D,
     TEX3D,
+    CUBE,
+    TEX1D_ARRAY,
+    TEX2D_ARRAY,
 };
 
 enum class GFXTextureUsageBit : FlagBits {
@@ -342,15 +344,6 @@ enum class GFXSampleCount : uint8_t {
     X16,
     X32,
     X64,
-};
-
-enum class GFXTextureViewType : uint8_t {
-    TV1D,
-    TV2D,
-    TV3D,
-    CUBE,
-    TV1D_ARRAY,
-    TV2D_ARRAY,
 };
 
 enum class GFXFilter : uint8_t {
@@ -678,6 +671,7 @@ struct GFXWindowInfo {
     bool isFullscreen = false;
     GFXVsyncMode vsyncMode = GFXVsyncMode::OFF;
     uintptr_t windowHandle = 0;
+    GFXRenderPass *renderPass = nullptr;
 };
 
 struct GFXContextInfo {
@@ -727,7 +721,7 @@ struct GFXTextureInfo {
 
 struct GFXTextureViewInfo {
     GFXTexture *texture = nullptr;
-    GFXTextureViewType type = GFXTextureViewType::TV2D;
+    GFXTextureType type = GFXTextureType::TEX2D;
     GFXFormat format = GFXFormat::UNKNOWN;
     uint baseLevel = 0;
     uint levelCount = 1;
@@ -865,12 +859,14 @@ struct GFXRenderPassInfo {
     GFXSubPassList subPasses;
 };
 
-typedef vector<GFXTextureView *>::type GFXTextureViewList;
+typedef vector<GFXTexture *>::type GFXTextureList;
 
 struct GFXFramebufferInfo {
     GFXRenderPass *renderPass = nullptr;
-    GFXTextureViewList colorViews;
-    GFXTextureView *depthStencilView = nullptr;
+    GFXTextureList colorTextures;
+    vector<int>::type colorMipmapLevels;
+    GFXTexture *depthStencilTexture = nullptr;
+    int depthStencilMipmapLevel = 0;
     bool isOffscreen = true;
 };
 
@@ -895,7 +891,7 @@ struct GFXBindingUnit {
     String name;
     uint count = 0;
     GFXBuffer *buffer = nullptr;
-    GFXTextureView *texView = nullptr;
+    GFXTexture *texture = nullptr;
     GFXSampler *sampler = nullptr;
 };
 

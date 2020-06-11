@@ -58,9 +58,8 @@ if(USE_SE_JSC)
 endif()
 
 
-## disable webview & videoplay on non-mobile platforms
+## disable videoplay on non-mobile platforms
 if(NOT ANDROID AND NOT IOS)
-    set(USE_WEBVIEW OFF)
     set(USE_VIDEOPLAYER OFF)
 endif()
 
@@ -475,8 +474,6 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXShader.h
     cocos/renderer/core/gfx/GFXTexture.cc
     cocos/renderer/core/gfx/GFXTexture.h
-    cocos/renderer/core/gfx/GFXTextureView.cc
-    cocos/renderer/core/gfx/GFXTextureView.h
     cocos/renderer/core/gfx/GFXWindow.cc
     cocos/renderer/core/gfx/GFXWindow.h
     cocos/renderer/core/gfx/GFXFence.h
@@ -547,8 +544,6 @@ if(CC_USE_GLES2)
         cocos/renderer/gfx-gles2/GLES2Std.h
         cocos/renderer/gfx-gles2/GLES2Texture.cc
         cocos/renderer/gfx-gles2/GLES2Texture.h
-        cocos/renderer/gfx-gles2/GLES2TextureView.cc
-        cocos/renderer/gfx-gles2/GLES2TextureView.h
         cocos/renderer/gfx-gles2/gles2w.h
         cocos/renderer/gfx-gles2/GLES2Window.cc
         cocos/renderer/gfx-gles2/GLES2Window.h
@@ -609,8 +604,6 @@ if(CC_USE_GLES3)
         cocos/renderer/gfx-gles3/GLES3Std.h
         cocos/renderer/gfx-gles3/GLES3Texture.cc
         cocos/renderer/gfx-gles3/GLES3Texture.h
-        cocos/renderer/gfx-gles3/GLES3TextureView.cc
-        cocos/renderer/gfx-gles3/GLES3TextureView.h
         cocos/renderer/gfx-gles3/gles3w.h
         cocos/renderer/gfx-gles3/GLES3Window.cc
         cocos/renderer/gfx-gles3/GLES3Window.h
@@ -670,8 +663,6 @@ if(CC_USE_METAL)
         cocos/renderer/gfx-metal/MTLStd.h
         cocos/renderer/gfx-metal/MTLTexture.h
         cocos/renderer/gfx-metal/MTLTexture.mm
-        cocos/renderer/gfx-metal/MTLTextureView.h
-        cocos/renderer/gfx-metal/MTLTextureView.mm
         cocos/renderer/gfx-metal/MTLUtils.h
         cocos/renderer/gfx-metal/MTLUtils.mm
         cocos/renderer/gfx-metal/MTLWindow.h
@@ -722,8 +713,6 @@ if(CC_USE_VULKAN)
         cocos/renderer/gfx-vulkan/VKStd.h
         cocos/renderer/gfx-vulkan/VKTexture.cc
         cocos/renderer/gfx-vulkan/VKTexture.h
-        cocos/renderer/gfx-vulkan/VKTextureView.cc
-        cocos/renderer/gfx-vulkan/VKTextureView.h
         cocos/renderer/gfx-vulkan/VKUtils.h
         cocos/renderer/gfx-vulkan/VKWindow.cc
         cocos/renderer/gfx-vulkan/VKWindow.h
@@ -752,13 +741,6 @@ if(USE_AUDIO)
     cocos_source_files(
         cocos/scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.cpp
         cocos/scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.hpp
-    )
-endif()
-
-if(USE_WEBVIEW)
-    cocos_source_files(
-        cocos/scripting/js-bindings/auto/jsb_webview_auto.cpp
-        cocos/scripting/js-bindings/auto/jsb_webview_auto.hpp
     )
 endif()
 
@@ -961,15 +943,9 @@ if(USE_EDIT_BOX)
 endif()
 
 if(ANDROID OR IOS) 
-    if(USE_WEBVIEW)
-        cocos_source_files(
-            cocos/ui/videoplayer/VideoPlayer.h
-        )
-    endif()
     if(USE_VIDEOPLAYER)
         cocos_source_files(
-            cocos/ui/webview/WebView-inl.h
-            cocos/ui/webview/WebView.h
+            cocos/ui/videoplayer/VideoPlayer.h
         )
     endif()
 endif()
@@ -983,12 +959,6 @@ if(ANDROID)
     if(USE_VIDEOPLAYER)
         cocos_source_files(
             cocos/ui/videoplayer/VideoPlayer-android.cpp
-        )
-    endif()
-    if(USE_WEBVIEW)
-        cocos_source_files(
-            cocos/ui/webview/WebViewImpl-android.cpp
-            cocos/ui/webview/WebViewImpl-android.h
         )
     endif()
 elseif(MACOSX)
@@ -1006,12 +976,6 @@ elseif(IOS)
     if(USE_VIDEOPLAYER)
         cocos_source_files(
             cocos/ui/videoplayer/VideoPlayer-ios.mm
-        )
-    endif()
-    if(USE_WEBVIEW)
-        cocos_source_files(
-            cocos/ui/webview/WebViewImpl-ios.h
-            cocos/ui/webview/WebViewImpl-ios.mm
         )
     endif()
 elseif(WIN32)
@@ -1045,7 +1009,6 @@ add_library(cocos2d ${COCOS2D_SOURCE_LIST})
 # setup default flags
 target_compile_definitions(cocos2d PUBLIC 
     $<$<NOT:$<BOOL:${USE_VIDEO}>>:USE_VIDEO=0>
-    $<$<NOT:$<BOOL:${USE_WEBVIEW}>>:USE_WEB_VIEW=0>
     $<$<NOT:$<BOOL:${USE_AUDIO}>>:USE_AUDIO=0>
     $<$<NOT:$<BOOL:${USE_SOCKET}>>:USE_SOCKET=0>
     $<$<NOT:$<BOOL:${USE_EDIT_BOX}>>:CC_USE_EDITBOX=0>
