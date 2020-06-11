@@ -2,6 +2,10 @@
 
 #include "core/CoreStd.h"
 
+NS_CC_BEGIN
+class PSOCreateInfo;
+NS_CC_END
+
 NS_PP_BEGIN
 
 class RenderStage;
@@ -45,6 +49,18 @@ struct CC_DLL InstancedItem {
     uint stride = 0;
 };
 typedef cocos2d::vector<InstancedItem>::type InstancedItemList;
+
+struct BatchedItem {
+    cocos2d::GFXBufferList vbs;
+    uint8_t *vbDatas = nullptr;
+    cocos2d::GFXBuffer *vbIdx = nullptr;
+    float *vbIdxData = nullptr;
+    uint mergCount = 0;
+    cocos2d::GFXInputAssembler *ia = nullptr;
+    cocos2d::GFXBuffer *ubo = nullptr;
+    cocos2d::PSOCreateInfo *psoCreatedInfo = nullptr;
+};
+typedef cocos2d::vector<BatchedItem>::type BatchedItemList;
 
 typedef cocos2d::vector<RenderStage *>::type RenderStageList;
 typedef cocos2d::vector<RenderFlow *>::type RenderFlowList;
