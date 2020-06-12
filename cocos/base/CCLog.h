@@ -53,10 +53,11 @@
 namespace cocos2d
 {
 
+    //TODO: add CC_DLL back
 	/**
 	 @brief Output Debug message.
 	 */
-	void CC_DLL log(const char * format, ...) CC_FORMAT_PRINTF(1, 2);
+	void log(const char * format, ...) CC_FORMAT_PRINTF(1, 2);
 
 }
 
