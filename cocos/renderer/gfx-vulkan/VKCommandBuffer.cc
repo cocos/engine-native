@@ -84,26 +84,17 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer *fbo, const GFXRect &rend
     CCVKGPURenderPass *renderPass = _curGPUFBO->gpuRenderPass;
     VkFramebuffer framebuffer = _curGPUFBO->vkFramebuffer;
     if (!_curGPUFBO->isOffscreen) {
-        renderPass = _curGPUFBO->swapchain->renderPass;
-        framebuffer = _curGPUFBO->swapchain->vkSwapchainFramebuffers[_curGPUFBO->swapchain->curImageIndex];
+        framebuffer = _curGPUFBO->swapchain->vkSwapchainFramebufferListMap[_curGPUFBO][_curGPUFBO->swapchain->curImageIndex];
     }
 
-    vector<VkImageMemoryBarrier>::type &barriers = renderPass->beginBarriers;
     vector<VkClearValue>::type &clearValues = renderPass->clearValues;
-    size_t attachmentCount = barriers.size();
+    size_t attachmentCount = clearValues.size();
 
     if (attachmentCount) {
         for (size_t i = 0u; i < attachmentCount - 1; i++) {
-            barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage : _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
             clearValues[i].color = {colors[i].r, colors[i].g, colors[i].b, colors[i].a};
         }
-        barriers[attachmentCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage : _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
         clearValues[attachmentCount - 1].depthStencil = {depth, (uint)stencil};
-
-        // transition to COLOR_ATTACHMENT_OPTIMAL
-        vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
-                             VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, attachmentCount, barriers.data());
     }
 
     VkRenderPassBeginInfo passBeginInfo{VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};
@@ -127,27 +118,6 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer *fbo, const GFXRect &rend
 
 void CCVKCommandBuffer::endRenderPass() {
     vkCmdEndRenderPass(_gpuCommandBuffer->vkCommandBuffer);
-
-    //CCVKGPURenderPass *renderPass = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuRenderPass : _curGPUFBO->swapchain->renderPass;
-    //vector<VkImageMemoryBarrier>::type &barriers = renderPass->endBarriers;
-    //size_t attachmentCount = barriers.size();
-
-    //if (attachmentCount)
-    //{
-    //    for (size_t i = 0u; i < attachmentCount - 1; i++)
-    //    {
-    //        barriers[i].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuColorViews[i]->gpuTexture->vkImage :
-    //            _curGPUFBO->swapchain->swapchainImages[_curGPUFBO->swapchain->curImageIndex];
-    //    }
-    //    barriers[attachmentCount - 1].image = _curGPUFBO->isOffscreen ? _curGPUFBO->gpuDepthStencilView->gpuTexture->vkImage :
-    //        _curGPUFBO->swapchain->depthStencilImages[_curGPUFBO->swapchain->curImageIndex];
-
-    //    vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer,
-    //        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-    //        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
-    //        0, nullptr, 0, nullptr, barriers.size(), barriers.data());
-    //}
-
     _curGPUFBO = nullptr;
 }
 
@@ -186,7 +156,7 @@ void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler *ia) {
             gpuInputAssembler->vertexBufferOffsets.resize(vbCount);
         }
 
-        for (size_t i = 0; i < vbCount; i++) {
+        for (size_t i = 0u; i < vbCount; i++) {
             gpuInputAssembler->vertexBuffers[i] = gpuInputAssembler->gpuVertexBuffers[i]->vkBuffer;
             gpuInputAssembler->vertexBufferOffsets[i] = gpuInputAssembler->gpuVertexBuffers[i]->startOffset;
         }
@@ -330,7 +300,7 @@ void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer *> &cmdBuffs,
 
     vector<VkCommandBuffer>::type vkCmdBuffs(count);
 
-    for (uint i = 0; i < count; ++i) {
+    for (uint i = 0u; i < count; ++i) {
         CCVKCommandBuffer *cmdBuff = (CCVKCommandBuffer *)cmdBuffs[i];
         vkCmdBuffs[i] = cmdBuff->_gpuCommandBuffer->vkCommandBuffer;
 

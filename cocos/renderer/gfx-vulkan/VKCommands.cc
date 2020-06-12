@@ -88,8 +88,6 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
     size_t colorAttachmentCount = gpuRenderPass->colorAttachments.size();
     vector<VkAttachmentDescription>::type attachmentDescriptions(colorAttachmentCount + 1);
     gpuRenderPass->clearValues.resize(colorAttachmentCount + 1);
-    gpuRenderPass->beginBarriers.resize(colorAttachmentCount + 1, {VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER});
-    gpuRenderPass->endBarriers.resize(colorAttachmentCount + 1, {VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER});
     for (size_t i = 0u; i < colorAttachmentCount; i++) {
         const GFXColorAttachment &attachment = gpuRenderPass->colorAttachments[i];
         const VkImageLayout beginLayout = MapVkImageLayout(attachment.beginLayout);
@@ -104,28 +102,6 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
         attachmentDescriptions[i].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         attachmentDescriptions[i].initialLayout = beginLayout;
         attachmentDescriptions[i].finalLayout = endLayout;
-
-        VkImageMemoryBarrier &beginBarrier = gpuRenderPass->beginBarriers[i];
-        beginBarrier.srcAccessMask = 0;
-        beginBarrier.dstAccessMask = beginAccessMask;
-        beginBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        beginBarrier.newLayout = beginLayout;
-        beginBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        beginBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        beginBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        beginBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-        beginBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-
-        VkImageMemoryBarrier &endBarrier = gpuRenderPass->endBarriers[i];
-        endBarrier.srcAccessMask = beginAccessMask;
-        endBarrier.dstAccessMask = endAccessMask;
-        endBarrier.oldLayout = beginLayout;
-        endBarrier.newLayout = endLayout;
-        endBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        endBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        endBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        endBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-        endBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
     }
     const GFXDepthStencilAttachment &depthStencilAttachment = gpuRenderPass->depthStencilAttachment;
     const VkImageLayout beginLayout = MapVkImageLayout(depthStencilAttachment.beginLayout);
@@ -142,41 +118,17 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
     attachmentDescriptions[colorAttachmentCount].initialLayout = beginLayout;
     attachmentDescriptions[colorAttachmentCount].finalLayout = endLayout;
 
-    VkImageMemoryBarrier &beginBarrier = gpuRenderPass->beginBarriers[colorAttachmentCount];
-    beginBarrier.srcAccessMask = 0;
-    beginBarrier.dstAccessMask = beginAccessMask;
-    beginBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    beginBarrier.newLayout = beginLayout;
-    beginBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    beginBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    beginBarrier.subresourceRange.aspectMask = aspectMask;
-    beginBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-    beginBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-
-    VkImageMemoryBarrier &endBarrier = gpuRenderPass->endBarriers[colorAttachmentCount];
-    endBarrier.srcAccessMask = beginAccessMask;
-    endBarrier.dstAccessMask = endAccessMask;
-    endBarrier.oldLayout = beginLayout;
-    endBarrier.newLayout = endLayout;
-    endBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    endBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    endBarrier.subresourceRange.aspectMask = aspectMask;
-    endBarrier.subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-    endBarrier.subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-
     size_t subpassCount = gpuRenderPass->subPasses.size();
     vector<VkSubpassDescription>::type subpassDescriptions(1, {VK_PIPELINE_BIND_POINT_GRAPHICS});
     vector<VkAttachmentReference>::type attachmentReferences;
-    if (subpassCount) // pass on user-specified subpasses
-    {
+    if (subpassCount) { // pass on user-specified subpasses
         subpassDescriptions.resize(subpassCount);
         for (size_t i = 0u; i < subpassCount; i++) {
             const GFXSubPass &subpass = gpuRenderPass->subPasses[i];
             subpassDescriptions[i].pipelineBindPoint = MapVkPipelineBindPoint(subpass.bindPoint);
             // TODO
         }
-    } else // generate a default subpass from attachment info
-    {
+    } else { // generate a default subpass from attachment info
         for (size_t i = 0u; i < colorAttachmentCount; i++) {
             attachmentReferences.push_back({i, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL});
         }
@@ -483,7 +435,7 @@ void CCVKCmdFuncCreateInputAssembler(CCVKDevice *device, CCVKGPUInputAssembler *
     gpuInputAssembler->vertexBuffers.resize(vbCount);
     gpuInputAssembler->vertexBufferOffsets.resize(vbCount);
 
-    for (size_t i = 0; i < vbCount; i++) {
+    for (size_t i = 0u; i < vbCount; i++) {
         gpuInputAssembler->vertexBuffers[i] = gpuInputAssembler->gpuVertexBuffers[i]->vkBuffer;
         gpuInputAssembler->vertexBufferOffsets[i] = gpuInputAssembler->gpuVertexBuffers[i]->startOffset;
     }
@@ -495,13 +447,9 @@ void CCVKCmdFuncDestroyInputAssembler(CCVKDevice *device, CCVKGPUInputAssembler 
 }
 
 void CCVKCmdFuncCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFramebuffer) {
-    if (!gpuFramebuffer->isOffscreen) {
-        gpuFramebuffer->swapchain = device->gpuSwapchain();
-        return;
-    }
-
     size_t colorViewCount = gpuFramebuffer->gpuColorViews.size();
-    vector<VkImageView>::type attachments(colorViewCount + (gpuFramebuffer->gpuDepthStencilView ? 1 : 0));
+    size_t userAttachmentCount = colorViewCount + (gpuFramebuffer->gpuDepthStencilView ? 1 : 0);
+    vector<VkImageView>::type attachments(userAttachmentCount);
     for (size_t i = 0u; i < colorViewCount; i++) {
         attachments[i] = gpuFramebuffer->gpuColorViews[i]->vkImageView;
     }
@@ -509,21 +457,63 @@ void CCVKCmdFuncCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFra
         attachments[colorViewCount] = gpuFramebuffer->gpuDepthStencilView->vkImageView;
     }
 
-    VkFramebufferCreateInfo createInfo{VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO};
-    createInfo.renderPass = gpuFramebuffer->gpuRenderPass->vkRenderPass;
-    createInfo.attachmentCount = attachments.size();
-    createInfo.pAttachments = attachments.data();
-    createInfo.width = colorViewCount ? gpuFramebuffer->gpuColorViews[0]->gpuTexture->width : 1;
-    createInfo.height = colorViewCount ? gpuFramebuffer->gpuColorViews[0]->gpuTexture->height : 1;
-    createInfo.layers = 1;
+    if (gpuFramebuffer->isOffscreen) {
+        VkFramebufferCreateInfo createInfo{VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO};
+        createInfo.renderPass = gpuFramebuffer->gpuRenderPass->vkRenderPass;
+        createInfo.attachmentCount = attachments.size();
+        createInfo.pAttachments = attachments.data();
+        createInfo.width = colorViewCount ? gpuFramebuffer->gpuColorViews[0]->gpuTexture->width : 1;
+        createInfo.height = colorViewCount ? gpuFramebuffer->gpuColorViews[0]->gpuTexture->height : 1;
+        createInfo.layers = 1;
+        VK_CHECK(vkCreateFramebuffer(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuFramebuffer->vkFramebuffer));
+    } else {
+        // swapchain-related framebuffers need special treatments: rebuild is needed
+        // whenever a user-specified attachment or swapchain itself is changed
 
-    VK_CHECK(vkCreateFramebuffer(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuFramebuffer->vkFramebuffer));
+        gpuFramebuffer->swapchain = device->gpuSwapchain();
+        FramebufferListMap &fboListMap = gpuFramebuffer->swapchain->vkSwapchainFramebufferListMap;
+        FramebufferListMapIter fboListMapIter = fboListMap.find(gpuFramebuffer);
+        if (fboListMapIter != fboListMap.end() && fboListMapIter->second.size()) {
+            return;
+        }
+        size_t swapchainImageCount = gpuFramebuffer->swapchain->vkSwapchainImageViews.size();
+        if (fboListMapIter != fboListMap.end()) {
+            fboListMapIter->second.resize(swapchainImageCount);
+        } else {
+            fboListMap[gpuFramebuffer] = FramebufferList(swapchainImageCount);
+        }
+        attachments.resize(userAttachmentCount + 2);
+        VkFramebufferCreateInfo createInfo{VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO};
+        createInfo.renderPass = gpuFramebuffer->gpuRenderPass->vkRenderPass;
+        createInfo.attachmentCount = attachments.size();
+        createInfo.pAttachments = attachments.data();
+        createInfo.width = device->getWidth();
+        createInfo.height = device->getHeight();
+        createInfo.layers = 1;
+        for (size_t i = 0u; i < swapchainImageCount; i++) {
+            attachments[userAttachmentCount] = gpuFramebuffer->swapchain->vkSwapchainImageViews[i];
+            attachments[userAttachmentCount + 1] = gpuFramebuffer->swapchain->depthStencilImageViews[i];
+            VK_CHECK(vkCreateFramebuffer(device->gpuDevice()->vkDevice, &createInfo, nullptr, &fboListMap[gpuFramebuffer][i]));
+        }
+    }
 }
 
 void CCVKCmdFuncDestroyFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFramebuffer) {
-    if (gpuFramebuffer->vkFramebuffer != VK_NULL_HANDLE) {
-        vkDestroyFramebuffer(device->gpuDevice()->vkDevice, gpuFramebuffer->vkFramebuffer, nullptr);
-        gpuFramebuffer->vkFramebuffer = VK_NULL_HANDLE;
+    if (gpuFramebuffer->isOffscreen) {
+        if (gpuFramebuffer->vkFramebuffer != VK_NULL_HANDLE) {
+            vkDestroyFramebuffer(device->gpuDevice()->vkDevice, gpuFramebuffer->vkFramebuffer, nullptr);
+            gpuFramebuffer->vkFramebuffer = VK_NULL_HANDLE;
+        }
+    } else {
+        FramebufferListMap &fboListMap = gpuFramebuffer->swapchain->vkSwapchainFramebufferListMap;
+        FramebufferListMapIter fboListMapIter = fboListMap.find(gpuFramebuffer);
+        if (fboListMapIter != fboListMap.end()) {
+            for (size_t i = 0u; i < fboListMapIter->second.size(); i++) {
+                vkDestroyFramebuffer(device->gpuDevice()->vkDevice, fboListMapIter->second[i], nullptr);
+            }
+            fboListMapIter->second.clear();
+            fboListMap.erase(fboListMapIter);
+        }
     }
 }
 
@@ -688,11 +678,10 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     }
 
     vector<uint>::type offsets(bindingCount, 0);
-    vector<uint>::type locations(bindingCount, 0);
     vector<VkVertexInputAttributeDescription>::type attributeDescriptions(attributeCount);
     for (size_t i = 0u; i < attributeCount; i++) {
         const GFXAttribute &attr = attributes[i];
-        attributeDescriptions[i].location = locations[attr.stream]++;
+        attributeDescriptions[i].location = attr.location;
         attributeDescriptions[i].binding = attr.stream;
         attributeDescriptions[i].format = MapVkFormat(attr.format);
         attributeDescriptions[i].offset = offsets[attr.stream];
@@ -763,26 +752,24 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     depthStencilState.depthWriteEnable = gpuPipelineState->dss.depthWrite;
     depthStencilState.depthCompareOp = VK_CMP_FUNCS[(uint)gpuPipelineState->dss.depthFunc];
     depthStencilState.stencilTestEnable = gpuPipelineState->dss.stencilTestFront;
-    depthStencilState.front =
-        {
-            VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilFailOpFront],
-            VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilPassOpFront],
-            VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilZFailOpFront],
-            VK_CMP_FUNCS[(uint)gpuPipelineState->dss.stencilFuncFront],
-            gpuPipelineState->dss.stencilReadMaskFront,
-            gpuPipelineState->dss.stencilWriteMaskFront,
-            gpuPipelineState->dss.stencilRefFront,
-        };
-    depthStencilState.back =
-        {
-            VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilFailOpBack],
-            VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilPassOpBack],
-            VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilZFailOpBack],
-            VK_CMP_FUNCS[(uint)gpuPipelineState->dss.stencilFuncBack],
-            gpuPipelineState->dss.stencilReadMaskBack,
-            gpuPipelineState->dss.stencilWriteMaskBack,
-            gpuPipelineState->dss.stencilRefBack,
-        };
+    depthStencilState.front = {
+        VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilFailOpFront],
+        VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilPassOpFront],
+        VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilZFailOpFront],
+        VK_CMP_FUNCS[(uint)gpuPipelineState->dss.stencilFuncFront],
+        gpuPipelineState->dss.stencilReadMaskFront,
+        gpuPipelineState->dss.stencilWriteMaskFront,
+        gpuPipelineState->dss.stencilRefFront,
+    };
+    depthStencilState.back = {
+        VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilFailOpBack],
+        VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilPassOpBack],
+        VK_STENCIL_OPS[(uint)gpuPipelineState->dss.stencilZFailOpBack],
+        VK_CMP_FUNCS[(uint)gpuPipelineState->dss.stencilFuncBack],
+        gpuPipelineState->dss.stencilReadMaskBack,
+        gpuPipelineState->dss.stencilWriteMaskBack,
+        gpuPipelineState->dss.stencilRefBack,
+    };
     //depthStencilState.depthBoundsTestEnable;
     //depthStencilState.minDepthBounds;
     //depthStencilState.maxDepthBounds;

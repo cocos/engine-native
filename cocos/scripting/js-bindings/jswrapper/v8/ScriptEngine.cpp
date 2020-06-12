@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "ScriptEngine.hpp"
-#include "platform/CCPlatformConfig.h"
+
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
@@ -667,7 +667,7 @@ namespace se {
         }
 
 
-#if CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_WINDOWS
+#if CC_PLATFORM == CC_PLATFORM_MAC_OSX
         if(strncmp("(no filename)", sourceUrl.c_str(), sizeof("(no filename)") )!= 0)
         {
             sourceUrl = cocos2d::FileUtils::getInstance()->fullPathForFilename(sourceUrl);

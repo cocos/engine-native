@@ -1,24 +1,41 @@
 
 
+set(CC_PLATFORM_MAC_IOS 1)
+set(CC_PLATFORM_WINDOWS 2)
+set(CC_PLATFORM_ANDROID 3)
+set(CC_PLATFORM_MAC_OSX 4)
+set(CC_PLATFORM 1)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(WINDOWS TRUE)
     set(PLATFORM_FOLDER win32)
+    set(CC_PLATFORM ${CC_PLATFORM_WINDOWS})
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Android")
     set(PLATFORM_FOLDER android)    
     set(ANDROID TRUE)
+    set(CC_PLATFORM ${CC_PLATFORM_ANDROID})
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(APPLE TRUE)
     set(MACOSX TRUE)
     set(PLATFORM_FOLDER mac)
+    set(CC_PLATFORM ${CC_PLATFORM_MAC_OSX})
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     set(APPLE TRUE)
     set(IOS TRUE)
     set(PLATFORM_FOLDER ios)
+    set(CC_PLATFORM ${CC_PLATFORM_MAC_IOS})
 else()
     message(FATAL_ERROR "Unsupported platform, CMake will exit")
     return()
 endif()
+
+# platform macros
+
+add_definitions(-DCC_PLATFORM_WINDOWS=${CC_PLATFORM_WINDOWS} )
+add_definitions(-DCC_PLATFORM_MAC_OSX=${CC_PLATFORM_MAC_OSX} )
+add_definitions(-DCC_PLATFORM_MAC_IOS=${CC_PLATFORM_MAC_IOS} )
+add_definitions(-DCC_PLATFORM_ANDROID=${CC_PLATFORM_ANDROID} )
+add_definitions(-DCC_PLATFORM=${CC_PLATFORM})
 
 # generators that are capable of organizing into a hierarchy of folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -58,9 +75,8 @@ if(USE_SE_JSC)
 endif()
 
 
-## disable webview & videoplay on non-mobile platforms
+## disable videoplay on non-mobile platforms
 if(NOT ANDROID AND NOT IOS)
-    set(USE_WEBVIEW OFF)
     set(USE_VIDEOPLAYER OFF)
 endif()
 
@@ -219,8 +235,6 @@ cocos_source_files(
     cocos/base/CCRef.cpp
     cocos/base/CCRef.h
     cocos/base/CCRefPtr.h
-    #cocos/base/CCRenderTexture.cpp
-    #cocos/base/CCRenderTexture.h
     cocos/base/CCScheduler.cpp
     cocos/base/CCScheduler.h
     cocos/base/CCThreadPool.cpp
@@ -356,7 +370,6 @@ cocos_source_files(
     cocos/platform/CCFileUtils.h
     cocos/platform/CCImage.cpp
     cocos/platform/CCImage.h
-    cocos/platform/CCPlatformConfig.h
     cocos/platform/CCPlatformDefine.h
     cocos/platform/CCSAXParser.cpp
     cocos/platform/CCSAXParser.h
@@ -475,8 +488,6 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXShader.h
     cocos/renderer/core/gfx/GFXTexture.cc
     cocos/renderer/core/gfx/GFXTexture.h
-    cocos/renderer/core/gfx/GFXWindow.cc
-    cocos/renderer/core/gfx/GFXWindow.h
     cocos/renderer/core/gfx/GFXFence.h
     cocos/renderer/core/gfx/GFXFence.cc
     cocos/renderer/core/kernel/Assertion.cc
@@ -546,8 +557,6 @@ if(CC_USE_GLES2)
         cocos/renderer/gfx-gles2/GLES2Texture.cc
         cocos/renderer/gfx-gles2/GLES2Texture.h
         cocos/renderer/gfx-gles2/gles2w.h
-        cocos/renderer/gfx-gles2/GLES2Window.cc
-        cocos/renderer/gfx-gles2/GLES2Window.h
         cocos/renderer/gfx-gles2/GLES2Fence.h
         cocos/renderer/gfx-gles2/GLES2Fence.cc
     )
@@ -606,8 +615,6 @@ if(CC_USE_GLES3)
         cocos/renderer/gfx-gles3/GLES3Texture.cc
         cocos/renderer/gfx-gles3/GLES3Texture.h
         cocos/renderer/gfx-gles3/gles3w.h
-        cocos/renderer/gfx-gles3/GLES3Window.cc
-        cocos/renderer/gfx-gles3/GLES3Window.h
         cocos/renderer/gfx-gles3/GLES3Fence.h
         cocos/renderer/gfx-gles3/GLES3Fence.cc
     )
@@ -666,8 +673,6 @@ if(CC_USE_METAL)
         cocos/renderer/gfx-metal/MTLTexture.mm
         cocos/renderer/gfx-metal/MTLUtils.h
         cocos/renderer/gfx-metal/MTLUtils.mm
-        cocos/renderer/gfx-metal/MTLWindow.h
-        cocos/renderer/gfx-metal/MTLWindow.mm
         cocos/renderer/gfx-metal/MTLFence.h
         cocos/renderer/gfx-metal/MTLFence.mm
     )
@@ -715,8 +720,6 @@ if(CC_USE_VULKAN)
         cocos/renderer/gfx-vulkan/VKTexture.cc
         cocos/renderer/gfx-vulkan/VKTexture.h
         cocos/renderer/gfx-vulkan/VKUtils.h
-        cocos/renderer/gfx-vulkan/VKWindow.cc
-        cocos/renderer/gfx-vulkan/VKWindow.h
         cocos/renderer/gfx-vulkan/VKFence.h
         cocos/renderer/gfx-vulkan/VKFence.cc
         cocos/renderer/gfx-vulkan/volk.h
@@ -742,13 +745,6 @@ if(USE_AUDIO)
     cocos_source_files(
         cocos/scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.cpp
         cocos/scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.hpp
-    )
-endif()
-
-if(USE_WEBVIEW)
-    cocos_source_files(
-        cocos/scripting/js-bindings/auto/jsb_webview_auto.cpp
-        cocos/scripting/js-bindings/auto/jsb_webview_auto.hpp
     )
 endif()
 
@@ -951,15 +947,9 @@ if(USE_EDIT_BOX)
 endif()
 
 if(ANDROID OR IOS) 
-    if(USE_WEBVIEW)
-        cocos_source_files(
-            cocos/ui/videoplayer/VideoPlayer.h
-        )
-    endif()
     if(USE_VIDEOPLAYER)
         cocos_source_files(
-            cocos/ui/webview/WebView-inl.h
-            cocos/ui/webview/WebView.h
+            cocos/ui/videoplayer/VideoPlayer.h
         )
     endif()
 endif()
@@ -973,12 +963,6 @@ if(ANDROID)
     if(USE_VIDEOPLAYER)
         cocos_source_files(
             cocos/ui/videoplayer/VideoPlayer-android.cpp
-        )
-    endif()
-    if(USE_WEBVIEW)
-        cocos_source_files(
-            cocos/ui/webview/WebViewImpl-android.cpp
-            cocos/ui/webview/WebViewImpl-android.h
         )
     endif()
 elseif(MACOSX)
@@ -996,12 +980,6 @@ elseif(IOS)
     if(USE_VIDEOPLAYER)
         cocos_source_files(
             cocos/ui/videoplayer/VideoPlayer-ios.mm
-        )
-    endif()
-    if(USE_WEBVIEW)
-        cocos_source_files(
-            cocos/ui/webview/WebViewImpl-ios.h
-            cocos/ui/webview/WebViewImpl-ios.mm
         )
     endif()
 elseif(WIN32)
@@ -1035,7 +1013,6 @@ add_library(cocos2d ${COCOS2D_SOURCE_LIST})
 # setup default flags
 target_compile_definitions(cocos2d PUBLIC 
     $<$<NOT:$<BOOL:${USE_VIDEO}>>:USE_VIDEO=0>
-    $<$<NOT:$<BOOL:${USE_WEBVIEW}>>:USE_WEB_VIEW=0>
     $<$<NOT:$<BOOL:${USE_AUDIO}>>:USE_AUDIO=0>
     $<$<NOT:$<BOOL:${USE_SOCKET}>>:USE_SOCKET=0>
     $<$<NOT:$<BOOL:${USE_EDIT_BOX}>>:CC_USE_EDITBOX=0>

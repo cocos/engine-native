@@ -59,7 +59,7 @@ void CCVKQueue::submit(const vector<GFXCommandBuffer *>::type &cmdBuffs, GFXFenc
         VkFence vkFence = fence ? ((CCVKFence *)fence)->gpuFence()->vkFence : ((CCVKDevice *)_device)->gpuFencePool()->alloc();
         VK_CHECK(vkQueueSubmit(_gpuQueue->vkQueue, 1, &submitInfo, vkFence));
         VK_CHECK(vkWaitForFences(((CCVKDevice*)_device)->gpuDevice()->vkDevice, 1, &vkFence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
-        
+
         _gpuQueue->nextWaitSemaphore = _gpuQueue->nextSignalSemaphore;
         _gpuQueue->nextSignalSemaphore = ((CCVKDevice *)_device)->gpuSemaphorePool()->alloc();
     }
