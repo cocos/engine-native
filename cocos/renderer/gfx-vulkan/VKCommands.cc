@@ -118,7 +118,7 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
     attachmentDescriptions[colorAttachmentCount].stencilStoreOp = MapVkStoreOp(depthStencilAttachment.stencilStoreOp);
     attachmentDescriptions[colorAttachmentCount].initialLayout = beginLayout;
     attachmentDescriptions[colorAttachmentCount].finalLayout = endLayout;
-    
+
     size_t subpassCount = gpuRenderPass->subPasses.size();
     vector<VkSubpassDescription>::type subpassDescriptions(1, {VK_PIPELINE_BIND_POINT_GRAPHICS});
     vector<VkAttachmentReference>::type attachmentReferences;
@@ -679,11 +679,10 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     }
 
     vector<uint>::type offsets(bindingCount, 0);
-    vector<uint>::type locations(bindingCount, 0);
     vector<VkVertexInputAttributeDescription>::type attributeDescriptions(attributeCount);
     for (size_t i = 0u; i < attributeCount; i++) {
         const GFXAttribute &attr = attributes[i];
-        attributeDescriptions[i].location = locations[attr.stream]++;
+        attributeDescriptions[i].location = attr.location;
         attributeDescriptions[i].binding = attr.stream;
         attributeDescriptions[i].format = MapVkFormat(attr.format);
         attributeDescriptions[i].offset = offsets[attr.stream];
