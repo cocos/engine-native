@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "platform/CCPlatformDefine.h"
+#include "base/ccMacros.h"
 
 /// @cond DO_NOT_SHOW
 
