@@ -29,6 +29,7 @@ THE SOFTWARE.
 
 #include "base/CCLog.h"
 #include "base/ccConfig.h"
+#include "platform/CCPlatformDefine.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     #include <BaseTsd.h>
