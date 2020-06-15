@@ -46,12 +46,13 @@ typedef SSIZE_T ssize_t;
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include <android/log.h>
-    #define CC_ASSERT(cond)                               \
-        if (!(cond)) {                                    \
-            __android_log_print(ANDROID_LOG_ERROR,        \
-                                "assert",                 \
-                                "%s function:%s line:%d", \
-                                __FILE__, __FUNCTION__, __LINE__);
+    #define CC_ASSERT(cond)                                        \
+        if (!(cond)) {                                             \
+            __android_log_print(ANDROID_LOG_ERROR,                 \
+                                "assert",                          \
+                                "%s function:%s line:%d",          \
+                                __FILE__, __FUNCTION__, __LINE__); \
+        }
 #else
     #include <assert.h>
     #define CC_ASSERT(cond) assert(cond)
