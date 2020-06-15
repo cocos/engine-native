@@ -32,7 +32,9 @@ bool CCVKBuffer::initialize(const GFXBufferInfo &info) {
     _gpuBuffer->stride = _stride;
     _gpuBuffer->count = _count;
 
-    if (!(_usage & GFXBufferUsageBit::INDIRECT)) {
+    if ((_usage & GFXBufferUsageBit::INDIRECT)) {
+        _gpuBuffer->indirectDrawType.resize(_count, GFXBufferUsageBit::INDEX);
+    } else {
         _gpuBuffer->buffer = _buffer;
     }
 
@@ -69,6 +71,7 @@ void CCVKBuffer::resize(uint size) {
         GFXMemoryStatus &status = _device->getMemoryStatus();
         _gpuBuffer->size = _size;
         _gpuBuffer->count = _count;
+        _gpuBuffer->indirectDrawType.resize(_count, GFXBufferUsageBit::INDEX);
         CCVKCmdFuncResizeBuffer((CCVKDevice *)_device, _gpuBuffer);
         status.bufferSize -= old_size;
         status.bufferSize += _size;

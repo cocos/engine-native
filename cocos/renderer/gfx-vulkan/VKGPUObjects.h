@@ -139,7 +139,8 @@ public:
     uint stride = 0;
     uint count = 0;
     void *buffer = nullptr;
-    GFXDrawInfoList indirects;
+    vector<GFXBufferUsageBit>::type indirectDrawType;
+    bool canMultiDrawIndirect = true;
 
     VkBuffer vkBuffer = VK_NULL_HANDLE;
     VkDeviceSize startOffset = 0u;

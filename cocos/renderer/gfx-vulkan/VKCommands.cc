@@ -263,7 +263,37 @@ void CCVKCmdFuncResizeBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
 
 void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void *buffer, uint offset, uint size) {
     if (gpuBuffer->mappedData) {
-        memcpy(gpuBuffer->mappedData + offset, buffer, size);
+        if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
+            GFXDrawInfo *drawInfo = static_cast<GFXDrawInfo *>(buffer);
+            gpuBuffer->count = size / gpuBuffer->stride;
+            for (size_t i = 0; i < gpuBuffer->count; i++) {
+                if (drawInfo->indexCount) {
+                    VkDrawIndexedIndirectCommand cmd;
+                    cmd.indexCount = drawInfo->indexCount;
+                    cmd.instanceCount = drawInfo->instanceCount == 0 ? 1 : drawInfo->instanceCount;
+                    cmd.firstIndex = drawInfo->firstIndex;
+                    cmd.vertexOffset = drawInfo->vertexOffset;
+                    cmd.firstInstance = drawInfo->firstInstance;
+                    gpuBuffer->indirectDrawType[i] = GFXBufferUsageBit::INDEX;
+                    memcpy(gpuBuffer->mappedData + offset + i * sizeof(VkDrawIndexedIndirectCommand), &cmd, sizeof(VkDrawIndexedIndirectCommand));
+                } else {
+                    VkDrawIndirectCommand cmd;
+                    cmd.vertexCount = drawInfo->vertexCount;
+                    cmd.instanceCount = drawInfo->indexCount;
+                    cmd.firstVertex = drawInfo->firstVertex;
+                    cmd.firstInstance = drawInfo->firstInstance;
+                    gpuBuffer->indirectDrawType[i] = GFXBufferUsageBit::VERTEX;
+                    memcpy(gpuBuffer->mappedData + offset + i * sizeof(VkDrawIndirectCommand), &cmd, sizeof(VkDrawIndirectCommand));
+                }
+            }
+            for (uint i = 1; i < gpuBuffer->count; i++) {
+                if (gpuBuffer->indirectDrawType[i] != gpuBuffer->indirectDrawType[i - 1]) {
+                    gpuBuffer->canMultiDrawIndirect = false;
+                    break;
+                }
+            }
+        } else
+            memcpy(gpuBuffer->mappedData + offset, buffer, size);
     } else if (gpuBuffer->memUsage == GFXMemoryUsage::DEVICE) {
         const CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();
         if (stagingBuffer->size < size) device->stagingBuffer()->resize(nextPowerOf2(size));

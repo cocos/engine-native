@@ -256,6 +256,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
     _features[(int)GFXFeature::MSAA] = true;
     _features[(int)GFXFeature::ELEMENT_INDEX_UINT] = true;
     _features[(int)GFXFeature::INSTANCED_ARRAYS] = true;
+    _features[(int)GFXFeature::MULTI_DRAW_INDIRECT] = deviceFeatures.multiDrawIndirect;
 
     String compressedFmts;
     if (deviceFeatures.textureCompressionETC2) {
