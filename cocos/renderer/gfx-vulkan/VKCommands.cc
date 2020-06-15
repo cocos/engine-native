@@ -294,7 +294,7 @@ bool CCVKCmdFuncCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
     vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, format, &formatProperties);
 
     if (!(formatProperties.optimalTilingFeatures & features)) {
-        CC_LOG_ERROR("CCVKCmdFuncCreateTexture: unsupported feature set in optimalTilingFeatures.");
+        CC_LOG_ERROR("CCVKCmdFuncCreateTexture: %s does not support optimal tiling with specified features", GFX_FORMAT_INFOS[(uint)gpuTexture->format].name.c_str());
         return false;
     }
     if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP) {
