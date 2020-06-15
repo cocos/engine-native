@@ -259,7 +259,41 @@ void CCVKCommandBuffer::draw(GFXInputAssembler *ia) {
         GFXDrawInfo drawInfo;
 
         if (gpuInputAssembler->gpuIndirectBuffer) {
-            // TODO
+            if (_device->hasFeature(GFXFeature::MULTI_DRAW_INDIRECT) && gpuInputAssembler->gpuIndirectBuffer->canMultiDrawIndirect) {
+                if (gpuInputAssembler->gpuIndirectBuffer->indirectDrawType[0] == GFXBufferUsageBit::VERTEX) {
+                    vkCmdDrawIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                      gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                      0,
+                                      gpuInputAssembler->gpuIndirectBuffer->count,
+                                      sizeof(VkDrawIndirectCommand));
+                } else {
+                    vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                             gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                             0,
+                                             gpuInputAssembler->gpuIndirectBuffer->count,
+                                             sizeof(VkDrawIndexedIndirectCommand));
+                }
+            } else {
+                // If multi draw is not available, we must issue separate draw commands
+                for (auto j = 0; j < gpuInputAssembler->gpuIndirectBuffer->count; j++) {
+                    if (gpuInputAssembler->gpuIndirectBuffer->indirectDrawType[j] == GFXBufferUsageBit::VERTEX)
+                    {
+                        vkCmdDrawIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                          gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                          j * sizeof(VkDrawIndirectCommand),
+                                          1,
+                                          sizeof(VkDrawIndirectCommand));
+                    } 
+                    else
+                    {
+                        vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                                 gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                                 j * sizeof(VkDrawIndexedIndirectCommand),
+                                                 1,
+                                                 sizeof(VkDrawIndexedIndirectCommand));
+                    }
+                }
+            }
         } else {
             ((CCVKInputAssembler *)ia)->extractDrawInfo(drawInfo);
             uint instanceCount = std::max(drawInfo.instanceCount, 1u);
