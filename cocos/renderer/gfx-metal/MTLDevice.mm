@@ -17,8 +17,10 @@
 #include "MTLStateCache.h"
 #include "MTLTexture.h"
 #include "MTLUtils.h"
-#import <MetalKit/MTKView.h>
+#include "MTLContext.h"
 #include <platform/mac/CCView.h>
+
+#import <MetalKit/MTKView.h>
 
 NS_CC_BEGIN
 
@@ -36,8 +38,17 @@ bool CCMTLDevice::initialize(const GFXDeviceInfo &info) {
 
     _stateCache = CC_NEW(CCMTLStateCache);
 
-    _mtkView = (MTKView *)_windowHandle;
-    _mtlDevice = ((MTKView *)_mtkView).device;
+    _mtkView = (MTKView*)_windowHandle;
+    _mtlDevice = ((MTKView*)_mtkView).device;
+    
+    GFXContextInfo contextCreateInfo;
+    contextCreateInfo.windowHandle = _windowHandle;
+    contextCreateInfo.sharedCtx = info.sharedCtx;
+    _context = CC_NEW(CCMTLContext(this));
+    if (!_context->initialize(contextCreateInfo)) {
+        destroy();
+        return false;
+    }
 
     GFXQueueInfo queue_info;
     queue_info.type = GFXQueueType::GRAPHICS;
