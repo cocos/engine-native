@@ -71,7 +71,7 @@ const vector<unsigned int>::type GLSL2SPIRV(GFXShaderType type, const String &so
 
     EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
 
-    if (!shader.parse(&glslang::DefaultTBuiltInResource, clientInputSemanticsVersion, true, messages)) {
+    if (!shader.parse(&glslang::DefaultTBuiltInResource, clientInputSemanticsVersion, false, messages)) {
         CC_LOG_ERROR("GLSL Parsing Failed:\n%s\n%s", shader.getInfoLog(), shader.getInfoDebugLog());
     }
 
