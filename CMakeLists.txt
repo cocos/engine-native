@@ -370,7 +370,6 @@ cocos_source_files(
     cocos/platform/CCFileUtils.h
     cocos/platform/CCImage.cpp
     cocos/platform/CCImage.h
-    cocos/platform/CCPlatformDefine.h
     cocos/platform/CCSAXParser.cpp
     cocos/platform/CCSAXParser.h
     cocos/platform/CCStdC.h
