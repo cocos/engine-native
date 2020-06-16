@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-namespace cocos2d {
+namespace cc {
     class View;
 };
 
