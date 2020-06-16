@@ -92,7 +92,6 @@ public:
 
 typedef vector<VkFramebuffer>::type FramebufferList;
 typedef map<CCVKGPUFramebuffer *, FramebufferList>::type FramebufferListMap;
-typedef std::pair<CCVKGPUFramebuffer *, FramebufferList> FramebufferListMapPair;
 typedef FramebufferListMap::iterator FramebufferListMapIter;
 
 class CCVKGPUSwapchain : public Object {

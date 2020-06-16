@@ -303,7 +303,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
         _features[(int)GFXFeature::FORMAT_ASTC] = true;
         compressedFmts += "astc ";
     }
-    
+
     uint32_t apiVersion = gpuContext->physicalDeviceProperties.apiVersion;
     _renderer = gpuContext->physicalDeviceProperties.deviceName;
     _vendor = MapVendorName(gpuContext->physicalDeviceProperties.vendorID);
@@ -354,11 +354,13 @@ void CCVKDevice::destroy() {
             _gpuSwapchain->depthStencilImageViews.clear();
             _gpuSwapchain->depthStencilImages.clear();
 
-            for (FramebufferListMapPair pair : _gpuSwapchain->vkSwapchainFramebufferListMap) {
-                for (VkFramebuffer framebuffer : pair.second) {
+            for (FramebufferListMapIter it = _gpuSwapchain->vkSwapchainFramebufferListMap.begin();
+                 it != _gpuSwapchain->vkSwapchainFramebufferListMap.end(); it++) {
+                FramebufferList &list = it->second;
+                for (VkFramebuffer framebuffer : list) {
                     vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
                 }
-                pair.second.clear();
+                list.clear();
             }
             _gpuSwapchain->vkSwapchainFramebufferListMap.clear();
 
@@ -430,11 +432,13 @@ void CCVKDevice::buildSwapchain() {
         _gpuSwapchain->depthStencilImageViews.clear();
         _gpuSwapchain->depthStencilImages.clear();
 
-        for (FramebufferListMapPair pair : _gpuSwapchain->vkSwapchainFramebufferListMap) {
-            for (VkFramebuffer framebuffer : pair.second) {
+        for (FramebufferListMapIter it = _gpuSwapchain->vkSwapchainFramebufferListMap.begin();
+             it != _gpuSwapchain->vkSwapchainFramebufferListMap.end(); it++) {
+            FramebufferList &list = it->second;
+            for (VkFramebuffer framebuffer : list) {
                 vkDestroyFramebuffer(_gpuDevice->vkDevice, framebuffer, nullptr);
             }
-            pair.second.clear();
+            list.clear();
         }
 
         for (VkImageView imageView : _gpuSwapchain->vkSwapchainImageViews) {
@@ -475,8 +479,9 @@ void CCVKDevice::buildSwapchain() {
         VK_CHECK(vkCreateImageView(_gpuDevice->vkDevice, &imageViewCreateInfo, nullptr, &_gpuSwapchain->vkSwapchainImageViews[i]));
     }
 
-    for (FramebufferListMapPair pair : _gpuSwapchain->vkSwapchainFramebufferListMap) {
-        CCVKCmdFuncCreateFramebuffer(this, pair.first);
+    for (FramebufferListMapIter it = _gpuSwapchain->vkSwapchainFramebufferListMap.begin();
+         it != _gpuSwapchain->vkSwapchainFramebufferListMap.end(); it++) {
+        CCVKCmdFuncCreateFramebuffer(this, it->first);
     }
 }
 
