@@ -4,7 +4,7 @@
 #include "spirv_cross/spirv_msl.hpp"
 #include <vector>
 
-NS_CC_BEGIN
+namespace cc {
 namespace {
 const TBuiltInResource DefaultTBuiltInResource = {
     /* .MaxLights = */ 32,
@@ -1258,4 +1258,4 @@ String featureSetToString(MTLFeatureSet featureSet) {
 
 } //namespace mu
 
-NS_CC_END
+}

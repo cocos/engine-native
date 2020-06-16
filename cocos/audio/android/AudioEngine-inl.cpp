@@ -55,7 +55,7 @@
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "scripting/js-bindings/event/CustomEventTypes.h"
 
-using namespace cocos2d;
+using namespace cc;
 
 // Audio focus values synchronized with which in cocos/platform/android/java/src/org/cocos2dx/lib/Cocos2dxActivity.java
 namespace

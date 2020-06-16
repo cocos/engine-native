@@ -33,8 +33,8 @@
 #include "cocos2d.h"
 #include "extensions/cocos-ext.h"
 
-using namespace cocos2d;
-using namespace cocos2d::extension;
+using namespace cc;
+using namespace cc::extension;
 
 static bool js_cocos2dx_extension_loadRemoteImage(se::State& s)
 {

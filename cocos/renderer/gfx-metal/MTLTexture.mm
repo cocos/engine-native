@@ -4,7 +4,7 @@
 #include "MTLDevice.h"
 #include <platform/mac/CCView.h>
 
-NS_CC_BEGIN
+namespace cc {
 
 namespace {
 uint8_t *convertData(uint8_t *source, uint length, GFXFormat type) {
@@ -271,4 +271,4 @@ void CCMTLTexture::generateMipmaps() {
     [mtlCommandBuffer commit];
 }
 
-NS_CC_END
+}

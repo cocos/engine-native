@@ -18,7 +18,7 @@
 
 #import <Metal/MTLDevice.h>
 
-NS_CC_BEGIN
+namespace cc {
 
 CCMTLQueue::CCMTLQueue(GFXDevice *device) : GFXQueue(device) {}
 
@@ -318,5 +318,5 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
     }
 }
 
-NS_CC_END
+}
 

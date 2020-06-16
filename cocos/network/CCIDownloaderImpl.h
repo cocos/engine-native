@@ -40,7 +40,7 @@ THE SOFTWARE.
 #define DLLOG(...)       do {} while (0)
 #endif
 
-namespace cocos2d { namespace network
+namespace cc { namespace network
 {
     class DownloadTask;
 
@@ -72,5 +72,5 @@ namespace cocos2d { namespace network
         virtual void abort(const std::unique_ptr<IDownloadTask>& task) = 0;
     };
 
-}}  // namespace cocos2d::network
+}}  // namespace cc::network
 

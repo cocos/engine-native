@@ -104,7 +104,7 @@ namespace
     }
 }
 
-namespace cocos2d
+namespace cc
 {
 
 	void log(const char * format, ...)

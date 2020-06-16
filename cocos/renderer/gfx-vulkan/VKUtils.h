@@ -8,7 +8,7 @@
 
 #define DEFAULT_FENCE_TIMEOUT 100000000000
 
-NS_CC_BEGIN
+namespace cc {
 
 namespace {
 VkFormat MapVkFormat(GFXFormat format) {
@@ -642,6 +642,6 @@ bool findSupportedFormat(std::pair<GFXFormat, VkFormat> format, VkImageTiling ti
 }
 } // namespace
 
-NS_CC_END
+}
 
 #endif // CC_GFXVULKAN_CCVK_UTILS_H_

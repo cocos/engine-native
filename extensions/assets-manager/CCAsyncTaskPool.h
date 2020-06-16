@@ -43,7 +43,8 @@ THE SOFTWARE.
 * @addtogroup base
 * @{
 */
-NS_CC_BEGIN
+namespace cc {
+
 
 
 /**
@@ -214,7 +215,7 @@ inline void AsyncTaskPool::enqueue(AsyncTaskPool::TaskType type, const TaskCallB
 }
 
 
-NS_CC_END
+}
 // end group
 /// @}
 #endif //__CCSYNC_TASK_POOL_H_

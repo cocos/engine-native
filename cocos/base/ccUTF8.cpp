@@ -30,7 +30,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-NS_CC_BEGIN
+namespace cc {
 
 namespace StringUtils {
 
@@ -378,4 +378,4 @@ bool StringUTF8::insert(std::size_t pos, const StringUTF8& insertStr)
 } //namespace StringUtils {
 
 
-NS_CC_END
+}

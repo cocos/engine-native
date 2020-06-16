@@ -39,7 +39,7 @@ std::once_flag __onceFlag;
 
 }
 
-namespace cocos2d { 
+namespace cc { 
 
 class SLUrlAudioPlayerCallbackProxy
 {
@@ -421,4 +421,4 @@ void UrlAudioPlayer::destroy()
     }
 }
 
-} // namespace cocos2d { 
+} // namespace cc { 

@@ -4,7 +4,7 @@
 #include "MTLUtils.h"
 #import <Metal/MTLDevice.h>
 
-NS_CC_BEGIN
+namespace cc {
 
 CCMTLShader::CCMTLShader(GFXDevice *device) : GFXShader(device) {}
 CCMTLShader::~CCMTLShader() { destroy(); }
@@ -94,4 +94,4 @@ bool CCMTLShader::createMTLFunction(const GFXShaderStage &stage) {
     return true;
 }
 
-NS_CC_END
+}

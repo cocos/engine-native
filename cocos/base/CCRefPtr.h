@@ -33,7 +33,7 @@
 #include <functional>
 #include <type_traits>
 
-NS_CC_BEGIN
+namespace cc {
 
 /**
  * Utility/support macros. Defined to enable RefPtr<T> to contain types like 'const T' because we do not
@@ -342,7 +342,7 @@ template<class T, class U> RefPtr<T> dynamic_pointer_cast(const RefPtr<U> & r)
 #undef CC_REF_PTR_SAFE_RELEASE
 #undef CC_REF_PTR_SAFE_RELEASE_NULL
 
-NS_CC_END
+}
 
 /// @endcond
 #endif  // __CC_REF_PTR_H__

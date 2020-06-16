@@ -1,7 +1,7 @@
 #ifndef CC_CORE_KERNEL_ASSERTION_H_
 #define CC_CORE_KERNEL_ASSERTION_H_
 
-NS_CC_BEGIN
+namespace cc {
 
 //#if defined(__GNUC__)
 #if 0
@@ -27,6 +27,6 @@ CC_CORE_API void _ExecAssertOutput(const char *condition, const char *fileName, 
 
 //#define CCASSERT(x) CCASSERT(x, "%s", "")
 
-NS_CC_END
+}
 
 #endif // CC_CORE_KERNEL_ASSERTION_H_

@@ -36,7 +36,7 @@ THE SOFTWARE.
 * @addtogroup base
 * @{
 */
-NS_CC_BEGIN
+namespace cc {
 
 
 /**
@@ -93,7 +93,7 @@ inline double random(double min, double max) {
  * Returns a random int between 0 and RAND_MAX.
  */
 inline int random() {
-    return cocos2d::random(0, RAND_MAX);
+    return cc::random(0, RAND_MAX);
 };
 
 /**
@@ -125,7 +125,7 @@ inline float rand_0_1() {
 };
 
 
-NS_CC_END
+}
 // end group
 /// @}
 #endif //__ccRandom_H_

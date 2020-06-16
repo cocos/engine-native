@@ -2,7 +2,7 @@
 #include "MTLCommandAllocator.h"
 #include "MTLCommands.h"
 
-NS_CC_BEGIN
+namespace cc {
 
 CCMTLCommandAllocator::CCMTLCommandAllocator(GFXDevice *device) : GFXCommandAllocator(device) {}
 CCMTLCommandAllocator::~CCMTLCommandAllocator() { destroy(); }
@@ -36,4 +36,4 @@ void CCMTLCommandAllocator::clearCommands(CCMTLCommandPackage *commandPackage) {
     commandPackage->commandTypes.clear();
 }
 
-NS_CC_END
+}

@@ -72,7 +72,7 @@ static cocos2d::network::DownloaderAndroid* _findDownloaderAndroid(int id)
     }
 }
 
-namespace cocos2d { namespace network {
+namespace cc { namespace network {
 
         static int sTaskCounter = 0;
         static int sDownloaderCounter = 0;
@@ -259,7 +259,7 @@ namespace cocos2d { namespace network {
             coTask->task.reset();
         }
     }
-}  // namespace cocos2d::network
+}  // namespace cc::network
 
 extern "C" {
 

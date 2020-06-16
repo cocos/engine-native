@@ -39,7 +39,7 @@
 #include <atomic>
 #include <chrono>
 
-namespace cocos2d {
+namespace cc {
 
 /**
  * @addtogroup base
@@ -235,4 +235,4 @@ private:
 // end of base group
 /// @}
 
-} // namespace cocos2d {
+} // namespace cc {

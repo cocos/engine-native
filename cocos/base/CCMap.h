@@ -42,7 +42,7 @@
  * @addtogroup base
  * @{
  */
-NS_CC_BEGIN
+namespace cc {
 
  /**
  * Similar to std::unordered_map, but it will manage reference count automatically internally.
@@ -417,6 +417,6 @@ protected:
 };
 
 
-NS_CC_END
+}
 // end group
 /// @}

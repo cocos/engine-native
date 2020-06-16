@@ -5,7 +5,7 @@
 
 #import <Metal/MTLDevice.h>
 
-NS_CC_BEGIN
+namespace cc {
 
 CCMTLSampler::CCMTLSampler(GFXDevice *device) : GFXSampler(device) {}
 CCMTLSampler::~CCMTLSampler() { destroy(); }
@@ -57,4 +57,4 @@ void CCMTLSampler::destroy() {
     _status = GFXStatus::UNREADY;
 }
 
-NS_CC_END
+}

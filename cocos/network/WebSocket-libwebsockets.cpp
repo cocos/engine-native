@@ -47,7 +47,7 @@
 #include "platform/CCApplication.h"
 #include "platform/CCStdC.h"
 
-#define NS_NETWORK_BEGIN namespace cocos2d { namespace network {
+#define NS_NETWORK_BEGIN namespace cc { namespace network {
 #define NS_NETWORK_END }}
 
 #define WS_RX_BUFFER_SIZE (65536)

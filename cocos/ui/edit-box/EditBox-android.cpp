@@ -71,7 +71,7 @@ namespace
     }
 }
 
-NS_CC_BEGIN
+namespace cc {
 
 bool EditBox::_isShown = false;
 
@@ -104,7 +104,7 @@ bool EditBox::complete()
     return true;
 }
 
-NS_CC_END
+}
 
 extern "C" 
 {

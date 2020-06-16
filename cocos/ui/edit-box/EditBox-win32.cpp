@@ -34,7 +34,7 @@
 
 extern std::shared_ptr<cocos2d::View> cc_get_application_view();
 
-NS_CC_BEGIN
+namespace cc {
 
 /*************************************************************************
  Global variables and functions.
@@ -203,4 +203,4 @@ bool EditBox::complete()
     return true;
 }
 
-NS_CC_END
+}

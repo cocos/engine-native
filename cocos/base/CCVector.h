@@ -38,7 +38,7 @@ THE SOFTWARE.
  * @addtogroup base
  * @{
  */
-NS_CC_BEGIN
+namespace cc {
 
 /*
  * Similar to std::vector, but it will manage reference count automatically internally.
@@ -516,4 +516,4 @@ protected:
 // end of base group
 /** @} */
 
-NS_CC_END
+}
