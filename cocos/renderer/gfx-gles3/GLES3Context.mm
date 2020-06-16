@@ -4,7 +4,7 @@
 #import <QuartzCore/CAEAGLLayer.h>
 #import <UIKit/UIScreen.h>
 
-namespace cc {
+namespace cc { namespace gfx {
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
 
