@@ -252,27 +252,20 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                                           instanceCount:cmd->drawInfo.instanceCount];
                             }
                         }
-                    }
-                    else
-                    {
-                        const auto *mtlIndirectBuffer = static_cast<CCMTLBuffer*>(indirectBuffer);
-                        const auto &indirectDrawType = mtlIndirectBuffer->getIndirectDrawType();
-                        for(size_t j = 0; j < indirectDrawType.size(); j++)
-                        {
-                            if(indirectDrawType[j] & GFXBufferUsageBit::INDEX)
-                            {
+                    } else {
+                        const auto *mtlIndirectBuffer = static_cast<CCMTLBuffer *>(indirectBuffer);
+                        for (size_t j = 0; j < mtlIndirectBuffer->getCount(); j++) {
+                            if (mtlIndirectBuffer->isIndexIndirectCommand()) {
                                 [encoder drawIndexedPrimitives:primitiveType
-                                                     indexType:static_cast<CCMTLBuffer*>(inputAssembler->getIndexBuffer() )->getIndexType()
+                                                     indexType:static_cast<CCMTLBuffer *>(inputAssembler->getIndexBuffer())->getIndexType()
                                                    indexBuffer:mtlIndexBuffer
                                              indexBufferOffset:j * inputAssembler->getIndexBuffer()->getStride()
                                                 indirectBuffer:mtlIndirectBuffer->getMTLBuffer()
                                           indirectBufferOffset:j * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
-                            }
-                            else
-                            {
+                            } else {
                                 [encoder drawPrimitives:primitiveType
-                                         indirectBuffer:mtlIndirectBuffer->getMTLBuffer()
-                                   indirectBufferOffset:j * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
+                                          indirectBuffer:mtlIndirectBuffer->getMTLBuffer()
+                                    indirectBufferOffset:j * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
                             }
                         }
                     }

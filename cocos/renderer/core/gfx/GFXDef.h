@@ -93,7 +93,6 @@ enum class GFXFeature : uint8_t {
     LINE_WIDTH,
     STENCIL_WRITE_MASK,
     STENCIL_COMPARE_MASK,
-    MULTI_DRAW_INDIRECT,
     COUNT,
 };
 

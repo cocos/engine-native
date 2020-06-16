@@ -1,8 +1,8 @@
 #pragma once
 
 #import <Metal/MTLBuffer.h>
-#import <Metal/MTLStageInputOutputDescriptor.h>
 #import <Metal/MTLRenderCommandEncoder.h>
+#import <Metal/MTLStageInputOutputDescriptor.h>
 
 namespace cc {
 
@@ -19,7 +19,7 @@ public:
     CC_INLINE id<MTLBuffer> getMTLBuffer() const { return _mtlBuffer; }
     CC_INLINE uint8_t *getTransferBuffer() const { return _transferBuffer; }
     CC_INLINE MTLIndexType getIndexType() const { return _indexType; }
-    CC_INLINE const vector<GFXBufferUsageBit>::type &getIndirectDrawType() const { return _indirectDrawType; }
+    CC_INLINE bool isIndexIndirectCommand() const { return _isIndexIndirectCommand; }
     void encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset, uint binding, GFXShaderType stages);
 
 private:
@@ -30,11 +30,12 @@ private:
     uint8_t *_transferBuffer = nullptr;
     MTLIndexType _indexType = MTLIndexTypeUInt16;
     MTLResourceOptions _mtlResourceOptions = MTLResourceStorageModePrivate;
-    vector<GFXBufferUsageBit>::type _indirectDrawType;
-    
+
     // to store vertex and ubo data when size is small, otherwise use MTLBuffer instead.
     bool _useOptimizedBufferEncoder = false;
     uint8_t *_bufferBytes = nullptr;
+
+    bool _isIndexIndirectCommand = false;
 };
 
-}
+} // namespace cc

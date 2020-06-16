@@ -1,4 +1,5 @@
 #include "MTLStd.h"
+
 #include "MTLBuffer.h"
 #include "MTLDevice.h"
 #include "MTLUtils.h"
@@ -54,11 +55,9 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo &info) {
         } else {
             createMTLBuffer(_size, _memUsage);
         }
-    } else if (_usage & GFXBufferUsage::INDEX) {
+    } else if (_usage & GFXBufferUsageBit::INDEX ||
+               _usage & GFXBufferUsageBit::INDIRECT) {
         createMTLBuffer(_size, _memUsage);
-    } else if (_usage & GFXBufferUsageBit::INDIRECT) {
-        createMTLBuffer(_size, _memUsage);
-        _indirectDrawType.resize(_count, GFXBufferUsageBit::INDEX);
     } else if (_usage & GFXBufferUsageBit::TRANSFER_SRC ||
                _usage & GFXBufferUsageBit::TRANSFER_DST) {
         _transferBuffer = (uint8_t *)CC_MALLOC(_size);
@@ -147,8 +146,6 @@ void CCMTLBuffer::resize(uint size) {
     _count = _size / _stride;
     resizeBuffer(&_transferBuffer, _size, oldSize);
     resizeBuffer(&_buffer, _size, oldSize);
-    if (_usage & GFXBufferUsageBit::INDIRECT)
-        _indirectDrawType.resize(_count, GFXBufferUsageBit::INDEX);
     _status = GFXStatus::SUCCESS;
 }
 
@@ -179,26 +176,32 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
         memcpy(_buffer + offset, buffer, size);
 
     if (_usage & GFXBufferUsageBit::INDIRECT) {
-        auto count = size / _stride;
+        auto drawInfoCount = size / _stride;
         auto *drawInfo = static_cast<GFXDrawInfo *>(buffer);
-        for (size_t i = 0; i < count; i++) {
+        if (drawInfoCount > 0) {
             if (drawInfo->indexCount) {
-                MTLDrawIndexedPrimitivesIndirectArguments argument;
-                argument.indexCount = drawInfo->indexCount;
-                argument.instanceCount = drawInfo->instanceCount;
-                argument.indexStart = drawInfo->firstIndex;
-                argument.baseVertex = drawInfo->firstVertex;
-                argument.baseInstance = drawInfo->firstInstance;
-                _indirectDrawType[i] = GFXBufferUsageBit::INDEX;
-                memcpy((uint8_t *)(_mtlBuffer.contents) + offset + i * sizeof(MTLDrawIndexedPrimitivesIndirectArguments), &argument, sizeof(MTLDrawIndexedPrimitivesIndirectArguments));
+                vector<MTLDrawIndexedPrimitivesIndirectArguments>::type arguments(drawInfoCount);
+                for (auto &argument : arguments) {
+                    argument.indexCount = drawInfo->indexCount;
+                    argument.instanceCount = drawInfo->instanceCount;
+                    argument.indexStart = drawInfo->firstIndex;
+                    argument.baseVertex = drawInfo->firstVertex;
+                    argument.baseInstance = drawInfo->firstInstance;
+                    drawInfo++;
+                }
+                memcpy((uint8_t *)(_mtlBuffer.contents) + offset, arguments.data(), drawInfoCount * sizeof(MTLDrawIndexedPrimitivesIndirectArguments));
+                _isIndexIndirectCommand = true;
             } else {
-                MTLDrawPrimitivesIndirectArguments argument;
-                argument.vertexCount = drawInfo->vertexCount;
-                argument.instanceCount = drawInfo->instanceCount;
-                argument.vertexStart = drawInfo->firstVertex;
-                argument.baseInstance = drawInfo->firstInstance;
-                _indirectDrawType[i] = GFXBufferUsageBit::VERTEX;
-                memcpy((uint8_t *)(_mtlBuffer.contents) + offset + i * sizeof(MTLDrawPrimitivesIndirectArguments), &argument, sizeof(MTLDrawPrimitivesIndirectArguments));
+                vector<MTLDrawPrimitivesIndirectArguments>::type arguments(drawInfoCount);
+                for (auto &argument : arguments) {
+                    argument.vertexCount = drawInfo->vertexCount;
+                    argument.instanceCount = drawInfo->instanceCount;
+                    argument.vertexStart = drawInfo->firstVertex;
+                    argument.baseInstance = drawInfo->firstInstance;
+                    drawInfo++;
+                }
+                memcpy((uint8_t *)(_mtlBuffer.contents) + offset, arguments.data(), drawInfoCount * sizeof(MTLDrawPrimitivesIndirectArguments));
+                _isIndexIndirectCommand = false;
             }
         }
         return;

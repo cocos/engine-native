@@ -264,32 +264,32 @@ void CCVKCmdFuncResizeBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
 void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void *buffer, uint offset, uint size) {
     if (gpuBuffer->mappedData) {
         if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
+            size_t drawInfoCount = size / gpuBuffer->stride;
             GFXDrawInfo *drawInfo = static_cast<GFXDrawInfo *>(buffer);
-            gpuBuffer->count = size / gpuBuffer->stride;
-            for (size_t i = 0; i < gpuBuffer->count; i++) {
+            if (drawInfoCount > 0) {
                 if (drawInfo->indexCount) {
-                    VkDrawIndexedIndirectCommand cmd;
-                    cmd.indexCount = drawInfo->indexCount;
-                    cmd.instanceCount = drawInfo->instanceCount == 0 ? 1 : drawInfo->instanceCount;
-                    cmd.firstIndex = drawInfo->firstIndex;
-                    cmd.vertexOffset = drawInfo->vertexOffset;
-                    cmd.firstInstance = drawInfo->firstInstance;
-                    gpuBuffer->indirectDrawType[i] = GFXBufferUsageBit::INDEX;
-                    memcpy(gpuBuffer->mappedData + offset + i * sizeof(VkDrawIndexedIndirectCommand), &cmd, sizeof(VkDrawIndexedIndirectCommand));
+                    vector<VkDrawIndexedIndirectCommand>::type cmds(drawInfoCount);
+                    for (size_t i = 0; i < drawInfoCount; i++) {
+                        cmds[i].indexCount = drawInfo->indexCount;
+                        cmds[i].instanceCount = drawInfo->instanceCount == 0 ? 1 : drawInfo->instanceCount;
+                        cmds[i].firstIndex = drawInfo->firstIndex;
+                        cmds[i].vertexOffset = drawInfo->vertexOffset;
+                        cmds[i].firstInstance = drawInfo->firstInstance;
+                        drawInfo++;
+                    }
+                    memcpy(gpuBuffer->mappedData + offset, cmds.data(), drawInfoCount * sizeof(VkDrawIndexedIndirectCommand));
+                    gpuBuffer->isIndexIndirectCommand = true;
                 } else {
-                    VkDrawIndirectCommand cmd;
-                    cmd.vertexCount = drawInfo->vertexCount;
-                    cmd.instanceCount = drawInfo->indexCount;
-                    cmd.firstVertex = drawInfo->firstVertex;
-                    cmd.firstInstance = drawInfo->firstInstance;
-                    gpuBuffer->indirectDrawType[i] = GFXBufferUsageBit::VERTEX;
-                    memcpy(gpuBuffer->mappedData + offset + i * sizeof(VkDrawIndirectCommand), &cmd, sizeof(VkDrawIndirectCommand));
-                }
-            }
-            for (uint i = 1; i < gpuBuffer->count; i++) {
-                if (gpuBuffer->indirectDrawType[i] != gpuBuffer->indirectDrawType[i - 1]) {
-                    gpuBuffer->canMultiDrawIndirect = false;
-                    break;
+                    vector<VkDrawIndirectCommand>::type cmds(drawInfoCount);
+                    for (size_t i = 0; i < drawInfoCount; i++) {
+                        cmds[i].vertexCount = drawInfo->vertexCount;
+                        cmds[i].instanceCount = drawInfo->indexCount;
+                        cmds[i].firstVertex = drawInfo->firstVertex;
+                        cmds[i].firstInstance = drawInfo->firstInstance;
+                        drawInfo++;
+                    }
+                    memcpy(gpuBuffer->mappedData + offset, cmds.data(), drawInfoCount * sizeof(VkDrawIndirectCommand));
+                    gpuBuffer->isIndexIndirectCommand = false;
                 }
             }
         } else
@@ -1013,4 +1013,4 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
     endOneTimeCommands(device, &cmdBuff);
 }
 
-}
+} // namespace cc

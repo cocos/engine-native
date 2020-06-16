@@ -257,7 +257,6 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
     _features[(int)GFXFeature::MSAA] = true;
     _features[(int)GFXFeature::ELEMENT_INDEX_UINT] = true;
     _features[(int)GFXFeature::INSTANCED_ARRAYS] = true;
-    _features[(int)GFXFeature::MULTI_DRAW_INDIRECT] = deviceFeatures.multiDrawIndirect;
 
     String compressedFmts;
     if (deviceFeatures.textureCompressionETC2) {
@@ -279,7 +278,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
     _features[static_cast<uint>(GFXFeature::FORMAT_D24S8)] = findSupportedFormat({ GFXFormat::D24S8, VK_FORMAT_D24_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
     _features[static_cast<uint>(GFXFeature::FORMAT_D32F)] = findSupportedFormat({ GFXFormat::D32F, VK_FORMAT_D32_SFLOAT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
     _features[static_cast<uint>(GFXFeature::FORMAT_D32FS8)] = findSupportedFormat({ GFXFormat::D32F_S8, VK_FORMAT_D32_SFLOAT_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, gpuContext->physicalDevice);
-
+    _multiDrawIndirectSupported = deviceFeatures2.features.multiDrawIndirect;
     uint32_t apiVersion = gpuContext->physicalDeviceProperties.apiVersion;
     _renderer = gpuContext->physicalDeviceProperties.deviceName;
     _vendor = MapVendorName(gpuContext->physicalDeviceProperties.vendorID);
