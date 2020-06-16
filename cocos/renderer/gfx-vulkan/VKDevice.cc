@@ -79,6 +79,7 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
     requestedFeatures2.features.textureCompressionBC = deviceFeatures2.features.textureCompressionBC;
     requestedFeatures2.features.textureCompressionETC2 = deviceFeatures2.features.textureCompressionETC2;
     requestedFeatures2.features.samplerAnisotropy = deviceFeatures2.features.samplerAnisotropy;
+    requestedFeatures2.features.multiDrawIndirect = deviceFeatures2.features.multiDrawIndirect;
 
     ///////////////////// Device Creation /////////////////////
 
