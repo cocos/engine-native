@@ -80,7 +80,7 @@ typedef SSIZE_T ssize_t;
         // #define CCASSERT(cond, msg) do {                              \
     //       if (!(cond)) {                                          \
     //         if (!cc_assert_script_compatible(msg) && strlen(msg)) \
-    //           cocos2d::log("Assert failed: %s", msg);             \
+    //           cc::log("Assert failed: %s", msg);             \
     //         CC_ASSERT(cond);                                      \
     //       } \
     //     } while (0)
@@ -186,7 +186,7 @@ It should work same as apples CFSwapInt32LittleToHost(..)
     if (cond) break
 
 #define __CCLOGWITHFUNCTION(s, ...) \
-    cocos2d::log("%s : %s", __FUNCTION__, cocos2d::StringUtils::format(s, ##__VA_ARGS__).c_str())
+    cc::log("%s : %s", __FUNCTION__, cc::StringUtils::format(s, ##__VA_ARGS__).c_str())
 
 /// @name Cocos2d debug
 /// @{

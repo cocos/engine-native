@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <memory>
 
-extern std::shared_ptr<cocos2d::View> cc_get_application_view();
+extern std::shared_ptr<cc::View> cc_get_application_view();
 
 namespace cc {
 

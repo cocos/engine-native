@@ -75,7 +75,7 @@ namespace cc {
 
 bool EditBox::_isShown = false;
 
-void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
+void EditBox::show(const cc::EditBox::ShowInfo& showInfo)
 {
     JniHelper::callStaticVoidMethod(JCLS_EDITBOX,
                                     "showNative",
@@ -110,8 +110,8 @@ extern "C"
 {
     JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardInputNative)(JNIEnv* env, jclass, jstring text)
     {
-        auto textStr = cocos2d::JniHelper::jstring2string(text);
-        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
+        auto textStr = cc::JniHelper::jstring2string(text);
+        cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
             callJSFunc("input", textStr);
         });
 
@@ -119,16 +119,16 @@ extern "C"
 
     JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardCompleteNative)(JNIEnv* env, jclass, jstring text)
     {
-        auto textStr = cocos2d::JniHelper::jstring2string(text);
-        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
+        auto textStr = cc::JniHelper::jstring2string(text);
+        cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
             callJSFunc("complete", textStr);
         });
     }
 
     JNIEXPORT void JNICALL JNI_EDITBOX(onKeyboardConfirmNative)(JNIEnv* env, jclass, jstring text)
     {
-        auto textStr = cocos2d::JniHelper::jstring2string(text);
-        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
+        auto textStr = cc::JniHelper::jstring2string(text);
+        cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([textStr]() {
             callJSFunc("confirm", textStr);
         });
     }

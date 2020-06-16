@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 //#define CC_DOWNLOADER_DEBUG
 #ifdef  CC_DOWNLOADER_DEBUG
-#define DLLOG(format, ...)      cocos2d::log(format, ##__VA_ARGS__)
+#define DLLOG(format, ...)      cc::log(format, ##__VA_ARGS__)
 #else
 #define DLLOG(...)       do {} while (0)
 #endif

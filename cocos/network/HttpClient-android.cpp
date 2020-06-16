@@ -643,7 +643,7 @@ private:
         {
             return nullptr;
         }
-        std::string strValue = cocos2d::StringUtils::getStringUTFCharsJNI(env, jstr);
+        std::string strValue = cc::StringUtils::getStringUTFCharsJNI(env, jstr);
         return strdup(strValue.c_str());
     }
 

@@ -200,7 +200,7 @@ private:
     cc::Data _responseData;
 
     cc::network::HttpRequest*  _httpRequest;
-//    cocos2d::EventListenerCustom* _resetDirectorListener;
+//    cc::EventListenerCustom* _resetDirectorListener;
 
     unsigned long _timeoutInMilliseconds;
     uint16_t _status;

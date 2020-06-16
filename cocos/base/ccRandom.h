@@ -107,7 +107,7 @@ inline float rand_minus1_1() {
     // be seeded using std::srand()
     return ((std::rand() / (float)RAND_MAX) * 2) -1;
 
-//    return cocos2d::random(-1.f, 1.f);
+//    return cc::random(-1.f, 1.f);
 };
 
 /**
@@ -121,7 +121,7 @@ inline float rand_0_1() {
     // be seeded using std::srand()
     return std::rand() / (float)RAND_MAX;
 
-//    return cocos2d::random(0.f, 1.f);
+//    return cc::random(0.f, 1.f);
 };
 
 

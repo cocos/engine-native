@@ -41,7 +41,7 @@ class Scheduler;
 
 #define MAX_AUDIOINSTANCES 32
 
-class CC_DLL AudioEngineImpl : public cocos2d::Ref
+class CC_DLL AudioEngineImpl : public cc::Ref
 {
 public:
     AudioEngineImpl();

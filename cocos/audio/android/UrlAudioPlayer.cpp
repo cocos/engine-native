@@ -34,7 +34,7 @@ THE SOFTWARE.
 namespace {
 
 std::mutex __playerContainerMutex;
-std::vector<cocos2d::UrlAudioPlayer*> __playerContainer;
+std::vector<cc::UrlAudioPlayer*> __playerContainer;
 std::once_flag __onceFlag;
 
 }

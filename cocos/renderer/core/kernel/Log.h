@@ -36,7 +36,7 @@ class CC_CORE_API Log {
 
 }
 
-#define CC_LOG_DEBUG(formats, ...)   if(cocos2d::Log::log_level >= cc::LogLevel::DEBUG) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::DEBUG, formats, ##__VA_ARGS__)
+#define CC_LOG_DEBUG(formats, ...)   if(cc::Log::log_level >= cc::LogLevel::DEBUG) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::DEBUG, formats, ##__VA_ARGS__)
 #define CC_LOG_INFO(formats, ...)    if(cc::Log::log_level >= cc::LogLevel::INFO) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::INFO, formats, ##__VA_ARGS__)
 #define CC_LOG_WARNING(formats, ...) if(cc::Log::log_level >= cc::LogLevel::WARN) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::WARN, formats, ##__VA_ARGS__)
 #define CC_LOG_ERROR_(formats, ...)   if(cc::Log::log_level >= cc::LogLevel::ERR) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::ERR, formats, ##__VA_ARGS__)

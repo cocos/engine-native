@@ -49,7 +49,7 @@ extern "C" {
         auto func = []() -> void {
             executeVideoCallback(index,event);
         };
-        cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread(func);
+        cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread(func);
     }
 }
 

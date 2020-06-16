@@ -49,7 +49,7 @@ class AudioPlayerProvider;
 
 class AudioEngineImpl;
 
-class AudioEngineImpl : public cocos2d::Ref
+class AudioEngineImpl : public cc::Ref
 {
 public:
     AudioEngineImpl();

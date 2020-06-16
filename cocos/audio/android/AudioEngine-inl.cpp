@@ -102,13 +102,13 @@ static CallerThreadUtils __callerThreadUtils;
 static int fdGetter(const std::string& url, off_t* start, off_t* length)
 {
     int fd = -1;
-    if (cocos2d::FileUtilsAndroid::getObbFile() != nullptr)
+    if (cc::FileUtilsAndroid::getObbFile() != nullptr)
     {
         fd = getObbAssetFileDescriptorJNI(url.c_str(), start, length);
     } 
     if (fd <= 0)
     {
-        auto asset = AAssetManager_open(cocos2d::FileUtilsAndroid::getAssetManager(), url.c_str(), AASSET_MODE_UNKNOWN);
+        auto asset = AAssetManager_open(cc::FileUtilsAndroid::getAssetManager(), url.c_str(), AASSET_MODE_UNKNOWN);
         // open asset as file descriptor
         fd = AAsset_openFileDescriptor(asset, start, length);
         AAsset_close(asset);
