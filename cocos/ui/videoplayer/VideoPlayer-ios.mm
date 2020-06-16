@@ -24,7 +24,7 @@
 
 #include "VideoPlayer.h"
 
-USING_NS_CC;
+using namespace cc;
 
 // No Available on tvOS
 #if CC_PLATFORM == CC_PLATFORM_MAC_IOS && !defined(CC_TARGET_OS_TVOS)

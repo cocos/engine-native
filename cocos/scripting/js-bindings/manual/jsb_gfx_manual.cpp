@@ -830,7 +830,7 @@ bool register_all_gfx_manual(se::Object* obj)
 #if defined USE_VULKAN
     register_all_vk(obj);
     __jsb_cc_CCVKDevice_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_CCVKDevice_copyBuffersToTexture));
-    __jsb_coc_CCVKDevice_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_CCVKDevice_copyTexImagesToTexture));
+    __jsb_cc_CCVKDevice_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_CCVKDevice_copyTexImagesToTexture));
 #endif
 #if defined USE_GLES3
     register_all_gles3(obj);
