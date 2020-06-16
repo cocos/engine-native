@@ -238,7 +238,7 @@ public:
     }
 
     ~CCVKGPUSemaphorePool() {
-        for (auto semaphore : _semaphores) {
+        for (VkSemaphore semaphore : _semaphores) {
             vkDestroySemaphore(_device->vkDevice, semaphore, nullptr);
         }
         _semaphores.clear();
