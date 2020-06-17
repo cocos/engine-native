@@ -20,7 +20,7 @@ public:
     CC_INLINE id<MTLBuffer> getMTLBuffer() const { return _mtlBuffer; }
     CC_INLINE uint8_t *getTransferBuffer() const { return _transferBuffer; }
     CC_INLINE MTLIndexType getIndexType() const { return _indexType; }
-    CC_INLINE bool isIndexIndirectCommand() const { return _isIndexIndirectCommand; }
+    CC_INLINE bool isDrawIndirectByIndex() const { return _isDrawIndirectByIndex; }
     void encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset, uint binding, GFXShaderType stages);
 
 private:
@@ -36,7 +36,7 @@ private:
     bool _useOptimizedBufferEncoder = false;
     uint8_t *_bufferBytes = nullptr;
 
-    bool _isIndexIndirectCommand = false;
+    bool _isDrawIndirectByIndex = false;
 };
 
 } // namespace gfx

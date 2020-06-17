@@ -281,7 +281,7 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
                         drawInfo++;
                     }
                     memcpy(gpuBuffer->mappedData + offset, cmds.data(), drawInfoCount * sizeof(VkDrawIndexedIndirectCommand));
-                    gpuBuffer->isIndexIndirectCommand = true;
+                    gpuBuffer->isDrawIndirectByIndex = true;
                 } else {
                     vector<VkDrawIndirectCommand>::type cmds(drawInfoCount);
                     for (size_t i = 0; i < drawInfoCount; i++) {
@@ -292,7 +292,7 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
                         drawInfo++;
                     }
                     memcpy(gpuBuffer->mappedData + offset, cmds.data(), drawInfoCount * sizeof(VkDrawIndirectCommand));
-                    gpuBuffer->isIndexIndirectCommand = false;
+                    gpuBuffer->isDrawIndirectByIndex = false;
                 }
             }
         } else

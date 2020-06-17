@@ -256,7 +256,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                     } else {
                         const auto *mtlIndirectBuffer = static_cast<CCMTLBuffer *>(indirectBuffer);
                         for (size_t j = 0; j < mtlIndirectBuffer->getCount(); j++) {
-                            if (mtlIndirectBuffer->isIndexIndirectCommand()) {
+                            if (mtlIndirectBuffer->isDrawIndirectByIndex()) {
                                 [encoder drawIndexedPrimitives:primitiveType
                                                      indexType:static_cast<CCMTLBuffer *>(inputAssembler->getIndexBuffer())->getIndexType()
                                                    indexBuffer:mtlIndexBuffer

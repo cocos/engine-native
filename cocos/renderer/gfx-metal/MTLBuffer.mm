@@ -191,7 +191,7 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
                     drawInfo++;
                 }
                 memcpy((uint8_t *)(_mtlBuffer.contents) + offset, arguments.data(), drawInfoCount * sizeof(MTLDrawIndexedPrimitivesIndirectArguments));
-                _isIndexIndirectCommand = true;
+                _isDrawIndirectByIndex = true;
             } else {
                 vector<MTLDrawPrimitivesIndirectArguments>::type arguments(drawInfoCount);
                 for (auto &argument : arguments) {
@@ -202,7 +202,7 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
                     drawInfo++;
                 }
                 memcpy((uint8_t *)(_mtlBuffer.contents) + offset, arguments.data(), drawInfoCount * sizeof(MTLDrawPrimitivesIndirectArguments));
-                _isIndexIndirectCommand = false;
+                _isDrawIndirectByIndex = false;
             }
         }
         return;

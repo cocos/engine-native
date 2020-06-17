@@ -262,7 +262,7 @@ void CCVKCommandBuffer::draw(GFXInputAssembler *ia) {
 
         if (gpuInputAssembler->gpuIndirectBuffer) {
             if (static_cast<CCVKDevice *>(_device)->isMultiDrawIndirectSupported()) {
-                if (gpuInputAssembler->gpuIndirectBuffer->isIndexIndirectCommand) {
+                if (gpuInputAssembler->gpuIndirectBuffer->isDrawIndirectByIndex) {
                     vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
                                              gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
                                              0,
@@ -278,7 +278,7 @@ void CCVKCommandBuffer::draw(GFXInputAssembler *ia) {
             } else {
                 // If multi draw is not available, we must issue separate draw commands
                 for (auto j = 0; j < gpuInputAssembler->gpuIndirectBuffer->count; j++) {
-                    if (gpuInputAssembler->gpuIndirectBuffer->isIndexIndirectCommand) {
+                    if (gpuInputAssembler->gpuIndirectBuffer->isDrawIndirectByIndex) {
                         vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
                                                  gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
                                                  j * sizeof(VkDrawIndexedIndirectCommand),
