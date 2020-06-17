@@ -138,9 +138,9 @@
     <CustomBuild Include="copy_resource.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">xcopy "$(SolutionDir)..\..\..\src" "$(OutDir)\src" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\res" "$(OutDir)\res" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter" /D /E /I /F /Y
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">robocopy /mir "$(SolutionDir)..\..\..\src" "$(OutDir)\src"
+robocopy /mir "$(SolutionDir)..\..\..\res" "$(OutDir)\res"
+robocopy /mir "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter"
 copy "$(SolutionDir)..\..\..\main.js" "$(OutDir)\" /Y
 copy "$(SolutionDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">%(AdditionalInputs)</AdditionalInputs>
@@ -148,9 +148,9 @@ copy "$(SolutionDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|win32'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|win32'">xcopy "$(SolutionDir)..\..\..\src" "$(OutDir)\src" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\res" "$(OutDir)\res" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter" /D /E /I /F /Y
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|win32'">robocopy /mir "$(SolutionDir)..\..\..\src" "$(OutDir)\src"
+robocopy /mir "$(SolutionDir)..\..\..\res" "$(OutDir)\res"
+robocopy /mir "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter"
 copy "$(SolutionDir)..\..\..\main.js" "$(OutDir)\" /Y
 copy "$(SolutionDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">%(AdditionalInputs)</AdditionalInputs>
@@ -158,9 +158,9 @@ copy "$(SolutionDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|win32'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">xcopy "$(SolutionDir)..\..\..\src" "$(OutDir)\src" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\res" "$(OutDir)\res" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter" /D /E /I /F /Y
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">robocopy /mir "$(SolutionDir)..\..\..\src" "$(OutDir)\src"
+robocopy /mir "$(SolutionDir)..\..\..\res" "$(OutDir)\res"
+robocopy /mir "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter"
 copy "$(SolutionDir)..\..\..\main.js" "$(OutDir)\" /Y
 copy "$(SolutionDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">%(AdditionalInputs)</AdditionalInputs>
@@ -168,9 +168,9 @@ copy "$(SolutionDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">
       </Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">xcopy "$(SolutionDir)..\..\..\src" "$(OutDir)\src" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\res" "$(OutDir)\res" /D /E /I /F /Y
-xcopy "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter" /D /E /I /F /Y
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">robocopy /mir "$(SolutionDir)..\..\..\src" "$(OutDir)\src"
+robocopy /mir "$(SolutionDir)..\..\..\res" "$(OutDir)\res"
+robocopy /mir "$(SolutionDir)..\..\..\jsb-adapter" "$(OutDir)\jsb-adapter"
 copy "$(SolutionDir)..\..\..\main.js" "$(OutDir)\" /Y
 copy "$(SolutionDir)..\..\..\project.json" "$(OutDir)\" /Y</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">%(AdditionalInputs)</AdditionalInputs>
