@@ -273,6 +273,12 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
                 if (drawInfo->indexCount) {
                     vector<VkDrawIndexedIndirectCommand>::type cmds(drawInfoCount);
                     for (size_t i = 0; i < drawInfoCount; i++) {
+#if COCOS2D_DEBUG > 0
+                        if (drawInfo->indexCount == 0) {
+                            CC_LOG_ERROR("CCVKCmdFuncUpdateBuffer: all indirect draw should use VkDrawIndexedIndirectCommand, but one of them is not.");
+                            return;
+                        }
+#endif
                         cmds[i].indexCount = drawInfo->indexCount;
                         cmds[i].instanceCount = drawInfo->instanceCount == 0 ? 1 : drawInfo->instanceCount;
                         cmds[i].firstIndex = drawInfo->firstIndex;
@@ -285,6 +291,12 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
                 } else {
                     vector<VkDrawIndirectCommand>::type cmds(drawInfoCount);
                     for (size_t i = 0; i < drawInfoCount; i++) {
+#if COCOS2D_DEBUG > 0
+                        if (drawInfo->indexCount > 0) {
+                            CC_LOG_ERROR("CCVKCmdFuncUpdateBuffer: all indirect draw should use VkDrawIndirectCommand, but one of them is not.");
+                            return;
+                        }
+#endif
                         cmds[i].vertexCount = drawInfo->vertexCount;
                         cmds[i].instanceCount = drawInfo->indexCount;
                         cmds[i].firstVertex = drawInfo->firstVertex;
@@ -295,8 +307,9 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
                     gpuBuffer->isDrawIndirectByIndex = false;
                 }
             }
-        } else
+        } else {
             memcpy(gpuBuffer->mappedData + offset, buffer, size);
+        }
     } else if (gpuBuffer->memUsage == GFXMemoryUsage::DEVICE) {
         const CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();
         if (stagingBuffer->size < size) device->stagingBuffer()->resize(nextPowerOf2(size));
