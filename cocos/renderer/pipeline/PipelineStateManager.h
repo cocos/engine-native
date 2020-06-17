@@ -22,7 +22,7 @@ public:
                                                            gfx::GFXInputAssembler *inputAssembler);
     
 private:
-    static gfx::map<uint, gfx::GFXPipelineState *>::type _PSOHashMap;
+    static gfx::map<uint, gfx::GFXPipelineState *> _PSOHashMap;
 };
 
 } // namespace pipeline

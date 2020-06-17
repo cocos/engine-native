@@ -18,21 +18,21 @@ public:
     ~RenderAdditiveLightQueue() = default;
     
     void add(RenderObject *renderObj, uint subModelIdx, Pass *pass, uint beginIdx, uint endIdx);
-    void clear(const gfx::vector<Light *>::type &validLights,
-               const gfx::vector<gfx::GFXBuffer *>::type &lightBuffers,
-               const gfx::vector<uint>::type &lightIndices);
+    void clear(const gfx::vector<Light *> &validLights,
+               const gfx::vector<gfx::GFXBuffer *> &lightBuffers,
+               const gfx::vector<uint> &lightIndices);
     void recordCommandBuffer(gfx::GFXDevice *device, gfx::GFXRenderPass *renderPass, gfx::GFXCommandBuffer *cmdBuff);
     
 private:
     void attach(RenderObject *renderObj, uint subModelIdx, gfx::GFXBuffer *lightBuffer,
-                uint lightIdx, Pass *pass, gfx::vector<MacroPatch>::type patches);
+                uint lightIdx, Pass *pass, gfx::vector<MacroPatch> patches);
 
 private:
-    gfx::vector<gfx::vector<SubModel *>::type>::type _sortedSubModelsArray;
-    gfx::vector<gfx::vector<PSOCreateInfo>::type>::type _sortedPSOCIArray;
-    gfx::vector<Light *>::type _validLights;
-    gfx::vector<gfx::GFXBuffer *>::type _lightBuffers;
-    gfx::vector<uint>::type _lightIndices;
+    gfx::vector<gfx::vector<SubModel *>> _sortedSubModelsArray;
+    gfx::vector<gfx::vector<PSOCreateInfo>> _sortedPSOCIArray;
+    gfx::vector<Light *> _validLights;
+    gfx::vector<gfx::GFXBuffer *> _lightBuffers;
+    gfx::vector<uint> _lightIndices;
     uint _phaseID = 0;
 };
 

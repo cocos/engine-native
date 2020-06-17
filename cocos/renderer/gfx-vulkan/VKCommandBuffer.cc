@@ -5,6 +5,7 @@
 #include "VKCommandAllocator.h"
 #include "VKCommandBuffer.h"
 #include "VKCommands.h"
+#include "VKDevice.h"
 #include "VKFramebuffer.h"
 #include "VKInputAssembler.h"
 #include "VKPipelineState.h"
@@ -88,7 +89,7 @@ void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer *fbo, const GFXRect &rend
         framebuffer = _curGPUFBO->swapchain->vkSwapchainFramebufferListMap[_curGPUFBO][_curGPUFBO->swapchain->curImageIndex];
     }
 
-    vector<VkClearValue>::type &clearValues = renderPass->clearValues;
+    vector<VkClearValue> &clearValues = renderPass->clearValues;
     size_t attachmentCount = clearValues.size();
 
     if (attachmentCount) {
@@ -167,7 +168,7 @@ void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler *ia) {
 
         if (gpuInputAssembler->gpuIndexBuffer) {
             vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->vkBuffer, 0,
-                                 gpuInputAssembler->gpuIndexBuffer->stride == 32 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
+                                 gpuInputAssembler->gpuIndexBuffer->stride == 4 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
         }
         _curGPUInputAssember = gpuInputAssembler;
     }
@@ -260,7 +261,40 @@ void CCVKCommandBuffer::draw(GFXInputAssembler *ia) {
         GFXDrawInfo drawInfo;
 
         if (gpuInputAssembler->gpuIndirectBuffer) {
-            // TODO
+            if (static_cast<CCVKDevice *>(_device)->isMultiDrawIndirectSupported()) {
+                if (gpuInputAssembler->gpuIndirectBuffer->isDrawIndirectByIndex) {
+                    vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                             gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                             0,
+                                             gpuInputAssembler->gpuIndirectBuffer->count,
+                                             sizeof(VkDrawIndexedIndirectCommand));
+                } else {
+                    vkCmdDrawIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                      gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                      0,
+                                      gpuInputAssembler->gpuIndirectBuffer->count,
+                                      sizeof(VkDrawIndirectCommand));
+                }
+            } else {
+                // If multi draw is not available, we must issue separate draw commands
+                if (gpuInputAssembler->gpuIndirectBuffer->isDrawIndirectByIndex) {
+                    for (auto j = 0; j < gpuInputAssembler->gpuIndirectBuffer->count; j++) {
+                        vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                                 gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                                 j * sizeof(VkDrawIndexedIndirectCommand),
+                                                 1,
+                                                 sizeof(VkDrawIndexedIndirectCommand));
+                    }
+                } else {
+                    for (auto j = 0; j < gpuInputAssembler->gpuIndirectBuffer->count; j++) {
+                        vkCmdDrawIndirect(_gpuCommandBuffer->vkCommandBuffer,
+                                          gpuInputAssembler->gpuIndirectBuffer->vkBuffer,
+                                          j * sizeof(VkDrawIndirectCommand),
+                                          1,
+                                          sizeof(VkDrawIndirectCommand));
+                    }
+                }
+            }
         } else {
             ((CCVKInputAssembler *)ia)->extractDrawInfo(drawInfo);
             uint instanceCount = std::max(drawInfo.instanceCount, 1u);
@@ -299,7 +333,7 @@ void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer *> &cmdBuffs,
         return;
     }
 
-    vector<VkCommandBuffer>::type vkCmdBuffs(count);
+    vector<VkCommandBuffer> vkCmdBuffs(count);
 
     for (uint i = 0u; i < count; ++i) {
         CCVKCommandBuffer *cmdBuff = (CCVKCommandBuffer *)cmdBuffs[i];

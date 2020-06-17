@@ -4,7 +4,7 @@
 #include "MTLCommandBuffer.h"
 #include "MTLCommands.h"
 #include "MTLDevice.h"
-#include "MTLFrameBuffer.h"
+#include "MTLFramebuffer.h"
 #include "MTLGPUObjects.h"
 #include "MTLInputAssembler.h"
 #include "MTLPipelineState.h"
@@ -41,7 +41,7 @@ void CCMTLQueue::destroy() {
     _status = GFXStatus::UNREADY;
 }
 
-void CCMTLQueue::submit(const vector<GFXCommandBuffer *>::type &cmdBuffs, GFXFence *fence) {
+void CCMTLQueue::submit(const vector<GFXCommandBuffer *> &cmdBuffs, GFXFence *fence) {
     // Should remove USE_METAL aftr switch to use metal.
 #ifdef USE_METAL
     //    dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);
@@ -254,38 +254,19 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                             }
                         }
                     } else {
-                        auto indirects = static_cast<CCMTLBuffer *>(indirectBuffer)->getIndirects();
-                        for (size_t j = 0; j < indirects.size(); j++) {
-                            const auto &draw = indirects[j];
-                            if (mtlIndexBuffer && draw.indexCount) {
-                                NSUInteger offset = 0;
-                                offset += draw.firstIndex * inputAssembler->getIndexBuffer()->getStride();
-                                if (cmd->drawInfo.instanceCount == 0) {
-                                    [encoder drawIndexedPrimitives:primitiveType
-                                                        indexCount:draw.indexCount
-                                                         // TODO: remove static_cast<>.
-                                                         indexType:static_cast<CCMTLBuffer *>(inputAssembler->getIndexBuffer())->getIndexType()
-                                                       indexBuffer:mtlIndexBuffer
-                                                 indexBufferOffset:offset];
-                                } else {
-                                    [encoder drawIndexedPrimitives:primitiveType
-                                                        indexCount:draw.indexCount
-                                                         indexType:static_cast<CCMTLBuffer *>(inputAssembler->getIndexBuffer())->getIndexType()
-                                                       indexBuffer:mtlIndexBuffer
-                                                 indexBufferOffset:offset
-                                                     instanceCount:draw.instanceCount];
-                                }
+                        const auto *mtlIndirectBuffer = static_cast<CCMTLBuffer *>(indirectBuffer);
+                        for (size_t j = 0; j < mtlIndirectBuffer->getCount(); j++) {
+                            if (mtlIndirectBuffer->isDrawIndirectByIndex()) {
+                                [encoder drawIndexedPrimitives:primitiveType
+                                                     indexType:static_cast<CCMTLBuffer *>(inputAssembler->getIndexBuffer())->getIndexType()
+                                                   indexBuffer:mtlIndexBuffer
+                                             indexBufferOffset:j * inputAssembler->getIndexBuffer()->getStride()
+                                                indirectBuffer:mtlIndirectBuffer->getMTLBuffer()
+                                          indirectBufferOffset:j * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
                             } else {
-                                if (draw.instanceCount == 0) {
-                                    [encoder drawPrimitives:primitiveType
-                                                vertexStart:draw.firstIndex
-                                                vertexCount:draw.vertexCount];
-                                } else {
-                                    [encoder drawPrimitives:primitiveType
-                                                vertexStart:draw.firstIndex
-                                                vertexCount:draw.vertexCount
-                                              instanceCount:draw.instanceCount];
-                                }
+                                [encoder drawPrimitives:primitiveType
+                                          indirectBuffer:mtlIndirectBuffer->getMTLBuffer()
+                                    indirectBufferOffset:j * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
                             }
                         }
                     }
