@@ -9,6 +9,7 @@
 #include "VKUtils.h"
 
 namespace cc {
+namespace gfx {
 
 namespace {
 
@@ -21,11 +22,6 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSe
                                                            VkDebugUtilsMessageTypeFlagsEXT messageType,
                                                            const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
                                                            void *userData) {
-    // https://github.com/KhronosGroup/SPIRV-Tools/issues/3422
-    if (!strcmp(callbackData->pMessageIdName, "UNASSIGNED-CoreValidation-Shader-InconsistentSpirv")) {
-        return VK_FALSE;
-    }
-
     // TODO: handle the few frames with no command submission at start up
     if (!strcmp(callbackData->pMessageIdName, "VUID-VkPresentInfoKHR-pImageIndices-01296")) {
         return VK_FALSE;
@@ -500,4 +496,5 @@ void CCVKContext::destroy() {
     }
 }
 
-}
+} // namespace gfx
+} // namespace cc

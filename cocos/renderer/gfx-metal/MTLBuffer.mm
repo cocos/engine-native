@@ -8,6 +8,7 @@
 #define MINIMUMR_REQUIRED_SIZE_4KB 4096
 
 namespace cc {
+namespace gfx {
 
 CCMTLBuffer::CCMTLBuffer(GFXDevice *device) : GFXBuffer(device) {}
 
@@ -259,4 +260,5 @@ void CCMTLBuffer::encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset,
     }
 }
 
-}
+} // namespace gfx
+} // namespace cc

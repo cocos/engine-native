@@ -5,11 +5,12 @@
 namespace cc {
 class Pass;
 class SubModel;
-}
+} // namespace cc
 
-NS_PP_BEGIN
+namespace cc {
+namespace pipeline {
 
-class CC_DLL BatchedBuffer : public cc::Object {
+class CC_DLL BatchedBuffer : public gfx::Object {
 public:
     BatchedBuffer(cc::Pass *pass);
     ~BatchedBuffer() = default;
@@ -28,4 +29,5 @@ private:
     cc::Pass *_pass = nullptr;
 };
 
-NS_PP_END
+} // namespace pipeline
+} // namespace cc

@@ -2,6 +2,7 @@
 #define CC_GFXVULKAN_CCVK_DEVICE_H_
 
 namespace cc {
+namespace gfx {
 
 class CCVKGPUContext;
 class CCVKGPUDevice;
@@ -78,6 +79,7 @@ private:
     bool _multiDrawIndirectSupported = false;
 };
 
-}
+} // namespace gfx
+} // namespace cc
 
 #endif // CC_GFXVULKAN_CCVK_DEVICE_H_

@@ -7,11 +7,12 @@ class Pass;
 struct InstancedAttributeBlock;
 struct PSOCreateInfo;
 class SubModel;
-}
+} // namespace cc
 
-NS_PP_BEGIN
+namespace cc {
+namespace pipeline {
 
-class InstancedBuffer : public cc::Object {
+class InstancedBuffer : public gfx::Object {
 public:
     static const uint INITIAL_CAPACITY = 32;
     static const uint MAX_CAPACITY = 1024;
@@ -34,4 +35,5 @@ private:
     cc::Pass *_pass = nullptr;
 };
 
-NS_PP_END
+} // namespace pipeline
+} // namespace cc

@@ -5,6 +5,7 @@
 #import <Metal/MTLStageInputOutputDescriptor.h>
 
 namespace cc {
+namespace gfx {
 
 class CCMTLBuffer : public GFXBuffer {
 public:
@@ -38,4 +39,5 @@ private:
     bool _isIndexIndirectCommand = false;
 };
 
+} // namespace gfx
 } // namespace cc

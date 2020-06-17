@@ -8,13 +8,14 @@ class GFXDevice;
 
 }
 
-NS_PP_BEGIN
+namespace cc {
+namespace pipeline {
 
 class RenderPipeline;
 class RenderStage;
 class RenderView;
 
-class CC_DLL RenderFlow : public cc::Object {
+class CC_DLL RenderFlow : public gfx::Object {
 public:
     RenderFlow() = default;
     virtual ~RenderFlow() = default;
@@ -31,7 +32,7 @@ public:
 
     CC_INLINE const cc::GFXDevice *getDevice() const { return _device; }
     CC_INLINE const RenderPipeline *getPipeline() const { return _pipeline; }
-    CC_INLINE const cc::String &getName() const { return _name; }
+    CC_INLINE const gfx::String &getName() const { return _name; }
     CC_INLINE int getPriority() const { return _priority; }
     CC_INLINE const RenderStageList &getStages() const { return _stages; }
     //    CC_INLINE const Material *getMaterial() const { return _material; }
@@ -43,11 +44,12 @@ protected:
 protected:
     cc::GFXDevice *_device = nullptr;
     RenderPipeline *_pipeline = nullptr;
-    cc::String _name;
+    gfx::String _name;
     int _priority = 0;
     RenderStageList _stages;
     //    Material *_material = nullptr;
     //    RenderFlowType _type = ;
 };
 
-NS_PP_END
+} // namespace pipeline
+} // namespace cc
