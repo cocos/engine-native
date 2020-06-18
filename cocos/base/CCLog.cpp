@@ -22,7 +22,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "base/CCLog.h"
+#include "base/CC_LOG_DEBUG.h"
 #include <stdio.h>
 #include <new>
 #include <algorithm>
