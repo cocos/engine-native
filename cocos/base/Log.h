@@ -17,7 +17,7 @@ enum class LogLevel : uint8_t {
     ERR,
     WARN,
     INFO,
-    DEBUG,
+    DEBUG_, // DEBUG is a macro on windows, so use DEBUG_ instead.
     COUNT,
 };
 
@@ -38,7 +38,7 @@ private:
 } // namespace cc
 
 #define CC_LOG_DEBUG(formats, ...) \
-    if (cc::Log::logLevel >= cc::LogLevel::DEBUG) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::DEBUG, formats, ##__VA_ARGS__)
+    if (cc::Log::logLevel >= cc::LogLevel::DEBUG_) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::DEBUG_, formats, ##__VA_ARGS__)
 #define CC_LOG_INFO(formats, ...) \
     if (cc::Log::logLevel >= cc::LogLevel::INFO) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::INFO, formats, ##__VA_ARGS__)
 #define CC_LOG_WARNING(formats, ...) \

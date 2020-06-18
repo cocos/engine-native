@@ -7,6 +7,7 @@
         #define WIN32_LEAN_AND_MEAN
     #endif
     #include <Windows.h>
+    #include <time.h>
 
     #define COLOR_FATAL                   FOREGROUND_INTENSITY | FOREGROUND_RED
     #define COLOR_ERROR                   FOREGROUND_RED
@@ -24,7 +25,7 @@ namespace cc {
 
 #define LOG_USE_TIMESTAMP
 #if (COCOS2D_DEBUG == 1)
-LogLevel Log::logLevel = LogLevel::DEBUG;
+LogLevel Log::logLevel = LogLevel::DEBUG_;
 #else
 LogLevel Log::logLevel = LogLevel::INFO;
 #endif
@@ -116,7 +117,7 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
 
     WORD color;
     switch (level) {
-        case LogLevel::DEBUG: color = COLOR_DEBUG; break;
+        case LogLevel::DEBUG_: color = COLOR_DEBUG; break;
         case LogLevel::INFO: color = COLOR_INFO; break;
         case LogLevel::WARN: color = COLOR_WARN; break;
         case LogLevel::ERR: color = COLOR_ERROR; break;
