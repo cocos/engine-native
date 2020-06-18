@@ -3,8 +3,10 @@
 
 #if (CC_MEMORY_ALLOCATOR == CC_MEMORY_ALLOCATOR_STD)
 
+#include "../CoreDef.h"
+#include <limits>
+
 namespace cc {
-namespace gfx {
 
 /**	A "standard" allocation policy for use with AllocatedObject and 
 	STLAllocator. This is the class that actually does the allocation
@@ -134,7 +136,6 @@ private:
     StdAllocPolicy() {}
 };
 
-} // namespace gfx
 } // namespace cc
 
 #endif
