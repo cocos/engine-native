@@ -205,7 +205,7 @@ namespace cocos2d {
             free(outside);
             free(inside);
 #endif
-            return std::move(out);
+            return out;
         }
 
 
@@ -245,10 +245,11 @@ namespace cocos2d {
 
     bool FontFreeType::loadFont()
     {
-        _fontData = std::move(FileUtils::getInstance()->getDataFromFile(_fontName));
+        _fontData = FileUtils::getInstance()->getDataFromFile(_fontName);
 
         if (FT_New_Memory_Face(getFTLibrary(), _fontData.getBytes(), _fontData.getSize(), 0, &_face))
         {
+            cocos2d::log("[error] failed to parse font %s", _fontName.c_str());
             return false;
         }
 
@@ -388,8 +389,8 @@ namespace cocos2d {
 
         int dms = std::max(3, (int)std::max(0.2 * bmWidth, 0.2 * bmHeight));
 
-        int size = PixelModeSize(mode) * bmWidth * bmHeight;
-        std::vector<uint8_t> data = std::move(makeDistanceMap(bitmap.buffer, bmWidth, bmHeight, dms));
+//        int size = PixelModeSize(mode) * bmWidth * bmHeight;
+        std::vector<uint8_t> data = makeDistanceMap(bitmap.buffer, bmWidth, bmHeight, dms);
         auto* ret = new GlyphBitmap(data, bmWidth + 2 * dms, bmHeight + 2 * dms, Rect(x, y, w + 2 * dms, h +  2 * dms), adv, mode, dms);
 
         return std::shared_ptr<GlyphBitmap>(ret);

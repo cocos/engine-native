@@ -69,13 +69,17 @@ namespace cocos2d {
     }
 
 
-    void TTFLabelAtals::init()
+    bool TTFLabelAtals::init()
     {
         assert(FileUtils::getInstance()->isFileExist(_fontName));
         _ttfFont = std::make_shared<FontFreeType>(_fontName, _fontSize, _info);
-        _ttfFont->loadFont();
+        
+        if(!_ttfFont->loadFont()){
+            return false;
+        }
         _fontAtlas = std::make_shared<FontAtlas>(PixelMode::A8, FTT_TEXTURE_SIZE, FTT_TEXTURE_SIZE, _info->outlineSize > 0 || _info->bold);
         _fontAtlas->init();
+        return true;
     }
 
     TTFLabelAtlasCache * TTFLabelAtlasCache::getInstance()
@@ -108,6 +112,10 @@ namespace cocos2d {
         if (!atlas)
         {
             atlas = std::make_shared<TTFLabelAtals>(font, fontSize, info);
+            if(!atlas->init())
+            {
+                return nullptr;
+            }
             atlasWeak = atlas;
         }
 #else
@@ -115,6 +123,10 @@ namespace cocos2d {
         if (!atlas)
         {
             atlas = std::make_shared<TTFLabelAtals>(font, fontSize, info);
+            if(!atlas->init())
+            {
+                return nullptr;
+            }
         }
 #endif
         return atlas;

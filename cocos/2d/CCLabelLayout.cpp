@@ -473,6 +473,9 @@ namespace cocos2d {
         _layoutInfo = info;
         _retinaFontSize = std::max(fontSize, retinaFontSize);
         _fontAtlas = TTFLabelAtlasCache::getInstance()->load(font, _retinaFontSize, info);
+        if(!_fontAtlas) {
+            return false;
+        }
         _fontScale = fontSize / _fontAtlas->getFontSize();
         _groups = std::make_shared<TextRenderGroup>();
         if (info->shadowBlur >= 0)
@@ -512,7 +515,10 @@ namespace cocos2d {
 
     bool LabelLayout::updateContent()
     {
-
+        if(!_fontAtlas)
+        {
+            return false;
+        }
         auto *atlas = _fontAtlas->getFontAtlas();
         auto *ttf = _fontAtlas->getTTF();
 
@@ -777,6 +783,9 @@ namespace cocos2d {
     void LabelLayout::fillAssembler(renderer::CustomAssembler *assembler, EffectVariant *templateEffect)
     {
         assembler->reset();
+        if(!_groups) {
+            return;
+        }
         _groups->reset();
         int groupIndex = 0;
         if (_textSpace.empty())

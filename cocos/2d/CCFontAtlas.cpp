@@ -232,7 +232,7 @@ namespace cocos2d {
             opt.y = 0;
             opt.width = _WIDTH;
             opt.height = _HEIGHT;
-            opt.imageDataLength = _buffer.size();
+            opt.imageDataLength = (uint32_t)_buffer.size();
             _texture->updateSubImage(opt);
         }
         else if (_dirtyFlag & DIRTY_RECT)
@@ -266,7 +266,6 @@ namespace cocos2d {
 
     bool FontAtlas::init()
     {
-        int pixelSize = PixelModeSize(_pixelMode);
         _textureFrame.reinit(_pixelMode, _width, _height);
         _letterMap.clear();
         return true;
