@@ -23,30 +23,30 @@ enum class LogLevel : uint8_t {
 
 class CC_DLL Log {
 public:
-    static LogLevel log_level; // for read only
+    static LogLevel logLevel; // for read only
 
-    static CC_INLINE void set_log_level(LogLevel level) { log_level = level; }
-    static CC_INLINE FILE *log_file() { return log_file_; }
-    static void set_log_file(const std::string &filename);
-    static void Close();
-    static void LogMessage(LogType type, LogLevel level, const char *formats, ...);
+    static CC_INLINE void setLogLevel(LogLevel level) { logLevel = level; }
+    static CC_INLINE FILE *getLogFile() { return _logFile; }
+    static void setLogFile(const std::string &filename);
+    static void close();
+    static void logMessage(LogType type, LogLevel level, const char *formats, ...);
 
 private:
-    static FILE *log_file_;
+    static FILE *_logFile;
 };
 
 } // namespace cc
 
 #define CC_LOG_DEBUG(formats, ...) \
-    if (cc::Log::log_level >= cc::LogLevel::DEBUG) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::DEBUG, formats, ##__VA_ARGS__)
+    if (cc::Log::logLevel >= cc::LogLevel::DEBUG) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::DEBUG, formats, ##__VA_ARGS__)
 #define CC_LOG_INFO(formats, ...) \
-    if (cc::Log::log_level >= cc::LogLevel::INFO) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::INFO, formats, ##__VA_ARGS__)
+    if (cc::Log::logLevel >= cc::LogLevel::INFO) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::INFO, formats, ##__VA_ARGS__)
 #define CC_LOG_WARNING(formats, ...) \
-    if (cc::Log::log_level >= cc::LogLevel::WARN) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::WARN, formats, ##__VA_ARGS__)
+    if (cc::Log::logLevel >= cc::LogLevel::WARN) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::WARN, formats, ##__VA_ARGS__)
 #define CC_LOG_ERROR_(formats, ...) \
-    if (cc::Log::log_level >= cc::LogLevel::ERR) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::ERR, formats, ##__VA_ARGS__)
+    if (cc::Log::logLevel >= cc::LogLevel::ERR) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::ERR, formats, ##__VA_ARGS__)
 #define CC_LOG_FATAL(formats, ...) \
-    if (cc::Log::logLevel >= cc::LogLevel::FATAL) cc::Log::LogMessage(cc::LogType::KERNEL, cc::LogLevel::FATAL, formats, ##__VA_ARGS__)
+    if (cc::Log::logLevel >= cc::LogLevel::FATAL) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::FATAL, formats, ##__VA_ARGS__)
 
 #define CC_LOG_ERROR(formats, ...)                                      \
     do {                                                                \

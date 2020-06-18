@@ -23,19 +23,24 @@
 namespace cc {
 
 #define LOG_USE_TIMESTAMP
-LogLevel Log::log_level = LogLevel::DEBUG;
-FILE *Log::log_file_ = nullptr;
+#if (COCOS2D_DEBUG == 1)
+LogLevel Log::logLevel = LogLevel::DEBUG;
+#else
+LogLevel Log::logLevel = LogLevel::INFO;
+#endif
+
+FILE *Log::_logFile = nullptr;
 const char *LOG_LEVEL_DESCS[] = {"FATAL", "ERROR", "WARN", "INFO", "DEBUG"};
 
-void Log::set_log_file(const std::string &filename) {
+void Log::setLogFile(const std::string &filename) {
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    if (log_file_) {
-        fclose(log_file_);
+    if (_logFile) {
+        fclose(_logFile);
     }
 
-    log_file_ = fopen(filename.c_str(), "w");
+    _logFile = fopen(filename.c_str(), "w");
 
-    if (log_file_) {
+    if (_logFile) {
         String msg;
         msg += "------------------------------------------------------\n";
 
@@ -54,20 +59,20 @@ void Log::set_log_file(const std::string &filename) {
 
         msg += "------------------------------------------------------\n";
 
-        fputs(msg.c_str(), log_file_);
-        fflush(log_file_);
+        fputs(msg.c_str(), _logFile);
+        fflush(_logFile);
     }
 #endif
 }
 
-void Log::Close() {
-    if (log_file_) {
-        fclose(log_file_);
-        log_file_ = nullptr;
+void Log::close() {
+    if (_logFile) {
+        fclose(_logFile);
+        _logFile = nullptr;
     }
 }
 
-void Log::LogMessage(LogType type, LogLevel level, const char *formats, ...) {
+void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
     char buff[4096];
     char *p = buff;
     char *last = buff + sizeof(buff) - 3;
@@ -100,9 +105,9 @@ void Log::LogMessage(LogType type, LogLevel level, const char *formats, ...) {
     *p++ = '\n';
     *p = 0;
 
-    if (log_file_) {
-        fputs(buff, log_file_);
-        fflush(log_file_);
+    if (_logFile) {
+        fputs(buff, _logFile);
+        fflush(_logFile);
     }
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
