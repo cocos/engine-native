@@ -5,6 +5,7 @@
 
 #include "../CoreDef.h"
 #include <limits>
+#include <stdlib.h>
 
 namespace cc {
 
