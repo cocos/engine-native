@@ -483,8 +483,6 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXTexture.h
     cocos/renderer/core/gfx/GFXFence.h
     cocos/renderer/core/gfx/GFXFence.cc
-    cocos/renderer/core/kernel/Assertion.cc
-    cocos/renderer/core/kernel/Assertion.h
     cocos/renderer/core/kernel/CachedArray.h
     cocos/renderer/core/kernel/Log.cc
     cocos/renderer/core/kernel/Log.h
