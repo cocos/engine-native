@@ -613,4 +613,4 @@ It should work same as apples CFSwapInt32LittleToHost(..)
     #define CC_STL_MEMORY_ALLOCATOR CC_STL_MEMORY_ALLOCATOR_CUSTOM
 #endif
 
-//#define CC_TOSTR(s) #s
+#define CC_TOSTR(s) #s
