@@ -726,15 +726,15 @@ static bool js_gfx_GFXBlendState_set_targets(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_GFXBlendState_set_targets)
 
-static bool js_gfx_GFXCommandBuffer_execute(se::State& s)
+static bool js_gfx_CommandBuffer_execute(se::State& s)
 {
-    cc::gfx::GFXCommandBuffer* cobj = (cc::gfx::GFXCommandBuffer*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXCommandBuffer_execute : Invalid Native Object");
+    cc::gfx::CommandBuffer* cobj = (cc::gfx::CommandBuffer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_CommandBuffer_execute : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 2) {
-        std::vector<cc::gfx::GFXCommandBuffer *> cmdBufs;
+        std::vector<cc::gfx::CommandBuffer *> cmdBufs;
         unsigned int count = 0;
         ok &= seval_to_uint32(args[1], (uint32_t*)&count);
         
@@ -760,19 +760,19 @@ static bool js_gfx_GFXCommandBuffer_execute(se::State& s)
                     break;
                 }
                 
-                cc::gfx::GFXCommandBuffer *cmdBuf = (cc::gfx::GFXCommandBuffer*)tmp.toObject()->getPrivateData();
+                cc::gfx::CommandBuffer *cmdBuf = (cc::gfx::CommandBuffer*)tmp.toObject()->getPrivateData();
                 cmdBufs[i] = cmdBuf;
             }
         }
         
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXCommandBuffer_execute : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_execute : Error processing arguments");
         cobj->execute(cmdBufs, count);
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXCommandBuffer_execute)
+SE_BIND_FUNC(js_gfx_CommandBuffer_execute)
 
 static bool js_gfx_GFXInputAssembler_extractDrawInfo(se::State& s)
 {
@@ -821,7 +821,7 @@ bool register_all_gfx_manual(se::Object* obj)
     
     __jsb_cc_gfx_GFXBlendState_proto->defineProperty("targets", _SE(js_gfx_GFXBlendState_get_targets), _SE(js_gfx_GFXBlendState_set_targets));
     
-    __jsb_cc_gfx_GFXCommandBuffer_proto->defineFunction("execute", _SE(js_gfx_GFXCommandBuffer_execute));
+    __jsb_cc_gfx_CommandBuffer_proto->defineFunction("execute", _SE(js_gfx_CommandBuffer_execute));
 
     __jsb_cc_gfx_GFXInputAssembler_proto->defineFunction("extractDrawInfo", _SE(js_gfx_GFXInputAssembler_extractDrawInfo));
     

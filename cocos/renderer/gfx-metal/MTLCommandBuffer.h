@@ -12,14 +12,14 @@ class CCMTLInputAssembler;
 class CCMTLPipelineState;
 class CCMTLBindingLayout;
 
-class CCMTLCommandBuffer : public GFXCommandBuffer {
+class CCMTLCommandBuffer : public CommandBuffer {
     friend class CCMTLQueue;
 
 public:
     CCMTLCommandBuffer(Device *device);
     ~CCMTLCommandBuffer();
 
-    virtual bool initialize(const GFXCommandBufferInfo &info) override;
+    virtual bool initialize(const CommandBufferInfo &info) override;
     virtual void destroy() override;
     virtual void begin(GFXRenderPass *renderPass = nullptr, uint subpass = 0, GFXFramebuffer *frameBuffer = nullptr) override;
     virtual void end() override;
@@ -39,7 +39,7 @@ public:
     virtual void draw(GFXInputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) override;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) override;
-    virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) override;
+    virtual void execute(const std::vector<CommandBuffer *> &cmd_buffs, uint32_t count) override;
 
     CC_INLINE const CCMTLCommandPackage *getCommandPackage() const { return _commandPackage; }
 

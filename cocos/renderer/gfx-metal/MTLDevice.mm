@@ -167,7 +167,7 @@ CommandAllocator *CCMTLDevice::createCommandAllocator(const CommandAllocatorInfo
     return nullptr;
 }
 
-GFXCommandBuffer *CCMTLDevice::createCommandBuffer(const GFXCommandBufferInfo &info) {
+CommandBuffer *CCMTLDevice::createCommandBuffer(const CommandBufferInfo &info) {
     auto commandBuffer = CC_NEW(CCMTLCommandBuffer(this));
     if (commandBuffer && commandBuffer->initialize(info))
         return commandBuffer;

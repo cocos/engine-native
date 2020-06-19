@@ -37,7 +37,7 @@ void CCVKQueue::destroy() {
     _status = GFXStatus::UNREADY;
 }
 
-void CCVKQueue::submit(const vector<GFXCommandBuffer *> &cmdBuffs, GFXFence *fence) {
+void CCVKQueue::submit(const vector<CommandBuffer *> &cmdBuffs, GFXFence *fence) {
     CCVKDevice *device = (CCVKDevice *)_device;
 
     _gpuQueue->commandBuffers.clear();

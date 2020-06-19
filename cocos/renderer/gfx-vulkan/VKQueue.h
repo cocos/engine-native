@@ -16,7 +16,7 @@ public:
 public:
     bool initialize(const GFXQueueInfo &info);
     void destroy();
-    void submit(const vector<GFXCommandBuffer *> &cmdBuffs, GFXFence *fence);
+    void submit(const vector<CommandBuffer *> &cmdBuffs, GFXFence *fence);
 
     CC_INLINE CCVKGPUQueue *gpuQueue() const { return _gpuQueue; }
 

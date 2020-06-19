@@ -21,7 +21,7 @@ public:
     void clear(const vector<Light *> &validLights,
                const vector<gfx::Buffer *> &lightBuffers,
                const vector<uint> &lightIndices);
-    void recordCommandBuffer(gfx::Device *device, gfx::GFXRenderPass *renderPass, gfx::GFXCommandBuffer *cmdBuff);
+    void recordCommandBuffer(gfx::Device *device, gfx::GFXRenderPass *renderPass, gfx::CommandBuffer *cmdBuff);
     
 private:
     void attach(RenderObject *renderObj, uint subModelIdx, gfx::Buffer *lightBuffer,

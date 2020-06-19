@@ -12,13 +12,13 @@ namespace cc {
 namespace gfx {
 
 GLES2CommandBuffer::GLES2CommandBuffer(Device *device)
-: GFXCommandBuffer(device) {
+: CommandBuffer(device) {
 }
 
 GLES2CommandBuffer::~GLES2CommandBuffer() {
 }
 
-bool GLES2CommandBuffer::initialize(const GFXCommandBufferInfo &info) {
+bool GLES2CommandBuffer::initialize(const CommandBufferInfo &info) {
 
     if (!info.allocator) {
         return false;
@@ -183,8 +183,8 @@ void GLES2CommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uin
 }
 
 void GLES2CommandBuffer::draw(GFXInputAssembler *ia) {
-    if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && _isInRenderPass) ||
+        (_type == CommandBufferType::SECONDARY)) {
         if (_isStateInvalid) {
             BindStates();
         }
@@ -221,8 +221,8 @@ void GLES2CommandBuffer::draw(GFXInputAssembler *ia) {
 }
 
 void GLES2CommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint offset) {
-    if ((_type == GFXCommandBufferType::PRIMARY && !_isInRenderPass) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && !_isInRenderPass) ||
+        (_type == CommandBufferType::SECONDARY)) {
         GLES2GPUBuffer *gpuBuffer = ((GLES2Buffer *)buff)->gpuBuffer();
         if (gpuBuffer) {
             GLES2CmdUpdateBuffer *cmd = _gles2Allocator->updateBufferCmdPool.alloc();
@@ -240,8 +240,8 @@ void GLES2CommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint 
 }
 
 void GLES2CommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) {
-    if ((_type == GFXCommandBufferType::PRIMARY && !_isInRenderPass) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && !_isInRenderPass) ||
+        (_type == CommandBufferType::SECONDARY)) {
         GLES2GPUBuffer *gpuBuffer = ((GLES2Buffer *)src)->gpuBuffer();
         GLES2GPUTexture *gpuTexture = ((GLES2Texture *)dst)->gpuTexture();
         if (gpuBuffer && gpuTexture) {
@@ -262,7 +262,7 @@ void GLES2CommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureL
     }
 }
 
-void GLES2CommandBuffer::execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) {
+void GLES2CommandBuffer::execute(const std::vector<CommandBuffer *> &cmd_buffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         GLES2CommandBuffer *cmd_buff = (GLES2CommandBuffer *)cmd_buffs[i];
 

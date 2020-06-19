@@ -8,7 +8,7 @@ namespace gfx {
 
 class GLES3CommandAllocator;
 
-class CC_GLES3_API GLES3CommandBuffer : public GFXCommandBuffer {
+class CC_GLES3_API GLES3CommandBuffer : public CommandBuffer {
     friend class GLES3Queue;
 
 public:
@@ -16,7 +16,7 @@ public:
     ~GLES3CommandBuffer();
 
 public:
-    virtual bool initialize(const GFXCommandBufferInfo &info) override;
+    virtual bool initialize(const CommandBufferInfo &info) override;
     virtual void destroy() override;
 
     virtual void begin(GFXRenderPass *renderPass = nullptr, uint subpass = 0, GFXFramebuffer *frameBuffer = nullptr) override;
@@ -37,7 +37,7 @@ public:
     virtual void draw(GFXInputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset) override;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) override;
-    virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) override;
+    virtual void execute(const std::vector<CommandBuffer *> &cmd_buffs, uint32_t count) override;
 
 private:
     void BindStates();

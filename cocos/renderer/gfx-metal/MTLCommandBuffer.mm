@@ -15,10 +15,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device) : GFXCommandBuffer(device) {}
+CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device) : CommandBuffer(device) {}
 CCMTLCommandBuffer::~CCMTLCommandBuffer() { destroy(); }
 
-bool CCMTLCommandBuffer::initialize(const GFXCommandBufferInfo &info) {
+bool CCMTLCommandBuffer::initialize(const CommandBufferInfo &info) {
     if (!info.allocator)
         return false;
 
@@ -166,8 +166,8 @@ void CCMTLCommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uin
 }
 
 void CCMTLCommandBuffer::draw(GFXInputAssembler *ia) {
-    if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
-        _type == GFXCommandBufferType::SECONDARY) {
+    if ((_type == CommandBufferType::PRIMARY && _isInRenderPass) ||
+        _type == CommandBufferType::SECONDARY) {
         CCMTLCmdDraw *cmd = _MTLCommandAllocator->_drawCmdPool.alloc();
         if (!cmd)
             return;
@@ -199,8 +199,8 @@ void CCMTLCommandBuffer::draw(GFXInputAssembler *ia) {
 }
 
 void CCMTLCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint offset) {
-    if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && _isInRenderPass) ||
+        (_type == CommandBufferType::SECONDARY)) {
         if (buff) {
             CCMTLCmdUpdateBuffer *cmd = _MTLCommandAllocator->_updateBufferCmdPool.alloc();
             cmd->gpuBuffer = static_cast<CCMTLBuffer *>(buff);
@@ -217,8 +217,8 @@ void CCMTLCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint 
 }
 
 void CCMTLCommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) {
-    if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && _isInRenderPass) ||
+        (_type == CommandBufferType::SECONDARY)) {
         if (src && dst) {
             CCMTLCmdCopyBufferToTexture *cmd = _MTLCommandAllocator->_copyBufferToTextureCmdPool.alloc();
             cmd->gpuBuffer = static_cast<CCMTLBuffer *>(src);
@@ -235,7 +235,7 @@ void CCMTLCommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureL
     }
 }
 
-void CCMTLCommandBuffer::execute(const std::vector<GFXCommandBuffer *> &commandBuffs, uint32_t count) {
+void CCMTLCommandBuffer::execute(const std::vector<CommandBuffer *> &commandBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         auto commandBuffer = static_cast<CCMTLCommandBuffer *>(commandBuffs[i]);
         for (uint j = 0; j < commandBuffer->_commandPackage->beginRenderPassCmds.size(); ++j) {

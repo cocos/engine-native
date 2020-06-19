@@ -362,12 +362,12 @@ VkImageViewType MapVkImageViewType(TextureType viewType) {
     }
 }
 
-VkCommandBufferLevel MapVkCommandBufferLevel(GFXCommandBufferType type) {
+VkCommandBufferLevel MapVkCommandBufferLevel(CommandBufferType type) {
     switch (type) {
-        case GFXCommandBufferType::PRIMARY: return VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        case GFXCommandBufferType::SECONDARY: return VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+        case CommandBufferType::PRIMARY: return VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        case CommandBufferType::SECONDARY: return VK_COMMAND_BUFFER_LEVEL_SECONDARY;
         default: {
-            CCASSERT(false, "Unsupported GFXCommandBufferType, convert to VkCommandBufferLevel failed.");
+            CCASSERT(false, "Unsupported CommandBufferType, convert to VkCommandBufferLevel failed.");
             return VK_COMMAND_BUFFER_LEVEL_SECONDARY;
         }
     }

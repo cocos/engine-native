@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXCommandBuffer : public GFXObject {
+class CC_DLL CommandBuffer : public GFXObject {
 public:
-    GFXCommandBuffer(Device *device);
-    virtual ~GFXCommandBuffer();
+    CommandBuffer(Device *device);
+    virtual ~CommandBuffer();
 
 public:
-    virtual bool initialize(const GFXCommandBufferInfo &info) = 0;
+    virtual bool initialize(const CommandBufferInfo &info) = 0;
     virtual void destroy() = 0;
     virtual void begin(GFXRenderPass *renderPass = nullptr, uint subpass = 0, GFXFramebuffer *frameBuffer = nullptr) = 0;
     virtual void end() = 0;
@@ -32,11 +32,11 @@ public:
     virtual void draw(GFXInputAssembler *ia) = 0;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) = 0;
-    virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) = 0;
+    virtual void execute(const std::vector<CommandBuffer *> &cmd_buffs, uint32_t count) = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE CommandAllocator *getAllocator() const { return _allocator; }
-    CC_INLINE GFXCommandBufferType getType() const { return _type; }
+    CC_INLINE CommandBufferType getType() const { return _type; }
     CC_INLINE uint getNumDrawCalls() const { return _numDrawCalls; }
     CC_INLINE uint getNumInstances() const { return _numInstances; }
     CC_INLINE uint getNumTris() const { return _numTriangles; }
@@ -44,7 +44,7 @@ public:
 protected:
     Device *_device = nullptr;
     CommandAllocator *_allocator = nullptr;
-    GFXCommandBufferType _type = GFXCommandBufferType::PRIMARY;
+    CommandBufferType _type = CommandBufferType::PRIMARY;
     uint32_t _numDrawCalls = 0;
     uint32_t _numInstances = 0;
     uint32_t _numTriangles = 0;

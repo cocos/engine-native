@@ -22,7 +22,7 @@ public:
     virtual GFXFence *createFence(const GFXFenceInfo &info) override;
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) override;
     virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) override;
-    virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) override;
+    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
     virtual Texture *createTexture(const TextureInfo &info) override;
     virtual Texture *createTexture(const TextureViewInfo &info) override;

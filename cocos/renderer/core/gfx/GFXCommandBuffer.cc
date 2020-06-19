@@ -4,11 +4,11 @@
 namespace cc {
 namespace gfx {
 
-GFXCommandBuffer::GFXCommandBuffer(Device *device)
+CommandBuffer::CommandBuffer(Device *device)
 : GFXObject(GFXObjectType::COMMAND_BUFFER), _device(device) {
 }
 
-GFXCommandBuffer::~GFXCommandBuffer() {
+CommandBuffer::~CommandBuffer() {
 }
 
 } // namespace gfx

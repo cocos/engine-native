@@ -193,8 +193,8 @@ CommandAllocator *GLES2Device::createCommandAllocator(const CommandAllocatorInfo
     return nullptr;
 }
 
-GFXCommandBuffer *GLES2Device::createCommandBuffer(const GFXCommandBufferInfo &info) {
-    GFXCommandBuffer *cmdBuff = CC_NEW(GLES2CommandBuffer(this));
+CommandBuffer *GLES2Device::createCommandBuffer(const CommandBufferInfo &info) {
+    CommandBuffer *cmdBuff = CC_NEW(GLES2CommandBuffer(this));
     if (cmdBuff->initialize(info))
         return cmdBuff;
 

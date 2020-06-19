@@ -11,7 +11,7 @@ public:
     
     void clear();
     bool insertRenderPass(RenderObject *renderObj, uint subModelIdx, uint passIdx);
-    void recordCommandBuffer(gfx::Device *device, gfx::GFXRenderPass *renderPass, gfx::GFXCommandBuffer *cmdBuff);
+    void recordCommandBuffer(gfx::Device *device, gfx::GFXRenderPass *renderPass, gfx::CommandBuffer *cmdBuff);
     void sort();
     
 private:

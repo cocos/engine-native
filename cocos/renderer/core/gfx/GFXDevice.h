@@ -20,7 +20,7 @@ public:
     virtual GFXFence *createFence(const GFXFenceInfo &info) = 0;
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) = 0;
     virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) = 0;
-    virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) = 0;
+    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) = 0;
     virtual Buffer *createBuffer(const BufferInfo &info) = 0;
     virtual Texture *createTexture(const TextureInfo &info) = 0;
     virtual Texture *createTexture(const TextureViewInfo &info) = 0;

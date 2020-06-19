@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-class CC_VULKAN_API CCVKCommandBuffer : public GFXCommandBuffer {
+class CC_VULKAN_API CCVKCommandBuffer : public CommandBuffer {
 public:
     CCVKCommandBuffer(Device *device);
     ~CCVKCommandBuffer();
@@ -14,7 +14,7 @@ public:
     friend class CCVKQueue;
 
 public:
-    bool initialize(const GFXCommandBufferInfo &info);
+    bool initialize(const CommandBufferInfo &info);
     void destroy();
 
     void begin(GFXRenderPass *renderPass = nullptr, uint subpass = 0, GFXFramebuffer *frameBuffer = nullptr);
@@ -35,7 +35,7 @@ public:
     void draw(GFXInputAssembler *ia);
     void updateBuffer(Buffer *buff, void *data, uint size, uint offset);
     void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions);
-    void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint count);
+    void execute(const std::vector<CommandBuffer *> &cmd_buffs, uint count);
 
     CCVKGPUCommandBuffer *gpuCommandBuffer() const { return _gpuCommandBuffer; }
 

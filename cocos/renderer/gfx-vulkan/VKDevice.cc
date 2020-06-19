@@ -554,8 +554,8 @@ CommandAllocator *CCVKDevice::createCommandAllocator(const CommandAllocatorInfo 
     return nullptr;
 }
 
-GFXCommandBuffer *CCVKDevice::createCommandBuffer(const GFXCommandBufferInfo &info) {
-    GFXCommandBuffer *gfx_cmd_buff = CC_NEW(CCVKCommandBuffer(this));
+CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo &info) {
+    CommandBuffer *gfx_cmd_buff = CC_NEW(CCVKCommandBuffer(this));
     if (gfx_cmd_buff->initialize(info))
         return gfx_cmd_buff;
 

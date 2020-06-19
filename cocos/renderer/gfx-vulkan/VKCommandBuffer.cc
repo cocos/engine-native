@@ -16,13 +16,13 @@ namespace cc {
 namespace gfx {
 
 CCVKCommandBuffer::CCVKCommandBuffer(Device *device)
-: GFXCommandBuffer(device) {
+: CommandBuffer(device) {
 }
 
 CCVKCommandBuffer::~CCVKCommandBuffer() {
 }
 
-bool CCVKCommandBuffer::initialize(const GFXCommandBufferInfo &info) {
+bool CCVKCommandBuffer::initialize(const CommandBufferInfo &info) {
     if (!info.allocator) {
         return false;
     }
@@ -61,7 +61,7 @@ void CCVKCommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, GFXFrameb
     VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-    if (_type == GFXCommandBufferType::SECONDARY) {
+    if (_type == CommandBufferType::SECONDARY) {
         if (!renderPass) {
             CC_LOG_ERROR("RenderPass has to be specified when beginning secondary command buffers.");
             return;
@@ -255,8 +255,8 @@ void CCVKCommandBuffer::setStencilCompareMask(GFXStencilFace face, int reference
 }
 
 void CCVKCommandBuffer::draw(GFXInputAssembler *ia) {
-    if ((_type == GFXCommandBufferType::PRIMARY && _curGPUFBO) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && _curGPUFBO) ||
+        (_type == CommandBufferType::SECONDARY)) {
         CCVKGPUInputAssembler *gpuInputAssembler = ((CCVKInputAssembler *)ia)->gpuInputAssembler();
         GFXDrawInfo drawInfo;
 
@@ -328,7 +328,7 @@ void CCVKCommandBuffer::draw(GFXInputAssembler *ia) {
     }
 }
 
-void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer *> &cmdBuffs, uint count) {
+void CCVKCommandBuffer::execute(const std::vector<CommandBuffer *> &cmdBuffs, uint count) {
     if (!count) {
         return;
     }
@@ -348,8 +348,8 @@ void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer *> &cmdBuffs,
 }
 
 void CCVKCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint offset) {
-    if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && !_curGPUFBO) ||
+        (_type == CommandBufferType::SECONDARY)) {
         CCVKCmdFuncUpdateBuffer((CCVKDevice *)_device, ((CCVKBuffer *)buff)->gpuBuffer(), data, offset, size);
     } else {
         CC_LOG_ERROR("Command 'updateBuffer' must be recorded outside a render pass.");
@@ -357,8 +357,8 @@ void CCVKCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint o
 }
 
 void CCVKCommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) {
-    if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
-        (_type == GFXCommandBufferType::SECONDARY)) {
+    if ((_type == CommandBufferType::PRIMARY && !_curGPUFBO) ||
+        (_type == CommandBufferType::SECONDARY)) {
         //const CCVKGPUBuffer* gpuBuffer = ((CCVKBuffer*)src)->gpuBuffer();
         //const CCVKGPUTexture* gpuTexture = ((CCVKTexture*)dst)->gpuTexture();
         //vkCmdCopyBufferToImage(_gpuCommandBuffer->vkCommandBuffer, gpuBuffer->vkBuffer, gpuTexture->vkImage, MapVkImageLayout(layout),

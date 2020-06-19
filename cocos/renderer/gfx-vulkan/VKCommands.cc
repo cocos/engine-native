@@ -39,7 +39,7 @@ void insertVkDynamicStates(vector<VkDynamicState> &out, const vector<GFXDynamicS
 
 void beginOneTimeCommands(CCVKDevice *device, CCVKGPUCommandBuffer *cmdBuff) {
     cmdBuff->commandPool = ((CCVKCommandAllocator *)device->getCommandAllocator())->gpuCommandPool();
-    cmdBuff->type = GFXCommandBufferType::PRIMARY;
+    cmdBuff->type = CommandBufferType::PRIMARY;
     CCVKCmdFuncAllocateCommandBuffer(device, cmdBuff);
 
     VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};

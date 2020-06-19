@@ -115,7 +115,7 @@ public:
 
 class CCVKGPUCommandBuffer : public Object {
 public:
-    GFXCommandBufferType type;
+    CommandBufferType type;
     CCVKGPUCommandPool *commandPool = nullptr;
     VkCommandBuffer vkCommandBuffer = VK_NULL_HANDLE;
 };

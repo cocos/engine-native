@@ -16,7 +16,7 @@ class BindingLayout;
 class GFXPipelineLayout;
 class GFXPipelineState;
 class CommandAllocator;
-class GFXCommandBuffer;
+class CommandBuffer;
 class GFXFence;
 class GFXQueue;
 class GFXWindow;
@@ -528,7 +528,7 @@ enum class GFXQueueType : uint8_t {
     TRANSFER,
 };
 
-enum class GFXCommandBufferType : uint8_t {
+enum class CommandBufferType : uint8_t {
     PRIMARY,
     SECONDARY,
 };
@@ -993,9 +993,9 @@ struct GFXPipelineStateInfo {
 struct CommandAllocatorInfo {
 };
 
-struct GFXCommandBufferInfo {
+struct CommandBufferInfo {
     CommandAllocator *allocator = nullptr;
-    GFXCommandBufferType type = GFXCommandBufferType::PRIMARY;
+    CommandBufferType type = CommandBufferType::PRIMARY;
 };
 
 struct GFXQueueInfo {
