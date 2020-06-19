@@ -90,17 +90,11 @@ scripting/js-bindings/event/EventDispatcher.cpp \
 ../external/sources/edtaa3func/edtaa3func.h \
 ui/edit-box/EditBox-android.cpp \
 2d/CCFontAtlas.cpp \
-2d/CCFontAtlas.h \
 2d/CCFontFreetype.cpp \
-2d/CCFontFreetype.h \
 2d/CCLabelLayout.cpp \
-2d/CCLabelLayout.h \
 2d/CCTTFLabelAtlasCache.cpp \
-2d/CCTTFLabelAtlasCache.h \
 2d/CCTTFLabelRenderer.cpp \
-2d/CCTTFLabelRenderer.h \
-2d/CCTTFTypes.cpp \
-2d/CCTTFTypes.h 
+2d/CCTTFTypes.cpp
 
 # v8 debugger source files, always enable it
 LOCAL_SRC_FILES += \
