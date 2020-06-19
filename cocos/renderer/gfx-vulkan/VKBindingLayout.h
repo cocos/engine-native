@@ -8,7 +8,7 @@ class CCVKGPUBindingLayout;
 
 class CC_VULKAN_API CCVKBindingLayout : public GFXBindingLayout {
 public:
-    CCVKBindingLayout(GFXDevice *device);
+    CCVKBindingLayout(Device *device);
     ~CCVKBindingLayout();
 
 public:

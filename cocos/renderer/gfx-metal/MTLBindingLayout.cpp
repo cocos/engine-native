@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLBindingLayout::CCMTLBindingLayout(GFXDevice *device) : GFXBindingLayout(device) {}
+CCMTLBindingLayout::CCMTLBindingLayout(Device *device) : GFXBindingLayout(device) {}
 CCMTLBindingLayout::~CCMTLBindingLayout() { destroy(); }
 
 bool CCMTLBindingLayout::initialize(const GFXBindingLayoutInfo &info) {

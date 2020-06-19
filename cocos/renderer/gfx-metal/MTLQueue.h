@@ -12,7 +12,7 @@ class CCMTLQueue : public GFXQueue {
     friend class CCMTLDevice;
 
 public:
-    CCMTLQueue(GFXDevice *device);
+    CCMTLQueue(Device *device);
     ~CCMTLQueue();
 
     virtual bool initialize(const GFXQueueInfo &info) override;

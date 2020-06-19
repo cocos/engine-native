@@ -8,7 +8,7 @@ class GLES3GPUBindingLayout;
 
 class CC_GLES3_API GLES3BindingLayout : public GFXBindingLayout {
 public:
-    GLES3BindingLayout(GFXDevice *device);
+    GLES3BindingLayout(Device *device);
     ~GLES3BindingLayout();
 
 public:

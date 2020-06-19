@@ -8,17 +8,17 @@ namespace gfx {
 
 class CC_DLL GFXCommandAllocator : public GFXObject {
 public:
-    GFXCommandAllocator(GFXDevice *device);
+    GFXCommandAllocator(Device *device);
     virtual ~GFXCommandAllocator();
 
 public:
     virtual bool initialize(const GFXCommandAllocatorInfo &info) = 0;
     virtual void destroy() = 0;
 
-    CC_INLINE GFXDevice *getDevice() const { return _device; }
+    CC_INLINE Device *getDevice() const { return _device; }
 
 protected:
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
 };
 
 } // namespace gfx

@@ -8,7 +8,7 @@ class GLES3GPUSampler;
 
 class CC_GLES3_API GLES3Sampler : public GFXSampler {
 public:
-    GLES3Sampler(GFXDevice *device);
+    GLES3Sampler(Device *device);
     ~GLES3Sampler();
 
 public:

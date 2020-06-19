@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKInputAssembler::CCVKInputAssembler(GFXDevice *device)
+CCVKInputAssembler::CCVKInputAssembler(Device *device)
 : GFXInputAssembler(device) {
 }
 

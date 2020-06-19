@@ -9,7 +9,7 @@ namespace gfx {
 
 class CC_GLES3_API GLES3CommandAllocator : public GFXCommandAllocator {
 public:
-    GLES3CommandAllocator(GFXDevice *device);
+    GLES3CommandAllocator(Device *device);
     ~GLES3CommandAllocator();
 
     GFXCommandPool<GLES3CmdBeginRenderPass> beginRenderPassCmdPool;

@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2CommandAllocator::GLES2CommandAllocator(GFXDevice *device)
+GLES2CommandAllocator::GLES2CommandAllocator(Device *device)
 : GFXCommandAllocator(device) {
 }
 

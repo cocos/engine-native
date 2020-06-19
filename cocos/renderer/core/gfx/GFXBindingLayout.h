@@ -8,7 +8,7 @@ namespace gfx {
 
 class CC_DLL GFXBindingLayout : public GFXObject {
 public:
-    GFXBindingLayout(GFXDevice *device);
+    GFXBindingLayout(Device *device);
     virtual ~GFXBindingLayout();
 
 public:
@@ -16,15 +16,15 @@ public:
     virtual void destroy() = 0;
     virtual void update() = 0;
 
-    void bindBuffer(uint binding, GFXBuffer *buffer);
+    void bindBuffer(uint binding, Buffer *buffer);
     void bindTexture(uint binding, GFXTexture *texView);
     void bindSampler(uint binding, GFXSampler *sampler);
 
-    CC_INLINE GFXDevice *getDevice() const { return _device; }
+    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const GFXBindingUnitList &getBindingUnits() const { return _bindingUnits; }
 
 protected:
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
     GFXBindingUnitList _bindingUnits;
     bool _isDirty = false;
 };

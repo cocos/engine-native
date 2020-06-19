@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKRenderPass::CCVKRenderPass(GFXDevice *device)
+CCVKRenderPass::CCVKRenderPass(Device *device)
 : GFXRenderPass(device) {
 }
 

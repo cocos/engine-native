@@ -15,7 +15,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLCommandBuffer::CCMTLCommandBuffer(GFXDevice *device) : GFXCommandBuffer(device) {}
+CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device) : GFXCommandBuffer(device) {}
 CCMTLCommandBuffer::~CCMTLCommandBuffer() { destroy(); }
 
 bool CCMTLCommandBuffer::initialize(const GFXCommandBufferInfo &info) {
@@ -198,7 +198,7 @@ void CCMTLCommandBuffer::draw(GFXInputAssembler *ia) {
         CC_LOG_ERROR("Command 'draw' must be recorded inside a render pass.");
 }
 
-void CCMTLCommandBuffer::updateBuffer(GFXBuffer *buff, void *data, uint size, uint offset) {
+void CCMTLCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint offset) {
     if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
         (_type == GFXCommandBufferType::SECONDARY)) {
         if (buff) {
@@ -216,7 +216,7 @@ void CCMTLCommandBuffer::updateBuffer(GFXBuffer *buff, void *data, uint size, ui
     }
 }
 
-void CCMTLCommandBuffer::copyBufferToTexture(GFXBuffer *src, GFXTexture *dst, GFXTextureLayout layout, const GFXBufferTextureCopyList &regions) {
+void CCMTLCommandBuffer::copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) {
     if ((_type == GFXCommandBufferType::PRIMARY && _isInRenderPass) ||
         (_type == GFXCommandBufferType::SECONDARY)) {
         if (src && dst) {

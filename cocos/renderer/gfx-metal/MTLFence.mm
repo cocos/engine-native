@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLFence::CCMTLFence(GFXDevice *device) : GFXFence(device) {}
+CCMTLFence::CCMTLFence(Device *device) : GFXFence(device) {}
 
 CCMTLFence::~CCMTLFence() {
     destroy();

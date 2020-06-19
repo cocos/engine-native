@@ -60,7 +60,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(VkDebugReportFlagsEXT flags,
 #endif
 } // namespace
 
-CCVKContext::CCVKContext(GFXDevice *device)
+CCVKContext::CCVKContext(Device *device)
 : GFXContext(device) {
 }
 

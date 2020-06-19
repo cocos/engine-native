@@ -8,7 +8,7 @@ namespace gfx {
 
 class GLES2GPUBuffer : public Object {
 public:
-    GFXBufferUsage usage = GFXBufferUsage::NONE;
+    BufferUsage usage = BufferUsage::NONE;
     GFXMemoryUsage memUsage = GFXMemoryUsage::NONE;
     uint size = 0;
     uint stride = 0;

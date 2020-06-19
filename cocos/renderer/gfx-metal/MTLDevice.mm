@@ -28,7 +28,7 @@ namespace gfx {
 CCMTLDevice::CCMTLDevice() {}
 CCMTLDevice::~CCMTLDevice() {}
 
-bool CCMTLDevice::initialize(const GFXDeviceInfo &info) {
+bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _gfxAPI = GFXAPI::METAL;
     _deviceName = "Metal";
     _width = info.width;
@@ -176,7 +176,7 @@ GFXCommandBuffer *CCMTLDevice::createCommandBuffer(const GFXCommandBufferInfo &i
     return nullptr;
 }
 
-GFXBuffer *CCMTLDevice::createBuffer(const GFXBufferInfo &info) {
+Buffer *CCMTLDevice::createBuffer(const BufferInfo &info) {
     auto buffer = CC_NEW(CCMTLBuffer(this));
     if (buffer && buffer->initialize(info))
         return buffer;
@@ -275,7 +275,7 @@ GFXPipelineLayout *CCMTLDevice::createPipelineLayout(const GFXPipelineLayoutInfo
     return nullptr;
 }
 
-void CCMTLDevice::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions) {
+void CCMTLDevice::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) {
     static_cast<CCMTLTexture *>(dst)->update(buffers.datas.data(), regions);
 }
 

@@ -7,12 +7,12 @@
 namespace cc {
 namespace gfx {
 
-class CCMTLBuffer : public GFXBuffer {
+class CCMTLBuffer : public Buffer {
 public:
-    CCMTLBuffer(GFXDevice *device);
+    CCMTLBuffer(Device *device);
     ~CCMTLBuffer();
 
-    virtual bool initialize(const GFXBufferInfo &info) override;
+    virtual bool initialize(const BufferInfo &info) override;
     virtual void destroy() override;
     virtual void resize(uint size) override;
     virtual void update(void *buffer, uint offset, uint size) override;

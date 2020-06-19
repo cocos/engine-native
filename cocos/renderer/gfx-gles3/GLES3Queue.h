@@ -6,7 +6,7 @@ namespace gfx {
 
 class CC_GLES3_API GLES3Queue : public GFXQueue {
 public:
-    GLES3Queue(GFXDevice *device);
+    GLES3Queue(Device *device);
     ~GLES3Queue();
 
     friend class GLES3Device;

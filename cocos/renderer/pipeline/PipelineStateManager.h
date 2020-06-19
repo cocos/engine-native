@@ -6,7 +6,7 @@ namespace cc {
 struct PSOCreateInfo;
 
 namespace gfx {
-class GFXDevice;
+class Device;
 class GFXInputAssembler;
 class GFXPipelineState;
 class GFXRenderPass;
@@ -16,7 +16,7 @@ namespace pipeline {
 
 class CC_DLL PipelineStateManager {
 public:
-    static gfx::GFXPipelineState *getOrCreatePipelineStage(gfx::GFXDevice *device,
+    static gfx::GFXPipelineState *getOrCreatePipelineStage(gfx::Device *device,
                                                            const PSOCreateInfo &PSOInfo,
                                                            gfx::GFXRenderPass *renderPass,
                                                            gfx::GFXInputAssembler *inputAssembler);

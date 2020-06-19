@@ -8,7 +8,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLShader::CCMTLShader(GFXDevice *device) : GFXShader(device) {}
+CCMTLShader::CCMTLShader(Device *device) : GFXShader(device) {}
 CCMTLShader::~CCMTLShader() { destroy(); }
 
 bool CCMTLShader::initialize(const GFXShaderInfo &info) {

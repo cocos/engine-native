@@ -4,14 +4,14 @@
 namespace cc {
 namespace gfx {
 
-GFXBindingLayout::GFXBindingLayout(GFXDevice *device)
+GFXBindingLayout::GFXBindingLayout(Device *device)
 : GFXObject(GFXObjectType::BINDING_LAYOUT), _device(device) {
 }
 
 GFXBindingLayout::~GFXBindingLayout() {
 }
 
-void GFXBindingLayout::bindBuffer(uint binding, GFXBuffer *buffer) {
+void GFXBindingLayout::bindBuffer(uint binding, Buffer *buffer) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
         GFXBindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {

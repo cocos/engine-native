@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GFXCommandBuffer::GFXCommandBuffer(GFXDevice *device)
+GFXCommandBuffer::GFXCommandBuffer(Device *device)
 : GFXObject(GFXObjectType::COMMAND_BUFFER), _device(device) {
 }
 

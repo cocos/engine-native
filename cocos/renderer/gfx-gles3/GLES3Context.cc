@@ -64,7 +64,7 @@ void APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum se
 
 #endif
 
-GLES3Context::GLES3Context(GFXDevice *device)
+GLES3Context::GLES3Context(Device *device)
 : GFXContext(device) {
 }
 

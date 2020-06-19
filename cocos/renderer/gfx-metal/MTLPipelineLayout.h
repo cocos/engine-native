@@ -5,7 +5,7 @@ namespace gfx {
 
 class CCMTLPipelineLayout : public GFXPipelineLayout {
 public:
-    CCMTLPipelineLayout(GFXDevice *device);
+    CCMTLPipelineLayout(Device *device);
     ~CCMTLPipelineLayout();
 
     virtual bool initialize(const GFXPipelineLayoutInfo &info) override;

@@ -8,7 +8,7 @@ class CCVKGPUFramebuffer;
 
 class CC_VULKAN_API CCVKFramebuffer : public GFXFramebuffer {
 public:
-    CCVKFramebuffer(GFXDevice *device);
+    CCVKFramebuffer(Device *device);
     ~CCVKFramebuffer();
 
 public:

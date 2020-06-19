@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKSampler::CCVKSampler(GFXDevice *device)
+CCVKSampler::CCVKSampler(Device *device)
 : GFXSampler(device) {
 }
 

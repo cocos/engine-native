@@ -22,7 +22,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLQueue::CCMTLQueue(GFXDevice *device) : GFXQueue(device) {}
+CCMTLQueue::CCMTLQueue(Device *device) : GFXQueue(device) {}
 
 CCMTLQueue::~CCMTLQueue() {
     destroy();

@@ -8,14 +8,14 @@ namespace gfx {
 
 class CC_DLL GFXSampler : public GFXObject {
 public:
-    GFXSampler(GFXDevice *device);
+    GFXSampler(Device *device);
     virtual ~GFXSampler();
 
 public:
     virtual bool initialize(const GFXSamplerInfo &info) = 0;
     virtual void destroy() = 0;
 
-    CC_INLINE GFXDevice *getDevice() const { return _device; }
+    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const String &getName() const { return _name; }
     CC_INLINE GFXFilter getMinFilter() const { return _minFilter; }
     CC_INLINE GFXFilter getMagFilter() const { return _magFilter; }
@@ -31,7 +31,7 @@ public:
     CC_INLINE float getMipLODBias() const { return _mipLODBias; }
 
 protected:
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
     String _name;
     GFXFilter _minFilter = GFXFilter::NONE;
     GFXFilter _magFilter = GFXFilter::NONE;

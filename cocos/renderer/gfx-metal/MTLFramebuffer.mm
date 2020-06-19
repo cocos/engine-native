@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLFramebuffer::CCMTLFramebuffer(GFXDevice *device) : GFXFramebuffer(device) {}
+CCMTLFramebuffer::CCMTLFramebuffer(Device *device) : GFXFramebuffer(device) {}
 CCMTLFramebuffer::~CCMTLFramebuffer() { destroy(); }
 
 bool CCMTLFramebuffer::initialize(const GFXFramebufferInfo &info) {

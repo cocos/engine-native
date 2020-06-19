@@ -5,7 +5,7 @@ namespace gfx {
 
 class CCMTLFence : public GFXFence {
 public:
-    CCMTLFence(GFXDevice *device);
+    CCMTLFence(Device *device);
     ~CCMTLFence();
 
     virtual bool initialize(const GFXFenceInfo &info) override;

@@ -5,14 +5,14 @@
 namespace cc {
 namespace gfx {
 
-GLES3Buffer::GLES3Buffer(GFXDevice *device)
-: GFXBuffer(device) {
+GLES3Buffer::GLES3Buffer(Device *device)
+: Buffer(device) {
 }
 
 GLES3Buffer::~GLES3Buffer() {
 }
 
-bool GLES3Buffer::initialize(const GFXBufferInfo &info) {
+bool GLES3Buffer::initialize(const BufferInfo &info) {
     _usage = info.usage;
     _memUsage = info.memUsage;
     _size = info.size;
@@ -20,7 +20,7 @@ bool GLES3Buffer::initialize(const GFXBufferInfo &info) {
     _count = _size / _stride;
     _flags = info.flags;
 
-    if ((_flags & GFXBufferFlagBit::BAKUP_BUFFER) && _size > 0) {
+    if ((_flags & BufferFlagBit::BAKUP_BUFFER) && _size > 0) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         if (!_buffer) {
             _status = GFXStatus::FAILED;
@@ -42,7 +42,7 @@ bool GLES3Buffer::initialize(const GFXBufferInfo &info) {
     _gpuBuffer->stride = _stride;
     _gpuBuffer->count = _count;
 
-    if (_usage & GFXBufferUsageBit::INDIRECT) {
+    if (_usage & BufferUsageBit::INDIRECT) {
         _gpuBuffer->indirects.resize(_count);
     } else {
         _gpuBuffer->buffer = _buffer;

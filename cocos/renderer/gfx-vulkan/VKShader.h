@@ -8,7 +8,7 @@ class CCVKGPUShader;
 
 class CC_VULKAN_API CCVKShader : public GFXShader {
 public:
-    CCVKShader(GFXDevice *device);
+    CCVKShader(Device *device);
     ~CCVKShader();
 
 public:

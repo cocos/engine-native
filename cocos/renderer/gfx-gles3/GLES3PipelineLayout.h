@@ -8,7 +8,7 @@ class GLES3GPUPipelineLayout;
 
 class CC_GLES3_API GLES3PipelineLayout : public GFXPipelineLayout {
 public:
-    GLES3PipelineLayout(GFXDevice *device);
+    GLES3PipelineLayout(Device *device);
     ~GLES3PipelineLayout();
 
 public:

@@ -8,7 +8,7 @@ class GLES2GPURenderPass;
 
 class CC_GLES2_API GLES2RenderPass : public GFXRenderPass {
 public:
-    GLES2RenderPass(GFXDevice *device);
+    GLES2RenderPass(Device *device);
     ~GLES2RenderPass();
 
 public:

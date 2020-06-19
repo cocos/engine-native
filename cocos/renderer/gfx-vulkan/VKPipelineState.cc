@@ -9,7 +9,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKPipelineState::CCVKPipelineState(GFXDevice *device)
+CCVKPipelineState::CCVKPipelineState(Device *device)
 : GFXPipelineState(device) {
 }
 

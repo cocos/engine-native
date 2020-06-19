@@ -8,7 +8,7 @@ class CCVKGPUCommandPool;
 
 class CC_VULKAN_API CCVKCommandAllocator : public GFXCommandAllocator {
 public:
-    CCVKCommandAllocator(GFXDevice *device);
+    CCVKCommandAllocator(Device *device);
     ~CCVKCommandAllocator();
 
 public:

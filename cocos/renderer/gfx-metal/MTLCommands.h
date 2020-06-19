@@ -73,7 +73,7 @@ public:
     CCMTLBuffer *gpuBuffer = nullptr;
     CCMTLTexture *gpuTexture = nullptr;
     GFXTextureLayout dstLayout;
-    GFXBufferTextureCopyList regions;
+    BufferTextureCopyList regions;
 
     CCMTLCmdCopyBufferToTexture() : GFXCmd(GFXCmdType::COPY_BUFFER_TO_TEXTURE) {}
     virtual void clear() override {

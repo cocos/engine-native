@@ -4,8 +4,8 @@
 namespace cc {
 namespace gfx {
 
-class GFXDevice;
-class GFXBuffer;
+class Device;
+class Buffer;
 class GFXTexture;
 class GFXSampler;
 class GFXShader;
@@ -269,7 +269,7 @@ enum class GFXType : uint8_t {
     COUNT,
 };
 
-enum class GFXBufferUsageBit : FlagBits {
+enum class BufferUsageBit : FlagBits {
     NONE = 0,
     TRANSFER_SRC = 0x1,
     TRANSFER_DST = 0x2,
@@ -279,23 +279,23 @@ enum class GFXBufferUsageBit : FlagBits {
     STORAGE = 0x20,
     INDIRECT = 0x40,
 };
-typedef GFXBufferUsageBit GFXBufferUsage;
-CC_ENUM_OPERATORS(GFXBufferUsageBit);
+typedef BufferUsageBit BufferUsage;
+CC_ENUM_OPERATORS(BufferUsageBit);
 
-enum class GFXBufferFlagBit : FlagBits {
+enum class BufferFlagBit : FlagBits {
     NONE = 0,
     BAKUP_BUFFER = 0x4,
 };
-typedef GFXBufferFlagBit GFXBufferFlags;
-CC_ENUM_OPERATORS(GFXBufferFlagBit);
+typedef BufferFlagBit BufferFlags;
+CC_ENUM_OPERATORS(BufferFlagBit);
 
-enum class GFXBufferAccessBit : FlagBits {
+enum class BufferAccessBit : FlagBits {
     NONE = 0,
     READ = 0x1,
     WRITE = 0x2,
 };
-typedef GFXBufferAccessBit GFXBufferAccess;
-CC_ENUM_OPERATORS(GFXBufferAccessBit);
+typedef BufferAccessBit BufferAccess;
+CC_ENUM_OPERATORS(BufferAccessBit);
 
 enum class GFXMemoryUsageBit : FlagBits {
     NONE = 0,
@@ -604,14 +604,14 @@ struct GFXTextureCopy {
     GFXExtent extent = {0, 0, 1};
 };
 
-struct GFXBufferTextureCopy {
+struct BufferTextureCopy {
     uint buffStride = 0;
     uint buffTexHeight = 0;
     GFXOffset texOffset = {0, 0, 0};
     GFXExtent texExtent = {0, 0, 1};
     GFXTextureSubres texSubres;
 };
-typedef vector<GFXBufferTextureCopy> GFXBufferTextureCopyList;
+typedef vector<BufferTextureCopy> BufferTextureCopyList;
 
 struct GFXDataArray {
     std::vector<uint8_t *> datas;
@@ -651,7 +651,7 @@ struct GFXColor {
 };
 #pragma pack(pop)
 
-struct GFXDeviceInfo {
+struct DeviceInfo {
     uintptr_t windowHandle = 0;
     uint width = 0;
     uint height = 0;
@@ -681,12 +681,12 @@ struct GFXContextInfo {
     GFXVsyncMode vsyncMode = GFXVsyncMode::RELAXED;
 };
 
-struct GFXBufferInfo {
-    GFXBufferUsage usage = GFXBufferUsage::NONE;
+struct BufferInfo {
+    BufferUsage usage = BufferUsage::NONE;
     GFXMemoryUsage memUsage = GFXMemoryUsage::NONE;
     uint stride = 1;
     uint size = 0;
-    GFXBufferFlags flags = GFXBufferFlagBit::NONE;
+    BufferFlags flags = BufferFlagBit::NONE;
 };
 
 #pragma pack(push, 1)
@@ -798,7 +798,7 @@ struct GFXAttribute {
 };
 
 typedef vector<GFXAttribute> GFXAttributeList;
-typedef vector<GFXBuffer *> GFXBufferList;
+typedef vector<Buffer *> BufferList;
 
 struct GFXShaderInfo {
     String name;
@@ -810,9 +810,9 @@ struct GFXShaderInfo {
 
 struct GFXInputAssemblerInfo {
     GFXAttributeList attributes;
-    GFXBufferList vertexBuffers;
-    GFXBuffer *indexBuffer = nullptr;
-    GFXBuffer *indirectBuffer = nullptr;
+    BufferList vertexBuffers;
+    Buffer *indexBuffer = nullptr;
+    Buffer *indirectBuffer = nullptr;
 };
 
 struct GFXColorAttachment {
@@ -892,7 +892,7 @@ struct GFXBindingUnit {
     GFXBindingType type = GFXBindingType::UNKNOWN;
     String name;
     uint count = 0;
-    GFXBuffer *buffer = nullptr;
+    Buffer *buffer = nullptr;
     GFXTexture *texture = nullptr;
     GFXSampler *sampler = nullptr;
 };

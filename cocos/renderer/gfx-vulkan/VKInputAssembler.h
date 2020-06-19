@@ -8,7 +8,7 @@ class CCVKGPUInputAssembler;
 
 class CC_VULKAN_API CCVKInputAssembler : public GFXInputAssembler {
 public:
-    CCVKInputAssembler(GFXDevice *device);
+    CCVKInputAssembler(Device *device);
     ~CCVKInputAssembler();
 
 public:

@@ -25,7 +25,7 @@ const GLenum GLES2Primitives[] = {
     GL_NONE,
 };
 
-GLES2PipelineState::GLES2PipelineState(GFXDevice *device)
+GLES2PipelineState::GLES2PipelineState(Device *device)
 : GFXPipelineState(device) {
 }
 

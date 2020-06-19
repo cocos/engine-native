@@ -10,7 +10,7 @@ class CCMTLTexture : public GFXTexture {
     friend class CCMTLQueue;
 
 public:
-    CCMTLTexture(GFXDevice *device);
+    CCMTLTexture(Device *device);
     ~CCMTLTexture();
 
     virtual bool initialize(const GFXTextureInfo &info) override;
@@ -22,7 +22,7 @@ public:
     CC_INLINE GFXFormat getConvertedFormat() const { return _convertedFormat; }
 
 private:
-    void update(uint8_t *const *datas, const GFXBufferTextureCopyList &regions);
+    void update(uint8_t *const *datas, const BufferTextureCopyList &regions);
     bool createMTLTexture();
     void generateMipmaps();
 

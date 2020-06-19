@@ -5,7 +5,7 @@
 namespace cc {
 namespace gfx {
 
-GLES3Shader::GLES3Shader(GFXDevice *device)
+GLES3Shader::GLES3Shader(Device *device)
 : GFXShader(device) {
 }
 

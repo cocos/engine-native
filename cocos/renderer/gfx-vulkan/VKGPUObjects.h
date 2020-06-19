@@ -133,7 +133,7 @@ public:
 
 class CCVKGPUBuffer : public Object {
 public:
-    GFXBufferUsage usage = GFXBufferUsage::NONE;
+    BufferUsage usage = BufferUsage::NONE;
     GFXMemoryUsage memUsage = GFXMemoryUsage::NONE;
     uint size = 0;
     uint stride = 0;

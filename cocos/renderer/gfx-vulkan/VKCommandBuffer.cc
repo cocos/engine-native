@@ -15,7 +15,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKCommandBuffer::CCVKCommandBuffer(GFXDevice *device)
+CCVKCommandBuffer::CCVKCommandBuffer(Device *device)
 : GFXCommandBuffer(device) {
 }
 
@@ -347,7 +347,7 @@ void CCVKCommandBuffer::execute(const std::vector<GFXCommandBuffer *> &cmdBuffs,
     vkCmdExecuteCommands(_gpuCommandBuffer->vkCommandBuffer, count, vkCmdBuffs.data());
 }
 
-void CCVKCommandBuffer::updateBuffer(GFXBuffer *buff, void *data, uint size, uint offset) {
+void CCVKCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint offset) {
     if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY)) {
         CCVKCmdFuncUpdateBuffer((CCVKDevice *)_device, ((CCVKBuffer *)buff)->gpuBuffer(), data, offset, size);
@@ -356,7 +356,7 @@ void CCVKCommandBuffer::updateBuffer(GFXBuffer *buff, void *data, uint size, uin
     }
 }
 
-void CCVKCommandBuffer::copyBufferToTexture(GFXBuffer *src, GFXTexture *dst, GFXTextureLayout layout, const GFXBufferTextureCopyList &regions) {
+void CCVKCommandBuffer::copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) {
     if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY)) {
         //const CCVKGPUBuffer* gpuBuffer = ((CCVKBuffer*)src)->gpuBuffer();

@@ -10,7 +10,7 @@ class CCMTLInputAssembler : public GFXInputAssembler {
     friend class CCMTLQueue;
 
 public:
-    CCMTLInputAssembler(GFXDevice *device);
+    CCMTLInputAssembler(Device *device);
     ~CCMTLInputAssembler();
 
     virtual bool initialize(const GFXInputAssemblerInfo &info) override;

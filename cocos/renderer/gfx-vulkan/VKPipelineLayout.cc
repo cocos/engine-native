@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKPipelineLayout::CCVKPipelineLayout(GFXDevice *device)
+CCVKPipelineLayout::CCVKPipelineLayout(Device *device)
 : GFXPipelineLayout(device) {
 }
 

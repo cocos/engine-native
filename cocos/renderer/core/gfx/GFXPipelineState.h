@@ -8,14 +8,14 @@ namespace gfx {
 
 class CC_DLL GFXPipelineState : public GFXObject {
 public:
-    GFXPipelineState(GFXDevice *device);
+    GFXPipelineState(Device *device);
     virtual ~GFXPipelineState();
 
 public:
     virtual bool initialize(const GFXPipelineStateInfo &info) = 0;
     virtual void destroy() = 0;
 
-    CC_INLINE GFXDevice *getDevice() const { return _device; }
+    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE GFXShader *getShader() const { return _shader; }
     CC_INLINE GFXPrimitiveMode getPrimitive() const { return _primitive; }
     CC_INLINE const GFXInputState &getInputState() const { return _inputState; }
@@ -27,7 +27,7 @@ public:
     CC_INLINE const GFXRenderPass *getRenderPass() const { return _renderPass; }
 
 protected:
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
     GFXShader *_shader = nullptr;
     GFXPrimitiveMode _primitive = GFXPrimitiveMode::TRIANGLE_LIST;
     GFXInputState _inputState;

@@ -8,7 +8,7 @@ class GLES3GPURenderPass;
 
 class CC_GLES3_API GLES3RenderPass : public GFXRenderPass {
 public:
-    GLES3RenderPass(GFXDevice *device);
+    GLES3RenderPass(Device *device);
     ~GLES3RenderPass();
 
 public:

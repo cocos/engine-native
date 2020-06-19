@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKFence::CCVKFence(GFXDevice *device)
+CCVKFence::CCVKFence(Device *device)
 : GFXFence(device) {
 }
 

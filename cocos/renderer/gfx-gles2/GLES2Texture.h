@@ -8,7 +8,7 @@ class GLES2GPUTexture;
 
 class CC_GLES2_API GLES2Texture : public GFXTexture {
 public:
-    GLES2Texture(GFXDevice *device);
+    GLES2Texture(Device *device);
     ~GLES2Texture();
 
 public:

@@ -10,7 +10,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKBindingLayout::CCVKBindingLayout(GFXDevice *device)
+CCVKBindingLayout::CCVKBindingLayout(Device *device)
 : GFXBindingLayout(device) {
 }
 

@@ -10,7 +10,7 @@ class CCMTLCommandPackage;
 
 class CCMTLCommandAllocator : public GFXCommandAllocator {
 public:
-    CCMTLCommandAllocator(GFXDevice *device);
+    CCMTLCommandAllocator(Device *device);
     ~CCMTLCommandAllocator();
 
     virtual bool initialize(const GFXCommandAllocatorInfo &info) override;

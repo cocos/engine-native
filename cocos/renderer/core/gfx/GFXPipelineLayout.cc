@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GFXPipelineLayout::GFXPipelineLayout(GFXDevice *device)
+GFXPipelineLayout::GFXPipelineLayout(Device *device)
 : GFXObject(GFXObjectType::PIPELINE_LAYOUT), _device(device) {
 }
 

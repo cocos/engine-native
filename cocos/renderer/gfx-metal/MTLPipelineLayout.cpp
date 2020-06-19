@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLPipelineLayout::CCMTLPipelineLayout(GFXDevice *device) : GFXPipelineLayout(device) {}
+CCMTLPipelineLayout::CCMTLPipelineLayout(Device *device) : GFXPipelineLayout(device) {}
 CCMTLPipelineLayout::~CCMTLPipelineLayout() { destroy(); }
 
 bool CCMTLPipelineLayout::initialize(const GFXPipelineLayoutInfo &info) {

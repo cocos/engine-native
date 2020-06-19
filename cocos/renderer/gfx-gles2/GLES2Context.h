@@ -33,7 +33,7 @@ namespace gfx {
 
 class CC_GLES2_API GLES2Context : public GFXContext {
 public:
-    GLES2Context(GFXDevice *device);
+    GLES2Context(Device *device);
     ~GLES2Context();
 
 public:

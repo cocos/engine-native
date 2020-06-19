@@ -38,7 +38,7 @@ CCVKGPUContext *CCVKDevice::gpuContext() const {
     return ((CCVKContext *)_context)->gpuContext();
 }
 
-bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
+bool CCVKDevice::initialize(const DeviceInfo &info) {
     _gfxAPI = GFXAPI::VULKAN;
     _deviceName = "Vulkan";
     _width = info.width;
@@ -257,8 +257,8 @@ bool CCVKDevice::initialize(const GFXDeviceInfo &info) {
     _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
     _gpuFencePool = CC_NEW(CCVKGPUFencePool(_gpuDevice));
 
-    GFXBufferInfo stagingBufferInfo;
-    stagingBufferInfo.usage = GFXBufferUsage::TRANSFER_SRC;
+    BufferInfo stagingBufferInfo;
+    stagingBufferInfo.usage = BufferUsage::TRANSFER_SRC;
     stagingBufferInfo.memUsage = GFXMemoryUsage::HOST;
     stagingBufferInfo.stride = _defaultStagingBufferSize;
     stagingBufferInfo.size = _defaultStagingBufferSize;
@@ -563,8 +563,8 @@ GFXCommandBuffer *CCVKDevice::createCommandBuffer(const GFXCommandBufferInfo &in
     return nullptr;
 }
 
-GFXBuffer *CCVKDevice::createBuffer(const GFXBufferInfo &info) {
-    GFXBuffer *buffer = CC_NEW(CCVKBuffer(this));
+Buffer *CCVKDevice::createBuffer(const BufferInfo &info) {
+    Buffer *buffer = CC_NEW(CCVKBuffer(this));
     if (buffer->initialize(info))
         return buffer;
 
@@ -662,7 +662,7 @@ GFXPipelineLayout *CCVKDevice::createPipelineLayout(const GFXPipelineLayoutInfo 
     return nullptr;
 }
 
-void CCVKDevice::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions) {
+void CCVKDevice::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) {
     CCVKCmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((CCVKTexture *)dst)->gpuTexture(), regions);
 }
 

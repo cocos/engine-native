@@ -16,7 +16,7 @@ class CCMTLCommandBuffer : public GFXCommandBuffer {
     friend class CCMTLQueue;
 
 public:
-    CCMTLCommandBuffer(GFXDevice *device);
+    CCMTLCommandBuffer(Device *device);
     ~CCMTLCommandBuffer();
 
     virtual bool initialize(const GFXCommandBufferInfo &info) override;
@@ -37,8 +37,8 @@ public:
     virtual void setStencilWriteMask(GFXStencilFace face, uint mask) override;
     virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) override;
     virtual void draw(GFXInputAssembler *ia) override;
-    virtual void updateBuffer(GFXBuffer *buff, void *data, uint size, uint offset = 0) override;
-    virtual void copyBufferToTexture(GFXBuffer *src, GFXTexture *dst, GFXTextureLayout layout, const GFXBufferTextureCopyList &regions) override;
+    virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) override;
+    virtual void copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) override;
     virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) override;
 
     CC_INLINE const CCMTLCommandPackage *getCommandPackage() const { return _commandPackage; }

@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLRenderPass::CCMTLRenderPass(GFXDevice *device) : GFXRenderPass(device) {}
+CCMTLRenderPass::CCMTLRenderPass(Device *device) : GFXRenderPass(device) {}
 CCMTLRenderPass::~CCMTLRenderPass() { destroy(); }
 
 bool CCMTLRenderPass::initialize(const GFXRenderPassInfo &info) {

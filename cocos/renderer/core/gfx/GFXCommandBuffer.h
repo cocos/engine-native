@@ -8,7 +8,7 @@ namespace gfx {
 
 class CC_DLL GFXCommandBuffer : public GFXObject {
 public:
-    GFXCommandBuffer(GFXDevice *device);
+    GFXCommandBuffer(Device *device);
     virtual ~GFXCommandBuffer();
 
 public:
@@ -30,11 +30,11 @@ public:
     virtual void setStencilWriteMask(GFXStencilFace face, uint mask) = 0;
     virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) = 0;
     virtual void draw(GFXInputAssembler *ia) = 0;
-    virtual void updateBuffer(GFXBuffer *buff, void *data, uint size, uint offset = 0) = 0;
-    virtual void copyBufferToTexture(GFXBuffer *src, GFXTexture *dst, GFXTextureLayout layout, const GFXBufferTextureCopyList &regions) = 0;
+    virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
+    virtual void copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) = 0;
     virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) = 0;
 
-    CC_INLINE GFXDevice *getDevice() const { return _device; }
+    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE GFXCommandAllocator *getAllocator() const { return _allocator; }
     CC_INLINE GFXCommandBufferType getType() const { return _type; }
     CC_INLINE uint getNumDrawCalls() const { return _numDrawCalls; }
@@ -42,7 +42,7 @@ public:
     CC_INLINE uint getNumTris() const { return _numTriangles; }
 
 protected:
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
     GFXCommandAllocator *_allocator = nullptr;
     GFXCommandBufferType _type = GFXCommandBufferType::PRIMARY;
     uint32_t _numDrawCalls = 0;

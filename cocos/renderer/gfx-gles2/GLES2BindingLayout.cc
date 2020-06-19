@@ -8,7 +8,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2BindingLayout::GLES2BindingLayout(GFXDevice *device)
+GLES2BindingLayout::GLES2BindingLayout(Device *device)
 : GFXBindingLayout(device) {
 }
 

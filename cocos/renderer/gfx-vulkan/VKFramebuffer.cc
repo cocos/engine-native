@@ -9,7 +9,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKFramebuffer::CCVKFramebuffer(GFXDevice *device)
+CCVKFramebuffer::CCVKFramebuffer(Device *device)
 : GFXFramebuffer(device) {
 }
 

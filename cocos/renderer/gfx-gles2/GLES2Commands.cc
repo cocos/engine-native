@@ -432,7 +432,7 @@ const GLenum GLES2_BLEND_FACTORS[] = {
 void GLES2CmdFuncCreateBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
     GLenum glUsage = (gpuBuffer->memUsage & GFXMemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 
-    if (gpuBuffer->usage & GFXBufferUsageBit::VERTEX) {
+    if (gpuBuffer->usage & BufferUsageBit::VERTEX) {
         gpuBuffer->glTarget = GL_ARRAY_BUFFER;
         glGenBuffers(1, &gpuBuffer->glBuffer);
         if (gpuBuffer->size) {
@@ -451,7 +451,7 @@ void GLES2CmdFuncCreateBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             device->stateCache->glArrayBuffer = 0;
         }
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::INDEX) {
+    } else if (gpuBuffer->usage & BufferUsageBit::INDEX) {
         gpuBuffer->glTarget = GL_ELEMENT_ARRAY_BUFFER;
         glGenBuffers(1, &gpuBuffer->glBuffer);
         if (gpuBuffer->size) {
@@ -470,29 +470,29 @@ void GLES2CmdFuncCreateBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             device->stateCache->glElementArrayBuffer = 0;
         }
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::UNIFORM) {
+    } else if (gpuBuffer->usage & BufferUsageBit::UNIFORM) {
         gpuBuffer->buffer = (uint8_t *)CC_MALLOC(gpuBuffer->size);
         gpuBuffer->glTarget = GL_NONE;
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
+    } else if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
         gpuBuffer->glTarget = GL_NONE;
-    } else if ((gpuBuffer->usage & GFXBufferUsageBit::TRANSFER_DST) ||
-               (gpuBuffer->usage & GFXBufferUsageBit::TRANSFER_SRC)) {
+    } else if ((gpuBuffer->usage & BufferUsageBit::TRANSFER_DST) ||
+               (gpuBuffer->usage & BufferUsageBit::TRANSFER_SRC)) {
         gpuBuffer->buffer = (uint8_t *)CC_MALLOC(gpuBuffer->size);
         gpuBuffer->glTarget = GL_NONE;
     } else {
-        CCASSERT(false, "Unsupported GFXBufferType, create buffer failed.");
+        CCASSERT(false, "Unsupported BufferType, create buffer failed.");
         gpuBuffer->glTarget = GL_NONE;
     }
 }
 
 void GLES2CmdFuncDestroyBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
     if (gpuBuffer->glBuffer) {
-        if (gpuBuffer->usage & GFXBufferUsageBit::VERTEX) {
+        if (gpuBuffer->usage & BufferUsageBit::VERTEX) {
             if (device->stateCache->glArrayBuffer == gpuBuffer->glBuffer) {
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
                 device->stateCache->glArrayBuffer = 0;
             }
-        } else if (gpuBuffer->usage & GFXBufferUsageBit::INDEX) {
+        } else if (gpuBuffer->usage & BufferUsageBit::INDEX) {
             if (device->stateCache->glElementArrayBuffer == gpuBuffer->glBuffer) {
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                 device->stateCache->glElementArrayBuffer = 0;
@@ -507,7 +507,7 @@ void GLES2CmdFuncDestroyBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
 void GLES2CmdFuncResizeBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
     GLenum glUsage = (gpuBuffer->memUsage & GFXMemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 
-    if (gpuBuffer->usage & GFXBufferUsageBit::VERTEX) {
+    if (gpuBuffer->usage & BufferUsageBit::VERTEX) {
         gpuBuffer->glTarget = GL_ARRAY_BUFFER;
         if (gpuBuffer->size) {
             if (device->useVAO()) {
@@ -525,7 +525,7 @@ void GLES2CmdFuncResizeBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             device->stateCache->glArrayBuffer = 0;
         }
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::INDEX) {
+    } else if (gpuBuffer->usage & BufferUsageBit::INDEX) {
         gpuBuffer->glTarget = GL_ELEMENT_ARRAY_BUFFER;
         if (gpuBuffer->size) {
             if (device->useVAO()) {
@@ -543,35 +543,35 @@ void GLES2CmdFuncResizeBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             device->stateCache->glElementArrayBuffer = 0;
         }
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::UNIFORM) {
+    } else if (gpuBuffer->usage & BufferUsageBit::UNIFORM) {
         if (gpuBuffer->buffer) {
             CC_FREE(gpuBuffer->buffer);
         }
         gpuBuffer->buffer = (uint8_t *)CC_MALLOC(gpuBuffer->size);
         gpuBuffer->glTarget = GL_NONE;
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
+    } else if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
         gpuBuffer->indirects.resize(gpuBuffer->count);
         gpuBuffer->glTarget = GL_NONE;
-    } else if ((gpuBuffer->usage & GFXBufferUsageBit::TRANSFER_DST) ||
-               (gpuBuffer->usage & GFXBufferUsageBit::TRANSFER_SRC)) {
+    } else if ((gpuBuffer->usage & BufferUsageBit::TRANSFER_DST) ||
+               (gpuBuffer->usage & BufferUsageBit::TRANSFER_SRC)) {
         if (gpuBuffer->buffer) {
             CC_FREE(gpuBuffer->buffer);
         }
         gpuBuffer->buffer = (uint8_t *)CC_MALLOC(gpuBuffer->size);
         gpuBuffer->glTarget = GL_NONE;
     } else {
-        CCASSERT(false, "Unsupported GFXBufferType, resize buffer failed.");
+        CCASSERT(false, "Unsupported BufferType, resize buffer failed.");
         gpuBuffer->glTarget = GL_NONE;
     }
 }
 
 void GLES2CmdFuncUpdateBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer, void *buffer, uint offset, uint size) {
     CCASSERT(buffer, "Buffer should not be nullptr");
-    if (gpuBuffer->usage & GFXBufferUsageBit::UNIFORM) {
+    if (gpuBuffer->usage & BufferUsageBit::UNIFORM) {
         memcpy(gpuBuffer->buffer + offset, buffer, size);
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
+    } else if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
         memcpy((uint8_t *)gpuBuffer->indirects.data() + offset, buffer, size);
-    } else if (gpuBuffer->usage & GFXBufferUsageBit::TRANSFER_SRC) {
+    } else if (gpuBuffer->usage & BufferUsageBit::TRANSFER_SRC) {
         memcpy(gpuBuffer->buffer + offset, buffer, size);
     } else {
         switch (gpuBuffer->glTarget) {
@@ -604,7 +604,7 @@ void GLES2CmdFuncUpdateBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer, vo
                 break;
             }
             default:
-                CCASSERT(false, "Unsupported GFXBufferType, update buffer failed.");
+                CCASSERT(false, "Unsupported BufferType, update buffer failed.");
                 break;
         }
     }
@@ -2093,7 +2093,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
     }
 }
 
-void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffers, GLES2GPUTexture *gpuTexture, const GFXBufferTextureCopyList &regions) {
+void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffers, GLES2GPUTexture *gpuTexture, const BufferTextureCopyList &regions) {
     GLuint &glTexture = device->stateCache->glTextures[device->stateCache->texUint];
     if (glTexture != gpuTexture->glTexture) {
         glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture);
@@ -2108,7 +2108,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
             uint w;
             uint h;
             for (size_t i = 0; i < regions.size(); ++i) {
-                const GFXBufferTextureCopy &region = regions[i];
+                const BufferTextureCopy &region = regions[i];
                 w = region.texExtent.width;
                 h = region.texExtent.height;
                 uint8_t *buff = buffers[n++];
@@ -2139,7 +2139,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
             uint w;
             uint h;
             for (size_t i = 0; i < regions.size(); ++i) {
-                const GFXBufferTextureCopy &region = regions[i];
+                const BufferTextureCopy &region = regions[i];
                 uint d = region.texSubres.layerCount;
                 uint layerCount = d + region.texSubres.baseArrayLayer;
 
@@ -2177,7 +2177,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
             uint h;
             uint d;
             for (size_t i = 0; i < regions.size(); ++i) {
-                const GFXBufferTextureCopy &region = regions[i];
+                const BufferTextureCopy &region = regions[i];
                 w = region.texExtent.width;
                 h = region.texExtent.height;
                 d = region.texExtent.depth;
@@ -2212,7 +2212,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
             uint h;
             uint f;
             for (size_t i = 0; i < regions.size(); ++i) {
-                const GFXBufferTextureCopy &region = regions[i];
+                const BufferTextureCopy &region = regions[i];
                 uint face_count = region.texSubres.baseArrayLayer + region.texSubres.layerCount;
                 for (f = region.texSubres.baseArrayLayer; f < face_count; ++f) {
                     w = region.texExtent.width;

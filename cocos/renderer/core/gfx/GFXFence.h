@@ -8,7 +8,7 @@ namespace gfx {
 
 class CC_DLL GFXFence : public GFXObject {
 public:
-    GFXFence(GFXDevice *device);
+    GFXFence(Device *device);
     virtual ~GFXFence();
 
 public:
@@ -18,7 +18,7 @@ public:
     virtual void reset() = 0;
 
 protected:
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
 };
 
 } // namespace gfx

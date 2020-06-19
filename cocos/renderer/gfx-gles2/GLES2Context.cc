@@ -69,7 +69,7 @@ void APIENTRY GLES2EGLDebugProc(GLenum source,
 
 #endif
 
-GLES2Context::GLES2Context(GFXDevice *device)
+GLES2Context::GLES2Context(Device *device)
 : GFXContext(device) {
 }
 

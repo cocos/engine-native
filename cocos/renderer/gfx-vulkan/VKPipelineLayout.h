@@ -8,7 +8,7 @@ class CCVKGPUPipelineLayout;
 
 class CC_VULKAN_API CCVKPipelineLayout : public GFXPipelineLayout {
 public:
-    CCVKPipelineLayout(GFXDevice *device);
+    CCVKPipelineLayout(Device *device);
     ~CCVKPipelineLayout();
 
 public:

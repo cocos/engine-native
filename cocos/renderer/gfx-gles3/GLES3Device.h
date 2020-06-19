@@ -6,7 +6,7 @@ namespace gfx {
 
 class GLES3StateCache;
 
-class CC_GLES3_API GLES3Device : public GFXDevice {
+class CC_GLES3_API GLES3Device : public Device {
 public:
     GLES3Device();
     ~GLES3Device();
@@ -14,7 +14,7 @@ public:
     GLES3StateCache *stateCache = nullptr;
 
 public:
-    virtual bool initialize(const GFXDeviceInfo &info) override;
+    virtual bool initialize(const DeviceInfo &info) override;
     virtual void destroy() override;
     virtual void resize(uint width, uint height) override;
     virtual void acquire() override {}
@@ -23,7 +23,7 @@ public:
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) override;
     virtual GFXCommandAllocator *createCommandAllocator(const GFXCommandAllocatorInfo &info) override;
     virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) override;
-    virtual GFXBuffer *createBuffer(const GFXBufferInfo &info) override;
+    virtual Buffer *createBuffer(const BufferInfo &info) override;
     virtual GFXTexture *createTexture(const GFXTextureInfo &info) override;
     virtual GFXTexture *createTexture(const GFXTextureViewInfo &info) override;
     virtual GFXSampler *createSampler(const GFXSamplerInfo &info) override;
@@ -34,7 +34,7 @@ public:
     virtual GFXBindingLayout *createBindingLayout(const GFXBindingLayoutInfo &info) override;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) override;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) override;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions) override;
+    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) override;
 
     CC_INLINE bool useVAO() const { return _useVAO; }
 

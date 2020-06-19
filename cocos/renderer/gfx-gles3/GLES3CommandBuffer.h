@@ -12,7 +12,7 @@ class CC_GLES3_API GLES3CommandBuffer : public GFXCommandBuffer {
     friend class GLES3Queue;
 
 public:
-    GLES3CommandBuffer(GFXDevice *device);
+    GLES3CommandBuffer(Device *device);
     ~GLES3CommandBuffer();
 
 public:
@@ -35,8 +35,8 @@ public:
     virtual void setStencilWriteMask(GFXStencilFace face, uint mask) override;
     virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) override;
     virtual void draw(GFXInputAssembler *ia) override;
-    virtual void updateBuffer(GFXBuffer *buff, void *data, uint size, uint offset) override;
-    virtual void copyBufferToTexture(GFXBuffer *src, GFXTexture *dst, GFXTextureLayout layout, const GFXBufferTextureCopyList &regions) override;
+    virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset) override;
+    virtual void copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) override;
     virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) override;
 
 private:

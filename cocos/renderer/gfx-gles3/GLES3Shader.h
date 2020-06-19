@@ -8,7 +8,7 @@ class GLES3GPUShader;
 
 class CC_GLES3_API GLES3Shader : public GFXShader {
 public:
-    GLES3Shader(GFXDevice *device);
+    GLES3Shader(Device *device);
     ~GLES3Shader();
 
 public:

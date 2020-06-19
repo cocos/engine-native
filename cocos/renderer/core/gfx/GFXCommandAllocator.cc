@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GFXCommandAllocator::GFXCommandAllocator(GFXDevice *device)
+GFXCommandAllocator::GFXCommandAllocator(Device *device)
 : GFXObject(GFXObjectType::COMMAND_ALLOCATOR), _device(device) {
 }
 

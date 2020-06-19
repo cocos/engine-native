@@ -11,7 +11,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2CommandBuffer::GLES2CommandBuffer(GFXDevice *device)
+GLES2CommandBuffer::GLES2CommandBuffer(Device *device)
 : GFXCommandBuffer(device) {
 }
 
@@ -220,7 +220,7 @@ void GLES2CommandBuffer::draw(GFXInputAssembler *ia) {
     }
 }
 
-void GLES2CommandBuffer::updateBuffer(GFXBuffer *buff, void *data, uint size, uint offset) {
+void GLES2CommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint offset) {
     if ((_type == GFXCommandBufferType::PRIMARY && !_isInRenderPass) ||
         (_type == GFXCommandBufferType::SECONDARY)) {
         GLES2GPUBuffer *gpuBuffer = ((GLES2Buffer *)buff)->gpuBuffer();
@@ -239,7 +239,7 @@ void GLES2CommandBuffer::updateBuffer(GFXBuffer *buff, void *data, uint size, ui
     }
 }
 
-void GLES2CommandBuffer::copyBufferToTexture(GFXBuffer *src, GFXTexture *dst, GFXTextureLayout layout, const GFXBufferTextureCopyList &regions) {
+void GLES2CommandBuffer::copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) {
     if ((_type == GFXCommandBufferType::PRIMARY && !_isInRenderPass) ||
         (_type == GFXCommandBufferType::SECONDARY)) {
         GLES2GPUBuffer *gpuBuffer = ((GLES2Buffer *)src)->gpuBuffer();

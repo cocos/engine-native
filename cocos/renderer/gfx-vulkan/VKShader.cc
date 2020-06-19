@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKShader::CCVKShader(GFXDevice *device)
+CCVKShader::CCVKShader(Device *device)
 : GFXShader(device) {
 }
 

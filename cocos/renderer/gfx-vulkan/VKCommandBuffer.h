@@ -8,7 +8,7 @@ namespace gfx {
 
 class CC_VULKAN_API CCVKCommandBuffer : public GFXCommandBuffer {
 public:
-    CCVKCommandBuffer(GFXDevice *device);
+    CCVKCommandBuffer(Device *device);
     ~CCVKCommandBuffer();
 
     friend class CCVKQueue;
@@ -33,8 +33,8 @@ public:
     void setStencilWriteMask(GFXStencilFace face, uint mask);
     void setStencilCompareMask(GFXStencilFace face, int reference, uint mask);
     void draw(GFXInputAssembler *ia);
-    void updateBuffer(GFXBuffer *buff, void *data, uint size, uint offset);
-    void copyBufferToTexture(GFXBuffer *src, GFXTexture *dst, GFXTextureLayout layout, const GFXBufferTextureCopyList &regions);
+    void updateBuffer(Buffer *buff, void *data, uint size, uint offset);
+    void copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions);
     void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint count);
 
     CCVKGPUCommandBuffer *gpuCommandBuffer() const { return _gpuCommandBuffer; }

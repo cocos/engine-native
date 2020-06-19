@@ -18,7 +18,7 @@ uint8_t *convertData(uint8_t *source, uint length, GFXFormat type) {
 }
 } // end of namespace
 
-CCMTLTexture::CCMTLTexture(GFXDevice *device) : GFXTexture(device) {}
+CCMTLTexture::CCMTLTexture(Device *device) : GFXTexture(device) {}
 CCMTLTexture::~CCMTLTexture() { destroy(); }
 
 bool CCMTLTexture::initialize(const GFXTextureInfo &info) {
@@ -236,7 +236,7 @@ void CCMTLTexture::resize(uint width, uint height) {
     _status = GFXStatus::SUCCESS;
 }
 
-void CCMTLTexture::update(uint8_t *const *datas, const GFXBufferTextureCopyList &regions) {
+void CCMTLTexture::update(uint8_t *const *datas, const BufferTextureCopyList &regions) {
     if (!_mtlTexture)
         return;
 

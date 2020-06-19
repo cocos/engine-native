@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GFXTexture::GFXTexture(GFXDevice *device)
+GFXTexture::GFXTexture(Device *device)
 : GFXObject(GFXObjectType::TEXTURE), _device(device) {
 }
 

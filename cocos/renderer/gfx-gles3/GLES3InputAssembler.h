@@ -9,7 +9,7 @@ class GLES3CmdDraw;
 
 class CC_GLES3_API GLES3InputAssembler : public GFXInputAssembler {
 public:
-    GLES3InputAssembler(GFXDevice *device);
+    GLES3InputAssembler(Device *device);
     ~GLES3InputAssembler();
 
 public:

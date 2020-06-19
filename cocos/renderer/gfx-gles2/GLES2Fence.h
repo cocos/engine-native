@@ -8,7 +8,7 @@ class GLES2GPUFence;
 
 class CC_GLES2_API GLES2Fence : public GFXFence {
 public:
-    GLES2Fence(GFXDevice *device);
+    GLES2Fence(Device *device);
     ~GLES2Fence();
 
 public:

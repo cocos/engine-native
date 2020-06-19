@@ -6,14 +6,14 @@
 namespace cc {
 namespace gfx {
 
-CCVKBuffer::CCVKBuffer(GFXDevice *device)
-: GFXBuffer(device) {
+CCVKBuffer::CCVKBuffer(Device *device)
+: Buffer(device) {
 }
 
 CCVKBuffer::~CCVKBuffer() {
 }
 
-bool CCVKBuffer::initialize(const GFXBufferInfo &info) {
+bool CCVKBuffer::initialize(const BufferInfo &info) {
     _usage = info.usage;
     _memUsage = info.memUsage;
     _size = info.size;
@@ -21,7 +21,7 @@ bool CCVKBuffer::initialize(const GFXBufferInfo &info) {
     _count = _size / _stride;
     _flags = info.flags;
 
-    if ((_flags & GFXBufferFlagBit::BAKUP_BUFFER) && _size > 0) {
+    if ((_flags & BufferFlagBit::BAKUP_BUFFER) && _size > 0) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         _device->getMemoryStatus().bufferSize += _size;
     }
@@ -33,7 +33,7 @@ bool CCVKBuffer::initialize(const GFXBufferInfo &info) {
     _gpuBuffer->stride = _stride;
     _gpuBuffer->count = _count;
 
-    if (!(_usage & GFXBufferUsageBit::INDIRECT)) {
+    if (!(_usage & BufferUsageBit::INDIRECT)) {
         _gpuBuffer->buffer = _buffer;
     }
 

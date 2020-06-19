@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKTexture::CCVKTexture(GFXDevice *device)
+CCVKTexture::CCVKTexture(Device *device)
 : GFXTexture(device) {
 }
 

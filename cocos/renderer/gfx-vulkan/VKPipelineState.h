@@ -8,7 +8,7 @@ class CCVKGPUPipelineState;
 
 class CC_VULKAN_API CCVKPipelineState : public GFXPipelineState {
 public:
-    CCVKPipelineState(GFXDevice *device);
+    CCVKPipelineState(Device *device);
     ~CCVKPipelineState();
 
 public:

@@ -9,7 +9,7 @@ class CCVKGPUTextureView;
 
 class CC_VULKAN_API CCVKTexture : public GFXTexture {
 public:
-    CCVKTexture(GFXDevice *device);
+    CCVKTexture(Device *device);
     ~CCVKTexture();
 
 public:

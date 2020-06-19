@@ -8,7 +8,7 @@ namespace gfx {
 
 class CC_DLL GFXTexture : public GFXObject {
 public:
-    GFXTexture(GFXDevice *device);
+    GFXTexture(Device *device);
     virtual ~GFXTexture();
 
 public:
@@ -31,7 +31,7 @@ public:
     CC_INLINE uint8_t *getBuffer() const { return _buffer; }
 
 protected:
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
     GFXTextureType _type = GFXTextureType::TEX2D;
     GFXTextureUsage _usage = GFXTextureUsageBit::NONE;
     GFXFormat _format = GFXFormat::UNKNOWN;

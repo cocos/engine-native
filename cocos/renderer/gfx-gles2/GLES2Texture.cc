@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2Texture::GLES2Texture(GFXDevice *device)
+GLES2Texture::GLES2Texture(Device *device)
 : GFXTexture(device) {
 }
 

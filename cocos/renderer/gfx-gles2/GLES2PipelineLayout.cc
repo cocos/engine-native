@@ -5,7 +5,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2PipelineLayout::GLES2PipelineLayout(GFXDevice *device)
+GLES2PipelineLayout::GLES2PipelineLayout(Device *device)
 : GFXPipelineLayout(device) {
 }
 

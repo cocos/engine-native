@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GFXQueue::GFXQueue(GFXDevice *device)
+GFXQueue::GFXQueue(Device *device)
 : GFXObject(GFXObjectType::QUEUE), _device(device) {
 }
 

@@ -8,7 +8,7 @@ class GLES2GPUPipelineLayout;
 
 class CC_GLES2_API GLES2PipelineLayout : public GFXPipelineLayout {
 public:
-    GLES2PipelineLayout(GFXDevice *device);
+    GLES2PipelineLayout(Device *device);
     ~GLES2PipelineLayout();
 
 public:

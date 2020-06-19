@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-GLES3Queue::GLES3Queue(GFXDevice *device)
+GLES3Queue::GLES3Queue(Device *device)
 : GFXQueue(device) {
 }
 

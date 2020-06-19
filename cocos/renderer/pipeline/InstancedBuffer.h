@@ -11,7 +11,7 @@ class SubModel;
 namespace pipeline {
 
 struct CC_DLL InstancedItem {
-    gfx::GFXBuffer *vb = nullptr;
+    gfx::Buffer *vb = nullptr;
     uint8_t *data = nullptr;
     gfx::GFXInputAssembler *ia = nullptr;
     uint count = 0;

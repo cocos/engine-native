@@ -8,7 +8,7 @@ class CCVKGPUSampler;
 
 class CC_VULKAN_API CCVKSampler : public GFXSampler {
 public:
-    CCVKSampler(GFXDevice *device);
+    CCVKSampler(Device *device);
     ~CCVKSampler();
 
 public:

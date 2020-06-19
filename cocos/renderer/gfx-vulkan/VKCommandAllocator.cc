@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKCommandAllocator::CCVKCommandAllocator(GFXDevice *device)
+CCVKCommandAllocator::CCVKCommandAllocator(Device *device)
 : GFXCommandAllocator(device) {
 }
 

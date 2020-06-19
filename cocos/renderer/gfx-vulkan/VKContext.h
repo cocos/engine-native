@@ -12,7 +12,7 @@ class CCVKGPUSemaphorePool;
 
 class CC_VULKAN_API CCVKContext : public GFXContext {
 public:
-    CCVKContext(GFXDevice *device);
+    CCVKContext(Device *device);
     ~CCVKContext();
 
 public:

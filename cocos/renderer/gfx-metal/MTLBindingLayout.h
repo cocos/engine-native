@@ -5,7 +5,7 @@ namespace gfx {
 
 class CCMTLBindingLayout : public GFXBindingLayout {
 public:
-    CCMTLBindingLayout(GFXDevice *device);
+    CCMTLBindingLayout(Device *device);
     virtual ~CCMTLBindingLayout();
 
     virtual bool initialize(const GFXBindingLayoutInfo &info) override;

@@ -9,7 +9,7 @@
 namespace cc {
 namespace gfx {
 
-CCVKQueue::CCVKQueue(GFXDevice *device)
+CCVKQueue::CCVKQueue(Device *device)
 : GFXQueue(device) {
 }
 

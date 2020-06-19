@@ -8,7 +8,7 @@ class CCVKGPURenderPass;
 
 class CC_VULKAN_API CCVKRenderPass : public GFXRenderPass {
 public:
-    CCVKRenderPass(GFXDevice *device);
+    CCVKRenderPass(Device *device);
     ~CCVKRenderPass();
 
 public:

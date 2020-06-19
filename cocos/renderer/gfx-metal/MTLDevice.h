@@ -5,12 +5,12 @@ namespace gfx {
 
 class CCMTLStateCache;
 
-class CCMTLDevice : public GFXDevice {
+class CCMTLDevice : public Device {
 public:
     CCMTLDevice();
     ~CCMTLDevice();
 
-    virtual bool initialize(const GFXDeviceInfo &info) override;
+    virtual bool initialize(const DeviceInfo &info) override;
     virtual void destroy() override;
     virtual void resize(uint width, uint height) override;
     virtual void acquire() override{};
@@ -19,7 +19,7 @@ public:
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) override;
     virtual GFXCommandAllocator *createCommandAllocator(const GFXCommandAllocatorInfo &info) override;
     virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) override;
-    virtual GFXBuffer *createBuffer(const GFXBufferInfo &info) override;
+    virtual Buffer *createBuffer(const BufferInfo &info) override;
     virtual GFXTexture *createTexture(const GFXTextureInfo &info) override;
     virtual GFXTexture *createTexture(const GFXTextureViewInfo &info) override;
     virtual GFXSampler *createSampler(const GFXSamplerInfo &info) override;
@@ -30,7 +30,7 @@ public:
     virtual GFXBindingLayout *createBindingLayout(const GFXBindingLayoutInfo &info) override;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) override;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) override;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions) override;
+    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) override;
     virtual void blitBuffer(void *srcBuffer, uint offset, uint size, void *dstBuffer);
 
     CC_INLINE void *getMTKView() const { return _mtkView; }

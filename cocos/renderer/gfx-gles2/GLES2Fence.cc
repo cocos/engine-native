@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2Fence::GLES2Fence(GFXDevice *device)
+GLES2Fence::GLES2Fence(Device *device)
 : GFXFence(device) {
 }
 

@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXDevice : public Object {
+class CC_DLL Device : public Object {
 public:
-    GFXDevice();
-    virtual ~GFXDevice();
+    Device();
+    virtual ~Device();
 
 public:
-    virtual bool initialize(const GFXDeviceInfo &info) = 0;
+    virtual bool initialize(const DeviceInfo &info) = 0;
     virtual void destroy() = 0;
     virtual void resize(uint width, uint height) = 0;
     virtual void acquire() = 0;
@@ -21,7 +21,7 @@ public:
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) = 0;
     virtual GFXCommandAllocator *createCommandAllocator(const GFXCommandAllocatorInfo &info) = 0;
     virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) = 0;
-    virtual GFXBuffer *createBuffer(const GFXBufferInfo &info) = 0;
+    virtual Buffer *createBuffer(const BufferInfo &info) = 0;
     virtual GFXTexture *createTexture(const GFXTextureInfo &info) = 0;
     virtual GFXTexture *createTexture(const GFXTextureViewInfo &info) = 0;
     virtual GFXSampler *createSampler(const GFXSamplerInfo &info) = 0;
@@ -32,7 +32,7 @@ public:
     virtual GFXBindingLayout *createBindingLayout(const GFXBindingLayoutInfo &info) = 0;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) = 0;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) = 0;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions) = 0;
+    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) = 0;
 
     CC_INLINE GFXAPI getGfxAPI() const { return _gfxAPI; }
     CC_INLINE const String &getDeviceName() const { return _deviceName; }

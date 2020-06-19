@@ -8,7 +8,7 @@ class CCVKGPUQueue;
 
 class CC_VULKAN_API CCVKQueue : public GFXQueue {
 public:
-    CCVKQueue(GFXDevice *device);
+    CCVKQueue(Device *device);
     ~CCVKQueue();
 
     friend class CCVKDevice;

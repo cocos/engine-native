@@ -8,7 +8,7 @@ class CCVKGPUFence;
 
 class CC_VULKAN_API CCVKFence : public GFXFence {
 public:
-    CCVKFence(GFXDevice *device);
+    CCVKFence(Device *device);
     virtual ~CCVKFence() override;
 
 public:

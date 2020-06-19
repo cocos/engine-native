@@ -22,7 +22,7 @@ GFXFormat toGFXFormat(MTLPixelFormat format) {
 }
 }
 
-CCMTLContext::CCMTLContext(GFXDevice *device)
+CCMTLContext::CCMTLContext(Device *device)
 : GFXContext(device) {
 }
 

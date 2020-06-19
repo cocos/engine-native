@@ -6,7 +6,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2InputAssembler::GLES2InputAssembler(GFXDevice *device)
+GLES2InputAssembler::GLES2InputAssembler(Device *device)
 : GFXInputAssembler(device) {
 }
 

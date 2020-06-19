@@ -10,13 +10,13 @@
 namespace cc {
 namespace gfx {
 
-CCMTLBuffer::CCMTLBuffer(GFXDevice *device) : GFXBuffer(device) {}
+CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {}
 
 CCMTLBuffer::~CCMTLBuffer() {
     destroy();
 }
 
-bool CCMTLBuffer::initialize(const GFXBufferInfo &info) {
+bool CCMTLBuffer::initialize(const BufferInfo &info) {
     _usage = info.usage;
     _memUsage = info.memUsage;
     _size = info.size;
@@ -24,7 +24,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo &info) {
     _count = _size / _stride;
     _flags = info.flags;
 
-    if (_usage & GFXBufferUsage::INDEX) {
+    if (_usage & BufferUsage::INDEX) {
         switch (_stride) {
             case 4: _indexType = MTLIndexTypeUInt32; break;
             case 2: _indexType = MTLIndexTypeUInt16; break;
@@ -34,7 +34,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo &info) {
         }
     }
 
-    if ((_flags & GFXBufferFlagBit::BAKUP_BUFFER) && _size > 0) {
+    if ((_flags & BufferFlagBit::BAKUP_BUFFER) && _size > 0) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         if (_buffer)
             _device->getMemoryStatus().bufferSize += _size;
@@ -45,8 +45,8 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo &info) {
         }
     }
 
-    if (_usage & GFXBufferUsageBit::VERTEX ||
-        _usage & GFXBufferUsageBit::UNIFORM) {
+    if (_usage & BufferUsageBit::VERTEX ||
+        _usage & BufferUsageBit::UNIFORM) {
         //for single-use data smaller than 4 KB, use setVertexBytes:length:atIndex: instead
         //see more detail at https://developer.apple.com/documentation/metal/mtlrendercommandencoder/1515846-setvertexbytes?language=objc
         if (_size < MINIMUMR_REQUIRED_SIZE_4KB) {
@@ -56,11 +56,11 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo &info) {
         } else {
             createMTLBuffer(_size, _memUsage);
         }
-    } else if (_usage & GFXBufferUsageBit::INDEX ||
-               _usage & GFXBufferUsageBit::INDIRECT) {
+    } else if (_usage & BufferUsageBit::INDEX ||
+               _usage & BufferUsageBit::INDIRECT) {
         createMTLBuffer(_size, _memUsage);
-    } else if (_usage & GFXBufferUsageBit::TRANSFER_SRC ||
-               _usage & GFXBufferUsageBit::TRANSFER_DST) {
+    } else if (_usage & BufferUsageBit::TRANSFER_SRC ||
+               _usage & BufferUsageBit::TRANSFER_DST) {
         _transferBuffer = (uint8_t *)CC_MALLOC(_size);
         if (!_transferBuffer) {
             _status = GFXStatus::FAILED;
@@ -70,7 +70,7 @@ bool CCMTLBuffer::initialize(const GFXBufferInfo &info) {
         _device->getMemoryStatus().bufferSize += _size;
     } else {
         _status = GFXStatus::FAILED;
-        CCASSERT(false, "Unsupported GFXBufferType, create buffer failed.");
+        CCASSERT(false, "Unsupported BufferType, create buffer failed.");
         return false;
     }
 
@@ -123,10 +123,10 @@ void CCMTLBuffer::resize(uint size) {
     if (_size == size)
         return;
 
-    if (_usage & GFXBufferUsageBit::VERTEX ||
-        _usage & GFXBufferUsageBit::INDEX ||
-        _usage & GFXBufferUsageBit::UNIFORM ||
-        _usage & GFXBufferUsageBit::INDIRECT) {
+    if (_usage & BufferUsageBit::VERTEX ||
+        _usage & BufferUsageBit::INDEX ||
+        _usage & BufferUsageBit::UNIFORM ||
+        _usage & BufferUsageBit::INDIRECT) {
         if (_useOptimizedBufferEncoder) {
             if (size < MINIMUMR_REQUIRED_SIZE_4KB)
                 resizeBuffer(&_bufferBytes, size, _size);
@@ -176,7 +176,7 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
     if (_buffer)
         memcpy(_buffer + offset, buffer, size);
 
-    if (_usage & GFXBufferUsageBit::INDIRECT) {
+    if (_usage & BufferUsageBit::INDIRECT) {
         auto drawInfoCount = size / _stride;
         auto *drawInfo = static_cast<GFXDrawInfo *>(buffer);
         if (drawInfoCount > 0) {

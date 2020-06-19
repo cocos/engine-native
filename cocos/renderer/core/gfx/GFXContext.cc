@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GFXContext::GFXContext(GFXDevice *device)
+GFXContext::GFXContext(Device *device)
 : _device(device) {
 }
 

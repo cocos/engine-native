@@ -5,7 +5,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2Sampler::GLES2Sampler(GFXDevice *device)
+GLES2Sampler::GLES2Sampler(Device *device)
 : GFXSampler(device) {
 }
 

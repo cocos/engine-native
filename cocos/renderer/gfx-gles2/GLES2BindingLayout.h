@@ -8,7 +8,7 @@ class GLES2GPUBindingLayout;
 
 class CC_GLES2_API GLES2BindingLayout : public GFXBindingLayout {
 public:
-    GLES2BindingLayout(GFXDevice *device);
+    GLES2BindingLayout(Device *device);
     ~GLES2BindingLayout();
 
 public:

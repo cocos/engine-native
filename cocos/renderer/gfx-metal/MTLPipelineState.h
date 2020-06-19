@@ -11,7 +11,7 @@ namespace gfx {
 
 class CCMTLPipelineState : public GFXPipelineState {
 public:
-    CCMTLPipelineState(GFXDevice *device);
+    CCMTLPipelineState(Device *device);
     virtual ~CCMTLPipelineState();
 
     virtual bool initialize(const GFXPipelineStateInfo &info) override;

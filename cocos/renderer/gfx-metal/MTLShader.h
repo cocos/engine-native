@@ -8,7 +8,7 @@ namespace gfx {
 
 class CCMTLShader : public GFXShader {
 public:
-    CCMTLShader(GFXDevice *device);
+    CCMTLShader(Device *device);
     ~CCMTLShader();
 
     virtual bool initialize(const GFXShaderInfo &info) override;

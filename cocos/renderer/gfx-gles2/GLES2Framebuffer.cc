@@ -8,7 +8,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2Framebuffer::GLES2Framebuffer(GFXDevice *device)
+GLES2Framebuffer::GLES2Framebuffer(Device *device)
 : GFXFramebuffer(device) {
 }
 

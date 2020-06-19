@@ -8,7 +8,7 @@ class GLES3GPUPipelineState;
 
 class CC_GLES3_API GLES3PipelineState : public GFXPipelineState {
 public:
-    GLES3PipelineState(GFXDevice *device);
+    GLES3PipelineState(Device *device);
     ~GLES3PipelineState();
 
 public:

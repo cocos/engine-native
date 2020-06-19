@@ -5,7 +5,7 @@
 namespace cc {
 namespace gfx {
 
-GLES2RenderPass::GLES2RenderPass(GFXDevice *device)
+GLES2RenderPass::GLES2RenderPass(Device *device)
 : GFXRenderPass(device) {
 }
 

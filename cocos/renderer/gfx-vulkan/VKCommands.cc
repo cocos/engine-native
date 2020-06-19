@@ -266,7 +266,7 @@ void CCVKCmdFuncResizeBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
 
 void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void *buffer, uint offset, uint size) {
     if (gpuBuffer->mappedData) {
-        if (gpuBuffer->usage & GFXBufferUsageBit::INDIRECT) {
+        if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
             size_t drawInfoCount = size / gpuBuffer->stride;
             GFXDrawInfo *drawInfo = static_cast<GFXDrawInfo *>(buffer);
             if (drawInfoCount > 0) {
@@ -881,7 +881,7 @@ void CCVKCmdFuncDestroyPipelineState(CCVKDevice *device, CCVKGPUPipelineState *g
     }
 }
 
-void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers, CCVKGPUTexture *gpuTexture, const GFXBufferTextureCopyList &regions) {
+void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers, CCVKGPUTexture *gpuTexture, const BufferTextureCopyList &regions) {
     //bool isCompressed = GFX_FORMAT_INFOS[(int)gpuTexture->format].isCompressed;
     CCVKGPUCommandBuffer cmdBuff;
     beginOneTimeCommands(device, &cmdBuff);
@@ -904,7 +904,7 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
     uint regionCount = regions.size(), totalSize = 0u;
     vector<uint> regionSizes(regionCount);
     for (size_t i = 0u; i < regionCount; ++i) {
-        const GFXBufferTextureCopy &region = regions[i];
+        const BufferTextureCopy &region = regions[i];
         uint w = region.buffStride > 0 ? region.buffStride : region.texExtent.width;
         uint h = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
         totalSize += regionSizes[i] = GFXFormatSize(gpuTexture->format, w, h, region.texExtent.depth);
@@ -916,7 +916,7 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
     vector<VkBufferImageCopy> stagingRegions(regionCount);
     VkDeviceSize offset = stagingBuffer->startOffset;
     for (size_t i = 0u; i < regionCount; ++i) {
-        const GFXBufferTextureCopy &region = regions[i];
+        const BufferTextureCopy &region = regions[i];
         VkBufferImageCopy &stagingRegion = stagingRegions[i];
         stagingRegion.bufferOffset = offset;
         stagingRegion.bufferRowLength = region.buffStride;

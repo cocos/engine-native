@@ -8,7 +8,7 @@ namespace gfx {
 
 class CC_DLL GFXInputAssembler : public GFXObject {
 public:
-    GFXInputAssembler(GFXDevice *device);
+    GFXInputAssembler(Device *device);
     virtual ~GFXInputAssembler();
 
 public:
@@ -17,11 +17,11 @@ public:
 
     void extractDrawInfo(GFXDrawInfo &drawInfo) const;
 
-    CC_INLINE GFXDevice *getDevice() const { return _device; }
+    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const GFXAttributeList &getAttributes() const { return _attributes; }
-    CC_INLINE const GFXBufferList &getVertexBuffers() const { return _vertexBuffers; }
-    CC_INLINE GFXBuffer *getIndexBuffer() const { return _indexBuffer; }
-    CC_INLINE GFXBuffer *getIndirectBuffer() const { return _indirectBuffer; }
+    CC_INLINE const BufferList &getVertexBuffers() const { return _vertexBuffers; }
+    CC_INLINE Buffer *getIndexBuffer() const { return _indexBuffer; }
+    CC_INLINE Buffer *getIndirectBuffer() const { return _indirectBuffer; }
     CC_INLINE uint getVertexCount() const { return _vertexCount; }
     CC_INLINE uint getFirstVertex() const { return _firstVertex; }
     CC_INLINE uint getIndexCount() const { return _indexCount; }
@@ -42,11 +42,11 @@ public:
 protected:
     uint computeAttributesHash() const;
 
-    GFXDevice *_device = nullptr;
+    Device *_device = nullptr;
     GFXAttributeList _attributes;
-    GFXBufferList _vertexBuffers;
-    GFXBuffer *_indexBuffer = nullptr;
-    GFXBuffer *_indirectBuffer = nullptr;
+    BufferList _vertexBuffers;
+    Buffer *_indexBuffer = nullptr;
+    Buffer *_indirectBuffer = nullptr;
     uint _vertexCount = 0;
     uint _firstVertex = 0;
     uint _indexCount = 0;

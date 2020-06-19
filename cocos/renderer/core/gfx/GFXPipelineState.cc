@@ -4,7 +4,7 @@
 namespace cc {
 namespace gfx {
 
-GFXPipelineState::GFXPipelineState(GFXDevice *device)
+GFXPipelineState::GFXPipelineState(Device *device)
 : GFXObject(GFXObjectType::PIPELINE_STATE), _device(device) {
 }
 

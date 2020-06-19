@@ -8,7 +8,7 @@ class GLES3GPUFramebuffer;
 
 class CC_GLES3_API GLES3Framebuffer : public GFXFramebuffer {
 public:
-    GLES3Framebuffer(GFXDevice *device);
+    GLES3Framebuffer(Device *device);
     ~GLES3Framebuffer();
 
 public:

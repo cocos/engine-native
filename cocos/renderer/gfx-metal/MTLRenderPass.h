@@ -11,7 +11,7 @@ class GFXTextureView;
 
 class CCMTLRenderPass : public GFXRenderPass {
 public:
-    CCMTLRenderPass(GFXDevice *device);
+    CCMTLRenderPass(Device *device);
     ~CCMTLRenderPass();
 
     virtual bool initialize(const GFXRenderPassInfo &info) override;

@@ -13,7 +13,7 @@ public:
     ~RenderInstancedQueue() = default;
 
     void clear();
-    void recordCommandBuffer(gfx::GFXDevice *, gfx::GFXRenderPass *, gfx::GFXCommandBuffer *);
+    void recordCommandBuffer(gfx::Device *, gfx::GFXRenderPass *, gfx::GFXCommandBuffer *);
 
     CC_INLINE const set<InstancedBuffer *> &getQueue() const { return _queue; }
 

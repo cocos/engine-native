@@ -16,7 +16,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLPipelineState::CCMTLPipelineState(GFXDevice *device) : GFXPipelineState(device) {}
+CCMTLPipelineState::CCMTLPipelineState(Device *device) : GFXPipelineState(device) {}
 CCMTLPipelineState::~CCMTLPipelineState() { destroy(); }
 
 bool CCMTLPipelineState::initialize(const GFXPipelineStateInfo &info) {

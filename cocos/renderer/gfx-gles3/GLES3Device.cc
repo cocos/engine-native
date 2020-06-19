@@ -27,7 +27,7 @@ GLES3Device::GLES3Device() {
 GLES3Device::~GLES3Device() {
 }
 
-bool GLES3Device::initialize(const GFXDeviceInfo &info) {
+bool GLES3Device::initialize(const DeviceInfo &info) {
     _gfxAPI = GFXAPI::GLES3;
     _deviceName = "GLES3";
     _width = info.width;
@@ -198,8 +198,8 @@ GFXCommandBuffer *GLES3Device::createCommandBuffer(const GFXCommandBufferInfo &i
     return nullptr;
 }
 
-GFXBuffer *GLES3Device::createBuffer(const GFXBufferInfo &info) {
-    GFXBuffer *buffer = CC_NEW(GLES3Buffer(this));
+Buffer *GLES3Device::createBuffer(const BufferInfo &info) {
+    Buffer *buffer = CC_NEW(GLES3Buffer(this));
     if (buffer->initialize(info))
         return buffer;
 
@@ -297,7 +297,7 @@ GFXPipelineLayout *GLES3Device::createPipelineLayout(const GFXPipelineLayoutInfo
     return nullptr;
 }
 
-void GLES3Device::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const GFXBufferTextureCopyList &regions) {
+void GLES3Device::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) {
 
     GLES3CmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((GLES3Texture *)dst)->gpuTexture(), regions);
 }
