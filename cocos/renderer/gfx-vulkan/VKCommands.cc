@@ -729,29 +729,28 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     const size_t shaderAttrCount = shaderAttrs.size();
     vector<VkVertexInputAttributeDescription> attributeDescriptions(shaderAttrCount);
     vector<uint> offsets(bindingCount, 0);
-    uint record = 0u;
-    for (size_t i = 0u; i < attributeCount; i++) {
-        const GFXAttribute &attr = attributes[i];
-        size_t j = 0u;
-        for (; j < shaderAttrCount; j++) {
+    bool attributeFound = false;
+
+    for (size_t j = 0; j < shaderAttrCount; j++) {
+        attributeFound = false;
+        for (size_t i = 0; i < attributeCount; i++) {
+            const GFXAttribute &attr = attributes[i];
             if (shaderAttrs[j].name == attr.name) {
                 attributeDescriptions[j].location = shaderAttrs[j].location;
                 attributeDescriptions[j].binding = attr.stream;
                 attributeDescriptions[j].format = MapVkFormat(attr.format);
                 attributeDescriptions[j].offset = offsets[attr.stream];
-                record |= 1 << j;
+                offsets[attr.stream] += GFX_FORMAT_INFOS[(uint)attr.format].size;
+                attributeFound = true;
                 break;
             }
         }
-        offsets[attr.stream] += GFX_FORMAT_INFOS[(uint)attr.format].size;
-    }
-
-    // handle absent attributes
-    for (size_t i = 0u; i < shaderAttrCount; i++) {
-        if (record & (1 << i)) continue;
-        attributeDescriptions[i].location = shaderAttrs[i].location;
-        attributeDescriptions[i].format = MapVkFormat(shaderAttrs[i].format);
-        attributeDescriptions[i].offset = 0; // reuse the first attribute as dummy data
+        if (!attributeFound) { //handle absent attribute
+            attributeDescriptions[j].location = shaderAttrs[j].location;
+            attributeDescriptions[j].format = MapVkFormat(shaderAttrs[j].format);
+            attributeDescriptions[j].offset = 0; // reuse the first attribute as dummy data
+            CC_LOG_WARNING("Attribute %s is missing, add a dummy data for it.", shaderAttrs[j].name.c_str());
+        }
     }
 
     VkPipelineVertexInputStateCreateInfo vertexInput{VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO};
