@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 GLES3Texture::GLES3Texture(Device *device)
-: GFXTexture(device) {
+: Texture(device) {
 }
 
 GLES3Texture::~GLES3Texture() {
 }
 
-bool GLES3Texture::initialize(const GFXTextureInfo &info) {
+bool GLES3Texture::initialize(const TextureInfo &info) {
 
     _type = info.type;
     _usage = info.usage;
@@ -60,7 +60,7 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
     }
 #endif
 
-    if (_flags & GFXTextureFlags::BAKUP_BUFFER) {
+    if (_flags & TextureFlags::BAKUP_BUFFER) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         if (!_buffer) {
             _status = GFXStatus::FAILED;
@@ -96,7 +96,7 @@ bool GLES3Texture::initialize(const GFXTextureInfo &info) {
     return true;
 }
 
-bool GLES3Texture::initialize(const GFXTextureViewInfo &info) {
+bool GLES3Texture::initialize(const TextureViewInfo &info) {
     CC_LOG_ERROR("GLES3 doesn't support texture view.");
     _status = GFXStatus::FAILED;
     return false;

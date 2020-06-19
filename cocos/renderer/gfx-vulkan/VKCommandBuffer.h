@@ -34,7 +34,7 @@ public:
     void setStencilCompareMask(GFXStencilFace face, int reference, uint mask);
     void draw(GFXInputAssembler *ia);
     void updateBuffer(Buffer *buff, void *data, uint size, uint offset);
-    void copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions);
+    void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions);
     void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint count);
 
     CCVKGPUCommandBuffer *gpuCommandBuffer() const { return _gpuCommandBuffer; }

@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 CCVKTexture::CCVKTexture(Device *device)
-: GFXTexture(device) {
+: Texture(device) {
 }
 
 CCVKTexture::~CCVKTexture() {
 }
 
-bool CCVKTexture::initialize(const GFXTextureInfo &info) {
+bool CCVKTexture::initialize(const TextureInfo &info) {
     _type = info.type;
     _usage = info.usage;
     _format = info.format;
@@ -59,7 +59,7 @@ bool CCVKTexture::initialize(const GFXTextureInfo &info) {
     }
 #endif
 
-    if (_flags & GFXTextureFlags::BAKUP_BUFFER) {
+    if (_flags & TextureFlags::BAKUP_BUFFER) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         _device->getMemoryStatus().textureSize += _size;
     }
@@ -81,7 +81,7 @@ bool CCVKTexture::initialize(const GFXTextureInfo &info) {
     CCVKCmdFuncCreateTexture((CCVKDevice *)_device, _gpuTexture);
     _device->getMemoryStatus().textureSize += _size;
 
-    GFXTextureViewInfo textureViewInfo;
+    TextureViewInfo textureViewInfo;
     textureViewInfo.texture = this;
     textureViewInfo.type = _type;
     textureViewInfo.format = _format;
@@ -95,7 +95,7 @@ bool CCVKTexture::initialize(const GFXTextureInfo &info) {
     return true;
 }
 
-bool CCVKTexture::initialize(const GFXTextureViewInfo &info) {
+bool CCVKTexture::initialize(const TextureViewInfo &info) {
     if (info.texture) {
         _type = info.texture->getType();
         _format = info.texture->getFormat();
@@ -116,7 +116,7 @@ bool CCVKTexture::initialize(const GFXTextureViewInfo &info) {
     return true;
 }
 
-void CCVKTexture::createTextureView(const GFXTextureViewInfo &info) {
+void CCVKTexture::createTextureView(const TextureViewInfo &info) {
     if (!_gpuTextureView) {
         _gpuTextureView = CC_NEW(CCVKGPUTextureView);
     }

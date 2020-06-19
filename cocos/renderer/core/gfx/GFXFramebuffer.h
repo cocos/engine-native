@@ -17,15 +17,15 @@ public:
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE GFXRenderPass *getRenderPass() const { return _renderPass; }
-    CC_INLINE const GFXTextureList &getColorTextures() const { return _colorTextures; }
-    CC_INLINE GFXTexture *getDepthStencilTexture() const { return _depthStencilTexture; }
+    CC_INLINE const TextureList &getColorTextures() const { return _colorTextures; }
+    CC_INLINE Texture *getDepthStencilTexture() const { return _depthStencilTexture; }
     CC_INLINE bool isOffscreen() const { return _isOffscreen; }
 
 protected:
     Device *_device = nullptr;
     GFXRenderPass *_renderPass = nullptr;
-    GFXTextureList _colorTextures;
-    GFXTexture *_depthStencilTexture = nullptr;
+    TextureList _colorTextures;
+    Texture *_depthStencilTexture = nullptr;
     bool _isOffscreen = true;
 };
 

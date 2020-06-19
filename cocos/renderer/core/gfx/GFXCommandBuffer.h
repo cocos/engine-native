@@ -31,7 +31,7 @@ public:
     virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) = 0;
     virtual void draw(GFXInputAssembler *ia) = 0;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
-    virtual void copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) = 0;
+    virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) = 0;
     virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }

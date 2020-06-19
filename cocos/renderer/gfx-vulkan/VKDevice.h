@@ -29,8 +29,8 @@ public:
     virtual GFXCommandAllocator *createCommandAllocator(const GFXCommandAllocatorInfo &info) override;
     virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
-    virtual GFXTexture *createTexture(const GFXTextureInfo &info) override;
-    virtual GFXTexture *createTexture(const GFXTextureViewInfo &info) override;
+    virtual Texture *createTexture(const TextureInfo &info) override;
+    virtual Texture *createTexture(const TextureViewInfo &info) override;
     virtual GFXSampler *createSampler(const GFXSamplerInfo &info) override;
     virtual GFXShader *createShader(const GFXShaderInfo &info) override;
     virtual GFXInputAssembler *createInputAssembler(const GFXInputAssemblerInfo &info) override;
@@ -39,7 +39,7 @@ public:
     virtual GFXBindingLayout *createBindingLayout(const GFXBindingLayoutInfo &info) override;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) override;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) override;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) override;
+    virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
 
     CC_INLINE bool checkExtension(const String &extension) const {
         return std::find_if(_extensions.begin(), _extensions.end(),

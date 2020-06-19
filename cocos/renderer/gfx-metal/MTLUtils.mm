@@ -425,37 +425,37 @@ MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode mode) {
     }
 }
 
-MTLTextureUsage toMTLTextureUsage(GFXTextureUsage usage) {
-    if (usage == GFXTextureUsage::NONE)
+MTLTextureUsage toMTLTextureUsage(TextureUsage usage) {
+    if (usage == TextureUsage::NONE)
         return MTLTextureUsageUnknown;
 
     MTLTextureUsage ret = MTLTextureUsageUnknown;
-    if (usage & GFXTextureUsage::TRANSFER_SRC)
+    if (usage & TextureUsage::TRANSFER_SRC)
         ret |= MTLTextureUsageShaderRead;
-    if (usage & GFXTextureUsage::TRANSFER_DST)
+    if (usage & TextureUsage::TRANSFER_DST)
         ret |= MTLTextureUsageShaderWrite;
-    if (usage & GFXTextureUsage::SAMPLED)
+    if (usage & TextureUsage::SAMPLED)
         ret |= MTLTextureUsageShaderRead;
-    if (usage & GFXTextureUsage::STORAGE)
+    if (usage & TextureUsage::STORAGE)
         ret |= MTLTextureUsageShaderWrite;
-    if (usage & GFXTextureUsage::COLOR_ATTACHMENT ||
-        usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT ||
-        usage & GFXTextureUsage::TRANSIENT_ATTACHMENT ||
-        usage & GFXTextureUsage::INPUT_ATTACHMENT) {
+    if (usage & TextureUsage::COLOR_ATTACHMENT ||
+        usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT ||
+        usage & TextureUsage::TRANSIENT_ATTACHMENT ||
+        usage & TextureUsage::INPUT_ATTACHMENT) {
         ret |= MTLTextureUsageRenderTarget;
     }
 
     return ret;
 }
 
-MTLTextureType toMTLTextureType(GFXTextureType type) {
+MTLTextureType toMTLTextureType(TextureType type) {
     switch (type) {
-        case GFXTextureType::TEX1D: return MTLTextureType1D;
-        case GFXTextureType::TEX2D: return MTLTextureType2D;
-        case GFXTextureType::TEX3D: return MTLTextureType3D;
-        case GFXTextureType::CUBE: return MTLTextureTypeCube;
-        case GFXTextureType::TEX1D_ARRAY: return MTLTextureType1DArray;
-        case GFXTextureType::TEX2D_ARRAY: return MTLTextureType2DArray;
+        case TextureType::TEX1D: return MTLTextureType1D;
+        case TextureType::TEX2D: return MTLTextureType2D;
+        case TextureType::TEX3D: return MTLTextureType3D;
+        case TextureType::CUBE: return MTLTextureTypeCube;
+        case TextureType::TEX1D_ARRAY: return MTLTextureType1DArray;
+        case TextureType::TEX2D_ARRAY: return MTLTextureType2DArray;
     }
 }
 

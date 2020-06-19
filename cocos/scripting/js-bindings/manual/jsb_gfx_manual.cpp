@@ -56,7 +56,7 @@ bool js_Device_copyBuffersToTexture(se::State& s, cc::gfx::Device* cobj)
     CC_UNUSED bool ok = true;
     if (argc == 3) {
         cc::gfx::GFXDataArray arg0;
-        cc::gfx::GFXTexture* arg1 = nullptr;
+        cc::gfx::Texture* arg1 = nullptr;
         std::vector<cc::gfx::BufferTextureCopy> arg2;
         if (args[0].isObject())
         {
@@ -110,7 +110,7 @@ bool js_Device_copyTexImagesToTexture(se::State& s, cc::gfx::Device* cobj)
     CC_UNUSED bool ok = true;
     if (argc == 3) {
         cc::gfx::GFXDataArray arg0;
-        cc::gfx::GFXTexture* arg1 = nullptr;
+        cc::gfx::Texture* arg1 = nullptr;
         std::vector<cc::gfx::BufferTextureCopy> arg2;
         if (args[0].isObject())
         {
@@ -154,19 +154,19 @@ static bool js_gfx_Device_createTexture(se::State& s)
     size_t argc = args.size();
     
     if (argc == 2) {
-        cc::gfx::GFXTexture* texture = nullptr;
+        cc::gfx::Texture* texture = nullptr;
         
         bool createTextureView = false;
         seval_to_boolean(args[1], &createTextureView);
         
         if (createTextureView)
         {
-            auto textureViewInfo = (cc::gfx::GFXTextureViewInfo*)(args[0].toObject()->getPrivateData());
+            auto textureViewInfo = (cc::gfx::TextureViewInfo*)(args[0].toObject()->getPrivateData());
             texture = cobj->createTexture(*textureViewInfo);
         }
         else
         {
-            auto textureInfo = (cc::gfx::GFXTextureInfo*)(args[0].toObject()->getPrivateData());
+            auto textureInfo = (cc::gfx::TextureInfo*)(args[0].toObject()->getPrivateData());
             texture = cobj->createTexture(*textureInfo);
         }
         
@@ -180,11 +180,11 @@ static bool js_gfx_Device_createTexture(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_Device_createTexture)
 
-static bool js_gfx_GFXTexture_initialize(se::State& s)
+static bool js_gfx_Texture_initialize(se::State& s)
 {
     CC_UNUSED bool ok = true;
-    cc::gfx::GFXTexture* cobj = (cc::gfx::GFXTexture*)s.nativeThisObject();
-    SE_PRECONDITION2( cobj, false, "js_gfx_GFXTexture_initialize : Invalid Native Object");
+    cc::gfx::Texture* cobj = (cc::gfx::Texture*)s.nativeThisObject();
+    SE_PRECONDITION2( cobj, false, "js_gfx_Texture_initialize : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -194,24 +194,24 @@ static bool js_gfx_GFXTexture_initialize(se::State& s)
         
         if (initWithTextureViewInfo)
         {
-            auto textureViewInfo = (cc::gfx::GFXTextureViewInfo*)(args[0].toObject()->getPrivateData());
+            auto textureViewInfo = (cc::gfx::TextureViewInfo*)(args[0].toObject()->getPrivateData());
             ok &= cobj->initialize(*textureViewInfo);
         }
         else
         {
-            auto textureInfo = (cc::gfx::GFXTextureInfo*)(args[0].toObject()->getPrivateData());
+            auto textureInfo = (cc::gfx::TextureInfo*)(args[0].toObject()->getPrivateData());
             ok &= cobj->initialize(*textureInfo);
         }
         
         ok &= boolean_to_seval(ok, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXTexture_initialize : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_gfx_Texture_initialize : Error processing arguments");
         return true;
     }
     
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXTexture_initialize)
+SE_BIND_FUNC(js_gfx_Texture_initialize)
 
 #ifdef USE_VULKAN
 static bool js_gfx_CCVKDevice_copyBuffersToTexture(se::State& s)
@@ -848,7 +848,7 @@ bool register_all_gfx_manual(se::Object* obj)
     __jsb_cc_gfx_CCMTLDevice_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_CCMTLDevice_copyTexImagesToTexture));
 #endif
     __jsb_cc_gfx_Device_proto->defineFunction("createTexture", _SE(js_gfx_Device_createTexture));
-    __jsb_cc_gfx_GFXTexture_proto->defineFunction("initialize", _SE(js_gfx_GFXTexture_initialize));
+    __jsb_cc_gfx_Texture_proto->defineFunction("initialize", _SE(js_gfx_Texture_initialize));
     
     return true;
 }

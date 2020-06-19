@@ -272,9 +272,9 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _cmdAllocator = createCommandAllocator(cmdAllocInfo);
 
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
-        GFXTextureInfo depthStencilTexInfo;
-        depthStencilTexInfo.type = GFXTextureType::TEX2D;
-        depthStencilTexInfo.usage = GFXTextureUsageBit::DEPTH_STENCIL_ATTACHMENT | GFXTextureUsageBit::SAMPLED;
+        TextureInfo depthStencilTexInfo;
+        depthStencilTexInfo.type = TextureType::TEX2D;
+        depthStencilTexInfo.usage = TextureUsageBit::DEPTH_STENCIL_ATTACHMENT | TextureUsageBit::SAMPLED;
         depthStencilTexInfo.format = _context->getDepthStencilFormat();
         depthStencilTexInfo.width = 1;
         depthStencilTexInfo.height = 1;
@@ -282,17 +282,17 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
         _depthStencilTextures.push_back(texture);
     }
 
-    GFXTextureInfo textureInfo;
-    GFXTextureViewInfo texViewInfo;
+    TextureInfo textureInfo;
+    TextureViewInfo texViewInfo;
 
-    textureInfo.usage = GFXTextureUsageBit::SAMPLED;
+    textureInfo.usage = TextureUsageBit::SAMPLED;
     textureInfo.format = GFXFormat::RGBA8;
     textureInfo.width = 2;
     textureInfo.height = 2;
     nullTexture2D = (CCVKTexture *)createTexture(textureInfo);
 
     textureInfo.arrayLayer = 6;
-    textureInfo.flags = GFXTextureFlagBit::CUBEMAP;
+    textureInfo.flags = TextureFlagBit::CUBEMAP;
     nullTextureCube = (CCVKTexture *)createTexture(textureInfo);
 
     _gpuSwapchain = CC_NEW(CCVKGPUSwapchain);
@@ -572,8 +572,8 @@ Buffer *CCVKDevice::createBuffer(const BufferInfo &info) {
     return nullptr;
 }
 
-GFXTexture *CCVKDevice::createTexture(const GFXTextureInfo &info) {
-    GFXTexture *texture = CC_NEW(CCVKTexture(this));
+Texture *CCVKDevice::createTexture(const TextureInfo &info) {
+    Texture *texture = CC_NEW(CCVKTexture(this));
     if (texture->initialize(info))
         return texture;
 
@@ -581,8 +581,8 @@ GFXTexture *CCVKDevice::createTexture(const GFXTextureInfo &info) {
     return nullptr;
 }
 
-GFXTexture *CCVKDevice::createTexture(const GFXTextureViewInfo &info) {
-    GFXTexture *texture = CC_NEW(CCVKTexture(this));
+Texture *CCVKDevice::createTexture(const TextureViewInfo &info) {
+    Texture *texture = CC_NEW(CCVKTexture(this));
     if (texture->initialize(info))
         return texture;
 
@@ -662,7 +662,7 @@ GFXPipelineLayout *CCVKDevice::createPipelineLayout(const GFXPipelineLayoutInfo 
     return nullptr;
 }
 
-void CCVKDevice::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) {
+void CCVKDevice::copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
     CCVKCmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((CCVKTexture *)dst)->gpuTexture(), regions);
 }
 

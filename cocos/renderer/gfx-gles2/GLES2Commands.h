@@ -129,7 +129,7 @@ class GLES2CmdCopyBufferToTexture : public GFXCmd {
 public:
     GLES2GPUBuffer *gpuBuffer = nullptr;
     GLES2GPUTexture *gpuTexture = nullptr;
-    GFXTextureLayout dst_layout;
+    TextureLayout dst_layout;
     BufferTextureCopyList regions;
 
     GLES2CmdCopyBufferToTexture() : GFXCmd(GFXCmdType::COPY_BUFFER_TO_TEXTURE) {}

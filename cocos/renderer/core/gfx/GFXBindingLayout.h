@@ -17,7 +17,7 @@ public:
     virtual void update() = 0;
 
     void bindBuffer(uint binding, Buffer *buffer);
-    void bindTexture(uint binding, GFXTexture *texView);
+    void bindTexture(uint binding, Texture *texView);
     void bindSampler(uint binding, GFXSampler *sampler);
 
     CC_INLINE Device *getDevice() const { return _device; }

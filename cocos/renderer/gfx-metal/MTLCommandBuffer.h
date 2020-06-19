@@ -38,7 +38,7 @@ public:
     virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) override;
     virtual void draw(GFXInputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) override;
-    virtual void copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) override;
+    virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) override;
     virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) override;
 
     CC_INLINE const CCMTLCommandPackage *getCommandPackage() const { return _commandPackage; }

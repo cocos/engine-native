@@ -29,8 +29,8 @@ public:
     CC_INLINE uint geiHeight() const { return _height; }
     CC_INLINE bool isOffscreen() const { return _isOffscreen; }
     CC_INLINE gfx::GFXRenderPass *getRenderPass() const { return _renderPass; }
-    CC_INLINE const gfx::GFXTextureList &getColorTextures() const { return _colorTexs; }
-    CC_INLINE gfx::GFXTexture *getDepthStencilTexture() const { return _depthStencilTex; }
+    CC_INLINE const gfx::TextureList &getColorTextures() const { return _colorTexs; }
+    CC_INLINE gfx::Texture *getDepthStencilTexture() const { return _depthStencilTex; }
     CC_INLINE gfx::GFXFramebuffer *getFramebuffer() const { return _frameBuffer; }
     
 private:
@@ -39,8 +39,8 @@ private:
     
 private:
     String title;
-    gfx::GFXTextureList _colorTexs;
-    gfx::GFXTexture *_depthStencilTex = nullptr;
+    gfx::TextureList _colorTexs;
+    gfx::Texture *_depthStencilTex = nullptr;
     gfx::GFXFramebuffer *_frameBuffer = nullptr;
     gfx::GFXRenderPass *_renderPass = nullptr;
     Root *_root = nullptr;

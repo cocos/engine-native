@@ -616,7 +616,7 @@ void GLES2CmdFuncCreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
     gpuTexture->glType = GFXFormatToGLType(gpuTexture->format);
 
     switch (gpuTexture->type) {
-        case GFXTextureType::TEX2D: {
+        case TextureType::TEX2D: {
             gpuTexture->glTarget = GL_TEXTURE_2D;
             glGenTextures(1, &gpuTexture->glTexture);
             if (gpuTexture->size > 0) {
@@ -644,7 +644,7 @@ void GLES2CmdFuncCreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
             }
             break;
         }
-        case GFXTextureType::CUBE: {
+        case TextureType::CUBE: {
             gpuTexture->glTarget = GL_TEXTURE_CUBE_MAP;
             glGenTextures(1, &gpuTexture->glTexture);
             if (gpuTexture->size > 0) {
@@ -679,7 +679,7 @@ void GLES2CmdFuncCreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
             break;
         }
         default:
-            CCASSERT(false, "Unsupported GFXTextureType, create texture failed.");
+            CCASSERT(false, "Unsupported TextureType, create texture failed.");
             break;
     }
 }
@@ -689,11 +689,11 @@ void GLES2CmdFuncDestroyTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture
         GLuint &glTexture = device->stateCache->glTextures[device->stateCache->texUint];
         if (glTexture == gpuTexture->glTexture) {
             switch (gpuTexture->type) {
-                case GFXTextureType::TEX2D: {
+                case TextureType::TEX2D: {
                     glBindTexture(GL_TEXTURE_2D, 0);
                     break;
                 }
-                case GFXTextureType::CUBE: {
+                case TextureType::CUBE: {
                     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
                     break;
                 }
@@ -711,7 +711,7 @@ void GLES2CmdFuncResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
     gpuTexture->glType = GFXFormatToGLType(gpuTexture->format);
 
     switch (gpuTexture->type) {
-        case GFXTextureType::TEX2D: {
+        case TextureType::TEX2D: {
             gpuTexture->glTarget = GL_TEXTURE_2D;
             if (gpuTexture->size > 0) {
                 GLuint &glTexture = device->stateCache->glTextures[device->stateCache->texUint];
@@ -738,7 +738,7 @@ void GLES2CmdFuncResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
             }
             break;
         }
-        case GFXTextureType::CUBE: {
+        case TextureType::CUBE: {
             gpuTexture->glTarget = GL_TEXTURE_CUBE_MAP;
             if (gpuTexture->size > 0) {
                 GLuint &glTexture = device->stateCache->glTextures[device->stateCache->texUint];
@@ -772,7 +772,7 @@ void GLES2CmdFuncResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
             break;
         }
         default:
-            CCASSERT(false, "Unsupported GFXTextureType, resize texture failed.");
+            CCASSERT(false, "Unsupported TextureType, resize texture failed.");
             break;
     }
 }
@@ -1729,7 +1729,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                                         glWrapT = gpuBinding.gpuSampler->glWrapT;
 
                                                         if (gpuBinding.gpuTexture->mipLevel <= 1 &&
-                                                            !(gpuBinding.gpuTexture->flags & GFXTextureFlagBit::GEN_MIPMAP) &&
+                                                            !(gpuBinding.gpuTexture->flags & TextureFlagBit::GEN_MIPMAP) &&
                                                             (gpuBinding.gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_NEAREST ||
                                                              gpuBinding.gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_LINEAR)) {
                                                             glMinFilter = GL_LINEAR;
@@ -2242,11 +2242,11 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
             break;
         }
         default:
-            CCASSERT(false, "Unsupported GFXTextureType, copy buffers to texture failed.");
+            CCASSERT(false, "Unsupported TextureType, copy buffers to texture failed.");
             break;
     }
 
-    if (!isCompressed && (gpuTexture->flags & GFXTextureFlagBit::GEN_MIPMAP)) {
+    if (!isCompressed && (gpuTexture->flags & TextureFlagBit::GEN_MIPMAP)) {
         glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture);
         glGenerateMipmap(gpuTexture->glTarget);
     }

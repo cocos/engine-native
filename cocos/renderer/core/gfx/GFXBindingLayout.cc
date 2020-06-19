@@ -28,7 +28,7 @@ void GFXBindingLayout::bindBuffer(uint binding, Buffer *buffer) {
     }
 }
 
-void GFXBindingLayout::bindTexture(uint binding, GFXTexture *texture) {
+void GFXBindingLayout::bindTexture(uint binding, Texture *texture) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
         GFXBindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {

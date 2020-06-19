@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-class GFXTextureView;
+class TextureView;
 
 class CCMTLRenderPass : public GFXRenderPass {
 public:

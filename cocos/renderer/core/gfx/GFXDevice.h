@@ -22,8 +22,8 @@ public:
     virtual GFXCommandAllocator *createCommandAllocator(const GFXCommandAllocatorInfo &info) = 0;
     virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) = 0;
     virtual Buffer *createBuffer(const BufferInfo &info) = 0;
-    virtual GFXTexture *createTexture(const GFXTextureInfo &info) = 0;
-    virtual GFXTexture *createTexture(const GFXTextureViewInfo &info) = 0;
+    virtual Texture *createTexture(const TextureInfo &info) = 0;
+    virtual Texture *createTexture(const TextureViewInfo &info) = 0;
     virtual GFXSampler *createSampler(const GFXSamplerInfo &info) = 0;
     virtual GFXShader *createShader(const GFXShaderInfo &info) = 0;
     virtual GFXInputAssembler *createInputAssembler(const GFXInputAssemblerInfo &info) = 0;
@@ -32,7 +32,7 @@ public:
     virtual GFXBindingLayout *createBindingLayout(const GFXBindingLayoutInfo &info) = 0;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) = 0;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) = 0;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) = 0;
+    virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) = 0;
 
     CC_INLINE GFXAPI getGfxAPI() const { return _gfxAPI; }
     CC_INLINE const String &getDeviceName() const { return _deviceName; }

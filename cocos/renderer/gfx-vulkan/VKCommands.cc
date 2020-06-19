@@ -340,7 +340,7 @@ void CCVKCmdFuncCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
         CC_LOG_ERROR("CCVKCmdFuncCreateTexture: %s does not support optimal tiling with specified features", GFX_FORMAT_INFOS[(uint)gpuTexture->format].name.c_str());
         return;
     }
-    if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP) {
+    if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
         usageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     }
 
@@ -932,7 +932,7 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
     vkCmdCopyBufferToImage(cmdBuff.vkCommandBuffer, stagingBuffer->vkBuffer, gpuTexture->vkImage,
                            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
 
-    if (gpuTexture->flags & GFXTextureFlags::GEN_MIPMAP) {
+    if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, MapVkFormat(gpuTexture->format), &formatProperties);
         VkFormatFeatureFlags mipmapFeatures = 0;

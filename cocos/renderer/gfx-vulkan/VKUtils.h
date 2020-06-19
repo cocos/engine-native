@@ -153,56 +153,56 @@ VkAttachmentStoreOp MapVkStoreOp(GFXStoreOp storeOp) {
     }
 }
 
-VkImageLayout MapVkImageLayout(GFXTextureLayout layout) {
+VkImageLayout MapVkImageLayout(TextureLayout layout) {
     switch (layout) {
-        case GFXTextureLayout::UNDEFINED: return VK_IMAGE_LAYOUT_UNDEFINED;
-        case GFXTextureLayout::GENERAL: return VK_IMAGE_LAYOUT_GENERAL;
-        case GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL: return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        case GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL: return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-        case GFXTextureLayout::DEPTH_STENCIL_READONLY_OPTIMAL: return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-        case GFXTextureLayout::SHADER_READONLY_OPTIMAL: return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        case GFXTextureLayout::TRANSFER_SRC_OPTIMAL: return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-        case GFXTextureLayout::TRANSFER_DST_OPTIMAL: return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        case GFXTextureLayout::PREINITIALIZED: return VK_IMAGE_LAYOUT_PREINITIALIZED;
-        case GFXTextureLayout::PRESENT_SRC: return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        case TextureLayout::UNDEFINED: return VK_IMAGE_LAYOUT_UNDEFINED;
+        case TextureLayout::GENERAL: return VK_IMAGE_LAYOUT_GENERAL;
+        case TextureLayout::COLOR_ATTACHMENT_OPTIMAL: return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        case TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL: return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+        case TextureLayout::DEPTH_STENCIL_READONLY_OPTIMAL: return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+        case TextureLayout::SHADER_READONLY_OPTIMAL: return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        case TextureLayout::TRANSFER_SRC_OPTIMAL: return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+        case TextureLayout::TRANSFER_DST_OPTIMAL: return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        case TextureLayout::PREINITIALIZED: return VK_IMAGE_LAYOUT_PREINITIALIZED;
+        case TextureLayout::PRESENT_SRC: return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
         default: {
-            CCASSERT(false, "Unsupported GFXTextureLayout, convert to VkImageLayout failed.");
+            CCASSERT(false, "Unsupported TextureLayout, convert to VkImageLayout failed.");
             return VK_IMAGE_LAYOUT_GENERAL;
         }
     }
 }
 
-VkAccessFlags MapVkAccessFlags(GFXTextureLayout layout) {
+VkAccessFlags MapVkAccessFlags(TextureLayout layout) {
     switch (layout) {
-        case GFXTextureLayout::UNDEFINED: return 0;
-        case GFXTextureLayout::GENERAL: return 0;
-        case GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL: return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        case GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL: return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-        case GFXTextureLayout::DEPTH_STENCIL_READONLY_OPTIMAL: return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
-        case GFXTextureLayout::SHADER_READONLY_OPTIMAL: return VK_ACCESS_SHADER_READ_BIT;
-        case GFXTextureLayout::TRANSFER_SRC_OPTIMAL: return VK_ACCESS_TRANSFER_READ_BIT;
-        case GFXTextureLayout::TRANSFER_DST_OPTIMAL: return VK_ACCESS_TRANSFER_WRITE_BIT;
-        case GFXTextureLayout::PREINITIALIZED: return 0;
-        case GFXTextureLayout::PRESENT_SRC: return 0;
+        case TextureLayout::UNDEFINED: return 0;
+        case TextureLayout::GENERAL: return 0;
+        case TextureLayout::COLOR_ATTACHMENT_OPTIMAL: return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        case TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL: return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        case TextureLayout::DEPTH_STENCIL_READONLY_OPTIMAL: return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+        case TextureLayout::SHADER_READONLY_OPTIMAL: return VK_ACCESS_SHADER_READ_BIT;
+        case TextureLayout::TRANSFER_SRC_OPTIMAL: return VK_ACCESS_TRANSFER_READ_BIT;
+        case TextureLayout::TRANSFER_DST_OPTIMAL: return VK_ACCESS_TRANSFER_WRITE_BIT;
+        case TextureLayout::PREINITIALIZED: return 0;
+        case TextureLayout::PRESENT_SRC: return 0;
         default: {
-            CCASSERT(false, "Unsupported GFXTextureLayout, convert to VkImageLayout failed.");
+            CCASSERT(false, "Unsupported TextureLayout, convert to VkImageLayout failed.");
             return 0;
         }
     }
 }
 
-VkAccessFlags MapVkAccessFlags(GFXTextureUsage usage, GFXFormat format) {
-    if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-    if (usage & GFXTextureUsage::INPUT_ATTACHMENT) return VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
-    if (usage & GFXTextureUsage::SAMPLED) {
+VkAccessFlags MapVkAccessFlags(TextureUsage usage, GFXFormat format) {
+    if (usage & TextureUsage::COLOR_ATTACHMENT) return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    if (usage & TextureUsage::INPUT_ATTACHMENT) return VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
+    if (usage & TextureUsage::SAMPLED) {
         if (GFX_FORMAT_INFOS[(uint)format].hasDepth)
             return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
         else
             return VK_ACCESS_SHADER_READ_BIT;
     }
-    if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_ACCESS_TRANSFER_READ_BIT;
-    if (usage & GFXTextureUsage::TRANSFER_DST) return VK_ACCESS_TRANSFER_WRITE_BIT;
+    if (usage & TextureUsage::TRANSFER_SRC) return VK_ACCESS_TRANSFER_READ_BIT;
+    if (usage & TextureUsage::TRANSFER_DST) return VK_ACCESS_TRANSFER_WRITE_BIT;
     return VK_ACCESS_SHADER_READ_BIT;
 }
 
@@ -230,16 +230,16 @@ VkBufferUsageFlagBits MapVkBufferUsageFlagBits(BufferUsage usage) {
     return (VkBufferUsageFlagBits)flags;
 }
 
-VkImageType MapVkImageType(GFXTextureType type) {
+VkImageType MapVkImageType(TextureType type) {
     switch (type) {
-        case GFXTextureType::TEX1D:
-        case GFXTextureType::TEX1D_ARRAY: return VK_IMAGE_TYPE_1D;
-        case GFXTextureType::CUBE:
-        case GFXTextureType::TEX2D:
-        case GFXTextureType::TEX2D_ARRAY: return VK_IMAGE_TYPE_2D;
-        case GFXTextureType::TEX3D: return VK_IMAGE_TYPE_3D;
+        case TextureType::TEX1D:
+        case TextureType::TEX1D_ARRAY: return VK_IMAGE_TYPE_1D;
+        case TextureType::CUBE:
+        case TextureType::TEX2D:
+        case TextureType::TEX2D_ARRAY: return VK_IMAGE_TYPE_2D;
+        case TextureType::TEX3D: return VK_IMAGE_TYPE_3D;
         default: {
-            CCASSERT(false, "Unsupported GFXTextureType, convert to VkImageType failed.");
+            CCASSERT(false, "Unsupported TextureType, convert to VkImageType failed.");
             return VK_IMAGE_TYPE_2D;
         }
     }
@@ -254,48 +254,48 @@ VkSampleCountFlagBits MapVkSampleCount(GFXSampleCount count) {
         case GFXSampleCount::X16: return VK_SAMPLE_COUNT_16_BIT;
         case GFXSampleCount::X32: return VK_SAMPLE_COUNT_32_BIT;
         default: {
-            CCASSERT(false, "Unsupported GFXTextureType, convert to VkImageType failed.");
+            CCASSERT(false, "Unsupported TextureType, convert to VkImageType failed.");
             return VK_SAMPLE_COUNT_1_BIT;
         }
     }
 }
 
-VkFormatFeatureFlags MapVkFormatFeatureFlags(GFXTextureUsage usage) {
+VkFormatFeatureFlags MapVkFormatFeatureFlags(TextureUsage usage) {
     uint flags = 0u;
-    if (usage & GFXTextureUsage::TRANSFER_SRC) flags |= VK_FORMAT_FEATURE_TRANSFER_SRC_BIT;
-    if (usage & GFXTextureUsage::TRANSFER_DST) flags |= VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
-    if (usage & GFXTextureUsage::SAMPLED) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
-    if (usage & GFXTextureUsage::STORAGE) flags |= VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT;
-    if (usage & GFXTextureUsage::COLOR_ATTACHMENT) flags |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    if (usage & GFXTextureUsage::TRANSIENT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
-    if (usage & GFXTextureUsage::INPUT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+    if (usage & TextureUsage::TRANSFER_SRC) flags |= VK_FORMAT_FEATURE_TRANSFER_SRC_BIT;
+    if (usage & TextureUsage::TRANSFER_DST) flags |= VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
+    if (usage & TextureUsage::SAMPLED) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+    if (usage & TextureUsage::STORAGE) flags |= VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT;
+    if (usage & TextureUsage::COLOR_ATTACHMENT) flags |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+    if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if (usage & TextureUsage::TRANSIENT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+    if (usage & TextureUsage::INPUT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
     return (VkFormatFeatureFlags)flags;
 }
 
-VkImageUsageFlagBits MapVkImageUsageFlagBits(GFXTextureUsage usage) {
+VkImageUsageFlagBits MapVkImageUsageFlagBits(TextureUsage usage) {
     uint flags = 0u;
-    if (usage & GFXTextureUsage::TRANSFER_SRC) flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-    if (usage & GFXTextureUsage::TRANSFER_DST) flags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-    if (usage & GFXTextureUsage::SAMPLED) flags |= VK_IMAGE_USAGE_SAMPLED_BIT;
-    if (usage & GFXTextureUsage::STORAGE) flags |= VK_IMAGE_USAGE_STORAGE_BIT;
-    if (usage & GFXTextureUsage::COLOR_ATTACHMENT) flags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-    if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    if (usage & GFXTextureUsage::TRANSIENT_ATTACHMENT) flags |= VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
-    if (usage & GFXTextureUsage::INPUT_ATTACHMENT) flags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+    if (usage & TextureUsage::TRANSFER_SRC) flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+    if (usage & TextureUsage::TRANSFER_DST) flags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    if (usage & TextureUsage::SAMPLED) flags |= VK_IMAGE_USAGE_SAMPLED_BIT;
+    if (usage & TextureUsage::STORAGE) flags |= VK_IMAGE_USAGE_STORAGE_BIT;
+    if (usage & TextureUsage::COLOR_ATTACHMENT) flags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if (usage & TextureUsage::TRANSIENT_ATTACHMENT) flags |= VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
+    if (usage & TextureUsage::INPUT_ATTACHMENT) flags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     return (VkImageUsageFlagBits)flags;
 }
 
-VkImageLayout MapVkImageLayout(GFXTextureUsage usage, GFXFormat format) {
+VkImageLayout MapVkImageLayout(TextureUsage usage, GFXFormat format) {
     const GFXFormatInfo &info = GFX_FORMAT_INFOS[(uint)format];
-    if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-    if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) {
+    if (usage & TextureUsage::COLOR_ATTACHMENT) return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) {
         if (info.hasStencil)
             return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
         else
             return VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
     }
-    if (usage & GFXTextureUsage::SAMPLED) {
+    if (usage & TextureUsage::SAMPLED) {
         if (info.hasDepth && info.hasStencil)
             return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
         else if (info.hasDepth)
@@ -303,8 +303,8 @@ VkImageLayout MapVkImageLayout(GFXTextureUsage usage, GFXFormat format) {
         else
             return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     }
-    if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-    if (usage & GFXTextureUsage::TRANSFER_DST) return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    if (usage & TextureUsage::TRANSFER_SRC) return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    if (usage & TextureUsage::TRANSFER_DST) return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
     return VK_IMAGE_LAYOUT_UNDEFINED;
 }
 
@@ -320,12 +320,12 @@ VkImageAspectFlags MapVkImageAspectFlags(GFXFormat format) {
     return aspectMask;
 }
 
-VkPipelineStageFlags MapVkPipelineStageFlags(GFXTextureUsage usage) {
-    if (usage & GFXTextureUsage::COLOR_ATTACHMENT) return VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    if (usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
-    if (usage & GFXTextureUsage::SAMPLED) return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
-    if (usage & GFXTextureUsage::TRANSFER_SRC) return VK_PIPELINE_STAGE_TRANSFER_BIT;
-    if (usage & GFXTextureUsage::TRANSFER_DST) return VK_PIPELINE_STAGE_TRANSFER_BIT;
+VkPipelineStageFlags MapVkPipelineStageFlags(TextureUsage usage) {
+    if (usage & TextureUsage::COLOR_ATTACHMENT) return VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+    if (usage & TextureUsage::SAMPLED) return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
+    if (usage & TextureUsage::TRANSFER_SRC) return VK_PIPELINE_STAGE_TRANSFER_BIT;
+    if (usage & TextureUsage::TRANSFER_DST) return VK_PIPELINE_STAGE_TRANSFER_BIT;
     return VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
 }
 
@@ -338,25 +338,25 @@ uint selectMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProperties, 
     return ~0u;
 }
 
-VkImageCreateFlags MapVkImageCreateFlags(GFXTextureType type) {
+VkImageCreateFlags MapVkImageCreateFlags(TextureType type) {
     uint res = 0u;
     switch (type) {
-        case GFXTextureType::CUBE: res |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; break;
-        case GFXTextureType::TEX2D_ARRAY: res |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT; break;
+        case TextureType::CUBE: res |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; break;
+        case TextureType::TEX2D_ARRAY: res |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT; break;
     }
     return (VkImageCreateFlags)res;
 }
 
-VkImageViewType MapVkImageViewType(GFXTextureType viewType) {
+VkImageViewType MapVkImageViewType(TextureType viewType) {
     switch (viewType) {
-        case GFXTextureType::TEX1D: return VK_IMAGE_VIEW_TYPE_1D;
-        case GFXTextureType::TEX1D_ARRAY: return VK_IMAGE_VIEW_TYPE_1D_ARRAY;
-        case GFXTextureType::TEX2D: return VK_IMAGE_VIEW_TYPE_2D;
-        case GFXTextureType::TEX2D_ARRAY: return VK_IMAGE_VIEW_TYPE_2D_ARRAY;
-        case GFXTextureType::TEX3D: return VK_IMAGE_VIEW_TYPE_3D;
-        case GFXTextureType::CUBE: return VK_IMAGE_VIEW_TYPE_CUBE;
+        case TextureType::TEX1D: return VK_IMAGE_VIEW_TYPE_1D;
+        case TextureType::TEX1D_ARRAY: return VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+        case TextureType::TEX2D: return VK_IMAGE_VIEW_TYPE_2D;
+        case TextureType::TEX2D_ARRAY: return VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+        case TextureType::TEX3D: return VK_IMAGE_VIEW_TYPE_3D;
+        case TextureType::CUBE: return VK_IMAGE_VIEW_TYPE_CUBE;
         default: {
-            CCASSERT(false, "Unsupported GFXTextureViewType, convert to VkImageViewType failed.");
+            CCASSERT(false, "Unsupported TextureViewType, convert to VkImageViewType failed.");
             return VK_IMAGE_VIEW_TYPE_2D;
         }
     }

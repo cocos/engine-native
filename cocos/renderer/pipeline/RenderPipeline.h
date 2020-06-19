@@ -12,7 +12,7 @@ class Camera;
 namespace gfx {
 class Device;
 class GFXInputAssembler;
-class GFXTexture;
+class Texture;
 class Buffer;
 class GFXRenderPass;
 } // namespace gfx
@@ -49,8 +49,8 @@ public:
     RenderFlow *getFlow(const String &name) const;
     gfx::Buffer *getFrameBuffer(const String &name) const;
     gfx::GFXRenderPass *getRenderPass(uint stage) const;
-    gfx::GFXTexture *getRenderTexture(const String &name) const;
-    gfx::GFXTexture *getTexture(const String &name) const;
+    gfx::Texture *getRenderTexture(const String &name) const;
+    gfx::Texture *getTexture(const String &name) const;
     void removeRenderPass(uint stage);
     void swapFBOS();
     void updateMacros();
@@ -61,7 +61,7 @@ public:
     CC_INLINE const String &getCurrentShading() const { return _currIdx; }
     CC_INLINE const String &getPreviousShading() const { return _prevIdx; }
     CC_INLINE gfx::Device *getDevice() const { return _device; }
-    CC_INLINE gfx::GFXTexture *getDefaultTexture() const { return _defaultTexture; }
+    CC_INLINE gfx::Texture *getDefaultTexture() const { return _defaultTexture; }
     CC_INLINE float getLightMeterScale() const { return _lightMeterScale; }
     CC_INLINE float getFpScale() const { return _fpScale; }
     CC_INLINE float getFpScaleInv() const { return _fpScaleInv; }
@@ -91,7 +91,7 @@ protected:
 
 private:
     void activateFlow(RenderFlow *flow);
-    gfx::GFXFormat getTextureFormat(gfx::GFXFormat format, gfx::GFXTextureUsageBit usage) const;
+    gfx::GFXFormat getTextureFormat(gfx::GFXFormat format, gfx::TextureUsageBit usage) const;
 
 protected:
     String _name;
@@ -102,7 +102,7 @@ protected:
     RenderFlowList _activeFlows;
     gfx::Device *_device = nullptr;
     gfx::GFXInputAssembler *_quadIA = nullptr;
-    gfx::GFXTexture *_defaultTexture = nullptr;
+    gfx::Texture *_defaultTexture = nullptr;
     float _shadingScale = 1.f;
     float _lightMeterScale = 1000.f;
     float _fpScale = 1.f / 1024;

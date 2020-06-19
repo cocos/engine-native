@@ -22,9 +22,9 @@ typedef vector<GLES2GPUBuffer *> GLES2GPUBufferList;
 
 class GLES2GPUTexture : public Object {
 public:
-    GFXTextureType type = GFXTextureType::TEX2D;
+    TextureType type = TextureType::TEX2D;
     GFXFormat format = GFXFormat::UNKNOWN;
-    GFXTextureUsage usage = GFXTextureUsageBit::NONE;
+    TextureUsage usage = TextureUsageBit::NONE;
     uint width = 0;
     uint height = 0;
     uint depth = 1;
@@ -32,7 +32,7 @@ public:
     uint arrayLayer = 1;
     uint mipLevel = 1;
     GFXSampleCount samples = GFXSampleCount::X1;
-    GFXTextureFlags flags = GFXTextureFlagBit::NONE;
+    TextureFlags flags = TextureFlagBit::NONE;
     bool isPowerOf2 = false;
     GLenum glTarget = 0;
     GLenum glInternelFmt = 0;

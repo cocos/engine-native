@@ -5,7 +5,7 @@
 namespace cc {
 namespace gfx {
 
-class CCMTLTexture : public GFXTexture {
+class CCMTLTexture : public Texture {
     friend class CCMTLDevice;
     friend class CCMTLQueue;
 
@@ -13,8 +13,8 @@ public:
     CCMTLTexture(Device *device);
     ~CCMTLTexture();
 
-    virtual bool initialize(const GFXTextureInfo &info) override;
-    virtual bool initialize(const GFXTextureViewInfo &info) override;
+    virtual bool initialize(const TextureInfo &info) override;
+    virtual bool initialize(const TextureViewInfo &info) override;
     virtual void destroy() override;
     virtual void resize(uint width, uint height) override;
 

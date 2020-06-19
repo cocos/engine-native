@@ -185,7 +185,7 @@ Buffer *CCMTLDevice::createBuffer(const BufferInfo &info) {
     return nullptr;
 }
 
-GFXTexture *CCMTLDevice::createTexture(const GFXTextureInfo &info) {
+Texture *CCMTLDevice::createTexture(const TextureInfo &info) {
     auto texture = CC_NEW(CCMTLTexture(this));
     if (texture && texture->initialize(info))
         return texture;
@@ -194,7 +194,7 @@ GFXTexture *CCMTLDevice::createTexture(const GFXTextureInfo &info) {
     return nullptr;
 }
 
-GFXTexture *CCMTLDevice::createTexture(const GFXTextureViewInfo &info) {
+Texture *CCMTLDevice::createTexture(const TextureViewInfo &info) {
     auto texture = CC_NEW(CCMTLTexture(this));
     if (texture && texture->initialize(info))
         return texture;
@@ -275,7 +275,7 @@ GFXPipelineLayout *CCMTLDevice::createPipelineLayout(const GFXPipelineLayoutInfo
     return nullptr;
 }
 
-void CCMTLDevice::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) {
+void CCMTLDevice::copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
     static_cast<CCMTLTexture *>(dst)->update(buffers.datas.data(), regions);
 }
 

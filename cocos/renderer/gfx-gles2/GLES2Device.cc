@@ -211,8 +211,8 @@ Buffer *GLES2Device::createBuffer(const BufferInfo &info) {
     return nullptr;
 }
 
-GFXTexture *GLES2Device::createTexture(const GFXTextureInfo &info) {
-    GFXTexture *texture = CC_NEW(GLES2Texture(this));
+Texture *GLES2Device::createTexture(const TextureInfo &info) {
+    Texture *texture = CC_NEW(GLES2Texture(this));
     if (texture->initialize(info))
         return texture;
 
@@ -220,8 +220,8 @@ GFXTexture *GLES2Device::createTexture(const GFXTextureInfo &info) {
     return nullptr;
 }
 
-GFXTexture *GLES2Device::createTexture(const GFXTextureViewInfo &info) {
-    GFXTexture *texture = CC_NEW(GLES2Texture(this));
+Texture *GLES2Device::createTexture(const TextureViewInfo &info) {
+    Texture *texture = CC_NEW(GLES2Texture(this));
     if (texture->initialize(info))
         return texture;
 
@@ -301,7 +301,7 @@ GFXPipelineLayout *GLES2Device::createPipelineLayout(const GFXPipelineLayoutInfo
     return nullptr;
 }
 
-void GLES2Device::copyBuffersToTexture(const GFXDataArray &buffers, GFXTexture *dst, const BufferTextureCopyList &regions) {
+void GLES2Device::copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
     GLES2CmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((GLES2Texture *)dst)->gpuTexture(), regions);
 }
 

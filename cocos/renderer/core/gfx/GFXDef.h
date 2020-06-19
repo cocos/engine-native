@@ -6,7 +6,7 @@ namespace gfx {
 
 class Device;
 class Buffer;
-class GFXTexture;
+class Texture;
 class GFXSampler;
 class GFXShader;
 class GFXInputAssembler;
@@ -305,7 +305,7 @@ enum class GFXMemoryUsageBit : FlagBits {
 typedef GFXMemoryUsageBit GFXMemoryUsage;
 CC_ENUM_OPERATORS(GFXMemoryUsageBit);
 
-enum class GFXTextureType {
+enum class TextureType {
     TEX1D,
     TEX2D,
     TEX3D,
@@ -314,7 +314,7 @@ enum class GFXTextureType {
     TEX2D_ARRAY,
 };
 
-enum class GFXTextureUsageBit : FlagBits {
+enum class TextureUsageBit : FlagBits {
     NONE = 0,
     TRANSFER_SRC = 0x1,
     TRANSFER_DST = 0x2,
@@ -325,17 +325,17 @@ enum class GFXTextureUsageBit : FlagBits {
     TRANSIENT_ATTACHMENT = 0x40,
     INPUT_ATTACHMENT = 0x80,
 };
-typedef GFXTextureUsageBit GFXTextureUsage;
-CC_ENUM_OPERATORS(GFXTextureUsageBit);
+typedef TextureUsageBit TextureUsage;
+CC_ENUM_OPERATORS(TextureUsageBit);
 
-enum class GFXTextureFlagBit : FlagBits {
+enum class TextureFlagBit : FlagBits {
     NONE = 0,
     GEN_MIPMAP = 0x1,
     CUBEMAP = 0x2,
     BAKUP_BUFFER = 0x4,
 };
-typedef GFXTextureFlagBit GFXTextureFlags;
-CC_ENUM_OPERATORS(GFXTextureFlagBit);
+typedef TextureFlagBit TextureFlags;
+CC_ENUM_OPERATORS(TextureFlagBit);
 
 enum class GFXSampleCount : uint8_t {
     X1,
@@ -442,7 +442,7 @@ enum class GFXStoreOp : uint8_t {
     DISCARD, // Don't write the source to the destination
 };
 
-enum class GFXTextureLayout : uint8_t {
+enum class TextureLayout : uint8_t {
     UNDEFINED,
     GENERAL,
     COLOR_ATTACHMENT_OPTIMAL,
@@ -590,16 +590,16 @@ struct GFXExtent {
     uint depth;
 };
 
-struct GFXTextureSubres {
+struct TextureSubres {
     uint mipLevel = 0u;
     uint baseArrayLayer = 0u;
     uint layerCount = 1u;
 };
 
-struct GFXTextureCopy {
-    GFXTextureSubres srcSubres;
+struct TextureCopy {
+    TextureSubres srcSubres;
     GFXOffset srcOffset = {0, 0, 0};
-    GFXTextureSubres dstSubres;
+    TextureSubres dstSubres;
     GFXOffset dstOffset = {0, 0, 0};
     GFXExtent extent = {0, 0, 1};
 };
@@ -609,7 +609,7 @@ struct BufferTextureCopy {
     uint buffTexHeight = 0;
     GFXOffset texOffset = {0, 0, 0};
     GFXExtent texExtent = {0, 0, 1};
-    GFXTextureSubres texSubres;
+    TextureSubres texSubres;
 };
 typedef vector<BufferTextureCopy> BufferTextureCopyList;
 
@@ -707,9 +707,9 @@ struct GFXIndirectBuffer {
     GFXDrawInfoList drawInfos;
 };
 
-struct GFXTextureInfo {
-    GFXTextureType type = GFXTextureType::TEX2D;
-    GFXTextureUsage usage = GFXTextureUsageBit::NONE;
+struct TextureInfo {
+    TextureType type = TextureType::TEX2D;
+    TextureUsage usage = TextureUsageBit::NONE;
     GFXFormat format = GFXFormat::UNKNOWN;
     uint width = 0;
     uint height = 0;
@@ -717,12 +717,12 @@ struct GFXTextureInfo {
     uint arrayLayer = 1;
     uint mipLevel = 1;
     GFXSampleCount samples = GFXSampleCount::X1;
-    GFXTextureFlags flags = GFXTextureFlagBit::NONE;
+    TextureFlags flags = TextureFlagBit::NONE;
 };
 
-struct GFXTextureViewInfo {
-    GFXTexture *texture = nullptr;
-    GFXTextureType type = GFXTextureType::TEX2D;
+struct TextureViewInfo {
+    Texture *texture = nullptr;
+    TextureType type = TextureType::TEX2D;
     GFXFormat format = GFXFormat::UNKNOWN;
     uint baseLevel = 0;
     uint levelCount = 1;
@@ -820,8 +820,8 @@ struct GFXColorAttachment {
     GFXLoadOp loadOp = GFXLoadOp::CLEAR;
     GFXStoreOp storeOp = GFXStoreOp::STORE;
     uint sampleCount = 1;
-    GFXTextureLayout beginLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
-    GFXTextureLayout endLayout = GFXTextureLayout::COLOR_ATTACHMENT_OPTIMAL;
+    TextureLayout beginLayout = TextureLayout::COLOR_ATTACHMENT_OPTIMAL;
+    TextureLayout endLayout = TextureLayout::COLOR_ATTACHMENT_OPTIMAL;
 };
 
 typedef vector<GFXColorAttachment> GFXColorAttachmentList;
@@ -833,8 +833,8 @@ struct GFXDepthStencilAttachment {
     GFXLoadOp stencilLoadOp = GFXLoadOp::CLEAR;
     GFXStoreOp stencilStoreOp = GFXStoreOp::STORE;
     uint sampleCount = 1;
-    GFXTextureLayout beginLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    GFXTextureLayout endLayout = GFXTextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    TextureLayout beginLayout = TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    TextureLayout endLayout = TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 };
 
 struct GFXSubPass {
@@ -861,13 +861,13 @@ struct GFXRenderPassInfo {
     GFXSubPassList subPasses;
 };
 
-typedef vector<GFXTexture *> GFXTextureList;
+typedef vector<Texture *> TextureList;
 
 struct GFXFramebufferInfo {
     GFXRenderPass *renderPass = nullptr;
-    GFXTextureList colorTextures;
+    TextureList colorTextures;
     vector<int> colorMipmapLevels;
-    GFXTexture *depthStencilTexture = nullptr;
+    Texture *depthStencilTexture = nullptr;
     int depthStencilMipmapLevel = 0;
     bool isOffscreen = true;
 };
@@ -893,7 +893,7 @@ struct GFXBindingUnit {
     String name;
     uint count = 0;
     Buffer *buffer = nullptr;
-    GFXTexture *texture = nullptr;
+    Texture *texture = nullptr;
     GFXSampler *sampler = nullptr;
 };
 

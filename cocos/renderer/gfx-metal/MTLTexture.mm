@@ -18,10 +18,10 @@ uint8_t *convertData(uint8_t *source, uint length, GFXFormat type) {
 }
 } // end of namespace
 
-CCMTLTexture::CCMTLTexture(Device *device) : GFXTexture(device) {}
+CCMTLTexture::CCMTLTexture(Device *device) : Texture(device) {}
 CCMTLTexture::~CCMTLTexture() { destroy(); }
 
-bool CCMTLTexture::initialize(const GFXTextureInfo &info) {
+bool CCMTLTexture::initialize(const TextureInfo &info) {
     _type = info.type;
     _usage = info.usage;
     _format = info.format;
@@ -67,7 +67,7 @@ bool CCMTLTexture::initialize(const GFXTextureInfo &info) {
     }
 #endif
 
-    if (_flags & GFXTextureFlags::BAKUP_BUFFER) {
+    if (_flags & TextureFlags::BAKUP_BUFFER) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         if (!_buffer) {
             _status = GFXStatus::FAILED;
@@ -88,7 +88,7 @@ bool CCMTLTexture::initialize(const GFXTextureInfo &info) {
     return true;
 }
 
-bool CCMTLTexture::initialize(const GFXTextureViewInfo &info) {
+bool CCMTLTexture::initialize(const TextureViewInfo &info) {
     if (!info.texture) {
         _status = GFXStatus::FAILED;
         return false;
@@ -160,13 +160,13 @@ bool CCMTLTexture::createMTLTexture() {
     descriptor.textureType = mu::toMTLTextureType(_type);
     descriptor.sampleCount = mu::toMTLSampleCount(_samples);
     descriptor.mipmapLevelCount = _mipLevel;
-    descriptor.arrayLength = _flags & GFXTextureFlagBit::CUBEMAP ? 1 : _arrayLayer;
+    descriptor.arrayLength = _flags & TextureFlagBit::CUBEMAP ? 1 : _arrayLayer;
 
-    //FIXME: should change to MTLStorageModeManaged if texture usage is GFXTextureFlags::BAKUP_BUFFER?
-    if (_usage & GFXTextureUsage::COLOR_ATTACHMENT ||
-        _usage & GFXTextureUsage::DEPTH_STENCIL_ATTACHMENT ||
-        _usage & GFXTextureUsage::INPUT_ATTACHMENT ||
-        _usage & GFXTextureUsage::TRANSIENT_ATTACHMENT) {
+    //FIXME: should change to MTLStorageModeManaged if texture usage is TextureFlags::BAKUP_BUFFER?
+    if (_usage & TextureUsage::COLOR_ATTACHMENT ||
+        _usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT ||
+        _usage & TextureUsage::INPUT_ATTACHMENT ||
+        _usage & TextureUsage::TRANSIENT_ATTACHMENT) {
         descriptor.resourceOptions = MTLResourceStorageModePrivate;
     }
 
@@ -218,7 +218,7 @@ void CCMTLTexture::resize(uint width, uint height) {
     }
 
     _device->getMemoryStatus().textureSize -= oldSize;
-    if (_flags & GFXTextureFlags::BAKUP_BUFFER) {
+    if (_flags & TextureFlags::BAKUP_BUFFER) {
         const uint8_t *oldBuffer = _buffer;
         uint8_t *buffer = (uint8_t *)CC_MALLOC(_size);
         if (!buffer) {
@@ -291,7 +291,7 @@ void CCMTLTexture::update(uint8_t *const *datas, const BufferTextureCopyList &re
             CCASSERT(false, "Unsupported MTLTextureType, metal texture update failed.");
             break;
     }
-    if (_flags & GFXTextureFlags::GEN_MIPMAP)
+    if (_flags & TextureFlags::GEN_MIPMAP)
         generateMipmaps();
 }
 

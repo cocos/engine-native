@@ -356,7 +356,7 @@ void CCVKCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint o
     }
 }
 
-void CCVKCommandBuffer::copyBufferToTexture(Buffer *src, GFXTexture *dst, GFXTextureLayout layout, const BufferTextureCopyList &regions) {
+void CCVKCommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) {
     if ((_type == GFXCommandBufferType::PRIMARY && !_curGPUFBO) ||
         (_type == GFXCommandBufferType::SECONDARY)) {
         //const CCVKGPUBuffer* gpuBuffer = ((CCVKBuffer*)src)->gpuBuffer();
