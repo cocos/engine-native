@@ -4,11 +4,11 @@
 namespace cc {
 namespace gfx {
 
-GFXCommandAllocator::GFXCommandAllocator(Device *device)
+CommandAllocator::CommandAllocator(Device *device)
 : GFXObject(GFXObjectType::COMMAND_ALLOCATOR), _device(device) {
 }
 
-GFXCommandAllocator::~GFXCommandAllocator() {
+CommandAllocator::~CommandAllocator() {
 }
 
 } // namespace gfx

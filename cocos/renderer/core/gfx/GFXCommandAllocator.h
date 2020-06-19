@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXCommandAllocator : public GFXObject {
+class CC_DLL CommandAllocator : public GFXObject {
 public:
-    GFXCommandAllocator(Device *device);
-    virtual ~GFXCommandAllocator();
+    CommandAllocator(Device *device);
+    virtual ~CommandAllocator();
 
 public:
-    virtual bool initialize(const GFXCommandAllocatorInfo &info) = 0;
+    virtual bool initialize(const CommandAllocatorInfo &info) = 0;
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }

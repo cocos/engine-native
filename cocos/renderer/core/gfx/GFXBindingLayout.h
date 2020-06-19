@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXBindingLayout : public GFXObject {
+class CC_DLL BindingLayout : public GFXObject {
 public:
-    GFXBindingLayout(Device *device);
-    virtual ~GFXBindingLayout();
+    BindingLayout(Device *device);
+    virtual ~BindingLayout();
 
 public:
-    virtual bool initialize(const GFXBindingLayoutInfo &info) = 0;
+    virtual bool initialize(const BindingLayoutInfo &info) = 0;
     virtual void destroy() = 0;
     virtual void update() = 0;
 

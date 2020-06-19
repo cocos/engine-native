@@ -97,7 +97,7 @@ void CCMTLCommandBuffer::bindPipelineState(GFXPipelineState *pso) {
     _currentPipelineState = static_cast<CCMTLPipelineState *>(pso);
 }
 
-void CCMTLCommandBuffer::bindBindingLayout(GFXBindingLayout *layout) {
+void CCMTLCommandBuffer::bindBindingLayout(BindingLayout *layout) {
     _currentBindingLayout = static_cast<CCMTLBindingLayout *>(layout);
     _isStateInValid = true;
 }

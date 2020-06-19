@@ -132,7 +132,7 @@ void CCVKCommandBuffer::bindPipelineState(GFXPipelineState *pso) {
     }
 }
 
-void CCVKCommandBuffer::bindBindingLayout(GFXBindingLayout *layout) {
+void CCVKCommandBuffer::bindBindingLayout(BindingLayout *layout) {
     if (!_curGPUPipelineState) {
         CC_LOG_ERROR("Command 'bindBindingLayout' must be recorded after 'bindPipelineState'.");
         return;

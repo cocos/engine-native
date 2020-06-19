@@ -4,10 +4,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLBindingLayout::CCMTLBindingLayout(Device *device) : GFXBindingLayout(device) {}
+CCMTLBindingLayout::CCMTLBindingLayout(Device *device) : BindingLayout(device) {}
 CCMTLBindingLayout::~CCMTLBindingLayout() { destroy(); }
 
-bool CCMTLBindingLayout::initialize(const GFXBindingLayoutInfo &info) {
+bool CCMTLBindingLayout::initialize(const BindingLayoutInfo &info) {
     if (info.bindings.size()) {
         _bindingUnits.resize(info.bindings.size());
         for (size_t i = 0; i < _bindingUnits.size(); ++i) {

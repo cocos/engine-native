@@ -7,7 +7,7 @@
 namespace cc {
 namespace gfx {
 
-class CC_GLES3_API GLES3CommandAllocator : public GFXCommandAllocator {
+class CC_GLES3_API GLES3CommandAllocator : public CommandAllocator {
 public:
     GLES3CommandAllocator(Device *device);
     ~GLES3CommandAllocator();
@@ -19,7 +19,7 @@ public:
     GFXCommandPool<GLES3CmdCopyBufferToTexture> copyBufferToTextureCmdPool;
 
 public:
-    virtual bool initialize(const GFXCommandAllocatorInfo &info) override;
+    virtual bool initialize(const CommandAllocatorInfo &info) override;
     virtual void destroy() override;
 
     void clearCmds(GLES3CmdPackage *cmd_package);

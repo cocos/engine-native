@@ -17,12 +17,12 @@ public:
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const GFXPushConstantRangeList &getPushConstantsRanges() const { return _pushConstantsRanges; }
-    CC_INLINE const GFXBindingLayoutList &getLayouts() const { return _layouts; }
+    CC_INLINE const BindingLayoutList &getLayouts() const { return _layouts; }
 
 protected:
     Device *_device = nullptr;
     GFXPushConstantRangeList _pushConstantsRanges;
-    GFXBindingLayoutList _layouts;
+    BindingLayoutList _layouts;
 };
 
 } // namespace gfx

@@ -55,7 +55,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     queue_info.type = GFXQueueType::GRAPHICS;
     _queue = createQueue(queue_info);
 
-    GFXCommandAllocatorInfo cmd_alloc_info;
+    CommandAllocatorInfo cmd_alloc_info;
     _cmdAllocator = createCommandAllocator(cmd_alloc_info);
 
     _minClipZ = 0;
@@ -158,7 +158,7 @@ GFXQueue *CCMTLDevice::createQueue(const GFXQueueInfo &info) {
     return nullptr;
 }
 
-GFXCommandAllocator *CCMTLDevice::createCommandAllocator(const GFXCommandAllocatorInfo &info) {
+CommandAllocator *CCMTLDevice::createCommandAllocator(const CommandAllocatorInfo &info) {
     auto allocator = CC_NEW(CCMTLCommandAllocator(this));
     if (allocator && allocator->initialize(info))
         return allocator;
@@ -248,7 +248,7 @@ GFXFramebuffer *CCMTLDevice::createFramebuffer(const GFXFramebufferInfo &info) {
     return nullptr;
 }
 
-GFXBindingLayout *CCMTLDevice::createBindingLayout(const GFXBindingLayoutInfo &info) {
+BindingLayout *CCMTLDevice::createBindingLayout(const BindingLayoutInfo &info) {
     auto bl = CC_NEW(CCMTLBindingLayout(this));
     if (bl && bl->initialize(info))
         return bl;

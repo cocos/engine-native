@@ -8,13 +8,13 @@ namespace cc {
 namespace gfx {
 
 CCVKCommandAllocator::CCVKCommandAllocator(Device *device)
-: GFXCommandAllocator(device) {
+: CommandAllocator(device) {
 }
 
 CCVKCommandAllocator::~CCVKCommandAllocator() {
 }
 
-bool CCVKCommandAllocator::initialize(const GFXCommandAllocatorInfo &info) {
+bool CCVKCommandAllocator::initialize(const CommandAllocatorInfo &info) {
     _gpuCommandPool = CC_NEW(CCVKGPUCommandPool);
 
     CCVKCmdFuncCreateCommandPool((CCVKDevice *)_device, _gpuCommandPool);

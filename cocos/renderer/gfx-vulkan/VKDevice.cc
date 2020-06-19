@@ -268,7 +268,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     queueInfo.type = GFXQueueType::GRAPHICS;
     _queue = createQueue(queueInfo);
 
-    GFXCommandAllocatorInfo cmdAllocInfo;
+    CommandAllocatorInfo cmdAllocInfo;
     _cmdAllocator = createCommandAllocator(cmdAllocInfo);
 
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
@@ -545,8 +545,8 @@ GFXQueue *CCVKDevice::createQueue(const GFXQueueInfo &info) {
     return nullptr;
 }
 
-GFXCommandAllocator *CCVKDevice::createCommandAllocator(const GFXCommandAllocatorInfo &info) {
-    GFXCommandAllocator *cmdAllocator = CC_NEW(CCVKCommandAllocator(this));
+CommandAllocator *CCVKDevice::createCommandAllocator(const CommandAllocatorInfo &info) {
+    CommandAllocator *cmdAllocator = CC_NEW(CCVKCommandAllocator(this));
     if (cmdAllocator->initialize(info))
         return cmdAllocator;
 
@@ -635,8 +635,8 @@ GFXFramebuffer *CCVKDevice::createFramebuffer(const GFXFramebufferInfo &info) {
     return nullptr;
 }
 
-GFXBindingLayout *CCVKDevice::createBindingLayout(const GFXBindingLayoutInfo &info) {
-    GFXBindingLayout *bindingLayout = CC_NEW(CCVKBindingLayout(this));
+BindingLayout *CCVKDevice::createBindingLayout(const BindingLayoutInfo &info) {
+    BindingLayout *bindingLayout = CC_NEW(CCVKBindingLayout(this));
     if (bindingLayout->initialize(info))
         return bindingLayout;
 

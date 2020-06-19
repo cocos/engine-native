@@ -9,13 +9,13 @@ namespace cc {
 namespace gfx {
 
 GLES2BindingLayout::GLES2BindingLayout(Device *device)
-: GFXBindingLayout(device) {
+: BindingLayout(device) {
 }
 
 GLES2BindingLayout::~GLES2BindingLayout() {
 }
 
-bool GLES2BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
+bool GLES2BindingLayout::initialize(const BindingLayoutInfo &info) {
 
     if (info.bindings.size()) {
         _bindingUnits.resize(info.bindings.size());

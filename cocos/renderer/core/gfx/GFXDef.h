@@ -12,10 +12,10 @@ class GFXShader;
 class GFXInputAssembler;
 class GFXRenderPass;
 class GFXFramebuffer;
-class GFXBindingLayout;
+class BindingLayout;
 class GFXPipelineLayout;
 class GFXPipelineState;
-class GFXCommandAllocator;
+class CommandAllocator;
 class GFXCommandBuffer;
 class GFXFence;
 class GFXQueue;
@@ -882,7 +882,7 @@ struct GFXBinding {
 
 typedef vector<GFXBinding> GFXBindingList;
 
-struct GFXBindingLayoutInfo {
+struct BindingLayoutInfo {
     GFXBindingList bindings;
 };
 
@@ -906,11 +906,11 @@ struct GFXPushConstantRange {
 };
 
 typedef vector<GFXPushConstantRange> GFXPushConstantRangeList;
-typedef vector<GFXBindingLayout *> GFXBindingLayoutList;
+typedef vector<BindingLayout *> BindingLayoutList;
 
 struct GFXPipelineLayoutInfo {
     GFXPushConstantRangeList pushConstantsRanges;
-    GFXBindingLayoutList layouts;
+    BindingLayoutList layouts;
 };
 
 struct GFXInputState {
@@ -990,11 +990,11 @@ struct GFXPipelineStateInfo {
     GFXRenderPass *renderPass = nullptr;
 };
 
-struct GFXCommandAllocatorInfo {
+struct CommandAllocatorInfo {
 };
 
 struct GFXCommandBufferInfo {
-    GFXCommandAllocator *allocator = nullptr;
+    CommandAllocator *allocator = nullptr;
     GFXCommandBufferType type = GFXCommandBufferType::PRIMARY;
 };
 

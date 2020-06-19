@@ -4,14 +4,14 @@
 namespace cc {
 namespace gfx {
 
-GFXBindingLayout::GFXBindingLayout(Device *device)
+BindingLayout::BindingLayout(Device *device)
 : GFXObject(GFXObjectType::BINDING_LAYOUT), _device(device) {
 }
 
-GFXBindingLayout::~GFXBindingLayout() {
+BindingLayout::~BindingLayout() {
 }
 
-void GFXBindingLayout::bindBuffer(uint binding, Buffer *buffer) {
+void BindingLayout::bindBuffer(uint binding, Buffer *buffer) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
         GFXBindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {
@@ -28,7 +28,7 @@ void GFXBindingLayout::bindBuffer(uint binding, Buffer *buffer) {
     }
 }
 
-void GFXBindingLayout::bindTexture(uint binding, Texture *texture) {
+void BindingLayout::bindTexture(uint binding, Texture *texture) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
         GFXBindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {
@@ -45,7 +45,7 @@ void GFXBindingLayout::bindTexture(uint binding, Texture *texture) {
     }
 }
 
-void GFXBindingLayout::bindSampler(uint binding, GFXSampler *sampler) {
+void BindingLayout::bindSampler(uint binding, GFXSampler *sampler) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
         GFXBindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {

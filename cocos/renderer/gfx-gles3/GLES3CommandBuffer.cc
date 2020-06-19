@@ -88,7 +88,7 @@ void GLES3CommandBuffer::bindPipelineState(GFXPipelineState *pso) {
     _isStateInvalid = true;
 }
 
-void GLES3CommandBuffer::bindBindingLayout(GFXBindingLayout *layout) {
+void GLES3CommandBuffer::bindBindingLayout(BindingLayout *layout) {
     _curGPUBlendLayout = ((GLES3BindingLayout *)layout)->gpuBindingLayout();
     _isStateInvalid = true;
 }

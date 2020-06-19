@@ -43,7 +43,7 @@ public:
 
 class CCMTLCmdBindStates : public GFXCmd {
 public:
-    GFXBindingLayout *bindingLayout = nullptr;
+    BindingLayout *bindingLayout = nullptr;
     CCMTLPipelineState *pipelineState = nullptr;
     CCMTLInputAssembler *inputAssembler = nullptr;
     MTLViewport viewport = {};

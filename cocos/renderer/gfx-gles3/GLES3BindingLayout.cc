@@ -9,13 +9,13 @@ namespace cc {
 namespace gfx {
 
 GLES3BindingLayout::GLES3BindingLayout(Device *device)
-: GFXBindingLayout(device) {
+: BindingLayout(device) {
 }
 
 GLES3BindingLayout::~GLES3BindingLayout() {
 }
 
-bool GLES3BindingLayout::initialize(const GFXBindingLayoutInfo &info) {
+bool GLES3BindingLayout::initialize(const BindingLayoutInfo &info) {
     if (info.bindings.size()) {
         _bindingUnits.resize(info.bindings.size());
 

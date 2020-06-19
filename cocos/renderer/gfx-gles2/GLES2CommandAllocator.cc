@@ -5,13 +5,13 @@ namespace cc {
 namespace gfx {
 
 GLES2CommandAllocator::GLES2CommandAllocator(Device *device)
-: GFXCommandAllocator(device) {
+: CommandAllocator(device) {
 }
 
 GLES2CommandAllocator::~GLES2CommandAllocator() {
 }
 
-bool GLES2CommandAllocator::initialize(const GFXCommandAllocatorInfo &info) {
+bool GLES2CommandAllocator::initialize(const CommandAllocatorInfo &info) {
     _status = GFXStatus::SUCCESS;
     return true;
 }

@@ -6,10 +6,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLCommandAllocator::CCMTLCommandAllocator(Device *device) : GFXCommandAllocator(device) {}
+CCMTLCommandAllocator::CCMTLCommandAllocator(Device *device) : CommandAllocator(device) {}
 CCMTLCommandAllocator::~CCMTLCommandAllocator() { destroy(); }
 
-bool CCMTLCommandAllocator::initialize(const GFXCommandAllocatorInfo &info) {
+bool CCMTLCommandAllocator::initialize(const CommandAllocatorInfo &info) {
     _status = GFXStatus::SUCCESS;
     return true;
 }

@@ -19,7 +19,7 @@ public:
     virtual void present() = 0;
     virtual GFXFence *createFence(const GFXFenceInfo &info) = 0;
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) = 0;
-    virtual GFXCommandAllocator *createCommandAllocator(const GFXCommandAllocatorInfo &info) = 0;
+    virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) = 0;
     virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) = 0;
     virtual Buffer *createBuffer(const BufferInfo &info) = 0;
     virtual Texture *createTexture(const TextureInfo &info) = 0;
@@ -29,7 +29,7 @@ public:
     virtual GFXInputAssembler *createInputAssembler(const GFXInputAssemblerInfo &info) = 0;
     virtual GFXRenderPass *createRenderPass(const GFXRenderPassInfo &info) = 0;
     virtual GFXFramebuffer *createFramebuffer(const GFXFramebufferInfo &info) = 0;
-    virtual GFXBindingLayout *createBindingLayout(const GFXBindingLayoutInfo &info) = 0;
+    virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) = 0;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) = 0;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) = 0;
     virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) = 0;
@@ -43,7 +43,7 @@ public:
     CC_INLINE GFXMemoryStatus &getMemoryStatus() { return _memoryStatus; }
     CC_INLINE GFXContext *getContext() const { return _context; }
     CC_INLINE GFXQueue *getQueue() const { return _queue; }
-    CC_INLINE GFXCommandAllocator *getCommandAllocator() const { return _cmdAllocator; }
+    CC_INLINE CommandAllocator *getCommandAllocator() const { return _cmdAllocator; }
     CC_INLINE const String &getRenderer() const { return _renderer; }
     CC_INLINE const String &getVendor() const { return _vendor; }
     CC_INLINE uint getNumDrawCalls() const { return _numDrawCalls; }
@@ -85,7 +85,7 @@ protected:
     uintptr_t _windowHandle = 0;
     GFXContext *_context = nullptr;
     GFXQueue *_queue = nullptr;
-    GFXCommandAllocator *_cmdAllocator = nullptr;
+    CommandAllocator *_cmdAllocator = nullptr;
     uint _numDrawCalls = 0;
     uint _numInstances = 0;
     uint _numTriangles = 0;

@@ -11,13 +11,13 @@ namespace cc {
 namespace gfx {
 
 CCVKBindingLayout::CCVKBindingLayout(Device *device)
-: GFXBindingLayout(device) {
+: BindingLayout(device) {
 }
 
 CCVKBindingLayout::~CCVKBindingLayout() {
 }
 
-bool CCVKBindingLayout::initialize(const GFXBindingLayoutInfo &info) {
+bool CCVKBindingLayout::initialize(const BindingLayoutInfo &info) {
     if (info.bindings.size()) {
         _bindingUnits.resize(info.bindings.size());
         for (size_t i = 0u; i < _bindingUnits.size(); ++i) {

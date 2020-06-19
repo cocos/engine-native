@@ -122,7 +122,7 @@ bool GLES2Device::initialize(const DeviceInfo &info) {
     queue_info.type = GFXQueueType::GRAPHICS;
     _queue = createQueue(queue_info);
 
-    GFXCommandAllocatorInfo cmd_alloc_info;
+    CommandAllocatorInfo cmd_alloc_info;
     _cmdAllocator = createCommandAllocator(cmd_alloc_info);
 
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, (GLint *)&_maxVertexAttributes);
@@ -183,8 +183,8 @@ GFXQueue *GLES2Device::createQueue(const GFXQueueInfo &info) {
     return nullptr;
 }
 
-GFXCommandAllocator *GLES2Device::createCommandAllocator(const GFXCommandAllocatorInfo &info) {
-    GFXCommandAllocator *cmdAllocator = CC_NEW(GLES2CommandAllocator(this));
+CommandAllocator *GLES2Device::createCommandAllocator(const CommandAllocatorInfo &info) {
+    CommandAllocator *cmdAllocator = CC_NEW(GLES2CommandAllocator(this));
     if (cmdAllocator->initialize(info))
         return cmdAllocator;
 
@@ -274,8 +274,8 @@ GFXFramebuffer *GLES2Device::createFramebuffer(const GFXFramebufferInfo &info) {
     return nullptr;
 }
 
-GFXBindingLayout *GLES2Device::createBindingLayout(const GFXBindingLayoutInfo &info) {
-    GFXBindingLayout *bindingLayout = CC_NEW(GLES2BindingLayout(this));
+BindingLayout *GLES2Device::createBindingLayout(const BindingLayoutInfo &info) {
+    BindingLayout *bindingLayout = CC_NEW(GLES2BindingLayout(this));
     if (bindingLayout->initialize(info))
         return bindingLayout;
 

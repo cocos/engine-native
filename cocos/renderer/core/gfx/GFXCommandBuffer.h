@@ -19,7 +19,7 @@ public:
     virtual void beginRenderPass(GFXFramebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) = 0;
     virtual void endRenderPass() = 0;
     virtual void bindPipelineState(GFXPipelineState *pso) = 0;
-    virtual void bindBindingLayout(GFXBindingLayout *layout) = 0;
+    virtual void bindBindingLayout(BindingLayout *layout) = 0;
     virtual void bindInputAssembler(GFXInputAssembler *ia) = 0;
     virtual void setViewport(const GFXViewport &vp) = 0;
     virtual void setScissor(const GFXRect &rect) = 0;
@@ -35,7 +35,7 @@ public:
     virtual void execute(const std::vector<GFXCommandBuffer *> &cmd_buffs, uint32_t count) = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
-    CC_INLINE GFXCommandAllocator *getAllocator() const { return _allocator; }
+    CC_INLINE CommandAllocator *getAllocator() const { return _allocator; }
     CC_INLINE GFXCommandBufferType getType() const { return _type; }
     CC_INLINE uint getNumDrawCalls() const { return _numDrawCalls; }
     CC_INLINE uint getNumInstances() const { return _numInstances; }
@@ -43,7 +43,7 @@ public:
 
 protected:
     Device *_device = nullptr;
-    GFXCommandAllocator *_allocator = nullptr;
+    CommandAllocator *_allocator = nullptr;
     GFXCommandBufferType _type = GFXCommandBufferType::PRIMARY;
     uint32_t _numDrawCalls = 0;
     uint32_t _numInstances = 0;

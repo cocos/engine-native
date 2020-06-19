@@ -664,7 +664,7 @@ static bool js_gfx_GFXPipelineLayout_get_layouts(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     if (argc == 0) {
-        const std::vector<cc::gfx::GFXBindingLayout *>& result = cobj->getLayouts();
+        const std::vector<cc::gfx::BindingLayout *>& result = cobj->getLayouts();
         
         se::Value *layouts = &s.rval();
         se::HandleObject arr(se::Object::createArrayObject(result.size()));

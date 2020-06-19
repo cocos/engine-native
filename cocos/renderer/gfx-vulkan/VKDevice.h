@@ -26,7 +26,7 @@ public:
     virtual void present() override;
     virtual GFXFence *createFence(const GFXFenceInfo &info) override;
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) override;
-    virtual GFXCommandAllocator *createCommandAllocator(const GFXCommandAllocatorInfo &info) override;
+    virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) override;
     virtual GFXCommandBuffer *createCommandBuffer(const GFXCommandBufferInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
     virtual Texture *createTexture(const TextureInfo &info) override;
@@ -36,7 +36,7 @@ public:
     virtual GFXInputAssembler *createInputAssembler(const GFXInputAssemblerInfo &info) override;
     virtual GFXRenderPass *createRenderPass(const GFXRenderPassInfo &info) override;
     virtual GFXFramebuffer *createFramebuffer(const GFXFramebufferInfo &info) override;
-    virtual GFXBindingLayout *createBindingLayout(const GFXBindingLayoutInfo &info) override;
+    virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) override;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) override;
     virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;

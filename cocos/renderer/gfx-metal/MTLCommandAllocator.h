@@ -8,12 +8,12 @@ namespace gfx {
 
 class CCMTLCommandPackage;
 
-class CCMTLCommandAllocator : public GFXCommandAllocator {
+class CCMTLCommandAllocator : public CommandAllocator {
 public:
     CCMTLCommandAllocator(Device *device);
     ~CCMTLCommandAllocator();
 
-    virtual bool initialize(const GFXCommandAllocatorInfo &info) override;
+    virtual bool initialize(const CommandAllocatorInfo &info) override;
     virtual void destroy() override;
 
     void clearCommands(CCMTLCommandPackage *commandPackage);
