@@ -26,6 +26,8 @@ bool CCMTLShader::initialize(const GFXShaderInfo &info) {
         }
     }
 
+    setAvailableBufferBindingIndex();
+
     _status = GFXStatus::SUCCESS;
     CC_LOG_INFO("%s compile succeed.", _name.c_str());
     return true;
@@ -50,7 +52,7 @@ bool CCMTLShader::createMTLFunction(const GFXShaderStage &stage) {
     id<MTLDevice> mtlDevice = id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice());
     auto mtlShader = mu::compileGLSLShader2Msl(stage.source,
                                                stage.type,
-                                               static_cast<CCMTLDevice *>(_device)->getMaximumSamplerUnits(),
+                                               _device,
                                                isVertexShader ? _mtlVertexSamplerBindings : _mtlFragmentSamplerBindings);
     NSString *shader = [NSString stringWithUTF8String:mtlShader.c_str()];
     NSError *error = nil;
@@ -92,6 +94,53 @@ bool CCMTLShader::createMTLFunction(const GFXShaderStage &stage) {
     }
 #endif
     return true;
+}
+
+uint CCMTLShader::getAvailableBufferBindingIndex(const GFXShaderType &stage, uint stream) {
+    if (stage & GFXShaderType::VERTEX) {
+        return _availableVertexBufferBindingIndex.at(stream);
+    }
+
+    if (stage & GFXShaderType::FRAGMENT) {
+        return _availableFragmentBufferBindingIndex.at(stream);
+    }
+
+    CC_LOG_ERROR("getAvailableBufferBindingIndex: invalid shader stage %d", stage);
+    return 0;
+}
+
+void CCMTLShader::setAvailableBufferBindingIndex() {
+    uint usedVertexBufferBindingIndexes = 0;
+    uint usedFragmentBufferBindingIndexes = 0;
+    size_t vertexBindingCount = 0;
+    size_t fragmentBindingCount = 0;
+    for (const auto &block : _blocks) {
+        if (block.shaderStages & GFXShaderType::VERTEX) {
+            usedVertexBufferBindingIndexes |= 1 << block.binding;
+            vertexBindingCount++;
+        }
+
+        if (block.shaderStages & GFXShaderType::FRAGMENT) {
+            usedFragmentBufferBindingIndexes |= 1 << block.binding;
+            fragmentBindingCount++;
+        }
+    }
+    auto maximumEntriesInBufferArgumentTable = static_cast<CCMTLDevice *>(_device)->getMaximumEntriesInBufferArgumentTable();
+    _availableVertexBufferBindingIndex.resize(maximumEntriesInBufferArgumentTable - vertexBindingCount);
+    _availableFragmentBufferBindingIndex.resize(maximumEntriesInBufferArgumentTable - fragmentBindingCount);
+    uint availableVertexBufferBit = ~usedVertexBufferBindingIndexes;
+    uint availableFragmentBufferBit = ~usedFragmentBufferBindingIndexes;
+    int theBit = maximumEntriesInBufferArgumentTable - 1;
+    uint i = 0, j = 0;
+    for (; theBit >= 0; theBit--) {
+        if ((availableVertexBufferBit & (1 << theBit))) {
+            _availableVertexBufferBindingIndex[i++] = theBit;
+        }
+
+        if ((availableFragmentBufferBit & (1 << theBit))) {
+            _availableFragmentBufferBindingIndex[j++] = theBit;
+        }
+    }
 }
 
 } // namespace gfx

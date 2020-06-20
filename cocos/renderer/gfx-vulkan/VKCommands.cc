@@ -731,25 +731,24 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     vector<uint> offsets(bindingCount, 0);
     bool attributeFound = false;
 
-    for (size_t j = 0; j < shaderAttrCount; j++) {
+    for (size_t i = 0; i < shaderAttrCount; i++) {
         attributeFound = false;
-        for (size_t i = 0; i < attributeCount; i++) {
-            const GFXAttribute &attr = attributes[i];
-            if (shaderAttrs[j].name == attr.name) {
-                attributeDescriptions[j].location = shaderAttrs[j].location;
-                attributeDescriptions[j].binding = attr.stream;
-                attributeDescriptions[j].format = MapVkFormat(attr.format);
-                attributeDescriptions[j].offset = offsets[attr.stream];
+        for (const GFXAttribute &attr : attributes) {
+            if (shaderAttrs[i].name == attr.name) {
+                attributeDescriptions[i].location = shaderAttrs[i].location;
+                attributeDescriptions[i].binding = attr.stream;
+                attributeDescriptions[i].format = MapVkFormat(attr.format);
+                attributeDescriptions[i].offset = offsets[attr.stream];
                 offsets[attr.stream] += GFX_FORMAT_INFOS[(uint)attr.format].size;
                 attributeFound = true;
                 break;
             }
         }
         if (!attributeFound) { //handle absent attribute
-            attributeDescriptions[j].location = shaderAttrs[j].location;
-            attributeDescriptions[j].format = MapVkFormat(shaderAttrs[j].format);
-            attributeDescriptions[j].offset = 0; // reuse the first attribute as dummy data
-            CC_LOG_WARNING("Attribute %s is missing, add a dummy data for it.", shaderAttrs[j].name.c_str());
+            attributeDescriptions[i].location = shaderAttrs[i].location;
+            attributeDescriptions[i].format = MapVkFormat(shaderAttrs[i].format);
+            attributeDescriptions[i].offset = 0; // reuse the first attribute as dummy data
+            CC_LOG_WARNING("Attribute %s is missing, add a dummy data for it.", shaderAttrs[i].name.c_str());
         }
     }
 

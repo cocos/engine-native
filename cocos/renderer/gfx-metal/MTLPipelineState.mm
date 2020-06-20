@@ -146,7 +146,6 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor *descri
 
     std::vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stream*/>> layouts;
     std::unordered_map<int /**vertexBufferBindingIndex*/, std::tuple<uint /**stride*/, bool /**isInstanced*/>> map;
-    const uint DEFAULT_VERTEX_BUFFER_INDEX = 30;
     uint streamOffsets[GFX_MAX_VERTEX_ATTRIBUTES] = {0};
     bool attributeFound = false;
     for (const auto &activeAttribute : activeAttributes) {
@@ -155,8 +154,7 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor *descri
             if (inputAttrib.name == activeAttribute.name) {
                 descriptor.vertexDescriptor.attributes[activeAttribute.location].format = mu::toMTLVertexFormat(inputAttrib.format, inputAttrib.isNormalized);
                 descriptor.vertexDescriptor.attributes[activeAttribute.location].offset = streamOffsets[inputAttrib.stream];
-                //FIXME: because translated metal shader binds argument buffers from 0. So bind vertex buffer to max buffer index: 30.
-                auto bufferIndex = DEFAULT_VERTEX_BUFFER_INDEX - inputAttrib.stream;
+                auto bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(GFXShaderType::VERTEX, inputAttrib.stream);
                 descriptor.vertexDescriptor.attributes[activeAttribute.location].bufferIndex = bufferIndex;
 
                 streamOffsets[inputAttrib.stream] += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
@@ -171,7 +169,7 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor *descri
         if (!attributeFound) { //handle absent attribute
             descriptor.vertexDescriptor.attributes[activeAttribute.location].format = mu::toMTLVertexFormat(activeAttribute.format, activeAttribute.isNormalized);
             descriptor.vertexDescriptor.attributes[activeAttribute.location].offset = 0;
-            descriptor.vertexDescriptor.attributes[activeAttribute.location].bufferIndex = DEFAULT_VERTEX_BUFFER_INDEX;
+            descriptor.vertexDescriptor.attributes[activeAttribute.location].bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(GFXShaderType::VERTEX, activeAttribute.stream);
             CC_LOG_WARNING("Attribute %s is missing, add a dummy data for it.", activeAttribute.name.c_str());
         }
     }

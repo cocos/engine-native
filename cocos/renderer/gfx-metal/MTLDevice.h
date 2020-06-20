@@ -38,6 +38,7 @@ public:
     CC_INLINE CCMTLStateCache *getStateCache() const { return _stateCache; }
     CC_INLINE uint getMaximumSamplerUnits() const { return _maxSamplerUnits; }
     CC_INLINE uint getMaximumColorRenderTargets() const { return _maxColorRenderTargets; }
+    CC_INLINE uint getMaximumEntriesInBufferArgumentTable() const { return _maxEntriesInBufferArgumentTable; }
     CC_INLINE bool isIndirectCommandBufferSupported() const { return _icbSuppored; }
 
 private:
@@ -47,6 +48,7 @@ private:
     unsigned long _mtlFeatureSet = 0;
     uint _maxSamplerUnits = 0;
     uint _maxColorRenderTargets = 0;
+    uint _maxEntriesInBufferArgumentTable = 0;
     bool _icbSuppored = false;
     void *_blitedBuffer = nullptr;
 };
