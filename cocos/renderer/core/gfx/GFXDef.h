@@ -490,7 +490,7 @@ enum class ShadeModel : uint8_t {
     FLAT,
 };
 
-enum class GFXCullMode : uint8_t {
+enum class CullMode : uint8_t {
     NONE,
     FRONT,
     BACK,
@@ -921,7 +921,7 @@ struct GFXRasterizerState {
     bool isDiscard = false;
     PolygonMode polygonMode = PolygonMode::FILL;
     ShadeModel shadeModel = ShadeModel::GOURAND;
-    GFXCullMode cullMode = GFXCullMode::BACK;
+    CullMode cullMode = CullMode::BACK;
     bool isFrontFaceCCW = true;
     bool depthBiasEnabled = false;
     float depthBias = 0.0f;

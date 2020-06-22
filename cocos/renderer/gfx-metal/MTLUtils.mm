@@ -324,11 +324,11 @@ MTLBlendOperation toMTLBlendOperation(BlendOp op) {
     }
 }
 
-MTLCullMode toMTLCullMode(GFXCullMode mode) {
+MTLCullMode toMTLCullMode(CullMode mode) {
     switch (mode) {
-        case GFXCullMode::FRONT: return MTLCullModeFront;
-        case GFXCullMode::BACK: return MTLCullModeBack;
-        case GFXCullMode::NONE: return MTLCullModeNone;
+        case CullMode::FRONT: return MTLCullModeFront;
+        case CullMode::BACK: return MTLCullModeBack;
+        case CullMode::NONE: return MTLCullModeNone;
     }
 }
 

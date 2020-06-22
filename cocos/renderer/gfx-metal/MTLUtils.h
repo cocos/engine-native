@@ -23,7 +23,7 @@ Format convertGFXPixelFormat(Format);
 MTLColorWriteMask toMTLColorWriteMask(ColorMask);
 MTLBlendFactor toMTLBlendFactor(BlendFactor);
 MTLBlendOperation toMTLBlendOperation(BlendOp);
-MTLCullMode toMTLCullMode(GFXCullMode);
+MTLCullMode toMTLCullMode(CullMode);
 MTLWinding toMTLWinding(bool isFrontFaceCCW);
 MTLViewport toMTLViewport(const GFXViewport &);
 MTLScissorRect toMTLScissorRect(const GFXRect &);

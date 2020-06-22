@@ -1535,20 +1535,20 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                     // bind rasterizer state
                     if (cache->rs.cullMode != gpuPipelineState->rs.cullMode) {
                         switch (gpuPipelineState->rs.cullMode) {
-                            case GFXCullMode::NONE: {
+                            case CullMode::NONE: {
                                 if (cache->isCullFaceEnabled) {
                                     glDisable(GL_CULL_FACE);
                                     cache->isCullFaceEnabled = false;
                                 }
                             } break;
-                            case GFXCullMode::FRONT: {
+                            case CullMode::FRONT: {
                                 if (!cache->isCullFaceEnabled) {
                                     glEnable(GL_CULL_FACE);
                                     cache->isCullFaceEnabled = true;
                                 }
                                 glCullFace(GL_FRONT);
                             } break;
-                            case GFXCullMode::BACK: {
+                            case CullMode::BACK: {
                                 if (!cache->isCullFaceEnabled) {
                                     glEnable(GL_CULL_FACE);
                                     cache->isCullFaceEnabled = true;
