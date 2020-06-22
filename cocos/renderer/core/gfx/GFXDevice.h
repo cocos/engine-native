@@ -64,7 +64,7 @@ public:
     CC_INLINE bool getReverseCW() const { return _reverseCW; }
     GFXFormat getColorFormat() const;
     GFXFormat getDepthStencilFormat() const;
-    CC_INLINE bool hasFeature(GFXFeature feature) const { return _features[static_cast<uint8_t>(feature)]; }
+    CC_INLINE bool hasFeature(Feature feature) const { return _features[static_cast<uint8_t>(feature)]; }
     CC_INLINE void defineMacro(const String &macro, const String &value) { _macros[macro] = value; }
     CC_INLINE void setReverseCW(bool reverseCW) { _reverseCW = reverseCW; }
     CC_INLINE float getMinClipZ() const { return _minClipZ; }
@@ -76,7 +76,7 @@ protected:
     String _renderer;
     String _vendor;
     String _version;
-    bool _features[static_cast<uint8_t>(GFXFeature::COUNT)];
+    bool _features[static_cast<uint8_t>(Feature::COUNT)];
     uint _width = 0;
     uint _height = 0;
     uint _nativeWidth = 0;

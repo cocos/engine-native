@@ -67,7 +67,7 @@ enum class API : uint8_t {
     WEBGL2,
 };
 
-enum class GFXFeature : uint8_t {
+enum class Feature : uint8_t {
     COLOR_FLOAT,
     COLOR_HALF_FLOAT,
     TEXTURE_FLOAT,

@@ -51,58 +51,58 @@ bool GLES2Device::initialize(const DeviceInfo &info) {
     String extStr = (const char *)glGetString(GL_EXTENSIONS);
     _extensions = StringUtil::Split(extStr, " ");
 
-    _features[(int)GFXFeature::TEXTURE_FLOAT] = true;
-    _features[(int)GFXFeature::TEXTURE_HALF_FLOAT] = true;
-    _features[(int)GFXFeature::FORMAT_R11G11B10F] = true;
-    _features[(int)GFXFeature::FORMAT_D24S8] = true;
-    _features[(int)GFXFeature::MSAA] = true;
+    _features[(int)Feature::TEXTURE_FLOAT] = true;
+    _features[(int)Feature::TEXTURE_HALF_FLOAT] = true;
+    _features[(int)Feature::FORMAT_R11G11B10F] = true;
+    _features[(int)Feature::FORMAT_D24S8] = true;
+    _features[(int)Feature::MSAA] = true;
 
     if (checkExtension("color_buffer_float"))
-        _features[(int)GFXFeature::COLOR_FLOAT] = true;
+        _features[(int)Feature::COLOR_FLOAT] = true;
 
     if (checkExtension("color_buffer_half_float"))
-        _features[(int)GFXFeature::COLOR_HALF_FLOAT] = true;
+        _features[(int)Feature::COLOR_HALF_FLOAT] = true;
 
     if (checkExtension("texture_float_linear"))
-        _features[(int)GFXFeature::TEXTURE_FLOAT_LINEAR] = true;
+        _features[(int)Feature::TEXTURE_FLOAT_LINEAR] = true;
 
     if (checkExtension("texture_half_float_linear"))
-        _features[(int)GFXFeature::TEXTURE_HALF_FLOAT_LINEAR] = true;
+        _features[(int)Feature::TEXTURE_HALF_FLOAT_LINEAR] = true;
 
     _useVAO = checkExtension("vertex_array_object");
     _useDrawInstanced = checkExtension("draw_instanced");
-    _useInstancedArrays = _features[(int)GFXFeature::INSTANCED_ARRAYS] = checkExtension("instanced_arrays");
+    _useInstancedArrays = _features[(int)Feature::INSTANCED_ARRAYS] = checkExtension("instanced_arrays");
     _useDiscardFramebuffer = checkExtension("discard_framebuffer");
 
     String compressed_fmts;
 
     if (checkExtension("compressed_ETC1")) {
-        _features[(int)GFXFeature::FORMAT_ETC1] = true;
+        _features[(int)Feature::FORMAT_ETC1] = true;
         compressed_fmts += "etc1 ";
     }
 
-    _features[(int)GFXFeature::FORMAT_ETC2] = true;
+    _features[(int)Feature::FORMAT_ETC2] = true;
     compressed_fmts += "etc2 ";
 
     if (checkExtension("texture_compression_pvrtc")) {
-        _features[(int)GFXFeature::FORMAT_PVRTC] = true;
+        _features[(int)Feature::FORMAT_PVRTC] = true;
         compressed_fmts += "pvrtc ";
     }
 
     if (checkExtension("texture_compression_astc")) {
-        _features[(int)GFXFeature::FORMAT_ASTC] = true;
+        _features[(int)Feature::FORMAT_ASTC] = true;
         compressed_fmts += "astc ";
     }
-    _features[static_cast<uint>(GFXFeature::DEPTH_BOUNDS)] = true;
-    _features[static_cast<uint>(GFXFeature::LINE_WIDTH)] = true;
-    _features[static_cast<uint>(GFXFeature::STENCIL_COMPARE_MASK)] = true;
-    _features[static_cast<uint>(GFXFeature::STENCIL_WRITE_MASK)] = true;
-    _features[static_cast<uint>(GFXFeature::FORMAT_RGB8)] = true;
+    _features[static_cast<uint>(Feature::DEPTH_BOUNDS)] = true;
+    _features[static_cast<uint>(Feature::LINE_WIDTH)] = true;
+    _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = true;
+    _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)] = true;
+    _features[static_cast<uint>(Feature::FORMAT_RGB8)] = true;
 
     if (checkExtension("depth_texture")) {
-        _features[static_cast<uint>(GFXFeature::FORMAT_D16)] = true;
-        _features[static_cast<uint>(GFXFeature::FORMAT_D24)] = true;
-        _features[static_cast<uint>(GFXFeature::FORMAT_D24S8)] = checkExtension("packed_depth_stencil");
+        _features[static_cast<uint>(Feature::FORMAT_D16)] = true;
+        _features[static_cast<uint>(Feature::FORMAT_D24)] = true;
+        _features[static_cast<uint>(Feature::FORMAT_D24S8)] = checkExtension("packed_depth_stencil");
     }
 
     _renderer = (const char *)glGetString(GL_RENDERER);
