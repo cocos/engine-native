@@ -41,7 +41,7 @@ void CCMTLQueue::destroy() {
     _status = GFXStatus::UNREADY;
 }
 
-void CCMTLQueue::submit(const vector<CommandBuffer *> &cmdBuffs, GFXFence *fence) {
+void CCMTLQueue::submit(const vector<CommandBuffer *> &cmdBuffs, Fence *fence) {
     // Should remove USE_METAL aftr switch to use metal.
 #ifdef USE_METAL
     //    dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);

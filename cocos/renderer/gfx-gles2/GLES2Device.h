@@ -19,7 +19,7 @@ public:
     virtual void resize(uint width, uint height) override;
     virtual void acquire() override{};
     virtual void present() override;
-    virtual GFXFence *createFence(const GFXFenceInfo &info) override;
+    virtual Fence *createFence(const FenceInfo &info) override;
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) override;
     virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) override;
     virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;

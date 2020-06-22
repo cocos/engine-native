@@ -9,7 +9,7 @@
 namespace cc {
 namespace gfx {
 
-bool GLES3Context::initialize(const GFXContextInfo &info)
+bool GLES3Context::initialize(const ContextInfo &info)
 {
   
     _vsyncMode = info.vsyncMode;

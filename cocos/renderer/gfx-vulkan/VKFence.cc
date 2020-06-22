@@ -8,13 +8,13 @@ namespace cc {
 namespace gfx {
 
 CCVKFence::CCVKFence(Device *device)
-: GFXFence(device) {
+: Fence(device) {
 }
 
 CCVKFence::~CCVKFence() {
 }
 
-bool CCVKFence::initialize(const GFXFenceInfo &info) {
+bool CCVKFence::initialize(const FenceInfo &info) {
     _gpuFence = CC_NEW(CCVKGPUFence);
     if (!_gpuFence) {
         CC_LOG_ERROR("GLES2Fence: CC_NEW CCVKGPUFence failed.");

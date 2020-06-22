@@ -61,13 +61,13 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(VkDebugReportFlagsEXT flags,
 } // namespace
 
 CCVKContext::CCVKContext(Device *device)
-: GFXContext(device) {
+: Context(device) {
 }
 
 CCVKContext::~CCVKContext() {
 }
 
-bool CCVKContext::initialize(const GFXContextInfo &info) {
+bool CCVKContext::initialize(const ContextInfo &info) {
 
     _vsyncMode = info.vsyncMode;
     _windowHandle = info.windowHandle;

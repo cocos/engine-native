@@ -65,7 +65,7 @@ void APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum se
 #endif
 
 GLES3Context::GLES3Context(Device *device)
-: GFXContext(device) {
+: Context(device) {
 }
 
 GLES3Context::~GLES3Context() {
@@ -73,7 +73,7 @@ GLES3Context::~GLES3Context() {
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 
-bool GLES3Context::initialize(const GFXContextInfo &info) {
+bool GLES3Context::initialize(const ContextInfo &info) {
 
     _vsyncMode = info.vsyncMode;
     _windowHandle = info.windowHandle;

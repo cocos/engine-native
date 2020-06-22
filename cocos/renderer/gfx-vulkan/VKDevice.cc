@@ -47,7 +47,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _nativeHeight = info.nativeHeight;
     _windowHandle = info.windowHandle;
 
-    GFXContextInfo contextCreateInfo;
+    ContextInfo contextCreateInfo;
     contextCreateInfo.windowHandle = _windowHandle;
     contextCreateInfo.sharedCtx = info.sharedCtx;
 
@@ -527,8 +527,8 @@ void CCVKDevice::present() {
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
 }
 
-GFXFence *CCVKDevice::createFence(const GFXFenceInfo &info) {
-    GFXFence *fence = CC_NEW(CCVKFence(this));
+Fence *CCVKDevice::createFence(const FenceInfo &info) {
+    Fence *fence = CC_NEW(CCVKFence(this));
     if (fence->initialize(info))
         return fence;
 

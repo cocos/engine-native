@@ -17,7 +17,7 @@ public:
     virtual void resize(uint width, uint height) = 0;
     virtual void acquire() = 0;
     virtual void present() = 0;
-    virtual GFXFence *createFence(const GFXFenceInfo &info) = 0;
+    virtual Fence *createFence(const FenceInfo &info) = 0;
     virtual GFXQueue *createQueue(const GFXQueueInfo &info) = 0;
     virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) = 0;
     virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) = 0;
@@ -41,7 +41,7 @@ public:
     CC_INLINE uint getNativeWidth() { return _nativeWidth; }
     CC_INLINE uint getNativeHeight() { return _nativeHeight; }
     CC_INLINE GFXMemoryStatus &getMemoryStatus() { return _memoryStatus; }
-    CC_INLINE GFXContext *getContext() const { return _context; }
+    CC_INLINE Context *getContext() const { return _context; }
     CC_INLINE GFXQueue *getQueue() const { return _queue; }
     CC_INLINE CommandAllocator *getCommandAllocator() const { return _cmdAllocator; }
     CC_INLINE const String &getRenderer() const { return _renderer; }
@@ -83,7 +83,7 @@ protected:
     uint _nativeHeight = 0;
     GFXMemoryStatus _memoryStatus;
     uintptr_t _windowHandle = 0;
-    GFXContext *_context = nullptr;
+    Context *_context = nullptr;
     GFXQueue *_queue = nullptr;
     CommandAllocator *_cmdAllocator = nullptr;
     uint _numDrawCalls = 0;

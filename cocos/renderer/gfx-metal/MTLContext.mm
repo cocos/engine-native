@@ -23,13 +23,13 @@ GFXFormat toGFXFormat(MTLPixelFormat format) {
 }
 
 CCMTLContext::CCMTLContext(Device *device)
-: GFXContext(device) {
+: Context(device) {
 }
 
 CCMTLContext::~CCMTLContext() {
 }
 
-bool CCMTLContext::initialize(const GFXContextInfo &info) {
+bool CCMTLContext::initialize(const ContextInfo &info) {
     _vsyncMode = info.vsyncMode;
     _windowHandle = info.windowHandle;
     MTKView *view = (MTKView *)((CCMTLDevice *)_device)->getMTKView();

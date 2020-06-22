@@ -42,7 +42,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _mtkView = (MTKView *)_windowHandle;
     _mtlDevice = ((MTKView *)_mtkView).device;
 
-    GFXContextInfo contextCreateInfo;
+    ContextInfo contextCreateInfo;
     contextCreateInfo.windowHandle = _windowHandle;
     contextCreateInfo.sharedCtx = info.sharedCtx;
     _context = CC_NEW(CCMTLContext(this));
@@ -140,7 +140,7 @@ void CCMTLDevice::present() {
     queue->_numTriangles = 0;
 }
 
-GFXFence *CCMTLDevice::createFence(const GFXFenceInfo &info) {
+Fence *CCMTLDevice::createFence(const FenceInfo &info) {
     auto fence = CC_NEW(CCMTLFence(this));
     if (fence && fence->initialize(info))
         return fence;

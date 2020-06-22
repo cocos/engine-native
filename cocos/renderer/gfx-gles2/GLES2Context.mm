@@ -10,7 +10,7 @@ namespace gfx {
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
 
-bool GLES2Context::initialize(const GFXContextInfo &info) {
+bool GLES2Context::initialize(const ContextInfo &info) {
   
     _vsyncMode = info.vsyncMode;
     _windowHandle = info.windowHandle;

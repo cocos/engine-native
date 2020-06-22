@@ -38,7 +38,7 @@ bool GLES3Device::initialize(const DeviceInfo &info) {
 
     stateCache = CC_NEW(GLES3StateCache);
 
-    GFXContextInfo ctx_info;
+    ContextInfo ctx_info;
     ctx_info.windowHandle = _windowHandle;
     ctx_info.sharedCtx = info.sharedCtx;
 
@@ -162,8 +162,8 @@ void GLES3Device::present() {
     queue->_numTriangles = 0;
 }
 
-GFXFence *GLES3Device::createFence(const GFXFenceInfo &info) {
-    GFXFence *fence = CC_NEW(GLES3Fence(this));
+Fence *GLES3Device::createFence(const FenceInfo &info) {
+    Fence *fence = CC_NEW(GLES3Fence(this));
     if (fence->initialize(info))
         return fence;
 

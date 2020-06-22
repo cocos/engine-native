@@ -70,7 +70,7 @@ void APIENTRY GLES2EGLDebugProc(GLenum source,
 #endif
 
 GLES2Context::GLES2Context(Device *device)
-: GFXContext(device) {
+: Context(device) {
 }
 
 GLES2Context::~GLES2Context() {
@@ -78,7 +78,7 @@ GLES2Context::~GLES2Context() {
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 
-bool GLES2Context::initialize(const GFXContextInfo &info) {
+bool GLES2Context::initialize(const ContextInfo &info) {
 
     _vsyncMode = info.vsyncMode;
     _windowHandle = info.windowHandle;

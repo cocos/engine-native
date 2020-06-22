@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-CCMTLFence::CCMTLFence(Device *device) : GFXFence(device) {}
+CCMTLFence::CCMTLFence(Device *device) : Fence(device) {}
 
 CCMTLFence::~CCMTLFence() {
     destroy();
 }
 
-bool CCMTLFence::initialize(const GFXFenceInfo &info) {
+bool CCMTLFence::initialize(const FenceInfo &info) {
     // TODO
 
     _status = GFXStatus::SUCCESS;

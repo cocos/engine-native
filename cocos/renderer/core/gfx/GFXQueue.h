@@ -14,7 +14,7 @@ public:
 public:
     virtual bool initialize(const GFXQueueInfo &info) = 0;
     virtual void destroy() = 0;
-    virtual void submit(const vector<CommandBuffer *> &cmdBuffs, GFXFence *fence) = 0;
+    virtual void submit(const vector<CommandBuffer *> &cmdBuffs, Fence *fence) = 0;
 
     CC_INLINE void submit(const vector<CommandBuffer *> &cmdBuffs) { submit(cmdBuffs, nullptr); }
     CC_INLINE Device *getDevice() const { return _device; }

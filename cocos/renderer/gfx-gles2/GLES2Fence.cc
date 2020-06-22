@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 GLES2Fence::GLES2Fence(Device *device)
-: GFXFence(device) {
+: Fence(device) {
 }
 
 GLES2Fence::~GLES2Fence() {
 }
 
-bool GLES2Fence::initialize(const GFXFenceInfo &info) {
+bool GLES2Fence::initialize(const FenceInfo &info) {
     _gpuFence = CC_NEW(GLES2GPUFence);
     if (!_gpuFence) {
         CC_LOG_ERROR("GLES2Fence: CC_NEW GLES2GPUFence failed.");

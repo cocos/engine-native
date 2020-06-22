@@ -17,10 +17,10 @@ class GFXPipelineLayout;
 class GFXPipelineState;
 class CommandAllocator;
 class CommandBuffer;
-class GFXFence;
+class Fence;
 class GFXQueue;
 class GFXWindow;
-class GFXContext;
+class Context;
 
 #define GFX_MAX_VERTEX_ATTRIBUTES 16
 #define GFX_MAX_TEXTURE_UNITS     16
@@ -657,7 +657,7 @@ struct DeviceInfo {
     uint height = 0;
     uint nativeWidth = 0;
     uint nativeHeight = 0;
-    GFXContext *sharedCtx = nullptr;
+    Context *sharedCtx = nullptr;
 };
 
 struct GFXWindowInfo {
@@ -675,9 +675,9 @@ struct GFXWindowInfo {
     GFXRenderPass *renderPass = nullptr;
 };
 
-struct GFXContextInfo {
+struct ContextInfo {
     uintptr_t windowHandle = 0;
-    GFXContext *sharedCtx = nullptr;
+    Context *sharedCtx = nullptr;
     GFXVsyncMode vsyncMode = GFXVsyncMode::RELAXED;
 };
 
@@ -1003,7 +1003,7 @@ struct GFXQueueInfo {
     bool forceSync = false;
 };
 
-struct GFXFenceInfo {
+struct FenceInfo {
 };
 
 struct GFXFormatInfo {
