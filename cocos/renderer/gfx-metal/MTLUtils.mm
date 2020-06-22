@@ -361,12 +361,12 @@ MTLScissorRect toMTLScissorRect(const GFXRect &rect) {
     return scissorRect;
 }
 
-MTLTriangleFillMode toMTLTriangleFillMode(GFXPolygonMode mode) {
+MTLTriangleFillMode toMTLTriangleFillMode(PolygonMode mode) {
     switch (mode) {
-        case GFXPolygonMode::FILL: return MTLTriangleFillModeFill;
-        case GFXPolygonMode::LINE: return MTLTriangleFillModeLines;
-        case GFXPolygonMode::POINT: {
-            CC_LOG_WARNING("Metal doesn't support GFXPolygonMode::POINT, translate to GFXPolygonMode::LINE.");
+        case PolygonMode::FILL: return MTLTriangleFillModeFill;
+        case PolygonMode::LINE: return MTLTriangleFillModeLines;
+        case PolygonMode::POINT: {
+            CC_LOG_WARNING("Metal doesn't support PolygonMode::POINT, translate to PolygonMode::LINE.");
             return MTLTriangleFillModeLines;
         }
     }

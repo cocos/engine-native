@@ -479,7 +479,7 @@ enum class PrimitiveMode : uint8_t {
     QUAD_PATCH_LIST,
 };
 
-enum class GFXPolygonMode : uint8_t {
+enum class PolygonMode : uint8_t {
     FILL,
     POINT,
     LINE,
@@ -919,7 +919,7 @@ struct GFXInputState {
 
 struct GFXRasterizerState {
     bool isDiscard = false;
-    GFXPolygonMode polygonMode = GFXPolygonMode::FILL;
+    PolygonMode polygonMode = PolygonMode::FILL;
     GFXShadeModel shadeModel = GFXShadeModel::GOURAND;
     GFXCullMode cullMode = GFXCullMode::BACK;
     bool isFrontFaceCCW = true;
