@@ -7,14 +7,14 @@ namespace gfx {
 
 class GFXObject : public Object {
 public:
-    GFXObject(GFXObjectType gfxType);
+    GFXObject(GFXObjectType Type);
     virtual ~GFXObject() = default;
 
-    CC_INLINE GFXObjectType getType() const { return _gfxType; }
+    CC_INLINE GFXObjectType getType() const { return _Type; }
     CC_INLINE Status getStatus() const { return _status; }
 
 protected:
-    GFXObjectType _gfxType = GFXObjectType::UNKNOWN;
+    GFXObjectType _Type = GFXObjectType::UNKNOWN;
     Status _status = Status::UNREADY;
 };
 

@@ -68,7 +68,7 @@ public:
 struct GLES2GPUInput {
     uint binding = 0;
     String name;
-    GFXType type = GFXType::UNKNOWN;
+    Type type = Type::UNKNOWN;
     uint stride = 0;
     uint count = 0;
     uint size = 0;
@@ -80,7 +80,7 @@ typedef vector<GLES2GPUInput> GLES2GPUInputList;
 struct GLES2GPUUniform {
     uint binding = GFX_INVALID_BINDING;
     String name;
-    GFXType type = GFXType::UNKNOWN;
+    Type type = Type::UNKNOWN;
     uint stride = 0;
     uint count = 0;
     uint size = 0;
@@ -134,7 +134,7 @@ typedef vector<GLES2GPUUniformBlock> GLES2GPUUniformBlockList;
 struct GLES2GPUUniformSampler {
     uint binding = 0;
     String name;
-    GFXType type = GFXType::UNKNOWN;
+    Type type = Type::UNKNOWN;
     vector<int> units;
     GLenum glType = 0;
     GLint glLoc = -1;

@@ -180,34 +180,34 @@ GLenum MapGLFormat(Format format) {
     }
 }
 
-GLenum MapGLType(GFXType type) {
+GLenum MapGLType(Type type) {
     switch (type) {
-        case GFXType::BOOL: return GL_BOOL;
-        case GFXType::BOOL2: return GL_BOOL_VEC2;
-        case GFXType::BOOL3: return GL_BOOL_VEC3;
-        case GFXType::BOOL4: return GL_BOOL_VEC4;
-        case GFXType::INT: return GL_INT;
-        case GFXType::INT2: return GL_INT_VEC2;
-        case GFXType::INT3: return GL_INT_VEC3;
-        case GFXType::INT4: return GL_INT_VEC4;
-        case GFXType::UINT: return GL_UNSIGNED_INT;
-        case GFXType::FLOAT: return GL_FLOAT;
-        case GFXType::FLOAT2: return GL_FLOAT_VEC2;
-        case GFXType::FLOAT3: return GL_FLOAT_VEC3;
-        case GFXType::FLOAT4: return GL_FLOAT_VEC4;
-        case GFXType::MAT2: return GL_FLOAT_MAT2;
-        case GFXType::MAT2X3: return GL_FLOAT_MAT2x3;
-        case GFXType::MAT2X4: return GL_FLOAT_MAT2x4;
-        case GFXType::MAT3X2: return GL_FLOAT_MAT3x2;
-        case GFXType::MAT3: return GL_FLOAT_MAT3;
-        case GFXType::MAT3X4: return GL_FLOAT_MAT3x4;
-        case GFXType::MAT4X2: return GL_FLOAT_MAT4x2;
-        case GFXType::MAT4X3: return GL_FLOAT_MAT4x3;
-        case GFXType::MAT4: return GL_FLOAT_MAT4;
-        case GFXType::SAMPLER2D: return GL_SAMPLER_2D;
-        case GFXType::SAMPLER2D_ARRAY: return GL_SAMPLER_2D_ARRAY;
-        case GFXType::SAMPLER3D: return GL_SAMPLER_3D;
-        case GFXType::SAMPLER_CUBE: return GL_SAMPLER_CUBE;
+        case Type::BOOL: return GL_BOOL;
+        case Type::BOOL2: return GL_BOOL_VEC2;
+        case Type::BOOL3: return GL_BOOL_VEC3;
+        case Type::BOOL4: return GL_BOOL_VEC4;
+        case Type::INT: return GL_INT;
+        case Type::INT2: return GL_INT_VEC2;
+        case Type::INT3: return GL_INT_VEC3;
+        case Type::INT4: return GL_INT_VEC4;
+        case Type::UINT: return GL_UNSIGNED_INT;
+        case Type::FLOAT: return GL_FLOAT;
+        case Type::FLOAT2: return GL_FLOAT_VEC2;
+        case Type::FLOAT3: return GL_FLOAT_VEC3;
+        case Type::FLOAT4: return GL_FLOAT_VEC4;
+        case Type::MAT2: return GL_FLOAT_MAT2;
+        case Type::MAT2X3: return GL_FLOAT_MAT2x3;
+        case Type::MAT2X4: return GL_FLOAT_MAT2x4;
+        case Type::MAT3X2: return GL_FLOAT_MAT3x2;
+        case Type::MAT3: return GL_FLOAT_MAT3;
+        case Type::MAT3X4: return GL_FLOAT_MAT3x4;
+        case Type::MAT4X2: return GL_FLOAT_MAT4x2;
+        case Type::MAT4X3: return GL_FLOAT_MAT4x3;
+        case Type::MAT4: return GL_FLOAT_MAT4;
+        case Type::SAMPLER2D: return GL_SAMPLER_2D;
+        case Type::SAMPLER2D_ARRAY: return GL_SAMPLER_2D_ARRAY;
+        case Type::SAMPLER3D: return GL_SAMPLER_3D;
+        case Type::SAMPLER_CUBE: return GL_SAMPLER_CUBE;
         default: {
             CCASSERT(false, "Unsupported GLType, convert to GL type failed.");
             return GL_NONE;
@@ -215,40 +215,40 @@ GLenum MapGLType(GFXType type) {
     }
 }
 
-GFXType MapGFXType(GLenum glType) {
+Type MapType(GLenum glType) {
     switch (glType) {
-        case GL_BOOL: return GFXType::BOOL;
-        case GL_BOOL_VEC2: return GFXType::BOOL2;
-        case GL_BOOL_VEC3: return GFXType::BOOL3;
-        case GL_BOOL_VEC4: return GFXType::BOOL4;
-        case GL_INT: return GFXType::INT;
-        case GL_INT_VEC2: return GFXType::INT2;
-        case GL_INT_VEC3: return GFXType::INT3;
-        case GL_INT_VEC4: return GFXType::INT4;
-        case GL_UNSIGNED_INT: return GFXType::UINT;
-        case GL_UNSIGNED_INT_VEC2: return GFXType::UINT2;
-        case GL_UNSIGNED_INT_VEC3: return GFXType::UINT3;
-        case GL_UNSIGNED_INT_VEC4: return GFXType::UINT4;
-        case GL_FLOAT: return GFXType::FLOAT;
-        case GL_FLOAT_VEC2: return GFXType::FLOAT2;
-        case GL_FLOAT_VEC3: return GFXType::FLOAT3;
-        case GL_FLOAT_VEC4: return GFXType::FLOAT4;
-        case GL_FLOAT_MAT2: return GFXType::MAT2;
-        case GL_FLOAT_MAT2x3: return GFXType::MAT2X3;
-        case GL_FLOAT_MAT2x4: return GFXType::MAT2X4;
-        case GL_FLOAT_MAT3x2: return GFXType::MAT3X2;
-        case GL_FLOAT_MAT3: return GFXType::MAT3;
-        case GL_FLOAT_MAT3x4: return GFXType::MAT3X4;
-        case GL_FLOAT_MAT4x2: return GFXType::MAT4X2;
-        case GL_FLOAT_MAT4x3: return GFXType::MAT4X3;
-        case GL_FLOAT_MAT4: return GFXType::MAT4;
-        case GL_SAMPLER_2D: return GFXType::SAMPLER2D;
-        case GL_SAMPLER_2D_ARRAY: return GFXType::SAMPLER2D_ARRAY;
-        case GL_SAMPLER_3D: return GFXType::SAMPLER3D;
-        case GL_SAMPLER_CUBE: return GFXType::SAMPLER_CUBE;
+        case GL_BOOL: return Type::BOOL;
+        case GL_BOOL_VEC2: return Type::BOOL2;
+        case GL_BOOL_VEC3: return Type::BOOL3;
+        case GL_BOOL_VEC4: return Type::BOOL4;
+        case GL_INT: return Type::INT;
+        case GL_INT_VEC2: return Type::INT2;
+        case GL_INT_VEC3: return Type::INT3;
+        case GL_INT_VEC4: return Type::INT4;
+        case GL_UNSIGNED_INT: return Type::UINT;
+        case GL_UNSIGNED_INT_VEC2: return Type::UINT2;
+        case GL_UNSIGNED_INT_VEC3: return Type::UINT3;
+        case GL_UNSIGNED_INT_VEC4: return Type::UINT4;
+        case GL_FLOAT: return Type::FLOAT;
+        case GL_FLOAT_VEC2: return Type::FLOAT2;
+        case GL_FLOAT_VEC3: return Type::FLOAT3;
+        case GL_FLOAT_VEC4: return Type::FLOAT4;
+        case GL_FLOAT_MAT2: return Type::MAT2;
+        case GL_FLOAT_MAT2x3: return Type::MAT2X3;
+        case GL_FLOAT_MAT2x4: return Type::MAT2X4;
+        case GL_FLOAT_MAT3x2: return Type::MAT3X2;
+        case GL_FLOAT_MAT3: return Type::MAT3;
+        case GL_FLOAT_MAT3x4: return Type::MAT3X4;
+        case GL_FLOAT_MAT4x2: return Type::MAT4X2;
+        case GL_FLOAT_MAT4x3: return Type::MAT4X3;
+        case GL_FLOAT_MAT4: return Type::MAT4;
+        case GL_SAMPLER_2D: return Type::SAMPLER2D;
+        case GL_SAMPLER_2D_ARRAY: return Type::SAMPLER2D_ARRAY;
+        case GL_SAMPLER_3D: return Type::SAMPLER3D;
+        case GL_SAMPLER_CUBE: return Type::SAMPLER_CUBE;
         default: {
-            CCASSERT(false, "Unsupported GLType, convert to GFXType failed.");
-            return GFXType::UNKNOWN;
+            CCASSERT(false, "Unsupported GLType, convert to Type failed.");
+            return Type::UNKNOWN;
         }
     }
 }
@@ -1014,7 +1014,7 @@ void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
         gpuInput.glLoc = glGetAttribLocation(gpuShader->glProgram, gl_name);
         gpuInput.binding = gpuInput.glLoc;
         gpuInput.name = gl_name;
-        gpuInput.type = MapGFXType(glType);
+        gpuInput.type = MapType(glType);
         gpuInput.stride = GLTypeSize(glType);
         gpuInput.count = gl_size;
         gpuInput.size = gpuInput.stride * gpuInput.count;
@@ -1082,7 +1082,7 @@ void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
 
                     uniform.binding = GFX_INVALID_BINDING;
                     uniform.name = gl_name;
-                    uniform.type = MapGFXType(glType);
+                    uniform.type = MapType(glType);
                     uniform.stride = GFX_TYPE_SIZES[(int)uniform.type];
                     uniform.count = gl_size;
                     uniform.size = uniform.stride * uniform.count;

@@ -233,7 +233,7 @@ enum class FormatType : uint8_t {
     FLOAT,
 };
 
-enum class GFXType : uint8_t {
+enum class Type : uint8_t {
     UNKNOWN,
     BOOL,
     BOOL2,
@@ -755,7 +755,7 @@ typedef vector<ShaderMacro> ShaderMacroList;
 
 struct GFXUniform {
     String name;
-    GFXType type = GFXType::UNKNOWN;
+    Type type = Type::UNKNOWN;
     uint count = 0;
 };
 
@@ -774,7 +774,7 @@ struct GFXUniformSampler {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     String name;
-    GFXType type = GFXType::UNKNOWN;
+    Type type = Type::UNKNOWN;
     uint count = 0;
 };
 
