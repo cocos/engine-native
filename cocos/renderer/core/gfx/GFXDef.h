@@ -437,7 +437,7 @@ enum class LoadOp : uint8_t {
     DISCARD, // Ignore writing to the fbo and keep old data
 };
 
-enum class GFXStoreOp : uint8_t {
+enum class StoreOp : uint8_t {
     STORE,   // Write the source to the destination
     DISCARD, // Don't write the source to the destination
 };
@@ -818,7 +818,7 @@ struct InputAssemblerInfo {
 struct GFXColorAttachment {
     Format format = Format::UNKNOWN;
     LoadOp loadOp = LoadOp::CLEAR;
-    GFXStoreOp storeOp = GFXStoreOp::STORE;
+    StoreOp storeOp = StoreOp::STORE;
     uint sampleCount = 1;
     TextureLayout beginLayout = TextureLayout::COLOR_ATTACHMENT_OPTIMAL;
     TextureLayout endLayout = TextureLayout::COLOR_ATTACHMENT_OPTIMAL;
@@ -829,9 +829,9 @@ typedef vector<GFXColorAttachment> GFXColorAttachmentList;
 struct GFXDepthStencilAttachment {
     Format format = Format::UNKNOWN;
     LoadOp depthLoadOp = LoadOp::CLEAR;
-    GFXStoreOp depthStoreOp = GFXStoreOp::STORE;
+    StoreOp depthStoreOp = StoreOp::STORE;
     LoadOp stencilLoadOp = LoadOp::CLEAR;
-    GFXStoreOp stencilStoreOp = GFXStoreOp::STORE;
+    StoreOp stencilStoreOp = StoreOp::STORE;
     uint sampleCount = 1;
     TextureLayout beginLayout = TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     TextureLayout endLayout = TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;

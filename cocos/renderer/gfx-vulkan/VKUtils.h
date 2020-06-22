@@ -142,12 +142,12 @@ VkAttachmentLoadOp MapVkLoadOp(LoadOp loadOp) {
     }
 }
 
-VkAttachmentStoreOp MapVkStoreOp(GFXStoreOp storeOp) {
+VkAttachmentStoreOp MapVkStoreOp(StoreOp storeOp) {
     switch (storeOp) {
-        case GFXStoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
-        case GFXStoreOp::DISCARD: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        case StoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
+        case StoreOp::DISCARD: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
         default: {
-            CCASSERT(false, "Unsupported GFXStoreOp, convert to VkStoreOp failed.");
+            CCASSERT(false, "Unsupported StoreOp, convert to VkStoreOp failed.");
             return VK_ATTACHMENT_STORE_OP_STORE;
         }
     }

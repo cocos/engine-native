@@ -135,10 +135,10 @@ MTLLoadAction toMTLLoadAction(LoadOp op) {
     }
 }
 
-MTLStoreAction toMTLStoreAction(GFXStoreOp op) {
+MTLStoreAction toMTLStoreAction(StoreOp op) {
     switch (op) {
-        case GFXStoreOp::STORE: return MTLStoreActionStore;
-        case GFXStoreOp::DISCARD: return MTLStoreActionDontCare;
+        case StoreOp::STORE: return MTLStoreActionStore;
+        case StoreOp::DISCARD: return MTLStoreActionDontCare;
         default: return MTLStoreActionDontCare;
     }
 }
