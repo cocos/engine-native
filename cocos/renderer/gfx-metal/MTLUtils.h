@@ -30,7 +30,7 @@ MTLScissorRect toMTLScissorRect(const GFXRect &);
 MTLTriangleFillMode toMTLTriangleFillMode(GFXPolygonMode);
 MTLDepthClipMode toMTLDepthClipMode(bool isClip);
 MTLCompareFunction toMTLCompareFunction(ComparisonFunc);
-MTLStencilOperation toMTLStencilOperation(GFXStencilOp);
+MTLStencilOperation toMTLStencilOperation(StencilOp);
 MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode);
 MTLTextureUsage toMTLTextureUsage(TextureUsage);
 MTLTextureType toMTLTextureType(TextureType type);

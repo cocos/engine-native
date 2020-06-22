@@ -372,7 +372,7 @@ enum class ComparisonFunc : uint8_t {
     ALWAYS,
 };
 
-enum class GFXStencilOp : uint8_t {
+enum class StencilOp : uint8_t {
     ZERO,
     KEEP,
     REPLACE,
@@ -940,17 +940,17 @@ struct GFXDepthStencilState {
     ComparisonFunc stencilFuncFront = ComparisonFunc::ALWAYS;
     uint stencilReadMaskFront = 0xffffffff;
     uint stencilWriteMaskFront = 0xffffffff;
-    GFXStencilOp stencilFailOpFront = GFXStencilOp::KEEP;
-    GFXStencilOp stencilZFailOpFront = GFXStencilOp::KEEP;
-    GFXStencilOp stencilPassOpFront = GFXStencilOp::KEEP;
+    StencilOp stencilFailOpFront = StencilOp::KEEP;
+    StencilOp stencilZFailOpFront = StencilOp::KEEP;
+    StencilOp stencilPassOpFront = StencilOp::KEEP;
     uint stencilRefFront = 1;
     bool stencilTestBack = false;
     ComparisonFunc stencilFuncBack = ComparisonFunc::ALWAYS;
     uint stencilReadMaskBack = 0xffffffff;
     uint stencilWriteMaskBack = 0xffffffff;
-    GFXStencilOp stencilFailOpBack = GFXStencilOp::KEEP;
-    GFXStencilOp stencilZFailOpBack = GFXStencilOp::KEEP;
-    GFXStencilOp stencilPassOpBack = GFXStencilOp::KEEP;
+    StencilOp stencilFailOpBack = StencilOp::KEEP;
+    StencilOp stencilZFailOpBack = StencilOp::KEEP;
+    StencilOp stencilPassOpBack = StencilOp::KEEP;
     uint stencilRefBack = 1;
 };
 

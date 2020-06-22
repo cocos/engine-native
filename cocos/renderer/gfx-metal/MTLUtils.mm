@@ -392,16 +392,16 @@ MTLCompareFunction toMTLCompareFunction(ComparisonFunc func) {
     }
 }
 
-MTLStencilOperation toMTLStencilOperation(GFXStencilOp op) {
+MTLStencilOperation toMTLStencilOperation(StencilOp op) {
     switch (op) {
-        case GFXStencilOp::ZERO: return MTLStencilOperationZero;
-        case GFXStencilOp::KEEP: return MTLStencilOperationKeep;
-        case GFXStencilOp::REPLACE: return MTLStencilOperationReplace;
-        case GFXStencilOp::INCR: return MTLStencilOperationIncrementClamp;
-        case GFXStencilOp::DECR: return MTLStencilOperationDecrementClamp;
-        case GFXStencilOp::INVERT: return MTLStencilOperationInvert;
-        case GFXStencilOp::INCR_WRAP: return MTLStencilOperationIncrementWrap;
-        case GFXStencilOp::DECR_WRAP: return MTLStencilOperationDecrementWrap;
+        case StencilOp::ZERO: return MTLStencilOperationZero;
+        case StencilOp::KEEP: return MTLStencilOperationKeep;
+        case StencilOp::REPLACE: return MTLStencilOperationReplace;
+        case StencilOp::INCR: return MTLStencilOperationIncrementClamp;
+        case StencilOp::DECR: return MTLStencilOperationDecrementClamp;
+        case StencilOp::INVERT: return MTLStencilOperationInvert;
+        case StencilOp::INCR_WRAP: return MTLStencilOperationIncrementWrap;
+        case StencilOp::DECR_WRAP: return MTLStencilOperationDecrementWrap;
     }
 }
 
