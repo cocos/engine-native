@@ -347,7 +347,7 @@ enum class SampleCount : uint8_t {
     X64,
 };
 
-enum class GFXFilter : uint8_t {
+enum class Filter : uint8_t {
     NONE,
     POINT,
     LINEAR,
@@ -732,9 +732,9 @@ struct TextureViewInfo {
 
 struct SamplerInfo {
     String name;
-    GFXFilter minFilter = GFXFilter::LINEAR;
-    GFXFilter magFilter = GFXFilter::LINEAR;
-    GFXFilter mipFilter = GFXFilter::NONE;
+    Filter minFilter = Filter::LINEAR;
+    Filter magFilter = Filter::LINEAR;
+    Filter mipFilter = Filter::NONE;
     GFXAddress addressU = GFXAddress::WRAP;
     GFXAddress addressV = GFXAddress::WRAP;
     GFXAddress addressW = GFXAddress::WRAP;

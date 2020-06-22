@@ -50,9 +50,9 @@ typedef vector<GLES3GPUTexture *> GLES3GPUTextureList;
 
 class GLES3GPUSampler : public Object {
 public:
-    GFXFilter minFilter = GFXFilter::NONE;
-    GFXFilter magFilter = GFXFilter::NONE;
-    GFXFilter mipFilter = GFXFilter::NONE;
+    Filter minFilter = Filter::NONE;
+    Filter magFilter = Filter::NONE;
+    Filter mipFilter = Filter::NONE;
     GFXAddress addressU = GFXAddress::CLAMP;
     GFXAddress addressV = GFXAddress::CLAMP;
     GFXAddress addressW = GFXAddress::CLAMP;

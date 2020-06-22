@@ -17,9 +17,9 @@ public:
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const String &getName() const { return _name; }
-    CC_INLINE GFXFilter getMinFilter() const { return _minFilter; }
-    CC_INLINE GFXFilter getMagFilter() const { return _magFilter; }
-    CC_INLINE GFXFilter getMipFilter() const { return _mipFilter; }
+    CC_INLINE Filter getMinFilter() const { return _minFilter; }
+    CC_INLINE Filter getMagFilter() const { return _magFilter; }
+    CC_INLINE Filter getMipFilter() const { return _mipFilter; }
     CC_INLINE GFXAddress getAddressU() const { return _addressU; }
     CC_INLINE GFXAddress getAddressV() const { return _addressV; }
     CC_INLINE GFXAddress getAddressW() const { return _addressW; }
@@ -33,9 +33,9 @@ public:
 protected:
     Device *_device = nullptr;
     String _name;
-    GFXFilter _minFilter = GFXFilter::NONE;
-    GFXFilter _magFilter = GFXFilter::NONE;
-    GFXFilter _mipFilter = GFXFilter::NONE;
+    Filter _minFilter = Filter::NONE;
+    Filter _magFilter = Filter::NONE;
+    Filter _mipFilter = Filter::NONE;
     GFXAddress _addressU = GFXAddress::WRAP;
     GFXAddress _addressV = GFXAddress::WRAP;
     GFXAddress _addressW = GFXAddress::WRAP;

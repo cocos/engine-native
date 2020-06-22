@@ -490,23 +490,23 @@ MTLSamplerBorderColor toMTLSamplerBorderColor(const GFXColor &color) {
         return MTLSamplerBorderColorOpaqueWhite;
 }
 
-MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(GFXFilter filter) {
+MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(Filter filter) {
     switch (filter) {
-        case GFXFilter::LINEAR:
-        case GFXFilter::ANISOTROPIC:
+        case Filter::LINEAR:
+        case Filter::ANISOTROPIC:
             return MTLSamplerMinMagFilterLinear;
         default:
             return MTLSamplerMinMagFilterNearest;
     }
 }
 
-MTLSamplerMipFilter toMTLSamplerMipFilter(GFXFilter filter) {
+MTLSamplerMipFilter toMTLSamplerMipFilter(Filter filter) {
     switch (filter) {
-        case GFXFilter::NONE: return MTLSamplerMipFilterNotMipmapped;
-        case GFXFilter::LINEAR:
-        case GFXFilter::ANISOTROPIC:
+        case Filter::NONE: return MTLSamplerMipFilterNotMipmapped;
+        case Filter::LINEAR:
+        case Filter::ANISOTROPIC:
             return MTLSamplerMipFilterLinear;
-        case GFXFilter::POINT: return MTLSamplerMipFilterNearest;
+        case Filter::POINT: return MTLSamplerMipFilterNearest;
     }
 }
 

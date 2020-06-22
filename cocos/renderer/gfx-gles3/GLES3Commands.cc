@@ -852,25 +852,25 @@ void GLES3CmdFuncResizeTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
 
 void GLES3CmdFuncCreateSampler(GLES3Device *device, GLES3GPUSampler *gpuSampler) {
     glGenSamplers(1, &gpuSampler->gl_sampler);
-    if (gpuSampler->minFilter == GFXFilter::LINEAR || gpuSampler->minFilter == GFXFilter::ANISOTROPIC) {
-        if (gpuSampler->mipFilter == GFXFilter::LINEAR || gpuSampler->mipFilter == GFXFilter::ANISOTROPIC) {
+    if (gpuSampler->minFilter == Filter::LINEAR || gpuSampler->minFilter == Filter::ANISOTROPIC) {
+        if (gpuSampler->mipFilter == Filter::LINEAR || gpuSampler->mipFilter == Filter::ANISOTROPIC) {
             gpuSampler->glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
-        } else if (gpuSampler->mipFilter == GFXFilter::POINT) {
+        } else if (gpuSampler->mipFilter == Filter::POINT) {
             gpuSampler->glMinFilter = GL_LINEAR_MIPMAP_NEAREST;
         } else {
             gpuSampler->glMinFilter = GL_LINEAR;
         }
     } else {
-        if (gpuSampler->mipFilter == GFXFilter::LINEAR || gpuSampler->mipFilter == GFXFilter::ANISOTROPIC) {
+        if (gpuSampler->mipFilter == Filter::LINEAR || gpuSampler->mipFilter == Filter::ANISOTROPIC) {
             gpuSampler->glMinFilter = GL_NEAREST_MIPMAP_LINEAR;
-        } else if (gpuSampler->mipFilter == GFXFilter::POINT) {
+        } else if (gpuSampler->mipFilter == Filter::POINT) {
             gpuSampler->glMinFilter = GL_NEAREST_MIPMAP_NEAREST;
         } else {
             gpuSampler->glMinFilter = GL_NEAREST;
         }
     }
 
-    if (gpuSampler->magFilter == GFXFilter::LINEAR || gpuSampler->magFilter == GFXFilter::ANISOTROPIC) {
+    if (gpuSampler->magFilter == Filter::LINEAR || gpuSampler->magFilter == Filter::ANISOTROPIC) {
         gpuSampler->glMagFilter = GL_LINEAR;
     } else {
         gpuSampler->glMagFilter = GL_NEAREST;

@@ -149,9 +149,9 @@ typedef vector<CCVKGPUBuffer *> CCVKGPUBufferList;
 
 class CCVKGPUSampler : public Object {
 public:
-    GFXFilter minFilter = GFXFilter::LINEAR;
-    GFXFilter magFilter = GFXFilter::LINEAR;
-    GFXFilter mipFilter = GFXFilter::NONE;
+    Filter minFilter = Filter::LINEAR;
+    Filter magFilter = Filter::LINEAR;
+    Filter mipFilter = Filter::NONE;
     GFXAddress addressU = GFXAddress::WRAP;
     GFXAddress addressV = GFXAddress::WRAP;
     GFXAddress addressW = GFXAddress::WRAP;

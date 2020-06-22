@@ -20,9 +20,9 @@ public:
 private:
     GLES2GPUSampler *_gpuSampler = nullptr;
     String _name;
-    GFXFilter _minFilter = GFXFilter::LINEAR;
-    GFXFilter _magFilter = GFXFilter::LINEAR;
-    GFXFilter _mipFilter = GFXFilter::NONE;
+    Filter _minFilter = Filter::LINEAR;
+    Filter _magFilter = Filter::LINEAR;
+    Filter _mipFilter = Filter::NONE;
     GFXAddress _addressU = GFXAddress::WRAP;
     GFXAddress _addressV = GFXAddress::WRAP;
     GFXAddress _addressW = GFXAddress::WRAP;
