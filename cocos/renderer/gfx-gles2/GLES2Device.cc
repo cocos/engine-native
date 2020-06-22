@@ -28,7 +28,7 @@ GLES2Device::~GLES2Device() {
 }
 
 bool GLES2Device::initialize(const DeviceInfo &info) {
-    _gfxAPI = GFXAPI::GLES2;
+    _API = API::GLES2;
     _deviceName = "GLES2";
     _width = info.width;
     _height = info.height;

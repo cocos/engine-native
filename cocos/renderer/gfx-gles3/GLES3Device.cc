@@ -28,7 +28,7 @@ GLES3Device::~GLES3Device() {
 }
 
 bool GLES3Device::initialize(const DeviceInfo &info) {
-    _gfxAPI = GFXAPI::GLES3;
+    _API = API::GLES3;
     _deviceName = "GLES3";
     _width = info.width;
     _height = info.height;

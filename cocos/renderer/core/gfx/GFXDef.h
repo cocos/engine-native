@@ -55,7 +55,7 @@ enum class Status : uint8_t {
     SUCCESS,
 };
 
-enum class GFXAPI : uint8_t {
+enum class API : uint8_t {
     UNKNOWN,
     GL,
     GLES2,

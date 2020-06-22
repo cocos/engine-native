@@ -39,7 +39,7 @@ CCVKGPUContext *CCVKDevice::gpuContext() const {
 }
 
 bool CCVKDevice::initialize(const DeviceInfo &info) {
-    _gfxAPI = GFXAPI::VULKAN;
+    _API = API::VULKAN;
     _deviceName = "Vulkan";
     _width = info.width;
     _height = info.height;

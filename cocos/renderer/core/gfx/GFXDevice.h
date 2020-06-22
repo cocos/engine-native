@@ -34,7 +34,7 @@ public:
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) = 0;
     virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) = 0;
 
-    CC_INLINE GFXAPI getGfxAPI() const { return _gfxAPI; }
+    CC_INLINE API getGfxAPI() const { return _API; }
     CC_INLINE const String &getDeviceName() const { return _deviceName; }
     CC_INLINE uint getWidth() { return _width; }
     CC_INLINE uint getHeight() { return _height; }
@@ -71,7 +71,7 @@ public:
     CC_INLINE float getProjectionSignY() const { return _projectionSignY; }
 
 protected:
-    GFXAPI _gfxAPI = GFXAPI::UNKNOWN;
+    API _API = API::UNKNOWN;
     String _deviceName;
     String _renderer;
     String _vendor;
