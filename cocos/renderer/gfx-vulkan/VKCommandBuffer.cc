@@ -174,7 +174,7 @@ void CCVKCommandBuffer::bindInputAssembler(InputAssembler *ia) {
     }
 }
 
-void CCVKCommandBuffer::setViewport(const GFXViewport &vp) {
+void CCVKCommandBuffer::setViewport(const Viewport &vp) {
     if (_curViewport != vp) {
         _curViewport = vp;
         VkViewport viewport{(float)vp.left, (float)vp.top, (float)vp.width, (float)vp.height, vp.minDepth, vp.maxDepth};

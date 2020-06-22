@@ -339,7 +339,7 @@ MTLWinding toMTLWinding(bool isFrontFaceCCW) {
         return MTLWindingClockwise;
 }
 
-MTLViewport toMTLViewport(const GFXViewport &viewport) {
+MTLViewport toMTLViewport(const Viewport &viewport) {
     MTLViewport mtlViewport;
     mtlViewport.originX = viewport.left;
     mtlViewport.originY = viewport.top;

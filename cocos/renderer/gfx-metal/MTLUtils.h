@@ -25,7 +25,7 @@ MTLBlendFactor toMTLBlendFactor(BlendFactor);
 MTLBlendOperation toMTLBlendOperation(BlendOp);
 MTLCullMode toMTLCullMode(CullMode);
 MTLWinding toMTLWinding(bool isFrontFaceCCW);
-MTLViewport toMTLViewport(const GFXViewport &);
+MTLViewport toMTLViewport(const Viewport &);
 MTLScissorRect toMTLScissorRect(const Rect &);
 MTLTriangleFillMode toMTLTriangleFillMode(PolygonMode);
 MTLDepthClipMode toMTLDepthClipMode(bool isClip);

@@ -98,7 +98,7 @@ void GLES3CommandBuffer::bindInputAssembler(InputAssembler *ia) {
     _isStateInvalid = true;
 }
 
-void GLES3CommandBuffer::setViewport(const GFXViewport &vp) {
+void GLES3CommandBuffer::setViewport(const Viewport &vp) {
 
     if ((_curViewport.left != vp.left) ||
         (_curViewport.top != vp.top) ||

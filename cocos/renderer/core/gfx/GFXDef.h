@@ -617,7 +617,7 @@ struct DataArray {
     std::vector<uint8_t *> datas;
 };
 
-struct GFXViewport {
+struct Viewport {
     int left = 0;
     int top = 0;
     uint width = 0;
@@ -625,7 +625,7 @@ struct GFXViewport {
     float minDepth = 0.0f;
     float maxDepth = 1.0f;
 
-    bool operator==(const GFXViewport &rs) {
+    bool operator==(const Viewport &rs) {
         if (left == rs.left &&
             top == rs.top &&
             width == rs.width &&
@@ -637,7 +637,7 @@ struct GFXViewport {
             return false;
     }
 
-    bool operator!=(const GFXViewport &rs) {
+    bool operator!=(const Viewport &rs) {
         return !(*this == rs);
     }
 };

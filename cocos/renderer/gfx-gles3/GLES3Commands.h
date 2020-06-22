@@ -82,7 +82,7 @@ public:
     GLES3GPUBindingLayout *gpuBindingLayout = nullptr;
     GLES3GPUInputAssembler *gpuInputAssembler = nullptr;
     uint8_t state_flags[(int)GLES3State::COUNT] = {0};
-    GFXViewport viewport;
+    Viewport viewport;
     Rect scissor;
     float lineWidth = 1.0f;
     bool depthBiasEnabled = false;

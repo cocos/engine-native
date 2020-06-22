@@ -107,7 +107,7 @@ void CCMTLCommandBuffer::bindInputAssembler(InputAssembler *ia) {
     _isStateInValid = true;
 }
 
-void CCMTLCommandBuffer::setViewport(const GFXViewport &vp) {
+void CCMTLCommandBuffer::setViewport(const Viewport &vp) {
     if (_currentViewport != vp) {
         _currentViewport = vp;
         _dynamicStateDirty[static_cast<uint>(DynamicState::VIEWPORT)] = true;

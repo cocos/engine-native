@@ -28,7 +28,7 @@ public:
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
     virtual void bindInputAssembler(InputAssembler *ia) override;
-    virtual void setViewport(const GFXViewport &vp) override;
+    virtual void setViewport(const Viewport &vp) override;
     virtual void setScissor(const Rect &rect) override;
     virtual void setLineWidth(const float width) override;
     virtual void setDepthBias(float constant, float clamp, float slope) override;
@@ -55,7 +55,7 @@ private:
     CCMTLPipelineState *_currentPipelineState = nullptr;
     CCMTLInputAssembler *_currentInputAssembler = nullptr;
     CCMTLBindingLayout *_currentBindingLayout = nullptr;
-    GFXViewport _currentViewport;
+    Viewport _currentViewport;
     Rect _currentScissor;
     // Just don't want to include "Commands.h", because "Commands.h" includes Objective-C codes.
     CCMTLDepthBias *_currentDepthBias = nullptr;

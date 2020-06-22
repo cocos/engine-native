@@ -21,7 +21,7 @@ public:
     bool glCurrentAttribLocs[GFX_MAX_VERTEX_ATTRIBUTES] = {false};
     GLuint glFramebuffer = 0;
     GLuint glReadFBO = 0;
-    GFXViewport viewport;
+    Viewport viewport;
     Rect scissor;
     GFXRasterizerState rs;
     GFXDepthStencilState dss;

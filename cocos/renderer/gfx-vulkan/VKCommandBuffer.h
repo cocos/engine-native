@@ -24,7 +24,7 @@ public:
     void bindPipelineState(PipelineState *pso);
     void bindBindingLayout(BindingLayout *layout);
     void bindInputAssembler(InputAssembler *ia);
-    void setViewport(const GFXViewport &vp);
+    void setViewport(const Viewport &vp);
     void setScissor(const Rect &rect);
     void setLineWidth(const float width);
     void setDepthBias(float constant, float clamp, float slope);
@@ -47,7 +47,7 @@ private:
     CCVKGPUInputAssembler *_curGPUInputAssember = nullptr;
     CCVKGPUFramebuffer *_curGPUFBO = nullptr;
 
-    GFXViewport _curViewport;
+    Viewport _curViewport;
     Rect _curScissor;
     float _curLineWidth = 1.0f;
     CCVKDepthBias _curDepthBias;

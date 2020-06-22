@@ -26,7 +26,7 @@ public:
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
     virtual void bindInputAssembler(InputAssembler *ia) override;
-    virtual void setViewport(const GFXViewport &vp) override;
+    virtual void setViewport(const Viewport &vp) override;
     virtual void setScissor(const Rect &rect) override;
     virtual void setLineWidth(const float width) override;
     virtual void setDepthBias(float constant, float clamp, float slope) override;
@@ -49,7 +49,7 @@ private:
     GLES3GPUPipelineState *_curGPUPipelineState = nullptr;
     GLES3GPUBindingLayout *_curGPUBlendLayout = nullptr;
     GLES3GPUInputAssembler *_curGPUInputAssember = nullptr;
-    GFXViewport _curViewport;
+    Viewport _curViewport;
     Rect _curScissor;
     float _curLineWidth = 1.0f;
     GLES3DepthBias _curDepthBias;
