@@ -544,7 +544,7 @@ enum class GFXClearFlagBit : uint8_t {
 typedef GFXClearFlagBit GFXClearFlags;
 CC_ENUM_OPERATORS(GFXClearFlags);
 
-enum class GFXVsyncMode : uint8_t {
+enum class VsyncMode : uint8_t {
     // The application does not synchronizes with the vertical sync. If application renders faster than the display refreshes, frames are wasted and tearing may be observed. FPS is uncapped. Maximum power consumption. If unsupported, "ON" value will be used instead. Minimum latency.
     OFF,
     // The application is always synchronized with the vertical sync. Tearing does not happen. FPS is capped to the display's refresh rate. For fast applications, battery life is improved. Always supported.
@@ -670,7 +670,7 @@ struct GFXWindowInfo {
     Format depthStencilFmt = Format::UNKNOWN;
     bool isOffscreen = false;
     bool isFullscreen = false;
-    GFXVsyncMode vsyncMode = GFXVsyncMode::OFF;
+    VsyncMode vsyncMode = VsyncMode::OFF;
     uintptr_t windowHandle = 0;
     RenderPass *renderPass = nullptr;
 };
@@ -678,7 +678,7 @@ struct GFXWindowInfo {
 struct ContextInfo {
     uintptr_t windowHandle = 0;
     Context *sharedCtx = nullptr;
-    GFXVsyncMode vsyncMode = GFXVsyncMode::RELAXED;
+    VsyncMode vsyncMode = VsyncMode::RELAXED;
 };
 
 struct BufferInfo {

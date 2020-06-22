@@ -363,7 +363,7 @@ void GLES3Context::destroy() {
     _isPrimaryContex = false;
     _windowHandle = 0;
     _nativeDisplay = 0;
-    _vsyncMode = GFXVsyncMode::OFF;
+    _vsyncMode = VsyncMode::OFF;
     _isInitialized = false;
 }
 
@@ -384,11 +384,11 @@ bool GLES3Context::MakeCurrent() {
             // Turn on or off the vertical sync depending on the input bool value.
             int interval = 1;
             switch (_vsyncMode) {
-                case GFXVsyncMode::OFF: interval = 0; break;
-                case GFXVsyncMode::ON: interval = 1; break;
-                case GFXVsyncMode::RELAXED: interval = -1; break;
-                case GFXVsyncMode::MAILBOX: interval = 0; break;
-                case GFXVsyncMode::HALF: interval = 2; break;
+                case VsyncMode::OFF: interval = 0; break;
+                case VsyncMode::ON: interval = 1; break;
+                case VsyncMode::RELAXED: interval = -1; break;
+                case VsyncMode::MAILBOX: interval = 0; break;
+                case VsyncMode::HALF: interval = 2; break;
                 default: break;
             }
 

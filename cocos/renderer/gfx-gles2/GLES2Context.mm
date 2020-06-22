@@ -169,7 +169,7 @@ void GLES2Context::destroy() {
 
   _isPrimaryContex = false;
   _windowHandle = 0;
-  _vsyncMode = GFXVsyncMode::OFF;
+  _vsyncMode = VsyncMode::OFF;
   _isInitialized = false;
 }
 
