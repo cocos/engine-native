@@ -360,8 +360,8 @@ static bool js_gfx_GFXSubPass_set_bind_point(se::State& s)
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_bind_point : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    cc::gfx::GFXPipelineBindPoint arg0 = cc::gfx::GFXPipelineBindPoint::GRAPHICS;
-    do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cc::gfx::GFXPipelineBindPoint)tmp; } while(false);
+    cc::gfx::PipelineBindPoint arg0 = cc::gfx::PipelineBindPoint::GRAPHICS;
+    do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cc::gfx::PipelineBindPoint)tmp; } while(false);
     SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_bind_point : Error processing new value");
     cobj->bindPoint = arg0;
     return true;
@@ -538,13 +538,13 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
         s.thisObject()->setPrivateData(cobj);
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
 
-        cc::gfx::GFXPipelineBindPoint arg0 = cc::gfx::GFXPipelineBindPoint::GRAPHICS;
+        cc::gfx::PipelineBindPoint arg0 = cc::gfx::PipelineBindPoint::GRAPHICS;
         json->getProperty("bind_point", &field);  
         if(field.isUndefined()) {
             SE_REPORT_ERROR("argument Field \".bind_point\" is undefined!");
             return false;
         }
-        do { int32_t tmp = 0; ok &= seval_to_int32(field, &tmp); arg0 = (cc::gfx::GFXPipelineBindPoint)tmp; } while(false);
+        do { int32_t tmp = 0; ok &= seval_to_int32(field, &tmp); arg0 = (cc::gfx::PipelineBindPoint)tmp; } while(false);
         cobj->bindPoint = arg0;
         
         json->getProperty("inputs", &field);  
@@ -595,8 +595,8 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
         s.thisObject()->setPrivateData(cobj);
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
 
-        cc::gfx::GFXPipelineBindPoint arg0 = cc::gfx::GFXPipelineBindPoint::GRAPHICS;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cc::gfx::GFXPipelineBindPoint)tmp; } while(false);
+        cc::gfx::PipelineBindPoint arg0 = cc::gfx::PipelineBindPoint::GRAPHICS;
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cc::gfx::PipelineBindPoint)tmp; } while(false);
         cobj->bindPoint = arg0;
 
         ok &= seval_to_Uint8Array(args[1], (uint8_t*)&cobj->inputs);

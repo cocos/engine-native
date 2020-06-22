@@ -455,7 +455,7 @@ enum class TextureLayout : uint8_t {
     PRESENT_SRC,
 };
 
-enum class GFXPipelineBindPoint : uint8_t {
+enum class PipelineBindPoint : uint8_t {
     GRAPHICS,
     COMPUTE,
     RAY_TRACING,
@@ -838,7 +838,7 @@ struct GFXDepthStencilAttachment {
 };
 
 struct GFXSubPass {
-    GFXPipelineBindPoint bindPoint = GFXPipelineBindPoint::GRAPHICS;
+    PipelineBindPoint bindPoint = PipelineBindPoint::GRAPHICS;
     uint8_t inputs[GFX_MAX_ATTACHMENTS];
     uint8_t colors[GFX_MAX_ATTACHMENTS];
     uint8_t resolves[GFX_MAX_ATTACHMENTS];

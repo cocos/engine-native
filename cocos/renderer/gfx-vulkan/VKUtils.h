@@ -206,13 +206,13 @@ VkAccessFlags MapVkAccessFlags(TextureUsage usage, Format format) {
     return VK_ACCESS_SHADER_READ_BIT;
 }
 
-VkPipelineBindPoint MapVkPipelineBindPoint(GFXPipelineBindPoint bindPoint) {
+VkPipelineBindPoint MapVkPipelineBindPoint(PipelineBindPoint bindPoint) {
     switch (bindPoint) {
-        case GFXPipelineBindPoint::GRAPHICS: return VK_PIPELINE_BIND_POINT_GRAPHICS;
-        case GFXPipelineBindPoint::COMPUTE: return VK_PIPELINE_BIND_POINT_COMPUTE;
-        case GFXPipelineBindPoint::RAY_TRACING: return VK_PIPELINE_BIND_POINT_RAY_TRACING_NV;
+        case PipelineBindPoint::GRAPHICS: return VK_PIPELINE_BIND_POINT_GRAPHICS;
+        case PipelineBindPoint::COMPUTE: return VK_PIPELINE_BIND_POINT_COMPUTE;
+        case PipelineBindPoint::RAY_TRACING: return VK_PIPELINE_BIND_POINT_RAY_TRACING_NV;
         default: {
-            CCASSERT(false, "Unsupported GFXPipelineBindPoint, convert to VkPipelineBindPoint failed.");
+            CCASSERT(false, "Unsupported PipelineBindPoint, convert to VkPipelineBindPoint failed.");
             return VK_PIPELINE_BIND_POINT_GRAPHICS;
         }
     }
