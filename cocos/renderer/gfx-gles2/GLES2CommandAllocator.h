@@ -1,7 +1,7 @@
 #ifndef CC_GFXGLES2_GLES2_COMMAND_ALLOCATOR_H_
 #define CC_GFXGLES2_GLES2_COMMAND_ALLOCATOR_H_
 
-#include "gfx/GFXCommandPool.h"
+#include "gfx/CommandPool.h"
 #include "GLES2Commands.h"
 
 namespace cc {
@@ -12,11 +12,11 @@ public:
     GLES2CommandAllocator(Device *device);
     ~GLES2CommandAllocator();
 
-    GFXCommandPool<GLES2CmdBeginRenderPass> beginRenderPassCmdPool;
-    GFXCommandPool<GLES2CmdBindStates> bindStatesCmdPool;
-    GFXCommandPool<GLES2CmdDraw> drawCmdPool;
-    GFXCommandPool<GLES2CmdUpdateBuffer> updateBufferCmdPool;
-    GFXCommandPool<GLES2CmdCopyBufferToTexture> copyBufferToTextureCmdPool;
+    CommandPool<GLES2CmdBeginRenderPass> beginRenderPassCmdPool;
+    CommandPool<GLES2CmdBindStates> bindStatesCmdPool;
+    CommandPool<GLES2CmdDraw> drawCmdPool;
+    CommandPool<GLES2CmdUpdateBuffer> updateBufferCmdPool;
+    CommandPool<GLES2CmdCopyBufferToTexture> copyBufferToTextureCmdPool;
 
 public:
     virtual bool initialize(const CommandAllocatorInfo &info) override;

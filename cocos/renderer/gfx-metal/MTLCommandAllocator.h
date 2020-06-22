@@ -28,11 +28,11 @@ public:
 
 private:
     friend class CCMTLCommandBuffer;
-    GFXCommandPool<CCMTLCmdBeginRenderPass> _beginRenderPassCmdPool;
-    GFXCommandPool<CCMTLCmdBindStates> _bindStatesCmdPool;
-    GFXCommandPool<CCMTLCmdDraw> _drawCmdPool;
-    GFXCommandPool<CCMTLCmdUpdateBuffer> _updateBufferCmdPool;
-    GFXCommandPool<CCMTLCmdCopyBufferToTexture> _copyBufferToTextureCmdPool;
+    CommandPool<CCMTLCmdBeginRenderPass> _beginRenderPassCmdPool;
+    CommandPool<CCMTLCmdBindStates> _bindStatesCmdPool;
+    CommandPool<CCMTLCmdDraw> _drawCmdPool;
+    CommandPool<CCMTLCmdUpdateBuffer> _updateBufferCmdPool;
+    CommandPool<CCMTLCmdCopyBufferToTexture> _copyBufferToTextureCmdPool;
 };
 
 } // namespace gfx
