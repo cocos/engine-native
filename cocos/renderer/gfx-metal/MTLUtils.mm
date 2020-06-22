@@ -294,19 +294,19 @@ MTLColorWriteMask toMTLColorWriteMask(GFXColorMask mask) {
     }
 }
 
-MTLBlendFactor toMTLBlendFactor(GFXBlendFactor factor) {
+MTLBlendFactor toMTLBlendFactor(BlendFactor factor) {
     switch (factor) {
-        case GFXBlendFactor::ZERO: return MTLBlendFactorZero;
-        case GFXBlendFactor::ONE: return MTLBlendFactorOne;
-        case GFXBlendFactor::SRC_ALPHA: return MTLBlendFactorSourceAlpha;
-        case GFXBlendFactor::DST_ALPHA: return MTLBlendFactorDestinationAlpha;
-        case GFXBlendFactor::ONE_MINUS_SRC_ALPHA: return MTLBlendFactorOneMinusSourceAlpha;
-        case GFXBlendFactor::ONE_MINUS_DST_ALPHA: return MTLBlendFactorOneMinusDestinationAlpha;
-        case GFXBlendFactor::SRC_COLOR: return MTLBlendFactorSourceColor;
-        case GFXBlendFactor::DST_COLOR: return MTLBlendFactorDestinationColor;
-        case GFXBlendFactor::ONE_MINUS_SRC_COLOR: return MTLBlendFactorOneMinusSourceColor;
-        case GFXBlendFactor::ONE_MINUS_DST_COLOR: return MTLBlendFactorOneMinusDestinationColor;
-        case GFXBlendFactor::SRC_ALPHA_SATURATE: return MTLBlendFactorSourceAlphaSaturated;
+        case BlendFactor::ZERO: return MTLBlendFactorZero;
+        case BlendFactor::ONE: return MTLBlendFactorOne;
+        case BlendFactor::SRC_ALPHA: return MTLBlendFactorSourceAlpha;
+        case BlendFactor::DST_ALPHA: return MTLBlendFactorDestinationAlpha;
+        case BlendFactor::ONE_MINUS_SRC_ALPHA: return MTLBlendFactorOneMinusSourceAlpha;
+        case BlendFactor::ONE_MINUS_DST_ALPHA: return MTLBlendFactorOneMinusDestinationAlpha;
+        case BlendFactor::SRC_COLOR: return MTLBlendFactorSourceColor;
+        case BlendFactor::DST_COLOR: return MTLBlendFactorDestinationColor;
+        case BlendFactor::ONE_MINUS_SRC_COLOR: return MTLBlendFactorOneMinusSourceColor;
+        case BlendFactor::ONE_MINUS_DST_COLOR: return MTLBlendFactorOneMinusDestinationColor;
+        case BlendFactor::SRC_ALPHA_SATURATE: return MTLBlendFactorSourceAlphaSaturated;
         default: {
             CC_LOG_ERROR("Unsupported blend factor %u", (uint)factor);
             return MTLBlendFactorZero;

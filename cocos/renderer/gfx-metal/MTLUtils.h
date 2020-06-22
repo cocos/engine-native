@@ -21,7 +21,7 @@ MTLPixelFormat toMTLPixelFormat(Format);
 // Because some pixel format is not supported on metal, so need to convert to supported pixel format.
 Format convertGFXPixelFormat(Format);
 MTLColorWriteMask toMTLColorWriteMask(GFXColorMask);
-MTLBlendFactor toMTLBlendFactor(GFXBlendFactor);
+MTLBlendFactor toMTLBlendFactor(BlendFactor);
 MTLBlendOperation toMTLBlendOperation(GFXBlendOp);
 MTLCullMode toMTLCullMode(GFXCullMode);
 MTLWinding toMTLWinding(bool isFrontFaceCCW);

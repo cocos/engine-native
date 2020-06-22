@@ -383,7 +383,7 @@ enum class StencilOp : uint8_t {
     DECR_WRAP,
 };
 
-enum class GFXBlendFactor : uint8_t {
+enum class BlendFactor : uint8_t {
     ZERO,
     ONE,
     SRC_ALPHA,
@@ -956,11 +956,11 @@ struct GFXDepthStencilState {
 
 struct GFXBlendTarget {
     bool blend = false;
-    GFXBlendFactor blendSrc = GFXBlendFactor::ONE;
-    GFXBlendFactor blendDst = GFXBlendFactor::ZERO;
+    BlendFactor blendSrc = BlendFactor::ONE;
+    BlendFactor blendDst = BlendFactor::ZERO;
     GFXBlendOp blendEq = GFXBlendOp::ADD;
-    GFXBlendFactor blendSrcAlpha = GFXBlendFactor::ONE;
-    GFXBlendFactor blendDstAlpha = GFXBlendFactor::ZERO;
+    BlendFactor blendSrcAlpha = BlendFactor::ONE;
+    BlendFactor blendDstAlpha = BlendFactor::ZERO;
     GFXBlendOp blendAlphaEq = GFXBlendOp::ADD;
     GFXColorMask blendColorMask = GFXColorMask::ALL;
 };
