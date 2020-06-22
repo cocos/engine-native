@@ -1355,7 +1355,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                                 case GFXLoadOp::LOAD: break; // GL default behaviour
                                 case GFXLoadOp::CLEAR: {
                                     if (cmd->clear_flags & GFXClearFlagBit::COLOR) {
-                                        if (cache->bs.targets[0].blendColorMask != GFXColorMask::ALL) {
+                                        if (cache->bs.targets[0].blendColorMask != ColorMask::ALL) {
                                             glColorMask(true, true, true, true);
                                         }
 
@@ -1439,12 +1439,12 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
 
                     // restore states
                     if (gl_clears & GL_COLOR_BUFFER_BIT) {
-                        GFXColorMask color_mask = cache->bs.targets[0].blendColorMask;
-                        if (color_mask != GFXColorMask::ALL) {
-                            glColorMask((GLboolean)(color_mask & GFXColorMask::R),
-                                        (GLboolean)(color_mask & GFXColorMask::G),
-                                        (GLboolean)(color_mask & GFXColorMask::B),
-                                        (GLboolean)(color_mask & GFXColorMask::A));
+                        ColorMask color_mask = cache->bs.targets[0].blendColorMask;
+                        if (color_mask != ColorMask::ALL) {
+                            glColorMask((GLboolean)(color_mask & ColorMask::R),
+                                        (GLboolean)(color_mask & ColorMask::G),
+                                        (GLboolean)(color_mask & ColorMask::B),
+                                        (GLboolean)(color_mask & ColorMask::A));
                         }
                     }
 
@@ -1712,10 +1712,10 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                     cache_target.blendDstAlpha = target.blendDstAlpha;
                 }
                 if (cache_target.blendColorMask != target.blendColorMask) {
-                    glColorMask((GLboolean)(target.blendColorMask & GFXColorMask::R),
-                                (GLboolean)(target.blendColorMask & GFXColorMask::G),
-                                (GLboolean)(target.blendColorMask & GFXColorMask::B),
-                                (GLboolean)(target.blendColorMask & GFXColorMask::A));
+                    glColorMask((GLboolean)(target.blendColorMask & ColorMask::R),
+                                (GLboolean)(target.blendColorMask & ColorMask::G),
+                                (GLboolean)(target.blendColorMask & ColorMask::B),
+                                (GLboolean)(target.blendColorMask & ColorMask::A));
                     cache_target.blendColorMask = target.blendColorMask;
                 }
 

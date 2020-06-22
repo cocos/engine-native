@@ -385,13 +385,13 @@ VkDescriptorType MapVkDescriptorType(GFXBindingType type) {
     }
 }
 
-VkColorComponentFlags MapVkColorComponentFlags(GFXColorMask colorMask) {
+VkColorComponentFlags MapVkColorComponentFlags(ColorMask colorMask) {
     uint flags = 0u;
-    if (colorMask & GFXColorMask::R) flags |= VK_COLOR_COMPONENT_R_BIT;
-    if (colorMask & GFXColorMask::G) flags |= VK_COLOR_COMPONENT_G_BIT;
-    if (colorMask & GFXColorMask::B) flags |= VK_COLOR_COMPONENT_B_BIT;
-    if (colorMask & GFXColorMask::A) flags |= VK_COLOR_COMPONENT_A_BIT;
-    if (colorMask & GFXColorMask::ALL) flags |= VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    if (colorMask & ColorMask::R) flags |= VK_COLOR_COMPONENT_R_BIT;
+    if (colorMask & ColorMask::G) flags |= VK_COLOR_COMPONENT_G_BIT;
+    if (colorMask & ColorMask::B) flags |= VK_COLOR_COMPONENT_B_BIT;
+    if (colorMask & ColorMask::A) flags |= VK_COLOR_COMPONENT_A_BIT;
+    if (colorMask & ColorMask::ALL) flags |= VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     return (VkColorComponentFlags)flags;
 }
 

@@ -409,7 +409,7 @@ enum class BlendOp : uint8_t {
     MAX,
 };
 
-enum class GFXColorMask : uint8_t {
+enum class ColorMask : uint8_t {
     NONE = 0x0,
     R = 0x1,
     G = 0x2,
@@ -417,7 +417,7 @@ enum class GFXColorMask : uint8_t {
     A = 0x8,
     ALL = R | G | B | A,
 };
-CC_ENUM_OPERATORS(GFXColorMask);
+CC_ENUM_OPERATORS(ColorMask);
 
 enum class ShaderType : uint8_t {
     NONE = 0x0,
@@ -962,7 +962,7 @@ struct GFXBlendTarget {
     BlendFactor blendSrcAlpha = BlendFactor::ONE;
     BlendFactor blendDstAlpha = BlendFactor::ZERO;
     BlendOp blendAlphaEq = BlendOp::ADD;
-    GFXColorMask blendColorMask = GFXColorMask::ALL;
+    ColorMask blendColorMask = ColorMask::ALL;
 };
 
 typedef vector<GFXBlendTarget> GFXBlendTargetList;

@@ -283,13 +283,13 @@ MTLPixelFormat toMTLPixelFormat(Format format) {
     }
 }
 
-MTLColorWriteMask toMTLColorWriteMask(GFXColorMask mask) {
+MTLColorWriteMask toMTLColorWriteMask(ColorMask mask) {
     switch (mask) {
-        case GFXColorMask::R: return MTLColorWriteMaskRed;
-        case GFXColorMask::G: return MTLColorWriteMaskGreen;
-        case GFXColorMask::B: return MTLColorWriteMaskBlue;
-        case GFXColorMask::A: return MTLColorWriteMaskAlpha;
-        case GFXColorMask::ALL: return MTLColorWriteMaskAll;
+        case ColorMask::R: return MTLColorWriteMaskRed;
+        case ColorMask::G: return MTLColorWriteMaskGreen;
+        case ColorMask::B: return MTLColorWriteMaskBlue;
+        case ColorMask::A: return MTLColorWriteMaskAlpha;
+        case ColorMask::ALL: return MTLColorWriteMaskAll;
         default: return MTLColorWriteMaskNone;
     }
 }
