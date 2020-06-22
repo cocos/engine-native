@@ -72,7 +72,7 @@ void CCMTLCommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     CCMTLCmdBeginRenderPass *cmd = _MTLCommandAllocator->_beginRenderPassCmdPool.alloc();
@@ -139,7 +139,7 @@ void CCMTLCommandBuffer::setDepthBias(float constant, float clamp, float slope) 
     }
 }
 
-void CCMTLCommandBuffer::setBlendConstants(const GFXColor &constants) {
+void CCMTLCommandBuffer::setBlendConstants(const Color &constants) {
     if (math::IsNotEqualF(constants.r, _currentBlendConstants.r) ||
         math::IsNotEqualF(constants.g, _currentBlendConstants.g) ||
         math::IsNotEqualF(constants.b, _currentBlendConstants.b) ||

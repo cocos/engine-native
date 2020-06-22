@@ -643,7 +643,7 @@ struct Viewport {
 };
 
 #pragma pack(push, 1)
-struct GFXColor {
+struct Color {
     float r = 0.0f;
     float g = 0.0f;
     float b = 0.0f;
@@ -740,7 +740,7 @@ struct SamplerInfo {
     Address addressW = Address::WRAP;
     uint maxAnisotropy = 16;
     ComparisonFunc cmpFunc = ComparisonFunc::NEVER;
-    GFXColor borderColor;
+    Color borderColor;
     uint minLOD = 0;
     uint maxLOD = 1000;
     float mipLODBias = 0.0f;
@@ -815,7 +815,7 @@ struct InputAssemblerInfo {
     Buffer *indirectBuffer = nullptr;
 };
 
-struct GFXColorAttachment {
+struct ColorAttachment {
     Format format = Format::UNKNOWN;
     LoadOp loadOp = LoadOp::CLEAR;
     StoreOp storeOp = StoreOp::STORE;
@@ -824,7 +824,7 @@ struct GFXColorAttachment {
     TextureLayout endLayout = TextureLayout::COLOR_ATTACHMENT_OPTIMAL;
 };
 
-typedef vector<GFXColorAttachment> GFXColorAttachmentList;
+typedef vector<ColorAttachment> ColorAttachmentList;
 
 struct GFXDepthStencilAttachment {
     Format format = Format::UNKNOWN;
@@ -856,7 +856,7 @@ struct GFXSubPass {
 typedef vector<GFXSubPass> GFXSubPassList;
 
 struct RenderPassInfo {
-    GFXColorAttachmentList colorAttachments;
+    ColorAttachmentList colorAttachments;
     GFXDepthStencilAttachment depthStencilAttachment;
     GFXSubPassList subPasses;
 };
@@ -970,7 +970,7 @@ typedef vector<GFXBlendTarget> GFXBlendTargetList;
 struct GFXBlendState {
     bool isA2C = false;
     bool isIndepend = false;
-    GFXColor blendColor;
+    Color blendColor;
     GFXBlendTargetList targets;
 
     GFXBlendState() {

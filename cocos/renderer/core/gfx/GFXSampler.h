@@ -25,7 +25,7 @@ public:
     CC_INLINE Address getAddressW() const { return _addressW; }
     CC_INLINE uint getMaxAnisotropy() const { return _maxAnisotropy; }
     CC_INLINE ComparisonFunc getCmpFunc() const { return _cmpFunc; }
-    CC_INLINE const GFXColor &getBorderColor() const { return _borderColor; }
+    CC_INLINE const Color &getBorderColor() const { return _borderColor; }
     CC_INLINE uint getMinLOD() const { return _minLOD; }
     CC_INLINE uint getMaxLOD() const { return _maxLOD; }
     CC_INLINE float getMipLODBias() const { return _mipLODBias; }
@@ -41,7 +41,7 @@ protected:
     Address _addressW = Address::WRAP;
     uint _maxAnisotropy = 0;
     ComparisonFunc _cmpFunc = ComparisonFunc::ALWAYS;
-    GFXColor _borderColor;
+    Color _borderColor;
     uint _minLOD = 0;
     uint _maxLOD = 0;
     float _mipLODBias = 0.0f;

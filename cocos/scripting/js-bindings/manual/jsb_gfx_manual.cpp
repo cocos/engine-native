@@ -55,7 +55,7 @@ bool js_Device_copyBuffersToTexture(se::State& s, cc::gfx::Device* cobj)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        cc::gfx::GFXDataArray arg0;
+        cc::gfx::DataArray arg0;
         cc::gfx::Texture* arg1 = nullptr;
         std::vector<cc::gfx::BufferTextureCopy> arg2;
         if (args[0].isObject())
@@ -109,7 +109,7 @@ bool js_Device_copyTexImagesToTexture(se::State& s, cc::gfx::Device* cobj)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        cc::gfx::GFXDataArray arg0;
+        cc::gfx::DataArray arg0;
         cc::gfx::Texture* arg1 = nullptr;
         std::vector<cc::gfx::BufferTextureCopy> arg2;
         if (args[0].isObject())

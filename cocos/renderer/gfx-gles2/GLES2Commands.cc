@@ -1234,7 +1234,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
 
                     gpuRenderPass = cmd->gpuFBO->gpuRenderPass;
                     for (uint j = 0; j < cmd->num_clear_colors; ++j) {
-                        const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
+                        const ColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
                         if (colorAttachment.format != Format::UNKNOWN) {
                             switch (colorAttachment.loadOp) {
                                 case LoadOp::LOAD: break; // GL default behaviour
@@ -1244,7 +1244,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                             glColorMask(true, true, true, true);
                                         }
 
-                                        const GFXColor &color = cmd->clear_colors[j];
+                                        const Color &color = cmd->clear_colors[j];
                                         glClearColor(color.r, color.g, color.b, color.a);
                                         gl_clears |= GL_COLOR_BUFFER_BIT;
                                     }
@@ -1343,7 +1343,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                 GLES2CmdBeginRenderPass *cmd = cmdBeginRenderPass;
                 uint num_attachments = 0;
                 for (uint j = 0; j < cmd->num_clear_colors; ++j) {
-                    const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
+                    const ColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
                     if (colorAttachment.format != Format::UNKNOWN) {
                         switch (colorAttachment.loadOp) {
                             case LoadOp::LOAD: break; // GL default behaviour

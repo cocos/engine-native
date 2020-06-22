@@ -143,7 +143,7 @@ MTLStoreAction toMTLStoreAction(StoreOp op) {
     }
 }
 
-MTLClearColor toMTLClearColor(const GFXColor &clearColor) {
+MTLClearColor toMTLClearColor(const Color &clearColor) {
     MTLClearColor mtlColor;
     mtlColor = MTLClearColorMake(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
     return MTLClearColorMake(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
@@ -480,7 +480,7 @@ MTLSamplerAddressMode toMTLSamplerAddressMode(Address mode) {
     }
 }
 
-MTLSamplerBorderColor toMTLSamplerBorderColor(const GFXColor &color) {
+MTLSamplerBorderColor toMTLSamplerBorderColor(const Color &color) {
     float diff = color.r - 0.5f;
     if (math::IsEqualF(color.a, 0.f))
         return MTLSamplerBorderColorTransparentBlack;

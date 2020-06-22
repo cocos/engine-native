@@ -61,7 +61,7 @@ void GLES3CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES3CmdBeginRenderPass *cmd = _gles3Allocator->beginRenderPassCmdPool.alloc();
@@ -142,7 +142,7 @@ void GLES3CommandBuffer::setDepthBias(float constant, float clamp, float slope) 
     }
 }
 
-void GLES3CommandBuffer::setBlendConstants(const GFXColor &constants) {
+void GLES3CommandBuffer::setBlendConstants(const Color &constants) {
     if (math::IsNotEqualF(_curBlendConstants.r, constants.r) ||
         math::IsNotEqualF(_curBlendConstants.g, constants.g) ||
         math::IsNotEqualF(_curBlendConstants.b, constants.b) ||

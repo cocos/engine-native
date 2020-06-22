@@ -23,7 +23,7 @@ public:
     virtual void destroy() override;
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) override;
     virtual void end() override;
-    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) override;
+    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) override;
     virtual void endRenderPass() override;
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
@@ -32,7 +32,7 @@ public:
     virtual void setScissor(const Rect &rect) override;
     virtual void setLineWidth(const float width) override;
     virtual void setDepthBias(float constant, float clamp, float slope) override;
-    virtual void setBlendConstants(const GFXColor &constants) override;
+    virtual void setBlendConstants(const Color &constants) override;
     virtual void setDepthBound(float min_bounds, float max_bounds) override;
     virtual void setStencilWriteMask(StencilFace face, uint mask) override;
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) override;
@@ -60,7 +60,7 @@ private:
     // Just don't want to include "Commands.h", because "Commands.h" includes Objective-C codes.
     CCMTLDepthBias *_currentDepthBias = nullptr;
     CCMTLDepthBounds *_currentDepthBounds = nullptr;
-    GFXColor _currentBlendConstants;
+    Color _currentBlendConstants;
     const static uint DYNAMIC_STATE_SIZE = 8;
     std::array<bool, DYNAMIC_STATE_SIZE> _dynamicStateDirty = {false, false, false, false, false, false, false, false};
 };

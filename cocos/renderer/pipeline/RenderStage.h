@@ -36,8 +36,8 @@ public:
 
     void createBuffer();
     void executeCommandBuffer(RenderView *view);
-    void setClearColor(/*color: IGFXColor*/);
-    void setClearColors(/*colors: IGFXColor[]*/);
+    void setClearColor(/*color: IColor*/);
+    void setClearColors(/*colors: IColor[]*/);
     void setClearDepth(float depth);
     void setClearStencil(float stencil);
     void setRenderArea(size_t width, size_t height);

@@ -52,7 +52,7 @@ public:
     Rect render_area;
     GFXClearFlags clear_flags = ClearFlagBit::NONE;
     uint num_clear_colors = 0;
-    GFXColor clear_colors[GFX_MAX_ATTACHMENTS];
+    Color clear_colors[GFX_MAX_ATTACHMENTS];
     float clear_depth = 1.0f;
     int clear_stencil = 0;
 
@@ -87,7 +87,7 @@ public:
     float lineWidth = 1.0f;
     bool depthBiasEnabled = false;
     GLES2DepthBias depthBias;
-    GFXColor blendConstants;
+    Color blendConstants;
     GLES2DepthBounds depthBounds;
     GLES2StencilWriteMask stencilWriteMask;
     GLES2StencilCompareMask stencilCompareMask;

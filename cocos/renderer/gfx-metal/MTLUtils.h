@@ -15,7 +15,7 @@ namespace mu {
 MTLResourceOptions toMTLResourseOption(GFXMemoryUsage usage);
 MTLLoadAction toMTLLoadAction(LoadOp op);
 MTLStoreAction toMTLStoreAction(StoreOp op);
-MTLClearColor toMTLClearColor(const GFXColor &clearColor);
+MTLClearColor toMTLClearColor(const Color &clearColor);
 MTLVertexFormat toMTLVertexFormat(Format, bool);
 MTLPixelFormat toMTLPixelFormat(Format);
 // Because some pixel format is not supported on metal, so need to convert to supported pixel format.
@@ -36,7 +36,7 @@ MTLTextureUsage toMTLTextureUsage(TextureUsage);
 MTLTextureType toMTLTextureType(TextureType type);
 NSUInteger toMTLSampleCount(SampleCount);
 MTLSamplerAddressMode toMTLSamplerAddressMode(Address);
-MTLSamplerBorderColor toMTLSamplerBorderColor(const GFXColor &);
+MTLSamplerBorderColor toMTLSamplerBorderColor(const Color &);
 MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(Filter);
 MTLSamplerMipFilter toMTLSamplerMipFilter(Filter);
 String compileGLSLShader2Msl(const String &src, ShaderType shaderType, int maxSamplerUnits, std::unordered_map<uint, uint> &samplerBindings);

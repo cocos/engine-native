@@ -28,7 +28,7 @@ private:
     Address _addressW = Address::WRAP;
     uint _maxAnisotropy = 16;
     ComparisonFunc _cmpFunc = ComparisonFunc::NEVER;
-    GFXColor _borderColor;
+    Color _borderColor;
     uint _minLOD = 0;
     uint _maxLOD = 1000;
     float _mipLODBias = 0.0f;

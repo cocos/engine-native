@@ -92,7 +92,7 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
     vector<VkAttachmentDescription> attachmentDescriptions(colorAttachmentCount + 1);
     gpuRenderPass->clearValues.resize(colorAttachmentCount + 1);
     for (size_t i = 0u; i < colorAttachmentCount; i++) {
-        const GFXColorAttachment &attachment = gpuRenderPass->colorAttachments[i];
+        const ColorAttachment &attachment = gpuRenderPass->colorAttachments[i];
         const VkImageLayout beginLayout = MapVkImageLayout(attachment.beginLayout);
         const VkImageLayout endLayout = MapVkImageLayout(attachment.endLayout);
         const VkAccessFlags beginAccessMask = MapVkAccessFlags(attachment.beginLayout);
@@ -850,7 +850,7 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
         blendTargets[i].alphaBlendOp = VK_BLEND_OPS[(uint)target.blendAlphaEq];
         blendTargets[i].colorWriteMask = MapVkColorComponentFlags(target.blendColorMask);
     }
-    GFXColor &blendColor = gpuPipelineState->bs.blendColor;
+    Color &blendColor = gpuPipelineState->bs.blendColor;
 
     VkPipelineColorBlendStateCreateInfo colorBlendState{VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO};
     //colorBlendState.logicOpEnable;

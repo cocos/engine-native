@@ -160,7 +160,7 @@ public:
 
 class GLES3GPURenderPass : public Object {
 public:
-    GFXColorAttachmentList colorAttachments;
+    ColorAttachmentList colorAttachments;
     GFXDepthStencilAttachment depthStencilAttachment;
 };
 

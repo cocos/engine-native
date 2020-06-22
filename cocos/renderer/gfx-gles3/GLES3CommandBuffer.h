@@ -21,7 +21,7 @@ public:
 
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) override;
     virtual void end() override;
-    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) override;
+    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) override;
     virtual void endRenderPass() override;
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
@@ -30,7 +30,7 @@ public:
     virtual void setScissor(const Rect &rect) override;
     virtual void setLineWidth(const float width) override;
     virtual void setDepthBias(float constant, float clamp, float slope) override;
-    virtual void setBlendConstants(const GFXColor &constants) override;
+    virtual void setBlendConstants(const Color &constants) override;
     virtual void setDepthBound(float min_bounds, float max_bounds) override;
     virtual void setStencilWriteMask(StencilFace face, uint mask) override;
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) override;
@@ -53,7 +53,7 @@ private:
     Rect _curScissor;
     float _curLineWidth = 1.0f;
     GLES3DepthBias _curDepthBias;
-    GFXColor _curBlendConstants;
+    Color _curBlendConstants;
     GLES3DepthBounds _curDepthBounds;
     GLES3StencilWriteMask _curStencilWriteMask;
     GLES3StencilCompareMask _curStencilCompareMask;

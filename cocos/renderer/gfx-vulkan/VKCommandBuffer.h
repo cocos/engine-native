@@ -19,7 +19,7 @@ public:
 
     void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr);
     void end();
-    void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil);
+    void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil);
     void endRenderPass();
     void bindPipelineState(PipelineState *pso);
     void bindBindingLayout(BindingLayout *layout);
@@ -28,7 +28,7 @@ public:
     void setScissor(const Rect &rect);
     void setLineWidth(const float width);
     void setDepthBias(float constant, float clamp, float slope);
-    void setBlendConstants(const GFXColor &constants);
+    void setBlendConstants(const Color &constants);
     void setDepthBound(float min_bounds, float max_bounds);
     void setStencilWriteMask(StencilFace face, uint mask);
     void setStencilCompareMask(StencilFace face, int reference, uint mask);
@@ -51,7 +51,7 @@ private:
     Rect _curScissor;
     float _curLineWidth = 1.0f;
     CCVKDepthBias _curDepthBias;
-    GFXColor _curBlendConstants;
+    Color _curBlendConstants;
     CCVKDepthBounds _curDepthBounds;
     CCVKStencilWriteMask _curStencilWriteMask;
     CCVKStencilCompareMask _curStencilCompareMask;

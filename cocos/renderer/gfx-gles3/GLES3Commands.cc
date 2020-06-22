@@ -1349,7 +1349,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
 
                     gpuRenderPass = cmd->gpuFBO->gpuRenderPass;
                     for (uint j = 0; j < cmd->num_clear_colors; ++j) {
-                        const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
+                        const ColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
                         if (colorAttachment.format != Format::UNKNOWN) {
                             switch (colorAttachment.loadOp) {
                                 case LoadOp::LOAD: break; // GL default behaviour
@@ -1367,7 +1367,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                                             f_colors[3] = cmd->clear_colors[j].a;
                                             glClearBufferfv(GL_COLOR, j, f_colors);
                                         } else {
-                                            const GFXColor &color = cmd->clear_colors[j];
+                                            const Color &color = cmd->clear_colors[j];
                                             glClearColor(color.r, color.g, color.b, color.a);
                                             gl_clears |= GL_COLOR_BUFFER_BIT;
                                         }
@@ -1467,7 +1467,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                 GLES3CmdBeginRenderPass *cmd = cmdBeginRenderPass;
                 uint num_attachments = 0;
                 for (uint j = 0; j < cmd->num_clear_colors; ++j) {
-                    const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
+                    const ColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
                     if (colorAttachment.format != Format::UNKNOWN) {
                         switch (colorAttachment.loadOp) {
                             case LoadOp::LOAD: break; // GL default behaviour

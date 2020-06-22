@@ -37,7 +37,7 @@ public:
 
 class CCVKGPURenderPass : public Object {
 public:
-    GFXColorAttachmentList colorAttachments;
+    ColorAttachmentList colorAttachments;
     GFXDepthStencilAttachment depthStencilAttachment;
     GFXSubPassList subPasses;
     VkRenderPass vkRenderPass;
@@ -157,7 +157,7 @@ public:
     Address addressW = Address::WRAP;
     uint maxAnisotropy = 16;
     ComparisonFunc cmpFunc = ComparisonFunc::NEVER;
-    GFXColor borderColor;
+    Color borderColor;
     uint minLOD = 0;
     uint maxLOD = 1000;
     float mipLODBias = 0.0f;

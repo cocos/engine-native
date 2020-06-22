@@ -16,7 +16,7 @@ public:
     virtual void destroy() = 0;
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) = 0;
     virtual void end() = 0;
-    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) = 0;
+    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) = 0;
     virtual void endRenderPass() = 0;
     virtual void bindPipelineState(PipelineState *pso) = 0;
     virtual void bindBindingLayout(BindingLayout *layout) = 0;
@@ -25,7 +25,7 @@ public:
     virtual void setScissor(const Rect &rect) = 0;
     virtual void setLineWidth(const float width) = 0;
     virtual void setDepthBias(float constant, float clamp, float slope) = 0;
-    virtual void setBlendConstants(const GFXColor &constants) = 0;
+    virtual void setBlendConstants(const Color &constants) = 0;
     virtual void setDepthBound(float min_bounds, float max_bounds) = 0;
     virtual void setStencilWriteMask(StencilFace face, uint mask) = 0;
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) = 0;

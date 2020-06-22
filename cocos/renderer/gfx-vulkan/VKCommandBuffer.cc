@@ -81,7 +81,7 @@ void CCVKCommandBuffer::end() {
 }
 
 void CCVKCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &renderArea,
-                                        GFXClearFlags clearFlags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+                                        GFXClearFlags clearFlags, const std::vector<Color> &colors, float depth, int stencil) {
     _curGPUFBO = ((CCVKFramebuffer *)fbo)->gpuFBO();
     CCVKGPURenderPass *renderPass = _curGPUFBO->gpuRenderPass;
     VkFramebuffer framebuffer = _curGPUFBO->vkFramebuffer;
@@ -208,7 +208,7 @@ void CCVKCommandBuffer::setDepthBias(float constant, float clamp, float slope) {
     }
 }
 
-void CCVKCommandBuffer::setBlendConstants(const GFXColor &constants) {
+void CCVKCommandBuffer::setBlendConstants(const Color &constants) {
     if (math::IsNotEqualF(_curBlendConstants.r, constants.r) ||
         math::IsNotEqualF(_curBlendConstants.g, constants.g) ||
         math::IsNotEqualF(_curBlendConstants.b, constants.b) ||

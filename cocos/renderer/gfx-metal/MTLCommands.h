@@ -30,7 +30,7 @@ public:
     GFXClearFlags clearFlags = GFXClearFlags::NONE;
     CCMTLFramebuffer *frameBuffer = nullptr;
     uint numOfClearColor = 0;
-    vector<GFXColor> clearColors;
+    vector<Color> clearColors;
     float clearDepth = 1.f;
     int clearStencil = 0;
 
@@ -51,7 +51,7 @@ public:
     bool depthBiasEnabled = false;
     CCMTLDepthBias depthBias;
     CCMTLDepthBounds depthBounds;
-    GFXColor blendConstants;
+    Color blendConstants;
     const static uint DYNAMIC_STATE_SIZE = 8;
     std::array<bool, DYNAMIC_STATE_SIZE> dynamicStateDirty = {false, false, false, false, false, false, false, false};
 
