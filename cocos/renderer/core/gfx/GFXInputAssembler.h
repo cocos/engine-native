@@ -15,7 +15,7 @@ public:
     virtual bool initialize(const InputAssemblerInfo &info) = 0;
     virtual void destroy() = 0;
 
-    void extractDrawInfo(GFXDrawInfo &drawInfo) const;
+    void extractDrawInfo(DrawInfo &drawInfo) const;
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const GFXAttributeList &getAttributes() const { return _attributes; }

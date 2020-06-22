@@ -11,7 +11,7 @@ InputAssembler::InputAssembler(Device *device)
 InputAssembler::~InputAssembler() {
 }
 
-void InputAssembler::extractDrawInfo(GFXDrawInfo &drawInfo) const {
+void InputAssembler::extractDrawInfo(DrawInfo &drawInfo) const {
     drawInfo.vertexCount = _vertexCount;
     drawInfo.firstVertex = _firstVertex;
     drawInfo.indexCount = _indexCount;

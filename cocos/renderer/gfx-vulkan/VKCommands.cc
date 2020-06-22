@@ -268,7 +268,7 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
     if (gpuBuffer->mappedData) {
         if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
             size_t drawInfoCount = size / gpuBuffer->stride;
-            GFXDrawInfo *drawInfo = static_cast<GFXDrawInfo *>(buffer);
+            DrawInfo *drawInfo = static_cast<DrawInfo *>(buffer);
             if (drawInfoCount > 0) {
                 if (drawInfo->indexCount) {
                     vector<VkDrawIndexedIndirectCommand> cmds(drawInfoCount);

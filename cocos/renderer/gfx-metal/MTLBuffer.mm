@@ -178,7 +178,7 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
 
     if (_usage & BufferUsageBit::INDIRECT) {
         auto drawInfoCount = size / _stride;
-        auto *drawInfo = static_cast<GFXDrawInfo *>(buffer);
+        auto *drawInfo = static_cast<DrawInfo *>(buffer);
         if (drawInfoCount > 0) {
             if (drawInfo->indexCount) {
                 vector<MTLDrawIndexedPrimitivesIndirectArguments> arguments(drawInfoCount);

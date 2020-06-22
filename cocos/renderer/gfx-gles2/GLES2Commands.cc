@@ -2051,7 +2051,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                         }
                     } else {
                         for (size_t j = 0; j < gpuInputAssembler->gpuIndirectBuffer->indirects.size(); ++j) {
-                            const GFXDrawInfo &draw = gpuInputAssembler->gpuIndirectBuffer->indirects[j];
+                            const DrawInfo &draw = gpuInputAssembler->gpuIndirectBuffer->indirects[j];
                             if (gpuInputAssembler->gpuIndexBuffer && draw.indexCount >= 0) {
                                 uint8_t *offset = 0;
                                 offset += draw.firstIndex * gpuInputAssembler->gpuIndexBuffer->stride;

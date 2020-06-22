@@ -690,7 +690,7 @@ struct BufferInfo {
 };
 
 #pragma pack(push, 1)
-struct GFXDrawInfo {
+struct DrawInfo {
     uint vertexCount = 0;
     uint firstVertex = 0;
     uint indexCount = 0;
@@ -701,10 +701,10 @@ struct GFXDrawInfo {
 };
 #pragma pack(pop)
 
-typedef vector<GFXDrawInfo> GFXDrawInfoList;
+typedef vector<DrawInfo> DrawInfoList;
 
 struct IndirectBuffer {
-    GFXDrawInfoList drawInfos;
+    DrawInfoList drawInfos;
 };
 
 struct TextureInfo {

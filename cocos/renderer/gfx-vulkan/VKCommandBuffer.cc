@@ -258,7 +258,7 @@ void CCVKCommandBuffer::draw(InputAssembler *ia) {
     if ((_type == CommandBufferType::PRIMARY && _curGPUFBO) ||
         (_type == CommandBufferType::SECONDARY)) {
         CCVKGPUInputAssembler *gpuInputAssembler = ((CCVKInputAssembler *)ia)->gpuInputAssembler();
-        GFXDrawInfo drawInfo;
+        DrawInfo drawInfo;
 
         if (gpuInputAssembler->gpuIndirectBuffer) {
             if (static_cast<CCVKDevice *>(_device)->isMultiDrawIndirectSupported()) {

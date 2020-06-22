@@ -16,7 +16,7 @@ public:
     GLenum glTarget = 0;
     GLuint glBuffer = 0;
     uint8_t *buffer = nullptr;
-    GFXDrawInfoList indirects;
+    DrawInfoList indirects;
 };
 typedef vector<GLES2GPUBuffer *> GLES2GPUBufferList;
 

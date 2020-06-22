@@ -104,7 +104,7 @@ public:
 
 class GLES2CmdDraw : public GFXCmd {
 public:
-    GFXDrawInfo draw_info;
+    DrawInfo draw_info;
 
     GLES2CmdDraw() : GFXCmd(GFXCmdType::DRAW) {}
     virtual void clear() override {}

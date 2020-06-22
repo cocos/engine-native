@@ -62,7 +62,7 @@ public:
 
 class CCMTLCmdDraw : public GFXCmd {
 public:
-    GFXDrawInfo drawInfo;
+    DrawInfo drawInfo;
 
     CCMTLCmdDraw() : GFXCmd(GFXCmdType::DRAW) {}
     virtual void clear() override {}
