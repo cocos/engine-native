@@ -313,11 +313,11 @@ void CCVKCommandBuffer::draw(InputAssembler *ia) {
             if (_curGPUPipelineState) {
                 uint indexCount = hasIndexBuffer ? drawInfo.indexCount : drawInfo.vertexCount;
                 switch (_curGPUPipelineState->primitive) {
-                    case GFXPrimitiveMode::TRIANGLE_LIST:
+                    case PrimitiveMode::TRIANGLE_LIST:
                         _numTriangles += indexCount / 3 * instanceCount;
                         break;
-                    case GFXPrimitiveMode::TRIANGLE_STRIP:
-                    case GFXPrimitiveMode::TRIANGLE_FAN:
+                    case PrimitiveMode::TRIANGLE_STRIP:
+                    case PrimitiveMode::TRIANGLE_FAN:
                         _numTriangles += (indexCount - 2) * instanceCount;
                         break;
                 }

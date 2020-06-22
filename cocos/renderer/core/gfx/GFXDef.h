@@ -461,7 +461,7 @@ enum class PipelineBindPoint : uint8_t {
     RAY_TRACING,
 };
 
-enum class GFXPrimitiveMode : uint8_t {
+enum class PrimitiveMode : uint8_t {
     POINT_LIST,
     LINE_LIST,
     LINE_STRIP,
@@ -979,7 +979,7 @@ struct GFXBlendState {
 };
 
 struct PipelineStateInfo {
-    GFXPrimitiveMode primitive = GFXPrimitiveMode::TRIANGLE_LIST;
+    PrimitiveMode primitive = PrimitiveMode::TRIANGLE_LIST;
     Shader *shader = nullptr;
     GFXInputState inputState;
     GFXRasterizerState rasterizerState;

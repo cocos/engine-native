@@ -30,7 +30,7 @@ void insertVkDynamicStates(vector<VkDynamicState> &out, const vector<GFXDynamicS
                 out.push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
                 break;
             default: {
-                CCASSERT(false, "Unsupported GFXPrimitiveMode, convert to VkPrimitiveTopology failed.");
+                CCASSERT(false, "Unsupported PrimitiveMode, convert to VkPrimitiveTopology failed.");
                 break;
             }
         }

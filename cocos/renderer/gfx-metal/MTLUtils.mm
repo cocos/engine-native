@@ -405,16 +405,16 @@ MTLStencilOperation toMTLStencilOperation(StencilOp op) {
     }
 }
 
-MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode mode) {
+MTLPrimitiveType toMTLPrimitiveType(PrimitiveMode mode) {
     switch (mode) {
-        case GFXPrimitiveMode::POINT_LIST: return MTLPrimitiveTypePoint;
-        case GFXPrimitiveMode::LINE_LIST: return MTLPrimitiveTypeLine;
-        case GFXPrimitiveMode::LINE_STRIP: return MTLPrimitiveTypeLineStrip;
-        case GFXPrimitiveMode::TRIANGLE_LIST: return MTLPrimitiveTypeTriangle;
-        case GFXPrimitiveMode::TRIANGLE_STRIP: return MTLPrimitiveTypeTriangleStrip;
+        case PrimitiveMode::POINT_LIST: return MTLPrimitiveTypePoint;
+        case PrimitiveMode::LINE_LIST: return MTLPrimitiveTypeLine;
+        case PrimitiveMode::LINE_STRIP: return MTLPrimitiveTypeLineStrip;
+        case PrimitiveMode::TRIANGLE_LIST: return MTLPrimitiveTypeTriangle;
+        case PrimitiveMode::TRIANGLE_STRIP: return MTLPrimitiveTypeTriangleStrip;
 
-        case GFXPrimitiveMode::LINE_LOOP: {
-            CC_LOG_ERROR("Metal doesn't support GFXPrimitiveMode::LINE_LOOP. Translate to GFXPrimitiveMode::LINE_LIST.");
+        case PrimitiveMode::LINE_LOOP: {
+            CC_LOG_ERROR("Metal doesn't support PrimitiveMode::LINE_LOOP. Translate to PrimitiveMode::LINE_LIST.");
             return MTLPrimitiveTypeLine;
         }
         default: {

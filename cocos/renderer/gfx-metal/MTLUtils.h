@@ -31,7 +31,7 @@ MTLTriangleFillMode toMTLTriangleFillMode(GFXPolygonMode);
 MTLDepthClipMode toMTLDepthClipMode(bool isClip);
 MTLCompareFunction toMTLCompareFunction(ComparisonFunc);
 MTLStencilOperation toMTLStencilOperation(StencilOp);
-MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode);
+MTLPrimitiveType toMTLPrimitiveType(PrimitiveMode);
 MTLTextureUsage toMTLTextureUsage(TextureUsage);
 MTLTextureType toMTLTextureType(TextureType type);
 NSUInteger toMTLSampleCount(SampleCount);
