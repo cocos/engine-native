@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 GLES3InputAssembler::GLES3InputAssembler(Device *device)
-: GFXInputAssembler(device) {
+: InputAssembler(device) {
 }
 
 GLES3InputAssembler::~GLES3InputAssembler() {
 }
 
-bool GLES3InputAssembler::initialize(const GFXInputAssemblerInfo &info) {
+bool GLES3InputAssembler::initialize(const InputAssemblerInfo &info) {
 
     _attributes = info.attributes;
     _vertexBuffers = info.vertexBuffers;

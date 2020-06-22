@@ -27,7 +27,7 @@ public:
     virtual void endRenderPass() override;
     virtual void bindPipelineState(GFXPipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
-    virtual void bindInputAssembler(GFXInputAssembler *ia) override;
+    virtual void bindInputAssembler(InputAssembler *ia) override;
     virtual void setViewport(const GFXViewport &vp) override;
     virtual void setScissor(const GFXRect &rect) override;
     virtual void setLineWidth(const float width) override;
@@ -36,7 +36,7 @@ public:
     virtual void setDepthBound(float min_bounds, float max_bounds) override;
     virtual void setStencilWriteMask(GFXStencilFace face, uint mask) override;
     virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) override;
-    virtual void draw(GFXInputAssembler *ia) override;
+    virtual void draw(InputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) override;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) override;
     virtual void execute(const std::vector<CommandBuffer *> &cmd_buffs, uint32_t count) override;

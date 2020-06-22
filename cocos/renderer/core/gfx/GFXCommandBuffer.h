@@ -20,7 +20,7 @@ public:
     virtual void endRenderPass() = 0;
     virtual void bindPipelineState(GFXPipelineState *pso) = 0;
     virtual void bindBindingLayout(BindingLayout *layout) = 0;
-    virtual void bindInputAssembler(GFXInputAssembler *ia) = 0;
+    virtual void bindInputAssembler(InputAssembler *ia) = 0;
     virtual void setViewport(const GFXViewport &vp) = 0;
     virtual void setScissor(const GFXRect &rect) = 0;
     virtual void setLineWidth(const float width) = 0;
@@ -29,7 +29,7 @@ public:
     virtual void setDepthBound(float min_bounds, float max_bounds) = 0;
     virtual void setStencilWriteMask(GFXStencilFace face, uint mask) = 0;
     virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) = 0;
-    virtual void draw(GFXInputAssembler *ia) = 0;
+    virtual void draw(InputAssembler *ia) = 0;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) = 0;
     virtual void execute(const std::vector<CommandBuffer *> &cmd_buffs, uint32_t count) = 0;

@@ -102,7 +102,7 @@ void CCMTLCommandBuffer::bindBindingLayout(BindingLayout *layout) {
     _isStateInValid = true;
 }
 
-void CCMTLCommandBuffer::bindInputAssembler(GFXInputAssembler *ia) {
+void CCMTLCommandBuffer::bindInputAssembler(InputAssembler *ia) {
     _currentInputAssembler = static_cast<CCMTLInputAssembler *>(ia);
     _isStateInValid = true;
 }
@@ -165,7 +165,7 @@ void CCMTLCommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uin
     CC_LOG_ERROR("Don't support change stencil compare mask here.");
 }
 
-void CCMTLCommandBuffer::draw(GFXInputAssembler *ia) {
+void CCMTLCommandBuffer::draw(InputAssembler *ia) {
     if ((_type == CommandBufferType::PRIMARY && _isInRenderPass) ||
         _type == CommandBufferType::SECONDARY) {
         CCMTLCmdDraw *cmd = _MTLCommandAllocator->_drawCmdPool.alloc();

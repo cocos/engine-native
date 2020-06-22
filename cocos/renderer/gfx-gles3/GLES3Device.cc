@@ -243,8 +243,8 @@ GFXShader *GLES3Device::createShader(const GFXShaderInfo &info) {
     return nullptr;
 }
 
-GFXInputAssembler *GLES3Device::createInputAssembler(const GFXInputAssemblerInfo &info) {
-    GFXInputAssembler *inputAssembler = CC_NEW(GLES3InputAssembler(this));
+InputAssembler *GLES3Device::createInputAssembler(const InputAssemblerInfo &info) {
+    InputAssembler *inputAssembler = CC_NEW(GLES3InputAssembler(this));
     if (inputAssembler->initialize(info))
         return inputAssembler;
 

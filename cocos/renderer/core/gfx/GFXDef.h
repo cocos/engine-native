@@ -9,7 +9,7 @@ class Buffer;
 class Texture;
 class GFXSampler;
 class GFXShader;
-class GFXInputAssembler;
+class InputAssembler;
 class GFXRenderPass;
 class Framebuffer;
 class BindingLayout;
@@ -808,7 +808,7 @@ struct GFXShaderInfo {
     GFXUniformSamplerList samplers;
 };
 
-struct GFXInputAssemblerInfo {
+struct InputAssemblerInfo {
     GFXAttributeList attributes;
     BufferList vertexBuffers;
     Buffer *indexBuffer = nullptr;

@@ -247,8 +247,8 @@ GFXShader *GLES2Device::createShader(const GFXShaderInfo &info) {
     return nullptr;
 }
 
-GFXInputAssembler *GLES2Device::createInputAssembler(const GFXInputAssemblerInfo &info) {
-    GFXInputAssembler *inputAssembler = CC_NEW(GLES2InputAssembler(this));
+InputAssembler *GLES2Device::createInputAssembler(const InputAssemblerInfo &info) {
+    InputAssembler *inputAssembler = CC_NEW(GLES2InputAssembler(this));
     if (inputAssembler->initialize(info))
         return inputAssembler;
 

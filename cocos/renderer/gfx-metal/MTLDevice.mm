@@ -221,7 +221,7 @@ GFXShader *CCMTLDevice::createShader(const GFXShaderInfo &info) {
     return shader;
 }
 
-GFXInputAssembler *CCMTLDevice::createInputAssembler(const GFXInputAssemblerInfo &info) {
+InputAssembler *CCMTLDevice::createInputAssembler(const InputAssemblerInfo &info) {
     auto ia = CC_NEW(CCMTLInputAssembler(this));
     if (ia && ia->initialize(info))
         return ia;

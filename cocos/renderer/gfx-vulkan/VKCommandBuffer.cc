@@ -147,7 +147,7 @@ void CCVKCommandBuffer::bindBindingLayout(BindingLayout *layout) {
     }
 }
 
-void CCVKCommandBuffer::bindInputAssembler(GFXInputAssembler *ia) {
+void CCVKCommandBuffer::bindInputAssembler(InputAssembler *ia) {
     CCVKGPUInputAssembler *gpuInputAssembler = ((CCVKInputAssembler *)ia)->gpuInputAssembler();
 
     if (_curGPUInputAssember != gpuInputAssembler) {
@@ -254,7 +254,7 @@ void CCVKCommandBuffer::setStencilCompareMask(GFXStencilFace face, int reference
     }
 }
 
-void CCVKCommandBuffer::draw(GFXInputAssembler *ia) {
+void CCVKCommandBuffer::draw(InputAssembler *ia) {
     if ((_type == CommandBufferType::PRIMARY && _curGPUFBO) ||
         (_type == CommandBufferType::SECONDARY)) {
         CCVKGPUInputAssembler *gpuInputAssembler = ((CCVKInputAssembler *)ia)->gpuInputAssembler();

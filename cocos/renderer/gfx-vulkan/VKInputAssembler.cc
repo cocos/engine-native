@@ -8,13 +8,13 @@ namespace cc {
 namespace gfx {
 
 CCVKInputAssembler::CCVKInputAssembler(Device *device)
-: GFXInputAssembler(device) {
+: InputAssembler(device) {
 }
 
 CCVKInputAssembler::~CCVKInputAssembler() {
 }
 
-bool CCVKInputAssembler::initialize(const GFXInputAssemblerInfo &info) {
+bool CCVKInputAssembler::initialize(const InputAssemblerInfo &info) {
     _attributes = info.attributes;
     _vertexBuffers = info.vertexBuffers;
     _indexBuffer = info.indexBuffer;

@@ -8,10 +8,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLInputAssembler::CCMTLInputAssembler(Device *device) : GFXInputAssembler(device) {}
+CCMTLInputAssembler::CCMTLInputAssembler(Device *device) : InputAssembler(device) {}
 CCMTLInputAssembler::~CCMTLInputAssembler() { destroy(); }
 
-bool CCMTLInputAssembler::initialize(const GFXInputAssemblerInfo &info) {
+bool CCMTLInputAssembler::initialize(const InputAssemblerInfo &info) {
     _attributes = info.attributes;
     _vertexBuffers = info.vertexBuffers;
     _indexBuffer = info.indexBuffer;

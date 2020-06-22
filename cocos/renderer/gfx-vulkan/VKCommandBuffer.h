@@ -23,7 +23,7 @@ public:
     void endRenderPass();
     void bindPipelineState(GFXPipelineState *pso);
     void bindBindingLayout(BindingLayout *layout);
-    void bindInputAssembler(GFXInputAssembler *ia);
+    void bindInputAssembler(InputAssembler *ia);
     void setViewport(const GFXViewport &vp);
     void setScissor(const GFXRect &rect);
     void setLineWidth(const float width);
@@ -32,7 +32,7 @@ public:
     void setDepthBound(float min_bounds, float max_bounds);
     void setStencilWriteMask(GFXStencilFace face, uint mask);
     void setStencilCompareMask(GFXStencilFace face, int reference, uint mask);
-    void draw(GFXInputAssembler *ia);
+    void draw(InputAssembler *ia);
     void updateBuffer(Buffer *buff, void *data, uint size, uint offset);
     void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions);
     void execute(const std::vector<CommandBuffer *> &cmd_buffs, uint count);

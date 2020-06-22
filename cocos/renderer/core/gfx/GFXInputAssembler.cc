@@ -4,14 +4,14 @@
 namespace cc {
 namespace gfx {
 
-GFXInputAssembler::GFXInputAssembler(Device *device)
+InputAssembler::InputAssembler(Device *device)
 : GFXObject(GFXObjectType::INPUT_ASSEMBLER), _device(device) {
 }
 
-GFXInputAssembler::~GFXInputAssembler() {
+InputAssembler::~InputAssembler() {
 }
 
-void GFXInputAssembler::extractDrawInfo(GFXDrawInfo &drawInfo) const {
+void InputAssembler::extractDrawInfo(GFXDrawInfo &drawInfo) const {
     drawInfo.vertexCount = _vertexCount;
     drawInfo.firstVertex = _firstVertex;
     drawInfo.indexCount = _indexCount;
@@ -21,7 +21,7 @@ void GFXInputAssembler::extractDrawInfo(GFXDrawInfo &drawInfo) const {
     drawInfo.firstInstance = _firstInstance;
 }
 
-uint GFXInputAssembler::computeAttributesHash() const {
+uint InputAssembler::computeAttributesHash() const {
     // https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
     // 6: GFXAttribute has 6 elements.
     std::size_t seed = _attributes.size() * 6;

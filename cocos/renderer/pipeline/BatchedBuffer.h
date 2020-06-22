@@ -14,7 +14,7 @@ struct CC_DLL BatchedItem {
     gfx::Buffer *vbIdx = nullptr;
     float *vbIdxData = nullptr;
     uint mergCount = 0;
-    gfx::GFXInputAssembler *ia = nullptr;
+    gfx::InputAssembler *ia = nullptr;
     gfx::Buffer *ubo = nullptr;
     cc::PSOCreateInfo *psoCreatedInfo = nullptr;
 };

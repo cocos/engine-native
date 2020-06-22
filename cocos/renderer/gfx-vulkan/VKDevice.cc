@@ -608,8 +608,8 @@ GFXShader *CCVKDevice::createShader(const GFXShaderInfo &info) {
     return nullptr;
 }
 
-GFXInputAssembler *CCVKDevice::createInputAssembler(const GFXInputAssemblerInfo &info) {
-    GFXInputAssembler *inputAssembler = CC_NEW(CCVKInputAssembler(this));
+InputAssembler *CCVKDevice::createInputAssembler(const InputAssemblerInfo &info) {
+    InputAssembler *inputAssembler = CC_NEW(CCVKInputAssembler(this));
     if (inputAssembler->initialize(info))
         return inputAssembler;
 

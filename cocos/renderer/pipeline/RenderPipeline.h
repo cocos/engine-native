@@ -11,7 +11,7 @@ class Camera;
 
 namespace gfx {
 class Device;
-class GFXInputAssembler;
+class InputAssembler;
 class Texture;
 class Buffer;
 class GFXRenderPass;
@@ -67,7 +67,7 @@ public:
     CC_INLINE float getFpScaleInv() const { return _fpScaleInv; }
     CC_INLINE const RenderObjectList &getRenderObjects() const { return _renderObjects; }
     CC_INLINE float getShadingScale() const { return _shadingScale; }
-    CC_INLINE gfx::GFXInputAssembler *getQuadIA() const { return _quadIA; }
+    CC_INLINE gfx::InputAssembler *getQuadIA() const { return _quadIA; }
     
     CC_INLINE const String &getName() const { return _name; }
     CC_INLINE bool isHDRSupported() const { return _isHDRSupported; }
@@ -101,7 +101,7 @@ protected:
     RenderFlowList _flows;
     RenderFlowList _activeFlows;
     gfx::Device *_device = nullptr;
-    gfx::GFXInputAssembler *_quadIA = nullptr;
+    gfx::InputAssembler *_quadIA = nullptr;
     gfx::Texture *_defaultTexture = nullptr;
     float _shadingScale = 1.f;
     float _lightMeterScale = 1000.f;

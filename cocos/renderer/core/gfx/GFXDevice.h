@@ -26,7 +26,7 @@ public:
     virtual Texture *createTexture(const TextureViewInfo &info) = 0;
     virtual GFXSampler *createSampler(const GFXSamplerInfo &info) = 0;
     virtual GFXShader *createShader(const GFXShaderInfo &info) = 0;
-    virtual GFXInputAssembler *createInputAssembler(const GFXInputAssemblerInfo &info) = 0;
+    virtual InputAssembler *createInputAssembler(const InputAssemblerInfo &info) = 0;
     virtual GFXRenderPass *createRenderPass(const GFXRenderPassInfo &info) = 0;
     virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) = 0;
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) = 0;

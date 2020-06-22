@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXInputAssembler : public GFXObject {
+class CC_DLL InputAssembler : public GFXObject {
 public:
-    GFXInputAssembler(Device *device);
-    virtual ~GFXInputAssembler();
+    InputAssembler(Device *device);
+    virtual ~InputAssembler();
 
 public:
-    virtual bool initialize(const GFXInputAssemblerInfo &info) = 0;
+    virtual bool initialize(const InputAssemblerInfo &info) = 0;
     virtual void destroy() = 0;
 
     void extractDrawInfo(GFXDrawInfo &drawInfo) const;

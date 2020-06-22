@@ -93,7 +93,7 @@ void GLES3CommandBuffer::bindBindingLayout(BindingLayout *layout) {
     _isStateInvalid = true;
 }
 
-void GLES3CommandBuffer::bindInputAssembler(GFXInputAssembler *ia) {
+void GLES3CommandBuffer::bindInputAssembler(InputAssembler *ia) {
     _curGPUInputAssember = ((GLES3InputAssembler *)ia)->gpuInputAssembler();
     _isStateInvalid = true;
 }
@@ -188,7 +188,7 @@ void GLES3CommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uin
     }
 }
 
-void GLES3CommandBuffer::draw(GFXInputAssembler *ia) {
+void GLES3CommandBuffer::draw(InputAssembler *ia) {
     if ((_type == CommandBufferType::PRIMARY && _isInRenderPass) ||
         (_type == CommandBufferType::SECONDARY)) {
 

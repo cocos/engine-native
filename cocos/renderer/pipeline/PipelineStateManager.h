@@ -7,7 +7,7 @@ struct PSOCreateInfo;
 
 namespace gfx {
 class Device;
-class GFXInputAssembler;
+class InputAssembler;
 class GFXPipelineState;
 class GFXRenderPass;
 };
@@ -19,7 +19,7 @@ public:
     static gfx::GFXPipelineState *getOrCreatePipelineStage(gfx::Device *device,
                                                            const PSOCreateInfo &PSOInfo,
                                                            gfx::GFXRenderPass *renderPass,
-                                                           gfx::GFXInputAssembler *inputAssembler);
+                                                           gfx::InputAssembler *inputAssembler);
     
 private:
     static map<uint, gfx::GFXPipelineState *> _PSOHashMap;
