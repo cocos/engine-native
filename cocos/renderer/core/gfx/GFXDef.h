@@ -401,7 +401,7 @@ enum class BlendFactor : uint8_t {
     ONE_MINUS_CONSTANT_ALPHA,
 };
 
-enum class GFXBlendOp : uint8_t {
+enum class BlendOp : uint8_t {
     ADD,
     SUB,
     REV_SUB,
@@ -958,10 +958,10 @@ struct GFXBlendTarget {
     bool blend = false;
     BlendFactor blendSrc = BlendFactor::ONE;
     BlendFactor blendDst = BlendFactor::ZERO;
-    GFXBlendOp blendEq = GFXBlendOp::ADD;
+    BlendOp blendEq = BlendOp::ADD;
     BlendFactor blendSrcAlpha = BlendFactor::ONE;
     BlendFactor blendDstAlpha = BlendFactor::ZERO;
-    GFXBlendOp blendAlphaEq = GFXBlendOp::ADD;
+    BlendOp blendAlphaEq = BlendOp::ADD;
     GFXColorMask blendColorMask = GFXColorMask::ALL;
 };
 

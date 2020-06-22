@@ -314,13 +314,13 @@ MTLBlendFactor toMTLBlendFactor(BlendFactor factor) {
     }
 }
 
-MTLBlendOperation toMTLBlendOperation(GFXBlendOp op) {
+MTLBlendOperation toMTLBlendOperation(BlendOp op) {
     switch (op) {
-        case GFXBlendOp::ADD: return MTLBlendOperationAdd;
-        case GFXBlendOp::SUB: return MTLBlendOperationSubtract;
-        case GFXBlendOp::REV_SUB: return MTLBlendOperationReverseSubtract;
-        case GFXBlendOp::MIN: return MTLBlendOperationMin;
-        case GFXBlendOp::MAX: return MTLBlendOperationMax;
+        case BlendOp::ADD: return MTLBlendOperationAdd;
+        case BlendOp::SUB: return MTLBlendOperationSubtract;
+        case BlendOp::REV_SUB: return MTLBlendOperationReverseSubtract;
+        case BlendOp::MIN: return MTLBlendOperationMin;
+        case BlendOp::MAX: return MTLBlendOperationMax;
     }
 }
 
