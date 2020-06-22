@@ -6,13 +6,13 @@ namespace cc {
 namespace gfx {
 
 GLES2PipelineLayout::GLES2PipelineLayout(Device *device)
-: GFXPipelineLayout(device) {
+: PipelineLayout(device) {
 }
 
 GLES2PipelineLayout::~GLES2PipelineLayout() {
 }
 
-bool GLES2PipelineLayout::initialize(const GFXPipelineLayoutInfo &info) {
+bool GLES2PipelineLayout::initialize(const PipelineLayoutInfo &info) {
 
     _layouts = info.layouts;
     _pushConstantsRanges = info.pushConstantsRanges;

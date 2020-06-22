@@ -653,8 +653,8 @@ GFXPipelineState *CCVKDevice::createPipelineState(const GFXPipelineStateInfo &in
     return nullptr;
 }
 
-GFXPipelineLayout *CCVKDevice::createPipelineLayout(const GFXPipelineLayoutInfo &info) {
-    GFXPipelineLayout *layout = CC_NEW(CCVKPipelineLayout(this));
+PipelineLayout *CCVKDevice::createPipelineLayout(const PipelineLayoutInfo &info) {
+    PipelineLayout *layout = CC_NEW(CCVKPipelineLayout(this));
     if (layout->initialize(info))
         return layout;
 

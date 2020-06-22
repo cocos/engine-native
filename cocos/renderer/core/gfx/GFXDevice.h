@@ -31,7 +31,7 @@ public:
     virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) = 0;
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) = 0;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) = 0;
-    virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) = 0;
+    virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) = 0;
     virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) = 0;
 
     CC_INLINE GFXAPI getGfxAPI() const { return _gfxAPI; }

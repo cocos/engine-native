@@ -288,8 +288,8 @@ GFXPipelineState *GLES3Device::createPipelineState(const GFXPipelineStateInfo &i
     return nullptr;
 }
 
-GFXPipelineLayout *GLES3Device::createPipelineLayout(const GFXPipelineLayoutInfo &info) {
-    GFXPipelineLayout *layout = CC_NEW(GLES3PipelineLayout(this));
+PipelineLayout *GLES3Device::createPipelineLayout(const PipelineLayoutInfo &info) {
+    PipelineLayout *layout = CC_NEW(GLES3PipelineLayout(this));
     if (layout->initialize(info))
         return layout;
 

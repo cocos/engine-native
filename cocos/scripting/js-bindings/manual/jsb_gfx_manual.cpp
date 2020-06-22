@@ -657,10 +657,10 @@ bool js_register_gfx_GFXSubPass(se::Object* obj)
     return true;
 }
 
-static bool js_gfx_GFXPipelineLayout_get_layouts(se::State& s)
+static bool js_gfx_PipelineLayout_get_layouts(se::State& s)
 {
-    cc::gfx::GFXPipelineLayout* cobj = (cc::gfx::GFXPipelineLayout*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXPipelineLayout_layouts : Invalid Native Object");
+    cc::gfx::PipelineLayout* cobj = (cc::gfx::PipelineLayout*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_PipelineLayout_layouts : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     if (argc == 0) {
@@ -684,7 +684,7 @@ static bool js_gfx_GFXPipelineLayout_get_layouts(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_GFXPipelineLayout_get_layouts)
+SE_BIND_PROP_GET(js_gfx_PipelineLayout_get_layouts)
 
 static bool js_gfx_GFXBlendState_get_targets(se::State& s)
 {
@@ -774,10 +774,10 @@ static bool js_gfx_CommandBuffer_execute(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_CommandBuffer_execute)
 
-static bool js_gfx_GFXInputAssembler_extractDrawInfo(se::State& s)
+static bool js_gfx_InputAssembler_extractDrawInfo(se::State& s)
 {
-    cc::gfx::GFXInputAssembler* cobj = (cc::gfx::GFXInputAssembler*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXInputAssembler_extractDrawInfo : Invalid Native Object");
+    cc::gfx::InputAssembler* cobj = (cc::gfx::InputAssembler*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_InputAssembler_extractDrawInfo : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     if (argc == 1) {
@@ -811,19 +811,19 @@ static bool js_gfx_GFXInputAssembler_extractDrawInfo(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_gfx_GFXInputAssembler_extractDrawInfo)
+SE_BIND_FUNC(js_gfx_InputAssembler_extractDrawInfo)
 
 bool register_all_gfx_manual(se::Object* obj)
 {    
     __jsb_cc_gfx_Buffer_proto->defineFunction("update", _SE(js_gfx_GFXBuffer_update));
     
-    __jsb_cc_gfx_GFXPipelineLayout_proto->defineProperty("layouts", _SE(js_gfx_GFXPipelineLayout_get_layouts), nullptr);
+    __jsb_cc_gfx_PipelineLayout_proto->defineProperty("layouts", _SE(js_gfx_PipelineLayout_get_layouts), nullptr);
     
     __jsb_cc_gfx_GFXBlendState_proto->defineProperty("targets", _SE(js_gfx_GFXBlendState_get_targets), _SE(js_gfx_GFXBlendState_set_targets));
     
     __jsb_cc_gfx_CommandBuffer_proto->defineFunction("execute", _SE(js_gfx_CommandBuffer_execute));
 
-    __jsb_cc_gfx_GFXInputAssembler_proto->defineFunction("extractDrawInfo", _SE(js_gfx_GFXInputAssembler_extractDrawInfo));
+    __jsb_cc_gfx_InputAssembler_proto->defineFunction("extractDrawInfo", _SE(js_gfx_InputAssembler_extractDrawInfo));
     
     js_register_gfx_GFXSubPass(obj);
 

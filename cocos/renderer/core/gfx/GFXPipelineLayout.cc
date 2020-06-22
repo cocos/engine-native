@@ -4,11 +4,11 @@
 namespace cc {
 namespace gfx {
 
-GFXPipelineLayout::GFXPipelineLayout(Device *device)
+PipelineLayout::PipelineLayout(Device *device)
 : GFXObject(GFXObjectType::PIPELINE_LAYOUT), _device(device) {
 }
 
-GFXPipelineLayout::~GFXPipelineLayout() {
+PipelineLayout::~PipelineLayout() {
 }
 
 } // namespace gfx

@@ -4,10 +4,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLPipelineLayout::CCMTLPipelineLayout(Device *device) : GFXPipelineLayout(device) {}
+CCMTLPipelineLayout::CCMTLPipelineLayout(Device *device) : PipelineLayout(device) {}
 CCMTLPipelineLayout::~CCMTLPipelineLayout() { destroy(); }
 
-bool CCMTLPipelineLayout::initialize(const GFXPipelineLayoutInfo &info) {
+bool CCMTLPipelineLayout::initialize(const PipelineLayoutInfo &info) {
     _layouts = info.layouts;
     _pushConstantsRanges = info.pushConstantsRanges;
     _status = GFXStatus::SUCCESS;

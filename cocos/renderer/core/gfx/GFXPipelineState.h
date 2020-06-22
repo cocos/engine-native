@@ -23,7 +23,7 @@ public:
     CC_INLINE const GFXDepthStencilState &getDepthStencilState() const { return _depthStencilState; }
     CC_INLINE const GFXBlendState &getBlendState() const { return _blendState; }
     CC_INLINE const GFXDynamicStateList &getDynamicStates() const { return _dynamicStates; }
-    CC_INLINE const GFXPipelineLayout *getPipelineLayout() const { return _layout; }
+    CC_INLINE const PipelineLayout *getPipelineLayout() const { return _layout; }
     CC_INLINE const GFXRenderPass *getRenderPass() const { return _renderPass; }
 
 protected:
@@ -35,7 +35,7 @@ protected:
     GFXDepthStencilState _depthStencilState;
     GFXBlendState _blendState;
     GFXDynamicStateList _dynamicStates;
-    GFXPipelineLayout *_layout = nullptr;
+    PipelineLayout *_layout = nullptr;
     GFXRenderPass *_renderPass = nullptr;
 };
 

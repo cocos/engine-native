@@ -8,13 +8,13 @@ namespace cc {
 namespace gfx {
 
 CCVKPipelineLayout::CCVKPipelineLayout(Device *device)
-: GFXPipelineLayout(device) {
+: PipelineLayout(device) {
 }
 
 CCVKPipelineLayout::~CCVKPipelineLayout() {
 }
 
-bool CCVKPipelineLayout::initialize(const GFXPipelineLayoutInfo &info) {
+bool CCVKPipelineLayout::initialize(const PipelineLayoutInfo &info) {
 
     _layouts = info.layouts;
     _pushConstantsRanges = info.pushConstantsRanges;

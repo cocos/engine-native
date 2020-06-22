@@ -292,8 +292,8 @@ GFXPipelineState *GLES2Device::createPipelineState(const GFXPipelineStateInfo &i
     return nullptr;
 }
 
-GFXPipelineLayout *GLES2Device::createPipelineLayout(const GFXPipelineLayoutInfo &info) {
-    GFXPipelineLayout *layout = CC_NEW(GLES2PipelineLayout(this));
+PipelineLayout *GLES2Device::createPipelineLayout(const PipelineLayoutInfo &info) {
+    PipelineLayout *layout = CC_NEW(GLES2PipelineLayout(this));
     if (layout->initialize(info))
         return layout;
 

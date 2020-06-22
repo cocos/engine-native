@@ -266,7 +266,7 @@ GFXPipelineState *CCMTLDevice::createPipelineState(const GFXPipelineStateInfo &i
     return nullptr;
 }
 
-GFXPipelineLayout *CCMTLDevice::createPipelineLayout(const GFXPipelineLayoutInfo &info) {
+PipelineLayout *CCMTLDevice::createPipelineLayout(const PipelineLayoutInfo &info) {
     auto pl = CC_NEW(CCMTLPipelineLayout(this));
     if (pl && pl->initialize(info))
         return pl;

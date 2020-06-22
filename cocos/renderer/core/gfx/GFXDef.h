@@ -13,7 +13,7 @@ class InputAssembler;
 class GFXRenderPass;
 class Framebuffer;
 class BindingLayout;
-class GFXPipelineLayout;
+class PipelineLayout;
 class GFXPipelineState;
 class CommandAllocator;
 class CommandBuffer;
@@ -908,7 +908,7 @@ struct GFXPushConstantRange {
 typedef vector<GFXPushConstantRange> GFXPushConstantRangeList;
 typedef vector<BindingLayout *> BindingLayoutList;
 
-struct GFXPipelineLayoutInfo {
+struct PipelineLayoutInfo {
     GFXPushConstantRangeList pushConstantsRanges;
     BindingLayoutList layouts;
 };
@@ -986,7 +986,7 @@ struct GFXPipelineStateInfo {
     GFXDepthStencilState depthStencilState;
     GFXBlendState blendState;
     GFXDynamicStateList dynamicStates;
-    GFXPipelineLayout *layout = nullptr;
+    PipelineLayout *layout = nullptr;
     GFXRenderPass *renderPass = nullptr;
 };
 

@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXPipelineLayout : public GFXObject {
+class CC_DLL PipelineLayout : public GFXObject {
 public:
-    GFXPipelineLayout(Device *device);
-    virtual ~GFXPipelineLayout();
+    PipelineLayout(Device *device);
+    virtual ~PipelineLayout();
 
 public:
-    virtual bool initialize(const GFXPipelineLayoutInfo &info) = 0;
+    virtual bool initialize(const PipelineLayoutInfo &info) = 0;
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
