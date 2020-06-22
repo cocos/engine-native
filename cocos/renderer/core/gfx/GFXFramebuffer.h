@@ -16,14 +16,14 @@ public:
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
-    CC_INLINE GFXRenderPass *getRenderPass() const { return _renderPass; }
+    CC_INLINE RenderPass *getRenderPass() const { return _renderPass; }
     CC_INLINE const TextureList &getColorTextures() const { return _colorTextures; }
     CC_INLINE Texture *getDepthStencilTexture() const { return _depthStencilTexture; }
     CC_INLINE bool isOffscreen() const { return _isOffscreen; }
 
 protected:
     Device *_device = nullptr;
-    GFXRenderPass *_renderPass = nullptr;
+    RenderPass *_renderPass = nullptr;
     TextureList _colorTextures;
     Texture *_depthStencilTexture = nullptr;
     bool _isOffscreen = true;

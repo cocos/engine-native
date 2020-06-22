@@ -256,8 +256,8 @@ InputAssembler *GLES2Device::createInputAssembler(const InputAssemblerInfo &info
     return nullptr;
 }
 
-GFXRenderPass *GLES2Device::createRenderPass(const GFXRenderPassInfo &info) {
-    GFXRenderPass *renderPass = CC_NEW(GLES2RenderPass(this));
+RenderPass *GLES2Device::createRenderPass(const RenderPassInfo &info) {
+    RenderPass *renderPass = CC_NEW(GLES2RenderPass(this));
     if (renderPass->initialize(info))
         return renderPass;
 

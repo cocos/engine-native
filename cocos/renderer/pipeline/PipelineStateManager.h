@@ -9,7 +9,7 @@ namespace gfx {
 class Device;
 class InputAssembler;
 class PipelineState;
-class GFXRenderPass;
+class RenderPass;
 };
 
 namespace pipeline {
@@ -18,7 +18,7 @@ class CC_DLL PipelineStateManager {
 public:
     static gfx::PipelineState *getOrCreatePipelineStage(gfx::Device *device,
                                                            const PSOCreateInfo &PSOInfo,
-                                                           gfx::GFXRenderPass *renderPass,
+                                                           gfx::RenderPass *renderPass,
                                                            gfx::InputAssembler *inputAssembler);
     
 private:

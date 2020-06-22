@@ -230,7 +230,7 @@ InputAssembler *CCMTLDevice::createInputAssembler(const InputAssemblerInfo &info
     return nullptr;
 }
 
-GFXRenderPass *CCMTLDevice::createRenderPass(const GFXRenderPassInfo &info) {
+RenderPass *CCMTLDevice::createRenderPass(const RenderPassInfo &info) {
     auto renderPass = CC_NEW(CCMTLRenderPass(this));
     if (renderPass && renderPass->initialize(info))
         return renderPass;

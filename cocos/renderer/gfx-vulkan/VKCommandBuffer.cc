@@ -50,7 +50,7 @@ void CCVKCommandBuffer::destroy() {
     _status = GFXStatus::UNREADY;
 }
 
-void CCVKCommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
+void CCVKCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     _curGPUPipelineState = nullptr;
     _curGPUBindingLayout = nullptr;
     _curGPUInputAssember = nullptr;

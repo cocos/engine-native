@@ -7,10 +7,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLRenderPass::CCMTLRenderPass(Device *device) : GFXRenderPass(device) {}
+CCMTLRenderPass::CCMTLRenderPass(Device *device) : RenderPass(device) {}
 CCMTLRenderPass::~CCMTLRenderPass() { destroy(); }
 
-bool CCMTLRenderPass::initialize(const GFXRenderPassInfo &info) {
+bool CCMTLRenderPass::initialize(const RenderPassInfo &info) {
     _colorAttachments = info.colorAttachments;
     _depthStencilAttachment = info.depthStencilAttachment;
 

@@ -617,8 +617,8 @@ InputAssembler *CCVKDevice::createInputAssembler(const InputAssemblerInfo &info)
     return nullptr;
 }
 
-GFXRenderPass *CCVKDevice::createRenderPass(const GFXRenderPassInfo &info) {
-    GFXRenderPass *renderPass = CC_NEW(CCVKRenderPass(this));
+RenderPass *CCVKDevice::createRenderPass(const RenderPassInfo &info) {
+    RenderPass *renderPass = CC_NEW(CCVKRenderPass(this));
     if (renderPass->initialize(info))
         return renderPass;
 

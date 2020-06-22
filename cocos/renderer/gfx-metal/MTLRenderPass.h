@@ -9,12 +9,12 @@ namespace gfx {
 
 class TextureView;
 
-class CCMTLRenderPass : public GFXRenderPass {
+class CCMTLRenderPass : public RenderPass {
 public:
     CCMTLRenderPass(Device *device);
     ~CCMTLRenderPass();
 
-    virtual bool initialize(const GFXRenderPassInfo &info) override;
+    virtual bool initialize(const RenderPassInfo &info) override;
     virtual void destroy() override;
 
     void setColorAttachment(size_t slot, id<MTLTexture> texture, int level);

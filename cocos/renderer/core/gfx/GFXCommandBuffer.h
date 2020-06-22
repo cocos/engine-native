@@ -14,7 +14,7 @@ public:
 public:
     virtual bool initialize(const CommandBufferInfo &info) = 0;
     virtual void destroy() = 0;
-    virtual void begin(GFXRenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) = 0;
+    virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) = 0;
     virtual void end() = 0;
     virtual void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) = 0;
     virtual void endRenderPass() = 0;

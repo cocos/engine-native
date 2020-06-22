@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXRenderPass : public GFXObject {
+class CC_DLL RenderPass : public GFXObject {
 public:
-    GFXRenderPass(Device *device);
-    virtual ~GFXRenderPass();
+    RenderPass(Device *device);
+    virtual ~RenderPass();
 
 public:
-    virtual bool initialize(const GFXRenderPassInfo &info) = 0;
+    virtual bool initialize(const RenderPassInfo &info) = 0;
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }

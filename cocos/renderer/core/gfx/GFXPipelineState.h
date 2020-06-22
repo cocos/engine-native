@@ -24,7 +24,7 @@ public:
     CC_INLINE const GFXBlendState &getBlendState() const { return _blendState; }
     CC_INLINE const GFXDynamicStateList &getDynamicStates() const { return _dynamicStates; }
     CC_INLINE const PipelineLayout *getPipelineLayout() const { return _layout; }
-    CC_INLINE const GFXRenderPass *getRenderPass() const { return _renderPass; }
+    CC_INLINE const RenderPass *getRenderPass() const { return _renderPass; }
 
 protected:
     Device *_device = nullptr;
@@ -36,7 +36,7 @@ protected:
     GFXBlendState _blendState;
     GFXDynamicStateList _dynamicStates;
     PipelineLayout *_layout = nullptr;
-    GFXRenderPass *_renderPass = nullptr;
+    RenderPass *_renderPass = nullptr;
 };
 
 } // namespace gfx

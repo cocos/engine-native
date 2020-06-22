@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 CCVKRenderPass::CCVKRenderPass(Device *device)
-: GFXRenderPass(device) {
+: RenderPass(device) {
 }
 
 CCVKRenderPass::~CCVKRenderPass() {
 }
 
-bool CCVKRenderPass::initialize(const GFXRenderPassInfo &info) {
+bool CCVKRenderPass::initialize(const RenderPassInfo &info) {
     _colorAttachments = info.colorAttachments;
     _depthStencilAttachment = info.depthStencilAttachment;
     _subPasses = info.subPasses;

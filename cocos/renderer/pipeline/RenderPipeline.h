@@ -14,7 +14,7 @@ class Device;
 class InputAssembler;
 class Texture;
 class Buffer;
-class GFXRenderPass;
+class RenderPass;
 } // namespace gfx
 
 namespace pipeline {
@@ -43,12 +43,12 @@ public:
     virtual void sceneCulling();
     virtual void updateUBOs(RenderView *view);
 
-    void addRenderPass(uint stage, gfx::GFXRenderPass *renderPass);
+    void addRenderPass(uint stage, gfx::RenderPass *renderPass);
     void clearRenderPasses();
     void destroyFlows();
     RenderFlow *getFlow(const String &name) const;
     gfx::Buffer *getFrameBuffer(const String &name) const;
-    gfx::GFXRenderPass *getRenderPass(uint stage) const;
+    gfx::RenderPass *getRenderPass(uint stage) const;
     gfx::Texture *getRenderTexture(const String &name) const;
     gfx::Texture *getTexture(const String &name) const;
     void removeRenderPass(uint stage);

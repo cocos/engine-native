@@ -13,7 +13,7 @@ struct CC_DLL RenderWindowInfo {
     uint top = 0;
     uint width = 0;
     uint height = 0;
-    gfx::GFXRenderPassInfo *renderPassInfo = nullptr;
+    gfx::RenderPassInfo *renderPassInfo = nullptr;
     bool isOffscreen = false;
 };
 
@@ -28,7 +28,7 @@ public:
     CC_INLINE uint getWidth() const { return _width; }
     CC_INLINE uint geiHeight() const { return _height; }
     CC_INLINE bool isOffscreen() const { return _isOffscreen; }
-    CC_INLINE gfx::GFXRenderPass *getRenderPass() const { return _renderPass; }
+    CC_INLINE gfx::RenderPass *getRenderPass() const { return _renderPass; }
     CC_INLINE const gfx::TextureList &getColorTextures() const { return _colorTexs; }
     CC_INLINE gfx::Texture *getDepthStencilTexture() const { return _depthStencilTex; }
     CC_INLINE gfx::Framebuffer *getFramebuffer() const { return _frameBuffer; }
@@ -42,7 +42,7 @@ private:
     gfx::TextureList _colorTexs;
     gfx::Texture *_depthStencilTex = nullptr;
     gfx::Framebuffer *_frameBuffer = nullptr;
-    gfx::GFXRenderPass *_renderPass = nullptr;
+    gfx::RenderPass *_renderPass = nullptr;
     Root *_root = nullptr;
     uint _width = 0;
     uint _height = 0;

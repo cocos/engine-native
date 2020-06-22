@@ -6,13 +6,13 @@ namespace cc {
 namespace gfx {
 
 GLES2RenderPass::GLES2RenderPass(Device *device)
-: GFXRenderPass(device) {
+: RenderPass(device) {
 }
 
 GLES2RenderPass::~GLES2RenderPass() {
 }
 
-bool GLES2RenderPass::initialize(const GFXRenderPassInfo &info) {
+bool GLES2RenderPass::initialize(const RenderPassInfo &info) {
 
     _colorAttachments = info.colorAttachments;
     _depthStencilAttachment = info.depthStencilAttachment;

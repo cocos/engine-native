@@ -10,7 +10,7 @@ class Texture;
 class GFXSampler;
 class GFXShader;
 class InputAssembler;
-class GFXRenderPass;
+class RenderPass;
 class Framebuffer;
 class BindingLayout;
 class PipelineLayout;
@@ -672,7 +672,7 @@ struct GFXWindowInfo {
     bool isFullscreen = false;
     GFXVsyncMode vsyncMode = GFXVsyncMode::OFF;
     uintptr_t windowHandle = 0;
-    GFXRenderPass *renderPass = nullptr;
+    RenderPass *renderPass = nullptr;
 };
 
 struct ContextInfo {
@@ -855,7 +855,7 @@ struct GFXSubPass {
 
 typedef vector<GFXSubPass> GFXSubPassList;
 
-struct GFXRenderPassInfo {
+struct RenderPassInfo {
     GFXColorAttachmentList colorAttachments;
     GFXDepthStencilAttachment depthStencilAttachment;
     GFXSubPassList subPasses;
@@ -864,7 +864,7 @@ struct GFXRenderPassInfo {
 typedef vector<Texture *> TextureList;
 
 struct FramebufferInfo {
-    GFXRenderPass *renderPass = nullptr;
+    RenderPass *renderPass = nullptr;
     TextureList colorTextures;
     vector<int> colorMipmapLevels;
     Texture *depthStencilTexture = nullptr;
@@ -987,7 +987,7 @@ struct PipelineStateInfo {
     GFXBlendState blendState;
     GFXDynamicStateList dynamicStates;
     PipelineLayout *layout = nullptr;
-    GFXRenderPass *renderPass = nullptr;
+    RenderPass *renderPass = nullptr;
 };
 
 struct CommandAllocatorInfo {

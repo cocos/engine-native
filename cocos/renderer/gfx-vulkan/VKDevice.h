@@ -34,7 +34,7 @@ public:
     virtual GFXSampler *createSampler(const GFXSamplerInfo &info) override;
     virtual GFXShader *createShader(const GFXShaderInfo &info) override;
     virtual InputAssembler *createInputAssembler(const InputAssemblerInfo &info) override;
-    virtual GFXRenderPass *createRenderPass(const GFXRenderPassInfo &info) override;
+    virtual RenderPass *createRenderPass(const RenderPassInfo &info) override;
     virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) override;
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;

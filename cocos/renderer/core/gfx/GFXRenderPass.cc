@@ -4,14 +4,14 @@
 namespace cc {
 namespace gfx {
 
-GFXRenderPass::GFXRenderPass(Device *device)
+RenderPass::RenderPass(Device *device)
 : GFXObject(GFXObjectType::RENDER_PASS), _device(device) {
 }
 
-GFXRenderPass::~GFXRenderPass() {
+RenderPass::~RenderPass() {
 }
 
-uint GFXRenderPass::computeHash() const {
+uint RenderPass::computeHash() const {
     // https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
     // 6: GFXColorAttament has 6 elements.
     // 8: GFXDepthStencilAttachment has 8 elements.

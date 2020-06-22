@@ -252,8 +252,8 @@ InputAssembler *GLES3Device::createInputAssembler(const InputAssemblerInfo &info
     return nullptr;
 }
 
-GFXRenderPass *GLES3Device::createRenderPass(const GFXRenderPassInfo &info) {
-    GFXRenderPass *renderPass = CC_NEW(GLES3RenderPass(this));
+RenderPass *GLES3Device::createRenderPass(const RenderPassInfo &info) {
+    RenderPass *renderPass = CC_NEW(GLES3RenderPass(this));
     if (renderPass->initialize(info))
         return renderPass;
 
