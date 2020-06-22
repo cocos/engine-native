@@ -509,7 +509,7 @@ enum class DynamicState : uint8_t {
 
 typedef vector<DynamicState> DynamicStateList;
 
-enum class GFXStencilFace : uint8_t {
+enum class StencilFace : uint8_t {
     FRONT,
     BACK,
     ALL,

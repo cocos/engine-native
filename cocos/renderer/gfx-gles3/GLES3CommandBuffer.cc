@@ -166,7 +166,7 @@ void GLES3CommandBuffer::setDepthBound(float min_bounds, float max_bounds) {
     }
 }
 
-void GLES3CommandBuffer::setStencilWriteMask(GFXStencilFace face, uint mask) {
+void GLES3CommandBuffer::setStencilWriteMask(StencilFace face, uint mask) {
     if ((_curStencilWriteMask.face != face) ||
         (_curStencilWriteMask.write_mask != mask)) {
 
@@ -176,7 +176,7 @@ void GLES3CommandBuffer::setStencilWriteMask(GFXStencilFace face, uint mask) {
     }
 }
 
-void GLES3CommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uint mask) {
+void GLES3CommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint mask) {
     if ((_curStencilCompareMask.face != face) ||
         (_curStencilCompareMask.refrence != ref) ||
         (_curStencilCompareMask.compare_mask != mask)) {

@@ -20,12 +20,12 @@ struct GLES3DepthBounds {
 };
 
 struct GLES3StencilWriteMask {
-    GFXStencilFace face = GFXStencilFace::FRONT;
+    StencilFace face = StencilFace::FRONT;
     uint write_mask = 0;
 };
 
 struct GLES3StencilCompareMask {
-    GFXStencilFace face = GFXStencilFace::FRONT;
+    StencilFace face = StencilFace::FRONT;
     int refrence = 0;
     uint compare_mask = 0;
 };

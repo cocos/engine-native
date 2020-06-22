@@ -32,8 +32,8 @@ public:
     virtual void setDepthBias(float constant, float clamp, float slope) override;
     virtual void setBlendConstants(const GFXColor &constants) override;
     virtual void setDepthBound(float min_bounds, float max_bounds) override;
-    virtual void setStencilWriteMask(GFXStencilFace face, uint mask) override;
-    virtual void setStencilCompareMask(GFXStencilFace face, int ref, uint mask) override;
+    virtual void setStencilWriteMask(StencilFace face, uint mask) override;
+    virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) override;
     virtual void draw(InputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset) override;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) override;

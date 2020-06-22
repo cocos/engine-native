@@ -1950,19 +1950,19 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                 break;
                             case DynamicState::STENCIL_WRITE_MASK:
                                 switch (cmd->stencilWriteMask.face) {
-                                    case GFXStencilFace::FRONT:
+                                    case StencilFace::FRONT:
                                         if (cache->dss.stencilWriteMaskFront != cmd->stencilWriteMask.write_mask) {
                                             glStencilMaskSeparate(GL_FRONT, cmd->stencilWriteMask.write_mask);
                                             cache->dss.stencilWriteMaskFront = cmd->stencilWriteMask.write_mask;
                                         }
                                         break;
-                                    case GFXStencilFace::BACK:
+                                    case StencilFace::BACK:
                                         if (cache->dss.stencilWriteMaskBack != cmd->stencilWriteMask.write_mask) {
                                             glStencilMaskSeparate(GL_BACK, cmd->stencilWriteMask.write_mask);
                                             cache->dss.stencilWriteMaskBack = cmd->stencilWriteMask.write_mask;
                                         }
                                         break;
-                                    case GFXStencilFace::ALL:
+                                    case StencilFace::ALL:
                                         if ((cache->dss.stencilWriteMaskFront != cmd->stencilWriteMask.write_mask) ||
                                             (cache->dss.stencilWriteMaskBack != cmd->stencilWriteMask.write_mask)) {
                                             glStencilMask(cmd->stencilWriteMask.write_mask);
@@ -1974,7 +1974,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                 break;
                             case DynamicState::STENCIL_COMPARE_MASK:
                                 switch (cmd->stencilCompareMask.face) {
-                                    case GFXStencilFace::FRONT:
+                                    case StencilFace::FRONT:
                                         if ((cache->dss.stencilRefFront != (uint)cmd->stencilCompareMask.refrence) ||
                                             (cache->dss.stencilReadMaskFront != cmd->stencilCompareMask.compare_mask)) {
                                             glStencilFuncSeparate(GL_FRONT,
@@ -1985,7 +1985,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                             cache->dss.stencilReadMaskFront = cmd->stencilCompareMask.compare_mask;
                                         }
                                         break;
-                                    case GFXStencilFace::BACK:
+                                    case StencilFace::BACK:
                                         if ((cache->dss.stencilRefBack != (uint)cmd->stencilCompareMask.refrence) ||
                                             (cache->dss.stencilReadMaskBack != cmd->stencilCompareMask.compare_mask)) {
                                             glStencilFuncSeparate(GL_BACK,
@@ -1996,7 +1996,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                             cache->dss.stencilReadMaskBack = cmd->stencilCompareMask.compare_mask;
                                         }
                                         break;
-                                    case GFXStencilFace::ALL:
+                                    case StencilFace::ALL:
                                         if ((cache->dss.stencilRefFront != (uint)cmd->stencilCompareMask.refrence) ||
                                             (cache->dss.stencilReadMaskFront != cmd->stencilCompareMask.compare_mask) ||
                                             (cache->dss.stencilRefBack != (uint)cmd->stencilCompareMask.refrence) ||

@@ -20,12 +20,12 @@ struct CCVKDepthBounds {
 };
 
 struct CCVKStencilWriteMask {
-    GFXStencilFace face = GFXStencilFace::FRONT;
+    StencilFace face = StencilFace::FRONT;
     uint32_t write_mask = 0;
 };
 
 struct CCVKStencilCompareMask {
-    GFXStencilFace face = GFXStencilFace::FRONT;
+    StencilFace face = StencilFace::FRONT;
     int reference = 0;
     uint32_t compareMask = 0;
 };

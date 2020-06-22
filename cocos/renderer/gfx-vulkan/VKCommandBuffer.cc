@@ -230,17 +230,17 @@ void CCVKCommandBuffer::setDepthBound(float minBounds, float maxBounds) {
     }
 }
 
-void CCVKCommandBuffer::setStencilWriteMask(GFXStencilFace face, uint mask) {
+void CCVKCommandBuffer::setStencilWriteMask(StencilFace face, uint mask) {
     if ((_curStencilWriteMask.face != face) ||
         (_curStencilWriteMask.write_mask != mask)) {
         _curStencilWriteMask.face = face;
         _curStencilWriteMask.write_mask = mask;
         vkCmdSetStencilWriteMask(_gpuCommandBuffer->vkCommandBuffer,
-                                 face == GFXStencilFace::FRONT ? VK_STENCIL_FACE_FRONT_BIT : VK_STENCIL_FACE_BACK_BIT, mask);
+                                 face == StencilFace::FRONT ? VK_STENCIL_FACE_FRONT_BIT : VK_STENCIL_FACE_BACK_BIT, mask);
     }
 }
 
-void CCVKCommandBuffer::setStencilCompareMask(GFXStencilFace face, int reference, uint mask) {
+void CCVKCommandBuffer::setStencilCompareMask(StencilFace face, int reference, uint mask) {
     if ((_curStencilCompareMask.face != face) ||
         (_curStencilCompareMask.reference != reference) ||
         (_curStencilCompareMask.compareMask != mask)) {
@@ -248,7 +248,7 @@ void CCVKCommandBuffer::setStencilCompareMask(GFXStencilFace face, int reference
         _curStencilCompareMask.reference = reference;
         _curStencilCompareMask.compareMask = mask;
 
-        VkStencilFaceFlagBits vkFace = (face == GFXStencilFace::FRONT ? VK_STENCIL_FACE_FRONT_BIT : VK_STENCIL_FACE_BACK_BIT);
+        VkStencilFaceFlagBits vkFace = (face == StencilFace::FRONT ? VK_STENCIL_FACE_FRONT_BIT : VK_STENCIL_FACE_BACK_BIT);
         vkCmdSetStencilReference(_gpuCommandBuffer->vkCommandBuffer, vkFace, reference);
         vkCmdSetStencilCompareMask(_gpuCommandBuffer->vkCommandBuffer, vkFace, mask);
     }

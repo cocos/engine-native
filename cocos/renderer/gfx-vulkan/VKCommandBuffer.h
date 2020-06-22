@@ -30,8 +30,8 @@ public:
     void setDepthBias(float constant, float clamp, float slope);
     void setBlendConstants(const GFXColor &constants);
     void setDepthBound(float min_bounds, float max_bounds);
-    void setStencilWriteMask(GFXStencilFace face, uint mask);
-    void setStencilCompareMask(GFXStencilFace face, int reference, uint mask);
+    void setStencilWriteMask(StencilFace face, uint mask);
+    void setStencilCompareMask(StencilFace face, int reference, uint mask);
     void draw(InputAssembler *ia);
     void updateBuffer(Buffer *buff, void *data, uint size, uint offset);
     void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions);

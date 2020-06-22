@@ -157,11 +157,11 @@ void CCMTLCommandBuffer::setDepthBound(float minBounds, float maxBounds) {
     CC_LOG_ERROR("Metal doesn't support setting depth bound.");
 }
 
-void CCMTLCommandBuffer::setStencilWriteMask(GFXStencilFace face, uint mask) {
+void CCMTLCommandBuffer::setStencilWriteMask(StencilFace face, uint mask) {
     CC_LOG_ERROR("Don't support change stencil write mask here.");
 }
 
-void CCMTLCommandBuffer::setStencilCompareMask(GFXStencilFace face, int ref, uint mask) {
+void CCMTLCommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint mask) {
     CC_LOG_ERROR("Don't support change stencil compare mask here.");
 }
 
