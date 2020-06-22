@@ -584,7 +584,7 @@ struct Rect {
     }
 };
 
-struct GFXExtent {
+struct Extent {
     uint width;
     uint height;
     uint depth;
@@ -601,14 +601,14 @@ struct TextureCopy {
     Offset srcOffset = {0, 0, 0};
     TextureSubres dstSubres;
     Offset dstOffset = {0, 0, 0};
-    GFXExtent extent = {0, 0, 1};
+    Extent extent = {0, 0, 1};
 };
 
 struct BufferTextureCopy {
     uint buffStride = 0;
     uint buffTexHeight = 0;
     Offset texOffset = {0, 0, 0};
-    GFXExtent texExtent = {0, 0, 1};
+    Extent texExtent = {0, 0, 1};
     TextureSubres texSubres;
 };
 typedef vector<BufferTextureCopy> BufferTextureCopyList;
