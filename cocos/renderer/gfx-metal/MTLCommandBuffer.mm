@@ -92,7 +92,7 @@ void CCMTLCommandBuffer::endRenderPass() {
     _commandPackage->commandTypes.push(GFXCmdType::END_RENDER_PASS);
 }
 
-void CCMTLCommandBuffer::bindPipelineState(GFXPipelineState *pso) {
+void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
     _isStateInValid = true;
     _currentPipelineState = static_cast<CCMTLPipelineState *>(pso);
 }

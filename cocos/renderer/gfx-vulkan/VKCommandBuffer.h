@@ -21,7 +21,7 @@ public:
     void end();
     void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil);
     void endRenderPass();
-    void bindPipelineState(GFXPipelineState *pso);
+    void bindPipelineState(PipelineState *pso);
     void bindBindingLayout(BindingLayout *layout);
     void bindInputAssembler(InputAssembler *ia);
     void setViewport(const GFXViewport &vp);

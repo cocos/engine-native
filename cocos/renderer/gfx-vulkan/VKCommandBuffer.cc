@@ -123,7 +123,7 @@ void CCVKCommandBuffer::endRenderPass() {
     _curGPUFBO = nullptr;
 }
 
-void CCVKCommandBuffer::bindPipelineState(GFXPipelineState *pso) {
+void CCVKCommandBuffer::bindPipelineState(PipelineState *pso) {
     CCVKGPUPipelineState *gpuPipelineState = ((CCVKPipelineState *)pso)->gpuPipelineState();
 
     if (_curGPUPipelineState != gpuPipelineState) {

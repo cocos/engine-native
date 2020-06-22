@@ -10,13 +10,13 @@ namespace cc {
 namespace gfx {
 
 CCVKQueue::CCVKQueue(Device *device)
-: GFXQueue(device) {
+: Queue(device) {
 }
 
 CCVKQueue::~CCVKQueue() {
 }
 
-bool CCVKQueue::initialize(const GFXQueueInfo &info) {
+bool CCVKQueue::initialize(const QueueInfo &info) {
     _type = info.type;
     _isAsync = !info.forceSync;
 

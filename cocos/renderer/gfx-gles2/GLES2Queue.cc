@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 GLES2Queue::GLES2Queue(Device *device)
-: GFXQueue(device) {
+: Queue(device) {
 }
 
 GLES2Queue::~GLES2Queue() {
 }
 
-bool GLES2Queue::initialize(const GFXQueueInfo &info) {
+bool GLES2Queue::initialize(const QueueInfo &info) {
     _type = info.type;
     _status = GFXStatus::SUCCESS;
 

@@ -4,11 +4,11 @@
 namespace cc {
 namespace gfx {
 
-GFXPipelineState::GFXPipelineState(Device *device)
+PipelineState::PipelineState(Device *device)
 : GFXObject(GFXObjectType::PIPELINE_STATE), _device(device) {
 }
 
-GFXPipelineState::~GFXPipelineState() {
+PipelineState::~PipelineState() {
 }
 
 } // namespace gfx

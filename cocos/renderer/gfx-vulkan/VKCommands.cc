@@ -161,12 +161,12 @@ void CCVKCmdFuncGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue) {
     uint queueType = 0u;
     VkBool32 needPresentable = VK_FALSE;
     switch (gpuQueue->type) {
-        case GFXQueueType::GRAPHICS:
+        case QueueType::GRAPHICS:
             queueType = VK_QUEUE_GRAPHICS_BIT;
             needPresentable = VK_TRUE;
             break;
-        case GFXQueueType::COMPUTE: queueType = VK_QUEUE_COMPUTE_BIT; break;
-        case GFXQueueType::TRANSFER: queueType = VK_QUEUE_TRANSFER_BIT; break;
+        case QueueType::COMPUTE: queueType = VK_QUEUE_COMPUTE_BIT; break;
+        case QueueType::TRANSFER: queueType = VK_QUEUE_TRANSFER_BIT; break;
     }
 
     const CCVKGPUContext *context = ((CCVKContext *)device->getContext())->gpuContext();

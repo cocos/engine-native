@@ -23,7 +23,7 @@ public:
     virtual void end() override;
     virtual void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) override;
     virtual void endRenderPass() override;
-    virtual void bindPipelineState(GFXPipelineState *pso) override;
+    virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
     virtual void bindInputAssembler(InputAssembler *ia) override;
     virtual void setViewport(const GFXViewport &vp) override;

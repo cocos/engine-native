@@ -84,7 +84,7 @@ void GLES2CommandBuffer::endRenderPass() {
     _cmdPackage->cmds.push(GFXCmdType::END_RENDER_PASS);
 }
 
-void GLES2CommandBuffer::bindPipelineState(GFXPipelineState *pso) {
+void GLES2CommandBuffer::bindPipelineState(PipelineState *pso) {
     _curGPUPipelineState = ((GLES2PipelineState *)pso)->gpuPipelineState();
     _isStateInvalid = true;
 }

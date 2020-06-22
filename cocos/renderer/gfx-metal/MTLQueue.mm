@@ -22,13 +22,13 @@
 namespace cc {
 namespace gfx {
 
-CCMTLQueue::CCMTLQueue(Device *device) : GFXQueue(device) {}
+CCMTLQueue::CCMTLQueue(Device *device) : Queue(device) {}
 
 CCMTLQueue::~CCMTLQueue() {
     destroy();
 }
 
-bool CCMTLQueue::initialize(const GFXQueueInfo &info) {
+bool CCMTLQueue::initialize(const QueueInfo &info) {
     _type = info.type;
     _status = GFXStatus::SUCCESS;
     _frameBoundarySemaphore = dispatch_semaphore_create(1);

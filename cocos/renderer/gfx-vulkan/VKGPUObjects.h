@@ -122,7 +122,7 @@ public:
 
 class CCVKGPUQueue : public Object {
 public:
-    GFXQueueType type;
+    QueueType type;
     VkQueue vkQueue;
     uint queueFamilyIndex;
     VkSemaphore nextWaitSemaphore = VK_NULL_HANDLE;

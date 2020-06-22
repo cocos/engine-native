@@ -83,7 +83,7 @@ void GLES3CommandBuffer::endRenderPass() {
     _cmdPackage->cmds.push(GFXCmdType::END_RENDER_PASS);
 }
 
-void GLES3CommandBuffer::bindPipelineState(GFXPipelineState *pso) {
+void GLES3CommandBuffer::bindPipelineState(PipelineState *pso) {
     _curGPUPipelineState = ((GLES3PipelineState *)pso)->gpuPipelineState();
     _isStateInvalid = true;
 }

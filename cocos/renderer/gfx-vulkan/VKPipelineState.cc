@@ -10,13 +10,13 @@ namespace cc {
 namespace gfx {
 
 CCVKPipelineState::CCVKPipelineState(Device *device)
-: GFXPipelineState(device) {
+: PipelineState(device) {
 }
 
 CCVKPipelineState::~CCVKPipelineState() {
 }
 
-bool CCVKPipelineState::initialize(const GFXPipelineStateInfo &info) {
+bool CCVKPipelineState::initialize(const PipelineStateInfo &info) {
     _primitive = info.primitive;
     _shader = info.shader;
     _inputState = info.inputState;

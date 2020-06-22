@@ -118,8 +118,8 @@ bool GLES2Device::initialize(const DeviceInfo &info) {
     CC_LOG_INFO("USE_VAO: %s", _useVAO ? "true" : "false");
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressed_fmts.c_str());
 
-    GFXQueueInfo queue_info;
-    queue_info.type = GFXQueueType::GRAPHICS;
+    QueueInfo queue_info;
+    queue_info.type = QueueType::GRAPHICS;
     _queue = createQueue(queue_info);
 
     CommandAllocatorInfo cmd_alloc_info;
@@ -174,8 +174,8 @@ Fence *GLES2Device::createFence(const FenceInfo &info) {
     return nullptr;
 }
 
-GFXQueue *GLES2Device::createQueue(const GFXQueueInfo &info) {
-    GFXQueue *queue = CC_NEW(GLES2Queue(this));
+Queue *GLES2Device::createQueue(const QueueInfo &info) {
+    Queue *queue = CC_NEW(GLES2Queue(this));
     if (queue->initialize(info))
         return queue;
 
@@ -283,8 +283,8 @@ BindingLayout *GLES2Device::createBindingLayout(const BindingLayoutInfo &info) {
     return nullptr;
 }
 
-GFXPipelineState *GLES2Device::createPipelineState(const GFXPipelineStateInfo &info) {
-    GFXPipelineState *pipelineState = CC_NEW(GLES2PipelineState(this));
+PipelineState *GLES2Device::createPipelineState(const PipelineStateInfo &info) {
+    PipelineState *pipelineState = CC_NEW(GLES2PipelineState(this));
     if (pipelineState->initialize(info))
         return pipelineState;
 

@@ -51,8 +51,8 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
         return false;
     }
 
-    GFXQueueInfo queue_info;
-    queue_info.type = GFXQueueType::GRAPHICS;
+    QueueInfo queue_info;
+    queue_info.type = QueueType::GRAPHICS;
     _queue = createQueue(queue_info);
 
     CommandAllocatorInfo cmd_alloc_info;
@@ -149,7 +149,7 @@ Fence *CCMTLDevice::createFence(const FenceInfo &info) {
     return nullptr;
 }
 
-GFXQueue *CCMTLDevice::createQueue(const GFXQueueInfo &info) {
+Queue *CCMTLDevice::createQueue(const QueueInfo &info) {
     auto queue = CC_NEW(CCMTLQueue(this));
     if (queue && queue->initialize(info))
         return queue;
@@ -257,7 +257,7 @@ BindingLayout *CCMTLDevice::createBindingLayout(const BindingLayoutInfo &info) {
     return nullptr;
 }
 
-GFXPipelineState *CCMTLDevice::createPipelineState(const GFXPipelineStateInfo &info) {
+PipelineState *CCMTLDevice::createPipelineState(const PipelineStateInfo &info) {
     auto ps = CC_NEW(CCMTLPipelineState(this));
     if (ps && ps->initialize(info))
         return ps;

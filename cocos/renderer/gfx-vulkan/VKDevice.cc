@@ -264,8 +264,8 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     stagingBufferInfo.size = _defaultStagingBufferSize;
     _stagingBuffer = (CCVKBuffer *)createBuffer(stagingBufferInfo);
 
-    GFXQueueInfo queueInfo;
-    queueInfo.type = GFXQueueType::GRAPHICS;
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
     _queue = createQueue(queueInfo);
 
     CommandAllocatorInfo cmdAllocInfo;
@@ -536,8 +536,8 @@ Fence *CCVKDevice::createFence(const FenceInfo &info) {
     return nullptr;
 }
 
-GFXQueue *CCVKDevice::createQueue(const GFXQueueInfo &info) {
-    GFXQueue *queue = CC_NEW(CCVKQueue(this));
+Queue *CCVKDevice::createQueue(const QueueInfo &info) {
+    Queue *queue = CC_NEW(CCVKQueue(this));
     if (queue->initialize(info))
         return queue;
 
@@ -644,8 +644,8 @@ BindingLayout *CCVKDevice::createBindingLayout(const BindingLayoutInfo &info) {
     return nullptr;
 }
 
-GFXPipelineState *CCVKDevice::createPipelineState(const GFXPipelineStateInfo &info) {
-    GFXPipelineState *pipelineState = CC_NEW(CCVKPipelineState(this));
+PipelineState *CCVKDevice::createPipelineState(const PipelineStateInfo &info) {
+    PipelineState *pipelineState = CC_NEW(CCVKPipelineState(this));
     if (pipelineState->initialize(info))
         return pipelineState;
 

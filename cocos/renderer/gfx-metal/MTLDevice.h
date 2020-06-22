@@ -16,7 +16,7 @@ public:
     virtual void acquire() override{};
     virtual void present() override;
     virtual Fence *createFence(const FenceInfo &info) override;
-    virtual GFXQueue *createQueue(const GFXQueueInfo &info) override;
+    virtual Queue *createQueue(const QueueInfo &info) override;
     virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) override;
     virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
@@ -28,7 +28,7 @@ public:
     virtual GFXRenderPass *createRenderPass(const GFXRenderPassInfo &info) override;
     virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) override;
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
-    virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) override;
+    virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) override;
     virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
     virtual void blitBuffer(void *srcBuffer, uint offset, uint size, void *dstBuffer);

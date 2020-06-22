@@ -26,13 +26,13 @@ const GLenum GLES2Primitives[] = {
 };
 
 GLES2PipelineState::GLES2PipelineState(Device *device)
-: GFXPipelineState(device) {
+: PipelineState(device) {
 }
 
 GLES2PipelineState::~GLES2PipelineState() {
 }
 
-bool GLES2PipelineState::initialize(const GFXPipelineStateInfo &info) {
+bool GLES2PipelineState::initialize(const PipelineStateInfo &info) {
 
     _primitive = info.primitive;
     _shader = info.shader;

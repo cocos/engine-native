@@ -16,10 +16,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLPipelineState::CCMTLPipelineState(Device *device) : GFXPipelineState(device) {}
+CCMTLPipelineState::CCMTLPipelineState(Device *device) : PipelineState(device) {}
 CCMTLPipelineState::~CCMTLPipelineState() { destroy(); }
 
-bool CCMTLPipelineState::initialize(const GFXPipelineStateInfo &info) {
+bool CCMTLPipelineState::initialize(const PipelineStateInfo &info) {
     _primitive = info.primitive;
     _shader = info.shader;
     _inputState = info.inputState;

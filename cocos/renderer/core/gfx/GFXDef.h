@@ -14,11 +14,11 @@ class GFXRenderPass;
 class Framebuffer;
 class BindingLayout;
 class PipelineLayout;
-class GFXPipelineState;
+class PipelineState;
 class CommandAllocator;
 class CommandBuffer;
 class Fence;
-class GFXQueue;
+class Queue;
 class GFXWindow;
 class Context;
 
@@ -522,7 +522,7 @@ enum class GFXBindingType : uint8_t {
     STORAGE_BUFFER,
 };
 
-enum class GFXQueueType : uint8_t {
+enum class QueueType : uint8_t {
     GRAPHICS,
     COMPUTE,
     TRANSFER,
@@ -978,7 +978,7 @@ struct GFXBlendState {
     }
 };
 
-struct GFXPipelineStateInfo {
+struct PipelineStateInfo {
     GFXPrimitiveMode primitive = GFXPrimitiveMode::TRIANGLE_LIST;
     GFXShader *shader = nullptr;
     GFXInputState inputState;
@@ -998,8 +998,8 @@ struct CommandBufferInfo {
     CommandBufferType type = CommandBufferType::PRIMARY;
 };
 
-struct GFXQueueInfo {
-    GFXQueueType type = GFXQueueType::GRAPHICS;
+struct QueueInfo {
+    QueueType type = QueueType::GRAPHICS;
     bool forceSync = false;
 };
 
