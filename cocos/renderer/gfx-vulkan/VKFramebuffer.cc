@@ -41,7 +41,7 @@ bool CCVKFramebuffer::initialize(const FramebufferInfo &info) {
 
     CCVKCmdFuncCreateFramebuffer((CCVKDevice *)_device, _gpuFBO);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -55,7 +55,7 @@ void CCVKFramebuffer::destroy() {
         _gpuFBO = nullptr;
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

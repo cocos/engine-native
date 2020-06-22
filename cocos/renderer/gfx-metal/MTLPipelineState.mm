@@ -31,10 +31,10 @@ bool CCMTLPipelineState::initialize(const PipelineStateInfo &info) {
     _renderPass = info.renderPass;
 
     if (!createGPUPipelineState()) {
-        _status = GFXStatus::FAILED;
+        _status = Status::FAILED;
         return false;
     }
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -50,7 +50,7 @@ void CCMTLPipelineState::destroy() {
     }
 
     CC_SAFE_DELETE(_GPUPipelieState);
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 bool CCMTLPipelineState::createGPUPipelineState() {

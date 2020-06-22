@@ -39,7 +39,7 @@ bool CCVKBuffer::initialize(const BufferInfo &info) {
 
     CCVKCmdFuncCreateBuffer((CCVKDevice *)_device, _gpuBuffer);
     _device->getMemoryStatus().bufferSize += _size;
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -58,7 +58,7 @@ void CCVKBuffer::destroy() {
         _buffer = nullptr;
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCVKBuffer::resize(uint size) {

@@ -12,12 +12,12 @@ GLES3CommandAllocator::~GLES3CommandAllocator() {
 }
 
 bool GLES3CommandAllocator::initialize(const CommandAllocatorInfo &info) {
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
 void GLES3CommandAllocator::destroy() {
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void GLES3CommandAllocator::clearCmds(GLES3CmdPackage *cmd_package) {

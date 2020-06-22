@@ -10,13 +10,13 @@ CCMTLPipelineLayout::~CCMTLPipelineLayout() { destroy(); }
 bool CCMTLPipelineLayout::initialize(const PipelineLayoutInfo &info) {
     _layouts = info.layouts;
     _pushConstantsRanges = info.pushConstantsRanges;
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
 
 void CCMTLPipelineLayout::destroy() {
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

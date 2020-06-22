@@ -15,14 +15,14 @@ CCMTLFence::~CCMTLFence() {
 bool CCMTLFence::initialize(const FenceInfo &info) {
     // TODO
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
 
 void CCMTLFence::destroy() {
     // TODO
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCMTLFence::wait() {

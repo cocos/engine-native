@@ -19,14 +19,14 @@ bool CCVKCommandAllocator::initialize(const CommandAllocatorInfo &info) {
 
     CCVKCmdFuncCreateCommandPool((CCVKDevice *)_device, _gpuCommandPool);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
 void CCVKCommandAllocator::destroy() {
     CCVKCmdFuncDestroyCommandPool((CCVKDevice *)_device, _gpuCommandPool);
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCVKCommandAllocator::reset() {

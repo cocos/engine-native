@@ -10,12 +10,12 @@ CCMTLCommandAllocator::CCMTLCommandAllocator(Device *device) : CommandAllocator(
 CCMTLCommandAllocator::~CCMTLCommandAllocator() { destroy(); }
 
 bool CCMTLCommandAllocator::initialize(const CommandAllocatorInfo &info) {
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
 void CCMTLCommandAllocator::destroy() {
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCMTLCommandAllocator::clearCommands(CCMTLCommandPackage *commandPackage) {

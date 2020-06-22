@@ -30,7 +30,7 @@ bool GLES2Shader::initialize(const ShaderInfo &info) {
 
     GLES2CmdFuncCreateShader((GLES2Device *)_device, _gpuShader);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -41,7 +41,7 @@ void GLES2Shader::destroy() {
         CC_DELETE(_gpuShader);
         _gpuShader = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

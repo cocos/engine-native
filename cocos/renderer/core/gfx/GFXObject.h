@@ -11,11 +11,11 @@ public:
     virtual ~GFXObject() = default;
 
     CC_INLINE GFXObjectType getType() const { return _gfxType; }
-    CC_INLINE GFXStatus getStatus() const { return _status; }
+    CC_INLINE Status getStatus() const { return _status; }
 
 protected:
     GFXObjectType _gfxType = GFXObjectType::UNKNOWN;
-    GFXStatus _status = GFXStatus::UNREADY;
+    Status _status = Status::UNREADY;
 };
 
 } // namespace gfx

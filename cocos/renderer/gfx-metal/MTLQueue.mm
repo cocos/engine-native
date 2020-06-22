@@ -30,7 +30,7 @@ CCMTLQueue::~CCMTLQueue() {
 
 bool CCMTLQueue::initialize(const QueueInfo &info) {
     _type = info.type;
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     _frameBoundarySemaphore = dispatch_semaphore_create(1);
     _mtkView = (MTKView *)((CCMTLDevice *)_device)->getMTKView();
 
@@ -38,7 +38,7 @@ bool CCMTLQueue::initialize(const QueueInfo &info) {
 }
 
 void CCMTLQueue::destroy() {
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCMTLQueue::submit(const vector<CommandBuffer *> &cmdBuffs, Fence *fence) {

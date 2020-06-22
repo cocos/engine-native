@@ -22,7 +22,7 @@ bool GLES2Fence::initialize(const FenceInfo &info) {
 
     // TODO
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -33,7 +33,7 @@ void GLES2Fence::destroy() {
         CC_DELETE(_gpuFence);
         _gpuFence = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void GLES2Fence::wait() {

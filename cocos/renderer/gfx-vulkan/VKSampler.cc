@@ -44,7 +44,7 @@ bool CCVKSampler::initialize(const SamplerInfo &info) {
 
     CCVKCmdFuncCreateSampler((CCVKDevice *)_device, _gpuSampler);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -55,7 +55,7 @@ void CCVKSampler::destroy() {
         CC_DELETE(_gpuSampler);
         _gpuSampler = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

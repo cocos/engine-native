@@ -35,7 +35,7 @@ bool CCVKCommandBuffer::initialize(const CommandBufferInfo &info) {
     _gpuCommandBuffer->commandPool = ((CCVKCommandAllocator *)_allocator)->gpuCommandPool();
     CCVKCmdFuncAllocateCommandBuffer((CCVKDevice *)_device, _gpuCommandBuffer);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -47,7 +47,7 @@ void CCVKCommandBuffer::destroy() {
     }
 
     _allocator = nullptr;
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCVKCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {

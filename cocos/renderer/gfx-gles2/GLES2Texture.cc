@@ -63,7 +63,7 @@ bool GLES2Texture::initialize(const TextureInfo &info) {
     if (_flags & TextureFlags::BAKUP_BUFFER) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         if (!_buffer) {
-            _status = GFXStatus::FAILED;
+            _status = Status::FAILED;
             CC_LOG_ERROR("GLES2Texture: CC_MALLOC backup buffer failed.");
             return false;
         }
@@ -72,7 +72,7 @@ bool GLES2Texture::initialize(const TextureInfo &info) {
 
     _gpuTexture = CC_NEW(GLES2GPUTexture);
     if (!_gpuTexture) {
-        _status = GFXStatus::FAILED;
+        _status = Status::FAILED;
         CC_LOG_ERROR("GLES2Texture: CC_NEW GLES2GPUTexture failed.");
         return false;
     }
@@ -91,13 +91,13 @@ bool GLES2Texture::initialize(const TextureInfo &info) {
 
     GLES2CmdFuncCreateTexture((GLES2Device *)_device, _gpuTexture);
     _device->getMemoryStatus().textureSize += _size;
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
 bool GLES2Texture::initialize(const TextureViewInfo &info) {
     CC_LOG_ERROR("GLES2 doesn't support texture view");
-    _status = GFXStatus::FAILED;
+    _status = Status::FAILED;
     return false;
 }
 
@@ -115,7 +115,7 @@ void GLES2Texture::destroy() {
         _buffer = nullptr;
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void GLES2Texture::resize(uint width, uint height) {
@@ -138,7 +138,7 @@ void GLES2Texture::resize(uint width, uint height) {
             const uint8_t *oldBuffer = _buffer;
             uint8_t *buffer = (uint8_t *)CC_MALLOC(_size);
             if (!buffer) {
-                _status = GFXStatus::FAILED;
+                _status = Status::FAILED;
                 CC_LOG_ERROR("GLES2Texture: CC_MALLOC backup buffer failed when resize the texture.");
                 return;
             }
@@ -148,7 +148,7 @@ void GLES2Texture::resize(uint width, uint height) {
             status.bufferSize -= oldSize;
             status.bufferSize += _size;
         }
-        _status = GFXStatus::SUCCESS;
+        _status = Status::SUCCESS;
     }
 }
 

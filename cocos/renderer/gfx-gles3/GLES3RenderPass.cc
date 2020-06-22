@@ -22,7 +22,7 @@ bool GLES3RenderPass::initialize(const RenderPassInfo &info) {
     _gpuRenderPass->depthStencilAttachment = _depthStencilAttachment;
 
     _hash = computeHash();
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -33,7 +33,7 @@ void GLES3RenderPass::destroy() {
         _gpuRenderPass = nullptr;
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

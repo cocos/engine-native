@@ -44,7 +44,7 @@ bool CCMTLCommandBuffer::initialize(const CommandBufferInfo &info) {
         return false;
     }
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -55,7 +55,7 @@ void CCMTLCommandBuffer::destroy() {
         _MTLCommandAllocator = nullptr;
     }
     _allocator = nullptr;
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 
     CC_SAFE_DELETE(_commandPackage);
     CC_SAFE_DELETE(_currentDepthBias);

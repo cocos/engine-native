@@ -24,7 +24,7 @@ bool CCVKFence::initialize(const FenceInfo &info) {
     VkFenceCreateInfo createInfo{VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
     VK_CHECK(vkCreateFence(((CCVKDevice *)_device)->gpuDevice()->vkDevice, &createInfo, nullptr, &_gpuFence->vkFence));
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -35,7 +35,7 @@ void CCVKFence::destroy() {
         CC_DELETE(_gpuFence);
         _gpuFence = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCVKFence::wait() {

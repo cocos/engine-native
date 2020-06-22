@@ -91,7 +91,7 @@ bool CCVKTexture::initialize(const TextureInfo &info) {
     textureViewInfo.layerCount = _arrayLayer;
     createTextureView(textureViewInfo);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -112,7 +112,7 @@ bool CCVKTexture::initialize(const TextureViewInfo &info) {
 
     createTextureView(info);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -147,7 +147,7 @@ void CCVKTexture::destroy() {
         _device->getMemoryStatus().textureSize -= _size;
         _buffer = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCVKTexture::resize(uint width, uint height) {
@@ -181,7 +181,7 @@ void CCVKTexture::resize(uint width, uint height) {
         }
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

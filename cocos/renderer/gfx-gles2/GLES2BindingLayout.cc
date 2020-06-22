@@ -39,7 +39,7 @@ bool GLES2BindingLayout::initialize(const BindingLayoutInfo &info) {
         gpuBinding.name = bindingUnit.name;
     }
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -49,7 +49,7 @@ void GLES2BindingLayout::destroy() {
         CC_DELETE(_gpuBindingLayout);
         _gpuBindingLayout = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void GLES2BindingLayout::update() {

@@ -39,7 +39,7 @@ bool GLES3BindingLayout::initialize(const BindingLayoutInfo &info) {
         gpuBinding.name = bindingUnit.name;
     }
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -50,7 +50,7 @@ void GLES3BindingLayout::destroy() {
         _gpuBindingLayout = nullptr;
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void GLES3BindingLayout::update() {

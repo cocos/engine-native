@@ -41,7 +41,7 @@ bool GLES3InputAssembler::initialize(const InputAssemblerInfo &info) {
 
     GLES3CmdFuncCreateInputAssembler((GLES3Device *)_device, _gpuInputAssembler);
     _attributesHash = computeAttributesHash();
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -52,7 +52,7 @@ void GLES3InputAssembler::destroy() {
         CC_DELETE(_gpuInputAssembler);
         _gpuInputAssembler = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void GLES3InputAssembler::ExtractCmdDraw(GLES3CmdDraw *cmd) {

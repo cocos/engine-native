@@ -18,7 +18,7 @@ bool GLES3PipelineLayout::initialize(const PipelineLayoutInfo &info) {
     _pushConstantsRanges = info.pushConstantsRanges;
 
     _gpuPipelineLayout = CC_NEW(GLES3GPUPipelineLayout);
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -27,7 +27,7 @@ void GLES3PipelineLayout::destroy() {
         CC_DELETE(_gpuPipelineLayout);
         _gpuPipelineLayout = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

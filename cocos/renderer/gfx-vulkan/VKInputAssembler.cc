@@ -45,7 +45,7 @@ bool CCVKInputAssembler::initialize(const InputAssemblerInfo &info) {
 
     CCVKCmdFuncCreateInputAssembler((CCVKDevice *)_device, _gpuInputAssembler);
     _attributesHash = computeAttributesHash();
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -57,7 +57,7 @@ void CCVKInputAssembler::destroy() {
         _gpuInputAssembler = nullptr;
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 } // namespace gfx

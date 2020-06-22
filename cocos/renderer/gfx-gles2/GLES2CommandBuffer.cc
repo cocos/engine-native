@@ -29,7 +29,7 @@ bool GLES2CommandBuffer::initialize(const CommandBufferInfo &info) {
     _type = info.type;
 
     _cmdPackage = CC_NEW(GLES2CmdPackage);
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -40,7 +40,7 @@ void GLES2CommandBuffer::destroy() {
         _gles2Allocator = nullptr;
     }
     _allocator = nullptr;
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 
     CC_SAFE_DELETE(_cmdPackage);
 }

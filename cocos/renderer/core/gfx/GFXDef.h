@@ -49,7 +49,7 @@ enum class GFXObjectType : uint8_t {
     WINDOW,
 };
 
-enum class GFXStatus : uint8_t {
+enum class Status : uint8_t {
     UNREADY,
     FAILED,
     SUCCESS,

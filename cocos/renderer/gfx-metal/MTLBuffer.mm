@@ -39,7 +39,7 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
         if (_buffer)
             _device->getMemoryStatus().bufferSize += _size;
         else {
-            _status = GFXStatus::FAILED;
+            _status = Status::FAILED;
             CC_LOG_ERROR("CCMTLBuffer: Failed to create backup buffer.");
             return false;
         }
@@ -63,18 +63,18 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
                _usage & BufferUsageBit::TRANSFER_DST) {
         _transferBuffer = (uint8_t *)CC_MALLOC(_size);
         if (!_transferBuffer) {
-            _status = GFXStatus::FAILED;
+            _status = Status::FAILED;
             CCASSERT(false, "CCMTLBuffer: failed to create memory for transfer buffer.");
             return false;
         }
         _device->getMemoryStatus().bufferSize += _size;
     } else {
-        _status = GFXStatus::FAILED;
+        _status = Status::FAILED;
         CCASSERT(false, "Unsupported BufferType, create buffer failed.");
         return false;
     }
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -86,7 +86,7 @@ bool CCMTLBuffer::createMTLBuffer(uint size, GFXMemoryUsage usage) {
     _mtlBuffer = [id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice()) newBufferWithLength:size
                                                                                       options:_mtlResourceOptions];
     if (_mtlBuffer == nil) {
-        _status = GFXStatus::FAILED;
+        _status = Status::FAILED;
         CCASSERT(false, "Failed to create MTLBuffer.");
         return false;
     }
@@ -116,7 +116,7 @@ void CCMTLBuffer::destroy() {
         _device->getMemoryStatus().bufferSize -= _size;
         _bufferBytes = nullptr;
     }
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCMTLBuffer::resize(uint size) {
@@ -147,7 +147,7 @@ void CCMTLBuffer::resize(uint size) {
     _count = _size / _stride;
     resizeBuffer(&_transferBuffer, _size, oldSize);
     resizeBuffer(&_buffer, _size, oldSize);
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 }
 
 void CCMTLBuffer::resizeBuffer(uint8_t **buffer, uint size, uint oldSize) {
@@ -162,14 +162,14 @@ void CCMTLBuffer::resizeBuffer(uint8_t **buffer, uint size, uint oldSize) {
         *buffer = temp;
         status.bufferSize += size;
     } else {
-        _status = GFXStatus::FAILED;
+        _status = Status::FAILED;
         CC_LOG_ERROR("Failed to resize buffer.");
         return;
     }
 
     CC_FREE(oldBuffer);
     status.bufferSize -= oldSize;
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 }
 
 void CCMTLBuffer::update(void *buffer, uint offset, uint size) {

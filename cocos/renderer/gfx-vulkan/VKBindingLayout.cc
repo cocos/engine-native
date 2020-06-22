@@ -34,7 +34,7 @@ bool CCVKBindingLayout::initialize(const BindingLayoutInfo &info) {
     _gpuBindingLayout = CC_NEW(CCVKGPUBindingLayout);
     CCVKCmdFuncCreateBindingLayout((CCVKDevice *)_device, _gpuBindingLayout, _bindingUnits);
 
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
 
     return true;
 }
@@ -46,7 +46,7 @@ void CCVKBindingLayout::destroy() {
         _gpuBindingLayout = nullptr;
     }
 
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 void CCVKBindingLayout::update() {
