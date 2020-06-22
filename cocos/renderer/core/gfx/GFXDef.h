@@ -485,7 +485,7 @@ enum class PolygonMode : uint8_t {
     LINE,
 };
 
-enum class GFXShadeModel : uint8_t {
+enum class ShadeModel : uint8_t {
     GOURAND,
     FLAT,
 };
@@ -920,7 +920,7 @@ struct GFXInputState {
 struct GFXRasterizerState {
     bool isDiscard = false;
     PolygonMode polygonMode = PolygonMode::FILL;
-    GFXShadeModel shadeModel = GFXShadeModel::GOURAND;
+    ShadeModel shadeModel = ShadeModel::GOURAND;
     GFXCullMode cullMode = GFXCullMode::BACK;
     bool isFrontFaceCCW = true;
     bool depthBiasEnabled = false;
