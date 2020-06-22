@@ -28,7 +28,7 @@ public:
     virtual GFXShader *createShader(const GFXShaderInfo &info) = 0;
     virtual GFXInputAssembler *createInputAssembler(const GFXInputAssemblerInfo &info) = 0;
     virtual GFXRenderPass *createRenderPass(const GFXRenderPassInfo &info) = 0;
-    virtual GFXFramebuffer *createFramebuffer(const GFXFramebufferInfo &info) = 0;
+    virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) = 0;
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) = 0;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) = 0;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) = 0;

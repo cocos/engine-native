@@ -44,7 +44,7 @@ void GLES3CommandBuffer::destroy() {
     CC_SAFE_DELETE(_cmdPackage);
 }
 
-void GLES3CommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, GFXFramebuffer *frameBuffer) {
+void GLES3CommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     _gles3Allocator->clearCmds(_cmdPackage);
     _curGPUPipelineState = nullptr;
     _curGPUBlendLayout = nullptr;
@@ -61,7 +61,7 @@ void GLES3CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES3CommandBuffer::beginRenderPass(GFXFramebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES3CmdBeginRenderPass *cmd = _gles3Allocator->beginRenderPassCmdPool.alloc();

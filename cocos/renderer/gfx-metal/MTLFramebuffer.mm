@@ -7,10 +7,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLFramebuffer::CCMTLFramebuffer(Device *device) : GFXFramebuffer(device) {}
+CCMTLFramebuffer::CCMTLFramebuffer(Device *device) : Framebuffer(device) {}
 CCMTLFramebuffer::~CCMTLFramebuffer() { destroy(); }
 
-bool CCMTLFramebuffer::initialize(const GFXFramebufferInfo &info) {
+bool CCMTLFramebuffer::initialize(const FramebufferInfo &info) {
     _renderPass = info.renderPass;
     _colorTextures = info.colorTextures;
     _depthStencilTexture = info.depthStencilTexture;

@@ -31,7 +31,7 @@ public:
     CC_INLINE gfx::GFXRenderPass *getRenderPass() const { return _renderPass; }
     CC_INLINE const gfx::TextureList &getColorTextures() const { return _colorTexs; }
     CC_INLINE gfx::Texture *getDepthStencilTexture() const { return _depthStencilTex; }
-    CC_INLINE gfx::GFXFramebuffer *getFramebuffer() const { return _frameBuffer; }
+    CC_INLINE gfx::Framebuffer *getFramebuffer() const { return _frameBuffer; }
     
 private:
     RenderWindow() = default;
@@ -41,7 +41,7 @@ private:
     String title;
     gfx::TextureList _colorTexs;
     gfx::Texture *_depthStencilTex = nullptr;
-    gfx::GFXFramebuffer *_frameBuffer = nullptr;
+    gfx::Framebuffer *_frameBuffer = nullptr;
     gfx::GFXRenderPass *_renderPass = nullptr;
     Root *_root = nullptr;
     uint _width = 0;

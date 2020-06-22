@@ -9,13 +9,13 @@ namespace cc {
 namespace gfx {
 
 GLES3Framebuffer::GLES3Framebuffer(Device *device)
-: GFXFramebuffer(device) {
+: Framebuffer(device) {
 }
 
 GLES3Framebuffer::~GLES3Framebuffer() {
 }
 
-bool GLES3Framebuffer::initialize(const GFXFramebufferInfo &info) {
+bool GLES3Framebuffer::initialize(const FramebufferInfo &info) {
 
     _renderPass = info.renderPass;
     _colorTextures = info.colorTextures;

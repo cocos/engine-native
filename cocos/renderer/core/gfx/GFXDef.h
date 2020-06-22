@@ -11,7 +11,7 @@ class GFXSampler;
 class GFXShader;
 class GFXInputAssembler;
 class GFXRenderPass;
-class GFXFramebuffer;
+class Framebuffer;
 class BindingLayout;
 class GFXPipelineLayout;
 class GFXPipelineState;
@@ -863,7 +863,7 @@ struct GFXRenderPassInfo {
 
 typedef vector<Texture *> TextureList;
 
-struct GFXFramebufferInfo {
+struct FramebufferInfo {
     GFXRenderPass *renderPass = nullptr;
     TextureList colorTextures;
     vector<int> colorMipmapLevels;

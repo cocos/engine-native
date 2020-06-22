@@ -45,7 +45,7 @@ void GLES2CommandBuffer::destroy() {
     CC_SAFE_DELETE(_cmdPackage);
 }
 
-void GLES2CommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, GFXFramebuffer *frameBuffer) {
+void GLES2CommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     _gles2Allocator->clearCmds(_cmdPackage);
     _curGPUPipelineState = nullptr;
     _curGPUBlendLayout = nullptr;
@@ -62,7 +62,7 @@ void GLES2CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES2CommandBuffer::beginRenderPass(GFXFramebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+void GLES2CommandBuffer::beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES2CmdBeginRenderPass *cmd = _gles2Allocator->beginRenderPassCmdPool.alloc();

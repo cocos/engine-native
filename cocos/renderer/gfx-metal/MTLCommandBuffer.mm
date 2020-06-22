@@ -62,7 +62,7 @@ void CCMTLCommandBuffer::destroy() {
     CC_SAFE_DELETE(_currentDepthBounds);
 }
 
-void CCMTLCommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, GFXFramebuffer *frameBuffer) {
+void CCMTLCommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     _MTLCommandAllocator->clearCommands(_commandPackage);
     _numTriangles = 0;
     _numDrawCalls = 0;
@@ -72,7 +72,7 @@ void CCMTLCommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void CCMTLCommandBuffer::beginRenderPass(GFXFramebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     CCMTLCmdBeginRenderPass *cmd = _MTLCommandAllocator->_beginRenderPassCmdPool.alloc();

@@ -239,7 +239,7 @@ GFXRenderPass *CCMTLDevice::createRenderPass(const GFXRenderPassInfo &info) {
     return nullptr;
 }
 
-GFXFramebuffer *CCMTLDevice::createFramebuffer(const GFXFramebufferInfo &info) {
+Framebuffer *CCMTLDevice::createFramebuffer(const FramebufferInfo &info) {
     auto frameBuffer = CC_NEW(CCMTLFramebuffer(this));
     if (frameBuffer && frameBuffer->initialize(info))
         return frameBuffer;

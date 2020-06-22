@@ -4,11 +4,11 @@
 namespace cc {
 namespace gfx {
 
-GFXFramebuffer::GFXFramebuffer(Device *device)
+Framebuffer::Framebuffer(Device *device)
 : GFXObject(GFXObjectType::FRAMEBUFFER), _device(device) {
 }
 
-GFXFramebuffer::~GFXFramebuffer() {
+Framebuffer::~Framebuffer() {
 }
 
 } // namespace gfx

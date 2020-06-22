@@ -17,9 +17,9 @@ public:
     bool initialize(const CommandBufferInfo &info);
     void destroy();
 
-    void begin(GFXRenderPass *renderPass = nullptr, uint subpass = 0, GFXFramebuffer *frameBuffer = nullptr);
+    void begin(GFXRenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr);
     void end();
-    void beginRenderPass(GFXFramebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil);
+    void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil);
     void endRenderPass();
     void bindPipelineState(GFXPipelineState *pso);
     void bindBindingLayout(BindingLayout *layout);

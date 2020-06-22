@@ -50,7 +50,7 @@ void CCVKCommandBuffer::destroy() {
     _status = GFXStatus::UNREADY;
 }
 
-void CCVKCommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, GFXFramebuffer *frameBuffer) {
+void CCVKCommandBuffer::begin(GFXRenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     _curGPUPipelineState = nullptr;
     _curGPUBindingLayout = nullptr;
     _curGPUInputAssember = nullptr;
@@ -80,7 +80,7 @@ void CCVKCommandBuffer::end() {
     VK_CHECK(vkEndCommandBuffer(_gpuCommandBuffer->vkCommandBuffer));
 }
 
-void CCVKCommandBuffer::beginRenderPass(GFXFramebuffer *fbo, const GFXRect &renderArea,
+void CCVKCommandBuffer::beginRenderPass(Framebuffer *fbo, const GFXRect &renderArea,
                                         GFXClearFlags clearFlags, const std::vector<GFXColor> &colors, float depth, int stencil) {
     _curGPUFBO = ((CCVKFramebuffer *)fbo)->gpuFBO();
     CCVKGPURenderPass *renderPass = _curGPUFBO->gpuRenderPass;

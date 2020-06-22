@@ -30,7 +30,7 @@ public:
     virtual GFXShader *createShader(const GFXShaderInfo &info) override;
     virtual GFXInputAssembler *createInputAssembler(const GFXInputAssemblerInfo &info) override;
     virtual GFXRenderPass *createRenderPass(const GFXRenderPassInfo &info) override;
-    virtual GFXFramebuffer *createFramebuffer(const GFXFramebufferInfo &info) override;
+    virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) override;
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
     virtual GFXPipelineState *createPipelineState(const GFXPipelineStateInfo &info) override;
     virtual GFXPipelineLayout *createPipelineLayout(const GFXPipelineLayoutInfo &info) override;

@@ -265,8 +265,8 @@ GFXRenderPass *GLES2Device::createRenderPass(const GFXRenderPassInfo &info) {
     return nullptr;
 }
 
-GFXFramebuffer *GLES2Device::createFramebuffer(const GFXFramebufferInfo &info) {
-    GFXFramebuffer *framebuffer = CC_NEW(GLES2Framebuffer(this));
+Framebuffer *GLES2Device::createFramebuffer(const FramebufferInfo &info) {
+    Framebuffer *framebuffer = CC_NEW(GLES2Framebuffer(this));
     if (framebuffer->initialize(info))
         return framebuffer;
 

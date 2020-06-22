@@ -626,8 +626,8 @@ GFXRenderPass *CCVKDevice::createRenderPass(const GFXRenderPassInfo &info) {
     return nullptr;
 }
 
-GFXFramebuffer *CCVKDevice::createFramebuffer(const GFXFramebufferInfo &info) {
-    GFXFramebuffer *framebuffer = CC_NEW(CCVKFramebuffer(this));
+Framebuffer *CCVKDevice::createFramebuffer(const FramebufferInfo &info) {
+    Framebuffer *framebuffer = CC_NEW(CCVKFramebuffer(this));
     if (framebuffer->initialize(info))
         return framebuffer;
 

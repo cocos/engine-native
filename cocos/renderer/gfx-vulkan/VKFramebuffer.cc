@@ -10,13 +10,13 @@ namespace cc {
 namespace gfx {
 
 CCVKFramebuffer::CCVKFramebuffer(Device *device)
-: GFXFramebuffer(device) {
+: Framebuffer(device) {
 }
 
 CCVKFramebuffer::~CCVKFramebuffer() {
 }
 
-bool CCVKFramebuffer::initialize(const GFXFramebufferInfo &info) {
+bool CCVKFramebuffer::initialize(const FramebufferInfo &info) {
     _renderPass = info.renderPass;
     _colorTextures = info.colorTextures;
     _depthStencilTexture = info.depthStencilTexture;

@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXFramebuffer : public GFXObject {
+class CC_DLL Framebuffer : public GFXObject {
 public:
-    GFXFramebuffer(Device *device);
-    virtual ~GFXFramebuffer();
+    Framebuffer(Device *device);
+    virtual ~Framebuffer();
 
 public:
-    virtual bool initialize(const GFXFramebufferInfo &info) = 0;
+    virtual bool initialize(const FramebufferInfo &info) = 0;
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
