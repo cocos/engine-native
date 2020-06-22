@@ -56,7 +56,7 @@ void CCVKBindingLayout::update() {
             VkWriteDescriptorSet &binding = _gpuBindingLayout->bindings[i];
 
             switch (bindingUnit.type) {
-                case GFXBindingType::UNIFORM_BUFFER: {
+                case BindingType::UNIFORM_BUFFER: {
                     if (bindingUnit.buffer) {
                         CCVKGPUBuffer *buffer = ((CCVKBuffer *)bindingUnit.buffer)->gpuBuffer();
                         VkDescriptorBufferInfo *info = (VkDescriptorBufferInfo *)binding.pBufferInfo;
@@ -68,7 +68,7 @@ void CCVKBindingLayout::update() {
 
                     break;
                 }
-                case GFXBindingType::SAMPLER: {
+                case BindingType::SAMPLER: {
                     VkDescriptorImageInfo *info = (VkDescriptorImageInfo *)binding.pImageInfo;
                     info->imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 

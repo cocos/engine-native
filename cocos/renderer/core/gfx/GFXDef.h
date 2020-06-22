@@ -515,7 +515,7 @@ enum class StencilFace : uint8_t {
     ALL,
 };
 
-enum class GFXBindingType : uint8_t {
+enum class BindingType : uint8_t {
     UNKNOWN,
     UNIFORM_BUFFER,
     SAMPLER,
@@ -875,7 +875,7 @@ struct FramebufferInfo {
 struct GFXBinding {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
-    GFXBindingType type = GFXBindingType::UNKNOWN;
+    BindingType type = BindingType::UNKNOWN;
     String name;
     uint count = 0;
 };
@@ -889,7 +889,7 @@ struct BindingLayoutInfo {
 struct GFXBindingUnit {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
-    GFXBindingType type = GFXBindingType::UNKNOWN;
+    BindingType type = BindingType::UNKNOWN;
     String name;
     uint count = 0;
     Buffer *buffer = nullptr;

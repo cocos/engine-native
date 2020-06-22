@@ -1724,7 +1724,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                     for (size_t j = 0; j < cmd->gpuBindingLayout->gpuBindings.size(); ++j) {
                         const GLES3GPUBinding &gpuBinding = cmd->gpuBindingLayout->gpuBindings[j];
                         switch (gpuBinding.type) {
-                            case GFXBindingType::UNIFORM_BUFFER: {
+                            case BindingType::UNIFORM_BUFFER: {
                                 if (gpuBinding.gpuBuffer) {
                                     for (size_t k = 0; k < gpuPipelineState->gpuShader->glBlocks.size(); ++k) {
                                         const GLES3GPUUniformBlock &gpuBlock = gpuPipelineState->gpuShader->glBlocks[k];
@@ -1737,7 +1737,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                                 }
                                 break;
                             }
-                            case GFXBindingType::SAMPLER: {
+                            case BindingType::SAMPLER: {
                                 if (gpuBinding.gpuSampler) {
                                     for (size_t k = 0; k < gpuPipelineState->gpuShader->glSamplers.size(); ++k) {
                                         const GLES3GPUUniformSampler &gpuSampler = gpuPipelineState->gpuShader->glSamplers[k];

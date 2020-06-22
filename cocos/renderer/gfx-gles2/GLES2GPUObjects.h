@@ -221,7 +221,7 @@ public:
 
 struct GLES2GPUBinding {
     uint binding = GFX_INVALID_BINDING;
-    GFXBindingType type = GFXBindingType::UNKNOWN;
+    BindingType type = BindingType::UNKNOWN;
     String name;
     GLES2GPUBuffer *gpuBuffer = nullptr;
     GLES2GPUTexture *gpuTexture = nullptr;

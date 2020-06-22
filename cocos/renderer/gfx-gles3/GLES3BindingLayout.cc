@@ -58,13 +58,13 @@ void GLES3BindingLayout::update() {
         for (size_t i = 0; i < _bindingUnits.size(); ++i) {
             GFXBindingUnit &bindingUnit = _bindingUnits[i];
             switch (bindingUnit.type) {
-                case GFXBindingType::UNIFORM_BUFFER: {
+                case BindingType::UNIFORM_BUFFER: {
                     if (bindingUnit.buffer) {
                         _gpuBindingLayout->gpuBindings[i].gpuBuffer = ((GLES3Buffer *)bindingUnit.buffer)->gpuBuffer();
                     }
                     break;
                 }
-                case GFXBindingType::SAMPLER: {
+                case BindingType::SAMPLER: {
                     if (bindingUnit.texture) {
                         _gpuBindingLayout->gpuBindings[i].gpuTexture = ((GLES3Texture *)bindingUnit.texture)->gpuTexture();
                     }

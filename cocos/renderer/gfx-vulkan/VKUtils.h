@@ -373,13 +373,13 @@ VkCommandBufferLevel MapVkCommandBufferLevel(CommandBufferType type) {
     }
 }
 
-VkDescriptorType MapVkDescriptorType(GFXBindingType type) {
+VkDescriptorType MapVkDescriptorType(BindingType type) {
     switch (type) {
-        case GFXBindingType::UNIFORM_BUFFER: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        case GFXBindingType::SAMPLER: return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        case GFXBindingType::STORAGE_BUFFER: return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        case BindingType::UNIFORM_BUFFER: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        case BindingType::SAMPLER: return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        case BindingType::STORAGE_BUFFER: return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
         default: {
-            CCASSERT(false, "Unsupported GFXBindingType, convert to VkDescriptorType failed.");
+            CCASSERT(false, "Unsupported BindingType, convert to VkDescriptorType failed.");
             return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
         }
     }

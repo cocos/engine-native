@@ -193,7 +193,7 @@ public:
 
 struct GLES3GPUBinding {
     uint binding = GFX_INVALID_BINDING;
-    GFXBindingType type = GFXBindingType::UNKNOWN;
+    BindingType type = BindingType::UNKNOWN;
     String name;
     GLES3GPUBuffer *gpuBuffer = nullptr;
     GLES3GPUTexture *gpuTexture = nullptr;
