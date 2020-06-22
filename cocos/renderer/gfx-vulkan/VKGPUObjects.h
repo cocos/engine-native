@@ -152,9 +152,9 @@ public:
     Filter minFilter = Filter::LINEAR;
     Filter magFilter = Filter::LINEAR;
     Filter mipFilter = Filter::NONE;
-    GFXAddress addressU = GFXAddress::WRAP;
-    GFXAddress addressV = GFXAddress::WRAP;
-    GFXAddress addressW = GFXAddress::WRAP;
+    Address addressU = Address::WRAP;
+    Address addressV = Address::WRAP;
+    Address addressW = Address::WRAP;
     uint maxAnisotropy = 16;
     GFXComparisonFunc cmpFunc = GFXComparisonFunc::NEVER;
     GFXColor borderColor;

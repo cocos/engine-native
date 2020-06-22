@@ -354,7 +354,7 @@ enum class Filter : uint8_t {
     ANISOTROPIC,
 };
 
-enum class GFXAddress : uint8_t {
+enum class Address : uint8_t {
     WRAP,
     MIRROR,
     CLAMP,
@@ -735,9 +735,9 @@ struct SamplerInfo {
     Filter minFilter = Filter::LINEAR;
     Filter magFilter = Filter::LINEAR;
     Filter mipFilter = Filter::NONE;
-    GFXAddress addressU = GFXAddress::WRAP;
-    GFXAddress addressV = GFXAddress::WRAP;
-    GFXAddress addressW = GFXAddress::WRAP;
+    Address addressU = Address::WRAP;
+    Address addressV = Address::WRAP;
+    Address addressW = Address::WRAP;
     uint maxAnisotropy = 16;
     GFXComparisonFunc cmpFunc = GFXComparisonFunc::NEVER;
     GFXColor borderColor;

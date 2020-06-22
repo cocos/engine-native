@@ -23,9 +23,9 @@ private:
     Filter _minFilter = Filter::LINEAR;
     Filter _magFilter = Filter::LINEAR;
     Filter _mipFilter = Filter::NONE;
-    GFXAddress _addressU = GFXAddress::WRAP;
-    GFXAddress _addressV = GFXAddress::WRAP;
-    GFXAddress _addressW = GFXAddress::WRAP;
+    Address _addressU = Address::WRAP;
+    Address _addressV = Address::WRAP;
+    Address _addressW = Address::WRAP;
     uint _maxAnisotropy = 16;
     GFXComparisonFunc _cmpFunc = GFXComparisonFunc::NEVER;
     GFXColor _borderColor;

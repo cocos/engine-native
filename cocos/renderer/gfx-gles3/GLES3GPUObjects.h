@@ -53,9 +53,9 @@ public:
     Filter minFilter = Filter::NONE;
     Filter magFilter = Filter::NONE;
     Filter mipFilter = Filter::NONE;
-    GFXAddress addressU = GFXAddress::CLAMP;
-    GFXAddress addressV = GFXAddress::CLAMP;
-    GFXAddress addressW = GFXAddress::CLAMP;
+    Address addressU = Address::CLAMP;
+    Address addressV = Address::CLAMP;
+    Address addressW = Address::CLAMP;
     uint minLOD = 0;
     uint maxLOD = 1000;
     GLuint gl_sampler = 0;

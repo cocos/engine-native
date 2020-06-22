@@ -35,7 +35,7 @@ MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode);
 MTLTextureUsage toMTLTextureUsage(TextureUsage);
 MTLTextureType toMTLTextureType(TextureType type);
 NSUInteger toMTLSampleCount(SampleCount);
-MTLSamplerAddressMode toMTLSamplerAddressMode(GFXAddress);
+MTLSamplerAddressMode toMTLSamplerAddressMode(Address);
 MTLSamplerBorderColor toMTLSamplerBorderColor(const GFXColor &);
 MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(Filter);
 MTLSamplerMipFilter toMTLSamplerMipFilter(Filter);

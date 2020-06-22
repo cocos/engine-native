@@ -20,9 +20,9 @@ public:
     CC_INLINE Filter getMinFilter() const { return _minFilter; }
     CC_INLINE Filter getMagFilter() const { return _magFilter; }
     CC_INLINE Filter getMipFilter() const { return _mipFilter; }
-    CC_INLINE GFXAddress getAddressU() const { return _addressU; }
-    CC_INLINE GFXAddress getAddressV() const { return _addressV; }
-    CC_INLINE GFXAddress getAddressW() const { return _addressW; }
+    CC_INLINE Address getAddressU() const { return _addressU; }
+    CC_INLINE Address getAddressV() const { return _addressV; }
+    CC_INLINE Address getAddressW() const { return _addressW; }
     CC_INLINE uint getMaxAnisotropy() const { return _maxAnisotropy; }
     CC_INLINE GFXComparisonFunc getCmpFunc() const { return _cmpFunc; }
     CC_INLINE const GFXColor &getBorderColor() const { return _borderColor; }
@@ -36,9 +36,9 @@ protected:
     Filter _minFilter = Filter::NONE;
     Filter _magFilter = Filter::NONE;
     Filter _mipFilter = Filter::NONE;
-    GFXAddress _addressU = GFXAddress::WRAP;
-    GFXAddress _addressV = GFXAddress::WRAP;
-    GFXAddress _addressW = GFXAddress::WRAP;
+    Address _addressU = Address::WRAP;
+    Address _addressV = Address::WRAP;
+    Address _addressW = Address::WRAP;
     uint _maxAnisotropy = 0;
     GFXComparisonFunc _cmpFunc = GFXComparisonFunc::ALWAYS;
     GFXColor _borderColor;

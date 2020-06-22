@@ -471,12 +471,12 @@ NSUInteger toMTLSampleCount(SampleCount count) {
     }
 }
 
-MTLSamplerAddressMode toMTLSamplerAddressMode(GFXAddress mode) {
+MTLSamplerAddressMode toMTLSamplerAddressMode(Address mode) {
     switch (mode) {
-        case GFXAddress::WRAP: return MTLSamplerAddressModeRepeat;
-        case GFXAddress::MIRROR: return MTLSamplerAddressModeMirrorRepeat;
-        case GFXAddress::CLAMP: return MTLSamplerAddressModeClampToEdge;
-        case GFXAddress::BORDER: return MTLSamplerAddressModeClampToBorderColor;
+        case Address::WRAP: return MTLSamplerAddressModeRepeat;
+        case Address::MIRROR: return MTLSamplerAddressModeMirrorRepeat;
+        case Address::CLAMP: return MTLSamplerAddressModeClampToEdge;
+        case Address::BORDER: return MTLSamplerAddressModeClampToBorderColor;
     }
 }
 
