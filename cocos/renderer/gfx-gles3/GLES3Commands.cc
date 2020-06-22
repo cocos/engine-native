@@ -1043,7 +1043,7 @@ void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
             gpuBlock.name = gl_name;
             gpuBlock.binding = GFX_INVALID_BINDING;
             for (size_t b = 0; b < gpuShader->blocks.size(); ++b) {
-                GFXUniformBlock &block = gpuShader->blocks[b];
+                UniformBlock &block = gpuShader->blocks[b];
                 if (block.name == gpuBlock.name) {
                     gpuBlock.binding = block.binding;
                     break;

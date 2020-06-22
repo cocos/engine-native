@@ -21,7 +21,7 @@ public:
     CC_INLINE const String &getName() const { return _name; }
     CC_INLINE const ShaderStageList &getStages() const { return _stages; }
     CC_INLINE const GFXAttributeList &getAttributes() const { return _attributes; }
-    CC_INLINE const GFXUniformBlockList &getBlocks() const { return _blocks; }
+    CC_INLINE const UniformBlockList &getBlocks() const { return _blocks; }
     CC_INLINE const GFXUniformSamplerList &getSamplers() const { return _samplers; }
 
 protected:
@@ -30,7 +30,7 @@ protected:
     String _name;
     ShaderStageList _stages;
     GFXAttributeList _attributes;
-    GFXUniformBlockList _blocks;
+    UniformBlockList _blocks;
     GFXUniformSamplerList _samplers;
 };
 

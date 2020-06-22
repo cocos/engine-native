@@ -179,7 +179,7 @@ class CCVKGPUShader : public Object {
 public:
     String name;
     GFXAttributeList attributes;
-    GFXUniformBlockList blocks;
+    UniformBlockList blocks;
     GFXUniformSamplerList samplers;
     CCVKGPUShaderStageList gpuStages;
 };

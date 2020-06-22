@@ -761,14 +761,14 @@ struct GFXUniform {
 
 typedef vector<GFXUniform> GFXUniformList;
 
-struct GFXUniformBlock {
+struct UniformBlock {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     String name;
     GFXUniformList uniforms;
 };
 
-typedef vector<GFXUniformBlock> GFXUniformBlockList;
+typedef vector<UniformBlock> UniformBlockList;
 
 struct GFXUniformSampler {
     ShaderType shaderStages = ShaderType::NONE;
@@ -804,7 +804,7 @@ struct ShaderInfo {
     String name;
     ShaderStageList stages;
     GFXAttributeList attributes;
-    GFXUniformBlockList blocks;
+    UniformBlockList blocks;
     GFXUniformSamplerList samplers;
 };
 

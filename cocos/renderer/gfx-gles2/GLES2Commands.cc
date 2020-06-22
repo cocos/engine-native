@@ -936,7 +936,7 @@ void GLES2CmdFuncCreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
 
         for (size_t i = 0; i < gpuShader->glBlocks.size(); ++i) {
             GLES2GPUUniformBlock &gpuBlock = gpuShader->glBlocks[i];
-            GFXUniformBlock &block = gpuShader->blocks[i];
+            UniformBlock &block = gpuShader->blocks[i];
 
             gpuBlock.name = block.name;
             gpuBlock.binding = block.binding;

@@ -124,7 +124,7 @@ typedef vector<GLES3GPUShaderStage> GLES3GPUShaderStageList;
 class GLES3GPUShader : public Object {
 public:
     String name;
-    GFXUniformBlockList blocks;
+    UniformBlockList blocks;
     GFXUniformSamplerList samplers;
     GLuint glProgram = 0;
     GLES3GPUShaderStageList gpuStages;

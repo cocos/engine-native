@@ -781,7 +781,7 @@ static bool js_gfx_InputAssembler_extractDrawInfo(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     if (argc == 1) {
-        cc::gfx::GFXDrawInfo nativeDrawInfo;
+        cc::gfx::DrawInfo nativeDrawInfo;
         cobj->extractDrawInfo(nativeDrawInfo);
         
         se::Object* drawInfo = args[0].toObject();
