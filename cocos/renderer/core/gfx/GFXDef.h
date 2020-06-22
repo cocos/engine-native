@@ -557,7 +557,7 @@ enum class VsyncMode : uint8_t {
     HALF,
 };
 
-struct GFXOffset {
+struct Offset {
     int x;
     int y;
     int z;
@@ -598,16 +598,16 @@ struct TextureSubres {
 
 struct TextureCopy {
     TextureSubres srcSubres;
-    GFXOffset srcOffset = {0, 0, 0};
+    Offset srcOffset = {0, 0, 0};
     TextureSubres dstSubres;
-    GFXOffset dstOffset = {0, 0, 0};
+    Offset dstOffset = {0, 0, 0};
     GFXExtent extent = {0, 0, 1};
 };
 
 struct BufferTextureCopy {
     uint buffStride = 0;
     uint buffTexHeight = 0;
-    GFXOffset texOffset = {0, 0, 0};
+    Offset texOffset = {0, 0, 0};
     GFXExtent texExtent = {0, 0, 1};
     TextureSubres texSubres;
 };
