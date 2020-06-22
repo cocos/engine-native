@@ -662,7 +662,7 @@ PipelineLayout *CCVKDevice::createPipelineLayout(const PipelineLayoutInfo &info)
     return nullptr;
 }
 
-void CCVKDevice::copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
+void CCVKDevice::copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
     CCVKCmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((CCVKTexture *)dst)->gpuTexture(), regions);
 }
 

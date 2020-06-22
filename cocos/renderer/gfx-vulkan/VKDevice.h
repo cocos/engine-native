@@ -39,7 +39,7 @@ public:
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) override;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
+    virtual void copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
 
     CC_INLINE bool checkExtension(const String &extension) const {
         return std::find_if(_extensions.begin(), _extensions.end(),

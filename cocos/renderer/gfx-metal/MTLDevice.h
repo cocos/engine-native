@@ -30,7 +30,7 @@ public:
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) override;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
+    virtual void copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
     virtual void blitBuffer(void *srcBuffer, uint offset, uint size, void *dstBuffer);
 
     CC_INLINE void *getMTKView() const { return _mtkView; }

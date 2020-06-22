@@ -301,7 +301,7 @@ PipelineLayout *GLES2Device::createPipelineLayout(const PipelineLayoutInfo &info
     return nullptr;
 }
 
-void GLES2Device::copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
+void GLES2Device::copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
     GLES2CmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((GLES2Texture *)dst)->gpuTexture(), regions);
 }
 

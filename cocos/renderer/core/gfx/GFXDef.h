@@ -613,7 +613,7 @@ struct BufferTextureCopy {
 };
 typedef vector<BufferTextureCopy> BufferTextureCopyList;
 
-struct GFXDataArray {
+struct DataArray {
     std::vector<uint8_t *> datas;
 };
 

@@ -32,7 +32,7 @@ public:
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) = 0;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) = 0;
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) = 0;
-    virtual void copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) = 0;
+    virtual void copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) = 0;
 
     CC_INLINE API getGfxAPI() const { return _API; }
     CC_INLINE const String &getDeviceName() const { return _deviceName; }

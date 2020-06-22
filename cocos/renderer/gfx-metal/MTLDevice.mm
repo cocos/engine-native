@@ -275,7 +275,7 @@ PipelineLayout *CCMTLDevice::createPipelineLayout(const PipelineLayoutInfo &info
     return nullptr;
 }
 
-void CCMTLDevice::copyBuffersToTexture(const GFXDataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
+void CCMTLDevice::copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
     static_cast<CCMTLTexture *>(dst)->update(buffers.datas.data(), regions);
 }
 
