@@ -1237,8 +1237,8 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                         const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
                         if (colorAttachment.format != Format::UNKNOWN) {
                             switch (colorAttachment.loadOp) {
-                                case GFXLoadOp::LOAD: break; // GL default behaviour
-                                case GFXLoadOp::CLEAR: {
+                                case LoadOp::LOAD: break; // GL default behaviour
+                                case LoadOp::CLEAR: {
                                     if (cmd->clear_flags & GFXClearFlagBit::COLOR) {
                                         if (cache->bs.targets[0].blendColorMask != ColorMask::ALL) {
                                             glColorMask(true, true, true, true);
@@ -1250,7 +1250,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                     }
                                     break;
                                 }
-                                case GFXLoadOp::DISCARD: {
+                                case LoadOp::DISCARD: {
                                     // invalidate fbo
                                     gl_attachments[num_attachments++] = (cmd->gpuFBO->isOffscreen ? GL_COLOR_ATTACHMENT0 + j : GL_COLOR_EXT);
                                     break;
@@ -1264,15 +1264,15 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                         bool hasDepth = GFX_FORMAT_INFOS[(int)gpuRenderPass->depthStencilAttachment.format].hasDepth;
                         if (hasDepth) {
                             switch (gpuRenderPass->depthStencilAttachment.depthLoadOp) {
-                                case GFXLoadOp::LOAD: break; // GL default behaviour
-                                case GFXLoadOp::CLEAR: {
+                                case LoadOp::LOAD: break; // GL default behaviour
+                                case LoadOp::CLEAR: {
                                     glDepthMask(true);
                                     cache->dss.depthWrite = true;
                                     glClearDepthf(cmd->clear_depth);
                                     gl_clears |= GL_DEPTH_BUFFER_BIT;
                                     break;
                                 }
-                                case GFXLoadOp::DISCARD: {
+                                case LoadOp::DISCARD: {
                                     // invalidate fbo
                                     gl_attachments[num_attachments++] = (cmd->gpuFBO->isOffscreen ? GL_DEPTH_ATTACHMENT : GL_DEPTH_EXT);
                                     break;
@@ -1283,8 +1283,8 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                         bool has_stencils = GFX_FORMAT_INFOS[(int)gpuRenderPass->depthStencilAttachment.format].hasStencil;
                         if (has_stencils) {
                             switch (gpuRenderPass->depthStencilAttachment.depthLoadOp) {
-                                case GFXLoadOp::LOAD: break; // GL default behaviour
-                                case GFXLoadOp::CLEAR: {
+                                case LoadOp::LOAD: break; // GL default behaviour
+                                case LoadOp::CLEAR: {
                                     if (!cache->dss.stencilWriteMaskFront) {
                                         glStencilMaskSeparate(GL_FRONT, 0xffffffff);
                                     }
@@ -1295,7 +1295,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                                     gl_clears |= GL_STENCIL_BUFFER_BIT;
                                     break;
                                 }
-                                case GFXLoadOp::DISCARD: {
+                                case LoadOp::DISCARD: {
                                     // invalidate fbo
                                     gl_attachments[num_attachments++] = (cmd->gpuFBO->isOffscreen ? GL_STENCIL_ATTACHMENT : GL_STENCIL_EXT);
                                     break;
@@ -1346,9 +1346,9 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                     const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
                     if (colorAttachment.format != Format::UNKNOWN) {
                         switch (colorAttachment.loadOp) {
-                            case GFXLoadOp::LOAD: break; // GL default behaviour
-                            case GFXLoadOp::CLEAR: break;
-                            case GFXLoadOp::DISCARD: {
+                            case LoadOp::LOAD: break; // GL default behaviour
+                            case LoadOp::CLEAR: break;
+                            case LoadOp::DISCARD: {
                                 // invalidate fbo
                                 gl_attachments[num_attachments++] = (cmd->gpuFBO->isOffscreen ? GL_COLOR_ATTACHMENT0 + j : GL_COLOR_EXT);
                                 break;
@@ -1362,9 +1362,9 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                     bool hasDepth = GFX_FORMAT_INFOS[(int)gpuRenderPass->depthStencilAttachment.format].hasDepth;
                     if (hasDepth) {
                         switch (gpuRenderPass->depthStencilAttachment.depthLoadOp) {
-                            case GFXLoadOp::LOAD: break; // GL default behaviour
-                            case GFXLoadOp::CLEAR: break;
-                            case GFXLoadOp::DISCARD: {
+                            case LoadOp::LOAD: break; // GL default behaviour
+                            case LoadOp::CLEAR: break;
+                            case LoadOp::DISCARD: {
                                 // invalidate fbo
                                 gl_attachments[num_attachments++] = (cmd->gpuFBO->isOffscreen ? GL_DEPTH_ATTACHMENT : GL_DEPTH_EXT);
                                 break;
@@ -1375,9 +1375,9 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                     bool has_stencils = GFX_FORMAT_INFOS[(int)gpuRenderPass->depthStencilAttachment.format].hasStencil;
                     if (has_stencils) {
                         switch (gpuRenderPass->depthStencilAttachment.depthLoadOp) {
-                            case GFXLoadOp::LOAD: break; // GL default behaviour
-                            case GFXLoadOp::CLEAR: break;
-                            case GFXLoadOp::DISCARD: {
+                            case LoadOp::LOAD: break; // GL default behaviour
+                            case LoadOp::CLEAR: break;
+                            case LoadOp::DISCARD: {
                                 // invalidate fbo
                                 gl_attachments[num_attachments++] = (cmd->gpuFBO->isOffscreen ? GL_STENCIL_ATTACHMENT : GL_STENCIL_EXT);
                                 break;

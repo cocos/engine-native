@@ -431,7 +431,7 @@ enum class ShaderType : uint8_t {
 };
 CC_ENUM_OPERATORS(ShaderType);
 
-enum class GFXLoadOp : uint8_t {
+enum class LoadOp : uint8_t {
     LOAD,    // Load the contents from the fbo from previous
     CLEAR,   // Clear the fbo
     DISCARD, // Ignore writing to the fbo and keep old data
@@ -817,7 +817,7 @@ struct InputAssemblerInfo {
 
 struct GFXColorAttachment {
     Format format = Format::UNKNOWN;
-    GFXLoadOp loadOp = GFXLoadOp::CLEAR;
+    LoadOp loadOp = LoadOp::CLEAR;
     GFXStoreOp storeOp = GFXStoreOp::STORE;
     uint sampleCount = 1;
     TextureLayout beginLayout = TextureLayout::COLOR_ATTACHMENT_OPTIMAL;
@@ -828,9 +828,9 @@ typedef vector<GFXColorAttachment> GFXColorAttachmentList;
 
 struct GFXDepthStencilAttachment {
     Format format = Format::UNKNOWN;
-    GFXLoadOp depthLoadOp = GFXLoadOp::CLEAR;
+    LoadOp depthLoadOp = LoadOp::CLEAR;
     GFXStoreOp depthStoreOp = GFXStoreOp::STORE;
-    GFXLoadOp stencilLoadOp = GFXLoadOp::CLEAR;
+    LoadOp stencilLoadOp = LoadOp::CLEAR;
     GFXStoreOp stencilStoreOp = GFXStoreOp::STORE;
     uint sampleCount = 1;
     TextureLayout beginLayout = TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;

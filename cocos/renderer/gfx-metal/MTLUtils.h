@@ -13,7 +13,7 @@ namespace gfx {
 
 namespace mu {
 MTLResourceOptions toMTLResourseOption(GFXMemoryUsage usage);
-MTLLoadAction toMTLLoadAction(GFXLoadOp op);
+MTLLoadAction toMTLLoadAction(LoadOp op);
 MTLStoreAction toMTLStoreAction(GFXStoreOp op);
 MTLClearColor toMTLClearColor(const GFXColor &clearColor);
 MTLVertexFormat toMTLVertexFormat(Format, bool);

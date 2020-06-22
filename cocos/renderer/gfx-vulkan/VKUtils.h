@@ -130,13 +130,13 @@ VkSampleCountFlagBits MapVkSampleCount(uint sampleCount) {
         return VK_SAMPLE_COUNT_1_BIT;
 }
 
-VkAttachmentLoadOp MapVkLoadOp(GFXLoadOp loadOp) {
+VkAttachmentLoadOp MapVkLoadOp(LoadOp loadOp) {
     switch (loadOp) {
-        case GFXLoadOp::CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
-        case GFXLoadOp::LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
-        case GFXLoadOp::DISCARD: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        case LoadOp::CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
+        case LoadOp::LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
+        case LoadOp::DISCARD: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         default: {
-            CCASSERT(false, "Unsupported GFXLoadOp, convert to VkLoadOp failed.");
+            CCASSERT(false, "Unsupported LoadOp, convert to VkLoadOp failed.");
             return VK_ATTACHMENT_LOAD_OP_LOAD;
         }
     }

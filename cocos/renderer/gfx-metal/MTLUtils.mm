@@ -126,11 +126,11 @@ MTLResourceOptions toMTLResourseOption(GFXMemoryUsage usage) {
 #endif
 }
 
-MTLLoadAction toMTLLoadAction(GFXLoadOp op) {
+MTLLoadAction toMTLLoadAction(LoadOp op) {
     switch (op) {
-        case GFXLoadOp::CLEAR: return MTLLoadActionClear;
-        case GFXLoadOp::LOAD: return MTLLoadActionLoad;
-        case GFXLoadOp::DISCARD: return MTLLoadActionDontCare;
+        case LoadOp::CLEAR: return MTLLoadActionClear;
+        case LoadOp::LOAD: return MTLLoadActionLoad;
+        case LoadOp::DISCARD: return MTLLoadActionDontCare;
         default: return MTLLoadActionDontCare;
     }
 }
