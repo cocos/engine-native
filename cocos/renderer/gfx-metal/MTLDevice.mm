@@ -203,7 +203,7 @@ Texture *CCMTLDevice::createTexture(const TextureViewInfo &info) {
     return nullptr;
 }
 
-GFXSampler *CCMTLDevice::createSampler(const GFXSamplerInfo &info) {
+Sampler *CCMTLDevice::createSampler(const SamplerInfo &info) {
     auto sampler = CC_NEW(CCMTLSampler(this));
     if (sampler && sampler->initialize(info))
         return sampler;

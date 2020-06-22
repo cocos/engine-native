@@ -7,7 +7,7 @@ namespace gfx {
 class Device;
 class Buffer;
 class Texture;
-class GFXSampler;
+class Sampler;
 class GFXShader;
 class InputAssembler;
 class RenderPass;
@@ -730,7 +730,7 @@ struct TextureViewInfo {
     uint layerCount = 1;
 };
 
-struct GFXSamplerInfo {
+struct SamplerInfo {
     String name;
     GFXFilter minFilter = GFXFilter::LINEAR;
     GFXFilter magFilter = GFXFilter::LINEAR;
@@ -894,7 +894,7 @@ struct GFXBindingUnit {
     uint count = 0;
     Buffer *buffer = nullptr;
     Texture *texture = nullptr;
-    GFXSampler *sampler = nullptr;
+    Sampler *sampler = nullptr;
 };
 
 typedef vector<GFXBindingUnit> GFXBindingUnitList;

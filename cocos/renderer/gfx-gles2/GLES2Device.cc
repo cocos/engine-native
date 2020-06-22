@@ -229,8 +229,8 @@ Texture *GLES2Device::createTexture(const TextureViewInfo &info) {
     return nullptr;
 }
 
-GFXSampler *GLES2Device::createSampler(const GFXSamplerInfo &info) {
-    GFXSampler *sampler = CC_NEW(GLES2Sampler(this));
+Sampler *GLES2Device::createSampler(const SamplerInfo &info) {
+    Sampler *sampler = CC_NEW(GLES2Sampler(this));
     if (sampler->initialize(info))
         return sampler;
 

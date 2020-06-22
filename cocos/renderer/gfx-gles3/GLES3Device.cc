@@ -225,8 +225,8 @@ Texture *GLES3Device::createTexture(const TextureViewInfo &info) {
     return nullptr;
 }
 
-GFXSampler *GLES3Device::createSampler(const GFXSamplerInfo &info) {
-    GFXSampler *sampler = CC_NEW(GLES3Sampler(this));
+Sampler *GLES3Device::createSampler(const SamplerInfo &info) {
+    Sampler *sampler = CC_NEW(GLES3Sampler(this));
     if (sampler->initialize(info))
         return sampler;
 

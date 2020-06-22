@@ -6,13 +6,13 @@
 namespace cc {
 namespace gfx {
 
-class CC_DLL GFXSampler : public GFXObject {
+class CC_DLL Sampler : public GFXObject {
 public:
-    GFXSampler(Device *device);
-    virtual ~GFXSampler();
+    Sampler(Device *device);
+    virtual ~Sampler();
 
 public:
-    virtual bool initialize(const GFXSamplerInfo &info) = 0;
+    virtual bool initialize(const SamplerInfo &info) = 0;
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }

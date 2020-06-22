@@ -18,7 +18,7 @@ public:
 
     void bindBuffer(uint binding, Buffer *buffer);
     void bindTexture(uint binding, Texture *texView);
-    void bindSampler(uint binding, GFXSampler *sampler);
+    void bindSampler(uint binding, Sampler *sampler);
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const GFXBindingUnitList &getBindingUnits() const { return _bindingUnits; }

@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 CCVKSampler::CCVKSampler(Device *device)
-: GFXSampler(device) {
+: Sampler(device) {
 }
 
 CCVKSampler::~CCVKSampler() {
 }
 
-bool CCVKSampler::initialize(const GFXSamplerInfo &info) {
+bool CCVKSampler::initialize(const SamplerInfo &info) {
     _name = info.name;
     _minFilter = info.minFilter;
     _magFilter = info.magFilter;

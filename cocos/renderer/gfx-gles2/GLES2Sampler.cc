@@ -6,13 +6,13 @@ namespace cc {
 namespace gfx {
 
 GLES2Sampler::GLES2Sampler(Device *device)
-: GFXSampler(device) {
+: Sampler(device) {
 }
 
 GLES2Sampler::~GLES2Sampler() {
 }
 
-bool GLES2Sampler::initialize(const GFXSamplerInfo &info) {
+bool GLES2Sampler::initialize(const SamplerInfo &info) {
     _name = info.name;
     _minFilter = info.minFilter;
     _magFilter = info.magFilter;

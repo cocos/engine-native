@@ -590,8 +590,8 @@ Texture *CCVKDevice::createTexture(const TextureViewInfo &info) {
     return nullptr;
 }
 
-GFXSampler *CCVKDevice::createSampler(const GFXSamplerInfo &info) {
-    GFXSampler *sampler = CC_NEW(CCVKSampler(this));
+Sampler *CCVKDevice::createSampler(const SamplerInfo &info) {
+    Sampler *sampler = CC_NEW(CCVKSampler(this));
     if (sampler->initialize(info))
         return sampler;
 
