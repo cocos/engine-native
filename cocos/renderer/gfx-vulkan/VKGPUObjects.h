@@ -217,7 +217,7 @@ public:
     GFXRasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;
-    GFXDynamicStateList dynamicStates;
+    DynamicStateList dynamicStates;
     CCVKGPUPipelineLayout *gpuLayout = nullptr;
     CCVKGPURenderPass *gpuRenderPass = nullptr;
     VkPipeline vkPipeline = VK_NULL_HANDLE;

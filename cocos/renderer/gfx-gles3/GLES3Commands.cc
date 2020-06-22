@@ -1872,25 +1872,25 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                 if (gpuPipelineState) {
                     for (auto dynamicState : gpuPipelineState->dynamicStates) {
                         switch (dynamicState) {
-                            case GFXDynamicState::VIEWPORT:
+                            case DynamicState::VIEWPORT:
                                 if (cache->viewport != cmd->viewport) {
                                     glViewport(cmd->viewport.left, cmd->viewport.top, cmd->viewport.width, cmd->viewport.height);
                                     cache->viewport = cmd->viewport;
                                 }
                                 break;
-                            case GFXDynamicState::SCISSOR:
+                            case DynamicState::SCISSOR:
                                 if (cache->scissor != cmd->scissor) {
                                     glScissor(cmd->scissor.x, cmd->scissor.y, cmd->scissor.width, cmd->scissor.height);
                                     cache->scissor = cmd->scissor;
                                 }
                                 break;
-                            case GFXDynamicState::LINE_WIDTH:
+                            case DynamicState::LINE_WIDTH:
                                 if (cache->rs.lineWidth != cmd->lineWidth) {
                                     glLineWidth(cmd->lineWidth);
                                     cache->rs.lineWidth = cmd->lineWidth;
                                 }
                                 break;
-                            case GFXDynamicState::DEPTH_BIAS:
+                            case DynamicState::DEPTH_BIAS:
                                 if (cache->rs.depthBiasEnabled != cmd->depthBiasEnabled) {
                                     if (cmd->depthBiasEnabled)
                                         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -1906,7 +1906,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                                     cache->rs.depthBiasSlop = cmd->depthBias.slope;
                                 }
                                 break;
-                            case GFXDynamicState::BLEND_CONSTANTS:
+                            case DynamicState::BLEND_CONSTANTS:
                                 if ((cache->bs.blendColor.r != gpuPipelineState->bs.blendColor.r) ||
                                     (cache->bs.blendColor.g != gpuPipelineState->bs.blendColor.g) ||
                                     (cache->bs.blendColor.b != gpuPipelineState->bs.blendColor.b) ||
@@ -1918,7 +1918,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                                     cache->bs.blendColor = gpuPipelineState->bs.blendColor;
                                 }
                                 break;
-                            case GFXDynamicState::STENCIL_WRITE_MASK:
+                            case DynamicState::STENCIL_WRITE_MASK:
                                 switch (cmd->stencilWriteMask.face) {
                                     case GFXStencilFace::FRONT:
                                         if (cache->dss.stencilWriteMaskFront != cmd->stencilWriteMask.write_mask) {
@@ -1942,7 +1942,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                                         break;
                                 }
                                 break;
-                            case GFXDynamicState::STENCIL_COMPARE_MASK:
+                            case DynamicState::STENCIL_COMPARE_MASK:
                                 switch (cmd->stencilCompareMask.face) {
                                     case GFXStencilFace::FRONT:
                                         if ((cache->dss.stencilRefFront != (uint)cmd->stencilCompareMask.refrence) ||

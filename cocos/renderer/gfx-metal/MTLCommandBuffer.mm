@@ -110,7 +110,7 @@ void CCMTLCommandBuffer::bindInputAssembler(InputAssembler *ia) {
 void CCMTLCommandBuffer::setViewport(const GFXViewport &vp) {
     if (_currentViewport != vp) {
         _currentViewport = vp;
-        _dynamicStateDirty[static_cast<uint>(GFXDynamicState::VIEWPORT)] = true;
+        _dynamicStateDirty[static_cast<uint>(DynamicState::VIEWPORT)] = true;
         _isStateInValid = true;
     }
 }
@@ -118,7 +118,7 @@ void CCMTLCommandBuffer::setViewport(const GFXViewport &vp) {
 void CCMTLCommandBuffer::setScissor(const GFXRect &rect) {
     if (_currentScissor != rect) {
         _currentScissor = rect;
-        _dynamicStateDirty[static_cast<uint>(GFXDynamicState::SCISSOR)] = true;
+        _dynamicStateDirty[static_cast<uint>(DynamicState::SCISSOR)] = true;
         _isStateInValid = true;
     }
 }
@@ -135,7 +135,7 @@ void CCMTLCommandBuffer::setDepthBias(float constant, float clamp, float slope) 
         _currentDepthBias->slopeScale = slope;
         _currentDepthBias->clamp = clamp;
         _isStateInValid = true;
-        _dynamicStateDirty[static_cast<uint>(GFXDynamicState::DEPTH_BIAS)] = true;
+        _dynamicStateDirty[static_cast<uint>(DynamicState::DEPTH_BIAS)] = true;
     }
 }
 
@@ -149,7 +149,7 @@ void CCMTLCommandBuffer::setBlendConstants(const GFXColor &constants) {
         _currentBlendConstants.b = constants.b;
         _currentBlendConstants.a = constants.a;
         _isStateInValid = true;
-        _dynamicStateDirty[static_cast<uint>(GFXDynamicState::BLEND_CONSTANTS)] = true;
+        _dynamicStateDirty[static_cast<uint>(DynamicState::BLEND_CONSTANTS)] = true;
     }
 }
 

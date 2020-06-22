@@ -186,7 +186,7 @@ public:
     GFXRasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;
-    GFXDynamicStateList dynamicStates;
+    DynamicStateList dynamicStates;
     GLES3GPUPipelineLayout *gpuLayout = nullptr;
     GLES3GPURenderPass *gpuRenderPass = nullptr;
 };

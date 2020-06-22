@@ -199,19 +199,19 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                     }
                 }
 
-                if (cmd->dynamicStateDirty[static_cast<uint>(GFXDynamicState::VIEWPORT)])
+                if (cmd->dynamicStateDirty[static_cast<uint>(DynamicState::VIEWPORT)])
                     [encoder setViewport:cmd->viewport];
-                if (cmd->dynamicStateDirty[static_cast<uint>(GFXDynamicState::SCISSOR)])
+                if (cmd->dynamicStateDirty[static_cast<uint>(DynamicState::SCISSOR)])
                     [encoder setScissorRect:cmd->scissorRect];
                 if (cmd->depthBiasEnabled) {
-                    if (cmd->dynamicStateDirty[static_cast<uint>(GFXDynamicState::DEPTH_BIAS)])
+                    if (cmd->dynamicStateDirty[static_cast<uint>(DynamicState::DEPTH_BIAS)])
                         [encoder setDepthBias:cmd->depthBias.depthBias
                                    slopeScale:cmd->depthBias.slopeScale
                                         clamp:cmd->depthBias.clamp];
                 } else {
                     [encoder setDepthBias:0 slopeScale:0 clamp:0];
                 }
-                if (cmd->dynamicStateDirty[static_cast<uint>(GFXDynamicState::BLEND_CONSTANTS)])
+                if (cmd->dynamicStateDirty[static_cast<uint>(DynamicState::BLEND_CONSTANTS)])
                     [encoder setBlendColorRed:cmd->blendConstants.r
                                         green:cmd->blendConstants.g
                                          blue:cmd->blendConstants.b

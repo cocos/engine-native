@@ -496,7 +496,7 @@ enum class CullMode : uint8_t {
     BACK,
 };
 
-enum class GFXDynamicState : uint8_t {
+enum class DynamicState : uint8_t {
     VIEWPORT,
     SCISSOR,
     LINE_WIDTH,
@@ -507,7 +507,7 @@ enum class GFXDynamicState : uint8_t {
     STENCIL_COMPARE_MASK,
 };
 
-typedef vector<GFXDynamicState> GFXDynamicStateList;
+typedef vector<DynamicState> DynamicStateList;
 
 enum class GFXStencilFace : uint8_t {
     FRONT,
@@ -985,7 +985,7 @@ struct PipelineStateInfo {
     GFXRasterizerState rasterizerState;
     GFXDepthStencilState depthStencilState;
     GFXBlendState blendState;
-    GFXDynamicStateList dynamicStates;
+    DynamicStateList dynamicStates;
     PipelineLayout *layout = nullptr;
     RenderPass *renderPass = nullptr;
 };
