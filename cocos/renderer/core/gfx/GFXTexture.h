@@ -26,7 +26,7 @@ public:
     CC_INLINE uint getArrayLayer() const { return _arrayLayer; }
     CC_INLINE uint getMipLevel() const { return _mipLevel; }
     CC_INLINE uint getSize() const { return _size; }
-    CC_INLINE GFXSampleCount getSamples() const { return _samples; }
+    CC_INLINE SampleCount getSamples() const { return _samples; }
     CC_INLINE TextureFlags getFlags() const { return _flags; }
     CC_INLINE uint8_t *getBuffer() const { return _buffer; }
 
@@ -41,7 +41,7 @@ protected:
     uint _arrayLayer = 1;
     uint _mipLevel = 1;
     uint _size = 0;
-    GFXSampleCount _samples = GFXSampleCount::X1;
+    SampleCount _samples = SampleCount::X1;
     TextureFlags _flags = TextureFlagBit::NONE;
     uint8_t *_buffer = nullptr;
 };

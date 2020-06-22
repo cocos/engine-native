@@ -34,7 +34,7 @@ MTLStencilOperation toMTLStencilOperation(GFXStencilOp);
 MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode);
 MTLTextureUsage toMTLTextureUsage(TextureUsage);
 MTLTextureType toMTLTextureType(TextureType type);
-NSUInteger toMTLSampleCount(GFXSampleCount);
+NSUInteger toMTLSampleCount(SampleCount);
 MTLSamplerAddressMode toMTLSamplerAddressMode(GFXAddress);
 MTLSamplerBorderColor toMTLSamplerBorderColor(const GFXColor &);
 MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(GFXFilter);

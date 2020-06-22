@@ -245,14 +245,14 @@ VkImageType MapVkImageType(TextureType type) {
     }
 }
 
-VkSampleCountFlagBits MapVkSampleCount(GFXSampleCount count) {
+VkSampleCountFlagBits MapVkSampleCount(SampleCount count) {
     switch (count) {
-        case GFXSampleCount::X1: return VK_SAMPLE_COUNT_1_BIT;
-        case GFXSampleCount::X2: return VK_SAMPLE_COUNT_2_BIT;
-        case GFXSampleCount::X4: return VK_SAMPLE_COUNT_4_BIT;
-        case GFXSampleCount::X8: return VK_SAMPLE_COUNT_8_BIT;
-        case GFXSampleCount::X16: return VK_SAMPLE_COUNT_16_BIT;
-        case GFXSampleCount::X32: return VK_SAMPLE_COUNT_32_BIT;
+        case SampleCount::X1: return VK_SAMPLE_COUNT_1_BIT;
+        case SampleCount::X2: return VK_SAMPLE_COUNT_2_BIT;
+        case SampleCount::X4: return VK_SAMPLE_COUNT_4_BIT;
+        case SampleCount::X8: return VK_SAMPLE_COUNT_8_BIT;
+        case SampleCount::X16: return VK_SAMPLE_COUNT_16_BIT;
+        case SampleCount::X32: return VK_SAMPLE_COUNT_32_BIT;
         default: {
             CCASSERT(false, "Unsupported TextureType, convert to VkImageType failed.");
             return VK_SAMPLE_COUNT_1_BIT;

@@ -459,15 +459,15 @@ MTLTextureType toMTLTextureType(TextureType type) {
     }
 }
 
-NSUInteger toMTLSampleCount(GFXSampleCount count) {
+NSUInteger toMTLSampleCount(SampleCount count) {
     switch (count) {
-        case GFXSampleCount::X1: return 1;
-        case GFXSampleCount::X2: return 2;
-        case GFXSampleCount::X4: return 4;
-        case GFXSampleCount::X8: return 8;
-        case GFXSampleCount::X16: return 16;
-        case GFXSampleCount::X32: return 32;
-        case GFXSampleCount::X64: return 64;
+        case SampleCount::X1: return 1;
+        case SampleCount::X2: return 2;
+        case SampleCount::X4: return 4;
+        case SampleCount::X8: return 8;
+        case SampleCount::X16: return 16;
+        case SampleCount::X32: return 32;
+        case SampleCount::X64: return 64;
     }
 }
 

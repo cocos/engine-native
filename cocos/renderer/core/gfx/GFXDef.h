@@ -337,7 +337,7 @@ enum class TextureFlagBit : FlagBits {
 typedef TextureFlagBit TextureFlags;
 CC_ENUM_OPERATORS(TextureFlagBit);
 
-enum class GFXSampleCount : uint8_t {
+enum class SampleCount : uint8_t {
     X1,
     X2,
     X4,
@@ -716,7 +716,7 @@ struct TextureInfo {
     uint depth = 1;
     uint arrayLayer = 1;
     uint mipLevel = 1;
-    GFXSampleCount samples = GFXSampleCount::X1;
+    SampleCount samples = SampleCount::X1;
     TextureFlags flags = TextureFlagBit::NONE;
 };
 

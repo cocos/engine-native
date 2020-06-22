@@ -55,7 +55,7 @@ public:
     uint size = 0;
     uint arrayLayer = 1;
     uint mipLevel = 1;
-    GFXSampleCount samples = GFXSampleCount::X1;
+    SampleCount samples = SampleCount::X1;
     TextureFlags flags = TextureFlagBit::NONE;
     bool isPowerOf2 = false;
 
