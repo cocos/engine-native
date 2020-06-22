@@ -16,7 +16,6 @@
 #include "gfx/GFXRenderPass.h"
 #include "gfx/GFXFramebuffer.h"
 #include "gfx/GFXBindingLayout.h"
-#include "gfx/GFXPipelineLayout.h"
 #include "gfx/GFXPipelineState.h"
 #include "gfx/GFXCommandAllocator.h"
 #include "gfx/GFXCommandBuffer.h"

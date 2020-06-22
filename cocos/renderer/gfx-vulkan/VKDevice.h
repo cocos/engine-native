@@ -9,6 +9,7 @@ class CCVKGPUDevice;
 class CCVKGPUSwapchain;
 class CCVKGPUSemaphorePool;
 class CCVKGPUFencePool;
+class CCVKGPUDescriptorSetPool;
 class CCVKTexture;
 class CCVKRenderPass;
 class CCVKBuffer;
@@ -38,7 +39,6 @@ public:
     virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) override;
     virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
-    virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) override;
     virtual void copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
 
     CC_INLINE bool checkExtension(const String &extension) const {
@@ -53,11 +53,15 @@ public:
     CC_INLINE CCVKGPUSwapchain *gpuSwapchain() { return _gpuSwapchain; }
     CC_INLINE CCVKGPUSemaphorePool *gpuSemaphorePool() { return _gpuSemaphorePool; }
     CC_INLINE CCVKGPUFencePool *gpuFencePool() { return _gpuFencePool; }
+    CC_INLINE CCVKGPUDescriptorSetPool *gpuDescriptorSetPool() { return _gpuDescriptorSetPool; }
     CC_INLINE CCVKBuffer *stagingBuffer() { return _stagingBuffer; }
     CC_INLINE const std::vector<const char *> &getLayers() const { return _layers; }
     CC_INLINE const std::vector<const char *> &getExtensions() const { return _extensions; }
-    CC_INLINE bool isMultiDrawIndirectSupported() const { return _multiDrawIndirectSupported; }
     CC_INLINE bool isSwapchainReady() const { return _swapchainReady; }
+
+    CC_INLINE bool isDescriptorUpdateTemplateSupported() const { return _descriptorUpdateTemplateSupported; }
+    CC_INLINE bool isPushDescriptorSetSupported() const { return _pushDescriptorSetSupported; }
+    CC_INLINE bool isMultiDrawIndirectSupported() const { return _multiDrawIndirectSupported; }
 
     CCVKTexture *nullTexture2D = nullptr;
     CCVKTexture *nullTextureCube = nullptr;
@@ -68,6 +72,7 @@ private:
     CCVKGPUDevice *_gpuDevice = nullptr;
     CCVKGPUSemaphorePool *_gpuSemaphorePool = nullptr;
     CCVKGPUFencePool *_gpuFencePool = nullptr;
+    CCVKGPUDescriptorSetPool *_gpuDescriptorSetPool = nullptr;
     CCVKGPUSwapchain *_gpuSwapchain = nullptr;
     std::vector<CCVKTexture *> _depthStencilTextures;
     CCVKBuffer *_stagingBuffer = nullptr;
@@ -78,6 +83,9 @@ private:
     std::vector<const char *> _extensions;
 
     bool _swapchainReady = false;
+
+    bool _descriptorUpdateTemplateSupported = false;
+    bool _pushDescriptorSetSupported = false;
     bool _multiDrawIndirectSupported = false;
 };
 

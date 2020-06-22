@@ -9,7 +9,6 @@
 #include "MTLFence.h"
 #include "MTLFrameBuffer.h"
 #include "MTLInputAssembler.h"
-#include "MTLPipelineLayout.h"
 #include "MTLPipelineState.h"
 #include "MTLQueue.h"
 #include "MTLRenderPass.h"
@@ -263,15 +262,6 @@ PipelineState *CCMTLDevice::createPipelineState(const PipelineStateInfo &info) {
         return ps;
 
     CC_SAFE_DESTROY(ps);
-    return nullptr;
-}
-
-PipelineLayout *CCMTLDevice::createPipelineLayout(const PipelineLayoutInfo &info) {
-    auto pl = CC_NEW(CCMTLPipelineLayout(this));
-    if (pl && pl->initialize(info))
-        return pl;
-
-    CC_SAFE_DESTROY(pl);
     return nullptr;
 }
 

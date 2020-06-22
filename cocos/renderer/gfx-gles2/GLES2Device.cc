@@ -9,7 +9,6 @@
 #include "GLES2Fence.h"
 #include "GLES2Framebuffer.h"
 #include "GLES2InputAssembler.h"
-#include "GLES2PipelineLayout.h"
 #include "GLES2PipelineState.h"
 #include "GLES2Queue.h"
 #include "GLES2RenderPass.h"
@@ -289,15 +288,6 @@ PipelineState *GLES2Device::createPipelineState(const PipelineStateInfo &info) {
         return pipelineState;
 
     CC_SAFE_DESTROY(pipelineState);
-    return nullptr;
-}
-
-PipelineLayout *GLES2Device::createPipelineLayout(const PipelineLayoutInfo &info) {
-    PipelineLayout *layout = CC_NEW(GLES2PipelineLayout(this));
-    if (layout->initialize(info))
-        return layout;
-
-    CC_SAFE_DESTROY(layout);
     return nullptr;
 }
 
