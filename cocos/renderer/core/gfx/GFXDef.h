@@ -533,7 +533,7 @@ enum class CommandBufferType : uint8_t {
     SECONDARY,
 };
 
-enum class GFXClearFlagBit : uint8_t {
+enum class ClearFlagBit : uint8_t {
     NONE = 0,
     COLOR = 0x1,
     DEPTH = 0x2,
@@ -541,7 +541,7 @@ enum class GFXClearFlagBit : uint8_t {
     DEPTH_STENCIL = DEPTH | STENCIL,
     ALL = COLOR | DEPTH | STENCIL,
 };
-typedef GFXClearFlagBit GFXClearFlags;
+typedef ClearFlagBit GFXClearFlags;
 CC_ENUM_OPERATORS(GFXClearFlags);
 
 enum class VsyncMode : uint8_t {

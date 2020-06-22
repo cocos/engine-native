@@ -50,7 +50,7 @@ class GLES2CmdBeginRenderPass : public GFXCmd {
 public:
     GLES2GPUFramebuffer *gpuFBO = nullptr;
     GFXRect render_area;
-    GFXClearFlags clear_flags = GFXClearFlagBit::NONE;
+    GFXClearFlags clear_flags = ClearFlagBit::NONE;
     uint num_clear_colors = 0;
     GFXColor clear_colors[GFX_MAX_ATTACHMENTS];
     float clear_depth = 1.0f;

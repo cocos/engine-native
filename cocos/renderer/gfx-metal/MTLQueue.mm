@@ -103,7 +103,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                     mtlRenderPassDescriptor = _mtkView.currentRenderPassDescriptor;
                 }
 
-                if (cmdBeginRenderPass->clearFlags & GFXClearFlagBit::COLOR) {
+                if (cmdBeginRenderPass->clearFlags & ClearFlagBit::COLOR) {
                     auto count = isOffscreen ? cmdBeginRenderPass->clearColors.size()
                                              : 1;
                     for (size_t slot = 0; slot < count; slot++) {
@@ -118,13 +118,13 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                     }
                 }
 
-                if (cmdBeginRenderPass->clearFlags & GFXClearFlagBit::DEPTH) {
+                if (cmdBeginRenderPass->clearFlags & ClearFlagBit::DEPTH) {
                     mtlRenderPassDescriptor.depthAttachment.clearDepth = cmdBeginRenderPass->clearDepth;
                     mtlRenderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
                 } else
                     mtlRenderPassDescriptor.depthAttachment.loadAction = MTLLoadActionLoad;
 
-                if (cmdBeginRenderPass->clearFlags & GFXClearFlagBit::STENCIL) {
+                if (cmdBeginRenderPass->clearFlags & ClearFlagBit::STENCIL) {
                     mtlRenderPassDescriptor.stencilAttachment.clearStencil = cmdBeginRenderPass->clearStencil;
                     mtlRenderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionClear;
                 } else

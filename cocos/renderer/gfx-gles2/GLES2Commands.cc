@@ -1239,7 +1239,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                             switch (colorAttachment.loadOp) {
                                 case LoadOp::LOAD: break; // GL default behaviour
                                 case LoadOp::CLEAR: {
-                                    if (cmd->clear_flags & GFXClearFlagBit::COLOR) {
+                                    if (cmd->clear_flags & ClearFlagBit::COLOR) {
                                         if (cache->bs.targets[0].blendColorMask != ColorMask::ALL) {
                                             glColorMask(true, true, true, true);
                                         }
