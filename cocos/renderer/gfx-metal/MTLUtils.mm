@@ -379,16 +379,16 @@ MTLDepthClipMode toMTLDepthClipMode(bool isClip) {
         return MTLDepthClipModeClamp;
 }
 
-MTLCompareFunction toMTLCompareFunction(GFXComparisonFunc func) {
+MTLCompareFunction toMTLCompareFunction(ComparisonFunc func) {
     switch (func) {
-        case GFXComparisonFunc::NEVER: return MTLCompareFunctionNever;
-        case GFXComparisonFunc::LESS: return MTLCompareFunctionLess;
-        case GFXComparisonFunc::EQUAL: return MTLCompareFunctionEqual;
-        case GFXComparisonFunc::LESS_EQUAL: return MTLCompareFunctionLessEqual;
-        case GFXComparisonFunc::GREATER: return MTLCompareFunctionGreater;
-        case GFXComparisonFunc::NOT_EQUAL: return MTLCompareFunctionNotEqual;
-        case GFXComparisonFunc::GREATER_EQUAL: return MTLCompareFunctionGreaterEqual;
-        case GFXComparisonFunc::ALWAYS: return MTLCompareFunctionAlways;
+        case ComparisonFunc::NEVER: return MTLCompareFunctionNever;
+        case ComparisonFunc::LESS: return MTLCompareFunctionLess;
+        case ComparisonFunc::EQUAL: return MTLCompareFunctionEqual;
+        case ComparisonFunc::LESS_EQUAL: return MTLCompareFunctionLessEqual;
+        case ComparisonFunc::GREATER: return MTLCompareFunctionGreater;
+        case ComparisonFunc::NOT_EQUAL: return MTLCompareFunctionNotEqual;
+        case ComparisonFunc::GREATER_EQUAL: return MTLCompareFunctionGreaterEqual;
+        case ComparisonFunc::ALWAYS: return MTLCompareFunctionAlways;
     }
 }
 

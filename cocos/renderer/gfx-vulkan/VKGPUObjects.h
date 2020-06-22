@@ -156,7 +156,7 @@ public:
     Address addressV = Address::WRAP;
     Address addressW = Address::WRAP;
     uint maxAnisotropy = 16;
-    GFXComparisonFunc cmpFunc = GFXComparisonFunc::NEVER;
+    ComparisonFunc cmpFunc = ComparisonFunc::NEVER;
     GFXColor borderColor;
     uint minLOD = 0;
     uint maxLOD = 1000;

@@ -24,7 +24,7 @@ public:
     CC_INLINE Address getAddressV() const { return _addressV; }
     CC_INLINE Address getAddressW() const { return _addressW; }
     CC_INLINE uint getMaxAnisotropy() const { return _maxAnisotropy; }
-    CC_INLINE GFXComparisonFunc getCmpFunc() const { return _cmpFunc; }
+    CC_INLINE ComparisonFunc getCmpFunc() const { return _cmpFunc; }
     CC_INLINE const GFXColor &getBorderColor() const { return _borderColor; }
     CC_INLINE uint getMinLOD() const { return _minLOD; }
     CC_INLINE uint getMaxLOD() const { return _maxLOD; }
@@ -40,7 +40,7 @@ protected:
     Address _addressV = Address::WRAP;
     Address _addressW = Address::WRAP;
     uint _maxAnisotropy = 0;
-    GFXComparisonFunc _cmpFunc = GFXComparisonFunc::ALWAYS;
+    ComparisonFunc _cmpFunc = ComparisonFunc::ALWAYS;
     GFXColor _borderColor;
     uint _minLOD = 0;
     uint _maxLOD = 0;

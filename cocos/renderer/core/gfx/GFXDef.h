@@ -361,7 +361,7 @@ enum class Address : uint8_t {
     BORDER,
 };
 
-enum class GFXComparisonFunc : uint8_t {
+enum class ComparisonFunc : uint8_t {
     NEVER,
     LESS,
     EQUAL,
@@ -739,7 +739,7 @@ struct SamplerInfo {
     Address addressV = Address::WRAP;
     Address addressW = Address::WRAP;
     uint maxAnisotropy = 16;
-    GFXComparisonFunc cmpFunc = GFXComparisonFunc::NEVER;
+    ComparisonFunc cmpFunc = ComparisonFunc::NEVER;
     GFXColor borderColor;
     uint minLOD = 0;
     uint maxLOD = 1000;
@@ -935,9 +935,9 @@ struct GFXRasterizerState {
 struct GFXDepthStencilState {
     bool depthTest = true;
     bool depthWrite = true;
-    GFXComparisonFunc depthFunc = GFXComparisonFunc::LESS;
+    ComparisonFunc depthFunc = ComparisonFunc::LESS;
     bool stencilTestFront = false;
-    GFXComparisonFunc stencilFuncFront = GFXComparisonFunc::ALWAYS;
+    ComparisonFunc stencilFuncFront = ComparisonFunc::ALWAYS;
     uint stencilReadMaskFront = 0xffffffff;
     uint stencilWriteMaskFront = 0xffffffff;
     GFXStencilOp stencilFailOpFront = GFXStencilOp::KEEP;
@@ -945,7 +945,7 @@ struct GFXDepthStencilState {
     GFXStencilOp stencilPassOpFront = GFXStencilOp::KEEP;
     uint stencilRefFront = 1;
     bool stencilTestBack = false;
-    GFXComparisonFunc stencilFuncBack = GFXComparisonFunc::ALWAYS;
+    ComparisonFunc stencilFuncBack = ComparisonFunc::ALWAYS;
     uint stencilReadMaskBack = 0xffffffff;
     uint stencilWriteMaskBack = 0xffffffff;
     GFXStencilOp stencilFailOpBack = GFXStencilOp::KEEP;

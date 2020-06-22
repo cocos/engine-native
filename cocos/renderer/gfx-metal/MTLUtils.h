@@ -29,7 +29,7 @@ MTLViewport toMTLViewport(const GFXViewport &);
 MTLScissorRect toMTLScissorRect(const GFXRect &);
 MTLTriangleFillMode toMTLTriangleFillMode(GFXPolygonMode);
 MTLDepthClipMode toMTLDepthClipMode(bool isClip);
-MTLCompareFunction toMTLCompareFunction(GFXComparisonFunc);
+MTLCompareFunction toMTLCompareFunction(ComparisonFunc);
 MTLStencilOperation toMTLStencilOperation(GFXStencilOp);
 MTLPrimitiveType toMTLPrimitiveType(GFXPrimitiveMode);
 MTLTextureUsage toMTLTextureUsage(TextureUsage);
