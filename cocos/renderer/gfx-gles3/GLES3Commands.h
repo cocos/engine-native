@@ -49,7 +49,7 @@ struct GLES3BufferTextureCopy {
 class GLES3CmdBeginRenderPass : public GFXCmd {
 public:
     GLES3GPUFramebuffer *gpuFBO = nullptr;
-    GFXRect render_area;
+    Rect render_area;
     GFXClearFlags clear_flags = ClearFlagBit::NONE;
     uint num_clear_colors = 0;
     GFXColor clear_colors[GFX_MAX_ATTACHMENTS];
@@ -83,7 +83,7 @@ public:
     GLES3GPUInputAssembler *gpuInputAssembler = nullptr;
     uint8_t state_flags[(int)GLES3State::COUNT] = {0};
     GFXViewport viewport;
-    GFXRect scissor;
+    Rect scissor;
     float lineWidth = 1.0f;
     bool depthBiasEnabled = false;
     GLES3DepthBias depthBias;

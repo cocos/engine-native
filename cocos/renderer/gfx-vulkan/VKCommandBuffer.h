@@ -19,13 +19,13 @@ public:
 
     void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr);
     void end();
-    void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil);
+    void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil);
     void endRenderPass();
     void bindPipelineState(PipelineState *pso);
     void bindBindingLayout(BindingLayout *layout);
     void bindInputAssembler(InputAssembler *ia);
     void setViewport(const GFXViewport &vp);
-    void setScissor(const GFXRect &rect);
+    void setScissor(const Rect &rect);
     void setLineWidth(const float width);
     void setDepthBias(float constant, float clamp, float slope);
     void setBlendConstants(const GFXColor &constants);
@@ -48,7 +48,7 @@ private:
     CCVKGPUFramebuffer *_curGPUFBO = nullptr;
 
     GFXViewport _curViewport;
-    GFXRect _curScissor;
+    Rect _curScissor;
     float _curLineWidth = 1.0f;
     CCVKDepthBias _curDepthBias;
     GFXColor _curBlendConstants;

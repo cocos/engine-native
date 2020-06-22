@@ -61,7 +61,7 @@ void GLES3CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES3CmdBeginRenderPass *cmd = _gles3Allocator->beginRenderPassCmdPool.alloc();
@@ -112,7 +112,7 @@ void GLES3CommandBuffer::setViewport(const GFXViewport &vp) {
     }
 }
 
-void GLES3CommandBuffer::setScissor(const GFXRect &rect) {
+void GLES3CommandBuffer::setScissor(const Rect &rect) {
     if ((_curScissor.x != rect.x) ||
         (_curScissor.y != rect.y) ||
         (_curScissor.width != rect.width) ||

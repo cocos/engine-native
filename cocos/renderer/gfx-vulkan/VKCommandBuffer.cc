@@ -80,7 +80,7 @@ void CCVKCommandBuffer::end() {
     VK_CHECK(vkEndCommandBuffer(_gpuCommandBuffer->vkCommandBuffer));
 }
 
-void CCVKCommandBuffer::beginRenderPass(Framebuffer *fbo, const GFXRect &renderArea,
+void CCVKCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &renderArea,
                                         GFXClearFlags clearFlags, const std::vector<GFXColor> &colors, float depth, int stencil) {
     _curGPUFBO = ((CCVKFramebuffer *)fbo)->gpuFBO();
     CCVKGPURenderPass *renderPass = _curGPUFBO->gpuRenderPass;
@@ -182,7 +182,7 @@ void CCVKCommandBuffer::setViewport(const GFXViewport &vp) {
     }
 }
 
-void CCVKCommandBuffer::setScissor(const GFXRect &rect) {
+void CCVKCommandBuffer::setScissor(const Rect &rect) {
     if (_curScissor != rect) {
         _curScissor = rect;
         VkRect2D scissor{{rect.x, rect.y}, {rect.width, rect.height}};

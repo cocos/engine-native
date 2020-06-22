@@ -26,7 +26,7 @@ MTLBlendOperation toMTLBlendOperation(BlendOp);
 MTLCullMode toMTLCullMode(CullMode);
 MTLWinding toMTLWinding(bool isFrontFaceCCW);
 MTLViewport toMTLViewport(const GFXViewport &);
-MTLScissorRect toMTLScissorRect(const GFXRect &);
+MTLScissorRect toMTLScissorRect(const Rect &);
 MTLTriangleFillMode toMTLTriangleFillMode(PolygonMode);
 MTLDepthClipMode toMTLDepthClipMode(bool isClip);
 MTLCompareFunction toMTLCompareFunction(ComparisonFunc);

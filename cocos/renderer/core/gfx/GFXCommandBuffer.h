@@ -16,13 +16,13 @@ public:
     virtual void destroy() = 0;
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) = 0;
     virtual void end() = 0;
-    virtual void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) = 0;
+    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) = 0;
     virtual void endRenderPass() = 0;
     virtual void bindPipelineState(PipelineState *pso) = 0;
     virtual void bindBindingLayout(BindingLayout *layout) = 0;
     virtual void bindInputAssembler(InputAssembler *ia) = 0;
     virtual void setViewport(const GFXViewport &vp) = 0;
-    virtual void setScissor(const GFXRect &rect) = 0;
+    virtual void setScissor(const Rect &rect) = 0;
     virtual void setLineWidth(const float width) = 0;
     virtual void setDepthBias(float constant, float clamp, float slope) = 0;
     virtual void setBlendConstants(const GFXColor &constants) = 0;

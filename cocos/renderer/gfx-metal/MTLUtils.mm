@@ -351,7 +351,7 @@ MTLViewport toMTLViewport(const GFXViewport &viewport) {
     return mtlViewport;
 }
 
-MTLScissorRect toMTLScissorRect(const GFXRect &rect) {
+MTLScissorRect toMTLScissorRect(const Rect &rect) {
     MTLScissorRect scissorRect;
     scissorRect.x = rect.x;
     scissorRect.y = rect.y;

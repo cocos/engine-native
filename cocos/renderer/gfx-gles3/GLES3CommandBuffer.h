@@ -21,13 +21,13 @@ public:
 
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) override;
     virtual void end() override;
-    virtual void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) override;
+    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) override;
     virtual void endRenderPass() override;
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
     virtual void bindInputAssembler(InputAssembler *ia) override;
     virtual void setViewport(const GFXViewport &vp) override;
-    virtual void setScissor(const GFXRect &rect) override;
+    virtual void setScissor(const Rect &rect) override;
     virtual void setLineWidth(const float width) override;
     virtual void setDepthBias(float constant, float clamp, float slope) override;
     virtual void setBlendConstants(const GFXColor &constants) override;
@@ -50,7 +50,7 @@ private:
     GLES3GPUBindingLayout *_curGPUBlendLayout = nullptr;
     GLES3GPUInputAssembler *_curGPUInputAssember = nullptr;
     GFXViewport _curViewport;
-    GFXRect _curScissor;
+    Rect _curScissor;
     float _curLineWidth = 1.0f;
     GLES3DepthBias _curDepthBias;
     GFXColor _curBlendConstants;

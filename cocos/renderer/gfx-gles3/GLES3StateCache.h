@@ -22,7 +22,7 @@ public:
     GLuint glFramebuffer = 0;
     GLuint glReadFBO = 0;
     GFXViewport viewport;
-    GFXRect scissor;
+    Rect scissor;
     GFXRasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;

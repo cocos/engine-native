@@ -23,13 +23,13 @@ public:
     virtual void destroy() override;
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) override;
     virtual void end() override;
-    virtual void beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) override;
+    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) override;
     virtual void endRenderPass() override;
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;
     virtual void bindInputAssembler(InputAssembler *ia) override;
     virtual void setViewport(const GFXViewport &vp) override;
-    virtual void setScissor(const GFXRect &rect) override;
+    virtual void setScissor(const Rect &rect) override;
     virtual void setLineWidth(const float width) override;
     virtual void setDepthBias(float constant, float clamp, float slope) override;
     virtual void setBlendConstants(const GFXColor &constants) override;
@@ -56,7 +56,7 @@ private:
     CCMTLInputAssembler *_currentInputAssembler = nullptr;
     CCMTLBindingLayout *_currentBindingLayout = nullptr;
     GFXViewport _currentViewport;
-    GFXRect _currentScissor;
+    Rect _currentScissor;
     // Just don't want to include "Commands.h", because "Commands.h" includes Objective-C codes.
     CCMTLDepthBias *_currentDepthBias = nullptr;
     CCMTLDepthBounds *_currentDepthBounds = nullptr;

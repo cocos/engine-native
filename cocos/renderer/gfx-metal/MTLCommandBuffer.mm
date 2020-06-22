@@ -72,7 +72,7 @@ void CCMTLCommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const GFXRect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
+void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<GFXColor> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     CCMTLCmdBeginRenderPass *cmd = _MTLCommandAllocator->_beginRenderPassCmdPool.alloc();
@@ -115,7 +115,7 @@ void CCMTLCommandBuffer::setViewport(const GFXViewport &vp) {
     }
 }
 
-void CCMTLCommandBuffer::setScissor(const GFXRect &rect) {
+void CCMTLCommandBuffer::setScissor(const Rect &rect) {
     if (_currentScissor != rect) {
         _currentScissor = rect;
         _dynamicStateDirty[static_cast<uint>(DynamicState::SCISSOR)] = true;

@@ -563,13 +563,13 @@ struct Offset {
     int z;
 };
 
-struct GFXRect {
+struct Rect {
     int x = 0;
     int y = 0;
     uint width = 0u;
     uint height = 0u;
 
-    bool operator==(const GFXRect &rs) {
+    bool operator==(const Rect &rs) {
         if (x == rs.x &&
             y == rs.y &&
             width == rs.width &&
@@ -579,7 +579,7 @@ struct GFXRect {
             return false;
     }
 
-    bool operator!=(const GFXRect &rs) {
+    bool operator!=(const Rect &rs) {
         return !(*this == rs);
     }
 };
