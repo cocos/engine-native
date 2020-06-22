@@ -660,7 +660,7 @@ struct DeviceInfo {
     Context *sharedCtx = nullptr;
 };
 
-struct GFXWindowInfo {
+struct WindowInfo {
     String title;
     int left = 0;
     int top = 0;
