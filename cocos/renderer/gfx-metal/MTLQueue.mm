@@ -165,7 +165,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                     if (binding.buffer)
                         static_cast<CCMTLBuffer *>(binding.buffer)->encodeBuffer(encoder, 0, binding.binding, binding.shaderStages);
 
-                    if (binding.shaderStages & GFXShaderType::VERTEX) {
+                    if (binding.shaderStages & ShaderType::VERTEX) {
                         if (binding.texture)
                             [encoder setVertexTexture:static_cast<CCMTLTexture *>(binding.texture)->getMTLTexture()
                                               atIndex:binding.binding];
@@ -175,7 +175,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                                                    atIndex:vertexSamplerBindings.at(binding.binding)];
                     }
 
-                    if (binding.shaderStages & GFXShaderType::FRAGMENT) {
+                    if (binding.shaderStages & ShaderType::FRAGMENT) {
                         if (binding.texture)
                             [encoder setFragmentTexture:static_cast<CCMTLTexture *>(binding.texture)->getMTLTexture()
                                                 atIndex:binding.binding];
@@ -195,7 +195,7 @@ void CCMTLQueue::executeCommands(const CCMTLCommandPackage *commandPackage, id<M
                     for (const auto &bindingInfo : gpuPipelineState->vertexBufferBindingInfo) {
                         auto index = std::get<0>(bindingInfo);
                         auto stream = std::get<1>(bindingInfo);
-                        static_cast<CCMTLBuffer *>(inputAssembler->_vertexBuffers[stream])->encodeBuffer(encoder, 0, index, GFXShaderType::VERTEX);
+                        static_cast<CCMTLBuffer *>(inputAssembler->_vertexBuffers[stream])->encodeBuffer(encoder, 0, index, ShaderType::VERTEX);
                     }
                 }
 

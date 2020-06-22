@@ -234,8 +234,8 @@ Sampler *GLES3Device::createSampler(const SamplerInfo &info) {
     return nullptr;
 }
 
-GFXShader *GLES3Device::createShader(const GFXShaderInfo &info) {
-    GFXShader *shader = CC_NEW(GLES3Shader(this));
+Shader *GLES3Device::createShader(const ShaderInfo &info) {
+    Shader *shader = CC_NEW(GLES3Shader(this));
     if (shader->initialize(info))
         return shader;
 

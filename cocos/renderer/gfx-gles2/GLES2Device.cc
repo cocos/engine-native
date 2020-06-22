@@ -238,8 +238,8 @@ Sampler *GLES2Device::createSampler(const SamplerInfo &info) {
     return nullptr;
 }
 
-GFXShader *GLES2Device::createShader(const GFXShaderInfo &info) {
-    GFXShader *shader = CC_NEW(GLES2Shader(this));
+Shader *GLES2Device::createShader(const ShaderInfo &info) {
+    Shader *shader = CC_NEW(GLES2Shader(this));
     if (shader->initialize(info))
         return shader;
 

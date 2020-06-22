@@ -7,13 +7,13 @@ namespace cc {
 namespace gfx {
 
 CCVKShader::CCVKShader(Device *device)
-: GFXShader(device) {
+: Shader(device) {
 }
 
 CCVKShader::~CCVKShader() {
 }
 
-bool CCVKShader::initialize(const GFXShaderInfo &info) {
+bool CCVKShader::initialize(const ShaderInfo &info) {
     _name = info.name;
     _stages = info.stages;
     _attributes = info.attributes;
@@ -25,7 +25,7 @@ bool CCVKShader::initialize(const GFXShaderInfo &info) {
     _gpuShader->attributes = _attributes;
     _gpuShader->blocks = _blocks;
     _gpuShader->samplers = _samplers;
-    for (GFXShaderStage &stage : _stages) {
+    for (ShaderStage &stage : _stages) {
         _gpuShader->gpuStages.push_back({stage.type, stage.source, stage.macros});
     }
 

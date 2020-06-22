@@ -165,12 +165,12 @@ public:
 };
 
 struct CCVKGPUShaderStage {
-    CCVKGPUShaderStage(GFXShaderType t, String s, GFXShaderMacroList m)
+    CCVKGPUShaderStage(ShaderType t, String s, ShaderMacroList m)
     : type(t), source(s), macros(m) {
     }
-    GFXShaderType type;
+    ShaderType type;
     String source;
-    GFXShaderMacroList macros;
+    ShaderMacroList macros;
     VkShaderModule vkShader = VK_NULL_HANDLE;
 };
 typedef vector<CCVKGPUShaderStage> CCVKGPUShaderStageList;

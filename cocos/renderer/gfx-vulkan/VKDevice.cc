@@ -599,8 +599,8 @@ Sampler *CCVKDevice::createSampler(const SamplerInfo &info) {
     return nullptr;
 }
 
-GFXShader *CCVKDevice::createShader(const GFXShaderInfo &info) {
-    GFXShader *shader = CC_NEW(CCVKShader(this));
+Shader *CCVKDevice::createShader(const ShaderInfo &info) {
+    Shader *shader = CC_NEW(CCVKShader(this));
     if (shader->initialize(info))
         return shader;
 

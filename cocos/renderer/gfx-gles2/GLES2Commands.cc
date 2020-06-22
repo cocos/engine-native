@@ -819,18 +819,18 @@ void GLES2CmdFuncCreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
         GLES2GPUShaderStage &gpu_stage = gpuShader->gpuStages[i];
 
         switch (gpu_stage.type) {
-            case GFXShaderType::VERTEX: {
+            case ShaderType::VERTEX: {
                 gl_shader_type = GL_VERTEX_SHADER;
                 shader_type_str = "Vertex Shader";
                 break;
             }
-            case GFXShaderType::FRAGMENT: {
+            case ShaderType::FRAGMENT: {
                 gl_shader_type = GL_FRAGMENT_SHADER;
                 shader_type_str = "Fragment Shader";
                 break;
             }
             default: {
-                CCASSERT(false, "Unsupported GFXShaderType");
+                CCASSERT(false, "Unsupported ShaderType");
                 return;
             }
         }

@@ -21,7 +21,7 @@ public:
     CC_INLINE uint8_t *getTransferBuffer() const { return _transferBuffer; }
     CC_INLINE MTLIndexType getIndexType() const { return _indexType; }
     CC_INLINE bool isDrawIndirectByIndex() const { return _isDrawIndirectByIndex; }
-    void encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset, uint binding, GFXShaderType stages);
+    void encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset, uint binding, ShaderType stages);
 
 private:
     void resizeBuffer(uint8_t **, uint, uint);

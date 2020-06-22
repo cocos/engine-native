@@ -6,13 +6,13 @@ namespace cc {
 namespace gfx {
 
 GLES2Shader::GLES2Shader(Device *device)
-: GFXShader(device) {
+: Shader(device) {
 }
 
 GLES2Shader::~GLES2Shader() {
 }
 
-bool GLES2Shader::initialize(const GFXShaderInfo &info) {
+bool GLES2Shader::initialize(const ShaderInfo &info) {
     _name = info.name;
     _stages = info.stages;
     _attributes = info.attributes;

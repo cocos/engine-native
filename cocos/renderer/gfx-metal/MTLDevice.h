@@ -23,7 +23,7 @@ public:
     virtual Texture *createTexture(const TextureInfo &info) override;
     virtual Texture *createTexture(const TextureViewInfo &info) override;
     virtual Sampler *createSampler(const SamplerInfo &info) override;
-    virtual GFXShader *createShader(const GFXShaderInfo &info) override;
+    virtual Shader *createShader(const ShaderInfo &info) override;
     virtual InputAssembler *createInputAssembler(const InputAssemblerInfo &info) override;
     virtual RenderPass *createRenderPass(const RenderPassInfo &info) override;
     virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) override;

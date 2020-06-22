@@ -16,7 +16,7 @@ public:
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
-    CC_INLINE GFXShader *getShader() const { return _shader; }
+    CC_INLINE Shader *getShader() const { return _shader; }
     CC_INLINE GFXPrimitiveMode getPrimitive() const { return _primitive; }
     CC_INLINE const GFXInputState &getInputState() const { return _inputState; }
     CC_INLINE const GFXRasterizerState &getRasterizerState() const { return _rasterizerState; }
@@ -28,7 +28,7 @@ public:
 
 protected:
     Device *_device = nullptr;
-    GFXShader *_shader = nullptr;
+    Shader *_shader = nullptr;
     GFXPrimitiveMode _primitive = GFXPrimitiveMode::TRIANGLE_LIST;
     GFXInputState _inputState;
     GFXRasterizerState _rasterizerState;

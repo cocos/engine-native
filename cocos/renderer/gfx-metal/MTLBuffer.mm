@@ -229,13 +229,13 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
     }
 }
 
-void CCMTLBuffer::encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset, uint binding, GFXShaderType stages) {
+void CCMTLBuffer::encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset, uint binding, ShaderType stages) {
     if (encoder == nil) {
         CC_LOG_ERROR("CCMTLBuffer::encodeBuffer: MTLRenderCommandEncoder should not be nil.");
         return;
     }
 
-    if (stages & GFXShaderType::VERTEX) {
+    if (stages & ShaderType::VERTEX) {
         if (_useOptimizedBufferEncoder) {
             [encoder setVertexBytes:_bufferBytes
                              length:_size
@@ -247,7 +247,7 @@ void CCMTLBuffer::encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset,
         }
     }
 
-    if (stages & GFXShaderType::FRAGMENT) {
+    if (stages & ShaderType::FRAGMENT) {
         if (_useOptimizedBufferEncoder) {
             [encoder setFragmentBytes:_bufferBytes
                                length:_size

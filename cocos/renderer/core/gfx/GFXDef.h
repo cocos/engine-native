@@ -8,7 +8,7 @@ class Device;
 class Buffer;
 class Texture;
 class Sampler;
-class GFXShader;
+class Shader;
 class InputAssembler;
 class RenderPass;
 class Framebuffer;
@@ -419,7 +419,7 @@ enum class GFXColorMask : uint8_t {
 };
 CC_ENUM_OPERATORS(GFXColorMask);
 
-enum class GFXShaderType : uint8_t {
+enum class ShaderType : uint8_t {
     NONE = 0x0,
     VERTEX = 0x1,
     CONTROL = 0x2,
@@ -429,7 +429,7 @@ enum class GFXShaderType : uint8_t {
     COMPUTE = 0x20,
     ALL = 0x3f,
 };
-CC_ENUM_OPERATORS(GFXShaderType);
+CC_ENUM_OPERATORS(ShaderType);
 
 enum class GFXLoadOp : uint8_t {
     LOAD,    // Load the contents from the fbo from previous
@@ -746,12 +746,12 @@ struct SamplerInfo {
     float mipLODBias = 0.0f;
 };
 
-struct GFXShaderMacro {
+struct ShaderMacro {
     String macro;
     String value;
 };
 
-typedef vector<GFXShaderMacro> GFXShaderMacroList;
+typedef vector<ShaderMacro> ShaderMacroList;
 
 struct GFXUniform {
     String name;
@@ -762,7 +762,7 @@ struct GFXUniform {
 typedef vector<GFXUniform> GFXUniformList;
 
 struct GFXUniformBlock {
-    GFXShaderType shaderStages = GFXShaderType::NONE;
+    ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     String name;
     GFXUniformList uniforms;
@@ -771,7 +771,7 @@ struct GFXUniformBlock {
 typedef vector<GFXUniformBlock> GFXUniformBlockList;
 
 struct GFXUniformSampler {
-    GFXShaderType shaderStages = GFXShaderType::NONE;
+    ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     String name;
     GFXType type = GFXType::UNKNOWN;
@@ -780,13 +780,13 @@ struct GFXUniformSampler {
 
 typedef vector<GFXUniformSampler> GFXUniformSamplerList;
 
-struct GFXShaderStage {
-    GFXShaderType type;
+struct ShaderStage {
+    ShaderType type;
     String source;
-    GFXShaderMacroList macros;
+    ShaderMacroList macros;
 };
 
-typedef vector<GFXShaderStage> GFXShaderStageList;
+typedef vector<ShaderStage> ShaderStageList;
 
 struct GFXAttribute {
     String name;
@@ -800,9 +800,9 @@ struct GFXAttribute {
 typedef vector<GFXAttribute> GFXAttributeList;
 typedef vector<Buffer *> BufferList;
 
-struct GFXShaderInfo {
+struct ShaderInfo {
     String name;
-    GFXShaderStageList stages;
+    ShaderStageList stages;
     GFXAttributeList attributes;
     GFXUniformBlockList blocks;
     GFXUniformSamplerList samplers;
@@ -873,7 +873,7 @@ struct FramebufferInfo {
 };
 
 struct GFXBinding {
-    GFXShaderType shaderStages = GFXShaderType::NONE;
+    ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     GFXBindingType type = GFXBindingType::UNKNOWN;
     String name;
@@ -887,7 +887,7 @@ struct BindingLayoutInfo {
 };
 
 struct GFXBindingUnit {
-    GFXShaderType shaderStages = GFXShaderType::NONE;
+    ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     GFXBindingType type = GFXBindingType::UNKNOWN;
     String name;
@@ -900,7 +900,7 @@ struct GFXBindingUnit {
 typedef vector<GFXBindingUnit> GFXBindingUnitList;
 
 struct GFXPushConstantRange {
-    GFXShaderType shaderType = GFXShaderType::NONE;
+    ShaderType shaderType = ShaderType::NONE;
     uint offset = 0;
     uint count = 0;
 };
@@ -980,7 +980,7 @@ struct GFXBlendState {
 
 struct PipelineStateInfo {
     GFXPrimitiveMode primitive = GFXPrimitiveMode::TRIANGLE_LIST;
-    GFXShader *shader = nullptr;
+    Shader *shader = nullptr;
     GFXInputState inputState;
     GFXRasterizerState rasterizerState;
     GFXDepthStencilState depthStencilState;

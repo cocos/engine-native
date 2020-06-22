@@ -10,16 +10,16 @@ namespace cc {
 namespace gfx {
 namespace {
 
-EShLanguage getShaderStage(GFXShaderType type) {
+EShLanguage getShaderStage(ShaderType type) {
     switch (type) {
-        case GFXShaderType::VERTEX: return EShLangVertex;
-        case GFXShaderType::CONTROL: return EShLangTessControl;
-        case GFXShaderType::EVALUATION: return EShLangTessEvaluation;
-        case GFXShaderType::GEOMETRY: return EShLangGeometry;
-        case GFXShaderType::FRAGMENT: return EShLangFragment;
-        case GFXShaderType::COMPUTE: return EShLangCompute;
+        case ShaderType::VERTEX: return EShLangVertex;
+        case ShaderType::CONTROL: return EShLangTessControl;
+        case ShaderType::EVALUATION: return EShLangTessEvaluation;
+        case ShaderType::GEOMETRY: return EShLangGeometry;
+        case ShaderType::FRAGMENT: return EShLangFragment;
+        case ShaderType::COMPUTE: return EShLangCompute;
         default: {
-            CCASSERT(false, "Unsupported GFXShaderType, convert to EShLanguage failed.");
+            CCASSERT(false, "Unsupported ShaderType, convert to EShLanguage failed.");
             return EShLangVertex;
         }
     }
@@ -49,7 +49,7 @@ glslang::EShTargetLanguageVersion getTargetVersion(int vulkanMinorVersion) {
     }
 }
 
-const std::vector<unsigned int> GLSL2SPIRV(GFXShaderType type, const String &source, int vulkanMinorVersion = 2) {
+const std::vector<unsigned int> GLSL2SPIRV(ShaderType type, const String &source, int vulkanMinorVersion = 2) {
     static bool glslangInitialized = false;
     if (!glslangInitialized) {
         glslang::InitializeProcess();
@@ -511,7 +511,7 @@ MTLSamplerMipFilter toMTLSamplerMipFilter(GFXFilter filter) {
 }
 
 String compileGLSLShader2Msl(const String &src,
-                             GFXShaderType shaderType,
+                             ShaderType shaderType,
                              int maxSamplerUnits,
                              std::unordered_map<uint, uint> &samplerBindings) {
 #if USE_METAL

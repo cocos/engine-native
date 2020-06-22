@@ -212,7 +212,7 @@ Sampler *CCMTLDevice::createSampler(const SamplerInfo &info) {
     return sampler;
 }
 
-GFXShader *CCMTLDevice::createShader(const GFXShaderInfo &info) {
+Shader *CCMTLDevice::createShader(const ShaderInfo &info) {
     auto shader = CC_NEW(CCMTLShader(this));
     if (shader && shader->initialize(info))
         return shader;

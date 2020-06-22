@@ -395,29 +395,29 @@ VkColorComponentFlags MapVkColorComponentFlags(GFXColorMask colorMask) {
     return (VkColorComponentFlags)flags;
 }
 
-VkShaderStageFlagBits MapVkShaderStageFlagBits(GFXShaderType stage) {
+VkShaderStageFlagBits MapVkShaderStageFlagBits(ShaderType stage) {
     switch (stage) {
-        case GFXShaderType::VERTEX: return VK_SHADER_STAGE_VERTEX_BIT;
-        case GFXShaderType::CONTROL: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-        case GFXShaderType::EVALUATION: return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-        case GFXShaderType::GEOMETRY: return VK_SHADER_STAGE_GEOMETRY_BIT;
-        case GFXShaderType::FRAGMENT: return VK_SHADER_STAGE_FRAGMENT_BIT;
-        case GFXShaderType::COMPUTE: return VK_SHADER_STAGE_COMPUTE_BIT;
+        case ShaderType::VERTEX: return VK_SHADER_STAGE_VERTEX_BIT;
+        case ShaderType::CONTROL: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+        case ShaderType::EVALUATION: return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+        case ShaderType::GEOMETRY: return VK_SHADER_STAGE_GEOMETRY_BIT;
+        case ShaderType::FRAGMENT: return VK_SHADER_STAGE_FRAGMENT_BIT;
+        case ShaderType::COMPUTE: return VK_SHADER_STAGE_COMPUTE_BIT;
         default: {
-            CCASSERT(false, "Unsupported GFXShaderType, convert to VkShaderStageFlagBits failed.");
+            CCASSERT(false, "Unsupported ShaderType, convert to VkShaderStageFlagBits failed.");
             return VK_SHADER_STAGE_VERTEX_BIT;
         }
     }
 }
 
-VkShaderStageFlags MapVkShaderStageFlags(GFXShaderType stages) {
+VkShaderStageFlags MapVkShaderStageFlags(ShaderType stages) {
     uint flags = 0u;
-    if (stages & GFXShaderType::VERTEX) flags |= VK_SHADER_STAGE_VERTEX_BIT;
-    if (stages & GFXShaderType::CONTROL) flags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-    if (stages & GFXShaderType::EVALUATION) flags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-    if (stages & GFXShaderType::GEOMETRY) flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-    if (stages & GFXShaderType::FRAGMENT) flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-    if (stages & GFXShaderType::COMPUTE) flags |= VK_SHADER_STAGE_COMPUTE_BIT;
+    if (stages & ShaderType::VERTEX) flags |= VK_SHADER_STAGE_VERTEX_BIT;
+    if (stages & ShaderType::CONTROL) flags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+    if (stages & ShaderType::EVALUATION) flags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+    if (stages & ShaderType::GEOMETRY) flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+    if (stages & ShaderType::FRAGMENT) flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+    if (stages & ShaderType::COMPUTE) flags |= VK_SHADER_STAGE_COMPUTE_BIT;
     return (VkShaderStageFlags)flags;
 }
 
