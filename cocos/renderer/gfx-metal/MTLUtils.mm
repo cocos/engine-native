@@ -149,38 +149,38 @@ MTLClearColor toMTLClearColor(const GFXColor &clearColor) {
     return MTLClearColorMake(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 }
 
-MTLVertexFormat toMTLVertexFormat(GFXFormat format, bool isNormalized) {
+MTLVertexFormat toMTLVertexFormat(Format format, bool isNormalized) {
     switch (format) {
-        case GFXFormat::R32F: return MTLVertexFormatFloat;
-        case GFXFormat::R32I: return MTLVertexFormatInt;
-        case GFXFormat::R32UI: return MTLVertexFormatUInt;
-        case GFXFormat::RG8: return isNormalized ? MTLVertexFormatUChar2Normalized : MTLVertexFormatUChar2;
-        case GFXFormat::RG8I: return isNormalized ? MTLVertexFormatChar2Normalized : MTLVertexFormatChar2;
-        case GFXFormat::RG16F: return MTLVertexFormatHalf2;
-        case GFXFormat::RG16UI: return isNormalized ? MTLVertexFormatUShort2Normalized : MTLVertexFormatUShort2;
-        case GFXFormat::RG16I: return isNormalized ? MTLVertexFormatShort2Normalized : MTLVertexFormatShort2;
-        case GFXFormat::RG32I: return MTLVertexFormatInt2;
-        case GFXFormat::RG32UI: return MTLVertexFormatUInt2;
-        case GFXFormat::RG32F: return MTLVertexFormatFloat2;
-        case GFXFormat::RGB8: return isNormalized ? MTLVertexFormatUChar3Normalized : MTLVertexFormatUChar3;
-        case GFXFormat::RGB8I: return isNormalized ? MTLVertexFormatChar3Normalized : MTLVertexFormatChar3;
-        case GFXFormat::RGB16I: return isNormalized ? MTLVertexFormatShort3Normalized : MTLVertexFormatShort3;
-        case GFXFormat::RGB16UI: return isNormalized ? MTLVertexFormatUShort3Normalized : MTLVertexFormatUShort3;
-        case GFXFormat::RGB16F: return MTLVertexFormatHalf3;
-        case GFXFormat::RGB32I: return MTLVertexFormatInt3;
-        case GFXFormat::RGB32UI: return MTLVertexFormatUInt3;
-        case GFXFormat::RGB32F: return MTLVertexFormatFloat3;
-        case GFXFormat::RGBA8: return isNormalized ? MTLVertexFormatUChar4Normalized : MTLVertexFormatUChar4;
-        case GFXFormat::RGBA8I: return isNormalized ? MTLVertexFormatChar4Normalized : MTLVertexFormatChar4;
-        case GFXFormat::RGBA16I: return isNormalized ? MTLVertexFormatShort4Normalized : MTLVertexFormatShort4;
-        case GFXFormat::RGBA16UI: return isNormalized ? MTLVertexFormatUShort4Normalized : MTLVertexFormatUShort4;
-        case GFXFormat::RGBA16F: return MTLVertexFormatHalf4;
-        case GFXFormat::RGBA32I: return MTLVertexFormatInt4;
-        case GFXFormat::RGBA32UI: return MTLVertexFormatUInt4;
-        case GFXFormat::RGBA32F: return MTLVertexFormatFloat4;
-        case GFXFormat::RGB10A2: return isNormalized ? MTLVertexFormatInt1010102Normalized : MTLVertexFormatInvalid;
-        case GFXFormat::RGB10A2UI: return isNormalized ? MTLVertexFormatUInt1010102Normalized : MTLVertexFormatInvalid;
-        case GFXFormat::BGRA8: {
+        case Format::R32F: return MTLVertexFormatFloat;
+        case Format::R32I: return MTLVertexFormatInt;
+        case Format::R32UI: return MTLVertexFormatUInt;
+        case Format::RG8: return isNormalized ? MTLVertexFormatUChar2Normalized : MTLVertexFormatUChar2;
+        case Format::RG8I: return isNormalized ? MTLVertexFormatChar2Normalized : MTLVertexFormatChar2;
+        case Format::RG16F: return MTLVertexFormatHalf2;
+        case Format::RG16UI: return isNormalized ? MTLVertexFormatUShort2Normalized : MTLVertexFormatUShort2;
+        case Format::RG16I: return isNormalized ? MTLVertexFormatShort2Normalized : MTLVertexFormatShort2;
+        case Format::RG32I: return MTLVertexFormatInt2;
+        case Format::RG32UI: return MTLVertexFormatUInt2;
+        case Format::RG32F: return MTLVertexFormatFloat2;
+        case Format::RGB8: return isNormalized ? MTLVertexFormatUChar3Normalized : MTLVertexFormatUChar3;
+        case Format::RGB8I: return isNormalized ? MTLVertexFormatChar3Normalized : MTLVertexFormatChar3;
+        case Format::RGB16I: return isNormalized ? MTLVertexFormatShort3Normalized : MTLVertexFormatShort3;
+        case Format::RGB16UI: return isNormalized ? MTLVertexFormatUShort3Normalized : MTLVertexFormatUShort3;
+        case Format::RGB16F: return MTLVertexFormatHalf3;
+        case Format::RGB32I: return MTLVertexFormatInt3;
+        case Format::RGB32UI: return MTLVertexFormatUInt3;
+        case Format::RGB32F: return MTLVertexFormatFloat3;
+        case Format::RGBA8: return isNormalized ? MTLVertexFormatUChar4Normalized : MTLVertexFormatUChar4;
+        case Format::RGBA8I: return isNormalized ? MTLVertexFormatChar4Normalized : MTLVertexFormatChar4;
+        case Format::RGBA16I: return isNormalized ? MTLVertexFormatShort4Normalized : MTLVertexFormatShort4;
+        case Format::RGBA16UI: return isNormalized ? MTLVertexFormatUShort4Normalized : MTLVertexFormatUShort4;
+        case Format::RGBA16F: return MTLVertexFormatHalf4;
+        case Format::RGBA32I: return MTLVertexFormatInt4;
+        case Format::RGBA32UI: return MTLVertexFormatUInt4;
+        case Format::RGBA32F: return MTLVertexFormatFloat4;
+        case Format::RGB10A2: return isNormalized ? MTLVertexFormatInt1010102Normalized : MTLVertexFormatInvalid;
+        case Format::RGB10A2UI: return isNormalized ? MTLVertexFormatUInt1010102Normalized : MTLVertexFormatInvalid;
+        case Format::BGRA8: {
 #if CC_PLATFORM == CC_PLATFORM_MAC_IOS
             if (@available(iOS 11.0, *)) {
                 if (isNormalized) {
@@ -208,73 +208,73 @@ MTLVertexFormat toMTLVertexFormat(GFXFormat format, bool isNormalized) {
     }
 }
 
-GFXFormat convertGFXPixelFormat(GFXFormat format) {
+Format convertGFXPixelFormat(Format format) {
     switch (format) {
-        case GFXFormat::RGB8: return GFXFormat::RGBA8;
-        case GFXFormat::RGB32F: return GFXFormat::RGBA32F;
+        case Format::RGB8: return Format::RGBA8;
+        case Format::RGB32F: return Format::RGBA32F;
         default: return format;
     }
 }
 
-MTLPixelFormat toMTLPixelFormat(GFXFormat format) {
+MTLPixelFormat toMTLPixelFormat(Format format) {
     switch (format) {
-        case GFXFormat::A8: return MTLPixelFormatA8Unorm;
-        case GFXFormat::R8: return MTLPixelFormatR8Uint;
-        case GFXFormat::R8SN: return MTLPixelFormatR8Snorm;
-        case GFXFormat::R8UI: return MTLPixelFormatR8Uint;
-        case GFXFormat::R16F: return MTLPixelFormatR16Float;
-        case GFXFormat::R32F: return MTLPixelFormatR32Float;
-        case GFXFormat::R32UI: return MTLPixelFormatR32Uint;
-        case GFXFormat::R32I: return MTLPixelFormatR32Sint;
+        case Format::A8: return MTLPixelFormatA8Unorm;
+        case Format::R8: return MTLPixelFormatR8Uint;
+        case Format::R8SN: return MTLPixelFormatR8Snorm;
+        case Format::R8UI: return MTLPixelFormatR8Uint;
+        case Format::R16F: return MTLPixelFormatR16Float;
+        case Format::R32F: return MTLPixelFormatR32Float;
+        case Format::R32UI: return MTLPixelFormatR32Uint;
+        case Format::R32I: return MTLPixelFormatR32Sint;
 
-        case GFXFormat::RG8: return MTLPixelFormatRG8Unorm;
-        case GFXFormat::RG8SN: return MTLPixelFormatRG8Snorm;
-        case GFXFormat::RG8UI: return MTLPixelFormatRG8Uint;
-        case GFXFormat::RG8I: return MTLPixelFormatRG8Sint;
-        case GFXFormat::RG16F: return MTLPixelFormatRG16Float;
-        case GFXFormat::RG16UI: return MTLPixelFormatRG16Uint;
-        case GFXFormat::RG16I:
+        case Format::RG8: return MTLPixelFormatRG8Unorm;
+        case Format::RG8SN: return MTLPixelFormatRG8Snorm;
+        case Format::RG8UI: return MTLPixelFormatRG8Uint;
+        case Format::RG8I: return MTLPixelFormatRG8Sint;
+        case Format::RG16F: return MTLPixelFormatRG16Float;
+        case Format::RG16UI: return MTLPixelFormatRG16Uint;
+        case Format::RG16I:
             return MTLPixelFormatRG16Sint;
 
-            //            case GFXFormat::RGB8SN: return MTLPixelFormatRGBA8Snorm;
-            //            case GFXFormat::RGB8UI: return MTLPixelFormatRGBA8Uint;
-            //            case GFXFormat::RGB8I: return MTLPixelFormatRGBA8Sint;
-            //            case GFXFormat::RGB16F: return MTLPixelFormatRGBA16Float;
-            //            case GFXFormat::RGB16UI: return MTLPixelFormatRGBA16Uint;
-            //            case GFXFormat::RGB16I: return MTLPixelFormatRGBA16Sint;
-            //            case GFXFormat::RGB32F: return MTLPixelFormatRGBA32Float;
-            //            case GFXFormat::RGB32UI: return MTLPixelFormatRGBA32Uint;
-            //            case GFXFormat::RGB32I: return MTLPixelFormatRGBA32Sint;
+            //            case Format::RGB8SN: return MTLPixelFormatRGBA8Snorm;
+            //            case Format::RGB8UI: return MTLPixelFormatRGBA8Uint;
+            //            case Format::RGB8I: return MTLPixelFormatRGBA8Sint;
+            //            case Format::RGB16F: return MTLPixelFormatRGBA16Float;
+            //            case Format::RGB16UI: return MTLPixelFormatRGBA16Uint;
+            //            case Format::RGB16I: return MTLPixelFormatRGBA16Sint;
+            //            case Format::RGB32F: return MTLPixelFormatRGBA32Float;
+            //            case Format::RGB32UI: return MTLPixelFormatRGBA32Uint;
+            //            case Format::RGB32I: return MTLPixelFormatRGBA32Sint;
 
-        case GFXFormat::RGBA8: return MTLPixelFormatRGBA8Unorm;
-        case GFXFormat::RGBA8SN: return MTLPixelFormatRGBA8Snorm;
-        case GFXFormat::RGBA8UI: return MTLPixelFormatRGBA8Uint;
-        case GFXFormat::RGBA8I: return MTLPixelFormatRGBA8Sint;
-        case GFXFormat::RGBA16F: return MTLPixelFormatRGBA16Float;
-        case GFXFormat::RGBA16UI: return MTLPixelFormatRGBA16Uint;
-        case GFXFormat::RGBA16I: return MTLPixelFormatRGBA16Sint;
-        case GFXFormat::RGBA32F: return MTLPixelFormatRGBA32Float;
-        case GFXFormat::RGBA32UI: return MTLPixelFormatRGBA32Uint;
-        case GFXFormat::RGBA32I: return MTLPixelFormatRGBA32Sint;
-        case GFXFormat::BGRA8:
+        case Format::RGBA8: return MTLPixelFormatRGBA8Unorm;
+        case Format::RGBA8SN: return MTLPixelFormatRGBA8Snorm;
+        case Format::RGBA8UI: return MTLPixelFormatRGBA8Uint;
+        case Format::RGBA8I: return MTLPixelFormatRGBA8Sint;
+        case Format::RGBA16F: return MTLPixelFormatRGBA16Float;
+        case Format::RGBA16UI: return MTLPixelFormatRGBA16Uint;
+        case Format::RGBA16I: return MTLPixelFormatRGBA16Sint;
+        case Format::RGBA32F: return MTLPixelFormatRGBA32Float;
+        case Format::RGBA32UI: return MTLPixelFormatRGBA32Uint;
+        case Format::RGBA32I: return MTLPixelFormatRGBA32Sint;
+        case Format::BGRA8:
             return MTLPixelFormatBGRA8Unorm;
 
             // Should convert.
-            //            case GFXFormat::R5G6B5: return MTLPixelFormatB5G6R5Unorm;
-            //            case GFXFormat::RGB5A1: return MTLPixelFormatBGR5A1Unorm;
-            //            case GFXFormat::RGBA4: return MTLPixelFormatABGR4Unorm;
-            //            case GFXFormat::RGB10A2: return MTLPixelFormatBGR10A2Unorm;
-        case GFXFormat::RGB9E5: return MTLPixelFormatRGB9E5Float;
-        case GFXFormat::RGB10A2UI: return MTLPixelFormatRGB10A2Uint;
-        case GFXFormat::R11G11B10F: return MTLPixelFormatRG11B10Float;
+            //            case Format::R5G6B5: return MTLPixelFormatB5G6R5Unorm;
+            //            case Format::RGB5A1: return MTLPixelFormatBGR5A1Unorm;
+            //            case Format::RGBA4: return MTLPixelFormatABGR4Unorm;
+            //            case Format::RGB10A2: return MTLPixelFormatBGR10A2Unorm;
+        case Format::RGB9E5: return MTLPixelFormatRGB9E5Float;
+        case Format::RGB10A2UI: return MTLPixelFormatRGB10A2Uint;
+        case Format::R11G11B10F: return MTLPixelFormatRG11B10Float;
 
-        case GFXFormat::D16: return MTLPixelFormatDepth16Unorm;
-        case GFXFormat::D24S8: return MTLPixelFormatDepth24Unorm_Stencil8;
-        case GFXFormat::D32F: return MTLPixelFormatDepth32Float;
-        case GFXFormat::D32F_S8: return MTLPixelFormatDepth32Float_Stencil8;
+        case Format::D16: return MTLPixelFormatDepth16Unorm;
+        case Format::D24S8: return MTLPixelFormatDepth24Unorm_Stencil8;
+        case Format::D32F: return MTLPixelFormatDepth32Float;
+        case Format::D32F_S8: return MTLPixelFormatDepth32Float_Stencil8;
 
-        case GFXFormat::BC1_ALPHA: return MTLPixelFormatBC1_RGBA;
-        case GFXFormat::BC1_SRGB_ALPHA: return MTLPixelFormatBC1_RGBA_sRGB;
+        case Format::BC1_ALPHA: return MTLPixelFormatBC1_RGBA;
+        case Format::BC1_SRGB_ALPHA: return MTLPixelFormatBC1_RGBA_sRGB;
 
         default: {
             CC_LOG_ERROR("Invalid pixel format %u", format);
@@ -1097,10 +1097,10 @@ bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet) {
 #endif
     return false;
 }
-bool isDepthStencilFormatSupported(GFXFormat format, uint family) {
+bool isDepthStencilFormatSupported(Format format, uint family) {
     GPUFamily gpuFamily = static_cast<GPUFamily>(family);
     switch (format) {
-        case GFXFormat::D16:
+        case Format::D16:
             switch (gpuFamily) {
                 case GPUFamily::Apple1:
                 case GPUFamily::Apple2:
@@ -1114,8 +1114,8 @@ bool isDepthStencilFormatSupported(GFXFormat format, uint family) {
                 default:
                     return false;
             }
-        case GFXFormat::D32F:
-        case GFXFormat::D32F_S8:
+        case Format::D32F:
+        case Format::D32F_S8:
             switch (gpuFamily) {
                 case GPUFamily::Apple1:
                 case GPUFamily::Apple2:

@@ -16,10 +16,10 @@ MTLResourceOptions toMTLResourseOption(GFXMemoryUsage usage);
 MTLLoadAction toMTLLoadAction(GFXLoadOp op);
 MTLStoreAction toMTLStoreAction(GFXStoreOp op);
 MTLClearColor toMTLClearColor(const GFXColor &clearColor);
-MTLVertexFormat toMTLVertexFormat(GFXFormat, bool);
-MTLPixelFormat toMTLPixelFormat(GFXFormat);
+MTLVertexFormat toMTLVertexFormat(Format, bool);
+MTLPixelFormat toMTLPixelFormat(Format);
 // Because some pixel format is not supported on metal, so need to convert to supported pixel format.
-GFXFormat convertGFXPixelFormat(GFXFormat);
+Format convertGFXPixelFormat(Format);
 MTLColorWriteMask toMTLColorWriteMask(GFXColorMask);
 MTLBlendFactor toMTLBlendFactor(GFXBlendFactor);
 MTLBlendOperation toMTLBlendOperation(GFXBlendOp);
@@ -59,7 +59,7 @@ bool isColorBufferFloatSupported(uint family);
 bool isColorBufferHalfFloatSupported(uint family);
 bool isLinearTextureSupported(uint family);
 bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet);
-bool isDepthStencilFormatSupported(GFXFormat format, uint family);
+bool isDepthStencilFormatSupported(Format format, uint family);
 String featureSetToString(MTLFeatureSet featureSet);
 
 } // namespace mu

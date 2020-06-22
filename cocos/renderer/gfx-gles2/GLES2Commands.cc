@@ -10,166 +10,166 @@ namespace cc {
 namespace gfx {
 
 namespace {
-GLenum MapGLInternalFormat(GFXFormat format) {
+GLenum MapGLInternalFormat(Format format) {
     switch (format) {
-        case GFXFormat::A8: return GL_ALPHA;
-        case GFXFormat::L8: return GL_LUMINANCE;
-        case GFXFormat::LA8: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::R8: return GL_LUMINANCE;
-        case GFXFormat::R8SN: return GL_LUMINANCE;
-        case GFXFormat::R8UI: return GL_LUMINANCE;
-        case GFXFormat::R8I: return GL_LUMINANCE;
-        case GFXFormat::RG8: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RG8SN: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RG8UI: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RG8I: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RGB8: return GL_RGB;
-        case GFXFormat::RGB8SN: return GL_RGB;
-        case GFXFormat::RGB8UI: return GL_RGB;
-        case GFXFormat::RGB8I: return GL_RGB;
-        case GFXFormat::RGBA8: return GL_RGBA;
-        case GFXFormat::RGBA8SN: return GL_RGBA;
-        case GFXFormat::RGBA8UI: return GL_RGBA;
-        case GFXFormat::RGBA8I: return GL_RGBA;
-        case GFXFormat::R16I: return GL_LUMINANCE;
-        case GFXFormat::R16UI: return GL_LUMINANCE;
-        case GFXFormat::R16F: return GL_LUMINANCE;
-        case GFXFormat::RG16I: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RG16UI: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RG16F: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RGB16I: return GL_RGB;
-        case GFXFormat::RGB16UI: return GL_RGB;
-        case GFXFormat::RGB16F: return GL_RGB;
-        case GFXFormat::RGBA16I: return GL_RGBA;
-        case GFXFormat::RGBA16UI: return GL_RGBA;
-        case GFXFormat::RGBA16F: return GL_RGBA;
-        case GFXFormat::R32I: return GL_LUMINANCE;
-        case GFXFormat::R32UI: return GL_LUMINANCE;
-        case GFXFormat::R32F: return GL_LUMINANCE;
-        case GFXFormat::RG32I: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RG32UI: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RG32F: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RGB32I: return GL_RGB;
-        case GFXFormat::RGB32UI: return GL_RGB;
-        case GFXFormat::RGB32F: return GL_RGB;
-        case GFXFormat::RGBA32I: return GL_RGBA;
-        case GFXFormat::RGBA32UI: return GL_RGBA;
+        case Format::A8: return GL_ALPHA;
+        case Format::L8: return GL_LUMINANCE;
+        case Format::LA8: return GL_LUMINANCE_ALPHA;
+        case Format::R8: return GL_LUMINANCE;
+        case Format::R8SN: return GL_LUMINANCE;
+        case Format::R8UI: return GL_LUMINANCE;
+        case Format::R8I: return GL_LUMINANCE;
+        case Format::RG8: return GL_LUMINANCE_ALPHA;
+        case Format::RG8SN: return GL_LUMINANCE_ALPHA;
+        case Format::RG8UI: return GL_LUMINANCE_ALPHA;
+        case Format::RG8I: return GL_LUMINANCE_ALPHA;
+        case Format::RGB8: return GL_RGB;
+        case Format::RGB8SN: return GL_RGB;
+        case Format::RGB8UI: return GL_RGB;
+        case Format::RGB8I: return GL_RGB;
+        case Format::RGBA8: return GL_RGBA;
+        case Format::RGBA8SN: return GL_RGBA;
+        case Format::RGBA8UI: return GL_RGBA;
+        case Format::RGBA8I: return GL_RGBA;
+        case Format::R16I: return GL_LUMINANCE;
+        case Format::R16UI: return GL_LUMINANCE;
+        case Format::R16F: return GL_LUMINANCE;
+        case Format::RG16I: return GL_LUMINANCE_ALPHA;
+        case Format::RG16UI: return GL_LUMINANCE_ALPHA;
+        case Format::RG16F: return GL_LUMINANCE_ALPHA;
+        case Format::RGB16I: return GL_RGB;
+        case Format::RGB16UI: return GL_RGB;
+        case Format::RGB16F: return GL_RGB;
+        case Format::RGBA16I: return GL_RGBA;
+        case Format::RGBA16UI: return GL_RGBA;
+        case Format::RGBA16F: return GL_RGBA;
+        case Format::R32I: return GL_LUMINANCE;
+        case Format::R32UI: return GL_LUMINANCE;
+        case Format::R32F: return GL_LUMINANCE;
+        case Format::RG32I: return GL_LUMINANCE_ALPHA;
+        case Format::RG32UI: return GL_LUMINANCE_ALPHA;
+        case Format::RG32F: return GL_LUMINANCE_ALPHA;
+        case Format::RGB32I: return GL_RGB;
+        case Format::RGB32UI: return GL_RGB;
+        case Format::RGB32F: return GL_RGB;
+        case Format::RGBA32I: return GL_RGBA;
+        case Format::RGBA32UI: return GL_RGBA;
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS
-        case GFXFormat::RGBA32F: return GL_RGBA32F_EXT; // driver issue
+        case Format::RGBA32F: return GL_RGBA32F_EXT; // driver issue
 #else
-        case GFXFormat::RGBA32F: return GL_RGBA;
+        case Format::RGBA32F: return GL_RGBA;
 #endif
-        case GFXFormat::R5G6B5: return GL_RGB565;
-        case GFXFormat::RGB5A1: return GL_RGB5_A1;
-        case GFXFormat::RGBA4: return GL_RGBA4;
-        case GFXFormat::RGB10A2: return GL_RGB;
-        case GFXFormat::RGB10A2UI: return GL_RGB;
-        case GFXFormat::R11G11B10F: return GL_RGB;
-        case GFXFormat::D16: return GL_DEPTH_COMPONENT;
-        case GFXFormat::D16S8: return GL_DEPTH_STENCIL_OES;
-        case GFXFormat::D24: return GL_DEPTH_COMPONENT;
-        case GFXFormat::D24S8: return GL_DEPTH_STENCIL_OES;
-        case GFXFormat::D32F: return GL_DEPTH_COMPONENT;
-        case GFXFormat::D32F_S8: return GL_DEPTH_STENCIL_OES;
+        case Format::R5G6B5: return GL_RGB565;
+        case Format::RGB5A1: return GL_RGB5_A1;
+        case Format::RGBA4: return GL_RGBA4;
+        case Format::RGB10A2: return GL_RGB;
+        case Format::RGB10A2UI: return GL_RGB;
+        case Format::R11G11B10F: return GL_RGB;
+        case Format::D16: return GL_DEPTH_COMPONENT;
+        case Format::D16S8: return GL_DEPTH_STENCIL_OES;
+        case Format::D24: return GL_DEPTH_COMPONENT;
+        case Format::D24S8: return GL_DEPTH_STENCIL_OES;
+        case Format::D32F: return GL_DEPTH_COMPONENT;
+        case Format::D32F_S8: return GL_DEPTH_STENCIL_OES;
 
-        case GFXFormat::BC1: return GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-        case GFXFormat::BC1_ALPHA: return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-        case GFXFormat::BC1_SRGB: return GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
-        case GFXFormat::BC1_SRGB_ALPHA: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
-        case GFXFormat::BC2: return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-        case GFXFormat::BC2_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT;
-        case GFXFormat::BC3: return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-        case GFXFormat::BC3_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
+        case Format::BC1: return GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+        case Format::BC1_ALPHA: return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+        case Format::BC1_SRGB: return GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
+        case Format::BC1_SRGB_ALPHA: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
+        case Format::BC2: return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+        case Format::BC2_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT;
+        case Format::BC3: return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+        case Format::BC3_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
 
-        case GFXFormat::ETC_RGB8: return GL_ETC1_RGB8_OES;
+        case Format::ETC_RGB8: return GL_ETC1_RGB8_OES;
 
-        case GFXFormat::PVRTC_RGB2: return GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-        case GFXFormat::PVRTC_RGBA2: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
-        case GFXFormat::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-        case GFXFormat::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+        case Format::PVRTC_RGB2: return GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+        case Format::PVRTC_RGBA2: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+        case Format::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+        case Format::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 
         default: {
-            CCASSERT(false, "Unsupported GFXFormat, convert to GL internal format failed.");
+            CCASSERT(false, "Unsupported Format, convert to GL internal format failed.");
             return GL_RGBA;
         }
     }
 }
 
-GLenum MapGLFormat(GFXFormat format) {
+GLenum MapGLFormat(Format format) {
     switch (format) {
-        case GFXFormat::A8: return GL_ALPHA;
-        case GFXFormat::L8: return GL_LUMINANCE;
-        case GFXFormat::LA8: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::R8:
-        case GFXFormat::R8SN:
-        case GFXFormat::R8UI:
-        case GFXFormat::R8I: return GL_LUMINANCE;
-        case GFXFormat::RG8:
-        case GFXFormat::RG8SN:
-        case GFXFormat::RG8UI:
-        case GFXFormat::RG8I: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RGB8:
-        case GFXFormat::RGB8SN:
-        case GFXFormat::RGB8UI:
-        case GFXFormat::RGB8I: return GL_RGB;
-        case GFXFormat::RGBA8:
-        case GFXFormat::RGBA8SN:
-        case GFXFormat::RGBA8UI:
-        case GFXFormat::RGBA8I: return GL_RGBA;
-        case GFXFormat::R16UI:
-        case GFXFormat::R16I:
-        case GFXFormat::R16F: return GL_LUMINANCE;
-        case GFXFormat::RG16UI:
-        case GFXFormat::RG16I:
-        case GFXFormat::RG16F: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RGB16UI:
-        case GFXFormat::RGB16I:
-        case GFXFormat::RGB16F: return GL_RGB;
-        case GFXFormat::RGBA16UI:
-        case GFXFormat::RGBA16I:
-        case GFXFormat::RGBA16F: return GL_RGBA;
-        case GFXFormat::R32UI:
-        case GFXFormat::R32I:
-        case GFXFormat::R32F: return GL_LUMINANCE;
-        case GFXFormat::RG32UI:
-        case GFXFormat::RG32I:
-        case GFXFormat::RG32F: return GL_LUMINANCE_ALPHA;
-        case GFXFormat::RGB32UI:
-        case GFXFormat::RGB32I:
-        case GFXFormat::RGB32F: return GL_RGB;
-        case GFXFormat::RGBA32UI:
-        case GFXFormat::RGBA32I:
-        case GFXFormat::RGBA32F: return GL_RGBA;
-        case GFXFormat::RGB10A2: return GL_RGBA;
-        case GFXFormat::R11G11B10F: return GL_RGB;
-        case GFXFormat::R5G6B5: return GL_RGB;
-        case GFXFormat::RGB5A1: return GL_RGBA;
-        case GFXFormat::RGBA4: return GL_RGBA;
-        case GFXFormat::D16: return GL_DEPTH_COMPONENT;
-        case GFXFormat::D16S8: return GL_DEPTH_STENCIL_OES;
-        case GFXFormat::D24: return GL_DEPTH_COMPONENT;
-        case GFXFormat::D24S8: return GL_DEPTH_STENCIL_OES;
-        case GFXFormat::D32F: return GL_DEPTH_COMPONENT;
-        case GFXFormat::D32F_S8: return GL_DEPTH_STENCIL_OES;
+        case Format::A8: return GL_ALPHA;
+        case Format::L8: return GL_LUMINANCE;
+        case Format::LA8: return GL_LUMINANCE_ALPHA;
+        case Format::R8:
+        case Format::R8SN:
+        case Format::R8UI:
+        case Format::R8I: return GL_LUMINANCE;
+        case Format::RG8:
+        case Format::RG8SN:
+        case Format::RG8UI:
+        case Format::RG8I: return GL_LUMINANCE_ALPHA;
+        case Format::RGB8:
+        case Format::RGB8SN:
+        case Format::RGB8UI:
+        case Format::RGB8I: return GL_RGB;
+        case Format::RGBA8:
+        case Format::RGBA8SN:
+        case Format::RGBA8UI:
+        case Format::RGBA8I: return GL_RGBA;
+        case Format::R16UI:
+        case Format::R16I:
+        case Format::R16F: return GL_LUMINANCE;
+        case Format::RG16UI:
+        case Format::RG16I:
+        case Format::RG16F: return GL_LUMINANCE_ALPHA;
+        case Format::RGB16UI:
+        case Format::RGB16I:
+        case Format::RGB16F: return GL_RGB;
+        case Format::RGBA16UI:
+        case Format::RGBA16I:
+        case Format::RGBA16F: return GL_RGBA;
+        case Format::R32UI:
+        case Format::R32I:
+        case Format::R32F: return GL_LUMINANCE;
+        case Format::RG32UI:
+        case Format::RG32I:
+        case Format::RG32F: return GL_LUMINANCE_ALPHA;
+        case Format::RGB32UI:
+        case Format::RGB32I:
+        case Format::RGB32F: return GL_RGB;
+        case Format::RGBA32UI:
+        case Format::RGBA32I:
+        case Format::RGBA32F: return GL_RGBA;
+        case Format::RGB10A2: return GL_RGBA;
+        case Format::R11G11B10F: return GL_RGB;
+        case Format::R5G6B5: return GL_RGB;
+        case Format::RGB5A1: return GL_RGBA;
+        case Format::RGBA4: return GL_RGBA;
+        case Format::D16: return GL_DEPTH_COMPONENT;
+        case Format::D16S8: return GL_DEPTH_STENCIL_OES;
+        case Format::D24: return GL_DEPTH_COMPONENT;
+        case Format::D24S8: return GL_DEPTH_STENCIL_OES;
+        case Format::D32F: return GL_DEPTH_COMPONENT;
+        case Format::D32F_S8: return GL_DEPTH_STENCIL_OES;
 
-        case GFXFormat::BC1: return GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-        case GFXFormat::BC1_ALPHA: return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-        case GFXFormat::BC1_SRGB: return GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
-        case GFXFormat::BC1_SRGB_ALPHA: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
-        case GFXFormat::BC2: return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-        case GFXFormat::BC2_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT;
-        case GFXFormat::BC3: return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-        case GFXFormat::BC3_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
+        case Format::BC1: return GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+        case Format::BC1_ALPHA: return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+        case Format::BC1_SRGB: return GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
+        case Format::BC1_SRGB_ALPHA: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
+        case Format::BC2: return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+        case Format::BC2_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT;
+        case Format::BC3: return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+        case Format::BC3_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
 
-        case GFXFormat::ETC_RGB8: return GL_ETC1_RGB8_OES;
+        case Format::ETC_RGB8: return GL_ETC1_RGB8_OES;
 
-        case GFXFormat::PVRTC_RGB2: return GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
-        case GFXFormat::PVRTC_RGBA2: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
-        case GFXFormat::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-        case GFXFormat::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+        case Format::PVRTC_RGB2: return GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+        case Format::PVRTC_RGBA2: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+        case Format::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+        case Format::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 
         default: {
-            CCASSERT(false, "Unsupported GFXFormat, convert to WebGL format failed.");
+            CCASSERT(false, "Unsupported Format, convert to WebGL format failed.");
             return GL_RGBA;
         }
     }
@@ -231,98 +231,98 @@ GFXType MapGFXType(GLenum glType) {
     }
 }
 
-GLenum GFXFormatToGLType(GFXFormat format) {
+GLenum FormatToGLType(Format format) {
     switch (format) {
-        case GFXFormat::R8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::R8SN: return GL_BYTE;
-        case GFXFormat::R8UI: return GL_UNSIGNED_BYTE;
-        case GFXFormat::R8I: return GL_BYTE;
-        case GFXFormat::R16UI: return GL_UNSIGNED_SHORT;
-        case GFXFormat::R16I: return GL_SHORT;
-        case GFXFormat::R32F: return GL_FLOAT;
-        case GFXFormat::R32UI: return GL_UNSIGNED_INT;
-        case GFXFormat::R32I: return GL_INT;
+        case Format::R8: return GL_UNSIGNED_BYTE;
+        case Format::R8SN: return GL_BYTE;
+        case Format::R8UI: return GL_UNSIGNED_BYTE;
+        case Format::R8I: return GL_BYTE;
+        case Format::R16UI: return GL_UNSIGNED_SHORT;
+        case Format::R16I: return GL_SHORT;
+        case Format::R32F: return GL_FLOAT;
+        case Format::R32UI: return GL_UNSIGNED_INT;
+        case Format::R32I: return GL_INT;
 
-        case GFXFormat::RG8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::RG8SN: return GL_BYTE;
-        case GFXFormat::RG8UI: return GL_UNSIGNED_BYTE;
-        case GFXFormat::RG8I: return GL_BYTE;
-        case GFXFormat::RG16UI: return GL_UNSIGNED_SHORT;
-        case GFXFormat::RG16I: return GL_SHORT;
-        case GFXFormat::RG32F: return GL_FLOAT;
-        case GFXFormat::RG32UI: return GL_UNSIGNED_INT;
-        case GFXFormat::RG32I: return GL_INT;
+        case Format::RG8: return GL_UNSIGNED_BYTE;
+        case Format::RG8SN: return GL_BYTE;
+        case Format::RG8UI: return GL_UNSIGNED_BYTE;
+        case Format::RG8I: return GL_BYTE;
+        case Format::RG16UI: return GL_UNSIGNED_SHORT;
+        case Format::RG16I: return GL_SHORT;
+        case Format::RG32F: return GL_FLOAT;
+        case Format::RG32UI: return GL_UNSIGNED_INT;
+        case Format::RG32I: return GL_INT;
 
-        case GFXFormat::RGB8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::SRGB8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::RGB8SN: return GL_BYTE;
-        case GFXFormat::RGB8UI: return GL_UNSIGNED_BYTE;
-        case GFXFormat::RGB8I: return GL_BYTE;
-        case GFXFormat::RGB16F: return GL_HALF_FLOAT_OES;
-        case GFXFormat::RGB16UI: return GL_UNSIGNED_SHORT;
-        case GFXFormat::RGB16I: return GL_SHORT;
-        case GFXFormat::RGB32F: return GL_FLOAT;
-        case GFXFormat::RGB32UI: return GL_UNSIGNED_INT;
-        case GFXFormat::RGB32I: return GL_INT;
+        case Format::RGB8: return GL_UNSIGNED_BYTE;
+        case Format::SRGB8: return GL_UNSIGNED_BYTE;
+        case Format::RGB8SN: return GL_BYTE;
+        case Format::RGB8UI: return GL_UNSIGNED_BYTE;
+        case Format::RGB8I: return GL_BYTE;
+        case Format::RGB16F: return GL_HALF_FLOAT_OES;
+        case Format::RGB16UI: return GL_UNSIGNED_SHORT;
+        case Format::RGB16I: return GL_SHORT;
+        case Format::RGB32F: return GL_FLOAT;
+        case Format::RGB32UI: return GL_UNSIGNED_INT;
+        case Format::RGB32I: return GL_INT;
 
-        case GFXFormat::RGBA8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::SRGB8_A8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::RGBA8SN: return GL_BYTE;
-        case GFXFormat::RGBA8UI: return GL_UNSIGNED_BYTE;
-        case GFXFormat::RGBA8I: return GL_BYTE;
-        case GFXFormat::RGBA16F: return GL_HALF_FLOAT_OES;
-        case GFXFormat::RGBA16UI: return GL_UNSIGNED_SHORT;
-        case GFXFormat::RGBA16I: return GL_SHORT;
-        case GFXFormat::RGBA32F: return GL_FLOAT;
-        case GFXFormat::RGBA32UI: return GL_UNSIGNED_INT;
-        case GFXFormat::RGBA32I: return GL_INT;
+        case Format::RGBA8: return GL_UNSIGNED_BYTE;
+        case Format::SRGB8_A8: return GL_UNSIGNED_BYTE;
+        case Format::RGBA8SN: return GL_BYTE;
+        case Format::RGBA8UI: return GL_UNSIGNED_BYTE;
+        case Format::RGBA8I: return GL_BYTE;
+        case Format::RGBA16F: return GL_HALF_FLOAT_OES;
+        case Format::RGBA16UI: return GL_UNSIGNED_SHORT;
+        case Format::RGBA16I: return GL_SHORT;
+        case Format::RGBA32F: return GL_FLOAT;
+        case Format::RGBA32UI: return GL_UNSIGNED_INT;
+        case Format::RGBA32I: return GL_INT;
 
-        case GFXFormat::R5G6B5: return GL_UNSIGNED_SHORT_5_6_5;
-        case GFXFormat::R11G11B10F: return GL_FLOAT;
-        case GFXFormat::RGB5A1: return GL_UNSIGNED_SHORT_5_5_5_1;
-        case GFXFormat::RGBA4: return GL_UNSIGNED_SHORT_4_4_4_4;
-        case GFXFormat::RGB10A2: return GL_UNSIGNED_BYTE;
-        case GFXFormat::RGB10A2UI: return GL_UNSIGNED_INT;
-        case GFXFormat::RGB9E5: return GL_FLOAT;
+        case Format::R5G6B5: return GL_UNSIGNED_SHORT_5_6_5;
+        case Format::R11G11B10F: return GL_FLOAT;
+        case Format::RGB5A1: return GL_UNSIGNED_SHORT_5_5_5_1;
+        case Format::RGBA4: return GL_UNSIGNED_SHORT_4_4_4_4;
+        case Format::RGB10A2: return GL_UNSIGNED_BYTE;
+        case Format::RGB10A2UI: return GL_UNSIGNED_INT;
+        case Format::RGB9E5: return GL_FLOAT;
 
-        case GFXFormat::D16: return GL_UNSIGNED_SHORT;
-        case GFXFormat::D16S8: return GL_UNSIGNED_INT_24_8_OES;
-        case GFXFormat::D24: return GL_UNSIGNED_INT;
-        case GFXFormat::D24S8: return GL_UNSIGNED_INT_24_8_OES;
-        case GFXFormat::D32F: return GL_UNSIGNED_INT;
-        case GFXFormat::D32F_S8: return GL_UNSIGNED_INT_24_8_OES;
+        case Format::D16: return GL_UNSIGNED_SHORT;
+        case Format::D16S8: return GL_UNSIGNED_INT_24_8_OES;
+        case Format::D24: return GL_UNSIGNED_INT;
+        case Format::D24S8: return GL_UNSIGNED_INT_24_8_OES;
+        case Format::D32F: return GL_UNSIGNED_INT;
+        case Format::D32F_S8: return GL_UNSIGNED_INT_24_8_OES;
 
-        case GFXFormat::BC1: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC1_SRGB: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC2: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC2_SRGB: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC3: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC3_SRGB: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC4: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC4_SNORM: return GL_BYTE;
-        case GFXFormat::BC5: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC5_SNORM: return GL_BYTE;
-        case GFXFormat::BC6H_SF16: return GL_FLOAT;
-        case GFXFormat::BC6H_UF16: return GL_FLOAT;
-        case GFXFormat::BC7: return GL_UNSIGNED_BYTE;
-        case GFXFormat::BC7_SRGB: return GL_UNSIGNED_BYTE;
+        case Format::BC1: return GL_UNSIGNED_BYTE;
+        case Format::BC1_SRGB: return GL_UNSIGNED_BYTE;
+        case Format::BC2: return GL_UNSIGNED_BYTE;
+        case Format::BC2_SRGB: return GL_UNSIGNED_BYTE;
+        case Format::BC3: return GL_UNSIGNED_BYTE;
+        case Format::BC3_SRGB: return GL_UNSIGNED_BYTE;
+        case Format::BC4: return GL_UNSIGNED_BYTE;
+        case Format::BC4_SNORM: return GL_BYTE;
+        case Format::BC5: return GL_UNSIGNED_BYTE;
+        case Format::BC5_SNORM: return GL_BYTE;
+        case Format::BC6H_SF16: return GL_FLOAT;
+        case Format::BC6H_UF16: return GL_FLOAT;
+        case Format::BC7: return GL_UNSIGNED_BYTE;
+        case Format::BC7_SRGB: return GL_UNSIGNED_BYTE;
 
-        case GFXFormat::ETC_RGB8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::ETC2_RGB8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::ETC2_SRGB8: return GL_UNSIGNED_BYTE;
-        case GFXFormat::ETC2_RGB8_A1: return GL_UNSIGNED_BYTE;
-        case GFXFormat::ETC2_SRGB8_A1: return GL_UNSIGNED_BYTE;
-        case GFXFormat::EAC_R11: return GL_UNSIGNED_BYTE;
-        case GFXFormat::EAC_R11SN: return GL_BYTE;
-        case GFXFormat::EAC_RG11: return GL_UNSIGNED_BYTE;
-        case GFXFormat::EAC_RG11SN: return GL_BYTE;
+        case Format::ETC_RGB8: return GL_UNSIGNED_BYTE;
+        case Format::ETC2_RGB8: return GL_UNSIGNED_BYTE;
+        case Format::ETC2_SRGB8: return GL_UNSIGNED_BYTE;
+        case Format::ETC2_RGB8_A1: return GL_UNSIGNED_BYTE;
+        case Format::ETC2_SRGB8_A1: return GL_UNSIGNED_BYTE;
+        case Format::EAC_R11: return GL_UNSIGNED_BYTE;
+        case Format::EAC_R11SN: return GL_BYTE;
+        case Format::EAC_RG11: return GL_UNSIGNED_BYTE;
+        case Format::EAC_RG11SN: return GL_BYTE;
 
-        case GFXFormat::PVRTC_RGB2: return GL_UNSIGNED_BYTE;
-        case GFXFormat::PVRTC_RGBA2: return GL_UNSIGNED_BYTE;
-        case GFXFormat::PVRTC_RGB4: return GL_UNSIGNED_BYTE;
-        case GFXFormat::PVRTC_RGBA4: return GL_UNSIGNED_BYTE;
-        case GFXFormat::PVRTC2_2BPP: return GL_UNSIGNED_BYTE;
-        case GFXFormat::PVRTC2_4BPP: return GL_UNSIGNED_BYTE;
+        case Format::PVRTC_RGB2: return GL_UNSIGNED_BYTE;
+        case Format::PVRTC_RGBA2: return GL_UNSIGNED_BYTE;
+        case Format::PVRTC_RGB4: return GL_UNSIGNED_BYTE;
+        case Format::PVRTC_RGBA4: return GL_UNSIGNED_BYTE;
+        case Format::PVRTC2_2BPP: return GL_UNSIGNED_BYTE;
+        case Format::PVRTC2_4BPP: return GL_UNSIGNED_BYTE;
 
         default: {
             return GL_UNSIGNED_BYTE;
@@ -613,7 +613,7 @@ void GLES2CmdFuncUpdateBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer, vo
 void GLES2CmdFuncCreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture) {
     gpuTexture->glInternelFmt = MapGLInternalFormat(gpuTexture->format);
     gpuTexture->glFormat = MapGLFormat(gpuTexture->format);
-    gpuTexture->glType = GFXFormatToGLType(gpuTexture->format);
+    gpuTexture->glType = FormatToGLType(gpuTexture->format);
 
     switch (gpuTexture->type) {
         case TextureType::TEX2D: {
@@ -635,7 +635,7 @@ void GLES2CmdFuncCreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                     }
                 } else {
                     for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                        uint img_size = GFXFormatSize(gpuTexture->format, w, h, 1);
+                        uint img_size = FormatSize(gpuTexture->format, w, h, 1);
                         glCompressedTexImage2D(GL_TEXTURE_2D, i, gpuTexture->glInternelFmt, w, h, 0, img_size, nullptr);
                         w = std::max(1U, w >> 1);
                         h = std::max(1U, h >> 1);
@@ -668,7 +668,7 @@ void GLES2CmdFuncCreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                         uint w = gpuTexture->width;
                         uint h = gpuTexture->height;
                         for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                            uint img_size = GFXFormatSize(gpuTexture->format, w, h, 1);
+                            uint img_size = FormatSize(gpuTexture->format, w, h, 1);
                             glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternelFmt, w, h, 0, img_size, nullptr);
                             w = std::max(1U, w >> 1);
                             h = std::max(1U, h >> 1);
@@ -708,7 +708,7 @@ void GLES2CmdFuncDestroyTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture
 void GLES2CmdFuncResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture) {
     gpuTexture->glInternelFmt = MapGLInternalFormat(gpuTexture->format);
     gpuTexture->glFormat = MapGLFormat(gpuTexture->format);
-    gpuTexture->glType = GFXFormatToGLType(gpuTexture->format);
+    gpuTexture->glType = FormatToGLType(gpuTexture->format);
 
     switch (gpuTexture->type) {
         case TextureType::TEX2D: {
@@ -729,7 +729,7 @@ void GLES2CmdFuncResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                     }
                 } else {
                     for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                        uint img_size = GFXFormatSize(gpuTexture->format, w, h, 1);
+                        uint img_size = FormatSize(gpuTexture->format, w, h, 1);
                         glCompressedTexImage2D(GL_TEXTURE_2D, i, gpuTexture->glInternelFmt, w, h, 0, img_size, nullptr);
                         w = std::max(1U, w >> 1);
                         h = std::max(1U, h >> 1);
@@ -761,7 +761,7 @@ void GLES2CmdFuncResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                         uint w = gpuTexture->width;
                         uint h = gpuTexture->height;
                         for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                            uint img_size = GFXFormatSize(gpuTexture->format, w, h, 1);
+                            uint img_size = FormatSize(gpuTexture->format, w, h, 1);
                             glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternelFmt, w, h, 0, img_size, nullptr);
                             w = std::max(1U, w >> 1);
                             h = std::max(1U, h >> 1);
@@ -1081,7 +1081,7 @@ void GLES2CmdFuncCreateInputAssembler(GLES2Device *device, GLES2GPUInputAssemble
         GLES2GPUBuffer *gpu_vb = (GLES2GPUBuffer *)gpuInputAssembler->gpuVertexBuffers[attrib.stream];
 
         gpuAttribute.name = attrib.name;
-        gpuAttribute.glType = GFXFormatToGLType(attrib.format);
+        gpuAttribute.glType = FormatToGLType(attrib.format);
         gpuAttribute.size = GFX_FORMAT_INFOS[(int)attrib.format].size;
         gpuAttribute.count = GFX_FORMAT_INFOS[(int)attrib.format].count;
         gpuAttribute.componentCount = GLComponentCount(gpuAttribute.glType);
@@ -1235,7 +1235,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                     gpuRenderPass = cmd->gpuFBO->gpuRenderPass;
                     for (uint j = 0; j < cmd->num_clear_colors; ++j) {
                         const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
-                        if (colorAttachment.format != GFXFormat::UNKNOWN) {
+                        if (colorAttachment.format != Format::UNKNOWN) {
                             switch (colorAttachment.loadOp) {
                                 case GFXLoadOp::LOAD: break; // GL default behaviour
                                 case GFXLoadOp::CLEAR: {
@@ -1260,7 +1260,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                         }
                     } // for
 
-                    if (gpuRenderPass->depthStencilAttachment.format != GFXFormat::UNKNOWN) {
+                    if (gpuRenderPass->depthStencilAttachment.format != Format::UNKNOWN) {
                         bool hasDepth = GFX_FORMAT_INFOS[(int)gpuRenderPass->depthStencilAttachment.format].hasDepth;
                         if (hasDepth) {
                             switch (gpuRenderPass->depthStencilAttachment.depthLoadOp) {
@@ -1344,7 +1344,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                 uint num_attachments = 0;
                 for (uint j = 0; j < cmd->num_clear_colors; ++j) {
                     const GFXColorAttachment &colorAttachment = gpuRenderPass->colorAttachments[j];
-                    if (colorAttachment.format != GFXFormat::UNKNOWN) {
+                    if (colorAttachment.format != Format::UNKNOWN) {
                         switch (colorAttachment.loadOp) {
                             case GFXLoadOp::LOAD: break; // GL default behaviour
                             case GFXLoadOp::CLEAR: break;
@@ -1358,7 +1358,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                     }
                 } // for
 
-                if (gpuRenderPass->depthStencilAttachment.format != GFXFormat::UNKNOWN) {
+                if (gpuRenderPass->depthStencilAttachment.format != Format::UNKNOWN) {
                     bool hasDepth = GFX_FORMAT_INFOS[(int)gpuRenderPass->depthStencilAttachment.format].hasDepth;
                     if (hasDepth) {
                         switch (gpuRenderPass->depthStencilAttachment.depthLoadOp) {
@@ -2113,7 +2113,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
                 h = region.texExtent.height;
                 uint8_t *buff = buffers[n++];
                 if (isCompressed) {
-                    GLsizei memSize = (GLsizei)GFXFormatSize(gpuTexture->format, w, h, 1);
+                    GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                     glCompressedTexSubImage2D(GL_TEXTURE_2D,
                                               region.texSubres.mipLevel,
                                               region.texOffset.x,
@@ -2148,7 +2148,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
                     h = region.texExtent.height;
                     uint8_t *buff = buffers[n++];
                     if (isCompressed) {
-                        GLsizei memSize = (GLsizei)GFXFormatSize(gpuTexture->format, w, h, 1);
+                        GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                         glCompressedTexSubImage3DOES(GL_TEXTURE_2D_ARRAY,
                                                      region.texSubres.mipLevel,
                                                      region.texOffset.x,
@@ -2183,7 +2183,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
                 d = region.texExtent.depth;
                 uint8_t *buff = buffers[n++];
                 if (isCompressed) {
-                    GLsizei memSize = (GLsizei)GFXFormatSize(gpuTexture->format, w, d + 1, 1);
+                    GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, d + 1, 1);
                     glCompressedTexSubImage3DOES(GL_TEXTURE_3D,
                                                  region.texSubres.mipLevel,
                                                  region.texOffset.x,
@@ -2219,7 +2219,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, uint8_t *const *buffe
                     h = region.texExtent.height;
                     uint8_t *buff = buffers[n++];
                     if (isCompressed) {
-                        GLsizei memSize = (GLsizei)GFXFormatSize(gpuTexture->format, w, h, 1);
+                        GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                         glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f,
                                                   region.texSubres.mipLevel,
                                                   region.texOffset.x,

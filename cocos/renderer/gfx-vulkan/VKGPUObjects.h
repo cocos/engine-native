@@ -47,7 +47,7 @@ public:
 class CCVKGPUTexture : public Object {
 public:
     TextureType type = TextureType::TEX2D;
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     TextureUsage usage = TextureUsageBit::NONE;
     uint width = 0;
     uint height = 0;
@@ -71,7 +71,7 @@ class CCVKGPUTextureView : public Object {
 public:
     CCVKGPUTexture *gpuTexture = nullptr;
     TextureType type = TextureType::TEX2D;
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     uint baseLevel = 0;
     uint levelCount = 1;
     VkImageView vkImageView = VK_NULL_HANDLE;

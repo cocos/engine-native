@@ -55,8 +55,8 @@ bool GLES3Context::initialize(const ContextInfo &info)
           return false;
         }
     }
-    _colorFmt = GFXFormat::RGBA8;
-    _depthStencilFmt = GFXFormat::D24S8;
+    _colorFmt = Format::RGBA8;
+    _depthStencilFmt = Format::D24S8;
 
     if (!MakeCurrent())
         return false;

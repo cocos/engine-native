@@ -24,35 +24,35 @@ bool CCVKTexture::initialize(const TextureInfo &info) {
     _mipLevel = info.mipLevel;
     _samples = info.samples;
     _flags = info.flags;
-    _size = GFXFormatSize(_format, _width, _height, _depth);
+    _size = FormatSize(_format, _width, _height, _depth);
 
 #if COCOS2D_DEBUG > 0
     switch (_format) { // device feature validation
-        case GFXFormat::D16:
+        case Format::D16:
             if (_device->hasFeature(Feature::FORMAT_D16)) break;
             CC_LOG_ERROR("D16 texture format is not supported on this backend");
             return false;
-        case GFXFormat::D16S8:
+        case Format::D16S8:
             if (_device->hasFeature(Feature::FORMAT_D16S8)) break;
             CC_LOG_WARNING("D16S8 texture format is not supported on this backend");
             return false;
-        case GFXFormat::D24:
+        case Format::D24:
             if (_device->hasFeature(Feature::FORMAT_D24)) break;
             CC_LOG_WARNING("D24 texture format is not supported on this backend");
             return false;
-        case GFXFormat::D24S8:
+        case Format::D24S8:
             if (_device->hasFeature(Feature::FORMAT_D24S8)) break;
             CC_LOG_WARNING("D24S8 texture format is not supported on this backend");
             return false;
-        case GFXFormat::D32F:
+        case Format::D32F:
             if (_device->hasFeature(Feature::FORMAT_D32F)) break;
             CC_LOG_WARNING("D32F texture format is not supported on this backend");
             return false;
-        case GFXFormat::D32F_S8:
+        case Format::D32F_S8:
             if (_device->hasFeature(Feature::FORMAT_D32FS8)) break;
             CC_LOG_WARNING("D32FS8 texture format is not supported on this backend");
             return false;
-        case GFXFormat::RGB8:
+        case Format::RGB8:
             if (_device->hasFeature(Feature::FORMAT_RGB8)) break;
             CC_LOG_WARNING("RGB8 texture format is not supported on this backend");
             return false;
@@ -107,7 +107,7 @@ bool CCVKTexture::initialize(const TextureViewInfo &info) {
         _depth = info.texture->getDepth();
         _samples = info.texture->getSamples();
         _flags = info.texture->getFlags();
-        _size = GFXFormatSize(_format, _width, _height, _depth);
+        _size = FormatSize(_format, _width, _height, _depth);
     }
 
     createTextureView(info);
@@ -151,7 +151,7 @@ void CCVKTexture::destroy() {
 }
 
 void CCVKTexture::resize(uint width, uint height) {
-    uint size = GFXFormatSize(_format, width, height, _depth);
+    uint size = FormatSize(_format, width, height, _depth);
     if (_size != size) {
         const uint old_size = _size;
         _width = width;

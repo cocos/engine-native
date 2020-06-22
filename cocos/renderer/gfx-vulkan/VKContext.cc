@@ -314,8 +314,8 @@ bool CCVKContext::initialize(const ContextInfo &info) {
 
         ///////////////////// Swapchain Preperation /////////////////////
 
-        _colorFmt = GFXFormat::BGRA8;
-        _depthStencilFmt = GFXFormat::D24S8;
+        _colorFmt = Format::BGRA8;
+        _depthStencilFmt = Format::D24S8;
 
         VkSurfaceCapabilitiesKHR surfaceCapabilities{};
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_gpuContext->physicalDevice, _gpuContext->vkSurface, &surfaceCapabilities);
@@ -360,14 +360,14 @@ bool CCVKContext::initialize(const ContextInfo &info) {
             }
         }
 
-        vector<std::pair<GFXFormat, VkFormat>> depthFormatPriorityList = {
-            {GFXFormat::D32F_S8, VK_FORMAT_D32_SFLOAT_S8_UINT},
-            {GFXFormat::D24S8, VK_FORMAT_D24_UNORM_S8_UINT},
-            {GFXFormat::D16S8, VK_FORMAT_D16_UNORM_S8_UINT},
-            {GFXFormat::D32F, VK_FORMAT_D32_SFLOAT},
-            {GFXFormat::D16, VK_FORMAT_D16_UNORM},
+        vector<std::pair<Format, VkFormat>> depthFormatPriorityList = {
+            {Format::D32F_S8, VK_FORMAT_D32_SFLOAT_S8_UINT},
+            {Format::D24S8, VK_FORMAT_D24_UNORM_S8_UINT},
+            {Format::D16S8, VK_FORMAT_D16_UNORM_S8_UINT},
+            {Format::D32F, VK_FORMAT_D32_SFLOAT},
+            {Format::D16, VK_FORMAT_D16_UNORM},
         };
-        for (std::pair<GFXFormat, VkFormat> &format : depthFormatPriorityList) {
+        for (std::pair<Format, VkFormat> &format : depthFormatPriorityList) {
             VkFormatProperties formatProperties;
             vkGetPhysicalDeviceFormatProperties(_gpuContext->physicalDevice, format.second, &formatProperties);
             // Format must support depth stencil attachment for optimal tiling

@@ -23,7 +23,7 @@ typedef vector<GLES3GPUBuffer *> GLES3GPUBufferList;
 class GLES3GPUTexture : public Object {
 public:
     TextureType type = TextureType::TEX2D;
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     TextureUsage usage = TextureUsageBit::NONE;
     uint width = 0;
     uint height = 0;

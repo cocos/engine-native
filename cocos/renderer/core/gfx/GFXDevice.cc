@@ -11,11 +11,11 @@ Device::Device() {
 Device::~Device() {
 }
 
-GFXFormat Device::getColorFormat() const {
+Format Device::getColorFormat() const {
     return _context->getColorFormat();
 }
 
-GFXFormat Device::getDepthStencilFormat() const {
+Format Device::getDepthStencilFormat() const {
     return _context->getDepthStencilFormat();
 }
 

@@ -907,7 +907,7 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
         const BufferTextureCopy &region = regions[i];
         uint w = region.buffStride > 0 ? region.buffStride : region.texExtent.width;
         uint h = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
-        totalSize += regionSizes[i] = GFXFormatSize(gpuTexture->format, w, h, region.texExtent.depth);
+        totalSize += regionSizes[i] = FormatSize(gpuTexture->format, w, h, region.texExtent.depth);
     }
 
     CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();

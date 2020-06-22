@@ -19,7 +19,7 @@ public:
     virtual void resize(uint width, uint height) override;
 
     CC_INLINE id<MTLTexture> getMTLTexture() const { return _mtlTexture; }
-    CC_INLINE GFXFormat getConvertedFormat() const { return _convertedFormat; }
+    CC_INLINE Format getConvertedFormat() const { return _convertedFormat; }
 
 private:
     void update(uint8_t *const *datas, const BufferTextureCopyList &regions);
@@ -28,7 +28,7 @@ private:
 
 private:
     id<MTLTexture> _mtlTexture = nil;
-    GFXFormat _convertedFormat = GFXFormat::UNKNOWN;
+    Format _convertedFormat = Format::UNKNOWN;
 };
 
 } // namespace gfx

@@ -91,7 +91,7 @@ protected:
 
 private:
     void activateFlow(RenderFlow *flow);
-    gfx::GFXFormat getTextureFormat(gfx::GFXFormat format, gfx::TextureUsageBit usage) const;
+    gfx::Format getTextureFormat(gfx::Format format, gfx::TextureUsageBit usage) const;
 
 protected:
     String _name;

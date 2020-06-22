@@ -19,7 +19,7 @@ public:
 
     CC_INLINE TextureType getType() const { return _type; }
     CC_INLINE TextureUsage getUsage() const { return _usage; }
-    CC_INLINE GFXFormat getFormat() const { return _format; }
+    CC_INLINE Format getFormat() const { return _format; }
     CC_INLINE uint getWidth() const { return _width; }
     CC_INLINE uint getHeight() const { return _height; }
     CC_INLINE uint getDepth() const { return _depth; }
@@ -34,7 +34,7 @@ protected:
     Device *_device = nullptr;
     TextureType _type = TextureType::TEX2D;
     TextureUsage _usage = TextureUsageBit::NONE;
-    GFXFormat _format = GFXFormat::UNKNOWN;
+    Format _format = Format::UNKNOWN;
     uint _width = 0;
     uint _height = 0;
     uint _depth = 1;

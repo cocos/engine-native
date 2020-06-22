@@ -19,16 +19,16 @@ public:
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Context *getSharedContext() const { return _sharedContext; }
     CC_INLINE GFXVsyncMode getVsyncMode() const { return _vsyncMode; }
-    CC_INLINE GFXFormat getColorFormat() const { return _colorFmt; }
-    CC_INLINE GFXFormat getDepthStencilFormat() const { return _depthStencilFmt; }
+    CC_INLINE Format getColorFormat() const { return _colorFmt; }
+    CC_INLINE Format getDepthStencilFormat() const { return _depthStencilFmt; }
 
 protected:
     Device *_device = nullptr;
     uintptr_t _windowHandle = 0;
     Context *_sharedContext = nullptr;
     GFXVsyncMode _vsyncMode = GFXVsyncMode::OFF;
-    GFXFormat _colorFmt = GFXFormat::UNKNOWN;
-    GFXFormat _depthStencilFmt = GFXFormat::UNKNOWN;
+    Format _colorFmt = Format::UNKNOWN;
+    Format _depthStencilFmt = Format::UNKNOWN;
 };
 
 } // namespace gfx

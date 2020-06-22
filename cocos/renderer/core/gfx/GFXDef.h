@@ -97,7 +97,7 @@ enum class Feature : uint8_t {
     COUNT,
 };
 
-enum class GFXFormat : uint {
+enum class Format : uint {
 
     UNKNOWN,
 
@@ -223,7 +223,7 @@ enum class GFXFormat : uint {
     COUNT,
 };
 
-enum class GFXFormatType : uint8_t {
+enum class FormatType : uint8_t {
     NONE,
     UNORM,
     SNORM,
@@ -666,8 +666,8 @@ struct GFXWindowInfo {
     int top = 0;
     uint width = 800;
     uint height = 600;
-    GFXFormat colorFmt = GFXFormat::UNKNOWN;
-    GFXFormat depthStencilFmt = GFXFormat::UNKNOWN;
+    Format colorFmt = Format::UNKNOWN;
+    Format depthStencilFmt = Format::UNKNOWN;
     bool isOffscreen = false;
     bool isFullscreen = false;
     GFXVsyncMode vsyncMode = GFXVsyncMode::OFF;
@@ -710,7 +710,7 @@ struct IndirectBuffer {
 struct TextureInfo {
     TextureType type = TextureType::TEX2D;
     TextureUsage usage = TextureUsageBit::NONE;
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     uint width = 0;
     uint height = 0;
     uint depth = 1;
@@ -723,7 +723,7 @@ struct TextureInfo {
 struct TextureViewInfo {
     Texture *texture = nullptr;
     TextureType type = TextureType::TEX2D;
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     uint baseLevel = 0;
     uint levelCount = 1;
     uint baseLayer = 0;
@@ -790,7 +790,7 @@ typedef vector<ShaderStage> ShaderStageList;
 
 struct GFXAttribute {
     String name;
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     bool isNormalized = false;
     uint stream = 0;
     bool isInstanced = false;
@@ -816,7 +816,7 @@ struct InputAssemblerInfo {
 };
 
 struct GFXColorAttachment {
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     GFXLoadOp loadOp = GFXLoadOp::CLEAR;
     GFXStoreOp storeOp = GFXStoreOp::STORE;
     uint sampleCount = 1;
@@ -827,7 +827,7 @@ struct GFXColorAttachment {
 typedef vector<GFXColorAttachment> GFXColorAttachmentList;
 
 struct GFXDepthStencilAttachment {
-    GFXFormat format = GFXFormat::UNKNOWN;
+    Format format = Format::UNKNOWN;
     GFXLoadOp depthLoadOp = GFXLoadOp::CLEAR;
     GFXStoreOp depthStoreOp = GFXStoreOp::STORE;
     GFXLoadOp stencilLoadOp = GFXLoadOp::CLEAR;
@@ -1006,18 +1006,18 @@ struct QueueInfo {
 struct FenceInfo {
 };
 
-struct GFXFormatInfo {
+struct FormatInfo {
     String name;
     uint size = 0;
     uint count = 0;
-    GFXFormatType type = GFXFormatType::NONE;
+    FormatType type = FormatType::NONE;
     bool hasAlpha = false;
     bool hasDepth = false;
     bool hasStencil = false;
     bool isCompressed = false;
 };
 
-extern CC_DLL const GFXFormatInfo GFX_FORMAT_INFOS[];
+extern CC_DLL const FormatInfo GFX_FORMAT_INFOS[];
 extern CC_DLL const uint GFX_TYPE_SIZES[];
 
 struct GFXMemoryStatus {
@@ -1025,9 +1025,9 @@ struct GFXMemoryStatus {
     uint textureSize = 0;
 };
 
-extern CC_DLL uint GFXFormatSize(GFXFormat format, uint width, uint height, uint depth);
+extern CC_DLL uint FormatSize(Format format, uint width, uint height, uint depth);
 
-extern CC_DLL uint GFXFormatSurfaceSize(GFXFormat format, uint width, uint height, uint depth, uint mips);
+extern CC_DLL uint FormatSurfaceSize(Format format, uint width, uint height, uint depth, uint mips);
 
 } // namespace gfx
 } // namespace cc

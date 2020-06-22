@@ -12,100 +12,100 @@ namespace cc {
 namespace gfx {
 
 namespace {
-VkFormat MapVkFormat(GFXFormat format) {
+VkFormat MapVkFormat(Format format) {
     switch (format) {
-        case GFXFormat::R8: return VK_FORMAT_R8_UNORM;
-        case GFXFormat::R8SN: return VK_FORMAT_R8_SNORM;
-        case GFXFormat::R8UI: return VK_FORMAT_R8_UINT;
-        case GFXFormat::R8I: return VK_FORMAT_R8_SINT;
-        case GFXFormat::RG8: return VK_FORMAT_R8G8_UNORM;
-        case GFXFormat::RG8SN: return VK_FORMAT_R8G8_SNORM;
-        case GFXFormat::RG8UI: return VK_FORMAT_R8G8_UINT;
-        case GFXFormat::RG8I: return VK_FORMAT_R8G8_SINT;
-        case GFXFormat::RGB8: return VK_FORMAT_R8G8B8_UNORM;
-        case GFXFormat::RGB8SN: return VK_FORMAT_R8G8B8_SNORM;
-        case GFXFormat::RGB8UI: return VK_FORMAT_R8G8B8_UINT;
-        case GFXFormat::RGB8I: return VK_FORMAT_R8G8B8_SINT;
-        case GFXFormat::RGBA8: return VK_FORMAT_R8G8B8A8_UNORM;
-        case GFXFormat::BGRA8: return VK_FORMAT_B8G8R8A8_UNORM;
-        case GFXFormat::RGBA8SN: return VK_FORMAT_R8G8B8A8_SNORM;
-        case GFXFormat::RGBA8UI: return VK_FORMAT_R8G8B8A8_UINT;
-        case GFXFormat::RGBA8I: return VK_FORMAT_R8G8B8A8_SINT;
-        case GFXFormat::R16I: return VK_FORMAT_R16_SINT;
-        case GFXFormat::R16UI: return VK_FORMAT_R16_UINT;
-        case GFXFormat::R16F: return VK_FORMAT_R16_SFLOAT;
-        case GFXFormat::RG16I: return VK_FORMAT_R16G16_SINT;
-        case GFXFormat::RG16UI: return VK_FORMAT_R16G16_UINT;
-        case GFXFormat::RG16F: return VK_FORMAT_R16G16_SFLOAT;
-        case GFXFormat::RGB16I: return VK_FORMAT_R16G16B16_SINT;
-        case GFXFormat::RGB16UI: return VK_FORMAT_R16G16B16_UINT;
-        case GFXFormat::RGB16F: return VK_FORMAT_R16G16B16_SFLOAT;
-        case GFXFormat::RGBA16I: return VK_FORMAT_R16G16B16A16_SINT;
-        case GFXFormat::RGBA16UI: return VK_FORMAT_R16G16B16A16_UINT;
-        case GFXFormat::RGBA16F: return VK_FORMAT_R16G16B16A16_SFLOAT;
-        case GFXFormat::R32I: return VK_FORMAT_R32_SINT;
-        case GFXFormat::R32UI: return VK_FORMAT_R32_UINT;
-        case GFXFormat::R32F: return VK_FORMAT_R32_SFLOAT;
-        case GFXFormat::RG32I: return VK_FORMAT_R32G32_SINT;
-        case GFXFormat::RG32UI: return VK_FORMAT_R32G32_UINT;
-        case GFXFormat::RG32F: return VK_FORMAT_R32G32_SFLOAT;
-        case GFXFormat::RGB32I: return VK_FORMAT_R32G32B32_SINT;
-        case GFXFormat::RGB32UI: return VK_FORMAT_R32G32B32_UINT;
-        case GFXFormat::RGB32F: return VK_FORMAT_R32G32B32_SFLOAT;
-        case GFXFormat::RGBA32I: return VK_FORMAT_R32G32B32A32_SINT;
-        case GFXFormat::RGBA32UI: return VK_FORMAT_R32G32B32A32_UINT;
-        case GFXFormat::RGBA32F: return VK_FORMAT_R32G32B32A32_SFLOAT;
+        case Format::R8: return VK_FORMAT_R8_UNORM;
+        case Format::R8SN: return VK_FORMAT_R8_SNORM;
+        case Format::R8UI: return VK_FORMAT_R8_UINT;
+        case Format::R8I: return VK_FORMAT_R8_SINT;
+        case Format::RG8: return VK_FORMAT_R8G8_UNORM;
+        case Format::RG8SN: return VK_FORMAT_R8G8_SNORM;
+        case Format::RG8UI: return VK_FORMAT_R8G8_UINT;
+        case Format::RG8I: return VK_FORMAT_R8G8_SINT;
+        case Format::RGB8: return VK_FORMAT_R8G8B8_UNORM;
+        case Format::RGB8SN: return VK_FORMAT_R8G8B8_SNORM;
+        case Format::RGB8UI: return VK_FORMAT_R8G8B8_UINT;
+        case Format::RGB8I: return VK_FORMAT_R8G8B8_SINT;
+        case Format::RGBA8: return VK_FORMAT_R8G8B8A8_UNORM;
+        case Format::BGRA8: return VK_FORMAT_B8G8R8A8_UNORM;
+        case Format::RGBA8SN: return VK_FORMAT_R8G8B8A8_SNORM;
+        case Format::RGBA8UI: return VK_FORMAT_R8G8B8A8_UINT;
+        case Format::RGBA8I: return VK_FORMAT_R8G8B8A8_SINT;
+        case Format::R16I: return VK_FORMAT_R16_SINT;
+        case Format::R16UI: return VK_FORMAT_R16_UINT;
+        case Format::R16F: return VK_FORMAT_R16_SFLOAT;
+        case Format::RG16I: return VK_FORMAT_R16G16_SINT;
+        case Format::RG16UI: return VK_FORMAT_R16G16_UINT;
+        case Format::RG16F: return VK_FORMAT_R16G16_SFLOAT;
+        case Format::RGB16I: return VK_FORMAT_R16G16B16_SINT;
+        case Format::RGB16UI: return VK_FORMAT_R16G16B16_UINT;
+        case Format::RGB16F: return VK_FORMAT_R16G16B16_SFLOAT;
+        case Format::RGBA16I: return VK_FORMAT_R16G16B16A16_SINT;
+        case Format::RGBA16UI: return VK_FORMAT_R16G16B16A16_UINT;
+        case Format::RGBA16F: return VK_FORMAT_R16G16B16A16_SFLOAT;
+        case Format::R32I: return VK_FORMAT_R32_SINT;
+        case Format::R32UI: return VK_FORMAT_R32_UINT;
+        case Format::R32F: return VK_FORMAT_R32_SFLOAT;
+        case Format::RG32I: return VK_FORMAT_R32G32_SINT;
+        case Format::RG32UI: return VK_FORMAT_R32G32_UINT;
+        case Format::RG32F: return VK_FORMAT_R32G32_SFLOAT;
+        case Format::RGB32I: return VK_FORMAT_R32G32B32_SINT;
+        case Format::RGB32UI: return VK_FORMAT_R32G32B32_UINT;
+        case Format::RGB32F: return VK_FORMAT_R32G32B32_SFLOAT;
+        case Format::RGBA32I: return VK_FORMAT_R32G32B32A32_SINT;
+        case Format::RGBA32UI: return VK_FORMAT_R32G32B32A32_UINT;
+        case Format::RGBA32F: return VK_FORMAT_R32G32B32A32_SFLOAT;
 
-        case GFXFormat::R5G6B5: return VK_FORMAT_R5G6B5_UNORM_PACK16;
-        case GFXFormat::R11G11B10F: return VK_FORMAT_B10G11R11_UFLOAT_PACK32;
-        case GFXFormat::RGB5A1: return VK_FORMAT_R5G5B5A1_UNORM_PACK16;
-        case GFXFormat::RGBA4: return VK_FORMAT_R4G4B4A4_UNORM_PACK16;
-        case GFXFormat::RGB10A2: return VK_FORMAT_A2B10G10R10_UNORM_PACK32;
-        case GFXFormat::RGB10A2UI: return VK_FORMAT_A2B10G10R10_UINT_PACK32;
-        case GFXFormat::RGB9E5: return VK_FORMAT_E5B9G9R9_UFLOAT_PACK32;
-        case GFXFormat::D16: return VK_FORMAT_D16_UNORM;
-        case GFXFormat::D16S8: return VK_FORMAT_D16_UNORM_S8_UINT;
-        case GFXFormat::D24: return VK_FORMAT_X8_D24_UNORM_PACK32;
-        case GFXFormat::D24S8: return VK_FORMAT_D24_UNORM_S8_UINT;
-        case GFXFormat::D32F: return VK_FORMAT_D32_SFLOAT;
-        case GFXFormat::D32F_S8: return VK_FORMAT_D32_SFLOAT_S8_UINT;
+        case Format::R5G6B5: return VK_FORMAT_R5G6B5_UNORM_PACK16;
+        case Format::R11G11B10F: return VK_FORMAT_B10G11R11_UFLOAT_PACK32;
+        case Format::RGB5A1: return VK_FORMAT_R5G5B5A1_UNORM_PACK16;
+        case Format::RGBA4: return VK_FORMAT_R4G4B4A4_UNORM_PACK16;
+        case Format::RGB10A2: return VK_FORMAT_A2B10G10R10_UNORM_PACK32;
+        case Format::RGB10A2UI: return VK_FORMAT_A2B10G10R10_UINT_PACK32;
+        case Format::RGB9E5: return VK_FORMAT_E5B9G9R9_UFLOAT_PACK32;
+        case Format::D16: return VK_FORMAT_D16_UNORM;
+        case Format::D16S8: return VK_FORMAT_D16_UNORM_S8_UINT;
+        case Format::D24: return VK_FORMAT_X8_D24_UNORM_PACK32;
+        case Format::D24S8: return VK_FORMAT_D24_UNORM_S8_UINT;
+        case Format::D32F: return VK_FORMAT_D32_SFLOAT;
+        case Format::D32F_S8: return VK_FORMAT_D32_SFLOAT_S8_UINT;
 
-        case GFXFormat::BC1: return VK_FORMAT_BC1_RGB_UNORM_BLOCK;
-        case GFXFormat::BC1_ALPHA: return VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
-        case GFXFormat::BC1_SRGB: return VK_FORMAT_BC1_RGB_SRGB_BLOCK;
-        case GFXFormat::BC1_SRGB_ALPHA: return VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
-        case GFXFormat::BC2: return VK_FORMAT_BC2_UNORM_BLOCK;
-        case GFXFormat::BC2_SRGB: return VK_FORMAT_BC2_SRGB_BLOCK;
-        case GFXFormat::BC3: return VK_FORMAT_BC3_UNORM_BLOCK;
-        case GFXFormat::BC3_SRGB: return VK_FORMAT_BC3_SRGB_BLOCK;
-        case GFXFormat::BC4: return VK_FORMAT_BC4_UNORM_BLOCK;
-        case GFXFormat::BC4_SNORM: return VK_FORMAT_BC4_SNORM_BLOCK;
-        case GFXFormat::BC5: return VK_FORMAT_BC5_UNORM_BLOCK;
-        case GFXFormat::BC5_SNORM: return VK_FORMAT_BC5_SNORM_BLOCK;
-        case GFXFormat::BC6H_UF16: return VK_FORMAT_BC6H_UFLOAT_BLOCK;
-        case GFXFormat::BC6H_SF16: return VK_FORMAT_BC6H_SFLOAT_BLOCK;
-        case GFXFormat::BC7: return VK_FORMAT_BC7_UNORM_BLOCK;
-        case GFXFormat::BC7_SRGB: return VK_FORMAT_BC7_SRGB_BLOCK;
+        case Format::BC1: return VK_FORMAT_BC1_RGB_UNORM_BLOCK;
+        case Format::BC1_ALPHA: return VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
+        case Format::BC1_SRGB: return VK_FORMAT_BC1_RGB_SRGB_BLOCK;
+        case Format::BC1_SRGB_ALPHA: return VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
+        case Format::BC2: return VK_FORMAT_BC2_UNORM_BLOCK;
+        case Format::BC2_SRGB: return VK_FORMAT_BC2_SRGB_BLOCK;
+        case Format::BC3: return VK_FORMAT_BC3_UNORM_BLOCK;
+        case Format::BC3_SRGB: return VK_FORMAT_BC3_SRGB_BLOCK;
+        case Format::BC4: return VK_FORMAT_BC4_UNORM_BLOCK;
+        case Format::BC4_SNORM: return VK_FORMAT_BC4_SNORM_BLOCK;
+        case Format::BC5: return VK_FORMAT_BC5_UNORM_BLOCK;
+        case Format::BC5_SNORM: return VK_FORMAT_BC5_SNORM_BLOCK;
+        case Format::BC6H_UF16: return VK_FORMAT_BC6H_UFLOAT_BLOCK;
+        case Format::BC6H_SF16: return VK_FORMAT_BC6H_SFLOAT_BLOCK;
+        case Format::BC7: return VK_FORMAT_BC7_UNORM_BLOCK;
+        case Format::BC7_SRGB: return VK_FORMAT_BC7_SRGB_BLOCK;
 
-        case GFXFormat::ETC2_RGB8: return VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
-        case GFXFormat::ETC2_SRGB8: return VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
-        case GFXFormat::ETC2_RGB8_A1: return VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
-        case GFXFormat::ETC2_SRGB8_A1: return VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
-        case GFXFormat::ETC2_RGBA8: return VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
-        case GFXFormat::ETC2_SRGB8_A8: return VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
-        case GFXFormat::EAC_R11: return VK_FORMAT_EAC_R11_UNORM_BLOCK;
-        case GFXFormat::EAC_R11SN: return VK_FORMAT_EAC_R11_SNORM_BLOCK;
-        case GFXFormat::EAC_RG11: return VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
-        case GFXFormat::EAC_RG11SN: return VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
+        case Format::ETC2_RGB8: return VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+        case Format::ETC2_SRGB8: return VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
+        case Format::ETC2_RGB8_A1: return VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
+        case Format::ETC2_SRGB8_A1: return VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
+        case Format::ETC2_RGBA8: return VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
+        case Format::ETC2_SRGB8_A8: return VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
+        case Format::EAC_R11: return VK_FORMAT_EAC_R11_UNORM_BLOCK;
+        case Format::EAC_R11SN: return VK_FORMAT_EAC_R11_SNORM_BLOCK;
+        case Format::EAC_RG11: return VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
+        case Format::EAC_RG11SN: return VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
 
-        case GFXFormat::PVRTC_RGB2: return VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG;
-        case GFXFormat::PVRTC_RGBA2: return VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG;
-        case GFXFormat::PVRTC_RGB4: return VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG;
-        case GFXFormat::PVRTC_RGBA4: return VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG;
-        case GFXFormat::PVRTC2_2BPP: return VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG;
-        case GFXFormat::PVRTC2_4BPP: return VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG;
+        case Format::PVRTC_RGB2: return VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG;
+        case Format::PVRTC_RGBA2: return VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG;
+        case Format::PVRTC_RGB4: return VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG;
+        case Format::PVRTC_RGBA4: return VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG;
+        case Format::PVRTC2_2BPP: return VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG;
+        case Format::PVRTC2_4BPP: return VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG;
         default: {
-            CCASSERT(false, "Unsupported GFXFormat, convert to VkFormat failed.");
+            CCASSERT(false, "Unsupported Format, convert to VkFormat failed.");
             return VK_FORMAT_B8G8R8A8_UNORM;
         }
     }
@@ -191,7 +191,7 @@ VkAccessFlags MapVkAccessFlags(TextureLayout layout) {
     }
 }
 
-VkAccessFlags MapVkAccessFlags(TextureUsage usage, GFXFormat format) {
+VkAccessFlags MapVkAccessFlags(TextureUsage usage, Format format) {
     if (usage & TextureUsage::COLOR_ATTACHMENT) return VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     if (usage & TextureUsage::INPUT_ATTACHMENT) return VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
@@ -286,8 +286,8 @@ VkImageUsageFlagBits MapVkImageUsageFlagBits(TextureUsage usage) {
     return (VkImageUsageFlagBits)flags;
 }
 
-VkImageLayout MapVkImageLayout(TextureUsage usage, GFXFormat format) {
-    const GFXFormatInfo &info = GFX_FORMAT_INFOS[(uint)format];
+VkImageLayout MapVkImageLayout(TextureUsage usage, Format format) {
+    const FormatInfo &info = GFX_FORMAT_INFOS[(uint)format];
     if (usage & TextureUsage::COLOR_ATTACHMENT) return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) {
         if (info.hasStencil)
@@ -308,9 +308,9 @@ VkImageLayout MapVkImageLayout(TextureUsage usage, GFXFormat format) {
     return VK_IMAGE_LAYOUT_UNDEFINED;
 }
 
-VkImageAspectFlags MapVkImageAspectFlags(GFXFormat format) {
+VkImageAspectFlags MapVkImageAspectFlags(Format format) {
     VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    const GFXFormatInfo &info = GFX_FORMAT_INFOS[(uint)format];
+    const FormatInfo &info = GFX_FORMAT_INFOS[(uint)format];
     if (info.hasDepth) {
         aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
     }
@@ -433,29 +433,29 @@ const char *MapVendorName(uint32_t vendorID) {
     return "Unknown";
 }
 
-void MapDepthStencilBits(GFXFormat format, uint &depthBits, uint &stencilBits) {
+void MapDepthStencilBits(Format format, uint &depthBits, uint &stencilBits) {
     switch (format) {
-        case GFXFormat::D16:
+        case Format::D16:
             depthBits = 16;
             stencilBits = 0;
             break;
-        case GFXFormat::D16S8:
+        case Format::D16S8:
             depthBits = 16;
             stencilBits = 8;
             break;
-        case GFXFormat::D24:
+        case Format::D24:
             depthBits = 24;
             stencilBits = 0;
             break;
-        case GFXFormat::D24S8:
+        case Format::D24S8:
             depthBits = 24;
             stencilBits = 8;
             break;
-        case GFXFormat::D32F:
+        case Format::D32F:
             depthBits = 32;
             stencilBits = 0;
             break;
-        case GFXFormat::D32F_S8:
+        case Format::D32F_S8:
             depthBits = 32;
             stencilBits = 8;
             break;

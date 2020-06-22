@@ -124,8 +124,8 @@ bool GLES2Context::initialize(const ContextInfo &info) {
             return false;
         }
 
-        _colorFmt = GFXFormat::RGBA8;
-        _depthStencilFmt = GFXFormat::D24S8;
+        _colorFmt = Format::RGBA8;
+        _depthStencilFmt = Format::D24S8;
 
         const EGLint attribs[] = {
             EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
@@ -160,17 +160,17 @@ bool GLES2Context::initialize(const ContextInfo &info) {
         CC_LOG_INFO("Setup EGLConfig: depth [%d] stencil [%d]", depth, stencil);
 
         if (depth == 16 && stencil == 0) {
-            _depthStencilFmt = GFXFormat::D16;
+            _depthStencilFmt = Format::D16;
         } else if (depth == 16 && stencil == 8) {
-            _depthStencilFmt = GFXFormat::D16S8;
+            _depthStencilFmt = Format::D16S8;
         } else if (depth == 24 && stencil == 0) {
-            _depthStencilFmt = GFXFormat::D24;
+            _depthStencilFmt = Format::D24;
         } else if (depth == 24 && stencil == 8) {
-            _depthStencilFmt = GFXFormat::D24S8;
+            _depthStencilFmt = Format::D24S8;
         } else if (depth == 32 && stencil == 0) {
-            _depthStencilFmt = GFXFormat::D32F;
+            _depthStencilFmt = Format::D32F;
         } else if (depth == 32 && stencil == 8) {
-            _depthStencilFmt = GFXFormat::D32F_S8;
+            _depthStencilFmt = Format::D32F_S8;
         } else {
             CC_LOG_ERROR("Unknown depth stencil format.");
             return false;

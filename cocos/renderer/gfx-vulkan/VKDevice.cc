@@ -286,7 +286,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     TextureViewInfo texViewInfo;
 
     textureInfo.usage = TextureUsageBit::SAMPLED;
-    textureInfo.format = GFXFormat::RGBA8;
+    textureInfo.format = Format::RGBA8;
     textureInfo.width = 2;
     textureInfo.height = 2;
     nullTexture2D = (CCVKTexture *)createTexture(textureInfo);
