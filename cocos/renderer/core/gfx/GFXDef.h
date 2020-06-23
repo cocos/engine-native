@@ -917,7 +917,7 @@ struct InputState {
     AttributeList attributes;
 };
 
-struct GFXRasterizerState {
+struct RasterizerState {
     bool isDiscard = false;
     PolygonMode polygonMode = PolygonMode::FILL;
     ShadeModel shadeModel = ShadeModel::GOURAND;
@@ -982,7 +982,7 @@ struct PipelineStateInfo {
     PrimitiveMode primitive = PrimitiveMode::TRIANGLE_LIST;
     Shader *shader = nullptr;
     InputState inputState;
-    GFXRasterizerState rasterizerState;
+    RasterizerState rasterizerState;
     GFXDepthStencilState depthStencilState;
     GFXBlendState blendState;
     DynamicStateList dynamicStates;

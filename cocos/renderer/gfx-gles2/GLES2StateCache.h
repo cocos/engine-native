@@ -23,7 +23,7 @@ public:
     GLuint glReadFBO = 0;
     Viewport viewport;
     Rect scissor;
-    GFXRasterizerState rs;
+    RasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;
     bool isCullFaceEnabled = true;

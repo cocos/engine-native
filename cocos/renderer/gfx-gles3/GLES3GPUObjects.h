@@ -183,7 +183,7 @@ class GLES3GPUPipelineState : public Object {
 public:
     GLenum glPrimitive = GL_TRIANGLES;
     GLES3GPUShader *gpuShader = nullptr;
-    GFXRasterizerState rs;
+    RasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;
     DynamicStateList dynamicStates;

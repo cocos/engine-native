@@ -214,7 +214,7 @@ public:
     PrimitiveMode primitive = PrimitiveMode::TRIANGLE_LIST;
     CCVKGPUShader *gpuShader = nullptr;
     InputState inputState;
-    GFXRasterizerState rs;
+    RasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;
     DynamicStateList dynamicStates;

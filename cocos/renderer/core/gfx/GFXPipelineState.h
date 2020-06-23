@@ -19,7 +19,7 @@ public:
     CC_INLINE Shader *getShader() const { return _shader; }
     CC_INLINE PrimitiveMode getPrimitive() const { return _primitive; }
     CC_INLINE const InputState &getInputState() const { return _inputState; }
-    CC_INLINE const GFXRasterizerState &getRasterizerState() const { return _rasterizerState; }
+    CC_INLINE const RasterizerState &getRasterizerState() const { return _rasterizerState; }
     CC_INLINE const GFXDepthStencilState &getDepthStencilState() const { return _depthStencilState; }
     CC_INLINE const GFXBlendState &getBlendState() const { return _blendState; }
     CC_INLINE const DynamicStateList &getDynamicStates() const { return _dynamicStates; }
@@ -31,7 +31,7 @@ protected:
     Shader *_shader = nullptr;
     PrimitiveMode _primitive = PrimitiveMode::TRIANGLE_LIST;
     InputState _inputState;
-    GFXRasterizerState _rasterizerState;
+    RasterizerState _rasterizerState;
     GFXDepthStencilState _depthStencilState;
     GFXBlendState _blendState;
     DynamicStateList _dynamicStates;

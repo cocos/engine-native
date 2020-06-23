@@ -211,7 +211,7 @@ class GLES2GPUPipelineState : public Object {
 public:
     GLenum glPrimitive = GL_TRIANGLES;
     GLES2GPUShader *gpuShader = nullptr;
-    GFXRasterizerState rs;
+    RasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;
     DynamicStateList dynamicStates;
