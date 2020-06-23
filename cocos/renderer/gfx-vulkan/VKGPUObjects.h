@@ -178,15 +178,15 @@ typedef vector<CCVKGPUShaderStage> CCVKGPUShaderStageList;
 class CCVKGPUShader : public Object {
 public:
     String name;
-    GFXAttributeList attributes;
+    AttributeList attributes;
     UniformBlockList blocks;
-    GFXUniformSamplerList samplers;
+    UniformSamplerList samplers;
     CCVKGPUShaderStageList gpuStages;
 };
 
 class CCVKGPUInputAssembler : public Object {
 public:
-    GFXAttributeList attributes;
+    AttributeList attributes;
     CCVKGPUBufferList gpuVertexBuffers;
     CCVKGPUBuffer *gpuIndexBuffer = nullptr;
     CCVKGPUBuffer *gpuIndirectBuffer = nullptr;

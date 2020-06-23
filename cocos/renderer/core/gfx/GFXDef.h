@@ -770,7 +770,7 @@ struct UniformBlock {
 
 typedef vector<UniformBlock> UniformBlockList;
 
-struct GFXUniformSampler {
+struct UniformSampler {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     String name;
@@ -778,7 +778,7 @@ struct GFXUniformSampler {
     uint count = 0;
 };
 
-typedef vector<GFXUniformSampler> GFXUniformSamplerList;
+typedef vector<UniformSampler> UniformSamplerList;
 
 struct ShaderStage {
     ShaderType type;
@@ -788,7 +788,7 @@ struct ShaderStage {
 
 typedef vector<ShaderStage> ShaderStageList;
 
-struct GFXAttribute {
+struct Attribute {
     String name;
     Format format = Format::UNKNOWN;
     bool isNormalized = false;
@@ -797,19 +797,19 @@ struct GFXAttribute {
     uint location = 0;
 };
 
-typedef vector<GFXAttribute> GFXAttributeList;
+typedef vector<Attribute> AttributeList;
 typedef vector<Buffer *> BufferList;
 
 struct ShaderInfo {
     String name;
     ShaderStageList stages;
-    GFXAttributeList attributes;
+    AttributeList attributes;
     UniformBlockList blocks;
-    GFXUniformSamplerList samplers;
+    UniformSamplerList samplers;
 };
 
 struct InputAssemblerInfo {
-    GFXAttributeList attributes;
+    AttributeList attributes;
     BufferList vertexBuffers;
     Buffer *indexBuffer = nullptr;
     Buffer *indirectBuffer = nullptr;
@@ -914,7 +914,7 @@ struct PipelineLayoutInfo {
 };
 
 struct GFXInputState {
-    GFXAttributeList attributes;
+    AttributeList attributes;
 };
 
 struct GFXRasterizerState {

@@ -23,7 +23,7 @@ void InputAssembler::extractDrawInfo(DrawInfo &drawInfo) const {
 
 uint InputAssembler::computeAttributesHash() const {
     // https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
-    // 6: GFXAttribute has 6 elements.
+    // 6: Attribute has 6 elements.
     std::size_t seed = _attributes.size() * 6;
     for (const auto attribute : _attributes) {
         seed ^= std::hash<std::string>{}(attribute.name) + 0x9e3779b9 + (seed << 6) + (seed >> 2);

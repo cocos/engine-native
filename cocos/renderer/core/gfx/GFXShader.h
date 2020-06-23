@@ -20,18 +20,18 @@ public:
     CC_INLINE uint getHash() const { return _hash; }
     CC_INLINE const String &getName() const { return _name; }
     CC_INLINE const ShaderStageList &getStages() const { return _stages; }
-    CC_INLINE const GFXAttributeList &getAttributes() const { return _attributes; }
+    CC_INLINE const AttributeList &getAttributes() const { return _attributes; }
     CC_INLINE const UniformBlockList &getBlocks() const { return _blocks; }
-    CC_INLINE const GFXUniformSamplerList &getSamplers() const { return _samplers; }
+    CC_INLINE const UniformSamplerList &getSamplers() const { return _samplers; }
 
 protected:
     Device *_device = nullptr;
     uint _hash = 0;
     String _name;
     ShaderStageList _stages;
-    GFXAttributeList _attributes;
+    AttributeList _attributes;
     UniformBlockList _blocks;
-    GFXUniformSamplerList _samplers;
+    UniformSamplerList _samplers;
 };
 
 } // namespace gfx

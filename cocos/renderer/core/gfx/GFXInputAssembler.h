@@ -18,7 +18,7 @@ public:
     void extractDrawInfo(DrawInfo &drawInfo) const;
 
     CC_INLINE Device *getDevice() const { return _device; }
-    CC_INLINE const GFXAttributeList &getAttributes() const { return _attributes; }
+    CC_INLINE const AttributeList &getAttributes() const { return _attributes; }
     CC_INLINE const BufferList &getVertexBuffers() const { return _vertexBuffers; }
     CC_INLINE Buffer *getIndexBuffer() const { return _indexBuffer; }
     CC_INLINE Buffer *getIndirectBuffer() const { return _indirectBuffer; }
@@ -43,7 +43,7 @@ protected:
     uint computeAttributesHash() const;
 
     Device *_device = nullptr;
-    GFXAttributeList _attributes;
+    AttributeList _attributes;
     BufferList _vertexBuffers;
     Buffer *_indexBuffer = nullptr;
     Buffer *_indirectBuffer = nullptr;

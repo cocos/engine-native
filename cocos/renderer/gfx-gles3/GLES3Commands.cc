@@ -1099,7 +1099,7 @@ void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
         gpuShader->glSamplers.resize(gpuShader->samplers.size());
 
         for (size_t i = 0; i < gpuShader->glSamplers.size(); ++i) {
-            GFXUniformSampler &sampler = gpuShader->samplers[i];
+            UniformSampler &sampler = gpuShader->samplers[i];
             GLES3GPUUniformSampler &gpuSampler = gpuShader->glSamplers[i];
             gpuSampler.binding = sampler.binding;
             gpuSampler.name = sampler.name;
@@ -1193,7 +1193,7 @@ void GLES3CmdFuncCreateInputAssembler(GLES3Device *device, GLES3GPUInputAssemble
     gpuInputAssembler->glAttribs.resize(gpuInputAssembler->attributes.size());
     for (size_t i = 0; i < gpuInputAssembler->glAttribs.size(); ++i) {
         GLES3GPUAttribute &gpuAttribute = gpuInputAssembler->glAttribs[i];
-        const GFXAttribute &attrib = gpuInputAssembler->attributes[i];
+        const Attribute &attrib = gpuInputAssembler->attributes[i];
 
         GLES3GPUBuffer *gpu_vb = (GLES3GPUBuffer *)gpuInputAssembler->gpuVertexBuffers[attrib.stream];
 

@@ -155,7 +155,7 @@ class GLES2GPUShader : public Object {
 public:
     String name;
     UniformBlockList blocks;
-    GFXUniformSamplerList samplers;
+    UniformSamplerList samplers;
     GLuint glProgram = 0;
     GLES2GPUShaderStageList gpuStages;
     GLES2GPUInputList glInputs;
@@ -179,7 +179,7 @@ typedef vector<GLES2GPUAttribute> GLES2GPUAttributeList;
 
 class GLES2GPUInputAssembler : public Object {
 public:
-    GFXAttributeList attributes;
+    AttributeList attributes;
     GLES2GPUBufferList gpuVertexBuffers;
     GLES2GPUBuffer *gpuIndexBuffer = nullptr;
     GLES2GPUBuffer *gpuIndirectBuffer = nullptr;

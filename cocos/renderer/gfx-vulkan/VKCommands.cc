@@ -697,11 +697,11 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
 
     ///////////////////// Input State /////////////////////
 
-    const GFXAttributeList &attributes = gpuPipelineState->inputState.attributes;
+    const AttributeList &attributes = gpuPipelineState->inputState.attributes;
     const size_t attributeCount = attributes.size();
     size_t bindingCount = 1u;
     for (size_t i = 0u; i < attributeCount; i++) {
-        const GFXAttribute &attr = attributes[i];
+        const Attribute &attr = attributes[i];
         bindingCount = std::max((size_t)bindingCount, (size_t)(attr.stream + 1));
     }
 
@@ -712,20 +712,20 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
         bindingDescriptions[i].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
     }
     for (size_t i = 0u; i < attributeCount; i++) {
-        const GFXAttribute &attr = attributes[i];
+        const Attribute &attr = attributes[i];
         bindingDescriptions[attr.stream].stride += GFX_FORMAT_INFOS[(uint)attr.format].size;
         if (attr.isInstanced) {
             bindingDescriptions[attr.stream].inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
         }
     }
 
-    const GFXAttributeList &shaderAttrs = gpuPipelineState->gpuShader->attributes;
+    const AttributeList &shaderAttrs = gpuPipelineState->gpuShader->attributes;
     const size_t shaderAttrCount = shaderAttrs.size();
     vector<VkVertexInputAttributeDescription> attributeDescriptions(shaderAttrCount);
     vector<uint> offsets(bindingCount, 0);
     uint record = 0u;
     for (size_t i = 0u; i < attributeCount; i++) {
-        const GFXAttribute &attr = attributes[i];
+        const Attribute &attr = attributes[i];
         size_t j = 0u;
         for (; j < shaderAttrCount; j++) {
             if (shaderAttrs[j].name == attr.name) {

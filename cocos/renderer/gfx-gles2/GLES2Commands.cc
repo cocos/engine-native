@@ -967,7 +967,7 @@ void GLES2CmdFuncCreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
         gpuShader->glSamplers.resize(gpuShader->samplers.size());
 
         for (size_t i = 0; i < gpuShader->glSamplers.size(); ++i) {
-            GFXUniformSampler &sampler = gpuShader->samplers[i];
+            UniformSampler &sampler = gpuShader->samplers[i];
             GLES2GPUUniformSampler &gpuSampler = gpuShader->glSamplers[i];
             gpuSampler.binding = sampler.binding;
             gpuSampler.name = sampler.name;
@@ -1076,7 +1076,7 @@ void GLES2CmdFuncCreateInputAssembler(GLES2Device *device, GLES2GPUInputAssemble
     gpuInputAssembler->glAttribs.resize(gpuInputAssembler->attributes.size());
     for (size_t i = 0; i < gpuInputAssembler->glAttribs.size(); ++i) {
         GLES2GPUAttribute &gpuAttribute = gpuInputAssembler->glAttribs[i];
-        const GFXAttribute &attrib = gpuInputAssembler->attributes[i];
+        const Attribute &attrib = gpuInputAssembler->attributes[i];
 
         GLES2GPUBuffer *gpu_vb = (GLES2GPUBuffer *)gpuInputAssembler->gpuVertexBuffers[attrib.stream];
 
