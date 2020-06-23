@@ -78,7 +78,7 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
     return true;
 }
 
-bool CCMTLBuffer::createMTLBuffer(uint size, GFXMemoryUsage usage) {
+bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
     if (_mtlBuffer)
         [_mtlBuffer release];
 
@@ -154,7 +154,7 @@ void CCMTLBuffer::resizeBuffer(uint8_t **buffer, uint size, uint oldSize) {
     if (!(*buffer))
         return;
 
-    GFXMemoryStatus &status = _device->getMemoryStatus();
+    MemoryStatus &status = _device->getMemoryStatus();
     const uint8_t *oldBuffer = *buffer;
     uint8_t *temp = (uint8_t *)CC_MALLOC(size);
     if (temp) {

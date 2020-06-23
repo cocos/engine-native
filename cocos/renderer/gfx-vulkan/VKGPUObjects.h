@@ -134,7 +134,7 @@ public:
 class CCVKGPUBuffer : public Object {
 public:
     BufferUsage usage = BufferUsage::NONE;
-    GFXMemoryUsage memUsage = GFXMemoryUsage::NONE;
+    MemoryUsage memUsage = MemoryUsage::NONE;
     uint size = 0;
     uint stride = 0;
     uint count = 0;
@@ -215,8 +215,8 @@ public:
     CCVKGPUShader *gpuShader = nullptr;
     InputState inputState;
     RasterizerState rs;
-    GFXDepthStencilState dss;
-    GFXBlendState bs;
+    DepthStencilState dss;
+    BlendState bs;
     DynamicStateList dynamicStates;
     CCVKGPUPipelineLayout *gpuLayout = nullptr;
     CCVKGPURenderPass *gpuRenderPass = nullptr;

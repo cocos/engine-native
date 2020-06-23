@@ -113,10 +113,10 @@ enum class GPUFamily : uint {
 }
 
 namespace mu {
-MTLResourceOptions toMTLResourseOption(GFXMemoryUsage usage) {
-    if (usage & GFXMemoryUsage::HOST && usage & GFXMemoryUsage::DEVICE)
+MTLResourceOptions toMTLResourseOption(MemoryUsage usage) {
+    if (usage & MemoryUsage::HOST && usage & MemoryUsage::DEVICE)
         return MTLResourceStorageModeShared;
-    else if (usage & GFXMemoryUsage::DEVICE)
+    else if (usage & MemoryUsage::DEVICE)
         return MTLResourceStorageModePrivate;
     else
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)

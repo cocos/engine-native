@@ -19,7 +19,7 @@ public:
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE BufferUsage getUsage() const { return _usage; }
-    CC_INLINE GFXMemoryUsage getMemUsage() const { return _memUsage; }
+    CC_INLINE MemoryUsage getMemUsage() const { return _memUsage; }
     CC_INLINE uint getStride() const { return _stride; }
     CC_INLINE uint getCount() const { return _count; }
     CC_INLINE uint getSize() const { return _size; }
@@ -29,7 +29,7 @@ public:
 protected:
     Device *_device = nullptr;
     BufferUsage _usage = BufferUsageBit::NONE;
-    GFXMemoryUsage _memUsage = GFXMemoryUsageBit::NONE;
+    MemoryUsage _memUsage = MemoryUsageBit::NONE;
     uint _stride = 0;
     uint _count = 0;
     uint _size = 0;

@@ -19,7 +19,7 @@ public:
 
     void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr);
     void end();
-    void beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil);
+    void beginRenderPass(Framebuffer *fbo, const Rect &render_area, ClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil);
     void endRenderPass();
     void bindPipelineState(PipelineState *pso);
     void bindBindingLayout(BindingLayout *layout);

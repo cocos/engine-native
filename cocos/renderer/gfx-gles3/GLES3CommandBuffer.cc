@@ -61,7 +61,7 @@ void GLES3CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) {
+void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, ClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES3CmdBeginRenderPass *cmd = _gles3Allocator->beginRenderPassCmdPool.alloc();

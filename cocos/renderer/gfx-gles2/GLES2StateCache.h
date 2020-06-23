@@ -24,8 +24,8 @@ public:
     Viewport viewport;
     Rect scissor;
     RasterizerState rs;
-    GFXDepthStencilState dss;
-    GFXBlendState bs;
+    DepthStencilState dss;
+    BlendState bs;
     bool isCullFaceEnabled = true;
     bool isStencilTestEnabled = false;
 

@@ -25,7 +25,7 @@ public:
 
 private:
     void resizeBuffer(uint8_t **, uint, uint);
-    bool createMTLBuffer(uint size, GFXMemoryUsage usage);
+    bool createMTLBuffer(uint size, MemoryUsage usage);
 
     id<MTLBuffer> _mtlBuffer = nullptr;
     uint8_t *_transferBuffer = nullptr;

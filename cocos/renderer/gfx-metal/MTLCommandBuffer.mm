@@ -72,7 +72,7 @@ void CCMTLCommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, GFXClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) {
+void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, ClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     CCMTLCmdBeginRenderPass *cmd = _MTLCommandAllocator->_beginRenderPassCmdPool.alloc();

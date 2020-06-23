@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 InputAssembler::InputAssembler(Device *device)
-: GFXObject(GFXObjectType::INPUT_ASSEMBLER), _device(device) {
+: GFXObject(ObjectType::INPUT_ASSEMBLER), _device(device) {
 }
 
 InputAssembler::~InputAssembler() {

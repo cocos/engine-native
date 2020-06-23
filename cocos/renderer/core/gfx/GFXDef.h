@@ -19,7 +19,7 @@ class CommandAllocator;
 class CommandBuffer;
 class Fence;
 class Queue;
-class GFXWindow;
+class Window;
 class Context;
 
 #define GFX_MAX_VERTEX_ATTRIBUTES 16
@@ -29,7 +29,7 @@ class Context;
 #define GFX_INVALID_BINDING       ((uint8_t)-1)
 #define GFX_INVALID_HANDLE        ((uint)-1)
 
-enum class GFXObjectType : uint8_t {
+enum class ObjectType : uint8_t {
     UNKNOWN,
     BUFFER,
     TEXTURE,
@@ -297,13 +297,13 @@ enum class BufferAccessBit : FlagBits {
 typedef BufferAccessBit BufferAccess;
 CC_ENUM_OPERATORS(BufferAccessBit);
 
-enum class GFXMemoryUsageBit : FlagBits {
+enum class MemoryUsageBit : FlagBits {
     NONE = 0,
     DEVICE = 0x1,
     HOST = 0x2,
 };
-typedef GFXMemoryUsageBit GFXMemoryUsage;
-CC_ENUM_OPERATORS(GFXMemoryUsageBit);
+typedef MemoryUsageBit MemoryUsage;
+CC_ENUM_OPERATORS(MemoryUsageBit);
 
 enum class TextureType {
     TEX1D,
@@ -541,8 +541,8 @@ enum class ClearFlagBit : uint8_t {
     DEPTH_STENCIL = DEPTH | STENCIL,
     ALL = COLOR | DEPTH | STENCIL,
 };
-typedef ClearFlagBit GFXClearFlags;
-CC_ENUM_OPERATORS(GFXClearFlags);
+typedef ClearFlagBit ClearFlags;
+CC_ENUM_OPERATORS(ClearFlags);
 
 enum class VsyncMode : uint8_t {
     // The application does not synchronizes with the vertical sync. If application renders faster than the display refreshes, frames are wasted and tearing may be observed. FPS is uncapped. Maximum power consumption. If unsupported, "ON" value will be used instead. Minimum latency.
@@ -683,7 +683,7 @@ struct ContextInfo {
 
 struct BufferInfo {
     BufferUsage usage = BufferUsage::NONE;
-    GFXMemoryUsage memUsage = GFXMemoryUsage::NONE;
+    MemoryUsage memUsage = MemoryUsage::NONE;
     uint stride = 1;
     uint size = 0;
     BufferFlags flags = BufferFlagBit::NONE;
@@ -753,19 +753,19 @@ struct ShaderMacro {
 
 typedef vector<ShaderMacro> ShaderMacroList;
 
-struct GFXUniform {
+struct Uniform {
     String name;
     Type type = Type::UNKNOWN;
     uint count = 0;
 };
 
-typedef vector<GFXUniform> GFXUniformList;
+typedef vector<Uniform> UniformList;
 
 struct UniformBlock {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     String name;
-    GFXUniformList uniforms;
+    UniformList uniforms;
 };
 
 typedef vector<UniformBlock> UniformBlockList;
@@ -932,7 +932,7 @@ struct RasterizerState {
     float lineWidth = 1.0f;
 };
 
-struct GFXDepthStencilState {
+struct DepthStencilState {
     bool depthTest = true;
     bool depthWrite = true;
     ComparisonFunc depthFunc = ComparisonFunc::LESS;
@@ -954,7 +954,7 @@ struct GFXDepthStencilState {
     uint stencilRefBack = 1;
 };
 
-struct GFXBlendTarget {
+struct BlendTarget {
     bool blend = false;
     BlendFactor blendSrc = BlendFactor::ONE;
     BlendFactor blendDst = BlendFactor::ZERO;
@@ -965,16 +965,16 @@ struct GFXBlendTarget {
     ColorMask blendColorMask = ColorMask::ALL;
 };
 
-typedef vector<GFXBlendTarget> GFXBlendTargetList;
+typedef vector<BlendTarget> BlendTargetList;
 
-struct GFXBlendState {
+struct BlendState {
     bool isA2C = false;
     bool isIndepend = false;
     Color blendColor;
-    GFXBlendTargetList targets;
+    BlendTargetList targets;
 
-    GFXBlendState() {
-        targets.emplace_back(GFXBlendTarget());
+    BlendState() {
+        targets.emplace_back(BlendTarget());
     }
 };
 
@@ -983,8 +983,8 @@ struct PipelineStateInfo {
     Shader *shader = nullptr;
     InputState inputState;
     RasterizerState rasterizerState;
-    GFXDepthStencilState depthStencilState;
-    GFXBlendState blendState;
+    DepthStencilState depthStencilState;
+    BlendState blendState;
     DynamicStateList dynamicStates;
     PipelineLayout *layout = nullptr;
     RenderPass *renderPass = nullptr;
@@ -1020,7 +1020,7 @@ struct FormatInfo {
 extern CC_DLL const FormatInfo GFX_FORMAT_INFOS[];
 extern CC_DLL const uint GFX_TYPE_SIZES[];
 
-struct GFXMemoryStatus {
+struct MemoryStatus {
     uint bufferSize = 0;
     uint textureSize = 0;
 };

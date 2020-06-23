@@ -686,15 +686,15 @@ static bool js_gfx_PipelineLayout_get_layouts(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_PipelineLayout_get_layouts)
 
-static bool js_gfx_GFXBlendState_get_targets(se::State& s)
+static bool js_gfx_BlendState_get_targets(se::State& s)
 {
-    cc::gfx::GFXBlendState* cobj = (cc::gfx::GFXBlendState*)s.nativeThisObject();
+    cc::gfx::BlendState* cobj = (cc::gfx::BlendState*)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_get_targets : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value *jsTargets = &s.rval();
 
-    const std::vector<cc::gfx::GFXBlendTarget>& targets = cobj->targets;
+    const std::vector<cc::gfx::BlendTarget>& targets = cobj->targets;
     se::HandleObject arr(se::Object::createArrayObject(targets.size()));
     jsTargets->setObject(arr);
     
@@ -709,22 +709,22 @@ static bool js_gfx_GFXBlendState_get_targets(se::State& s)
     }
     return true;
 }
-SE_BIND_PROP_GET(js_gfx_GFXBlendState_get_targets)
+SE_BIND_PROP_GET(js_gfx_BlendState_get_targets)
 
-static bool js_gfx_GFXBlendState_set_targets(se::State& s)
+static bool js_gfx_BlendState_set_targets(se::State& s)
 {
     const auto& args = s.args();
-    cc::gfx::GFXBlendState* cobj = (cc::gfx::GFXBlendState*)s.nativeThisObject();
+    cc::gfx::BlendState* cobj = (cc::gfx::BlendState*)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_gfx_GFXBlendState_set_targets : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    std::vector<cc::gfx::GFXBlendTarget> arg0;
+    std::vector<cc::gfx::BlendTarget> arg0;
     ok &= seval_to_std_vector(args[0], &arg0);
     SE_PRECONDITION2(ok, false, "js_gfx_GFXBlendState_set_targets : Error processing new value");
     cobj->targets = arg0;
     return true;
 }
-SE_BIND_PROP_SET(js_gfx_GFXBlendState_set_targets)
+SE_BIND_PROP_SET(js_gfx_BlendState_set_targets)
 
 static bool js_gfx_CommandBuffer_execute(se::State& s)
 {
@@ -819,7 +819,7 @@ bool register_all_gfx_manual(se::Object* obj)
     
     __jsb_cc_gfx_PipelineLayout_proto->defineProperty("layouts", _SE(js_gfx_PipelineLayout_get_layouts), nullptr);
     
-    __jsb_cc_gfx_GFXBlendState_proto->defineProperty("targets", _SE(js_gfx_GFXBlendState_get_targets), _SE(js_gfx_GFXBlendState_set_targets));
+    __jsb_cc_gfx_BlendState_proto->defineProperty("targets", _SE(js_gfx_BlendState_get_targets), _SE(js_gfx_BlendState_set_targets));
     
     __jsb_cc_gfx_CommandBuffer_proto->defineFunction("execute", _SE(js_gfx_CommandBuffer_execute));
 

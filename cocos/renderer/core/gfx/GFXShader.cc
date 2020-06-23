@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 Shader::Shader(Device *device)
-: GFXObject(GFXObjectType::SHADER), _device(device) {
+: GFXObject(ObjectType::SHADER), _device(device) {
 }
 
 Shader::~Shader() {

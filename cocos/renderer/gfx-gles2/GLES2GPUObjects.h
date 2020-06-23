@@ -9,7 +9,7 @@ namespace gfx {
 class GLES2GPUBuffer : public Object {
 public:
     BufferUsage usage = BufferUsage::NONE;
-    GFXMemoryUsage memUsage = GFXMemoryUsage::NONE;
+    MemoryUsage memUsage = MemoryUsage::NONE;
     uint size = 0;
     uint stride = 0;
     uint count = 0;
@@ -212,8 +212,8 @@ public:
     GLenum glPrimitive = GL_TRIANGLES;
     GLES2GPUShader *gpuShader = nullptr;
     RasterizerState rs;
-    GFXDepthStencilState dss;
-    GFXBlendState bs;
+    DepthStencilState dss;
+    BlendState bs;
     DynamicStateList dynamicStates;
     GLES2GPUPipelineLayout *gpuLayout = nullptr;
     GLES2GPURenderPass *gpuRenderPass = nullptr;

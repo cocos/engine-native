@@ -12,7 +12,7 @@ namespace cc {
 namespace gfx {
 
 namespace mu {
-MTLResourceOptions toMTLResourseOption(GFXMemoryUsage usage);
+MTLResourceOptions toMTLResourseOption(MemoryUsage usage);
 MTLLoadAction toMTLLoadAction(LoadOp op);
 MTLStoreAction toMTLStoreAction(StoreOp op);
 MTLClearColor toMTLClearColor(const Color &clearColor);

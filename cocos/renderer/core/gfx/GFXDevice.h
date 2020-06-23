@@ -40,7 +40,7 @@ public:
     CC_INLINE uint getHeight() { return _height; }
     CC_INLINE uint getNativeWidth() { return _nativeWidth; }
     CC_INLINE uint getNativeHeight() { return _nativeHeight; }
-    CC_INLINE GFXMemoryStatus &getMemoryStatus() { return _memoryStatus; }
+    CC_INLINE MemoryStatus &getMemoryStatus() { return _memoryStatus; }
     CC_INLINE Context *getContext() const { return _context; }
     CC_INLINE Queue *getQueue() const { return _queue; }
     CC_INLINE CommandAllocator *getCommandAllocator() const { return _cmdAllocator; }
@@ -81,7 +81,7 @@ protected:
     uint _height = 0;
     uint _nativeWidth = 0;
     uint _nativeHeight = 0;
-    GFXMemoryStatus _memoryStatus;
+    MemoryStatus _memoryStatus;
     uintptr_t _windowHandle = 0;
     Context *_context = nullptr;
     Queue *_queue = nullptr;

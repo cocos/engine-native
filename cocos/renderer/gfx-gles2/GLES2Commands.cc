@@ -430,7 +430,7 @@ const GLenum GLES2_BLEND_FACTORS[] = {
 } // namespace
 
 void GLES2CmdFuncCreateBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
-    GLenum glUsage = (gpuBuffer->memUsage & GFXMemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+    GLenum glUsage = (gpuBuffer->memUsage & MemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 
     if (gpuBuffer->usage & BufferUsageBit::VERTEX) {
         gpuBuffer->glTarget = GL_ARRAY_BUFFER;
@@ -505,7 +505,7 @@ void GLES2CmdFuncDestroyBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
 }
 
 void GLES2CmdFuncResizeBuffer(GLES2Device *device, GLES2GPUBuffer *gpuBuffer) {
-    GLenum glUsage = (gpuBuffer->memUsage & GFXMemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+    GLenum glUsage = (gpuBuffer->memUsage & MemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 
     if (gpuBuffer->usage & BufferUsageBit::VERTEX) {
         gpuBuffer->glTarget = GL_ARRAY_BUFFER;
@@ -944,7 +944,7 @@ void GLES2CmdFuncCreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
 
             for (size_t j = 0; j < gpuBlock.glUniforms.size(); ++j) {
                 GLES2GPUUniform &gpuUniform = gpuBlock.glUniforms[j];
-                GFXUniform &uniform = block.uniforms[j];
+                Uniform &uniform = block.uniforms[j];
 
                 gpuUniform.binding = GFX_INVALID_BINDING;
                 gpuUniform.name = uniform.name;
@@ -1557,8 +1557,8 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmd_package) 
                     cache->bs.blendColor = gpuPipelineState->bs.blendColor;
                 }
 
-                GFXBlendTarget &cache_target = cache->bs.targets[0];
-                const GFXBlendTarget &target = gpuPipelineState->bs.targets[0];
+                BlendTarget &cache_target = cache->bs.targets[0];
+                const BlendTarget &target = gpuPipelineState->bs.targets[0];
                 if (cache_target.blend != target.blend) {
                     if (!cache_target.blend) {
                         glEnable(GL_BLEND);

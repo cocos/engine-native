@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 Fence::Fence(Device *device)
-: GFXObject(GFXObjectType::FENCE), _device(device) {
+: GFXObject(ObjectType::FENCE), _device(device) {
 }
 
 Fence::~Fence() {

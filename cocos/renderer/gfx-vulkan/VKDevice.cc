@@ -259,7 +259,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
 
     BufferInfo stagingBufferInfo;
     stagingBufferInfo.usage = BufferUsage::TRANSFER_SRC;
-    stagingBufferInfo.memUsage = GFXMemoryUsage::HOST;
+    stagingBufferInfo.memUsage = MemoryUsage::HOST;
     stagingBufferInfo.stride = _defaultStagingBufferSize;
     stagingBufferInfo.size = _defaultStagingBufferSize;
     _stagingBuffer = (CCVKBuffer *)createBuffer(stagingBufferInfo);

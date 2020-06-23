@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 Sampler::Sampler(Device *device)
-: GFXObject(GFXObjectType::SAMPLER), _device(device) {
+: GFXObject(ObjectType::SAMPLER), _device(device) {
     _borderColor.r = 0.0f;
     _borderColor.g = 0.0f;
     _borderColor.b = 0.0f;

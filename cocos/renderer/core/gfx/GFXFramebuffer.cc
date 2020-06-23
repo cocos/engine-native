@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 Framebuffer::Framebuffer(Device *device)
-: GFXObject(GFXObjectType::FRAMEBUFFER), _device(device) {
+: GFXObject(ObjectType::FRAMEBUFFER), _device(device) {
 }
 
 Framebuffer::~Framebuffer() {

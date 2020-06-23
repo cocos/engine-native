@@ -216,8 +216,8 @@ void CCMTLPipelineState::setFormats(MTLRenderPipelineDescriptor *descriptor) {
 
 void CCMTLPipelineState::setBlendStates(MTLRenderPipelineDescriptor *descriptor) {
     //FIXME: how to handle these two attributes?
-    //    GFXBlendState::isIndepend
-    //    GFXBlendState::blendColor;
+    //    BlendState::isIndepend
+    //    BlendState::blendColor;
 
     descriptor.alphaToCoverageEnabled = _blendState.isA2C;
 

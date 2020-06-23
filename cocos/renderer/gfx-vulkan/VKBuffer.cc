@@ -67,7 +67,7 @@ void CCVKBuffer::resize(uint size) {
         _size = size;
         _count = _size / _stride;
 
-        GFXMemoryStatus &status = _device->getMemoryStatus();
+        MemoryStatus &status = _device->getMemoryStatus();
         _gpuBuffer->size = _size;
         _gpuBuffer->count = _count;
         CCVKCmdFuncResizeBuffer((CCVKDevice *)_device, _gpuBuffer);

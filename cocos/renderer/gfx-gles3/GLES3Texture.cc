@@ -127,7 +127,7 @@ void GLES3Texture::resize(uint width, uint height) {
         _height = height;
         _size = size;
 
-        GFXMemoryStatus &status = _device->getMemoryStatus();
+        MemoryStatus &status = _device->getMemoryStatus();
         _gpuTexture->width = _width;
         _gpuTexture->height = _height;
         _gpuTexture->size = _size;

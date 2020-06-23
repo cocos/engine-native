@@ -27,7 +27,7 @@ struct CCMTLDepthBounds {
 class CCMTLCmdBeginRenderPass : public GFXCmd {
 public:
     Rect renderArea;
-    GFXClearFlags clearFlags = GFXClearFlags::NONE;
+    ClearFlags clearFlags = ClearFlags::NONE;
     CCMTLFramebuffer *frameBuffer = nullptr;
     uint numOfClearColor = 0;
     vector<Color> clearColors;

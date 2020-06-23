@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 PipelineLayout::PipelineLayout(Device *device)
-: GFXObject(GFXObjectType::PIPELINE_LAYOUT), _device(device) {
+: GFXObject(ObjectType::PIPELINE_LAYOUT), _device(device) {
 }
 
 PipelineLayout::~PipelineLayout() {

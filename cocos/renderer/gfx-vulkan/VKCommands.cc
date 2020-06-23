@@ -233,13 +233,13 @@ void CCVKCmdFuncCreateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
     VmaAllocationCreateInfo allocInfo{};
     allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
 
-    if (gpuBuffer->memUsage == GFXMemoryUsage::HOST) {
+    if (gpuBuffer->memUsage == MemoryUsage::HOST) {
         bufferInfo.usage |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         allocInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
-    } else if (gpuBuffer->memUsage == GFXMemoryUsage::DEVICE) {
+    } else if (gpuBuffer->memUsage == MemoryUsage::DEVICE) {
         bufferInfo.usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
-    } else if (gpuBuffer->memUsage == (GFXMemoryUsage::HOST | GFXMemoryUsage::DEVICE)) {
+    } else if (gpuBuffer->memUsage == (MemoryUsage::HOST | MemoryUsage::DEVICE)) {
         allocInfo.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
     }
 
@@ -310,7 +310,7 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
         } else {
             memcpy(gpuBuffer->mappedData + offset, buffer, size);
         }
-    } else if (gpuBuffer->memUsage == GFXMemoryUsage::DEVICE) {
+    } else if (gpuBuffer->memUsage == MemoryUsage::DEVICE) {
         const CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();
         if (stagingBuffer->size < size) device->stagingBuffer()->resize(nextPowerOf2(size));
 
@@ -840,7 +840,7 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     size_t blendTargetCount = gpuPipelineState->bs.targets.size();
     vector<VkPipelineColorBlendAttachmentState> blendTargets(blendTargetCount);
     for (size_t i = 0u; i < blendTargetCount; i++) {
-        GFXBlendTarget &target = gpuPipelineState->bs.targets[i];
+        BlendTarget &target = gpuPipelineState->bs.targets[i];
         blendTargets[i].blendEnable = target.blend;
         blendTargets[i].srcColorBlendFactor = VK_BLEND_FACTORS[(uint)target.blendSrc];
         blendTargets[i].dstColorBlendFactor = VK_BLEND_FACTORS[(uint)target.blendDst];

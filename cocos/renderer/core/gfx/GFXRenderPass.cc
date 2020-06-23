@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 RenderPass::RenderPass(Device *device)
-: GFXObject(GFXObjectType::RENDER_PASS), _device(device) {
+: GFXObject(ObjectType::RENDER_PASS), _device(device) {
 }
 
 RenderPass::~RenderPass() {

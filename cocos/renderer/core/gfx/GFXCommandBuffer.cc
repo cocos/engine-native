@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 CommandBuffer::CommandBuffer(Device *device)
-: GFXObject(GFXObjectType::COMMAND_BUFFER), _device(device) {
+: GFXObject(ObjectType::COMMAND_BUFFER), _device(device) {
 }
 
 CommandBuffer::~CommandBuffer() {

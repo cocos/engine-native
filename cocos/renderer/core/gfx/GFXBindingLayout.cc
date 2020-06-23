@@ -5,7 +5,7 @@ namespace cc {
 namespace gfx {
 
 BindingLayout::BindingLayout(Device *device)
-: GFXObject(GFXObjectType::BINDING_LAYOUT), _device(device) {
+: GFXObject(ObjectType::BINDING_LAYOUT), _device(device) {
 }
 
 BindingLayout::~BindingLayout() {

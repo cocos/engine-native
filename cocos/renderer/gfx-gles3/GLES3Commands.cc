@@ -475,7 +475,7 @@ const GLenum GLES3_BLEND_FACTORS[] = {
 } // namespace
 
 void GLES3CmdFuncCreateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
-    GLenum glUsage = (gpuBuffer->memUsage & GFXMemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+    GLenum glUsage = (gpuBuffer->memUsage & MemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 
     if (gpuBuffer->usage & BufferUsageBit::VERTEX) {
         gpuBuffer->glTarget = GL_ARRAY_BUFFER;
@@ -572,7 +572,7 @@ void GLES3CmdFuncDestroyBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
 }
 
 void GLES3CmdFuncResizeBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
-    GLenum glUsage = (gpuBuffer->memUsage & GFXMemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+    GLenum glUsage = (gpuBuffer->memUsage & MemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 
     if (gpuBuffer->usage & BufferUsageBit::VERTEX) {
         gpuBuffer->glTarget = GL_ARRAY_BUFFER;
@@ -1681,8 +1681,8 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package) 
                     cache->bs.blendColor = gpuPipelineState->bs.blendColor;
                 }
 
-                GFXBlendTarget &cache_target = cache->bs.targets[0];
-                const GFXBlendTarget &target = gpuPipelineState->bs.targets[0];
+                BlendTarget &cache_target = cache->bs.targets[0];
+                const BlendTarget &target = gpuPipelineState->bs.targets[0];
                 if (cache_target.blend != target.blend) {
                     if (!cache_target.blend) {
                         glEnable(GL_BLEND);
