@@ -1,7 +1,7 @@
 #ifndef CC_GFXGLES3_GLES3_COMMAND_ALLOCATOR_H_
 #define CC_GFXGLES3_GLES3_COMMAND_ALLOCATOR_H_
 
-#include "gfx/CommandPool.h"
+#include "gfx/GFXCommandPool.h"
 #include "GLES3Commands.h"
 
 namespace cc {
