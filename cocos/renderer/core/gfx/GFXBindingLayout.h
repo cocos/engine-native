@@ -21,11 +21,11 @@ public:
     void bindSampler(uint binding, Sampler *sampler);
 
     CC_INLINE Device *getDevice() const { return _device; }
-    CC_INLINE const GFXBindingUnitList &getBindingUnits() const { return _bindingUnits; }
+    CC_INLINE const BindingUnitList &getBindingUnits() const { return _bindingUnits; }
 
 protected:
     Device *_device = nullptr;
-    GFXBindingUnitList _bindingUnits;
+    BindingUnitList _bindingUnits;
     bool _isDirty = false;
 };
 

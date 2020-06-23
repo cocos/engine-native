@@ -13,7 +13,7 @@ BindingLayout::~BindingLayout() {
 
 void BindingLayout::bindBuffer(uint binding, Buffer *buffer) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-        GFXBindingUnit &bindingUnit = _bindingUnits[i];
+        BindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {
             if (bindingUnit.type == BindingType::UNIFORM_BUFFER) {
                 if (bindingUnit.buffer != buffer) {
@@ -30,7 +30,7 @@ void BindingLayout::bindBuffer(uint binding, Buffer *buffer) {
 
 void BindingLayout::bindTexture(uint binding, Texture *texture) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-        GFXBindingUnit &bindingUnit = _bindingUnits[i];
+        BindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {
             if (bindingUnit.type == BindingType::SAMPLER) {
                 if (bindingUnit.texture != texture) {
@@ -47,7 +47,7 @@ void BindingLayout::bindTexture(uint binding, Texture *texture) {
 
 void BindingLayout::bindSampler(uint binding, Sampler *sampler) {
     for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-        GFXBindingUnit &bindingUnit = _bindingUnits[i];
+        BindingUnit &bindingUnit = _bindingUnits[i];
         if (bindingUnit.binding == binding) {
             if (bindingUnit.type == BindingType::SAMPLER) {
                 if (bindingUnit.sampler != sampler) {

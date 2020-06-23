@@ -20,8 +20,8 @@ bool GLES3BindingLayout::initialize(const BindingLayoutInfo &info) {
         _bindingUnits.resize(info.bindings.size());
 
         for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-            GFXBindingUnit &bindingUnit = _bindingUnits[i];
-            const GFXBinding &binding = info.bindings[i];
+            BindingUnit &bindingUnit = _bindingUnits[i];
+            const Binding &binding = info.bindings[i];
             bindingUnit.shaderStages = binding.shaderStages;
             bindingUnit.binding = binding.binding;
             bindingUnit.type = binding.type;
@@ -33,7 +33,7 @@ bool GLES3BindingLayout::initialize(const BindingLayoutInfo &info) {
     _gpuBindingLayout->gpuBindings.resize(_bindingUnits.size());
     for (size_t i = 0; i < _gpuBindingLayout->gpuBindings.size(); ++i) {
         GLES3GPUBinding &gpuBinding = _gpuBindingLayout->gpuBindings[i];
-        const GFXBindingUnit &bindingUnit = _bindingUnits[i];
+        const BindingUnit &bindingUnit = _bindingUnits[i];
         gpuBinding.binding = bindingUnit.binding;
         gpuBinding.type = bindingUnit.type;
         gpuBinding.name = bindingUnit.name;
@@ -56,7 +56,7 @@ void GLES3BindingLayout::destroy() {
 void GLES3BindingLayout::update() {
     if (_isDirty && _gpuBindingLayout) {
         for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-            GFXBindingUnit &bindingUnit = _bindingUnits[i];
+            BindingUnit &bindingUnit = _bindingUnits[i];
             switch (bindingUnit.type) {
                 case BindingType::UNIFORM_BUFFER: {
                     if (bindingUnit.buffer) {

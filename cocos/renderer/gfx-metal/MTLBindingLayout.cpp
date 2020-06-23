@@ -11,8 +11,8 @@ bool CCMTLBindingLayout::initialize(const BindingLayoutInfo &info) {
     if (info.bindings.size()) {
         _bindingUnits.resize(info.bindings.size());
         for (size_t i = 0; i < _bindingUnits.size(); ++i) {
-            GFXBindingUnit &bindingUnit = _bindingUnits[i];
-            const GFXBinding &binding = info.bindings[i];
+            BindingUnit &bindingUnit = _bindingUnits[i];
+            const Binding &binding = info.bindings[i];
             bindingUnit.shaderStages = binding.shaderStages;
             bindingUnit.binding = binding.binding;
             bindingUnit.type = binding.type;

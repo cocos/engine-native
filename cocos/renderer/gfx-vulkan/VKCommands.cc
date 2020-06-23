@@ -559,12 +559,12 @@ void CCVKCmdFuncDestroyFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFr
     }
 }
 
-void CCVKCmdFuncCreateBindingLayout(CCVKDevice *device, CCVKGPUBindingLayout *gpuBindingLayout, GFXBindingUnitList bindings) {
+void CCVKCmdFuncCreateBindingLayout(CCVKDevice *device, CCVKGPUBindingLayout *gpuBindingLayout, BindingUnitList bindings) {
     size_t count = bindings.size();
 
     vector<VkDescriptorSetLayoutBinding> setBindings(count);
     for (size_t i = 0u; i < count; i++) {
-        const GFXBindingUnit &binding = bindings[i];
+        const BindingUnit &binding = bindings[i];
         setBindings[i].binding = binding.binding;
         setBindings[i].descriptorType = MapVkDescriptorType(binding.type);
         setBindings[i].descriptorCount = binding.count;

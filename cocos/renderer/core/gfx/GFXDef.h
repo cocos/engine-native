@@ -872,7 +872,7 @@ struct FramebufferInfo {
     bool isOffscreen = true;
 };
 
-struct GFXBinding {
+struct Binding {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     BindingType type = BindingType::UNKNOWN;
@@ -880,13 +880,13 @@ struct GFXBinding {
     uint count = 0;
 };
 
-typedef vector<GFXBinding> GFXBindingList;
+typedef vector<Binding> BindingList;
 
 struct BindingLayoutInfo {
-    GFXBindingList bindings;
+    BindingList bindings;
 };
 
-struct GFXBindingUnit {
+struct BindingUnit {
     ShaderType shaderStages = ShaderType::NONE;
     uint binding = 0;
     BindingType type = BindingType::UNKNOWN;
@@ -897,7 +897,7 @@ struct GFXBindingUnit {
     Sampler *sampler = nullptr;
 };
 
-typedef vector<GFXBindingUnit> GFXBindingUnitList;
+typedef vector<BindingUnit> BindingUnitList;
 
 struct GFXPushConstantRange {
     ShaderType shaderType = ShaderType::NONE;
