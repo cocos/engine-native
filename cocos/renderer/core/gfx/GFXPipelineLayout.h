@@ -16,12 +16,12 @@ public:
     virtual void destroy() = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
-    CC_INLINE const GFXPushConstantRangeList &getPushConstantsRanges() const { return _pushConstantsRanges; }
+    CC_INLINE const PushConstantRangeList &getPushConstantsRanges() const { return _pushConstantsRanges; }
     CC_INLINE const BindingLayoutList &getLayouts() const { return _layouts; }
 
 protected:
     Device *_device = nullptr;
-    GFXPushConstantRangeList _pushConstantsRanges;
+    PushConstantRangeList _pushConstantsRanges;
     BindingLayoutList _layouts;
 };
 

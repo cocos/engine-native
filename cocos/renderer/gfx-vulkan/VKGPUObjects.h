@@ -204,7 +204,7 @@ public:
 
 class CCVKGPUPipelineLayout : public Object {
 public:
-    GFXPushConstantRangeList pushConstantRanges;
+    PushConstantRangeList pushConstantRanges;
     vector<CCVKGPUBindingLayout *> gpuBindingLayouts;
     VkPipelineLayout vkPipelineLayout;
 };

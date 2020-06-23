@@ -899,17 +899,17 @@ struct BindingUnit {
 
 typedef vector<BindingUnit> BindingUnitList;
 
-struct GFXPushConstantRange {
+struct PushConstantRange {
     ShaderType shaderType = ShaderType::NONE;
     uint offset = 0;
     uint count = 0;
 };
 
-typedef vector<GFXPushConstantRange> GFXPushConstantRangeList;
+typedef vector<PushConstantRange> PushConstantRangeList;
 typedef vector<BindingLayout *> BindingLayoutList;
 
 struct PipelineLayoutInfo {
-    GFXPushConstantRangeList pushConstantsRanges;
+    PushConstantRangeList pushConstantsRanges;
     BindingLayoutList layouts;
 };
 
