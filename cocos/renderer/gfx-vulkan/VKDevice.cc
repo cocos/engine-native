@@ -266,6 +266,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
 
     QueueInfo queueInfo;
     queueInfo.type = QueueType::GRAPHICS;
+    queueInfo.forceSync = true;
     _queue = createQueue(queueInfo);
 
     CommandAllocatorInfo cmdAllocInfo;

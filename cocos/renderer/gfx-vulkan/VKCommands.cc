@@ -186,7 +186,7 @@ void CCVKCmdFuncGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue) {
 void CCVKCmdFuncCreateCommandPool(CCVKDevice *device, CCVKGPUCommandPool *gpuCommandPool) {
     VkCommandPoolCreateInfo createInfo{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
     createInfo.queueFamilyIndex = ((CCVKQueue *)device->getQueue())->gpuQueue()->queueFamilyIndex;
-    createInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    createInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
 
     VK_CHECK(vkCreateCommandPool(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuCommandPool->vkCommandPool));
 }
@@ -265,61 +265,55 @@ void CCVKCmdFuncResizeBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
 }
 
 void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void *buffer, uint offset, uint size) {
-    if (gpuBuffer->mappedData) {
-        if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
-            size_t drawInfoCount = size / gpuBuffer->stride;
-            DrawInfo *drawInfo = static_cast<DrawInfo *>(buffer);
-            if (drawInfoCount > 0) {
-                if (drawInfo->indexCount) {
-                    vector<VkDrawIndexedIndirectCommand> cmds(drawInfoCount);
-                    for (size_t i = 0; i < drawInfoCount; i++) {
-#if COCOS2D_DEBUG > 0
-                        if (drawInfo->indexCount == 0) {
-                            CC_LOG_ERROR("CCVKCmdFuncUpdateBuffer: all indirect draw should use VkDrawIndexedIndirectCommand, but one of them is not.");
-                            return;
-                        }
-#endif
-                        cmds[i].indexCount = drawInfo->indexCount;
-                        cmds[i].instanceCount = drawInfo->instanceCount == 0 ? 1 : drawInfo->instanceCount;
-                        cmds[i].firstIndex = drawInfo->firstIndex;
-                        cmds[i].vertexOffset = drawInfo->vertexOffset;
-                        cmds[i].firstInstance = drawInfo->firstInstance;
-                        drawInfo++;
-                    }
-                    memcpy(gpuBuffer->mappedData + offset, cmds.data(), drawInfoCount * sizeof(VkDrawIndexedIndirectCommand));
-                    gpuBuffer->isDrawIndirectByIndex = true;
-                } else {
-                    vector<VkDrawIndirectCommand> cmds(drawInfoCount);
-                    for (size_t i = 0; i < drawInfoCount; i++) {
-#if COCOS2D_DEBUG > 0
-                        if (drawInfo->indexCount > 0) {
-                            CC_LOG_ERROR("CCVKCmdFuncUpdateBuffer: all indirect draw should use VkDrawIndirectCommand, but one of them is not.");
-                            return;
-                        }
-#endif
-                        cmds[i].vertexCount = drawInfo->vertexCount;
-                        cmds[i].instanceCount = drawInfo->indexCount;
-                        cmds[i].firstVertex = drawInfo->firstVertex;
-                        cmds[i].firstInstance = drawInfo->firstInstance;
-                        drawInfo++;
-                    }
-                    memcpy(gpuBuffer->mappedData + offset, cmds.data(), drawInfoCount * sizeof(VkDrawIndirectCommand));
-                    gpuBuffer->isDrawIndirectByIndex = false;
-                }
-            }
-        } else {
-            memcpy(gpuBuffer->mappedData + offset, buffer, size);
-        }
-    } else if (gpuBuffer->memUsage == MemoryUsage::DEVICE) {
-        const CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();
-        if (stagingBuffer->size < size) device->stagingBuffer()->resize(nextPowerOf2(size));
+    const void *dataToUpload = nullptr;
+    size_t sizeToUpload = 0u;
 
-        memcpy(stagingBuffer->mappedData, buffer, size);
+    if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
+        size_t drawInfoCount = size / sizeof(DrawInfo);
+        DrawInfo *drawInfo = static_cast<DrawInfo *>(buffer);
+        if (drawInfoCount > 0) {
+            if (drawInfo->indexCount) {
+                for (size_t i = 0; i < drawInfoCount; i++) {
+                    gpuBuffer->indexedIndirectCmds[i].indexCount = drawInfo->indexCount;
+                    gpuBuffer->indexedIndirectCmds[i].instanceCount = std::max(drawInfo->instanceCount, 1u);
+                    gpuBuffer->indexedIndirectCmds[i].firstIndex = drawInfo->firstIndex;
+                    gpuBuffer->indexedIndirectCmds[i].vertexOffset = drawInfo->vertexOffset;
+                    gpuBuffer->indexedIndirectCmds[i].firstInstance = drawInfo->firstInstance;
+                    drawInfo++;
+                }
+                dataToUpload = gpuBuffer->indexedIndirectCmds.data();
+                sizeToUpload = drawInfoCount * sizeof(VkDrawIndexedIndirectCommand);
+                gpuBuffer->isDrawIndirectByIndex = true;
+            } else {
+                for (size_t i = 0; i < drawInfoCount; i++) {
+                    gpuBuffer->indirectCmds[i].vertexCount = drawInfo->vertexCount;
+                    gpuBuffer->indirectCmds[i].instanceCount = drawInfo->instanceCount;
+                    gpuBuffer->indirectCmds[i].firstVertex = drawInfo->firstVertex;
+                    gpuBuffer->indirectCmds[i].firstInstance = drawInfo->firstInstance;
+                    drawInfo++;
+                }
+                dataToUpload = gpuBuffer->indirectCmds.data();
+                sizeToUpload = drawInfoCount * sizeof(VkDrawIndirectCommand);
+                gpuBuffer->isDrawIndirectByIndex = false;
+            }
+        }
+    } else {
+        dataToUpload = buffer;
+        sizeToUpload = size;
+    }
+
+    if (gpuBuffer->mappedData) {
+        memcpy(gpuBuffer->mappedData + offset, dataToUpload, sizeToUpload);
+    } else {
+        const CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();
+        if (stagingBuffer->size < sizeToUpload) device->stagingBuffer()->resize(nextPowerOf2(sizeToUpload));
+
+        memcpy(stagingBuffer->mappedData, dataToUpload, sizeToUpload);
 
         CCVKGPUCommandBuffer cmdBuff;
         beginOneTimeCommands(device, &cmdBuff);
 
-        VkBufferCopy region{0, gpuBuffer->startOffset + offset, size};
+        VkBufferCopy region{0, gpuBuffer->startOffset + offset, sizeToUpload};
         vkCmdCopyBuffer(cmdBuff.vkCommandBuffer, stagingBuffer->vkBuffer, gpuBuffer->vkBuffer, 1, &region);
 
         endOneTimeCommands(device, &cmdBuff);
@@ -331,15 +325,15 @@ void CCVKCmdFuncCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
 
     VkFormat format = MapVkFormat(gpuTexture->format);
     VkFormatFeatureFlags features = MapVkFormatFeatureFlags(gpuTexture->usage);
-    VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
-    VkImageUsageFlags usageFlags = MapVkImageUsageFlagBits(gpuTexture->usage) | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
     VkFormatProperties formatProperties;
     vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, format, &formatProperties);
-
     if (!(formatProperties.optimalTilingFeatures & features)) {
-        CC_LOG_ERROR("CCVKCmdFuncCreateTexture: %s does not support optimal tiling with specified features", GFX_FORMAT_INFOS[(uint)gpuTexture->format].name.c_str());
+        const char *formatName = GFX_FORMAT_INFOS[(uint)gpuTexture->format].name.c_str();
+        CC_LOG_ERROR("CCVKCmdFuncCreateTexture: The specified usage for %s is not supported on this platform", formatName);
         return;
     }
+
+    VkImageUsageFlags usageFlags = MapVkImageUsageFlagBits(gpuTexture->usage);
     if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
         usageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     }
@@ -352,7 +346,7 @@ void CCVKCmdFuncCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
     createInfo.mipLevels = gpuTexture->mipLevel;
     createInfo.arrayLayers = gpuTexture->arrayLayer;
     createInfo.samples = MapVkSampleCount(gpuTexture->samples);
-    createInfo.tiling = tiling;
+    createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
     createInfo.usage = usageFlags;
     createInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
@@ -932,13 +926,11 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
     vkCmdCopyBufferToImage(cmdBuff.vkCommandBuffer, stagingBuffer->vkBuffer, gpuTexture->vkImage,
                            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
 
+    bool layoutReady = false;
     if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, MapVkFormat(gpuTexture->format), &formatProperties);
-        VkFormatFeatureFlags mipmapFeatures = 0;
-        mipmapFeatures |= VK_FORMAT_FEATURE_BLIT_SRC_BIT;
-        mipmapFeatures |= VK_FORMAT_FEATURE_BLIT_DST_BIT;
-        mipmapFeatures |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+        VkFormatFeatureFlags mipmapFeatures = VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
 
         if (formatProperties.optimalTilingFeatures & mipmapFeatures) {
             VkImageSubresourceRange mipSubRange{};
@@ -962,19 +954,14 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
                                          mipSubRange);
 
                 VkImageBlit blit{};
-
-                //Source
                 blit.srcOffsets[1] = {mipWidth, mipHeight, 1};
                 blit.srcSubresource.aspectMask = gpuTexture->aspectMask;
                 blit.srcSubresource.mipLevel = i - 1;
                 blit.srcSubresource.layerCount = gpuTexture->arrayLayer;
-
-                //Destination
                 blit.dstOffsets[1] = {mipWidth > 1 ? mipWidth >> 1 : 1, mipHeight > 1 ? mipHeight >> 1 : 1, 1};
                 blit.dstSubresource.aspectMask = gpuTexture->aspectMask;
                 blit.dstSubresource.mipLevel = i;
                 blit.dstSubresource.layerCount = gpuTexture->arrayLayer;
-
                 vkCmdBlitImage(cmdBuff.vkCommandBuffer,
                                gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                                gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -1005,10 +992,14 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
                                      VK_PIPELINE_STAGE_TRANSFER_BIT,
                                      gpuTexture->targetStage,
                                      mipSubRange);
+            layoutReady = true;
         } else {
-            CC_LOG_WARNING("CCVKCmdFuncCopyBuffersToTexture: unsupported mipmap feature in optimal tiling.");
+            const char *formatName = GFX_FORMAT_INFOS[(uint)gpuTexture->format].name.c_str();
+            CC_LOG_WARNING("CCVKCmdFuncCopyBuffersToTexture: generate mipmap for %s is not supported on this platform", formatName);
         }
-    } else {
+    }
+
+    if (!layoutReady) {
         insertImageMemoryBarrior(cmdBuff.vkCommandBuffer,
                                  gpuTexture->vkImage,
                                  VK_ACCESS_TRANSFER_WRITE_BIT,
