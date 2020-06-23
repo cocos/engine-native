@@ -46,9 +46,15 @@ bool CCVKBindingLayout::initialize(const BindingLayoutInfo &info) {
     }
 
     _gpuBindingLayout = CC_NEW(CCVKGPUBindingLayout);
-    _gpuBindingLayout->descriptorSets.resize(1);
+    _gpuBindingLayout->gpuBindings.resize(1);
     _gpuBindingLayout->descriptorInfos.resize(1);
+    _gpuBindingLayout->descriptorSets.resize(1);
+    _gpuBindingLayout->gpuBindings[0].resize(bindingCount);
     _gpuBindingLayout->descriptorInfos[0].resize(bindingCount);
+
+    for (size_t i = blocks.size(); i < bindingCount; ++i) {
+        _gpuBindingLayout->descriptorInfos[0][i].image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    }
 
     _status = Status::SUCCESS;
 
@@ -57,7 +63,17 @@ bool CCVKBindingLayout::initialize(const BindingLayoutInfo &info) {
 
 void CCVKBindingLayout::destroy() {
     if (_gpuBindingLayout) {
+        for (vector<CCVKGPUBinding> &bindings : _gpuBindingLayout->gpuBindings) {
+            bindings.clear();
+        }
+        _gpuBindingLayout->gpuBindings.clear();
+
+        for (vector<CCVKDescriptorInfo> &descriptors : _gpuBindingLayout->descriptorInfos) {
+            descriptors.clear();
+        }
         _gpuBindingLayout->descriptorInfos.clear();
+
+        _gpuBindingLayout->descriptorSets.clear();
         CC_DELETE(_gpuBindingLayout);
         _gpuBindingLayout = nullptr;
     }
@@ -69,31 +85,21 @@ void CCVKBindingLayout::update() {
     if (_isDirty && _gpuBindingLayout) {
         for (size_t i = 0u; i < _bindingUnits.size(); ++i) {
             BindingUnit &bindingUnit = _bindingUnits[i];
-            CCVKDescriptorInfo &descriptorInfo = _gpuBindingLayout->descriptorInfos[0][i];
+            CCVKGPUBinding &binding = _gpuBindingLayout->gpuBindings[0][i];
             switch (bindingUnit.type) {
                 case BindingType::UNIFORM_BUFFER: {
                     if (bindingUnit.buffer) {
-                        CCVKGPUBuffer *buffer = ((CCVKBuffer *)bindingUnit.buffer)->gpuBuffer();
-                        descriptorInfo.buffer.buffer = buffer->vkBuffer;
-                        descriptorInfo.buffer.offset = 0;
-                        descriptorInfo.buffer.range = buffer->size;
+                        binding.buffer = ((CCVKBuffer *)bindingUnit.buffer)->gpuBuffer();
                     }
-
                     break;
                 }
                 case BindingType::SAMPLER: {
-                    descriptorInfo.image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
                     if (bindingUnit.texture) {
-                        descriptorInfo.image.imageView = ((CCVKTexture *)bindingUnit.texture)->gpuTextureView()->vkImageView;
-                    } else {
-                        descriptorInfo.image.imageView = ((CCVKDevice *)_device)->nullTexture2D->gpuTextureView()->vkImageView;
+                        binding.texView = ((CCVKTexture *)bindingUnit.texture)->gpuTextureView();
                     }
-
                     if (bindingUnit.sampler) {
-                        descriptorInfo.image.sampler = ((CCVKSampler *)bindingUnit.sampler)->gpuSampler()->vkSampler;
+                        binding.sampler = ((CCVKSampler *)bindingUnit.sampler)->gpuSampler();
                     }
-
                     break;
                 }
             }

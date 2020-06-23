@@ -141,21 +141,84 @@ void CCVKCommandBuffer::bindBindingLayout(BindingLayout *layout) {
     CCVKGPUBindingLayout *gpuBindingLayout = ((CCVKBindingLayout *)layout)->gpuBindingLayout();
 
     if (_curGPUBindingLayout != gpuBindingLayout) {
-        vector<VkDescriptorSetLayout> &layouts = _curGPUPipelineState->gpuShader->vkDescriptorSetLayouts;
-        vector<VkDescriptorUpdateTemplate> &templates = _curGPUPipelineState->gpuShader->vkDescriptorUpdateTemplates;
-        vector<VkDescriptorSet> &sets = gpuBindingLayout->descriptorSets;
-        vector<vector<CCVKDescriptorInfo>> &descriptors = gpuBindingLayout->descriptorInfos;
+
+        // Update refs here in case resources updated, e.g. resize events
+        // TODO: maybe there is a better way?
+        vector<vector<CCVKDescriptorInfo>> &descriptorInfos = gpuBindingLayout->descriptorInfos;
+        vector<vector<CCVKGPUBinding>> &gpuBindings = gpuBindingLayout->gpuBindings;
+        for (uint i = 0u; i < descriptorInfos.size(); i++) {
+            vector<CCVKDescriptorInfo> &descriptors = descriptorInfos[i];
+            vector<CCVKGPUBinding> &bindings = gpuBindings[i];
+            for (uint j = 0u; j < descriptors.size(); j++) {
+                CCVKDescriptorInfo &descriptor = descriptors[j];
+                CCVKGPUBinding &binding = bindings[j];
+                if (binding.buffer) {
+                    descriptor.buffer.buffer = binding.buffer->vkBuffer;
+                    descriptor.buffer.offset = binding.buffer->startOffset;
+                    descriptor.buffer.range = binding.buffer->size;
+                } else {
+                    if (binding.texView) {
+                        descriptor.image.imageView = binding.texView->vkImageView;
+                    }
+                    if (binding.sampler) {
+                        descriptor.image.sampler = binding.sampler->vkSampler;
+                    }
+                }
+            }
+        }
+
         CCVKDevice *device = (CCVKDevice *)_device;
-        VkPipelineLayout pipelineLayout = _curGPUPipelineState->gpuShader->vkPipelineLayout;
         VkCommandBuffer cmdBuff = _gpuCommandBuffer->vkCommandBuffer;
+        VkPipelineLayout pipelineLayout = _curGPUPipelineState->gpuShader->vkPipelineLayout;
+
         if (device->isPushDescriptorSetSupported()) {
+            vector<VkDescriptorUpdateTemplate> &templates = _curGPUPipelineState->gpuShader->vkDescriptorUpdateTemplates;
+
             for (uint i = 0u; i < templates.size(); i++) {
-                vkCmdPushDescriptorSetWithTemplateKHR(cmdBuff, templates[i], pipelineLayout, i, descriptors[i].data());
+                vkCmdPushDescriptorSetWithTemplateKHR(cmdBuff, templates[i], pipelineLayout, i, descriptorInfos[i].data());
             }
         } else {
+            vector<VkDescriptorSetLayout> &layouts = _curGPUPipelineState->gpuShader->vkDescriptorSetLayouts;
+            vector<VkDescriptorSet> &sets = gpuBindingLayout->descriptorSets;
+
             device->gpuDescriptorSetPool()->alloc(layouts.data(), sets.data(), layouts.size());
-            for (uint i = 0u; i < templates.size(); i++) {
-                vkUpdateDescriptorSetWithTemplateKHR(device->gpuDevice()->vkDevice, sets[i], templates[i], descriptors[i].data());
+
+            if (device->isDescriptorUpdateTemplateSupported()) {
+                vector<VkDescriptorUpdateTemplate> &templates = _curGPUPipelineState->gpuShader->vkDescriptorUpdateTemplates;
+
+                for (uint i = 0u; i < templates.size(); i++) {
+                    vkUpdateDescriptorSetWithTemplateKHR(device->gpuDevice()->vkDevice, sets[i], templates[i], descriptorInfos[i].data());
+                }
+            } else {
+                vector<vector<VkWriteDescriptorSet>> &templates = _curGPUPipelineState->gpuShader->manualDescriptorUpdateTemplates;
+
+                for (uint i = 0u; i < templates.size(); i++) {
+                    vector<VkWriteDescriptorSet> &entries = templates[i];
+                    vector<CCVKDescriptorInfo> &descriptors = descriptorInfos[i];
+                    for (uint j = 0u; j < entries.size(); j++) {
+                        entries[j].dstSet = sets[i];
+                        switch (entries[j].descriptorType) {
+                            case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
+                            case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER:
+                            case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC:
+                            case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC:
+                                entries[j].pBufferInfo = &descriptors[j].buffer;
+                                break;
+                            case VK_DESCRIPTOR_TYPE_SAMPLER:
+                            case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
+                            case VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE:
+                            case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+                            case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
+                                entries[j].pImageInfo = &descriptors[j].image;
+                                break;
+                            case VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER:
+                            case VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER:
+                                entries[j].pTexelBufferView = &descriptors[j].texelBufferView;
+                                break;
+                        }
+                    }
+                    vkUpdateDescriptorSets(device->gpuDevice()->vkDevice, entries.size(), entries.data(), 0, nullptr);
+                }
             }
             vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, layouts.size(), sets.data(), 0, nullptr);
         }

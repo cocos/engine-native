@@ -63,9 +63,6 @@ public:
     CC_INLINE bool isPushDescriptorSetSupported() const { return _pushDescriptorSetSupported; }
     CC_INLINE bool isMultiDrawIndirectSupported() const { return _multiDrawIndirectSupported; }
 
-    CCVKTexture *nullTexture2D = nullptr;
-    CCVKTexture *nullTextureCube = nullptr;
-
 private:
     void buildSwapchain();
 

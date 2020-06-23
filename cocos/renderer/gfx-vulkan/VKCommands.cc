@@ -459,7 +459,6 @@ void CCVKCmdFuncCreateShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {
     CC_LOG_INFO("Shader '%s' compilation succeeded.", gpuShader->name.c_str());
 
     gpuShader->vkDescriptorSetLayouts.resize(1);
-    gpuShader->vkDescriptorUpdateTemplates.resize(1);
 
     const GFXUniformBlockList &blocks = gpuShader->blocks;
     const GFXUniformSamplerList &samplers = gpuShader->samplers;
@@ -494,29 +493,43 @@ void CCVKCmdFuncCreateShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {
     pipelineLayoutCreateInfo.pSetLayouts = gpuShader->vkDescriptorSetLayouts.data();
     VK_CHECK(vkCreatePipelineLayout(device->gpuDevice()->vkDevice, &pipelineLayoutCreateInfo, nullptr, &gpuShader->vkPipelineLayout));
 
-    vector<VkDescriptorUpdateTemplateEntry> entries(bindingCount);
-    for (size_t i = 0u; i < bindingCount; i++) {
-        entries[i].dstBinding = setBindings[i].binding;
-        entries[i].dstArrayElement = 0;
-        entries[i].descriptorCount = 1;
-        entries[i].descriptorType = setBindings[i].descriptorType;
-        entries[i].offset = sizeof(CCVKDescriptorInfo) * i;
-        entries[i].stride = sizeof(CCVKDescriptorInfo);
-    }
+    if (device->isDescriptorUpdateTemplateSupported()) {
+        gpuShader->vkDescriptorUpdateTemplates.resize(1);
 
-    VkDescriptorUpdateTemplateCreateInfo createInfo = {VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO};
-    createInfo.descriptorUpdateEntryCount = bindingCount;
-    createInfo.pDescriptorUpdateEntries = entries.data();
-    if (device->isPushDescriptorSetSupported()) {
-        createInfo.templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR;
-        createInfo.descriptorSetLayout = VK_NULL_HANDLE;
+        vector<VkDescriptorUpdateTemplateEntry> entries(bindingCount);
+        for (size_t i = 0u; i < bindingCount; i++) {
+            entries[i].dstBinding = setBindings[i].binding;
+            entries[i].dstArrayElement = 0;
+            entries[i].descriptorCount = 1;
+            entries[i].descriptorType = setBindings[i].descriptorType;
+            entries[i].offset = sizeof(CCVKDescriptorInfo) * i;
+            entries[i].stride = sizeof(CCVKDescriptorInfo);
+        }
+
+        VkDescriptorUpdateTemplateCreateInfo createInfo = {VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO};
+        createInfo.descriptorUpdateEntryCount = bindingCount;
+        createInfo.pDescriptorUpdateEntries = entries.data();
+        if (device->isPushDescriptorSetSupported()) {
+            createInfo.templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR;
+            createInfo.descriptorSetLayout = VK_NULL_HANDLE;
+        } else {
+            createInfo.templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET;
+            createInfo.descriptorSetLayout = gpuShader->vkDescriptorSetLayouts[0];
+        }
+        createInfo.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        createInfo.pipelineLayout = gpuShader->vkPipelineLayout;
+        VK_CHECK(vkCreateDescriptorUpdateTemplateKHR(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuShader->vkDescriptorUpdateTemplates[0]));
     } else {
-        createInfo.templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET;
-        createInfo.descriptorSetLayout = gpuShader->vkDescriptorSetLayouts[0];
+        gpuShader->manualDescriptorUpdateTemplates.resize(1);
+        vector<VkWriteDescriptorSet> &entries = gpuShader->manualDescriptorUpdateTemplates[0];
+        entries.resize(bindingCount, {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET});
+        for (size_t i = 0u; i < bindingCount; i++) {
+            entries[i].dstBinding = setBindings[i].binding;
+            entries[i].dstArrayElement = 0;
+            entries[i].descriptorCount = 1;
+            entries[i].descriptorType = setBindings[i].descriptorType;
+        }
     }
-    createInfo.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    createInfo.pipelineLayout = gpuShader->vkPipelineLayout;
-    VK_CHECK(vkCreateDescriptorUpdateTemplateKHR(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuShader->vkDescriptorUpdateTemplates[0]));
 }
 
 void CCVKCmdFuncDestroyShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {

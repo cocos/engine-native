@@ -289,19 +289,6 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
         _depthStencilTextures.push_back(texture);
     }
 
-    TextureInfo textureInfo;
-    TextureViewInfo texViewInfo;
-
-    textureInfo.usage = TextureUsageBit::SAMPLED;
-    textureInfo.format = Format::RGBA8;
-    textureInfo.width = 2;
-    textureInfo.height = 2;
-    nullTexture2D = (CCVKTexture *)createTexture(textureInfo);
-
-    textureInfo.arrayLayer = 6;
-    textureInfo.flags = TextureFlagBit::CUBEMAP;
-    nullTextureCube = (CCVKTexture *)createTexture(textureInfo);
-
     _gpuSwapchain = CC_NEW(CCVKGPUSwapchain);
     buildSwapchain();
 
@@ -377,8 +364,6 @@ void CCVKDevice::destroy() {
     }
     _depthStencilTextures.clear();
 
-    CC_SAFE_DESTROY(nullTexture2D);
-    CC_SAFE_DESTROY(nullTextureCube);
     CC_SAFE_DESTROY(_stagingBuffer);
     CC_SAFE_DESTROY(_cmdAllocator);
     CC_SAFE_DESTROY(_queue);

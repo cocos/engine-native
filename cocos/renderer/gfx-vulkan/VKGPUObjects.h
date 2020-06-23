@@ -137,17 +137,19 @@ class CCVKGPUBuffer : public Object {
 public:
     BufferUsage usage = BufferUsage::NONE;
     MemoryUsage memUsage = MemoryUsage::NONE;
-    uint size = 0;
-    uint stride = 0;
-    uint count = 0;
+    uint stride = 0u;
+    uint count = 0u;
     void *buffer = nullptr;
 
     bool isDrawIndirectByIndex = false;
     vector<VkDrawIndirectCommand> indirectCmds;
     vector<VkDrawIndexedIndirectCommand> indexedIndirectCmds;
 
+    // VkDescriptorBufferInfo
     VkBuffer vkBuffer = VK_NULL_HANDLE;
     VkDeviceSize startOffset = 0u;
+    VkDeviceSize size = 0u;
+
     uint8_t *mappedData = nullptr;
     VmaAllocation vmaAllocation = VK_NULL_HANDLE;
 };
@@ -191,6 +193,7 @@ public:
 
     vector<VkDescriptorSetLayout> vkDescriptorSetLayouts;
     vector<VkDescriptorUpdateTemplate> vkDescriptorUpdateTemplates;
+    vector<vector<VkWriteDescriptorSet>> manualDescriptorUpdateTemplates;
     VkPipelineLayout vkPipelineLayout = VK_NULL_HANDLE;
 };
 
@@ -208,10 +211,17 @@ struct CCVKDescriptorInfo {
     union {
         VkDescriptorImageInfo image;
         VkDescriptorBufferInfo buffer;
+        VkBufferView texelBufferView;
     };
+};
+struct CCVKGPUBinding {
+    CCVKGPUBuffer *buffer;
+    CCVKGPUTextureView *texView;
+    CCVKGPUSampler *sampler;
 };
 class CCVKGPUBindingLayout : public Object {
 public:
+    vector<vector<CCVKGPUBinding>> gpuBindings;
     vector<vector<CCVKDescriptorInfo>> descriptorInfos;
     vector<VkDescriptorSet> descriptorSets;
 };
