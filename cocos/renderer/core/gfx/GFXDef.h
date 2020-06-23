@@ -913,7 +913,7 @@ struct PipelineLayoutInfo {
     BindingLayoutList layouts;
 };
 
-struct GFXInputState {
+struct InputState {
     AttributeList attributes;
 };
 
@@ -981,7 +981,7 @@ struct GFXBlendState {
 struct PipelineStateInfo {
     PrimitiveMode primitive = PrimitiveMode::TRIANGLE_LIST;
     Shader *shader = nullptr;
-    GFXInputState inputState;
+    InputState inputState;
     GFXRasterizerState rasterizerState;
     GFXDepthStencilState depthStencilState;
     GFXBlendState blendState;

@@ -213,7 +213,7 @@ class CCVKGPUPipelineState : public Object {
 public:
     PrimitiveMode primitive = PrimitiveMode::TRIANGLE_LIST;
     CCVKGPUShader *gpuShader = nullptr;
-    GFXInputState inputState;
+    InputState inputState;
     GFXRasterizerState rs;
     GFXDepthStencilState dss;
     GFXBlendState bs;

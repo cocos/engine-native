@@ -337,13 +337,13 @@ static bool js_gfx_GFXBuffer_update(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_GFXBuffer_update)
 
-se::Object* __jsb_cocos2d_GFXSubPass_proto = nullptr;
-se::Class* __jsb_cocos2d_GFXSubPass_class = nullptr;
+se::Object* __jsb_cocos2d_SubPass_proto = nullptr;
+se::Class* __jsb_cocos2d_SubPass_class = nullptr;
 
-static bool js_gfx_GFXSubPass_get_bind_point(se::State& s)
+static bool js_gfx_SubPass_get_bind_point(se::State& s)
 {
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_get_bind_point : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_get_bind_point : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
@@ -351,27 +351,27 @@ static bool js_gfx_GFXSubPass_get_bind_point(se::State& s)
     s.rval() = jsret;
     return true;
 }
-SE_BIND_PROP_GET(js_gfx_GFXSubPass_get_bind_point)
+SE_BIND_PROP_GET(js_gfx_SubPass_get_bind_point)
 
-static bool js_gfx_GFXSubPass_set_bind_point(se::State& s)
+static bool js_gfx_SubPass_set_bind_point(se::State& s)
 {
     const auto& args = s.args();
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_bind_point : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_set_bind_point : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     cc::gfx::PipelineBindPoint arg0 = cc::gfx::PipelineBindPoint::GRAPHICS;
     do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cc::gfx::PipelineBindPoint)tmp; } while(false);
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_bind_point : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_gfx_SubPass_set_bind_point : Error processing new value");
     cobj->bindPoint = arg0;
     return true;
 }
-SE_BIND_PROP_SET(js_gfx_GFXSubPass_set_bind_point)
+SE_BIND_PROP_SET(js_gfx_SubPass_set_bind_point)
 
-static bool js_gfx_GFXSubPass_get_inputs(se::State& s)
+static bool js_gfx_SubPass_get_inputs(se::State& s)
 {
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_get_inputs : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_get_inputs : Invalid Native Object");
 
     se::Value jsret;
     se::HandleObject obj(se::Object::createArrayObject(GFX_MAX_ATTACHMENTS));
@@ -382,25 +382,25 @@ static bool js_gfx_GFXSubPass_get_inputs(se::State& s)
     jsret.setObject(obj);
     return true;
 }
-SE_BIND_PROP_GET(js_gfx_GFXSubPass_get_inputs)
+SE_BIND_PROP_GET(js_gfx_SubPass_get_inputs)
 
-static bool js_gfx_GFXSubPass_set_inputs(se::State& s)
+static bool js_gfx_SubPass_set_inputs(se::State& s)
 {
     const auto& args = s.args();
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_inputs : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_set_inputs : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= seval_to_Uint8Array(args[0], cobj->inputs);
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_inputs : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_gfx_SubPass_set_inputs : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_gfx_GFXSubPass_set_inputs)
+SE_BIND_PROP_SET(js_gfx_SubPass_set_inputs)
 
-static bool js_gfx_GFXSubPass_get_colors(se::State& s)
+static bool js_gfx_SubPass_get_colors(se::State& s)
 {
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_get_colors : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_get_colors : Invalid Native Object");
 
     se::Value jsret;
     se::HandleObject obj(se::Object::createArrayObject(GFX_MAX_ATTACHMENTS));
@@ -411,25 +411,25 @@ static bool js_gfx_GFXSubPass_get_colors(se::State& s)
     jsret.setObject(obj);
     return true;
 }
-SE_BIND_PROP_GET(js_gfx_GFXSubPass_get_colors)
+SE_BIND_PROP_GET(js_gfx_SubPass_get_colors)
 
-static bool js_gfx_GFXSubPass_set_colors(se::State& s)
+static bool js_gfx_SubPass_set_colors(se::State& s)
 {
     const auto& args = s.args();
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_colors : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_set_colors : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= seval_to_Uint8Array(args[0], cobj->colors);
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_colors : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_gfx_SubPass_set_colors : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_gfx_GFXSubPass_set_colors)
+SE_BIND_PROP_SET(js_gfx_SubPass_set_colors)
 
-static bool js_gfx_GFXSubPass_get_resolves(se::State& s)
+static bool js_gfx_SubPass_get_resolves(se::State& s)
 {
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_get_resolves : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_get_resolves : Invalid Native Object");
 
     se::Value jsret;
     se::HandleObject obj(se::Object::createArrayObject(GFX_MAX_ATTACHMENTS));
@@ -440,26 +440,26 @@ static bool js_gfx_GFXSubPass_get_resolves(se::State& s)
     jsret.setObject(obj);
     return true;
 }
-SE_BIND_PROP_GET(js_gfx_GFXSubPass_get_resolves)
+SE_BIND_PROP_GET(js_gfx_SubPass_get_resolves)
 
-static bool js_gfx_GFXSubPass_set_resolves(se::State& s)
+static bool js_gfx_SubPass_set_resolves(se::State& s)
 {
     const auto& args = s.args();
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_resolves : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_set_resolves : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= seval_to_Uint8Array(args[0], cobj->resolves);
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_resolves : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_gfx_SubPass_set_resolves : Error processing new value");
 
     return true;
 }
-SE_BIND_PROP_SET(js_gfx_GFXSubPass_set_resolves)
+SE_BIND_PROP_SET(js_gfx_SubPass_set_resolves)
 
-static bool js_gfx_GFXSubPass_get_depth_stencil(se::State& s)
+static bool js_gfx_SubPass_get_depth_stencil(se::State& s)
 {
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_get_depth_stencil : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_get_depth_stencil : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
@@ -467,27 +467,27 @@ static bool js_gfx_GFXSubPass_get_depth_stencil(se::State& s)
     s.rval() = jsret;
     return true;
 }
-SE_BIND_PROP_GET(js_gfx_GFXSubPass_get_depth_stencil)
+SE_BIND_PROP_GET(js_gfx_SubPass_get_depth_stencil)
 
-static bool js_gfx_GFXSubPass_set_depth_stencil(se::State& s)
+static bool js_gfx_SubPass_set_depth_stencil(se::State& s)
 {
     const auto& args = s.args();
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_depth_stencil : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_set_depth_stencil : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     uint8_t arg0;
     ok &= seval_to_uint8(args[0], (uint8_t*)&arg0);
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_depth_stencil : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_gfx_SubPass_set_depth_stencil : Error processing new value");
     cobj->depthStencil = arg0;
     return true;
 }
-SE_BIND_PROP_SET(js_gfx_GFXSubPass_set_depth_stencil)
+SE_BIND_PROP_SET(js_gfx_SubPass_set_depth_stencil)
 
-static bool js_gfx_GFXSubPass_get_preserves(se::State& s)
+static bool js_gfx_SubPass_get_preserves(se::State& s)
 {
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_get_preserves : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_get_preserves : Invalid Native Object");
 
     se::Value jsret;
     se::HandleObject obj(se::Object::createArrayObject(GFX_MAX_ATTACHMENTS));
@@ -498,25 +498,25 @@ static bool js_gfx_GFXSubPass_get_preserves(se::State& s)
     jsret.setObject(obj);
     return true;
 }
-SE_BIND_PROP_GET(js_gfx_GFXSubPass_get_preserves)
+SE_BIND_PROP_GET(js_gfx_SubPass_get_preserves)
 
-static bool js_gfx_GFXSubPass_set_preserves(se::State& s)
+static bool js_gfx_SubPass_set_preserves(se::State& s)
 {
     const auto& args = s.args();
-    cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GFXSubPass_set_preserves : Invalid Native Object");
+    cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubPass_set_preserves : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= seval_to_Uint8Array(args[0], cobj->preserves);
-    SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_set_preserves : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_gfx_SubPass_set_preserves : Error processing new value");
 
     return true;
 }
-SE_BIND_PROP_SET(js_gfx_GFXSubPass_set_preserves)
+SE_BIND_PROP_SET(js_gfx_SubPass_set_preserves)
 
-SE_DECLARE_FINALIZE_FUNC(js_cocos2d_GFXSubPass_finalize)
+SE_DECLARE_FINALIZE_FUNC(js_cocos2d_SubPass_finalize)
 
-static bool js_gfx_GFXSubPass_constructor(se::State& s)
+static bool js_gfx_SubPass_constructor(se::State& s)
 {
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
@@ -524,7 +524,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
 
     if(argc == 0) 
     {
-        cc::gfx::GFXSubPass* cobj = new (std::nothrow) cc::gfx::GFXSubPass();
+        cc::gfx::SubPass* cobj = new (std::nothrow) cc::gfx::SubPass();
         s.thisObject()->setPrivateData(cobj);
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
         return true;
@@ -534,7 +534,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
         se::Object *json = args[0].toObject();
         se::Value field;
 
-        cc::gfx::GFXSubPass* cobj = new (std::nothrow) cc::gfx::GFXSubPass();
+        cc::gfx::SubPass* cobj = new (std::nothrow) cc::gfx::SubPass();
         s.thisObject()->setPrivateData(cobj);
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
 
@@ -553,7 +553,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
             return false;
         } 
         ok &= seval_to_Uint8Array(field, cobj->inputs);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing inputs value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing inputs value");
 
         json->getProperty("colors", &field);  
         if(field.isUndefined()) {
@@ -561,7 +561,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
             return false;
         }
         ok &= seval_to_Uint8Array(field, cobj->colors);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing colors value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing colors value");
 
         json->getProperty("resolves", &field);  
         if(field.isUndefined()) {
@@ -569,7 +569,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
             return false;
         }
         ok &= seval_to_Uint8Array(field, cobj->resolves);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing resolves value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing resolves value");
 
         json->getProperty("depth_stencil", &field);  
         if(field.isUndefined()) {
@@ -577,7 +577,7 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
             return false;
         }
         ok &= seval_to_uint8(field, (uint8_t*)&cobj->depthStencil);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing depth_stencil value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing depth_stencil value");
         
         json->getProperty("preserves", &field);  
         if(field.isUndefined()) {
@@ -585,13 +585,13 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
             return false;
         }
         ok &= seval_to_Uint8Array(field, cobj->preserves);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing preserves value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing preserves value");
 
         return true;
     }
     else if(argc == 6)
     {
-        cc::gfx::GFXSubPass* cobj = new (std::nothrow) cc::gfx::GFXSubPass();
+        cc::gfx::SubPass* cobj = new (std::nothrow) cc::gfx::SubPass();
         s.thisObject()->setPrivateData(cobj);
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
 
@@ -600,19 +600,19 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
         cobj->bindPoint = arg0;
 
         ok &= seval_to_Uint8Array(args[1], (uint8_t*)&cobj->inputs);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing inputs value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing inputs value");
 
         ok &= seval_to_Uint8Array(args[2], (uint8_t*)&cobj->colors);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing colors value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing colors value");
 
         ok &= seval_to_Uint8Array(args[3], (uint8_t*)&cobj->resolves);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing resolves value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing resolves value");
 
         ok &= seval_to_uint8(args[4], (uint8_t*)&cobj->depthStencil);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing depth_stencil value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing depth_stencil value");
 
         ok &= seval_to_Uint8Array(args[5], (uint8_t*)&cobj->preserves);
-        SE_PRECONDITION2(ok, false, "js_gfx_GFXSubPass_constructor : Error processing preserves value");
+        SE_PRECONDITION2(ok, false, "js_gfx_SubPass_constructor : Error processing preserves value");
         
         return true;
     }
@@ -620,38 +620,38 @@ static bool js_gfx_GFXSubPass_constructor(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_CTOR(js_gfx_GFXSubPass_constructor, __jsb_cocos2d_GFXSubPass_class, js_cocos2d_GFXSubPass_finalize)
+SE_BIND_CTOR(js_gfx_SubPass_constructor, __jsb_cocos2d_SubPass_class, js_cocos2d_SubPass_finalize)
 
-static bool js_cocos2d_GFXSubPass_finalize(se::State& s)
+static bool js_cocos2d_SubPass_finalize(se::State& s)
 {
-    CC_LOG_INFO("jsbindings: finalizing JS object %p (cc::GFXSubPass)", s.nativeThisObject());
+    CC_LOG_INFO("jsbindings: finalizing JS object %p (cc::SubPass)", s.nativeThisObject());
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cc::gfx::GFXSubPass* cobj = (cc::gfx::GFXSubPass*)s.nativeThisObject();
+        cc::gfx::SubPass* cobj = (cc::gfx::SubPass*)s.nativeThisObject();
         JSB_FREE(cobj);
     }
     return true;
 }
-SE_BIND_FINALIZE_FUNC(js_cocos2d_GFXSubPass_finalize)
+SE_BIND_FINALIZE_FUNC(js_cocos2d_SubPass_finalize)
 
-bool js_register_gfx_GFXSubPass(se::Object* obj)
+bool js_register_gfx_SubPass(se::Object* obj)
 {
-    auto cls = se::Class::create("GFXSubPass", obj, nullptr, _SE(js_gfx_GFXSubPass_constructor));
+    auto cls = se::Class::create("SubPass", obj, nullptr, _SE(js_gfx_SubPass_constructor));
 
-    cls->defineProperty("bindPoint", _SE(js_gfx_GFXSubPass_get_bind_point), _SE(js_gfx_GFXSubPass_set_bind_point));
-    cls->defineProperty("inputs", _SE(js_gfx_GFXSubPass_get_inputs), _SE(js_gfx_GFXSubPass_set_inputs));
-    cls->defineProperty("colors", _SE(js_gfx_GFXSubPass_get_colors), _SE(js_gfx_GFXSubPass_set_colors));
-    cls->defineProperty("resolves", _SE(js_gfx_GFXSubPass_get_resolves), _SE(js_gfx_GFXSubPass_set_resolves));
-    cls->defineProperty("depthStencil", _SE(js_gfx_GFXSubPass_get_depth_stencil), _SE(js_gfx_GFXSubPass_set_depth_stencil));
-    cls->defineProperty("preserves", _SE(js_gfx_GFXSubPass_get_preserves), _SE(js_gfx_GFXSubPass_set_preserves));
-    cls->defineFinalizeFunction(_SE(js_cocos2d_GFXSubPass_finalize));
+    cls->defineProperty("bindPoint", _SE(js_gfx_SubPass_get_bind_point), _SE(js_gfx_SubPass_set_bind_point));
+    cls->defineProperty("inputs", _SE(js_gfx_SubPass_get_inputs), _SE(js_gfx_SubPass_set_inputs));
+    cls->defineProperty("colors", _SE(js_gfx_SubPass_get_colors), _SE(js_gfx_SubPass_set_colors));
+    cls->defineProperty("resolves", _SE(js_gfx_SubPass_get_resolves), _SE(js_gfx_SubPass_set_resolves));
+    cls->defineProperty("depthStencil", _SE(js_gfx_SubPass_get_depth_stencil), _SE(js_gfx_SubPass_set_depth_stencil));
+    cls->defineProperty("preserves", _SE(js_gfx_SubPass_get_preserves), _SE(js_gfx_SubPass_set_preserves));
+    cls->defineFinalizeFunction(_SE(js_cocos2d_SubPass_finalize));
     cls->install();
-    JSBClassType::registerClass<cc::gfx::GFXSubPass>(cls);
+    JSBClassType::registerClass<cc::gfx::SubPass>(cls);
 
-    __jsb_cocos2d_GFXSubPass_proto = cls->getProto();
-    __jsb_cocos2d_GFXSubPass_class = cls;
+    __jsb_cocos2d_SubPass_proto = cls->getProto();
+    __jsb_cocos2d_SubPass_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -825,7 +825,7 @@ bool register_all_gfx_manual(se::Object* obj)
 
     __jsb_cc_gfx_InputAssembler_proto->defineFunction("extractDrawInfo", _SE(js_gfx_InputAssembler_extractDrawInfo));
     
-    js_register_gfx_GFXSubPass(obj);
+    js_register_gfx_SubPass(obj);
 
 #if defined USE_VULKAN
     register_all_vk(obj);

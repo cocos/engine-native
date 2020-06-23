@@ -18,7 +18,7 @@ public:
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Shader *getShader() const { return _shader; }
     CC_INLINE PrimitiveMode getPrimitive() const { return _primitive; }
-    CC_INLINE const GFXInputState &getInputState() const { return _inputState; }
+    CC_INLINE const InputState &getInputState() const { return _inputState; }
     CC_INLINE const GFXRasterizerState &getRasterizerState() const { return _rasterizerState; }
     CC_INLINE const GFXDepthStencilState &getDepthStencilState() const { return _depthStencilState; }
     CC_INLINE const GFXBlendState &getBlendState() const { return _blendState; }
@@ -30,7 +30,7 @@ protected:
     Device *_device = nullptr;
     Shader *_shader = nullptr;
     PrimitiveMode _primitive = PrimitiveMode::TRIANGLE_LIST;
-    GFXInputState _inputState;
+    InputState _inputState;
     GFXRasterizerState _rasterizerState;
     GFXDepthStencilState _depthStencilState;
     GFXBlendState _blendState;
