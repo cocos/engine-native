@@ -471,8 +471,6 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXBuffer.cc
     cocos/renderer/core/gfx/GFXBuffer.h
     cocos/renderer/core/gfx/GFXCommand.h
-    cocos/renderer/core/gfx/GFXCommandAllocator.cc
-    cocos/renderer/core/gfx/GFXCommandAllocator.h
     cocos/renderer/core/gfx/GFXCommandBuffer.cc
     cocos/renderer/core/gfx/GFXCommandBuffer.h
     cocos/renderer/core/gfx/GFXCommandPool.h
@@ -700,8 +698,6 @@ if(CC_USE_VULKAN)
         cocos/renderer/gfx-vulkan/VKBindingLayout.h
         cocos/renderer/gfx-vulkan/VKBuffer.cc
         cocos/renderer/gfx-vulkan/VKBuffer.h
-        cocos/renderer/gfx-vulkan/VKCommandAllocator.cc
-        cocos/renderer/gfx-vulkan/VKCommandAllocator.h
         cocos/renderer/gfx-vulkan/VKCommandBuffer.cc
         cocos/renderer/gfx-vulkan/VKCommandBuffer.h
         cocos/renderer/gfx-vulkan/VKCommands.cc

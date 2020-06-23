@@ -963,11 +963,8 @@ struct PipelineStateInfo {
     RenderPass *renderPass = nullptr;
 };
 
-struct CommandAllocatorInfo {
-};
-
 struct CommandBufferInfo {
-    CommandAllocator *allocator = nullptr;
+    Queue *queue = nullptr;
     CommandBufferType type = CommandBufferType::PRIMARY;
 };
 

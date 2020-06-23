@@ -17,10 +17,9 @@ public:
     virtual void resize(uint width, uint height) = 0;
     virtual void acquire() = 0;
     virtual void present() = 0;
+    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) = 0;
     virtual Fence *createFence(const FenceInfo &info) = 0;
     virtual Queue *createQueue(const QueueInfo &info) = 0;
-    virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) = 0;
-    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) = 0;
     virtual Buffer *createBuffer(const BufferInfo &info) = 0;
     virtual Texture *createTexture(const TextureInfo &info) = 0;
     virtual Texture *createTexture(const TextureViewInfo &info) = 0;
@@ -42,7 +41,6 @@ public:
     CC_INLINE MemoryStatus &getMemoryStatus() { return _memoryStatus; }
     CC_INLINE Context *getContext() const { return _context; }
     CC_INLINE Queue *getQueue() const { return _queue; }
-    CC_INLINE CommandAllocator *getCommandAllocator() const { return _cmdAllocator; }
     CC_INLINE const String &getRenderer() const { return _renderer; }
     CC_INLINE const String &getVendor() const { return _vendor; }
     CC_INLINE uint getNumDrawCalls() const { return _numDrawCalls; }
@@ -84,7 +82,6 @@ protected:
     uintptr_t _windowHandle = 0;
     Context *_context = nullptr;
     Queue *_queue = nullptr;
-    CommandAllocator *_cmdAllocator = nullptr;
     uint _numDrawCalls = 0;
     uint _numInstances = 0;
     uint _numTriangles = 0;

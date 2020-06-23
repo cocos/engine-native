@@ -10,6 +10,7 @@ class CCVKGPUSwapchain;
 class CCVKGPUSemaphorePool;
 class CCVKGPUFencePool;
 class CCVKGPUDescriptorSetPool;
+class CCVKGPUCommandBufferPool;
 class CCVKTexture;
 class CCVKRenderPass;
 class CCVKBuffer;
@@ -25,10 +26,9 @@ public:
     virtual void resize(uint width, uint height) override;
     virtual void acquire() override;
     virtual void present() override;
+    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Fence *createFence(const FenceInfo &info) override;
     virtual Queue *createQueue(const QueueInfo &info) override;
-    virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) override;
-    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
     virtual Texture *createTexture(const TextureInfo &info) override;
     virtual Texture *createTexture(const TextureViewInfo &info) override;
@@ -54,6 +54,7 @@ public:
     CC_INLINE CCVKGPUSemaphorePool *gpuSemaphorePool() { return _gpuSemaphorePool; }
     CC_INLINE CCVKGPUFencePool *gpuFencePool() { return _gpuFencePool; }
     CC_INLINE CCVKGPUDescriptorSetPool *gpuDescriptorSetPool() { return _gpuDescriptorSetPool; }
+    CC_INLINE CCVKGPUCommandBufferPool *gpuCommandBufferPool() { return _gpuCommandBufferPool; }
     CC_INLINE CCVKBuffer *stagingBuffer() { return _stagingBuffer; }
     CC_INLINE const std::vector<const char *> &getLayers() const { return _layers; }
     CC_INLINE const std::vector<const char *> &getExtensions() const { return _extensions; }
@@ -70,6 +71,7 @@ private:
     CCVKGPUSemaphorePool *_gpuSemaphorePool = nullptr;
     CCVKGPUFencePool *_gpuFencePool = nullptr;
     CCVKGPUDescriptorSetPool *_gpuDescriptorSetPool = nullptr;
+    CCVKGPUCommandBufferPool *_gpuCommandBufferPool = nullptr;
     CCVKGPUSwapchain *_gpuSwapchain = nullptr;
     std::vector<CCVKTexture *> _depthStencilTextures;
     CCVKBuffer *_stagingBuffer = nullptr;

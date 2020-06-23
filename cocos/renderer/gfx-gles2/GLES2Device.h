@@ -5,6 +5,7 @@ namespace cc {
 namespace gfx {
 
 class GLES2StateCache;
+class GLES2CommandAllocator;
 
 class CC_GLES2_API GLES2Device : public Device {
 public:
@@ -17,12 +18,11 @@ public:
     virtual bool initialize(const DeviceInfo &info) override;
     virtual void destroy() override;
     virtual void resize(uint width, uint height) override;
-    virtual void acquire() override{};
+    virtual void acquire() override;
     virtual void present() override;
+    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Fence *createFence(const FenceInfo &info) override;
     virtual Queue *createQueue(const QueueInfo &info) override;
-    virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) override;
-    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
     virtual Texture *createTexture(const TextureInfo &info) override;
     virtual Texture *createTexture(const TextureViewInfo &info) override;
@@ -39,6 +39,7 @@ public:
     CC_INLINE bool useDrawInstanced() const { return _useDrawInstanced; }
     CC_INLINE bool useInstancedArrays() const { return _useInstancedArrays; }
     CC_INLINE bool useDiscardFramebuffer() const { return _useDiscardFramebuffer; }
+    CC_INLINE GLES2CommandAllocator *cmdAllocator() const { return _cmdAllocator; }
 
     CC_INLINE bool checkExtension(const String &extension) const {
         for (size_t i = 0; i < _extensions.size(); ++i) {
@@ -50,6 +51,8 @@ public:
     }
 
 private:
+    GLES2CommandAllocator *_cmdAllocator = nullptr;
+
     StringArray _extensions;
     bool _useVAO = false;
     bool _useDrawInstanced = false;

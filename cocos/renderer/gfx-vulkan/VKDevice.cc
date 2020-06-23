@@ -2,7 +2,6 @@
 
 #include "VKBindingLayout.h"
 #include "VKBuffer.h"
-#include "VKCommandAllocator.h"
 #include "VKCommandBuffer.h"
 #include "VKContext.h"
 #include "VKDevice.h"
@@ -262,6 +261,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
     _gpuFencePool = CC_NEW(CCVKGPUFencePool(_gpuDevice));
     _gpuDescriptorSetPool = CC_NEW(CCVKGPUDescriptorSetPool(_gpuDevice));
+    _gpuCommandBufferPool = CC_NEW(CCVKGPUCommandBufferPool(_gpuDevice));
 
     BufferInfo stagingBufferInfo;
     stagingBufferInfo.usage = BufferUsage::TRANSFER_SRC;
@@ -274,9 +274,6 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     queueInfo.type = QueueType::GRAPHICS;
     queueInfo.forceSync = true;
     _queue = createQueue(queueInfo);
-
-    CommandAllocatorInfo cmdAllocInfo;
-    _cmdAllocator = createCommandAllocator(cmdAllocInfo);
 
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
         TextureInfo depthStencilTexInfo;
@@ -365,8 +362,9 @@ void CCVKDevice::destroy() {
     _depthStencilTextures.clear();
 
     CC_SAFE_DESTROY(_stagingBuffer);
-    CC_SAFE_DESTROY(_cmdAllocator);
     CC_SAFE_DESTROY(_queue);
+    CC_SAFE_DELETE(_gpuCommandBufferPool);
+    CC_SAFE_DELETE(_gpuDescriptorSetPool);
     CC_SAFE_DELETE(_gpuSemaphorePool);
     CC_SAFE_DELETE(_gpuFencePool);
 
@@ -487,7 +485,7 @@ void CCVKDevice::acquire() {
     _gpuSemaphorePool->reset();
     _gpuFencePool->reset();
     _gpuDescriptorSetPool->reset();
-    ((CCVKCommandAllocator *)_cmdAllocator)->reset();
+    _gpuCommandBufferPool->reset();
 
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
@@ -520,6 +518,15 @@ void CCVKDevice::present() {
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
 }
 
+CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo &info) {
+    CommandBuffer *cmdBuff = CC_NEW(CCVKCommandBuffer(this));
+    if (cmdBuff->initialize(info))
+        return cmdBuff;
+
+    CC_SAFE_DESTROY(cmdBuff)
+    return nullptr;
+}
+
 Fence *CCVKDevice::createFence(const FenceInfo &info) {
     Fence *fence = CC_NEW(CCVKFence(this));
     if (fence->initialize(info))
@@ -535,24 +542,6 @@ Queue *CCVKDevice::createQueue(const QueueInfo &info) {
         return queue;
 
     CC_SAFE_DESTROY(queue);
-    return nullptr;
-}
-
-CommandAllocator *CCVKDevice::createCommandAllocator(const CommandAllocatorInfo &info) {
-    CommandAllocator *cmdAllocator = CC_NEW(CCVKCommandAllocator(this));
-    if (cmdAllocator->initialize(info))
-        return cmdAllocator;
-
-    CC_SAFE_DESTROY(cmdAllocator);
-    return nullptr;
-}
-
-CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo &info) {
-    CommandBuffer *cmdBuff = CC_NEW(CCVKCommandBuffer(this));
-    if (cmdBuff->initialize(info))
-        return cmdBuff;
-
-    CC_SAFE_DESTROY(cmdBuff);
     return nullptr;
 }
 

@@ -17,7 +17,6 @@
 #include "gfx/GFXFramebuffer.h"
 #include "gfx/GFXBindingLayout.h"
 #include "gfx/GFXPipelineState.h"
-#include "gfx/GFXCommandAllocator.h"
 #include "gfx/GFXCommandBuffer.h"
 #include "gfx/GFXFence.h"
 #include "gfx/GFXQueue.h"

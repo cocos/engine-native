@@ -5,6 +5,7 @@ namespace cc {
 namespace gfx {
 
 class GLES3StateCache;
+class GLES3CommandAllocator;
 
 class CC_GLES3_API GLES3Device : public Device {
 public:
@@ -17,12 +18,11 @@ public:
     virtual bool initialize(const DeviceInfo &info) override;
     virtual void destroy() override;
     virtual void resize(uint width, uint height) override;
-    virtual void acquire() override {}
+    virtual void acquire() override;
     virtual void present() override;
+    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Fence *createFence(const FenceInfo &info) override;
     virtual Queue *createQueue(const QueueInfo &info) override;
-    virtual CommandAllocator *createCommandAllocator(const CommandAllocatorInfo &info) override;
-    virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
     virtual Texture *createTexture(const TextureInfo &info) override;
     virtual Texture *createTexture(const TextureViewInfo &info) override;
@@ -35,7 +35,7 @@ public:
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
     virtual void copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
 
-    CC_INLINE bool useVAO() const { return _useVAO; }
+    CC_INLINE GLES3CommandAllocator *cmdAllocator() const { return _cmdAllocator; }
 
     CC_INLINE bool checkExtension(const String &extension) const {
         for (size_t i = 0; i < _extensions.size(); ++i) {
@@ -47,8 +47,8 @@ public:
     }
 
 private:
+    GLES3CommandAllocator *_cmdAllocator = nullptr;
     StringArray _extensions;
-    bool _useVAO = true;
 };
 
 } // namespace gfx

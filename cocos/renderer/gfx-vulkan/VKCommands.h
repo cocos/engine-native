@@ -30,13 +30,9 @@ struct CCVKStencilCompareMask {
     uint32_t compareMask = 0;
 };
 
+CC_VULKAN_API void CCVKCmdFuncGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue);
 CC_VULKAN_API void CCVKCmdFuncCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRenderPass);
 CC_VULKAN_API void CCVKCmdFuncDestroyRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRenderPass);
-CC_VULKAN_API void CCVKCmdFuncGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue);
-CC_VULKAN_API void CCVKCmdFuncCreateCommandPool(CCVKDevice *device, CCVKGPUCommandPool *gpuCommandPool);
-CC_VULKAN_API void CCVKCmdFuncDestroyCommandPool(CCVKDevice *device, CCVKGPUCommandPool *gpuCommandPool);
-CC_VULKAN_API void CCVKCmdFuncAllocateCommandBuffer(CCVKDevice *device, CCVKGPUCommandBuffer *gpuCommandBuffer);
-CC_VULKAN_API void CCVKCmdFuncFreeCommandBuffer(CCVKDevice *device, CCVKGPUCommandBuffer *gpuCommandBuffer);
 
 CC_VULKAN_API void CCVKCmdFuncCreateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer);
 CC_VULKAN_API void CCVKCmdFuncDestroyBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer);

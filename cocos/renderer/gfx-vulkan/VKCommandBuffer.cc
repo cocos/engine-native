@@ -2,13 +2,13 @@
 
 #include "VKBindingLayout.h"
 #include "VKBuffer.h"
-#include "VKCommandAllocator.h"
 #include "VKCommandBuffer.h"
 #include "VKCommands.h"
 #include "VKDevice.h"
 #include "VKFramebuffer.h"
 #include "VKInputAssembler.h"
 #include "VKPipelineState.h"
+#include "VKQueue.h"
 #include "VKRenderPass.h"
 #include "VKTexture.h"
 
@@ -23,17 +23,13 @@ CCVKCommandBuffer::~CCVKCommandBuffer() {
 }
 
 bool CCVKCommandBuffer::initialize(const CommandBufferInfo &info) {
-    if (!info.allocator) {
-        return false;
-    }
-
-    _allocator = info.allocator;
     _type = info.type;
+    _queue = info.queue;
 
     _gpuCommandBuffer = CC_NEW(CCVKGPUCommandBuffer);
-    _gpuCommandBuffer->type = _type;
-    _gpuCommandBuffer->commandPool = ((CCVKCommandAllocator *)_allocator)->gpuCommandPool();
-    CCVKCmdFuncAllocateCommandBuffer((CCVKDevice *)_device, _gpuCommandBuffer);
+    _gpuCommandBuffer->level = MapVkCommandBufferLevel(_type);
+    _gpuCommandBuffer->queueFamilyIndex = ((CCVKQueue *)_queue)->gpuQueue()->queueFamilyIndex;
+    ((CCVKDevice *)_device)->gpuCommandBufferPool()->request(_gpuCommandBuffer);
 
     _status = Status::SUCCESS;
     return true;
@@ -41,12 +37,11 @@ bool CCVKCommandBuffer::initialize(const CommandBufferInfo &info) {
 
 void CCVKCommandBuffer::destroy() {
     if (_gpuCommandBuffer) {
-        CCVKCmdFuncFreeCommandBuffer((CCVKDevice *)_device, _gpuCommandBuffer);
+        ((CCVKDevice *)_device)->gpuCommandBufferPool()->yield(_gpuCommandBuffer);
         CC_DELETE(_gpuCommandBuffer);
         _gpuCommandBuffer = nullptr;
     }
 
-    _allocator = nullptr;
     _status = Status::UNREADY;
 }
 

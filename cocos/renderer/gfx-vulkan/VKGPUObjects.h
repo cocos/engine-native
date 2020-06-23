@@ -51,12 +51,12 @@ public:
     TextureType type = TextureType::TEX2D;
     Format format = Format::UNKNOWN;
     TextureUsage usage = TextureUsageBit::NONE;
-    uint width = 0;
-    uint height = 0;
-    uint depth = 1;
-    uint size = 0;
-    uint arrayLayer = 1;
-    uint mipLevel = 1;
+    uint width = 0u;
+    uint height = 0u;
+    uint depth = 1u;
+    uint size = 0u;
+    uint arrayLayer = 1u;
+    uint mipLevel = 1u;
     SampleCount samples = SampleCount::X1;
     TextureFlags flags = TextureFlagBit::NONE;
     bool isPowerOf2 = false;
@@ -74,8 +74,8 @@ public:
     CCVKGPUTexture *gpuTexture = nullptr;
     TextureType type = TextureType::TEX2D;
     Format format = Format::UNKNOWN;
-    uint baseLevel = 0;
-    uint levelCount = 1;
+    uint baseLevel = 0u;
+    uint levelCount = 1u;
     VkImageView vkImageView = VK_NULL_HANDLE;
 };
 
@@ -98,7 +98,7 @@ typedef FramebufferListMap::iterator FramebufferListMapIter;
 
 class CCVKGPUSwapchain : public Object {
 public:
-    uint curImageIndex = 0;
+    uint curImageIndex = 0u;
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
     vector<VkImageView> vkSwapchainImageViews;
     FramebufferListMap vkSwapchainFramebufferListMap;
@@ -108,25 +108,18 @@ public:
     vector<VkImageView> depthStencilImageViews;
 };
 
-class CCVKGPUCommandPool : public Object {
-public:
-    VkCommandPool vkCommandPool = VK_NULL_HANDLE;
-    CachedArray<VkCommandBuffer> commandBuffers[2];
-    CachedArray<VkCommandBuffer> usedCommandBuffers[2];
-};
-
 class CCVKGPUCommandBuffer : public Object {
 public:
-    CommandBufferType type;
-    CCVKGPUCommandPool *commandPool = nullptr;
     VkCommandBuffer vkCommandBuffer = VK_NULL_HANDLE;
+    VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    uint queueFamilyIndex = 0u;
 };
 
 class CCVKGPUQueue : public Object {
 public:
-    QueueType type;
-    VkQueue vkQueue;
-    uint queueFamilyIndex;
+    QueueType type = QueueType::GRAPHICS;
+    VkQueue vkQueue = VK_NULL_HANDLE;
+    uint queueFamilyIndex = 0u;
     VkSemaphore nextWaitSemaphore = VK_NULL_HANDLE;
     VkSemaphore nextSignalSemaphore = VK_NULL_HANDLE;
     VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
@@ -163,11 +156,11 @@ public:
     Address addressU = Address::WRAP;
     Address addressV = Address::WRAP;
     Address addressW = Address::WRAP;
-    uint maxAnisotropy = 16;
+    uint maxAnisotropy = 16u;
     ComparisonFunc cmpFunc = ComparisonFunc::NEVER;
     Color borderColor;
-    uint minLOD = 0;
-    uint maxLOD = 1000;
+    uint minLOD = 0u;
+    uint maxLOD = 1000u;
     float mipLODBias = 0.0f;
     VkSampler vkSampler;
 };
@@ -214,10 +207,11 @@ struct CCVKDescriptorInfo {
         VkBufferView texelBufferView;
     };
 };
-struct CCVKGPUBinding {
-    CCVKGPUBuffer *buffer;
-    CCVKGPUTextureView *texView;
-    CCVKGPUSampler *sampler;
+class CCVKGPUBinding : public Object {
+public:
+    CCVKGPUBuffer *buffer = nullptr;
+    CCVKGPUTextureView *texView = nullptr;
+    CCVKGPUSampler *sampler = nullptr;
 };
 class CCVKGPUBindingLayout : public Object {
 public:
@@ -396,6 +390,83 @@ public:
 private:
     CCVKGPUDevice *_device;
     vector<VkDescriptorPool> _pools;
+    vector<uint> _counts;
+};
+
+class CCVKGPUCommandBufferPool : public Object {
+public:
+    struct CommandBufferPool {
+        VkCommandPool vkCommandPool = VK_NULL_HANDLE;
+        CachedArray<VkCommandBuffer> commandBuffers[2];
+        CachedArray<VkCommandBuffer> usedCommandBuffers[2];
+    };
+
+    CCVKGPUCommandBufferPool(CCVKGPUDevice *device)
+    : _device(device) {
+    }
+
+    ~CCVKGPUCommandBufferPool() {
+        for (map<uint, CommandBufferPool>::iterator it = _pools.begin(); it != _pools.end(); it++) {
+            CommandBufferPool &pool = it->second;
+            if (pool.vkCommandPool != VK_NULL_HANDLE) {
+                vkDestroyCommandPool(_device->vkDevice, pool.vkCommandPool, nullptr);
+                pool.vkCommandPool = VK_NULL_HANDLE;
+            }
+            pool.usedCommandBuffers->clear();
+            pool.commandBuffers->clear();
+        }
+        _pools.clear();
+    }
+
+    void request(CCVKGPUCommandBuffer *gpuCommandBuffer) {
+        if (!_pools.count(gpuCommandBuffer->queueFamilyIndex)) {
+            _pools.emplace(std::piecewise_construct,
+                           std::forward_as_tuple(gpuCommandBuffer->queueFamilyIndex),
+                           std::forward_as_tuple());
+            VkCommandPoolCreateInfo createInfo{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
+            createInfo.queueFamilyIndex = gpuCommandBuffer->queueFamilyIndex;
+            createInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+            VK_CHECK(vkCreateCommandPool(_device->vkDevice, &createInfo, nullptr, &_pools[gpuCommandBuffer->queueFamilyIndex].vkCommandPool));
+        }
+        CommandBufferPool &pool = _pools[gpuCommandBuffer->queueFamilyIndex];
+
+        CachedArray<VkCommandBuffer> &availableList = pool.commandBuffers[gpuCommandBuffer->level];
+        if (availableList.size()) {
+            gpuCommandBuffer->vkCommandBuffer = availableList.pop();
+        } else {
+            VkCommandBufferAllocateInfo allocateInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
+            allocateInfo.commandPool = pool.vkCommandPool;
+            allocateInfo.commandBufferCount = 1;
+            allocateInfo.level = gpuCommandBuffer->level;
+            VK_CHECK(vkAllocateCommandBuffers(_device->vkDevice, &allocateInfo, &gpuCommandBuffer->vkCommandBuffer));
+        }
+    }
+
+    void yield(CCVKGPUCommandBuffer *gpuCommandBuffer) {
+        if (gpuCommandBuffer->vkCommandBuffer) {
+            if (!_pools.count(gpuCommandBuffer->queueFamilyIndex)) return;
+            CommandBufferPool &pool = _pools[gpuCommandBuffer->queueFamilyIndex];
+            pool.usedCommandBuffers[gpuCommandBuffer->level].push(gpuCommandBuffer->vkCommandBuffer);
+            gpuCommandBuffer->vkCommandBuffer = VK_NULL_HANDLE;
+        }
+    }
+
+    void reset() {
+        for (map<uint, CommandBufferPool>::iterator it = _pools.begin(); it != _pools.end(); it++) {
+            CommandBufferPool &pool = it->second;
+            VK_CHECK(vkResetCommandPool(_device->vkDevice, pool.vkCommandPool, 0));
+
+            for (uint i = 0u; i < 2u; i++) {
+                CachedArray<VkCommandBuffer> &usedList = pool.usedCommandBuffers[i];
+                pool.commandBuffers[i].concat(usedList);
+                usedList.clear();
+            }
+        }
+    }
+
+private:
+    CCVKGPUDevice *_device = nullptr;
+    map<uint, CommandBufferPool> _pools;
     vector<uint> _counts;
 };
 

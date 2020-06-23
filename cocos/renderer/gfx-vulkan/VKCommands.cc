@@ -1,7 +1,6 @@
 #include "VKStd.h"
 
 #include "VKBuffer.h"
-#include "VKCommandAllocator.h"
 #include "VKCommands.h"
 #include "VKContext.h"
 #include "VKDevice.h"
@@ -38,9 +37,9 @@ void insertVkDynamicStates(vector<VkDynamicState> &out, const vector<DynamicStat
 }
 
 void beginOneTimeCommands(CCVKDevice *device, CCVKGPUCommandBuffer *cmdBuff) {
-    cmdBuff->commandPool = ((CCVKCommandAllocator *)device->getCommandAllocator())->gpuCommandPool();
-    cmdBuff->type = CommandBufferType::PRIMARY;
-    CCVKCmdFuncAllocateCommandBuffer(device, cmdBuff);
+    cmdBuff->level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    cmdBuff->queueFamilyIndex = ((CCVKQueue*)device->getQueue())->gpuQueue()->queueFamilyIndex;
+    device->gpuCommandBufferPool()->request(cmdBuff);
 
     VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
@@ -57,7 +56,7 @@ void endOneTimeCommands(CCVKDevice *device, CCVKGPUCommandBuffer *cmdBuff) {
     submitInfo.pCommandBuffers = &cmdBuff->vkCommandBuffer;
     VK_CHECK(vkQueueSubmit(queue->vkQueue, 1, &submitInfo, fence));
     VK_CHECK(vkWaitForFences(device->gpuDevice()->vkDevice, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
-    CCVKCmdFuncFreeCommandBuffer(device, cmdBuff);
+    device->gpuCommandBufferPool()->yield(cmdBuff);
 }
 
 void insertImageMemoryBarrior(
@@ -180,44 +179,6 @@ void CCVKCmdFuncGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue) {
             gpuQueue->queueFamilyIndex = i;
             break;
         }
-    }
-}
-
-void CCVKCmdFuncCreateCommandPool(CCVKDevice *device, CCVKGPUCommandPool *gpuCommandPool) {
-    VkCommandPoolCreateInfo createInfo{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
-    createInfo.queueFamilyIndex = ((CCVKQueue *)device->getQueue())->gpuQueue()->queueFamilyIndex;
-    createInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-
-    VK_CHECK(vkCreateCommandPool(device->gpuDevice()->vkDevice, &createInfo, nullptr, &gpuCommandPool->vkCommandPool));
-}
-
-void CCVKCmdFuncDestroyCommandPool(CCVKDevice *device, CCVKGPUCommandPool *gpuCommandPool) {
-    if (gpuCommandPool->vkCommandPool != VK_NULL_HANDLE) {
-        vkDestroyCommandPool(device->gpuDevice()->vkDevice, gpuCommandPool->vkCommandPool, nullptr);
-        gpuCommandPool->vkCommandPool = VK_NULL_HANDLE;
-    }
-}
-
-void CCVKCmdFuncAllocateCommandBuffer(CCVKDevice *device, CCVKGPUCommandBuffer *gpuCommandBuffer) {
-    CCVKGPUCommandPool *commandPool = gpuCommandBuffer->commandPool;
-    CachedArray<VkCommandBuffer> &availableList = commandPool->commandBuffers[(uint)gpuCommandBuffer->type];
-
-    if (availableList.size()) {
-        gpuCommandBuffer->vkCommandBuffer = availableList.pop();
-    } else {
-        VkCommandBufferAllocateInfo allocateInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
-        allocateInfo.commandPool = commandPool->vkCommandPool;
-        allocateInfo.commandBufferCount = 1;
-        allocateInfo.level = MapVkCommandBufferLevel(gpuCommandBuffer->type);
-
-        VK_CHECK(vkAllocateCommandBuffers(device->gpuDevice()->vkDevice, &allocateInfo, &gpuCommandBuffer->vkCommandBuffer));
-    }
-}
-
-void CCVKCmdFuncFreeCommandBuffer(CCVKDevice *device, CCVKGPUCommandBuffer *gpuCommandBuffer) {
-    if (gpuCommandBuffer->vkCommandBuffer) {
-        gpuCommandBuffer->commandPool->usedCommandBuffers[(uint)gpuCommandBuffer->type].push(gpuCommandBuffer->vkCommandBuffer);
-        gpuCommandBuffer->vkCommandBuffer = VK_NULL_HANDLE;
     }
 }
 
@@ -460,13 +421,13 @@ void CCVKCmdFuncCreateShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {
 
     gpuShader->vkDescriptorSetLayouts.resize(1);
 
-    const GFXUniformBlockList &blocks = gpuShader->blocks;
-    const GFXUniformSamplerList &samplers = gpuShader->samplers;
+    const UniformBlockList &blocks = gpuShader->blocks;
+    const UniformSamplerList &samplers = gpuShader->samplers;
     const uint bindingCount = blocks.size() + samplers.size();
 
     vector<VkDescriptorSetLayoutBinding> setBindings(bindingCount);
     for (size_t i = 0u; i < blocks.size(); i++) {
-        const GFXUniformBlock &binding = blocks[i];
+        const UniformBlock &binding = blocks[i];
         VkDescriptorSetLayoutBinding &setBinding = setBindings[i];
         setBinding.stageFlags = MapVkShaderStageFlags(binding.shaderStages);
         setBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -474,7 +435,7 @@ void CCVKCmdFuncCreateShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {
         setBinding.descriptorCount = 1;
     }
     for (size_t i = 0u; i < samplers.size(); i++) {
-        const GFXUniformSampler &binding = samplers[i];
+        const UniformSampler &binding = samplers[i];
         VkDescriptorSetLayoutBinding &setBinding = setBindings[blocks.size() + i];
         setBinding.stageFlags = MapVkShaderStageFlags(binding.shaderStages);
         setBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
