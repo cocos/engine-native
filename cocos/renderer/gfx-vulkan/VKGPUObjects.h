@@ -39,7 +39,7 @@ class CCVKGPURenderPass : public Object {
 public:
     ColorAttachmentList colorAttachments;
     DepthStencilAttachment depthStencilAttachment;
-    GFXSubPassList subPasses;
+    SubPassList subPasses;
     VkRenderPass vkRenderPass;
     vector<VkClearValue> clearValues;
 };

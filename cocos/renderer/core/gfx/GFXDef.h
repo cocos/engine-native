@@ -837,7 +837,7 @@ struct DepthStencilAttachment {
     TextureLayout endLayout = TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 };
 
-struct GFXSubPass {
+struct SubPass {
     PipelineBindPoint bindPoint = PipelineBindPoint::GRAPHICS;
     uint8_t inputs[GFX_MAX_ATTACHMENTS];
     uint8_t colors[GFX_MAX_ATTACHMENTS];
@@ -845,7 +845,7 @@ struct GFXSubPass {
     uint8_t depthStencil = GFX_INVALID_BINDING;
     uint8_t preserves[GFX_MAX_ATTACHMENTS];
 
-    GFXSubPass() {
+    SubPass() {
         memset(inputs, -1, sizeof(inputs));
         memset(colors, -1, sizeof(colors));
         memset(resolves, -1, sizeof(resolves));
@@ -853,12 +853,12 @@ struct GFXSubPass {
     }
 };
 
-typedef vector<GFXSubPass> GFXSubPassList;
+typedef vector<SubPass> SubPassList;
 
 struct RenderPassInfo {
     ColorAttachmentList colorAttachments;
     DepthStencilAttachment depthStencilAttachment;
-    GFXSubPassList subPasses;
+    SubPassList subPasses;
 };
 
 typedef vector<Texture *> TextureList;
