@@ -826,7 +826,7 @@ struct ColorAttachment {
 
 typedef vector<ColorAttachment> ColorAttachmentList;
 
-struct GFXDepthStencilAttachment {
+struct DepthStencilAttachment {
     Format format = Format::UNKNOWN;
     LoadOp depthLoadOp = LoadOp::CLEAR;
     StoreOp depthStoreOp = StoreOp::STORE;
@@ -857,7 +857,7 @@ typedef vector<GFXSubPass> GFXSubPassList;
 
 struct RenderPassInfo {
     ColorAttachmentList colorAttachments;
-    GFXDepthStencilAttachment depthStencilAttachment;
+    DepthStencilAttachment depthStencilAttachment;
     GFXSubPassList subPasses;
 };
 

@@ -14,7 +14,7 @@ RenderPass::~RenderPass() {
 uint RenderPass::computeHash() const {
     // https://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
     // 6: ColorAttament has 6 elements.
-    // 8: GFXDepthStencilAttachment has 8 elements.
+    // 8: DepthStencilAttachment has 8 elements.
     uint seed = _colorAttachments.size() * 6 + 8;
     for (const auto &colorAttachment : _colorAttachments) {
         seed ^= (uint)(colorAttachment.format) + 0x9e3779b9 + (seed << 6) + (seed >> 2);

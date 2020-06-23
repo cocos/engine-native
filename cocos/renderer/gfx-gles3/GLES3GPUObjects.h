@@ -161,7 +161,7 @@ public:
 class GLES3GPURenderPass : public Object {
 public:
     ColorAttachmentList colorAttachments;
-    GFXDepthStencilAttachment depthStencilAttachment;
+    DepthStencilAttachment depthStencilAttachment;
 };
 
 class GLES3GPUFramebuffer : public Object {

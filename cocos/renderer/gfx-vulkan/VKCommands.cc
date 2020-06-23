@@ -106,7 +106,7 @@ void CCVKCmdFuncCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
         attachmentDescriptions[i].initialLayout = beginLayout;
         attachmentDescriptions[i].finalLayout = endLayout;
     }
-    const GFXDepthStencilAttachment &depthStencilAttachment = gpuRenderPass->depthStencilAttachment;
+    const DepthStencilAttachment &depthStencilAttachment = gpuRenderPass->depthStencilAttachment;
     const VkImageLayout beginLayout = MapVkImageLayout(depthStencilAttachment.beginLayout);
     const VkImageLayout endLayout = MapVkImageLayout(depthStencilAttachment.endLayout);
     const VkAccessFlags beginAccessMask = MapVkAccessFlags(depthStencilAttachment.beginLayout);
