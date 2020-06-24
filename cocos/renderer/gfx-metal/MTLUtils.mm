@@ -533,13 +533,13 @@ String compileGLSLShader2Msl(const String &src,
     msl.set_enabled_interface_variables(std::move(active));
 
     // Get all uniform buffers in the shader.
-    uint maxEntriesInBufferArgumentTable = static_cast<CCMTLDevice *>(device)->getMaximumEntriesInBufferArgumentTable();
+    uint maxBufferBindingIndex = static_cast<CCMTLDevice *>(device)->getMaximumBufferBindingIndex();
     for (const auto &ubo : resources.uniform_buffers) {
         auto set = msl.get_decoration(ubo.id, spv::DecorationDescriptorSet);
         auto binding = msl.get_decoration(ubo.id, spv::DecorationBinding);
 
-        if (binding >= maxEntriesInBufferArgumentTable) {
-            CC_LOG_ERROR("Implemention limits: %s binding at %d, should not use more than %d entries in the buffer argument table", ubo.name.c_str(), binding, maxEntriesInBufferArgumentTable);
+        if (binding >= maxBufferBindingIndex) {
+            CC_LOG_ERROR("Implemention limits: %s binding at %d, should not use more than %d entries in the buffer argument table", ubo.name.c_str(), binding, maxBufferBindingIndex);
         }
         newBinding.desc_set = set;
         newBinding.binding = binding;

@@ -95,7 +95,7 @@ bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
     return true;
 }
 
-uint CCMTLShader::getAvailableBufferBindingIndex(const ShaderType &stage, uint stream) {
+uint CCMTLShader::getAvailableBufferBindingIndex(ShaderType stage, uint stream) {
     if (stage & ShaderType::VERTEX) {
         return _availableVertexBufferBindingIndex.at(stream);
     }
@@ -124,12 +124,12 @@ void CCMTLShader::setAvailableBufferBindingIndex() {
             fragmentBindingCount++;
         }
     }
-    auto maximumEntriesInBufferArgumentTable = static_cast<CCMTLDevice *>(_device)->getMaximumEntriesInBufferArgumentTable();
-    _availableVertexBufferBindingIndex.resize(maximumEntriesInBufferArgumentTable - vertexBindingCount);
-    _availableFragmentBufferBindingIndex.resize(maximumEntriesInBufferArgumentTable - fragmentBindingCount);
+    auto maxBufferBindinIndex = static_cast<CCMTLDevice *>(_device)->getMaximumBufferBindingIndex();
+    _availableVertexBufferBindingIndex.resize(maxBufferBindinIndex - vertexBindingCount);
+    _availableFragmentBufferBindingIndex.resize(maxBufferBindinIndex - fragmentBindingCount);
     uint availableVertexBufferBit = ~usedVertexBufferBindingIndexes;
     uint availableFragmentBufferBit = ~usedFragmentBufferBindingIndexes;
-    int theBit = maximumEntriesInBufferArgumentTable - 1;
+    int theBit = maxBufferBindinIndex - 1;
     uint i = 0, j = 0;
     for (; theBit >= 0; theBit--) {
         if ((availableVertexBufferBit & (1 << theBit))) {

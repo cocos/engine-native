@@ -19,7 +19,7 @@ public:
     CC_INLINE const std::unordered_map<uint, uint> &getVertexSamplerBindings() const { return _mtlVertexSamplerBindings; }
     CC_INLINE const std::unordered_map<uint, uint> &getFragmentSamplerBindings() const { return _mtlFragmentSamplerBindings; }
 
-    uint getAvailableBufferBindingIndex(const ShaderType &stage, uint stream);
+    uint getAvailableBufferBindingIndex(ShaderType stage, uint stream);
 
 #ifdef DEBUG_SHADER
     CC_INLINE const std::string &getVertGlslShader() const { return _vertGlslShader; }
@@ -35,10 +35,10 @@ private:
 private:
     id<MTLFunction> _vertexMTLFunction = nil;
     id<MTLFunction> _fragmentMTLFunction = nil;
-    std::unordered_map<uint, uint> _mtlVertexSamplerBindings;
-    std::unordered_map<uint, uint> _mtlFragmentSamplerBindings;
-    std::vector<uint> _availableVertexBufferBindingIndex;
-    std::vector<uint> _availableFragmentBufferBindingIndex;
+    unordered_map<uint, uint> _mtlVertexSamplerBindings;
+    unordered_map<uint, uint> _mtlFragmentSamplerBindings;
+    vector<uint> _availableVertexBufferBindingIndex;
+    vector<uint> _availableFragmentBufferBindingIndex;
 
     // For debug
 #ifdef DEBUG_SHADER
