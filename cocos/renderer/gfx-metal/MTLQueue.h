@@ -8,16 +8,16 @@ namespace gfx {
 
 class CCMTLCommandPackage;
 
-class CCMTLQueue : public GFXQueue {
+class CCMTLQueue : public Queue {
     friend class CCMTLDevice;
 
 public:
-    CCMTLQueue(GFXDevice *device);
+    CCMTLQueue(Device *device);
     ~CCMTLQueue();
 
-    virtual bool initialize(const GFXQueueInfo &info) override;
+    virtual bool initialize(const QueueInfo &info) override;
     virtual void destroy() override;
-    virtual void submit(const vector<GFXCommandBuffer *> &cmdBuffs, GFXFence *fence) override;
+    virtual void submit(const vector<CommandBuffer *> &cmdBuffs, Fence *fence) override;
 
 private:
     CC_INLINE void executeCommands(const CCMTLCommandPackage *, id<MTLCommandBuffer> mtlCommandBuffer);
@@ -25,7 +25,6 @@ private:
 private:
     MTKView *_mtkView = nil;
     dispatch_semaphore_t _frameBoundarySemaphore;
-    bool _isAsync = false;
     uint _numDrawCalls = 0;
     uint _numInstances = 0;
     uint _numTriangles = 0;

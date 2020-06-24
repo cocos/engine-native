@@ -16,10 +16,10 @@
 namespace cc {
 namespace gfx {
 
-CCMTLPipelineState::CCMTLPipelineState(GFXDevice *device) : GFXPipelineState(device) {}
+CCMTLPipelineState::CCMTLPipelineState(Device *device) : PipelineState(device) {}
 CCMTLPipelineState::~CCMTLPipelineState() { destroy(); }
 
-bool CCMTLPipelineState::initialize(const GFXPipelineStateInfo &info) {
+bool CCMTLPipelineState::initialize(const PipelineStateInfo &info) {
     _primitive = info.primitive;
     _shader = info.shader;
     _inputState = info.inputState;
@@ -31,10 +31,10 @@ bool CCMTLPipelineState::initialize(const GFXPipelineStateInfo &info) {
     _renderPass = info.renderPass;
 
     if (!createGPUPipelineState()) {
-        _status = GFXStatus::FAILED;
+        _status = Status::FAILED;
         return false;
     }
-    _status = GFXStatus::SUCCESS;
+    _status = Status::SUCCESS;
     return true;
 }
 
@@ -50,7 +50,7 @@ void CCMTLPipelineState::destroy() {
     }
 
     CC_SAFE_DELETE(_GPUPipelieState);
-    _status = GFXStatus::UNREADY;
+    _status = Status::UNREADY;
 }
 
 bool CCMTLPipelineState::createGPUPipelineState() {
@@ -154,7 +154,7 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor *descri
             if (inputAttrib.name == activeAttribute.name) {
                 descriptor.vertexDescriptor.attributes[activeAttribute.location].format = mu::toMTLVertexFormat(inputAttrib.format, inputAttrib.isNormalized);
                 descriptor.vertexDescriptor.attributes[activeAttribute.location].offset = streamOffsets[inputAttrib.stream];
-                auto bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(GFXShaderType::VERTEX, inputAttrib.stream);
+                auto bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(ShaderType::VERTEX, inputAttrib.stream);
                 descriptor.vertexDescriptor.attributes[activeAttribute.location].bufferIndex = bufferIndex;
 
                 streamOffsets[inputAttrib.stream] += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
@@ -169,7 +169,7 @@ void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor *descri
         if (!attributeFound) { //handle absent attribute
             descriptor.vertexDescriptor.attributes[activeAttribute.location].format = mu::toMTLVertexFormat(activeAttribute.format, activeAttribute.isNormalized);
             descriptor.vertexDescriptor.attributes[activeAttribute.location].offset = 0;
-            descriptor.vertexDescriptor.attributes[activeAttribute.location].bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(GFXShaderType::VERTEX, activeAttribute.stream);
+            descriptor.vertexDescriptor.attributes[activeAttribute.location].bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(ShaderType::VERTEX, activeAttribute.stream);
             CC_LOG_WARNING("Attribute %s is missing, add a dummy data for it.", activeAttribute.name.c_str());
         }
     }
@@ -211,8 +211,8 @@ void CCMTLPipelineState::setFormats(MTLRenderPipelineDescriptor *descriptor) {
 
 void CCMTLPipelineState::setBlendStates(MTLRenderPipelineDescriptor *descriptor) {
     //FIXME: how to handle these two attributes?
-    //    GFXBlendState::isIndepend
-    //    GFXBlendState::blendColor;
+    //    BlendState::isIndepend
+    //    BlendState::blendColor;
 
     descriptor.alphaToCoverageEnabled = _blendState.isA2C;
 

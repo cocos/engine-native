@@ -6,12 +6,12 @@
 namespace cc {
 namespace gfx {
 
-class CCMTLShader : public GFXShader {
+class CCMTLShader : public Shader {
 public:
-    CCMTLShader(GFXDevice *device);
+    CCMTLShader(Device *device);
     ~CCMTLShader();
 
-    virtual bool initialize(const GFXShaderInfo &info) override;
+    virtual bool initialize(const ShaderInfo &info) override;
     virtual void destroy() override;
 
     CC_INLINE id<MTLFunction> getVertMTLFunction() const { return _vertexMTLFunction; }
@@ -19,7 +19,7 @@ public:
     CC_INLINE const std::unordered_map<uint, uint> &getVertexSamplerBindings() const { return _mtlVertexSamplerBindings; }
     CC_INLINE const std::unordered_map<uint, uint> &getFragmentSamplerBindings() const { return _mtlFragmentSamplerBindings; }
 
-    uint getAvailableBufferBindingIndex(const GFXShaderType &stage, uint stream);
+    uint getAvailableBufferBindingIndex(const ShaderType &stage, uint stream);
 
 #ifdef DEBUG_SHADER
     CC_INLINE const std::string &getVertGlslShader() const { return _vertGlslShader; }
@@ -29,7 +29,7 @@ public:
 #endif
 
 private:
-    bool createMTLFunction(const GFXShaderStage &);
+    bool createMTLFunction(const ShaderStage &);
     void setAvailableBufferBindingIndex();
 
 private:
