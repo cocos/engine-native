@@ -83,11 +83,10 @@ SE_BIND_CTOR(js_vk_CCVKDevice_constructor, __jsb_cc_gfx_CCVKDevice_class, js_cc_
 
 
 
-extern se::Object* __jsb_cc_gfx_GFXDevice_proto;
+extern se::Object* __jsb_cc_gfx_Device_proto;
 
 static bool js_cc_gfx_CCVKDevice_finalize(se::State& s)
 {
-    CC_LOG_INFO("jsbindings: finalizing JS object %p (cc::gfx::CCVKDevice)", s.nativeThisObject());
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
@@ -101,7 +100,7 @@ SE_BIND_FINALIZE_FUNC(js_cc_gfx_CCVKDevice_finalize)
 
 bool js_register_vk_CCVKDevice(se::Object* obj)
 {
-    auto cls = se::Class::create("CCVKDevice", obj, __jsb_cc_gfx_GFXDevice_proto, _SE(js_vk_CCVKDevice_constructor));
+    auto cls = se::Class::create("CCVKDevice", obj, __jsb_cc_gfx_Device_proto, _SE(js_vk_CCVKDevice_constructor));
 
     cls->defineFunction("isMultiDrawIndirectSupported", _SE(js_vk_CCVKDevice_isMultiDrawIndirectSupported));
     cls->defineFunction("checkExtension", _SE(js_vk_CCVKDevice_checkExtension));

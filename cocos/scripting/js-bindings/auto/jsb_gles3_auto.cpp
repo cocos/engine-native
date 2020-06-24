@@ -65,11 +65,10 @@ SE_BIND_CTOR(js_gles3_GLES3Device_constructor, __jsb_cc_gfx_GLES3Device_class, j
 
 
 
-extern se::Object* __jsb_cc_gfx_GFXDevice_proto;
+extern se::Object* __jsb_cc_gfx_Device_proto;
 
 static bool js_cc_gfx_GLES3Device_finalize(se::State& s)
 {
-    CC_LOG_INFO("jsbindings: finalizing JS object %p (cc::gfx::GLES3Device)", s.nativeThisObject());
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
@@ -83,7 +82,7 @@ SE_BIND_FINALIZE_FUNC(js_cc_gfx_GLES3Device_finalize)
 
 bool js_register_gles3_GLES3Device(se::Object* obj)
 {
-    auto cls = se::Class::create("GLES3Device", obj, __jsb_cc_gfx_GFXDevice_proto, _SE(js_gles3_GLES3Device_constructor));
+    auto cls = se::Class::create("GLES3Device", obj, __jsb_cc_gfx_Device_proto, _SE(js_gles3_GLES3Device_constructor));
 
     cls->defineFunction("checkExtension", _SE(js_gles3_GLES3Device_checkExtension));
     cls->defineFunction("useVAO", _SE(js_gles3_GLES3Device_useVAO));

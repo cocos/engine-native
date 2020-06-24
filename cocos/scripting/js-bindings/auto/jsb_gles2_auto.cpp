@@ -119,11 +119,10 @@ SE_BIND_CTOR(js_gles2_GLES2Device_constructor, __jsb_cc_gfx_GLES2Device_class, j
 
 
 
-extern se::Object* __jsb_cc_gfx_GFXDevice_proto;
+extern se::Object* __jsb_cc_gfx_Device_proto;
 
 static bool js_cc_gfx_GLES2Device_finalize(se::State& s)
 {
-    CC_LOG_INFO("jsbindings: finalizing JS object %p (cc::gfx::GLES2Device)", s.nativeThisObject());
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
@@ -137,7 +136,7 @@ SE_BIND_FINALIZE_FUNC(js_cc_gfx_GLES2Device_finalize)
 
 bool js_register_gles2_GLES2Device(se::Object* obj)
 {
-    auto cls = se::Class::create("GLES2Device", obj, __jsb_cc_gfx_GFXDevice_proto, _SE(js_gles2_GLES2Device_constructor));
+    auto cls = se::Class::create("GLES2Device", obj, __jsb_cc_gfx_Device_proto, _SE(js_gles2_GLES2Device_constructor));
 
     cls->defineFunction("checkExtension", _SE(js_gles2_GLES2Device_checkExtension));
     cls->defineFunction("useInstancedArrays", _SE(js_gles2_GLES2Device_useInstancedArrays));
