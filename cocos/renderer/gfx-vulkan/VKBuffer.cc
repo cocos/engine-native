@@ -87,8 +87,8 @@ void CCVKBuffer::resize(uint size) {
             status.bufferSize += _size;
         }
 
-        if (_usage & GFXBufferUsageBit::INDIRECT) {
-            const size_t drawInfoCount = _size / sizeof(GFXDrawInfo);
+        if (_usage & BufferUsageBit::INDIRECT) {
+            const size_t drawInfoCount = _size / sizeof(DrawInfo);
             _gpuBuffer->indexedIndirectCmds.resize(drawInfoCount);
             _gpuBuffer->indirectCmds.resize(drawInfoCount);
         } else {
@@ -99,9 +99,9 @@ void CCVKBuffer::resize(uint size) {
 
 void CCVKBuffer::update(void *buffer, uint offset, uint size) {
 #if COCOS2D_DEBUG > 0
-    if (_usage & GFXBufferUsageBit::INDIRECT) {
-        GFXDrawInfo *drawInfo = static_cast<GFXDrawInfo *>(buffer);
-        const size_t drawInfoCount = size / sizeof(GFXDrawInfo);
+    if (_usage & BufferUsageBit::INDIRECT) {
+        DrawInfo *drawInfo = static_cast<DrawInfo *>(buffer);
+        const size_t drawInfoCount = size / sizeof(DrawInfo);
         const bool isIndexed = drawInfoCount > 0 && drawInfo->indexCount > 0;
         for (size_t i = 1u; i < drawInfoCount; i++) {
             if ((++drawInfo)->indexCount > 0 != isIndexed) {
