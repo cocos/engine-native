@@ -10,6 +10,8 @@
 namespace cc {
 namespace gfx {
 
+#define MAX_INFLIGHT_BUFFER 3
+
 struct CCMTLGPUUniformBlock {
     uint mtlBinding = 0;
     uint originBinding = 0;
@@ -51,13 +53,21 @@ struct CCMTLGPUPipelineState {
     uint stencilRefFront = 0;
     uint stencilRefBack = 0;
     std::vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stream*/>> vertexBufferBindingInfo;
+    std::unordered_map<uint, uint> vertexSamplerBinding;
+    std::unordered_map<uint, uint> fragmentSamplerBinding;
+};
+
+struct CCMTLGPUBuffer {
+    uint stride = 0;
+    uint count = 0;
+    id<MTLBuffer> mtlBuffer = nil;
 };
 
 class CCMTLGPUInputAssembler : public Object {
 public:
     id<MTLBuffer> mtlIndexBuffer = nil;
     id<MTLBuffer> mtlIndirectBuffer = nil;
-    std::vector<id<MTLBuffer>> mtlVertexBufers;
+    vector<id<MTLBuffer>> mtlVertexBufers;
 };
 
 } // namespace gfx

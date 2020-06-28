@@ -21,7 +21,7 @@ public:
 
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) override;
     virtual void end() override;
-    virtual void beginRenderPass(Framebuffer *fbo, const Rect &render_area, ClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) override;
+    virtual void beginRenderPass(Framebuffer *fbo, const Rect &renderArea, ClearFlags clearFlags, const std::vector<Color> &colors, float depth, int stencil) override;
     virtual void endRenderPass() override;
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindBindingLayout(BindingLayout *layout) override;

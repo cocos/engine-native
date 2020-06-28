@@ -59,13 +59,13 @@ void GLES2CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES2CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &render_area, ClearFlags clear_flags, const std::vector<Color> &colors, float depth, int stencil) {
+void GLES2CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &renderArea, ClearFlags clearFlags, const std::vector<Color> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES2CmdBeginRenderPass *cmd = _gles2Allocator->beginRenderPassCmdPool.alloc();
     cmd->gpuFBO = ((GLES2Framebuffer *)fbo)->gpuFBO();
-    cmd->render_area = render_area;
-    cmd->clear_flags = clear_flags;
+    cmd->renderArea = renderArea;
+    cmd->clearFlags = clearFlags;
     cmd->num_clear_colors = (uint32_t)colors.size();
     for (uint i = 0; i < colors.size(); ++i) {
         cmd->clear_colors[i] = colors[i];

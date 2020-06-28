@@ -23,7 +23,7 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
     _stride = std::max(info.stride, 1U);
     _count = _size / _stride;
     _flags = info.flags;
-
+    
     if (_usage & BufferUsage::INDEX) {
         switch (_stride) {
             case 4: _indexType = MTLIndexTypeUInt32; break;
@@ -184,7 +184,7 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
                 vector<MTLDrawIndexedPrimitivesIndirectArguments> arguments(drawInfoCount);
                 for (auto &argument : arguments) {
                     argument.indexCount = drawInfo->indexCount;
-                    argument.instanceCount = drawInfo->instanceCount;
+                    argument.instanceCount = drawInfo->instanceCount == 0 ? 1 : drawInfo->instanceCount;
                     argument.indexStart = drawInfo->firstIndex;
                     argument.baseVertex = drawInfo->firstVertex;
                     argument.baseInstance = drawInfo->firstInstance;
@@ -196,7 +196,7 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
                 vector<MTLDrawPrimitivesIndirectArguments> arguments(drawInfoCount);
                 for (auto &argument : arguments) {
                     argument.vertexCount = drawInfo->vertexCount;
-                    argument.instanceCount = drawInfo->instanceCount;
+                    argument.instanceCount = drawInfo->instanceCount == 0 ? 1 : drawInfo->instanceCount;
                     argument.vertexStart = drawInfo->firstVertex;
                     argument.baseInstance = drawInfo->firstInstance;
                     drawInfo++;
