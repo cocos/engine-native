@@ -316,11 +316,11 @@ namespace se {
         const char *eventName = "[invalidatePromiseEvent]";
         
         if(event == v8::kPromiseRejectWithNoHandler) {
-            eventName = "unhandleRejectedPromise";
+            eventName = "unhandledRejectedPromise";
         }else if(event == v8::kPromiseHandlerAddedAfterReject) {
             eventName = "handlerAddedAfterPromiseRejected";
         }else if(event == v8::kPromiseRejectAfterResolved) {
-            eventName = "rejectedAfterPromiseResolved";
+            eventName = "rejectAfterPromiseResolved";
         }else if( event == v8::kPromiseResolveAfterResolved) {
             eventName = "resolveAfterPromiseResolved";
         }
