@@ -73,8 +73,8 @@ bool CCMTLPipelineState::createGPUPipelineState() {
     _GPUPipelieState->stencilRefFront = _depthStencilState.stencilRefFront;
     _GPUPipelieState->stencilRefBack = _depthStencilState.stencilRefBack;
     _GPUPipelieState->primitiveType = mu::toMTLPrimitiveType(_primitive);
-    _GPUPipelieState->vertexSamplerBinding = static_cast<CCMTLShader*>(_shader)->getVertexSamplerBindings();
-    _GPUPipelieState->fragmentSamplerBinding = static_cast<CCMTLShader*>(_shader)->getFragmentSamplerBindings();
+    _GPUPipelieState->vertexSamplerBinding = static_cast<CCMTLShader *>(_shader)->getVertexSamplerBindings();
+    _GPUPipelieState->fragmentSamplerBinding = static_cast<CCMTLShader *>(_shader)->getFragmentSamplerBindings();
 
     return true;
 }

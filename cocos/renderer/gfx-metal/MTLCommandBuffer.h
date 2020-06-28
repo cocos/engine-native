@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MTLCommands.h"
+#include "MTLGPUObjects.h"
 #import <Metal/MTLCommandQueue.h>
 #import <MetalKit/MTKView.h>
 
@@ -45,7 +46,7 @@ private:
     void bindStates();
 
 private:
-    CCMTLGPUPipelineState* _gpuPipelineState = nullptr;
+    CCMTLGPUPipelineState *_gpuPipelineState = nullptr;
     Viewport _currentViewport;
     Rect _currentScissor;
 

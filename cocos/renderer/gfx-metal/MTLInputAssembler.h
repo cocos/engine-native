@@ -8,7 +8,7 @@ class CCMTLGPUInputAssembler;
 
 class CCMTLInputAssembler : public InputAssembler {
     friend class CCMTLQueue;
- 
+
 public:
     CCMTLInputAssembler(Device *device);
     ~CCMTLInputAssembler();

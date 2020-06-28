@@ -7,7 +7,7 @@ namespace cc {
 namespace gfx {
 
 class CC_DLL InputAssembler : public GFXObject {
-public: 
+public:
     InputAssembler(Device *device);
     virtual ~InputAssembler();
 

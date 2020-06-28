@@ -24,7 +24,7 @@
 #import <AppKit/NSView.h>
 
 #ifdef USE_METAL
-#import <MetalKit/MetalKit.h>
+    #import <MetalKit/MetalKit.h>
 #endif
 
 #ifdef USE_METAL

@@ -147,13 +147,13 @@ void CCMTLCommandBuffer::bindBindingLayout(BindingLayout *layout) {
 void CCMTLCommandBuffer::bindInputAssembler(InputAssembler *ia) {
     if (ia) {
         const auto mtlInputAssembler = static_cast<CCMTLInputAssembler *>(ia);
-        if(mtlInputAssembler->getIndexBuffer()) {
+        if (mtlInputAssembler->getIndexBuffer()) {
             _gpuIndexBuffer.mtlBuffer = static_cast<CCMTLBuffer *>(mtlInputAssembler->getIndexBuffer())->getMTLBuffer();
             _gpuIndexBuffer.stride = mtlInputAssembler->getIndexBuffer()->getStride();
             _indexType = static_cast<CCMTLBuffer *>(mtlInputAssembler->getIndexBuffer())->getIndexType();
         }
-        
-        if(mtlInputAssembler->getIndirectBuffer()) {
+
+        if (mtlInputAssembler->getIndirectBuffer()) {
             _gpuIndirectBuffer.mtlBuffer = static_cast<CCMTLBuffer *>(mtlInputAssembler->getIndirectBuffer())->getMTLBuffer();
             _gpuIndirectBuffer.count = mtlInputAssembler->getIndirectBuffer()->getCount();
         }
@@ -169,7 +169,7 @@ void CCMTLCommandBuffer::bindInputAssembler(InputAssembler *ia) {
 void CCMTLCommandBuffer::setViewport(const Viewport &vp) {
     if (_currentViewport == vp)
         return;
-        
+
     _currentViewport = vp;
     [_mtlEncoder setViewport:mu::toMTLViewport(_currentViewport)];
 }
@@ -177,7 +177,7 @@ void CCMTLCommandBuffer::setViewport(const Viewport &vp) {
 void CCMTLCommandBuffer::setScissor(const Rect &rect) {
     if (_currentScissor == rect)
         return;
-    
+
     _currentScissor = rect;
     [_mtlEncoder setScissorRect:mu::toMTLScissorRect(_currentScissor)];
 }

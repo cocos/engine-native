@@ -23,7 +23,7 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
     _stride = std::max(info.stride, 1U);
     _count = _size / _stride;
     _flags = info.flags;
-    
+
     if (_usage & BufferUsage::INDEX) {
         switch (_stride) {
             case 4: _indexType = MTLIndexTypeUInt32; break;
