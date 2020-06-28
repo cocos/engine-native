@@ -57,6 +57,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     se->setExceptionCallback([](const char *location, const char *message, const char *stack) {
         // Send exception information to server like Tencent Bugly.
+        cocos2d::log("\nUncaught Exception:\n - location :  %s\n - msg : %s\n - detail : \n      %s\n", location, message, stack);
     });
     
     jsb_register_all_modules();
