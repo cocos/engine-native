@@ -57,7 +57,7 @@ void CCMTLCommandBuffer::end() {
     [_mtlCommandBuffer release];
 }
 
-void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &renderArea, ClearFlags clearFlags, const std::vector<Color> &colors, float depth, int stencil) {
+void CCMTLCommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &renderArea, ClearFlags clearFlags, const vector<Color> &colors, float depth, int stencil) {
 
     MTLRenderPassDescriptor *mtlRenderPassDescriptor;
     auto isOffscreen = fbo->isOffscreen();
@@ -312,7 +312,7 @@ void CCMTLCommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureL
     }
 }
 
-void CCMTLCommandBuffer::execute(const std::vector<CommandBuffer *> &commandBuffs, uint32_t count) {
+void CCMTLCommandBuffer::execute(const vector<CommandBuffer *> &commandBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         auto commandBuffer = static_cast<CCMTLCommandBuffer *>(commandBuffs[i]);
         _numDrawCalls += commandBuffer->_numDrawCalls;

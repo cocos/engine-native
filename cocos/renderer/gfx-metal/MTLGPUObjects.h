@@ -10,7 +10,7 @@
 namespace cc {
 namespace gfx {
 
-#define MAX_INFLIGHT_BUFFER 3
+#define MAX_INFLIGHT_BUFFER 1
 
 struct CCMTLGPUUniformBlock {
     uint mtlBinding = 0;
@@ -52,9 +52,9 @@ struct CCMTLGPUPipelineState {
     id<MTLDepthStencilState> mtlDepthStencilState = nil;
     uint stencilRefFront = 0;
     uint stencilRefBack = 0;
-    std::vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stream*/>> vertexBufferBindingInfo;
-    std::unordered_map<uint, uint> vertexSamplerBinding;
-    std::unordered_map<uint, uint> fragmentSamplerBinding;
+    vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stream*/>> vertexBufferBindingInfo;
+    unordered_map<uint, uint> vertexSamplerBinding;
+    unordered_map<uint, uint> fragmentSamplerBinding;
 };
 
 struct CCMTLGPUBuffer {

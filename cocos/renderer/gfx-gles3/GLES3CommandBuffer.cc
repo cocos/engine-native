@@ -59,7 +59,7 @@ void GLES3CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &renderArea, ClearFlags clearFlags, const std::vector<Color> &colors, float depth, int stencil) {
+void GLES3CommandBuffer::beginRenderPass(Framebuffer *fbo, const Rect &renderArea, ClearFlags clearFlags, const vector<Color> &colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES3CmdBeginRenderPass *cmd = _gles3Allocator->beginRenderPassCmdPool.alloc();
@@ -265,7 +265,7 @@ void GLES3CommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureL
     }
 }
 
-void GLES3CommandBuffer::execute(const std::vector<CommandBuffer *> &cmd_buffs, uint32_t count) {
+void GLES3CommandBuffer::execute(const vector<CommandBuffer *> &cmd_buffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         GLES3CommandBuffer *cmd_buff = (GLES3CommandBuffer *)cmd_buffs[i];
 
