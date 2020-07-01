@@ -30,7 +30,7 @@
  
  The reason for implement as private inheritance is to hide some interface call by Director.
  */
-class Game : public cc::Application
+class Game : public cocos2d::Application
 {
 public:
     /**

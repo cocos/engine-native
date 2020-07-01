@@ -3,6 +3,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COCOS2DX_ROOT="$DIR"/../..
+COCOS_CLI=$COCOS2DX_ROOT/tools/cocos-console/bin/cocos_cli.js
 
 if [ -z "$NDK_ROOT" ]; then
     export NDK_ROOT=$HOME/bin/android-ndk
@@ -48,8 +49,8 @@ function build_android()
     echo "Compiling Android ... "
     cd $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src/proj.android-studio
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" app/build.gradle
+    sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" ../CMakeLists.txt
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" settings.gradle
-    sed -i "s@PROP_APP_ABI.*@PROP_APP_ABI=armeabi-v7a:arm64-v8a:x86@" gradle.properties
     sed -i "s/^RELEASE_/#RELEASE_/g" gradle.properties
 
     #echo "Compile Android - ndk-build ..."
@@ -133,6 +134,33 @@ function build_windows()
     echo "Compile Win32 Debug Done!"
 }
 
+function build_windows_console()
+{
+    echo "Compiling Win32 ... [console]"
+    mkdir $COCOS2DX_ROOT/test_dir
+    node $COCOS_CLI new NewGame -d $COCOS2DX_ROOT/test_dir -k link
+    node $COCOS_CLI compile --build-dir $COCOS2DX_ROOT/test_dir/build -d $COCOS2DX_ROOT/test_dir/NewGame -p win32
+    echo "Compile Win32 Done! [console]"
+}
+
+function build_mac_console()
+{
+    echo "Compiling mac ... [console]"
+    mkdir $COCOS2DX_ROOT/test_dir
+    node $COCOS_CLI new NewGame -d $COCOS2DX_ROOT/test_dir -k link
+    node $COCOS_CLI compile --build-dir $COCOS2DX_ROOT/test_dir/build -d $COCOS2DX_ROOT/test_dir/NewGame -p mac
+    echo "Compile mac Done! [console]"
+}
+
+function build_ios_console()
+{
+    echo "Compiling mac ... [console]"
+    mkdir $COCOS2DX_ROOT/test_dir
+    node $COCOS_CLI new NewGame -d $COCOS2DX_ROOT/test_dir -k link
+    node $COCOS_CLI compile --build-dir $COCOS2DX_ROOT/test_dir/build -d $COCOS2DX_ROOT/test_dir/NewGame -p ios --ios-simulator
+    echo "Compile mac Done! [console]"
+}
+
 
 function run_compile()
 {
@@ -144,16 +172,19 @@ function run_compile()
     if [ "$BUILD_TARGET" == "macosx_cmake" ]; then
         mac_download_cmake
         build_macosx
+        build_mac_console
     fi
 
     if [ "$BUILD_TARGET" == "ios_cmake" ]; then
         mac_download_cmake
         build_ios
+        build_ios_console
     fi
 
     if [ "$BUILD_TARGET" == "windows_cmake" ]; then
         cmake --version
         build_windows
+        build_windows_console
     fi
 }
 

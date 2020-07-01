@@ -22,6 +22,8 @@ if(USE_SE_JSC AND APPLE)
     set(USE_V8_DEBUGGER OFF)
 endif()
 
+set(DEVELOPMENT_TEAM "" CACHE STRING "APPLE Developtment Team")
+
 if(CMAKE_OSX_SYSROOT STREQUAL "iphonesimulator")
     set(TARGET_IOS_VERSION "9.0")
 else()
@@ -188,7 +190,7 @@ if(APPLE)
         target_include_directories(${LIB_NAME} PRIVATE proj.ios_mac/ios/service )
 
         set_target_properties(${LIB_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/proj.ios_mac/ios/Info.plist")
-        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "")
+        set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "${DEVELOPMENT_TEAM}")
         set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer")
         set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
         set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHSTORYBOARD_NAME "LaunchScreen")
