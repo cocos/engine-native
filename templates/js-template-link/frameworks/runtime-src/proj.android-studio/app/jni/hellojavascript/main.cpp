@@ -70,7 +70,7 @@ void handle_cmd(struct android_app* app, int32_t cmd)
             break;
     }
 
-    cc::View::engineHandleCmd(app, cmd);
+    cocos2d::View::engineHandleCmd(app, cmd);
 }
 
 void android_main(struct android_app* state) {
@@ -78,9 +78,9 @@ void android_main(struct android_app* state) {
     memset(&savedState, 0, sizeof(savedState));
     state->userData = &savedState;
     state->onAppCmd = handle_cmd;
-    state->onInputEvent = cc::View::engineHandleInput;
+    state->onInputEvent = cocos2d::View::engineHandleInput;
     savedState.app = state;
-    cc::JniHelper::setAndroidApp(state);
+    cocos2d::JniHelper::setAndroidApp(state);
 
     while (1)
     {
@@ -103,8 +103,6 @@ void android_main(struct android_app* state) {
 
         if (state->destroyRequested != 0)
             return;
-
-        cc::JniHelper::callStaticVoidMethod("org.cocos2dx.lib.Cocos2dxHelper", "flushTasksOnGameThread");
 
         if (savedState.animating)
             game->tick();
