@@ -57,6 +57,7 @@ class CCPluginGENERATE extends cocos_cli_1.CCPlugin {
             let c = this.get_current_platform();
             if (p == "ios-simulator") {
                 p = "ios";
+                this.set_platform("ios");
                 this.extend_argv(["--ios-simulator"]);
                 this.args.set_bool("ios_simulator", true);
             }
