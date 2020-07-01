@@ -50,6 +50,7 @@ export class CCPluginGENERATE extends CCPlugin {
 
         if(p == "ios-simulator") {
             p = "ios";
+            this.set_platform("ios");
             this.extend_argv(["--ios-simulator"]);
             this.args.set_bool("ios_simulator", true);
         }

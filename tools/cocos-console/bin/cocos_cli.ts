@@ -7,8 +7,6 @@ import * as cocos_cfg from "./cocos_config.json";
 import * as os from "os";
 import { afs } from "./afs";
 import * as child_process from "child_process";
-import { stringify } from "querystring";
-import { clearScreenDown } from "readline";
 
 enum ArgumentItemType {
     BOOL_FLAG,
@@ -190,6 +188,10 @@ class ArgumentParser {
             console.log(`[warn] argument ${key} not set!`);
         }
         return this.get_path(key);
+    }
+
+    public set_string(key:string, v:string) {
+        this.values[key] = v;
     }
 
     public exist_key(key: string): boolean {
@@ -452,6 +454,10 @@ export abstract class CCPlugin {
             console.log(`platform not specified, use current platform ${p}`);
         }
         return p;
+    }
+
+    set_platform(p:string) {
+        this.parser.set_string("platform", p);
     }
 
     get_plugin_name(): string { return this._plugin_name!; }
@@ -784,6 +790,7 @@ class CCPluginRunner {
 }
 
 process.on("unhandledRejection", (err, promise) => {
+    console.error(`----unhandledRejection---`);
     console.error(err);
 });
 

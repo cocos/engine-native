@@ -31,11 +31,11 @@
 #include "cocos/scripting/js-bindings/event/EventDispatcher.h"
 #include "cocos/scripting/js-bindings/manual/jsb_classtype.hpp"
 
-Game::Game(int width, int height) : cocos2d::Application(width, height) {}
+Game::Game(int width, int height) : cc::Application(width, height) {}
 
 bool Game::init()
 {
-    cocos2d::Application::init();
+    cc::Application::init();
     
     se::ScriptEngine *se = se::ScriptEngine::getInstance();
     
@@ -49,6 +49,7 @@ bool Game::init()
     
     se->setExceptionCallback([](const char *location, const char *message, const char *stack) {
         // Send exception information to server like Tencent Bugly.
+        CC_LOG_ERROR("\nUncaught Exception:\n - location :  %s\n - msg : %s\n - detail : \n      %s\n", location, message, stack);
     });
     
     jsb_register_all_modules();
@@ -68,20 +69,20 @@ bool Game::init()
 
 void Game::onPause()
 {
-    cocos2d::Application::onPause();
+    cc::Application::onPause();
 
-    cocos2d::CustomEvent event;
+    cc::CustomEvent event;
     event.name = EVENT_COME_TO_BACKGROUND;
-    cocos2d::EventDispatcher::dispatchCustomEvent(event);
-    cocos2d::EventDispatcher::dispatchEnterBackgroundEvent();
+    cc::EventDispatcher::dispatchCustomEvent(event);
+    cc::EventDispatcher::dispatchEnterBackgroundEvent();
 }
 
 void Game::onResume()
 {
-    cocos2d::Application::onResume();
+    cc::Application::onResume();
     
-    cocos2d::CustomEvent event;
+    cc::CustomEvent event;
     event.name = EVENT_COME_TO_FOREGROUND;
-    cocos2d::EventDispatcher::dispatchCustomEvent(event);
-    cocos2d::EventDispatcher::dispatchEnterForegroundEvent();
+    cc::EventDispatcher::dispatchCustomEvent(event);
+    cc::EventDispatcher::dispatchEnterForegroundEvent();
 }

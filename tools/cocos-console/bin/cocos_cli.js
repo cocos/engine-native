@@ -181,6 +181,9 @@ class ArgumentParser {
         }
         return this.get_path(key);
     }
+    set_string(key, v) {
+        this.values[key] = v;
+    }
     exist_key(key) {
         return key in this.values;
     }
@@ -397,6 +400,9 @@ class CCPlugin {
             console.log(`platform not specified, use current platform ${p}`);
         }
         return p;
+    }
+    set_platform(p) {
+        this.parser.set_string("platform", p);
     }
     get_plugin_name() { return this._plugin_name; }
     set_plugin_name(name) { this._plugin_name = name; }
@@ -725,6 +731,7 @@ class CCPluginRunner {
     }
 }
 process.on("unhandledRejection", (err, promise) => {
+    console.error(`----unhandledRejection---`);
     console.error(err);
 });
 let runner = new CCPluginRunner();
