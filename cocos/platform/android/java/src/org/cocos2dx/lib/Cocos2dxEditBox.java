@@ -82,7 +82,6 @@ public class Cocos2dxEditBox {
         private int mLineColor = DARK_GREEN;
         private float mLineWidth = 2f;
         private boolean keyboardVisible = false;
-        private int mScreenHeight;
         private int mTopMargin = 0;
         private int mOrientation;
 
@@ -91,8 +90,6 @@ public class Cocos2dxEditBox {
             //remove focus border
             this.setBackground(null);
             this.setTextColor(Color.BLACK);
-            mScreenHeight = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).
-                    getDefaultDisplay().getHeight();
             mPaint = new Paint();
             mPaint.setStrokeWidth(mLineWidth);
             mPaint.setStyle(Paint.Style.FILL);
@@ -244,21 +241,21 @@ public class Cocos2dxEditBox {
                 public void onGlobalLayout() {
                     Rect r = new Rect();
                     getWindowVisibleDisplayFrame(r);
-                    int heightDiff = getRootView().getHeight() - (r.bottom - r.top);
+                    int screenHeight = getRootView().getHeight();
+                    int heightDiff = screenHeight - r.height();
                     // if more than a quarter of the screen, its probably a keyboard
-                    if (heightDiff > mScreenHeight/4) {
+                    if (heightDiff > screenHeight / 4) {
                         if (!keyboardVisible) {
                             keyboardVisible = true;
+                            if (Cocos2dxEditText.this.mTopMargin == 0 && r.bottom != screenHeight) {
+                                Cocos2dxEditText.this.setTopMargin(r.bottom);
+                            }
                         }
                     } else {
                         if (keyboardVisible) {
                             keyboardVisible = false;
                             Cocos2dxEditBox.this.hide();
                         }
-                    }
-
-                    if (Cocos2dxEditText.this.mTopMargin == 0 && r.bottom != getRootView().getHeight()) {
-                        Cocos2dxEditText.this.setTopMargin(r.bottom);
                     }
                 }
             });
