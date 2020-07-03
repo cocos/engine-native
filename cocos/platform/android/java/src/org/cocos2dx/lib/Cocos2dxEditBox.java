@@ -293,6 +293,7 @@ public class Cocos2dxEditBox {
      **************************************************************************************/
     private void addItems(Cocos2dxActivity context, FrameLayout layout) {
         RelativeLayout myLayout = new RelativeLayout(context);
+        myLayout.setFitsSystemWindows(true);
         this.addEditText(context, myLayout);
         this.addButton(context, myLayout);
 
