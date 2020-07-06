@@ -47,6 +47,7 @@ Configuration::Configuration()
 , _supportsPVRTC(false)
 , _supportsETC1(false)
 , _supportsETC2(false)
+, _supportsASTC(false)
 , _supportsS3TC(false)
 , _supportsATITC(false)
 , _supportsNPOT(false)
@@ -154,6 +155,9 @@ void Configuration::gatherGPUInfo()
 
     _supportsPVRTC = checkForGLExtension("GL_IMG_texture_compression_pvrtc");
     _valueDict["gl.supports_PVRTC"] = Value(_supportsPVRTC);
+
+    _supportsASTC = checkForGLExtension("GL_OES_texture_compression_astc");
+    _valueDict["gl.supports_ASTC"] = Value(_supportsASTC);
 
     _supportsNPOT = true;
     _valueDict["gl.supports_NPOT"] = Value(_supportsNPOT);
@@ -286,6 +290,11 @@ bool Configuration::checkForETC2() const
 bool Configuration::supportsETC2() const
 {
     return _supportsETC2;
+}
+
+bool Configuration::supportsASTC() const
+{
+    return _supportsASTC;
 }
 
 bool Configuration::supportsS3TC() const

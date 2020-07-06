@@ -3841,6 +3841,9 @@ static bool JSB_glGetSupportedExtensions(se::State& s) {
     if (config->supportsInstancing()) {
         jsobj->setArrayElement(element++, se::Value("ANGLE_instanced_arrays"));
     }
+    if (config->supportsASTC()) {
+        jsobj->setArrayElement(element++, se::Value("WEBGL_compressed_texture_astc"));
+    }
 
     s.rval().setObject(jsobj.get());
     CC_SAFE_DELETE_ARRAY(copy);

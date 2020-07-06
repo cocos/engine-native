@@ -118,6 +118,13 @@ public:
      */
     bool supportsETC2() const;
 
+    /** Whether or not ASTC Texture Compressed is supported.
+     *
+     *
+     * @return Is true if supports ASTC Texture Compressed.
+     */
+    bool supportsASTC() const;
+
     /** Whether or not S3TC Texture Compressed is supported.
      *
      * @return Is true if supports S3TC Texture Compressed.
@@ -277,6 +284,7 @@ protected:
     bool            _supportsPVRTC;
     bool            _supportsETC1;
     bool            _supportsETC2;
+    bool            _supportsASTC;
     bool            _supportsS3TC;
     bool            _supportsATITC;
     bool            _supportsNPOT;

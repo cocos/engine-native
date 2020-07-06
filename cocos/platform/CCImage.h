@@ -84,6 +84,8 @@ public:
         ETC,
         //! ETC2
         ETC2,
+        //! ASTC
+        ASTC,
         //! S3TC
         S3TC,
         //! ATITC
@@ -135,6 +137,34 @@ public:
         ETC2_RGB,
         //! ETC-compressed texture: GL_COMPRESSED_RGBA8_ETC2
         ETC2_RGBA,
+        //! ASTC-compressed texture: ASTC_4x4
+        ASTC_RGBA_4x4,
+        //! ASTC-compressed texture: ASTC_5x4
+        ASTC_RGBA_5x4,
+        //! ASTC-compressed texture: ASTC_5x5
+        ASTC_RGBA_5x5,
+        //! ASTC-compressed texture: ASTC_6x5
+        ASTC_RGBA_6x5,
+        //! ASTC-compressed texture: ASTC_6x6
+        ASTC_RGBA_6x6,
+        //! ASTC-compressed texture: ASTC_8x5
+        ASTC_RGBA_8x5,
+        //! ASTC-compressed texture: ASTC_8x6
+        ASTC_RGBA_8x6,
+        //! ASTC-compressed texture: ASTC_8x8
+        ASTC_RGBA_8x8,
+        //! ASTC-compressed texture: ASTC_10x5
+        ASTC_RGBA_10x5,
+        //! ASTC-compressed texture: ASTC_10x6
+        ASTC_RGBA_10x6,
+        //! ASTC-compressed texture: ASTC_10x8
+        ASTC_RGBA_10x8,
+        //! ASTC-compressed texture: ASTC_10x10
+        ASTC_RGBA_10x10,
+        //! ASTC-compressed texture: ASTC_12x10
+        ASTC_RGBA_12x10,
+        //! ASTC-compressed texture: ASTC_12x12
+        ASTC_RGBA_12x12,
         //! S3TC-compressed texture: S3TC_Dxt1
         S3TC_DXT1,
         //! S3TC-compressed texture: S3TC_Dxt3
@@ -244,6 +274,7 @@ protected:
     bool initWithPVRv3Data(const unsigned char * data, ssize_t dataLen);
     bool initWithETCData(const unsigned char * data, ssize_t dataLen);
     bool initWithETC2Data(const unsigned char * data, ssize_t dataLen);
+    bool initWithASTCData(const unsigned char * data, ssize_t dataLen);
     bool initWithS3TCData(const unsigned char * data, ssize_t dataLen);
 
     typedef struct sImageTGA tImageTGA;
@@ -299,7 +330,10 @@ protected:
     bool isPvr(const unsigned char * data, ssize_t dataLen);
     bool isEtc(const unsigned char * data, ssize_t dataLen);
     bool isEtc2(const unsigned char * data, ssize_t dataLen);
+    bool isASTC(const unsigned char * data, ssize_t detaLen);
     bool isS3TC(const unsigned char * data,ssize_t dataLen);
+
+    PixelFormat getASTCFormat(const unsigned char * pHeader);
 };
 
 // end of platform group
