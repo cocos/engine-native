@@ -5,6 +5,7 @@
 #include "MTLCommandBuffer.h"
 #include "MTLCommands.h"
 #include "MTLDevice.h"
+#include "MTLFramebuffer.h"
 #include "MTLInputAssembler.h"
 #include "MTLPipelineState.h"
 #include "MTLRenderPass.h"
@@ -59,6 +60,11 @@ void CCMTLCommandBuffer::end() {
 
 void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const vector<Color> &colors, float depth, int stencil) {
 
+    auto isOffscreen = static_cast<CCMTLFramebuffer *>(fbo)->isOffscreen();
+    if (!isOffscreen) {
+        static_cast<CCMTLRenderPass *>(renderPass)->setColorAttachment(0, ((MTKView *)_mtkView).currentDrawable.texture, 0);
+        static_cast<CCMTLRenderPass *>(renderPass)->setDepthStencilAttachment(((MTKView *)_mtkView).depthStencilTexture, 0);
+    }
     MTLRenderPassDescriptor *mtlRenderPassDescriptor = static_cast<CCMTLRenderPass *>(renderPass)->getMTLRenderPassDescriptor();
 
     for (size_t slot = 0; slot < colors.size(); slot++) {
