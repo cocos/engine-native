@@ -136,11 +136,12 @@ void CCMTLCommandBuffer::bindBindingLayout(BindingLayout *layout) {
 
         if (binding.shaderStages & ShaderType::FRAGMENT) {
             if (binding.sampler && binding.texture) {
+#if COCOS2D_DEBUG > 0
                 if (_gpuPipelineState->fragmentSamplerBinding.find(binding.binding) == _gpuPipelineState->fragmentSamplerBinding.end()) {
                     CC_LOG_WARNING("%s(binding = %d) not used in shader.", binding.name.c_str(), binding.binding);
                     continue;
                 }
-
+#endif
                 [_mtlEncoder setFragmentTexture:static_cast<CCMTLTexture *>(binding.texture)->getMTLTexture()
                                         atIndex:binding.binding];
 
