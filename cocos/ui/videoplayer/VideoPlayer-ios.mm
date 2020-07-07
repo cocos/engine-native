@@ -138,7 +138,7 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
 
 -(BOOL) isPlaying
 {
-    return (self.playerController.player && self.playerController.player.rate != 0);
+    return self.playerController.player && self.playerController.player.rate != 0 && _state == PlayerbackStatePlaying;
 }
 
 -(void) setURL:(int)videoSource :(std::string &)videoUrl
