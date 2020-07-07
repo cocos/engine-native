@@ -156,7 +156,7 @@ void Configuration::gatherGPUInfo()
     _supportsPVRTC = checkForGLExtension("GL_IMG_texture_compression_pvrtc");
     _valueDict["gl.supports_PVRTC"] = Value(_supportsPVRTC);
 
-    _supportsASTC = checkForGLExtension("GL_OES_texture_compression_astc");
+    _supportsASTC = checkForGLExtension("texture_compression_astc");
     _valueDict["gl.supports_ASTC"] = Value(_supportsASTC);
 
     _supportsNPOT = true;
