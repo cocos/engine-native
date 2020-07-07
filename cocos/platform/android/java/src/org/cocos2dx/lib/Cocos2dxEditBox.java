@@ -83,7 +83,6 @@ public class Cocos2dxEditBox {
         private float mLineWidth = 2f;
         private boolean keyboardVisible = false;
         private int mTopMargin = 0;
-        private int mOrientation;
 
         public  Cocos2dxEditText(Cocos2dxActivity context){
             super(context);
@@ -94,7 +93,6 @@ public class Cocos2dxEditBox {
             mPaint.setStrokeWidth(mLineWidth);
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setColor(mLineColor);
-            mOrientation = this.getResources().getConfiguration().orientation;
 
             mTextWatcher = new TextWatcher() {
                 @Override
@@ -128,16 +126,6 @@ public class Cocos2dxEditBox {
                     getScrollX() + this.getWidth(),
                     this.getHeight() - padB / 2 - mLineWidth, mPaint);
             super.onDraw(canvas);
-        }
-
-        @Override
-        protected void onConfigurationChanged(Configuration newConfig) {
-            super.onConfigurationChanged(newConfig);
-            int newOrientation = newConfig.orientation;
-            if (mOrientation != newOrientation) {
-                mOrientation = newOrientation;
-                mTopMargin = 0;  // clear top margin cache
-            }
         }
 
         /***************************************************************************************
@@ -247,7 +235,7 @@ public class Cocos2dxEditBox {
                     if (heightDiff > screenHeight / 4) {
                         if (!keyboardVisible) {
                             keyboardVisible = true;
-                            if (Cocos2dxEditText.this.mTopMargin == 0 && r.bottom != screenHeight) {
+                            if (r.bottom != screenHeight) {
                                 Cocos2dxEditText.this.setTopMargin(r.bottom);
                             }
                         }
