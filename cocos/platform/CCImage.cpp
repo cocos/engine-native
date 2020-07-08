@@ -788,7 +788,7 @@ Image::Format Image::detectFormat(const unsigned char * data, ssize_t dataLen)
     }
 }
 
-Image::PixelFormat getASTCFormat(const unsigned char * pHeader) const
+Image::PixelFormat Image::getASTCFormat(const unsigned char * pHeader) const
 {
     int xdim = pHeader[ASTC_HEADER_MAGIC];
     int ydim = pHeader[ASTC_HEADER_MAGIC + 1];
