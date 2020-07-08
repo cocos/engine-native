@@ -140,7 +140,7 @@ void Configuration::gatherGPUInfo()
     _valueDict["gl.max_texture_units"] = Value((int)_maxTextureUnits);
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    glGetIntegerv(GL_MAX_SAMPLES, &_maxSamplesAllowed);
+    glGetIntegerv(GL_MAX_SAMPLES_APPLE, &_maxSamplesAllowed);
     _valueDict["gl.max_samples_allowed"] = Value((int)_maxSamplesAllowed);
 #endif
 
