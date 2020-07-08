@@ -677,7 +677,7 @@ bool Image::isEtc2(const unsigned char * data, ssize_t dataLen)
 
 bool Image::isASTC(const unsigned char * data, ssize_t dataLen)
 {
-    return astc_is_valid((astc_byte*)data) ? true : false;
+    return astcIsValid((astc_byte*)data) ? true : false;
 }
 
 bool Image::isS3TC(const unsigned char * data, ssize_t /*dataLen*/)
@@ -788,7 +788,8 @@ Image::Format Image::detectFormat(const unsigned char * data, ssize_t dataLen)
     }
 }
 
-Image::PixelFormat astc_get_format(const unsigned char * pHeader) {
+Image::PixelFormat getASTCFormat(const unsigned char * pHeader) const
+{
     int xdim = pHeader[ASTC_HEADER_MAGIC];
     int ydim = pHeader[ASTC_HEADER_MAGIC + 1];
 
@@ -1450,6 +1451,10 @@ bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
     dataLength = CC_SWAP_INT32_LITTLE_TO_HOST(header->dataLength);
 
     assert(Configuration::getInstance()->supportsPVRTC());
+    if (Configuration::getInstance()->supportsPVRTC() == false) {
+        CCLOG("initWithPVRv2Data: ERROR: Unsupported PVR Compress texture on this device");
+        return false;
+    }
 
     //Move by size of header
     _dataLen = dataLen - sizeof(PVRv2TexHeader);
@@ -1581,6 +1586,10 @@ bool Image::initWithPVRv3Data(const unsigned char * data, ssize_t dataLen)
     int blockSize = 0, widthBlocks = 0, heightBlocks = 0;
 
     assert(Configuration::getInstance()->supportsPVRTC());
+    if (Configuration::getInstance()->supportsPVRTC() == false) {
+        CCLOG("initWithPVRv3Data: ERROR: Unsupported PVR Compress texture on this device");
+        return false;
+    }
 
     _dataLen = dataLen - (sizeof(PVRv3TexHeader) + header->metadataLength);
     _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));
@@ -1671,6 +1680,10 @@ bool Image::initWithETCData(const unsigned char * data, ssize_t dataLen)
     }
 
     assert(Configuration::getInstance()->supportsETC());
+    if (Configuration::getInstance()->supportsETC() == false) {
+        CCLOG("initWithETCData: ERROR: Unsupported ETC Compress texture on this device");
+        return false;
+    }
 
     //old opengl version has no define for GL_ETC1_RGB8_OES, add macro to make compiler happy.
 #ifdef GL_ETC1_RGB8_OES
@@ -1703,6 +1716,10 @@ bool Image::initWithETC2Data(const unsigned char * data, ssize_t dataLen)
     }
     
     assert(Configuration::getInstance()->supportsETC2());
+    if (Configuration::getInstance()->supportsETC2() == false) {
+        CCLOG("initWithETC2Data: ERROR: Unsupported ETC2 Compress texture on this device");
+        return false;
+    }
     
     etc2_uint32 format = etc2_pkm_get_format(header);
     if (format == ETC2_RGB_NO_MIPMAPS)
@@ -1726,13 +1743,13 @@ bool Image::initWithASTCData(const unsigned char * data, ssize_t dataLen)
     const astc_byte* header = static_cast<const astc_byte*>(data);
 
     //check the data
-    if (!astc_is_valid(header))
+    if (!astcIsValid(header))
     {
         return false;
     }
 
-    _width = astc_get_width(header);
-    _height = astc_get_height(header);
+    _width = astcGetWidth(header);
+    _height = astcGetHeight(header);
 
     if (0 == _width || 0 == _height)
     {
@@ -1740,12 +1757,20 @@ bool Image::initWithASTCData(const unsigned char * data, ssize_t dataLen)
     }
 
     assert(Configuration::getInstance()->supportsASTC());
+    if (Configuration::getInstance()->supportsASTC() == false) {
+        CCLOG("initWithASTCData: ERROR: Unsupported ASTC Compress texture on this device");
+        return false;
+    }
 
-    _renderFormat = astc_get_format(header);
+    _renderFormat = getASTCFormat(header);
 
     _dataLen = dataLen - ASTC_HEADER_SIZE;
     _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));
     memcpy(_data, static_cast<const unsigned char*>(data) + ASTC_HEADER_SIZE, _dataLen);
+    if (_data == nullptr) {
+        CCLOG("initWithASTCData: ERROR: Image _data is null!");
+        return false;
+    }
 
     return true;
 }
@@ -1856,6 +1881,10 @@ bool Image::initWithS3TCData(const unsigned char * data, ssize_t dataLen)
     int height = _height;
 
     assert(Configuration::getInstance()->supportsS3TC());
+    if (Configuration::getInstance()->supportsS3TC() == false) {
+        CCLOG("initWithS3TCData: ERROR: Unsupported S3TC Compress texture on this device");
+        return false;
+    }
 
     _dataLen = dataLen - sizeof(S3TCTexHeader);
     _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));

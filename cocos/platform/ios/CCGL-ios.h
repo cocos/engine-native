@@ -43,7 +43,7 @@ THE SOFTWARE.
 
 #define glVertexAttribDivisor       glVertexAttribDivisorEXT
 #define glDrawArraysInstanced       glDrawArraysInstancedEXT
-#define glDrawElementsInstanced     glDrawElementsInstancedEXT
+//#define glDrawElementsInstanced     glDrawElementsInstancedEXT
 
 //#define GL_DEPTH24_STENCIL8         GL_DEPTH24_STENCIL8_OES
 //#define GL_DEPTH_STENCIL            GL_DEPTH_STENCIL_OES

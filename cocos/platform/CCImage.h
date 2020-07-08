@@ -333,7 +333,7 @@ protected:
     bool isASTC(const unsigned char * data, ssize_t detaLen);
     bool isS3TC(const unsigned char * data,ssize_t dataLen);
 
-    PixelFormat getASTCFormat(const unsigned char * pHeader);
+    PixelFormat getASTCFormat(const unsigned char * pHeader) const;
 };
 
 // end of platform group

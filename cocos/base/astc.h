@@ -40,14 +40,14 @@ typedef unsigned int astc_uint32;
 
 // Check if a ASTC header is correctly formatted
 
-bool astc_is_valid(const astc_byte* pHeader);
+bool astcIsValid(const astc_byte* pHeader);
 
 // Read the image width from a ASTC header
 
-int astc_get_width(const astc_byte* pHeader);
+int astcGetWidth(const astc_byte* pHeader);
 
 // Read the image height from a ASTC header
 
-int astc_get_height(const astc_byte* pHeader);
+int astcGetHeight(const astc_byte* pHeader);
 
 #endif

@@ -32,7 +32,7 @@ static const astc_byte ASTC_HEADER_SIZE_X_BEGIN = 7;
 static const astc_byte ASTC_HEADER_SIZE_Y_BEGIN = 10;
 static const astc_byte ASTC_HEADER_SIZE_Z_BEGIN = 13;
 
-bool astc_is_valid(const astc_byte* pHeader) {
+bool astcIsValid(const astc_byte* pHeader) {
     uint32_t magicval = (uint32_t)(pHeader[0]) +
                         (uint32_t)(pHeader[1]) * 256 +
                         (uint32_t)(pHeader[2]) * 65536 +
@@ -55,12 +55,12 @@ bool astc_is_valid(const astc_byte* pHeader) {
     return true;
 }
 
-int astc_get_width(const astc_byte* pHeader) {
+int astcGetWidth(const astc_byte* pHeader) {
     int xsize = pHeader[ASTC_HEADER_SIZE_X_BEGIN] + (pHeader[ASTC_HEADER_SIZE_X_BEGIN + 1] * 256) + (pHeader[ASTC_HEADER_SIZE_X_BEGIN + 2] * 65536);
     return xsize;
 }
 
-int astc_get_height(const astc_byte* pHeader) {
+int astcGetHeight(const astc_byte* pHeader) {
     int ysize = pHeader[ASTC_HEADER_SIZE_Y_BEGIN] + (pHeader[ASTC_HEADER_SIZE_Y_BEGIN + 1] * 256) + (pHeader[ASTC_HEADER_SIZE_Y_BEGIN + 2] * 65536);
     return ysize;
 }
