@@ -34,15 +34,15 @@ THE SOFTWARE.
 
 #define glClearDepth                glClearDepthf
 #define glDepthRange                glDepthRangef
-#define glDeleteVertexArrays        glDeleteVertexArraysOES
-#define glGenVertexArrays           glGenVertexArraysOES
+//#define glDeleteVertexArrays        glDeleteVertexArraysOES
+//#define glGenVertexArrays           glGenVertexArraysOES
 //#define glBindVertexArray           glBindVertexArrayOES
-#define glIsVertexArray             glIsVertexArrayOES
+//#define glIsVertexArray             glIsVertexArrayOES
 //#define glMapBuffer                 glMapBufferOES
 //#define glUnmapBuffer               glUnmapBufferOES
 
-#define glVertexAttribDivisor       glVertexAttribDivisorEXT
-#define glDrawArraysInstanced       glDrawArraysInstancedEXT
+//#define glVertexAttribDivisor       glVertexAttribDivisorEXT
+//#define glDrawArraysInstanced       glDrawArraysInstancedEXT
 //#define glDrawElementsInstanced     glDrawElementsInstancedEXT
 
 //#define GL_DEPTH24_STENCIL8         GL_DEPTH24_STENCIL8_OES
