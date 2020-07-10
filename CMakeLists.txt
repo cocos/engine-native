@@ -452,7 +452,6 @@ elseif(APPLE)
             cocos/platform/ios/CCApplication-ios.mm
             cocos/platform/ios/cocos2d-prefix.pch
             cocos/platform/ios/CCDevice-ios.mm
-            cocos/platform/ios/CCImage-ios.mm
         )
     endif()
 endif()

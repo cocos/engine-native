@@ -39,27 +39,6 @@ THE SOFTWARE.
 
 extern "C"
 {
-    // To resolve link error when building 32bits with Xcode 6.
-    // More information please refer to the discussion in https://github.com/cocos2d/cocos2d-x/pull/6986
-#if defined (__unix) || (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-#ifndef __ENABLE_COMPATIBILITY_WITH_UNIX_2003__
-#define __ENABLE_COMPATIBILITY_WITH_UNIX_2003__
-#include <stdio.h>
-    FILE *fopen$UNIX2003( const char *filename, const char *mode )
-    {
-        return fopen(filename, mode);
-    }
-    size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d )
-    {
-        return fwrite(a, b, c, d);
-    }
-    char *strerror$UNIX2003( int errnum )
-    {
-        return strerror(errnum);
-    }
-#endif
-#endif
-
 #if CC_USE_PNG
 #include "png/png.h"
 #endif //CC_USE_PNG
