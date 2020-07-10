@@ -43,11 +43,6 @@ void CCMTLPipelineState::destroy() {
         _mtlRenderPipelineState = nil;
     }
 
-    if (_mtlDepthStencilState) {
-        [_mtlDepthStencilState release];
-        _mtlDepthStencilState = nil;
-    }
-
     CC_SAFE_DELETE(_GPUPipelieState);
     _status = Status::UNREADY;
 }

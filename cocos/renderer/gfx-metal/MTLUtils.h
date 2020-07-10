@@ -63,6 +63,7 @@ bool isDepthStencilFormatSupported(Format format, uint family);
 String featureSetToString(MTLFeatureSet featureSet);
 
 id<MTLDepthStencilState> getMTLDepthStencilState(id<MTLDevice> device, const DepthStencilState &depthStencilState);
+id<MTLSamplerState> getMTLSamplerState(id<MTLDevice> device, const SamplerInfo &samplerInfo);
 void destroyCachedResources();
 
 } // namespace mu

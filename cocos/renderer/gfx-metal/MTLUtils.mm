@@ -11,6 +11,11 @@ template <>
 struct hash<cc::gfx::DepthStencilState> {
     std::size_t operator()(const cc::gfx::DepthStencilState &k) const { return k.hash(); }
 };
+
+template <>
+struct hash<cc::gfx::SamplerInfo> {
+    std::size_t operator()(const cc::gfx::SamplerInfo &k) const { return k.hash(); }
+};
 }
 namespace cc {
 namespace gfx {
@@ -1210,11 +1215,55 @@ id<MTLDepthStencilState> getMTLDepthStencilState(id<MTLDevice> device, const Dep
     return res;
 }
 
+id<MTLSamplerState> newMTLSamplerState(id<MTLDevice> mtlDevice, const SamplerInfo &samplerInfo) {
+    MTLSamplerDescriptor *descriptor = [MTLSamplerDescriptor new];
+    if (descriptor == nil) {
+        CC_LOG_ERROR("MTLUtils: MTLSamplerDescriptor could not be allocated.");
+        return nil;
+    }
+
+    descriptor.borderColor = toMTLSamplerBorderColor(samplerInfo.borderColor);
+    descriptor.sAddressMode = toMTLSamplerAddressMode(samplerInfo.addressU);
+    descriptor.tAddressMode = toMTLSamplerAddressMode(samplerInfo.addressV);
+    descriptor.rAddressMode = toMTLSamplerAddressMode(samplerInfo.addressW);
+    descriptor.minFilter = toMTLSamplerMinMagFilter(samplerInfo.minFilter);
+    descriptor.magFilter = toMTLSamplerMinMagFilter(samplerInfo.magFilter);
+    descriptor.mipFilter = toMTLSamplerMipFilter(samplerInfo.mipFilter);
+    descriptor.maxAnisotropy = samplerInfo.maxAnisotropy;
+    descriptor.compareFunction = toMTLCompareFunction(samplerInfo.cmpFunc);
+    descriptor.lodMinClamp = samplerInfo.minLOD;
+    descriptor.lodMaxClamp = samplerInfo.maxLOD;
+
+    id<MTLSamplerState> mtlSamplerState = [mtlDevice newSamplerStateWithDescriptor:descriptor];
+    if (mtlSamplerState == nil) {
+        CC_LOG_ERROR("Failed to create MTLSamplerState.");
+        return nil;
+    }
+
+    [descriptor release];
+    return mtlSamplerState;
+}
+
+static unordered_map<SamplerInfo, id<MTLSamplerState>> cachedSamplerStates;
+id<MTLSamplerState> getMTLSamplerState(id<MTLDevice> device, const SamplerInfo &samplerInfo) {
+    auto &res = cachedSamplerStates[samplerInfo];
+    if (res == nil) {
+        res = newMTLSamplerState(device, samplerInfo);
+    }
+
+    return res;
+}
+
 void destroyCachedResources() {
     for (auto &pair : cachedDepthStencilStates) {
         [pair.second release];
     }
     cachedDepthStencilStates.clear();
+
+    for (auto &pair : cachedSamplerStates) {
+        [pair.second release];
+    }
+    cachedSamplerStates.clear();
 }
 
 } //namespace mu

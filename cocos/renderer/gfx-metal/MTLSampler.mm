@@ -27,23 +27,7 @@ bool CCMTLSampler::initialize(const SamplerInfo &info) {
     _maxLOD = info.maxLOD;
     _mipLODBias = info.mipLODBias;
 
-    MTLSamplerDescriptor *descriptor = [[MTLSamplerDescriptor alloc] init];
-    descriptor.borderColor = mu::toMTLSamplerBorderColor(_borderColor);
-    descriptor.sAddressMode = mu::toMTLSamplerAddressMode(_addressU);
-    descriptor.tAddressMode = mu::toMTLSamplerAddressMode(_addressV);
-    descriptor.rAddressMode = mu::toMTLSamplerAddressMode(_addressW);
-    descriptor.minFilter = mu::toMTLSamplerMinMagFilter(_minFilter);
-    descriptor.magFilter = mu::toMTLSamplerMinMagFilter(_magFilter);
-    descriptor.mipFilter = mu::toMTLSamplerMipFilter(_mipFilter);
-    descriptor.maxAnisotropy = _maxAnisotropy;
-    descriptor.compareFunction = mu::toMTLCompareFunction(_cmpFunc);
-    descriptor.lodMinClamp = _minLOD;
-    descriptor.lodMaxClamp = _maxLOD;
-
-    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
-    _mtlSamplerState = [mtlDevice newSamplerStateWithDescriptor:descriptor];
-
-    [descriptor release];
+    _mtlSamplerState = mu::getMTLSamplerState(id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice()), info);
 
     _status = Status::SUCCESS;
 
@@ -51,11 +35,6 @@ bool CCMTLSampler::initialize(const SamplerInfo &info) {
 }
 
 void CCMTLSampler::destroy() {
-    if (_mtlSamplerState) {
-        [_mtlSamplerState release];
-        _mtlSamplerState = nil;
-    }
-
     _status = Status::UNREADY;
 }
 

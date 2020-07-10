@@ -786,7 +786,14 @@ struct SamplerInfo {
     uint minLOD = 0;
     uint maxLOD = 1000;
     float mipLODBias = 0.0f;
-};
+
+    bool operator==(const SamplerInfo &rhs) const { return areEqual(this, &rhs); }
+    std::size_t hash() const { return makeHash((uint64_t *)this, sizeof(*this) / sizeof(uint64_t)); }
+
+    SamplerInfo() {
+        clear(this);
+    }
+} __attribute__((aligned(sizeof(uint64_t))));
 
 struct ShaderMacro {
     String macro;

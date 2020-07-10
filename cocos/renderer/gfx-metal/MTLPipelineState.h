@@ -3,8 +3,8 @@
 #include "MTLGPUObjects.h"
 #include <tuple>
 
-#import <Metal/MTLRenderPipeline.h>
 #import <Metal/MTLDepthStencil.h>
+#import <Metal/MTLRenderPipeline.h>
 
 namespace cc {
 namespace gfx {
@@ -31,7 +31,7 @@ private:
 
 private:
     id<MTLRenderPipelineState> _mtlRenderPipelineState = nil;
-    id<MTLDepthStencilState> _mtlDepthStencilState = nil;
+    id<MTLDepthStencilState> _mtlDepthStencilState = nil; //weak reference
     CCMTLGPUPipelineState *_GPUPipelieState = nullptr;
 };
 
