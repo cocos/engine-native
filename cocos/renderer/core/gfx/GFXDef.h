@@ -28,6 +28,50 @@ class Context;
 #define GFX_INVALID_BINDING       ((uint8_t)-1)
 #define GFX_INVALID_HANDLE        ((uint)-1)
 
+/**
+ * If pV1 and pV2 are both not null, returns whether the contents of the two values are equal,
+ * otherwise returns false. The optional count allows comparing multiple elements in an array.
+ */
+template <typename T>
+bool areEqual(const T *pV1, const T *pV2, size_t count = 1) {
+    return (pV1 && pV2) ? (memcmp(pV1, pV2, sizeof(T) * count) == 0) : false;
+}
+
+/**
+ * Returns a hash value calculated from the specified array of numeric elements,
+ * using the DJB2a algorithm:  hash = (hash * 33) ^ value.
+ *
+ * For a hash on a single array, leave the seed value unspecified, to use the default
+ * seed value. To accumulate a single hash value over several arrays, use the hash
+ * value returned by previous calls as the seed in subsequent calls.
+ */
+template <class N>
+std::size_t makeHash(const N *pVals, std::size_t count = 1, std::size_t seed = 5381) {
+    std::size_t hash = seed;
+    for (std::size_t i = 0; i < count; i++) {
+        hash = ((hash << 5) + hash) ^ pVals[i];
+    }
+    return hash;
+}
+
+/**
+ * If pVal is not null, clears the memory occupied by *pVal by writing zeros to all bytes.
+ * The optional count allows clearing multiple elements in an array.
+ */
+template <typename T>
+void clear(T *pVal, size_t count = 1) {
+    if (pVal) {
+        memset(pVal, 0, sizeof(T) * count);
+    }
+}
+
+/**
+ * If pVal is not null, overrides the const declaration, and clears the memory occupied by *pVal
+ * by writing zeros to all bytes. The optional count allows clearing multiple elements in an array.
+*/
+template <typename T>
+void clear(const T *pVal, size_t count = 1) { clear((T *)pVal, count); }
+
 enum class ObjectType : uint8_t {
     UNKNOWN,
     BUFFER,
@@ -925,7 +969,18 @@ struct DepthStencilState {
     StencilOp stencilZFailOpBack = StencilOp::KEEP;
     StencilOp stencilPassOpBack = StencilOp::KEEP;
     uint stencilRefBack = 1;
-};
+
+    bool operator==(const DepthStencilState &rhs) const { return areEqual(this, &rhs); }
+
+    std::size_t hash() const { return makeHash((uint64_t *)this, sizeof(*this) / sizeof(uint64_t)); }
+
+    DepthStencilState() {
+        // Start with all zeros to ensure memory comparisons will work,
+        // even if the structure contains alignment gaps.
+        clear(this);
+    }
+
+} __attribute__((aligned(sizeof(uint64_t))));
 
 struct BlendTarget {
     bool blend = false;

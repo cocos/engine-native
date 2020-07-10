@@ -80,49 +80,8 @@ bool CCMTLPipelineState::createGPUPipelineState() {
 }
 
 bool CCMTLPipelineState::createMTLDepthStencilState() {
-    MTLDepthStencilDescriptor *descriptor = [[MTLDepthStencilDescriptor alloc] init];
-    if (descriptor == nil) {
-        CC_LOG_ERROR("CCMTLPipelineState: MTLDepthStencilDescriptor could not be allocated.");
-        return false;
-    }
-
-    descriptor.depthWriteEnabled = _depthStencilState.depthWrite;
-
-    if (!_depthStencilState.depthTest)
-        descriptor.depthCompareFunction = MTLCompareFunctionAlways;
-    else
-        descriptor.depthCompareFunction = mu::toMTLCompareFunction(_depthStencilState.depthFunc);
-
-    if (_depthStencilState.stencilTestFront) {
-        descriptor.frontFaceStencil.stencilCompareFunction = mu::toMTLCompareFunction(_depthStencilState.stencilFuncFront);
-        descriptor.frontFaceStencil.readMask = _depthStencilState.stencilReadMaskFront;
-        descriptor.frontFaceStencil.writeMask = _depthStencilState.stencilWriteMaskFront;
-        descriptor.frontFaceStencil.stencilFailureOperation = mu::toMTLStencilOperation(_depthStencilState.stencilFailOpFront);
-        descriptor.frontFaceStencil.depthFailureOperation = mu::toMTLStencilOperation(_depthStencilState.stencilZFailOpFront);
-        descriptor.frontFaceStencil.depthStencilPassOperation = mu::toMTLStencilOperation(_depthStencilState.stencilPassOpFront);
-    } else {
-        descriptor.frontFaceStencil = nil;
-    }
-
-    if (_depthStencilState.stencilTestBack) {
-        descriptor.backFaceStencil.stencilCompareFunction = mu::toMTLCompareFunction(_depthStencilState.stencilFuncBack);
-        descriptor.backFaceStencil.readMask = _depthStencilState.stencilReadMaskBack;
-        descriptor.backFaceStencil.writeMask = _depthStencilState.stencilWriteMaskBack;
-        descriptor.backFaceStencil.stencilFailureOperation = mu::toMTLStencilOperation(_depthStencilState.stencilFailOpBack);
-        descriptor.backFaceStencil.depthFailureOperation = mu::toMTLStencilOperation(_depthStencilState.stencilZFailOpBack);
-        descriptor.backFaceStencil.depthStencilPassOperation = mu::toMTLStencilOperation(_depthStencilState.stencilPassOpBack);
-    } else {
-        descriptor.backFaceStencil = nil;
-    }
-
-    id<MTLDevice> mtlDevice = id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice());
-    _mtlDepthStencilState = [mtlDevice newDepthStencilStateWithDescriptor:descriptor];
-
-    if (!_mtlDepthStencilState) {
-        CC_LOG_ERROR("Failed to create MTLDepthStencilState.");
-        return false;
-    }
-    return true;
+    _mtlDepthStencilState = mu::getMTLDepthStencilState(id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice()), _depthStencilState);
+    return _mtlDepthStencilState != nil;
 }
 
 bool CCMTLPipelineState::createMTLRenderPipelineState() {

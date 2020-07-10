@@ -39,7 +39,7 @@ MTLSamplerAddressMode toMTLSamplerAddressMode(Address);
 MTLSamplerBorderColor toMTLSamplerBorderColor(const Color &);
 MTLSamplerMinMagFilter toMTLSamplerMinMagFilter(Filter);
 MTLSamplerMipFilter toMTLSamplerMipFilter(Filter);
-String compileGLSLShader2Msl(const String &src, ShaderType shaderType, Device* device, unordered_map<uint, uint> &samplerBindings);
+String compileGLSLShader2Msl(const String &src, ShaderType shaderType, Device *device, unordered_map<uint, uint> &samplerBindings);
 uint8_t *convertRGB8ToRGBA8(uint8_t *source, uint length);
 uint8_t *convertRGB32FToRGBA32F(uint8_t *source, uint length);
 NSUInteger highestSupportedFeatureSet(id<MTLDevice> device);
@@ -61,6 +61,9 @@ bool isLinearTextureSupported(uint family);
 bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet);
 bool isDepthStencilFormatSupported(Format format, uint family);
 String featureSetToString(MTLFeatureSet featureSet);
+
+id<MTLDepthStencilState> getMTLDepthStencilState(id<MTLDevice> device, const DepthStencilState &depthStencilState);
+void destroyCachedResources();
 
 } // namespace mu
 

@@ -6,7 +6,12 @@
 #include "StandAlone/ResourceLimits.h"
 #include "spirv_cross/spirv_msl.hpp"
 #include <vector>
-
+namespace std {
+template <>
+struct hash<cc::gfx::DepthStencilState> {
+    std::size_t operator()(const cc::gfx::DepthStencilState &k) const { return k.hash(); }
+};
+}
 namespace cc {
 namespace gfx {
 namespace {
@@ -1146,6 +1151,70 @@ String featureSetToString(MTLFeatureSet featureSet) {
 #else
     return getMacFeatureSetToString(featureSet);
 #endif
+}
+
+id<MTLDepthStencilState> newMTLDepthStencilState(id<MTLDevice> mtlDevice, const DepthStencilState &depthStencilState) {
+    MTLDepthStencilDescriptor *descriptor = [MTLDepthStencilDescriptor new];
+    if (descriptor == nil) {
+        CC_LOG_ERROR("MTLUtils: MTLDepthStencilDescriptor could not be allocated.");
+        return nil;
+    }
+
+    descriptor.depthWriteEnabled = depthStencilState.depthWrite;
+
+    if (!depthStencilState.depthTest)
+        descriptor.depthCompareFunction = MTLCompareFunctionAlways;
+    else
+        descriptor.depthCompareFunction = toMTLCompareFunction(depthStencilState.depthFunc);
+
+    if (depthStencilState.stencilTestFront) {
+        descriptor.frontFaceStencil.stencilCompareFunction = toMTLCompareFunction(depthStencilState.stencilFuncFront);
+        descriptor.frontFaceStencil.readMask = depthStencilState.stencilReadMaskFront;
+        descriptor.frontFaceStencil.writeMask = depthStencilState.stencilWriteMaskFront;
+        descriptor.frontFaceStencil.stencilFailureOperation = toMTLStencilOperation(depthStencilState.stencilFailOpFront);
+        descriptor.frontFaceStencil.depthFailureOperation = toMTLStencilOperation(depthStencilState.stencilZFailOpFront);
+        descriptor.frontFaceStencil.depthStencilPassOperation = toMTLStencilOperation(depthStencilState.stencilPassOpFront);
+    } else {
+        descriptor.frontFaceStencil = nil;
+    }
+
+    if (depthStencilState.stencilTestBack) {
+        descriptor.backFaceStencil.stencilCompareFunction = toMTLCompareFunction(depthStencilState.stencilFuncBack);
+        descriptor.backFaceStencil.readMask = depthStencilState.stencilReadMaskBack;
+        descriptor.backFaceStencil.writeMask = depthStencilState.stencilWriteMaskBack;
+        descriptor.backFaceStencil.stencilFailureOperation = toMTLStencilOperation(depthStencilState.stencilFailOpBack);
+        descriptor.backFaceStencil.depthFailureOperation = toMTLStencilOperation(depthStencilState.stencilZFailOpBack);
+        descriptor.backFaceStencil.depthStencilPassOperation = toMTLStencilOperation(depthStencilState.stencilPassOpBack);
+    } else {
+        descriptor.backFaceStencil = nil;
+    }
+
+    id<MTLDepthStencilState> mtlDepthStencilState = [mtlDevice newDepthStencilStateWithDescriptor:descriptor];
+
+    if (mtlDepthStencilState == nil) {
+        CC_LOG_ERROR("Failed to create MTLDepthStencilState.");
+        return nil;
+    }
+
+    [descriptor release];
+    return mtlDepthStencilState;
+}
+
+static unordered_map<DepthStencilState, id<MTLDepthStencilState>> cachedDepthStencilStates;
+id<MTLDepthStencilState> getMTLDepthStencilState(id<MTLDevice> device, const DepthStencilState &depthStencilState) {
+    auto &res = cachedDepthStencilStates[depthStencilState];
+    if (res == nil) {
+        res = newMTLDepthStencilState(device, depthStencilState);
+    }
+
+    return res;
+}
+
+void destroyCachedResources() {
+    for (auto &pair : cachedDepthStencilStates) {
+        [pair.second release];
+    }
+    cachedDepthStencilStates.clear();
 }
 
 } //namespace mu
