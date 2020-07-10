@@ -63,7 +63,7 @@ public:
     CC_INLINE bool hasFeature(Feature feature) const { return _features[static_cast<uint8_t>(feature)]; }
     CC_INLINE void defineMacro(const String &macro, const String &value) { _macros[macro] = value; }
     CC_INLINE float getClipSpaceMinZ() const { return _clipSpaceMinZ; }
-    CC_INLINE float getClipSpaceSignY() const { return _clipSpaceSignY; }
+    CC_INLINE float getScreenSpaceSignY() const { return _screenSpaceSignY; }
     CC_INLINE float getUVSpaceSignY() const { return _UVSpaceSignY; }
 
 protected:
@@ -98,7 +98,7 @@ protected:
     uint _shaderIdGen = 0;
     unordered_map<String, String> _macros;
     float _clipSpaceMinZ = -1.0f;
-    float _clipSpaceSignY = 1.0f;
+    float _screenSpaceSignY = 1.0f;
     float _UVSpaceSignY = -1.0f;
 }; // namespace gfx
 

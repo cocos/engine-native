@@ -12113,6 +12113,24 @@ static bool js_gfx_Device_getWidth(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_Device_getWidth)
 
+static bool js_gfx_Device_getScreenSpaceSignY(se::State& s)
+{
+    cc::gfx::Device* cobj = (cc::gfx::Device*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_Device_getScreenSpaceSignY : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        float result = cobj->getScreenSpaceSignY();
+        ok &= float_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_Device_getScreenSpaceSignY : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_gfx_Device_getScreenSpaceSignY)
+
 static bool js_gfx_Device_getQueue(se::State& s)
 {
     cc::gfx::Device* cobj = (cc::gfx::Device*)s.nativeThisObject();
@@ -12752,24 +12770,6 @@ static bool js_gfx_Device_getMemoryStatus(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_Device_getMemoryStatus)
 
-static bool js_gfx_Device_getClipSpaceSignY(se::State& s)
-{
-    cc::gfx::Device* cobj = (cc::gfx::Device*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_Device_getClipSpaceSignY : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        float result = cobj->getClipSpaceSignY();
-        ok &= float_to_seval(result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_Device_getClipSpaceSignY : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_PROP_GET(js_gfx_Device_getClipSpaceSignY)
-
 static bool js_gfx_Device_getMaxTextureUnits(se::State& s)
 {
     cc::gfx::Device* cobj = (cc::gfx::Device*)s.nativeThisObject();
@@ -12912,9 +12912,9 @@ bool js_register_gfx_Device(se::Object* obj)
     cls->defineProperty("maxUniformBlockSize", _SE(js_gfx_Device_getMaxUniformBlockSize), nullptr);
     cls->defineProperty("maxTextureSize", _SE(js_gfx_Device_getMaxTextureSize), nullptr);
     cls->defineProperty("nativeHeight", _SE(js_gfx_Device_getNativeHeight), nullptr);
-    cls->defineProperty("clipSpaceSignY", _SE(js_gfx_Device_getClipSpaceSignY), nullptr);
     cls->defineProperty("depthStencilFormat", _SE(js_gfx_Device_getDepthStencilFormat), nullptr);
     cls->defineProperty("numTris", _SE(js_gfx_Device_getNumTris), nullptr);
+    cls->defineProperty("screenSpaceSignY", _SE(js_gfx_Device_getScreenSpaceSignY), nullptr);
     cls->defineProperty("stencilBits", _SE(js_gfx_Device_getStencilBits), nullptr);
     cls->defineProperty("queue", _SE(js_gfx_Device_getQueue), nullptr);
     cls->defineProperty("context", _SE(js_gfx_Device_getContext), nullptr);
