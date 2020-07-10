@@ -41,6 +41,12 @@ void CCVKQueue::submit(const vector<CommandBuffer *> &cmdBuffs, Fence *fence) {
     CCVKDevice *device = (CCVKDevice *)_device;
 
     _gpuQueue->commandBuffers.clear();
+    if (_gpuQueue->maintenanceCmdBuff) {
+        VK_CHECK(vkEndCommandBuffer(_gpuQueue->maintenanceCmdBuff));
+        _gpuQueue->commandBuffers.push(_gpuQueue->maintenanceCmdBuff);
+        _gpuQueue->maintenanceCmdBuff = VK_NULL_HANDLE;
+    }
+
     uint count = cmdBuffs.size();
     for (uint i = 0u; i < count; ++i) {
         CCVKCommandBuffer *cmdBuffer = (CCVKCommandBuffer *)cmdBuffs[i];
@@ -54,12 +60,12 @@ void CCVKQueue::submit(const vector<CommandBuffer *> &cmdBuffs, Fence *fence) {
     }
 
     VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.waitSemaphoreCount = _gpuQueue->nextWaitSemaphore ? 1 : 0;
     submitInfo.pWaitSemaphores = &_gpuQueue->nextWaitSemaphore;
     submitInfo.pWaitDstStageMask = &_gpuQueue->submitStageMask;
-    submitInfo.commandBufferCount = count;
+    submitInfo.commandBufferCount = cmdBuffs.size();
     submitInfo.pCommandBuffers = &_gpuQueue->commandBuffers[0];
-    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.signalSemaphoreCount = _gpuQueue->nextSignalSemaphore ? 1 : 0;
     submitInfo.pSignalSemaphores = &_gpuQueue->nextSignalSemaphore;
 
     if (_isAsync) {

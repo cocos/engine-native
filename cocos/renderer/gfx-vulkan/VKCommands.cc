@@ -37,26 +37,32 @@ void insertVkDynamicStates(vector<VkDynamicState> &out, const vector<DynamicStat
 }
 
 void beginOneTimeCommands(CCVKDevice *device, CCVKGPUCommandBuffer *cmdBuff) {
+    CCVKGPUQueue *queue = ((CCVKQueue *)device->getQueue())->gpuQueue();
     cmdBuff->level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    cmdBuff->queueFamilyIndex = ((CCVKQueue *)device->getQueue())->gpuQueue()->queueFamilyIndex;
-    device->gpuCommandBufferPool()->request(cmdBuff);
-
-    VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    VK_CHECK(vkBeginCommandBuffer(cmdBuff->vkCommandBuffer, &beginInfo));
+    cmdBuff->queueFamilyIndex = queue->queueFamilyIndex;
+    if (queue->maintenanceCmdBuff) {
+        cmdBuff->vkCommandBuffer = queue->maintenanceCmdBuff;
+    } else {
+        device->gpuCommandBufferPool()->request(cmdBuff);
+        VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        VK_CHECK(vkBeginCommandBuffer(cmdBuff->vkCommandBuffer, &beginInfo));
+        queue->maintenanceCmdBuff = cmdBuff->vkCommandBuffer;
+    }
 }
 
 void endOneTimeCommands(CCVKDevice *device, CCVKGPUCommandBuffer *cmdBuff) {
     VK_CHECK(vkEndCommandBuffer(cmdBuff->vkCommandBuffer));
 
     VkFence fence = device->gpuFencePool()->alloc();
-    const CCVKGPUQueue *queue = ((CCVKQueue *)device->getQueue())->gpuQueue();
+    CCVKGPUQueue *queue = ((CCVKQueue *)device->getQueue())->gpuQueue();
     VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &cmdBuff->vkCommandBuffer;
     VK_CHECK(vkQueueSubmit(queue->vkQueue, 1, &submitInfo, fence));
     VK_CHECK(vkWaitForFences(device->gpuDevice()->vkDevice, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
     device->gpuCommandBufferPool()->yield(cmdBuff);
+    queue->maintenanceCmdBuff = VK_NULL_HANDLE;
 }
 
 void insertImageMemoryBarrior(
@@ -268,16 +274,16 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
     if (gpuBuffer->mappedData) {
         memcpy(gpuBuffer->mappedData + offset, dataToUpload, sizeToUpload);
     } else {
-        const CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();
-        if (stagingBuffer->size < sizeToUpload) device->stagingBuffer()->resize(nextPowerOf2(sizeToUpload));
-
-        memcpy(stagingBuffer->mappedData, dataToUpload, sizeToUpload);
+        CCVKGPUBuffer stagingBuffer;
+        stagingBuffer.size = sizeToUpload;
+        device->gpuStagingBufferPool()->alloc(&stagingBuffer);
+        memcpy(stagingBuffer.mappedData, dataToUpload, sizeToUpload);
 
         CCVKGPUCommandBuffer cmdBuff;
         beginOneTimeCommands(device, &cmdBuff);
 
-        VkBufferCopy region{0, gpuBuffer->startOffset + offset, sizeToUpload};
-        vkCmdCopyBuffer(cmdBuff.vkCommandBuffer, stagingBuffer->vkBuffer, gpuBuffer->vkBuffer, 1, &region);
+        VkBufferCopy region{stagingBuffer.startOffset, gpuBuffer->startOffset + offset, sizeToUpload};
+        vkCmdCopyBuffer(cmdBuff.vkCommandBuffer, stagingBuffer.vkBuffer, gpuBuffer->vkBuffer, 1, &region);
 
         endOneTimeCommands(device, &cmdBuff);
     }
@@ -852,26 +858,27 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, uint8_t *const *buffers
         totalSize += regionSizes[i] = FormatSize(gpuTexture->format, w, h, region.texExtent.depth);
     }
 
-    CCVKGPUBuffer *stagingBuffer = device->stagingBuffer()->gpuBuffer();
-    if (stagingBuffer->size < totalSize) device->stagingBuffer()->resize(nextPowerOf2(totalSize));
+    CCVKGPUBuffer stagingBuffer;
+    stagingBuffer.size = totalSize;
+    device->gpuStagingBufferPool()->alloc(&stagingBuffer);
 
     vector<VkBufferImageCopy> stagingRegions(regionCount);
-    VkDeviceSize offset = stagingBuffer->startOffset;
+    VkDeviceSize offset = 0;
     for (size_t i = 0u; i < regionCount; ++i) {
         const BufferTextureCopy &region = regions[i];
         VkBufferImageCopy &stagingRegion = stagingRegions[i];
-        stagingRegion.bufferOffset = offset;
+        stagingRegion.bufferOffset = stagingBuffer.startOffset + offset;
         stagingRegion.bufferRowLength = region.buffStride;
         stagingRegion.bufferImageHeight = region.buffTexHeight;
         stagingRegion.imageSubresource = {gpuTexture->aspectMask, region.texSubres.mipLevel, region.texSubres.baseArrayLayer, region.texSubres.layerCount};
         stagingRegion.imageOffset = {region.texOffset.x, region.texOffset.y, region.texOffset.z};
         stagingRegion.imageExtent = {region.texExtent.width, region.texExtent.height, region.texExtent.depth};
 
-        memcpy(stagingBuffer->mappedData + offset, buffers[i], regionSizes[i]);
+        memcpy(stagingBuffer.mappedData + offset, buffers[i], regionSizes[i]);
         offset += regionSizes[i];
     }
 
-    vkCmdCopyBufferToImage(cmdBuff.vkCommandBuffer, stagingBuffer->vkBuffer, gpuTexture->vkImage,
+    vkCmdCopyBufferToImage(cmdBuff.vkCommandBuffer, stagingBuffer.vkBuffer, gpuTexture->vkImage,
                            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
 
     bool layoutReady = false;

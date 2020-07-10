@@ -124,6 +124,7 @@ public:
     VkSemaphore nextSignalSemaphore = VK_NULL_HANDLE;
     VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     CachedArray<VkCommandBuffer> commandBuffers;
+    VkCommandBuffer maintenanceCmdBuff = VK_NULL_HANDLE;
 };
 
 class CCVKGPUBuffer : public Object {
@@ -239,48 +240,6 @@ public:
     VkFence vkFence;
 };
 
-class CCVKGPUSemaphorePool : public Object {
-public:
-    CCVKGPUSemaphorePool(CCVKGPUDevice *device)
-    : _device(device) {
-    }
-
-    ~CCVKGPUSemaphorePool() {
-        for (VkSemaphore semaphore : _semaphores) {
-            vkDestroySemaphore(_device->vkDevice, semaphore, nullptr);
-        }
-        _semaphores.clear();
-        _count = 0;
-    }
-
-    VkSemaphore alloc() {
-        if (_count < _semaphores.size()) {
-            return _semaphores[_count++];
-        }
-
-        VkSemaphore semaphore = VK_NULL_HANDLE;
-        VkSemaphoreCreateInfo createInfo{VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
-        VK_CHECK(vkCreateSemaphore(_device->vkDevice, &createInfo, nullptr, &semaphore));
-        _semaphores.push_back(semaphore);
-        _count++;
-
-        return semaphore;
-    }
-
-    void reset() {
-        _count = 0;
-    }
-
-    uint size() {
-        return _count;
-    }
-
-private:
-    CCVKGPUDevice *_device;
-    uint _count = 0;
-    vector<VkSemaphore> _semaphores;
-};
-
 class CCVKGPUFencePool : public Object {
 public:
     CCVKGPUFencePool(CCVKGPUDevice *device)
@@ -324,6 +283,48 @@ private:
     CCVKGPUDevice *_device;
     uint _count = 0;
     vector<VkFence> _fences;
+};
+
+class CCVKGPUSemaphorePool : public Object {
+public:
+    CCVKGPUSemaphorePool(CCVKGPUDevice *device)
+    : _device(device) {
+    }
+
+    ~CCVKGPUSemaphorePool() {
+        for (VkSemaphore semaphore : _semaphores) {
+            vkDestroySemaphore(_device->vkDevice, semaphore, nullptr);
+        }
+        _semaphores.clear();
+        _count = 0;
+    }
+
+    VkSemaphore alloc() {
+        if (_count < _semaphores.size()) {
+            return _semaphores[_count++];
+        }
+
+        VkSemaphore semaphore = VK_NULL_HANDLE;
+        VkSemaphoreCreateInfo createInfo{VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
+        VK_CHECK(vkCreateSemaphore(_device->vkDevice, &createInfo, nullptr, &semaphore));
+        _semaphores.push_back(semaphore);
+        _count++;
+
+        return semaphore;
+    }
+
+    void reset() {
+        _count = 0;
+    }
+
+    uint size() {
+        return _count;
+    }
+
+private:
+    CCVKGPUDevice *_device;
+    uint _count = 0;
+    vector<VkSemaphore> _semaphores;
 };
 
 class CCVKGPUDescriptorSetPool : public Object {
@@ -468,6 +469,66 @@ private:
     CCVKGPUDevice *_device = nullptr;
     map<uint, CommandBufferPool> _pools;
     vector<uint> _counts;
+};
+
+class CCVKGPUStagingBufferPool : public Object {
+public:
+    struct Buffer {
+        VkBuffer vkBuffer = VK_NULL_HANDLE;
+        VkDeviceSize size = 16 * 1024 * 1024; // 16M per block by default
+        uint8_t *mappedData = nullptr;
+        VmaAllocation vmaAllocation = VK_NULL_HANDLE;
+
+        VkDeviceSize curOffset = 0u;
+    };
+
+    CCVKGPUStagingBufferPool(CCVKGPUDevice *device)
+    : _device(device) {
+    }
+
+    ~CCVKGPUStagingBufferPool() {
+        for (Buffer &buffer : _pool) {
+            vmaDestroyBuffer(_device->memoryAllocator, buffer.vkBuffer, buffer.vmaAllocation);
+        }
+        _pool.clear();
+    }
+
+    void alloc(CCVKGPUBuffer *gpuBuffer) {
+        size_t bufferCount = _pool.size();
+        Buffer *buffer = nullptr;
+        for (size_t idx = 0u; idx < bufferCount; idx++) {
+            buffer = &_pool[idx];
+            if (buffer->size - buffer->curOffset > gpuBuffer->size) {
+                break;
+            }
+        }
+        if (!buffer) {
+            _pool.resize(bufferCount + 1);
+            buffer = &_pool.back();
+            VkBufferCreateInfo bufferInfo{VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
+            bufferInfo.size = buffer->size;
+            bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+            VmaAllocationCreateInfo allocInfo{};
+            allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+            allocInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
+            VmaAllocationInfo res;
+            VK_CHECK(vmaCreateBuffer(_device->memoryAllocator, &bufferInfo, &allocInfo, &buffer->vkBuffer, &buffer->vmaAllocation, &res));
+            buffer->mappedData = (uint8_t *)res.pMappedData;
+        }
+        gpuBuffer->vkBuffer = buffer->vkBuffer;
+        gpuBuffer->startOffset = buffer->curOffset;
+        gpuBuffer->mappedData = buffer->mappedData + buffer->curOffset;
+    }
+
+    void reset() {
+        for (Buffer &buffer : _pool) {
+            buffer.curOffset = 0u;
+        }
+    }
+
+private:
+    CCVKGPUDevice *_device = nullptr;
+    vector<Buffer> _pool;
 };
 
 } // namespace gfx

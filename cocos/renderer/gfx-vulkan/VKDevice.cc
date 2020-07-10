@@ -63,8 +63,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     //const VkPhysicalDeviceVulkan12Features &deviceVulkan12Features = gpuContext->physicalDeviceVulkan12Features;
 
     // only enable the absolute essentials for now
-    vector<const char *> requestedValidationLayers{
-    };
+    vector<const char *> requestedValidationLayers{};
 #if COCOS2D_DEBUG > 0
     requestedValidationLayers.push_back("VK_LAYER_KHRONOS_validation");
 #endif
@@ -259,17 +258,11 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
 
     VK_CHECK(vmaCreateAllocator(&allocatorInfo, &_gpuDevice->memoryAllocator));
 
-    _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
     _gpuFencePool = CC_NEW(CCVKGPUFencePool(_gpuDevice));
+    _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
     _gpuDescriptorSetPool = CC_NEW(CCVKGPUDescriptorSetPool(_gpuDevice));
     _gpuCommandBufferPool = CC_NEW(CCVKGPUCommandBufferPool(_gpuDevice));
-
-    BufferInfo stagingBufferInfo;
-    stagingBufferInfo.usage = BufferUsage::TRANSFER_SRC;
-    stagingBufferInfo.memUsage = MemoryUsage::HOST;
-    stagingBufferInfo.stride = _defaultStagingBufferSize;
-    stagingBufferInfo.size = _defaultStagingBufferSize;
-    _stagingBuffer = (CCVKBuffer *)createBuffer(stagingBufferInfo);
+    _gpuStagingBufferPool = CC_NEW(CCVKGPUStagingBufferPool(_gpuDevice));
 
     QueueInfo queueInfo;
     queueInfo.type = QueueType::GRAPHICS;
@@ -362,8 +355,8 @@ void CCVKDevice::destroy() {
     }
     _depthStencilTextures.clear();
 
-    CC_SAFE_DESTROY(_stagingBuffer);
     CC_SAFE_DESTROY(_queue);
+    CC_SAFE_DELETE(_gpuStagingBufferPool);
     CC_SAFE_DELETE(_gpuCommandBufferPool);
     CC_SAFE_DELETE(_gpuDescriptorSetPool);
     CC_SAFE_DELETE(_gpuSemaphorePool);
@@ -482,18 +475,29 @@ void CCVKDevice::buildSwapchain() {
 void CCVKDevice::acquire() {
     if (!_swapchainReady) return;
 
+    // TODO: remove this hack
+    CCVKQueue *queue = (CCVKQueue *)_queue;
+    if (queue->gpuQueue()->maintenanceCmdBuff) {
+        VK_CHECK(vkEndCommandBuffer(queue->gpuQueue()->maintenanceCmdBuff));
+        VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &queue->gpuQueue()->maintenanceCmdBuff;
+        VK_CHECK(vkQueueSubmit(queue->gpuQueue()->vkQueue, 1, &submitInfo, VK_NULL_HANDLE));
+        queue->gpuQueue()->maintenanceCmdBuff = VK_NULL_HANDLE;
+    }
+
     VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
-    _gpuSemaphorePool->reset();
     _gpuFencePool->reset();
+    _gpuSemaphorePool->reset();
     _gpuDescriptorSetPool->reset();
     _gpuCommandBufferPool->reset();
+    _gpuStagingBufferPool->reset();
 
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
                                    ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
     // Clear queue stats
-    CCVKQueue *queue = (CCVKQueue *)_queue;
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;

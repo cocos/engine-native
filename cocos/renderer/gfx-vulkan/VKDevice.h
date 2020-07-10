@@ -11,6 +11,7 @@ class CCVKGPUSemaphorePool;
 class CCVKGPUFencePool;
 class CCVKGPUDescriptorSetPool;
 class CCVKGPUCommandBufferPool;
+class CCVKGPUStagingBufferPool;
 class CCVKTexture;
 class CCVKRenderPass;
 class CCVKBuffer;
@@ -51,11 +52,11 @@ public:
     CCVKGPUContext *gpuContext() const;
     CC_INLINE CCVKGPUDevice *gpuDevice() const { return _gpuDevice; }
     CC_INLINE CCVKGPUSwapchain *gpuSwapchain() { return _gpuSwapchain; }
-    CC_INLINE CCVKGPUSemaphorePool *gpuSemaphorePool() { return _gpuSemaphorePool; }
     CC_INLINE CCVKGPUFencePool *gpuFencePool() { return _gpuFencePool; }
+    CC_INLINE CCVKGPUSemaphorePool *gpuSemaphorePool() { return _gpuSemaphorePool; }
     CC_INLINE CCVKGPUDescriptorSetPool *gpuDescriptorSetPool() { return _gpuDescriptorSetPool; }
     CC_INLINE CCVKGPUCommandBufferPool *gpuCommandBufferPool() { return _gpuCommandBufferPool; }
-    CC_INLINE CCVKBuffer *stagingBuffer() { return _stagingBuffer; }
+    CC_INLINE CCVKGPUStagingBufferPool *gpuStagingBufferPool() { return _gpuStagingBufferPool; }
     CC_INLINE const vector<const char *> &getLayers() const { return _layers; }
     CC_INLINE const vector<const char *> &getExtensions() const { return _extensions; }
     CC_INLINE bool isSwapchainReady() const { return _swapchainReady; }
@@ -68,15 +69,13 @@ private:
     void buildSwapchain();
 
     CCVKGPUDevice *_gpuDevice = nullptr;
-    CCVKGPUSemaphorePool *_gpuSemaphorePool = nullptr;
     CCVKGPUFencePool *_gpuFencePool = nullptr;
+    CCVKGPUSemaphorePool *_gpuSemaphorePool = nullptr;
     CCVKGPUDescriptorSetPool *_gpuDescriptorSetPool = nullptr;
     CCVKGPUCommandBufferPool *_gpuCommandBufferPool = nullptr;
+    CCVKGPUStagingBufferPool *_gpuStagingBufferPool = nullptr;
     CCVKGPUSwapchain *_gpuSwapchain = nullptr;
     vector<CCVKTexture *> _depthStencilTextures;
-    CCVKBuffer *_stagingBuffer = nullptr;
-
-    uint32_t _defaultStagingBufferSize = 1024;
 
     vector<const char *> _layers;
     vector<const char *> _extensions;
