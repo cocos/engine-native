@@ -32,7 +32,7 @@ public:
     virtual void draw(InputAssembler *ia) = 0;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) = 0;
-    virtual void execute(const vector<CommandBuffer *> &cmd_buffs, uint32_t count) = 0;
+    virtual void execute(const CommandBufferList &cmd_buffs, uint32_t count) = 0;
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Queue *getQueue() const { return _queue; }

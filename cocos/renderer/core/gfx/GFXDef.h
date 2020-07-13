@@ -610,10 +610,7 @@ struct BufferTextureCopy {
     TextureSubres texSubres;
 };
 typedef vector<BufferTextureCopy> BufferTextureCopyList;
-
-struct DataArray {
-    vector<uint8_t *> datas;
-};
+typedef vector<const uint8_t *> BufferDataList;
 
 struct Viewport {
     int left = 0;
@@ -966,6 +963,7 @@ struct CommandBufferInfo {
     Queue *queue = nullptr;
     CommandBufferType type = CommandBufferType::PRIMARY;
 };
+typedef vector<CommandBuffer *> CommandBufferList;
 
 struct QueueInfo {
     QueueType type = QueueType::GRAPHICS;

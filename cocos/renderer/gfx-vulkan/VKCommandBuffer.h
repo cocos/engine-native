@@ -35,7 +35,7 @@ public:
     void draw(InputAssembler *ia);
     void updateBuffer(Buffer *buff, void *data, uint size, uint offset);
     void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions);
-    void execute(const vector<CommandBuffer *> &cmd_buffs, uint count);
+    void execute(const CommandBufferList &cmd_buffs, uint count);
 
     CCVKGPUCommandBuffer *gpuCommandBuffer() const { return _gpuCommandBuffer; }
 

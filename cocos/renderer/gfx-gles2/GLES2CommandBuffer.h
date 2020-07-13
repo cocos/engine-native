@@ -37,7 +37,7 @@ public:
     virtual void draw(InputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset) override;
     virtual void copyBufferToTexture(Buffer *src, Texture *dst, TextureLayout layout, const BufferTextureCopyList &regions) override;
-    virtual void execute(const vector<CommandBuffer *> &cmd_buffs, uint32_t count) override;
+    virtual void execute(const CommandBufferList &cmd_buffs, uint32_t count) override;
 
 private:
     void BindStates();

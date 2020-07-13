@@ -302,7 +302,7 @@ void CCMTLCommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureL
     }
 }
 
-void CCMTLCommandBuffer::execute(const vector<CommandBuffer *> &commandBuffs, uint32_t count) {
+void CCMTLCommandBuffer::execute(const CommandBufferList &commandBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         auto commandBuffer = static_cast<CCMTLCommandBuffer *>(commandBuffs[i]);
         _numDrawCalls += commandBuffer->_numDrawCalls;

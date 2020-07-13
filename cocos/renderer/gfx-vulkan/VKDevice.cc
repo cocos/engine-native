@@ -274,8 +274,8 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
         depthStencilTexInfo.type = TextureType::TEX2D;
         depthStencilTexInfo.usage = TextureUsageBit::DEPTH_STENCIL_ATTACHMENT | TextureUsageBit::SAMPLED;
         depthStencilTexInfo.format = _context->getDepthStencilFormat();
-        depthStencilTexInfo.width = 1;
-        depthStencilTexInfo.height = 1;
+        depthStencilTexInfo.width = _width;
+        depthStencilTexInfo.height = _height;
         CCVKTexture *texture = (CCVKTexture *)createTexture(depthStencilTexInfo);
         _depthStencilTextures.push_back(texture);
     }
@@ -475,24 +475,18 @@ void CCVKDevice::buildSwapchain() {
 void CCVKDevice::acquire() {
     if (!_swapchainReady) return;
 
-    // TODO: remove this hack
+    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
+
     CCVKQueue *queue = (CCVKQueue *)_queue;
-    if (queue->gpuQueue()->maintenanceCmdBuff) {
-        VK_CHECK(vkEndCommandBuffer(queue->gpuQueue()->maintenanceCmdBuff));
-        VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &queue->gpuQueue()->maintenanceCmdBuff;
-        VK_CHECK(vkQueueSubmit(queue->gpuQueue()->vkQueue, 1, &submitInfo, VK_NULL_HANDLE));
-        queue->gpuQueue()->maintenanceCmdBuff = VK_NULL_HANDLE;
+    // don't reset these pools if nothing was submitted last frame
+    if (!queue->gpuQueue()->maintenanceCmdBuff) {
+        _gpuFencePool->reset();
+        _gpuDescriptorSetPool->reset();
+        _gpuCommandBufferPool->reset();
+        _gpuStagingBufferPool->reset();
     }
 
-    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
-    _gpuFencePool->reset();
     _gpuSemaphorePool->reset();
-    _gpuDescriptorSetPool->reset();
-    _gpuCommandBufferPool->reset();
-    _gpuStagingBufferPool->reset();
-
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
                                    ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
@@ -640,8 +634,8 @@ PipelineState *CCVKDevice::createPipelineState(const PipelineStateInfo &info) {
     return nullptr;
 }
 
-void CCVKDevice::copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
-    CCVKCmdFuncCopyBuffersToTexture(this, buffers.datas.data(), ((CCVKTexture *)dst)->gpuTexture(), regions);
+void CCVKDevice::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
+    CCVKCmdFuncCopyBuffersToTexture(this, buffers.data(), ((CCVKTexture *)dst)->gpuTexture(), regions);
 }
 
 } // namespace gfx

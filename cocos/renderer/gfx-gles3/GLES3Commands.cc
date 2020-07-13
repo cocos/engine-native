@@ -1,9 +1,9 @@
 #include "GLES3Std.h"
 
 #include "GLES3Commands.h"
+#include "GLES3Context.h"
 #include "GLES3Device.h"
 #include "GLES3StateCache.h"
-#include "GLES3Context.h"
 
 #define BUFFER_OFFSET(idx) (static_cast<char *>(0) + (idx))
 
@@ -2080,7 +2080,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
     }
 }
 
-void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, uint8_t *const *buffers, GLES3GPUTexture *gpuTexture, const BufferTextureCopyList &regions) {
+void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const *buffers, GLES3GPUTexture *gpuTexture, const BufferTextureCopyList &regions) {
     GLuint &glTexture = device->stateCache->glTextures[device->stateCache->texUint];
     if (glTexture != gpuTexture->glTexture) {
         glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture);
@@ -2098,7 +2098,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, uint8_t *const *buffe
                 const BufferTextureCopy &region = regions[i];
                 w = region.texExtent.width;
                 h = region.texExtent.height;
-                uint8_t *buff = buffers[n++];
+                const uint8_t *buff = buffers[n++];
                 if (isCompressed) {
                     GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                     glCompressedTexSubImage2D(GL_TEXTURE_2D,
@@ -2133,7 +2133,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, uint8_t *const *buffe
                 for (uint z = region.texSubres.baseArrayLayer; z < layerCount; ++z) {
                     w = region.texExtent.width;
                     h = region.texExtent.height;
-                    uint8_t *buff = buffers[n++];
+                    const uint8_t *buff = buffers[n++];
                     if (isCompressed) {
                         GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                         glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY,
@@ -2169,7 +2169,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, uint8_t *const *buffe
                 w = region.texExtent.width;
                 h = region.texExtent.height;
                 d = region.texExtent.depth;
-                uint8_t *buff = buffers[n++];
+                const uint8_t *buff = buffers[n++];
                 if (isCompressed) {
                     GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                     glCompressedTexSubImage3D(GL_TEXTURE_3D,
@@ -2205,7 +2205,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, uint8_t *const *buffe
                 for (f = region.texSubres.baseArrayLayer; f < face_count; ++f) {
                     w = region.texExtent.width;
                     h = region.texExtent.height;
-                    uint8_t *buff = buffers[n++];
+                    const uint8_t *buff = buffers[n++];
                     if (isCompressed) {
                         GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                         glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f,

@@ -403,7 +403,7 @@ void CCVKCommandBuffer::draw(InputAssembler *ia) {
     }
 }
 
-void CCVKCommandBuffer::execute(const vector<CommandBuffer *> &cmdBuffs, uint count) {
+void CCVKCommandBuffer::execute(const CommandBufferList &cmdBuffs, uint count) {
     if (!count) {
         return;
     }

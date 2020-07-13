@@ -257,8 +257,8 @@ PipelineState *CCMTLDevice::createPipelineState(const PipelineStateInfo &info) {
     return nullptr;
 }
 
-void CCMTLDevice::copyBuffersToTexture(const DataArray &buffers, Texture *dst, const BufferTextureCopyList &regions) {
-    static_cast<CCMTLTexture *>(dst)->update(buffers.datas.data(), regions);
+void CCMTLDevice::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
+    static_cast<CCMTLTexture *>(dst)->update(buffers.data(), regions);
 }
 
 void CCMTLDevice::blitBuffer(void *srcData, uint offset, uint size, void *dstBuffer) {

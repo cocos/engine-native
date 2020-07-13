@@ -266,7 +266,7 @@ void GLES3CommandBuffer::copyBufferToTexture(Buffer *src, Texture *dst, TextureL
     }
 }
 
-void GLES3CommandBuffer::execute(const vector<CommandBuffer *> &cmd_buffs, uint32_t count) {
+void GLES3CommandBuffer::execute(const CommandBufferList &cmd_buffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         GLES3CommandBuffer *cmd_buff = (GLES3CommandBuffer *)cmd_buffs[i];
 

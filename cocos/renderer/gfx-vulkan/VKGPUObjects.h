@@ -63,6 +63,7 @@ public:
 
     VkImage vkImage = VK_NULL_HANDLE;
     VmaAllocation vmaAllocation = VK_NULL_HANDLE;
+    VkImageLayout layout = VK_IMAGE_LAYOUT_UNDEFINED;
     VkImageLayout currentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     VkAccessFlags accessMask = VK_ACCESS_SHADER_READ_BIT;
     VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -518,6 +519,7 @@ public:
         gpuBuffer->vkBuffer = buffer->vkBuffer;
         gpuBuffer->startOffset = buffer->curOffset;
         gpuBuffer->mappedData = buffer->mappedData + buffer->curOffset;
+        buffer->curOffset += gpuBuffer->size;
     }
 
     void reset() {
