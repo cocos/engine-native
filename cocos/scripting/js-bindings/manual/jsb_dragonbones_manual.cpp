@@ -445,6 +445,7 @@ bool register_all_dragonbones_manual(se::Object* obj)
 {
     // add by fins
     __jsb_dragonBones_Slot_proto->defineProperty("globalTransformMatrix", _SE(js_cocos2dx_dragonbones_Slot_get_globalTransformMatrix), nullptr);
+    // add by fins
     __jsb_dragonBones_Animation_proto->defineProperty("animations", _SE(js_cocos2dx_dragonbones_Animation_get_animations), nullptr);
 
     __jsb_dragonBones_Armature_proto->defineFunction("getDisplay", _SE(js_cocos2dx_dragonbones_Armature_getDisplay));
