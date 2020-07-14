@@ -40,6 +40,47 @@
 
 using namespace cocos2d;
 
+// add by fins
+static bool js_cocos2dx_dragonbones_Slot_get_globalTransformMatrix(se::State &s)
+{
+    dragonBones::Slot *cobj = (dragonBones::Slot *)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_Slot_get_globalTransformMatrix : Invalid Native Object");
+    const auto &args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0)
+    {
+        dragonBones::Matrix *result = cobj->getGlobalTransformMatrix();
+        ok &= native_ptr_to_rooted_seval<dragonBones::Matrix>((dragonBones::Matrix *)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_Slot_get_globalTransformMatrix : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_cocos2dx_dragonbones_Slot_get_globalTransformMatrix)
+
+// add by fins
+static bool js_cocos2dx_dragonbones_Animation_get_animations(se::State &s)
+{
+    dragonBones::Animation *cobj = (dragonBones::Animation *)s.nativeThisObject();
+    se::HandleObject retObj(se::Object::createPlainObject());
+    bool ok = false;
+    se::Value tmp;
+    for (const auto &e : cobj->getAnimations())
+    {
+        if (!e.first.empty())
+        {
+            ok = native_ptr_to_rooted_seval<dragonBones::AnimationData>(e.second, __jsb_dragonBones_AnimationData_class, &tmp);
+            SE_PRECONDITION2(ok, false, "Convert dragonBones::AnimationData to se::Value failed!");
+            retObj->setProperty(e.first.c_str(), tmp);
+        }
+    }
+    s.rval().setObject(retObj);
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_dragonbones_Animation_get_animations)
+
 static bool js_cocos2dx_dragonbones_Armature_getDisplay(se::State& s)
 {
     if (s.args().size() == 0)
@@ -95,7 +136,7 @@ static bool js_cocos2dx_dragonbones_Armature_getBones(se::State& s)
     dragonBones::Armature* cobj = (dragonBones::Armature*)s.nativeThisObject();
     const auto& result = cobj->getBones();
     se::HandleObject arr(se::Object::createArrayObject(result.size()));
-    
+
     uint32_t i = 0;
     se::Value tmp;
     bool ok = true;
@@ -111,7 +152,7 @@ static bool js_cocos2dx_dragonbones_Armature_getBones(se::State& s)
     }
     if (ok)
         s.rval().setObject(arr);
-    
+
     SE_PRECONDITION2(ok, false, "Convert getBones to se::Value failed!");
     return true;
 }
@@ -302,7 +343,7 @@ static bool js_cocos2dx_dragonbones_Slot_set_displayIndex(se::State& s)
     const auto& args = s.args();
     dragonBones::Slot* cobj = (dragonBones::Slot*)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_Slot_set_displayIndex : Invalid Native Object");
-    
+
     CC_UNUSED bool ok = true;
     int32_t arg0;
     ok &= seval_to_int32(args[0], &arg0);
@@ -316,7 +357,7 @@ static bool js_cocos2dx_dragonbones_Slot_get_displayIndex(se::State& s)
 {
     dragonBones::Slot* cobj = (dragonBones::Slot*)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_Slot_get_displayIndex : Invalid Native Object");
-    
+
     const int32_t ret = cobj->getDisplayIndex();
     bool ok = int32_to_seval(ret, &s.rval());
     SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_Slot_get_displayIndex to se::Value failed!");
@@ -402,6 +443,10 @@ SE_BIND_FUNC(js_cocos2dx_dragonbones_BaseFactory_parseTextureAtlasData)
 
 bool register_all_dragonbones_manual(se::Object* obj)
 {
+    // add by fins
+    __jsb_dragonBones_Slot_proto->defineProperty("globalTransformMatrix", _SE(js_cocos2dx_dragonbones_Slot_get_globalTransformMatrix), nullptr);
+    __jsb_dragonBones_Animation_proto->defineProperty("animations", _SE(js_cocos2dx_dragonbones_Animation_get_animations), nullptr);
+
     __jsb_dragonBones_Armature_proto->defineFunction("getDisplay", _SE(js_cocos2dx_dragonbones_Armature_getDisplay));
     __jsb_dragonBones_Armature_proto->defineFunction("getSlots", _SE(js_cocos2dx_dragonbones_Armature_getSlots));
     __jsb_dragonBones_Armature_proto->defineFunction("getBones", _SE(js_cocos2dx_dragonbones_Armature_getBones));
@@ -422,7 +467,7 @@ bool register_all_dragonbones_manual(se::Object* obj)
     __jsb_dragonBones_Slot_proto->defineFunction("setDisplay", _SE(js_cocos2dx_dragonbones_Slot_setDisplay));
 
     __jsb_dragonBones_BaseFactory_proto->defineFunction("parseTextureAtlasData", _SE(js_cocos2dx_dragonbones_BaseFactory_parseTextureAtlasData));
-    
+
     dragonBones::BaseObject::setObjectRecycleOrDestroyCallback([](dragonBones::BaseObject* obj, int type){
 
         std::string typeName = typeid(*obj).name();
@@ -482,9 +527,9 @@ bool register_all_dragonbones_manual(se::Object* obj)
         {
             return;
         }
-        
+
         dragonBones::DragonBones::checkInPool = false;
-        
+
         auto factory = dragonBones::CCFactory::getFactory();
         factory->stopSchedule();
 
@@ -498,12 +543,12 @@ bool register_all_dragonbones_manual(se::Object* obj)
                 dbObj->returnToPool();
             }
         }
-        
+
         dragonBones::BaseObject::clearPool(0);
         dragonBones::CCFactory::destroyFactory();
-        
+
         dragonBones::DragonBones::checkInPool = true;
-        
+
         // Don't need to use copy operator since we only print leak object below.
         auto& refAllDragonBonesObjects = dragonBones::BaseObject::getAllObjects();
         SE_LOGD("After cleanup, dragonbones object remained count: %d\n", (int)refAllDragonBonesObjects.size());
