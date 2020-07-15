@@ -48,7 +48,10 @@
 #define GFX_INVALID_BINDING       ((uint8_t)-1)
 #define GFX_INVALID_HANDLE        ((uint)-1)
 
-bool js_Device_copyBuffersToTexture(se::State &s, cc::gfx::Device *cobj) {
+bool js_gfx_Device_copyBuffersToTexture(se::State &s) {
+    cc::gfx::Device *cobj = (cc::gfx::Device *)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_Device_copyBuffersToTexture : Invalid Native Object");
+
     const auto &args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
@@ -92,8 +95,12 @@ bool js_Device_copyBuffersToTexture(se::State &s, cc::gfx::Device *cobj) {
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
     return false;
 }
+SE_BIND_FUNC(js_gfx_Device_copyBuffersToTexture)
 
-bool js_Device_copyTexImagesToTexture(se::State &s, cc::gfx::Device *cobj) {
+bool js_gfx_Device_copyTexImagesToTexture(se::State &s) {
+    cc::gfx::Device *cobj = (cc::gfx::Device *)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_Device_copyBuffersToTexture : Invalid Native Object");
+
     const auto &args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
@@ -129,6 +136,7 @@ bool js_Device_copyTexImagesToTexture(se::State &s, cc::gfx::Device *cobj) {
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
     return false;
 }
+SE_BIND_FUNC(js_gfx_Device_copyTexImagesToTexture)
 
 static bool js_gfx_Device_createTexture(se::State &s) {
     cc::gfx::Device *cobj = (cc::gfx::Device *)s.nativeThisObject();
@@ -188,70 +196,6 @@ static bool js_gfx_Texture_initialize(se::State &s) {
     return false;
 }
 SE_BIND_FUNC(js_gfx_Texture_initialize)
-
-#ifdef USE_VULKAN
-static bool js_gfx_CCVKDevice_copyBuffersToTexture(se::State &s) {
-    cc::gfx::CCVKDevice *cobj = (cc::gfx::CCVKDevice *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_CCVKDevice_copyBuffersToTexture : Invalid Native Object");
-    return js_Device_copyBuffersToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_CCVKDevice_copyBuffersToTexture)
-
-static bool js_gfx_CCVKDevice_copyTexImagesToTexture(se::State &s) {
-    cc::gfx::CCVKDevice *cobj = (cc::gfx::CCVKDevice *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_CCVKDevice_copyTexImagesToTexture : Invalid Native Object");
-    return js_Device_copyTexImagesToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_CCVKDevice_copyTexImagesToTexture);
-#endif // USE_GLES3
-
-#ifdef USE_METAL
-static bool js_gfx_CCMTLDevice_copyBuffersToTexture(se::State &s) {
-    cc::gfx::CCMTLDevice *cobj = (cc::gfx::CCMTLDevice *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_CCMTLDevice_copyBuffersToTexture : Invalid Native Object");
-    return js_Device_copyBuffersToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_CCMTLDevice_copyBuffersToTexture)
-
-static bool js_gfx_CCMTLDevice_copyTexImagesToTexture(se::State &s) {
-    cc::gfx::CCMTLDevice *cobj = (cc::gfx::CCMTLDevice *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_CCMTLDevice_copyTexImagesToTexture : Invalid Native Object");
-    return js_Device_copyTexImagesToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_CCMTLDevice_copyTexImagesToTexture);
-#endif // USE_METAL
-
-#ifdef USE_GLES3
-static bool js_gfx_GLES3Device_copyBuffersToTexture(se::State &s) {
-    cc::gfx::GLES3Device *cobj = (cc::gfx::GLES3Device *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GLES3Device_copyBuffersToTexture : Invalid Native Object");
-    return js_Device_copyBuffersToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_GLES3Device_copyBuffersToTexture)
-
-static bool js_gfx_GLES3Device_copyTexImagesToTexture(se::State &s) {
-    cc::gfx::GLES3Device *cobj = (cc::gfx::GLES3Device *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GLES3Device_copyTexImagesToTexture : Invalid Native Object");
-    return js_Device_copyTexImagesToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_GLES3Device_copyTexImagesToTexture);
-#endif // USE_GLES3
-
-#ifdef USE_GLES2
-static bool js_gfx_GLES2Device_copyBuffersToTexture(se::State &s) {
-    cc::gfx::GLES2Device *cobj = (cc::gfx::GLES2Device *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GLES2Device_copyBuffersToTexture : Invalid Native Object");
-    return js_Device_copyBuffersToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_GLES2Device_copyBuffersToTexture)
-
-static bool js_gfx_GLES2Device_copyTexImagesToTexture(se::State &s) {
-    cc::gfx::GLES2Device *cobj = (cc::gfx::GLES2Device *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_GLES2Device_copyTexImagesToTexture : Invalid Native Object");
-    return js_Device_copyTexImagesToTexture(s, cobj);
-}
-SE_BIND_FUNC(js_gfx_GLES2Device_copyTexImagesToTexture);
-#endif // USE_GLES2
 
 static bool js_gfx_GFXBuffer_update(se::State &s) {
     cc::gfx::Buffer *cobj = (cc::gfx::Buffer *)s.nativeThisObject();
@@ -686,6 +630,54 @@ static bool js_gfx_CommandBuffer_execute(se::State &s) {
 }
 SE_BIND_FUNC(js_gfx_CommandBuffer_execute)
 
+static bool js_gfx_CommandBuffer_copyBuffersToTexture(se::State &s) {
+    cc::gfx::CommandBuffer *cobj = (cc::gfx::CommandBuffer *)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_CommandBuffer_copyBuffersToTexture : Invalid Native Object");
+
+    const auto &args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        cc::gfx::BufferDataList arg0;
+        cc::gfx::Texture *arg1 = nullptr;
+        cc::gfx::BufferTextureCopyList arg2;
+        if (args[0].isObject()) {
+            se::Object *dataObj = args[0].toObject();
+            SE_PRECONDITION2(dataObj->isArray(), false, "Buffers must be an array!");
+            uint32_t length = 0;
+            dataObj->getArrayLength(&length);
+            arg0.resize(length);
+
+            se::Value value;
+            for (uint32_t i = 0; i < length; ++i) {
+                if (dataObj->getArrayElement(i, &value)) {
+                    uint8_t *ptr = nullptr;
+                    CC_UNUSED size_t dataLength = 0;
+                    se::Object *obj = value.toObject();
+                    if (obj->isArrayBuffer()) {
+                        ok = obj->getArrayBufferData(&ptr, &dataLength);
+                        SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
+                    } else if (obj->isTypedArray()) {
+                        ok = obj->getTypedArrayData(&ptr, &dataLength);
+                        SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
+                    } else {
+                        assert(false);
+                    }
+                    arg0[i] = ptr;
+                }
+            }
+        }
+        ok &= seval_to_native_ptr(args[1], &arg1);
+        ok &= seval_to_std_vector(args[2], &arg2);
+        SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_copyBuffersToTexture : Error processing arguments");
+        cobj->copyBuffersToTexture(arg0, arg1, arg2);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_CommandBuffer_copyBuffersToTexture)
+
 static bool js_gfx_InputAssembler_extractDrawInfo(se::State &s) {
     cc::gfx::InputAssembler *cobj = (cc::gfx::InputAssembler *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_gfx_InputAssembler_extractDrawInfo : Invalid Native Object");
@@ -725,38 +717,35 @@ static bool js_gfx_InputAssembler_extractDrawInfo(se::State &s) {
 SE_BIND_FUNC(js_gfx_InputAssembler_extractDrawInfo)
 
 bool register_all_gfx_manual(se::Object *obj) {
+    __jsb_cc_gfx_Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_Device_copyBuffersToTexture));
+    __jsb_cc_gfx_Device_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_Device_copyTexImagesToTexture));
+    __jsb_cc_gfx_Device_proto->defineFunction("createTexture", _SE(js_gfx_Device_createTexture));
+
     __jsb_cc_gfx_Buffer_proto->defineFunction("update", _SE(js_gfx_GFXBuffer_update));
 
     __jsb_cc_gfx_BlendState_proto->defineProperty("targets", _SE(js_gfx_BlendState_get_targets), _SE(js_gfx_BlendState_set_targets));
 
     __jsb_cc_gfx_CommandBuffer_proto->defineFunction("execute", _SE(js_gfx_CommandBuffer_execute));
+    __jsb_cc_gfx_CommandBuffer_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_CommandBuffer_copyBuffersToTexture));
 
     __jsb_cc_gfx_InputAssembler_proto->defineFunction("extractDrawInfo", _SE(js_gfx_InputAssembler_extractDrawInfo));
+
+    __jsb_cc_gfx_Texture_proto->defineFunction("initialize", _SE(js_gfx_Texture_initialize));
 
     js_register_gfx_SubPass(obj);
 
 #if defined USE_VULKAN
     register_all_vk(obj);
-    __jsb_cc_gfx_CCVKDevice_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_CCVKDevice_copyBuffersToTexture));
-    __jsb_cc_gfx_CCVKDevice_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_CCVKDevice_copyTexImagesToTexture));
 #endif
 #if defined USE_GLES3
     register_all_gles3(obj);
-    __jsb_cc_gfx_GLES3Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES3Device_copyBuffersToTexture));
-    __jsb_cc_gfx_GLES3Device_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_GLES3Device_copyTexImagesToTexture));
 #endif
 #ifdef USE_GLES2
     register_all_gles2(obj);
-    __jsb_cc_gfx_GLES2Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_GLES2Device_copyBuffersToTexture));
-    __jsb_cc_gfx_GLES2Device_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_GLES2Device_copyTexImagesToTexture));
 #endif
 #if defined USE_METAL
     register_all_mtl(obj);
-    __jsb_cc_gfx_CCMTLDevice_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_CCMTLDevice_copyBuffersToTexture));
-    __jsb_cc_gfx_CCMTLDevice_proto->defineFunction("copyTexImagesToTexture", _SE(js_gfx_CCMTLDevice_copyTexImagesToTexture));
 #endif
-    __jsb_cc_gfx_Device_proto->defineFunction("createTexture", _SE(js_gfx_Device_createTexture));
-    __jsb_cc_gfx_Texture_proto->defineFunction("initialize", _SE(js_gfx_Texture_initialize));
 
     return true;
 }

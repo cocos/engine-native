@@ -15397,31 +15397,6 @@ static bool js_gfx_CommandBuffer_setDepthBound(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_CommandBuffer_setDepthBound)
 
-static bool js_gfx_CommandBuffer_copyBufferToTexture(se::State& s)
-{
-    cc::gfx::CommandBuffer* cobj = (cc::gfx::CommandBuffer*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_CommandBuffer_copyBufferToTexture : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 4) {
-        cc::gfx::Buffer* arg0 = nullptr;
-        cc::gfx::Texture* arg1 = nullptr;
-        cc::gfx::TextureLayout arg2;
-        std::vector<cc::gfx::BufferTextureCopy> arg3;
-        ok &= seval_to_native_ptr(args[0], &arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[2], &tmp); arg2 = (cc::gfx::TextureLayout)tmp; } while(false);
-        ok &= seval_to_std_vector(args[3], &arg3);
-        SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_copyBufferToTexture : Error processing arguments");
-        cobj->copyBufferToTexture(arg0, arg1, arg2, arg3);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
-    return false;
-}
-SE_BIND_FUNC(js_gfx_CommandBuffer_copyBufferToTexture)
-
 static bool js_gfx_CommandBuffer_getQueue(se::State& s)
 {
     cc::gfx::CommandBuffer* cobj = (cc::gfx::CommandBuffer*)s.nativeThisObject();
@@ -15919,7 +15894,6 @@ bool js_register_gfx_CommandBuffer(se::Object* obj)
     cls->defineFunction("draw", _SE(js_gfx_CommandBuffer_draw));
     cls->defineFunction("setBlendConstants", _SE(js_gfx_CommandBuffer_setBlendConstants));
     cls->defineFunction("setDepthBound", _SE(js_gfx_CommandBuffer_setDepthBound));
-    cls->defineFunction("copyBufferToTexture", _SE(js_gfx_CommandBuffer_copyBufferToTexture));
     cls->defineFunction("getQueue", _SE(js_gfx_CommandBuffer_getQueue));
     cls->defineFunction("setLineWidth", _SE(js_gfx_CommandBuffer_setLineWidth));
     cls->defineFunction("updateBuffer", _SE(js_gfx_CommandBuffer_updateBuffer));

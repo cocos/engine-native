@@ -279,7 +279,7 @@ PipelineState *GLES3Device::createPipelineState(const PipelineStateInfo &info) {
 }
 
 void GLES3Device::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
-    GLES3CmdFuncCopyBuffersToTexture(this, buffers.data(), ((GLES3Texture *)dst)->gpuTexture(), regions);
+    GLES3CmdFuncCopyBuffersToTexture(this, buffers, ((GLES3Texture *)dst)->gpuTexture(), regions);
 }
 
 } // namespace gfx
