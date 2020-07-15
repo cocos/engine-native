@@ -259,6 +259,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     VK_CHECK(vmaCreateAllocator(&allocatorInfo, &_gpuDevice->memoryAllocator));
 
     _gpuFencePool = CC_NEW(CCVKGPUFencePool(_gpuDevice));
+    _gpuRecycleBin = CC_NEW(CCVKGPURecycleBin(_gpuDevice));
     _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
     _gpuDescriptorSetPool = CC_NEW(CCVKGPUDescriptorSetPool(_gpuDevice));
     _gpuCommandBufferPool = CC_NEW(CCVKGPUCommandBufferPool(_gpuDevice));
@@ -266,7 +267,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
 
     QueueInfo queueInfo;
     queueInfo.type = QueueType::GRAPHICS;
-    queueInfo.forceSync = true;
+    //queueInfo.forceSync = true;
     _queue = createQueue(queueInfo);
 
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
@@ -321,6 +322,8 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
 }
 
 void CCVKDevice::destroy() {
+    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
+
     if (_gpuSwapchain) {
         if (_gpuSwapchain->vkSwapchain != VK_NULL_HANDLE) {
             _gpuSwapchain->depthStencilImageViews.clear();
@@ -345,21 +348,21 @@ void CCVKDevice::destroy() {
             vkDestroySwapchainKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, nullptr);
             _gpuSwapchain->vkSwapchain = VK_NULL_HANDLE;
         }
-
-        CC_DELETE(_gpuSwapchain);
-        _gpuSwapchain = nullptr;
     }
 
     for (CCVKTexture *texture : _depthStencilTextures) {
         CC_SAFE_DESTROY(texture);
     }
     _depthStencilTextures.clear();
+    _gpuRecycleBin->clear();
 
     CC_SAFE_DESTROY(_queue);
+    CC_SAFE_DELETE(_gpuSwapchain);
     CC_SAFE_DELETE(_gpuStagingBufferPool);
     CC_SAFE_DELETE(_gpuCommandBufferPool);
     CC_SAFE_DELETE(_gpuDescriptorSetPool);
     CC_SAFE_DELETE(_gpuSemaphorePool);
+    CC_SAFE_DELETE(_gpuRecycleBin);
     CC_SAFE_DELETE(_gpuFencePool);
 
     if (_gpuDevice) {
@@ -481,6 +484,7 @@ void CCVKDevice::acquire() {
     // don't reset these pools if nothing was submitted last frame
     if (!queue->gpuQueue()->maintenanceCmdBuff) {
         _gpuFencePool->reset();
+        _gpuRecycleBin->clear();
         _gpuDescriptorSetPool->reset();
         _gpuCommandBufferPool->reset();
         _gpuStagingBufferPool->reset();

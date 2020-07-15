@@ -55,8 +55,8 @@ public:
     uint height = 0u;
     uint depth = 1u;
     uint size = 0u;
-    uint arrayLayer = 1u;
-    uint mipLevel = 1u;
+    uint arrayLayers = 1u;
+    uint mipLevels = 1u;
     SampleCount samples = SampleCount::X1;
     TextureFlags flags = TextureFlagBit::NONE;
     bool isPowerOf2 = false;
@@ -77,6 +77,8 @@ public:
     Format format = Format::UNKNOWN;
     uint baseLevel = 0u;
     uint levelCount = 1u;
+    uint baseLayer = 0u;
+    uint layerCount = 1u;
     VkImageView vkImageView = VK_NULL_HANDLE;
 };
 
@@ -282,7 +284,7 @@ public:
 
 private:
     CCVKGPUDevice *_device;
-    uint _count = 0;
+    uint _count = 0u;
     vector<VkFence> _fences;
 };
 
@@ -324,7 +326,7 @@ public:
 
 private:
     CCVKGPUDevice *_device;
-    uint _count = 0;
+    uint _count = 0u;
     vector<VkSemaphore> _semaphores;
 };
 
@@ -531,6 +533,68 @@ public:
 private:
     CCVKGPUDevice *_device = nullptr;
     vector<Buffer> _pool;
+};
+
+class CCVKGPURecycleBin : public Object {
+public:
+    struct Buffer {
+        VkBuffer vkBuffer;
+        VmaAllocation vmaAllocation;
+    };
+    struct Image {
+        VkImage vkImage;
+        VmaAllocation vmaAllocation;
+    };
+    struct Resource {
+        ObjectType type = ObjectType::UNKNOWN;
+        union {
+            // resizable resources, cannot take over directly
+            // or descriptor sets won't work
+            Buffer buffer;
+            Image image;
+            VkImageView vkImageView;
+
+            CCVKGPURenderPass *gpuRenderPass;
+            CCVKGPUFramebuffer *gpuFramebuffer;
+            CCVKGPUSampler *gpuSampler;
+            CCVKGPUShader *gpuShader;
+            CCVKGPUPipelineState *gpuPipelineState;
+            CCVKGPUFence *gpuFence;
+        };
+    };
+    CCVKGPURecycleBin(CCVKGPUDevice *device)
+    : _device(device) {
+        _resources.resize(16);
+    }
+
+    ~CCVKGPURecycleBin() {
+    }
+
+#define DEFINE_COLLECT_FN(_type, typeValue, expr) \
+    void collect(_type *gpuRes) {                 \
+        if (_resources.size() <= _count) {        \
+            _resources.resize(_count * 2);        \
+        }                                         \
+        Resource &res = _resources[_count++];     \
+        res.type = typeValue;                     \
+        expr;                                     \
+    }
+    DEFINE_COLLECT_FN(CCVKGPUBuffer, ObjectType::BUFFER, (res.buffer = {gpuRes->vkBuffer, gpuRes->vmaAllocation}))
+    DEFINE_COLLECT_FN(CCVKGPUTexture, ObjectType::TEXTURE, (res.image = {gpuRes->vkImage, gpuRes->vmaAllocation}))
+    DEFINE_COLLECT_FN(CCVKGPUTextureView, ObjectType::TEXTURE_VIEW, res.vkImageView = gpuRes->vkImageView)
+    DEFINE_COLLECT_FN(CCVKGPURenderPass, ObjectType::RENDER_PASS, res.gpuRenderPass = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUFramebuffer, ObjectType::FRAMEBUFFER, res.gpuFramebuffer = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUSampler, ObjectType::SAMPLER, res.gpuSampler = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUShader, ObjectType::SHADER, res.gpuShader = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUPipelineState, ObjectType::PIPELINE_STATE, res.gpuPipelineState = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUFence, ObjectType::FENCE, res.gpuFence = gpuRes)
+
+    void clear();
+
+private:
+    CCVKGPUDevice *_device = nullptr;
+    vector<Resource> _resources;
+    uint _count = 0u;
 };
 
 } // namespace gfx

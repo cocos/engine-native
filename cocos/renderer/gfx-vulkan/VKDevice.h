@@ -4,17 +4,20 @@
 namespace cc {
 namespace gfx {
 
-class CCVKGPUContext;
+class CCVKBuffer;
+class CCVKTexture;
+class CCVKRenderPass;
+
 class CCVKGPUDevice;
+class CCVKGPUContext;
 class CCVKGPUSwapchain;
-class CCVKGPUSemaphorePool;
+
 class CCVKGPUFencePool;
+class CCVKGPURecycleBin;
+class CCVKGPUSemaphorePool;
 class CCVKGPUDescriptorSetPool;
 class CCVKGPUCommandBufferPool;
 class CCVKGPUStagingBufferPool;
-class CCVKTexture;
-class CCVKRenderPass;
-class CCVKBuffer;
 
 class CC_VULKAN_API CCVKDevice : public Device {
 public:
@@ -53,6 +56,7 @@ public:
     CC_INLINE CCVKGPUDevice *gpuDevice() const { return _gpuDevice; }
     CC_INLINE CCVKGPUSwapchain *gpuSwapchain() { return _gpuSwapchain; }
     CC_INLINE CCVKGPUFencePool *gpuFencePool() { return _gpuFencePool; }
+    CC_INLINE CCVKGPURecycleBin *gpuRecycleBin() { return _gpuRecycleBin; }
     CC_INLINE CCVKGPUSemaphorePool *gpuSemaphorePool() { return _gpuSemaphorePool; }
     CC_INLINE CCVKGPUDescriptorSetPool *gpuDescriptorSetPool() { return _gpuDescriptorSetPool; }
     CC_INLINE CCVKGPUCommandBufferPool *gpuCommandBufferPool() { return _gpuCommandBufferPool; }
@@ -70,6 +74,7 @@ private:
 
     CCVKGPUDevice *_gpuDevice = nullptr;
     CCVKGPUFencePool *_gpuFencePool = nullptr;
+    CCVKGPURecycleBin *_gpuRecycleBin = nullptr;
     CCVKGPUSemaphorePool *_gpuSemaphorePool = nullptr;
     CCVKGPUDescriptorSetPool *_gpuDescriptorSetPool = nullptr;
     CCVKGPUCommandBufferPool *_gpuCommandBufferPool = nullptr;

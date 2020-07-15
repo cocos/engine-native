@@ -40,11 +40,9 @@ enum class ObjectType : uint8_t {
     PIPELINE_STATE,
     BINDING_LAYOUT,
     INPUT_ASSEMBLER,
-    COMMAND_ALLOCATOR,
     COMMAND_BUFFER,
     FENCE,
     QUEUE,
-    WINDOW,
 };
 
 enum class Status : uint8_t {
