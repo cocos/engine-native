@@ -127,7 +127,7 @@ public:
     VkSemaphore nextSignalSemaphore = VK_NULL_HANDLE;
     VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     CachedArray<VkCommandBuffer> commandBuffers;
-    VkCommandBuffer maintenanceCmdBuff = VK_NULL_HANDLE;
+    VkFence lastAutoFence = VK_NULL_HANDLE;
 };
 
 class CCVKGPUBuffer : public Object {
@@ -399,12 +399,6 @@ private:
 
 class CCVKGPUCommandBufferPool : public Object {
 public:
-    struct CommandBufferPool {
-        VkCommandPool vkCommandPool = VK_NULL_HANDLE;
-        CachedArray<VkCommandBuffer> commandBuffers[2];
-        CachedArray<VkCommandBuffer> usedCommandBuffers[2];
-    };
-
     CCVKGPUCommandBufferPool(CCVKGPUDevice *device)
     : _device(device) {
     }
@@ -469,6 +463,12 @@ public:
     }
 
 private:
+    struct CommandBufferPool {
+        VkCommandPool vkCommandPool = VK_NULL_HANDLE;
+        CachedArray<VkCommandBuffer> commandBuffers[2];
+        CachedArray<VkCommandBuffer> usedCommandBuffers[2];
+    };
+
     CCVKGPUDevice *_device = nullptr;
     map<uint, CommandBufferPool> _pools;
     vector<uint> _counts;
@@ -476,15 +476,6 @@ private:
 
 class CCVKGPUStagingBufferPool : public Object {
 public:
-    struct Buffer {
-        VkBuffer vkBuffer = VK_NULL_HANDLE;
-        VkDeviceSize size = 16 * 1024 * 1024; // 16M per block by default
-        uint8_t *mappedData = nullptr;
-        VmaAllocation vmaAllocation = VK_NULL_HANDLE;
-
-        VkDeviceSize curOffset = 0u;
-    };
-
     CCVKGPUStagingBufferPool(CCVKGPUDevice *device)
     : _device(device) {
     }
@@ -500,8 +491,9 @@ public:
         size_t bufferCount = _pool.size();
         Buffer *buffer = nullptr;
         for (size_t idx = 0u; idx < bufferCount; idx++) {
-            buffer = &_pool[idx];
-            if (buffer->size - buffer->curOffset > gpuBuffer->size) {
+            Buffer *cur = &_pool[idx];
+            if (cur->size - cur->curOffset > gpuBuffer->size) {
+                buffer = cur;
                 break;
             }
         }
@@ -531,12 +523,48 @@ public:
     }
 
 private:
+    struct Buffer {
+        VkBuffer vkBuffer = VK_NULL_HANDLE;
+        VkDeviceSize size = 16 * 1024 * 1024; // 16M per block by default
+        uint8_t *mappedData = nullptr;
+        VmaAllocation vmaAllocation = VK_NULL_HANDLE;
+
+        VkDeviceSize curOffset = 0u;
+    };
+
     CCVKGPUDevice *_device = nullptr;
     vector<Buffer> _pool;
 };
 
 class CCVKGPURecycleBin : public Object {
 public:
+    CCVKGPURecycleBin(CCVKGPUDevice *device)
+    : _device(device) {
+        _resources.resize(16);
+    }
+
+#define DEFINE_COLLECT_FN(_type, typeValue, expr) \
+    void collect(_type *gpuRes) {                 \
+        if (_resources.size() <= _count) {        \
+            _resources.resize(_count * 2);        \
+        }                                         \
+        Resource &res = _resources[_count++];     \
+        res.type = typeValue;                     \
+        expr;                                     \
+    }
+    DEFINE_COLLECT_FN(CCVKGPUBuffer, ObjectType::BUFFER, (res.buffer = {gpuRes->vkBuffer, gpuRes->vmaAllocation}))
+    DEFINE_COLLECT_FN(CCVKGPUTexture, ObjectType::TEXTURE, (res.image = {gpuRes->vkImage, gpuRes->vmaAllocation}))
+    DEFINE_COLLECT_FN(CCVKGPUTextureView, ObjectType::TEXTURE_VIEW, res.vkImageView = gpuRes->vkImageView)
+    DEFINE_COLLECT_FN(CCVKGPURenderPass, ObjectType::RENDER_PASS, res.gpuRenderPass = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUFramebuffer, ObjectType::FRAMEBUFFER, res.gpuFramebuffer = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUSampler, ObjectType::SAMPLER, res.gpuSampler = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUShader, ObjectType::SHADER, res.gpuShader = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUPipelineState, ObjectType::PIPELINE_STATE, res.gpuPipelineState = gpuRes)
+    DEFINE_COLLECT_FN(CCVKGPUFence, ObjectType::FENCE, res.gpuFence = gpuRes)
+
+    void clear();
+
+private:
     struct Buffer {
         VkBuffer vkBuffer;
         VmaAllocation vmaAllocation;
@@ -562,38 +590,99 @@ public:
             CCVKGPUFence *gpuFence;
         };
     };
-    CCVKGPURecycleBin(CCVKGPUDevice *device)
-    : _device(device) {
-        _resources.resize(16);
-    }
-
-    ~CCVKGPURecycleBin() {
-    }
-
-#define DEFINE_COLLECT_FN(_type, typeValue, expr) \
-    void collect(_type *gpuRes) {                 \
-        if (_resources.size() <= _count) {        \
-            _resources.resize(_count * 2);        \
-        }                                         \
-        Resource &res = _resources[_count++];     \
-        res.type = typeValue;                     \
-        expr;                                     \
-    }
-    DEFINE_COLLECT_FN(CCVKGPUBuffer, ObjectType::BUFFER, (res.buffer = {gpuRes->vkBuffer, gpuRes->vmaAllocation}))
-    DEFINE_COLLECT_FN(CCVKGPUTexture, ObjectType::TEXTURE, (res.image = {gpuRes->vkImage, gpuRes->vmaAllocation}))
-    DEFINE_COLLECT_FN(CCVKGPUTextureView, ObjectType::TEXTURE_VIEW, res.vkImageView = gpuRes->vkImageView)
-    DEFINE_COLLECT_FN(CCVKGPURenderPass, ObjectType::RENDER_PASS, res.gpuRenderPass = gpuRes)
-    DEFINE_COLLECT_FN(CCVKGPUFramebuffer, ObjectType::FRAMEBUFFER, res.gpuFramebuffer = gpuRes)
-    DEFINE_COLLECT_FN(CCVKGPUSampler, ObjectType::SAMPLER, res.gpuSampler = gpuRes)
-    DEFINE_COLLECT_FN(CCVKGPUShader, ObjectType::SHADER, res.gpuShader = gpuRes)
-    DEFINE_COLLECT_FN(CCVKGPUPipelineState, ObjectType::PIPELINE_STATE, res.gpuPipelineState = gpuRes)
-    DEFINE_COLLECT_FN(CCVKGPUFence, ObjectType::FENCE, res.gpuFence = gpuRes)
-
-    void clear();
-
-private:
     CCVKGPUDevice *_device = nullptr;
     vector<Resource> _resources;
+    uint _count = 0u;
+};
+
+#define ASYNC_SUBMISSION
+class CCVKGPUTransportHub : public Object {
+public:
+    CCVKGPUTransportHub(CCVKGPUDevice *device)
+    : _device(device) {
+        _transfers.resize(16);
+    }
+
+    void link(CCVKGPUQueue *queue, CCVKGPUFencePool *fencePool, CCVKGPUCommandBufferPool *commandBufferPool) {
+        _queue = queue;
+        _fencePool = fencePool;
+        _commandBufferPool = commandBufferPool;
+
+        _cmdBuff.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        _cmdBuff.queueFamilyIndex = _queue->queueFamilyIndex;
+    }
+
+    CC_INLINE bool empty() {
+        return !_cmdBuff.vkCommandBuffer && !_count;
+    }
+
+    void checkIn(void *dst, const void *src, size_t size) {
+        if (_transfers.size() <= _count) {
+            _transfers.resize(_count * 2);
+        }
+        Transfer &transfer = _transfers[_count++];
+        transfer.dst = dst;
+        transfer.src = src;
+        transfer.size = size;
+    }
+
+    template <typename TFunc>
+    void checkIn(const TFunc &record) {
+        if (!_cmdBuff.vkCommandBuffer) {
+            _commandBufferPool->request(&_cmdBuff);
+            VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+            beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+            VK_CHECK(vkBeginCommandBuffer(_cmdBuff.vkCommandBuffer, &beginInfo));
+        }
+
+        record(_cmdBuff.vkCommandBuffer);
+
+#ifndef ASYNC_SUBMISSION
+        VK_CHECK(vkEndCommandBuffer(_cmdBuff.vkCommandBuffer));
+        VkFence fence = _fencePool->alloc();
+        VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &_cmdBuff.vkCommandBuffer;
+        VK_CHECK(vkQueueSubmit(_queue->vkQueue, 1, &submitInfo, fence));
+        VK_CHECK(vkWaitForFences(_device->vkDevice, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
+        _commandBufferPool->yield(&_cmdBuff);
+#endif // ASYNC_SUBMISSION
+    }
+
+    void depart() {
+        if (_cmdBuff.vkCommandBuffer) {
+            VK_CHECK(vkEndCommandBuffer(_cmdBuff.vkCommandBuffer));
+            _queue->commandBuffers.push(_cmdBuff.vkCommandBuffer);
+            _commandBufferPool->yield(&_cmdBuff);
+        }
+
+        if (_count) {
+            if (_queue->lastAutoFence) {
+                vkWaitForFences(_device->vkDevice, 1, &_queue->lastAutoFence, VK_TRUE, DEFAULT_FENCE_TIMEOUT);
+                _queue->lastAutoFence = VK_NULL_HANDLE;
+            }
+            for (const Transfer &transfer : _transfers) {
+                memcpy(transfer.dst, transfer.src, transfer.size);
+            }
+            _count = 0u;
+        }
+    }
+
+private:
+    struct Transfer {
+        void *dst = nullptr;
+        const void *src = nullptr;
+        size_t size = 0u;
+    };
+
+    CCVKGPUDevice *_device = nullptr;
+
+    CCVKGPUQueue *_queue = nullptr;
+    CCVKGPUFencePool *_fencePool = nullptr;
+    CCVKGPUCommandBufferPool *_commandBufferPool = nullptr;
+
+    CCVKGPUCommandBuffer _cmdBuff;
+    vector<Transfer> _transfers;
     uint _count = 0u;
 };
 

@@ -3483,7 +3483,7 @@ static bool js_gfx_TextureInfo_get_arrayLayer(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= uint32_to_seval((unsigned int)cobj->arrayLayer, &jsret);
+    ok &= uint32_to_seval((unsigned int)cobj->layerCount, &jsret);
     s.rval() = jsret;
     return true;
 }
@@ -3499,7 +3499,7 @@ static bool js_gfx_TextureInfo_set_arrayLayer(se::State& s)
     unsigned int arg0 = 0;
     ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
     SE_PRECONDITION2(ok, false, "js_gfx_TextureInfo_set_arrayLayer : Error processing new value");
-    cobj->arrayLayer = arg0;
+    cobj->layerCount = arg0;
     return true;
 }
 SE_BIND_PROP_SET(js_gfx_TextureInfo_set_arrayLayer)
@@ -3511,7 +3511,7 @@ static bool js_gfx_TextureInfo_get_mipLevel(se::State& s)
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= uint32_to_seval((unsigned int)cobj->mipLevel, &jsret);
+    ok &= uint32_to_seval((unsigned int)cobj->levelCount, &jsret);
     s.rval() = jsret;
     return true;
 }
@@ -3527,7 +3527,7 @@ static bool js_gfx_TextureInfo_set_mipLevel(se::State& s)
     unsigned int arg0 = 0;
     ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
     SE_PRECONDITION2(ok, false, "js_gfx_TextureInfo_set_mipLevel : Error processing new value");
-    cobj->mipLevel = arg0;
+    cobj->levelCount = arg0;
     return true;
 }
 SE_BIND_PROP_SET(js_gfx_TextureInfo_set_mipLevel)
@@ -3649,13 +3649,13 @@ static bool js_gfx_TextureInfo_constructor(se::State& s)
         json->getProperty("arrayLayer", &field);
         if(!field.isUndefined()) {
             ok &= seval_to_uint32(field, (uint32_t*)&arg6);
-            cobj->arrayLayer = arg6;
+            cobj->layerCount = arg6;
         }
         unsigned int arg7 = 0;
         json->getProperty("mipLevel", &field);
         if(!field.isUndefined()) {
             ok &= seval_to_uint32(field, (uint32_t*)&arg7);
-            cobj->mipLevel = arg7;
+            cobj->levelCount = arg7;
         }
         cc::gfx::SampleCount arg8;
         json->getProperty("samples", &field);
@@ -3716,12 +3716,12 @@ static bool js_gfx_TextureInfo_constructor(se::State& s)
         unsigned int arg6 = 0;
         if (!args[6].isUndefined()) {
             ok &= seval_to_uint32(args[6], (uint32_t*)&arg6);
-            cobj->arrayLayer = arg6;
+            cobj->layerCount = arg6;
         }
         unsigned int arg7 = 0;
         if (!args[7].isUndefined()) {
             ok &= seval_to_uint32(args[7], (uint32_t*)&arg7);
-            cobj->mipLevel = arg7;
+            cobj->levelCount = arg7;
         }
         cc::gfx::SampleCount arg8;
         if (!args[8].isUndefined()) {
@@ -11165,34 +11165,6 @@ static bool js_gfx_QueueInfo_set_type(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_QueueInfo_set_type)
 
-static bool js_gfx_QueueInfo_get_forceSync(se::State& s)
-{
-    cc::gfx::QueueInfo* cobj = (cc::gfx::QueueInfo*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_QueueInfo_get_forceSync : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= boolean_to_seval(cobj->forceSync, &jsret);
-    s.rval() = jsret;
-    return true;
-}
-SE_BIND_PROP_GET(js_gfx_QueueInfo_get_forceSync)
-
-static bool js_gfx_QueueInfo_set_forceSync(se::State& s)
-{
-    const auto& args = s.args();
-    cc::gfx::QueueInfo* cobj = (cc::gfx::QueueInfo*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_QueueInfo_set_forceSync : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    bool arg0;
-    ok &= seval_to_boolean(args[0], &arg0);
-    SE_PRECONDITION2(ok, false, "js_gfx_QueueInfo_set_forceSync : Error processing new value");
-    cobj->forceSync = arg0;
-    return true;
-}
-SE_BIND_PROP_SET(js_gfx_QueueInfo_set_forceSync)
-
 SE_DECLARE_FINALIZE_FUNC(js_cc_gfx_QueueInfo_finalize)
 
 static bool js_gfx_QueueInfo_constructor(se::State& s)
@@ -11208,47 +11180,13 @@ static bool js_gfx_QueueInfo_constructor(se::State& s)
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
         return true;
     }
-    else if(argc == 1 && args[0].isObject())
-    {
-        se::Object *json = args[0].toObject();
-        se::Value field;
-
-        cc::gfx::QueueInfo* cobj = JSB_ALLOC(cc::gfx::QueueInfo);
-        cc::gfx::QueueType arg0;
-        json->getProperty("type", &field);
-        if(!field.isUndefined()) {
-            do { int32_t tmp = 0; ok &= seval_to_int32(field, &tmp); arg0 = (cc::gfx::QueueType)tmp; } while(false);
-            cobj->type = arg0;
-        }
-        bool arg1;
-        json->getProperty("forceSync", &field);
-        if(!field.isUndefined()) {
-            ok &= seval_to_boolean(field, &arg1);
-            cobj->forceSync = arg1;
-        }
-
-        if(!ok) {
-            JSB_FREE(cobj);
-            SE_REPORT_ERROR("argument convertion error");
-            return false;
-        }
-
-        s.thisObject()->setPrivateData(cobj);
-        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
-        return true;
-    }
-    else if(argc == 2)
+    else if(argc == 1)
     {
         cc::gfx::QueueInfo* cobj = JSB_ALLOC(cc::gfx::QueueInfo);
         cc::gfx::QueueType arg0;
         if (!args[0].isUndefined()) {
             do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (cc::gfx::QueueType)tmp; } while(false);
             cobj->type = arg0;
-        }
-        bool arg1;
-        if (!args[1].isUndefined()) {
-            ok &= seval_to_boolean(args[1], &arg1);
-            cobj->forceSync = arg1;
         }
 
         if(!ok) {
@@ -11288,7 +11226,6 @@ bool js_register_gfx_QueueInfo(se::Object* obj)
     auto cls = se::Class::create("QueueInfo", obj, nullptr, _SE(js_gfx_QueueInfo_constructor));
 
     cls->defineProperty("type", _SE(js_gfx_QueueInfo_get_type), _SE(js_gfx_QueueInfo_set_type));
-    cls->defineProperty("forceSync", _SE(js_gfx_QueueInfo_get_forceSync), _SE(js_gfx_QueueInfo_set_forceSync));
     cls->defineFinalizeFunction(_SE(js_cc_gfx_QueueInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cc::gfx::QueueInfo>(cls);
@@ -13321,7 +13258,7 @@ static bool js_gfx_Texture_getMipLevel(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = cobj->getMipLevel();
+        unsigned int result = cobj->getLevelCount();
         ok &= uint32_to_seval((unsigned int)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getMipLevel : Error processing arguments");
         return true;
@@ -13339,7 +13276,7 @@ static bool js_gfx_Texture_getArrayLayer(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = cobj->getArrayLayer();
+        unsigned int result = cobj->getLayerCount();
         ok &= uint32_to_seval((unsigned int)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getArrayLayer : Error processing arguments");
         return true;

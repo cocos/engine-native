@@ -258,17 +258,20 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
 
     VK_CHECK(vmaCreateAllocator(&allocatorInfo, &_gpuDevice->memoryAllocator));
 
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
+    //queueInfo.forceSync = true;
+    _queue = createQueue(queueInfo);
+
     _gpuFencePool = CC_NEW(CCVKGPUFencePool(_gpuDevice));
     _gpuRecycleBin = CC_NEW(CCVKGPURecycleBin(_gpuDevice));
+    _gpuTransportHub = CC_NEW(CCVKGPUTransportHub(_gpuDevice));
     _gpuSemaphorePool = CC_NEW(CCVKGPUSemaphorePool(_gpuDevice));
     _gpuDescriptorSetPool = CC_NEW(CCVKGPUDescriptorSetPool(_gpuDevice));
     _gpuCommandBufferPool = CC_NEW(CCVKGPUCommandBufferPool(_gpuDevice));
     _gpuStagingBufferPool = CC_NEW(CCVKGPUStagingBufferPool(_gpuDevice));
 
-    QueueInfo queueInfo;
-    queueInfo.type = QueueType::GRAPHICS;
-    //queueInfo.forceSync = true;
-    _queue = createQueue(queueInfo);
+    _gpuTransportHub->link(((CCVKQueue *)_queue)->gpuQueue(), _gpuFencePool, _gpuCommandBufferPool);
 
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
         TextureInfo depthStencilTexInfo;
@@ -362,6 +365,7 @@ void CCVKDevice::destroy() {
     CC_SAFE_DELETE(_gpuCommandBufferPool);
     CC_SAFE_DELETE(_gpuDescriptorSetPool);
     CC_SAFE_DELETE(_gpuSemaphorePool);
+    CC_SAFE_DELETE(_gpuTransportHub);
     CC_SAFE_DELETE(_gpuRecycleBin);
     CC_SAFE_DELETE(_gpuFencePool);
 
@@ -478,23 +482,12 @@ void CCVKDevice::buildSwapchain() {
 void CCVKDevice::acquire() {
     if (!_swapchainReady) return;
 
-    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
-
-    CCVKQueue *queue = (CCVKQueue *)_queue;
-    // don't reset these pools if nothing was submitted last frame
-    if (!queue->gpuQueue()->maintenanceCmdBuff) {
-        _gpuFencePool->reset();
-        _gpuRecycleBin->clear();
-        _gpuDescriptorSetPool->reset();
-        _gpuCommandBufferPool->reset();
-        _gpuStagingBufferPool->reset();
-    }
-
     _gpuSemaphorePool->reset();
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
                                    ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
+    CCVKQueue *queue = (CCVKQueue *)_queue;
     // Clear queue stats
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
@@ -519,6 +512,21 @@ void CCVKDevice::present() {
     presentInfo.pImageIndices = &_gpuSwapchain->curImageIndex;
 
     VK_CHECK(vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo));
+
+    // TODO: these can be moved to acquire-time after pipeline refactoring,
+    // which should guarantee that no transfer operation will be issued before acquiring
+
+    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
+
+    queue->gpuQueue()->lastAutoFence = VK_NULL_HANDLE;
+    // reset everything only when no pending commands
+    if (_gpuTransportHub->empty()) {
+        _gpuFencePool->reset();
+        _gpuRecycleBin->clear();
+        _gpuDescriptorSetPool->reset();
+        _gpuCommandBufferPool->reset();
+        _gpuStagingBufferPool->reset();
+    }
 }
 
 CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo &info) {

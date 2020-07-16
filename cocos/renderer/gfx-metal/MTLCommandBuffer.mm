@@ -292,7 +292,7 @@ void CCMTLCommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Tex
     if ((_type == CommandBufferType::PRIMARY) ||
         (_type == CommandBufferType::SECONDARY)) {
         if (texture) {
-            static_cast<CCMTLTexture *>(dst)->update(buffers.data(), regions);
+            static_cast<CCMTLTexture *>(texture)->update(buffers.data(), regions);
         } else {
             CC_LOG_ERROR("CCMTLCommandBuffer::copyBufferToTexture: texture is nullptr");
         }

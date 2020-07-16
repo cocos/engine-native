@@ -36,37 +36,6 @@ void insertVkDynamicStates(vector<VkDynamicState> &out, const vector<DynamicStat
     }
 }
 
-void beginOneTimeCommands(CCVKDevice *device, CCVKGPUCommandBuffer *cmdBuff) {
-    CCVKGPUQueue *queue = ((CCVKQueue *)device->getQueue())->gpuQueue();
-    cmdBuff->level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    cmdBuff->queueFamilyIndex = queue->queueFamilyIndex;
-    if (queue->maintenanceCmdBuff) {
-        cmdBuff->vkCommandBuffer = queue->maintenanceCmdBuff;
-    } else {
-        device->gpuCommandBufferPool()->request(cmdBuff);
-        VkCommandBufferBeginInfo beginInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-        VK_CHECK(vkBeginCommandBuffer(cmdBuff->vkCommandBuffer, &beginInfo));
-        queue->maintenanceCmdBuff = cmdBuff->vkCommandBuffer;
-    }
-}
-
-void endOneTimeCommands(CCVKDevice *device, CCVKGPUCommandBuffer *cmdBuff) {
-    /* */
-    VK_CHECK(vkEndCommandBuffer(cmdBuff->vkCommandBuffer));
-
-    VkFence fence = device->gpuFencePool()->alloc();
-    CCVKGPUQueue *queue = ((CCVKQueue *)device->getQueue())->gpuQueue();
-    VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &cmdBuff->vkCommandBuffer;
-    VK_CHECK(vkQueueSubmit(queue->vkQueue, 1, &submitInfo, fence));
-    VK_CHECK(vkWaitForFences(device->gpuDevice()->vkDevice, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
-    device->gpuCommandBufferPool()->yield(cmdBuff);
-    queue->maintenanceCmdBuff = VK_NULL_HANDLE;
-    /* */
-}
-
 void CCVKCmdFuncGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue) {
     uint queueType = 0u;
     VkBool32 needPresentable = VK_FALSE;
@@ -663,152 +632,147 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
     }
 
     if (gpuBuffer->mappedData) {
-        memcpy(gpuBuffer->mappedData + offset, dataToUpload, sizeToUpload);
+        device->gpuTransportHub()->checkIn(gpuBuffer->mappedData + offset, dataToUpload, sizeToUpload);
     } else {
         CCVKGPUBuffer stagingBuffer;
         stagingBuffer.size = sizeToUpload;
         device->gpuStagingBufferPool()->alloc(&stagingBuffer);
         memcpy(stagingBuffer.mappedData, dataToUpload, sizeToUpload);
 
-        CCVKGPUCommandBuffer cmdBuff;
-        beginOneTimeCommands(device, &cmdBuff);
-
         VkBufferCopy region{stagingBuffer.startOffset, gpuBuffer->startOffset + offset, sizeToUpload};
-        vkCmdCopyBuffer(cmdBuff.vkCommandBuffer, stagingBuffer.vkBuffer, gpuBuffer->vkBuffer, 1, &region);
-
-        endOneTimeCommands(device, &cmdBuff);
+        device->gpuTransportHub()->checkIn([&](VkCommandBuffer cmdBuff) {
+            vkCmdCopyBuffer(cmdBuff, stagingBuffer.vkBuffer, gpuBuffer->vkBuffer, 1, &region);
+        });
     }
 }
 
 void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, const BufferDataList &buffers, CCVKGPUTexture *gpuTexture, const BufferTextureCopyList &regions) {
-    //bool isCompressed = GFX_FORMAT_INFOS[(int)gpuTexture->format].isCompressed;
-    CCVKGPUCommandBuffer cmdBuff;
-    beginOneTimeCommands(device, &cmdBuff);
+    device->gpuTransportHub()->checkIn([&](VkCommandBuffer cmdBuff) {
+        //bool isCompressed = GFX_FORMAT_INFOS[(int)gpuTexture->format].isCompressed;
 
-    VkImageMemoryBarrier barriers[2]{};
-    barriers[0].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    barriers[0].image = gpuTexture->vkImage;
-    barriers[0].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barriers[0].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barriers[0].subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
-    barriers[0].subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-    barriers[0].subresourceRange.aspectMask = gpuTexture->aspectMask;
-    barriers[0].srcAccessMask = gpuTexture->accessMask;
-    barriers[0].dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    barriers[0].oldLayout = gpuTexture->currentLayout;
-    barriers[0].newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, gpuTexture->targetStage, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                         VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, barriers);
-
-    uint regionCount = regions.size(), totalSize = 0u;
-    vector<uint> regionSizes(regionCount);
-    for (size_t i = 0u; i < regionCount; ++i) {
-        const BufferTextureCopy &region = regions[i];
-        uint w = region.buffStride > 0 ? region.buffStride : region.texExtent.width;
-        uint h = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
-        totalSize += regionSizes[i] = FormatSize(gpuTexture->format, w, h, region.texExtent.depth);
-    }
-
-    CCVKGPUBuffer stagingBuffer;
-    stagingBuffer.size = totalSize;
-    device->gpuStagingBufferPool()->alloc(&stagingBuffer);
-
-    vector<VkBufferImageCopy> stagingRegions(regionCount);
-    VkDeviceSize offset = 0;
-    for (size_t i = 0u; i < regionCount; ++i) {
-        const BufferTextureCopy &region = regions[i];
-        VkBufferImageCopy &stagingRegion = stagingRegions[i];
-        stagingRegion.bufferOffset = stagingBuffer.startOffset + offset;
-        stagingRegion.bufferRowLength = region.buffStride;
-        stagingRegion.bufferImageHeight = region.buffTexHeight;
-        stagingRegion.imageSubresource = {gpuTexture->aspectMask, region.texSubres.mipLevel, region.texSubres.baseArrayLayer, region.texSubres.layerCount};
-        stagingRegion.imageOffset = {region.texOffset.x, region.texOffset.y, region.texOffset.z};
-        stagingRegion.imageExtent = {region.texExtent.width, region.texExtent.height, region.texExtent.depth};
-
-        memcpy(stagingBuffer.mappedData + offset, buffers[i], regionSizes[i]);
-        offset += regionSizes[i];
-    }
-
-    vkCmdCopyBufferToImage(cmdBuff.vkCommandBuffer, stagingBuffer.vkBuffer, gpuTexture->vkImage,
-                           VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
-
-    bool layoutReady = false;
-    if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
-        VkFormatProperties formatProperties;
-        vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, MapVkFormat(gpuTexture->format), &formatProperties);
-        VkFormatFeatureFlags mipmapFeatures = VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
-
-        if (formatProperties.optimalTilingFeatures & mipmapFeatures) {
-            const int32_t width = gpuTexture->width;
-            const int32_t height = gpuTexture->height;
-
-            VkImageBlit blitInfo{};
-            blitInfo.srcSubresource.aspectMask = gpuTexture->aspectMask;
-            blitInfo.srcSubresource.layerCount = gpuTexture->arrayLayers;
-            blitInfo.dstSubresource.aspectMask = gpuTexture->aspectMask;
-            blitInfo.dstSubresource.layerCount = gpuTexture->arrayLayers;
-            blitInfo.srcOffsets[1] = {width, height, 1};
-            blitInfo.dstOffsets[1] = {std::max(width >> 1, 1), std::max(height >> 1, 1), 1};
-            barriers[0].subresourceRange.levelCount = 1;
-            barriers[0].srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            barriers[0].dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-            barriers[0].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-            barriers[0].newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-
-            for (uint i = 1u; i < gpuTexture->mipLevels; i++) {
-                barriers[0].subresourceRange.baseMipLevel = i - 1;
-                vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                     VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, barriers);
-
-                blitInfo.srcSubresource.mipLevel = i - 1;
-                blitInfo.dstSubresource.mipLevel = i;
-                vkCmdBlitImage(cmdBuff.vkCommandBuffer, gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                               gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blitInfo, VK_FILTER_LINEAR);
-
-                const int32_t w = blitInfo.srcOffsets[1].x = blitInfo.dstOffsets[1].x;
-                const int32_t h = blitInfo.srcOffsets[1].y = blitInfo.dstOffsets[1].y;
-                blitInfo.dstOffsets[1].x = std::max(w >> 1, 1);
-                blitInfo.dstOffsets[1].y = std::max(h >> 1, 1);
-            }
-
-            barriers[0].subresourceRange.baseMipLevel = gpuTexture->mipLevels - 1;
-            barriers[0].dstAccessMask = gpuTexture->accessMask;
-            barriers[0].newLayout = gpuTexture->layout;
-
-            barriers[1].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-            barriers[1].image = gpuTexture->vkImage;
-            barriers[1].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-            barriers[1].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-            barriers[1].subresourceRange.aspectMask = gpuTexture->aspectMask;
-            barriers[1].subresourceRange.baseMipLevel = 0;
-            barriers[1].subresourceRange.levelCount = gpuTexture->mipLevels - 1;
-            barriers[1].subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
-            barriers[1].srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-            barriers[1].dstAccessMask = gpuTexture->accessMask;
-            barriers[1].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-            barriers[1].newLayout = gpuTexture->layout;
-
-            vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, gpuTexture->targetStage,
-                                 VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 2, barriers);
-            layoutReady = true;
-        } else {
-            const char *formatName = GFX_FORMAT_INFOS[(uint)gpuTexture->format].name.c_str();
-            CC_LOG_WARNING("CCVKCmdFuncCopyBuffersToTexture: generate mipmap for %s is not supported on this platform", formatName);
-        }
-    }
-
-    if (!layoutReady) {
-        barriers[0].srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        barriers[0].dstAccessMask = gpuTexture->accessMask;
-        barriers[0].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        barriers[0].newLayout = gpuTexture->layout;
-        vkCmdPipelineBarrier(cmdBuff.vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, gpuTexture->targetStage,
+        VkImageMemoryBarrier barriers[2]{};
+        barriers[0].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        barriers[0].image = gpuTexture->vkImage;
+        barriers[0].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barriers[0].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barriers[0].subresourceRange.levelCount = VK_REMAINING_MIP_LEVELS;
+        barriers[0].subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+        barriers[0].subresourceRange.aspectMask = gpuTexture->aspectMask;
+        barriers[0].srcAccessMask = gpuTexture->accessMask;
+        barriers[0].dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        barriers[0].oldLayout = gpuTexture->currentLayout;
+        barriers[0].newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        vkCmdPipelineBarrier(cmdBuff, gpuTexture->targetStage, VK_PIPELINE_STAGE_TRANSFER_BIT,
                              VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, barriers);
-    }
 
-    endOneTimeCommands(device, &cmdBuff);
+        uint regionCount = regions.size(), totalSize = 0u;
+        vector<uint> regionSizes(regionCount);
+        for (size_t i = 0u; i < regionCount; ++i) {
+            const BufferTextureCopy &region = regions[i];
+            uint w = region.buffStride > 0 ? region.buffStride : region.texExtent.width;
+            uint h = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
+            totalSize += regionSizes[i] = FormatSize(gpuTexture->format, w, h, region.texExtent.depth);
+        }
 
-    gpuTexture->currentLayout = gpuTexture->layout;
+        CCVKGPUBuffer stagingBuffer;
+        stagingBuffer.size = totalSize;
+        device->gpuStagingBufferPool()->alloc(&stagingBuffer);
+
+        vector<VkBufferImageCopy> stagingRegions(regionCount);
+        VkDeviceSize offset = 0;
+        for (size_t i = 0u; i < regionCount; ++i) {
+            const BufferTextureCopy &region = regions[i];
+            VkBufferImageCopy &stagingRegion = stagingRegions[i];
+            stagingRegion.bufferOffset = stagingBuffer.startOffset + offset;
+            stagingRegion.bufferRowLength = region.buffStride;
+            stagingRegion.bufferImageHeight = region.buffTexHeight;
+            stagingRegion.imageSubresource = {gpuTexture->aspectMask, region.texSubres.mipLevel, region.texSubres.baseArrayLayer, region.texSubres.layerCount};
+            stagingRegion.imageOffset = {region.texOffset.x, region.texOffset.y, region.texOffset.z};
+            stagingRegion.imageExtent = {region.texExtent.width, region.texExtent.height, region.texExtent.depth};
+
+            memcpy(stagingBuffer.mappedData + offset, buffers[i], regionSizes[i]);
+            offset += regionSizes[i];
+        }
+
+        vkCmdCopyBufferToImage(cmdBuff, stagingBuffer.vkBuffer, gpuTexture->vkImage,
+                               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
+
+        bool layoutReady = false;
+        if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
+            VkFormatProperties formatProperties;
+            vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, MapVkFormat(gpuTexture->format), &formatProperties);
+            VkFormatFeatureFlags mipmapFeatures = VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+            if (formatProperties.optimalTilingFeatures & mipmapFeatures) {
+                const int32_t width = gpuTexture->width;
+                const int32_t height = gpuTexture->height;
+
+                VkImageBlit blitInfo{};
+                blitInfo.srcSubresource.aspectMask = gpuTexture->aspectMask;
+                blitInfo.srcSubresource.layerCount = gpuTexture->arrayLayers;
+                blitInfo.dstSubresource.aspectMask = gpuTexture->aspectMask;
+                blitInfo.dstSubresource.layerCount = gpuTexture->arrayLayers;
+                blitInfo.srcOffsets[1] = {width, height, 1};
+                blitInfo.dstOffsets[1] = {std::max(width >> 1, 1), std::max(height >> 1, 1), 1};
+                barriers[0].subresourceRange.levelCount = 1;
+                barriers[0].srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+                barriers[0].dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+                barriers[0].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+                barriers[0].newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+
+                for (uint i = 1u; i < gpuTexture->mipLevels; i++) {
+                    barriers[0].subresourceRange.baseMipLevel = i - 1;
+                    vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                         VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, barriers);
+
+                    blitInfo.srcSubresource.mipLevel = i - 1;
+                    blitInfo.dstSubresource.mipLevel = i;
+                    vkCmdBlitImage(cmdBuff, gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                   gpuTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blitInfo, VK_FILTER_LINEAR);
+
+                    const int32_t w = blitInfo.srcOffsets[1].x = blitInfo.dstOffsets[1].x;
+                    const int32_t h = blitInfo.srcOffsets[1].y = blitInfo.dstOffsets[1].y;
+                    blitInfo.dstOffsets[1].x = std::max(w >> 1, 1);
+                    blitInfo.dstOffsets[1].y = std::max(h >> 1, 1);
+                }
+
+                barriers[0].subresourceRange.baseMipLevel = gpuTexture->mipLevels - 1;
+                barriers[0].dstAccessMask = gpuTexture->accessMask;
+                barriers[0].newLayout = gpuTexture->layout;
+
+                barriers[1].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+                barriers[1].image = gpuTexture->vkImage;
+                barriers[1].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+                barriers[1].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+                barriers[1].subresourceRange.aspectMask = gpuTexture->aspectMask;
+                barriers[1].subresourceRange.baseMipLevel = 0;
+                barriers[1].subresourceRange.levelCount = gpuTexture->mipLevels - 1;
+                barriers[1].subresourceRange.layerCount = VK_REMAINING_ARRAY_LAYERS;
+                barriers[1].srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+                barriers[1].dstAccessMask = gpuTexture->accessMask;
+                barriers[1].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+                barriers[1].newLayout = gpuTexture->layout;
+
+                vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT, gpuTexture->targetStage,
+                                     VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 2, barriers);
+                layoutReady = true;
+            } else {
+                const char *formatName = GFX_FORMAT_INFOS[(uint)gpuTexture->format].name.c_str();
+                CC_LOG_WARNING("CCVKCmdFuncCopyBuffersToTexture: generate mipmap for %s is not supported on this platform", formatName);
+            }
+        }
+
+        if (!layoutReady) {
+            barriers[0].srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            barriers[0].dstAccessMask = gpuTexture->accessMask;
+            barriers[0].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+            barriers[0].newLayout = gpuTexture->layout;
+            vkCmdPipelineBarrier(cmdBuff, VK_PIPELINE_STAGE_TRANSFER_BIT, gpuTexture->targetStage,
+                                 VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, barriers);
+        }
+
+        gpuTexture->currentLayout = gpuTexture->layout;
+    });
 }
 
 void CCVKCmdFuncDestroyRenderPass(CCVKGPUDevice *gpuDevice, CCVKGPURenderPass *gpuRenderPass) {

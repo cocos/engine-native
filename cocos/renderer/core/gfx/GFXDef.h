@@ -704,11 +704,11 @@ struct TextureInfo {
     TextureType type = TextureType::TEX2D;
     TextureUsage usage = TextureUsageBit::NONE;
     Format format = Format::UNKNOWN;
-    uint width = 0;
-    uint height = 0;
-    uint depth = 1;
-    uint arrayLayer = 1;
-    uint mipLevel = 1;
+    uint width = 0u;
+    uint height = 0u;
+    uint depth = 1u;
+    uint layerCount = 1u;
+    uint levelCount = 1u;
     SampleCount samples = SampleCount::X1;
     TextureFlags flags = TextureFlagBit::NONE;
 };
@@ -717,10 +717,10 @@ struct TextureViewInfo {
     Texture *texture = nullptr;
     TextureType type = TextureType::TEX2D;
     Format format = Format::UNKNOWN;
-    uint baseLevel = 0;
-    uint levelCount = 1;
-    uint baseLayer = 0;
-    uint layerCount = 1;
+    uint baseLevel = 0u;
+    uint levelCount = 1u;
+    uint baseLayer = 0u;
+    uint layerCount = 1u;
 };
 
 struct SamplerInfo {
@@ -965,7 +965,6 @@ typedef vector<CommandBuffer *> CommandBufferList;
 
 struct QueueInfo {
     QueueType type = QueueType::GRAPHICS;
-    bool forceSync = false;
 };
 
 struct FenceInfo {

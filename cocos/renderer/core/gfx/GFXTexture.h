@@ -23,8 +23,8 @@ public:
     CC_INLINE uint getWidth() const { return _width; }
     CC_INLINE uint getHeight() const { return _height; }
     CC_INLINE uint getDepth() const { return _depth; }
-    CC_INLINE uint getArrayLayer() const { return _layerCount; }
-    CC_INLINE uint getMipLevel() const { return _levelCount; }
+    CC_INLINE uint getLayerCount() const { return _layerCount; }
+    CC_INLINE uint getLevelCount() const { return _levelCount; }
     CC_INLINE uint getSize() const { return _size; }
     CC_INLINE SampleCount getSamples() const { return _samples; }
     CC_INLINE TextureFlags getFlags() const { return _flags; }

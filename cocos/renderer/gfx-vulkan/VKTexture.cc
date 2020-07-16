@@ -21,8 +21,8 @@ bool CCVKTexture::initialize(const TextureInfo &info) {
     _width = info.width;
     _height = info.height;
     _depth = info.depth;
-    _layerCount = info.arrayLayer;
-    _levelCount = info.mipLevel;
+    _layerCount = info.layerCount;
+    _levelCount = info.levelCount;
     _samples = info.samples;
     _flags = info.flags;
     _size = FormatSize(_format, _width, _height, _depth);

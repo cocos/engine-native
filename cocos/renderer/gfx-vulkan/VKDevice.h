@@ -14,6 +14,7 @@ class CCVKGPUSwapchain;
 
 class CCVKGPUFencePool;
 class CCVKGPURecycleBin;
+class CCVKGPUTransportHub;
 class CCVKGPUSemaphorePool;
 class CCVKGPUDescriptorSetPool;
 class CCVKGPUCommandBufferPool;
@@ -57,6 +58,7 @@ public:
     CC_INLINE CCVKGPUSwapchain *gpuSwapchain() { return _gpuSwapchain; }
     CC_INLINE CCVKGPUFencePool *gpuFencePool() { return _gpuFencePool; }
     CC_INLINE CCVKGPURecycleBin *gpuRecycleBin() { return _gpuRecycleBin; }
+    CC_INLINE CCVKGPUTransportHub *gpuTransportHub() { return _gpuTransportHub; }
     CC_INLINE CCVKGPUSemaphorePool *gpuSemaphorePool() { return _gpuSemaphorePool; }
     CC_INLINE CCVKGPUDescriptorSetPool *gpuDescriptorSetPool() { return _gpuDescriptorSetPool; }
     CC_INLINE CCVKGPUCommandBufferPool *gpuCommandBufferPool() { return _gpuCommandBufferPool; }
@@ -75,6 +77,7 @@ private:
     CCVKGPUDevice *_gpuDevice = nullptr;
     CCVKGPUFencePool *_gpuFencePool = nullptr;
     CCVKGPURecycleBin *_gpuRecycleBin = nullptr;
+    CCVKGPUTransportHub *_gpuTransportHub = nullptr;
     CCVKGPUSemaphorePool *_gpuSemaphorePool = nullptr;
     CCVKGPUDescriptorSetPool *_gpuDescriptorSetPool = nullptr;
     CCVKGPUCommandBufferPool *_gpuCommandBufferPool = nullptr;
