@@ -487,7 +487,7 @@ public:
         _pool.clear();
     }
 
-    void alloc(CCVKGPUBuffer *gpuBuffer) {
+    void alloc(CCVKGPUBuffer *gpuBuffer, size_t align = 0) {
         size_t bufferCount = _pool.size();
         Buffer *buffer = nullptr;
         for (size_t idx = 0u; idx < bufferCount; idx++) {
@@ -509,6 +509,9 @@ public:
             VmaAllocationInfo res;
             VK_CHECK(vmaCreateBuffer(_device->memoryAllocator, &bufferInfo, &allocInfo, &buffer->vkBuffer, &buffer->vmaAllocation, &res));
             buffer->mappedData = (uint8_t *)res.pMappedData;
+        }
+        if (align) {
+            buffer->curOffset = (buffer->curOffset + (align - 1)) & (~(align - 1));
         }
         gpuBuffer->vkBuffer = buffer->vkBuffer;
         gpuBuffer->startOffset = buffer->curOffset;

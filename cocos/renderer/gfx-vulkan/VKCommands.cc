@@ -674,9 +674,12 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, const BufferDataList &b
             totalSize += regionSizes[i] = FormatSize(gpuTexture->format, w, h, region.texExtent.depth);
         }
 
+        //bufferOffset must be a multiple of the format's texel block size except for depth/stencil format
+        //https://vulkan.lunarg.com/doc/view/1.2.141.0/windows/1.2-extensions/vkspec.html#VUID-VkBufferImageCopy-bufferOffset-01558
+        size_t alignment = (gpuTexture->format != device->getDepthStencilFormat()) ? GFX_FORMAT_INFOS[(uint)gpuTexture->format].size : 0;
         CCVKGPUBuffer stagingBuffer;
         stagingBuffer.size = totalSize;
-        device->gpuStagingBufferPool()->alloc(&stagingBuffer);
+        device->gpuStagingBufferPool()->alloc(&stagingBuffer, alignment);
 
         vector<VkBufferImageCopy> stagingRegions(regionCount);
         VkDeviceSize offset = 0;
