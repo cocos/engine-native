@@ -495,6 +495,10 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXFence.cc
     cocos/renderer/core/math/CCCoreMath.cc
     cocos/renderer/core/math/CCCoreMath.h
+    cocos/renderer/core/PipelineState.cpp
+    cocos/renderer/core/PipelineState.h
+    cocos/renderer/core/DataBindings.cpp
+    cocos/renderer/core/DataBindings.h
     cocos/renderer/pipeline/BatchedBuffer.cpp
     cocos/renderer/pipeline/BatchedBuffer.h
     cocos/renderer/pipeline/Define.h
@@ -730,6 +734,14 @@ if(CC_USE_VULKAN)
 endif()
 
 ##### script bindings
+######## dop
+cocos_source_files(
+    cocos/scripting/dop/TypedPool.cpp
+    cocos/scripting/dop/TypedPool.h
+    cocos/scripting/dop/jsb_dop.cpp
+    cocos/scripting/dop/jsb_dop.h
+)
+
 ######## auto
 cocos_source_files(
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_auto.cpp
@@ -740,7 +752,6 @@ cocos_source_files(
     cocos/scripting/js-bindings/auto/jsb_gfx_auto.h
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.cpp
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.h
-
 )
 
 if(USE_AUDIO)
