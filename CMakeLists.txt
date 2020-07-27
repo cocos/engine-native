@@ -495,8 +495,6 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXFence.cc
     cocos/renderer/core/math/CCCoreMath.cc
     cocos/renderer/core/math/CCCoreMath.h
-    cocos/renderer/core/PipelineState.cpp
-    cocos/renderer/core/PipelineState.h
     cocos/renderer/core/DataBindings.cpp
     cocos/renderer/core/DataBindings.h
     cocos/renderer/pipeline/BatchedBuffer.cpp

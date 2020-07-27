@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "jsb_dop.h"
 #include "TypedPool.h"
-#include "cocos/renderer/core/PipelineState.h"
+#include "cocos/renderer/core/DataBindings.h"
 #include "cocos/renderer/core/gfx/GFXDef.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include "cocos/scripting/js-bindings/manual/jsb_classtype.h"
@@ -50,6 +50,6 @@ se::Class* jsb_DepthStencilState_TypedPool_class = nullptr;
 
 bool register_all_dop_bindings(se::Object* obj)
 {
-    js_register_se_TypedPool<cc::gfx::DepthStencilState, cc::gfx::DepthStencilStatePageSize>(obj, "DepthStencilStateTypedPool", &jsb_DepthStencilState_TypedPool_proto, &jsb_DepthStencilState_TypedPool_class);
+    js_register_se_TypedPool<cc::gfx::DepthStencilState, DepthStencilStatePageSize>(obj, "DepthStencilStateTypedPool", &jsb_DepthStencilState_TypedPool_proto, &jsb_DepthStencilState_TypedPool_class);
     return true;
 }

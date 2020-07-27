@@ -24,10 +24,13 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "PipelineState.h"
+#include "cocos/base/ccMacros.h"
+#include "gfx/GFXDef.h"
 #include "cocos/scripting/dop/TypedPool.h"
 #include "cocos/scripting/dop/jsb_dop.h"
 
-typedef se::TypedPool<cc::gfx::DepthStencilState, cc::gfx::DepthStencilStatePageSize> DepthStencilStatePool;
+const size_t DepthStencilStatePageSize = 128;
+
+typedef se::TypedPool<cc::gfx::DepthStencilState, DepthStencilStatePageSize> DepthStencilStatePool;
 
 DepthStencilStatePool *initDepthStencilStatePool();
