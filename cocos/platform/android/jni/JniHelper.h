@@ -55,6 +55,25 @@ struct CC_DLL JniMethodSignature {
     std::string signature;
 };
 
+class JniLocalRefPostDelete {
+public:
+    JniLocalRefPostDelete();
+    JniLocalRefPostDelete(JNIEnv *e): _env(e) {}
+    void post_delete(jobject i) {
+        if(i) {
+            _data.push_back(i);
+        }
+    }
+    virtual ~JniLocalRefPostDelete() {
+        for(jobject i: _data) {
+            _env->DeleteLocalRef(i);
+        }
+    }
+private:
+    std::vector<jobject> _data;
+    JNIEnv *_env = nullptr;
+};
+
 class CC_DLL JniHelper
 {
 public:

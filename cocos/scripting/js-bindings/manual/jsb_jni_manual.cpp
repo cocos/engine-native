@@ -31,6 +31,7 @@
 
 using cocos2d::JniHelper;
 using cocos2d::JniMethodInfo;
+using cocos2d::JniLocalRefPostDelete;
 
 SE_DECLARE_FUNC(js_jni_proxy_java_path_base);
 
@@ -150,8 +151,10 @@ namespace {
     bool setJavaObjectField(jobject obj, const std::string &fieldName,
                             const se::Value &value, bool &hasField) {
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
         bool ok = false;
         jobject fieldObject = JniHelper::getObjectFieldObject(obj, fieldName);
+        guard.post_delete(fieldObject);
         if (!fieldObject) {
             hasField = false;
             return true;
@@ -162,6 +165,8 @@ namespace {
         jobject fieldClassObject = JniHelper::callObjectObjectMethod(fieldObject, "java/lang/reflect/Field", "getType", "Ljava/lang/Class;");
         jobject fieldTypeJNIName = JniHelper::callObjectObjectMethod(fieldClassObject, "java/lang/Class", "getName", "Ljava/lang/String;");
         JniUtils::JniType fieldType = JniUtils::JniType::fromString(jstringToString(fieldTypeJNIName));
+        guard.post_delete(fieldClassObject);
+        guard.post_delete(fieldTypeJNIName);
         // convert js value to java value
         jvalue ret = seval_to_jvalule(env, fieldType, value, ok);
         if (ok) {
@@ -215,6 +220,7 @@ namespace {
     jobject constructJavaObjectByClassPath(const std::string &path, se::Object *args) {
 
         JNIEnv *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
         std::stack<jclass> classStack;
         jclass pathClass = nullptr;
 
@@ -222,6 +228,7 @@ namespace {
 
         // test class path
         pathClass = JniHelper::findClass(classPath.c_str());
+        guard.post_delete(pathClass);
         if (pathClass == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
             return nullptr;
@@ -230,6 +237,7 @@ namespace {
         jobjectArray constructors = (jobjectArray) JniHelper::callObjectObjectMethod(
                 pathClass, "java/lang/Class", "getConstructors",
                 "[Ljava/lang/reflect/Constructor;");
+        guard.post_delete(constructors);
         if (constructors == nullptr)
             return nullptr;
         int constructLen = env->GetArrayLength(constructors);
@@ -237,8 +245,11 @@ namespace {
             jobject constructor = env->GetObjectArrayElement(constructors, i);
             jobject ret = callJavaConstructor(env, classPath, pathClass, constructor, args);
             if (ret) {
+                env->DeleteLocalRef(constructor);
                 return ret;
             }
+            env->DeleteLocalRef(constructor);
+            env->DeleteLocalRef(ret);
         }
 
         return nullptr;
@@ -247,6 +258,7 @@ namespace {
 
     bool getJavaObjectStaticField(const std::string &longPath, se::Value &ret) {
         JNIEnv *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
 
         std::string path = std::regex_replace(longPath, std::regex("\\."), "/");
         std::string fieldName;
@@ -264,6 +276,7 @@ namespace {
         }
 
         jclass kls = JniHelper::findClass(className.c_str());
+        guard.post_delete(kls);
         if (kls == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
             return false;
@@ -278,6 +291,7 @@ namespace {
 
     bool setJavaObjectStaticField(const std::string &longPath, const se::Value &ret) {
         JNIEnv *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
 
         std::string path = std::regex_replace(longPath, std::regex("\\."), "/");
         std::string fieldName;
@@ -295,6 +309,7 @@ namespace {
         }
 
         jclass kls = JniHelper::findClass(className.c_str());
+        guard.post_delete(kls);
         if (kls == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
             return false;
@@ -396,9 +411,13 @@ namespace {
 
     bool JObject::getFieldValue(const std::string &name, JValue &ret) {
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
+
         std::string klassName = JniHelper::getObjectClass(_javaObject);
         jclass klassObject = env->GetObjectClass(_javaObject);
+        guard.post_delete(klassObject);
         jobject fieldObj = JniHelper::callObjectObjectMethod(klassObject, "java/lang/Class", "getField", "Ljava/lang/reflect/Field;", name);
+        guard.post_delete(fieldObj);
         if (fieldObj == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
             return false;
@@ -407,6 +426,8 @@ namespace {
                 fieldObj, "java/lang/reflect/Field", "getType", "Ljava/lang/Class;");
         jobject fieldTypeName = JniHelper::callObjectObjectMethod(
                 fieldType, "java/lang/Class", "getName", "Ljava/lang/String;");
+        guard.post_delete(fieldType);
+        guard.post_delete(fieldTypeName);
         std::string fieldNameStr = jstringToString(fieldTypeName);
         JniUtils::JniType jniFieldType =
                 JniUtils::JniType::fromString(fieldNameStr);
@@ -453,8 +474,12 @@ namespace {
                               const std::string &signature,
                               std::vector<cocos2d::JniMethodSignature> &list) {
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete gurad(env);
+
         std::string className = JniHelper::getObjectClass(_javaObject);
         jclass jobjClass = env->GetObjectClass(_javaObject);
+        gurad.post_delete(jobjClass);
+
         cocos2d::JniMethodSignature oMethod;
         if (!signature.empty()) {
             jmethodID mid = env->GetMethodID(jobjClass, className.c_str(), signature.c_str());
@@ -467,6 +492,7 @@ namespace {
             list.push_back(oMethod);
         } else {
             jobjectArray methodsArray = (jobjectArray) JniHelper::callObjectObjectMethod(jobjClass, "java/lang/Class", "getMethods", "[Ljava/lang/reflect/Method;");
+            gurad.post_delete(methodsArray);
             if (!methodsArray || env->ExceptionCheck()) {
                 env->ExceptionClear();
                 return false;
@@ -476,11 +502,13 @@ namespace {
                 jobject methodObj = env->GetObjectArrayElement(methodsArray, i);
                 std::string methodName = JniHelper::getMethodName(methodObj);
                 if (methodName != name) {
+                    env->DeleteLocalRef(methodObj);
                     continue;
                 }
                 auto sig = JniHelper::getMethodSignature(methodObj);
                 jmethodID mid = env->GetMethodID(jobjClass, name.c_str(), sig.c_str());
                 if (mid == nullptr || env->ExceptionCheck()) {
+                    env->DeleteLocalRef(methodObj);
                     env->ExceptionClear();
                     return false;
                 }
@@ -488,6 +516,7 @@ namespace {
                 oMethod.method = mid;
                 oMethod.signature = sig;
                 list.push_back(oMethod);
+                env->DeleteLocalRef(methodObj);
             }
         }
 
@@ -577,11 +606,7 @@ namespace {
         jvalue jRet = {};
 
         if (rType.isVoid()) {
-            if (jvalueArray.size() == 0) {
-                env->CallVoidMethod(jthis, method);
-            } else {
-                env->CallVoidMethodA(jthis, method, jvalueArray.data());
-            }
+            env->CallVoidMethodA(jthis, method, jvalueArray.data());
         } else if (rType.isBoolean()) {
             jRet.z = env->CallBooleanMethodA(jthis, method, jvalueArray.data());
         } else if (rType.isChar()) {
@@ -1179,7 +1204,8 @@ namespace {
 
     bool hasStaticMethod(const std::string &longPath) {
         JNIEnv *env = JniHelper::getEnv();
-        bool ok = false;
+        JniLocalRefPostDelete guard(env);
+
         std::string path = std::regex_replace(longPath, std::regex("\\."), "/");
         std::string fieldName;
         std::string className;
@@ -1194,6 +1220,7 @@ namespace {
         }
 
         jclass kls = JniHelper::findClass(className.c_str());
+        guard.post_delete(kls);
         if (kls == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
             return false;
@@ -1206,6 +1233,8 @@ namespace {
     bool callStaticJMethod(const std::string &longPath,
                            const std::vector<se::Value> &args, se::Value &out) {
         JNIEnv *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
+
         bool ok = false;
         std::string path = std::regex_replace(longPath, std::regex("\\."), "/");
         std::string fieldName;
@@ -1221,6 +1250,7 @@ namespace {
         }
 
         jclass kls = JniHelper::findClass(className.c_str());
+        guard.post_delete(kls);
         if (kls == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
             return false;
@@ -1279,8 +1309,6 @@ static bool js_register_jni_jmethod_invoke_instance(se::Object *obj) {
 }
 
 static bool js_jni_helper_getActivity(se::State &s) {
-    auto *env = JniHelper::getEnv();
-    jobject activity = JniHelper::getActivity();
     auto *obj = new JObject(JniHelper::getActivity());
     s.rval().setObject(obj->asJSObject());
     return true;
@@ -1294,6 +1322,7 @@ static bool js_jni_helper_newObject(se::State &s) {
     jobject ret = nullptr;
     bool ok;
 
+    JniLocalRefPostDelete guard;
     JniMethodInfo methodInfo;
     if (argCnt == 0) {
         SE_REPORT_ERROR("wrong number of arguments: %d", (int) argCnt);
@@ -1325,6 +1354,7 @@ static bool js_jni_helper_newObject(se::State &s) {
             return false;
         }
     }
+    guard.post_delete(ret);
     auto *jobjWrapper = new JObject(ret);
     s.rval().setObject(jobjWrapper->asJSObject());
     return true;
@@ -1334,9 +1364,14 @@ SE_BIND_FUNC(js_jni_helper_newObject)
 
 static jobject genAnonymousJavaObject(const std::string &parentClassStr, const std::vector<std::string> &interfacesList) {
     JNIEnv *env = JniHelper::getEnv();
+
+    JniLocalRefPostDelete guard(env);
     jclass stringClass = JniHelper::findClass("java/lang/String");
     jobject superClassNameJ = env->NewStringUTF(parentClassStr.c_str());
     jobjectArray interfacesJ = env->NewObjectArray(interfacesList.size(), stringClass, nullptr);
+    guard.post_delete(stringClass);
+    guard.post_delete(superClassNameJ);
+    guard.post_delete(interfacesJ);
     for (int i = 0; i < interfacesList.size(); i++) {
         jobject tmpStr = env->NewStringUTF(interfacesList[i].c_str());
         env->SetObjectArrayElement(interfacesJ, i, tmpStr);
@@ -1344,6 +1379,7 @@ static jobject genAnonymousJavaObject(const std::string &parentClassStr, const s
     }
 
     jclass bcClass = JniHelper::findClass("org/cocos2dx/lib/ByteCodeGenerator");
+    guard.post_delete(bcClass);
 
     if (bcClass == nullptr || env->ExceptionCheck()) {
         env->ExceptionClear();
@@ -1353,25 +1389,25 @@ static jobject genAnonymousJavaObject(const std::string &parentClassStr, const s
     jobject ret = env->CallStaticObjectMethod(bcClass, generateMID, superClassNameJ, interfacesJ);
     if(env->ExceptionCheck()) {
         jthrowable e = env->ExceptionOccurred();
+        guard.post_delete(e);
         env->ExceptionClear();
         SE_LOGE("Failed to call newInstance:");
         jmethodID ps = env->GetMethodID(env->GetObjectClass(e), "printStackTrace", "()V");
         env->CallVoidMethod(e, ps);
     }
 
-    env->DeleteLocalRef(stringClass);;
-    env->DeleteLocalRef(superClassNameJ);
-    env->DeleteLocalRef(interfacesJ);
-    env->DeleteLocalRef(bcClass);
     return ret;
 }
 
 static se::Object *registerAnonymousJavaObject(JNIEnv *env, jobject ret, se::Object *instanceCfg) {
 
+    JniLocalRefPostDelete guard(env);
+
     jclass tmpClass = env->GetObjectClass(ret);
     jfieldID idField = env->GetFieldID(tmpClass, JS_JNI_NATIVE_ID_KEY, "I");
     int instID = env->GetIntField(ret, idField);
 
+    guard.post_delete(tmpClass);
 
     auto *wrap = new JObject(ret);
     auto *jsObj = wrap->asJSObject();
@@ -1430,9 +1466,12 @@ static bool js_jni_helper_impl(se::State &s) {
         }
     }
 
+    auto *env = JniHelper::getEnv();
+    JniLocalRefPostDelete guard(env);
+
     if (argCnt == 1) {
-        auto *env = JniHelper::getEnv();
         jobject wrap = genAnonymousJavaObject(parentClassStr, interfacesList);
+        guard.post_delete(wrap);
         if (wrap) {
             s.rval().setObject(registerAnonymousJavaObject(env, wrap, instanceCfg));
         }
@@ -1444,13 +1483,13 @@ static bool js_jni_helper_impl(se::State &s) {
             auto *env = JniHelper::getEnv();
             jobject anonyJObj = genAnonymousJavaObject(parentClassStr, interfacesList);
             jobject globlAnonyJobj = env->NewGlobalRef(anonyJObj);
-            cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([instanceCfg, cb, globlAnonyJobj, anonyJObj]() {
+            cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread([instanceCfg, cb, globlAnonyJobj]() {
                 auto *env = JniHelper::getEnv();
                 se::AutoHandleScope scope;
                 se::ValueArray cbArgs;
                 cbArgs.resize(1);
                 cbArgs[0].setUndefined();
-                if (!anonyJObj) {
+                if (!globlAnonyJobj) {
                     cb->call(cbArgs, nullptr);
                 } else {
                     se::Object *wrap = registerAnonymousJavaObject(env, globlAnonyJobj, instanceCfg);
@@ -1461,7 +1500,7 @@ static bool js_jni_helper_impl(se::State &s) {
                 cb->decRef();
                 env->DeleteGlobalRef(globlAnonyJobj);
             });
-
+            env->DeleteLocalRef(anonyJObj);
         });
         t.detach();
         s.rval().setUndefined();
@@ -1666,7 +1705,9 @@ static bool js_jni_proxy_object_method_apply(se::State &s) {
         JniUtils::JniType rType = JniUtils::JniType::fromString(returnType);
         ok = callJMethodByReturnType(rType, jThis, m.method, jArgs, s.rval());
         if (env->ExceptionCheck()) {
+            JniLocalRefPostDelete guard(env);
             jthrowable e = env->ExceptionOccurred();
+            guard.post_delete(e);
             env->ExceptionClear();
             if (e) {
                 auto printStackTrace = env->GetMethodID(env->GetObjectClass(e), "printStackTrace", "()V");
@@ -1723,7 +1764,9 @@ static bool js_jni_proxy_java_path_construct(se::State &s) {
         se::Object *underline = stub->getUnderlineJSObject();
         underline->getProperty(JS_JNI_TAG_PATH, &path);
         std::string pathStr = path.toString();
+        JniLocalRefPostDelete guard;
         jobject ret = constructJavaObjectByClassPath(pathStr, args);
+        guard.post_delete(ret);
         if (ret) {
             auto *jThis = new JObject(ret);
             s.rval().setObject(jThis->asJSObject());
@@ -1898,6 +1941,7 @@ JNIEXPORT jobject JNICALL JNI_BYTECODE_GENERATOR(callJS)(JNIEnv *env,
                                                          jobject finished,
                                                          jstring methodName,
                                                          jobjectArray args) {
+    JniLocalRefPostDelete guard(env);
     se::AutoHandleScope scope;
     Defer setState([&]() {
         JniHelper::callObjectVoidMethod(finished, "java/util/concurrent/atomic/AtomicBoolean", "set", true);
@@ -1906,6 +1950,9 @@ JNIEXPORT jobject JNICALL JNI_BYTECODE_GENERATOR(callJS)(JNIEnv *env,
     int argCnt = env->GetArrayLength(args);
     jobject mapKey = env->GetObjectArrayElement(args, 0);
     jobject thisObject = env->GetObjectArrayElement(args, 1);
+
+    guard.post_delete(mapKey);
+    guard.post_delete(thisObject);
 
     std::string functionName = jstringToString(methodName);
 
@@ -1920,6 +1967,7 @@ JNIEXPORT jobject JNICALL JNI_BYTECODE_GENERATOR(callJS)(JNIEnv *env,
         jobject argI = env->GetObjectArrayElement(args, i);
         jobject_to_seval2(env, argI, tmp);
         jsArgs.push_back(tmp);
+        env->DeleteLocalRef(argI);
     }
 
     se::Object *configObject = item.jsConfig;
@@ -1955,3 +2003,4 @@ JNIEXPORT jobject JNICALL JNI_BYTECODE_GENERATOR(callJS)(JNIEnv *env,
     }
 }
 }
+

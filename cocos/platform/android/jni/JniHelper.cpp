@@ -66,6 +66,7 @@ void _detachCurrentThread(void* a) {
     cocos2d::JniHelper::getJavaVM()->DetachCurrentThread();
 }
 
+
 namespace cocos2d {
 
     JavaVM* JniHelper::_psJavaVM = nullptr;
@@ -74,6 +75,11 @@ namespace cocos2d {
     std::function<void()> JniHelper::classloaderCallback = nullptr;
     
     jobject JniHelper::_activity = nullptr;
+
+
+    JniLocalRefPostDelete::JniLocalRefPostDelete() {
+        _env = JniHelper::getEnv();
+    }
 
     JavaVM* JniHelper::getJavaVM() {
         pthread_t thisthread = pthread_self();
@@ -328,7 +334,9 @@ namespace cocos2d {
 
     std::vector<JniMethodSignature> JniHelper::getStaticMethodsByName(JNIEnv *env, jclass klass, const std::string &methodName) {
         std::vector<JniMethodSignature> ret;
+        JniLocalRefPostDelete guard(env);
         jobject methods = callObjectObjectMethod(klass, "java/lang/Class", "getMethods", "[Ljava/lang/reflect/Method;");
+        guard.post_delete(methods);
         int len = env->GetArrayLength((jarray) methods);
         for (int i = 0; i < len; i++) {
             jobject method = env->GetObjectArrayElement((jobjectArray) methods, i);
@@ -339,14 +347,19 @@ namespace cocos2d {
                 m.method = env->GetStaticMethodID(klass, methodName.c_str(), m.signature.c_str());
                 ret.push_back(m);
             }
+            env->DeleteLocalRef(method);
+            env->DeleteLocalRef(methodNameObj);
         }
         return ret;
     }
 
     std::vector<std::string> JniHelper::getObjectMethods(jobject obj) {
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
         jobject classObject = env->GetObjectClass(obj);
         jobjectArray methods = (jobjectArray) JniHelper::callObjectObjectMethod(classObject, "java/lang/Class", "getMethods","[Ljava/lang/reflect/Method;");
+        guard.post_delete(classObject);
+        guard.post_delete(methods);
         std::vector<std::string> methodList;
         auto len = env->GetArrayLength(methods);
         for (auto i = 0; i < len; i++) {
@@ -356,6 +369,7 @@ namespace cocos2d {
             ss << " # ";
             ss << getMethodSignature(method);
             methodList.push_back(ss.str());
+            env->DeleteLocalRef(method);
         }
 
         return methodList;
@@ -365,13 +379,17 @@ namespace cocos2d {
     std::string JniHelper::getMethodSignature(jobject method) {
         std::stringstream ss;
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
         jobjectArray paramTypes = (jobjectArray) callObjectObjectMethod(method, "java/lang/reflect/Method", "getParameterTypes","[Ljava/lang/Class;");
+        guard.post_delete(paramTypes);
         auto len = env->GetArrayLength(paramTypes);
         ss << "(";
         for (auto j = 0; j < len; j++) {
             jobject m = env->GetObjectArrayElement(paramTypes, 0);
             jobject paramName = callObjectObjectMethod(m, "java/lang/Class", "getName", "Ljava/lang/String;");
             ss << JniUtils::JniType::reparse(jstring2string((jstring)paramName));
+            env->DeleteLocalRef(m);
+            env->DeleteLocalRef(paramName);
         }
         ss << ")";
         ss << getMethodReturnType(method);
@@ -379,25 +397,34 @@ namespace cocos2d {
     }
 
     std::string JniHelper::getMethodName(jobject method) {
+        JniLocalRefPostDelete guard;
         jobject methodName = callObjectObjectMethod(method, "java/lang/reflect/Method", "getName", "Ljava/lang/String;");
+        guard.post_delete(methodName);
         return jstring2string((jstring)methodName);
     }
 
     std::string JniHelper::getMethodReturnType(jobject method) {
+        JniLocalRefPostDelete guard;
         jobject returnType = callObjectObjectMethod(method, "java/lang/reflect/Method", "getReturnType", "Ljava/lang/Class;");
         jobject returnTypeName = callObjectObjectMethod(returnType, "java/lang/Class", "getName", "Ljava/lang/String;");
+        guard.post_delete(returnType);
+        guard.post_delete(returnTypeName);
         return JniUtils::JniType::fromString(jstring2string((jstring)returnTypeName)).toString();
     }
 
     std::string JniHelper::getConstructorSignature(JNIEnv *env, jobject constructor) {
         std::stringstream ss;
+        JniLocalRefPostDelete guard(env);
         jobjectArray paramTypes = (jobjectArray) callObjectObjectMethod(constructor, "java/lang/reflect/Constructor", "getParameterTypes", "[Ljava/lang/Class;");
+        guard.post_delete(paramTypes);
         auto len = env->GetArrayLength(paramTypes);
         ss << "(";
         for (auto j = 0; j < len; j++) {
             jobject m = env->GetObjectArrayElement(paramTypes, 0);
             jobject paramName = callObjectObjectMethod(m, "java/lang/Class", "getName", "Ljava/lang/String;");
             ss << JniUtils::JniType::reparse(jstring2string((jstring)paramName));
+            env->DeleteLocalRef(m);
+            env->DeleteLocalRef(paramName);
         }
         ss << ")";
         ss << "V";
@@ -406,6 +433,7 @@ namespace cocos2d {
 
     std::string JniHelper::getObjectClass(jobject obj) {
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
 
         jobject classObject = env->GetObjectClass(obj);
         jobject classNameString = JniHelper::callObjectObjectMethod(
@@ -413,16 +441,19 @@ namespace cocos2d {
 
         std::string buff = jstring2string((jstring)classNameString);
 
-        env->DeleteLocalRef(classObject);
-        env->DeleteLocalRef(classNameString);
+        guard.post_delete(classObject);
+        guard.post_delete(classNameString);
 
         return buff;
     }
 
     std::vector<std::string> JniHelper::getObjectFields(jobject obj) {
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
         jobject classObject = env->GetObjectClass(obj);
+        guard.post_delete(classObject);
         jobjectArray fields = (jobjectArray) JniHelper::callObjectObjectMethod(classObject, "java/lang/Class", "getFields", "[Ljava/lang/reflect/Field;");
+        guard.post_delete(fields);
         std::vector<std::string> fieldList;
         auto len = env->GetArrayLength(fields);
         for (auto i = 0; i < len; i++) {
@@ -435,6 +466,10 @@ namespace cocos2d {
             std::string fieldTypeNameStr = jstring2string((jstring)fieldTypeName);
             name.append(" # ").append(fieldTypeNameStr);
             fieldList.push_back(name);
+            env->DeleteLocalRef(fieldObj);
+            env->DeleteLocalRef(fieldName);
+            env->DeleteLocalRef(fieldClass);
+            env->DeleteLocalRef(fieldTypeName);
         }
 
         return fieldList;
@@ -443,11 +478,12 @@ namespace cocos2d {
     jobject JniHelper::getObjectFieldObject(jobject obj, const std::string &fieldName)
     {
         auto *env = JniHelper::getEnv();
+        JniLocalRefPostDelete guard(env);
         jobject classObj = env->GetObjectClass(obj);
+        guard.post_delete(classObj);
         jobject fid = callObjectObjectMethod(classObj, "java/lang/Class", "getField", "Ljava/lang/reflect/Field;", fieldName);
         if(fid == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
-            env->DeleteLocalRef(classObj);
             return nullptr;
         }
         return fid;
@@ -456,7 +492,10 @@ namespace cocos2d {
     jfieldID JniHelper::getClassStaticField(JNIEnv *env, jclass classObj,
                                   const std::string &fieldName,
                                   JniUtils::JniType &fieldType) {
+
+        JniLocalRefPostDelete guard(env);
         jobject fieldObj = callObjectObjectMethod(classObj, "java/lang/Class", "getField","Ljava/lang/reflect/Field;", fieldName);
+        guard.post_delete(fieldObj);
         if (!fieldObj || env->ExceptionCheck()) {
             env->ExceptionClear();
             return nullptr;
@@ -465,6 +504,8 @@ namespace cocos2d {
         jfieldID modifierStaticField = env->GetStaticFieldID(modifierClass, "STATIC", "I");
         const auto STATIC_FLAG = (unsigned int) env->GetStaticIntField(modifierClass, modifierStaticField);
         unsigned int modifiers = callObjectIntMethod(fieldObj, "java/lang/reflect/Field", "getModifiers");
+
+        guard.post_delete(modifierClass);
 
         if (env->ExceptionCheck()) {
             env->ExceptionClear();
@@ -480,6 +521,10 @@ namespace cocos2d {
         fieldType = JniUtils::JniType::fromString(jstring2string((jstring)fieldTypeName));
         jfieldID fid = env->GetStaticFieldID(classObj, fieldName.c_str(),
                                              fieldType.toString().c_str());
+
+        guard.post_delete(fieldClassObj);
+        guard.post_delete(fieldTypeName);
+
         if (!fid || env->ExceptionCheck()) {
             env->ExceptionClear();
             return nullptr;
@@ -491,7 +536,7 @@ namespace cocos2d {
 
     bool JniHelper::hasStaticField(const std::string &longPath) {
         JNIEnv *env = JniHelper::getEnv();
-
+        JniLocalRefPostDelete guard(env);
         std::string path = std::regex_replace(longPath, std::regex("\\."), "/");
         std::string fieldName;
         std::string className;
@@ -506,6 +551,7 @@ namespace cocos2d {
         }
 
         jclass kls = _getClassID(className.c_str());
+        guard.post_delete(kls);
         if (kls == nullptr || env->ExceptionCheck()) {
             env->ExceptionClear();
             return false;
