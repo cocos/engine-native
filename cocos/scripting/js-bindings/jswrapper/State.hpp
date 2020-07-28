@@ -95,6 +95,10 @@ namespace se {
          *  @return
          */
         State(Object* thisObject, const ValueArray& args);
+
+        void setJSThisObject(Object * thisObject);
+
+        Object * getJSThisObject() const {return _jsThisObject;}
     private:
 
         // Disable copy/move constructor, copy/move assigment
@@ -103,9 +107,10 @@ namespace se {
         State& operator=(const State&);
         State& operator=(State&&);
 
-        void* _nativeThisObject;  //weak ref
-        Object* _thisObject; //weak ref
-        const ValueArray* _args; //weak ref
+        void* _nativeThisObject = nullptr;  //weak ref
+        Object* _thisObject = nullptr; //weak ref
+        const ValueArray* _args = nullptr; //weak ref
         Value _retVal; //weak ref
+        Object* _jsThisObject = nullptr;
     };
 }

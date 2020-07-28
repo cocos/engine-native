@@ -42,6 +42,7 @@ android {
         res.srcDirs "../res", 'res'
         jniLibs.srcDirs "../libs", 'libs'
         manifest.srcFile "AndroidManifest.xml"
+        assets.srcDirs "assets"
     }
 
     externalNativeBuild {
@@ -98,12 +99,17 @@ android {
 }
 
 android.applicationVariants.all { variant ->
-    // delete previous files first
-    delete "${buildDir}/intermediates/merged_assets/${variant.dirName}"
 
-    variant.mergeAssets.doLast {
-        def sourceDir = "${buildDir}/../../../../.."
+    def outputDir="${projectDir}/assets"
+    def sourceDir="${projectDir}/../../../.."
 
+    assert file("${sourceDir}/assets").exists()
+
+    delete "${outputDir}"
+
+    def targetName = variant.name.capitalize()
+    def copyTaskName = "copy${targetName}Assets"
+    tasks.register(copyTaskName) {
         copy {
             from "${sourceDir}/assets"
             into "${outputDir}/assets"
@@ -125,6 +131,8 @@ android.applicationVariants.all { variant ->
             into outputDir
         }
     }
+
+    tasks.getByName("pre${targetName}Build").dependsOn copyTaskName
 }
 
 dependencies {

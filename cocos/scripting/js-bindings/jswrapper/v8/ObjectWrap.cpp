@@ -58,17 +58,17 @@ namespace se {
     }
 
 
-    v8::Local<v8::Object> ObjectWrap::handle() {
+    v8::Local<v8::Object> ObjectWrap::handle() const {
         return handle(v8::Isolate::GetCurrent());
     }
 
 
-    v8::Local<v8::Object> ObjectWrap::handle(v8::Isolate *isolate) {
+    v8::Local<v8::Object> ObjectWrap::handle(v8::Isolate *isolate) const {
         return v8::Local<v8::Object>::New(isolate, persistent());
     }
 
 
-    v8::Persistent<v8::Object> &ObjectWrap::persistent() {
+    v8::Persistent<v8::Object> &ObjectWrap::persistent() const {
         return handle_;
     }
 

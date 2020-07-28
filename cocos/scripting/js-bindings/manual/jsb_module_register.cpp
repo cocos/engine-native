@@ -66,6 +66,7 @@
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include "cocos/scripting/js-bindings/manual/JavaScriptJavaBridge.h"
+#include "cocos/scripting/js-bindings/manual/jsb_jni_manual.hpp"
 #endif
 
 #if USE_GFX_RENDERER && USE_MIDDLEWARE
@@ -141,6 +142,7 @@ bool jsb_register_all_modules()
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     se->addRegisterCallback(register_javascript_java_bridge);
+    se->addRegisterCallback(jsb_register_jni_manual);
 #endif
 
 #if USE_AUDIO

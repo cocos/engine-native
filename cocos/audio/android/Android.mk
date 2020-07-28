@@ -45,7 +45,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include \
                     $(LOCAL_PATH)/../../../external \
                     $(LOCAL_PATH)/../../../external/sources
                     
-LOCAL_STATIC_LIBRARIES += libvorbisidec libpvmp3dec
+LOCAL_STATIC_LIBRARIES += libvorbisidec libpvmp3dec v8_static
 
 include $(BUILD_STATIC_LIBRARY)
 

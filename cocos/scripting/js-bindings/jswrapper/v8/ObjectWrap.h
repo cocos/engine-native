@@ -38,9 +38,9 @@ namespace se {
         bool init(v8::Local<v8::Object> handle);
         void setFinalizeCallback(V8FinalizeFunc finalizeCb);
 
-        v8::Local<v8::Object> handle();
-        v8::Local<v8::Object> handle(v8::Isolate *isolate);
-        v8::Persistent<v8::Object> &persistent();
+        v8::Local<v8::Object> handle() const;
+        v8::Local<v8::Object> handle(v8::Isolate *isolate) const;
+        v8::Persistent<v8::Object> &persistent() const;
 
         void wrap(void *nativeObj);
         static void* unwrap(v8::Local<v8::Object> handle);
@@ -67,7 +67,7 @@ namespace se {
         void makeWeak();
 
         int refs_;  // ro
-        v8::Persistent<v8::Object> handle_;
+        mutable v8::Persistent<v8::Object> handle_;
         void *_nativeObj;
         V8FinalizeFunc _finalizeCb;
     };

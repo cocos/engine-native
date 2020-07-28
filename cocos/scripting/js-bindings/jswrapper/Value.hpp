@@ -398,6 +398,8 @@ namespace se {
          */
         inline bool isNullOrUndefined() const { return (isNull() || isUndefined()); }
 
+        std::string getTypeName() const;
+
     private:
         explicit Value(Type type);
         void reset(Type type);

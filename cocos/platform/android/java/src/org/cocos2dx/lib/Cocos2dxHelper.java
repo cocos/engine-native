@@ -86,11 +86,12 @@ public class Cocos2dxHelper {
     private static boolean sActivityVisible;
     private static String sPackageName;
     private static String sFileDirectory;
+    private static File sCacheDirectory = null;
     private static Activity sActivity = null;
     private static Cocos2dxHelperListener sCocos2dxHelperListener;
     private static Set<OnActivityResultListener> onActivityResultListeners = new LinkedHashSet<OnActivityResultListener>();
     private static Vibrator sVibrateService = null;
-
+    public static long renderThread = -1;
     // The absolute path to the OBB if it exists, else the absolute path to the APK.
     private static String sAssetsPath = "";
     
@@ -271,7 +272,9 @@ public class Cocos2dxHelper {
     public static Set<OnActivityResultListener> getOnActivityResultListeners() {
         return onActivityResultListeners;
     }
-    
+
+    public static boolean inRendererThread() {return renderThread != -1 && renderThread == Thread.currentThread().getId();}
+
     public static boolean isActivityVisible(){
         return sActivityVisible;
     }
@@ -301,6 +304,13 @@ public class Cocos2dxHelper {
     }
     public static String getWritablePath() {
         return Cocos2dxHelper.sFileDirectory;
+    }
+
+    public static File getCacheDir() {
+        if(sCacheDirectory == null) {
+            sCacheDirectory =  Cocos2dxActivity.getContext().getCacheDir();
+        }
+        return sCacheDirectory;
     }
 
     public static String getCurrentLanguage() {

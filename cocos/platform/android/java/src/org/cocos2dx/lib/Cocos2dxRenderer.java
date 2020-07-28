@@ -58,6 +58,10 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private long mFrameCount = 0;
     private boolean mNeedToPause = false;
 
+
+    public Cocos2dxRenderer() {
+    }
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -114,6 +118,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
                 }
             });
         }
+        Cocos2dxHelper.renderThread = Thread.currentThread().getId();
     }
 
     @Override

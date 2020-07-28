@@ -275,6 +275,8 @@ namespace se {
          */
         bool isDebuggerEnabled() const;
 
+        void throwException(const std::string &message);
+
         /**
          *  @brief Main loop update trigger, it's need to invoked in main thread every frame.
          */

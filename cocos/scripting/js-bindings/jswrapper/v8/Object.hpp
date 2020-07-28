@@ -74,6 +74,9 @@ namespace se {
          */
         SE_DEPRECATED_ATTRIBUTE static Object* createUint8TypedArray(uint8_t* bytes, size_t byteLength);
 
+
+        static Object * createFunctionObject(Object *thisObject, void (*func)(const v8::FunctionCallbackInfo<v8::Value> &args));
+
         enum class TypedArrayType
         {
             NONE,
@@ -133,12 +136,26 @@ namespace se {
         static Object* getObjectWithPtr(void* ptr);
 
         /**
+         * @briefC Creates a proxy object
+         * @param proxyObject
+         * @return
+         */
+        Object *proxyTo(Object *proxyObject);
+
+
+        /**
          *  @brief Gets a property from an object.
          *  @param[in] name A utf-8 string containing the property's name.
          *  @param[out] value The property's value if object has the property, otherwise the undefined value.
          *  @return true if object has the property, otherwise false.
          */
         bool getProperty(const char *name, Value* value);
+
+        int getPrivateFieldCount();
+
+        bool getRealNamedProperty(const char *name, Value* value);
+
+        bool hasRealNamedProperty(const char *name);
 
         /**
          *  @brief Sets a property to an object.
@@ -276,6 +293,9 @@ namespace se {
          */
         void clearPrivateData(bool clearMapping = true);
 
+
+        std::vector<std::string> keys() const;
+
         /**
          *  @brief Roots an object from garbage collection.
          *  @note Use this method when you want to store an object in a global or on the heap, where the garbage collector will not be able to discover your reference to it.
@@ -368,6 +388,8 @@ namespace se {
          */
         std::string toString() const;
 
+        std::string toJSON() const;
+
         // Private API used in wrapper
         static Object* _createJSObject(Class* cls, v8::Local<v8::Object> obj);
         v8::Local<v8::Object> _getJSObject() const;
@@ -377,6 +399,8 @@ namespace se {
         void _setFinalizeCallback(V8FinalizeFunc finalizeCb);
         bool _isNativeFunction() const;
         //
+
+        Object* bindThis(Object *p);
 
     private:
         static void nativeObjectFinalizeHook(void* nativeObj);

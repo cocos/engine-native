@@ -42,6 +42,8 @@ namespace se {
             Object* seObj;
         };
 
+        Object *getJSThis(const v8::FunctionCallbackInfo<v8::Value>& _v8args);
+
         void jsToSeArgs(const v8::FunctionCallbackInfo<v8::Value>& _v8args, ValueArray* outArr);
         void jsToSeValue(v8::Isolate* isolate, v8::Local<v8::Value> jsval, Value* v);
         void seToJsArgs(v8::Isolate* isolate, const ValueArray& args, std::vector<v8::Local<v8::Value>>* outArr);

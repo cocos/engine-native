@@ -277,7 +277,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             //Field constValue = lp.getClass().getDeclaredField("LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER");
             Field constValue = lp.getClass().getDeclaredField("LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES");
             field.setInt(lp, constValue.getInt(null));
-            
+
             // https://developer.android.com/training/system-ui/immersive
             int flag = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -357,6 +357,9 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         onLoadNativeLibraries();
 
         sContext = this;
+
+        ByteCodeGenerator.init();  //need context
+
         this.mHandler = new Cocos2dxHandler(this);
         
         Cocos2dxHelper.init(this);
@@ -444,7 +447,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         msg.obj = new Cocos2dxHandler.DialogMessage(pTitle, pMessage);
         this.mHandler.sendMessage(msg);
     }
-    
+
     @Override
     public void runOnGLThread(final Runnable runnable) {
         this.mGLSurfaceView.queueEvent(runnable);

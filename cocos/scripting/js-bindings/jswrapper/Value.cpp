@@ -580,4 +580,18 @@ namespace se {
         }
     }
 
+    std::string Value::getTypeName() const {
+        switch (_type) {
+            case Type::Undefined: return "undefined";
+            case Type::Null: return "null";
+            case Type::Number: return "number";
+            case Type::Boolean: return "boolean";
+            case Type::String: return "string";
+            case Type::Object:
+                if(_u._object) return _u._object->toString();
+                else return "null";
+            default: return "undefined";
+        }
+    }
+
 } // namespace se {

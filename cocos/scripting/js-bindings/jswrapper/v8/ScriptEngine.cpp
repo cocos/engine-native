@@ -819,6 +819,12 @@ namespace se {
         return !_debuggerServerAddr.empty() && _debuggerServerPort > 0;
     }
 
+    void ScriptEngine::throwException(const std::string &message)
+    {
+        v8::HandleScope scope(_isolate);
+        _isolate->ThrowException(v8::String::NewFromUtf8(_isolate, message.c_str()).ToLocalChecked());
+    }
+
     void ScriptEngine::mainLoopUpdate()
     {
         // empty implementation

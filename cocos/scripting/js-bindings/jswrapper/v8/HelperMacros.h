@@ -58,6 +58,7 @@ extern uint32_t __jsbInvocationCount;
         se::internal::jsToSeArgs(_v8args, &args); \
         void* nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This()); \
         se::State state(nativeThisObject, args); \
+        state.setJSThisObject(se::internal::getJSThis(_v8args));\
         ret = funcName(state); \
         if (!ret) { \
             SE_LOGE("[ERROR] Failed to invoke %s, location: %s:%d\n", #funcName, __FILE__, __LINE__); \

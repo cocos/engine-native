@@ -25,5 +25,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/. \
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/. \
                            $(LOCAL_PATH)/..
+                           
+LOCAL_STATIC_LIBRARIES += v8_static
                     
 include $(BUILD_STATIC_LIBRARY)

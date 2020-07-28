@@ -38,6 +38,7 @@ namespace se {
     State::~State()
     {
         SAFE_DEC_REF(_thisObject);
+        SAFE_DEC_REF(_jsThisObject);
     }
     
     State::State(void* nativeThisObject)
@@ -64,7 +65,14 @@ namespace se {
             _thisObject->incRef();
         }
     }
-    
+
+    void State::setJSThisObject(se::Object *thisObject) {
+
+        SAFE_DEC_REF(_jsThisObject);
+        _jsThisObject = thisObject;
+        SAFE_INC_REF(thisObject);
+    }
+
     void* State::nativeThisObject() const
     {
         return _nativeThisObject;

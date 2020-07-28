@@ -67,6 +67,8 @@ scripting/js-bindings/manual/jsb_global.cpp \
 scripting/js-bindings/manual/jsb_xmlhttprequest.cpp \
 scripting/js-bindings/manual/jsb_cocos2dx_network_manual.cpp \
 scripting/js-bindings/manual/jsb_platform_android.cpp \
+scripting/js-bindings/manual/jsb_jni_manual.cpp \
+scripting/js-bindings/manual/jsb_jni_utils.cpp \
 scripting/js-bindings/jswrapper/config.cpp \
 scripting/js-bindings/jswrapper/HandleObject.cpp \
 scripting/js-bindings/jswrapper/MappingUtils.cpp \
@@ -87,7 +89,6 @@ scripting/js-bindings/event/EventDispatcher.cpp \
 ../external/sources/ConvertUTF/ConvertUTFWrapper.cpp \
 ../external/sources/ConvertUTF/ConvertUTF.c \
 ../external/sources/edtaa3func/edtaa3func.cpp \
-../external/sources/edtaa3func/edtaa3func.h \
 ui/edit-box/EditBox-android.cpp \
 2d/CCFontAtlas.cpp \
 2d/CCFontFreetype.cpp \
@@ -168,7 +169,6 @@ renderer/scene/StencilManager.cpp \
 renderer/scene/MemPool.cpp \
 renderer/scene/NodeMemPool.cpp \
 renderer/scene/ParallelTask.cpp \
-renderer/memop/RecyclePool.hpp \
 renderer/renderer/EffectVariant.cpp \
 renderer/renderer/EffectBase.cpp \
 scripting/js-bindings/auto/jsb_gfx_auto.cpp \

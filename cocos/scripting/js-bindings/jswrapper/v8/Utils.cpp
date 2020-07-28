@@ -34,6 +34,13 @@ namespace se {
 
     namespace internal {
 
+
+        Object *getJSThis(const v8::FunctionCallbackInfo<v8::Value>& _v8args)
+        {
+            Object *obj = Object::_createJSObject(nullptr, _v8args.This());
+            return obj;
+        }
+
         void jsToSeArgs(const v8::FunctionCallbackInfo<v8::Value>& v8args, ValueArray* outArr)
         {
             assert(outArr != nullptr);
@@ -245,11 +252,11 @@ namespace se {
                 return nullptr;
 
             v8::Local<v8::String> keyChecked = key.ToLocalChecked();
-            v8::Maybe<bool> mbHas = objChecked->Has(context, keyChecked);
+            v8::Maybe<bool> mbHas = objChecked->HasRealNamedProperty(context, keyChecked);
             if (mbHas.IsNothing() || !mbHas.FromJust())
                 return nullptr;
 
-            v8::MaybeLocal<v8::Value> mbVal = objChecked->Get(context, keyChecked);
+            v8::MaybeLocal<v8::Value> mbVal = objChecked->GetRealNamedProperty(context, keyChecked);
             if (mbVal.IsEmpty())
                 return nullptr;
 

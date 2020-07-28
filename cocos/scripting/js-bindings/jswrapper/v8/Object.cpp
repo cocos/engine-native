@@ -32,6 +32,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <array>
 
 namespace se {
 
@@ -288,6 +289,20 @@ namespace se {
         return createTypedArray(TypedArrayType::UINT8, data, dataCount);
     }
 
+    Object * Object::createFunctionObject(Object *thisObj, void (*func)(const v8::FunctionCallbackInfo<v8::Value> &args))
+    {
+        v8::Local<v8::Context> context = __isolate->GetCurrentContext();
+        v8::MaybeLocal<v8::Function> maybeFunc;
+        if(thisObj) {
+            maybeFunc = v8::FunctionTemplate::New(__isolate, func, thisObj->_obj.handle(__isolate))->GetFunction(context);
+        }else{
+            maybeFunc = v8::FunctionTemplate::New(__isolate, func)->GetFunction(context);
+        }
+        if (maybeFunc.IsEmpty())
+            return nullptr;
+        return Object::_createJSObject(nullptr, maybeFunc.ToLocalChecked());
+    }
+
     Object* Object::createJSONObject(const std::string& jsonStr)
     {
         v8::Local<v8::Context> context = __isolate->GetCurrentContext();
@@ -353,6 +368,55 @@ namespace se {
         return true;
     }
 
+    int Object::getPrivateFieldCount() {
+        return _obj.handle(__isolate)->InternalFieldCount();
+    }
+
+
+    bool Object::hasRealNamedProperty(const char *name)
+    {
+        v8::HandleScope handle_scope(__isolate);
+        v8::Local<v8::Object> self = _obj.handle(__isolate);
+
+        v8::Local<v8::String> key = v8::String::NewFromUtf8(__isolate, name).ToLocalChecked();
+        return  self->HasRealNamedProperty(__isolate->GetCurrentContext(), key).FromJust();
+    }
+
+    bool Object::getRealNamedProperty(const char *name, Value *data)
+    {
+        assert(data != nullptr);
+        data->setUndefined();
+
+        v8::HandleScope handle_scope(__isolate);
+
+        if (_obj.persistent().IsEmpty())
+        {
+            return false;
+        }
+
+        v8::MaybeLocal<v8::String> nameValue = v8::String::NewFromUtf8(__isolate, name, v8::NewStringType::kNormal);
+        if (nameValue.IsEmpty())
+            return false;
+
+        v8::Local<v8::String> nameValToLocal = nameValue.ToLocalChecked();
+        v8::Local<v8::Context> context = __isolate->GetCurrentContext();
+        v8::Maybe<bool> maybeExist = _obj.handle(__isolate)->HasRealNamedProperty(context, nameValToLocal);
+        if (maybeExist.IsNothing())
+            return false;
+
+
+        if (!maybeExist.FromJust())
+            return false;
+
+        v8::MaybeLocal<v8::Value> result = _obj.handle(__isolate)->GetRealNamedProperty(context, nameValToLocal);
+        if (result.IsEmpty())
+            return false;
+
+        internal::jsToSeValue(__isolate, result.ToLocalChecked(), data);
+
+        return true;
+    }
+
     bool Object::deleteProperty(const char *name)
     {
 
@@ -379,6 +443,15 @@ namespace se {
         return true;
     }
 
+    Object * Object::proxyTo(se::Object *proxyObject)
+    {
+        v8::HandleScope scope(__isolate);
+        v8::Local<v8::Context> context = __isolate->GetCurrentContext();
+        v8::Local<v8::Proxy> proxy = v8::Proxy::New(context, _obj.handle(), proxyObject->_obj.handle()).ToLocalChecked();
+        v8::Local<v8::Object> ret = proxy.As<v8::Object>();
+        se::Object *jso = se::Object::_createJSObject(nullptr, ret);
+        return jso;
+    }
 
     bool Object::setProperty(const char *name, const Value& data)
     {
@@ -799,6 +872,52 @@ namespace se {
         {
             ret = "[object Object]";
         }
+        return ret;
+    }
+
+    std::string Object::toJSON() const
+    {
+        v8::HandleScope scope(__isolate);
+        v8::Local<v8::Context> context = __isolate->GetCurrentContext();
+        v8::Local<v8::String> jsonValue = v8::JSON::Stringify(context, _obj.handle()).ToLocalChecked();
+        v8::String::Utf8Value jsonStr(__isolate, jsonValue);
+        return *jsonStr;
+    }
+
+    std::vector<std::string> Object::keys() const
+    {
+        v8::HandleScope scope(__isolate);
+        v8::Local<v8::Context> context = __isolate->GetCurrentContext();
+        v8::Local<v8::Array> keyArr =  _obj.handle()->GetOwnPropertyNames(context).ToLocalChecked();
+        std::vector<std::string> ret;
+        auto len = keyArr->Length();
+        for(auto i = 0;i  < len; i++) {
+            v8::Local<v8::Value> attr = keyArr->Get(context, i).ToLocalChecked();
+            v8::String::Utf8Value attrStr(__isolate, attr);
+            ret.emplace_back(*attrStr);
+        }
+        return ret;
+    }
+
+    Object * Object::bindThis(se::Object *p)
+    {
+        v8::HandleScope scope(__isolate);
+        v8::Local<v8::Context> context = __isolate->GetCurrentContext();
+        v8::Local<v8::Function> thisFunc = _obj.handle(__isolate).As<v8::Function>();
+
+        v8::Local<v8::String> keyFunction = v8::String::NewFromUtf8(__isolate, "Function").ToLocalChecked();
+        v8::Local<v8::Function> functionCls = context->Global()->Get(context, keyFunction).ToLocalChecked().As<v8::Function>();
+        v8::Local<v8::Object> functionProto = functionCls->GetPrototype()->ToObject(context).ToLocalChecked();
+
+        v8::Local<v8::String> keyBind = v8::String::NewFromUtf8(__isolate, "bind").ToLocalChecked();
+        v8::Local<v8::Function> funcBind = functionProto->Get(context, keyBind).ToLocalChecked().As<v8::Function>();
+
+        std::array<v8::Local<v8::Value>, 1> bindArgs = { p->_obj.handle(__isolate)};
+        v8::MaybeLocal<v8::Value> maybeReturn = funcBind->Call(context, thisFunc, bindArgs.size(), bindArgs.data());
+        assert(!maybeReturn.IsEmpty());
+        v8::Local<v8::Function> boundFunction = maybeReturn.ToLocalChecked().As<v8::Function>();
+
+        Object * ret = Object::_createJSObject(nullptr, boundFunction);
         return ret;
     }
 
