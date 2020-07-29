@@ -421,4 +421,9 @@ THE SOFTWARE.
 # define CC_ENABLE_CACHE_TTF_FONT_TEXTURE 1
 #endif 
 
+
+#ifndef CC_ENABLE_JNI_BINDING
+#define CC_ENABLE_JNI_BINDING 1
+#endif
+
 #endif // __CCCONFIG_H__

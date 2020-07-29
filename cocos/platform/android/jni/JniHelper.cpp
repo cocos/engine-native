@@ -331,7 +331,7 @@ namespace cocos2d {
     void JniHelper::reportError(const std::string& className, const std::string& methodName, const std::string& signature) {
         LOGE("Failed to find static java method. Class name: %s, method name: %s, signature: %s ",  className.c_str(), methodName.c_str(), signature.c_str());
     }
-
+#if CC_ENABLE_JNI_BINDING
     std::vector<JniMethodSignature> JniHelper::getStaticMethodsByName(JNIEnv *env, jclass klass, const std::string &methodName) {
         std::vector<JniMethodSignature> ret;
         JniLocalRefPostDelete guard(env);
@@ -563,5 +563,7 @@ namespace cocos2d {
     jclass JniHelper::findClass(const char *classPath) {
         return _getClassID(classPath);
     }
+
+#endif
 
 } //namespace cocos2d

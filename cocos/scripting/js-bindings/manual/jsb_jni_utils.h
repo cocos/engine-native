@@ -1,10 +1,13 @@
 
 #pragma once
 
+#include "base/ccConfig.h"
 #include <sstream>
 #include <string>
 #include <vector>
 #include "jni.h"
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) && CC_ENABLE_JNI_BINDING
 
 namespace JniUtils {
     enum class JniTypeEnum : uint8_t {
@@ -96,3 +99,5 @@ namespace JniUtils {
     bool parseSigType(const char *data, size_t max_length, size_t *len,
                       JniType *type);
 } // namespace jni_utils
+
+#endif

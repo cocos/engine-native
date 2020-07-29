@@ -142,6 +142,9 @@ namespace se {
          */
         Object *proxyTo(Object *proxyObject);
 
+        bool isProxy() const;
+
+        void * getProxyTargetPrivateData();
 
         /**
          *  @brief Gets a property from an object.
@@ -402,6 +405,7 @@ namespace se {
 
         Object* bindThis(Object *p);
 
+        int _getRootCount() const {return _rootCount;}
     private:
         static void nativeObjectFinalizeHook(void* nativeObj);
         static void setIsolate(v8::Isolate* isolate);

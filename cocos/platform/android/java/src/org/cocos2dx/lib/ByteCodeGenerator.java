@@ -290,8 +290,8 @@ public class ByteCodeGenerator {
     }
 
     public static TypeId<?>[] getMethodArguments(Method m) {
-        Class<?> types[] = m.getParameterTypes();
-        TypeId<?> ret[] = new TypeId<?>[types.length];
+        Class<?> []types = m.getParameterTypes();
+        TypeId<?> []ret = new TypeId<?>[types.length];
         for (int i = 0; i < types.length; i++) {
             ret[i] = TypeId.get(types[i]);
         }

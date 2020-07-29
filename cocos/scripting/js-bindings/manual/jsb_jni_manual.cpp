@@ -1,5 +1,6 @@
 
 
+#include "base/ccConfig.h"
 #include "jsb_conversions.hpp"
 #include "jsb_global.h"
 #include "jsb_jni_utils.h"
@@ -15,6 +16,9 @@
 #include <vector>
 #include <cocos/platform/CCApplication.h>
 #include <cocos/base/CCScheduler.h>
+
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) && CC_ENABLE_JNI_BINDING
 
 #define JS_JNI_DEBUG 1
 #define JS_JNI_TAG_TYPE "$jni_obj_type"
@@ -1286,8 +1290,46 @@ static bool js_jni_jobject_finalize(se::State &s) {
 
 SE_BIND_FINALIZE_FUNC(js_jni_jobject_finalize)
 
+static bool js_jni_jobject_root(se::State &s) {
+    JObject *cobj = nullptr;
+    if(s.getJSThisObject()->isProxy()) {
+        cobj = (JObject *) s.getJSThisObject()->getProxyTargetPrivateData();
+    }else {
+        cobj = (JObject *) s.nativeThisObject();
+    }
+    if(cobj) {
+        se::Object *underline = cobj->getUnderlineJSObject();
+        underline->root();
+        s.rval().setInt32(underline->_getRootCount());
+    }else{
+        s.rval().setInt32(-1);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_jni_jobject_root);
+
+static bool js_jni_jobject_unroot(se::State &s) {
+    JObject *cobj = nullptr;
+    if(s.getJSThisObject()->isProxy()) {
+        cobj = (JObject *) s.getJSThisObject()->getProxyTargetPrivateData();
+    }else {
+        cobj = (JObject *) s.nativeThisObject();
+    }
+    if(cobj) {
+        se::Object *underline = cobj->getUnderlineJSObject();
+        underline->unroot();
+        s.rval().setInt32(underline->_getRootCount());
+    }else{
+        s.rval().setInt32(-1);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_jni_jobject_unroot);
+
 static bool js_register_jni_jobject(se::Object *obj) {
     auto cls = se::Class::create("jobject", obj, nullptr, nullptr);
+    cls->defineFunction("root", _SE(js_jni_jobject_root));
+    cls->defineFunction("unroot", _SE(js_jni_jobject_unroot));
     cls->defineFinalizeFunction(_SE(js_jni_jobject_finalize));
     __jsb_jni_jobject = cls;
     return true;
@@ -1555,6 +1597,13 @@ static bool js_jni_proxy_get(se::State &s) {
 
     auto *inner = (JObject *) target->getPrivateData();
     if (inner) {
+
+        if(method == "root" || method == "unroot") {
+            if(inner->getUnderlineJSObject()->getProperty(method.c_str(), &outvalue)) {
+                s.rval() = outvalue;
+                return true;
+            }
+        }
 
         if (inner->getUnderlineJSObject()->getRealNamedProperty(method.c_str(), &outvalue)) {
             s.rval() = outvalue;
@@ -2004,3 +2053,4 @@ JNIEXPORT jobject JNICALL JNI_BYTECODE_GENERATOR(callJS)(JNIEnv *env,
 }
 }
 
+#endif

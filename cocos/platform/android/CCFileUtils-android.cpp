@@ -35,7 +35,9 @@ THE SOFTWARE.
 #include "base/ZipUtils.h"
 #include <stdlib.h>
 #include <sys/stat.h>
-
+#ifdef LOG_TAG
+#undef LOG_TAG
+#endif
 #define  LOG_TAG    "CCFileUtils-android.cpp"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 

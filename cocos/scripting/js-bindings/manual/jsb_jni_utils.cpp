@@ -1,8 +1,11 @@
 
+#include "base/ccConfig.h"
 #include "jsb_jni_utils.h"
 
 #include <cassert>
 #include <regex>
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) && CC_ENABLE_JNI_BINDING
 
 namespace JniUtils {
 
@@ -214,3 +217,6 @@ namespace JniUtils {
     }
 
 } // namespace jni_utils
+
+
+#endif

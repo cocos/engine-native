@@ -488,7 +488,7 @@ public:
         }
         return ret;
     }
-
+#if CC_ENABLE_JNI_BINDING
     static std::vector<JniMethodSignature> getStaticMethodsByName(JNIEnv *env, jclass klass, const std::string &methodName);
     static std::vector<std::string> getObjectMethods(jobject obj);
     static std::string getMethodSignature(jobject method);
@@ -501,6 +501,7 @@ public:
     static jfieldID getClassStaticField(JNIEnv *env, jclass classObj, const std::string &fieldName, JniUtils::JniType &fieldType);
     static bool hasStaticField(const std::string &longPath);
     static jclass findClass(const char *);
+#endif
 private:
     static JNIEnv* cacheEnv(JavaVM* jvm);
 

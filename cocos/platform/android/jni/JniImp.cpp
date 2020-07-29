@@ -310,6 +310,7 @@ extern "C"
     JNIEXPORT jstring JNICALL JNI_RENDER(nativeGetContentText)()
     {
         //REFINE
+        return nullptr;
     }
 
     JNIEXPORT void JNICALL JNI_RENDER(nativeOnSurfaceChanged)(JNIEnv*  env, jobject thiz, jint w, jint h)

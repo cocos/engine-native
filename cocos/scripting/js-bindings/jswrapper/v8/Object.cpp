@@ -453,6 +453,20 @@ namespace se {
         return jso;
     }
 
+    bool Object::isProxy() const {
+        v8::HandleScope scope(__isolate);
+        return _obj.handle()->IsProxy();
+    }
+
+    void *Object::getProxyTargetPrivateData() {
+        v8::HandleScope scope(__isolate);
+        assert(_obj.handle()->IsProxy());
+        v8::Local<v8::Proxy> proxy = _obj.handle().As<v8::Proxy>();
+        v8::Local<v8::Object> target = proxy->GetTarget()->ToObject(__isolate->GetCurrentContext()).ToLocalChecked();
+        se::Object *tmp = se::Object::_createJSObject(nullptr, target);
+        return tmp->getPrivateData();
+    }
+
     bool Object::setProperty(const char *name, const Value& data)
     {
         v8::MaybeLocal<v8::String> nameValue = v8::String::NewFromUtf8(__isolate, name, v8::NewStringType::kNormal);
