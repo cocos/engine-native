@@ -26,5 +26,8 @@ THE SOFTWARE.
 
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 
-extern se::Object* jsb_DepthStencilState_TypedPool_proto;
-extern se::Class* jsb_DepthStencilState_TypedPool_class;
+extern se::Object* jsb_BufferPool_proto;
+extern se::Class* jsb_BufferPool_class;
+
+extern se::Object* jsb_ObjectPool_proto;
+extern se::Class* jsb_ObjectPool_class;

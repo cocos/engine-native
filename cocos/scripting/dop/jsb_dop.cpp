@@ -23,33 +23,153 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "jsb_dop.h"
-#include "TypedPool.h"
-#include "cocos/renderer/core/DataBindings.h"
-#include "cocos/renderer/core/gfx/GFXDef.h"
+
+#include "BufferPool.h"
+#include "ObjectPool.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include "cocos/scripting/js-bindings/manual/jsb_classtype.h"
+#include "cocos/scripting/js-bindings/manual/jsb_conversions.h"
 
-template<class Type, size_t pageSize>
-bool js_register_se_TypedPool(se::Object* obj, const std::string &name, se::Object** proto, se::Class** cls)
+se::Object* jsb_BufferPool_proto = nullptr;
+se::Class* jsb_BufferPool_class = nullptr;
+
+static bool jsb_BufferPool_getChunkArrayBuffer(se::State& s)
 {
-    *cls = se::Class::create(name, obj, nullptr, nullptr);
+    se::BufferPool* pool = (se::BufferPool*)s.nativeThisObject();
+    SE_PRECONDITION2(pool, false, "jsb_BufferPool_getChunkArrayBuffer : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 1) {
+        size_t id = 0;
+        bool ok = seval_to_size(args[0], &id);
+        SE_PRECONDITION2(ok, false, "Error processing arguments");
+        se::Object *ab = pool->getChunkArrayBuffer(id);
+        s.rval().setObject(ab);
+        return true;
+    }
 
-//    cls->defineFunction("getDevicePixelRatio", _SE(js_engine_Device_getDevicePixelRatio));
-//    cls->defineStaticFunction("getDeviceModel", _SE(js_engine_Device_getDeviceModel));
-    (*cls)->install();
-    JSBClassType::registerClass<se::TypedPool<Type, pageSize>>(*cls);
+    SE_REPORT_ERROR("Invalid number of arguments");
+    return false;
+}
+SE_BIND_FUNC(jsb_BufferPool_getChunkArrayBuffer);
 
-    *proto = (*cls)->getProto();
+SE_DECLARE_FINALIZE_FUNC(jsb_BufferPool_finalize)
+
+static bool jsb_BufferPool_constructor(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 2)
+    {
+        size_t bytesPerEntry, entryBits;
+
+        bool ok = true;
+        ok &= seval_to_size(args[0], &bytesPerEntry);
+        ok &= seval_to_size(args[1], &entryBits);
+        if (!ok) {
+            SE_REPORT_ERROR("argument convertion error");
+            return false;
+        }
+
+        se::BufferPool* pool = new se::BufferPool(bytesPerEntry, entryBits);
+        s.thisObject()->setPrivateData(pool);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(pool);
+        return true;
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
+}
+SE_BIND_CTOR(jsb_BufferPool_constructor, jsb_BufferPool_class, jsb_BufferPool_finalize)
+
+static bool jsb_BufferPool_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        se::BufferPool *cobj = (se::BufferPool*)s.nativeThisObject();
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(jsb_BufferPool_finalize)
+
+bool js_register_se_BufferPool(se::Object* obj)
+{
+    se::Class *cls = se::Class::create("BufferPool", obj, nullptr, _SE(jsb_BufferPool_constructor));
+
+    cls->defineFunction("getChunkArrayBuffer", _SE(jsb_BufferPool_getChunkArrayBuffer));
+    cls->install();
+    JSBClassType::registerClass<se::BufferPool>(cls);
+    se::Object *proto = cls->getProto();
+    
+    jsb_BufferPool_proto = proto;
+    jsb_BufferPool_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
 
-se::Object* jsb_DepthStencilState_TypedPool_proto = nullptr;
-se::Class* jsb_DepthStencilState_TypedPool_class = nullptr;
+
+se::Object* jsb_ObjectPool_proto = nullptr;
+se::Class* jsb_ObjectPool_class = nullptr;
+
+SE_DECLARE_FINALIZE_FUNC(jsb_ObjectPool_finalize)
+
+static bool jsb_ObjectPool_constructor(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 1)
+    {
+        if (!args[0].isObject()) {
+            SE_REPORT_ERROR("argument convertion error");
+            return false;
+        }
+        se::Object *jsArr = args[0].toObject();
+
+        se::ObjectPool* pool = new se::ObjectPool(jsArr);
+        s.thisObject()->setPrivateData(pool);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(pool);
+        return true;
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
+}
+SE_BIND_CTOR(jsb_ObjectPool_constructor, jsb_ObjectPool_class, jsb_ObjectPool_finalize)
+
+static bool jsb_ObjectPool_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        se::ObjectPool *cobj = (se::ObjectPool*)s.nativeThisObject();
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(jsb_ObjectPool_finalize)
+
+bool js_register_se_ObjectPool(se::Object* obj)
+{
+    se::Class *cls = se::Class::create("ObjectPool", obj, nullptr, _SE(jsb_ObjectPool_constructor));
+    cls->install();
+    JSBClassType::registerClass<se::ObjectPool>(cls);
+    se::Object *proto = cls->getProto();
+    
+    jsb_ObjectPool_proto = proto;
+    jsb_ObjectPool_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
 
 bool register_all_dop_bindings(se::Object* obj)
 {
-    js_register_se_TypedPool<cc::gfx::DepthStencilState, DepthStencilStatePageSize>(obj, "DepthStencilStateTypedPool", &jsb_DepthStencilState_TypedPool_proto, &jsb_DepthStencilState_TypedPool_class);
+    js_register_se_BufferPool(obj);
+    js_register_se_ObjectPool(obj);
     return true;
 }

@@ -495,8 +495,6 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXFence.cc
     cocos/renderer/core/math/CCCoreMath.cc
     cocos/renderer/core/math/CCCoreMath.h
-    cocos/renderer/core/DataBindings.cpp
-    cocos/renderer/core/DataBindings.h
     cocos/renderer/pipeline/BatchedBuffer.cpp
     cocos/renderer/pipeline/BatchedBuffer.h
     cocos/renderer/pipeline/Define.h
@@ -734,8 +732,10 @@ endif()
 ##### script bindings
 ######## dop
 cocos_source_files(
-    cocos/scripting/dop/TypedPool.cpp
-    cocos/scripting/dop/TypedPool.h
+    cocos/scripting/dop/BufferPool.cpp
+    cocos/scripting/dop/BufferPool.h
+    cocos/scripting/dop/ObjectPool.cpp
+    cocos/scripting/dop/ObjectPool.h
     cocos/scripting/dop/jsb_dop.cpp
     cocos/scripting/dop/jsb_dop.h
 )

@@ -22,47 +22,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
+#include "ObjectPool.h"
 
-#include <array>
-#include "cocos/scripting/js-bindings/jswrapper/Object.h"
-#include "cocos/base/ccMacros.h"
+using namespace se;
 
-namespace se {
-
-typedef void (*SwapCallback)(uint32_t oldId, uint32_t newId);
-
-struct IDHandle {
-    uint32_t id;
-    SwapCallback swapCallback;
-};
-
-template<class Type, size_t pageSize>
-class CC_DLL TypedPool {
-public:
-    using Page = std::array<Type, pageSize>;
-//    using FreeList =
+ObjectPool::ObjectPool(Object *jsArr)
+{
+    CCASSERT(jsArr->isArray(), "ObjectPool: It must be initialized with a JavaScript array");
     
-    TypedPool();
-    ~TypedPool();
-    Type *getData(size_t id);
-    Type *getData(IDHandle *idHandle);
-    Object *getArrayBuffer(size_t id);
-    Object *getArrayBuffer(IDHandle *idHandle);
-    
-    void setJSObject(Object *jsObj);
-    Object *getJSObject();
-    
-    IDHandle *alloc(SwapCallback swapCallback);
-    bool free(IDHandle *handle);
-protected:
-//    std::vector<Page *> _pages;
-    std::array<Type, pageSize> _pool;
-    std::array<IDHandle*, pageSize> _idHandles;
-    std::array<Object*, pageSize> _jsObjs;
-    Type _defaultValue;
-    Object* _jsObj;
-    size_t _count;
-};
+    _jsArr = jsArr;
+    _jsArr->root();
+    _jsArr->incRef();
+    _jsArr->setPrivateData(this);
+}
 
-} // namespace se {
+ObjectPool::~ObjectPool()
+{
+    // Let GC manages the js array
+    _jsArr->setPrivateData(nullptr);
+    _jsArr->decRef();
+    _jsArr->unroot();
+}
+
+template<class Type>
+Type *ObjectPool::getTypedObject(size_t id)
+{
+    uint32_t len = 0;
+    bool ok = _jsArr->getArrayLength(&len);
+    CCASSERT(ok && id < len, "ObjectPool: Invalid buffer pool entry id");
+
+    se::Value jsEntry;
+    ok = _jsArr->getArrayElement(id, &jsEntry);
+    if (!ok || !jsEntry.isObject()) {
+        return nullptr;
+    }
+    Type *entry = (Type *)jsEntry.toObject()->getPrivateData();
+    return entry;
+}

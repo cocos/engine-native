@@ -1,7 +1,7 @@
 /****************************************************************************
 Copyright (c) 2020 Xiamen Yaji Software Co., Ltd.
 
-http://www.cocos2d-x.org
+http://www.cocos.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,21 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <vector>
+#include "cocos/scripting/js-bindings/jswrapper/Object.h"
 #include "cocos/base/ccMacros.h"
-#include "gfx/GFXDef.h"
-#include "cocos/scripting/dop/TypedPool.h"
-#include "cocos/scripting/dop/jsb_dop.h"
 
-const size_t DepthStencilStatePageSize = 128;
+namespace se {
 
-typedef se::TypedPool<cc::gfx::DepthStencilState, DepthStencilStatePageSize> DepthStencilStatePool;
+class CC_DLL ObjectPool {
+public:
+    ObjectPool(Object *jsArr);
+    ~ObjectPool();
 
-DepthStencilStatePool *initDepthStencilStatePool();
+    template<class Type>
+    Type *getTypedObject(size_t id);
+protected:
+    Object* _jsArr;
+};
+
+} // namespace se {
