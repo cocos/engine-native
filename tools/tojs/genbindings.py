@@ -120,7 +120,7 @@ def main():
     config.set('DEFAULT', 'gcc_toolchain_dir', gcc_toolchain_path)
     config.set('DEFAULT', 'cocosdir', cocos_root)
     config.set('DEFAULT', 'cxxgeneratordir', cxx_generator_root)
-    config.set('DEFAULT', 'extra_flags', '')
+    config.set('DEFAULT', 'extra_flags', '-I%s' %(cocos_root+"/external/android/armeabi-v7a/include/v8"))
     
     conf_ini_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'userconf.ini'))
 
