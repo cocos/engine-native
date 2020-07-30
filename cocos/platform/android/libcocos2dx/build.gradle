@@ -31,5 +31,5 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: '../java/libs')
-    implementation 'com.linkedin.dexmaker:dexmaker:2.28.0'
+    // implementation 'com.linkedin.dexmaker:dexmaker:2.28.0'
 }

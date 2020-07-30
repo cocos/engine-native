@@ -138,7 +138,7 @@ static jobject genAnonymousJavaObject(const std::string &parentClassStr, const s
         env->ExceptionClear();
         return nullptr;
     }
-    jmethodID generateMID = env->GetStaticMethodID(bcClass, "newInstance", "(Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Object;");
+    jmethodID generateMID = env->GetStaticMethodID(bcClass, "newInstance", "(Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Object;");
     jobject ret = env->CallStaticObjectMethod(bcClass, generateMID, superClassNameJ, interfacesJ);
     if(env->ExceptionCheck()) {
         jthrowable e = env->ExceptionOccurred();
@@ -156,25 +156,25 @@ static jobject genAnonymousJavaObject(const std::string &parentClassStr, const s
 
 static se::Object *registerAnonymousJavaObject(JNIEnv *env, jobject ret, se::Object *instanceCfg) {
 
-JniLocalRefPostDelete guard(env);
+    JniLocalRefPostDelete guard(env);
 
-jclass tmpClass = env->GetObjectClass(ret);
-jfieldID idField = env->GetFieldID(tmpClass, JS_JNI_NATIVE_ID_KEY, "I");
-int instID = env->GetIntField(ret, idField);
+    jclass tmpClass = env->GetObjectClass(ret);
+    jfieldID idField = env->GetFieldID(tmpClass, JS_JNI_NATIVE_ID_KEY, "I");
+    int instID = env->GetIntField(ret, idField);
 
-guard.post_delete(tmpClass);
+    guard.post_delete(tmpClass);
 
-auto *wrap = new JObject(ret);
-auto *jsObj = wrap->asJSObject();
+    auto *wrap = new JObject(ret);
+    auto *jsObj = wrap->asJSObject();
 
-jsObj->setProperty(JS_JNI_NATIVE_ID_KEY, se::Value(instID));
+    jsObj->setProperty(JS_JNI_NATIVE_ID_KEY, se::Value(instID));
 
-auto &item = sJavaObjectMapToJS[instID];
-item.jsConfig = instanceCfg;
-jsObj->attachObject(instanceCfg);
-instanceCfg->incRef(); //prevent reset from se::Value
+    auto &item = sJavaObjectMapToJS[instID];
+    item.jsConfig = instanceCfg;
+    jsObj->attachObject(instanceCfg);
+    instanceCfg->incRef(); //prevent reset from se::Value
 
-return jsObj;
+    return jsObj;
 }
 
 static bool js_jni_helper_impl(se::State &s) {

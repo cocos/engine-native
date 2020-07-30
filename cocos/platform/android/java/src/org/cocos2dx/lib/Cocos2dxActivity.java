@@ -358,8 +358,6 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         sContext = this;
 
-        ByteCodeGenerator.init();  //need context
-
         this.mHandler = new Cocos2dxHandler(this);
         
         Cocos2dxHelper.init(this);
