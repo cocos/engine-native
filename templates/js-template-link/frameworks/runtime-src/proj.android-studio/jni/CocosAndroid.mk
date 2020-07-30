@@ -16,6 +16,10 @@ LOCAL_SRC_FILES := hellojavascript/main.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 
+ifeq ($(USE_JNI_BINDING_EXT),1)
+LOCAL_WHOLE_STATIC_LIBRARIES := cocos2djni
+endif
+
 LOCAL_STATIC_LIBRARIES := cocos2dx_static
 
 include $(BUILD_SHARED_LIBRARY)
