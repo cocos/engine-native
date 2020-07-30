@@ -34,11 +34,14 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "math/Vec3.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
-#include "scripting/js-bindings/manual/jsb_jni_utils.h"
 
 //The macro must be used this way to find the native method. The principle is not well understood.
 #define JNI_METHOD2(CLASS2,FUNC2) Java_##CLASS2##_##FUNC2
 #define JNI_METHOD1(CLASS1,FUNC1) JNI_METHOD2(CLASS1,FUNC1)
+
+namespace JniUtils {
+    class JniType;
+}
 
 NS_CC_BEGIN
 
@@ -55,7 +58,7 @@ struct CC_DLL JniMethodSignature {
     std::string signature;
 };
 
-class JniLocalRefPostDelete {
+class CC_DLL JniLocalRefPostDelete {
 public:
     JniLocalRefPostDelete();
     JniLocalRefPostDelete(JNIEnv *e): _env(e) {}

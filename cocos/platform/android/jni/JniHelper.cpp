@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include <regex>
 #include <pthread.h>
 
+#include "scripting/js-bindings/manual/jsb_jni_utils.hpp"
 #include "base/ccUTF8.h"
 
 

@@ -65,10 +65,13 @@
 #endif
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-#include "cocos/scripting/js-bindings/manual/JavaScriptJavaBridge.h"
-#if CC_ENABLE_JNI_BINDING
-#include "cocos/scripting/js-bindings/manual/jsb_jni_manual.hpp"
-#endif
+#   include "cocos/scripting/js-bindings/manual/JavaScriptJavaBridge.h"
+#   if CC_ENABLE_JNI_BINDING
+#       include "cocos/scripting/js-bindings/manual/jsb_jni_manual.hpp"
+#       if CC_ENABLE_JNI_BINDING_EXT
+#           include "cocos/scripting/js-bindings/manual/jsb_jni_anonymous_object.hpp"
+#       endif
+#   endif
 #endif
 
 #if USE_GFX_RENDERER && USE_MIDDLEWARE
@@ -124,7 +127,7 @@ bool jsb_register_all_modules()
     se->addRegisterCallback(register_all_engine);
     se->addRegisterCallback(register_all_cocos2dx_manual);
     se->addRegisterCallback(register_platform_bindings);
-    
+
     se->addRegisterCallback(register_all_network);
     se->addRegisterCallback(register_all_cocos2dx_network_manual);
     se->addRegisterCallback(register_all_xmlhttprequest);
@@ -144,15 +147,18 @@ bool jsb_register_all_modules()
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     se->addRegisterCallback(register_javascript_java_bridge);
-    #if CC_ENABLE_JNI_BINDING
+#if CC_ENABLE_JNI_BINDING
     se->addRegisterCallback(jsb_register_jni_manual);
-    #endif
+#if CC_ENABLE_JNI_BINDING_EXT
+    se->addRegisterCallback(jsb_register_jni_impl);
+#endif
+#endif
 #endif
 
 #if USE_AUDIO
     se->addRegisterCallback(register_all_audioengine);
 #endif
-    
+
 #if USE_SOCKET
     se->addRegisterCallback(register_all_websocket);
     se->addRegisterCallback(register_all_socketio);

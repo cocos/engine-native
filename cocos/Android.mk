@@ -265,6 +265,36 @@ LOCAL_EXPORT_CPPFLAGS := -Wno-deprecated-declarations
 include $(BUILD_STATIC_LIBRARY)
 
 
+
+ifeq ($(CC_BUILD_JNI), 1)
+
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := cocos2djni
+
+LOCAL_MODULE_FILENAME := libcocos2djni
+
+CC_ENGINE := C:/Github/cocos2d-x-lite
+
+LOCAL_SRC_FILES := \
+$(CC_ENGINE)/cocos/scripting/js-bindings/manual/jsb_jni_anonymous_object.cpp
+
+
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
+
+LOCAL_C_INCLUDES := $(CC_ENGINE) \
+                    $(CC_ENGINE)/cocos \
+                    $(CC_ENGINE)/external/android/$(TARGET_ARCH_ABI)/include \
+                    $(CC_ENGINE)/external/android/$(TARGET_ARCH_ABI)/include/v8 \
+
+#LOCAL_EXPORT_LDLIBS := -landroid -lcocos2djs -lv8_static
+
+include $(BUILD_STATIC_LIBRARY)
+
+endif
+
 #==============================================================
 #$(call import-module,.)
 $(call import-module,android)

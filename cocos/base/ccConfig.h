@@ -426,4 +426,8 @@ THE SOFTWARE.
 #define CC_ENABLE_JNI_BINDING 1
 #endif
 
+#ifndef CC_ENABLE_JNI_BINDING_EXT
+#define CC_ENABLE_JNI_BINDING_EXT 1
+#endif
+
 #endif // __CCCONFIG_H__

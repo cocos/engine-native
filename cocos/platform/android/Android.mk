@@ -12,7 +12,7 @@ CCFileUtils-android.cpp \
 CCApplication-android.cpp \
 CCCanvasRenderingContext2D-android.cpp \
 jni/JniImp.cpp \
-jni/JniHelper.cpp \
+jni/JniHelper.cpp 
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 
