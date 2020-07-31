@@ -26,7 +26,7 @@ public:
     RenderStage() = default;
     virtual ~RenderStage() = default;
 
-    virtual void activate(RenderFlow *flow);
+    virtual void activate(RenderPipeline *pipeline, RenderFlow *flow);
     virtual bool initialize(const RenderStageInfo &info);
 
     virtual void destroy() = 0;

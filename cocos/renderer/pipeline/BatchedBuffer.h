@@ -16,7 +16,7 @@ struct CC_DLL BatchedItem {
     uint mergCount = 0;
     gfx::InputAssembler *ia = nullptr;
     gfx::Buffer *ubo = nullptr;
-    cc::PSOCreateInfo *psoCreatedInfo = nullptr;
+//    cc::PSOCreateInfo *psoCreatedInfo = nullptr;
 };
 typedef vector<BatchedItem> BatchedItemList;
 

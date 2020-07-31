@@ -3,9 +3,6 @@
 #include "core/CoreStd.h"
 
 namespace cc {
-struct PSOCreateInfo;
-class SubModel;
-
 namespace pipeline {
 
 class RenderStage;
@@ -26,7 +23,7 @@ struct CC_DLL RenderPass {
     uint depth = 0;
     uint shaderID = 0;
     uint index = 0;
-    SubModel *subModel = nullptr;
+//    SubModel *subModel = nullptr;
 };
 typedef vector<RenderPass> RenderPassList;
 
@@ -35,14 +32,14 @@ typedef vector<ColorDesc> ColorDescList;
 
 typedef gfx::DepthStencilAttachment DepthStencilDesc;
 
-struct RenderPassDesc {
+struct CC_DLL RenderPassDesc {
     uint index = 0;
     ColorDescList colorAttachments;
     DepthStencilDesc depthStencilAttachment;
 };
 typedef vector<RenderPassDesc> RenderPassDescList;
 
-struct RenderTextureDesc {
+struct CC_DLL RenderTextureDesc {
     String name;
     gfx::TextureType type = gfx::TextureType::TEX2D;
     gfx::TextureUsage usage = gfx::TextureUsage::COLOR_ATTACHMENT;
@@ -52,7 +49,7 @@ struct RenderTextureDesc {
 };
 typedef vector<RenderTextureDesc> RenderTextureDescList;
 
-struct FrameBufferDesc {
+struct CC_DLL FrameBufferDesc {
     String name;
     uint renderPass = 0;
     vector<String> colorTextures;
@@ -69,12 +66,12 @@ enum class RenderFlowType : uint8_t {
 typedef vector<RenderStage *> RenderStageList;
 typedef vector<RenderFlow *> RenderFlowList;
 
-enum class RenderPassStage : uint8_t {
+enum class CC_DLL RenderPassStage {
     DEFAULT = 100,
     UI = 200,
 };
 
-struct InternalBindingDesc {
+struct CC_DLL InternalBindingDesc {
     gfx::BindingType type;
     gfx::UniformBlock blockInfo;
     gfx::UniformSampler samplerInfo;
@@ -91,7 +88,7 @@ struct InternalBindingDesc {
     }
 };
 
-struct InternalBindingInst : public InternalBindingDesc {
+struct CC_DLL InternalBindingInst : public InternalBindingDesc {
     gfx::Buffer *buffer = nullptr;
     gfx::Sampler *sampler = nullptr;
     gfx::Texture *texture = nullptr;
