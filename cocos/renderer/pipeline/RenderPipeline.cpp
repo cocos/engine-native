@@ -1,5 +1,6 @@
 #include "RenderPipeline.h"
 #include "RenderFlow.h"
+#include "RenderView.h"
 #include "renderer/core/gfx/GFXDevice.h"
 
 namespace cc {
@@ -33,6 +34,11 @@ bool RenderPipeline::activate() {
     }
 
     return true;
+}
+
+void RenderPipeline::render(RenderView *view) {
+    for (const auto &flow : view->getFlows())
+        flow->render(view);
 }
 
 bool RenderPipeline::initRenderResource() {
@@ -146,6 +152,11 @@ bool RenderPipeline::initRenderResource() {
 //    _macros.CC_SUPPORT_FLOAT_TEXTURE = device->hasFeature(gfx::Feature::TEXTURE_FLOAT);
     
     return true;
+}
+
+void RenderPipeline::addRenderPass(RenderPassStage stage, gfx::RenderPass *renderPass) {
+    if (renderPass)
+        _renderPasses[(uint)stage] = renderPass;
 }
 
 } // namespace pipeline

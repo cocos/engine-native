@@ -5,9 +5,9 @@
 namespace cc {
 namespace pipeline {
 
-//class CC_DLL DefineMap : public cc::Object {
-//    
-//};
+class CC_DLL DefineMap : public Object {
+    
+};
 
 }
 }
