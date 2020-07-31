@@ -74,6 +74,29 @@ enum class RenderPassStage : uint8_t {
     UI = 200,
 };
 
+struct InternalBindingDesc {
+    gfx::BindingType type;
+    gfx::UniformBlock blockInfo;
+    gfx::UniformSampler samplerInfo;
+    String defaultStringValue;
+    uint8_t *defaultDataValue = nullptr;
+
+    template <class T>
+    const std::enable_if_t<std::is_same<String, T>::value || std::is_same<uint8_t, T>::value> *
+    getDefaultValue() const {
+        if (defaultDataValue)
+            return static_cast<T *>(defaultDataValue);
+        else
+            return static_cast<T *>(&defaultStringValue);
+    }
+};
+
+struct InternalBindingInst : public InternalBindingDesc {
+    gfx::Buffer *buffer = nullptr;
+    gfx::Sampler *sampler = nullptr;
+    gfx::Texture *texture = nullptr;
+};
+
 //TODO
 const uint CAMERA_DEFAULT_MASK = 1;
 //constexpr CAMERA_DEFAULT_MASK = Layers.makeMaskExclude([Layers.BitMask.UI_2D, Layers.BitMask.GIZMOS, Layers.BitMask.EDITOR,
