@@ -12,7 +12,7 @@ public:
     ForwardFlow() = default;
     ~ForwardFlow() = default;
 
-    virtual void initialize(const RenderFlowInfo &info) override;
+    virtual bool initialize(const RenderFlowInfo &info) override;
     virtual void destroy() override;
     virtual void render(RenderView *view) override;
 };

@@ -16,11 +16,12 @@ struct CC_DLL RenderPipelineInfo {
 
 class CC_DLL RenderPipeline : public Object {
 public:
+    RenderPipeline() = default;
     virtual ~RenderPipeline() = default;
 
     virtual bool activate();
     virtual void destroy();
-    virtual void initialize(const RenderPipelineInfo *info);
+    virtual bool initialize(const RenderPipelineInfo *info);
     virtual void render(RenderView *view);
 
     CC_INLINE const RenderFlowList &getFlows() const { return _flows; }

@@ -10,7 +10,7 @@ public:
     ForwardPipeline();
     ~ForwardPipeline();
 
-    virtual void initialize(const RenderPipelineInfo *info) override;
+    virtual bool initialize(const RenderPipelineInfo *info) override;
     virtual void destroy() override;
     virtual bool activate() override;
 

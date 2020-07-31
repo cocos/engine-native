@@ -6,11 +6,13 @@
 namespace cc {
 namespace pipeline {
 
-void RenderPipeline::initialize(const RenderPipelineInfo *info) {
+bool RenderPipeline::initialize(const RenderPipelineInfo *info) {
     if (info) {
         _flows = std::move(info->flows);
         _tag = info->tag;
     }
+    
+    return true;
 }
 
 bool RenderPipeline::activate() {

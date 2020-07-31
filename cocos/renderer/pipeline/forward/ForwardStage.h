@@ -20,8 +20,6 @@ public:
 
     virtual void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
     virtual void destroy() override;
-    virtual void resize(uint width, uint height) override;
-    virtual void rebuild() override;
     virtual void render(RenderView *view) override;
 
 private:

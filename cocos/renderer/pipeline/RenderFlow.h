@@ -20,7 +20,7 @@ public:
     RenderFlow() = default;
     virtual ~RenderFlow() = default;
 
-    virtual void initialize(const RenderFlowInfo &info);
+    virtual bool initialize(const RenderFlowInfo &info);
     virtual void activate(RenderPipeline *pipeline);
     virtual void render(RenderView *view);
     virtual void destroy();

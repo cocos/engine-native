@@ -4,10 +4,12 @@
 namespace cc {
 namespace pipeline {
 
-void RenderFlow::initialize(const RenderFlowInfo &info) {
+bool RenderFlow::initialize(const RenderFlowInfo &info) {
     _name = info.name;
     _priority = info.priority;
     _tag = info.tag;
+    
+    return true;
 }
 
 void RenderFlow::activate(RenderPipeline *pipeline) {
