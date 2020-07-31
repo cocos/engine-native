@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/CoreStd.h"
+#include "base/CCValue.h"
 
 namespace cc {
 namespace pipeline {
@@ -23,7 +24,7 @@ struct CC_DLL RenderPass {
     uint depth = 0;
     uint shaderID = 0;
     uint index = 0;
-//    SubModel *subModel = nullptr;
+    //    SubModel *subModel = nullptr;
 };
 typedef vector<RenderPass> RenderPassList;
 
@@ -75,17 +76,7 @@ struct CC_DLL InternalBindingDesc {
     gfx::BindingType type;
     gfx::UniformBlock blockInfo;
     gfx::UniformSampler samplerInfo;
-    String defaultStringValue;
-    uint8_t *defaultDataValue = nullptr;
-
-    template <class T>
-    const std::enable_if_t<std::is_same<String, T>::value || std::is_same<uint8_t, T>::value> *
-    getDefaultValue() const {
-        if (defaultDataValue)
-            return static_cast<T *>(defaultDataValue);
-        else
-            return static_cast<T *>(&defaultStringValue);
-    }
+    Value defaultValue;
 };
 
 struct CC_DLL InternalBindingInst : public InternalBindingDesc {
