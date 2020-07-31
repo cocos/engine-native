@@ -12818,6 +12818,22 @@ static bool js_gfx_Device_createBindingLayout(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_Device_createBindingLayout)
 
+static bool js_gfx_Device_getInstance(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::gfx::Device* result = cc::gfx::Device::getInstance();
+        ok &= native_ptr_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_Device_getInstance : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_Device_getInstance)
+
 
 
 
@@ -12874,6 +12890,7 @@ bool js_register_gfx_Device(se::Object* obj)
     cls->defineFunction("resize", _SE(js_gfx_Device_resize));
     cls->defineFunction("createQueue", _SE(js_gfx_Device_createQueue));
     cls->defineFunction("createBindingLayout", _SE(js_gfx_Device_createBindingLayout));
+    cls->defineStaticFunction("getInstance", _SE(js_gfx_Device_getInstance));
     cls->install();
     JSBClassType::registerClass<cc::gfx::Device>(cls);
 
