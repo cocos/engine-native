@@ -369,7 +369,6 @@ namespace
     }
 
     callJSFunc("input", [textField.text UTF8String]);
-    setText(textField.text);
 }
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField
@@ -407,7 +406,6 @@ namespace
         textView.text = [textView.text substringToIndex:g_maxLength];
 
     callJSFunc("input", [textView.text UTF8String]);
-    setText(textView.text);
 }
 @end
 
