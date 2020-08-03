@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TemplateCreator = exports.CCPluginNEW = void 0;
 const cocos_cli_1 = require("./cocos_cli");
 const path = require("path");
 const fs = require("fs");
@@ -41,13 +40,15 @@ class CCPluginNEW extends cocos_cli_1.CCPlugin {
         parser.add_predefined_argument_with_default("language", "js");
         parser.add_predefined_argument("do_list_templates", this.do_list_templates.bind(this));
         parser.add_predefined_argument_with_default("template_name", "link");
+        parser.add_predefined_argument("shared_dir");
     }
     init() {
         this.set_env("PROJECT_NAME", this.project_name);
+        this.set_env("COMMON_DIR", cocos_cli_1.cchelper.join(this.shared_dir, this.common_dir));
         let parser = this.parser;
         // console.log(`PROJECT_NAME name ${this.project_name}`);
         let cocos_dir = this.get_cocos_root();
-        if (!fs.existsSync(path.join(cocos_dir, "cocos/cocos2d.h"))) {
+        if (!fs.existsSync(cocos_cli_1.cchelper.join(cocos_dir, "cocos/cocos2d.h"))) {
             console.error(`cocos2d.h not found in ${cocos_dir}, path incorrect!`);
             return false;
         }
@@ -55,6 +56,9 @@ class CCPluginNEW extends cocos_cli_1.CCPlugin {
             cocos_cli_1.cchelper.make_directory_recursive(this.project_dir);
         }
         return true;
+    }
+    get common_dir() {
+        return `common-${this.args.get_string("template_name")}`;
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -88,7 +92,13 @@ class CCPluginNEW extends cocos_cli_1.CCPlugin {
         let dir = this.args.get_path("directory");
         if (!dir || !this.project_name)
             return;
-        return path.join(dir, this.project_name);
+        return cocos_cli_1.cchelper.join(dir, this.project_name);
+    }
+    get shared_dir() {
+        let dir = this.args.get_path("shared_dir");
+        if (!dir)
+            return cocos_cli_1.cchelper.join(this.project_dir, "..");
+        return dir;
     }
     get engine_path() {
         return this.args.get_path("engine_path");
@@ -111,7 +121,7 @@ class CCPluginNEW extends cocos_cli_1.CCPlugin {
     get selected_template_path() {
         if (!this.selected_template_dir_name)
             return null;
-        let dir = path.join(this.get_templates_root_path(), this.selected_template_dir_name);
+        let dir = cocos_cli_1.cchelper.join(this.get_templates_root_path(), this.selected_template_dir_name);
         if (!fs.existsSync(dir)) {
             console.error(`selected template path not exists: ${dir}`);
         }
@@ -121,7 +131,7 @@ class CCPluginNEW extends cocos_cli_1.CCPlugin {
         }
         let check_files = ["main.js", "project.json", PackageNewConfig, "frameworks"];
         for (let f of check_files) {
-            if (!fs.existsSync(path.join(dir, f))) {
+            if (!fs.existsSync(cocos_cli_1.cchelper.join(dir, f))) {
                 console.warn(`warning: file "${f}" does not exists in ${dir}, template path can be incorrect setting!`);
             }
         }
@@ -134,7 +144,7 @@ class TemplateCreator {
         this.excludes = [];
         this.plugin = plugin;
         let args = plugin.args;
-        let template_dir = path.join(plugin.get_templates_root_path(), plugin.selected_template_dir_name);
+        let template_dir = cocos_cli_1.cchelper.join(plugin.get_templates_root_path(), plugin.selected_template_dir_name);
         this.lang = args.get_path("language");
         this.cocos_root = plugin.get_cocos_root();
         this.project_name = plugin.project_name;
@@ -147,11 +157,11 @@ class TemplateCreator {
         if (cocos_cfg.support_templates.indexOf(this.tp_name) < 0) {
             console.error(`template name "${this.tp_name}" is not supported!`);
         }
-        if (!fs.existsSync(path.join(this.tp_dir, PackageNewConfig))) {
+        if (!fs.existsSync(cocos_cli_1.cchelper.join(this.tp_dir, PackageNewConfig))) {
             console.error(`can not find ${PackageNewConfig} in ${this.tp_dir}`);
             return;
         }
-        this.template_info = JSON.parse(fs.readFileSync(path.join(this.tp_dir, PackageNewConfig)).toString("utf8"));
+        this.template_info = JSON.parse(fs.readFileSync(cocos_cli_1.cchelper.join(this.tp_dir, PackageNewConfig)).toString("utf8"));
         if (!("do_default" in this.template_info)) {
             console.error(`can not find "do_default" in ${PackageNewConfig}`);
             return;
@@ -164,20 +174,24 @@ class TemplateCreator {
         });
     }
     get_config_path() {
-        return path.join(this.project_dir, cocos_project.CONFIG);
+        return cocos_cli_1.cchelper.join(this.project_dir, cocos_project.CONFIG);
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            let default_cmds = this.template_info.do_default;
-            if (default_cmds) {
+            let shared_dir = this.plugin.shared_dir;
+            yield cocos_cli_1.cchelper.copy_files_with_config({
+                from: cocos_cli_1.cchelper.join(this.tp_dir, "common"),
+                to: cocos_cli_1.cchelper.join(shared_dir, this.plugin.common_dir),
+            }, this.tp_dir, this.project_dir);
+            // copy by platform
+            let plat = this.plugin.args.get_string("platform");
+            if (plat) {
                 yield cocos_cli_1.cchelper.copy_files_with_config({
-                    from: this.tp_dir,
-                    to: this.project_dir,
-                    exclude: default_cmds.exclude_from_template
+                    from: cocos_cli_1.cchelper.join(this.tp_dir, "platforms", plat),
+                    to: cocos_cli_1.cchelper.join(this.project_dir, "proj"),
                 }, this.tp_dir, this.project_dir);
-                yield this.execute(default_cmds);
-                delete this.template_info.do_default;
             }
+            delete this.template_info.do_default;
             for (let key in this.template_info) {
                 // console.log(`other commands ${key}`)
                 yield this.execute(this.template_info[key]);
@@ -194,7 +208,7 @@ class TemplateCreator {
         });
     }
     get_cocos_version() {
-        const cocos2d_h = path.join(this.cocos_root, "cocos/cocos2d.h");
+        const cocos2d_h = cocos_cli_1.cchelper.join(this.cocos_root, "cocos/cocos2d.h");
         if (!fs.existsSync(cocos2d_h)) {
             return "unknown";
         }
@@ -225,7 +239,7 @@ class TemplateCreator {
                 let json = JSON.parse(fs.readFileSync(cfgPath).toString("utf-8"));
                 if (json.ios) {
                     let cfg = json.ios.orientation;
-                    let infoPlist = path.join(this.project_dir, 'frameworks/runtime-src/proj.ios_mac/ios/Info.plist');
+                    let infoPlist = cocos_cli_1.cchelper.join(this.project_dir, 'frameworks/runtime-src/proj.ios_mac/ios/Info.plist');
                     if (fs.existsSync(infoPlist)) {
                         let orientations = [];
                         if (cfg.landscapeRight) {
@@ -276,7 +290,7 @@ class TemplateCreator {
                 }
                 if (json.android) {
                     let cfg = json.android.orientation;
-                    let manifestPath = path.join(this.project_dir, 'frameworks/runtime-src/proj.android-studio/app/AndroidManifest.xml');
+                    let manifestPath = cocos_cli_1.cchelper.join(this.project_dir, 'frameworks/runtime-src/proj.android-studio/app/AndroidManifest.xml');
                     if (fs.existsSync(manifestPath)) {
                         let pattern = /android:screenOrientation=\"[^"]*\"/;
                         let replaceString = 'android:screenOrientation="unspecified"';
@@ -323,7 +337,7 @@ class TemplateCreator {
             if (!cfg)
                 return;
             // android-studio gradle.properties
-            let gradlePropertyPath = path.join(this.project_dir, 'frameworks/runtime-src/proj.android-studio/gradle.properties');
+            let gradlePropertyPath = cocos_cli_1.cchelper.join(this.project_dir, 'frameworks/runtime-src/proj.android-studio/gradle.properties');
             if (fs.existsSync(gradlePropertyPath)) {
                 let keystorePath = cfg.keystorePath;
                 if (this.plugin.get_current_platform() == "win32") {
@@ -354,7 +368,7 @@ class TemplateCreator {
                     content = content.replace(/\\/g, '\\\\');
                     content = content.replace(/:/g, '\\:');
                 }
-                fs.writeFileSync(path.join(path.dirname(gradlePropertyPath), 'local.properties'), content);
+                fs.writeFileSync(cocos_cli_1.cchelper.join(path.dirname(gradlePropertyPath), 'local.properties'), content);
             }
         });
     }
@@ -374,7 +388,8 @@ class TemplateCreator {
             let project_x_root = cmds.append_x_engine;
             if (cmds.append_x_engine && this.tp_name != "link") {
                 let common = cocos2dx_files.common;
-                let to = path.join(this.project_dir, cmds.append_x_engine.to);
+                let engine_to = cocos_cli_1.cchelper.replace_env_variables(cmds.append_x_engine.to);
+                let to = path.isAbsolute(engine_to) ? engine_to : cocos_cli_1.cchelper.join(this.project_dir, engine_to);
                 yield cocos_cli_1.cchelper.parallel_copy_files(20, this.cocos_root, common, to);
                 if (this.lang == "js") {
                     let fileList = cocos2dx_files.js;
@@ -397,7 +412,7 @@ class TemplateCreator {
             if (cmds.project_replace_project_name) {
                 let cmd = cmds.project_replace_project_name;
                 cmd.files.forEach(file => {
-                    let fp = path.join(this.project_dir, file);
+                    let fp = cocos_cli_1.cchelper.join(this.project_dir, file);
                     replace_files_delay[fp] = replace_files_delay[fp] || [];
                     replace_files_delay[fp].push({
                         reg: cmd.src_project_name,
@@ -410,7 +425,7 @@ class TemplateCreator {
                 let cmd = cmds.project_replace_package_name;
                 let name = cmd.src_package_name.replace(/\./g, "\\.");
                 cmd.files.forEach(file => {
-                    let fp = path.join(this.project_dir, file);
+                    let fp = cocos_cli_1.cchelper.join(this.project_dir, file);
                     replace_files_delay[fp] = replace_files_delay[fp] || [];
                     replace_files_delay[fp].push({
                         reg: name,
@@ -423,7 +438,7 @@ class TemplateCreator {
                 let cmd = cmds.project_replace_mac_bundleid;
                 let bundle_id = cmd.src_bundle_id.replace(/\./g, "\\.");
                 cmd.files.forEach(file => {
-                    let fp = path.join(this.project_dir, file);
+                    let fp = cocos_cli_1.cchelper.join(this.project_dir, file);
                     replace_files_delay[fp] = replace_files_delay[fp] || [];
                     replace_files_delay[fp].push({
                         reg: bundle_id,
@@ -436,7 +451,7 @@ class TemplateCreator {
                 let cmd = cmds.project_replace_ios_bundleid;
                 let bundle_id = cmd.src_bundle_id.replace(/\./g, "\\.");
                 cmd.files.forEach(file => {
-                    let fp = path.join(this.project_dir, file);
+                    let fp = cocos_cli_1.cchelper.join(this.project_dir, file);
                     replace_files_delay[fp] = replace_files_delay[fp] || [];
                     replace_files_delay[fp].push({
                         reg: bundle_id,
@@ -448,16 +463,15 @@ class TemplateCreator {
             if (cmds.project_replace_cocos_x_root) {
                 let cmd = cmds.project_replace_cocos_x_root;
                 let cocos_x_root = path.normalize(this.cocos_root);
-                let proj_cocos_path = path.normalize(path.join(this.project_dir, project_x_root.to));
+                let proj_cocos_path = path.normalize(cocos_cli_1.cchelper.join(this.project_dir, project_x_root.to));
                 for (let f of cmd.files) {
                     let p = typeof (f) == "string" ? f : f.file;
-                    let fp = path.join(this.project_dir, p);
+                    console.log(`warning: project dir ${this.project_dir} + ${p}`);
+                    let fp = cocos_cli_1.cchelper.join(this.project_dir, p);
                     let list = replace_files_delay[fp] = replace_files_delay[fp] || [];
                     if (this.tp_name == "link") {
                         let v = typeof f.link == "string" ? f.link : cocos_x_root;
-                        if (typeof f === "object" && f.needFix) {
-                            v = cocos_cli_1.cchelper.fix_path(v);
-                        }
+                        v = cocos_cli_1.cchelper.fix_path(v);
                         list.push({
                             reg: cmd.pattern,
                             content: v
@@ -467,9 +481,7 @@ class TemplateCreator {
                         // use relative path
                         let rel_path = path.relative(fp, proj_cocos_path);
                         let v = !!f.default ? f.default : rel_path;
-                        if (typeof f === "object" && f.needFix) {
-                            v = cocos_cli_1.cchelper.fix_path(v);
-                        }
+                        v = cocos_cli_1.cchelper.fix_path(v);
                         list.push({
                             reg: cmd.pattern,
                             content: v
@@ -478,10 +490,26 @@ class TemplateCreator {
                 }
                 delete cmds.project_replace_cocos_x_root;
             }
+            if (cmds.project_replace_projec_common) {
+                let cmd = cmds.project_replace_projec_common;
+                let cocos_x_root = path.normalize(this.cocos_root);
+                let proj_common_dir = cocos_cli_1.cchelper.join(this.project_dir, this.plugin.common_dir);
+                for (let f of cmd.files) {
+                    let p = typeof (f) == "string" ? f : f.file;
+                    let fp = cocos_cli_1.cchelper.join(this.project_dir, p);
+                    let list = replace_files_delay[fp] = replace_files_delay[fp] || [];
+                    let rel_path = path.relative(fp, proj_common_dir);
+                    list.push({
+                        reg: cmd.pattern,
+                        content: cocos_cli_1.cchelper.fix_path(rel_path)
+                    });
+                }
+                delete cmds.project_replace_projec_common;
+            }
             if (cmds.common_replace) {
                 for (let cmd of cmds.common_replace) {
                     for (let f of cmd.files) {
-                        let fp = path.join(this.project_dir, f);
+                        let fp = cocos_cli_1.cchelper.join(this.project_dir, f);
                         replace_files_delay[fp] = replace_files_delay[fp] || [];
                         replace_files_delay[fp].push({
                             reg: cmd.pattern,

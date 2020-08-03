@@ -50,7 +50,9 @@ export const pa = {
     cmake_path: { short: "", long: "--cmake-path", help: "path to cmake.exe or cmake", arg_type: ArgumentItemType.STRING_VALUE },
     ios_simulator: { short: "", long: "--ios-simulator", help: "enable iOS simulator support", arg_type: ArgumentItemType.BOOL_FLAG },
     teamid: { short: "", long: "--team-id", help: "Apple developer team id", arg_type: ArgumentItemType.STRING_VALUE },
+    shared_dir: { short: "", long: "--shared-dir", help: "Shared source directory", arg_type: ArgumentItemType.STRING_VALUE },
 };
+
 
 
 
@@ -488,6 +490,7 @@ export class cchelper {
 
 
     static fix_path(p: string): string {
+        p = this.replace_env_variables(p);
         if (os.platform() == "win32") {
             return p.replace(/\\/g, "\\\\");
         }
@@ -502,19 +505,29 @@ export class cchelper {
         });
     }
 
+    static join(p1:string, ...p2:string[]) :string {
+
+        let l = p2.map(x=> this.replace_env_variables(x));
+        if(path.isAbsolute(l[l.length - 1])) return l[l.length -1];
+        return path.join(this.replace_env_variables(p1), ...p2);
+    }
+
     static copy_file_sync(src_root: string, src_file: string, dst_root: string, dst_file: string) {
+        
+        // console.log(`copy_file_sync args: ${JSON.stringify(arguments)}`);
         src_root = this.replace_env_variables(src_root);
         src_file = this.replace_env_variables(src_file);
         dst_root = this.replace_env_variables(dst_root);
         dst_file = this.replace_env_variables(dst_file);
-        this.make_directory_recursive(dst_root);
-        this.make_directory_recursive(path.join(dst_root, dst_file, ".."));
-        let src = path.join(src_root, src_file);
-        let dst = path.join(dst_root, dst_file);
+        let src = path.isAbsolute(src_file) ? src_file: path.join(src_root, src_file);
+        let dst = path.isAbsolute(dst_file)? dst_file: path.join(dst_root, dst_file);
+        // console.log(`copy_file_sync ${src} -> ${dst}`);
+        this.make_directory_recursive(path.dirname(dst));
         fs.copyFileSync(src, dst);
     }
 
     static async copy_file_async(src: string, dst: string) {
+        // console.log(`[async] copy_file ${src} -> ${dst}`);
         this.make_directory_recursive(path.parse(dst).dir);
         await afs.copyFile(src, dst);
     }
@@ -524,13 +537,13 @@ export class cchelper {
         dst = this.replace_env_variables(dst);
 
         let tasks: Promise<any>[] = [];
-        let stat = await afs.stat(src_dir);
+        let src_stat = await afs.stat(src_dir);
 
-        if (!stat) {
+        if (!src_stat) {
             console.error(`failed to stat ${src_dir}`);
             return;
         }
-        if (stat.isDirectory()) {
+        if (src_stat.isDirectory()) {
             this.make_directory_recursive(dst);
             let files = await afs.readdir(src_dir);
             for (let f of files) {
@@ -540,19 +553,53 @@ export class cchelper {
                 tasks.push(tsk);
             }
             await Promise.all(tasks);
-        } else if (stat.isFile()) {
+        } else if (src_stat.isFile()) {
             try {
                 await this.copy_file_async(src_dir, dst);
             } catch (e) {
                 await this.delay(10);
-                console.warn(`warning: retry copying ${src_dir} ... ${e}`);
+                console.error(`error: retry copying ${src_dir} -> to ${dst} ... ${e}`);
                 await this.copy_file_async(src_dir, dst);
             }
         }
     }
 
+    static prepare_dirs_for_files(src_root:string, files: string[], dst_dir:string) {
+        let tree: any = {};
+        for(let f of files) {
+            let parts = f.split("/");
+            let p = tree;
+            for(let i of parts) {
+                if(i in p) {
+                    p = p[i];
+                }else {
+                    p = p[i] = {};
+                }
+            }
+        }
+
+        let mkdirs = ( src_dir:string, attrs:any, dst_dir:string) => {
+            let src_stat = fs.statSync(src_dir);
+            if(!src_stat.isDirectory()) return;
+            if(!fs.existsSync(dst_dir)) {
+                // console.log(`prepere_dir ${dst_dir}`);
+                fs.mkdirSync(dst_dir);
+            }
+            for(let i in attrs) {
+                if(i !== "." && i !== "..") {
+                    mkdirs(path.join(src_dir, i), attrs[i], path.join(dst_dir, i));
+                }
+            }
+        }
+
+        mkdirs(src_root, tree, dst_dir);
+
+    }
+
     static parallel_copy_files(par: number, src_root: string, files: string[], dst_dir: string) {
         let running_tasks = 0;
+        dst_dir = this.replace_env_variables(dst_dir);
+        cchelper.prepare_dirs_for_files(src_root, files, dst_dir);
         return new Promise((resolve, reject) => {
             let copy_async = async (src: string, dst: string) => {
                 running_tasks += 1;
@@ -615,6 +662,8 @@ export class cchelper {
             console.error(`copy file src_root ${src_root} is not exists!`);
             return;
         }
+
+
         src_root = this.replace_env_variables(src_root);
         dst_root = this.replace_env_variables(dst_root);
         let from = this.replace_env_variables(cfg.from)
@@ -627,6 +676,9 @@ export class cchelper {
             dst_root = to;
             to = ".";
         }
+
+        
+        // console.log(`copy ${JSON.stringify(cfg)}, ${from} -> ${to} from ${src_root} -> ${dst_root}`);
 
         let build_prefix_tree = (list0: string[]) => {
             let tree: any = {};
@@ -683,6 +735,7 @@ export class cchelper {
                 }
                 await Promise.all(subcopies);
             } else if (stat.isFile()) {
+                // let dst_file_abs = path.isAbsolute(src_dir) ? src_dir : path.join(dst_root, src_dir);
                 await this.copy_file_async(curr_full_dir, path.join(dst_root, src_dir));
             }
         }
@@ -698,7 +751,7 @@ export class cchelper {
             console.warn(`warning: file ${filepath} not exists while replacing content!`);
             return;
         }
-        //console.log(`replace ${filepath} with ${JSON.stringify(patterns)}`);
+        // console.log(`replace ${filepath} with ${JSON.stringify(patterns)}`);
         let lines = (await afs.readFile(filepath)).toString("utf8").split("\n");
 
         let new_content = lines.map(l => {

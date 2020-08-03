@@ -9,9 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CCPluginGENERATE = void 0;
 const cocos_cli_1 = require("./cocos_cli");
-const path = require("path");
 const os = require("os");
 const cocos_cfg = require("./cocos_config.json");
 const child_process = require("child_process");
@@ -29,6 +27,7 @@ class CCPluginGENERATE extends cocos_cli_1.CCPlugin {
         this.parser.add_predefined_argument("cmake_path");
         this.parser.add_predefined_argument("ios_simulator");
         this.parser.add_predefined_argument("teamid");
+        this.parser.add_predefined_argument_with_default("template_name", "link");
     }
     init() {
         if (cocos_cfg.platforms.indexOf(this.get_platform()) < 0) {
@@ -111,14 +110,16 @@ class PlatformGenerateCmd {
     constructor(plugin) {
         this.plugin = plugin;
     }
+    get project_src_dir() {
+        return cocos_cli_1.cchelper.join(this.plugin.project_dir, "..", `common-${this.plugin.args.get_string("template_name")}`);
+    }
 }
 class IOSGenerateCMD extends PlatformGenerateCmd {
     generate() {
         return __awaiter(this, void 0, void 0, function* () {
             let build_dir = this.plugin.get_build_dir();
-            let project_src_dir = path.join(this.plugin.project_dir, "frameworks/runtime-src");
-            if (!(yield afs_1.afs.exists(path.join(project_src_dir, "CMakelists.txt")))) {
-                throw new Error(`CMakeLists.txt not found in ${project_src_dir}`);
+            if (!(yield afs_1.afs.exists(cocos_cli_1.cchelper.join(this.project_src_dir, "CMakelists.txt")))) {
+                throw new Error(`CMakeLists.txt not found in ${this.project_src_dir}`);
             }
             if (!(yield afs_1.afs.exists(build_dir))) {
                 cocos_cli_1.cchelper.make_directory_recursive(build_dir);
@@ -140,7 +141,7 @@ class IOSGenerateCMD extends PlatformGenerateCmd {
                 console.error(`can not build ios without teamid`);
                 process.exit(1);
             }
-            yield this.plugin.run_cmake(["-S", `${project_src_dir}`, "-GXcode", `-B${build_dir}`, "-DCMAKE_SYSTEM_NAME=iOS", `-DCMAKE_OSX_SYSROOT=${osx_sysroot}`].concat(ext));
+            yield this.plugin.run_cmake(["-S", `${this.project_src_dir}`, "-GXcode", `-B${build_dir}`, "-DCMAKE_SYSTEM_NAME=iOS", `-DCMAKE_OSX_SYSROOT=${osx_sysroot}`].concat(ext));
             // await this.plugin.run_cmake(["--build", `${build_dir}`, "--config", "Debug", "--", "-allowProvisioningUpdates"]);
             return true;
         });
@@ -150,14 +151,13 @@ class MacGenerateCMD extends PlatformGenerateCmd {
     generate() {
         return __awaiter(this, void 0, void 0, function* () {
             let build_dir = this.plugin.get_build_dir();
-            let project_src_dir = path.join(this.plugin.project_dir, "frameworks/runtime-src");
-            if (!(yield afs_1.afs.exists(path.join(project_src_dir, "CMakelists.txt")))) {
-                throw new Error(`CMakeLists.txt not found in ${project_src_dir}`);
+            if (!(yield afs_1.afs.exists(cocos_cli_1.cchelper.join(this.project_src_dir, "CMakelists.txt")))) {
+                throw new Error(`CMakeLists.txt not found in ${this.project_src_dir}`);
             }
             if (!(yield afs_1.afs.exists(build_dir))) {
                 cocos_cli_1.cchelper.make_directory_recursive(build_dir);
             }
-            yield this.plugin.run_cmake(["-S", `${project_src_dir}`, "-GXcode", `-B${build_dir}`, "-DCMAKE_SYSTEM_NAME=Darwin"]);
+            yield this.plugin.run_cmake(["-S", `${this.project_src_dir}`, "-GXcode", `-B${build_dir}`, "-DCMAKE_SYSTEM_NAME=Darwin"]);
             return true;
         });
     }
@@ -167,9 +167,9 @@ class Win32GenerateCMD extends PlatformGenerateCmd {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(`selecting visual studio generator ...`);
             const visualstudio_generators = cocos_cfg.cmake.win32.generators;
-            let test_proj_dir = yield afs_1.afs.mkdtemp(path.join(os.tmpdir(), "cmake_test_"));
-            let test_cmake_lists_path = path.join(test_proj_dir, "CMakeLists.txt");
-            let test_cpp_file = path.join(test_proj_dir, "test.cpp");
+            let test_proj_dir = yield afs_1.afs.mkdtemp(cocos_cli_1.cchelper.join(os.tmpdir(), "cmake_test_"));
+            let test_cmake_lists_path = cocos_cli_1.cchelper.join(test_proj_dir, "CMakeLists.txt");
+            let test_cpp_file = cocos_cli_1.cchelper.join(test_proj_dir, "test.cpp");
             {
                 let cmake_content = `
             cmake_minimum_required(VERSION 3.8)
@@ -206,7 +206,7 @@ class Win32GenerateCMD extends PlatformGenerateCmd {
             };
             let available_generators = [];
             for (let cfg of visualstudio_generators) {
-                let build_dir = path.join(test_proj_dir, `build_${cfg.G.replace(/ /g, "_")}`);
+                let build_dir = cocos_cli_1.cchelper.join(test_proj_dir, `build_${cfg.G.replace(/ /g, "_")}`);
                 let args = [`-S"${test_proj_dir}"`, `-G"${cfg.G}"`, `-B"${build_dir}"`];
                 if ("A" in cfg) {
                     args.push("-A", cfg.A);
@@ -234,9 +234,8 @@ class Win32GenerateCMD extends PlatformGenerateCmd {
     generate() {
         return __awaiter(this, void 0, void 0, function* () {
             let build_dir = this.plugin.get_build_dir();
-            let project_src_dir = path.join(this.plugin.project_dir, "frameworks/runtime-src");
-            if (!(yield afs_1.afs.exists(path.join(project_src_dir, "CMakelists.txt")))) {
-                throw new Error(`CMakeLists.txt not found in ${project_src_dir}`);
+            if (!(yield afs_1.afs.exists(cocos_cli_1.cchelper.join(this.project_src_dir, "CMakelists.txt")))) {
+                throw new Error(`CMakeLists.txt not found in ${this.project_src_dir}`);
             }
             if (!(yield afs_1.afs.exists(build_dir))) {
                 cocos_cli_1.cchelper.make_directory_recursive(build_dir);
@@ -258,7 +257,7 @@ class Win32GenerateCMD extends PlatformGenerateCmd {
             else {
                 generate_args = generate_args.concat(yield this.win32_select_cmake_generator_args());
             }
-            yield this.plugin.run_cmake([`-S"${cocos_cli_1.cchelper.fix_path(project_src_dir)}"`, `-B"${cocos_cli_1.cchelper.fix_path(build_dir)}"`].concat(generate_args));
+            yield this.plugin.run_cmake([`-S"${cocos_cli_1.cchelper.fix_path(this.project_src_dir)}"`, `-B"${cocos_cli_1.cchelper.fix_path(build_dir)}"`].concat(generate_args));
             return true;
         });
     }

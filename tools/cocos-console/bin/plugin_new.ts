@@ -11,7 +11,8 @@ import { afs } from "./afs";
 
 const PackageNewConfig = "cocos-project-template.json";
 
-import {CCPluginGENERATE} from "./plugin_generate";
+import { CCPluginGENERATE } from "./plugin_generate";
+import { CCPluginRUN } from "./plugin_run";
 
 let project_CONFIG =
 {
@@ -40,15 +41,17 @@ export class CCPluginNEW extends CCPlugin {
         parser.add_predefined_argument_with_default("language", "js");
         parser.add_predefined_argument("do_list_templates", this.do_list_templates.bind(this));
         parser.add_predefined_argument_with_default("template_name", "link");
+        parser.add_predefined_argument("shared_dir");
     }
     init(): boolean {
 
         this.set_env("PROJECT_NAME", this.project_name!);
+        this.set_env("COMMON_DIR", ccutils.join(this.shared_dir!, this.common_dir));
 
         let parser = this.parser;
         // console.log(`PROJECT_NAME name ${this.project_name}`);
         let cocos_dir = this.get_cocos_root();
-        if (!fs.existsSync(path.join(cocos_dir!, "cocos/cocos2d.h"))) {
+        if (!fs.existsSync(ccutils.join(cocos_dir!, "cocos/cocos2d.h"))) {
             console.error(`cocos2d.h not found in ${cocos_dir}, path incorrect!`);
             return false;
         }
@@ -59,6 +62,11 @@ export class CCPluginNEW extends CCPlugin {
 
         return true;
     }
+
+    get common_dir() {
+        return `common-${this.args.get_string("template_name")}`;
+    }
+    
     async run(): Promise<boolean> {
         let tp = new TemplateCreator(this);
         await tp.run(); // async
@@ -91,7 +99,13 @@ export class CCPluginNEW extends CCPlugin {
     get project_dir(): string | undefined {
         let dir = this.args.get_path("directory");
         if (!dir || !this.project_name) return;
-        return path.join(dir, this.project_name!);
+        return ccutils.join(dir, this.project_name!);
+    }
+
+    get shared_dir(): string | undefined {
+        let dir = this.args.get_path("shared_dir");
+        if (!dir) return ccutils.join(this.project_dir!, "..");
+        return dir;
     }
 
     get engine_path(): string {
@@ -116,7 +130,7 @@ export class CCPluginNEW extends CCPlugin {
 
     get selected_template_path(): string | null {
         if (!this.selected_template_dir_name) return null;
-        let dir = path.join(this.get_templates_root_path()!, this.selected_template_dir_name);
+        let dir = ccutils.join(this.get_templates_root_path()!, this.selected_template_dir_name);
         if (!fs.existsSync(dir)) {
             console.error(`selected template path not exists: ${dir}`);
         }
@@ -127,7 +141,7 @@ export class CCPluginNEW extends CCPlugin {
 
         let check_files: string[] = ["main.js", "project.json", PackageNewConfig, "frameworks"];
         for (let f of check_files) {
-            if (!fs.existsSync(path.join(dir, f))) {
+            if (!fs.existsSync(ccutils.join(dir, f))) {
                 console.warn(`warning: file "${f}" does not exists in ${dir}, template path can be incorrect setting!`);
             }
         }
@@ -155,7 +169,7 @@ export class TemplateCreator {
     constructor(plugin: CCPluginNEW) {
         this.plugin = plugin;
         let args = plugin.args;
-        let template_dir = path.join(plugin.get_templates_root_path()!, plugin.selected_template_dir_name);
+        let template_dir = ccutils.join(plugin.get_templates_root_path()!, plugin.selected_template_dir_name);
 
         this.lang = args.get_path("language");
         this.cocos_root = plugin.get_cocos_root()!;
@@ -171,12 +185,12 @@ export class TemplateCreator {
             console.error(`template name "${this.tp_name}" is not supported!`);
         }
 
-        if (!fs.existsSync(path.join(this.tp_dir, PackageNewConfig))) {
+        if (!fs.existsSync(ccutils.join(this.tp_dir, PackageNewConfig))) {
             console.error(`can not find ${PackageNewConfig} in ${this.tp_dir}`);
             return;
         }
 
-        this.template_info = JSON.parse(fs.readFileSync(path.join(this.tp_dir, PackageNewConfig)).toString("utf8"));
+        this.template_info = JSON.parse(fs.readFileSync(ccutils.join(this.tp_dir, PackageNewConfig)).toString("utf8"));
         if (!("do_default" in this.template_info!)) {
             console.error(`can not find "do_default" in ${PackageNewConfig}`);
             return;
@@ -189,21 +203,31 @@ export class TemplateCreator {
     }
 
     get_config_path(): string {
-        return path.join(this.project_dir!, cocos_project.CONFIG);
+        return ccutils.join(this.project_dir!, cocos_project.CONFIG);
     }
 
     async run() {
-        let default_cmds = this.template_info!.do_default;
-        if (default_cmds) {
+
+        let shared_dir = this.plugin.shared_dir!;
+
+        await ccutils.copy_files_with_config(
+            {
+                from: ccutils.join(this.tp_dir!, "common"),
+                to: ccutils.join(shared_dir, this.plugin.common_dir),
+            }, this.tp_dir!, this.project_dir!);
+
+
+        // copy by platform
+        let plat = this.plugin.args.get_string("platform");
+        if (plat) {
             await ccutils.copy_files_with_config(
                 {
-                    from: this.tp_dir!,
-                    to: this.project_dir!,
-                    exclude: default_cmds.exclude_from_template
+                    from: ccutils.join(this.tp_dir!, "platforms", plat),
+                    to: ccutils.join(this.project_dir!, "proj"),
                 }, this.tp_dir!, this.project_dir!);
-            await this.execute(default_cmds);
-            delete this.template_info!.do_default;
         }
+
+        delete this.template_info!.do_default;
 
         for (let key in this.template_info!) {
             // console.log(`other commands ${key}`)
@@ -224,7 +248,7 @@ export class TemplateCreator {
     }
 
     get_cocos_version(): string {
-        const cocos2d_h = path.join(this.cocos_root!, "cocos/cocos2d.h");
+        const cocos2d_h = ccutils.join(this.cocos_root!, "cocos/cocos2d.h");
         if (!fs.existsSync(cocos2d_h)) {
             return "unknown";
         } else {
@@ -243,7 +267,7 @@ export class TemplateCreator {
             return undefined;
         }
         let p = JSON.parse(fs.readFileSync(this.get_config_path()).toString("utf-8"));
-        if(!p.packages) {
+        if (!p.packages) {
             return undefined;
         }
         return p.packages[platform];
@@ -255,7 +279,7 @@ export class TemplateCreator {
             let json = JSON.parse(fs.readFileSync(cfgPath).toString("utf-8"));
             if (json.ios) {
                 let cfg = json.ios.orientation;
-                let infoPlist = path.join(this.project_dir!, 'frameworks/runtime-src/proj.ios_mac/ios/Info.plist');
+                let infoPlist = ccutils.join(this.project_dir!, 'frameworks/runtime-src/proj.ios_mac/ios/Info.plist');
                 if (fs.existsSync(infoPlist)) {
                     let orientations: string[] = [];
                     if (cfg.landscapeRight) {
@@ -304,7 +328,7 @@ export class TemplateCreator {
 
             if (json.android) {
                 let cfg = json.android.orientation;
-                let manifestPath = path.join(this.project_dir!, 'frameworks/runtime-src/proj.android-studio/app/AndroidManifest.xml');
+                let manifestPath = ccutils.join(this.project_dir!, 'frameworks/runtime-src/proj.android-studio/app/AndroidManifest.xml');
                 if (fs.existsSync(manifestPath)) {
                     let pattern = /android:screenOrientation=\"[^"]*\"/;
                     let replaceString = 'android:screenOrientation="unspecified"';
@@ -348,17 +372,17 @@ export class TemplateCreator {
     async update_android_gradle_values() {
 
         let cfg = this.get_project_pkg_config("android");
-        if(!cfg) return;
+        if (!cfg) return;
 
         // android-studio gradle.properties
-        let gradlePropertyPath = path.join(this.project_dir!, 'frameworks/runtime-src/proj.android-studio/gradle.properties');
+        let gradlePropertyPath = ccutils.join(this.project_dir!, 'frameworks/runtime-src/proj.android-studio/gradle.properties');
         if (fs.existsSync(gradlePropertyPath)) {
             let keystorePath = cfg.keystorePath;
-            if(this.plugin.get_current_platform() == "win32") {
+            if (this.plugin.get_current_platform() == "win32") {
                 keystorePath = ccutils.fix_path(keystorePath);
             }
             let apiLevel = cfg.apiLevel;
-            if(!apiLevel) {
+            if (!apiLevel) {
                 apiLevel = 27;
             }
             console.log(`AndroidAPI level ${apiLevel}`);
@@ -389,7 +413,7 @@ export class TemplateCreator {
                 content = content.replace(/:/g, '\\:');
             }
 
-            fs.writeFileSync(path.join(path.dirname(gradlePropertyPath), 'local.properties'), content);
+            fs.writeFileSync(ccutils.join(path.dirname(gradlePropertyPath), 'local.properties'), content);
         }
     }
 
@@ -410,7 +434,8 @@ export class TemplateCreator {
         let project_x_root = cmds.append_x_engine!;
         if (cmds.append_x_engine && this.tp_name != "link") {
             let common = cocos2dx_files.common;
-            let to = path.join(this.project_dir!, cmds.append_x_engine.to);
+            let engine_to = ccutils.replace_env_variables(cmds.append_x_engine.to);
+            let to = path.isAbsolute(engine_to) ? engine_to : ccutils.join(this.project_dir!, engine_to);
             await ccutils.parallel_copy_files(20, this.cocos_root!, common, to);
             if (this.lang == "js") {
                 let fileList = cocos2dx_files.js;
@@ -437,7 +462,7 @@ export class TemplateCreator {
             let cmd = cmds.project_replace_project_name;
 
             cmd.files.forEach(file => {
-                let fp = path.join(this.project_dir!, file);
+                let fp = ccutils.join(this.project_dir!, file);
                 replace_files_delay[fp] = replace_files_delay[fp] || [];
                 replace_files_delay[fp].push({
                     reg: cmd.src_project_name,
@@ -451,7 +476,7 @@ export class TemplateCreator {
             let cmd = cmds.project_replace_package_name;
             let name = cmd.src_package_name.replace(/\./g, "\\.");
             cmd.files.forEach(file => {
-                let fp = path.join(this.project_dir!, file);
+                let fp = ccutils.join(this.project_dir!, file);
                 replace_files_delay[fp] = replace_files_delay[fp] || [];
                 replace_files_delay[fp].push({
                     reg: name,
@@ -465,7 +490,7 @@ export class TemplateCreator {
             let cmd = cmds.project_replace_mac_bundleid;
             let bundle_id = cmd.src_bundle_id.replace(/\./g, "\\.");
             cmd.files.forEach(file => {
-                let fp = path.join(this.project_dir!, file);
+                let fp = ccutils.join(this.project_dir!, file);
                 replace_files_delay[fp] = replace_files_delay[fp] || [];
                 replace_files_delay[fp].push({
                     reg: bundle_id,
@@ -479,7 +504,7 @@ export class TemplateCreator {
             let cmd = cmds.project_replace_ios_bundleid;
             let bundle_id = cmd.src_bundle_id.replace(/\./g, "\\.");
             cmd.files.forEach(file => {
-                let fp = path.join(this.project_dir!, file);
+                let fp = ccutils.join(this.project_dir!, file);
                 replace_files_delay[fp] = replace_files_delay[fp] || [];
                 replace_files_delay[fp].push({
                     reg: bundle_id,
@@ -492,19 +517,17 @@ export class TemplateCreator {
         if (cmds.project_replace_cocos_x_root) {
             let cmd = cmds.project_replace_cocos_x_root!;
             let cocos_x_root = path.normalize(this.cocos_root!);
-            let proj_cocos_path = path.normalize(path.join(this.project_dir!, project_x_root.to));
+            let proj_cocos_path = path.normalize(ccutils.join(this.project_dir!, project_x_root.to));
             for (let f of cmd.files) {
 
                 let p = typeof (f) == "string" ? f : f.file;
-
-                let fp = path.join(this.project_dir!, p);
+                console.log(`warning: project dir ${this.project_dir!} + ${p}`);
+                let fp = ccutils.join(this.project_dir!, p);
                 let list = replace_files_delay[fp] = replace_files_delay[fp] || [];
 
                 if (this.tp_name == "link") {
                     let v = typeof f.link == "string" ? f.link as string : cocos_x_root;
-                    if (typeof f === "object" && f.needFix) {
-                        v = ccutils.fix_path(v);
-                    }
+                    v = ccutils.fix_path(v);
                     list.push({
                         reg: cmd.pattern,
                         content: v
@@ -513,9 +536,7 @@ export class TemplateCreator {
                     // use relative path
                     let rel_path = path.relative(fp, proj_cocos_path);
                     let v = !!(f as any).default ? (f as any).default : rel_path;
-                    if (typeof f === "object" && f.needFix) {
-                        v = ccutils.fix_path(v);
-                    }
+                    v = ccutils.fix_path(v);
                     list.push({
                         reg: cmd.pattern,
                         content: v
@@ -526,10 +547,28 @@ export class TemplateCreator {
             delete cmds.project_replace_cocos_x_root;
         }
 
+        if(cmds.project_replace_projec_common) {
+
+            let cmd = cmds.project_replace_projec_common!;
+            let cocos_x_root = path.normalize(this.cocos_root!);
+            let proj_common_dir = ccutils.join(this.project_dir!, this.plugin.common_dir);
+            for (let f of cmd.files) {
+                let p = typeof (f) == "string" ? f : f.file;
+                let fp = ccutils.join(this.project_dir!, p);
+                let list = replace_files_delay[fp] = replace_files_delay[fp] || [];
+                let rel_path = path.relative(fp, proj_common_dir);
+                list.push({
+                    reg: cmd.pattern,
+                    content: ccutils.fix_path(rel_path)
+                });
+            }
+            delete cmds.project_replace_projec_common;
+        }
+
         if (cmds.common_replace) {
             for (let cmd of cmds.common_replace) {
                 for (let f of cmd.files) {
-                    let fp = path.join(this.project_dir!, f);
+                    let fp = ccutils.join(this.project_dir!, f);
                     replace_files_delay[fp] = replace_files_delay[fp] || [];
                     replace_files_delay[fp].push({
                         reg: cmd.pattern,

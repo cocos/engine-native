@@ -49,6 +49,10 @@ export interface CocosProjectTasks {
     project_replace_cocos_x_root: {
         pattern: string;
         files:(string|{file:string, default?:string, link?:string, needFix?:boolean})[];
+    },
+    project_replace_projec_common: {
+        pattern: string;
+        files:(string|{file:string, default?:string, link?:string, needFix?:boolean})[];
     }
     common_replace?: {pattern:string, value:string, files:string[]}[];
 }
