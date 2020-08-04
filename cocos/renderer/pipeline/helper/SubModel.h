@@ -1,19 +1,17 @@
 #pragma once
-#include "core/CoreStd.h"
+#include "SharedMemoryPool.h"
 
 namespace cc {
 namespace pipeline {
 
 struct CC_DLL SubModel {
-    uint priority = 0;
-    uint materialID = 0;
-    uint psociID = 0;
-    uint iaID = 0;
+    SHARED_MEMORY_DATA_TYPE priority = 0;
+    SHARED_MEMORY_DATA_TYPE materialID = 0;
+    SHARED_MEMORY_DATA_TYPE psociID = 0;
+    SHARED_MEMORY_DATA_TYPE iaID = 0;
     
-    uint passesID = 0;
-    uint passesCount = 0;
-    
-    
+    SHARED_MEMORY_DATA_TYPE passesID = 0;
+    SHARED_MEMORY_DATA_TYPE passesCount = 0;
 };
 
 } //namespace pipeline

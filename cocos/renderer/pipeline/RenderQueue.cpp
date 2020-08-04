@@ -19,9 +19,9 @@ void RenderQueue::clear() {
 }
 
 bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelIdx, uint passIdx) {
-    const auto subModelPtr = SharedMemory::get<SubModel *>(subModelIdx);
-    const auto passPtr = SharedMemory::get<Pass *>(subModelPtr->materialID) + passIdx;
-    const auto psoCIPtr = SharedMemory::get<gfx::PipelineStateInfo *>(subModelPtr->psociID) + passIdx;
+    const auto subModelPtr = GET_SUBMODLE(renderObj.modle->subModelsID, subModelIdx);
+    const auto passPtr = GET_PASS(subModelPtr->materialID, passIdx);
+    const auto psoCIPtr = GET_PSOCI(subModelPtr->psociID, passIdx);
     const auto isTransparent = psoCIPtr->blendState.targets[0].blend;
 
     if (isTransparent != _passDesc.isTransparent || !(passPtr->phase & _passDesc.phases)) {
@@ -42,9 +42,9 @@ void RenderQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *rend
     for (size_t i = 0; i < _queue.size(); ++i) {
         const auto subModelPtr = _queue[i].subModel;
         const auto passIdx = _queue[i].passIndex;
-        const auto iaPtr = SharedMemory::get<gfx::InputAssembler *>(subModelPtr->iaID);
-        const auto psoCIPtr = SharedMemory::get<gfx::PipelineStateInfo *>(subModelPtr->psociID) + passIdx;
-        const auto passPtr = SharedMemory::get<Pass *>(subModelPtr->materialID) + passIdx;
+        const auto iaPtr = GET_IA(subModelPtr->iaID);
+        const auto psoCIPtr = GET_PSOCI(subModelPtr->psociID, passIdx);
+        const auto passPtr = GET_PASS(subModelPtr->materialID, passIdx);
         auto *pso = PipelineStateManager::getOrCreatePipelineStage(psoCIPtr, iaPtr, passPtr->hash, renderPass);
         cmdBuff->bindPipelineState(pso);
         cmdBuff->bindBindingLayout(psoCIPtr->bindingLayout);

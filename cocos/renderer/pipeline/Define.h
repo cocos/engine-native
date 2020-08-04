@@ -9,10 +9,12 @@ namespace pipeline {
 class RenderStage;
 class RenderFlow;
 struct SubModel;
+struct Light;
+struct Model;
 
 struct CC_DLL RenderObject {
     uint depth = 0;
-    uint modelMappedIndex = UINT_MAX;
+    Model *modle = nullptr;
 };
 typedef vector<struct RenderObject> RenderObjectList;
 

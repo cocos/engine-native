@@ -1,13 +1,13 @@
 #pragma once
-#include "core/CoreStd.h"
+#include "SharedMemoryPool.h"
 
 namespace cc {
 namespace pipeline {
 
 struct CC_DLL Pass {
-    uint priority = 0;
-    uint hash = 0;
-    uint phase = 0;
+    SHARED_MEMORY_DATA_TYPE priority = 0;
+    SHARED_MEMORY_DATA_TYPE hash = 0;
+    SHARED_MEMORY_DATA_TYPE phase = 0;
 };
 
 } //namespace pipeline
