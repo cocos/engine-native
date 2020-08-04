@@ -28,9 +28,8 @@ THE SOFTWARE.
 
 using namespace se;
 
-BufferPool::BufferPool(size_t bytesPerEntry, size_t entryBits)
+BufferPool::BufferPool(size_t bytesPerEntry, uint32_t entryBits)
 : _entryBits(entryBits)
-, _poolFlag(1 << 30)
 , _bytesPerEntry(bytesPerEntry)
 {
     _entiesPerChunk = 1 << entryBits;
@@ -45,8 +44,8 @@ BufferPool::~BufferPool()
 {
     CCASSERT(_chunks.size() == _jsObjs.size(), "BufferPool: Page count doesn't match the number of javascript array buffer objects.");
     for (size_t i = 0; i < _chunks.size(); ++i) {
-        CC_FREE(_chunks[i]);
-        Object *jsObj = _jsObjs[i];
+        CC_FREE(_chunks.at(i));
+        Object *jsObj = _jsObjs.at(i);
         jsObj->setPrivateData(nullptr);
         jsObj->decRef();
         jsObj->unroot();
@@ -54,7 +53,7 @@ BufferPool::~BufferPool()
     }
 }
 
-void *BufferPool::getData(size_t id)
+void *BufferPool::getData(uint32_t id)
 {
     size_t chunk = (_chunkMask & id) >> _entryBits;
     size_t entry = _entryMask & id;
@@ -64,7 +63,7 @@ void *BufferPool::getData(size_t id)
 }
 
 template<class Type>
-Type *BufferPool::getTypedObject(size_t id)
+Type *BufferPool::getTypedObject(uint32_t id)
 {
     size_t chunk = (_chunkMask & id) >> _entryBits;
     size_t entry = _entryMask & id;
@@ -87,7 +86,7 @@ Object *BufferPool::allocateNewChunk()
     return jsObj;
 }
 
-Object *BufferPool::getChunkArrayBuffer(size_t chunkId)
+Object *BufferPool::getChunkArrayBuffer(uint32_t chunkId)
 {
     return _jsObjs[chunkId];
 }

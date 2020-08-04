@@ -30,16 +30,16 @@ THE SOFTWARE.
 
 namespace se {
 
-class CC_DLL ObjectPool : cc::gfx::Object {
+class CC_DLL ObjectPool : public cc::Object {
 public:
     ObjectPool(Object *jsArr);
     ~ObjectPool();
 
     template<class Type>
-    Type *getTypedObject(size_t id);
+    Type *getTypedObject(uint32_t id);
 protected:
     Object* _jsArr;
-    uint32_t _poolFlag;
+    uint32_t _poolFlag = 1 << 29;
     uint32_t _indexMask;
 };
 

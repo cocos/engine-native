@@ -27,7 +27,6 @@ THE SOFTWARE.
 using namespace se;
 
 ObjectPool::ObjectPool(Object *jsArr)
-: _poolFlag(1 << 29)
 {
     CCASSERT(jsArr->isArray(), "ObjectPool: It must be initialized with a JavaScript array");
     
@@ -48,8 +47,9 @@ ObjectPool::~ObjectPool()
 }
 
 template<class Type>
-Type *ObjectPool::getTypedObject(size_t id)
+Type *ObjectPool::getTypedObject(uint32_t id)
 {
+    id = _indexMask & id;
     uint32_t len = 0;
     bool ok = _jsArr->getArrayLength(&len);
     CCASSERT(ok && id < len, "ObjectPool: Invalid buffer pool entry id");

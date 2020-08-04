@@ -71,7 +71,7 @@ static bool jsb_BufferPool_constructor(se::State& s)
             return false;
         }
 
-        se::BufferPool* pool = new se::BufferPool(bytesPerEntry, entryBits);
+        se::BufferPool* pool = JSB_ALLOC(se::BufferPool, bytesPerEntry, entryBits);
         s.thisObject()->setPrivateData(pool);
         se::NonRefNativePtrCreatedByCtorMap::emplace(pool);
         return true;
@@ -129,7 +129,7 @@ static bool jsb_ObjectPool_constructor(se::State& s)
         }
         se::Object *jsArr = args[0].toObject();
 
-        se::ObjectPool* pool = new se::ObjectPool(jsArr);
+        se::ObjectPool* pool = JSB_ALLOC(se::ObjectPool, jsArr);
         s.thisObject()->setPrivateData(pool);
         se::NonRefNativePtrCreatedByCtorMap::emplace(pool);
         return true;
