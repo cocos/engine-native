@@ -295,6 +295,7 @@ public class Cocos2dxEditBox {
         RelativeLayout myLayout = new RelativeLayout(context);
         this.addEditText(context, myLayout);
         this.addButton(context, myLayout);
+        myLayout.setFitsSystemWindows(true);
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
