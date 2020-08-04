@@ -51,7 +51,7 @@ function build_android()
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" app/build.gradle
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" ../../common/CMakeLists.txt
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" settings.gradle
-    sed -i "s@\${COCOS_PROJ_COMMON}@$COCOS2DX_ROOT/js-template-link/templates/common@g" app/build.gradle
+    sed -i "s@\${COCOS_PROJ_COMMON}@$COCOS2DX_ROOT/js-template-link/common@g" app/build.gradle
     sed -i "s/^RELEASE_/#RELEASE_/g" gradle.properties
 
     #echo "Compile Android - ndk-build ..."
