@@ -38,9 +38,9 @@ public:
     template<class Type>
     Type *getTypedObject(uint32_t id);
 protected:
-    Object* _jsArr;
+    Object* _jsArr = nullptr;
     uint32_t _poolFlag = 1 << 29;
-    uint32_t _indexMask;
+    uint32_t _indexMask = 0;
 };
 
 } // namespace se {

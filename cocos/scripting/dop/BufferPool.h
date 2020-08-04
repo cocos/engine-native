@@ -49,11 +49,11 @@ protected:
     cc::vector<size_t> _sizes;
     uint32_t _poolFlag = 1 << 30;
     uint32_t _entryBits = 1 << 8;
-    uint32_t _chunkMask;
-    uint32_t _entryMask;
-    size_t _bytesPerChunk;
-    size_t _entiesPerChunk;
-    size_t _bytesPerEntry;
+    uint32_t _chunkMask = 0;
+    uint32_t _entryMask = 0;
+    size_t _bytesPerChunk = 0;
+    size_t _entiesPerChunk = 0;
+    size_t _bytesPerEntry = 0;
 };
 
 } // namespace se {

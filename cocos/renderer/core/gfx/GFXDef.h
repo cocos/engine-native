@@ -93,7 +93,7 @@ enum class Feature : uint8_t {
     COUNT,
 };
 
-enum class Format : uint32_t {
+enum class Format : uint {
 
     UNKNOWN,
 
