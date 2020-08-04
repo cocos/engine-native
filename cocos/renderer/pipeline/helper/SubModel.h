@@ -6,9 +6,14 @@ namespace pipeline {
 
 struct CC_DLL SubModel {
     uint priority = 0;
-    uint materialMappedID = UINT_MAX;
-    uint psoCIMappendID = UINT_MAX;
-    uint iaMappedID = UINT_MAX;
+    uint materialID = 0;
+    uint psociID = 0;
+    uint iaID = 0;
+    
+    uint passesID = 0;
+    uint passesCount = 0;
+    
+    
 };
 
 } //namespace pipeline

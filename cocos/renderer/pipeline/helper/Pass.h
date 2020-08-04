@@ -7,7 +7,7 @@ namespace pipeline {
 struct CC_DLL Pass {
     uint priority = 0;
     uint hash = 0;
-    uint phaseMappendID = UINT_MAX;
+    uint phase = 0;
 };
 
 } //namespace pipeline

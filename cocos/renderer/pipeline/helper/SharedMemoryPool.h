@@ -6,11 +6,8 @@ namespace pipeline {
 
 class CC_DLL SharedMemory : public Object {
 public:
-    template <typename RET, typename T, typename U>
-    static RET get(T mappedIndex, U slot);
-
-    template <typename RET, typename T, typename U>
-    static RET get(const T *handle, U memberOffset);
+    template <typename RET, typename T>
+    static RET get(T index);
 };
 } //namespace pipeline
 } //namespace cc
