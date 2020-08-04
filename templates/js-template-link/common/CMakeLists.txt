@@ -57,7 +57,7 @@ if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/../${PLATFORM_DIR_NAME})
     set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../${PLATFORM_DIR_NAME}/proj)
 else()
     if(WINDOWS)
-        set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../platforms/win32)
+        set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../platforms/win32) ## FIXME
     else()
         set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../platforms/${PLATFORM_DIR_NAME}
     endif()
