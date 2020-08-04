@@ -75,7 +75,7 @@ android.applicationVariants.all { variant ->
     def outputDir ="${projectDir}/assets"
     def sourceDir = "${projectDir}/../.."
 
-    assert file("${sourceDir}/res").exists()
+    // assert file("${sourceDir}/res").exists()
 
     delete "${outputDir}"
     def targetName = variant.name.capitalize()

@@ -47,10 +47,11 @@ function setup_linux_andorid_sdk()
 function build_android()
 {
     echo "Compiling Android ... "
-    cd $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src/proj.android-studio
+    cd $COCOS2DX_ROOT/templates/js-template-link/platforms/android
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" app/build.gradle
-    sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" ../CMakeLists.txt
+    sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" ../../common/CMakeLists.txt
     sed -i "s@\${COCOS_X_ROOT}@$COCOS2DX_ROOT@g" settings.gradle
+    sed -i "s@\${COCOS_PROJ_COMMON}@$COCOS2DX_ROOT/js-template-link/templates/common@g" app/build.gradle
     sed -i "s/^RELEASE_/#RELEASE_/g" gradle.properties
 
     #echo "Compile Android - ndk-build ..."
@@ -96,10 +97,10 @@ function build_macosx()
     NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
 
     echo "Compiling MacOSX ... "
-    cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
+    cd  $COCOS2DX_ROOT/templates/js-template-link/platforms/mac
     mkdir build-mac 
     cd build-mac
-    cmake .. -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT
+    cmake ../../../common -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT
     cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORES
     echo "Compile MacOSX Debug Done!"
     cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORES
@@ -111,12 +112,12 @@ function build_ios()
     NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
 
     echo "Compiling iOS ... "
-    cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
+    cd  $COCOS2DX_ROOT/templates/js-template-link/platforms/ios
     mkdir build-ios 
     cd build-ios
-    cmake .. -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT -DCMAKE_SYSTEM_NAME=iOS \
+    cmake ../../../common -GXcode -DCOCOS_X_ROOT=$COCOS2DX_ROOT -DCMAKE_SYSTEM_NAME=iOS \
         -DCMAKE_OSX_SYSROOT=iphonesimulator \
-        -DUSE_SE_JSC=ON
+        -DCMAKE_OSX_ARCHITECTURES=x86_64 
     cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORES
     echo "Compile iOS Done!"
 }
@@ -124,41 +125,14 @@ function build_ios()
 function build_windows()
 {
     echo "Compiling Win32 ... "
-    cd  $COCOS2DX_ROOT/templates/js-template-link/frameworks/runtime-src
+    cd  $COCOS2DX_ROOT/templates/js-template-link/platforms/win32
     mkdir build-win32 
     cd build-win32
-    cmake .. -G"Visual Studio 15 2017" -DCOCOS_X_ROOT=$COCOS2DX_ROOT 
+    cmake ../../../common -G"Visual Studio 15 2017" -DCOCOS_X_ROOT=$COCOS2DX_ROOT 
     cmake --build . --config Debug 
     echo "Compile Win32 Debug Done!"
     cmake --build . --config Release
     echo "Compile Win32 Debug Done!"
-}
-
-function build_windows_console()
-{
-    echo "Compiling Win32 ... [console]"
-    mkdir $COCOS2DX_ROOT/test_dir
-    node $COCOS_CLI new NewGame -d $COCOS2DX_ROOT/test_dir -k link
-    node $COCOS_CLI compile --build-dir $COCOS2DX_ROOT/test_dir/build -d $COCOS2DX_ROOT/test_dir/NewGame -p win32
-    echo "Compile Win32 Done! [console]"
-}
-
-function build_mac_console()
-{
-    echo "Compiling mac ... [console]"
-    mkdir $COCOS2DX_ROOT/test_dir
-    node $COCOS_CLI new NewGame -d $COCOS2DX_ROOT/test_dir -k link
-    node $COCOS_CLI compile --build-dir $COCOS2DX_ROOT/test_dir/build -d $COCOS2DX_ROOT/test_dir/NewGame -p mac
-    echo "Compile mac Done! [console]"
-}
-
-function build_ios_console()
-{
-    echo "Compiling mac ... [console]"
-    mkdir $COCOS2DX_ROOT/test_dir
-    node $COCOS_CLI new NewGame -d $COCOS2DX_ROOT/test_dir -k link
-    node $COCOS_CLI compile --build-dir $COCOS2DX_ROOT/test_dir/build -d $COCOS2DX_ROOT/test_dir/NewGame -p ios --ios-simulator
-    echo "Compile mac Done! [console]"
 }
 
 
@@ -172,19 +146,16 @@ function run_compile()
     if [ "$BUILD_TARGET" == "macosx_cmake" ]; then
         mac_download_cmake
         build_macosx
-        build_mac_console
     fi
 
     if [ "$BUILD_TARGET" == "ios_cmake" ]; then
         mac_download_cmake
         build_ios
-        build_ios_console
     fi
 
     if [ "$BUILD_TARGET" == "windows_cmake" ]; then
         cmake --version
         build_windows
-        build_windows_console
     fi
 }
 
