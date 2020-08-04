@@ -521,7 +521,7 @@ export class cchelper {
         dst_file = this.replace_env_variables(dst_file);
         let src = path.isAbsolute(src_file) ? src_file: path.join(src_root, src_file);
         let dst = path.isAbsolute(dst_file)? dst_file: path.join(dst_root, dst_file);
-        // console.log(`copy_file_sync ${src} -> ${dst}`);
+        // console.error(`copy_file_sync ${src} -> ${dst}`);
         this.make_directory_recursive(path.dirname(dst));
         fs.copyFileSync(src, dst);
     }
@@ -748,7 +748,7 @@ export class cchelper {
     static async replace_in_file(patterns: { reg: string, text: string }[], filepath: string) {
         filepath = this.replace_env_variables(filepath);
         if (!fs.existsSync(filepath)) {
-            console.warn(`warning: file ${filepath} not exists while replacing content!`);
+            console.log(`warning: file ${filepath} not exists while replacing content!`);
             return;
         }
         // console.log(`replace ${filepath} with ${JSON.stringify(patterns)}`);

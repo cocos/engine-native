@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TemplateCreator = exports.CCPluginNEW = void 0;
 const cocos_cli_1 = require("./cocos_cli");
 const path = require("path");
 const fs = require("fs");
@@ -183,6 +184,7 @@ class TemplateCreator {
                 from: cocos_cli_1.cchelper.join(this.tp_dir, "common"),
                 to: cocos_cli_1.cchelper.join(shared_dir, this.plugin.common_dir),
             }, this.tp_dir, this.project_dir);
+            cocos_cli_1.cchelper.copy_file_sync(this.tp_dir, "project.json", this.project_dir, "project.json");
             // copy by platform
             let plat = this.plugin.args.get_string("platform");
             if (plat) {
@@ -239,7 +241,7 @@ class TemplateCreator {
                 let json = JSON.parse(fs.readFileSync(cfgPath).toString("utf-8"));
                 if (json.ios) {
                     let cfg = json.ios.orientation;
-                    let infoPlist = cocos_cli_1.cchelper.join(this.project_dir, 'frameworks/runtime-src/proj.ios_mac/ios/Info.plist');
+                    let infoPlist = cocos_cli_1.cchelper.join(this.project_dir, 'proj/Info.plist');
                     if (fs.existsSync(infoPlist)) {
                         let orientations = [];
                         if (cfg.landscapeRight) {
@@ -290,7 +292,7 @@ class TemplateCreator {
                 }
                 if (json.android) {
                     let cfg = json.android.orientation;
-                    let manifestPath = cocos_cli_1.cchelper.join(this.project_dir, 'frameworks/runtime-src/proj.android-studio/app/AndroidManifest.xml');
+                    let manifestPath = cocos_cli_1.cchelper.join(this.project_dir, 'proj/app/AndroidManifest.xml');
                     if (fs.existsSync(manifestPath)) {
                         let pattern = /android:screenOrientation=\"[^"]*\"/;
                         let replaceString = 'android:screenOrientation="unspecified"';
@@ -337,7 +339,8 @@ class TemplateCreator {
             if (!cfg)
                 return;
             // android-studio gradle.properties
-            let gradlePropertyPath = cocos_cli_1.cchelper.join(this.project_dir, 'frameworks/runtime-src/proj.android-studio/gradle.properties');
+            console.log(`update gradle.prperties`);
+            let gradlePropertyPath = cocos_cli_1.cchelper.join(this.project_dir, 'proj/gradle.properties');
             if (fs.existsSync(gradlePropertyPath)) {
                 let keystorePath = cfg.keystorePath;
                 if (this.plugin.get_current_platform() == "win32") {
@@ -349,12 +352,21 @@ class TemplateCreator {
                 }
                 console.log(`AndroidAPI level ${apiLevel}`);
                 let content = fs.readFileSync(gradlePropertyPath, 'utf-8');
-                content = content.replace(/RELEASE_STORE_FILE=.*/, `RELEASE_STORE_FILE=${keystorePath}`);
-                content = content.replace(/RELEASE_STORE_PASSWORD=.*/, `RELEASE_STORE_PASSWORD=${cfg.keystorePassword}`);
-                content = content.replace(/RELEASE_KEY_ALIAS=.*/, `RELEASE_KEY_ALIAS=${cfg.keystoreAlias}`);
-                content = content.replace(/RELEASE_KEY_PASSWORD=.*/, `RELEASE_KEY_PASSWORD=${cfg.keystoreAliasPassword}`);
-                content = content.replace(/PROP_TARGET_SDK_VERSION=.*/, `PROP_TARGET_SDK_VERSION=${apiLevel}`);
-                content = content.replace(/PROP_COMPILE_SDK_VERSION=.*/, `PROP_COMPILE_SDK_VERSION=${apiLevel}`);
+                if (keystorePath) {
+                    content = content.replace(/.*RELEASE_STORE_FILE=.*/, `RELEASE_STORE_FILE=${keystorePath}`);
+                    content = content.replace(/.*RELEASE_STORE_PASSWORD=.*/, `RELEASE_STORE_PASSWORD=${cfg.keystorePassword}`);
+                    content = content.replace(/.*RELEASE_KEY_ALIAS=.*/, `RELEASE_KEY_ALIAS=${cfg.keystoreAlias}`);
+                    content = content.replace(/.*RELEASE_KEY_PASSWORD=.*/, `RELEASE_KEY_PASSWORD=${cfg.keystoreAliasPassword}`);
+                }
+                else {
+                    content = content.replace(/.*RELEASE_STORE_FILE=.*/, `# RELEASE_STORE_FILE=${keystorePath}`);
+                    content = content.replace(/.*RELEASE_STORE_PASSWORD=.*/, `# RELEASE_STORE_PASSWORD=${cfg.keystorePassword}`);
+                    content = content.replace(/.*RELEASE_KEY_ALIAS=.*/, `# RELEASE_KEY_ALIAS=${cfg.keystoreAlias}`);
+                    content = content.replace(/.*RELEASE_KEY_PASSWORD=.*/, `# RELEASE_KEY_PASSWORD=${cfg.keystoreAliasPassword}`);
+                }
+                let SDK_VERSION = typeof apiLevel === "string" ? apiLevel.match(/\d+/)[0] : apiLevel;
+                content = content.replace(/PROP_TARGET_SDK_VERSION=.*/, `PROP_TARGET_SDK_VERSION=${SDK_VERSION}`);
+                content = content.replace(/PROP_COMPILE_SDK_VERSION=.*/, `PROP_COMPILE_SDK_VERSION=${SDK_VERSION}`);
                 let abis = (cfg.appABIs && cfg.appABIs.length > 0) ? cfg.appABIs.join(':') : 'armeabi-v7a';
                 //todo:新的template里面有个注释也是这个字段，所以要加个g
                 content = content.replace(/PROP_APP_ABI=.*/g, `PROP_APP_ABI=${abis}`);
@@ -369,6 +381,9 @@ class TemplateCreator {
                     content = content.replace(/:/g, '\\:');
                 }
                 fs.writeFileSync(cocos_cli_1.cchelper.join(path.dirname(gradlePropertyPath), 'local.properties'), content);
+            }
+            else {
+                console.log(`warning: ${gradlePropertyPath} not found!`);
             }
         });
     }
@@ -466,7 +481,7 @@ class TemplateCreator {
                 let proj_cocos_path = path.normalize(cocos_cli_1.cchelper.join(this.project_dir, project_x_root.to));
                 for (let f of cmd.files) {
                     let p = typeof (f) == "string" ? f : f.file;
-                    console.log(`warning: project dir ${this.project_dir} + ${p}`);
+                    // console.log(`warning: project dir ${this.project_dir!} + ${p}`);
                     let fp = cocos_cli_1.cchelper.join(this.project_dir, p);
                     let list = replace_files_delay[fp] = replace_files_delay[fp] || [];
                     if (this.tp_name == "link") {

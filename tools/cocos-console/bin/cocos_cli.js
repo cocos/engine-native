@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.cchelper = exports.CCPlugin = exports.pa = void 0;
 const fs = require("fs");
 const path = require("path");
 const ml = require("./multi_language");
@@ -458,7 +459,7 @@ class cchelper {
         dst_file = this.replace_env_variables(dst_file);
         let src = path.isAbsolute(src_file) ? src_file : path.join(src_root, src_file);
         let dst = path.isAbsolute(dst_file) ? dst_file : path.join(dst_root, dst_file);
-        // console.log(`copy_file_sync ${src} -> ${dst}`);
+        // console.error(`copy_file_sync ${src} -> ${dst}`);
         this.make_directory_recursive(path.dirname(dst));
         fs.copyFileSync(src, dst);
     }
@@ -684,7 +685,7 @@ class cchelper {
         return __awaiter(this, void 0, void 0, function* () {
             filepath = this.replace_env_variables(filepath);
             if (!fs.existsSync(filepath)) {
-                console.warn(`warning: file ${filepath} not exists while replacing content!`);
+                console.log(`warning: file ${filepath} not exists while replacing content!`);
                 return;
             }
             // console.log(`replace ${filepath} with ${JSON.stringify(patterns)}`);

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CCPluginCOMPILE = void 0;
 const cocos_cli_1 = require("./cocos_cli");
 const path = require("path");
 const cocos_cfg = require("./cocos_config.json");

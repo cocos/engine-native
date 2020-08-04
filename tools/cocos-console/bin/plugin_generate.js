@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CCPluginGENERATE = void 0;
 const cocos_cli_1 = require("./cocos_cli");
 const os = require("os");
 const cocos_cfg = require("./cocos_config.json");
@@ -38,7 +39,6 @@ class CCPluginGENERATE extends cocos_cli_1.CCPlugin {
     run() {
         return __awaiter(this, void 0, void 0, function* () {
             let arg_p = this.parser.get_string("platform");
-            ;
             if (!arg_p) {
                 let ps = cocos_cfg["defaultGeneratePlatforms"][this.get_current_platform()];
                 for (let p of ps) {
@@ -137,12 +137,17 @@ class IOSGenerateCMD extends PlatformGenerateCmd {
             if (teamid) {
                 ext.push(`-DDEVELOPMENT_TEAM=${teamid}`);
             }
-            if (!this.plugin.enable_ios_simulator() && !teamid) {
-                console.error(`can not build ios without teamid`);
-                process.exit(1);
+            const do_build = false;
+            if (do_build) {
+                if (!this.plugin.enable_ios_simulator() && !teamid) {
+                    console.error(`can not build ios without teamid`);
+                    process.exit(1);
+                }
             }
             yield this.plugin.run_cmake(["-S", `${this.project_src_dir}`, "-GXcode", `-B${build_dir}`, "-DCMAKE_SYSTEM_NAME=iOS", `-DCMAKE_OSX_SYSROOT=${osx_sysroot}`].concat(ext));
-            // await this.plugin.run_cmake(["--build", `${build_dir}`, "--config", "Debug", "--", "-allowProvisioningUpdates"]);
+            if (do_build) {
+                yield this.plugin.run_cmake(["--build", `${build_dir}`, "--config", "Debug", "--", "-allowProvisioningUpdates"]);
+            }
             return true;
         });
     }

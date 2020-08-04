@@ -33,7 +33,7 @@ export class CCPluginGENERATE extends CCPlugin {
 
     async run(): Promise<boolean> {
 
-        let arg_p = this.parser.get_string("platform");;
+        let arg_p = this.parser.get_string("platform");
         if(!arg_p) {
             let ps = (cocos_cfg as any)["defaultGeneratePlatforms"][this.get_current_platform()];
             for(let p of ps){
@@ -137,13 +137,18 @@ class IOSGenerateCMD extends PlatformGenerateCmd {
             ext.push(`-DDEVELOPMENT_TEAM=${teamid}`);
         }
 
-        if(!this.plugin.enable_ios_simulator() && !teamid) {
-            console.error(`can not build ios without teamid`);
-            process.exit(1);
+        const do_build = false;
+        if(do_build) {
+            if(!this.plugin.enable_ios_simulator() && !teamid) {
+                console.error(`can not build ios without teamid`);
+                process.exit(1);
+            }
         }
 
         await this.plugin.run_cmake(["-S", `${this.project_src_dir}`, "-GXcode", `-B${build_dir}`, "-DCMAKE_SYSTEM_NAME=iOS", `-DCMAKE_OSX_SYSROOT=${osx_sysroot}`].concat(ext));
-        // await this.plugin.run_cmake(["--build", `${build_dir}`, "--config", "Debug", "--", "-allowProvisioningUpdates"]);
+        if(do_build) {
+            await this.plugin.run_cmake(["--build", `${build_dir}`, "--config", "Debug", "--", "-allowProvisioningUpdates"]);
+        }
         return true;
     }
 }

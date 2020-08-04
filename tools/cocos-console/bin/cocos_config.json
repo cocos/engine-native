@@ -6,7 +6,8 @@
         "ios",
         "mac",
         "win32",
-        "android"
+        "android",
+        "ios-simulator"
     ],
     "support_templates":["link", "default"],
     "default": {

@@ -66,7 +66,7 @@ export class CCPluginNEW extends CCPlugin {
     get common_dir() {
         return `common-${this.args.get_string("template_name")}`;
     }
-    
+
     async run(): Promise<boolean> {
         let tp = new TemplateCreator(this);
         await tp.run(); // async
@@ -216,6 +216,7 @@ export class TemplateCreator {
                 to: ccutils.join(shared_dir, this.plugin.common_dir),
             }, this.tp_dir!, this.project_dir!);
 
+        ccutils.copy_file_sync(this.tp_dir!, "project.json", this.project_dir!, "project.json");
 
         // copy by platform
         let plat = this.plugin.args.get_string("platform");
@@ -279,7 +280,7 @@ export class TemplateCreator {
             let json = JSON.parse(fs.readFileSync(cfgPath).toString("utf-8"));
             if (json.ios) {
                 let cfg = json.ios.orientation;
-                let infoPlist = ccutils.join(this.project_dir!, 'frameworks/runtime-src/proj.ios_mac/ios/Info.plist');
+                let infoPlist = ccutils.join(this.project_dir!, 'proj/Info.plist');
                 if (fs.existsSync(infoPlist)) {
                     let orientations: string[] = [];
                     if (cfg.landscapeRight) {
@@ -328,7 +329,7 @@ export class TemplateCreator {
 
             if (json.android) {
                 let cfg = json.android.orientation;
-                let manifestPath = ccutils.join(this.project_dir!, 'frameworks/runtime-src/proj.android-studio/app/AndroidManifest.xml');
+                let manifestPath = ccutils.join(this.project_dir!, 'proj/app/AndroidManifest.xml');
                 if (fs.existsSync(manifestPath)) {
                     let pattern = /android:screenOrientation=\"[^"]*\"/;
                     let replaceString = 'android:screenOrientation="unspecified"';
@@ -375,7 +376,8 @@ export class TemplateCreator {
         if (!cfg) return;
 
         // android-studio gradle.properties
-        let gradlePropertyPath = ccutils.join(this.project_dir!, 'frameworks/runtime-src/proj.android-studio/gradle.properties');
+        console.log(`update gradle.prperties`)
+        let gradlePropertyPath = ccutils.join(this.project_dir!, 'proj/gradle.properties');
         if (fs.existsSync(gradlePropertyPath)) {
             let keystorePath = cfg.keystorePath;
             if (this.plugin.get_current_platform() == "win32") {
@@ -387,14 +389,20 @@ export class TemplateCreator {
             }
             console.log(`AndroidAPI level ${apiLevel}`);
             let content = fs.readFileSync(gradlePropertyPath, 'utf-8');
-            content = content.replace(/RELEASE_STORE_FILE=.*/, `RELEASE_STORE_FILE=${keystorePath}`);
-            content = content.replace(/RELEASE_STORE_PASSWORD=.*/, `RELEASE_STORE_PASSWORD=${cfg.keystorePassword}`);
-            content = content.replace(/RELEASE_KEY_ALIAS=.*/, `RELEASE_KEY_ALIAS=${cfg.keystoreAlias}`);
-            content = content.replace(/RELEASE_KEY_PASSWORD=.*/, `RELEASE_KEY_PASSWORD=${cfg.keystoreAliasPassword}`);
-
-            content = content.replace(/PROP_TARGET_SDK_VERSION=.*/, `PROP_TARGET_SDK_VERSION=${apiLevel}`);
-
-            content = content.replace(/PROP_COMPILE_SDK_VERSION=.*/, `PROP_COMPILE_SDK_VERSION=${apiLevel}`);
+            if (keystorePath) {
+                content = content.replace(/.*RELEASE_STORE_FILE=.*/, `RELEASE_STORE_FILE=${keystorePath}`);
+                content = content.replace(/.*RELEASE_STORE_PASSWORD=.*/, `RELEASE_STORE_PASSWORD=${cfg.keystorePassword}`);
+                content = content.replace(/.*RELEASE_KEY_ALIAS=.*/, `RELEASE_KEY_ALIAS=${cfg.keystoreAlias}`);
+                content = content.replace(/.*RELEASE_KEY_PASSWORD=.*/, `RELEASE_KEY_PASSWORD=${cfg.keystoreAliasPassword}`);
+            } else {
+                content = content.replace(/.*RELEASE_STORE_FILE=.*/, `# RELEASE_STORE_FILE=${keystorePath}`);
+                content = content.replace(/.*RELEASE_STORE_PASSWORD=.*/, `# RELEASE_STORE_PASSWORD=${cfg.keystorePassword}`);
+                content = content.replace(/.*RELEASE_KEY_ALIAS=.*/, `# RELEASE_KEY_ALIAS=${cfg.keystoreAlias}`);
+                content = content.replace(/.*RELEASE_KEY_PASSWORD=.*/, `# RELEASE_KEY_PASSWORD=${cfg.keystoreAliasPassword}`);
+            }
+            let SDK_VERSION = typeof apiLevel === "string"? apiLevel.match(/\d+/)![0] : apiLevel;
+            content = content.replace(/PROP_TARGET_SDK_VERSION=.*/, `PROP_TARGET_SDK_VERSION=${SDK_VERSION}`);
+            content = content.replace(/PROP_COMPILE_SDK_VERSION=.*/, `PROP_COMPILE_SDK_VERSION=${SDK_VERSION}`);
 
             let abis = (cfg.appABIs && cfg.appABIs.length > 0) ? cfg.appABIs.join(':') : 'armeabi-v7a';
             //todo:新的template里面有个注释也是这个字段，所以要加个g
@@ -414,6 +422,8 @@ export class TemplateCreator {
             }
 
             fs.writeFileSync(ccutils.join(path.dirname(gradlePropertyPath), 'local.properties'), content);
+        } else {
+            console.log(`warning: ${gradlePropertyPath} not found!`);
         }
     }
 
@@ -521,7 +531,7 @@ export class TemplateCreator {
             for (let f of cmd.files) {
 
                 let p = typeof (f) == "string" ? f : f.file;
-                console.log(`warning: project dir ${this.project_dir!} + ${p}`);
+                // console.log(`warning: project dir ${this.project_dir!} + ${p}`);
                 let fp = ccutils.join(this.project_dir!, p);
                 let list = replace_files_delay[fp] = replace_files_delay[fp] || [];
 
@@ -547,7 +557,7 @@ export class TemplateCreator {
             delete cmds.project_replace_cocos_x_root;
         }
 
-        if(cmds.project_replace_projec_common) {
+        if (cmds.project_replace_projec_common) {
 
             let cmd = cmds.project_replace_projec_common!;
             let cocos_x_root = path.normalize(this.cocos_root!);
