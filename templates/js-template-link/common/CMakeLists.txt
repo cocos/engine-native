@@ -56,7 +56,11 @@ endif()
 if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/../${PLATFORM_DIR_NAME})
     set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../${PLATFORM_DIR_NAME}/proj)
 else()
-    set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../platforms/${PLATFORM_DIR_NAME})
+    if(WINDOWS)
+        set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../platforms/win32)
+    else()
+        set(PROJ_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../platforms/${PLATFORM_DIR_NAME}
+    endif()
 endif()
 set(GAME_RES_ROOT ${CMAKE_CURRENT_LIST_DIR}/../${PLATFORM_DIR_NAME})
 
