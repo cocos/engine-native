@@ -27,7 +27,7 @@ gfx::PipelineState *PipelineStateManager::getOrCreatePipelineStage(const gfx::Pi
             psoci->dynamicStates,
             renderPass};
 
-        pso = SharedMemory::getDevice()->createPipelineState(std::move(info));
+        pso = gfx::Device::getInstance()->createPipelineState(std::move(info));
         _PSOHashMap[hash] = pso;
     }
 

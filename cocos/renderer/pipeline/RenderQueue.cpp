@@ -10,8 +10,8 @@
 namespace cc {
 namespace pipeline {
 
-RenderQueue::RenderQueue(const RenderQueueDesc &desc) {
-    _passDesc = desc;
+RenderQueue::RenderQueue(const RenderQueueCreateInfo &desc)
+: _passDesc(desc) {
 }
 
 void RenderQueue::clear() {

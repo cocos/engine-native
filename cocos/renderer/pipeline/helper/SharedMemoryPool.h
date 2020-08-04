@@ -2,21 +2,15 @@
 #include "core/CoreStd.h"
 
 namespace cc {
-namespace gfx {
-class Device;
-} //namespace gfx
-
 namespace pipeline {
 
 class CC_DLL SharedMemory : public Object {
 public:
-    template <typename T, typename T1, typename T2>
-    static T get(T1 mappedIndex, T2 slot);
+    template <typename RET, typename T, typename U>
+    static RET get(T mappedIndex, U slot);
 
-    template <typename T, typename T1, typename T2>
-    static T get(const T1 *handle, T2 memberOffset);
-
-    static gfx::Device *getDevice();
+    template <typename RET, typename T, typename U>
+    static RET get(const T *handle, U memberOffset);
 };
 } //namespace pipeline
 } //namespace cc

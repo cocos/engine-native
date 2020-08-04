@@ -92,7 +92,7 @@ const uint CAMERA_DEFAULT_MASK = 1;
 //constexpr CAMERA_DEFAULT_MASK = Layers.makeMaskExclude([Layers.BitMask.UI_2D, Layers.BitMask.GIZMOS, Layers.BitMask.EDITOR,
 //                                                           Layers.BitMask.SCENE_GIZMO, Layers.BitMask.PROFILER]);
 
-struct CC_DLL RenderQueueDesc {
+struct CC_DLL RenderQueueCreateInfo {
     bool isTransparent = false;
     uint phases = 0;
     std::function<int(const RenderPass &a, const RenderPass &b)> sortFunc;

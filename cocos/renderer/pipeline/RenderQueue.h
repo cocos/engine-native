@@ -7,7 +7,7 @@ namespace pipeline {
 
 class CC_DLL RenderQueue : public Object {
 public:
-    RenderQueue(const RenderQueueDesc &desc);
+    RenderQueue(const RenderQueueCreateInfo &desc);
 
     void clear();
     bool insertRenderPass(const RenderObject &renderObj, uint subModelIdx, uint passIdx);
@@ -16,7 +16,7 @@ public:
 
 private:
     RenderPassList _queue;
-    RenderQueueDesc _passDesc;
+    RenderQueueCreateInfo _passDesc;
 };
 
 } // namespace pipeline
