@@ -27,8 +27,11 @@ THE SOFTWARE.
 using namespace se;
 
 ObjectPool::ObjectPool(Object *jsArr)
+: _poolFlag(1 << 29)
 {
     CCASSERT(jsArr->isArray(), "ObjectPool: It must be initialized with a JavaScript array");
+    
+    _indexMask = 0xffffffff & ~_poolFlag;
     
     _jsArr = jsArr;
     _jsArr->root();

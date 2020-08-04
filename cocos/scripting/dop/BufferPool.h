@@ -24,33 +24,36 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <vector>
+#include "cocos/base/Object.h"
+#include "cocos/base/CCVector.h"
 #include "cocos/scripting/js-bindings/jswrapper/Object.h"
 #include "cocos/base/ccMacros.h"
 
 namespace se {
 
-class CC_DLL BufferPool {
+class CC_DLL BufferPool : cc::gfx::Object {
 public:
     using Chunk = uint8_t*;
     
     BufferPool(size_t bytesPerEntry, size_t entryBits);
     ~BufferPool();
-    void *getData(size_t id);
+    void *getData(uint32_t id);
     template<class Type>
     Type *getTypedObject(size_t id);
     
+    Object *allocateNewChunk();
     Object *getChunkArrayBuffer(size_t chunkId);
 protected:
-    std::vector<Chunk> _chunks;
-    std::vector<Object*> _jsObjs;
-    std::vector<size_t> _sizes;
+    cc::Vector<Chunk> _chunks;
+    cc::Vector<Object*> _jsObjs;
+    cc::Vector<size_t> _sizes;
     uint32_t _entryBits;
+    uint32_t _chunkMask;
+    uint32_t _entryMask;
+    uint32_t _poolFlag;
     size_t _bytesPerChunk;
     size_t _entiesPerChunk;
     size_t _bytesPerEntry;
-    uint32_t _chunkMask;
-    uint32_t _entryMask;
 };
 
 } // namespace se {

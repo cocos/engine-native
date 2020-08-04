@@ -24,13 +24,13 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <vector>
+#include "cocos/base/Object.h"
 #include "cocos/scripting/js-bindings/jswrapper/Object.h"
 #include "cocos/base/ccMacros.h"
 
 namespace se {
 
-class CC_DLL ObjectPool {
+class CC_DLL ObjectPool : cc::gfx::Object {
 public:
     ObjectPool(Object *jsArr);
     ~ObjectPool();
@@ -39,6 +39,8 @@ public:
     Type *getTypedObject(size_t id);
 protected:
     Object* _jsArr;
+    uint32_t _poolFlag;
+    uint32_t _indexMask;
 };
 
 } // namespace se {

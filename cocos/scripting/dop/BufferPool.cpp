@@ -30,23 +30,15 @@ using namespace se;
 
 BufferPool::BufferPool(size_t bytesPerEntry, size_t entryBits)
 : _entryBits(entryBits)
+, _poolFlag(1 << 30)
 , _bytesPerEntry(bytesPerEntry)
 {
     _entiesPerChunk = 1 << entryBits;
     _entryMask = _entiesPerChunk - 1;
-    _chunkMask = ~_entryMask & 0xffffffff;
+    _chunkMask = 0xffffffff & ~(_entryMask | _poolFlag);
     
     _bytesPerChunk = _bytesPerEntry * _entiesPerChunk;
-    
-    Chunk chunk = (uint8_t *)CC_MALLOC(_bytesPerChunk);
-    _chunks.push_back(chunk);
-    _sizes.push_back(0);
-
-    Object *jsObj = Object::createArrayBufferObject(chunk, _bytesPerChunk);
-    jsObj->root();
-    jsObj->incRef();
-    jsObj->setPrivateData(this);
-    _jsObjs.push_back(jsObj);
+    allocateNewChunk();
 }
 
 BufferPool::~BufferPool()
@@ -79,6 +71,20 @@ Type *BufferPool::getTypedObject(size_t id)
     CCASSERT(chunk < _chunks.size() && entry < _entiesPerChunk, "BufferPool: Invalid buffer pool entry id");
     Type *object = ((Type*)_chunks[chunk])[entry];
     return object;
+}
+
+Object *BufferPool::allocateNewChunk()
+{
+    Chunk chunk = (uint8_t *)CC_MALLOC(_bytesPerChunk);
+    _chunks.push_back(chunk);
+    _sizes.push_back(0);
+
+    Object *jsObj = Object::createArrayBufferObject(chunk, _bytesPerChunk);
+    jsObj->root();
+    jsObj->incRef();
+    jsObj->setPrivateData(this);
+    _jsObjs.push_back(jsObj);
+    return jsObj;
 }
 
 Object *BufferPool::getChunkArrayBuffer(size_t chunkId)
