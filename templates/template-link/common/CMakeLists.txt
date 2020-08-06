@@ -29,12 +29,15 @@ if(CMAKE_OSX_SYSROOT STREQUAL "iphonesimulator")
 else()
     set(TARGET_IOS_VERSION "8.0")
 endif()
+set(TARGET_OSX_VERSION "10.10")
 
 set(cocosdir "${COCOS_X_ROOT}")
 if(NOT cocosdir)
     message(FATAL_ERROR "COCOS_X_ROOT is not set!")
 endif()
 include(${cocosdir}/CMakeLists.txt)
+
+
 
 if(ANDROID)
     set(LIB_NAME cocos2djs)
@@ -192,10 +195,11 @@ if(APPLE)
     set(EXECUTABLE_NAME ${LIB_NAME}) # referenced in Info.plist
     set(PRODUCT_NAME ${APP_NAME})
     if(MACOSX)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET ${TARGET_OSX_VERSION})
         set(MACOSX_BUNDLE_GUI_IDENTIFIER org.cocos2dx.hellojavascript.mac)
         set_target_properties(${LIB_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${PROJ_SRC_DIR}/Info.plist")
         set_target_properties(${LIB_NAME} PROPERTIES
-            MACOSX_DEPLOYMENT_TARGET 10.10
+            MACOSX_DEPLOYMENT_TARGET ${TARGET_OSX_VERSION}
         )
         get_property(gles2_loc TARGET GLESv2 PROPERTY IMPORTED_LOCATION)
         get_property(egl_loc TARGET EGL PROPERTY IMPORTED_LOCATION)
