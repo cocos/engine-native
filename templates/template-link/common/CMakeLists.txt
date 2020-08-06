@@ -70,6 +70,7 @@ set(GAME_RES_ROOT ${CMAKE_CURRENT_LIST_DIR}/../${PLATFORM_DIR_NAME})
 
 if(RES_DIR)
     set(GAME_RES_ROOT ${RES_DIR})
+    set(PROJ_SRC_DIR ${RES_DIR}/proj)
     message(STATUS "Use resource diretory ${RES_DIR}")
 endif()
 
