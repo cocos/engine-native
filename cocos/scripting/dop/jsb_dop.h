@@ -28,4 +28,4 @@ namespace se {
 class Object;
 }
 
-bool register_all_dop_bindings(se::Object* obj);
+bool register_all_dop_bindings(se::Object *obj);

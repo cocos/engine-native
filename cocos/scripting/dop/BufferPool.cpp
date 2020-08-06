@@ -31,34 +31,30 @@ using namespace se;
 cc::map<BufferPool::Type, BufferPool *> BufferPool::_poolMap;
 
 BufferPool::BufferPool(Type type, uint entryBits, uint bytesPerEntry)
-: _entryBits(entryBits)
-, _bytesPerEntry(bytesPerEntry)
-{
+: _entryBits(entryBits), _bytesPerEntry(bytesPerEntry) {
     CCASSERT(BufferPool::_poolMap.count(type) == 0, "The type of pool is already exist");
-    
+
     _entriesPerChunk = 1 << entryBits;
     _entryMask = _entriesPerChunk - 1;
     _chunkMask = 0xffffffff & ~(_entryMask | _poolFlag);
-    
+
     _bytesPerChunk = _bytesPerEntry * _entriesPerChunk;
-    
+
     BufferPool::_poolMap[type] = this;
 }
 
-BufferPool::~BufferPool()
-{
+BufferPool::~BufferPool() {
     CCASSERT(_chunks.size() == _jsObjs.size(), "BufferPool: Page count doesn't match the number of javascript array buffer objects.");
     for (auto element : _jsObjs) {
         CC_FREE(element.first);
         element.second->decRef();
         element.second->unroot();
     }
-    
+
     BufferPool::_poolMap.erase(_type);
 }
 
-Object *BufferPool::allocateNewChunk()
-{
+Object *BufferPool::allocateNewChunk() {
     Chunk chunk = (uint8_t *)CC_MALLOC(_bytesPerChunk);
     _chunks.push_back(chunk);
 
