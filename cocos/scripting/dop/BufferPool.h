@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "cocos/scripting/js-bindings/jswrapper/Object.h"
 #include "cocos/base/ccMacros.h"
 #include "cocos/base/TypeDef.h"
+#include "PoolType.h"
 
 namespace se {
 
@@ -36,24 +37,9 @@ class CC_DLL BufferPool final : public cc::Object {
 public:
     using Chunk = uint8_t *;
 
-    enum class Type {
-        // objects
-        RASTERIZER_STATE,
-        DEPTH_STENCIL_STATE,
-        BLEND_STATE,
-        BINDING_LAYOUT,
-        SHADER,
-        // buffers
-        PASS_INFO,
-        PSOCI,
-        MODEL_INFO,
-        SUBMODEL_INFO,
-        INPUT_ASSEMBLER_INFO
-    };
+    CC_INLINE static const cc::map<PoolType, BufferPool *> &getPoolMap() { return BufferPool::_poolMap; }
 
-    CC_INLINE static const cc::map<Type, BufferPool *> &getPoolMap() { return BufferPool::_poolMap; }
-
-    BufferPool(Type type, uint entryBits, uint bytesPerEntry);
+    BufferPool(PoolType type, uint entryBits, uint bytesPerEntry);
     ~BufferPool();
 
     template <class T>
@@ -67,7 +53,7 @@ public:
     Object *allocateNewChunk();
 
 private:
-    static cc::map<Type, BufferPool *> _poolMap;
+    static cc::map<PoolType, BufferPool *> _poolMap;
 
     cc::vector<Chunk> _chunks;
     cc::map<Chunk, Object *> _jsObjs;
@@ -78,7 +64,7 @@ private:
     uint _bytesPerChunk = 0;
     uint _entriesPerChunk = 0;
     uint _bytesPerEntry = 0;
-    Type _type = Type::RASTERIZER_STATE;
+    PoolType _type = PoolType::RASTERIZER_STATE;
 };
 
 } // namespace se

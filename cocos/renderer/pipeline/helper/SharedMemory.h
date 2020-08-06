@@ -11,7 +11,7 @@ struct CC_DLL Pass {
     uint32_t hash = 0;
     uint32_t phase = 0;
     
-    const static se::BufferPool::Type type = se::BufferPool::Type::PASS_INFO;
+    const static se::PoolType type = se::PoolType::PASS_INFO;
 };
 
 struct CC_DLL Model {
@@ -19,7 +19,7 @@ struct CC_DLL Model {
     uint32_t subModelsCount = 0;
     uint32_t subModelsID = 0;
     
-    const static se::BufferPool::Type type = se::BufferPool::Type::MODEL_INFO;
+    const static se::PoolType type = se::PoolType::MODEL_INFO;
 };
 
 struct CC_DLL SubModel {
@@ -31,15 +31,15 @@ struct CC_DLL SubModel {
     uint32_t passesID = 0;
     uint32_t passesCount = 0;
     
-    const static se::BufferPool::Type type = se::BufferPool::Type::SUBMODEL_INFO;
+    const static se::PoolType type = se::PoolType::SUBMODEL_INFO;
 };
 
 struct CC_DLL PipelineStateInfo {
-    const static se::BufferPool::Type type = se::BufferPool::Type::PSOCI;
+    const static se::PoolType type = se::PoolType::PSOCI;
 };
 
 struct CC_DLL InputAssembler {
-    const static se::BufferPool::Type type = se::BufferPool::Type::INPUT_ASSEMBLER_INFO;
+    const static se::PoolType type = se::PoolType::INPUT_ASSEMBLER_INFO;
 };
 
 #define GET_SUBMODLE(index, offset) (SharedMemory::get<SubModel>(index) + offset)
@@ -67,7 +67,7 @@ public:
     
 private:
     template <typename T>
-    static se::BufferPool::Type getBufferType() {
+    static se::PoolType getBufferType() {
         
     }
 };

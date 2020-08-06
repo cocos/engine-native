@@ -28,9 +28,9 @@ THE SOFTWARE.
 
 using namespace se;
 
-cc::map<BufferPool::Type, BufferPool *> BufferPool::_poolMap;
+cc::map<PoolType, BufferPool *> BufferPool::_poolMap;
 
-BufferPool::BufferPool(Type type, uint entryBits, uint bytesPerEntry)
+BufferPool::BufferPool(PoolType type, uint entryBits, uint bytesPerEntry)
 : _entryBits(entryBits), _bytesPerEntry(bytesPerEntry) {
     CCASSERT(BufferPool::_poolMap.count(type) == 0, "The type of pool is already exist");
 

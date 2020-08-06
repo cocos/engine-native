@@ -60,7 +60,7 @@ static bool jsb_BufferPool_constructor(se::State &s) {
             return false;
         }
 
-        se::BufferPool *pool = JSB_ALLOC(se::BufferPool, (se::BufferPool::Type)poolType, entryBits, bytesPerEntry);
+        se::BufferPool *pool = JSB_ALLOC(se::BufferPool, (se::PoolType)poolType, entryBits, bytesPerEntry);
         s.thisObject()->setPrivateData(pool);
         se::NonRefNativePtrCreatedByCtorMap::emplace(pool);
         return true;
