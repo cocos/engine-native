@@ -34,6 +34,7 @@
 #include "cocos/scripting/js-bindings/manual/jsb_conversions.h"
 #include "cocos/scripting/js-bindings/manual/jsb_platform.h"
 #include "cocos/scripting/js-bindings/manual/jsb_cocos2dx_manual.h"
+#include "cocos/scripting/js-bindings/manual/jsb_dop.h"
 #include "cocos/scripting/js-bindings/manual/jsb_xmlhttprequest.h"
 #include "cocos/scripting/js-bindings/manual/jsb_cocos2dx_network_manual.h"
 #include "cocos/scripting/js-bindings/manual/jsb_gfx_manual.h"
