@@ -69,7 +69,7 @@ private:
     static cc::map<Type, BufferPool *> _poolMap;
     
     cc::vector<Chunk> _chunks;
-    cc::vector<Object*> _jsObjs;
+    cc::map<Chunk, Object*> _jsObjs;
     const uint _poolFlag = 1 << 30;
     uint _entryBits = 1 << 8;
     uint _chunkMask = 0;

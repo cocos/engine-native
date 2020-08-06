@@ -48,12 +48,10 @@ BufferPool::BufferPool(Type type, uint entryBits, uint bytesPerEntry)
 BufferPool::~BufferPool()
 {
     CCASSERT(_chunks.size() == _jsObjs.size(), "BufferPool: Page count doesn't match the number of javascript array buffer objects.");
-    for (size_t i = 0; i < _chunks.size(); ++i) {
-        CC_FREE(_chunks.at(i));
-        Object *jsObj = _jsObjs.at(i);
-        jsObj->decRef();
-        jsObj->unroot();
-        _jsObjs[i] = nullptr;
+    for (auto element : _jsObjs) {
+        CC_FREE(element.first);
+        element.second->decRef();
+        element.second->unroot();
     }
     
     BufferPool::_poolMap.erase(_type);
@@ -67,6 +65,6 @@ Object *BufferPool::allocateNewChunk()
     Object *jsObj = Object::createArrayBufferObject(chunk, _bytesPerChunk);
     jsObj->root();
     jsObj->incRef();
-    _jsObjs.push_back(jsObj);
+    _jsObjs.emplace(chunk, jsObj);
     return jsObj;
 }
