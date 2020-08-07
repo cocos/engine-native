@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include "cocos/scripting/js-bindings/jswrapper/Object.h"
 #include "cocos/base/memory/StlAlloc.h"
 #include "cocos/base/ccMacros.h"
+#include "cocos/base/TypeDef.h"
 #include "PoolType.h"
 
 namespace se {
