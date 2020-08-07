@@ -135,7 +135,7 @@ static bool jsb_ObjectPool_finalize(se::State &s) {
 SE_BIND_FINALIZE_FUNC(jsb_ObjectPool_finalize)
 
 bool js_register_se_ObjectPool(se::Object *obj) {
-    se::Class *cls = se::Class::create("ObjectPool", obj, nullptr, _SE(jsb_ObjectPool_constructor));
+    se::Class *cls = se::Class::create("NativeObjectPool", obj, nullptr, _SE(jsb_ObjectPool_constructor));
     cls->install();
     JSBClassType::registerClass<se::ObjectPool>(cls);
     se::Object *proto = cls->getProto();

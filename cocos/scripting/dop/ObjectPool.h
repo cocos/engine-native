@@ -30,17 +30,31 @@ THE SOFTWARE.
 
 namespace se {
 
-class CC_DLL ObjectPool : public cc::Object {
+class CC_DLL ObjectPool final : public cc::Object {
 public:
     ObjectPool(Object *jsArr);
-    ~ObjectPool();
+    ~ObjectPool() = default;
 
-    template<class Type>
-    Type *getTypedObject(uint32_t id);
-protected:
-    Object* _jsArr = nullptr;
-    uint32_t _poolFlag = 1 << 29;
-    uint32_t _indexMask = 0;
+    template <class Type>
+    Type *getTypedObject(uint id) {
+        id = _indexMask & id;
+        uint len = 0;
+        bool ok = _jsArr->getArrayLength(&len);
+        CCASSERT(ok && id < len, "ObjectPool: Invalid buffer pool entry id");
+
+        se::Value jsEntry;
+        ok = _jsArr->getArrayElement(id, &jsEntry);
+        if (!ok || !jsEntry.isObject()) {
+            return nullptr;
+        }
+        Type *entry = (Type *)jsEntry.toObject()->getPrivateData();
+        return entry;
+    }
+
+private:
+    Object *_jsArr = nullptr;
+    uint _poolFlag = 1 << 29;
+    uint _indexMask = 0;
 };
 
-} // namespace se {
+} // namespace se

@@ -26,39 +26,10 @@ THE SOFTWARE.
 
 using namespace se;
 
-ObjectPool::ObjectPool(Object *jsArr)
-{
+ObjectPool::ObjectPool(Object *jsArr) {
     CCASSERT(jsArr->isArray(), "ObjectPool: It must be initialized with a JavaScript array");
-    
+
     _indexMask = 0xffffffff & ~_poolFlag;
-    
+
     _jsArr = jsArr;
-    _jsArr->root();
-    _jsArr->incRef();
-    _jsArr->setPrivateData(this);
-}
-
-ObjectPool::~ObjectPool()
-{
-    // Let GC manages the js array
-    _jsArr->setPrivateData(nullptr);
-    _jsArr->decRef();
-    _jsArr->unroot();
-}
-
-template<class Type>
-Type *ObjectPool::getTypedObject(uint32_t id)
-{
-    id = _indexMask & id;
-    uint32_t len = 0;
-    bool ok = _jsArr->getArrayLength(&len);
-    CCASSERT(ok && id < len, "ObjectPool: Invalid buffer pool entry id");
-
-    se::Value jsEntry;
-    ok = _jsArr->getArrayElement(id, &jsEntry);
-    if (!ok || !jsEntry.isObject()) {
-        return nullptr;
-    }
-    Type *entry = (Type *)jsEntry.toObject()->getPrivateData();
-    return entry;
 }
