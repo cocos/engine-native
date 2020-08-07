@@ -21,15 +21,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-
 #include "ObjectPool.h"
+#include "base/memory/Memory.h"
 
 using namespace se;
 
-ObjectPool::ObjectPool(Object *jsArr) {
+cc::map<PoolType, ObjectPool *> ObjectPool::_poolMap;
+
+ObjectPool::ObjectPool(PoolType type, Object *jsArr)
+: _type(type), _jsArr(jsArr) {
     CCASSERT(jsArr->isArray(), "ObjectPool: It must be initialized with a JavaScript array");
+    CCASSERT(ObjectPool::_poolMap.count(type) == 0, "This type of ObjectPool already exists.");
 
     _indexMask = 0xffffffff & ~_poolFlag;
+    ObjectPool::_poolMap.emplace(type, this);
+}
 
-    _jsArr = jsArr;
+ObjectPool::~ObjectPool() {
+    ObjectPool::_poolMap.erase(_type);
 }

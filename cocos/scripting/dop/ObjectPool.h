@@ -26,14 +26,18 @@ THE SOFTWARE.
 
 #include "cocos/base/Object.h"
 #include "cocos/scripting/js-bindings/jswrapper/Object.h"
+#include "cocos/base/memory/StlAlloc.h"
 #include "cocos/base/ccMacros.h"
+#include "PoolType.h"
 
 namespace se {
 
 class CC_DLL ObjectPool final : public cc::Object {
 public:
-    ObjectPool(Object *jsArr);
-    ~ObjectPool() = default;
+    CC_INLINE static const cc::map<PoolType, ObjectPool *> &getPoolMap() { return ObjectPool::_poolMap; }
+    
+    ObjectPool(PoolType type, Object *jsArr);
+    ~ObjectPool();
 
     template <class Type>
     Type *getTypedObject(uint id) {
@@ -52,6 +56,9 @@ public:
     }
 
 private:
+    static cc::map<PoolType, ObjectPool *> _poolMap;
+    
+    PoolType _type = PoolType::RASTERIZER_STATE;
     Object *_jsArr = nullptr;
     uint _poolFlag = 1 << 29;
     uint _indexMask = 0;
