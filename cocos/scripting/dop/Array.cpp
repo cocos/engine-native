@@ -45,7 +45,7 @@ Object *Array::resize(uint size) {
     uint newBytes = (size + 1) * BYTES_PER_ELEMENT;
     uint8_t *tmpBuff = static_cast<uint8_t *>(CC_MALLOC(newBytes));
     if (!tmpBuff) {
-        CC_LOG_ERROR("Can not resize pool.");
+        CC_LOG_ERROR("Can not resize array.");
         return _jsObj;
     }
 
