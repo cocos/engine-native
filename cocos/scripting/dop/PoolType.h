@@ -13,6 +13,6 @@ enum class PoolType {
     PSOCI,
     MODEL_INFO,
     SUBMODEL_INFO,
-    INPUT_ASSEMBLER_INFO
+    INPUT_ASSEMBLER_INFO,
 };
 }
