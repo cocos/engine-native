@@ -112,7 +112,7 @@ static bool jsb_ObjectPool_constructor(se::State &s) {
         uint poolType = 0;
         bool ok = true;
         ok &= seval_to_uint(args[0], &poolType);
-        
+
         if (!args[1].isObject()) {
             SE_REPORT_ERROR("jsb_ObjectPool_constructor: parameter 2 wants a JSArray");
             return false;
@@ -167,14 +167,13 @@ static bool jsb_Array_constructor(se::State &s) {
         bool ok = seval_to_uint(args[0], &index);
         uint size = 0;
         ok &= seval_to_uint(args[1], &size);
-        
-        
+
         se::Array *array = JSB_ALLOC(se::Array, index, size);
         s.thisObject()->setPrivateData(array);
         se::NonRefNativePtrCreatedByCtorMap::emplace(array);
         return true;
     }
-    
+
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
@@ -194,7 +193,7 @@ SE_BIND_FINALIZE_FUNC(jsb_Array_finalize)
 static bool jsb_Array_resize(se::State &s) {
     se::Array *array = (se::Array *)s.nativeThisObject();
     SE_PRECONDITION2(array, false, "jsb_Array_reize : Invalid native array");
-    
+
     const auto &args = s.args();
     size_t argc = args.size();
     if (argc == 1) {
@@ -203,11 +202,11 @@ static bool jsb_Array_resize(se::State &s) {
             s.rval().setObject(array->resize(size));
             return true;
         }
-        
+
         SE_REPORT_ERROR("jsb_Array_reize: failed to get size");
         return false;
     }
-    
+
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
@@ -227,9 +226,9 @@ static bool js_register_se_Array(se::Object *obj) {
     cls->defineFunction("getArray", _SE(jsb_Array_getArray));
     cls->install();
     JSBClassType::registerClass<se::Array>(cls);
-    
+
     jsb_Array_class = cls;
-    
+
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
