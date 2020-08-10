@@ -49,14 +49,13 @@ Object *Array::resize(uint size) {
         return _jsObj;
     }
 
-    _size = adjustSize(size);
-
     if (_buffer) {
         memcpy(tmpBuff, _buffer, _size * BYTES_PER_ELEMENT);
         std::swap(_buffer, tmpBuff);
         CC_FREE(tmpBuff);
     }
 
+    _size = adjustSize(size);
     destroyJSObject();
     createJSObject(newBytes);
 
