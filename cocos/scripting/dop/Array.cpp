@@ -17,7 +17,7 @@ Array *Array::getArray(uint index) {
 }
 
 Array::Array(uint index, uint size)
-: _index(index), _size(adjustSize(size)) {
+: _index(index), _size(size) {
     uint bytes = _size * BYTES_PER_ELEMENT;
     _buffer = static_cast<uint8_t *>(CC_MALLOC(bytes));
     if (!_buffer)
@@ -39,10 +39,10 @@ Array::~Array() {
 }
 
 Object *Array::resize(uint size) {
-    if (!needToResize(size))
+    if (size <= _size)
         return _jsObj;
 
-    uint newBytes = (size + 1) * BYTES_PER_ELEMENT;
+    uint newBytes = size * BYTES_PER_ELEMENT;
     uint8_t *tmpBuff = static_cast<uint8_t *>(CC_MALLOC(newBytes));
     if (!tmpBuff) {
         CC_LOG_ERROR("Can not resize array.");
@@ -55,7 +55,7 @@ Object *Array::resize(uint size) {
         CC_FREE(tmpBuff);
     }
 
-    _size = adjustSize(size);
+    _size = size;
     destroyJSObject();
     createJSObject(newBytes);
 
@@ -76,16 +76,6 @@ void Array::destroyJSObject() {
         _jsObj->unroot();
         _jsObj = nullptr;
     }
-}
-
-uint Array::adjustSize(uint size) const {
-    // First element is the size of the array.
-    return size + 1;
-}
-
-bool Array::needToResize(uint size) const {
-    // First element is the size of the array. So if size == _size, need to resize.
-    return size >= _size;
 }
 
 } // namespace se

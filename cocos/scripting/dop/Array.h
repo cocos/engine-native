@@ -22,8 +22,6 @@ public:
 private:
     void createJSObject(uint bytes);
     void destroyJSObject();
-    uint adjustSize(uint size) const;
-    bool needToResize(uint size) const;
 
 private:
     static cc::map<uint, Array *> _arrayMap;
