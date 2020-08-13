@@ -45,7 +45,7 @@
 @property (nonatomic) int64_t totalBytesReceived;
 
 -(id)init:(std::shared_ptr<const cocos2d::network::DownloadTask>&)t;
--(const cocos2d::network::DownloadTask *)get;
+-(cocos2d::network::DownloadTask *)get;
 -(void) addData:(NSData*) data;
 -(int64_t) transferDataToBuffer:(void*)buffer lengthOfBuffer:(int64_t)len;
 
@@ -472,6 +472,15 @@ namespace cocos2d { namespace network {
                 errorCode = cocos2d::network::DownloadTask::ERROR_ABORT;
                 errorMsg = @"downloadFile:fail abort";
             }
+
+            // fix Error Domain=NSPOSIXErrorDomain Code=2 "No such file or directory"
+            if (error.code == 2 && [wrapper get]->storagePath.length() > 0) {
+                NSString *tempFilePath = [NSString stringWithFormat:@"%s%s", [wrapper get]->storagePath.c_str(), _hints.tempFileNameSuffix.c_str()];
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                [fileManager removeItemAtURL:[NSURL fileURLWithPath:tempFilePath] error:NULL];
+                [wrapper get]->storagePath = "";
+            }
+                    
             std::vector<unsigned char> buf; // just a placeholder
             _outer->onTaskFinish(*[wrapper get],
                              cocos2d::network::DownloadTask::ERROR_IMPL_INTERNAL,
