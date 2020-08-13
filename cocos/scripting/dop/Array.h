@@ -9,26 +9,20 @@
 
 namespace se {
 
-class CC_DLL Array final : public cc::Object {
+class CC_DLL ArrayPool final : public cc::Object {
 public:
-    static Array *getArray(uint index);
+    ArrayPool(PoolType type, uint size);
+    ~ArrayPool();
+
+    Object *alloc(uint index);
+    Object *resize(Object *origin, uint size);
     
-    Array(uint index, uint size);
-    ~Array();
-
-    Object *resize(uint size);
-    CC_INLINE Object *getJSArray() const { return _jsObj; }
+    uint8_t *getArray(PoolType type, uint index);
 
 private:
-    void createJSObject(uint bytes);
-    void destroyJSObject();
+    static cc::map<PoolType, cc::map<uint, uint8_t *>> _arrayMap;
 
-private:
-    static cc::map<uint, Array *> _arrayMap;
-
-    Object *_jsObj = nullptr;
-    uint8_t *_buffer = nullptr;
-    uint _index = UINT_MAX;
+    PoolType _type;
     uint _size = 0;
 };
 

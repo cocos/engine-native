@@ -7,74 +7,55 @@
 
 namespace se {
 
-cc::map<uint, Array *> Array::_arrayMap;
+cc::map<PoolType, cc::map<uint, uint8_t *>> ArrayPool::_arrayMap;
 
-Array *Array::getArray(uint index) {
-    if (Array::_arrayMap.count(index) != 0)
-        return Array::_arrayMap.at(index);
-    else
-        return nullptr;
+ArrayPool::ArrayPool(PoolType type, uint size)
+: _type(type), _size(size) {
+    ArrayPool::_arrayMap[_type] = {};
 }
 
-Array::Array(uint index, uint size)
-: _index(index), _size(size) {
+ArrayPool::~ArrayPool() {
+    ArrayPool::_arrayMap.erase(_type);
+}
+
+Object *ArrayPool::alloc(uint index) {
     uint bytes = _size * BYTES_PER_ELEMENT;
-    _buffer = static_cast<uint8_t *>(CC_MALLOC(bytes));
-    if (!_buffer)
-        return;
+    uint8_t *buffer = static_cast<uint8_t *>(CC_MALLOC(bytes));
+    if (!buffer)
+        return nullptr;
 
-    createJSObject(bytes);
-    if (!_jsObj) {
-        CC_FREE(_buffer);
-        return;
-    }
-
-    Array::_arrayMap.emplace(_index, this);
+    auto obj = Object::createArrayBufferObject(buffer, bytes);
+    CC_FREE(buffer);
+    return obj;
 }
 
-Array::~Array() {
-    destroyJSObject();
-    CC_SAFE_FREE(_buffer);
-    Array::_arrayMap.erase(_index);
-}
-
-Object *Array::resize(uint size) {
-    if (size <= _size)
-        return _jsObj;
-
-    uint newBytes = size * BYTES_PER_ELEMENT;
-    uint8_t *tmpBuff = static_cast<uint8_t *>(CC_MALLOC(newBytes));
-    if (!tmpBuff) {
+Object *ArrayPool::resize(Object *origin, uint size) {
+    uint bytes = size * BYTES_PER_ELEMENT;
+    uint8_t *buffer = static_cast<uint8_t *>(CC_MALLOC(bytes));
+    if (!buffer) {
         CC_LOG_ERROR("Can not resize array.");
-        return _jsObj;
+        return origin;
     }
 
-    if (_buffer) {
-        memcpy(tmpBuff, _buffer, _size * BYTES_PER_ELEMENT);
-        std::swap(_buffer, tmpBuff);
-        CC_FREE(tmpBuff);
-    }
-
-    _size = size;
-    destroyJSObject();
-    createJSObject(newBytes);
-
-    return _jsObj;
+    uint8_t *originData = nullptr;
+    size_t len = 0;
+    origin->getTypedArrayData(&originData, &len);
+    memcpy(buffer, originData, len);
+    
+    auto obj = Object::createArrayBufferObject(buffer, bytes);
+    CC_FREE(buffer);
+    return obj;
 }
 
-void Array::createJSObject(uint bytes) {
-    _jsObj = Object::createArrayBufferObject(_buffer, bytes);
-    if (_jsObj) {
-        _jsObj->root();
-        _jsObj->incRef();
-    }
-}
-
-void Array::destroyJSObject() {
-    if (_jsObj) {
-        _jsObj->decRef();
-        _jsObj->unroot();
-        _jsObj = nullptr;
+uint8_t *ArrayPool::getArray(PoolType type, uint index) {
+    if (ArrayPool::_arrayMap.count(type) != 0) {
+        const auto &arrays = ArrayPool::_arrayMap[type];
+        if (arrays.count(index) != 0)
+            return arrays.at(index);
+        else
+            return nullptr;
+    } else {
+        return nullptr;
     }
 }
 

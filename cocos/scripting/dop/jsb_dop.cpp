@@ -155,79 +155,90 @@ static bool js_register_se_ObjectPool(se::Object *obj) {
 /*****************************************************
    Array binding
   ******************************************************/
-static se::Class *jsb_Array_class = nullptr;
+static se::Class *jsb_ArrayPool_class = nullptr;
 
-SE_DECLARE_FINALIZE_FUNC(jsb_Array_finalize)
+SE_DECLARE_FINALIZE_FUNC(jsb_ArrayPool_finalize)
 
-static bool jsb_Array_constructor(se::State &s) {
+static bool jsb_ArrayPool_constructor(se::State &s) {
     const auto &args = s.args();
     size_t argc = args.size();
     if (argc == 2) {
-        uint index = 0;
-        bool ok = seval_to_uint(args[0], &index);
+        uint type = 0;
+        bool ok = seval_to_uint(args[0], &type);
         uint size = 0;
         ok &= seval_to_uint(args[1], &size);
 
-        se::Array *array = JSB_ALLOC(se::Array, index, size);
-        s.thisObject()->setPrivateData(array);
-        se::NonRefNativePtrCreatedByCtorMap::emplace(array);
+        se::ArrayPool *arrayPool = JSB_ALLOC(se::ArrayPool, static_cast<se::PoolType>(type), size);
+        s.thisObject()->setPrivateData(arrayPool);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(arrayPool);
         return true;
     }
 
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_CTOR(jsb_Array_constructor, jsb_Array_class, jsb_Array_finalize)
+SE_BIND_CTOR(jsb_ArrayPool_constructor, jsb_ArrayPool_class, jsb_ArrayPool_finalize)
 
-static bool jsb_Array_finalize(se::State &s) {
+static bool jsb_ArrayPool_finalize(se::State &s) {
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end()) {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        se::Array *cobj = (se::Array *)s.nativeThisObject();
+        se::ArrayPool *cobj = (se::ArrayPool *)s.nativeThisObject();
         JSB_FREE(cobj);
     }
     return true;
 }
-SE_BIND_FINALIZE_FUNC(jsb_Array_finalize)
+SE_BIND_FINALIZE_FUNC(jsb_ArrayPool_finalize)
 
-static bool jsb_Array_resize(se::State &s) {
-    se::Array *array = (se::Array *)s.nativeThisObject();
-    SE_PRECONDITION2(array, false, "jsb_Array_reize : Invalid native array");
+static bool jsb_ArrayPool_resize(se::State &s) {
+    se::ArrayPool *arrayPool = (se::ArrayPool *)s.nativeThisObject();
+    SE_PRECONDITION2(arrayPool, false, "jsb_ArrayPool_reize : Invalid native array pool");
 
     const auto &args = s.args();
     size_t argc = args.size();
-    if (argc == 1) {
+    if (argc == 2) {
         uint size = 0;
-        if (seval_to_uint(args[0], &size)) {
-            s.rval().setObject(array->resize(size));
+        if (seval_to_uint(args[1], &size)) {
+            s.rval().setObject(arrayPool->resize(args[0].toObject(), size));
             return true;
         }
 
-        SE_REPORT_ERROR("jsb_Array_reize: failed to get size");
+        SE_REPORT_ERROR("jsb_ArrayPool_reize: failed to resize array");
         return false;
     }
 
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(jsb_Array_resize);
+SE_BIND_FUNC(jsb_ArrayPool_resize);
 
-static bool jsb_Array_getArray(se::State &s) {
-    se::Array *array = (se::Array *)s.nativeThisObject();
-    SE_PRECONDITION2(array, false, "jsb_Array_getArray : Invalid Native Object");
-    s.rval().setObject(array->getJSArray());
-    return true;
+static bool jsb_ArrayPool_alloc(se::State &s) {
+    se::ArrayPool *arrayPool = (se::ArrayPool *)s.nativeThisObject();
+    SE_PRECONDITION2(arrayPool, false, "jsb_Array_alloc : Invalid Native Object");
+    
+    const auto &args = s.args();
+    size_t argc = args.size();
+    if (argc == 1) {
+        uint index = 0;
+        seval_to_uint(args[0], &index);
+        s.rval().setObject(arrayPool->alloc(index));
+        return true;
+    }
+    
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
+    
 }
-SE_BIND_FUNC(jsb_Array_getArray);
+SE_BIND_FUNC(jsb_ArrayPool_alloc);
 
-static bool js_register_se_Array(se::Object *obj) {
-    se::Class *cls = se::Class::create("NativeArray", obj, nullptr, _SE(jsb_ObjectPool_constructor));
-    cls->defineFunction("resize", _SE(jsb_Array_resize));
-    cls->defineFunction("getArray", _SE(jsb_Array_getArray));
+static bool js_register_se_ArrayPool(se::Object *obj) {
+    se::Class *cls = se::Class::create("NativeArrayPool", obj, nullptr, _SE(jsb_ArrayPool_constructor));
+    cls->defineFunction("resize", _SE(jsb_ArrayPool_resize));
+    cls->defineFunction("getAlloc", _SE(jsb_ArrayPool_alloc));
     cls->install();
-    JSBClassType::registerClass<se::Array>(cls);
+    JSBClassType::registerClass<se::ArrayPool>(cls);
 
-    jsb_Array_class = cls;
+    jsb_ArrayPool_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -245,6 +256,6 @@ bool register_all_dop_bindings(se::Object *obj) {
 
     js_register_se_BufferPool(ns);
     js_register_se_ObjectPool(ns);
-    js_register_se_Array(ns);
+    js_register_se_ArrayPool(ns);
     return true;
 }
