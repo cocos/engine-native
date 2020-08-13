@@ -589,6 +589,37 @@ static bool register_filetuils_ext(se::Object* obj) {
     return true;
 }
 
+static bool js_se_setExceptionCallback(se::State &s) {
+    
+    auto &args = s.args();
+    if (args.size() != 1 || !args[0].isObject() || !args[0].toObject()->isFunction()) {
+        SE_REPORT_ERROR("expect 1 arguments of Function type, %d provided", (int)args.size());
+        return false;
+    }
+
+    se::Object *objFunc = args[0].toObject();
+    // se::Value::reset will invoke decRef() while destroying s.args()
+    // increase ref here
+    objFunc->incRef(); 
+    if (s.thisObject()) {
+        s.thisObject()->attachObject(objFunc); // prevent GC
+    } else {
+        //prevent GC in C++ & JS
+        objFunc->root();
+    }
+    
+    se::ScriptEngine::getInstance()->setExceptionCallback([objFunc](const char *location, const char *message, const char *stack) {
+        se::ValueArray jsArgs;
+        jsArgs.resize(3);
+        jsArgs[0] = se::Value(location);
+        jsArgs[1] = se::Value(message);
+        jsArgs[2] = se::Value(stack);
+        objFunc->call(jsArgs, nullptr);
+    });
+    return true;
+}
+SE_BIND_FUNC(js_se_setExceptionCallback)
+
 
 #define DESCRIPT_FIELD(kls, field, field_type) do {\
     ss << "\"" << #field <<  "\": " << "{" ; \
@@ -732,6 +763,18 @@ static bool register_labelrenderer_ext(se::Object *obj)
     return true;
 }
 
+static bool register_se_setExceptionCallback(se::Object *obj)
+{
+    se::Value jsb;
+    if (!obj->getProperty("jsb", &jsb)) {
+        jsb.setObject(se::Object::createPlainObject());
+        obj->setProperty("jsb", jsb);
+    }
+    auto *jsbObj = jsb.toObject();
+    jsbObj->defineFunction("onError", _SE(js_se_setExceptionCallback));
+    return true;
+}
+
 bool register_all_cocos2dx_manual(se::Object* obj)
 {
     register_plist_parser(obj);
@@ -740,6 +783,7 @@ bool register_all_cocos2dx_manual(se::Object* obj)
     register_canvas_context2d(obj);
     register_filetuils_ext(obj);
     register_labelrenderer_ext(obj);
+    register_se_setExceptionCallback(obj);
     return true;
 }
 
