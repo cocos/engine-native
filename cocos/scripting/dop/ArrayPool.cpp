@@ -7,15 +7,15 @@
 
 namespace se {
 
-cc::map<PoolType, cc::map<uint, uint8_t *>> ArrayPool::_arrayMap;
+cc::map<PoolType, ArrayPool *> ArrayPool::_pools;
 
 ArrayPool::ArrayPool(PoolType type, uint size)
 : _type(type), _size(size) {
-    ArrayPool::_arrayMap[_type] = {};
+    ArrayPool::_pools[_type] = this;
 }
 
 ArrayPool::~ArrayPool() {
-    ArrayPool::_arrayMap.erase(_type);
+    ArrayPool::_pools.erase(_type);
 }
 
 Object *ArrayPool::alloc(uint index) {
@@ -26,6 +26,9 @@ Object *ArrayPool::alloc(uint index) {
 
     auto obj = Object::createArrayBufferObject(buffer, bytes);
     CC_FREE(buffer);
+    _objects[index] = obj;
+    _indexes[obj] = index;
+
     return obj;
 }
 
@@ -41,19 +44,30 @@ Object *ArrayPool::resize(Object *origin, uint size) {
     size_t len = 0;
     origin->getTypedArrayData(&originData, &len);
     memcpy(buffer, originData, len);
-    
+
     auto obj = Object::createArrayBufferObject(buffer, bytes);
     CC_FREE(buffer);
+    
+    uint originIndex = _indexes[origin];
+    _objects[originIndex] = obj;
+    _indexes[obj] = originIndex;
+    _indexes.erase(origin);
+
     return obj;
 }
 
 uint8_t *ArrayPool::getArray(PoolType type, uint index) {
-    if (ArrayPool::_arrayMap.count(type) != 0) {
-        const auto &arrays = ArrayPool::_arrayMap[type];
-        if (arrays.count(index) != 0)
-            return arrays.at(index);
-        else
+    if (ArrayPool::_pools.count(type) != 0) {
+        const auto pool = ArrayPool::_pools[type];
+        if (pool->_objects.count(index) != 0) {
+            uint8_t *ret = nullptr;
+            size_t len = 0;
+            pool->_objects[index]->getTypedArrayData(&ret, &len);
+            return ret;
+        }
+        else {
             return nullptr;
+        }
     } else {
         return nullptr;
     }

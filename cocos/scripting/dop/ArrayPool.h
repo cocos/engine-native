@@ -20,8 +20,10 @@ public:
     uint8_t *getArray(PoolType type, uint index);
 
 private:
-    static cc::map<PoolType, cc::map<uint, uint8_t *>> _arrayMap;
+    static cc::map<PoolType, ArrayPool *> _pools;
 
+    cc::map<uint, Object *> _objects;
+    cc::map<Object *, uint> _indexes;
     PoolType _type;
     uint _size = 0;
 };
