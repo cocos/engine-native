@@ -740,8 +740,8 @@ cocos_source_files(
     cocos/scripting/dop/jsb_dop.cpp
     cocos/scripting/dop/jsb_dop.h
     cocos/scripting/dop/PoolType.h
-    cocos/scripting/dop/Array.h
-    cocos/scripting/dop/Array.cpp
+    cocos/scripting/dop/ArrayPool.h
+    cocos/scripting/dop/ArrayPool.cpp
 )
 
 ######## auto

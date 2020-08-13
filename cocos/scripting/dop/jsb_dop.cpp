@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "BufferPool.h"
 #include "ObjectPool.h"
-#include "Array.h"
+#include "ArrayPool.h"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include "cocos/scripting/js-bindings/manual/jsb_classtype.h"
 #include "cocos/scripting/js-bindings/manual/jsb_conversions.h"
