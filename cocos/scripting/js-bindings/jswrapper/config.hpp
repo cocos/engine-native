@@ -43,11 +43,11 @@
     #endif
 
     #if TARGET_OS_IOS
-        #ifdef __arm64__
+        // #ifdef __arm64__
             #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_V8
-        #else
-            #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_JSC
-        #endif
+        // #else
+        //     #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_JSC
+        // #endif
     #endif
 
     //TODO how to make simulator build with v8 too? Because in release mode, it will build
