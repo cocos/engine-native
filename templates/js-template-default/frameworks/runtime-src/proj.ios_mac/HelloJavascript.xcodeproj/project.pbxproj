@@ -31,7 +31,6 @@
 		467AF613232881E400770112 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467AF612232881E400770112 /* AVKit.framework */; };
 		467AF615232881EB00770112 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467AF614232881EB00770112 /* CoreMedia.framework */; };
 		4DD5E6AB1CDAF6430046171E /* libcocos2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DD0DB561CDAF5F40099AD86 /* libcocos2d Mac.a */; };
-		4DD5E6B11CDAF65C0046171E /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DD0DB581CDAF5F40099AD86 /* libcocos2d iOS.a */; };
 		502380DC17EBB88200990C9B /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 502380DB17EBB88200990C9B /* libcurl.dylib */; };
 		509D4A8117EBB24E00697056 /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4545215156E28EF00887EB5 /* AppDelegate.cpp */; };
 		509D4A8817EBB24E00697056 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A82F5FA169AC92500C4B13A /* libsqlite3.dylib */; };
@@ -50,6 +49,7 @@
 		509D4AE917EBB82000697056 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 509D4AE817EBB82000697056 /* AppKit.framework */; };
 		509D4AEB17EBB82600697056 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 509D4AEA17EBB82600697056 /* IOKit.framework */; };
 		6DB455E424EA5CFE003A72AA /* libcocos2d iOS AppClip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB455E324EA5CFE003A72AA /* libcocos2d iOS AppClip.a */; };
+		6DB4560224EA64C1003A72AA /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB455F024EA5D0A003A72AA /* libcocos2d iOS.a */; };
 		6DC0F39324E12E4D0035E12B /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6DC0F39224E12E4D0035E12B /* ViewController.mm */; };
 		6DC0F39E24E12E4D0035E12B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC0F39D24E12E4D0035E12B /* main.m */; };
 		6DC0F3B824E12E4E0035E12B /* HelloJavascript-clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 6DC0F38924E12E4D0035E12B /* HelloJavascript-clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -132,13 +132,6 @@
 			remoteGlobalIDString = 1551A33E158F2AB200E66CFE;
 			remoteInfo = "libcocos2d Mac";
 		};
-		4DD5E6AF1CDAF6520046171E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1AC6FB34180E9ACB004C840B /* cocos2d_libs.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A07A4C241783777C0073F6A7;
-			remoteInfo = "libcocos2d iOS";
-		};
 		6DB455D624EA259F003A72AA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AC6FB34180E9ACB004C840B /* cocos2d_libs.xcodeproj */;
@@ -173,6 +166,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 6DB452E524EA233E003A72AA;
 			remoteInfo = "libcocos2d iOS AppClip";
+		};
+		6DB4560324EA64CB003A72AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6DB455E524EA5D0A003A72AA /* cocos2d_libs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A07A4C241783777C0073F6A7;
+			remoteInfo = "libcocos2d iOS";
 		};
 		6DC0F3B624E12E4E0035E12B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -361,6 +361,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DB4560224EA64C1003A72AA /* libcocos2d iOS.a in Frameworks */,
 				467AF615232881EB00770112 /* CoreMedia.framework in Frameworks */,
 				467AF613232881E400770112 /* AVKit.framework in Frameworks */,
 				467AF6082321FBED00770112 /* WebKit.framework in Frameworks */,
@@ -373,7 +374,6 @@
 				ABE456E51D34F87A00F1F400 /* CoreFoundation.framework in Frameworks */,
 				ABE456E31D34F87300F1F400 /* CFNetwork.framework in Frameworks */,
 				294D7D801D0D668F002CE7B7 /* CoreText.framework in Frameworks */,
-				4DD5E6B11CDAF65C0046171E /* libcocos2d iOS.a in Frameworks */,
 				FA676C761C71AFA200E091E3 /* libiconv.dylib in Frameworks */,
 				BA3A85EC1A724AE900924D24 /* Security.framework in Frameworks */,
 				D6B061241803AB9F0077942B /* CoreMotion.framework in Frameworks */,
@@ -640,7 +640,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				4DD5E6B01CDAF6520046171E /* PBXTargetDependency */,
+				6DB4560424EA64CB003A72AA /* PBXTargetDependency */,
 				6DC0F3B724E12E4E0035E12B /* PBXTargetDependency */,
 			);
 			name = "HelloJavascript-mobile";
@@ -835,15 +835,15 @@
 			name = "libcocos2d Mac";
 			targetProxy = 4DD5E6A91CDAF6330046171E /* PBXContainerItemProxy */;
 		};
-		4DD5E6B01CDAF6520046171E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "libcocos2d iOS";
-			targetProxy = 4DD5E6AF1CDAF6520046171E /* PBXContainerItemProxy */;
-		};
 		6DB455E924EA5D0A003A72AA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "libcocos2d iOS AppClip";
 			targetProxy = 6DB455E824EA5D0A003A72AA /* PBXContainerItemProxy */;
+		};
+		6DB4560424EA64CB003A72AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libcocos2d iOS";
+			targetProxy = 6DB4560324EA64CB003A72AA /* PBXContainerItemProxy */;
 		};
 		6DC0F3B724E12E4E0035E12B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1155,7 +1155,7 @@
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios $(SRCROOT)/../../cocos2d-x/plugin/jsbindings/auto $(SRCROOT)/../../cocos2d-x/plugin/jsbindings/manual $(SRCROOT)/../../cocos2d-x/external/ios/include $(SRCROOT)/../../cocos2d-x/external/ios/include/spidermonkey";
-				VALID_ARCHS = "arm64 armv7 x86_64";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Debug;
 		};
@@ -1192,7 +1192,7 @@
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios $(SRCROOT)/../../cocos2d-x/plugin/jsbindings/auto $(SRCROOT)/../../cocos2d-x/plugin/jsbindings/manual $(SRCROOT)/../../cocos2d-x/external/ios/include $(SRCROOT)/../../cocos2d-x/external/ios/include/spidermonkey";
-				VALID_ARCHS = "arm64 armv7 x86_64";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Release;
 		};
