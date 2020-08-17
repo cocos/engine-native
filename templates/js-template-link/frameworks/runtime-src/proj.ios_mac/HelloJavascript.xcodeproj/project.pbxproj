@@ -50,9 +50,51 @@
 		509D4AE917EBB82000697056 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 509D4AE817EBB82000697056 /* AppKit.framework */; };
 		509D4AEB17EBB82600697056 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 509D4AEA17EBB82600697056 /* IOKit.framework */; };
 		6DB455D824EA25AA003A72AA /* libcocos2d iOS AppClip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB455D724EA259F003A72AA /* libcocos2d iOS AppClip.a */; };
+		6DB456AA24EA7962003A72AA /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 509D4ABB17EBB2AB00697056 /* RootViewController.mm */; };
+		6DB456AB24EA7962003A72AA /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4545215156E28EF00887EB5 /* AppDelegate.cpp */; };
+		6DB456AC24EA7962003A72AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 509D4AB817EBB2AB00697056 /* main.m */; };
+		6DB456AD24EA7962003A72AA /* SDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CC756D21BA5B5C00FBF2F7 /* SDKWrapper.m */; };
+		6DB456AE24EA7962003A72AA /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 509D4AAC17EBB2AB00697056 /* AppController.mm */; };
+		6DB456B024EA7962003A72AA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467AF614232881EB00770112 /* CoreMedia.framework */; };
+		6DB456B124EA7962003A72AA /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467AF612232881E400770112 /* AVKit.framework */; };
+		6DB456B224EA7962003A72AA /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 467AF6072321FBED00770112 /* WebKit.framework */; };
+		6DB456B324EA7962003A72AA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A37E9D9200DEF110078AF72 /* SystemConfiguration.framework */; };
+		6DB456B424EA7962003A72AA /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ACA99241F550A28002DE225 /* JavaScriptCore.framework */; };
+		6DB456B524EA7962003A72AA /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A499EBC1F0CDDD9004E6AEC /* libicucore.A.tbd */; };
+		6DB456B624EA7962003A72AA /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE456EA1D34F89000F1F400 /* GameController.framework */; };
+		6DB456B724EA7962003A72AA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE456E81D34F88A00F1F400 /* SystemConfiguration.framework */; };
+		6DB456B824EA7962003A72AA /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE456E61D34F87F00F1F400 /* MobileCoreServices.framework */; };
+		6DB456B924EA7962003A72AA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE456E41D34F87A00F1F400 /* CoreFoundation.framework */; };
+		6DB456BA24EA7962003A72AA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE456E21D34F87300F1F400 /* CFNetwork.framework */; };
+		6DB456BB24EA7962003A72AA /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294D7D7F1D0D668F002CE7B7 /* CoreText.framework */; };
+		6DB456BC24EA7962003A72AA /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DD0DB581CDAF5F40099AD86 /* libcocos2d iOS.a */; };
+		6DB456BD24EA7962003A72AA /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FA676C751C71AFA200E091E3 /* libiconv.dylib */; };
+		6DB456BE24EA7962003A72AA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA3A85EB1A724AE900924D24 /* Security.framework */; };
+		6DB456BF24EA7962003A72AA /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B061231803AB9F0077942B /* CoreMotion.framework */; };
+		6DB456C024EA7962003A72AA /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A82F5FA169AC92500C4B13A /* libsqlite3.dylib */; };
+		6DB456C124EA7962003A72AA /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D454520B156E22BD00887EB5 /* libz.dylib */; };
+		6DB456C224EA7962003A72AA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275411517C094001B78AA /* QuartzCore.framework */; };
+		6DB456C324EA7962003A72AA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275431517C094001B78AA /* OpenGLES.framework */; };
+		6DB456C424EA7962003A72AA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275451517C094001B78AA /* OpenAL.framework */; };
+		6DB456C524EA7962003A72AA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275471517C094001B78AA /* AudioToolbox.framework */; };
+		6DB456C624EA7962003A72AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275491517C094001B78AA /* AVFoundation.framework */; };
+		6DB456C724EA7962003A72AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A922754B1517C094001B78AA /* UIKit.framework */; };
+		6DB456C824EA7962003A72AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A922754D1517C094001B78AA /* Foundation.framework */; };
+		6DB456C924EA7962003A72AA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A922754F1517C094001B78AA /* CoreGraphics.framework */; };
+		6DB456CB24EA7962003A72AA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 28A34C0F225B462E00926306 /* assets */; };
+		6DB456CC24EA7962003A72AA /* jsb-adapter in Resources */ = {isa = PBXBuildFile; fileRef = 4033CDBB20E4935000DAA37B /* jsb-adapter */; };
+		6DB456CD24EA7962003A72AA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1ABC56911F7A005D00826282 /* Images.xcassets */; };
+		6DB456CE24EA7962003A72AA /* LaunchScreenBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AFFCD7B1F7A5D4F00628F2C /* LaunchScreenBackground.png */; };
+		6DB456CF24EA7962003A72AA /* project.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A1A081B18C9DF05005C6854 /* project.json */; };
+		6DB456D024EA7962003A72AA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 6DC0F3FC24E154B30035E12B /* assets */; };
+		6DB456D124EA7962003A72AA /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 1A6BF21418C9DB5900FB0E1C /* main.js */; };
+		6DB456D224EA7962003A72AA /* src in Resources */ = {isa = PBXBuildFile; fileRef = C03780EA18BEE0E400FE4F13 /* src */; };
+		6DB456D324EA7962003A72AA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4011F9D1212BD6750091CC5B /* LaunchScreen.storyboard */; };
+		6DB456D424EA7962003A72AA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4011F9D7212BD7050091CC5B /* Localizable.strings */; };
+		6DB456D624EA7962003A72AA /* HelloJavascript-clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 6DC0F38924E12E4D0035E12B /* HelloJavascript-clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6DB4572124EA7C52003A72AA /* MobileInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6DB4572024EA7C52003A72AA /* MobileInfo.plist */; };
 		6DC0F39324E12E4D0035E12B /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6DC0F39224E12E4D0035E12B /* ViewController.mm */; };
 		6DC0F39E24E12E4D0035E12B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC0F39D24E12E4D0035E12B /* main.m */; };
-		6DC0F3B824E12E4E0035E12B /* HelloJavascript-clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 6DC0F38924E12E4D0035E12B /* HelloJavascript-clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6DC0F3C924E139880035E12B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4011F9D1212BD6750091CC5B /* LaunchScreen.storyboard */; };
 		6DC0F3CA24E1398C0035E12B /* LaunchScreenBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AFFCD7B1F7A5D4F00628F2C /* LaunchScreenBackground.png */; };
 		6DC0F3CB24E13AD60035E12B /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 509D4AAC17EBB2AB00697056 /* AppController.mm */; };
@@ -153,7 +195,14 @@
 			remoteGlobalIDString = 6DB455D224EA2573003A72AA;
 			remoteInfo = "libcocos2d iOS AppClip";
 		};
-		6DC0F3B624E12E4E0035E12B /* PBXContainerItemProxy */ = {
+		6DB456A624EA7962003A72AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AC6FB34180E9ACB004C840B /* cocos2d_libs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A07A4C241783777C0073F6A7;
+			remoteInfo = "libcocos2d iOS";
+		};
+		6DB456A824EA7962003A72AA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A92275341517C094001B78AA /* Project object */;
 			proxyType = 1;
@@ -163,13 +212,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		6DC0F3B924E12E4E0035E12B /* Embed App Clips */ = {
+		6DB456D524EA7962003A72AA /* Embed App Clips */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
 			dstSubfolderSpec = 16;
 			files = (
-				6DC0F3B824E12E4E0035E12B /* HelloJavascript-clip.app in Embed App Clips */,
+				6DB456D624EA7962003A72AA /* HelloJavascript-clip.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,6 +272,8 @@
 		509D4AE617EBB81800697056 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		509D4AE817EBB82000697056 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		509D4AEA17EBB82600697056 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		6DB456DA24EA7962003A72AA /* HelloJavascript-full.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HelloJavascript-full.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6DB4572024EA7C52003A72AA /* MobileInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MobileInfo.plist; path = ios/MobileInfo.plist; sourceTree = "<group>"; };
 		6DC0F38924E12E4D0035E12B /* HelloJavascript-clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HelloJavascript-clip.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DC0F38E24E12E4D0035E12B /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		6DC0F38F24E12E4D0035E12B /* SceneDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneDelegate.mm; sourceTree = "<group>"; };
@@ -304,6 +355,39 @@
 				509D4A8E17EBB24E00697056 /* AVFoundation.framework in Frameworks */,
 				509D4A9017EBB24E00697056 /* Foundation.framework in Frameworks */,
 				509D4A9117EBB24E00697056 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6DB456AF24EA7962003A72AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DB456B024EA7962003A72AA /* CoreMedia.framework in Frameworks */,
+				6DB456B124EA7962003A72AA /* AVKit.framework in Frameworks */,
+				6DB456B224EA7962003A72AA /* WebKit.framework in Frameworks */,
+				6DB456B324EA7962003A72AA /* SystemConfiguration.framework in Frameworks */,
+				6DB456B424EA7962003A72AA /* JavaScriptCore.framework in Frameworks */,
+				6DB456B524EA7962003A72AA /* libicucore.A.tbd in Frameworks */,
+				6DB456B624EA7962003A72AA /* GameController.framework in Frameworks */,
+				6DB456B724EA7962003A72AA /* SystemConfiguration.framework in Frameworks */,
+				6DB456B824EA7962003A72AA /* MobileCoreServices.framework in Frameworks */,
+				6DB456B924EA7962003A72AA /* CoreFoundation.framework in Frameworks */,
+				6DB456BA24EA7962003A72AA /* CFNetwork.framework in Frameworks */,
+				6DB456BB24EA7962003A72AA /* CoreText.framework in Frameworks */,
+				6DB456BC24EA7962003A72AA /* libcocos2d iOS.a in Frameworks */,
+				6DB456BD24EA7962003A72AA /* libiconv.dylib in Frameworks */,
+				6DB456BE24EA7962003A72AA /* Security.framework in Frameworks */,
+				6DB456BF24EA7962003A72AA /* CoreMotion.framework in Frameworks */,
+				6DB456C024EA7962003A72AA /* libsqlite3.dylib in Frameworks */,
+				6DB456C124EA7962003A72AA /* libz.dylib in Frameworks */,
+				6DB456C224EA7962003A72AA /* QuartzCore.framework in Frameworks */,
+				6DB456C324EA7962003A72AA /* OpenGLES.framework in Frameworks */,
+				6DB456C424EA7962003A72AA /* OpenAL.framework in Frameworks */,
+				6DB456C524EA7962003A72AA /* AudioToolbox.framework in Frameworks */,
+				6DB456C624EA7962003A72AA /* AVFoundation.framework in Frameworks */,
+				6DB456C724EA7962003A72AA /* UIKit.framework in Frameworks */,
+				6DB456C824EA7962003A72AA /* Foundation.framework in Frameworks */,
+				6DB456C924EA7962003A72AA /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +535,7 @@
 				A922753D1517C094001B78AA /* HelloJavascript-mobile.app */,
 				509D4AAA17EBB24E00697056 /* HelloJavascript-desktop.app */,
 				6DC0F38924E12E4D0035E12B /* HelloJavascript-clip.app */,
+				6DB456DA24EA7962003A72AA /* HelloJavascript-full.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -523,6 +608,7 @@
 		D45446CC156DE73F00887EB5 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				6DB4572024EA7C52003A72AA /* MobileInfo.plist */,
 				6DE1A29424E66E5300974ACD /* HelloJavascript-mobileRelease.entitlements */,
 				051C018221E32AE400D4A347 /* UserConfigIOS.debug.xcconfig */,
 				051C018121E32AE400D4A347 /* UserConfigIOS.release.xcconfig */,
@@ -575,6 +661,26 @@
 			productReference = 509D4AAA17EBB24E00697056 /* HelloJavascript-desktop.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6DB456A424EA7962003A72AA /* HelloJavascript-full */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6DB456D724EA7962003A72AA /* Build configuration list for PBXNativeTarget "HelloJavascript-full" */;
+			buildPhases = (
+				6DB456A924EA7962003A72AA /* Sources */,
+				6DB456AF24EA7962003A72AA /* Frameworks */,
+				6DB456CA24EA7962003A72AA /* Resources */,
+				6DB456D524EA7962003A72AA /* Embed App Clips */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6DB456A524EA7962003A72AA /* PBXTargetDependency */,
+				6DB456A724EA7962003A72AA /* PBXTargetDependency */,
+			);
+			name = "HelloJavascript-full";
+			productName = "HelloJavascript-mobile";
+			productReference = 6DB456DA24EA7962003A72AA /* HelloJavascript-full.app */;
+			productType = "com.apple.product-type.application";
+		};
 		6DC0F38824E12E4D0035E12B /* HelloJavascript-clip */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6DC0F3C024E12E4E0035E12B /* Build configuration list for PBXNativeTarget "HelloJavascript-clip" */;
@@ -600,13 +706,11 @@
 				A92275391517C094001B78AA /* Sources */,
 				A922753A1517C094001B78AA /* Frameworks */,
 				A922753B1517C094001B78AA /* Resources */,
-				6DC0F3B924E12E4E0035E12B /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				4DD5E6B01CDAF6520046171E /* PBXTargetDependency */,
-				6DC0F3B724E12E4E0035E12B /* PBXTargetDependency */,
 			);
 			name = "HelloJavascript-mobile";
 			productName = "HelloJavascript-mobile";
@@ -621,6 +725,9 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				TargetAttributes = {
+					6DB456A424EA7962003A72AA = {
+						ProvisioningStyle = Automatic;
+					};
 					6DC0F38824E12E4D0035E12B = {
 						CreatedOnToolsVersion = 12.0;
 						DevelopmentTeam = NQ596S94Q5;
@@ -653,9 +760,10 @@
 			);
 			projectRoot = "";
 			targets = (
-				A922753C1517C094001B78AA /* HelloJavascript-mobile */,
 				509D4A7517EBB24E00697056 /* HelloJavascript-desktop */,
+				6DB456A424EA7962003A72AA /* HelloJavascript-full */,
 				6DC0F38824E12E4D0035E12B /* HelloJavascript-clip */,
+				A922753C1517C094001B78AA /* HelloJavascript-mobile */,
 			);
 		};
 /* End PBXProject section */
@@ -695,6 +803,24 @@
 				4033CDBD20E4935100DAA37B /* jsb-adapter in Resources */,
 				509D4ACF17EBB2BE00697056 /* Icon.icns in Resources */,
 				C03780EC18BEE0E400FE4F13 /* src in Resources */,
+				6DB4572124EA7C52003A72AA /* MobileInfo.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6DB456CA24EA7962003A72AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DB456CB24EA7962003A72AA /* assets in Resources */,
+				6DB456CC24EA7962003A72AA /* jsb-adapter in Resources */,
+				6DB456CD24EA7962003A72AA /* Images.xcassets in Resources */,
+				6DB456CE24EA7962003A72AA /* LaunchScreenBackground.png in Resources */,
+				6DB456CF24EA7962003A72AA /* project.json in Resources */,
+				6DB456D024EA7962003A72AA /* assets in Resources */,
+				6DB456D124EA7962003A72AA /* main.js in Resources */,
+				6DB456D224EA7962003A72AA /* src in Resources */,
+				6DB456D324EA7962003A72AA /* LaunchScreen.storyboard in Resources */,
+				6DB456D424EA7962003A72AA /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -742,6 +868,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6DB456A924EA7962003A72AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DB456AA24EA7962003A72AA /* RootViewController.mm in Sources */,
+				6DB456AB24EA7962003A72AA /* AppDelegate.cpp in Sources */,
+				6DB456AC24EA7962003A72AA /* main.m in Sources */,
+				6DB456AD24EA7962003A72AA /* SDKWrapper.m in Sources */,
+				6DB456AE24EA7962003A72AA /* AppController.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6DC0F38524E12E4D0035E12B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -785,10 +923,15 @@
 			name = "libcocos2d iOS AppClip";
 			targetProxy = 6DB455D324EA259F003A72AA /* PBXContainerItemProxy */;
 		};
-		6DC0F3B724E12E4E0035E12B /* PBXTargetDependency */ = {
+		6DB456A524EA7962003A72AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libcocos2d iOS";
+			targetProxy = 6DB456A624EA7962003A72AA /* PBXContainerItemProxy */;
+		};
+		6DB456A724EA7962003A72AA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6DC0F38824E12E4D0035E12B /* HelloJavascript-clip */;
-			targetProxy = 6DC0F3B624E12E4E0035E12B /* PBXContainerItemProxy */;
+			targetProxy = 6DB456A824EA7962003A72AA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -864,6 +1007,84 @@
 				PRODUCT_NAME = "HelloJavascript-desktop";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(inherited) /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/platform/mac /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/glfw3/include/mac /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/mac/include/ /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/mac/include/spidermonkey";
+			};
+			name = Release;
+		};
+		6DB456D824EA7962003A72AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 051C018221E32AE400D4A347 /* UserConfigIOS.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ios/Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CC_TARGET_OS_IPHONE,
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = "$(SRCROOT)/ios/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LIBRARY_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/libs";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(inherited) /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/platform/ios /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/spidermonkey";
+				VALID_ARCHS = "arm64 x86_64";
+			};
+			name = Debug;
+		};
+		6DB456D924EA7962003A72AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 051C018121E32AE400D4A347 /* UserConfigIOS.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "ios/HelloJavascript-mobileRelease.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ios/Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CC_TARGET_OS_IPHONE,
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = "$(SRCROOT)/ios/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LIBRARY_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/libs";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(inherited) /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/platform/ios /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/spidermonkey";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Release;
 		};
@@ -997,7 +1218,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = ios_appclip/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/ios_appclip/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1082,7 +1303,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = ios/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/ios/MobileInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LIBRARY_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/libs";
 				OTHER_LDFLAGS = (
@@ -1121,7 +1342,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = ios/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/ios/MobileInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LIBRARY_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/libs";
 				OTHER_LDFLAGS = (
@@ -1147,6 +1368,15 @@
 			buildConfigurations = (
 				509D4AA817EBB24E00697056 /* Debug */,
 				509D4AA917EBB24E00697056 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6DB456D724EA7962003A72AA /* Build configuration list for PBXNativeTarget "HelloJavascript-full" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6DB456D824EA7962003A72AA /* Debug */,
+				6DB456D924EA7962003A72AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
