@@ -8,7 +8,7 @@
 #import "SDKWrapper.h"
 #import "SDKDelegate.h"
 
-
+#import <UIKit/UIKit.h>
 
 @interface SDKWrapper ()
 

@@ -48,8 +48,8 @@ namespace se {
     class AutoHandleScope
     {
     public:
-        AutoHandleScope();
-        ~AutoHandleScope();
+        AutoHandleScope() = default;
+        ~AutoHandleScope() = default;
     };
 
     /**

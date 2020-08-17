@@ -5,11 +5,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>${PRODUCT_NAME}-clip</string>
+	<string>HelloJavascript-clip</string>
 	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)Clip</string>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.cocos2dx.hellojavascript.clip</string>
+	<string>org.cocos2dx.hellojavascript.ios.clip</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

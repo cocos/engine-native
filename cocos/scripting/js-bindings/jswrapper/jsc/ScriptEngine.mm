@@ -41,15 +41,6 @@ extern "C" JS_EXPORT void JSSynchronousGarbageCollectForDebugging(JSContextRef);
 
 namespace se {
 
-    AutoHandleScope::AutoHandleScope()
-    {
-
-    }
-
-    AutoHandleScope::~AutoHandleScope()
-    {
-
-    }
 
     Class* __jsb_CCPrivateData_class = nullptr;
     //

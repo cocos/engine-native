@@ -17,7 +17,7 @@
                BlueprintIdentifier = "6DC0F38824E12E4D0035E12B"
                BuildableName = "HelloJavascript-clip.app"
                BlueprintName = "HelloJavascript-clip"
-               ReferencedContainer = "container:examplecases.xcodeproj">
+               ReferencedContainer = "container:HelloJavascript.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

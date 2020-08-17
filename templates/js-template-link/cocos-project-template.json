@@ -42,7 +42,10 @@
                 "frameworks/runtime-src/proj.android-studio/res/values/strings.xml",
                 "frameworks/runtime-src/proj.ios_mac/ios/main.m",
                 "frameworks/runtime-src/proj.ios_mac/ios/Prefix.pch",
+                "frameworks/runtime-src/proj.ios_mac/ios/PROJECT_NAME-mobileRelease.entitlements",
+                "frameworks/runtime-src/proj.ios_mac/ios_appclip/PROJECT_NAME.entitlements",
                 "frameworks/runtime-src/proj.ios_mac/PROJECT_NAME.xcodeproj/project.pbxproj",
+                "frameworks/runtime-src/proj.ios_mac/PROJECT_NAME.xcodeproj/xcshareddata/xcschemes/PROJECT_NAME-clip.xcscheme",
                 "frameworks/runtime-src/Classes/AppDelegate.cpp"
             ]
         },
@@ -62,7 +65,8 @@
         "project_replace_ios_bundleid": {
             "src_bundle_id": "org.cocos2dx.hellojavascript",
             "files": [
-                "frameworks/runtime-src/proj.ios_mac/ios/Info.plist"
+                "frameworks/runtime-src/proj.ios_mac/ios/Info.plist",
+                "frameworks/runtime-src/proj.ios_mac/ios_appclip/Info.plist"
             ]
         }
     }
