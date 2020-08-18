@@ -14,12 +14,12 @@ public:
 public:
     virtual bool initialize(const CommandBufferInfo &info) = 0;
     virtual void destroy() = 0;
-    virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) = 0;
+    virtual void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) = 0;
     virtual void end() = 0;
     virtual void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const vector<Color> &colors, float depth, int stencil) = 0;
     virtual void endRenderPass() = 0;
     virtual void bindPipelineState(PipelineState *pso) = 0;
-    virtual void bindBindingLayout(BindingLayout *layout) = 0;
+    virtual void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, uint *dynamicOffsets) = 0;
     virtual void bindInputAssembler(InputAssembler *ia) = 0;
     virtual void setViewport(const Viewport &vp) = 0;
     virtual void setScissor(const Rect &rect) = 0;
@@ -33,6 +33,11 @@ public:
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
     virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) = 0;
     virtual void execute(const CommandBufferList &cmd_buffs, uint32_t count) = 0;
+
+    CC_INLINE void begin() { begin(nullptr, 0, nullptr); }
+    CC_INLINE void begin(RenderPass *renderPass) { begin(renderPass, 0, nullptr); }
+    CC_INLINE void begin(RenderPass *renderPass, uint subpass) { begin(renderPass, subpass, nullptr); }
+    CC_INLINE void bindDescriptorSet(uint set, DescriptorSet *descriptorSet) { bindDescriptorSet(set, descriptorSet, 0, nullptr); }
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Queue *getQueue() const { return _queue; }

@@ -13,6 +13,7 @@ public:
 
 public:
     virtual bool initialize(const BufferInfo &info) = 0;
+    virtual bool initialize(const BufferViewInfo &info) = 0;
     virtual void destroy() = 0;
     virtual void resize(uint size) = 0;
     virtual void update(void *buffer, uint offset = 0, uint size = 0) = 0;

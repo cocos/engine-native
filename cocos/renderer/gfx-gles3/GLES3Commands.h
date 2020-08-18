@@ -21,7 +21,7 @@ struct GLES3DepthBounds {
 
 struct GLES3StencilWriteMask {
     StencilFace face = StencilFace::FRONT;
-    uint write_mask = 0;
+    uint writeMask = 0;
 };
 
 struct GLES3StencilCompareMask {
@@ -79,8 +79,9 @@ enum class GLES3State : uint8_t {
 class GLES3CmdBindStates : public GFXCmd {
 public:
     GLES3GPUPipelineState *gpuPipelineState = nullptr;
-    GLES3GPUBindingLayout *gpuBindingLayout = nullptr;
     GLES3GPUInputAssembler *gpuInputAssembler = nullptr;
+    vector<GLES3GPUDescriptorSet *> gpuDescriptorSets;
+    vector<uint> dynamicOffsets;
     uint8_t stateFlags[(int)GLES3State::COUNT] = {0};
     Viewport viewport;
     Rect scissor;
@@ -96,8 +97,9 @@ public:
 
     virtual void clear() override {
         gpuPipelineState = nullptr;
-        gpuBindingLayout = nullptr;
         gpuInputAssembler = nullptr;
+        gpuDescriptorSets.clear();
+        dynamicOffsets.clear();
         memset(stateFlags, 0, sizeof(stateFlags));
     }
 };
