@@ -1,4 +1,5 @@
 #include "GLES2Std.h"
+
 #include "GLES2Buffer.h"
 #include "GLES2Commands.h"
 
@@ -57,6 +58,24 @@ bool GLES2Buffer::initialize(const BufferInfo &info) {
     return true;
 }
 
+bool GLES2Buffer::initialize(const BufferViewInfo &info) {
+
+    GLES2Buffer *buffer = (GLES2Buffer *)info.buffer;
+
+    _usage = buffer->_usage;
+    _memUsage = buffer->_memUsage;
+    _size = _stride = info.range;
+    _count = 1u;
+    _flags = buffer->_flags;
+
+    _gpuBufferView = CC_NEW(GLES2GPUBufferView);
+    _gpuBufferView->gpuBuffer = buffer->gpuBuffer();
+    _gpuBufferView->range = _size;
+    _gpuBufferView->offset = info.offset;
+
+    return true;
+}
+
 void GLES2Buffer::destroy() {
     if (_gpuBuffer) {
         GLES2CmdFuncDestroyBuffer((GLES2Device *)_device, _gpuBuffer);
@@ -64,6 +83,8 @@ void GLES2Buffer::destroy() {
         CC_DELETE(_gpuBuffer);
         _gpuBuffer = nullptr;
     }
+
+    CC_SAFE_DELETE(_gpuBufferView);
 
     if (_buffer) {
         CC_FREE(_buffer);
@@ -75,6 +96,8 @@ void GLES2Buffer::destroy() {
 }
 
 void GLES2Buffer::resize(uint size) {
+    CCASSERT(!_gpuBufferView, "Cannot resize buffer views");
+
     if (_size != size) {
         const uint oldSize = _size;
         _size = size;
@@ -106,8 +129,10 @@ void GLES2Buffer::resize(uint size) {
 }
 
 void GLES2Buffer::update(void *buffer, uint offset, uint size) {
+    CCASSERT(!_gpuBufferView, "Cannot update through buffer views");
     CCASSERT(size != 0, "Should not update buffer with 0 bytes of data");
     CCASSERT(buffer, "Buffer should not be nullptr");
+
     if (_buffer) {
         memcpy(_buffer + offset, buffer, size);
     }

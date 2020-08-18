@@ -1759,7 +1759,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                 }
 
                 // bind descriptor sets
-                if (cmd->gpuPipelineState && gpuPipelineState->gpuShader) {
+                if (cmd->gpuPipelineState && gpuPipelineState->gpuShader && gpuPipelineState->gpuPipelineLayout) {
 
                     size_t blockLen = gpuPipelineState->gpuShader->glBlocks.size();
                     const vector<vector<int>> &dynamicOffsetIndices = cmd->gpuPipelineState->gpuPipelineLayout->dynamicOffsetIndices;
@@ -1771,7 +1771,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                         const GLES3GPUDescriptorSet *gpuDescriptorSet = cmd->gpuDescriptorSets[glBlock.set];
                         CCASSERT(gpuDescriptorSet && gpuDescriptorSet->gpuDescriptors.size() > glBlock.binding, "");
                         const GLES3GPUDescriptor &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[glBlock.binding];
-                        CCASSERT(gpuDescriptor && gpuDescriptor->gpuBuffer, "buffer not bounded");
+                        CCASSERT(gpuDescriptor && gpuDescriptor.gpuBuffer, "buffer not bounded");
 
                         int dynamicOffsetIndex = -1;
                         if (dynamicOffsetIndices.size() > glBlock.set) {

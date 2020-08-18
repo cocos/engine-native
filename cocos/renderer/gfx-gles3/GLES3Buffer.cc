@@ -101,6 +101,8 @@ void GLES3Buffer::destroy() {
 }
 
 void GLES3Buffer::resize(uint size) {
+    CCASSERT(!_isBufferView, "Cannot resize buffer views");
+
     if (_size != size) {
         const uint oldSize = _size;
         _size = size;
@@ -132,6 +134,8 @@ void GLES3Buffer::resize(uint size) {
 }
 
 void GLES3Buffer::update(void *buffer, uint offset, uint size) {
+    CCASSERT(!_isBufferView, "Cannot update through buffer views");
+
     if (_buffer) {
         memcpy(_buffer + offset, buffer, size);
     }
