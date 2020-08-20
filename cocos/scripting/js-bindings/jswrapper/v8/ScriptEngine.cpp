@@ -225,6 +225,10 @@ namespace se {
         {
             getInstance()->_exceptionCallback(location, message, "(no stack information)");
         }
+        if (getInstance()->_jsExceptionCallback != nullptr)
+        {
+            getInstance()->_jsExceptionCallback(location, message, "(no stack information)");
+        }
     }
 
     void ScriptEngine::onOOMErrorCallback(const char* location, bool is_heap_oom)
@@ -800,6 +804,11 @@ namespace se {
     void ScriptEngine::setExceptionCallback(const ExceptionCallback& cb)
     {
         _exceptionCallback = cb;
+    }
+
+    void ScriptEngine::setJSExceptionCallback(const ExceptionCallback& cb)
+    {
+        _jsExceptionCallback = cb;
     }
 
     v8::Local<v8::Context> ScriptEngine::_getContext() const
