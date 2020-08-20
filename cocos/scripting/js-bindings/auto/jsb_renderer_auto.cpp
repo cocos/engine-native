@@ -2494,6 +2494,24 @@ static bool js_renderer_Light_getViewPorjMatrix(se::State& s)
 }
 SE_BIND_FUNC(js_renderer_Light_getViewPorjMatrix)
 
+static bool js_renderer_Light_getSpotAngleUniform(se::State& s)
+{
+    cocos2d::renderer::Light* cobj = (cocos2d::renderer::Light*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_renderer_Light_getSpotAngleUniform : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        float result = cobj->getSpotAngleUniform();
+        ok &= float_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_renderer_Light_getSpotAngleUniform : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_renderer_Light_getSpotAngleUniform)
+
 static bool js_renderer_Light_getType(se::State& s)
 {
     cocos2d::renderer::Light* cobj = (cocos2d::renderer::Light*)s.nativeThisObject();
@@ -2947,6 +2965,7 @@ bool js_register_renderer_Light(se::Object* obj)
     cls->defineFunction("getSpotExp", _SE(js_renderer_Light_getSpotExp));
     cls->defineFunction("setShadowDepthScale", _SE(js_renderer_Light_setShadowDepthScale));
     cls->defineFunction("getViewPorjMatrix", _SE(js_renderer_Light_getViewPorjMatrix));
+    cls->defineFunction("getSpotAngleUniform", _SE(js_renderer_Light_getSpotAngleUniform));
     cls->defineFunction("getType", _SE(js_renderer_Light_getType));
     cls->defineFunction("getColorUniform", _SE(js_renderer_Light_getColorUniform));
     cls->defineFunction("getIntensity", _SE(js_renderer_Light_getIntensity));
