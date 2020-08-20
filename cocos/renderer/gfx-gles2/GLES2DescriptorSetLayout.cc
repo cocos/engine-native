@@ -19,9 +19,10 @@ bool GLES2DescriptorSetLayout::initialize(const DescriptorSetLayoutInfo &info) {
 
     _gpuDescriptorSetLayout = CC_NEW(GLES2GPUDescriptorSetLayout);
 
-    for (DescriptorSetLayoutBinding binding : _bindings) {
+    for (uint i = 0u; i < _bindings.size(); i++) {
+        const DescriptorSetLayoutBinding &binding = _bindings[i];
         if ((uint)binding.descriptorType & DESCRIPTOR_DYNAMIC_TYPE) {
-            for (uint i = 0u; i < binding.count; i++) {
+            for (uint j = 0u; j < binding.count; j++) {
                 _gpuDescriptorSetLayout->dynamicBindings.push_back(i);
             }
         }

@@ -27,7 +27,7 @@ bool GLES2CommandBuffer::initialize(const CommandBufferInfo &info) {
 
     _gles2Allocator = ((GLES2Device *)_device)->cmdAllocator();
 
-    size_t setCount = ((GLES2Device *)_device)->bindingMappingInfo().bufferOffsets.size();
+    uint setCount = ((GLES2Device *)_device)->bindingMappingInfo().bufferOffsets.size();
     _curGPUDescriptorSets.resize(setCount);
     _curDynamicOffsets.resize(setCount);
 
@@ -52,9 +52,7 @@ void GLES2CommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer
     _curGPUPipelineState = nullptr;
     _curGPUInputAssember = nullptr;
     _curGPUDescriptorSets.assign(_curGPUDescriptorSets.size(), nullptr);
-    for (size_t i = 0u; i < _curDynamicOffsets.size(); i++) {
-        _curDynamicOffsets[i].clear();
-    }
+    for (vector<uint> &offsets : _curDynamicOffsets) offsets.clear();
 
     _numDrawCalls = 0;
     _numInstances = 0;
@@ -99,9 +97,7 @@ void GLES2CommandBuffer::bindPipelineState(PipelineState *pso) {
 }
 
 void GLES2CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
-    // these will break if using more sets than what's declared in DeviceInfo.bindingMappingInfo
-    CCASSERT(_curGPUDescriptorSets.size() > set, "");
-    CCASSERT(_curDynamicOffsets.size() > set, "");
+    CCASSERT(_curGPUDescriptorSets.size() > set, "Invalid set index");
 
     GLES2GPUDescriptorSet *gpuDescriptorSet = ((GLES2DescriptorSet *)descriptorSet)->gpuDescriptorSet();
     if (_curGPUDescriptorSets[set] != gpuDescriptorSet) {

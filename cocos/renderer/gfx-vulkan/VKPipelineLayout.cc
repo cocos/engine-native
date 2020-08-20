@@ -21,10 +21,18 @@ bool CCVKPipelineLayout::initialize(const PipelineLayoutInfo &info) {
 
     _gpuPipelineLayout = CC_NEW(CCVKGPUPipelineLayout);
 
+    int offset = 0u;
     for (uint i = 0u; i < _setLayouts.size(); i++) {
         DescriptorSetLayout *setLayout = _setLayouts[i];
-        _gpuPipelineLayout->setLayouts.push_back(((CCVKDescriptorSetLayout *)setLayout)->gpuDescriptorSetLayout());
+        CCVKGPUDescriptorSetLayout *gpuSetLayout = ((CCVKDescriptorSetLayout *)setLayout)->gpuDescriptorSetLayout();
+        size_t dynamicCount = gpuSetLayout->dynamicBindings.size();
+        _gpuPipelineLayout->dynamicOffsetOffsets.push_back(offset);
+        _gpuPipelineLayout->setLayouts.push_back(gpuSetLayout);
+        offset += dynamicCount;
     }
+    _gpuPipelineLayout->dynamicOffsetOffsets.push_back(offset);
+    _gpuPipelineLayout->dynamicOffsetCount = offset;
+    _gpuPipelineLayout->dynamicOffsets.resize(offset);
 
     CCVKCmdFuncCreatePipelineLayout((CCVKDevice *)_device, _gpuPipelineLayout);
 

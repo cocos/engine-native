@@ -66,6 +66,18 @@ public:
     CC_INLINE uint size() const { return _size; }
     CC_INLINE T pop() { return _array[--_size]; }
 
+    void resize(uint size) {
+        if (size >= _capacity) {
+            T *temp = _array;
+            _array = CC_NEW_ARRAY(T, size);
+            for (uint i = 0; i < _capacity; ++i) {
+                _array[i] = temp[i];
+            }
+            _capacity = size;
+            CC_DELETE_ARRAY(temp);
+        }
+    }
+
     void push(T item) {
         if (_size >= _capacity) {
             T *temp = _array;
@@ -91,6 +103,22 @@ public:
             CC_DELETE_ARRAY(temp);
         }
         for (uint i = 0; i < array._size; ++i) {
+            _array[_size++] = array[i];
+        }
+    }
+
+    void concat(uint count, T *array) {
+        if (_size + count >= _capacity) {
+            T *temp = _array;
+            uint size = std::max(_capacity * 2, _size + count);
+            _array = CC_NEW_ARRAY(T, size);
+            for (uint i = 0; i < _size; ++i) {
+                _array[i] = temp[i];
+            }
+            _capacity = size;
+            CC_DELETE_ARRAY(temp);
+        }
+        for (uint i = 0; i < count; ++i) {
             _array[_size++] = array[i];
         }
     }

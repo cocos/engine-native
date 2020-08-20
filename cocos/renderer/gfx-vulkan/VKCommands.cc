@@ -345,7 +345,6 @@ void CCVKCmdFuncCreateDescriptorSetLayout(CCVKDevice *device, CCVKGPUDescriptorS
     gpuDescriptorSetLayout->descriptorCount = descriptorCount;
 
     VkDescriptorSetLayoutCreateInfo setCreateInfo{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO};
-    if (gpuDevice->usePushDescriptorSet) setCreateInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR;
     setCreateInfo.bindingCount = bindingCount;
     setCreateInfo.pBindings = gpuDescriptorSetLayout->vkBindings.data();
     VK_CHECK(vkCreateDescriptorSetLayout(gpuDevice->vkDevice, &setCreateInfo, nullptr, &gpuDescriptorSetLayout->vkDescriptorSetLayout));
@@ -355,14 +354,16 @@ void CCVKCmdFuncCreatePipelineLayout(CCVKDevice *device, CCVKGPUPipelineLayout *
     CCVKGPUDevice *gpuDevice = device->gpuDevice();
     size_t layoutCount = gpuPipelineLayout->setLayouts.size();
 
-    vector<VkDescriptorSetLayout> layouts(layoutCount);
+    gpuPipelineLayout->descriptorSets.resize(layoutCount);
+    gpuPipelineLayout->descriptorSetLayouts.resize(layoutCount);
     for (uint i = 0; i < layoutCount; i++) {
-        layouts[i] = gpuPipelineLayout->setLayouts[i]->vkDescriptorSetLayout;
+        gpuPipelineLayout->descriptorSetLayouts[i] = gpuPipelineLayout->setLayouts[i]->vkDescriptorSetLayout;
     }
+
 
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
     pipelineLayoutCreateInfo.setLayoutCount = layoutCount;
-    pipelineLayoutCreateInfo.pSetLayouts = layouts.data();
+    pipelineLayoutCreateInfo.pSetLayouts = gpuPipelineLayout->descriptorSetLayouts.data();
     VK_CHECK(vkCreatePipelineLayout(gpuDevice->vkDevice, &pipelineLayoutCreateInfo, nullptr, &gpuPipelineLayout->vkPipelineLayout));
 
     if (gpuDevice->useDescriptorUpdateTemplate) {
@@ -371,6 +372,7 @@ void CCVKCmdFuncCreatePipelineLayout(CCVKDevice *device, CCVKGPUPipelineLayout *
         for (uint i = 0; i < layoutCount; i++) {
             const vector<VkDescriptorSetLayoutBinding> &bindings = gpuPipelineLayout->setLayouts[i]->vkBindings;
             uint bindingCount = bindings.size();
+            if (!bindingCount) continue;
 
             vector<VkDescriptorUpdateTemplateEntry> entries(bindingCount);
             for (size_t j = 0u, k = 0u; j < bindingCount; j++) {
@@ -389,13 +391,8 @@ void CCVKCmdFuncCreatePipelineLayout(CCVKDevice *device, CCVKGPUPipelineLayout *
             VkDescriptorUpdateTemplateCreateInfo createInfo = {VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO};
             createInfo.descriptorUpdateEntryCount = bindingCount;
             createInfo.pDescriptorUpdateEntries = entries.data();
-            if (gpuDevice->usePushDescriptorSet) {
-                createInfo.templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR;
-                createInfo.descriptorSetLayout = VK_NULL_HANDLE;
-            } else {
-                createInfo.templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET;
-                createInfo.descriptorSetLayout = gpuPipelineLayout->setLayouts[i]->vkDescriptorSetLayout;
-            }
+            createInfo.templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET;
+            createInfo.descriptorSetLayout = gpuPipelineLayout->setLayouts[i]->vkDescriptorSetLayout;
             createInfo.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
             createInfo.pipelineLayout = gpuPipelineLayout->vkPipelineLayout;
             VK_CHECK(vkCreateDescriptorUpdateTemplateKHR(gpuDevice->vkDevice, &createInfo, nullptr, &gpuPipelineLayout->vkDescriptorUpdateTemplates[i]));
@@ -835,7 +832,9 @@ void CCVKCmdFuncDestroyDescriptorSetLayout(CCVKGPUDevice *gpuDevice, CCVKGPUDesc
 
 void CCVKCmdFuncDestroyPipelineLayout(CCVKGPUDevice *gpuDevice, CCVKGPUPipelineLayout *gpuPipelineLayout) {
     for (VkDescriptorUpdateTemplate updateTemplate : gpuPipelineLayout->vkDescriptorUpdateTemplates) {
-        vkDestroyDescriptorUpdateTemplateKHR(gpuDevice->vkDevice, updateTemplate, nullptr);
+        if (updateTemplate != VK_NULL_HANDLE) {
+            vkDestroyDescriptorUpdateTemplateKHR(gpuDevice->vkDevice, updateTemplate, nullptr);
+        }
     }
     gpuPipelineLayout->vkDescriptorUpdateTemplates.clear();
 

@@ -807,9 +807,8 @@ struct UniformSampler {
 typedef vector<UniformSampler> UniformSamplerList;
 
 struct ShaderStage {
-    ShaderStageFlagBit type;
+    ShaderStageFlagBit stage;
     String source;
-    ShaderMacroList macros;
 };
 
 typedef vector<ShaderStage> ShaderStageList;

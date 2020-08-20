@@ -38,6 +38,9 @@ public:
     CC_INLINE void begin(RenderPass *renderPass) { begin(renderPass, 0, nullptr); }
     CC_INLINE void begin(RenderPass *renderPass, uint subpass) { begin(renderPass, subpass, nullptr); }
     CC_INLINE void bindDescriptorSet(uint set, DescriptorSet *descriptorSet) { bindDescriptorSet(set, descriptorSet, 0, nullptr); }
+    CC_INLINE void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
+        bindDescriptorSet(set, descriptorSet, dynamicOffsets.size(), dynamicOffsets.data());
+    }
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Queue *getQueue() const { return _queue; }

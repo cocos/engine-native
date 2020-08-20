@@ -151,11 +151,10 @@ struct GLES2GPUUniformSampler {
 typedef vector<GLES2GPUUniformSampler> GLES2GPUUniformSamplerList;
 
 struct GLES2GPUShaderStage {
-    GLES2GPUShaderStage(ShaderStageFlagBit t, String s, ShaderMacroList m, GLuint shader = 0)
-    : type(t), source(s), macros(m), glShader(shader) {}
+    GLES2GPUShaderStage(ShaderStageFlagBit t, String s, GLuint shader = 0)
+    : type(t), source(s), glShader(shader) {}
     ShaderStageFlagBit type;
     String source;
-    ShaderMacroList macros;
     GLuint glShader = 0;
 };
 typedef vector<GLES2GPUShaderStage> GLES2GPUShaderStageList;
@@ -223,6 +222,8 @@ class GLES2GPUPipelineLayout : public Object {
 public:
     GLES2GPUDescriptorSetLayoutList setLayouts;
     vector<vector<int>> dynamicOffsetIndices;
+    vector<uint> dynamicOffsetOffsets;
+    uint dynamicOffsetCount;
 };
 
 class GLES2GPUPipelineState : public Object {

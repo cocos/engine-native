@@ -56,6 +56,7 @@ public:
                                 return std::strcmp(device_extension, extension.c_str()) == 0;
                             }) != _extensions.end();
     }
+    CC_INLINE const BindingMappingInfo &bindingMappingInfo() const { return _bindingMappingInfo; }
 
     CCVKGPUContext *gpuContext() const;
     CC_INLINE CCVKGPUDevice *gpuDevice() const { return _gpuDevice; }
@@ -86,6 +87,7 @@ private:
     CCVKGPUCommandBufferPool *_gpuCommandBufferPool = nullptr;
     CCVKGPUStagingBufferPool *_gpuStagingBufferPool = nullptr;
 
+    BindingMappingInfo _bindingMappingInfo;
     vector<const char *> _layers;
     vector<const char *> _extensions;
 

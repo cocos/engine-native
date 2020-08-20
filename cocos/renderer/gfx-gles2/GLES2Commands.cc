@@ -942,6 +942,7 @@ void GLES2CmdFuncCreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
             UniformBlock &block = gpuShader->blocks[i];
 
             gpuBlock.name = block.name;
+            gpuBlock.set = block.set;
             gpuBlock.binding = block.binding;
             gpuBlock.glUniforms.resize(block.members.size());
 
@@ -972,6 +973,7 @@ void GLES2CmdFuncCreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
         for (size_t i = 0; i < gpuShader->glSamplers.size(); ++i) {
             UniformSampler &sampler = gpuShader->samplers[i];
             GLES2GPUUniformSampler &gpuSampler = gpuShader->glSamplers[i];
+            gpuSampler.set = sampler.set;
             gpuSampler.binding = sampler.binding;
             gpuSampler.name = sampler.name;
             gpuSampler.type = sampler.type;
@@ -1477,166 +1479,166 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                         }
                         cache->rs.cullMode = gpuPipelineState->rs.cullMode;
                     }
-                }
-                bool isFrontFaceCCW = gpuPipelineState->rs.isFrontFaceCCW;
-                if (reverseCW) isFrontFaceCCW = !isFrontFaceCCW;
-                if (cache->rs.isFrontFaceCCW != isFrontFaceCCW) {
-                    glFrontFace(isFrontFaceCCW ? GL_CCW : GL_CW);
-                    cache->rs.isFrontFaceCCW = isFrontFaceCCW;
-                }
-                if ((cache->rs.depthBias != gpuPipelineState->rs.depthBias) ||
-                    (cache->rs.depthBiasSlop != gpuPipelineState->rs.depthBiasSlop)) {
-                    glPolygonOffset(cache->rs.depthBias, cache->rs.depthBiasSlop);
-                    cache->rs.depthBiasSlop = gpuPipelineState->rs.depthBiasSlop;
-                }
-                if (cache->rs.lineWidth != gpuPipelineState->rs.lineWidth) {
-                    glLineWidth(gpuPipelineState->rs.lineWidth);
-                    cache->rs.lineWidth = gpuPipelineState->rs.lineWidth;
-                }
+                    bool isFrontFaceCCW = gpuPipelineState->rs.isFrontFaceCCW;
+                    if (reverseCW) isFrontFaceCCW = !isFrontFaceCCW;
+                    if (cache->rs.isFrontFaceCCW != isFrontFaceCCW) {
+                        glFrontFace(isFrontFaceCCW ? GL_CCW : GL_CW);
+                        cache->rs.isFrontFaceCCW = isFrontFaceCCW;
+                    }
+                    if ((cache->rs.depthBias != gpuPipelineState->rs.depthBias) ||
+                        (cache->rs.depthBiasSlop != gpuPipelineState->rs.depthBiasSlop)) {
+                        glPolygonOffset(cache->rs.depthBias, cache->rs.depthBiasSlop);
+                        cache->rs.depthBiasSlop = gpuPipelineState->rs.depthBiasSlop;
+                    }
+                    if (cache->rs.lineWidth != gpuPipelineState->rs.lineWidth) {
+                        glLineWidth(gpuPipelineState->rs.lineWidth);
+                        cache->rs.lineWidth = gpuPipelineState->rs.lineWidth;
+                    }
 
-                // bind depth-stencil state
-                if (cache->dss.depthTest != gpuPipelineState->dss.depthTest) {
-                    if (gpuPipelineState->dss.depthTest) {
-                        glEnable(GL_DEPTH_TEST);
+                    // bind depth-stencil state
+                    if (cache->dss.depthTest != gpuPipelineState->dss.depthTest) {
+                        if (gpuPipelineState->dss.depthTest) {
+                            glEnable(GL_DEPTH_TEST);
+                        } else {
+                            glDisable(GL_DEPTH_TEST);
+                        }
+                        cache->dss.depthTest = gpuPipelineState->dss.depthTest;
+                    }
+                    if (cache->dss.depthWrite != gpuPipelineState->dss.depthWrite) {
+                        glDepthMask(gpuPipelineState->dss.depthWrite);
+                        cache->dss.depthWrite = gpuPipelineState->dss.depthWrite;
+                    }
+                    if (cache->dss.depthFunc != gpuPipelineState->dss.depthFunc) {
+                        glDepthFunc(GLES2_CMP_FUNCS[(int)gpuPipelineState->dss.depthFunc]);
+                        cache->dss.depthFunc = gpuPipelineState->dss.depthFunc;
+                    }
+
+                    // bind depth-stencil state - front
+                    if (gpuPipelineState->dss.stencilTestFront || gpuPipelineState->dss.stencilTestBack) {
+                        if (!cache->isStencilTestEnabled) {
+                            glEnable(GL_STENCIL_TEST);
+                            cache->isStencilTestEnabled = true;
+                        }
                     } else {
-                        glDisable(GL_DEPTH_TEST);
+                        if (cache->isStencilTestEnabled) {
+                            glDisable(GL_STENCIL_TEST);
+                            cache->isStencilTestEnabled = false;
+                        }
                     }
-                    cache->dss.depthTest = gpuPipelineState->dss.depthTest;
-                }
-                if (cache->dss.depthWrite != gpuPipelineState->dss.depthWrite) {
-                    glDepthMask(gpuPipelineState->dss.depthWrite);
-                    cache->dss.depthWrite = gpuPipelineState->dss.depthWrite;
-                }
-                if (cache->dss.depthFunc != gpuPipelineState->dss.depthFunc) {
-                    glDepthFunc(GLES2_CMP_FUNCS[(int)gpuPipelineState->dss.depthFunc]);
-                    cache->dss.depthFunc = gpuPipelineState->dss.depthFunc;
-                }
-
-                // bind depth-stencil state - front
-                if (gpuPipelineState->dss.stencilTestFront || gpuPipelineState->dss.stencilTestBack) {
-                    if (!cache->isStencilTestEnabled) {
-                        glEnable(GL_STENCIL_TEST);
-                        cache->isStencilTestEnabled = true;
+                    if (cache->dss.stencilFuncFront != gpuPipelineState->dss.stencilFuncFront ||
+                        cache->dss.stencilRefFront != gpuPipelineState->dss.stencilRefFront ||
+                        cache->dss.stencilReadMaskFront != gpuPipelineState->dss.stencilReadMaskFront) {
+                        glStencilFuncSeparate(GL_FRONT,
+                                              GLES2_CMP_FUNCS[(int)gpuPipelineState->dss.stencilFuncFront],
+                                              gpuPipelineState->dss.stencilRefFront,
+                                              gpuPipelineState->dss.stencilReadMaskFront);
+                        cache->dss.stencilFuncFront = gpuPipelineState->dss.stencilFuncFront;
+                        cache->dss.stencilRefFront = gpuPipelineState->dss.stencilRefFront;
+                        cache->dss.stencilReadMaskFront = gpuPipelineState->dss.stencilReadMaskFront;
                     }
-                } else {
-                    if (cache->isStencilTestEnabled) {
-                        glDisable(GL_STENCIL_TEST);
-                        cache->isStencilTestEnabled = false;
+                    if (cache->dss.stencilFailOpFront != gpuPipelineState->dss.stencilFailOpFront ||
+                        cache->dss.stencilZFailOpFront != gpuPipelineState->dss.stencilZFailOpFront ||
+                        cache->dss.stencilPassOpFront != gpuPipelineState->dss.stencilPassOpFront) {
+                        glStencilOpSeparate(GL_FRONT,
+                                            GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilFailOpFront],
+                                            GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilZFailOpFront],
+                                            GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilPassOpFront]);
+                        cache->dss.stencilFailOpFront = gpuPipelineState->dss.stencilFailOpFront;
+                        cache->dss.stencilZFailOpFront = gpuPipelineState->dss.stencilZFailOpFront;
+                        cache->dss.stencilPassOpFront = gpuPipelineState->dss.stencilPassOpFront;
                     }
-                }
-                if (cache->dss.stencilFuncFront != gpuPipelineState->dss.stencilFuncFront ||
-                    cache->dss.stencilRefFront != gpuPipelineState->dss.stencilRefFront ||
-                    cache->dss.stencilReadMaskFront != gpuPipelineState->dss.stencilReadMaskFront) {
-                    glStencilFuncSeparate(GL_FRONT,
-                                          GLES2_CMP_FUNCS[(int)gpuPipelineState->dss.stencilFuncFront],
-                                          gpuPipelineState->dss.stencilRefFront,
-                                          gpuPipelineState->dss.stencilReadMaskFront);
-                    cache->dss.stencilFuncFront = gpuPipelineState->dss.stencilFuncFront;
-                    cache->dss.stencilRefFront = gpuPipelineState->dss.stencilRefFront;
-                    cache->dss.stencilReadMaskFront = gpuPipelineState->dss.stencilReadMaskFront;
-                }
-                if (cache->dss.stencilFailOpFront != gpuPipelineState->dss.stencilFailOpFront ||
-                    cache->dss.stencilZFailOpFront != gpuPipelineState->dss.stencilZFailOpFront ||
-                    cache->dss.stencilPassOpFront != gpuPipelineState->dss.stencilPassOpFront) {
-                    glStencilOpSeparate(GL_FRONT,
-                                        GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilFailOpFront],
-                                        GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilZFailOpFront],
-                                        GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilPassOpFront]);
-                    cache->dss.stencilFailOpFront = gpuPipelineState->dss.stencilFailOpFront;
-                    cache->dss.stencilZFailOpFront = gpuPipelineState->dss.stencilZFailOpFront;
-                    cache->dss.stencilPassOpFront = gpuPipelineState->dss.stencilPassOpFront;
-                }
-                if (cache->dss.stencilWriteMaskFront != gpuPipelineState->dss.stencilWriteMaskFront) {
-                    glStencilMaskSeparate(GL_FRONT, gpuPipelineState->dss.stencilWriteMaskFront);
-                    cache->dss.stencilWriteMaskFront = gpuPipelineState->dss.stencilWriteMaskFront;
-                }
-
-                // bind depth-stencil state - back
-                if (cache->dss.stencilFuncBack != gpuPipelineState->dss.stencilFuncBack ||
-                    cache->dss.stencilRefBack != gpuPipelineState->dss.stencilRefBack ||
-                    cache->dss.stencilReadMaskBack != gpuPipelineState->dss.stencilReadMaskBack) {
-                    glStencilFuncSeparate(GL_BACK,
-                                          GLES2_CMP_FUNCS[(int)gpuPipelineState->dss.stencilFuncBack],
-                                          gpuPipelineState->dss.stencilRefBack,
-                                          gpuPipelineState->dss.stencilReadMaskBack);
-                    cache->dss.stencilFuncBack = gpuPipelineState->dss.stencilFuncBack;
-                    cache->dss.stencilRefBack = gpuPipelineState->dss.stencilRefBack;
-                    cache->dss.stencilReadMaskBack = gpuPipelineState->dss.stencilReadMaskBack;
-                }
-                if (cache->dss.stencilFailOpBack != gpuPipelineState->dss.stencilFailOpBack ||
-                    cache->dss.stencilZFailOpBack != gpuPipelineState->dss.stencilZFailOpBack ||
-                    cache->dss.stencilPassOpBack != gpuPipelineState->dss.stencilPassOpBack) {
-                    glStencilOpSeparate(GL_BACK,
-                                        GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilFailOpBack],
-                                        GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilZFailOpBack],
-                                        GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilPassOpBack]);
-                    cache->dss.stencilFailOpBack = gpuPipelineState->dss.stencilFailOpBack;
-                    cache->dss.stencilZFailOpBack = gpuPipelineState->dss.stencilZFailOpBack;
-                    cache->dss.stencilPassOpBack = gpuPipelineState->dss.stencilPassOpBack;
-                }
-                if (cache->dss.stencilWriteMaskBack != gpuPipelineState->dss.stencilWriteMaskBack) {
-                    glStencilMaskSeparate(GL_BACK, gpuPipelineState->dss.stencilWriteMaskBack);
-                    cache->dss.stencilWriteMaskBack = gpuPipelineState->dss.stencilWriteMaskBack;
-                }
-
-                // bind blend state
-                if (cache->bs.isA2C != gpuPipelineState->bs.isA2C) {
-                    if (cache->bs.isA2C) {
-                        glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-                    } else {
-                        glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+                    if (cache->dss.stencilWriteMaskFront != gpuPipelineState->dss.stencilWriteMaskFront) {
+                        glStencilMaskSeparate(GL_FRONT, gpuPipelineState->dss.stencilWriteMaskFront);
+                        cache->dss.stencilWriteMaskFront = gpuPipelineState->dss.stencilWriteMaskFront;
                     }
-                    cache->bs.isA2C = gpuPipelineState->bs.isA2C;
-                }
-                if (cache->bs.blendColor.r != gpuPipelineState->bs.blendColor.r ||
-                    cache->bs.blendColor.g != gpuPipelineState->bs.blendColor.g ||
-                    cache->bs.blendColor.b != gpuPipelineState->bs.blendColor.b ||
-                    cache->bs.blendColor.a != gpuPipelineState->bs.blendColor.a) {
 
-                    glBlendColor(gpuPipelineState->bs.blendColor.r,
-                                 gpuPipelineState->bs.blendColor.g,
-                                 gpuPipelineState->bs.blendColor.b,
-                                 gpuPipelineState->bs.blendColor.a);
-                    cache->bs.blendColor = gpuPipelineState->bs.blendColor;
-                }
-
-                BlendTarget &cacheTarget = cache->bs.targets[0];
-                const BlendTarget &target = gpuPipelineState->bs.targets[0];
-                if (cacheTarget.blend != target.blend) {
-                    if (!cacheTarget.blend) {
-                        glEnable(GL_BLEND);
-                    } else {
-                        glDisable(GL_BLEND);
+                    // bind depth-stencil state - back
+                    if (cache->dss.stencilFuncBack != gpuPipelineState->dss.stencilFuncBack ||
+                        cache->dss.stencilRefBack != gpuPipelineState->dss.stencilRefBack ||
+                        cache->dss.stencilReadMaskBack != gpuPipelineState->dss.stencilReadMaskBack) {
+                        glStencilFuncSeparate(GL_BACK,
+                                              GLES2_CMP_FUNCS[(int)gpuPipelineState->dss.stencilFuncBack],
+                                              gpuPipelineState->dss.stencilRefBack,
+                                              gpuPipelineState->dss.stencilReadMaskBack);
+                        cache->dss.stencilFuncBack = gpuPipelineState->dss.stencilFuncBack;
+                        cache->dss.stencilRefBack = gpuPipelineState->dss.stencilRefBack;
+                        cache->dss.stencilReadMaskBack = gpuPipelineState->dss.stencilReadMaskBack;
                     }
-                    cacheTarget.blend = target.blend;
-                }
-                if (cacheTarget.blendEq != target.blendEq ||
-                    cacheTarget.blendAlphaEq != target.blendAlphaEq) {
-                    glBlendEquationSeparate(GLES2_BLEND_OPS[(int)target.blendEq],
-                                            GLES2_BLEND_OPS[(int)target.blendAlphaEq]);
-                    cacheTarget.blendEq = target.blendEq;
-                    cacheTarget.blendAlphaEq = target.blendAlphaEq;
-                }
-                if (cacheTarget.blendSrc != target.blendSrc ||
-                    cacheTarget.blendDst != target.blendDst ||
-                    cacheTarget.blendSrcAlpha != target.blendSrcAlpha ||
-                    cacheTarget.blendDstAlpha != target.blendDstAlpha) {
-                    glBlendFuncSeparate(GLES2_BLEND_FACTORS[(int)target.blendSrc],
-                                        GLES2_BLEND_FACTORS[(int)target.blendDst],
-                                        GLES2_BLEND_FACTORS[(int)target.blendSrcAlpha],
-                                        GLES2_BLEND_FACTORS[(int)target.blendDstAlpha]);
-                    cacheTarget.blendSrc = target.blendSrc;
-                    cacheTarget.blendDst = target.blendDst;
-                    cacheTarget.blendSrcAlpha = target.blendSrcAlpha;
-                    cacheTarget.blendDstAlpha = target.blendDstAlpha;
-                }
-                if (cacheTarget.blendColorMask != target.blendColorMask) {
-                    glColorMask((GLboolean)(target.blendColorMask & ColorMask::R),
-                                (GLboolean)(target.blendColorMask & ColorMask::G),
-                                (GLboolean)(target.blendColorMask & ColorMask::B),
-                                (GLboolean)(target.blendColorMask & ColorMask::A));
-                    cacheTarget.blendColorMask = target.blendColorMask;
-                }
+                    if (cache->dss.stencilFailOpBack != gpuPipelineState->dss.stencilFailOpBack ||
+                        cache->dss.stencilZFailOpBack != gpuPipelineState->dss.stencilZFailOpBack ||
+                        cache->dss.stencilPassOpBack != gpuPipelineState->dss.stencilPassOpBack) {
+                        glStencilOpSeparate(GL_BACK,
+                                            GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilFailOpBack],
+                                            GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilZFailOpBack],
+                                            GLES2_STENCIL_OPS[(int)gpuPipelineState->dss.stencilPassOpBack]);
+                        cache->dss.stencilFailOpBack = gpuPipelineState->dss.stencilFailOpBack;
+                        cache->dss.stencilZFailOpBack = gpuPipelineState->dss.stencilZFailOpBack;
+                        cache->dss.stencilPassOpBack = gpuPipelineState->dss.stencilPassOpBack;
+                    }
+                    if (cache->dss.stencilWriteMaskBack != gpuPipelineState->dss.stencilWriteMaskBack) {
+                        glStencilMaskSeparate(GL_BACK, gpuPipelineState->dss.stencilWriteMaskBack);
+                        cache->dss.stencilWriteMaskBack = gpuPipelineState->dss.stencilWriteMaskBack;
+                    }
+
+                    // bind blend state
+                    if (cache->bs.isA2C != gpuPipelineState->bs.isA2C) {
+                        if (cache->bs.isA2C) {
+                            glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+                        } else {
+                            glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+                        }
+                        cache->bs.isA2C = gpuPipelineState->bs.isA2C;
+                    }
+                    if (cache->bs.blendColor.r != gpuPipelineState->bs.blendColor.r ||
+                        cache->bs.blendColor.g != gpuPipelineState->bs.blendColor.g ||
+                        cache->bs.blendColor.b != gpuPipelineState->bs.blendColor.b ||
+                        cache->bs.blendColor.a != gpuPipelineState->bs.blendColor.a) {
+
+                        glBlendColor(gpuPipelineState->bs.blendColor.r,
+                                     gpuPipelineState->bs.blendColor.g,
+                                     gpuPipelineState->bs.blendColor.b,
+                                     gpuPipelineState->bs.blendColor.a);
+                        cache->bs.blendColor = gpuPipelineState->bs.blendColor;
+                    }
+
+                    BlendTarget &cacheTarget = cache->bs.targets[0];
+                    const BlendTarget &target = gpuPipelineState->bs.targets[0];
+                    if (cacheTarget.blend != target.blend) {
+                        if (!cacheTarget.blend) {
+                            glEnable(GL_BLEND);
+                        } else {
+                            glDisable(GL_BLEND);
+                        }
+                        cacheTarget.blend = target.blend;
+                    }
+                    if (cacheTarget.blendEq != target.blendEq ||
+                        cacheTarget.blendAlphaEq != target.blendAlphaEq) {
+                        glBlendEquationSeparate(GLES2_BLEND_OPS[(int)target.blendEq],
+                                                GLES2_BLEND_OPS[(int)target.blendAlphaEq]);
+                        cacheTarget.blendEq = target.blendEq;
+                        cacheTarget.blendAlphaEq = target.blendAlphaEq;
+                    }
+                    if (cacheTarget.blendSrc != target.blendSrc ||
+                        cacheTarget.blendDst != target.blendDst ||
+                        cacheTarget.blendSrcAlpha != target.blendSrcAlpha ||
+                        cacheTarget.blendDstAlpha != target.blendDstAlpha) {
+                        glBlendFuncSeparate(GLES2_BLEND_FACTORS[(int)target.blendSrc],
+                                            GLES2_BLEND_FACTORS[(int)target.blendDst],
+                                            GLES2_BLEND_FACTORS[(int)target.blendSrcAlpha],
+                                            GLES2_BLEND_FACTORS[(int)target.blendDstAlpha]);
+                        cacheTarget.blendSrc = target.blendSrc;
+                        cacheTarget.blendDst = target.blendDst;
+                        cacheTarget.blendSrcAlpha = target.blendSrcAlpha;
+                        cacheTarget.blendDstAlpha = target.blendDstAlpha;
+                    }
+                    if (cacheTarget.blendColorMask != target.blendColorMask) {
+                        glColorMask((GLboolean)(target.blendColorMask & ColorMask::R),
+                                    (GLboolean)(target.blendColorMask & ColorMask::G),
+                                    (GLboolean)(target.blendColorMask & ColorMask::B),
+                                    (GLboolean)(target.blendColorMask & ColorMask::A));
+                        cacheTarget.blendColorMask = target.blendColorMask;
+                    }
+                } // if
 
                 // bind descriptor sets
                 if (cmd->gpuPipelineState && gpuPipelineState->gpuShader && gpuPipelineState->gpuPipelineLayout) {
@@ -1648,19 +1650,21 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                     for (size_t j = 0; j < blockLen; j++) {
                         const GLES2GPUUniformBlock &glBlock = gpuPipelineState->gpuShader->glBlocks[j];
 
-                        CCASSERT(cmd->gpuDescriptorSets.size() > glBlock.set, "");
+                        CCASSERT(cmd->gpuDescriptorSets.size() > glBlock.set, "Invalid set index");
                         const GLES2GPUDescriptorSet *gpuDescriptorSet = cmd->gpuDescriptorSets[glBlock.set];
-                        CCASSERT(gpuDescriptorSet && gpuDescriptorSet->gpuDescriptors.size() > glBlock.binding, "");
                         const GLES2GPUDescriptor &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[glBlock.binding];
-                        CCASSERT(gpuDescriptor && (gpuDescriptor.gpuBuffer || gpuDescriptor.gpuBufferView), "buffer not bounded");
+
+                        if (!gpuDescriptor.gpuBuffer && !gpuDescriptor.gpuBufferView) {
+                            CC_LOG_ERROR("Buffer binding '%s' at set %d binding %d is not bounded",
+                                         glBlock.name.c_str(), glBlock.set, glBlock.binding);
+                            continue;
+                        }
 
                         uint offset = 0u;
-                        if (dynamicOffsetIndices.size() > glBlock.set) {
-                            const vector<int> &dynamicOffsetIndexSet = dynamicOffsetIndices[glBlock.set];
-                            if (dynamicOffsetIndexSet.size() > glBlock.binding) {
-                                int dynamicOffsetIndex = dynamicOffsetIndexSet[glBlock.binding];
-                                if (dynamicOffsetIndex >= 0) offset = cmd->dynamicOffsets[dynamicOffsetIndex];
-                            }
+                        const vector<int> &dynamicOffsetIndexSet = dynamicOffsetIndices[glBlock.set];
+                        if (dynamicOffsetIndexSet.size() > glBlock.binding) {
+                            int dynamicOffsetIndex = dynamicOffsetIndexSet[glBlock.binding];
+                            if (dynamicOffsetIndex >= 0) offset = cmd->dynamicOffsets[dynamicOffsetIndex];
                         }
 
                         if (gpuDescriptor.gpuBufferView) {
@@ -1767,13 +1771,14 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                     for (size_t j = 0; j < samplerLen; j++) {
                         const GLES2GPUUniformSampler &glSampler = gpuPipelineState->gpuShader->glSamplers[j];
 
-                        CCASSERT(cmd->gpuDescriptorSets.size() > glSampler.set, "");
+                        CCASSERT(cmd->gpuDescriptorSets.size() > glSampler.set, "Invalid set index");
                         const GLES2GPUDescriptorSet *gpuDescriptorSet = cmd->gpuDescriptorSets[glSampler.set];
-                        CCASSERT(gpuDescriptorSet && gpuDescriptorSet->gpuDescriptors.size() > glSampler.binding, "");
                         const GLES2GPUDescriptor &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[glSampler.binding];
-                        CCASSERT(gpuDescriptor && gpuDescriptor->gpuTexture &&
-                                     gpuDescriptor->gpuTexture->size > 0 && gpuDescriptor->gpuSampler,
-                                 "sampler not bounded");
+
+                        if (!gpuDescriptor.gpuTexture || !gpuDescriptor.gpuSampler) {
+                            CC_LOG_ERROR("Sampler binding '%s' at set %d binding %d is not bounded",
+                                         glSampler.name.c_str(), glSampler.set, glSampler.binding);
+                        }
 
                         for (size_t u = 0; u < glSampler.units.size(); ++u) {
                             uint unit = (uint)glSampler.units[u];

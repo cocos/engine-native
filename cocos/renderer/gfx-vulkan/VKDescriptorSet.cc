@@ -31,18 +31,21 @@ bool CCVKDescriptorSet::initialize(const DescriptorSetInfo &info) {
     _textures.resize(bindingCount);
     _samplers.resize(bindingCount);
 
+    CCVKGPUDevice *gpuDevice = ((CCVKDevice *)_device)->gpuDevice();
     _gpuDescriptorSet = CC_NEW(CCVKGPUDescriptorSet);
     _gpuDescriptorSet->gpuDescriptors.resize(bindingCount);
     _gpuDescriptorSet->descriptorInfos.resize(bindingCount);
     for (size_t i = 0u; i < bindingCount; i++) {
-        DescriptorSetLayoutBinding binding = gpuDescriptorSetLayout->bindings[i];
+        const DescriptorSetLayoutBinding &binding = gpuDescriptorSetLayout->bindings[i];
         _gpuDescriptorSet->gpuDescriptors[i].type = binding.descriptorType;
         if ((uint)binding.descriptorType & DESCRIPTOR_SAMPLER_TYPE) {
+            _gpuDescriptorSet->descriptorInfos[i].image.sampler = gpuDevice->defaultSampler.vkSampler;
+            _gpuDescriptorSet->descriptorInfos[i].image.imageView = gpuDevice->defaultTextureView.vkImageView;
             _gpuDescriptorSet->descriptorInfos[i].image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         }
     }
 
-    if (!((CCVKDevice *)_device)->gpuDevice()->useDescriptorUpdateTemplate) {
+    if (!gpuDevice->useDescriptorUpdateTemplate) {
         vector<VkWriteDescriptorSet> &entries = _gpuDescriptorSet->descriptorUpdateEntries;
         entries.resize(descriptorCount, {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET});
 

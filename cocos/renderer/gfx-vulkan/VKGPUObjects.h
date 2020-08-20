@@ -19,7 +19,6 @@ public:
     VkPhysicalDeviceVulkan12Features physicalDeviceVulkan12Features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES};
     VkPhysicalDeviceProperties physicalDeviceProperties{};
     VkPhysicalDeviceProperties2 physicalDeviceProperties2{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2};
-    VkPhysicalDevicePushDescriptorPropertiesKHR physicalDevicePushDescriptorProperties{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR};
     VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties{};
     vector<VkQueueFamilyProperties> queueFamilyProperties;
     vector<VkBool32> queueFamilyPresentables;
@@ -28,19 +27,6 @@ public:
 
     VkSwapchainCreateInfoKHR swapchainCreateInfo{VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR};
 };
-
-class CCVKGPUDevice : public Object {
-public:
-    VkDevice vkDevice = VK_NULL_HANDLE;
-    vector<VkLayerProperties> layers;
-    vector<VkExtensionProperties> extensions;
-    VmaAllocator memoryAllocator = VK_NULL_HANDLE;
-
-    bool useDescriptorUpdateTemplate = false;
-    bool usePushDescriptorSet = false;
-    bool useMultiDrawIndirect = false;
-};
-
 class CCVKGPURenderPass : public Object {
 public:
     ColorAttachmentList colorAttachments;
@@ -184,12 +170,11 @@ public:
 };
 
 struct CCVKGPUShaderStage {
-    CCVKGPUShaderStage(ShaderStageFlagBit t, String s, ShaderMacroList m)
-    : type(t), source(s), macros(m) {
+    CCVKGPUShaderStage(ShaderStageFlagBit t, String s)
+    : type(t), source(s) {
     }
     ShaderStageFlagBit type;
     String source;
-    ShaderMacroList macros;
     VkShaderModule vkShader = VK_NULL_HANDLE;
 };
 typedef vector<CCVKGPUShaderStage> CCVKGPUShaderStageList;
@@ -232,13 +217,12 @@ public:
 
     vector<CCVKDescriptorInfo> descriptorInfos;
     vector<VkWriteDescriptorSet> descriptorUpdateEntries;
-
-    VkDescriptorSet descriptorSet;
 };
 
 class CCVKGPUDescriptorSetLayout : public Object {
 public:
     DescriptorSetLayoutBindingList bindings;
+    vector<uint> dynamicBindings;
 
     vector<VkDescriptorSetLayoutBinding> vkBindings;
     VkDescriptorSetLayout vkDescriptorSetLayout = VK_NULL_HANDLE;
@@ -250,8 +234,16 @@ typedef vector<CCVKGPUDescriptorSetLayout *> CCVKGPUDescriptorSetLayoutList;
 class CCVKGPUPipelineLayout : public Object {
 public:
     CCVKGPUDescriptorSetLayoutList setLayouts;
+    vector<uint> dynamicOffsetOffsets;
+    uint dynamicOffsetCount;
+
     VkPipelineLayout vkPipelineLayout = VK_NULL_HANDLE;
     vector<VkDescriptorUpdateTemplate> vkDescriptorUpdateTemplates;
+
+    // helper storage
+    vector<VkDescriptorSetLayout> descriptorSetLayouts;
+    vector<VkDescriptorSet> descriptorSets;
+    vector<uint> dynamicOffsets;
 };
 
 class CCVKGPUPipelineState : public Object {
@@ -272,6 +264,21 @@ public:
 class CCVKGPUFence : public Object {
 public:
     VkFence vkFence;
+};
+
+class CCVKGPUDevice : public Object {
+public:
+    VkDevice vkDevice = VK_NULL_HANDLE;
+    vector<VkLayerProperties> layers;
+    vector<VkExtensionProperties> extensions;
+    VmaAllocator memoryAllocator = VK_NULL_HANDLE;
+
+    bool useDescriptorUpdateTemplate = false;
+    bool useMultiDrawIndirect = false;
+
+    CCVKGPUSampler defaultSampler;
+    CCVKGPUTexture defaultTexture;
+    CCVKGPUTextureView defaultTextureView;
 };
 
 /**
@@ -384,7 +391,7 @@ public:
         _counts.clear();
     }
 
-    void alloc(VkDescriptorSetLayout *layouts, VkDescriptorSet *output, uint count) {
+    void alloc(const VkDescriptorSetLayout *layouts, VkDescriptorSet *output, uint count) {
         VkDescriptorSetAllocateInfo info{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO};
         info.pSetLayouts = layouts;
         info.descriptorSetCount = count;

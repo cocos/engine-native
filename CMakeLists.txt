@@ -461,8 +461,6 @@ cocos_source_files(
     cocos/renderer/core/CoreStd.h
     cocos/renderer/core/gfx/GFXObject.h
     cocos/renderer/core/gfx/GFXObject.cc
-    cocos/renderer/core/gfx/GFXBindingLayout.cc
-    cocos/renderer/core/gfx/GFXBindingLayout.h
     cocos/renderer/core/gfx/GFXBuffer.cc
     cocos/renderer/core/gfx/GFXBuffer.h
     cocos/renderer/core/gfx/GFXCommand.h
@@ -479,6 +477,12 @@ cocos_source_files(
     cocos/renderer/core/gfx/GFXFramebuffer.h
     cocos/renderer/core/gfx/GFXInputAssembler.cc
     cocos/renderer/core/gfx/GFXInputAssembler.h
+    cocos/renderer/core/gfx/GFXDescriptorSet.cc
+    cocos/renderer/core/gfx/GFXDescriptorSet.h
+    cocos/renderer/core/gfx/GFXDescriptorSetLayout.cc
+    cocos/renderer/core/gfx/GFXDescriptorSetLayout.h
+    cocos/renderer/core/gfx/GFXPipelineLayout.cc
+    cocos/renderer/core/gfx/GFXPipelineLayout.h
     cocos/renderer/core/gfx/GFXPipelineState.cc
     cocos/renderer/core/gfx/GFXPipelineState.h
     cocos/renderer/core/gfx/GFXQueue.cc
@@ -547,8 +551,6 @@ cocos_source_files(
 if(CC_USE_GLES2)
     cocos_source_files(
         cocos/renderer/gfx-gles2/GFXGLES2.h
-        cocos/renderer/gfx-gles2/GLES2BindingLayout.cc
-        cocos/renderer/gfx-gles2/GLES2BindingLayout.h
         cocos/renderer/gfx-gles2/GLES2Buffer.cc
         cocos/renderer/gfx-gles2/GLES2Buffer.h
         cocos/renderer/gfx-gles2/GLES2CommandAllocator.cc
@@ -565,6 +567,12 @@ if(CC_USE_GLES2)
         cocos/renderer/gfx-gles2/GLES2GPUObjects.h
         cocos/renderer/gfx-gles2/GLES2InputAssembler.cc
         cocos/renderer/gfx-gles2/GLES2InputAssembler.h
+        cocos/renderer/gfx-gles2/GLES2DescriptorSet.cc
+        cocos/renderer/gfx-gles2/GLES2DescriptorSet.h
+        cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.cc
+        cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.h
+        cocos/renderer/gfx-gles2/GLES2PipelineLayout.cc
+        cocos/renderer/gfx-gles2/GLES2PipelineLayout.h
         cocos/renderer/gfx-gles2/GLES2PipelineState.cc
         cocos/renderer/gfx-gles2/GLES2PipelineState.h
         cocos/renderer/gfx-gles2/GLES2Queue.cc
@@ -602,8 +610,6 @@ endif()
 if(CC_USE_GLES3)
     cocos_source_files(
         cocos/renderer/gfx-gles3/GFXGLES3.h
-        cocos/renderer/gfx-gles3/GLES3BindingLayout.cc
-        cocos/renderer/gfx-gles3/GLES3BindingLayout.h
         cocos/renderer/gfx-gles3/GLES3Buffer.cc
         cocos/renderer/gfx-gles3/GLES3Buffer.h
         cocos/renderer/gfx-gles3/GLES3CommandAllocator.cc
@@ -621,6 +627,12 @@ if(CC_USE_GLES3)
         cocos/renderer/gfx-gles3/GLES3GPUObjects.h
         cocos/renderer/gfx-gles3/GLES3InputAssembler.cc
         cocos/renderer/gfx-gles3/GLES3InputAssembler.h
+        cocos/renderer/gfx-gles3/GLES3DescriptorSet.cc
+        cocos/renderer/gfx-gles3/GLES3DescriptorSet.h
+        cocos/renderer/gfx-gles3/GLES3DescriptorSetLayout.cc
+        cocos/renderer/gfx-gles3/GLES3DescriptorSetLayout.h
+        cocos/renderer/gfx-gles3/GLES3PipelineLayout.cc
+        cocos/renderer/gfx-gles3/GLES3PipelineLayout.h
         cocos/renderer/gfx-gles3/GLES3PipelineState.cc
         cocos/renderer/gfx-gles3/GLES3PipelineState.h
         cocos/renderer/gfx-gles3/GLES3Queue.cc
@@ -703,8 +715,6 @@ if(CC_USE_VULKAN)
     cocos_source_files(
         cocos/renderer/gfx-vulkan/GFXVulkan.h
         cocos/renderer/gfx-vulkan/vk_mem_alloc.h
-        cocos/renderer/gfx-vulkan/VKBindingLayout.cc
-        cocos/renderer/gfx-vulkan/VKBindingLayout.h
         cocos/renderer/gfx-vulkan/VKBuffer.cc
         cocos/renderer/gfx-vulkan/VKBuffer.h
         cocos/renderer/gfx-vulkan/VKCommandBuffer.cc
@@ -720,6 +730,12 @@ if(CC_USE_VULKAN)
         cocos/renderer/gfx-vulkan/VKGPUObjects.h
         cocos/renderer/gfx-vulkan/VKInputAssembler.cc
         cocos/renderer/gfx-vulkan/VKInputAssembler.h
+        cocos/renderer/gfx-vulkan/VKDescriptorSet.cc
+        cocos/renderer/gfx-vulkan/VKDescriptorSet.h
+        cocos/renderer/gfx-vulkan/VKDescriptorSetLayout.cc
+        cocos/renderer/gfx-vulkan/VKDescriptorSetLayout.h
+        cocos/renderer/gfx-vulkan/VKPipelineLayout.cc
+        cocos/renderer/gfx-vulkan/VKPipelineLayout.h
         cocos/renderer/gfx-vulkan/VKPipelineState.cc
         cocos/renderer/gfx-vulkan/VKPipelineState.h
         cocos/renderer/gfx-vulkan/VKQueue.cc
