@@ -219,8 +219,6 @@ namespace se {
     ScriptEngine::ScriptEngine()
             : _cx(nullptr)
             , _globalObj(nullptr)
-            , _exceptionCallback(nullptr)
-            , _jsExceptionCallback(nullptr)
             , _vmId(0)
             , _isGarbageCollecting(false)
             , _isValid(false)
