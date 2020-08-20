@@ -373,7 +373,6 @@ namespace se {
     , _isolate(nullptr)
     , _handleScope(nullptr)
     , _globalObj(nullptr)
-    , _exceptionCallback(nullptr)
 #if SE_ENABLE_INSPECTOR
     , _env(nullptr)
     , _isolateData(nullptr)
