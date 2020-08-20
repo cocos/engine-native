@@ -98,7 +98,7 @@ void GLES3CommandBuffer::bindPipelineState(PipelineState *pso) {
     }
 }
 
-void GLES3CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, uint *dynamicOffsets) {
+void GLES3CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     // these will break if using more sets than what's declared in DeviceInfo.bindingMappingInfo
     CCASSERT(_curGPUDescriptorSets.size() > set, "");
     CCASSERT(_curDynamicOffsets.size() > set, "");

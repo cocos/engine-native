@@ -1,9 +1,9 @@
 #include "VKStd.h"
 
-#include "VKBindingLayout.h"
 #include "VKBuffer.h"
 #include "VKCommandBuffer.h"
 #include "VKCommands.h"
+#include "VKDescriptorSet.h"
 #include "VKDevice.h"
 #include "VKFramebuffer.h"
 #include "VKInputAssembler.h"
@@ -47,8 +47,12 @@ void CCVKCommandBuffer::destroy() {
 
 void CCVKCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     _curGPUPipelineState = nullptr;
-    _curGPUBindingLayout = nullptr;
     _curGPUInputAssember = nullptr;
+    _curGPUDescriptorSets.assign(_curGPUDescriptorSets.size(), nullptr);
+    for (size_t i = 0u; i < _curDynamicOffsets.size(); i++) {
+        _curDynamicOffsets[i].clear();
+    }
+
     _numDrawCalls = 0;
     _numInstances = 0;
     _numTriangles = 0;
@@ -124,54 +128,49 @@ void CCVKCommandBuffer::bindPipelineState(PipelineState *pso) {
     if (_curGPUPipelineState != gpuPipelineState) {
         vkCmdBindPipeline(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gpuPipelineState->vkPipeline);
         _curGPUPipelineState = gpuPipelineState;
+        _curGPUDescriptorSets.resize(gpuPipelineState->gpuPipelineLayout->setLayouts.size());
     }
 }
 
-void CCVKCommandBuffer::bindBindingLayout(BindingLayout *layout) {
+void CCVKCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     if (!_curGPUPipelineState) {
         CC_LOG_ERROR("Command 'bindBindingLayout' must be recorded after 'bindPipelineState'.");
         return;
     }
 
-    CCVKGPUBindingLayout *gpuBindingLayout = ((CCVKBindingLayout *)layout)->gpuBindingLayout();
+    CCVKGPUDescriptorSet *gpuDescriptorSet = ((CCVKDescriptorSet *)descriptorSet)->gpuDescriptorSet();
 
-    if (_curGPUBindingLayout != gpuBindingLayout) {
+    CCVKDevice *device = (CCVKDevice *)_device;
+    CCVKGPUDevice *gpuDevice = device->gpuDevice();
+    VkCommandBuffer cmdBuff = _gpuCommandBuffer->vkCommandBuffer;
+    CCVKGPUPipelineLayout *pipelineLayout = _curGPUPipelineState->gpuPipelineLayout;
+    vector<CCVKDescriptorInfo> &descriptorInfos = gpuDescriptorSet->descriptorInfos;
 
-        CCVKDevice *device = (CCVKDevice *)_device;
-        CCVKGPUDevice *gpuDevice = device->gpuDevice();
-        VkCommandBuffer cmdBuff = _gpuCommandBuffer->vkCommandBuffer;
-        CCVKGPUPipelineLayout *pipelineLayout = _curGPUPipelineState->gpuShader->pipelineLayout;
-        vector<CCVKGPUDescriptorInfo> &descriptorInfos = gpuBindingLayout->descriptorInfos;
+    if (gpuDevice->usePushDescriptorSet) {
+        vector<VkDescriptorUpdateTemplate> &templates = pipelineLayout->vkDescriptorUpdateTemplates;
+        vkCmdPushDescriptorSetWithTemplateKHR(cmdBuff, templates[set], pipelineLayout->vkPipelineLayout, set, descriptorInfos.data());
+    } else {
+        // TODO: update in batch
+        VkDescriptorSetLayout *layouts = &pipelineLayout->setLayouts[set]->vkDescriptorSetLayout;
+        VkDescriptorSet *sets = &gpuDescriptorSet->descriptorSet;
 
-        if (gpuDevice->usePushDescriptorSet) {
+        device->gpuDescriptorSetPool()->alloc(layouts, sets, 1);
+
+        if (gpuDevice->useDescriptorUpdateTemplate) {
             vector<VkDescriptorUpdateTemplate> &templates = pipelineLayout->vkDescriptorUpdateTemplates;
-
-            for (uint i = 0u; i < templates.size(); i++) {
-                vkCmdPushDescriptorSetWithTemplateKHR(cmdBuff, templates[i], pipelineLayout->vkPipelineLayout, i, descriptorInfos.data());
-            }
+            vkUpdateDescriptorSetWithTemplateKHR(device->gpuDevice()->vkDevice, sets[0], templates[set], descriptorInfos.data());
         } else {
-            vector<VkDescriptorSetLayout> &layouts = pipelineLayout->vkDescriptorSetLayouts;
-            vector<VkDescriptorSet> &sets = gpuBindingLayout->descriptorSets;
+            vector<VkWriteDescriptorSet> &entries = gpuDescriptorSet->descriptorUpdateEntries;
 
-            device->gpuDescriptorSetPool()->alloc(layouts.data(), sets.data(), layouts.size());
-
-            if (gpuDevice->useDescriptorUpdateTemplate) {
-                vector<VkDescriptorUpdateTemplate> &templates = pipelineLayout->vkDescriptorUpdateTemplates;
-
-                for (uint i = 0u; i < templates.size(); i++) {
-                    vkUpdateDescriptorSetWithTemplateKHR(device->gpuDevice()->vkDevice, sets[i], templates[i], descriptorInfos.data());
-                }
-            } else {
-                vector<VkWriteDescriptorSet> &entries = gpuBindingLayout->descriptorUpdateEntries;
-
-                for (uint j = 0u; j < entries.size(); j++) {
-                    entries[j].dstSet = sets[0];
-                }
-                vkUpdateDescriptorSets(device->gpuDevice()->vkDevice, entries.size(), entries.data(), 0, nullptr);
+            for (uint j = 0u; j < entries.size(); j++) {
+                entries[j].dstSet = sets[0];
             }
-            vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->vkPipelineLayout, 0, layouts.size(), sets.data(), 0, nullptr);
+            vkUpdateDescriptorSets(device->gpuDevice()->vkDevice, entries.size(), entries.data(), 0, nullptr);
         }
-        _curGPUBindingLayout = gpuBindingLayout;
+        vkCmdBindDescriptorSets(cmdBuff, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->vkPipelineLayout,
+                                0, 1, sets, dynamicOffsetCount, dynamicOffsets);
+
+        _curGPUDescriptorSets[set] = gpuDescriptorSet;
     }
 }
 

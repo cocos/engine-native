@@ -1,13 +1,15 @@
 #include "VKStd.h"
 
-#include "VKBindingLayout.h"
 #include "VKBuffer.h"
 #include "VKCommandBuffer.h"
 #include "VKContext.h"
+#include "VKDescriptorSet.h"
+#include "VKDescriptorSetLayout.h"
 #include "VKDevice.h"
 #include "VKFence.h"
 #include "VKFramebuffer.h"
 #include "VKInputAssembler.h"
+#include "VKPipelineLayout.h"
 #include "VKPipelineState.h"
 #include "VKQueue.h"
 #include "VKRenderPass.h"
@@ -223,6 +225,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _maxVertexTextureUnits = limits.maxPerStageDescriptorSampledImages;
     _maxTextureSize = limits.maxImageDimension2D;
     _maxCubeMapTextureSize = limits.maxImageDimensionCube;
+    _uboOffsetAlignment = (uint)limits.minUniformBufferOffsetAlignment;
     MapDepthStencilBits(_context->getDepthStencilFormat(), _depthBits, _stencilBits);
 
     ///////////////////// Resource Initialization /////////////////////
@@ -274,7 +277,6 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _gpuDescriptorSetPool = CC_NEW(CCVKGPUDescriptorSetPool(_gpuDevice));
     _gpuCommandBufferPool = CC_NEW(CCVKGPUCommandBufferPool(_gpuDevice));
     _gpuStagingBufferPool = CC_NEW(CCVKGPUStagingBufferPool(_gpuDevice));
-    _gpuPipelineLayoutPool = CC_NEW(CCVKGPUPipelineLayoutPool(_gpuDevice));
 
     _gpuTransportHub->link(((CCVKQueue *)_queue)->gpuQueue(), _gpuFencePool, _gpuCommandBufferPool, _gpuStagingBufferPool);
 
@@ -366,7 +368,6 @@ void CCVKDevice::destroy() {
 
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DELETE(_gpuSwapchain);
-    CC_SAFE_DELETE(_gpuPipelineLayoutPool);
     CC_SAFE_DELETE(_gpuStagingBufferPool);
     CC_SAFE_DELETE(_gpuCommandBufferPool);
     CC_SAFE_DELETE(_gpuDescriptorSetPool);
@@ -572,6 +573,15 @@ Buffer *CCVKDevice::createBuffer(const BufferInfo &info) {
     return nullptr;
 }
 
+Buffer *CCVKDevice::createBuffer(const BufferViewInfo &info) {
+    Buffer *buffer = CC_NEW(CCVKBuffer(this));
+    if (buffer->initialize(info))
+        return buffer;
+
+    CC_SAFE_DESTROY(buffer);
+    return nullptr;
+}
+
 Texture *CCVKDevice::createTexture(const TextureInfo &info) {
     Texture *texture = CC_NEW(CCVKTexture(this));
     if (texture->initialize(info))
@@ -635,12 +645,30 @@ Framebuffer *CCVKDevice::createFramebuffer(const FramebufferInfo &info) {
     return nullptr;
 }
 
-BindingLayout *CCVKDevice::createBindingLayout(const BindingLayoutInfo &info) {
-    BindingLayout *bindingLayout = CC_NEW(CCVKBindingLayout(this));
-    if (bindingLayout->initialize(info))
-        return bindingLayout;
+DescriptorSet *CCVKDevice::createDescriptorSet(const DescriptorSetInfo &info) {
+    DescriptorSet *descriptorSet = CC_NEW(CCVKDescriptorSet(this));
+    if (descriptorSet->initialize(info))
+        return descriptorSet;
 
-    CC_SAFE_DESTROY(bindingLayout);
+    CC_SAFE_DESTROY(descriptorSet);
+    return nullptr;
+}
+
+DescriptorSetLayout *CCVKDevice::createDescriptorSetLayout(const DescriptorSetLayoutInfo &info) {
+    DescriptorSetLayout *descriptorSetLayout = CC_NEW(CCVKDescriptorSetLayout(this));
+    if (descriptorSetLayout->initialize(info))
+        return descriptorSetLayout;
+
+    CC_SAFE_DESTROY(descriptorSetLayout);
+    return nullptr;
+}
+
+PipelineLayout *CCVKDevice::createPipelineLayout(const PipelineLayoutInfo &info) {
+    PipelineLayout *pipelineLayout = CC_NEW(CCVKPipelineLayout(this));
+    if (pipelineLayout->initialize(info))
+        return pipelineLayout;
+
+    CC_SAFE_DESTROY(pipelineLayout);
     return nullptr;
 }
 

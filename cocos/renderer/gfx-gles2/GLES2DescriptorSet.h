@@ -16,10 +16,10 @@ public:
     virtual void destroy() override;
     virtual void update() override;
 
-    CC_INLINE GLES2GPUDescriptorSet *gpuBindingLayout() const { return _gpuBindingLayout; }
+    CC_INLINE GLES2GPUDescriptorSet *gpuDescriptorSet() const { return _gpuDescriptorSet; }
 
 private:
-    GLES2GPUDescriptorSet *_gpuBindingLayout = nullptr;
+    GLES2GPUDescriptorSet *_gpuDescriptorSet = nullptr;
 };
 
 } // namespace gfx

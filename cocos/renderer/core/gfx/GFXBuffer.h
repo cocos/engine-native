@@ -25,17 +25,20 @@ public:
     CC_INLINE uint getCount() const { return _count; }
     CC_INLINE uint getSize() const { return _size; }
     CC_INLINE BufferFlags getFlags() const { return _flags; }
-    CC_INLINE uint8_t *getBufferView() const { return _buffer; }
+    CC_INLINE uint8_t *getBackupBuffer() const { return _buffer; }
+    CC_INLINE bool isBufferView() const { return _isBufferView; }
 
 protected:
     Device *_device = nullptr;
     BufferUsage _usage = BufferUsageBit::NONE;
     MemoryUsage _memUsage = MemoryUsageBit::NONE;
-    uint _stride = 0;
-    uint _count = 0;
-    uint _size = 0;
+    uint _stride = 0u;
+    uint _count = 0u;
+    uint _size = 0u;
+    uint _offset = 0u;
     BufferFlags _flags = BufferFlagBit::NONE;
     uint8_t *_buffer = nullptr;
+    bool _isBufferView = false;
 };
 
 } // namespace gfx

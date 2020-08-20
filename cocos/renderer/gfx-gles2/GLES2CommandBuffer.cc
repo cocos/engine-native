@@ -98,12 +98,12 @@ void GLES2CommandBuffer::bindPipelineState(PipelineState *pso) {
     }
 }
 
-void GLES2CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, uint *dynamicOffsets) {
+void GLES2CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     // these will break if using more sets than what's declared in DeviceInfo.bindingMappingInfo
     CCASSERT(_curGPUDescriptorSets.size() > set, "");
     CCASSERT(_curDynamicOffsets.size() > set, "");
 
-    GLES2GPUDescriptorSet *gpuDescriptorSet = ((GLES2DescriptorSet *)descriptorSet)->gpuBindingLayout();
+    GLES2GPUDescriptorSet *gpuDescriptorSet = ((GLES2DescriptorSet *)descriptorSet)->gpuDescriptorSet();
     if (_curGPUDescriptorSets[set] != gpuDescriptorSet) {
         _curGPUDescriptorSets[set] = gpuDescriptorSet;
         _isStateInvalid = true;

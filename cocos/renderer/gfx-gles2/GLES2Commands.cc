@@ -1668,6 +1668,8 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                                               gpuDescriptor.gpuBufferView->offset + offset;
                         } else if (gpuDescriptor.gpuBuffer) {
                             uniformBuffBase = gpuDescriptor.gpuBuffer->buffer + offset;
+                        } else {
+                            continue;
                         }
 
                         for (size_t u = 0; u < glBlock.glActiveUniforms.size(); ++u) {

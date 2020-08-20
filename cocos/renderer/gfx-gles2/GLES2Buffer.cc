@@ -18,7 +18,7 @@ bool GLES2Buffer::initialize(const BufferInfo &info) {
     _usage = info.usage;
     _memUsage = info.memUsage;
     _size = info.size;
-    _stride = std::max(info.stride, 1U);
+    _stride = std::max(info.stride, 1u);
     _count = _size / _stride;
     _flags = info.flags;
 
@@ -60,6 +60,8 @@ bool GLES2Buffer::initialize(const BufferInfo &info) {
 
 bool GLES2Buffer::initialize(const BufferViewInfo &info) {
 
+    _isBufferView = true;
+
     GLES2Buffer *buffer = (GLES2Buffer *)info.buffer;
 
     _usage = buffer->_usage;
@@ -96,7 +98,7 @@ void GLES2Buffer::destroy() {
 }
 
 void GLES2Buffer::resize(uint size) {
-    CCASSERT(!_gpuBufferView, "Cannot resize buffer views");
+    CCASSERT(!_isBufferView, "Cannot resize buffer views");
 
     if (_size != size) {
         const uint oldSize = _size;
@@ -129,7 +131,7 @@ void GLES2Buffer::resize(uint size) {
 }
 
 void GLES2Buffer::update(void *buffer, uint offset, uint size) {
-    CCASSERT(!_gpuBufferView, "Cannot update through buffer views");
+    CCASSERT(!_isBufferView, "Cannot update through buffer views");
     CCASSERT(size != 0, "Should not update buffer with 0 bytes of data");
     CCASSERT(buffer, "Buffer should not be nullptr");
 
