@@ -219,7 +219,6 @@ namespace se {
     ScriptEngine::ScriptEngine()
             : _cx(nullptr)
             , _globalObj(nullptr)
-            , _exceptionCallback(nullptr)
             , _vmId(0)
             , _isGarbageCollecting(false)
             , _isValid(false)
@@ -453,6 +452,11 @@ namespace se {
                     _exceptionCallback(exceptionInfo.location.c_str(), exceptionInfo.message.c_str(), exceptionInfo.stack.c_str());
                 }
 
+                if (_jsExceptionCallback != nullptr)
+                {
+                    _jsExceptionCallback(exceptionInfo.location.c_str(), exceptionInfo.message.c_str(), exceptionInfo.stack.c_str());
+                }
+
                 if (!_isErrorHandleWorking)
                 {
                     _isErrorHandleWorking = true;
@@ -481,6 +485,11 @@ namespace se {
     void ScriptEngine::setExceptionCallback(const ExceptionCallback& cb)
     {
         _exceptionCallback = cb;
+    }
+
+    void ScriptEngine::setJSExceptionCallback(const ExceptionCallback& cb)
+    {
+        _jsExceptionCallback = cb;
     }
 
     bool ScriptEngine::isGarbageCollecting()
