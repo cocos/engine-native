@@ -14,6 +14,7 @@ namespace pipeline {
 struct RenderingSubMesh;
 struct FlatBuffer;
 struct PlanarShadow;
+class RenderPipeline;
 
 struct CC_DLL ModelView {
     uint32_t enabled = 0;
@@ -223,6 +224,14 @@ struct CC_DLL Director {
     const static se::PoolType type = se::PoolType::DIRECTOR;
 };
 
+struct CC_DLL RenderWindow {
+    uint32_t hasOnScreenAttachments = 0;
+    uint32_t hasOffScreenAttachments = 0;
+    uint32_t framebufferID = 0;
+
+    const static se::PoolType type = se::PoolType::RENDER_WINDOW;
+};
+
 //Get buffer pool data
 #define GET_SUBMODEL(index) SharedMemory::getBuffer<SubModelView>(index)
 #define GET_PASS(index)     SharedMemory::getBuffer<PassView>(index)
@@ -244,6 +253,7 @@ struct CC_DLL Director {
 #define GET_SKYBOX(index)                     SharedMemory::getBuffer<Skybox>(index)
 #define GET_FRUSTUM(index)                    SharedMemory::getBuffer<Frustum>(index)
 #define GET_AABB(index)                       SharedMemory::getBuffer<AABB>(index)
+#define GET_WINDOW(index)                     SharedMemory::getBuffer<RenderWindow>(index)
 
 //TODO
 #define GET_NAME(index) (String(0))
@@ -255,7 +265,7 @@ struct CC_DLL Director {
 #define GET_RASTERIZER_STATE(index)    SharedMemory::getObject<gfx::RasterizerState, se::PoolType::RASTERIZER_STATE>(index)
 #define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getObject<gfx::DepthStencilState, se::PoolType::DEPTH_STENCIL_STATE>(index)
 #define GET_BLEND_STATE(index)         SharedMemory::getObject<gfx::BlendState, se::PoolType::BLEND_STATE>(index)
-//#define GET_BINDING_LAYOUT(index)      (SharedMemory::getObject<gfx::BindingLayout>(index))
+#define GET_FRAMEBUFFER(index)         SharedMemory::getObject<gfx::Framebuffer, se::PoolType::FRAMEBUFFER>(index)
 
 //Get array pool data
 #define GET_MODEL_ARRAY(index)    SharedMemory::getArray(se::PoolType::MODEL_ARRAY, index)
