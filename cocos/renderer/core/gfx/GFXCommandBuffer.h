@@ -26,13 +26,13 @@ public:
     virtual void setLineWidth(const float width) = 0;
     virtual void setDepthBias(float constant, float clamp, float slope) = 0;
     virtual void setBlendConstants(const Color &constants) = 0;
-    virtual void setDepthBound(float min_bounds, float max_bounds) = 0;
+    virtual void setDepthBound(float minBounds, float maxBounds) = 0;
     virtual void setStencilWriteMask(StencilFace face, uint mask) = 0;
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) = 0;
     virtual void draw(InputAssembler *ia) = 0;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
     virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) = 0;
-    virtual void execute(const CommandBufferList &cmd_buffs, uint32_t count) = 0;
+    virtual void execute(const CommandBufferList &cmdBuffs, uint32_t count) = 0;
 
     CC_INLINE void begin() { begin(nullptr, 0, nullptr); }
     CC_INLINE void begin(RenderPass *renderPass) { begin(renderPass, 0, nullptr); }

@@ -90,7 +90,7 @@ bool CCMTLTexture::initialize(const TextureInfo &info) {
 }
 
 bool CCMTLTexture::initialize(const TextureViewInfo &info) {
-    _Type = ObjectType::TEXTURE_VIEW;
+    _isTextureView = true;
 
     if (!info.texture) {
         _status = Status::FAILED;

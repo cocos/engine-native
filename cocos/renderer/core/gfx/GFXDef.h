@@ -428,7 +428,7 @@ enum class ShaderStageFlagBit : uint8_t {
     COMPUTE = 0x20,
     ALL = 0x3f,
 };
-typedef ShaderStageFlagBit SHaderStageFlags;
+typedef ShaderStageFlagBit ShaderStageFlags;
 CC_ENUM_OPERATORS(ShaderStageFlagBit);
 
 enum class LoadOp : uint8_t {

@@ -34,13 +34,13 @@ public:
     virtual void setLineWidth(const float width) override;
     virtual void setDepthBias(float constant, float clamp, float slope) override;
     virtual void setBlendConstants(const Color &constants) override;
-    virtual void setDepthBound(float min_bounds, float max_bounds) override;
+    virtual void setDepthBound(float minBounds, float maxBounds) override;
     virtual void setStencilWriteMask(StencilFace face, uint mask) override;
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) override;
     virtual void draw(InputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) override;
     virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) override;
-    virtual void execute(const CommandBufferList &cmd_buffs, uint32_t count) override;
+    virtual void execute(const CommandBufferList &cmdBuffs, uint32_t count) override;
 
 private:
     void bindStates();
@@ -53,6 +53,9 @@ private:
     CCMTLDepthBias _depthBias;
     CCMTLDepthBounds _depthBounds;
     Color _blendConstants;
+    
+    vector<CCMTLGPUDescriptorSet *> _GPUDescriptorSets;
+    vector<vector<uint>> _dynamicOffsets;
 
     MTKView *_mtkView = nil;
     id<MTLCommandBuffer> _mtlCommandBuffer = nil;

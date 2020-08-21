@@ -20,6 +20,7 @@ public:
     virtual Fence *createFence(const FenceInfo &info) override;
     virtual Queue *createQueue(const QueueInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
+    virtual Buffer *createBuffer(const BufferViewInfo &info) override;
     virtual Texture *createTexture(const TextureInfo &info) override;
     virtual Texture *createTexture(const TextureViewInfo &info) override;
     virtual Sampler *createSampler(const SamplerInfo &info) override;
