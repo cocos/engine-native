@@ -298,6 +298,12 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _gpuDevice->defaultTextureView.format = Format::RGBA8;
     CCVKCmdFuncCreateTextureView(this, &_gpuDevice->defaultTextureView);
 
+    _gpuDevice->defaultBuffer.usage = BufferUsage::UNIFORM;
+    _gpuDevice->defaultBuffer.memUsage = MemoryUsage::HOST | MemoryUsage::DEVICE;
+    _gpuDevice->defaultBuffer.size = _gpuDevice->defaultBuffer.stride = 16u;
+    _gpuDevice->defaultBuffer.count = 1u;
+    CCVKCmdFuncCreateBuffer(this, &_gpuDevice->defaultBuffer);
+
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
         TextureInfo depthStencilTexInfo;
         depthStencilTexInfo.type = TextureType::TEX2D;
@@ -396,6 +402,11 @@ void CCVKDevice::destroy() {
     CC_SAFE_DELETE(_gpuFencePool);
 
     if (_gpuDevice) {
+        if (_gpuDevice->defaultBuffer.vkBuffer) {
+            vmaDestroyBuffer(_gpuDevice->memoryAllocator, _gpuDevice->defaultBuffer.vkBuffer, _gpuDevice->defaultBuffer.vmaAllocation);
+            _gpuDevice->defaultBuffer.vkBuffer = VK_NULL_HANDLE;
+            _gpuDevice->defaultBuffer.vmaAllocation = VK_NULL_HANDLE;
+        }
         if (_gpuDevice->defaultTextureView.vkImageView) {
             vkDestroyImageView(_gpuDevice->vkDevice, _gpuDevice->defaultTextureView.vkImageView, nullptr);
             _gpuDevice->defaultTextureView.vkImageView = VK_NULL_HANDLE;

@@ -38,7 +38,11 @@ bool CCVKDescriptorSet::initialize(const DescriptorSetInfo &info) {
     for (size_t i = 0u; i < bindingCount; i++) {
         const DescriptorSetLayoutBinding &binding = gpuDescriptorSetLayout->bindings[i];
         _gpuDescriptorSet->gpuDescriptors[i].type = binding.descriptorType;
-        if ((uint)binding.descriptorType & DESCRIPTOR_SAMPLER_TYPE) {
+        if ((uint)binding.descriptorType & DESCRIPTOR_BUFFER_TYPE) {
+            _gpuDescriptorSet->descriptorInfos[i].buffer.buffer = gpuDevice->defaultBuffer.vkBuffer;
+            _gpuDescriptorSet->descriptorInfos[i].buffer.offset = gpuDevice->defaultBuffer.startOffset;
+            _gpuDescriptorSet->descriptorInfos[i].buffer.range = gpuDevice->defaultBuffer.size;
+        } else if ((uint)binding.descriptorType & DESCRIPTOR_SAMPLER_TYPE) {
             _gpuDescriptorSet->descriptorInfos[i].image.sampler = gpuDevice->defaultSampler.vkSampler;
             _gpuDescriptorSet->descriptorInfos[i].image.imageView = gpuDevice->defaultTextureView.vkImageView;
             _gpuDescriptorSet->descriptorInfos[i].image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

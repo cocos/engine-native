@@ -399,7 +399,7 @@ void CCVKCommandBuffer::doBindDescriptorSet() {
         }
 
         uint offsetCount = pipelineLayout->dynamicOffsetOffsets[set + 1] - dynamicOffsetStartIndex;
-        if (offsetCount > 0) {
+        if (_curDynamicOffsets[set].size() && offsetCount > 0) {
             memcpy(dynamicOffsets + offsetAcc, _curDynamicOffsets[set].data(), offsetCount * sizeof(uint));
             offsetAcc += offsetCount;
         }
