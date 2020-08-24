@@ -5,7 +5,7 @@
 #include "MTLUtils.h"
 #import <Metal/Metal.h>
 
-#define MINIMUMR_REQUIRED_SIZE_4KB 4096
+#define MINIMUMR_REQUIRED_SIZE_4KB 0
 
 namespace cc {
 namespace gfx {
@@ -79,7 +79,9 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
 }
 
 bool CCMTLBuffer::initialize(const BufferViewInfo &info) {
-    *this = *static_cast<CCMTLBuffer*>(info.buffer);
+    *this = *static_cast<CCMTLBuffer *>(info.buffer);
+    _bufferViewOffset = info.offset;
+    _isBufferView = true;
     return true;
 }
 
@@ -99,11 +101,11 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
 }
 
 void CCMTLBuffer::destroy() {
-    if(_isBufferView) {
+    if (_isBufferView) {
         _status = Status::UNREADY;
         return;
     }
-    
+
     if (_mtlBuffer) {
         [_mtlBuffer release];
         _mtlBuffer = nil;
@@ -130,11 +132,11 @@ void CCMTLBuffer::destroy() {
 }
 
 void CCMTLBuffer::resize(uint size) {
-    if(_isBufferView) {
+    if (_isBufferView) {
         CC_LOG_WARNING("Cannot resize a buffer view.");
         return;
     }
-    
+
     if (_size == size)
         return;
 
@@ -188,7 +190,7 @@ void CCMTLBuffer::resizeBuffer(uint8_t **buffer, uint size, uint oldSize) {
 }
 
 void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
-    if(_isBufferView) {
+    if (_isBufferView) {
         CC_LOG_WARNING("Cannot update a buffer view.");
         return;
     }
@@ -252,6 +254,10 @@ void CCMTLBuffer::encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset,
     if (encoder == nil) {
         CC_LOG_ERROR("CCMTLBuffer::encodeBuffer: MTLRenderCommandEncoder should not be nil.");
         return;
+    }
+
+    if (_isBufferView) {
+        offset += _bufferViewOffset;
     }
 
     if (stages & ShaderStageFlagBit::VERTEX) {

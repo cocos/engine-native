@@ -38,6 +38,7 @@ private:
     uint8_t *_bufferBytes = nullptr;
 
     bool _isDrawIndirectByIndex = false;
+    uint _bufferViewOffset = 0;
 };
 
 } // namespace gfx
