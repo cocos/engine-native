@@ -13350,24 +13350,6 @@ static bool js_gfx_Buffer_getCount(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_Buffer_getCount)
 
-static bool js_gfx_Buffer_isBufferView(se::State& s)
-{
-    cc::gfx::Buffer* cobj = (cc::gfx::Buffer*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_Buffer_isBufferView : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        bool result = cobj->isBufferView();
-        ok &= boolean_to_seval(result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_Buffer_isBufferView : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_gfx_Buffer_isBufferView)
-
 static bool js_gfx_Buffer_destroy(se::State& s)
 {
     cc::gfx::Buffer* cobj = (cc::gfx::Buffer*)s.nativeThisObject();
@@ -13495,7 +13477,6 @@ bool js_register_gfx_Buffer(se::Object* obj)
     cls->defineProperty("device", _SE(js_gfx_Buffer_getDevice), nullptr);
     cls->defineProperty("backupBuffer", _SE(js_gfx_Buffer_getBackupBuffer), nullptr);
     cls->defineProperty("size", _SE(js_gfx_Buffer_getSize), nullptr);
-    cls->defineFunction("isBufferView", _SE(js_gfx_Buffer_isBufferView));
     cls->defineFunction("destroy", _SE(js_gfx_Buffer_destroy));
     cls->defineFunction("resize", _SE(js_gfx_Buffer_resize));
     cls->defineFinalizeFunction(_SE(js_cc_gfx_Buffer_finalize));
@@ -16329,13 +16310,13 @@ static bool js_gfx_CommandBuffer_begin(se::State& s)
     do {
         if (argc == 3) {
             cc::gfx::RenderPass* arg0 = nullptr;
-            ok &= seval_to_native_ptr(args[0], &arg0);
+            ok &= seval_to_native_ptr(args[0], &arg0);            
             if (!ok) { ok = true; break; }
             unsigned int arg1 = 0;
-            ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);
+            ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);            
             if (!ok) { ok = true; break; }
             cc::gfx::Framebuffer* arg2 = nullptr;
-            ok &= seval_to_native_ptr(args[2], &arg2);
+            ok &= seval_to_native_ptr(args[2], &arg2);            
             if (!ok) { ok = true; break; }
             cobj->begin(arg0, arg1, arg2);
             return true;
@@ -16345,7 +16326,7 @@ static bool js_gfx_CommandBuffer_begin(se::State& s)
     do {
         if (argc == 1) {
             cc::gfx::RenderPass* arg0 = nullptr;
-            ok &= seval_to_native_ptr(args[0], &arg0);
+            ok &= seval_to_native_ptr(args[0], &arg0);            
             if (!ok) { ok = true; break; }
             cobj->begin(arg0);
             return true;
@@ -16355,10 +16336,10 @@ static bool js_gfx_CommandBuffer_begin(se::State& s)
     do {
         if (argc == 2) {
             cc::gfx::RenderPass* arg0 = nullptr;
-            ok &= seval_to_native_ptr(args[0], &arg0);
+            ok &= seval_to_native_ptr(args[0], &arg0);            
             if (!ok) { ok = true; break; }
             unsigned int arg1 = 0;
-            ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);
+            ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);            
             if (!ok) { ok = true; break; }
             cobj->begin(arg0, arg1);
             return true;
@@ -16398,10 +16379,10 @@ static bool js_gfx_CommandBuffer_bindDescriptorSet(se::State& s)
     do {
         if (argc == 2) {
             unsigned int arg0 = 0;
-            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
             if (!ok) { ok = true; break; }
             cc::gfx::DescriptorSet* arg1 = nullptr;
-            ok &= seval_to_native_ptr(args[1], &arg1);
+            ok &= seval_to_native_ptr(args[1], &arg1);            
             if (!ok) { ok = true; break; }
             cobj->bindDescriptorSet(arg0, arg1);
             return true;
@@ -16411,17 +16392,17 @@ static bool js_gfx_CommandBuffer_bindDescriptorSet(se::State& s)
     do {
         if (argc == 4) {
             unsigned int arg0 = 0;
-            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
             if (!ok) { ok = true; break; }
             cc::gfx::DescriptorSet* arg1 = nullptr;
-            ok &= seval_to_native_ptr(args[1], &arg1);
+            ok &= seval_to_native_ptr(args[1], &arg1);            
             if (!ok) { ok = true; break; }
             unsigned int arg2 = 0;
-            ok &= seval_to_uint32(args[2], (uint32_t*)&arg2);
+            ok &= seval_to_uint32(args[2], (uint32_t*)&arg2);            
             if (!ok) { ok = true; break; }
             const unsigned int* arg3 = 0;
             #pragma warning NO CONVERSION TO NATIVE FOR unsigned int*
-            ok = false;
+            ok = false;            
             if (!ok) { ok = true; break; }
             cobj->bindDescriptorSet(arg0, arg1, arg2, arg3);
             return true;
@@ -16431,13 +16412,13 @@ static bool js_gfx_CommandBuffer_bindDescriptorSet(se::State& s)
     do {
         if (argc == 3) {
             unsigned int arg0 = 0;
-            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
             if (!ok) { ok = true; break; }
             cc::gfx::DescriptorSet* arg1 = nullptr;
-            ok &= seval_to_native_ptr(args[1], &arg1);
+            ok &= seval_to_native_ptr(args[1], &arg1);            
             if (!ok) { ok = true; break; }
             std::vector<unsigned int> arg2;
-            ok &= seval_to_std_vector(args[2], &arg2);
+            ok &= seval_to_std_vector(args[2], &arg2);            
             if (!ok) { ok = true; break; }
             cobj->bindDescriptorSet(arg0, arg1, arg2);
             return true;
@@ -16506,29 +16487,62 @@ SE_BIND_FUNC(js_gfx_CommandBuffer_setScissor)
 
 static bool js_gfx_CommandBuffer_beginRenderPass(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cc::gfx::CommandBuffer* cobj = (cc::gfx::CommandBuffer*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_CommandBuffer_beginRenderPass : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_gfx_CommandBuffer_beginRenderPass : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 6) {
-        cc::gfx::RenderPass* arg0 = nullptr;
-        cc::gfx::Framebuffer* arg1 = nullptr;
-        cc::gfx::Rect* arg2 = nullptr;
-        std::vector<cc::gfx::Color> arg3;
-        float arg4 = 0;
-        int arg5 = 0;
-        ok &= seval_to_native_ptr(args[0], &arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        ok &= seval_to_reference(args[2], &arg2);
-        ok &= seval_to_std_vector(args[3], &arg3);
-        ok &= seval_to_float(args[4], &arg4);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (int)tmp; } while(false);
-        SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_beginRenderPass : Error processing arguments");
-        cobj->beginRenderPass(arg0, arg1, *arg2, arg3, arg4, arg5);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
+    do {
+        if (argc == 6) {
+            cc::gfx::RenderPass* arg0 = nullptr;
+            ok &= seval_to_native_ptr(args[0], &arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Framebuffer* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Rect* arg2 = nullptr;
+            ok &= seval_to_reference(args[2], &arg2);            
+            if (!ok) { ok = true; break; }
+            std::vector<cc::gfx::Color> arg3;
+            ok &= seval_to_std_vector(args[3], &arg3);            
+            if (!ok) { ok = true; break; }
+            float arg4 = 0;
+            ok &= seval_to_float(args[4], &arg4);            
+            if (!ok) { ok = true; break; }
+            int arg5 = 0;
+            do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (int)tmp; } while(false);            
+            if (!ok) { ok = true; break; }
+            cobj->beginRenderPass(arg0, arg1, *arg2, arg3, arg4, arg5);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 6) {
+            cc::gfx::RenderPass* arg0 = nullptr;
+            ok &= seval_to_native_ptr(args[0], &arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Framebuffer* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Rect* arg2 = nullptr;
+            ok &= seval_to_reference(args[2], &arg2);            
+            if (!ok) { ok = true; break; }
+            const cc::gfx::Color* arg3 = nullptr;
+            ok &= seval_to_native_ptr(args[3], &arg3);            
+            if (!ok) { ok = true; break; }
+            float arg4 = 0;
+            ok &= seval_to_float(args[4], &arg4);            
+            if (!ok) { ok = true; break; }
+            int arg5 = 0;
+            do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (int)tmp; } while(false);            
+            if (!ok) { ok = true; break; }
+            cobj->beginRenderPass(arg0, arg1, *arg2, arg3, arg4, arg5);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_gfx_CommandBuffer_beginRenderPass)
@@ -16764,7 +16778,7 @@ static bool js_gfx_Queue_submit(se::State& s)
     do {
         if (argc == 1) {
             std::vector<cc::gfx::CommandBuffer *> arg0;
-            ok &= seval_to_std_vector(args[0], &arg0);
+            ok &= seval_to_std_vector(args[0], &arg0);            
             if (!ok) { ok = true; break; }
             cobj->submit(arg0);
             return true;
@@ -16774,10 +16788,10 @@ static bool js_gfx_Queue_submit(se::State& s)
     do {
         if (argc == 2) {
             std::vector<cc::gfx::CommandBuffer *> arg0;
-            ok &= seval_to_std_vector(args[0], &arg0);
+            ok &= seval_to_std_vector(args[0], &arg0);            
             if (!ok) { ok = true; break; }
             cc::gfx::Fence* arg1 = nullptr;
-            ok &= seval_to_native_ptr(args[1], &arg1);
+            ok &= seval_to_native_ptr(args[1], &arg1);            
             if (!ok) { ok = true; break; }
             cobj->submit(arg0, arg1);
             return true;

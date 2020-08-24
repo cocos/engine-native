@@ -16,7 +16,7 @@ public:
     virtual void destroy() = 0;
     virtual void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) = 0;
     virtual void end() = 0;
-    virtual void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const vector<Color> &colors, float depth, int stencil) = 0;
+    virtual void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) = 0;
     virtual void endRenderPass() = 0;
     virtual void bindPipelineState(PipelineState *pso) = 0;
     virtual void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) = 0;
@@ -31,15 +31,22 @@ public:
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) = 0;
     virtual void draw(InputAssembler *ia) = 0;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset = 0) = 0;
-    virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) = 0;
-    virtual void execute(const CommandBufferList &cmdBuffs, uint32_t count) = 0;
+    virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) = 0;
+    virtual void execute(const CommandBuffer *const *cmdBuffs, uint32_t count) = 0;
 
     CC_INLINE void begin() { begin(nullptr, 0, nullptr); }
     CC_INLINE void begin(RenderPass *renderPass) { begin(renderPass, 0, nullptr); }
     CC_INLINE void begin(RenderPass *renderPass, uint subpass) { begin(renderPass, subpass, nullptr); }
+    CC_INLINE void execute(const CommandBufferList &cmdBuffs, uint32_t count) { execute(cmdBuffs.data(), count); }
     CC_INLINE void bindDescriptorSet(uint set, DescriptorSet *descriptorSet) { bindDescriptorSet(set, descriptorSet, 0, nullptr); }
     CC_INLINE void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
         bindDescriptorSet(set, descriptorSet, dynamicOffsets.size(), dynamicOffsets.data());
+    }
+    CC_INLINE void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const vector<Color> &colors, float depth, int stencil) {
+        beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil);
+    }
+    CC_INLINE void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
+        copyBuffersToTexture(buffers.data(), texture, regions.data(), regions.size());
     }
 
     CC_INLINE Device *getDevice() const { return _device; }

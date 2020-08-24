@@ -320,8 +320,8 @@ PipelineState *GLES2Device::createPipelineState(const PipelineStateInfo &info) {
     return nullptr;
 }
 
-void GLES2Device::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
-    GLES2CmdFuncCopyBuffersToTexture(this, buffers, ((GLES2Texture *)dst)->gpuTexture(), regions);
+void GLES2Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
+    GLES2CmdFuncCopyBuffersToTexture(this, buffers, ((GLES2Texture *)dst)->gpuTexture(), regions, count);
 }
 
 } // namespace gfx

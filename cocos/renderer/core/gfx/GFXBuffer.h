@@ -26,7 +26,6 @@ public:
     CC_INLINE uint getSize() const { return _size; }
     CC_INLINE BufferFlags getFlags() const { return _flags; }
     CC_INLINE uint8_t *getBackupBuffer() const { return _buffer; }
-    CC_INLINE bool isBufferView() const { return _isBufferView; }
 
 protected:
     Device *_device = nullptr;

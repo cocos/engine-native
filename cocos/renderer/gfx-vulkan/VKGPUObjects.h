@@ -469,7 +469,6 @@ public:
 
     void request(CCVKGPUCommandBuffer *gpuCommandBuffer) {
         if (!_pools.count(gpuCommandBuffer->queueFamilyIndex)) {
-            _pools.emplace(std::piecewise_construct, std::forward_as_tuple(gpuCommandBuffer->queueFamilyIndex), std::forward_as_tuple());
             VkCommandPoolCreateInfo createInfo{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
             createInfo.queueFamilyIndex = gpuCommandBuffer->queueFamilyIndex;
             createInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;

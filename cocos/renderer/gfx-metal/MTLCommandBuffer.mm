@@ -65,7 +65,7 @@ void CCMTLCommandBuffer::end() {
     [_mtlCommandBuffer release];
 }
 
-void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const vector<Color> &colors, float depth, int stencil) {
+void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) {
 
     auto isOffscreen = static_cast<CCMTLFramebuffer *>(fbo)->isOffscreen();
     if (!isOffscreen) {
@@ -73,8 +73,9 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
         static_cast<CCMTLRenderPass *>(renderPass)->setDepthStencilAttachment(((MTKView *)_mtkView).depthStencilTexture, 0);
     }
     MTLRenderPassDescriptor *mtlRenderPassDescriptor = static_cast<CCMTLRenderPass *>(renderPass)->getMTLRenderPassDescriptor();
+    auto colorAttachmentCount = renderPass->getColorAttachments().size();
 
-    for (size_t slot = 0; slot < colors.size(); slot++) {
+    for (size_t slot = 0; slot < colorAttachmentCount; slot++) {
         mtlRenderPassDescriptor.colorAttachments[slot].clearColor = mu::toMTLClearColor(colors[slot]);
     }
 
@@ -324,11 +325,11 @@ void CCMTLCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint 
     }
 }
 
-void CCMTLCommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
+void CCMTLCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
     if ((_type == CommandBufferType::PRIMARY) ||
         (_type == CommandBufferType::SECONDARY)) {
         if (texture) {
-            static_cast<CCMTLTexture *>(texture)->update(buffers.data(), regions);
+            static_cast<CCMTLTexture *>(texture)->update(buffers, regions, count);
         } else {
             CC_LOG_ERROR("CCMTLCommandBuffer::copyBufferToTexture: texture is nullptr");
         }
@@ -337,9 +338,9 @@ void CCMTLCommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Tex
     }
 }
 
-void CCMTLCommandBuffer::execute(const CommandBufferList &commandBuffs, uint32_t count) {
+void CCMTLCommandBuffer::execute(const CommandBuffer *const *commandBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
-        auto commandBuffer = static_cast<CCMTLCommandBuffer *>(commandBuffs[i]);
+        auto commandBuffer = static_cast<const CCMTLCommandBuffer *>(commandBuffs[i]);
         _numDrawCalls += commandBuffer->_numDrawCalls;
         _numInstances += commandBuffer->_numInstances;
         _numTriangles += commandBuffer->_numTriangles;

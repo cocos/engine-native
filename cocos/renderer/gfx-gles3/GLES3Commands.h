@@ -130,15 +130,17 @@ public:
 class GLES3CmdCopyBufferToTexture : public GFXCmd {
 public:
     GLES3GPUTexture *gpuTexture = nullptr;
-    BufferDataList buffers;
-    BufferTextureCopyList regions;
+    const uint8_t *const *buffers = nullptr;
+    const BufferTextureCopy *regions = nullptr;
+    uint count = 0u;
 
     GLES3CmdCopyBufferToTexture() : GFXCmd(GFXCmdType::COPY_BUFFER_TO_TEXTURE) {}
 
     virtual void clear() override {
         gpuTexture = nullptr;
-        buffers.clear();
-        regions.clear();
+        buffers = nullptr;
+        regions = nullptr;
+        count = 0u;
     }
 };
 
@@ -168,7 +170,7 @@ CC_GLES3_API void GLES3CmdFuncDestroyInputAssembler(GLES3Device *device, GLES3GP
 CC_GLES3_API void GLES3CmdFuncCreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO);
 CC_GLES3_API void GLES3CmdFuncDestroyFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO);
 CC_GLES3_API void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmd_package);
-CC_GLES3_API void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const BufferDataList &buffers, GLES3GPUTexture *gpuTexture, const BufferTextureCopyList &regions);
+CC_GLES3_API void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const *buffers, GLES3GPUTexture *gpuTexture, const BufferTextureCopy *regions, uint count);
 
 } // namespace gfx
 } // namespace cc

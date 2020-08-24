@@ -36,7 +36,7 @@ public:
     virtual DescriptorSetLayout *createDescriptorSetLayout(const DescriptorSetLayoutInfo &info) override;
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) override;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
-    virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
+    virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
 
     CC_INLINE GLES3CommandAllocator *cmdAllocator() const { return _cmdAllocator; }
     CC_INLINE const BindingMappingInfo &bindingMappingInfo() const { return _bindingMappingInfo; }

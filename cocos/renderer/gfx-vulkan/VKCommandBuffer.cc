@@ -85,7 +85,7 @@ void CCVKCommandBuffer::end() {
 }
 
 void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea,
-                                        const vector<Color> &colors, float depth, int stencil) {
+                                        const Color *colors, float depth, int stencil) {
     _curGPUFBO = ((CCVKFramebuffer *)fbo)->gpuFBO();
     CCVKGPURenderPass *gpuRenderPass = ((CCVKRenderPass *)renderPass)->gpuRenderPass();
     VkFramebuffer framebuffer = _curGPUFBO->vkFramebuffer;
@@ -260,7 +260,7 @@ void CCVKCommandBuffer::setStencilCompareMask(StencilFace face, int reference, u
 
 void CCVKCommandBuffer::draw(InputAssembler *ia) {
     if (_firstDirtyDescriptorSet < _curGPUDescriptorSets.size()) {
-        doBindDescriptorSet();
+        bindDescriptorSets();
     }
 
     CCVKGPUInputAssembler *gpuInputAssembler = ((CCVKInputAssembler *)ia)->gpuInputAssembler();
@@ -333,7 +333,7 @@ void CCVKCommandBuffer::draw(InputAssembler *ia) {
     }
 }
 
-void CCVKCommandBuffer::execute(const CommandBufferList &cmdBuffs, uint count) {
+void CCVKCommandBuffer::execute(const CommandBuffer *const *cmdBuffs, uint count) {
     if (!count) {
         return;
     }
@@ -356,14 +356,14 @@ void CCVKCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint o
     CCVKCmdFuncUpdateBuffer((CCVKDevice *)_device, ((CCVKBuffer *)buff)->gpuBuffer(), data, offset, size);
 }
 
-void CCVKCommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
+void CCVKCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
     //const CCVKGPUBuffer* gpuBuffer = ((CCVKBuffer*)src)->gpuBuffer();
     //const CCVKGPUTexture* gpuTexture = ((CCVKTexture*)dst)->gpuTexture();
     //vkCmdCopyBufferToImage(_gpuCommandBuffer->vkCommandBuffer, gpuBuffer->vkBuffer, gpuTexture->vkImage, MapVkImageLayout(layout),
     //    regions.size(), regions.data());
 }
 
-void CCVKCommandBuffer::doBindDescriptorSet() {
+void CCVKCommandBuffer::bindDescriptorSets() {
 
     CCVKDevice *device = (CCVKDevice *)_device;
     CCVKGPUDevice *gpuDevice = device->gpuDevice();

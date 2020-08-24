@@ -298,7 +298,6 @@ extern se::Class* __jsb_cc_gfx_Buffer_class;
 
 bool js_register_cc_gfx_Buffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
-SE_DECLARE_FUNC(js_gfx_Buffer_isBufferView);
 SE_DECLARE_FUNC(js_gfx_Buffer_destroy);
 SE_DECLARE_FUNC(js_gfx_Buffer_resize);
 SE_DECLARE_FUNC(js_gfx_Buffer_Buffer);

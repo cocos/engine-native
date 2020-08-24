@@ -35,7 +35,11 @@ public:
     virtual DescriptorSetLayout *createDescriptorSetLayout(const DescriptorSetLayoutInfo &info) = 0;
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) = 0;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) = 0;
-    virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) = 0;
+    virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) = 0;
+
+    CC_INLINE void copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
+        copyBuffersToTexture(buffers.data(), dst, regions.data(), regions.size());
+    }
 
     CC_INLINE API getGfxAPI() const { return _API; }
     CC_INLINE const String &getDeviceName() const { return _deviceName; }
