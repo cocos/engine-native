@@ -2142,7 +2142,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
             }
             case GFXCmdType::COPY_BUFFER_TO_TEXTURE: {
                 GLES2CmdCopyBufferToTexture *cmd = cmdPackage->copyBufferToTextureCmds[cmdIdx];
-                GLES2CmdFuncCopyBuffersToTexture(device, cmd->buffers, cmd->gpuTexture, cmd->regions);
+                GLES2CmdFuncCopyBuffersToTexture(device, cmd->buffers, cmd->gpuTexture, cmd->regions, cmd->count);
                 break;
             }
             default:
@@ -2152,7 +2152,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
     }
 }
 
-void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, const BufferDataList &buffers, GLES2GPUTexture *gpuTexture, const BufferTextureCopyList &regions) {
+void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, const uint8_t *const *buffers, GLES2GPUTexture *gpuTexture, const BufferTextureCopy *regions, uint count) {
     GLuint &glTexture = device->stateCache->glTextures[device->stateCache->texUint];
     if (glTexture != gpuTexture->glTexture) {
         glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture);
@@ -2166,7 +2166,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, const BufferDataList 
         case GL_TEXTURE_2D: {
             uint w;
             uint h;
-            for (size_t i = 0; i < regions.size(); ++i) {
+            for (size_t i = 0; i < count; ++i) {
                 const BufferTextureCopy &region = regions[i];
                 w = region.texExtent.width;
                 h = region.texExtent.height;
@@ -2197,7 +2197,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, const BufferDataList 
         case GL_TEXTURE_2D_ARRAY: {
             uint w;
             uint h;
-            for (size_t i = 0; i < regions.size(); ++i) {
+            for (size_t i = 0; i < count; ++i) {
                 const BufferTextureCopy &region = regions[i];
                 uint d = region.texSubres.layerCount;
                 uint layerCount = d + region.texSubres.baseArrayLayer;
@@ -2235,7 +2235,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, const BufferDataList 
             uint w;
             uint h;
             uint d;
-            for (size_t i = 0; i < regions.size(); ++i) {
+            for (size_t i = 0; i < count; ++i) {
                 const BufferTextureCopy &region = regions[i];
                 w = region.texExtent.width;
                 h = region.texExtent.height;
@@ -2270,7 +2270,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, const BufferDataList 
             uint w;
             uint h;
             uint f;
-            for (size_t i = 0; i < regions.size(); ++i) {
+            for (size_t i = 0; i < count; ++i) {
                 const BufferTextureCopy &region = regions[i];
                 uint faceCount = region.texSubres.baseArrayLayer + region.texSubres.layerCount;
                 for (f = region.texSubres.baseArrayLayer; f < faceCount; ++f) {

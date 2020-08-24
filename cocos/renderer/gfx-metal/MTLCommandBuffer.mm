@@ -324,11 +324,11 @@ void CCMTLCommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint 
     }
 }
 
-void CCMTLCommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
+void CCMTLCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
     if ((_type == CommandBufferType::PRIMARY) ||
         (_type == CommandBufferType::SECONDARY)) {
         if (texture) {
-            static_cast<CCMTLTexture *>(texture)->update(buffers.data(), regions);
+            static_cast<CCMTLTexture *>(texture)->update(buffers, regions, count);
         } else {
             CC_LOG_ERROR("CCMTLCommandBuffer::copyBufferToTexture: texture is nullptr");
         }
@@ -337,7 +337,7 @@ void CCMTLCommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Tex
     }
 }
 
-void CCMTLCommandBuffer::execute(const CommandBufferList &commandBuffs, uint32_t count) {
+void CCMTLCommandBuffer::execute(const CommandBuffer *const *commandBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         auto commandBuffer = static_cast<CCMTLCommandBuffer *>(commandBuffs[i]);
         _numDrawCalls += commandBuffer->_numDrawCalls;

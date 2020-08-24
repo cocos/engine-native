@@ -459,7 +459,7 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
                 break;
             }
         }
-        if (!attributeFound) { //handle absent attribute
+        if (!attributeFound) { // handle absent attribute
             attributeDescriptions[i].location = shaderAttrs[i].location;
             attributeDescriptions[i].format = MapVkFormat(shaderAttrs[i].format);
             attributeDescriptions[i].offset = 0; // reuse the first attribute as dummy data
@@ -653,7 +653,7 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, void 
     }
 }
 
-void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, const BufferDataList &buffers, CCVKGPUTexture *gpuTexture, const BufferTextureCopyList &regions) {
+void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, const uint8_t *const *buffers, CCVKGPUTexture *gpuTexture, const BufferTextureCopy *regions, uint count) {
     device->gpuTransportHub()->checkIn([&](VkCommandBuffer cmdBuff) {
         //bool isCompressed = GFX_FORMAT_INFOS[(int)gpuTexture->format].isCompressed;
 
@@ -672,9 +672,9 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, const BufferDataList &b
         vkCmdPipelineBarrier(cmdBuff, gpuTexture->targetStage, VK_PIPELINE_STAGE_TRANSFER_BIT,
                              VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, barriers);
 
-        uint regionCount = regions.size(), totalSize = 0u;
-        vector<uint> regionSizes(regionCount);
-        for (size_t i = 0u; i < regionCount; ++i) {
+        uint totalSize = 0u;
+        vector<uint> regionSizes(count);
+        for (size_t i = 0u; i < count; ++i) {
             const BufferTextureCopy &region = regions[i];
             uint w = region.buffStride > 0 ? region.buffStride : region.texExtent.width;
             uint h = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
@@ -686,9 +686,9 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, const BufferDataList &b
         uint texelSize = GFX_FORMAT_INFOS[(uint)gpuTexture->format].size;
         device->gpuStagingBufferPool()->alloc(&stagingBuffer, texelSize);
 
-        vector<VkBufferImageCopy> stagingRegions(regionCount);
+        vector<VkBufferImageCopy> stagingRegions(count);
         VkDeviceSize offset = 0;
-        for (size_t i = 0u; i < regionCount; ++i) {
+        for (size_t i = 0u; i < count; ++i) {
             const BufferTextureCopy &region = regions[i];
             VkBufferImageCopy &stagingRegion = stagingRegions[i];
             stagingRegion.bufferOffset = stagingBuffer.startOffset + offset;

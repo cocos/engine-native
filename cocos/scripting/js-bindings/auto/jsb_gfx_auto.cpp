@@ -16506,29 +16506,62 @@ SE_BIND_FUNC(js_gfx_CommandBuffer_setScissor)
 
 static bool js_gfx_CommandBuffer_beginRenderPass(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cc::gfx::CommandBuffer* cobj = (cc::gfx::CommandBuffer*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_CommandBuffer_beginRenderPass : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_gfx_CommandBuffer_beginRenderPass : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 6) {
-        cc::gfx::RenderPass* arg0 = nullptr;
-        cc::gfx::Framebuffer* arg1 = nullptr;
-        cc::gfx::Rect* arg2 = nullptr;
-        std::vector<cc::gfx::Color> arg3;
-        float arg4 = 0;
-        int arg5 = 0;
-        ok &= seval_to_native_ptr(args[0], &arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        ok &= seval_to_reference(args[2], &arg2);
-        ok &= seval_to_std_vector(args[3], &arg3);
-        ok &= seval_to_float(args[4], &arg4);
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (int)tmp; } while(false);
-        SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_beginRenderPass : Error processing arguments");
-        cobj->beginRenderPass(arg0, arg1, *arg2, arg3, arg4, arg5);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
+    do {
+        if (argc == 6) {
+            cc::gfx::RenderPass* arg0 = nullptr;
+            ok &= seval_to_native_ptr(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cc::gfx::Framebuffer* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);
+            if (!ok) { ok = true; break; }
+            cc::gfx::Rect arg2;
+            ok &= seval_to_reference(args[2], &arg2);
+            if (!ok) { ok = true; break; }
+            std::vector<cc::gfx::Color> arg3;
+            ok &= seval_to_std_vector(args[3], &arg3);
+            if (!ok) { ok = true; break; }
+            float arg4 = 0;
+            ok &= seval_to_float(args[4], &arg4);
+            if (!ok) { ok = true; break; }
+            int arg5 = 0;
+            do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (int)tmp; } while(false);
+            if (!ok) { ok = true; break; }
+            cobj->beginRenderPass(arg0, arg1, arg2, arg3, arg4, arg5);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 6) {
+            cc::gfx::RenderPass* arg0 = nullptr;
+            ok &= seval_to_native_ptr(args[0], &arg0);
+            if (!ok) { ok = true; break; }
+            cc::gfx::Framebuffer* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);
+            if (!ok) { ok = true; break; }
+            cc::gfx::Rect arg2;
+            ok &= seval_to_reference(args[2], &arg2);
+            if (!ok) { ok = true; break; }
+            const cc::gfx::Color* arg3 = nullptr;
+            ok &= seval_to_native_ptr(args[3], &arg3);
+            if (!ok) { ok = true; break; }
+            float arg4 = 0;
+            ok &= seval_to_float(args[4], &arg4);
+            if (!ok) { ok = true; break; }
+            int arg5 = 0;
+            do { int32_t tmp = 0; ok &= seval_to_int32(args[5], &tmp); arg5 = (int)tmp; } while(false);
+            if (!ok) { ok = true; break; }
+            cobj->beginRenderPass(arg0, arg1, arg2, arg3, arg4, arg5);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_gfx_CommandBuffer_beginRenderPass)

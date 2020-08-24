@@ -671,8 +671,6 @@ endif()
 if(CC_USE_METAL)
     cocos_source_files(
         cocos/renderer/gfx-metal/GFXMTL.h
-        cocos/renderer/gfx-metal/MTLBindingLayout.cpp
-        cocos/renderer/gfx-metal/MTLBindingLayout.h
         cocos/renderer/gfx-metal/MTLBuffer.h
         cocos/renderer/gfx-metal/MTLBuffer.mm
         cocos/renderer/gfx-metal/MTLCommandBuffer.h
@@ -688,8 +686,14 @@ if(CC_USE_METAL)
         cocos/renderer/gfx-metal/MTLGPUObjects.h
         cocos/renderer/gfx-metal/MTLInputAssembler.h
         cocos/renderer/gfx-metal/MTLInputAssembler.mm
+        cocos/renderer/gfx-metal/MTLDescriptorSetLayout.h
+        cocos/renderer/gfx-metal/MTLDescriptorSetLayout.mm
+        cocos/renderer/gfx-metal/MTLPipelineLayout.h
+        cocos/renderer/gfx-metal/MTLPipelineLayout.mm
         cocos/renderer/gfx-metal/MTLPipelineState.h
         cocos/renderer/gfx-metal/MTLPipelineState.mm
+        cocos/renderer/gfx-metal/MTLDescriptorSet.h
+        cocos/renderer/gfx-metal/MTLDescriptorSet.mm
         cocos/renderer/gfx-metal/MTLQueue.h
         cocos/renderer/gfx-metal/MTLQueue.mm
         cocos/renderer/gfx-metal/MTLRenderPass.h

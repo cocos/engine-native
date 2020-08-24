@@ -721,8 +721,8 @@ PipelineState *CCVKDevice::createPipelineState(const PipelineStateInfo &info) {
     return nullptr;
 }
 
-void CCVKDevice::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
-    CCVKCmdFuncCopyBuffersToTexture(this, buffers, ((CCVKTexture *)dst)->gpuTexture(), regions);
+void CCVKDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
+    CCVKCmdFuncCopyBuffersToTexture(this, buffers, ((CCVKTexture *)dst)->gpuTexture(), regions, count);
 }
 
 } // namespace gfx

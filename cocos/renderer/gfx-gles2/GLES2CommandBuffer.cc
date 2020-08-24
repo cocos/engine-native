@@ -66,15 +66,15 @@ void GLES2CommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES2CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const vector<Color> &colors, float depth, int stencil) {
+void GLES2CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) {
     _isInRenderPass = true;
 
     GLES2CmdBeginRenderPass *cmd = _gles2Allocator->beginRenderPassCmdPool.alloc();
     cmd->gpuRenderPass = ((GLES2RenderPass *)renderPass)->gpuRenderPass();
     cmd->gpuFBO = ((GLES2Framebuffer *)fbo)->gpuFBO();
     cmd->renderArea = renderArea;
-    cmd->numClearColors = (uint32_t)colors.size();
-    for (uint i = 0; i < colors.size(); ++i) {
+    cmd->numClearColors = cmd->gpuRenderPass->colorAttachments.size();
+    for (uint i = 0; i < cmd->numClearColors; ++i) {
         cmd->clearColors[i] = colors[i];
     }
     cmd->clearDepth = depth;
@@ -255,19 +255,16 @@ void GLES2CommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint 
     }
 }
 
-void GLES2CommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
+void GLES2CommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
     if ((_type == CommandBufferType::PRIMARY && !_isInRenderPass) ||
         (_type == CommandBufferType::SECONDARY)) {
         GLES2GPUTexture *gpuTexture = ((GLES2Texture *)texture)->gpuTexture();
         if (gpuTexture) {
             GLES2CmdCopyBufferToTexture *cmd = _gles2Allocator->copyBufferToTextureCmdPool.alloc();
             cmd->gpuTexture = gpuTexture;
-            cmd->buffers.resize(buffers.size());
-            cmd->regions.resize(regions.size());
-            for (uint i = 0; i < static_cast<uint>(regions.size()); ++i) {
-                cmd->buffers[i] = buffers[i];
-                cmd->regions[i] = regions[i];
-            }
+            cmd->buffers = buffers;
+            cmd->regions = regions;
+            cmd->count = count;
 
             _cmdPackage->copyBufferToTextureCmds.push(cmd);
             _cmdPackage->cmds.push(GFXCmdType::COPY_BUFFER_TO_TEXTURE);
@@ -277,7 +274,7 @@ void GLES2CommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Tex
     }
 }
 
-void GLES2CommandBuffer::execute(const CommandBufferList &cmdBuffs, uint32_t count) {
+void GLES2CommandBuffer::execute(const CommandBuffer *const *cmdBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
         GLES2CommandBuffer *cmdBuff = (GLES2CommandBuffer *)cmdBuffs[i];
 

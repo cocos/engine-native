@@ -21,7 +21,7 @@ public:
 
     virtual void begin(RenderPass *renderPass = nullptr, uint subpass = 0, Framebuffer *frameBuffer = nullptr) override;
     virtual void end() override;
-    virtual void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const vector<Color> &colors, float depth, int stencil) override;
+    virtual void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) override;
     virtual void endRenderPass() override;
     virtual void bindPipelineState(PipelineState *pso) override;
     virtual void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) override;
@@ -36,8 +36,8 @@ public:
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask) override;
     virtual void draw(InputAssembler *ia) override;
     virtual void updateBuffer(Buffer *buff, void *data, uint size, uint offset) override;
-    virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) override;
-    virtual void execute(const CommandBufferList &cmdBuffs, uint32_t count) override;
+    virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) override;
+    virtual void execute(const CommandBuffer *const *cmdBuffs, uint32_t count) override;
 
 private:
     void BindStates();
