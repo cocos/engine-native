@@ -26,7 +26,6 @@ bool GLES3DescriptorSetLayout::initialize(const DescriptorSetLayoutInfo &info) {
                 _gpuDescriptorSetLayout->dynamicBindings.push_back(i);
             }
         }
-        _gpuDescriptorSetLayout->bindings.push_back(binding);
     }
 
     return true;

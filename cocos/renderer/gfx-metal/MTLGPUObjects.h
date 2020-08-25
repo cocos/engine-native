@@ -57,13 +57,14 @@ class CCMTLGPUPipelineLayout : public Object {
 public:
     MTLGPUDescriptorSetLayoutList setLayouts;
     vector<vector<int>> dynamicOffsetIndices;
-    uint dynamicOffsetCount = 0;
 };
 
 class CCMTLGPUShader : public Object {
 public:
-    unordered_map<uint, uint> vertexSamplerBindings;
-    unordered_map<uint, uint> fragmentSamplerBindings;
+    unordered_map<uint, std::tuple<uint, uint>> vertexSamplerBindings;
+    unordered_map<uint, std::tuple<uint, uint>> fragmentSamplerBindings;
+    unordered_map<uint, uint> vertexBufferBindings;
+    unordered_map<uint, uint> fragmentBufferBindings;
     UniformBlockList blocks;
     UniformSamplerList samplers;
 };

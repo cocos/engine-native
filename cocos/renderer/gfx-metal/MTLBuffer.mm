@@ -8,7 +8,8 @@
 namespace cc {
 namespace gfx {
 
-CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {}
+CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {
+}
 
 CCMTLBuffer::~CCMTLBuffer() {
     destroy();

@@ -5,6 +5,7 @@
 #include "SPIRV/GlslangToSpv.h"
 #include "StandAlone/ResourceLimits.h"
 #include "spirv_cross/spirv_msl.hpp"
+#include "MTLGPUObjects.h"
 #include <vector>
 
 namespace cc {
@@ -514,7 +515,7 @@ MTLSamplerMipFilter toMTLSamplerMipFilter(Filter filter) {
 String compileGLSLShader2Msl(const String &src,
                              ShaderStageFlagBit shaderType,
                              Device *device,
-                             unordered_map<uint, uint> &samplerBindings) {
+                             CCMTLGPUShader* gpuShader) {
 #if USE_METAL
     String shaderSource("#version 310 es\n");
     shaderSource.append(src);
@@ -534,6 +535,7 @@ String compileGLSLShader2Msl(const String &src,
 
     // Get all uniform buffers in the shader.
     uint maxBufferBindingIndex = static_cast<CCMTLDevice *>(device)->getMaximumBufferBindingIndex();
+    const auto&bufferBingdingOffset = device->bindingMappingInfo().bufferOffsets;
     for (const auto &ubo : resources.uniform_buffers) {
         auto set = msl.get_decoration(ubo.id, spv::DecorationDescriptorSet);
         auto binding = msl.get_decoration(ubo.id, spv::DecorationBinding);
@@ -541,12 +543,19 @@ String compileGLSLShader2Msl(const String &src,
         if (binding >= maxBufferBindingIndex) {
             CC_LOG_ERROR("Implemention limits: %s binding at %d, should not use more than %d entries in the buffer argument table", ubo.name.c_str(), binding, maxBufferBindingIndex);
         }
+        auto mappedBinding = binding + bufferBingdingOffset[set];
         newBinding.desc_set = set;
         newBinding.binding = binding;
-        newBinding.msl_buffer = binding;
+        newBinding.msl_buffer = mappedBinding;
         newBinding.msl_texture = 0;
         newBinding.msl_sampler = 0;
         msl.add_msl_resource_binding(newBinding);
+        
+        if(shaderType == ShaderStageFlagBit::VERTEX) {
+            gpuShader->vertexBufferBindings[binding] = mappedBinding;
+        } else {
+            gpuShader->fragmentBufferBindings[binding] = mappedBinding;
+        }
     }
 
     //TODO: coulsonwang, need to set sampler binding explicitly
@@ -557,17 +566,25 @@ String compileGLSLShader2Msl(const String &src,
 
     // Get all sampled images in the shader.
     unsigned int samplerIndex = 0;
+    const auto&samplerBindingOffset = device->bindingMappingInfo().samplerOffsets;
     for (const auto &sampler : resources.sampled_images) {
-        unsigned set = msl.get_decoration(sampler.id, spv::DecorationDescriptorSet);
-        unsigned binding = msl.get_decoration(sampler.id, spv::DecorationBinding);
+        auto set = msl.get_decoration(sampler.id, spv::DecorationDescriptorSet);
+        auto binding = msl.get_decoration(sampler.id, spv::DecorationBinding);
 
-        samplerBindings[binding] = samplerIndex;
+        auto mappedBinding = binding + samplerBindingOffset[set];
         newBinding.desc_set = set;
         newBinding.binding = binding;
         newBinding.msl_buffer = 0;
-        newBinding.msl_texture = binding;
-        newBinding.msl_sampler = samplerIndex++;
+        newBinding.msl_texture = mappedBinding;
+        newBinding.msl_sampler = samplerIndex;
         msl.add_msl_resource_binding(newBinding);
+        
+        if(shaderType == ShaderStageFlagBit::VERTEX) {
+            gpuShader->vertexSamplerBindings[binding] = std::make_tuple(samplerIndex, mappedBinding);
+        } else {
+            gpuShader->fragmentSamplerBindings[binding] = std::make_tuple(samplerIndex, mappedBinding);
+        }
+        samplerIndex++;
     }
 
     // Set some options.
