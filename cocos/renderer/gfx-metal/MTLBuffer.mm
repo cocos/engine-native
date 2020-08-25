@@ -5,8 +5,6 @@
 #include "MTLUtils.h"
 #import <Metal/Metal.h>
 
-#define MINIMUMR_REQUIRED_SIZE_4KB 0
-
 namespace cc {
 namespace gfx {
 
@@ -46,18 +44,9 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
     }
 
     if (_usage & BufferUsageBit::VERTEX ||
-        _usage & BufferUsageBit::UNIFORM) {
-        //for single-use data smaller than 4 KB, use setVertexBytes:length:atIndex: instead
-        //see more detail at https://developer.apple.com/documentation/metal/mtlrendercommandencoder/1515846-setvertexbytes?language=objc
-        if (_size < MINIMUMR_REQUIRED_SIZE_4KB) {
-            _useOptimizedBufferEncoder = true;
-            _bufferBytes = static_cast<uint8_t *>(CC_MALLOC(_size));
-            _device->getMemoryStatus().bufferSize += _size;
-        } else {
-            createMTLBuffer(_size, _memUsage);
-        }
-    } else if (_usage & BufferUsageBit::INDEX ||
-               _usage & BufferUsageBit::INDIRECT) {
+        _usage & BufferUsageBit::UNIFORM ||
+        _usage & BufferUsageBit::INDEX ||
+        _usage & BufferUsageBit::INDIRECT) {
         createMTLBuffer(_size, _memUsage);
     } else if (_usage & BufferUsageBit::TRANSFER_SRC ||
                _usage & BufferUsageBit::TRANSFER_DST) {
@@ -123,11 +112,6 @@ void CCMTLBuffer::destroy() {
         _buffer = nullptr;
     }
 
-    if (_bufferBytes) {
-        CC_FREE(_bufferBytes);
-        _device->getMemoryStatus().bufferSize -= _size;
-        _bufferBytes = nullptr;
-    }
     _status = Status::UNREADY;
 }
 
@@ -144,19 +128,7 @@ void CCMTLBuffer::resize(uint size) {
         _usage & BufferUsageBit::INDEX ||
         _usage & BufferUsageBit::UNIFORM ||
         _usage & BufferUsageBit::INDIRECT) {
-        if (_useOptimizedBufferEncoder) {
-            if (size < MINIMUMR_REQUIRED_SIZE_4KB)
-                resizeBuffer(&_bufferBytes, size, _size);
-            else {
-                if (_bufferBytes)
-                    CC_SAFE_FREE(_bufferBytes);
-
-                _useOptimizedBufferEncoder = false;
-                createMTLBuffer(size, _memUsage);
-            }
-        } else {
-            createMTLBuffer(size, _memUsage);
-        }
+        createMTLBuffer(size, _memUsage);
     }
 
     const uint oldSize = _size;
@@ -229,9 +201,6 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
         return;
     }
 
-    if (_bufferBytes)
-        memcpy(_bufferBytes + offset, buffer, size);
-
     if (_mtlBuffer) {
         if (_mtlResourceOptions == MTLResourceStorageModePrivate) {
             static_cast<CCMTLDevice *>(_device)->blitBuffer(buffer, offset, size, _mtlBuffer);
@@ -261,27 +230,15 @@ void CCMTLBuffer::encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset,
     }
 
     if (stages & ShaderStageFlagBit::VERTEX) {
-        if (_useOptimizedBufferEncoder) {
-            [encoder setVertexBytes:_bufferBytes
-                             length:_size
-                            atIndex:binding];
-        } else {
-            [encoder setVertexBuffer:_mtlBuffer
-                              offset:offset
-                             atIndex:binding];
-        }
+        [encoder setVertexBuffer:_mtlBuffer
+                          offset:offset
+                         atIndex:binding];
     }
 
     if (stages & ShaderStageFlagBit::FRAGMENT) {
-        if (_useOptimizedBufferEncoder) {
-            [encoder setFragmentBytes:_bufferBytes
-                               length:_size
-                              atIndex:binding];
-        } else {
-            [encoder setFragmentBuffer:_mtlBuffer
-                                offset:offset
-                               atIndex:binding];
-        }
+        [encoder setFragmentBuffer:_mtlBuffer
+                            offset:offset
+                           atIndex:binding];
     }
 }
 
