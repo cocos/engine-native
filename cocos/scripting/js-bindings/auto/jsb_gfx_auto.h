@@ -363,6 +363,7 @@ extern se::Class* __jsb_cc_gfx_DescriptorSetLayout_class;
 
 bool js_register_cc_gfx_DescriptorSetLayout(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
+SE_DECLARE_FUNC(js_gfx_DescriptorSetLayout_getDescriptorIndices);
 SE_DECLARE_FUNC(js_gfx_DescriptorSetLayout_initialize);
 SE_DECLARE_FUNC(js_gfx_DescriptorSetLayout_destroy);
 SE_DECLARE_FUNC(js_gfx_DescriptorSetLayout_getDevice);

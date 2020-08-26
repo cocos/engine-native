@@ -5496,34 +5496,6 @@ static bool js_gfx_UniformBlock_set_members(se::State& s)
 }
 SE_BIND_PROP_SET(js_gfx_UniformBlock_set_members)
 
-static bool js_gfx_UniformBlock_get_count(se::State& s)
-{
-    cc::gfx::UniformBlock* cobj = (cc::gfx::UniformBlock*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_UniformBlock_get_count : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= uint32_to_seval((unsigned int)cobj->count, &jsret);
-    s.rval() = jsret;
-    return true;
-}
-SE_BIND_PROP_GET(js_gfx_UniformBlock_get_count)
-
-static bool js_gfx_UniformBlock_set_count(se::State& s)
-{
-    const auto& args = s.args();
-    cc::gfx::UniformBlock* cobj = (cc::gfx::UniformBlock*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_UniformBlock_set_count : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    unsigned int arg0 = 0;
-    ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
-    SE_PRECONDITION2(ok, false, "js_gfx_UniformBlock_set_count : Error processing new value");
-    cobj->count = arg0;
-    return true;
-}
-SE_BIND_PROP_SET(js_gfx_UniformBlock_set_count)
-
 SE_DECLARE_FINALIZE_FUNC(js_cc_gfx_UniformBlock_finalize)
 
 static bool js_gfx_UniformBlock_constructor(se::State& s)
@@ -5569,12 +5541,6 @@ static bool js_gfx_UniformBlock_constructor(se::State& s)
             ok &= seval_to_std_vector(field, &arg3);
             cobj->members = arg3;
         }
-        unsigned int arg4 = 0;
-        json->getProperty("count", &field);
-        if(!field.isUndefined()) {
-            ok &= seval_to_uint32(field, (uint32_t*)&arg4);
-            cobj->count = arg4;
-        }
 
         if(!ok) {
             JSB_FREE(cobj);
@@ -5586,7 +5552,7 @@ static bool js_gfx_UniformBlock_constructor(se::State& s)
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
         return true;
     }
-    else if(argc == 5)
+    else if(argc == 4)
     {
         cc::gfx::UniformBlock* cobj = JSB_ALLOC(cc::gfx::UniformBlock);
         unsigned int arg0 = 0;
@@ -5608,11 +5574,6 @@ static bool js_gfx_UniformBlock_constructor(se::State& s)
         if (!args[3].isUndefined()) {
             ok &= seval_to_std_vector(args[3], &arg3);
             cobj->members = arg3;
-        }
-        unsigned int arg4 = 0;
-        if (!args[4].isUndefined()) {
-            ok &= seval_to_uint32(args[4], (uint32_t*)&arg4);
-            cobj->count = arg4;
         }
 
         if(!ok) {
@@ -5655,7 +5616,6 @@ bool js_register_gfx_UniformBlock(se::Object* obj)
     cls->defineProperty("binding", _SE(js_gfx_UniformBlock_get_binding), _SE(js_gfx_UniformBlock_set_binding));
     cls->defineProperty("name", _SE(js_gfx_UniformBlock_get_name), _SE(js_gfx_UniformBlock_set_name));
     cls->defineProperty("members", _SE(js_gfx_UniformBlock_get_members), _SE(js_gfx_UniformBlock_set_members));
-    cls->defineProperty("count", _SE(js_gfx_UniformBlock_get_count), _SE(js_gfx_UniformBlock_set_count));
     cls->defineFinalizeFunction(_SE(js_cc_gfx_UniformBlock_finalize));
     cls->install();
     JSBClassType::registerClass<cc::gfx::UniformBlock>(cls);
@@ -15188,6 +15148,42 @@ bool js_register_gfx_Framebuffer(se::Object* obj)
 se::Object* __jsb_cc_gfx_DescriptorSetLayout_proto = nullptr;
 se::Class* __jsb_cc_gfx_DescriptorSetLayout_class = nullptr;
 
+static bool js_gfx_DescriptorSetLayout_getDescriptorIndices(se::State& s)
+{
+    cc::gfx::DescriptorSetLayout* cobj = (cc::gfx::DescriptorSetLayout*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_DescriptorSetLayout_getDescriptorIndices : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const std::vector<unsigned int>& result = cobj->getDescriptorIndices();
+        ok &= native_ptr_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSetLayout_getDescriptorIndices : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_DescriptorSetLayout_getDescriptorIndices)
+
+static bool js_gfx_DescriptorSetLayout_getBindings(se::State& s)
+{
+    cc::gfx::DescriptorSetLayout* cobj = (cc::gfx::DescriptorSetLayout*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_DescriptorSetLayout_getBindings : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const std::vector<cc::gfx::DescriptorSetLayoutBinding>& result = cobj->getBindings();
+        ok &= std_vector_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSetLayout_getBindings : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_gfx_DescriptorSetLayout_getBindings)
+
 static bool js_gfx_DescriptorSetLayout_initialize(se::State& s)
 {
     cc::gfx::DescriptorSetLayout* cobj = (cc::gfx::DescriptorSetLayout*)s.nativeThisObject();
@@ -15242,24 +15238,6 @@ static bool js_gfx_DescriptorSetLayout_getDevice(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_DescriptorSetLayout_getDevice)
 
-static bool js_gfx_DescriptorSetLayout_getBindings(se::State& s)
-{
-    cc::gfx::DescriptorSetLayout* cobj = (cc::gfx::DescriptorSetLayout*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_DescriptorSetLayout_getBindings : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        const std::vector<cc::gfx::DescriptorSetLayoutBinding>& result = cobj->getBindings();
-        ok &= std_vector_to_seval(result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSetLayout_getBindings : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_PROP_GET(js_gfx_DescriptorSetLayout_getBindings)
-
 SE_DECLARE_FINALIZE_FUNC(js_cc_gfx_DescriptorSetLayout_finalize)
 
 static bool js_gfx_DescriptorSetLayout_constructor(se::State& s)
@@ -15292,6 +15270,7 @@ bool js_register_gfx_DescriptorSetLayout(se::Object* obj)
     auto cls = se::Class::create("DescriptorSetLayout", obj, __jsb_cc_gfx_GFXObject_proto, _SE(js_gfx_DescriptorSetLayout_constructor));
 
     cls->defineProperty("bindings", _SE(js_gfx_DescriptorSetLayout_getBindings), nullptr);
+    cls->defineFunction("getDescriptorIndices", _SE(js_gfx_DescriptorSetLayout_getDescriptorIndices));
     cls->defineFunction("initialize", _SE(js_gfx_DescriptorSetLayout_initialize));
     cls->defineFunction("destroy", _SE(js_gfx_DescriptorSetLayout_destroy));
     cls->defineFunction("getDevice", _SE(js_gfx_DescriptorSetLayout_getDevice));
@@ -15726,21 +15705,41 @@ SE_BIND_FUNC(js_gfx_DescriptorSet_getBuffer)
 
 static bool js_gfx_DescriptorSet_bindBuffer(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cc::gfx::DescriptorSet* cobj = (cc::gfx::DescriptorSet*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_DescriptorSet_bindBuffer : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_gfx_DescriptorSet_bindBuffer : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        unsigned int arg0 = 0;
-        cc::gfx::Buffer* arg1 = nullptr;
-        ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindBuffer : Error processing arguments");
-        cobj->bindBuffer(arg0, arg1);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    do {
+        if (argc == 2) {
+            unsigned int arg0 = 0;
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Buffer* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            cobj->bindBuffer(arg0, arg1);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 3) {
+            unsigned int arg0 = 0;
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Buffer* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            unsigned int arg2 = 0;
+            ok &= seval_to_uint32(args[2], (uint32_t*)&arg2);            
+            if (!ok) { ok = true; break; }
+            cobj->bindBuffer(arg0, arg1, arg2);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_gfx_DescriptorSet_bindBuffer)
@@ -15768,21 +15767,41 @@ SE_BIND_FUNC(js_gfx_DescriptorSet_getTexture)
 
 static bool js_gfx_DescriptorSet_bindSampler(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cc::gfx::DescriptorSet* cobj = (cc::gfx::DescriptorSet*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_DescriptorSet_bindSampler : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_gfx_DescriptorSet_bindSampler : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        unsigned int arg0 = 0;
-        cc::gfx::Sampler* arg1 = nullptr;
-        ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindSampler : Error processing arguments");
-        cobj->bindSampler(arg0, arg1);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    do {
+        if (argc == 2) {
+            unsigned int arg0 = 0;
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Sampler* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            cobj->bindSampler(arg0, arg1);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 3) {
+            unsigned int arg0 = 0;
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Sampler* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            unsigned int arg2 = 0;
+            ok &= seval_to_uint32(args[2], (uint32_t*)&arg2);            
+            if (!ok) { ok = true; break; }
+            cobj->bindSampler(arg0, arg1, arg2);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_gfx_DescriptorSet_bindSampler)
@@ -15825,21 +15844,41 @@ SE_BIND_FUNC(js_gfx_DescriptorSet_getSampler)
 
 static bool js_gfx_DescriptorSet_bindTexture(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cc::gfx::DescriptorSet* cobj = (cc::gfx::DescriptorSet*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_DescriptorSet_bindTexture : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_gfx_DescriptorSet_bindTexture : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        unsigned int arg0 = 0;
-        cc::gfx::Texture* arg1 = nullptr;
-        ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
-        ok &= seval_to_native_ptr(args[1], &arg1);
-        SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindTexture : Error processing arguments");
-        cobj->bindTexture(arg0, arg1);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    do {
+        if (argc == 2) {
+            unsigned int arg0 = 0;
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Texture* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            cobj->bindTexture(arg0, arg1);
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 3) {
+            unsigned int arg0 = 0;
+            ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Texture* arg1 = nullptr;
+            ok &= seval_to_native_ptr(args[1], &arg1);            
+            if (!ok) { ok = true; break; }
+            unsigned int arg2 = 0;
+            ok &= seval_to_uint32(args[2], (uint32_t*)&arg2);            
+            if (!ok) { ok = true; break; }
+            cobj->bindTexture(arg0, arg1, arg2);
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_gfx_DescriptorSet_bindTexture)

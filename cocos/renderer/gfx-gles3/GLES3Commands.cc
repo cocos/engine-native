@@ -1801,31 +1801,32 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
 
                         CCASSERT(cmd->gpuDescriptorSets.size() > glSampler.set, "Invalid set index");
                         const GLES3GPUDescriptorSet *gpuDescriptorSet = cmd->gpuDescriptorSets[glSampler.set];
-                        const GLES3GPUDescriptor &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[glSampler.binding];
+                        uint descriptorIndex = gpuDescriptorSet->descriptorIndices->at(glSampler.binding);
+                        const GLES3GPUDescriptor *gpuDescriptor = &gpuDescriptorSet->gpuDescriptors[descriptorIndex];
 
-                        if (!gpuDescriptor.gpuTexture || !gpuDescriptor.gpuSampler) {
+                        if (!gpuDescriptor->gpuTexture || !gpuDescriptor->gpuSampler) {
                             CC_LOG_ERROR("Sampler binding '%s' at set %d binding %d is not bounded",
                                          glSampler.name.c_str(), glSampler.set, glSampler.binding);
                             continue;
                         }
 
-                        for (size_t u = 0; u < glSampler.units.size(); ++u) {
+                        for (size_t u = 0; u < glSampler.units.size(); u++, gpuDescriptor++) {
                             uint unit = (uint)glSampler.units[u];
 
-                            if (gpuDescriptor.gpuTexture->size > 0) {
-                                GLuint glTexture = gpuDescriptor.gpuTexture->glTexture;
+                            if (gpuDescriptor->gpuTexture->size > 0) {
+                                GLuint glTexture = gpuDescriptor->gpuTexture->glTexture;
                                 if (cache->glTextures[unit] != glTexture) {
                                     if (cache->texUint != unit) {
                                         glActiveTexture(GL_TEXTURE0 + unit);
                                         cache->texUint = unit;
                                     }
-                                    glBindTexture(gpuDescriptor.gpuTexture->glTarget, glTexture);
+                                    glBindTexture(gpuDescriptor->gpuTexture->glTarget, glTexture);
                                     cache->glTextures[unit] = glTexture;
                                 }
 
-                                if (cache->glSamplers[unit] != gpuDescriptor.gpuSampler->glSampler) {
-                                    glBindSampler(unit, gpuDescriptor.gpuSampler->glSampler);
-                                    cache->glSamplers[unit] = gpuDescriptor.gpuSampler->glSampler;
+                                if (cache->glSamplers[unit] != gpuDescriptor->gpuSampler->glSampler) {
+                                    glBindSampler(unit, gpuDescriptor->gpuSampler->glSampler);
+                                    cache->glSamplers[unit] = gpuDescriptor->gpuSampler->glSampler;
                                 }
                             }
                         }

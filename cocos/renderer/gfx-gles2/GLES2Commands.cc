@@ -1773,17 +1773,18 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
 
                         CCASSERT(cmd->gpuDescriptorSets.size() > glSampler.set, "Invalid set index");
                         const GLES2GPUDescriptorSet *gpuDescriptorSet = cmd->gpuDescriptorSets[glSampler.set];
-                        const GLES2GPUDescriptor &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[glSampler.binding];
+                        uint descriptorIndex = gpuDescriptorSet->descriptorIndices->at(glSampler.binding);
+                        const GLES2GPUDescriptor *gpuDescriptor = &gpuDescriptorSet->gpuDescriptors[descriptorIndex];
 
-                        if (!gpuDescriptor.gpuTexture || !gpuDescriptor.gpuSampler) {
+                        if (!gpuDescriptor->gpuTexture || !gpuDescriptor->gpuSampler) {
                             CC_LOG_ERROR("Sampler binding '%s' at set %d binding %d is not bounded",
                                          glSampler.name.c_str(), glSampler.set, glSampler.binding);
                             continue;
                         }
 
-                        for (size_t u = 0; u < glSampler.units.size(); ++u) {
+                        for (size_t u = 0; u < glSampler.units.size(); u++, gpuDescriptor++) {
                             uint unit = (uint)glSampler.units[u];
-                            GLES2GPUTexture *gpuTexture = gpuDescriptor.gpuTexture;
+                            GLES2GPUTexture *gpuTexture = gpuDescriptor->gpuTexture;
                             GLuint glTexture = gpuTexture->glTexture;
                             if (cache->glTextures[unit] != glTexture) {
                                 if (cache->texUint != unit) {
@@ -1794,25 +1795,25 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                                 cache->glTextures[unit] = glTexture;
                             }
 
-                            if (gpuDescriptor.gpuTexture->isPowerOf2) {
-                                glWrapS = gpuDescriptor.gpuSampler->glWrapS;
-                                glWrapT = gpuDescriptor.gpuSampler->glWrapT;
+                            if (gpuDescriptor->gpuTexture->isPowerOf2) {
+                                glWrapS = gpuDescriptor->gpuSampler->glWrapS;
+                                glWrapT = gpuDescriptor->gpuSampler->glWrapT;
 
-                                if (gpuDescriptor.gpuTexture->mipLevel <= 1 &&
-                                    !(gpuDescriptor.gpuTexture->flags & TextureFlagBit::GEN_MIPMAP) &&
-                                    (gpuDescriptor.gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_NEAREST ||
-                                     gpuDescriptor.gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_LINEAR)) {
+                                if (gpuDescriptor->gpuTexture->mipLevel <= 1 &&
+                                    !(gpuDescriptor->gpuTexture->flags & TextureFlagBit::GEN_MIPMAP) &&
+                                    (gpuDescriptor->gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_NEAREST ||
+                                     gpuDescriptor->gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_LINEAR)) {
                                     glMinFilter = GL_LINEAR;
                                 } else {
-                                    glMinFilter = gpuDescriptor.gpuSampler->glMinFilter;
+                                    glMinFilter = gpuDescriptor->gpuSampler->glMinFilter;
                                 }
                             } else {
                                 glWrapS = GL_CLAMP_TO_EDGE;
                                 glWrapT = GL_CLAMP_TO_EDGE;
 
-                                if (gpuDescriptor.gpuSampler->glMinFilter == GL_LINEAR ||
-                                    gpuDescriptor.gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_NEAREST ||
-                                    gpuDescriptor.gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_LINEAR) {
+                                if (gpuDescriptor->gpuSampler->glMinFilter == GL_LINEAR ||
+                                    gpuDescriptor->gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_NEAREST ||
+                                    gpuDescriptor->gpuSampler->glMinFilter == GL_LINEAR_MIPMAP_LINEAR) {
                                     glMinFilter = GL_LINEAR;
                                 } else {
                                     glMinFilter = GL_NEAREST;
@@ -1846,13 +1847,13 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                                 gpuTexture->glMinFilter = glMinFilter;
                             }
 
-                            if (gpuTexture->glMagFilter != gpuDescriptor.gpuSampler->glMagFilter) {
+                            if (gpuTexture->glMagFilter != gpuDescriptor->gpuSampler->glMagFilter) {
                                 if (cache->texUint != unit) {
                                     glActiveTexture(GL_TEXTURE0 + unit);
                                     cache->texUint = unit;
                                 }
-                                glTexParameteri(gpuTexture->glTarget, GL_TEXTURE_MAG_FILTER, gpuDescriptor.gpuSampler->glMagFilter);
-                                gpuTexture->glMagFilter = gpuDescriptor.gpuSampler->glMagFilter;
+                                glTexParameteri(gpuTexture->glTarget, GL_TEXTURE_MAG_FILTER, gpuDescriptor->gpuSampler->glMagFilter);
+                                gpuTexture->glMagFilter = gpuDescriptor->gpuSampler->glMagFilter;
                             }
                         }
                     }
