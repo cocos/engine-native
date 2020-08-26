@@ -1,7 +1,10 @@
 #pragma once
 
 #include "base/CCValue.h"
-#include "core/CoreStd.h"
+#include "../../core/CoreStd.h"
+#include "base/ccMacros.h"
+
+using namespace std;
 
 namespace cc {
 namespace pipeline {

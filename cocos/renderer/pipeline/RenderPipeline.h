@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Define.h"
-#include "core/CoreStd.h"
+#include "../core/CoreStd.h"
 #include "helper/DefineMap.h"
 
 namespace cc {
