@@ -763,21 +763,10 @@ void GLES3CmdFuncCreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
 
 void GLES3CmdFuncDestroyTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
     if (gpuTexture->glTexture) {
-        GLuint &glTexture = device->stateCache->glTextures[device->stateCache->texUint];
-        if (glTexture == gpuTexture->glTexture) {
-            switch (gpuTexture->type) {
-                case TextureType::TEX2D: {
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                    break;
-                }
-                case TextureType::CUBE: {
-                    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-                    break;
-                }
-                default: // no supported
-                    break;
+        for (GLuint &glTexture : device->stateCache->glTextures) {
+            if (glTexture == gpuTexture->glTexture) {
+                glTexture = 0;
             }
-            glTexture = 0;
         }
         glDeleteTextures(1, &gpuTexture->glTexture);
         gpuTexture->glTexture = 0;
@@ -896,11 +885,10 @@ void GLES3CmdFuncCreateSampler(GLES3Device *device, GLES3GPUSampler *gpuSampler)
 
 void GLES3CmdFuncDestroySampler(GLES3Device *device, GLES3GPUSampler *gpuSampler) {
     if (gpuSampler->glSampler) {
-        uint unit = device->stateCache->texUint;
-        GLuint &glSampler = device->stateCache->glSamplers[unit];
-        if (glSampler == gpuSampler->glSampler) {
-            glBindSampler(unit, 0);
-            glSampler = 0;
+        for (GLuint &glSampler : device->stateCache->glSamplers) {
+            if (glSampler == gpuSampler->glSampler) {
+                glSampler = 0;
+            }
         }
         glDeleteSamplers(1, &gpuSampler->glSampler);
         gpuSampler->glSampler = 0;
@@ -1778,20 +1766,19 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                             continue;
                         }
 
+                        uint offset = gpuDescriptor.gpuBuffer->glOffset;
+
                         int dynamicOffsetIndex = -1;
                         const vector<int> &dynamicOffsetIndexSet = dynamicOffsetIndices[glBlock.set];
                         dynamicOffsetIndex = dynamicOffsetIndexSet[glBlock.binding];
+                        if (dynamicOffsetIndex >= 0) offset += cmd->dynamicOffsets[dynamicOffsetIndex];
 
-                        if (dynamicOffsetIndex >= 0) { // dynamically bound
+                        if (cache->glBindUBOs[glBlock.glBinding] != gpuDescriptor.gpuBuffer->glBuffer ||
+                            cache->glBindUBOOffsets[glBlock.glBinding] != offset) {
                             glBindBufferRange(GL_UNIFORM_BUFFER, glBlock.glBinding, gpuDescriptor.gpuBuffer->glBuffer,
-                                              gpuDescriptor.gpuBuffer->glOffset + cmd->dynamicOffsets[dynamicOffsetIndex],
-                                              gpuDescriptor.gpuBuffer->size);
+                                              offset, gpuDescriptor.gpuBuffer->size);
                             cache->glUniformBuffer = cache->glBindUBOs[glBlock.glBinding] = gpuDescriptor.gpuBuffer->glBuffer;
-                        } else { // statically bound
-                            if (cache->glBindUBOs[glBlock.glBinding] != gpuDescriptor.gpuBuffer->glBuffer) {
-                                glBindBufferBase(GL_UNIFORM_BUFFER, glBlock.glBinding, gpuDescriptor.gpuBuffer->glBuffer);
-                                cache->glUniformBuffer = cache->glBindUBOs[glBlock.glBinding] = gpuDescriptor.gpuBuffer->glBuffer;
-                            }
+                            cache->glBindUBOOffsets[glBlock.glBinding] = offset;
                         }
                     }
 
@@ -1804,14 +1791,14 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                         uint descriptorIndex = gpuDescriptorSet->descriptorIndices->at(glSampler.binding);
                         const GLES3GPUDescriptor *gpuDescriptor = &gpuDescriptorSet->gpuDescriptors[descriptorIndex];
 
-                        if (!gpuDescriptor->gpuTexture || !gpuDescriptor->gpuSampler) {
-                            CC_LOG_ERROR("Sampler binding '%s' at set %d binding %d is not bounded",
-                                         glSampler.name.c_str(), glSampler.set, glSampler.binding);
-                            continue;
-                        }
-
                         for (size_t u = 0; u < glSampler.units.size(); u++, gpuDescriptor++) {
                             uint unit = (uint)glSampler.units[u];
+
+                            if (!gpuDescriptor->gpuTexture || !gpuDescriptor->gpuSampler) {
+                                CC_LOG_ERROR("Sampler binding '%s' at set %d binding %d index %d is not bounded",
+                                             glSampler.name.c_str(), glSampler.set, glSampler.binding, u);
+                                continue;
+                            }
 
                             if (gpuDescriptor->gpuTexture->size > 0) {
                                 GLuint glTexture = gpuDescriptor->gpuTexture->glTexture;

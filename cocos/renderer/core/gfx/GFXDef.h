@@ -792,7 +792,7 @@ struct UniformBlock {
     uint binding = 0;
     String name;
     UniformList members;
-    // count = 1 guaranteed, no array of blocks
+    uint count = 0u;
 };
 
 typedef vector<UniformBlock> UniformBlockList;
