@@ -101,6 +101,7 @@ bool jsb_register_all_modules()
     // extension depend on network
     se->addRegisterCallback(register_all_extension);
     se->addRegisterCallback(register_all_dop_bindings);
+    se->addRegisterCallback(register_all_pipeline);
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     se->addRegisterCallback(register_javascript_objc_bridge);
