@@ -542,6 +542,7 @@ cocos_source_files(
     cocos/renderer/pipeline/helper/DefineMap.h
     cocos/renderer/pipeline/helper/DefineMap.cpp
     cocos/renderer/pipeline/helper/SharedMemory.h
+    cocos/renderer/pipeline/helper/SharedMemory.cpp
 )
 
 if(CC_USE_GLES2)
