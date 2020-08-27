@@ -39,7 +39,6 @@ bool CCMTLPipelineLayout::initialize(const PipelineLayoutInfo &info) {
 
 void CCMTLPipelineLayout::destroy() {
     CC_SAFE_DELETE(_gpuPipelineLayout);
-    _status = Status::UNREADY;
 }
 
 }

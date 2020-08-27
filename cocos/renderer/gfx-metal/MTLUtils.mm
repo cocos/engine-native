@@ -1,11 +1,11 @@
 #include "MTLStd.h"
 
 #include "MTLDevice.h"
+#include "MTLGPUObjects.h"
 #include "MTLUtils.h"
 #include "SPIRV/GlslangToSpv.h"
 #include "StandAlone/ResourceLimits.h"
 #include "spirv_cross/spirv_msl.hpp"
-#include "MTLGPUObjects.h"
 #include <vector>
 
 namespace cc {
@@ -515,7 +515,7 @@ MTLSamplerMipFilter toMTLSamplerMipFilter(Filter filter) {
 String compileGLSLShader2Msl(const String &src,
                              ShaderStageFlagBit shaderType,
                              Device *device,
-                             CCMTLGPUShader* gpuShader) {
+                             CCMTLGPUShader *gpuShader) {
 #if USE_METAL
     String shaderSource("#version 310 es\n");
     shaderSource.append(src);
@@ -535,7 +535,7 @@ String compileGLSLShader2Msl(const String &src,
 
     // Get all uniform buffers in the shader.
     uint maxBufferBindingIndex = static_cast<CCMTLDevice *>(device)->getMaximumBufferBindingIndex();
-    const auto&bufferBingdingOffset = device->bindingMappingInfo().bufferOffsets;
+    const auto &bufferBingdingOffset = device->bindingMappingInfo().bufferOffsets;
     for (const auto &ubo : resources.uniform_buffers) {
         auto set = msl.get_decoration(ubo.id, spv::DecorationDescriptorSet);
         auto binding = msl.get_decoration(ubo.id, spv::DecorationBinding);
@@ -550,11 +550,11 @@ String compileGLSLShader2Msl(const String &src,
         newBinding.msl_texture = 0;
         newBinding.msl_sampler = 0;
         msl.add_msl_resource_binding(newBinding);
-        
-        if(shaderType == ShaderStageFlagBit::VERTEX) {
-            gpuShader->vertexBufferBindings[binding] = mappedBinding;
-        } else {
-            gpuShader->fragmentBufferBindings[binding] = mappedBinding;
+
+        if (gpuShader->blocks.find(mappedBinding) == gpuShader->blocks.end())
+            gpuShader->blocks[mappedBinding] = {ubo.name, set, binding, mappedBinding, shaderType};
+        else {
+            gpuShader->blocks[mappedBinding].stages |= shaderType;
         }
     }
 
@@ -566,7 +566,7 @@ String compileGLSLShader2Msl(const String &src,
 
     // Get all sampled images in the shader.
     unsigned int samplerIndex = 0;
-    const auto&samplerBindingOffset = device->bindingMappingInfo().samplerOffsets;
+    const auto &samplerBindingOffset = device->bindingMappingInfo().samplerOffsets;
     for (const auto &sampler : resources.sampled_images) {
         auto set = msl.get_decoration(sampler.id, spv::DecorationDescriptorSet);
         auto binding = msl.get_decoration(sampler.id, spv::DecorationBinding);
@@ -578,12 +578,13 @@ String compileGLSLShader2Msl(const String &src,
         newBinding.msl_texture = mappedBinding;
         newBinding.msl_sampler = samplerIndex;
         msl.add_msl_resource_binding(newBinding);
-        
-        if(shaderType == ShaderStageFlagBit::VERTEX) {
-            gpuShader->vertexSamplerBindings[binding] = std::make_tuple(samplerIndex, mappedBinding);
+
+        if (gpuShader->samplers.find(mappedBinding) == gpuShader->samplers.end()) {
+            gpuShader->samplers[mappedBinding] = {sampler.name, set, binding, mappedBinding, samplerIndex, shaderType};
         } else {
-            gpuShader->fragmentSamplerBindings[binding] = std::make_tuple(samplerIndex, mappedBinding);
+            gpuShader->samplers[mappedBinding].stages |= shaderType;
         }
+
         samplerIndex++;
     }
 

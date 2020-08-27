@@ -29,9 +29,6 @@ CCMTLDevice::CCMTLDevice() {
     _clipSpaceMinZ = 0.0f;
     _screenSpaceSignY = 1.0f;
     _UVSpaceSignY = 1.0f;
-    //TODO coulsonwang
-    _bindingMappingInfo.bufferOffsets = {0, 7, 2};
-    _bindingMappingInfo.samplerOffsets = {0,8,2};
 }
 
 CCMTLDevice::~CCMTLDevice() {}

@@ -54,6 +54,7 @@ void CCMTLCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer
         dynamicOffset.clear();
     }
     _firstDirtyDescriptorSet = UINT_MAX;
+    CCMTLBufferManager::begin();
 }
 
 void CCMTLCommandBuffer::end() {
@@ -108,16 +109,16 @@ void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
 
 void CCMTLCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     CCASSERT(set < _GPUDescriptorSets.size(), "Invalid set index");
-    
+
     if (dynamicOffsetCount) {
         _dynamicOffsets[set].assign(dynamicOffsets, dynamicOffsets + dynamicOffsetCount);
-        if(set < _firstDirtyDescriptorSet) _firstDirtyDescriptorSet = set;
+        if (set < _firstDirtyDescriptorSet) _firstDirtyDescriptorSet = set;
     }
 
     auto gpuDescriptorSet = static_cast<CCMTLDescriptorSet *>(descriptorSet)->gpuDescriptorSet();
-    if(_GPUDescriptorSets[set] != gpuDescriptorSet) {
+    if (_GPUDescriptorSets[set] != gpuDescriptorSet) {
         _GPUDescriptorSets[set] = gpuDescriptorSet;
-        if(set < _firstDirtyDescriptorSet) _firstDirtyDescriptorSet = set;
+        if (set < _firstDirtyDescriptorSet) _firstDirtyDescriptorSet = set;
     }
 }
 
@@ -199,7 +200,7 @@ void CCMTLCommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint m
 }
 
 void CCMTLCommandBuffer::draw(InputAssembler *ia) {
-    if(_firstDirtyDescriptorSet < _GPUDescriptorSets.size()) {
+    if (_firstDirtyDescriptorSet < _GPUDescriptorSets.size()) {
         bindDescriptorSets();
     }
 
@@ -302,12 +303,12 @@ void CCMTLCommandBuffer::bindDescriptorSets() {
         auto stream = std::get<1>(bindingInfo);
         static_cast<CCMTLBuffer *>(vertexBuffers[stream])->encodeBuffer(_mtlEncoder, 0, index, ShaderStageFlagBit::VERTEX);
     }
-    static const auto &gBindingMappedInfo = _device->bindingMappingInfo();
+
     const auto &dynamicOffsetIndices = _gpuPipelineState->gpuPipelineLayout->dynamicOffsetIndices;
     const auto &blocks = _gpuPipelineState->gpuShader->blocks;
-    for (const auto &block : blocks) {
-        if(block.set < _firstDirtyDescriptorSet) continue;
-        
+    for (const auto &iter : blocks) {
+        const auto &block = iter.second;
+
         const auto gpuDescriptorSet = _GPUDescriptorSets[block.set];
         const auto &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[block.binding];
         if (!gpuDescriptor.buffer) {
@@ -321,45 +322,37 @@ void CCMTLCommandBuffer::bindDescriptorSets() {
             uint offset = (dynamicOffsetIndex >= 0) ? _dynamicOffsets[block.set][dynamicOffsetIndex] : 0;
             gpuDescriptor.buffer->encodeBuffer(_mtlEncoder,
                                                offset,
-                                               block.binding + gBindingMappedInfo.bufferOffsets[block.set],
-                                               gpuDescriptor.stages);
+                                               block.mappedBinding,
+                                               block.stages);
         }
     }
-    
-    const auto &vertexSamplerBindings = _gpuPipelineState->gpuShader->vertexSamplerBindings;
-    const auto &fragmentSamplerBindings = _gpuPipelineState->gpuShader->fragmentSamplerBindings;
-        const auto &samplers = _gpuPipelineState->gpuShader->samplers;
-        for (const auto sampler : samplers) {
-            if(sampler.set < _firstDirtyDescriptorSet) continue;
-    
-            const auto gpuDescriptorSet = _GPUDescriptorSets[sampler.set];
-            const auto &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[sampler.binding];
-    
-            if (!gpuDescriptor.texture || !gpuDescriptor.sampler) {
-                CC_LOG_ERROR("Sampler binding %s at set %d binding %d is not bounded.", sampler.name.c_str(), sampler.set, sampler.binding);
-                continue;
-            }
-    
-            uint samplerBinding = 0;
-            uint textureBinding = 0;
-            if (gpuDescriptor.stages & ShaderStageFlagBit::VERTEX) {
-                auto binding = vertexSamplerBindings.at(sampler.binding);
-                std::tie(samplerBinding, textureBinding) = binding;
-                [_mtlEncoder setVertexTexture:gpuDescriptor.texture->getMTLTexture()
-                                      atIndex:textureBinding];
-                [_mtlEncoder setVertexSamplerState:gpuDescriptor.sampler->getMTLSamplerState()
-                                           atIndex:samplerBinding];
-            }
-    
-            if (gpuDescriptor.stages & ShaderStageFlagBit::FRAGMENT) {
-                auto binding = fragmentSamplerBindings.at(sampler.binding);
-                std::tie(samplerBinding, textureBinding) = binding;
-                [_mtlEncoder setFragmentTexture:gpuDescriptor.texture->getMTLTexture()
-                                        atIndex:textureBinding];
-                [_mtlEncoder setFragmentSamplerState:gpuDescriptor.sampler->getMTLSamplerState()
-                                             atIndex:samplerBinding];
-            }
+
+    const auto &samplers = _gpuPipelineState->gpuShader->samplers;
+    for (const auto &iter : samplers) {
+        const auto &sampler = iter.second;
+
+        const auto gpuDescriptorSet = _GPUDescriptorSets[sampler.set];
+        const auto &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[sampler.binding];
+
+        if (!gpuDescriptor.texture || !gpuDescriptor.sampler) {
+            CC_LOG_ERROR("Sampler binding %s at set %d binding %d is not bounded.", sampler.name.c_str(), sampler.set, sampler.binding);
+            continue;
         }
+
+        if (sampler.stages & ShaderStageFlagBit::VERTEX) {
+            [_mtlEncoder setVertexTexture:gpuDescriptor.texture->getMTLTexture()
+                                  atIndex:sampler.textureBinding];
+            [_mtlEncoder setVertexSamplerState:gpuDescriptor.sampler->getMTLSamplerState()
+                                       atIndex:sampler.samplerBinding];
+        }
+
+        if (sampler.stages & ShaderStageFlagBit::FRAGMENT) {
+            [_mtlEncoder setFragmentTexture:gpuDescriptor.texture->getMTLTexture()
+                                    atIndex:sampler.textureBinding];
+            [_mtlEncoder setFragmentSamplerState:gpuDescriptor.sampler->getMTLSamplerState()
+                                         atIndex:sampler.samplerBinding];
+        }
+    }
     _firstDirtyDescriptorSet = UINT_MAX;
 }
 
