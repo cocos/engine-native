@@ -116,7 +116,6 @@ SE_BIND_CTOR(js_pipeline_RenderPipeline_constructor, __jsb_cc_pipeline_RenderPip
 
 
 
-extern se::Object* __jsb_cc_Object_proto;
 
 static bool js_cc_pipeline_RenderPipeline_finalize(se::State& s)
 {
@@ -133,7 +132,7 @@ SE_BIND_FINALIZE_FUNC(js_cc_pipeline_RenderPipeline_finalize)
 
 bool js_register_pipeline_RenderPipeline(se::Object* obj)
 {
-    auto cls = se::Class::create("RenderPipeline", obj, __jsb_cc_Object_proto, _SE(js_pipeline_RenderPipeline_constructor));
+    auto cls = se::Class::create("RenderPipeline", obj, nullptr, _SE(js_pipeline_RenderPipeline_constructor));
 
     cls->defineFunction("activate", _SE(js_pipeline_RenderPipeline_activate));
     cls->defineFunction("render", _SE(js_pipeline_RenderPipeline_render));
