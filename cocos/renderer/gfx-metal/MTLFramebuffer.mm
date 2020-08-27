@@ -18,7 +18,7 @@ bool CCMTLFramebuffer::initialize(const FramebufferInfo &info) {
     auto *mtlRenderPass = static_cast<CCMTLRenderPass *>(_renderPass);
     size_t slot = 0;
     size_t levelCount = info.colorMipmapLevels.size();
-    int i = 0;
+    size_t i = 0;
     size_t attachmentIndices = 0;
     for (const auto &colorTexture : info.colorTextures) {
         int level = 0;
@@ -33,20 +33,18 @@ bool CCMTLFramebuffer::initialize(const FramebufferInfo &info) {
         ++i;
     }
 
-    _isOffscreen = (attachmentIndices != 0);
-
     if (_depthStencilTexture) {
         id<MTLTexture> texture = static_cast<CCMTLTexture *>(_depthStencilTexture)->getMTLTexture();
         mtlRenderPass->setDepthStencilAttachment(texture, info.depthStencilMipmapLevel);
+        attachmentIndices |= (1 << i);
     }
 
-    _status = Status::SUCCESS;
+    _isOffscreen = (attachmentIndices != 0);
 
     return true;
 }
 
 void CCMTLFramebuffer::destroy() {
-    _status = Status::UNREADY;
 }
 
 } // namespace gfx

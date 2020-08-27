@@ -1,10 +1,11 @@
-#ifndef CC_GFXVULKAN_CCVK_BUFFER_H_
-#define CC_GFXVULKAN_CCVK_BUFFER_H_
+#ifndef CC_GFXVULKAN_BUFFER_H_
+#define CC_GFXVULKAN_BUFFER_H_
 
 namespace cc {
 namespace gfx {
 
 class CCVKGPUBuffer;
+class CCVKGPUBufferView;
 
 class CC_VULKAN_API CCVKBuffer : public Buffer {
 public:
@@ -13,14 +14,19 @@ public:
 
 public:
     bool initialize(const BufferInfo &info);
+    bool initialize(const BufferViewInfo &info);
     void destroy();
     void resize(uint size);
     void update(void *buffer, uint offset, uint size);
 
     CC_INLINE CCVKGPUBuffer *gpuBuffer() const { return _gpuBuffer; }
+    CC_INLINE CCVKGPUBufferView *gpuBufferView() const { return _gpuBufferView; }
 
 private:
+    void createBufferView();
+
     CCVKGPUBuffer *_gpuBuffer = nullptr;
+    CCVKGPUBufferView *_gpuBufferView = nullptr;
 };
 
 } // namespace gfx

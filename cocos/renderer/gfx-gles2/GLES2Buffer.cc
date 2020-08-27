@@ -1,4 +1,5 @@
 #include "GLES2Std.h"
+
 #include "GLES2Buffer.h"
 #include "GLES2Commands.h"
 
@@ -17,14 +18,13 @@ bool GLES2Buffer::initialize(const BufferInfo &info) {
     _usage = info.usage;
     _memUsage = info.memUsage;
     _size = info.size;
-    _stride = std::max(info.stride, 1U);
+    _stride = std::max(info.stride, 1u);
     _count = _size / _stride;
     _flags = info.flags;
 
     if ((_flags & BufferFlagBit::BAKUP_BUFFER) && _size > 0) {
         _buffer = (uint8_t *)CC_MALLOC(_size);
         if (!_buffer) {
-            _status = Status::FAILED;
             CC_LOG_ERROR("GLES2Buffer: CC_MALLOC backup buffer faild.");
             return false;
         }
@@ -33,7 +33,6 @@ bool GLES2Buffer::initialize(const BufferInfo &info) {
 
     _gpuBuffer = CC_NEW(GLES2GPUBuffer);
     if (!_gpuBuffer) {
-        _status = Status::FAILED;
         CC_LOG_ERROR("GLES2Buffer: CC_NEW GLES2GPUBuffer failed.");
         return false;
     }
@@ -52,7 +51,25 @@ bool GLES2Buffer::initialize(const BufferInfo &info) {
     GLES2CmdFuncCreateBuffer((GLES2Device *)_device, _gpuBuffer);
     _device->getMemoryStatus().bufferSize += _size;
 
-    _status = Status::SUCCESS;
+    return true;
+}
+
+bool GLES2Buffer::initialize(const BufferViewInfo &info) {
+
+    _isBufferView = true;
+
+    GLES2Buffer *buffer = (GLES2Buffer *)info.buffer;
+
+    _usage = buffer->_usage;
+    _memUsage = buffer->_memUsage;
+    _size = _stride = info.range;
+    _count = 1u;
+    _flags = buffer->_flags;
+
+    _gpuBufferView = CC_NEW(GLES2GPUBufferView);
+    _gpuBufferView->gpuBuffer = buffer->gpuBuffer();
+    _gpuBufferView->range = _size;
+    _gpuBufferView->offset = info.offset;
 
     return true;
 }
@@ -65,16 +82,18 @@ void GLES2Buffer::destroy() {
         _gpuBuffer = nullptr;
     }
 
+    CC_SAFE_DELETE(_gpuBufferView);
+
     if (_buffer) {
         CC_FREE(_buffer);
         _device->getMemoryStatus().bufferSize -= _size;
         _buffer = nullptr;
     }
-
-    _status = Status::UNREADY;
 }
 
 void GLES2Buffer::resize(uint size) {
+    CCASSERT(!_isBufferView, "Cannot resize buffer views");
+
     if (_size != size) {
         const uint oldSize = _size;
         _size = size;
@@ -91,7 +110,6 @@ void GLES2Buffer::resize(uint size) {
             const uint8_t *oldBuffer = _buffer;
             uint8_t *buffer = (uint8_t *)CC_MALLOC(_size);
             if (!buffer) {
-                _status = Status::FAILED;
                 CC_LOG_ERROR("GLES2Buffer: CC_MALLOC backup buffer failed.");
                 return;
             }
@@ -101,13 +119,14 @@ void GLES2Buffer::resize(uint size) {
             status.bufferSize -= oldSize;
             status.bufferSize += _size;
         }
-        _status = Status::SUCCESS;
     }
 }
 
 void GLES2Buffer::update(void *buffer, uint offset, uint size) {
+    CCASSERT(!_isBufferView, "Cannot update through buffer views");
     CCASSERT(size != 0, "Should not update buffer with 0 bytes of data");
     CCASSERT(buffer, "Buffer should not be nullptr");
+
     if (_buffer) {
         memcpy(_buffer + offset, buffer, size);
     }

@@ -24,13 +24,11 @@ bool GLES3Shader::initialize(const ShaderInfo &info) {
     _gpuShader->blocks = _blocks;
     _gpuShader->samplers = _samplers;
     for (const auto &stage : _stages) {
-        GLES3GPUShaderStage gpuShaderStage = {stage.type, stage.source, stage.macros, 0};
+        GLES3GPUShaderStage gpuShaderStage = {stage.stage, stage.source};
         _gpuShader->gpuStages.emplace_back(std::move(gpuShaderStage));
     }
 
     GLES3CmdFuncCreateShader((GLES3Device *)_device, _gpuShader);
-
-    _status = Status::SUCCESS;
 
     return true;
 }
@@ -41,8 +39,6 @@ void GLES3Shader::destroy() {
         CC_DELETE(_gpuShader);
         _gpuShader = nullptr;
     }
-
-    _status = Status::UNREADY;
 }
 
 } // namespace gfx

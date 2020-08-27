@@ -44,12 +44,6 @@ if(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
 	set(ALL_FILES ${ALL_FILES} ${SOURCE_MM_FILES})
 endif()
 
-if(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
-	list(REMOVE_ITEM ALL_FILES "${COCOS_SRC_PATH}/renderer/gfx-vulkan/gles3w.c")
-else()
-	list(REMOVE_ITEM ALL_FILES "${COCOS_SRC_PATH}/renderer/gfx-vulkan/gles3w.mm")
-endif()
-
 add_definitions("-DCC_VK_EXPORTS")
 if(WIN32)
 	add_definitions("-DGLEW_BUILD")
@@ -74,5 +68,5 @@ use_precompiled_header("${CMAKE_CURRENT_SOURCE_DIR}/VKStd.h" "${CMAKE_CURRENT_SO
 message(STATUS "${TARGET_NAME} configuration completed.")
 
 target_compile_definitions(${TARGET_NAME} PUBLIC
-    $<$<CONFIG:Debug>:COCOS2D_DEBUG=1>
+    $<$<CONFIG:Debug>:CC_DEBUG=1>
 )

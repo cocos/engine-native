@@ -1,13 +1,15 @@
 #include "MTLStd.h"
 
-#include "MTLBindingLayout.h"
 #include "MTLBuffer.h"
 #include "MTLCommandBuffer.h"
 #include "MTLContext.h"
+#include "MTLDescriptorSet.h"
+#include "MTLDescriptorSetLayout.h"
 #include "MTLDevice.h"
 #include "MTLFence.h"
 #include "MTLFrameBuffer.h"
 #include "MTLInputAssembler.h"
+#include "MTLPipelineLayout.h"
 #include "MTLPipelineState.h"
 #include "MTLQueue.h"
 #include "MTLRenderPass.h"
@@ -40,6 +42,14 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _nativeHeight = info.nativeHeight;
     _windowHandle = info.windowHandle;
 
+    _bindingMappingInfo = info.bindingMappingInfo;
+    if (!_bindingMappingInfo.bufferOffsets.size()) {
+        _bindingMappingInfo.bufferOffsets.push_back(0);
+    }
+    if (!_bindingMappingInfo.samplerOffsets.size()) {
+        _bindingMappingInfo.samplerOffsets.push_back(0);
+    }
+
     _stateCache = CC_NEW(CCMTLStateCache);
 
     _mtkView = (MTKView *)_windowHandle;
@@ -70,7 +80,9 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _maxCubeMapTextureSize = mu::getMaxCubeMapTextureWidthHeight(gpuFamily);
     _maxColorRenderTargets = mu::getMaxColorRenderTarget(gpuFamily);
     _maxBufferBindingIndex = mu::getMaxEntriesInBufferArgumentTable(gpuFamily);
+    _uboOffsetAlignment = mu::getMinBufferOffsetAlignment(gpuFamily);
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
+
     if ([id<MTLDevice>(_mtlDevice) isDepth24Stencil8PixelFormatSupported]) {
         _depthBits = 24;
         _stencilBits = 8;
@@ -176,6 +188,15 @@ Buffer *CCMTLDevice::createBuffer(const BufferInfo &info) {
     return nullptr;
 }
 
+Buffer *CCMTLDevice::createBuffer(const BufferViewInfo &info) {
+    auto buffer = CC_NEW(CCMTLBuffer(this));
+    if (buffer && buffer->initialize(info))
+        return buffer;
+
+    CC_SAFE_DESTROY(buffer);
+    return nullptr;
+}
+
 Texture *CCMTLDevice::createTexture(const TextureInfo &info) {
     auto texture = CC_NEW(CCMTLTexture(this));
     if (texture && texture->initialize(info))
@@ -239,12 +260,30 @@ Framebuffer *CCMTLDevice::createFramebuffer(const FramebufferInfo &info) {
     return nullptr;
 }
 
-BindingLayout *CCMTLDevice::createBindingLayout(const BindingLayoutInfo &info) {
-    auto bl = CC_NEW(CCMTLBindingLayout(this));
-    if (bl && bl->initialize(info))
-        return bl;
+DescriptorSet *CCMTLDevice::createDescriptorSet(const DescriptorSetInfo &info) {
+    auto descriptorSet = CC_NEW(CCMTLDescriptorSet(this));
+    if (descriptorSet && descriptorSet->initialize(info))
+        return descriptorSet;
 
-    CC_SAFE_DESTROY(bl);
+    CC_SAFE_DESTROY(descriptorSet);
+    return nullptr;
+}
+
+DescriptorSetLayout *CCMTLDevice::createDescriptorSetLayout(const DescriptorSetLayoutInfo &info) {
+    auto descriptorSetLayout = CC_NEW(CCMTLDescriptorSetLayout(this));
+    if (descriptorSetLayout && descriptorSetLayout->initialize(info))
+        return descriptorSetLayout;
+
+    CC_SAFE_DESTROY(descriptorSetLayout);
+    return nullptr;
+}
+
+PipelineLayout *CCMTLDevice::createPipelineLayout(const PipelineLayoutInfo &info) {
+    auto pipelineLayout = CC_NEW(CCMTLPipelineLayout(this));
+    if (pipelineLayout && pipelineLayout->initialize(info))
+        return pipelineLayout;
+
+    CC_SAFE_DESTROY(pipelineLayout);
     return nullptr;
 }
 
@@ -257,8 +296,8 @@ PipelineState *CCMTLDevice::createPipelineState(const PipelineStateInfo &info) {
     return nullptr;
 }
 
-void CCMTLDevice::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
-    static_cast<CCMTLTexture *>(texture)->update(buffers.data(), regions);
+void CCMTLDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
+    static_cast<CCMTLTexture *>(texture)->update(buffers, regions, count);
 }
 
 void CCMTLDevice::blitBuffer(void *srcData, uint offset, uint size, void *dstBuffer) {

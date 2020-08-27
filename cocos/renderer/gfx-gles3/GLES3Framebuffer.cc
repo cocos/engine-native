@@ -23,7 +23,9 @@ bool GLES3Framebuffer::initialize(const FramebufferInfo &info) {
     _gpuFBO = CC_NEW(GLES3GPUFramebuffer);
     _gpuFBO->gpuRenderPass = ((GLES3RenderPass *)_renderPass)->gpuRenderPass();
     _gpuFBO->depthStencilMipmapLevel = info.depthStencilMipmapLevel;
-    _gpuFBO->colorMipmapLevels = info.colorMipmapLevels;
+    for (uint mipLevel : info.colorMipmapLevels) {
+        _gpuFBO->colorMipmapLevels.push_back(mipLevel);
+    }
 
     _gpuFBO->gpuColorTextures.resize(_colorTextures.size());
     for (size_t i = 0; i < _colorTextures.size(); ++i) {
@@ -39,8 +41,6 @@ bool GLES3Framebuffer::initialize(const FramebufferInfo &info) {
 
     GLES3CmdFuncCreateFramebuffer((GLES3Device *)_device, _gpuFBO);
 
-    _status = Status::SUCCESS;
-
     return true;
 }
 
@@ -50,7 +50,6 @@ void GLES3Framebuffer::destroy() {
         CC_DELETE(_gpuFBO);
         _gpuFBO = nullptr;
     }
-    _status = Status::UNREADY;
 }
 
 } // namespace gfx

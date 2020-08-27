@@ -1,5 +1,5 @@
-#ifndef CC_GFXGLES3_GLES3_DEVICE_H_
-#define CC_GFXGLES3_GLES3_DEVICE_H_
+#ifndef CC_GFXGLES3_DEVICE_H_
+#define CC_GFXGLES3_DEVICE_H_
 
 namespace cc {
 namespace gfx {
@@ -24,6 +24,7 @@ public:
     virtual Fence *createFence(const FenceInfo &info) override;
     virtual Queue *createQueue(const QueueInfo &info) override;
     virtual Buffer *createBuffer(const BufferInfo &info) override;
+    virtual Buffer *createBuffer(const BufferViewInfo &info) override;
     virtual Texture *createTexture(const TextureInfo &info) override;
     virtual Texture *createTexture(const TextureViewInfo &info) override;
     virtual Sampler *createSampler(const SamplerInfo &info) override;
@@ -31,9 +32,11 @@ public:
     virtual InputAssembler *createInputAssembler(const InputAssemblerInfo &info) override;
     virtual RenderPass *createRenderPass(const RenderPassInfo &info) override;
     virtual Framebuffer *createFramebuffer(const FramebufferInfo &info) override;
-    virtual BindingLayout *createBindingLayout(const BindingLayoutInfo &info) override;
+    virtual DescriptorSet *createDescriptorSet(const DescriptorSetInfo &info) override;
+    virtual DescriptorSetLayout *createDescriptorSetLayout(const DescriptorSetLayoutInfo &info) override;
+    virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) override;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
-    virtual void copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) override;
+    virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
 
     CC_INLINE GLES3CommandAllocator *cmdAllocator() const { return _cmdAllocator; }
 
