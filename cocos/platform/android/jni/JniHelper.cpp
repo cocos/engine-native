@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "platform/android/jni/JniHelper.h"
-#include "platform/android/CCFileUtils-android.h"
+#include "platform/android/FileUtils-android.h"
 #include <android/log.h>
 #include <string.h>
 #include <pthread.h>

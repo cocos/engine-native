@@ -27,9 +27,9 @@ THE SOFTWARE.
 
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS
 
-#include "platform/CCDevice.h"
-#include "platform/CCFileUtils.h"
-#include "platform/CCStdC.h"
+#include "platform/Device.h"
+#include "platform/FileUtils.h"
+#include "platform/StdC.h"
 
 namespace cc {
 
