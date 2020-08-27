@@ -41,6 +41,7 @@
 #include "cocos/scripting/js-bindings/auto/jsb_gfx_auto.h"
 #include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.h"
 #include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_extension_auto.h"
+#include "cocos/scripting/js-bindings/auto/jsb_pipeline_auto.h"
 
 #if USE_GFX_RENDERER
 #endif

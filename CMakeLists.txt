@@ -767,6 +767,8 @@ cocos_source_files(
     cocos/scripting/js-bindings/auto/jsb_gfx_auto.h
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.cpp
     cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.h
+    cocos/scripting/js-bindings/auto/jsb_pipeline_auto.cpp
+    cocos/scripting/js-bindings/auto/jsb_pipeline_auto.h
 )
 
 if(USE_AUDIO)
