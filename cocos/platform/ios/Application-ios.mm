@@ -22,10 +22,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#import "CCApplication.h"
+#import "Application.h"
 #import <UIKit/UIKit.h>
-#include "base/CCScheduler.h"
-#include "base/CCAutoreleasePool.h"
+#include "base/Scheduler.h"
+#include "base/AutoreleasePool.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "audio/include/AudioEngine.h"

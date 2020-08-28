@@ -24,12 +24,12 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "CCApplication.h"
-#include "platform/CCDevice.h"
+#include "platform/Device.h"
 
 // Vibrate
 #import <AudioToolbox/AudioToolbox.h>
-#include "platform/apple/CCDevice-apple.h"
-#include "CCReachability.h"
+#include "platform/apple/Device-apple.h"
+#include "Reachability.h"
 
 #import <UIKit/UIKit.h>
 // Accelerometer

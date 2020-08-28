@@ -21,7 +21,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#import "CCView.h"
+#import "View.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 
 namespace {
