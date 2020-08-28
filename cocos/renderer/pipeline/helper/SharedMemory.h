@@ -159,19 +159,19 @@ struct CC_DLL Fog {
 
 struct CC_DLL ShadowMap {
     uint32_t enabled = 0;
-    uint32_t near = 0;
-    uint32_t far = 0;
+    uint32_t nearValue = 0;
+    uint32_t farValue = 0;
     uint32_t aspect = 0;
     uint32_t orthoSize = 0;
     cc::Vec2 size;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
 };
 
 struct CC_DLL PlanarShadow {
     uint32_t enabled = 0;
-    
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+
+    const static se::PoolType type;
 };
 
 struct CC_DLL InstancedAttribute {
@@ -259,7 +259,7 @@ struct CC_DLL RenderWindow {
 #define GET_MAIN_LIGHT(index)                 SharedMemory::getBuffer<MainLight>(index)
 #define GET_AMBIENT(index)                    SharedMemory::getBuffer<Ambient>(index)
 #define GET_FOG(index)                        SharedMemory::getBuffer<Fog>(index)
-#define GET_PLANAR_SHADOW(index)              static_cast<PlanarShadow *>(0)
+#define GET_PLANAR_SHADOW(index)              SharedMemory::getBuffer<PlanarShadow>(index)
 #define GET_SKYBOX(index)                     SharedMemory::getBuffer<Skybox>(index)
 #define GET_FRUSTUM(index)                    SharedMemory::getBuffer<Frustum>(index)
 #define GET_AABB(index)                       SharedMemory::getBuffer<AABB>(index)
