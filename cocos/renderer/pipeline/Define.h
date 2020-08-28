@@ -174,13 +174,20 @@ enum class CC_DLL UniformBinding : uint8_t {
     CUSTOM_SAMPLER_BINDING_START_POINT = MAX_BINDING_SUPPORTED + 8,
 };
 
+struct CC_DLL BlockInfo : public gfx::UniformBlock, public gfx::DescriptorSetLayoutBinding {
+    BlockInfo(const gfx::UniformBlock &block, const gfx::DescriptorSetLayoutBinding &binding) : gfx::UniformBlock{block}, gfx::DescriptorSetLayoutBinding{} {}
+};
+struct CC_DLL SamplerInfo : public gfx::UniformSampler, public gfx::DescriptorSetLayoutBinding {
+    SamplerInfo(const gfx::UniformSampler &sampler, const gfx::DescriptorSetLayoutBinding &binding) : gfx::UniformSampler(sampler), gfx::DescriptorSetLayoutBinding{} {}
+};
+
 struct CC_DLL UBOLocalBatched {
     static const uint BATCHING_COUNT = 10;
     static const uint MAT_WORLDS_OFFSET = 0;
     static const uint COUNT = 16 * BATCHING_COUNT;
     static const uint SIZE = COUNT * 4;
 
-    static gfx::UniformBlock BLOCK;
+    static BlockInfo BLOCK;
     std::array<float, COUNT> view;
 };
 
@@ -224,15 +231,16 @@ struct CC_DLL UBOGlobal : public Object {
     static const uint GLOBAL_FOG_ADD_OFFSET = UBOGlobal::GLOBAL_FOG_BASE_OFFSET + 4;
     static const uint COUNT = UBOGlobal::GLOBAL_FOG_ADD_OFFSET + 4;
     static const uint SIZE = UBOGlobal::COUNT * 4;
-    static gfx::UniformBlock BLOCK; //TODO
+    static BlockInfo BLOCK;
 };
 
-struct  CC_DLL UBOShadow : public Object {
+struct CC_DLL UBOShadow : public Object {
     static const uint MAT_LIGHT_PLANE_PROJ_OFFSET = 0;
-    static const uint SHADOW_COLOR_OFFSET = UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
+    static const uint MAT_LIGHT_VIEW_PROJ_OFFSET = UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
+    static const uint SHADOW_COLOR_OFFSET = UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET + 16;
     static const uint COUNT = UBOShadow::SHADOW_COLOR_OFFSET + 4;
     static const uint SIZE = UBOShadow::COUNT * 4;
-    static gfx::UniformBlock BLOCK; //TODO
+    static BlockInfo BLOCK;
 };
 
 class CC_DLL SamplerLib : public Object {
@@ -240,9 +248,11 @@ public:
     gfx::Sampler *getSampler(uint hash);
 };
 
-struct CC_DLL DescriptorSetLayoutInfo {
-    //    bindings: GFXDescriptorSetLayoutBinding[];
-    //    record: Record<string, IBlockInfo | ISamplerInfo>;
+struct CC_DLL DescriptorSetLayoutInfos : public gfx::DescriptorSetLayoutInfo {
+    union record {
+        unordered_map<String, BlockInfo> block;
+        unordered_map<String, SamplerInfo> sampler;
+    };
 };
 
 uint genSamplerHash(const gfx::SamplerInfo &);
@@ -269,9 +279,42 @@ enum class CC_DLL BatchingSchemes {
     VB_MERGING = 2,
 };
 
-extern CC_DLL uint SKYBOX_FLAG;
-extern CC_DLL DescriptorSetLayoutInfo globalDescriptorSetLayout;
-extern CC_DLL DescriptorSetLayoutInfo localDescriptorSetLayout;
+enum class CC_DLL SetIndex : uint8_t {
+    GLOBAL,
+    MATERIAL,
+    LOCAL,
+};
 
+enum class CC_DLL PipelineGlobalBindings {
+    UBO_GLOBAL,
+    UBO_SHADOW,
+
+    SAMPLER_ENVIRONMENT,
+    SAMPLER_SHADOWMAP,
+
+    COUNT,
+};
+
+enum class CC_DLL ModelLocalBindings {
+    UBO_LOCAL,
+    UBO_FORWARD_LIGHTS,
+    UBO_SKINNING_ANIMATION,
+    UBO_SKINNING_TEXTURE,
+    UBO_MORPH,
+
+    SAMPLER_JOINTS,
+    SAMPLER_MORPH_POSITION,
+    SAMPLER_MORPH_NORMAL,
+    SAMPLER_MORPH_TANGENT,
+    SAMPLER_LIGHTING_MAP,
+    SAMPLER_SPRITE,
+
+    COUNT,
+};
+
+extern CC_DLL uint SKYBOX_FLAG;
+extern CC_DLL DescriptorSetLayoutInfos globalDescriptorSetLayout;
+extern CC_DLL DescriptorSetLayoutInfos localDescriptorSetLayout;
+extern CC_DLL const SamplerInfo UNIFORM_SHADOWMAP;
 } // namespace pipeline
 } // namespace cc

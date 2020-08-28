@@ -5,9 +5,83 @@
 namespace cc {
 namespace pipeline {
 
-//TODO coulsonwang
-gfx::UniformBlock UBOGlobal::BLOCK;
-gfx::UniformBlock UBOShadow::BLOCK;
+DescriptorSetLayoutInfos globalDescriptorSetLayout;
+DescriptorSetLayoutInfos localDescriptorSetLayout;
+const SamplerInfo UNIFORM_SHADOWMAP = {
+    {static_cast<uint>(SetIndex::GLOBAL),
+     static_cast<uint>(PipelineGlobalBindings::SAMPLER_SHADOWMAP),
+     "cc_shadowMap",
+     gfx::Type::SAMPLER2D,
+     1},
+    {
+        gfx::DescriptorType::SAMPLER,
+        1,
+        gfx::ShaderStageFlagBit::FRAGMENT,
+    }};
+
+static gfx::UniformBlock block;
+static gfx::DescriptorSetLayoutBinding binding;
+BlockInfo UBOGlobal::BLOCK = {
+    {static_cast<uint>(SetIndex::GLOBAL),
+     static_cast<uint>(PipelineGlobalBindings::UBO_GLOBAL),
+     "CCGlobal",
+     {
+         {"cc_time", gfx::Type::FLOAT4, 1},
+         {"cc_screenSize", gfx::Type::FLOAT4, 1},
+         {"cc_screenScale", gfx::Type::FLOAT4, 1},
+         {"cc_nativeSize", gfx::Type::FLOAT4, 1},
+         {"cc_matView", gfx::Type::MAT4, 1},
+         {"cc_matViewInv", gfx::Type::MAT4, 1},
+         {"cc_matProj", gfx::Type::MAT4, 1},
+         {"cc_matProjInv", gfx::Type::MAT4, 1},
+         {"cc_matViewProj", gfx::Type::MAT4, 1},
+         {"cc_matViewProjInv", gfx::Type::MAT4, 1},
+         {"cc_cameraPos", gfx::Type::FLOAT4, 1},
+         {"cc_exposure", gfx::Type::FLOAT4, 1},
+         {"cc_mainLitDir", gfx::Type::FLOAT4, 1},
+         {"cc_mainLitColor", gfx::Type::FLOAT4, 1},
+         {"cc_ambientSky", gfx::Type::FLOAT4, 1},
+         {"cc_ambientGround", gfx::Type::FLOAT4, 1},
+         {"cc_fogColor", gfx::Type::FLOAT4, 1},
+         {"cc_fogBase", gfx::Type::FLOAT4, 1},
+         {"cc_fogAdd", gfx::Type::FLOAT4, 1},
+     },
+     1},
+    {
+        gfx::DescriptorType::UNIFORM_BUFFER,
+        1,
+        gfx::ShaderStageFlagBit::ALL,
+    }};
+
+BlockInfo UBOShadow::BLOCK = {
+    {static_cast<uint>(SetIndex::GLOBAL),
+     static_cast<uint>(PipelineGlobalBindings::UBO_SHADOW),
+     "CCShadow",
+     {
+         {"cc_matLightPlaneProj", gfx::Type::MAT4, 1},
+         {"cc_matLightViewProj", gfx::Type::MAT4, 1},
+         {"cc_shadowColor", gfx::Type::FLOAT4, 1},
+     },
+     1},
+    {
+        gfx::DescriptorType::UNIFORM_BUFFER,
+        1,
+        gfx::ShaderStageFlagBit::ALL,
+    }};
+
+BlockInfo UBOLocalBatched::BLOCK = {
+    {static_cast<uint>(SetIndex::LOCAL),
+     static_cast<uint>(ModelLocalBindings::UBO_LOCAL),
+     "CCLocalBatched",
+     {
+         {"cc_matWorlds", gfx::Type::MAT4, 1},
+     },
+     1},
+    {
+        gfx::DescriptorType::UNIFORM_BUFFER,
+        1,
+        gfx::ShaderStageFlagBit::ALL,
+    }};
 
 uint genSamplerHash(const gfx::SamplerInfo &info) {
     uint hash = 0;
