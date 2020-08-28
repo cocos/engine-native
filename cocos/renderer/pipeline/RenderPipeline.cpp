@@ -36,7 +36,7 @@ bool RenderPipeline::activate() {
     return true;
 }
 
-void RenderPipeline::render(vector<RenderView*>& views) {
+void RenderPipeline::render(const vector<RenderView*>& views) {
     for (const auto view : views) {
         const auto &flows = view->getFlows();
         for (const auto flow : flows)

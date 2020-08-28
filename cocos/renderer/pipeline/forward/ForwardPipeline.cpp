@@ -111,7 +111,7 @@ bool ForwardPipeline::activate() {
     return true;
 }
 
-void ForwardPipeline::render(vector<RenderView*>& views) {
+void ForwardPipeline::render(const vector<RenderView*>& views) {
     for (const auto view : views) {
         sceneCulling(this, view);
         const auto &flows = view->getFlows();
