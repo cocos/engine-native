@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include <pthread.h>
 #include <android_native_app_glue.h>
 
-#include "base/ccUTF8.h"
+#include "base/UTF8.h"
 
 #define  LOG_TAG    "JniHelper"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
