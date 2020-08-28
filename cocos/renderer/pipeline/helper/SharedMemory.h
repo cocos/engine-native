@@ -1,9 +1,9 @@
 #pragma once
 #include "core/CoreStd.h"
 #include "math/Vec3.h"
-#include "scripting/dop/BufferPool.h"
-#include "scripting/dop/ObjectPool.h"
-#include "scripting/dop/ArrayPool.h"
+#include "bindings/dop/BufferPool.h"
+#include "bindings/dop/ObjectPool.h"
+#include "bindings/dop/ArrayPool.h"
 
 namespace cc {
 namespace gfx {

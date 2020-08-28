@@ -141,7 +141,7 @@ def main():
     try:
 
         tojs_root = '%s/tools/tojs' % project_root
-        output_dir = '%s/cocos/scripting/js-bindings/auto' % project_root
+        output_dir = '%s/cocos/bindings/auto' % project_root
 
         cmd_args = {
                     'cocos2dx.ini' : ('cocos2d-x', 'jsb_cocos2dx_auto'),
