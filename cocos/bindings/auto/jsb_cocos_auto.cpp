@@ -1,4 +1,4 @@
-#include "bindings/auto/jsb_cocos2dx_auto.h"
+#include "bindings/auto/jsb_cocos_auto.h"
 #include "bindings/manual/jsb_conversions.h"
 #include "bindings/manual/jsb_global.h"
 #include "cocos2d.h"

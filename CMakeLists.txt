@@ -778,20 +778,20 @@ cocos_source_files(
 
 ######## auto
 cocos_source_files(
-    cocos/bindings/auto/jsb_cocos2dx_auto.cpp
-    cocos/bindings/auto/jsb_cocos2dx_auto.h
-    cocos/bindings/auto/jsb_cocos2dx_extension_auto.cpp
-    cocos/bindings/auto/jsb_cocos2dx_extension_auto.h
+    cocos/bindings/auto/jsb_cocos_auto.cpp
+    cocos/bindings/auto/jsb_cocos_auto.h
+    cocos/bindings/auto/jsb_extension_auto.cpp
+    cocos/bindings/auto/jsb_extension_auto.h
     cocos/bindings/auto/jsb_gfx_auto.cpp
     cocos/bindings/auto/jsb_gfx_auto.h
-    cocos/bindings/auto/jsb_cocos2dx_network_auto.cpp
-    cocos/bindings/auto/jsb_cocos2dx_network_auto.h
+    cocos/bindings/auto/jsb_network_auto.cpp
+    cocos/bindings/auto/jsb_network_auto.h
 )
 
 if(USE_AUDIO)
     cocos_source_files(
-        cocos/bindings/auto/jsb_cocos2dx_audioengine_auto.cpp
-        cocos/bindings/auto/jsb_cocos2dx_audioengine_auto.h
+        cocos/bindings/auto/jsb_audio_auto.cpp
+        cocos/bindings/auto/jsb_audio_auto.h
     )
 endif()
 
