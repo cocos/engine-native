@@ -2,7 +2,7 @@
 
 #include "base/Value.h"
 #include "../../core/CoreStd.h"
-#include "base/ccMacros.h"
+#include "base/Macros.h"
 
 using namespace std;
 
