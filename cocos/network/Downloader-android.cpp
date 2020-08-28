@@ -23,14 +23,14 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "network/CCDownloader-android.h"
+#include "network/Downloader-android.h"
 
-#include "network/CCDownloader.h"
+#include "network/Downloader.h"
 #include "platform/android/jni/JniHelper.h"
 #include "platform/android/jni/JniImp.h"
 
 #include <mutex>
-#include <platform/CCApplication.h>
+#include <platform/Application.h>
 
 #ifndef JCLS_DOWNLOADER
 #define JCLS_DOWNLOADER "org/cocos2dx/lib/Cocos2dxDownloader"

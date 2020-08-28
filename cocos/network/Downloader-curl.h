@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "network/CCIDownloaderImpl.h"
+#include "network/DownloaderImpl.h"
 
 namespace cc {
     class Scheduler;

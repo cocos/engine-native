@@ -23,7 +23,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "CCApplication.h"
+#include "Application.h"
 #include "platform/Device.h"
 
 // Vibrate

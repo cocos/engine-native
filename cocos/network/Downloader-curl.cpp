@@ -22,16 +22,16 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "network/CCDownloader-curl.h"
+#include "network/Downloader-curl.h"
 
 #include <set>
 #include <curl/curl.h>
 #include <deque>
 
-#include "base/CCScheduler.h"
-#include "platform/CCFileUtils.h"
-#include "platform/CCApplication.h"
-#include "network/CCDownloader.h"
+#include "base/Scheduler.h"
+#include "platform/FileUtils.h"
+#include "platform/Application.h"
+#include "network/Downloader.h"
 
 // **NOTE**
 // In the file:
