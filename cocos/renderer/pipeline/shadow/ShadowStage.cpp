@@ -22,7 +22,10 @@ ShadowStage::~ShadowStage() {
 }
 RenderStageInfo ShadowStage::_initInfo = {
     "ShadowStage",
-    static_cast<uint>(ForwardStagePriority::FORWARD)};
+    static_cast<uint>(ForwardStagePriority::FORWARD),
+    static_cast<uint>(RenderFlowTag::SCENE),
+    {}
+};
 const RenderStageInfo &ShadowStage::getInitializeInfo() { return ShadowStage::_initInfo; }
 
 bool ShadowStage::initialize(const RenderStageInfo &info) {
