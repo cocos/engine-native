@@ -71,7 +71,8 @@ struct CC_DLL PassView {
 //    uint32_t instancedAttributesID = 0; //array pool
 //};
 
-struct CC_DLL Camera {
+class CC_DLL Camera {
+private:
     float width = 0;
     float height = 0;
     float exposure = 0;
@@ -83,13 +84,39 @@ struct CC_DLL Camera {
     float frustumID = 0;
     cc::Vec3 forward;
     cc::Vec3 position;
-    gfx::Rect viewport;
+    float viewportX;
+    float viewportY;
+    float viewportWidth;
+    float viewportHeight;
     gfx::Color clearColor;
     cc::Mat4 matView;
     cc::Mat4 matViewProj;
     cc::Mat4 matViewProjInv;
     cc::Mat4 matProj;
     cc::Mat4 matProjInv;
+
+public:
+    float getWidth() const { return width;}
+    float getHeight() const { return height;}
+    float getExposure() const { return exposure;}
+    float getClearDepth() const { return clearDepth;}
+    uint getClearFlag() const { return static_cast<uint>(clearFlag);}
+    uint getClearStencil() const { return static_cast<uint>(clearStencil);}
+    uint getNodeID() const { return static_cast<uint>(nodeID);}
+    uint getSceneID() const { return static_cast<uint>(sceneID);}
+    uint getFrustumID() const { return static_cast<uint>(frustumID);}
+    uint getViewportX() const { return static_cast<uint>(viewportX);}
+    uint getViewportY() const { return static_cast<uint>(viewportY);}
+    uint getViewportWidth() const { return static_cast<uint>(viewportWidth);}
+    uint getViewportHeight() const { return static_cast<uint>(viewportHeight);}
+    const cc::Vec3 &getForward() const { return forward;}
+    const cc::Vec3 &getPosition() const { return position;}
+    const gfx::Color &getClearColor() const { return clearColor; }
+    const cc::Mat4 &getMatView() const { return matView; }
+    const cc::Mat4 &getMatViewProj() const { return matViewProj; }
+    const cc::Mat4 &getMatViewProjInv() const { return matViewProjInv; }
+    const cc::Mat4 &getMatProj() const { return matProj; }
+    const cc::Mat4 &getMatProjInv() const { return matProjInv; }
 
     const static se::PoolType type;
 };
@@ -218,13 +245,21 @@ struct CC_DLL RenderingSubMesh {
     const static se::PoolType type;
 };
 
-struct CC_DLL Node {
+class CC_DLL Node {
+private:
     float layer = 0;
     cc::Vec3 worldScale;
     cc::Vec3 worldPosition;
     cc::Vec4 worldRotation;
     cc::Mat4 worldMatrix;
 
+public:
+    uint getLayer() const { return static_cast<uint>(layer); }
+    const cc::Vec3 &getWorldScale() const { return worldScale;}
+    const cc::Vec3 &getWorldPosition() const { return worldPosition;}
+    const cc::Vec4 &getWorldRotation() const { return worldRotation;}
+    const cc::Mat4 &getWorldMatrix() const { return worldMatrix;}
+    
     const static se::PoolType type;
 };
 
@@ -242,6 +277,7 @@ struct CC_DLL RenderWindow {
 
     const static se::PoolType type;
 };
+
 
 //Get buffer pool data
 #define GET_SUBMODEL(index) SharedMemory::getBuffer<SubModelView>(index)
