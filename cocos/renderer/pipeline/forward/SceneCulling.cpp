@@ -35,7 +35,7 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
         //        }
     }
 
-    if (GET_SKYBOX(scene->skyboxID)->enabled && (camera->clearFlag & SKYBOX_FLAG)) {
+    if (GET_SKYBOX(scene->skyboxID)->enabled && (static_cast<uint>(camera->clearFlag) & SKYBOX_FLAG)) {
         renderObjects.emplace_back(genRenderObject(GET_SKYBOX(scene->skyboxID), camera));
     }
 
@@ -55,7 +55,7 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
                     renderObjects.emplace_back(genRenderObject(model, camera));
                 }
             } else {
-                if ((model->nodeID && ((visibility & GET_NODE(model->nodeID)->layer) == GET_NODE(model->nodeID)->layer)) ||
+                if ((model->nodeID && ((visibility & static_cast<uint>(GET_NODE(model->nodeID)->layer)) == GET_NODE(model->nodeID)->layer)) ||
                     (visibility & model->visFlags)) {
 
                     // shadow render Object

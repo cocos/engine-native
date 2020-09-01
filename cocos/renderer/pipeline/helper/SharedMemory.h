@@ -75,12 +75,12 @@ struct CC_DLL Camera {
     float width = 0;
     float height = 0;
     float exposure = 0;
-    uint32_t clearFlag = 0;
+    float clearFlag = 0;
     float clearDepth = 0;
-    uint32_t clearStencil = 0;
-    uint32_t nodeID = 0;
-    uint32_t sceneID = 0;
-    uint32_t frustumID = 0;
+    float clearStencil = 0;
+    float nodeID = 0;
+    float sceneID = 0;
+    float frustumID = 0;
     cc::Vec3 forward;
     cc::Vec3 position;
     gfx::Rect viewport;
@@ -131,7 +131,7 @@ struct CC_DLL MainLight {
     cc::Vec3 color;
     cc::Vec3 colorTemperatureRGB;
 
-    uint32_t nodeID = 0;
+    float nodeID = 0;
 
     const static se::PoolType type;
 };
@@ -158,11 +158,11 @@ struct CC_DLL Fog {
 };
 
 struct CC_DLL ShadowMap {
-    uint32_t enabled = 0;
-    uint32_t nearValue = 0;
-    uint32_t farValue = 0;
-    uint32_t aspect = 0;
-    uint32_t orthoSize = 0;
+    float enabled = 0;
+    float nearValue = 0;
+    float farValue = 0;
+    float aspect = 0;
+    float orthoSize = 0;
     cc::Vec2 size;
 
     const static se::PoolType type;
@@ -219,7 +219,7 @@ struct CC_DLL RenderingSubMesh {
 };
 
 struct CC_DLL Node {
-    uint32_t layer = 0;
+    float layer = 0;
     cc::Vec3 worldScale;
     cc::Vec3 worldPosition;
     cc::Vec4 worldRotation;
