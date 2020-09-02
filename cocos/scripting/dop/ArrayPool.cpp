@@ -53,7 +53,7 @@ Object *ArrayPool::resize(Object *origin, uint size) {
 }
 
 uint32_t *ArrayPool::getArray(PoolType type, uint index) {
-    index &= ~(1 << 30);
+    index &= ~(1 << 20);
     if (ArrayPool::_pools.count(type) != 0) {
         const auto pool = ArrayPool::_pools[type];
         if (pool->_objects.count(index) != 0) {

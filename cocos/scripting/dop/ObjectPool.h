@@ -61,7 +61,7 @@ private:
     
     PoolType _type = PoolType::RASTERIZER_STATE;
     Object *_jsArr = nullptr;
-    uint _poolFlag = 1 << 29;
+    uint _poolFlag = 1 << 20;
     uint _indexMask = 0;
 };
 

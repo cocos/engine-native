@@ -103,6 +103,7 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
 }
 
 void ShadowFlow::render(RenderView *view) {
+    return; //TODO coulsonwang
     auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
     const auto shadowInfo = pipeline->getShadowMap();
     if (!shadowInfo->enabled) return;
