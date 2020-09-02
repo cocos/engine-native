@@ -1131,7 +1131,10 @@ static bool JSB_showInputBox(se::State& s)
         SE_PRECONDITION2(ok && tmp.isString(), false, "defaultValue is invalid!");
         showInfo.defaultValue = tmp.toString();
 
-
+        ok = obj->getProperty("placeholder", &tmp);
+        SE_PRECONDITION2(ok && tmp.isString(), false, "placeholder is invalid!");
+        showInfo.placeholder = tmp.toString();
+        
         ok = obj->getProperty("maxLength", &tmp);
         SE_PRECONDITION2(ok && tmp.isNumber(), false, "maxLength is invalid!");
         showInfo.maxLength = tmp.toInt32();

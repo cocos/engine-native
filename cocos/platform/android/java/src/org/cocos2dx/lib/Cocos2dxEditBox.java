@@ -382,12 +382,13 @@ public class Cocos2dxEditBox {
         mActivity.getGLSurfaceView().setStopHandleTouchAndKeyEvents(false);
     }
 
-    private void show(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType) {
+    private void show(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType, String placeholder) {
         mConfirmHold = confirmHold;
         mEditText.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType);
         int editPaddingBottom = mEditText.getPaddingBottom();
         int editPadding = mEditText.getPaddingTop();
         mEditText.setPadding(editPadding, editPadding, editPadding, editPaddingBottom);
+        mEditText.setHint(placeholder);
         mButton.setText(mButtonTitle);
         if (TextUtils.isEmpty(mButtonTitle)) {
             mButton.setPadding(0, 0, 0, 0);
@@ -419,12 +420,12 @@ public class Cocos2dxEditBox {
      Functions invoked by CPP.
      **************************************************************************************/
 
-    private static void showNative(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType) {
+    private static void showNative(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType, String placeholder) {
         if (null != Cocos2dxEditBox.sThis) {
             Cocos2dxEditBox.sThis.mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Cocos2dxEditBox.sThis.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType);
+                    Cocos2dxEditBox.sThis.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType, placeholder);
                 }
             });
         }

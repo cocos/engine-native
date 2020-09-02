@@ -36,6 +36,7 @@ public:
         std::string defaultValue = "";
         std::string confirmType = "";
         std::string inputType = "";
+        std::string placeholder = "";
         int maxLength = 0;
         int x = 0;
         int y = 0;

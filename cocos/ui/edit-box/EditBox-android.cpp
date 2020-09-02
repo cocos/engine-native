@@ -48,7 +48,8 @@ void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
                                     showInfo.isMultiline,
                                     showInfo.confirmHold,
                                     showInfo.confirmType,
-                                    showInfo.inputType);
+                                    showInfo.inputType,
+                                    showInfo.placeholder);
 }
 
 void EditBox::hide()
