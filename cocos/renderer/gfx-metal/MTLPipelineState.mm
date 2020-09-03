@@ -73,6 +73,7 @@ bool CCMTLPipelineState::createGPUPipelineState() {
     _GPUPipelineState->primitiveType = mu::toMTLPrimitiveType(_primitive);
     _GPUPipelineState->gpuPipelineLayout = static_cast<CCMTLPipelineLayout *>(_pipelineLayout)->gpuPipelineLayout();
     _GPUPipelineState->gpuShader = static_cast<CCMTLShader *>(_shader)->gpuShader();
+    _GPUPipelineState->shader = static_cast<CCMTLShader *>(_shader);
     return true;
 }
 

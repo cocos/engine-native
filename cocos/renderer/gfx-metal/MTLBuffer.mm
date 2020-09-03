@@ -101,6 +101,7 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
         for (int i = 0; i < MAX_INFLIGHT_BUFFER; ++i) {
             // Create a new buffer with enough capacity to store one instance of the dynamic buffer data
             id<MTLBuffer> dynamicDataBuffer = [_mtlDevice newBufferWithLength:size options:_mtlResourceOptions];
+            dynamicDataBuffer.label = @(_inflightIndex).stringValue;
             [mutableDynamicDataBuffers addObject:dynamicDataBuffer];
         }
         _dynamicDataBuffers = [mutableDynamicDataBuffers copy];

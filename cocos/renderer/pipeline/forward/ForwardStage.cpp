@@ -109,7 +109,17 @@ void ForwardStage::render(RenderView *view) {
         for (m = 1; m <= subModelCount; ++m) {
             auto subModel = GET_SUBMODEL(subModels[m]);
             for (p = 0; p < subModel->passCount; ++p) {
-                auto pass = GET_PASS(subModel->pass0ID + p);
+                const PassView *pass = nullptr;
+                if(p == 0) {
+                   pass = GET_PASS(subModel->pass0ID);
+                } else if(p == 1) {
+                    pass = GET_PASS(subModel->pass1ID);
+                } else if(p == 2) {
+                    pass = GET_PASS(subModel->pass2ID);
+                } else {
+                    CC_ASSERT(0);
+                }
+                
                 if (pass->phase != _phaseID) continue;
                 if (static_cast<BatchingSchemes>(pass->batchingScheme) == BatchingSchemes::INSTANCING) {
                     auto instancedBuffer = InstancedBuffer::get(pass);
