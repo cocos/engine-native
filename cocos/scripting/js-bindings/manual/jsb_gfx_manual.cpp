@@ -719,6 +719,32 @@ static bool js_gfx_BlendState_set_targets(se::State &s) {
 }
 SE_BIND_PROP_SET(js_gfx_BlendState_set_targets)
 
+static bool js_gfx_BlendState_set_target(se::State &s) {
+    cc::gfx::BlendState *cobj = (cc::gfx::BlendState *)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_BlendState_set_target : Invalid Native Object");
+
+    const auto &args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if(argc == 2) {
+        uint arg0 = 0;
+        cc::gfx::BlendTarget *arg1 = nullptr;
+        ok &= seval_to_uint(args[0], &arg0);
+        ok &= seval_to_native_ptr(args[1], &arg1);
+        SE_PRECONDITION2(ok, false, "js_gfx_BlendState_set_target : Error processing arguments");
+        
+        const auto size = cobj->targets.size();
+        if(size <= arg0) {
+            cobj->targets.resize(size << 1);
+        }
+        cobj->targets[arg0] = std::move(*arg1);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_BlendState_set_target)
+
 static bool js_gfx_CommandBuffer_execute(se::State &s) {
     cc::gfx::CommandBuffer *cobj = (cc::gfx::CommandBuffer *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_gfx_CommandBuffer_execute : Invalid Native Object");
@@ -858,6 +884,7 @@ bool register_all_gfx_manual(se::Object *obj) {
     __jsb_cc_gfx_Buffer_proto->defineFunction("update", _SE(js_gfx_GFXBuffer_update));
 
     __jsb_cc_gfx_BlendState_proto->defineProperty("targets", _SE(js_gfx_BlendState_get_targets), _SE(js_gfx_BlendState_set_targets));
+    __jsb_cc_gfx_BlendState_proto->defineFunction("setTarget", _SE(js_gfx_BlendState_set_target));
 
     __jsb_cc_gfx_CommandBuffer_proto->defineFunction("execute", _SE(js_gfx_CommandBuffer_execute));
     __jsb_cc_gfx_CommandBuffer_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_CommandBuffer_copyBuffersToTexture));

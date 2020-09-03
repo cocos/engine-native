@@ -16,9 +16,12 @@ void RenderQueue::clear() {
 }
 
 bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelIdx, uint passIdx) {
-    const auto subModel = GET_SUBMODEL(subModelIdx);
+    uint32_t *subModels = GET_SUBMODEL_ARRAY(renderObj.model->subModelsID);
+    
+    const auto subModel = GET_SUBMODEL(subModels[subModelIdx+1]);
     const auto pass = GET_PASS(subModel->pass0ID + passIdx);
-    const auto isTransparent = GET_BLEND_STATE(pass->blendStateID)->targets[0].blend;
+    const auto blendState = GET_BLEND_STATE(pass->blendStateID);
+    const auto isTransparent = blendState->targets[0].blend;
 
     if (isTransparent != _passDesc.isTransparent || !(pass->phase & _passDesc.phases)) {
         return false;
