@@ -70,9 +70,9 @@ struct CC_DLL PassView {
 //
 //    uint32_t instancedAttributesID = 0; //array pool
 //};
-#pragma pack(push, 16)
+#pragma pack(push, 4)
 class CC_DLL Camera {
-private:
+public:
     float width = 0;
     float height = 0;
     float exposure = 0;
@@ -82,22 +82,43 @@ private:
     float nodeID = 0;
     float sceneID = 0;
     float frustumID = 0;
-    cc::Vec3 forward;
-    cc::Vec3 position;
+    
+    float forwardX = 0;
+    float forwardY = 0;
+    float forwardZ = 0;
+    float positionX = 0;
+    float positionY = 0;
+    float positionZ = 0;
+//    cc::Vec3 forward;
+//    cc::Vec3 position;
     float viewportX;
     float viewportY;
     float viewportWidth;
     float viewportHeight;
-    gfx::Color clearColor;
-    cc::Mat4 matView;
-    cc::Mat4 matViewProj;
-    cc::Mat4 matViewProjInv;
-    cc::Mat4 matProj;
-    cc::Mat4 matProjInv;
+//    gfx::Color clearColor;
+    float clearColorR;
+    float clearColorG;
+    float clearColorB;
+    float clearColorA;
+    
+    float matView[16];
+    float matViewProj[16];
+    float matViewProjInv[16];
+    float matProj[16];
+    float matProjInv[16];
+//    cc::Mat4 matView;
+//    cc::Mat4 matViewProj;
+//    cc::Mat4 matViewProjInv;
+//    cc::Mat4 matProj;
+//    cc::Mat4 matProjInv;
 
 public:
     float getWidth() const { return width;}
-    float getHeight() const { return height;}
+    float getHeight() const { return height;
+    }
+    uint offsetOf() {
+        return offsetof(Camera, height);
+    }
     float getExposure() const { return exposure;}
     float getClearDepth() const { return clearDepth;}
     uint getClearFlag() const { return static_cast<uint>(clearFlag);}
@@ -109,14 +130,14 @@ public:
     uint getViewportY() const { return static_cast<uint>(viewportY);}
     uint getViewportWidth() const { return static_cast<uint>(viewportWidth);}
     uint getViewportHeight() const { return static_cast<uint>(viewportHeight);}
-    const cc::Vec3 &getForward() const { return forward;}
-    const cc::Vec3 &getPosition() const { return position;}
-    const gfx::Color &getClearColor() const { return clearColor; }
-    const cc::Mat4 &getMatView() const { return matView; }
-    const cc::Mat4 &getMatViewProj() const { return matViewProj; }
-    const cc::Mat4 &getMatViewProjInv() const { return matViewProjInv; }
-    const cc::Mat4 &getMatProj() const { return matProj; }
-    const cc::Mat4 &getMatProjInv() const { return matProjInv; }
+    const cc::Vec3 getForward() const { return cc::Vec3(forwardX, forwardY, forwardZ);}
+    const cc::Vec3 getPosition() const { return cc::Vec3(positionX, positionY, positionZ);}
+    const gfx::Color getClearColor() const { return {clearColorR, clearColorG, clearColorB, clearColorA}; }
+    const cc::Mat4 getMatView() const { return cc::Mat4(matView); }
+    const cc::Mat4 getMatViewProj() const { return cc::Mat4(matViewProj); }
+    const cc::Mat4 getMatViewProjInv() const { return cc::Mat4(matViewProjInv); }
+    const cc::Mat4 getMatProj() const { return cc::Mat4(matProj); }
+    const cc::Mat4 getMatProjInv() const { return cc::Mat4(matProjInv); }
 
     const static se::PoolType type;
 };
@@ -250,17 +271,21 @@ struct CC_DLL RenderingSubMesh {
 class CC_DLL Node {
 private:
     float layer = 0;
-    cc::Vec3 worldScale;
-    cc::Vec3 worldPosition;
-    cc::Vec4 worldRotation;
-    cc::Mat4 worldMatrix;
+    float worldScale[3];
+    float worldPosition[3];
+    float worldRotation[3];
+    float worldMatrix[16];
+//    cc::Vec3 worldScale;
+//    cc::Vec3 worldPosition;
+//    cc::Vec4 worldRotation;
+//    cc::Mat4 worldMatrix;
 
 public:
     uint getLayer() const { return static_cast<uint>(layer); }
-    const cc::Vec3 &getWorldScale() const { return worldScale;}
-    const cc::Vec3 &getWorldPosition() const { return worldPosition;}
-    const cc::Vec4 &getWorldRotation() const { return worldRotation;}
-    const cc::Mat4 &getWorldMatrix() const { return worldMatrix;}
+    const cc::Vec3 getWorldScale() const { return cc::Vec3(worldScale);}
+    const cc::Vec3 getWorldPosition() const { return cc::Vec3(worldPosition);}
+    const cc::Vec4 getWorldRotation() const { return cc::Vec4(worldRotation);}
+    const cc::Mat4 getWorldMatrix() const { return cc::Mat4(worldMatrix);}
     
     const static se::PoolType type;
 };

@@ -88,6 +88,7 @@ struct CCMTLGPUPipelineState {
     vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stream*/>> vertexBufferBindingInfo;
     const CCMTLGPUPipelineLayout *gpuPipelineLayout = nullptr;
     const CCMTLGPUShader *gpuShader = nullptr;
+    const CCMTLShader *shader = nullptr;
 };
 
 struct CCMTLGPUBuffer {

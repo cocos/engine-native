@@ -14,6 +14,7 @@ CCMTLShader::~CCMTLShader() { destroy(); }
 
 bool CCMTLShader::initialize(const ShaderInfo &info) {
     _name = info.name;
+//    printf("\n=====name = %s\n", _name.c_str());
     _stages = info.stages;
     _attributes = info.attributes;
     _blocks = info.blocks;
@@ -49,14 +50,14 @@ void CCMTLShader::destroy() {
 }
 
 bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
-    printf("\n----GLSL-----\n%s\n", stage.source.c_str());
+//    printf("----GLSL-----\n%s\n", stage.source.c_str());
     bool isVertexShader = stage.stage == ShaderStageFlagBit::VERTEX;
     id<MTLDevice> mtlDevice = id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice());
     auto mtlShader = mu::compileGLSLShader2Msl(stage.source,
                                                stage.stage,
                                                _device,
                                                _gpuShader);
-    printf("\n++++MTL+++++\n%s\n", mtlShader.c_str());
+//    printf("++++MTL+++++\n%s\n", mtlShader.c_str());
     NSString *shader = [NSString stringWithUTF8String:mtlShader.c_str()];
     NSError *error = nil;
     id<MTLLibrary> library = [mtlDevice newLibraryWithSource:shader

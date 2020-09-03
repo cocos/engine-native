@@ -214,6 +214,7 @@ namespace se {
     Object* Object::createArrayBufferObject(void* data, size_t byteLength)
     {
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
+        assert((size_t)(uint8_t*)(jsobj->GetContents().Data()) % 16 == 0);
         if (data)
         {
             memcpy(jsobj->GetContents().Data(), data, byteLength);
