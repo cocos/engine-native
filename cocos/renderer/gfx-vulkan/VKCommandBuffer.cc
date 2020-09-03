@@ -302,7 +302,7 @@ void CCVKCommandBuffer::draw(InputAssembler *ia) {
     } else {
         ((CCVKInputAssembler *)ia)->extractDrawInfo(drawInfo);
         uint instanceCount = std::max(drawInfo.instanceCount, 1u);
-        bool hasIndexBuffer = gpuInputAssembler->gpuIndexBuffer && drawInfo.indexCount >= 0;
+        bool hasIndexBuffer = gpuInputAssembler->gpuIndexBuffer && drawInfo.indexCount > 0;
 
         if (hasIndexBuffer) {
             vkCmdDrawIndexed(_gpuCommandBuffer->vkCommandBuffer, drawInfo.indexCount, instanceCount,

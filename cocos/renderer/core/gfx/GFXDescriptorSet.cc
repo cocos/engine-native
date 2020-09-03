@@ -60,17 +60,17 @@ void DescriptorSet::bindSampler(uint binding, Sampler *sampler, uint index) {
     }
 }
 
-const Buffer* DescriptorSet::getBuffer(uint binding, uint index) const {
+Buffer* DescriptorSet::getBuffer(uint binding, uint index) const {
     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
     return _buffers[descriptorIndex + index];
 }
 
-const Texture *DescriptorSet::getTexture(uint binding, uint index) const {
+Texture *DescriptorSet::getTexture(uint binding, uint index) const {
     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
     return _textures[descriptorIndex + index];
 }
 
-const Sampler *DescriptorSet::getSampler(uint binding, uint index) const {
+Sampler *DescriptorSet::getSampler(uint binding, uint index) const {
     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
     return _samplers[descriptorIndex + index];
 }
