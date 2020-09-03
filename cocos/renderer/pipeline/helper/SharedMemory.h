@@ -15,7 +15,7 @@ namespace pipeline {
 struct RenderingSubMesh;
 struct FlatBuffer;
 class RenderPipeline;
-
+#pragma pack(push, 4)
 struct CC_DLL ModelView {
     uint32_t enabled = 0;
     uint32_t visFlags = 0;
@@ -62,7 +62,7 @@ struct CC_DLL PassView {
 
     const static se::PoolType type;
 };
-
+#pragma pack(pop)
 //
 //struct CC_DLL InstancedAttributeBlock {
 //    uint32_t bufferViewID = 0;
@@ -70,7 +70,7 @@ struct CC_DLL PassView {
 //
 //    uint32_t instancedAttributesID = 0; //array pool
 //};
-
+#pragma pack(push, 16)
 class CC_DLL Camera {
 private:
     float width = 0;
@@ -244,7 +244,9 @@ struct CC_DLL RenderingSubMesh {
 
     const static se::PoolType type;
 };
+#pragma pack(pop)
 
+#pragma pack(push, 16)
 class CC_DLL Node {
 private:
     float layer = 0;
@@ -262,6 +264,7 @@ public:
     
     const static se::PoolType type;
 };
+#pragma pack(pop)
 
 struct CC_DLL Root {
     float cumulativeTime = 0;
@@ -313,6 +316,7 @@ struct CC_DLL RenderWindow {
 #define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getObject<gfx::DepthStencilState, se::PoolType::DEPTH_STENCIL_STATE>(index)
 #define GET_BLEND_STATE(index)         SharedMemory::getObject<gfx::BlendState, se::PoolType::BLEND_STATE>(index)
 #define GET_FRAMEBUFFER(index)         SharedMemory::getObject<gfx::Framebuffer, se::PoolType::FRAMEBUFFER>(index)
+#define GET_PIPELINE_LAYOUT(index)         SharedMemory::getObject<gfx::PipelineLayout, se::PoolType::PIPELINE_LAYOUT>(index)
 
 //Get array pool data
 #define GET_MODEL_ARRAY(index)    SharedMemory::getArray(se::PoolType::MODEL_ARRAY, index)
