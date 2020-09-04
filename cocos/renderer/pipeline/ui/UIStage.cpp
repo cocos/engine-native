@@ -63,7 +63,7 @@ void UIStage::render(RenderView *view) {
         for (uint32_t i = 1; i <= subModelCount; i++) {
             const auto subModel = GET_SUBMODEL(subModels[i]);
             for (size_t j = 0; j < subModel->passCount; j++) {
-                _renderQueues[0]->insertRenderPass(ro, i, j);
+                _renderQueues[0]->insertRenderPass(ro, i-1, j);
             }
         }
     }
