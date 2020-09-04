@@ -132,7 +132,7 @@ void ForwardStage::render(RenderView *view) {
                     _batchedQueue->getQueue().emplace(batchedBuffer);
                 } else {
                     for (k = 0; k < _renderQueues.size(); k++) {
-                        _renderQueues[k]->insertRenderPass(ro, m, p);
+                        _renderQueues[k]->insertRenderPass(ro, m-1, p);
                     }
                 }
             }
