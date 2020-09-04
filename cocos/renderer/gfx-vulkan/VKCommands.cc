@@ -570,10 +570,10 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     //colorBlendState.logicOp;
     colorBlendState.attachmentCount = blendTargetCount;
     colorBlendState.pAttachments = blendTargets.data();
-    colorBlendState.blendConstants[0] = blendColor.r;
-    colorBlendState.blendConstants[1] = blendColor.g;
-    colorBlendState.blendConstants[2] = blendColor.b;
-    colorBlendState.blendConstants[3] = blendColor.a;
+    colorBlendState.blendConstants[0] = blendColor.x;
+    colorBlendState.blendConstants[1] = blendColor.y;
+    colorBlendState.blendConstants[2] = blendColor.z;
+    colorBlendState.blendConstants[3] = blendColor.w;
     createInfo.pColorBlendState = &colorBlendState;
 
     ///////////////////// References /////////////////////

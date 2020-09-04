@@ -1416,14 +1416,14 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
 
                                     if (cmd->gpuFBO->isOffscreen) {
                                         static float fColors[4];
-                                        fColors[0] = cmd->clearColors[j].r;
-                                        fColors[1] = cmd->clearColors[j].g;
-                                        fColors[2] = cmd->clearColors[j].b;
-                                        fColors[3] = cmd->clearColors[j].a;
+                                        fColors[0] = cmd->clearColors[j].x;
+                                        fColors[1] = cmd->clearColors[j].y;
+                                        fColors[2] = cmd->clearColors[j].z;
+                                        fColors[3] = cmd->clearColors[j].w;
                                         glClearBufferfv(GL_COLOR, j, fColors);
                                     } else {
                                         const Color &color = cmd->clearColors[j];
-                                        glClearColor(color.r, color.g, color.b, color.a);
+                                        glClearColor(color.x, color.y, color.z, color.w);
                                         glClears |= GL_COLOR_BUFFER_BIT;
                                     }
                                     break;
@@ -1723,15 +1723,15 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                         }
                         cache->bs.isA2C = gpuPipelineState->bs.isA2C;
                     }
-                    if (cache->bs.blendColor.r != gpuPipelineState->bs.blendColor.r ||
-                        cache->bs.blendColor.g != gpuPipelineState->bs.blendColor.g ||
-                        cache->bs.blendColor.b != gpuPipelineState->bs.blendColor.b ||
-                        cache->bs.blendColor.a != gpuPipelineState->bs.blendColor.a) {
+                    if (cache->bs.blendColor.x != gpuPipelineState->bs.blendColor.x ||
+                        cache->bs.blendColor.y != gpuPipelineState->bs.blendColor.y ||
+                        cache->bs.blendColor.z != gpuPipelineState->bs.blendColor.z ||
+                        cache->bs.blendColor.w != gpuPipelineState->bs.blendColor.w) {
 
-                        glBlendColor(gpuPipelineState->bs.blendColor.r,
-                                     gpuPipelineState->bs.blendColor.g,
-                                     gpuPipelineState->bs.blendColor.b,
-                                     gpuPipelineState->bs.blendColor.a);
+                        glBlendColor(gpuPipelineState->bs.blendColor.x,
+                                     gpuPipelineState->bs.blendColor.y,
+                                     gpuPipelineState->bs.blendColor.z,
+                                     gpuPipelineState->bs.blendColor.w);
                         cache->bs.blendColor = gpuPipelineState->bs.blendColor;
                     }
 
@@ -1984,14 +1984,14 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                                 }
                                 break;
                             case DynamicStateFlagBit::BLEND_CONSTANTS:
-                                if ((cache->bs.blendColor.r != gpuPipelineState->bs.blendColor.r) ||
-                                    (cache->bs.blendColor.g != gpuPipelineState->bs.blendColor.g) ||
-                                    (cache->bs.blendColor.b != gpuPipelineState->bs.blendColor.b) ||
-                                    (cache->bs.blendColor.a != gpuPipelineState->bs.blendColor.a)) {
-                                    glBlendColor(gpuPipelineState->bs.blendColor.r,
-                                                 gpuPipelineState->bs.blendColor.g,
-                                                 gpuPipelineState->bs.blendColor.b,
-                                                 gpuPipelineState->bs.blendColor.a);
+                                if ((cache->bs.blendColor.x != gpuPipelineState->bs.blendColor.x) ||
+                                    (cache->bs.blendColor.y != gpuPipelineState->bs.blendColor.y) ||
+                                    (cache->bs.blendColor.z != gpuPipelineState->bs.blendColor.z) ||
+                                    (cache->bs.blendColor.w != gpuPipelineState->bs.blendColor.w)) {
+                                    glBlendColor(gpuPipelineState->bs.blendColor.x,
+                                                 gpuPipelineState->bs.blendColor.y,
+                                                 gpuPipelineState->bs.blendColor.z,
+                                                 gpuPipelineState->bs.blendColor.w);
                                     cache->bs.blendColor = gpuPipelineState->bs.blendColor;
                                 }
                                 break;
