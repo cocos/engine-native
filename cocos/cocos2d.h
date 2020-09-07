@@ -26,8 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __COCOS2D_H__
-#define __COCOS2D_H__
+#pragma once
 
 // 0x00 HI ME LO
 // 00   03 08 00
@@ -78,6 +77,7 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "platform/CCSAXParser.h"
 #include "platform/CCCanvasRenderingContext2D.h"
+#include "platform/CCApplication.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     #include "platform/ios/CCGL-ios.h"
@@ -101,5 +101,4 @@ CC_DLL const char* cocos2dVersion();
 
 NS_CC_END
 
-#endif // __COCOS2D_H__
 
