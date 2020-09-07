@@ -447,15 +447,7 @@ namespace se {
                 }
                 SE_LOGE("ERROR: %s\n", exceptionStr.c_str());
 
-                if (_exceptionCallback != nullptr)
-                {
-                    _exceptionCallback(exceptionInfo.location.c_str(), exceptionInfo.message.c_str(), exceptionInfo.stack.c_str());
-                }
-
-                if (_jsExceptionCallback != nullptr)
-                {
-                    _jsExceptionCallback(exceptionInfo.location.c_str(), exceptionInfo.message.c_str(), exceptionInfo.stack.c_str());
-                }
+                callExceptionCallback(exceptionInfo.location.c_str(), exceptionInfo.message.c_str(), exceptionInfo.stack.c_str());
 
                 if (!_isErrorHandleWorking)
                 {
@@ -482,9 +474,19 @@ namespace se {
         }
     }
 
+    void ScriptEngine::callExceptionCallback(const char * location, const char * message, const char * stack)
+    {
+        if(_nativeExceptionCallback) {
+            _nativeExceptionCallback(location, message, stack);
+        }
+        if(_jsExceptionCallback) {
+            _jsExceptionCallback(location, message, stack);
+        }
+    }
+
     void ScriptEngine::setExceptionCallback(const ExceptionCallback& cb)
     {
-        _exceptionCallback = cb;
+        _nativeExceptionCallback = cb;
     }
 
     void ScriptEngine::setJSExceptionCallback(const ExceptionCallback& cb)
