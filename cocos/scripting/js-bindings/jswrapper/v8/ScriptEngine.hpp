@@ -309,6 +309,8 @@ namespace se {
         static void onMessageCallback(v8::Local<v8::Message> message, v8::Local<v8::Value> data);
         static void onPromiseRejectCallback(v8::PromiseRejectMessage msg);
 
+        void callExceptionCallback(const char*, const char*, const char*);
+
         std::chrono::steady_clock::time_point _startTime;
         std::vector<RegisterCallback> _registerCallbackArray;
         std::vector<std::function<void()>> _beforeInitHookArray;
@@ -326,7 +328,7 @@ namespace se {
         Object *_gcFunc = nullptr;
 
         FileOperationDelegate _fileOperationDelegate;
-        ExceptionCallback _exceptionCallback = nullptr;
+        ExceptionCallback _nativeExceptionCallback = nullptr;
         ExceptionCallback _jsExceptionCallback = nullptr;
 
 #if SE_ENABLE_INSPECTOR
