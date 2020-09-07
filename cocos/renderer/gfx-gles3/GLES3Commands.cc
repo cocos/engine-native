@@ -1775,7 +1775,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                 } // if
 
                 // bind descriptor sets
-                if (gpuPipelineState && gpuPipelineState->gpuShader && gpuPipelineState->gpuPipelineLayout) {
+                if (cmd->gpuPipelineState && gpuPipelineState->gpuShader && gpuPipelineState->gpuPipelineLayout) {
 
                     size_t blockLen = gpuPipelineState->gpuShader->glBlocks.size();
                     const vector<vector<int>> &dynamicOffsetIndices = gpuPipelineState->gpuPipelineLayout->dynamicOffsetIndices;
@@ -1795,9 +1795,8 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
 
                         uint offset = gpuDescriptor.gpuBuffer->glOffset;
 
-                        int dynamicOffsetIndex = -1;
                         const vector<int> &dynamicOffsetIndexSet = dynamicOffsetIndices[glBlock.set];
-                        dynamicOffsetIndex = dynamicOffsetIndexSet[glBlock.binding];
+                        int dynamicOffsetIndex = (dynamicOffsetIndexSet.size()) ? dynamicOffsetIndexSet[glBlock.binding] : -1;
                         if (dynamicOffsetIndex >= 0) offset += cmd->dynamicOffsets[dynamicOffsetIndex];
 
                         if (cache->glBindUBOs[glBlock.glBinding] != gpuDescriptor.gpuBuffer->glBuffer ||
@@ -1946,7 +1945,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                     }
                 } // if
 
-                if (gpuPipelineState) {
+                if (cmd->gpuPipelineState) {
                     for (DynamicStateFlagBit dynamicState : gpuPipelineState->dynamicStates) {
                         switch (dynamicState) {
                             case DynamicStateFlagBit::VIEWPORT:
