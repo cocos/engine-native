@@ -28,7 +28,21 @@ bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelI
     }
 
     const auto hash = (0 << 30) | (pass->priority << 16) | (subModel->priority << 8) | passIdx;
-    RenderPass renderPass = {hash, renderObj.depth, GET_SHADER(subModel->shader0ID + passIdx)->getHash(), passIdx, subModel};
+    uint shaderID = subModel->shader0ID;
+    switch (passIdx) {
+        case 1:
+            shaderID = subModel->shader1ID;
+            break;
+        case 2:
+            shaderID = subModel->shader2ID;
+            break;
+        case 3:
+            shaderID = subModel->shader3ID;
+            break;
+        default:
+            break;
+    }
+    RenderPass renderPass = {hash, renderObj.depth, shaderID, passIdx, subModel};
     _queue.emplace_back(std::move(renderPass));
     return true;
 }

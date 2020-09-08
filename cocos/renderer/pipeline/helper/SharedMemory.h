@@ -37,7 +37,7 @@ struct CC_DLL SubModelView {
     uint32_t pass2ID = 0;
     uint32_t pass3ID = 0;
     uint32_t shader0ID = 0;
-    uint32_t shadere1ID = 0;
+    uint32_t shader1ID = 0;
     uint32_t shader2ID = 0;
     uint32_t shader3ID = 0;
     uint32_t descriptorSetID = 0;
