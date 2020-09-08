@@ -12,7 +12,7 @@ enum class PoolType {
     PIPELINE_LAYOUT,
     FRAMEBUFFER,
     // buffers
-    PASS,
+    PASS = 100,
     SUB_MODEL,
     MODEL,
     SCENE,
@@ -31,7 +31,7 @@ enum class PoolType {
 //    FLAT_BUFFER,
     
     // array
-    SUB_MODEL_ARRAY,
+    SUB_MODEL_ARRAY = 200,
     MODEL_ARRAY,
     UNKNOWN
 };

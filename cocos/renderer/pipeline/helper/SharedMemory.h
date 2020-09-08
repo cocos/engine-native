@@ -164,6 +164,7 @@ struct CC_DLL MainLight {
 };
 
 struct CC_DLL Ambient {
+    float enabled = 0;
     float skyIllum = 0;
     cc::Vec4 skyColor;
     cc::Vec4 groundAlbedo;
@@ -173,30 +174,34 @@ struct CC_DLL Ambient {
 
 struct CC_DLL Fog {
     float enabled = 0;
+    float fogType = 0;
+    float fogDensity = 0;
     float fogStart = 0;
     float fogEnd = 0;
-    float fogDensity = 0;
+    float fogAtten = 0;
     float fogTop = 0;
     float fogRange = 0;
-    float fogAtten = 0;
     cc::Vec4 fogColor;
 
     const static se::PoolType type;
 };
 
-struct CC_DLL ShadowMap {
+struct CC_DLL Shadows {
     float enabled = 0;
-    float nearValue = 0;
-    float farValue = 0;
+    float dirty = 0;
+    float shadowType = 0;
+    float distance = 0;
+    float instancePass = 0;
+    float planarPass = 0;
+    float near = 0;
+    float far = 0;
     float aspect = 0;
+    float pcfType = 0;
     float orthoSize = 0;
     cc::Vec2 size;
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL PlanarShadow {
-    uint32_t enabled = 0;
+    cc::Vec3 normal;
+    cc::Vec4 color;
+    cc::Vec4 sphere;
 
     const static se::PoolType type;
 };
@@ -210,8 +215,13 @@ struct CC_DLL InstancedAttribute {
     const static se::PoolType type;
 };
 
-struct CC_DLL Skybox : public ModelView {
+struct CC_DLL Skybox {
     uint32_t enabled = 0;
+    uint32_t isRGBE = 0;
+    uint32_t useIBL = 0;
+    uint32_t model = 0;
+
+    const static se::PoolType type;
 };
 
 struct CC_DLL BufferView {
@@ -278,7 +288,6 @@ struct CC_DLL RenderWindow {
     const static se::PoolType type;
 };
 
-
 //Get buffer pool data
 #define GET_SUBMODEL(index) SharedMemory::getBuffer<SubModelView>(index)
 #define GET_PASS(index)     SharedMemory::getBuffer<PassView>(index)
@@ -300,7 +309,7 @@ struct CC_DLL RenderWindow {
 #define GET_FRUSTUM(index)                    SharedMemory::getBuffer<Frustum>(index)
 #define GET_AABB(index)                       SharedMemory::getBuffer<AABB>(index)
 #define GET_WINDOW(index)                     SharedMemory::getBuffer<RenderWindow>(index)
-#define GET_SHADOWMAP(index)                  SharedMemory::getBuffer<ShadowMap>(index)
+#define GET_SHADOWS(index)                    SharedMemory::getBuffer<Shadows>(index)
 
 //TODO
 #define GET_NAME(index) (String(0))

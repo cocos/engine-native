@@ -116,7 +116,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
     updateUBO(view);
     const auto scene = GET_SCENE(view->getCamera()->getSceneID());
     const auto mainLight = GET_MAIN_LIGHT(scene->mainLightID);
-    const auto shadowInfo = _shadowMap;
+    const auto shadowInfo = _shadows;
 
     if (mainLight && shadowInfo->enabled) {
         const auto node = GET_NODE(mainLight->nodeID);
@@ -129,7 +129,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         const auto y = shadowInfo->orthoSize;
         const auto projectionSinY = _device->getScreenSpaceSignY() * _device->getUVSpaceSignY();
         Mat4 shadowViewProj;
-        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, shadowInfo->farValue, _device->getClipSpaceMinZ(), projectionSinY, &shadowViewProj);
+        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->near, shadowInfo->far, _device->getClipSpaceMinZ(), projectionSinY, &shadowViewProj);
 
         shadowViewProj.multiply(shadowView);
         memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, shadowViewProj.m, sizeof(shadowViewProj));
