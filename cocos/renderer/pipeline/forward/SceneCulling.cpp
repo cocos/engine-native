@@ -22,30 +22,6 @@ RenderObject genRenderObject(ModelView *model, const Camera *camera) {
 
 void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
     const auto camera = view->getCamera();
-//    auto a1 = offsetof(Camera, width);
-//    auto a2 = offsetof(Camera, height);
-//    auto a3 = offsetof(Camera, exposure);
-//    auto a4 = offsetof(Camera, clearFlag);
-//    auto a5 = offsetof(Camera, clearDepth);
-//    auto a6 = offsetof(Camera, clearStencil);
-//    auto a7 = offsetof(Camera, nodeID);
-//    auto a8 = offsetof(Camera, sceneID);
-//    auto a9 = offsetof(Camera, frustumID);
-//    auto a10 = offsetof(Camera, forward);
-//    auto a101 = offsetof(Camera, position);
-//    auto a11 = offsetof(Camera, viewportX);
-//    auto a12 = offsetof(Camera, viewportY);
-//    auto a13 = offsetof(Camera, viewportWidth);
-//    auto a14 = offsetof(Camera, viewportHeight);
-//    auto a15 = offsetof(Camera, clearColor);
-//    auto a16 = offsetof(Camera, matView);
-//    auto a17 = offsetof(Camera, matViewProj);
-//    auto a18 = offsetof(Camera, matViewProjInv);
-//    auto a19 = offsetof(Camera, matProj);
-//    auto a20 = offsetof(Camera, matProjInv);
-    
-    
-    auto offsetof = camera->offsetOf();
     const auto scene = GET_SCENE(camera->getSceneID());
     RenderObjectList renderObjects;
     RenderObjectList shadowObjects;

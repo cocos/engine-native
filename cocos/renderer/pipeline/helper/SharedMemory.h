@@ -15,7 +15,7 @@ namespace pipeline {
 struct RenderingSubMesh;
 struct FlatBuffer;
 class RenderPipeline;
-#pragma pack(push, 4)
+
 struct CC_DLL ModelView {
     uint32_t enabled = 0;
     uint32_t visFlags = 0;
@@ -62,7 +62,7 @@ struct CC_DLL PassView {
 
     const static se::PoolType type;
 };
-#pragma pack(pop)
+
 //
 //struct CC_DLL InstancedAttributeBlock {
 //    uint32_t bufferViewID = 0;
@@ -70,7 +70,7 @@ struct CC_DLL PassView {
 //
 //    uint32_t instancedAttributesID = 0; //array pool
 //};
-#pragma pack(push, 4)
+
 class CC_DLL Camera {
 public:
     float width = 0;
@@ -265,15 +265,25 @@ struct CC_DLL RenderingSubMesh {
 
     const static se::PoolType type;
 };
-#pragma pack(pop)
 
-#pragma pack(push, 16)
 class CC_DLL Node {
 private:
     float layer = 0;
-    float worldScale[3];
-    float worldPosition[3];
-    float worldRotation[3];
+    float scaleX = 0;
+    float scaleY = 0;
+    float scaleZ = 0;
+    
+    float positionX = 0;
+    float positionY = 0;
+    float positionZ = 0;
+    
+    float rotationX = 0;
+    float rotationY = 0;
+    float rotationZ = 0;
+    float rotationW = 0;
+//    float worldScale[3] = {0, 0, 0};
+//    float worldPosition[3] = {0, 0, 0};
+//    float worldRotation[4] = {0, 0, 0, 0};
     float worldMatrix[16];
 //    cc::Vec3 worldScale;
 //    cc::Vec3 worldPosition;
@@ -282,14 +292,13 @@ private:
 
 public:
     uint getLayer() const { return static_cast<uint>(layer); }
-    const cc::Vec3 getWorldScale() const { return cc::Vec3(worldScale);}
-    const cc::Vec3 getWorldPosition() const { return cc::Vec3(worldPosition);}
-    const cc::Vec4 getWorldRotation() const { return cc::Vec4(worldRotation);}
+    const cc::Vec3 getWorldScale() const { return cc::Vec3(scaleX, scaleY, scaleZ);}
+    const cc::Vec3 getWorldPosition() const { return cc::Vec3(positionX, positionY, positionZ);}
+    const cc::Vec4 getWorldRotation() const { return cc::Vec4(rotationX, rotationY, rotationZ, rotationW);}
     const cc::Mat4 getWorldMatrix() const { return cc::Mat4(worldMatrix);}
     
     const static se::PoolType type;
 };
-#pragma pack(pop)
 
 struct CC_DLL Root {
     float cumulativeTime = 0;

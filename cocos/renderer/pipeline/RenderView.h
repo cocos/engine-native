@@ -42,6 +42,7 @@ private:
     RenderFlowList _flows;
     String _name;
     Camera *_camera = nullptr;
+    uint _cameraID = 0;
     RenderWindow *_window = nullptr;
     RenderPipeline *_pipeline = nullptr;
 

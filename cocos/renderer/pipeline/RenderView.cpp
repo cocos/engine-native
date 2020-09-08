@@ -20,7 +20,7 @@ bool RenderView::initialize(const RenderViewInfo &info) {
     _priority = info.priority;
     setExecuteFlows(info.flows);
     _camera = GET_CAMERA(info.cameraID);
-
+    _cameraID = info.cameraID;
     return true;
 }
 
