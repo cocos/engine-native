@@ -1975,7 +1975,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                     } // if
                 }
 
-                if (gpuPipelineState) {
+                if (cmd->gpuPipelineState) {
                     for (DynamicStateFlagBit dynamicState : gpuPipelineState->dynamicStates) {
                         switch (dynamicState) {
                             case DynamicStateFlagBit::VIEWPORT:
