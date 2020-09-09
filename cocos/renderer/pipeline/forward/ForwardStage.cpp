@@ -35,8 +35,7 @@ RenderStageInfo ForwardStage::_initInfo = {
     static_cast<uint>(ForwardStagePriority::FORWARD),
     static_cast<uint>(RenderFlowTag::SCENE),
     {{false, RenderQueueSortMode::FRONT_TO_BACK, {"default"}},
-    {true, RenderQueueSortMode::BACK_TO_FRONT, {"default", "planarShadow"}}}
-};
+     {true, RenderQueueSortMode::BACK_TO_FRONT, {"default", "planarShadow"}}}};
 const RenderStageInfo &ForwardStage::getInitializeInfo() { return ForwardStage::_initInfo; }
 
 ForwardStage::ForwardStage() : RenderStage() {
@@ -100,7 +99,8 @@ void ForwardStage::render(RenderView *view) {
         queue->clear();
     }
 
-    size_t m = 0, p = 0, k = 0;
+    uint m = 0, p = 0;
+    size_t k = 0;
     for (size_t i = 0; i < renderObjects.size(); ++i) {
         const auto &ro = renderObjects[i];
         auto model = ro.model;
@@ -109,17 +109,8 @@ void ForwardStage::render(RenderView *view) {
         for (m = 1; m <= subModelCount; ++m) {
             auto subModel = GET_SUBMODEL(subModels[m]);
             for (p = 0; p < subModel->passCount; ++p) {
-                const PassView *pass = nullptr;
-                if(p == 0) {
-                   pass = GET_PASS(subModel->pass0ID);
-                } else if(p == 1) {
-                    pass = GET_PASS(subModel->pass1ID);
-                } else if(p == 2) {
-                    pass = GET_PASS(subModel->pass2ID);
-                } else {
-                    CC_ASSERT(0);
-                }
-                
+                const PassView *pass = GET_PASS(*(&subModel->pass0ID + p));
+
                 if (pass->phase != _phaseID) continue;
                 if (static_cast<BatchingSchemes>(pass->batchingScheme) == BatchingSchemes::INSTANCING) {
                     auto instancedBuffer = InstancedBuffer::get(pass);
@@ -132,7 +123,7 @@ void ForwardStage::render(RenderView *view) {
                     _batchedQueue->getQueue().emplace(batchedBuffer);
                 } else {
                     for (k = 0; k < _renderQueues.size(); k++) {
-                        _renderQueues[k]->insertRenderPass(ro, m-1, p);
+                        _renderQueues[k]->insertRenderPass(ro, m, p);
                     }
                 }
             }
