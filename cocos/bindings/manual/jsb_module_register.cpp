@@ -24,49 +24,49 @@
  ****************************************************************************/
 
 #include "cocos2d.h"
-#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
-#include "cocos/scripting/js-bindings/manual/jsb_module_register.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
+#include "cocos/bindings/manual/jsb_module_register.h"
 
-#include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_auto.h"
+#include "cocos/bindings/auto/jsb_cocos_auto.h"
 
-#include "cocos/scripting/dop/jsb_dop.h"
-#include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_extension_auto.h"
-#include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_network_auto.h"
-#include "cocos/scripting/js-bindings/auto/jsb_gfx_auto.h"
-#include "cocos/scripting/js-bindings/auto/jsb_pipeline_auto.h"
-#include "cocos/scripting/js-bindings/manual/jsb_pipeline_manual.h"
-#include "cocos/scripting/js-bindings/manual/jsb_cocos2dx_manual.h"
-#include "cocos/scripting/js-bindings/manual/jsb_cocos2dx_network_manual.h"
-#include "cocos/scripting/js-bindings/manual/jsb_conversions.h"
-#include "cocos/scripting/js-bindings/manual/jsb_gfx_manual.h"
-#include "cocos/scripting/js-bindings/manual/jsb_global.h"
-#include "cocos/scripting/js-bindings/manual/jsb_platform.h"
-#include "cocos/scripting/js-bindings/manual/jsb_xmlhttprequest.h"
+#include "cocos/bindings/dop/jsb_dop.h"
+#include "cocos/bindings/auto/jsb_extension_auto.h"
+#include "cocos/bindings/auto/jsb_network_auto.h"
+#include "cocos/bindings/auto/jsb_gfx_auto.h"
+#include "cocos/bindings/auto/jsb_pipeline_auto.h"
+#include "cocos/bindings/manual/jsb_pipeline_manual.h"
+#include "cocos/bindings/manual/jsb_cocos_manual.h"
+#include "cocos/bindings/manual/jsb_network_manual.h"
+#include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_gfx_manual.h"
+#include "cocos/bindings/manual/jsb_global.h"
+#include "cocos/bindings/manual/jsb_platform.h"
+#include "cocos/bindings/manual/jsb_xmlhttprequest.h"
 
 #if USE_GFX_RENDERER
 #endif
 
 #if USE_SOCKET
-    #include "cocos/scripting/js-bindings/manual/jsb_socketio.h"
-    #include "cocos/scripting/js-bindings/manual/jsb_websocket.h"
+    #include "cocos/bindings/manual/jsb_socketio.h"
+    #include "cocos/bindings/manual/jsb_websocket.h"
 #endif // USE_SOCKET
 
 #if USE_AUDIO
-    #include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.h"
+    #include "cocos/bindings/auto/jsb_audio_auto.h"
 #endif
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "cocos/scripting/js-bindings/manual/JavaScriptObjCBridge.h"
+    #include "cocos/bindings/manual/JavaScriptObjCBridge.h"
 #endif
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
-    #include "cocos/scripting/js-bindings/manual/JavaScriptJavaBridge.h"
+    #include "cocos/bindings/manual/JavaScriptJavaBridge.h"
 #endif
 
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_ANDROID)
 
     #if USE_VIDEO
-        #include "cocos/scripting/js-bindings/auto/jsb_video_auto.h"
+        #include "cocos/bindings/auto/jsb_video_auto.h"
     #endif
 
 #endif // (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_ANDROID)
