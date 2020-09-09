@@ -16,7 +16,8 @@ void RenderQueue::clear() {
 }
 
 bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelIdx, uint passIdx) {
-    const auto subModel = GET_SUBMODEL(subModelIdx);
+    uint32_t *subModels = GET_SUBMODEL_ARRAY(renderObj.model->subModelsID);
+    const auto subModel = GET_SUBMODEL(subModels[subModelIdx]);
     const auto pass = GET_PASS(subModel->pass0ID + passIdx);
     const auto isTransparent = GET_BLEND_STATE(pass->blendStateID)->targets[0].blend;
 
@@ -25,24 +26,7 @@ bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelI
     }
 
     const auto hash = (0 << 30) | (pass->priority << 16) | (subModel->priority << 8) | passIdx;
-    uint shaderID = 0;
-    switch (passIdx) {
-        case 0:
-            shaderID = subModel->shader0ID;
-            break;
-        case 1:
-            shaderID = subModel->shader1ID;
-            break;
-        case 2:
-            shaderID = subModel->shader2ID;
-            break;
-        case 3:
-            shaderID = subModel->shader3ID;
-            break;
-        default:
-            CC_LOG_ERROR("RenderQueue::insertRenderPass: invalid shaderID in SubModelView.");
-            break;
-    }
+    uint shaderID = *(&subModel->shader0ID + passIdx);
     RenderPass renderPass = {hash, renderObj.depth, shaderID, passIdx, subModel};
     _queue.emplace_back(std::move(renderPass));
     return true;
