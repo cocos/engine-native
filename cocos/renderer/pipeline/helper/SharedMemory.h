@@ -194,8 +194,8 @@ struct CC_DLL Shadows {
     float distance = 0;
     float instancePass = 0;
     float planarPass = 0;
-    float near = 0;
-    float far = 0;
+    float nearValue = 0;
+    float farValue = 0;
     float aspect = 0;
     float pcfType = 0;
     float orthoSize = 0;
