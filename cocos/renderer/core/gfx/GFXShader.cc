@@ -1,4 +1,6 @@
 #include "CoreStd.h"
+
+#include "GFXDevice.h"
 #include "GFXShader.h"
 
 namespace cc {
@@ -6,6 +8,7 @@ namespace gfx {
 
 Shader::Shader(Device *device)
 : GFXObject(ObjectType::SHADER), _device(device) {
+    _hash = device->genShaderId();
 }
 
 Shader::~Shader() {
