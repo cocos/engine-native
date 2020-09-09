@@ -25,7 +25,25 @@ bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelI
     }
 
     const auto hash = (0 << 30) | (pass->priority << 16) | (subModel->priority << 8) | passIdx;
-    RenderPass renderPass = {hash, renderObj.depth, GET_SHADER(subModel->shader0ID + passIdx)->getHash(), passIdx, subModel};
+    uint shaderID = 0;
+    switch (passIdx) {
+        case 0:
+            shaderID = subModel->shader0ID;
+            break;
+        case 1:
+            shaderID = subModel->shader1ID;
+            break;
+        case 2:
+            shaderID = subModel->shader2ID;
+            break;
+        case 3:
+            shaderID = subModel->shader3ID;
+            break;
+        default:
+            CC_LOG_ERROR("RenderQueue::insertRenderPass: invalid shaderID in SubModelView.");
+            break;
+    }
+    RenderPass renderPass = {hash, renderObj.depth, shaderID, passIdx, subModel};
     _queue.emplace_back(std::move(renderPass));
     return true;
 }
