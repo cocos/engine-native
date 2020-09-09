@@ -8,7 +8,7 @@ namespace gfx {
 
 Shader::Shader(Device *device)
 : GFXObject(ObjectType::SHADER), _device(device) {
-    _hash = device->genShaderId();
+    _shaderID = device->genShaderId();
 }
 
 Shader::~Shader() {
