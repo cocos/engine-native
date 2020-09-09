@@ -29,6 +29,7 @@ class Context;
 #define GFX_MAX_BUFFER_BINDINGS   24
 #define GFX_INVALID_BINDING       ((uint8_t)-1)
 #define GFX_INVALID_HANDLE        ((uint)-1)
+#define MAX_INFLIGHT_BUFFER       3
 
 enum class ObjectType : uint8_t {
     UNKNOWN,
@@ -645,10 +646,10 @@ struct Viewport {
 
 #pragma pack(push, 1)
 struct Color {
-    float r = 0.0f;
-    float g = 0.0f;
-    float b = 0.0f;
-    float a = 0.0f;
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+    float w = 0.0f;
 };
 #pragma pack(pop)
 typedef vector<Color> ColorList;
@@ -667,6 +668,7 @@ typedef vector<Color> ColorList;
 struct BindingMappingInfo {
     vector<uint> bufferOffsets;
     vector<uint> samplerOffsets;
+    uint flexibleSet = 0u;
 };
 
 struct DeviceInfo {
@@ -791,7 +793,7 @@ struct UniformBlock {
     uint binding = 0;
     String name;
     UniformList members;
-    uint count = 0;
+    uint count = 0u;
 };
 
 typedef vector<UniformBlock> UniformBlockList;

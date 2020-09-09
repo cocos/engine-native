@@ -144,6 +144,8 @@ struct GLES2GPUUniformSampler {
     uint binding = 0;
     String name;
     Type type = Type::UNKNOWN;
+    uint count = 0u;
+
     vector<int> units;
     GLenum glType = 0;
     GLint glLoc = -1;
@@ -215,6 +217,9 @@ class GLES2GPUDescriptorSetLayout : public Object {
 public:
     DescriptorSetLayoutBindingList bindings;
     vector<uint> dynamicBindings;
+
+    vector<uint> descriptorIndices;
+    uint descriptorCount = 0u;
 };
 typedef vector<GLES2GPUDescriptorSetLayout *> GLES2GPUDescriptorSetLayoutList;
 
@@ -251,6 +256,7 @@ typedef vector<GLES2GPUDescriptor> GLES2GPUDescriptorList;
 class GLES2GPUDescriptorSet : public Object {
 public:
     GLES2GPUDescriptorList gpuDescriptors;
+    const vector<uint> *descriptorIndices;
 };
 
 class GLES2GPUFence : public Object {

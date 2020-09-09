@@ -6,6 +6,7 @@
 #include "../forward/ForwardPipeline.h"
 #include "../helper/SharedMemory.h"
 #include "gfx/GFXCommandBuffer.h"
+#include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXDevice.h"
 #include "gfx/GFXFramebuffer.h"
 #include "gfx/GFXQueue.h"
@@ -22,7 +23,10 @@ ShadowStage::~ShadowStage() {
 }
 RenderStageInfo ShadowStage::_initInfo = {
     "ShadowStage",
-    static_cast<uint>(ForwardStagePriority::FORWARD)};
+    static_cast<uint>(ForwardStagePriority::FORWARD),
+    static_cast<uint>(RenderFlowTag::SCENE),
+    {}
+};
 const RenderStageInfo &ShadowStage::getInitializeInfo() { return ShadowStage::_initInfo; }
 
 bool ShadowStage::initialize(const RenderStageInfo &info) {
@@ -35,8 +39,8 @@ bool ShadowStage::initialize(const RenderStageInfo &info) {
 
 void ShadowStage::render(RenderView *view) {
     const auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    //TODO
-    //    _additiveShadowQueue->clear(pipeline.descriptorSet.getBuffer(UBOShadow.BLOCK.binding));
+    const auto shadowInfo = pipeline->getShadows();
+    _additiveShadowQueue->clear(pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.binding));
 
     const auto shadowObjects = pipeline->getShadowObjects();
     for (const auto &shadowObject : shadowObjects) {
@@ -54,23 +58,19 @@ void ShadowStage::render(RenderView *view) {
     const auto commandBuffers = pipeline->getCommandBuffers();
     auto cmdBuffer = commandBuffers[0];
 
-    const auto vp = camera->viewport;
-    cc::Vec2 shadowMapSize; //TODO = ShadowInfo.instance.shadowMapSize;
-    _renderArea.x = vp.x * shadowMapSize.x;
-    _renderArea.y = vp.y * shadowMapSize.y;
-    _renderArea.width = vp.width * shadowMapSize.x * pipeline->getShadingScale();
-    _renderArea.height = vp.height * shadowMapSize.y * pipeline->getShadingScale();
+    const auto shadowMapSize = shadowInfo->size;
+    _renderArea.x = camera->getViewportX() * shadowMapSize.x;
+    _renderArea.y = camera->getViewportY() * shadowMapSize.y;
+    _renderArea.width = camera->getViewportWidth() * shadowMapSize.x * pipeline->getShadingScale();
+    _renderArea.height = camera->getViewportHeight() * shadowMapSize.y * pipeline->getShadingScale();
 
     _clearColors[0] = {1.0f, 1.0f, 1.0f, 1.0f};
     auto renderPass = _framebuffer->getRenderPass();
 
     cmdBuffer->begin();
     cmdBuffer->beginRenderPass(renderPass, _framebuffer, _renderArea,
-                               _clearColors, camera->clearDepth, camera->clearStencil);
-
-    //TODO
-    //    cmdBuffer.bindDescriptorSet(SetIndex.GLOBAL, pipeline.descriptorSet);
-
+                               _clearColors, camera->getClearDepth(), camera->getClearStencil());
+    cmdBuffer->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
     _additiveShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuffer);
 
     cmdBuffer->endRenderPass();

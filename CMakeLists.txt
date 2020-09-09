@@ -545,6 +545,7 @@ cocos_source_files(
     cocos/renderer/pipeline/helper/DefineMap.h
     cocos/renderer/pipeline/helper/DefineMap.cpp
     cocos/renderer/pipeline/helper/SharedMemory.h
+    cocos/renderer/pipeline/helper/SharedMemory.cpp
 )
 
 if(CC_USE_GLES2)
@@ -786,6 +787,8 @@ cocos_source_files(
     cocos/bindings/auto/jsb_gfx_auto.h
     cocos/bindings/auto/jsb_network_auto.cpp
     cocos/bindings/auto/jsb_network_auto.h
+    cocos/scripting/js-bindings/auto/jsb_pipeline_auto.cpp
+    cocos/scripting/js-bindings/auto/jsb_pipeline_auto.h
 )
 
 if(USE_AUDIO)
@@ -825,6 +828,8 @@ cocos_source_files(
     cocos/bindings/manual/jsb_cocos2dx_network_manual.h
     cocos/bindings/manual/jsb_xmlhttprequest.cpp
     cocos/bindings/manual/jsb_xmlhttprequest.h
+    cocos/scripting/js-bindings/manual/jsb_pipeline_manual.h
+    cocos/scripting/js-bindings/manual/jsb_pipeline_manual.cpp
 )
 
 if(USE_SOCKET)
@@ -1071,6 +1076,7 @@ target_compile_definitions(cocos2d PUBLIC
 if(CC_USE_VULKAN)
 
     target_compile_definitions(cocos2d PUBLIC VK_NO_PROTOTYPES)
+    target_compile_definitions(cocos2d PUBLIC CC_USE_VULKAN)
 
     if(WIN32)
         target_compile_definitions(cocos2d PUBLIC VK_USE_PLATFORM_WIN32_KHR)
@@ -1085,7 +1091,11 @@ if(CC_USE_VULKAN)
     endif()
 
 elseif(CC_USE_METAL)
-    target_compile_definitions(cocos2d PUBLIC USE_METAL)
+    target_compile_definitions(cocos2d PUBLIC CC_USE_METAL)
+elseif(CC_USE_GLES3)
+    target_compile_definitions(cocos2d PUBLIC CC_USE_GLES3)
+elseif(CC_USE_GLES2)
+    target_compile_definitions(cocos2d PUBLIC CC_USE_GLES2)
 endif()
 
 target_include_directories(cocos2d

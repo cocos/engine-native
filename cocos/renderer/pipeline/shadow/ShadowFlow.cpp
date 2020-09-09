@@ -3,7 +3,9 @@
 #include "../Define.h"
 #include "../forward/ForwardPipeline.h"
 #include "../forward/SceneCulling.h"
+#include "../helper/SharedMemory.h"
 #include "ShadowStage.h"
+#include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXDevice.h"
 #include "gfx/GFXFramebuffer.h"
 #include "gfx/GFXRenderPass.h"
@@ -15,7 +17,9 @@ namespace pipeline {
 RenderFlowInfo ShadowFlow::_initInfo = {
     "ShadowFlow",
     static_cast<uint>(ForwardFlowPriority::SHADOW),
-    static_cast<uint>(RenderFlowTag::SCENE)};
+    static_cast<uint>(RenderFlowTag::SCENE),
+    {}
+};
 const RenderFlowInfo &ShadowFlow::getInitializeInfo() { return ShadowFlow::_initInfo; }
 
 ShadowFlow::~ShadowFlow() {
@@ -24,18 +28,20 @@ ShadowFlow::~ShadowFlow() {
 
 bool ShadowFlow::initialize(const RenderFlowInfo &info) {
     RenderFlow::initialize(info);
-
-    auto shadowStage = CC_NEW(ShadowStage);
-    shadowStage->initialize(ShadowStage::getInitializeInfo());
-    _stages.emplace_back(shadowStage);
+    if (_stages.size() == 0) {
+        auto shadowStage = CC_NEW(ShadowStage);
+        shadowStage->initialize(ShadowStage::getInitializeInfo());
+        _stages.emplace_back(shadowStage);
+    }
     return true;
 }
 
 void ShadowFlow::activate(RenderPipeline *pipeline) {
+    return; //TODO coulsonwang
     RenderFlow::activate(pipeline);
 
     auto device = gfx::Device::getInstance();
-    cc::Vec2 shadowMapSize; //TODO
+    const auto shadowMapSize = static_cast<ForwardPipeline *>(pipeline)->getShadows()->size;
     _width = shadowMapSize.x;
     _height = shadowMapSize.y;
 
@@ -97,26 +103,20 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
 }
 
 void ShadowFlow::render(RenderView *view) {
-    //TODO
-    //    const shadowInfo = ShadowInfo.instance;
-    //    if (!shadowInfo.enabled) { return; }
-    //
-    //    const shadowMapSize = shadowInfo.shadowMapSize;
-    //    if (this._width !== shadowMapSize.x || this._height !== shadowMapSize.y) {
-    //        this.resizeShadowMap(shadowMapSize.x,shadowMapSize.y);
-    //        this._width = shadowMapSize.x;
-    //        this._height = shadowMapSize.y;
-    //    }
-    //
-    //    const pipeline = this._pipeline as ForwardPipeline;
-    //    view.camera.update();
     auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    sceneCulling(pipeline, view);
+    const auto shadowInfo = pipeline->getShadows();
+    if (!shadowInfo->enabled) return;
+
+    const auto shadowMapSize = shadowInfo->size;
+    if (_width != shadowMapSize.x || _height != shadowMapSize.y) {
+        resizeShadowMap(shadowMapSize.x, shadowMapSize.y);
+        _width = shadowMapSize.x;
+        _height = shadowMapSize.y;
+    }
+
     pipeline->updateUBOs(view);
     RenderFlow::render(view);
-
-    //TODO
-    //    pipeline.descriptorSet.bindTexture(UNIFORM_SHADOWMAP.binding, this._shadowFrameBuffer!.colorTextures[0]!);
+    pipeline->getDescriptorSet()->bindTexture(UNIFORM_SHADOWMAP.binding, _framebuffer->getColorTextures()[0]);
 }
 
 void ShadowFlow::resizeShadowMap(uint width, uint height) {

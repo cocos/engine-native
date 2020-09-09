@@ -10,7 +10,9 @@ namespace pipeline {
 RenderFlowInfo UIFlow::_initInfo = {
     "UIFlow",
     static_cast<uint>(ForwardFlowPriority::UI),
-    static_cast<uint>(RenderFlowTag::UI)};
+    static_cast<uint>(RenderFlowTag::UI),
+    {}
+};
 const RenderFlowInfo &UIFlow::getInitializeInfo() { return UIFlow::_initInfo; }
 
 UIFlow::~UIFlow() {
@@ -19,10 +21,11 @@ UIFlow::~UIFlow() {
 
 bool UIFlow::initialize(const RenderFlowInfo &info) {
     RenderFlow::initialize(info);
-
-    auto uiStage = CC_NEW(UIStage);
-    _stages.emplace_back(uiStage);
-
+    if (_stages.size() == 0) {
+        auto uiStage = CC_NEW(UIStage);
+        uiStage->initialize(UIStage::getInitializeInfo());
+        _stages.emplace_back(uiStage);
+    }
     return true;
 }
 
@@ -32,9 +35,6 @@ void UIFlow::activate(RenderPipeline *pipeline) {
 
 void UIFlow::render(RenderView *view) {
     auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    //TODO coulsonwang
-    //view.camera.update();
-    sceneCulling(pipeline, view);
     pipeline->updateUBOs(view);
     RenderFlow::render(view);
 }

@@ -1,6 +1,8 @@
 #pragma once
-#include "core/CoreStd.h"
+#include "renderer/core/CoreStd.h"
+#include "math/Vec2.h"
 #include "math/Vec3.h"
+#include "math/Vec4.h"
 #include "bindings/dop/BufferPool.h"
 #include "bindings/dop/ObjectPool.h"
 #include "bindings/dop/ArrayPool.h"
@@ -13,7 +15,6 @@ class DescriptorSet;
 namespace pipeline {
 struct RenderingSubMesh;
 struct FlatBuffer;
-struct PlanarShadow;
 class RenderPipeline;
 
 struct CC_DLL ModelView {
@@ -26,7 +27,7 @@ struct CC_DLL ModelView {
     uint32_t subModelsID = 0; // array pool id
     //    InstancedAttributeBlock instancedAttributeBlock;
 
-    const static se::PoolType type = se::PoolType::MODEL;
+    const static se::PoolType type;
 };
 
 struct CC_DLL SubModelView {
@@ -43,7 +44,7 @@ struct CC_DLL SubModelView {
     uint32_t descriptorSetID = 0;
     uint32_t inputAssemblerID = 0;
 
-    const static se::PoolType type = se::PoolType::SUB_MODEL;
+    const static se::PoolType type;
 };
 
 struct CC_DLL PassView {
@@ -60,7 +61,7 @@ struct CC_DLL PassView {
     uint32_t descriptorSetID = 0;
     uint32_t pipelineLayoutID = 0;
 
-    const static se::PoolType type = se::PoolType::PASS;
+    const static se::PoolType type;
 };
 
 //
@@ -71,19 +72,23 @@ struct CC_DLL PassView {
 //    uint32_t instancedAttributesID = 0; //array pool
 //};
 
-struct CC_DLL Camera {
+class CC_DLL Camera {
+private:
     float width = 0;
     float height = 0;
     float exposure = 0;
-    uint32_t clearFlag = 0;
+    float clearFlag = 0;
     float clearDepth = 0;
-    uint32_t clearStencil = 0;
-    uint32_t nodeID = 0;
-    uint32_t sceneID = 0;
-    uint32_t frustumID = 0;
+    float clearStencil = 0;
+    float nodeID = 0;
+    float sceneID = 0;
+    float frustumID = 0;
     cc::Vec3 forward;
     cc::Vec3 position;
-    gfx::Rect viewport;
+    float viewportX;
+    float viewportY;
+    float viewportWidth;
+    float viewportHeight;
     gfx::Color clearColor;
     cc::Mat4 matView;
     cc::Mat4 matViewProj;
@@ -91,26 +96,49 @@ struct CC_DLL Camera {
     cc::Mat4 matProj;
     cc::Mat4 matProjInv;
 
-    const static se::PoolType type = se::PoolType::CAMERA;
+public:
+    float getWidth() const { return width;}
+    float getHeight() const { return height;}
+    float getExposure() const { return exposure;}
+    float getClearDepth() const { return clearDepth;}
+    uint getClearFlag() const { return static_cast<uint>(clearFlag);}
+    uint getClearStencil() const { return static_cast<uint>(clearStencil);}
+    uint getNodeID() const { return static_cast<uint>(nodeID);}
+    uint getSceneID() const { return static_cast<uint>(sceneID);}
+    uint getFrustumID() const { return static_cast<uint>(frustumID);}
+    uint getViewportX() const { return static_cast<uint>(viewportX);}
+    uint getViewportY() const { return static_cast<uint>(viewportY);}
+    uint getViewportWidth() const { return static_cast<uint>(viewportWidth);}
+    uint getViewportHeight() const { return static_cast<uint>(viewportHeight);}
+    const cc::Vec3 &getForward() const { return forward;}
+    const cc::Vec3 &getPosition() const { return position;}
+    const gfx::Color &getClearColor() const { return clearColor; }
+    const cc::Mat4 &getMatView() const { return matView; }
+    const cc::Mat4 &getMatViewProj() const { return matViewProj; }
+    const cc::Mat4 &getMatViewProjInv() const { return matViewProjInv; }
+    const cc::Mat4 &getMatProj() const { return matProj; }
+    const cc::Mat4 &getMatProjInv() const { return matProjInv; }
+
+    const static se::PoolType type;
 };
 
 struct CC_DLL AABB {
     cc::Vec3 center;
     cc::Vec3 halfExtents;
 
-    const static se::PoolType type = se::PoolType::AABB;
+    const static se::PoolType type;
 };
 
 struct CC_DLL Plane {
-    float distance;
     cc::Vec3 normal;
+    float distance;
 };
 
 struct CC_DLL Frustum {
     cc::Vec3 vertices[8];
     Plane planes[6];
 
-    const static se::PoolType type = se::PoolType::FRUSTUM;
+    const static se::PoolType type;
 };
 
 struct CC_DLL Scene {
@@ -121,7 +149,7 @@ struct CC_DLL Scene {
     uint32_t planarShadowID = 0;
     uint32_t modelsID = 0; //array pool
 
-    const static se::PoolType type = se::PoolType::SCENE;
+    const static se::PoolType type;
 };
 
 struct CC_DLL MainLight {
@@ -131,30 +159,52 @@ struct CC_DLL MainLight {
     cc::Vec3 color;
     cc::Vec3 colorTemperatureRGB;
 
-    uint32_t nodeID = 0;
+    float nodeID = 0;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
 };
 
 struct CC_DLL Ambient {
+    float enabled = 0;
     float skyIllum = 0;
     cc::Vec4 skyColor;
     cc::Vec4 groundAlbedo;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
 };
 
 struct CC_DLL Fog {
     float enabled = 0;
+    float fogType = 0;
+    float fogDensity = 0;
     float fogStart = 0;
     float fogEnd = 0;
-    float fogDensity = 0;
+    float fogAtten = 0;
     float fogTop = 0;
     float fogRange = 0;
-    float fogAtten = 0;
     cc::Vec4 fogColor;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
+};
+
+struct CC_DLL Shadows {
+    float enabled = 0;
+    float dirty = 0;
+    float shadowType = 0;
+    float distance = 0;
+    float instancePass = 0;
+    float planarPass = 0;
+    float nearValue = 0;
+    float farValue = 0;
+    float aspect = 0;
+    float pcfType = 0;
+    float orthoSize = 0;
+    cc::Vec2 size;
+    cc::Vec3 normal;
+    cc::Vec4 color;
+    cc::Vec4 sphere;
+
+    const static se::PoolType type;
 };
 
 struct CC_DLL InstancedAttribute {
@@ -163,17 +213,22 @@ struct CC_DLL InstancedAttribute {
     uint32_t isNormalized = 0;
     uint32_t viewID = 0;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
 };
 
-struct CC_DLL Skybox : public ModelView {
+struct CC_DLL Skybox {
     uint32_t enabled = 0;
+    uint32_t isRGBE = 0;
+    uint32_t useIBL = 0;
+    uint32_t model = 0;
+
+    const static se::PoolType type;
 };
 
 struct CC_DLL BufferView {
     uint8_t *data = nullptr;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
 };
 
 struct CC_DLL FlatBuffer {
@@ -182,7 +237,7 @@ struct CC_DLL FlatBuffer {
     uint32_t bufferViewID = 0;
     uint32_t bufferViewSize = 0;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
 };
 
 struct CC_DLL RenderingSubMesh {
@@ -198,24 +253,32 @@ struct CC_DLL RenderingSubMesh {
     uint32_t meshID = 0;
     uint32_t subMeshIndex = 0;
 
-    const static se::PoolType type = se::PoolType::UNKNOWN;
+    const static se::PoolType type;
 };
 
-struct CC_DLL Node {
-    uint32_t layer = 0;
+class CC_DLL Node {
+private:
+    float layer = 0;
     cc::Vec3 worldScale;
     cc::Vec3 worldPosition;
     cc::Vec4 worldRotation;
     cc::Mat4 worldMatrix;
 
-    const static se::PoolType type = se::PoolType::NODE;
+public:
+    uint getLayer() const { return static_cast<uint>(layer); }
+    const cc::Vec3 &getWorldScale() const { return worldScale;}
+    const cc::Vec3 &getWorldPosition() const { return worldPosition;}
+    const cc::Vec4 &getWorldRotation() const { return worldRotation;}
+    const cc::Mat4 &getWorldMatrix() const { return worldMatrix;}
+    
+    const static se::PoolType type;
 };
 
 struct CC_DLL Root {
     float cumulativeTime = 0;
     float frameTime = 0;
 
-    const static se::PoolType type = se::PoolType::ROOT;
+    const static se::PoolType type;
 };
 
 struct CC_DLL RenderWindow {
@@ -223,7 +286,7 @@ struct CC_DLL RenderWindow {
     uint32_t hasOffScreenAttachments = 0;
     uint32_t framebufferID = 0;
 
-    const static se::PoolType type = se::PoolType::RENDER_WINDOW;
+    const static se::PoolType type;
 };
 
 //Get buffer pool data
@@ -242,17 +305,17 @@ struct CC_DLL RenderWindow {
 #define GET_MAIN_LIGHT(index)                 SharedMemory::getBuffer<MainLight>(index)
 #define GET_AMBIENT(index)                    SharedMemory::getBuffer<Ambient>(index)
 #define GET_FOG(index)                        SharedMemory::getBuffer<Fog>(index)
-#define GET_PLANAR_SHADOW(index)              static_cast<PlanarShadow *>(0)
 #define GET_SKYBOX(index)                     SharedMemory::getBuffer<Skybox>(index)
 #define GET_FRUSTUM(index)                    SharedMemory::getBuffer<Frustum>(index)
 #define GET_AABB(index)                       SharedMemory::getBuffer<AABB>(index)
 #define GET_WINDOW(index)                     SharedMemory::getBuffer<RenderWindow>(index)
+#define GET_SHADOWS(index)                    SharedMemory::getBuffer<Shadows>(index)
 
 //TODO
 #define GET_NAME(index) (String(0))
 
 //Get object pool data
-#define GET_DESCRIPTOR_SET(index)      static_cast<gfx::DescriptorSet *>(0) // TODO
+#define GET_DESCRIPTOR_SET(index)      SharedMemory::getObject<gfx::DescriptorSet, se::PoolType::DESCRIPTOR_SETS>(index)
 #define GET_IA(index)                  SharedMemory::getObject<gfx::InputAssembler, se::PoolType::INPUT_ASSEMBLER>(index)
 #define GET_SHADER(index)              SharedMemory::getObject<gfx::Shader, se::PoolType::SHADER>(index)
 #define GET_RASTERIZER_STATE(index)    SharedMemory::getObject<gfx::RasterizerState, se::PoolType::RASTERIZER_STATE>(index)
@@ -277,19 +340,18 @@ public:
             return nullptr;
         }
     }
-    
+
     template <typename T, se::PoolType p>
     static T *getObject(uint index) {
         const auto &poolMap = se::ObjectPool::getPoolMap();
         if (poolMap.count(p) != 0) {
             const se::ObjectPool *objectPool = poolMap.at(p);
             return objectPool->getTypedObject<T>(index);
-        }
-        else {
+        } else {
             return nullptr;
         }
     }
-    
+
     static uint32_t *getArray(se::PoolType type, uint index) {
         return se::ArrayPool::getArray(type, index);
     }

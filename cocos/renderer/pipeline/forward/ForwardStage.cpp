@@ -18,22 +18,25 @@ namespace cc {
 namespace pipeline {
 namespace {
 void SRGBToLinear(gfx::Color &out, const gfx::Color &gamma) {
-    out.r = gamma.r * gamma.r;
-    out.g = gamma.g * gamma.g;
-    out.b = gamma.b * gamma.b;
+    out.x = gamma.x * gamma.x;
+    out.y = gamma.y * gamma.y;
+    out.z = gamma.z * gamma.z;
 }
 
 void LinearToSRGB(gfx::Color &out, const gfx::Color &linear) {
-    out.r = std::sqrt(linear.r);
-    out.g = std::sqrt(linear.g);
-    out.b = std::sqrt(linear.b);
+    out.x = std::sqrt(linear.x);
+    out.y = std::sqrt(linear.y);
+    out.z = std::sqrt(linear.z);
 }
 } // namespace
 
 RenderStageInfo ForwardStage::_initInfo = {
     "ForwardStage",
     static_cast<uint>(ForwardStagePriority::FORWARD),
-    static_cast<uint>(RenderFlowTag::SCENE)};
+    static_cast<uint>(RenderFlowTag::SCENE),
+    {{false, RenderQueueSortMode::FRONT_TO_BACK, {"default"}},
+    {true, RenderQueueSortMode::BACK_TO_FRONT, {"default", "planarShadow"}}}
+};
 const RenderStageInfo &ForwardStage::getInitializeInfo() { return ForwardStage::_initInfo; }
 
 ForwardStage::ForwardStage() : RenderStage() {
@@ -48,10 +51,7 @@ ForwardStage::~ForwardStage() {
 
 bool ForwardStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
-    _renderQueueDescriptors = {
-        {false, RenderQueueSortMode::FRONT_TO_BACK, {"default"}},
-        {true, RenderQueueSortMode::BACK_TO_FRONT, {"default", "planarShadow"}}};
-
+    _renderQueueDescriptors = info.renderQueues;
     _phaseID = PassPhase::getPhaseID("default");
     return true;
 }
@@ -94,20 +94,14 @@ void ForwardStage::render(RenderView *view) {
     _instancedQueue->clear();
     _batchedQueue->clear();
     auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    //    const auto &validLights = pipeline->getValidLights();
-    //    const auto &lightBuffers = pipeline->getLightBuffers();
-    //    const auto &lightIndices = pipeline->getLightIndices();
-    //    const auto &lightIndexOffset = pipeline->getLightIndexOffsets();
     const auto &renderObjects = pipeline->getRenderObjects();
 
-    //    _additiveLightQueue->clear(validLights, lightBuffers, lightIndices);
     for (auto queue : _renderQueues) {
         queue->clear();
     }
 
     size_t m = 0, p = 0, k = 0;
     for (size_t i = 0; i < renderObjects.size(); ++i) {
-        //        auto nextLightIndex = i + 1 < renderObjects.size() ? lightIndexOffset[i + 1] : lightIndices.size();
         const auto &ro = renderObjects[i];
         auto model = ro.model;
         uint32_t *subModels = GET_SUBMODEL_ARRAY(model->subModelsID);
@@ -144,36 +138,36 @@ void ForwardStage::render(RenderView *view) {
     auto commandBuffers = pipeline->getCommandBuffers();
     auto cmdBuff = commandBuffers[0];
 
-    auto vp = camera->viewport;
-    _renderArea.x = vp.x * camera->width;
-    _renderArea.y = vp.y * camera->height;
-    _renderArea.width = vp.width * camera->width * pipeline->getShadingScale();
-    _renderArea.height = vp.height * camera->height * pipeline->getShadingScale();
+    _renderArea.x = camera->getViewportX() * camera->getWidth();
+    _renderArea.y = camera->getViewportY() * camera->getHeight();
+    _renderArea.width = camera->getViewportWidth() * camera->getWidth() * pipeline->getShadingScale();
+    _renderArea.height = camera->getViewportHeight() * camera->getHeight() * pipeline->getShadingScale();
 
-    if (static_cast<gfx::ClearFlags>(camera->clearFlag) & gfx::ClearFlagBit::COLOR) {
+    if (static_cast<gfx::ClearFlags>(camera->getClearFlag()) & gfx::ClearFlagBit::COLOR) {
         if (pipeline->isHDR()) {
-            SRGBToLinear(_clearColors[0], camera->clearColor);
-            auto scale = pipeline->getFpScale() / camera->exposure;
-            _clearColors[0].r *= scale;
-            _clearColors[0].g *= scale;
-            _clearColors[0].b *= scale;
+            SRGBToLinear(_clearColors[0], camera->getClearColor());
+            auto scale = pipeline->getFpScale() / camera->getExposure();
+            _clearColors[0].x *= scale;
+            _clearColors[0].y *= scale;
+            _clearColors[0].z *= scale;
         } else {
-            _clearColors[0].r = camera->clearColor.r;
-            _clearColors[0].g = camera->clearColor.g;
-            _clearColors[0].b = camera->clearColor.b;
+            _clearColors[0].x = camera->getClearColor().x;
+            _clearColors[0].y = camera->getClearColor().y;
+            _clearColors[0].z = camera->getClearColor().z;
         }
     }
 
-    _clearColors[0].a = camera->clearColor.a;
+    _clearColors[0].w = camera->getClearColor().w;
 
     auto framebuffer = GET_FRAMEBUFFER(view->getWindow()->framebufferID);
     const auto &colorTextures = framebuffer->getColorTextures();
 
-    auto renderPass = colorTextures.size() ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
+    auto renderPass = colorTextures.size() ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->getClearFlag()));
 
     cmdBuff->begin();
-    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
-    //TODO cmdBuff.bindDescriptorSet(SetIndex.GLOBAL, pipeline.descriptorSet);
+    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->getClearDepth(), camera->getClearStencil());
+    cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), _pipeline->getDescriptorSet());
+
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
     _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
     _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);

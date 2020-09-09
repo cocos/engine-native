@@ -24,9 +24,9 @@ android {
     }
 
     sourceSets.main {
-        java.srcDir "src"
-        res.srcDir "res"
-        jniLibs.srcDir "libs"
+        java.srcDirs "../src", "src"
+        res.srcDirs "../res", 'res'
+        jniLibs.srcDirs "../libs", 'libs'
         manifest.srcFile "AndroidManifest.xml"
         assets.srcDir "assets"
     }
@@ -116,6 +116,7 @@ android.applicationVariants.all { variant ->
 }
 
 dependencies {
+    implementation fileTree(dir: '../libs', include: ['*.jar','*.aar'])
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation fileTree(dir: "${COCOS_X_ROOT}/cocos/platform/android/java/libs", include: ['*.jar'])
     implementation project(':libcocos2dx')
