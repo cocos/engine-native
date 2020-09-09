@@ -165,7 +165,7 @@ void Configuration::gatherGPUInfo()
     _supportsDepthTexture = checkForGLExtension("depth_texture");
     _valueDict["gl.supports_DepthTexture"] = Value(_supportsDepthTexture);
 
-    _supportsBGRA8888 = checkForGLExtension("GL_IMG_texture_format_BGRA888");
+    _supportsBGRA8888 = checkForGLExtension("texture_format_BGRA8888");
     _valueDict["gl.supports_BGRA8888"] = Value(_supportsBGRA8888);
 
     _supportsDiscardFramebuffer = checkForGLExtension("GL_EXT_discard_framebuffer");
@@ -185,6 +185,7 @@ void Configuration::gatherGPUInfo()
         _supportsFloatTexture = true;
         _supportsShareableVAO = true;
         _supportsInstancing = true;
+        _supportsDepthTexture = true;
     }
     else {
         _supportsFloatTexture = checkForGLExtension("texture_float");
@@ -247,6 +248,11 @@ int Configuration::getMaxTextureUnits() const
 bool Configuration::supportsNPOT() const
 {
     return _supportsNPOT;
+}
+
+bool Configuration::isOpenglES3() const
+{
+    return _isOpenglES3;
 }
 
 bool Configuration::supportsDepthTexture() const

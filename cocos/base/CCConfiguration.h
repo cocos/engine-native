@@ -98,6 +98,12 @@ public:
      */
     bool supportsDepthTexture() const;
 
+    /** Whether or not the version is glES3.
+     *
+     * @return Is true if the version is glES3.
+     */
+    bool isOpenglES3() const;
+
     /** Whether or not PVR Texture Compressed is supported.
      *
      * @return Is true if supports PVR Texture Compressed.

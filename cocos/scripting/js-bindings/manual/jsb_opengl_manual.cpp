@@ -2290,6 +2290,14 @@ static GLenum convertFloatTextureInternalFormat(GLenum format, GLenum type)
         else if (type == GL_HALF_FLOAT_OES)
             return GL_RGB16F_EXT;
     }
+    // The depth stencil format on gl3 is not same to gl2;
+    else if (format == GL_DEPTH_STENCIL)
+    {
+        Configuration *config = Configuration::getInstance();
+        if (config->supportsDepthTexture()) {
+            return GL_DEPTH24_STENCIL8;
+        }
+    }
 
     //FIXME: support other types, such as GL_ALPHA32F_EXT, GL_LUMINANCE32F_EXT?
 
