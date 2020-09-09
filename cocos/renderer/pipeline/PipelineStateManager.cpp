@@ -3,6 +3,7 @@
 #include "gfx/GFXInputAssembler.h"
 #include "gfx/GFXRenderPass.h"
 #include "helper/SharedMemory.h"
+#include "gfx/GFXShader.h"
 
 namespace cc {
 namespace pipeline {
@@ -12,9 +13,11 @@ gfx::PipelineState *PipelineStateManager::getOrCreatePipelineState(const PassVie
                                                                    gfx::InputAssembler *inputAssembler,
                                                                    gfx::RenderPass *renderPass) {
     const auto passHash = pass->hash;
+    const auto renderPassHash = renderPass->getHash();
     const auto iaHash = inputAssembler->getAttributesHash();
-    const auto hash = passHash ^ passHash ^ iaHash;
-
+    const auto shaderID = shader->getHash();
+    const auto hash = passHash ^ renderPassHash ^ iaHash ^ shaderID;
+    
     auto pso = _PSOHashMap[hash];
     if (!pso) {
         auto pipelineLayout = GET_PIPELINE_LAYOUT(pass->pipelineLayoutID);
