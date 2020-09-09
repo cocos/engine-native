@@ -324,6 +324,7 @@ namespace se {
          *  @return true if succeed, otherwise false.
          */
         bool runByteCodeFile(const std::string &path_bc, Value* ret/* = nullptr */);
+        void callExceptionCallback(const char*, const char*, const char*);
 
         std::chrono::steady_clock::time_point _startTime;
         std::vector<RegisterCallback> _registerCallbackArray;
@@ -342,7 +343,7 @@ namespace se {
         Object *_gcFunc = nullptr;
 
         FileOperationDelegate _fileOperationDelegate;
-        ExceptionCallback _exceptionCallback = nullptr;
+        ExceptionCallback _nativeExceptionCallback = nullptr;
         ExceptionCallback _jsExceptionCallback = nullptr;
 
 #if SE_ENABLE_INSPECTOR

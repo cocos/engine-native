@@ -307,6 +307,8 @@ namespace se {
         };
         ExceptionInfo _formatException(JSValueRef exception);
 
+        void callExceptionCallback(const char*, const char*, const char*);
+        
         std::chrono::steady_clock::time_point _startTime;
         std::vector<RegisterCallback> _registerCallbackArray;
         std::vector<std::function<void()>> _beforeInitHookArray;
@@ -319,7 +321,7 @@ namespace se {
 
         Object* _globalObj;
         FileOperationDelegate _fileOperationDelegate;
-        ExceptionCallback _exceptionCallback = nullptr;
+        ExceptionCallback _nativeExceptionCallback = nullptr;
         ExceptionCallback _jsExceptionCallback = nullptr;
 
         uint32_t _vmId;
