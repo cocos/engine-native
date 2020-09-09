@@ -12987,6 +12987,24 @@ static bool js_gfx_Device_resize(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_Device_resize)
 
+static bool js_gfx_Device_genShaderId(se::State& s)
+{
+    cc::gfx::Device* cobj = (cc::gfx::Device*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_Device_genShaderId : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->genShaderId();
+        ok &= uint32_to_seval((unsigned int)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_Device_genShaderId : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_Device_genShaderId)
+
 static bool js_gfx_Device_createQueue(se::State& s)
 {
     cc::gfx::Device* cobj = (cc::gfx::Device*)s.nativeThisObject();
@@ -13245,6 +13263,7 @@ bool js_register_gfx_Device(se::Object* obj)
     cls->defineFunction("createSampler", _SE(js_gfx_Device_createSampler));
     cls->defineFunction("initialize", _SE(js_gfx_Device_initialize));
     cls->defineFunction("resize", _SE(js_gfx_Device_resize));
+    cls->defineFunction("genShaderId", _SE(js_gfx_Device_genShaderId));
     cls->defineFunction("createQueue", _SE(js_gfx_Device_createQueue));
     cls->defineFunction("bindingMappingInfo", _SE(js_gfx_Device_bindingMappingInfo));
     cls->install();
