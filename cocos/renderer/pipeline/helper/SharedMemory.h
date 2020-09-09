@@ -2,6 +2,7 @@
 #include "renderer/core/CoreStd.h"
 #include "math/Vec2.h"
 #include "math/Vec3.h"
+#include "math/Vec4.h"
 #include "scripting/dop/ArrayPool.h"
 #include "scripting/dop/BufferPool.h"
 #include "scripting/dop/ObjectPool.h"
@@ -304,7 +305,6 @@ struct CC_DLL RenderWindow {
 #define GET_MAIN_LIGHT(index)                 SharedMemory::getBuffer<MainLight>(index)
 #define GET_AMBIENT(index)                    SharedMemory::getBuffer<Ambient>(index)
 #define GET_FOG(index)                        SharedMemory::getBuffer<Fog>(index)
-#define GET_PLANAR_SHADOW(index)              SharedMemory::getBuffer<PlanarShadow>(index)
 #define GET_SKYBOX(index)                     SharedMemory::getBuffer<Skybox>(index)
 #define GET_FRUSTUM(index)                    SharedMemory::getBuffer<Frustum>(index)
 #define GET_AABB(index)                       SharedMemory::getBuffer<AABB>(index)
