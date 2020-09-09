@@ -132,6 +132,7 @@
 		6DC0F3F924E152230035E12B /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC0F3F824E152230035E12B /* CoreText.framework */; };
 		6DC0F3FB24E152650035E12B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC0F3FA24E152650035E12B /* UIKit.framework */; };
 		6DE1A2AA24E68E7900974ACD /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DE1A2A924E68E7900974ACD /* JavaScriptCore.framework */; };
+		6DF0C0302508D380001BE3D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1ABC56911F7A005D00826282 /* Images.xcassets */; };
 		A92275421517C094001B78AA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275411517C094001B78AA /* QuartzCore.framework */; };
 		A92275441517C094001B78AA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275431517C094001B78AA /* OpenGLES.framework */; };
 		A92275461517C094001B78AA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275451517C094001B78AA /* OpenAL.framework */; };
@@ -842,6 +843,7 @@
 				6D9C230824ED063500EBABC5 /* ios-app-clip in Resources */,
 				6DC0F3CA24E1398C0035E12B /* LaunchScreenBackground.png in Resources */,
 				6DC0F3C924E139880035E12B /* LaunchScreen.storyboard in Resources */,
+				6DF0C0302508D380001BE3D9 /* Images.xcassets in Resources */,
 				6DC0F3EF24E1484B0035E12B /* Localizable.strings in Resources */,
 				6DC0F3EB24E1483B0035E12B /* project.json in Resources */,
 			);
