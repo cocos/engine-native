@@ -1,7 +1,7 @@
-#include "scripting/js-bindings/auto/jsb_pipeline_auto.h"
+#include "cocos/bindings/auto/jsb_pipeline_auto.h"
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_WINDOWS)
-#include "scripting/js-bindings/manual/jsb_conversions.h"
-#include "scripting/js-bindings/manual/jsb_global.h"
+#include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_global.h"
 #include "renderer/pipeline/forward/ForwardPipeline.h"
 #include "renderer/pipeline/forward/ForwardFlow.h"
 #include "renderer/pipeline/forward/ForwardStage.h"

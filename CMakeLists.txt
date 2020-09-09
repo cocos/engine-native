@@ -787,8 +787,8 @@ cocos_source_files(
     cocos/bindings/auto/jsb_gfx_auto.h
     cocos/bindings/auto/jsb_network_auto.cpp
     cocos/bindings/auto/jsb_network_auto.h
-    cocos/scripting/js-bindings/auto/jsb_pipeline_auto.cpp
-    cocos/scripting/js-bindings/auto/jsb_pipeline_auto.h
+    cocos/bindings/auto/jsb_pipeline_auto.cpp
+    cocos/bindings/auto/jsb_pipeline_auto.h
 )
 
 if(USE_AUDIO)
@@ -809,10 +809,10 @@ endif()
 cocos_source_files(
     cocos/bindings/manual/jsb_classtype.cpp
     cocos/bindings/manual/jsb_classtype.h
-    #cocos/bindings/manual/jsb_cocos2dx_extension_manual.cpp
-    #cocos/bindings/manual/jsb_cocos2dx_extension_manual.h
-    cocos/bindings/manual/jsb_cocos2dx_manual.cpp
-    cocos/bindings/manual/jsb_cocos2dx_manual.h
+    #cocos/bindings/manual/jsb_extension_manual.cpp
+    #cocos/bindings/manual/jsb_extension_manual.h
+    cocos/bindings/manual/jsb_cocos_manual.cpp
+    cocos/bindings/manual/jsb_cocos_manual.h
     cocos/bindings/manual/jsb_conversions.cpp
     cocos/bindings/manual/jsb_conversions.h
     cocos/bindings/manual/jsb_gfx_manual.cpp
@@ -824,12 +824,12 @@ cocos_source_files(
     # cocos/scripting/js-bindings/manual/jsb_module_register.cpp
     cocos/bindings/manual/jsb_module_register.h
     cocos/bindings/manual/jsb_platform.h
-    cocos/bindings/manual/jsb_cocos2dx_network_manual.cpp
-    cocos/bindings/manual/jsb_cocos2dx_network_manual.h
+    cocos/bindings/manual/jsb_network_manual.cpp
+    cocos/bindings/manual/jsb_network_manual.h
     cocos/bindings/manual/jsb_xmlhttprequest.cpp
     cocos/bindings/manual/jsb_xmlhttprequest.h
-    cocos/scripting/js-bindings/manual/jsb_pipeline_manual.h
-    cocos/scripting/js-bindings/manual/jsb_pipeline_manual.cpp
+    cocos/bindings/manual/jsb_pipeline_manual.h
+    cocos/bindings/manual/jsb_pipeline_manual.cpp
 )
 
 if(USE_SOCKET)

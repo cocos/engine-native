@@ -23,12 +23,12 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "jsb_cocos2dx_manual.h"
+#include "jsb_cocos_manual.h"
 
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
-#include "cocos/bindings/auto/jsb_cocos2dx_auto.h"
+#include "cocos/bindings/auto/jsb_cocos_auto.h"
 
 #include "storage/local-storage/LocalStorage.h"
 #include "cocos2d.h"
@@ -534,7 +534,7 @@ static bool register_canvas_context2d(se::Object* obj)
     return true;
 }
 
-bool register_all_cocos2dx_manual(se::Object* obj)
+bool register_all_cocos_manual(se::Object* obj)
 {
     register_plist_parser(obj);
     register_sys_localStorage(obj);

@@ -2,7 +2,7 @@
 #include "base/Config.h"
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_WINDOWS)
 
-#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
 
 extern se::Object* __jsb_cc_pipeline_RenderQueueDesc_proto;
 extern se::Class* __jsb_cc_pipeline_RenderQueueDesc_class;

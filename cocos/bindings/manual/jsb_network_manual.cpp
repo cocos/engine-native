@@ -23,12 +23,12 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "base/Config.h"
-#include "jsb_cocos2dx_network_manual.h"
+#include "jsb_network_manual.h"
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_WINDOWS)
 #include "bindings/manual/jsb_conversions.h"
 #include "bindings/manual/jsb_global.h"
 #include "network/Downloader.h"
-#include "bindings/auto/jsb_cocos2dx_network_auto.h"
+#include "bindings/auto/jsb_network_auto.h"
 
 static bool js_cocos2dx_network_Downloader_createDownloadFileTask(se::State &s) {
     cc::network::Downloader *cobj = (cc::network::Downloader *) s.nativeThisObject();
@@ -181,7 +181,7 @@ static bool js_network_Downloader_setOnTaskError(se::State& s)
 }
 SE_BIND_FUNC(js_network_Downloader_setOnTaskError)
 
-bool register_all_cocos2dx_network_manual(se::Object *obj) {
+bool register_all_network_manual(se::Object *obj) {
     __jsb_cc_network_Downloader_proto->defineFunction("createDownloadFileTask",
                                                            _SE(js_cocos2dx_network_Downloader_createDownloadFileTask));
     __jsb_cc_network_Downloader_proto->defineFunction("setOnTaskError",

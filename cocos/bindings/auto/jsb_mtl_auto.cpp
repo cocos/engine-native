@@ -1,6 +1,6 @@
-#include "bindings/auto/jsb_mtl_auto.h"
-#include "bindings/manual/jsb_conversions.h"
-#include "bindings/manual/jsb_global.h"
+#include "cocos/bindings/auto/jsb_mtl_auto.h"
+#include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_global.h"
 #include "renderer/gfx-metal/GFXMTL.h"
 
 #ifndef JSB_ALLOC

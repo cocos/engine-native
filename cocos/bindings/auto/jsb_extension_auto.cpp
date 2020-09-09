@@ -1,6 +1,6 @@
-#include "bindings/auto/jsb_extension_auto.h"
-#include "bindings/manual/jsb_conversions.h"
-#include "bindings/manual/jsb_global.h"
+#include "cocos/bindings/auto/jsb_extension_auto.h"
+#include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_global.h"
 #include "extensions/cocos-ext.h"
 
 #ifndef JSB_ALLOC

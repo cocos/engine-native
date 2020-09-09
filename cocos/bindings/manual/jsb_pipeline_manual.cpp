@@ -1,8 +1,8 @@
 #include "jsb_gfx_manual.h"
-#include "scripting/js-bindings/auto/jsb_pipeline_auto.h"
-#include "scripting/js-bindings/jswrapper/SeApi.h"
-#include "scripting/js-bindings/manual/jsb_conversions.h"
-#include "scripting/js-bindings/manual/jsb_global.h"
+#include "cocos/bindings/auto/jsb_pipeline_auto.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
+#include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_global.h"
 
 #include "renderer/pipeline/Define.h"
 #include "renderer/pipeline/RenderFlow.h"
@@ -16,8 +16,8 @@
 #include "renderer/pipeline/shadow/ShadowStage.h"
 #include "renderer/pipeline/ui/UIFlow.h"
 #include "renderer/pipeline/ui/UIStage.h"
-#include "scripting/js-bindings/manual/jsb_conversions.h"
-#include "scripting/js-bindings/manual/jsb_global.h"
+#include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_global.h"
 
 se::Object *__jsb_cc_pipeline_RenderViewInfo_proto = nullptr;
 se::Class *__jsb_cc_pipeline_RenderViewInfo_class = nullptr;

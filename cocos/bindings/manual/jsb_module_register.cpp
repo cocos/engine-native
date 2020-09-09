@@ -24,6 +24,7 @@
  ****************************************************************************/
 
 #include "cocos2d.h"
+
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_module_register.h"
 
@@ -89,13 +90,13 @@ bool jsb_register_all_modules() {
 
     se->addRegisterCallback(jsb_register_global_variables);
     se->addRegisterCallback(register_all_engine);
-    se->addRegisterCallback(register_all_cocos2dx_manual);
+    se->addRegisterCallback(register_all_cocos_manual);
     se->addRegisterCallback(register_platform_bindings);
     se->addRegisterCallback(register_all_gfx);
     se->addRegisterCallback(register_all_gfx_manual);
 
     se->addRegisterCallback(register_all_network);
-    se->addRegisterCallback(register_all_cocos2dx_network_manual);
+    se->addRegisterCallback(register_all_network_manual);
     se->addRegisterCallback(register_all_xmlhttprequest);
     // extension depend on network
     se->addRegisterCallback(register_all_extension);
@@ -112,7 +113,7 @@ bool jsb_register_all_modules() {
 #endif
 
 #if USE_AUDIO
-    se->addRegisterCallback(register_all_audioengine);
+    se->addRegisterCallback(register_all_audio);
 #endif
 
 #if USE_SOCKET

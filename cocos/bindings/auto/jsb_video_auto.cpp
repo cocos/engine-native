@@ -1,7 +1,7 @@
-#include "bindings/auto/jsb_video_auto.h"
+#include "cocos/bindings/auto/jsb_video_auto.h"
 #if (USE_VIDEO > 0) && (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_IOS) && !defined(CC_TARGET_OS_TVOS)
-#include "bindings/manual/jsb_conversions.h"
-#include "bindings/manual/jsb_global.h"
+#include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_global.h"
 #include "ui/videoplayer/VideoPlayer.h"
 
 #ifndef JSB_ALLOC
