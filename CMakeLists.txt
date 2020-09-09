@@ -1106,7 +1106,7 @@ target_include_directories(cocos2d
         ${CWD}/cocos/platform
         ${CWD}/cocos/renderer/core
         ${CWD}/external/sources/khronos
-        $<$<BOOL:USE_SE_JSC>:${CWD}/cocos/scripting/js-bindings/jswrapper>
+        $<$<BOOL:USE_SE_JSC>:${CWD}/cocos/bindings/jswrapper>
     PRIVATE
         ${CC_EXTERNAL_PRIVATE_INCLUDES}
 )

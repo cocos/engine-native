@@ -22,7 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "cocos.bindings/event/EventDispatcher.h"
+#include "cocos/bindings/event/EventDispatcher.h"
 #include "platform/Application.h"
 #include "EditBox.h"
 #include "platform/android/jni/JniHelper.h"
