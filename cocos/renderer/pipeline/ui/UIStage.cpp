@@ -18,8 +18,7 @@ RenderStageInfo UIStage::_initInfo = {
     "UIStage",
     static_cast<uint>(ForwardStagePriority::UI),
     static_cast<uint>(RenderFlowTag::SCENE),
-    {{true, RenderQueueSortMode::BACK_TO_FRONT, {"default"}}}
-};
+    {{true, RenderQueueSortMode::BACK_TO_FRONT, {"default"}}}};
 const RenderStageInfo &UIStage::getInitializeInfo() { return UIStage::_initInfo; }
 
 bool UIStage::initialize(const RenderStageInfo &info) {
@@ -79,7 +78,8 @@ void UIStage::render(RenderView *view) {
     auto cmdBuff = commandBuffers[0];
 
     auto framebuffer = GET_FRAMEBUFFER(view->getWindow()->framebufferID);
-    auto renderPass = framebuffer->getColorTextures().size() ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlags>(camera->getClearFlag()));
+
+    auto renderPass = framebuffer->getColorTextures().size() && framebuffer->getColorTextures()[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlags>(camera->getClearFlag()));
 
     cmdBuff->begin();
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea,
