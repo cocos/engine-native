@@ -103,8 +103,6 @@
 		6DB456D424EA7962003A72AA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4011F9D7212BD7050091CC5B /* Localizable.strings */; };
 		6DB456D624EA7962003A72AA /* HelloJavascript-clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 6DC0F38924E12E4D0035E12B /* HelloJavascript-clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6DB4572124EA7C52003A72AA /* MobileInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6DB4572024EA7C52003A72AA /* MobileInfo.plist */; };
-		6DC0F39324E12E4D0035E12B /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6DC0F39224E12E4D0035E12B /* ViewController.mm */; };
-		6DC0F39E24E12E4D0035E12B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC0F39D24E12E4D0035E12B /* main.m */; };
 		6DC0F3C924E139880035E12B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4011F9D1212BD6750091CC5B /* LaunchScreen.storyboard */; };
 		6DC0F3CA24E1398C0035E12B /* LaunchScreenBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AFFCD7B1F7A5D4F00628F2C /* LaunchScreenBackground.png */; };
 		6DC0F3CB24E13AD60035E12B /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 509D4AAC17EBB2AB00697056 /* AppController.mm */; };
@@ -133,6 +131,7 @@
 		6DC0F3FB24E152650035E12B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC0F3FA24E152650035E12B /* UIKit.framework */; };
 		6DE1A2AA24E68E7900974ACD /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DE1A2A924E68E7900974ACD /* JavaScriptCore.framework */; };
 		6DF0C0302508D380001BE3D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1ABC56911F7A005D00826282 /* Images.xcassets */; };
+		6DF0C0992509BDE6001BE3D9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 509D4AB817EBB2AB00697056 /* main.m */; };
 		A92275421517C094001B78AA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275411517C094001B78AA /* QuartzCore.framework */; };
 		A92275441517C094001B78AA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275431517C094001B78AA /* OpenGLES.framework */; };
 		A92275461517C094001B78AA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A92275451517C094001B78AA /* OpenAL.framework */; };
@@ -283,12 +282,7 @@
 		6DB456DA24EA7962003A72AA /* HelloJavascript-full.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HelloJavascript-full.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB4572024EA7C52003A72AA /* MobileInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MobileInfo.plist; path = ios/MobileInfo.plist; sourceTree = "<group>"; };
 		6DC0F38924E12E4D0035E12B /* HelloJavascript-clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HelloJavascript-clip.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6DC0F38E24E12E4D0035E12B /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		6DC0F38F24E12E4D0035E12B /* SceneDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneDelegate.mm; sourceTree = "<group>"; };
-		6DC0F39124E12E4D0035E12B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		6DC0F39224E12E4D0035E12B /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
 		6DC0F39C24E12E4D0035E12B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6DC0F39D24E12E4D0035E12B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6DC0F39F24E12E4D0035E12B /* HelloJavascript.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HelloJavascript.entitlements; sourceTree = "<group>"; };
 		6DC0F3C824E134840035E12B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		6DC0F3D224E144FF0035E12B /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
@@ -512,12 +506,7 @@
 		6DC0F38A24E12E4D0035E12B /* ios_appclip */ = {
 			isa = PBXGroup;
 			children = (
-				6DC0F38E24E12E4D0035E12B /* SceneDelegate.h */,
-				6DC0F38F24E12E4D0035E12B /* SceneDelegate.mm */,
-				6DC0F39124E12E4D0035E12B /* ViewController.h */,
-				6DC0F39224E12E4D0035E12B /* ViewController.mm */,
 				6DC0F39C24E12E4D0035E12B /* Info.plist */,
-				6DC0F39D24E12E4D0035E12B /* main.m */,
 				6DC0F39F24E12E4D0035E12B /* HelloJavascript.entitlements */,
 			);
 			path = ios_appclip;
@@ -897,13 +886,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6DC0F39324E12E4D0035E12B /* ViewController.mm in Sources */,
 				6DC0F3CC24E13B020035E12B /* RootViewController.mm in Sources */,
 				6DC0F3CD24E13B050035E12B /* SDKWrapper.m in Sources */,
 				6DC0F3CB24E13AD60035E12B /* AppController.mm in Sources */,
 				6D787BA824EBA48700E4A839 /* jsb_module_register.cpp in Sources */,
+				6DF0C0992509BDE6001BE3D9 /* main.m in Sources */,
 				6DC0F3D824E1466A0035E12B /* AppDelegate.cpp in Sources */,
-				6DC0F39E24E12E4D0035E12B /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1171,7 +1159,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/base /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/physics /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/math/kazmath /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/2d /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/gui /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/network /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/audio/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/editor-support /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/extensions /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/sources /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/chipmunk/include/chipmunk /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/v8 /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/renderer /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include";
+				USER_HEADER_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/base /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/physics /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/math/kazmath /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/2d /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/gui /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/network /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/editor-support /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/audio/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/extensions /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/sources /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/chipmunk/include/chipmunk /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/v8 /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/renderer /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include";
 			};
 			name = Debug;
 		};
@@ -1243,7 +1231,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/base /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/physics /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/math/kazmath /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/2d /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/gui /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/network /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/audio/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/editor-support /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/extensions /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/sources /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/chipmunk/include/chipmunk /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/v8 /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/renderer /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include";
+				USER_HEADER_SEARCH_PATHS = "/Applications/CocosCreator.app/Contents/Resources/cocos2d-x /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/base /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/physics /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/math/kazmath /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/2d /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/gui /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/network /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/editor-support /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/audio/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/extensions /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/sources /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/chipmunk/include/chipmunk /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/v8 /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/scripting/js-bindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/renderer /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include";
 			};
 			name = Release;
 		};
