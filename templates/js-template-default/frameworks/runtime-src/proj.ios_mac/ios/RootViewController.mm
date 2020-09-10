@@ -30,7 +30,6 @@
 #include "platform/CCApplication.h"
 #include "platform/ios/CCEAGLView-ios.h"
 
-
 @implementation RootViewController
 
 /*
@@ -72,6 +71,10 @@ return self;
 
 - (BOOL) shouldAutorotate {
     return YES;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
 //fix not hide status on ios7
