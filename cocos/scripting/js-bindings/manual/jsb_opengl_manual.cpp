@@ -2294,7 +2294,7 @@ static GLenum convertFloatTextureInternalFormat(GLenum format, GLenum type)
     else if (format == GL_DEPTH_STENCIL)
     {
         Configuration *config = Configuration::getInstance();
-        if (config->supportsDepthTexture()) {
+        if (config->isOpenglES3()) {
             return GL_DEPTH24_STENCIL8;
         }
     }
