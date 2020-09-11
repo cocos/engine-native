@@ -3,6 +3,7 @@
 #include "../RenderView.h"
 #include "../helper/SharedMemory.h"
 #include "ForwardPipeline.h"
+#include "cocos/math/Vec3.h"
 #include "platform/Application.h"
 
 namespace cc {

@@ -7,16 +7,16 @@ namespace pipeline {
 struct Light;
 struct UBOGlobal;
 struct UBOShadow;
-struct Fog;
-struct Ambient;
+class Fog;
+class Ambient;
 struct Skybox;
-struct Shadows;
+class Shadows;
 
 class CC_DLL ForwardPipeline : public RenderPipeline {
 public:
     ForwardPipeline();
     ~ForwardPipeline();
-    
+
     virtual bool initialize(const RenderPipelineInfo &info) override;
     virtual void destroy() override;
     virtual bool activate() override;

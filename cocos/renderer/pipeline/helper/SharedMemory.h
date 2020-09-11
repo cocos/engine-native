@@ -1,12 +1,9 @@
 #pragma once
 #include "renderer/core/CoreStd.h"
 
-#include "math/Vec2.h"
-#include "math/Vec3.h"
-#include "math/Vec4.h"
+#include "bindings/dop/ArrayPool.h"
 #include "bindings/dop/BufferPool.h"
 #include "bindings/dop/ObjectPool.h"
-#include "bindings/dop/ArrayPool.h"
 
 namespace cc {
 namespace gfx {
@@ -17,6 +14,11 @@ namespace pipeline {
 struct RenderingSubMesh;
 struct FlatBuffer;
 class RenderPipeline;
+
+#define X 0
+#define Y 1
+#define Z 2
+#define W 3
 
 struct CC_DLL ModelView {
     uint32_t enabled = 0;
@@ -75,69 +77,85 @@ struct CC_DLL PassView {
 
 class CC_DLL Camera {
 private:
-    float width = 0;
-    float height = 0;
-    float exposure = 0;
-    float clearFlag = 0;
-    float clearDepth = 0;
-    float clearStencil = 0;
-    float nodeID = 0;
-    float sceneID = 0;
-    float frustumID = 0;
-    cc::Vec3 forward;
-    cc::Vec3 position;
-    float viewportX;
-    float viewportY;
-    float viewportWidth;
-    float viewportHeight;
-    gfx::Color clearColor;
-    cc::Mat4 matView;
-    cc::Mat4 matViewProj;
-    cc::Mat4 matViewProjInv;
-    cc::Mat4 matProj;
-    cc::Mat4 matProjInv;
+    float _width = 0;
+    float _height = 0;
+    float _exposure = 0;
+    float _clearFlag = 0;
+    float _clearDepth = 0;
+    float _clearStencil = 0;
+    float _nodeID = 0;
+    float _sceneID = 0;
+    float _frustumID = 0;
+    float _forward[3];
+    float _position[3];
+    float _viewportX;
+    float _viewportY;
+    float _viewportWidth;
+    float _viewportHeight;
+    float _clearColor[4];
+    float _matView[16];
+    float _matViewProj[16];
+    float _matViewProjInv[16];
+    float _matProj[16];
+    float _matProjInv[16];
 
 public:
-    float getWidth() const { return width; }
-    float getHeight() const { return height; }
-    float getExposure() const { return exposure; }
-    float getClearDepth() const { return clearDepth; }
-    uint getClearFlag() const { return static_cast<uint>(clearFlag); }
-    uint getClearStencil() const { return static_cast<uint>(clearStencil); }
-    uint getNodeID() const { return static_cast<uint>(nodeID); }
-    uint getSceneID() const { return static_cast<uint>(sceneID); }
-    uint getFrustumID() const { return static_cast<uint>(frustumID); }
-    uint getViewportX() const { return static_cast<uint>(viewportX); }
-    uint getViewportY() const { return static_cast<uint>(viewportY); }
-    uint getViewportWidth() const { return static_cast<uint>(viewportWidth); }
-    uint getViewportHeight() const { return static_cast<uint>(viewportHeight); }
-    const cc::Vec3 &getForward() const { return forward; }
-    const cc::Vec3 &getPosition() const { return position; }
-    const gfx::Color &getClearColor() const { return clearColor; }
-    const cc::Mat4 &getMatView() const { return matView; }
-    const cc::Mat4 &getMatViewProj() const { return matViewProj; }
-    const cc::Mat4 &getMatViewProjInv() const { return matViewProjInv; }
-    const cc::Mat4 &getMatProj() const { return matProj; }
-    const cc::Mat4 &getMatProjInv() const { return matProjInv; }
+    float getWidth() const { return _width; }
+    float getHeight() const { return _height; }
+    float getExposure() const { return _exposure; }
+    float getClearDepth() const { return _clearDepth; }
+    uint getClearFlag() const { return static_cast<uint>(_clearFlag); }
+    uint getClearStencil() const { return static_cast<uint>(_clearStencil); }
+    uint getNodeID() const { return static_cast<uint>(_nodeID); }
+    uint getSceneID() const { return static_cast<uint>(_sceneID); }
+    uint getFrustumID() const { return static_cast<uint>(_frustumID); }
+    uint getViewportX() const { return static_cast<uint>(_viewportX); }
+    uint getViewportY() const { return static_cast<uint>(_viewportY); }
+    uint getViewportWidth() const { return static_cast<uint>(_viewportWidth); }
+    uint getViewportHeight() const { return static_cast<uint>(_viewportHeight); }
+    const float *getClearColor() const { return _clearColor; }
+    const float *getForward() const { return _forward; }
+    const float *getPosition() const { return _position; }
+    const float *getMatView() const { return _matView; }
+    const float *getMatViewProj() const { return _matViewProj; }
+    const float *getMatViewProjInv() const { return _matViewProjInv; }
+    const float *getMatProj() const { return _matProj; }
+    const float *getMatProjInv() const { return _matProjInv; }
 
     const static se::PoolType type;
 };
 
-struct CC_DLL AABB {
-    cc::Vec3 center;
-    cc::Vec3 halfExtents;
+class CC_DLL AABB {
+private:
+    float _center[3];
+    float _halfExtents[3];
+
+public:
+    const float *getCenter() const { return _center; }
+    const float *getHalfExtents() const { return _halfExtents; }
 
     const static se::PoolType type;
 };
 
-struct CC_DLL Plane {
-    cc::Vec3 normal;
-    float distance;
+class CC_DLL Plane {
+private:
+    float _normal[3];
+    float _distance;
+
+public:
+    float getDistance() const { return _distance; }
+    const float *getNormal() const { return _normal; }
 };
 
-struct CC_DLL Frustum {
-    cc::Vec3 vertices[8];
-    Plane planes[6];
+typedef float Vertices[3][8];
+class CC_DLL Frustum {
+private:
+    Vertices _vertices;
+    Plane _planes[6];
+
+public:
+    const Vertices &getVertices() const { return _vertices; }
+    const Plane *getPlanes() const { return _planes; }
 
     const static se::PoolType type;
 };
@@ -153,57 +171,102 @@ struct CC_DLL Scene {
     const static se::PoolType type;
 };
 
-struct CC_DLL MainLight {
-    float useColorTemperature = 0;
-    float illuminance = 0;
-    cc::Vec3 direction;
-    cc::Vec3 color;
-    cc::Vec3 colorTemperatureRGB;
+class CC_DLL MainLight {
+private:
+    float _useColorTemperature = 0;
+    float _illuminance = 0;
+    float _direction[3];
+    float _color[3];
+    float _colorTemperatureRGB[3];
+    float _nodeID = 0;
 
-    float nodeID = 0;
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL Ambient {
-    float enabled = 0;
-    float skyIllum = 0;
-    cc::Vec4 skyColor;
-    cc::Vec4 groundAlbedo;
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL Fog {
-    float enabled = 0;
-    float fogType = 0;
-    float fogDensity = 0;
-    float fogStart = 0;
-    float fogEnd = 0;
-    float fogAtten = 0;
-    float fogTop = 0;
-    float fogRange = 0;
-    cc::Vec4 fogColor;
+public:
+    float getUseColorTemperature() const { return _useColorTemperature; }
+    float getIlluminance() const { return _illuminance; }
+    const float *getDirection() const { return _direction; }
+    const float *getColor() const { return _color; }
+    const float *getColorTemperatureRGB() const { return _colorTemperatureRGB; }
+    uint getNodeID() const { return static_cast<uint>(_nodeID); }
 
     const static se::PoolType type;
 };
 
-struct CC_DLL Shadows {
-    float enabled = 0;
-    float dirty = 0;
-    float shadowType = 0;
-    float distance = 0;
-    float instancePass = 0;
-    float planarPass = 0;
-    float nearValue = 0;
-    float farValue = 0;
-    float aspect = 0;
-    float pcfType = 0;
-    float orthoSize = 0;
-    cc::Vec2 size;
-    cc::Vec3 normal;
-    cc::Vec4 color;
-    cc::Vec4 sphere;
+class CC_DLL Ambient {
+private:
+    float _enabled = 0;
+    float _skyIllum = 0;
+    float _skyColor[4];
+    float _groundAlbedo[4];
+
+public:
+    bool isEnabled() const { return gfx::math::IsEqualF(_enabled, 0); }
+    float getSkyIllum() const { return _skyIllum; }
+    const float *getSkyColor() const { return _skyColor; }
+    const float *getGroundAlbedo() const { return _groundAlbedo; }
+
+    const static se::PoolType type;
+};
+
+class CC_DLL Fog {
+private:
+    float _enabled = 0;
+    float _fogType = 0;
+    float _fogDensity = 0;
+    float _fogStart = 0;
+    float _fogEnd = 0;
+    float _fogAtten = 0;
+    float _fogTop = 0;
+    float _fogRange = 0;
+    float _fogColor[4];
+
+public:
+    bool isEnabled() const { return gfx::math::IsEqualF(_enabled, 0); }
+    uint getFogType() const { return static_cast<uint>(_fogType); }
+    float getFogDensity() const { return _fogDensity; }
+    float getFogStart() const { return _fogStart; }
+    float getFogEnd() const { return _fogEnd; }
+    float getFogAtten() const { return _fogAtten; }
+    float getFogTop() const { return _fogTop; }
+    float getFogRange() const { return _fogRange; }
+    const float *getFogColor() const { return _fogColor; }
+
+    const static se::PoolType type;
+};
+
+class CC_DLL Shadows {
+private:
+    float _enabled = 0;
+    float _dirty = 0;
+    float _shadowType = 0;
+    float _distance = 0;
+    float _instancePass = 0;
+    float _planarPass = 0;
+    float _nearValue = 0;
+    float _farValue = 0;
+    float _aspect = 0;
+    float _pcfType = 0;
+    float _orthoSize = 0;
+    float _size[2];
+    float _normal[3];
+    float _color[4];
+    float _sphere[4];
+
+public:
+    bool isEnabled() const { return gfx::math::IsEqualF(_enabled, 0); }
+    bool isDirty() const { return gfx::math::IsEqualF(_dirty, 0); }
+    uint getShadowType() const { return static_cast<uint>(_shadowType); }
+    float getDistance() const { return _distance; }
+    float getInstancePass() const { return _instancePass; }
+    float getPlanarPass() const { return _planarPass; }
+    float getNearValue() const { return _nearValue; }
+    float getFarValue() const { return _farValue; }
+    float getAspect() const { return _aspect; }
+    uint getPcfType() const { return static_cast<uint>(_pcfType); }
+    uint getOrthoSize() const { return static_cast<uint>(_orthoSize); }
+    const float *getSize() const { return _size; }
+    const float *getNormal() const { return _normal; }
+    const float *getColor() const { return _color; }
+    const float *getSphere() const { return _sphere; }
 
     const static se::PoolType type;
 };
@@ -259,18 +322,18 @@ struct CC_DLL RenderingSubMesh {
 
 class CC_DLL Node {
 private:
-    float layer = 0;
-    cc::Vec3 worldScale;
-    cc::Vec3 worldPosition;
-    cc::Vec4 worldRotation;
-    cc::Mat4 worldMatrix;
+    float _layer = 0;
+    float _worldScale[3];
+    float _worldPosition[3];
+    float _worldRotation[4];
+    float _worldMatrix[16];
 
 public:
-    uint getLayer() const { return static_cast<uint>(layer); }
-    const cc::Vec3 &getWorldScale() const { return worldScale; }
-    const cc::Vec3 &getWorldPosition() const { return worldPosition; }
-    const cc::Vec4 &getWorldRotation() const { return worldRotation; }
-    const cc::Mat4 &getWorldMatrix() const { return worldMatrix; }
+    uint getLayer() const { return static_cast<uint>(_layer); }
+    const float *getWorldScale() const { return _worldScale; }
+    const float *getWorldPosition() const { return _worldPosition; }
+    const float *getWorldRotation() const { return _worldRotation; }
+    const float *getWorldMatrix() const { return _worldMatrix; }
 
     const static se::PoolType type;
 };

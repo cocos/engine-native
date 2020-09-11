@@ -5,6 +5,7 @@
 #include "../ui/UIFlow.h"
 #include "ForwardFlow.h"
 #include "SceneCulling.h"
+#include "cocos/math/Mat4.h"
 #include "gfx/GFXBuffer.h"
 #include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXDevice.h"
@@ -14,15 +15,17 @@
 namespace cc {
 namespace pipeline {
 namespace {
+float UNIT_Z[3] = {0, 0, 1.0f};
+float ZERO[4] = {0, 0, 0, 0};
 #define TO_VEC3(dst, src, offset) \
-    dst[offset] = src.x;          \
-    dst[offset + 1] = src.y;      \
-    dst[offset + 2] = src.z;
+    dst[offset] = src[0];         \
+    dst[offset + 1] = src[1];     \
+    dst[offset + 2] = src[2];
 #define TO_VEC4(dst, src, offset) \
-    dst[offset] = src.x;          \
-    dst[offset + 1] = src.y;      \
-    dst[offset + 2] = src.z;      \
-    dst[offset + 3] = src.w;
+    dst[offset] = src[0];         \
+    dst[offset + 1] = src[1];     \
+    dst[offset + 2] = src[2];     \
+    dst[offset + 3] = src[3];
 } // namespace
 
 gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags) {
@@ -117,26 +120,26 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
     const auto mainLight = GET_MAIN_LIGHT(scene->mainLightID);
     const auto shadowInfo = _shadows;
 
-    if (mainLight && shadowInfo->enabled) {
-        const auto node = GET_NODE(mainLight->nodeID);
+    if (mainLight && shadowInfo->isEnabled()) {
+        const auto node = GET_NODE(mainLight->getNodeID());
 
         // shadow view
-        auto shadowView = node->getWorldMatrix().getInversed();
+        auto shadowView = cc::Mat4(node->getWorldMatrix()).getInversed();
 
         // shadow view proj
-        const auto x = shadowInfo->orthoSize * shadowInfo->aspect;
-        const auto y = shadowInfo->orthoSize;
+        const auto x = shadowInfo->getOrthoSize() * shadowInfo->getAspect();
+        const auto y = shadowInfo->getOrthoSize();
         const auto projectionSinY = _device->getScreenSpaceSignY() * _device->getUVSpaceSignY();
         Mat4 shadowViewProj;
-        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, shadowInfo->farValue, _device->getClipSpaceMinZ(), projectionSinY, &shadowViewProj);
+        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->getNearValue(), shadowInfo->getFarValue(), _device->getClipSpaceMinZ(), projectionSinY, &shadowViewProj);
 
         shadowViewProj.multiply(shadowView);
         memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, shadowViewProj.m, sizeof(shadowViewProj));
     }
 
     // update ubos
-    _descriptorSet->getBuffer(UBOGlobal::BLOCK.binding)->update(_globalUBO.data(), 0, _globalUBO.size() * sizeof(float));
-    _descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->update(_shadowUBO.data(), 0, _shadowUBO.size() * sizeof(float));
+    _descriptorSet->getBuffer(UBOGlobal::BLOCK.binding)->update(_globalUBO.data(), 0, static_cast<uint>(_globalUBO.size() * sizeof(float)));
+    _descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->update(_shadowUBO.data(), 0, static_cast<uint>(_shadowUBO.size() * sizeof(float)));
 }
 
 void ForwardPipeline::updateUBO(RenderView *view) {
@@ -175,12 +178,12 @@ void ForwardPipeline::updateUBO(RenderView *view) {
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 2] = 1.0f / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET];
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 3] = 1.0f / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1];
 
-    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_OFFSET, camera->getMatView().m, sizeof(cc::Mat4));
-    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_INV_OFFSET, GET_NODE(camera->getNodeID())->getWorldMatrix().m, sizeof(cc::Mat4));
-    memcpy(uboGlobalView.data() + UBOGlobal::MAT_PROJ_OFFSET, camera->getMatProj().m, sizeof(cc::Mat4));
-    memcpy(uboGlobalView.data() + UBOGlobal::MAT_PROJ_INV_OFFSET, camera->getMatProjInv().m, sizeof(cc::Mat4));
-    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_PROJ_OFFSET, camera->getMatViewProj().m, sizeof(cc::Mat4));
-    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_PROJ_INV_OFFSET, camera->getMatViewProjInv().m, sizeof(cc::Mat4));
+    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_OFFSET, camera->getMatView(), sizeof(cc::Mat4));
+    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_INV_OFFSET, GET_NODE(camera->getNodeID())->getWorldMatrix(), sizeof(cc::Mat4));
+    memcpy(uboGlobalView.data() + UBOGlobal::MAT_PROJ_OFFSET, camera->getMatProj(), sizeof(cc::Mat4));
+    memcpy(uboGlobalView.data() + UBOGlobal::MAT_PROJ_INV_OFFSET, camera->getMatProjInv(), sizeof(cc::Mat4));
+    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_PROJ_OFFSET, camera->getMatViewProj(), sizeof(cc::Mat4));
+    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_PROJ_INV_OFFSET, camera->getMatViewProjInv(), sizeof(cc::Mat4));
     TO_VEC3(uboGlobalView, camera->getPosition(), UBOGlobal::CAMERA_POS_OFFSET);
 
     auto projectionSignY = _device->getScreenSpaceSignY();
@@ -196,23 +199,24 @@ void ForwardPipeline::updateUBO(RenderView *view) {
     uboGlobalView[UBOGlobal::EXPOSURE_OFFSET + 3] = _fpScale / exposure;
 
     if (mainLight) {
-        TO_VEC3(uboGlobalView, mainLight->direction, UBOGlobal::MAIN_LIT_DIR_OFFSET);
-        TO_VEC3(uboGlobalView, mainLight->color, UBOGlobal::MAIN_LIT_COLOR_OFFSET);
-        if (mainLight->useColorTemperature) {
-            const auto colorTempRGB = mainLight->colorTemperatureRGB;
-            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET] *= colorTempRGB.x;
-            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 1] *= colorTempRGB.y;
-            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 2] *= colorTempRGB.z;
+        TO_VEC3(uboGlobalView, mainLight->getDirection(), UBOGlobal::MAIN_LIT_DIR_OFFSET);
+        TO_VEC3(uboGlobalView, mainLight->getColor(), UBOGlobal::MAIN_LIT_COLOR_OFFSET);
+        if (mainLight->getUseColorTemperature()) {
+            const auto colorTempRGB = mainLight->getColorTemperatureRGB();
+            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET] *= colorTempRGB[X];
+            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 1] *= colorTempRGB[Y];
+            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 2] *= colorTempRGB[Z];
         }
 
         if (_isHDR) {
-            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->illuminance * _fpScale;
+            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * _fpScale;
         } else {
-            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->illuminance * exposure;
+            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * exposure;
         }
     } else {
-        TO_VEC3(uboGlobalView, Vec3::UNIT_Z, UBOGlobal::MAIN_LIT_DIR_OFFSET);
-        TO_VEC4(uboGlobalView, Vec4::ZERO, UBOGlobal::MAIN_LIT_COLOR_OFFSET);
+
+        TO_VEC3(uboGlobalView, UNIT_Z, UBOGlobal::MAIN_LIT_DIR_OFFSET);
+        TO_VEC4(uboGlobalView, ZERO, UBOGlobal::MAIN_LIT_COLOR_OFFSET);
     }
 
     //TODO coulsonwang

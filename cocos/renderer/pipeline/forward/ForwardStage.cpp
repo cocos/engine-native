@@ -17,16 +17,16 @@
 namespace cc {
 namespace pipeline {
 namespace {
-void SRGBToLinear(gfx::Color &out, const gfx::Color &gamma) {
-    out.x = gamma.x * gamma.x;
-    out.y = gamma.y * gamma.y;
-    out.z = gamma.z * gamma.z;
+void SRGBToLinear(gfx::Color &out, float gammaX, float gammaY, float gammaZ) {
+    out.x = gammaX * gammaX;
+    out.y = gammaY * gammaY;
+    out.z = gammaZ * gammaZ;
 }
 
-void LinearToSRGB(gfx::Color &out, const gfx::Color &linear) {
-    out.x = std::sqrt(linear.x);
-    out.y = std::sqrt(linear.y);
-    out.z = std::sqrt(linear.z);
+void LinearToSRGB(gfx::Color &out, float linearX, float linearY, float linearZ) {
+    out.x = std::sqrt(linearX);
+    out.y = std::sqrt(linearY);
+    out.z = std::sqrt(linearZ);
 }
 } // namespace
 
@@ -144,21 +144,22 @@ void ForwardStage::render(RenderView *view) {
     _renderArea.width = camera->getViewportWidth() * camera->getWidth() * pipeline->getShadingScale();
     _renderArea.height = camera->getViewportHeight() * camera->getHeight() * pipeline->getShadingScale();
 
+    const auto clearColor = camera->getClearColor();
     if (static_cast<gfx::ClearFlags>(camera->getClearFlag()) & gfx::ClearFlagBit::COLOR) {
         if (pipeline->isHDR()) {
-            SRGBToLinear(_clearColors[0], camera->getClearColor());
+            SRGBToLinear(_clearColors[0], clearColor[X], clearColor[Y], clearColor[Z]);
             auto scale = pipeline->getFpScale() / camera->getExposure();
             _clearColors[0].x *= scale;
             _clearColors[0].y *= scale;
             _clearColors[0].z *= scale;
         } else {
-            _clearColors[0].x = camera->getClearColor().x;
-            _clearColors[0].y = camera->getClearColor().y;
-            _clearColors[0].z = camera->getClearColor().z;
+            _clearColors[0].x = clearColor[X];
+            _clearColors[0].y = clearColor[Y];
+            _clearColors[0].z = clearColor[Z];
         }
     }
 
-    _clearColors[0].w = camera->getClearColor().w;
+    _clearColors[0].w = clearColor[W];
 
     auto framebuffer = GET_FRAMEBUFFER(view->getWindow()->framebufferID);
     const auto &colorTextures = framebuffer->getColorTextures();

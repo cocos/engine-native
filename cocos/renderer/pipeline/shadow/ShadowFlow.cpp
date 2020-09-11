@@ -18,8 +18,7 @@ RenderFlowInfo ShadowFlow::_initInfo = {
     "ShadowFlow",
     static_cast<uint>(ForwardFlowPriority::SHADOW),
     static_cast<uint>(RenderFlowTag::SCENE),
-    {}
-};
+    {}};
 const RenderFlowInfo &ShadowFlow::getInitializeInfo() { return ShadowFlow::_initInfo; }
 
 ShadowFlow::~ShadowFlow() {
@@ -41,9 +40,9 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 
     auto device = gfx::Device::getInstance();
-    const auto shadowMapSize = static_cast<ForwardPipeline *>(pipeline)->getShadows()->size;
-    _width = shadowMapSize.x;
-    _height = shadowMapSize.y;
+    const auto shadowMapSize = static_cast<ForwardPipeline *>(pipeline)->getShadows()->getSize();
+    _width = shadowMapSize[X];
+    _height = shadowMapSize[Y];
 
     if (!_renderPass) {
         _renderPass = device->createRenderPass({
@@ -103,15 +102,16 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
 }
 
 void ShadowFlow::render(RenderView *view) {
+    return;
     auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
     const auto shadowInfo = pipeline->getShadows();
-    if (!shadowInfo->enabled) return;
+    if (!shadowInfo->isEnabled()) return;
 
-    const auto shadowMapSize = shadowInfo->size;
-    if (_width != shadowMapSize.x || _height != shadowMapSize.y) {
-        resizeShadowMap(shadowMapSize.x, shadowMapSize.y);
-        _width = shadowMapSize.x;
-        _height = shadowMapSize.y;
+    const auto shadowMapSize = shadowInfo->getSize();
+    if (_width != shadowMapSize[X] || _height != shadowMapSize[Y]) {
+        resizeShadowMap(shadowMapSize[X], shadowMapSize[Y]);
+        _width = shadowMapSize[X];
+        _height = shadowMapSize[Y];
     }
 
     pipeline->updateUBOs(view);

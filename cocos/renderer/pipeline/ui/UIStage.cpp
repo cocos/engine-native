@@ -69,10 +69,15 @@ void UIStage::render(RenderView *view) {
     _renderQueues[0]->sort();
 
     const auto camera = view->getCamera();
+    const auto clearColor = camera->getClearColor();
     _renderArea.x = camera->getViewportX() * camera->getWidth();
     _renderArea.y = camera->getViewportY() * camera->getHeight();
     _renderArea.width = camera->getViewportWidth() * camera->getWidth();
     _renderArea.height = camera->getViewportHeight() * camera->getHeight();
+    _clearColors[0].x = clearColor[X];
+    _clearColors[0].y = clearColor[Y];
+    _clearColors[0].z = clearColor[Z];
+    _clearColors[0].w = clearColor[W];
 
     auto &commandBuffers = pipeline->getCommandBuffers();
     auto cmdBuff = commandBuffers[0];
@@ -82,8 +87,7 @@ void UIStage::render(RenderView *view) {
     auto renderPass = framebuffer->getColorTextures().size() && framebuffer->getColorTextures()[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlags>(camera->getClearFlag()));
 
     cmdBuff->begin();
-    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea,
-                             {camera->getClearColor()}, camera->getClearDepth(), camera->getClearStencil());
+    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->getClearDepth(), camera->getClearStencil());
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
 

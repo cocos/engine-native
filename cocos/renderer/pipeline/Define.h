@@ -11,8 +11,8 @@ class RenderFlow;
 struct SubModelView;
 struct Light;
 struct ModelView;
-struct AABB;
-struct Frustum;
+class AABB;
+class Frustum;
 
 // The actual uniform vectors used is JointUniformCapacity * 3.
 // We think this is a reasonable default capacity considering MAX_VERTEX_UNIFORM_VECTORS in WebGL spec is just 128.

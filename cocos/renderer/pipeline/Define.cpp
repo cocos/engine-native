@@ -309,13 +309,16 @@ gfx::Sampler *getSampler(uint hash) {
 }
 
 int aabb_plane(const AABB *aabb, const Plane *plane) {
-    auto r = aabb->halfExtents.x * std::abs(plane->normal.x) +
-             aabb->halfExtents.y * std::abs(plane->normal.y) +
-             aabb->halfExtents.z * std::abs(plane->normal.z);
-    auto dot = Vec3::dot(plane->normal, aabb->center);
-    if (dot + r < plane->distance) {
+    const auto halfExtents = aabb->getHalfExtents();
+    const auto normal = plane->getNormal();
+    const auto center = aabb->getCenter();
+    auto r = halfExtents[X] * std::abs(normal[X]) +
+             halfExtents[Y] * std::abs(normal[Y]) +
+             halfExtents[Z] * std::abs(normal[Z]);
+    auto dot = (normal[X] * center[X] + normal[Y] * center[Y] + normal[Z] * center[Z]);
+    if (dot + r < plane->getDistance()) {
         return -1;
-    } else if (dot - r > plane->distance) {
+    } else if (dot - r > plane->getDistance()) {
         return 0;
     }
     return 1;

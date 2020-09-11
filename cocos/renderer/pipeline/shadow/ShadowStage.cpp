@@ -25,8 +25,7 @@ RenderStageInfo ShadowStage::_initInfo = {
     "ShadowStage",
     static_cast<uint>(ForwardStagePriority::FORWARD),
     static_cast<uint>(RenderFlowTag::SCENE),
-    {}
-};
+    {}};
 const RenderStageInfo &ShadowStage::getInitializeInfo() { return ShadowStage::_initInfo; }
 
 bool ShadowStage::initialize(const RenderStageInfo &info) {
@@ -38,6 +37,7 @@ bool ShadowStage::initialize(const RenderStageInfo &info) {
 }
 
 void ShadowStage::render(RenderView *view) {
+    return; //TODO coulsonwang
     const auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
     const auto shadowInfo = pipeline->getShadows();
     _additiveShadowQueue->clear(pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.binding));
@@ -58,11 +58,11 @@ void ShadowStage::render(RenderView *view) {
     const auto commandBuffers = pipeline->getCommandBuffers();
     auto cmdBuffer = commandBuffers[0];
 
-    const auto shadowMapSize = shadowInfo->size;
-    _renderArea.x = camera->getViewportX() * shadowMapSize.x;
-    _renderArea.y = camera->getViewportY() * shadowMapSize.y;
-    _renderArea.width = camera->getViewportWidth() * shadowMapSize.x * pipeline->getShadingScale();
-    _renderArea.height = camera->getViewportHeight() * shadowMapSize.y * pipeline->getShadingScale();
+    const auto shadowMapSize = shadowInfo->getSize();
+    _renderArea.x = camera->getViewportX() * shadowMapSize[X];
+    _renderArea.y = camera->getViewportY() * shadowMapSize[Y];
+    _renderArea.width = camera->getViewportWidth() * shadowMapSize[X] * pipeline->getShadingScale();
+    _renderArea.height = camera->getViewportHeight() * shadowMapSize[Y] * pipeline->getShadingScale();
 
     _clearColors[0] = {1.0f, 1.0f, 1.0f, 1.0f};
     auto renderPass = _framebuffer->getRenderPass();
