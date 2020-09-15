@@ -323,6 +323,9 @@
     <ClCompile Include="..\cocos\renderer\core\util\Utils.cpp">
       <Filter>renderer\core\util</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\base\astc.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos\base\base64.h">
@@ -751,6 +754,9 @@
     </ClInclude>
     <ClInclude Include="..\cocos\renderer\core\util\Utils.h">
       <Filter>renderer\core\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\base\astc.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

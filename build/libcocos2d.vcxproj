@@ -19,6 +19,7 @@
     <ClCompile Include="..\cocos\audio\win32\AudioDecoderOgg.cpp" />
     <ClCompile Include="..\cocos\audio\win32\AudioEngine-win32.cpp" />
     <ClCompile Include="..\cocos\audio\win32\AudioPlayer.cpp" />
+    <ClCompile Include="..\cocos\base\astc.cpp" />
     <ClCompile Include="..\cocos\base\base64.cpp" />
     <ClCompile Include="..\cocos\base\CCAutoreleasePool.cpp" />
     <ClCompile Include="..\cocos\base\ccCArray.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="..\cocos\audio\win32\AudioEngine-win32.h" />
     <ClInclude Include="..\cocos\audio\win32\AudioMacros.h" />
     <ClInclude Include="..\cocos\audio\win32\AudioPlayer.h" />
+    <ClInclude Include="..\cocos\base\astc.h" />
     <ClInclude Include="..\cocos\base\base64.h" />
     <ClInclude Include="..\cocos\base\CCAutoreleasePool.h" />
     <ClInclude Include="..\cocos\base\ccCArray.h" />
