@@ -30,6 +30,7 @@
 #import "RootViewController.h"
 #import "SDKWrapper.h"
 #import "platform/ios/CCEAGLView-ios.h"
+#include "scripting/js-bindings/event/EventDispatcher.h"
 
 
 
@@ -38,6 +39,7 @@ using namespace cocos2d;
 @implementation AppController
 
 Application* app = nullptr;
+cocos2d::Device::Rotation _lastRotation;
 @synthesize window;
 
 #pragma mark -
@@ -89,6 +91,32 @@ Application* app = nullptr;
 }
 
 - (void)statusBarOrientationChanged:(NSNotification *)notification {
+    
+    cocos2d::Device::Rotation rotation = cocos2d::Device::Rotation::_0;
+    UIDevice * device = [UIDevice currentDevice];
+    
+    switch(device.orientation)
+    {
+        case UIDeviceOrientationPortrait:
+            rotation = cocos2d::Device::Rotation::_0;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = cocos2d::Device::Rotation::_90;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = cocos2d::Device::Rotation::_180;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = cocos2d::Device::Rotation::_270;
+            break;
+        default:
+            break;
+    };
+    if(_lastRotation != rotation){
+        cocos2d::EventDispatcher::dispatchOrientationChangeEvent((int) rotation);
+        _lastRotation = rotation;
+    }
+    
     CGRect bounds = [UIScreen mainScreen].bounds;
     float scale = [[UIScreen mainScreen] scale];
     float width = bounds.size.width * scale;
