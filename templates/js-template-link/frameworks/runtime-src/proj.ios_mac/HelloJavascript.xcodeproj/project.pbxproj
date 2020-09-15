@@ -1041,7 +1041,6 @@
 					"-ObjC",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -1080,7 +1079,6 @@
 					"-ObjC",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -1159,7 +1157,6 @@
 					"$(OTHER_CFLAGS)",
 					"-frtti",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.ios.clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -1239,7 +1236,6 @@
 					"$(OTHER_CFLAGS)",
 					"-frtti",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.ios.clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -1335,7 +1331,6 @@
 					"-ObjC",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.pt.ios;
 				PRODUCT_NAME = "HelloJavascript-mobile";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -1374,7 +1369,6 @@
 					"-ObjC",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.hellojavascript.pt.ios;
 				PRODUCT_NAME = "HelloJavascript-mobile";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
