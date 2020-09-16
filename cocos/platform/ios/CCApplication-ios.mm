@@ -95,16 +95,16 @@ namespace
         [nc addObserver:self selector:@selector(appDidBecomeInactive) name:UIApplicationWillResignActiveNotification object:nil];
         
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-        [nc addObserver:self selector:@selector(orientationChanged:)name:UIDeviceOrientationDidChangeNotification
-              object:[UIDevice currentDevice]];
+        [nc addObserver:self selector:@selector(statusBarOrientationChanged:)name:UIApplicationDidChangeStatusBarOrientationNotification
+              object:nil];
     }
     return self;
 }
 
-- (void) orientationChanged:(NSNotification *)note
+- (void) statusBarOrientationChanged:(NSNotification *)note
 {
     cocos2d::Device::Rotation rotation = cocos2d::Device::Rotation::_0;
-    UIDevice * device = note.object;
+    UIDevice * device = [UIDevice currentDevice];
     
     switch(device.orientation)
     {
@@ -127,6 +127,12 @@ namespace
         cocos2d::EventDispatcher::dispatchOrientationChangeEvent((int) rotation);
         _lastRotation = rotation;
     }
+    
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    float scale = [[UIScreen mainScreen] scale];
+    float width = bounds.size.width * scale;
+    float height = bounds.size.height * scale;
+    cocos2d::Application::getInstance()->updateViewSize(width, height);
 }
 
 -(void) dealloc
