@@ -11,7 +11,7 @@ namespace pipeline {
 class CC_DLL DefineMap final : public Object {
 public:
     DefineMap();
-    virtual ~DefineMap();
+    ~DefineMap();
 
     CC_INLINE se::Object *getObject() const { return _jsbMacros; }
     CC_INLINE void getValue(const String &name, se::Value *value) const { _jsbMacros->getProperty(name.c_str(), value); }

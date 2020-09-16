@@ -2,22 +2,8 @@
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
-#include "jsb_gfx_manual.h"
-
-#include "cocos/bindings/manual/jsb_conversions.h"
-#include "cocos/bindings/manual/jsb_global.h"
-#include "renderer/pipeline/Define.h"
-#include "renderer/pipeline/RenderFlow.h"
 #include "renderer/pipeline/RenderPipeline.h"
-#include "renderer/pipeline/RenderStage.h"
 #include "renderer/pipeline/RenderView.h"
-#include "renderer/pipeline/forward/ForwardFlow.h"
-#include "renderer/pipeline/forward/ForwardPipeline.h"
-#include "renderer/pipeline/forward/ForwardStage.h"
-#include "renderer/pipeline/shadow/ShadowFlow.h"
-#include "renderer/pipeline/shadow/ShadowStage.h"
-#include "renderer/pipeline/ui/UIFlow.h"
-#include "renderer/pipeline/ui/UIStage.h"
 
 se::Object *__jsb_cc_pipeline_RenderViewInfo_proto = nullptr;
 se::Class *__jsb_cc_pipeline_RenderViewInfo_class = nullptr;
@@ -153,41 +139,6 @@ static bool js_pipeline_RenderPipeline_getMacros(se::State &s) {
 }
 SE_BIND_PROP_GET(js_pipeline_RenderPipeline_getMacros)
 
-static bool js_pipeline_RenderView_setEnabled(se::State &s) {
-    cc::pipeline::RenderView *cobj = (cc::pipeline::RenderView *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_pipeline_RenderView_setEnabled : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        bool arg0;
-        ok &= seval_to_boolean(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_pipeline_RenderView_setEnabled : Error processing arguments");
-        cobj->setEnable(arg0);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_pipeline_RenderView_setEnabled)
-
-static bool js_pipeline_RenderView_IsEnabled(se::State &s) {
-    cc::pipeline::RenderView *cobj = (cc::pipeline::RenderView *)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_pipeline_RenderView_getIsEnable : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        bool result = cobj->isEnabled();
-        ok &= boolean_to_seval(result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_pipeline_RenderView_getIsEnable : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_PROP_GET(js_pipeline_RenderView_IsEnabled)
-
 bool register_all_pipeline_manual(se::Object *obj) {
     // Get the ns
     se::Value nsVal;
@@ -201,7 +152,5 @@ bool register_all_pipeline_manual(se::Object *obj) {
     js_register_pipeline_RenderViewInfo(ns);
 
     __jsb_cc_pipeline_RenderPipeline_proto->defineProperty("macros", _SE(js_pipeline_RenderPipeline_getMacros), nullptr);
-    __jsb_cc_pipeline_RenderView_proto->defineFunction("enable", _SE(js_pipeline_RenderView_setEnabled));
-    __jsb_cc_pipeline_RenderView_proto->defineProperty("isEnable", _SE(js_pipeline_RenderView_IsEnabled), nullptr);
     return true;
 }
