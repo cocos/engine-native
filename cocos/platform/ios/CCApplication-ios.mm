@@ -106,7 +106,7 @@ namespace
     cocos2d::Device::Rotation rotation = cocos2d::Device::Rotation::_0;
     UIDevice * device = [UIDevice currentDevice];
     
-    // NOTE: bug on iOS
+    // NOTE: https://developer.apple.com/documentation/uikit/uideviceorientation
     // when the device rotates to LandscapeLeft, device.orientation returns UIDeviceOrientationLandscapeRight
     // when the device rotates to LandscapeRight, device.orientation returns UIDeviceOrientationLandscapeLeft
     switch(device.orientation)
