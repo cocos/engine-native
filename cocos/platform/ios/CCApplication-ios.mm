@@ -95,8 +95,38 @@ namespace
         [nc addObserver:self selector:@selector(appDidBecomeInactive) name:UIApplicationWillResignActiveNotification object:nil];
         
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [nc addObserver:self selector:@selector(orientationChanged:)name:UIDeviceOrientationDidChangeNotification
+              object:[UIDevice currentDevice]];
     }
     return self;
+}
+
+- (void) orientationChanged:(NSNotification *)note
+{
+    cocos2d::Device::Rotation rotation = cocos2d::Device::Rotation::_0;
+    UIDevice * device = note.object;
+    
+    switch(device.orientation)
+    {
+        case UIDeviceOrientationPortrait:
+            rotation = cocos2d::Device::Rotation::_0;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = cocos2d::Device::Rotation::_90;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = cocos2d::Device::Rotation::_180;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = cocos2d::Device::Rotation::_270;
+            break;
+        default:
+            break;
+    };
+    if(_lastRotation != rotation){
+        cocos2d::EventDispatcher::dispatchOrientationChangeEvent((int) rotation);
+        _lastRotation = rotation;
+    }
 }
 
 -(void) dealloc
