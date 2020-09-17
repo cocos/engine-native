@@ -37,6 +37,7 @@ public:
     CC_INLINE const DefineMap &getMacros() const { return _macros; }
     CC_INLINE void setValue(const String &name, bool value) { _macros.setValue(name, value); }
     CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return _descriptorSet; }
+    CC_INLINE gfx::DescriptorSetLayout *getDescriptorSetLayout() const { return _descriptorSetLayout; }
 
 protected:
     static RenderPipeline *_instance;
