@@ -155,6 +155,7 @@ public:
     VkCommandBuffer vkCommandBuffer = VK_NULL_HANDLE;
     VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     uint queueFamilyIndex = 0u;
+    bool began = false;
 };
 
 class CCVKGPUQueue : public Object {
@@ -759,7 +760,7 @@ private:
  * Transport hub for data traveling between host and devices.
  * Record all transfer requests until batched submission.
  */
-#define ASYNC_BUFFER_UPDATE
+//#define ASYNC_BUFFER_UPDATE
 class CCVKGPUTransportHub : public Object {
 public:
     CCVKGPUTransportHub(CCVKGPUDevice *device)
@@ -809,7 +810,7 @@ public:
             VK_CHECK(vkBeginCommandBuffer(_cmdBuff.vkCommandBuffer, &beginInfo));
         }
 
-        record(_cmdBuff.vkCommandBuffer);
+        record(&_cmdBuff);
 
         if (immediateSubmission) {
             VK_CHECK(vkEndCommandBuffer(_cmdBuff.vkCommandBuffer));

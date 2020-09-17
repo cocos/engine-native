@@ -1489,7 +1489,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                 GLES2CmdBindStates *cmd = cmdPackage->bindStatesCmds[cmdIdx];
                 isShaderChanged = false;
 
-                if (cmd->gpuPipelineState) {
+                if (cmd->gpuPipelineState && gpuPipelineState != cmd->gpuPipelineState) {
                     gpuPipelineState = cmd->gpuPipelineState;
                     glPrimitive = gpuPipelineState->glPrimitive;
 

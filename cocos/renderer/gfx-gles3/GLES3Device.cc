@@ -126,6 +126,11 @@ bool GLES3Device::initialize(const DeviceInfo &info) {
     queueInfo.type = QueueType::GRAPHICS;
     _queue = createQueue(queueInfo);
 
+    CommandBufferInfo cmdBuffInfo;
+    cmdBuffInfo.type = CommandBufferType::PRIMARY;
+    cmdBuffInfo.queue = _queue;
+    _cmdBuff = createCommandBuffer(cmdBuffInfo);
+
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, (GLint *)&_maxVertexAttributes);
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, (GLint *)&_maxVertexUniformVectors);
     glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, (GLint *)&_maxFragmentUniformVectors);
@@ -146,6 +151,7 @@ bool GLES3Device::initialize(const DeviceInfo &info) {
 
 void GLES3Device::destroy() {
     CC_SAFE_DESTROY(_queue);
+    CC_SAFE_DESTROY(_cmdBuff);
     CC_SAFE_DESTROY(_context);
     CC_SAFE_DELETE(_cmdAllocator);
     CC_SAFE_DELETE(stateCache);
