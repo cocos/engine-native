@@ -8,7 +8,7 @@ namespace gfx {
 
 class GLES3Device;
 
-struct GLES3GPUStateCache {
+struct GLES3ObjectCache {
     GLES3GPUPipelineState *gpuPipelineState = nullptr;
     GLES3GPUInputAssembler *gpuInputAssembler = nullptr;
     bool reverseCW = false;
@@ -159,6 +159,43 @@ public:
     CachedArray<GLES3CmdDraw *> drawCmds;
     CachedArray<GLES3CmdUpdateBuffer *> updateBufferCmds;
     CachedArray<GLES3CmdCopyBufferToTexture *> copyBufferToTextureCmds;
+};
+
+class GLES3GPUCommandAllocator : public Object {
+public:
+    CommandPool<GLES3CmdBeginRenderPass> beginRenderPassCmdPool;
+    CommandPool<GLES3CmdBindStates> bindStatesCmdPool;
+    CommandPool<GLES3CmdDraw> drawCmdPool;
+    CommandPool<GLES3CmdUpdateBuffer> updateBufferCmdPool;
+    CommandPool<GLES3CmdCopyBufferToTexture> copyBufferToTextureCmdPool;
+
+    void clearCmds(GLES3CmdPackage *cmd_package) {
+        if (cmd_package->beginRenderPassCmds.size()) {
+            beginRenderPassCmdPool.freeCmds(cmd_package->beginRenderPassCmds);
+        }
+        if (cmd_package->bindStatesCmds.size()) {
+            bindStatesCmdPool.freeCmds(cmd_package->bindStatesCmds);
+        }
+        if (cmd_package->drawCmds.size()) {
+            drawCmdPool.freeCmds(cmd_package->drawCmds);
+        }
+        if (cmd_package->updateBufferCmds.size()) {
+            updateBufferCmdPool.freeCmds(cmd_package->updateBufferCmds);
+        }
+        if (cmd_package->copyBufferToTextureCmds.size()) {
+            copyBufferToTextureCmdPool.freeCmds(cmd_package->copyBufferToTextureCmds);
+        }
+
+        cmd_package->cmds.clear();
+    }
+
+    CC_INLINE void releaseCmds() {
+        beginRenderPassCmdPool.release();
+        bindStatesCmdPool.release();
+        drawCmdPool.release();
+        updateBufferCmdPool.release();
+        copyBufferToTextureCmdPool.release();
+    }
 };
 
 CC_GLES3_API void GLES3CmdFuncCreateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer);

@@ -1,7 +1,6 @@
 #include "GLES2Std.h"
 
 #include "GLES2Buffer.h"
-#include "GLES2CommandAllocator.h"
 #include "GLES2CommandBuffer.h"
 #include "GLES2DescriptorSet.h"
 #include "GLES2Device.h"
@@ -241,9 +240,10 @@ void GLES2CommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint 
         if (gpuBuffer) {
             GLES2CmdUpdateBuffer *cmd = _gles2Allocator->updateBufferCmdPool.alloc();
             cmd->gpuBuffer = gpuBuffer;
-            cmd->buffer = (uint8_t *)data;
             cmd->size = size;
             cmd->offset = offset;
+            cmd->buffer = ((GLES2Device *)_device)->stagingBufferPool()->alloc(size);
+            memcpy(cmd->buffer, data, size);
 
             _cmdPackage->updateBufferCmds.push(cmd);
             _cmdPackage->cmds.push(GFXCmdType::UPDATE_BUFFER);

@@ -1,7 +1,6 @@
 #include "GLES3Std.h"
 
 #include "GLES3Buffer.h"
-#include "GLES3CommandAllocator.h"
 #include "GLES3CommandBuffer.h"
 #include "GLES3DescriptorSet.h"
 #include "GLES3Device.h"
@@ -246,14 +245,10 @@ void GLES3CommandBuffer::updateBuffer(Buffer *buff, void *data, uint size, uint 
         if (gpuBuffer) {
             GLES3CmdUpdateBuffer *cmd = _gles3Allocator->updateBufferCmdPool.alloc();
             cmd->gpuBuffer = gpuBuffer;
-            //cmd->buffer = (uint8_t *)data;
-            // TODO
-            if (cmd->buffer) CC_FREE(cmd->buffer);
-            cmd->buffer = (uint8_t*) CC_MALLOC(size);
-            memcpy(cmd->buffer, data, size);
-
             cmd->size = size;
             cmd->offset = offset;
+            cmd->buffer = ((GLES3Device *)_device)->stagingBufferPool()->alloc(size);
+            memcpy(cmd->buffer, data, size);
 
             _cmdPackage->updateBufferCmds.push(cmd);
             _cmdPackage->cmds.push(GFXCmdType::UPDATE_BUFFER);
