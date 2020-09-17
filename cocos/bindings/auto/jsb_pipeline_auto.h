@@ -22,6 +22,7 @@ bool js_register_cc_pipeline_RenderPipeline(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_activate);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_render);
+SE_DECLARE_FUNC(js_pipeline_RenderPipeline_setValue);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_initialize);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_destroy);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_getInstance);
@@ -121,6 +122,7 @@ extern se::Class* __jsb_cc_pipeline_RenderView_class;
 
 bool js_register_cc_pipeline_RenderView(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
+SE_DECLARE_FUNC(js_pipeline_RenderView_setEnable);
 SE_DECLARE_FUNC(js_pipeline_RenderView_setExecuteFlows);
 SE_DECLARE_FUNC(js_pipeline_RenderView_onGlobalPipelineStateChanged);
 SE_DECLARE_FUNC(js_pipeline_RenderView_getWindow);
