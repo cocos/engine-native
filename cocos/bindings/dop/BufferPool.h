@@ -24,23 +24,16 @@ THE SOFTWARE.
 
 #pragma once
 
+#include "PoolType.h"
+#include "cocos/base/Macros.h"
 #include "cocos/base/Object.h"
+#include "cocos/base/TypeDef.h"
 #include "cocos/base/memory/StlAlloc.h"
 #include "cocos/bindings/jswrapper/Object.h"
-#include "cocos/base/Macros.h"
-#include "cocos/base/TypeDef.h"
-#include "PoolType.h"
 
 namespace se {
-
-enum class BufferPoolType {
-    PASS,
-    SUBMODEL,
-    
-    MODEL,
-    UNKNOWN
-};
-
+#define POOL_FLAG_BITS 20
+#define ENTRY_BITS     8
 class CC_DLL BufferPool final : public cc::Object {
 public:
     using Chunk = uint8_t *;
@@ -64,8 +57,8 @@ private:
     static cc::map<PoolType, BufferPool *> _poolMap;
 
     cc::vector<Chunk> _chunks;
-    const uint _poolFlag = 1 << 20;
-    uint _entryBits = 1 << 8;
+    const uint _poolFlag = 1 << POOL_FLAG_BITS;
+    uint _entryBits = 1 << ENTRY_BITS;
     uint _chunkMask = 0;
     uint _entryMask = 0;
     uint _bytesPerChunk = 0;
