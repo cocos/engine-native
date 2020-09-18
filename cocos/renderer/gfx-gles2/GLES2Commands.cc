@@ -2191,7 +2191,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
             }
             case GFXCmdType::COPY_BUFFER_TO_TEXTURE: {
                 GLES2CmdCopyBufferToTexture *cmd = cmdPackage->copyBufferToTextureCmds[cmdIdx];
-                GLES2CmdFuncCopyBuffersToTexture(device, cmd->buffers, cmd->gpuTexture, cmd->regions, cmd->count);
+                GLES2CmdFuncCopyBuffersToTexture(device, cmd->buffers.data(), cmd->gpuTexture, cmd->regions, cmd->count);
                 break;
             }
             default:
@@ -2291,7 +2291,7 @@ void GLES2CmdFuncCopyBuffersToTexture(GLES2Device *device, const uint8_t *const 
                 d = region.texExtent.depth;
                 const uint8_t *buff = buffers[n++];
                 if (isCompressed) {
-                    GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, d + 1, 1);
+                    GLsizei memSize = (GLsizei)FormatSize(gpuTexture->format, w, h, 1);
                     glCompressedTexSubImage3DOES(GL_TEXTURE_3D,
                                                  region.texSubres.mipLevel,
                                                  region.texOffset.x,

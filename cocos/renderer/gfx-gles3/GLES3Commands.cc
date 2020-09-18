@@ -2134,7 +2134,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
             }
             case GFXCmdType::COPY_BUFFER_TO_TEXTURE: {
                 GLES3CmdCopyBufferToTexture *cmd = cmdPackage->copyBufferToTextureCmds[cmdIdx];
-                GLES3CmdFuncCopyBuffersToTexture(device, cmd->buffers, cmd->gpuTexture, cmd->regions, cmd->count);
+                GLES3CmdFuncCopyBuffersToTexture(device, cmd->buffers.data(), cmd->gpuTexture, cmd->regions, cmd->count);
                 break;
             }
             default:

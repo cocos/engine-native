@@ -137,17 +137,17 @@ public:
 class GLES2CmdCopyBufferToTexture : public GFXCmd {
 public:
     GLES2GPUTexture *gpuTexture = nullptr;
-    const uint8_t *const *buffers = nullptr;
     const BufferTextureCopy *regions = nullptr;
     uint count = 0u;
+    vector<const uint8_t *> buffers;
 
     GLES2CmdCopyBufferToTexture() : GFXCmd(GFXCmdType::COPY_BUFFER_TO_TEXTURE) {}
 
     virtual void clear() override {
         gpuTexture = nullptr;
-        buffers = nullptr;
         regions = nullptr;
         count = 0u;
+        buffers.clear();
     }
 };
 
