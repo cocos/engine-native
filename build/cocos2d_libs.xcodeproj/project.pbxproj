@@ -5352,6 +5352,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -5401,6 +5402,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -5449,6 +5451,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = armv7;
 				EXECUTABLE_EXTENSION = a;
 				EXECUTABLE_PREFIX = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5479,6 +5482,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = armv7;
 				EXECUTABLE_EXTENSION = a;
 				EXECUTABLE_PREFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -5507,9 +5511,11 @@
 			baseConfigurationReference = 051C016F21E2F85C00D4A347 /* CCModuleConfigIOS.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = armv7;
 				EXECUTABLE_PREFIX = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../cocos/platform/ios/cocos2d-prefix.pch";
@@ -5542,7 +5548,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8 $(SRCROOT)/../external/ios/include/uv";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/";
-				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
 		};
@@ -5551,10 +5556,12 @@
 			baseConfigurationReference = 051C017021E2F85C00D4A347 /* CCModuleConfigIOS.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = armv7;
 				EXECUTABLE_PREFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5588,7 +5595,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8 $(SRCROOT)/../external/ios/include/uv";
-				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
 		};
