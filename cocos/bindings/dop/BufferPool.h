@@ -32,13 +32,12 @@ THE SOFTWARE.
 #include "cocos/bindings/jswrapper/Object.h"
 
 namespace se {
-#define POOL_FLAG_BITS 20
-#define ENTRY_BITS     8
 class CC_DLL BufferPool final : public cc::Object {
 public:
     using Chunk = uint8_t *;
 
     CC_INLINE static const cc::map<PoolType, BufferPool *> &getPoolMap() { return BufferPool::_poolMap; }
+    CC_INLINE static const uint getPoolFlag() { return _poolFlag; }
 
     BufferPool(PoolType type, uint entryBits, uint bytesPerEntry);
     ~BufferPool();
@@ -57,8 +56,8 @@ private:
     static cc::map<PoolType, BufferPool *> _poolMap;
 
     cc::vector<Chunk> _chunks;
-    const uint _poolFlag = 1 << POOL_FLAG_BITS;
-    uint _entryBits = 1 << ENTRY_BITS;
+    static constexpr uint _poolFlag = 1 << 20;
+    uint _entryBits = 1 << 8;
     uint _chunkMask = 0;
     uint _entryMask = 0;
     uint _bytesPerChunk = 0;
