@@ -16920,6 +16920,22 @@ static bool js_gfx_Queue_submit(se::State& s)
     } while(false);
 
     do {
+        if (argc == 3) {
+            const cc::gfx::CommandBuffer** arg0 = nullptr;
+            ok &= seval_to_native_ptr(args[0], &arg0);            
+            if (!ok) { ok = true; break; }
+            unsigned int arg1 = 0;
+            ok &= seval_to_uint32(args[1], (uint32_t*)&arg1);            
+            if (!ok) { ok = true; break; }
+            cc::gfx::Fence* arg2 = nullptr;
+            ok &= seval_to_native_ptr(args[2], &arg2);            
+            if (!ok) { ok = true; break; }
+            cobj->submit(arg0, arg1, arg2);
+            return true;
+        }
+    } while(false);
+
+    do {
         if (argc == 2) {
             std::vector<cc::gfx::CommandBuffer *> arg0;
             ok &= seval_to_std_vector(args[0], &arg0);            

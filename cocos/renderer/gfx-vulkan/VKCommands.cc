@@ -134,7 +134,7 @@ void CCVKCmdFuncCreateSampler(CCVKDevice *device, CCVKGPUSampler *gpuSampler) {
     createInfo.addressModeV = VK_SAMPLER_ADDRESS_MODES[(uint)gpuSampler->addressV];
     createInfo.addressModeW = VK_SAMPLER_ADDRESS_MODES[(uint)gpuSampler->addressW];
     createInfo.mipLodBias = gpuSampler->mipLODBias;
-    createInfo.anisotropyEnable = context->physicalDeviceFeatures.samplerAnisotropy;
+    createInfo.anisotropyEnable = gpuSampler->maxAnisotropy && context->physicalDeviceFeatures.samplerAnisotropy;
     createInfo.maxAnisotropy = std::min(context->physicalDeviceProperties.limits.maxSamplerAnisotropy, (float)gpuSampler->maxAnisotropy);
     createInfo.compareEnable = VK_TRUE;
     createInfo.compareOp = VK_CMP_FUNCS[(uint)gpuSampler->cmpFunc];
