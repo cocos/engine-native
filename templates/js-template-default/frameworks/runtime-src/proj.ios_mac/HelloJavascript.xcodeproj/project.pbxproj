@@ -47,9 +47,6 @@
 		509D4AE717EBB81800697056 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 509D4AE617EBB81800697056 /* OpenGL.framework */; };
 		509D4AE917EBB82000697056 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 509D4AE817EBB82000697056 /* AppKit.framework */; };
 		509D4AEB17EBB82600697056 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 509D4AEA17EBB82600697056 /* IOKit.framework */; };
-		6D787B0724EBA3CA00E4A839 /* subpackages in Resources */ = {isa = PBXBuildFile; fileRef = 6D787B0624EBA3CA00E4A839 /* subpackages */; };
-		6D787B0824EBA3CA00E4A839 /* subpackages in Resources */ = {isa = PBXBuildFile; fileRef = 6D787B0624EBA3CA00E4A839 /* subpackages */; };
-		6D787B0A24EBA3CA00E4A839 /* subpackages in Resources */ = {isa = PBXBuildFile; fileRef = 6D787B0624EBA3CA00E4A839 /* subpackages */; };
 		6D787B0C24EBA3D800E4A839 /* application.js in Resources */ = {isa = PBXBuildFile; fileRef = 6D787B0B24EBA3D800E4A839 /* application.js */; };
 		6D787B0D24EBA3D800E4A839 /* application.js in Resources */ = {isa = PBXBuildFile; fileRef = 6D787B0B24EBA3D800E4A839 /* application.js */; };
 		6D787B0F24EBA3D800E4A839 /* application.js in Resources */ = {isa = PBXBuildFile; fileRef = 6D787B0B24EBA3D800E4A839 /* application.js */; };
@@ -275,7 +272,6 @@
 		509D4AE617EBB81800697056 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		509D4AE817EBB82000697056 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		509D4AEA17EBB82600697056 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		6D787B0624EBA3CA00E4A839 /* subpackages */ = {isa = PBXFileReference; lastKnownFileType = folder; name = subpackages; path = ../../../subpackages; sourceTree = "<group>"; };
 		6D787B0B24EBA3D800E4A839 /* application.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = application.js; path = ../../../application.js; sourceTree = "<group>"; };
 		6D787BA524EBA48700E4A839 /* jsb_module_register.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsb_module_register.cpp; sourceTree = "<group>"; };
 		6D9C230724ED063500EBABC5 /* ios-app-clip */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "ios-app-clip"; path = "../../../ios-app-clip"; sourceTree = "<group>"; };
@@ -460,7 +456,6 @@
 			children = (
 				6D9C230724ED063500EBABC5 /* ios-app-clip */,
 				6D787B0B24EBA3D800E4A839 /* application.js */,
-				6D787B0624EBA3CA00E4A839 /* subpackages */,
 				4033CDBB20E4935000DAA37B /* jsb-adapter */,
 				1A1A081B18C9DF05005C6854 /* project.json */,
 				1A6BF21418C9DB5900FB0E1C /* main.js */,
@@ -799,7 +794,6 @@
 				1AC22EDE18CA0E11007112B9 /* project.json in Resources */,
 				1AD7E0A918C9DBE3004817A6 /* main.js in Resources */,
 				4033CDBD20E4935100DAA37B /* jsb-adapter in Resources */,
-				6D787B0724EBA3CA00E4A839 /* subpackages in Resources */,
 				509D4ACF17EBB2BE00697056 /* Icon.icns in Resources */,
 				6D787B0C24EBA3D800E4A839 /* application.js in Resources */,
 				C03780EC18BEE0E400FE4F13 /* src in Resources */,
@@ -819,7 +813,6 @@
 				6DB456CF24EA7962003A72AA /* project.json in Resources */,
 				6DB456D124EA7962003A72AA /* main.js in Resources */,
 				6DB456D224EA7962003A72AA /* src in Resources */,
-				6D787B0824EBA3CA00E4A839 /* subpackages in Resources */,
 				6DB456D324EA7962003A72AA /* LaunchScreen.storyboard in Resources */,
 				6DB456D424EA7962003A72AA /* Localizable.strings in Resources */,
 			);
@@ -850,7 +843,6 @@
 				1AE159EC18C9DF3600FCA372 /* project.json in Resources */,
 				1AD7E0A818C9DB93004817A6 /* main.js in Resources */,
 				C03780EB18BEE0E400FE4F13 /* src in Resources */,
-				6D787B0A24EBA3CA00E4A839 /* subpackages in Resources */,
 				4011F9CF212BD6750091CC5B /* LaunchScreen.storyboard in Resources */,
 				4011F9D5212BD7050091CC5B /* Localizable.strings in Resources */,
 			);
@@ -1019,7 +1011,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = "";
@@ -1058,7 +1050,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ios/HelloJavascript-mobileRelease.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = "";
@@ -1125,7 +1117,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = ios_appclip/HelloJavascript.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
@@ -1201,7 +1193,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = ios_appclip/HelloJavascript.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1308,7 +1300,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = "";
@@ -1352,7 +1344,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ios/HelloJavascript-mobileRelease.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMPRESS_PNG_FILES = NO;
 				DEVELOPMENT_TEAM = "";
