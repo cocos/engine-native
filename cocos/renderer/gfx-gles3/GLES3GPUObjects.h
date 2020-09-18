@@ -264,6 +264,7 @@ public:
     }
 };
 
+constexpr size_t chunkSize = 16 * 1024 * 1024; // 16M per block by default
 class GLES3GPUStagingBufferPool : public Object {
 public:
     ~GLES3GPUStagingBufferPool() {
@@ -278,7 +279,7 @@ public:
         Buffer *buffer = nullptr;
         for (size_t idx = 0u; idx < bufferCount; idx++) {
             Buffer *cur = &_pool[idx];
-            if (cur->size - cur->curOffset > size) {
+            if (chunkSize - cur->curOffset >= size) {
                 buffer = cur;
                 break;
             }
@@ -286,7 +287,7 @@ public:
         if (!buffer) {
             _pool.resize(bufferCount + 1);
             buffer = &_pool.back();
-            buffer->mappedData = (uint8_t *)CC_MALLOC(buffer->size);
+            buffer->mappedData = (uint8_t *)CC_MALLOC(chunkSize);
         }
         uint8_t *data = buffer->mappedData + buffer->curOffset;
         buffer->curOffset += size;
@@ -301,7 +302,6 @@ public:
 
 private:
     struct Buffer {
-        size_t size = 16 * 1024 * 1024; // 16M per block by default
         uint8_t *mappedData = nullptr;
         size_t curOffset = 0u;
     };

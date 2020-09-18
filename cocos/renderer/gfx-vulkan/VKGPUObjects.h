@@ -529,6 +529,7 @@ private:
 /**
  * Staging buffer pool, based on multiple fix-sized VkBuffer blocks.
  */
+constexpr size_t chunkSize = 16 * 1024 * 1024; // 16M per block by default
 class CCVKGPUStagingBufferPool : public Object {
 public:
     CCVKGPUStagingBufferPool(CCVKGPUDevice *device)
@@ -550,7 +551,7 @@ public:
         for (size_t idx = 0u; idx < bufferCount; idx++) {
             Buffer *cur = &_pool[idx];
             offset = roundUp(cur->curOffset, alignment);
-            if (cur->size - offset > gpuBuffer->size) {
+            if (chunkSize - offset >= gpuBuffer->size) {
                 buffer = cur;
                 break;
             }
@@ -559,7 +560,7 @@ public:
             _pool.resize(bufferCount + 1);
             buffer = &_pool.back();
             VkBufferCreateInfo bufferInfo{VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
-            bufferInfo.size = buffer->size;
+            bufferInfo.size = chunkSize;
             bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
             VmaAllocationCreateInfo allocInfo{};
             allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
@@ -584,7 +585,6 @@ public:
 private:
     struct Buffer {
         VkBuffer vkBuffer = VK_NULL_HANDLE;
-        VkDeviceSize size = 16 * 1024 * 1024; // 16M per block by default
         uint8_t *mappedData = nullptr;
         VmaAllocation vmaAllocation = VK_NULL_HANDLE;
 

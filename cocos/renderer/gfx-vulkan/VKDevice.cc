@@ -653,9 +653,14 @@ PipelineState *CCVKDevice::createPipelineState(const PipelineStateInfo &info) {
 }
 
 void CCVKDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
-    _gpuTransportHub->checkIn([&](const CCVKGPUCommandBuffer *cmdBuff) {
-        CCVKCmdFuncCopyBuffersToTexture(this, buffers, ((CCVKTexture *)dst)->gpuTexture(), regions, count, cmdBuff);
-    });
+    // This assumes the default command buffer will get submitted every frame,
+    // which is true for now but may change in the future. This appoach gives us
+    // the wiggle room to leverage immediate update vs. copy-upload strategies without
+    // breaking compatabilities. When we reached some conclusion on this subject,
+    // getting rid of this interface all together may become a better option.
+    _cmdBuff->begin();
+    const CCVKGPUCommandBuffer *gpuCommandBuffer = ((CCVKCommandBuffer *)_cmdBuff)->gpuCommandBuffer();
+    CCVKCmdFuncCopyBuffersToTexture(this, buffers, ((CCVKTexture *)dst)->gpuTexture(), regions, count, gpuCommandBuffer);
 }
 
 bool CCVKDevice::checkSwapchainStatus() {
