@@ -81,7 +81,7 @@ private:
     float exposure = 0;
     uint32_t clearFlag = 0;
     float clearDepth = 0;
-    float clearStencil = 0;
+    uint32_t clearStencil = 0;
     uint32_t nodeID = 0;
     uint32_t sceneID = 0;
     uint32_t frustumID = 0;
