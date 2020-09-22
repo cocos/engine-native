@@ -190,6 +190,7 @@ private:
     static Application* _instance;
     static std::shared_ptr<Scheduler> _scheduler;
     int _fps = 60;
+    long _prefererredNanosecondsPerFrame = NANOSECONDS_60FPS;
     uint _totalFrames = 0;
     cc::Vec2 _viewLogicalSize;
 };
