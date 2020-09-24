@@ -57,11 +57,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [_displayLink release];
-    [super dealloc];
-}
-
 - (void)start
 {
     [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
