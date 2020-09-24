@@ -365,7 +365,10 @@ namespace
     // check length limit after text changed, a little rude
     if (textField.text.length > g_maxLength) {
         NSRange rangeIndex = [textField.text rangeOfComposedCharacterSequenceAtIndex:g_maxLength];
-        textField.text = [textField.text substringToIndex:rangeIndex.location];
+        auto newText = [textField.text substringToIndex:rangeIndex.location];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            textField.text = newText;
+        });
     }
 
     callJSFunc("input", [textField.text UTF8String]);
@@ -402,8 +405,12 @@ namespace
         return;
 
     // check length limit after text changed, a little rude
-    if (textView.text.length > g_maxLength)
-        textView.text = [textView.text substringToIndex:g_maxLength];
+    if (textView.text.length > g_maxLength) {
+        auto newText = [textView.text substringToIndex:g_maxLength];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            textView.text = newText;
+        });
+    }
 
     callJSFunc("input", [textView.text UTF8String]);
 }
