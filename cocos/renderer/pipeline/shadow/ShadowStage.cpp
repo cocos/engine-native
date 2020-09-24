@@ -57,7 +57,7 @@ void ShadowStage::render(RenderView *view) {
     const auto camera = view->getCamera();
     auto cmdBuffer = pipeline->getCommandBuffers()[0];
 
-    const auto shadowMapSize = shadowInfo->size;
+    const auto shadowMapSize = shadowInfo->getSize();
     _renderArea.x = camera->getViewportX() * shadowMapSize.x;
     _renderArea.y = camera->getViewportY() * shadowMapSize.y;
     _renderArea.width = camera->getViewportWidth() * shadowMapSize.x * pipeline->getShadingScale();

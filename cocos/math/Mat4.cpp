@@ -410,6 +410,43 @@ void Mat4::add(const Mat4 &m1, const Mat4 &m2, Mat4 *dst) {
 #endif
 }
 
+Mat4 Mat4::fromRT(const Vec4 &rotation, const Vec3 &translation) {
+    const auto x = rotation.x, y = rotation.y, z = rotation.z, w = rotation.w;
+    const auto x2 = x + x;
+    const auto y2 = y + y;
+    const auto z2 = z + z;
+
+    const auto xx = x * x2;
+    const auto xy = x * y2;
+    const auto xz = x * z2;
+    const auto yy = y * y2;
+    const auto yz = y * z2;
+    const auto zz = z * z2;
+    const auto wx = w * x2;
+    const auto wy = w * y2;
+    const auto wz = w * z2;
+    
+    Mat4 out;
+    out.m[0] = 1 - (yy + zz);
+    out.m[1] = xy + wz;
+    out.m[2] = xz - wy;
+    out.m[3] = 0;
+    out.m[4] = xy - wz;
+    out.m[5] = 1 - (xx + zz);
+    out.m[6] = yz + wx;
+    out.m[7] = 0;
+    out.m[8] = xz + wy;
+    out.m[9] = yz - wx;
+    out.m[10] = 1 - (xx + yy);
+    out.m[11] = 0;
+    out.m[12] = translation.x;
+    out.m[13] = translation.y;
+    out.m[14] = translation.z;
+    out.m[15] = 1;
+
+    return out;
+}
+
 bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const {
     if (translation) {
         // Extract the translation.

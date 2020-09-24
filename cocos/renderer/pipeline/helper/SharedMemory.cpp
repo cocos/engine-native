@@ -22,5 +22,6 @@ const se::PoolType Node::type = se::PoolType::NODE;
 const se::PoolType Root::type = se::PoolType::ROOT;
 const se::PoolType RenderWindow::type = se::PoolType::RENDER_WINDOW;
 const se::PoolType Shadows::type = se::PoolType::SHADOW;
+const se::PoolType Sphere::type = se::PoolType::SPHERE;
 } // namespace pipeline
 } // namespace cc

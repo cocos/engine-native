@@ -5,7 +5,7 @@
 namespace cc {
 namespace pipeline {
 struct SubModelView;
-struct Light;
+class Light;
 struct RenderObject;
 struct PassView;
 class RenderPipeline;

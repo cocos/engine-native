@@ -9,7 +9,7 @@ namespace pipeline {
 class RenderStage;
 class RenderFlow;
 struct SubModelView;
-struct Light;
+class Light;
 struct ModelView;
 struct AABB;
 struct Frustum;

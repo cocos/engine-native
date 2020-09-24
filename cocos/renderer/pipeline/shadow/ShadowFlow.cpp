@@ -39,7 +39,7 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 
     auto device = gfx::Device::getInstance();
-    const auto shadowMapSize = static_cast<ForwardPipeline *>(pipeline)->getShadows()->size;
+    const auto shadowMapSize = static_cast<ForwardPipeline *>(pipeline)->getShadows()->getSize();
     _width = shadowMapSize.x;
     _height = shadowMapSize.y;
 
@@ -104,9 +104,9 @@ void ShadowFlow::render(RenderView *view) {
     auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
     return; //TODO coulsonwang
     const auto shadowInfo = pipeline->getShadows();
-    if (!shadowInfo->enabled) return;
+    if (!shadowInfo->isEnabled()) return;
 
-    const auto shadowMapSize = shadowInfo->size;
+    const auto shadowMapSize = shadowInfo->getSize();
     if (_width != shadowMapSize.x || _height != shadowMapSize.y) {
         resizeShadowMap(shadowMapSize.x, shadowMapSize.y);
         _width = shadowMapSize.x;

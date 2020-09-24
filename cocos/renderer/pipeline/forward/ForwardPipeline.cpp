@@ -62,12 +62,6 @@ gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFla
     return renderPass;
 }
 
-ForwardPipeline::ForwardPipeline() {
-}
-
-ForwardPipeline::~ForwardPipeline() {
-}
-
 void ForwardPipeline::setFog(uint fog) {
     _fog = GET_FOG(fog);
 }
@@ -137,35 +131,45 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
     if (scene->mainLightID) mainLight = GET_LIGHT(scene->mainLightID);
     const auto shadowInfo = _shadows;
 
-    if (mainLight && shadowInfo->enabled) {
-        const auto node = GET_NODE(mainLight->nodeID);
-
-        // shadow view
-        auto shadowView = node->getWorldMatrix().getInversed();
+    if (mainLight && static_cast<ShadowType>(shadowInfo->getShadowType()) == ShadowType::SHADOWMAP) {
+        const auto node = GET_NODE(mainLight->getNodeID());
+        const auto sphere = GET_SPHERE(shadowInfo->getSphereID());
+        const auto &shadowCameraView = getShadowWorldMatrix(shadowInfo, node->getWorldRotation(), mainLight->getDirection());
+        const auto &matShadowView = shadowCameraView.getInversed();
 
         // shadow view proj
-        const auto x = shadowInfo->orthoSize * shadowInfo->aspect;
-        const auto y = shadowInfo->orthoSize;
-        const auto projectionSinY = _device->getScreenSpaceSignY() * _device->getUVSpaceSignY();
-        Mat4 shadowViewProj;
-        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, shadowInfo->farValue, _device->getClipSpaceMinZ(), projectionSinY, &shadowViewProj);
 
-        shadowViewProj.multiply(shadowView);
-        memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, shadowViewProj.m, sizeof(shadowViewProj));
+        float x = 0;
+        float y = 0;
+        if (shadowInfo->getOrthoSize() > sphere->getRadius()) {
+            x = shadowInfo->getOrthoSize() * shadowInfo->getAspect();
+            y = shadowInfo->getOrthoSize();
+        } else {
+            x = sphere->getRadius() * shadowInfo->getAspect();
+            y = sphere->getRadius();
+        }
+
+        const auto projectionSinY = _device->getScreenSpaceSignY() * _device->getUVSpaceSignY();
+        Mat4 matShadowViewProj;
+        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->getNearValue(), shadowInfo->getFarValue(), _device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
+
+        matShadowViewProj.multiply(matShadowView);
+        const auto pcf = shadowInfo->getPCFType();
+        float shadowSize[2] = {shadowInfo->getSize().x, shadowInfo->getSize().y};
+        memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_PCF_OFFSET, &pcf, sizeof(pcf));
+        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_SIZE_OFFSET, shadowSize, sizeof(shadowSize));
     }
 
     // update ubos
-    _commandBuffers[0]->updateBuffer(_descriptorSet->getBuffer(UBOGlobal::BLOCK.binding), _globalUBO.data(),
-                                     static_cast<uint>(_globalUBO.size() * sizeof(float)));
-    _commandBuffers[0]->updateBuffer(_descriptorSet->getBuffer(UBOShadow::BLOCK.binding), _shadowUBO.data(),
-                                     static_cast<uint>(_shadowUBO.size() * sizeof(float)));
+    _commandBuffers[0]->updateBuffer(_descriptorSet->getBuffer(UBOGlobal::BLOCK.binding), _globalUBO.data(), UBOGlobal::SIZE);
+    _commandBuffers[0]->updateBuffer(_descriptorSet->getBuffer(UBOShadow::BLOCK.binding), _shadowUBO.data(), UBOShadow::SIZE);
 }
 
 void ForwardPipeline::updateUBO(RenderView *view) {
     _descriptorSet->update();
 
     const auto root = GET_ROOT();
-
     const auto camera = view->getCamera();
     const auto scene = GET_SCENE(camera->getSceneID());
 
@@ -180,8 +184,8 @@ void ForwardPipeline::updateUBO(RenderView *view) {
     const auto shadingHeight = std::floor(_device->getHeight());
 
     // update UBOGlobal
-    uboGlobalView[UBOGlobal::TIME_OFFSET] = root->cumulativeTime;
-    uboGlobalView[UBOGlobal::TIME_OFFSET + 1] = root->frameTime;
+    uboGlobalView[UBOGlobal::TIME_OFFSET] = root->getCumulativeTime();
+    uboGlobalView[UBOGlobal::TIME_OFFSET + 1] = root->getFrameTime();
     uboGlobalView[UBOGlobal::TIME_OFFSET + 2] = Application::getInstance()->getTotalFrames();
 
     uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET] = _device->getWidth();
@@ -220,44 +224,44 @@ void ForwardPipeline::updateUBO(RenderView *view) {
     uboGlobalView[UBOGlobal::EXPOSURE_OFFSET + 3] = _fpScale / exposure;
 
     if (mainLight) {
-        TO_VEC3(uboGlobalView, mainLight->direction, UBOGlobal::MAIN_LIT_DIR_OFFSET);
-        TO_VEC3(uboGlobalView, mainLight->color, UBOGlobal::MAIN_LIT_COLOR_OFFSET);
-        if (mainLight->useColorTemperature) {
-            const auto colorTempRGB = mainLight->colorTemperatureRGB;
+        TO_VEC3(uboGlobalView, mainLight->getDirection(), UBOGlobal::MAIN_LIT_DIR_OFFSET);
+        TO_VEC3(uboGlobalView, mainLight->getColor(), UBOGlobal::MAIN_LIT_COLOR_OFFSET);
+        if (mainLight->getUseColorTemperature()) {
+            const auto colorTempRGB = mainLight->getColorTemperatureRGB();
             uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET] *= colorTempRGB.x;
             uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 1] *= colorTempRGB.y;
             uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 2] *= colorTempRGB.z;
         }
 
         if (_isHDR) {
-            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->illuminance * _fpScale;
+            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * _fpScale;
         } else {
-            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->illuminance * exposure;
+            uboGlobalView[UBOGlobal::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * exposure;
         }
     } else {
         TO_VEC3(uboGlobalView, Vec3::UNIT_Z, UBOGlobal::MAIN_LIT_DIR_OFFSET);
         TO_VEC4(uboGlobalView, Vec4::ZERO, UBOGlobal::MAIN_LIT_COLOR_OFFSET);
     }
 
-    auto skyColor = ambient->skyColor;
+    Vec4 skyColor = ambient->getSkyColor();
     if (_isHDR) {
-        skyColor.w = ambient->skyIllum * _fpScale;
+        skyColor.w = ambient->getSkyIllum() * _fpScale;
     } else {
-        skyColor.w = ambient->skyIllum * exposure;
+        skyColor.w = ambient->getSkyIllum() * exposure;
     }
     TO_VEC4(uboGlobalView, skyColor, UBOGlobal::AMBIENT_SKY_OFFSET);
-    TO_VEC4(uboGlobalView, ambient->groundAlbedo, UBOGlobal::AMBIENT_GROUND_OFFSET);
+    TO_VEC4(uboGlobalView, ambient->getGroundAlbedo(), UBOGlobal::AMBIENT_GROUND_OFFSET);
 
-    if (fog->enabled) {
-        TO_VEC4(uboGlobalView, fog->fogColor, UBOGlobal::GLOBAL_FOG_COLOR_OFFSET);
+    if (fog->isEnabled()) {
+        TO_VEC4(uboGlobalView, fog->getFogColor(), UBOGlobal::GLOBAL_FOG_COLOR_OFFSET);
 
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET] = fog->fogStart;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET + 1] = fog->fogEnd;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET + 2] = fog->fogDensity;
+        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET] = fog->getFogStart();
+        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET + 1] = fog->getFogEnd();
+        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET + 2] = fog->getFogDensity();
 
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET] = fog->fogTop;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET + 1] = fog->fogRange;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET + 2] = fog->fogAtten;
+        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET] = fog->getFogTop();
+        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET + 1] = fog->getFogRange();
+        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET + 2] = fog->getFogAtten();
     }
 }
 
@@ -295,7 +299,6 @@ bool ForwardPipeline::activeRenderer() {
 }
 
 void ForwardPipeline::destroy() {
-
     if (_descriptorSet) {
         _descriptorSet->getBuffer(UBOGlobal::BLOCK.binding)->destroy();
         _descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->destroy();
