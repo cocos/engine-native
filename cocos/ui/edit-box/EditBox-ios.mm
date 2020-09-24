@@ -407,6 +407,7 @@ namespace
     // check length limit after text changed, a little rude
     if (textView.text.length > g_maxLength) {
         auto newText = [textView.text substringToIndex:g_maxLength];
+        // fix undo crash
         dispatch_async(dispatch_get_main_queue(), ^{
             textView.text = newText;
         });
