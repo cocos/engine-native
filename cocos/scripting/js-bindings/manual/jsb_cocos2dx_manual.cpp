@@ -661,6 +661,9 @@ static bool js_engine_LabelRenderer_init(se::State& s)
         cobj->bindSharedBlock(self, pcfg, playout);
         cobj->setJsComponent(comp);
         
+        cfgBufferObj->decRef();
+        layoutBufferObj->decRef();
+        
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
