@@ -636,8 +636,10 @@ static bool js_engine_LabelRenderer_init(se::State& s)
     size_t argc = args.size();
     se::Object *self = s.thisObject();
     CC_UNUSED bool ok = true;
-    if (argc == 0) {
-                
+    if (argc == 1 && args[0].isObject()) {
+        
+        se::Object *comp = args[0].toObject();
+        
         cocos2d::LabelRenderer::LabelRendererConfig config;
         cocos2d::LabelLayoutInfo layout;
         
@@ -657,11 +659,11 @@ static bool js_engine_LabelRenderer_init(se::State& s)
         new (pcfg) cocos2d::LabelRenderer::LabelRendererConfig();
         new (playout) cocos2d::LabelLayoutInfo();
         cobj->bindSharedBlock(self, pcfg, playout);
-        
+        cobj->setJsComponent(comp);
         
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
 SE_BIND_FUNC(js_engine_LabelRenderer_init)
@@ -705,6 +707,7 @@ static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
         se::Object *cfgFields = se::Object::createJSONObject(ss.str());
         assert(cfgFields);
         self->setProperty("_cfgFields", se::Value(cfgFields));
+        cfgFields->decRef();
     }
     {
         std::stringstream ss;
@@ -752,6 +755,7 @@ static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
         se::Object *cfgFields = se::Object::createJSONObject(ss.str());
         assert(cfgFields);
         self->setProperty("_layoutFields", se::Value(cfgFields));
+        cfgFields->decRef();
     }
     
 }

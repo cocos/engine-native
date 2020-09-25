@@ -51,7 +51,9 @@ namespace cocos2d {
 
     LabelRenderer::~LabelRenderer()
     {
-        CC_SAFE_RELEASE(_effect);
+        CC_SAFE_RELEASE_NULL(_effect);
+        CC_SAFE_RELEASE_NULL(_nodeProxy);
+        if(_componentObj) _componentObj->decRef();
     }
 
 
@@ -85,7 +87,7 @@ namespace cocos2d {
         std::string text = getString();
         if (!fontPath.empty() && !text.empty() && !_stringLayout)
         {
-            _stringLayout.reset(new LabelLayout());
+            _stringLayout.reset(new LabelLayout(this));
             _stringLayout->init(fontPath, text, _cfg->fontSize, _cfg->fontSizeRetina, _layoutInfo);
         }
     }
@@ -148,6 +150,15 @@ namespace cocos2d {
         assert(_selfObj);
         _selfObj->getProperty("fontPath", &str);
         return str.toString();
+    }
+
+
+    void LabelRenderer::setJsComponent(se::Object *component)
+    {
+        if(_componentObj == component) return;
+        if(_componentObj) _componentObj->decRef();
+        if(component) component->incRef();
+        _componentObj = component;
     }
 }
 #endif

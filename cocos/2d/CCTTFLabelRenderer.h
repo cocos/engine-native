@@ -75,6 +75,10 @@ namespace cocos2d {
  
         void bindSharedBlock(se::Object *selfObj, void *cfg, void *layout);
         
+        void setJsComponent(se::Object *component);
+        
+        se::Object *getJsComponent() const {return _componentObj;}
+        
     private:
 
         void genStringLayout();
@@ -87,6 +91,8 @@ namespace cocos2d {
         
         std::unique_ptr<LabelLayout> _stringLayout;
         se::Object *_selfObj = nullptr;
+        se::Object *_componentObj = nullptr;
+        
         //export arraybuffer to js
         LabelRendererConfig *_cfg =  nullptr;
         LabelLayoutInfo *_layoutInfo = nullptr;
