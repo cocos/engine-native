@@ -777,19 +777,18 @@ namespace cocos2d {
 
 
         se::Object *comp = _renderer->getJsComponent();
-        if (OverFlow == LabelOverflow::NONE && comp) {
+        if ((OverFlow == LabelOverflow::NONE || OverFlow == LabelOverflow::RESIZE_HEIGHT) && comp) {
             se::Value funcVal;
             se::Value nodeVal;
             if(comp->getProperty("node", &nodeVal) && nodeVal.isObject() &&
                 nodeVal.toObject()->getProperty("setContentSize", &funcVal)) {
                 se::ValueArray args;
-                args.push_back(se::Value(maxLineWidth));
+                args.push_back(se::Value( OverFlow == LabelOverflow::RESIZE_HEIGHT ? ContentWidth: maxLineWidth));
                 args.push_back(se::Value(TotalTextHeight));
                 funcVal.toObject()->call(args, nodeVal.toObject());
             }
         }
         
-    
         _textSpace = std::move(textSpaces._data);
 
         return true;
