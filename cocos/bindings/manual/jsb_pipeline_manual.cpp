@@ -7,7 +7,6 @@
 #include "renderer/pipeline/RenderView.h"
 #include "renderer/pipeline/PipelineStateManager.h"
 #include "renderer/core/gfx/GFXPipelineState.h"
-#include "renderer/core/gfx/GFXInputAssembler.h"
 
 se::Object *__jsb_cc_pipeline_RenderViewInfo_proto = nullptr;
 se::Class *__jsb_cc_pipeline_RenderViewInfo_class = nullptr;
