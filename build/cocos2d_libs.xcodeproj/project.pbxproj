@@ -5510,6 +5510,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../cocos/platform/ios/cocos2d-prefix.pch";
@@ -5542,7 +5543,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8 $(SRCROOT)/../external/ios/include/uv";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/";
-				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
 		};
@@ -5555,6 +5555,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5588,7 +5589,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8 $(SRCROOT)/../external/ios/include/uv";
-				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
 		};
