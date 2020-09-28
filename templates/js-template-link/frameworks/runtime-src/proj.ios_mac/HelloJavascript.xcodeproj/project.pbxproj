@@ -702,7 +702,6 @@
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/platform/ios /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/spidermonkey";
-				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
 		};
@@ -735,7 +734,6 @@
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/cocos/platform/ios /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/auto /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/plugin/jsbindings/manual /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include /Applications/CocosCreator.app/Contents/Resources/cocos2d-x/external/ios/include/spidermonkey";
-				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
 		};

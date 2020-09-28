@@ -3362,7 +3362,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8 $(SRCROOT)/../external/ios/include/uv";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype";
-				VALID_ARCHS = "arm64 armv7 arm64e armv7s";
 			};
 			name = Debug;
 		};
@@ -3431,7 +3430,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../cocos/editor-support/ $(SRCROOT)/../external/ios/include/v8";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "$(inherited) $(SRCROOT)/../external/sources $(SRCROOT)/../external/ios/include $(SRCROOT)/../external/ios/include/freetype $(SRCROOT)/../external/ios/include/v8 $(SRCROOT)/../external/ios/include/uv";
-				VALID_ARCHS = "arm64 armv7 arm64e armv7s";
 			};
 			name = Release;
 		};
