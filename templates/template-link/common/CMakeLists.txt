@@ -16,7 +16,7 @@ option(USE_VIDEOPLAYER          "Enable VideoPlayer Component"      OFF)
 option(USE_WEBVIEW              "Enable WebView Component"          OFF)
 option(USE_DRAGONBONES          "Enable Dragonbones"                OFF)
 option(USE_SPINE                "Enable Spine"                      OFF)
-option(USE_WEBSOCKET_SERVER     "Enable WebSocket Server"           ON)
+option(USE_WEBSOCKET_SERVER     "Enable WebSocket Server"           OFF)
 
 
 if(USE_SE_JSC AND APPLE)
