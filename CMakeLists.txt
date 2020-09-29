@@ -847,7 +847,7 @@ if(USE_SOCKET)
     )
 endif()
 
-    
+
 if(NOT IOS AND USE_WEBSOCKET_SERVER)
     cocos_source_files(
         cocos/bindings/manual/jsb_websocket_server.cpp
@@ -1212,6 +1212,8 @@ if(APPLE)
     elseif(IOS)
         find_library(QUARTZCORE_LIBRARY QuartzCore)
         find_library(UIKIT_LIBRARY UIKit)
+        find_library(AVKIT_LIBRARY AVKit)
+        find_library(WebKit_LIBRARY WebKit)
         find_library(CORE_MOTION_LIBRARY CoreMotion)
         find_library(CFNETWORK_LIBRARY CFNetwork)
         find_library(CORE_MEDIA_LIBRARY CoreMedia)
@@ -1233,6 +1235,8 @@ if(APPLE)
             ${OPENGLES_LIBRARY}
             ${JAVASCRIPTCORE_LIBRARY}
             ${CORE_MEDIA_LIBRARY}
+            ${AVKIT_LIBRARY}
+            ${WebKit_LIBRARY}
         )
         set_property(TARGET cocos2d PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${TARGET_IOS_VERSION})
         set_property(TARGET cocos2d PROPERTY XCODE_ATTRIBUTE_ENABLE_BITCODE "NO")
