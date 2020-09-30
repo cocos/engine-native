@@ -84,10 +84,6 @@ if(NOT ANDROID AND NOT IOS)
     set(USE_WEBVIEW OFF)
 endif()
 
-if(NOT USE_WEBVIEW)
-message(FATAL_ERROR "failed")
-endif()
-
 ################################# external source code ################################
 
 
