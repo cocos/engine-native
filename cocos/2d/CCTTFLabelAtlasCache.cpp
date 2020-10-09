@@ -62,14 +62,14 @@ namespace cocos2d {
     }
 
 
-    TTFLabelAtals::TTFLabelAtals(const std::string &fontPath, float fontSize, LabelLayoutInfo *info)
+    TTFLabelAtlas::TTFLabelAtlas(const std::string &fontPath, float fontSize, LabelLayoutInfo *info)
         :_fontName(fontPath), _fontSize(fontSize), _info(info)
     {
         init();
     }
 
 
-    bool TTFLabelAtals::init()
+    bool TTFLabelAtlas::init()
     {
         assert(FileUtils::getInstance()->isFileExist(_fontName));
         _ttfFont = std::make_shared<FontFreeType>(_fontName, _fontSize, _info);
@@ -102,16 +102,16 @@ namespace cocos2d {
         _cache.clear();
     }
 
-    std::shared_ptr<TTFLabelAtals> TTFLabelAtlasCache::load(const std::string &font, float fontSizeF, LabelLayoutInfo *info)
+    std::shared_ptr<TTFLabelAtlas> TTFLabelAtlasCache::load(const std::string &font, float fontSizeF, LabelLayoutInfo *info)
     {
         int fontSize = mapFontSize(fontSizeF);
         std::string keybuffer = cacheKeyFor(font, fontSize, info);
 #if CC_TTF_LABELATLAS_ENABLE_GC
-        std::weak_ptr<TTFLabelAtals> &atlasWeak= _cache[keybuffer];
-        std::shared_ptr<TTFLabelAtals> atlas = atlasWeak.lock();
+        std::weak_ptr<TTFLabelAtlas> &atlasWeak= _cache[keybuffer];
+        std::shared_ptr<TTFLabelAtlas> atlas = atlasWeak.lock();
         if (!atlas)
         {
-            atlas = std::make_shared<TTFLabelAtals>(font, fontSize, info);
+            atlas = std::make_shared<TTFLabelAtlas>(font, fontSize, info);
             if(!atlas->init())
             {
                 return nullptr;
@@ -133,7 +133,7 @@ namespace cocos2d {
     }
 
 
-    void TTFLabelAtlasCache::unload(TTFLabelAtals *atlas)
+    void TTFLabelAtlasCache::unload(TTFLabelAtlas *atlas)
     {
         int fontSize = mapFontSize(atlas->_fontSize);
         std::string key = cacheKeyFor(atlas->_fontName, fontSize, atlas->_info);
