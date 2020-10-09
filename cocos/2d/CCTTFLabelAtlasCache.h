@@ -46,6 +46,10 @@ namespace cocos2d {
         
         TTFLabelAtals(const std::string &, float, LabelLayoutInfo *info);
 
+        virtual ~TTFLabelAtals() {
+            int a = 0;
+        }
+
         
         inline FontAtlas * getFontAtlas() const { return _fontAtlas.get(); }
         inline FontFreeType * getTTF() const { return _ttfFont.get(); }
