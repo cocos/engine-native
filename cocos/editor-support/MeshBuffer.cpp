@@ -31,12 +31,19 @@ using namespace cocos2d::renderer;
 
 MIDDLEWARE_BEGIN
 
+
 MeshBuffer::MeshBuffer(int vertexFormat)
+    :MeshBuffer(vertexFormat, INIT_INDEX_BUFFER_SIZE,MAX_VERTEX_BUFFER_SIZE)
+{
+}
+
+MeshBuffer::MeshBuffer(int vertexFormat, size_t indexSize, size_t vertexSize)
 : _vertexFormat(vertexFormat)
-, _ib(INIT_INDEX_BUFFER_SIZE)
-, _vb(MAX_VERTEX_BUFFER_SIZE * vertexFormat * sizeof(float))
+, _ib(indexSize)
+, _vb(vertexSize * vertexFormat * sizeof(float))
 {
     _vb.setMaxSize(MAX_VERTEX_BUFFER_SIZE * _vertexFormat * sizeof(float));
+    _ib.setMaxSize(INIT_INDEX_BUFFER_SIZE);
     _vb.setFullCallback([this]
     {
         uploadVB();
