@@ -11,10 +11,10 @@
 namespace cc {
 namespace pipeline {
 
-RenderObject genRenderObject(ModelView *model, const Camera *camera) {
+RenderObject genRenderObject(const ModelView *model, const Camera *camera) {
     float depth = 0;
-    if (model->nodeID != 0) {
-        const auto node = GET_NODE(model->nodeID);
+    if (model->isNodeValid()) {
+        const auto node = model->getNode();
         cc::Vec3 position;
         cc::Vec3::subtract(node->getWorldPosition(), camera->getPosition(), &position);
         depth = position.dot(camera->getForward());
@@ -26,7 +26,7 @@ RenderObject genRenderObject(ModelView *model, const Camera *camera) {
 cc::Mat4 getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, const cc::Vec3 &dir) {
     Vec3 translation(dir);
     translation.negate();
-    const auto sphere = GET_SPHERE(shadows->getSphereID());
+    const auto sphere = shadows->getSphere();
     const auto distance = std::sqrt(2) * sphere->getRadius();
     translation.scale(distance);
     translation.add(sphere->getCenter());
@@ -34,8 +34,47 @@ cc::Mat4 getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, 
     return std::move(Mat4::fromRT(rotation, translation));
 }
 
+void updateSphereLight(const Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
+    const auto node = light->getNode();
+    if (!node->hasFlagsChanged() && !shadows->isDirty()) {
+        return;
+    }
+
+    //    shadows.dirty = false; //TODO coulsonwang
+    const auto position = node->getWorldPosition();
+    const auto &normal = shadows->getNormal();
+    const auto distance = shadows->getDistance() + 0.001f; // avoid z-fighting
+    const auto NdL = normal.dot(position);
+    const auto lx = position.x;
+    const auto ly = position.y;
+    const auto lz = position.z;
+    const auto nx = normal.x;
+    const auto ny = normal.y;
+    const auto nz = normal.z;
+    //    const auto m = shadows.matLight; //TODO coulsonwang
+    float matLight[16];
+    matLight[0] = NdL - distance - lx * nx;
+    matLight[1] = -ly * nx;
+    matLight[2] = -lz * nx;
+    matLight[3] = -nx;
+    matLight[4] = -lx * ny;
+    matLight[5] = NdL - distance - ly * ny;
+    matLight[6] = -lz * ny;
+    matLight[7] = -ny;
+    matLight[8] = -lx * nz;
+    matLight[9] = -ly * nz;
+    matLight[10] = NdL - distance - lz * nz;
+    matLight[11] = -nz;
+    matLight[12] = lx * distance;
+    matLight[13] = ly * distance;
+    matLight[14] = lz * distance;
+    matLight[15] = NdL;
+
+    descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->update(matLight, UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, sizeof(matLight));
+}
+
 void updateDirLight(const Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
-    const auto node = GET_NODE(light->getNodeID());
+    const auto node = light->getNode();
     if (!node->hasFlagsChanged() && !shadows->isDirty()) {
         return;
     }
@@ -80,10 +119,10 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
     const auto camera = view->getCamera();
     const auto shadows = pipeline->getShadows();
     const auto skybox = pipeline->getSkybox();
-    const auto scene = GET_SCENE(camera->getSceneID());
+    const auto scene = camera->getScene();
 
     const Light *mainLight = nullptr;
-    if (scene->mainLightID) mainLight = GET_LIGHT(scene->mainLightID);
+    if (scene->useMainLight()) mainLight = scene->getMainLight();
     RenderObjectList renderObjects;
     RenderObjectList shadowObjects;
 
@@ -92,42 +131,42 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
         pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.binding)->update(color, UBOShadow::SHADOW_COLOR_OFFSET, sizeof(color));
     }
 
-    if (mainLight && shadows->getShadowType() == static_cast<uint>(ShadowType::PLANAR)) {
+    if (mainLight && shadows->getShadowType() == ShadowType::PLANAR) {
         updateDirLight(shadows, mainLight, pipeline->getDescriptorSet());
     }
 
-    if (skybox->isEnabled() && skybox->getModelID() && (camera->getClearFlag() & SKYBOX_FLAG)) {
-        renderObjects.emplace_back(genRenderObject(GET_MODEL(skybox->getModelID()), camera));
+    if (skybox->isEnabled() && skybox->isModelValid() && (camera->getClearFlag() & SKYBOX_FLAG)) {
+        renderObjects.emplace_back(genRenderObject(skybox->getModel(), camera));
     }
 
-    uint32_t *models = GET_MODEL_ARRAY(scene->modelsID);
-    uint32_t modelCount = models[0];
+    const auto models = scene->getModels();
+    const auto modelCount = models[0];
     for (size_t i = 1; i <= modelCount; i++) {
-        const auto model = GET_MODEL(models[i]);
+        const auto model = scene->getModelView(models[i]);
 
         // filter model by view visibility
-        if (model->enabled) {
+        if (model->isEnabled()) {
             const auto visibility = view->getVisibility();
             const auto vis = visibility & static_cast<uint>(LayerList::UI_2D);
-            const auto node = GET_NODE(model->nodeID);
+            const auto node = model->getNode();
             if (vis) {
-                if ((model->nodeID && (visibility == node->getLayer())) ||
-                    visibility == model->visFlags) {
+                if ((model->isNodeValid() && (visibility == node->getLayer())) ||
+                    visibility == model->getVisFlags()) {
                     renderObjects.emplace_back(genRenderObject(model, camera));
                 }
             } else {
 
-                if ((model->nodeID && ((visibility & node->getLayer()) == node->getLayer())) ||
-                    (visibility & model->visFlags)) {
+                if ((model->isNodeValid() && ((visibility & node->getLayer()) == node->getLayer())) ||
+                    (visibility & model->getVisFlags())) {
 
                     // shadow render Object
-                    if (model->castShadow) {
+                    if (model->isCastShadow()) {
                         //                        sphere.mergeAABB(shadowSphere, shadowSphere, model.worldBounds!); //TODO coulsonwang
                         shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
 
                     // frustum culling
-                    if (model->worldBoundsID && !aabb_frustum(GET_AABB(model->worldBoundsID), GET_FRUSTUM(camera->getFrustumID()))) {
+                    if (model->isWorldBoundsValid() && !aabb_frustum(model->getWroldBounds(), camera->getFrustum())) {
                         continue;
                     }
 

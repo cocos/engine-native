@@ -309,10 +309,11 @@ gfx::Sampler *getSampler(uint hash) {
 }
 
 int aabb_plane(const AABB *aabb, const Plane *plane) {
-    auto r = aabb->halfExtents.x * std::abs(plane->normal.x) +
-             aabb->halfExtents.y * std::abs(plane->normal.y) +
-             aabb->halfExtents.z * std::abs(plane->normal.z);
-    auto dot = Vec3::dot(plane->normal, aabb->center);
+    const auto &halfExtents = aabb->getHalfExtents();
+    auto r = halfExtents.x * std::abs(plane->normal.x) +
+             halfExtents.y * std::abs(plane->normal.y) +
+             halfExtents.z * std::abs(plane->normal.z);
+    auto dot = Vec3::dot(plane->normal, aabb->getCenter());
     if (dot + r < plane->distance) {
         return -1;
     } else if (dot - r > plane->distance) {
@@ -322,12 +323,11 @@ int aabb_plane(const AABB *aabb, const Plane *plane) {
 };
 
 bool aabb_frustum(const AABB *aabb, const Frustum *frustum) {
-    const size_t plantCount = 6;
-    for (size_t i = 0; i < plantCount; i++) {
+    for (size_t i = 0; i < PLANE_LENGTH; i++) {
         // frustum plane normal points to the inside
-        //        if (aabb_plane(aabb, GET_PLANE(i)) == -1) {
-        //            return 0;
-        //        }
+        if (aabb_plane(aabb, &frustum->getPlane(i)) == -1) {
+            return 0;
+        }
     } // completely outside
     return 1;
 }

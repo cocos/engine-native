@@ -3,8 +3,8 @@
 
 namespace cc {
 namespace pipeline {
-struct SubModelView;
-struct PassView;
+class SubModelView;
+class PassView;
 struct RenderObject;
 
 class CC_DLL ShadowMapBatchedQueue : public Object {
@@ -18,8 +18,8 @@ public:
     void recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer);
 
 private:
-    vector<SubModelView *> _subModels;
-    vector<PassView *> _passes;
+    vector<const SubModelView *> _subModels;
+    vector<const PassView *> _passes;
     vector<gfx::Shader *> _shaders;
     gfx::Buffer *_buffer = nullptr;
     uint _phaseID = 0;

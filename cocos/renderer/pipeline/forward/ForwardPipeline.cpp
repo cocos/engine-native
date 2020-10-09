@@ -126,14 +126,14 @@ void ForwardPipeline::render(const vector<RenderView *> &views) {
 
 void ForwardPipeline::updateUBOs(RenderView *view) {
     updateUBO(view);
-    const auto scene = GET_SCENE(view->getCamera()->getSceneID());
+    const auto scene = view->getCamera()->getScene();
     const Light *mainLight = nullptr;
-    if (scene->mainLightID) mainLight = GET_LIGHT(scene->mainLightID);
+    if (scene->useMainLight()) mainLight = scene->getMainLight();
     const auto shadowInfo = _shadows;
 
-    if (mainLight && static_cast<ShadowType>(shadowInfo->getShadowType()) == ShadowType::SHADOWMAP) {
-        const auto node = GET_NODE(mainLight->getNodeID());
-        const auto sphere = GET_SPHERE(shadowInfo->getSphereID());
+    if (mainLight && shadowInfo->getShadowType() == ShadowType::SHADOWMAP) {
+        const auto node = mainLight->getNode();
+        const auto sphere = shadowInfo->getSphere();
         const auto &shadowCameraView = getShadowWorldMatrix(shadowInfo, node->getWorldRotation(), mainLight->getDirection());
         const auto &matShadowView = shadowCameraView.getInversed();
 
@@ -171,10 +171,10 @@ void ForwardPipeline::updateUBO(RenderView *view) {
 
     const auto root = GET_ROOT();
     const auto camera = view->getCamera();
-    const auto scene = GET_SCENE(camera->getSceneID());
+    const auto scene = camera->getScene();
 
     const Light *mainLight = nullptr;
-    if (scene->mainLightID) mainLight = GET_LIGHT(scene->mainLightID);
+    if (scene->useMainLight()) mainLight = scene->getMainLight();
 
     const auto ambient = _ambient;
     const auto fog = _fog;
@@ -204,7 +204,7 @@ void ForwardPipeline::updateUBO(RenderView *view) {
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 3] = 1.0f / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1];
 
     memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_OFFSET, camera->getMatView().m, sizeof(cc::Mat4));
-    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_INV_OFFSET, GET_NODE(camera->getNodeID())->getWorldMatrix().m, sizeof(cc::Mat4));
+    memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_INV_OFFSET, camera->getNode()->getWorldMatrix().m, sizeof(cc::Mat4));
     memcpy(uboGlobalView.data() + UBOGlobal::MAT_PROJ_OFFSET, camera->getMatProj().m, sizeof(cc::Mat4));
     memcpy(uboGlobalView.data() + UBOGlobal::MAT_PROJ_INV_OFFSET, camera->getMatProjInv().m, sizeof(cc::Mat4));
     memcpy(uboGlobalView.data() + UBOGlobal::MAT_VIEW_PROJ_OFFSET, camera->getMatViewProj().m, sizeof(cc::Mat4));
@@ -212,7 +212,7 @@ void ForwardPipeline::updateUBO(RenderView *view) {
     TO_VEC3(uboGlobalView, camera->getPosition(), UBOGlobal::CAMERA_POS_OFFSET);
 
     auto projectionSignY = _device->getScreenSpaceSignY();
-    if (view->getWindow()->hasOffScreenAttachments) {
+    if (view->getWindow()->hasOffScreenAttachments()) {
         projectionSignY *= _device->getUVSpaceSignY(); // need flipping if drawing on render targets
     }
     uboGlobalView[UBOGlobal::CAMERA_POS_OFFSET + 3] = projectionSignY;

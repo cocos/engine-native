@@ -57,11 +57,11 @@ void UIStage::render(RenderView *view) {
     _renderQueues[0]->clear();
     const auto &renderObjects = pipeline->getRenderObjects();
     for (const auto &ro : renderObjects) {
-        uint32_t *subModels = GET_SUBMODEL_ARRAY(ro.model->subModelsID);
+        const auto subModels = ro.model->getSubModels();
         uint32_t subModelCount = subModels[0];
         for (uint32_t i = 1; i <= subModelCount; i++) {
-            const auto subModel = GET_SUBMODEL(subModels[i]);
-            for (uint j = 0; j < subModel->passCount; j++) {
+            const auto subModel = ro.model->getSubModelView(subModels[i]);
+            for (uint j = 0; j < subModel->getPassCount(); j++) {
                 _renderQueues[0]->insertRenderPass(ro, i, j);
             }
         }
@@ -76,7 +76,7 @@ void UIStage::render(RenderView *view) {
 
     auto cmdBuff = pipeline->getCommandBuffers()[0];
 
-    auto framebuffer = GET_FRAMEBUFFER(view->getWindow()->framebufferID);
+    auto framebuffer = view->getWindow()->getFramebuffer();
 
     auto renderPass = framebuffer->getColorTextures().size() && framebuffer->getColorTextures()[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlags>(camera->getClearFlag()));
 

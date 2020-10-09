@@ -8,11 +8,11 @@ namespace pipeline {
 
 class RenderStage;
 class RenderFlow;
-struct SubModelView;
+class SubModelView;
 class Light;
-struct ModelView;
-struct AABB;
-struct Frustum;
+class ModelView;
+class AABB;
+class Frustum;
 
 // The actual uniform vectors used is JointUniformCapacity * 3.
 // We think this is a reasonable default capacity considering MAX_VERTEX_UNIFORM_VECTORS in WebGL spec is just 128.
@@ -23,7 +23,7 @@ struct Frustum;
 
 struct CC_DLL RenderObject {
     float depth = 0;
-    ModelView *model = nullptr;
+    const ModelView *model = nullptr;
 };
 typedef vector<struct RenderObject> RenderObjectList;
 
@@ -37,7 +37,7 @@ struct CC_DLL RenderPass {
     float depth = 0;
     uint shaderID = 0;
     uint passIndex = 0;
-    SubModelView *subModel = nullptr;
+    const SubModelView *subModel = nullptr;
 };
 typedef vector<RenderPass> RenderPassList;
 
@@ -349,11 +349,6 @@ enum class LayerList : uint {
 };
 
 bool aabb_frustum(const AABB *, const Frustum *);
-
-enum class CC_DLL BatchingSchemes {
-    INSTANCING = 1,
-    VB_MERGING = 2,
-};
 
 enum class CC_DLL SetIndex : uint8_t {
     GLOBAL,

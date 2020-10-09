@@ -25,8 +25,7 @@ RenderStageInfo ShadowStage::_initInfo = {
     "ShadowStage",
     static_cast<uint>(ForwardStagePriority::FORWARD),
     static_cast<uint>(RenderFlowTag::SCENE),
-    {}
-};
+    {}};
 const RenderStageInfo &ShadowStage::getInitializeInfo() { return ShadowStage::_initInfo; }
 
 bool ShadowStage::initialize(const RenderStageInfo &info) {
@@ -44,11 +43,11 @@ void ShadowStage::render(RenderView *view) {
 
     const auto shadowObjects = pipeline->getShadowObjects();
     for (const auto &shadowObject : shadowObjects) {
-        const uint32_t *subModels = GET_SUBMODEL_ARRAY(shadowObject.model->subModelsID);
+        const auto subModels = shadowObject.model->getSubModels();
         uint32_t subModelCount = subModels[0];
         for (uint32_t m = 1; m <= subModelCount; m++) {
-            const auto subModel = GET_SUBMODEL(subModels[m]);
-            for (uint32_t p = 0; p < subModel->passCount; p++) {
+            const auto subModel = shadowObject.model->getSubModelView(subModels[m]);
+            for (uint32_t p = 0; p < subModel->getPassCount(); p++) {
                 _additiveShadowQueue->add(shadowObject, m, p);
             }
         }

@@ -102,21 +102,21 @@ void ForwardStage::render(RenderView *view) {
     size_t k = 0;
     for (size_t i = 0; i < renderObjects.size(); ++i) {
         const auto &ro = renderObjects[i];
-        auto model = ro.model;
-        uint32_t *subModels = GET_SUBMODEL_ARRAY(model->subModelsID);
-        uint32_t subModelCount = subModels[0];
+        const auto model = ro.model;
+        const auto subModels = model->getSubModels();
+        const auto subModelCount = subModels[0];
         for (m = 1; m <= subModelCount; ++m) {
-            auto subModel = GET_SUBMODEL(subModels[m]);
-            for (p = 0; p < subModel->passCount; ++p) {
-                const PassView *pass = GET_PASS(*(&subModel->pass0ID + p));
+            auto subModel = model->getSubModelView(subModels[m]);
+            for (p = 0; p < subModel->getPassCount(); ++p) {
+                const PassView *pass = subModel->getPassView(p);
 
-                if (pass->phase != _phaseID) continue;
-                if (static_cast<BatchingSchemes>(pass->batchingScheme) == BatchingSchemes::INSTANCING) {
+                if (pass->getPhase() != _phaseID) continue;
+                if (pass->getBatchingScheme() == BatchingSchemes::INSTANCING) {
                     auto instancedBuffer = InstancedBuffer::get(pass);
                     //TODO coulsonwang
                     //                    instancedBuffer->merge(subModel, model->instancedAttributeBlock, p);
                     _instancedQueue->getQueue().emplace(instancedBuffer);
-                } else if (static_cast<BatchingSchemes>(pass->batchingScheme) == BatchingSchemes::VB_MERGING) {
+                } else if (pass->getBatchingScheme() == BatchingSchemes::VB_MERGING) {
                     auto batchedBuffer = BatchedBuffer::get(pass);
                     batchedBuffer->merge(subModel, p, &ro);
                     _batchedQueue->getQueue().emplace(batchedBuffer);
@@ -158,7 +158,7 @@ void ForwardStage::render(RenderView *view) {
 
     _clearColors[0].w = camera->getClearColor().w;
 
-    auto framebuffer = GET_FRAMEBUFFER(view->getWindow()->framebufferID);
+    auto framebuffer = view->getWindow()->getFramebuffer();
     const auto &colorTextures = framebuffer->getColorTextures();
 
     auto renderPass = colorTextures.size() ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->getClearFlag()));

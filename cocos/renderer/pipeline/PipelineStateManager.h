@@ -10,7 +10,7 @@ class RenderPass;
 }; // namespace gfx
 
 namespace pipeline {
-struct PassView;
+class PassView;
 
 class CC_DLL PipelineStateManager {
 public:

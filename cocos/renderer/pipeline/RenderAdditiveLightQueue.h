@@ -4,10 +4,10 @@
 
 namespace cc {
 namespace pipeline {
-struct SubModelView;
+class SubModelView;
 class Light;
 struct RenderObject;
-struct PassView;
+class PassView;
 class RenderPipeline;
 class RenderView;
 class DefineMap;
