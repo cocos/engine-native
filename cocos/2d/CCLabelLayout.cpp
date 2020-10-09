@@ -48,6 +48,8 @@ THE SOFTWARE.
 
 #if CC_ENABLE_TTF_LABEL_RENDERER
 
+#define INIT_VERTEX_SIZE 32
+
 namespace {
     const std::string textureKey = "texture";
     const std::string shadowColor = "shadowColor";
@@ -179,7 +181,7 @@ namespace cocos2d {
     TextRenderGroupItem::TextRenderGroupItem(renderer::Texture* tex)
     {
         _texture = tex;
-        _buffer = new middleware::MeshBuffer(VF_XYUVC, sizeof(uint16_t) * 6 * 16, 16 * 4);
+        _buffer = new middleware::MeshBuffer(VF_XYUVC, sizeof(uint16_t) * 6 * INIT_VERTEX_SIZE, INIT_VERTEX_SIZE * 4);
     }
     TextRenderGroupItem::~TextRenderGroupItem()
     {
