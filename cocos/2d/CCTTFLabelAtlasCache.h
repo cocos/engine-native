@@ -41,10 +41,10 @@ namespace cocos2d {
     struct LabelLayoutInfo;
 
     // font atlas of specific size font
-    class TTFLabelAtals {
+    class TTFLabelAtlas {
     public:
         
-        TTFLabelAtals(const std::string &, float, LabelLayoutInfo *info);
+        TTFLabelAtlas(const std::string &, float, LabelLayoutInfo *info);
 
         
         inline FontAtlas * getFontAtlas() const { return _fontAtlas.get(); }
@@ -73,9 +73,9 @@ namespace cocos2d {
 
         void reset();
 
-        std::shared_ptr<TTFLabelAtals> load(const std::string &font, float fontSize, LabelLayoutInfo* info);
+        std::shared_ptr<TTFLabelAtlas> load(const std::string &font, float fontSize, LabelLayoutInfo* info);
 
-        void unload(TTFLabelAtals *);
+        void unload(TTFLabelAtlas *);
 
     protected:
 
@@ -84,7 +84,7 @@ namespace cocos2d {
         TTFLabelAtlasCache() {}
     private:
 #if CC_TTF_LABELATLAS_ENABLE_GC
-        std::unordered_map< std::string, std::weak_ptr< TTFLabelAtals>> _cache;
+        std::unordered_map< std::string, std::weak_ptr< TTFLabelAtlas>> _cache;
 #else
         std::unordered_map< std::string, std::shared_ptr< TTFLabelAtals>> _cache;
 #endif

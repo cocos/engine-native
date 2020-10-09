@@ -151,7 +151,7 @@ namespace cocos2d {
         //weak reference
         LabelLayoutInfo *_layoutInfo = nullptr;
 
-        std::shared_ptr<TTFLabelAtals> _fontAtlas;
+        std::shared_ptr<TTFLabelAtlas> _fontAtlas;
 
         bool        _enableKerning = true;
         bool        _inited = false;

@@ -96,7 +96,10 @@ namespace cocos2d {
         std::string fontPath = getFontPath();
         if (!_effect || text.empty() || fontPath.empty()) return;
 
-        genStringLayout();
+        if (!_stringLayout) {
+            genStringLayout();
+            _cfg->updateFlags &= ~(UPDATE_FONT | UPDATE_EFFECT);
+        }
 
         renderIfChange();
 
