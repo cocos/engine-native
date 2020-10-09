@@ -72,11 +72,12 @@ namespace cocos2d {
         Data fontData;
 
         ~FontFaceData() {
-            if(face) FT_Done_Face(face);
+            if(face) {
+                FT_Done_Face(face);
+                face = {0};
+            }
         }
     };
-
-    std::unordered_map<std::string, std::shared_ptr<FontFaceData>> _faceCache;
 
     class FontFreeTypeLibrary {
     public:
@@ -86,12 +87,18 @@ namespace cocos2d {
         }
         ~FontFreeTypeLibrary()
         {
+            _faceCache.clear();
             FT_Done_FreeType(_library);
         }
 
         FT_Library * get() { return &_library; }
 
+        std::unordered_map<std::string, std::shared_ptr<FontFaceData>> &getFaceCache() {
+            return _faceCache;
+        }
+        
     private:
+        std::unordered_map<std::string, std::shared_ptr<FontFaceData>> _faceCache;
         FT_Library _library;
     };
 
@@ -257,8 +264,8 @@ namespace cocos2d {
     bool FontFreeType::loadFont()
     {
         std::shared_ptr<FontFaceData> faceData;
-        auto itr = _faceCache.find(_fontName);
-        if (itr == _faceCache.end()) {
+        auto itr = _sFTLibrary->getFaceCache().find(_fontName);
+        if (itr == _sFTLibrary->getFaceCache().end()) {
             faceData = std::make_shared<FontFaceData>();
             faceData->fontData = FileUtils::getInstance()->getDataFromFile(_fontName);
             if (FT_New_Memory_Face(getFTLibrary(), faceData->fontData.getBytes(), faceData->fontData.getSize(), 0, &(faceData->face)))
@@ -266,7 +273,7 @@ namespace cocos2d {
                 cocos2d::log("[error] failed to parse font %s", _fontName.c_str());
                 return false;
             }
-            _faceCache[_fontName] = faceData;
+            _sFTLibrary->getFaceCache()[_fontName] = faceData;
         } else {
             faceData = itr->second;
         }
