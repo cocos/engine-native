@@ -334,7 +334,6 @@ void Technique::Parameter::setTexture(renderer::Texture *texture)
         return;
     
     freeValue();
-    _value = malloc(sizeof(void*));
     _value = texture;
     RENDERER_SAFE_RETAIN(texture);
     
