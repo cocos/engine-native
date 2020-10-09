@@ -66,6 +66,18 @@ namespace {
 
 namespace cocos2d {
 
+
+    struct FontFaceData {
+        FT_Face face = { 0 };
+        Data fontData;
+
+        ~FontFaceData() {
+            if(face) FT_Done_Face(face);
+        }
+    };
+
+    std::unordered_map<std::string, std::shared_ptr<FontFaceData>> _faceCache;
+
     class FontFreeTypeLibrary {
     public:
         FontFreeTypeLibrary() {
@@ -84,7 +96,7 @@ namespace cocos2d {
     };
 
     namespace {
-        std::weak_ptr<FontFreeTypeLibrary> _sFTLibrary;
+        std::shared_ptr<FontFreeTypeLibrary> _sFTLibrary;
 
         PixelMode FTtoPixelModel(FT_Pixel_Mode mode)
         {
@@ -214,10 +226,9 @@ namespace cocos2d {
 
     FontFreeType::FontFreeType(const std::string& fontName, float fontSize, LabelLayoutInfo *info)
     {
-        _ftLibrary = _sFTLibrary.lock();
-        if (!_ftLibrary)
+        if (!_sFTLibrary)
         {
-            _ftLibrary = std::make_shared< FontFreeTypeLibrary>();
+            _sFTLibrary = std::make_shared< FontFreeTypeLibrary>();
         }
 
         _fontName = fontName;
@@ -235,30 +246,40 @@ namespace cocos2d {
     {
         //CCLOG("~FontFreeType");
         if (_stroker) FT_Stroker_Done(_stroker);
-        if (_face) FT_Done_Face(_face);
+        //if (_face) FT_Done_Face(_face);
     }
 
     FT_Library& FontFreeType::getFTLibrary()
     {
-        return *_ftLibrary->get();
+        return *(_sFTLibrary->get());
     }
 
     bool FontFreeType::loadFont()
     {
-        _fontData = FileUtils::getInstance()->getDataFromFile(_fontName);
-
-        if (FT_New_Memory_Face(getFTLibrary(), _fontData.getBytes(), _fontData.getSize(), 0, &_face))
-        {
-            cocos2d::log("[error] failed to parse font %s", _fontName.c_str());
-            return false;
+        std::shared_ptr<FontFaceData> faceData;
+        auto itr = _faceCache.find(_fontName);
+        if (itr == _faceCache.end()) {
+            faceData = std::make_shared<FontFaceData>();
+            faceData->fontData = FileUtils::getInstance()->getDataFromFile(_fontName);
+            if (FT_New_Memory_Face(getFTLibrary(), faceData->fontData.getBytes(), faceData->fontData.getSize(), 0, &(faceData->face)))
+            {
+                cocos2d::log("[error] failed to parse font %s", _fontName.c_str());
+                return false;
+            }
+            _faceCache[_fontName] = faceData;
+        } else {
+            faceData = itr->second;
         }
 
-        if (FT_Select_Charmap(_face, _encoding))
+        _fontFaceData = faceData;
+    
+
+        if (FT_Select_Charmap(faceData->face, _encoding))
         {
             int foundIndex = -1;
-            for (int charmapIndex = 0; charmapIndex < _face->num_charmaps; charmapIndex++)
+            for (int charmapIndex = 0; charmapIndex < faceData->face->num_charmaps; charmapIndex++)
             {
-                if (_face->charmaps[charmapIndex]->encoding != FT_ENCODING_NONE)
+                if (faceData->face->charmaps[charmapIndex]->encoding != FT_ENCODING_NONE)
                 {
                     foundIndex = charmapIndex;
                     break;
@@ -268,8 +289,8 @@ namespace cocos2d {
             {
                 return false;
             }
-            _encoding = _face->charmaps[foundIndex]->encoding;
-            if (FT_Select_Charmap(_face, _encoding))
+            _encoding = faceData->face->charmaps[foundIndex]->encoding;
+            if (FT_Select_Charmap(faceData->face, _encoding))
             {
                 return false;
             }
@@ -277,26 +298,26 @@ namespace cocos2d {
 
         int fontSizeInPoints = (int)(64.0f * _fontSize);
 
-        if (FT_Set_Char_Size(_face, fontSizeInPoints, fontSizeInPoints, _dpi, _dpi))
+        if (FT_Set_Char_Size(faceData->face, fontSizeInPoints, fontSizeInPoints, _dpi, _dpi))
         {
             return false;
         }
 
-        _lineHeight = SCALE_BY_DPI((_face->size->metrics.ascender - _face->size->metrics.descender) >> 6);
+        _lineHeight = SCALE_BY_DPI((faceData->face->size->metrics.ascender - faceData->face->size->metrics.descender) >> 6);
 
         return true;
     }
 
     int FontFreeType::getHorizontalKerningForChars(uint64_t a, uint64_t b) const
     {
-        auto idx1 = FT_Get_Char_Index(_face, static_cast<FT_ULong>(a));
+        auto idx1 = FT_Get_Char_Index(_fontFaceData->face, static_cast<FT_ULong>(a));
         if (!idx1)
             return 0;
-        auto idx2 = FT_Get_Char_Index(_face, static_cast<FT_ULong>(b));
+        auto idx2 = FT_Get_Char_Index(_fontFaceData->face, static_cast<FT_ULong>(b));
         if (!idx2)
             return 0;
         FT_Vector kerning;
-        if (FT_Get_Kerning(_face, idx1, idx2, FT_KERNING_DEFAULT, &kerning))
+        if (FT_Get_Kerning(_fontFaceData->face, idx1, idx2, FT_KERNING_DEFAULT, &kerning))
             return 0;
 
         return SCALE_BY_DPI(kerning.x >> 6);
@@ -304,8 +325,8 @@ namespace cocos2d {
 
     std::unique_ptr<std::vector<int>> FontFreeType::getHorizontalKerningForUTF32Text(const std::u32string& text) const
     {
-        if (!_face) return nullptr;
-        if (FT_HAS_KERNING(_face) == 0) return nullptr;
+        if (!_fontFaceData->face) return nullptr;
+        if (FT_HAS_KERNING(_fontFaceData->face) == 0) return nullptr;
 
         const auto letterNum = text.length();
         std::vector<int>* sizes = new std::vector<int>(letterNum, 0);
@@ -320,13 +341,13 @@ namespace cocos2d {
 
     int FontFreeType::getFontAscender() const
     {
-        return SCALE_BY_DPI(_face->size->metrics.ascender >> 6);
+        return SCALE_BY_DPI(_fontFaceData->face->size->metrics.ascender >> 6);
     }
 
     const char* FontFreeType::getFontFamily() const
     {
-        if (!_face) return nullptr;
-        return _face->family_name;
+        if (!_fontFaceData->face) return nullptr;
+        return _fontFaceData->face->family_name;
     }
 
     std::shared_ptr<GlyphBitmap> FontFreeType::getGlyphBitmap(unsigned long ch, bool hasOutline)
@@ -337,14 +358,14 @@ namespace cocos2d {
 
     std::shared_ptr<GlyphBitmap> FontFreeType::getNormalGlyphBitmap(unsigned long ch)
     {
-        if (!_face) return nullptr;
+        if (!_fontFaceData->face) return nullptr;
         const auto load_char_flag = FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT;
-        if (FT_Load_Char(_face, static_cast<FT_ULong>(ch), load_char_flag))
+        if (FT_Load_Char(_fontFaceData->face, static_cast<FT_ULong>(ch), load_char_flag))
         {
             return nullptr;
         }
 
-        auto& metrics = _face->glyph->metrics;
+        auto& metrics = _fontFaceData->face->glyph->metrics;
         int x = SCALE_BY_DPI(metrics.horiBearingX >> 6);
         int y = SCALE_BY_DPI(-(metrics.horiBearingY >> 6));
         int w = SCALE_BY_DPI(metrics.width >> 6);
@@ -353,7 +374,7 @@ namespace cocos2d {
         int adv = SCALE_BY_DPI(metrics.horiAdvance >> 6);
 
 
-        auto& bitmap = _face->glyph->bitmap;
+        auto& bitmap = _fontFaceData->face->glyph->bitmap;
         int bmWidth = bitmap.width;
         int bmHeight = bitmap.rows;
         PixelMode mode = FTtoPixelModel(static_cast<FT_Pixel_Mode>(bitmap.pixel_mode));
@@ -365,14 +386,14 @@ namespace cocos2d {
 
     std::shared_ptr<GlyphBitmap> FontFreeType::getSDFGlyphBitmap(unsigned long ch)
     {
-        if (!_face) return nullptr;
+        if (!_fontFaceData->face) return nullptr;
         const auto load_char_flag = FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT;
-        if (FT_Load_Char(_face, static_cast<FT_ULong>(ch), load_char_flag))
+        if (FT_Load_Char(_fontFaceData->face, static_cast<FT_ULong>(ch), load_char_flag))
         {
             return nullptr;
         }
 
-        auto& metrics = _face->glyph->metrics;
+        auto& metrics = _fontFaceData->face->glyph->metrics;
         int x = SCALE_BY_DPI(metrics.horiBearingX >> 6);
         int y = SCALE_BY_DPI(-(metrics.horiBearingY >> 6));
         int w = SCALE_BY_DPI(metrics.width >> 6);
@@ -380,7 +401,7 @@ namespace cocos2d {
 
         int adv = SCALE_BY_DPI(metrics.horiAdvance >> 6);
 
-        auto& bitmap = _face->glyph->bitmap;
+        auto& bitmap = _fontFaceData->face->glyph->bitmap;
         int bmWidth = bitmap.width;
         int bmHeight = bitmap.rows;
         PixelMode mode = FTtoPixelModel(static_cast<FT_Pixel_Mode>(bitmap.pixel_mode));

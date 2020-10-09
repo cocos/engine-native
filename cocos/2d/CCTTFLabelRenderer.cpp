@@ -88,7 +88,6 @@ namespace cocos2d {
             _stringLayout.reset(new LabelLayout());
             _stringLayout->init(fontPath, text, _cfg->fontSize, _cfg->fontSizeRetina, _layoutInfo);
         }
-
     }
 
     void LabelRenderer::render()
@@ -97,10 +96,7 @@ namespace cocos2d {
         std::string fontPath = getFontPath();
         if (!_effect || text.empty() || fontPath.empty()) return;
 
-        if (!_stringLayout) {
-            genStringLayout();
-            _cfg->updateFlags &= (~(UPDATE_FONT | UPDATE_EFFECT));
-        }
+        genStringLayout();
 
         renderIfChange();
 

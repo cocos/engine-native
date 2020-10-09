@@ -47,6 +47,8 @@ namespace cocos2d {
 
     struct LabelLayoutInfo;
 
+    struct FontFaceData;
+
     class FontFreeType
     {
     public:
@@ -74,17 +76,15 @@ namespace cocos2d {
         std::shared_ptr<GlyphBitmap> getNormalGlyphBitmap(unsigned long ch);
         std::shared_ptr<GlyphBitmap> getSDFGlyphBitmap(unsigned long ch);
 
-        std::shared_ptr<FontFreeTypeLibrary> _ftLibrary;
         //weak reference
         LabelLayoutInfo *_info = nullptr;
         float _fontSize = 0.0f;
         float _lineHeight = 0.0f;
         std::string _fontName;
 
-        Data _fontData;
+        std::shared_ptr<FontFaceData> _fontFaceData;
 
         FT_Stroker _stroker = { 0 };
-        FT_Face    _face = { 0 };
         FT_Encoding _encoding = FT_ENCODING_UNICODE;
 
         int _dpi = 72;

@@ -65,7 +65,7 @@ namespace cocos2d {
     TTFLabelAtals::TTFLabelAtals(const std::string &fontPath, float fontSize, LabelLayoutInfo *info)
         :_fontName(fontPath), _fontSize(fontSize), _info(info)
     {
-        //init();
+        init();
     }
 
 
