@@ -70,7 +70,7 @@ static bool ${struct_constructor_name}(se::State& s)
         return true;
     }
     #end if
-    else if(argc == ${len($public_fields)})
+    else
     {
         ${namespaced_class_name}* cobj = JSB_ALLOC(${namespaced_class_name});
         #set arg_idx = 0
