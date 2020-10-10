@@ -20,8 +20,8 @@ namespace gfx {
 CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device)
 : CommandBuffer(device),
   _mtlDevice((CCMTLDevice *)device),
-  _mtlCommandQueue(id<MTLCommandQueue>(_mtlDevice->getMTLCommandQueue())),
-  _mtkView((MTKView *)(_mtlDevice->getMTKView())),
+  _mtlCommandQueue(id<MTLCommandQueue>(((CCMTLDevice *)device)->getMTLCommandQueue())),
+  _mtkView((MTKView *)(((CCMTLDevice *)device)->getMTKView())),
   _frameBoundarySemaphore(dispatch_semaphore_create(MAX_INFLIGHT_BUFFER)) {
     uint setCount = device->bindingMappingInfo().bufferOffsets.size();
     _GPUDescriptorSets.resize(setCount);
