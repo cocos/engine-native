@@ -86,9 +86,12 @@ void IndexBuffer::update(uint32_t offset, const void* data, size_t dataByteLengt
         return;
     }
     
-    if (dataByteLength == 0) return;
-
-    if (data && dataByteLength + offset > _bytes)
+    if (data == nullptr || dataByteLength == 0)
+    {
+        return;
+    }
+    
+    if (dataByteLength + offset > _bytes)
     {
         if (offset) {
             RENDERER_LOGE("Failed to update index buffer data, bytes exceed.");

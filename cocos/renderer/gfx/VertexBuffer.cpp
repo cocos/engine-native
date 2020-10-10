@@ -76,13 +76,18 @@ void VertexBuffer::setFormat(VertexFormat* format)
 
 void VertexBuffer::update(uint32_t offset, const void* data, size_t dataByteLength)
 {
+    if(data == nullptr || dataByteLength == 0)
+    {
+        return;
+    }
+
     if (_glID == 0)
     {
         RENDERER_LOGE("The buffer is destroyed");
         return;
     }
 
-    if (data && dataByteLength + offset > _bytes)
+    if (dataByteLength + offset > _bytes)
     {
         if (offset) {
             RENDERER_LOGE("Failed to update index buffer data, bytes exceed.");
