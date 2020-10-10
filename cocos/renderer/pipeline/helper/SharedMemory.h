@@ -113,6 +113,8 @@ public:
     CC_INLINE const cc::Vec3 &getCenter() const { return _center; }
     CC_INLINE const cc::Vec3 &getHalfExtents() const { return _halfExtents; }
 
+    void getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const;
+
     const static se::PoolType type;
 };
 
@@ -351,6 +353,11 @@ private:
 public:
     CC_INLINE float getRadius() const { return _radius; }
     CC_INLINE const cc::Vec3 &getCenter() const { return _center; }
+    CC_INLINE void setCenter(const cc::Vec3 &center) { _center = center; }
+    CC_INLINE void setRadius(float radius) { _radius = radius; }
+
+    void mergeAABB(const AABB *aabb);
+    void mergePoint(const Vec3 &point);
 
     const static se::PoolType type;
 };
@@ -379,6 +386,7 @@ private:
     cc::Vec2 _size;
     cc::Vec3 _normal;
     cc::Vec4 _color;
+    cc::Mat4 _matLight;
 
 public:
     CC_INLINE bool isEnabled() const { return _enabled; }
@@ -393,10 +401,12 @@ public:
     CC_INLINE uint getPCFType() const { return static_cast<uint>(_pcfType); }
     CC_INLINE float getOrthoSize() const { return _orthoSize; }
     CC_INLINE float getBias() const { return _bias; }
-    CC_INLINE const Sphere *getSphere() const { return GET_SPHERE(_sphereID); }
+    CC_INLINE Sphere *getSphere() const { return GET_SPHERE(_sphereID); }
     CC_INLINE const cc::Vec2 &getSize() const { return _size; }
     CC_INLINE const cc::Vec3 &getNormal() const { return _normal; }
     CC_INLINE const cc::Vec4 &getColor() const { return _color; }
+    CC_INLINE cc::Mat4 &getMatLight() { return _matLight; }
+    CC_INLINE void setDirty(bool dirty) { _dirty = dirty; }
 
     const static se::PoolType type;
 };

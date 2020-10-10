@@ -34,13 +34,13 @@ cc::Mat4 getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, 
     return std::move(Mat4::fromRT(rotation, translation));
 }
 
-void updateSphereLight(const Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
+void updateSphereLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
     const auto node = light->getNode();
     if (!node->hasFlagsChanged() && !shadows->isDirty()) {
         return;
     }
 
-    //    shadows.dirty = false; //TODO coulsonwang
+    shadows->setDirty(false);
     const auto position = node->getWorldPosition();
     const auto &normal = shadows->getNormal();
     const auto distance = shadows->getDistance() + 0.001f; // avoid z-fighting
@@ -51,35 +51,34 @@ void updateSphereLight(const Shadows *shadows, const Light *light, gfx::Descript
     const auto nx = normal.x;
     const auto ny = normal.y;
     const auto nz = normal.z;
-    //    const auto m = shadows.matLight; //TODO coulsonwang
-    float matLight[16];
-    matLight[0] = NdL - distance - lx * nx;
-    matLight[1] = -ly * nx;
-    matLight[2] = -lz * nx;
-    matLight[3] = -nx;
-    matLight[4] = -lx * ny;
-    matLight[5] = NdL - distance - ly * ny;
-    matLight[6] = -lz * ny;
-    matLight[7] = -ny;
-    matLight[8] = -lx * nz;
-    matLight[9] = -ly * nz;
-    matLight[10] = NdL - distance - lz * nz;
-    matLight[11] = -nz;
-    matLight[12] = lx * distance;
-    matLight[13] = ly * distance;
-    matLight[14] = lz * distance;
-    matLight[15] = NdL;
+    auto &matLight = shadows->getMatLight();
+    matLight.m[0] = NdL - distance - lx * nx;
+    matLight.m[1] = -ly * nx;
+    matLight.m[2] = -lz * nx;
+    matLight.m[3] = -nx;
+    matLight.m[4] = -lx * ny;
+    matLight.m[5] = NdL - distance - ly * ny;
+    matLight.m[6] = -lz * ny;
+    matLight.m[7] = -ny;
+    matLight.m[8] = -lx * nz;
+    matLight.m[9] = -ly * nz;
+    matLight.m[10] = NdL - distance - lz * nz;
+    matLight.m[11] = -nz;
+    matLight.m[12] = lx * distance;
+    matLight.m[13] = ly * distance;
+    matLight.m[14] = lz * distance;
+    matLight.m[15] = NdL;
 
-    descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->update(matLight, UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, sizeof(matLight));
+    descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->update(matLight.m, UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, sizeof(matLight));
 }
 
-void updateDirLight(const Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
+void updateDirLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
     const auto node = light->getNode();
     if (!node->hasFlagsChanged() && !shadows->isDirty()) {
         return;
     }
 
-    //    shadows.dirty = false; //todo coulsonwang
+    shadows->setDirty(false);
     const auto rotation = node->getWorldRotation();
     Quaternion _qt(rotation.x, rotation.y, rotation.z, rotation.w);
     Vec3 forward(0, 0, -1.0f);
@@ -94,32 +93,35 @@ void updateDirLight(const Shadows *shadows, const Light *light, gfx::DescriptorS
     const auto nx = normal.x;
     const auto ny = normal.y;
     const auto nz = normal.z;
-    float matLight[16];
-    matLight[0] = 1 - nx * lx;
-    matLight[1] = -nx * ly;
-    matLight[2] = -nx * lz;
-    matLight[3] = 0;
-    matLight[4] = -ny * lx;
-    matLight[5] = 1 - ny * ly;
-    matLight[6] = -ny * lz;
-    matLight[7] = 0;
-    matLight[8] = -nz * lx;
-    matLight[9] = -nz * ly;
-    matLight[10] = 1 - nz * lz;
-    matLight[11] = 0;
-    matLight[12] = lx * distance;
-    matLight[13] = ly * distance;
-    matLight[14] = lz * distance;
-    matLight[15] = 1;
+    auto &matLight = shadows->getMatLight();
+    matLight.m[0] = 1 - nx * lx;
+    matLight.m[1] = -nx * ly;
+    matLight.m[2] = -nx * lz;
+    matLight.m[3] = 0;
+    matLight.m[4] = -ny * lx;
+    matLight.m[5] = 1 - ny * ly;
+    matLight.m[6] = -ny * lz;
+    matLight.m[7] = 0;
+    matLight.m[8] = -nz * lx;
+    matLight.m[9] = -nz * ly;
+    matLight.m[10] = 1 - nz * lz;
+    matLight.m[11] = 0;
+    matLight.m[12] = lx * distance;
+    matLight.m[13] = ly * distance;
+    matLight.m[14] = lz * distance;
+    matLight.m[15] = 1;
 
-    descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->update(matLight, UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, sizeof(matLight));
+    descriptorSet->getBuffer(UBOShadow::BLOCK.binding)->update(matLight.m, UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, sizeof(matLight));
 }
 
 void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
     const auto camera = view->getCamera();
-    const auto shadows = pipeline->getShadows();
+    auto shadows = pipeline->getShadows();
     const auto skybox = pipeline->getSkybox();
     const auto scene = camera->getScene();
+    auto sphere = shadows->getSphere();
+    sphere->setCenter(cc::Vec3::ZERO);
+    sphere->setRadius(0.01f);
 
     const Light *mainLight = nullptr;
     if (scene->useMainLight()) mainLight = scene->getMainLight();
@@ -161,7 +163,7 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
 
                     // shadow render Object
                     if (model->isCastShadow()) {
-                        //                        sphere.mergeAABB(shadowSphere, shadowSphere, model.worldBounds!); //TODO coulsonwang
+                        sphere->mergeAABB(model->getWroldBounds());
                         shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
 
