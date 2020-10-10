@@ -864,6 +864,8 @@ bool jsb_register_gfx_manual(se::Object* global)
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineFunction("update", _SE(js_gfx_VertexBuffer_update));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_format", nullptr, _SE(js_gfx_VertexBuffer_prop_setFormat));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_usage", _SE(js_gfx_VertexBuffer_prop_getUsage), _SE(js_gfx_VertexBuffer_prop_setUsage));
+    __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_bytes", _SE(js_gfx_VertexBuffer_prop_getBytes), nullptr);
+    __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_numVertices", _SE(js_gfx_VertexBuffer_prop_getNumVertices), _SE(js_gfx_VertexBuffer_prop_setNumVertices));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineFunction("self", _SE(js_gfx_VertexBuffer_self));
 
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineFunction("init", _SE(js_gfx_IndexBuffer_init));
@@ -871,7 +873,7 @@ bool jsb_register_gfx_manual(se::Object* global)
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_format", _SE(js_gfx_IndexBuffer_prop_getFormat), _SE(js_gfx_IndexBuffer_prop_setFormat));
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_usage", _SE(js_gfx_IndexBuffer_prop_getUsage), _SE(js_gfx_IndexBuffer_prop_setUsage));
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_bytesPerIndex", _SE(js_gfx_IndexBuffer_prop_getBytesPerIndex), _SE(js_gfx_IndexBuffer_prop_setBytesPerIndex));
-    __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_bytes", _SE(js_gfx_IndexBuffer_prop_getBytes), _SE(js_gfx_IndexBuffer_prop_setBytes));
+    __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_bytes", _SE(js_gfx_IndexBuffer_prop_getBytes), nullptr);
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineProperty("_numIndices", _SE(js_gfx_IndexBuffer_prop_getNumIndices), _SE(js_gfx_IndexBuffer_prop_setNumIndices));
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineFunction("self", _SE(js_gfx_IndexBuffer_self));
 
