@@ -428,26 +428,6 @@ static bool js_gfx_VertexBuffer_prop_getNumVertices(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_VertexBuffer_prop_getNumVertices)
 
-static bool js_gfx_VertexBuffer_prop_setBytes(se::State& s)
-{
-    cocos2d::renderer::VertexBuffer* cobj = (cocos2d::renderer::VertexBuffer*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_VertexBuffer_prop_setBytes : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        uint32_t count = 0;
-        ok = seval_to_uint32(args[0], &count);
-        SE_PRECONDITION2(ok, false, "Convert arg0 offset failed!");
-        cobj->setBytes(count);
-        return true;
-    }
-
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_PROP_SET(js_gfx_VertexBuffer_prop_setBytes)
-
 static bool js_gfx_VertexBuffer_prop_getBytes(se::State& s)
 {
     cocos2d::renderer::VertexBuffer* cobj = (cocos2d::renderer::VertexBuffer*)s.nativeThisObject();
@@ -728,26 +708,6 @@ static bool js_gfx_IndexBuffer_prop_getBytesPerIndex(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_IndexBuffer_prop_getBytesPerIndex)
 
-static bool js_gfx_IndexBuffer_prop_setBytes(se::State& s)
-{
-    cocos2d::renderer::IndexBuffer* cobj = (cocos2d::renderer::IndexBuffer*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_IndexBuffer_prop_setBytes : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        uint32_t count = 0;
-        ok = seval_to_uint32(args[0], &count);
-        SE_PRECONDITION2(ok, false, "Convert arg0 offset failed!");
-        cobj->setBytes(count);
-        return true;
-    }
-
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_PROP_SET(js_gfx_IndexBuffer_prop_setBytes)
-
 static bool js_gfx_IndexBuffer_prop_getBytes(se::State& s)
 {
     cocos2d::renderer::IndexBuffer* cobj = (cocos2d::renderer::IndexBuffer*)s.nativeThisObject();
@@ -904,8 +864,6 @@ bool jsb_register_gfx_manual(se::Object* global)
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineFunction("update", _SE(js_gfx_VertexBuffer_update));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_format", nullptr, _SE(js_gfx_VertexBuffer_prop_setFormat));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_usage", _SE(js_gfx_VertexBuffer_prop_getUsage), _SE(js_gfx_VertexBuffer_prop_setUsage));
-    __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_bytes", _SE(js_gfx_VertexBuffer_prop_getBytes), _SE(js_gfx_VertexBuffer_prop_setBytes));
-    __jsb_cocos2d_renderer_VertexBuffer_proto->defineProperty("_numVertices", _SE(js_gfx_VertexBuffer_prop_getNumVertices), _SE(js_gfx_VertexBuffer_prop_setNumVertices));
     __jsb_cocos2d_renderer_VertexBuffer_proto->defineFunction("self", _SE(js_gfx_VertexBuffer_self));
 
     __jsb_cocos2d_renderer_IndexBuffer_proto->defineFunction("init", _SE(js_gfx_IndexBuffer_init));

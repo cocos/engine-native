@@ -179,11 +179,9 @@ void MeshBuffer::switchBuffer(uint32_t vertexCount)
     {
         DeviceGraphics* device = _batcher->getFlow()->getDevice();
         _vb = VertexBuffer::create(device, _vertexFmt, Usage::DYNAMIC, nullptr, 0, 0);
-        _vb->setBytes(_vDataCount * VDATA_BYTE);
         _vbArr.pushBack(_vb);
         
         _ib = IndexBuffer::create(device, IndexFormat::UINT16, Usage::STATIC, nullptr, 0, 0);
-        _ib->setBytes(_iDataCount * IDATA_BYTE);
         _ibArr.pushBack(_ib);
     }
 }

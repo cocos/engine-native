@@ -117,10 +117,6 @@ public:
      * Gets byte size of the index buffer
      */
     inline uint32_t getBytes() const { return _bytes; }
-    /**
-     * Sets byte size of the index buffer
-     */
-    inline void setBytes(uint32_t bytes) { _bytes = bytes; }
 
     using FetchDataCallback = std::function<uint8_t*(size_t*)>;
     void setFetchDataCallback(const FetchDataCallback& cb) { _fetchDataCallback = cb; }
