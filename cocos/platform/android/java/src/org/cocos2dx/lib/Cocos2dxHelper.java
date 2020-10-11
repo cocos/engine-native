@@ -47,6 +47,7 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.os.Vibrator;
 import android.preference.PreferenceManager.OnActivityResultListener;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -184,19 +185,17 @@ public class Cocos2dxHelper {
 
             if (Build.VERSION.SDK_INT >= 17) {
                 AudioManager am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-                // use reflection to remove dependence of API 17 when compiling
 
-                // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-                final Class audioManagerClass = AudioManager.class;
-                Object[] parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_SAMPLE_RATE")};
-                final String strSampleRate = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
+                final String strSampleRate = am.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
+                final String strBufferSizeInFrames = am.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
 
-                // AudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
-                parameters = new Object[]{Cocos2dxReflectionHelper.<String>getConstantValue(audioManagerClass, "PROPERTY_OUTPUT_FRAMES_PER_BUFFER")};
-                final String strBufferSizeInFrames = Cocos2dxReflectionHelper.<String>invokeInstanceMethod(am, "getProperty", new Class[]{String.class}, parameters);
+                if (!TextUtils.isEmpty(strSampleRate)) {
+                    sampleRate = Integer.parseInt(strSampleRate);
+                }
 
-                sampleRate = Integer.parseInt(strSampleRate);
-                bufferSizeInFrames = Integer.parseInt(strBufferSizeInFrames);
+                if (!TextUtils.isEmpty(strBufferSizeInFrames)) {
+                    bufferSizeInFrames = Integer.parseInt(strBufferSizeInFrames);
+                }
 
                 Log.d(TAG, "sampleRate: " + sampleRate + ", framesPerBuffer: " + bufferSizeInFrames);
             } else {
