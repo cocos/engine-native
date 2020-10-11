@@ -367,6 +367,7 @@ enum class CanvasTextBaseline {
     [self saveContext];
 
     // text color
+    CGContextSetRGBStrokeColor(_context, _strokeStyle.r, _strokeStyle.g, _strokeStyle.b, _strokeStyle.a);
     CGContextSetRGBFillColor(_context, _fillStyle.r, _fillStyle.g, _fillStyle.b, _fillStyle.a);
     CGContextSetLineWidth(_context, _lineWidth);
     CGContextSetLineJoin(_context, kCGLineJoinRound);

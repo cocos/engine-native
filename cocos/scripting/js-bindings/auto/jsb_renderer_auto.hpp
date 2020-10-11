@@ -168,6 +168,7 @@ SE_DECLARE_FUNC(js_renderer_Light_getDirectionUniform);
 SE_DECLARE_FUNC(js_renderer_Light_getSpotExp);
 SE_DECLARE_FUNC(js_renderer_Light_setShadowDepthScale);
 SE_DECLARE_FUNC(js_renderer_Light_getViewPorjMatrix);
+SE_DECLARE_FUNC(js_renderer_Light_getSpotAngleUniform);
 SE_DECLARE_FUNC(js_renderer_Light_getType);
 SE_DECLARE_FUNC(js_renderer_Light_getColorUniform);
 SE_DECLARE_FUNC(js_renderer_Light_getIntensity);

@@ -216,6 +216,13 @@ bool JavaScriptJavaBridge::CallInfo::execute()
         case JavaScriptJavaBridge::ValueType::STRING:
         {
             m_retjstring = (jstring)m_env->CallStaticObjectMethod(m_classID, m_methodID);
+
+            if(m_env->ExceptionCheck()) {
+                m_env->ExceptionDescribe();
+                m_env->ExceptionClear();
+                m_retjstring = nullptr;
+            }
+
             if (m_retjstring)
             {
                 std::string strValue = cocos2d::StringUtils::getStringUTFCharsJNI(m_env, m_retjstring);

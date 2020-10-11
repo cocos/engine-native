@@ -131,6 +131,10 @@ public:
      *  @brief Gets the spot light angle.
      */
     inline float getSpotAngle() const { return _spotAngle; }
+    /**
+     *  @brief Gets the spot light angle uniform float value.
+     */
+    inline float getSpotAngleUniform() const { return _spotUniform[0]; };
     
     /**
      *  @brief Sets the light attenuation exponent.

@@ -120,6 +120,7 @@ public:
     static void dispatchKeyboardEvent(const struct KeyboardEvent& keyboardEvent);
     static void dispatchTickEvent(float dt);
     static void dispatchResizeEvent(int width, int height);
+    static void dispatchOrientationChangeEvent(int rotation);
     static void dispatchOnPauseEvent();
     static void dispatchOnResumeEvent();
 

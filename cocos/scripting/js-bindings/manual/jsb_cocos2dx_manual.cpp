@@ -589,6 +589,37 @@ static bool register_filetuils_ext(se::Object* obj) {
     return true;
 }
 
+static bool js_se_setExceptionCallback(se::State &s) {
+    
+    auto &args = s.args();
+    if (args.size() != 1 || !args[0].isObject() || !args[0].toObject()->isFunction()) {
+        SE_REPORT_ERROR("expect 1 arguments of Function type, %d provided", (int)args.size());
+        return false;
+    }
+
+    se::Object *objFunc = args[0].toObject();
+    // se::Value::reset will invoke decRef() while destroying s.args()
+    // increase ref here
+    objFunc->incRef(); 
+    if (s.thisObject()) {
+        s.thisObject()->attachObject(objFunc); // prevent GC
+    } else {
+        //prevent GC in C++ & JS
+        objFunc->root();
+    }
+    
+    se::ScriptEngine::getInstance()->setJSExceptionCallback([objFunc](const char *location, const char *message, const char *stack) {
+        se::ValueArray jsArgs;
+        jsArgs.resize(3);
+        jsArgs[0] = se::Value(location);
+        jsArgs[1] = se::Value(message);
+        jsArgs[2] = se::Value(stack);
+        objFunc->call(jsArgs, nullptr);
+    });
+    return true;
+}
+SE_BIND_FUNC(js_se_setExceptionCallback)
+
 
 #define DESCRIPT_FIELD(kls, field, field_type) do {\
     ss << "\"" << #field <<  "\": " << "{" ; \
@@ -605,8 +636,10 @@ static bool js_engine_LabelRenderer_init(se::State& s)
     size_t argc = args.size();
     se::Object *self = s.thisObject();
     CC_UNUSED bool ok = true;
-    if (argc == 0) {
-                
+    if (argc == 1 && args[0].isObject()) {
+        
+        se::Object *comp = args[0].toObject();
+        
         cocos2d::LabelRenderer::LabelRendererConfig config;
         cocos2d::LabelLayoutInfo layout;
         
@@ -626,11 +659,14 @@ static bool js_engine_LabelRenderer_init(se::State& s)
         new (pcfg) cocos2d::LabelRenderer::LabelRendererConfig();
         new (playout) cocos2d::LabelLayoutInfo();
         cobj->bindSharedBlock(self, pcfg, playout);
+        cobj->setJsComponent(comp);
         
+        cfgBufferObj->decRef();
+        layoutBufferObj->decRef();
         
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
 SE_BIND_FUNC(js_engine_LabelRenderer_init)
@@ -674,6 +710,7 @@ static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
         se::Object *cfgFields = se::Object::createJSONObject(ss.str());
         assert(cfgFields);
         self->setProperty("_cfgFields", se::Value(cfgFields));
+        cfgFields->decRef();
     }
     {
         std::stringstream ss;
@@ -721,6 +758,7 @@ static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
         se::Object *cfgFields = se::Object::createJSONObject(ss.str());
         assert(cfgFields);
         self->setProperty("_layoutFields", se::Value(cfgFields));
+        cfgFields->decRef();
     }
     
 }
@@ -732,6 +770,18 @@ static bool register_labelrenderer_ext(se::Object *obj)
     return true;
 }
 
+static bool register_se_setExceptionCallback(se::Object *obj)
+{
+    se::Value jsb;
+    if (!obj->getProperty("jsb", &jsb)) {
+        jsb.setObject(se::Object::createPlainObject());
+        obj->setProperty("jsb", jsb);
+    }
+    auto *jsbObj = jsb.toObject();
+    jsbObj->defineFunction("onError", _SE(js_se_setExceptionCallback));
+    return true;
+}
+
 bool register_all_cocos2dx_manual(se::Object* obj)
 {
     register_plist_parser(obj);
@@ -740,6 +790,7 @@ bool register_all_cocos2dx_manual(se::Object* obj)
     register_canvas_context2d(obj);
     register_filetuils_ext(obj);
     register_labelrenderer_ext(obj);
+    register_se_setExceptionCallback(obj);
     return true;
 }
 

@@ -36,6 +36,7 @@
 #include "base/CCGLUtils.h"
 #include "audio/include/AudioEngine.h"
 #include "platform/CCDevice.h"
+#include "cocos/renderer/gfx/DeviceGraphics.h"
 
 namespace
 {
@@ -51,7 +52,7 @@ namespace
                 (int)(viewSize.x / screenScale / devicePixelRatio),
                 (int)(viewSize.y / screenScale / devicePixelRatio));
         se->evalString(commandBuf);
-        cocos2d::ccViewport(0,0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
+        
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -63,6 +64,7 @@ namespace
     int _fps;
     float _systemVersion;
     BOOL _isAppActive;
+    cocos2d::Device::Rotation _lastRotation;
     cocos2d::Application* _application;
     std::shared_ptr<cocos2d::Scheduler> _scheduler;
 }
@@ -86,12 +88,54 @@ namespace
         _application = application;
         _scheduler = _application->getScheduler();
         
+        _lastRotation = cocos2d::Device::getDeviceRotation();
         _isAppActive = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [nc addObserver:self selector:@selector(appDidBecomeInactive) name:UIApplicationWillResignActiveNotification object:nil];
+        
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [nc addObserver:self selector:@selector(statusBarOrientationChanged:)name:UIApplicationDidChangeStatusBarOrientationNotification
+              object:nil];
     }
     return self;
+}
+
+- (void) statusBarOrientationChanged:(NSNotification *)note
+{
+    cocos2d::Device::Rotation rotation = cocos2d::Device::Rotation::_0;
+    UIDevice * device = [UIDevice currentDevice];
+    
+    // NOTE: https://developer.apple.com/documentation/uikit/uideviceorientation
+    // when the device rotates to LandscapeLeft, device.orientation returns UIDeviceOrientationLandscapeRight
+    // when the device rotates to LandscapeRight, device.orientation returns UIDeviceOrientationLandscapeLeft
+    switch(device.orientation)
+    {
+        case UIDeviceOrientationPortrait:
+            rotation = cocos2d::Device::Rotation::_0;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = cocos2d::Device::Rotation::_90;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = cocos2d::Device::Rotation::_180;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = cocos2d::Device::Rotation::_270;
+            break;
+        default:
+            break;
+    };
+    if(_lastRotation != rotation){
+        cocos2d::EventDispatcher::dispatchOrientationChangeEvent((int) rotation);
+        _lastRotation = rotation;
+    }
+    
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    float scale = [[UIScreen mainScreen] scale];
+    float width = bounds.size.width * scale;
+    float height = bounds.size.height * scale;
+    cocos2d::Application::getInstance()->updateViewSize(width, height);
 }
 
 -(void) dealloc

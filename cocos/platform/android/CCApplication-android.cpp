@@ -72,6 +72,16 @@ extern "C" {
             inst->updateViewSize(width, height);
         }
     }
+    void Java_org_cocos2dx_lib_Cocos2dxOrientationHelper_nativeOnOrientationChanged(JNIEnv * env, jobject obj, jint rotation) {
+        auto inst = Application::getInstance();
+        // nativeOnSizeChanged is firstly called before Application initiating.
+        if (inst != nullptr) {
+            // handle orientation change event
+            inst->getScheduler()->performFunctionInCocosThread([=]() {
+                EventDispatcher::dispatchOrientationChangeEvent(rotation);
+            });
+        }
+    }
 }
 
 Application* Application::_instance = nullptr;

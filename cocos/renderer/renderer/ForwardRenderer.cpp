@@ -219,8 +219,8 @@ void ForwardRenderer::submitLightsUniforms()
             *(positionAndRanges + index + 3) = light->getRange();
             
             if (light->getType() == Light::LightType::SPOT) {
-                *(directions + index + 3) = light->getSpotExp();
-                *(colors + index + 3) = light->getSpotAngle();
+                *(directions + index + 3) = light->getSpotAngleUniform();
+                *(colors + index + 3) = light->getSpotExp();
             }
             else {
                 *(directions + index + 3) = 0;

@@ -125,7 +125,7 @@ namespace cocos2d {
 
     class LabelLayout {
     public:
-        LabelLayout() = default;
+        LabelLayout(LabelRenderer *r): _renderer(r){}
         bool init(const std::string& font, const std::string& text, float fontSize, float retinaFontSize, LabelLayoutInfo *info);
         virtual ~LabelLayout();
 
@@ -160,6 +160,7 @@ namespace cocos2d {
 
         std::shared_ptr<TextRenderGroup> _groups;
         std::shared_ptr<TextRenderGroup> _shadowGroups;
+        LabelRenderer *_renderer = nullptr;
     };
 
 }

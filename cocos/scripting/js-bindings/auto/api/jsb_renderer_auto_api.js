@@ -1058,6 +1058,16 @@ getViewPorjMatrix : function (
 },
 
 /**
+ * @method getSpotAngleUniform
+ * @return {float}
+ */
+getSpotAngleUniform : function (
+)
+{
+    return 0;
+},
+
+/**
  * @method getType
  * @return {cc.renderer::Light::LightType}
  */

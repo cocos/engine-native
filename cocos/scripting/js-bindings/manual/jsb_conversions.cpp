@@ -1304,7 +1304,7 @@ bool seval_to_TextureOptions(const se::Value& v, cocos2d::renderer::Texture::Opt
     }
 
     se::Value tmp;
-    if (obj->getProperty("mipmap", &tmp))
+    if (obj->getProperty("genMipmaps", &tmp))
     {
         seval_to_boolean(tmp, &ret->hasMipmap);
     }

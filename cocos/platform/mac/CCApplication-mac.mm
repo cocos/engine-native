@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "base/CCGLUtils.h"
 #include "audio/include/AudioEngine.h"
+#include "cocos/renderer/gfx/DeviceGraphics.h"
 
 NS_CC_BEGIN
 
@@ -52,7 +53,7 @@ namespace
                 (int)(viewSize.x  / devicePixelRatio),
                 (int)(viewSize.y  / devicePixelRatio));
         se->evalString(commandBuf);
-        ccViewport(0, 0, viewSize.x / devicePixelRatio, viewSize.y / devicePixelRatio);
+        
         glDepthMask(GL_TRUE);
         return true;
     }
