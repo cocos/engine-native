@@ -13,37 +13,38 @@ namespace pipeline {
 
 RenderObject genRenderObject(const ModelView *model, const Camera *camera) {
     float depth = 0;
-    if (model->isNodeValid()) {
+    if (model->nodeID) {
         const auto node = model->getNode();
         cc::Vec3 position;
-        cc::Vec3::subtract(node->getWorldPosition(), camera->getPosition(), &position);
-        depth = position.dot(camera->getForward());
+        cc::Vec3::subtract(node->worldPosition, camera->position, &position);
+        depth = position.dot(camera->forward);
     }
 
     return {depth, model};
 }
 
-cc::Mat4 getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, const cc::Vec3 &dir) {
+void getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, const cc::Vec3 &dir, cc::Mat4 &shadowWorldMat) {
     Vec3 translation(dir);
     translation.negate();
     const auto sphere = shadows->getSphere();
-    const auto distance = std::sqrt(2) * sphere->getRadius();
+    const auto distance = std::sqrt(2) * sphere->radius;
     translation.scale(distance);
-    translation.add(sphere->getCenter());
+    translation.add(sphere->center);
 
-    return std::move(Mat4::fromRT(rotation, translation));
+    
+    Mat4::fromRT(rotation, translation, &shadowWorldMat);
 }
 
 void updateSphereLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
     const auto node = light->getNode();
-    if (!node->hasFlagsChanged() && !shadows->isDirty()) {
+    if (!node->flagsChanged && !shadows->dirty) {
         return;
     }
 
-    shadows->setDirty(false);
-    const auto position = node->getWorldPosition();
-    const auto &normal = shadows->getNormal();
-    const auto distance = shadows->getDistance() + 0.001f; // avoid z-fighting
+    shadows->dirty = false;
+    const auto position = node->worldPosition;
+    const auto &normal = shadows->normal;
+    const auto distance = shadows->distance + 0.001f; // avoid z-fighting
     const auto NdL = normal.dot(position);
     const auto lx = position.x;
     const auto ly = position.y;
@@ -51,7 +52,7 @@ void updateSphereLight(Shadows *shadows, const Light *light, gfx::DescriptorSet 
     const auto nx = normal.x;
     const auto ny = normal.y;
     const auto nz = normal.z;
-    auto &matLight = shadows->getMatLight();
+    auto &matLight = shadows->matLight;
     matLight.m[0] = NdL - distance - lx * nx;
     matLight.m[1] = -ly * nx;
     matLight.m[2] = -lz * nx;
@@ -74,17 +75,17 @@ void updateSphereLight(Shadows *shadows, const Light *light, gfx::DescriptorSet 
 
 void updateDirLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *descriptorSet) {
     const auto node = light->getNode();
-    if (!node->hasFlagsChanged() && !shadows->isDirty()) {
+    if (!node->flagsChanged && !shadows->dirty) {
         return;
     }
 
-    shadows->setDirty(false);
-    const auto rotation = node->getWorldRotation();
+    shadows->dirty = false;
+    const auto rotation = node->worldRotation;
     Quaternion _qt(rotation.x, rotation.y, rotation.z, rotation.w);
     Vec3 forward(0, 0, -1.0f);
     forward.transformQuat(_qt);
-    const auto &normal = shadows->getNormal();
-    const auto distance = shadows->getDistance() + 0.001f; // avoid z-fighting
+    const auto &normal = shadows->normal;
+    const auto distance = shadows->distance + 0.001f; // avoid z-fighting
     const auto NdL = normal.dot(forward);
     const auto scale = 1.0f / NdL;
     const auto lx = forward.x * scale;
@@ -93,7 +94,7 @@ void updateDirLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *de
     const auto nx = normal.x;
     const auto ny = normal.y;
     const auto nz = normal.z;
-    auto &matLight = shadows->getMatLight();
+    auto &matLight = shadows->matLight;
     matLight.m[0] = 1 - nx * lx;
     matLight.m[1] = -nx * ly;
     matLight.m[2] = -nx * lz;
@@ -124,12 +125,12 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
     sphere->setRadius(0.01f);
 
     const Light *mainLight = nullptr;
-    if (scene->useMainLight()) mainLight = scene->getMainLight();
+    if (scene->mainLightID) mainLight = scene->getMainLight();
     RenderObjectList renderObjects;
     RenderObjectList shadowObjects;
 
-    if (shadows->isEnabled() && shadows->isDirty()) {
-        float color[3] = {shadows->getColor().x, shadows->getColor().y, shadows->getColor().z};
+    if (shadows->enabled && shadows->dirty) {
+        float color[3] = {shadows->color.x, shadows->color.y, shadows->color.z};
         pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.binding)->update(color, UBOShadow::SHADOW_COLOR_OFFSET, sizeof(color));
     }
 
@@ -137,7 +138,7 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
         updateDirLight(shadows, mainLight, pipeline->getDescriptorSet());
     }
 
-    if (skybox->isEnabled() && skybox->isModelValid() && (camera->getClearFlag() & SKYBOX_FLAG)) {
+    if (skybox->enabled && skybox->modelID && (camera->clearFlag & SKYBOX_FLAG)) {
         renderObjects.emplace_back(genRenderObject(skybox->getModel(), camera));
     }
 
@@ -147,28 +148,28 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
         const auto model = scene->getModelView(models[i]);
 
         // filter model by view visibility
-        if (model->isEnabled()) {
+        if (model->enabled) {
             const auto visibility = view->getVisibility();
             const auto vis = visibility & static_cast<uint>(LayerList::UI_2D);
             const auto node = model->getNode();
             if (vis) {
-                if ((model->isNodeValid() && (visibility == node->getLayer())) ||
-                    visibility == model->getVisFlags()) {
+                if ((model->nodeID && (visibility == node->layer)) ||
+                    visibility == model->visFlags) {
                     renderObjects.emplace_back(genRenderObject(model, camera));
                 }
             } else {
 
-                if ((model->isNodeValid() && ((visibility & node->getLayer()) == node->getLayer())) ||
-                    (visibility & model->getVisFlags())) {
+                if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
+                    (visibility & model->visFlags)) {
 
                     // shadow render Object
-                    if (model->isCastShadow()) {
+                    if (model->castShadow) {
                         sphere->mergeAABB(model->getWroldBounds());
                         shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
 
-                    // frustum culling
-                    if (model->isWorldBoundsValid() && !aabb_frustum(model->getWroldBounds(), camera->getFrustum())) {
+                    //                     frustum culling
+                    if ((model->worldBoundsID) && !aabb_frustum(model->getWroldBounds(), camera->getFrustum())) {
                         continue;
                     }
 

@@ -18,11 +18,11 @@ void ShadowMapBatchedQueue::clear(gfx::Buffer *buffer) {
 }
 
 void ShadowMapBatchedQueue::add(const RenderObject &renderObject, uint subModelIdx, uint passIdx) {
-    const auto subModels = renderObject.model->getSubModels();
-    const auto subModel = renderObject.model->getSubModelView(subModels[subModelIdx]);
+    const auto subModelID = renderObject.model->getSubModelID();
+    const auto subModel = renderObject.model->getSubModelView(subModelID[subModelIdx]);
     const auto pass = subModel->getPassView(passIdx);
 
-    if (pass->getPhase() == _phaseID) {
+    if (pass->phase == _phaseID) {
         if (_buffer) {
             auto shader = subModel->getShader(passIdx);
             _subModels.emplace_back(subModel);

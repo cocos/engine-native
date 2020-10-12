@@ -8,11 +8,11 @@ namespace pipeline {
 
 class RenderStage;
 class RenderFlow;
-class SubModelView;
-class Light;
-class ModelView;
-class AABB;
-class Frustum;
+struct SubModelView;
+struct Light;
+struct ModelView;
+struct AABB;
+struct Frustum;
 
 // The actual uniform vectors used is JointUniformCapacity * 3.
 // We think this is a reasonable default capacity considering MAX_VERTEX_UNIFORM_VECTORS in WebGL spec is just 128.

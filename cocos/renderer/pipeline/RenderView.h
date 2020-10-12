@@ -4,9 +4,9 @@
 
 namespace cc {
 namespace pipeline {
-class Camera;
+struct Camera;
 class RenderFlow;
-class RenderWindow;
+struct RenderWindow;
 class RenderPipeline;
 
 struct CC_DLL RenderViewInfo {

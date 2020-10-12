@@ -12,7 +12,7 @@ gfx::PipelineState *PipelineStateManager::getOrCreatePipelineState(const PassVie
                                                                    gfx::Shader *shader,
                                                                    gfx::InputAssembler *inputAssembler,
                                                                    gfx::RenderPass *renderPass) {
-    const auto passHash = pass->getHash();
+    const auto passHash = pass->hash;
     const auto renderPassHash = renderPass->getHash();
     const auto iaHash = inputAssembler->getAttributesHash();
     const auto shaderID = shader->getID();

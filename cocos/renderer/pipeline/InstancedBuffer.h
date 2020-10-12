@@ -5,8 +5,8 @@
 namespace cc {
 
 namespace pipeline {
-class SubModelView;
-class PassView;
+struct SubModelView;
+struct PassView;
 struct InstancedAttributeBlock;
 struct PSOInfo;
 

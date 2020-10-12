@@ -400,7 +400,7 @@ public:
     /**
      * Calculate the matrix according to the ratation and translation
      */
-    static Mat4 fromRT(const Vec4 &rotation, const Vec3 &translation);
+    static void fromRT(const Vec4 &rotation, const Vec3 &translation, Mat4 *dst);
     
     /**
      * Decomposes the scale, rotation and translation components of this matrix.

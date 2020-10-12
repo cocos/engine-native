@@ -84,56 +84,35 @@ public:
     }
 };
 
-class CC_DLL Node {
-private:
-    bool _hasFlagsChanged = 0;
-    uint32_t _layer = 0;
-    cc::Vec3 _worldScale;
-    cc::Vec3 _worldPosition;
-    cc::Vec4 _worldRotation;
-    cc::Mat4 _worldMatrix;
-
-public:
-    CC_INLINE bool hasFlagsChanged() const { return _hasFlagsChanged; }
-    CC_INLINE uint getLayer() const { return _layer; }
-    CC_INLINE const cc::Vec3 &getWorldScale() const { return _worldScale; }
-    CC_INLINE const cc::Vec3 &getWorldPosition() const { return _worldPosition; }
-    CC_INLINE const cc::Vec4 &getWorldRotation() const { return _worldRotation; }
-    CC_INLINE const cc::Mat4 &getWorldMatrix() const { return _worldMatrix; }
+struct CC_DLL Node {
+    bool flagsChanged = 0;
+    uint32_t layer = 0;
+    cc::Vec3 worldScale;
+    cc::Vec3 worldPosition;
+    cc::Vec4 worldRotation;
+    cc::Mat4 worldMatrix;
 
     const static se::PoolType type;
 };
 
-class CC_DLL AABB {
-private:
-    cc::Vec3 _center;
-    cc::Vec3 _halfExtents;
-
-public:
-    CC_INLINE const cc::Vec3 &getCenter() const { return _center; }
-    CC_INLINE const cc::Vec3 &getHalfExtents() const { return _halfExtents; }
+struct CC_DLL AABB {
+    cc::Vec3 center;
+    cc::Vec3 halfExtents;
 
     void getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const;
 
     const static se::PoolType type;
 };
 
-class CC_DLL Light {
-private:
-    uint32_t _useColorTemperature = 0;
-    float _illuminance = 0;
-    uint32_t _nodeID = 0;
-    cc::Vec3 _direction;
-    cc::Vec3 _color;
-    cc::Vec3 _colorTemperatureRGB;
+struct CC_DLL Light {
+    uint32_t useColorTemperature = 0;
+    float illuminance = 0;
+    uint32_t nodeID = 0;
+    cc::Vec3 direction;
+    cc::Vec3 color;
+    cc::Vec3 colorTemperatureRGB;
 
-public:
-    CC_INLINE uint getUseColorTemperature() const { return _useColorTemperature; }
-    CC_INLINE float getIlluminance() const { return _illuminance; }
-    CC_INLINE const Node *getNode() const { return GET_NODE(_nodeID); }
-    CC_INLINE const cc::Vec3 &getDirection() const { return _direction; }
-    CC_INLINE const cc::Vec3 &getColor() const { return _color; }
-    CC_INLINE const cc::Vec3 &getColorTemperatureRGB() const { return _colorTemperatureRGB; }
+    CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
 
     const static se::PoolType type;
 };
@@ -143,93 +122,72 @@ enum class CC_DLL BatchingSchemes {
     VB_MERGING = 2,
 };
 
-class CC_DLL PassView {
-private:
-    uint32_t _priority = 0;
-    uint32_t _stage = 0;
-    uint32_t _phase = 0;
-    uint32_t _batchingScheme = 0;
-    uint32_t _primitive = 0;
-    uint32_t _dynamicState = 0;
-    uint32_t _hash = 0;
-    uint32_t _rasterizerStateID = 0;
-    uint32_t _depthStencilStateID = 0;
-    uint32_t _blendStateID = 0;
-    uint32_t _descriptorSetID = 0;
-    uint32_t _pipelineLayoutID = 0;
+struct CC_DLL PassView {
+    uint32_t priority = 0;
+    uint32_t stage = 0;
+    uint32_t phase = 0;
+    uint32_t batchingScheme = 0;
+    uint32_t primitive = 0;
+    uint32_t dynamicState = 0;
+    uint32_t hash = 0;
+    uint32_t rasterizerStateID = 0;
+    uint32_t depthStencilStateID = 0;
+    uint32_t blendStateID = 0;
+    uint32_t descriptorSetID = 0;
+    uint32_t pipelineLayoutID = 0;
 
-public:
-    CC_INLINE uint getPriority() const { return _priority; }
-    CC_INLINE uint getStage() const { return _stage; }
-    CC_INLINE uint getPhase() const { return _phase; }
-    CC_INLINE BatchingSchemes getBatchingScheme() const { return static_cast<BatchingSchemes>(_batchingScheme); }
-    CC_INLINE gfx::PrimitiveMode getPrimitive() const { return static_cast<gfx::PrimitiveMode>(_primitive); }
-    CC_INLINE gfx::DynamicStateFlags getDynamicState() const { return static_cast<gfx::DynamicStateFlags>(_dynamicState); }
-    CC_INLINE uint getHash() const { return _hash; }
-    CC_INLINE const gfx::RasterizerState *getRasterizerState() const { return GET_RASTERIZER_STATE(_rasterizerStateID); }
-    CC_INLINE const gfx::DepthStencilState *getDepthStencilState() const { return GET_DEPTH_STENCIL_STATE(_depthStencilStateID); }
-    CC_INLINE const gfx::BlendState *getBlendState() const { return GET_BLEND_STATE(_blendStateID); }
-    CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return GET_DESCRIPTOR_SET(_descriptorSetID); }
-    CC_INLINE gfx::PipelineLayout *getPipelineLayout() const { return GET_PIPELINE_LAYOUT(_pipelineLayoutID); }
+    CC_INLINE BatchingSchemes getBatchingScheme() const { return static_cast<BatchingSchemes>(batchingScheme); }
+    CC_INLINE gfx::PrimitiveMode getPrimitive() const { return static_cast<gfx::PrimitiveMode>(primitive); }
+    CC_INLINE gfx::DynamicStateFlags getDynamicState() const { return static_cast<gfx::DynamicStateFlags>(dynamicState); }
+    CC_INLINE gfx::RasterizerState *getRasterizerState() const { return GET_RASTERIZER_STATE(rasterizerStateID); }
+    CC_INLINE gfx::DepthStencilState *getDepthStencilState() const { return GET_DEPTH_STENCIL_STATE(depthStencilStateID); }
+    CC_INLINE gfx::BlendState *getBlendState() const { return GET_BLEND_STATE(blendStateID); }
+    CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return GET_DESCRIPTOR_SET(descriptorSetID); }
+    CC_INLINE gfx::PipelineLayout *getPipelineLayout() const { return GET_PIPELINE_LAYOUT(pipelineLayoutID); }
 
     const static se::PoolType type;
 };
 
-class CC_DLL SubModelView {
-private:
-    uint32_t _priority = 0;
-    uint32_t _passCount = 0;
-    uint32_t _passID[4] = {0, 0, 0, 0};
-    uint32_t _shaderID[4] = {0, 0, 0, 0};
-    uint32_t _descriptorSetID = 0;
-    uint32_t _inputAssemblerID = 0;
+struct CC_DLL SubModelView {
+    uint32_t priority = 0;
+    uint32_t passCount = 0;
+    uint32_t passID[4] = {0, 0, 0, 0};
+    uint32_t shaderID[4] = {0, 0, 0, 0};
+    uint32_t descriptorSetID = 0;
+    uint32_t inputAssemblerID = 0;
 
-public:
-    CC_INLINE uint getPriority() const { return _priority; }
-    CC_INLINE uint getPassCount() const { return _passCount; }
-    CC_INLINE const PassView *getPassView(uint idx) const { return GET_PASS(_passID[idx]); }
-    CC_INLINE uint getShaderID(uint idx) const { return _shaderID[idx]; }
-    CC_INLINE gfx::Shader *getShader(uint idx) const { return GET_SHADER(_shaderID[idx]); }
-    CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return GET_DESCRIPTOR_SET(_descriptorSetID); }
-    CC_INLINE gfx::InputAssembler *getInputAssembler() const { return GET_IA(_inputAssemblerID); }
+    CC_INLINE const PassView *getPassView(uint idx) const { return GET_PASS(passID[idx]); }
+    CC_INLINE gfx::Shader *getShader(uint idx) const { return GET_SHADER(shaderID[idx]); }
+    CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return GET_DESCRIPTOR_SET(descriptorSetID); }
+    CC_INLINE gfx::InputAssembler *getInputAssembler() const { return GET_IA(inputAssemblerID); }
 
     const static se::PoolType type;
 };
 
-class CC_DLL ModelView {
-private:
-    uint32_t _enabled = 0;
-    uint32_t _visFlags = 0;
-    uint32_t _castShadow = 0;
-    uint32_t _worldBoundsID = 0; // aabb
-    uint32_t _nodeID = 0;
-    uint32_t _transformID = 0;
-    uint32_t _subModelsID = 0; // array pool id
-    //    InstancedAttributeBlock instancedAttributeBlock;
+struct CC_DLL ModelView {
+    uint32_t enabled = 0;
+    uint32_t visFlags = 0;
+    uint32_t castShadow = 0;
+    uint32_t worldBoundsID = 0; // aabb
+    uint32_t nodeID = 0;
+    uint32_t transformID = 0;
+    uint32_t subModelsID = 0; // array pool id
 
-public:
-    CC_INLINE bool isEnabled() const { return _enabled; }
-    CC_INLINE bool isCastShadow() const { return _castShadow; }
-    CC_INLINE bool isNodeValid() const { return _nodeID; }
-    CC_INLINE bool isWorldBoundsValid() const { return _worldBoundsID; }
-    CC_INLINE uint getVisFlags() const { return _visFlags; }
-    CC_INLINE const AABB *getWroldBounds() const { return GET_AABB(_worldBoundsID); }
-    CC_INLINE const Node *getNode() const { return GET_NODE(_nodeID); }
-    CC_INLINE const Node *getTransform() const { return GET_NODE(_transformID); }
-    CC_INLINE const uint *getSubModels() const { return GET_SUBMODEL_ARRAY(_subModelsID); }
+    CC_INLINE const AABB *getWroldBounds() const { return GET_AABB(worldBoundsID); }
+    CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
+    CC_INLINE const Node *getTransform() const { return GET_NODE(transformID); }
+    CC_INLINE const uint *getSubModelID() const { return GET_SUBMODEL_ARRAY(subModelsID); }
     CC_INLINE const SubModelView *getSubModelView(uint idx) const { return GET_SUBMODEL(idx); }
+
     const static se::PoolType type;
 };
 
-class CC_DLL Scene {
-private:
-    uint32_t _mainLightID = 0;
-    uint32_t _modelsID = 0; //array pool
+struct CC_DLL Scene {
+    uint32_t mainLightID = 0;
+    uint32_t modelsID = 0; //array pool
 
-public:
-    CC_INLINE bool useMainLight() const { return _mainLightID; }
-    CC_INLINE const Light *getMainLight() const { return GET_LIGHT(_mainLightID); }
-    CC_INLINE const uint *getModels() const { return GET_MODEL_ARRAY(_modelsID); }
+    CC_INLINE const Light *getMainLight() const { return GET_LIGHT(mainLightID); }
+    CC_INLINE const uint *getModels() const { return GET_MODEL_ARRAY(modelsID); }
     CC_INLINE const ModelView *getModelView(uint idx) const { return GET_MODEL(idx); }
 
     const static se::PoolType type;
@@ -241,121 +199,72 @@ struct CC_DLL Plane {
 };
 
 constexpr uint PLANE_LENGTH = 6;
-class CC_DLL Frustum {
-private:
+struct CC_DLL Frustum {
     cc::Vec3 vertices[8];
     Plane planes[PLANE_LENGTH];
 
-public:
-    CC_INLINE const cc::Vec3 &getVertex(uint idx) const { return vertices[idx]; }
-    CC_INLINE const Plane &getPlane(uint idx) const { return planes[idx]; }
+    const static se::PoolType type;
+};
+
+struct CC_DLL Camera {
+    uint32_t width = 0;
+    uint32_t height = 0;
+    float exposure = 0;
+    uint32_t clearFlag = 0;
+    float clearDepth = 0;
+    uint32_t clearStencil = 0;
+    uint32_t nodeID = 0;
+    uint32_t sceneID = 0;
+    uint32_t frustumID = 0;
+    cc::Vec3 forward;
+    cc::Vec3 position;
+    uint32_t viewportX = 0;
+    uint32_t viewportY = 0;
+    uint32_t viewportWidth = 0;
+    uint32_t viewportHeight = 0;
+    gfx::Color clearColor;
+    cc::Mat4 matView;
+    cc::Mat4 matViewProj;
+    cc::Mat4 matViewProjInv;
+    cc::Mat4 matProj;
+    cc::Mat4 matProjInv;
+
+    CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
+    CC_INLINE const Scene *getScene() const { return GET_SCENE(sceneID); }
+    CC_INLINE const Frustum *getFrustum() const { return GET_FRUSTUM(frustumID); }
 
     const static se::PoolType type;
 };
 
-class CC_DLL Camera {
-private:
-    uint32_t _width = 0;
-    uint32_t _height = 0;
-    float _exposure = 0;
-    uint32_t _clearFlag = 0;
-    float _clearDepth = 0;
-    uint32_t _clearStencil = 0;
-    uint32_t _nodeID = 0;
-    uint32_t _sceneID = 0;
-    uint32_t _frustumID = 0;
-    cc::Vec3 _forward;
-    cc::Vec3 _position;
-    uint32_t _viewportX = 0;
-    uint32_t _viewportY = 0;
-    uint32_t _viewportWidth = 0;
-    uint32_t _viewportHeight = 0;
-    gfx::Color _clearColor;
-    cc::Mat4 _matView;
-    cc::Mat4 _matViewProj;
-    cc::Mat4 _matViewProjInv;
-    cc::Mat4 _matProj;
-    cc::Mat4 _matProjInv;
-
-public:
-    CC_INLINE uint getWidth() const { return _width; }
-    CC_INLINE uint getHeight() const { return _height; }
-    CC_INLINE float getExposure() const { return _exposure; }
-    CC_INLINE float getClearDepth() const { return _clearDepth; }
-    CC_INLINE uint getClearFlag() const { return _clearFlag; }
-    CC_INLINE uint getClearStencil() const { return _clearStencil; }
-    CC_INLINE const Node *getNode() const { return GET_NODE(_nodeID); }
-    CC_INLINE const Scene *getScene() const { return GET_SCENE(_sceneID); }
-    CC_INLINE const Frustum *getFrustum() const { return GET_FRUSTUM(_frustumID); }
-    CC_INLINE uint getViewportX() const { return _viewportX; }
-    CC_INLINE uint getViewportY() const { return _viewportY; }
-    CC_INLINE uint getViewportWidth() const { return _viewportWidth; }
-    CC_INLINE uint getViewportHeight() const { return _viewportHeight; }
-    CC_INLINE const cc::Vec3 &getForward() const { return _forward; }
-    CC_INLINE const cc::Vec3 &getPosition() const { return _position; }
-    CC_INLINE const gfx::Color &getClearColor() const { return _clearColor; }
-    CC_INLINE const cc::Mat4 &getMatView() const { return _matView; }
-    CC_INLINE const cc::Mat4 &getMatViewProj() const { return _matViewProj; }
-    CC_INLINE const cc::Mat4 &getMatViewProjInv() const { return _matViewProjInv; }
-    CC_INLINE const cc::Mat4 &getMatProj() const { return _matProj; }
-    CC_INLINE const cc::Mat4 &getMatProjInv() const { return _matProjInv; }
+struct CC_DLL Ambient {
+    uint32_t enabled = 0;
+    float skyIllum = 0;
+    cc::Vec4 skyColor;
+    cc::Vec4 groundAlbedo;
 
     const static se::PoolType type;
 };
 
-class CC_DLL Ambient {
-private:
-    uint32_t _enabled = 0;
-    float _skyIllum = 0;
-    cc::Vec4 _skyColor;
-    cc::Vec4 _groundAlbedo;
-
-public:
-    CC_INLINE bool isEnabled() const { return _enabled; }
-    CC_INLINE float getSkyIllum() const { return _skyIllum; }
-    CC_INLINE const cc::Vec4 &getSkyColor() const { return _skyColor; }
-    CC_INLINE const cc::Vec4 &getGroundAlbedo() const { return _groundAlbedo; }
+struct CC_DLL Fog {
+    uint32_t enabled = 0;
+    uint32_t fogType = 0;
+    float fogDensity = 0;
+    float fogStart = 0;
+    float fogEnd = 0;
+    float fogAtten = 0;
+    float fogTop = 0;
+    float fogRange = 0;
+    cc::Vec4 fogColor;
 
     const static se::PoolType type;
 };
 
-class CC_DLL Fog {
-private:
-    uint32_t _enabled = 0;
-    uint32_t _fogType = 0;
-    float _fogDensity = 0;
-    float _fogStart = 0;
-    float _fogEnd = 0;
-    float _fogAtten = 0;
-    float _fogTop = 0;
-    float _fogRange = 0;
-    cc::Vec4 _fogColor;
+struct CC_DLL Sphere {
+    float radius = 0;
+    cc::Vec3 center;
 
-public:
-    CC_INLINE bool isEnabled() const { return _enabled; }
-    CC_INLINE uint getFogType() const { return _fogType; }
-    CC_INLINE float getFogDensity() const { return _fogDensity; }
-    CC_INLINE float getFogStart() const { return _fogStart; }
-    CC_INLINE float getFogEnd() const { return _fogEnd; }
-    CC_INLINE float getFogAtten() const { return _fogAtten; }
-    CC_INLINE float getFogTop() const { return _fogTop; }
-    CC_INLINE float getFogRange() const { return _fogRange; }
-    CC_INLINE const cc::Vec4 &getFogColor() const { return _fogColor; }
-
-    const static se::PoolType type;
-};
-
-class CC_DLL Sphere {
-private:
-    float _radius = 0;
-    cc::Vec3 _center;
-
-public:
-    CC_INLINE float getRadius() const { return _radius; }
-    CC_INLINE const cc::Vec3 &getCenter() const { return _center; }
-    CC_INLINE void setCenter(const cc::Vec3 &center) { _center = center; }
-    CC_INLINE void setRadius(float radius) { _radius = radius; }
-
+    CC_INLINE void setCenter(const cc::Vec3 &val) { center = val; }
+    CC_INLINE void setRadius(float val) { radius = val; }
     void mergeAABB(const AABB *aabb);
     void mergePoint(const Vec3 &point);
 
@@ -367,88 +276,56 @@ enum class CC_DLL ShadowType {
     SHADOWMAP = 1
 };
 
-class CC_DLL Shadows {
-private:
-    uint32_t _enabled = 0;
-    uint32_t _dirty = 0;
-    float _shadowType = 0;
-    float _distance = 0;
-    float _instancePass = 0;
-    float _planarPass = 0;
-    float _nearValue = 0;
-    float _farValue = 0;
-    float _aspect = 0;
-    uint32_t _pcfType = 0;
-    float _bias = 0;
-    float _orthoSize = 0;
-    uint32_t _sphereID = 0;
+struct CC_DLL Shadows {
+    uint32_t enabled = 0;
+    uint32_t dirty = 0;
+    float shadowType = 0;
+    float distance = 0;
+    float instancePass = 0;
+    float planarPass = 0;
+    float nearValue = 0;
+    float farValue = 0;
+    float aspect = 0;
+    uint32_t pcfType = 0;
+    float bias = 0;
+    float orthoSize = 0;
+    uint32_t sphereID = 0;
 
-    cc::Vec2 _size;
-    cc::Vec3 _normal;
-    cc::Vec4 _color;
-    cc::Mat4 _matLight;
+    cc::Vec2 size;
+    cc::Vec3 normal;
+    cc::Vec4 color;
+    cc::Mat4 matLight;
 
-public:
-    CC_INLINE bool isEnabled() const { return _enabled; }
-    CC_INLINE bool isDirty() const { return _dirty; }
-    CC_INLINE ShadowType getShadowType() const { return static_cast<ShadowType>(_shadowType); }
-    CC_INLINE float getDistance() const { return _distance; }
-    CC_INLINE float getInstancePass() const { return _instancePass; }
-    CC_INLINE float getPlanarPass() const { return _planarPass; }
-    CC_INLINE float getNearValue() const { return _nearValue; }
-    CC_INLINE float getFarValue() const { return _farValue; }
-    CC_INLINE float getAspect() const { return _aspect; }
-    CC_INLINE uint getPCFType() const { return static_cast<uint>(_pcfType); }
-    CC_INLINE float getOrthoSize() const { return _orthoSize; }
-    CC_INLINE float getBias() const { return _bias; }
-    CC_INLINE Sphere *getSphere() const { return GET_SPHERE(_sphereID); }
-    CC_INLINE const cc::Vec2 &getSize() const { return _size; }
-    CC_INLINE const cc::Vec3 &getNormal() const { return _normal; }
-    CC_INLINE const cc::Vec4 &getColor() const { return _color; }
-    CC_INLINE cc::Mat4 &getMatLight() { return _matLight; }
-    CC_INLINE void setDirty(bool dirty) { _dirty = dirty; }
+    CC_INLINE ShadowType getShadowType() const { return static_cast<ShadowType>(shadowType); }
+    CC_INLINE Sphere *getSphere() const { return GET_SPHERE(sphereID); }
 
     const static se::PoolType type;
 };
 
-class CC_DLL Skybox {
-private:
-    uint32_t _enabled = 0;
-    uint32_t _isRGBE = 0;
-    uint32_t _useIBL = 0;
-    uint32_t _modelID = 0;
+struct CC_DLL Skybox {
+    uint32_t enabled = 0;
+    uint32_t isRGBE = 0;
+    uint32_t useIBL = 0;
+    uint32_t modelID = 0;
 
-public:
-    CC_INLINE bool isEnabled() const { return _enabled; }
-    CC_INLINE bool isRGBE() const { return _isRGBE; }
-    CC_INLINE bool useIBL() const { return _useIBL; }
-    CC_INLINE bool isModelValid() const { return _modelID; }
-    CC_INLINE const ModelView *getModel() const { return GET_MODEL(_modelID); }
+    CC_INLINE const ModelView *getModel() const { return GET_MODEL(modelID); }
 
     const static se::PoolType type;
 };
 
-class CC_DLL Root {
-    float _cumulativeTime = 0;
-    float _frameTime = 0;
-
-public:
-    CC_INLINE float getCumulativeTime() const { return _cumulativeTime; }
-    CC_INLINE float getFrameTime() const { return _frameTime; }
+struct CC_DLL Root {
+    float cumulativeTime = 0;
+    float frameTime = 0;
 
     const static se::PoolType type;
 };
 
-class CC_DLL RenderWindow {
-private:
-    uint32_t _hasOnScreenAttachments = 0;
-    uint32_t _hasOffScreenAttachments = 0;
-    uint32_t _framebufferID = 0;
+struct CC_DLL RenderWindow {
+    uint32_t hasOnScreenAttachments = 0;
+    uint32_t hasOffScreenAttachments = 0;
+    uint32_t framebufferID = 0;
 
-public:
-    CC_INLINE bool hasOnScreenAttachments() const { return _hasOnScreenAttachments; }
-    CC_INLINE bool hasOffScreenAttachments() const { return _hasOffScreenAttachments; }
-    CC_INLINE gfx::Framebuffer *getFramebuffer() const { return GET_FRAMEBUFFER(_framebufferID); }
+    CC_INLINE gfx::Framebuffer *getFramebuffer() const { return GET_FRAMEBUFFER(framebufferID); }
 
     const static se::PoolType type;
 };

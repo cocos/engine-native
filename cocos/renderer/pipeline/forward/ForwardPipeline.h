@@ -4,13 +4,13 @@
 
 namespace cc {
 namespace pipeline {
-class Light;
+struct Light;
 struct UBOGlobal;
 struct UBOShadow;
-class Fog;
-class Ambient;
-class Skybox;
-class Shadows;
+struct Fog;
+struct Ambient;
+struct Skybox;
+struct Shadows;
 
 class CC_DLL ForwardPipeline : public RenderPipeline {
 public:

@@ -3,8 +3,8 @@
 
 namespace cc {
 namespace pipeline {
-class SubModelView;
-class PassView;
+struct SubModelView;
+struct PassView;
 struct RenderObject;
 
 class CC_DLL ShadowMapBatchedQueue : public Object {

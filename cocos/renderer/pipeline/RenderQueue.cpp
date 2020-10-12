@@ -16,17 +16,17 @@ void RenderQueue::clear() {
 }
 
 bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelIdx, uint passIdx) {
-    const auto subModels = renderObj.model->getSubModels();
-    const auto subModel = renderObj.model->getSubModelView(subModels[subModelIdx]);
+    const auto subModelID = renderObj.model->getSubModelID();
+    const auto subModel = renderObj.model->getSubModelView(subModelID[subModelIdx]);
     const auto pass = subModel->getPassView(passIdx);
     const auto isTransparent = pass->getBlendState()->targets[0].blend;
 
-    if (isTransparent != _passDesc.isTransparent || !(pass->getPhase() & _passDesc.phases)) {
+    if (isTransparent != _passDesc.isTransparent || !(pass->phase & _passDesc.phases)) {
         return false;
     }
 
-    const auto hash = (0 << 30) | (pass->getPriority() << 16) | (subModel->getPriority() << 8) | passIdx;
-    uint shaderID = subModel->getShaderID(passIdx);
+    const auto hash = (0 << 30) | (pass->priority << 16) | (subModel->priority << 8) | passIdx;
+    uint shaderID = subModel->shaderID[passIdx];
     RenderPass renderPass = {hash, renderObj.depth, shaderID, passIdx, subModel};
     _queue.emplace_back(std::move(renderPass));
     return true;

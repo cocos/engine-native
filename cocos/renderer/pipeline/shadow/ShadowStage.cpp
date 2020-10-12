@@ -43,11 +43,11 @@ void ShadowStage::render(RenderView *view) {
 
     const auto shadowObjects = pipeline->getShadowObjects();
     for (const auto &shadowObject : shadowObjects) {
-        const auto subModels = shadowObject.model->getSubModels();
-        uint32_t subModelCount = subModels[0];
+        const auto subModelID = shadowObject.model->getSubModelID();
+        uint32_t subModelCount = subModelID[0];
         for (uint32_t m = 1; m <= subModelCount; m++) {
-            const auto subModel = shadowObject.model->getSubModelView(subModels[m]);
-            for (uint32_t p = 0; p < subModel->getPassCount(); p++) {
+            const auto subModel = shadowObject.model->getSubModelView(subModelID[m]);
+            for (uint32_t p = 0; p < subModel->passCount; p++) {
                 _additiveShadowQueue->add(shadowObject, m, p);
             }
         }
@@ -56,17 +56,17 @@ void ShadowStage::render(RenderView *view) {
     const auto camera = view->getCamera();
     auto cmdBuffer = pipeline->getCommandBuffers()[0];
 
-    const auto shadowMapSize = shadowInfo->getSize();
-    _renderArea.x = camera->getViewportX() * shadowMapSize.x;
-    _renderArea.y = camera->getViewportY() * shadowMapSize.y;
-    _renderArea.width = camera->getViewportWidth() * shadowMapSize.x * pipeline->getShadingScale();
-    _renderArea.height = camera->getViewportHeight() * shadowMapSize.y * pipeline->getShadingScale();
+    const auto shadowMapSize = shadowInfo->size;
+    _renderArea.x = camera->viewportX * shadowMapSize.x;
+    _renderArea.y = camera->viewportY * shadowMapSize.y;
+    _renderArea.width = camera->viewportWidth * shadowMapSize.x * pipeline->getShadingScale();
+    _renderArea.height = camera->viewportHeight * shadowMapSize.y * pipeline->getShadingScale();
 
     _clearColors[0] = {1.0f, 1.0f, 1.0f, 1.0f};
     auto renderPass = _framebuffer->getRenderPass();
 
     cmdBuffer->beginRenderPass(renderPass, _framebuffer, _renderArea,
-                               _clearColors, camera->getClearDepth(), camera->getClearStencil());
+                               _clearColors, camera->clearDepth, camera->clearStencil);
     cmdBuffer->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
     _additiveShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuffer);
 

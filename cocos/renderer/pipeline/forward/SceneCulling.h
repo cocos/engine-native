@@ -8,14 +8,14 @@ namespace pipeline {
 
 struct RenderObject;
 struct Model;
-class Camera;
+struct Camera;
 class ForwardPipeline;
 class RenderView;
-class Shadows;
+struct Shadows;
 
 RenderObject genRenderObject(Model *, const Camera *);
 
 void sceneCulling(ForwardPipeline *, RenderView *);
-cc::Mat4 getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, const cc::Vec3 &dir);
+void getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, const cc::Vec3 &dir, cc::Mat4 &shadowWorldMat);
 } // namespace pipeline
 } // namespace cc

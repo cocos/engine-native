@@ -4,8 +4,8 @@
 
 namespace cc {
 namespace pipeline {
-class PassView;
-class SubModelView;
+struct PassView;
+struct SubModelView;
 
 struct CC_DLL BatchedItem {
     gfx::BufferList vbs;

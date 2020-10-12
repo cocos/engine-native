@@ -25,25 +25,25 @@ const se::PoolType Shadows::type = se::PoolType::SHADOW;
 const se::PoolType Sphere::type = se::PoolType::SPHERE;
 
 void AABB::getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const {
-    minPos = _center - _halfExtents;
-    maxPos = _center + _halfExtents;
+    minPos = center - halfExtents;
+    maxPos = center + halfExtents;
 }
 
 void Sphere::mergePoint(const cc::Vec3 &point) {
-    if (_radius < 0.0f) {
-        _center = point;
-        _radius = 0.0;
+    if (radius < 0.0f) {
+        center = point;
+        radius = 0.0;
         return;
     }
 
-    auto offset = point - _center;
+    auto offset = point - center;
     auto distance = offset.length();
 
-    if (distance > _radius) {
-        auto half = (distance - _radius) * 0.5f;
-        _radius += half;
+    if (distance > radius) {
+        auto half = (distance - radius) * 0.5f;
+        radius += half;
         offset.scale(half / distance);
-        _center += offset;
+        center += offset;
     }
 }
 
