@@ -1,7 +1,7 @@
 #pragma once
 #include "renderer/core/CoreStd.h"
 
-#include "bindings/dop/ArrayPool.h"
+#include "bindings/dop/BufferAllocator.h"
 #include "bindings/dop/BufferPool.h"
 #include "bindings/dop/ObjectPool.h"
 #include "math/Vec2.h"
@@ -48,12 +48,16 @@ namespace pipeline {
 #define GET_RASTERIZER_STATE(index)    SharedMemory::getObject<gfx::RasterizerState, se::PoolType::RASTERIZER_STATE>(index)
 #define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getObject<gfx::DepthStencilState, se::PoolType::DEPTH_STENCIL_STATE>(index)
 #define GET_BLEND_STATE(index)         SharedMemory::getObject<gfx::BlendState, se::PoolType::BLEND_STATE>(index)
+#define GET_ATTRIBUTE(index)           SharedMemory::getObject<gfx::Attribute, se::PoolType::ATTRIBUTE>(index)
 #define GET_FRAMEBUFFER(index)         SharedMemory::getObject<gfx::Framebuffer, se::PoolType::FRAMEBUFFER>(index)
 #define GET_PIPELINE_LAYOUT(index)     SharedMemory::getObject<gfx::PipelineLayout, se::PoolType::PIPELINE_LAYOUT>(index)
 
 //Get array pool data
-#define GET_MODEL_ARRAY(index)    SharedMemory::getArray(se::PoolType::MODEL_ARRAY, index)
-#define GET_SUBMODEL_ARRAY(index) SharedMemory::getArray(se::PoolType::SUB_MODEL_ARRAY, index)
+#define GET_MODEL_ARRAY(index)     SharedMemory::getHandleArray(se::PoolType::MODEL_ARRAY, index)
+#define GET_SUBMODEL_ARRAY(index)  SharedMemory::getHandleArray(se::PoolType::SUB_MODEL_ARRAY, index)
+#define GET_ATTRIBUTE_ARRAY(index) SharedMemory::getHandleArray(se::PoolType::ATTRIBUTE_ARRAY, index)
+
+#define GET_RAW_BUFFER(index) SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index)
 
 class CC_DLL SharedMemory : public Object {
 public:
@@ -79,8 +83,13 @@ public:
         }
     }
 
-    static uint32_t *getArray(se::PoolType type, uint index) {
-        return se::ArrayPool::getArray(type, index);
+    static uint32_t *getHandleArray(se::PoolType type, uint index) {
+        return se::BufferAllocator::getBuffer<uint32_t>(type, index);
+    }
+
+    template <typename T>
+    static T *getRawBuffer(se::PoolType type, uint index) {
+        return se::BufferAllocator::getBuffer<T>(type, index);
     }
 };
 
@@ -171,7 +180,9 @@ struct CC_DLL ModelView {
     uint32_t worldBoundsID = 0; // aabb
     uint32_t nodeID = 0;
     uint32_t transformID = 0;
-    uint32_t subModelsID = 0; // array pool id
+    uint32_t subModelsID = 0;       // array pool id
+    uint32_t instancedBufferID = 0; // raw buffer id
+    uint32_t instancedAttrsID = 0;  // array pool id
 
     CC_INLINE const AABB *getWroldBounds() const { return GET_AABB(worldBoundsID); }
     CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
