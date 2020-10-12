@@ -28,7 +28,7 @@ public:
             return nullptr;
         }
     }
-    
+
     BufferAllocator(PoolType type);
     ~BufferAllocator();
 
@@ -39,7 +39,7 @@ private:
     static cc::map<PoolType, BufferAllocator *> _pools;
 
     cc::map<uint, Object *> _buffers;
-    PoolType _type;
+    PoolType _type = PoolType::UNKNOWN;
 };
 
 } // namespace se
