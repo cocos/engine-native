@@ -14,7 +14,8 @@ std::shared_ptr<InstancedBuffer> &InstancedBuffer::get(const PassView *pass) {
     return _buffers[pass];
 }
 
-InstancedBuffer::InstancedBuffer(const PassView *pass) {
+InstancedBuffer::InstancedBuffer(const PassView *pass)
+:_pass(pass){
 }
 
 InstancedBuffer::~InstancedBuffer() {
@@ -29,77 +30,67 @@ void InstancedBuffer::destroy() {
     _instancedItems.clear();
 }
 
-void InstancedBuffer::merge(const SubModelView *subModel, const InstancedAttributeBlock &attrs, uint passIdx) {
-    //    const auto stride = attrs.bufferViewSize;
-    //    if (!stride) {
-    //        return;
-    //    } // we assume per-instance attributes are always present
-    //
-    //    const auto sourceIA = GET_IA(subModel->inputAssemblerID);
-    //    const auto shader = GET_SHADER(subModel->shader0ID + passIdx);
-    //    const auto descriptorSet = GET_DESCRIPTOR_SET(subModel->descriptorSetID);
-    //    for (size_t i = 0; i < _instancedItems.size(); ++i) {
-    //        auto &instance = _instancedItems[i];
-    //        if (instance.ia->getIndexBuffer() != sourceIA->getIndexBuffer() || instance.count >= MAX_CAPACITY) {
-    //            continue;
-    //        }
-    //        if (instance.stride != stride) {
-    //            // console.error(`instanced buffer stride mismatch! ${stride}/${instance.stride}`);
-    //            return;
-    //        }
-    //        if (instance.count >= instance.capacity) { // resize buffers
-    //            instance.capacity = instance.capacity << 1;
-    //            const auto newSize = instance.stride * instance.capacity;
-    //            const auto *oldData = instance.data.get();
-    //            const auto oldSize = instance.size;
-    //            instance.data = std::shared_ptr<uint8_t>((uint8_t *)CC_MALLOC(newSize), [](uint8_t *ptr) { CC_SAFE_FREE(ptr); });
-    //            memcpy(instance.data.get(), oldData, oldSize);
-    //            instance.size = newSize;
-    //            instance.vb->resize(newSize);
-    //        }
-    //        memcpy(instance.data.get() + instance.stride * instance.count++, GET_BUFFERVIEW(attrs.bufferViewID)->data, attrs.bufferViewSize);
-    //        return;
-    //    }
-    //
-    //    // Create a new instance
-    //    auto device = gfx::Device::getInstance();
-    //    auto vb = device->createBuffer({
-    //        gfx::BufferUsageBit::VERTEX | gfx::BufferUsageBit::TRANSFER_DST,
-    //        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
-    //        stride * INITIAL_CAPACITY,
-    //        stride,
-    //    });
-    //    auto dataSize = stride * INITIAL_CAPACITY;
-    //    std::shared_ptr<uint8_t> data((uint8_t *)CC_MALLOC(dataSize), [&](uint8_t *ptr) { CC_FREE(ptr); });
-    //    auto vertexBuffers = sourceIA->getVertexBuffers();
-    //    auto attributes = sourceIA->getAttributes();
-    //    auto indexBuffer = sourceIA->getIndexBuffer();
-    //
-    //    //TODO coulsonwang
-    ////    for (size_t i = 0; i < attrs.instancedAttributesCount; i++) {
-    ////        const auto *attr = GET_INSTANCE_ATTRIBUTE(attrs.instancedAttributesID, i);
-    ////
-    ////        gfx::Attribute newAttr = {
-    ////            GET_NAME(attr->nameID),
-    ////            static_cast<gfx::Format>(attr->format),
-    ////            static_cast<bool>(attr->isNormalized),
-    ////            static_cast<uint>(vertexBuffers.size()),
-    ////            true};
-    ////        attributes.emplace_back(newAttr);
-    ////    }
-    //    memcpy(data.get(), GET_BUFFERVIEW(attrs.bufferViewID)->data, attrs.bufferViewSize);
-    //    vertexBuffers.emplace_back(vb);
-    //
-    //    auto ia = device->createInputAssembler({attributes, vertexBuffers, indexBuffer});
-    //    InstancedItem item = {
-    //        1,
-    //        INITIAL_CAPACITY,
-    //        vb,
-    //        data,
-    //        dataSize,
-    //        ia,
-    //        stride};
-    //    _instancedItems.emplace_back(std::move(item));
+void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel, uint passIdx) {
+    size_t stride = 0;
+    const auto instancedBuffer = model->getInstancedBuffer(stride);
+    
+    if (!stride) { return; } // we assume per-instance attributes are always present
+    auto sourceIA = subModel->getIn
+//    const lightingMap = subModel.descriptorSet.getTexture(UNIFORM_LIGHTMAP_TEXTURE_BINDING);
+//    const hShader = SubModelPool.get(subModel.handle, SubModelView.SHADER_0 + passIdx) as ShaderHandle;
+//    const hDescriptorSet = SubModelPool.get(subModel.handle, SubModelView.DESCRIPTOR_SET);
+//    for (let i = 0; i < this.instances.length; ++i) {
+//        const instance = this.instances[i];
+//        if (instance.ia.indexBuffer !== sourceIA.indexBuffer || instance.count >= MAX_CAPACITY) { continue; }
+//
+//        // check same binding
+//        if (instance.lightingMap !== lightingMap) {
+//            continue;
+//        }
+//
+//        if (instance.stride !== stride) {
+//            // console.error(`instanced buffer stride mismatch! ${stride}/${instance.stride}`);
+//            return;
+//        }
+//        if (instance.count >= instance.capacity) { // resize buffers
+//            instance.capacity <<= 1;
+//            const newSize = instance.stride * instance.capacity;
+//            const oldData = instance.data;
+//            instance.data = new Uint8Array(newSize);
+//            instance.data.set(oldData);
+//            instance.vb.resize(newSize);
+//        }
+//        if (instance.hShader !== hShader) { instance.hShader = hShader; }
+//        if (instance.hDescriptorSet !== hDescriptorSet) { instance.hDescriptorSet = hDescriptorSet; }
+//        instance.data.set(attrs.buffer, instance.stride * instance.count++);
+//        this.hasPendingModels = true;
+//        return;
+//    }
+//
+//    // Create a new instance
+//    const vb = this._device.createBuffer(new GFXBufferInfo(
+//        GFXBufferUsageBit.VERTEX | GFXBufferUsageBit.TRANSFER_DST,
+//        GFXMemoryUsageBit.HOST | GFXMemoryUsageBit.DEVICE,
+//        stride * INITIAL_CAPACITY,
+//        stride,
+//    ));
+//    const data = new Uint8Array(stride * INITIAL_CAPACITY);
+//    const vertexBuffers = sourceIA.vertexBuffers.slice();
+//    const attributes = sourceIA.attributes.slice();
+//    const indexBuffer = sourceIA.indexBuffer;
+//
+//    for (let i = 0; i < attrs.list.length; i++) {
+//        const attr = attrs.list[i];
+//        const newAttr = new GFXAttribute(attr.name, attr.format, attr.isNormalized, vertexBuffers.length, true);
+//        attributes.push(newAttr);
+//    }
+//    data.set(attrs.buffer);
+//
+//    vertexBuffers.push(vb);
+//    const iaInfo = new GFXInputAssemblerInfo(attributes, vertexBuffers, indexBuffer);
+//    const ia = this._device.createInputAssembler(iaInfo);
+//    this.instances.push({ count: 1, capacity: INITIAL_CAPACITY, vb, data, ia, stride, hShader, hDescriptorSet, lightingMap});
+//    this.hasPendingModels = true;
 }
 
 void InstancedBuffer::uploadBuffers() {
