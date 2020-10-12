@@ -290,7 +290,7 @@ enum class CC_DLL ShadowType {
 struct CC_DLL Shadows {
     uint32_t enabled = 0;
     uint32_t dirty = 0;
-    float shadowType = 0;
+    uint32_t shadowType = 0;
     float distance = 0;
     float instancePass = 0;
     float planarPass = 0;
