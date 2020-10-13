@@ -756,7 +756,6 @@ struct TextureViewInfo {
 };
 
 struct SamplerInfo {
-    String name;
     Filter minFilter = Filter::LINEAR;
     Filter magFilter = Filter::LINEAR;
     Filter mipFilter = Filter::NONE;
