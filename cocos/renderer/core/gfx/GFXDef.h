@@ -894,7 +894,6 @@ struct FramebufferInfo {
     TextureList colorTextures;
     Texture *depthStencilTexture = nullptr;
     cc::vector<uint> colorMipmapLevels;
-    
     uint depthStencilMipmapLevel = 0;
 };
 
