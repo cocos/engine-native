@@ -334,7 +334,7 @@ struct CC_DLL DescriptorSetLayoutInfos : public gfx::DescriptorSetLayoutInfo {
 uint genSamplerHash(const gfx::SamplerInfo &);
 gfx::Sampler *getSampler(uint hash);
 
-enum class LayerList {
+enum class LayerList : uint {
     NONE = 0,
     IGNORE_RAYCAST = (1 << 20),
     GIZMOS = (1 << 21),
