@@ -898,9 +898,9 @@ struct FramebufferInfo {
 };
 
 struct DescriptorSetLayoutBinding {
-    DescriptorType descriptorType;
-    uint count;
-    ShaderStageFlagBit stageFlags;
+    DescriptorType descriptorType = DescriptorType::UNKNOWN;
+    uint count = 0;
+    ShaderStageFlagBit stageFlags = ShaderStageFlagBit::NONE;
     SamplerList immutableSamplers;
 };
 typedef cc::vector<DescriptorSetLayoutBinding> DescriptorSetLayoutBindingList;
