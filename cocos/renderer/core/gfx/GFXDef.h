@@ -892,8 +892,9 @@ typedef cc::vector<Sampler *> SamplerList;
 struct FramebufferInfo {
     RenderPass *renderPass = nullptr;
     TextureList colorTextures;
-    cc::vector<uint> colorMipmapLevels;
     Texture *depthStencilTexture = nullptr;
+    cc::vector<uint> colorMipmapLevels;
+    
     uint depthStencilMipmapLevel = 0;
 };
 

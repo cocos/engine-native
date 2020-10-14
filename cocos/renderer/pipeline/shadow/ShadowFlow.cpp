@@ -90,8 +90,8 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
         _framebuffer = device->createFramebuffer({
             _renderPass,
             _renderTargets,
-            {}, //colorMipmapLevels
             _depthTexture,
+            {}, //colorMipmapLevels
         });
     }
 
@@ -136,8 +136,8 @@ void ShadowFlow::resizeShadowMap(uint width, uint height) {
         _framebuffer->initialize({
             _renderPass,
             _renderTargets,
-            {},
             _depthTexture,
+            {},
         });
     }
 }
