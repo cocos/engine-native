@@ -25,6 +25,7 @@
 #pragma once
 
 #include "../config.h"
+#include "base/Log.h"
 #include <map>
 #include <string>
 
