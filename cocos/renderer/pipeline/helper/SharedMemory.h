@@ -84,11 +84,11 @@ public:
     }
 
     static uint32_t *getHandleArray(se::PoolType type, uint index) {
-        return se::BufferAllocator::getBuffer<uint32_t>(type, index, nullptr);
+        return se::BufferAllocator::getBuffer<uint32_t>(type, index);
     }
 
     template <typename T>
-    static T *getRawBuffer(se::PoolType type, uint index, size_t *size) {
+    static T *getRawBuffer(se::PoolType type, uint index, uint *size) {
         return se::BufferAllocator::getBuffer<T>(type, index, size);
     }
 };
@@ -190,7 +190,7 @@ struct CC_DLL ModelView {
     CC_INLINE const Node *getTransform() const { return GET_NODE(transformID); }
     CC_INLINE const uint *getSubModelID() const { return GET_SUBMODEL_ARRAY(subModelsID); }
     CC_INLINE const SubModelView *getSubModelView(uint idx) const { return GET_SUBMODEL(idx); }
-    CC_INLINE const uint8_t *getInstancedBuffer(size_t *size) const { return GET_RAW_BUFFER(instancedBufferID, size); }
+    CC_INLINE const uint8_t *getInstancedBuffer(uint *size) const { return GET_RAW_BUFFER(instancedBufferID, size); }
     CC_INLINE const uint *getInstancedAttributeID() const { return GET_ATTRIBUTE_ARRAY(instancedAttrsID); }
     CC_INLINE gfx::Attribute *getInstancedAttribute(uint idx) const { return GET_ATTRIBUTE(idx); }
     const static se::PoolType type;

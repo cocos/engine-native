@@ -19,7 +19,7 @@ struct CC_DLL InstancedItem {
     gfx::Buffer *vb = nullptr;
     uint8_t *data = nullptr;
     gfx::InputAssembler *ia = nullptr;
-    size_t stride = 0;
+    uint stride = 0;
     gfx::Shader *shader = nullptr;
     gfx::DescriptorSet *descriptorSet = nullptr;
     gfx::Texture *lightingMap = nullptr;

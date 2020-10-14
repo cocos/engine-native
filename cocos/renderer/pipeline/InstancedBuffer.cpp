@@ -33,7 +33,7 @@ void InstancedBuffer::destroy() {
 }
 
 void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel, uint passIdx) {
-    size_t stride = 0;
+    uint stride = 0;
     const auto instancedBuffer = model->getInstancedBuffer(&stride);
 
     if (!stride) return; // we assume per-instance attributes are always present
