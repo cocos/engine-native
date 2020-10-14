@@ -25,6 +25,8 @@
 #pragma once
 
 #include "../config.h"
+#include <map>
+#include <string>
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
