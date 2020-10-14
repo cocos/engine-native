@@ -112,7 +112,7 @@ void ForwardStage::render(RenderView *view) {
 
                 if (pass->phase != _phaseID) continue;
                 if (pass->getBatchingScheme() == BatchingSchemes::INSTANCING) {
-                    auto instancedBuffer = InstancedBuffer::get(pass);
+                    auto instancedBuffer = InstancedBuffer::get(subModel->getPassID(p));
                     instancedBuffer->merge(model, subModel, p);
                     _instancedQueue->getQueue().emplace(instancedBuffer);
                 } else if (pass->getBatchingScheme() == BatchingSchemes::VB_MERGING) {
