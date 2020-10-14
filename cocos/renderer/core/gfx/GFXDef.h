@@ -852,11 +852,11 @@ typedef cc::vector<ColorAttachment> ColorAttachmentList;
 
 struct DepthStencilAttachment {
     Format format = Format::UNKNOWN;
+    uint sampleCount = 1;
     LoadOp depthLoadOp = LoadOp::CLEAR;
     StoreOp depthStoreOp = StoreOp::STORE;
     LoadOp stencilLoadOp = LoadOp::CLEAR;
     StoreOp stencilStoreOp = StoreOp::STORE;
-    uint sampleCount = 1;
     TextureLayout beginLayout = TextureLayout::UNDEFINED;
     TextureLayout endLayout = TextureLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 };
