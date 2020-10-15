@@ -191,11 +191,15 @@ enum class CC_DLL UniformBinding {
     CUSTOM_SAMPLER_BINDING_START_POINT = MAX_BINDING_SUPPORTED + 8,
 };
 
-struct CC_DLL BlockInfo : public gfx::UniformBlock, public gfx::DescriptorSetLayoutBinding {
-    BlockInfo(const gfx::UniformBlock &block, const gfx::DescriptorSetLayoutBinding &binding) : gfx::UniformBlock{block}, gfx::DescriptorSetLayoutBinding{binding} {}
+struct CC_DLL BlockInfo{
+    gfx::DescriptorSetLayoutBinding bindings;
+    gfx::UniformBlock layout;
+    BlockInfo(const gfx::UniformBlock &layout, const gfx::DescriptorSetLayoutBinding &binding) : layout(layout), bindings(binding) {}
 };
-struct CC_DLL SamplerInfo : public gfx::UniformSampler, public gfx::DescriptorSetLayoutBinding {
-    SamplerInfo(const gfx::UniformSampler &sampler, const gfx::DescriptorSetLayoutBinding &binding) : gfx::UniformSampler(sampler), gfx::DescriptorSetLayoutBinding{binding} {}
+struct CC_DLL SamplerInfo {
+    gfx::DescriptorSetLayoutBinding bindings;
+    gfx::UniformSampler layout;
+    SamplerInfo(const gfx::UniformSampler &layout, const gfx::DescriptorSetLayoutBinding &binding) : layout(layout), bindings(binding) {}
 };
 
 struct CC_DLL UBOLocalBatched {
