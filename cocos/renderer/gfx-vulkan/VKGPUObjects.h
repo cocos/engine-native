@@ -280,6 +280,9 @@ public:
     bool useMultiDrawIndirect = false;
 
     CCVKGPUSampler defaultSampler;
+    CCVKGPUTexture defaultTexture;
+    CCVKGPUTextureView defaultTextureView;
+    CCVKGPUBuffer defaultBuffer;
 };
 
 /**
