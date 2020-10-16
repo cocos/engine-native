@@ -232,17 +232,20 @@ const SamplerInfo UNIFORM_ENVIRONMENT = {
 };
 
 const SamplerInfo UniformJointTexture = {
-    {static_cast<uint>(SetIndex::LOCAL),
-     static_cast<uint>(ModelLocalBindings::SAMPLER_JOINTS),
-     "cc_jointTexture",
-     gfx::Type::SAMPLER2D,
-     1},
+    {
+        static_cast<uint>(SetIndex::LOCAL),
+        static_cast<uint>(ModelLocalBindings::SAMPLER_JOINTS),
+        "cc_jointTexture",
+        gfx::Type::SAMPLER2D,
+        1,
+    },
     {
         static_cast<uint>(ModelLocalBindings::SAMPLER_JOINTS),
         gfx::DescriptorType::SAMPLER,
         1,
         gfx::ShaderStageFlagBit::VERTEX,
-    }};
+    },
+};
 
 const SamplerInfo UniformPositionMorphTexture = {
     {
@@ -277,17 +280,20 @@ const SamplerInfo UniformNormalMorphTexture = {
 };
 
 const SamplerInfo UniformTangentMorphTexture = {
-    {static_cast<uint>(SetIndex::LOCAL),
-     static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_TANGENT),
-     "cc_TangentDisplacements",
-     gfx::Type::SAMPLER2D,
-     1},
+    {
+        static_cast<uint>(SetIndex::LOCAL),
+        static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_TANGENT),
+        "cc_TangentDisplacements",
+        gfx::Type::SAMPLER2D,
+        1,
+    },
     {
         static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_TANGENT),
         gfx::DescriptorType::SAMPLER,
         1,
         gfx::ShaderStageFlagBit::VERTEX,
-    }};
+    },
+};
 
 const SamplerInfo UniformLightingMapSampler = {
     {

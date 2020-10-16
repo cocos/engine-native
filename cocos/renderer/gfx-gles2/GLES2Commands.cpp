@@ -1700,7 +1700,8 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
 
                         CCASSERT(cmd->gpuDescriptorSets.size() > glBlock.set, "Invalid set index");
                         const GLES2GPUDescriptorSet *gpuDescriptorSet = cmd->gpuDescriptorSets[glBlock.set];
-                        const GLES2GPUDescriptor &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[glBlock.binding];
+                        const uint descriptorIndex = gpuDescriptorSet->descriptorIndices->at(glBlock.binding);
+                        const GLES2GPUDescriptor &gpuDescriptor = gpuDescriptorSet->gpuDescriptors[descriptorIndex];
 
                         if (!gpuDescriptor.gpuBuffer && !gpuDescriptor.gpuBufferView) {
                             CC_LOG_ERROR("Buffer binding '%s' at set %d binding %d is not bounded",
@@ -1819,7 +1820,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
 
                         CCASSERT(cmd->gpuDescriptorSets.size() > glSampler.set, "Invalid set index");
                         const GLES2GPUDescriptorSet *gpuDescriptorSet = cmd->gpuDescriptorSets[glSampler.set];
-                        uint descriptorIndex = gpuDescriptorSet->descriptorIndices->at(glSampler.binding);
+                        const uint descriptorIndex = gpuDescriptorSet->descriptorIndices->at(glSampler.binding);
                         const GLES2GPUDescriptor *gpuDescriptor = &gpuDescriptorSet->gpuDescriptors[descriptorIndex];
 
                         for (size_t u = 0; u < glSampler.units.size(); u++, gpuDescriptor++) {

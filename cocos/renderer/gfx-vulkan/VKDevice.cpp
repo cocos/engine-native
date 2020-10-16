@@ -318,6 +318,9 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _gpuDevice->defaultBuffer.count = 1u;
     CCVKCmdFuncCreateBuffer(this, &_gpuDevice->defaultBuffer);
 
+    VkPipelineCacheCreateInfo pipelineCacheInfo{VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO};
+    vkCreatePipelineCache(_gpuDevice->vkDevice, &pipelineCacheInfo, nullptr, &_gpuDevice->vkPipelineCache);
+
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
         TextureInfo depthStencilTexInfo;
         depthStencilTexInfo.type = TextureType::TEX2D;
