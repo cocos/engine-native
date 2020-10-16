@@ -3,6 +3,7 @@
 #include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXDevice.h"
 #include "gfx/GFXInputAssembler.h"
+#include "gfx/GFXCommandBuffer.h"
 #include "helper/SharedMemory.h"
 
 namespace cc {
@@ -106,11 +107,11 @@ void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel
     _hasPendingModels = true;
 }
 
-void InstancedBuffer::uploadBuffers() {
+void InstancedBuffer::uploadBuffers(gfx::CommandBuffer *cmdBuff) {
     for (auto &instance : _instances) {
         if (!instance.count) continue;
 
-        instance.vb->update(instance.data, 0, instance.vb->getSize());
+        cmdBuff->updateBuffer(instance.vb, instance.data, instance.vb->getSize());
         instance.ia->setInstanceCount(instance.count);
     }
 }

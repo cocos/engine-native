@@ -703,7 +703,7 @@ struct BufferInfo {
     BufferUsage usage = BufferUsage::NONE;
     MemoryUsage memUsage = MemoryUsage::NONE;
     uint size = 0;
-    uint stride = 0; //in bytes
+    uint stride = 0; // in bytes
     BufferFlags flags = BufferFlagBit::NONE;
 };
 

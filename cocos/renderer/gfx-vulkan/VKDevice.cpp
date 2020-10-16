@@ -319,7 +319,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     CCVKCmdFuncCreateBuffer(this, &_gpuDevice->defaultBuffer);
 
     VkPipelineCacheCreateInfo pipelineCacheInfo{VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO};
-    vkCreatePipelineCache(_gpuDevice->vkDevice, &pipelineCacheInfo, nullptr, &_gpuDevice->vkPipelineCache);
+    VK_CHECK(vkCreatePipelineCache(_gpuDevice->vkDevice, &pipelineCacheInfo, nullptr, &_gpuDevice->vkPipelineCache));
 
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
         TextureInfo depthStencilTexInfo;
@@ -424,6 +424,11 @@ void CCVKDevice::destroy() {
     CC_SAFE_DELETE(_gpuFencePool);
 
     if (_gpuDevice) {
+        if (_gpuDevice->vkPipelineCache) {
+            vkDestroyPipelineCache(_gpuDevice->vkDevice, _gpuDevice->vkPipelineCache, nullptr);
+            _gpuDevice->vkPipelineCache = VK_NULL_HANDLE;
+        }
+
         if (_gpuDevice->defaultBuffer.vkBuffer) {
             vmaDestroyBuffer(_gpuDevice->memoryAllocator, _gpuDevice->defaultBuffer.vkBuffer, _gpuDevice->defaultBuffer.vmaAllocation);
             _gpuDevice->defaultBuffer.vkBuffer = VK_NULL_HANDLE;
