@@ -267,13 +267,12 @@ void EventDispatcher::dispatchTickEvent(float dt)
     if (!se::ScriptEngine::getInstance()->isValid())
         return;
 
-//    clearRecordJSBInvoke();
-    
     se::AutoHandleScope scope;
     if (_tickVal.isUndefined())
     {
         se::ScriptEngine::getInstance()->getGlobalObject()->getProperty("gameTick", &_tickVal);
     }
+    
 
     static std::chrono::steady_clock::time_point prevTime;
     prevTime = std::chrono::steady_clock::now();
@@ -283,8 +282,6 @@ void EventDispatcher::dispatchTickEvent(float dt)
     args.push_back(se::Value((double)milliSeconds));
     
     _tickVal.toObject()->call(args, nullptr);
-    
-//    printJSBInvoke();
 }
 
 void EventDispatcher::dispatchResizeEvent(int width, int height)

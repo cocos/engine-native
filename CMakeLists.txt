@@ -61,7 +61,7 @@ set(CC_USE_GLES3 ON)
 set(CC_USE_GLES2 OFF)
 
 if(ANDROID OR WINDOWS)
-    set(CC_USE_VULKAN OFF)
+    set(CC_USE_VULKAN ON)
     set(CC_USE_GLES3 ON)
     set(CC_USE_GLES2 ON)
 elseif(MACOSX)
