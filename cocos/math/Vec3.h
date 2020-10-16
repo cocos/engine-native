@@ -131,6 +131,18 @@ public:
     inline bool isOne() const;
 
     /**
+     * 
+     * 
+    */
+    inline max(const Vec3& v);
+
+    /**
+     * 
+     * 
+    */
+    inline min(const Vec3& v);
+
+    /**
      * Returns the angle (in radians) between the specified vectors.
      *
      * @param v1 The first vector.

@@ -109,6 +109,7 @@ struct CC_DLL AABB {
     cc::Vec3 halfExtents;
 
     void getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const;
+    void merge(const AABB *aabb);
 
     const static se::PoolType type;
 };
@@ -304,6 +305,7 @@ struct CC_DLL Shadows {
     float bias = 0;
     float orthoSize = 0;
     uint32_t sphereID = 0;
+    uint32_t receiveSphereID = 0;
 
     cc::Vec2 size;
     cc::Vec3 normal;
@@ -312,6 +314,7 @@ struct CC_DLL Shadows {
 
     CC_INLINE ShadowType getShadowType() const { return static_cast<ShadowType>(shadowType); }
     CC_INLINE Sphere *getSphere() const { return GET_SPHERE(sphereID); }
+    CC_INLINE Sphere *getReceiveSphere() const { return GET_SPHERE(receiveSphereID); }
 
     const static se::PoolType type;
 };

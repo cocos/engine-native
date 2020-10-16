@@ -120,9 +120,11 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
     auto shadows = pipeline->getShadows();
     const auto skybox = pipeline->getSkybox();
     const auto scene = camera->getScene();
-    auto sphere = shadows->getSphere();
-    sphere->setCenter(cc::Vec3::ZERO);
-    sphere->setRadius(0.01f);
+
+    AABB castWorldBounds();
+    AABB receiveWorldBounds();
+    auto castBoundsInited = false;
+    auto receiveBoundsInited = false;
 
     const Light *mainLight = nullptr;
     if (scene->mainLightID) mainLight = scene->getMainLight();
@@ -164,15 +166,35 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
 
                     // shadow render Object
                     if (model->castShadow) {
-                        sphere->mergeAABB(model->getWroldBounds());
+                        if (!castBoundsInited) {
+                            castWorldBounds.center.set(model->worldBounds().center);
+                            castWorldBounds.halfExtents.set(model->worldBounds().halfExtents);
+                            castBoundsInited = true;
+                        }
+                        castWorldBounds.merge(model->getWroldBounds());
                         shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
 
-                    //                     frustum culling
+                    if (model->receiveShadow) {
+                        if(!receiveBoundsInited) {
+                            receiveWorldBounds.center.set(model->worldBounds().center);
+                            receiveWorldBounds.halfExtents.set(model->worldBounds().halfExtents);
+                            receiveBoundsInited = true;
+                        }
+                        receiveWorldBounds.merge(model->worldBounds());
+                    }
+
+                    // frustum culling
                     if ((model->worldBoundsID) && !aabb_frustum(model->getWroldBounds(), camera->getFrustum())) {
                         continue;
                     }
 
+                    auto* sphere = shadows->getSphere();
+                    sphere->define(castWorldBounds);
+
+                    auto* receiveSphere = shadows->getReceiveSphere();
+                    receiveSphere->define(receiveWorldBounds);
+                    
                     renderObjects.emplace_back(genRenderObject(model, camera));
                 }
             }

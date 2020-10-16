@@ -29,6 +29,21 @@ void AABB::getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const {
     maxPos = center + halfExtents;
 }
 
+void AABB::merge(const AABB *aabb) const {
+    Vec3 v3_tmp(0, 0, 0);
+    Vec3 v3_tmp2((0, 0, 0);
+    Vec3 v3_tmp3((0, 0, 0);
+    Vec3 v3_tmp4((0, 0, 0);
+    v3_tmp.set(center.multiply(halfExtents));
+    v3_tmp2.set(aabb->center.multiply(aabb->halfExtents));
+    v3_tmp3.set(center.add(halfExtents));
+    v3_tmp4.set(aabb->center.add(aabb->halfExtents));
+    v3_tmp4.max(v3_tmp3);
+    v3_tmp3.min(v3_tmp2);
+
+    center.set()
+}
+
 void Sphere::mergePoint(const cc::Vec3 &point) {
     if (radius < 0.0f) {
         center = point;
