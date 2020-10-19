@@ -131,16 +131,137 @@ public:
     inline bool isOne() const;
 
     /**
-     * 
+     * Assign from another vector.
      * 
     */
-    inline max(const Vec3& v);
+    Vec3& operator =(const Vec3& rhs) noexcept = default;
 
     /**
-     * 
+     * Test for equality with another vector without epsilon.
      * 
     */
-    inline min(const Vec3& v);
+    bool operator ==(const Vec3& rhs) const { return x == rhs.x && y == rhs.y && z == rhs.z; }
+
+    /**
+     * Test for inequality with another vector without epsilon.
+     * 
+    */
+    bool operator !=(const Vec3& rhs) const { return x != rhs.x || y != rhs.y || z != rhs.z; }
+
+    /**
+     * Add a vector.
+     * 
+    */
+    Vec3 operator +(const Vec3& rhs) const { return Vec3(x + rhs.x, y + rhs.y, z + rhs.z); }
+
+    /**
+     * Return negation.
+     * 
+    */
+    Vec3 operator -() const { return Vec3(-x, -y, -z); }
+
+    /**
+     * Subtract a vector.
+     * 
+    */
+    Vec3 operator -(const Vec3& rhs) const { return Vec3(x - rhs.x, y - rhs.y, z - rhs.z); }
+
+    /**
+     * Multiply with a scalar.
+     * 
+    */
+    Vec3 operator *(float rhs) const { return Vec3(x * rhs, y * rhs, z * rhs); }
+
+    /**
+     * Multiply with a vector.
+     * 
+    */
+    Vec3 operator *(const Vec3& rhs) const { return Vec3(x * rhs.x, y * rhs.y, z * rhs.z); }
+
+    /**
+     * Divide by a scalar.
+     * 
+    */
+    Vec3 operator /(float rhs) const { return Vec3(x / rhs, y / rhs, z / rhs); }
+
+    /**
+     * Divide by a vector.
+     * 
+    */
+    Vec3 operator /(const Vec3& rhs) const { return Vec3(x / rhs.x, y / rhs.y, z / rhs.z); }
+
+    /**
+     * Add-assign a vector.
+     * 
+    */
+    Vec3& operator +=(const Vec3& rhs)
+    {
+        x += rhs.x;
+        y += rhs.y;
+        z += rhs.z;
+        return *this;
+    }
+
+    /**
+     * Subtract-assign a vector.
+     * 
+    */
+    Vec3& operator -=(const Vec3& rhs)
+    {
+        x -= rhs.x;
+        y -= rhs.y;
+        z -= rhs.z;
+        return *this;
+    }
+
+    /**
+     * Multiply-assign a scalar.
+     * 
+    */
+    Vec3& operator *=(float rhs)
+    {
+        x *= rhs;
+        y *= rhs;
+        z *= rhs;
+        return *this;
+    }
+
+    /**
+     * Multiply-assign a vector.
+     * 
+    */
+    Vec3& operator *=(const Vec3& rhs)
+    {
+        x *= rhs.x;
+        y *= rhs.y;
+        z *= rhs.z;
+        return *this;
+    }
+
+    /**
+     * Divide-assign a scalar.
+     * 
+    */
+    Vec3& operator /=(float rhs)
+    {
+        float invRhs = 1.0f / rhs;
+        x *= invRhs;
+        y *= invRhs;
+        z *= invRhs;
+        return *this;
+    }
+
+    /**
+     * Divide-assign a vector.
+     * 
+    */
+    Vec3& operator /=(const Vec3& rhs)
+    {
+        x /= rhs.x;
+        y /= rhs.y;
+        z /= rhs.z;
+        return *this;
+    }
 
     /**
      * Returns the angle (in radians) between the specified vectors.

@@ -1,4 +1,5 @@
 #include "SharedMemory.h"
+#include "../math/MathUtil.h"
 
 namespace cc {
 namespace pipeline {
@@ -29,19 +30,18 @@ void AABB::getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const {
     maxPos = center + halfExtents;
 }
 
-void AABB::merge(const AABB *aabb) const {
-    Vec3 v3_tmp(0, 0, 0);
-    Vec3 v3_tmp2((0, 0, 0);
-    Vec3 v3_tmp3((0, 0, 0);
-    Vec3 v3_tmp4((0, 0, 0);
-    v3_tmp.set(center.multiply(halfExtents));
-    v3_tmp2.set(aabb->center.multiply(aabb->halfExtents));
-    v3_tmp3.set(center.add(halfExtents));
-    v3_tmp4.set(aabb->center.add(aabb->halfExtents));
-    v3_tmp4.max(v3_tmp3);
-    v3_tmp3.min(v3_tmp2);
+void AABB::merge(const AABB &aabb) const {
+    Vec3 minA = center - halfExtents;
+    Vec3 minB = aabb.center - aabb.halfExtents;
+    Vec3 maxA = center + halfExtents;
+    Vec3 maxB = aabb.center + aabb.halfExtents;
+    Vec3 maxP = MathUtil.max(maxA, maxB);
+    Vec3 minP = MathUtil.min(minA, minB);
 
-    center.set()
+    Vec3 addP = maxP + minP;
+    Vec3 subP = maxP - minP;
+    center = addP * 0.5;
+    halfExtents = subP * 0.5;
 }
 
 void Sphere::mergePoint(const cc::Vec3 &point) {
@@ -60,6 +60,23 @@ void Sphere::mergePoint(const cc::Vec3 &point) {
         offset.scale(half / distance);
         center += offset;
     }
+}
+
+void Sphere::define(const AABB &aabb) {
+    cc::Vec3 minPos, maxPos;
+    aabb->getBoundary(minPos, maxPos);
+
+    // Initialize sphere
+    center.set(minPos);
+    radius = 0.0f;
+
+    // Calculate sphere
+    Vec3 offset = maxPos - center;
+    const float dist = offset.length();
+
+    const float half = dist * 0.5f;
+    radius += dist * 0.5f;
+    center += (half / dist) * offset;
 }
 
 void Sphere::mergeAABB(const AABB *aabb) {

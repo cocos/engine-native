@@ -171,7 +171,7 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
                             castWorldBounds.halfExtents.set(model->worldBounds().halfExtents);
                             castBoundsInited = true;
                         }
-                        castWorldBounds.merge(model->getWroldBounds());
+                        castWorldBounds.merge(&model->getWroldBounds());
                         shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
 
@@ -181,7 +181,7 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
                             receiveWorldBounds.halfExtents.set(model->worldBounds().halfExtents);
                             receiveBoundsInited = true;
                         }
-                        receiveWorldBounds.merge(model->worldBounds());
+                        receiveWorldBounds.merge(&model->getWroldBounds());
                     }
 
                     // frustum culling

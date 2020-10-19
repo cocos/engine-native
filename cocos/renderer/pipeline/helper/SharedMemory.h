@@ -109,7 +109,7 @@ struct CC_DLL AABB {
     cc::Vec3 halfExtents;
 
     void getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const;
-    void merge(const AABB *aabb);
+    void merge(const AABB &aabb);
 
     const static se::PoolType type;
 };
@@ -280,6 +280,7 @@ struct CC_DLL Sphere {
 
     CC_INLINE void setCenter(const cc::Vec3 &val) { center = val; }
     CC_INLINE void setRadius(float val) { radius = val; }
+    void define(const AABB &aabb);
     void mergeAABB(const AABB *aabb);
     void mergePoint(const Vec3 &point);
 
@@ -305,6 +306,7 @@ struct CC_DLL Shadows {
     float bias = 0;
     float orthoSize = 0;
     uint32_t sphereID = 0;
+    uint32_t autoAdapt = 0;
     uint32_t receiveSphereID = 0;
 
     cc::Vec2 size;

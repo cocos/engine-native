@@ -34,20 +34,6 @@ inline bool Vec3::isOne() const
     return x == 1.0f && y == 1.0f && z == 1.0f;
 }
 
-inline void Vec3::max(const Vec3& v)
-{
-    x = x >= v.x ? x : v.x;
-    y = y >= v.y ? y : v.y;
-    z = z >= v.z ? z : v.z;
-}
-
-inline void Vec3::min(const Vec3& v)
-{
-    x = x <= v.x ? x : v.x;
-    y = y <= v.y ? y : v.y;
-    z = z <= v.z ? z : v.z;
-}
-
 inline void Vec3::add(const Vec3& v)
 {
     x += v.x;

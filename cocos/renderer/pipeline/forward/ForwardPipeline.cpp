@@ -135,20 +135,31 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         const auto node = mainLight->getNode();
         const auto sphere = shadowInfo->getSphere();
         cc::Mat4 shadowCameraView;
-        getShadowWorldMatrix(shadowInfo, node->worldRotation, mainLight->direction, shadowCameraView);
-        const auto &matShadowView = shadowCameraView.getInversed();
 
-        // shadow view proj
-
+        // light proj
         float x = 0;
         float y = 0;
-        if (shadowInfo->orthoSize > sphere->radius) {
+        float far = 0;
+        if(shadowInfo->autoAdapt) {
+            getShadowWorldMatrix(shadowInfo, node->worldRotation, mainLight->direction, shadowCameraView);
+
+            const float radius = shadowInfo->getSphere()->radius;
+            x = radius * shadowInfo.aspect;
+            y = radius;
+
+            far = std::min(shadowInfo.receiveSphere.radius * 2.0f * std::sqrt(2.0f), 2000.0f);
+            if(radius >= 500.0f) { shadowInfo.size.set(2048, 2048); }
+            else if (radius < 500.0f && radius >= 100.0f) { shadowInfo.size.set(1024, 1024); }
+        } else {
+            shadowCameraView = mainLight->getNode()->worldMatrix;
+
             x = shadowInfo->orthoSize * shadowInfo->aspect;
             y = shadowInfo->orthoSize;
-        } else {
-            x = sphere->radius * shadowInfo->aspect;
-            y = sphere->radius;
+
+            far = shadowInfo->far;
         }
+
+        const auto &matShadowView = shadowCameraView.getInversed();
 
         const auto projectionSinY = _device->getScreenSpaceSignY() * _device->getUVSpaceSignY();
         Mat4 matShadowViewProj;
