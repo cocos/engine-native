@@ -298,13 +298,13 @@ const SamplerInfo UniformTangentMorphTexture = {
 const SamplerInfo UniformLightingMapSampler = {
     {
         static_cast<uint>(SetIndex::LOCAL),
-        static_cast<uint>(ModelLocalBindings::SAMPLER_LIGHTING_MAP),
+        static_cast<uint>(ModelLocalBindings::SAMPLER_LIGHTMAP),
         "cc_lightingMap",
         gfx::Type::SAMPLER2D,
         1,
     },
     {
-        static_cast<uint>(ModelLocalBindings::SAMPLER_LIGHTING_MAP),
+        static_cast<uint>(ModelLocalBindings::SAMPLER_LIGHTMAP),
         gfx::DescriptorType::SAMPLER,
         1,
         gfx::ShaderStageFlagBit::FRAGMENT,

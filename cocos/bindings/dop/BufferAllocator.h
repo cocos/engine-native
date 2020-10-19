@@ -18,7 +18,7 @@ public:
     }
 
     template <class T>
-    static T *getBuffer(PoolType type, uint index, size_t *size) {
+    static T *getBuffer(PoolType type, uint index, uint *size) {
         index &= _bufferMask;
         if (BufferAllocator::_pools.count(type) != 0) {
             const auto pool = BufferAllocator::_pools[type];

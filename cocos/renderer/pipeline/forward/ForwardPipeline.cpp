@@ -11,6 +11,7 @@
 #include "gfx/GFXDevice.h"
 #include "gfx/GFXQueue.h"
 #include "gfx/GFXRenderPass.h"
+#include "gfx/GFXTexture.h"
 #include "platform/Application.h"
 
 namespace cc {
@@ -251,7 +252,12 @@ void ForwardPipeline::updateUBO(RenderView *view) {
         skyColor.w = ambient->skyIllum * exposure;
     }
     TO_VEC4(uboGlobalView, skyColor, UBOGlobal::AMBIENT_SKY_OFFSET);
-    TO_VEC4(uboGlobalView, ambient->groundAlbedo, UBOGlobal::AMBIENT_GROUND_OFFSET);
+
+    uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET]     = ambient->groundAlbedo.x;
+    uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
+    uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
+    const auto envmap = _descriptorSet->getTexture((uint)PipelineGlobalBindings::SAMPLER_ENVIRONMENT);
+    if (envmap) uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET + 3] = envmap->getLevelCount();
 
     if (fog->enabled) {
         TO_VEC4(uboGlobalView, fog->fogColor, UBOGlobal::GLOBAL_FOG_COLOR_OFFSET);
