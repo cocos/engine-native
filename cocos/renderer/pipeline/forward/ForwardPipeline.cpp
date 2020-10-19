@@ -144,10 +144,10 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
             getShadowWorldMatrix(shadowInfo, node->worldRotation, mainLight->direction, shadowCameraView);
 
             const float radius = shadowInfo->getSphere()->radius;
-            x = radius * shadowInfo.aspect;
+            x = radius * shadowInfo->aspect;
             y = radius;
 
-            far = std::min(shadowInfo.receiveSphere.radius * 2.0f * std::sqrt(2.0f), 2000.0f);
+            far = std::min(shadowInfo->getReceiveSphere().radius * 2.0f * std::sqrt(2.0f), 2000.0f);
             if(radius >= 500.0f) { shadowInfo.size.set(2048, 2048); }
             else if (radius < 500.0f && radius >= 100.0f) { shadowInfo.size.set(1024, 1024); }
         } else {
