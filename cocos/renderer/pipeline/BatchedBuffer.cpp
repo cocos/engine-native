@@ -57,7 +57,7 @@ void BatchedBuffer::merge(const SubModelView *subModel, uint passIdx, const Rend
     const auto pass = subModel->getPassView(passIdx);
     const auto shader = subModel->getShader(passIdx);
     const auto descriptorSet = subModel->getDescriptorSet();
-    auto isBatchExist = false;
+    bool isBatchExist = false;
 
     for (auto i = 0; i < _batches.size(); ++i) {
         auto batch = _batches[i];

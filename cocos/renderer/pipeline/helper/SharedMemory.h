@@ -146,17 +146,8 @@ struct CC_DLL InstancedAttributeView {
 };
 
 struct CC_DLL RenderingSubMesh {
-    uint32_t vertexBuffersID = 0; // array pool id
-    uint32_t attributesID = 0;    // array pool id
-    uint32_t flatBuffersID = 0;   // array pool id
+    uint32_t flatBuffersID = 0; // array pool id
 
-    uint32_t primitiveMode = 0;
-    uint32_t indexBufferID = 0;
-    uint32_t indirectBufferID = 0;
-    uint32_t meshID = 0;
-    uint32_t subMeshIndex = 0;
-
-    //    CC_INLINE const uint8_t * getVertexBufferArrayID() const { return GET_}
     CC_INLINE const uint *getFlatBufferArrayID() const { return GET_FLAT_BUFFER_ARRAY(flatBuffersID); }
     CC_INLINE const FlatBufferView *getFlatBuffer(uint idx) const { return GET_FLAT_BUFFER(idx); }
 

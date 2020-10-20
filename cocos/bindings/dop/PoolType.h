@@ -30,6 +30,8 @@ enum class PoolType {
     SHADOW,
     LIGHT,
     SPHERE,
+    INSTANCED_ATTRIBUTE,
+    FLAT_BUFFER,
     SUB_MESH,
 
     // array

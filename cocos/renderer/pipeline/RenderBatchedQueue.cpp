@@ -51,5 +51,9 @@ void RenderBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPas
     }
 }
 
+void RenderBatchedQueue::push(BatchedBuffer *batchedBuffer) {
+    _queues.emplace(batchedBuffer);
+}
+
 } // namespace pipeline
 } // namespace cc
