@@ -816,7 +816,7 @@ public:
             submitInfo.commandBufferCount = 1;
             submitInfo.pCommandBuffers = &_cmdBuff.vkCommandBuffer;
             VK_CHECK(vkQueueSubmit(_queue->vkQueue, 1, &submitInfo, fence));
-            VK_CHECK(vkWaitForFences(_device->vkDevice, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
+            VK_CHECK(vkWaitForFences(_device->vkDevice, 1, &fence, VK_TRUE, DEFAULT_TIMEOUT));
             _commandBufferPool->yield(&_cmdBuff);
         }
     }

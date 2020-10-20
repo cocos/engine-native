@@ -440,7 +440,7 @@ void CCVKDevice::acquire() {
 
     if (queue->gpuQueue()->fences.size()) {
         VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, queue->gpuQueue()->fences.size(), 
-            queue->gpuQueue()->fences.data(), VK_TRUE, DEFAULT_FENCE_TIMEOUT));
+                                 queue->gpuQueue()->fences.data(), VK_TRUE, DEFAULT_TIMEOUT));
     }
 
     queue->_numDrawCalls = 0;
@@ -461,8 +461,8 @@ void CCVKDevice::acquire() {
 
     _gpuSemaphorePool->reset();
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
-    VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
-                                   ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
+    VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, DEFAULT_TIMEOUT,
+                                   acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
     queue->gpuQueue()->nextWaitSemaphore = acquireSemaphore;
     queue->gpuQueue()->nextSignalSemaphore = _gpuSemaphorePool->alloc();
