@@ -23,6 +23,7 @@
  ****************************************************************************/
 #import "View.h"
 #include "bindings/event/EventDispatcher.h"
+#include "platform/Application.h"
 
 namespace {
 void dispatchEvents(cc::TouchEvent &touchEvent, NSSet *touches) {
@@ -88,5 +89,15 @@ void dispatchEvents(cc::TouchEvent &touchEvent, NSSet *touches) {
 - (void)setPreventTouchEvent:(BOOL)flag {
     self.preventTouch = flag;
 }
+
+#ifdef CC_USE_METAL
+- (void)drawInMTKView:(nonnull MTKView *)view {
+    cc::Application::getInstance()->tick();
+}
+
+- (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size {
+    //TODO
+}
+#endif
 
 @end
