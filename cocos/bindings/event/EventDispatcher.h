@@ -29,6 +29,10 @@
 #include <functional>
 #include <string>
 
+namespace se {
+class Value;
+}
+
 namespace cc
 {
     
@@ -191,11 +195,13 @@ public:
     static void dispatchCustomEvent(const CustomEvent& event);
 
 private:
+    static void doDispatchEvent(const char *eventName, const char *jsFunctionName, const std::vector<se::Value> &args);
+    
     struct Node
     {
         CustomEventListener listener;
         uint32_t listenerID;
-        struct Node* next;
+        struct Node* next = nullptr;
     };
     static std::unordered_map<std::string, Node*> _listeners;
 };

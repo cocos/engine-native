@@ -21,7 +21,6 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
 #include "EventDispatcher.h"
 
 #include "cocos/bindings/jswrapper/SeApi.h"
@@ -92,14 +91,8 @@ namespace cc
 
 void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
 {
-    if (!se::ScriptEngine::getInstance()->isValid())
-        return;
-
     se::AutoHandleScope scope;
-    assert(_inited);
-
-    if (_jsTouchObjArray == nullptr)
-    {
+    if (!_jsTouchObjArray) {
         _jsTouchObjArray = se::Object::createArrayObject(0);
         _jsTouchObjArray->root();
     }
@@ -147,24 +140,15 @@ void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
             break;
     }
 
-    se::Value callbackVal;
-    if (__jsbObj->getProperty(eventName, &callbackVal) && !callbackVal.isNullOrUndefined())
-    {
-        se::ValueArray args;
-        args.push_back(se::Value(_jsTouchObjArray));
-        callbackVal.toObject()->call(args, nullptr);
-    }
+    se::ValueArray args;
+    args.push_back(se::Value(_jsTouchObjArray));
+    EventDispatcher::doDispatchEvent(nullptr, eventName, args);
 }
 
 void EventDispatcher::dispatchMouseEvent(const struct MouseEvent& mouseEvent)
 {
-    if (!se::ScriptEngine::getInstance()->isValid())
-        return;
-
     se::AutoHandleScope scope;
-    assert(_inited);
-
-    if (_jsMouseEventObj == nullptr)
+    if (!_jsMouseEventObj)
     {
         _jsMouseEventObj = se::Object::createPlainObject();
         _jsMouseEventObj->root();
@@ -208,26 +192,15 @@ void EventDispatcher::dispatchMouseEvent(const struct MouseEvent& mouseEvent)
             break;
     }
 
-    se::Value callbackVal;
-    if (__jsbObj->getProperty(eventName, &callbackVal) && !callbackVal.isNullOrUndefined())
-    {
-        se::ValueArray args;
-        args.push_back(se::Value(_jsMouseEventObj));
-        callbackVal.toObject()->call(args, nullptr);
-    }
+    se::ValueArray args;
+    args.push_back(se::Value(_jsMouseEventObj));
+    EventDispatcher::doDispatchEvent(nullptr, eventName, args);
 }
 
 void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent& keyboardEvent)
 {
-    if (!se::ScriptEngine::getInstance()->isValid())
-        return;
-
-
     se::AutoHandleScope scope;
-    assert(_inited);
-
-    if (_jsKeyboardEventObj == nullptr)
-    {
+    if (!_jsKeyboardEventObj) {
         _jsKeyboardEventObj = se::Object::createPlainObject();
         _jsKeyboardEventObj->root();
     }
@@ -246,20 +219,15 @@ void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent& keyboard
             break;
     }
 
-    se::Value callbackVal;
-    if (__jsbObj->getProperty(eventName, &callbackVal) && !callbackVal.isNullOrUndefined())
-    {
-        _jsKeyboardEventObj->setProperty("altKey", se::Value(keyboardEvent.altKeyActive));
-        _jsKeyboardEventObj->setProperty("ctrlKey", se::Value(keyboardEvent.ctrlKeyActive));
-        _jsKeyboardEventObj->setProperty("metaKey", se::Value(keyboardEvent.metaKeyActive));
-        _jsKeyboardEventObj->setProperty("shiftKey", se::Value(keyboardEvent.shiftKeyActive));
-        _jsKeyboardEventObj->setProperty("repeat", se::Value(keyboardEvent.action == KeyboardEvent::Action::REPEAT));
-        _jsKeyboardEventObj->setProperty("keyCode", se::Value(keyboardEvent.key));
-
-        se::ValueArray args;
-        args.push_back(se::Value(_jsKeyboardEventObj));
-        callbackVal.toObject()->call(args, nullptr);
-    }
+    _jsKeyboardEventObj->setProperty("altKey", se::Value(keyboardEvent.altKeyActive));
+    _jsKeyboardEventObj->setProperty("ctrlKey", se::Value(keyboardEvent.ctrlKeyActive));
+    _jsKeyboardEventObj->setProperty("metaKey", se::Value(keyboardEvent.metaKeyActive));
+    _jsKeyboardEventObj->setProperty("shiftKey", se::Value(keyboardEvent.shiftKeyActive));
+    _jsKeyboardEventObj->setProperty("repeat", se::Value(keyboardEvent.action == KeyboardEvent::Action::REPEAT));
+    _jsKeyboardEventObj->setProperty("keyCode", se::Value(keyboardEvent.key));
+    se::ValueArray args;
+    args.push_back(se::Value(_jsKeyboardEventObj));
+    EventDispatcher::doDispatchEvent(nullptr, eventName, args);
 }
 
 void EventDispatcher::dispatchTickEvent(float dt)
@@ -286,73 +254,42 @@ void EventDispatcher::dispatchTickEvent(float dt)
 
 void EventDispatcher::dispatchResizeEvent(int width, int height)
 {
-    if (!se::ScriptEngine::getInstance()->isValid())
-        return;
-
     se::AutoHandleScope scope;
-    assert(_inited);
-
-    if (_jsResizeEventObj == nullptr)
-    {
+    if (!_jsResizeEventObj) {
         _jsResizeEventObj = se::Object::createPlainObject();
         _jsResizeEventObj->root();
     }
-
-    se::Value func;
-    __jsbObj->getProperty("onResize", &func);
-    if (func.isObject() && func.toObject()->isFunction())
-    {
-        _jsResizeEventObj->setProperty("width", se::Value(width));
-        _jsResizeEventObj->setProperty("height", se::Value(height));
-
-        se::ValueArray args;
-        args.push_back(se::Value(_jsResizeEventObj));
-        func.toObject()->call(args, nullptr);
-    }
-}
-
-static void dispatchEnterBackgroundOrForegroundEvent(const char* funcName)
-{
-    if (!se::ScriptEngine::getInstance()->isValid())
-        return;
-
-    se::AutoHandleScope scope;
-    assert(_inited);
-
-    se::Value func;
-    __jsbObj->getProperty(funcName, &func);
-    if (func.isObject() && func.toObject()->isFunction())
-    {
-        func.toObject()->call(se::EmptyValueArray, nullptr);
-    }
+    
+    _jsResizeEventObj->setProperty("width", se::Value(width));
+    _jsResizeEventObj->setProperty("height", se::Value(height));
+    se::ValueArray args;
+    args.push_back(se::Value(_jsResizeEventObj));
+    EventDispatcher::doDispatchEvent(EVENT_RESIZE, "onResize", args);
 }
 
 void EventDispatcher::dispatchEnterBackgroundEvent()
 {
-    // dispatch to Native
-    CustomEvent event;
-    event.name = EVENT_COME_TO_BACKGROUND;
-    EventDispatcher::dispatchCustomEvent(event);
-
-    // dispatch to JavaScript
-    dispatchEnterBackgroundOrForegroundEvent("onPause");
+    EventDispatcher::doDispatchEvent(EVENT_COME_TO_BACKGROUND, "onPause", se::EmptyValueArray);
 }
 
 void EventDispatcher::dispatchEnterForegroundEvent()
 {
-    // dispatch to Native
-    CustomEvent event;
-    event.name = EVENT_COME_TO_FOREGROUND;
-    EventDispatcher::dispatchCustomEvent(event);
-
-    // dispatch to JavaScript
-    dispatchEnterBackgroundOrForegroundEvent("onResume");
+    EventDispatcher::doDispatchEvent(EVENT_COME_TO_FOREGROUND, "onResume", se::EmptyValueArray);
 }
 
 void EventDispatcher::dispatchMemoryWarningEvent() {
-    CustomEvent event;
-    event.name = EVENT_MEMORY_WARNING;
-    EventDispatcher::dispatchCustomEvent(event);
+    EventDispatcher::doDispatchEvent(EVENT_MEMORY_WARNING, "onMemoryWarning", se::EmptyValueArray);
+}
+
+void EventDispatcher::doDispatchEvent(const char *eventName, const char *jsFunctionName, const std::vector<se::Value> &args) {
+    if (!se::ScriptEngine::getInstance()->isValid())
+        return;
+    
+    if (eventName) {
+        CustomEvent event;
+        event.name = eventName;
+        EventDispatcher::dispatchCustomEvent(event);
+    }
     
     // dispatch to Javascript
     if (!se::ScriptEngine::getInstance()->isValid())
@@ -362,9 +299,9 @@ void EventDispatcher::dispatchMemoryWarningEvent() {
     assert(_inited);
     
     se::Value func;
-    __jsbObj->getProperty("onMemoryWarning", &func);
+    __jsbObj->getProperty(jsFunctionName, &func);
     if (func.isObject() && func.toObject()->isFunction()) {
-        func.toObject()->call(se::EmptyValueArray, nullptr);
+        func.toObject()->call(args, nullptr);
     }
 }
 
