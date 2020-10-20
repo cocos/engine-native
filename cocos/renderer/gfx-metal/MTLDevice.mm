@@ -130,6 +130,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _features[(int)Feature::MSAA] = true;
     _features[(int)Feature::INSTANCED_ARRAYS] = true;
     _features[(int)Feature::MULTIPLE_RENDER_TARGETS] = true;
+    _features[(uint)Feature::BLEND_MINMAX] = true;
     _features[static_cast<uint>(Feature::DEPTH_BOUNDS)] = false;
     _features[static_cast<uint>(Feature::LINE_WIDTH)] = false;
     _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = false;
@@ -155,18 +156,22 @@ void CCMTLDevice::destroy() {
 
 void CCMTLDevice::resize(uint width, uint height) {}
 
-void CCMTLDevice::present() {
+void CCMTLDevice::acquire() {
     CCMTLQueue *queue = (CCMTLQueue *)_queue;
-    _numDrawCalls = queue->_numDrawCalls;
-    _numInstances = queue->_numInstances;
-    _numTriangles = queue->_numTriangles;
-
+    
     // Clear queue stats
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
 
     _gpuStagingBufferPool->reset();
+}
+
+void CCMTLDevice::present() {
+    CCMTLQueue *queue = (CCMTLQueue *)_queue;
+    _numDrawCalls = queue->_numDrawCalls;
+    _numInstances = queue->_numInstances;
+    _numTriangles = queue->_numTriangles;
 
     [((MTKView *)(_mtkView)).currentDrawable present];
 }

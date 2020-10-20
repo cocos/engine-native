@@ -167,7 +167,7 @@ public:
     VkSemaphore nextSignalSemaphore = VK_NULL_HANDLE;
     VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
     CachedArray<VkCommandBuffer> commandBuffers;
-    VkFence lastAutoFence = VK_NULL_HANDLE;
+    vector<VkFence> fences;
 };
 
 struct CCVKGPUShaderStage {
@@ -228,6 +228,7 @@ public:
     vector<VkDescriptorSetLayoutBinding> vkBindings;
     VkDescriptorSetLayout vkDescriptorSetLayout = VK_NULL_HANDLE;
 
+    vector<uint> bindingIndices;
     vector<uint> descriptorIndices;
     uint descriptorCount = 0u;
 };
@@ -236,8 +237,6 @@ typedef vector<CCVKGPUDescriptorSetLayout *> CCVKGPUDescriptorSetLayoutList;
 class CCVKGPUPipelineLayout : public Object {
 public:
     CCVKGPUDescriptorSetLayoutList setLayouts;
-    vector<uint> dynamicOffsetOffsets;
-    uint dynamicOffsetCount;
 
     VkPipelineLayout vkPipelineLayout = VK_NULL_HANDLE;
     vector<VkDescriptorUpdateTemplate> vkDescriptorUpdateTemplates;
@@ -246,6 +245,8 @@ public:
     vector<VkDescriptorSetLayout> descriptorSetLayouts;
     vector<VkDescriptorSet> descriptorSets;
     vector<uint> dynamicOffsets;
+    vector<uint> dynamicOffsetOffsets;
+    uint dynamicOffsetCount;
 };
 
 class CCVKGPUPipelineState : public Object {
@@ -260,7 +261,6 @@ public:
     DynamicStateList dynamicStates;
     CCVKGPURenderPass *gpuRenderPass = nullptr;
     VkPipeline vkPipeline = VK_NULL_HANDLE;
-    VkPipelineCache vkPipelineCache = VK_NULL_HANDLE;
 };
 
 class CCVKGPUFence : public Object {
@@ -280,6 +280,9 @@ public:
     bool useMultiDrawIndirect = false;
 
     CCVKGPUSampler defaultSampler;
+    CCVKGPUTexture defaultTexture;
+    CCVKGPUTextureView defaultTextureView;
+    CCVKGPUBuffer defaultBuffer;
 };
 
 /**
@@ -816,7 +819,7 @@ public:
             submitInfo.commandBufferCount = 1;
             submitInfo.pCommandBuffers = &_cmdBuff.vkCommandBuffer;
             VK_CHECK(vkQueueSubmit(_queue->vkQueue, 1, &submitInfo, fence));
-            VK_CHECK(vkWaitForFences(_device->vkDevice, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
+            VK_CHECK(vkWaitForFences(_device->vkDevice, 1, &fence, VK_TRUE, DEFAULT_TIMEOUT));
             _commandBufferPool->yield(&_cmdBuff);
         }
     }
@@ -829,10 +832,6 @@ public:
         }
 
         if (_count) {
-            if (_queue->lastAutoFence) {
-                VK_CHECK(vkWaitForFences(_device->vkDevice, 1, &_queue->lastAutoFence, VK_TRUE, DEFAULT_FENCE_TIMEOUT));
-                _queue->lastAutoFence = VK_NULL_HANDLE;
-            }
             for (uint i = 0u; i < _count; i++) {
                 const Transfer &transfer = _transfers[i];
                 memcpy(transfer.dst, transfer.src, transfer.size);

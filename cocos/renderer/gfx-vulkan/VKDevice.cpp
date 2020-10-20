@@ -181,6 +181,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _features[(uint)Feature::ELEMENT_INDEX_UINT] = true;
     _features[(uint)Feature::INSTANCED_ARRAYS] = true;
     _features[(uint)Feature::MULTIPLE_RENDER_TARGETS] = true;
+    _features[(uint)Feature::BLEND_MINMAX] = true;
     _features[(uint)Feature::DEPTH_BOUNDS] = deviceFeatures.depthBounds;
     _features[(uint)Feature::LINE_WIDTH] = true;
     _features[(uint)Feature::STENCIL_COMPARE_MASK] = true;
@@ -302,6 +303,25 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
 
     CCVKCmdFuncCreateSampler(this, &_gpuDevice->defaultSampler);
 
+    _gpuDevice->defaultTexture.format = Format::RGBA8;
+    _gpuDevice->defaultTexture.usage = TextureUsageBit::SAMPLED;
+    _gpuDevice->defaultTexture.width = _gpuDevice->defaultTexture.height = 1u;
+    _gpuDevice->defaultTexture.size = FormatSize(Format::RGBA8, 1u, 1u, 1u);
+    CCVKCmdFuncCreateTexture(this, &_gpuDevice->defaultTexture);
+
+    _gpuDevice->defaultTextureView.gpuTexture = &_gpuDevice->defaultTexture;
+    _gpuDevice->defaultTextureView.format = Format::RGBA8;
+    CCVKCmdFuncCreateTextureView(this, &_gpuDevice->defaultTextureView);
+
+    _gpuDevice->defaultBuffer.usage = BufferUsage::UNIFORM;
+    _gpuDevice->defaultBuffer.memUsage = MemoryUsage::HOST | MemoryUsage::DEVICE;
+    _gpuDevice->defaultBuffer.size = _gpuDevice->defaultBuffer.stride = 16u;
+    _gpuDevice->defaultBuffer.count = 1u;
+    CCVKCmdFuncCreateBuffer(this, &_gpuDevice->defaultBuffer);
+
+    VkPipelineCacheCreateInfo pipelineCacheInfo{VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO};
+    VK_CHECK(vkCreatePipelineCache(_gpuDevice->vkDevice, &pipelineCacheInfo, nullptr, &_gpuDevice->vkPipelineCache));
+
     for (uint i = 0u; i < gpuContext->swapchainCreateInfo.minImageCount; i++) {
         TextureInfo depthStencilTexInfo;
         depthStencilTexInfo.type = TextureType::TEX2D;
@@ -405,6 +425,25 @@ void CCVKDevice::destroy() {
     CC_SAFE_DELETE(_gpuFencePool);
 
     if (_gpuDevice) {
+        if (_gpuDevice->vkPipelineCache) {
+            vkDestroyPipelineCache(_gpuDevice->vkDevice, _gpuDevice->vkPipelineCache, nullptr);
+            _gpuDevice->vkPipelineCache = VK_NULL_HANDLE;
+        }
+
+        if (_gpuDevice->defaultBuffer.vkBuffer) {
+            vmaDestroyBuffer(_gpuDevice->memoryAllocator, _gpuDevice->defaultBuffer.vkBuffer, _gpuDevice->defaultBuffer.vmaAllocation);
+            _gpuDevice->defaultBuffer.vkBuffer = VK_NULL_HANDLE;
+            _gpuDevice->defaultBuffer.vmaAllocation = VK_NULL_HANDLE;
+        }
+        if (_gpuDevice->defaultTextureView.vkImageView) {
+            vkDestroyImageView(_gpuDevice->vkDevice, _gpuDevice->defaultTextureView.vkImageView, nullptr);
+            _gpuDevice->defaultTextureView.vkImageView = VK_NULL_HANDLE;
+        }
+        if (_gpuDevice->defaultTexture.vkImage) {
+            vmaDestroyImage(_gpuDevice->memoryAllocator, _gpuDevice->defaultTexture.vkImage, _gpuDevice->defaultTexture.vmaAllocation);
+            _gpuDevice->defaultTexture.vkImage = VK_NULL_HANDLE;
+            _gpuDevice->defaultTexture.vmaAllocation = VK_NULL_HANDLE;
+        }
         CCVKCmdFuncDestroySampler(_gpuDevice, &_gpuDevice->defaultSampler);
 
         if (_gpuDevice->memoryAllocator != VK_NULL_HANDLE) {
@@ -437,15 +476,32 @@ void CCVKDevice::acquire() {
     if (!checkSwapchainStatus()) return;
 
     CCVKQueue *queue = (CCVKQueue *)_queue;
-    // Clear queue stats
+
+    if (queue->gpuQueue()->fences.size()) {
+        VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, queue->gpuQueue()->fences.size(), 
+                                 queue->gpuQueue()->fences.data(), VK_TRUE, DEFAULT_TIMEOUT));
+    }
+
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
+    queue->gpuQueue()->fences.clear();
+    queue->gpuQueue()->nextWaitSemaphore = VK_NULL_HANDLE;
+    queue->gpuQueue()->nextSignalSemaphore = VK_NULL_HANDLE;
+
+    // reset everything only when no pending commands
+    if (_gpuTransportHub->empty() && !((CCVKCommandBuffer *)_cmdBuff)->gpuCommandBuffer()->began) {
+        _gpuFencePool->reset();
+        _gpuRecycleBin->clear();
+        _gpuDescriptorSetPool->reset();
+        _gpuCommandBufferPool->reset();
+        _gpuStagingBufferPool->reset();
+    }
 
     _gpuSemaphorePool->reset();
     VkSemaphore acquireSemaphore = _gpuSemaphorePool->alloc();
-    VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain,
-                                   ~0ull, acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
+    VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, DEFAULT_TIMEOUT,
+                                   acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
     queue->gpuQueue()->nextWaitSemaphore = acquireSemaphore;
     queue->gpuQueue()->nextSignalSemaphore = _gpuSemaphorePool->alloc();
@@ -467,24 +523,6 @@ void CCVKDevice::present() {
 
         VkResult res = vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo);
         if (res) _swapchainReady = false;
-    }
-
-    // TODO: these can be moved to acquire-time after pipeline refactoring,
-    // which should guarantee that no transfer operation will be issued before acquiring
-
-    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
-
-    queue->gpuQueue()->lastAutoFence = VK_NULL_HANDLE;
-    queue->gpuQueue()->nextWaitSemaphore = VK_NULL_HANDLE;
-    queue->gpuQueue()->nextSignalSemaphore = VK_NULL_HANDLE;
-
-    // reset everything only when no pending commands
-    if (_gpuTransportHub->empty()) {
-        _gpuFencePool->reset();
-        _gpuRecycleBin->clear();
-        _gpuDescriptorSetPool->reset();
-        _gpuCommandBufferPool->reset();
-        _gpuStagingBufferPool->reset();
     }
 }
 
@@ -637,7 +675,7 @@ void CCVKDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *ds
     // which is true for now but may change in the future. This appoach gives us
     // the wiggle room to leverage immediate update vs. copy-upload strategies without
     // breaking compatabilities. When we reached some conclusion on this subject,
-    // getting rid of this interface all together may become a better option.
+    // getting rid of this interface all together might become a better option.
     _cmdBuff->begin();
     const CCVKGPUCommandBuffer *gpuCommandBuffer = ((CCVKCommandBuffer *)_cmdBuff)->gpuCommandBuffer();
     CCVKCmdFuncCopyBuffersToTexture(this, buffers, ((CCVKTexture *)dst)->gpuTexture(), regions, count, gpuCommandBuffer);
