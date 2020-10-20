@@ -181,6 +181,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     _features[(uint)Feature::ELEMENT_INDEX_UINT] = true;
     _features[(uint)Feature::INSTANCED_ARRAYS] = true;
     _features[(uint)Feature::MULTIPLE_RENDER_TARGETS] = true;
+    _features[(uint)Feature::BLEND_MINMAX] = true;
     _features[(uint)Feature::DEPTH_BOUNDS] = deviceFeatures.depthBounds;
     _features[(uint)Feature::LINE_WIDTH] = true;
     _features[(uint)Feature::STENCIL_COMPARE_MASK] = true;

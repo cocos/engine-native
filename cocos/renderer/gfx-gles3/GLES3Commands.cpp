@@ -454,8 +454,8 @@ const GLenum GLES3_BLEND_OPS[] = {
     GL_FUNC_ADD,
     GL_FUNC_SUBTRACT,
     GL_FUNC_REVERSE_SUBTRACT,
-    GL_FUNC_ADD,
-    GL_FUNC_ADD,
+    GL_MIN,
+    GL_MAX,
 };
 
 const GLenum GLES3_BLEND_FACTORS[] = {
