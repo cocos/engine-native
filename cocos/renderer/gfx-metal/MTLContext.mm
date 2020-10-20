@@ -13,7 +13,7 @@ Format toFormat(MTLPixelFormat format) {
     switch (format) {
         case MTLPixelFormatRGBA8Unorm: return Format::RGBA8;
         case MTLPixelFormatBGRA8Unorm: return Format::BGRA8;
-#if (CC_PLATFORM == CC_PLATFORM_OSX)
+#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
         case MTLPixelFormatDepth24Unorm_Stencil8: return Format::D24S8;
 #endif
         case MTLPixelFormatDepth32Float_Stencil8: return Format::D32F_S8;
