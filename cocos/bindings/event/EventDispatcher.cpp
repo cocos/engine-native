@@ -28,69 +28,60 @@
 #include "cocos/bindings/event/CustomEventTypes.h"
 
 namespace {
-    se::Value _tickVal;
-    std::vector<se::Object*> _jsTouchObjPool;
-    se::Object* _jsTouchObjArray = nullptr;
-    se::Object* _jsMouseEventObj = nullptr;
-    se::Object* _jsKeyboardEventObj = nullptr;
-    se::Object* _jsResizeEventObj = nullptr;
-    bool _inited = false;
+se::Value _tickVal;
+std::vector<se::Object *> _jsTouchObjPool;
+se::Object *_jsTouchObjArray = nullptr;
+se::Object *_jsMouseEventObj = nullptr;
+se::Object *_jsKeyboardEventObj = nullptr;
+se::Object *_jsResizeEventObj = nullptr;
+bool _inited = false;
+} // namespace
+
+namespace cc {
+std::unordered_map<std::string, EventDispatcher::Node *> EventDispatcher::_listeners;
+
+void EventDispatcher::init() {
+    _inited = true;
+    se::ScriptEngine::getInstance()->addBeforeCleanupHook([]() {
+        EventDispatcher::destroy();
+    });
 }
 
-namespace cc
-{
-    std::unordered_map<std::string, EventDispatcher::Node*> EventDispatcher::_listeners;
+void EventDispatcher::destroy() {
+    for (auto touchObj : _jsTouchObjPool) {
+        touchObj->unroot();
+        touchObj->decRef();
+    }
+    _jsTouchObjPool.clear();
 
-    void EventDispatcher::init()
-    {
-        _inited = true;
-        se::ScriptEngine::getInstance()->addBeforeCleanupHook([](){
-            EventDispatcher::destroy();
-        });
+    if (_jsTouchObjArray != nullptr) {
+        _jsTouchObjArray->unroot();
+        _jsTouchObjArray->decRef();
+        _jsTouchObjArray = nullptr;
     }
 
-    void EventDispatcher::destroy()
-    {
-        for (auto touchObj : _jsTouchObjPool)
-        {
-            touchObj->unroot();
-            touchObj->decRef();
-        }
-        _jsTouchObjPool.clear();
-
-        if (_jsTouchObjArray != nullptr)
-        {
-            _jsTouchObjArray->unroot();
-            _jsTouchObjArray->decRef();
-            _jsTouchObjArray = nullptr;
-        }
-
-        if (_jsMouseEventObj != nullptr)
-        {
-            _jsMouseEventObj->unroot();
-            _jsMouseEventObj->decRef();
-            _jsMouseEventObj = nullptr;
-        }
-
-        if (_jsKeyboardEventObj != nullptr)
-        {
-            _jsKeyboardEventObj->unroot();
-            _jsKeyboardEventObj->decRef();
-            _jsKeyboardEventObj = nullptr;
-        }
-
-        if (_jsResizeEventObj != nullptr)
-        {
-            _jsResizeEventObj->unroot();
-            _jsResizeEventObj->decRef();
-            _jsResizeEventObj = nullptr;
-        }
-        _inited = false;
-        _tickVal.setUndefined();
+    if (_jsMouseEventObj != nullptr) {
+        _jsMouseEventObj->unroot();
+        _jsMouseEventObj->decRef();
+        _jsMouseEventObj = nullptr;
     }
 
-void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
-{
+    if (_jsKeyboardEventObj != nullptr) {
+        _jsKeyboardEventObj->unroot();
+        _jsKeyboardEventObj->decRef();
+        _jsKeyboardEventObj = nullptr;
+    }
+
+    if (_jsResizeEventObj != nullptr) {
+        _jsResizeEventObj->unroot();
+        _jsResizeEventObj->decRef();
+        _jsResizeEventObj = nullptr;
+    }
+    _inited = false;
+    _tickVal.setUndefined();
+}
+
+void EventDispatcher::dispatchTouchEvent(const struct TouchEvent &touchEvent) {
     se::AutoHandleScope scope;
     if (!_jsTouchObjArray) {
         _jsTouchObjArray = se::Object::createArrayObject(0);
@@ -99,18 +90,16 @@ void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
 
     _jsTouchObjArray->setProperty("length", se::Value(touchEvent.touches.size()));
 
-    while (_jsTouchObjPool.size() < touchEvent.touches.size())
-    {
-        se::Object* touchObj = se::Object::createPlainObject();
+    while (_jsTouchObjPool.size() < touchEvent.touches.size()) {
+        se::Object *touchObj = se::Object::createPlainObject();
         touchObj->root();
         _jsTouchObjPool.push_back(touchObj);
     }
 
     uint32_t touchIndex = 0;
     int poolIndex = 0;
-    for (const auto& touch : touchEvent.touches)
-    {
-        se::Object* jsTouch = _jsTouchObjPool.at(poolIndex++);
+    for (const auto &touch : touchEvent.touches) {
+        se::Object *jsTouch = _jsTouchObjPool.at(poolIndex++);
         jsTouch->setProperty("identifier", se::Value(touch.index));
         jsTouch->setProperty("clientX", se::Value(touch.x));
         jsTouch->setProperty("clientY", se::Value(touch.y));
@@ -121,7 +110,7 @@ void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
         ++touchIndex;
     }
 
-    const char* eventName = nullptr;
+    const char *eventName = nullptr;
     switch (touchEvent.type) {
         case TouchEvent::Type::BEGAN:
             eventName = "onTouchStart";
@@ -145,35 +134,29 @@ void EventDispatcher::dispatchTouchEvent(const struct TouchEvent& touchEvent)
     EventDispatcher::doDispatchEvent(nullptr, eventName, args);
 }
 
-void EventDispatcher::dispatchMouseEvent(const struct MouseEvent& mouseEvent)
-{
+void EventDispatcher::dispatchMouseEvent(const struct MouseEvent &mouseEvent) {
     se::AutoHandleScope scope;
-    if (!_jsMouseEventObj)
-    {
+    if (!_jsMouseEventObj) {
         _jsMouseEventObj = se::Object::createPlainObject();
         _jsMouseEventObj->root();
     }
 
-    const auto& xVal = se::Value(mouseEvent.x);
-    const auto& yVal = se::Value(mouseEvent.y);
+    const auto &xVal = se::Value(mouseEvent.x);
+    const auto &yVal = se::Value(mouseEvent.y);
     const MouseEvent::Type type = mouseEvent.type;
 
-    if (type == MouseEvent::Type::WHEEL)
-    {
+    if (type == MouseEvent::Type::WHEEL) {
         _jsMouseEventObj->setProperty("wheelDeltaX", xVal);
         _jsMouseEventObj->setProperty("wheelDeltaY", yVal);
-    }
-    else
-    {
-        if (type == MouseEvent::Type::DOWN || type == MouseEvent::Type::UP)
-        {
+    } else {
+        if (type == MouseEvent::Type::DOWN || type == MouseEvent::Type::UP) {
             _jsMouseEventObj->setProperty("button", se::Value(mouseEvent.button));
         }
         _jsMouseEventObj->setProperty("x", xVal);
         _jsMouseEventObj->setProperty("y", yVal);
     }
 
-    const char* eventName = nullptr;
+    const char *eventName = nullptr;
     switch (type) {
         case MouseEvent::Type::DOWN:
             eventName = "onMouseDown";
@@ -197,15 +180,14 @@ void EventDispatcher::dispatchMouseEvent(const struct MouseEvent& mouseEvent)
     EventDispatcher::doDispatchEvent(nullptr, eventName, args);
 }
 
-void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent& keyboardEvent)
-{
+void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent &keyboardEvent) {
     se::AutoHandleScope scope;
     if (!_jsKeyboardEventObj) {
         _jsKeyboardEventObj = se::Object::createPlainObject();
         _jsKeyboardEventObj->root();
     }
 
-    const char* eventName = nullptr;
+    const char *eventName = nullptr;
     switch (keyboardEvent.action) {
         case KeyboardEvent::Action::PRESS:
         case KeyboardEvent::Action::REPEAT:
@@ -230,17 +212,14 @@ void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent& keyboard
     EventDispatcher::doDispatchEvent(nullptr, eventName, args);
 }
 
-void EventDispatcher::dispatchTickEvent(float dt)
-{
+void EventDispatcher::dispatchTickEvent(float dt) {
     if (!se::ScriptEngine::getInstance()->isValid())
         return;
 
     se::AutoHandleScope scope;
-    if (_tickVal.isUndefined())
-    {
+    if (_tickVal.isUndefined()) {
         se::ScriptEngine::getInstance()->getGlobalObject()->getProperty("gameTick", &_tickVal);
     }
-    
 
     static std::chrono::steady_clock::time_point prevTime;
     prevTime = std::chrono::steady_clock::now();
@@ -248,18 +227,17 @@ void EventDispatcher::dispatchTickEvent(float dt)
     se::ValueArray args;
     long long milliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(prevTime - se::ScriptEngine::getInstance()->getStartTime()).count();
     args.push_back(se::Value((double)milliSeconds));
-    
+
     _tickVal.toObject()->call(args, nullptr);
 }
 
-void EventDispatcher::dispatchResizeEvent(int width, int height)
-{
+void EventDispatcher::dispatchResizeEvent(int width, int height) {
     se::AutoHandleScope scope;
     if (!_jsResizeEventObj) {
         _jsResizeEventObj = se::Object::createPlainObject();
         _jsResizeEventObj->root();
     }
-    
+
     _jsResizeEventObj->setProperty("width", se::Value(width));
     _jsResizeEventObj->setProperty("height", se::Value(height));
     se::ValueArray args;
@@ -267,13 +245,11 @@ void EventDispatcher::dispatchResizeEvent(int width, int height)
     EventDispatcher::doDispatchEvent(EVENT_RESIZE, "onResize", args);
 }
 
-void EventDispatcher::dispatchEnterBackgroundEvent()
-{
+void EventDispatcher::dispatchEnterBackgroundEvent() {
     EventDispatcher::doDispatchEvent(EVENT_COME_TO_BACKGROUND, "onPause", se::EmptyValueArray);
 }
 
-void EventDispatcher::dispatchEnterForegroundEvent()
-{
+void EventDispatcher::dispatchEnterForegroundEvent() {
     EventDispatcher::doDispatchEvent(EVENT_COME_TO_FOREGROUND, "onResume", se::EmptyValueArray);
 }
 
@@ -284,20 +260,20 @@ void EventDispatcher::dispatchMemoryWarningEvent() {
 void EventDispatcher::doDispatchEvent(const char *eventName, const char *jsFunctionName, const std::vector<se::Value> &args) {
     if (!se::ScriptEngine::getInstance()->isValid())
         return;
-    
+
     if (eventName) {
         CustomEvent event;
         event.name = eventName;
         EventDispatcher::dispatchCustomEvent(event);
     }
-    
+
     // dispatch to Javascript
     if (!se::ScriptEngine::getInstance()->isValid())
         return;
-    
+
     se::AutoHandleScope scope;
     assert(_inited);
-    
+
     se::Value func;
     __jsbObj->getProperty(jsFunctionName, &func);
     if (func.isObject() && func.toObject()->isFunction()) {
@@ -305,29 +281,24 @@ void EventDispatcher::doDispatchEvent(const char *eventName, const char *jsFunct
     }
 }
 
-uint32_t EventDispatcher::addCustomEventListener(const std::string& eventName, const CustomEventListener& listener)
-{
+uint32_t EventDispatcher::addCustomEventListener(const std::string &eventName, const CustomEventListener &listener) {
     static uint32_t __listenerIDCounter = 0;
     uint32_t listenerID = ++__listenerIDCounter;
     listenerID = listenerID == 0 ? 1 : listenerID;
 
-    Node* newNode = new Node();
+    Node *newNode = new Node();
     newNode->listener = listener;
     newNode->listenerID = listenerID;
     newNode->next = nullptr;
 
     auto iter = _listeners.find(eventName);
-    if (iter == _listeners.end())
-    {
+    if (iter == _listeners.end()) {
         _listeners.emplace(eventName, newNode);
-    }
-    else
-    {
-        Node* node = iter->second;
+    } else {
+        Node *node = iter->second;
         assert(node != nullptr);
-        Node* prev = nullptr;
-        while (node != nullptr)
-        {
+        Node *prev = nullptr;
+        while (node != nullptr) {
             prev = node;
             node = node->next;
         }
@@ -336,8 +307,7 @@ uint32_t EventDispatcher::addCustomEventListener(const std::string& eventName, c
     return listenerID;
 }
 
-void EventDispatcher::removeCustomEventListener(const std::string& eventName, uint32_t listenerID)
-{
+void EventDispatcher::removeCustomEventListener(const std::string &eventName, uint32_t listenerID) {
     if (eventName.empty())
         return;
 
@@ -345,24 +315,16 @@ void EventDispatcher::removeCustomEventListener(const std::string& eventName, ui
         return;
 
     auto iter = _listeners.find(eventName);
-    if (iter != _listeners.end())
-    {
-        Node* prev = nullptr;
-        Node* node = iter->second;
-        while (node != nullptr)
-        {
-            if (node->listenerID == listenerID)
-            {
-                if (prev != nullptr)
-                {
+    if (iter != _listeners.end()) {
+        Node *prev = nullptr;
+        Node *node = iter->second;
+        while (node != nullptr) {
+            if (node->listenerID == listenerID) {
+                if (prev != nullptr) {
                     prev->next = node->next;
-                }
-                else if (node->next)
-                {
+                } else if (node->next) {
                     _listeners[eventName] = node->next;
-                }
-                else
-                {
+                } else {
                     _listeners.erase(iter);
                 }
 
@@ -376,15 +338,12 @@ void EventDispatcher::removeCustomEventListener(const std::string& eventName, ui
     }
 }
 
-void EventDispatcher::removeAllCustomEventListeners(const std::string& eventName)
-{
+void EventDispatcher::removeAllCustomEventListeners(const std::string &eventName) {
     auto iter = _listeners.find(eventName);
-    if (iter != _listeners.end())
-    {
-        Node* node = iter->second;
-        while (node != nullptr)
-        {
-            Node* next = node->next;
+    if (iter != _listeners.end()) {
+        Node *node = iter->second;
+        while (node != nullptr) {
+            Node *next = node->next;
             delete node;
             node = next;
         }
@@ -392,15 +351,12 @@ void EventDispatcher::removeAllCustomEventListeners(const std::string& eventName
     }
 }
 
-void EventDispatcher::dispatchCustomEvent(const CustomEvent& event)
-{
+void EventDispatcher::dispatchCustomEvent(const CustomEvent &event) {
     auto iter = _listeners.find(event.name);
-    if (iter != _listeners.end())
-    {
-        Node* next = nullptr;
-        Node* node = iter->second;
-        while (node != nullptr)
-        {
+    if (iter != _listeners.end()) {
+        Node *next = nullptr;
+        Node *node = iter->second;
+        while (node != nullptr) {
             next = node->next;
             node->listener(event);
             node = next;
