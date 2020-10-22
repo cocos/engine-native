@@ -15,7 +15,7 @@ public:
     virtual bool initialize(const DeviceInfo &info) override;
     virtual void destroy() override;
     virtual void resize(uint width, uint height) override;
-    virtual void acquire() override{};
+    virtual void acquire() override;
     virtual void present() override;
     virtual CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) override;
     virtual Fence *createFence(const FenceInfo &info) override;
@@ -57,7 +57,6 @@ private:
     uint _maxColorRenderTargets = 0;
     uint _maxBufferBindingIndex = 0;
     bool _icbSuppored = false;
-    void *_blitedBuffer = nullptr;
     CCMTLGPUStagingBufferPool *_gpuStagingBufferPool = nullptr;
 };
 

@@ -6,7 +6,7 @@
 #include "vk_mem_alloc.h"
 #include "volk.h"
 
-#define DEFAULT_FENCE_TIMEOUT 100000000000
+#define DEFAULT_TIMEOUT 1000000000 // 1 second
 
 namespace cc {
 namespace gfx {
@@ -522,8 +522,8 @@ const VkBlendOp VK_BLEND_OPS[] = {
     VK_BLEND_OP_ADD,
     VK_BLEND_OP_SUBTRACT,
     VK_BLEND_OP_REVERSE_SUBTRACT,
-    VK_BLEND_OP_ADD,
-    VK_BLEND_OP_ADD,
+    VK_BLEND_OP_MIN,
+    VK_BLEND_OP_MAX,
 };
 
 const VkBlendFactor VK_BLEND_FACTORS[] = {

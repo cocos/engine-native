@@ -15,30 +15,44 @@ void RenderBatchedQueue::clear() {
     _queues.clear();
 }
 
-void RenderBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuff) {
+void RenderBatchedQueue::uploadBuffers(gfx::CommandBuffer *cmdBuffer) {
     for (auto batchedBuffer : _queues) {
-        bool boundPSO = false;
-        const auto &batches = batchedBuffer->getBaches();
-        for (const auto &batch : batches) {
+        auto &batches = batchedBuffer->getBatches();
+        for (auto &batch : batches) {
             if (!batch.mergeCount) continue;
 
-            for (size_t i = 0; i < batch.vbs.size(); i++) {
-                auto buffer = batch.vbs[i];
-                buffer->update(batch.vbDatas[i].get(), 0, buffer->getSize());
+            auto i = 0u;
+            for (auto vb : batch.vbs) {
+                cmdBuffer->updateBuffer(vb, batch.vbDatas[i++], vb->getSize());
             }
-            batch.vbIdx->update(batch.vbIndexData.get(), 0, batch.vbIdx->getSize());
-            batch.ubo->update(batch.uboData, 0, batch.ubo->getSize());
-            auto pso = PipelineStateManager::getOrCreatePipelineState(batch.pass, batch.shader, batch.ia, renderPass);
-            if (!boundPSO) {
-                cmdBuff->bindPipelineState(pso);
-                boundPSO = true;
-            }
-            cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::MATERIAL), batch.pass->getDescriptorSet());
-            cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::LOCAL), batch.descriptorSet);
-            cmdBuff->bindInputAssembler(batch.ia);
-            cmdBuff->draw(batch.ia);
+            cmdBuffer->updateBuffer(batch.indexBuffer, batch.indexData, batch.indexBuffer->getSize());
+            cmdBuffer->updateBuffer(batch.ubo, batch.uboData.data(), batch.ubo->getSize());
         }
     }
+}
+
+void RenderBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
+    for (auto batchedBuffer : _queues) {
+        bool boundPSO = false;
+        const auto &batches = batchedBuffer->getBatches();
+        for (const auto &batch : batches) {
+            if (!batch.mergeCount) continue;
+            if (!boundPSO) {
+                auto pso = PipelineStateManager::getOrCreatePipelineState(batch.pass, batch.shader, batch.ia, renderPass);
+                cmdBuffer->bindPipelineState(pso);
+                cmdBuffer->bindDescriptorSet(MATERIAL_SET, batch.pass->getDescriptorSet());
+                boundPSO = true;
+            }
+
+            cmdBuffer->bindDescriptorSet(LOCAL_SET, batch.descriptorSet);
+            cmdBuffer->bindInputAssembler(batch.ia);
+            cmdBuffer->draw(batch.ia);
+        }
+    }
+}
+
+void RenderBatchedQueue::add(BatchedBuffer *batchedBuffer) {
+    _queues.emplace(batchedBuffer);
 }
 
 } // namespace pipeline

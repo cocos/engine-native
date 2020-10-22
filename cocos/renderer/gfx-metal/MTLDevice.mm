@@ -55,6 +55,18 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _mtkView = (MTKView *)_windowHandle;
     _mtlDevice = ((MTKView *)_mtkView).device;
     _mtlCommandQueue = [id<MTLDevice>(_mtlDevice) newCommandQueue];
+    
+    if ([id<MTLDevice>(_mtlDevice) isDepth24Stencil8PixelFormatSupported]) {
+        static_cast<MTKView*>(_mtkView).depthStencilPixelFormat = MTLPixelFormatDepth24Unorm_Stencil8;
+        _depthBits = 24;
+        _features[(int)Feature::FORMAT_D24S8] = true;
+    } else {
+        static_cast<MTKView*>(_mtkView).depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+        _depthBits = 32;
+        _features[(int)Feature::FORMAT_D32FS8] = true;
+    }
+    _stencilBits = 8;
+    
     ContextInfo contextCreateInfo;
     contextCreateInfo.windowHandle = _windowHandle;
     contextCreateInfo.sharedCtx = info.sharedCtx;
@@ -75,9 +87,6 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
 
     _gpuStagingBufferPool = CC_NEW(CCMTLGPUStagingBufferPool(id<MTLDevice>(_mtlDevice)));
 
-    _depthBits = 24;
-    _stencilBits = 8;
-
     _mtlFeatureSet = mu::highestSupportedFeatureSet(id<MTLDevice>(_mtlDevice));
     auto gpuFamily = mu::getGPUFamily(MTLFeatureSet(_mtlFeatureSet));
     _maxVertexAttributes = mu::getMaxVertexAttributes(gpuFamily);
@@ -90,11 +99,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _uboOffsetAlignment = mu::getMinBufferOffsetAlignment(gpuFamily);
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
 
-    if ([id<MTLDevice>(_mtlDevice) isDepth24Stencil8PixelFormatSupported]) {
-        _depthBits = 24;
-        _stencilBits = 8;
-        _features[(int)Feature::FORMAT_D24S8] = true;
-    }
+    
 
     _features[static_cast<int>(Feature::COLOR_FLOAT)] = mu::isColorBufferFloatSupported(gpuFamily);
     _features[static_cast<int>(Feature::COLOR_HALF_FLOAT)] = mu::isColorBufferHalfFloatSupported(gpuFamily);
@@ -125,6 +130,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _features[(int)Feature::MSAA] = true;
     _features[(int)Feature::INSTANCED_ARRAYS] = true;
     _features[(int)Feature::MULTIPLE_RENDER_TARGETS] = true;
+    _features[(uint)Feature::BLEND_MINMAX] = true;
     _features[static_cast<uint>(Feature::DEPTH_BOUNDS)] = false;
     _features[static_cast<uint>(Feature::LINE_WIDTH)] = false;
     _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = false;
@@ -150,18 +156,22 @@ void CCMTLDevice::destroy() {
 
 void CCMTLDevice::resize(uint width, uint height) {}
 
-void CCMTLDevice::present() {
+void CCMTLDevice::acquire() {
     CCMTLQueue *queue = (CCMTLQueue *)_queue;
-    _numDrawCalls = queue->_numDrawCalls;
-    _numInstances = queue->_numInstances;
-    _numTriangles = queue->_numTriangles;
-
+    
     // Clear queue stats
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
 
     _gpuStagingBufferPool->reset();
+}
+
+void CCMTLDevice::present() {
+    CCMTLQueue *queue = (CCMTLQueue *)_queue;
+    _numDrawCalls = queue->_numDrawCalls;
+    _numInstances = queue->_numInstances;
+    _numTriangles = queue->_numTriangles;
 
     [((MTKView *)(_mtkView)).currentDrawable present];
 }
@@ -321,22 +331,18 @@ void CCMTLDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *t
 }
 
 void CCMTLDevice::blitBuffer(void *srcData, uint offset, uint size, void *dstBuffer) {
-    id<MTLBuffer> sourceBuffer = id<MTLBuffer>(_blitedBuffer);
-    if (sourceBuffer == nil || sourceBuffer.allocatedSize < size) {
-        if (sourceBuffer)
-            [sourceBuffer release];
-        sourceBuffer = [id<MTLDevice>(_mtlDevice) newBufferWithBytes:srcData
-                                                              length:size
-                                                             options:MTLResourceStorageModeShared];
-    }
-
+    CCMTLGPUBuffer stagingBuffer;
+    stagingBuffer.size = size;
+    _gpuStagingBufferPool->alloc(&stagingBuffer);
+    memcpy(stagingBuffer.mappedData, srcData, size);
+    
     // Create a command buffer for GPU work.
     id<MTLCommandBuffer> commandBuffer = [id<MTLCommandQueue>(_mtlCommandQueue) commandBuffer];
 
     // Encode a blit pass to copy data from the source buffer to the private buffer.
     id<MTLBlitCommandEncoder> blitCommandEncoder = [commandBuffer blitCommandEncoder];
-    [blitCommandEncoder copyFromBuffer:sourceBuffer
-                          sourceOffset:0
+    [blitCommandEncoder copyFromBuffer:stagingBuffer.mtlBuffer
+                          sourceOffset:stagingBuffer.startOffset
                               toBuffer:id<MTLBuffer>(dstBuffer)
                      destinationOffset:offset
                                   size:size];

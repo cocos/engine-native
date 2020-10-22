@@ -13,12 +13,12 @@ public:
     ~RenderBatchedQueue() = default;
 
     void clear();
+    void uploadBuffers(gfx::CommandBuffer *cmdBuff);
     void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *);
-
-    CC_INLINE set<std::shared_ptr<BatchedBuffer>> &getQueue() { return _queues; }
+    void add(BatchedBuffer *batchedBuffer);
 
 private:
-    set<std::shared_ptr<BatchedBuffer>> _queues;
+    set<BatchedBuffer *> _queues;
 };
 
 } // namespace pipeline

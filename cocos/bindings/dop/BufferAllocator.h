@@ -12,33 +12,20 @@ namespace se {
 class CC_DLL BufferAllocator final : public cc::Object {
 public:
     template <class T>
-    static T *getBuffer(PoolType type, uint index) {
-        index &= ~(1 << 30);
-        if (BufferAllocator::_pools.count(type) != 0) {
-            const auto pool = BufferAllocator::_pools[type];
-            if (pool->_buffers.count(index) != 0) {
-                T *ret = nullptr;
-                size_t len = 0;
-                pool->_buffers[index]->getArrayBufferData((uint8_t **)&ret, &len);
-                return ret;
-            } else {
-                return nullptr;
-            }
-        } else {
-            return nullptr;
-        }
+    CC_INLINE static T *getBuffer(PoolType type, uint index) {
+        uint size = 0;
+        return BufferAllocator::getBuffer<T>(type, index, &size);
     }
 
     template <class T>
     static T *getBuffer(PoolType type, uint index, uint *size) {
-        index &= ~(1 << 30);
+        index &= _bufferMask;
         if (BufferAllocator::_pools.count(type) != 0) {
             const auto pool = BufferAllocator::_pools[type];
             if (pool->_buffers.count(index) != 0) {
-                T *ret = nullptr;
-                size_t len = 0;
+                T *ret = nullptr; size_t len;
                 pool->_buffers[index]->getArrayBufferData((uint8_t **)&ret, &len);
-                if (size) *size = len;
+                *size = (uint)len;
                 return ret;
             } else {
                 return nullptr;
@@ -56,6 +43,7 @@ public:
 
 private:
     static cc::map<PoolType, BufferAllocator *> _pools;
+    static constexpr uint _bufferMask = ~(1 << 30);
 
     cc::map<uint, Object *> _buffers;
     PoolType _type = PoolType::UNKNOWN;

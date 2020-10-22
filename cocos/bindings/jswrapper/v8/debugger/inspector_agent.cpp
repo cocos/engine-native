@@ -673,7 +673,7 @@ bool Agent::StartIoThread(bool wait_for_connect) {
 
   Local<Object> message = Object::New(isolate);
     message->Set(parent_env_->context(), FIXED_ONE_BYTE_STRING(isolate, "cmd"),
-               FIXED_ONE_BYTE_STRING(isolate, "NODE_DEBUG_ENABLED"));
+               FIXED_ONE_BYTE_STRING(isolate, "NODE_DEBUG_ENABLED")).Check();
   Local<Value> argv[] = {
     FIXED_ONE_BYTE_STRING(isolate, "internalMessage"),
     message
@@ -801,7 +801,7 @@ void Agent::RequestIoThreadStart() {
   // for IO events)
   uv_async_send(&start_io_thread_async);
   v8::Isolate* isolate = parent_env_->isolate();
-  platform_->CallOnForegroundThread(isolate, new StartIoTask(this));
+  platform_->GetForegroundTaskRunner(isolate)->PostTask(std::make_unique<StartIoTask>(this));
   isolate->RequestInterrupt(StartIoInterrupt, this);
   uv_async_send(&start_io_thread_async);
 }

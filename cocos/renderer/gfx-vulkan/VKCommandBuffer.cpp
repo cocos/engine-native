@@ -81,6 +81,8 @@ void CCVKCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer 
 }
 
 void CCVKCommandBuffer::end() {
+    if (!_gpuCommandBuffer->began) return;
+
     _curGPUFBO = nullptr;
     VK_CHECK(vkEndCommandBuffer(_gpuCommandBuffer->vkCommandBuffer));
     _gpuCommandBuffer->began = false;
@@ -352,7 +354,7 @@ void CCVKCommandBuffer::execute(const CommandBuffer *const *cmdBuffs, uint count
     vkCmdExecuteCommands(_gpuCommandBuffer->vkCommandBuffer, count, vkCmdBuffs.data());
 }
 
-void CCVKCommandBuffer::updateBuffer(Buffer *buffer, void *data, uint size, uint offset) {
+void CCVKCommandBuffer::updateBuffer(Buffer *buffer, const void *data, uint size, uint offset) {
     CCVKCmdFuncUpdateBuffer((CCVKDevice *)_device, ((CCVKBuffer *)buffer)->gpuBuffer(), data, offset, size, _gpuCommandBuffer);
 }
 
