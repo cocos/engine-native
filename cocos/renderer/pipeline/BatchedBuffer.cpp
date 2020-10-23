@@ -13,7 +13,7 @@ BatchedBuffer *BatchedBuffer::get(uint pass) {
 }
 BatchedBuffer *BatchedBuffer::get(uint pass, uint extraKey) {
     auto &record = _buffers[pass];
-    auto buffer = record[extraKey];
+    auto &buffer = record[extraKey];
     if (buffer == nullptr) buffer = CC_NEW(BatchedBuffer(GET_PASS(pass)));
     return buffer;
 }

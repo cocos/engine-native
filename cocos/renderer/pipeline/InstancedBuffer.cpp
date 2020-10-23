@@ -14,7 +14,7 @@ InstancedBuffer *InstancedBuffer::get(uint pass) {
 }
 InstancedBuffer *InstancedBuffer::get(uint pass, uint extraKey) {
     auto &record = _buffers[pass];
-    auto buffer = record[extraKey];
+    auto &buffer = record[extraKey];
     if (buffer == nullptr) buffer = CC_NEW(InstancedBuffer(GET_PASS(pass)));
 
     return buffer;

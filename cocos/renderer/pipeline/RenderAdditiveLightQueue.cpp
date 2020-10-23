@@ -15,7 +15,7 @@
 namespace cc {
 namespace pipeline {
 namespace {
-const static uint phaseID(PassPhase::getPhaseID("forward-add"));
+const uint phaseID(PassPhase::getPhaseID("forward-add"));
 int getLightPassIndex(const ModelView *model) {
     const auto subModelArrayID = model->getSubModelID();
     const auto count = subModelArrayID[0];
