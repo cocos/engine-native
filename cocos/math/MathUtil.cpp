@@ -137,24 +137,6 @@ bool MathUtil::isNeon64Enabled()
 #endif
 }
 
-static void max(const Vec3& v1, const Vec3& v2)
-{
-    float x = v1.x >= v2.x ? v1.x : v2.x;
-    float y = v1.y >= v2.y ? v1.y : v2.y;
-    float z = v1.z >= v2.z ? v1.z : v2.z;
-
-    return Vec3(x, y, z);
-}
-
-static void min(const Vec3& v1, const Vec3& v2)
-{
-    float x = v1.x <= v2.x ? v1.x : v2.x;
-    float y = v1.y <= v2.y ? v1.y : v2.y;
-    float z = v1.z <= v2.z ? v1.z : v2.z;
-
-    return Vec3(x, y, z);
-}
-
 void MathUtil::addMatrix(const float* m, float scalar, float* dst)
 {
 #ifdef USE_NEON32

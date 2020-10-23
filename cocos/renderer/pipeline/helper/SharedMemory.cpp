@@ -29,18 +29,18 @@ void AABB::getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const {
     maxPos = center + halfExtents;
 }
 
-void AABB::merge(const AABB &aabb) const {
+void AABB::merge(const AABB &aabb) {
     Vec3 minA = center - halfExtents;
     Vec3 minB = aabb.center - aabb.halfExtents;
     Vec3 maxA = center + halfExtents;
     Vec3 maxB = aabb.center + aabb.halfExtents;
-    Vec3 maxP = MathUtil.max(maxA, maxB);
-    Vec3 minP = MathUtil.min(minA, minB);
+    Vec3 maxP = maxA.max(maxB);
+    Vec3 minP = minA.min(minB);
 
     Vec3 addP = maxP + minP;
     Vec3 subP = maxP - minP;
-    center = addP * 0.5;
-    halfExtents = subP * 0.5;
+    center = addP * 0.5f;
+    halfExtents = subP * 0.5f;
 }
 
 void Sphere::mergePoint(const cc::Vec3 &point) {
@@ -63,7 +63,7 @@ void Sphere::mergePoint(const cc::Vec3 &point) {
 
 void Sphere::define(const AABB &aabb) {
     cc::Vec3 minPos, maxPos;
-    aabb->getBoundary(minPos, maxPos);
+    aabb.getBoundary(minPos, maxPos);
 
     // Initialize sphere
     center.set(minPos);

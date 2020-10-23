@@ -131,139 +131,6 @@ public:
     inline bool isOne() const;
 
     /**
-     * Assign from another vector.
-     * 
-    */
-    Vec3& operator =(const Vec3& rhs) noexcept = default;
-
-    /**
-     * Test for equality with another vector without epsilon.
-     * 
-    */
-    bool operator ==(const Vec3& rhs) const { return x == rhs.x && y == rhs.y && z == rhs.z; }
-
-    /**
-     * Test for inequality with another vector without epsilon.
-     * 
-    */
-    bool operator !=(const Vec3& rhs) const { return x != rhs.x || y != rhs.y || z != rhs.z; }
-
-    /**
-     * Add a vector.
-     * 
-    */
-    Vec3 operator +(const Vec3& rhs) const { return Vec3(x + rhs.x, y + rhs.y, z + rhs.z); }
-
-    /**
-     * Return negation.
-     * 
-    */
-    Vec3 operator -() const { return Vec3(-x, -y, -z); }
-
-    /**
-     * Subtract a vector.
-     * 
-    */
-    Vec3 operator -(const Vec3& rhs) const { return Vec3(x - rhs.x, y - rhs.y, z - rhs.z); }
-
-    /**
-     * Multiply with a scalar.
-     * 
-    */
-    Vec3 operator *(float rhs) const { return Vec3(x * rhs, y * rhs, z * rhs); }
-
-    /**
-     * Multiply with a vector.
-     * 
-    */
-    Vec3 operator *(const Vec3& rhs) const { return Vec3(x * rhs.x, y * rhs.y, z * rhs.z); }
-
-    /**
-     * Divide by a scalar.
-     * 
-    */
-    Vec3 operator /(float rhs) const { return Vec3(x / rhs, y / rhs, z / rhs); }
-
-    /**
-     * Divide by a vector.
-     * 
-    */
-    Vec3 operator /(const Vec3& rhs) const { return Vec3(x / rhs.x, y / rhs.y, z / rhs.z); }
-
-    /**
-     * Add-assign a vector.
-     * 
-    */
-    Vec3& operator +=(const Vec3& rhs)
-    {
-        x += rhs.x;
-        y += rhs.y;
-        z += rhs.z;
-        return *this;
-    }
-
-    /**
-     * Subtract-assign a vector.
-     * 
-    */
-    Vec3& operator -=(const Vec3& rhs)
-    {
-        x -= rhs.x;
-        y -= rhs.y;
-        z -= rhs.z;
-        return *this;
-    }
-
-    /**
-     * Multiply-assign a scalar.
-     * 
-    */
-    Vec3& operator *=(float rhs)
-    {
-        x *= rhs;
-        y *= rhs;
-        z *= rhs;
-        return *this;
-    }
-
-    /**
-     * Multiply-assign a vector.
-     * 
-    */
-    Vec3& operator *=(const Vec3& rhs)
-    {
-        x *= rhs.x;
-        y *= rhs.y;
-        z *= rhs.z;
-        return *this;
-    }
-
-    /**
-     * Divide-assign a scalar.
-     * 
-    */
-    Vec3& operator /=(float rhs)
-    {
-        float invRhs = 1.0f / rhs;
-        x *= invRhs;
-        y *= invRhs;
-        z *= invRhs;
-        return *this;
-    }
-
-    /**
-     * Divide-assign a vector.
-     * 
-    */
-    Vec3& operator /=(const Vec3& rhs)
-    {
-        x /= rhs.x;
-        y /= rhs.y;
-        z /= rhs.z;
-        return *this;
-    }
-
-    /**
      * Returns the angle (in radians) between the specified vectors.
      *
      * @param v1 The first vector.
@@ -524,6 +391,26 @@ public:
     static void subtract(const Vec3& v1, const Vec3& v2, Vec3* dst);
 
     /**
+     * return new vec3 for max
+     */
+    inline Vec3 max(const Vec3 &v) const;
+
+    /**
+     * return new vec3 for max
+     */
+    static void max(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
+
+    /**
+     * return new vec3 for min
+     */
+    inline Vec3 min(const Vec3 &v) const;
+
+    /**
+     * return new vec3 for min
+     */
+    static void min(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
+
+    /**
      * Updates this vector towards the given target using a smoothing function.
      * The given response time determines the amount of smoothing (lag). A longer
      * response time yields a smoother result and more lag. To force this vector to
@@ -597,6 +484,12 @@ public:
      */
     inline const Vec3 operator*(float s) const;
 
+     /**
+      * Multiply with a vector.
+      * 
+      */
+    inline Vec3 operator*(const Vec3 &rhs) const;
+
     /**
      * Scales this vector by the given value.
      *
@@ -614,6 +507,12 @@ public:
      * @return a smaller vector
      */
     inline const Vec3 operator/(float s) const;
+
+    /**
+     * Divide by a vector.
+     * 
+    */
+    inline Vec3 operator/(const Vec3 &rhs) const;
 
     /** Returns true if the vector's scalar components are all greater
      that the ones of the vector it is compared against.
@@ -643,6 +542,12 @@ public:
      * @return True if this vector is equal to the given vector, false otherwise.
      */
     inline bool operator==(const Vec3& v) const;
+
+     /**
+      * Assign from another vector.
+      * 
+      */
+    inline Vec3 &operator=(const Vec3 &rhs) noexcept = default;
 
     /**
      * Determines if this vector is not equal to the given vector.

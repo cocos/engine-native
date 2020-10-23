@@ -134,13 +134,12 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
 
     if (mainLight && shadowInfo->getShadowType() == ShadowType::SHADOWMAP) {
         const auto node = mainLight->getNode();
-        const auto sphere = shadowInfo->getSphere();
         cc::Mat4 shadowCameraView;
 
         // light proj
         float x = 0;
         float y = 0;
-        float far = 0;
+        float farClamp = 0;
         if(shadowInfo->autoAdapt) {
             getShadowWorldMatrix(shadowInfo, node->worldRotation, mainLight->direction, shadowCameraView);
 
@@ -148,23 +147,23 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
             x = radius * shadowInfo->aspect;
             y = radius;
 
-            far = std::min(shadowInfo->getReceiveSphere().radius * 2.0f * std::sqrt(2.0f), 2000.0f);
-            if(radius >= 500.0f) { shadowInfo.size.set(2048, 2048); }
-            else if (radius < 500.0f && radius >= 100.0f) { shadowInfo.size.set(1024, 1024); }
+            farClamp = std::min(shadowInfo->getReceiveSphere()->radius * 2.0f * std::sqrt(2.0f), 2000.0f);
+            if(radius >= 500.0f) { shadowInfo->size.set(2048, 2048); }
+            else if (radius < 500.0f && radius >= 100.0f) { shadowInfo->size.set(1024, 1024); }
         } else {
             shadowCameraView = mainLight->getNode()->worldMatrix;
 
             x = shadowInfo->orthoSize * shadowInfo->aspect;
             y = shadowInfo->orthoSize;
 
-            far = shadowInfo->far;
+            farClamp = shadowInfo->farValue;
         }
 
         const auto &matShadowView = shadowCameraView.getInversed();
 
         const auto projectionSinY = _device->getScreenSpaceSignY() * _device->getUVSpaceSignY();
         Mat4 matShadowViewProj;
-        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, shadowInfo->farValue, _device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
+        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, _device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
 
         matShadowViewProj.multiply(matShadowView);
         const auto pcf = shadowInfo->pcfType;

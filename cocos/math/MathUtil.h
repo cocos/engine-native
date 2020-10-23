@@ -118,8 +118,6 @@ private:
 
     static void transformVec4(const __m128 m[4], const __m128& v, __m128& dst);
 #endif
-    static void max(const Vec3& v1, const Vec3& v2);
-
     static void addMatrix(const float* m, float scalar, float* dst);
 
     static void addMatrix(const float* m1, const float* m2, float* dst);

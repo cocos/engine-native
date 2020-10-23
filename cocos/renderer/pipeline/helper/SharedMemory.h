@@ -208,6 +208,7 @@ struct CC_DLL ModelView {
     uint32_t enabled = 0;
     uint32_t visFlags = 0;
     uint32_t castShadow = 0;
+    uint32_t receiveShadow = 0;
     uint32_t worldBoundsID = 0; // aabb
     uint32_t nodeID = 0;
     uint32_t transformID = 0;

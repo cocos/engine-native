@@ -117,12 +117,12 @@ void updateDirLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *de
 
 void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
     const auto camera = view->getCamera();
-    auto shadows = pipeline->getShadows();
-    const auto skybox = pipeline->getSkybox();
+    const auto shadows = pipeline->getShadows();
+    const auto skyBox = pipeline->getSkybox();
     const auto scene = camera->getScene();
 
-    AABB castWorldBounds();
-    AABB receiveWorldBounds();
+    AABB castWorldBounds;
+    AABB receiveWorldBounds;
     auto castBoundsInited = false;
     auto receiveBoundsInited = false;
 
@@ -140,8 +140,8 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
         updateDirLight(shadows, mainLight, pipeline->getDescriptorSet());
     }
 
-    if (skybox->enabled && skybox->modelID && (camera->clearFlag & SKYBOX_FLAG)) {
-        renderObjects.emplace_back(genRenderObject(skybox->getModel(), camera));
+    if (skyBox->enabled && skyBox->modelID && (camera->clearFlag & SKYBOX_FLAG)) {
+        renderObjects.emplace_back(genRenderObject(skyBox->getModel(), camera));
     }
 
     const auto models = scene->getModels();
@@ -167,21 +167,21 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
                     // shadow render Object
                     if (model->castShadow) {
                         if (!castBoundsInited) {
-                            castWorldBounds.center.set(model->worldBounds().center);
-                            castWorldBounds.halfExtents.set(model->worldBounds().halfExtents);
+                            castWorldBounds.center.set(model->getWroldBounds()->center);
+                            castWorldBounds.halfExtents.set(model->getWroldBounds()->halfExtents);
                             castBoundsInited = true;
                         }
-                        castWorldBounds.merge(&model->getWroldBounds());
+                        castWorldBounds.merge(*model->getWroldBounds());
                         shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
 
                     if (model->receiveShadow) {
                         if(!receiveBoundsInited) {
-                            receiveWorldBounds.center.set(model->worldBounds().center);
-                            receiveWorldBounds.halfExtents.set(model->worldBounds().halfExtents);
+                            receiveWorldBounds.center.set(model->getWroldBounds()->center);
+                            receiveWorldBounds.halfExtents.set(model->getWroldBounds()->halfExtents);
                             receiveBoundsInited = true;
                         }
-                        receiveWorldBounds.merge(&model->getWroldBounds());
+                        receiveWorldBounds.merge(*model->getWroldBounds());
                     }
 
                     // frustum culling
@@ -189,17 +189,17 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
                         continue;
                     }
 
-                    auto* sphere = shadows->getSphere();
-                    sphere->define(castWorldBounds);
-
-                    auto* receiveSphere = shadows->getReceiveSphere();
-                    receiveSphere->define(receiveWorldBounds);
-                    
-                    renderObjects.emplace_back(genRenderObject(model, camera));
+                   renderObjects.emplace_back(genRenderObject(model, camera));
                 }
             }
         }
     }
+
+    auto *sphere = shadows->getSphere();
+    sphere->define(castWorldBounds);
+
+    auto *receiveSphere = shadows->getReceiveSphere();
+    receiveSphere->define(receiveWorldBounds);
 
     pipeline->setRenderObjcts(renderObjects);
     pipeline->setShadowObjects(shadowObjects);
