@@ -439,8 +439,6 @@ std::string getCurAppName(void)
     RuntimeEngine::getInstance()->setProjectConfig(_project);
 
     _app->init();
-    // After run, application needs to be terminated immediately.
-    [[NSApplication sharedApplication] terminate:self];
 }
 
 
