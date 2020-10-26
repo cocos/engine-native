@@ -124,7 +124,19 @@ struct CC_DLL RenderQueueDesc {
 };
 typedef vector<RenderQueueDesc> RenderQueueDescList;
 
-uint getPhaseID(const String &phase);
+class CC_DLL PassPhase {
+public:
+    static uint getPhaseID(const String &phaseName) {
+        if (phases.find(phaseName) == phases.end()) {
+            phases[phaseName] = 1 << phaseNum++;
+        }
+        return phases[phaseName];
+    }
+
+private:
+    static map<String, uint> phases;
+    static uint phaseNum;
+};
 
 CC_INLINE bool opaqueCompareFn(const RenderPass &a, const RenderPass &b) {
     if (a.hash != b.hash)

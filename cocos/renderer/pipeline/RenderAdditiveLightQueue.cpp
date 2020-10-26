@@ -15,7 +15,8 @@
 namespace cc {
 namespace pipeline {
 namespace {
-int getLightPassIndex(const ModelView *model, uint phaseID) {
+const uint phaseID(PassPhase::getPhaseID("forward-add"));
+int getLightPassIndex(const ModelView *model) {
     const auto subModelArrayID = model->getSubModelID();
     const auto count = subModelArrayID[0];
     for (auto i = 1; i <= count; i++) {
@@ -44,15 +45,12 @@ bool cullingLight(const Light *light, const ModelView *model) {
 RenderAdditiveLightQueue::RenderAdditiveLightQueue(RenderPipeline *pipeline)
 : _device(gfx::Device::getInstance()),
   _instancedQueue(CC_NEW(RenderInstancedQueue)),
-  _batchedQueue(CC_NEW(RenderBatchedQueue)),
-  _phaseID(getPhaseID("forward-add")) {
+  _batchedQueue(CC_NEW(RenderBatchedQueue)) {
     auto forwardPipline = static_cast<ForwardPipeline *>(pipeline);
     _renderObjects = forwardPipline->getRenderObjects();
     _fpScale = forwardPipline->getFpScale();
     _isHDR = forwardPipline->isHDR();
-
-    const auto alignment = _device->getUboOffsetAlignment();
-    _lightBufferStride = ((UBOForwardLight::SIZE + alignment - 1) / alignment) * alignment;
+    _lightBufferStride = std::ceil(UBOForwardLight::SIZE / _device->getUboOffsetAlignment()) * _device->getUboOffsetAlignment();
     _lightBufferElementCount = _lightBufferStride / sizeof(float);
     _lightBuffer = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
@@ -135,7 +133,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const RenderView *view, gfx::Co
         const auto model = renderObject.model;
 
         // this assumes light pass index is the same for all submodels
-        const auto lightPassIdx = getLightPassIndex(model, _phaseID);
+        const auto lightPassIdx = getLightPassIndex(model);
         if (lightPassIdx < 0) continue;
 
         _lightIndices.clear();

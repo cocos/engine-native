@@ -11,7 +11,7 @@
 namespace cc {
 namespace pipeline {
 ShadowMapBatchedQueue::ShadowMapBatchedQueue()
-: _phaseID(getPhaseID("shadow-caster")) {
+: _phaseID(PassPhase::getPhaseID("shadow-caster")) {
 }
 
 void ShadowMapBatchedQueue::clear(gfx::Buffer *buffer) {
