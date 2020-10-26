@@ -269,19 +269,19 @@ void Vec3::subtract(const Vec3& v1, const Vec3& v2, Vec3* dst)
 void Vec3::max(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
 
     GP_ASSERT(dst);
-
-    dst->x = std::max(v1.x, v2.x);
-    dst->y = std::max(v1.y, v2.y);
-    dst->z = std::max(v1.z, v2.z);
+    
+    dst->x = std::fmaxf(v1.x, v2.x);
+    dst->y = std::fmaxf(v1.y, v2.y);
+    dst->z = std::fmaxf(v1.z, v2.z);
 }
 
 void Vec3::min(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
 
     GP_ASSERT(dst);
 
-    dst->x = std::min(v1.x, v2.x);
-    dst->y = std::min(v1.y, v2.y);
-    dst->z = std::min(v1.z, v2.z);
+    dst->x = std::fminf(v1.x, v2.x);
+    dst->y = std::fminf(v1.y, v2.y);
+    dst->z = std::fminf(v1.z, v2.z);
 }
 
 

@@ -30,15 +30,16 @@ void AABB::getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const {
 }
 
 void AABB::merge(const AABB &aabb) {
-    Vec3 minA = center - halfExtents;
-    Vec3 minB = aabb.center - aabb.halfExtents;
-    Vec3 maxA = center + halfExtents;
-    Vec3 maxB = aabb.center + aabb.halfExtents;
-    Vec3 maxP = maxA.max(maxB);
-    Vec3 minP = minA.min(minB);
+    cc::Vec3 minA = center - halfExtents;
+    cc::Vec3 minB = aabb.center - aabb.halfExtents;
+    cc::Vec3 maxA = center + halfExtents;
+    cc::Vec3 maxB = aabb.center + aabb.halfExtents;
+    cc::Vec3 maxP, minP;
+    cc::Vec3::max(maxA, maxB, &maxP);
+    cc::Vec3::min(minA, minB, &minP);
 
-    Vec3 addP = maxP + minP;
-    Vec3 subP = maxP - minP;
+    cc::Vec3 addP = maxP + minP;
+    cc::Vec3 subP = maxP - minP;
     center = addP * 0.5f;
     halfExtents = subP * 0.5f;
 }
@@ -70,7 +71,7 @@ void Sphere::define(const AABB &aabb) {
     radius = 0.0f;
 
     // Calculate sphere
-    Vec3 offset = maxPos - center;
+    cc::Vec3 offset = maxPos - center;
     const float dist = offset.length();
 
     const float half = dist * 0.5f;

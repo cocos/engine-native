@@ -312,7 +312,7 @@ struct CC_DLL Sphere {
     CC_INLINE void setRadius(float val) { radius = val; }
     void define(const AABB &aabb);
     void mergeAABB(const AABB *aabb);
-    void mergePoint(const Vec3 &point);
+    void mergePoint(const cc::Vec3 &point);
 
     const static se::PoolType type;
 };

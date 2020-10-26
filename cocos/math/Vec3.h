@@ -311,6 +311,8 @@ public:
 
     /**
      * Negates this vector.
+     *
+     * @return Inverse vector.
      */
     inline void negate();
 
@@ -329,6 +331,8 @@ public:
 
     /**
      * Get the normalized vector.
+     *
+     * @return normalized vector.
      */
     Vec3 getNormalized() const;
 
@@ -364,11 +368,18 @@ public:
 
     /**
      * Sets this vector to the directional vector between the specified points.
+     *
+     * @param p1 The vector to subtract.
+     * @return p2 The vector to subtracted.
+     *
+     * @return this vector with the given vector.
      */
     inline void set(const Vec3& p1, const Vec3& p2);
 
     /**
     * Sets the elements of this vector to zero.
+    *
+    * @return zero vector.
     */
     inline void setZero();
 
@@ -391,22 +402,24 @@ public:
     static void subtract(const Vec3& v1, const Vec3& v2, Vec3* dst);
 
     /**
-     * return new vec3 for max
-     */
-    inline Vec3 max(const Vec3 &v) const;
-
-    /**
-     * return new vec3 for max
+     * Compare two vectors
+     *
+     * @param v1 To be compared vector.
+     * @param v2 To be compared vector.
+     * @param dst The destination vector.
+     *
+     * @return new vec3 for max
      */
     static void max(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 
     /**
-     * return new vec3 for min
-     */
-    inline Vec3 min(const Vec3 &v) const;
-
-    /**
-     * return new vec3 for min
+     * Compare two vectors
+     *
+     * @param v1 To be compared vector.
+     * @param v2 To be compared vector.
+     * @param dst The destination vector.
+     *
+     * @return new vec3 for min
      */
     static void min(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 
@@ -486,7 +499,9 @@ public:
 
      /**
       * Multiply with a vector.
-      * 
+      *
+      * @param rhs The value to scale by.
+      * @return The scaled vector.
       */
     inline Vec3 operator*(const Vec3 &rhs) const;
 
@@ -510,12 +525,20 @@ public:
 
     /**
      * Divide by a vector.
-     * 
+     *
+     * Note: this does not modify this vector.
+     *
+     * @param rhs the vector to divide this vector with
+     * @return a vector
     */
     inline Vec3 operator/(const Vec3 &rhs) const;
 
-    /** Returns true if the vector's scalar components are all greater
-     that the ones of the vector it is compared against.
+    /**
+     * Returns true if the vector's scalar components are all greater
+     * that the ones of the vector it is compared against.
+     *
+     * @param rhs Compare the size of two vectors
+     * @return bool
      */
     inline bool operator < (const Vec3& rhs) const
     {
@@ -524,8 +547,12 @@ public:
         return false;
     }
 
-    /** Returns true if the vector's scalar components are all smaller
-     that the ones of the vector it is compared against.
+    /**
+     * Returns true if the vector's scalar components are all smaller
+     * that the ones of the vector it is compared against.
+     *
+     * @param rhs Compare the size of two vectors
+     * @return bool
      */
     inline bool operator >(const Vec3& rhs) const
     {
@@ -545,7 +572,10 @@ public:
 
      /**
       * Assign from another vector.
-      * 
+      *
+      * @param rhs the vector to divide this vector with
+      *
+      * @return a vector
       */
     inline Vec3 &operator=(const Vec3 &rhs) noexcept = default;
 

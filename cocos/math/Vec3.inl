@@ -119,16 +119,6 @@ inline void Vec3::subtract(const Vec3& v)
     z -= v.z;
 }
 
-inline Vec3 Vec3::max(const Vec3 &v) const
-{
-    return Vec3(std::max(x, v.x), std::max(y, v.y), std::max(z, v.z));
-}
-
-inline Vec3 Vec3::min(const Vec3 &v) const
-{
-    return Vec3(std::min(x, v.x), std::min(y, v.y), std::min(z, v.z));
-}
-
 inline const Vec3 Vec3::operator+(const Vec3& v) const
 {
     Vec3 result(*this);
