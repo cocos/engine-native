@@ -137,9 +137,9 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         cc::Mat4 shadowCameraView;
 
         // light proj
-        float x = 0;
-        float y = 0;
-        float farClamp = 0;
+        float x = 0.0f;
+        float y = 0.0f;
+        float farClamp = 0.0f;
         if(shadowInfo->autoAdapt) {
             getShadowWorldMatrix(shadowInfo, node->worldRotation, mainLight->direction, shadowCameraView);
 
@@ -166,11 +166,9 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, _device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
 
         matShadowViewProj.multiply(matShadowView);
-        const auto pcf = shadowInfo->pcfType;
-        float shadowSize[2] = {shadowInfo->size.x, shadowInfo->size.y};
+        float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, shadowInfo->pcfType, shadowInfo->bias};
         memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_PCF_OFFSET, &pcf, sizeof(pcf));
-        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_SIZE_OFFSET, shadowSize, sizeof(shadowSize));
+        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
     }
 
     // update ubos
@@ -305,12 +303,6 @@ bool ForwardPipeline::activeRenderer() {
         gfx::BufferFlagBit::NONE,
     });
     _descriptorSet->bindBuffer(UBOShadow::BLOCK.layout.binding, shadowUBO);
-
-    gfx::SamplerInfo info;
-    info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
-    auto shadowMapSamplerHash = genSamplerHash(std::move(info));
-    auto shadowMapSampler = getSampler(shadowMapSamplerHash);
-    _descriptorSet->bindSampler(UNIFORM_SHADOWMAP.layout.binding, shadowMapSampler);
 
     // update global defines when all states initialized.
     _macros.setValue("CC_USE_HDR", _isHDR);

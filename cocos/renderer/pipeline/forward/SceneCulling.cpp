@@ -27,7 +27,7 @@ void getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, cons
     Vec3 translation(dir);
     translation.negate();
     const auto sphere = shadows->getSphere();
-    const auto distance = std::sqrt(2) * sphere->radius;
+    const auto distance = std::sqrt(2.0f) * sphere->radius;
     translation.scale(distance);
     translation.add(sphere->center);
 

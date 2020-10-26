@@ -2,7 +2,6 @@
 #include "ShadowFlow.h"
 #include "../Define.h"
 #include "../forward/ForwardPipeline.h"
-#include "../forward/SceneCulling.h"
 #include "../helper/SharedMemory.h"
 #include "ShadowStage.h"
 #include "gfx/GFXDescriptorSet.h"
@@ -31,11 +30,11 @@ bool ShadowFlow::initialize(const RenderFlowInfo &info) {
         shadowStage->initialize(ShadowStage::getInitializeInfo());
         _stages.emplace_back(shadowStage);
     }
+
     return true;
 }
 
 void ShadowFlow::activate(RenderPipeline *pipeline) {
-    return; //TODO coulsonwang
     RenderFlow::activate(pipeline);
 
     auto device = gfx::Device::getInstance();
@@ -66,7 +65,7 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
         });
     }
 
-    if (_renderTargets.size() == 0) {
+    if (_renderTargets.empty()) {
         _renderTargets.emplace_back(device->createTexture({
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
@@ -86,8 +85,8 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
         });
     }
 
-    if (!_framebuffer) {
-        _framebuffer = device->createFramebuffer({
+    if (!_frameBuffer) {
+        _frameBuffer = device->createFramebuffer({
             _renderPass,
             _renderTargets,
             _depthTexture,
@@ -96,13 +95,19 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
     }
 
     for (const auto stage : _stages) {
-        static_cast<ShadowStage *>(stage)->setFramebuffer(_framebuffer);
+        static_cast<ShadowStage *>(stage)->setFramebuffer(_frameBuffer);
     }
+
+    gfx::SamplerInfo info;
+    info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
+    const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
+    const auto shadowMapSampler = getSampler(shadowMapSamplerHash);
+    pipeline->getDescriptorSet()->bindSampler(UNIFORM_SHADOWMAP.layout.binding, shadowMapSampler);
+    pipeline->getDescriptorSet()->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _frameBuffer->getColorTextures()[0]);
 }
 
 void ShadowFlow::render(RenderView *view) {
     auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    return; //TODO coulsonwang
     const auto shadowInfo = pipeline->getShadows();
     if (!shadowInfo->enabled) return;
 
@@ -115,7 +120,6 @@ void ShadowFlow::render(RenderView *view) {
 
     pipeline->updateUBOs(view);
     RenderFlow::render(view);
-    pipeline->getDescriptorSet()->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _framebuffer->getColorTextures()[0]);
 }
 
 void ShadowFlow::resizeShadowMap(uint width, uint height) {
@@ -123,7 +127,7 @@ void ShadowFlow::resizeShadowMap(uint width, uint height) {
         _depthTexture->resize(width, height);
     }
 
-    if (_renderTargets.size()) {
+    if (!_renderTargets.empty()) {
         for (auto renderTarget : _renderTargets) {
             if (renderTarget) {
                 renderTarget->resize(width, height);
@@ -131,9 +135,9 @@ void ShadowFlow::resizeShadowMap(uint width, uint height) {
         }
     }
 
-    if (_framebuffer) {
-        _framebuffer->destroy();
-        _framebuffer->initialize({
+    if (_frameBuffer) {
+        _frameBuffer->destroy();
+        _frameBuffer->initialize({
             _renderPass,
             _renderTargets,
             _depthTexture,
@@ -150,7 +154,7 @@ void ShadowFlow::destroy() {
 
     CC_SAFE_DESTROY(_renderPass);
     CC_SAFE_DESTROY(_depthTexture)
-    CC_SAFE_DESTROY(_framebuffer);
+    CC_SAFE_DESTROY(_frameBuffer);
 
     RenderFlow::destroy();
 }
