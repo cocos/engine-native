@@ -47,8 +47,6 @@ namespace cocos2d {
 
     struct LabelLayoutInfo;
 
-    struct FontFaceData;
-
     class FontFreeType
     {
     public:
@@ -82,7 +80,8 @@ namespace cocos2d {
         float _lineHeight = 0.0f;
         std::string _fontName;
 
-        std::shared_ptr<FontFaceData> _fontFaceData;
+        std::shared_ptr<Data> _fontFaceData;
+        FT_Face _face = { 0 };
 
         FT_Stroker _stroker = { 0 };
         FT_Encoding _encoding = FT_ENCODING_UNICODE;
