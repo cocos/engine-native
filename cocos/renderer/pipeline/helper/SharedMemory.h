@@ -16,30 +16,26 @@ class DescriptorSet;
 namespace pipeline {
 
 //Get buffer pool data
-#define GET_SUBMODEL(index) SharedMemory::getBuffer<SubModelView>(index)
-#define GET_PASS(index)     SharedMemory::getBuffer<PassView>(index)
-#define GET_MODEL(index)    SharedMemory::getBuffer<ModelView>(index)
-
-#define GET_INSTANCE_ATTRIBUTE(index, offset) (SharedMemory::getBuffer<InstancedAttribute>(index) + offset)
-#define GET_RENDER_SUBMESH(index)             SharedMemory::getBuffer<RenderingSubMesh>(index)
-#define GET_FLAT_BUFFER(index, offset)        (SharedMemory::getBuffer<FlatBuffer>(index) + offset)
-#define GET_BUFFERVIEW(index)                 SharedMemory::getBuffer<BufferView>(index)
-#define GET_NODE(index)                       SharedMemory::getBuffer<Node>(index)
-#define GET_ROOT()                            SharedMemory::getBuffer<Root>(se::BufferPool::getPoolFlag())
-#define GET_CAMERA(index)                     SharedMemory::getBuffer<Camera>(index)
-#define GET_SCENE(index)                      SharedMemory::getBuffer<Scene>(index)
-#define GET_LIGHT(index)                      SharedMemory::getBuffer<Light>(index)
-#define GET_AMBIENT(index)                    SharedMemory::getBuffer<Ambient>(index)
-#define GET_FOG(index)                        SharedMemory::getBuffer<Fog>(index)
-#define GET_SKYBOX(index)                     SharedMemory::getBuffer<Skybox>(index)
-#define GET_FRUSTUM(index)                    SharedMemory::getBuffer<Frustum>(index)
-#define GET_AABB(index)                       SharedMemory::getBuffer<AABB>(index)
-#define GET_WINDOW(index)                     SharedMemory::getBuffer<RenderWindow>(index)
-#define GET_SHADOWS(index)                    SharedMemory::getBuffer<Shadows>(index)
-#define GET_SPHERE(index)                     SharedMemory::getBuffer<Sphere>(index)
-
-//TODO
-#define GET_NAME(index) (String(0))
+#define GET_SUBMODEL(index)           SharedMemory::getBuffer<SubModelView>(index)
+#define GET_PASS(index)               SharedMemory::getBuffer<PassView>(index)
+#define GET_MODEL(index)              SharedMemory::getBuffer<ModelView>(index)
+#define GET_FLAT_BUFFER(index)        SharedMemory::getBuffer<FlatBufferView>(index)
+#define GET_INSTANCE_ATTRIBUTE(index) SharedMemory::getBuffer<InstancedAttributeView>(index)
+#define GET_RENDER_SUBMESH(index)     SharedMemory::getBuffer<RenderingSubMesh>(index)
+#define GET_BUFFERVIEW(index)         SharedMemory::getBuffer<BufferView>(index)
+#define GET_NODE(index)               SharedMemory::getBuffer<Node>(index)
+#define GET_ROOT()                    SharedMemory::getBuffer<Root>(se::BufferPool::getPoolFlag())
+#define GET_CAMERA(index)             SharedMemory::getBuffer<Camera>(index)
+#define GET_SCENE(index)              SharedMemory::getBuffer<Scene>(index)
+#define GET_LIGHT(index)              SharedMemory::getBuffer<Light>(index)
+#define GET_AMBIENT(index)            SharedMemory::getBuffer<Ambient>(index)
+#define GET_FOG(index)                SharedMemory::getBuffer<Fog>(index)
+#define GET_SKYBOX(index)             SharedMemory::getBuffer<Skybox>(index)
+#define GET_FRUSTUM(index)            SharedMemory::getBuffer<Frustum>(index)
+#define GET_AABB(index)               SharedMemory::getBuffer<AABB>(index)
+#define GET_WINDOW(index)             SharedMemory::getBuffer<RenderWindow>(index)
+#define GET_SHADOWS(index)            SharedMemory::getBuffer<Shadows>(index)
+#define GET_SPHERE(index)             SharedMemory::getBuffer<Sphere>(index)
 
 //Get object pool data
 #define GET_DESCRIPTOR_SET(index)      SharedMemory::getObject<gfx::DescriptorSet, se::PoolType::DESCRIPTOR_SETS>(index)
@@ -53,9 +49,12 @@ namespace pipeline {
 #define GET_PIPELINE_LAYOUT(index)     SharedMemory::getObject<gfx::PipelineLayout, se::PoolType::PIPELINE_LAYOUT>(index)
 
 //Get array pool data
-#define GET_MODEL_ARRAY(index)     SharedMemory::getHandleArray(se::PoolType::MODEL_ARRAY, index)
-#define GET_SUBMODEL_ARRAY(index)  SharedMemory::getHandleArray(se::PoolType::SUB_MODEL_ARRAY, index)
-#define GET_ATTRIBUTE_ARRAY(index) SharedMemory::getHandleArray(se::PoolType::ATTRIBUTE_ARRAY, index)
+#define GET_MODEL_ARRAY(index)               SharedMemory::getHandleArray(se::PoolType::MODEL_ARRAY, index)
+#define GET_SUBMODEL_ARRAY(index)            SharedMemory::getHandleArray(se::PoolType::SUB_MODEL_ARRAY, index)
+#define GET_ATTRIBUTE_ARRAY(index)           SharedMemory::getHandleArray(se::PoolType::ATTRIBUTE_ARRAY, index)
+#define GET_FLAT_BUFFER_ARRAY(index)         SharedMemory::getHandleArray(se::PoolType::FLAT_BUFFER_ARRAY, index)
+#define GET_INSTANCED_ATTRIBUTE_ARRAY(index) SharedMemory::getHandleArray(se::PoolType::INSTANCED_ATTRIBUTE_ARRAY, index)
+#define GET_LIGHT_ARRAY(index)               SharedMemory::getHandleArray(se::PoolType::LIGHT_ARRAY, index)
 
 #define GET_RAW_BUFFER(index, size) SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
 
@@ -112,16 +111,77 @@ struct CC_DLL AABB {
 
     const static se::PoolType type;
 };
+bool aabb_aabb(const AABB *, const AABB *);
 
+struct CC_DLL Plane {
+    cc::Vec3 normal;
+    float distance;
+};
+
+constexpr uint PLANE_LENGTH = 6;
+struct CC_DLL Frustum {
+    cc::Vec3 vertices[8];
+    Plane planes[PLANE_LENGTH];
+
+    const static se::PoolType type;
+};
+bool aabb_frustum(const AABB *, const Frustum *);
+
+enum class LightType {
+    DIRECTIONAL,
+    SPHERE,
+    SPOT,
+    UNKNOWN,
+};
 struct CC_DLL Light {
     uint32_t useColorTemperature = 0;
-    float illuminance = 0;
+    float luminance = 0;
     uint32_t nodeID = 0;
+    float range = 0;
+    uint32_t lightType = 0;
+    uint32_t aabbID = 0;
+    uint32_t frustumID = 0;
+    float size;
+    float spotAngle;
     cc::Vec3 direction;
     cc::Vec3 color;
     cc::Vec3 colorTemperatureRGB;
+    cc::Vec3 position;
 
     CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
+    CC_INLINE LightType getType() const { return static_cast<LightType>(lightType); }
+    CC_INLINE const AABB *getAABB() const { return GET_AABB(aabbID); }
+    CC_INLINE const Frustum *getFrustum() const { return GET_FRUSTUM(frustumID); }
+
+    const static se::PoolType type;
+};
+
+struct CC_DLL FlatBufferView {
+    uint32_t stride = 0;
+    uint32_t count = 0;
+    uint32_t bufferID = 0; // raw buffer id
+
+    CC_INLINE uint8_t *getBuffer(uint *size) const { return GET_RAW_BUFFER(bufferID, size); }
+
+    const static se::PoolType type;
+};
+
+struct CC_DLL InstancedAttributeView {
+    uint32_t nameID = 0;
+    uint32_t format = 0;
+    uint32_t isNormalized = 0;
+    uint32_t bufferID = 0;
+
+    CC_INLINE const uint8_t *getBuffer(uint *size) const { return GET_RAW_BUFFER(bufferID, size); }
+
+    const static se::PoolType type;
+};
+
+struct CC_DLL RenderingSubMesh {
+    uint32_t flatBuffersID = 0; // array pool id
+
+    CC_INLINE const uint *getFlatBufferArrayID() const { return GET_FLAT_BUFFER_ARRAY(flatBuffersID); }
+    CC_INLINE const FlatBufferView *getFlatBuffer(uint idx) const { return GET_FLAT_BUFFER(idx); }
 
     const static se::PoolType type;
 };
@@ -164,12 +224,13 @@ struct CC_DLL SubModelView {
     uint32_t shaderID[4] = {0, 0, 0, 0};
     uint32_t descriptorSetID = 0;
     uint32_t inputAssemblerID = 0;
+    uint32_t subMeshID = 0;
 
-    CC_INLINE uint getPassID(uint idx) const { return passID[idx]; }
     CC_INLINE const PassView *getPassView(uint idx) const { return GET_PASS(passID[idx]); }
     CC_INLINE gfx::Shader *getShader(uint idx) const { return GET_SHADER(shaderID[idx]); }
     CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return GET_DESCRIPTOR_SET(descriptorSetID); }
     CC_INLINE gfx::InputAssembler *getInputAssembler() const { return GET_IA(inputAssemblerID); }
+    CC_INLINE const RenderingSubMesh *getSubMesh() const { return GET_RENDER_SUBMESH(subMeshID); }
 
     const static se::PoolType type;
 };
@@ -185,7 +246,7 @@ struct CC_DLL ModelView {
     uint32_t instancedBufferID = 0; // raw buffer id
     uint32_t instancedAttrsID = 0;  // array pool id
 
-    CC_INLINE const AABB *getWroldBounds() const { return GET_AABB(worldBoundsID); }
+    CC_INLINE const AABB *getWorldBounds() const { return GET_AABB(worldBoundsID); }
     CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
     CC_INLINE const Node *getTransform() const { return GET_NODE(transformID); }
     CC_INLINE const uint *getSubModelID() const { return GET_SUBMODEL_ARRAY(subModelsID); }
@@ -198,24 +259,17 @@ struct CC_DLL ModelView {
 
 struct CC_DLL Scene {
     uint32_t mainLightID = 0;
-    uint32_t modelsID = 0; //array pool
+    uint32_t modelsID = 0; // array pool
+    uint32_t sphereLights; // array pool
+    uint32_t spotLights;   // array pool
 
     CC_INLINE const Light *getMainLight() const { return GET_LIGHT(mainLightID); }
+    CC_INLINE const uint *getSphereLightArrayID() const { return GET_LIGHT_ARRAY(sphereLights); }
+    CC_INLINE const Light *getSphereLight(uint idx) const { return GET_LIGHT(idx); }
+    CC_INLINE const uint *getSpotLightArrayID() const { return GET_LIGHT_ARRAY(spotLights); }
+    CC_INLINE const Light *getSpotLight(uint idx) const { return GET_LIGHT(idx); }
     CC_INLINE const uint *getModels() const { return GET_MODEL_ARRAY(modelsID); }
     CC_INLINE const ModelView *getModelView(uint idx) const { return GET_MODEL(idx); }
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL Plane {
-    cc::Vec3 normal;
-    float distance;
-};
-
-constexpr uint PLANE_LENGTH = 6;
-struct CC_DLL Frustum {
-    cc::Vec3 vertices[8];
-    Plane planes[PLANE_LENGTH];
 
     const static se::PoolType type;
 };
@@ -284,6 +338,7 @@ struct CC_DLL Sphere {
 
     const static se::PoolType type;
 };
+bool sphere_frustum(const Sphere *sphere, const Frustum *frustum);
 
 enum class CC_DLL ShadowType {
     PLANAR = 0,
@@ -340,46 +395,6 @@ struct CC_DLL RenderWindow {
     uint32_t framebufferID = 0;
 
     CC_INLINE gfx::Framebuffer *getFramebuffer() const { return GET_FRAMEBUFFER(framebufferID); }
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL InstancedAttribute {
-    uint32_t nameID = 0;
-    uint32_t format = 0;
-    uint32_t isNormalized = 0;
-    uint32_t viewID = 0;
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL BufferView {
-    uint8_t *data = nullptr;
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL FlatBuffer {
-    uint32_t stride = 0;
-    uint32_t count = 0;
-    uint32_t bufferViewID = 0;
-    uint32_t bufferViewSize = 0;
-
-    const static se::PoolType type;
-};
-
-struct CC_DLL RenderingSubMesh {
-    uint32_t vertexBuffersID = 0;
-
-    uint32_t attributesID = 0;
-
-    uint32_t flatBuffersID = 0;
-
-    uint32_t primitiveMode = 0;
-    uint32_t indexBufferID = 0;
-    uint32_t indirectBufferID = 0;
-    uint32_t meshID = 0;
-    uint32_t subMeshIndex = 0;
 
     const static se::PoolType type;
 };
