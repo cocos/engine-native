@@ -31,7 +31,6 @@ void getShadowWorldMatrix(const Shadows *shadows, const cc::Vec4 &rotation, cons
     translation.scale(distance);
     translation.add(sphere->center);
 
-    
     Mat4::fromRT(rotation, translation, &shadowWorldMat);
 }
 
