@@ -214,6 +214,17 @@ uint FormatSurfaceSize(Format format, uint width, uint height, uint depth, uint 
     return size;
 }
 
+void BlendTarget::reset() {
+    blend = false;
+    blendSrc = BlendFactor::ONE;
+    blendDst = BlendFactor::ZERO;
+    blendEq = BlendOp::ADD;
+    blendSrcAlpha = BlendFactor::ONE;
+    blendDstAlpha = BlendFactor::ZERO;
+    blendAlphaEq = BlendOp::ADD;
+    blendColorMask = ColorMask::ALL;
+}
+
 void RasterizerState::reset() {
     isDiscard = false;
     polygonMode = PolygonMode::FILL;

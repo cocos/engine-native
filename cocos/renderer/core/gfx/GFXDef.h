@@ -985,6 +985,8 @@ struct BlendTarget {
     BlendFactor blendDstAlpha = BlendFactor::ZERO;
     BlendOp blendAlphaEq = BlendOp::ADD;
     ColorMask blendColorMask = ColorMask::ALL;
+
+    void reset();
 };
 
 typedef cc::vector<BlendTarget> BlendTargetList;
