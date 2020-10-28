@@ -263,6 +263,7 @@ void BlendState::reset() {
     isIndepend = false;
     memset(&blendColor, 0, sizeof blendColor);
     targets.clear();
+    targets.emplace_back(BlendTarget());
 }
 
 } // namespace gfx
