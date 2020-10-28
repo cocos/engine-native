@@ -214,11 +214,55 @@ uint FormatSurfaceSize(Format format, uint width, uint height, uint depth, uint 
     return size;
 }
 
+RasterizerState::reset() {
+    isDiscard = false;
+    polygonMode = PolygonMode::FILL;
+    shadeModel = ShadeModel::GOURAND;
+    cullMode = CullMode::BACK;
+    isFrontFaceCCW = true;
+    depthBiasEnabled = false;
+    depthBias = 0.0f;
+    depthBiasClamp = 0.0f;
+    depthBiasSlop = 0.0f;
+    isDepthClip = true;
+    isMultisample = false;
+    lineWidth = 1.0f;
+}
+
+void DepthStencilState::reset() {
+    depthTest = true;
+    depthWrite = true;
+    depthFunc = ComparisonFunc::LESS;
+    stencilTestFront = false;
+    stencilFuncFront = ComparisonFunc::ALWAYS;
+    stencilReadMaskFront = 0xffffffff;
+    stencilWriteMaskFront = 0xffffffff;
+    stencilFailOpFront = StencilOp::KEEP;
+    stencilZFailOpFront = StencilOp::KEEP;
+    stencilPassOpFront = StencilOp::KEEP;
+    stencilRefFront = 1;
+    stencilTestBack = false;
+    stencilFuncBack = ComparisonFunc::ALWAYS;
+    stencilReadMaskBack = 0xffffffff;
+    stencilWriteMaskBack = 0xffffffff;
+    stencilFailOpBack = StencilOp::KEEP;
+    stencilZFailOpBack = StencilOp::KEEP;
+    stencilPassOpBack = StencilOp::KEEP;
+    stencilRefBack = 1;
+}
+
 void BlendState::setTarget(uint index, const BlendTarget &target) {
     const auto size = targets.size();
     if (size <= index) targets.resize(size << 1);
 
     targets[index] = target;
+}
+
+void BlendState::reset() {
+    isA2C = false;
+    isIndepend = false;
+    memset(&blendColor, 0, sizeof blendColor);
+    targets.clear();
 }
 
 } // namespace gfx

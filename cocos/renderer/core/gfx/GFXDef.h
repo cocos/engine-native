@@ -944,6 +944,8 @@ struct RasterizerState {
     bool isDepthClip = true;
     bool isMultisample = false;
     float lineWidth = 1.0f;
+
+    void reset();
 };
 
 struct DepthStencilState {
@@ -966,6 +968,8 @@ struct DepthStencilState {
     StencilOp stencilZFailOpBack = StencilOp::KEEP;
     StencilOp stencilPassOpBack = StencilOp::KEEP;
     uint32_t stencilRefBack = 1;
+
+    void reset();
 };
 
 struct BlendTarget {
@@ -991,6 +995,7 @@ struct BlendState {
         targets.emplace_back(BlendTarget());
     }
     void setTarget(uint, const BlendTarget &);
+    void reset();
 };
 
 struct PipelineStateInfo {
