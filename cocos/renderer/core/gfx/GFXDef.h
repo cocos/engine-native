@@ -946,6 +946,8 @@ struct RasterizerState {
     float lineWidth = 1.0f;
 
     void reset();
+    uint getHash();
+    void set(const RasterizerState &);
 };
 
 struct DepthStencilState {
@@ -970,6 +972,8 @@ struct DepthStencilState {
     uint32_t stencilRefBack = 1;
 
     void reset();
+    uint getHash() const;
+    void set(const DepthStencilState &dss);
 };
 
 struct BlendTarget {
@@ -996,6 +1000,7 @@ struct BlendState {
     }
     void setTarget(uint, const BlendTarget &);
     void reset();
+    uint getHash() const;
 };
 
 struct PipelineStateInfo {

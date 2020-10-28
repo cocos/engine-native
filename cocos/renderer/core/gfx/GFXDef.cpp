@@ -229,6 +229,25 @@ void RasterizerState::reset() {
     lineWidth = 1.0f;
 }
 
+uint RasterizerState::getHash() {
+    uint hashVal = isDiscard;
+    hashVal = hashVal * 31 + (uint)polygonMode;
+    hashVal = hashVal * 31 + (uint)shadeModel;
+    hashVal = hashVal * 31 + (uint)cullMode;
+    hashVal = hashVal * 31 + isFrontFaceCCW;
+    hashVal = hashVal * 31 + depthBiasEnabled;
+    hashVal = hashVal * 31 + depthBias * 100;
+    hashVal = hashVal * 31 + depthBiasClamp * 100;
+    hashVal = hashVal * 31 + depthBiasSlop * 100;
+    hashVal = hashVal * 31 + isDepthClip;
+    hashVal = hashVal * 31 + isMultisample;
+    hashVal = hashVal * 31 + lineWidth * 100;
+}
+
+void RasterizerState::set(const RasterizerState &rs) {
+    *this = rs;
+}
+
 void DepthStencilState::reset() {
     depthTest = true;
     depthWrite = true;
@@ -251,6 +270,34 @@ void DepthStencilState::reset() {
     stencilRefBack = 1;
 }
 
+void DepthStencilState::set(const DepthStencilState &dss) {
+    *this = dss;
+}
+
+uint DepthStencilState::getHash() const {
+    uint hashVal = (uint)depthTest;
+    hashVal = hashVal * 31 + (uint)depthWrite;
+    hashVal = hashVal * 31 + (uint)depthFunc;
+    hashVal = hashVal * 31 + (uint)stencilTestFront;
+    hashVal = hashVal * 31 + (uint)stencilFuncFront;
+    hashVal = hashVal * 31 + stencilReadMaskFront;
+    hashVal = hashVal * 31 + stencilWriteMaskFront;
+    hashVal = hashVal * 31 + (uint)stencilFailOpFront;
+    hashVal = hashVal * 31 + (uint)stencilZFailOpFront;
+    hashVal = hashVal * 31 + (uint)stencilPassOpFront;
+    hashVal = hashVal * 31 + stencilRefFront;
+    hashVal = hashVal * 31 + stencilTestBack;
+    hashVal = hashVal * 31 + (uint)stencilFuncBack;
+    hashVal = hashVal * 31 + stencilReadMaskBack;
+    hashVal = hashVal * 31 + stencilWriteMaskBack;
+    hashVal = hashVal * 31 + (uint)stencilFailOpBack;
+    hashVal = hashVal * 31 + (uint)stencilZFailOpBack;
+    hashVal = hashVal * 31 + (uint)stencilPassOpBack;
+    hashVal = hashVal * 31 +stencilRefBack;
+    
+    return hashVal;
+}
+
 void BlendState::setTarget(uint index, const BlendTarget &target) {
     const auto size = targets.size();
     if (size <= index) targets.resize(size << 1);
@@ -264,6 +311,29 @@ void BlendState::reset() {
     memset(&blendColor, 0, sizeof(blendColor));
     targets.clear();
     targets.emplace_back(BlendTarget());
+}
+
+uint BlendState::getHash() const {
+    uint hashVal = (int)isA2C;
+    hashVal = hashVal * 31 + (int)isIndepend;
+
+    for (const auto &target : targets) {
+        hashVal = hashVal * 31 + target.blend;
+        hashVal = hashVal * 31 + (uint)target.blendSrc;
+        hashVal = hashVal * 31 + (uint)target.blendDst;
+        hashVal = hashVal * 31 + (uint)target.blendEq;
+        hashVal = hashVal * 31 + (uint)target.blendSrcAlpha;
+        hashVal = hashVal * 31 + (uint)target.blendDstAlpha;
+        hashVal = hashVal * 31 + (uint)target.blendAlphaEq;
+        hashVal = hashVal * 31 + (uint)target.blendColorMask;
+    }
+
+    hashVal = hashVal * 31 + blendColor.x * 100;
+    hashVal = hashVal * 31 + blendColor.y * 100;
+    hashVal = hashVal * 31 + blendColor.z * 100;
+    hashVal = hashVal * 31 + blendColor.w * 100;
+    
+    return hashVal;
 }
 
 } // namespace gfx
