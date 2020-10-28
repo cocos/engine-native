@@ -214,7 +214,7 @@ uint FormatSurfaceSize(Format format, uint width, uint height, uint depth, uint 
     return size;
 }
 
-RasterizerState::reset() {
+void RasterizerState::reset() {
     isDiscard = false;
     polygonMode = PolygonMode::FILL;
     shadeModel = ShadeModel::GOURAND;
@@ -261,7 +261,7 @@ void BlendState::setTarget(uint index, const BlendTarget &target) {
 void BlendState::reset() {
     isA2C = false;
     isIndepend = false;
-    memset(&blendColor, 0, sizeof blendColor);
+    memset(&blendColor, 0, sizeof(blendColor));
     targets.clear();
     targets.emplace_back(BlendTarget());
 }
