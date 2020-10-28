@@ -166,7 +166,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, _device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
 
         matShadowViewProj.multiply(matShadowView);
-        float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, shadowInfo->pcfType, shadowInfo->bias};
+        float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
         memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
         memcpy(_shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
     }
