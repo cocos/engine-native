@@ -55,18 +55,18 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _mtkView = (MTKView *)_windowHandle;
     _mtlDevice = ((MTKView *)_mtkView).device;
     _mtlCommandQueue = [id<MTLDevice>(_mtlDevice) newCommandQueue];
-    
+
     if ([id<MTLDevice>(_mtlDevice) isDepth24Stencil8PixelFormatSupported]) {
-        static_cast<MTKView*>(_mtkView).depthStencilPixelFormat = MTLPixelFormatDepth24Unorm_Stencil8;
+        static_cast<MTKView *>(_mtkView).depthStencilPixelFormat = MTLPixelFormatDepth24Unorm_Stencil8;
         _depthBits = 24;
         _features[(int)Feature::FORMAT_D24S8] = true;
     } else {
-        static_cast<MTKView*>(_mtkView).depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+        static_cast<MTKView *>(_mtkView).depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
         _depthBits = 32;
         _features[(int)Feature::FORMAT_D32FS8] = true;
     }
     _stencilBits = 8;
-    
+
     ContextInfo contextCreateInfo;
     contextCreateInfo.windowHandle = _windowHandle;
     contextCreateInfo.sharedCtx = info.sharedCtx;
@@ -98,8 +98,6 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _maxBufferBindingIndex = mu::getMaxEntriesInBufferArgumentTable(gpuFamily);
     _uboOffsetAlignment = mu::getMinBufferOffsetAlignment(gpuFamily);
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
-
-    
 
     _features[static_cast<int>(Feature::COLOR_FLOAT)] = mu::isColorBufferFloatSupported(gpuFamily);
     _features[static_cast<int>(Feature::COLOR_HALF_FLOAT)] = mu::isColorBufferHalfFloatSupported(gpuFamily);
@@ -158,13 +156,11 @@ void CCMTLDevice::resize(uint width, uint height) {}
 
 void CCMTLDevice::acquire() {
     CCMTLQueue *queue = (CCMTLQueue *)_queue;
-    
+
     // Clear queue stats
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
-
-    _gpuStagingBufferPool->reset();
 }
 
 void CCMTLDevice::present() {
@@ -172,7 +168,7 @@ void CCMTLDevice::present() {
     _numDrawCalls = queue->_numDrawCalls;
     _numInstances = queue->_numInstances;
     _numTriangles = queue->_numTriangles;
-
+    _gpuStagingBufferPool->reset();
     [((MTKView *)(_mtkView)).currentDrawable present];
 }
 
@@ -335,7 +331,7 @@ void CCMTLDevice::blitBuffer(void *srcData, uint offset, uint size, void *dstBuf
     stagingBuffer.size = size;
     _gpuStagingBufferPool->alloc(&stagingBuffer);
     memcpy(stagingBuffer.mappedData, srcData, size);
-    
+
     // Create a command buffer for GPU work.
     id<MTLCommandBuffer> commandBuffer = [id<MTLCommandQueue>(_mtlCommandQueue) commandBuffer];
 
