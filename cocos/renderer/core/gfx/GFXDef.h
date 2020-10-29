@@ -946,7 +946,7 @@ struct RasterizerState {
     float lineWidth = 1.0f;
 
     void reset();
-    uint getHash();
+    uint getHash() const;
     void set(const RasterizerState &);
 };
 

@@ -240,7 +240,7 @@ void RasterizerState::reset() {
     lineWidth = 1.0f;
 }
 
-uint RasterizerState::getHash() {
+uint RasterizerState::getHash() const {
     uint hashVal = isDiscard;
     hashVal = hashVal * 31 + (uint)polygonMode;
     hashVal = hashVal * 31 + (uint)shadeModel;
