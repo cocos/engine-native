@@ -166,25 +166,25 @@ void sceneCulling(ForwardPipeline *pipeline, RenderView *view) {
                     // shadow render Object
                     if (model->castShadow) {
                         if (!castBoundsInited) {
-                            castWorldBounds.center.set(model->getWroldBounds()->center);
-                            castWorldBounds.halfExtents.set(model->getWroldBounds()->halfExtents);
+                            castWorldBounds.center.set(model->getWorldBounds()->center);
+                            castWorldBounds.halfExtents.set(model->getWorldBounds()->halfExtents);
                             castBoundsInited = true;
                         }
-                        castWorldBounds.merge(*model->getWroldBounds());
+                        castWorldBounds.merge(*model->getWorldBounds());
                         shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
 
                     if (model->receiveShadow) {
                         if(!receiveBoundsInited) {
-                            receiveWorldBounds.center.set(model->getWroldBounds()->center);
-                            receiveWorldBounds.halfExtents.set(model->getWroldBounds()->halfExtents);
+                            receiveWorldBounds.center.set(model->getWorldBounds()->center);
+                            receiveWorldBounds.halfExtents.set(model->getWorldBounds()->halfExtents);
                             receiveBoundsInited = true;
                         }
-                        receiveWorldBounds.merge(*model->getWroldBounds());
+                        receiveWorldBounds.merge(*model->getWorldBounds());
                     }
 
                     // frustum culling
-                    if ((model->worldBoundsID) && !aabb_frustum(model->getWroldBounds(), camera->getFrustum())) {
+                    if ((model->worldBoundsID) && !aabb_frustum(model->getWorldBounds(), camera->getFrustum())) {
                         continue;
                     }
 
