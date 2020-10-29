@@ -947,7 +947,6 @@ struct RasterizerState {
 
     void reset();
     uint getHash() const;
-    void set(const RasterizerState &);
 };
 
 struct DepthStencilState {
@@ -973,7 +972,6 @@ struct DepthStencilState {
 
     void reset();
     uint getHash() const;
-    void set(const DepthStencilState &dss);
 };
 
 struct BlendTarget {

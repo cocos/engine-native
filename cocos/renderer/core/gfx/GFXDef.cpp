@@ -257,10 +257,6 @@ uint RasterizerState::getHash() const {
     return hashVal;
 }
 
-void RasterizerState::set(const RasterizerState &rs) {
-    *this = rs;
-}
-
 void DepthStencilState::reset() {
     depthTest = true;
     depthWrite = true;
@@ -281,10 +277,6 @@ void DepthStencilState::reset() {
     stencilZFailOpBack = StencilOp::KEEP;
     stencilPassOpBack = StencilOp::KEEP;
     stencilRefBack = 1;
-}
-
-void DepthStencilState::set(const DepthStencilState &dss) {
-    *this = dss;
 }
 
 uint DepthStencilState::getHash() const {
