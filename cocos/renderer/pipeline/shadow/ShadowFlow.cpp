@@ -1,5 +1,8 @@
 
 #include "ShadowFlow.h"
+
+#include <iostream>
+
 #include "../Define.h"
 #include "../forward/ForwardPipeline.h"
 #include "../helper/SharedMemory.h"
@@ -36,11 +39,57 @@ bool ShadowFlow::initialize(const RenderFlowInfo &info) {
 
 void ShadowFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
+}
+    
 
+void ShadowFlow::render(RenderView *view) {
+    auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
+    const auto shadowInfo = pipeline->getShadows();
+    if (!shadowInfo->enabled) return;
+
+    initShadowFrameBuffer();
+    
+    const auto shadowMapSize = shadowInfo->size;
+    if (_width != shadowMapSize.x || _height != shadowMapSize.y) {
+        resizeShadowMap(shadowMapSize.x, shadowMapSize.y);
+        _width = shadowMapSize.x;
+        _height = shadowMapSize.y;
+    }
+
+    pipeline->updateUBOs(view);
+    RenderFlow::render(view);
+}
+
+void ShadowFlow::resizeShadowMap(uint width, uint height) {
+    if (_depthTexture) {
+        _depthTexture->resize(width, height);
+    }
+
+    if (!_renderTargets.empty()) {
+        for (auto renderTarget : _renderTargets) {
+            if (renderTarget) {
+                renderTarget->resize(width, height);
+            }
+        }
+    }
+
+    if (_frameBuffer) {
+        _frameBuffer->destroy();
+        _frameBuffer->initialize({
+            _renderPass,
+            _renderTargets,
+            _depthTexture,
+            {},
+        });
+    }
+}
+
+void ShadowFlow::initShadowFrameBuffer() {
     auto device = gfx::Device::getInstance();
-    const auto shadowMapSize = static_cast<ForwardPipeline *>(pipeline)->getShadows()->size;
+    const auto shadowMapSize = static_cast<ForwardPipeline *>(this->_pipeline)->getShadows()->size;
     _width = shadowMapSize.x;
     _height = shadowMapSize.y;
+    std::cout << "shadowMapSize: (" << shadowMapSize.x << ", " << shadowMapSize.y << std::endl;
 
     if (!_renderPass) {
         _renderPass = device->createRenderPass({
@@ -92,61 +141,22 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
             _depthTexture,
             {}, //colorMipmapLevels
         });
-    }
 
-    for (const auto stage : _stages) {
-        static_cast<ShadowStage *>(stage)->setFramebuffer(_frameBuffer);
-    }
-
-    gfx::SamplerInfo info;
-    info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
-    const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
-    const auto shadowMapSampler = getSampler(shadowMapSamplerHash);
-    pipeline->getDescriptorSet()->bindSampler(UNIFORM_SHADOWMAP.layout.binding, shadowMapSampler);
-    pipeline->getDescriptorSet()->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _frameBuffer->getColorTextures()[0]);
-}
-
-void ShadowFlow::render(RenderView *view) {
-    auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    const auto shadowInfo = pipeline->getShadows();
-    if (!shadowInfo->enabled) return;
-
-    const auto shadowMapSize = shadowInfo->size;
-    if (_width != shadowMapSize.x || _height != shadowMapSize.y) {
-        resizeShadowMap(shadowMapSize.x, shadowMapSize.y);
-        _width = shadowMapSize.x;
-        _height = shadowMapSize.y;
-    }
-
-    pipeline->updateUBOs(view);
-    RenderFlow::render(view);
-}
-
-void ShadowFlow::resizeShadowMap(uint width, uint height) {
-    if (_depthTexture) {
-        _depthTexture->resize(width, height);
-    }
-
-    if (!_renderTargets.empty()) {
-        for (auto renderTarget : _renderTargets) {
-            if (renderTarget) {
-                renderTarget->resize(width, height);
-            }
+            for (const auto stage : _stages) {
+            static_cast<ShadowStage *>(stage)->setFramebuffer(_frameBuffer);
         }
-    }
 
-    if (_frameBuffer) {
-        _frameBuffer->destroy();
-        _frameBuffer->initialize({
-            _renderPass,
-            _renderTargets,
-            _depthTexture,
-            {},
-        });
+        gfx::SamplerInfo info;
+        info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
+        const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
+        const auto shadowMapSampler = getSampler(shadowMapSamplerHash);
+        this->_pipeline->getDescriptorSet()->bindSampler(UNIFORM_SHADOWMAP.layout.binding, shadowMapSampler);
+        this->_pipeline->getDescriptorSet()->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _frameBuffer->getColorTextures()[0]);
     }
 }
 
 void ShadowFlow::destroy() {
+    return;
     for (auto renderTarget : _renderTargets) {
         CC_SAFE_DESTROY(renderTarget);
     }

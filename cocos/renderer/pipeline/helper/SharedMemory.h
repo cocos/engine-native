@@ -364,10 +364,10 @@ struct CC_DLL Shadows {
     uint32_t sphereID = 0;
     uint32_t autoAdapt = 0;
     uint32_t receiveSphereID = 0;
+    cc::Vec4 color;
 
     cc::Vec2 size;
     cc::Vec3 normal;
-    cc::Vec4 color;
     cc::Mat4 matLight;
 
     CC_INLINE ShadowType getShadowType() const { return static_cast<ShadowType>(shadowType); }

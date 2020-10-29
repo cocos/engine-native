@@ -12,14 +12,16 @@ namespace cc {
 namespace pipeline {
 ShadowMapBatchedQueue::ShadowMapBatchedQueue()
 : _phaseID(PassPhase::getPhaseID("shadow-caster")) {
+    this->_instancedQueue = new RenderInstancedQueue();
+    this->_batchedQueue = new RenderBatchedQueue();
 }
 
 void ShadowMapBatchedQueue::clear(gfx::Buffer *buffer) {
     _subModels.clear();
     _shaders.clear();
     _passes.clear();
-    _instancedQueue->clear();
-    _batchedQueue->clear();
+    if(this->_instancedQueue) _instancedQueue->clear();
+    if(this->_batchedQueue) _batchedQueue->clear();
     _buffer = buffer;
 }
 
@@ -48,22 +50,22 @@ void ShadowMapBatchedQueue::add(const RenderObject &renderObject, uint subModelI
             _subModels.clear();
             _shaders.clear();
             _passes.clear();
-            _instancedQueue->clear();
-            _batchedQueue->clear();
+            if (this->_instancedQueue) _instancedQueue->clear();
+            if (this->_batchedQueue) _batchedQueue->clear();
         }
     }
 }
 
 void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
-    _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
-    _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
+    if (this->_instancedQueue) _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
+    if (this->_instancedQueue) _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
 
     for (size_t i = 0; i < _subModels.size(); i++) {
-        auto subModel = _subModels[i];
-        auto shader = _shaders[i];
-        auto pass = _passes[i];
-        auto ia = subModel->getInputAssembler();
-        auto pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
+        const auto subModel = _subModels[i];
+        const auto shader = _shaders[i];
+        const auto pass = _passes[i];
+        const auto ia = subModel->getInputAssembler();
+        const auto pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
 
         cmdBuffer->bindPipelineState(pso);
         cmdBuffer->bindDescriptorSet(MATERIAL_SET, pass->getDescriptorSet());

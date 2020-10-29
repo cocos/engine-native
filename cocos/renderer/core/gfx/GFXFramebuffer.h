@@ -23,7 +23,7 @@ public:
 protected:
     Device *_device = nullptr;
     RenderPass *_renderPass = nullptr;
-    TextureList _colorTextures;
+    TextureList _colorTextures{};
     Texture *_depthStencilTexture = nullptr;
 };
 
