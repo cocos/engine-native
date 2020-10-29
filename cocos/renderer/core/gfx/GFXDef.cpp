@@ -253,6 +253,8 @@ uint RasterizerState::getHash() {
     hashVal = hashVal * 31 + isDepthClip;
     hashVal = hashVal * 31 + isMultisample;
     hashVal = hashVal * 31 + lineWidth * 100;
+    
+    return hashVal;
 }
 
 void RasterizerState::set(const RasterizerState &rs) {
