@@ -12,8 +12,8 @@ namespace cc {
 namespace pipeline {
 ShadowMapBatchedQueue::ShadowMapBatchedQueue()
 : _phaseID(PassPhase::getPhaseID("shadow-caster")) {
-    _instancedQueue = new RenderInstancedQueue();
-    _batchedQueue = new RenderBatchedQueue();
+    _instancedQueue = CC_NEW(RenderInstancedQueue);
+    _batchedQueue = CC_NEW(RenderBatchedQueue);
 }
 
 void ShadowMapBatchedQueue::clear(gfx::Buffer *buffer) {
@@ -76,16 +76,9 @@ void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::Render
 }
 
 void ShadowMapBatchedQueue::destroy() {
-    if (_batchedQueue) {
-        delete _batchedQueue;
-        _batchedQueue = nullptr;
-    }
+    CC_SAFE_DELETE(_batchedQueue);
     
-
-    if (_instancedQueue) {
-        delete _instancedQueue;
-        _instancedQueue = nullptr;
-    }
+    CC_SAFE_DELETE(_instancedQueue);
 
     _buffer = nullptr;
 }
