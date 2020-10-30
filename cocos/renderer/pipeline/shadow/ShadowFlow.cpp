@@ -69,7 +69,6 @@ void ShadowFlow::resizeShadowMap(uint width, uint height) {
         }
     }
 
-
     if (_framebuffer) {
         _framebuffer->destroy();
         _framebuffer->initialize({

@@ -71,7 +71,7 @@ void Sphere::define(const AABB &aabb) {
     radius = 0.0f;
 
     // Calculate sphere
-    cc::Vec3 offset = maxPos - center;
+    const cc::Vec3 offset = maxPos - center;
     const float dist = offset.length();
 
     const float half = dist * 0.5f;
