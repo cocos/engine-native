@@ -471,20 +471,18 @@ void CCVKDevice::destroy() {
     CC_SAFE_DESTROY(_context);
 }
 
-void CCVKDevice::resize(uint width, uint height) {
-    _width = width;
-    _height = height;
-}
+// op-op since we maintain surface size internally
+void CCVKDevice::resize(uint width, uint height) {}
 
 void CCVKDevice::acquire() {
-    if (!checkSwapchainStatus()) return;
-
     CCVKQueue *queue = (CCVKQueue *)_queue;
 
     if (queue->gpuQueue()->fences.size()) {
         VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, queue->gpuQueue()->fences.size(),
                                  queue->gpuQueue()->fences.data(), VK_TRUE, DEFAULT_TIMEOUT));
     }
+
+    if (!checkSwapchainStatus()) return;
 
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
@@ -717,8 +715,8 @@ bool CCVKDevice::checkSwapchainStatus() {
         context->swapchainCreateInfo.imageExtent.width = _width;
         context->swapchainCreateInfo.imageExtent.height = _height;
     } else {
-        _width = context->swapchainCreateInfo.imageExtent.width = newWidth;
-        _height = context->swapchainCreateInfo.imageExtent.height = newHeight;
+        _nativeWidth = _width = context->swapchainCreateInfo.imageExtent.width = newWidth;
+        _nativeHeight = _height = context->swapchainCreateInfo.imageExtent.height = newHeight;
     }
 
     if (newWidth == 0 || newHeight == 0) {
@@ -727,6 +725,8 @@ bool CCVKDevice::checkSwapchainStatus() {
 
     _transform = MapSurfaceTransform(preTransform);
     context->swapchainCreateInfo.preTransform = preTransform;
+
+    CC_LOG_INFO("Resizing surface: %dx%d, surface rotation: %d degrees", newWidth, newHeight, (uint)_transform * 90);
 
     VK_CHECK(vkCreateSwapchainKHR(_gpuDevice->vkDevice, &context->swapchainCreateInfo, nullptr, &_gpuSwapchain->vkSwapchain));
 
