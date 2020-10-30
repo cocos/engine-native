@@ -284,7 +284,6 @@ void Vec3::min(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
     dst->z = std::fminf(v1.z, v2.z);
 }
 
-
 void Vec3::smooth(const Vec3& target, float elapsedTime, float responseTime)
 {
     if (elapsedTime > 0)
