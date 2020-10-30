@@ -370,16 +370,14 @@ public:
      * Sets this vector to the directional vector between the specified points.
      *
      * @param p1 The vector to subtract.
-     * @return p2 The vector to subtracted.
+     * @param p2 The vector to subtracted.
      *
-     * @return this vector with the given vector.
      */
     inline void set(const Vec3& p1, const Vec3& p2);
 
     /**
     * Sets the elements of this vector to zero.
     *
-    * @return zero vector.
     */
     inline void setZero();
 
@@ -402,7 +400,7 @@ public:
     static void subtract(const Vec3& v1, const Vec3& v2, Vec3* dst);
 
     /**
-     * Compare two vectors
+     * Get the maximum value in the vector
      *
      * @param v1 To be compared vector.
      * @param v2 To be compared vector.
@@ -413,7 +411,7 @@ public:
     static void max(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 
     /**
-     * Compare two vectors
+     * Get the minimum value in the vector
      *
      * @param v1 To be compared vector.
      * @param v2 To be compared vector.

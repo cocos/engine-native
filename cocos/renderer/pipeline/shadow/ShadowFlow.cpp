@@ -1,8 +1,6 @@
 
 #include "ShadowFlow.h"
 
-#include <iostream>
-
 #include "../Define.h"
 #include "../forward/ForwardPipeline.h"
 #include "../helper/SharedMemory.h"
@@ -28,7 +26,7 @@ ShadowFlow::~ShadowFlow() {
 
 bool ShadowFlow::initialize(const RenderFlowInfo &info) {
     RenderFlow::initialize(info);
-    if (_stages.size() == 0) {
+    if (_stages.empty()) {
         auto shadowStage = CC_NEW(ShadowStage);
         shadowStage->initialize(ShadowStage::getInitializeInfo());
         _stages.emplace_back(shadowStage);
@@ -89,7 +87,6 @@ void ShadowFlow::initShadowFrameBuffer() {
     const auto shadowMapSize = static_cast<ForwardPipeline *>(this->_pipeline)->getShadows()->size;
     _width = shadowMapSize.x;
     _height = shadowMapSize.y;
-    std::cout << "shadowMapSize: (" << shadowMapSize.x << ", " << shadowMapSize.y << std::endl;
 
     if (!_renderPass) {
         _renderPass = device->createRenderPass({
@@ -156,7 +153,6 @@ void ShadowFlow::initShadowFrameBuffer() {
 }
 
 void ShadowFlow::destroy() {
-    return;
     for (auto renderTarget : _renderTargets) {
         CC_SAFE_DESTROY(renderTarget);
     }

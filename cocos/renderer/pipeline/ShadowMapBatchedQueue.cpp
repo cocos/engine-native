@@ -12,16 +12,16 @@ namespace cc {
 namespace pipeline {
 ShadowMapBatchedQueue::ShadowMapBatchedQueue()
 : _phaseID(PassPhase::getPhaseID("shadow-caster")) {
-    this->_instancedQueue = new RenderInstancedQueue();
-    this->_batchedQueue = new RenderBatchedQueue();
+    _instancedQueue = new RenderInstancedQueue();
+    _batchedQueue = new RenderBatchedQueue();
 }
 
 void ShadowMapBatchedQueue::clear(gfx::Buffer *buffer) {
     _subModels.clear();
     _shaders.clear();
     _passes.clear();
-    if(this->_instancedQueue) _instancedQueue->clear();
-    if(this->_batchedQueue) _batchedQueue->clear();
+    if(_instancedQueue) _instancedQueue->clear();
+    if(_batchedQueue) _batchedQueue->clear();
     _buffer = buffer;
 }
 
@@ -50,15 +50,15 @@ void ShadowMapBatchedQueue::add(const RenderObject &renderObject, uint subModelI
             _subModels.clear();
             _shaders.clear();
             _passes.clear();
-            if (this->_instancedQueue) _instancedQueue->clear();
-            if (this->_batchedQueue) _batchedQueue->clear();
+            _instancedQueue->clear();
+            _batchedQueue->clear();
         }
     }
 }
 
-void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
-    if (this->_instancedQueue) _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
-    if (this->_instancedQueue) _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
+void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) const {
+    if (_instancedQueue) _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
+    if (_batchedQueue) _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
 
     for (size_t i = 0; i < _subModels.size(); i++) {
         const auto subModel = _subModels[i];
@@ -76,6 +76,10 @@ void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::Render
 }
 
 void ShadowMapBatchedQueue::destroy() {
+    CC_SAFE_DELETE(_batchedQueue);
+    CC_SAFE_DELETE(_instancedQueue);
+
+    _buffer = nullptr;
 }
 } // namespace pipeline
 } // namespace cc
