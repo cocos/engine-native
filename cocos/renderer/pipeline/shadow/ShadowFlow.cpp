@@ -63,13 +63,12 @@ void ShadowFlow::resizeShadowMap(uint width, uint height) {
         _depthTexture->resize(width, height);
     }
 
-    if (!_renderTargets.empty()) {
-        for (auto renderTarget : _renderTargets) {
-            if (renderTarget) {
-                renderTarget->resize(width, height);
-            }
+    for (auto renderTarget : _renderTargets) {
+        if (renderTarget) {
+            renderTarget->resize(width, height);
         }
     }
+
 
     if (_framebuffer) {
         _framebuffer->destroy();
@@ -139,9 +138,9 @@ void ShadowFlow::initShadowFrameBuffer() {
             {}, //colorMipmapLevels
         });
 
-            for (const auto stage : _stages) {
-            static_cast<ShadowStage *>(stage)->setFramebuffer(_framebuffer);
-        }
+    for (const auto stage : _stages) {
+        static_cast<ShadowStage *>(stage)->setFramebuffer(_framebuffer);
+    }
 
         gfx::SamplerInfo info;
         info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
