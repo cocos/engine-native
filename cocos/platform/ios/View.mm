@@ -43,13 +43,24 @@ void dispatchEvents(cc::TouchEvent &touchEvent, NSSet *touches) {
 
 @synthesize preventTouch;
 
+#ifndef CC_USE_METAL
 + (Class)layerClass {
     return [CAEAGLLayer class];
 }
+#endif
 
 - (id)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame])
-        self.preventTouch = false;
+#ifdef CC_USE_METAL
+    if (self = [super initWithFrame:frame device:MTLCreateSystemDefaultDevice()]) {
+        self.framebufferOnly = YES;
+        self.delegate = self;
+        self.preventTouch = FALSE;
+    }
+#else
+    if (self = [super initWithFrame:frame]) {
+        self.preventTouch = FALSE;
+    }
+#endif
 
     return self;
 }
