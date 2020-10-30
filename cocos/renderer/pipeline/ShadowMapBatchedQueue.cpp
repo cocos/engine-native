@@ -57,8 +57,8 @@ void ShadowMapBatchedQueue::add(const RenderObject &renderObject, uint subModelI
 }
 
 void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) const {
-    if (_instancedQueue) _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
-    if (_batchedQueue) _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
+    _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
+    _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
 
     for (size_t i = 0; i < _subModels.size(); i++) {
         const auto subModel = _subModels[i];
