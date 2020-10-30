@@ -71,9 +71,9 @@ void ShadowFlow::resizeShadowMap(uint width, uint height) {
         }
     }
 
-    if (_frameBuffer) {
-        _frameBuffer->destroy();
-        _frameBuffer->initialize({
+    if (_framebuffer) {
+        _framebuffer->destroy();
+        _framebuffer->initialize({
             _renderPass,
             _renderTargets,
             _depthTexture,
@@ -131,8 +131,8 @@ void ShadowFlow::initShadowFrameBuffer() {
         });
     }
 
-    if (!_frameBuffer) {
-        _frameBuffer = device->createFramebuffer({
+    if (!_framebuffer) {
+        _framebuffer = device->createFramebuffer({
             _renderPass,
             _renderTargets,
             _depthTexture,
@@ -140,7 +140,7 @@ void ShadowFlow::initShadowFrameBuffer() {
         });
 
             for (const auto stage : _stages) {
-            static_cast<ShadowStage *>(stage)->setFramebuffer(_frameBuffer);
+            static_cast<ShadowStage *>(stage)->setFramebuffer(_framebuffer);
         }
 
         gfx::SamplerInfo info;
@@ -148,7 +148,7 @@ void ShadowFlow::initShadowFrameBuffer() {
         const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
         const auto shadowMapSampler = getSampler(shadowMapSamplerHash);
         this->_pipeline->getDescriptorSet()->bindSampler(UNIFORM_SHADOWMAP.layout.binding, shadowMapSampler);
-        this->_pipeline->getDescriptorSet()->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _frameBuffer->getColorTextures()[0]);
+        this->_pipeline->getDescriptorSet()->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _framebuffer->getColorTextures()[0]);
     }
 }
 
@@ -160,7 +160,7 @@ void ShadowFlow::destroy() {
 
     CC_SAFE_DESTROY(_renderPass);
     CC_SAFE_DESTROY(_depthTexture)
-    CC_SAFE_DESTROY(_frameBuffer);
+    CC_SAFE_DESTROY(_framebuffer);
 
     RenderFlow::destroy();
 }

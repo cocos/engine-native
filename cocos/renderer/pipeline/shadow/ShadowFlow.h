@@ -28,7 +28,7 @@ private:
     gfx::RenderPass *_renderPass = nullptr;
     gfx::TextureList _renderTargets;
     gfx::Texture *_depthTexture = nullptr;
-    gfx::Framebuffer *_frameBuffer = nullptr;
+    gfx::Framebuffer *_framebuffer = nullptr;
 
     uint _width = 0;
     uint _height = 0;
