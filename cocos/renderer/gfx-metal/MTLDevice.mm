@@ -57,7 +57,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _mtlCommandQueue = [id<MTLDevice>(_mtlDevice) newCommandQueue];
     
     
-#if CC_USE_METAL
+#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     static_cast<MTKView*>(_mtkView).depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
     _depthBits = 32;
     _features[(int)Feature::FORMAT_D32FS8] = true;
