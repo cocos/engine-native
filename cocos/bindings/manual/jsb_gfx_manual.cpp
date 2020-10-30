@@ -814,41 +814,47 @@ static bool jsb_gfx_RasterizerState_set(se::State &s) {
     const auto &args = s.args();
     size_t argc = args.size();
     if (argc == 1) {
+        const auto src = (cc::gfx::RasterizerState *)args[0].toObject()->getPrivateData();
+        if (src) {
+            *cobj = *src;
+            return true;
+        }
+
         se::Object *stateInfo = args[0].toObject();
         se::Value val;
         stateInfo->getProperty("isDiscard", &val);
         if (!val.isNullOrUndefined()) cobj->isDiscard = val.toBoolean();
-        
+
         stateInfo->getProperty("polygonMode", &val);
         if (!val.isNullOrUndefined()) cobj->polygonMode = (cc::gfx::PolygonMode)val.toUint();
-        
+
         stateInfo->getProperty("cullMode", &val);
         if (!val.isNullOrUndefined()) cobj->cullMode = (cc::gfx::CullMode)val.toUint();
-        
+
         stateInfo->getProperty("isFrontFaceCCW", &val);
         if (!val.isNullOrUndefined()) cobj->isFrontFaceCCW = val.toBoolean();
-        
+
         stateInfo->getProperty("depthBiasEnabled", &val);
         if (!val.isNullOrUndefined()) cobj->depthBiasEnabled = val.toBoolean();
-        
+
         stateInfo->getProperty("depthBias", &val);
         if (!val.isNullOrUndefined()) cobj->depthBias = val.toFloat();
-        
+
         stateInfo->getProperty("depthBiasClamp", &val);
         if (!val.isNullOrUndefined()) cobj->depthBiasClamp = val.toFloat();
-        
+
         stateInfo->getProperty("depthBiasSlop", &val);
         if (!val.isNullOrUndefined()) cobj->depthBiasSlop = val.toFloat();
-        
+
         stateInfo->getProperty("isDepthClip", &val);
         if (!val.isNullOrUndefined()) cobj->isDepthClip = val.toBoolean();
-        
+
         stateInfo->getProperty("isMultisample", &val);
         if (!val.isNullOrUndefined()) cobj->isMultisample = val.toBoolean();
-        
+
         stateInfo->getProperty("lineWidth", &val);
         if (!val.isNullOrUndefined()) cobj->lineWidth = val.toFloat();
-        
+
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -862,74 +868,176 @@ static bool jsb_gfx_DepthStencilState_set(se::State &s) {
     const auto &args = s.args();
     size_t argc = args.size();
     if (argc == 1) {
+        const auto src = (cc::gfx::DepthStencilState *)args[0].toObject()->getPrivateData();
+        if (src) {
+            *cobj = *src;
+            return true;
+        }
+
         se::Object *stateInfo = args[0].toObject();
         se::Value val;
         stateInfo->getProperty("depthTest", &val);
         if (!val.isNullOrUndefined()) cobj->depthTest = val.toBoolean();
-        
+
         stateInfo->getProperty("depthWrite", &val);
         if (!val.isNullOrUndefined()) cobj->depthWrite = val.toBoolean();
-        
+
         stateInfo->getProperty("depthFunc", &val);
         if (!val.isNullOrUndefined()) cobj->depthFunc = (cc::gfx::ComparisonFunc)val.toUint();
-        
+
         stateInfo->getProperty("stencilTestFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilTestFront = val.toBoolean();
-        
+
         stateInfo->getProperty("stencilFuncFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilFuncFront = (cc::gfx::ComparisonFunc)val.toUint();
-        
+
         stateInfo->getProperty("stencilReadMaskFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilReadMaskFront = val.toUint32();
-        
+
         stateInfo->getProperty("stencilWriteMaskFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilWriteMaskFront = val.toUint32();
-        
+
         stateInfo->getProperty("stencilFailOpFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilFailOpFront = (cc::gfx::StencilOp)val.toUint();
-        
+
         stateInfo->getProperty("stencilZFailOpFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilZFailOpFront = (cc::gfx::StencilOp)val.toUint();
-        
+
         stateInfo->getProperty("stencilPassOpFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilPassOpFront = (cc::gfx::StencilOp)val.toUint();
-        
+
         stateInfo->getProperty("stencilRefFront", &val);
         if (!val.isNullOrUndefined()) cobj->stencilRefFront = val.toUint32();
-        
+
         stateInfo->getProperty("stencilTestBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilTestBack = val.toBoolean();
-        
+
         stateInfo->getProperty("stencilTestBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilTestBack = val.toBoolean();
-        
+
         stateInfo->getProperty("stencilFuncBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilFuncBack = (cc::gfx::ComparisonFunc)val.toUint();
-        
+
         stateInfo->getProperty("stencilReadMaskBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilReadMaskBack = val.toUint32();
-        
+
         stateInfo->getProperty("stencilWriteMaskBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilWriteMaskBack = val.toUint32();
-        
+
         stateInfo->getProperty("stencilFailOpBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilFailOpBack = (cc::gfx::StencilOp)val.toUint();
-        
+
         stateInfo->getProperty("stencilZFailOpBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilZFailOpBack = (cc::gfx::StencilOp)val.toUint();
-        
+
         stateInfo->getProperty("stencilPassOpBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilPassOpBack = (cc::gfx::StencilOp)val.toUint();
-        
+
         stateInfo->getProperty("stencilRefBack", &val);
         if (!val.isNullOrUndefined()) cobj->stencilRefBack = val.toUint32();
-        
+
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
 SE_BIND_FUNC(jsb_gfx_DepthStencilState_set)
+
+static bool jsb_gfx_BlendState_setTarget(se::State &s) {
+    cc::gfx::BlendState *cobj = (cc::gfx::BlendState *)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "BlendState : Invalid Native Object");
+    const auto &args = s.args();
+    size_t argc = args.size();
+    if (argc == 2) {
+        uint index = args[0].toUint();
+        auto &targets = cobj->targets;
+        if (index >= targets.size()) targets.resize(index);
+
+        const auto src = (cc::gfx::BlendTarget *)args[1].toObject()->getPrivateData();
+        if (src) {
+            targets[index] = *src;
+            return true;
+        }
+
+        se::Object *targetInfo = args[1].toObject();
+        se::Value val;
+        auto &target = targets[index];
+        targetInfo->getProperty("blend", &val);
+        if (!val.isNullOrUndefined()) target.blend = val.toBoolean();
+
+        targetInfo->getProperty("blendSrc", &val);
+        if (!val.isNullOrUndefined()) target.blendSrc = (cc::gfx::BlendFactor)val.toUint();
+
+        targetInfo->getProperty("blendDst", &val);
+        if (!val.isNullOrUndefined()) target.blendDst = (cc::gfx::BlendFactor)val.toUint();
+
+        targetInfo->getProperty("blendEq", &val);
+        if (!val.isNullOrUndefined()) target.blendEq = (cc::gfx::BlendOp)val.toUint();
+
+        targetInfo->getProperty("blendSrcAlpha", &val);
+        if (!val.isNullOrUndefined()) target.blendSrcAlpha = (cc::gfx::BlendFactor)val.toUint();
+
+        targetInfo->getProperty("blendDstAlpha", &val);
+        if (!val.isNullOrUndefined()) target.blendDstAlpha = (cc::gfx::BlendFactor)val.toUint();
+
+        targetInfo->getProperty("blendAlphaEq", &val);
+        if (!val.isNullOrUndefined()) target.blendAlphaEq = (cc::gfx::BlendOp)val.toUint();
+
+        targetInfo->getProperty("blendColorMask", &val);
+        if (!val.isNullOrUndefined()) target.blendColorMask = (cc::gfx::ColorMask)val.toUint();
+
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(jsb_gfx_BlendState_setTarget)
+
+static bool jsb_gfx_BlendState_updateByPass(se::State &s) {
+    cc::gfx::BlendState *cobj = (cc::gfx::BlendState *)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "BlendState : Invalid Native Object");
+    const auto &args = s.args();
+    size_t argc = args.size();
+    if (argc == 1) {
+        const auto src = (cc::gfx::BlendState *)args[0].toObject()->getPrivateData();
+        if (src) {
+            cobj->isA2C = src->isA2C;
+            cobj->isIndepend = src->isIndepend;
+            cobj->blendColor = src->blendColor;
+            return true;
+        }
+
+        se::Object *stateInfo = args[0].toObject();
+        se::Value val;
+        stateInfo->getProperty("isA2C", &val);
+        if (!val.isNullOrUndefined()) cobj->isA2C = val.toBoolean();
+
+        stateInfo->getProperty("isIndepend", &val);
+        if (!val.isNullOrUndefined()) cobj->isIndepend = val.toBoolean();
+
+        stateInfo->getProperty("BlendColor", &val);
+        if (!val.isNullOrUndefined()) {
+            auto &blendColor = cobj->blendColor;
+            se::Object *colorObj = val.toObject();
+            colorObj->getProperty("x", &val);
+            blendColor.x = val.toFloat();
+
+            colorObj->getProperty("y", &val);
+            blendColor.y = val.toFloat();
+
+            colorObj->getProperty("z", &val);
+            blendColor.z = val.toFloat();
+
+            colorObj->getProperty("w", &val);
+            blendColor.w = val.toFloat();
+        }
+
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(jsb_gfx_BlendState_updateByPass)
 
 bool register_all_gfx_manual(se::Object *obj) {
     __jsb_cc_gfx_Device_proto->defineFunction("copyBuffersToTexture", _SE(js_gfx_Device_copyBuffersToTexture));
@@ -950,10 +1058,13 @@ bool register_all_gfx_manual(se::Object *obj) {
 
     __jsb_cc_gfx_Buffer_proto->defineFunction("initialize", _SE(js_gfx_Buffer_initialize));
     __jsb_cc_gfx_Texture_proto->defineFunction("initialize", _SE(js_gfx_Texture_initialize));
-    
+
     __jsb_cc_gfx_RasterizerState_proto->defineFunction("set", _SE(jsb_gfx_RasterizerState_set));
-    
+
     __jsb_cc_gfx_DepthStencilState_proto->defineFunction("set", _SE(jsb_gfx_DepthStencilState_set));
+
+    __jsb_cc_gfx_BlendState_proto->defineFunction("setTarget", _SE(jsb_gfx_BlendState_setTarget));
+    __jsb_cc_gfx_BlendState_proto->defineFunction("updateByPass", _SE(jsb_gfx_BlendState_updateByPass));
 
     // Get the ns
     se::Value nsVal;

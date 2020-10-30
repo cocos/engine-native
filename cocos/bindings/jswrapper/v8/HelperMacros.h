@@ -29,9 +29,11 @@
 #include <map>
 #include <string>
 
+#define RECORD_JSB_INVOKING
+
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-#ifdef CC_DEBUG
+#ifdef RECORD_JSB_INVOKING
 extern unsigned int __jsbInvocationCount;
 extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
 #endif
@@ -39,21 +41,21 @@ extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
 namespace {
 
 void recordJSBInvoke(const std::string &funcName) {
-    #ifdef CC_DEBUG
+    #ifdef RECORD_JSB_INVOKING
     ++__jsbInvocationCount;
     ++__jsbFunctionInvokedRecords[funcName];
     #endif
 }
 void clearRecordJSBInvoke() {
-    #ifdef CC_DEBUG
+    #ifdef RECORD_JSB_INVOKING
     __jsbInvocationCount = 0;
     __jsbFunctionInvokedRecords.clear();
     #endif
 }
 
 void printJSBInvoke() {
-    #ifdef CC_DEBUG
-    CC_LOG_DEBUG("Start print JSB function record info.......");
+    #ifdef RECORD_JSB_INVOKING
+    CC_LOG_DEBUG("Start print JSB function record info....... %d times", __jsbInvocationCount);
     for (const auto &pair : __jsbFunctionInvokedRecords) {
         CC_LOG_DEBUG("%s is invoked %u times.", pair.first.c_str(), pair.second);
     }
