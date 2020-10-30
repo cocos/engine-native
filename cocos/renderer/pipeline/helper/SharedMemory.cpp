@@ -1,4 +1,5 @@
 #include "SharedMemory.h"
+#include "../math/MathUtil.h"
 
 namespace cc {
 namespace pipeline {
@@ -28,6 +29,21 @@ void AABB::getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const {
     maxPos = center + halfExtents;
 }
 
+void AABB::merge(const AABB &aabb) {
+    cc::Vec3 minA = center - halfExtents;
+    cc::Vec3 minB = aabb.center - aabb.halfExtents;
+    cc::Vec3 maxA = center + halfExtents;
+    cc::Vec3 maxB = aabb.center + aabb.halfExtents;
+    cc::Vec3 maxP, minP;
+    cc::Vec3::max(maxA, maxB, &maxP);
+    cc::Vec3::min(minA, minB, &minP);
+
+    cc::Vec3 addP = maxP + minP;
+    cc::Vec3 subP = maxP - minP;
+    center = addP * 0.5f;
+    halfExtents = subP * 0.5f;
+}
+
 void Sphere::mergePoint(const cc::Vec3 &point) {
     if (radius < 0.0f) {
         center = point;
@@ -46,11 +62,85 @@ void Sphere::mergePoint(const cc::Vec3 &point) {
     }
 }
 
+void Sphere::define(const AABB &aabb) {
+    cc::Vec3 minPos, maxPos;
+    aabb.getBoundary(minPos, maxPos);
+
+    // Initialize sphere
+    center.set(minPos);
+    radius = 0.0f;
+
+    // Calculate sphere
+    const cc::Vec3 offset = maxPos - center;
+    const float dist = offset.length();
+
+    const float half = dist * 0.5f;
+    radius += dist * 0.5f;
+    center += (half / dist) * offset;
+}
+
 void Sphere::mergeAABB(const AABB *aabb) {
     cc::Vec3 minPos, maxPos;
     aabb->getBoundary(minPos, maxPos);
     mergePoint(minPos);
     mergePoint(maxPos);
 }
+
+int sphere_plane(const Sphere *sphere, const Plane *plane) {
+    const auto dot = cc::Vec3::dot(plane->normal, sphere->center);
+    const auto r = sphere->radius * plane->normal.length();
+    if (dot + r < plane->distance) {
+        return -1;
+    } else if (dot - r > plane->distance) {
+        return 0;
+    }
+    return 1;
+};
+
+bool sphere_frustum(const Sphere *sphere, const Frustum *frustum) {
+    for (auto i = 0; i < PLANE_LENGTH; i++) {
+        // frustum plane normal points to the inside
+        if (sphere_plane(sphere, &frustum->planes[i]) == -1) {
+            return false;
+        }
+    } // completely outside
+    return true;
+}
+
+bool aabb_aabb(const AABB *aabb1, const AABB*aabb2) {
+    cc::Vec3 aMin, aMax, bMin, bMax;
+    cc::Vec3::subtract(aabb1->center, aabb1->halfExtents, &aMin);
+    cc::Vec3::add(aabb1->center, aabb1->halfExtents, &aMax);
+    cc::Vec3::subtract(aabb2->center, aabb2->halfExtents, &bMin);
+    cc::Vec3::add(aabb2->center, aabb2->halfExtents, &bMax);
+    return (aMin.x <= bMax.x && aMax.x >= bMin.x) &&
+        (aMin.y <= bMax.y && aMax.y >= bMin.y) &&
+        (aMin.z <= bMax.z && aMax.z >= bMin.z);
+}
+
+int aabb_plane(const AABB *aabb, const Plane *plane) {
+    const auto &halfExtents = aabb->halfExtents;
+    auto r = halfExtents.x * std::abs(plane->normal.x) +
+             halfExtents.y * std::abs(plane->normal.y) +
+             halfExtents.z * std::abs(plane->normal.z);
+    auto dot = Vec3::dot(plane->normal, aabb->center);
+    if (dot + r < plane->distance) {
+        return -1;
+    } else if (dot - r > plane->distance) {
+        return 0;
+    }
+    return 1;
+};
+
+bool aabb_frustum(const AABB *aabb, const Frustum *frustum) {
+    for (size_t i = 0; i < PLANE_LENGTH; i++) {
+        // frustum plane normal points to the inside
+        if (aabb_plane(aabb, &frustum->planes[i]) == -1) {
+            return 0;
+        }
+    } // completely outside
+    return 1;
+}
+
 } // namespace pipeline
 } // namespace cc

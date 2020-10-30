@@ -112,13 +112,13 @@ void ForwardStage::render(RenderView *view) {
 
                 if (pass->phase != _phaseID) continue;
                 if (pass->getBatchingScheme() == BatchingSchemes::INSTANCING) {
-                    auto instancedBuffer = InstancedBuffer::get(subModel->getPassID(p));
+                    auto instancedBuffer = InstancedBuffer::get(subModel->passID[p]);
                     instancedBuffer->merge(model, subModel, p);
-                    _instancedQueue->push(instancedBuffer);
+                    _instancedQueue->add(instancedBuffer);
                 } else if (pass->getBatchingScheme() == BatchingSchemes::VB_MERGING) {
-                    auto batchedBuffer = BatchedBuffer::get(pass);
+                    auto batchedBuffer = BatchedBuffer::get(subModel->passID[p]);
                     batchedBuffer->merge(subModel, p, &ro);
-                    _batchedQueue->push(batchedBuffer);
+                    _batchedQueue->add(batchedBuffer);
                 } else {
                     for (k = 0; k < _renderQueues.size(); k++) {
                         _renderQueues[k]->insertRenderPass(ro, m, p);
@@ -135,14 +135,16 @@ void ForwardStage::render(RenderView *view) {
 
     _instancedQueue->uploadBuffers(cmdBuff);
     _batchedQueue->uploadBuffers(cmdBuff);
-    _additiveLightQueue->gatherLightPasses(view);
+    _additiveLightQueue->gatherLightPasses(view, cmdBuff);
 
     auto camera = view->getCamera();
-
-    _renderArea.x = camera->viewportX * camera->width;
-    _renderArea.y = camera->viewportY * camera->height;
-    _renderArea.width = camera->viewportWidth * camera->width * pipeline->getShadingScale();
-    _renderArea.height = camera->viewportHeight * camera->height * pipeline->getShadingScale();
+    // render area is not oriented
+    uint w = (uint)_device->getSurfaceTransform() % 2 ? camera->height : camera->width;
+    uint h = (uint)_device->getSurfaceTransform() % 2 ? camera->width : camera->height;
+    _renderArea.x = camera->viewportX * w;
+    _renderArea.y = camera->viewportY * h;
+    _renderArea.width = camera->viewportWidth * w * pipeline->getShadingScale();
+    _renderArea.height = camera->viewportHeight * h * pipeline->getShadingScale();
 
     if (static_cast<gfx::ClearFlags>(camera->clearFlag) & gfx::ClearFlagBit::COLOR) {
         if (pipeline->isHDR()) {
@@ -163,10 +165,10 @@ void ForwardStage::render(RenderView *view) {
     auto framebuffer = view->getWindow()->getFramebuffer();
     const auto &colorTextures = framebuffer->getColorTextures();
 
-    auto renderPass = colorTextures.size() ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
+    auto renderPass = colorTextures.size() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
 
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
-    cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), _pipeline->getDescriptorSet());
+    cmdBuff->bindDescriptorSet(GLOBAL_SET, _pipeline->getDescriptorSet());
 
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
     _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);

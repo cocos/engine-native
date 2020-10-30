@@ -25,6 +25,7 @@ if(USE_SE_JSC AND APPLE)
 endif()
 
 set(DEVELOPMENT_TEAM "" CACHE STRING "APPLE Developtment Team")
+set(RES_DIR "" CACHE STRING          "Resource path")
 
 if(CMAKE_OSX_SYSROOT STREQUAL "iphonesimulator")
     set(TARGET_IOS_VERSION "9.0")
@@ -33,13 +34,16 @@ else()
 endif()
 set(TARGET_OSX_VERSION "10.10")
 
+if(RES_DIR)
+    include(${RES_DIR}/proj/cfg.cmake)
+endif()
+
 set(cocosdir "${COCOS_ROOT}")
 if(NOT cocosdir)
     message(FATAL_ERROR "COCOS_ROOT is not set!")
 endif()
 include(${cocosdir}/CMakeLists.txt)
 
-set(RES_DIR "" CACHE STRING          "Resource path")
 
 if(ANDROID)
     set(LIB_NAME cocos2djs)
@@ -70,27 +74,10 @@ endif()
 set(GAME_RES_ROOT ${CMAKE_CURRENT_LIST_DIR}/../${PLATFORM_DIR_NAME})
 
 if(RES_DIR)
-    set(GAME_RES_ROOT ${RES_DIR})
+    set(GAME_RES_ROOT ${RES_DIR}/assets)
     set(PROJ_SRC_DIR ${RES_DIR}/proj)
     message(STATUS "Use resource diretory ${RES_DIR}")
 endif()
-
-set(GAME_RES_FILES
-    ${GAME_RES_ROOT}/application.js
-    ${GAME_RES_ROOT}/main.js
-    ${GAME_RES_ROOT}/project.json
-)
-set(GAME_RES_FOLDERS
-    ${GAME_RES_ROOT}/jsb-adapter
-    ${GAME_RES_ROOT}/res
-    ${GAME_RES_ROOT}/src
-    ${GAME_RES_ROOT}/subpackages
-
-)
-set(GAME_RES_ALL
-    ${GAME_RES_FILES}
-    ${GAME_RES_FOLDERS}
-)
 
 set(UI_RESOURCES)
 set(PROJ_SOURCES)
@@ -155,7 +142,7 @@ elseif(ANDROID)
 endif()
 
 set(asset_files)
-foreach(res ${GAME_RES_ALL})
+foreach(res ${GAME_RES_ROOT})
     set(res_list)
     if(NOT EXISTS ${res})
         continue()
@@ -239,14 +226,8 @@ elseif(WINDOWS)
         add_custom_target(copy_resource ALL
             COMMAND ${CMAKE_COMMAND} -E echo "Copying resources to ${bin_dir}"
             COMMAND ${CMAKE_COMMAND} -E make_directory ${bin_dir}
-            COMMAND ${CMAKE_COMMAND} -E make_directory ${GAME_RES_ROOT}/subpackages
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${GAME_RES_ROOT}/jsb-adapter ${bin_dir}/jsb-adapter
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${GAME_RES_ROOT}/res ${bin_dir}/res
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${GAME_RES_ROOT}/src ${bin_dir}/src
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${GAME_RES_ROOT}/subpackages ${bin_dir}/subpackages
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GAME_RES_ROOT}/application.js ${bin_dir}/application.js
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GAME_RES_ROOT}/main.js ${bin_dir}/main.js
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GAME_RES_ROOT}/project.json ${bin_dir}/project.json
+            # COMMAND ${CMAKE_COMMAND} -E copy_directory ${GAME_RES_ROOT} ${bin_dir}/
+            COMMAND robocopy /mir "${GAME_RES_ROOT}" "${bin_dir}/"
         )
         add_dependencies(${LIB_NAME} copy_resource)
         set_target_properties(copy_resource PROPERTIES FOLDER Utils)

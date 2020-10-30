@@ -156,7 +156,6 @@ CC_INLINE bool transparentCompareFn(const RenderPass &a, const RenderPass &b) {
         return a.shaderID < b.shaderID;
 }
 
-
 enum class CC_DLL PipelineGlobalBindings {
     UBO_GLOBAL,
     UBO_SHADOW,
@@ -306,9 +305,8 @@ struct CC_DLL UBOShadow : public Object {
     static constexpr uint MAT_LIGHT_PLANE_PROJ_OFFSET = 0;
     static constexpr uint MAT_LIGHT_VIEW_PROJ_OFFSET = UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
     static constexpr uint SHADOW_COLOR_OFFSET = UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET + 16;
-    static constexpr uint SHADOW_PCF_OFFSET = UBOShadow::SHADOW_COLOR_OFFSET + 4;
-    static constexpr uint SHADOW_SIZE_OFFSET = UBOShadow::SHADOW_PCF_OFFSET + 4;
-    static constexpr uint COUNT = UBOShadow::SHADOW_SIZE_OFFSET + 4;
+    static constexpr uint SHADOW_INFO_OFFSET = UBOShadow::SHADOW_COLOR_OFFSET + 4;
+    static constexpr uint COUNT = UBOShadow::SHADOW_INFO_OFFSET + 4;
     static constexpr uint SIZE = UBOShadow::COUNT * 4;
 
     static const BlockInfo BLOCK;
@@ -348,13 +346,15 @@ const uint CAMERA_DEFAULT_MASK = ~static_cast<uint>(LayerList::UI_2D) & ~static_
 //constexpr CAMERA_DEFAULT_MASK = Layers.makeMaskExclude([Layers.BitMask.UI_2D, Layers.BitMask.GIZMOS, Layers.BitMask.EDITOR,
 //                                                           Layers.BitMask.SCENE_GIZMO, Layers.BitMask.PROFILER]);
 
-bool aabb_frustum(const AABB *, const Frustum *);
-
+uint nextPow2(uint val);
 enum class CC_DLL SetIndex {
     GLOBAL,
     MATERIAL,
     LOCAL,
 };
+extern CC_DLL uint GLOBAL_SET;
+extern CC_DLL uint MATERIAL_SET;
+extern CC_DLL uint LOCAL_SET;
 
 extern CC_DLL uint SKYBOX_FLAG;
 extern CC_DLL DescriptorSetLayoutInfos globalDescriptorSetLayout;

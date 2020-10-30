@@ -139,6 +139,7 @@ extern se::Class* __jsb_cc_pipeline_RenderWindow_class;
 
 bool js_register_cc_pipeline_RenderWindow(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
+SE_DECLARE_FUNC(js_pipeline_RenderWindow_getFramebuffer);
 
 extern se::Object* __jsb_cc_pipeline_InstancedBuffer_proto;
 extern se::Class* __jsb_cc_pipeline_InstancedBuffer_class;
@@ -146,6 +147,7 @@ extern se::Class* __jsb_cc_pipeline_InstancedBuffer_class;
 bool js_register_cc_pipeline_InstancedBuffer(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_destroy);
+SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_setDynamicOffset);
 SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_get);
 SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_InstancedBuffer);
 

@@ -7,12 +7,15 @@
 
 namespace cc {
 namespace pipeline {
-map<const PassView *, BatchedBuffer *> BatchedBuffer::_buffers;
-BatchedBuffer *BatchedBuffer::get(const PassView *pass) {
-    if (_buffers.find(pass) == _buffers.end()) {
-        _buffers[pass] = CC_NEW(BatchedBuffer(pass));
-    }
-    return _buffers[pass];
+map<uint, map<uint, BatchedBuffer *>> BatchedBuffer::_buffers;
+BatchedBuffer *BatchedBuffer::get(uint pass) {
+    return BatchedBuffer::get(pass, 0);
+}
+BatchedBuffer *BatchedBuffer::get(uint pass, uint extraKey) {
+    auto &record = _buffers[pass];
+    auto &buffer = record[extraKey];
+    if (buffer == nullptr) buffer = CC_NEW(BatchedBuffer(GET_PASS(pass)));
+    return buffer;
 }
 
 BatchedBuffer::BatchedBuffer(const PassView *pass)
@@ -45,7 +48,7 @@ void BatchedBuffer::destroy() {
 void BatchedBuffer::merge(const SubModelView *subModel, uint passIdx, const RenderObject *renderObject) {
     const auto subMesh = subModel->getSubMesh();
     const auto flatBuffersID = subMesh->getFlatBufferArrayID();
-    const auto flatBuffersCount = flatBuffersID[0];
+    const auto flatBuffersCount = flatBuffersID ? flatBuffersID[0] : 0;
     if (flatBuffersCount == 0) {
         return;
     }
@@ -215,6 +218,10 @@ void BatchedBuffer::clear() {
         batch.mergeCount = 0;
         batch.ia->setVertexCount(0);
     }
+}
+
+void BatchedBuffer::setDynamicOffset(uint idx, uint value) {
+    _dynamicOffsets[idx] = value;
 }
 
 } // namespace pipeline

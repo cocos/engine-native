@@ -4,10 +4,12 @@
 
 namespace cc {
 namespace pipeline {
-
+uint GLOBAL_SET = static_cast<uint>(SetIndex::GLOBAL);
+uint MATERIAL_SET = static_cast<uint>(SetIndex::MATERIAL);
+uint LOCAL_SET = static_cast<uint>(SetIndex::LOCAL);
 const BlockInfo UBOGlobal::BLOCK = {
     {
-        static_cast<uint>(SetIndex::GLOBAL),
+        LOCAL_SET,
         static_cast<uint>(PipelineGlobalBindings::UBO_GLOBAL),
         "CCGlobal",
         {
@@ -43,7 +45,7 @@ const BlockInfo UBOGlobal::BLOCK = {
 
 const BlockInfo UBOLocalBatched::BLOCK = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::UBO_LOCAL),
         "CCLocalBatched",
         {
@@ -61,13 +63,14 @@ const BlockInfo UBOLocalBatched::BLOCK = {
 
 const BlockInfo UBOShadow::BLOCK = {
     {
-        static_cast<uint>(SetIndex::GLOBAL),
+        LOCAL_SET,
         static_cast<uint>(PipelineGlobalBindings::UBO_SHADOW),
         "CCShadow",
         {
             {"cc_matLightPlaneProj", gfx::Type::MAT4, 1},
             {"cc_matLightViewProj", gfx::Type::MAT4, 1},
             {"cc_shadowColor", gfx::Type::FLOAT4, 1},
+            {"cc_shadowInfo", gfx::Type::FLOAT4, 1},
         },
         1,
     },
@@ -81,7 +84,7 @@ const BlockInfo UBOShadow::BLOCK = {
 
 const BlockInfo UBOLocal::BLOCK = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::UBO_LOCAL),
         "CCLocal",
         {
@@ -101,7 +104,7 @@ const BlockInfo UBOLocal::BLOCK = {
 
 const BlockInfo UBOForwardLight::BLOCK = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::UBO_FORWARD_LIGHTS),
         "CCForwardLight",
         {
@@ -122,7 +125,7 @@ const BlockInfo UBOForwardLight::BLOCK = {
 
 const BlockInfo UBOSkinningTexture::BLOCK = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::UBO_SKINNING_TEXTURE),
         "CCSkinningTexture",
         {
@@ -140,7 +143,7 @@ const BlockInfo UBOSkinningTexture::BLOCK = {
 
 const BlockInfo UBOSkinningAnimation::BLOCK = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::UBO_SKINNING_ANIMATION),
         "CCSkinningAnimation",
         {
@@ -158,7 +161,7 @@ const BlockInfo UBOSkinningAnimation::BLOCK = {
 
 const BlockInfo UBOSkinning::BLOCK = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::UBO_SKINNING_TEXTURE),
         "CCSkinning",
         {
@@ -182,7 +185,7 @@ const uint UBOMorph::COUNT_BASE_4_BYTES = 4 * std::ceil(UBOMorph::MAX_MORPH_TARG
 const uint UBOMorph::SIZE = UBOMorph::COUNT_BASE_4_BYTES * 4;
 const BlockInfo UBOMorph::BLOCK = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::UBO_MORPH),
         "CCMorph",
         {
@@ -201,7 +204,7 @@ const BlockInfo UBOMorph::BLOCK = {
 
 const SamplerInfo UNIFORM_SHADOWMAP = {
     {
-        static_cast<uint>(SetIndex::GLOBAL),
+        LOCAL_SET,
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_SHADOWMAP),
         "cc_shadowMap",
         gfx::Type::SAMPLER2D,
@@ -217,7 +220,7 @@ const SamplerInfo UNIFORM_SHADOWMAP = {
 
 const SamplerInfo UNIFORM_ENVIRONMENT = {
     {
-        static_cast<uint>(SetIndex::GLOBAL),
+        LOCAL_SET,
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_ENVIRONMENT),
         "cc_environment",
         gfx::Type::SAMPLER_CUBE,
@@ -233,7 +236,7 @@ const SamplerInfo UNIFORM_ENVIRONMENT = {
 
 const SamplerInfo UniformJointTexture = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::SAMPLER_JOINTS),
         "cc_jointTexture",
         gfx::Type::SAMPLER2D,
@@ -249,7 +252,7 @@ const SamplerInfo UniformJointTexture = {
 
 const SamplerInfo UniformPositionMorphTexture = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_POSITION),
         "cc_PositionDisplacements",
         gfx::Type::SAMPLER2D,
@@ -265,7 +268,7 @@ const SamplerInfo UniformPositionMorphTexture = {
 
 const SamplerInfo UniformNormalMorphTexture = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_NORMAL),
         "cc_NormalDisplacements",
         gfx::Type::SAMPLER2D,
@@ -281,7 +284,7 @@ const SamplerInfo UniformNormalMorphTexture = {
 
 const SamplerInfo UniformTangentMorphTexture = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_TANGENT),
         "cc_TangentDisplacements",
         gfx::Type::SAMPLER2D,
@@ -297,7 +300,7 @@ const SamplerInfo UniformTangentMorphTexture = {
 
 const SamplerInfo UniformLightingMapSampler = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::SAMPLER_LIGHTMAP),
         "cc_lightingMap",
         gfx::Type::SAMPLER2D,
@@ -313,7 +316,7 @@ const SamplerInfo UniformLightingMapSampler = {
 
 const SamplerInfo UniformSpriteSampler = {
     {
-        static_cast<uint>(SetIndex::LOCAL),
+        LOCAL_SET,
         static_cast<uint>(ModelLocalBindings::SAMPLER_SPRITE),
         "cc_spriteTexture",
         gfx::Type::SAMPLER2D,
@@ -376,34 +379,20 @@ gfx::Sampler *getSampler(uint hash) {
     return sampler;
 }
 
-int aabb_plane(const AABB *aabb, const Plane *plane) {
-    const auto &halfExtents = aabb->halfExtents;
-    auto r = halfExtents.x * std::abs(plane->normal.x) +
-             halfExtents.y * std::abs(plane->normal.y) +
-             halfExtents.z * std::abs(plane->normal.z);
-    auto dot = Vec3::dot(plane->normal, aabb->center);
-    if (dot + r < plane->distance) {
-        return -1;
-    } else if (dot - r > plane->distance) {
-        return 0;
-    }
-    return 1;
-};
-
-bool aabb_frustum(const AABB *aabb, const Frustum *frustum) {
-    for (size_t i = 0; i < PLANE_LENGTH; i++) {
-        // frustum plane normal points to the inside
-        if (aabb_plane(aabb, &frustum->planes[i]) == -1) {
-            return 0;
-        }
-    } // completely outside
-    return 1;
-}
-
 uint SKYBOX_FLAG = static_cast<uint>(gfx::ClearFlagBit::STENCIL) << 1;
 
 map<String, uint> PassPhase::phases;
 uint PassPhase::phaseNum = 0;
 
+uint nextPow2(uint val) {
+    --val;
+    val |= (val >> 1);
+    val |= (val >> 2);
+    val |= (val >> 4);
+    val |= (val >> 8);
+    val |= (val >> 16);
+    ++val;
+    return val;
+}
 } // namespace pipeline
 } // namespace cc
