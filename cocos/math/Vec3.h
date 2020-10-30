@@ -311,8 +311,6 @@ public:
 
     /**
      * Negates this vector.
-     *
-     * @return Inverse vector.
      */
     inline void negate();
 
@@ -324,8 +322,6 @@ public:
      * after calling this method will be 1.0f). If the vector
      * already has unit length or if the length of the vector
      * is zero, this method does nothing.
-     *
-     * @return This vector, after the normalization occurs.
      */
     void normalize();
 
@@ -371,13 +367,11 @@ public:
      *
      * @param p1 The vector to subtract.
      * @param p2 The vector to subtracted.
-     *
      */
     inline void set(const Vec3& p1, const Vec3& p2);
 
     /**
     * Sets the elements of this vector to zero.
-    *
     */
     inline void setZero();
 
@@ -405,8 +399,6 @@ public:
      * @param v1 To be compared vector.
      * @param v2 To be compared vector.
      * @param dst The destination vector.
-     *
-     * @return new vec3 for max
      */
     static void max(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 
@@ -416,8 +408,6 @@ public:
      * @param v1 To be compared vector.
      * @param v2 To be compared vector.
      * @param dst The destination vector.
-     *
-     * @return new vec3 for min
      */
     static void min(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 

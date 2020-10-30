@@ -20,8 +20,8 @@ void ShadowMapBatchedQueue::clear(gfx::Buffer *buffer) {
     _subModels.clear();
     _shaders.clear();
     _passes.clear();
-    if(_instancedQueue) _instancedQueue->clear();
-    if(_batchedQueue) _batchedQueue->clear();
+    if (_instancedQueue) _instancedQueue->clear();
+    if (_batchedQueue) _batchedQueue->clear();
     _buffer = buffer;
 }
 
@@ -76,8 +76,16 @@ void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::Render
 }
 
 void ShadowMapBatchedQueue::destroy() {
-    CC_SAFE_DELETE(_batchedQueue);
-    CC_SAFE_DELETE(_instancedQueue);
+    if (_batchedQueue) {
+        delete _batchedQueue;
+        _batchedQueue = nullptr;
+    }
+    
+
+    if (_instancedQueue) {
+        delete _instancedQueue;
+        _instancedQueue = nullptr;
+    }
 
     _buffer = nullptr;
 }
