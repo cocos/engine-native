@@ -3,9 +3,12 @@
 #include "platform/android/FileUtils-android.h"
 #include "platform/Application.h"
 #include <jni.h>
+#include <android/log.h>
 #include <android/asset_manager_jni.h>
 #include <android/native_window_jni.h>
 #include <thread>
+
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "CocosActivity JNI", __VA_ARGS__)
 
 cc::Application *cocos_main(int, int) __attribute__((weak));
 
@@ -16,9 +19,11 @@ void glThreadEntry(ANativeWindow *window) {
 	int width = ANativeWindow_getWidth(window);
 	int height = ANativeWindow_getHeight(window);
 	auto game = cocos_main(width, height);
+	game->init();
 	if (!game) return;
 
 	while (1) {
+	    LOGD("tick .......");
 		JniHelper::callStaticVoidMethod("org.cocos2dx.lib.Cocos2dxHelper", "flushTasksOnGameThread");
 		game->tick();
 	}
