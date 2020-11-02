@@ -39,6 +39,11 @@ extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
 #endif
 
 namespace {
+bool cmp(std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
+    return a.second < b.second;
+}
+
+std::vector<std::pair<std::string, int>> pairs;
 
 void recordJSBInvoke(const std::string &funcName) {
     #ifdef RECORD_JSB_INVOKING
@@ -55,10 +60,15 @@ void clearRecordJSBInvoke() {
 
 void printJSBInvoke() {
     #ifdef RECORD_JSB_INVOKING
+    for (const auto &it : __jsbFunctionInvokedRecords)
+        pairs.push_back(it);
+
+    std::sort(pairs.begin(), pairs.end(), cmp);
     CC_LOG_DEBUG("Start print JSB function record info....... %d times", __jsbInvocationCount);
-    for (const auto &pair : __jsbFunctionInvokedRecords) {
+    for (const auto &pair : pairs) {
         CC_LOG_DEBUG("%s is invoked %u times.", pair.first.c_str(), pair.second);
     }
+    pairs.clear();
     CC_LOG_DEBUG("End print JSB function record info.......\n");
     #endif
 }

@@ -76,7 +76,7 @@ bool js_gfx_Device_copyBuffersToTexture(se::State &s) {
             }
         }
         ok &= seval_to_native_ptr(args[1], &arg1);
-        ok &= seval_to_std_vector(args[2], &arg2);
+        ok &= seval_to_gfx_buffer_texture_copy_list(args[2], &arg2);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_copyBuffersToTexture : Error processing arguments");
         cobj->copyBuffersToTexture(arg0, arg1, arg2);
         return true;
@@ -118,7 +118,7 @@ bool js_gfx_Device_copyTexImagesToTexture(se::State &s) {
             ok &= false;
         }
         ok &= seval_to_native_ptr(args[1], &arg1);
-        ok &= seval_to_std_vector(args[2], &arg2);
+        ok &= seval_to_gfx_buffer_texture_copy_list(args[2], &arg2);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_copyBuffersToTexture : Error processing arguments");
         cobj->copyBuffersToTexture(arg0, arg1, arg2);
         return true;
