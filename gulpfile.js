@@ -34,6 +34,10 @@ var spawn = require('child_process').spawn;
 var Path = require('path');
 var fs = require('fs-extra');
 
+function absolutePath (relativePath) {
+    return Path.join(__dirname, relativePath);
+}
+
 var program = require('commander');
 program
     .option('-b, --bump [version]', 'bump to a new version, or +1')
@@ -143,40 +147,57 @@ gulp.task('gen-cocos2d-x', function(cb) {
     cb();
 });
 
-gulp.task('gen-simulator', function(cb) {
-    var cocosConsoleRoot = './tools/cocos2d-console/bin';
-    var cocosConsoleBin = Path.join(cocosConsoleRoot, process.platform === 'win32' ? 'cocos.bat' : 'cocos');
-    var args;
-    if (process.platform === 'darwin') {
-        args = ['gen-simulator', '-m', 'debug', '-p', 'mac'];
-    } else {
-        args = ['gen-simulator', '-c', '-m', 'debug', '-p', 'win32', '--vs', '2017', '--ol', 'en'];
-    }
-    try {
-        var child = spawn(cocosConsoleBin, args);
-        child.stdout.on('data', function(data) {
-            console.log(data.toString());
+gulp.task('gen-simulator', async function () {
+    let cmakeBin = absolutePath('../cmake-3.18.4-darwin/bin/cmake');
+    let simulatorProject = absolutePath('./simulator');
+    await fs.ensureDir(simulatorProject);
+    
+    console.log('=====================================\n');
+    console.log('make project\n');
+    console.log('=====================================\n');
+    await new Promise((resolve, reject) => {
+        let cmakeProcess = spawn(cmakeBin, ['-G', 'Xcode', absolutePath('./tools/simulator/frameworks/runtime-src/')], {
+            cwd: simulatorProject,
         });
-        child.stderr.on('data', function(data) {
-            console.error(data.toString());
+        cmakeProcess.on('close',  () => {
+            console.log('cmake finished!');
+            resolve();
         });
-        child.on('close', (code) => {
-            if (code !== 0) {
-                cb('Generate simulator failed');
-                return;
-            }
-            if (process.platform === 'darwin') {
-                //reset project file to hide code sign information.
-                execSync('git checkout -- ./tools/simulator/frameworks/runtime-src/proj.ios_mac/simulator.xcodeproj');
-            }
-            cb();
+        cmakeProcess.on('error', err => {
+            console.error(err);
         });
-        child.on('error', function() {
-            cb('Generate simulator failed');
+        cmakeProcess.stderr.on('data', err => {
+            console.error(err.toString ? err.toString() : err);
         });
-    } catch (err) {
-        cb(err);
-    }
+        cmakeProcess.stdout.on('data', data => {
+            console.log(data.toString ? data.toString() : data);
+        });
+    });
+    
+    
+    console.log('=====================================\n');
+    console.log('build project\n');
+    console.log('=====================================\n');
+    await new Promise((resolve, reject) => {
+        let buildProcess = spawn(cmakeBin, ['--build', simulatorProject], {
+            cwd: simulatorProject,
+        });
+        buildProcess.on('close',  () => {
+            console.log('cmake finished!');
+            resolve();
+        });
+        buildProcess.on('error', err => {
+            console.error(err);
+        });
+        buildProcess.stderr.on('data', err => {
+            console.error(err.toString ? err.toString() : err);
+        });
+        buildProcess.stdout.on('data', data => {
+            console.log(data.toString ? data.toString() : data);
+        });
+    });
+
+    console.log('done!');   
 });
 
 gulp.task('sign-simulator', function () {
