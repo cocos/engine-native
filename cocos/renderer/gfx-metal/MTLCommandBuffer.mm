@@ -13,6 +13,7 @@
 #include "MTLShader.h"
 #include "MTLTexture.h"
 #include "MTLUtils.h"
+#include "TargetConditionals.h"
 
 namespace cc {
 namespace gfx {
@@ -23,7 +24,7 @@ CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device)
   _mtlCommandQueue(id<MTLCommandQueue>(((CCMTLDevice *)device)->getMTLCommandQueue())),
   _mtkView((MTKView *)(((CCMTLDevice *)device)->getMTKView())),
   _frameBoundarySemaphore(dispatch_semaphore_create(MAX_INFLIGHT_BUFFER)) {
-    uint setCount = device->bindingMappingInfo().bufferOffsets.size();
+    const auto setCount = device->bindingMappingInfo().bufferOffsets.size();
     _GPUDescriptorSets.resize(setCount);
     _dynamicOffsets.resize(setCount);
 }
@@ -65,13 +66,14 @@ void CCMTLCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer
 void CCMTLCommandBuffer::end() {
     if (!_commandBufferBegan) return;
 
+    [_mtlCommandBuffer presentDrawable:_mtkView.currentDrawable];
     [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         // GPU work is complete
         // Signal the semaphore to start the CPU work
         dispatch_semaphore_signal(_frameBoundarySemaphore);
+        [commandBuffer release];
     }];
     [_mtlCommandBuffer commit];
-    [_mtlCommandBuffer release];
     _commandBufferBegan = false;
 }
 
@@ -108,7 +110,12 @@ void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
     _mtlPrimitiveType = _gpuPipelineState->primitiveType;
     [_mtlEncoder setCullMode:_gpuPipelineState->cullMode];
     [_mtlEncoder setFrontFacingWinding:_gpuPipelineState->winding];
-    if (@available(iOS 11.0, *)) [_mtlEncoder setDepthClipMode:_gpuPipelineState->depthClipMode];
+
+#ifndef TARGET_OS_SIMULATOR
+    if (@available(iOS 11.0, macOS 10.11)) {
+        [_mtlEncoder setDepthClipMode:_gpuPipelineState->depthClipMode];
+    }
+#endif
     [_mtlEncoder setTriangleFillMode:_gpuPipelineState->fillMode];
     [_mtlEncoder setRenderPipelineState:_gpuPipelineState->mtlRenderPipelineState];
 
@@ -215,20 +222,22 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
         bindDescriptorSets();
     }
 
+    const auto indirectBuffer = ia->getIndirectBuffer();
     if (_type == CommandBufferType::PRIMARY) {
-        if (_gpuIndirectBuffer.count) {
-            _numDrawCalls += _gpuIndirectBuffer.count;
-            for (size_t j = 0; j < _gpuIndirectBuffer.count; j++) {
+        if (indirectBuffer) {
+            const auto count = indirectBuffer->getCount();
+            _numDrawCalls += count;
+            for (size_t j = 0; j < count; j++) {
                 if (_gpuIndexBuffer.mtlBuffer) {
                     [_mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
                                              indexType:_indexType
                                            indexBuffer:_gpuIndexBuffer.mtlBuffer
                                      indexBufferOffset:j * _gpuIndexBuffer.stride
-                                        indirectBuffer:_gpuIndirectBuffer.mtlBuffer
+                                        indirectBuffer:static_cast<CCMTLBuffer *>(indirectBuffer)->getMTLBuffer()
                                   indirectBufferOffset:j * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
                 } else {
                     [_mtlEncoder drawPrimitives:_mtlPrimitiveType
-                                 indirectBuffer:_gpuIndirectBuffer.mtlBuffer
+                                 indirectBuffer:static_cast<CCMTLBuffer *>(indirectBuffer)->getMTLBuffer()
                            indirectBufferOffset:j * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
                 }
             }
@@ -399,7 +408,7 @@ void CCMTLCommandBuffer::bindDescriptorSets() {
         }
 
         const auto &dynamicOffset = dynamicOffsetIndices[block.set];
-        auto dynamicOffsetIndex = (block.binding < dynamicOffset.size()) ? -1 : dynamicOffset[block.binding];
+        auto dynamicOffsetIndex = (block.binding < dynamicOffset.size()) ? dynamicOffset[block.binding] : -1;
         if (gpuDescriptor.buffer) {
             uint offset = (dynamicOffsetIndex >= 0) ? _dynamicOffsets[block.set][dynamicOffsetIndex] : 0;
             gpuDescriptor.buffer->encodeBuffer(_mtlEncoder,
