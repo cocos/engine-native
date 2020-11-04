@@ -15,6 +15,8 @@ class DescriptorSet;
 
 namespace pipeline {
 
+extern gfx::BlendState *getBlendStateImpl(uint index);
+
 //Get buffer pool data
 #define GET_SUBMODEL(index)           SharedMemory::getBuffer<SubModelView>(index)
 #define GET_PASS(index)               SharedMemory::getBuffer<PassView>(index)
@@ -38,15 +40,12 @@ namespace pipeline {
 #define GET_SPHERE(index)             SharedMemory::getBuffer<Sphere>(index)
 
 //Get object pool data
-#define GET_DESCRIPTOR_SET(index)      SharedMemory::getObject<gfx::DescriptorSet, se::PoolType::DESCRIPTOR_SETS>(index)
-#define GET_IA(index)                  SharedMemory::getObject<gfx::InputAssembler, se::PoolType::INPUT_ASSEMBLER>(index)
-#define GET_SHADER(index)              SharedMemory::getObject<gfx::Shader, se::PoolType::SHADER>(index)
-#define GET_RASTERIZER_STATE(index)    SharedMemory::getObject<gfx::RasterizerState, se::PoolType::RASTERIZER_STATE>(index)
-#define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getObject<gfx::DepthStencilState, se::PoolType::DEPTH_STENCIL_STATE>(index)
-#define GET_BLEND_STATE(index)         SharedMemory::getObject<gfx::BlendState, se::PoolType::BLEND_STATE>(index)
-#define GET_ATTRIBUTE(index)           SharedMemory::getObject<gfx::Attribute, se::PoolType::ATTRIBUTE>(index)
-#define GET_FRAMEBUFFER(index)         SharedMemory::getObject<gfx::Framebuffer, se::PoolType::FRAMEBUFFER>(index)
-#define GET_PIPELINE_LAYOUT(index)     SharedMemory::getObject<gfx::PipelineLayout, se::PoolType::PIPELINE_LAYOUT>(index)
+#define GET_DESCRIPTOR_SET(index)  SharedMemory::getObject<gfx::DescriptorSet, se::PoolType::DESCRIPTOR_SETS>(index)
+#define GET_IA(index)              SharedMemory::getObject<gfx::InputAssembler, se::PoolType::INPUT_ASSEMBLER>(index)
+#define GET_SHADER(index)          SharedMemory::getObject<gfx::Shader, se::PoolType::SHADER>(index)
+#define GET_ATTRIBUTE(index)       SharedMemory::getObject<gfx::Attribute, se::PoolType::ATTRIBUTE>(index)
+#define GET_FRAMEBUFFER(index)     SharedMemory::getObject<gfx::Framebuffer, se::PoolType::FRAMEBUFFER>(index)
+#define GET_PIPELINE_LAYOUT(index) SharedMemory::getObject<gfx::PipelineLayout, se::PoolType::PIPELINE_LAYOUT>(index)
 
 //Get array pool data
 #define GET_MODEL_ARRAY(index)               SharedMemory::getHandleArray(se::PoolType::MODEL_ARRAY, index)
@@ -55,8 +54,13 @@ namespace pipeline {
 #define GET_FLAT_BUFFER_ARRAY(index)         SharedMemory::getHandleArray(se::PoolType::FLAT_BUFFER_ARRAY, index)
 #define GET_INSTANCED_ATTRIBUTE_ARRAY(index) SharedMemory::getHandleArray(se::PoolType::INSTANCED_ATTRIBUTE_ARRAY, index)
 #define GET_LIGHT_ARRAY(index)               SharedMemory::getHandleArray(se::PoolType::LIGHT_ARRAY, index)
+#define GET_BLEND_TARGET_ARRAY(index)        SharedMemory::getHandleArray(se::PoolType::BLEND_TARGET_ARRAY, index)
 
-#define GET_RAW_BUFFER(index, size) SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
+// Get raw buffer or gfx object.
+#define GET_RAW_BUFFER(index, size)    SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
+#define GET_RASTERIZER_STATE(index)    SharedMemory::getRawBuffer<gfx::RasterizerState>(se::PoolType::RAW_BUFFER, index)
+#define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getRawBuffer<gfx::DepthStencilState>(se::PoolType::RAW_BUFFER, index)
+#define GET_BLEND_STATE(index)         getBlendStateImpl(index)
 
 class CC_DLL SharedMemory : public Object {
 public:
@@ -89,6 +93,11 @@ public:
     template <typename T>
     static T *getRawBuffer(se::PoolType type, uint index, uint *size) {
         return se::BufferAllocator::getBuffer<T>(type, index, size);
+    }
+
+    template <typename T>
+    static T *getRawBuffer(se::PoolType type, uint index) {
+        return se::BufferAllocator::getBuffer<T>(type, index);
     }
 };
 

@@ -1,5 +1,6 @@
 #include "SharedMemory.h"
 #include "../math/MathUtil.h"
+#include "renderer/core/gfx/GFXDef.h"
 
 namespace cc {
 namespace pipeline {
@@ -107,15 +108,15 @@ bool sphere_frustum(const Sphere *sphere, const Frustum *frustum) {
     return true;
 }
 
-bool aabb_aabb(const AABB *aabb1, const AABB*aabb2) {
+bool aabb_aabb(const AABB *aabb1, const AABB *aabb2) {
     cc::Vec3 aMin, aMax, bMin, bMax;
     cc::Vec3::subtract(aabb1->center, aabb1->halfExtents, &aMin);
     cc::Vec3::add(aabb1->center, aabb1->halfExtents, &aMax);
     cc::Vec3::subtract(aabb2->center, aabb2->halfExtents, &bMin);
     cc::Vec3::add(aabb2->center, aabb2->halfExtents, &bMax);
     return (aMin.x <= bMax.x && aMax.x >= bMin.x) &&
-        (aMin.y <= bMax.y && aMax.y >= bMin.y) &&
-        (aMin.z <= bMax.z && aMax.z >= bMin.z);
+           (aMin.y <= bMax.y && aMax.y >= bMin.y) &&
+           (aMin.z <= bMax.z && aMax.z >= bMin.z);
 }
 
 int aabb_plane(const AABB *aabb, const Plane *plane) {
@@ -140,6 +141,26 @@ bool aabb_frustum(const AABB *aabb, const Frustum *frustum) {
         }
     } // completely outside
     return 1;
+}
+
+gfx::BlendState *getBlendStateImpl(uint index) {
+    static gfx::BlendState blendState;
+    auto buffer = SharedMemory::getRawBuffer<uint32_t>(se::PoolType::RAW_BUFFER, index);
+    memcpy(&blendState, buffer, 24);
+
+    uint32_t targetsHandle = *(buffer + 6);
+    const auto targets = GET_BLEND_TARGET_ARRAY(targetsHandle);
+    uint32_t targetLen = targets[0];
+    gfx::BlendTarget *btPtr = nullptr;
+    uint32_t *btBuffer = nullptr;
+    blendState.targets.resize(targetLen);
+    for (uint32_t i = 1; i <= targetLen; ++i) {
+        btBuffer = SharedMemory::getRawBuffer<uint32_t>(se::PoolType::RAW_BUFFER, targets[i]);
+        btPtr = &blendState.targets[i - 1];
+        memcpy(btPtr, btBuffer, 32);
+    }
+
+    return &blendState;
 }
 
 } // namespace pipeline
