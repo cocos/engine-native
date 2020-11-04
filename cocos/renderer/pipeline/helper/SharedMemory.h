@@ -58,6 +58,9 @@ namespace pipeline {
 
 #define GET_RAW_BUFFER(index, size) SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
 
+static const float SHADOW_CAMERA_MAX_FAR = 2000.0f;
+static const float COEFFICIENT_OF_EXPANSION = 2.0f * std::sqrtf(3.0f);
+
 class CC_DLL SharedMemory : public Object {
 public:
     template <typename T>
@@ -144,6 +147,7 @@ struct CC_DLL Light {
     uint32_t frustumID = 0;
     float size;
     float spotAngle;
+    float aspect;
     cc::Vec3 direction;
     cc::Vec3 color;
     cc::Vec3 colorTemperatureRGB;
@@ -338,6 +342,8 @@ struct CC_DLL Sphere {
     void define(const AABB &aabb);
     void mergeAABB(const AABB *aabb);
     void mergePoint(const cc::Vec3 &point);
+    bool interset(const Frustum &frustum) const;
+    int32_t interset(const Plane &plane) const;
 
     const static se::PoolType type;
 };
@@ -359,6 +365,7 @@ struct CC_DLL Shadows {
     float farValue = 0;
     float aspect = 0;
     uint32_t pcfType = 0;
+    uint32_t shadowMapDirty = 0;
     float bias = 0;
     float orthoSize = 0;
     uint32_t autoAdapt = 0;

@@ -2,6 +2,8 @@
 #include "../RenderFlow.h"
 namespace cc {
 namespace pipeline {
+class ForwardPipeline;
+
 class CC_DLL ShadowFlow : public RenderFlow {
 public:
     ShadowFlow() = default;
@@ -18,20 +20,14 @@ public:
     virtual void destroy() override;
 
 private:
-    void resizeShadowMap(uint width, uint height);
+    void resizeShadowMap(const Light *light, const Vec2 &size) const;
 
-    void initShadowFrameBuffer();
+    void initShadowFrameBuffer(ForwardPipeline *pipeline, const Light *light);
 
 private:
     static RenderFlowInfo _initInfo;
 
     gfx::RenderPass *_renderPass = nullptr;
-    gfx::TextureList _renderTargets;
-    gfx::Texture *_depthTexture = nullptr;
-    gfx::Framebuffer *_framebuffer = nullptr;
-
-    uint _width = 0;
-    uint _height = 0;
 };
 } // namespace pipeline
 } // namespace cc

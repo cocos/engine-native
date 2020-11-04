@@ -23,6 +23,7 @@ struct AdditiveLightPass {
     const PassView *pass = nullptr;
     gfx::Shader *shader = nullptr;
     vector<uint> dynamicOffsets;
+    vector<const Light *> lights;
 };
 
 class RenderAdditiveLightQueue : public Object {
@@ -35,8 +36,10 @@ public:
 
 private:
     void updateUBOs(const RenderView *view, gfx::CommandBuffer *cmdBuffer);
+    void updateSpotUBO(gfx::DescriptorSet *, const Light *) const;
 
 private:
+    ForwardPipeline *_pipeline = nullptr;
     gfx::Device *_device = nullptr;
     vector<vector<SubModelView *>> _sortedSubModelsArray;
     vector<vector<uint>> _sortedPSOCIArray;
@@ -50,7 +53,7 @@ private:
     RenderBatchedQueue *_batchedQueue = nullptr;
     gfx::Buffer *_lightBuffer = nullptr;
     gfx::Buffer *_firstlightBufferView = nullptr;
-    ForwardPipeline *_forwardPipline = nullptr;
+    gfx::Sampler *_sampler = nullptr;
 
     float _fpScale = 0;
     bool _isHDR = false;

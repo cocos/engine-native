@@ -11,8 +11,7 @@
 
 namespace cc {
 namespace pipeline {
-ShadowStage::ShadowStage()
-: _additiveShadowQueue(CC_NEW(ShadowMapBatchedQueue)) {
+ShadowStage::ShadowStage() {
 }
 
 ShadowStage::~ShadowStage() {
@@ -33,25 +32,20 @@ bool ShadowStage::initialize(const RenderStageInfo &info) {
     return true;
 }
 
+void ShadowStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
+    RenderStage::activate(pipeline, flow);
+
+    _additiveShadowQueue = CC_NEW(ShadowMapBatchedQueue(static_cast<ForwardPipeline *>(pipeline)));
+}
+
 void ShadowStage::render(RenderView *view) {
     const auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
     const auto shadowInfo = pipeline->getShadows();
-    _additiveShadowQueue->clear(pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding));
 
-    if (view->getCamera()->getScene()->getMainLight())
-    {
-        const auto& shadowObjects = pipeline->getShadowObjects();
-        for (const auto &shadowObject : shadowObjects) {
-            const auto subModelID = shadowObject.model->getSubModelID();
-            const uint32_t subModelCount = subModelID[0];
-            for (uint32_t m = 1; m <= subModelCount; m++) {
-                const auto subModel = shadowObject.model->getSubModelView(subModelID[m]);
-                for (uint32_t p = 0; p < subModel->passCount; p++) {
-                    _additiveShadowQueue->add(shadowObject, m, p);
-                }
-            }
-        }
+    if (!_light || !_framebuffer) {
+        return;
     }
+    _additiveShadowQueue->gatherLightPasses(_light);
 
     const auto camera = view->getCamera();
     auto cmdBuffer = pipeline->getCommandBuffers()[0];

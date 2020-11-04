@@ -49,9 +49,13 @@ public:
     CC_INLINE Shadows *getShadows() const { return _shadows; }
     CC_INLINE Sphere *getSphere() const { return _sphere; }
     CC_INLINE Sphere *getReceivedSphere() const { return _receivedSphere; }
+    CC_INLINE std::array<float, UBOShadow::COUNT> getShadowUBO() const { return _shadowUBO; }
 
-    void setRenderObjcts(const RenderObjectList &ro) { _renderObjects = std::move(ro); }
+    void setRenderObjects(const RenderObjectList &ro) { _renderObjects = std::move(ro); }
     void setShadowObjects(const RenderObjectList &ro) { _shadowObjects = std::move(ro); }
+
+public:
+    map<const Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 
 private:
     bool activeRenderer();

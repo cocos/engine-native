@@ -12,6 +12,7 @@
 #include "gfx/GFXQueue.h"
 #include "gfx/GFXRenderPass.h"
 #include "gfx/GFXTexture.h"
+#include "gfx/GFXFramebuffer.h"
 #include "platform/Application.h"
 
 namespace cc {
@@ -135,13 +136,15 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
     const auto shadowInfo = _shadows;
 
     if (mainLight && shadowInfo->getShadowType() == ShadowType::SHADOWMAP) {
+        if (_shadowFrameBufferMap.find(mainLight) != _shadowFrameBufferMap.end()) {
+            _descriptorSet->bindTexture(UniformSpotLightingMapSampler.layout.binding, _shadowFrameBufferMap[mainLight]->getColorTextures()[0]);
+        }
+
         const auto node = mainLight->getNode();
         cc::Mat4 shadowCameraView;
 
         // light proj
-        float x = 0.0f;
-        float y = 0.0f;
-        float farClamp = 0.0f;
+        float x = 0.0f, y = 0.0f, farClamp = 0.0f;
         if (shadowInfo->autoAdapt) {
             getShadowWorldMatrix(_sphere, node->worldRotation, mainLight->direction, shadowCameraView);
 
@@ -149,12 +152,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
             x = radius * shadowInfo->aspect;
             y = radius;
 
-            farClamp = std::min(_receivedSphere->radius * 2.0f * std::sqrt(2.0f), 2000.0f);
-            if (radius >= 500.0f) {
-                shadowInfo->size.set(2048, 2048);
-            } else if (radius < 500.0f && radius >= 100.0f) {
-                shadowInfo->size.set(1024, 1024);
-            }
+            farClamp = std::min(_receivedSphere->radius * SHADOW_CAMERA_MAX_FAR, COEFFICIENT_OF_EXPANSION);
         } else {
             shadowCameraView = mainLight->getNode()->worldMatrix;
 
@@ -333,6 +331,8 @@ void ForwardPipeline::destroy() {
 
     CC_SAFE_DELETE(_sphere);
     CC_SAFE_DELETE(_receivedSphere);
+
+    _shadowFrameBufferMap.clear();
 
     RenderPipeline::destroy();
 }
