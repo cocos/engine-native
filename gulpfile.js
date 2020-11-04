@@ -33,6 +33,7 @@ var ExecSync = require('child_process').execSync;
 var spawn = require('child_process').spawn;
 var Path = require('path');
 var fs = require('fs-extra');
+const which = require('which');
 
 function absolutePath (relativePath) {
     return Path.join(__dirname, relativePath);
@@ -148,7 +149,16 @@ gulp.task('gen-cocos2d-x', function(cb) {
 });
 
 gulp.task('gen-simulator', async function () {
-    let cmakeBin = absolutePath('../cmake-3.18.4-darwin/bin/cmake');
+    // get the cmake path
+    let cmakeBin = await new Promise((resolve, reject) => {
+        which('cmake', (err, resolvedPath) => {
+            if (err) {
+                console.log('failed to resolve path for cmake, maybe you need to install cmake in the global environment\n');
+                return reject(err);
+            }
+            resolve(resolvedPath);
+        });
+    });
     let simulatorProject = absolutePath('./simulator');
     await fs.ensureDir(simulatorProject);
     
@@ -156,7 +166,7 @@ gulp.task('gen-simulator', async function () {
     console.log('make project\n');
     console.log('=====================================\n');
     await new Promise((resolve, reject) => {
-        let cmakeProcess = spawn(cmakeBin, ['-G', 'Xcode', absolutePath('./tools/simulator/frameworks/runtime-src/')], {
+        let cmakeProcess = spawn(cmakeBin, ['-G', process.platform === 'win32'? 'Visual Studio 15 2017': 'Xcode', absolutePath('./tools/simulator/frameworks/runtime-src/')], {
             cwd: simulatorProject,
         });
         cmakeProcess.on('close',  () => {
