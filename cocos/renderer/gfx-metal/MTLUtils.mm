@@ -1160,7 +1160,7 @@ bool isIndirectCommandBufferSupported(MTLFeatureSet featureSet) {
 #endif
     return false;
 }
-bool isDepthStencilFormatSupported(Format format, uint family) {
+bool isDepthStencilFormatSupported(id<MTLDevice> device, Format format, uint family) {
     GPUFamily gpuFamily = static_cast<GPUFamily>(family);
     switch (format) {
         case Format::D16:
@@ -1186,16 +1186,47 @@ bool isDepthStencilFormatSupported(Format format, uint family) {
                 case GPUFamily::Apple4:
                 case GPUFamily::Apple5:
                 case GPUFamily::Apple6:
+#ifdef TARGET_OS_SIMULATOR
+                    return true;
+#else
                     return false;
+#endif
                 case GPUFamily::Mac1:
                 case GPUFamily::Mac2:
                     return true;
                 default:
                     return false;
             }
+        case Format::D24S8:
+#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
+            return [device isDepth24Stencil8PixelFormatSupported];
+#else
+            return false;
+#endif
         default:
             return false;
     }
+}
+
+bool isIndirectDrawSupported(uint family) {
+#if CC_PLATFORM == CC_PLATFORM_MAC_IOS
+    return static_cast<GPUFamily>(family) < GPUFamily::Apple3 ? false : true; //is only supported on MTLFeatureSet_iOS_GPUFamily3_v1 and later'
+#else
+    return true;
+#endif
+}
+
+MTLPixelFormat getSupportedDepthStencilFormat(id<MTLDevice> device, uint family, uint &dephBits) {
+    vector<std::tuple<cc::gfx::Format, uint>> formats = {{Format::D24S8, 24}, {Format::D32F_S8, 32}, {Format::D16S8, 16}};
+    Format format;
+    for (const auto &formatPair : formats) {
+        std::tie(format, dephBits) = formatPair;
+        if (isDepthStencilFormatSupported(device, format, family))
+            return toMTLPixelFormat(format);
+        else
+            continue;
+    }
+    return MTLPixelFormatInvalid;
 }
 
 String featureSetToString(MTLFeatureSet featureSet) {
