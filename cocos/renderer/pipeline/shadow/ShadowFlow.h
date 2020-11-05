@@ -3,6 +3,7 @@
 namespace cc {
 namespace pipeline {
 class ForwardPipeline;
+class Vec2;
 
 class CC_DLL ShadowFlow : public RenderFlow {
 public:

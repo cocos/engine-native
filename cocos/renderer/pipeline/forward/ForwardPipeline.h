@@ -12,6 +12,7 @@ struct Ambient;
 struct Skybox;
 struct Shadows;
 struct Sphere;
+class Framebuffer;
 
 class CC_DLL ForwardPipeline : public RenderPipeline {
 public:
