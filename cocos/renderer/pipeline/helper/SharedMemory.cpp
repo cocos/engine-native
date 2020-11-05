@@ -145,7 +145,7 @@ bool aabb_frustum(const AABB *aabb, const Frustum *frustum) {
 
 gfx::BlendState *getBlendStateImpl(uint index) {
     static gfx::BlendState blendState;
-    auto buffer = SharedMemory::getRawBuffer<uint32_t>(se::PoolType::RAW_BUFFER, index);
+    auto buffer = SharedMemory::getBuffer<uint32_t>(se::PoolType::BLEND_STATE, index);
     memcpy(&blendState, buffer, 24);
 
     uint32_t targetArrayHandle = *(buffer + 6);

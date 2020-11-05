@@ -30,6 +30,10 @@ enum class PoolType {
     INSTANCED_ATTRIBUTE,
     FLAT_BUFFER,
     SUB_MESH,
+    RASTERIZER_STATE,
+    DEPTH_STENCIL_STATE,
+    BLEND_TARGET,
+    BLEND_STATE,
 
     // array
     SUB_MODEL_ARRAY = 200,

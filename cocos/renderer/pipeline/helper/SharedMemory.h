@@ -18,26 +18,30 @@ namespace pipeline {
 extern gfx::BlendState *getBlendStateImpl(uint index);
 
 //Get buffer pool data
-#define GET_SUBMODEL(index)           SharedMemory::getBuffer<SubModelView>(index)
-#define GET_PASS(index)               SharedMemory::getBuffer<PassView>(index)
-#define GET_MODEL(index)              SharedMemory::getBuffer<ModelView>(index)
-#define GET_FLAT_BUFFER(index)        SharedMemory::getBuffer<FlatBufferView>(index)
-#define GET_INSTANCE_ATTRIBUTE(index) SharedMemory::getBuffer<InstancedAttributeView>(index)
-#define GET_RENDER_SUBMESH(index)     SharedMemory::getBuffer<RenderingSubMesh>(index)
-#define GET_BUFFERVIEW(index)         SharedMemory::getBuffer<BufferView>(index)
-#define GET_NODE(index)               SharedMemory::getBuffer<Node>(index)
-#define GET_ROOT()                    SharedMemory::getBuffer<Root>(se::BufferPool::getPoolFlag())
-#define GET_CAMERA(index)             SharedMemory::getBuffer<Camera>(index)
-#define GET_SCENE(index)              SharedMemory::getBuffer<Scene>(index)
-#define GET_LIGHT(index)              SharedMemory::getBuffer<Light>(index)
-#define GET_AMBIENT(index)            SharedMemory::getBuffer<Ambient>(index)
-#define GET_FOG(index)                SharedMemory::getBuffer<Fog>(index)
-#define GET_SKYBOX(index)             SharedMemory::getBuffer<Skybox>(index)
-#define GET_FRUSTUM(index)            SharedMemory::getBuffer<Frustum>(index)
-#define GET_AABB(index)               SharedMemory::getBuffer<AABB>(index)
-#define GET_WINDOW(index)             SharedMemory::getBuffer<RenderWindow>(index)
-#define GET_SHADOWS(index)            SharedMemory::getBuffer<Shadows>(index)
-#define GET_SPHERE(index)             SharedMemory::getBuffer<Sphere>(index)
+#define GET_SUBMODEL(index)            SharedMemory::getBuffer<SubModelView>(index)
+#define GET_PASS(index)                SharedMemory::getBuffer<PassView>(index)
+#define GET_MODEL(index)               SharedMemory::getBuffer<ModelView>(index)
+#define GET_FLAT_BUFFER(index)         SharedMemory::getBuffer<FlatBufferView>(index)
+#define GET_INSTANCE_ATTRIBUTE(index)  SharedMemory::getBuffer<InstancedAttributeView>(index)
+#define GET_RENDER_SUBMESH(index)      SharedMemory::getBuffer<RenderingSubMesh>(index)
+#define GET_BUFFERVIEW(index)          SharedMemory::getBuffer<BufferView>(index)
+#define GET_NODE(index)                SharedMemory::getBuffer<Node>(index)
+#define GET_ROOT()                     SharedMemory::getBuffer<Root>(se::BufferPool::getPoolFlag())
+#define GET_CAMERA(index)              SharedMemory::getBuffer<Camera>(index)
+#define GET_SCENE(index)               SharedMemory::getBuffer<Scene>(index)
+#define GET_LIGHT(index)               SharedMemory::getBuffer<Light>(index)
+#define GET_AMBIENT(index)             SharedMemory::getBuffer<Ambient>(index)
+#define GET_FOG(index)                 SharedMemory::getBuffer<Fog>(index)
+#define GET_SKYBOX(index)              SharedMemory::getBuffer<Skybox>(index)
+#define GET_FRUSTUM(index)             SharedMemory::getBuffer<Frustum>(index)
+#define GET_AABB(index)                SharedMemory::getBuffer<AABB>(index)
+#define GET_WINDOW(index)              SharedMemory::getBuffer<RenderWindow>(index)
+#define GET_SHADOWS(index)             SharedMemory::getBuffer<Shadows>(index)
+#define GET_SPHERE(index)              SharedMemory::getBuffer<Sphere>(index)
+#define GET_RASTERIZER_STATE(index)    SharedMemory::getBuffer<gfx::RasterizerState>(se::PoolType::RASTERIZER_STATE, index)
+#define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getBuffer<gfx::DepthStencilState>(se::PoolType::DEPTH_STENCIL_STATE, index)
+#define GET_BLEND_TARGET(index)        SharedMemory::getBuffer<gfx::BlendTarget>(se::PoolType::BLEND_TARGET, index)
+#define GET_BLEND_STATE(index)         getBlendStateImpl(index)
 
 //Get object pool data
 #define GET_DESCRIPTOR_SET(index)  SharedMemory::getObject<gfx::DescriptorSet, se::PoolType::DESCRIPTOR_SETS>(index)
@@ -57,11 +61,7 @@ extern gfx::BlendState *getBlendStateImpl(uint index);
 #define GET_BLEND_TARGET_ARRAY(index)        SharedMemory::getHandleArray(se::PoolType::BLEND_TARGET_ARRAY, index)
 
 // Get raw buffer or gfx object.
-#define GET_RAW_BUFFER(index, size)    SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
-#define GET_RASTERIZER_STATE(index)    SharedMemory::getRawBuffer<gfx::RasterizerState>(se::PoolType::RAW_BUFFER, index)
-#define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getRawBuffer<gfx::DepthStencilState>(se::PoolType::RAW_BUFFER, index)
-#define GET_BLEND_TARGET(index)        SharedMemory::getRawBuffer<gfx::BlendTarget>(se::PoolType::RAW_BUFFER, index)
-#define GET_BLEND_STATE(index)         getBlendStateImpl(index)
+#define GET_RAW_BUFFER(index, size) SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
 
 class CC_DLL SharedMemory : public Object {
 public:
@@ -70,6 +70,17 @@ public:
         const auto &bufferMap = se::BufferPool::getPoolMap();
         if (bufferMap.count(T::type) != 0) {
             const se::BufferPool *bufferPool = bufferMap.at(T::type);
+            return bufferPool->getTypedObject<T>(index);
+        } else {
+            return nullptr;
+        }
+    }
+
+    template <typename T>
+    static T *getBuffer(se::PoolType poolType, uint index) {
+        const auto &bufferMap = se::BufferPool::getPoolMap();
+        if (bufferMap.count(poolType) != 0) {
+            const se::BufferPool *bufferPool = bufferMap.at(poolType);
             return bufferPool->getTypedObject<T>(index);
         } else {
             return nullptr;
