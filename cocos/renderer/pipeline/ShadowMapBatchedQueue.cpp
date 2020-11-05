@@ -38,17 +38,17 @@ ShadowMapBatchedQueue::ShadowMapBatchedQueue(ForwardPipeline *pipeline)
     _buffer = pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
     _batchedQueue = CC_NEW(RenderBatchedQueue);
-    _shadowObjects = pipeline->getShadowObjects();
 }
 
 void ShadowMapBatchedQueue::gatherLightPasses(const Light *light) {
     clear();
 
     const auto *shadowInfo = _pipeline->getShadows();
+    const auto &shadowObjects = _pipeline->getShadowObjects();
     if (light && shadowInfo->getShadowType() == ShadowType::SHADOWMAP) {
         updateUBOs(light);
 
-        for (const auto ro : _shadowObjects) {
+        for (const auto ro : shadowObjects) {
             const auto *model = ro.model;
 
             switch (light->getType()) {

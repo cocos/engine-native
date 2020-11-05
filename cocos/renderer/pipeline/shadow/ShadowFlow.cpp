@@ -52,17 +52,16 @@ void ShadowFlow::render(RenderView *view) {
     for (const auto *light : validLights) {
         if (pipeline->_shadowFrameBufferMap.find(light) == pipeline->_shadowFrameBufferMap.end()) {
             initShadowFrameBuffer(pipeline, light);
+        }
 
-            auto *shadowFrameBuffer = pipeline->_shadowFrameBufferMap[light];
-            if (shadowInfo->shadowMapDirty) {
-                resizeShadowMap(light, shadowInfo->size);
-            }
-            for (auto* _stage : _stages)
-            {
-                auto *shadowStage = static_cast<ShadowStage *>(_stage);
-                shadowStage->setUsage(light, shadowFrameBuffer);
-                shadowStage->render(view);
-            }
+        auto *shadowFrameBuffer = pipeline->_shadowFrameBufferMap[light];
+        if (shadowInfo->shadowMapDirty) {
+            resizeShadowMap(light, shadowInfo->size);
+        }
+        for (auto *_stage : _stages) {
+            auto *shadowStage = static_cast<ShadowStage *>(_stage);
+            shadowStage->setUsage(light, shadowFrameBuffer);
+            shadowStage->render(view);
         }
     }
 }

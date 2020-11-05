@@ -127,7 +127,7 @@ vector<const Light *> lightCollecting(RenderView *view) {
 
     const auto spotLightArrayID = scene->getSpotLightArrayID();
     const auto count = spotLightArrayID ? spotLightArrayID[0] : 0;
-    for (uint32_t i = 1; i < count; ++i) {
+    for (uint32_t i = 1; i <= count; ++i) {
         const auto *spotLight = scene->getSpotLight(spotLightArrayID[i]);
         sphere->center.set(spotLight->position);
         sphere->radius = spotLight->range;
