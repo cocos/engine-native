@@ -29,11 +29,11 @@
 #include <map>
 #include <string>
 
-#define RECORD_JSB_INVOKING
+//#define RECORD_JSB_INVOKING
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-#ifdef CC_DEBUG
+#if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
 extern unsigned int __jsbInvocationCount;
 extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
 #endif
@@ -46,20 +46,20 @@ bool cmp(std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
 std::vector<std::pair<std::string, int>> pairs;
 
 void recordJSBInvoke(const std::string &funcName) {
-    #ifdef RECORD_JSB_INVOKING
+    #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
     ++__jsbInvocationCount;
     ++__jsbFunctionInvokedRecords[funcName];
     #endif
 }
 void clearRecordJSBInvoke() {
-    #ifdef RECORD_JSB_INVOKING
+    #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
     __jsbInvocationCount = 0;
     __jsbFunctionInvokedRecords.clear();
     #endif
 }
 
 void printJSBInvoke() {
-    #ifdef RECORD_JSB_INVOKING
+    #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
     for (const auto &it : __jsbFunctionInvokedRecords)
         pairs.push_back(it);
 
