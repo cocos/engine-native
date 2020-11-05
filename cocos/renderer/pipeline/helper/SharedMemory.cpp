@@ -148,16 +148,13 @@ gfx::BlendState *getBlendStateImpl(uint index) {
     auto buffer = SharedMemory::getRawBuffer<uint32_t>(se::PoolType::RAW_BUFFER, index);
     memcpy(&blendState, buffer, 24);
 
-    uint32_t targetsHandle = *(buffer + 6);
-    const auto targets = GET_BLEND_TARGET_ARRAY(targetsHandle);
-    uint32_t targetLen = targets[0];
-    gfx::BlendTarget *btPtr = nullptr;
-    uint32_t *btBuffer = nullptr;
-    blendState.targets.resize(targetLen);
+    uint32_t targetArrayHandle = *(buffer + 6);
+    const auto targetsHandle = GET_BLEND_TARGET_ARRAY(targetArrayHandle);
+    uint32_t targetLen = targetsHandle[0];
+    auto &targets = blendState.targets;
+    targets.resize(targetLen);
     for (uint32_t i = 1; i <= targetLen; ++i) {
-        btBuffer = SharedMemory::getRawBuffer<uint32_t>(se::PoolType::RAW_BUFFER, targets[i]);
-        btPtr = &blendState.targets[i - 1];
-        memcpy(btPtr, btBuffer, 32);
+        targets[i - 1] = GET_BLEND_TARGET(targetsHandle[i]);
     }
 
     return &blendState;

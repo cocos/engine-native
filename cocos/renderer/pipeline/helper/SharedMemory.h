@@ -60,6 +60,7 @@ extern gfx::BlendState *getBlendStateImpl(uint index);
 #define GET_RAW_BUFFER(index, size)    SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
 #define GET_RASTERIZER_STATE(index)    SharedMemory::getRawBuffer<gfx::RasterizerState>(se::PoolType::RAW_BUFFER, index)
 #define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getRawBuffer<gfx::DepthStencilState>(se::PoolType::RAW_BUFFER, index)
+#define GET_BLEND_TARGET(index)        SharedMemory::getRawBuffer<gfx::BlendTarget>(se::PoolType::RAW_BUFFER, index)
 #define GET_BLEND_STATE(index)         getBlendStateImpl(index)
 
 class CC_DLL SharedMemory : public Object {
