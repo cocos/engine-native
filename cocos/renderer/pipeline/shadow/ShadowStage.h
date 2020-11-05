@@ -28,7 +28,7 @@ private:
     static RenderStageInfo _initInfo;
 
     gfx::Rect _renderArea;
-    const Light *_light;
+    const Light *_light = nullptr;
     gfx::Framebuffer *_framebuffer = nullptr;
 
     ShadowMapBatchedQueue *_additiveShadowQueue = nullptr;

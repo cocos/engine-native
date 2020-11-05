@@ -7,6 +7,7 @@
 #include "gfx/GFXCommandBuffer.h"
 #include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXFramebuffer.h"
+#include "gfx/GFXTexture.h"
 #include "math/Vec2.h"
 
 namespace cc {
@@ -51,10 +52,10 @@ void ShadowStage::render(RenderView *view) {
     auto cmdBuffer = pipeline->getCommandBuffers()[0];
 
     const auto shadowMapSize = shadowInfo->size;
-    _renderArea.x = camera->viewportX * shadowMapSize.x;
-    _renderArea.y = camera->viewportY * shadowMapSize.y;
-    _renderArea.width = camera->viewportWidth * shadowMapSize.x * pipeline->getShadingScale();
-    _renderArea.height = camera->viewportHeight * shadowMapSize.y * pipeline->getShadingScale();
+    _renderArea.x = (int)(camera->viewportX * shadowMapSize.x);
+    _renderArea.y = (int)(camera->viewportY * shadowMapSize.y);
+    _renderArea.width = (uint)(camera->viewportWidth * shadowMapSize.x * pipeline->getShadingScale());
+    _renderArea.height = (uint)(camera->viewportHeight * shadowMapSize.y * pipeline->getShadingScale());
 
     _clearColors[0] = {1.0f, 1.0f, 1.0f, 1.0f};
     auto* renderPass = _framebuffer->getRenderPass();
@@ -68,6 +69,21 @@ void ShadowStage::render(RenderView *view) {
 }
 
 void ShadowStage::destroy() {
+    if (_light && _framebuffer) {
+        auto &renderTargets = _framebuffer->getColorTextures();
+        for (auto *renderTarget : renderTargets) {
+            CC_SAFE_DELETE(renderTarget);
+        }
+
+    	auto *depth = _framebuffer->getDepthStencilTexture();
+        CC_SAFE_DELETE(depth);
+
+    	_framebuffer->destroy();
+
+    	CC_SAFE_DESTROY(_framebuffer);
+    }
+
+	
     CC_SAFE_DESTROY(_additiveShadowQueue);
 
     RenderStage::destroy();

@@ -49,8 +49,6 @@ void ShadowFlow::render(RenderView *view) {
     const auto validLights = lightCollecting(view);
     shadowCollecting(pipeline, view);
 
-    //initShadowFrameBuffer();
-
     for (const auto *light : validLights) {
         if (pipeline->_shadowFrameBufferMap.find(light) == pipeline->_shadowFrameBufferMap.end()) {
             initShadowFrameBuffer(pipeline, light);
@@ -59,8 +57,9 @@ void ShadowFlow::render(RenderView *view) {
             if (shadowInfo->shadowMapDirty) {
                 resizeShadowMap(light, shadowInfo->size);
             }
-            for (unsigned i = 0; i < _stages.size(); ++i) {
-                auto *shadowStage = static_cast<ShadowStage *>(_stages[i]);
+            for (auto* _stage : _stages)
+            {
+                auto *shadowStage = static_cast<ShadowStage *>(_stage);
                 shadowStage->setUsage(light, shadowFrameBuffer);
                 shadowStage->render(view);
             }
@@ -80,8 +79,8 @@ void ShadowFlow::resizeShadowMap(const Light *light, const Vec2 &size) const {
             return;
         }
 
-        auto renderTargets = framebuffer->getColorTextures();
-        for (auto renderTarget : renderTargets) {
+        auto &renderTargets = framebuffer->getColorTextures();
+        for (auto *renderTarget : renderTargets) {
             renderTarget->resize(width, height);
         }
 

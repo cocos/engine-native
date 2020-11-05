@@ -44,7 +44,7 @@ void AABB::merge(const AABB &aabb) {
     halfExtents = subP * 0.5f;
 }
 
-int32_t Sphere::interset(const Plane &plane) const {
+int Sphere::interset(const Plane &plane) const {
     const float dot = plane.normal.dot(center);
     const float r = radius * plane.normal.length();
     if (dot + r < plane.distance) {

@@ -127,7 +127,7 @@ vector<const Light *> lightCollecting(RenderView *view) {
 
     const auto spotLightArrayID = scene->getSpotLightArrayID();
     const auto count = spotLightArrayID ? spotLightArrayID[0] : 0;
-    for (uint32_t i = 0; i < count; ++i) {
+    for (uint32_t i = 1; i < count; ++i) {
         const auto *spotLight = scene->getSpotLight(spotLightArrayID[i]);
         sphere->center.set(spotLight->position);
         sphere->radius = spotLight->range;
@@ -136,15 +136,16 @@ vector<const Light *> lightCollecting(RenderView *view) {
         }
     }
 
+	CC_SAFE_DELETE(sphere);
+
     return validLights;
 }
 
 void shadowCollecting(ForwardPipeline *pipeline, RenderView *view) {
     const auto camera = view->getCamera();
     const auto scene = camera->getScene();
-    const auto *shadowInfo = pipeline->getShadows();
 
-        AABB castWorldBounds;
+    AABB castWorldBounds;
     AABB receiveWorldBounds;
     auto castBoundsInited = false;
     auto receiveBoundsInited = false;
@@ -166,8 +167,7 @@ void shadowCollecting(ForwardPipeline *pipeline, RenderView *view) {
                 // shadow render Object
                 if (model->castShadow) {
                     if (!castBoundsInited) {
-                        castWorldBounds.center.set(model->getWorldBounds()->center);
-                        castWorldBounds.halfExtents.set(model->getWorldBounds()->halfExtents);
+                        castWorldBounds = *model->getWorldBounds();
                         castBoundsInited = true;
                     }
                     castWorldBounds.merge(*model->getWorldBounds());
@@ -176,8 +176,7 @@ void shadowCollecting(ForwardPipeline *pipeline, RenderView *view) {
 
                 if (model->receiveShadow) {
                     if (!receiveBoundsInited) {
-                        receiveWorldBounds.center.set(model->getWorldBounds()->center);
-                        receiveWorldBounds.halfExtents.set(model->getWorldBounds()->halfExtents);
+                        receiveWorldBounds = *model->getWorldBounds();
                         receiveBoundsInited = true;
                     }
                     receiveWorldBounds.merge(*model->getWorldBounds());

@@ -95,7 +95,7 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::Ren
         cmdBuffer->bindDescriptorSet(MATERIAL_SET, pass->getDescriptorSet());
         cmdBuffer->bindInputAssembler(ia);
 
-        for (uint32_t i = 0; i < dynamicOffsets.size(); ++i) {
+        for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
             const auto *light = lights[i];
             if ((light->getType() == LightType::SPOT) && (_pipeline->_shadowFrameBufferMap.find(light) != _pipeline->_shadowFrameBufferMap.end()) && (_pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP)) {
                 updateSpotUBO(descriptorSet, light);
@@ -155,7 +155,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const RenderView *view, gfx::Co
         if (lightPassIdx < 0) continue;
 
         _lightIndices.clear();
-        for (unsigned i = 0; i < _validLights.size(); i++) {
+        for (size_t i = 0; i < _validLights.size(); i++) {
             const auto light = _validLights[i];
             const bool isCulled = cullingLight(light, model);
             if (!isCulled) {
@@ -216,7 +216,7 @@ void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, 
     }
 
     // light view
-    const cc::Mat4 lightView = light->getNode()->worldMatrix.getInversed();
+    const cc::Mat4& lightView = light->getNode()->worldMatrix.getInversed();
 
     // light proj
     cc::Mat4 lightProj;
