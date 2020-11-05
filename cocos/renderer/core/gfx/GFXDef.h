@@ -388,7 +388,7 @@ enum class StencilOp {
     DECR_WRAP,
 };
 
-enum class BlendFactor: uint32_t {
+enum class BlendFactor {
     ZERO,
     ONE,
     SRC_ALPHA,
@@ -406,7 +406,7 @@ enum class BlendFactor: uint32_t {
     ONE_MINUS_CONSTANT_ALPHA,
 };
 
-enum class BlendOp: uint32_t {
+enum class BlendOp {
     ADD,
     SUB,
     REV_SUB,
@@ -414,7 +414,7 @@ enum class BlendOp: uint32_t {
     MAX,
 };
 
-enum class ColorMask : uint32_t {
+enum class ColorMask : FlagBits {
     NONE = 0x0,
     R = 0x1,
     G = 0x2,
@@ -931,7 +931,7 @@ struct InputState {
     AttributeList attributes;
 };
 
-// Use uint32_t for all boolean values to do memeory copy in shared memory.
+// Use uint32_t for all boolean values to convert memory to RasterizerState* in shared memory.
 struct RasterizerState {
     uint32_t isDiscard = 0;
     PolygonMode polygonMode = PolygonMode::FILL;
@@ -947,7 +947,7 @@ struct RasterizerState {
     float lineWidth = 1.0f;
 };
 
-// Use uint32_t for all boolean values to do memeory copy in shared memory.
+// Use uint32_t for all boolean values to convert memory to DepthStencilState* in shared memory.
 struct DepthStencilState {
     uint32_t depthTest = 1;
     uint32_t depthWrite = 1;
@@ -970,7 +970,7 @@ struct DepthStencilState {
     uint32_t stencilRefBack = 1;
 };
 
-// Use uint32_t for all boolean values to do memeory copy in shared memory.
+// Use uint32_t for all boolean values to do convert memory to BlendTarget* in shared memory.
 struct BlendTarget {
     uint32_t blend = 0;
     BlendFactor blendSrc = BlendFactor::ONE;
