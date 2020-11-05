@@ -42,6 +42,7 @@ struct Extent;
 struct TextureSubres;
 struct TextureCopy;
 struct BufferTextureCopy;
+struct BufferInfo;
 }
 } // namespace cc
 
@@ -137,6 +138,7 @@ bool seval_to_gfx_texture_subres(const se::Value &v, cc::gfx::TextureSubres *tex
 bool seval_to_gfx_texture_copy(const se::Value &v, cc::gfx::TextureCopy *textureCopy);
 bool seval_to_gfx_buffer_texture_copy(const se::Value &v, cc::gfx::BufferTextureCopy *bufferTextureCopy);
 bool seval_to_gfx_buffer_texture_copy_list(const se::Value &v, cc::vector<cc::gfx::BufferTextureCopy> *bufferTextureCopyList);
+bool seval_to_gfx_buffer_info(const se::Value &v, cc::gfx::BufferInfo *bufferInfo);
 
 #if USE_GFX_RENDERER
 #endif

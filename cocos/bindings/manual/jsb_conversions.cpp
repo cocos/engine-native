@@ -990,6 +990,34 @@ bool seval_to_gfx_buffer_texture_copy_list(const se::Value &v, cc::vector<cc::gf
     return true;
 }
 
+bool seval_to_gfx_buffer_info(const se::Value &v, cc::gfx::BufferInfo *bufferInfo) {
+    assert(bufferInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::BufferInfo failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("usage", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get usage from BufferInfo!");
+    bufferInfo->usage = (cc::gfx::BufferUsage)val.toUint();
+    
+    ok = obj->getProperty("memUsage", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get memUsage from BufferInfo!");
+    bufferInfo->memUsage = (cc::gfx::MemoryUsage)val.toUint();
+    
+    ok = obj->getProperty("size", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get size from BufferInfo!");
+    bufferInfo->size = val.toUint();
+    
+    ok = obj->getProperty("stride", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get stride from BufferInfo!");
+    bufferInfo->stride = val.toUint();
+    
+    ok = obj->getProperty("flags", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get flags from BufferInfo!");
+    bufferInfo->flags = (cc::gfx::BufferFlags)val.toUint();
+    
+    return true;
+}
+
 #if USE_GFX_RENDERER
 
 #endif // USE_GFX_RENDERER > 0

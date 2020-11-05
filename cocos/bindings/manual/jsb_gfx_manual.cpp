@@ -144,8 +144,9 @@ static bool js_gfx_Device_createBuffer(se::State &s) {
             auto bufferViewInfo = (cc::gfx::BufferViewInfo *)(args[0].toObject()->getPrivateData());
             buffer = cobj->createBuffer(*bufferViewInfo);
         } else {
-            auto bufferInfo = (cc::gfx::BufferInfo *)(args[0].toObject()->getPrivateData());
-            buffer = cobj->createBuffer(*bufferInfo);
+            cc::gfx::BufferInfo bufferInfo;
+            seval_to_gfx_buffer_info(args[0], &bufferInfo);
+            buffer = cobj->createBuffer(bufferInfo);
         }
 
         CC_UNUSED bool ok = native_ptr_to_seval(buffer, &s.rval());
