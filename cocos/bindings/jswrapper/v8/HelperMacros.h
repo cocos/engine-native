@@ -33,7 +33,7 @@
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-#ifdef RECORD_JSB_INVOKING
+#ifdef CC_DEBUG
 extern unsigned int __jsbInvocationCount;
 extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
 #endif
