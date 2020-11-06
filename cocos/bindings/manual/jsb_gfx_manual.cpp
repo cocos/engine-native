@@ -168,16 +168,15 @@ static bool js_gfx_Device_createTexture(se::State &s) {
 
     if (argc == 2) {
         cc::gfx::Texture *texture = nullptr;
-
         bool createTextureView = false;
         seval_to_boolean(args[1], &createTextureView);
-
         if (createTextureView) {
             auto textureViewInfo = (cc::gfx::TextureViewInfo *)(args[0].toObject()->getPrivateData());
             texture = cobj->createTexture(*textureViewInfo);
         } else {
-            auto textureInfo = (cc::gfx::TextureInfo *)(args[0].toObject()->getPrivateData());
-            texture = cobj->createTexture(*textureInfo);
+            cc::gfx::TextureInfo textureInfo;
+            seval_to_gfx_texture_info(args[0], &textureInfo);
+            texture = cobj->createTexture(textureInfo);
         }
 
         CC_UNUSED bool ok = native_ptr_to_seval(texture, &s.rval());
