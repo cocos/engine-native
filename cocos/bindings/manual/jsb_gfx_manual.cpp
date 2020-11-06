@@ -141,8 +141,9 @@ static bool js_gfx_Device_createBuffer(se::State &s) {
         seval_to_boolean(args[1], &createBufferView);
 
         if (createBufferView) {
-            auto bufferViewInfo = (cc::gfx::BufferViewInfo *)(args[0].toObject()->getPrivateData());
-            buffer = cobj->createBuffer(*bufferViewInfo);
+            cc::gfx::BufferViewInfo bufferViewInfo;
+            seval_to_gfx_buffer_view_info(args[0], &bufferViewInfo);
+            buffer = cobj->createBuffer(bufferViewInfo);
         } else {
             cc::gfx::BufferInfo bufferInfo;
             seval_to_gfx_buffer_info(args[0], &bufferInfo);

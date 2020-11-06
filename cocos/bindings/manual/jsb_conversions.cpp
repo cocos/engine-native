@@ -1018,6 +1018,26 @@ bool seval_to_gfx_buffer_info(const se::Value &v, cc::gfx::BufferInfo *bufferInf
     return true;
 }
 
+bool seval_to_gfx_buffer_view_info(const se::Value &v, cc::gfx::BufferViewInfo *bufferViewInfo) {
+    assert(bufferViewInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::BufferViewInfo failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("buffer", &val);
+    SE_PRECONDITION2(ok && val.isObject(), false, "Can not get buffer from BufferViewInfo!");
+    bufferViewInfo->buffer = static_cast<cc::gfx::Buffer *>(val.toObject()->getPrivateData());
+    
+    ok = obj->getProperty("offset", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get offset from BufferInfo!");
+    bufferViewInfo->offset = val.toUint();
+    
+    ok = obj->getProperty("range", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get range from BufferInfo!");
+    bufferViewInfo->range = val.toUint();
+    
+    return true;
+}
+
 #if USE_GFX_RENDERER
 
 #endif // USE_GFX_RENDERER > 0
