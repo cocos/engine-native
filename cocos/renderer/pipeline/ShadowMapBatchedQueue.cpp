@@ -56,8 +56,8 @@ void ShadowMapBatchedQueue::gatherLightPasses(const Light *light, gfx::CommandBu
                     break;
                 case LightType::SPOT:
                     if (model->getWorldBounds() &&
-                        (!aabb_aabb(model->getWorldBounds(), light->getAABB()) ||
-                         !aabb_frustum(model->getWorldBounds(), light->getFrustum()))) {
+                        (aabb_aabb(model->getWorldBounds(), light->getAABB()) ||
+                         aabb_frustum(model->getWorldBounds(), light->getFrustum()))) {
                         add(model);
                     }
                     break;
