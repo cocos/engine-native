@@ -98,7 +98,7 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::Ren
         for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
             const auto *light = lights[i];
             if ((light->getType() == LightType::SPOT) && (_pipeline->_shadowFrameBufferMap.find(light) != _pipeline->_shadowFrameBufferMap.end()) && (_pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP)) {
-                updateSpotUBO(descriptorSet, light);
+                updateSpotUBO(descriptorSet, light, cmdBuffer);
             }
             _dynamicOffsets[0] = dynamicOffsets[i];
             cmdBuffer->bindDescriptorSet(LOCAL_SET, descriptorSet, _dynamicOffsets);
@@ -208,28 +208,27 @@ void RenderAdditiveLightQueue::gatherLightPasses(const RenderView *view, gfx::Co
     _batchedQueue->uploadBuffers(cmdBufferer);
 }
 
-void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, const Light *light) const {
+void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, const Light *light, gfx::CommandBuffer *cmdBufferer) const {
     const auto *shadowInfo = _pipeline->getShadows();
     auto shadowUBO = _pipeline->getShadowUBO();
     if (light->getType() != LightType::SPOT) {
         return;
     }
 
-    // light view
-    const cc::Mat4& lightView = light->getNode()->worldMatrix.getInversed();
+    const auto shadowCameraView = light->getNode()->worldMatrix;
 
-    // light proj
-    cc::Mat4 lightProj;
-    Mat4::createPerspective(light->spotAngle, light->aspect, 0.001f, light->range, &lightProj);
+	const auto &matShadowView = shadowCameraView.getInversed();
 
-    // light voewProj
-    cc::Mat4 lightViewProj = lightProj * lightView;
+    cc::Mat4 matShadowViewProj;
+    cc::Mat4::createPerspective(light->spotAngle, light->aspect, 0.001f, light->range, &matShadowViewProj);
+
+    matShadowViewProj.multiply(matShadowView);
 
     // shadow info
     float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
     float shadowColor[4] = {shadowInfo->color.x, shadowInfo->color.y, shadowInfo->color.z, shadowInfo->color.w};
 
-    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, lightViewProj.m, sizeof(lightViewProj));
+    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowColor, sizeof(shadowColor));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
 
@@ -244,7 +243,7 @@ void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, 
     descriptorSet->bindSampler(UniformSpotLightingMapSampler.layout.binding, _sampler);
     descriptorSet->update();
 
-    _pipeline->getCommandBuffers()[0]->updateBuffer(_pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding), shadowUBO.data(), UBOShadow::SIZE);
+    cmdBufferer->updateBuffer(_pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding), shadowUBO.data(), UBOShadow::SIZE);
 }
 
 void RenderAdditiveLightQueue::updateUBOs(const RenderView *view, gfx::CommandBuffer *cmdBuffer) {

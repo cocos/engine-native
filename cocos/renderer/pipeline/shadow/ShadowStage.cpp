@@ -46,10 +46,11 @@ void ShadowStage::render(RenderView *view) {
     if (!_light || !_framebuffer) {
         return;
     }
-    _additiveShadowQueue->gatherLightPasses(_light);
 
     const auto camera = view->getCamera();
     auto cmdBuffer = pipeline->getCommandBuffers()[0];
+
+	_additiveShadowQueue->gatherLightPasses(_light, cmdBuffer);
 
     const auto shadowMapSize = shadowInfo->size;
     _renderArea.x = (int)(camera->viewportX * shadowMapSize.x);

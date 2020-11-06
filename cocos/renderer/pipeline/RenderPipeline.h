@@ -38,7 +38,6 @@ public:
     CC_INLINE void setValue(const String &name, bool value) { _macros.setValue(name, value); }
     CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return _descriptorSet; }
     CC_INLINE gfx::DescriptorSetLayout *getDescriptorSetLayout() const { return _descriptorSetLayout; }
-    CC_INLINE gfx::CommandBufferList& getCommandBuffer() { return _commandBuffers; }
 
 protected:
     static RenderPipeline *_instance;

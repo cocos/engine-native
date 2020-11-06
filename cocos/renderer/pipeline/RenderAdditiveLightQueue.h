@@ -36,7 +36,7 @@ public:
 
 private:
     void updateUBOs(const RenderView *view, gfx::CommandBuffer *cmdBuffer);
-    void updateSpotUBO(gfx::DescriptorSet *, const Light *) const;
+    void updateSpotUBO(gfx::DescriptorSet *, const Light *, gfx::CommandBuffer *cmdBufferer) const;
 
 private:
     ForwardPipeline *_pipeline = nullptr;

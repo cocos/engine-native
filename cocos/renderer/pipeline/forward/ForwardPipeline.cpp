@@ -152,7 +152,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
             x = radius * shadowInfo->aspect;
             y = radius;
 
-            farClamp = std::min(_receivedSphere->radius * SHADOW_CAMERA_MAX_FAR, COEFFICIENT_OF_EXPANSION);
+            farClamp = std::min(_receivedSphere->radius * COEFFICIENT_OF_EXPANSION, SHADOW_CAMERA_MAX_FAR);
         } else {
             shadowCameraView = mainLight->getNode()->worldMatrix;
 

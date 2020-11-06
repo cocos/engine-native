@@ -21,12 +21,12 @@ public:
     void destroy();
 
     void clear();
-    void gatherLightPasses(const Light *);
+    void gatherLightPasses(const Light *, gfx::CommandBuffer *cmdBufferer);
     void add(const ModelView *);
     void recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) const;
 
 private:
-    void updateUBOs(const Light *) const;
+    void updateUBOs(const Light *, gfx::CommandBuffer *cmdBufferer) const;
 
 private:
     ForwardPipeline *_pipeline = nullptr;
