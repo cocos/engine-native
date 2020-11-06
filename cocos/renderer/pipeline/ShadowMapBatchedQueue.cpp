@@ -33,8 +33,7 @@ int getShadowPassIndex(const ModelView *model) {
 }
 
 ShadowMapBatchedQueue::ShadowMapBatchedQueue(ForwardPipeline *pipeline)
-: _pipeline(pipeline),
-    _device(gfx::Device::getInstance()) {
+: _pipeline(pipeline){
     _buffer = pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
     _batchedQueue = CC_NEW(RenderBatchedQueue);
@@ -92,22 +91,19 @@ void ShadowMapBatchedQueue::add(const ModelView *model) {
         subModel->getDescriptorSet()->bindBuffer(UBOShadow::BLOCK.layout.binding, _buffer);
         subModel->getDescriptorSet()->update();
 
-        for (unsigned p = 0; p < subModel->passCount; ++p) {
-            if (batchingScheme == BatchingSchemes::INSTANCING) {
-                auto *instancedBuffer = InstancedBuffer::get(subModel->passID[p]);
-                instancedBuffer->merge(model, subModel, p);
-                _instancedQueue->add(instancedBuffer);
-
-            } else if (batchingScheme == BatchingSchemes::VB_MERGING) {
-                auto *batchedBuffer = BatchedBuffer::get(subModel->passID[p]);
-                batchedBuffer->merge(subModel, p, model);
-                _batchedQueue->add(batchedBuffer);
-            } else { // standard draw
-                _subModels.emplace_back(subModel);
-                _shaders.emplace_back(subModel->getShader(shadowPassIdx));
-                _passes.emplace_back(pass);
-            }
-        } 
+        if (batchingScheme == BatchingSchemes::INSTANCING) {
+            auto *instancedBuffer = InstancedBuffer::get(subModel->passID[shadowPassIdx]);
+            instancedBuffer->merge(model, subModel, shadowPassIdx);
+            _instancedQueue->add(instancedBuffer);
+        } else if (batchingScheme == BatchingSchemes::VB_MERGING) {
+            auto *batchedBuffer = BatchedBuffer::get(subModel->passID[shadowPassIdx]);
+            batchedBuffer->merge(subModel, shadowPassIdx, model);
+            _batchedQueue->add(batchedBuffer);
+        } else { // standard draw
+            _subModels.emplace_back(subModel);
+            _shaders.emplace_back(subModel->getShader(shadowPassIdx));
+            _passes.emplace_back(pass);
+        }
     }
 }
 
@@ -166,9 +162,8 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
 
             const auto &matShadowView = shadowCameraView.getInversed();
 
-            const auto projectionSinY = _device->getScreenSpaceSignY() * _device->getUVSpaceSignY();
             cc::Mat4 matShadowViewProj;
-            cc::Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, _device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
+            cc::Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, &matShadowViewProj);
 
             matShadowViewProj.multiply(matShadowView);
             memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
@@ -176,7 +171,7 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
         case LightType::SPOT: {
             const auto shadowCameraView = light->getNode()->worldMatrix;
 
-			const auto &matShadowView = shadowCameraView.getInversed();
+	    const auto &matShadowView = shadowCameraView.getInversed();
 
             cc::Mat4 matShadowViewProj;
             cc::Mat4::createPerspective(light->spotAngle, light->aspect, 0.001f, light->range, &matShadowViewProj);

@@ -30,7 +30,6 @@ private:
 
 private:
     ForwardPipeline *_pipeline = nullptr;
-    gfx::Device *_device = nullptr;
     vector<const SubModelView *> _subModels;
     vector<const PassView *> _passes;
     vector<gfx::Shader *> _shaders;

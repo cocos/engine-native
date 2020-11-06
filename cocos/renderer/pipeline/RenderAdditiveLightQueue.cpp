@@ -47,22 +47,22 @@ bool cullingLight(const Light *light, const ModelView *model) {
 
 RenderAdditiveLightQueue::RenderAdditiveLightQueue(RenderPipeline *pipeline):
 _pipeline(static_cast<ForwardPipeline *>(pipeline)),
-    _device(gfx::Device::getInstance()),
     _instancedQueue(CC_NEW(RenderInstancedQueue)),
     _batchedQueue(CC_NEW(RenderBatchedQueue)) {
     _renderObjects = _pipeline->getRenderObjects();
     _fpScale = _pipeline->getFpScale();
     _isHDR = _pipeline->isHDR();
-    const auto alignment = _device->getUboOffsetAlignment();
+    auto *device = gfx::Device::getInstance();
+    const auto alignment = device->getUboOffsetAlignment();
     _lightBufferStride = ((UBOForwardLight::SIZE + alignment - 1) / alignment) * alignment;
     _lightBufferElementCount = _lightBufferStride / sizeof(float);
-    _lightBuffer = _device->createBuffer({
+    _lightBuffer = device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
         _lightBufferStride * _lightBufferCount,
         _lightBufferStride,
     });
-    _firstlightBufferView = _device->createBuffer({_lightBuffer, 0, UBOForwardLight::SIZE});
+    _firstlightBufferView = device->createBuffer({_lightBuffer, 0, UBOForwardLight::SIZE});
     _lightBufferData.resize(_lightBufferElementCount * _lightBufferCount);
     _dynamicOffsets.resize(1, 0);
 

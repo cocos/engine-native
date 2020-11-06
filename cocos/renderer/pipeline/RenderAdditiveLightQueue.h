@@ -40,7 +40,6 @@ private:
 
 private:
     ForwardPipeline *_pipeline = nullptr;
-    gfx::Device *_device = nullptr;
     vector<vector<SubModelView *>> _sortedSubModelsArray;
     vector<vector<uint>> _sortedPSOCIArray;
     vector<const Light *> _validLights;
