@@ -1086,6 +1086,18 @@ bool seval_to_gfx_texture_info(const se::Value &v, cc::gfx::TextureInfo *texture
     return true;
 }
 
+bool seval_to_gfx_descriptor_set_info(const se::Value &v, cc::gfx::DescriptorSetInfo *descriptorSetInfo) {
+    assert(descriptorSetInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::DescriptorSetInfo failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("layout", &val);
+    SE_PRECONDITION2(ok && val.isObject(), false, "Can not get layout from TextureInfo!");
+    descriptorSetInfo->layout = static_cast<cc::gfx::DescriptorSetLayout *>(val.toObject()->getPrivateData());
+    
+    return true;
+}
+
 #if USE_GFX_RENDERER
 
 #endif // USE_GFX_RENDERER > 0
