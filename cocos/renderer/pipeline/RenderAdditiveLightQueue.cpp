@@ -217,7 +217,7 @@ void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, 
 
     const auto shadowCameraView = light->getNode()->worldMatrix;
 
-	const auto &matShadowView = shadowCameraView.getInversed();
+    const auto &matShadowView = shadowCameraView.getInversed();
 
     cc::Mat4 matShadowViewProj;
     cc::Mat4::createPerspective(light->spotAngle, light->aspect, 0.001f, light->range, &matShadowViewProj);

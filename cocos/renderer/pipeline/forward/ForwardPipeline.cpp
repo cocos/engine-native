@@ -134,10 +134,11 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
     const Light *mainLight = nullptr;
     if (scene->mainLightID) mainLight = scene->getMainLight();
     const auto shadowInfo = _shadows;
+    auto *device = gfx::Device::getInstance();
 
     if (mainLight && shadowInfo->getShadowType() == ShadowType::SHADOWMAP) {
         if (_shadowFrameBufferMap.find(mainLight) != _shadowFrameBufferMap.end()) {
-            _descriptorSet->bindTexture(UniformSpotLightingMapSampler.layout.binding, _shadowFrameBufferMap[mainLight]->getColorTextures()[0]);
+            _descriptorSet->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _shadowFrameBufferMap[mainLight]->getColorTextures()[0]);
         }
 
         const auto node = mainLight->getNode();
@@ -165,7 +166,8 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         const auto &matShadowView = shadowCameraView.getInversed();
 
         Mat4 matShadowViewProj;
-        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, &matShadowViewProj);
+        const auto projectionSinY = device->getScreenSpaceSignY() * device->getUVSpaceSignY();
+        Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, shadowInfo->farValue, device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);    
 
         matShadowViewProj.multiply(matShadowView);
         float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
