@@ -96,6 +96,36 @@ GLenum MapGLInternalFormat(Format format) {
         case Format::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
         case Format::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 
+        case Format::ASTC_RGBA_4x4: return GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+        case Format::ASTC_RGBA_5x4: return GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
+        case Format::ASTC_RGBA_5x5: return GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
+        case Format::ASTC_RGBA_6x5: return GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
+        case Format::ASTC_RGBA_6x6: return GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
+        case Format::ASTC_RGBA_8x5: return GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
+        case Format::ASTC_RGBA_8x6: return GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
+        case Format::ASTC_RGBA_8x8: return GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
+        case Format::ASTC_RGBA_10x5: return GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
+        case Format::ASTC_RGBA_10x6: return GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
+        case Format::ASTC_RGBA_10x8: return GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
+        case Format::ASTC_RGBA_10x10: return GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
+        case Format::ASTC_RGBA_12x10: return GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
+        case Format::ASTC_RGBA_12x12: return GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
+
+        case Format::ASTC_SRGBA_4x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
+        case Format::ASTC_SRGBA_5x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
+        case Format::ASTC_SRGBA_5x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
+        case Format::ASTC_SRGBA_6x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
+        case Format::ASTC_SRGBA_6x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
+        case Format::ASTC_SRGBA_8x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
+        case Format::ASTC_SRGBA_8x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
+        case Format::ASTC_SRGBA_8x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
+        case Format::ASTC_SRGBA_10x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
+        case Format::ASTC_SRGBA_10x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
+        case Format::ASTC_SRGBA_10x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
+        case Format::ASTC_SRGBA_10x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
+        case Format::ASTC_SRGBA_12x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
+        case Format::ASTC_SRGBA_12x12: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
+
         default: {
             CCASSERT(false, "Unsupported Format, convert to GL internal format failed.");
             return GL_RGBA;
@@ -170,11 +200,52 @@ GLenum MapGLFormat(Format format) {
         case Format::BC3_SRGB: return GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
 
         case Format::ETC_RGB8: return GL_ETC1_RGB8_OES;
+        case Format::ETC2_RGB8: return GL_COMPRESSED_RGB8_ETC2;
+        case Format::ETC2_SRGB8: return GL_COMPRESSED_SRGB8_ETC2;
+        case Format::ETC2_RGB8_A1: return GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+        case Format::ETC2_SRGB8_A1: return GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+        case Format::ETC2_RGBA8: return GL_COMPRESSED_RGBA8_ETC2_EAC;
+        case Format::ETC2_SRGB8_A8: return GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC;
+        case Format::EAC_R11: return GL_COMPRESSED_R11_EAC;
+        case Format::EAC_R11SN: return GL_COMPRESSED_SIGNED_R11_EAC;
+        case Format::EAC_RG11: return GL_COMPRESSED_RG11_EAC;
+        case Format::EAC_RG11SN: return GL_COMPRESSED_SIGNED_RG11_EAC;
 
         case Format::PVRTC_RGB2: return GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
         case Format::PVRTC_RGBA2: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
         case Format::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
         case Format::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+
+        case Format::ASTC_RGBA_4x4: return GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+        case Format::ASTC_RGBA_5x4: return GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
+        case Format::ASTC_RGBA_5x5: return GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
+        case Format::ASTC_RGBA_6x5: return GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
+        case Format::ASTC_RGBA_6x6: return GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
+        case Format::ASTC_RGBA_8x5: return GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
+        case Format::ASTC_RGBA_8x6: return GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
+        case Format::ASTC_RGBA_8x8: return GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
+        case Format::ASTC_RGBA_10x5: return GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
+        case Format::ASTC_RGBA_10x6: return GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
+        case Format::ASTC_RGBA_10x8: return GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
+        case Format::ASTC_RGBA_10x10: return GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
+        case Format::ASTC_RGBA_12x10: return GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
+        case Format::ASTC_RGBA_12x12: return GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
+
+        case Format::ASTC_SRGBA_4x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
+        case Format::ASTC_SRGBA_5x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
+        case Format::ASTC_SRGBA_5x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
+        case Format::ASTC_SRGBA_6x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
+        case Format::ASTC_SRGBA_6x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
+        case Format::ASTC_SRGBA_8x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
+        case Format::ASTC_SRGBA_8x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
+        case Format::ASTC_SRGBA_8x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
+        case Format::ASTC_SRGBA_10x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
+        case Format::ASTC_SRGBA_10x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
+        case Format::ASTC_SRGBA_10x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
+        case Format::ASTC_SRGBA_10x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
+        case Format::ASTC_SRGBA_12x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
+        case Format::ASTC_SRGBA_12x12: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
+
 
         default: {
             CCASSERT(false, "Unsupported Format, convert to WebGL format failed.");
@@ -350,6 +421,36 @@ GLenum FormatToGLType(Format format) {
         case Format::PVRTC_RGBA4: return GL_UNSIGNED_BYTE;
         case Format::PVRTC2_2BPP: return GL_UNSIGNED_BYTE;
         case Format::PVRTC2_4BPP: return GL_UNSIGNED_BYTE;
+
+        case Format::ASTC_RGBA_4x4:
+        case Format::ASTC_RGBA_5x4:
+        case Format::ASTC_RGBA_5x5:
+        case Format::ASTC_RGBA_6x5:
+        case Format::ASTC_RGBA_6x6:
+        case Format::ASTC_RGBA_8x5:
+        case Format::ASTC_RGBA_8x6:
+        case Format::ASTC_RGBA_8x8:
+        case Format::ASTC_RGBA_10x5:
+        case Format::ASTC_RGBA_10x6:
+        case Format::ASTC_RGBA_10x8:
+        case Format::ASTC_RGBA_10x10:
+        case Format::ASTC_RGBA_12x10:
+        case Format::ASTC_RGBA_12x12:
+        case Format::ASTC_SRGBA_4x4:
+        case Format::ASTC_SRGBA_5x4:
+        case Format::ASTC_SRGBA_5x5:
+        case Format::ASTC_SRGBA_6x5:
+        case Format::ASTC_SRGBA_6x6:
+        case Format::ASTC_SRGBA_8x5:
+        case Format::ASTC_SRGBA_8x6:
+        case Format::ASTC_SRGBA_8x8:
+        case Format::ASTC_SRGBA_10x5:
+        case Format::ASTC_SRGBA_10x6:
+        case Format::ASTC_SRGBA_10x8:
+        case Format::ASTC_SRGBA_10x10:
+        case Format::ASTC_SRGBA_12x10:
+        case Format::ASTC_SRGBA_12x12:
+            return GL_UNSIGNED_BYTE;
 
         default: {
             return GL_UNSIGNED_BYTE;
@@ -1427,7 +1528,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                             switch (colorAttachment.loadOp) {
                                 case LoadOp::LOAD: break; // GL default behaviour
                                 case LoadOp::CLEAR: {
-                                    if (cache->bs.targets[0].blendColorMask != ColorMask::ALL) {
+                                    if (cache->bs.targets[0]->blendColorMask != ColorMask::ALL) {
                                         glColorMask(true, true, true, true);
                                     }
 
@@ -1510,7 +1611,7 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
 
                     // restore states
                     if (glClears & GL_COLOR_BUFFER_BIT) {
-                        ColorMask colorMask = cache->bs.targets[0].blendColorMask;
+                        ColorMask colorMask = cache->bs.targets[0]->blendColorMask;
                         if (colorMask != ColorMask::ALL) {
                             glColorMask((GLboolean)(colorMask & ColorMask::R),
                                         (GLboolean)(colorMask & ColorMask::G),
@@ -1749,42 +1850,42 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
                         cache->bs.blendColor = gpuPipelineState->bs.blendColor;
                     }
 
-                    BlendTarget &cacheTarget = cache->bs.targets[0];
-                    const BlendTarget &target = gpuPipelineState->bs.targets[0];
-                    if (cacheTarget.blend != target.blend) {
-                        if (!cacheTarget.blend) {
+                    BlendTarget *cacheTarget = cache->bs.targets[0];
+                    const BlendTarget *target = gpuPipelineState->bs.targets[0];
+                    if (cacheTarget->blend != target->blend) {
+                        if (!cacheTarget->blend) {
                             glEnable(GL_BLEND);
                         } else {
                             glDisable(GL_BLEND);
                         }
-                        cacheTarget.blend = target.blend;
+                        cacheTarget->blend = target->blend;
                     }
-                    if (cacheTarget.blendEq != target.blendEq ||
-                        cacheTarget.blendAlphaEq != target.blendAlphaEq) {
-                        glBlendEquationSeparate(GLES3_BLEND_OPS[(int)target.blendEq],
-                                                GLES3_BLEND_OPS[(int)target.blendAlphaEq]);
-                        cacheTarget.blendEq = target.blendEq;
-                        cacheTarget.blendAlphaEq = target.blendAlphaEq;
+                    if (cacheTarget->blendEq != target->blendEq ||
+                        cacheTarget->blendAlphaEq != target->blendAlphaEq) {
+                        glBlendEquationSeparate(GLES3_BLEND_OPS[(int)target->blendEq],
+                                                GLES3_BLEND_OPS[(int)target->blendAlphaEq]);
+                        cacheTarget->blendEq = target->blendEq;
+                        cacheTarget->blendAlphaEq = target->blendAlphaEq;
                     }
-                    if (cacheTarget.blendSrc != target.blendSrc ||
-                        cacheTarget.blendDst != target.blendDst ||
-                        cacheTarget.blendSrcAlpha != target.blendSrcAlpha ||
-                        cacheTarget.blendDstAlpha != target.blendDstAlpha) {
-                        glBlendFuncSeparate(GLES3_BLEND_FACTORS[(int)target.blendSrc],
-                                            GLES3_BLEND_FACTORS[(int)target.blendDst],
-                                            GLES3_BLEND_FACTORS[(int)target.blendSrcAlpha],
-                                            GLES3_BLEND_FACTORS[(int)target.blendDstAlpha]);
-                        cacheTarget.blendSrc = target.blendSrc;
-                        cacheTarget.blendDst = target.blendDst;
-                        cacheTarget.blendSrcAlpha = target.blendSrcAlpha;
-                        cacheTarget.blendDstAlpha = target.blendDstAlpha;
+                    if (cacheTarget->blendSrc != target->blendSrc ||
+                        cacheTarget->blendDst != target->blendDst ||
+                        cacheTarget->blendSrcAlpha != target->blendSrcAlpha ||
+                        cacheTarget->blendDstAlpha != target->blendDstAlpha) {
+                        glBlendFuncSeparate(GLES3_BLEND_FACTORS[(int)target->blendSrc],
+                                            GLES3_BLEND_FACTORS[(int)target->blendDst],
+                                            GLES3_BLEND_FACTORS[(int)target->blendSrcAlpha],
+                                            GLES3_BLEND_FACTORS[(int)target->blendDstAlpha]);
+                        cacheTarget->blendSrc = target->blendSrc;
+                        cacheTarget->blendDst = target->blendDst;
+                        cacheTarget->blendSrcAlpha = target->blendSrcAlpha;
+                        cacheTarget->blendDstAlpha = target->blendDstAlpha;
                     }
-                    if (cacheTarget.blendColorMask != target.blendColorMask) {
-                        glColorMask((GLboolean)(target.blendColorMask & ColorMask::R),
-                                    (GLboolean)(target.blendColorMask & ColorMask::G),
-                                    (GLboolean)(target.blendColorMask & ColorMask::B),
-                                    (GLboolean)(target.blendColorMask & ColorMask::A));
-                        cacheTarget.blendColorMask = target.blendColorMask;
+                    if (cacheTarget->blendColorMask != target->blendColorMask) {
+                        glColorMask((GLboolean)(target->blendColorMask & ColorMask::R),
+                                    (GLboolean)(target->blendColorMask & ColorMask::G),
+                                    (GLboolean)(target->blendColorMask & ColorMask::B),
+                                    (GLboolean)(target->blendColorMask & ColorMask::A));
+                        cacheTarget->blendColorMask = target->blendColorMask;
                     }
                 } // if
 
