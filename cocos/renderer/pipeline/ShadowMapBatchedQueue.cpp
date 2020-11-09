@@ -14,29 +14,12 @@
 
 namespace cc {
 namespace pipeline {
-
-const uint phaseID(PassPhase::getPhaseID("shadow-caster"));
-
-int getShadowPassIndex(const ModelView *model) {
-    const auto subModelArrayID = model->getSubModelID();
-    const auto count = subModelArrayID[0];
-    for (unsigned i = 1; i <= count; i++) {
-        const auto subModel = model->getSubModelView(subModelArrayID[i]);
-        for (unsigned passIdx = 0; passIdx < subModel->passCount; passIdx++) {
-            const auto pass = subModel->getPassView(passIdx);
-            if (pass->phase == phaseID) {
-                return passIdx;
-            }
-        }
-    }
-    return -1;
-}
-
 ShadowMapBatchedQueue::ShadowMapBatchedQueue(ForwardPipeline *pipeline)
 : _pipeline(pipeline){
     _buffer = pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
     _batchedQueue = CC_NEW(RenderBatchedQueue);
+    _phaseID = PassPhase::getPhaseID("shadow-caster");
 }
 
 void ShadowMapBatchedQueue::gatherLightPasses(const Light *light, gfx::CommandBuffer *cmdBufferer) {
@@ -141,11 +124,11 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
 
     switch (light->getType()) {
         case LightType::DIRECTIONAL: {
-            cc::Mat4 shadowCameraView;
+            cc::Mat4 matShadowCamera;
 
             float x = 0.0f, y = 0.0f, farClamp = 0.0f;
             if (shadowInfo->autoAdapt) {
-                getShadowWorldMatrix(_pipeline->getSphere(), light->getNode()->worldRotation, light->direction, shadowCameraView);
+                getShadowWorldMatrix(_pipeline->getSphere(), light->getNode()->worldRotation, light->direction, matShadowCamera);
             	
                 const auto radius = _pipeline->getSphere()->radius;
                 x = radius * shadowInfo->aspect;
@@ -153,7 +136,7 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
 
                 farClamp = std::min(_pipeline->getReceivedSphere()->radius * COEFFICIENT_OF_EXPANSION, SHADOW_CAMERA_MAX_FAR);
             } else {
-                shadowCameraView = light->getNode()->worldMatrix;
+                matShadowCamera = light->getNode()->worldMatrix;
 
                 x = shadowInfo->orthoSize * shadowInfo->aspect;
                 y = shadowInfo->orthoSize;
@@ -161,7 +144,7 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
                 farClamp = shadowInfo->farValue;
             }
 
-            const auto &matShadowView = shadowCameraView.getInversed();
+            const auto matShadowView = matShadowCamera.getInversed();
 
             cc::Mat4 matShadowViewProj;
             const auto projectionSinY = device->getScreenSpaceSignY() * device->getUVSpaceSignY();
@@ -171,9 +154,9 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
             memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
         } break;
         case LightType::SPOT: {
-            const auto shadowCameraView = light->getNode()->worldMatrix;
+            const auto &matShadowCamera = light->getNode()->worldMatrix;
 
-	    const auto &matShadowView = shadowCameraView.getInversed();
+	    const auto matShadowView = matShadowCamera.getInversed();
 
             cc::Mat4 matShadowViewProj;
             cc::Mat4::createPerspective(light->spotAngle, light->aspect, 0.001f, light->range, &matShadowViewProj);
@@ -185,11 +168,25 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
     }
 
     float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
-    float shadowColor[4] = {shadowInfo->color.x, shadowInfo->color.y, shadowInfo->color.z, shadowInfo->color.w};
-    memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowColor, sizeof(shadowColor));
+    memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
 
     cmdBufferer->updateBuffer(_pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding), shadowUBO.data(), UBOShadow::SIZE);
+}
+
+int ShadowMapBatchedQueue::getShadowPassIndex(const ModelView *model) const {
+    const auto subModelArrayID = model->getSubModelID();
+    const auto count = subModelArrayID[0];
+    for (unsigned i = 1; i <= count; i++) {
+        const auto subModel = model->getSubModelView(subModelArrayID[i]);
+        for (unsigned passIdx = 0; passIdx < subModel->passCount; passIdx++) {
+            const auto pass = subModel->getPassView(passIdx);
+            if (pass->phase == _phaseID) {
+                return passIdx;
+            }
+        }
+    }
+    return -1;
 }
 
 } // namespace pipeline

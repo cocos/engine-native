@@ -15,36 +15,6 @@
 
 namespace cc {
 namespace pipeline {
-namespace {
-
-const uint phaseID(PassPhase::getPhaseID("forward-add"));
-
-int getLightPassIndex(const ModelView *model) {
-    const auto subModelArrayID = model->getSubModelID();
-    const auto count = subModelArrayID[0];
-    for (unsigned i = 1; i <= count; i++) {
-        const auto subModel = model->getSubModelView(subModelArrayID[i]);
-        for (unsigned passIdx = 0; passIdx < subModel->passCount; passIdx++) {
-            const auto pass = subModel->getPassView(passIdx);
-            if (pass->phase == phaseID) {
-                return passIdx;
-            }
-        }
-    }
-    return -1;
-}
-
-bool cullingLight(const Light *light, const ModelView *model) {
-    switch (light->getType()) {
-        case LightType::SPHERE:
-            return model->worldBoundsID && !aabb_aabb(model->getWorldBounds(), light->getAABB());
-        case LightType::SPOT:
-            return model->worldBoundsID && (!aabb_aabb(model->getWorldBounds(), light->getAABB()) || !aabb_frustum(model->getWorldBounds(), light->getFrustum()));
-        default: return false;
-    }
-}
-} // namespace
-
 RenderAdditiveLightQueue::RenderAdditiveLightQueue(RenderPipeline *pipeline):
 _pipeline(static_cast<ForwardPipeline *>(pipeline)),
     _instancedQueue(CC_NEW(RenderInstancedQueue)),
@@ -70,6 +40,8 @@ _pipeline(static_cast<ForwardPipeline *>(pipeline)),
     info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
     const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
     _sampler = getSampler(shadowMapSamplerHash);
+
+    _phaseID = PassPhase::getPhaseID("forward-add");
 }
 
 RenderAdditiveLightQueue ::~RenderAdditiveLightQueue() {
@@ -97,7 +69,9 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::Ren
 
         for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
             const auto *light = lights[i];
-            if ((light->getType() == LightType::SPOT) && (_pipeline->_shadowFrameBufferMap.find(light) != _pipeline->_shadowFrameBufferMap.end()) && (_pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP)) {
+            if (light->getType() == LightType::SPOT && 
+                _pipeline->_shadowFrameBufferMap.count(light) && 
+                _pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP) {
                 updateSpotUBO(descriptorSet, light, cmdBuffer);
             }
             _dynamicOffsets[0] = dynamicOffsets[i];
@@ -215,9 +189,9 @@ void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, 
         return;
     }
 
-    const auto shadowCameraView = light->getNode()->worldMatrix;
+    const auto &matShadowCamera = light->getNode()->worldMatrix;
 
-    const auto &matShadowView = shadowCameraView.getInversed();
+    const auto matShadowView = matShadowCamera.getInversed();
 
     cc::Mat4 matShadowViewProj;
     cc::Mat4::createPerspective(light->spotAngle, light->aspect, 0.001f, light->range, &matShadowViewProj);
@@ -226,14 +200,12 @@ void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, 
 
     // shadow info
     float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
-    float shadowColor[4] = {shadowInfo->color.x, shadowInfo->color.y, shadowInfo->color.z, shadowInfo->color.w};
-
     memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-    memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowColor, sizeof(shadowColor));
+    memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
 
     gfx::Texture *texture = nullptr;
-    if (_pipeline->_shadowFrameBufferMap.find(light) != _pipeline->_shadowFrameBufferMap.end()) {
+    if (_pipeline->_shadowFrameBufferMap.count(light)) {
         texture = _pipeline->_shadowFrameBufferMap[light]->getColorTextures()[0];
     } else {
         return;
@@ -308,6 +280,31 @@ void RenderAdditiveLightQueue::updateUBOs(const RenderView *view, gfx::CommandBu
     }
 
     cmdBuffer->updateBuffer(_lightBuffer, _lightBufferData.data(), _lightBufferData.size() * sizeof(float));
+}
+
+int RenderAdditiveLightQueue::getLightPassIndex(const ModelView *model) const{
+    const auto subModelArrayID = model->getSubModelID();
+    const auto count = subModelArrayID[0];
+    for (unsigned i = 1; i <= count; i++) {
+        const auto subModel = model->getSubModelView(subModelArrayID[i]);
+        for (unsigned passIdx = 0; passIdx < subModel->passCount; passIdx++) {
+            const auto pass = subModel->getPassView(passIdx);
+            if (pass->phase == _phaseID) {
+                return passIdx;
+            }
+        }
+    }
+    return -1;
+}
+
+bool RenderAdditiveLightQueue::cullingLight(const Light *light, const ModelView *model) {
+    switch (light->getType()) {
+        case LightType::SPHERE:
+            return model->worldBoundsID && !aabb_aabb(model->getWorldBounds(), light->getAABB());
+        case LightType::SPOT:
+            return model->worldBoundsID && (!aabb_aabb(model->getWorldBounds(), light->getAABB()) || !aabb_frustum(model->getWorldBounds(), light->getFrustum()));
+        default: return false;
+    }
 }
 
 } // namespace pipeline

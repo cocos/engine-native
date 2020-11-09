@@ -117,8 +117,8 @@ void updateDirLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *de
     descriptorSet->getBuffer(UBOShadow::BLOCK.layout.binding)->update(matLight.m, UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, sizeof(matLight));
 }
 
-vector<const Light *> lightCollecting(RenderView *view) {
-    vector<const Light *> validLights;
+ void lightCollecting(RenderView *view, vector<const Light *>& validLights) {
+    validLights.clear();
     auto *sphere = CC_NEW(Sphere);
     const auto scene = view->getCamera()->getScene();
     const Light *mainLight = nullptr;
@@ -136,9 +136,7 @@ vector<const Light *> lightCollecting(RenderView *view) {
         }
     }
 
-	CC_SAFE_DELETE(sphere);
-
-    return validLights;
+    CC_SAFE_DELETE(sphere);
 }
 
 void shadowCollecting(ForwardPipeline *pipeline, RenderView *view) {

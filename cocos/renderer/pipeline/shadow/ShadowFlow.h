@@ -3,6 +3,7 @@
 namespace cc {
 namespace pipeline {
 class ForwardPipeline;
+struct Light;
 
 class CC_DLL ShadowFlow : public RenderFlow {
 public:
@@ -28,6 +29,8 @@ private:
     static RenderFlowInfo _initInfo;
 
     gfx::RenderPass *_renderPass = nullptr;
+
+    vector<const Light *> _validLights;
 };
 } // namespace pipeline
 } // namespace cc

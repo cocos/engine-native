@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/CoreStd.h"
+#include "helper/SharedMemory.h"
 
 namespace cc {
 namespace pipeline {
@@ -36,6 +37,8 @@ public:
 
 private:
     void updateUBOs(const RenderView *view, gfx::CommandBuffer *cmdBuffer);
+    int getLightPassIndex(const ModelView *model) const;
+    bool cullingLight(const Light *light, const ModelView *model);
     void updateSpotUBO(gfx::DescriptorSet *, const Light *, gfx::CommandBuffer *cmdBufferer) const;
 
 private:
@@ -60,6 +63,8 @@ private:
     uint _lightBufferElementCount = 0;
     uint _lightBufferCount = 16;
     float _lightMeterScale = 10000.0f;
+
+    uint _phaseID;
 };
 
 } // namespace pipeline

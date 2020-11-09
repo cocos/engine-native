@@ -39,18 +39,17 @@ bool ShadowFlow::initialize(const RenderFlowInfo &info) {
 void ShadowFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 }
-    
 
 void ShadowFlow::render(RenderView *view) {
     auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
     const auto *shadowInfo = pipeline->getShadows();
     if (!shadowInfo->enabled || shadowInfo->getShadowType() != ShadowType::SHADOWMAP) return;
 
-    const auto validLights = lightCollecting(view);
+    lightCollecting(view, _validLights);
     shadowCollecting(pipeline, view);
 
-    for (const auto *light : validLights) {
-        if (pipeline->_shadowFrameBufferMap.find(light) == pipeline->_shadowFrameBufferMap.end()) {
+    for (const auto *light : _validLights) {
+        if (!pipeline->_shadowFrameBufferMap.count(light)) {
             initShadowFrameBuffer(pipeline, light);
         }
 
@@ -71,7 +70,7 @@ void ShadowFlow::resizeShadowMap(const Light *light, const Vec2 &size) const {
     const auto height = (uint)size.y;
     auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
 
-    if (pipeline->_shadowFrameBufferMap.find(light) != pipeline->_shadowFrameBufferMap.end()) {
+    if (pipeline->_shadowFrameBufferMap.count(light)) {
         auto *framebuffer = pipeline->_shadowFrameBufferMap[light];
 
         if (!framebuffer) {
@@ -151,7 +150,7 @@ void ShadowFlow::initShadowFrameBuffer(ForwardPipeline *pipeline, const Light *l
         {}, //colorMipmapLevels
     });
 
-    pipeline->_shadowFrameBufferMap.insert(map<const Light *, gfx::Framebuffer *>::value_type(light, framebuffer));
+    pipeline->_shadowFrameBufferMap.emplace(map<const Light *, gfx::Framebuffer *>::value_type(light, framebuffer));
 
     gfx::SamplerInfo info;
     info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;

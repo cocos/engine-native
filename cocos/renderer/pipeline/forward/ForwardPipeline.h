@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../RenderPipeline.h"
+#include "../helper/SharedMemory.h"
 
 namespace cc {
 namespace pipeline {
-struct Light;
 struct UBOGlobal;
 struct UBOShadow;
 struct Fog;

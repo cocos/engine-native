@@ -1,6 +1,5 @@
 #include "ForwardPipeline.h"
 #include "../RenderView.h"
-#include "../helper/SharedMemory.h"
 #include "../shadow/ShadowFlow.h"
 #include "../ui/UIFlow.h"
 #include "ForwardFlow.h"
@@ -137,17 +136,17 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
     auto *device = gfx::Device::getInstance();
 
     if (mainLight && shadowInfo->getShadowType() == ShadowType::SHADOWMAP) {
-        if (_shadowFrameBufferMap.find(mainLight) != _shadowFrameBufferMap.end()) {
+        if (_shadowFrameBufferMap.count(mainLight)) {
             _descriptorSet->bindTexture(UNIFORM_SHADOWMAP.layout.binding, _shadowFrameBufferMap[mainLight]->getColorTextures()[0]);
         }
 
         const auto node = mainLight->getNode();
-        cc::Mat4 shadowCameraView;
+        cc::Mat4 matShadowCamera;
 
         // light proj
         float x = 0.0f, y = 0.0f, farClamp = 0.0f;
         if (shadowInfo->autoAdapt) {
-            getShadowWorldMatrix(_sphere, node->worldRotation, mainLight->direction, shadowCameraView);
+            getShadowWorldMatrix(_sphere, node->worldRotation, mainLight->direction, matShadowCamera);
 
             const float radius = _sphere->radius;
             x = radius * shadowInfo->aspect;
@@ -155,7 +154,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
 
             farClamp = std::min(_receivedSphere->radius * COEFFICIENT_OF_EXPANSION, SHADOW_CAMERA_MAX_FAR);
         } else {
-            shadowCameraView = mainLight->getNode()->worldMatrix;
+            matShadowCamera = mainLight->getNode()->worldMatrix;
 
             x = shadowInfo->orthoSize * shadowInfo->aspect;
             y = shadowInfo->orthoSize;
@@ -163,7 +162,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
             farClamp = shadowInfo->farValue;
         }
 
-        const auto &matShadowView = shadowCameraView.getInversed();
+        const auto matShadowView = matShadowCamera.getInversed();
 
         Mat4 matShadowViewProj;
         const auto projectionSinY = device->getScreenSpaceSignY() * device->getUVSpaceSignY();
@@ -171,9 +170,8 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
 
         matShadowViewProj.multiply(matShadowView);
         float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
-        float shadowColor[4] = {shadowInfo->color.x, shadowInfo->color.y, shadowInfo->color.z, shadowInfo->color.w};
         memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowColor, sizeof(shadowColor));
+        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
         memcpy(_shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
     }
 
