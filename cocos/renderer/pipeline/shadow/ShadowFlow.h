@@ -1,6 +1,5 @@
 #pragma once
 #include "../RenderFlow.h"
-#include "math/Vec2.h"
 namespace cc {
 namespace pipeline {
 class ForwardPipeline;
@@ -22,7 +21,7 @@ public:
     virtual void destroy() override;
 
 private:
-    void resizeShadowMap(const Light *light, const cc::Vec2 &size) const;
+    void resizeShadowMap(const Light *light, const uint width, const uint height) const;
 
     void initShadowFrameBuffer(ForwardPipeline *pipeline, const Light *light);
 

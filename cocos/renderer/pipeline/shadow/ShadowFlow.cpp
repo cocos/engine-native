@@ -54,7 +54,7 @@ void ShadowFlow::render(RenderView *view) {
 
         auto *shadowFrameBuffer = pipeline->getShadowFramebuffer().at(light);
         if (shadowInfo->shadowMapDirty) {
-            resizeShadowMap(light, shadowInfo->size);
+            resizeShadowMap(light, (uint)shadowInfo->size.x, (uint)shadowInfo->size.y);
         }
         for (auto *_stage : _stages) {
             auto *shadowStage = static_cast<ShadowStage *>(_stage);
@@ -64,9 +64,7 @@ void ShadowFlow::render(RenderView *view) {
     }
 }
 
-void ShadowFlow::resizeShadowMap(const Light *light, const cc::Vec2 &size) const {
-    const auto width = (uint)size.x;
-    const auto height = (uint)size.y;
+void ShadowFlow::resizeShadowMap(const Light *light, const uint width, const uint height) const {
     auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
 
     if (pipeline->getShadowFramebuffer().count(light)) {
