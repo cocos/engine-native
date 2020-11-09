@@ -19,7 +19,7 @@ public:
     virtual void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
 
     CC_INLINE void setFramebuffer(gfx::Framebuffer *framebuffer) { _framebuffer = framebuffer; }
-    CC_INLINE void setUsage(const Light *light, gfx::Framebuffer *framebuffer) {
+    CC_INLINE void setUseData(const Light *light, gfx::Framebuffer *framebuffer) {
         _light = light;
         _framebuffer = framebuffer;
     };

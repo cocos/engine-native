@@ -36,8 +36,14 @@ _pipeline(static_cast<ForwardPipeline *>(pipeline)),
     _lightBufferData.resize(_lightBufferElementCount * _lightBufferCount);
     _dynamicOffsets.resize(1, 0);
 
-    gfx::SamplerInfo info;
-    info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
+    gfx::SamplerInfo info{
+        gfx::Filter::LINEAR,
+        gfx::Filter::LINEAR,
+        gfx::Filter::NONE,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+    };
     const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
     _sampler = getSampler(shadowMapSamplerHash);
 

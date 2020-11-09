@@ -59,7 +59,7 @@ void ShadowFlow::render(RenderView *view) {
         }
         for (auto *_stage : _stages) {
             auto *shadowStage = static_cast<ShadowStage *>(_stage);
-            shadowStage->setUsage(light, shadowFrameBuffer);
+            shadowStage->setUseData(light, shadowFrameBuffer);
             shadowStage->render(view);
         }
     }
@@ -152,8 +152,14 @@ void ShadowFlow::initShadowFrameBuffer(ForwardPipeline *pipeline, const Light *l
 
     pipeline->_shadowFrameBufferMap.emplace(map<const Light *, gfx::Framebuffer *>::value_type(light, framebuffer));
 
-    gfx::SamplerInfo info;
-    info.addressU = info.addressV = info.addressW = gfx::Address::CLAMP;
+    gfx::SamplerInfo info{
+        gfx::Filter::LINEAR,
+        gfx::Filter::LINEAR,
+        gfx::Filter::NONE,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+    };
     const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
     const auto shadowMapSampler = getSampler(shadowMapSamplerHash);
     this->_pipeline->getDescriptorSet()->bindSampler(UNIFORM_SHADOWMAP.layout.binding, shadowMapSampler);
