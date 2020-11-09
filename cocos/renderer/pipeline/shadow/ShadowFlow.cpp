@@ -49,11 +49,11 @@ void ShadowFlow::render(RenderView *view) {
     shadowCollecting(pipeline, view);
 
     for (const auto *light : _validLights) {
-        if (!pipeline->_shadowFrameBufferMap.count(light)) {
+        if (!pipeline->getShadowFramebuffer().count(light)) {
             initShadowFrameBuffer(pipeline, light);
         }
 
-        auto *shadowFrameBuffer = pipeline->_shadowFrameBufferMap[light];
+        auto *shadowFrameBuffer = pipeline->getShadowFramebuffer().at(light);
         if (shadowInfo->shadowMapDirty) {
             resizeShadowMap(light, shadowInfo->size);
         }
@@ -70,8 +70,8 @@ void ShadowFlow::resizeShadowMap(const Light *light, const Vec2 &size) const {
     const auto height = (uint)size.y;
     auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
 
-    if (pipeline->_shadowFrameBufferMap.count(light)) {
-        auto *framebuffer = pipeline->_shadowFrameBufferMap[light];
+    if (pipeline->getShadowFramebuffer().count(light)) {
+        auto *framebuffer = pipeline->getShadowFramebuffer().at(light);
 
         if (!framebuffer) {
             return;
@@ -150,7 +150,7 @@ void ShadowFlow::initShadowFrameBuffer(ForwardPipeline *pipeline, const Light *l
         {}, //colorMipmapLevels
     });
 
-    pipeline->_shadowFrameBufferMap.emplace(map<const Light *, gfx::Framebuffer *>::value_type(light, framebuffer));
+    pipeline->getShadowFramebuffer().emplace(map<const Light *, gfx::Framebuffer *>::value_type(light, framebuffer));
 
     gfx::SamplerInfo info{
         gfx::Filter::LINEAR,

@@ -76,7 +76,7 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::Ren
         for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
             const auto *light = lights[i];
             if (light->getType() == LightType::SPOT && 
-                _pipeline->_shadowFrameBufferMap.count(light) && 
+                _pipeline->getShadowFramebuffer().count(light) && 
                 _pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP) {
                 updateSpotUBO(descriptorSet, light, cmdBuffer);
             }
@@ -211,8 +211,8 @@ void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, 
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
 
     gfx::Texture *texture = nullptr;
-    if (_pipeline->_shadowFrameBufferMap.count(light)) {
-        texture = _pipeline->_shadowFrameBufferMap[light]->getColorTextures()[0];
+    if (_pipeline->getShadowFramebuffer().count(light)) {
+        texture = _pipeline->getShadowFramebuffer().at(light)->getColorTextures()[0];
     } else {
         return;
     }
