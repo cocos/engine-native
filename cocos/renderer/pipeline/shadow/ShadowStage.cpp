@@ -69,22 +69,7 @@ void ShadowStage::render(RenderView *view) {
     cmdBuffer->endRenderPass();
 }
 
-void ShadowStage::destroy() {
-    if (_light && _framebuffer) {
-        auto &renderTargets = _framebuffer->getColorTextures();
-        for (auto *renderTarget : renderTargets) {
-            CC_SAFE_DELETE(renderTarget);
-        }
-
-    	auto *depth = _framebuffer->getDepthStencilTexture();
-        CC_SAFE_DELETE(depth);
-
-    	_framebuffer->destroy();
-
-    	CC_SAFE_DESTROY(_framebuffer);
-    }
-
-	
+void ShadowStage::destroy() {	
     CC_SAFE_DESTROY(_additiveShadowQueue);
 
     RenderStage::destroy();

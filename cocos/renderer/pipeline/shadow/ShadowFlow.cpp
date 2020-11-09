@@ -166,8 +166,24 @@ void ShadowFlow::initShadowFrameBuffer(ForwardPipeline *pipeline, const Light *l
 }
 
 void ShadowFlow::destroy() {
+    auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
+    for (auto &pair : pipeline->getShadowFramebuffer()) {
+
+        auto &renderTargets = pair.second->getColorTextures();
+        for (auto *renderTarget : renderTargets) {
+            CC_SAFE_DELETE(renderTarget);
+        }
+
+        auto *depth = pair.second->getDepthStencilTexture();
+        CC_SAFE_DELETE(depth);
+
+        pair.second->destroy();
+        CC_SAFE_DESTROY(pair.second);
+    }
 
     CC_SAFE_DESTROY(_renderPass);
+
+    _validLights.clear();
 
     RenderFlow::destroy();
 }
