@@ -10,7 +10,6 @@
 #include "gfx/GFXFramebuffer.h"
 #include "gfx/GFXRenderPass.h"
 #include "gfx/GFXTexture.h"
-#include "math/Vec2.h"
 #include "../forward/SceneCulling.h"
 
 namespace cc {
@@ -65,7 +64,7 @@ void ShadowFlow::render(RenderView *view) {
     }
 }
 
-void ShadowFlow::resizeShadowMap(const Light *light, const Vec2 &size) const {
+void ShadowFlow::resizeShadowMap(const Light *light, const cc::Vec2 &size) const {
     const auto width = (uint)size.x;
     const auto height = (uint)size.y;
     auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
