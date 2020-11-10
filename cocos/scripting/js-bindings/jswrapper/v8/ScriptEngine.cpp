@@ -33,6 +33,14 @@
 #include "../State.hpp"
 #include "../MappingUtils.hpp"
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#include <sys/sysctl.h>
+#include <sys/types.h>
+#include <mach/machine.h>
+#include <string.h>
+#include <iostream>
+#endif
+
 #if SE_ENABLE_INSPECTOR
 #include "debugger/inspector_agent.h"
 #include "debugger/env.h"
@@ -210,6 +218,62 @@ namespace se {
             return true;
         }
         SE_BIND_FUNC(JSB_console_assert)
+    
+    
+        #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+        /**
+         *  JIT is enabled on iOS 14.2+ & chipset A12+
+         *  ref https://github.com/flutter/engine/pull/22377
+         */
+        bool jitSupported() {
+            #if TARGET_CPU_X86 || TARGET_CPU_X86_64
+            return true;
+            #else
+            
+            // Check for arm64e.
+            cpu_type_t cpuType = 0;
+            size_t cpuTypeSize = sizeof(cpu_type_t);
+            if (::sysctlbyname("hw.cputype", &cpuType, &cpuTypeSize, nullptr, 0) < 0) {
+                SE_LOGD("Could not execute sysctl() to get CPU type: %s", strerror(errno));
+            }
+            
+            cpu_subtype_t cpuSubType = 0;
+            if (::sysctlbyname("hw.cpusubtype", &cpuSubType, &cpuTypeSize, nullptr, 0) < 0) {
+                SE_LOGD("Could not execute sysctl() to get CPU subtype: %s", strerror(errno));
+            }
+            
+            // Tracing is necessary unless the device is arm64e (A12 chip or higher).
+            if (cpuType != CPU_TYPE_ARM64 || cpuSubType != CPU_SUBTYPE_ARM64E) {
+                return false;
+            }
+            
+            // Check for iOS 14.2 and higher.
+            size_t osVersionSize;
+            ::sysctlbyname("kern.osversion", NULL, &osVersionSize, NULL, 0);
+            char osversionBuffer[osVersionSize];
+            
+            if (::sysctlbyname("kern.osversion", osversionBuffer, &osVersionSize, NULL, 0) < 0) {
+                SE_LOGD("Could not execute sysctl() to get current OS version: %s", strerror(errno));
+                return false;
+            }
+            
+            int majorVersion = 0;
+            char minorLetter = 'Z';
+            
+            for (size_t index = 0; index < osVersionSize; index++) {
+                char version_char = osversionBuffer[index];
+                // Find the minor version build letter.
+                if (isalpha(version_char)) {
+                    majorVersion = atoi((const char*)osversionBuffer);
+                    minorLetter = toupper(version_char);
+                    break;
+                }
+            }
+            // 18B92 is iOS 14.2 beta release candidate where tracing became unnecessary.
+            return majorVersion > 18 || (majorVersion == 18 && minorLetter >= 'B');
+            #endif //TARGET_CPU_X86 || TARGET_CPU_X86_64
+        }
+        #endif //CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 
     } // namespace {
 
@@ -391,7 +455,9 @@ namespace se {
         flags.append(" --expose-gc-as=" EXPOSE_GC);
         // flags.append(" --trace-gc"); // v8 trace gc
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        flags.append(" --jitless");
+        if(!jitSupported()) {
+            flags.append(" --jitless");
+        }
 #endif
         if(!flags.empty())
         {
