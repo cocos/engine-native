@@ -1,5 +1,7 @@
 /****************************************************************************
- Copyright (c) 2020 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2010-2012 cocos2d-x.org
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -21,23 +23,31 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#pragma once
 
-#include "base/Macros.h"
-#include <cstdint>
+#include <stdint.h>
 
-struct android_app;
-struct AInputEvent;
+#ifndef __ASTC_H__
+#define __ASTC_H__
 
-namespace cc {
+typedef unsigned char astc_byte;
+typedef unsigned int astc_uint32;
 
-class TouchEvent;
+// Size of a ASTC header
 
-class View
-{
-public:
-	static void engineHandleCmd(int cmd);
-	static int32_t engineHandleInput(struct android_app* app, AInputEvent* event);
-};
+#define ASTC_HEADER_SIZE 16
 
-}
+#define ASTC_HEADER_MAGIC 4
+
+// Check if a ASTC header is correctly formatted
+
+bool astcIsValid(const astc_byte* pHeader);
+
+// Read the image width from a ASTC header
+
+int astcGetWidth(const astc_byte* pHeader);
+
+// Read the image height from a ASTC header
+
+int astcGetHeight(const astc_byte* pHeader);
+
+#endif

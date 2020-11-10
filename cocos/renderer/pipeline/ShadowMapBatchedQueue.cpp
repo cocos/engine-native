@@ -14,8 +14,8 @@
 
 namespace cc {
 namespace pipeline {
-ShadowMapBatchedQueue::ShadowMapBatchedQueue(ForwardPipeline *pipeline)
-: _pipeline(pipeline){
+ShadowMapBatchedQueue::ShadowMapBatchedQueue()
+: _phaseID(getPhaseID("shadow-caster")) {
     _buffer = pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
     _batchedQueue = CC_NEW(RenderBatchedQueue);
@@ -111,7 +111,7 @@ void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::Render
 
 void ShadowMapBatchedQueue::destroy() {
     CC_SAFE_DELETE(_batchedQueue);
-    
+
     CC_SAFE_DELETE(_instancedQueue);
 
     _buffer = nullptr;

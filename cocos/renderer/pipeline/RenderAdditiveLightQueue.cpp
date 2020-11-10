@@ -131,7 +131,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const RenderView *view, gfx::Co
         const auto model = renderObject.model;
 
         // this assumes light pass index is the same for all submodels
-        const auto lightPassIdx = getLightPassIndex(model);
+        const auto lightPassIdx = getLightPassIndex(model, _phaseID);
         if (lightPassIdx < 0) continue;
 
         _lightIndices.clear();

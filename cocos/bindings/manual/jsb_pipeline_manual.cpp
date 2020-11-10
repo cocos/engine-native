@@ -146,47 +146,22 @@ SE_BIND_PROP_GET(js_pipeline_RenderPipeline_getMacros)
 static bool JSB_getOrCreatePipelineState(se::State &s) {
     const auto &args = s.args();
     size_t argc = args.size();
-    if (argc == 5) {
+    if (argc == 4) {
         bool ok = true;
         uint32_t passHandle = 0;
-        ok &= seval_to_uint32(args[1], &passHandle);
+        ok &= seval_to_uint32(args[0], &passHandle);
         SE_PRECONDITION2(ok, false, "JSB_getOrCreatePipelineState : Error getting pass handle.");
-        auto shader = static_cast<cc::gfx::Shader *>(args[2].toObject()->getPrivateData());
-        auto renderPass = static_cast<cc::gfx::RenderPass *>(args[3].toObject()->getPrivateData());
-        auto inputAssembler = static_cast<cc::gfx::InputAssembler *>(args[4].toObject()->getPrivateData());
+        auto shader = static_cast<cc::gfx::Shader *>(args[1].toObject()->getPrivateData());
+        auto renderPass = static_cast<cc::gfx::RenderPass *>(args[2].toObject()->getPrivateData());
+        auto inputAssembler = static_cast<cc::gfx::InputAssembler *>(args[3].toObject()->getPrivateData());
         auto pipelineState = cc::pipeline::PipelineStateManager::getOrCreatePipelineStateByJS(passHandle, shader, inputAssembler, renderPass);
         native_ptr_to_seval<cc::gfx::PipelineState>(pipelineState, &s.rval());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
     return false;
 }
 SE_BIND_FUNC(JSB_getOrCreatePipelineState);
-
-static bool JSB_getPhaseID(se::State &s) {
-    const auto &args = s.args();
-    size_t argc = args.size();
-    if (argc == 1) {
-        bool ok = true;
-        if (args[0].isNumber()) {
-            uint phase = 0;
-            ok &= seval_to_uint(args[0], &phase);
-            SE_PRECONDITION2(ok, false, "JSB_getPhaseID : Error getting pass phase.");
-            uint32_to_seval(phase, &s.rval());
-        }
-        if (args[0].isString()) {
-            std::string phase;
-            ok &= seval_to_std_string(args[0], &phase);
-            SE_PRECONDITION2(ok, false, "JSB_getPhaseID : Error getting pass phase.");
-            auto phaseID = cc::pipeline::PassPhase::getPhaseID(phase);
-            uint32_to_seval(phaseID, &s.rval());
-        }
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(JSB_getPhaseID);
 
 bool register_all_pipeline_manual(se::Object *obj) {
     // Get the ns
@@ -197,8 +172,6 @@ bool register_all_pipeline_manual(se::Object *obj) {
         obj->setProperty("nr", nrVal);
     }
     se::Object *nr = nrVal.toObject();
-
-    nr->defineFunction("getPhaseID", _SE(JSB_getPhaseID));
 
     se::Value psmVal;
     se::HandleObject jsobj(se::Object::createPlainObject());

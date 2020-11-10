@@ -442,24 +442,24 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     const AttributeList &shaderAttrs = gpuPipelineState->gpuShader->attributes;
     const size_t shaderAttrCount = shaderAttrs.size();
     vector<VkVertexInputAttributeDescription> attributeDescriptions(shaderAttrCount);
-    vector<uint> offsets(bindingCount, 0);
-    bool attributeFound = false;
 
     for (size_t i = 0; i < shaderAttrCount; i++) {
-        attributeFound = false;
+        bool attributeFound = false;
+        uint offset = 0u;
         for (const Attribute &attr : attributes) {
             if (shaderAttrs[i].name == attr.name) {
                 attributeDescriptions[i].location = shaderAttrs[i].location;
                 attributeDescriptions[i].binding = attr.stream;
                 attributeDescriptions[i].format = MapVkFormat(attr.format);
-                attributeDescriptions[i].offset = offsets[attr.stream];
-                offsets[attr.stream] += GFX_FORMAT_INFOS[(uint)attr.format].size;
+                attributeDescriptions[i].offset = offset;
                 attributeFound = true;
                 break;
             }
+            offset += GFX_FORMAT_INFOS[(uint)attr.format].size;
         }
         if (!attributeFound) { // handle absent attribute
             attributeDescriptions[i].location = shaderAttrs[i].location;
+            attributeDescriptions[i].binding = 0;
             attributeDescriptions[i].format = MapVkFormat(shaderAttrs[i].format);
             attributeDescriptions[i].offset = 0; // reuse the first attribute as dummy data
             CC_LOG_WARNING("Attribute %s is missing, add a dummy data for it.", shaderAttrs[i].name.c_str());
@@ -558,15 +558,15 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     size_t blendTargetCount = gpuPipelineState->bs.targets.size();
     vector<VkPipelineColorBlendAttachmentState> blendTargets(blendTargetCount);
     for (size_t i = 0u; i < blendTargetCount; i++) {
-        BlendTarget &target = gpuPipelineState->bs.targets[i];
-        blendTargets[i].blendEnable = target.blend;
-        blendTargets[i].srcColorBlendFactor = VK_BLEND_FACTORS[(uint)target.blendSrc];
-        blendTargets[i].dstColorBlendFactor = VK_BLEND_FACTORS[(uint)target.blendDst];
-        blendTargets[i].colorBlendOp = VK_BLEND_OPS[(uint)target.blendEq];
-        blendTargets[i].srcAlphaBlendFactor = VK_BLEND_FACTORS[(uint)target.blendSrcAlpha];
-        blendTargets[i].dstAlphaBlendFactor = VK_BLEND_FACTORS[(uint)target.blendDstAlpha];
-        blendTargets[i].alphaBlendOp = VK_BLEND_OPS[(uint)target.blendAlphaEq];
-        blendTargets[i].colorWriteMask = MapVkColorComponentFlags(target.blendColorMask);
+        BlendTarget *target = gpuPipelineState->bs.targets[i];
+        blendTargets[i].blendEnable = target->blend;
+        blendTargets[i].srcColorBlendFactor = VK_BLEND_FACTORS[(uint)target->blendSrc];
+        blendTargets[i].dstColorBlendFactor = VK_BLEND_FACTORS[(uint)target->blendDst];
+        blendTargets[i].colorBlendOp = VK_BLEND_OPS[(uint)target->blendEq];
+        blendTargets[i].srcAlphaBlendFactor = VK_BLEND_FACTORS[(uint)target->blendSrcAlpha];
+        blendTargets[i].dstAlphaBlendFactor = VK_BLEND_FACTORS[(uint)target->blendDstAlpha];
+        blendTargets[i].alphaBlendOp = VK_BLEND_OPS[(uint)target->blendAlphaEq];
+        blendTargets[i].colorWriteMask = MapVkColorComponentFlags(target->blendColorMask);
     }
     Color &blendColor = gpuPipelineState->bs.blendColor;
 

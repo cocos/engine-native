@@ -224,6 +224,38 @@ enum class Format {
     PVRTC2_2BPP,
     PVRTC2_4BPP,
 
+    // ASTC (Adaptive Scalable Texture Compression)
+    ASTC_RGBA_4x4,
+    ASTC_RGBA_5x4,
+    ASTC_RGBA_5x5,
+    ASTC_RGBA_6x5,
+    ASTC_RGBA_6x6,
+    ASTC_RGBA_8x5,
+    ASTC_RGBA_8x6,
+    ASTC_RGBA_8x8,
+    ASTC_RGBA_10x5,
+    ASTC_RGBA_10x6,
+    ASTC_RGBA_10x8,
+    ASTC_RGBA_10x10,
+    ASTC_RGBA_12x10,
+    ASTC_RGBA_12x12,
+
+    // ASTC (Adaptive Scalable Texture Compression) SRGB
+    ASTC_SRGBA_4x4,
+    ASTC_SRGBA_5x4,
+    ASTC_SRGBA_5x5,
+    ASTC_SRGBA_6x5,
+    ASTC_SRGBA_6x6,
+    ASTC_SRGBA_8x5,
+    ASTC_SRGBA_8x6,
+    ASTC_SRGBA_8x8,
+    ASTC_SRGBA_10x5,
+    ASTC_SRGBA_10x6,
+    ASTC_SRGBA_10x8,
+    ASTC_SRGBA_10x10,
+    ASTC_SRGBA_12x10,
+    ASTC_SRGBA_12x12,
+
     // Total count
     COUNT,
 };
@@ -931,29 +963,28 @@ struct InputState {
     AttributeList attributes;
 };
 
+// Use uint32_t for all boolean values to convert memory to RasterizerState* in shared memory.
 struct RasterizerState {
-    bool isDiscard = false;
+    uint32_t isDiscard = 0;
     PolygonMode polygonMode = PolygonMode::FILL;
     ShadeModel shadeModel = ShadeModel::GOURAND;
     CullMode cullMode = CullMode::BACK;
-    bool isFrontFaceCCW = true;
-    bool depthBiasEnabled = false;
+    uint32_t isFrontFaceCCW = 1;
+    uint32_t depthBiasEnabled = 0;
     float depthBias = 0.0f;
     float depthBiasClamp = 0.0f;
     float depthBiasSlop = 0.0f;
-    bool isDepthClip = true;
-    bool isMultisample = false;
+    uint32_t isDepthClip = 1;
+    uint32_t isMultisample = 0;
     float lineWidth = 1.0f;
-
-    void reset();
-    uint getHash() const;
 };
 
+// Use uint32_t for all boolean values to convert memory to DepthStencilState* in shared memory.
 struct DepthStencilState {
-    bool depthTest = true;
-    bool depthWrite = true;
+    uint32_t depthTest = 1;
+    uint32_t depthWrite = 1;
     ComparisonFunc depthFunc = ComparisonFunc::LESS;
-    bool stencilTestFront = false;
+    uint32_t stencilTestFront = 0;
     ComparisonFunc stencilFuncFront = ComparisonFunc::ALWAYS;
     uint32_t stencilReadMaskFront = 0xffffffff;
     uint32_t stencilWriteMaskFront = 0xffffffff;
@@ -961,7 +992,7 @@ struct DepthStencilState {
     StencilOp stencilZFailOpFront = StencilOp::KEEP;
     StencilOp stencilPassOpFront = StencilOp::KEEP;
     uint32_t stencilRefFront = 1;
-    bool stencilTestBack = false;
+    uint32_t stencilTestBack = 0;
     ComparisonFunc stencilFuncBack = ComparisonFunc::ALWAYS;
     uint32_t stencilReadMaskBack = 0xffffffff;
     uint32_t stencilWriteMaskBack = 0xffffffff;
@@ -969,13 +1000,11 @@ struct DepthStencilState {
     StencilOp stencilZFailOpBack = StencilOp::KEEP;
     StencilOp stencilPassOpBack = StencilOp::KEEP;
     uint32_t stencilRefBack = 1;
-
-    void reset();
-    uint getHash() const;
 };
 
+// Use uint32_t for all boolean values to do convert memory to BlendTarget* in shared memory.
 struct BlendTarget {
-    bool blend = false;
+    uint32_t blend = 0;
     BlendFactor blendSrc = BlendFactor::ONE;
     BlendFactor blendDst = BlendFactor::ZERO;
     BlendOp blendEq = BlendOp::ADD;
@@ -983,24 +1012,17 @@ struct BlendTarget {
     BlendFactor blendDstAlpha = BlendFactor::ZERO;
     BlendOp blendAlphaEq = BlendOp::ADD;
     ColorMask blendColorMask = ColorMask::ALL;
-
-    void reset();
 };
 
 typedef cc::vector<BlendTarget> BlendTargetList;
+typedef cc::vector<BlendTarget *> BlendTargetPtrList;
 
+// Use uint32_t for all boolean values to do memeory copy in shared memory.
 struct BlendState {
-    bool isA2C = false;
-    bool isIndepend = false;
+    uint32_t isA2C = 0;
+    uint32_t isIndepend = 0;
     Color blendColor;
-    BlendTargetList targets;
-
-    BlendState() {
-        targets.emplace_back(BlendTarget());
-    }
-    void setTarget(uint, const BlendTarget &);
-    void reset();
-    uint getHash() const;
+    BlendTargetPtrList targets;
 };
 
 struct PipelineStateInfo {
