@@ -537,6 +537,14 @@ enableStencilTest : function (
 },
 
 /**
+ * @method destroy
+ */
+destroy : function (
+)
+{
+},
+
+/**
  * @method getInstance
  * @return {cc.renderer::DeviceGraphics}
  */
@@ -615,6 +623,20 @@ gfx.RenderBuffer = {
 init : function (
 devicegraphics, 
 format, 
+short, 
+short 
+)
+{
+    return false;
+},
+
+/**
+ * @method update
+ * @param {unsigned short} arg0
+ * @param {unsigned short} arg1
+ * @return {bool}
+ */
+update : function (
 short, 
 short 
 )

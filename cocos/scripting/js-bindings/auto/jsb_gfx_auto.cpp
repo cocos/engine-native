@@ -1013,6 +1013,19 @@ static bool js_gfx_DeviceGraphics_enableStencilTest(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_DeviceGraphics_enableStencilTest)
 
+static bool js_gfx_DeviceGraphics_destroy(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cocos2d::renderer::DeviceGraphics::destroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_gfx_DeviceGraphics_destroy)
+
 static bool js_gfx_DeviceGraphics_getInstance(se::State& s)
 {
     const auto& args = s.args();
@@ -1066,6 +1079,7 @@ bool js_register_gfx_DeviceGraphics(se::Object* obj)
     cls->defineFunction("setCullMode", _SE(js_gfx_DeviceGraphics_setCullMode));
     cls->defineFunction("setStencilOp", _SE(js_gfx_DeviceGraphics_setStencilOp));
     cls->defineFunction("enableStencilTest", _SE(js_gfx_DeviceGraphics_enableStencilTest));
+    cls->defineStaticFunction("destroy", _SE(js_gfx_DeviceGraphics_destroy));
     cls->defineStaticFunction("getInstance", _SE(js_gfx_DeviceGraphics_getInstance));
     cls->install();
     JSBClassType::registerClass<cocos2d::renderer::DeviceGraphics>(cls);
@@ -1245,7 +1259,9 @@ static bool js_gfx_RenderBuffer_update(se::State& s)
         ok &= seval_to_uint16(args[0], &arg0);
         ok &= seval_to_uint16(args[1], &arg1);
         SE_PRECONDITION2(ok, false, "js_gfx_RenderBuffer_update : Error processing arguments");
-        cobj->update(arg0, arg1);
+        bool result = cobj->update(arg0, arg1);
+        ok &= boolean_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_gfx_RenderBuffer_update : Error processing arguments");
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);

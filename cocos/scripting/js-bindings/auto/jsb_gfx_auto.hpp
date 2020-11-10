@@ -73,6 +73,7 @@ SE_DECLARE_FUNC(js_gfx_DeviceGraphics_setBlendFunc);
 SE_DECLARE_FUNC(js_gfx_DeviceGraphics_setCullMode);
 SE_DECLARE_FUNC(js_gfx_DeviceGraphics_setStencilOp);
 SE_DECLARE_FUNC(js_gfx_DeviceGraphics_enableStencilTest);
+SE_DECLARE_FUNC(js_gfx_DeviceGraphics_destroy);
 SE_DECLARE_FUNC(js_gfx_DeviceGraphics_getInstance);
 
 extern se::Object* __jsb_cocos2d_renderer_FrameBuffer_proto;
@@ -97,6 +98,7 @@ extern se::Class* __jsb_cocos2d_renderer_RenderBuffer_class;
 bool js_register_cocos2d_renderer_RenderBuffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 SE_DECLARE_FUNC(js_gfx_RenderBuffer_init);
+SE_DECLARE_FUNC(js_gfx_RenderBuffer_update);
 SE_DECLARE_FUNC(js_gfx_RenderBuffer_create);
 SE_DECLARE_FUNC(js_gfx_RenderBuffer_RenderBuffer);
 
