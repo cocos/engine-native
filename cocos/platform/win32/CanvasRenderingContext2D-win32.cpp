@@ -580,7 +580,6 @@ CanvasRenderingContext2D::CanvasRenderingContext2D(float width, float height)
 {
     //SE_LOGD("CanvasRenderingContext2D constructor: %p, width: %f, height: %f\n", this, width, height);
     _impl = new CanvasRenderingContext2DImpl();
-    recreateBufferIfNeeded();
 }
 
 CanvasRenderingContext2D::~CanvasRenderingContext2D()
@@ -702,6 +701,7 @@ void CanvasRenderingContext2D::restore()
 void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBufferUpdatedCallback& cb)
 {
     _canvasBufferUpdatedCB = cb;
+    recreateBufferIfNeeded();
 }
 
 void CanvasRenderingContext2D::set_width(float width)
