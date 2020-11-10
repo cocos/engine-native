@@ -1,3 +1,5 @@
+#include <array>
+
 #include "ShadowMapBatchedQueue.h"
 #include "BatchedBuffer.h"
 #include "Define.h"

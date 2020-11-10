@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "SceneCulling.h"
 #include "../Define.h"
 #include "../RenderView.h"
@@ -118,7 +120,7 @@ void updateDirLight(Shadows *shadows, const Light *light, gfx::DescriptorSet *de
     descriptorSet->getBuffer(UBOShadow::BLOCK.layout.binding)->update(matLight.m, UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, sizeof(matLight));
 }
 
- void lightCollecting(RenderView *view, vector<const Light *>& validLights) {
+ void lightCollecting(RenderView *view, std::vector<const Light *>& validLights) {
     validLights.clear();
     auto *sphere = CC_NEW(Sphere);
     const auto scene = view->getCamera()->getScene();

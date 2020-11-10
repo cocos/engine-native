@@ -1,3 +1,5 @@
+#include <array>
+
 #include "RenderAdditiveLightQueue.h"
 #include "BatchedBuffer.h"
 #include "InstancedBuffer.h"
