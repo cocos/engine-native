@@ -35,16 +35,6 @@ GraphicsHandle : function (
 gfx.IndexBuffer = {
 
 /**
- * @method setBytes
- * @param {unsigned int} arg0
- */
-setBytes : function (
-int 
-)
-{
-},
-
-/**
  * @method getUsage
  * @return {cc.renderer::Usage}
  */
@@ -137,16 +127,6 @@ IndexBuffer : function (
  * @class VertexBuffer
  */
 gfx.VertexBuffer = {
-
-/**
- * @method setBytes
- * @param {unsigned int} arg0
- */
-setBytes : function (
-int 
-)
-{
-},
 
 /**
  * @method getUsage

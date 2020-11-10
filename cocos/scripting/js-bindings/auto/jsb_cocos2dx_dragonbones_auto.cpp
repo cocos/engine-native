@@ -1952,6 +1952,831 @@ bool js_register_cocos2dx_dragonbones_SkinData(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_dragonBones_BoundingBoxData_proto = nullptr;
+se::Class* __jsb_dragonBones_BoundingBoxData_class = nullptr;
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment(se::State& s)
+{
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 4) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        int result = cobj->intersectsSegment(arg0, arg1, arg2, arg3);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 5) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        dragonBones::Point* arg4 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_native_ptr(args[4], &arg4);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        int result = cobj->intersectsSegment(arg0, arg1, arg2, arg3, arg4);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 6) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        dragonBones::Point* arg4 = 0;
+        dragonBones::Point* arg5 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_native_ptr(args[4], &arg4);
+        ok &= seval_to_native_ptr(args[5], &arg5);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        int result = cobj->intersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 7) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        dragonBones::Point* arg4 = 0;
+        dragonBones::Point* arg5 = 0;
+        dragonBones::Point* arg6 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_native_ptr(args[4], &arg4);
+        ok &= seval_to_native_ptr(args[5], &arg5);
+        ok &= seval_to_native_ptr(args[6], &arg6);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        int result = cobj->intersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 7);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_containsPoint(se::State& s)
+{
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_containsPoint : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        float arg0 = 0;
+        float arg1 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_containsPoint : Error processing arguments");
+        bool result = cobj->containsPoint(arg0, arg1);
+        ok &= boolean_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_containsPoint : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_containsPoint)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_getType(se::State& s)
+{
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_getType : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = cobj->getType();
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_getType : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_getType)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_setType(se::State& s)
+{
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_setType : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        int arg0 = 0;
+        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (int)tmp; } while(false);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_setType : Error processing arguments");
+        cobj->setType(arg0);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_setType)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_get_color(se::State& s)
+{
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_get_color : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= uint32_to_seval(cobj->color, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_dragonbones_BoundingBoxData_get_color)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_set_color(se::State& s)
+{
+    const auto& args = s.args();
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_set_color : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    unsigned int arg0 = 0;
+    ok &= seval_to_uint32(args[0], (uint32_t*)&arg0);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_set_color : Error processing new value");
+    cobj->color = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_dragonbones_BoundingBoxData_set_color)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_get_width(se::State& s)
+{
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_get_width : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= float_to_seval(cobj->width, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_dragonbones_BoundingBoxData_get_width)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_set_width(se::State& s)
+{
+    const auto& args = s.args();
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_set_width : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    float arg0 = 0;
+    ok &= seval_to_float(args[0], &arg0);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_set_width : Error processing new value");
+    cobj->width = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_dragonbones_BoundingBoxData_set_width)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_get_height(se::State& s)
+{
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_get_height : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= float_to_seval(cobj->height, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_dragonbones_BoundingBoxData_get_height)
+
+static bool js_cocos2dx_dragonbones_BoundingBoxData_set_height(se::State& s)
+{
+    const auto& args = s.args();
+    dragonBones::BoundingBoxData* cobj = (dragonBones::BoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_BoundingBoxData_set_height : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    float arg0 = 0;
+    ok &= seval_to_float(args[0], &arg0);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_BoundingBoxData_set_height : Error processing new value");
+    cobj->height = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_dragonbones_BoundingBoxData_set_height)
+
+
+extern se::Object* __jsb_dragonBones_BaseObject_proto;
+
+
+bool js_register_cocos2dx_dragonbones_BoundingBoxData(se::Object* obj)
+{
+    auto cls = se::Class::create("BoundingBoxData", obj, __jsb_dragonBones_BaseObject_proto, nullptr);
+
+    cls->defineProperty("color", _SE(js_cocos2dx_dragonbones_BoundingBoxData_get_color), _SE(js_cocos2dx_dragonbones_BoundingBoxData_set_color));
+    cls->defineProperty("width", _SE(js_cocos2dx_dragonbones_BoundingBoxData_get_width), _SE(js_cocos2dx_dragonbones_BoundingBoxData_set_width));
+    cls->defineProperty("height", _SE(js_cocos2dx_dragonbones_BoundingBoxData_get_height), _SE(js_cocos2dx_dragonbones_BoundingBoxData_set_height));
+    cls->defineFunction("intersectsSegment", _SE(js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment));
+    cls->defineFunction("containsPoint", _SE(js_cocos2dx_dragonbones_BoundingBoxData_containsPoint));
+    cls->defineFunction("getType", _SE(js_cocos2dx_dragonbones_BoundingBoxData_getType));
+    cls->defineFunction("setType", _SE(js_cocos2dx_dragonbones_BoundingBoxData_setType));
+    cls->install();
+    JSBClassType::registerClass<dragonBones::BoundingBoxData>(cls);
+
+    __jsb_dragonBones_BoundingBoxData_proto = cls->getProto();
+    __jsb_dragonBones_BoundingBoxData_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_dragonBones_RectangleBoundingBoxData_proto = nullptr;
+se::Class* __jsb_dragonBones_RectangleBoundingBoxData_class = nullptr;
+
+static bool js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 8) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        int result = dragonBones::RectangleBoundingBoxData::rectangleIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 9) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        dragonBones::Point* arg8 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        ok &= seval_to_native_ptr(args[8], &arg8);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        int result = dragonBones::RectangleBoundingBoxData::rectangleIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 10) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        dragonBones::Point* arg8 = 0;
+        dragonBones::Point* arg9 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        ok &= seval_to_native_ptr(args[8], &arg8);
+        ok &= seval_to_native_ptr(args[9], &arg9);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        int result = dragonBones::RectangleBoundingBoxData::rectangleIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 11) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        dragonBones::Point* arg8 = 0;
+        dragonBones::Point* arg9 = 0;
+        dragonBones::Point* arg10 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        ok &= seval_to_native_ptr(args[8], &arg8);
+        ok &= seval_to_native_ptr(args[9], &arg9);
+        ok &= seval_to_native_ptr(args[10], &arg10);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        int result = dragonBones::RectangleBoundingBoxData::rectangleIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 11);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment)
+
+static bool js_cocos2dx_dragonbones_RectangleBoundingBoxData_getTypeIndex(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        size_t result = dragonBones::RectangleBoundingBoxData::getTypeIndex();
+        ok &= uint32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_RectangleBoundingBoxData_getTypeIndex : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_RectangleBoundingBoxData_getTypeIndex)
+
+SE_DECLARE_FINALIZE_FUNC(js_dragonBones_RectangleBoundingBoxData_finalize)
+
+static bool js_cocos2dx_dragonbones_RectangleBoundingBoxData_constructor(se::State& s)
+{
+    dragonBones::RectangleBoundingBoxData* cobj = new (std::nothrow) dragonBones::RectangleBoundingBoxData();
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_cocos2dx_dragonbones_RectangleBoundingBoxData_constructor, __jsb_dragonBones_RectangleBoundingBoxData_class, js_dragonBones_RectangleBoundingBoxData_finalize)
+
+
+
+extern se::Object* __jsb_dragonBones_BoundingBoxData_proto;
+
+static bool js_dragonBones_RectangleBoundingBoxData_finalize(se::State& s)
+{
+    CCLOGINFO("jsbindings: finalizing JS object %p (dragonBones::RectangleBoundingBoxData)", s.nativeThisObject());
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_dragonBones_RectangleBoundingBoxData_finalize)
+
+bool js_register_cocos2dx_dragonbones_RectangleBoundingBoxData(se::Object* obj)
+{
+    auto cls = se::Class::create("RectangleBoundingBoxData", obj, __jsb_dragonBones_BoundingBoxData_proto, _SE(js_cocos2dx_dragonbones_RectangleBoundingBoxData_constructor));
+
+    cls->defineStaticFunction("rectangleIntersectsSegment", _SE(js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment));
+    cls->defineStaticFunction("getTypeIndex", _SE(js_cocos2dx_dragonbones_RectangleBoundingBoxData_getTypeIndex));
+    cls->defineFinalizeFunction(_SE(js_dragonBones_RectangleBoundingBoxData_finalize));
+    cls->install();
+    JSBClassType::registerClass<dragonBones::RectangleBoundingBoxData>(cls);
+
+    __jsb_dragonBones_RectangleBoundingBoxData_proto = cls->getProto();
+    __jsb_dragonBones_RectangleBoundingBoxData_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_dragonBones_EllipseBoundingBoxData_proto = nullptr;
+se::Class* __jsb_dragonBones_EllipseBoundingBoxData_class = nullptr;
+
+static bool js_cocos2dx_dragonbones_EllipseBoundingBoxData_getTypeIndex(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        size_t result = dragonBones::EllipseBoundingBoxData::getTypeIndex();
+        ok &= uint32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_getTypeIndex : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_EllipseBoundingBoxData_getTypeIndex)
+
+static bool js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 8) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        int result = dragonBones::EllipseBoundingBoxData::ellipseIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 9) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        dragonBones::Point* arg8 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        ok &= seval_to_native_ptr(args[8], &arg8);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        int result = dragonBones::EllipseBoundingBoxData::ellipseIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 10) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        dragonBones::Point* arg8 = 0;
+        dragonBones::Point* arg9 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        ok &= seval_to_native_ptr(args[8], &arg8);
+        ok &= seval_to_native_ptr(args[9], &arg9);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        int result = dragonBones::EllipseBoundingBoxData::ellipseIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 11) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        float arg4 = 0;
+        float arg5 = 0;
+        float arg6 = 0;
+        float arg7 = 0;
+        dragonBones::Point* arg8 = 0;
+        dragonBones::Point* arg9 = 0;
+        dragonBones::Point* arg10 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_float(args[4], &arg4);
+        ok &= seval_to_float(args[5], &arg5);
+        ok &= seval_to_float(args[6], &arg6);
+        ok &= seval_to_float(args[7], &arg7);
+        ok &= seval_to_native_ptr(args[8], &arg8);
+        ok &= seval_to_native_ptr(args[9], &arg9);
+        ok &= seval_to_native_ptr(args[10], &arg10);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        int result = dragonBones::EllipseBoundingBoxData::ellipseIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 11);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment)
+
+SE_DECLARE_FINALIZE_FUNC(js_dragonBones_EllipseBoundingBoxData_finalize)
+
+static bool js_cocos2dx_dragonbones_EllipseBoundingBoxData_constructor(se::State& s)
+{
+    dragonBones::EllipseBoundingBoxData* cobj = new (std::nothrow) dragonBones::EllipseBoundingBoxData();
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_cocos2dx_dragonbones_EllipseBoundingBoxData_constructor, __jsb_dragonBones_EllipseBoundingBoxData_class, js_dragonBones_EllipseBoundingBoxData_finalize)
+
+
+
+extern se::Object* __jsb_dragonBones_BoundingBoxData_proto;
+
+static bool js_dragonBones_EllipseBoundingBoxData_finalize(se::State& s)
+{
+    CCLOGINFO("jsbindings: finalizing JS object %p (dragonBones::EllipseBoundingBoxData)", s.nativeThisObject());
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_dragonBones_EllipseBoundingBoxData_finalize)
+
+bool js_register_cocos2dx_dragonbones_EllipseBoundingBoxData(se::Object* obj)
+{
+    auto cls = se::Class::create("EllipseBoundingBoxData", obj, __jsb_dragonBones_BoundingBoxData_proto, _SE(js_cocos2dx_dragonbones_EllipseBoundingBoxData_constructor));
+
+    cls->defineStaticFunction("getTypeIndex", _SE(js_cocos2dx_dragonbones_EllipseBoundingBoxData_getTypeIndex));
+    cls->defineStaticFunction("ellipseIntersectsSegment", _SE(js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment));
+    cls->defineFinalizeFunction(_SE(js_dragonBones_EllipseBoundingBoxData_finalize));
+    cls->install();
+    JSBClassType::registerClass<dragonBones::EllipseBoundingBoxData>(cls);
+
+    __jsb_dragonBones_EllipseBoundingBoxData_proto = cls->getProto();
+    __jsb_dragonBones_EllipseBoundingBoxData_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_dragonBones_PolygonBoundingBoxData_proto = nullptr;
+se::Class* __jsb_dragonBones_PolygonBoundingBoxData_class = nullptr;
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_getVertices(se::State& s)
+{
+    dragonBones::PolygonBoundingBoxData* cobj = (dragonBones::PolygonBoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_getVertices : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::vector<float>* result = cobj->getVertices();
+        ok &= native_ptr_to_seval<std::vector<float>>((std::vector<float>*)result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_getVertices : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_PolygonBoundingBoxData_getVertices)
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_getTypeIndex(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        size_t result = dragonBones::PolygonBoundingBoxData::getTypeIndex();
+        ok &= uint32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_getTypeIndex : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_PolygonBoundingBoxData_getTypeIndex)
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 5) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        std::vector<float> arg4;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_std_vector_float(args[4], &arg4);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        int result = dragonBones::PolygonBoundingBoxData::polygonIntersectsSegment(arg0, arg1, arg2, arg3, arg4);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 6) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        std::vector<float> arg4;
+        dragonBones::Point* arg5 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_std_vector_float(args[4], &arg4);
+        ok &= seval_to_native_ptr(args[5], &arg5);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        int result = dragonBones::PolygonBoundingBoxData::polygonIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 7) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        std::vector<float> arg4;
+        dragonBones::Point* arg5 = 0;
+        dragonBones::Point* arg6 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_std_vector_float(args[4], &arg4);
+        ok &= seval_to_native_ptr(args[5], &arg5);
+        ok &= seval_to_native_ptr(args[6], &arg6);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        int result = dragonBones::PolygonBoundingBoxData::polygonIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    if (argc == 8) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        std::vector<float> arg4;
+        dragonBones::Point* arg5 = 0;
+        dragonBones::Point* arg6 = 0;
+        dragonBones::Point* arg7 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        ok &= seval_to_std_vector_float(args[4], &arg4);
+        ok &= seval_to_native_ptr(args[5], &arg5);
+        ok &= seval_to_native_ptr(args[6], &arg6);
+        ok &= seval_to_native_ptr(args[7], &arg7);
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        int result = dragonBones::PolygonBoundingBoxData::polygonIntersectsSegment(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        ok &= int32_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 8);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment)
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_x(se::State& s)
+{
+    dragonBones::PolygonBoundingBoxData* cobj = (dragonBones::PolygonBoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_x : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= float_to_seval(cobj->x, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_x)
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_x(se::State& s)
+{
+    const auto& args = s.args();
+    dragonBones::PolygonBoundingBoxData* cobj = (dragonBones::PolygonBoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_x : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    float arg0 = 0;
+    ok &= seval_to_float(args[0], &arg0);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_x : Error processing new value");
+    cobj->x = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_x)
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_y(se::State& s)
+{
+    dragonBones::PolygonBoundingBoxData* cobj = (dragonBones::PolygonBoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_y : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= float_to_seval(cobj->y, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_y)
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_y(se::State& s)
+{
+    const auto& args = s.args();
+    dragonBones::PolygonBoundingBoxData* cobj = (dragonBones::PolygonBoundingBoxData*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_y : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    float arg0 = 0;
+    ok &= seval_to_float(args[0], &arg0);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_y : Error processing new value");
+    cobj->y = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_y)
+
+SE_DECLARE_FINALIZE_FUNC(js_dragonBones_PolygonBoundingBoxData_finalize)
+
+static bool js_cocos2dx_dragonbones_PolygonBoundingBoxData_constructor(se::State& s)
+{
+    dragonBones::PolygonBoundingBoxData* cobj = new (std::nothrow) dragonBones::PolygonBoundingBoxData();
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_cocos2dx_dragonbones_PolygonBoundingBoxData_constructor, __jsb_dragonBones_PolygonBoundingBoxData_class, js_dragonBones_PolygonBoundingBoxData_finalize)
+
+
+
+extern se::Object* __jsb_dragonBones_BoundingBoxData_proto;
+
+static bool js_dragonBones_PolygonBoundingBoxData_finalize(se::State& s)
+{
+    CCLOGINFO("jsbindings: finalizing JS object %p (dragonBones::PolygonBoundingBoxData)", s.nativeThisObject());
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_dragonBones_PolygonBoundingBoxData_finalize)
+
+bool js_register_cocos2dx_dragonbones_PolygonBoundingBoxData(se::Object* obj)
+{
+    auto cls = se::Class::create("PolygonBoundingBoxData", obj, __jsb_dragonBones_BoundingBoxData_proto, _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_constructor));
+
+    cls->defineProperty("x", _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_x), _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_x));
+    cls->defineProperty("y", _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_get_y), _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_set_y));
+    cls->defineFunction("getVertices", _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_getVertices));
+    cls->defineStaticFunction("getTypeIndex", _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_getTypeIndex));
+    cls->defineStaticFunction("polygonIntersectsSegment", _SE(js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment));
+    cls->defineFinalizeFunction(_SE(js_dragonBones_PolygonBoundingBoxData_finalize));
+    cls->install();
+    JSBClassType::registerClass<dragonBones::PolygonBoundingBoxData>(cls);
+
+    __jsb_dragonBones_PolygonBoundingBoxData_proto = cls->getProto();
+    __jsb_dragonBones_PolygonBoundingBoxData_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 se::Object* __jsb_dragonBones_AnimationData_proto = nullptr;
 se::Class* __jsb_dragonBones_AnimationData_class = nullptr;
 
@@ -4270,7 +5095,7 @@ static bool js_cocos2dx_dragonbones_Slot_getBoundingBoxData(se::State& s)
     CC_UNUSED bool ok = true;
     if (argc == 0) {
         dragonBones::BoundingBoxData* result = cobj->getBoundingBoxData();
-        ok &= native_ptr_to_seval<dragonBones::BoundingBoxData>((dragonBones::BoundingBoxData*)result, &s.rval());
+        ok &= native_ptr_to_rooted_seval<dragonBones::BoundingBoxData>((dragonBones::BoundingBoxData*)result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_cocos2dx_dragonbones_Slot_getBoundingBoxData : Error processing arguments");
         return true;
     }
@@ -8075,8 +8900,10 @@ bool register_all_cocos2dx_dragonbones(se::Object* obj)
     js_register_cocos2dx_dragonbones_AttachUtilBase(ns);
     js_register_cocos2dx_dragonbones_RealTimeAttachUtil(ns);
     js_register_cocos2dx_dragonbones_Matrix(ns);
-    js_register_cocos2dx_dragonbones_Transform(ns);
     js_register_cocos2dx_dragonbones_BaseObject(ns);
+    js_register_cocos2dx_dragonbones_BoundingBoxData(ns);
+    js_register_cocos2dx_dragonbones_PolygonBoundingBoxData(ns);
+    js_register_cocos2dx_dragonbones_Transform(ns);
     js_register_cocos2dx_dragonbones_Animation(ns);
     js_register_cocos2dx_dragonbones_TextureData(ns);
     js_register_cocos2dx_dragonbones_CCTextureData(ns);
@@ -8087,12 +8914,14 @@ bool register_all_cocos2dx_dragonbones(se::Object* obj)
     js_register_cocos2dx_dragonbones_CCArmatureDisplay(ns);
     js_register_cocos2dx_dragonbones_AnimationState(ns);
     js_register_cocos2dx_dragonbones_BoneData(ns);
+    js_register_cocos2dx_dragonbones_EllipseBoundingBoxData(ns);
     js_register_cocos2dx_dragonbones_ArmatureData(ns);
     js_register_cocos2dx_dragonbones_CCTextureAtlasData(ns);
     js_register_cocos2dx_dragonbones_TransformObject(ns);
     js_register_cocos2dx_dragonbones_CCSlot(ns);
     js_register_cocos2dx_dragonbones_Armature(ns);
     js_register_cocos2dx_dragonbones_Bone(ns);
+    js_register_cocos2dx_dragonbones_RectangleBoundingBoxData(ns);
     js_register_cocos2dx_dragonbones_CacheModeAttachUtil(ns);
     js_register_cocos2dx_dragonbones_ArmatureCacheMgr(ns);
     js_register_cocos2dx_dragonbones_SkinData(ns);

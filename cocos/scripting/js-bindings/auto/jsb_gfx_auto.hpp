@@ -17,7 +17,6 @@ extern se::Class* __jsb_cocos2d_renderer_IndexBuffer_class;
 
 bool js_register_cocos2d_renderer_IndexBuffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
-SE_DECLARE_FUNC(js_gfx_IndexBuffer_setBytes);
 SE_DECLARE_FUNC(js_gfx_IndexBuffer_getUsage);
 SE_DECLARE_FUNC(js_gfx_IndexBuffer_setFormat);
 SE_DECLARE_FUNC(js_gfx_IndexBuffer_setCount);
@@ -33,7 +32,6 @@ extern se::Class* __jsb_cocos2d_renderer_VertexBuffer_class;
 
 bool js_register_cocos2d_renderer_VertexBuffer(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
-SE_DECLARE_FUNC(js_gfx_VertexBuffer_setBytes);
 SE_DECLARE_FUNC(js_gfx_VertexBuffer_getUsage);
 SE_DECLARE_FUNC(js_gfx_VertexBuffer_setCount);
 SE_DECLARE_FUNC(js_gfx_VertexBuffer_destroy);

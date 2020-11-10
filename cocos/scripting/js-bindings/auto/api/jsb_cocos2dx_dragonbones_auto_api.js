@@ -670,6 +670,249 @@ str
 };
 
 /**
+ * @class BoundingBoxData
+ */
+dragonBones.BoundingBoxData = {
+
+/**
+ * @method intersectsSegment
+ * @param {float} arg0
+ * @param {float} arg1
+ * @param {float} arg2
+ * @param {float} arg3
+ * @param {dragonBones::Point} arg4
+ * @param {dragonBones::Point} arg5
+ * @param {dragonBones::Point} arg6
+ * @return {int}
+ */
+intersectsSegment : function (
+float, 
+float, 
+float, 
+float, 
+point, 
+point, 
+point 
+)
+{
+    return 0;
+},
+
+/**
+ * @method containsPoint
+ * @param {float} arg0
+ * @param {float} arg1
+ * @return {bool}
+ */
+containsPoint : function (
+float, 
+float 
+)
+{
+    return false;
+},
+
+/**
+ * @method getType
+ * @return {int}
+ */
+getType : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method setType
+ * @param {int} arg0
+ */
+setType : function (
+int 
+)
+{
+},
+
+};
+
+/**
+ * @class RectangleBoundingBoxData
+ */
+dragonBones.RectangleBoundingBoxData = {
+
+/**
+ * @method rectangleIntersectsSegment
+ * @param {float} arg0
+ * @param {float} arg1
+ * @param {float} arg2
+ * @param {float} arg3
+ * @param {float} arg4
+ * @param {float} arg5
+ * @param {float} arg6
+ * @param {float} arg7
+ * @param {dragonBones::Point} arg8
+ * @param {dragonBones::Point} arg9
+ * @param {dragonBones::Point} arg10
+ * @return {int}
+ */
+rectangleIntersectsSegment : function (
+float, 
+float, 
+float, 
+float, 
+float, 
+float, 
+float, 
+float, 
+point, 
+point, 
+point 
+)
+{
+    return 0;
+},
+
+/**
+ * @method getTypeIndex
+ * @return {unsigned int}
+ */
+getTypeIndex : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method RectangleBoundingBoxData
+ * @constructor
+ */
+RectangleBoundingBoxData : function (
+)
+{
+},
+
+};
+
+/**
+ * @class EllipseBoundingBoxData
+ */
+dragonBones.EllipseBoundingBoxData = {
+
+/**
+ * @method getTypeIndex
+ * @return {unsigned int}
+ */
+getTypeIndex : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method ellipseIntersectsSegment
+ * @param {float} arg0
+ * @param {float} arg1
+ * @param {float} arg2
+ * @param {float} arg3
+ * @param {float} arg4
+ * @param {float} arg5
+ * @param {float} arg6
+ * @param {float} arg7
+ * @param {dragonBones::Point} arg8
+ * @param {dragonBones::Point} arg9
+ * @param {dragonBones::Point} arg10
+ * @return {int}
+ */
+ellipseIntersectsSegment : function (
+float, 
+float, 
+float, 
+float, 
+float, 
+float, 
+float, 
+float, 
+point, 
+point, 
+point 
+)
+{
+    return 0;
+},
+
+/**
+ * @method EllipseBoundingBoxData
+ * @constructor
+ */
+EllipseBoundingBoxData : function (
+)
+{
+},
+
+};
+
+/**
+ * @class PolygonBoundingBoxData
+ */
+dragonBones.PolygonBoundingBoxData = {
+
+/**
+ * @method getVertices
+ * @return {Array}
+ */
+getVertices : function (
+)
+{
+    return new Array();
+},
+
+/**
+ * @method getTypeIndex
+ * @return {unsigned int}
+ */
+getTypeIndex : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method polygonIntersectsSegment
+ * @param {float} arg0
+ * @param {float} arg1
+ * @param {float} arg2
+ * @param {float} arg3
+ * @param {Array} arg4
+ * @param {dragonBones::Point} arg5
+ * @param {dragonBones::Point} arg6
+ * @param {dragonBones::Point} arg7
+ * @return {int}
+ */
+polygonIntersectsSegment : function (
+float, 
+float, 
+float, 
+float, 
+array, 
+point, 
+point, 
+point 
+)
+{
+    return 0;
+},
+
+/**
+ * @method PolygonBoundingBoxData
+ * @constructor
+ */
+PolygonBoundingBoxData : function (
+)
+{
+},
+
+};
+
+/**
  * @class AnimationData
  */
 dragonBones.AnimationData = {
