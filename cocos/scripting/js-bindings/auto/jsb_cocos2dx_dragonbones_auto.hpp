@@ -121,6 +121,44 @@ bool register_all_cocos2dx_dragonbones(se::Object* obj);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_SkinData_addDisplay);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_SkinData_getDisplay);
 
+extern se::Object* __jsb_dragonBones_BoundingBoxData_proto;
+extern se::Class* __jsb_dragonBones_BoundingBoxData_class;
+
+bool js_register_dragonBones_BoundingBoxData(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_intersectsSegment);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_containsPoint);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_getType);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_BoundingBoxData_setType);
+
+extern se::Object* __jsb_dragonBones_RectangleBoundingBoxData_proto;
+extern se::Class* __jsb_dragonBones_RectangleBoundingBoxData_class;
+
+bool js_register_dragonBones_RectangleBoundingBoxData(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_RectangleBoundingBoxData_rectangleIntersectsSegment);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_RectangleBoundingBoxData_getTypeIndex);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_RectangleBoundingBoxData_RectangleBoundingBoxData);
+
+extern se::Object* __jsb_dragonBones_EllipseBoundingBoxData_proto;
+extern se::Class* __jsb_dragonBones_EllipseBoundingBoxData_class;
+
+bool js_register_dragonBones_EllipseBoundingBoxData(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_EllipseBoundingBoxData_getTypeIndex);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_EllipseBoundingBoxData_ellipseIntersectsSegment);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_EllipseBoundingBoxData_EllipseBoundingBoxData);
+
+extern se::Object* __jsb_dragonBones_PolygonBoundingBoxData_proto;
+extern se::Class* __jsb_dragonBones_PolygonBoundingBoxData_class;
+
+bool js_register_dragonBones_PolygonBoundingBoxData(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_PolygonBoundingBoxData_getVertices);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_PolygonBoundingBoxData_getTypeIndex);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_PolygonBoundingBoxData_polygonIntersectsSegment);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_PolygonBoundingBoxData_PolygonBoundingBoxData);
+
 extern se::Object* __jsb_dragonBones_AnimationData_proto;
 extern se::Class* __jsb_dragonBones_AnimationData_class;
 

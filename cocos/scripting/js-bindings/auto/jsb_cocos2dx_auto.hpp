@@ -118,7 +118,9 @@ extern se::Class* __jsb_cocos2d_LabelRenderer_class;
 bool js_register_cocos2d_LabelRenderer(se::Object* obj);
 bool register_all_engine(se::Object* obj);
 SE_DECLARE_FUNC(js_engine_LabelRenderer_setEffect);
-SE_DECLARE_FUNC(js_engine_LabelRenderer_render);
 SE_DECLARE_FUNC(js_engine_LabelRenderer_bindNodeProxy);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_render);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_setJsComponent);
+SE_DECLARE_FUNC(js_engine_LabelRenderer_getJsComponent);
 SE_DECLARE_FUNC(js_engine_LabelRenderer_LabelRenderer);
 
