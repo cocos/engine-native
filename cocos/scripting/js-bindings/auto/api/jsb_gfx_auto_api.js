@@ -537,6 +537,14 @@ enableStencilTest : function (
 },
 
 /**
+ * @method destroy
+ */
+destroy : function (
+)
+{
+},
+
+/**
  * @method getInstance
  * @return {cc.renderer::DeviceGraphics}
  */
