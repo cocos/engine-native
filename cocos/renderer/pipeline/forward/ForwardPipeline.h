@@ -2,6 +2,7 @@
 
 #include "../RenderPipeline.h"
 #include "../helper/SharedMemory.h"
+#include <array>
 
 namespace cc {
 namespace pipeline {
