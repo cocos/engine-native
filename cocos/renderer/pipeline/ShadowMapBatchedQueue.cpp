@@ -14,12 +14,12 @@
 
 namespace cc {
 namespace pipeline {
-ShadowMapBatchedQueue::ShadowMapBatchedQueue()
+ShadowMapBatchedQueue::ShadowMapBatchedQueue(ForwardPipeline *pipeline)
 : _phaseID(getPhaseID("shadow-caster")) {
+    _pipeline = pipeline;
     _buffer = pipeline->getDescriptorSet()->getBuffer(UBOShadow::BLOCK.layout.binding);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
     _batchedQueue = CC_NEW(RenderBatchedQueue);
-    _phaseID = PassPhase::getPhaseID("shadow-caster");
 }
 
 void ShadowMapBatchedQueue::gatherLightPasses(const Light *light, gfx::CommandBuffer *cmdBufferer) {
@@ -128,13 +128,15 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
 
             float x = 0.0f, y = 0.0f, farClamp = 0.0f;
             if (shadowInfo->autoAdapt) {
-                getShadowWorldMatrix(_pipeline->getSphere(), light->getNode()->worldRotation, light->direction, matShadowCamera);
+                Vec3 tmpCenter;
+                getShadowWorldMatrix(_pipeline->getSphere(), light->getNode()->worldRotation, light->direction, matShadowCamera, tmpCenter);
             	
                 const auto radius = _pipeline->getSphere()->radius;
                 x = radius * shadowInfo->aspect;
                 y = radius;
 
-                farClamp = std::min(_pipeline->getReceivedSphere()->radius * COEFFICIENT_OF_EXPANSION, SHADOW_CAMERA_MAX_FAR);
+                const float halfFar = tmpCenter.distance(_pipeline ->getSphere()->center);
+                farClamp = std::min(halfFar * COEFFICIENT_OF_EXPANSION, SHADOW_CAMERA_MAX_FAR);
             } else {
                 matShadowCamera = light->getNode()->worldMatrix;
 

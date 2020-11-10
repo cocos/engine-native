@@ -47,7 +47,7 @@ _pipeline(static_cast<ForwardPipeline *>(pipeline)),
     const auto shadowMapSamplerHash = genSamplerHash(std::move(info));
     _sampler = getSampler(shadowMapSamplerHash);
 
-    _phaseID = PassPhase::getPhaseID("forward-add");
+    _phaseID = getPhaseID("forward-add");
 }
 
 RenderAdditiveLightQueue ::~RenderAdditiveLightQueue() {
@@ -131,7 +131,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const RenderView *view, gfx::Co
         const auto model = renderObject.model;
 
         // this assumes light pass index is the same for all submodels
-        const auto lightPassIdx = getLightPassIndex(model, _phaseID);
+        const auto lightPassIdx = getLightPassIndex(model);
         if (lightPassIdx < 0) continue;
 
         _lightIndices.clear();
@@ -205,7 +205,7 @@ void RenderAdditiveLightQueue::updateSpotUBO(gfx::DescriptorSet *descriptorSet, 
     matShadowViewProj.multiply(matShadowView);
 
     // shadow info
-    float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
+    float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias / 10.0f};
     memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));

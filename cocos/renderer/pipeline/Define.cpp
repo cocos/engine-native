@@ -363,7 +363,7 @@ uint genSamplerHash(const gfx::SamplerInfo &info) {
     hash |= static_cast<uint>(info.minLOD) << 20;
     hash |= static_cast<uint>(info.maxLOD) << 24;
     hash |= static_cast<uint>(info.mipLODBias) << 28;
-    return 0;
+    return hash;
 }
 
 static uint defaultSamplerHash = genSamplerHash(gfx::SamplerInfo());

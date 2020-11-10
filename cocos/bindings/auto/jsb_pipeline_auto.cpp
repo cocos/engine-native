@@ -619,7 +619,7 @@ static bool js_pipeline_ForwardPipeline_getReceivedSphere(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        cc::pipeline::Sphere* result = cobj->getReceivedSphere();
+        cc::pipeline::Sphere* result = cobj->getSphere();
         ok &= native_ptr_to_seval(result, &s.rval());
         SE_PRECONDITION2(ok, false, "js_pipeline_ForwardPipeline_getReceivedSphere : Error processing arguments");
         return true;

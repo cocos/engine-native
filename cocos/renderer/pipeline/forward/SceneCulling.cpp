@@ -27,12 +27,13 @@ RenderObject genRenderObject(const ModelView *model, const Camera *camera) {
     return {depth, model};
 }
 
-void getShadowWorldMatrix(const Sphere *sphere, const cc::Vec4 &rotation, const cc::Vec3 &dir, cc::Mat4 &shadowWorldMat) {
+void getShadowWorldMatrix(const Sphere *sphere, const cc::Vec4 &rotation, const cc::Vec3 &dir, cc::Mat4 &shadowWorldMat, cc::Vec3 &out) {
     Vec3 translation(dir);
     translation.negate();
     const auto distance = sphere->radius * COEFFICIENT_OF_EXPANSION;
     translation.scale(distance);
     translation.add(sphere->center);
+    out.set(translation);
 
     Mat4::fromRT(rotation, translation, &shadowWorldMat);
 }
@@ -184,7 +185,6 @@ void shadowCollecting(ForwardPipeline *pipeline, RenderView *view) {
     }
 
     pipeline->getSphere()->define(castWorldBounds);
-    pipeline->getReceivedSphere()->define(receiveWorldBounds);
 
     pipeline->setShadowObjects(shadowObjects);
 }

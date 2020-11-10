@@ -51,7 +51,6 @@ public:
     CC_INLINE const Skybox *getSkybox() const { return _skybox; }
     CC_INLINE Shadows *getShadows() const { return _shadows; }
     CC_INLINE Sphere *getSphere() const { return _sphere; }
-    CC_INLINE Sphere *getReceivedSphere() const { return _receivedSphere; }
     CC_INLINE std::array<float, UBOShadow::COUNT> getShadowUBO() const { return _shadowUBO; }
 
     void setRenderObjects(const RenderObjectList &ro) { _renderObjects = std::move(ro); }
@@ -77,7 +76,6 @@ private:
     std::array<float, UBOGlobal::COUNT> _globalUBO;
     std::array<float, UBOShadow::COUNT> _shadowUBO;
     Sphere *_sphere = nullptr;
-    Sphere *_receivedSphere = nullptr;
 
     float _shadingScale = 1.0f;
     bool _isHDR = false;
