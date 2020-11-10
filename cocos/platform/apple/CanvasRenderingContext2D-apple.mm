@@ -1,6 +1,7 @@
 #include "platform/CanvasRenderingContext2D.h"
 #include "base/csscolorparser.h"
 #include "base/UTF8.h"
+#include "math/Math.h"
 
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_platform.h"
@@ -694,6 +695,7 @@ void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBuffer
 void CanvasRenderingContext2D::set_width(float width)
 {
 //    SE_LOGD("CanvasRenderingContext2D::set__width: %f\n", width);
+    if (math::IsEqualF(width, _width)) return;
     _width = width;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
@@ -702,6 +704,7 @@ void CanvasRenderingContext2D::set_width(float width)
 void CanvasRenderingContext2D::set_height(float height)
 {
 //    SE_LOGD("CanvasRenderingContext2D::set__height: %f\n", height);
+    if (math::IsEqualF(height, _height)) return;
     _height = height;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
