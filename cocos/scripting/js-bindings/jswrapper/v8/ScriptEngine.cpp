@@ -24,6 +24,7 @@
  ****************************************************************************/
 #include "ScriptEngine.hpp"
 #include "platform/CCPlatformConfig.h"
+#include "base/ccConfig.h"
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
@@ -226,7 +227,9 @@ namespace se {
          *  ref https://github.com/flutter/engine/pull/22377
          */
         bool jitSupported() {
-            #if TARGET_CPU_X86 || TARGET_CPU_X86_64
+            #if CC_IOS_FORCE_DISABLE_JIT
+            return false;
+            #elif TARGET_CPU_X86 || TARGET_CPU_X86_64
             return true;
             #else
             

@@ -421,4 +421,11 @@ THE SOFTWARE.
 # define CC_ENABLE_CACHE_TTF_FONT_TEXTURE 1
 #endif 
 
+/** @def CC_IOS_FORCE_DISABLE_JIT
+ * If enabled, --jitless flag will be add to V8
+ */
+#ifndef CC_IOS_FORCE_DISABLE_JIT
+# define CC_IOS_FORCE_DISABLE_JIT 0
+#endif
+
 #endif // __CCCONFIG_H__
