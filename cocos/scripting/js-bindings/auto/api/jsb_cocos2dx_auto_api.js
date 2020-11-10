@@ -984,6 +984,16 @@ effectvariant
 },
 
 /**
+ * @method bindNodeProxy
+ * @param {cc.renderer::NodeProxy} arg0
+ */
+bindNodeProxy : function (
+nodeproxy 
+)
+{
+},
+
+/**
  * @method render
  */
 render : function (
@@ -992,13 +1002,23 @@ render : function (
 },
 
 /**
- * @method bindNodeProxy
- * @param {cc.renderer::NodeProxy} arg0
+ * @method setJsComponent
+ * @param {se::Object} arg0
  */
-bindNodeProxy : function (
-nodeproxy 
+setJsComponent : function (
+object 
 )
 {
+},
+
+/**
+ * @method getJsComponent
+ * @return {se::Object}
+ */
+getJsComponent : function (
+)
+{
+    return se::Object;
 },
 
 /**
