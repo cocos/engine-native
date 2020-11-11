@@ -47,6 +47,11 @@ struct BufferViewInfo;
 struct TextureInfo;
 struct DescriptorSetInfo;
 struct BindingMappingInfo;
+struct ShaderStage;
+struct UniformSampler;
+struct UniformBlock;
+struct Uniform;
+struct ShaderInfo;
 }
 } // namespace cc
 
@@ -147,6 +152,11 @@ bool seval_to_gfx_buffer_view_info(const se::Value &v, cc::gfx::BufferViewInfo *
 bool seval_to_gfx_texture_info(const se::Value &v, cc::gfx::TextureInfo *textureInfo);
 bool seval_to_gfx_descriptor_set_info(const se::Value &v, cc::gfx::DescriptorSetInfo *descriptorSetInfo);
 bool seval_to_gfx_binding_mapping_info(const se::Value &v, cc::gfx::BindingMappingInfo *bindingMappingInfo);
+bool seval_to_gfx_shader_stage(const se::Value &v, cc::gfx::ShaderStage *shaderStage);
+bool seval_to_gfx_uniform_sampler(const se::Value &v, cc::gfx::UniformSampler *uniformSampler);
+bool seval_to_gfx_uniform_block(const se::Value &v, cc::gfx::UniformBlock *uniformBlock);
+bool seval_to_gfx_uniform(const se::Value &v, cc::gfx::Uniform *uniform);
+bool seval_to_gfx_shader_info(const se::Value &v, cc::gfx::ShaderInfo *shaderInfo);
 
 #if USE_GFX_RENDERER
 #endif

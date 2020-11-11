@@ -86,6 +86,12 @@ conversions:
     "TextureInfo": "ok &= seval_to_gfx_texture_info(${in_value}, &${out_value})"
     "DescriptorSetInfo": "ok &= seval_to_gfx_descriptor_set_info(${in_value}, &${out_value})"
     "BindingMappingInfo": "ok &= seval_to_gfx_binding_mapping_info(${in_value}, &${out_value})"
+    "ShaderStage": "ok &= seval_to_gfx_shader_stage(${in_value}, &${out_value})"
+    "UniformSampler": "ok &= seval_to_gfx_uniform_sampler(${in_value}, &${out_value})"
+    "UniformBlock": "ok &= seval_to_gfx_uniform_block(${in_value}, &${out_value})"
+    "Uniform": "ok &= seval_to_gfx_uniform(${in_value}, &${out_value})"
+    "ShaderInfo": "ok &= seval_to_gfx_shader_info(${in_value}, &${out_value})"
+    
 
   from_native:
     # int to jsval

@@ -1118,6 +1118,167 @@ bool seval_to_gfx_binding_mapping_info(const se::Value &v, cc::gfx::BindingMappi
     return true;
 }
 
+bool seval_to_gfx_shader_stage(const se::Value &v, cc::gfx::ShaderStage *shaderStage) {
+    assert(shaderStage != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::ShaderStage failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("stage", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get stage from ShaderStage!");
+    shaderStage->stage = (cc::gfx::ShaderStageFlags)val.toUint();
+    
+    obj->getProperty("source", &val);
+    SE_PRECONDITION2(ok && val.isString(), false, "Can not get source from ShaderStage!");
+    seval_to_std_string(val, &shaderStage->source);
+    
+    return true;
+}
+
+bool seval_to_gfx_uniform_sampler(const se::Value &v, cc::gfx::UniformSampler *uniformSampler) {
+    assert(uniformSampler != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::UniformSampler failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("set", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get set from UniformSampler!");
+    uniformSampler->set = val.toUint();
+    
+    ok = obj->getProperty("binding", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get binding from UniformSampler!");
+    uniformSampler->binding = val.toUint();
+    
+    ok = obj->getProperty("name", &val);
+    SE_PRECONDITION2(ok && val.isString(), false, "Can not get name from UniformSampler!");
+    seval_to_std_string(val, &uniformSampler->name);
+    
+    ok = obj->getProperty("type", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get type from UniformSampler!");
+    uniformSampler->type = (cc::gfx::Type)val.toUint();
+    
+    ok = obj->getProperty("count", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get count from UniformSampler!");
+    uniformSampler->count = val.toUint();
+        
+    return true;
+}
+
+bool seval_to_gfx_uniform(const se::Value &v, cc::gfx::Uniform *uniform) {
+    assert(uniform != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::Uniform failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("name", &val);
+    SE_PRECONDITION2(ok && val.isString(), false, "Can not get name from Uniform!");
+    seval_to_std_string(val, &uniform->name);
+    
+    ok = obj->getProperty("type", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get type from Uniform!");
+    uniform->type = (cc::gfx::Type)val.toUint();
+    
+    ok = obj->getProperty("count", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get count from Uniform!");
+    uniform->count = val.toUint();
+    
+    return true;
+}
+
+bool seval_to_gfx_uniform_block(const se::Value &v, cc::gfx::UniformBlock *uniformBlock) {
+    assert(uniformBlock != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::UniformBlock failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("set", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get set from UniformBlock!");
+    uniformBlock->set = val.toUint();
+    
+    ok = obj->getProperty("binding", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get binding from UniformBlock!");
+    uniformBlock->binding = val.toUint();
+    
+    ok = obj->getProperty("name", &val);
+    SE_PRECONDITION2(ok && val.isString(), false, "Can not get name from UniformBlock!");
+    seval_to_std_string(val, &uniformBlock->name);
+    
+    ok = obj->getProperty("members", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get members from UniformBlock!");
+    auto membersObj = val.toObject();
+    uint32_t len;
+    if (membersObj->getArrayLength(&len)) {
+        uniformBlock->members.resize(len);
+        se::Value memberVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            membersObj->getArrayElement(i, &memberVal);
+            seval_to_gfx_uniform(memberVal, &uniformBlock->members[i]);
+        }
+    }
+    
+    ok = obj->getProperty("count", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get count from UniformBlock!");
+    uniformBlock->count = val.toUint();
+    
+    return true;
+}
+
+bool seval_to_gfx_shader_info(const se::Value &v, cc::gfx::ShaderInfo *shaderInfo) {
+    assert(shaderInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::UniformBlock failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("name", &val);
+    SE_PRECONDITION2(ok && val.isString(), false, "Can not get set from ShaderInfo!");
+    seval_to_std_string(val, &shaderInfo->name);
+    
+    ok = obj->getProperty("stages", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get stages from ShaderInfo!");
+    auto stagesObj = val.toObject();
+    uint32_t len;
+    if (stagesObj->getArrayLength(&len)) {
+        shaderInfo->stages.resize(len);
+        se::Value stageVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            stagesObj->getArrayElement(i, &stageVal);
+            seval_to_gfx_shader_stage(stageVal, &shaderInfo->stages[i]);
+        }
+    }
+    
+    ok = obj->getProperty("attributes", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get stages from ShaderInfo!");
+    auto attrubtesObj = val.toObject();
+    if (attrubtesObj->getArrayLength(&len)) {
+        se::Value attributeVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            attrubtesObj->getArrayElement(i, &attributeVal);
+            shaderInfo->attributes.push_back(*static_cast<cc::gfx::Attribute *>(attributeVal.toObject()->getPrivateData()));
+        }
+    }
+    
+    ok = obj->getProperty("blocks", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get blocks from ShaderInfo!");
+    auto blocksObj = val.toObject();
+    if (blocksObj->getArrayLength(&len)) {
+        se::Value blockVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            shaderInfo->blocks.resize(len);
+            blocksObj->getArrayElement(i, &blockVal);
+            seval_to_gfx_uniform_block(blockVal, &shaderInfo->blocks[i]);
+        }
+    }
+    
+    ok = obj->getProperty("samplers", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get samplers from ShaderInfo!");
+    auto samplersObj = val.toObject();
+    if (samplersObj->getArrayLength(&len)) {
+        shaderInfo->samplers.resize(len);
+        se::Value samplerVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            samplersObj->getArrayElement(i, &samplerVal);
+            seval_to_gfx_uniform_sampler(samplerVal, &shaderInfo->samplers[i]);
+        }
+    }
+    
+    return true;
+}
+
 #if USE_GFX_RENDERER
 
 #endif // USE_GFX_RENDERER > 0
