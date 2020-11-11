@@ -1098,6 +1098,26 @@ bool seval_to_gfx_descriptor_set_info(const se::Value &v, cc::gfx::DescriptorSet
     return true;
 }
 
+bool seval_to_gfx_binding_mapping_info(const se::Value &v, cc::gfx::BindingMappingInfo *bindingMappingInfo) {
+    assert(bindingMappingInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::BindingMappingInfo failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("bufferOffsets", &val);
+    SE_PRECONDITION2(ok && val.isObject(), false, "Can not get bufferOffsets from BindingMappingInfo!");
+    seval_to_std_vector(val, &bindingMappingInfo->bufferOffsets);
+    
+    ok = obj->getProperty("samplerOffsets", &val);
+    SE_PRECONDITION2(ok && val.isObject(), false, "Can not get samplerOffsets from BindingMappingInfo!");
+    seval_to_std_vector(val, &bindingMappingInfo->samplerOffsets);
+    
+    ok = obj->getProperty("flexibleSet", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get flexibleSet from BindingMappingInfo!");
+    bindingMappingInfo->flexibleSet = val.toUint();
+    
+    return true;
+}
+
 #if USE_GFX_RENDERER
 
 #endif // USE_GFX_RENDERER > 0

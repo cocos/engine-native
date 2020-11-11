@@ -85,6 +85,7 @@ conversions:
     "BufferViewInfo": "ok &= seval_to_gfx_buffer_view_info(${in_value}, &${out_value})"
     "TextureInfo": "ok &= seval_to_gfx_texture_info(${in_value}, &${out_value})"
     "DescriptorSetInfo": "ok &= seval_to_gfx_descriptor_set_info(${in_value}, &${out_value})"
+    "BindingMappingInfo": "ok &= seval_to_gfx_binding_mapping_info(${in_value}, &${out_value})"
 
   from_native:
     # int to jsval

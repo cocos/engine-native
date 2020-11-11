@@ -46,6 +46,7 @@ struct BufferInfo;
 struct BufferViewInfo;
 struct TextureInfo;
 struct DescriptorSetInfo;
+struct BindingMappingInfo;
 }
 } // namespace cc
 
@@ -145,6 +146,7 @@ bool seval_to_gfx_buffer_info(const se::Value &v, cc::gfx::BufferInfo *bufferInf
 bool seval_to_gfx_buffer_view_info(const se::Value &v, cc::gfx::BufferViewInfo *bufferViewInfo);
 bool seval_to_gfx_texture_info(const se::Value &v, cc::gfx::TextureInfo *textureInfo);
 bool seval_to_gfx_descriptor_set_info(const se::Value &v, cc::gfx::DescriptorSetInfo *descriptorSetInfo);
+bool seval_to_gfx_binding_mapping_info(const se::Value &v, cc::gfx::BindingMappingInfo *bindingMappingInfo);
 
 #if USE_GFX_RENDERER
 #endif
