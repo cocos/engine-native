@@ -1336,6 +1336,62 @@ bool seval_to_gfx_indirect_buffer(const se::Value &v, cc::gfx::IndirectBuffer *i
     return true;
 }
 
+bool seval_to_gfx_sampler_info(const se::Value &v, cc::gfx::SamplerInfo *samplerInfo) {
+    assert(samplerInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::SamplerInfo failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("minFilter", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get minFilter from SamplerInfo!");
+    samplerInfo->minFilter = (cc::gfx::Filter)val.toUint();
+    
+    ok = obj->getProperty("magFilter", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get magFilter from SamplerInfo!");
+    samplerInfo->magFilter = (cc::gfx::Filter)val.toUint();
+    
+    obj->getProperty("mipFilter", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get mipFilter from SamplerInfo!");
+    samplerInfo->mipFilter = (cc::gfx::Filter)val.toUint();
+    
+    obj->getProperty("addressU", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get addressU from SamplerInfo!");
+    samplerInfo->addressU = (cc::gfx::Address)val.toUint();
+    
+    obj->getProperty("addressV", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get addressV from SamplerInfo!");
+    samplerInfo->addressV = (cc::gfx::Address)val.toUint();
+    
+    obj->getProperty("addressW", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get addressW from SamplerInfo!");
+    samplerInfo->addressV = (cc::gfx::Address)val.toUint();
+    
+    obj->getProperty("maxAnisotropy", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get maxAnisotropy from SamplerInfo!");
+    samplerInfo->maxAnisotropy = val.toUint();
+    
+    obj->getProperty("cmpFunc", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get cmpFunc from SamplerInfo!");
+    samplerInfo->cmpFunc = (cc::gfx::ComparisonFunc)val.toUint();
+    
+    obj->getProperty("borderColor", &val);
+    SE_PRECONDITION2(ok && val.isObject(), false, "Can not get borderColor from SamplerInfo!");
+    seval_to_gfx_color(val, &samplerInfo->borderColor);
+    
+    obj->getProperty("minLOD", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get minLOD from SamplerInfo!");
+    samplerInfo->minLOD = val.toUint();
+    
+    obj->getProperty("maxLOD", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get maxLOD from SamplerInfo!");
+    samplerInfo->maxLOD = val.toUint();
+    
+    obj->getProperty("mipLODBias", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get mipLODBias from SamplerInfo!");
+    samplerInfo->mipLODBias = val.toFloat();
+    
+    return true;
+}
+
 #if USE_GFX_RENDERER
 
 #endif // USE_GFX_RENDERER > 0

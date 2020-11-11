@@ -93,6 +93,7 @@ conversions:
     "ShaderInfo": "ok &= seval_to_gfx_shader_info(${in_value}, &${out_value})"
     "DrawInfo": "ok &= seval_to_gfx_draw_info(${in_value}, &${out_value})"
     "IndirectBuffer": "ok &= seval_to_gfx_inderect_buffer(${in_value}, &${out_value})"
+    "SamplerInfo": "ok &= seval_to_gfx_sampler_info(${in_value}, &${out_value})"
     
 
   from_native:
