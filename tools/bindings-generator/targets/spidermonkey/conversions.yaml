@@ -91,6 +91,8 @@ conversions:
     "UniformBlock": "ok &= seval_to_gfx_uniform_block(${in_value}, &${out_value})"
     "Uniform": "ok &= seval_to_gfx_uniform(${in_value}, &${out_value})"
     "ShaderInfo": "ok &= seval_to_gfx_shader_info(${in_value}, &${out_value})"
+    "DrawInfo": "ok &= seval_to_gfx_draw_info(${in_value}, &${out_value})"
+    "IndirectBuffer": "ok &= seval_to_gfx_inderect_buffer(${in_value}, &${out_value})"
     
 
   from_native:

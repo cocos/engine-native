@@ -1279,6 +1279,63 @@ bool seval_to_gfx_shader_info(const se::Value &v, cc::gfx::ShaderInfo *shaderInf
     return true;
 }
 
+bool seval_to_gfx_draw_info(const se::Value &v, cc::gfx::DrawInfo *drawInfo) {
+    assert(drawInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::DrawInfo failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("vertexCount", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get vertexCount from DrawInfo!");
+    drawInfo->vertexCount = val.toUint();
+    
+    ok = obj->getProperty("firstVertex", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get firstVertex from DrawInfo!");
+    drawInfo->firstVertex = val.toUint();
+    
+    ok = obj->getProperty("indexCount", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get indexCount from DrawInfo!");
+    drawInfo->indexCount = val.toUint();
+    
+    ok = obj->getProperty("firstIndex", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get firstIndex from DrawInfo!");
+    drawInfo->firstIndex = val.toUint();
+    
+    ok = obj->getProperty("vertexOffset", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get vertexOffset from DrawInfo!");
+    drawInfo->vertexOffset = val.toUint();
+    
+    ok = obj->getProperty("instanceCount", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get instanceCount from DrawInfo!");
+    drawInfo->instanceCount = val.toUint();
+    
+    ok = obj->getProperty("firstInstance", &val);
+    SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get firstInstance from DrawInfo!");
+    drawInfo->firstInstance = val.toUint();
+    
+    return true;
+}
+
+bool seval_to_gfx_indirect_buffer(const se::Value &v, cc::gfx::IndirectBuffer *indirectBuffer) {
+    assert(indirectBuffer != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::IndirectBuffer failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    bool ok = obj->getProperty("drawInfos", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get drawInfos from IndirectBuffer!");
+    auto drawInfosObj = val.toObject();
+    uint32_t len = 0;
+    if (drawInfosObj->getArrayLength(&len)) {
+        indirectBuffer->drawInfos.resize(len);
+        se::Value drawInfoVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            drawInfosObj->getArrayElement(i, &drawInfoVal);
+            seval_to_gfx_draw_info(drawInfoVal, &indirectBuffer->drawInfos[i]);
+        }
+    }
+    
+    return true;
+}
+
 #if USE_GFX_RENDERER
 
 #endif // USE_GFX_RENDERER > 0

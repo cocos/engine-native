@@ -52,6 +52,8 @@ struct UniformSampler;
 struct UniformBlock;
 struct Uniform;
 struct ShaderInfo;
+struct DrawInfo;
+struct IndirectBuffer;
 }
 } // namespace cc
 
@@ -157,6 +159,8 @@ bool seval_to_gfx_uniform_sampler(const se::Value &v, cc::gfx::UniformSampler *u
 bool seval_to_gfx_uniform_block(const se::Value &v, cc::gfx::UniformBlock *uniformBlock);
 bool seval_to_gfx_uniform(const se::Value &v, cc::gfx::Uniform *uniform);
 bool seval_to_gfx_shader_info(const se::Value &v, cc::gfx::ShaderInfo *shaderInfo);
+bool seval_to_gfx_draw_info(const se::Value &v, cc::gfx::DrawInfo *drawInfo);
+bool seval_to_gfx_indirect_buffer(const se::Value &v, cc::gfx::IndirectBuffer *indirectBuffer);
 
 #if USE_GFX_RENDERER
 #endif
