@@ -462,7 +462,6 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
             attributeDescriptions[i].binding = 0;
             attributeDescriptions[i].format = MapVkFormat(shaderAttrs[i].format);
             attributeDescriptions[i].offset = 0; // reuse the first attribute as dummy data
-            CC_LOG_WARNING("Attribute %s is missing, add a dummy data for it.", shaderAttrs[i].name.c_str());
         }
     }
 
