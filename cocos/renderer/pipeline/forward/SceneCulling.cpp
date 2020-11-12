@@ -159,7 +159,6 @@ void shadowCollecting(ForwardPipeline *pipeline, RenderView *view) {
         // filter model by view visibility
         if (model->enabled) {
             const auto visibility = view->getVisibility();
-            const auto vis = visibility & static_cast<uint>(LayerList::UI_2D);
             const auto node = model->getNode();
             if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
                 (visibility & model->visFlags)) {
