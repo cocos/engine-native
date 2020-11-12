@@ -442,20 +442,21 @@ void CCVKCmdFuncCreatePipelineState(CCVKDevice *device, CCVKGPUPipelineState *gp
     const AttributeList &shaderAttrs = gpuPipelineState->gpuShader->attributes;
     const size_t shaderAttrCount = shaderAttrs.size();
     vector<VkVertexInputAttributeDescription> attributeDescriptions(shaderAttrCount);
+    vector<uint> offsets(bindingCount, 0);
 
     for (size_t i = 0; i < shaderAttrCount; i++) {
         bool attributeFound = false;
-        uint offset = 0u;
+        offsets.assign(bindingCount, 0);
         for (const Attribute &attr : attributes) {
             if (shaderAttrs[i].name == attr.name) {
                 attributeDescriptions[i].location = shaderAttrs[i].location;
                 attributeDescriptions[i].binding = attr.stream;
                 attributeDescriptions[i].format = MapVkFormat(attr.format);
-                attributeDescriptions[i].offset = offset;
+                attributeDescriptions[i].offset = offsets[attr.stream];
                 attributeFound = true;
                 break;
             }
-            offset += GFX_FORMAT_INFOS[(uint)attr.format].size;
+            offsets[attr.stream] += GFX_FORMAT_INFOS[(uint)attr.format].size;
         }
         if (!attributeFound) { // handle absent attribute
             attributeDescriptions[i].location = shaderAttrs[i].location;
