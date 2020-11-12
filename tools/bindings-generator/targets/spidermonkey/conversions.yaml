@@ -98,7 +98,12 @@ conversions:
     "DepthStencilAttachment": "ok &= seval_to_gfx_depth_stencil_attachment(${in_value}, &${out_value})"
     "SubPassInfo": "ok &= seval_to_gfx_sub_pass_info(${in_value}, &${out_value})"
     "RenderPassInfo": "ok &= seval_to_gfx_render_pass_info(${in_value}, &${out_value})"
-    
+    "QueueInfo": "ok &= seval_to_gfx_queue_info(${in_value}, &${out_value})"
+    "PipelineLayoutInfo": "ok &= seval_to_gfx_pipeline_layout_info(${in_value}, &${out_value})"
+    "DescriptorSetLayoutInfo": "ok &= seval_to_gfx_descriptor_set_layout_info(${in_value}, &${out_value})"
+    "DescriptorSetLayoutBinding": "ok &= seval_to_gfx_descriptor_set_layout_binding(${in_value}, &${out_value})"
+    "FramebufferInfo": "ok &= seval_to_gfx_frame_buffer_info(${in_value}, &${out_value})"
+    "CommandBufferInfo": "ok &= seval_to_gfx_command_buffer_info(${in_value}, &${out_value})"
 
   from_native:
     # int to jsval

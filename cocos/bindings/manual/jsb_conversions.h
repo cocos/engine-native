@@ -59,6 +59,12 @@ struct ColorAttachment;
 struct DepthStencilAttachment;
 struct SubPassInfo;
 struct RenderPassInfo;
+struct QueueInfo;
+struct PipelineLayoutInfo;
+struct DescriptorSetLayoutBinding;
+struct DescriptorSetLayoutInfo;
+struct FramebufferInfo;
+struct CommandBufferInfo;
 }
 } // namespace cc
 
@@ -171,6 +177,12 @@ bool seval_to_gfx_color_attachment(const se::Value &v, cc::gfx::ColorAttachment 
 bool seval_to_gfx_depth_stencil_attachment(const se::Value &v, cc::gfx::DepthStencilAttachment *depthStencilAttachment);
 bool seval_to_gfx_sub_pass_info(const se::Value &v, cc::gfx::SubPassInfo *subPassInfo);
 bool seval_to_gfx_render_pass_info(const se::Value &v, cc::gfx::RenderPassInfo *renderPassInfo);
+bool seval_to_gfx_queue_info(const se::Value &v, cc::gfx::QueueInfo *queueInfo);
+bool seval_to_gfx_pipeline_layout_info(const se::Value &v, cc::gfx::PipelineLayoutInfo *pipelineLayoutInfo);
+bool seval_to_gfx_descriptor_set_layout_binding(const se::Value &v, cc::gfx::DescriptorSetLayoutBinding *dscriptorSetLayoutBinding);
+bool seval_to_gfx_descriptor_set_layout_info(const se::Value &v, cc::gfx::DescriptorSetLayoutInfo *dscriptorSetLayoutInfo);
+bool seval_to_gfx_frame_buffer_info(const se::Value &v, cc::gfx::FramebufferInfo *framebufferInfo);
+bool seval_to_gfx_command_buffer_info(const se::Value &v, cc::gfx::CommandBufferInfo *commandBufferInfo);
 
 #if USE_GFX_RENDERER
 #endif
