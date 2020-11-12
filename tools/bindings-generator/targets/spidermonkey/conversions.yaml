@@ -94,6 +94,10 @@ conversions:
     "DrawInfo": "ok &= seval_to_gfx_draw_info(${in_value}, &${out_value})"
     "IndirectBuffer": "ok &= seval_to_gfx_inderect_buffer(${in_value}, &${out_value})"
     "SamplerInfo": "ok &= seval_to_gfx_sampler_info(${in_value}, &${out_value})"
+    "ColorAttachment": "ok &= seval_to_gfx_color_attachment(${in_value}, &${out_value})"
+    "DepthStencilAttachment": "ok &= seval_to_gfx_depth_stencil_attachment(${in_value}, &${out_value})"
+    "SubPassInfo": "ok &= seval_to_gfx_sub_pass_info(${in_value}, &${out_value})"
+    "RenderPassInfo": "ok &= seval_to_gfx_render_pass_info(${in_value}, &${out_value})"
     
 
   from_native:

@@ -55,6 +55,10 @@ struct ShaderInfo;
 struct DrawInfo;
 struct IndirectBuffer;
 struct SamplerInfo;
+struct ColorAttachment;
+struct DepthStencilAttachment;
+struct SubPassInfo;
+struct RenderPassInfo;
 }
 } // namespace cc
 
@@ -163,6 +167,10 @@ bool seval_to_gfx_shader_info(const se::Value &v, cc::gfx::ShaderInfo *shaderInf
 bool seval_to_gfx_draw_info(const se::Value &v, cc::gfx::DrawInfo *drawInfo);
 bool seval_to_gfx_indirect_buffer(const se::Value &v, cc::gfx::IndirectBuffer *indirectBuffer);
 bool seval_to_gfx_sampler_info(const se::Value &v, cc::gfx::SamplerInfo *samplerInfo);
+bool seval_to_gfx_color_attachment(const se::Value &v, cc::gfx::ColorAttachment *colorAttachment);
+bool seval_to_gfx_depth_stencil_attachment(const se::Value &v, cc::gfx::DepthStencilAttachment *depthStencilAttachment);
+bool seval_to_gfx_sub_pass_info(const se::Value &v, cc::gfx::SubPassInfo *subPassInfo);
+bool seval_to_gfx_render_pass_info(const se::Value &v, cc::gfx::RenderPassInfo *renderPassInfo);
 
 #if USE_GFX_RENDERER
 #endif
@@ -418,6 +426,11 @@ bool std_map_string_string_to_seval(const std::map<std::string, std::string> &v,
 bool ManifestAsset_to_seval(const cc::extension::ManifestAsset &v, se::Value *ret);
 bool Data_to_seval(const cc::Data &v, se::Value *ret);
 bool DownloadTask_to_seval(const cc::network::DownloadTask &v, se::Value *ret);
+
+//TODO: should add these functions if only bind gfx.
+// gfx_color_attachment_to_seval
+// gfx_depth_stecil_attachment_to_seval
+// sub_pass_info_to_seval
 
 #if USE_GFX_RENDERER
 #endif
