@@ -25,6 +25,8 @@
 #include "base/Log.h"
 #include "math/MathUtil.h"
 #include "math/Quaternion.h"
+#include "math/Math.h"
+
 #include <cmath>
 
 NS_CC_MATH_BEGIN
@@ -143,9 +145,9 @@ void Mat4::createOrthographicOffCenter(float left, float right, float bottom, fl
 
 void Mat4::createOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane, float minClipZ, float projectionSignY, Mat4 *dst) {
     GP_ASSERT(dst);
-    GP_ASSERT(right != left);
-    GP_ASSERT(top != bottom);
-    GP_ASSERT(zFarPlane != zNearPlane);
+    GP_ASSERT(math::IsNotEqualF(right, left));
+    GP_ASSERT(math::IsNotEqualF(top, bottom));
+    GP_ASSERT(math::IsNotEqualF(zFarPlane, zNearPlane));
 
     memset(dst, 0.0f, MATRIX_SIZE);
     dst->m[0] = 2.0f / (right - left);

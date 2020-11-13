@@ -56,6 +56,21 @@ RenderAdditiveLightQueue ::~RenderAdditiveLightQueue() {
     CC_DELETE(_batchedQueue);
 }
 
+void RenderAdditiveLightQueue::uploadBuffers(gfx::CommandBuffer *cmdBuffer) {
+    for (const auto &lightPass : _lightPasses) {
+        const auto subModel = lightPass.subModel;
+        auto *descriptorSet = subModel->getDescriptorSet();
+        const auto &dynamicOffsets = lightPass.dynamicOffsets;
+        const auto lights = lightPass.lights;
+        for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
+            const auto *light = lights[i];
+            if (_pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP) {
+                updateShadowsUBO(descriptorSet, light, cmdBuffer);
+            }
+        }
+    }
+}
+
 void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
     _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
     _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
@@ -65,7 +80,6 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::Ren
         const auto pass = lightPass.pass;
         const auto &dynamicOffsets = lightPass.dynamicOffsets;
         auto *shader = lightPass.shader;
-        const auto lights = lightPass.lights;
         auto *ia = subModel->getInputAssembler();
         auto *pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
         auto *descriptorSet = subModel->getDescriptorSet();
@@ -75,10 +89,6 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::Ren
         cmdBuffer->bindInputAssembler(ia);
 
         for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
-            const auto *light = lights[i];
-            if (_pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP) {
-                updateShadowsUBO(descriptorSet, light, cmdBuffer);
-            }
             _dynamicOffsets[0] = dynamicOffsets[i];
             cmdBuffer->bindDescriptorSet(LOCAL_SET, descriptorSet, _dynamicOffsets);
             cmdBuffer->draw(ia);

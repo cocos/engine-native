@@ -136,6 +136,7 @@ void ForwardStage::render(RenderView *view) {
     _instancedQueue->uploadBuffers(cmdBuff);
     _batchedQueue->uploadBuffers(cmdBuff);
     _additiveLightQueue->gatherLightPasses(view, cmdBuff);
+    _additiveLightQueue->uploadBuffers(cmdBuff);
 
     auto camera = view->getCamera();
     // render area is not oriented

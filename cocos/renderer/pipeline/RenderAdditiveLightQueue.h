@@ -34,7 +34,8 @@ public:
 
     void recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer);
     void gatherLightPasses(const RenderView *view, gfx::CommandBuffer *cmdBuffer);
-
+    void uploadBuffers(gfx::CommandBuffer *cmdBuffer);
+    
 private:
     void updateUBOs(const RenderView *view, gfx::CommandBuffer *cmdBuffer);
     bool getLightPassIndex(const ModelView *model, vector<uint> &lightPassIndices) const;
