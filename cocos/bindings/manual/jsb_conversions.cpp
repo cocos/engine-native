@@ -1631,10 +1631,12 @@ bool seval_to_gfx_frame_buffer_info(const se::Value &v, cc::gfx::FramebufferInfo
     se::Object *obj = v.toObject();
     se::Value val;
     
-    obj->getProperty("renderPass", &val);
+    bool ok = obj->getProperty("renderPass", &val);
+    SE_PRECONDITION2(ok, false, "Can not get renderPass from FramebufferInfo!");
     if (!val.isNullOrUndefined()) framebufferInfo->renderPass = static_cast<cc::gfx::RenderPass *>(val.toObject()->getPrivateData());
     
-    obj->getProperty("colorTextures", &val);
+     ok  = obj->getProperty("colorTextures", &val);
+    SE_PRECONDITION2(ok, false, "Can not get colorTextures from FramebufferInfo!");
     se::Object *colorTexturesObj = val.toObject();
     if (!val.isNullOrUndefined()) {
         uint32_t len = 0;
@@ -1649,10 +1651,11 @@ bool seval_to_gfx_frame_buffer_info(const se::Value &v, cc::gfx::FramebufferInfo
         }
     }
     
-    obj->getProperty("depthStencilTexture", &val);
+    ok = obj->getProperty("depthStencilTexture", &val);
+    SE_PRECONDITION2(ok, false, "Can not get depthStencilTexture from FramebufferInfo!");
     if (!val.isNullOrUndefined()) framebufferInfo->depthStencilTexture = static_cast<cc::gfx::Texture *>(val.toObject()->getPrivateData());
     
-    bool ok = obj->getProperty("colorMipmapLevels", &val);
+    ok = obj->getProperty("colorMipmapLevels", &val);
     SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get colorMipmapLevels from FramebufferInfo!");
     seval_to_std_vector(val, &framebufferInfo->colorMipmapLevels);
     
@@ -1675,6 +1678,48 @@ bool seval_to_gfx_command_buffer_info(const se::Value &v, cc::gfx::CommandBuffer
     bool ok = obj->getProperty("type", &val);
     SE_PRECONDITION2(ok && val.isNumber(), false, "Can not get type from FramebufferInfo!");
     commandBufferInfo->type = (cc::gfx::CommandBufferType)val.toUint();
+    
+    return true;
+}
+
+bool seval_to_gfx_input_assembler_info(const se::Value &v, cc::gfx::InputAssemblerInfo *inputAssemblerInfo) {
+    assert(inputAssemblerInfo != nullptr);
+    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to cc::gfx::InputAssemblerInfo failed!");
+    se::Object *obj = v.toObject();
+    se::Value val;
+    
+    bool ok = obj->getProperty("attributes", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get attributes from cc::gfx::InputAssemblerInfo!");
+    se::Object *attributesObj = val.toObject();
+    uint32_t len = 0;
+    if (attributesObj->getArrayLength(&len)) {
+        inputAssemblerInfo->attributes.resize(len);
+        se::Value attributeVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            attributesObj->getArrayElement(i, &attributeVal);
+            inputAssemblerInfo->attributes[i] = *static_cast<cc::gfx::Attribute *>(attributeVal.toObject()->getPrivateData());
+        }
+    }
+    
+    ok = obj->getProperty("vertexBuffers", &val);
+    SE_PRECONDITION2(ok && val.isObject() && val.toObject()->isArray(), false, "Can not get vertexBuffers from cc::gfx::InputAssemblerInfo!");
+    se::Object *vertexBuffersObj = val.toObject();
+    if (vertexBuffersObj->getArrayLength(&len)) {
+        inputAssemblerInfo->vertexBuffers.resize(len);
+        se::Value vertexBufferVal;
+        for (uint32_t i = 0; i < len; ++i) {
+            vertexBuffersObj->getArrayElement(i, &vertexBufferVal);
+            inputAssemblerInfo->vertexBuffers[i] = static_cast<cc::gfx::Buffer *>(vertexBufferVal.toObject()->getPrivateData());
+        }
+    }
+    
+    ok = obj->getProperty("indexBuffer", &val);
+    SE_PRECONDITION2(ok, false, "Can not get indexBuffer from cc::gfx::InputAssemblerInfo!");
+    if (!val.isNullOrUndefined()) inputAssemblerInfo->indexBuffer = static_cast<cc::gfx::Buffer *>(val.toObject()->getPrivateData());
+    
+    ok = obj->getProperty("indirectBuffer", &val);
+    SE_PRECONDITION2(ok, false, "Can not get indirectBuffer from cc::gfx::InputAssemblerInfo!");
+    if (!val.isNullOrUndefined()) inputAssemblerInfo->indirectBuffer = static_cast<cc::gfx::Buffer *>(val.toObject()->getPrivateData());
     
     return true;
 }

@@ -104,6 +104,7 @@ conversions:
     "DescriptorSetLayoutBinding": "ok &= seval_to_gfx_descriptor_set_layout_binding(${in_value}, &${out_value})"
     "FramebufferInfo": "ok &= seval_to_gfx_frame_buffer_info(${in_value}, &${out_value})"
     "CommandBufferInfo": "ok &= seval_to_gfx_command_buffer_info(${in_value}, &${out_value})"
+    "InputAssemblerInfo": "ok &= seval_to_gfx_input_assembler_info(${in_value}, &${out_value})"
 
   from_native:
     # int to jsval

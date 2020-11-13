@@ -65,6 +65,7 @@ struct DescriptorSetLayoutBinding;
 struct DescriptorSetLayoutInfo;
 struct FramebufferInfo;
 struct CommandBufferInfo;
+struct InputAssemblerInfo;
 }
 } // namespace cc
 
@@ -183,6 +184,7 @@ bool seval_to_gfx_descriptor_set_layout_binding(const se::Value &v, cc::gfx::Des
 bool seval_to_gfx_descriptor_set_layout_info(const se::Value &v, cc::gfx::DescriptorSetLayoutInfo *dscriptorSetLayoutInfo);
 bool seval_to_gfx_frame_buffer_info(const se::Value &v, cc::gfx::FramebufferInfo *framebufferInfo);
 bool seval_to_gfx_command_buffer_info(const se::Value &v, cc::gfx::CommandBufferInfo *commandBufferInfo);
+bool seval_to_gfx_input_assembler_info(const se::Value &v, cc::gfx::InputAssemblerInfo *inputAssemblerInfo);
 
 #if USE_GFX_RENDERER
 #endif
