@@ -62,9 +62,9 @@ void PlanarShadowQueue::gatherShadowPasses(RenderView *view, gfx::CommandBuffer 
                         instancedBuffer->merge(model, subModel, m);
                         _instancedQueue->add(instancedBuffer);
                     }
+                } else {
+                    _pendingModels.emplace_back(model);
                 }
-
-                _pendingModels.emplace_back(model);
             }
         }
     }
