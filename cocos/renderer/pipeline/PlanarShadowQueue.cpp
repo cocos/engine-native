@@ -11,10 +11,10 @@
 #include "gfx/GFXCommandBuffer.h"
 #include "helper/SharedMemory.h"
 #include "forward/ForwardPipeline.h"
-#include "forward/SceneCulling.h"
 #include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXDevice.h"
 #include "renderer/pipeline/RenderView.h"
+#include "gfx/GFXShader.h"
 
 namespace cc {
 namespace pipeline {
@@ -22,7 +22,6 @@ namespace pipeline {
 PlanarShadowQueue::PlanarShadowQueue(RenderPipeline *pipeline)
 :_pipeline(static_cast<ForwardPipeline *>(pipeline)){
     _instancedQueue = CC_NEW(RenderInstancedQueue);
-    _batchedQueue = CC_NEW(RenderBatchedQueue);
 }
 
 void PlanarShadowQueue::gatherShadowPasses(RenderView *view, gfx::CommandBuffer *cmdBufferer) {
@@ -53,6 +52,18 @@ void PlanarShadowQueue::gatherShadowPasses(RenderView *view, gfx::CommandBuffer 
                     continue;
                 }
 
+                const auto attributesID = model->getInstancedAttributeID();
+                const auto lenght = attributesID[0];
+                if (lenght > 0) {
+                    const auto subModelID = model->getSubModelID();
+                    const auto subModelCount = subModelID[0];
+                    for (unsigned m = 1; m <= subModelCount; ++m) {
+                        const auto subModel = model->getSubModelView(subModelID[m]);
+                        instancedBuffer->merge(model, subModel, m);
+                        _instancedQueue->add(instancedBuffer);
+                    }
+                }
+
                 _pendingModels.emplace_back(model);
             }
         }
@@ -62,7 +73,6 @@ void PlanarShadowQueue::gatherShadowPasses(RenderView *view, gfx::CommandBuffer 
 void PlanarShadowQueue::clear() {
     _pendingModels.clear();
     if (_instancedQueue) _instancedQueue->clear();
-    if (_batchedQueue) _batchedQueue->clear();
 }
 
 void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
@@ -71,15 +81,15 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
 
     _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
 
-    const auto *pass = _pipeline->getShadows()->getPlanarShadowPass();
+    const auto *pass = shadowInfo->getPlanarShadowPass();
     cmdBuffer->bindDescriptorSet(MATERIAL_SET, pass->getDescriptorSet());
+    auto *shader = shadowInfo->getPlanarShader();
 
     for (auto model : _pendingModels) {
         const auto subModelID = model->getSubModelID();
         const auto subModelCount = subModelID[0];
         for (unsigned m = 1; m <= subModelCount; ++m) {
             const auto subModel = model->getSubModelView(subModelID[m]);
-            const auto shader = subModel->getShader(0);
             const auto ia = subModel->getInputAssembler();
             const auto pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
 
@@ -92,8 +102,6 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
 }
 
 void PlanarShadowQueue::destroy() {
-    CC_SAFE_DELETE(_batchedQueue);
-
     CC_SAFE_DELETE(_instancedQueue);
 }
 }

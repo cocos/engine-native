@@ -382,6 +382,7 @@ struct CC_DLL Shadows {
     float distance = 0.0f;
     uint32_t instancePass = 0;
     uint32_t planarPass = 0;
+    uint32_t shader = 0;
     float nearValue = 0.0f;
     float farValue = 0.0f;
     float aspect = 0.0f;
@@ -398,7 +399,8 @@ struct CC_DLL Shadows {
 
     CC_INLINE ShadowType getShadowType() const { return static_cast<ShadowType>(shadowType); }
     CC_INLINE PassView *getPlanarShadowPass() const { return GET_PASS(planarPass); }
-    CC_INLINE PassView *getInstancePass() const { return GET_PASS(instancePass);  }
+    CC_INLINE PassView *getInstancePass() const { return GET_PASS(instancePass); }
+    CC_INLINE gfx::Shader *getPlanarShader() const { return GET_SHADER(shader); }
 
     const static se::PoolType type;
 };

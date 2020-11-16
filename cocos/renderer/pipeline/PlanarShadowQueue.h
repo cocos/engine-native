@@ -39,7 +39,6 @@ public:
 private:
     ForwardPipeline *_pipeline = nullptr;
     RenderInstancedQueue *_instancedQueue = nullptr;
-    RenderBatchedQueue *_batchedQueue = nullptr;
     std::vector<const ModelView *> _pendingModels;
 };
 } // namespace pipeline
