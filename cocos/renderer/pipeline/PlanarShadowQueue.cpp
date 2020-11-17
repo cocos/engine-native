@@ -39,11 +39,12 @@ void PlanarShadowQueue::gatherShadowPasses(RenderView *view, gfx::CommandBuffer 
     const auto modelCount = models[0];
     auto *instancedBuffer = InstancedBuffer::get(shadowInfo->planarPass);
 
-    for (size_t i = 1; i <= modelCount; i++) {
-        const auto model = scene->getModelView(models[i]);
-        const auto node = model->getNode();
+    uint visibility = 0, lenght = 0;
+    for (uint i = 1; i <= modelCount; i++) {
+        const auto *model = scene->getModelView(models[i]);
+        const auto *node = model->getNode();
         if (model->enabled && model->castShadow) {
-            const auto visibility = view->getVisibility();
+            visibility = view->getVisibility();
             if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
                 (visibility & model->visFlags)) {
 
@@ -52,13 +53,13 @@ void PlanarShadowQueue::gatherShadowPasses(RenderView *view, gfx::CommandBuffer 
                     continue;
                 }
 
-                const auto attributesID = model->getInstancedAttributeID();
-                const auto lenght = attributesID[0];
+                const auto *attributesID = model->getInstancedAttributeID();
+                lenght = attributesID[0];
                 if (lenght > 0) {
-                    const auto subModelID = model->getSubModelID();
+                    const auto *subModelID = model->getSubModelID();
                     const auto subModelCount = subModelID[0];
-                    for (unsigned m = 1; m <= subModelCount; ++m) {
-                        const auto subModel = model->getSubModelView(subModelID[m]);
+                    for (uint m = 1; m <= subModelCount; ++m) {
+                        const auto *subModel = model->getSubModelView(subModelID[m]);
                         instancedBuffer->merge(model, subModel, m);
                         _instancedQueue->add(instancedBuffer);
                     }
