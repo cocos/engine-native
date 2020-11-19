@@ -329,7 +329,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const RenderView *view, 
 
          // must binding a sampler
         if (texture == nullptr) {
-            map<const Light *, gfx::Framebuffer *>::iterator iter;
+            std::unordered_map<const Light *, gfx::Framebuffer *>::iterator iter;
             for (iter = _pipeline->getShadowFramebuffer().begin(); iter != _pipeline->getShadowFramebuffer().end(); ++iter) {
                 texture = iter->second->getColorTextures()[0];
                 if (texture) {
