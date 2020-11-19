@@ -35,6 +35,7 @@ public:
 
     void recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer);
     void gatherLightPasses(const RenderView *view, gfx::CommandBuffer *cmdBuffer);
+    void destroy();
 
 private:
     void clear();

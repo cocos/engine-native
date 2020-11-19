@@ -17,6 +17,7 @@
 #include "gfx/GFXFramebuffer.h"
 #include "helper/SharedMemory.h"
 #include "gfx/GFXDescriptorSet.h"
+#include "gfx/GFXTexture.h"
 #include "Define.h"
 
 namespace cc {
@@ -199,6 +200,16 @@ void RenderAdditiveLightQueue::gatherLightPasses(const RenderView *view, gfx::Co
     }
     _instancedQueue->uploadBuffers(cmdBufferer);
     _batchedQueue->uploadBuffers(cmdBufferer);
+}
+
+void RenderAdditiveLightQueue::destroy() {
+    for (auto &pair : _descriptorSetMap) {
+        auto *descriptorSet = pair.second;
+        descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
+        descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
+        descriptorSet->destroy();
+    }
+    _descriptorSetMap.clear();
 }
 
 void RenderAdditiveLightQueue::clear() {
@@ -425,6 +436,8 @@ void RenderAdditiveLightQueue::updateGlobalDescriptorSet(const RenderView *view,
     uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET] = ambient->groundAlbedo.x;
     uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
     uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
+    const auto *envmap = _pipeline->getDescriptorSet()->getTexture((uint)PipelineGlobalBindings::SAMPLER_ENVIRONMENT);
+    if (envmap) uboGlobalView[UBOGlobal::AMBIENT_GROUND_OFFSET + 3] = envmap->getLevelCount();
 
     if (fog->enabled) {
         TO_VEC4(uboGlobalView, fog->fogColor, UBOGlobal::GLOBAL_FOG_COLOR_OFFSET);
