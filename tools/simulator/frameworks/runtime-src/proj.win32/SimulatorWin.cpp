@@ -465,7 +465,7 @@ int SimulatorWin::run()
     auto frameWidth = (int) (_project.getFrameScale() * frameSize.width);
     auto frameHeight = (int) (_project.getFrameScale() * frameSize.height);
 
-    _view = std::make_shared<cc::View>(title.str(), frameWidth, frameWidth);
+    _view = std::make_shared<cc::View>(title.str(), frameWidth, frameHeight);
 
     // create opengl view, and init app
     _app.reset(new Game(frameWidth, frameHeight));
