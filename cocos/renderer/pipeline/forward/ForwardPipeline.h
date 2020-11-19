@@ -83,7 +83,7 @@ private:
     bool _isHDR = false;
     float _fpScale = 1.0f / 1024.0f;
 
-    map<const Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
+    std::unordered_map<const Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };
 
 } // namespace pipeline

@@ -62,7 +62,7 @@ private:
     gfx::Buffer *_firstLightBufferView = nullptr;
     gfx::Sampler *_sampler = nullptr;
 
-    std::map<const Light *, gfx::DescriptorSet *> _descriptorSetMap;
+    std::unordered_map<const Light *, gfx::DescriptorSet *> _descriptorSetMap;
     std::array<float, UBOGlobal::COUNT> _globalUBO;
     std::array<float, UBOShadow::COUNT> _shadowUBO;
 
