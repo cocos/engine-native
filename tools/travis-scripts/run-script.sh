@@ -16,9 +16,6 @@ fi
 
 set -x
 
-cd $COCOS2DX_ROOT/tools/travis-scripts
-./generate-bindings.sh $TRAVIS_BRANCH
-
 
 ANDROID_SDK=$COCOS2DX_ROOT/../android/android_sdk
 export ANDROID_HOME=$ANDROID_SDK
@@ -162,6 +159,17 @@ function run_compile()
         build_windows
     fi
 }
+
+# If not a pull request, setup for Linux only
+if [[ "$TRAVIS_OS_NAME" != "linux" && "$TRAVIS_PULL_REQUEST" == "false" ]]; then
+  echo "Stop process for TRAVIS_OS_NAME:$TRAVIS_OS_NAME && TRAVIS_PULL_REQUEST:$TRAVIS_PULL_REQUEST"
+  exit 0
+fi
+
+
+cd $COCOS2DX_ROOT/tools/travis-scripts
+./generate-bindings.sh $TRAVIS_BRANCH
+
 
 # Compile pull request
 if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
