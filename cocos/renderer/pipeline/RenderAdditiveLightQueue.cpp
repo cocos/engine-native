@@ -294,10 +294,10 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const RenderView *view, 
         auto *descriptorSet = getOrCreateDescriptorSet(light);
         if (!descriptorSet) { return; }
 
-        this->_pipeline->getDescriptorSet()->bindSampler(SHADOWMAP::BINDING, _sampler);
-        this->_pipeline->getDescriptorSet()->bindSampler(SPOT_LIGHTING_MAP::BINDING, _sampler);
+        descriptorSet->bindSampler(SHADOWMAP::BINDING, _sampler);
+        descriptorSet->bindSampler(SPOT_LIGHTING_MAP::BINDING, _sampler);
         // Main light sampler binding
-        this->_pipeline->getDescriptorSet()->bindTexture(SHADOWMAP::BINDING, _pipeline->getDefaultTexture());
+        descriptorSet->bindTexture(SHADOWMAP::BINDING, _pipeline->getDefaultTexture());
         descriptorSet->update();
 
         _globalUBO.fill(0.0f);
@@ -331,7 +331,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const RenderView *view, 
             case LightType::SPHERE: {
                 // Reserve sphere light shadow interface
                 // Spot light sampler binding
-                this->_pipeline->getDescriptorSet()->bindTexture(SPOT_LIGHTING_MAP::BINDING, _pipeline->getDefaultTexture());
+                descriptorSet->bindTexture(SPOT_LIGHTING_MAP::BINDING, _pipeline->getDefaultTexture());
             } break;
             default:;
         }
