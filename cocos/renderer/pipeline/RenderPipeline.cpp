@@ -90,13 +90,15 @@ bool RenderPipeline::activate() {
 
     // has not initBuiltinRes,
     // create temporary default Texture to binding sampler2d
-    _defaultTexture =_device->createTexture({
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA8,
-        1u,
-        1u,
-    });
+    if (!_defaultTexture) {
+        _defaultTexture = _device->createTexture({
+            gfx::TextureType::TEX2D,
+            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+            gfx::Format::RGBA8,
+            1u,
+            1u,
+        });
+    }
 
     return true;
 }
@@ -123,7 +125,7 @@ void RenderPipeline::destroy() {
     }
     _commandBuffers.clear();
 
-    _defaultTexture->destroy();
+    CC_SAFE_DESTROY(_defaultTexture);
 
     CC_SAFE_DELETE(_defaultTexture);
 }
