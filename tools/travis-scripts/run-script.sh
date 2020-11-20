@@ -4,6 +4,7 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COCOS2DX_ROOT="$DIR"/../..
 COCOS_CLI=$COCOS2DX_ROOT/tools/cocos-console/bin/cocos_cli.js
+TOJS_ROOT=$COCOS2DX_ROOT/tools/tojs
 
 if [ -z "$NDK_ROOT" ]; then
     export NDK_ROOT=$HOME/bin/android-ndk
@@ -21,6 +22,16 @@ ANDROID_SDK=$COCOS2DX_ROOT/../android/android_sdk
 export ANDROID_HOME=$ANDROID_SDK
 export ANDROID_NDK=$NDK_ROOT       #installed in generate-bindings.sh
 export ANDROID_NDK_HOME=$NDK_ROOT
+
+generate_bindings_glue_codes()
+{
+    echo "Create auto-generated jsbinding glue codes."
+    pushd $TOJS_ROOT
+    python -V 
+    python ./genbindings.py
+    rm userconf.ini
+    popd
+}
 
 
 function setup_linux_andorid_sdk()
@@ -168,7 +179,7 @@ fi
 
 
 cd $COCOS2DX_ROOT/tools/travis-scripts
-./generate-bindings.sh $TRAVIS_BRANCH
+generate_bindings_glue_codes
 
 
 # Compile pull request
@@ -183,5 +194,5 @@ git checkout HEAD templates
 set +x
 
 cd $COCOS2DX_ROOT/tools/travis-scripts
-./generate-cocosfiles.sh $TRAVIS_BRANCH
+./generate-pr.sh $TRAVIS_BRANCH
 exit 0
