@@ -124,6 +124,8 @@ void RenderPipeline::destroy() {
     _commandBuffers.clear();
 
     _defaultTexture->destroy();
+
+    CC_SAFE_DELETE(_defaultTexture);
 }
 
 } // namespace pipeline
