@@ -194,5 +194,5 @@ git checkout HEAD templates
 set +x
 
 cd $COCOS2DX_ROOT/tools/travis-scripts
-./generate-pr.sh $TRAVIS_BRANCH
+bash ./generate-pr.sh $TRAVIS_BRANCH
 exit 0
