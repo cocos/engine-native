@@ -134,8 +134,12 @@ echo "Pushing to Robot's repo ..."
 # git push -fq upstream "$COCOS_BRANCH" 2> /dev/null
 git push -fq upstream "$COCOS_BRANCH"
 
+echo "  finish push ..."
+
 # 7.
 echo "Sending Pull Request to base repo ..."
 curl --user "${GH_USER}:${GH_PASSWORD}" --request POST --data "{ \"title\": \"$COMMITTAG\", \"body\": \"\", \"head\": \"${GH_USER}:${COCOS_BRANCH}\", \"base\": \"${TRAVIS_BRANCH}\"}" "${PULL_REQUEST_REPO}" 2> /dev/null > /dev/null
+
+echo "  finish sending PR ..."
 
 popd
