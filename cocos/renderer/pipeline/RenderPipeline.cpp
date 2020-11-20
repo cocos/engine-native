@@ -87,6 +87,14 @@ bool RenderPipeline::activate() {
     for (const auto flow : _flows)
         flow->activate(this);
 
+    _defaultTexture =_device->createTexture({
+        gfx::TextureType::TEX2D,
+        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+        gfx::Format::RGBA8,
+        1u,
+        1u,
+    });
+
     return true;
 }
 
