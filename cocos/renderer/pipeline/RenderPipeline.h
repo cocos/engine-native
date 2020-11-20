@@ -53,6 +53,8 @@ protected:
     gfx::Device *_device = nullptr;
     gfx::DescriptorSetLayout *_descriptorSetLayout = nullptr;
     gfx::DescriptorSet *_descriptorSet = nullptr;
+    // has not initBuiltinRes,
+    // create temporary default Texture to binding sampler2d
     gfx::Texture *_defaultTexture = nullptr;
 };
 

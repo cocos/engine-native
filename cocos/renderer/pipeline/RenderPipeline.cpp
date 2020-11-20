@@ -5,6 +5,7 @@
 #include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXDescriptorSetLayout.h"
 #include "gfx/GFXDevice.h"
+#include "gfx/GFXTexture.h"
 
 namespace cc {
 namespace pipeline {
@@ -87,6 +88,8 @@ bool RenderPipeline::activate() {
     for (const auto flow : _flows)
         flow->activate(this);
 
+    // has not initBuiltinRes,
+    // create temporary default Texture to binding sampler2d
     _defaultTexture =_device->createTexture({
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
@@ -119,6 +122,8 @@ void RenderPipeline::destroy() {
         cmdBuffer->destroy();
     }
     _commandBuffers.clear();
+
+    _defaultTexture->destroy();
 }
 
 } // namespace pipeline
