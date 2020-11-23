@@ -400,6 +400,24 @@ bool js_register_pipeline_RenderPipelineInfo(se::Object* obj)
 se::Object* __jsb_cc_pipeline_RenderPipeline_proto = nullptr;
 se::Class* __jsb_cc_pipeline_RenderPipeline_class = nullptr;
 
+static bool js_pipeline_RenderPipeline_getDefaultTexture(se::State& s)
+{
+    cc::pipeline::RenderPipeline* cobj = (cc::pipeline::RenderPipeline*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_pipeline_RenderPipeline_getDefaultTexture : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::gfx::Texture* result = cobj->getDefaultTexture();
+        ok &= native_ptr_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_getDefaultTexture : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_RenderPipeline_getDefaultTexture)
+
 static bool js_pipeline_RenderPipeline_activate(se::State& s)
 {
     cc::pipeline::RenderPipeline* cobj = (cc::pipeline::RenderPipeline*)s.nativeThisObject();
@@ -555,6 +573,7 @@ bool js_register_pipeline_RenderPipeline(se::Object* obj)
 
     cls->defineProperty("descriptorSet", _SE(js_pipeline_RenderPipeline_getDescriptorSet), nullptr);
     cls->defineProperty("descriptorSetLayout", _SE(js_pipeline_RenderPipeline_getDescriptorSetLayout), nullptr);
+    cls->defineFunction("getDefaultTexture", _SE(js_pipeline_RenderPipeline_getDefaultTexture));
     cls->defineFunction("activate", _SE(js_pipeline_RenderPipeline_activate));
     cls->defineFunction("render", _SE(js_pipeline_RenderPipeline_render));
     cls->defineFunction("setValue", _SE(js_pipeline_RenderPipeline_setValue));
@@ -874,23 +893,26 @@ static bool js_pipeline_ForwardPipeline_setShadows(se::State& s)
 }
 SE_BIND_FUNC(js_pipeline_ForwardPipeline_setShadows)
 
-static bool js_pipeline_ForwardPipeline_getShadowFramebuffer(se::State& s)
+static bool js_pipeline_ForwardPipeline_setShadowFramebuffer(se::State& s)
 {
     cc::pipeline::ForwardPipeline* cobj = (cc::pipeline::ForwardPipeline*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_pipeline_ForwardPipeline_getShadowFramebuffer : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_pipeline_ForwardPipeline_setShadowFramebuffer : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        std::unordered_map<const cc::pipeline::Light *, cc::gfx::Framebuffer *>& result = cobj->getShadowFramebuffer();
-        ok &= native_ptr_to_seval(result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_pipeline_ForwardPipeline_getShadowFramebuffer : Error processing arguments");
+    if (argc == 2) {
+        const cc::pipeline::Light* arg0 = nullptr;
+        cc::gfx::Framebuffer* arg1 = nullptr;
+        ok &= seval_to_native_ptr(args[0], &arg0);
+        ok &= seval_to_native_ptr(args[1], &arg1);
+        SE_PRECONDITION2(ok, false, "js_pipeline_ForwardPipeline_setShadowFramebuffer : Error processing arguments");
+        cobj->setShadowFramebuffer(arg0, arg1);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
-SE_BIND_FUNC(js_pipeline_ForwardPipeline_getShadowFramebuffer)
+SE_BIND_FUNC(js_pipeline_ForwardPipeline_setShadowFramebuffer)
 
 static bool js_pipeline_ForwardPipeline_setSkybox(se::State& s)
 {
@@ -930,6 +952,24 @@ static bool js_pipeline_ForwardPipeline_setAmbient(se::State& s)
 }
 SE_BIND_FUNC(js_pipeline_ForwardPipeline_setAmbient)
 
+static bool js_pipeline_ForwardPipeline_getShadowFramebufferMap(se::State& s)
+{
+    cc::pipeline::ForwardPipeline* cobj = (cc::pipeline::ForwardPipeline*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_pipeline_ForwardPipeline_getShadowFramebufferMap : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const std::unordered_map<const cc::pipeline::Light *, cc::gfx::Framebuffer *>& result = cobj->getShadowFramebufferMap();
+        ok &= native_ptr_to_seval(result, &s.rval());
+        SE_PRECONDITION2(ok, false, "js_pipeline_ForwardPipeline_getShadowFramebufferMap : Error processing arguments");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_ForwardPipeline_getShadowFramebufferMap)
+
 SE_DECLARE_FINALIZE_FUNC(js_cc_pipeline_ForwardPipeline_finalize)
 
 static bool js_pipeline_ForwardPipeline_constructor(se::State& s)
@@ -966,9 +1006,10 @@ bool js_register_pipeline_ForwardPipeline(se::Object* obj)
     cls->defineFunction("getSphere", _SE(js_pipeline_ForwardPipeline_getSphere));
     cls->defineFunction("setRenderObjects", _SE(js_pipeline_ForwardPipeline_setRenderObjects));
     cls->defineFunction("setShadows", _SE(js_pipeline_ForwardPipeline_setShadows));
-    cls->defineFunction("getShadowFramebuffer", _SE(js_pipeline_ForwardPipeline_getShadowFramebuffer));
+    cls->defineFunction("setShadowFramebuffer", _SE(js_pipeline_ForwardPipeline_setShadowFramebuffer));
     cls->defineFunction("setSkybox", _SE(js_pipeline_ForwardPipeline_setSkybox));
     cls->defineFunction("setAmbient", _SE(js_pipeline_ForwardPipeline_setAmbient));
+    cls->defineFunction("getShadowFramebufferMap", _SE(js_pipeline_ForwardPipeline_getShadowFramebufferMap));
     cls->defineFinalizeFunction(_SE(js_cc_pipeline_ForwardPipeline_finalize));
     cls->install();
     JSBClassType::registerClass<cc::pipeline::ForwardPipeline>(cls);
