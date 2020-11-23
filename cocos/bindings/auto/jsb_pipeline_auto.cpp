@@ -400,24 +400,6 @@ bool js_register_pipeline_RenderPipelineInfo(se::Object* obj)
 se::Object* __jsb_cc_pipeline_RenderPipeline_proto = nullptr;
 se::Class* __jsb_cc_pipeline_RenderPipeline_class = nullptr;
 
-static bool js_pipeline_RenderPipeline_getDefaultTexture(se::State& s)
-{
-    cc::pipeline::RenderPipeline* cobj = (cc::pipeline::RenderPipeline*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_pipeline_RenderPipeline_getDefaultTexture : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        cc::gfx::Texture* result = cobj->getDefaultTexture();
-        ok &= native_ptr_to_seval(result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_getDefaultTexture : Error processing arguments");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_pipeline_RenderPipeline_getDefaultTexture)
-
 static bool js_pipeline_RenderPipeline_activate(se::State& s)
 {
     cc::pipeline::RenderPipeline* cobj = (cc::pipeline::RenderPipeline*)s.nativeThisObject();
@@ -573,7 +555,6 @@ bool js_register_pipeline_RenderPipeline(se::Object* obj)
 
     cls->defineProperty("descriptorSet", _SE(js_pipeline_RenderPipeline_getDescriptorSet), nullptr);
     cls->defineProperty("descriptorSetLayout", _SE(js_pipeline_RenderPipeline_getDescriptorSetLayout), nullptr);
-    cls->defineFunction("getDefaultTexture", _SE(js_pipeline_RenderPipeline_getDefaultTexture));
     cls->defineFunction("activate", _SE(js_pipeline_RenderPipeline_activate));
     cls->defineFunction("render", _SE(js_pipeline_RenderPipeline_render));
     cls->defineFunction("setValue", _SE(js_pipeline_RenderPipeline_setValue));
