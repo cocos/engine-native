@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 
 #include <cmath>
+#include <cassert>
 #include "base/ccConfig.h"
 #if CC_ENABLE_TTF_LABEL_RENDERER
 
