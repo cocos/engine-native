@@ -348,10 +348,9 @@ bool GLES2Device::checkForETC2() {
     glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, formats);
 
     int supportNum = 0;
-    for (GLint i = 0; i < numFormats; ++i)
-    {
+    for (GLint i = 0; i < numFormats; ++i) {
         if (formats[i] == GL_COMPRESSED_RGB8_ETC2 || formats[i] == GL_COMPRESSED_RGBA8_ETC2_EAC)
-        supportNum++;
+            supportNum++;
     }
     delete [] formats;
 
