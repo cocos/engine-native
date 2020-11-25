@@ -58,6 +58,7 @@ private:
     CCMTLDepthBias _depthBias;
     CCMTLDepthBounds _depthBounds;
     Color _blendConstants;
+    bool _isOffscreen = false;
 
     vector<CCMTLGPUDescriptorSet *> _GPUDescriptorSets;
     vector<vector<uint>> _dynamicOffsets;

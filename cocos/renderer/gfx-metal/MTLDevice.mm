@@ -28,7 +28,7 @@ namespace gfx {
 CCMTLDevice::CCMTLDevice() {
     _clipSpaceMinZ = 0.0f;
     _screenSpaceSignY = 1.0f;
-    _UVSpaceSignY = 1.0f;
+    _UVSpaceSignY = -1.0f; // UV space <-> RT viewport conflict
 }
 
 CCMTLDevice::~CCMTLDevice() {}

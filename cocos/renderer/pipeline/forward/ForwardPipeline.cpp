@@ -170,7 +170,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         const auto matShadowView = matShadowCamera.getInversed();
 
         Mat4 matShadowViewProj;
-        const auto projectionSinY = device->getScreenSpaceSignY() * device->getUVSpaceSignY();
+        const auto projectionSinY = device->getScreenSpaceSignY();
         Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
 
         matShadowViewProj.multiply(matShadowView);
