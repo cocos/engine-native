@@ -22,8 +22,7 @@ CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device)
 : CommandBuffer(device),
   _mtlDevice((CCMTLDevice *)device),
   _mtlCommandQueue(id<MTLCommandQueue>(((CCMTLDevice *)device)->getMTLCommandQueue())),
-  _mtkView((MTKView *)(((CCMTLDevice *)device)->getMTKView())),
-  _frameBoundarySemaphore(dispatch_semaphore_create(MAX_INFLIGHT_BUFFER)) {
+  _mtkView((MTKView *)(((CCMTLDevice *)device)->getMTKView())) {
     const auto setCount = device->bindingMappingInfo().bufferOffsets.size();
     _GPUDescriptorSets.resize(setCount);
     _dynamicOffsets.resize(setCount);
@@ -39,13 +38,11 @@ bool CCMTLCommandBuffer::initialize(const CommandBufferInfo &info) {
 }
 
 void CCMTLCommandBuffer::destroy() {
-    dispatch_semaphore_signal(_frameBoundarySemaphore);
 }
 
 void CCMTLCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     if (_commandBufferBegan) return;
 
-    dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);
     _mtlCommandBuffer = [_mtlCommandQueue commandBuffer];
     [_mtlCommandBuffer enqueue];
     [_mtlCommandBuffer retain];
@@ -68,13 +65,8 @@ void CCMTLCommandBuffer::end() {
     if (!_commandBufferBegan) return;
 
     [_mtlCommandBuffer presentDrawable:_mtkView.currentDrawable];
-    [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
-        // GPU work is complete
-        // Signal the semaphore to start the CPU work
-        dispatch_semaphore_signal(_frameBoundarySemaphore);
-        [commandBuffer release];
-    }];
     [_mtlCommandBuffer commit];
+    [_mtlCommandBuffer waitUntilCompleted];
     _commandBufferBegan = false;
 }
 

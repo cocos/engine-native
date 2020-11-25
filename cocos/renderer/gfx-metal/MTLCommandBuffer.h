@@ -70,7 +70,6 @@ private:
     MTKView *_mtkView = nil;
     id<MTLCommandBuffer> _mtlCommandBuffer = nil;
     id<MTLRenderCommandEncoder> _mtlEncoder = nil;
-    dispatch_semaphore_t _frameBoundarySemaphore;
     CCMTLGPUBuffer _gpuIndexBuffer;
     CCMTLGPUBuffer _gpuIndirectBuffer;
     CCMTLInputAssembler *_inputAssembler = nullptr;
