@@ -532,7 +532,7 @@ void AudioEngineImpl::setLoop(int audioID, bool loop)
 bool AudioEngineImpl::pause(int audioID)
 {
     if (!_checkAudioIdValid(audioID)) {
-        return;
+        return false;
     }
     bool ret = true;
     alSourcePause(_audioPlayers[audioID]->_alSource);
@@ -549,7 +549,7 @@ bool AudioEngineImpl::pause(int audioID)
 bool AudioEngineImpl::resume(int audioID)
 {
     if (!_checkAudioIdValid(audioID)) {
-        return;
+        return false;
     }
     bool ret = true;
     alSourcePlay(_audioPlayers[audioID]->_alSource);
@@ -589,7 +589,7 @@ void AudioEngineImpl::stopAll()
 float AudioEngineImpl::getDuration(int audioID)
 {
     if (!_checkAudioIdValid(audioID)) {
-        return;
+        return 0.0f;
     }
     auto player = _audioPlayers[audioID];
     if(player->_ready){
@@ -613,7 +613,7 @@ float AudioEngineImpl::getDurationFromFile(const std::string &filePath)
 float AudioEngineImpl::getCurrentTime(int audioID)
 {
     if (!_checkAudioIdValid(audioID)) {
-        return;
+        return 0.0f;
     }
     float ret = 0.0f;
     auto player = _audioPlayers[audioID];
@@ -636,7 +636,7 @@ float AudioEngineImpl::getCurrentTime(int audioID)
 bool AudioEngineImpl::setCurrentTime(int audioID, float time)
 {
     if (!_checkAudioIdValid(audioID)) {
-        return;
+        return false;
     }
     bool ret = false;
     auto player = _audioPlayers[audioID];
