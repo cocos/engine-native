@@ -13,6 +13,8 @@
 #include "MTLShader.h"
 #include "MTLTexture.h"
 #include "MTLUtils.h"
+#include "MTLFence.h"
+#include "MTLQueue.h"
 #include "TargetConditionals.h"
 
 namespace cc {
@@ -34,6 +36,8 @@ CCMTLCommandBuffer::~CCMTLCommandBuffer() { destroy(); }
 bool CCMTLCommandBuffer::initialize(const CommandBufferInfo &info) {
     _type = info.type;
     _queue = info.queue;
+    const auto mtlQueue = static_cast<CCMTLQueue*>(_queue);
+    _fence = static_cast<CCMTLFence*>(mtlQueue->getFence());
     return true;
 }
 
@@ -65,8 +69,13 @@ void CCMTLCommandBuffer::end() {
     if (!_commandBufferBegan) return;
 
     [_mtlCommandBuffer presentDrawable:_mtkView.currentDrawable];
+    [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
+        // GPU work is complete
+        // Signal the fence to start the CPU work
+        _fence->signal();
+        [commandBuffer release];
+    }];
     [_mtlCommandBuffer commit];
-    [_mtlCommandBuffer waitUntilCompleted];
     _commandBufferBegan = false;
 }
 
