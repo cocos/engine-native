@@ -341,7 +341,7 @@ void GLES2Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *d
     GLES2CmdFuncCopyBuffersToTexture(this, buffers, ((GLES2Texture *)dst)->gpuTexture(), regions, count);
 }
 
-bool GLES2Device::checkForETC2() {
+bool GLES2Device::checkForETC2() const {
     GLint numFormats = 0;
     glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &numFormats);
     GLint* formats = new GLint[numFormats];
