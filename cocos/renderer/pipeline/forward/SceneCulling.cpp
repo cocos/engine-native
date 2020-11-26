@@ -125,7 +125,7 @@ void updateDirLight(Shadows *shadows, const Light *light, std::array<float, UBOS
         return;
     }
 
-    shadows->dirty = false;
+    //shadows->dirty = false;
     const auto rotation = node->worldRotation;
     Quaternion _qt(rotation.x, rotation.y, rotation.z, rotation.w);
     Vec3 forward(0, 0, -1.0f);
