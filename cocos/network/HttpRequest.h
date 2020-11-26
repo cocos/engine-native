@@ -74,6 +74,7 @@ public:
         GET,
         POST,
         PUT,
+        HEAD,
         DELETE,
         UNKNOWN,
     };
