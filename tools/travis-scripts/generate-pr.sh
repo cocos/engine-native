@@ -37,7 +37,7 @@ fi
 generate_cocosfiles_json()
 {
     echo "Updates cocos_files.json"
-    pushd "$TOJS_ROOT"
+    pushd "$TRAVIS_ROOT"
     ./generate-template-files.py
     popd
 }
