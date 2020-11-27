@@ -192,6 +192,10 @@ public:
      * @param callback  The event callback function
      */
     void setEventCallback(const EventCallback& callback) {_eventCallback = callback;};
+
+    /** @brief Cancel update
+     */
+    void cancelUpdate();
     
 CC_CONSTRUCTOR_ACCESS:
     
@@ -398,6 +402,11 @@ private:
     
     //! Marker for whether the assets manager is inited
     bool _inited;
+
+    //! Marker for whether the update is canceled
+    bool _canceled;
+    //! Downloading task container
+    std::unordered_map<std::string, std::shared_ptr<const network::DownloadTask>> _downloadingTask;
 };
 
 NS_CC_EXT_END
