@@ -120,7 +120,6 @@ GLenum MapGLInternalFormat(Format format) {
         case Format::ASTC_SRGBA_12x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
         case Format::ASTC_SRGBA_12x12: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
 
-
         default: {
             CCASSERT(false, "Unsupported Format, convert to GL internal format failed.");
             return GL_RGBA;
@@ -1396,7 +1395,7 @@ void GLES2CmdFuncExecuteCmds(GLES2Device *device, GLES2CmdPackage *cmdPackage) {
                         glBindFramebuffer(GL_FRAMEBUFFER, cmd->gpuFBO->glFramebuffer);
                         cache->glFramebuffer = cmd->gpuFBO->glFramebuffer;
                         // render targets are drawn with flipped-Y
-                        gfxStateCache.reverseCW = !!cmd->gpuFBO->glFramebuffer;
+                        gfxStateCache.reverseCW = cmd->gpuFBO->isOffscreen;
                     }
 
                     if (cache->viewport.left != cmd->renderArea.x ||
