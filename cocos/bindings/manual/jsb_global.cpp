@@ -754,13 +754,13 @@ namespace
         return dst;
     }
 
-    struct ImageInfo* createImageInfo(const Image* img)
+    struct ImageInfo* createImageInfo(Image* img)
     {
         struct ImageInfo* imgInfo = new struct ImageInfo();
         imgInfo->length = (uint32_t)img->getDataLen();
         imgInfo->width = img->getWidth();
         imgInfo->height = img->getHeight();
-        imgInfo->data = img->getData();
+        img->takeData(&imgInfo->data);
         imgInfo->format = img->getRenderFormat();
         imgInfo->compressed = img->isCompressed();
 
