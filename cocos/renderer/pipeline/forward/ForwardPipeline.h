@@ -83,7 +83,7 @@ private:
     float _shadingScale = 1.0f;
     bool _isHDR = false;
     float _fpScale = 1.0f / 1024.0f;
-    bool _globalBinding = false;
+    bool _isGlobalBound = false;
 
     std::unordered_map<const Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };

@@ -143,7 +143,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
     const auto shadowInfo = _shadows;
     auto *device = gfx::Device::getInstance();
 
-    if (!_globalBinding) {
+    if (!_isGlobalBound) {
         gfx::SamplerInfo info{
             gfx::Filter::LINEAR,
             gfx::Filter::LINEAR,
@@ -160,7 +160,7 @@ void ForwardPipeline::updateUBOs(RenderView *view) {
         // Spot light sampler binding
         this->_descriptorSet->bindSampler(SPOT_LIGHTING_MAP::BINDING, shadowMapSampler);
         this->_descriptorSet->bindTexture(SPOT_LIGHTING_MAP::BINDING, getDefaultTexture());
-        _globalBinding = true;
+        _isGlobalBound = true;
     }
 
     if (mainLight && shadowInfo->enabled && shadowInfo->getShadowType() == ShadowType::SHADOWMAP) {
@@ -374,7 +374,7 @@ void ForwardPipeline::destroy() {
 
     _shadowFrameBufferMap.clear();
 
-    _globalBinding = false;
+    _isGlobalBound = false;
 
     RenderPipeline::destroy();
 }
