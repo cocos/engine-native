@@ -44,7 +44,7 @@ void Particle::reset()
 {
     pos = cocos2d::Vec3::ZERO;
     startPos = cocos2d::Vec3::ZERO;
-    color = cocos2d::Color4B::BLACK;
+    color = cocos2d::Color4F::BLACK;
     deltaColor = cocos2d::Color4F::BLACK;
     size = 0;
     deltaSize = 0;
@@ -427,10 +427,10 @@ void ParticleSimulator::render(float dt)
             
             auto rad = -CC_DEGREES_TO_RADIANS(particle.rotation);
             auto cr = cos(rad), sr = sin(rad);
-            uint32_t tempColor = ((particle.color.a << 24) & 0xff000000) +
-                                 ((particle.color.b << 16) & 0x00ff0000) +
-                                 ((particle.color.g << 8)  & 0x0000ff00) +
-                                 ((particle.color.r)       & 0x000000ff);
+            uint32_t tempColor = (((GLuint)particle.color.a << 24) & 0xff000000) +
+                                 (((GLuint)particle.color.b << 16) & 0x00ff0000) +
+                                 (((GLuint)particle.color.g << 8)  & 0x0000ff00) +
+                                 (((GLuint)particle.color.r)       & 0x000000ff);
             // bl
             vb.writeFloat32(x1 * cr - y1 * sr + x);
             vb.writeFloat32(x1 * sr + y1 * cr + y);

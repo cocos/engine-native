@@ -38,7 +38,7 @@ struct Particle {
 public:
     cocos2d::Vec3 pos;
     cocos2d::Vec3 startPos;
-    cocos2d::Color4B color = cocos2d::Color4B::BLACK;
+    cocos2d::Color4F color = cocos2d::Color4F::BLACK;
     cocos2d::Color4F deltaColor = cocos2d::Color4F::BLACK;
     float size = 0.0f;
     float deltaSize = 0.0f;
