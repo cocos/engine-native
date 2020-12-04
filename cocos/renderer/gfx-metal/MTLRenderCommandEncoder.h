@@ -114,10 +114,11 @@ public:
     }
 
     CC_INLINE void setRenderPipelineState(id<MTLRenderPipelineState> pipelineState) {
-        if (_pipelineState != pipelineState) {
-            [_mtlEncoder setRenderPipelineState:pipelineState];
-            _pipelineState = pipelineState;
-        }
+        if (_pipelineState == pipelineState)
+            return;
+        
+        [_mtlEncoder setRenderPipelineState:pipelineState];
+        _pipelineState = pipelineState;
     }
 
     CC_INLINE void setStencilFrontBackReferenceValue(uint frontReferenceValue, uint backReferenceValue) {
@@ -131,10 +132,11 @@ public:
     }
 
     CC_INLINE void setDepthStencilState(id<MTLDepthStencilState> depthStencilState) {
-        if (_depthStencilState != depthStencilState) {
-            [_mtlEncoder setDepthStencilState:depthStencilState];
-            _depthStencilState = depthStencilState;
-        }
+        if (_depthStencilState == depthStencilState)
+            return;
+        
+        [_mtlEncoder setDepthStencilState:depthStencilState];
+        _depthStencilState = depthStencilState;
     }
 
     CC_INLINE void setDepthBias(float depthBias, float clamp, float slope) {
@@ -168,7 +170,7 @@ public:
 
     CC_INLINE void setVertexBuffer(const id<MTLBuffer> buffer, uint offset, uint index) {
         if (_vertexBufferMap.count(index) > 0 && (buffer == _vertexBufferMap[index]))
-                return;
+            return;
 
         _vertexBufferMap[index] = buffer;
         [_mtlEncoder setVertexBuffer:buffer
@@ -178,8 +180,7 @@ public:
 
     CC_INLINE void setFragmentBuffer(const id<MTLBuffer> buffer, uint offset, uint index) {
         if (_fragmentBufferMap.count(index) > 0 && (buffer == _fragmentBufferMap[index]))
-            if (_fragmentBufferMap[index] == buffer)
-                return;
+            return;
 
         _fragmentBufferMap[index] = buffer;
         [_mtlEncoder setFragmentBuffer:buffer
