@@ -440,7 +440,7 @@ void CCMTLCommandBuffer::bindDescriptorSets() {
 
         if (sampler.stages & ShaderStageFlagBit::VERTEX) {
             _commandEncoder.setVertexTexture(gpuDescriptor.texture->getMTLTexture(), sampler.textureBinding);
-            _commandEncoder.setVertexSampler(gpuDescriptor.sampler->getMTLSamplerState(), sampler.textureBinding);
+            _commandEncoder.setVertexSampler(gpuDescriptor.sampler->getMTLSamplerState(), sampler.samplerBinding);
         }
 
         if (sampler.stages & ShaderStageFlagBit::FRAGMENT) {
