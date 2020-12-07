@@ -322,7 +322,7 @@ static int processPutTask(HttpClient* client, HttpRequest* request, write_callba
     return ok ? 0 : 1;
 }
 
-static int processHEADTask(HttpClient* client, HttpRequest* request, write_callback callback, void* stream, long* responseCode, write_callback headerCallback, void* headerStream, char* errorBuffer)
+static int processHeadTask(HttpClient* client, HttpRequest* request, write_callback callback, void* stream, long* responseCode, write_callback headerCallback, void* headerStream, char* errorBuffer)
 {
     CURLRaii curl;
     bool ok = curl.init(client, request, callback, stream, headerCallback, headerStream, errorBuffer)
@@ -552,7 +552,7 @@ void HttpClient::processResponse(HttpResponse* response, char* responseMessage)
         break;
 
 	case HttpRequest::Type::HEAD:
-		retValue = processHEADTask(this, request,
+		retValue = processHeadTask(this, request,
 			writeData,
 			response->getResponseData(),
 			&responseCode,
