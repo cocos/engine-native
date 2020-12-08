@@ -36,7 +36,6 @@ CCMTLCommandBuffer::~CCMTLCommandBuffer() { destroy(); }
 bool CCMTLCommandBuffer::initialize(const CommandBufferInfo &info) {
     _type = info.type;
     _queue = info.queue;
-    const auto mtlQueue = static_cast<CCMTLQueue *>(_queue);
     return true;
 }
 
