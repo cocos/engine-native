@@ -187,8 +187,6 @@ void CCMTLDevice::present() {
     auto mtkView = static_cast<MTKView *>(_mtkView);
     [mtlCommandBuffer presentDrawable:mtkView.currentDrawable];
     [mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
-        // GPU work is complete
-        // Signal the fence to start the CPU work
         [commandBuffer release];
         _inFlightSemaphore->signal();
     }];
