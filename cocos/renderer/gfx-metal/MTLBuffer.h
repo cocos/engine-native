@@ -31,7 +31,6 @@ public:
 private:
     void resizeBuffer(uint8_t **, uint, uint);
     bool createMTLBuffer(uint size, MemoryUsage usage);
-    void begin();
 
     id<MTLDevice> _mtlDevice = nil;
     uint _inflightIndex = 0;

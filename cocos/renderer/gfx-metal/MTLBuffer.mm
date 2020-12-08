@@ -247,8 +247,5 @@ void CCMTLBuffer::encodeBuffer(CCMTLRenderCommandEncoder &encoder, uint offset, 
     }
 }
 
-void CCMTLBuffer::begin() {
-}
-
 } // namespace gfx
 } // namespace cc
