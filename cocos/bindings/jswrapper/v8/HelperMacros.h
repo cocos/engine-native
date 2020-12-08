@@ -38,8 +38,9 @@ extern unsigned int __jsbInvocationCount;
 extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
 #endif
 
-template<typename T>
-constexpr inline T * SE_THIS_OBJECT(se::State& s) {
+
+template<typename T, typename STATE>
+constexpr inline T * SE_THIS_OBJECT(STATE& s) {
     return (T*) s.nativeThisObject();
 }
 
