@@ -15,7 +15,7 @@ public:
     void signal();
 
 private:
-    dispatch_semaphore_t _frameBoundarySemaphore;
+    dispatch_semaphore_t _semaphore;
 };
 
 } // namespace gfx

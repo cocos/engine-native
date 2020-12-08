@@ -8,7 +8,7 @@ namespace gfx {
 
 CCMTLFence::CCMTLFence(Device *device)
 : Fence(device),
-  _frameBoundarySemaphore(dispatch_semaphore_create(MAX_INFLIGHT_BUFFER)) {
+  _semaphore(dispatch_semaphore_create(1)) {
 }
 
 CCMTLFence::~CCMTLFence() {
@@ -22,19 +22,19 @@ bool CCMTLFence::initialize(const FenceInfo &info) {
 }
 
 void CCMTLFence::destroy() {
-    dispatch_semaphore_signal(_frameBoundarySemaphore);
+    dispatch_semaphore_signal(_semaphore);
 }
 
 void CCMTLFence::signal() {
-    dispatch_semaphore_signal(_frameBoundarySemaphore);
+    dispatch_semaphore_signal(_semaphore);
 }
 
 void CCMTLFence::wait() {
-    dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
 }
 
 void CCMTLFence::reset() {
-    dispatch_semaphore_signal(_frameBoundarySemaphore);
+    dispatch_semaphore_signal(_semaphore);
 }
 
 } // namespace gfx
