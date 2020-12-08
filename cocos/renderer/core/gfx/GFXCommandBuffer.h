@@ -20,7 +20,7 @@ public:
     virtual void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) = 0;
     virtual void endRenderPass() = 0;
     virtual void bindPipelineState(PipelineState *pso) = 0;
-    virtual void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) = 0;
+    virtual void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const vector<uint>& dynamicOffsets) = 0;
     virtual void bindInputAssembler(InputAssembler *ia) = 0;
     virtual void setViewport(const Viewport &vp) = 0;
     virtual void setScissor(const Rect &rect) = 0;

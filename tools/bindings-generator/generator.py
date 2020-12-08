@@ -1336,13 +1336,22 @@ class Generator(object):
         self.out_file = opts['out_file']
         self.script_type = opts['script_type']
         self.macro_judgement = opts['macro_judgement']
-        self.hpp_headers = opts['hpp_headers']
+        self._hpp_headers = opts['hpp_headers']
         self.cpp_headers = opts['cpp_headers']
         self.win32_clang_flags = opts['win32_clang_flags']
         self.getter_setter = {}
         self.shadowed_methods_by_getter_setter = {}
 
         extend_clang_args = []
+
+        # append headers to hpp_headers
+        self.hpp_headers = []
+        if self._hpp_headers is not None:
+            self.hpp_headers += self._hpp_headers
+        cocos_root = os.path.normpath(os.path.join(os.path.dirname(__file__),"../.."))
+        for header in self.headers:
+            reldir = os.path.relpath(header, cocos_root)
+            self.hpp_headers.append(reldir)
 
         for clang_arg in self.clang_args:
             if not os.path.exists(clang_arg.replace("-I","")):

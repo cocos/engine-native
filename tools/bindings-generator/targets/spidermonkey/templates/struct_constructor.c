@@ -81,7 +81,8 @@ static bool ${struct_constructor_name}(se::State& s)
                              "arg": $field.ntype, \
                              "arg_type": $field_type, \
                              "in_value": "args[" + str(arg_idx) + "]", \
-                             "out_value": "arg" + str(arg_idx), \
+                             "_out_value": "arg" + str(arg_idx), \
+                             "out_value" : "(cobj->" + field.name +")",
                              "class_name": $class_name, \
                              "level": 3, \
                              "is_static": False, \
@@ -105,6 +106,9 @@ static bool ${struct_constructor_name}(se::State& s)
             #else
             cobj->${field.name} = arg${arg_idx};
             #end if
+            ## // $holder_prefix arg${arg_idx} = {};
+            $conv_text;
+            ## // cobj->${field.name} = arg${arg_idx}.value();
         }
         #set $arg_idx = $arg_idx + 1
         #end for 

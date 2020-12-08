@@ -38,6 +38,21 @@ extern unsigned int __jsbInvocationCount;
 extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
 #endif
 
+template<typename T>
+constexpr inline T * SE_THIS_OBJECT(se::State& s) {
+    return (T*) s.nativeThisObject();
+}
+
+template<typename T>
+constexpr const typename std::enable_if<std::is_enum<T>::value, char *>::type SE_UNDERLYING_TYPE_NAME() {
+   return typeid(std::underlying_type_t<T>).name();
+}
+
+template<typename T>
+constexpr const typename std::enable_if<!std::is_enum<T>::value, char *>::type SE_UNDERLYING_TYPE_NAME() {
+    return typeid(T).name();
+}
+
 namespace {
 bool cmp(std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
     return a.second < b.second;
