@@ -171,6 +171,22 @@ public:
         }
     }
 
+    void  shrink_to_fit()
+    {
+        for(auto iter = _pool.begin(); iter != _pool.end() && _pool.size() > 1;)
+        {
+            if (iter->curOffset == 0)
+            {
+                [iter->mtlBuffer release];
+                iter = _pool.erase(iter);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+    }
+
 private:
     struct Buffer {
         id<MTLBuffer> mtlBuffer = nil;

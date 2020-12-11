@@ -49,6 +49,9 @@ public:
     CC_INLINE bool isSamplerDescriptorCompareFunctionSupported() const { return _isSamplerDescriptorCompareFunctionSupported; }
 
 private:
+    void responseToMemoryAlarm();
+    
+private:
     void *_mtlCommandQueue = nullptr;
     void *_mtkView = nullptr;
     void *_mtlDevice = nullptr;
@@ -62,6 +65,7 @@ private:
     CCMTLGPUStagingBufferPool *_gpuStagingBufferPools[MAX_FRAMES_IN_FLIGHT] = { nullptr };
     CCMTLSemaphore *_inFlightSemaphore = nullptr;
     uint _currentFrameIndex = 0;
+    uint32_t    _memoryAlarmListenerId = 0;
 };
 
 } // namespace gfx

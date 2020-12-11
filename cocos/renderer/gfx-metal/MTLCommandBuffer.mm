@@ -303,7 +303,8 @@ void CCMTLCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size,
     }
     CCMTLGPUBuffer stagingBuffer;
     stagingBuffer.size = size;
-    _mtlDevice->gpuStagingBufferPool()->alloc(&stagingBuffer);
+    CCMTLGPUStagingBufferPool* bufferPool = _mtlDevice->gpuStagingBufferPool();
+    bufferPool->alloc(&stagingBuffer);
     memcpy(stagingBuffer.mappedData, data, size);
     id<MTLBlitCommandEncoder> encoder = [_mtlCommandBuffer blitCommandEncoder];
     [encoder copyFromBuffer:stagingBuffer.mtlBuffer
@@ -311,6 +312,9 @@ void CCMTLCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size,
                    toBuffer:((CCMTLBuffer *)buff)->getMTLBuffer()
           destinationOffset:offset
                        size:size];
+    [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buf){
+        bufferPool->reset();
+    }];
     [encoder endEncoding];
 }
 
