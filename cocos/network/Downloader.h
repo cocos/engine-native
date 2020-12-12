@@ -62,9 +62,8 @@ namespace cc { namespace network {
         std::unique_ptr<IDownloadTask> _coTask;
     };
 
-    class CC_DLL DownloaderHints
+    struct CC_DLL DownloaderHints
     {
-    public:
         uint32_t countOfMaxProcessingTasks;
         uint32_t timeoutInSeconds;
         std::string tempFileNameSuffix;
@@ -78,7 +77,7 @@ namespace cc { namespace network {
         ~Downloader();
 
         std::function<void(const DownloadTask& task,
-                           std::vector<unsigned char>& data)> onDataTaskSuccess;
+                           const std::vector<unsigned char>& data)> onDataTaskSuccess;
 
         std::function<void(const DownloadTask& task)> onFileTaskSuccess;
 

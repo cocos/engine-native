@@ -2,13 +2,12 @@
 
 namespace cc {
 namespace gfx {
-
 class CCMTLQueue : public Queue {
     friend class CCMTLDevice;
 
 public:
     CCMTLQueue(Device *device);
-    ~CCMTLQueue();
+    ~CCMTLQueue() = default;
 
     virtual bool initialize(const QueueInfo &info) override;
     virtual void destroy() override;

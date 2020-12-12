@@ -757,7 +757,6 @@ if(CC_USE_METAL)
         cocos/renderer/gfx-metal/MTLSampler.mm
         cocos/renderer/gfx-metal/MTLShader.h
         cocos/renderer/gfx-metal/MTLShader.mm
-        cocos/renderer/gfx-metal/MTLStateCache.h
         cocos/renderer/gfx-metal/MTLStd.cpp
         cocos/renderer/gfx-metal/MTLStd.h
         cocos/renderer/gfx-metal/MTLTexture.h
@@ -766,6 +765,9 @@ if(CC_USE_METAL)
         cocos/renderer/gfx-metal/MTLUtils.mm
         cocos/renderer/gfx-metal/MTLFence.h
         cocos/renderer/gfx-metal/MTLFence.mm
+        cocos/renderer/gfx-metal/MTLRenderCommandEncoder.h
+        cocos/renderer/gfx-metal/MTLConfig.h
+        cocos/renderer/gfx-metal/MTLSemaphore.h
     )
 endif()
 
@@ -1251,7 +1253,7 @@ if(APPLE)
         ${CWD}/cocos/platform/ios
     )
     find_library(ICONV_LIBRARY iconv)
-    find_library(AUDIOTOOLBOX_LIBRARY AudioToolBox)
+    find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox)
     find_library(FOUNDATION_LIBRARY Foundation)
     find_library(OPENAL_LIBRARY OpenAL)
     find_library(GAMECONTROLLER_LIBRARY GameController)

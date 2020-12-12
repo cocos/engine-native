@@ -1,16 +1,18 @@
 #pragma once
 
+#include "MTLConfig.h"
+
 namespace cc {
 namespace gfx {
 
-class CCMTLStateCache;
 class CCMTLCommandAllocator;
 class CCMTLGPUStagingBufferPool;
+class CCMTLSemaphore;
 
 class CCMTLDevice : public Device {
 public:
     CCMTLDevice();
-    ~CCMTLDevice();
+    ~CCMTLDevice() = default;
 
     virtual bool initialize(const DeviceInfo &info) override;
     virtual void destroy() override;
@@ -34,9 +36,7 @@ public:
     virtual PipelineLayout *createPipelineLayout(const PipelineLayoutInfo &info) override;
     virtual PipelineState *createPipelineState(const PipelineStateInfo &info) override;
     virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
-    virtual void blitBuffer(void *srcBuffer, uint offset, uint size, void *dstBuffer);
 
-    CC_INLINE CCMTLStateCache *getStateCache() const { return _stateCache; }
     CC_INLINE void *getMTLCommandQueue() const { return _mtlCommandQueue; }
     CC_INLINE void *getMTKView() const { return _mtkView; }
     CC_INLINE void *getMTLDevice() const { return _mtlDevice; }
@@ -45,12 +45,10 @@ public:
     CC_INLINE uint getMaximumBufferBindingIndex() const { return _maxBufferBindingIndex; }
     CC_INLINE bool isIndirectCommandBufferSupported() const { return _icbSuppored; }
     CC_INLINE bool isIndirectDrawSupported() const { return _indirectDrawSupported; }
-    CC_INLINE CCMTLGPUStagingBufferPool *gpuStagingBufferPool() const { return _gpuStagingBufferPool; }
-    CC_INLINE bool isSamplerDescriptorCompareFunctionSupported() const { return _isSamplerDescriptorCompareFunctionSupported;}
-    
-private:
-    CCMTLStateCache *_stateCache = nullptr;
+    CC_INLINE CCMTLGPUStagingBufferPool *gpuStagingBufferPool() const { return _gpuStagingBufferPools[_currentFrameIndex]; }
+    CC_INLINE bool isSamplerDescriptorCompareFunctionSupported() const { return _isSamplerDescriptorCompareFunctionSupported; }
 
+private:
     void *_mtlCommandQueue = nullptr;
     void *_mtkView = nullptr;
     void *_mtlDevice = nullptr;
@@ -61,7 +59,9 @@ private:
     bool _icbSuppored = false;
     bool _indirectDrawSupported = false;
     bool _isSamplerDescriptorCompareFunctionSupported = false;
-    CCMTLGPUStagingBufferPool *_gpuStagingBufferPool = nullptr;
+    CCMTLGPUStagingBufferPool *_gpuStagingBufferPools[MAX_FRAMES_IN_FLIGHT] = { nullptr };
+    CCMTLSemaphore *_inFlightSemaphore = nullptr;
+    uint _currentFrameIndex = 0;
 };
 
 } // namespace gfx

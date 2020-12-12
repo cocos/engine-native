@@ -64,7 +64,7 @@ static cc::network::Downloader *localDownloader()
     {
         _localDownloader = std::make_shared<cc::network::Downloader>();
         _localDownloader->onDataTaskSuccess = [=](const cc::network::DownloadTask& task,
-                                            std::vector<unsigned char>& data) {
+                                            const std::vector<unsigned char>& data) {
             if(data.empty())
             {
                 SE_REPORT_ERROR("Getting image from (%s) failed!", task.requestURL.c_str());
@@ -622,14 +622,6 @@ static bool JSB_core_restartVM(se::State& s)
 }
 SE_BIND_FUNC(JSB_core_restartVM)
 
-static bool JSB_closeWindow(se::State& s)
-{
-    //TODO: minggo
-//    Application::getInstance()->end();
-    return true;
-}
-SE_BIND_FUNC(JSB_closeWindow)
-
 static bool JSB_isObjectValid(se::State& s)
 {
     const auto& args = s.args();
@@ -722,7 +714,7 @@ namespace
     };
 
     uint8_t* convertRGB2RGBA (uint32_t length, uint8_t* src) {
-        uint8_t* dst = new uint8_t[length];
+        uint8_t* dst = reinterpret_cast<uint8_t*>(malloc(length));
         for (uint32_t i = 0; i < length; i += 4) {
             dst[i] = *src++;
             dst[i + 1] = *src++;
@@ -733,7 +725,7 @@ namespace
     }
 
     uint8_t* convertIA2RGBA (uint32_t length, uint8_t* src) {
-        uint8_t* dst = new uint8_t[length];
+        uint8_t* dst = reinterpret_cast<uint8_t*>(malloc(length));
         for (uint32_t i = 0; i < length; i += 4) {
             dst[i] = *src;
             dst[i + 1] = *src;
@@ -744,7 +736,7 @@ namespace
     }
 
     uint8_t* convertI2RGBA (uint32_t length, uint8_t* src) {
-        uint8_t* dst = new uint8_t[length];
+        uint8_t* dst = reinterpret_cast<uint8_t*>(malloc(length));
         for (uint32_t i = 0; i < length; i += 4) {
             dst[i] = *src;
             dst[i + 1] = *src;
@@ -754,13 +746,13 @@ namespace
         return dst;
     }
 
-    struct ImageInfo* createImageInfo(const Image* img)
+    struct ImageInfo* createImageInfo(Image* img)
     {
         struct ImageInfo* imgInfo = new struct ImageInfo();
         imgInfo->length = (uint32_t)img->getDataLen();
         imgInfo->width = img->getWidth();
         imgInfo->height = img->getHeight();
-        imgInfo->data = img->getData();
+        img->takeData(&imgInfo->data);
         imgInfo->format = img->getRenderFormat();
         imgInfo->compressed = img->isCompressed();
 
@@ -792,6 +784,7 @@ namespace
                     break;
             }
 
+            if (dst != imgInfo->data) free(imgInfo->data);
             imgInfo->data = dst;
             imgInfo->hasAlpha = true;
         }
@@ -858,6 +851,7 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                     SE_REPORT_ERROR("initWithImageFile: %s failed!", path.c_str());
                 }
                 callbackPtr->toObject()->call(seArgs, nullptr);
+                img->release();
             });
 
         });
@@ -928,7 +922,7 @@ static bool js_destroyImage(se::State& s) {
         unsigned long data = 0;
         ok &= seval_to_ulong(args[0], &data);
         SE_PRECONDITION2(ok, false, "js_destroyImage : Error processing arguments");
-        delete (void*)data;
+        free(reinterpret_cast<char*>(data));
         
         return true;
     }
@@ -1121,7 +1115,6 @@ bool jsb_register_global_variables(se::Object* global)
     global->defineFunction("__getCurrentLanguageCode", _SE(JSBCore_getCurrentLanguageCode));
     global->defineFunction("__restartVM", _SE(JSB_core_restartVM));
     global->defineFunction("__isObjectValid", _SE(JSB_isObjectValid));
-    global->defineFunction("close", _SE(JSB_closeWindow));
 
     se::HandleObject performanceObj(se::Object::createPlainObject());
     performanceObj->defineFunction("now", _SE(js_performance_now));

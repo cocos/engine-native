@@ -5,10 +5,8 @@
 namespace cc {
 namespace gfx {
 
-CCMTLQueue::CCMTLQueue(Device *device) : Queue(device) {}
-
-CCMTLQueue::~CCMTLQueue() {
-    destroy();
+CCMTLQueue::CCMTLQueue(Device *device)
+: Queue(device) {
 }
 
 bool CCMTLQueue::initialize(const QueueInfo &info) {

@@ -1,37 +1,17 @@
 #include "MTLStd.h"
 
 #include "MTLBuffer.h"
+#include "MTLCommandBuffer.h"
 #include "MTLDevice.h"
 #include "MTLUtils.h"
+#include "MTLRenderCommandEncoder.h"
 #import <Metal/Metal.h>
 
 namespace cc {
 namespace gfx {
 
-vector<CCMTLBuffer *> CCMTLBufferManager::_buffers;
-void CCMTLBufferManager::addBuffer(CCMTLBuffer *buffer) {
-    _buffers.emplace_back(buffer);
-}
-
-void CCMTLBufferManager::removeBuffer(CCMTLBuffer *buffer) {
-    const auto iter = std::find(_buffers.begin(), _buffers.end(), buffer);
-    if (iter != _buffers.end()) {
-        _buffers.erase(iter);
-    }
-}
-
-void CCMTLBufferManager::begin() {
-    for (auto buffer : _buffers) {
-        buffer->begin();
-    }
-}
-
 CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {
     _mtlDevice = id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice());
-}
-
-CCMTLBuffer::~CCMTLBuffer() {
-    destroy();
 }
 
 bool CCMTLBuffer::initialize(const BufferInfo &info) {
@@ -84,9 +64,7 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
         CCASSERT(false, "Unsupported BufferType, create buffer failed.");
         return false;
     }
-    if (_tripleEnabled) {
-        CCMTLBufferManager::addBuffer(this);
-    }
+
     return true;
 }
 
@@ -99,28 +77,18 @@ bool CCMTLBuffer::initialize(const BufferViewInfo &info) {
 
 bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
     _mtlResourceOptions = mu::toMTLResourseOption(usage);
-    if (_tripleEnabled) {
-        for (id<MTLBuffer> buffer in _dynamicDataBuffers) {
-            if (buffer) [buffer release];
-        }
-        NSMutableArray *mutableDynamicDataBuffers = [NSMutableArray arrayWithCapacity:MAX_INFLIGHT_BUFFER];
-        for (int i = 0; i < MAX_INFLIGHT_BUFFER; ++i) {
-            // Create a new buffer with enough capacity to store one instance of the dynamic buffer data
-            id<MTLBuffer> dynamicDataBuffer = [_mtlDevice newBufferWithLength:size options:_mtlResourceOptions];
-            [mutableDynamicDataBuffers addObject:dynamicDataBuffer];
-        }
-        _dynamicDataBuffers = [mutableDynamicDataBuffers copy];
 
-        _mtlBuffer = _dynamicDataBuffers[0];
-    } else {
-        if (_mtlBuffer)
-            [_mtlBuffer release];
-        _mtlBuffer = [_mtlDevice newBufferWithLength:size options:_mtlResourceOptions];
+    if (_mtlBuffer) {
+        [_mtlBuffer release];
     }
+    _mtlBuffer = [_mtlDevice newBufferWithLength:size options:_mtlResourceOptions];
     if (_mtlBuffer == nil) {
         CCASSERT(false, "Failed to create MTLBuffer.");
         return false;
     }
+
+    _device->getMemoryStatus().bufferSize += size;
+
     return true;
 }
 
@@ -129,19 +97,9 @@ void CCMTLBuffer::destroy() {
         return;
     }
 
-    if (_tripleEnabled) {
-        for (id<MTLBuffer> buffer in _dynamicDataBuffers) {
-            [buffer release];
-        }
-        [_dynamicDataBuffers release];
-        _dynamicDataBuffers = nil;
+    if (_mtlBuffer) {
+        [_mtlBuffer release];
         _mtlBuffer = nil;
-        CCMTLBufferManager::removeBuffer(this);
-    } else {
-        if (_mtlBuffer) {
-            [_mtlBuffer release];
-            _mtlBuffer = nil;
-        }
     }
 
     if (_transferBuffer) {
@@ -156,6 +114,8 @@ void CCMTLBuffer::destroy() {
         _buffer = nullptr;
     }
     _indirects.clear();
+
+    _device->getMemoryStatus().bufferSize -= _size;
 }
 
 void CCMTLBuffer::resize(uint size) {
@@ -213,8 +173,6 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
         return;
     }
 
-    updateInflightBuffer(offset, size);
-
     if (_buffer)
         memcpy(_buffer + offset, buffer, size);
 
@@ -255,16 +213,13 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
     }
 
     if (_mtlBuffer) {
-        if (_mtlResourceOptions == MTLResourceStorageModePrivate) {
-            static_cast<CCMTLDevice *>(_device)->blitBuffer(buffer, offset, size, _mtlBuffer);
-        } else {
-            uint8_t *dst = (uint8_t *)(_mtlBuffer.contents) + offset;
-            memcpy(dst, buffer, size);
+        CommandBuffer *cmdBuffer = _device->getCommandBuffer();
+        cmdBuffer->begin();
+        static_cast<CCMTLCommandBuffer *>(cmdBuffer)->updateBuffer(this, buffer, size, offset);
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-            if (_mtlResourceOptions == MTLResourceStorageModeManaged)
-                [_mtlBuffer didModifyRange:NSMakeRange(0, _size)]; // Synchronize the managed buffer.
+        if (_mtlResourceOptions == MTLResourceStorageModeManaged)
+            [_mtlBuffer didModifyRange:NSMakeRange(0, _size)]; // Synchronize the managed buffer.
 #endif
-        }
         return;
     }
 
@@ -274,46 +229,17 @@ void CCMTLBuffer::update(void *buffer, uint offset, uint size) {
     }
 }
 
-void CCMTLBuffer::encodeBuffer(id<MTLRenderCommandEncoder> encoder, uint offset, uint binding, ShaderStageFlags stages) {
-    if (encoder == nil) {
-        CC_LOG_ERROR("CCMTLBuffer::encodeBuffer: MTLRenderCommandEncoder should not be nil.");
-        return;
-    }
-
+void CCMTLBuffer::encodeBuffer(CCMTLRenderCommandEncoder &encoder, uint offset, uint binding, ShaderStageFlags stages) {
     if (_isBufferView) {
         offset += _bufferViewOffset;
     }
 
     if (stages & ShaderStageFlagBit::VERTEX) {
-        [encoder setVertexBuffer:_mtlBuffer
-                          offset:offset
-                         atIndex:binding];
+        encoder.setVertexBuffer(_mtlBuffer, offset, binding);
     }
 
     if (stages & ShaderStageFlagBit::FRAGMENT) {
-        [encoder setFragmentBuffer:_mtlBuffer
-                            offset:offset
-                           atIndex:binding];
-    }
-}
-
-void CCMTLBuffer::begin() {
-    _inflightDirty = true;
-}
-
-void CCMTLBuffer::updateInflightBuffer(uint offset, uint size) {
-    if (_tripleEnabled && _mtlResourceOptions != MTLResourceStorageModePrivate && _inflightDirty) {
-        _inflightIndex = ((_inflightIndex + 1) % MAX_INFLIGHT_BUFFER);
-        id<MTLBuffer> prevFrameBuffer = _mtlBuffer;
-        _mtlBuffer = _dynamicDataBuffers[_inflightIndex];
-        if (offset) {
-            memcpy((uint8_t *)_mtlBuffer.contents, prevFrameBuffer.contents, offset);
-        }
-        offset += size;
-        if (offset < _size) {
-            memcpy((uint8_t *)_mtlBuffer.contents + offset, (uint8_t *)prevFrameBuffer.contents + offset, _size - offset);
-        }
-        _inflightDirty = false;
+        encoder.setFragmentBuffer(_mtlBuffer, offset, binding);
     }
 }
 

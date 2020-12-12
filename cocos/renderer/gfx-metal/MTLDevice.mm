@@ -15,12 +15,14 @@
 #include "MTLRenderPass.h"
 #include "MTLSampler.h"
 #include "MTLShader.h"
-#include "MTLStateCache.h"
 #include "MTLTexture.h"
 #include "MTLUtils.h"
+#include "MTLConfig.h"
+#include "MTLSemaphore.h"
 #include "TargetConditionals.h"
 
 #import <MetalKit/MTKView.h>
+#include <dispatch/dispatch.h>
 
 namespace cc {
 namespace gfx {
@@ -30,8 +32,6 @@ CCMTLDevice::CCMTLDevice() {
     _screenSpaceSignY = 1.0f;
     _UVSpaceSignY = -1.0f; // UV space <-> RT viewport conflict
 }
-
-CCMTLDevice::~CCMTLDevice() {}
 
 bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _API = API::METAL;
@@ -50,7 +50,8 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
         _bindingMappingInfo.samplerOffsets.push_back(0);
     }
 
-    _stateCache = CC_NEW(CCMTLStateCache);
+    _inFlightSemaphore = CC_NEW(CCMTLSemaphore(MAX_FRAMES_IN_FLIGHT));
+    _currentFrameIndex = 0;
 
     _mtkView = (MTKView *)_windowHandle;
     id<MTLDevice> mtlDevice = ((MTKView *)_mtkView).device;
@@ -70,8 +71,8 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _uboOffsetAlignment = mu::getMinBufferOffsetAlignment(gpuFamily);
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
     _isSamplerDescriptorCompareFunctionSupported = mu::isSamplerDescriptorCompareFunctionSupported(gpuFamily);
-    MTKView *view = static_cast<MTKView*>(_mtkView);
-    if(view.colorPixelFormat == MTLPixelFormatInvalid) view.colorPixelFormat = MTLPixelFormatBGRA8Unorm;
+    MTKView *view = static_cast<MTKView *>(_mtkView);
+    if (view.colorPixelFormat == MTLPixelFormatInvalid) view.colorPixelFormat = MTLPixelFormatBGRA8Unorm;
     view.depthStencilPixelFormat = mu::getSupportedDepthStencilFormat(mtlDevice, gpuFamily, _depthBits);
     _stencilBits = 8;
 
@@ -93,7 +94,9 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     cmdBuffInfo.queue = _queue;
     _cmdBuff = createCommandBuffer(cmdBuffInfo);
 
-    _gpuStagingBufferPool = CC_NEW(CCMTLGPUStagingBufferPool(mtlDevice));
+    for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
+        _gpuStagingBufferPools[i] = CC_NEW(CCMTLGPUStagingBufferPool(mtlDevice));
+    }
 
     _features[static_cast<int>(Feature::COLOR_FLOAT)] = mu::isColorBufferFloatSupported(gpuFamily);
     _features[static_cast<int>(Feature::COLOR_HALF_FLOAT)] = mu::isColorBufferHalfFloatSupported(gpuFamily);
@@ -145,21 +148,27 @@ void CCMTLDevice::destroy() {
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_cmdBuff);
     CC_SAFE_DESTROY(_context);
-    CC_SAFE_DELETE(_stateCache);
-    CC_SAFE_DELETE(_gpuStagingBufferPool);
+    CC_SAFE_DELETE(_inFlightSemaphore);
+
+    for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
+        CC_SAFE_DELETE(_gpuStagingBufferPools[i]);
+        _gpuStagingBufferPools[i] = nullptr;
+    }
 }
 
 void CCMTLDevice::resize(uint width, uint height) {}
 
 void CCMTLDevice::acquire() {
-    CCMTLQueue *queue = (CCMTLQueue *)_queue;
+    _inFlightSemaphore->wait();
 
     // Clear queue stats
+    CCMTLQueue *queue = static_cast<CCMTLQueue *>(_queue);
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
-    if(!static_cast<CCMTLCommandBuffer*>(_cmdBuff)->isCommandBufferBegan()) {
-        _gpuStagingBufferPool->reset();
+
+    if (!static_cast<CCMTLCommandBuffer *>(_cmdBuff)->isCommandBufferBegan()) {
+        _gpuStagingBufferPools[_currentFrameIndex]->reset();
     }
 }
 
@@ -168,6 +177,17 @@ void CCMTLDevice::present() {
     _numDrawCalls = queue->_numDrawCalls;
     _numInstances = queue->_numInstances;
     _numTriangles = queue->_numTriangles;
+
+    _currentFrameIndex = (_currentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
+
+    auto mtlCommandBuffer = static_cast<CCMTLCommandBuffer *>(_cmdBuff)->getMTLCommandBuffer();
+    auto mtkView = static_cast<MTKView *>(_mtkView);
+    [mtlCommandBuffer presentDrawable:mtkView.currentDrawable];
+    [mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
+        [commandBuffer release];
+        _inFlightSemaphore->signal();
+    }];
+    [mtlCommandBuffer commit];
 }
 
 Fence *CCMTLDevice::createFence(const FenceInfo &info) {
@@ -322,26 +342,6 @@ void CCMTLDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *t
     // getting rid of this interface all together may become a better option.
     _cmdBuff->begin();
     static_cast<CCMTLCommandBuffer *>(_cmdBuff)->copyBuffersToTexture(buffers, texture, regions, count);
-}
-
-void CCMTLDevice::blitBuffer(void *srcData, uint offset, uint size, void *dstBuffer) {
-    CCMTLGPUBuffer stagingBuffer;
-    stagingBuffer.size = size;
-    _gpuStagingBufferPool->alloc(&stagingBuffer);
-    memcpy(stagingBuffer.mappedData, srcData, size);
-
-    // Create a command buffer for GPU work.
-    id<MTLCommandBuffer> commandBuffer = [id<MTLCommandQueue>(_mtlCommandQueue) commandBuffer];
-
-    // Encode a blit pass to copy data from the source buffer to the private buffer.
-    id<MTLBlitCommandEncoder> blitCommandEncoder = [commandBuffer blitCommandEncoder];
-    [blitCommandEncoder copyFromBuffer:stagingBuffer.mtlBuffer
-                          sourceOffset:stagingBuffer.startOffset
-                              toBuffer:id<MTLBuffer>(dstBuffer)
-                     destinationOffset:offset
-                                  size:size];
-    [blitCommandEncoder endEncoding];
-    [commandBuffer commit];
 }
 
 } // namespace gfx
