@@ -1421,19 +1421,21 @@ void AssetsManagerEx::onDownloadUnitsFinished()
 
 void AssetsManagerEx::cancelUpdate()
 {
-    if (_canceled) {
+    if (_canceled)
+	{
         return;
     }
     _canceled = true;
     std::vector<std::shared_ptr<const network::DownloadTask>> tasks;
-    for (auto iter : _downloadingTask)
+    for (const auto& it : _downloadingTask)
     {
-        tasks.push_back(iter.second);
+        tasks.push_back(it.second);
     }
-    for (auto iter : tasks)
+    for (const auto& it : tasks)
     {
-        _downloader->abort(*iter);
+        _downloader->abort(*it);
     }
+    _downloadingTask.clear();
 }
 
 NS_CC_EXT_END
