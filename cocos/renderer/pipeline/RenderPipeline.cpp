@@ -1,6 +1,5 @@
 #include "RenderPipeline.h"
 #include "RenderFlow.h"
-#include "RenderView.h"
 #include "gfx/GFXCommandBuffer.h"
 #include "gfx/GFXDescriptorSet.h"
 #include "gfx/GFXDescriptorSetLayout.h"
@@ -103,10 +102,11 @@ bool RenderPipeline::activate() {
     return true;
 }
 
-void RenderPipeline::render(const vector<RenderView *> &views) {
-    for (const auto view : views) {
-        for (const auto flow : view->getFlows()) {
-            flow->render(view);
+void RenderPipeline::render(const vector<uint> &cameras) {
+    for (const auto flow : _flows) {
+        for (const auto cameraID : cameras) {
+            Camera* camera = GET_CAMERA(cameraID);
+            flow->render(camera);
         }
     }
 }
