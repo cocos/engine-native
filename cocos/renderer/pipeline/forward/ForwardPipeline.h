@@ -8,6 +8,7 @@
 namespace cc {
 namespace pipeline {
 struct UBOGlobal;
+struct UBOCamera;
 struct UBOShadow;
 struct Fog;
 struct Ambient;

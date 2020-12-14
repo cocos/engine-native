@@ -33,8 +33,8 @@ void UIPhase::render(Camera *camera, gfx::RenderPass *renderPass){
         if (!visible) continue;
         const auto count = batch->passCount;
         for (auto j = 0; j < count; j++) {
-            const auto pass = batch->getPassView(i);
-            const auto shader = batch->getShader(i);
+            const auto pass = batch->getPassView(j);
+            const auto shader = batch->getShader(j);
             const auto inputAssembler = batch->getInputAssembler();
             const auto ds = batch->getDescriptorSet();
             auto *pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, renderPass);

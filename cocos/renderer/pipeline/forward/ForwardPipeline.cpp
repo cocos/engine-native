@@ -369,6 +369,7 @@ bool ForwardPipeline::activeRenderer() {
 void ForwardPipeline::destroy() {
     if (_descriptorSet) {
         _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
+        _descriptorSet->getBuffer(UBOCamera::BINDING)->destroy();
         _descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
         _descriptorSet->getSampler(SHADOWMAP::BINDING)->destroy();
         _descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
