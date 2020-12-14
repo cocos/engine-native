@@ -12,7 +12,6 @@ namespace gfx {
 struct CCMTLDepthBias;
 struct CCMTLDepthBounds;
 struct CCMTLGPUPipelineState;
-struct CCMTLGPUBuffer;
 class CCMTLInputAssembler;
 class CCMTLDevice;
 class CCMTLRenderPass;
@@ -55,6 +54,13 @@ private:
 
 private:
     CCMTLGPUPipelineState *_gpuPipelineState = nullptr;
+    Viewport _currentViewport;
+    Rect _currentScissor;
+
+    CCMTLDepthBias _depthBias;
+    CCMTLDepthBounds _depthBounds;
+    Color _blendConstants;
+    bool _isOffscreen = false;
 
     vector<CCMTLGPUDescriptorSet *> _GPUDescriptorSets;
     vector<vector<uint>> _dynamicOffsets;
@@ -67,8 +73,6 @@ private:
     MTKView *_mtkView = nil;
     id<MTLCommandBuffer> _mtlCommandBuffer = nil;
     CCMTLRenderCommandEncoder _commandEncoder;
-    CCMTLGPUBuffer _gpuIndexBuffer;
-    CCMTLGPUBuffer _gpuIndirectBuffer;
     CCMTLInputAssembler *_inputAssembler = nullptr;
     MTLIndexType _indexType = MTLIndexTypeUInt16;
     MTLPrimitiveType _mtlPrimitiveType = MTLPrimitiveType::MTLPrimitiveTypeTriangle;
