@@ -103,11 +103,9 @@ void CCMTLCommandBuffer::endRenderPass() {
 void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
     _gpuPipelineState = static_cast<CCMTLPipelineState *>(pso)->getGPUPipelineState();
     _mtlPrimitiveType = _gpuPipelineState->primitiveType;
-    [_mtlEncoder setCullMode:_gpuPipelineState->cullMode];
-    [_mtlEncoder setFrontFacingWinding: (MTLWinding)(_isOffscreen ? !_gpuPipelineState->winding : _gpuPipelineState->winding)];
 
     _commandEncoder.setCullMode(_gpuPipelineState->cullMode);
-    _commandEncoder.setFrontFacingWinding(_gpuPipelineState->winding);
+    _commandEncoder.setFrontFacingWinding(_isOffscreen ? !_gpuPipelineState->winding : _gpuPipelineState->winding);
     _commandEncoder.setDepthClipMode(_gpuPipelineState->depthClipMode);
     _commandEncoder.setTriangleFillMode(_gpuPipelineState->fillMode);
     _commandEncoder.setRenderPipelineState(_gpuPipelineState->mtlRenderPipelineState);
