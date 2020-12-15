@@ -122,7 +122,6 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
     for (const auto flow : _flows) {
         for (const auto cameraId : cameras) {
             Camera *camera = GET_CAMERA(cameraId);
-            sceneCulling(this, camera);
             flow->render(camera);
         }
     }
