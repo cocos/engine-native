@@ -1450,14 +1450,6 @@ inline bool nativevalue_to_se(const int32_t &from, se::Value &to, se::Object *)
     return true;
 }
 
-template<>
-inline
-typename std::enable_if<!std::is_same<long long, int32_t>::value && !std::is_same<long long , int64_t>::value , bool>::type
-nativevalue_to_se(const long long &from , se::Value &to, se::Object *)
-{
-    to.setNumber((double) from);
-    return true;
-}
 
 template<>
 inline bool nativevalue_to_se(const uint32_t &from, se::Value &to, se::Object *)
