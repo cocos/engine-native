@@ -1043,6 +1043,8 @@ class NativeClass(object):
 
 
     def skip_bind_function(self, method_name):
+        if self.generator.is_reserved_function(self.class_name, method_name["name"]):
+            return False
         if self.class_name in self.generator.shadowed_methods_by_getter_setter :
             #print("??? skip %s contains %s" %(self.generator.shadowed_methods_by_getter_setter[self.class_name], method_name))
             return method_name["name"] in self.generator.shadowed_methods_by_getter_setter[self.class_name]
@@ -1079,7 +1081,7 @@ class NativeClass(object):
             if name == 'constructor':
                 should_skip = True
             else:
-                if self.generator.should_skip(self.class_name, name):
+                if self.generator.should_skip(self.class_name, name) and not self.generator.is_reserved_function(self.class_name, name):
                     should_skip = True
             if not should_skip:
                 ret.append({"name": name, "impl": impl})
@@ -1503,7 +1505,13 @@ class Generator(object):
                         else:
                             raise Exception("getter_setter parse %s:%s failed" %(gs_kls, field))
 
-
+    def is_reserved_function(self, class_name, method_name):
+        if self.rename_functions.has_key(class_name):
+            rename_map = self.rename_functions[class_name]
+            for fn in rename_map:
+                if method_name == rename_map[fn]:
+                    return True
+        return False 
 
     def should_rename_function(self, class_name, method_name):
         if self.rename_functions.has_key(class_name) and self.rename_functions[class_name].has_key(method_name):
