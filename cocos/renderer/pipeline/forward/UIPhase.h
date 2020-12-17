@@ -11,6 +11,7 @@ public:
     void render(Camera *camera, gfx::RenderPass* renderPass);
 protected:
     RenderPipeline *_pipeline = nullptr;
+    uint _phaseID = 0;
 };
 
 }

@@ -8,6 +8,7 @@ namespace pipeline {
 
 void UIPhase::activate(RenderPipeline *pipeline){
     _pipeline = pipeline;
+    _phaseID = getPhaseID("default");
 };
 
 void UIPhase::render(Camera *camera, gfx::RenderPass *renderPass){

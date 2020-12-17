@@ -134,6 +134,7 @@ void ForwardPipeline::updateCameraUBO(Camera *camera) {
     const Light *mainLight = nullptr;
     if (scene->mainLightID) mainLight = scene->getMainLight();
     const auto ambient = _ambient;
+    const auto fog = _fog;
     
     auto *device = gfx::Device::getInstance();
     auto &uboCameraView = _cameraUBO;
@@ -199,6 +200,18 @@ void ForwardPipeline::updateCameraUBO(Camera *camera) {
         projectionSignY *= _device->getUVSpaceSignY(); // need flipping if drawing on render targets
     }
     uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = projectionSignY;
+
+    if (fog->enabled) {
+        TO_VEC4(uboCameraView, fog->fogColor, UBOCamera::GLOBAL_FOG_COLOR_OFFSET);
+
+        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET] = fog->fogStart;
+        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 1] = fog->fogEnd;
+        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 2] = fog->fogDensity;
+
+        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET] = fog->fogTop;
+        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 1] = fog->fogRange;
+        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 2] = fog->fogAtten;
+    }
     
     // update ubos
     _commandBuffers[0]->updateBuffer(_descriptorSet->getBuffer(UBOCamera::BINDING), _cameraUBO.data(), UBOCamera::SIZE);
@@ -266,7 +279,6 @@ void ForwardPipeline::updateGlobalUBO() {
     _descriptorSet->update();
 
     const auto root = GET_ROOT();
-    const auto fog = _fog;
     auto &uboGlobalView = _globalUBO;
 
     const auto shadingWidth = std::floor(_device->getWidth());
@@ -286,18 +298,6 @@ void ForwardPipeline::updateGlobalUBO() {
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1] = shadingHeight;
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 2] = 1.0f / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET];
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 3] = 1.0f / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1];
-
-    if (fog->enabled) {
-        TO_VEC4(uboGlobalView, fog->fogColor, UBOGlobal::GLOBAL_FOG_COLOR_OFFSET);
-
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET] = fog->fogStart;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET + 1] = fog->fogEnd;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_BASE_OFFSET + 2] = fog->fogDensity;
-
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET] = fog->fogTop;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET + 1] = fog->fogRange;
-        uboGlobalView[UBOGlobal::GLOBAL_FOG_ADD_OFFSET + 2] = fog->fogAtten;
-    }
     
     // update ubos
     _commandBuffers[0]->updateBuffer(_descriptorSet->getBuffer(UBOGlobal::BINDING), _globalUBO.data(), UBOGlobal::SIZE);
