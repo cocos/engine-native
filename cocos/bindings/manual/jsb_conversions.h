@@ -835,15 +835,6 @@ struct HolderType<std::function<R (ARGS...)>, true> {
     inline type value() { return data; }
 };
 
-template<>
-struct HolderType<const unsigned int *, false> {
-    using type = const unsigned int *;
-    using local_type = std::vector<unsigned int>;
-    local_type data;
-    std::remove_const_t<type> *ptr = nullptr;
-    inline type value() { return data.data(); }
-};
-
 
 ///////////////////////////////////convertion//////////////////////////////////////////////////////////
 
@@ -1305,14 +1296,6 @@ sevalue_to_native(const se::Value &from, HolderType<std::vector<T, allocator>, t
 }
 
 #endif // HAS_CONSTEXPR
-
-
-template<>
-inline bool sevalue_to_native(const se::Value &from, HolderType<const unsigned int *, false> *holder, se::Object *ctx)
-{
-    return sevalue_to_native(from, &(holder->data), ctx);
-}
-
 
 
 ///////////////////////////////////////////////////////////////////
