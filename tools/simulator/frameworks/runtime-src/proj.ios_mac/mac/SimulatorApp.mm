@@ -383,7 +383,9 @@ std::string getCurAppName(void)
     _window.contentView = viewController.view;
     [_window.contentView setWantsBestResolutionOpenGLSurface:YES];
     [_window makeKeyAndOrderFront:nil];
-
+    
+    NSApplication *thisApp = [NSApplication sharedApplication];
+    [thisApp activateIgnoringOtherApps:YES];
 
     // create opengl view, and init app
     _app = new Game(frameWidth, frameHeight);
