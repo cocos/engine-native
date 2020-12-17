@@ -2112,25 +2112,6 @@ bool js_register_pipeline_RenderPipeline(se::Object* obj)
 se::Object* __jsb_cc_pipeline_ForwardPipeline_proto = nullptr;
 se::Class* __jsb_cc_pipeline_ForwardPipeline_class = nullptr;
 
-static bool js_pipeline_ForwardPipeline_updateCameraUBO(se::State& s)
-{
-    cc::pipeline::ForwardPipeline* cobj = SE_THIS_OBJECT<cc::pipeline::ForwardPipeline>(s);
-    SE_PRECONDITION2(cobj, false, "js_pipeline_ForwardPipeline_updateCameraUBO : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<cc::pipeline::Camera*, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());;
-        SE_PRECONDITION2(ok, false, "js_pipeline_ForwardPipeline_updateCameraUBO : Error processing arguments");
-        cobj->updateCameraUBO(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_pipeline_ForwardPipeline_updateCameraUBO)
-
 static bool js_pipeline_ForwardPipeline_setFog(se::State& s)
 {
     cc::pipeline::ForwardPipeline* cobj = SE_THIS_OBJECT<cc::pipeline::ForwardPipeline>(s);
@@ -2149,40 +2130,6 @@ static bool js_pipeline_ForwardPipeline_setFog(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_pipeline_ForwardPipeline_setFog)
-
-static bool js_pipeline_ForwardPipeline_updateGlobalUBO(se::State& s)
-{
-    cc::pipeline::ForwardPipeline* cobj = SE_THIS_OBJECT<cc::pipeline::ForwardPipeline>(s);
-    SE_PRECONDITION2(cobj, false, "js_pipeline_ForwardPipeline_updateGlobalUBO : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        cobj->updateGlobalUBO();
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_pipeline_ForwardPipeline_updateGlobalUBO)
-
-static bool js_pipeline_ForwardPipeline_updateShadowUBO(se::State& s)
-{
-    cc::pipeline::ForwardPipeline* cobj = SE_THIS_OBJECT<cc::pipeline::ForwardPipeline>(s);
-    SE_PRECONDITION2(cobj, false, "js_pipeline_ForwardPipeline_updateShadowUBO : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<cc::pipeline::Camera*, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());;
-        SE_PRECONDITION2(ok, false, "js_pipeline_ForwardPipeline_updateShadowUBO : Error processing arguments");
-        cobj->updateShadowUBO(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_pipeline_ForwardPipeline_updateShadowUBO)
 
 static bool js_pipeline_ForwardPipeline_getSphere(se::State& s)
 {
@@ -2310,10 +2257,7 @@ bool js_register_pipeline_ForwardPipeline(se::Object* obj)
 {
     auto cls = se::Class::create("ForwardPipeline", obj, __jsb_cc_pipeline_RenderPipeline_proto, _SE(js_pipeline_ForwardPipeline_constructor));
 
-    cls->defineFunction("updateCameraUBO", _SE(js_pipeline_ForwardPipeline_updateCameraUBO));
     cls->defineFunction("setFog", _SE(js_pipeline_ForwardPipeline_setFog));
-    cls->defineFunction("updateGlobalUBO", _SE(js_pipeline_ForwardPipeline_updateGlobalUBO));
-    cls->defineFunction("updateShadowUBO", _SE(js_pipeline_ForwardPipeline_updateShadowUBO));
     cls->defineFunction("getSphere", _SE(js_pipeline_ForwardPipeline_getSphere));
     cls->defineFunction("setRenderObjects", _SE(js_pipeline_ForwardPipeline_setRenderObjects));
     cls->defineFunction("setShadows", _SE(js_pipeline_ForwardPipeline_setShadows));

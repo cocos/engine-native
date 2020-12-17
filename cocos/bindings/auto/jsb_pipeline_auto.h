@@ -100,10 +100,7 @@ bool js_register_cc_pipeline_ForwardPipeline(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::ForwardPipeline);
-SE_DECLARE_FUNC(js_pipeline_ForwardPipeline_updateCameraUBO);
 SE_DECLARE_FUNC(js_pipeline_ForwardPipeline_setFog);
-SE_DECLARE_FUNC(js_pipeline_ForwardPipeline_updateGlobalUBO);
-SE_DECLARE_FUNC(js_pipeline_ForwardPipeline_updateShadowUBO);
 SE_DECLARE_FUNC(js_pipeline_ForwardPipeline_getSphere);
 SE_DECLARE_FUNC(js_pipeline_ForwardPipeline_setRenderObjects);
 SE_DECLARE_FUNC(js_pipeline_ForwardPipeline_setShadows);
