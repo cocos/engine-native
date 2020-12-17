@@ -35,16 +35,12 @@ public:
     virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) = 0;
     virtual void execute(const CommandBuffer *const *cmdBuffs, uint32_t count) = 0;
     
-    CC_INLINE void bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const std::vector<uint> &dynamicOffsets) {
-        bindDescriptorSet(set, descriptorSet, dynamicOffsetCount, dynamicOffsets.data());
-    }
     CC_INLINE void bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet) {
         bindDescriptorSet(set, descriptorSet, 0, nullptr); 
     }
     CC_INLINE void bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
         bindDescriptorSet(set, descriptorSet, static_cast<uint>(dynamicOffsets.size()), dynamicOffsets.data());
     }
-
 
     CC_INLINE void begin() { begin(nullptr, 0, nullptr); }
     CC_INLINE void begin(RenderPass *renderPass) { begin(renderPass, 0, nullptr); }
