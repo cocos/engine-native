@@ -807,7 +807,7 @@ struct HolderType {
     using local_type = typename std::conditional_t<is_reference && is_jsb_object_v<T>, std::add_pointer_t<type>, type>;
     local_type data;
     type *ptr = nullptr;
-    constexpr inline type value()
+    inline type value()
     {
         if(ptr) return *ptr;
         return holder_convert_to<type, local_type>(data);
