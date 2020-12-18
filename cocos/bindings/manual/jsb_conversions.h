@@ -758,22 +758,22 @@ constexpr bool is_jsb_object_v = _is_jsb_object<typename std::remove_const<T>::t
 #if HAS_CONSTEXPR
 
 template<typename Out, typename In>
-constexpr inline Out& holder_convert_to(In& input) {
+inline Out& holder_convert_to(In& input) {
     if CC_CONSTEXPR (std::is_same< Out, In>::value)
     {
-        return (Out)(input);
+        return reinterpret_cast<Out>(input);
     }
     else if CC_CONSTEXPR (std::is_same<Out, std::add_pointer_t<In>>::value)
     {
-        return (Out)(&input);
+        return reinterpret_cast<Out>(&input);
     } 
     else if CC_CONSTEXPR (std::is_same<Out, std::remove_pointer_t<In>>::value)
     {
-        return (Out)(*input);
+        return reinterpret_cast<Out>(*input);
     }
     else if CC_CONSTEXPR (std::is_enum<In>::value)
     {
-        return (Out)input;
+        return reinterpret_cast<Out>input;
     }
     else {
         assert(false); // "types are not convertiable!");
@@ -782,21 +782,21 @@ constexpr inline Out& holder_convert_to(In& input) {
 #else
 
 template <typename Out, typename In>
-constexpr inline typename std::enable_if<std::is_same<Out,In>::value || std::is_enum<In>::value, Out>::type &
+inline typename std::enable_if<std::is_same<Out,In>::value || std::is_enum<In>::value, Out>::type &
 holder_convert_to(In &input) {
-    return (Out)input;
+    return reinterpret_cast<Out>(input);
 }
 
 template <typename Out, typename In>
-constexpr inline typename std::enable_if<std::is_pointer_v<Out> && std::is_same<Out, typename std::add_pointer<In>::type>::value, Out>::type &
+inline typename std::enable_if<std::is_pointer_v<Out> && std::is_same<Out, typename std::add_pointer<In>::type>::value, Out>::type &
 holder_convert_to(In &input) {
-    return (Out)(&input);
+    return reinterpret_cast<Out>(&input);
 }
 
 template <typename Out, typename In>
-constexpr inline typename std::enable_if<std::is_pointer_v<In> && std::is_same<Out, typename std::remove_pointer<In>::type>::value, Out>::type &
+inline typename std::enable_if<std::is_pointer_v<In> && std::is_same<Out, typename std::remove_pointer<In>::type>::value, Out>::type &
 holder_convert_to(In &input) {
-    return (Out)(*input);
+    return reinterpret_cast<Out>(*input);
 }
 
 #endif //HAS_CONST_EXPR
