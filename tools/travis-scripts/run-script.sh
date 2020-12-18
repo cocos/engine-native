@@ -118,7 +118,7 @@ function build_macosx()
     cd ..
     mkdir build-mac-apple-silicon
     cd build-mac-apple-silicon
-    cmake ../../../common -GXcode -DCOCOS_ROOT=$COCOS2DX_ROOT -DCC_USE_METAL=ON -DCMAKE_OSX_ARCHITECTURES=arm64
+    cmake ../../../common -GXcode -DCOCOS_ROOT=$COCOS2DX_ROOT -DCC_USE_METAL=ON -DCC_USE_GLES3=OFF -DCMAKE_OSX_ARCHITECTURES=arm64
     cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORES
     echo "Compile MacOSX ARM64 Release Done!"
 }
