@@ -761,19 +761,19 @@ template<typename Out, typename In>
 inline Out& holder_convert_to(In& input) {
     if CC_CONSTEXPR (std::is_same< Out, In>::value)
     {
-        return input;
+        return (Out)input;
     }
     else if CC_CONSTEXPR (std::is_same<Out, std::add_pointer_t<In>>::value)
     {
-        return reinterpret_cast<Out>(&input);
+        return (Out)(&input);
     } 
     else if CC_CONSTEXPR (std::is_same<Out, std::remove_pointer_t<In>>::value)
     {
-        return reinterpret_cast<Out>(*input);
+        return (Out)(*input);
     }
     else if CC_CONSTEXPR (std::is_enum<In>::value)
     {
-        return reinterpret_cast<Out>(input);
+        return (Out)(input);
     }
     else {
         assert(false); // "types are not convertiable!");
@@ -790,13 +790,13 @@ holder_convert_to(In &input) {
 template <typename Out, typename In>
 inline typename std::enable_if<std::is_pointer_v<Out> && std::is_same<Out, typename std::add_pointer<In>::type>::value, Out>::type &
 holder_convert_to(In &input) {
-    return reinterpret_cast<Out>(&input);
+    return (Out)(&input);
 }
 
 template <typename Out, typename In>
 inline typename std::enable_if<std::is_pointer_v<In> && std::is_same<Out, typename std::remove_pointer<In>::type>::value, Out>::type &
 holder_convert_to(In &input) {
-    return reinterpret_cast<Out>(*input);
+    return (Out)(*input);
 }
 
 #endif //HAS_CONST_EXPR
