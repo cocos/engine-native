@@ -761,7 +761,7 @@ template<typename Out, typename In>
 inline Out& holder_convert_to(In& input) {
     if CC_CONSTEXPR (std::is_same< Out, In>::value)
     {
-        return reinterpret_cast<Out>(input);
+        return input;
     }
     else if CC_CONSTEXPR (std::is_same<Out, std::add_pointer_t<In>>::value)
     {
@@ -773,7 +773,7 @@ inline Out& holder_convert_to(In& input) {
     }
     else if CC_CONSTEXPR (std::is_enum<In>::value)
     {
-        return reinterpret_cast<Out>input;
+        return reinterpret_cast<Out>(input);
     }
     else {
         assert(false); // "types are not convertiable!");
@@ -784,7 +784,7 @@ inline Out& holder_convert_to(In& input) {
 template <typename Out, typename In>
 inline typename std::enable_if<std::is_same<Out,In>::value || std::is_enum<In>::value, Out>::type &
 holder_convert_to(In &input) {
-    return reinterpret_cast<Out>(input);
+    return (Out)input;
 }
 
 template <typename Out, typename In>
@@ -807,7 +807,7 @@ struct HolderType {
     using local_type = typename std::conditional_t<is_reference && is_jsb_object_v<T>, std::add_pointer_t<type>, type>;
     local_type data;
     type *ptr = nullptr;
-    inline type value()
+    inline type & value()
     {
         if(ptr) return *ptr;
         return holder_convert_to<type, local_type>(data);
