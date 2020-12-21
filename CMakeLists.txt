@@ -95,9 +95,9 @@ endfunction()
 
 
 if(ANDROID OR WINDOWS)
-    set_if_undefined(CC_USE_VULKAN ON)
+    set_if_undefined(CC_USE_VULKAN OFF)
     set_if_undefined(CC_USE_GLES3 ON)
-    set_if_undefined(CC_USE_GLES2 ON)
+    set_if_undefined(CC_USE_GLES2 OFF)
 elseif(MACOSX OR IOS)
     set_if_undefined(CC_USE_METAL ON)
     set_if_undefined(CC_USE_GLES3 OFF)
