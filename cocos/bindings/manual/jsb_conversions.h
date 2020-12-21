@@ -761,7 +761,7 @@ template<typename Out, typename In>
 inline Out& holder_convert_to(In& input) {
     if CC_CONSTEXPR (std::is_same< Out, In>::value)
     {
-        return (Out)input;
+        return input;
     }
     else if CC_CONSTEXPR (std::is_same<Out, std::add_pointer_t<In>>::value)
     {
@@ -782,9 +782,9 @@ inline Out& holder_convert_to(In& input) {
 #else
 
 template <typename Out, typename In>
-inline typename std::enable_if<std::is_same<Out,In>::value || std::is_enum<In>::value, Out>::type &
+inline typename std::enable_if<std::is_same<Out,In>::value>::type &
 holder_convert_to(In &input) {
-    return (Out)input;
+    return input;
 }
 
 template <typename Out, typename In>
