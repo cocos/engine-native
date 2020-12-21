@@ -166,7 +166,12 @@ gulp.task('gen-simulator', async function () {
     console.log('make project\n');
     console.log('=====================================\n');
     await new Promise((resolve, reject) => {
-        let cmakeProcess = spawn(cmakeBin, ['-G', process.platform === 'win32'? 'Visual Studio 15 2017': 'Xcode', absolutePath('./tools/simulator/frameworks/runtime-src/')], {
+        let cmakeArgs = ['-G', process.platform === 'win32'? 'Visual Studio 15 2017': 'Xcode', absolutePath('./tools/simulator/frameworks/runtime-src/')];
+        if(process.platform === 'darwin') {
+            cmakeArgs.push(`-DCC_USE_METAL=ON`, 'CC_USE_GLES3=OFF');
+        }
+    
+        let cmakeProcess = spawn(cmakeBin, cmakeArgs, {
             cwd: simulatorProject,
         });
         cmakeProcess.on('close',  () => {
