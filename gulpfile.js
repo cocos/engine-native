@@ -189,7 +189,7 @@ gulp.task('gen-simulator', async function () {
     console.log('build project\n');
     console.log('=====================================\n');
     await new Promise((resolve, reject) => {
-        let buildProcess = spawn(cmakeBin, ['--build', simulatorProject], {
+        let buildProcess = spawn(cmakeBin, ['--build', simulatorProject, '--', '--quiet'], {
             cwd: simulatorProject,
         });
         buildProcess.on('close',  () => {
