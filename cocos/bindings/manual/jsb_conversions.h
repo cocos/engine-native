@@ -1291,8 +1291,17 @@ inline bool nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
     {
         return native_ptr_to_seval(from, &to);
     }
+    else if CC_CONSTEXPR (std::is_same<unsigned long, T>::value) {
+        to.setUint32(static_cast<uint32_t>(from));
+        return true;
+    }
+    else if CC_CONSTEXPR (std::is_same<long, T>::value) {
+        to.setInt32(static_cast<int32_t>(from));
+        return true;
+    }
     else
     {
+        static_assert(!std::is_const<T>::value, "Only non-const value accept here");
         return nativevalue_to_se<typename std::conditional_t<std::is_const<T>::value, T, typename std::add_const<T>::type>>(from, to, ctx);
     }
     return false;
