@@ -92,9 +92,7 @@ endfunction()
 
 ################################# options ############################################
 
-set_if_undefined(CC_USE_METAL OFF)
-set_if_undefined(CC_USE_GLES3 ON)
-set_if_undefined(CC_USE_GLES2 OFF)
+
 
 if(ANDROID OR WINDOWS)
     set_if_undefined(CC_USE_VULKAN ON)
@@ -103,6 +101,7 @@ if(ANDROID OR WINDOWS)
 elseif(MACOSX OR IOS)
     set_if_undefined(CC_USE_METAL ON)
     set_if_undefined(CC_USE_GLES3 OFF)
+    set_if_undefined(CC_USE_GLES2 OFF)
 endif()
 
 if(USE_SE_JSC)
