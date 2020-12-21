@@ -758,7 +758,7 @@ constexpr bool is_jsb_object_v = _is_jsb_object<typename std::remove_const<T>::t
 #if HAS_CONSTEXPR
 
 template<typename Out, typename In>
-inline Out& holder_convert_to(In& input) {
+constexpr inline Out& holder_convert_to(In& input) {
     if CC_CONSTEXPR (std::is_same< Out, In>::value)
     {
         return input;
@@ -769,7 +769,7 @@ inline Out& holder_convert_to(In& input) {
     } 
     else if CC_CONSTEXPR (std::is_same<Out, std::remove_pointer_t<In>>::value)
     {
-        return (Out)(*input);
+        return *input;
     }
     else if CC_CONSTEXPR (std::is_enum<In>::value)
     {
@@ -782,21 +782,21 @@ inline Out& holder_convert_to(In& input) {
 #else
 
 template <typename Out, typename In>
-inline typename std::enable_if<std::is_same<Out,In>::value>::type &
+constexpr inline typename std::enable_if<std::is_same<Out,In>::value>::type &
 holder_convert_to(In &input) {
     return input;
 }
 
 template <typename Out, typename In>
-inline typename std::enable_if<std::is_pointer_v<Out> && std::is_same<Out, typename std::add_pointer<In>::type>::value, Out>::type &
+constexpr inline typename std::enable_if<std::is_pointer_v<Out> && std::is_same<Out, typename std::add_pointer<In>::type>::value, Out>::type &
 holder_convert_to(In &input) {
     return (Out)(&input);
 }
 
 template <typename Out, typename In>
-inline typename std::enable_if<std::is_pointer_v<In> && std::is_same<Out, typename std::remove_pointer<In>::type>::value, Out>::type &
+constexpr inline typename std::enable_if<std::is_pointer_v<In> && std::is_same<Out, typename std::remove_pointer<In>::type>::value, Out>::type &
 holder_convert_to(In &input) {
-    return (Out)(*input);
+    return *input;
 }
 
 #endif //HAS_CONST_EXPR
@@ -807,7 +807,7 @@ struct HolderType {
     using local_type = typename std::conditional_t<is_reference && is_jsb_object_v<T>, std::add_pointer_t<type>, type>;
     local_type data;
     type *ptr = nullptr;
-    inline type & value()
+    constexpr inline type & value()
     {
         if(ptr) return *ptr;
         return holder_convert_to<type, local_type>(data);
