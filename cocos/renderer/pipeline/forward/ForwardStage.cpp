@@ -87,6 +87,7 @@ void ForwardStage::destroy() {
     CC_SAFE_DELETE(_instancedQueue);
     CC_SAFE_DELETE(_additiveLightQueue);
     CC_SAFE_DELETE(_planarShadowQueue);
+    CC_SAFE_DELETE(_uiPhase);
     RenderStage::destroy();
 }
 
