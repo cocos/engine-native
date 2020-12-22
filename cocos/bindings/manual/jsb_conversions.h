@@ -1291,11 +1291,13 @@ inline bool nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
     {
         return native_ptr_to_seval(from, &to);
     }
-    else if CC_CONSTEXPR (std::is_same<unsigned long, T>::value) {
+    else if CC_CONSTEXPR (std::is_same<unsigned long, T>::value)
+    {
         to.setUint32(static_cast<uint32_t>(from));
         return true;
     }
-    else if CC_CONSTEXPR (std::is_same<long, T>::value) {
+    else if CC_CONSTEXPR (std::is_same<long, T>::value)
+    {
         to.setInt32(static_cast<int32_t>(from));
         return true;
     }
@@ -1493,9 +1495,16 @@ inline bool nativevalue_to_se(const bool& from, se::Value& to, se::Object *)
 }
 
 template<typename R, typename ... Args>
-inline bool nativevalue_to_se(const bool& from, std::function<R(Args...)>& to, se::Object *)
+inline bool nativevalue_to_se(std::function<R(Args...)>& from, se::Value& to, se::Object *)
 {
     SE_LOGE("Can not convert C++ lambda to JS object"); // TODO
+    return false;
+}
+
+template<typename R, typename ... Args>
+inline bool nativevalue_to_se(const std::function<R(Args...)>& from, se::Value& to, se::Object *)
+{
+    SE_LOGE("Can not convert C++ const lambda to JS object"); // TODO
     return false;
 }
 
