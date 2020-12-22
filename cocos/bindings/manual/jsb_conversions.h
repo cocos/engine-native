@@ -1293,12 +1293,12 @@ inline bool nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
     }
     else if CC_CONSTEXPR (std::is_same<unsigned long, T>::value)
     {
-        to.setUint32(static_cast<uint32_t>(from));
+        to.setNumber((double)static_cast<std::conditional_t<sizeof(T) == 4, uint32_t, uint64_t>>(from));
         return true;
     }
     else if CC_CONSTEXPR (std::is_same<long, T>::value)
     {
-        to.setInt32(static_cast<int32_t>(from));
+        to.setNumber((double)static_cast<std::conditional_t<sizeof(T) == 4, int32_t, int64_t>>(from));
         return true;
     }
     else
