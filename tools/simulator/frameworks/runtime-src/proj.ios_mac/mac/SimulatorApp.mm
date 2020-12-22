@@ -222,12 +222,8 @@ std::string getCurAppName(void)
         FileUtils::getInstance()->setDefaultResourceRootPath(tmpConfig.getProjectDir());
     }
 
-    // parse config.json
+    // parse config.json when firstly init ConfigParser single instance
     auto parser = ConfigParser::getInstance();
-    auto configPath = spath.append(CONFIG_FILE);
-    if(!FileUtils::getInstance()->isFileExist(configPath))
-        configPath = solutionDir.append(CONFIG_FILE);
-    parser->readConfig(configPath);
 
     // set information
     config->setConsolePort(parser->getConsolePort());
@@ -333,7 +329,7 @@ std::string getCurAppName(void)
     float workareaWidth = workarea.size.width;
     float workareaHeight = workarea.size.height - [self titleBarHeight];
     CC_LOG_DEBUG("WORKAREA WIDTH %0.2f, HEIGHT %0.2f", workareaWidth, workareaHeight);
-    while (true && frameScale > 0.25f)
+    while (frameScale > 0.25f)
     {
         if (frameSize.width * frameScale > workareaWidth || frameSize.height * frameScale > workareaHeight)
         {
@@ -383,7 +379,9 @@ std::string getCurAppName(void)
     _window.contentView = viewController.view;
     [_window.contentView setWantsBestResolutionOpenGLSurface:YES];
     [_window makeKeyAndOrderFront:nil];
-
+    
+    NSApplication *thisApp = [NSApplication sharedApplication];
+    [thisApp activateIgnoringOtherApps:YES];
 
     // create opengl view, and init app
     _app = new Game(frameWidth, frameHeight);
@@ -433,8 +431,9 @@ std::string getCurAppName(void)
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     FileUtils::getInstance()->addSearchPath(resourcePath.UTF8String);
 
-     [self setupUI];
-     [self adjustEditMenuIndex];
+    // the UI workflow is migrated into the Cocos Creator Editor
+    // [self setupUI];
+    [self adjustEditMenuIndex];
 
     RuntimeEngine::getInstance()->setProjectConfig(_project);
 

@@ -24,14 +24,14 @@ type_map = {
     cindex.TypeKind.USHORT      : "unsigned short",
     cindex.TypeKind.UINT        : "unsigned int",
     cindex.TypeKind.ULONG       : "unsigned long",
-    cindex.TypeKind.ULONGLONG   : "unsigned long long",
+    cindex.TypeKind.ULONGLONG   : "uint64_t",
     cindex.TypeKind.CHAR_S      : "char",
     cindex.TypeKind.SCHAR       : "char",
     cindex.TypeKind.WCHAR       : "wchar_t",
     cindex.TypeKind.SHORT       : "short",
     cindex.TypeKind.INT         : "int",
     cindex.TypeKind.LONG        : "long",
-    cindex.TypeKind.LONGLONG    : "long long",
+    cindex.TypeKind.LONGLONG    : "int64_t",
     cindex.TypeKind.FLOAT       : "float",
     cindex.TypeKind.DOUBLE      : "double",
     cindex.TypeKind.LONGDOUBLE  : "long double",
@@ -559,7 +559,7 @@ class NativeType(object):
 
     @property
     def lambda_parameters(self):
-        params = ["%s larg%d" % (str(nt), i) for i, nt in enumerate(self.param_types)]
+        params = ["%s larg%d" % (str(nt.to_string(self.generator)), i) for i, nt in enumerate(self.param_types)]
         return ", ".join(params)
 
     @staticmethod
@@ -629,14 +629,15 @@ class NativeType(object):
             context = convert_opts["context"]
 
 
-        return "ok &= sevalue_to_native(%s, &%s, %s);" % (convert_opts["in_value"], convert_opts["out_value"], context)
+        return "ok &= sevalue_to_native(%s, &%s, %s)" % (convert_opts["in_value"], convert_opts["out_value"], context)
 
     def to_string(self, generator):
         conversions = generator.config['conversions']
         if conversions.has_key('native_types'):
             native_types_dict = conversions['native_types']
             if NativeType.dict_has_key_re(native_types_dict, [self.namespaced_class_name]):
-                return NativeType.dict_get_value_re(native_types_dict, [self.namespaced_class_name])
+                # print "type ---> " + self.namespaced_class_name
+                return  NativeType.dict_get_value_re(native_types_dict, [self.namespaced_class_name])
 
         name = self.namespaced_class_name
 
@@ -1043,6 +1044,8 @@ class NativeClass(object):
 
 
     def skip_bind_function(self, method_name):
+        if self.generator.is_reserved_function(self.class_name, method_name["name"]):
+            return False
         if self.class_name in self.generator.shadowed_methods_by_getter_setter :
             #print("??? skip %s contains %s" %(self.generator.shadowed_methods_by_getter_setter[self.class_name], method_name))
             return method_name["name"] in self.generator.shadowed_methods_by_getter_setter[self.class_name]
@@ -1082,8 +1085,8 @@ class NativeClass(object):
                 if self.generator.should_skip(self.class_name, name):
                     should_skip = True
             if not should_skip:
-                ret.append({"name": name, "impl": impl})
-        return ret
+                ret.append({"name": self.generator.should_rename_function(self.class_name, name) or name, "impl": impl})
+        return sorted(ret, key=lambda fn: fn["name"])
 
     def static_methods_clean(self):
         '''
@@ -1237,7 +1240,7 @@ class NativeClass(object):
             # skip if variadic
             if self._current_visibility == cindex.AccessSpecifier.PUBLIC and not cursor.type.is_function_variadic():
                 m = NativeFunction(cursor, self.generator)
-                registration_name = self.generator.should_rename_function(self.class_name, m.func_name) or m.func_name
+                registration_name = m.func_name
                 # bail if the function is not supported (at least one arg not supported)
                 if m.not_supported:
                     return False
@@ -1503,7 +1506,13 @@ class Generator(object):
                         else:
                             raise Exception("getter_setter parse %s:%s failed" %(gs_kls, field))
 
-
+    def is_reserved_function(self, class_name, method_name):
+        if self.rename_functions.has_key(class_name):
+            rename_map = self.rename_functions[class_name]
+            for fn in rename_map:
+                if method_name == rename_map[fn]:
+                    return True
+        return False 
 
     def should_rename_function(self, class_name, method_name):
         if self.rename_functions.has_key(class_name) and self.rename_functions[class_name].has_key(method_name):

@@ -70,8 +70,8 @@ bool CCMTLCommandBuffer::isRenderingEntireDrawable(const Rect &rect, const CCMTL
 }
 
 void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) {
-    _isOffscreen = static_cast<CCMTLFramebuffer *>(fbo)->isOffscreen();
-    if (!_isOffscreen) {
+    auto isOffscreen = static_cast<CCMTLFramebuffer *>(fbo)->isOffscreen();
+    if (!isOffscreen) {
         static_cast<CCMTLRenderPass *>(renderPass)->setColorAttachment(0, _mtkView.currentDrawable.texture, 0);
         static_cast<CCMTLRenderPass *>(renderPass)->setDepthStencilAttachment(_mtkView.depthStencilTexture, 0);
     }
@@ -104,17 +104,8 @@ void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
     _gpuPipelineState = static_cast<CCMTLPipelineState *>(pso)->getGPUPipelineState();
     _mtlPrimitiveType = _gpuPipelineState->primitiveType;
 
-    MTLWinding winding = _gpuPipelineState->winding;
-    if (_isOffscreen) {
-        if (MTLWindingClockwise == winding) {
-            winding = MTLWindingCounterClockwise;
-        } else {
-            winding = MTLWindingClockwise;
-        }
-    }
-    _commandEncoder.setFrontFacingWinding(winding);
-
     _commandEncoder.setCullMode(_gpuPipelineState->cullMode);
+    _commandEncoder.setFrontFacingWinding(_gpuPipelineState->winding);
     _commandEncoder.setDepthClipMode(_gpuPipelineState->depthClipMode);
     _commandEncoder.setTriangleFillMode(_gpuPipelineState->fillMode);
     _commandEncoder.setRenderPipelineState(_gpuPipelineState->mtlRenderPipelineState);
@@ -125,10 +116,10 @@ void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
     }
 }
 
-void CCMTLCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const vector<uint> &dynamicOffsets) {
+void CCMTLCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     CCASSERT(set < _GPUDescriptorSets.size(), "Invalid set index");
     if (dynamicOffsetCount) {
-        _dynamicOffsets[set].assign(dynamicOffsets.begin(), dynamicOffsets.begin() + dynamicOffsetCount);
+        _dynamicOffsets[set].assign(dynamicOffsets, dynamicOffsets + dynamicOffsetCount);
         if (set < _firstDirtyDescriptorSet) _firstDirtyDescriptorSet = set;
     }
 
@@ -185,33 +176,36 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
     const auto indirectBuffer = static_cast<CCMTLBuffer *>(ia->getIndirectBuffer());
     const auto indexBuffer = static_cast<CCMTLBuffer *>(ia->getIndexBuffer());
     auto mtlEncoder = _commandEncoder.getMTLEncoder();
+
     if (_type == CommandBufferType::PRIMARY) {
         if (indirectBuffer) {
-            uint count = indirectBuffer->getCount();
-            const auto &drawInfos = indirectBuffer->getDrawInfos();
-            _numDrawCalls += count;
-            for (uint i = 0; i < count; ++i) {
-                const auto &drawInfo = drawInfos[i];
+            const auto indirectMTLBuffer = indirectBuffer->getMTLBuffer();
 
-                if (_indirectDrawSuppotred) {
-                    if (indexBuffer) {
-                        if (drawInfo.indexCount) {
-                            [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
-                                                    indexType:_indexType
-                                                  indexBuffer:indexBuffer->getMTLBuffer()
-                                            indexBufferOffset:i * indirectBuffer->getStride()
-                                               indirectBuffer:indirectBuffer->getMTLBuffer()
-                                         indirectBufferOffset:i * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
-                        }
-                    } else if (drawInfo.vertexCount) {
-                        [mtlEncoder drawPrimitives:_mtlPrimitiveType
-                                    indirectBuffer:indirectBuffer->getMTLBuffer()
-                              indirectBufferOffset:i * sizeof(MTLDrawIndexedPrimitivesIndirectArguments)];
-                    }
+            if (_indirectDrawSuppotred) {
+                ++_numDrawCalls;
+                if (indirectBuffer->isDrawIndirectByIndex()) {
+                    [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
+                                            indexType:_indexType
+                                          indexBuffer:indexBuffer->getMTLBuffer()
+                                    indexBufferOffset:0
+                                       indirectBuffer:indirectMTLBuffer
+                                 indirectBufferOffset:0];
                 } else {
-                    NSUInteger offset = 0;
-                    offset += drawInfo.firstIndex * indirectBuffer->getStride();
-                    if (drawInfo.indexCount) {
+                    [mtlEncoder drawPrimitives:_mtlPrimitiveType
+                                indirectBuffer:indirectMTLBuffer
+                          indirectBufferOffset:0];
+                }
+            } else {
+                uint stride = indirectBuffer->getStride();
+                uint offset = 0;
+                uint drawInfoCount = indirectBuffer->getCount();
+                const auto &drawInfos = indirectBuffer->getDrawInfos();
+                _numDrawCalls += drawInfoCount;
+
+                for (uint i = 0; i < drawInfoCount; ++i) {
+                    const auto &drawInfo = drawInfos[i];
+                    offset += drawInfo.firstIndex * stride;
+                    if (indirectBuffer->isDrawIndirectByIndex()) {
                         if (drawInfo.instanceCount == 0) {
                             [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
                                                    indexCount:drawInfo.indexCount
@@ -226,7 +220,7 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
                                             indexBufferOffset:offset
                                                 instanceCount:drawInfo.instanceCount];
                         }
-                    } else if (drawInfo.vertexCount) {
+                    } else {
                         if (drawInfo.instanceCount == 0) {
                             [mtlEncoder drawPrimitives:_mtlPrimitiveType
                                            vertexStart:drawInfo.firstIndex
@@ -244,7 +238,7 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
             DrawInfo drawInfo;
             static_cast<CCMTLInputAssembler *>(ia)->extractDrawInfo(drawInfo);
             if (drawInfo.indexCount > 0) {
-                NSUInteger offset = 0;
+                uint offset = 0;
                 offset += drawInfo.firstIndex * indexBuffer->getStride();
                 if (drawInfo.instanceCount == 0) {
                     [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
