@@ -59,9 +59,9 @@ const Device::MotionValue & Device::getDeviceMotionValue()
   return __motionValue;
 }
 
-Device::Rotation Device::getDeviceRotation()
+Device::Rotation Device::getDeivceOrientation()
 {
-  return Device::Rotation::_0;
+  return Device::Orientation::LANDSCAPE_RIGHT;
 }
 
 std::string Device::getDeviceModel()
