@@ -55,8 +55,14 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _inFlightSemaphore = CC_NEW(CCMTLSemaphore(MAX_FRAMES_IN_FLIGHT));
     _currentFrameIndex = 0;
 
-    _mtkView = (MTKView *)_windowHandle;
-    id<MTLDevice> mtlDevice = ((MTKView *)_mtkView).device;
+#if CC_PLATFORM == CC_PLATFORM_MAC_OSX
+    NSView *view = (NSView *)_windowHandle;
+#else
+    UIView *view = (UIView *)_windowHandle;
+#endif
+    CAMetalLayer *layer = static_cast<CAMetalLayer *>(view.layer);
+    _mtlLayer = layer;
+    id<MTLDevice> mtlDevice = (id<MTLDevice>)layer.device;
     _mtlDevice = mtlDevice;
     _mtlCommandQueue = [mtlDevice newCommandQueue];
 
@@ -73,9 +79,19 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _uboOffsetAlignment = mu::getMinBufferOffsetAlignment(gpuFamily);
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
     _isSamplerDescriptorCompareFunctionSupported = mu::isSamplerDescriptorCompareFunctionSupported(gpuFamily);
-    MTKView *view = static_cast<MTKView *>(_mtkView);
-    if (view.colorPixelFormat == MTLPixelFormatInvalid) view.colorPixelFormat = MTLPixelFormatBGRA8Unorm;
-    view.depthStencilPixelFormat = mu::getSupportedDepthStencilFormat(mtlDevice, gpuFamily, _depthBits);
+    if (layer.pixelFormat == MTLPixelFormatInvalid)
+    {
+        layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+    }
+
+    // Persistent depth stencil texture
+    MTLTextureDescriptor *dssDescriptor = [[MTLTextureDescriptor alloc] init];
+    dssDescriptor.pixelFormat = mu::getSupportedDepthStencilFormat(mtlDevice, gpuFamily, _depthBits);
+    dssDescriptor.width = info.width;
+    dssDescriptor.height = info.height;
+    dssDescriptor.storageMode = MTLStorageModePrivate;
+    dssDescriptor.usage = MTLTextureUsageRenderTarget;
+    _dssTex = [mtlDevice newTextureWithDescriptor:dssDescriptor];
     _stencilBits = 8;
 
     ContextInfo contextCreateInfo;
@@ -134,6 +150,8 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::LINE_WIDTH)] = false;
     _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = false;
     _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)] = false;
+    _features[static_cast<uint>(Feature::MULTITHREADED_SUBMISSION)] = true;
+
     _features[static_cast<uint>(Feature::FORMAT_RGB8)] = false;
     _features[static_cast<uint>(Feature::FORMAT_D16)] = mu::isDepthStencilFormatSupported(mtlDevice, Format::D16, gpuFamily);
     _features[static_cast<uint>(Feature::FORMAT_D16S8)] = mu::isDepthStencilFormatSupported(mtlDevice, Format::D16S8, gpuFamily);
@@ -186,9 +204,9 @@ void CCMTLDevice::present() {
     CCMTLGPUStagingBufferPool *bufferPool = _gpuStagingBufferPools[_currentFrameIndex];
     _currentFrameIndex = (_currentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
 
-    auto mtlCommandBuffer = static_cast<CCMTLCommandBuffer *>(_cmdBuff)->getMTLCommandBuffer();
-    auto mtkView = static_cast<MTKView *>(_mtkView);
-    [mtlCommandBuffer presentDrawable:mtkView.currentDrawable];
+    auto cmdBuff = static_cast<CCMTLCommandBuffer *>(_cmdBuff);
+    auto mtlCommandBuffer = cmdBuff->getMTLCommandBuffer();
+    [mtlCommandBuffer presentDrawable:cmdBuff->getCurrentDrawable()];
     [mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         [commandBuffer release];
         bufferPool->reset();
@@ -197,148 +215,60 @@ void CCMTLDevice::present() {
     [mtlCommandBuffer commit];
 }
 
-Fence *CCMTLDevice::createFence(const FenceInfo &info) {
-    auto fence = CC_NEW(CCMTLFence(this));
-    if (fence && fence->initialize(info))
-        return fence;
-
-    CC_SAFE_DESTROY(fence);
-    return nullptr;
+Fence *CCMTLDevice::createFence() {
+    return CC_NEW(CCMTLFence(this));
 }
 
-Queue *CCMTLDevice::createQueue(const QueueInfo &info) {
-    auto queue = CC_NEW(CCMTLQueue(this));
-    if (queue && queue->initialize(info))
-        return queue;
-
-    CC_SAFE_DESTROY(queue);
-    return nullptr;
+Queue *CCMTLDevice::createQueue() {
+    return CC_NEW(CCMTLQueue(this));
 }
 
-CommandBuffer *CCMTLDevice::createCommandBuffer(const CommandBufferInfo &info) {
-    auto commandBuffer = CC_NEW(CCMTLCommandBuffer(this));
-    if (commandBuffer && commandBuffer->initialize(info))
-        return commandBuffer;
-
-    CC_SAFE_DESTROY(commandBuffer);
-    return nullptr;
+CommandBuffer *CCMTLDevice::doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
+    return CC_NEW(CCMTLCommandBuffer(this));
 }
 
-Buffer *CCMTLDevice::createBuffer(const BufferInfo &info) {
-    auto buffer = CC_NEW(CCMTLBuffer(this));
-    if (buffer && buffer->initialize(info))
-        return buffer;
-
-    CC_SAFE_DESTROY(buffer);
-    return nullptr;
+Buffer *CCMTLDevice::createBuffer() {
+    return CC_NEW(CCMTLBuffer(this));
 }
 
-Buffer *CCMTLDevice::createBuffer(const BufferViewInfo &info) {
-    auto buffer = CC_NEW(CCMTLBuffer(this));
-    if (buffer && buffer->initialize(info))
-        return buffer;
-
-    CC_SAFE_DESTROY(buffer);
-    return nullptr;
+Texture *CCMTLDevice::createTexture() {
+    return CC_NEW(CCMTLTexture(this));
 }
 
-Texture *CCMTLDevice::createTexture(const TextureInfo &info) {
-    auto texture = CC_NEW(CCMTLTexture(this));
-    if (texture && texture->initialize(info))
-        return texture;
-
-    CC_SAFE_DESTROY(texture);
-    return nullptr;
+Sampler *CCMTLDevice::createSampler() {
+    return CC_NEW(CCMTLSampler(this));
 }
 
-Texture *CCMTLDevice::createTexture(const TextureViewInfo &info) {
-    auto texture = CC_NEW(CCMTLTexture(this));
-    if (texture && texture->initialize(info))
-        return texture;
-
-    CC_SAFE_DESTROY(texture);
-    return nullptr;
+Shader *CCMTLDevice::createShader() {
+    return CC_NEW(CCMTLShader(this));
 }
 
-Sampler *CCMTLDevice::createSampler(const SamplerInfo &info) {
-    auto sampler = CC_NEW(CCMTLSampler(this));
-    if (sampler && sampler->initialize(info))
-        return sampler;
-
-    CC_SAFE_DESTROY(sampler);
-    return sampler;
+InputAssembler *CCMTLDevice::createInputAssembler() {
+    return CC_NEW(CCMTLInputAssembler(this));
 }
 
-Shader *CCMTLDevice::createShader(const ShaderInfo &info) {
-    auto shader = CC_NEW(CCMTLShader(this));
-    if (shader && shader->initialize(info))
-        return shader;
-
-    CC_SAFE_DESTROY(shader);
-    return shader;
+RenderPass *CCMTLDevice::createRenderPass() {
+    return CC_NEW(CCMTLRenderPass(this));
 }
 
-InputAssembler *CCMTLDevice::createInputAssembler(const InputAssemblerInfo &info) {
-    auto ia = CC_NEW(CCMTLInputAssembler(this));
-    if (ia && ia->initialize(info))
-        return ia;
-
-    CC_SAFE_DESTROY(ia);
-    return nullptr;
+Framebuffer *CCMTLDevice::createFramebuffer() {
+    return CC_NEW(CCMTLFramebuffer(this));
 }
 
-RenderPass *CCMTLDevice::createRenderPass(const RenderPassInfo &info) {
-    auto renderPass = CC_NEW(CCMTLRenderPass(this));
-    if (renderPass && renderPass->initialize(info))
-        return renderPass;
-
-    CC_SAFE_DESTROY(renderPass);
-    return nullptr;
+DescriptorSet *CCMTLDevice::createDescriptorSet() {
+    return CC_NEW(CCMTLDescriptorSet(this));
 }
 
-Framebuffer *CCMTLDevice::createFramebuffer(const FramebufferInfo &info) {
-    auto frameBuffer = CC_NEW(CCMTLFramebuffer(this));
-    if (frameBuffer && frameBuffer->initialize(info))
-        return frameBuffer;
-
-    CC_SAFE_DESTROY(frameBuffer);
-    return nullptr;
+DescriptorSetLayout *CCMTLDevice::createDescriptorSetLayout() {
+    return CC_NEW(CCMTLDescriptorSetLayout(this));
 }
 
-DescriptorSet *CCMTLDevice::createDescriptorSet(const DescriptorSetInfo &info) {
-    auto descriptorSet = CC_NEW(CCMTLDescriptorSet(this));
-    if (descriptorSet && descriptorSet->initialize(info))
-        return descriptorSet;
-
-    CC_SAFE_DESTROY(descriptorSet);
-    return nullptr;
+PipelineLayout *CCMTLDevice::createPipelineLayout() {
+    return CC_NEW(CCMTLPipelineLayout(this));
 }
 
-DescriptorSetLayout *CCMTLDevice::createDescriptorSetLayout(const DescriptorSetLayoutInfo &info) {
-    auto descriptorSetLayout = CC_NEW(CCMTLDescriptorSetLayout(this));
-    if (descriptorSetLayout && descriptorSetLayout->initialize(info))
-        return descriptorSetLayout;
-
-    CC_SAFE_DESTROY(descriptorSetLayout);
-    return nullptr;
-}
-
-PipelineLayout *CCMTLDevice::createPipelineLayout(const PipelineLayoutInfo &info) {
-    auto pipelineLayout = CC_NEW(CCMTLPipelineLayout(this));
-    if (pipelineLayout && pipelineLayout->initialize(info))
-        return pipelineLayout;
-
-    CC_SAFE_DESTROY(pipelineLayout);
-    return nullptr;
-}
-
-PipelineState *CCMTLDevice::createPipelineState(const PipelineStateInfo &info) {
-    auto ps = CC_NEW(CCMTLPipelineState(this));
-    if (ps && ps->initialize(info))
-        return ps;
-
-    CC_SAFE_DESTROY(ps);
-    return nullptr;
+PipelineState *CCMTLDevice::createPipelineState() {
+    return CC_NEW(CCMTLPipelineState(this));
 }
 
 void CCMTLDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
