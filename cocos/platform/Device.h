@@ -103,9 +103,9 @@ public:
     static const MotionValue& getDeviceMotionValue();
 
     /**
-     *  Gets the rotation of device.
+     *  Gets the orientation of device.
      */
-    static Rotation getDeviceRotation();
+    static Orientation getDeivceOrientation();
 
     /**
      *  Gets device model information.
