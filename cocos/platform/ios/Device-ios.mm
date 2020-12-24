@@ -213,7 +213,7 @@ const Device::MotionValue& Device::getDeviceMotionValue()
 #endif
 }
 
-Device::Orientation Device::getDeivceOrientation()
+Device::Orientation Device::getDeviceOrientation()
 {
     Orientation orientation = Device::Orientation::LANDSCAPE_RIGHT;
     switch ([[UIApplication sharedApplication] statusBarOrientation])

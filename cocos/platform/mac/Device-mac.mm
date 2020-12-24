@@ -64,7 +64,7 @@ const Device::MotionValue& Device::getDeviceMotionValue()
     return __motionValue;
 }
 
-Device::Rotation Device::getDeivceOrientation()
+Device::Orientation Device::getDeviceOrientation()
 {
     return Device::Orientation::LANDSCAPE_RIGHT;
 }

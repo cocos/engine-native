@@ -105,7 +105,7 @@ public:
     /**
      *  Gets the orientation of device.
      */
-    static Orientation getDeivceOrientation();
+    static Orientation getDeviceOrientation();
 
     /**
      *  Gets device model information.

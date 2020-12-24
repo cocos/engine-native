@@ -87,7 +87,7 @@ namespace {
         CGRect nativeBounds = [[UIScreen mainScreen] nativeBounds];
         int nativeWidth = static_cast<int>(nativeBounds.size.width);
         int nativeHeight = static_cast<int>(nativeBounds.size.height);
-        auto orientation = cc::Device::getDeivceOrientation();
+        auto orientation = cc::Device::getDeviceOrientation();
         bool isLandscape = orientation == cc::Device::Orientation::LANDSCAPE_RIGHT || orientation == cc::Device::Orientation::LANDSCAPE_LEFT;
         if (isLandscape) std::swap(nativeWidth, nativeHeight);
         
