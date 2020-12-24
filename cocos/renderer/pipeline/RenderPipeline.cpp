@@ -77,11 +77,13 @@ bool RenderPipeline::initialize(const RenderPipelineInfo &info) {
 
 bool RenderPipeline::activate() {
     if (_descriptorSetLayout) {
+        _descriptorSetLayout->destroy();
         CC_DELETE(_descriptorSetLayout);
     }
     _descriptorSetLayout = _device->createDescriptorSetLayout({globalDescriptorSetLayout.bindings});
 
     if (_descriptorSet) {
+        _descriptorSet->destroy();
         CC_DELETE(_descriptorSet);
     }
     _descriptorSet = _device->createDescriptorSet({_descriptorSetLayout});
