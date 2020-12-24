@@ -143,6 +143,7 @@ void CCVKBuffer::resize(uint size) {
 
 void CCVKBuffer::update(void *buffer, uint size) {
     CCASSERT(!_isBufferView, "Cannot update through buffer views");
+    if (!size) return;
 
 #if CC_DEBUG > 0
     if (_usage & BufferUsageBit::INDIRECT) {
