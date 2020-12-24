@@ -96,10 +96,21 @@ const Device::MotionValue& Device::getDeviceMotionValue()
     return motionValue;
 }
 
-Device::Rotation Device::getDeviceRotation()
+Device::Orientation Device::getDeviceOrientation()
 {
     int rotation = JniHelper::callStaticIntMethod(JCLS_HELPER, "getDeviceRotation");
-    return (Device::Rotation)rotation;
+    switch (rotation) {
+        case 0:
+            return Orientation::PORTRAIT;
+        case 1:
+            return Orientation::LANDSCAPE_RIGHT;
+        case 2:
+            return Orientation::PORTRAIT_UPSIDE_DOWN;
+        case 3:
+            return Orientation::LANDSCAPE_LEFT;
+        default:
+            assert(false);
+    }
 }
 
 std::string Device::getDeviceModel()
