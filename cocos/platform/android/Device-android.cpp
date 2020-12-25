@@ -47,6 +47,15 @@ THE SOFTWARE.
 #define JCLS_SENSOR "com/cocos/lib/CocosSensorHandler"
 #endif
 
+// constant from Android API:
+// reference: https://developer.android.com/reference/android/view/Surface#ROTATION_0
+enum Rotation {
+    Rotation_0 = 0,
+    ROTATION_90,
+    ROTATION_180,
+    ROTATION_270
+};
+
 namespace {
     cc::Device::MotionValue motionValue;
 }
@@ -100,16 +109,14 @@ Device::Orientation Device::getDeviceOrientation()
 {
     int rotation = JniHelper::callStaticIntMethod(JCLS_HELPER, "getDeviceRotation");
     switch (rotation) {
-        case 0:
+        case Rotation_0:
             return Orientation::PORTRAIT;
-        case 1:
+        case ROTATION_90:
             return Orientation::LANDSCAPE_RIGHT;
-        case 2:
+        case ROTATION_180:
             return Orientation::PORTRAIT_UPSIDE_DOWN;
-        case 3:
+        case ROTATION_270:
             return Orientation::LANDSCAPE_LEFT;
-        default:
-            assert(false);
     }
 }
 
