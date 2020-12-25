@@ -1395,7 +1395,7 @@ class Generator(object):
         cocos_root = os.path.normpath(os.path.join(os.path.dirname(__file__),"../.."))
         for header in self.headers:
             reldir = os.path.relpath(header, cocos_root)
-            self.hpp_headers.append(reldir)
+            self.hpp_headers.append(reldir.replace(os.sep, '/'))
 
         for clang_arg in self.clang_args:
             if not os.path.exists(clang_arg.replace("-I","")):

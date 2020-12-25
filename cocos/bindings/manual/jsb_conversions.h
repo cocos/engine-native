@@ -118,6 +118,15 @@ struct InputAssemblerInfo;
         break;                                                                                      \
     }
 
+#if CC_ENABLE_CACHE_JSB_FUNC_RESULT
+#define SE_HOLD_RETURN_VALUE(retCXXValue, thisObject, jsValue) \
+    if(is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type> && (jsValue).isObject()) {\
+        (thisObject)->setProperty("cache" __FUNCTION__, (jsValue)); \
+    }
+#else
+#define SE_HOLD_RETURN_VALUE(...)
+#endif
+
 #if __clang__ && defined(__has_feature) && __has_feature(cxx_static_assert) && __has_feature(cxx_relaxed_constexpr)
     #define CC_STATIC_ASSERT static_assert
     #define CC_CONSTEXPR     constexpr
