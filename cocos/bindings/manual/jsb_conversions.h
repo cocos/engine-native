@@ -121,7 +121,7 @@ struct InputAssemblerInfo;
 #if 0
 #define SE_HOLD_RETURN_VALUE(retCXXValue, thisObject, jsValue) \
     if CC_CONSTEXPR (is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type> && (jsValue).isObject()) {\
-        (thisObject)->setProperty("cache" __FUNCTION__, (jsValue)); \
+        (thisObject)->setProperty("__cache" __FUNCTION__, (jsValue)); \
     }
 #else
 #define SE_HOLD_RETURN_VALUE(...)
