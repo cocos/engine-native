@@ -54,13 +54,6 @@ public:
         PORTRAIT_UPSIDE_DOWN = 180,
         LANDSCAPE_RIGHT = 90
     };
-    // TODO: remove Rotation
-    enum class Rotation {
-        _0 = 0,
-        _90,
-        _180,
-        _270
-    };
 
     struct MotionValue {
         float accelerationX = 0.0f;
