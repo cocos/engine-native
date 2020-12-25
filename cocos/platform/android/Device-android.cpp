@@ -50,7 +50,7 @@ THE SOFTWARE.
 // constant from Android API:
 // reference: https://developer.android.com/reference/android/view/Surface#ROTATION_0
 enum Rotation {
-    Rotation_0 = 0,
+    ROTATION_0 = 0,
     ROTATION_90,
     ROTATION_180,
     ROTATION_270
@@ -109,7 +109,7 @@ Device::Orientation Device::getDeviceOrientation()
 {
     int rotation = JniHelper::callStaticIntMethod(JCLS_HELPER, "getDeviceRotation");
     switch (rotation) {
-        case Rotation_0:
+        case ROTATION_0:
             return Orientation::PORTRAIT;
         case ROTATION_90:
             return Orientation::LANDSCAPE_RIGHT;
