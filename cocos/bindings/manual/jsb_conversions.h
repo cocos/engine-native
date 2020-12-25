@@ -118,7 +118,7 @@ struct InputAssemblerInfo;
         break;                                                                                      \
     }
 
-#if CC_ENABLE_CACHE_JSB_FUNC_RESULT
+#if 0
 #define SE_HOLD_RETURN_VALUE(retCXXValue, thisObject, jsValue) \
     if CC_CONSTEXPR (is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type> && (jsValue).isObject()) {\
         (thisObject)->setProperty("cache" __FUNCTION__, (jsValue)); \
@@ -127,10 +127,12 @@ struct InputAssemblerInfo;
 #define SE_HOLD_RETURN_VALUE(...)
 #endif
 
-#if __clang__ && defined(__has_feature) && __has_feature(cxx_static_assert) && __has_feature(cxx_relaxed_constexpr)
-    #define CC_STATIC_ASSERT static_assert
-    #define CC_CONSTEXPR     constexpr
-    #define HAS_CONSTEXPR    1
+#if __clang__ 
+    #if defined(__has_feature) && __has_feature(cxx_static_assert) && __has_feature(cxx_relaxed_constexpr)
+        #define CC_STATIC_ASSERT static_assert
+        #define CC_CONSTEXPR     constexpr
+        #define HAS_CONSTEXPR    1
+    #endif
 #elif defined(_MSVC_LANG) && _MSVC_LANG >= 201703L
     #define CC_STATIC_ASSERT static_assert
     #define CC_CONSTEXPR     constexpr
@@ -1136,7 +1138,7 @@ inline bool sevalue_to_native(const se::Value &from, std::vector<unsigned char>*
         in->getArrayLength(&len);
         to->resize(len);
         se::Value ele;
-        for(int i = 0; i < len ; i++ ) {
+        for (uint32_t i = 0; i < len; i++) {
             in->getArrayElement(i, &ele);
             (*to)[i] = ele.toUint8();
         }
@@ -1477,6 +1479,16 @@ template<>
 inline bool nativevalue_to_se(const uint8_t &from, se::Value &to, se::Object *)
 {
     to.setUint8(from);
+    return true;
+}
+
+template <>
+inline bool nativevalue_to_se(const long &from, se::Value &to, se::Object *) {
+    if (sizeof(long) == 4) {
+        to.setInt32(from);
+    } else {
+        to.setNumber(static_cast<double>(from));
+    }
     return true;
 }
 
