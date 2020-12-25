@@ -219,6 +219,7 @@ static bool js_gfx_Offset_get_x(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->x, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->x, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Offset_get_x)
@@ -245,6 +246,7 @@ static bool js_gfx_Offset_get_y(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->y, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->y, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Offset_get_y)
@@ -271,6 +273,7 @@ static bool js_gfx_Offset_get_z(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->z, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->z, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Offset_get_z)
@@ -423,6 +426,7 @@ static bool js_gfx_Rect_get_x(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->x, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->x, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Rect_get_x)
@@ -449,6 +453,7 @@ static bool js_gfx_Rect_get_y(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->y, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->y, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Rect_get_y)
@@ -475,6 +480,7 @@ static bool js_gfx_Rect_get_width(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->width, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->width, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Rect_get_width)
@@ -501,6 +507,7 @@ static bool js_gfx_Rect_get_height(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->height, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->height, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Rect_get_height)
@@ -661,6 +668,7 @@ static bool js_gfx_Extent_get_width(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->width, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->width, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Extent_get_width)
@@ -687,6 +695,7 @@ static bool js_gfx_Extent_get_height(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->height, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->height, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Extent_get_height)
@@ -713,6 +722,7 @@ static bool js_gfx_Extent_get_depth(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depth, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depth, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Extent_get_depth)
@@ -865,6 +875,7 @@ static bool js_gfx_TextureSubres_get_mipLevel(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->mipLevel, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->mipLevel, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureSubres_get_mipLevel)
@@ -891,6 +902,7 @@ static bool js_gfx_TextureSubres_get_baseArrayLayer(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->baseArrayLayer, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->baseArrayLayer, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureSubres_get_baseArrayLayer)
@@ -917,6 +929,7 @@ static bool js_gfx_TextureSubres_get_layerCount(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->layerCount, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->layerCount, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureSubres_get_layerCount)
@@ -1069,6 +1082,7 @@ static bool js_gfx_BufferTextureCopy_get_buffStride(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->buffStride, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->buffStride, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferTextureCopy_get_buffStride)
@@ -1095,6 +1109,7 @@ static bool js_gfx_BufferTextureCopy_get_buffTexHeight(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->buffTexHeight, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->buffTexHeight, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferTextureCopy_get_buffTexHeight)
@@ -1121,6 +1136,7 @@ static bool js_gfx_BufferTextureCopy_get_texOffset(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->texOffset, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->texOffset, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferTextureCopy_get_texOffset)
@@ -1147,6 +1163,7 @@ static bool js_gfx_BufferTextureCopy_get_texExtent(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->texExtent, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->texExtent, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferTextureCopy_get_texExtent)
@@ -1173,6 +1190,7 @@ static bool js_gfx_BufferTextureCopy_get_texSubres(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->texSubres, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->texSubres, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferTextureCopy_get_texSubres)
@@ -1341,6 +1359,7 @@ static bool js_gfx_Color_get_x(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->x, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->x, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Color_get_x)
@@ -1367,6 +1386,7 @@ static bool js_gfx_Color_get_y(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->y, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->y, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Color_get_y)
@@ -1393,6 +1413,7 @@ static bool js_gfx_Color_get_z(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->z, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->z, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Color_get_z)
@@ -1419,6 +1440,7 @@ static bool js_gfx_Color_get_w(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->w, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->w, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Color_get_w)
@@ -1579,6 +1601,7 @@ static bool js_gfx_BindingMappingInfo_get_bufferOffsets(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->bufferOffsets, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->bufferOffsets, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BindingMappingInfo_get_bufferOffsets)
@@ -1605,6 +1628,7 @@ static bool js_gfx_BindingMappingInfo_get_samplerOffsets(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->samplerOffsets, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->samplerOffsets, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BindingMappingInfo_get_samplerOffsets)
@@ -1631,6 +1655,7 @@ static bool js_gfx_BindingMappingInfo_get_flexibleSet(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->flexibleSet, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->flexibleSet, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BindingMappingInfo_get_flexibleSet)
@@ -1783,6 +1808,7 @@ static bool js_gfx_DeviceInfo_get_windowHandle(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->windowHandle, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->windowHandle, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DeviceInfo_get_windowHandle)
@@ -1809,6 +1835,7 @@ static bool js_gfx_DeviceInfo_get_width(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->width, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->width, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DeviceInfo_get_width)
@@ -1835,6 +1862,7 @@ static bool js_gfx_DeviceInfo_get_height(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->height, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->height, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DeviceInfo_get_height)
@@ -1861,6 +1889,7 @@ static bool js_gfx_DeviceInfo_get_nativeWidth(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->nativeWidth, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->nativeWidth, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DeviceInfo_get_nativeWidth)
@@ -1887,6 +1916,7 @@ static bool js_gfx_DeviceInfo_get_nativeHeight(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->nativeHeight, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->nativeHeight, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DeviceInfo_get_nativeHeight)
@@ -1913,6 +1943,7 @@ static bool js_gfx_DeviceInfo_get_sharedCtx(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->sharedCtx, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->sharedCtx, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DeviceInfo_get_sharedCtx)
@@ -1939,6 +1970,7 @@ static bool js_gfx_DeviceInfo_get_bindingMappingInfo(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->bindingMappingInfo, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->bindingMappingInfo, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DeviceInfo_get_bindingMappingInfo)
@@ -2123,6 +2155,7 @@ static bool js_gfx_ContextInfo_get_windowHandle(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->windowHandle, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->windowHandle, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ContextInfo_get_windowHandle)
@@ -2149,6 +2182,7 @@ static bool js_gfx_ContextInfo_get_sharedCtx(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->sharedCtx, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->sharedCtx, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ContextInfo_get_sharedCtx)
@@ -2175,6 +2209,7 @@ static bool js_gfx_ContextInfo_get_vsyncMode(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->vsyncMode, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->vsyncMode, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ContextInfo_get_vsyncMode)
@@ -2327,6 +2362,7 @@ static bool js_gfx_BufferInfo_get_usage(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->usage, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->usage, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferInfo_get_usage)
@@ -2353,6 +2389,7 @@ static bool js_gfx_BufferInfo_get_memUsage(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->memUsage, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->memUsage, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferInfo_get_memUsage)
@@ -2379,6 +2416,7 @@ static bool js_gfx_BufferInfo_get_size(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->size, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->size, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferInfo_get_size)
@@ -2405,6 +2443,7 @@ static bool js_gfx_BufferInfo_get_stride(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stride, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stride, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferInfo_get_stride)
@@ -2431,6 +2470,7 @@ static bool js_gfx_BufferInfo_get_flags(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->flags, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->flags, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferInfo_get_flags)
@@ -2599,6 +2639,7 @@ static bool js_gfx_BufferViewInfo_get_buffer(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->buffer, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->buffer, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferViewInfo_get_buffer)
@@ -2625,6 +2666,7 @@ static bool js_gfx_BufferViewInfo_get_offset(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->offset, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->offset, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferViewInfo_get_offset)
@@ -2651,6 +2693,7 @@ static bool js_gfx_BufferViewInfo_get_range(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->range, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->range, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BufferViewInfo_get_range)
@@ -2803,6 +2846,7 @@ static bool js_gfx_TextureInfo_get_type(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->type, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->type, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_type)
@@ -2829,6 +2873,7 @@ static bool js_gfx_TextureInfo_get_usage(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->usage, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->usage, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_usage)
@@ -2855,6 +2900,7 @@ static bool js_gfx_TextureInfo_get_format(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->format, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->format, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_format)
@@ -2881,6 +2927,7 @@ static bool js_gfx_TextureInfo_get_width(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->width, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->width, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_width)
@@ -2907,6 +2954,7 @@ static bool js_gfx_TextureInfo_get_height(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->height, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->height, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_height)
@@ -2933,6 +2981,7 @@ static bool js_gfx_TextureInfo_get_flags(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->flags, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->flags, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_flags)
@@ -2959,6 +3008,7 @@ static bool js_gfx_TextureInfo_get_layerCount(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->layerCount, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->layerCount, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_layerCount)
@@ -2985,6 +3035,7 @@ static bool js_gfx_TextureInfo_get_levelCount(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->levelCount, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->levelCount, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_levelCount)
@@ -3011,6 +3062,7 @@ static bool js_gfx_TextureInfo_get_samples(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->samples, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->samples, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_samples)
@@ -3037,6 +3089,7 @@ static bool js_gfx_TextureInfo_get_depth(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depth, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depth, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureInfo_get_depth)
@@ -3245,6 +3298,7 @@ static bool js_gfx_TextureViewInfo_get_texture(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->texture, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->texture, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureViewInfo_get_texture)
@@ -3271,6 +3325,7 @@ static bool js_gfx_TextureViewInfo_get_type(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->type, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->type, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureViewInfo_get_type)
@@ -3297,6 +3352,7 @@ static bool js_gfx_TextureViewInfo_get_format(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->format, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->format, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureViewInfo_get_format)
@@ -3323,6 +3379,7 @@ static bool js_gfx_TextureViewInfo_get_baseLevel(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->baseLevel, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->baseLevel, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureViewInfo_get_baseLevel)
@@ -3349,6 +3406,7 @@ static bool js_gfx_TextureViewInfo_get_levelCount(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->levelCount, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->levelCount, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureViewInfo_get_levelCount)
@@ -3375,6 +3433,7 @@ static bool js_gfx_TextureViewInfo_get_baseLayer(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->baseLayer, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->baseLayer, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureViewInfo_get_baseLayer)
@@ -3401,6 +3460,7 @@ static bool js_gfx_TextureViewInfo_get_layerCount(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->layerCount, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->layerCount, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_TextureViewInfo_get_layerCount)
@@ -3585,6 +3645,7 @@ static bool js_gfx_SamplerInfo_get_minFilter(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->minFilter, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->minFilter, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_minFilter)
@@ -3611,6 +3672,7 @@ static bool js_gfx_SamplerInfo_get_magFilter(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->magFilter, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->magFilter, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_magFilter)
@@ -3637,6 +3699,7 @@ static bool js_gfx_SamplerInfo_get_mipFilter(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->mipFilter, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->mipFilter, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_mipFilter)
@@ -3663,6 +3726,7 @@ static bool js_gfx_SamplerInfo_get_addressU(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->addressU, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->addressU, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_addressU)
@@ -3689,6 +3753,7 @@ static bool js_gfx_SamplerInfo_get_addressV(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->addressV, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->addressV, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_addressV)
@@ -3715,6 +3780,7 @@ static bool js_gfx_SamplerInfo_get_addressW(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->addressW, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->addressW, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_addressW)
@@ -3741,6 +3807,7 @@ static bool js_gfx_SamplerInfo_get_maxAnisotropy(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->maxAnisotropy, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->maxAnisotropy, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_maxAnisotropy)
@@ -3767,6 +3834,7 @@ static bool js_gfx_SamplerInfo_get_cmpFunc(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->cmpFunc, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->cmpFunc, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_cmpFunc)
@@ -3793,6 +3861,7 @@ static bool js_gfx_SamplerInfo_get_borderColor(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->borderColor, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->borderColor, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_borderColor)
@@ -3819,6 +3888,7 @@ static bool js_gfx_SamplerInfo_get_minLOD(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->minLOD, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->minLOD, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_minLOD)
@@ -3845,6 +3915,7 @@ static bool js_gfx_SamplerInfo_get_maxLOD(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->maxLOD, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->maxLOD, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_maxLOD)
@@ -3871,6 +3942,7 @@ static bool js_gfx_SamplerInfo_get_mipLODBias(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->mipLODBias, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->mipLODBias, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SamplerInfo_get_mipLODBias)
@@ -4095,6 +4167,7 @@ static bool js_gfx_ShaderMacro_get_macro(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->macro, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->macro, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderMacro_get_macro)
@@ -4121,6 +4194,7 @@ static bool js_gfx_ShaderMacro_get_value(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->value, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->value, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderMacro_get_value)
@@ -4265,6 +4339,7 @@ static bool js_gfx_Uniform_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Uniform_get_name)
@@ -4291,6 +4366,7 @@ static bool js_gfx_Uniform_get_type(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->type, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->type, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Uniform_get_type)
@@ -4317,6 +4393,7 @@ static bool js_gfx_Uniform_get_count(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->count, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->count, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Uniform_get_count)
@@ -4469,6 +4546,7 @@ static bool js_gfx_UniformBlock_get_set(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->set, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->set, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformBlock_get_set)
@@ -4495,6 +4573,7 @@ static bool js_gfx_UniformBlock_get_binding(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->binding, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->binding, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformBlock_get_binding)
@@ -4521,6 +4600,7 @@ static bool js_gfx_UniformBlock_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformBlock_get_name)
@@ -4547,6 +4627,7 @@ static bool js_gfx_UniformBlock_get_members(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->members, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->members, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformBlock_get_members)
@@ -4573,6 +4654,7 @@ static bool js_gfx_UniformBlock_get_count(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->count, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->count, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformBlock_get_count)
@@ -4741,6 +4823,7 @@ static bool js_gfx_UniformSampler_get_set(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->set, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->set, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformSampler_get_set)
@@ -4767,6 +4850,7 @@ static bool js_gfx_UniformSampler_get_binding(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->binding, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->binding, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformSampler_get_binding)
@@ -4793,6 +4877,7 @@ static bool js_gfx_UniformSampler_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformSampler_get_name)
@@ -4819,6 +4904,7 @@ static bool js_gfx_UniformSampler_get_type(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->type, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->type, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformSampler_get_type)
@@ -4845,6 +4931,7 @@ static bool js_gfx_UniformSampler_get_count(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->count, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->count, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_UniformSampler_get_count)
@@ -5013,6 +5100,7 @@ static bool js_gfx_ShaderStage_get_stage(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stage, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stage, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderStage_get_stage)
@@ -5039,6 +5127,7 @@ static bool js_gfx_ShaderStage_get_source(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->source, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->source, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderStage_get_source)
@@ -5183,6 +5272,7 @@ static bool js_gfx_Attribute_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Attribute_get_name)
@@ -5209,6 +5299,7 @@ static bool js_gfx_Attribute_get_format(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->format, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->format, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Attribute_get_format)
@@ -5235,6 +5326,7 @@ static bool js_gfx_Attribute_get_isNormalized(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isNormalized, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isNormalized, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Attribute_get_isNormalized)
@@ -5261,6 +5353,7 @@ static bool js_gfx_Attribute_get_stream(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stream, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stream, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Attribute_get_stream)
@@ -5287,6 +5380,7 @@ static bool js_gfx_Attribute_get_isInstanced(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isInstanced, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isInstanced, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Attribute_get_isInstanced)
@@ -5313,6 +5407,7 @@ static bool js_gfx_Attribute_get_location(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->location, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->location, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_Attribute_get_location)
@@ -5489,6 +5584,7 @@ static bool js_gfx_ShaderInfo_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderInfo_get_name)
@@ -5515,6 +5611,7 @@ static bool js_gfx_ShaderInfo_get_stages(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stages, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stages, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderInfo_get_stages)
@@ -5541,6 +5638,7 @@ static bool js_gfx_ShaderInfo_get_attributes(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->attributes, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->attributes, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderInfo_get_attributes)
@@ -5567,6 +5665,7 @@ static bool js_gfx_ShaderInfo_get_blocks(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blocks, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blocks, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderInfo_get_blocks)
@@ -5593,6 +5692,7 @@ static bool js_gfx_ShaderInfo_get_samplers(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->samplers, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->samplers, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ShaderInfo_get_samplers)
@@ -5761,6 +5861,7 @@ static bool js_gfx_InputAssemblerInfo_get_attributes(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->attributes, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->attributes, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_InputAssemblerInfo_get_attributes)
@@ -5787,6 +5888,7 @@ static bool js_gfx_InputAssemblerInfo_get_vertexBuffers(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->vertexBuffers, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->vertexBuffers, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_InputAssemblerInfo_get_vertexBuffers)
@@ -5813,6 +5915,7 @@ static bool js_gfx_InputAssemblerInfo_get_indexBuffer(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->indexBuffer, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->indexBuffer, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_InputAssemblerInfo_get_indexBuffer)
@@ -5839,6 +5942,7 @@ static bool js_gfx_InputAssemblerInfo_get_indirectBuffer(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->indirectBuffer, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->indirectBuffer, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_InputAssemblerInfo_get_indirectBuffer)
@@ -5999,6 +6103,7 @@ static bool js_gfx_ColorAttachment_get_format(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->format, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->format, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ColorAttachment_get_format)
@@ -6025,6 +6130,7 @@ static bool js_gfx_ColorAttachment_get_sampleCount(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->sampleCount, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->sampleCount, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ColorAttachment_get_sampleCount)
@@ -6051,6 +6157,7 @@ static bool js_gfx_ColorAttachment_get_loadOp(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->loadOp, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->loadOp, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ColorAttachment_get_loadOp)
@@ -6077,6 +6184,7 @@ static bool js_gfx_ColorAttachment_get_storeOp(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->storeOp, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->storeOp, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ColorAttachment_get_storeOp)
@@ -6103,6 +6211,7 @@ static bool js_gfx_ColorAttachment_get_beginLayout(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->beginLayout, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->beginLayout, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ColorAttachment_get_beginLayout)
@@ -6129,6 +6238,7 @@ static bool js_gfx_ColorAttachment_get_endLayout(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->endLayout, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->endLayout, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_ColorAttachment_get_endLayout)
@@ -6305,6 +6415,7 @@ static bool js_gfx_DepthStencilAttachment_get_format(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->format, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->format, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_format)
@@ -6331,6 +6442,7 @@ static bool js_gfx_DepthStencilAttachment_get_sampleCount(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->sampleCount, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->sampleCount, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_sampleCount)
@@ -6357,6 +6469,7 @@ static bool js_gfx_DepthStencilAttachment_get_depthLoadOp(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthLoadOp, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthLoadOp, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_depthLoadOp)
@@ -6383,6 +6496,7 @@ static bool js_gfx_DepthStencilAttachment_get_depthStoreOp(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthStoreOp, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthStoreOp, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_depthStoreOp)
@@ -6409,6 +6523,7 @@ static bool js_gfx_DepthStencilAttachment_get_stencilLoadOp(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilLoadOp, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilLoadOp, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_stencilLoadOp)
@@ -6435,6 +6550,7 @@ static bool js_gfx_DepthStencilAttachment_get_stencilStoreOp(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilStoreOp, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilStoreOp, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_stencilStoreOp)
@@ -6461,6 +6577,7 @@ static bool js_gfx_DepthStencilAttachment_get_beginLayout(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->beginLayout, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->beginLayout, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_beginLayout)
@@ -6487,6 +6604,7 @@ static bool js_gfx_DepthStencilAttachment_get_endLayout(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->endLayout, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->endLayout, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilAttachment_get_endLayout)
@@ -6679,6 +6797,7 @@ static bool js_gfx_SubPassInfo_get_bindPoint(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->bindPoint, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->bindPoint, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SubPassInfo_get_bindPoint)
@@ -6705,6 +6824,7 @@ static bool js_gfx_SubPassInfo_get_inputs(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->inputs, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->inputs, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SubPassInfo_get_inputs)
@@ -6731,6 +6851,7 @@ static bool js_gfx_SubPassInfo_get_colors(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->colors, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->colors, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SubPassInfo_get_colors)
@@ -6757,6 +6878,7 @@ static bool js_gfx_SubPassInfo_get_resolves(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->resolves, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->resolves, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SubPassInfo_get_resolves)
@@ -6783,6 +6905,7 @@ static bool js_gfx_SubPassInfo_get_depthStencil(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthStencil, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthStencil, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SubPassInfo_get_depthStencil)
@@ -6809,6 +6932,7 @@ static bool js_gfx_SubPassInfo_get_preserves(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->preserves, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->preserves, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_SubPassInfo_get_preserves)
@@ -6985,6 +7109,7 @@ static bool js_gfx_RenderPassInfo_get_colorAttachments(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->colorAttachments, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->colorAttachments, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RenderPassInfo_get_colorAttachments)
@@ -7011,6 +7136,7 @@ static bool js_gfx_RenderPassInfo_get_depthStencilAttachment(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthStencilAttachment, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthStencilAttachment, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RenderPassInfo_get_depthStencilAttachment)
@@ -7037,6 +7163,7 @@ static bool js_gfx_RenderPassInfo_get_subPasses(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->subPasses, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->subPasses, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RenderPassInfo_get_subPasses)
@@ -7189,6 +7316,7 @@ static bool js_gfx_FramebufferInfo_get_renderPass(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->renderPass, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->renderPass, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FramebufferInfo_get_renderPass)
@@ -7215,6 +7343,7 @@ static bool js_gfx_FramebufferInfo_get_colorTextures(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->colorTextures, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->colorTextures, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FramebufferInfo_get_colorTextures)
@@ -7241,6 +7370,7 @@ static bool js_gfx_FramebufferInfo_get_depthStencilTexture(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthStencilTexture, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthStencilTexture, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FramebufferInfo_get_depthStencilTexture)
@@ -7267,6 +7397,7 @@ static bool js_gfx_FramebufferInfo_get_colorMipmapLevels(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->colorMipmapLevels, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->colorMipmapLevels, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FramebufferInfo_get_colorMipmapLevels)
@@ -7293,6 +7424,7 @@ static bool js_gfx_FramebufferInfo_get_depthStencilMipmapLevel(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthStencilMipmapLevel, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthStencilMipmapLevel, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FramebufferInfo_get_depthStencilMipmapLevel)
@@ -7461,6 +7593,7 @@ static bool js_gfx_DescriptorSetLayoutBinding_get_binding(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->binding, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->binding, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DescriptorSetLayoutBinding_get_binding)
@@ -7487,6 +7620,7 @@ static bool js_gfx_DescriptorSetLayoutBinding_get_descriptorType(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->descriptorType, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->descriptorType, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DescriptorSetLayoutBinding_get_descriptorType)
@@ -7513,6 +7647,7 @@ static bool js_gfx_DescriptorSetLayoutBinding_get_count(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->count, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->count, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DescriptorSetLayoutBinding_get_count)
@@ -7539,6 +7674,7 @@ static bool js_gfx_DescriptorSetLayoutBinding_get_stageFlags(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stageFlags, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stageFlags, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DescriptorSetLayoutBinding_get_stageFlags)
@@ -7565,6 +7701,7 @@ static bool js_gfx_DescriptorSetLayoutBinding_get_immutableSamplers(se::State& s
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->immutableSamplers, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->immutableSamplers, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DescriptorSetLayoutBinding_get_immutableSamplers)
@@ -7733,6 +7870,7 @@ static bool js_gfx_DescriptorSetLayoutInfo_get_bindings(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->bindings, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->bindings, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DescriptorSetLayoutInfo_get_bindings)
@@ -7852,6 +7990,7 @@ static bool js_gfx_DescriptorSetInfo_get_layout(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->layout, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->layout, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DescriptorSetInfo_get_layout)
@@ -7971,6 +8110,7 @@ static bool js_gfx_PipelineLayoutInfo_get_setLayouts(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->setLayouts, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->setLayouts, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineLayoutInfo_get_setLayouts)
@@ -8090,6 +8230,7 @@ static bool js_gfx_InputState_get_attributes(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->attributes, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->attributes, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_InputState_get_attributes)
@@ -8209,6 +8350,7 @@ static bool js_gfx_RasterizerState_get_isDiscard(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isDiscard, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isDiscard, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_isDiscard)
@@ -8235,6 +8377,7 @@ static bool js_gfx_RasterizerState_get_polygonMode(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->polygonMode, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->polygonMode, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_polygonMode)
@@ -8261,6 +8404,7 @@ static bool js_gfx_RasterizerState_get_shadeModel(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->shadeModel, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->shadeModel, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_shadeModel)
@@ -8287,6 +8431,7 @@ static bool js_gfx_RasterizerState_get_cullMode(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->cullMode, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->cullMode, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_cullMode)
@@ -8313,6 +8458,7 @@ static bool js_gfx_RasterizerState_get_isFrontFaceCCW(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isFrontFaceCCW, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isFrontFaceCCW, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_isFrontFaceCCW)
@@ -8339,6 +8485,7 @@ static bool js_gfx_RasterizerState_get_depthBiasEnabled(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthBiasEnabled, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthBiasEnabled, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_depthBiasEnabled)
@@ -8365,6 +8512,7 @@ static bool js_gfx_RasterizerState_get_depthBias(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthBias, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthBias, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_depthBias)
@@ -8391,6 +8539,7 @@ static bool js_gfx_RasterizerState_get_depthBiasClamp(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthBiasClamp, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthBiasClamp, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_depthBiasClamp)
@@ -8417,6 +8566,7 @@ static bool js_gfx_RasterizerState_get_depthBiasSlop(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthBiasSlop, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthBiasSlop, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_depthBiasSlop)
@@ -8443,6 +8593,7 @@ static bool js_gfx_RasterizerState_get_isDepthClip(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isDepthClip, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isDepthClip, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_isDepthClip)
@@ -8469,6 +8620,7 @@ static bool js_gfx_RasterizerState_get_isMultisample(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isMultisample, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isMultisample, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_isMultisample)
@@ -8495,6 +8647,7 @@ static bool js_gfx_RasterizerState_get_lineWidth(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->lineWidth, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->lineWidth, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_RasterizerState_get_lineWidth)
@@ -8719,6 +8872,7 @@ static bool js_gfx_DepthStencilState_get_depthTest(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthTest, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthTest, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_depthTest)
@@ -8745,6 +8899,7 @@ static bool js_gfx_DepthStencilState_get_depthWrite(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthWrite, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthWrite, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_depthWrite)
@@ -8771,6 +8926,7 @@ static bool js_gfx_DepthStencilState_get_depthFunc(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthFunc, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthFunc, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_depthFunc)
@@ -8797,6 +8953,7 @@ static bool js_gfx_DepthStencilState_get_stencilTestFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilTestFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilTestFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilTestFront)
@@ -8823,6 +8980,7 @@ static bool js_gfx_DepthStencilState_get_stencilFuncFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilFuncFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilFuncFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilFuncFront)
@@ -8849,6 +9007,7 @@ static bool js_gfx_DepthStencilState_get_stencilReadMaskFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilReadMaskFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilReadMaskFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilReadMaskFront)
@@ -8875,6 +9034,7 @@ static bool js_gfx_DepthStencilState_get_stencilWriteMaskFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilWriteMaskFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilWriteMaskFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilWriteMaskFront)
@@ -8901,6 +9061,7 @@ static bool js_gfx_DepthStencilState_get_stencilFailOpFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilFailOpFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilFailOpFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilFailOpFront)
@@ -8927,6 +9088,7 @@ static bool js_gfx_DepthStencilState_get_stencilZFailOpFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilZFailOpFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilZFailOpFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilZFailOpFront)
@@ -8953,6 +9115,7 @@ static bool js_gfx_DepthStencilState_get_stencilPassOpFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilPassOpFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilPassOpFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilPassOpFront)
@@ -8979,6 +9142,7 @@ static bool js_gfx_DepthStencilState_get_stencilRefFront(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilRefFront, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilRefFront, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilRefFront)
@@ -9005,6 +9169,7 @@ static bool js_gfx_DepthStencilState_get_stencilTestBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilTestBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilTestBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilTestBack)
@@ -9031,6 +9196,7 @@ static bool js_gfx_DepthStencilState_get_stencilFuncBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilFuncBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilFuncBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilFuncBack)
@@ -9057,6 +9223,7 @@ static bool js_gfx_DepthStencilState_get_stencilReadMaskBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilReadMaskBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilReadMaskBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilReadMaskBack)
@@ -9083,6 +9250,7 @@ static bool js_gfx_DepthStencilState_get_stencilWriteMaskBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilWriteMaskBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilWriteMaskBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilWriteMaskBack)
@@ -9109,6 +9277,7 @@ static bool js_gfx_DepthStencilState_get_stencilFailOpBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilFailOpBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilFailOpBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilFailOpBack)
@@ -9135,6 +9304,7 @@ static bool js_gfx_DepthStencilState_get_stencilZFailOpBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilZFailOpBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilZFailOpBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilZFailOpBack)
@@ -9161,6 +9331,7 @@ static bool js_gfx_DepthStencilState_get_stencilPassOpBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilPassOpBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilPassOpBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilPassOpBack)
@@ -9187,6 +9358,7 @@ static bool js_gfx_DepthStencilState_get_stencilRefBack(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stencilRefBack, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilRefBack, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_DepthStencilState_get_stencilRefBack)
@@ -9467,6 +9639,7 @@ static bool js_gfx_BlendTarget_get_blend(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blend, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blend, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blend)
@@ -9493,6 +9666,7 @@ static bool js_gfx_BlendTarget_get_blendSrc(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendSrc, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendSrc, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blendSrc)
@@ -9519,6 +9693,7 @@ static bool js_gfx_BlendTarget_get_blendDst(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendDst, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendDst, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blendDst)
@@ -9545,6 +9720,7 @@ static bool js_gfx_BlendTarget_get_blendEq(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendEq, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendEq, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blendEq)
@@ -9571,6 +9747,7 @@ static bool js_gfx_BlendTarget_get_blendSrcAlpha(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendSrcAlpha, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendSrcAlpha, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blendSrcAlpha)
@@ -9597,6 +9774,7 @@ static bool js_gfx_BlendTarget_get_blendDstAlpha(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendDstAlpha, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendDstAlpha, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blendDstAlpha)
@@ -9623,6 +9801,7 @@ static bool js_gfx_BlendTarget_get_blendAlphaEq(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendAlphaEq, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendAlphaEq, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blendAlphaEq)
@@ -9649,6 +9828,7 @@ static bool js_gfx_BlendTarget_get_blendColorMask(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendColorMask, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendColorMask, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendTarget_get_blendColorMask)
@@ -9841,6 +10021,7 @@ static bool js_gfx_BlendState_get_isA2C(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isA2C, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isA2C, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendState_get_isA2C)
@@ -9867,6 +10048,7 @@ static bool js_gfx_BlendState_get_isIndepend(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isIndepend, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isIndepend, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendState_get_isIndepend)
@@ -9893,6 +10075,7 @@ static bool js_gfx_BlendState_get_blendColor(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendColor, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendColor, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendState_get_blendColor)
@@ -9919,6 +10102,7 @@ static bool js_gfx_BlendState_get_targets(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->targets, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->targets, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_BlendState_get_targets)
@@ -10079,6 +10263,7 @@ static bool js_gfx_PipelineStateInfo_get_shader(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->shader, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->shader, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_shader)
@@ -10105,6 +10290,7 @@ static bool js_gfx_PipelineStateInfo_get_pipelineLayout(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->pipelineLayout, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->pipelineLayout, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_pipelineLayout)
@@ -10131,6 +10317,7 @@ static bool js_gfx_PipelineStateInfo_get_renderPass(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->renderPass, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->renderPass, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_renderPass)
@@ -10157,6 +10344,7 @@ static bool js_gfx_PipelineStateInfo_get_inputState(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->inputState, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->inputState, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_inputState)
@@ -10183,6 +10371,7 @@ static bool js_gfx_PipelineStateInfo_get_rasterizerState(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->rasterizerState, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->rasterizerState, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_rasterizerState)
@@ -10209,6 +10398,7 @@ static bool js_gfx_PipelineStateInfo_get_depthStencilState(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthStencilState, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthStencilState, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_depthStencilState)
@@ -10235,6 +10425,7 @@ static bool js_gfx_PipelineStateInfo_get_blendState(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendState, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->blendState, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_blendState)
@@ -10261,6 +10452,7 @@ static bool js_gfx_PipelineStateInfo_get_primitive(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->primitive, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->primitive, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_primitive)
@@ -10287,6 +10479,7 @@ static bool js_gfx_PipelineStateInfo_get_dynamicStates(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->dynamicStates, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->dynamicStates, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_PipelineStateInfo_get_dynamicStates)
@@ -10487,6 +10680,7 @@ static bool js_gfx_FormatInfo_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_name)
@@ -10513,6 +10707,7 @@ static bool js_gfx_FormatInfo_get_size(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->size, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->size, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_size)
@@ -10539,6 +10734,7 @@ static bool js_gfx_FormatInfo_get_count(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->count, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->count, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_count)
@@ -10565,6 +10761,7 @@ static bool js_gfx_FormatInfo_get_type(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->type, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->type, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_type)
@@ -10591,6 +10788,7 @@ static bool js_gfx_FormatInfo_get_hasAlpha(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->hasAlpha, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->hasAlpha, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_hasAlpha)
@@ -10617,6 +10815,7 @@ static bool js_gfx_FormatInfo_get_hasDepth(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->hasDepth, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->hasDepth, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_hasDepth)
@@ -10643,6 +10842,7 @@ static bool js_gfx_FormatInfo_get_hasStencil(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->hasStencil, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->hasStencil, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_hasStencil)
@@ -10669,6 +10869,7 @@ static bool js_gfx_FormatInfo_get_isCompressed(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isCompressed, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->isCompressed, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_FormatInfo_get_isCompressed)
@@ -10861,6 +11062,7 @@ static bool js_gfx_MemoryStatus_get_bufferSize(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->bufferSize, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->bufferSize, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_MemoryStatus_get_bufferSize)
@@ -10887,6 +11089,7 @@ static bool js_gfx_MemoryStatus_get_textureSize(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->textureSize, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->textureSize, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_gfx_MemoryStatus_get_textureSize)
@@ -11033,6 +11236,7 @@ static bool js_gfx_GFXObject_getType(se::State& s)
         int result = (int)cobj->getType();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_GFXObject_getType : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11117,6 +11321,7 @@ static bool js_gfx_Device_bindingMappingInfo(se::State& s)
         const cc::gfx::BindingMappingInfo& result = cobj->bindingMappingInfo();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_bindingMappingInfo : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11139,6 +11344,7 @@ static bool js_gfx_Device_createCommandBuffer(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createCommandBuffer : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11161,6 +11367,7 @@ static bool js_gfx_Device_createDescriptorSet(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createDescriptorSet : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11183,6 +11390,7 @@ static bool js_gfx_Device_createDescriptorSetLayout(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createDescriptorSetLayout : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11205,6 +11413,7 @@ static bool js_gfx_Device_createFence(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createFence : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11227,6 +11436,7 @@ static bool js_gfx_Device_createFramebuffer(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createFramebuffer : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11249,6 +11459,7 @@ static bool js_gfx_Device_createInputAssembler(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createInputAssembler : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11271,6 +11482,7 @@ static bool js_gfx_Device_createPipelineLayout(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createPipelineLayout : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11293,6 +11505,7 @@ static bool js_gfx_Device_createPipelineState(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createPipelineState : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11315,6 +11528,7 @@ static bool js_gfx_Device_createQueue(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createQueue : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11337,6 +11551,7 @@ static bool js_gfx_Device_createRenderPass(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createRenderPass : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11359,6 +11574,7 @@ static bool js_gfx_Device_createSampler(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createSampler : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11381,6 +11597,7 @@ static bool js_gfx_Device_createShader(se::State& s)
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_createShader : Error processing arguments");
         se::NonRefNativePtrCreatedByCtorMap::emplace(result);
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -11435,6 +11652,7 @@ static bool js_gfx_Device_genShaderId(se::State& s)
         unsigned int result = cobj->genShaderId();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_genShaderId : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11453,6 +11671,7 @@ static bool js_gfx_Device_getClipSpaceMinZ(se::State& s)
         float result = cobj->getClipSpaceMinZ();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getClipSpaceMinZ : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11471,6 +11690,7 @@ static bool js_gfx_Device_getColorFormat(se::State& s)
         int result = (int)cobj->getColorFormat();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getColorFormat : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11489,6 +11709,7 @@ static bool js_gfx_Device_getCommandBuffer(se::State& s)
         cc::gfx::CommandBuffer* result = cobj->getCommandBuffer();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getCommandBuffer : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11507,6 +11728,7 @@ static bool js_gfx_Device_getContext(se::State& s)
         cc::gfx::Context* result = cobj->getContext();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getContext : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11525,6 +11747,7 @@ static bool js_gfx_Device_getDepthBits(se::State& s)
         int result = cobj->getDepthBits();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getDepthBits : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11543,6 +11766,7 @@ static bool js_gfx_Device_getDepthStencilFormat(se::State& s)
         int result = (int)cobj->getDepthStencilFormat();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getDepthStencilFormat : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11561,6 +11785,7 @@ static bool js_gfx_Device_getDeviceName(se::State& s)
         const cc::String& result = cobj->getDeviceName();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getDeviceName : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11579,6 +11804,7 @@ static bool js_gfx_Device_getGfxAPI(se::State& s)
         int result = (int)cobj->getGfxAPI();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getGfxAPI : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11597,6 +11823,7 @@ static bool js_gfx_Device_getHeight(se::State& s)
         unsigned int result = cobj->getHeight();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getHeight : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11615,6 +11842,7 @@ static bool js_gfx_Device_getMaxCubeMapTextureSize(se::State& s)
         int result = cobj->getMaxCubeMapTextureSize();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxCubeMapTextureSize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11633,6 +11861,7 @@ static bool js_gfx_Device_getMaxFragmentUniformVectors(se::State& s)
         int result = cobj->getMaxFragmentUniformVectors();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxFragmentUniformVectors : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11651,6 +11880,7 @@ static bool js_gfx_Device_getMaxTextureSize(se::State& s)
         int result = cobj->getMaxTextureSize();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxTextureSize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11669,6 +11899,7 @@ static bool js_gfx_Device_getMaxTextureUnits(se::State& s)
         int result = cobj->getMaxTextureUnits();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxTextureUnits : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11687,6 +11918,7 @@ static bool js_gfx_Device_getMaxUniformBlockSize(se::State& s)
         int result = cobj->getMaxUniformBlockSize();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxUniformBlockSize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11705,6 +11937,7 @@ static bool js_gfx_Device_getMaxUniformBufferBindings(se::State& s)
         int result = cobj->getMaxUniformBufferBindings();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxUniformBufferBindings : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11723,6 +11956,7 @@ static bool js_gfx_Device_getMaxVertexAttributes(se::State& s)
         int result = cobj->getMaxVertexAttributes();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxVertexAttributes : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11741,6 +11975,7 @@ static bool js_gfx_Device_getMaxVertexTextureUnits(se::State& s)
         int result = cobj->getMaxVertexTextureUnits();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxVertexTextureUnits : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11759,6 +11994,7 @@ static bool js_gfx_Device_getMaxVertexUniformVectors(se::State& s)
         int result = cobj->getMaxVertexUniformVectors();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMaxVertexUniformVectors : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11777,6 +12013,7 @@ static bool js_gfx_Device_getMemoryStatus(se::State& s)
         cc::gfx::MemoryStatus& result = cobj->getMemoryStatus();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getMemoryStatus : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11795,6 +12032,7 @@ static bool js_gfx_Device_getNativeHeight(se::State& s)
         unsigned int result = cobj->getNativeHeight();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getNativeHeight : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11813,6 +12051,7 @@ static bool js_gfx_Device_getNativeWidth(se::State& s)
         unsigned int result = cobj->getNativeWidth();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getNativeWidth : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11831,6 +12070,7 @@ static bool js_gfx_Device_getNumDrawCalls(se::State& s)
         unsigned int result = cobj->getNumDrawCalls();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getNumDrawCalls : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11849,6 +12089,7 @@ static bool js_gfx_Device_getNumInstances(se::State& s)
         unsigned int result = cobj->getNumInstances();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getNumInstances : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11867,6 +12108,7 @@ static bool js_gfx_Device_getNumTris(se::State& s)
         unsigned int result = cobj->getNumTris();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getNumTris : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11885,6 +12127,7 @@ static bool js_gfx_Device_getQueue(se::State& s)
         cc::gfx::Queue* result = cobj->getQueue();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getQueue : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11903,6 +12146,7 @@ static bool js_gfx_Device_getRenderer(se::State& s)
         const cc::String& result = cobj->getRenderer();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getRenderer : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11921,6 +12165,7 @@ static bool js_gfx_Device_getScreenSpaceSignY(se::State& s)
         float result = cobj->getScreenSpaceSignY();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getScreenSpaceSignY : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11939,6 +12184,7 @@ static bool js_gfx_Device_getShaderIdGen(se::State& s)
         unsigned int result = cobj->getShaderIdGen();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getShaderIdGen : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11957,6 +12203,7 @@ static bool js_gfx_Device_getStencilBits(se::State& s)
         int result = cobj->getStencilBits();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getStencilBits : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11975,6 +12222,7 @@ static bool js_gfx_Device_getSurfaceTransform(se::State& s)
         int result = (int)cobj->getSurfaceTransform();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getSurfaceTransform : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -11993,6 +12241,7 @@ static bool js_gfx_Device_getUVSpaceSignY(se::State& s)
         float result = cobj->getUVSpaceSignY();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getUVSpaceSignY : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12011,6 +12260,7 @@ static bool js_gfx_Device_getUboOffsetAlignment(se::State& s)
         int result = cobj->getUboOffsetAlignment();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getUboOffsetAlignment : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12029,6 +12279,7 @@ static bool js_gfx_Device_getVendor(se::State& s)
         const cc::String& result = cobj->getVendor();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getVendor : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12047,6 +12298,7 @@ static bool js_gfx_Device_getWidth(se::State& s)
         unsigned int result = cobj->getWidth();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_getWidth : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12068,6 +12320,7 @@ static bool js_gfx_Device_hasFeature(se::State& s)
         bool result = cobj->hasFeature(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_hasFeature : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -12089,6 +12342,7 @@ static bool js_gfx_Device_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Device_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -12233,6 +12487,7 @@ static bool js_gfx_Context_getColorFormat(se::State& s)
         int result = (int)cobj->getColorFormat();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Context_getColorFormat : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12251,6 +12506,7 @@ static bool js_gfx_Context_getDepthStencilFormat(se::State& s)
         int result = (int)cobj->getDepthStencilFormat();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Context_getDepthStencilFormat : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12269,6 +12525,7 @@ static bool js_gfx_Context_getDevice(se::State& s)
         cc::gfx::Device* result = cobj->getDevice();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Context_getDevice : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12287,6 +12544,7 @@ static bool js_gfx_Context_getSharedContext(se::State& s)
         cc::gfx::Context* result = cobj->getSharedContext();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Context_getSharedContext : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12305,6 +12563,7 @@ static bool js_gfx_Context_getVsyncMode(se::State& s)
         int result = (int)cobj->getVsyncMode();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Context_getVsyncMode : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12326,6 +12585,7 @@ static bool js_gfx_Context_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Context_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -12426,6 +12686,7 @@ static bool js_gfx_Buffer_getCount(se::State& s)
         unsigned int result = cobj->getCount();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Buffer_getCount : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12444,6 +12705,7 @@ static bool js_gfx_Buffer_getFlags(se::State& s)
         int result = (int)cobj->getFlags();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Buffer_getFlags : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12462,6 +12724,7 @@ static bool js_gfx_Buffer_getMemUsage(se::State& s)
         int result = (int)cobj->getMemUsage();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Buffer_getMemUsage : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12480,6 +12743,7 @@ static bool js_gfx_Buffer_getSize(se::State& s)
         unsigned int result = cobj->getSize();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Buffer_getSize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12498,6 +12762,7 @@ static bool js_gfx_Buffer_getStride(se::State& s)
         unsigned int result = cobj->getStride();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Buffer_getStride : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12516,6 +12781,7 @@ static bool js_gfx_Buffer_getUsage(se::State& s)
         int result = (int)cobj->getUsage();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Buffer_getUsage : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12621,6 +12887,7 @@ static bool js_gfx_Texture_getBuffer(se::State& s)
         unsigned char* result = cobj->getBuffer();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getBuffer : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12639,6 +12906,7 @@ static bool js_gfx_Texture_getDepth(se::State& s)
         unsigned int result = cobj->getDepth();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getDepth : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12657,6 +12925,7 @@ static bool js_gfx_Texture_getFlags(se::State& s)
         int result = (int)cobj->getFlags();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getFlags : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12675,6 +12944,7 @@ static bool js_gfx_Texture_getFormat(se::State& s)
         int result = (int)cobj->getFormat();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getFormat : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12693,6 +12963,7 @@ static bool js_gfx_Texture_getHeight(se::State& s)
         unsigned int result = cobj->getHeight();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getHeight : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12711,6 +12982,7 @@ static bool js_gfx_Texture_getLayerCount(se::State& s)
         unsigned int result = cobj->getLayerCount();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getLayerCount : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12729,6 +13001,7 @@ static bool js_gfx_Texture_getLevelCount(se::State& s)
         unsigned int result = cobj->getLevelCount();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getLevelCount : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12747,6 +13020,7 @@ static bool js_gfx_Texture_getSamples(se::State& s)
         int result = (int)cobj->getSamples();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getSamples : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12765,6 +13039,7 @@ static bool js_gfx_Texture_getSize(se::State& s)
         unsigned int result = cobj->getSize();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getSize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12783,6 +13058,7 @@ static bool js_gfx_Texture_getType(se::State& s)
         int result = (int)cobj->getType();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getType : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12801,6 +13077,7 @@ static bool js_gfx_Texture_getUsage(se::State& s)
         int result = (int)cobj->getUsage();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getUsage : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12819,6 +13096,7 @@ static bool js_gfx_Texture_getWidth(se::State& s)
         unsigned int result = cobj->getWidth();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_getWidth : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12837,6 +13115,7 @@ static bool js_gfx_Texture_isTextureView(se::State& s)
         bool result = cobj->isTextureView();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Texture_isTextureView : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12951,6 +13230,7 @@ static bool js_gfx_Sampler_getAddressU(se::State& s)
         int result = (int)cobj->getAddressU();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getAddressU : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12969,6 +13249,7 @@ static bool js_gfx_Sampler_getAddressV(se::State& s)
         int result = (int)cobj->getAddressV();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getAddressV : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -12987,6 +13268,7 @@ static bool js_gfx_Sampler_getAddressW(se::State& s)
         int result = (int)cobj->getAddressW();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getAddressW : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13005,6 +13287,7 @@ static bool js_gfx_Sampler_getBorderColor(se::State& s)
         const cc::gfx::Color& result = cobj->getBorderColor();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getBorderColor : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13023,6 +13306,7 @@ static bool js_gfx_Sampler_getCmpFunc(se::State& s)
         int result = (int)cobj->getCmpFunc();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getCmpFunc : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13041,6 +13325,7 @@ static bool js_gfx_Sampler_getMagFilter(se::State& s)
         int result = (int)cobj->getMagFilter();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getMagFilter : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13059,6 +13344,7 @@ static bool js_gfx_Sampler_getMaxAnisotropy(se::State& s)
         unsigned int result = cobj->getMaxAnisotropy();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getMaxAnisotropy : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13077,6 +13363,7 @@ static bool js_gfx_Sampler_getMaxLOD(se::State& s)
         unsigned int result = cobj->getMaxLOD();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getMaxLOD : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13095,6 +13382,7 @@ static bool js_gfx_Sampler_getMinFilter(se::State& s)
         int result = (int)cobj->getMinFilter();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getMinFilter : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13113,6 +13401,7 @@ static bool js_gfx_Sampler_getMinLOD(se::State& s)
         unsigned int result = cobj->getMinLOD();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getMinLOD : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13131,6 +13420,7 @@ static bool js_gfx_Sampler_getMipFilter(se::State& s)
         int result = (int)cobj->getMipFilter();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getMipFilter : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13149,6 +13439,7 @@ static bool js_gfx_Sampler_getMipLODBias(se::State& s)
         float result = cobj->getMipLODBias();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_getMipLODBias : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13170,6 +13461,7 @@ static bool js_gfx_Sampler_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Sampler_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -13262,6 +13554,7 @@ static bool js_gfx_Shader_getAttributes(se::State& s)
         const std::vector<cc::gfx::Attribute>& result = cobj->getAttributes();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Shader_getAttributes : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13280,6 +13573,7 @@ static bool js_gfx_Shader_getBlocks(se::State& s)
         const std::vector<cc::gfx::UniformBlock>& result = cobj->getBlocks();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Shader_getBlocks : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13298,6 +13592,7 @@ static bool js_gfx_Shader_getID(se::State& s)
         unsigned int result = cobj->getID();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Shader_getID : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13316,6 +13611,7 @@ static bool js_gfx_Shader_getName(se::State& s)
         const cc::String& result = cobj->getName();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Shader_getName : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13334,6 +13630,7 @@ static bool js_gfx_Shader_getSamplers(se::State& s)
         const std::vector<cc::gfx::UniformSampler>& result = cobj->getSamplers();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Shader_getSamplers : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13352,6 +13649,7 @@ static bool js_gfx_Shader_getStages(se::State& s)
         const std::vector<cc::gfx::ShaderStage>& result = cobj->getStages();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Shader_getStages : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13373,6 +13671,7 @@ static bool js_gfx_Shader_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Shader_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -13459,6 +13758,7 @@ static bool js_gfx_InputAssembler_getAttributes(se::State& s)
         const std::vector<cc::gfx::Attribute>& result = cobj->getAttributes();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getAttributes : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13477,6 +13777,7 @@ static bool js_gfx_InputAssembler_getAttributesHash(se::State& s)
         unsigned int result = cobj->getAttributesHash();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getAttributesHash : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13495,6 +13796,7 @@ static bool js_gfx_InputAssembler_getFirstIndex(se::State& s)
         unsigned int result = cobj->getFirstIndex();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getFirstIndex : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13513,6 +13815,7 @@ static bool js_gfx_InputAssembler_getFirstInstance(se::State& s)
         unsigned int result = cobj->getFirstInstance();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getFirstInstance : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13531,6 +13834,7 @@ static bool js_gfx_InputAssembler_getFirstVertex(se::State& s)
         unsigned int result = cobj->getFirstVertex();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getFirstVertex : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13549,6 +13853,7 @@ static bool js_gfx_InputAssembler_getIndexBuffer(se::State& s)
         cc::gfx::Buffer* result = cobj->getIndexBuffer();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getIndexBuffer : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13567,6 +13872,7 @@ static bool js_gfx_InputAssembler_getIndexCount(se::State& s)
         unsigned int result = cobj->getIndexCount();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getIndexCount : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13585,6 +13891,7 @@ static bool js_gfx_InputAssembler_getIndirectBuffer(se::State& s)
         cc::gfx::Buffer* result = cobj->getIndirectBuffer();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getIndirectBuffer : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13603,6 +13910,7 @@ static bool js_gfx_InputAssembler_getInstanceCount(se::State& s)
         unsigned int result = cobj->getInstanceCount();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getInstanceCount : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13621,6 +13929,7 @@ static bool js_gfx_InputAssembler_getVertexBuffers(se::State& s)
         const std::vector<cc::gfx::Buffer *>& result = cobj->getVertexBuffers();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getVertexBuffers : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13639,6 +13948,7 @@ static bool js_gfx_InputAssembler_getVertexCount(se::State& s)
         unsigned int result = cobj->getVertexCount();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getVertexCount : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13657,6 +13967,7 @@ static bool js_gfx_InputAssembler_getVertexOffset(se::State& s)
         unsigned int result = cobj->getVertexOffset();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_getVertexOffset : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13678,6 +13989,7 @@ static bool js_gfx_InputAssembler_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_InputAssembler_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -13903,6 +14215,7 @@ static bool js_gfx_RenderPass_getDepthStencilAttachment(se::State& s)
         const cc::gfx::DepthStencilAttachment& result = cobj->getDepthStencilAttachment();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_RenderPass_getDepthStencilAttachment : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13921,6 +14234,7 @@ static bool js_gfx_RenderPass_getHash(se::State& s)
         unsigned int result = cobj->getHash();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_RenderPass_getHash : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13939,6 +14253,7 @@ static bool js_gfx_RenderPass_getSubPasses(se::State& s)
         const std::vector<cc::gfx::SubPassInfo>& result = cobj->getSubPasses();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_RenderPass_getSubPasses : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -13960,6 +14275,7 @@ static bool js_gfx_RenderPass_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_RenderPass_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -14043,6 +14359,7 @@ static bool js_gfx_Framebuffer_getColorTextures(se::State& s)
         const std::vector<cc::gfx::Texture *>& result = cobj->getColorTextures();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Framebuffer_getColorTextures : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14061,6 +14378,7 @@ static bool js_gfx_Framebuffer_getDepthStencilTexture(se::State& s)
         cc::gfx::Texture* result = cobj->getDepthStencilTexture();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Framebuffer_getDepthStencilTexture : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14079,6 +14397,7 @@ static bool js_gfx_Framebuffer_getRenderPass(se::State& s)
         cc::gfx::RenderPass* result = cobj->getRenderPass();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Framebuffer_getRenderPass : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14100,6 +14419,7 @@ static bool js_gfx_Framebuffer_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Framebuffer_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -14183,6 +14503,7 @@ static bool js_gfx_DescriptorSetLayout_getBindings(se::State& s)
         const std::vector<cc::gfx::DescriptorSetLayoutBinding>& result = cobj->getBindings();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSetLayout_getBindings : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14204,6 +14525,7 @@ static bool js_gfx_DescriptorSetLayout_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSetLayout_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -14285,6 +14607,7 @@ static bool js_gfx_PipelineLayout_getSetLayouts(se::State& s)
         const std::vector<cc::gfx::DescriptorSetLayout *>& result = cobj->getSetLayouts();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineLayout_getSetLayouts : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14306,6 +14629,7 @@ static bool js_gfx_PipelineLayout_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineLayout_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -14387,6 +14711,7 @@ static bool js_gfx_PipelineState_getBlendState(se::State& s)
         const cc::gfx::BlendState& result = cobj->getBlendState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getBlendState : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14405,6 +14730,7 @@ static bool js_gfx_PipelineState_getDepthStencilState(se::State& s)
         const cc::gfx::DepthStencilState& result = cobj->getDepthStencilState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getDepthStencilState : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14423,6 +14749,7 @@ static bool js_gfx_PipelineState_getDynamicStates(se::State& s)
         int result = (int)cobj->getDynamicStates();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getDynamicStates : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14441,6 +14768,7 @@ static bool js_gfx_PipelineState_getInputState(se::State& s)
         const cc::gfx::InputState& result = cobj->getInputState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getInputState : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14459,6 +14787,7 @@ static bool js_gfx_PipelineState_getPipelineLayout(se::State& s)
         const cc::gfx::PipelineLayout* result = cobj->getPipelineLayout();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getPipelineLayout : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14477,6 +14806,7 @@ static bool js_gfx_PipelineState_getPrimitive(se::State& s)
         int result = (int)cobj->getPrimitive();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getPrimitive : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14495,6 +14825,7 @@ static bool js_gfx_PipelineState_getRasterizerState(se::State& s)
         const cc::gfx::RasterizerState& result = cobj->getRasterizerState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getRasterizerState : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14513,6 +14844,7 @@ static bool js_gfx_PipelineState_getRenderPass(se::State& s)
         const cc::gfx::RenderPass* result = cobj->getRenderPass();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getRenderPass : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14531,6 +14863,7 @@ static bool js_gfx_PipelineState_getShader(se::State& s)
         cc::gfx::Shader* result = cobj->getShader();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_getShader : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -14552,6 +14885,7 @@ static bool js_gfx_PipelineState_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_PipelineState_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -14676,6 +15010,7 @@ static bool js_gfx_DescriptorSet_bindBufferJSB(se::State& s)
         bool result = cobj->bindBufferJSB(arg0.value(), arg1.value(), arg2.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindBufferJSB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
@@ -14744,6 +15079,7 @@ static bool js_gfx_DescriptorSet_bindSamplerJSB(se::State& s)
         bool result = cobj->bindSamplerJSB(arg0.value(), arg1.value(), arg2.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindSamplerJSB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
@@ -14812,6 +15148,7 @@ static bool js_gfx_DescriptorSet_bindTextureJSB(se::State& s)
         bool result = cobj->bindTextureJSB(arg0.value(), arg1.value(), arg2.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindTextureJSB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
@@ -14850,6 +15187,7 @@ static bool js_gfx_DescriptorSet_getBuffer(se::State& s)
             cc::gfx::Buffer* result = cobj->getBuffer(arg0.value());
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_getBuffer : Error processing arguments");
+            SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
             return true;
         }
     } while(false);
@@ -14866,6 +15204,7 @@ static bool js_gfx_DescriptorSet_getBuffer(se::State& s)
             cc::gfx::Buffer* result = cobj->getBuffer(arg0.value(), arg1.value());
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_getBuffer : Error processing arguments");
+            SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
             return true;
         }
     } while(false);
@@ -14891,6 +15230,7 @@ static bool js_gfx_DescriptorSet_getSampler(se::State& s)
             cc::gfx::Sampler* result = cobj->getSampler(arg0.value());
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_getSampler : Error processing arguments");
+            SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
             return true;
         }
     } while(false);
@@ -14907,6 +15247,7 @@ static bool js_gfx_DescriptorSet_getSampler(se::State& s)
             cc::gfx::Sampler* result = cobj->getSampler(arg0.value(), arg1.value());
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_getSampler : Error processing arguments");
+            SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
             return true;
         }
     } while(false);
@@ -14932,6 +15273,7 @@ static bool js_gfx_DescriptorSet_getTexture(se::State& s)
             cc::gfx::Texture* result = cobj->getTexture(arg0.value());
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_getTexture : Error processing arguments");
+            SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
             return true;
         }
     } while(false);
@@ -14948,6 +15290,7 @@ static bool js_gfx_DescriptorSet_getTexture(se::State& s)
             cc::gfx::Texture* result = cobj->getTexture(arg0.value(), arg1.value());
             ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
             SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_getTexture : Error processing arguments");
+            SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
             return true;
         }
     } while(false);
@@ -14971,6 +15314,7 @@ static bool js_gfx_DescriptorSet_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -15332,6 +15676,7 @@ static bool js_gfx_CommandBuffer_getNumDrawCalls(se::State& s)
         unsigned int result = cobj->getNumDrawCalls();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_getNumDrawCalls : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -15350,6 +15695,7 @@ static bool js_gfx_CommandBuffer_getNumInstances(se::State& s)
         unsigned int result = cobj->getNumInstances();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_getNumInstances : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -15368,6 +15714,7 @@ static bool js_gfx_CommandBuffer_getNumTris(se::State& s)
         unsigned int result = cobj->getNumTris();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_getNumTris : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -15386,6 +15733,7 @@ static bool js_gfx_CommandBuffer_getQueue(se::State& s)
         cc::gfx::Queue* result = cobj->getQueue();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_getQueue : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -15404,6 +15752,7 @@ static bool js_gfx_CommandBuffer_getType(se::State& s)
         int result = (int)cobj->getType();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_getType : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -15425,6 +15774,7 @@ static bool js_gfx_CommandBuffer_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_CommandBuffer_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -15693,6 +16043,7 @@ static bool js_gfx_Fence_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Fence_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -15805,6 +16156,7 @@ static bool js_gfx_Queue_getType(se::State& s)
         int result = (int)cobj->getType();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Queue_getType : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -15826,6 +16178,7 @@ static bool js_gfx_Queue_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Queue_initialize : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -15844,6 +16197,7 @@ static bool js_gfx_Queue_isAsync(se::State& s)
         bool result = cobj->isAsync();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_Queue_isAsync : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);

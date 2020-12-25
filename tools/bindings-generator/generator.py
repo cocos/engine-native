@@ -1149,7 +1149,7 @@ class NativeClass(object):
 
     def generate_struct_constructor(self):
         stream = file(os.path.join(self.generator.target, "conversions.yaml"), "r")
-        config = yaml.full_load(stream)
+        config = yaml.load(stream)
         tpl = Template(config['definitions']['constructor'],
                                     searchList=[self])
         self.struct_constructor_name = str(tpl)
@@ -1657,7 +1657,7 @@ class Generator(object):
     def generate_code(self):
         # must read the yaml file first
         stream = file(os.path.join(self.target, "conversions.yaml"), "r")
-        data = yaml.full_load(stream)
+        data = yaml.load(stream)
         self.config = data
         implfilepath = os.path.join(self.outdir, self.out_file + ".cpp")
         headfilepath = os.path.join(self.outdir, self.out_file + ".h")
