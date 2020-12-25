@@ -47,17 +47,17 @@ THE SOFTWARE.
 #define JCLS_SENSOR "com/cocos/lib/CocosSensorHandler"
 #endif
 
-// constant from Android API:
-// reference: https://developer.android.com/reference/android/view/Surface#ROTATION_0
-enum Rotation {
-    ROTATION_0 = 0,
-    ROTATION_90,
-    ROTATION_180,
-    ROTATION_270
-};
-
 namespace {
     cc::Device::MotionValue motionValue;
+
+    // constant from Android API:
+    // reference: https://developer.android.com/reference/android/view/Surface#ROTATION_0
+    enum Rotation {
+        ROTATION_0 = 0,
+        ROTATION_90,
+        ROTATION_180,
+        ROTATION_270
+    };
 }
 
 namespace cc {

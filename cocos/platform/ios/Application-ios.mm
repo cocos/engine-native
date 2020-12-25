@@ -88,7 +88,7 @@ namespace {
         int nativeWidth = static_cast<int>(nativeBounds.size.width);
         int nativeHeight = static_cast<int>(nativeBounds.size.height);
         auto orientation = cc::Device::getDeviceOrientation();
-        bool isLandscape = orientation == cc::Device::Orientation::LANDSCAPE_RIGHT || orientation == cc::Device::Orientation::LANDSCAPE_LEFT;
+        bool isLandscape = (orientation == cc::Device::Orientation::LANDSCAPE_RIGHT || orientation == cc::Device::Orientation::LANDSCAPE_LEFT);
         if (isLandscape) std::swap(nativeWidth, nativeHeight);
         
         char commandBuf[200] = {0};
