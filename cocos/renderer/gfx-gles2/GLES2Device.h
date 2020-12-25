@@ -98,7 +98,7 @@ private:
     bool _useInstancedArrays = false;
     bool _useDiscardFramebuffer = false;
 
-    uint _threadID;
+    uint _threadID = 0u;
 };
 
 } // namespace gfx
