@@ -191,16 +191,3 @@ SE_DECLARE_FUNC(js_pipeline_ShadowStage_setFramebuffer);
 SE_DECLARE_FUNC(js_pipeline_ShadowStage_setUseData);
 SE_DECLARE_FUNC(js_pipeline_ShadowStage_getInitializeInfo);
 SE_DECLARE_FUNC(js_pipeline_ShadowStage_ShadowStage);
-
-extern se::Object* __jsb_cc_pipeline_InstancedBuffer_proto;
-extern se::Class* __jsb_cc_pipeline_InstancedBuffer_class;
-
-bool js_register_cc_pipeline_InstancedBuffer(se::Object* obj);
-bool register_all_pipeline(se::Object* obj);
-
-JSB_REGISTER_OBJECT_TYPE(cc::pipeline::InstancedBuffer);
-SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_destroy);
-SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_setDynamicOffset);
-SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_get);
-SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_InstancedBuffer);
-
