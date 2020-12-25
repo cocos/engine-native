@@ -34,7 +34,6 @@ static bool js_pipeline_RenderQueueDesc_get_isTransparent(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->isTransparent, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->isTransparent, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderQueueDesc_get_isTransparent)
@@ -61,7 +60,6 @@ static bool js_pipeline_RenderQueueDesc_get_sortMode(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->sortMode, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->sortMode, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderQueueDesc_get_sortMode)
@@ -88,7 +86,6 @@ static bool js_pipeline_RenderQueueDesc_get_stages(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stages, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->stages, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderQueueDesc_get_stages)
@@ -243,7 +240,6 @@ static bool js_pipeline_Light_getAABB(se::State& s)
         const cc::pipeline::AABB* result = cobj->getAABB();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_Light_getAABB : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -262,7 +258,6 @@ static bool js_pipeline_Light_getFrustum(se::State& s)
         const cc::pipeline::Frustum* result = cobj->getFrustum();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_Light_getFrustum : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -281,7 +276,6 @@ static bool js_pipeline_Light_getNode(se::State& s)
         const cc::pipeline::Node* result = cobj->getNode();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_Light_getNode : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -300,7 +294,6 @@ static bool js_pipeline_Light_getType(se::State& s)
         int result = (int)cobj->getType();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_Light_getType : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -317,7 +310,6 @@ static bool js_pipeline_Light_get_useColorTemperature(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->useColorTemperature, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->useColorTemperature, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_useColorTemperature)
@@ -344,7 +336,6 @@ static bool js_pipeline_Light_get_luminance(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->luminance, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->luminance, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_luminance)
@@ -371,7 +362,6 @@ static bool js_pipeline_Light_get_nodeID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->nodeID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->nodeID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_nodeID)
@@ -398,7 +388,6 @@ static bool js_pipeline_Light_get_range(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->range, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->range, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_range)
@@ -425,7 +414,6 @@ static bool js_pipeline_Light_get_lightType(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->lightType, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->lightType, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_lightType)
@@ -452,7 +440,6 @@ static bool js_pipeline_Light_get_aabbID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->aabbID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->aabbID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_aabbID)
@@ -479,7 +466,6 @@ static bool js_pipeline_Light_get_frustumID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->frustumID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->frustumID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_frustumID)
@@ -506,7 +492,6 @@ static bool js_pipeline_Light_get_size(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->size, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->size, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_size)
@@ -533,7 +518,6 @@ static bool js_pipeline_Light_get_spotAngle(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->spotAngle, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->spotAngle, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_spotAngle)
@@ -560,7 +544,6 @@ static bool js_pipeline_Light_get_aspect(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->aspect, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->aspect, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_aspect)
@@ -587,7 +570,6 @@ static bool js_pipeline_Light_get_direction(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->direction, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->direction, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_direction)
@@ -614,7 +596,6 @@ static bool js_pipeline_Light_get_color(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->color, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->color, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_color)
@@ -641,7 +622,6 @@ static bool js_pipeline_Light_get_colorTemperatureRGB(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->colorTemperatureRGB, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->colorTemperatureRGB, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_colorTemperatureRGB)
@@ -668,7 +648,6 @@ static bool js_pipeline_Light_get_position(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->position, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->position, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_Light_get_position)
@@ -915,7 +894,6 @@ static bool js_pipeline_PassView_getBatchingScheme(se::State& s)
         int result = (int)cobj->getBatchingScheme();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getBatchingScheme : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -934,7 +912,6 @@ static bool js_pipeline_PassView_getBlendState(se::State& s)
         cc::gfx::BlendState* result = cobj->getBlendState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getBlendState : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -953,7 +930,6 @@ static bool js_pipeline_PassView_getDepthStencilState(se::State& s)
         cc::gfx::DepthStencilState* result = cobj->getDepthStencilState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getDepthStencilState : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -972,7 +948,6 @@ static bool js_pipeline_PassView_getDescriptorSet(se::State& s)
         cc::gfx::DescriptorSet* result = cobj->getDescriptorSet();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getDescriptorSet : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -991,7 +966,6 @@ static bool js_pipeline_PassView_getDynamicState(se::State& s)
         int result = (int)cobj->getDynamicState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getDynamicState : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -1010,7 +984,6 @@ static bool js_pipeline_PassView_getPipelineLayout(se::State& s)
         cc::gfx::PipelineLayout* result = cobj->getPipelineLayout();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getPipelineLayout : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -1029,7 +1002,6 @@ static bool js_pipeline_PassView_getPrimitive(se::State& s)
         int result = (int)cobj->getPrimitive();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getPrimitive : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -1048,7 +1020,6 @@ static bool js_pipeline_PassView_getRasterizerState(se::State& s)
         cc::gfx::RasterizerState* result = cobj->getRasterizerState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getRasterizerState : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -1065,7 +1036,6 @@ static bool js_pipeline_PassView_get_priority(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->priority, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->priority, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_priority)
@@ -1092,7 +1062,6 @@ static bool js_pipeline_PassView_get_stage(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stage, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->stage, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_stage)
@@ -1119,7 +1088,6 @@ static bool js_pipeline_PassView_get_phase(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->phase, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->phase, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_phase)
@@ -1146,7 +1114,6 @@ static bool js_pipeline_PassView_get_batchingScheme(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->batchingScheme, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->batchingScheme, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_batchingScheme)
@@ -1173,7 +1140,6 @@ static bool js_pipeline_PassView_get_primitive(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->primitive, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->primitive, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_primitive)
@@ -1200,7 +1166,6 @@ static bool js_pipeline_PassView_get_dynamicState(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->dynamicState, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->dynamicState, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_dynamicState)
@@ -1227,7 +1192,6 @@ static bool js_pipeline_PassView_get_hash(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->hash, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->hash, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_hash)
@@ -1254,7 +1218,6 @@ static bool js_pipeline_PassView_get_rasterizerStateID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->rasterizerStateID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->rasterizerStateID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_rasterizerStateID)
@@ -1281,7 +1244,6 @@ static bool js_pipeline_PassView_get_depthStencilStateID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->depthStencilStateID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->depthStencilStateID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_depthStencilStateID)
@@ -1308,7 +1270,6 @@ static bool js_pipeline_PassView_get_blendStateID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->blendStateID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->blendStateID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_blendStateID)
@@ -1335,7 +1296,6 @@ static bool js_pipeline_PassView_get_descriptorSetID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->descriptorSetID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->descriptorSetID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_descriptorSetID)
@@ -1362,7 +1322,6 @@ static bool js_pipeline_PassView_get_pipelineLayoutID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->pipelineLayoutID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->pipelineLayoutID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_PassView_get_pipelineLayoutID)
@@ -1597,7 +1556,6 @@ static bool js_pipeline_RenderWindow_getFramebuffer(se::State& s)
         cc::gfx::Framebuffer* result = cobj->getFramebuffer();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderWindow_getFramebuffer : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -1614,7 +1572,6 @@ static bool js_pipeline_RenderWindow_get_hasOnScreenAttachments(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->hasOnScreenAttachments, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->hasOnScreenAttachments, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderWindow_get_hasOnScreenAttachments)
@@ -1641,7 +1598,6 @@ static bool js_pipeline_RenderWindow_get_hasOffScreenAttachments(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->hasOffScreenAttachments, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->hasOffScreenAttachments, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderWindow_get_hasOffScreenAttachments)
@@ -1668,7 +1624,6 @@ static bool js_pipeline_RenderWindow_get_framebufferID(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->framebufferID, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->framebufferID, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderWindow_get_framebufferID)
@@ -1822,7 +1777,6 @@ static bool js_pipeline_RenderPipelineInfo_get_tag(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->tag, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->tag, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderPipelineInfo_get_tag)
@@ -1849,7 +1803,6 @@ static bool js_pipeline_RenderPipelineInfo_get_flows(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->flows, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->flows, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderPipelineInfo_get_flows)
@@ -1996,7 +1949,6 @@ static bool js_pipeline_RenderPipeline_activate(se::State& s)
         bool result = cobj->activate();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_activate : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -2030,7 +1982,6 @@ static bool js_pipeline_RenderPipeline_getDescriptorSet(se::State& s)
         cc::gfx::DescriptorSet* result = cobj->getDescriptorSet();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_getDescriptorSet : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -2049,7 +2000,6 @@ static bool js_pipeline_RenderPipeline_getDescriptorSetLayout(se::State& s)
         cc::gfx::DescriptorSetLayout* result = cobj->getDescriptorSetLayout();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_getDescriptorSetLayout : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -2071,7 +2021,6 @@ static bool js_pipeline_RenderPipeline_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_initialize : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -2128,7 +2077,6 @@ static bool js_pipeline_RenderPipeline_getInstance(se::State& s)
         cc::pipeline::RenderPipeline* result = cc::pipeline::RenderPipeline::getInstance();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_getInstance : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -2175,7 +2123,6 @@ static bool js_pipeline_ForwardPipeline_getSphere(se::State& s)
         cc::pipeline::Sphere* result = cobj->getSphere();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_ForwardPipeline_getSphere : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -2339,7 +2286,6 @@ static bool js_pipeline_RenderFlowInfo_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderFlowInfo_get_name)
@@ -2366,7 +2312,6 @@ static bool js_pipeline_RenderFlowInfo_get_priority(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->priority, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->priority, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderFlowInfo_get_priority)
@@ -2393,7 +2338,6 @@ static bool js_pipeline_RenderFlowInfo_get_tag(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->tag, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->tag, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderFlowInfo_get_tag)
@@ -2420,7 +2364,6 @@ static bool js_pipeline_RenderFlowInfo_get_stages(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->stages, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->stages, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderFlowInfo_get_stages)
@@ -2602,7 +2545,6 @@ static bool js_pipeline_RenderFlow_getTag(se::State& s)
         unsigned int result = cobj->getTag();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderFlow_getTag : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -2624,7 +2566,6 @@ static bool js_pipeline_RenderFlow_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderFlow_initialize : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -2664,7 +2605,6 @@ static bool js_pipeline_ForwardFlow_getInitializeInfo(se::State& s)
         const cc::pipeline::RenderFlowInfo& result = cc::pipeline::ForwardFlow::getInitializeInfo();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_ForwardFlow_getInitializeInfo : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -2728,7 +2668,6 @@ static bool js_pipeline_RenderStageInfo_get_name(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->name, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->name, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderStageInfo_get_name)
@@ -2755,7 +2694,6 @@ static bool js_pipeline_RenderStageInfo_get_priority(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->priority, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->priority, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderStageInfo_get_priority)
@@ -2782,7 +2720,6 @@ static bool js_pipeline_RenderStageInfo_get_tag(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->tag, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->tag, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderStageInfo_get_tag)
@@ -2809,7 +2746,6 @@ static bool js_pipeline_RenderStageInfo_get_renderQueues(se::State& s)
     se::Value jsret;
     ok &= nativevalue_to_se(cobj->renderQueues, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->renderQueues, s.thisObject(), s.rval());
     return true;
 }
 SE_BIND_PROP_GET(js_pipeline_RenderStageInfo_get_renderQueues)
@@ -2993,7 +2929,6 @@ static bool js_pipeline_RenderStage_getTag(se::State& s)
         unsigned int result = cobj->getTag();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderStage_getTag : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -3015,7 +2950,6 @@ static bool js_pipeline_RenderStage_initialize(se::State& s)
         bool result = cobj->initialize(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderStage_initialize : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
@@ -3055,7 +2989,6 @@ static bool js_pipeline_ForwardStage_getInitializeInfo(se::State& s)
         const cc::pipeline::RenderStageInfo& result = cc::pipeline::ForwardStage::getInitializeInfo();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_ForwardStage_getInitializeInfo : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -3119,7 +3052,6 @@ static bool js_pipeline_ShadowFlow_getInitializeInfo(se::State& s)
         const cc::pipeline::RenderFlowInfo& result = cc::pipeline::ShadowFlow::getInitializeInfo();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_ShadowFlow_getInitializeInfo : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -3223,7 +3155,6 @@ static bool js_pipeline_ShadowStage_getInitializeInfo(se::State& s)
         const cc::pipeline::RenderStageInfo& result = cc::pipeline::ShadowStage::getInitializeInfo();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_ShadowStage_getInitializeInfo : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -3274,6 +3205,161 @@ bool js_register_pipeline_ShadowStage(se::Object* obj)
     __jsb_cc_pipeline_ShadowStage_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_cc_pipeline_InstancedBuffer_proto = nullptr;
+se::Class* __jsb_cc_pipeline_InstancedBuffer_class = nullptr;
+
+static bool js_pipeline_InstancedBuffer_destroy(se::State& s)
+{
+    cc::pipeline::InstancedBuffer* cobj = SE_THIS_OBJECT<cc::pipeline::InstancedBuffer>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_InstancedBuffer_destroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->destroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_InstancedBuffer_destroy)
+
+static bool js_pipeline_InstancedBuffer_setDynamicOffset(se::State& s)
+{
+    cc::pipeline::InstancedBuffer* cobj = SE_THIS_OBJECT<cc::pipeline::InstancedBuffer>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_InstancedBuffer_setDynamicOffset : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<unsigned int, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_pipeline_InstancedBuffer_setDynamicOffset : Error processing arguments");
+        cobj->setDynamicOffset(arg0.value(), arg1.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_InstancedBuffer_setDynamicOffset)
+
+static bool js_pipeline_InstancedBuffer_get(se::State& s)
+{
+    CC_UNUSED bool ok = true;
+    const auto& args = s.args();
+    size_t argc = args.size();
+    do {
+        if (argc == 2) {
+            HolderType<unsigned int, false> arg0 = {};
+            ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+            if (!ok) { ok = true; break; }
+            HolderType<unsigned int, false> arg1 = {};
+            ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+            if (!ok) { ok = true; break; }
+            cc::pipeline::InstancedBuffer* result = cc::pipeline::InstancedBuffer::get(arg0.value(), arg1.value());
+            ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
+            SE_PRECONDITION2(ok, false, "js_pipeline_InstancedBuffer_get : Error processing arguments");
+            return true;
+        }
+    } while (false);
+    do {
+        if (argc == 1) {
+            HolderType<unsigned int, false> arg0 = {};
+            ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+            if (!ok) { ok = true; break; }
+            cc::pipeline::InstancedBuffer* result = cc::pipeline::InstancedBuffer::get(arg0.value());
+            ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
+            SE_PRECONDITION2(ok, false, "js_pipeline_InstancedBuffer_get : Error processing arguments");
+            return true;
+        }
+    } while (false);
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_InstancedBuffer_get)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_pipeline_InstancedBuffer_finalize)
+
+static bool js_pipeline_InstancedBuffer_constructor(se::State& s) // constructor.c
+{
+    CC_UNUSED bool ok = true;
+    const auto& args = s.args();
+    const cc::pipeline::PassView* arg0 = nullptr;
+    ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_pipeline_InstancedBuffer_constructor : Error processing arguments");
+    cc::pipeline::InstancedBuffer* cobj = JSB_ALLOC(cc::pipeline::InstancedBuffer, arg0);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_pipeline_InstancedBuffer_constructor, __jsb_cc_pipeline_InstancedBuffer_class, js_cc_pipeline_InstancedBuffer_finalize)
+
+
+
+
+static bool js_cc_pipeline_InstancedBuffer_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::pipeline::InstancedBuffer>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::pipeline::InstancedBuffer* cobj = SE_THIS_OBJECT<cc::pipeline::InstancedBuffer>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_pipeline_InstancedBuffer_finalize)
+
+bool js_register_pipeline_InstancedBuffer(se::Object* obj)
+{
+    auto cls = se::Class::create("InstancedBuffer", obj, nullptr, _SE(js_pipeline_InstancedBuffer_constructor));
+
+    cls->defineFunction("destroy", _SE(js_pipeline_InstancedBuffer_destroy));
+    cls->defineFunction("setDynamicOffset", _SE(js_pipeline_InstancedBuffer_setDynamicOffset));
+    cls->defineStaticFunction("get", _SE(js_pipeline_InstancedBuffer_get));
+    cls->defineFinalizeFunction(_SE(js_cc_pipeline_InstancedBuffer_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::pipeline::InstancedBuffer>(cls);
+
+    __jsb_cc_pipeline_InstancedBuffer_proto = cls->getProto();
+    __jsb_cc_pipeline_InstancedBuffer_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+bool register_all_pipeline(se::Object* obj)
+{
+    // Get the ns
+    se::Value nsVal;
+    if (!obj->getProperty("nr", &nsVal))
+    {
+        se::HandleObject jsobj(se::Object::createPlainObject());
+        nsVal.setObject(jsobj);
+        obj->setProperty("nr", nsVal);
+    }
+    se::Object* ns = nsVal.toObject();
+
+    js_register_pipeline_RenderQueueDesc(ns);
+    js_register_pipeline_RenderFlow(ns);
+    js_register_pipeline_PassView(ns);
+    js_register_pipeline_RenderStageInfo(ns);
+    js_register_pipeline_RenderPipeline(ns);
+    js_register_pipeline_ForwardPipeline(ns);
+    js_register_pipeline_RenderPipelineInfo(ns);
+    js_register_pipeline_Light(ns);
+    js_register_pipeline_RenderStage(ns);
+    js_register_pipeline_ForwardStage(ns);
+    js_register_pipeline_ShadowStage(ns);
+    js_register_pipeline_RenderFlowInfo(ns);
+    js_register_pipeline_ForwardFlow(ns);
+    js_register_pipeline_InstancedBuffer(ns);
+    js_register_pipeline_RenderWindow(ns);
+    js_register_pipeline_ShadowFlow(ns);
     return true;
 }
 
