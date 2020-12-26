@@ -120,8 +120,8 @@ struct InputAssemblerInfo;
 
 #if CC_ENABLE_CACHE_JSB_FUNC_RESULT 
 #define SE_HOLD_RETURN_VALUE(retCXXValue, thisObject, jsValue) \
-    if CC_CONSTEXPR (is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type> && (jsValue).isObject()) {\
-        (thisObject)->setProperty("__cache" __FUNCTION__, (jsValue)); \
+    if (is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type> && (jsValue).isObject()) {\
+        (thisObject)->setProperty("__cache"##__FUNCTION__, (jsValue)); \
     }
 #else
 #define SE_HOLD_RETURN_VALUE(...)
@@ -129,18 +129,22 @@ struct InputAssemblerInfo;
 
 #if __clang__ 
     #if defined(__has_feature) && __has_feature(cxx_static_assert) && __has_feature(cxx_relaxed_constexpr)
-        #define CC_STATIC_ASSERT static_assert
-        #define CC_CONSTEXPR     constexpr
-        #define HAS_CONSTEXPR    1
+        #define HAS_CONSTEXPR 1
+    #else
+        #define HAS_CONSTEXPR 0
     #endif
 #elif defined(_MSVC_LANG) && _MSVC_LANG >= 201703L
+    #define HAS_CONSTEXPR 1
+#else 
+    #define HAS_CONSTEXPR 0
+#endif
+
+#if HAS_CONSTEXPR
     #define CC_STATIC_ASSERT static_assert
     #define CC_CONSTEXPR     constexpr
-    #define HAS_CONSTEXPR    1
 #else
     #define CC_CONSTEXPR 
     #define CC_STATIC_ASSERT(cond, msg) assert(cond)
-    #define HAS_CONSTEXPR 0
 #endif
 
 #if __clang__
@@ -1482,6 +1486,7 @@ inline bool nativevalue_to_se(const uint8_t &from, se::Value &to, se::Object *)
     return true;
 }
 
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
 template <>
 inline bool nativevalue_to_se(const long &from, se::Value &to, se::Object *) {
     if (sizeof(long) == 4) {
@@ -1491,6 +1496,7 @@ inline bool nativevalue_to_se(const long &from, se::Value &to, se::Object *) {
     }
     return true;
 }
+#endif
 
 template<>
 inline bool nativevalue_to_se(const std::string &from, se::Value &to, se::Object *)
