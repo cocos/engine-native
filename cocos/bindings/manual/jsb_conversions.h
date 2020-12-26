@@ -118,16 +118,17 @@ struct InputAssemblerInfo;
         break;                                                                                      \
     }
 
-#if CC_ENABLE_CACHE_JSB_FUNC_RESULT 
+#define CC_CONCAT(a, b) a ## b
+#if CC_ENABLE_CACHE_JSB_FUNC_RESULT
 #define SE_HOLD_RETURN_VALUE(retCXXValue, thisObject, jsValue) \
     if (is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type> && (jsValue).isObject()) {\
-        (thisObject)->setProperty("__cache"##__FUNCTION__, (jsValue)); \
+        (thisObject)->setProperty(CC_CONCAT("__cache", __FUNCTION__), (jsValue)); \
     }
 #else
 #define SE_HOLD_RETURN_VALUE(...)
 #endif
 
-#if __clang__ 
+#if __clang__
     #if defined(__has_feature) && __has_feature(cxx_static_assert) && __has_feature(cxx_relaxed_constexpr)
         #define HAS_CONSTEXPR 1
     #else
@@ -135,7 +136,7 @@ struct InputAssemblerInfo;
     #endif
 #elif defined(_MSVC_LANG) && _MSVC_LANG >= 201703L
     #define HAS_CONSTEXPR 1
-#else 
+#else
     #define HAS_CONSTEXPR 0
 #endif
 
@@ -143,7 +144,7 @@ struct InputAssemblerInfo;
     #define CC_STATIC_ASSERT static_assert
     #define CC_CONSTEXPR     constexpr
 #else
-    #define CC_CONSTEXPR 
+    #define CC_CONSTEXPR
     #define CC_STATIC_ASSERT(cond, msg) assert(cond)
 #endif
 
@@ -908,7 +909,7 @@ bool sevalue_to_native(const se::Value& from, std::array<uint8_t, CNT>* to, se::
             sevalue_to_native(tmp, &(*to)[i], ctx);
         }
     }
-    else 
+    else
     {
         return false;
     }
@@ -1177,7 +1178,7 @@ inline bool sevalue_to_native(const se::Value& from, std::function<R( Args...)>*
                 sevalue_to_native(rval, &raw_ret, self);
                 return raw_ret;
             }
-                
+
         };
     }
     else
@@ -1216,7 +1217,7 @@ inline bool sevalue_to_native(const se::Value &from, HolderType<T, is_reference>
 #else
 template <typename T>
 inline typename std::enable_if<is_jsb_object_v<T>,  bool>::type sevalue_to_native(const se::Value &from, HolderType<T, true> *holder, se::Object *ctx) {
-  
+
         void *ptr = from.toObject()->getPrivateData();
         if (ptr) {
             holder->data = static_cast<T *>(ptr);
@@ -1268,13 +1269,13 @@ inline bool sevalue_to_native(const se::Value &from, HolderType<std::vector<T, a
 #else
 template <typename T, typename allocator>
 inline typename std::enable_if<is_jsb_object_v<T> && std::is_pointer<T>::value, bool>::type
-sevalue_to_native(const se::Value &from, HolderType<std::vector<T, allocator>, true> *holder, se::Object *ctx) 
+sevalue_to_native(const se::Value &from, HolderType<std::vector<T, allocator>, true> *holder, se::Object *ctx)
 {
     auto &vec = holder->data;
     return sevalue_to_native(from, &vec, ctx);
 }
 template <typename T, typename allocator>
-inline typename std::enable_if<is_jsb_object_v<T> && !std::is_pointer<T>::value, bool>::type 
+inline typename std::enable_if<is_jsb_object_v<T> && !std::is_pointer<T>::value, bool>::type
 sevalue_to_native(const se::Value &from, HolderType<std::vector<T, allocator>, true> *holder, se::Object *ctx)
 {
     return sevalue_to_native(from, (std::vector<T, allocator> *)/* clang/xcode needs this */ &(holder->data), ctx);
@@ -1282,7 +1283,7 @@ sevalue_to_native(const se::Value &from, HolderType<std::vector<T, allocator>, t
 
 template <typename T, typename allocator>
 inline typename std::enable_if<!is_jsb_object_v<T>, bool>::type
-sevalue_to_native(const se::Value &from, HolderType<std::vector<T, allocator>, true> *holder, se::Object *ctx) 
+sevalue_to_native(const se::Value &from, HolderType<std::vector<T, allocator>, true> *holder, se::Object *ctx)
 {
     return sevalue_to_native(from, &(holder->data), ctx);
 }
@@ -1300,7 +1301,7 @@ inline bool nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
     {
         to.setInt32(static_cast<int32_t>(from));
         return true;
-    } 
+    }
     else if CC_CONSTEXPR (std::is_pointer<T>::value)
     {
         return native_ptr_to_seval(from, &to);
@@ -1331,7 +1332,7 @@ inline bool nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
 
 template <typename T>
 inline typename std::enable_if<std::is_enum<T>::value, bool>::type
-nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) 
+nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx)
 {
     to.setInt32(static_cast<int32_t>(from));
     return true;
@@ -1353,7 +1354,7 @@ nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
 template <typename T>
 inline typename std::enable_if<!std::is_enum<T>::value && !std::is_pointer<T>::value && !is_jsb_object_v<T>, bool>::type
 nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
-    return nativevalue_to_se<typename std::conditional_t<std::is_const<T>::value, T, typename std::add_const<T>::type>>(from, to, ctx);    
+    return nativevalue_to_se<typename std::conditional_t<std::is_const<T>::value, T, typename std::add_const<T>::type>>(from, to, ctx);
 }
 
 #endif // HAS_CONSTEXPR
