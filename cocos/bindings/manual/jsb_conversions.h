@@ -118,11 +118,10 @@ struct InputAssemblerInfo;
         break;                                                                                      \
     }
 
-#define CC_CONCAT(a, b) a ## b
 #if CC_ENABLE_CACHE_JSB_FUNC_RESULT
-#define SE_HOLD_RETURN_VALUE(retCXXValue, thisObject, jsValue) \
-    if (is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type> && (jsValue).isObject()) {\
-        (thisObject)->setProperty(CC_CONCAT("__cache", __FUNCTION__), (jsValue)); \
+#define SE_HOLD_RETURN_VALUE(retCXXValue, thisObject, jsValue)                          \
+    if (is_jsb_object_v<typename std::decay<decltype(retCXXValue)>::type>) {            \
+        (thisObject)->setProperty(std::string("__cache") + __FUNCTION__, (jsValue));    \
     }
 #else
 #define SE_HOLD_RETURN_VALUE(...)
