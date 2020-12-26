@@ -229,7 +229,7 @@ if(APPLE)
         set_target_properties(${LIB_NAME} PROPERTIES 
             MACOSX_BUNDLE_INFO_PLIST "${PROJ_SRC_DIR}/Info.plist"
             IOS_INSTALL_COMBINED YES
-233         OSX_ARCHITECTURES "arm64;x86_64"
+            OSX_ARCHITECTURES "arm64;x86_64"
         )
         set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "${DEVELOPMENT_TEAM}")
         set_property(TARGET ${LIB_NAME} PROPERTY XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer")
