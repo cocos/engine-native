@@ -52,7 +52,7 @@ void Application::tick() {
     static std::chrono::steady_clock::time_point prevTime;
     static std::chrono::steady_clock::time_point now;
     static float dt = 0.f;
-    static long dtNS = NANOSECONDS_60FPS;
+    static double dtNS = NANOSECONDS_60FPS;
     
     ++_totalFrames;
 
