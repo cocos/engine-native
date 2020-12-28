@@ -302,7 +302,7 @@ It should work same as apples CFSwapInt32LittleToHost(..)
     #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
         #include <machine/endian.h>
     #else
-        #include <endian.h>
+        #include <Endian.h>
     #endif // (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     #
     #if __BYTE_ORDER == __LITTLE_ENDIAN
