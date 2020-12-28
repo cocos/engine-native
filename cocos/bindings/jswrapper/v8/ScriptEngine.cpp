@@ -217,6 +217,44 @@ namespace se {
             return true;
         }
         SE_BIND_FUNC(JSB_console_assert)
+    
+        /*
+        * The unique V8 platform instance
+        */
+        class ScriptEngineV8Context {
+        public:
+            ScriptEngineV8Context() {
+                _platform = v8::platform::NewDefaultPlatform().release();
+                v8::V8::InitializePlatform(_platform);
+
+                std::string flags;
+                //NOTICE: spaces are required between flags
+                flags.append(" --expose-gc-as=" EXPOSE_GC);
+                flags.append(" --no-flush-bytecode --no-lazy"); // for bytecode support
+                // flags.append(" --trace-gc"); // v8 trace gc
+        #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
+                flags.append(" --jitless");
+        #endif
+                if(!flags.empty())
+                {
+                    v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
+                }
+                
+                bool ok = v8::V8::Initialize();
+                assert(ok);
+            }
+
+           
+            ~ScriptEngineV8Context() {
+                
+                v8::V8::Dispose();
+                v8::V8::ShutdownPlatform();
+                delete _platform;
+            }
+            v8::Platform *_platform = nullptr;
+        };
+    
+        ScriptEngineV8Context *_sharedV8 = nullptr;
 
     } // namespace {
 
@@ -375,8 +413,7 @@ namespace se {
     }
 
     ScriptEngine::ScriptEngine()
-    : _platform(nullptr)
-    , _isolate(nullptr)
+    : _isolate(nullptr)
     , _handleScope(nullptr)
     , _globalObj(nullptr)
 #if SE_ENABLE_INSPECTOR
@@ -390,32 +427,15 @@ namespace se {
     , _isInCleanup(false)
     , _isErrorHandleWorking(false)
     {
-        _platform = v8::platform::NewDefaultPlatform().release();
-        v8::V8::InitializePlatform(_platform);
-
-        std::string flags;
-        //NOTICE: spaces are required between flags
-        flags.append(" --expose-gc-as=" EXPOSE_GC);
-        flags.append(" --no-flush-bytecode --no-lazy"); // for bytecode support
-        // flags.append(" --trace-gc"); // v8 trace gc
-#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-        flags.append(" --jitless");
-#endif
-        if(!flags.empty())
-        {
-            v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
-        }
         
-        bool ok = v8::V8::Initialize();
-        assert(ok);
+        if(!_sharedV8) {
+            _sharedV8 = new ScriptEngineV8Context();
+        }
     }
 
     ScriptEngine::~ScriptEngine()
     {
         cleanup();
-        v8::V8::Dispose();
-        v8::V8::ShutdownPlatform();
-        delete _platform;
     }
 
     bool ScriptEngine::init()
@@ -539,6 +559,13 @@ namespace se {
             __oldConsoleAssert.setUndefined();
 
 #if SE_ENABLE_INSPECTOR
+            
+            if (_env != nullptr)
+            {
+                _env->inspector_agent()->Disconnect();
+                _env->inspector_agent()->Stop();
+            }
+            
             if (_isolateData != nullptr)
             {
                 node::FreeIsolateData(_isolateData);
@@ -547,7 +574,6 @@ namespace se {
 
             if (_env != nullptr)
             {
-                _env->inspector_agent()->Stop();
                 _env->CleanupHandles();
                 node::FreeEnvironment(_env);
                 _env = nullptr;
@@ -559,7 +585,7 @@ namespace se {
             _isolate->Exit();
         }
         _isolate->Dispose();
-
+        
         _isolate = nullptr;
         _globalObj = nullptr;
         _isValid = false;
@@ -610,6 +636,13 @@ namespace se {
         _registerCallbackArray.push_back(cb);
     }
 
+    
+    void ScriptEngine::addPermanentRegisterCallback(RegisterCallback cb) {
+        if (std::find(_permRegisterCallbackArray.begin(), _permRegisterCallbackArray.end(), cb) == _permRegisterCallbackArray.end()) {
+            _permRegisterCallbackArray.push_back(cb);
+        }
+    }
+
     bool ScriptEngine::start()
     {
         if (!init())
@@ -630,13 +663,20 @@ namespace se {
             options.set_inspector_enabled(true);
             options.set_port((int)_debuggerServerPort);
             options.set_host_name(_debuggerServerAddr.c_str());
-            bool ok = _env->inspector_agent()->Start(_platform, "", options);
+            bool ok = _env->inspector_agent()->Start(_sharedV8->_platform, "", options);
             assert(ok);
 #endif
         }
         //
         bool ok = false;
         _startTime = std::chrono::steady_clock::now();
+
+        for (auto cb : _permRegisterCallbackArray) {
+            ok = cb(_globalObj);
+            assert(ok);
+            if (!ok)
+                break;
+        }
 
         for (auto cb : _registerCallbackArray)
         {
@@ -661,7 +701,7 @@ namespace se {
         {
             const double kLongIdlePauseInSeconds = 1.0;
             _isolate->ContextDisposedNotification();
-            _isolate->IdleNotificationDeadline(_platform->MonotonicallyIncreasingTime() + kLongIdlePauseInSeconds);
+            _isolate->IdleNotificationDeadline(_sharedV8->_platform->MonotonicallyIncreasingTime() + kLongIdlePauseInSeconds);
             // By sending a low memory notifications, we will try hard to collect all
             // garbage and will therefore also invoke all weak callbacks of actually
             // unreachable persistent handles.
