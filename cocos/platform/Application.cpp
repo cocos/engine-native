@@ -26,11 +26,11 @@ THE SOFTWARE.
 #include "cocos/bindings/jswrapper/SeApi.h"
 
 #if USE_AUDIO
-#include "cocos/audio/include/AudioEngine.h"
+    #include "cocos/audio/include/AudioEngine.h"
 #endif
 
 #if USE_SOCKET
-#include "cocos/network/WebSocket.h"
+    #include "cocos/network/WebSocket.h"
 #endif
 
 #include "cocos/network/HttpClient.h"

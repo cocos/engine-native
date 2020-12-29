@@ -25,35 +25,35 @@
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-#include "../MappingUtils.h"
-#include "../State.h"
-#include "Class.h"
-#include "Object.h"
-#include "Utils.h"
-#include "platform/FileUtils.h"
+    #include "../MappingUtils.h"
+    #include "../State.h"
+    #include "Class.h"
+    #include "Object.h"
+    #include "Utils.h"
+    #include "platform/FileUtils.h"
 
-#include <sstream>
+    #include <sstream>
 
-#if SE_ENABLE_INSPECTOR
-#include "debugger/env.h"
-#include "debugger/inspector_agent.h"
-#include "debugger/node.h"
+    #if SE_ENABLE_INSPECTOR
+        #include "debugger/env.h"
+        #include "debugger/inspector_agent.h"
+        #include "debugger/node.h"
 
-#endif
+    #endif
 
-#include <sstream>
+    #include <sstream>
 
-#define EXPOSE_GC "__jsb_gc__"
+    #define EXPOSE_GC "__jsb_gc__"
 
 unsigned int __jsbStackFrameLimit = 20;
 
-#ifdef CC_DEBUG
+    #ifdef CC_DEBUG
 unsigned int __jsbInvocationCount = 0;
 std::map<std::string, unsigned> __jsbFunctionInvokedRecords;
-#endif
+    #endif
 
-#define RETRUN_VAL_IF_FAIL(cond, val) \
-    if (!(cond)) return val
+    #define RETRUN_VAL_IF_FAIL(cond, val) \
+        if (!(cond)) return val
 
 namespace se {
 
@@ -207,9 +207,9 @@ public:
         flags.append(" --expose-gc-as=" EXPOSE_GC);
         flags.append(" --no-flush-bytecode --no-lazy"); // for bytecode support
                                                         // flags.append(" --trace-gc"); // v8 trace gc
-#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
+    #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
         flags.append(" --jitless");
-#endif
+    #endif
         if (!flags.empty()) {
             v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
         }
@@ -371,11 +371,11 @@ void ScriptEngine::destroyInstance() {
 
 ScriptEngine::ScriptEngine()
 : _isolate(nullptr), _handleScope(nullptr), _globalObj(nullptr)
-#if SE_ENABLE_INSPECTOR
+    #if SE_ENABLE_INSPECTOR
   ,
   _env(nullptr),
   _isolateData(nullptr)
-#endif
+    #endif
   ,
   _debuggerServerPort(0),
   _vmId(0),
@@ -505,7 +505,7 @@ void ScriptEngine::cleanup() {
         __oldConsoleError.setUndefined();
         __oldConsoleAssert.setUndefined();
 
-#if SE_ENABLE_INSPECTOR
+    #if SE_ENABLE_INSPECTOR
 
         if (_env != nullptr) {
             _env->inspector_agent()->Disconnect();
@@ -522,7 +522,7 @@ void ScriptEngine::cleanup() {
             node::FreeEnvironment(_env);
             _env = nullptr;
         }
-#endif
+    #endif
 
         _context.Get(_isolate)->Exit();
         _context.Reset();
@@ -587,7 +587,7 @@ bool ScriptEngine::start() {
 
     // debugger
     if (isDebuggerEnabled()) {
-#if SE_ENABLE_INSPECTOR
+    #if SE_ENABLE_INSPECTOR
         // V8 inspector stuff, most code are taken from NodeJS.
         _isolateData = node::CreateIsolateData(_isolate, uv_default_loop());
         _env = node::CreateEnvironment(_isolateData, _context.Get(_isolate), 0, nullptr, 0, nullptr);
@@ -599,7 +599,7 @@ bool ScriptEngine::start() {
         options.set_host_name(_debuggerServerAddr.c_str());
         bool ok = _env->inspector_agent()->Start(_sharedV8->_platform, "", options);
         assert(ok);
-#endif
+    #endif
     }
     //
     bool ok = false;
@@ -679,11 +679,11 @@ bool ScriptEngine::evalString(const char *script, ssize_t length /* = -1 */, Val
         sourceUrl = sourceUrl.substr(prefixPos + prefixKey.length());
     }
 
-#if CC_PLATFORM == CC_PLATFORM_MAC_OSX
+    #if CC_PLATFORM == CC_PLATFORM_MAC_OSX
     if (strncmp("(no filename)", sourceUrl.c_str(), sizeof("(no filename)")) != 0) {
         sourceUrl = cc::FileUtils::getInstance()->fullPathForFilename(sourceUrl);
     }
-#endif
+    #endif
 
     // It is needed, or will crash if invoked from non C++ context, such as invoked from objective-c context(for example, handler of UIKit).
     v8::HandleScope handle_scope(_isolate);
