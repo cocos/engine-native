@@ -26,7 +26,6 @@ THE SOFTWARE.
 #include "MTLDevice.h"
 #include "MTLGPUObjects.h"
 #include "MTLShader.h"
-#include "MTLUtils.h"
 #import <Metal/MTLDevice.h>
 
 namespace cc {
@@ -72,7 +71,7 @@ void CCMTLShader::destroy() {
 
 bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
     bool isVertexShader = stage.stage == ShaderStageFlagBit::VERTEX;
-    id<MTLDevice> mtlDevice = id<MTLDevice>(((CCMTLDevice *)_device)->getMTLDevice());
+    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
     auto mtlShader = mu::compileGLSLShader2Msl(stage.source,
                                                stage.stage,
                                                _device,
