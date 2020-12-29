@@ -186,10 +186,6 @@ fi
 cd $COCOS2DX_ROOT/tools/travis-scripts
 generate_bindings_glue_codes
 
-echo "format source files ..."
-cd $COCOS2DX_ROOT
-git diff --name-only  "*.cpp" "*.h" |xargs clang-format -i
-
 # Compile pull request
 if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
     run_compile
