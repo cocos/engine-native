@@ -25,5 +25,5 @@ AccessModifierOffset: -4
 ConstructorInitializerIndentWidth: 0
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 
-# AlignConsecutiveMacros: true
-# IndentPPDirectives: BeforeHash
+AlignConsecutiveMacros: true
+IndentPPDirectives: BeforeHash
