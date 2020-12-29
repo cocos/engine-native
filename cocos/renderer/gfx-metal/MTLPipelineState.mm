@@ -272,7 +272,6 @@ bool CCMTLPipelineState::createMTLRenderPipeline(MTLRenderPipelineDescriptor *de
     if (!_mtlRenderPipelineState) {
         CC_LOG_ERROR("Failed to create MTLRenderPipelineState: %s", [nsError.localizedDescription UTF8String]);
         return false;
-        ;
     }
 
     return true;
