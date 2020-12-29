@@ -148,12 +148,12 @@ void CCMTLShader::setAvailableBufferBindingIndex() {
         }
     }
 
-    auto maxBufferBindinIndex = static_cast<CCMTLDevice *>(_device)->getMaximumBufferBindingIndex();
-    _availableVertexBufferBindingIndex.resize(maxBufferBindinIndex - vertexBindingCount);
-    _availableFragmentBufferBindingIndex.resize(maxBufferBindinIndex - fragmentBindingCount);
+    auto maxBufferBindingIndex = static_cast<CCMTLDevice *>(_device)->getMaximumBufferBindingIndex();
+    _availableVertexBufferBindingIndex.resize(maxBufferBindingIndex - vertexBindingCount);
+    _availableFragmentBufferBindingIndex.resize(maxBufferBindingIndex - fragmentBindingCount);
     uint availableVertexBufferBit = ~usedVertexBufferBindingIndexes;
     uint availableFragmentBufferBit = ~usedFragmentBufferBindingIndexes;
-    int theBit = maxBufferBindinIndex - 1;
+    int theBit = maxBufferBindingIndex - 1;
     uint i = 0, j = 0;
     for (; theBit >= 0; theBit--) {
         if ((availableVertexBufferBit & (1 << theBit))) {
