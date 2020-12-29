@@ -94,7 +94,7 @@ public:
     virtual void onPause();
     virtual void onResume();
     
-    virtual void restart() { _needRestart = true; }
+    void restart() { _needRestart = true; }
     
     void tick();
     
