@@ -88,7 +88,7 @@ void Application::tick() {
 
     prevTime = std::chrono::steady_clock::now(); 
 
-    _scheduler->update(dt);
+    _scheduler->update(dt); 
     cc::EventDispatcher::dispatchTickEvent(dt);
 
     PoolManager::getInstance()->getCurrentPool()->clear();
