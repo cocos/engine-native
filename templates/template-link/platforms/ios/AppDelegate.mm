@@ -75,7 +75,7 @@ Game* game = nullptr;
             orientation = cc::Device::Orientation::PORTRAIT;
             break;
         case UIDeviceOrientationLandscapeRight:
-            orientation = cc::Device::Orientation::LANDSCAPE_LEFT;
+            orientation = cc::Device::Orientation::LANDSCAPE_RIGHT;
             break;
         case UIDeviceOrientationPortraitUpsideDown:
             orientation = cc::Device::Orientation::PORTRAIT_UPSIDE_DOWN;
