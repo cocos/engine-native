@@ -28,6 +28,7 @@
 #include "platform/ios/View.h"
 #include "cocos/bindings/event/EventDispatcher.h"
 
+#include "SDKWrapper.h"
 #include "Game.h"
 
 cc::Device::Orientation _lastOrientation;
@@ -41,6 +42,7 @@ Game* game = nullptr;
 #pragma mark Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+//     [[SDKWrapper getInstance] application:application didFinishLaunchingWithOptions:launchOptions];
     // Add the view controller's view to the window and display.
     CGRect bounds = [[UIScreen mainScreen] bounds];
     self.window = [[UIWindow alloc] initWithFrame: bounds];
@@ -49,7 +51,6 @@ Game* game = nullptr;
     _viewController = [[ViewController alloc]init];
     _viewController.view = [[View alloc] initWithFrame:bounds];
     _viewController.view.contentScaleFactor = UIScreen.mainScreen.scale;
-    _viewController.view.multipleTouchEnabled = true;
     [self.window setRootViewController:_viewController];
 
     // cocos2d application instance
@@ -57,7 +58,7 @@ Game* game = nullptr;
     game->init();
 
     [[NSNotificationCenter defaultCenter] addObserver:self
-        selector:@selector(orientationChanged:)name:UIDeviceOrientationDidChangeNotification object:nil];
+        selector:@selector(statusBarOrientationChanged:)name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 
     [self.window makeKeyAndVisible];
 
@@ -65,48 +66,71 @@ Game* game = nullptr;
 }
 
 
-- (void) orientationChanged:(NSNotification *)note {
-    cc::Device::Orientation orientation = cc::Device::Orientation::PORTRAIT;
-    UIDevice * device = note.object;
-
-    switch (device.orientation)
+- (void) statusBarOrientationChanged:(NSNotification *)note
+{
+    // https://developer.apple.com/documentation/uikit/uideviceorientation
+    // NOTE: do not use API [UIDevice currentDevice].orientation to get the device orientation
+    // when the device rotates to LandscapeLeft, device.orientation returns UIDeviceOrientationLandscapeRight
+    // when the device rotates to LandscapeRight, device.orientation returns UIDeviceOrientationLandscapeLeft
+    cc::Device::Orientation orientation;
+    switch([[UIApplication sharedApplication] statusBarOrientation])
     {
-        case UIDeviceOrientationPortrait:
-            orientation = cc::Device::Orientation::PORTRAIT;
-            break;
-        case UIDeviceOrientationLandscapeRight:
+        case UIInterfaceOrientationLandscapeRight:
             orientation = cc::Device::Orientation::LANDSCAPE_RIGHT;
             break;
-        case UIDeviceOrientationPortraitUpsideDown:
+        case UIInterfaceOrientationLandscapeLeft:
+            orientation = cc::Device::Orientation::LANDSCAPE_LEFT;
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown:
             orientation = cc::Device::Orientation::PORTRAIT_UPSIDE_DOWN;
             break;
-        case UIDeviceOrientationLandscapeLeft:
-            orientation = cc::Device::Orientation::LANDSCAPE_LEFT;
+        case UIInterfaceOrientationPortrait:
+            orientation = cc::Device::Orientation::PORTRAIT;
             break;
         default:
             break;
-    };
-    if (_lastOrientation != orientation) {
+    }
+    if(_lastOrientation != orientation){
         cc::EventDispatcher::dispatchOrientationChangeEvent((int) orientation);
         _lastOrientation = orientation;
     }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
+    /*
+     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+     */
+//     [[SDKWrapper getInstance] applicationWillResignActive:application];
     game->onPause();
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    /*
+     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+     */
+//     [[SDKWrapper getInstance] applicationDidBecomeActive:application];
     game->onResume();
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    /*
+     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+     If your application supports background execution, called instead of applicationWillTerminate: when the user quits.
+     */
+//     [[SDKWrapper getInstance] applicationDidEnterBackground:application];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    /*
+     Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
+     */
+//     [[SDKWrapper getInstance] applicationWillEnterForeground:application];
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+//     [[SDKWrapper getInstance] applicationWillTerminate:application];
     delete game;
     game = nullptr;
 }
