@@ -27,9 +27,6 @@ package com.cocos.game;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.PersistableBundle;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 
 import com.cocos.game.service.SDKWrapper;
 import com.cocos.lib.CocosActivity;
