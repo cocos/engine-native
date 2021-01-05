@@ -28,7 +28,7 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.content.res.Configuration;
 
-import com.cocos.game.service.SDKWrapper;
+import com.cocos.service.SDKWrapper;
 import com.cocos.lib.CocosActivity;
 
 public class AppActivity extends CocosActivity {

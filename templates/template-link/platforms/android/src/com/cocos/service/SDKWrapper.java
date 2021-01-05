@@ -19,7 +19,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-package com.cocos.game.service;
+package com.cocos.service;
 
 import android.app.Activity;
 import android.content.Context;
@@ -69,7 +69,7 @@ public final class SDKWrapper {
     private void loadSDKInterface() {
         ArrayList<SDKInterface> instances = new ArrayList<>();
         try {
-            String json = this.getJson("project.json");
+            String json = this.getJson("service.json");
             JSONObject jsonObject = new JSONObject(json);
             JSONArray serviceClasses = jsonObject.getJSONArray("serviceClasses");
             if (serviceClasses == null) return;
