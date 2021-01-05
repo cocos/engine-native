@@ -63,7 +63,7 @@ static SDKWrapper *mInstace = nil;
 - (void)loadSDKClass {
     NSMutableArray *sdks = [NSMutableArray array];
     @try {
-        NSString *path = [NSString stringWithFormat:@"%@/project.json", [[NSBundle mainBundle] resourcePath]];
+        NSString *path = [NSString stringWithFormat:@"%@/service.json", [[NSBundle mainBundle] resourcePath]];
         NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingMappedIfSafe error:nil];
         id obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         id dic = obj[@"serviceClasses"];
