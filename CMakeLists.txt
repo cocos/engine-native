@@ -480,18 +480,21 @@ elseif(ANDROID)
         cocos/platform/android/FileUtils-android.h
         cocos/platform/android/View.cpp
         cocos/platform/android/View.h
-        cocos/platform/android/jni/JniHelper.cpp
-        cocos/platform/android/jni/JniHelper.h
-        cocos/platform/android/jni/JniImp.cpp
-        cocos/platform/android/jni/JniImp.h
-        cocos/platform/android/jni/JniCocosActivity.cpp
-        cocos/platform/android/jni/JniCocosActivity.h
-        cocos/platform/android/jni/JniCocosTouchHandler.cpp
-        cocos/platform/android/jni/JniCocosKeyCodeHandler.cpp
-        cocos/platform/android/jni/JniCocosSurfaceView.cpp
-        cocos/platform/android/jni/JniCocosOrientationHelper.cpp
 
     )
+    set(CC_JNI_SRC_FILES
+        ${CWD}/cocos/platform/android/jni/JniCocosActivity.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosActivity.h
+        ${CWD}/cocos/platform/android/jni/JniCocosTouchHandler.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosKeyCodeHandler.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosSurfaceView.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosOrientationHelper.cpp
+        ${CWD}/cocos/platform/android/jni/JniHelper.cpp
+        ${CWD}/cocos/platform/android/jni/JniHelper.h
+        ${CWD}/cocos/platform/android/jni/JniImp.cpp
+        ${CWD}/cocos/platform/android/jni/JniImp.h
+    )
+
 elseif(APPLE)
     cocos_source_files(
         cocos/platform/apple/FileUtils-apple.h
@@ -1442,6 +1445,19 @@ cocos_source_files(
 list(APPEND COCOS2D_SOURCE_LIST ${CC_EXTERNAL_SROUCES})
 
 add_library(cocos2d ${COCOS2D_SOURCE_LIST})
+
+if(ANDROID) 
+    add_library(cocos2d_jni STATIC ${CC_JNI_SRC_FILES})
+    target_include_directories(cocos2d_jni PUBLIC
+        ${CWD}
+        ${CWD}/cocos
+    )
+    target_link_libraries(cocos2d_jni PUBLIC
+        android_platform
+        android
+        log
+    )
+endif()
 
 # setup default flags
 target_compile_definitions(cocos2d PUBLIC
