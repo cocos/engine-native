@@ -76,9 +76,13 @@ public:
     void uploadIB();
     void reset();
 
+    void afterCleanupHandle();
+    void afterInitHook();
+
 private:
     void next();
-
+    void clear();
+    void init();
 private:
     std::vector<IOTypedArray *> _ibArr;
     std::vector<IOTypedArray *> _vbArr;
