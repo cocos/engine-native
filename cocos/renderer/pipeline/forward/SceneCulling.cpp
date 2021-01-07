@@ -164,30 +164,32 @@ void shadowCollecting(ForwardPipeline *pipeline, Camera *camera) {
     castBoundsInitialized = false;
 
     RenderObjectList shadowObjects;
+    if (pipeline->getShadows()->getShadowType() == ShadowType::SHADOWMAP) {
+        const auto models = scene->getModels();
+        const auto modelCount = models[0];
+        for (size_t i = 1; i <= modelCount; i++) {
+            const auto model = scene->getModelView(models[i]);
 
-    const auto models = scene->getModels();
-    const auto modelCount = models[0];
-    for (size_t i = 1; i <= modelCount; i++) {
-        const auto model = scene->getModelView(models[i]);
-
-        // filter model by view visibility
-        if (model->enabled) {
-            const auto visibility = camera->visibility;
-            const auto node = model->getNode();
-            if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
-                (visibility & model->visFlags)) {
-                // shadow render Object
-                if (model->castShadow && model->getWorldBounds()) {
-                    if (!castBoundsInitialized) {
-                        castWorldBounds = *model->getWorldBounds();
-                        castBoundsInitialized = true;
+            // filter model by view visibility
+            if (model->enabled) {
+                const auto visibility = camera->visibility;
+                const auto node = model->getNode();
+                if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
+                    (visibility & model->visFlags)) {
+                    // shadow render Object
+                    if (model->castShadow && model->getWorldBounds()) {
+                        if (!castBoundsInitialized) {
+                            castWorldBounds = *model->getWorldBounds();
+                            castBoundsInitialized = true;
+                        }
+                        castWorldBounds.merge(*model->getWorldBounds());
+                        shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
-                    castWorldBounds.merge(*model->getWorldBounds());
-                    shadowObjects.emplace_back(genRenderObject(model, camera));
                 }
             }
         }
     }
+
 
     pipeline->getSphere()->define(castWorldBounds);
 

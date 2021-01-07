@@ -144,9 +144,11 @@ bool ForwardPipeline::activate() {
 
 void ForwardPipeline::render(const vector<uint> &cameras) {
     _commandBuffers[0]->begin();
-    for (const auto flow : _flows) {
-        for (const auto cameraId : cameras) {
-            Camera *camera = GET_CAMERA(cameraId);
+    updateGlobalUBO();
+    for (const auto cameraId : cameras) {
+        Camera *camera = GET_CAMERA(cameraId);
+        updateCameraUBO(camera);
+        for (const auto flow : _flows) {
             flow->render(camera);
         }
     }
@@ -155,6 +157,7 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
 }
 
 void ForwardPipeline::updateCameraUBO(Camera *camera) {
+    _descriptorSet->update();
     const auto scene = camera->getScene();
     const Light *mainLight = nullptr;
     if (scene->mainLightID) mainLight = scene->getMainLight();
@@ -243,6 +246,7 @@ void ForwardPipeline::updateCameraUBO(Camera *camera) {
 }
 
 void ForwardPipeline::updateShadowUBO(Camera *camera) {
+    _descriptorSet->update();
     const auto scene = camera->getScene();
     const Light *mainLight = nullptr;
     if (scene->mainLightID) mainLight = scene->getMainLight();
