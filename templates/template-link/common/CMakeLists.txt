@@ -169,7 +169,6 @@ if(ANDROID)
     add_library(${LIB_NAME} SHARED ${PROJ_SOURCES} ${PROJ_EXTRA_SOURCE} ${PROJ_COMMON_SOURCES})
     target_link_libraries(${LIB_NAME} 
         "-Wl,--whole-archive" cocos2d_jni "-Wl,--no-whole-archive"
-        cocos2d
     )
 elseif(APPLE OR MSVC)
     add_executable(${LIB_NAME} ${PROJ_SOURCES} ${asset_files} ${PROJ_EXTRA_SOURCE} ${PROJ_COMMON_SOURCES})
