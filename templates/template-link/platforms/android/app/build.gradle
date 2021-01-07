@@ -17,7 +17,7 @@ android {
         externalNativeBuild {
             cmake {
                 targets "cocos"
-                arguments "-DRES_DIR=${projectDir.absolutePath.replace("\\", "/")}/../..", "-DANDROID_STL=c++_static", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ARM_NEON=TRUE"
+                arguments "-DRES_DIR=${projectDir.absolutePath.replace("\\", "/")}/../..", "-DANDROID_STL=c++_static", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_LD=lld"
                 cppFlags "-frtti -fexceptions -fsigned-char"
             }
             ndk { abiFilters PROP_APP_ABI.split(':') }
