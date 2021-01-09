@@ -145,7 +145,7 @@ echo "  finish push ..."
 
 # 7.
 echo "Sending Pull Request to base repo ..."
-curl -H "Authorization: token $GH_TOKEN"  --request POST --data "{ \"title\": \"$COMMITTAG\", \"body\": \"From $TRAVIS_COMMIT_MESSAGE\", \"head\": \"${GH_USER}:${COCOS_BRANCH}\", \"base\": \"${TRAVIS_BRANCH}\"}" "${PULL_REQUEST_REPO}" # 2> /dev/null > /dev/null
+curl -H "Authorization: token $GH_TOKEN"  --request POST --data "{ \"title\": \"$COMMITTAG\", \"body\": \"> $TRAVIS_COMMIT_MESSAGE\", \"head\": \"${GH_USER}:${COCOS_BRANCH}\", \"base\": \"${TRAVIS_BRANCH}\"}" "${PULL_REQUEST_REPO}" # 2> /dev/null > /dev/null
 
 echo "  finish sending PR ..."
 
