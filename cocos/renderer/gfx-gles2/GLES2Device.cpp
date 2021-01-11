@@ -84,8 +84,14 @@ bool GLES2Device::initialize(const DeviceInfo &info) {
     String extStr = (const char *)glGetString(GL_EXTENSIONS);
     _extensions = StringUtil::Split(extStr, " ");
 
-    _features[(int)Feature::TEXTURE_FLOAT] = true;
-    _features[(int)Feature::TEXTURE_HALF_FLOAT] = true;
+    if (checkExtension("GL_OES_texture_float")) {
+        _features[(int)Feature::TEXTURE_FLOAT] = true;
+    }
+
+    if (checkExtension("GL_OES_texture_half_float")) {
+        _features[(int)Feature::TEXTURE_HALF_FLOAT] = true;
+    }
+
     _features[(int)Feature::FORMAT_R11G11B10F] = true;
     _features[(int)Feature::FORMAT_D24S8] = true;
     _features[(int)Feature::MSAA] = true;
@@ -222,7 +228,6 @@ void GLES2Device::bindRenderContext(bool bound) {
 
     if (bound) {
         _threadID = std::hash<std::thread::id>()(std::this_thread::get_id());
-        _gpuStateCache->reset();
     }
 }
 
@@ -239,9 +244,7 @@ void GLES2Device::bindDeviceContext(bool bound) {
     _context = bound ? _deviceContext : nullptr;
 
     if (bound) {
-        std::hash<std::thread::id> hasher;
-        _threadID = hasher(std::this_thread::get_id());
-        _gpuStateCache->reset();
+        _threadID = std::hash<std::thread::id>()(std::this_thread::get_id());
     }
 }
 

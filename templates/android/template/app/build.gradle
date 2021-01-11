@@ -2,6 +2,10 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'com.android.application'
 
+RES_PATH = RES_PATH.replace("\\", "/")
+COCOS_ENGINE_PATH = COCOS_ENGINE_PATH.replace("\\", "/")
+
+buildDir = "${RES_PATH}/proj/build/$project.name"
 android {
     compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
     buildToolsVersion PROP_BUILD_TOOLS_VERSION
@@ -13,7 +17,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.cocos.helloworld"
+        applicationId APPLICATION_ID
         minSdkVersion PROP_MIN_SDK_VERSION
         targetSdkVersion PROP_TARGET_SDK_VERSION
         versionCode 1
@@ -22,7 +26,7 @@ android {
         externalNativeBuild {
             cmake {
                 targets "cocos"
-                arguments "-DRES_DIR=${projectDir.absolutePath.replace("\\", "/")}/../..", "-DANDROID_STL=c++_static", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ARM_NEON=TRUE"
+                arguments "-DRES_DIR=${RES_PATH}", "-DCOCOS_X_PATH=${COCOS_ENGINE_PATH}", "-DANDROID_STL=c++_static", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_LD=lld"
                 cppFlags "-frtti -fexceptions -fsigned-char"
             }
             ndk { abiFilters PROP_APP_ABI.split(':') }
@@ -43,7 +47,8 @@ android {
 
     externalNativeBuild {
         cmake {
-                path "${COCOS_PROJ_COMMON}/CMakeLists.txt"
+            path "../CMakeLists.txt"
+            buildStagingDirectory "${RES_PATH}/proj/build"
         }
     }
 
@@ -83,7 +88,7 @@ android {
 android.applicationVariants.all { variant ->
 
     def outputDir ="${projectDir}/assets"
-    def sourceDir = "${projectDir}/../../assets"
+    def sourceDir = "${RES_PATH}/assets"
 
     // assert file("${sourceDir}/res").exists()
 
@@ -105,6 +110,6 @@ android.applicationVariants.all { variant ->
 dependencies {
     implementation fileTree(dir: '../libs', include: ['*.jar','*.aar'])
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
-    implementation fileTree(dir: "${COCOS_ROOT}/cocos/platform/android/java/libs", include: ['*.jar'])
+    implementation fileTree(dir: "${COCOS_ENGINE_PATH}/cocos/platform/android/java/libs", include: ['*.jar'])
     implementation project(':libcocos')
 }
