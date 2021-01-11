@@ -91,6 +91,7 @@ RenderAdditiveLightQueue::RenderAdditiveLightQueue(RenderPipeline *pipeline) : _
     _phaseID = getPhaseID("forward-add");
 
     _globalUBO.fill(0.f);
+    _cameraUBO.fill(0.f);
     _shadowUBO.fill(0.f);
 }
 
@@ -331,6 +332,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
         descriptorSet->update();
 
         _globalUBO.fill(0.0f);
+        _cameraUBO.fill(0.0f);
         _shadowUBO.fill(0.0f);
         updateGlobalDescriptorSet(camera, cmdBuffer);
 
@@ -375,9 +377,9 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
         }
         descriptorSet->update();
 
-        cmdBuffer->updateBuffer(descriptorSet->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
         cmdBuffer->updateBuffer(descriptorSet->getBuffer(UBOGlobal::BINDING), _globalUBO.data(), UBOGlobal::SIZE);
         cmdBuffer->updateBuffer(descriptorSet->getBuffer(UBOCamera::BINDING), _cameraUBO.data(), UBOCamera::SIZE);
+        cmdBuffer->updateBuffer(descriptorSet->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
     }
 }
 
@@ -541,7 +543,6 @@ gfx::DescriptorSet *RenderAdditiveLightQueue::getOrCreateDescriptorSet(const Lig
             gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
             UBOGlobal::SIZE,
             UBOGlobal::SIZE,
-            gfx::BufferFlagBit::NONE,
         });
         descriptorSet->bindBuffer(UBOGlobal::BINDING, globalUBO);
         
@@ -554,12 +555,19 @@ gfx::DescriptorSet *RenderAdditiveLightQueue::getOrCreateDescriptorSet(const Lig
         });
         descriptorSet->bindBuffer(UBOCamera::BINDING, cameraUBO);
 
+        auto cameraUBO = device->createBuffer({
+            gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
+            gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
+            UBOCamera::SIZE,
+            UBOCamera::SIZE,
+        });
+        descriptorSet->bindBuffer(UBOCamera::BINDING, cameraUBO);
+
         auto shadowUBO = device->createBuffer({
             gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
             gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
             UBOShadow::SIZE,
             UBOShadow::SIZE,
-            gfx::BufferFlagBit::NONE,
         });
         descriptorSet->bindBuffer(UBOShadow::BINDING, shadowUBO);
 
