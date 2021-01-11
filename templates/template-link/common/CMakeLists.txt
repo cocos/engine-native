@@ -89,13 +89,6 @@ if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/Classes/jsb_module_register.cpp)
 endif()
 list(APPEND PROJ_COMMON_SOURCES ${CMAKE_CURRENT_LIST_DIR}/Classes/jsb_module_register.cpp)
 
-# -------------- SRART ---------------
-# USED BY COCOS SERVICE, DON'T REMOVE!
-if(EXISTS ${PROJ_SRC_DIR}/service.cmake)
-    include(${PROJ_SRC_DIR}/service.cmake)
-endif()
-# --------------  END ----------------
-
 if(WINDOWS)
     set(UI_RESOURCES
         ${PROJ_SRC_DIR}/game.rc
@@ -197,14 +190,6 @@ elseif(APPLE OR MSVC)
 else()
     add_executable(${LIB_NAME} ${PROJ_SOURCES} ${PROJ_EXTRA_SOURCE} ${PROJ_COMMON_SOURCES})
 endif()
-
-
-# -------------- SRART ---------------
-# USED BY COCOS SERVICE, DON'T REMOVE!
-if(COMMAND service_insert_library)
-    service_insert_library()
-endif()
-# --------------  END ----------------
 
 target_link_libraries(${LIB_NAME} cocos2d)
 target_include_directories(${LIB_NAME} PRIVATE
