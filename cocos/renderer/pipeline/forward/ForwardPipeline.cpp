@@ -157,7 +157,6 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
 }
 
 void ForwardPipeline::updateCameraUBO(Camera *camera) {
-    _descriptorSet->update();
     const auto scene = camera->getScene();
     const Light *mainLight = nullptr;
     if (scene->mainLightID) mainLight = scene->getMainLight();
