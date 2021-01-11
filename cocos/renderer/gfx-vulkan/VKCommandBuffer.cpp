@@ -461,8 +461,8 @@ void CCVKCommandBuffer::bindDescriptorSets() {
                             VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout->vkPipelineLayout,
                             _firstDirtyDescriptorSet, dirtyDescriptorSetCount,
                             &_curVkDescriptorSets[_firstDirtyDescriptorSet],
-                            dynamicOffsetCount, &_curDynamicOffsetCounts[dynamicOffsetStartIndex]);
-    
+                            dynamicOffsetCount, _curDynamicOffsets.data() + dynamicOffsetStartIndex);
+
     _firstDirtyDescriptorSet = UINT_MAX;
 }
 

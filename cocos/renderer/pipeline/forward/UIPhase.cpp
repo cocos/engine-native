@@ -39,26 +39,20 @@ void UIPhase::render(Camera *camera, gfx::RenderPass *renderPass){
     auto cmdBuff = pipeline->getCommandBuffers()[0];
 
     auto batches = camera->getScene()->getUIBatches();
-    const auto vis = camera->visibility & static_cast<uint>(LayerList::UI_2D);
     const int batchCount = batches[0];
     // Notice: The batches[0] is batchCount
     for (int i = 1; i <= batchCount; ++i) {
         const auto batch = GET_UI_BATCH(batches[i]);
         bool visible = false;
-        if (vis) {
-            if (camera->visibility == batch->visFlags) {
-                visible = true;
-            }
-        } else {
-            if (camera->visibility & batch->visFlags) {
-                visible = true;
-            }
+        if (camera->visibility & batch->visFlags) {
+            visible = true;
         }
 
         if (!visible) continue;
         const int count = batch->passCount;
         for (int j = 0; j < count; j++) {
             const auto pass = batch->getPassView(j);
+            if (pass->phase != _phaseID) continue;
             const auto shader = batch->getShader(j);
             const auto inputAssembler = batch->getInputAssembler();
             const auto ds = batch->getDescriptorSet();

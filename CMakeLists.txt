@@ -119,6 +119,11 @@ if(NOT ANDROID AND NOT IOS)
     set(USE_WEBVIEW OFF)
 endif()
 
+## disable middleware when dragonbones and spine are disabled
+if(NOT USE_DRAGONBONES AND NOT USE_SPINE)
+	set(USE_MIDDLEWARE OFF)
+endif()
+
 ################################# list all option values ##############################
 
 inspect_values(
@@ -439,6 +444,7 @@ endif()
 ##### platform
 cocos_source_files(
     cocos/platform/Application.h
+    cocos/platform/Application.cpp
     cocos/platform/CanvasRenderingContext2D.h
     cocos/platform/Device.h
     cocos/platform/FileUtils.cpp
@@ -474,17 +480,18 @@ elseif(ANDROID)
         cocos/platform/android/FileUtils-android.h
         cocos/platform/android/View.cpp
         cocos/platform/android/View.h
-        cocos/platform/android/jni/JniHelper.cpp
-        cocos/platform/android/jni/JniHelper.h
-        cocos/platform/android/jni/JniImp.cpp
-        cocos/platform/android/jni/JniImp.h
-        cocos/platform/android/jni/JniCocosActivity.cpp
-        cocos/platform/android/jni/JniCocosActivity.h
-        cocos/platform/android/jni/JniCocosTouchHandler.cpp
-        cocos/platform/android/jni/JniCocosKeyCodeHandler.cpp
-        cocos/platform/android/jni/JniCocosSurfaceView.cpp
-        cocos/platform/android/jni/JniCocosOrientationHelper.cpp
-
+    )
+    set(CC_JNI_SRC_FILES
+        ${CWD}/cocos/platform/android/jni/JniCocosActivity.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosActivity.h
+        ${CWD}/cocos/platform/android/jni/JniCocosTouchHandler.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosKeyCodeHandler.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosSurfaceView.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosOrientationHelper.cpp
+        ${CWD}/cocos/platform/android/jni/JniHelper.cpp
+        ${CWD}/cocos/platform/android/jni/JniHelper.h
+        ${CWD}/cocos/platform/android/jni/JniImp.cpp
+        ${CWD}/cocos/platform/android/jni/JniImp.h
     )
 elseif(APPLE)
     cocos_source_files(
@@ -1091,19 +1098,19 @@ if(USE_MIDDLEWARE)
             cocos/editor-support/dragonbones/core/BaseObject.cpp
             cocos/editor-support/dragonbones/core/BaseObject.h
             cocos/editor-support/dragonbones/core/DragonBones.cpp
-            cocos/editor-support/dragonbones/core/DragonBones.h      
+            cocos/editor-support/dragonbones/core/DragonBones.h
             cocos/editor-support/dragonbones/event/EventObject.cpp
             cocos/editor-support/dragonbones/event/EventObject.h
-            cocos/editor-support/dragonbones/event/IEventDispatcher.h            
+            cocos/editor-support/dragonbones/event/IEventDispatcher.h
             cocos/editor-support/dragonbones/factory/BaseFactory.cpp
-            cocos/editor-support/dragonbones/factory/BaseFactory.h           
+            cocos/editor-support/dragonbones/factory/BaseFactory.h
             cocos/editor-support/dragonbones/geom/ColorTransform.h
             cocos/editor-support/dragonbones/geom/Matrix.h
             cocos/editor-support/dragonbones/geom/Point.cpp
             cocos/editor-support/dragonbones/geom/Point.h
             cocos/editor-support/dragonbones/geom/Rectangle.h
             cocos/editor-support/dragonbones/geom/Transform.cpp
-            cocos/editor-support/dragonbones/geom/Transform.h        
+            cocos/editor-support/dragonbones/geom/Transform.h
             cocos/editor-support/dragonbones/model/AnimationConfig.cpp
             cocos/editor-support/dragonbones/model/AnimationConfig.h
             cocos/editor-support/dragonbones/model/AnimationData.cpp
@@ -1131,7 +1138,7 @@ if(USE_MIDDLEWARE)
             cocos/editor-support/dragonbones/parser/DataParser.cpp
             cocos/editor-support/dragonbones/parser/DataParser.h
             cocos/editor-support/dragonbones/parser/JSONDataParser.cpp
-            cocos/editor-support/dragonbones/parser/JSONDataParser.h           
+            cocos/editor-support/dragonbones/parser/JSONDataParser.h
             cocos/editor-support/dragonbones-creator-support/ArmatureCache.cpp
             cocos/editor-support/dragonbones-creator-support/ArmatureCache.h
             cocos/editor-support/dragonbones-creator-support/ArmatureCacheMgr.cpp
@@ -1435,6 +1442,19 @@ list(APPEND COCOS2D_SOURCE_LIST ${CC_EXTERNAL_SROUCES})
 
 add_library(cocos2d ${COCOS2D_SOURCE_LIST})
 
+if(ANDROID)
+    add_library(cocos2d_jni STATIC ${CC_JNI_SRC_FILES})
+    target_include_directories(cocos2d_jni PUBLIC
+        ${CWD}
+        ${CWD}/cocos
+    )
+    target_link_libraries(cocos2d_jni PUBLIC
+        android_platform
+        android
+        log
+    )
+endif()
+
 # setup default flags
 target_compile_definitions(cocos2d PUBLIC
     $<IF:$<BOOL:${USE_VIDEO}>,USE_VIDEO=1,USE_VIDEO=0>
@@ -1549,7 +1569,7 @@ if(APPLE)
         "-framework GameController"
         "-framework Metal"
         "-framework MetalKit"
-        "-lSQLite3"
+        "-lsqlite3"
         "-framework Security"
         "-framework SystemConfiguration"
         ${CC_EXTERNAL_LIBS}
