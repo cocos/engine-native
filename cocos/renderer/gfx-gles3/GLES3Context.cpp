@@ -361,7 +361,7 @@ void GLES3Context::destroy() {
     }
 
     if (_eglDisplay != EGL_NO_DISPLAY) {
-        eglTerminate(_eglDisplay);
+        EGL_CHECK(eglTerminate(_eglDisplay));
         _eglDisplay = EGL_NO_DISPLAY;
     }
 
