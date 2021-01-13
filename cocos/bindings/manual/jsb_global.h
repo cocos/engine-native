@@ -29,12 +29,13 @@
 #include "renderer/core/CoreStd.h"
 #include <string>
 #include <type_traits>
+#include <utility>
 
 template <typename T, class... Args>
 inline typename std::enable_if<std::is_base_of<cc::Object, T>::value, T>::type *
 jsb_override_new(Args &&...args) {
     //create object in gfx way
-    return CC_NEW(T(args...));
+    return CC_NEW(T(std::forward<Args>(args)...));
 }
 
 template <typename T>
@@ -48,7 +49,7 @@ template <typename T, class... Args>
 inline typename std::enable_if<!std::is_base_of<cc::Object, T>::value, T>::type *
 jsb_override_new(Args &&...args) {
     //create object in the default way
-    return new T(args...);
+    return new T(std::forward<Args>(args)...);
 }
 
 template <typename T>
