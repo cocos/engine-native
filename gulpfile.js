@@ -34,6 +34,7 @@ var spawn = require('child_process').spawn;
 var Path = require('path');
 var fs = require('fs-extra');
 const which = require('which');
+const del = require('del');
 
 function absolutePath (relativePath) {
     return Path.join(__dirname, relativePath);
@@ -149,6 +150,9 @@ gulp.task('gen-cocos2d-x', function(cb) {
 });
 
 gulp.task('gen-simulator', async function () {
+    console.log('remove old simulator project\n');
+    await del(Path.join(__dirname, './simulator'));
+
     let isWin32 = process.platform === 'win32';
     // get the cmake path
     let cmakeBin = await new Promise((resolve, reject) => {
@@ -185,7 +189,6 @@ gulp.task('gen-simulator', async function () {
         });
     });
     
-    
     console.log('=====================================\n');
     console.log('build project\n');
     console.log('=====================================\n');
@@ -211,6 +214,23 @@ gulp.task('gen-simulator', async function () {
             console.log(data.toString ? data.toString() : data);
         });
     });
+
+    console.log('=====================================\n');
+    console.log('clean project\n');
+    console.log('=====================================\n');
+    let delPatterns = [
+        Path.join(__dirname, './simulator/*'),
+    ];
+    if (isWin32) {
+        delPatterns.push(`!${Path.join(__dirname, './simulator/win32')}`);
+    }
+    else {
+        delPatterns.push(`!${Path.join(__dirname, './simulator/Debug')}`);
+        delPatterns.push(`${Path.join(__dirname, './simulator/Debug/libcocos2d.a')}`);
+        delPatterns.push(`${Path.join(__dirname, './simulator/Debug/libsimulator.a')}`);
+    }
+    console.log('delete patterns: ', JSON.stringify(delPatterns, undefined, 2));
+    await del(delPatterns);
 
     console.log('done!');   
 });
