@@ -92,7 +92,7 @@ endfunction()
 
 ################################# options ############################################
 
-# default options fall back
+# default fallback options 
 set_if_undefined(USE_SE_V8                ON)
 set_if_undefined(USE_V8_DEBUGGER          ON)
 set_if_undefined(USE_SOCKET               ON)
