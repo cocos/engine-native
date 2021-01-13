@@ -131,6 +131,10 @@ function getCurrentBranch() {
     return output.stdout.toString().trim();
 }
 
+function formatPath (p) {
+    return p.replace(/\\/g, '/');
+}
+
 gulp.task('update', function (cb) {
     const git = require('./utils/git');
     var branch = git.getCurrentBranch('.');
@@ -219,18 +223,15 @@ gulp.task('gen-simulator', async function () {
     console.log('clean project\n');
     console.log('=====================================\n');
     let delPatterns = [
-        Path.join(__dirname, './simulator/*'),
+        formatPath(Path.join(__dirname, './simulator/*')),
+        formatPath(`!${Path.join(__dirname, './simulator/Debug')}`),
     ];
-    if (isWin32) {
-        delPatterns.push(`!${Path.join(__dirname, './simulator/win32')}`);
-    }
-    else {
-        delPatterns.push(`!${Path.join(__dirname, './simulator/Debug')}`);
-        delPatterns.push(`${Path.join(__dirname, './simulator/Debug/libcocos2d.a')}`);
-        delPatterns.push(`${Path.join(__dirname, './simulator/Debug/libsimulator.a')}`);
+    if (!isWin32) {
+        delPatterns.push(formatPath(Path.join(__dirname, './simulator/Debug/libcocos2d.a')));
+        delPatterns.push(formatPath(Path.join(__dirname, './simulator/Debug/libsimulator.a')));
     }
     console.log('delete patterns: ', JSON.stringify(delPatterns, undefined, 2));
-    await del(delPatterns);
+    await del(delPatterns, { force: true });
 
     console.log('done!');   
 });
