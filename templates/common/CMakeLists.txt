@@ -32,7 +32,7 @@ endif()
 
 
 set(TARGET_OSX_VERSION "10.10")
-set(TARGET_IOS_VERSION "9.0")
+set(TARGET_IOS_VERSION "10.0")
 
 include(${COCOS_X_PATH}/CMakeLists.txt)
 
