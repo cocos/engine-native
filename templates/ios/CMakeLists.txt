@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 set(CMAKE_SYSTEM_NAME iOS)
-set(APP_NAME    "CocosGame"  CACHE STRING "Project Name")
+set(APP_NAME "CocosGame"  CACHE STRING "Project Name")
 project(${APP_NAME} CXX)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../common/CMakeLists.txt)
