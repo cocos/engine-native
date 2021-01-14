@@ -9,7 +9,6 @@ set(LIB_NAME ${APP_NAME}-mobile)
 
 set(UI_RESOURCES)
 set(PROJ_SOURCES)
-set(PROJ_EXTRA_SOURCE)
 set(PROJ_COMMON_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/../common/Classes/Game.h
     ${CMAKE_CURRENT_LIST_DIR}/../common/Classes/Game.cpp
@@ -41,7 +40,7 @@ list(APPEND PROJ_SOURCES
 
 include_resources(${RES_DIR}/assets)
 
-add_executable(${LIB_NAME} ${PROJ_SOURCES} ${ASSET_FILES} ${PROJ_EXTRA_SOURCE} ${PROJ_COMMON_SOURCES})
+add_executable(${LIB_NAME} ${PROJ_SOURCES} ${ASSET_FILES} ${PROJ_COMMON_SOURCES})
 source_group(TREE ${RES_DIR}/assets PREFIX "Resources" FILES ${ASSET_FILES})
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} PREFIX "Source Files" FILES ${PROJ_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR}/../common PREFIX "Source Files" FILES ${PROJ_COMMON_SOURCES})
