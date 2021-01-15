@@ -34,11 +34,11 @@ class CCMTLBuffer;
 class CCMTLRenderCommandEncoder;
 
 class CCMTLBuffer final : public Buffer {
-    friend class CCMTLGPUResourceHelper;
-
 public:
     explicit CCMTLBuffer(Device *device);
     ~CCMTLBuffer() override = default;
+    CCMTLBuffer(const CCMTLBuffer &) = delete;
+    CCMTLBuffer(CCMTLBuffer &&) = delete;
     CCMTLBuffer &operator=(const CCMTLBuffer &) = default;
     CCMTLBuffer &operator=(CCMTLBuffer &&) = delete;
 
@@ -56,12 +56,9 @@ public:
     CC_INLINE const DrawInfoList &getDrawInfos() const { return _drawInfos; }
 
 private:
-    CCMTLBuffer(const CCMTLBuffer &); //shallow copy
-    CCMTLBuffer(CCMTLBuffer &&);
     void resizeBuffer(uint8_t **, uint, uint);
     bool createMTLBuffer(uint size, MemoryUsage usage);
     void updateMTLBuffer(void *buffer, uint offset, uint size);
-    void dispose();
 
     id<MTLBuffer> _mtlBuffer = nullptr;
     MTLIndexType _indexType = MTLIndexTypeUInt16;

@@ -38,24 +38,6 @@ namespace gfx {
 CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {
 }
 
-CCMTLBuffer::CCMTLBuffer(const CCMTLBuffer &ccBuffer) : Buffer(ccBuffer._device),
-                                                        _mtlBuffer(ccBuffer._mtlBuffer) {
-    _isBufferView = ccBuffer._isBufferView;
-    _buffer = ccBuffer._buffer;
-}
-
-CCMTLBuffer::CCMTLBuffer(CCMTLBuffer &&ccBuffer) : Buffer(ccBuffer._device),
-                                                   _mtlBuffer(ccBuffer._mtlBuffer) {
-    [_mtlBuffer retain];
-    _isBufferView = ccBuffer._isBufferView;
-    _buffer = ccBuffer._buffer;
-
-    ccBuffer._buffer = nullptr;
-    ccBuffer._device = nullptr;
-    [ccBuffer._mtlBuffer release];
-    ccBuffer._mtlBuffer = nil;
-}
-
 bool CCMTLBuffer::initialize(const BufferInfo &info) {
     _usage = info.usage;
     _memUsage = info.memUsage;
@@ -126,23 +108,8 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
 }
 
 void CCMTLBuffer::destroy() {
-    uint8_t currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
-    CCMTLBuffer ccBuffer(std::move(*this));
-    std::function<void(void)> destroyFunc = [=]() {
-        CCMTLBuffer ccBuf(ccBuffer);
-        ccBuf.dispose();
-    };
-    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
-}
-
-void CCMTLBuffer::dispose() {
     if (_isBufferView) {
         return;
-    }
-
-    if (_mtlBuffer) {
-        [_mtlBuffer release];
-        _mtlBuffer = nil;
     }
 
     if (_buffer) {
@@ -150,8 +117,20 @@ void CCMTLBuffer::dispose() {
         _device->getMemoryStatus().bufferSize -= _size;
         _buffer = nullptr;
     }
+    
+    Device* device = _device;
+    id<MTLBuffer> mtlBuffer = _mtlBuffer;
+    _mtlBuffer = nil;
 
-    _device->getMemoryStatus().bufferSize -= _size;
+    uint8_t currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
+    std::function<void(void)> destroyFunc = [=]() {
+        if (mtlBuffer) {
+            [mtlBuffer release];
+            device->getMemoryStatus().bufferSize -= _size;
+        }
+    };
+    //gpu object only
+    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
 }
 
 void CCMTLBuffer::resize(uint size) {

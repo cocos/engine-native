@@ -33,23 +33,6 @@ namespace gfx {
 
 CCMTLTexture::CCMTLTexture(Device *device) : Texture(device) {}
 
-CCMTLTexture::CCMTLTexture(CCMTLTexture &&cctex) : Texture(cctex._device),
-                                                   _mtlTexture(cctex._mtlTexture) {
-    [_mtlTexture retain];
-    _buffer = cctex._buffer;
-    _isTextureView = cctex._isTextureView;
-    cctex._device = nullptr;
-    cctex._buffer = nullptr;
-    [cctex._mtlTexture release];
-    cctex._mtlTexture = nil;
-}
-
-CCMTLTexture::CCMTLTexture(const CCMTLTexture &cctex) : Texture(cctex._device),
-                                                        _mtlTexture(cctex._mtlTexture) {
-    _buffer = cctex._buffer;
-    _isTextureView = cctex._isTextureView;
-}
-
 bool CCMTLTexture::initialize(const TextureInfo &info) {
     _type = info.type;
     _usage = info.usage;
@@ -219,26 +202,25 @@ bool CCMTLTexture::createMTLTexture() {
 
 void CCMTLTexture::destroy() {
     uint currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
-    //hand over all assets
-    CCMTLTexture ccTexture(std::move(*this));
-    std::function<void(void)> destroyFunc = [=]() {
-        //shallow copy from local variable
-        CCMTLTexture ccTex(ccTexture);
-        ccTex.dispose();
-    };
-    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
-}
 
-void CCMTLTexture::dispose() {
     if (_buffer) {
         CC_FREE(_buffer);
         _device->getMemoryStatus().textureSize -= _size;
+        _buffer = nullptr;
     }
-
-    if (_mtlTexture) {
-        [_mtlTexture release];
-        _device->getMemoryStatus().textureSize -= _size;
-    }
+    
+    Device* device = _device;
+    id<MTLTexture> mtlTexure = _mtlTexture;
+    _mtlTexture = nil;
+    
+    std::function<void(void)> destroyFunc = [=]() {
+        if (mtlTexure) {
+            [mtlTexure release];
+            device->getMemoryStatus().textureSize -= _size;
+        }
+    };
+    //gpu object only
+    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
 }
 
 void CCMTLTexture::resize(uint width, uint height) {
