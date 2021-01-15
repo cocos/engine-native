@@ -794,6 +794,8 @@ if(CC_USE_METAL)
         cocos/renderer/gfx-metal/MTLRenderCommandEncoder.h
         cocos/renderer/gfx-metal/MTLConfig.h
         cocos/renderer/gfx-metal/MTLSemaphore.h
+        cocos/renderer/gfx-metal/MTLGPUResourceHelper.h
+        cocos/renderer/gfx-metal/MTLGPUResourceHelper.mm
     )
 endif()
 

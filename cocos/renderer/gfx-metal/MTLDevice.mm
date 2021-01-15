@@ -176,6 +176,9 @@ void CCMTLDevice::destroy() {
         _inFlightSemaphore->syncAll();
     }
 
+    [id<MTLCommandQueue>(_mtlCommandQueue) release];
+    _mtlCommandQueue = nullptr;
+
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_cmdBuff);
     CC_SAFE_DESTROY(_context);
@@ -207,6 +210,7 @@ void CCMTLDevice::present() {
 
     //hold this pointer before update _currentFrameIndex
     CCMTLGPUStagingBufferPool *bufferPool = _gpuStagingBufferPools[_currentFrameIndex];
+    uint triggeredFrameIndex = _currentFrameIndex;
     _currentFrameIndex = (_currentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
 
     auto mtlCommandBuffer = static_cast<CCMTLCommandBuffer *>(_cmdBuff)->getMTLCommandBuffer();
@@ -215,6 +219,7 @@ void CCMTLDevice::present() {
     [mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         [commandBuffer release];
         bufferPool->reset();
+        CCMTLGPUGabageCollectionPool::getInstance()->clear(triggeredFrameIndex);
         _inFlightSemaphore->signal();
     }];
     [mtlCommandBuffer commit];

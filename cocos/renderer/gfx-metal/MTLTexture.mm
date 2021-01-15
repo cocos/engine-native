@@ -26,11 +26,19 @@ THE SOFTWARE.
 #include "MTLDevice.h"
 #include "MTLTexture.h"
 #include "MTLUtils.h"
+#include "MTLGPUObjects.h"
+#include "MTLGPUResourceHelper.h"
 
 namespace cc {
 namespace gfx {
 
 CCMTLTexture::CCMTLTexture(Device *device) : Texture(device) {}
+
+CCMTLTexture::CCMTLTexture(const CCMTLTexture& cctex) : Texture(cctex._device){
+    _mtlTexture = cctex._mtlTexture;
+    _device = cctex._device;
+    _buffer = cctex._buffer;
+}
 
 bool CCMTLTexture::initialize(const TextureInfo &info) {
     _type = info.type;
@@ -200,17 +208,9 @@ bool CCMTLTexture::createMTLTexture() {
 }
 
 void CCMTLTexture::destroy() {
-    if (_buffer) {
-        CC_FREE(_buffer);
-        _device->getMemoryStatus().textureSize -= _size;
-        _buffer = nullptr;
-    }
-
-    if (_mtlTexture) {
-        [_mtlTexture release];
-        _mtlTexture = nil;
-        _device->getMemoryStatus().textureSize -= _size;
-    }
+    uint currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
+    std::function<void(void)> destroyFunc = CCMTLGPUResourceHelper::destroyFunction<ObjectType::TEXTURE>(this, Execution::DELAY);
+    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
 }
 
 void CCMTLTexture::resize(uint width, uint height) {

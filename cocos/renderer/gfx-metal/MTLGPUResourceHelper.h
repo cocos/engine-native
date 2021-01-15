@@ -17,48 +17,52 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISEgfxObject, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #pragma once
-
-#import <Metal/MTLTexture.h>
+#include "gfx/GFXObject.h"
+#include <functional>
 
 namespace cc {
 namespace gfx {
 
-class CCMTLTexture final : public Texture {
-    friend class CCMTLGPUResourceHelper;
-
-public:
-    explicit CCMTLTexture(Device *device);
-    ~CCMTLTexture() override = default;
-    CCMTLTexture(CCMTLTexture &&) = delete;
-    CCMTLTexture &operator=(const CCMTLTexture &) = delete;
-    CCMTLTexture &operator=(CCMTLTexture &&) = delete;
-
-    bool initialize(const TextureInfo &info) override;
-    bool initialize(const TextureViewInfo &info) override;
-    void destroy() override;
-    void resize(uint width, uint height) override;
-
-    CC_INLINE id<MTLTexture> getMTLTexture() const { return _mtlTexture; }
-    CC_INLINE Format getConvertedFormat() const { return _convertedFormat; }
-    CC_INLINE bool isArray() const { return _isArray; }
-    CC_INLINE bool isPVRTC() const { return _isPVRTC; }
-
-private:
-    CCMTLTexture(const CCMTLTexture &); //shallow copy
-
-    bool createMTLTexture();
-
-private:
-    id<MTLTexture> _mtlTexture = nil;
-    Format _convertedFormat = Format::UNKNOWN;
-    bool _isArray = false;
-    bool _isPVRTC = false;
+//way of execution, instantly execute or delayed.
+enum Execution{
+    INSTANT,
+    DELAY
 };
+
+class CCMTLGPUResourceHelper : public Object{
+public:
+    template <ObjectType type>
+    inline static std::function<void(void)> destroyFunction(GFXObject* obj, Execution exec);
+
+
+private:
+    CCMTLGPUResourceHelper() = delete;
+    static std::function<void(void)> getTextureDestroyFunc(GFXObject* obj, Execution exec);
+    static std::function<void(void)> getBufferDestroyFunc(GFXObject* obj, Execution exec);
+    
+};
+
+template <ObjectType type>
+inline std::function<void(void)> CCMTLGPUResourceHelper::destroyFunction(GFXObject* obj, Execution exec){
+    
+}
+
+template<>
+inline std::function<void(void)> CCMTLGPUResourceHelper::destroyFunction<ObjectType::TEXTURE>(GFXObject* obj, Execution exec){
+    return getTextureDestroyFunc(obj, exec);
+}
+
+template<>
+inline std::function<void(void)> CCMTLGPUResourceHelper::destroyFunction<ObjectType::BUFFER>(GFXObject* obj, Execution exec){
+    return getBufferDestroyFunc(obj, exec);
+}
+
+
 
 } // namespace gfx
 } // namespace cc

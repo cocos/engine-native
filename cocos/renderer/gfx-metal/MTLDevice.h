@@ -70,6 +70,7 @@ public:
     CC_INLINE bool isIndirectDrawSupported() const { return _indirectDrawSupported; }
     CC_INLINE CCMTLGPUStagingBufferPool *gpuStagingBufferPool() const { return _gpuStagingBufferPools[_currentFrameIndex]; }
     CC_INLINE bool isSamplerDescriptorCompareFunctionSupported() const { return _isSamplerDescriptorCompareFunctionSupported; }
+    CC_INLINE const uint currentFrameIndex() const { return _currentFrameIndex; }
 
 protected:
     CommandBuffer *doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;

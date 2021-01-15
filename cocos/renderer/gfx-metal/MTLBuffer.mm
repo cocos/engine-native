@@ -31,12 +31,19 @@ THE SOFTWARE.
 #include "MTLDevice.h"
 #include "MTLRenderCommandEncoder.h"
 #include "MTLUtils.h"
+#include "MTLGPUResourceHelper.h"
 
 namespace cc {
 namespace gfx {
 
-CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device),
-                                           _mtlDevice(id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice())) {
+CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {
+}
+
+CCMTLBuffer::CCMTLBuffer(const CCMTLBuffer &ccBuffer) : Buffer(ccBuffer._device) {
+    _isBufferView = ccBuffer._isBufferView;
+    _buffer = ccBuffer._buffer;
+    _device = ccBuffer._device;
+    _mtlBuffer = ccBuffer._mtlBuffer;
 }
 
 bool CCMTLBuffer::initialize(const BufferInfo &info) {
@@ -59,10 +66,9 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
 
     if ((_flags & BufferFlagBit::BAKUP_BUFFER) && _size > 0) {
         _buffer = static_cast<uint8_t *>(CC_MALLOC(_size));
-        if (_buffer){
+        if (_buffer) {
             _device->getMemoryStatus().bufferSize += _size;
-        }
-        else {
+        } else {
             CC_LOG_ERROR("CCMTLBuffer: Failed to create backup buffer.");
             return false;
         }
@@ -98,7 +104,8 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
     if (_mtlBuffer) {
         [_mtlBuffer release];
     }
-    _mtlBuffer = [_mtlDevice newBufferWithLength:size options:_mtlResourceOptions];
+    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
+    _mtlBuffer = [mtlDevice newBufferWithLength:size options:_mtlResourceOptions];
     if (_mtlBuffer == nil) {
         return false;
     }
@@ -109,25 +116,9 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
 }
 
 void CCMTLBuffer::destroy() {
-    if (_isBufferView) {
-        return;
-    }
-
-    if (_mtlBuffer) {
-        [_mtlBuffer release];
-        _mtlBuffer = nil;
-    }
-
-    if (_buffer) {
-        CC_FREE(_buffer);
-        _device->getMemoryStatus().bufferSize -= _size;
-        _buffer = nullptr;
-    }
-    _indexedPrimitivesIndirectArguments.clear();
-    _primitiveIndirectArguments.clear();
-    _drawInfos.clear();
-
-    _device->getMemoryStatus().bufferSize -= _size;
+    uint8_t currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
+    std::function<void(void)> destroyFunc = CCMTLGPUResourceHelper::destroyFunction<ObjectType::BUFFER>(this, Execution::DELAY);
+    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
 }
 
 void CCMTLBuffer::resize(uint size) {

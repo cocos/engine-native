@@ -25,8 +25,8 @@ THE SOFTWARE.
 
 #include <vector>
 
-#import "MTLUtils.h"
 #import "MTLConfig.h"
+#import "MTLUtils.h"
 #import <Metal/MTLBuffer.h>
 #import <Metal/MTLRenderCommandEncoder.h>
 #import <Metal/MTLSampler.h>
@@ -237,6 +237,34 @@ struct CCMTLGPUBufferImageCopy {
     NSUInteger destinationSlice = 0;
     NSUInteger destinationLevel = 0;
     MTLOrigin destinationOrigin = {0, 0, 0};
+};
+
+//destroy GPU resource only, delete the owner object mannually.
+class CCMTLGPUGabageCollectionPool : public Object {
+    using GCFunc = std::function<void(void)>;
+    
+    CCMTLGPUGabageCollectionPool(){};
+public:
+    static CCMTLGPUGabageCollectionPool* getInstance(){
+        static CCMTLGPUGabageCollectionPool s_gcPool;
+        return &s_gcPool;
+    }
+    
+    void collect(std::function<void(void)> destroyFunc, uint8_t currentFrameIndex){
+        CC_ASSERT(currentFrameIndex < MAX_FRAMES_IN_FLIGHT);
+        _releaseQueue[currentFrameIndex].push(destroyFunc);
+    }
+    
+    void clear(uint8_t currentFrameIndex){
+        CC_ASSERT(currentFrameIndex < MAX_FRAMES_IN_FLIGHT);
+        while(!_releaseQueue[currentFrameIndex].empty()){
+            auto&& gcFunc = _releaseQueue[currentFrameIndex].front();
+            gcFunc();
+            _releaseQueue[currentFrameIndex].pop();
+        }
+    }
+private:
+    std::queue<GCFunc> _releaseQueue[MAX_FRAMES_IN_FLIGHT];
 };
 
 } // namespace gfx
