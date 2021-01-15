@@ -34,7 +34,6 @@ class CCMTLTexture final : public Texture {
 public:
     explicit CCMTLTexture(Device *device);
     ~CCMTLTexture() override = default;
-    CCMTLTexture(CCMTLTexture &&) = delete;
     CCMTLTexture &operator=(const CCMTLTexture &) = delete;
     CCMTLTexture &operator=(CCMTLTexture &&) = delete;
 
@@ -49,8 +48,9 @@ public:
     CC_INLINE bool isPVRTC() const { return _isPVRTC; }
 
 private:
-    CCMTLTexture(const CCMTLTexture &); //shallow copy
-
+    CCMTLTexture(const CCMTLTexture &); // shallow copy
+    CCMTLTexture(CCMTLTexture &&);
+    void dispose();
     bool createMTLTexture();
 
 private:

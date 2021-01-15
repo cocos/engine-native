@@ -31,7 +31,6 @@ THE SOFTWARE.
 #include "MTLDevice.h"
 #include "MTLRenderCommandEncoder.h"
 #include "MTLUtils.h"
-#include "MTLGPUResourceHelper.h"
 
 namespace cc {
 namespace gfx {
@@ -39,11 +38,22 @@ namespace gfx {
 CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {
 }
 
-CCMTLBuffer::CCMTLBuffer(const CCMTLBuffer &ccBuffer) : Buffer(ccBuffer._device) {
+CCMTLBuffer::CCMTLBuffer(const CCMTLBuffer &ccBuffer) : Buffer(ccBuffer._device),
+                                                        _mtlBuffer(ccBuffer._mtlBuffer) {
     _isBufferView = ccBuffer._isBufferView;
     _buffer = ccBuffer._buffer;
-    _device = ccBuffer._device;
-    _mtlBuffer = ccBuffer._mtlBuffer;
+}
+
+CCMTLBuffer::CCMTLBuffer(CCMTLBuffer &&ccBuffer) : Buffer(ccBuffer._device),
+                                                   _mtlBuffer(ccBuffer._mtlBuffer) {
+    [_mtlBuffer retain];
+    _isBufferView = ccBuffer._isBufferView;
+    _buffer = ccBuffer._buffer;
+
+    ccBuffer._buffer = nullptr;
+    ccBuffer._device = nullptr;
+    [ccBuffer._mtlBuffer release];
+    ccBuffer._mtlBuffer = nil;
 }
 
 bool CCMTLBuffer::initialize(const BufferInfo &info) {
@@ -117,8 +127,31 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
 
 void CCMTLBuffer::destroy() {
     uint8_t currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
-    std::function<void(void)> destroyFunc = CCMTLGPUResourceHelper::destroyFunction<ObjectType::BUFFER>(this, Execution::DELAY);
+    CCMTLBuffer ccBuffer(std::move(*this));
+    std::function<void(void)> destroyFunc = [=]() {
+        CCMTLBuffer ccBuf(ccBuffer);
+        ccBuf.dispose();
+    };
     CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
+}
+
+void CCMTLBuffer::dispose() {
+    if (_isBufferView) {
+        return;
+    }
+
+    if (_mtlBuffer) {
+        [_mtlBuffer release];
+        _mtlBuffer = nil;
+    }
+
+    if (_buffer) {
+        CC_FREE(_buffer);
+        _device->getMemoryStatus().bufferSize -= _size;
+        _buffer = nullptr;
+    }
+
+    _device->getMemoryStatus().bufferSize -= _size;
 }
 
 void CCMTLBuffer::resize(uint size) {

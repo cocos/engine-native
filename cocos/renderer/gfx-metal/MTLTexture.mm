@@ -24,20 +24,30 @@ THE SOFTWARE.
 #include "MTLStd.h"
 
 #include "MTLDevice.h"
+#include "MTLGPUObjects.h"
 #include "MTLTexture.h"
 #include "MTLUtils.h"
-#include "MTLGPUObjects.h"
-#include "MTLGPUResourceHelper.h"
 
 namespace cc {
 namespace gfx {
 
 CCMTLTexture::CCMTLTexture(Device *device) : Texture(device) {}
 
-CCMTLTexture::CCMTLTexture(const CCMTLTexture& cctex) : Texture(cctex._device){
-    _mtlTexture = cctex._mtlTexture;
-    _device = cctex._device;
+CCMTLTexture::CCMTLTexture(CCMTLTexture &&cctex) : Texture(cctex._device),
+                                                   _mtlTexture(cctex._mtlTexture) {
+    [_mtlTexture retain];
     _buffer = cctex._buffer;
+    _isTextureView = cctex._isTextureView;
+    cctex._device = nullptr;
+    cctex._buffer = nullptr;
+    [cctex._mtlTexture release];
+    cctex._mtlTexture = nil;
+}
+
+CCMTLTexture::CCMTLTexture(const CCMTLTexture &cctex) : Texture(cctex._device),
+                                                        _mtlTexture(cctex._mtlTexture) {
+    _buffer = cctex._buffer;
+    _isTextureView = cctex._isTextureView;
 }
 
 bool CCMTLTexture::initialize(const TextureInfo &info) {
@@ -209,8 +219,26 @@ bool CCMTLTexture::createMTLTexture() {
 
 void CCMTLTexture::destroy() {
     uint currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
-    std::function<void(void)> destroyFunc = CCMTLGPUResourceHelper::destroyFunction<ObjectType::TEXTURE>(this, Execution::DELAY);
+    //hand over all assets
+    CCMTLTexture ccTexture(std::move(*this));
+    std::function<void(void)> destroyFunc = [=]() {
+        //shallow copy from local variable
+        CCMTLTexture ccTex(ccTexture);
+        ccTex.dispose();
+    };
     CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
+}
+
+void CCMTLTexture::dispose() {
+    if (_buffer) {
+        CC_FREE(_buffer);
+        _device->getMemoryStatus().textureSize -= _size;
+    }
+
+    if (_mtlTexture) {
+        [_mtlTexture release];
+        _device->getMemoryStatus().textureSize -= _size;
+    }
 }
 
 void CCMTLTexture::resize(uint width, uint height) {

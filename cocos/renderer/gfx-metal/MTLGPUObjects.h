@@ -242,27 +242,29 @@ struct CCMTLGPUBufferImageCopy {
 //destroy GPU resource only, delete the owner object mannually.
 class CCMTLGPUGabageCollectionPool : public Object {
     using GCFunc = std::function<void(void)>;
-    
-    CCMTLGPUGabageCollectionPool(){};
+
+    CCMTLGPUGabageCollectionPool() = default;
+
 public:
-    static CCMTLGPUGabageCollectionPool* getInstance(){
-        static CCMTLGPUGabageCollectionPool s_gcPool;
-        return &s_gcPool;
+    static CCMTLGPUGabageCollectionPool *getInstance() {
+        static CCMTLGPUGabageCollectionPool gcPoolSingleton;
+        return &gcPoolSingleton;
     }
-    
-    void collect(std::function<void(void)> destroyFunc, uint8_t currentFrameIndex){
+
+    void collect(std::function<void(void)> destroyFunc, uint8_t currentFrameIndex) {
         CC_ASSERT(currentFrameIndex < MAX_FRAMES_IN_FLIGHT);
         _releaseQueue[currentFrameIndex].push(destroyFunc);
     }
-    
-    void clear(uint8_t currentFrameIndex){
+
+    void clear(uint8_t currentFrameIndex) {
         CC_ASSERT(currentFrameIndex < MAX_FRAMES_IN_FLIGHT);
-        while(!_releaseQueue[currentFrameIndex].empty()){
-            auto&& gcFunc = _releaseQueue[currentFrameIndex].front();
+        while (!_releaseQueue[currentFrameIndex].empty()) {
+            auto &&gcFunc = _releaseQueue[currentFrameIndex].front();
             gcFunc();
             _releaseQueue[currentFrameIndex].pop();
         }
     }
+
 private:
     std::queue<GCFunc> _releaseQueue[MAX_FRAMES_IN_FLIGHT];
 };

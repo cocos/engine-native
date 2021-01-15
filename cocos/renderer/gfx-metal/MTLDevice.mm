@@ -176,8 +176,10 @@ void CCMTLDevice::destroy() {
         _inFlightSemaphore->syncAll();
     }
 
-    [id<MTLCommandQueue>(_mtlCommandQueue) release];
-    _mtlCommandQueue = nullptr;
+    if (_mtlCommandQueue) {
+        [id<MTLCommandQueue>(_mtlCommandQueue) release];
+        _mtlCommandQueue = nullptr;
+    }
 
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_cmdBuff);

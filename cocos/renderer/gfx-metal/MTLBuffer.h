@@ -39,7 +39,6 @@ class CCMTLBuffer final : public Buffer {
 public:
     explicit CCMTLBuffer(Device *device);
     ~CCMTLBuffer() override = default;
-    CCMTLBuffer(CCMTLBuffer &&) = delete;
     CCMTLBuffer &operator=(const CCMTLBuffer &) = default;
     CCMTLBuffer &operator=(CCMTLBuffer &&) = delete;
 
@@ -56,13 +55,13 @@ public:
     CC_INLINE bool isDrawIndirectByIndex() const { return _isDrawIndirectByIndex; }
     CC_INLINE const DrawInfoList &getDrawInfos() const { return _drawInfos; }
 
-protected:
-    CCMTLBuffer(const CCMTLBuffer &); // shallow copy
-
 private:
+    CCMTLBuffer(const CCMTLBuffer &); //shallow copy
+    CCMTLBuffer(CCMTLBuffer &&);
     void resizeBuffer(uint8_t **, uint, uint);
     bool createMTLBuffer(uint size, MemoryUsage usage);
     void updateMTLBuffer(void *buffer, uint offset, uint size);
+    void dispose();
 
     id<MTLBuffer> _mtlBuffer = nullptr;
     MTLIndexType _indexType = MTLIndexTypeUInt16;
