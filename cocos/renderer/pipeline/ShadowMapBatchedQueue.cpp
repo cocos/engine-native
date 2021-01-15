@@ -181,7 +181,7 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
             Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
 
             matShadowViewProj.multiply(matShadowView);
-            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+            // memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
         } break;
         case LightType::SPOT: {
             const auto &matShadowCamera = light->getNode()->worldMatrix;
@@ -192,14 +192,14 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
             cc::Mat4::createPerspective(light->spotAngle, light->aspect, 0.001f, light->range, &matShadowViewProj);
 
             matShadowViewProj.multiply(matShadowView);
-            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+            // memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
         } break;
         default:;
     }
 
     float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
-    memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
+    //memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
 
     cmdBufferer->updateBuffer(_pipeline->getDescriptorSet()->getBuffer(UBOShadow::BINDING), shadowUBO.data(), UBOShadow::SIZE);
 }

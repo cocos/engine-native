@@ -292,8 +292,8 @@ void ForwardPipeline::updateShadowUBO(Camera *camera) {
 
             matShadowViewProj.multiply(matShadowView);
             float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
-            memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-            memcpy(_shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
+            //memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+            //memcpy(_shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
         } else if (mainLight && shadowInfo->getShadowType() == ShadowType::PLANAR) {
             updateDirLight(shadowInfo, mainLight, _shadowUBO);
         }

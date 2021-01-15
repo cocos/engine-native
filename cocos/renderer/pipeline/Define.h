@@ -333,10 +333,10 @@ struct CC_DLL UBOCamera : public Object {
 
 struct CC_DLL UBOShadow : public Object {
     static constexpr uint MAT_LIGHT_PLANE_PROJ_OFFSET = 0;
-    static constexpr uint MAT_LIGHT_VIEW_PROJ_OFFSET = UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
-    static constexpr uint SHADOW_COLOR_OFFSET = UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET + 16;
-    static constexpr uint SHADOW_INFO_OFFSET = UBOShadow::SHADOW_COLOR_OFFSET + 4;
-    static constexpr uint COUNT = UBOShadow::SHADOW_INFO_OFFSET + 4;
+    // static constexpr uint MAT_LIGHT_VIEW_PROJ_OFFSET = UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
+    static constexpr uint SHADOW_COLOR_OFFSET = UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
+    // static constexpr uint SHADOW_INFO_OFFSET = UBOShadow::SHADOW_COLOR_OFFSET + 4;
+    static constexpr uint COUNT = UBOShadow::SHADOW_COLOR_OFFSET + 4;
     static constexpr uint SIZE = UBOShadow::COUNT * 4;
     static constexpr uint BINDING = static_cast<uint>(PipelineGlobalBindings::UBO_SHADOW);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
