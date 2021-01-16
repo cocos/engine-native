@@ -221,7 +221,7 @@ void CCMTLDevice::present() {
     [mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         [commandBuffer release];
         bufferPool->reset();
-        CCMTLGPUGabageCollectionPool::getInstance()->clear(triggeredFrameIndex);
+        CCMTLGPUGarbageCollectionPool::getInstance()->clear(triggeredFrameIndex);
         _inFlightSemaphore->signal();
     }];
     [mtlCommandBuffer commit];

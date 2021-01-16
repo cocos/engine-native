@@ -201,26 +201,29 @@ bool CCMTLTexture::createMTLTexture() {
 }
 
 void CCMTLTexture::destroy() {
-    uint currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
+    if (_isTextureView) {
+        return;
+    }
 
     if (_buffer) {
         CC_FREE(_buffer);
         _device->getMemoryStatus().textureSize -= _size;
         _buffer = nullptr;
     }
-    
-    Device* device = _device;
+
+    Device *device = _device;
     id<MTLTexture> mtlTexure = _mtlTexture;
     _mtlTexture = nil;
-    
+    uint size = _size;
+
     std::function<void(void)> destroyFunc = [=]() {
         if (mtlTexure) {
             [mtlTexure release];
-            device->getMemoryStatus().textureSize -= _size;
+            device->getMemoryStatus().textureSize -= size;
         }
     };
     //gpu object only
-    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
+    CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
 }
 
 void CCMTLTexture::resize(uint width, uint height) {

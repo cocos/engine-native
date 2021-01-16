@@ -117,20 +117,20 @@ void CCMTLBuffer::destroy() {
         _device->getMemoryStatus().bufferSize -= _size;
         _buffer = nullptr;
     }
-    
-    Device* device = _device;
+
+    Device *device = _device;
     id<MTLBuffer> mtlBuffer = _mtlBuffer;
     _mtlBuffer = nil;
+    uint size = _size;
 
-    uint8_t currentFrameIndex = static_cast<CCMTLDevice *>(_device)->currentFrameIndex();
     std::function<void(void)> destroyFunc = [=]() {
         if (mtlBuffer) {
             [mtlBuffer release];
-            device->getMemoryStatus().bufferSize -= _size;
+            device->getMemoryStatus().bufferSize -= size;
         }
     };
     //gpu object only
-    CCMTLGPUGabageCollectionPool::getInstance()->collect(destroyFunc, currentFrameIndex);
+    CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
 }
 
 void CCMTLBuffer::resize(uint size) {
