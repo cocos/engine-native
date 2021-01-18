@@ -36,7 +36,7 @@ generate_bindings_glue_codes()
     
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         pushd $COCOS2DX_ROOT
-        clang-format -i cocos/bindings/auto/*.h cocos/bindings/auto/*.cpp
+        clang-format-11 -i cocos/bindings/auto/*.h cocos/bindings/auto/*.cpp
         popd
     fi
 }
