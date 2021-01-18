@@ -1492,12 +1492,6 @@ inline bool nativevalue_to_se(const cc::network::DownloadTask &v, se::Value &ret
     return DownloadTask_to_seval(v, &ret);
 }
 
-template <>
-inline bool nativevalue_to_se(const se_object_ptr &from, se::Value &to, se::Object *) {
-    to.setObject(from);
-    return true;
-}
-
 #if __clang__
     #pragma clang diagnostic pop
 #endif
@@ -1581,9 +1575,6 @@ template <>
 bool nativevalue_to_se(const spine::Vector<spine::String> &v, se::Value &ret, se::Object *);
 
 template <>
-bool nativevalue_to_se(const se_object_ptr &obj, se::Value &val, se::Object *);
-
-template <>
 bool nativevalue_to_se(const spine::String &obj, se::Value &val, se::Object *);
 
 template <>
@@ -1591,4 +1582,12 @@ bool sevalue_to_native(const se::Value &v, spine::Vector<spine::String> *ret, se
 
 template <>
 bool seval_to_Map_string_key(const se::Value &v, cc::Map<std::string, cc::middleware::Texture2D *> *ret);
-#endif
+#endif //USE_SPINE
+
+#if USE_MIDDLEWARE
+template <>
+inline bool nativevalue_to_se(const se_object_ptr &from, se::Value &to, se::Object *) {
+    to.setObject(from);
+    return true;
+}
+#endif //USE_MIDDLEWARE
