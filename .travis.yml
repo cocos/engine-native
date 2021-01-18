@@ -43,7 +43,7 @@ jobs:
       before_install:
         - nvm install 12
         - tools/travis-scripts/before-install.sh
-        - sudo apt-get -y install llvm-11  llvm-11-tools
+        - sudo apt-get -y install clang-11  clang-11-tools
       addons:
         apt:
           sources:
