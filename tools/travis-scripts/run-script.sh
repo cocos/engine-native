@@ -33,6 +33,12 @@ generate_bindings_glue_codes()
     python ./genbindings.py
     rm userconf.ini
     popd
+    
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        pushd $COCOS2DX_ROOT
+        clang-format -i cocos/bindings/auto/*.h cocos/bindings/auto/*.cpp
+        popd
+    fi
 }
 
 

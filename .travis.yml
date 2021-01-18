@@ -43,6 +43,14 @@ jobs:
       before_install:
         - nvm install 12
         - tools/travis-scripts/before-install.sh
+      addons:
+      apt:
+        sources:
+        - sourceline: "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main"
+          key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
+      packages:
+      - clang-tools-11
+      - clang-11
 
 jdk:
   - oraclejdk8  
