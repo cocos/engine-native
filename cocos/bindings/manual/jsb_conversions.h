@@ -1587,7 +1587,7 @@ bool seval_to_Map_string_key(const se::Value &v, cc::Map<std::string, cc::middle
 #if USE_MIDDLEWARE
 template <>
 inline bool nativevalue_to_se(const se_object_ptr &from, se::Value &to, se::Object *) {
-    to.setObject(from);
+    to.setObject(const_cast<se::Object *>(from));
     return true;
 }
 #endif //USE_MIDDLEWARE
