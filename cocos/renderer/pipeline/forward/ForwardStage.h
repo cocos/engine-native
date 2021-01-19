@@ -59,6 +59,7 @@ private:
     UIPhase *_uiPhase = nullptr;
     gfx::Rect _renderArea;
     uint _phaseID = 0;
+    vector<uint> _dynamicOffsets;
 };
 
 } // namespace pipeline

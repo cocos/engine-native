@@ -124,7 +124,7 @@ bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
         _flows.emplace_back(forwardFlow);
     }
     _sphere = CC_NEW(Sphere);
-
+    
     return true;
 }
 
@@ -145,9 +145,9 @@ bool ForwardPipeline::activate() {
 void ForwardPipeline::render(const vector<uint> &cameras) {
     _commandBuffers[0]->begin();
     updateGlobalUBO();
-    for (const auto cameraId : cameras) {
-        Camera *camera = GET_CAMERA(cameraId);
-        updateCameraUBO(camera);
+    updateCameraUBO(cameras);
+    mergeCameras(cameras);
+    for (const auto camera : _cameras) {
         for (const auto flow : _flows) {
             flow->render(camera);
         }
@@ -156,92 +156,114 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
     _device->getQueue()->submit(_commandBuffers);
 }
 
-void ForwardPipeline::updateCameraUBO(Camera *camera) {
-    const auto scene = camera->getScene();
-    const Light *mainLight = nullptr;
-    if (scene->mainLightID) mainLight = scene->getMainLight();
-    const auto ambient = _ambient;
-    const auto fog = _fog;
+void ForwardPipeline::updateCameraUBO(const vector<uint> &cameras) {
+    if (cameras.size() > _cameraCount) {
+        _cameraBufferView->destroy();
+        _cameraCount = nextPow2((int)cameras.size());
+        _cameraBuffer->resize(UBOCamera::SIZE * _cameraCount);
+        _cameraUBO.resize(UBOCamera::SIZE * _cameraCount);
+        _cameraBufferView->initialize({_cameraBuffer, 0, UBOCamera::SIZE});
+    }
     
-    auto *device = gfx::Device::getInstance();
-    auto &uboCameraView = _cameraUBO;
-    
-    const auto shadingWidth = std::floor(_device->getWidth());
-    const auto shadingHeight = std::floor(_device->getHeight());
-    
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET] = camera->width / shadingWidth * _shadingScale;
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1] = camera->height / shadingHeight * _shadingScale;
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 2] = 1.0 / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET];
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 3] = 1.0 / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1];
-    
-    const auto exposure = camera->exposure;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET] = exposure;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 1] = 1.0f / exposure;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 2] = _isHDR ? 1.0f : 0.0;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 3] = _fpScale / exposure;
-    
-    if (mainLight) {
-        TO_VEC3(uboCameraView, mainLight->direction, UBOCamera::MAIN_LIT_DIR_OFFSET);
-        TO_VEC3(uboCameraView, mainLight->color, UBOCamera::MAIN_LIT_COLOR_OFFSET);
-        if (mainLight->useColorTemperature) {
-            const auto colorTempRGB = mainLight->colorTemperatureRGB;
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET] *= colorTempRGB.x;
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 1] *= colorTempRGB.y;
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 2] *= colorTempRGB.z;
-        }
+    _cameraOffset.clear();
+    int offset = 0;
+    for (int i = 0, len = (int)cameras.size(); i < len; i++) {
+        const auto cameraId = cameras[i];
+        Camera *camera = GET_CAMERA(cameraId);
+        const auto scene = camera->getScene();
+        const Light *mainLight = nullptr;
+        if (scene->mainLightID) mainLight = scene->getMainLight();
+        const auto ambient = _ambient;
+        const auto fog = _fog;
+        
+        auto *device = gfx::Device::getInstance();
+        auto &uboCameraView = _cameraUBO;
+        
+        const auto shadingWidth = std::floor(_device->getWidth());
+        const auto shadingHeight = std::floor(_device->getHeight());
+        
+        _cameraOffset[camera] = UBOCamera::SIZE * i;
+        int offset = UBOCamera::COUNT * i;
+        const int SCREEN_SCALE_OFFSET = offset + UBOCamera::SCREEN_SCALE_OFFSET;
+        uboCameraView[SCREEN_SCALE_OFFSET] = camera->width / shadingWidth * _shadingScale;
+        uboCameraView[SCREEN_SCALE_OFFSET + 1] = camera->height / shadingHeight * _shadingScale;
+        uboCameraView[SCREEN_SCALE_OFFSET + 2] = 1.0 / uboCameraView[SCREEN_SCALE_OFFSET];
+        uboCameraView[SCREEN_SCALE_OFFSET + 3] = 1.0 / uboCameraView[SCREEN_SCALE_OFFSET + 1];
+        
+        const int EXPOSURE_OFFSET = offset + UBOCamera::EXPOSURE_OFFSET;
+        const auto exposure = camera->exposure;
+        uboCameraView[EXPOSURE_OFFSET] = exposure;
+        uboCameraView[EXPOSURE_OFFSET + 1] = 1.0f / exposure;
+        uboCameraView[EXPOSURE_OFFSET + 2] = _isHDR ? 1.0f : 0.0;
+        uboCameraView[EXPOSURE_OFFSET + 3] = _fpScale / exposure;
+        
+        const int MAIN_LIT_COLOR_OFFSET = offset + UBOCamera::MAIN_LIT_COLOR_OFFSET;
+        const int MAIN_LIT_DIR_OFFSET = offset + UBOCamera::MAIN_LIT_DIR_OFFSET;
+        if (mainLight) {
+            TO_VEC3(uboCameraView, mainLight->direction, MAIN_LIT_DIR_OFFSET);
+            TO_VEC3(uboCameraView, mainLight->color, MAIN_LIT_COLOR_OFFSET);
+            if (mainLight->useColorTemperature) {
+                const auto colorTempRGB = mainLight->colorTemperatureRGB;
+                uboCameraView[MAIN_LIT_COLOR_OFFSET] *= colorTempRGB.x;
+                uboCameraView[MAIN_LIT_COLOR_OFFSET + 1] *= colorTempRGB.y;
+                uboCameraView[MAIN_LIT_COLOR_OFFSET + 2] *= colorTempRGB.z;
+            }
 
-        if (_isHDR) {
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->luminance * _fpScale;
+            if (_isHDR) {
+                uboCameraView[MAIN_LIT_COLOR_OFFSET + 3] = mainLight->luminance * _fpScale;
+            } else {
+                uboCameraView[MAIN_LIT_COLOR_OFFSET + 3] = mainLight->luminance * exposure;
+            }
         } else {
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->luminance * exposure;
+            TO_VEC3(uboCameraView, Vec3::UNIT_Z, MAIN_LIT_DIR_OFFSET);
+            TO_VEC4(uboCameraView, Vec4::ZERO, MAIN_LIT_COLOR_OFFSET);
         }
-    } else {
-        TO_VEC3(uboCameraView, Vec3::UNIT_Z, UBOCamera::MAIN_LIT_DIR_OFFSET);
-        TO_VEC4(uboCameraView, Vec4::ZERO, UBOCamera::MAIN_LIT_COLOR_OFFSET);
-    }
 
-    Vec4 skyColor = ambient->skyColor;
-    if (_isHDR) {
-        skyColor.w = ambient->skyIllum * _fpScale;
-    } else {
-        skyColor.w = ambient->skyIllum * exposure;
-    }
-    TO_VEC4(uboCameraView, skyColor, UBOCamera::AMBIENT_SKY_OFFSET);
+        Vec4 skyColor = ambient->skyColor;
+        if (_isHDR) {
+            skyColor.w = ambient->skyIllum * _fpScale;
+        } else {
+            skyColor.w = ambient->skyIllum * exposure;
+        }
+        TO_VEC4(uboCameraView, skyColor, offset + UBOCamera::AMBIENT_SKY_OFFSET);
+        
+        const int AMBIENT_GROUND_OFFSET = offset + UBOCamera::AMBIENT_GROUND_OFFSET;
+        uboCameraView[AMBIENT_GROUND_OFFSET] = ambient->groundAlbedo.x;
+        uboCameraView[AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
+        uboCameraView[AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
+        const auto envmap = _descriptorSet->getTexture((uint)PipelineGlobalBindings::SAMPLER_ENVIRONMENT);
+        if (envmap) uboCameraView[AMBIENT_GROUND_OFFSET + 3] = envmap->getLevelCount();
+        
+        memcpy(uboCameraView.data() + offset + UBOCamera::MAT_VIEW_OFFSET, camera->matView.m, sizeof(cc::Mat4));
+        memcpy(uboCameraView.data() + offset + UBOCamera::MAT_VIEW_INV_OFFSET, camera->getNode()->worldMatrix.m, sizeof(cc::Mat4));
+        memcpy(uboCameraView.data() + offset + UBOCamera::MAT_PROJ_OFFSET, camera->matProj.m, sizeof(cc::Mat4));
+        memcpy(uboCameraView.data() + offset + UBOCamera::MAT_PROJ_INV_OFFSET, camera->matProjInv.m, sizeof(cc::Mat4));
+        memcpy(uboCameraView.data() + offset + UBOCamera::MAT_VIEW_PROJ_OFFSET, camera->matViewProj.m, sizeof(cc::Mat4));
+        memcpy(uboCameraView.data() + offset + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
+        TO_VEC3(uboCameraView, camera->position, offset + UBOCamera::CAMERA_POS_OFFSET);
 
-    uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET] = ambient->groundAlbedo.x;
-    uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
-    uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
-    const auto envmap = _descriptorSet->getTexture((uint)PipelineGlobalBindings::SAMPLER_ENVIRONMENT);
-    if (envmap) uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 3] = envmap->getLevelCount();
-    
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_OFFSET, camera->matView.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_INV_OFFSET, camera->getNode()->worldMatrix.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_PROJ_OFFSET, camera->matProj.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_PROJ_INV_OFFSET, camera->matProjInv.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_PROJ_OFFSET, camera->matViewProj.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
-    TO_VEC3(uboCameraView, camera->position, UBOCamera::CAMERA_POS_OFFSET);
+        auto projectionSignY = _device->getScreenSpaceSignY();
+        if (camera->getWindow()->hasOffScreenAttachments) {
+            projectionSignY *= _device->getUVSpaceSignY(); // need flipping if drawing on render targets
+        }
+        uboCameraView[offset + UBOCamera::CAMERA_POS_OFFSET + 3] = projectionSignY;
 
-    auto projectionSignY = _device->getScreenSpaceSignY();
-    if (camera->getWindow()->hasOffScreenAttachments) {
-        projectionSignY *= _device->getUVSpaceSignY(); // need flipping if drawing on render targets
-    }
-    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = projectionSignY;
-
-    if (fog->enabled) {
-        TO_VEC4(uboCameraView, fog->fogColor, UBOCamera::GLOBAL_FOG_COLOR_OFFSET);
-
-        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET] = fog->fogStart;
-        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 1] = fog->fogEnd;
-        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 2] = fog->fogDensity;
-
-        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET] = fog->fogTop;
-        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 1] = fog->fogRange;
-        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 2] = fog->fogAtten;
+        if (fog->enabled) {
+            TO_VEC4(uboCameraView, fog->fogColor, offset + UBOCamera::GLOBAL_FOG_COLOR_OFFSET);
+            const int GLOBAL_FOG_BASE_OFFSET = offset + UBOCamera::GLOBAL_FOG_BASE_OFFSET;
+            uboCameraView[GLOBAL_FOG_BASE_OFFSET] = fog->fogStart;
+            uboCameraView[GLOBAL_FOG_BASE_OFFSET + 1] = fog->fogEnd;
+            uboCameraView[GLOBAL_FOG_BASE_OFFSET + 2] = fog->fogDensity;
+            
+            const int GLOBAL_FOG_ADD_OFFSET = offset + GLOBAL_FOG_ADD_OFFSET;
+            uboCameraView[GLOBAL_FOG_ADD_OFFSET] = fog->fogTop;
+            uboCameraView[GLOBAL_FOG_ADD_OFFSET + 1] = fog->fogRange;
+            uboCameraView[GLOBAL_FOG_ADD_OFFSET + 2] = fog->fogAtten;
+        }
     }
     
     // update ubos
-    _commandBuffers[0]->updateBuffer(_descriptorSet->getBuffer(UBOCamera::BINDING), _cameraUBO.data(), UBOCamera::SIZE);
+    _commandBuffers[0]->updateBuffer(_cameraBuffer, _cameraUBO.data());
 }
 
 void ForwardPipeline::updateShadowUBO(Camera *camera) {
@@ -335,8 +357,8 @@ bool ForwardPipeline::activeRenderer() {
     _commandBuffers.push_back(_device->getCommandBuffer());
 
     _globalUBO.fill(0.f);
-    _cameraUBO.fill(0.f);
     _shadowUBO.fill(0.f);
+    _cameraUBO.resize(_cameraCount * UBOCamera::SIZE, 0.f);
 
     auto globalUBO = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
@@ -347,14 +369,15 @@ bool ForwardPipeline::activeRenderer() {
     });
     _descriptorSet->bindBuffer(UBOGlobal::BINDING, globalUBO);
     
-    auto cameraUBO = _device->createBuffer({
+    _cameraBuffer = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
-        UBOCamera::SIZE,
+        UBOCamera::SIZE * _cameraCount,
         UBOCamera::SIZE,
         gfx::BufferFlagBit::NONE,
     });
-    _descriptorSet->bindBuffer(UBOCamera::BINDING, cameraUBO);
+    _cameraBufferView = _device->createBuffer({_cameraBuffer, 0, UBOCamera::SIZE});
+    _descriptorSet->bindBuffer(UBOCamera::BINDING, _cameraBufferView);
 
     auto shadowUBO = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
@@ -393,6 +416,27 @@ bool ForwardPipeline::activeRenderer() {
     return true;
 }
 
+void ForwardPipeline::mergeCameras(const vector<uint> &cameras) {
+    _cameras.clear();
+    _subViews.clear();
+    if (cameras.size() == 0) return;
+    Camera *prev = GET_CAMERA(cameras[0]);
+    _cameras.push_back(prev);
+    for (int i = 1, len = (int)cameras.size(); i < len; i++) {
+        Camera *cur = GET_CAMERA(cameras[i]);
+        if (prev->windowID == cur->windowID && (cur->visibility & static_cast<uint>(LayerList::UI_2D))) {
+            if (_subViews.find(prev) == _subViews.end()) {
+                vector<Camera*> subView;
+                _subViews.insert(make_pair(prev, subView));
+            }
+            _subViews[prev].push_back(cur);
+        }else{
+            prev = cur;
+            _cameras.push_back(prev);
+        }
+    }
+}
+
 void ForwardPipeline::destroy() {
     if (_descriptorSet) {
         _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
@@ -408,6 +452,7 @@ void ForwardPipeline::destroy() {
         it.second->destroy();
     }
     _renderPasses.clear();
+    _cameras.clear();
 
     _commandBuffers.clear();
 

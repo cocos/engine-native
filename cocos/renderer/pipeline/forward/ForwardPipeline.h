@@ -52,7 +52,7 @@ public:
     virtual void render(const vector<uint> &cameras) override;
 
     void updateGlobalUBO();
-    void updateCameraUBO(Camera *camera);
+    void updateCameraUBO(const vector<uint> &cameras);
     void updateShadowUBO(Camera *camera);
     CC_INLINE void setHDR(bool isHDR) { _isHDR = isHDR; }
 
@@ -82,6 +82,8 @@ public:
     CC_INLINE Shadows *getShadows() const { return _shadows; }
     CC_INLINE Sphere *getSphere() const { return _sphere; }
     CC_INLINE std::array<float, UBOShadow::COUNT> getShadowUBO() const { return _shadowUBO; }
+    CC_INLINE const std::unordered_map<Camera*, vector<Camera*>> &getSubViews() const {return _subViews; }
+    CC_INLINE int getCameraOffset(Camera* camera) const {return _cameraOffset.count(camera) == 0 ? 0 : _cameraOffset.at(camera); }
 
     CC_INLINE void setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
     CC_INLINE void setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
@@ -89,6 +91,7 @@ public:
 private:
     bool activeRenderer();
     void updateUBO(Camera *);
+    void mergeCameras(const vector<uint> &cameras);
 
 private:
     const Fog *_fog = nullptr;
@@ -104,9 +107,15 @@ private:
     RenderObjectList _shadowObjects;
     map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
     std::array<float, UBOGlobal::COUNT> _globalUBO;
-    std::array<float, UBOCamera::COUNT> _cameraUBO;
     std::array<float, UBOShadow::COUNT> _shadowUBO;
+    vector<float> _cameraUBO;
     Sphere *_sphere = nullptr;
+    gfx::Buffer *_cameraBuffer;
+    gfx::Buffer *_cameraBufferView;
+    int _cameraCount = UBOCamera::CAMERA_COUNT;
+    vector<Camera*> _cameras;
+    std::unordered_map<Camera*, int> _cameraOffset;
+    std::unordered_map<Camera*, vector<Camera*>> _subViews;
 
     float _shadingScale = 1.0f;
     bool _isHDR = false;

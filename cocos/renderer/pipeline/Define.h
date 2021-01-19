@@ -37,6 +37,8 @@ struct ModelView;
 struct AABB;
 struct Frustum;
 
+uint nextPow2(uint val);
+
 // The actual uniform vectors used is JointUniformCapacity * 3.
 // We think this is a reasonable default capacity considering MAX_VERTEX_UNIFORM_VECTORS in WebGL spec is just 128.
 // Skinning models with number of bones more than this capacity will be automatically switched to texture skinning.
@@ -307,6 +309,7 @@ struct CC_DLL UBOGlobal : public Object {
 };
 
 struct CC_DLL UBOCamera : public Object {
+    static constexpr uint CAMERA_COUNT = 8;
     static constexpr uint MAT_VIEW_OFFSET = 0;
     static constexpr uint MAT_VIEW_INV_OFFSET = UBOCamera::MAT_VIEW_OFFSET + 16;
     static constexpr uint MAT_PROJ_OFFSET = UBOCamera::MAT_VIEW_INV_OFFSET + 16;
@@ -323,7 +326,7 @@ struct CC_DLL UBOCamera : public Object {
     static constexpr uint GLOBAL_FOG_COLOR_OFFSET = UBOCamera::AMBIENT_GROUND_OFFSET + 4;
     static constexpr uint GLOBAL_FOG_BASE_OFFSET = UBOCamera::GLOBAL_FOG_COLOR_OFFSET + 4;
     static constexpr uint GLOBAL_FOG_ADD_OFFSET = UBOCamera::GLOBAL_FOG_BASE_OFFSET + 4;
-    static constexpr uint COUNT = UBOCamera::GLOBAL_FOG_ADD_OFFSET + 4;
+    static constexpr uint COUNT = 256;
     static constexpr uint SIZE = UBOCamera::COUNT * 4;
     static constexpr uint BINDING = static_cast<uint>(PipelineGlobalBindings::UBO_CAMERA);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
@@ -379,7 +382,6 @@ const uint CAMERA_DEFAULT_MASK = ~static_cast<uint>(LayerList::UI_2D) & ~static_
 //constexpr CAMERA_DEFAULT_MASK = Layers.makeMaskExclude([Layers.BitMask.UI_2D, Layers.BitMask.GIZMOS, Layers.BitMask.EDITOR,
 //                                                           Layers.BitMask.SCENE_GIZMO, Layers.BitMask.PROFILER]);
 
-uint nextPow2(uint val);
 enum class CC_DLL SetIndex {
     GLOBAL,
     MATERIAL,

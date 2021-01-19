@@ -74,6 +74,7 @@ bool ForwardStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
     _phaseID = getPhaseID("default");
+    _dynamicOffsets.resize(1, 0);
     return true;
 }
 
@@ -192,10 +193,12 @@ void ForwardStage::render(Camera *camera) {
     const auto &colorTextures = framebuffer->getColorTextures();
 
     auto renderPass = colorTextures.size() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
-
+    
+    const auto offsets = pipeline->getCameraOffset(camera);
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
-    cmdBuff->bindDescriptorSet(GLOBAL_SET, _pipeline->getDescriptorSet());
-
+    _dynamicOffsets[0] = pipeline->getCameraOffset(camera);
+    cmdBuff->bindDescriptorSet(GLOBAL_SET, _pipeline->getDescriptorSet(), _dynamicOffsets);
+    
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
     _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
     _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
@@ -203,6 +206,17 @@ void ForwardStage::render(Camera *camera) {
     _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
     _renderQueues[1]->recordCommandBuffer(_device, renderPass, cmdBuff);
     _uiPhase->render(camera, renderPass);
+    const auto subViews = pipeline->getSubViews();
+    if (subViews.count(camera) != 0) {
+        const auto subView = subViews.at(camera);
+        for (int i = 0, len = (int)subView.size(); i < len; i++) {
+            const auto view = subView[i];
+            _dynamicOffsets[0] = pipeline->getCameraOffset(view);
+            cmdBuff->bindDescriptorSet(GLOBAL_SET, _pipeline->getDescriptorSet(), _dynamicOffsets);
+            _uiPhase->render(view, renderPass);
+        }
+    }
+    
     
     cmdBuff->endRenderPass();
 }
