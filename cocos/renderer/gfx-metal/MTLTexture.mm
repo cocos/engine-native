@@ -248,7 +248,15 @@ void CCMTLTexture::resize(uint width, uint height) {
     }
 
     if (oldMTLTexture) {
-        [oldMTLTexture release];
+        Device *device = _device;
+        std::function<void(void)> destroyFunc = [=]() {
+            if (oldMTLTexture) {
+                [oldMTLTexture release];
+                device->getMemoryStatus().bufferSize -= oldSize;
+            }
+        };
+        //gpu object only
+        CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
     }
 
     _device->getMemoryStatus().textureSize -= oldSize;

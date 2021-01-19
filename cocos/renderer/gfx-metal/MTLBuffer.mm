@@ -94,8 +94,20 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
     _mtlResourceOptions = mu::toMTLResourceOption(usage);
 
     if (_mtlBuffer) {
-        [_mtlBuffer release];
+        Device *device = _device;
+        id<MTLBuffer> mtlBuffer = _mtlBuffer;
+        uint oldSize = [_mtlBuffer length];
+
+        std::function<void(void)> destroyFunc = [=]() {
+            if (mtlBuffer) {
+                [mtlBuffer release];
+                device->getMemoryStatus().bufferSize -= oldSize;
+            }
+        };
+        //gpu object only
+        CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
     }
+
     id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
     _mtlBuffer = [mtlDevice newBufferWithLength:size options:_mtlResourceOptions];
     if (_mtlBuffer == nil) {
@@ -120,18 +132,14 @@ void CCMTLBuffer::destroy() {
 
     if (!_indexedPrimitivesIndirectArguments.empty()) {
         _indexedPrimitivesIndirectArguments.clear();
-        //force to release instantly.
-        _indexedPrimitivesIndirectArguments.shrink_to_fit();
     }
 
     if (!_primitiveIndirectArguments.empty()) {
         _primitiveIndirectArguments.clear();
-        _primitiveIndirectArguments.shrink_to_fit();
     }
 
     if (!_drawInfos.empty()) {
         _drawInfos.clear();
-        _drawInfos.shrink_to_fit();
     }
 
     Device *device = _device;
