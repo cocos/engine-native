@@ -109,12 +109,12 @@ private:
     std::array<float, UBOGlobal::COUNT> _globalUBO;
     std::array<float, UBOShadow::COUNT> _shadowUBO;
     vector<float> _cameraUBO;
-    Sphere *_sphere = nullptr;
-    gfx::Buffer *_cameraBuffer;
-    gfx::Buffer *_cameraBufferView;
-    int _cameraCount = UBOCamera::CAMERA_COUNT;
     vector<Camera*> _cameras;
-    std::unordered_map<Camera*, int> _cameraOffset;
+    Sphere *_sphere = nullptr;
+    gfx::Buffer *_cameraBuffer = nullptr;
+    gfx::Buffer *_cameraBufferView = nullptr;
+    uint _cameraCount = UBOCamera::CAMERA_COUNT;
+    std::unordered_map<Camera*, uint> _cameraOffset;
     std::unordered_map<Camera*, vector<Camera*>> _subViews;
 
     float _shadingScale = 1.0f;

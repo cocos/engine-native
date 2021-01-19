@@ -124,7 +124,6 @@ bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
         _flows.emplace_back(forwardFlow);
     }
     _sphere = CC_NEW(Sphere);
-    
     return true;
 }
 
@@ -147,7 +146,7 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
     updateGlobalUBO();
     updateCameraUBO(cameras);
     mergeCameras(cameras);
-    for (const auto camera : _cameras) {
+    for (const auto &camera : _cameras) {
         for (const auto flow : _flows) {
             flow->render(camera);
         }
@@ -159,31 +158,32 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
 void ForwardPipeline::updateCameraUBO(const vector<uint> &cameras) {
     if (cameras.size() > _cameraCount) {
         _cameraBufferView->destroy();
-        _cameraCount = nextPow2((int)cameras.size());
+        _cameraCount = nextPow2(static_cast<uint>(cameras.size()));
         _cameraBuffer->resize(UBOCamera::SIZE * _cameraCount);
         _cameraUBO.resize(UBOCamera::SIZE * _cameraCount);
         _cameraBufferView->initialize({_cameraBuffer, 0, UBOCamera::SIZE});
     }
     
     _cameraOffset.clear();
-    int offset = 0;
-    for (int i = 0, len = (int)cameras.size(); i < len; i++) {
+    auto *device = gfx::Device::getInstance();
+    auto &uboCameraView = _cameraUBO;
+    const auto shadingWidth = std::floor(_device->getWidth());
+    const auto shadingHeight = std::floor(_device->getHeight());
+    const auto ambient = _ambient;
+    const auto fog = _fog;
+    auto projectionSignY = _device->getScreenSpaceSignY();
+    Vec4 skyColor = ambient->skyColor;
+    
+    uint offset = 0;
+    for (uint i = 0, len = static_cast<uint>(cameras.size()); i < len; i++) {
         const auto cameraId = cameras[i];
         Camera *camera = GET_CAMERA(cameraId);
         const auto scene = camera->getScene();
         const Light *mainLight = nullptr;
         if (scene->mainLightID) mainLight = scene->getMainLight();
-        const auto ambient = _ambient;
-        const auto fog = _fog;
-        
-        auto *device = gfx::Device::getInstance();
-        auto &uboCameraView = _cameraUBO;
-        
-        const auto shadingWidth = std::floor(_device->getWidth());
-        const auto shadingHeight = std::floor(_device->getHeight());
         
         _cameraOffset[camera] = UBOCamera::SIZE * i;
-        int offset = UBOCamera::COUNT * i;
+        offset = UBOCamera::COUNT * i;
         const int SCREEN_SCALE_OFFSET = offset + UBOCamera::SCREEN_SCALE_OFFSET;
         uboCameraView[SCREEN_SCALE_OFFSET] = camera->width / shadingWidth * _shadingScale;
         uboCameraView[SCREEN_SCALE_OFFSET + 1] = camera->height / shadingHeight * _shadingScale;
@@ -219,7 +219,6 @@ void ForwardPipeline::updateCameraUBO(const vector<uint> &cameras) {
             TO_VEC4(uboCameraView, Vec4::ZERO, MAIN_LIT_COLOR_OFFSET);
         }
 
-        Vec4 skyColor = ambient->skyColor;
         if (_isHDR) {
             skyColor.w = ambient->skyIllum * _fpScale;
         } else {
@@ -242,7 +241,6 @@ void ForwardPipeline::updateCameraUBO(const vector<uint> &cameras) {
         memcpy(uboCameraView.data() + offset + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
         TO_VEC3(uboCameraView, camera->position, offset + UBOCamera::CAMERA_POS_OFFSET);
 
-        auto projectionSignY = _device->getScreenSpaceSignY();
         if (camera->getWindow()->hasOffScreenAttachments) {
             projectionSignY *= _device->getUVSpaceSignY(); // need flipping if drawing on render targets
         }
@@ -417,13 +415,13 @@ bool ForwardPipeline::activeRenderer() {
 }
 
 void ForwardPipeline::mergeCameras(const vector<uint> &cameras) {
-    _cameras.clear();
-    _subViews.clear();
+    _cameras.empty();
+    _subViews.empty();
     if (cameras.size() == 0) return;
     Camera *prev = GET_CAMERA(cameras[0]);
     _cameras.push_back(prev);
-    for (int i = 1, len = (int)cameras.size(); i < len; i++) {
-        Camera *cur = GET_CAMERA(cameras[i]);
+    for (const auto cameraId : cameras) {
+        Camera *cur = GET_CAMERA(cameraId);
         if (prev->windowID == cur->windowID && (cur->visibility & static_cast<uint>(LayerList::UI_2D))) {
             if (_subViews.find(prev) == _subViews.end()) {
                 vector<Camera*> subView;
@@ -459,6 +457,9 @@ void ForwardPipeline::destroy() {
     CC_SAFE_DELETE(_sphere);
 
     _shadowFrameBufferMap.clear();
+    _cameras.empty();
+    _subViews.empty();
+    _cameraOffset.empty();
 
     RenderPipeline::destroy();
 }

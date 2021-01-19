@@ -209,8 +209,7 @@ void ForwardStage::render(Camera *camera) {
     const auto subViews = pipeline->getSubViews();
     if (subViews.count(camera) != 0) {
         const auto subView = subViews.at(camera);
-        for (int i = 0, len = (int)subView.size(); i < len; i++) {
-            const auto view = subView[i];
+        for (const auto &view : subView) {
             _dynamicOffsets[0] = pipeline->getCameraOffset(view);
             cmdBuff->bindDescriptorSet(GLOBAL_SET, _pipeline->getDescriptorSet(), _dynamicOffsets);
             _uiPhase->render(view, renderPass);
