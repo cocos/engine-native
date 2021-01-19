@@ -118,6 +118,22 @@ void CCMTLBuffer::destroy() {
         _buffer = nullptr;
     }
 
+    if (!_indexedPrimitivesIndirectArguments.empty()) {
+        _indexedPrimitivesIndirectArguments.clear();
+        //force to release instantly.
+        _indexedPrimitivesIndirectArguments.shrink_to_fit();
+    }
+
+    if (!_primitiveIndirectArguments.empty()) {
+        _primitiveIndirectArguments.clear();
+        _primitiveIndirectArguments.shrink_to_fit();
+    }
+
+    if (!_drawInfos.empty()) {
+        _drawInfos.clear();
+        _drawInfos.shrink_to_fit();
+    }
+
     Device *device = _device;
     id<MTLBuffer> mtlBuffer = _mtlBuffer;
     _mtlBuffer = nil;
