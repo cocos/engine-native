@@ -415,9 +415,9 @@ bool ForwardPipeline::activeRenderer() {
 }
 
 void ForwardPipeline::mergeCameras(const vector<uint> &cameras) {
-    _cameras.empty();
-    _subViews.empty();
-    if (cameras.size() == 0) return;
+    _cameras.clear();
+    _subViews.clear();
+    if (cameras.empty()) return;
     Camera *prev = GET_CAMERA(cameras[0]);
     _cameras.push_back(prev);
     for (const auto cameraId : cameras) {
