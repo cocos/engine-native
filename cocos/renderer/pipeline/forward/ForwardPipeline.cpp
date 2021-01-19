@@ -457,9 +457,9 @@ void ForwardPipeline::destroy() {
     CC_SAFE_DELETE(_sphere);
 
     _shadowFrameBufferMap.clear();
-    _cameras.empty();
-    _subViews.empty();
-    _cameraOffset.empty();
+    _cameras.clear();
+    _subViews.clear();
+    _cameraOffset.clear();
 
     RenderPipeline::destroy();
 }
