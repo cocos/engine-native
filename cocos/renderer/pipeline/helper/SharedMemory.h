@@ -65,7 +65,8 @@ extern gfx::BlendState *getBlendStateImpl(uint index);
 #define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getBuffer<gfx::DepthStencilState>(se::PoolType::DEPTH_STENCIL_STATE, index)
 #define GET_BLEND_TARGET(index)        SharedMemory::getBuffer<gfx::BlendTarget>(se::PoolType::BLEND_TARGET, index)
 #define GET_BLEND_STATE(index)         getBlendStateImpl(index)
-#define GET_UI_BATCH(index)              SharedMemory::getBuffer<UIBatch>(index)
+#define GET_UI_BATCH(index)            SharedMemory::getBuffer<UIBatch>(index)
+#define GET_PIPELINE_SHARED_SCENE_DATA(index) SharedMemory::getBuffer<PipelineSharedSceneData>(index)
 
 //Get object pool data
 #define GET_DESCRIPTOR_SET(index)  SharedMemory::getObject<gfx::DescriptorSet, se::PoolType::DESCRIPTOR_SETS>(index)
@@ -469,6 +470,23 @@ struct CC_DLL Skybox {
 
     CC_INLINE const ModelView *getModel() const { return GET_MODEL(modelID); }
 
+    const static se::PoolType type;
+};
+
+struct CC_DLL PipelineSharedSceneData {
+    uint32_t shadow;
+    uint32_t skybox;
+    uint32_t ambient;
+    uint32_t fog;
+    uint32_t isHDR;
+    uint32_t shadingScale;
+    uint32_t fpScale;
+    
+    CC_INLINE Shadows* getShadows() const {return GET_SHADOWS(shadow);}
+    CC_INLINE Skybox* getSkybox() const {return GET_SKYBOX(skybox);}
+    CC_INLINE Ambient* getAmbient() const {return GET_AMBIENT(ambient);}
+    CC_INLINE Fog* getFog() const {return GET_FOG(fog);}
+    
     const static se::PoolType type;
 };
 
