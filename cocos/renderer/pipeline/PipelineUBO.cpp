@@ -273,6 +273,35 @@ void PipelineUBO::activate(gfx::Device *device, RenderPipeline *pipeline)
 {
     _device = device;
     _pipeline = pipeline;
+    
+    const auto descriptorSet = pipeline->getDescriptorSet();
+    
+    auto globalUBO = _device->createBuffer({
+        gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
+        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
+        UBOGlobal::SIZE,
+        UBOGlobal::SIZE,
+        gfx::BufferFlagBit::NONE,
+    });
+    descriptorSet->bindBuffer(UBOGlobal::BINDING, globalUBO);
+    
+    auto cameraUBO = _device->createBuffer({
+        gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
+        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
+        UBOCamera::SIZE,
+        UBOCamera::SIZE,
+        gfx::BufferFlagBit::NONE,
+    });
+    descriptorSet->bindBuffer(UBOCamera::BINDING, cameraUBO);
+
+    auto shadowUBO = _device->createBuffer({
+        gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
+        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
+        UBOShadow::SIZE,
+        UBOShadow::SIZE,
+        gfx::BufferFlagBit::NONE,
+    });
+    descriptorSet->bindBuffer(UBOShadow::BINDING, shadowUBO);
 }
 
 void PipelineUBO::destroy()

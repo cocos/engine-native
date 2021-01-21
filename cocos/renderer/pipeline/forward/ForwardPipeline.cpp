@@ -133,34 +133,8 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
 
 bool ForwardPipeline::activeRenderer() {
     _commandBuffers.push_back(_device->getCommandBuffer());
-
-    auto globalUBO = _device->createBuffer({
-        gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
-        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
-        UBOGlobal::SIZE,
-        UBOGlobal::SIZE,
-        gfx::BufferFlagBit::NONE,
-    });
-    _descriptorSet->bindBuffer(UBOGlobal::BINDING, globalUBO);
+    const auto sharedData = _pipelineSceneData->getSharedData();
     
-    auto cameraUBO = _device->createBuffer({
-        gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
-        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
-        UBOCamera::SIZE,
-        UBOCamera::SIZE,
-        gfx::BufferFlagBit::NONE,
-    });
-    _descriptorSet->bindBuffer(UBOCamera::BINDING, cameraUBO);
-
-    auto shadowUBO = _device->createBuffer({
-        gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
-        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
-        UBOShadow::SIZE,
-        UBOShadow::SIZE,
-        gfx::BufferFlagBit::NONE,
-    });
-    _descriptorSet->bindBuffer(UBOShadow::BINDING, shadowUBO);
-
     gfx::SamplerInfo info{
         gfx::Filter::LINEAR,
         gfx::Filter::LINEAR,
@@ -181,8 +155,6 @@ bool ForwardPipeline::activeRenderer() {
     this->_descriptorSet->bindTexture(SPOT_LIGHTING_MAP::BINDING, getDefaultTexture());
 
     _descriptorSet->update();
-    
-    const auto sharedData = _pipelineSceneData->getSharedData();
     // update global defines when all states initialized.
     _macros.setValue("CC_USE_HDR", static_cast<bool>(sharedData->isHDR));
     _macros.setValue("CC_SUPPORT_FLOAT_TEXTURE", _device->hasFeature(gfx::Feature::TEXTURE_FLOAT));
