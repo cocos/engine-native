@@ -23,7 +23,9 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "PipelineSceneData.h"
-#include "gfx/GFXFrameBuffer.h"
+#include "gfx/GFXCommandBuffer.h"
+#include "gfx/GFXDevice.h"
+#include "gfx/GFXFramebuffer.h"
 
 namespace cc {
 namespace pipeline {
