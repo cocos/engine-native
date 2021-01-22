@@ -40,6 +40,8 @@ class RenderPipeline;
 
 class CC_DLL PipelineSceneData : public Object {
 public:
+    PipelineSceneData() = default;
+    virtual ~PipelineSceneData() = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
     void setPipelineSharedSceneData (uint handle);
     void destroy();

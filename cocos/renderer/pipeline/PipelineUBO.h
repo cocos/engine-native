@@ -47,6 +47,8 @@ public:
     static void updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> &bufferView, const Light *light);
     
 public:
+    PipelineUBO() = default;
+    virtual ~PipelineUBO() = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
     void destroy();
     void updateGlobalUBO();

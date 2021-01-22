@@ -474,13 +474,13 @@ struct CC_DLL Skybox {
 };
 
 struct CC_DLL PipelineSharedSceneData {
-    uint32_t shadow;
-    uint32_t skybox;
-    uint32_t ambient;
-    uint32_t fog;
-    uint32_t isHDR;
-    uint32_t shadingScale;
-    uint32_t fpScale;
+    uint32_t shadow = 0;
+    uint32_t skybox = 0;
+    uint32_t ambient = 0;
+    uint32_t fog = 0;
+    uint32_t isHDR = 0;
+    uint32_t shadingScale = 0;
+    uint32_t fpScale = 0;
     
     CC_INLINE Shadows* getShadows() const {return GET_SHADOWS(shadow);}
     CC_INLINE Skybox* getSkybox() const {return GET_SKYBOX(skybox);}
