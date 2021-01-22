@@ -25,7 +25,6 @@ THE SOFTWARE.
 #pragma once
 
 #include <array>
-#include "core/CoreStd.h"
 #include "helper/SharedMemory.h"
 #include "Define.h"
 
