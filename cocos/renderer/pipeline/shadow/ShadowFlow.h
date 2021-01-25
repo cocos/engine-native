@@ -44,6 +44,8 @@ public:
     virtual void destroy() override;
 
 private:
+    void clearShadowMap(Camera *camera);
+
     void resizeShadowMap(const Light *light, const uint width, const uint height) const;
 
     void initShadowFrameBuffer(ForwardPipeline *pipeline, const Light *light);

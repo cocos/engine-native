@@ -47,6 +47,8 @@ public:
         _framebuffer = framebuffer;
     };
 
+    void clearFramebuffer(Camera *camera);
+
 private:
     static RenderStageInfo _initInfo;
 
