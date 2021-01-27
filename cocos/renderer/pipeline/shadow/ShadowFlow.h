@@ -27,6 +27,7 @@ namespace cc {
 namespace pipeline {
 class ForwardPipeline;
 struct Light;
+struct Camera;
 
 class CC_DLL ShadowFlow : public RenderFlow {
 public:
