@@ -114,23 +114,9 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
         }
         //Metal limits clearDepth at range [0.0, 1.0]
         //to keep consistent with OpenGL, assume passed value ranges in [-1, 1];
-        const DepthStencilAttachment &depthStencilAttachment = renderPass->getDepthStencilAttachment();
-
-        auto getNativeLoadAction = [](LoadOp loadOp) {
-            return loadOp == LoadOp::LOAD ? MTLLoadActionLoad : (loadOp == LoadOp::CLEAR ? MTLLoadActionClear : MTLLoadActionDontCare);
-        };
-
-        auto getNativeStoreAction = [](StoreOp storeOp) {
-            return storeOp == StoreOp::STORE ? MTLStoreActionStore : MTLStoreActionDontCare;
-        };
-
         depth = clampf(depth / 2 + 0.5f, 0.0f, 1.0f);
         mtlRenderPassDescriptor.depthAttachment.clearDepth = depth;
         mtlRenderPassDescriptor.stencilAttachment.clearStencil = stencil;
-        mtlRenderPassDescriptor.depthAttachment.loadAction = getNativeLoadAction(depthStencilAttachment.depthLoadOp);
-        mtlRenderPassDescriptor.stencilAttachment.loadAction = getNativeLoadAction(depthStencilAttachment.stencilLoadOp);
-        mtlRenderPassDescriptor.depthAttachment.storeAction = getNativeStoreAction(depthStencilAttachment.depthStoreOp);
-        mtlRenderPassDescriptor.stencilAttachment.storeAction = getNativeStoreAction(depthStencilAttachment.stencilStoreOp);
     }
 
     _commandEncoder.initialize(_mtlCommandBuffer, mtlRenderPassDescriptor);
