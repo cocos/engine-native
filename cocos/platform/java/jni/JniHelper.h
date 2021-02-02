@@ -26,13 +26,13 @@ THE SOFTWARE.
 #ifndef __ANDROID_JNI_HELPER_H__
 #define __ANDROID_JNI_HELPER_H__
 
-#include <jni.h>
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <functional>
 #include "base/Macros.h"
 #include "math/Vec3.h"
+#include <functional>
+#include <jni.h>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 //The macro must be used this way to find the native method. The principle is not well understood.
 #define JNI_METHOD2(CLASS2, FUNC2) Java_##CLASS2##_##FUNC2

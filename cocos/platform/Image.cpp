@@ -24,10 +24,10 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "Image.h"
-#include <string>
-#include <ctype.h>
-#include <assert.h>
 #include "base/Config.h" // CC_USE_JPEG, CC_USE_WEBP
+#include <assert.h>
+#include <ctype.h>
+#include <string>
 #if CC_USE_JPEG
     #include "jpeg/jpeglib.h"
 #endif // CC_USE_JPEG
@@ -38,7 +38,11 @@ THE SOFTWARE.
 
 extern "C" {
 #if CC_USE_PNG
-    #include "png/png.h"
+    #if __OHOS
+        #include "png.h"
+    #else
+        #include "png/png.h"
+    #endif
 #endif //CC_USE_PNG
 
 #include "base/etc1.h"
@@ -51,8 +55,8 @@ extern "C" {
     #include "webp/decode.h"
 #endif // CC_USE_WEBP
 
-#include "platform/FileUtils.h"
 #include "base/ZipUtils.h"
+#include "platform/FileUtils.h"
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "platform/android/FileUtils-android.h"
 #endif

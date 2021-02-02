@@ -25,25 +25,23 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+#include "network/HttpClient.h"
 
-    #include "network/HttpClient.h"
+#include <errno.h>
+#include <queue>
+#include <sstream>
+#include <stdio.h>
 
-    #include <queue>
-    #include <sstream>
-    #include <stdio.h>
-    #include <errno.h>
+#include "platform/Application.h"
+#include "platform/FileUtils.h"
+#include "platform/java/jni/JniHelper.h"
 
-    #include "platform/Application.h"
-    #include "platform/FileUtils.h"
-    #include "platform/android/jni/JniHelper.h"
+#include "base/Log.h"
+#include "base/UTF8.h"
 
-    #include "base/UTF8.h"
-    #include "base/Log.h"
-
-    #ifndef JCLS_HTTPCLIENT
-        #define JCLS_HTTPCLIENT "com/cocos/lib/CocosHttpURLConnection"
-    #endif
+#ifndef JCLS_HTTPCLIENT
+    #define JCLS_HTTPCLIENT "com/cocos/lib/CocosHttpURLConnection"
+#endif
 
 namespace cc {
 
@@ -962,5 +960,3 @@ const std::string &HttpClient::getSSLVerification() {
 } // namespace network
 
 } // namespace cc
-
-#endif // #if (CC_PLATFORM == CC_PLATFORM_ANDROID)

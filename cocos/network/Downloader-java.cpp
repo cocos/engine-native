@@ -23,11 +23,11 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "network/Downloader-android.h"
+#include "network/Downloader-java.h"
 
 #include "network/Downloader.h"
-#include "platform/android/jni/JniHelper.h"
-#include "platform/android/jni/JniImp.h"
+#include "platform/java/jni/JniHelper.h"
+#include "platform/java/jni/JniImp.h"
 
 #include <mutex>
 #include <platform/Application.h>
@@ -43,15 +43,15 @@
 #endif
 #define JNI_DOWNLOADER(FUNC) JNI_METHOD1(ORG_DOWNLOADER_CLASS_NAME, FUNC)
 
-std::unordered_map<int, cc::network::DownloaderAndroid *> sDownloaderMap;
+std::unordered_map<int, cc::network::DownloaderJava *> sDownloaderMap;
 std::mutex sDownloaderMutex;
 
-static void _insertDownloaderAndroid(int id, cc::network::DownloaderAndroid *downloaderPtr) {
+static void _insertDownloaderJava(int id, cc::network::DownloaderJava *downloaderPtr) {
     std::lock_guard<std::mutex> guard(sDownloaderMutex);
     sDownloaderMap.insert(std::make_pair(id, downloaderPtr));
 }
 
-static void _eraseDownloaderAndroid(int id) {
+static void _eraseDownloaderJava(int id) {
     std::lock_guard<std::mutex> guard(sDownloaderMutex);
     sDownloaderMap.erase(id);
 }
@@ -59,7 +59,7 @@ static void _eraseDownloaderAndroid(int id) {
 /**
  * If not found, return nullptr, otherwise return the Downloader
  */
-static cc::network::DownloaderAndroid *_findDownloaderAndroid(int id) {
+static cc::network::DownloaderJava *_findDownloaderJava(int id) {
     std::lock_guard<std::mutex> guard(sDownloaderMutex);
     auto iter = sDownloaderMap.find(id);
     if (sDownloaderMap.end() == iter) {
@@ -88,10 +88,10 @@ struct DownloadTaskAndroid : public IDownloadTask {
     std::shared_ptr<const DownloadTask> task; // reference to DownloadTask, when task finish, release
 };
 
-DownloaderAndroid::DownloaderAndroid(const DownloaderHints &hints)
+DownloaderJava::DownloaderJava(const DownloaderHints &hints)
 : _id(++sDownloaderCounter),
   _impl(nullptr) {
-    DLLOG("Construct DownloaderAndroid: %p", this);
+    DLLOG("Construct DownloaderJava: %p", this);
     JniMethodInfo methodInfo;
     if (JniHelper::getStaticMethodInfo(methodInfo,
                                        JCLS_DOWNLOADER,
@@ -109,14 +109,14 @@ DownloaderAndroid::DownloaderAndroid(const DownloaderHints &hints)
         DLLOG("android downloader: jObj: %p, _impl: %p", jObj, _impl);
         //It's not thread-safe here, use thread-safe method instead
         //sDownloaderMap.insert(make_pair(_id, this));
-        _insertDownloaderAndroid(_id, this);
+        _insertDownloaderJava(_id, this);
         methodInfo.env->DeleteLocalRef(jStr);
         methodInfo.env->DeleteLocalRef(jObj);
         methodInfo.env->DeleteLocalRef(methodInfo.classID);
     }
 }
 
-DownloaderAndroid::~DownloaderAndroid() {
+DownloaderJava::~DownloaderJava() {
     if (_impl != nullptr) {
         JniMethodInfo methodInfo;
         if (JniHelper::getStaticMethodInfo(methodInfo,
@@ -131,13 +131,13 @@ DownloaderAndroid::~DownloaderAndroid() {
         }
         //It's not thread-safe here, use thread-safe method instead
         //sDownloaderMap.erase(_id);
-        _eraseDownloaderAndroid(_id);
+        _eraseDownloaderJava(_id);
         JniHelper::getEnv()->DeleteGlobalRef(_impl);
     }
-    DLLOG("Destruct DownloaderAndroid: %p", this);
+    DLLOG("Destruct DownloaderJava: %p", this);
 }
 
-IDownloadTask *DownloaderAndroid::createCoTask(std::shared_ptr<const DownloadTask> &task) {
+IDownloadTask *DownloaderJava::createCoTask(std::shared_ptr<const DownloadTask> &task) {
     DownloadTaskAndroid *coTask = new DownloadTaskAndroid;
     coTask->task = task;
 
@@ -167,12 +167,12 @@ IDownloadTask *DownloaderAndroid::createCoTask(std::shared_ptr<const DownloadTas
         methodInfo.env->DeleteLocalRef(methodInfo.classID);
     }
 
-    DLLOG("DownloaderAndroid::createCoTask id: %d", coTask->id);
+    DLLOG("DownloaderJava::createCoTask id: %d", coTask->id);
     _taskMap.insert(std::make_pair(coTask->id, coTask));
     return coTask;
 }
 
-void DownloaderAndroid::abort(const std::unique_ptr<IDownloadTask> &task) {
+void DownloaderJava::abort(const std::unique_ptr<IDownloadTask> &task) {
     auto iter = _taskMap.begin();
     for (; iter != _taskMap.end(); iter++) {
         if (task.get() == iter->second) {
@@ -204,14 +204,14 @@ void DownloaderAndroid::abort(const std::unique_ptr<IDownloadTask> &task) {
             coTask->task.reset();
         }
     }
-    DLLOG("DownloaderAndroid:abort");
+    DLLOG("DownloaderJava:abort");
 }
 
-void DownloaderAndroid::_onProcess(int taskId, int64_t dl, int64_t dlNow, int64_t dlTotal) {
-    DLLOG("DownloaderAndroid::onProgress(taskId: %d, dl: %lld, dlnow: %lld, dltotal: %lld)", taskId, dl, dlNow, dlTotal);
+void DownloaderJava::_onProcess(int taskId, int64_t dl, int64_t dlNow, int64_t dlTotal) {
+    DLLOG("DownloaderJava::onProgress(taskId: %d, dl: %lld, dlnow: %lld, dltotal: %lld)", taskId, dl, dlNow, dlTotal);
     auto iter = _taskMap.find(taskId);
     if (_taskMap.end() == iter) {
-        DLLOG("DownloaderAndroid::onProgress can't find task with id: %d", taskId);
+        DLLOG("DownloaderJava::onProgress can't find task with id: %d", taskId);
         return;
     }
     DownloadTaskAndroid *coTask = iter->second;
@@ -219,11 +219,11 @@ void DownloaderAndroid::_onProcess(int taskId, int64_t dl, int64_t dlNow, int64_
     onTaskProgress(*coTask->task, dl, dlNow, dlTotal, transferDataToBuffer);
 }
 
-void DownloaderAndroid::_onFinish(int taskId, int errCode, const char *errStr, const std::vector<unsigned char> &data) {
-    DLLOG("DownloaderAndroid::_onFinish(taskId: %d, errCode: %d, errStr: %s)", taskId, errCode, (errStr) ? errStr : "null");
+void DownloaderJava::_onFinish(int taskId, int errCode, const char *errStr, const std::vector<unsigned char> &data) {
+    DLLOG("DownloaderJava::_onFinish(taskId: %d, errCode: %d, errStr: %s)", taskId, errCode, (errStr) ? errStr : "null");
     auto iter = _taskMap.find(taskId);
     if (_taskMap.end() == iter) {
-        DLLOG("DownloaderAndroid::_onFinish can't find task with id: %d", taskId);
+        DLLOG("DownloaderJava::_onFinish can't find task with id: %d", taskId);
         return;
     }
     DownloadTaskAndroid *coTask = iter->second;
@@ -245,7 +245,7 @@ JNIEXPORT void JNICALL JNI_DOWNLOADER(nativeOnProgress)(JNIEnv *env, jclass claz
     auto func = [=]() -> void {
         DLLOG("_nativeOnProgress(id: %d, taskId: %d, dl: %lld, dlnow: %lld, dltotal: %lld)", id, taskId, dl, dlnow, dltotal);
         //It's not thread-safe here, use thread-safe method instead
-        cc::network::DownloaderAndroid *downloader = _findDownloaderAndroid(id);
+        cc::network::DownloaderJava *downloader = _findDownloaderJava(id);
         if (nullptr == downloader) {
             DLLOG("_nativeOnProgress can't find downloader by key: %p for task: %d", clazz, id);
             return;
@@ -271,7 +271,7 @@ JNIEXPORT void JNICALL JNI_DOWNLOADER(nativeOnFinish)(JNIEnv *env, jclass clazz,
     auto func = [errStrTmp = std::move(errStrTmp), dataTmp = std::move(dataTmp), id, taskId, errCode]() -> void {
         DLLOG("_nativeOnFinish(id: %d, taskId: %d)", id, taskId);
         //It's not thread-safe here, use thread-safe method instead
-        cc::network::DownloaderAndroid *downloader = _findDownloaderAndroid(id);
+        cc::network::DownloaderJava *downloader = _findDownloaderJava(id);
         if (nullptr == downloader) {
             DLLOG("_nativeOnFinish can't find downloader id: %d for task: %d", id, taskId);
             return;

@@ -21,12 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "platform/android/jni/JniHelper.h"
 #include "platform/Application.h"
-#include <jni.h>
-#include <android/log.h>
-#include <android/keycodes.h>
 #include "platform/Device.h"
+#include "platform/java/jni/JniHelper.h"
+#include <android/keycodes.h>
+#include <android/log.h>
+#include <jni.h>
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "JniCocosOrientationHelper JNI", __VA_ARGS__)
 

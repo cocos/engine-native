@@ -25,8 +25,8 @@
  ****************************************************************************/
 
 #include "base/UTF8.h"
-#include "base/Log.h"
 #include "ConvertUTF/ConvertUTF.h"
+#include "base/Log.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -224,7 +224,7 @@ bool UTF32ToUTF16(const std::u32string &utf32, std::u16string &outUtf16) {
     return utfConvert(utf32, outUtf16, ConvertUTF32toUTF16);
 }
 
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
 std::string getStringUTFCharsJNI(JNIEnv *env, jstring srcjStr, bool *ret) {
     std::string utf8Str;
     const unsigned short *unicodeChar = (const unsigned short *)env->GetStringChars(srcjStr, nullptr);

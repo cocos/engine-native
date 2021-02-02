@@ -32,7 +32,7 @@ THE SOFTWARE.
     #include "cocos/bindings/event/EventDispatcher.h"
 #endif
 
-#define FORCE_DISABLE_VALIDATION  1
+#define FORCE_DISABLE_VALIDATION 1
 
 namespace cc {
 namespace gfx {
@@ -90,7 +90,7 @@ GLES3Context::GLES3Context(Device *device)
 GLES3Context::~GLES3Context() {
 }
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
+#if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_OHOS)
 
 bool GLES3Context::initialize(const ContextInfo &info) {
 

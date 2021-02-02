@@ -22,14 +22,18 @@
  */
 
 #include "cocos/bindings/manual/JavaScriptJavaBridge.h"
-#include "platform/android/jni/JniHelper.h"
+#include "cocos/base/UTF8.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
-#include "cocos/base/UTF8.h"
+#include "platform/java/jni/JniHelper.h"
 
-#include <android/log.h>
-#include <vector>
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
+    #include <android/log.h>
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include <hilog/log.h>
+#endif
 #include <string>
+#include <vector>
 
 #ifdef LOG_TAG
     #undef LOG_TAG
@@ -347,7 +351,7 @@ bool JavaScriptJavaBridge::CallInfo::getMethodInfo() {
             break;
 
         case JNI_EDETACHED:
-            if (jvm->AttachCurrentThread(&m_env, NULL) < 0) {
+            if (jvm->AttachCurrentThread((void **)&m_env, NULL) < 0) {
                 SE_LOGD("%s", "Failed to get the environment using AttachCurrentThread()");
                 m_error = JSJ_ERR_VM_THREAD_DETACHED;
                 return false;

@@ -22,18 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "JniCocosActivity.h"
-#include "platform/android/jni/JniHelper.h"
-#include "platform/android/FileUtils-android.h"
 #include "platform/Application.h"
+#include "platform/android/FileUtils-android.h"
 #include "platform/android/View.h"
-#include <jni.h>
-#include <android/log.h>
+#include "platform/java/jni/JniHelper.h"
 #include <android/asset_manager_jni.h>
+#include <android/log.h>
 #include <android/native_window_jni.h>
 #include <android_native_app_glue.h>
+#include <fcntl.h>
+#include <jni.h>
 #include <thread>
 #include <unistd.h>
-#include <fcntl.h>
 #include <vector>
 
 #define LOGV(...) __android_log_print(ANDROID_LOG_INFO, "CocosActivity JNI", __VA_ARGS__)

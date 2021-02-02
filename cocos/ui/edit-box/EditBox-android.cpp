@@ -1,7 +1,7 @@
 /****************************************************************************
- Copyright (c) 2018 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
 
- http://www.cocos2d-x.org
+ http://www.cocos.com
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,12 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "cocos/bindings/event/EventDispatcher.h"
-#include "platform/Application.h"
 #include "EditBox.h"
-#include "platform/android/jni/JniHelper.h"
+#include "cocos/bindings/event/EventDispatcher.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_global.h"
+#include "platform/Application.h"
+#include "platform/java/jni/JniHelper.h"
 
 #ifndef JCLS_EDITBOX
     #define JCLS_EDITBOX "com/cocos/lib/CocosEditBoxActivity"

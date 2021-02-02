@@ -27,12 +27,12 @@ THE SOFTWARE.
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
 
     #include "platform/android/FileUtils-android.h"
-    #include "platform/android/jni/JniHelper.h"
-    #include "platform/android/jni/JniImp.h"
     #include "android/asset_manager.h"
     #include "android/asset_manager_jni.h"
-    #include "base/ZipUtils.h"
     #include "base/Log.h"
+    #include "base/ZipUtils.h"
+    #include "platform/java/jni/JniHelper.h"
+    #include "platform/java/jni/JniImp.h"
     #include <stdlib.h>
     #include <sys/stat.h>
 

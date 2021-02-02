@@ -25,14 +25,14 @@
 #include "VideoPlayer.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
-    #include <unordered_map>
-    #include <stdlib.h>
-    #include <jni.h>
-    #include <string>
-    #include "platform/Application.h"
-    #include "platform/android/jni/JniHelper.h"
-    #include "platform/FileUtils.h"
     #include "../../platform/Application.h"
+    #include "platform/Application.h"
+    #include "platform/FileUtils.h"
+    #include "platform/java/jni/JniHelper.h"
+    #include <jni.h>
+    #include <stdlib.h>
+    #include <string>
+    #include <unordered_map>
 
 //-----------------------------------------------------------------------------------------------------------
 

@@ -23,19 +23,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "platform/android/jni/JniHelper.h"
-#include "platform/android/FileUtils-android.h"
-#include <android/log.h>
-#include <string.h>
+#include "platform/java/jni/JniHelper.h"
+#if ANDROID
+    #include <android/log.h>
+#else
+    #include <hilog/log.h>
+#endif
 #include <pthread.h>
-#include <android_native_app_glue.h>
+#include <string.h>
 
 #include "base/UTF8.h"
 
-#define LOG_TAG   "JniHelper"
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
-
+#if ANDROID
+    #define LOG_TAG   "JniHelper"
+    #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+    #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#else
+    #define LOGD(...) HILOG_DEBUG(LOG_APP, __VA_ARGS__)
+    #define LOGE(...) HILOG_ERROR(LOG_APP, __VA_ARGS__)
+#endif
 static pthread_key_t g_key;
 
 jclass _getClassID(const char *className) {
@@ -101,7 +107,7 @@ JNIEnv *JniHelper::cacheEnv() {
 
         case JNI_EDETACHED:
             // Thread not attached
-            if (jvm->AttachCurrentThread(&_env, nullptr) < 0) {
+            if (jvm->AttachCurrentThread((void **)&_env, nullptr) < 0) {
                 LOGE("Failed to get the environment using AttachCurrentThread()");
 
                 return nullptr;

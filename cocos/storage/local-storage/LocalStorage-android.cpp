@@ -29,16 +29,16 @@
  Works on cocos2d-iphone and cocos2d-x.
  */
 
-#include "storage/local-storage/LocalStorage.h"
 #include "base/Macros.h"
+#include "storage/local-storage/LocalStorage.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
 
+    #include "jni.h"
+    #include "platform/java/jni/JniHelper.h"
+    #include <assert.h>
     #include <stdio.h>
     #include <stdlib.h>
-    #include <assert.h>
-    #include "jni.h"
-    #include "platform/android/jni/JniHelper.h"
 
     #ifndef JCLS_LOCALSTORAGE
         #define JCLS_LOCALSTORAGE "com/cocos/lib/CocosLocalStorage"

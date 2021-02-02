@@ -21,10 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "platform/android/jni/JniHelper.h"
 #include "platform/Application.h"
-#include <jni.h>
+#include "platform/java/jni/JniHelper.h"
 #include <android/log.h>
+#include <jni.h>
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "CocosTouchHandler JNI", __VA_ARGS__)
 

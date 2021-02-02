@@ -25,9 +25,10 @@ THE SOFTWARE.
 ****************************************************************************/
 #pragma once
 
-#include <vector>
-#include <string>
 #include "base/Macros.h"
+#include <errno.h>
+#include <string>
+#include <vector>
 
 /** @file ccUtils.h
 Misc free functions

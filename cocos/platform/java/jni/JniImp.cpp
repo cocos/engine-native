@@ -23,9 +23,13 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "JniImp.h"
-#include <android/log.h>
-#include <jni.h>
+#if ANDROID
+    #include <android/log.h>
+#else
+    #include <hilog/log.h>
+#endif
 #include "JniHelper.h"
+#include <jni.h>
 
 #define JNI_IMP_LOG_TAG "JniImp"
 #define LOGD(...)       __android_log_print(ANDROID_LOG_DEBUG, JNI_IMP_LOG_TAG, __VA_ARGS__)

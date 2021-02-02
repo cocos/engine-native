@@ -30,7 +30,7 @@
 #include "WebView-inl.h"
 
 #include "platform/FileUtils.h"
-#include "platform/android/jni/JniHelper.h"
+#include "platform/java/jni/JniHelper.h"
 
 static const std::string className = "com/cocos/lib/CocosWebViewHelper";
 

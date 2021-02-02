@@ -23,16 +23,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "platform/Application.h"
-#include <cstring>
-#include <android_native_app_glue.h>
-#include "platform/android/jni/JniImp.h"
-#include "base/Scheduler.h"
 #include "audio/include/AudioEngine.h"
-#include "cocos/bindings/jswrapper/SeApi.h"
+#include "base/Scheduler.h"
 #include "cocos/bindings/event/EventDispatcher.h"
-#include "platform/android/jni/JniHelper.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
+#include "platform/Application.h"
 #include "platform/android/jni/JniCocosActivity.h"
+#include "platform/java/jni/JniHelper.h"
+#include "platform/java/jni/JniImp.h"
+#include <android_native_app_glue.h>
+#include <cstring>
 
 #define LOG_APP_TAG "Application_android Debug"
 #define LOGD(...)   __android_log_print(ANDROID_LOG_DEBUG, LOG_APP_TAG, __VA_ARGS__)

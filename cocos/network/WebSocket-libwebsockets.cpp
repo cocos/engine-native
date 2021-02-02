@@ -27,26 +27,30 @@
 (http://libwebsockets.org)"
 
  ****************************************************************************/
-#include "websockets/libwebsockets.h"
+#if __OHOS
+    #include "libwebsockets.h"
+#else
+    #include "websockets/libwebsockets.h"
+#endif
 
+#include "base/Scheduler.h"
+#include "network/Uri.h"
+#include "network/WebSocket.h"
+#include "platform/Application.h"
+#include "platform/FileUtils.h"
+#include "platform/StdC.h"
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
 #include <errno.h>
 #include <list>
-#include <mutex>
 #include <memory> // for std::shared_ptr
+#include <mutex>
 #include <queue>
-#include <string>
 #include <signal.h>
+#include <string>
 #include <thread>
 #include <vector>
-#include "network/WebSocket.h"
-#include "network/Uri.h"
-#include "base/Scheduler.h"
-#include "platform/FileUtils.h"
-#include "platform/Application.h"
-#include "platform/StdC.h"
 
 #define NS_NETWORK_BEGIN \
     namespace cc {       \

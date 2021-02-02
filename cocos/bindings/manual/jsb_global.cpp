@@ -23,24 +23,24 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "jsb_global.h"
-#include "jsb_conversions.h"
-#include "xxtea/xxtea.h"
-#include "base/ZipUtils.h"
 #include "base/Scheduler.h"
 #include "base/ThreadPool.h"
+#include "base/ZipUtils.h"
 #include "base/base64.h"
+#include "jsb_conversions.h"
 #include "network/HttpClient.h"
 #include "platform/Application.h"
 #include "platform/Image.h"
 #include "renderer/core/Core.h"
 #include "ui/edit-box/EditBox.h"
+#include "xxtea/xxtea.h"
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
-    #include "platform/android/jni/JniImp.h"
+    #include "platform/java/jni/JniImp.h"
 #endif
 
-#include <regex>
 #include <chrono>
+#include <regex>
 #include <sstream>
 
 using namespace cc;

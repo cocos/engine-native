@@ -26,14 +26,14 @@
 
 #ifndef __cocos2dx__ccUTF8__
 #define __cocos2dx__ccUTF8__
-
 #include "base/Macros.h"
-#include <vector>
-#include <string>
+#include <errno.h>
 #include <sstream>
+#include <string>
+#include <vector>
 
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
-    #include "platform/android/jni/JniHelper.h"
+#if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
+    #include "platform/java/jni/JniHelper.h"
 #endif
 
 namespace cc {
@@ -111,7 +111,7 @@ CC_DLL bool UTF32ToUTF16(const std::u32string &inUtf32, std::u16string &outUtf16
  */
 CC_DLL void UTF8LooseFix(const std::string &in, std::string &out);
 
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
 
 /**
 *  @brief convert jstring to utf8 std::string,  same function with env->getStringUTFChars. 

@@ -28,30 +28,30 @@
 
 #include <unistd.h>
 // for native asset manager
-#include <sys/types.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include <unordered_map>
 #include <android/log.h>
-#include <thread>
 #include <mutex>
+#include <sys/types.h>
+#include <thread>
+#include <unordered_map>
 
 #include "audio/include/AudioEngine.h"
-#include "platform/Application.h"
 #include "base/Scheduler.h"
 #include "base/UTF8.h"
+#include "platform/Application.h"
 #include "platform/android/FileUtils-android.h"
-#include "platform/android/jni/JniImp.h"
-#include "platform/android/jni/JniHelper.h"
+#include "platform/java/jni/JniHelper.h"
+#include "platform/java/jni/JniImp.h"
 
+#include "audio/android/AudioPlayerProvider.h"
 #include "audio/android/IAudioPlayer.h"
 #include "audio/android/ICallerThreadUtils.h"
-#include "audio/android/AudioPlayerProvider.h"
-#include "audio/android/cutils/log.h"
 #include "audio/android/UrlAudioPlayer.h"
+#include "audio/android/cutils/log.h"
 
-#include "cocos/bindings/event/EventDispatcher.h"
 #include "cocos/bindings/event/CustomEventTypes.h"
+#include "cocos/bindings/event/EventDispatcher.h"
 
 using namespace cc;
 
@@ -112,7 +112,12 @@ static int fdGetter(const std::string &url, off_t *start, off_t *length) {
 
 //====================================================
 AudioEngineImpl::AudioEngineImpl()
-: _engineObject(nullptr), _engineEngine(nullptr), _outputMixObject(nullptr), _audioPlayerProvider(nullptr), _audioIDIndex(0), _lazyInitLoop(true) {
+: _engineObject(nullptr),
+  _engineEngine(nullptr),
+  _outputMixObject(nullptr),
+  _audioPlayerProvider(nullptr),
+  _audioIDIndex(0),
+  _lazyInitLoop(true) {
     __callerThreadUtils.setCallerThreadId(std::this_thread::get_id());
     __impl = this;
     getAudioInfo();

@@ -24,27 +24,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#if CC_PLATFORM == CC_PLATFORM_ANDROID
+#include "base/UTF8.h"
+#include "platform/Device.h"
+#include "platform/FileUtils.h"
+#include "platform/android/jni/JniCocosActivity.h"
+#include "platform/java/jni/JniHelper.h"
+#include <android/log.h>
+#include <android/sensor.h>
+#include <android/window.h>
+#include <android_native_app_glue.h>
+#include <jni.h>
+#include <string.h>
 
-    #include "platform/Device.h"
-    #include <string.h>
-    #include <android/log.h>
-    #include <jni.h>
-    #include <android_native_app_glue.h>
-    #include <android/window.h>
-    #include <android/sensor.h>
-    #include "platform/android/jni/JniCocosActivity.h"
-    #include "platform/FileUtils.h"
-    #include "base/UTF8.h"
-    #include "platform/android/jni/JniHelper.h"
+#ifndef JCLS_HELPER
+    #define JCLS_HELPER "com/cocos/lib/CocosHelper"
+#endif
 
-    #ifndef JCLS_HELPER
-        #define JCLS_HELPER "com/cocos/lib/CocosHelper"
-    #endif
-
-    #ifndef JCLS_SENSOR
-        #define JCLS_SENSOR "com/cocos/lib/CocosSensorHandler"
-    #endif
+#ifndef JCLS_SENSOR
+    #define JCLS_SENSOR "com/cocos/lib/CocosSensorHandler"
+#endif
 
 namespace {
 cc::Device::MotionValue motionValue;
@@ -143,5 +141,3 @@ float Device::getDevicePixelRatio() {
     return 1;
 }
 } // namespace cc
-
-#endif // CC_PLATFORM == CC_PLATFORM_ANDROID

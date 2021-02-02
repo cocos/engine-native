@@ -32,10 +32,10 @@
     #include "network/DownloaderImpl-apple.h"
     #define DownloaderImpl DownloaderApple
 
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID)
+#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
 
-    #include "network/Downloader-android.h"
-    #define DownloaderImpl DownloaderAndroid
+    #include "network/Downloader-java.h"
+    #define DownloaderImpl DownloaderJava
 
 #else
 
