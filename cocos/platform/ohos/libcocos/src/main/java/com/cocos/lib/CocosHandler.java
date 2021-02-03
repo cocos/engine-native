@@ -26,15 +26,15 @@ THE SOFTWARE.
 
 package com.cocos.lib;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Message;
-import android.app.Activity;
+import ohos.agp.window.dialog.CommonDialog;
+import ohos.agp.window.dialog.IDialog;
+import ohos.eventhandler.EventHandler;
+import ohos.eventhandler.EventRunner;
+import ohos.eventhandler.InnerEvent;
 
 import java.lang.ref.WeakReference;
 
-public class CocosHandler extends Handler {
+public class CocosHandler extends EventHandler {
     // ===========================================================
     // Constants
     // ===========================================================
@@ -43,13 +43,14 @@ public class CocosHandler extends Handler {
     // ===========================================================
     // Fields
     // ===========================================================
-    private WeakReference<Activity> mActivity;
+    private WeakReference<CocosAbilitySlice> mActivity;
     
     // ===========================================================
     // Constructors
     // ===========================================================
-    public CocosHandler(Activity activity) {
-        this.mActivity = new WeakReference<Activity>(activity);
+    public CocosHandler(CocosAbilitySlice activity) {
+        super(EventRunner.getMainEventRunner());
+        this.mActivity = new WeakReference<CocosAbilitySlice>(activity);
     }
 
     // ===========================================================
@@ -64,29 +65,29 @@ public class CocosHandler extends Handler {
     // Methods
     // ===========================================================
 
-    public void handleMessage(Message msg) {
-        switch (msg.what) {
+    @Override
+    public void processEvent(InnerEvent msg) {
+        switch (msg.eventId) {
         case CocosHandler.HANDLER_SHOW_DIALOG:
             showDialog(msg);
             break;
         }
     }
 
-    private void showDialog(Message msg) {
-        Activity theActivity = this.mActivity.get();
-        DialogMessage dialogMessage = (DialogMessage)msg.obj;
-        new AlertDialog.Builder(theActivity)
-        .setTitle(dialogMessage.title)
-        .setMessage(dialogMessage.message)
-        .setPositiveButton("Ok", 
-                new DialogInterface.OnClickListener() {
+    private void showDialog(InnerEvent msg) {
+        CocosAbilitySlice theActivity = this.mActivity.get();
+        DialogMessage dialogMessage = (DialogMessage)msg.object;
 
+        CommonDialog dialog = new CommonDialog(theActivity.getContext());
+        dialog.setTitleText(dialogMessage.title)
+                .setContentText(dialogMessage.message)
+                .setButton(IDialog.BUTTON1, "OK", new IDialog.ClickedListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // REFINE: Auto-generated method stub
+                    public void onClick(IDialog iDialog, int i) {
 
                     }
-                }).create().show();
+                });
+        dialog.show();
     }
 
     // ===========================================================

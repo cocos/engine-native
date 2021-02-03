@@ -25,41 +25,28 @@ THE SOFTWARE.
  ****************************************************************************/
 package com.cocos.lib;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.AssetFileDescriptor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Environment;
-import android.os.ParcelFileDescriptor;
-import android.os.Vibrator;
-import android.util.Log;
-import android.view.Display;
-import android.view.Surface;
-import android.view.WindowInsets;
-import android.view.WindowManager;
+import ohos.aafwk.ability.AbilitySlice;
+import ohos.aafwk.content.Intent;
+import ohos.agp.window.service.Display;
+import ohos.agp.window.service.DisplayManager;
+import ohos.app.Context;
+import ohos.app.dispatcher.TaskDispatcher;
+import ohos.app.dispatcher.task.TaskPriority;
+import ohos.batterymanager.BatteryInfo;
+import ohos.bundle.AbilityInfo;
+import ohos.event.commonevent.*;
+import ohos.miscservices.pasteboard.PasteData;
+import ohos.miscservices.pasteboard.SystemPasteboard;
+import ohos.net.NetManager;
+import ohos.rpc.RemoteException;
+import ohos.system.DeviceInfo;
+import ohos.system.version.SystemVersion;
+import ohos.utils.net.Uri;
+import ohos.vibrator.agent.VibratorAgent;
+import ohos.vibrator.bean.VibrationPattern;
+import ohos.wifi.WifiDevice;
 
-import com.android.vending.expansion.zipfile.APKExpansionSupport;
-import com.android.vending.expansion.zipfile.ZipResourceFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 
 public class CocosHelper {
@@ -72,9 +59,9 @@ public class CocosHelper {
     // Fields
     // ===========================================================
 
-    private static Activity sActivity;
-    private static Vibrator sVibrateService;
-    private static BatteryReceiver sBatteryReceiver = new BatteryReceiver();
+    private static AbilitySlice sAbilitySlice;
+    private static VibratorAgent sVibrateService;
+    private static Optional<BatteryReceiver> sBatteryReceiver = Optional.empty();
 
     public static final int NETWORK_TYPE_NONE = 0;
     public static final int NETWORK_TYPE_LAN  = 1;
@@ -83,40 +70,54 @@ public class CocosHelper {
     // The absolute path to the OBB if it exists.
     private static String sObbFilePath = "";
 
-    // The OBB file
-    private static ZipResourceFile sOBBFile = null;
 
     private static List<Runnable> sTaskOnGameThread = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Battery receiver to getting battery level.
      */
-    static class BatteryReceiver extends BroadcastReceiver {
+    static class BatteryReceiver extends CommonEventSubscriber {
         public float sBatteryLevel = 0.0f;
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            setBatteryLevelByIntent(intent);
+        public BatteryReceiver(CommonEventSubscribeInfo subscribeInfo) {
+            super(subscribeInfo);
         }
 
-        public void setBatteryLevelByIntent(Intent intent) {
-            if (null != intent) {
-                int current = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-                int total = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
-                float level = current * 1.0f / total;
-                // clamp to 0~1
+        @Override
+        public void onReceiveEvent(CommonEventData commonEventData) {
+            Intent intent = commonEventData.getIntent();
+            if(intent != null) {
+                int capacity =  intent.getIntParam(BatteryInfo.OHOS_BATTERY_CAPACITY, 100);
+                float level = capacity / 100.0f;
                 sBatteryLevel = Math.min(Math.max(level, 0.0f), 1.0f);
             }
+
         }
     }
 
     static void registerBatteryLevelReceiver(Context context) {
-        Intent intent = context.registerReceiver(sBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        sBatteryReceiver.setBatteryLevelByIntent(intent);
+        if(sBatteryReceiver.isPresent()) return;
+
+        MatchingSkills ms = new MatchingSkills();
+        ms.addEvent(CommonEventSupport.COMMON_EVENT_BATTERY_CHANGED);
+        CommonEventSubscribeInfo subscribeInfo = new CommonEventSubscribeInfo(ms);
+        sBatteryReceiver = Optional.of(new BatteryReceiver(subscribeInfo));
+        try {
+            CommonEventManager.subscribeCommonEvent(sBatteryReceiver.get());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     static void unregisterBatteryLevelReceiver(Context context) {
-        context.unregisterReceiver(sBatteryReceiver);
+        if(sBatteryReceiver.isPresent()) {
+            try {
+                CommonEventManager.unsubscribeCommonEvent(sBatteryReceiver.get());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            sBatteryReceiver = Optional.empty();
+        }
     }
 
     public static void runOnGameThread(final Runnable runnable) {
@@ -133,25 +134,17 @@ public class CocosHelper {
     }
 
     public static int getNetworkType() {
-        int status = NETWORK_TYPE_NONE;
-        NetworkInfo networkInfo;
-        try {
-            ConnectivityManager connMgr = (ConnectivityManager) sActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
-            networkInfo = connMgr.getActiveNetworkInfo();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return status;
+
+        NetManager netManager =  NetManager.getInstance(sAbilitySlice.getContext());
+        if(!netManager.hasDefaultNet()) return NETWORK_TYPE_NONE;
+
+        WifiDevice wifiDevice = WifiDevice.getInstance(sAbilitySlice.getContext());
+        if(null == wifiDevice) return NETWORK_TYPE_NONE;
+
+        if(wifiDevice.isWifiActive() && wifiDevice.isConnected()) {
+            return NETWORK_TYPE_LAN;
         }
-        if (networkInfo == null) {
-            return status;
-        }
-        int nType = networkInfo.getType();
-        if (nType == ConnectivityManager.TYPE_MOBILE) {
-            status = NETWORK_TYPE_WWAN;
-        } else if (nType == ConnectivityManager.TYPE_WIFI) {
-            status = NETWORK_TYPE_LAN;
-        }
-        return status;
+        return NETWORK_TYPE_WWAN;
     }
 
     // ===========================================================
@@ -159,21 +152,21 @@ public class CocosHelper {
     // ===========================================================
 
     private static boolean sInited = false;
-    public static void init(final Activity activity) {
-        sActivity = activity;
+    public static void init(final AbilitySlice activity) {
+        sAbilitySlice = activity;
         if (!sInited) {
-            CocosHelper.sVibrateService = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
-            CocosHelper.initObbFilePath();
-            CocosHelper.initializeOBBFile();
+            CocosHelper.sVibrateService = new VibratorAgent();
 
             sInited = true;
         }
     }
 
-    public static float getBatteryLevel() { return sBatteryReceiver.sBatteryLevel; }
+    public static float getBatteryLevel() {
+        return sBatteryReceiver.map(x -> x.sBatteryLevel).orElse(1.0f);
+    }
     public static String getObbFilePath() { return CocosHelper.sObbFilePath; }
     public static String getWritablePath() {
-        return sActivity.getFilesDir().getAbsolutePath();
+        return sAbilitySlice.getFilesDir().getAbsolutePath();
     }
     public static String getCurrentLanguage() {
         return Locale.getDefault().getLanguage();
@@ -182,46 +175,37 @@ public class CocosHelper {
         return Locale.getDefault().toString();
     }
     public static String getDeviceModel(){
-        return Build.MODEL;
+        return DeviceInfo.getModel();
     }
     public static String getSystemVersion() {
-        return Build.VERSION.RELEASE;
+        return SystemVersion.getVersion();
     }
 
-    public static void vibrate(float duration) {
-        try {
-            if (sVibrateService != null && sVibrateService.hasVibrator()) {
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    Class<?> vibrationEffectClass = Class.forName("android.os.VibrationEffect");
-                    if(vibrationEffectClass != null) {
-                        final int DEFAULT_AMPLITUDE = CocosReflectionHelper.<Integer>getConstantValue(vibrationEffectClass,
-                                "DEFAULT_AMPLITUDE");
-                        //VibrationEffect.createOneShot(long milliseconds, int amplitude)
-                        final Method method = vibrationEffectClass.getMethod("createOneShot",
-                                new Class[]{Long.TYPE, Integer.TYPE});
-                        Class<?> type = method.getReturnType();
-
-                        Object effect =  method.invoke(vibrationEffectClass,
-                                new Object[]{(long) (duration * 1000), DEFAULT_AMPLITUDE});
-                        //sVibrateService.vibrate(VibrationEffect effect);
-                        CocosReflectionHelper.invokeInstanceMethod(sVibrateService,"vibrate",
-                                new Class[]{type}, new Object[]{(effect)});
-                    }
-                } else {
-                    sVibrateService.vibrate((long) (duration * 1000));
-                }
+    public static void vibrate(float durSec) {
+        List<Integer> vlist = sVibrateService.getVibratorIdList();
+        if(vlist.isEmpty()) return;
+        int durationMs = (int)(1000 * durSec);
+        int vibrateId = -1;
+        for(Integer vId : vlist) {
+            // TODO: choose preferred vibration effect
+            if(sVibrateService.isEffectSupport(vId, VibrationPattern.VIBRATOR_TYPE_CAMERA_CLICK)){
+                vibrateId = vId;
+                break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        if(vibrateId < 0) {
+            sVibrateService.startOnce(durationMs);
+        }else {
+            sVibrateService.startOnce(durationMs, vibrateId);
         }
     }
 
     public static boolean openURL(String url) {
         boolean ret = false;
         try {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            sActivity.startActivity(i);
+            Intent i = new Intent();
+            i.formatUri(Uri.parse(url));
+            sAbilitySlice.startAbility(i);
             ret = true;
         } catch (Exception e) {
         }
@@ -229,129 +213,44 @@ public class CocosHelper {
     }
 
     public static void copyTextToClipboard(final String text){
-        sActivity.runOnUiThread(new Runnable() {
+        TaskDispatcher dispatcher = sAbilitySlice.getGlobalTaskDispatcher(TaskPriority.DEFAULT);
+        dispatcher.asyncDispatch(new Runnable() {
             @Override
             public void run() {
-                ClipboardManager myClipboard = (ClipboardManager)sActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData myClip = ClipData.newPlainText("text", text);
-                myClipboard.setPrimaryClip(myClip);
+                PasteData pasteData = PasteData.creatPlainTextData(text);
+                SystemPasteboard.getSystemPasteboard(sAbilitySlice.getContext()).setPasteData(pasteData);
             }
         });
     }
 
-    public static long[] getObbAssetFileDescriptor(final String path) {
-        long[] array = new long[3];
-        if (CocosHelper.sOBBFile != null) {
-            AssetFileDescriptor descriptor = CocosHelper.sOBBFile.getAssetFileDescriptor(path);
-            if (descriptor != null) {
-                try {
-                    ParcelFileDescriptor parcel = descriptor.getParcelFileDescriptor();
-                    Method method = parcel.getClass().getMethod("getFd", new Class[] {});
-                    array[0] = (Integer)method.invoke(parcel);
-                    array[1] = descriptor.getStartOffset();
-                    array[2] = descriptor.getLength();
-                } catch (NoSuchMethodException e) {
-                    Log.e(CocosHelper.TAG, "Accessing file descriptor directly from the OBB is only supported from Android 3.1 (API level 12) and above.");
-                } catch (IllegalAccessException e) {
-                    Log.e(CocosHelper.TAG, e.toString());
-                } catch (InvocationTargetException e) {
-                    Log.e(CocosHelper.TAG, e.toString());
-                }
-            }
-        }
-        return array;
+    public static void runOnUIThread(final Runnable r) {
+        TaskDispatcher dispatcher = sAbilitySlice.getGlobalTaskDispatcher(TaskPriority.DEFAULT);
+        dispatcher.asyncDispatch(r);
     }
 
     public static int getDeviceRotation() {
         try {
-            Display display = ((WindowManager) sActivity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-            return display.getRotation();
+            return sAbilitySlice.getDisplayOrientation();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        return Surface.ROTATION_0;
+        return AbilityInfo.DisplayOrientation.UNSPECIFIED.ordinal();
     }
 
-    // ===========================================================
-    // Private functions.
-    // ===========================================================
-
-    // Initialize asset path:
-    // - absolute path to the OBB if it exists,
-    // - else empty string.
-    private static void initObbFilePath() {
-        int versionCode = 1;
-        final ApplicationInfo applicationInfo = sActivity.getApplicationInfo();
-        try {
-            versionCode = CocosHelper.sActivity.getPackageManager().getPackageInfo(applicationInfo.packageName, 0).versionCode;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        String pathToOBB = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" + applicationInfo.packageName + "/main." + versionCode + "." + applicationInfo.packageName + ".obb";
-        File obbFile = new File(pathToOBB);
-        if (obbFile.exists())
-            CocosHelper.sObbFilePath = pathToOBB;
-    }
-
-    private static void initializeOBBFile() {
-        int versionCode = 1;
-        final ApplicationInfo applicationInfo = sActivity.getApplicationInfo();
-        try {
-            versionCode = sActivity.getPackageManager().getPackageInfo(applicationInfo.packageName, 0).versionCode;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            CocosHelper.sOBBFile = APKExpansionSupport.getAPKExpansionZipFile(sActivity, versionCode, 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static float[] getSafeArea() {
-        if (android.os.Build.VERSION.SDK_INT >= 28) {
-            do {
-                Object windowInsectObj = GlobalObject.getActivity().getWindow().getDecorView().getRootWindowInsets();
-
-                if(windowInsectObj == null) break;
-
-                Class<?> windowInsets = WindowInsets.class;
-                try {
-                    Method wiGetDisplayCutout = windowInsets.getMethod("getDisplayCutout");
-                    Object cutout = wiGetDisplayCutout.invoke(windowInsectObj);
-
-                    if(cutout == null) break;
-
-                    Class<?> displayCutout = cutout.getClass();
-                    Method dcGetLeft = displayCutout.getMethod("getSafeInsetLeft");
-                    Method dcGetRight = displayCutout.getMethod("getSafeInsetRight");
-                    Method dcGetBottom = displayCutout.getMethod("getSafeInsetBottom");
-                    Method dcGetTop = displayCutout.getMethod("getSafeInsetTop");
-
-                    if (dcGetLeft != null && dcGetRight != null && dcGetBottom != null && dcGetTop != null) {
-                        int left = (Integer) dcGetLeft.invoke(cutout);
-                        int right = (Integer) dcGetRight.invoke(cutout);
-                        int top = (Integer) dcGetTop.invoke(cutout);
-                        int bottom = (Integer) dcGetBottom.invoke(cutout);
-                        return new float[]{top, left, bottom, right};
-                    }
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }while(false);
-        }
         return new float[]{0,0,0,0};
     }
 
     public static int getDPI() {
         Optional<Display> disp = DisplayManager.getInstance().getDefaultDisplay(getContext());
         if(disp.isPresent()) {
-            return disp.get().getAttributes().xDpi;
+            return (int)disp.get().getAttributes().xDpi;
         }
         return -1;
+    }
+
+    public static Context getContext() {
+        return sAbilitySlice.getContext();
     }
 }

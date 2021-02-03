@@ -25,26 +25,28 @@ THE SOFTWARE.
  ****************************************************************************/
 package com.cocos.lib;
 
-import android.util.Log;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class CocosReflectionHelper {
+    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, "CocosReflection");
     public static <T> T getConstantValue(final Class aClass, final String constantName) {
         try {
             return (T)aClass.getDeclaredField(constantName).get(null);
         } catch (NoSuchFieldException e) {
-            Log.e("error", "can not find " + constantName + " in " + aClass.getName());
+            HiLog.error(LABEL, "can not find " + constantName + " in " + aClass.getName());
         }
         catch (IllegalAccessException e) {
-            Log.e("error", constantName + " is not accessable");
+            HiLog.error(LABEL, constantName + " is not accessable");
         }
         catch (IllegalArgumentException e) {
-            Log.e("error", "arguments error when get " + constantName);
+            HiLog.error(LABEL, "arguments error when get " + constantName);
         }
         catch (Exception e) {
-            Log.e("error", "can not get constant" + constantName);
+            HiLog.error(LABEL, "can not get constant" + constantName);
         }
 
         return null;
@@ -58,16 +60,16 @@ public class CocosReflectionHelper {
             final Method method = aClass.getMethod(methodName, parameterTypes);
             return (T)method.invoke(instance, parameters);
         } catch (NoSuchMethodException e) {
-            Log.e("error", "can not find " + methodName + " in " + aClass.getName());
+            HiLog.error(LABEL, "can not find " + methodName + " in " + aClass.getName());
         }
         catch (IllegalAccessException e) {
-            Log.e("error", methodName + " is not accessible");
+            HiLog.error(LABEL, methodName + " is not accessible");
         }
         catch (IllegalArgumentException e) {
-            Log.e("error", "arguments are error when invoking " + methodName);
+            HiLog.error(LABEL, "arguments are error when invoking " + methodName);
         }
         catch (InvocationTargetException e) {
-            Log.e("error", "an exception was thrown by the invoked method when invoking " + methodName);
+            HiLog.error(LABEL, "an exception was thrown by the invoked method when invoking " + methodName);
         }
 
         return null;

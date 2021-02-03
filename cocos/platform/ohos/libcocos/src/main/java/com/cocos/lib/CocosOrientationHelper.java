@@ -24,28 +24,42 @@
 
 package com.cocos.lib;
 
-import android.content.Context;
-import android.view.OrientationEventListener;
 
-public class CocosOrientationHelper extends OrientationEventListener {
+import ohos.app.Context;
+import ohos.sensor.agent.CategoryOrientationAgent;
+import ohos.sensor.agent.SensorAgent;
+import ohos.sensor.bean.CategoryMotion;
+import ohos.sensor.bean.CategoryOrientation;
+import ohos.sensor.data.CategoryMotionData;
+import ohos.sensor.data.CategoryOrientationData;
+import ohos.sensor.listener.ICategoryMotionDataCallback;
+import ohos.sensor.listener.ICategoryOrientationDataCallback;
+
+public class CocosOrientationHelper implements ICategoryOrientationDataCallback {
 
     private int mCurrentOrientation;
+    private CategoryOrientationAgent agent;
+    private CategoryOrientation orientation;
 
     public CocosOrientationHelper(Context context) {
-        super(context);
+        agent = new CategoryOrientationAgent();
+        orientation = agent.getSingleSensor(CategoryOrientationAgent.SENSOR_CATEGORY_ORIENTATION);
         mCurrentOrientation = CocosHelper.getDeviceRotation();
     }
 
     public void onPause() {
-        this.disable();
+        agent.releaseSensorDataCallback(this);
     }
 
     public void onResume() {
-        this.enable();
+        agent.setSensorDataCallback(this, orientation, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
     }
 
+
+    private static native void nativeOnOrientationChanged(int rotation);
+
     @Override
-    public void onOrientationChanged(int orientation) {
+    public void onSensorDataModified(CategoryOrientationData data) {
         int curOrientation = CocosHelper.getDeviceRotation();
         if (curOrientation != mCurrentOrientation) {
             mCurrentOrientation = CocosHelper.getDeviceRotation();
@@ -58,5 +72,13 @@ public class CocosOrientationHelper extends OrientationEventListener {
         }
     }
 
-    private static native void nativeOnOrientationChanged(int rotation);
+    @Override
+    public void onAccuracyDataModified(CategoryOrientation categoryOrientation, int i) {
+
+    }
+
+    @Override
+    public void onCommandCompleted(CategoryOrientation categoryOrientation) {
+
+    }
 }

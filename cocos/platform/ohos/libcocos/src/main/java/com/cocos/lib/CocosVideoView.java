@@ -18,33 +18,34 @@
 
 package com.cocos.lib;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.Resources;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.widget.FrameLayout;
-import android.app.Activity;
-import android.graphics.Point;
+import ohos.aafwk.ability.AbilitySlice;
+import ohos.agp.components.Component;
+import ohos.agp.components.PositionLayout;
+import ohos.agp.components.surfaceprovider.SurfaceProvider;
+import ohos.agp.graphics.SurfaceOps;
+import ohos.agp.utils.Rect;
+import ohos.agp.window.dialog.BaseDialog;
+import ohos.agp.window.dialog.PopupDialog;
+import ohos.global.resource.RawFileDescriptor;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
+import ohos.media.audio.AudioManager;
+import ohos.media.common.Source;
+import ohos.media.player.Player;
+import ohos.multimodalinput.event.TouchEvent;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class CocosVideoView extends SurfaceView {
+public class CocosVideoView extends SurfaceProvider implements Component.TouchEventListener {
+
 
     // ===========================================================
     // Internal classes and interfaces.
     // ===========================================================
 
     public interface OnVideoEventListener {
-        void onVideoEvent(int tag,int event);
+        void onVideoEvent(int tag, int event);
     }
 
     private enum State {
@@ -70,24 +71,23 @@ public class CocosVideoView extends SurfaceView {
 
     private String TAG = "CocosVideoView";
 
-    private Uri         mVideoUri;
-    private int         mDuration;
-    private int         mPosition;
+    private Source mVideoUri;
+    private int mDuration;
+    private int mPosition;
 
     private State mCurrentState = State.IDLE;
 
     // All the stuff we need for playing and showing a video
-    private SurfaceHolder mSurfaceHolder = null;
-    private MediaPlayer mMediaPlayer = null;
-    private int         mVideoWidth = 0;
-    private int         mVideoHeight = 0;
+    private Player mMediaPlayer = null;
+    private int mVideoWidth = 0;
+    private int mVideoHeight = 0;
 
     private OnVideoEventListener mOnVideoEventListener;
 
     // recording the seek position while preparing
-    private int         mSeekWhenPrepared = 0;
+    private int mSeekWhenPrepared = 0;
 
-    protected Activity mActivity = null;
+    protected AbilitySlice mAbility = null;
 
     protected int mViewLeft = 0;
     protected int mViewTop = 0;
@@ -116,11 +116,11 @@ public class CocosVideoView extends SurfaceView {
     // Constructors
     // ===========================================================
 
-    public CocosVideoView(Activity activity, int tag) {
+    public CocosVideoView(AbilitySlice activity, int tag) {
         super(activity);
 
         mViewTag = tag;
-        mActivity = activity;
+        mAbility = activity;
         initVideoView();
     }
 
@@ -147,9 +147,9 @@ public class CocosVideoView extends SurfaceView {
         }
     }
 
-    public void setVolume (float volume) {
+    public void setVolume(float volume) {
         if (mMediaPlayer != null) {
-            mMediaPlayer.setVolume(volume, volume);
+            mMediaPlayer.setVolume(volume);
         }
     }
 
@@ -160,7 +160,7 @@ public class CocosVideoView extends SurfaceView {
 
     public void setVideoURL(String url) {
         mIsAssetRouse = false;
-        setVideoURI(Uri.parse(url), null);
+        setVideoURI(new Source(url), null);
     }
 
     public void setVideoFileName(String path) {
@@ -170,33 +170,32 @@ public class CocosVideoView extends SurfaceView {
 
         if (path.startsWith("/")) {
             mIsAssetRouse = false;
-            setVideoURI(Uri.parse(path),null);
-        }
-        else {
+            setVideoURI(new Source(path), null);
+        } else {
 
             mVideoFilePath = path;
             mIsAssetRouse = true;
-            setVideoURI(Uri.parse(path), null);
+            setVideoURI(new Source(path), null);
         }
     }
 
     public int getCurrentPosition() {
-        if (! (mCurrentState == State.IDLE ||
+        if (!(mCurrentState == State.IDLE ||
                 mCurrentState == State.ERROR ||
                 mCurrentState == State.INITIALIZED ||
                 mCurrentState == State.STOPPED ||
-                mMediaPlayer == null) ) {
-            mPosition = mMediaPlayer.getCurrentPosition();
+                mMediaPlayer == null)) {
+            mPosition = mMediaPlayer.getCurrentTime();
         }
         return mPosition;
     }
 
     public int getDuration() {
-        if (! (mCurrentState == State.IDLE ||
+        if (!(mCurrentState == State.IDLE ||
                 mCurrentState == State.ERROR ||
                 mCurrentState == State.INITIALIZED ||
                 mCurrentState == State.STOPPED ||
-                mMediaPlayer == null) ) {
+                mMediaPlayer == null)) {
             mDuration = mMediaPlayer.getDuration();
         }
 
@@ -208,8 +207,7 @@ public class CocosVideoView extends SurfaceView {
      *
      * @param l The callback that will be run
      */
-    public void setVideoViewEventListener(OnVideoEventListener l)
-    {
+    public void setVideoViewEventListener(OnVideoEventListener l) {
         mOnVideoEventListener = l;
     }
 
@@ -223,14 +221,8 @@ public class CocosVideoView extends SurfaceView {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(mVisibleWidth, mVisibleHeight);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+    public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
+        if ((touchEvent.getAction() & TouchEvent.PRIMARY_POINT_UP) == TouchEvent.PRIMARY_POINT_UP) {
             this.sendEvent(EVENT_CLICKED);
         }
         return true;
@@ -251,7 +243,8 @@ public class CocosVideoView extends SurfaceView {
             try {
                 mMediaPlayer.prepare();
                 this.showFirstFrame();
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -266,7 +259,7 @@ public class CocosVideoView extends SurfaceView {
                 mMediaPlayer != null) {
 
             mCurrentState = State.STARTED;
-            mMediaPlayer.start();
+            mMediaPlayer.play();
             this.sendEvent(EVENT_PLAYING);
         }
     }
@@ -287,14 +280,13 @@ public class CocosVideoView extends SurfaceView {
             return;
         }
 
-        mMediaPlayer.seekTo(ms);
+        mMediaPlayer.rewindTo(ms * 1000);
     }
 
     public void fixSize() {
         if (mFullScreenEnabled) {
-            Point screenSize = new Point();
-            mActivity.getWindowManager().getDefaultDisplay().getSize(screenSize);
-            fixSize(0, 0, screenSize.x, screenSize.y);
+            Rect rect = mAbility.getWindow().getBoundRect();
+            fixSize(rect.left, rect.top, rect.getWidth(), rect.getHeight());
         } else {
             fixSize(mViewLeft, mViewTop, mViewWidth, mViewHeight);
         }
@@ -306,13 +298,12 @@ public class CocosVideoView extends SurfaceView {
             mVisibleTop = top;
             mVisibleWidth = width;
             mVisibleHeight = height;
-        }
-        else if (width != 0 && height != 0) {
+        } else if (width != 0 && height != 0) {
             if (mKeepRatio && !mFullScreenEnabled) {
-                if ( mVideoWidth * height  > width * mVideoHeight ) {
+                if (mVideoWidth * height > width * mVideoHeight) {
                     mVisibleWidth = width;
                     mVisibleHeight = width * mVideoHeight / mVideoWidth;
-                } else if ( mVideoWidth * height  < width * mVideoHeight ) {
+                } else if (mVideoWidth * height < width * mVideoHeight) {
                     mVisibleWidth = height * mVideoWidth / mVideoHeight;
                     mVisibleHeight = height;
                 }
@@ -324,37 +315,36 @@ public class CocosVideoView extends SurfaceView {
                 mVisibleWidth = width;
                 mVisibleHeight = height;
             }
-        }
-        else {
+        } else {
             mVisibleLeft = left;
             mVisibleTop = top;
             mVisibleWidth = mVideoWidth;
             mVisibleHeight = mVideoHeight;
         }
 
-        getHolder().setFixedSize(mVisibleWidth, mVisibleHeight);
+        setComponentSize(mVisibleWidth, mVisibleHeight);
 
-        FrameLayout.LayoutParams lParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT);
-        lParams.leftMargin = mVisibleLeft;
-        lParams.topMargin = mVisibleTop;
-        setLayoutParams(lParams);
+        PositionLayout.LayoutConfig lParams = new PositionLayout.LayoutConfig(PositionLayout.LayoutConfig.MATCH_PARENT,
+                PositionLayout.LayoutConfig.MATCH_PARENT);
+        lParams.setMarginLeft(mVisibleLeft);
+        lParams.setMarginTop(mVisibleTop);
+        setLayoutConfig(lParams);
     }
 
     public int resolveAdjustedSize(int desiredSize, int measureSpec) {
         int result = desiredSize;
         int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize =  MeasureSpec.getSize(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
 
         switch (specMode) {
-            case MeasureSpec.UNSPECIFIED:
+            case MeasureSpec.UNCONSTRAINT:
                 /* Parent says we can be as big as we want. Just don't be larger
                  * than max size imposed on ourselves.
                  */
                 result = desiredSize;
                 break;
 
-            case MeasureSpec.AT_MOST:
+            case MeasureSpec.NOT_EXCEED:
                 /* Parent says we can be as big as we want, up to specSize.
                  * Don't be larger than specSize, and don't be larger than
                  * the max size imposed on ourselves.
@@ -362,7 +352,7 @@ public class CocosVideoView extends SurfaceView {
                 result = Math.min(desiredSize, specSize);
                 break;
 
-            case MeasureSpec.EXACTLY:
+            case MeasureSpec.PRECISE:
                 // No choice. Do what we are told.
                 result = specSize;
                 break;
@@ -378,51 +368,48 @@ public class CocosVideoView extends SurfaceView {
     private void initVideoView() {
         mVideoWidth = 0;
         mVideoHeight = 0;
-        getHolder().addCallback(mSHCallback);
-        //Fix issue#11516:Can't play video on Android 2.3.x
-        getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
+        getSurfaceOps().get().addCallback(mSHCallback);
         mCurrentState = State.IDLE;
+        setTouchEventListener(this);
+        setFocusable(FOCUS_ADAPTABLE);
+        setTouchFocusable(true);
     }
 
     /**
      * @hide
      */
-    private void setVideoURI(Uri uri, Map<String, String> headers) {
+    private void setVideoURI(Source uri, Map<String, String> headers) {
         mVideoUri = uri;
         mVideoWidth = 0;
         mVideoHeight = 0;
     }
 
     private void openVideo() {
-        if (mSurfaceHolder == null) {
+        if (!getSurfaceOps().isPresent() || getSurfaceOps().get().getSurface() == null) {
             // not ready for playback just yet, will try again later
             return;
         }
         if (mIsAssetRouse) {
-            if(mVideoFilePath == null)
+            if (mVideoFilePath == null)
                 return;
-        } else if(mVideoUri == null) {
+        } else if (mVideoUri == null) {
             return;
         }
 
-        this.pausePlaybackService();
+//        this.pausePlaybackService();
 
         try {
-            mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setOnPreparedListener(mPreparedListener);
-            mMediaPlayer.setOnCompletionListener(mCompletionListener);
-            mMediaPlayer.setOnErrorListener(mErrorListener);
-            mMediaPlayer.setDisplay(mSurfaceHolder);
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mMediaPlayer.setScreenOnWhilePlaying(true);
+            mMediaPlayer = new Player(getContext());
+            mMediaPlayer.setPlayerCallback(mPlayerCallback);
+            mMediaPlayer.setSurfaceOps(getSurfaceOps().get());
+            mMediaPlayer.setAudioStreamType(AudioManager.AudioVolumeType.STREAM_MUSIC.getValue());
+            getSurfaceOps().get().setKeepScreenOn(true);
 
             if (mIsAssetRouse) {
-                AssetFileDescriptor afd = mActivity.getAssets().openFd(mVideoFilePath);
-                mMediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                RawFileDescriptor afd = mAbility.getResourceManager().getRawFileEntry(mVideoFilePath).openRawFileDescriptor();
+                mMediaPlayer.setSource(afd);
             } else {
-                mMediaPlayer.setDataSource(mVideoUri.toString());
+                mMediaPlayer.setSource(mVideoUri);
             }
             mCurrentState = State.INITIALIZED;
 
@@ -433,28 +420,29 @@ public class CocosVideoView extends SurfaceView {
 
 //            mMediaPlayer.prepareAsync();
         } catch (IOException ex) {
-            Log.w(TAG, "Unable to open content: " + mVideoUri, ex);
+            HiLog.error(new HiLogLabel(HiLog.LOG_APP, 0, getClass().getSimpleName()), "Unable to open content: " + mVideoUri + ex);
             mCurrentState = State.ERROR;
-            mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
+            mPlayerCallback.onError(Player.PLAYER_ERROR_UNKNOWN, 0);
             return;
         } catch (IllegalArgumentException ex) {
-            Log.w(TAG, "Unable to open content: " + mVideoUri, ex);
+            HiLog.error(new HiLogLabel(HiLog.LOG_APP, 0, getClass().getSimpleName()), "Unable to open content: " + mVideoUri + ex);
             mCurrentState = State.ERROR;
-            mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
+            mPlayerCallback.onError(Player.PLAYER_ERROR_UNKNOWN, 0);
             return;
         }
     }
 
-    MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
-        public void onPrepared(MediaPlayer mp) {
-            mVideoWidth = mp.getVideoWidth();
-            mVideoHeight = mp.getVideoHeight();
+    private Player.IPlayerCallback mPlayerCallback = new Player.IPlayerCallback() {
+        @Override
+        public void onPrepared() {
+            mVideoWidth = mMediaPlayer.getVideoWidth();
+            mVideoHeight = mMediaPlayer.getVideoHeight();
 
             if (mVideoWidth != 0 && mVideoHeight != 0) {
                 fixSize();
             }
 
-            if(!mMetaUpdated) {
+            if (!mMetaUpdated) {
                 CocosVideoView.this.sendEvent(EVENT_META_LOADED);
                 CocosVideoView.this.sendEvent(EVENT_READY_TO_PLAY);
                 mMetaUpdated = true;
@@ -468,13 +456,60 @@ public class CocosVideoView extends SurfaceView {
                 mPositionBeforeRelease = 0;
             }
         }
-    };
 
-    private MediaPlayer.OnCompletionListener mCompletionListener =
-        new MediaPlayer.OnCompletionListener() {
-        public void onCompletion(MediaPlayer mp) {
+        @Override
+        public void onMessage(int i, int i1) {
+
+        }
+
+        @Override
+        public void onError(int i, int i1) {
+            mCurrentState = State.ERROR;
+
+            //TODO: i18n
+            PopupDialog dialog = new PopupDialog(getContext(), CocosVideoView.this);
+            dialog.setText("Error code " + i + ", " + i1)
+                    .setDialogListener(new BaseDialog.DialogListener() {
+                        @Override
+                        public boolean isTouchOutside() {
+                            CocosVideoView.this.sendEvent(EVENT_COMPLETED);
+                            return false;
+                        }
+                    });
+            dialog.setAutoClosable(true);
+            dialog.setHasArrow(false);
+            dialog.show();
+        }
+
+        @Override
+        public void onResolutionChanged(int i, int i1) {
+
+        }
+
+        @Override
+        public void onPlayBackComplete() {
             mCurrentState = State.PLAYBACK_COMPLETED;
             CocosVideoView.this.sendEvent(EVENT_COMPLETED);
+        }
+
+        @Override
+        public void onRewindToComplete() {
+
+        }
+
+        @Override
+        public void onBufferingChange(int i) {
+
+        }
+
+        @Override
+        public void onNewTimedMetaData(Player.MediaTimedMetaData mediaTimedMetaData) {
+
+        }
+
+        @Override
+        public void onMediaTimeIncontinuity(Player.MediaTimeInfo mediaTimeInfo) {
+
         }
     };
 
@@ -487,73 +522,29 @@ public class CocosVideoView extends SurfaceView {
     private static final int EVENT_CLICKED = 5;
     private static final int EVENT_READY_TO_PLAY = 6;
 
-    private MediaPlayer.OnErrorListener mErrorListener =
-        new MediaPlayer.OnErrorListener() {
-        public boolean onError(MediaPlayer mp, int framework_err, int impl_err) {
-            Log.d(TAG, "Error: " + framework_err + "," + impl_err);
-            mCurrentState = State.ERROR;
-
-            /* Otherwise, pop up an error dialog so the user knows that
-             * something bad has happened. Only try and pop up the dialog
-             * if we're attached to a window. When we're going away and no
-             * longer have a window, don't bother showing the user an error.
-             */
-            if (getWindowToken() != null) {
-                Resources r = mActivity.getResources();
-                int messageId;
-
-                if (framework_err == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
-                    // messageId = com.android.internal.R.string.VideoView_error_text_invalid_progressive_playback;
-                    messageId = r.getIdentifier("VideoView_error_text_invalid_progressive_playback", "string", "android");
-                } else {
-                    // messageId = com.android.internal.R.string.VideoView_error_text_unknown;
-                    messageId = r.getIdentifier("VideoView_error_text_unknown", "string", "android");
-                }
-
-                int titleId = r.getIdentifier("VideoView_error_title", "string", "android");
-                int buttonStringId = r.getIdentifier("VideoView_error_button", "string", "android");
-
-                new AlertDialog.Builder(mActivity)
-                        .setTitle(r.getString(titleId))
-                        .setMessage(messageId)
-                        .setPositiveButton(r.getString(buttonStringId),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        /* If we get here, there is no onError listener, so
-                                         * at least inform them that the video is over.
-                                         */
-                                        CocosVideoView.this.sendEvent(EVENT_COMPLETED);
-                                    }
-                                })
-                        .setCancelable(false)
-                        .show();
-            }
-            return true;
-        }
-    };
-
-    SurfaceHolder.Callback mSHCallback = new SurfaceHolder.Callback()
-    {
-        public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        }
-
-        public void surfaceCreated(SurfaceHolder holder) {
-            mSurfaceHolder = holder;
+    SurfaceOps.Callback mSHCallback = new SurfaceOps.Callback() {
+        @Override
+        public void surfaceCreated(SurfaceOps surfaceOps) {
             CocosVideoView.this.openVideo();
         }
 
-        public void surfaceDestroyed(SurfaceHolder holder) {
+        @Override
+        public void surfaceChanged(SurfaceOps surfaceOps, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceOps surfaceOps) {
             // after we return from this we can't use the surface any more
-            mSurfaceHolder = null;
             mPositionBeforeRelease = getCurrentPosition();
-            CocosVideoView.this.release();
+            CocosVideoView.this.doRelease();
         }
     };
 
     /*
      * release the media player in any state
      */
-    private void release() {
+    private void doRelease() {
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
             mMediaPlayer = null;
@@ -562,7 +553,7 @@ public class CocosVideoView extends SurfaceView {
     }
 
     private void showFirstFrame() {
-        mMediaPlayer.seekTo(1);
+        mMediaPlayer.rewindTo(1);
     }
 
     private void sendEvent(int event) {
@@ -571,11 +562,4 @@ public class CocosVideoView extends SurfaceView {
         }
     }
 
-    // Tell the music playback service to pause
-    // REFINE: these constants need to be published somewhere in the framework.
-    private void pausePlaybackService() {
-        Intent i = new Intent("com.android.music.musicservicecommand");
-        i.putExtra("command", "pause");
-        mActivity.sendBroadcast(i);
-    }
 }

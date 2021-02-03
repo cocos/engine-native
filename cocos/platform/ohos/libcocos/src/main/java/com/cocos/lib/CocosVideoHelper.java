@@ -25,39 +25,36 @@ THE SOFTWARE.
 
 package com.cocos.lib;
 
-import android.graphics.Rect;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
-import android.util.SparseArray;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.app.Activity;
-
 import com.cocos.lib.CocosVideoView.OnVideoEventListener;
+import ohos.aafwk.ability.AbilitySlice;
+import ohos.agp.components.Component;
+import ohos.agp.components.StackLayout;
+import ohos.eventhandler.EventHandler;
+import ohos.eventhandler.EventRunner;
+import ohos.eventhandler.InnerEvent;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
+import ohos.media.image.common.Rect;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.util.WeakHashMap;
 
 public class CocosVideoHelper {
 
-    private FrameLayout mLayout = null;
-    private Activity mActivity = null;
-    private static SparseArray<CocosVideoView> sVideoViews = null;
+    private StackLayout mLayout = null;
+    private AbilitySlice mActivity = null;
+    private static WeakHashMap<Integer, CocosVideoView> sVideoViews = null;
     static VideoHandler mVideoHandler = null;
-    private static Handler sHandler = null;
 
-    CocosVideoHelper(Activity activity, FrameLayout layout)
+    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, "CocosVideoHelper");
+
+    CocosVideoHelper(AbilitySlice activity, StackLayout layout)
     {
         mActivity = activity;
         mLayout = layout;
 
         mVideoHandler = new VideoHandler(this);
-        sVideoViews = new SparseArray<CocosVideoView>();
-        sHandler = new Handler(Looper.myLooper());
+        sVideoViews = new WeakHashMap<>();
     }
 
     private static int videoTag = 0;
@@ -78,16 +75,18 @@ public class CocosVideoHelper {
 
     final static int KeyEventBack = 1000;
 
-    static class VideoHandler extends Handler{
+    static class VideoHandler extends EventHandler {
         WeakReference<CocosVideoHelper> mReference;
 
         VideoHandler(CocosVideoHelper helper){
+            super(EventRunner.getMainEventRunner());
             mReference = new WeakReference<CocosVideoHelper>(helper);
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void processEvent(InnerEvent event) {
             CocosVideoHelper helper = mReference.get();
+            Message msg = (Message) event.object;
             switch (msg.what) {
             case VideoTaskCreate: {
                 helper._createVideoView(msg.arg1);
@@ -107,7 +106,7 @@ public class CocosVideoHelper {
             }
             case VideoTaskSetRect: {
                 Rect rect = (Rect)msg.obj;
-                helper._setVideoRect(msg.arg1, rect.left, rect.top, rect.right, rect.bottom);
+                helper._setVideoRect(msg.arg1, rect.minX, rect.minY, rect.width + rect.minX , rect.minY+rect.height);
                 break;
             }
             case VideoTaskFullScreen:{
@@ -160,7 +159,7 @@ public class CocosVideoHelper {
                 break;
             }
 
-            super.handleMessage(msg);
+            super.processEvent(event);
         }
     }
 
@@ -179,24 +178,36 @@ public class CocosVideoHelper {
         }
     };
 
+    static class Message {
+        public int what =0;
+        public int arg1 = 0;
+        public int arg2 = 0;
+        public Object obj = null;
+    }
+
     public static int createVideoWidget() {
         Message msg = new Message();
         msg.what = VideoTaskCreate;
         msg.arg1 = videoTag;
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
 
         return videoTag++;
     }
 
+    private static void dispatchMessage(Message msg) {
+        InnerEvent event = InnerEvent.get(msg.what, msg.arg1, msg);
+        mVideoHandler.distributeEvent(event);
+    }
+
+
     private void _createVideoView(int index) {
         CocosVideoView videoView = new CocosVideoView(mActivity,index);
         sVideoViews.put(index, videoView);
-        FrameLayout.LayoutParams lParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        mLayout.addView(videoView, lParams);
+        StackLayout.LayoutConfig lParams = new StackLayout.LayoutConfig(
+                StackLayout.LayoutConfig.MATCH_CONTENT,
+                StackLayout.LayoutConfig.MATCH_CONTENT);
+        mLayout.addComponent(videoView, lParams);
 
-        videoView.setZOrderOnTop(true);
         videoView.setVideoViewEventListener(videoEventListener);
     }
 
@@ -204,7 +215,7 @@ public class CocosVideoHelper {
         Message msg = new Message();
         msg.what = VideoTaskRemove;
         msg.arg1 = index;
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _removeVideoView(int index) {
@@ -212,7 +223,7 @@ public class CocosVideoHelper {
         if (view != null) {
             view.stopPlayback();
             sVideoViews.remove(index);
-            mLayout.removeView(view);
+            mLayout.removeComponent(view);
         }
     }
 
@@ -222,7 +233,7 @@ public class CocosVideoHelper {
         msg.arg1 = index;
         msg.arg2 = videoSource;
         msg.obj = videoUrl;
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _setVideoURL(int index, int videoSource, String videoUrl) {
@@ -246,7 +257,7 @@ public class CocosVideoHelper {
         msg.what = VideoTaskSetRect;
         msg.arg1 = index;
         msg.obj = new Rect(left, top, maxWidth, maxHeight);
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _setVideoRect(int index, int left, int top, int maxWidth, int maxHeight) {
@@ -265,7 +276,7 @@ public class CocosVideoHelper {
         } else {
             msg.arg2 = 0;
         }
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _setFullScreenEnabled(int index, boolean enabled) {
@@ -276,9 +287,7 @@ public class CocosVideoHelper {
     }
 
     private void onBackKeyEvent() {
-        int viewCount = sVideoViews.size();
-        for (int i = 0; i < viewCount; i++) {
-            int key = sVideoViews.keyAt(i);
+        for(Integer key : sVideoViews.keySet()) {
             CocosVideoView videoView = sVideoViews.get(key);
             if (videoView != null) {
                 videoView.setFullScreenEnabled(false);
@@ -296,7 +305,7 @@ public class CocosVideoHelper {
         Message msg = new Message();
         msg.what = VideoTaskStart;
         msg.arg1 = index;
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _startVideo(int index) {
@@ -310,7 +319,7 @@ public class CocosVideoHelper {
         Message msg = new Message();
         msg.what = VideoTaskPause;
         msg.arg1 = index;
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _pauseVideo(int index) {
@@ -324,7 +333,7 @@ public class CocosVideoHelper {
         Message msg = new Message();
         msg.what = VideoTaskStop;
         msg.arg1 = index;
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _stopVideo(int index) {
@@ -339,7 +348,7 @@ public class CocosVideoHelper {
         msg.what = VideoTaskSeek;
         msg.arg1 = index;
         msg.arg2 = msec;
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _seekVideoTo(int index,int msec) {
@@ -365,7 +374,7 @@ public class CocosVideoHelper {
             duration = video.getDuration() / 1000.0f;
         }
         if (duration <= 0) {
-            Log.w("CocosVideoHelper", "Video player's duration is not ready to get now!");
+            HiLog.error(LABEL, "Video player's duration is not ready to get now!");
         }
         return duration;
     }
@@ -379,8 +388,7 @@ public class CocosVideoHelper {
         } else {
             msg.arg2 = 0;
         }
-
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _setVideoVisible(int index, boolean visible) {
@@ -388,9 +396,9 @@ public class CocosVideoHelper {
         if (videoView != null) {
             if (visible) {
                 videoView.fixSize();
-                videoView.setVisibility(View.VISIBLE);
+                videoView.setVisibility(Component.VISIBLE);
             } else {
-                videoView.setVisibility(View.INVISIBLE);
+                videoView.setVisibility(Component.INVISIBLE);
             }
         }
     }
@@ -404,7 +412,7 @@ public class CocosVideoHelper {
         } else {
             msg.arg2 = 0;
         }
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 
     private void _setVideoKeepRatio(int index, boolean enable) {
@@ -426,6 +434,6 @@ public class CocosVideoHelper {
         msg.what = VideoTaskSetVolume;
         msg.arg1 = index;
         msg.arg2 = (int) (volume * 10);
-        mVideoHandler.sendMessage(msg);
+        dispatchMessage(msg);
     }
 }

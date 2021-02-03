@@ -25,7 +25,10 @@
 
 package com.cocos.lib;
 
-import android.util.Log;
+
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
+import okhttp3.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,23 +46,16 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-// Rename package okhttp3 to org.cocos2dx.okhttp3
-// Github repo: https://github.com/PatriceJiang/okhttp/tree/cocos2dx-rename-3.12.x
-// and https://github.com/PatriceJiang/okio/tree/cocos2dx-rename-1.15.0
-import org.cocos2dx.okhttp3.Call;
-import org.cocos2dx.okhttp3.Callback;
-import org.cocos2dx.okhttp3.OkHttpClient;
-import org.cocos2dx.okhttp3.Request;
-import org.cocos2dx.okhttp3.Response;
-
 public class CocosDownloader {
+
+    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, "CocosDownloader");
 
     private int _id;
     private OkHttpClient _httpClient = null;
 
     private String _tempFileNameSuffix;
     private int _countOfMaxProcessingTasks;
-    private ConcurrentHashMap<Integer,Call> _taskMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Call> _taskMap = new ConcurrentHashMap<>();
     private Queue<Runnable> _taskQueue = new LinkedList<>();
     private int _runningTaskCount = 0;
     private static ConcurrentHashMap<String, Boolean> _resumingSupport = new ConcurrentHashMap<>();
@@ -283,7 +279,7 @@ public class CocosDownloader {
                                         fos.close();
                                     }
                                 } catch (IOException e) {
-                                    Log.e("CocosDownloader", e.toString());
+                                    HiLog.error(LABEL, e.toString());
                                 }
                             }
                         }
@@ -307,7 +303,7 @@ public class CocosDownloader {
     }
 
     public static void abort(final CocosDownloader downloader, final int id) {
-        GlobalObject.getActivity().runOnUiThread(new Runnable() {
+        CocosHelper.runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 Iterator iter = downloader._taskMap.entrySet().iterator();
@@ -327,7 +323,7 @@ public class CocosDownloader {
     }
 
     public static void cancelAllRequests(final CocosDownloader downloader) {
-        GlobalObject.getActivity().runOnUiThread(new Runnable() {
+        CocosHelper.runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 for (Object o : downloader._taskMap.entrySet()) {
@@ -345,7 +341,7 @@ public class CocosDownloader {
     private void enqueueTask(Runnable taskRunnable) {
         synchronized (_taskQueue) {
             if (_runningTaskCount < _countOfMaxProcessingTasks) {
-                GlobalObject.getActivity().runOnUiThread(taskRunnable);
+                CocosHelper.runOnUIThread(taskRunnable);
                 _runningTaskCount++;
             } else {
                 _taskQueue.add(taskRunnable);
@@ -359,7 +355,7 @@ public class CocosDownloader {
                 CocosDownloader.this._taskQueue.size() > 0) {
                 
                 Runnable taskRunnable = CocosDownloader.this._taskQueue.poll();
-                GlobalObject.getActivity().runOnUiThread(taskRunnable);
+                CocosHelper.runOnUIThread(taskRunnable);
                 _runningTaskCount += 1;
             }
         }

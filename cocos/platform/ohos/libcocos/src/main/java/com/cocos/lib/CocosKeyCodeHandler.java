@@ -25,31 +25,32 @@
  ****************************************************************************/
 package com.cocos.lib;
 
-import android.view.KeyEvent;
+
+import ohos.multimodalinput.event.KeyEvent;
 
 public class CocosKeyCodeHandler {
-    private CocosActivity mAct;
+    private CocosAbilitySlice mAct;
 
     public native void handleKeyDown(final int keyCode);
 
     public native void handleKeyUp(final int keyCode);
 
-    public CocosKeyCodeHandler(CocosActivity act) {
+    public CocosKeyCodeHandler(CocosAbilitySlice act) {
         mAct = act;
     }
 
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
+            case KeyEvent.KEY_BACK:
 //                CocosVideoHelper.mVideoHandler.sendEmptyMessage(CocosVideoHelper.KeyEventBack);
-            case KeyEvent.KEYCODE_MENU:
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-            case KeyEvent.KEYCODE_DPAD_UP:
-            case KeyEvent.KEYCODE_DPAD_DOWN:
-            case KeyEvent.KEYCODE_ENTER:
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEY_MENU:
+            case KeyEvent.KEY_DPAD_LEFT:
+            case KeyEvent.KEY_DPAD_RIGHT:
+            case KeyEvent.KEY_DPAD_UP:
+            case KeyEvent.KEY_DPAD_DOWN:
+            case KeyEvent.KEY_ENTER:
+            case KeyEvent.KEY_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEY_DPAD_CENTER:
                 CocosHelper.runOnGameThread(new Runnable() {
                     @Override
                     public void run() {
@@ -64,15 +65,15 @@ public class CocosKeyCodeHandler {
 
     public boolean onKeyUp(final int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-            case KeyEvent.KEYCODE_MENU:
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-            case KeyEvent.KEYCODE_DPAD_UP:
-            case KeyEvent.KEYCODE_DPAD_DOWN:
-            case KeyEvent.KEYCODE_ENTER:
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEY_BACK:
+            case KeyEvent.KEY_MENU:
+            case KeyEvent.KEY_DPAD_LEFT:
+            case KeyEvent.KEY_DPAD_RIGHT:
+            case KeyEvent.KEY_DPAD_UP:
+            case KeyEvent.KEY_DPAD_DOWN:
+            case KeyEvent.KEY_ENTER:
+            case KeyEvent.KEY_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEY_DPAD_CENTER:
                 CocosHelper.runOnGameThread(new Runnable() {
                     @Override
                     public void run() {

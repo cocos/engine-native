@@ -25,13 +25,15 @@
  ****************************************************************************/
 package com.cocos.lib;
 
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 
-public class CocosSensorHandler implements SensorEventListener {
+import ohos.app.Context;
+import ohos.sensor.agent.CategoryMotionAgent;
+import ohos.sensor.agent.SensorAgent;
+import ohos.sensor.bean.CategoryMotion;
+import ohos.sensor.data.CategoryMotionData;
+import ohos.sensor.listener.ICategoryMotionDataCallback;
+
+public class CocosSensorHandler implements ICategoryMotionDataCallback {
     // ===========================================================
     // Constants
     // ===========================================================
@@ -39,12 +41,10 @@ public class CocosSensorHandler implements SensorEventListener {
     private static final String TAG = "CocosSensorHandler";
     private static CocosSensorHandler mSensorHandler;
 
-    private final Context mContext;
-    private final SensorManager mSensorManager;
-    private final Sensor mAcceleration;
-    private final Sensor mAccelerationIncludingGravity;
-    private final Sensor mGyroscope;
-    private int mSamplingPeriodUs = SensorManager.SENSOR_DELAY_GAME;
+    private final CategoryMotionAgent mSensorManager;
+    private final CategoryMotion mAcceleration;
+    private final CategoryMotion mGravity;
+    private final CategoryMotion mGyroscope;
 
     private static float[] sDeviceMotionValues = new float[9];
 
@@ -52,13 +52,11 @@ public class CocosSensorHandler implements SensorEventListener {
     // Constructors
     // ===========================================================
 
-    public CocosSensorHandler(final Context context) {
-        mContext = context;
-
-        mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
-        mAcceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mAccelerationIncludingGravity = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+    public CocosSensorHandler() {
+        mSensorManager = new CategoryMotionAgent();
+        mAcceleration = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_ACCELEROMETER);
+        mGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GRAVITY);
+        mGyroscope = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GYROSCOPE);
 
         mSensorHandler = this;
     }
@@ -67,49 +65,17 @@ public class CocosSensorHandler implements SensorEventListener {
     // Getter & Setter
     // ===========================================================
     public void enable() {
-        mSensorManager.registerListener(this, mAcceleration, mSamplingPeriodUs);
-        mSensorManager.registerListener(this, mAccelerationIncludingGravity, mSamplingPeriodUs);
-        mSensorManager.registerListener(this, mGyroscope, mSamplingPeriodUs);
+        mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
     }
 
     public void disable() {
-        this.mSensorManager.unregisterListener(this);
+        this.mSensorManager.releaseSensorDataCallback(this);
     }
 
     public void setInterval(float interval) {
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            mSamplingPeriodUs = (int) (interval * 1000000);
-        }
-        disable();
-        enable();
-    }
-
-    // ===========================================================
-    // Methods for/from SuperClass/Interfaces
-    // ===========================================================
-    @Override
-    public void onSensorChanged(final SensorEvent sensorEvent) {
-        int type = sensorEvent.sensor.getType();
-        if (type == Sensor.TYPE_ACCELEROMETER) {
-            sDeviceMotionValues[0] = sensorEvent.values[0];
-            sDeviceMotionValues[1] = sensorEvent.values[1];
-            // Issue https://github.com/cocos-creator/2d-tasks/issues/2532
-            // use negative event.acceleration.z to match iOS value
-            sDeviceMotionValues[2] = -sensorEvent.values[2];
-        } else if (type == Sensor.TYPE_LINEAR_ACCELERATION) {
-            sDeviceMotionValues[3] = sensorEvent.values[0];
-            sDeviceMotionValues[4] = sensorEvent.values[1];
-            sDeviceMotionValues[5] = sensorEvent.values[2];
-        } else if (type == Sensor.TYPE_GYROSCOPE) {
-            // The unit is rad/s, need to be converted to deg/s
-            sDeviceMotionValues[6] = (float) Math.toDegrees(sensorEvent.values[0]);
-            sDeviceMotionValues[7] = (float) Math.toDegrees(sensorEvent.values[1]);
-            sDeviceMotionValues[8] = (float) Math.toDegrees(sensorEvent.values[2]);
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
+        //TODO
     }
 
     public void onPause() {
@@ -135,5 +101,36 @@ public class CocosSensorHandler implements SensorEventListener {
 
     public static float[] getDeviceMotionValue() {
         return sDeviceMotionValues;
+    }
+
+    @Override
+    public void onSensorDataModified(CategoryMotionData sensorEvent) {
+        CategoryMotion type = sensorEvent.getSensor();
+        if (type == mAcceleration) {
+            sDeviceMotionValues[0] = sensorEvent.values[0];
+            sDeviceMotionValues[1] = sensorEvent.values[1];
+            // Issue https://github.com/cocos-creator/2d-tasks/issues/2532
+            // use negative event.acceleration.z to match iOS value
+            sDeviceMotionValues[2] = -sensorEvent.values[2];
+        } else if (type == mGravity) {
+            sDeviceMotionValues[3] = sensorEvent.values[0];
+            sDeviceMotionValues[4] = sensorEvent.values[1];
+            sDeviceMotionValues[5] = sensorEvent.values[2];
+        } else if (type == mGyroscope) {
+            // The unit is rad/s, need to be converted to deg/s
+            sDeviceMotionValues[6] = (float) Math.toDegrees(sensorEvent.values[0]);
+            sDeviceMotionValues[7] = (float) Math.toDegrees(sensorEvent.values[1]);
+            sDeviceMotionValues[8] = (float) Math.toDegrees(sensorEvent.values[2]);
+        }
+    }
+
+    @Override
+    public void onAccuracyDataModified(CategoryMotion categoryMotion, int i) {
+
+    }
+
+    @Override
+    public void onCommandCompleted(CategoryMotion categoryMotion) {
+
     }
 }

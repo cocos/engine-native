@@ -23,16 +23,16 @@
  ****************************************************************************/
 package com.cocos.lib;
 
-import android.app.Activity;
+import ohos.aafwk.ability.AbilitySlice;
 
 public class GlobalObject {
-    private static Activity sActivity = null;
+    private static AbilitySlice sActivity = null;
 
-    public static void setActivity(Activity activity) {
+    public static void setAbilitySlice(AbilitySlice activity) {
         GlobalObject.sActivity = activity;
     }
 
-    public static Activity getActivity() {
+    public static AbilitySlice getAbilitySlice() {
         return GlobalObject.sActivity;
     }
 }
