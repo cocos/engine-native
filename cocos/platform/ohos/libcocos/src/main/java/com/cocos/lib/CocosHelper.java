@@ -166,7 +166,7 @@ public class CocosHelper {
     }
     public static String getObbFilePath() { return CocosHelper.sObbFilePath; }
     public static String getWritablePath() {
-        return sAbilitySlice.getFilesDir().getAbsolutePath();
+        return sAbilitySlice.getApplicationContext().getFilesDir().getAbsolutePath();
     }
     public static String getCurrentLanguage() {
         return Locale.getDefault().getLanguage();

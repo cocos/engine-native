@@ -35,7 +35,6 @@ namespace cc {
 struct CocosApp {
     ResourceManager *resourceManager = nullptr;
     NativeLayer *window = nullptr;
-    std::string obbPath;
     int sdkVersion = 0;
 
     std::mutex mutex;

@@ -14,14 +14,9 @@ public:
     //        FileUtilsOHOS();
     //        virtual ~FileUtilsOHOS();
 
-    static bool initResourceManager(ResourceManager *mgr) {
-        CCASSERT(mgr, "ResourceManager should not be empty!");
-        _ohosResourceMgr = mgr;
-    }
+    static bool initResourceManager(ResourceManager *mgr, const std::string &assetPath);
 
-    static auto *getResourceManager() {
-        return _ohosResourceMgr;
-    }
+    static ResourceManager *getResourceManager();
 
     bool init() override;
 
@@ -38,6 +33,7 @@ private:
 
     /* weak ref, do not need release */
     static ResourceManager *_ohosResourceMgr;
+    static std::string _ohosAssetPath;
 
     friend class FileUtils;
 };

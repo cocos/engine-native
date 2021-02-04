@@ -61,6 +61,12 @@
     #define LOG_TAG      "jswrapper"
     #define SE_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
     #define SE_LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#elif __OHOS
+
+    #include <hilog/log.h>
+
+    #define SE_LOGD(...) HILOG_DEBUG(LOG_APP, __VA_ARGS__)
+    #define SE_LOGE(...) HILOG_ERROR(LOG_APP, __VA_ARGS__)
 
 #elif defined(_WIN32) && defined(_WINDOWS)
 

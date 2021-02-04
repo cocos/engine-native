@@ -137,6 +137,41 @@ jobject JniHelper::getActivity() {
     return _activity;
 }
 
+#if CC_PLATFORM == CC_PLATFORM_OHOS
+bool JniHelper::setClassLoaderFrom(jobject activityinstance) {
+    JniMethodInfo _getclassloaderMethod;
+    if (!JniHelper::getMethodInfo_DefaultClassLoader(_getclassloaderMethod,
+                                                     "ohos/app/Context",
+                                                     "getClassloader", // typo ?
+                                                     "()Ljava/lang/ClassLoader;")) {
+        return false;
+    }
+
+    jobject _c = cc::JniHelper::getEnv()->CallObjectMethod(activityinstance,
+                                                           _getclassloaderMethod.methodID);
+
+    if (nullptr == _c) {
+        return false;
+    }
+
+    JniMethodInfo _m;
+    if (!JniHelper::getMethodInfo_DefaultClassLoader(_m,
+                                                     "java/lang/ClassLoader",
+                                                     "loadClass",
+                                                     "(Ljava/lang/String;)Ljava/lang/Class;")) {
+        return false;
+    }
+
+    JniHelper::classloader = cc::JniHelper::getEnv()->NewGlobalRef(_c);
+    JniHelper::loadclassMethod_methodID = _m.methodID;
+    JniHelper::_activity = cc::JniHelper::getEnv()->NewGlobalRef(activityinstance);
+    if (JniHelper::classloaderCallback != nullptr) {
+        JniHelper::classloaderCallback();
+    }
+
+    return true;
+}
+#elif CC_PLATFORM == CC_PLATFORM_ANDROID
 bool JniHelper::setClassLoaderFrom(jobject activityinstance) {
     JniMethodInfo _getclassloaderMethod;
     if (!JniHelper::getMethodInfo_DefaultClassLoader(_getclassloaderMethod,
@@ -170,6 +205,7 @@ bool JniHelper::setClassLoaderFrom(jobject activityinstance) {
 
     return true;
 }
+#endif
 
 bool JniHelper::getStaticMethodInfo(JniMethodInfo &methodinfo,
                                     const char *className,

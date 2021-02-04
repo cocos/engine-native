@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "platform/FileUtils.h"
 #include "platform/java/jni/JniHelper.h"
 #include "platform/ohos/jni/JniCocosAbility.h"
-#include <hilog //log.h>
+#include <hilog/log.h>
 #include <jni.h>
 #include <native_layer.h>
 #include <native_layer_jni.h>

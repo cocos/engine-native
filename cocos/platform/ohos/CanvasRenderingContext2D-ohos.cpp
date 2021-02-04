@@ -6,6 +6,7 @@
 #include "platform/java/jni/JniHelper.h"
 #include "platform/java/jni/JniImp.h"
 
+#include <hilog/log.h>
 #include <regex>
 
 #ifndef JCLS_CANVASIMPL
@@ -212,6 +213,12 @@ public:
 
     void fillData() {
         jbyteArray arr = JniHelper::callObjectByteArrayMethod(_obj, JCLS_CANVASIMPL, "getDataRef");
+        if (arr == nullptr) {
+#if __OHOS
+            HILOG_ERROR(LOG_APP, "Canvas null data ref: %{public}f, %{public}f", _bufferWidth, _bufferHeight);
+            return;
+#endif
+        }
         jsize len = JniHelper::getEnv()->GetArrayLength(arr);
         jbyte *jbarray = (jbyte *)malloc(len * sizeof(jbyte));
         JniHelper::getEnv()->GetByteArrayRegion(arr, 0, len, jbarray);

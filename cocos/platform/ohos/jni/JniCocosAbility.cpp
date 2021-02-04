@@ -40,7 +40,7 @@ THE SOFTWARE.
 
 #define LOGV(...) HILOG_INFO(LOG_APP, __VA_ARGS__)
 
-cc::Application *cocos_main(int, int) __attribute__((weak));
+extern "C" cc::Application *cocos_main(int, int) __attribute__((weak));
 
 namespace cc {
 CocosApp cocosApp;
@@ -184,17 +184,24 @@ void setActivityState(int8_t cmd) {
 
 extern "C" {
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onCreateNative(JNIEnv *env, jobject obj, jobject activity,
-                                                                      jobject resourceManager, jstring obbPath, jint sdkVersion) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onCreateNative(JNIEnv *env, jobject obj, jobject ability,
+                                                                           jstring assetPath, jobject resourceManager, jint sdkVersion) {
     if (cc::cocosApp.running) {
         return;
     }
 
+    jboolean isCopy = false;
+    const char *assetPathStr = env->GetStringUTFChars(assetPath, &isCopy);
+
     cc::cocosApp.sdkVersion = sdkVersion;
-    cc::JniHelper::init(env, activity);
-    cc::cocosApp.obbPath = cc::JniHelper::jstring2string(obbPath);
+    cc::JniHelper::init(env, ability);
     cc::cocosApp.resourceManager = InitNativeResourceManager(env, resourceManager);
-    cc::FileUtilsOHOS::initResourceManager(cc::cocosApp.resourceManager);
+    cc::FileUtilsOHOS::initResourceManager(cc::cocosApp.resourceManager, assetPathStr);
+
+    if (isCopy) {
+        env->ReleaseStringUTFChars(assetPath, assetPathStr);
+        assetPathStr = nullptr;
+    }
 
     if (pipe(messagePipe)) {
         LOGV("Can not create pipe: %s", strerror(errno));
@@ -214,34 +221,34 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onCreateNative(JNIEnv *en
     }
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onSurfaceCreatedNative(JNIEnv *env, jobject obj, jobject surface) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceCreatedNative(JNIEnv *env, jobject obj, jobject surface) {
     setWindow(GetNativeLayer(env, surface));
 }
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onStartNative(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onStartNative(JNIEnv *env, jobject obj) {
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onPauseNative(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onPauseNative(JNIEnv *env, jobject obj) {
     setActivityState(ABILITY_CMD_PAUSE);
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onResumeNative(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onResumeNative(JNIEnv *env, jobject obj) {
     setActivityState(ABILITY_CMD_RESUME);
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onStopNative(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onStopNative(JNIEnv *env, jobject obj) {
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onLowMemoryNative(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onLowMemoryNative(JNIEnv *env, jobject obj) {
     writeCommand(ABILITY_CMD_LOW_MEMORY);
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onWindowFocusChangedNative(JNIEnv *env, jobject obj, jboolean has_focus) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onWindowFocusChangedNative(JNIEnv *env, jobject obj, jboolean has_focus) {
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onSurfaceChangedNative(JNIEnv *env, jobject obj, jint width, jint height) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceChangedNative(JNIEnv *env, jobject obj, jint width, jint height) {
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosABILITY_onSurfaceDestroyNative(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceDestroyNative(JNIEnv *env, jobject obj) {
     setWindow(nullptr);
 }
 }

@@ -33,6 +33,8 @@ import ohos.agp.utils.Color;
 import ohos.app.Context;
 import ohos.global.resource.RawFileEntry;
 import ohos.global.resource.Resource;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 import ohos.media.image.PixelMap;
 import ohos.media.image.common.AlphaType;
 import ohos.media.image.common.PixelFormat;
@@ -48,6 +50,7 @@ import java.util.HashMap;
 public class CanvasRenderingContext2DImpl {
 
     private static final String TAG = "CanvasContext2D";
+    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, TAG);
 
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_CENTER = 1;
@@ -495,15 +498,16 @@ public class CanvasRenderingContext2DImpl {
 
     private byte[] getDataRef() {
         // Log.d(TAG, "this: " + this + ", getDataRef ...");
-        if (mTexture != null) {
+        if (mTexture != null && mTexture.getPixelMap() != null) {
             final int len = mTexture.getWidth() * mTexture.getHeight() * 4;
             final byte[] pixels = new byte[len];
             final ByteBuffer buf = ByteBuffer.wrap(pixels);
             buf.order(ByteOrder.nativeOrder());
-            mTexture.getPixelMap().writePixels(buf);
+            mTexture.getPixelMap().readPixels(buf);
 
             return pixels;
         }
+        HiLog.error(LABEL, "getDataRef return null");
         return null;
     }
 }

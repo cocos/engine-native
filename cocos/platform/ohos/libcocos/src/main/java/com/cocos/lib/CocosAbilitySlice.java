@@ -25,22 +25,18 @@
 package com.cocos.lib;
 
 import ohos.aafwk.ability.AbilitySlice;
-import ohos.aafwk.ability.MemoryInfo;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.Component;
-import ohos.agp.components.PositionLayout;
 import ohos.agp.components.StackLayout;
 import ohos.agp.components.surfaceprovider.SurfaceProvider;
 import ohos.agp.graphics.Surface;
 import ohos.agp.graphics.SurfaceOps;
 import ohos.global.resource.ResourceManager;
-import ohos.media.audio.AudioManager;
 import ohos.multimodalinput.event.KeyEvent;
 import ohos.multimodalinput.event.TouchEvent;
 import ohos.system.version.SystemVersion;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callback, Component.TouchEventListener , Component.KeyEventListener, Component.FocusChangedListener {
@@ -57,7 +53,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
     private CocosSensorHandler mSensorHandler;
 
 
-    private native void onCreateNative(AbilitySlice activity, ResourceManager resourceManager, String obbPath, int sdkVersion);
+    private native void onCreateNative(AbilitySlice activity, String assetPath, ResourceManager resourceManager, int sdkVersion);
 
     private native void onSurfaceCreatedNative(Surface surface);
 
@@ -86,10 +82,12 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
         CanvasRenderingContext2DImpl.init(this);
         onLoadNativeLibraries();
 
+
 //        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         initView();
-        onCreateNative(this, getResourceManager(), getAbsolutePath(getDataDir()), SystemVersion.getBuildVersion());
+
+        onCreateNative(this, getAssetPath(),  getResourceManager(), SystemVersion.getApiVersion());
 
         mKeyCodeHandler = new CocosKeyCodeHandler(this);
         mSensorHandler = new CocosSensorHandler();
@@ -99,6 +97,9 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
 //        Utils.hideVirtualButton();
 
         mOrientationHelper = new CocosOrientationHelper(this);
+    }
+    private String getAssetPath() {
+        return getApplicationContext().getFilesDir().getPath();
     }
 
 //    private void setImmersiveMode() {
@@ -190,10 +191,10 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
     @Override
     protected void onActive() {
         super.onActive();
+        onStartNative();
         mSensorHandler.onResume();
         mOrientationHelper.onResume();
         onResumeNative();
-        onStartNative();
 
     }
 

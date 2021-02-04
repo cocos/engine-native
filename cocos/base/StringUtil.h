@@ -3,7 +3,7 @@
 
 #include "Macros.h"
 #include "TypeDef.h"
-
+#include "base/memory/StlAlloc.h"
 namespace cc {
 
 class CC_DLL StringUtil {
