@@ -606,16 +606,32 @@ cocos_source_files(
     cocos/renderer/pipeline/PlanarShadowQueue.h
     cocos/renderer/pipeline/ShadowMapBatchedQueue.cpp
     cocos/renderer/pipeline/ShadowMapBatchedQueue.h
+    cocos/renderer/pipeline/PipelineUBO.cpp
+    cocos/renderer/pipeline/PipelineUBO.h
+    cocos/renderer/pipeline/PipelineSceneData.cpp
+    cocos/renderer/pipeline/PipelineSceneData.h
     cocos/renderer/pipeline/forward/ForwardFlow.cpp
     cocos/renderer/pipeline/forward/ForwardFlow.h
     cocos/renderer/pipeline/forward/ForwardPipeline.cpp
     cocos/renderer/pipeline/forward/ForwardPipeline.h
     cocos/renderer/pipeline/forward/ForwardStage.cpp
     cocos/renderer/pipeline/forward/ForwardStage.h
-    cocos/renderer/pipeline/forward/SceneCulling.cpp
-    cocos/renderer/pipeline/forward/SceneCulling.h
+    cocos/renderer/pipeline/SceneCulling.cpp
+    cocos/renderer/pipeline/SceneCulling.h
     cocos/renderer/pipeline/forward/UIPhase.cpp
     cocos/renderer/pipeline/forward/UIPhase.h
+    cocos/renderer/pipeline/deferred/DeferredPipeline.cpp
+    cocos/renderer/pipeline/deferred/DeferredPipeline.h
+    cocos/renderer/pipeline/deferred/GbufferFlow.cpp
+    cocos/renderer/pipeline/deferred/GbufferFlow.h
+    cocos/renderer/pipeline/deferred/GbufferStage.cpp
+    cocos/renderer/pipeline/deferred/GbufferStage.h
+    cocos/renderer/pipeline/deferred/LightingFlow.cpp
+    cocos/renderer/pipeline/deferred/LightingFlow.h
+    cocos/renderer/pipeline/deferred/LightingStage.cpp
+    cocos/renderer/pipeline/deferred/LightingStage.h
+    cocos/renderer/pipeline/deferred/PostprocessStage.cpp
+    cocos/renderer/pipeline/deferred/PostprocessStage.h
     cocos/renderer/pipeline/shadow/ShadowFlow.cpp
     cocos/renderer/pipeline/shadow/ShadowFlow.h
     cocos/renderer/pipeline/shadow/ShadowStage.cpp

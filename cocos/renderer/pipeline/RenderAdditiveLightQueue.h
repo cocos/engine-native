@@ -65,7 +65,7 @@ private:
     bool cullingLight(const Light *light, const ModelView *model);
     void addRenderQueue(const PassView *pass, const SubModelView *subModel, const ModelView *model, uint lightPassIdx);
     void updateUBOs(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
-    void updateCameraUBO(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
+    void updateCameraUBO(const Camera *camera, gfx::CommandBuffer *cmdBuffer, bool hasOffScreenAttachments);
     void updateLightDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     void updateGlobalDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     bool getLightPassIndex(const ModelView *model, vector<uint> &lightPassIndices) const;
@@ -78,7 +78,6 @@ private:
     vector<const Light *> _validLights;
     vector<uint> _lightIndices;
     vector<AdditiveLightPass> _lightPasses;
-    vector<RenderObject> _renderObjects;
     vector<uint> _dynamicOffsets;
     vector<float> _lightBufferData;
     RenderInstancedQueue *_instancedQueue = nullptr;
@@ -92,8 +91,6 @@ private:
     std::array<float, UBOCamera::COUNT> _cameraUBO;
     std::array<float, UBOShadow::COUNT> _shadowUBO;
 
-    float _fpScale = 0;
-    bool _isHDR = false;
     uint _lightBufferStride = 0;
     uint _lightBufferElementCount = 0;
     uint _lightBufferCount = 16;

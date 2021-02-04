@@ -24,10 +24,10 @@ THE SOFTWARE.
 #include <array>
 #include <vector>
 
-#include "../Define.h"
-#include "../helper/SharedMemory.h"
-#include "ForwardPipeline.h"
 #include "SceneCulling.h"
+#include "Define.h"
+#include "helper/SharedMemory.h"
+#include "RenderPipeline.h"
 #include "gfx/GFXBuffer.h"
 #include "gfx/GFXDescriptorSet.h"
 #include "math/Quaternion.h"
@@ -158,8 +158,9 @@ void lightCollecting(Camera *camera, std::vector<const Light *> &validLights) {
     CC_SAFE_DELETE(sphere);
 }
 
-void shadowCollecting(ForwardPipeline *pipeline, Camera *camera) {
+void shadowCollecting(RenderPipeline *pipeline, Camera *camera) {
     const auto scene = camera->getScene();
+    const auto sceneData = pipeline->getPipelineSceneData();
 
     castBoundsInitialized = false;
 
@@ -189,14 +190,16 @@ void shadowCollecting(ForwardPipeline *pipeline, Camera *camera) {
         }
     }
 
-    pipeline->getSphere()->define(castWorldBounds);
+    sceneData->getSphere()->define(castWorldBounds);
 
-    pipeline->setShadowObjects(std::move(shadowObjects));
+    sceneData->setShadowObjects(std::move(shadowObjects));
 }
 
-void sceneCulling(ForwardPipeline *pipeline, Camera *camera) {
-    const auto shadows = pipeline->getShadows();
-    const auto skyBox = pipeline->getSkybox();
+void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
+    const auto sceneData = pipeline->getPipelineSceneData();
+    const auto sharedData = sceneData->getSharedData();
+    const auto shadows = sharedData->getShadows();
+    const auto skyBox = sharedData->getSkybox();
     const auto scene = camera->getScene();
 
     const Light *mainLight = nullptr;
@@ -229,7 +232,7 @@ void sceneCulling(ForwardPipeline *pipeline, Camera *camera) {
         }
     }
 
-    pipeline->setRenderObjects(std::move(renderObjects));
+    sceneData->setRenderObjects(std::move(renderObjects));
 }
 
 } // namespace pipeline

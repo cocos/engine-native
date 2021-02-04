@@ -21,48 +21,49 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
+
 #pragma once
-#include "core/CoreStd.h"
+
+#include "helper/SharedMemory.h"
+#include "Define.h"
 
 namespace cc {
+
 namespace gfx {
-class Device;
-class RenderPass;
-class CommandBuffer;
-class Shader;
-} // namespace gfx
+class Framebuffer;
+}
+
 namespace pipeline {
+
 class RenderPipeline;
-struct ModelView;
-struct SubModelView;
-struct PassView;
-class InstanceBuffer;
-class RenderInstancedQueue;
-class RenderBatchedQueue;
-struct Camera;
 
-struct AABB;
-
-struct ShadowRenderData {
-    const ModelView *model = nullptr;
-    vector<gfx::Shader*> shaders;
-    InstanceBuffer *instancedBuffer = nullptr;
-};
-
-class CC_DLL PlanarShadowQueue : public Object {
+class CC_DLL PipelineSceneData : public Object {
 public:
-    PlanarShadowQueue(RenderPipeline *);
-    ~PlanarShadowQueue() = default;
-
-    void clear();
-    void gatherShadowPasses(Camera *camera , gfx::CommandBuffer *cmdBufferer);
-    void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *);
+    PipelineSceneData() = default;
+    virtual ~PipelineSceneData() = default;
+    void activate(gfx::Device *device, RenderPipeline *pipeline);
+    void setPipelineSharedSceneData (uint handle);
     void destroy();
-    
+
+    CC_INLINE void setShadowFramebuffer(const Light *light, gfx::Framebuffer *framebuffer) { _shadowFrameBufferMap.emplace(light, framebuffer); }
+    CC_INLINE const std::unordered_map<const Light *, gfx::Framebuffer *> &getShadowFramebufferMap() const { return _shadowFrameBufferMap; }
+    CC_INLINE PipelineSharedSceneData* getSharedData() const { return _sharedSceneData; }
+    CC_INLINE const RenderObjectList &getRenderObjects() const { return _renderObjects; }
+    CC_INLINE const RenderObjectList &getShadowObjects() const { return _shadowObjects; }
+    CC_INLINE void setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
+    CC_INLINE void setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
+    CC_INLINE Sphere* getSphere() const {return _sphere; }
 private:
+    RenderObjectList _renderObjects;
+    RenderObjectList _shadowObjects;
+    
+    PipelineSharedSceneData *_sharedSceneData = nullptr;
     RenderPipeline *_pipeline = nullptr;
-    RenderInstancedQueue *_instancedQueue = nullptr;
-    std::vector<const ModelView *> _pendingModels;
+    gfx::Device *_device = nullptr;
+    Sphere *_sphere = nullptr;
+    
+    std::unordered_map<const Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };
+
 } // namespace pipeline
 } // namespace cc

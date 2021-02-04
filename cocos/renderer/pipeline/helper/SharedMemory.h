@@ -65,7 +65,8 @@ extern gfx::BlendState *getBlendStateImpl(uint index);
 #define GET_DEPTH_STENCIL_STATE(index) SharedMemory::getBuffer<gfx::DepthStencilState>(se::PoolType::DEPTH_STENCIL_STATE, index)
 #define GET_BLEND_TARGET(index)        SharedMemory::getBuffer<gfx::BlendTarget>(se::PoolType::BLEND_TARGET, index)
 #define GET_BLEND_STATE(index)         getBlendStateImpl(index)
-#define GET_UI_BATCH(index)              SharedMemory::getBuffer<UIBatch>(index)
+#define GET_UI_BATCH(index)            SharedMemory::getBuffer<UIBatch>(index)
+#define GET_PIPELINE_SHARED_SCENE_DATA(index) SharedMemory::getBuffer<PipelineSharedSceneData>(index)
 
 //Get object pool data
 #define GET_DESCRIPTOR_SET(index)  SharedMemory::getObject<gfx::DescriptorSet, se::PoolType::DESCRIPTOR_SETS>(index)
@@ -380,6 +381,10 @@ struct CC_DLL Camera {
     cc::Mat4 matViewProjInv;
     cc::Mat4 matProj;
     cc::Mat4 matProjInv;
+    cc::Mat4 matViewProjOffscreen;
+    cc::Mat4 matViewProjInvOffscreen;
+    cc::Mat4 matProjOffscreen;
+    cc::Mat4 matProjInvOffscreen;
 
     CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
     CC_INLINE const Scene *getScene() const { return GET_SCENE(sceneID); }
@@ -468,6 +473,31 @@ struct CC_DLL Skybox {
     uint32_t modelID = 0;
 
     CC_INLINE const ModelView *getModel() const { return GET_MODEL(modelID); }
+
+    const static se::PoolType type;
+};
+
+struct CC_DLL PipelineSharedSceneData {
+    uint32_t shadow = 0;
+    uint32_t skybox = 0;
+    uint32_t ambient = 0;
+    uint32_t fog = 0;
+    uint32_t isHDR = 0;
+    uint32_t shadingScale = 0;
+    uint32_t fpScale = 0;
+    uint32_t deferredLightPass = 0;
+    uint32_t deferredLightPassShader = 0;
+    uint32_t deferredPostPass = 0;
+    uint32_t deferredPostPassShader = 0;
+    
+    CC_INLINE Shadows* getShadows() const {return GET_SHADOWS(shadow);}
+    CC_INLINE Skybox* getSkybox() const {return GET_SKYBOX(skybox);}
+    CC_INLINE Ambient* getAmbient() const {return GET_AMBIENT(ambient);}
+    CC_INLINE Fog* getFog() const {return GET_FOG(fog);}
+    CC_INLINE PassView* getDeferredLightPass() const {return GET_PASS(deferredLightPass);}
+    CC_INLINE gfx::Shader* getDeferredLightPassShader() const {return GET_SHADER(deferredLightPassShader);}
+    CC_INLINE PassView* getDeferredPostPass() const {return GET_PASS(deferredPostPass);}
+    CC_INLINE gfx::Shader* getDeferredPostPassShader() const {return GET_SHADER(deferredPostPassShader);}
 
     const static se::PoolType type;
 };

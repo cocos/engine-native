@@ -21,48 +21,49 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
+
 #pragma once
-#include "core/CoreStd.h"
+
+#include <array>
+#include "helper/SharedMemory.h"
+#include "Define.h"
 
 namespace cc {
-namespace gfx {
-class Device;
-class RenderPass;
-class CommandBuffer;
-class Shader;
-} // namespace gfx
+
+class Mat4;
+class Color;
+
 namespace pipeline {
+
 class RenderPipeline;
-struct ModelView;
-struct SubModelView;
-struct PassView;
-class InstanceBuffer;
-class RenderInstancedQueue;
-class RenderBatchedQueue;
-struct Camera;
+class Device;
 
-struct AABB;
-
-struct ShadowRenderData {
-    const ModelView *model = nullptr;
-    vector<gfx::Shader*> shaders;
-    InstanceBuffer *instancedBuffer = nullptr;
-};
-
-class CC_DLL PlanarShadowQueue : public Object {
+class CC_DLL PipelineUBO : public Object  {
 public:
-    PlanarShadowQueue(RenderPipeline *);
-    ~PlanarShadowQueue() = default;
-
-    void clear();
-    void gatherShadowPasses(Camera *camera , gfx::CommandBuffer *cmdBufferer);
-    void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *);
-    void destroy();
+    static void updateGlobalUBOView(const RenderPipeline *pipeline, std::array<float, UBOGlobal::COUNT> &bufferView);
+    static void updateCameraUBOView(const RenderPipeline *pipeline, std::array<float, UBOCamera::COUNT> &bufferView, const Camera *camera, bool hasOffScreenAttachments);
+    static void updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> &bufferView, const Camera *camera);
+    static void updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> &bufferView, const Light *light);
     
+public:
+    PipelineUBO() = default;
+    virtual ~PipelineUBO() = default;
+    void activate(gfx::Device *device, RenderPipeline *pipeline);
+    void destroy();
+    void updateGlobalUBO();
+    void updateCameraUBO(const Camera *camera, bool hasOffScreenAttachments);
+    void updateShadowUBO(const Camera *camera);
+    void updateShadowUBOLight(const Light *light);
+    void updateShadowUBORange(uint offset, const Mat4* data);
+    void destroyShadowFrameBuffers();
 private:
     RenderPipeline *_pipeline = nullptr;
-    RenderInstancedQueue *_instancedQueue = nullptr;
-    std::vector<const ModelView *> _pendingModels;
+    gfx::Device *_device = nullptr;
+    
+    std::array<float, UBOGlobal::COUNT> _globalUBO;
+    std::array<float, UBOCamera::COUNT> _cameraUBO;
+    std::array<float, UBOShadow::COUNT> _shadowUBO;
 };
+
 } // namespace pipeline
 } // namespace cc

@@ -21,48 +21,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#pragma once
-#include "core/CoreStd.h"
+
+#include "PipelineSceneData.h"
+#include "gfx/GFXCommandBuffer.h"
+#include "gfx/GFXDevice.h"
+#include "gfx/GFXFramebuffer.h"
 
 namespace cc {
-namespace gfx {
-class Device;
-class RenderPass;
-class CommandBuffer;
-class Shader;
-} // namespace gfx
 namespace pipeline {
-class RenderPipeline;
-struct ModelView;
-struct SubModelView;
-struct PassView;
-class InstanceBuffer;
-class RenderInstancedQueue;
-class RenderBatchedQueue;
-struct Camera;
 
-struct AABB;
-
-struct ShadowRenderData {
-    const ModelView *model = nullptr;
-    vector<gfx::Shader*> shaders;
-    InstanceBuffer *instancedBuffer = nullptr;
-};
-
-class CC_DLL PlanarShadowQueue : public Object {
-public:
-    PlanarShadowQueue(RenderPipeline *);
-    ~PlanarShadowQueue() = default;
-
-    void clear();
-    void gatherShadowPasses(Camera *camera , gfx::CommandBuffer *cmdBufferer);
-    void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *);
-    void destroy();
+void PipelineSceneData::activate(gfx::Device *device, RenderPipeline *pipeline)
+{
+    _device = device;
+    _pipeline = pipeline;
     
-private:
-    RenderPipeline *_pipeline = nullptr;
-    RenderInstancedQueue *_instancedQueue = nullptr;
-    std::vector<const ModelView *> _pendingModels;
-};
+    _sphere = CC_NEW(Sphere);
+}
+
+void PipelineSceneData::setPipelineSharedSceneData(uint handle)
+{
+    _sharedSceneData = GET_PIPELINE_SHARED_SCENE_DATA(handle);
+}
+
+void PipelineSceneData::destroy()
+{
+    CC_SAFE_DELETE(_sphere);
+    
+    for (auto &pair : _shadowFrameBufferMap) {
+        pair.second->destroy();
+        delete pair.second;
+    }
+    
+    _shadowFrameBufferMap.clear();
+}
+
 } // namespace pipeline
 } // namespace cc

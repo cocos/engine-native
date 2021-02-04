@@ -42,10 +42,18 @@ RenderPipeline::RenderPipeline()
     RenderPipeline::_instance = this;
 
     setDescriptorSetLayout();
+    _pipelineUBO = new PipelineUBO();
+    _pipelineSceneData = new PipelineSceneData();
 }
 
 RenderPipeline::~RenderPipeline() {
 }
+
+#define INIT_GLOBAL_DESCSET_LAYOUT(info)                                    \
+do {                                                                        \
+    globalDescriptorSetLayout.samplers[info::NAME] = info::LAYOUT;          \
+    globalDescriptorSetLayout.bindings[info::BINDING] = info::DESCRIPTOR;   \
+} while (0)
 
 void RenderPipeline::setDescriptorSetLayout() {
     globalDescriptorSetLayout.bindings.resize(static_cast<size_t>(PipelineGlobalBindings::COUNT));
@@ -62,6 +70,12 @@ void RenderPipeline::setDescriptorSetLayout() {
     globalDescriptorSetLayout.bindings[ENVIRONMENT::BINDING] = ENVIRONMENT::DESCRIPTOR;
     globalDescriptorSetLayout.samplers[SPOT_LIGHTING_MAP::NAME] = SPOT_LIGHTING_MAP::LAYOUT;
     globalDescriptorSetLayout.bindings[SPOT_LIGHTING_MAP::BINDING] = SPOT_LIGHTING_MAP::DESCRIPTOR;
+
+    INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERGBUFFERALBEDOMAP);
+    INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERGBUFFERPOSITIONMAP);
+    INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERGBUFFEREMISSIVEMAP);
+    INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERGBUFFERNORMALMAP);
+    INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERLIGHTINGRESULTMAP);
 
     localDescriptorSetLayout.bindings.resize(static_cast<size_t>(ModelLocalBindings::COUNT));
     localDescriptorSetLayout.blocks[UBOLocalBatched::NAME] = UBOLocalBatched::LAYOUT;
@@ -110,7 +124,9 @@ bool RenderPipeline::activate() {
         CC_DELETE(_descriptorSet);
     }
     _descriptorSet = _device->createDescriptorSet({_descriptorSetLayout});
-
+    _pipelineUBO->activate(_device, this);
+    _pipelineSceneData->activate(_device, this);
+    
     for (const auto flow : _flows)
         flow->activate(this);
 
@@ -146,6 +162,8 @@ void RenderPipeline::destroy() {
 
     CC_SAFE_DESTROY(_descriptorSetLayout);
     CC_SAFE_DESTROY(_descriptorSet);
+    CC_SAFE_DESTROY(_pipelineUBO);
+    CC_SAFE_DESTROY(_pipelineSceneData);
 
     for (const auto cmdBuffer : _commandBuffers) {
         cmdBuffer->destroy();
@@ -155,6 +173,11 @@ void RenderPipeline::destroy() {
     CC_SAFE_DESTROY(_defaultTexture);
 
     CC_SAFE_DELETE(_defaultTexture);
+}
+
+void RenderPipeline::setPipelineSharedSceneData(uint handle)
+{
+    _pipelineSceneData->setPipelineSharedSceneData(handle);
 }
 
 } // namespace pipeline
