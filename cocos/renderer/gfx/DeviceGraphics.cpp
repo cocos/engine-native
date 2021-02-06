@@ -409,6 +409,15 @@ void DeviceGraphics::draw(size_t base, GLsizei count)
     }
     
     commitTextures();
+
+    if(!nextIndexBuffer->isDrawable()){
+        _drawCalls++;
+        auto temp = _nextState;
+        _nextState = _currentState;
+        _currentState = temp;
+        _nextState->reset();
+        return;
+    }
     
     //commit uniforms
     const auto& uniformsInfo = _nextState->getProgram()->getUniforms();

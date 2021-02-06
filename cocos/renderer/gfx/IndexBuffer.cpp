@@ -22,6 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include "GFXUtils.h"
 #include "IndexBuffer.h"
 #include "DeviceGraphics.h"
 #include "base/CCGLUtils.h"
@@ -110,11 +111,25 @@ void IndexBuffer::update(uint32_t offset, const void* data, size_t dataByteLengt
     {
 //        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)dataByteLength, data, glUsage);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, _bytes, (const GLvoid*)data, glUsage);
+        GLenum gl_err = glGetError();
+        if (0 != gl_err){
+            RENDERER_LOGE("GL error 0x%x: %s:%s", gl_err, glEnumName(gl_err), __FUNCTION__);
+            _drawable = false;
+        }else{
+            _drawable = true;
+        }
         _needExpandDataStore = false;
     }
     else
     {
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (GLintptr)offset, (GLsizeiptr)dataByteLength, (const GLvoid*)data);
+        GLenum gl_err = glGetError();
+        if (0 != gl_err){
+            RENDERER_LOGE("GL error 0x%x: %s:%s", gl_err, glEnumName(gl_err), __FUNCTION__);
+            _drawable = false;
+        }else{
+            _drawable = true;
+        }
     }
     
     _device->restoreIndexBuffer();

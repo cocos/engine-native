@@ -118,6 +118,11 @@ public:
      */
     inline uint32_t getBytes() const { return _bytes; }
 
+    /**
+     * Whether the buffer data can be drawn
+     */
+    inline bool isDrawable() const { return _drawable; }
+
     using FetchDataCallback = std::function<uint8_t*(size_t*)>;
     void setFetchDataCallback(const FetchDataCallback& cb) { _fetchDataCallback = cb; }
     uint8_t* invokeFetchDataCallback(size_t* bytes) {
@@ -142,6 +147,7 @@ private:
     uint32_t _bytesPerIndex;
     uint32_t _bytes;
     bool _needExpandDataStore = true;
+    bool _drawable = true;
 
     FetchDataCallback _fetchDataCallback;
 
