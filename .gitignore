@@ -171,3 +171,6 @@ build/*
 out
 
 CMakeSettings.json
+
+
+cocos/platform/ohos/libcocos/build/.transforms

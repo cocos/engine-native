@@ -62,12 +62,14 @@
     #define SE_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
     #define SE_LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #elif __OHOS
-
-    #include <hilog/log.h>
-
-    #define SE_LOGD(...) HILOG_DEBUG(LOG_APP, __VA_ARGS__)
-    #define SE_LOGE(...) HILOG_ERROR(LOG_APP, __VA_ARGS__)
-
+    #if 1
+        #include "cocos/base/Log.h"
+        #define SE_LOGD(...) CC_LOG_DEBUG(__VA_ARGS__)
+        #define SE_LOGE(...) CC_LOG_ERROR(__VA_ARGS__)
+    #else
+        #define SE_LOGD(...)
+        #define SE_LOGE(...)
+    #endif
 #elif defined(_WIN32) && defined(_WINDOWS)
 
     #ifndef QUOTEME_

@@ -119,6 +119,7 @@ FileUtils::Status FileUtilsOHOS::getContents(const std::string &filename, Resiza
 
     int readsize = ReadRawFile(asset, buffer->buffer(), size);
     CloseRawFile(asset);
+    // TODO: read error
 
     if (readsize < size) {
         if (readsize >= 0)

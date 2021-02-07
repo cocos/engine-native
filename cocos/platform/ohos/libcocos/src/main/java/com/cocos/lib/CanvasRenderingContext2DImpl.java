@@ -45,52 +45,53 @@ import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 
 public class CanvasRenderingContext2DImpl {
 
-    private static final String TAG = "CanvasContext2D";
-    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, TAG);
+    public static final String TAG = "CanvasContext2D";
+    public static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, TAG);
 
-    private static final int TEXT_ALIGN_LEFT = 0;
-    private static final int TEXT_ALIGN_CENTER = 1;
-    private static final int TEXT_ALIGN_RIGHT = 2;
+    public static final int TEXT_ALIGN_LEFT = 0;
+    public static final int TEXT_ALIGN_CENTER = 1;
+    public static final int TEXT_ALIGN_RIGHT = 2;
 
-    private static final int TEXT_BASELINE_TOP = 0;
-    private static final int TEXT_BASELINE_MIDDLE = 1;
-    private static final int TEXT_BASELINE_BOTTOM = 2;
-    private static final int TEXT_BASELINE_ALPHABETIC = 3;
+    public static final int TEXT_BASELINE_TOP = 0;
+    public static final int TEXT_BASELINE_MIDDLE = 1;
+    public static final int TEXT_BASELINE_BOTTOM = 2;
+    public static final int TEXT_BASELINE_ALPHABETIC = 3;
 
-    private static WeakReference<Context> sContext;
-    private Paint mTextPaint;
-    private Paint mLinePaint;
-    private Path mLinePath;
-    private Canvas mCanvas = new Canvas();
-    private Texture mTexture;
-    private int mTextAlign = TEXT_ALIGN_LEFT;
-    private int mTextBaseline = TEXT_BASELINE_BOTTOM;
-    private int mFillStyleR = 0;
-    private int mFillStyleG = 0;
-    private int mFillStyleB = 0;
-    private int mFillStyleA = 255;
+    public static WeakReference<Context> sContext;
+    public Paint mTextPaint;
+    public Paint mLinePaint;
+    public Path mLinePath;
+    public Canvas mCanvas = new Canvas();
+    public Texture mTexture;
+    public int mTextAlign = TEXT_ALIGN_LEFT;
+    public int mTextBaseline = TEXT_BASELINE_BOTTOM;
+    public int mFillStyleR = 0;
+    public int mFillStyleG = 0;
+    public int mFillStyleB = 0;
+    public int mFillStyleA = 255;
 
-    private int mStrokeStyleR = 0;
-    private int mStrokeStyleG = 0;
-    private int mStrokeStyleB = 0;
-    private int mStrokeStyleA = 255;
+    public int mStrokeStyleR = 0;
+    public int mStrokeStyleG = 0;
+    public int mStrokeStyleB = 0;
+    public int mStrokeStyleA = 255;
 
-    private String mFontName = "Arial";
-    private float mFontSize = 40.0f;
-    private float mLineWidth = 0.0f;
-    private static float _sApproximatingOblique = -0.25f;//please check paint api documentation
-    private boolean mIsBoldFont = false;
-    private boolean mIsItalicFont = false;
-    private boolean mIsObliqueFont = false;
-    private boolean mIsSmallCapsFontVariant = false;
-    private String mLineCap = "butt";
-    private String mLineJoin = "miter";
+    public String mFontName = "Arial";
+    public float mFontSize = 40.0f;
+    public float mLineWidth = 0.0f;
+    public static float _sApproximatingOblique = -0.25f;//please check paint api documentation
+    public boolean mIsBoldFont = false;
+    public boolean mIsItalicFont = false;
+    public boolean mIsObliqueFont = false;
+    public boolean mIsSmallCapsFontVariant = false;
+    public String mLineCap = "butt";
+    public String mLineJoin = "miter";
 
-    private class Size {
+    public class Size {
         Size(float w, float h) {
             this.width = w;
             this.height = h;
@@ -105,7 +106,7 @@ public class CanvasRenderingContext2DImpl {
         public float height;
     }
 
-    private class Point {
+    public class Point {
         Point(float x, float y) {
             this.x = x;
             this.y = y;
@@ -137,10 +138,10 @@ public class CanvasRenderingContext2DImpl {
         sContext = null;
     }
 
-    private static HashMap<String, Font.Builder> sTypefaceCache = new HashMap<>();
+    public static HashMap<String, Font.Builder> sTypefaceCache = new HashMap<>();
 
     // url is a full path started with '@assets/'
-    private static void loadTypeface(String familyName, String url) {
+    public static void loadTypeface(String familyName, String url) {
         Context ctx = sContext.get();
         if (!sTypefaceCache.containsKey(familyName)) {
             try {
@@ -179,11 +180,11 @@ public class CanvasRenderingContext2DImpl {
     }
 
     // REFINE:: native should clear font cache before exiting game.
-    private static void clearTypefaceCache() {
+    public static void clearTypefaceCache() {
         sTypefaceCache.clear();
     }
 
-    private static Paint newPaint(String fontName, int fontSize, boolean enableBold, boolean enableItalic, boolean obliqueFont, boolean smallCapsFontVariant) {
+    public static Paint newPaint(String fontName, int fontSize, boolean enableBold, boolean enableItalic, boolean obliqueFont, boolean smallCapsFontVariant) {
         Paint paint = new Paint();
         paint.setTextSize(fontSize);
         paint.setAntiAlias(true);
@@ -216,45 +217,55 @@ public class CanvasRenderingContext2DImpl {
         return paint;
     }
 
-    private CanvasRenderingContext2DImpl() {
+    public CanvasRenderingContext2DImpl() {
         // Log.d(TAG, "constructor");
     }
 
-    private void recreateBuffer(float w, float h) {
+    public void recreateBuffer(float w, float h) {
         // Log.d(TAG, "recreateBuffer:" + w + ", " + h);
-        if (mTexture != null) {
-            mTexture.getPixelMap().release();
-        }
-        PixelMap.InitializationOptions initializationOptions = new PixelMap.InitializationOptions();
-        initializationOptions.alphaType = AlphaType.UNPREMUL;
-        initializationOptions.pixelFormat = PixelFormat.ARGB_8888;
-        initializationOptions.size = new ohos.media.image.common.Size((int) Math.ceil(w), (int) Math.ceil(h));
 
-        PixelMap pixelMap = PixelMap.create(initializationOptions);
-        mTexture = new Texture(pixelMap);
+        if(mTexture != null ){
+            mTexture.getPixelMap().release();
+            mTexture = null;
+        }
+
+        if(mTexture == null) {
+            PixelMap.InitializationOptions initializationOptions = new PixelMap.InitializationOptions();
+            initializationOptions.alphaType = AlphaType.UNPREMUL;
+            initializationOptions.pixelFormat = PixelFormat.ARGB_8888;
+            initializationOptions.size = new ohos.media.image.common.Size((int) Math.ceil(w), (int) Math.ceil(h));
+
+            PixelMap pixelMap = PixelMap.create(initializationOptions);
+            mTexture = new Texture(pixelMap);
+        } else {
+        // FIXME: crash here
+//            mTexture.getPixelMap().resetConfig(new ohos.media.image.common.Size((int) Math.ceil(w), (int) Math.ceil(h)),
+//                    PixelFormat.ARGB_8888
+//                    );
+        }
         mCanvas.setTexture(mTexture);
     }
 
-    private void beginPath() {
+    public void beginPath() {
         if (mLinePath == null) {
             mLinePath = new Path();
         }
         mLinePath.reset();
     }
 
-    private void closePath() {
+    public void closePath() {
         mLinePath.close();
     }
 
-    private void moveTo(float x, float y) {
+    public void moveTo(float x, float y) {
         mLinePath.moveTo(x, y);
     }
 
-    private void lineTo(float x, float y) {
+    public void lineTo(float x, float y) {
         mLinePath.lineTo(x, y);
     }
 
-    private void stroke() {
+    public void stroke() {
         if (mLinePaint == null) {
             mLinePaint = new Paint();
             mLinePaint.setAntiAlias(true);
@@ -273,7 +284,7 @@ public class CanvasRenderingContext2DImpl {
         mCanvas.drawPath(mLinePath, mLinePaint);
     }
 
-    private void setStrokeCap(Paint paint) {
+    public void setStrokeCap(Paint paint) {
         switch (mLineCap) {
             case "butt":
                 paint.setStrokeCap(Paint.StrokeCap.BUTT_CAP);
@@ -287,7 +298,7 @@ public class CanvasRenderingContext2DImpl {
         }
     }
 
-    private void setStrokeJoin(Paint paint) {
+    public void setStrokeJoin(Paint paint) {
         switch (mLineJoin) {
             case "bevel":
                 paint.setStrokeJoin(Paint.Join.BEVEL_JOIN);
@@ -301,7 +312,7 @@ public class CanvasRenderingContext2DImpl {
         }
     }
 
-    private void fill() {
+    public void fill() {
         if (mLinePaint == null) {
             mLinePaint = new Paint();
         }
@@ -323,26 +334,26 @@ public class CanvasRenderingContext2DImpl {
         mLinePaint.setStrokeWidth(mLineWidth);
     }
 
-    private void setLineCap(String lineCap) {
+    public void setLineCap(String lineCap) {
         mLineCap = lineCap;
     }
 
-    private void setLineJoin(String lineJoin) {
+    public void setLineJoin(String lineJoin) {
         mLineJoin = lineJoin;
     }
 
-    private void saveContext() {
+    public void saveContext() {
         mCanvas.save();
     }
 
-    private void restoreContext() {
+    public void restoreContext() {
         // If there is no saved state, this method should do nothing.
         if (mCanvas.getSaveCount() > 1) {
             mCanvas.restore();
         }
     }
 
-    private void rect(float x, float y, float w, float h) {
+    public void rect(float x, float y, float w, float h) {
         //        Log.d(TAG, "this: " + this + ", rect: " + x + ", " + y + ", " + w + ", " + h);
         beginPath();
         moveTo(x, y);
@@ -352,29 +363,29 @@ public class CanvasRenderingContext2DImpl {
         closePath();
     }
 
-    private void clearRect(float x, float y, float w, float h) {
+    public void clearRect(float x, float y, float w, float h) {
         mTexture.getPixelMap().writePixels(Color.TRANSPARENT.getValue());
     }
 
-    private void createTextPaintIfNeeded() {
+    public void createTextPaintIfNeeded() {
         if (mTextPaint == null) {
             mTextPaint = newPaint(mFontName, (int) mFontSize, mIsBoldFont, mIsItalicFont, mIsObliqueFont, mIsSmallCapsFontVariant);
         }
     }
 
-    private void fillRect(float x, float y, float w, float h) {
+    public void fillRect(float x, float y, float w, float h) {
         // Log.d(TAG, "fillRect: " + x + ", " + y + ", " + ", " + w + ", " + h);
         int pixelValue = (mFillStyleA & 0xff) << 24 | (mFillStyleR & 0xff) << 16 | (mFillStyleG & 0xff) << 8 | (mFillStyleB & 0xff);
         int fillSize = (int) (w * h);
-        int[] fillColors = new int[fillSize];
+        ByteBuffer fillColors = ByteBuffer.allocate(fillSize * 4);
         for (int i = 0; i < fillSize; ++i) {
-            fillColors[i] = pixelValue;
+            fillColors.putInt(i * 4, pixelValue);
         }
         Rect region = new Rect((int)x,(int)y, (int)w, (int)h );
-        mTexture.getPixelMap().writePixels(fillColors, 0, (int)w, region);
+        mTexture.getPixelMap().writePixels(fillColors.asIntBuffer().array(), 0, (int)w, region);
     }
 
-    private void scaleX(Paint textPaint, String text, float maxWidth) {
+    public void scaleX(Paint textPaint, String text, float maxWidth) {
         if (maxWidth < Float.MIN_VALUE) return;
         float measureWidth = this.measureText(text);
         if ((measureWidth - maxWidth) < Float.MIN_VALUE) return;
@@ -383,7 +394,7 @@ public class CanvasRenderingContext2DImpl {
 //        textPaint.setTextScaleX(scaleX);
     }
 
-    private void fillText(String text, float x, float y, float maxWidth) {
+    public void fillText(String text, float x, float y, float maxWidth) {
 //        Log.d(TAG, "this: " + this + ", fillText: " + text + ", " + x + ", " + y + ", " + ", " + maxWidth);
         createTextPaintIfNeeded();
         Color fillColor = new Color(Color.argb(mFillStyleA, mFillStyleR, mFillStyleG, mFillStyleB));
@@ -394,7 +405,7 @@ public class CanvasRenderingContext2DImpl {
         mCanvas.drawText(mTextPaint, text, pt.x, pt.y);
     }
 
-    private void strokeText(String text, float x, float y, float maxWidth) {
+    public void strokeText(String text, float x, float y, float maxWidth) {
         // Log.d(TAG, "strokeText: " + text + ", " + x + ", " + y + ", " + ", " + maxWidth);
         createTextPaintIfNeeded();
         Color strokeColor = new Color(Color.argb(mStrokeStyleA, mStrokeStyleR, mStrokeStyleG, mStrokeStyleB));
@@ -406,14 +417,14 @@ public class CanvasRenderingContext2DImpl {
         mCanvas.drawText(mTextPaint, text, pt.x, pt.y );
     }
 
-    private float measureText(String text) {
+    public float measureText(String text) {
         createTextPaintIfNeeded();
         float ret = mTextPaint.measureText(text);
         // Log.d(TAG, "measureText: " + text + ", return: " + ret);
         return ret;
     }
 
-    private void updateFont(String fontName, float fontSize, boolean bold, boolean italic, boolean oblique, boolean smallCaps) {
+    public void updateFont(String fontName, float fontSize, boolean bold, boolean italic, boolean oblique, boolean smallCaps) {
         // Log.d(TAG, "updateFont: " + fontName + ", " + fontSize);
         mFontName = fontName;
         mFontSize = fontSize;
@@ -424,17 +435,17 @@ public class CanvasRenderingContext2DImpl {
         mTextPaint = null; // Reset paint to re-create paint object in createTextPaintIfNeeded
     }
 
-    private void setTextAlign(int align) {
+    public void setTextAlign(int align) {
         // Log.d(TAG, "setTextAlign: " + align);
         mTextAlign = align;
     }
 
-    private void setTextBaseline(int baseline) {
+    public void setTextBaseline(int baseline) {
         // Log.d(TAG, "setTextBaseline: " + baseline);
         mTextBaseline = baseline;
     }
 
-    private void setFillStyle(float r, float g, float b, float a) {
+    public void setFillStyle(float r, float g, float b, float a) {
         // Log.d(TAG, "setFillStyle: " + r + ", " + g + ", " + b + ", " + a);
         mFillStyleR = (int) (r * 255.0f);
         mFillStyleG = (int) (g * 255.0f);
@@ -442,7 +453,7 @@ public class CanvasRenderingContext2DImpl {
         mFillStyleA = (int) (a * 255.0f);
     }
 
-    private void setStrokeStyle(float r, float g, float b, float a) {
+    public void setStrokeStyle(float r, float g, float b, float a) {
         // Log.d(TAG, "setStrokeStyle: " + r + ", " + g + ", " + b + ", " + a);
         mStrokeStyleR = (int) (r * 255.0f);
         mStrokeStyleG = (int) (g * 255.0f);
@@ -450,11 +461,11 @@ public class CanvasRenderingContext2DImpl {
         mStrokeStyleA = (int) (a * 255.0f);
     }
 
-    private void setLineWidth(float lineWidth) {
+    public void setLineWidth(float lineWidth) {
         mLineWidth = lineWidth;
     }
 
-    private void _fillImageData(byte[] imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) {
+    public void _fillImageData(byte[] imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) {
         int fillSize = (int) (imageWidth * imageHeight);
         int[] fillColors = new int[fillSize];
         int r, g, b, a;
@@ -470,7 +481,7 @@ public class CanvasRenderingContext2DImpl {
         mTexture.getPixelMap().writePixels(fillColors, 0, (int) imageWidth, dstRect);
     }
 
-    private Point convertDrawPoint(final Point point, String text) {
+    public Point convertDrawPoint(final Point point, String text) {
         // The parameter 'point' is located at left-bottom position.
         // Need to adjust 'point' according 'text align' & 'text base line'.
         Point ret = new Point(point);
@@ -496,7 +507,7 @@ public class CanvasRenderingContext2DImpl {
         return ret;
     }
 
-    private byte[] getDataRef() {
+    public byte[] getDataRef() {
         // Log.d(TAG, "this: " + this + ", getDataRef ...");
         if (mTexture != null && mTexture.getPixelMap() != null) {
             final int len = mTexture.getWidth() * mTexture.getHeight() * 4;
@@ -504,7 +515,6 @@ public class CanvasRenderingContext2DImpl {
             final ByteBuffer buf = ByteBuffer.wrap(pixels);
             buf.order(ByteOrder.nativeOrder());
             mTexture.getPixelMap().readPixels(buf);
-
             return pixels;
         }
         HiLog.error(LABEL, "getDataRef return null");

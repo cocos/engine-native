@@ -103,6 +103,15 @@ void Data::fastSet(unsigned char *bytes, const ssize_t size) {
     _size = size;
 }
 
+void Data::resize(const ssize_t size) {
+    assert(size);
+    if (_size != size) {
+        free(_bytes);
+        _size = size;
+        _bytes = (unsigned char *)malloc(sizeof(unsigned char) * _size);
+    }
+}
+
 void Data::clear() {
     free(_bytes);
     _bytes = nullptr;

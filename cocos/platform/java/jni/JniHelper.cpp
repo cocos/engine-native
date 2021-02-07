@@ -27,7 +27,7 @@ THE SOFTWARE.
 #if ANDROID
     #include <android/log.h>
 #else
-    #include <hilog/log.h>
+    #include "cocos/base/Log.h"
 #endif
 #include <pthread.h>
 #include <string.h>
@@ -39,14 +39,43 @@ THE SOFTWARE.
     #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
     #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #else
-    #define LOGD(...) HILOG_DEBUG(LOG_APP, __VA_ARGS__)
-    #define LOGE(...) HILOG_ERROR(LOG_APP, __VA_ARGS__)
+    #define LOGD(...) CC_LOG_DEBUG(__VA_ARGS__)
+    #define LOGE(...) CC_LOG_ERROR(__VA_ARGS__)
 #endif
 static pthread_key_t g_key;
+
+namespace {
+class JClassWrapper final {
+public:
+    JClassWrapper(jclass kls) {
+        if (kls) {
+            _globalKls = static_cast<jclass>(cc::JniHelper::getEnv()->NewGlobalRef((jobject)kls));
+        }
+    }
+    ~JClassWrapper() {
+        if (_globalKls) {
+            cc::JniHelper::getEnv()->DeleteGlobalRef(_globalKls);
+        }
+        _globalKls = nullptr;
+    }
+    jclass operator*() const {
+        return _globalKls;
+    }
+
+private:
+    jclass _globalKls = {};
+};
+
+std::unordered_map<const char *, JClassWrapper> _cachedJClasses;
+}; // namespace
 
 jclass _getClassID(const char *className) {
     if (nullptr == className) {
         return nullptr;
+    }
+    auto it = _cachedJClasses.find(className);
+    if (it != _cachedJClasses.end()) {
+        return *it->second;
     }
 
     JNIEnv *env = cc::JniHelper::getEnv();
@@ -59,12 +88,19 @@ jclass _getClassID(const char *className) {
 
     if (nullptr == _clazz || env->ExceptionCheck()) {
         LOGE("Classloader failed to find class of %s", className);
+        if (env->ExceptionCheck()) {
+            env->ExceptionDescribe();
+        }
         env->ExceptionClear();
         _clazz = nullptr;
     }
 
     env->DeleteLocalRef(_jstrClassName);
+    LOGE("1. delete 0x%p", _jstrClassName);
 
+    if (_clazz) {
+        _cachedJClasses.emplace(className, _clazz);
+    }
     return _clazz;
 }
 
@@ -90,7 +126,8 @@ void JniHelper::init(JNIEnv *env, jobject activity) {
     JniHelper::_activity = activity;
 
     pthread_key_create(&g_key, _detachCurrentThread);
-    JniHelper::setClassLoaderFrom(activity);
+    auto ok = JniHelper::setClassLoaderFrom(activity);
+    assert(ok);
 }
 
 JNIEnv *JniHelper::cacheEnv() {
@@ -350,6 +387,7 @@ void JniHelper::deleteLocalRefs(JNIEnv *env, JniHelper::LocalRefMapType &localRe
 
     for (const auto &ref : localRefs[env]) {
         env->DeleteLocalRef(ref);
+        LOGE("2. delete 0x%p", ref);
     }
     localRefs[env].clear();
 }

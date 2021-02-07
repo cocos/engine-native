@@ -107,6 +107,8 @@ public:
      */
     void fastSet(unsigned char *bytes, const ssize_t size);
 
+    void resize(const ssize_t size);
+
     /**
      * Clears data, free buffer and reset data size.
      */

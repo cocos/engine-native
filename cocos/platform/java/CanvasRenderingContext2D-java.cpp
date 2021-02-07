@@ -1,10 +1,15 @@
 #include "base/csscolorparser.h"
+#include "bindings/jswrapper/config.h"
 #include "math/Math.h"
 #include "platform/CanvasRenderingContext2D.h"
 
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "platform/java/jni/JniHelper.h"
 #include "platform/java/jni/JniImp.h"
+
+#if __OHOS
+    #include <hilog/log.h>
+#endif
 
 #include <regex>
 
@@ -212,6 +217,10 @@ public:
 
     void fillData() {
         jbyteArray arr = JniHelper::callObjectByteArrayMethod(_obj, JCLS_CANVASIMPL, "getDataRef");
+        if (arr == nullptr) {
+            SE_LOGE("getDataRef return null in fillData, size: %d, %d", _bufferWidth, _bufferHeight);
+            return;
+        }
         jsize len = JniHelper::getEnv()->GetArrayLength(arr);
         jbyte *jbarray = (jbyte *)malloc(len * sizeof(jbyte));
         JniHelper::getEnv()->GetByteArrayRegion(arr, 0, len, jbarray);

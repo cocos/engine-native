@@ -501,7 +501,7 @@ if(WINDOWS)
 elseif(ANDROID)
     cocos_source_files(
         cocos/platform/android/Application-android.cpp
-        cocos/platform/android/CanvasRenderingContext2D-android.cpp
+        cocos/platform/java/CanvasRenderingContext2D-java.cpp
         cocos/platform/android/Device-android.cpp
         cocos/platform/android/FileUtils-android.cpp
         cocos/platform/android/FileUtils-android.h
@@ -523,7 +523,7 @@ elseif(ANDROID)
 elseif(OHOS)
     cocos_source_files(
         cocos/platform/ohos/Application-ohos.cpp
-        cocos/platform/ohos/CanvasRenderingContext2D-ohos.cpp
+        cocos/platform/java/CanvasRenderingContext2D-java.cpp
         cocos/platform/ohos/Device-ohos.cpp
         cocos/platform/ohos/FileUtils-ohos.cpp
         cocos/platform/ohos/FileUtils-ohos.h
@@ -1324,7 +1324,7 @@ if(USE_SE_V8)
         cocos/bindings/jswrapper/v8/debugger/base64.h
         cocos/bindings/jswrapper/v8/debugger/env.cpp
         cocos/bindings/jswrapper/v8/debugger/env.h
-        cocos/bindings/jswrapper/v8/debugger/http_parser.c
+            cocos/bindings/jswrapper/v8/debugger/http_parser.cpp
         cocos/bindings/jswrapper/v8/debugger/http_parser.h
         cocos/bindings/jswrapper/v8/debugger/inspector_agent.cpp
         cocos/bindings/jswrapper/v8/debugger/inspector_agent.h

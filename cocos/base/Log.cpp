@@ -144,10 +144,10 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
 
     __android_log_write(priority, (type == LogType::KERNEL ? "Cocos" : "CocosScript"), buff);
 #elif (CC_PLATFORM == CC_PLATFORM_OHOS)
-    const char *typeStr = (type == LogType::KERNEL ? "Cocos %s" : "CocosScript %s");
+    const char *typeStr = (type == LogType::KERNEL ? "Cocos %{public}s" : "CocosScript %{public}s");
     switch (level) {
         case LogLevel::DEBUG_:
-            HILOG_DEBUG(LOG_APP, "Cocos %s", (const char *)buff);
+            HILOG_DEBUG(LOG_APP, typeStr, (const char *)buff);
             break;
         case LogLevel::INFO:
             HILOG_INFO(LOG_APP, typeStr, buff);

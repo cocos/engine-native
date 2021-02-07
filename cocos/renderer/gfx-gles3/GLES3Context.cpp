@@ -204,6 +204,12 @@ bool GLES3Context::initialize(const ContextInfo &info) {
         uint width = _device->getWidth();
         uint height = _device->getHeight();
         ANativeWindow_setBuffersGeometry((ANativeWindow *)_windowHandle, width, height, nFmt);
+    #elif CC_PLATFORM == CC_PLATFORM_OHOS
+        EGLint nFmt;
+        if (eglGetConfigAttrib(_eglDisplay, _eglConfig, EGL_NATIVE_VISUAL_ID, &nFmt) == EGL_FALSE) {
+            CC_LOG_ERROR("Getting configuration attributes failed.");
+            return false;
+        }
     #endif
 
         EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL));
@@ -399,7 +405,7 @@ bool GLES3Context::MakeCurrent(bool bound) {
 
     if (MakeCurrentImpl(bound)) {
         if (!_isInitialized) {
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
             // Turn on or off the vertical sync depending on the input bool value.
             int interval = 1;
             switch (_vsyncMode) {
