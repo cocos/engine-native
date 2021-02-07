@@ -389,6 +389,14 @@ void DeviceGraphics::draw(size_t base, GLsizei count)
     commitVertexBuffer();
     
     auto nextIndexBuffer = _nextState->getIndexBuffer();
+
+    if(!nextIndexBuffer->isDrawable()){
+        _drawCalls++;
+        std::swap(_nextState, _currentState);
+        _nextState->reset();
+        return;
+    }
+
     if (_currentState->getIndexBuffer() != nextIndexBuffer)
     {
         GL_CHECK(ccBindBuffer(GL_ELEMENT_ARRAY_BUFFER, nextIndexBuffer ? nextIndexBuffer->getHandle() : 0));
@@ -409,15 +417,6 @@ void DeviceGraphics::draw(size_t base, GLsizei count)
     }
     
     commitTextures();
-
-    if(!nextIndexBuffer->isDrawable()){
-        _drawCalls++;
-        auto temp = _nextState;
-        _nextState = _currentState;
-        _currentState = temp;
-        _nextState->reset();
-        return;
-    }
     
     //commit uniforms
     const auto& uniformsInfo = _nextState->getProgram()->getUniforms();
