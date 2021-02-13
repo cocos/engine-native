@@ -28,6 +28,8 @@ package com.cocos.lib;
 import com.cocos.lib.CocosVideoView.OnVideoEventListener;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.DirectionalLayout;
 import ohos.agp.components.StackLayout;
 import ohos.eventhandler.EventHandler;
 import ohos.eventhandler.EventRunner;
@@ -41,14 +43,14 @@ import java.util.WeakHashMap;
 
 public class CocosVideoHelper {
 
-    private StackLayout mLayout = null;
+    private DirectionalLayout mLayout = null;
     private AbilitySlice mActivity = null;
     private static WeakHashMap<Integer, CocosVideoView> sVideoViews = null;
     static VideoHandler mVideoHandler = null;
 
     private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, "CocosVideoHelper");
 
-    CocosVideoHelper(AbilitySlice activity, StackLayout layout)
+    CocosVideoHelper(AbilitySlice activity, DirectionalLayout layout)
     {
         mActivity = activity;
         mLayout = layout;
@@ -203,9 +205,9 @@ public class CocosVideoHelper {
     private void _createVideoView(int index) {
         CocosVideoView videoView = new CocosVideoView(mActivity,index);
         sVideoViews.put(index, videoView);
-        StackLayout.LayoutConfig lParams = new StackLayout.LayoutConfig(
-                StackLayout.LayoutConfig.MATCH_CONTENT,
-                StackLayout.LayoutConfig.MATCH_CONTENT);
+        DirectionalLayout.LayoutConfig lParams = new DirectionalLayout.LayoutConfig(
+                DirectionalLayout.LayoutConfig.MATCH_CONTENT,
+                DirectionalLayout.LayoutConfig.MATCH_CONTENT);
         mLayout.addComponent(videoView, lParams);
 
         videoView.setVideoViewEventListener(videoEventListener);

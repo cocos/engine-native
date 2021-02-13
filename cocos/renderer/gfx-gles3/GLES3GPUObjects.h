@@ -23,9 +23,13 @@ THE SOFTWARE.
 ****************************************************************************/
 #ifndef CC_GFXGLES3_GPU_OBJECTS_H_
 #define CC_GFXGLES3_GPU_OBJECTS_H_
-
-#include "gles3w.h"
-
+#if USE_GLEW3
+    #include "gles3w.h"
+#else
+    #include <GLES3/gl3.h>
+    #include <GLES3/gl32.h>
+    #include <GLES3/gl3platform.h>
+#endif
 namespace cc {
 namespace gfx {
 
@@ -142,7 +146,9 @@ typedef vector<GLES3GPUUniformSampler> GLES3GPUUniformSamplerList;
 
 struct GLES3GPUShaderStage final {
     GLES3GPUShaderStage(ShaderStageFlagBit t, String s, GLuint shader = 0)
-    : type(t), source(s), glShader(shader) {}
+    : type(t),
+      source(s),
+      glShader(shader) {}
     ShaderStageFlagBit type;
     String source;
     GLuint glShader = 0;

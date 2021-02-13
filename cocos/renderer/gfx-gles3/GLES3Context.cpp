@@ -24,7 +24,13 @@ THE SOFTWARE.
 #include "GLES3Std.h"
 
 #include "GLES3Context.h"
-#include "gles3w.h"
+#if USE_GLEW3
+    #include "gles3w.h"
+#else
+    #include <GLES3/gl3.h>
+    #include <GLES3/gl31.h>
+    #include <GLES3/gl32.h>
+#endif
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "android/native_window.h"
@@ -294,9 +300,30 @@ bool GLES3Context::initialize(const ContextInfo &info) {
         });
     #endif
 
+    #if USE_GLEW3
         if (!gles3wInit()) {
             return false;
         }
+    #endif
+
+        MakeCurrent(true);
+        {
+            int width = {};
+            int height = {};
+            eglQuerySurface(_eglDisplay, _eglSurface, EGL_WIDTH, &width);
+            eglQuerySurface(_eglDisplay, _eglSurface, EGL_HEIGHT, &height);
+            glViewport(0, 0, width, height);
+        }
+
+        //        glClearColor(1.0, 0.0, 0.0, 1.0);
+        //        while (true) {
+        //            GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
+        //            GLbyte color4[4] = {};
+        //            glReadPixels(10, 10, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color4);
+        //            CC_LOG_ERROR("COLOR %{public}d %{public}d %{public}d %d{public}",(int) color4[0], (int)color4[1], (int)color4[2],(int) color4[3]);
+        ////            eglSwapInterval(_eglSurface, 0);
+        //            EGL_CHECK(eglSwapBuffers(_eglDisplay, _eglSurface));
+        //        }
 
     } else {
         GLES3Context *sharedCtx = (GLES3Context *)info.sharedCtx;

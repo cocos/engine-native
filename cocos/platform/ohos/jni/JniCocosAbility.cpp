@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "platform/ohos/jni/JniCocosAbility.h"
+#include "base/Log.h"
 #include "platform/Application.h"
 #include "platform/android/View.h"
 #include "platform/java/jni/JniHelper.h"
@@ -147,6 +148,7 @@ void glThreadEntry() {
             cc::JniHelper::callStaticVoidMethod("com.cocos.lib.CocosHelper",
                                                 "flushTasksOnGameThread");
             game->tick();
+            CC_LOG_DEBUG("TICK ");
         }
 
         if (cc::cocosApp.destroyRequested) break;
@@ -165,11 +167,15 @@ void setWindow(NativeLayer *window) {
         writeCommand(ABILITY_CMD_TERM_WINDOW);
     }
     cc::cocosApp.pendingWindow = window;
-    if (window) {
+}
+
+void tryInitGame() {
+    std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
+    if (cc::cocosApp.window == nullptr) {
         writeCommand(ABILITY_CMD_INIT_WINDOW);
-    }
-    while (cc::cocosApp.window != cc::cocosApp.pendingWindow) {
-        cc::cocosApp.cond.wait(lk);
+        while (cc::cocosApp.window != cc::cocosApp.pendingWindow) {
+            cc::cocosApp.cond.wait(lk);
+        }
     }
 }
 
@@ -222,8 +228,17 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onCreateNative(JNIEn
 }
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceCreatedNative(JNIEnv *env, jobject obj, jobject surface) {
-    setWindow(GetNativeLayer(env, surface));
+    //    setWindow(GetNativeLayer(env, surface));
 }
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceChangedNative(JNIEnv *env, jobject obj, jobject surface, jint x, jint width, jint height) {
+    setWindow(GetNativeLayer(env, surface));
+    tryInitGame();
+}
+
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceDestroyNative(JNIEnv *env, jobject obj) {
+    setWindow(nullptr);
+}
+
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onStartNative(JNIEnv *env, jobject obj) {
 }
 
@@ -243,12 +258,5 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onLowMemoryNative(JN
 }
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onWindowFocusChangedNative(JNIEnv *env, jobject obj, jboolean has_focus) {
-}
-
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceChangedNative(JNIEnv *env, jobject obj, jint width, jint height) {
-}
-
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceDestroyNative(JNIEnv *env, jobject obj) {
-    setWindow(nullptr);
 }
 }

@@ -27,23 +27,28 @@ package com.cocos.lib;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.Component;
+import ohos.agp.components.DirectionalLayout;
 import ohos.agp.components.StackLayout;
 import ohos.agp.components.surfaceprovider.SurfaceProvider;
 import ohos.agp.graphics.Surface;
 import ohos.agp.graphics.SurfaceOps;
+import ohos.agp.window.service.DisplayAttributes;
+import ohos.agp.window.service.DisplayManager;
 import ohos.global.resource.ResourceManager;
+import ohos.ivihardware.vehiclecontrol.model.SubscriberFilter;
 import ohos.multimodalinput.event.KeyEvent;
 import ohos.multimodalinput.event.TouchEvent;
 import ohos.system.version.SystemVersion;
 
 import java.io.File;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callback, Component.TouchEventListener , Component.KeyEventListener, Component.FocusChangedListener {
     private boolean mDestroyed;
-    private SurfaceProvider mSurfaceHolder;
+    private DirectionalLayout mSurfaceHolder;
+    private SurfaceProvider mSurfaceProvider;
     private Optional<Surface> mSurface = Optional.empty();
-    private StackLayout mFrameLayout;
     private CocosVideoHelper mVideoHelper = null;
     private CocosOrientationHelper mOrientationHelper = null;
 
@@ -57,7 +62,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
 
     private native void onSurfaceCreatedNative(Surface surface);
 
-    private native void onSurfaceChangedNative(int width, int height);
+    private native void onSurfaceChangedNative(Surface surface, int width, int height);
 
     private native void onSurfaceDestroyNative();
 
@@ -133,14 +138,19 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
     }
 
     protected void initView() {
-        StackLayout.LayoutConfig frameLayoutParams = new StackLayout.LayoutConfig(
-                StackLayout.LayoutConfig.MATCH_PARENT,
-                StackLayout.LayoutConfig.MATCH_PARENT);
-        mFrameLayout = new StackLayout(getContext());
-        mFrameLayout.setLayoutConfig(frameLayoutParams);
 
-        mSurfaceHolder = new SurfaceProvider( getContext());
-        mSurfaceHolder.getSurfaceOps().get().addCallback(this);
+        DisplayAttributes displayAttrib = DisplayManager.getInstance().getDefaultDisplay(this).get().getRealAttributes();
+
+        // gles view
+        DirectionalLayout.LayoutConfig config = new DirectionalLayout.LayoutConfig(DirectionalLayout.LayoutConfig.MATCH_PARENT, DirectionalLayout.LayoutConfig.MATCH_PARENT);
+
+        mSurfaceProvider = new SurfaceProvider( getContext());
+        mSurfaceProvider.getSurfaceOps().get().addCallback(this);
+        mSurfaceProvider.pinToZTop(true);
+
+        mSurfaceHolder = new DirectionalLayout(getContext());
+        mSurfaceHolder.setWidth(displayAttrib.width);
+        mSurfaceHolder.setHeight(displayAttrib.height);
         mSurfaceHolder.setLayoutConfig(new StackLayout.LayoutConfig(
                 StackLayout.LayoutConfig.MATCH_PARENT,
                 StackLayout.LayoutConfig.MATCH_PARENT
@@ -151,31 +161,31 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
         mSurfaceHolder.setFocusable(Component.FOCUS_ENABLE);
         mSurfaceHolder.setFocusChangedListener(this);
 
-
-        mFrameLayout.addComponent(mSurfaceHolder);
+        mSurfaceHolder.addComponent(mSurfaceProvider);
+        mSurfaceProvider.setLayoutConfig(config);
 //
 //        if (mWebViewHelper == null) {
 //            mWebViewHelper = new CocosWebViewHelper(mFrameLayout);
 //        }
 
         if (mVideoHelper == null) {
-            mVideoHelper = new CocosVideoHelper(this, mFrameLayout);
+            mVideoHelper = new CocosVideoHelper(this, mSurfaceHolder);
         }
 
 
-        setUIContent(mFrameLayout);
+        setUIContent(mSurfaceHolder);
     }
 
     public SurfaceProvider getSurfaceView() {
-        return this.mSurfaceHolder;
+        return this.mSurfaceProvider;
     }
 
     @Override
     protected void onStop() {
         mDestroyed = true;
-        if (mSurfaceHolder != null) {
+        if (mSurfaceProvider != null) {
             onSurfaceDestroyNative();
-            mSurfaceHolder = null;
+            mSurfaceProvider = null;
         }
         super.onStop();
     }
@@ -234,8 +244,8 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
     @Override
     public void surfaceChanged(SurfaceOps surfaceOps, int format, int width, int height) {
         if (!mDestroyed) {
-            mSurface = Optional.empty();
-            onSurfaceChangedNative(width, height);
+            mSurface = Optional.of(surfaceOps.getSurface());
+            onSurfaceChangedNative(surfaceOps.getSurface(), width, height);
         }
     }
 
@@ -246,6 +256,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
             onSurfaceDestroyNative();
             engineInit = false;
         }
+        mSurface = Optional.empty();
     }
 
     private void onLoadNativeLibraries() {
@@ -269,6 +280,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
 
     @Override
     public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
+
         return false;
     }
 
