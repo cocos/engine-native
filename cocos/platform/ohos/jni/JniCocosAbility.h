@@ -43,6 +43,7 @@ struct CocosApp {
     bool destroyRequested = false;
     bool animating = true;
     bool running = false;
+    bool surfaceInited = false;
 
     // Current state of the app's activity.  May be either APP_CMD_RESUME, APP_CMD_PAUSE.
     int activityState = 0;

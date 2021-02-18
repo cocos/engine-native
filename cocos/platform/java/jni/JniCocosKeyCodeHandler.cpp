@@ -23,15 +23,19 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "platform/Application.h"
 #include "platform/java/jni/JniHelper.h"
-#include <android/keycodes.h>
-#include <android/log.h>
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
+    #include <android/keycodes.h>
+    #include <android/log.h>
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include <hilog/log.h>
+#endif
 #include <jni.h>
 
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "CocosKeyCodeHandler JNI", __VA_ARGS__)
 namespace {
 struct cc::KeyboardEvent keyboardEvent;
 
 // key values in web, refer to http://docs.cocos.com/creator/api/en/enums/KEY.html
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
 std::unordered_map<int, int> keyCodeMap = {
     {AKEYCODE_BACK, 6},
     {AKEYCODE_ENTER, 13},
@@ -41,6 +45,9 @@ std::unordered_map<int, int> keyCodeMap = {
     {AKEYCODE_DPAD_LEFT, 1000},
     {AKEYCODE_DPAD_RIGHT, 1001},
     {AKEYCODE_DPAD_CENTER, 1005}};
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+std::unordered_map<int, int> keyCodeMap = {};
+#endif
 
 void dispatchKeyCodeEvent(int keyCode, cc::KeyboardEvent &event) {
     if (keyCodeMap.count(keyCode) > 0)

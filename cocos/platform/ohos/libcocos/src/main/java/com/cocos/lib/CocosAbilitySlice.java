@@ -27,6 +27,7 @@ package com.cocos.lib;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.DirectionalLayout;
 import ohos.agp.components.StackLayout;
 import ohos.agp.components.surfaceprovider.SurfaceProvider;
@@ -34,6 +35,7 @@ import ohos.agp.graphics.Surface;
 import ohos.agp.graphics.SurfaceOps;
 import ohos.agp.window.service.DisplayAttributes;
 import ohos.agp.window.service.DisplayManager;
+import ohos.bundle.AbilityInfo;
 import ohos.global.resource.ResourceManager;
 import ohos.ivihardware.vehiclecontrol.model.SubscriberFilter;
 import ohos.multimodalinput.event.KeyEvent;
@@ -49,6 +51,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
     private DirectionalLayout mSurfaceHolder;
     private SurfaceProvider mSurfaceProvider;
     private Optional<Surface> mSurface = Optional.empty();
+    private CocosTouchHandler mTocuhHandler;
     private CocosVideoHelper mVideoHelper = null;
     private CocosOrientationHelper mOrientationHelper = null;
 
@@ -97,6 +100,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
         mKeyCodeHandler = new CocosKeyCodeHandler(this);
         mSensorHandler = new CocosSensorHandler();
 
+        mTocuhHandler = new CocosTouchHandler();
 
 //        setImmersiveMode();
 //        Utils.hideVirtualButton();
@@ -107,7 +111,13 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
         return getApplicationContext().getFilesDir().getPath();
     }
 
-//    private void setImmersiveMode() {
+    @Override
+    protected void onOrientationChanged(AbilityInfo.DisplayOrientation displayOrientation) {
+        super.onOrientationChanged(displayOrientation);
+        //TODO: dispatch event?
+    }
+
+    //    private void setImmersiveMode() {
 //        WindowManager.LayoutParams lp = getWindow().getAttributes();
 //        try {
 //            Field field = lp.getClass().getField("layoutInDisplayCutoutMode");
@@ -280,7 +290,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
 
     @Override
     public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
-
+        mTocuhHandler.onTouchEvent(touchEvent);
         return false;
     }
 

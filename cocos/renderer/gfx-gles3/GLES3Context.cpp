@@ -24,16 +24,12 @@ THE SOFTWARE.
 #include "GLES3Std.h"
 
 #include "GLES3Context.h"
-#if USE_GLEW3
-    #include "gles3w.h"
-#else
-    #include <GLES3/gl3.h>
-    #include <GLES3/gl31.h>
-    #include <GLES3/gl32.h>
-#endif
+#include "gles3w.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "android/native_window.h"
+#endif
+#if CC_PLATFORM == CC_PLATFORM_OHOS || CC_PLATFORM == CC_PLATFORM_ANDROID
     #include "cocos/bindings/event/CustomEventTypes.h"
     #include "cocos/bindings/event/EventDispatcher.h"
 #endif
@@ -270,7 +266,7 @@ bool GLES3Context::initialize(const ContextInfo &info) {
 
         _eglSharedContext = _eglContext;
 
-    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+    #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
         EventDispatcher::addCustomEventListener(EVENT_DESTROY_WINDOW, [=](const CustomEvent &) -> void {
             if (_eglSurface != EGL_NO_SURFACE) {
                 eglDestroySurface(_eglDisplay, _eglSurface);
@@ -288,8 +284,9 @@ bool GLES3Context::initialize(const ContextInfo &info) {
             }
             uint width = _device->getWidth();
             uint height = _device->getHeight();
+        #if ANDROID
             ANativeWindow_setBuffersGeometry((ANativeWindow *)_windowHandle, width, height, nFmt);
-
+        #endif
             EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL));
             if (_eglSurface == EGL_NO_SURFACE) {
                 CC_LOG_ERROR("Recreate window surface failed.");

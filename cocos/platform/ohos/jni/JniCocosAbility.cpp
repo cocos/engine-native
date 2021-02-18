@@ -167,11 +167,14 @@ void setWindow(NativeLayer *window) {
         writeCommand(ABILITY_CMD_TERM_WINDOW);
     }
     cc::cocosApp.pendingWindow = window;
+    //    while (cc::cocosApp.window != cc::cocosApp.pendingWindow) {
+    //        cc::cocosApp.cond.wait(lk);
+    //    }
 }
 
 void tryInitGame() {
     std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
-    if (cc::cocosApp.window == nullptr) {
+    if (cc::cocosApp.pendingWindow) {
         writeCommand(ABILITY_CMD_INIT_WINDOW);
         while (cc::cocosApp.window != cc::cocosApp.pendingWindow) {
             cc::cocosApp.cond.wait(lk);
@@ -228,10 +231,10 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onCreateNative(JNIEn
 }
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceCreatedNative(JNIEnv *env, jobject obj, jobject surface) {
-    //    setWindow(GetNativeLayer(env, surface));
+    setWindow(GetNativeLayer(env, surface));
 }
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceChangedNative(JNIEnv *env, jobject obj, jobject surface, jint x, jint width, jint height) {
-    setWindow(GetNativeLayer(env, surface));
+    //    setWindow(GetNativeLayer(env, surface));
     tryInitGame();
 }
 

@@ -23,10 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "platform/Application.h"
 #include "platform/java/jni/JniHelper.h"
-#include <android/log.h>
 #include <jni.h>
-
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "CocosTouchHandler JNI", __VA_ARGS__)
 
 namespace {
 struct cc::TouchEvent touchEvent;

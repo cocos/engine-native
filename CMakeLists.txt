@@ -510,11 +510,11 @@ elseif(ANDROID)
     )
     set(CC_JNI_SRC_FILES
         ${CWD}/cocos/platform/android/jni/JniCocosActivity.cpp
-        ${CWD}/cocos/platform/android/jni/JniCocosActivity.h
-        ${CWD}/cocos/platform/android/jni/JniCocosTouchHandler.cpp
-        ${CWD}/cocos/platform/android/jni/JniCocosKeyCodeHandler.cpp
+        ${CWD}/cocos/platform/java/jni/JniCocosActivity.h
+        ${CWD}/cocos/platform/java/jni/JniCocosTouchHandler.cpp
+        ${CWD}/cocos/platform/java/jni/JniCocosKeyCodeHandler.cpp
         ${CWD}/cocos/platform/android/jni/JniCocosSurfaceView.cpp
-        ${CWD}/cocos/platform/android/jni/JniCocosOrientationHelper.cpp
+        ${CWD}/cocos/platform/java/jni/JniCocosOrientationHelper.cpp
         ${CWD}/cocos/platform/java/jni/JniHelper.cpp
         ${CWD}/cocos/platform/java/jni/JniHelper.h
         ${CWD}/cocos/platform/java/jni/JniImp.cpp
@@ -538,8 +538,10 @@ elseif(OHOS)
         ${CWD}/cocos/platform/java/jni/JniHelper.h
         ${CWD}/cocos/platform/java/jni/JniImp.cpp
         ${CWD}/cocos/platform/java/jni/JniImp.h
-        ${CWD}/cocos/platform/ohos/jni/AbilityConsts.h
-    )
+        ${CWD}/cocos/platform/java/jni/JniCocosTouchHandler.cpp
+        ${CWD}/cocos/platform/java/jni/JniCocosKeyCodeHandler.cpp
+        ${CWD}/cocos/platform/java/jni/JniCocosOrientationHelper.cpp
+        ${CWD}/cocos/platform/ohos/jni/AbilityConsts.h)
 elseif(APPLE)
     cocos_source_files(
         cocos/platform/apple/FileUtils-apple.h
@@ -1538,6 +1540,7 @@ target_compile_definitions(cocos2d PUBLIC
     $<IF:$<BOOL:${USE_MIDDLEWARE}>,USE_MIDDLEWARE=1,USE_MIDDLEWARE=0>
     $<IF:$<BOOL:${USE_SPINE}>,USE_SPINE=1,USE_SPINE=0>
     $<IF:$<BOOL:${USE_DRAGONBONES}>,USE_DRAGONBONES=1,USE_DRAGONBONES=0>
+    $<IF:$<BOOL:${USE_GLEW3}>,USE_GLEW3=1,USE_GLEW3=0>
     $<$<BOOL:${USE_SE_JSC}>:SCRIPT_ENGINE_TYPE=3>
     $<$<CONFIG:Debug>:CC_DEBUG=1>
 )
@@ -1581,7 +1584,7 @@ target_include_directories(cocos2d
         ${CWD}/cocos/platform
         ${CWD}/cocos/renderer/core
         ${CWD}/cocos/editor-support
-        ${CWD}/external/sources/khronos
+#        ${CWD}/external/sources/khronos
         $<$<BOOL:USE_SE_JSC>:${CWD}/cocos/bindings/jswrapper>
     PRIVATE
         ${CC_EXTERNAL_PRIVATE_INCLUDES}
