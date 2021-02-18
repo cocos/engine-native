@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "platform/ohos/FileUtils-ohos.h"
 #include "platform/ohos/jni/AbilityConsts.h"
 #include <fcntl.h>
+#include <future>
 #include <hilog/log.h>
 #include <jni.h>
 #include <native_layer.h>
@@ -55,6 +56,12 @@ int pipeRead = 0;
 int pipeWrite = 0;
 cc::Application *game = nullptr;
 
+struct CommandMsg {
+    int8_t cmd;
+    bool sync;
+    std::function<void()> callback;
+};
+
 void createGame(NativeLayer *window) {
     int width = NativeLayerHandle(window, NativeLayerOps::GET_WIDTH);
     int height = NativeLayerHandle(window, NativeLayerOps::GET_HEIGHT);
@@ -62,30 +69,34 @@ void createGame(NativeLayer *window) {
     game->init();
 }
 
-void writeCommand(int8_t cmd) {
-    write(pipeWrite, &cmd, sizeof(cmd));
+void writeCommandAsync(int8_t cmd) {
+    CommandMsg msg{.cmd = cmd, .sync = false, .callback = nullptr};
+    write(pipeWrite, &msg, sizeof(msg));
 }
 
-int readCommand(int8_t &cmd) {
-    return read(pipeRead, &cmd, sizeof(cmd));
+void writeCommandSync(int8_t cmd) {
+    std::promise<void> fu;
+    CommandMsg msg{.cmd = cmd, .sync = true, .callback = [&fu]() {
+                       fu.set_value();
+                   }};
+    write(pipeWrite, &msg, sizeof(msg));
+    fu.get_future().get();
+}
+
+int readCommand(CommandMsg &msg) {
+    return read(pipeRead, &msg, sizeof(msg));
 }
 
 void handlePauseResume(int8_t cmd) {
     LOGV("activityState=%d", cmd);
-    std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
     cc::cocosApp.activityState = cmd;
-    lk.unlock();
-    cc::cocosApp.cond.notify_all();
 }
 
 void preExecCmd(int8_t cmd) {
     switch (cmd) {
         case ABILITY_CMD_INIT_WINDOW: {
             LOGV("ABILITY_CMD_INIT_WINDOW");
-            std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
             cc::cocosApp.window = cc::cocosApp.pendingWindow;
-            lk.unlock();
-            cc::cocosApp.cond.notify_all();
             cc::cocosApp.animating = true;
 
             if (!game) {
@@ -95,7 +106,6 @@ void preExecCmd(int8_t cmd) {
         case ABILITY_CMD_TERM_WINDOW:
             LOGV("ABILITY_CMD_TERM_WINDOW");
             cc::cocosApp.animating = false;
-            cc::cocosApp.cond.notify_all();
             break;
         case ABILITY_CMD_RESUME:
             LOGV("ABILITY_CMD_RESUME");
@@ -116,29 +126,29 @@ void preExecCmd(int8_t cmd) {
 
 void postExecCmd(int8_t cmd) {
     switch (cmd) {
-        case ABILITY_CMD_TERM_WINDOW: {
-            std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
+        case ABILITY_CMD_TERM_WINDOW:
             cc::cocosApp.window = nullptr;
-            lk.unlock();
-            cc::cocosApp.cond.notify_all();
-        } break;
+            break;
         default:
             break;
     }
 }
 
 void glThreadEntry() {
-    std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
+    cc::cocosApp.glThreadPromise.set_value();
     cc::cocosApp.running = true;
-    lk.unlock();
-    cc::cocosApp.cond.notify_all();
 
     int8_t cmd = 0;
+    CommandMsg msg;
     while (1) {
-        if (readCommand(cmd) > 0) {
+        if (readCommand(msg) > 0) {
+            cmd = msg.cmd;
             preExecCmd(cmd);
             cc::View::engineHandleCmd(cmd);
             postExecCmd(cmd);
+            if (msg.callback) {
+                msg.callback();
+            }
         }
 
         if (!cc::cocosApp.animating) continue;
@@ -162,39 +172,28 @@ void glThreadEntry() {
 }
 
 void setWindow(NativeLayer *window) {
-    std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
     if (cc::cocosApp.pendingWindow) {
-        writeCommand(ABILITY_CMD_TERM_WINDOW);
+        writeCommandSync(ABILITY_CMD_TERM_WINDOW);
     }
     cc::cocosApp.pendingWindow = window;
-    //    while (cc::cocosApp.window != cc::cocosApp.pendingWindow) {
-    //        cc::cocosApp.cond.wait(lk);
-    //    }
 }
 
 void tryInitGame() {
-    std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
     if (cc::cocosApp.pendingWindow) {
-        writeCommand(ABILITY_CMD_INIT_WINDOW);
-        while (cc::cocosApp.window != cc::cocosApp.pendingWindow) {
-            cc::cocosApp.cond.wait(lk);
-        }
+        writeCommandSync(ABILITY_CMD_INIT_WINDOW);
     }
 }
 
 void setActivityState(int8_t cmd) {
-    std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
-    writeCommand(cmd);
-    while (cc::cocosApp.activityState != cmd) {
-        cc::cocosApp.cond.wait(lk);
-    }
+    writeCommandSync(cmd);
 }
 } // namespace
 
 extern "C" {
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onCreateNative(JNIEnv *env, jobject obj, jobject ability,
-                                                                           jstring assetPath, jobject resourceManager, jint sdkVersion) {
+                                                                           jstring assetPath, jobject resourceManager,
+                                                                           jint sdkVersion) {
     if (cc::cocosApp.running) {
         return;
     }
@@ -224,16 +223,16 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onCreateNative(JNIEn
     std::thread glThread(glThreadEntry);
     glThread.detach();
 
-    std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
-    while (!cc::cocosApp.running) {
-        cc::cocosApp.cond.wait(lk);
-    }
+    cc::cocosApp.glThreadPromise.get_future().get();
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceCreatedNative(JNIEnv *env, jobject obj, jobject surface) {
+JNIEXPORT void JNICALL
+Java_com_cocos_lib_CocosAbilitySlice_onSurfaceCreatedNative(JNIEnv *env, jobject obj, jobject surface) {
     setWindow(GetNativeLayer(env, surface));
 }
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onSurfaceChangedNative(JNIEnv *env, jobject obj, jobject surface, jint x, jint width, jint height) {
+JNIEXPORT void JNICALL
+Java_com_cocos_lib_CocosAbilitySlice_onSurfaceChangedNative(JNIEnv *env, jobject obj, jobject surface, jint x,
+                                                            jint width, jint height) {
     //    setWindow(GetNativeLayer(env, surface));
     tryInitGame();
 }
@@ -257,9 +256,10 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onStopNative(JNIEnv 
 }
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onLowMemoryNative(JNIEnv *env, jobject obj) {
-    writeCommand(ABILITY_CMD_LOW_MEMORY);
+    writeCommandSync(ABILITY_CMD_LOW_MEMORY);
 }
 
-JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onWindowFocusChangedNative(JNIEnv *env, jobject obj, jboolean has_focus) {
+JNIEXPORT void JNICALL
+Java_com_cocos_lib_CocosAbilitySlice_onWindowFocusChangedNative(JNIEnv *env, jobject obj, jboolean has_focus) {
 }
 }

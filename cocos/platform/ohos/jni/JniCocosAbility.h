@@ -30,6 +30,8 @@ THE SOFTWARE.
 #include <rawfile/resource_manager.h>
 #include <string>
 
+#include <future>
+
 namespace cc {
 
 struct CocosApp {
@@ -37,8 +39,8 @@ struct CocosApp {
     NativeLayer *window = nullptr;
     int sdkVersion = 0;
 
-    std::mutex mutex;
-    std::condition_variable cond;
+    std::promise<void> glThreadPromise;
+
     NativeLayer *pendingWindow = nullptr;
     bool destroyRequested = false;
     bool animating = true;

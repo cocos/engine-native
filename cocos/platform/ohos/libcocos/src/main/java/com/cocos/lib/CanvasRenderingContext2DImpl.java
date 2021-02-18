@@ -24,6 +24,7 @@
 
 package com.cocos.lib;
 
+import ohos.agp.components.ComponentContainer;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
 import ohos.agp.render.Path;
@@ -43,6 +44,7 @@ import ohos.media.image.common.Rect;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -224,25 +226,15 @@ public class CanvasRenderingContext2DImpl {
     public void recreateBuffer(float w, float h) {
         // Log.d(TAG, "recreateBuffer:" + w + ", " + h);
 
-        if(mTexture != null ){
-            mTexture.getPixelMap().release();
-            mTexture = null;
-        }
+        PixelMap.InitializationOptions initializationOptions = new PixelMap.InitializationOptions();
+        initializationOptions.alphaType = AlphaType.UNPREMUL;
+        initializationOptions.pixelFormat = PixelFormat.ARGB_8888;
+        initializationOptions.size = new ohos.media.image.common.Size((int) Math.ceil(w), (int) Math.ceil(h));
 
-        if(mTexture == null) {
-            PixelMap.InitializationOptions initializationOptions = new PixelMap.InitializationOptions();
-            initializationOptions.alphaType = AlphaType.UNPREMUL;
-            initializationOptions.pixelFormat = PixelFormat.ARGB_8888;
-            initializationOptions.size = new ohos.media.image.common.Size((int) Math.ceil(w), (int) Math.ceil(h));
+        PixelMap pixelMap = PixelMap.create(initializationOptions);
+        mTexture = new Texture(pixelMap);
+            // NOTE: PixelMap.resetConfig does not change pixel data or nor reallocate memory for pixel data
 
-            PixelMap pixelMap = PixelMap.create(initializationOptions);
-            mTexture = new Texture(pixelMap);
-        } else {
-        // FIXME: crash here
-//            mTexture.getPixelMap().resetConfig(new ohos.media.image.common.Size((int) Math.ceil(w), (int) Math.ceil(h)),
-//                    PixelFormat.ARGB_8888
-//                    );
-        }
         mCanvas.setTexture(mTexture);
     }
 
@@ -364,7 +356,18 @@ public class CanvasRenderingContext2DImpl {
     }
 
     public void clearRect(float x, float y, float w, float h) {
-        mTexture.getPixelMap().writePixels(Color.TRANSPARENT.getValue());
+//        mTexture.getPixelMap().writePixels(Color.TRANSPARENT.getValue());
+        PixelMap pm = mTexture.getPixelMap();
+        if (pm.isReleased() || !pm.isEditable()) {
+            return;
+        }
+        Rect region = new Rect((int) x, (int) y, (int) w, (int) h);
+        int fillSize = (int) (w * h);
+        IntBuffer buffer = IntBuffer.allocate(fillSize);
+        for (int i = 0; i < fillSize; i++) {
+            buffer.put(Color.TRANSPARENT.getValue());
+        }
+        pm.writePixels(buffer.array(), 0, (int) w, region);
     }
 
     public void createTextPaintIfNeeded() {
@@ -374,6 +377,10 @@ public class CanvasRenderingContext2DImpl {
     }
 
     public void fillRect(float x, float y, float w, float h) {
+        PixelMap pm = mTexture.getPixelMap();
+        if (pm.isReleased() || !pm.isEditable()) {
+            return;
+        }
         // Log.d(TAG, "fillRect: " + x + ", " + y + ", " + ", " + w + ", " + h);
         int pixelValue = (mFillStyleA & 0xff) << 24 | (mFillStyleR & 0xff) << 16 | (mFillStyleG & 0xff) << 8 | (mFillStyleB & 0xff);
         int fillSize = (int) (w * h);
@@ -381,8 +388,8 @@ public class CanvasRenderingContext2DImpl {
         for (int i = 0; i < fillSize; ++i) {
             fillColors.putInt(i * 4, pixelValue);
         }
-        Rect region = new Rect((int)x,(int)y, (int)w, (int)h );
-        mTexture.getPixelMap().writePixels(fillColors.asIntBuffer().array(), 0, (int)w, region);
+        Rect region = new Rect((int) x, (int) y, (int) w, (int) h);
+        pm.writePixels(fillColors.asIntBuffer().array(), 0, (int) w, region);
     }
 
     public void scaleX(Paint textPaint, String text, float maxWidth) {
@@ -414,7 +421,7 @@ public class CanvasRenderingContext2DImpl {
         mTextPaint.setStrokeWidth(mLineWidth);
         scaleX(mTextPaint, text, maxWidth);
         Point pt = convertDrawPoint(new Point(x, y), text);
-        mCanvas.drawText(mTextPaint, text, pt.x, pt.y );
+        mCanvas.drawText(mTextPaint, text, pt.x, pt.y);
     }
 
     public float measureText(String text) {
