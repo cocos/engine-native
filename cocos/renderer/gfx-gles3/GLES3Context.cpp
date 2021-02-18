@@ -297,11 +297,9 @@ bool GLES3Context::initialize(const ContextInfo &info) {
         });
     #endif
 
-    #if USE_GLEW3
         if (!gles3wInit()) {
             return false;
         }
-    #endif
 
         MakeCurrent(true);
         {

@@ -23,13 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #ifndef CC_GFXGLES3_GPU_OBJECTS_H_
 #define CC_GFXGLES3_GPU_OBJECTS_H_
-#if USE_GLEW3
-    #include "gles3w.h"
-#else
-    #include <GLES3/gl3.h>
-    #include <GLES3/gl32.h>
-    #include <GLES3/gl3platform.h>
-#endif
+#include "gles3w.h"
 namespace cc {
 namespace gfx {
 
