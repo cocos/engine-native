@@ -24,6 +24,8 @@
  ****************************************************************************/
 #pragma once
 
+#include "base/Log.h"
+
 #define QUEUEBUFFER_NUM       (3)
 #define QUEUEBUFFER_TIME_STEP (0.1f)
 
@@ -32,7 +34,7 @@
 
 //IDEA:Move the definition of the following macros to a separated file.
 
-void audioLog(const char *format, ...);
+#define audioLog(...) CC_LOG_DEBUG(__VA_ARGS__)
 
 #define QUOTEME_(x) #x
 #define QUOTEME(x)  QUOTEME_(x)

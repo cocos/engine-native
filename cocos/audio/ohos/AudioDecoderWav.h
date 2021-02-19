@@ -22,40 +22,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#define LOG_TAG "AudioDecoderManager"
 
-#include "audio/win32/AudioDecoderManager.h"
-#include "audio/win32/AudioDecoderOgg.h"
-#include "audio/win32/AudioDecoderMp3.h"
-#include "audio/win32/AudioMacros.h"
-#include "platform/FileUtils.h"
-#include "mpg123/mpg123.h"
+#pragma once
+
+#include "audio/android/tinysndfile.h"
+#include "audio/oalsoft/AudioDecoder.h"
 
 namespace cc {
 
-static bool __mp3Inited = false;
+class AudioDecoderWav : public AudioDecoder {
+public:
+    AudioDecoderWav();
+    ~AudioDecoderWav() override;
 
-bool AudioDecoderManager::init() {
-    return true;
-}
+    bool open(const char *path) override;
+    void close() override;
+    uint32_t read(uint32_t framesToRead, char *pcmBuf) override;
+    bool seek(uint32_t frameOffset) override;
+    uint32_t tell() const override;
 
-void AudioDecoderManager::destroy() {
-    AudioDecoderMp3::destroy();
-}
-
-AudioDecoder *AudioDecoderManager::createDecoder(const char *path) {
-    std::string suffix = FileUtils::getInstance()->getFileExtension(path);
-    if (suffix == ".ogg") {
-        return new (std::nothrow) AudioDecoderOgg();
-    } else if (suffix == ".mp3") {
-        return new (std::nothrow) AudioDecoderMp3();
-    }
-
-    return nullptr;
-}
-
-void AudioDecoderManager::destroyDecoder(AudioDecoder *decoder) {
-    delete decoder;
-}
+private:
+    SF_INFO _sndInfo;
+    SNDFILE *_sndHandle{};
+};
 
 } // namespace cc

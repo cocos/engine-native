@@ -24,9 +24,13 @@
  ****************************************************************************/
 #pragma once
 
-#include "audio/win32/AudioDecoder.h"
+#include "audio/oalsoft/AudioDecoder.h"
 
-#include "vorbis/vorbisfile.h"
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    #include "vorbis/vorbisfile.h"
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include "ivorbisfile.h"
+#endif
 
 namespace cc {
 

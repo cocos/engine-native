@@ -23,21 +23,21 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "audio/include/AudioEngine.h"
-#include "platform/FileUtils.h"
-#include "base/Utils.h"
 #include "base/Log.h"
+#include "base/Utils.h"
+#include "platform/FileUtils.h"
 
 #include <condition_variable>
+#include <mutex>
 #include <queue>
 #include <thread>
-#include <mutex>
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
     #include "audio/android/AudioEngine-inl.h"
 #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
     #include "audio/apple/AudioEngine-inl.h"
-#elif CC_PLATFORM == CC_PLATFORM_WINDOWS
-    #include "audio/win32/AudioEngine-win32.h"
+#elif CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_OHOS
+    #include "audio/oalsoft/AudioEngine-soft.h"
 #elif CC_PLATFORM == CC_PLATFORM_WINRT
     #include "audio/winrt/AudioEngine-winrt.h"
 #elif CC_PLATFORM == CC_PLATFORM_LINUX
@@ -74,7 +74,12 @@ AudioEngine::AudioEngineThreadPool *AudioEngine::s_threadPool = nullptr;
 bool AudioEngine::_isEnabled = true;
 
 AudioEngine::AudioInfo::AudioInfo()
-: filePath(nullptr), profileHelper(nullptr), volume(1.0f), loop(false), duration(TIME_UNKNOWN), state(AudioState::INITIALIZING) {
+: filePath(nullptr),
+  profileHelper(nullptr),
+  volume(1.0f),
+  loop(false),
+  duration(TIME_UNKNOWN),
+  state(AudioState::INITIALIZING) {
 }
 
 AudioEngine::AudioInfo::~AudioInfo() {

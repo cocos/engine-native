@@ -24,18 +24,20 @@
  ****************************************************************************/
 #pragma once
 
-#include <string>
-#include <mutex>
-#include <vector>
-#include <memory>
 #include <functional>
-#ifdef OPENAL_PLAIN_INCLUDES
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
+#if defined(OPENAL_PLAIN_INCLUDES)
     #include <al.h>
-#else
+#elif CC_PLATFORM == CC_PLATFORM_WINDOWS
     #include <OpenalSoft/al.h>
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include <AL/al.h>
 #endif
+#include "audio/oalsoft/AudioMacros.h"
 #include "base/Macros.h"
-#include "audio/win32/AudioMacros.h"
 
 namespace cc {
 class AudioEngineImpl;

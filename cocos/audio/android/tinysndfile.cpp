@@ -18,14 +18,16 @@
 
 #include "audio/android/tinysndfile.h"
 #include "audio/android/audio_utils/include/audio_utils/primitives.h"
-#include "audio/android/cutils/log.h"
+
+#include "base/Log.h"
 
 // #ifdef HAVE_STDERR
 // #include <stdio.h>
 // #endif
 
-#include <string.h>
+#include <cassert>
 #include <errno.h>
+#include <string.h>
 
 #ifndef HAVE_STDERR
     #define HAVE_STDERR
@@ -105,7 +107,7 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
 
     if (path == NULL || info == NULL) {
 #ifdef HAVE_STDERR
-        ALOGE("path=%p info=%p\n", path, info);
+        CC_LOG_ERROR("path=%p info=%p\n", path, info);
 #endif
         return NULL;
     }
@@ -123,7 +125,7 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
     void *stream = handle->callback.open(path, user);
     if (stream == NULL) {
 #ifdef HAVE_STDERR
-        ALOGE("fopen %s failed errno %d\n", path, errno);
+        CC_LOG_ERROR("fopen %s failed errno %d\n", path, errno);
 #endif
         free(handle);
         return NULL;
@@ -142,26 +144,26 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
     actual = handle->callback.read(wav, sizeof(char), sizeof(wav), stream);
     if (actual < 12) {
 #ifdef HAVE_STDERR
-        ALOGE("actual %zu < 44\n", actual);
+        CC_LOG_ERROR("actual %zu < 44\n", actual);
 #endif
         goto close;
     }
     if (memcmp(wav, "RIFF", 4)) {
 #ifdef HAVE_STDERR
-        ALOGE("wav != RIFF\n");
+        CC_LOG_ERROR("wav != RIFF\n");
 #endif
         goto close;
     }
     riffSize = little4u(&wav[4]);
     if (riffSize < 4) {
 #ifdef HAVE_STDERR
-        ALOGE("riffSize %u < 4\n", riffSize);
+        CC_LOG_ERROR("riffSize %u < 4\n", riffSize);
 #endif
         goto close;
     }
     if (memcmp(&wav[8], "WAVE", 4)) {
 #ifdef HAVE_STDERR
-        ALOGE("missing WAVE\n");
+        CC_LOG_ERROR("missing WAVE\n");
 #endif
         goto close;
     }
@@ -172,7 +174,7 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
         actual = handle->callback.read(chunk, sizeof(char), sizeof(chunk), stream);
         if (actual != sizeof(chunk)) {
 #ifdef HAVE_STDERR
-            ALOGE("actual %zu != %zu\n", actual, sizeof(chunk));
+            CC_LOG_ERROR("actual %zu != %zu\n", actual, sizeof(chunk));
 #endif
             goto close;
         }
@@ -180,20 +182,20 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
         unsigned chunkSize = little4u(&chunk[4]);
         if (chunkSize > remaining) {
 #ifdef HAVE_STDERR
-            ALOGE("chunkSize %u > remaining %zu\n", chunkSize, remaining);
+            CC_LOG_ERROR("chunkSize %u > remaining %zu\n", chunkSize, remaining);
 #endif
             goto close;
         }
         if (!memcmp(&chunk[0], "fmt ", 4)) {
             if (hadFmt) {
 #ifdef HAVE_STDERR
-                ALOGE("multiple fmt\n");
+                CC_LOG_ERROR("multiple fmt\n");
 #endif
                 goto close;
             }
             if (chunkSize < 2) {
 #ifdef HAVE_STDERR
-                ALOGE("chunkSize %u < 2\n", chunkSize);
+                CC_LOG_ERROR("chunkSize %u < 2\n", chunkSize);
 #endif
                 goto close;
             }
@@ -201,7 +203,7 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
             actual = handle->callback.read(fmt, sizeof(char), 2, stream);
             if (actual != 2) {
 #ifdef HAVE_STDERR
-                ALOGE("actual %zu != 2\n", actual);
+                CC_LOG_ERROR("actual %zu != 2\n", actual);
 #endif
                 goto close;
             }
@@ -217,20 +219,20 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
                     break;
                 default:
 #ifdef HAVE_STDERR
-                    ALOGE("unsupported format %u\n", format);
+                    CC_LOG_ERROR("unsupported format %u\n", format);
 #endif
                     goto close;
             }
             if (chunkSize < minSize) {
 #ifdef HAVE_STDERR
-                ALOGE("chunkSize %u < minSize %zu\n", chunkSize, minSize);
+                CC_LOG_ERROR("chunkSize %u < minSize %zu\n", chunkSize, minSize);
 #endif
                 goto close;
             }
             actual = handle->callback.read(&fmt[2], sizeof(char), minSize - 2, stream);
             if (actual != minSize - 2) {
 #ifdef HAVE_STDERR
-                ALOGE("actual %zu != %zu\n", actual, minSize - 16);
+                CC_LOG_ERROR("actual %zu != %zu\n", actual, minSize - 16);
 #endif
                 goto close;
             }
@@ -241,14 +243,14 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
             // IDEA: FCC_8
             if (channels != 1 && channels != 2 && channels != 4 && channels != 6 && channels != 8) {
 #ifdef HAVE_STDERR
-                ALOGE("unsupported channels %u\n", channels);
+                CC_LOG_ERROR("unsupported channels %u\n", channels);
 #endif
                 goto close;
             }
             unsigned samplerate = little4u(&fmt[4]);
             if (samplerate == 0) {
 #ifdef HAVE_STDERR
-                ALOGE("samplerate %u == 0\n", samplerate);
+                CC_LOG_ERROR("samplerate %u == 0\n", samplerate);
 #endif
                 goto close;
             }
@@ -258,7 +260,7 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
             if (bitsPerSample != 8 && bitsPerSample != 16 && bitsPerSample != 24 &&
                 bitsPerSample != 32) {
 #ifdef HAVE_STDERR
-                ALOGE("bitsPerSample %u != 8 or 16 or 24 or 32\n", bitsPerSample);
+                CC_LOG_ERROR("bitsPerSample %u != 8 or 16 or 24 or 32\n", bitsPerSample);
 #endif
                 goto close;
             }
@@ -287,13 +289,13 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
         } else if (!memcmp(&chunk[0], "data", 4)) {
             if (!hadFmt) {
 #ifdef HAVE_STDERR
-                ALOGE("data not preceded by fmt\n");
+                CC_LOG_ERROR("data not preceded by fmt\n");
 #endif
                 goto close;
             }
             if (hadData) {
 #ifdef HAVE_STDERR
-                ALOGE("multiple data\n");
+                CC_LOG_ERROR("multiple data\n");
 #endif
                 goto close;
             }
@@ -312,8 +314,8 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
         } else {
             // ignore unknown chunk
 #ifdef HAVE_STDERR
-            ALOGE("ignoring unknown chunk %c%c%c%c\n",
-                  chunk[0], chunk[1], chunk[2], chunk[3]);
+            CC_LOG_ERROR("ignoring unknown chunk %c%c%c%c\n",
+                         chunk[0], chunk[1], chunk[2], chunk[3]);
 #endif
             if (chunkSize > 0) {
                 handle->callback.seek(stream, (long)chunkSize, SEEK_CUR);
@@ -323,13 +325,13 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
     }
     if (remaining > 0) {
 #ifdef HAVE_STDERR
-        ALOGE("partial chunk at end of RIFF, remaining %zu\n", remaining);
+        CC_LOG_ERROR("partial chunk at end of RIFF, remaining %zu\n", remaining);
 #endif
         goto close;
     }
     if (!hadData) {
 #ifdef HAVE_STDERR
-        ALOGE("missing data\n");
+        CC_LOG_ERROR("missing data\n");
 #endif
         goto close;
     }
@@ -349,6 +351,26 @@ void sf_close(SNDFILE *handle) {
     free(handle->temp);
     (void)handle->callback.close(handle->stream);
     free(handle);
+}
+
+off_t sf_seek(SNDFILE *handle, int offset, int whence) {
+    if (whence == SEEK_SET) {
+        assert(offset >= 0 && offset <= handle->info.frames);
+    } else if (whence == SEEK_CUR) {
+        offset += sf_tell(handle);
+        assert(offset >= 0 && offset <= handle->info.frames);
+    } else if (whence == SEEK_END) {
+        offset += handle->info.frames;
+        assert(offset >= 0 && offset <= handle->info.frames);
+    } else {
+        assert(false); // base whence value
+    }
+    handle->remaining = handle->info.frames - offset;
+    return offset;
+}
+
+off_t sf_tell(SNDFILE *handle) {
+    return handle->info.frames - handle->remaining;
 }
 
 sf_count_t sf_readf_short(SNDFILE *handle, short *ptr, sf_count_t desiredFrames) {

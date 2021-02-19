@@ -71,4 +71,7 @@ sf_count_t sf_readf_float(SNDFILE *handle, float *ptr, sf_count_t desired);
 sf_count_t sf_readf_int(SNDFILE *handle, int *ptr, sf_count_t desired);
 */
 
+off_t sf_seek(SNDFILE *handle, int offset, int whence);
+off_t sf_tell(SNDFILE *handle);
+
 __END_DECLS

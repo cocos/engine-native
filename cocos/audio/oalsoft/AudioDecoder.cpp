@@ -22,8 +22,8 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "audio/win32/AudioDecoder.h"
-#include "audio/win32/AudioMacros.h"
+#include "audio/oalsoft/AudioDecoder.h"
+#include "audio/oalsoft/AudioMacros.h"
 #include "platform/FileUtils.h"
 
 #define LOG_TAG "AudioDecoder"
@@ -31,7 +31,11 @@
 namespace cc {
 
 AudioDecoder::AudioDecoder()
-: _isOpened(false), _totalFrames(0), _bytesPerFrame(0), _sampleRate(0), _channelCount(0) {
+: _isOpened(false),
+  _totalFrames(0),
+  _bytesPerFrame(0),
+  _sampleRate(0),
+  _channelCount(0) {
 }
 
 AudioDecoder::~AudioDecoder() {

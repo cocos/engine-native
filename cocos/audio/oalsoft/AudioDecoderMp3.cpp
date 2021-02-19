@@ -22,11 +22,16 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "audio/win32/AudioDecoderMp3.h"
-#include "audio/win32/AudioMacros.h"
+#include "audio/oalsoft/AudioDecoderMp3.h"
+#include "audio/oalsoft/AudioMacros.h"
 #include "platform/FileUtils.h"
 
-#include "mpg123/mpg123.h"
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    #include "mpg123/mpg123.h"
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include "cocos/platform/ohos/FileUtils-ohos.h"
+    #include "mpg123.h"
+#endif
 
 #define LOG_TAG "AudioDecoderMp3"
 
@@ -77,8 +82,13 @@ bool AudioDecoderMp3::open(const char *path) {
             ALOGE("Basic setup goes wrong: %s", mpg123_plain_strerror(error));
             break;
         }
-
+#if CC_PLATFORM_OHOS == CC_PLATFORM
+        auto *fu = static_cast<FileUtilsOHOS *>(FileUtils::getInstance());
+        _fdAndDeleter = fu->getFd(fullPath);
+        if (mpg123_open_fd(_mpg123handle, _fdAndDeleter.first) != MPG123_OK || mpg123_getformat(_mpg123handle, &rate, &channel, &mp3Encoding) != MPG123_OK) {
+#else
         if (mpg123_open(_mpg123handle, FileUtils::getInstance()->getSuitableFOpen(fullPath).c_str()) != MPG123_OK || mpg123_getformat(_mpg123handle, &rate, &channel, &mp3Encoding) != MPG123_OK) {
+#endif
             ALOGE("Trouble with mpg123: %s\n", mpg123_strerror(_mpg123handle));
             break;
         }
@@ -124,6 +134,12 @@ void AudioDecoderMp3::close() {
         }
         _isOpened = false;
     }
+#if CC_PLATFORM_OHOS == CC_PLATFORM
+    if (_fdAndDeleter.second) {
+        _fdAndDeleter.second();
+        _fdAndDeleter.second = nullptr;
+    }
+#endif
 }
 
 uint32_t AudioDecoderMp3::read(uint32_t framesToRead, char *pcmBuf) {

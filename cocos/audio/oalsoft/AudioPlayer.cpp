@@ -25,21 +25,19 @@
 
 #define LOG_TAG "AudioPlayer"
 
-#if CC_PLATFORM == CC_PLATFORM_WINDOWS
-    #include "audio/win32/AudioPlayer.h"
-    #include "audio/win32/AudioCache.h"
-    #include "platform/FileUtils.h"
-    #include "audio/win32/AudioDecoderManager.h"
-    #include "audio/win32/Audiodecoder.h"
+#include "audio/oalsoft/AudioPlayer.h"
+#include "audio/oalsoft/AudioCache.h"
+#include "audio/oalsoft/AudioDecoder.h"
+#include "audio/oalsoft/AudioDecoderManager.h"
 
-    #define VERY_VERY_VERBOSE_LOGGING
-    #ifdef VERY_VERY_VERBOSE_LOGGING
-        #define ALOGVV ALOGV
-    #else
-        #define ALOGVV(...) \
-            do {            \
-            } while (false)
-    #endif
+#define VERY_VERY_VERBOSE_LOGGING
+#ifdef VERY_VERY_VERBOSE_LOGGING
+    #define ALOGVV ALOGV
+#else
+    #define ALOGVV(...) \
+        do {            \
+        } while (false)
+#endif
 
 using namespace cc;
 
@@ -48,7 +46,17 @@ unsigned int __idIndex = 0;
 }
 
 AudioPlayer::AudioPlayer()
-: _audioCache(nullptr), _finishCallbak(nullptr), _isDestroyed(false), _removeByAudioEngine(false), _ready(false), _currTime(0.0f), _streamingSource(false), _rotateBufferThread(nullptr), _timeDirty(false), _isRotateThreadExited(false), _id(++__idIndex) {
+: _audioCache(nullptr),
+  _finishCallbak(nullptr),
+  _isDestroyed(false),
+  _removeByAudioEngine(false),
+  _ready(false),
+  _currTime(0.0f),
+  _streamingSource(false),
+  _rotateBufferThread(nullptr),
+  _timeDirty(false),
+  _isRotateThreadExited(false),
+  _id(++__idIndex) {
     memset(_bufferIds, 0, sizeof(_bufferIds));
 }
 
@@ -107,7 +115,7 @@ void AudioPlayer::destroy() {
     alSourceStop(_alSource);
     CHECK_AL_ERROR_DEBUG();
     ALOGVV("Before alSourcei");
-    alSourcei(_alSource, AL_BUFFER, NULL);
+    alSourcei(_alSource, AL_BUFFER, 0);
     CHECK_AL_ERROR_DEBUG();
 
     _removeByAudioEngine = true;
@@ -154,7 +162,8 @@ bool AudioPlayer::play2d() {
             auto alError = alGetError();
             if (alError == AL_NO_ERROR) {
                 for (int index = 0; index < QUEUEBUFFER_NUM; ++index) {
-                    alBufferData(_bufferIds[index], _audioCache->_format, _audioCache->_queBuffers[index], _audioCache->_queBufferSize[index], _audioCache->_sampleRate);
+                    alBufferData(_bufferIds[index], _audioCache->_format, _audioCache->_queBuffers[index],
+                                 _audioCache->_queBufferSize[index], _audioCache->_sampleRate);
                 }
                 CHECK_AL_ERROR_DEBUG();
             } else {
@@ -172,7 +181,8 @@ bool AudioPlayer::play2d() {
             if (_streamingSource) {
                 alSourceQueueBuffers(_alSource, QUEUEBUFFER_NUM, _bufferIds);
                 CHECK_AL_ERROR_DEBUG();
-                _rotateBufferThread = new std::thread(&AudioPlayer::rotateBufferThread, this, _audioCache->_queBufferFrames * QUEUEBUFFER_NUM + 1);
+                _rotateBufferThread = new std::thread(&AudioPlayer::rotateBufferThread, this,
+                                                      _audioCache->_queBufferFrames * QUEUEBUFFER_NUM + 1);
             } else {
                 alSourcei(_alSource, AL_BUFFER, _audioCache->_alBufferId);
                 CHECK_AL_ERROR_DEBUG();
@@ -190,7 +200,8 @@ bool AudioPlayer::play2d() {
         ALint state;
         alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
         if (state != AL_PLAYING) {
-            ALOGE("state isn't playing, %d, %s, cache id=%u, player id=%u", state, _audioCache->_fileFullPath.c_str(), _audioCache->_id, _id);
+            ALOGE("state isn't playing, %d, %s, cache id=%u, player id=%u", state, _audioCache->_fileFullPath.c_str(),
+                  _audioCache->_id, _id);
             //abort playing if the state is incorrect
             break;
         }
@@ -261,7 +272,8 @@ void AudioPlayer::rotateBufferThread(int offsetFrame) {
 
                     ALuint bid;
                     alSourceUnqueueBuffers(_alSource, 1, &bid);
-                    alBufferData(bid, _audioCache->_format, tmpBuffer, framesRead * decoder->getBytesPerFrame(), decoder->getSampleRate());
+                    alBufferData(bid, _audioCache->_format, tmpBuffer, framesRead * decoder->getBytesPerFrame(),
+                                 decoder->getSampleRate());
                     alSourceQueueBuffers(_alSource, 1, &bid);
                 }
             }
@@ -305,5 +317,3 @@ bool AudioPlayer::setTime(float time) {
     }
     return false;
 }
-
-#endif

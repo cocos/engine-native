@@ -185,4 +185,39 @@ bool FileUtilsOHOS::isDirectoryExistInternal(const std::string &dirPath) const {
     return false;
 }
 
+std::string FileUtilsOHOS::expandPath(const std::string &input, bool *isRawFile) const {
+    if (!input.empty() && input[0] == '/') {
+        if (isRawFile) *isRawFile = false;
+        return input;
+    }
+    const auto fullpath = fullPathForFilename(input);
+
+    if (fullpath.find(_defaultResRootPath) == 0) {
+        if (isRawFile) *isRawFile = true;
+        return RAWFILE_PREFIX + fullpath.substr(_defaultResRootPath.length(), fullpath.length());
+    }
+
+    if (isRawFile) *isRawFile = false;
+
+    return fullpath;
+}
+
+std::pair<int, std::function<void()>> FileUtilsOHOS::getFd(const std::string &path) const {
+    bool isRawFile = false;
+    const auto fullpath = expandPath(path, &isRawFile);
+    if (isRawFile) {
+        RawFile *rf = OpenRawFile(_ohosResourceMgr, fullpath.c_str());
+        RawFileDescriptor descriptor;
+        GetRawFileDescriptor(rf, descriptor);
+        return std::make_pair(descriptor.fd, [rf]() {
+            CloseRawFile(rf);
+        });
+    } else {
+        FILE *fp = fopen(fullpath.c_str(), "rb");
+        return std::make_pair(fileno(fp), [fp]() {
+            fclose(fp);
+        });
+    }
+}
+
 } // namespace cc

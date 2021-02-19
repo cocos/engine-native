@@ -25,17 +25,17 @@
 
 #pragma once
 
-#include "base/Macros.h"
 #include "audio/include/Export.h"
+#include "base/Macros.h"
 
-#include "bindings/event/EventDispatcher.h"
 #include "bindings/event/CustomEventTypes.h"
+#include "bindings/event/EventDispatcher.h"
 
+#include <chrono>
 #include <functional>
 #include <list>
 #include <string>
 #include <unordered_map>
-#include <chrono>
 
 #ifdef ERROR
     #undef ERROR
@@ -69,7 +69,8 @@ public:
      * @lua new
      */
     AudioProfile()
-    : maxInstances(0), minDelay(0.0) {
+    : maxInstances(0),
+      minDelay(0.0) {
     }
 };
 
@@ -253,7 +254,7 @@ public:
 
     /** 
      * Uncache the audio data from internal buffer.
-     * AudioEngine cache audio data on ios,mac, and win32 platform.
+     * AudioEngine cache audio data on ios,mac, and oalsoft platform.
      *
      * @warning This can lead to stop related audio first.
      * @param filePath Audio file path.

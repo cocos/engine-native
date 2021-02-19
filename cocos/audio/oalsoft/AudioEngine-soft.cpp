@@ -22,24 +22,28 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#define LOG_TAG "AudioEngine-Win32"
+#define LOG_TAG "AudioEngine-OALSOFT"
 
-#include "audio/win32/AudioEngine-win32.h"
+#include "audio/oalsoft/AudioEngine-soft.h"
 
 #ifdef OPENAL_PLAIN_INCLUDES
     #include "alc.h"
     #include "alext.h"
-#else
+#elif CC_PLATFORM == CC_PLATFORM_WINDOWS
     #include "OpenalSoft/alc.h"
     #include "OpenalSoft/alext.h"
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include "AL/alc.h"
+    #include "AL/alext.h"
 #endif
 #include "audio/include/AudioEngine.h"
-#include "platform/Application.h"
+#include "audio/oalsoft/AudioDecoderManager.h"
 #include "base/Scheduler.h"
+#include "platform/Application.h"
 #include "platform/FileUtils.h"
-#include "audio/win32/AudioDecoderManager.h"
 
-#include <windows.h>
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    #include <windows.h>
 
 // log, CC_LOG_DEBUG aren't threadsafe, since we uses sub threads for parsing pcm data, threadsafe log output
 // is needed. Define the following macros (ALOGV, ALOGD, ALOGI, ALOGW, ALOGE) for threadsafe log output.
@@ -93,6 +97,11 @@ void audioLog(const char *format, ...) {
     _winLog(format, args);
     va_end(args);
 }
+#else
+
+    #define audioLog(...) CC_LOG_DEBUG(__VA_ARGS__)
+
+#endif
 
 using namespace cc;
 
@@ -100,7 +109,8 @@ static ALCdevice *s_ALDevice = nullptr;
 static ALCcontext *s_ALContext = nullptr;
 
 AudioEngineImpl::AudioEngineImpl()
-: _lazyInitLoop(true), _currentAudioID(0) {
+: _lazyInitLoop(true),
+  _currentAudioID(0) {
 }
 
 AudioEngineImpl::~AudioEngineImpl() {

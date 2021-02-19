@@ -198,21 +198,21 @@ if(USE_AUDIO)
     )
     if(WINDOWS)
         cocos_source_files(
-            cocos/audio/win32/AudioCache.cpp
-            cocos/audio/win32/AudioCache.h
-            cocos/audio/win32/AudioDecoder.cpp
-            cocos/audio/win32/AudioDecoder.h
-            cocos/audio/win32/AudioDecoderManager.cpp
-            cocos/audio/win32/AudioDecoderManager.h
-            cocos/audio/win32/AudioDecoderMp3.cpp
-            cocos/audio/win32/AudioDecoderMp3.h
-            cocos/audio/win32/AudioDecoderOgg.cpp
-            cocos/audio/win32/AudioDecoderOgg.h
-            cocos/audio/win32/AudioEngine-win32.cpp
-            cocos/audio/win32/AudioEngine-win32.h
-            cocos/audio/win32/AudioMacros.h
-            cocos/audio/win32/AudioPlayer.cpp
-            cocos/audio/win32/AudioPlayer.h
+            cocos/audio/oalsoft/AudioCache.cpp
+            cocos/audio/oalsoft/AudioCache.h
+            cocos/audio/oalsoft/AudioDecoder.cpp
+            cocos/audio/oalsoft/AudioDecoder.h
+            cocos/audio/oalsoft/AudioDecoderManager.cpp
+            cocos/audio/oalsoft/AudioDecoderManager.h
+            cocos/audio/oalsoft/AudioDecoderMp3.cpp
+            cocos/audio/oalsoft/AudioDecoderMp3.h
+            cocos/audio/oalsoft/AudioDecoderOgg.cpp
+            cocos/audio/oalsoft/AudioDecoderOgg.h
+            cocos/audio/oalsoft/AudioEngine-soft.cpp
+            cocos/audio/oalsoft/AudioEngine-soft.h
+            cocos/audio/oalsoft/AudioMacros.h
+            cocos/audio/oalsoft/AudioPlayer.cpp
+            cocos/audio/oalsoft/AudioPlayer.h
         )
     elseif(ANDROID)
         cocos_source_files(
@@ -279,6 +279,35 @@ if(USE_AUDIO)
             cocos/audio/android/utils/Errors.h
             cocos/audio/android/utils/Utils.cpp
             cocos/audio/android/utils/Utils.h
+        )
+     elseif(OHOS)
+        cocos_source_files(
+            cocos/audio/oalsoft/AudioCache.cpp
+            cocos/audio/oalsoft/AudioCache.h
+            cocos/audio/oalsoft/AudioDecoderManager.cpp
+            cocos/audio/oalsoft/AudioDecoderManager.h
+            cocos/audio/oalsoft/AudioDecoder.cpp
+            cocos/audio/oalsoft/AudioDecoder.h
+            cocos/audio/oalsoft/AudioDecoderMp3.cpp
+            cocos/audio/oalsoft/AudioDecoderMp3.h
+            cocos/audio/oalsoft/AudioDecoderOgg.cpp
+            cocos/audio/oalsoft/AudioDecoderOgg.h
+            cocos/audio/oalsoft/AudioEngine-soft.cpp
+            cocos/audio/oalsoft/AudioEngine-soft.h
+            cocos/audio/oalsoft/AudioMacros.h
+            cocos/audio/oalsoft/AudioPlayer.cpp
+            cocos/audio/oalsoft/AudioPlayer.h
+
+            cocos/audio/ohos/AudioDecoderWav.h
+            cocos/audio/ohos/AudioDecoderWav.cpp
+            # cocos/audio/ohos/AudioDecoderMp3.h
+            # cocos/audio/ohos/AudioDecoderMp3.cpp
+            cocos/audio/ohos/FsCallback.h
+            cocos/audio/ohos/FsCallback.cpp
+
+            cocos/audio/android/tinysndfile.cpp
+            cocos/audio/android/tinysndfile.h
+            cocos/audio/android/audio_utils/primitives.c
         )
     elseif(APPLE)
         cocos_source_files(

@@ -26,9 +26,9 @@
 
 #include <unordered_map>
 
+#include "audio/oalsoft/AudioCache.h"
+#include "audio/oalsoft/AudioPlayer.h"
 #include "base/Ref.h"
-#include "audio/win32/AudioCache.h"
-#include "audio/win32/AudioPlayer.h"
 
 namespace cc {
 

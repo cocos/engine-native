@@ -24,15 +24,17 @@
  ****************************************************************************/
 #pragma once
 
-#include <string>
 #include <condition_variable>
-#include <mutex>
-#include <thread>
 #include <functional>
+#include <mutex>
+#include <string>
+#include <thread>
 #ifdef OPENAL_PLAIN_INCLUDES
     #include <al.h>
-#else
+#elif CC_PLATFORM == CC_PLATFORM_WINDOWS
     #include <OpenalSoft/al.h>
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include <AL/al.h>
 #endif
 #include "base/Macros.h"
 

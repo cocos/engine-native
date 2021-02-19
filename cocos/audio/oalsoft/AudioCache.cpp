@@ -24,13 +24,13 @@
  ****************************************************************************/
 #define LOG_TAG "AudioCache"
 
-#include "audio/win32/AudioCache.h"
-#include <thread>
-#include "platform/Application.h"
+#include "audio/oalsoft/AudioCache.h"
 #include "base/Scheduler.h"
+#include "platform/Application.h"
+#include <thread>
 
-#include "audio/win32/AudioDecoderManager.h"
-#include "audio/win32/AudioDecoder.h"
+#include "audio/oalsoft/AudioDecoder.h"
+#include "audio/oalsoft/AudioDecoderManager.h"
 
 #define VERY_VERY_VERBOSE_LOGGING
 #ifdef VERY_VERY_VERBOSE_LOGGING
@@ -51,7 +51,18 @@ unsigned int __idIndex = 0;
 using namespace cc;
 
 AudioCache::AudioCache()
-: _totalFrames(0), _framesRead(0), _format(-1), _duration(0.0f), _alBufferId(INVALID_AL_BUFFER_ID), _pcmData(nullptr), _queBufferFrames(0), _state(State::INITIAL), _isDestroyed(std::make_shared<bool>(false)), _id(++__idIndex), _isLoadingFinished(false), _isSkipReadDataTask(false) {
+: _totalFrames(0),
+  _framesRead(0),
+  _format(-1),
+  _duration(0.0f),
+  _alBufferId(INVALID_AL_BUFFER_ID),
+  _pcmData(nullptr),
+  _queBufferFrames(0),
+  _state(State::INITIAL),
+  _isDestroyed(std::make_shared<bool>(false)),
+  _id(++__idIndex),
+  _isLoadingFinished(false),
+  _isSkipReadDataTask(false) {
     ALOGVV("AudioCache() %p, id=%u", this, _id);
     for (int i = 0; i < QUEUEBUFFER_NUM; ++i) {
         _queBuffers[i] = nullptr;
