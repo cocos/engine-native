@@ -57,8 +57,7 @@ int pipeWrite = 0;
 cc::Application *game = nullptr;
 
 struct CommandMsg {
-    int8_t cmd;
-    bool sync;
+    int cmd;
     std::function<void()> callback;
 };
 
@@ -69,14 +68,14 @@ void createGame(NativeLayer *window) {
     game->init();
 }
 
-void writeCommandAsync(int8_t cmd) {
-    CommandMsg msg{.cmd = cmd, .sync = false, .callback = nullptr};
+void writeCommandAsync(int cmd) {
+    CommandMsg msg{.cmd = cmd, .callback = nullptr};
     write(pipeWrite, &msg, sizeof(msg));
 }
 
-void writeCommandSync(int8_t cmd) {
+void writeCommandSync(int cmd) {
     std::promise<void> fu;
-    CommandMsg msg{.cmd = cmd, .sync = true, .callback = [&fu]() {
+    CommandMsg msg{.cmd = cmd, .callback = [&fu]() {
                        fu.set_value();
                    }};
     write(pipeWrite, &msg, sizeof(msg));
@@ -92,7 +91,7 @@ void handlePauseResume(int8_t cmd) {
     cc::cocosApp.activityState = cmd;
 }
 
-void preExecCmd(int8_t cmd) {
+void preExecCmd(int cmd) {
     switch (cmd) {
         case ABILITY_CMD_INIT_WINDOW: {
             LOGV("ABILITY_CMD_INIT_WINDOW");
@@ -124,7 +123,7 @@ void preExecCmd(int8_t cmd) {
     }
 }
 
-void postExecCmd(int8_t cmd) {
+void postExecCmd(int cmd) {
     switch (cmd) {
         case ABILITY_CMD_TERM_WINDOW:
             cc::cocosApp.window = nullptr;
@@ -138,7 +137,7 @@ void glThreadEntry() {
     cc::cocosApp.glThreadPromise.set_value();
     cc::cocosApp.running = true;
 
-    int8_t cmd = 0;
+    int cmd = 0;
     CommandMsg msg;
     while (1) {
         if (readCommand(msg) > 0) {
