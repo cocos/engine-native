@@ -216,14 +216,15 @@ std::pair<int, std::function<void()>> FileUtilsOHOS::getFd(const std::string &pa
         auto fileCache = std::vector<char>(bufSize);
         auto *buf = fileCache.data();
         // Fill buffer
-        ReadRawFile(rf, buf, bufSize); // Read can fail?
+        const auto readBytes = ReadRawFile(rf, buf, bufSize);
+        assert(readBytes == bufSize); // read failure ?
         auto fd = syscall(__NR_memfd_create, fullpath.c_str(), 0);
         {
-            ::write(fd, buf, bufSize); // Write can fail?
+            auto writeBytes = ::write(fd, buf, bufSize); // Write can fail?
+            assert(writeBytes == bufSize);
             ::lseek(fd, 0, SEEK_SET);
         }
-        //        FILE *tmpFp = fmemopen(bufSizeΩ
-        if (fd < 0) {
+        if (errno != 0) {
             const auto *err_msg = strerror(errno);
             CC_LOG_ERROR("failed to open buffer fd %s", err_msg);
         }

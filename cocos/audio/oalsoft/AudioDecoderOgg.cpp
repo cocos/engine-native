@@ -26,6 +26,21 @@
 #include "audio/oalsoft/AudioMacros.h"
 #include "platform/FileUtils.h"
 
+#if CC_PLATFORM == CC_PLATFORM_OHOS
+    #include "audio/ohos/FsCallback.h"
+namespace {
+int ohos_seek_wrap(void *source, ogg_int64_t offset, int whence) {
+    return cc::ohos_seek(source, (long)offset, whence);
+}
+
+ov_callbacks ogg_callbacks = {
+    (size_t(*)(void *, size_t, size_t, void *))cc::ohos_read,
+    (int (*)(void *, ogg_int64_t, int))ohos_seek_wrap,
+    (int (*)(void *))cc::ohos_close,
+    (long (*)(void *))cc::ohos_tell};
+} // namespace
+#endif
+
 #define LOG_TAG "AudioDecoderOgg"
 
 namespace cc {
@@ -42,8 +57,8 @@ bool AudioDecoderOgg::open(const char *path) {
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS
     if (0 == ov_fopen(FileUtils::getInstance()->getSuitableFOpen(fullPath).c_str(), &_vf)) {
 #elif CC_PLATFORM == CC_PLATFORM_OHOS
-    FILE *fp = fopen(FileUtils::getInstance()->getSuitableFOpen(fullPath).c_str(), "rb");
-    if (0 == ov_open(fp, &_vf, nullptr, 0)) {
+    auto *fp = cc::ohos_open(FileUtils::getInstance()->getSuitableFOpen(fullPath).c_str(), this);
+    if (0 == ov_open_callbacks(fp, &_vf, nullptr, 0, ogg_callbacks)) {
 #endif
         // header
         vorbis_info *vi = ov_info(&_vf, -1);
