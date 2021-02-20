@@ -77,7 +77,7 @@ protected:
     static bool lazyInit();
     static void destroy();
 
-    struct mpg123_handle_struct *_mpg123handle;
+    struct mpg123_handle_struct *_mpg123handle = nullptr;
 
 #if CC_PLATFORM_OHOS == CC_PLATFORM
     std::pair<int, std::function<void()>> _fdAndDeleter;

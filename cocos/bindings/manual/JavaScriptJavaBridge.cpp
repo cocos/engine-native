@@ -375,13 +375,13 @@ bool JavaScriptJavaBridge::CallInfo::getMethodInfo() {
 
     if (NULL == m_classID) {
         SE_LOGD("Classloader failed to find class of %s", m_className.c_str());
-        m_env->DeleteLocalRef(_jstrClassName);
+        CC_CALL_DLR(m_env, _jstrClassName);
         m_env->ExceptionClear();
         m_error = JSJ_ERR_CLASS_NOT_FOUND;
         return false;
     }
 
-    m_env->DeleteLocalRef(_jstrClassName);
+    CC_CALL_DLR(m_env, _jstrClassName);
     m_methodID = m_env->GetStaticMethodID(m_classID, m_methodName.c_str(), m_methodSig.c_str());
     if (!m_methodID) {
         m_env->ExceptionClear();
@@ -532,7 +532,7 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) {
             }
             ok = call.executeWithArgs(jargs);
             for (const auto &obj : toReleaseObjects) {
-                call.getEnv()->DeleteLocalRef(obj);
+                CC_CALL_DLR(call.getEnv(), obj);
             }
             if (jargs)
                 delete[] jargs;

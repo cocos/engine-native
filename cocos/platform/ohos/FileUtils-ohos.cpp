@@ -1,10 +1,14 @@
 #include "cocos/platform/ohos/FileUtils-ohos.h"
 #include "cocos/base/Log.h"
 #include "cocos/platform/java/jni/JniHelper.h"
+#include <cstdio>
 #include <hilog/log.h>
 #include <regex>
 #include <string>
 #include <sys/stat.h>
+
+#include <sys/syscall.h>
+#include <unistd.h>
 
 #define ASSETS_FOLDER_NAME "@assets/"
 
@@ -207,10 +211,24 @@ std::pair<int, std::function<void()>> FileUtilsOHOS::getFd(const std::string &pa
     const auto fullpath = expandPath(path, &isRawFile);
     if (isRawFile) {
         RawFile *rf = OpenRawFile(_ohosResourceMgr, fullpath.c_str());
-        RawFileDescriptor descriptor;
-        GetRawFileDescriptor(rf, descriptor);
-        return std::make_pair(descriptor.fd, [rf]() {
-            CloseRawFile(rf);
+        // FIXME: try reuse file
+        const auto bufSize = GetRawFileSize(rf);
+        auto fileCache = std::vector<char>(bufSize);
+        auto *buf = fileCache.data();
+        // Fill buffer
+        ReadRawFile(rf, buf, bufSize); // Read can fail?
+        auto fd = syscall(__NR_memfd_create, fullpath.c_str(), 0);
+        {
+            ::write(fd, buf, bufSize); // Write can fail?
+            ::lseek(fd, 0, SEEK_SET);
+        }
+        //        FILE *tmpFp = fmemopen(bufSizeΩ
+        if (fd < 0) {
+            const auto *err_msg = strerror(errno);
+            CC_LOG_ERROR("failed to open buffer fd %s", err_msg);
+        }
+        return std::make_pair(fd, [fd]() {
+            close(fd);
         });
     } else {
         FILE *fp = fopen(fullpath.c_str(), "rb");

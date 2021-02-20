@@ -25,6 +25,7 @@
 #include "audio/oalsoft/AudioDecoderMp3.h"
 #include "audio/oalsoft/AudioMacros.h"
 #include "platform/FileUtils.h"
+#include <bits/seek_constants.h>
 
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS
     #include "mpg123/mpg123.h"
@@ -32,6 +33,10 @@
     #include "cocos/platform/ohos/FileUtils-ohos.h"
     #include "mpg123.h"
 #endif
+
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #define LOG_TAG "AudioDecoderMp3"
 
@@ -85,6 +90,28 @@ bool AudioDecoderMp3::open(const char *path) {
 #if CC_PLATFORM_OHOS == CC_PLATFORM
         auto *fu = static_cast<FileUtilsOHOS *>(FileUtils::getInstance());
         _fdAndDeleter = fu->getFd(fullPath);
+    #if 0 // test rawfile fd
+        {
+            std::string content = fu->getStringFromFile(fullPath);
+            const auto *ptr = content.c_str();
+            const auto size = content.size();
+            CC_LOG_DEBUG("file size %d", content.length(), ptr);
+        }
+        {
+            auto fd = _fdAndDeleter.first;
+            struct stat st;
+            if(::fstat(fd, &st)) {
+                CC_LOG_ERROR("file not exist %s", fullPath.c_str());
+            } else{
+                auto *buf = new char[st.st_size];
+                auto readsize = ::read(fd, buf, st.st_size);
+                CC_LOG_DEBUG("file size by fd %d", readsize);
+                ::lseek(fd, 0, SEEK_SET);
+                delete buf;
+            }
+        }
+    #endif
+
         if (mpg123_open_fd(_mpg123handle, _fdAndDeleter.first) != MPG123_OK || mpg123_getformat(_mpg123handle, &rate, &channel, &mp3Encoding) != MPG123_OK) {
 #else
         if (mpg123_open(_mpg123handle, FileUtils::getInstance()->getSuitableFOpen(fullPath).c_str()) != MPG123_OK || mpg123_getformat(_mpg123handle, &rate, &channel, &mp3Encoding) != MPG123_OK) {

@@ -56,7 +56,7 @@ int createVideoWidgetJNI() {
     if (JniHelper::getStaticMethodInfo(t, videoHelperClassName.c_str(), "createVideoWidget", "()I")) {
         ret = t.env->CallStaticIntMethod(t.classID, t.methodID);
 
-        t.env->DeleteLocalRef(t.classID);
+        CC_CALL_DLR(t.env, t.classID);
     }
 
     return ret;

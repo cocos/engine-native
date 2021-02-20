@@ -54,6 +54,8 @@ bool AudioDecoderMp3::decodeToPcm() {
     int numFrames = 0;
 
     if (EXIT_SUCCESS == decodeMP3(&callbacks, this, *_result.pcmBuffer, &numChannels, &sampleRate, &numFrames) && numChannels > 0 && sampleRate > 0 && numFrames > 0) {
+
+        auto size = _result.pcmBuffer->size();
         _result.numChannels = numChannels;
         _result.sampleRate = sampleRate;
         _result.bitsPerSample = SL_PCMSAMPLEFORMAT_FIXED_16;

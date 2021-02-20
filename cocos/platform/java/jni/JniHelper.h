@@ -26,6 +26,7 @@ THE SOFTWARE.
 #ifndef __ANDROID_JNI_HELPER_H__
 #define __ANDROID_JNI_HELPER_H__
 
+#include "base/Log.h"
 #include "base/Macros.h"
 #include "math/Vec3.h"
 #include <functional>
@@ -37,6 +38,17 @@ THE SOFTWARE.
 //The macro must be used this way to find the native method. The principle is not well understood.
 #define JNI_METHOD2(CLASS2, FUNC2) Java_##CLASS2##_##FUNC2
 #define JNI_METHOD1(CLASS1, FUNC1) JNI_METHOD2(CLASS1, FUNC1)
+
+// CC_CALL_DLR with classid produces warning??
+#if 0
+    #define CC_CALL_DLR(jenv, ref)                                                                         \
+        do {                                                                                               \
+            jenv->DeleteLocalRef(ref);                                                                     \
+            CC_LOG_DEBUG("deleteLocalRef file: %s, func: %s, line: %d", __FILE__, __FUNCTION__, __LINE__); \
+        } while (0)
+#else
+    #define CC_CALL_DLR(jenv, ref) jenv->DeleteLocalRef(ref);
+#endif
 
 struct android_app;
 
@@ -81,7 +93,7 @@ public:
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName, signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->NewObject(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            // CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -99,7 +111,7 @@ public:
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             t.env->CallVoidMethod(object, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            // CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -117,7 +129,7 @@ public:
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallFloatMethod(object, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            // CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -136,7 +148,7 @@ public:
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = (jbyteArray)t.env->CallObjectMethod(object, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            // CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -153,7 +165,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             t.env->CallStaticVoidMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            // CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -170,7 +182,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             jret = t.env->CallStaticBooleanMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            //CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -188,7 +200,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallStaticIntMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            //CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -206,7 +218,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallStaticFloatMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            //CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -232,7 +244,7 @@ public:
                     t.env->ReleaseFloatArrayElements(array, elems, 0);
                 };
             }
-            t.env->DeleteLocalRef(t.classID);
+            CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
             return &ret[0];
         } else {
@@ -259,7 +271,7 @@ public:
                 ret.z = elems[2];
                 t.env->ReleaseFloatArrayElements(array, elems, 0);
             }
-            t.env->DeleteLocalRef(t.classID);
+            //CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -277,7 +289,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallStaticDoubleMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            t.env->DeleteLocalRef(t.classID);
+            CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -297,8 +309,8 @@ public:
             LocalRefMapType localRefs;
             jstring jret = (jstring)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
             ret = cc::JniHelper::jstring2string(jret);
-            t.env->DeleteLocalRef(t.classID);
-            t.env->DeleteLocalRef(jret);
+            //CC_CALL_DLR(t.env, t.classID);
+            CC_CALL_DLR(t.env, jret);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);

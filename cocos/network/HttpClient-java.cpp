@@ -108,8 +108,8 @@ public:
             jstring jstr = methodInfo.env->NewStringUTF(_requestmethod.c_str());
             methodInfo.env->CallStaticVoidMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, jstr);
-            methodInfo.env->DeleteLocalRef(jstr);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, jstr);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -150,7 +150,7 @@ public:
                                            "(Ljava/net/HttpURLConnection;)I")) {
             suc = methodInfo.env->CallStaticIntMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -166,7 +166,7 @@ public:
                                            "(Ljava/net/HttpURLConnection;)V")) {
             methodInfo.env->CallStaticVoidMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -181,7 +181,7 @@ public:
                                            "(Ljava/net/HttpURLConnection;)I")) {
             responseCode = methodInfo.env->CallStaticIntMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -200,9 +200,9 @@ public:
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection);
             message = getBufferFromJString((jstring)jObj, methodInfo.env);
             if (nullptr != jObj) {
-                methodInfo.env->DeleteLocalRef(jObj);
+                CC_CALL_DLR(methodInfo.env, jObj);
             }
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -223,8 +223,8 @@ public:
             methodInfo.env->SetByteArrayRegion(bytearray, 0, dataSize, (const jbyte *)request->getRequestData());
             methodInfo.env->CallStaticVoidMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, bytearray);
-            methodInfo.env->DeleteLocalRef(bytearray);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, bytearray);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -263,9 +263,9 @@ public:
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection);
             headers = getBufferFromJString((jstring)jObj, methodInfo.env);
             if (nullptr != jObj) {
-                methodInfo.env->DeleteLocalRef(jObj);
+                CC_CALL_DLR(methodInfo.env, jObj);
             }
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -289,9 +289,9 @@ public:
 
             _contentLength = getCStrFromJByteArray((jbyteArray)jObj, methodInfo.env, &content);
             if (nullptr != jObj) {
-                methodInfo.env->DeleteLocalRef(jObj);
+                CC_CALL_DLR(methodInfo.env, jObj);
             }
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -310,11 +310,11 @@ public:
             jobject jObj = methodInfo.env->CallStaticObjectMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, jstrKey);
             value = getBufferFromJString((jstring)jObj, methodInfo.env);
-            methodInfo.env->DeleteLocalRef(jstrKey);
+            CC_CALL_DLR(methodInfo.env, jstrKey);
             if (nullptr != jObj) {
-                methodInfo.env->DeleteLocalRef(jObj);
+                CC_CALL_DLR(methodInfo.env, jObj);
             }
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -332,8 +332,8 @@ public:
             jstring jstrKey = methodInfo.env->NewStringUTF(key);
             contentLength = methodInfo.env->CallStaticIntMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, jstrKey);
-            methodInfo.env->DeleteLocalRef(jstrKey);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, jstrKey);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -352,9 +352,9 @@ public:
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, idx);
             header = getBufferFromJString((jstring)jObj, methodInfo.env);
             if (nullptr != jObj) {
-                methodInfo.env->DeleteLocalRef(jObj);
+                CC_CALL_DLR(methodInfo.env, jObj);
             }
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -385,9 +385,9 @@ private:
             jstring jurl = methodInfo.env->NewStringUTF(url.c_str());
             jobject jObj = methodInfo.env->CallStaticObjectMethod(methodInfo.classID, methodInfo.methodID, jurl);
             _httpURLConnection = methodInfo.env->NewGlobalRef(jObj);
-            methodInfo.env->DeleteLocalRef(jurl);
-            methodInfo.env->DeleteLocalRef(jObj);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, jurl);
+            CC_CALL_DLR(methodInfo.env, jObj);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -403,9 +403,9 @@ private:
             jstring jstrVal = methodInfo.env->NewStringUTF(value);
             methodInfo.env->CallStaticVoidMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, jstrKey, jstrVal);
-            methodInfo.env->DeleteLocalRef(jstrKey);
-            methodInfo.env->DeleteLocalRef(jstrVal);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, jstrKey);
+            CC_CALL_DLR(methodInfo.env, jstrVal);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -495,7 +495,7 @@ private:
                                            "(Ljava/net/HttpURLConnection;II)V")) {
             methodInfo.env->CallStaticVoidMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, readMiliseconds, connectMiliseconds);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }
@@ -515,8 +515,8 @@ private:
             jstring jstrfullpath = methodInfo.env->NewStringUTF(fullpath.c_str());
             methodInfo.env->CallStaticVoidMethod(
                 methodInfo.classID, methodInfo.methodID, _httpURLConnection, jstrfullpath);
-            methodInfo.env->DeleteLocalRef(jstrfullpath);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
+            CC_CALL_DLR(methodInfo.env, jstrfullpath);
+            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
         } else {
             CC_LOG_ERROR("HttpClient::%s failed!", __FUNCTION__);
         }

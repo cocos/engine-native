@@ -95,7 +95,7 @@ jclass _getClassID(const char *className) {
         _clazz = nullptr;
     }
 
-    env->DeleteLocalRef(_jstrClassName);
+    CC_CALL_DLR(env, _jstrClassName);
     //    LOGE("1. delete 0x%p", _jstrClassName);
 
     if (_clazz) {
@@ -390,7 +390,7 @@ void JniHelper::deleteLocalRefs(JNIEnv *env, JniHelper::LocalRefMapType &localRe
     }
 
     for (const auto &ref : localRefs[env]) {
-        env->DeleteLocalRef(ref);
+        CC_CALL_DLR(env, ref);
         //        LOGE("2. delete 0x%p", ref);
     }
     localRefs[env].clear();

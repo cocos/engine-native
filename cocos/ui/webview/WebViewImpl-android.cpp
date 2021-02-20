@@ -130,7 +130,7 @@ int createWebViewJNI() {
     if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), "createWebView", "()I")) {
         // LOGD("error: %s,%d",__func__,__LINE__);
         jint viewTag = t.env->CallStaticIntMethod(t.classID, t.methodID);
-        t.env->DeleteLocalRef(t.classID);
+        CC_CALL_DLR(t.env, t.classID);
         return viewTag;
     }
     return -1;
