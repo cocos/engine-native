@@ -351,7 +351,11 @@ bool JavaScriptJavaBridge::CallInfo::getMethodInfo() {
             break;
 
         case JNI_EDETACHED:
-            if (jvm->AttachCurrentThread((void **)&m_env, NULL) < 0) {
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
+            if (jvm->AttachCurrentThread(&m_env, nullptr) < 0) {
+#else
+            if (jvm->AttachCurrentThread((void **)&m_env, nullptr) < 0) {
+#endif
                 SE_LOGD("%s", "Failed to get the environment using AttachCurrentThread()");
                 m_error = JSJ_ERR_VM_THREAD_DETACHED;
                 return false;

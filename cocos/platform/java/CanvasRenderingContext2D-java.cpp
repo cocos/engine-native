@@ -218,7 +218,7 @@ public:
     void fillData() {
         jbyteArray arr = JniHelper::callObjectByteArrayMethod(_obj, JCLS_CANVASIMPL, "getDataRef");
         if (arr == nullptr) {
-            SE_LOGE("getDataRef return null in fillData, size: %d, %d", _bufferWidth, _bufferHeight);
+            SE_LOGE("getDataRef return null in fillData, size: %d, %d", (int)_bufferWidth, (int)_bufferHeight);
             return;
         }
         jsize len = JniHelper::getEnv()->GetArrayLength(arr);

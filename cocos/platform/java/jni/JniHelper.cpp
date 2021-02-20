@@ -144,7 +144,11 @@ JNIEnv *JniHelper::cacheEnv() {
 
         case JNI_EDETACHED:
             // Thread not attached
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
+            if (jvm->AttachCurrentThread(&_env, nullptr) < 0) {
+#else
             if (jvm->AttachCurrentThread((void **)&_env, nullptr) < 0) {
+#endif
                 LOGE("Failed to get the environment using AttachCurrentThread()");
 
                 return nullptr;

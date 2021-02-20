@@ -109,6 +109,7 @@ Device::Orientation Device::getDeviceOrientation() {
         case ROTATION_270:
             return Orientation::LANDSCAPE_LEFT;
     }
+    return Orientation::LANDSCAPE_LEFT;
 }
 
 std::string Device::getDeviceModel() {

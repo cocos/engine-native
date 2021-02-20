@@ -539,7 +539,7 @@ elseif(ANDROID)
     )
     set(CC_JNI_SRC_FILES
         ${CWD}/cocos/platform/android/jni/JniCocosActivity.cpp
-        ${CWD}/cocos/platform/java/jni/JniCocosActivity.h
+        ${CWD}/cocos/platform/android/jni/JniCocosActivity.h
         ${CWD}/cocos/platform/java/jni/JniCocosTouchHandler.cpp
         ${CWD}/cocos/platform/java/jni/JniCocosKeyCodeHandler.cpp
         ${CWD}/cocos/platform/android/jni/JniCocosSurfaceView.cpp
@@ -1670,6 +1670,7 @@ if(OHOS)
         zgraphic.z
         rawfile.z
         z
+        OpenSLES
         ${CC_EXTERNAL_LIBS}
     )
     target_compile_definitions(cocos2d PUBLIC
