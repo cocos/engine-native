@@ -45,10 +45,6 @@ set(ALL_FILES
 	${HEADER_FILES}
 	${SOURCE_CPP_FILES}
 	${SOURCE_C_FILES}
-	${CC_BASE_HEADERS}
-	${CC_BASE_SOURCES}
-    ${COCOS_SRC_PATH}/base/StringUtil.h
-    ${COCOS_SRC_PATH}/base/StringUtil.cpp
 	)
 
 if(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
@@ -69,7 +65,7 @@ else()
 	add_library(${TARGET_NAME} SHARED ${HEADER_FILES} ${ALL_FILES})
 endif()
 
-target_link_libraries(${TARGET_NAME} Core glslang OGLCompiler OSDependent SPIRV glslang-default-resource-limits tbb tbbmalloc tbbmalloc_proxy)
+target_link_libraries(${TARGET_NAME} Core GFXBase glslang OGLCompiler OSDependent SPIRV glslang-default-resource-limits tbb tbbmalloc tbbmalloc_proxy)
 target_compile_definitions(${TARGET_NAME} PRIVATE ${CC_EXTERNAL_PRIVATE_DEFINITIONS})
 
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME CCGFXVulkan)

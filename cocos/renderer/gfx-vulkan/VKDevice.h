@@ -26,6 +26,8 @@
 #ifndef CC_GFXVULKAN_DEVICE_H_
 #define CC_GFXVULKAN_DEVICE_H_
 
+#include "renderer/gfx-base/GFXDevice.h"
+
 namespace cc {
 namespace gfx {
 

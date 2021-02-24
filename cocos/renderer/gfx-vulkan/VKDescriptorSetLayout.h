@@ -26,6 +26,8 @@
 #ifndef CC_GFXVULKAN_DESCRIPTOR_SET_LAYOUT_H_
 #define CC_GFXVULKAN_DESCRIPTOR_SET_LAYOUT_H_
 
+#include "renderer/gfx-base/GFXDescriptorSetLayout.h"
+
 namespace cc {
 namespace gfx {
 

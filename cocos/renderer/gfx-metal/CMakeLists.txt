@@ -2,23 +2,6 @@ set(TARGET_NAME GFXMetal)
 
 message(STATUS "Target: ${TARGET_NAME}...")
 
-# ---------------------------------------------------------------------
-# set include files
-
-set(INCLUDE_FILES
-    ${GFX_EXTERNAL_PATH}/khronos
-    ${GFX_EXTERNAL_PATH}/taskflow
-    ${GFX_EXTERNAL_PATH}/boost
-    ${GFX_EXTERNAL_PATH}/concurrentqueue
-    ${COCOS_SRC_PATH}/base
-    ${COCOS_SRC_PATH}/renderer/core
-    ${COCOS_SRC_PATH}/renderer/gfx-metal
-)
-
-include_directories( ${INCLUDE_FILES} )
-
-# ---------------------------------------------------------------------
-
 file(GLOB_RECURSE HEADER_FILES *.h)
 file(GLOB_RECURSE SOURCE_CPP_FILES *.cpp *.cc)
 file(GLOB_RECURSE SOURCE_C_FILES *.c)
@@ -42,7 +25,7 @@ find_library(METAL_LIBRARY Metal)
 find_library(METALKIT_LIBRARY MetalKit)
 set(glslang_libs_name glslang OGLCompiler OSDependent SPIRV glslang-default-resource-limits)
 set(spirv-cross_libs_name spirv-cross-core spirv-cross-glsl spirv-cross-msl)
-target_link_libraries(${TARGET_NAME} Core ${COREFOUNDATION_FRAMEWORK} ${FOUNDATION_FRAMEWORK} ${METAL_LIBRARY} ${METALKIT_LIBRARY} ${glslang_libs_name} ${spirv-cross_libs_name})
+target_link_libraries(${TARGET_NAME} Core GFXBase ${COREFOUNDATION_FRAMEWORK} ${FOUNDATION_FRAMEWORK} ${METAL_LIBRARY} ${METALKIT_LIBRARY} ${glslang_libs_name} ${spirv-cross_libs_name})
 
 target_include_directories(${TARGET_NAME} PUBLIC ${COCOS_EXTERNAL_PATH}/mac/include)
 

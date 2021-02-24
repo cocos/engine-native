@@ -26,6 +26,8 @@
 #ifndef CC_GFXVULKAN_INPUT_ASSEMBLER_H_
 #define CC_GFXVULKAN_INPUT_ASSEMBLER_H_
 
+#include "renderer/gfx-base/GFXInputAssembler.h"
+
 namespace cc {
 namespace gfx {
 

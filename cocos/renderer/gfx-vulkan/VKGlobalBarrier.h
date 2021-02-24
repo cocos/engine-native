@@ -26,6 +26,8 @@
 #ifndef CC_GFXVULKAN_GLOBAL_BARRIER_H_
 #define CC_GFXVULKAN_GLOBAL_BARRIER_H_
 
+#include "renderer/gfx-base/GFXGlobalBarrier.h"
+
 namespace cc {
 namespace gfx {
 

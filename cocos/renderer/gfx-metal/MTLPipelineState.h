@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include "renderer/gfx-base/GFXPipelineState.h"
+
 #include "MTLGPUObjects.h"
 
 #import <Metal/MTLDepthStencil.h>

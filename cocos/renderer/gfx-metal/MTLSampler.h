@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include "renderer/gfx-base/GFXSampler.h"
+
 #import <Metal/MTLSampler.h>
 
 namespace cc {

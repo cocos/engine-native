@@ -31,8 +31,6 @@ set(ALL_FILES
   ${HEADER_FILES}
   ${SOURCE_CPP_FILES}
   ${SOURCE_C_FILES}
-  ${COCOS_SRC_PATH}/base/StringUtil.h
-  ${COCOS_SRC_PATH}/base/StringUtil.cpp
   )
 
 if(COCOS_PLATFORM_IOS OR COCOS_PLATFORM_OSX)
@@ -63,7 +61,7 @@ else()
 	add_library(${TARGET_NAME} SHARED ${HEADER_FILES} ${ALL_FILES})
 endif()
 
-target_link_libraries(${TARGET_NAME} Core GFXGLESCommon)
+target_link_libraries(${TARGET_NAME} Core GFXBase GFXGLESCommon)
 
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME CCGFXGLES3)
 set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME_DEBUG CCGFXGLES3_d)
