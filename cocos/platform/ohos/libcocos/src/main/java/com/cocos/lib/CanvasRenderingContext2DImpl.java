@@ -225,15 +225,15 @@ public class CanvasRenderingContext2DImpl {
 
     public void recreateBuffer(float w, float h) {
         // Log.d(TAG, "recreateBuffer:" + w + ", " + h);
-
         PixelMap.InitializationOptions initializationOptions = new PixelMap.InitializationOptions();
         initializationOptions.alphaType = AlphaType.UNPREMUL;
         initializationOptions.pixelFormat = PixelFormat.ARGB_8888;
+        initializationOptions.editable = true; // allow writePixels
         initializationOptions.size = new ohos.media.image.common.Size((int) Math.ceil(w), (int) Math.ceil(h));
 
         PixelMap pixelMap = PixelMap.create(initializationOptions);
         mTexture = new Texture(pixelMap);
-            // NOTE: PixelMap.resetConfig does not change pixel data or nor reallocate memory for pixel data
+        // NOTE: PixelMap.resetConfig does not change pixel data or nor reallocate memory for pixel data
 
         mCanvas.setTexture(mTexture);
     }
@@ -384,12 +384,13 @@ public class CanvasRenderingContext2DImpl {
         // Log.d(TAG, "fillRect: " + x + ", " + y + ", " + ", " + w + ", " + h);
         int pixelValue = (mFillStyleA & 0xff) << 24 | (mFillStyleR & 0xff) << 16 | (mFillStyleG & 0xff) << 8 | (mFillStyleB & 0xff);
         int fillSize = (int) (w * h);
-        ByteBuffer fillColors = ByteBuffer.allocate(fillSize * 4);
+        int buffer[] = new int[fillSize];
+        IntBuffer fillColors = IntBuffer.wrap(buffer);
         for (int i = 0; i < fillSize; ++i) {
-            fillColors.putInt(i * 4, pixelValue);
+            buffer[i]  = pixelValue;
         }
         Rect region = new Rect((int) x, (int) y, (int) w, (int) h);
-        pm.writePixels(fillColors.asIntBuffer().array(), 0, (int) w, region);
+        pm.writePixels(buffer, 0, (int) w, region);
     }
 
     public void scaleX(Paint textPaint, String text, float maxWidth) {

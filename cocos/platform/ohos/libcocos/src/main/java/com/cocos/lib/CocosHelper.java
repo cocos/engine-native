@@ -213,8 +213,7 @@ public class CocosHelper {
     }
 
     public static void copyTextToClipboard(final String text){
-        TaskDispatcher dispatcher = sAbilitySlice.getGlobalTaskDispatcher(TaskPriority.DEFAULT);
-        dispatcher.asyncDispatch(new Runnable() {
+        runOnUIThread(new Runnable() {
             @Override
             public void run() {
                 PasteData pasteData = PasteData.creatPlainTextData(text);
@@ -224,7 +223,7 @@ public class CocosHelper {
     }
 
     public static void runOnUIThread(final Runnable r) {
-        TaskDispatcher dispatcher = sAbilitySlice.getGlobalTaskDispatcher(TaskPriority.DEFAULT);
+        TaskDispatcher dispatcher = sAbilitySlice.getUITaskDispatcher();
         dispatcher.asyncDispatch(r);
     }
 

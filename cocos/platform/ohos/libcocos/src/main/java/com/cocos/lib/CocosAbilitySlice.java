@@ -35,6 +35,7 @@ import ohos.agp.graphics.Surface;
 import ohos.agp.graphics.SurfaceOps;
 import ohos.agp.window.service.DisplayAttributes;
 import ohos.agp.window.service.DisplayManager;
+import ohos.agp.window.service.WindowManager;
 import ohos.bundle.AbilityInfo;
 import ohos.global.resource.ResourceManager;
 import ohos.ivihardware.vehiclecontrol.model.SubscriberFilter;
@@ -90,6 +91,13 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
         CanvasRenderingContext2DImpl.init(this);
         onLoadNativeLibraries();
 
+
+        getWindow().setTransparent(true); // required for surface provider
+
+        this.getWindow().addFlags(WindowManager.LayoutConfig.MARK_ALLOW_EXTEND_LAYOUT);
+        this.getWindow().addFlags(WindowManager.LayoutConfig.MARK_FULL_SCREEN);
+
+        this.getWindow().addFlags(WindowManager.LayoutConfig.INPUT_ADJUST_PAN);
 
 //        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
@@ -156,7 +164,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
 
         mSurfaceProvider = new SurfaceProvider( getContext());
         mSurfaceProvider.getSurfaceOps().get().addCallback(this);
-        mSurfaceProvider.pinToZTop(true);
+        mSurfaceProvider.pinToZTop(false); // getWindow().setTransparent(true)
 
         mSurfaceHolder = new DirectionalLayout(getContext());
         mSurfaceHolder.setWidth(displayAttrib.width);
