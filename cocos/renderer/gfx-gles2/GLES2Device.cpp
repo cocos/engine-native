@@ -95,7 +95,10 @@ bool GLES2Device::initialize(const DeviceInfo &info) {
     _features[(int)Feature::FORMAT_R11G11B10F] = true;
     _features[(int)Feature::FORMAT_D24S8] = true;
     _features[(int)Feature::MSAA] = true;
-    _features[(uint)Feature::ELEMENT_INDEX_UINT] = GL_OES_element_index_uint;
+
+    if (checkExtension("GL_OES_element_index_uint")) {
+        _features[(int)Feature::ELEMENT_INDEX_UINT] = true;
+    }
 
     if (checkExtension("color_buffer_float"))
         _features[(int)Feature::COLOR_FLOAT] = true;
