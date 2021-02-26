@@ -28,7 +28,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "renderer/gfx-base/GFXDef.h"
+#include "gfx-base/GFXDef.h"
 
 #include "vk_mem_alloc.h"
 #include "volk.h"

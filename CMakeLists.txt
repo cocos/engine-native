@@ -1616,7 +1616,7 @@ target_include_directories(cocos2d
         ${CWD}
         ${CWD}/cocos
         ${CWD}/cocos/renderer
-        ${CWD}/cocos/platforms
+        ${CWD}/cocos/platform
         ${CWD}/external/sources/khronos
         ${CWD}/cocos/editor-support
         $<$<BOOL:USE_SE_JSC>:${CWD}/cocos/bindings/jswrapper>

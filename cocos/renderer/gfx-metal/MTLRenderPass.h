@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXRenderPass.h"
+#include "gfx-base/GFXRenderPass.h"
 
 #import <Metal/MTLPixelFormat.h>
 #import <Metal/MTLRenderPass.h>

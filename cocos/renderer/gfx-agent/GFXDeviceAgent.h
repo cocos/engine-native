@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXDevice.h"
+#include "gfx-base/GFXDevice.h"
 #include "GFXAgent.h"
 #include "base/threading/Semaphore.h"
 

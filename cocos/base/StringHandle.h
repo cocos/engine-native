@@ -33,7 +33,7 @@ class StringHandle final : public IndexHandle<uint32_t> {
 public:
     StringHandle() noexcept = default;
     explicit StringHandle(IndexType const handle, char const *const str) noexcept;
-    inline char const *Str() const noexcept { return _str; }
+    inline char const *str() const noexcept { return _str; }
 
 private:
     char const *_str{nullptr};

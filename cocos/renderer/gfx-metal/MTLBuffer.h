@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXBuffer.h"
+#include "gfx-base/GFXBuffer.h"
 
 #import <Metal/MTLBuffer.h>
 #import <Metal/MTLRenderCommandEncoder.h>

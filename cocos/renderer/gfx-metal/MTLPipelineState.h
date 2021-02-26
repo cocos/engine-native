@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXPipelineState.h"
+#include "gfx-base/GFXPipelineState.h"
 
 #include "MTLGPUObjects.h"
 

@@ -26,7 +26,7 @@
 #pragma once
 
 #include <memory>
-#include "renderer/gfx-base/GFXDevice.h"
+#include "gfx-base/GFXDevice.h"
 
 namespace cc {
 namespace gfx {

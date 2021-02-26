@@ -26,7 +26,7 @@
 #ifndef CC_GFXVULKAN_SAMPLER_H_
 #define CC_GFXVULKAN_SAMPLER_H_
 
-#include "renderer/gfx-base/GFXSampler.h"
+#include "gfx-base/GFXSampler.h"
 
 namespace cc {
 namespace gfx {

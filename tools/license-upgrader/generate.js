@@ -17,7 +17,6 @@ const ignoreList = [
     'cocos/math/',
     'cocos/renderer/pipeline/deferred/',
     'cocos/bindings/jswrapper/v8/debugger/',
-    'cocos/bindings/auto/',
 ];
 
 const genHeader = (history) => {

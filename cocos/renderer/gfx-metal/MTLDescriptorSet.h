@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXDescriptorSet.h"
+#include "gfx-base/GFXDescriptorSet.h"
 
 namespace cc {
 namespace gfx {

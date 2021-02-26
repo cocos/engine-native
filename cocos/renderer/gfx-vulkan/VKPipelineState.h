@@ -26,7 +26,7 @@
 #ifndef CC_GFXVULKAN_PIPELINE_STATE_H_
 #define CC_GFXVULKAN_PIPELINE_STATE_H_
 
-#include "renderer/gfx-base/GFXPipelineState.h"
+#include "gfx-base/GFXPipelineState.h"
 
 namespace cc {
 namespace gfx {

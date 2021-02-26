@@ -26,7 +26,7 @@
 #ifndef CC_GFXVULKAN_TEXTURE_BARRIER_H_
 #define CC_GFXVULKAN_TEXTURE_BARRIER_H_
 
-#include "renderer/gfx-base/GFXTextureBarrier.h"
+#include "gfx-base/GFXTextureBarrier.h"
 
 namespace cc {
 namespace gfx {

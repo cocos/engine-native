@@ -26,7 +26,7 @@
 #ifndef CC_GFXGLES3_DESCRIPTOR_SET_H_
 #define CC_GFXGLES3_DESCRIPTOR_SET_H_
 
-#include "renderer/gfx-base/GFXDescriptorSet.h"
+#include "gfx-base/GFXDescriptorSet.h"
 
 namespace cc {
 namespace gfx {

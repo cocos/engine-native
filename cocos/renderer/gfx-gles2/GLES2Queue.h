@@ -26,7 +26,7 @@
 #ifndef CC_GFXGLES2_QUEUE_H_
 #define CC_GFXGLES2_QUEUE_H_
 
-#include "renderer/gfx-base/GFXQueue.h"
+#include "gfx-base/GFXQueue.h"
 
 namespace cc {
 namespace gfx {

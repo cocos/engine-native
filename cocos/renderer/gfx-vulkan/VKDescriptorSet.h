@@ -26,7 +26,7 @@
 #ifndef CC_GFXVULKAN_BINDING_LAYOUT_H_
 #define CC_GFXVULKAN_BINDING_LAYOUT_H_
 
-#include "renderer/gfx-base/GFXDescriptorSet.h"
+#include "gfx-base/GFXDescriptorSet.h"
 
 namespace cc {
 namespace gfx {

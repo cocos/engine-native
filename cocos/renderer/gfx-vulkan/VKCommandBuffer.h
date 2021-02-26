@@ -26,7 +26,7 @@
 #ifndef CC_GFXVULKAN_COMMAND_BUFFER_H_
 #define CC_GFXVULKAN_COMMAND_BUFFER_H_
 
-#include "renderer/gfx-base/GFXCommandBuffer.h"
+#include "gfx-base/GFXCommandBuffer.h"
 
 #include "VKCommands.h"
 

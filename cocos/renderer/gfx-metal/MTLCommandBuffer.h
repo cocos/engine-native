@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXCommandBuffer.h"
+#include "gfx-base/GFXCommandBuffer.h"
 
 #include "MTLGPUObjects.h"
 #include "MTLRenderCommandEncoder.h"

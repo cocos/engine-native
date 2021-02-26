@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXSampler.h"
+#include "gfx-base/GFXSampler.h"
 
 #import <Metal/MTLSampler.h>
 

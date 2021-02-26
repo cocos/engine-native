@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXShader.h"
+#include "gfx-base/GFXShader.h"
 
 #import <Metal/MTLLibrary.h>
 

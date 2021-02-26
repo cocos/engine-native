@@ -26,7 +26,7 @@
 #ifndef CC_GFXGLES3_FRAMEBUFFER_H_
 #define CC_GFXGLES3_FRAMEBUFFER_H_
 
-#include "renderer/gfx-base/GFXFramebuffer.h"
+#include "gfx-base/GFXFramebuffer.h"
 
 namespace cc {
 namespace gfx {

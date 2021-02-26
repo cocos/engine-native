@@ -26,7 +26,7 @@
 #ifndef CC_GFXGLES3_SHADER_H_
 #define CC_GFXGLES3_SHADER_H_
 
-#include "renderer/gfx-base/GFXshader.h"
+#include "gfx-base/GFXShader.h"
 
 namespace cc {
 namespace gfx {

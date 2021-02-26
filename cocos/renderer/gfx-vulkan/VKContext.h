@@ -26,7 +26,7 @@
 #ifndef CC_GFXVULKAN_CONTEXT_H_
 #define CC_GFXVULKAN_CONTEXT_H_
 
-#include "renderer/gfx-base/GFXContext.h"
+#include "gfx-base/GFXContext.h"
 
 namespace cc {
 namespace gfx {

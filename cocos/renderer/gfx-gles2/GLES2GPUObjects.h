@@ -26,7 +26,7 @@
 #ifndef CC_GFXGLES2_GPU_OBJECTS_H_
 #define CC_GFXGLES2_GPU_OBJECTS_H_
 
-#include "renderer/gfx-base/GFXDef.h"
+#include "gfx-base/GFXDef.h"
 #include "GLES2Wrangler.h"
 
 namespace cc {

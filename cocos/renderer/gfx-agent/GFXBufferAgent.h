@@ -26,7 +26,7 @@
 #pragma once
 
 #include "GFXAgent.h"
-#include "renderer/gfx-base/GFXBuffer.h"
+#include "gfx-base/GFXBuffer.h"
 
 namespace cc {
 namespace gfx {

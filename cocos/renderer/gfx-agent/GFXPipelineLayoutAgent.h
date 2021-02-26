@@ -26,7 +26,7 @@
 #pragma once
 
 #include "GFXAgent.h"
-#include "renderer/gfx-base/GFXPipelineLayout.h"
+#include "gfx-base/GFXPipelineLayout.h"
 
 namespace cc {
 namespace gfx {

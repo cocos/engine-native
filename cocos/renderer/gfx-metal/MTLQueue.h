@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXQueue.h"
+#include "gfx-base/GFXQueue.h"
 
 namespace cc {
 namespace gfx {

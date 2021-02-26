@@ -26,7 +26,7 @@
 #ifndef CC_GFXGLES3_RENDER_PASS_H_
 #define CC_GFXGLES3_RENDER_PASS_H_
 
-#include "renderer/gfx-base/GFXRenderPass.h"
+#include "gfx-base/GFXRenderPass.h"
 
 namespace cc {
 namespace gfx {

@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXTexture.h"
+#include "gfx-base/GFXTexture.h"
 
 #import <Metal/MTLTexture.h>
 

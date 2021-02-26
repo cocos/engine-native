@@ -26,7 +26,7 @@
 #ifndef CC_GFXVULKAN_FRAMEBUFFER_H_
 #define CC_GFXVULKAN_FRAMEBUFFER_H_
 
-#include "renderer/gfx-base/GFXFramebuffer.h"
+#include "gfx-base/GFXFramebuffer.h"
 
 namespace cc {
 namespace gfx {

@@ -43,28 +43,28 @@ public:
     IndexHandle() noexcept = default;
     explicit IndexHandle(IndexType const index) noexcept : _index(index) {}
 
-    inline bool IsValid() const noexcept;
-    inline void Clear() noexcept;
+    inline bool isValid() const noexcept;
+    inline void clear() noexcept;
 
     inline bool operator<(IndexHandle const &rhs) const noexcept;
     inline bool operator==(IndexHandle const &rhs) const noexcept;
     inline bool operator!=(IndexHandle const &rhs) const noexcept;
     inline      operator IndexType() const noexcept;
 
-    static IndexType constexpr sUninitialized{std::numeric_limits<IndexType>::max()};
+    static IndexType constexpr UNINITIALIZED{std::numeric_limits<IndexType>::max()};
 
 private:
-    IndexType _index{sUninitialized};
+    IndexType _index{UNINITIALIZED};
 };
 
 template <typename Index, typename Enable>
-bool IndexHandle<Index, Enable>::IsValid() const noexcept {
-    return _index != sUninitialized;
+bool IndexHandle<Index, Enable>::isValid() const noexcept {
+    return _index != UNINITIALIZED;
 }
 
 template <typename Index, typename Enable>
-void IndexHandle<Index, Enable>::Clear() noexcept {
-    _index = sUninitialized;
+void IndexHandle<Index, Enable>::clear() noexcept {
+    _index = UNINITIALIZED;
 }
 
 template <typename Index, typename Enable>
