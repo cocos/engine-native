@@ -208,6 +208,8 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
     const auto *indexBuffer = static_cast<CCMTLBuffer *>(ia->getIndexBuffer());
     auto mtlEncoder = _commandEncoder.getMTLEncoder();
 
+    _indexType = indexBuffer->getIndexType();
+
     if (_type == CommandBufferType::PRIMARY) {
         if (indirectBuffer) {
             const auto indirectMTLBuffer = indirectBuffer->getMTLBuffer();
