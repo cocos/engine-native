@@ -215,9 +215,8 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
             if (_indirectDrawSuppotred) {
                 ++_numDrawCalls;
                 if (indirectBuffer->isDrawIndirectByIndex()) {
-                    _indexType = indexBuffer->getIndexType();
                     [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
-                                            indexType:_indexType
+                                            indexType:indexBuffer->getIndexType()
                                           indexBuffer:indexBuffer->getMTLBuffer()
                                     indexBufferOffset:0
                                        indirectBuffer:indirectMTLBuffer
@@ -238,17 +237,16 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
                     const auto &drawInfo = drawInfos[i];
                     offset += drawInfo.firstIndex * stride;
                     if (indirectBuffer->isDrawIndirectByIndex()) {
-                        _indexType = indexBuffer->getIndexType();
                         if (drawInfo.instanceCount == 0) {
                             [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
                                                    indexCount:drawInfo.indexCount
-                                                    indexType:_indexType
+                                                    indexType:indexBuffer->getIndexType()
                                                   indexBuffer:indexBuffer->getMTLBuffer()
                                             indexBufferOffset:offset];
                         } else {
                             [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
                                                    indexCount:drawInfo.indexCount
-                                                    indexType:_indexType
+                                                    indexType:indexBuffer->getIndexType()
                                                   indexBuffer:indexBuffer->getMTLBuffer()
                                             indexBufferOffset:offset
                                                 instanceCount:drawInfo.instanceCount];
@@ -271,19 +269,18 @@ void CCMTLCommandBuffer::draw(InputAssembler *ia) {
             DrawInfo drawInfo;
             static_cast<CCMTLInputAssembler *>(ia)->extractDrawInfo(drawInfo);
             if (drawInfo.indexCount > 0) {
-                _indexType = indexBuffer->getIndexType();
                 uint offset = 0;
                 offset += drawInfo.firstIndex * indexBuffer->getStride();
                 if (drawInfo.instanceCount == 0) {
                     [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
                                            indexCount:drawInfo.indexCount
-                                            indexType:_indexType
+                                            indexType:indexBuffer->getIndexType()
                                           indexBuffer:indexBuffer->getMTLBuffer()
                                     indexBufferOffset:offset];
                 } else {
                     [mtlEncoder drawIndexedPrimitives:_mtlPrimitiveType
                                            indexCount:drawInfo.indexCount
-                                            indexType:_indexType
+                                            indexType:indexBuffer->getIndexType()
                                           indexBuffer:indexBuffer->getMTLBuffer()
                                     indexBufferOffset:offset
                                         instanceCount:drawInfo.instanceCount];
