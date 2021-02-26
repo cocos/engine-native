@@ -319,6 +319,7 @@ void ScriptEngine::onPromiseRejectCallback(v8::PromiseRejectMessage msg) {
     std::stringstream ss;
     auto event = msg.GetEvent();
     auto value = msg.GetValue();
+    auto promiseName = msg.GetPromise()->GetConstructorName();
     const char *eventName = "[invalidatePromiseEvent]";
 
     if (event == v8::kPromiseRejectWithNoHandler) {
@@ -335,7 +336,57 @@ void ScriptEngine::onPromiseRejectCallback(v8::PromiseRejectMessage msg) {
         // prepend error object to stack message
         v8::Local<v8::String> str = value->ToString(isolate->GetCurrentContext()).ToLocalChecked();
         v8::String::Utf8Value valueUtf8(isolate, str);
-        ss << *valueUtf8 << std::endl;
+        auto *strp = *valueUtf8;
+        auto len = valueUtf8.length();
+        if (strp == nullptr) {
+            ss << "value: null" << std::endl;
+            auto tn = value->TypeOf(isolate);
+            v8::String::Utf8Value tnUtf8(isolate, tn);
+            strp = *tnUtf8;
+            if (strp) {
+                ss << " type: " << strp << std::endl;
+            }
+            if (value->IsObject()) {
+                v8::MaybeLocal<v8::String> json = v8::JSON::Stringify(isolate->GetCurrentContext(), value);
+                if (!json.IsEmpty()) {
+                    v8::String::Utf8Value jsonStr(isolate, json.ToLocalChecked());
+                    strp = *jsonStr;
+                    if (strp) {
+                        ss << " obj: " << strp << std::endl;
+                    } else {
+                        ss << " obj: null" << std::endl;
+                    }
+                } else {
+                    v8::Local<v8::Object> obj = value->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+                    v8::Local<v8::Array> attrNames = obj->GetOwnPropertyNames(isolate->GetCurrentContext()).ToLocalChecked();
+
+                    if (!attrNames.IsEmpty()) {
+                        uint32_t size = attrNames->Length();
+
+                        for (auto i = 0; i < size; i++) {
+                            se::Value e;
+                            v8::Local<v8::String> attrName = attrNames->Get(isolate->GetCurrentContext(), i)
+                                                                 .ToLocalChecked()
+                                                                 ->ToString(isolate->GetCurrentContext())
+                                                                 .ToLocalChecked();
+                            v8::String::Utf8Value attrUtf8(isolate, attrName);
+                            strp = *attrUtf8;
+                            ss << " obj.property " << strp << std::endl;
+                        }
+                        ss << " obj: JSON.parse failed!" << std::endl;
+                    }
+                }
+            }
+
+        } else {
+            ss << *valueUtf8 << std::endl;
+        }
+
+        v8::String::Utf8Value valuePromiseConstructor(isolate, promiseName);
+        strp = *valuePromiseConstructor;
+        if (strp) {
+            ss << "PromiseConstructor " << strp;
+        }
     }
 
     auto stackStr = getInstance()->getCurrentStackTrace();

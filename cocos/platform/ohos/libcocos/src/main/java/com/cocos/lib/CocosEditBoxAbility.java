@@ -29,7 +29,6 @@ import ohos.aafwk.content.Intent;
 import ohos.accessibility.ability.AccessibleAbility;
 import ohos.accessibility.ability.SoftKeyBoardController;
 import ohos.agp.components.*;
-import ohos.agp.render.Paint;
 import ohos.agp.utils.Color;
 import ohos.agp.window.service.DisplayAttributes;
 import ohos.agp.window.service.DisplayManager;
@@ -38,15 +37,18 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.multimodalinput.event.TouchEvent;
 
+import java.lang.ref.WeakReference;
+
 
 public class CocosEditBoxAbility extends AbilitySlice {
 
     // a color of dark green, was used for confirm button background
     private static final Color DARK_GREEN = new Color(Color.getIntColor("#1fa014"));
     private static final Color DARK_GREEN_PRESS = new Color(Color.getIntColor("#008e26"));
+    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0, "CocosEditBoxAbility");
 
-    private static CocosEditBoxAbility sThis = null;
-    private Cocos2dxEditText mEditText = null;
+    private static WeakReference<CocosEditBoxAbility> sThis = null;
+    private CocosTextHelper mCCText = null;
     private Button mButton = null;
     private String mButtonTitle = null;
     private boolean mConfirmHold = true;
@@ -54,29 +56,20 @@ public class CocosEditBoxAbility extends AbilitySlice {
     /***************************************************************************************
      Inner class.
      **************************************************************************************/
-    class Cocos2dxEditText extends TextField {
+    class CocosTextHelper {
         private final HiLogLabel TAG = new HiLogLabel(HiLog.LOG_APP, 0, "Cocos2dxEditBox");
         private boolean mIsMultiLine = false;
         private Text.TextObserver mTextWatcher = null;
-        private Paint mPaint;
         private Color mLineColor = DARK_GREEN;
         private float mLineWidth = 2f;
         private boolean keyboardVisible = false;
         private int mScreenHeight;
+        private TextField mTextField;
 
-        public Cocos2dxEditText(AbilitySlice context) {
-            super(context);
-            //remove focus border
-//            this.setBackground(null);
-            this.setTextColor(Color.BLACK);
-
-            DisplayAttributes displayAttrib = DisplayManager.getInstance().getDefaultDisplay(context).get().getRealAttributes();
-
+        public CocosTextHelper(TextField tf) {
+            mTextField = tf;
+            DisplayAttributes displayAttrib = DisplayManager.getInstance().getDefaultDisplay(tf.getContext()).get().getRealAttributes();
             mScreenHeight = displayAttrib.width;
-            mPaint = new Paint();
-            mPaint.setStrokeWidth(mLineWidth);
-            mPaint.setStyle(Paint.Style.FILL_STYLE);
-            mPaint.setColor(mLineColor);
 
             mTextWatcher = new Text.TextObserver() {
                 @Override
@@ -84,22 +77,11 @@ public class CocosEditBoxAbility extends AbilitySlice {
                     CocosEditBoxAbility.this.onKeyboardInput(s.toString());
                 }
             };
+            tf.setAdjustInputPanel(true);
             registKeyboardVisible();
+            mCCText = this;
         }
 
-        /***************************************************************************************
-         Override functions.
-         **************************************************************************************/
-
-//        @Override
-//        protected void onDraw(Canvas canvas) {
-//            // draw the underline
-//            int padB = this.getPaddingBottom();
-//            canvas.drawLine(getScrollX(), this.getHeight() - padB / 2 - mLineWidth,
-//                    getScrollX() + this.getWidth(),
-//                    this.getHeight() - padB / 2 - mLineWidth, mPaint);
-//            super.onDraw(canvas);
-//        }
 
         /***************************************************************************************
          Public functions.
@@ -107,23 +89,18 @@ public class CocosEditBoxAbility extends AbilitySlice {
 
         public void show(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType) {
             mIsMultiLine = isMultiline;
-            // TODO: max text
+            // TODO: truncate
 //            this.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+//            mTextField.setTruncationMode(Text.TruncationMode.ELLIPSIS_AT_END);
 
-            this.setText(defaultValue);
-            setSelected(true);
+            mTextField.setText(defaultValue);
             this.setConfirmType(confirmType);
-            this.setInputType(inputType, mIsMultiLine);
-            this.setVisibility(Component.VISIBLE);
-
-            // Open soft keyboard manually. Should request focus to open soft keyboard.
-            this.requestFocus();
-
+//            this.setInputType(inputType, mIsMultiLine); // FIXME: should enable
             this.addListeners();
         }
 
         public void hide() {
-            mEditText.setVisibility(Component.INVISIBLE);
+            mTextField.clearFocus();
             this.removeListeners();
         }
 
@@ -133,19 +110,19 @@ public class CocosEditBoxAbility extends AbilitySlice {
 
         private void setConfirmType(final String confirmType) {
             if (confirmType.contentEquals("done")) {
-                setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_UNSPECIFIED);
+                mTextField.setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_UNSPECIFIED);
                 mButtonTitle = "Done"; //TODO: read from ResourceTable
             } else if (confirmType.contentEquals("next")) {
-                setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_UNSPECIFIED);
+                mTextField.setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_UNSPECIFIED);
                 mButtonTitle = "Done"; //TODO: read from ResourceTable
             } else if (confirmType.contentEquals("search")) {
-                setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_SEARCH);
+                mTextField.setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_SEARCH);
                 mButtonTitle = "Search"; //TODO: read from ResourceTable
             } else if (confirmType.contentEquals("go")) {
-                setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_GO);
+                mTextField.setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_GO);
                 mButtonTitle = "Go"; //TODO: read from ResourceTable
             } else if (confirmType.contentEquals("send")) {
-                setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_SEND);
+                mTextField.setInputMethodOption(InputAttribute.ENTER_KEY_TYPE_SEND);
                 mButtonTitle = "Send"; //TODO: read from ResourceTable
             } else {
                 mButtonTitle = null;
@@ -157,48 +134,45 @@ public class CocosEditBoxAbility extends AbilitySlice {
             if (inputType.contentEquals("text")) {
                 if (isMultiLine) {
 //                    this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                    setTextInputType(InputAttribute.PATTERN_TEXT);
-                    setMultipleLine(true);
+                    mTextField.setTextInputType(InputAttribute.PATTERN_TEXT);
+                    mTextField.setMultipleLine(true);
                 } else {
-                    setTextInputType(InputAttribute.PATTERN_TEXT);
-                    setMultipleLine(false);
+                    mTextField.setTextInputType(InputAttribute.PATTERN_TEXT);
+                    mTextField.setMultipleLine(false);
                 }
             } else if (inputType.contentEquals("email")) {
 //                this.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                this.setTextInputType(InputAttribute.PATTERN_TEXT);
+                mTextField.setTextInputType(InputAttribute.PATTERN_TEXT);
             } else if (inputType.contentEquals("number")) {
 //                this.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                this.setTextInputType(InputAttribute.PATTERN_NUMBER);
+                mTextField.setTextInputType(InputAttribute.PATTERN_NUMBER);
             } else if (inputType.contentEquals("phone")) {
 //                this.setInputType(InputType.TYPE_CLASS_PHONE);
-                this.setTextInputType(InputAttribute.PATTERN_TEXT);
+                mTextField.setTextInputType(InputAttribute.PATTERN_TEXT);
             } else if (inputType.contentEquals("password")) {
 //                this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                this.setTextInputType(InputAttribute.PATTERN_PASSWORD);
+                mTextField.setTextInputType(InputAttribute.PATTERN_PASSWORD);
             } else {
                 HiLog.error(TAG, "unknown input type " + inputType);
             }
         }
 
         private void addListeners() {
-// TODO: ??
-//            this.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//                @Override
-//                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                    if (!mIsMultiLine) {
-//                        CocosEditBoxActivity.this.hide();
-//                    }
-//
-//                    return false; // pass on to other listeners.
-//                }
-//            });
 
-            this.addTextObserver(mTextWatcher);
+            mTextField.setEditorActionListener(new Text.EditorActionListener() {
+                @Override
+                public boolean onTextEditorAction(int i) {
+                    //TODO:
+                    return false;
+                }
+            });
+
+            mTextField.addTextObserver(mTextWatcher);
         }
 
         private void removeListeners() {
 //            this.setOnEditorActionListener(null);
-            this.removeTextObserver(mTextWatcher);
+            mTextField.removeTextObserver(mTextWatcher);
         }
 
         private void registKeyboardVisible() {
@@ -228,25 +202,34 @@ public class CocosEditBoxAbility extends AbilitySlice {
     protected void onStart(Intent intent) {
         super.onStart(intent);
 
+        getKeyBoard().setShowMode(AccessibleAbility.SHOW_MODE_AUTO);
         getAbility().setAbilitySliceAnimator(null); // remove animation
 
         //FIXME: todo
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE); // android
 //        getWindow().setInputPanelDisplayType(Dis); // ohos
-        sThis = this;
-        getWindow().setInputPanelDisplayType(WindowManager.LayoutConfig.INPUT_ADJUST_PAN);
+
+        sThis = new WeakReference<CocosEditBoxAbility>(this);
+//        getWindow().setInputPanelDisplayType(WindowManager.LayoutConfig.INPUT_ADJUST_PAN);
 
         setUIContent(ResourceTable.Layout_editbox_layout);
+        delayShow(intent);
+    }
 
-        this.addItems();
+    private void delayShow(final Intent intent) {
+        CocosHelper.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                CocosEditBoxAbility.this.addItems();
+                CocosEditBoxAbility.this.show(intent.getStringParam("defaultValue"),
+                        intent.getIntParam("maxLength", 60),
+                        intent.getBooleanParam("isMultiline", false),
+                        intent.getBooleanParam("confirmHold", true),
+                        intent.getStringParam("confirmType"),
+                        intent.getStringParam("inputType"));
 
-        show(intent.getStringParam("defaultValue"),
-                intent.getIntParam("maxLength", 60),
-                intent.getBooleanParam("isMultiline", false),
-                intent.getBooleanParam("confirmHold", true),
-                intent.getStringParam("confirmType"),
-                intent.getStringParam("inputType"));
-
+            }
+        });
     }
 
     /***************************************************************************************
@@ -257,54 +240,55 @@ public class CocosEditBoxAbility extends AbilitySlice {
      Private functions.
      **************************************************************************************/
     private void addItems() {
-        this.addEditText();
-        this.addButton();
-        //FXI ME: Is it needed?
-        // When touch area outside EditText and soft keyboard, then hide.
-//        layout.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Cocos2dxEditBox.this.hide();
-//                return true;
-//            }
-//
-//        });
-    }
-
-    private void addEditText() {
-        mEditText = (Cocos2dxEditText)findComponentById(ResourceTable.Id_textField);
-        mEditText.setVisibility(Component.INVISIBLE);
-    }
-
-    private void addButton() {
-        mButton = (Button) findComponentById(ResourceTable.Id_enterBtn);
+        mCCText = new CocosTextHelper(getTextField());
+        mButton = (Button) findComponentById(ResourceTable.Id_editbox_enterBtn);
 
         mButton.setTouchEventListener(new Component.TouchEventListener() {
             @Override
             public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
-                CocosEditBoxAbility.this.onKeyboardConfirm(mEditText.getText().toString());
-
-                if (!CocosEditBoxAbility.this.mConfirmHold)
+                CocosEditBoxAbility.this.onKeyboardConfirm(CocosEditBoxAbility.this.getTextField().getText());
+                if (!CocosEditBoxAbility.this.mConfirmHold && touchEvent.getAction() == TouchEvent.PRIMARY_POINT_DOWN)
                     CocosEditBoxAbility.this.hide();
                 return true;
             }
         });
+        // When touch area outside EditText and soft keyboard, then hide.
+        Component layout = findComponentById(ResourceTable.Id_editbox_container);
+        layout.setTouchEventListener(new Component.TouchEventListener() {
+            @Override
+            public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
+                if(touchEvent.getAction() == TouchEvent.PRIMARY_POINT_DOWN) {
+                    CocosEditBoxAbility.this.hide();
+                }
+                return true;
+            }
+        });
+        layout.setLayoutRefreshedListener(new Component.LayoutRefreshedListener() {
+            @Override
+            public void onRefreshed(Component component) {
+                // detect keyboard re-layout?
+                HiLog.debug(LABEL, component.getClass().getSimpleName());
+            }
+        });
+    }
+
+    private TextField getTextField() {
+        return (TextField)findComponentById(ResourceTable.Id_editbox_textField);
     }
 
     private void hide() {
 //        Utils.hideVirtualButton(); // TODO: hide virtual button
         this.closeKeyboard();
-        this.terminate();
     }
 
     public void show(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType) {
+        TextField tf = getTextField();
         mConfirmHold = confirmHold;
-        mEditText.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType);
-        int editPaddingBottom = mEditText.getPaddingBottom();
-        int editPadding = mEditText.getPaddingTop();
-        mEditText.setPadding(editPadding, editPadding, editPadding, editPaddingBottom);
+        mCCText.show(defaultValue, maxLength, isMultiline, confirmHold, confirmType, inputType);
+        int editPaddingBottom = tf.getPaddingBottom();
+        int editPadding = tf.getPaddingTop();
+        tf.setPadding(editPadding, editPadding, editPadding, editPaddingBottom);
 
-        mEditText.setTextColor(Color.WHITE);
 
         mButton.setText(mButtonTitle);
 //        if (mButtonTitle == null || mButton.length() == 0) {
@@ -322,24 +306,24 @@ public class CocosEditBoxAbility extends AbilitySlice {
     }
 
     private void closeKeyboard() {
-        getKeyBoard().setShowMode(AccessibleAbility.SHOW_MODE_HIDE);
+        TextField tf = getTextField();
         CocosHelper.runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                mEditText.clearFocus();
+                tf.clearFocus();
             }
         });
-        this.onKeyboardComplete(mEditText.getText().toString());
+        this.onKeyboardComplete(tf.getText());
 
     }
 
     private void openKeyboard() {
-        getKeyBoard().setShowMode(AccessibleAbility.SHOW_MODE_AUTO);
+        TextField tf = getTextField();
         CocosHelper.runOnUIThread(new Runnable() {
             @Override
             public void run() {
-                mEditText.requestFocus();
-                mEditText.simulateClick();
+                tf.requestFocus();
+                tf.simulateClick();
             }
         });
     }
@@ -371,14 +355,19 @@ public class CocosEditBoxAbility extends AbilitySlice {
     }
 
     private static void hideNative() {
-        if (null != CocosEditBoxAbility.sThis) {
-            CocosHelper.runOnUIThread(new Runnable() {
-                @Override
-                public void run() {
-                    CocosEditBoxAbility.sThis.hide();
+        CocosHelper.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                if(null != CocosEditBoxAbility.sThis) {
+                    CocosEditBoxAbility ability = CocosEditBoxAbility.sThis.get();
+                    if(ability != null) {
+                        ability.hide();
+                        ability.terminate();
+                        CocosEditBoxAbility.sThis = null;
+                    }
                 }
-            });
-        }
+            }
+        });
     }
 
     /***************************************************************************************

@@ -97,7 +97,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
         this.getWindow().addFlags(WindowManager.LayoutConfig.MARK_ALLOW_EXTEND_LAYOUT);
         this.getWindow().addFlags(WindowManager.LayoutConfig.MARK_FULL_SCREEN);
 
-        this.getWindow().addFlags(WindowManager.LayoutConfig.INPUT_ADJUST_PAN);
+//        this.getWindow().addFlags(WindowManager.LayoutConfig.INPUT_ADJUST_PAN);
 
 //        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
