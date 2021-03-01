@@ -289,7 +289,7 @@ public class CocosVideoView extends SurfaceView {
                 mMediaPlayer == null) {
             return;
         }
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
                 Method seekTo = mMediaPlayer.getClass().getMethod("seekTo", long.class, int.class);
                 // The mode argument added in API level 26, 3 = MediaPlayer.SEEK_CLOSEST
