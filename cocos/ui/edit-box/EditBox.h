@@ -51,11 +51,6 @@ public:
     // Don't call it by yourself untile you know the effect.
     static bool complete();
 
-#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    static uint32_t mouseDownListenerId;
-    static void onMouseDown(const CustomEvent &);
-#endif
-
 private:
     static bool _isShown;
 };
