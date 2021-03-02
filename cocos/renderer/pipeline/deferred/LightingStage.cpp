@@ -276,6 +276,11 @@ void LightingStage::render(Camera *camera) {
     auto pipeline = static_cast<DeferredPipeline *>(_pipeline);
     const auto sceneData = _pipeline->getPipelineSceneData();
     const auto sharedData = sceneData->getSharedData();
+    const auto &renderObjects = sceneData->getRenderObjects();
+
+    if (renderObjects.empty()) {
+        return;
+    }
 
     auto cmdBuff = pipeline->getCommandBuffers()[0];
 
@@ -290,7 +295,7 @@ void LightingStage::render(Camera *camera) {
     gfx::Rect renderArea = pipeline->getRenderArea(camera, false);
 
     gfx::Color clearColor = {0.0, 0.0, 0.0, 1.0};
-    if (camera->clearFlag | static_cast<uint>( gfx::ClearFlagBit::COLOR)) {
+    if (camera->clearFlag & static_cast<uint>( gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {
             SRGBToLinear(clearColor, camera->clearColor);
             const auto scale = sharedData->fpScale / camera->exposure;
@@ -319,7 +324,7 @@ void LightingStage::render(Camera *camera) {
     gfx::Shader *shader = sceneData->getSharedData()->getDeferredLightPassShader();
 
     gfx::InputAssembler* inputAssembler = pipeline->getQuadIAOffScreen();
-    gfx::PipelineState *pState =PipelineStateManager::getOrCreatePipelineState(
+    gfx::PipelineState *pState = PipelineStateManager::getOrCreatePipelineState(
         pass, shader, inputAssembler, renderPass);
     assert(pState != nullptr);
 
@@ -334,7 +339,6 @@ void LightingStage::render(Camera *camera) {
     for (auto queue : _renderQueues) {
         queue->clear();
     }
-    const auto &renderObjects = sceneData->getRenderObjects();
 
     uint m = 0, p = 0;
     size_t k = 0;

@@ -35,7 +35,7 @@ class UIPhase;
 
 class CC_DLL PostprocessStage : public RenderStage {
 public:
-    PostprocessStage() {};
+    PostprocessStage();
     ~PostprocessStage() {};
 
     virtual bool initialize(const RenderStageInfo &info) override;

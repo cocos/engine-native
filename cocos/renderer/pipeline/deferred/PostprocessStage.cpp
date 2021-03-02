@@ -40,6 +40,10 @@ RenderStageInfo PostprocessStage::_initInfo = {
     0,
 };
 
+PostprocessStage::PostprocessStage() : RenderStage() {
+    _uiPhase = CC_NEW(UIPhase);
+}
+
 bool PostprocessStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     return true;
@@ -47,7 +51,7 @@ bool PostprocessStage::initialize(const RenderStageInfo &info) {
 
 void PostprocessStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
-    _uiPhase = CC_NEW(UIPhase);
+    _uiPhase->activate(pipeline);
 }
 
 void PostprocessStage::destroy() {
@@ -62,15 +66,20 @@ void PostprocessStage::render(Camera *camera) {
     _pipeline->getPipelineUBO()->updateCameraUBO(camera, camera->getWindow()->hasOffScreenAttachments);
     gfx::Rect renderArea = pp->getRenderArea(camera, !camera->getWindow()->hasOffScreenAttachments);
 
-    gfx::Color color = {0, 0, 0, 1};
-    gfx::ColorList clst;
-    clst.push_back(color);
+    if (static_cast<gfx::ClearFlags>(camera->clearFlag) & gfx::ClearFlagBit::COLOR) {
+        _clearColors[0].x = camera->clearColor.x;
+        _clearColors[0].y = camera->clearColor.y;
+        _clearColors[0].z = camera->clearColor.z;
+    }
+
+    _clearColors[0].w = camera->clearColor.w;
 
     gfx::Framebuffer *fb = camera->getWindow()->getFramebuffer();
-    gfx::RenderPass *rp = fb->getRenderPass() ?
+    const auto &colorTextures = fb->getColorTextures();
+    gfx::RenderPass *rp = colorTextures.size() && colorTextures[0] ? 
         fb->getRenderPass() : pp->getOrCreateRenderPass(static_cast<gfx::ClearFlags>(camera->clearFlag));
 
-    cmdBf->beginRenderPass(rp, fb, renderArea, clst, camera->clearDepth, camera->clearStencil);
+    cmdBf->beginRenderPass(rp, fb, renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
     cmdBf->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pp->getDescriptorSet());
 
     // post proces
@@ -79,12 +88,11 @@ void PostprocessStage::render(Camera *camera) {
     gfx::Shader *sd = sceneData->getSharedData()->getDeferredPostPassShader();
     const auto &renderObjects = sceneData->getRenderObjects();
     
-    gfx::InputAssembler *ia = camera->getWindow()->hasOffScreenAttachments ? pp->getQuadIAOffScreen() : pp->getQuadIAOnScreen();
-
-    gfx::PipelineState *pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, rp);
-    assert(pso != nullptr);
-    
     if (!renderObjects.empty()) {
+        gfx::InputAssembler *ia = camera->getWindow()->hasOffScreenAttachments ? pp->getQuadIAOffScreen() : pp->getQuadIAOnScreen();
+        gfx::PipelineState *pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, rp);
+        assert(pso != nullptr);
+
         cmdBf->bindPipelineState(pso);
         cmdBf->bindInputAssembler(ia);
         cmdBf->draw(ia);
