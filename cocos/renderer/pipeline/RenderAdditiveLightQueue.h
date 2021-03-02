@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 #include "core/CoreStd.h"
 #include "helper/SharedMemory.h"
+#include "../math/Mat4.h"
 
 namespace cc {
 namespace pipeline {
@@ -99,6 +100,7 @@ private:
     uint _lightBufferCount = 16;
     float _lightMeterScale = 10000.0f;
     uint _phaseID = 0;
+    Mat4 _nullMatrix;
 };
 
 } // namespace pipeline

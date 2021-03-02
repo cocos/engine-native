@@ -102,6 +102,7 @@ void updateSphereLight(Shadows *shadows, const Light *light, std::array<float, U
 void updateDirLight(Shadows *shadows, const Light *light, std::array<float, UBOShadow::COUNT> &shadowUBO) {
     const auto node = light->getNode();
     const auto rotation = node->worldRotation;
+    cc::Mat4 nullMatrix;
     Quaternion _qt(rotation.x, rotation.y, rotation.z, rotation.w);
     Vec3 forward(0, 0, -1.0f);
     forward.transformQuat(_qt);
@@ -135,7 +136,7 @@ void updateDirLight(Shadows *shadows, const Light *light, std::array<float, UBOS
 
     float shadowInfos[4] = {shadows->size.x, shadows->size.y, (float)shadows->pcfType, shadows->bias};
     memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_PLANE_PROJ_OFFSET, matLight.m, sizeof(matLight));
-    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matLight.m, sizeof(matLight));
+    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, nullMatrix.m, sizeof(nullMatrix));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadows->color, sizeof(Vec4));
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
 }

@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 #include "core/CoreStd.h"
 #include "Define.h"
+#include "../math/Mat4.h"
 
 namespace cc {
 namespace pipeline {
@@ -66,6 +67,7 @@ private:
     RenderBatchedQueue *_batchedQueue = nullptr;
     gfx::Buffer *_buffer = nullptr;
     uint _phaseID = 0;
+    Mat4 _nullMatrix;
 };
 } // namespace pipeline
 } // namespace cc
