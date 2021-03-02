@@ -30,6 +30,7 @@
 #include "../helper/SharedMemory.h"
 #include "../PipelineStateManager.h"
 #include "gfx-base/GFXDevice.h"
+#include "../forward/UIPhase.h"
 
 namespace cc {
 namespace pipeline {
@@ -46,6 +47,7 @@ bool PostprocessStage::initialize(const RenderStageInfo &info) {
 
 void PostprocessStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
+    _uiPhase = CC_NEW(UIPhase);
 }
 
 void PostprocessStage::destroy() {
@@ -75,15 +77,20 @@ void PostprocessStage::render(Camera *camera) {
     const auto sceneData = _pipeline->getPipelineSceneData();
     PassView *pv = sceneData->getSharedData()->getDeferredPostPass();
     gfx::Shader *sd = sceneData->getSharedData()->getDeferredPostPassShader();
-
+    const auto &renderObjects = sceneData->getRenderObjects();
+    
     gfx::InputAssembler *ia = camera->getWindow()->hasOffScreenAttachments ? pp->getQuadIAOffScreen() : pp->getQuadIAOnScreen();
 
     gfx::PipelineState *pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, rp);
     assert(pso != nullptr);
+    
+    if (!renderObjects.empty()) {
+        cmdBf->bindPipelineState(pso);
+        cmdBf->bindInputAssembler(ia);
+        cmdBf->draw(ia);
+    }
 
-    cmdBf->bindPipelineState(pso);
-    cmdBf->bindInputAssembler(ia);
-    cmdBf->draw(ia);
+    _uiPhase->render(camera, rp);
     cmdBf->endRenderPass();
 }
 } // namespace pipeline

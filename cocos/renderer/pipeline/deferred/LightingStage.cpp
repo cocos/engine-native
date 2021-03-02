@@ -78,8 +78,7 @@ LightingStage::~LightingStage() {
 bool LightingStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
-    _phaseID = getPhaseID("deferred-lighting");
-    _transparentPhaseID = getPhaseID("deferred-transparent");
+    _phaseID = getPhaseID("deferred");
     return true;
 }
 
@@ -303,12 +302,11 @@ void LightingStage::render(Camera *camera) {
         }
     }
 
-    clearColor.w = camera->clearColor.w;
-
-    LightingFlow *flow = dynamic_cast<LightingFlow *>(_flow);
-    assert(flow != nullptr);
-
-    auto frameBuffer = flow->getLightingFrameBuffer();
+    clearColor.w = 0;
+    
+    const auto deferredData = pipeline->getDeferredRenderData(camera);
+    bindLightingTexture(deferredData);
+    auto frameBuffer = deferredData->lightingFrameBuff;
     auto renderPass = frameBuffer->getRenderPass();
 
     cmdBuff->beginRenderPass(renderPass, frameBuffer, renderArea, &clearColor,
@@ -350,7 +348,7 @@ void LightingStage::render(Camera *camera) {
             for (p = 0; p < subModel->passCount; ++p) {
                 const PassView *pass = subModel->getPassView(p);
 
-                if (pass->phase != _transparentPhaseID) continue;
+                if (pass->phase == _phaseID) continue;
                 for (k = 0; k < _renderQueues.size(); k++) {
                     _renderQueues[k]->insertRenderPass(ro, m, p);
                 }
@@ -363,6 +361,14 @@ void LightingStage::render(Camera *camera) {
     }
 
     cmdBuff->endRenderPass();
+}
+
+void LightingStage::bindLightingTexture(DeferredRenderData *data) {
+    // bind sampler and texture, used in postprocess
+    _pipeline->getDescriptorSet()->bindTexture(
+        static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP),
+        data->lightingFrameBuff->getColorTextures()[0]);
+    _pipeline->getDescriptorSet()->update();
 }
 
 } // namespace pipeline

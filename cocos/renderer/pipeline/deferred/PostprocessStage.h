@@ -31,6 +31,7 @@ namespace cc {
 namespace pipeline {
 
 class Camera;
+class UIPhase;
 
 class CC_DLL PostprocessStage : public RenderStage {
 public:
@@ -45,6 +46,7 @@ public:
 private:
     gfx::Rect _renderArea;
     static RenderStageInfo _initInfo;
+    UIPhase *_uiPhase = nullptr;
 };
 } // namespace pipeline
 } // namespace cc
