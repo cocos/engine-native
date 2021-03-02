@@ -73,7 +73,7 @@ GbufferStage::~GbufferStage() {
 bool GbufferStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
-    _phaseID = getPhaseID("deferred");
+    _phaseID = getPhaseID("default");
     return true;
 }
 
