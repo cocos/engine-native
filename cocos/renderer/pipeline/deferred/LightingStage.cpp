@@ -79,6 +79,7 @@ bool LightingStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
     _phaseID = getPhaseID("deferred");
+    _transparentPhaseID = getPhaseID("forward-add");
     return true;
 }
 
@@ -352,7 +353,7 @@ void LightingStage::render(Camera *camera) {
             for (p = 0; p < subModel->passCount; ++p) {
                 const PassView *pass = subModel->getPassView(p);
 
-                if (pass->phase == _phaseID) continue;
+                if (pass->phase == _phaseID || pass->phase == _transparentPhaseID) continue;
                 for (k = 0; k < _renderQueues.size(); k++) {
                     _renderQueues[k]->insertRenderPass(ro, m, p);
                 }
