@@ -352,7 +352,7 @@ void LightingStage::render(Camera *camera) {
             auto subModel = model->getSubModelView(subModelID[m]);
             for (p = 0; p < subModel->passCount; ++p) {
                 const PassView *pass = subModel->getPassView(p);
-
+                // TODO: need fallback of ulit and gizmo material.
                 if (pass->phase == _phaseID || pass->phase == _transparentPhaseID) continue;
                 for (k = 0; k < _renderQueues.size(); k++) {
                     _renderQueues[k]->insertRenderPass(ro, m, p);
