@@ -26,7 +26,6 @@ THE SOFTWARE.
 
 #include "core/CoreStd.h"
 #include "Define.h"
-#include "../math/Mat4.h"
 
 namespace cc {
 namespace pipeline {
