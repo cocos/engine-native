@@ -102,7 +102,6 @@ void updateSphereLight(Shadows *shadows, const Light *light, std::array<float, U
 void updateDirLight(Shadows *shadows, const Light *light, std::array<float, UBOShadow::COUNT> &shadowUBO) {
     const auto node = light->getNode();
     const auto rotation = node->worldRotation;
-    cc::Mat4 nullMatrix;
     Quaternion _qt(rotation.x, rotation.y, rotation.z, rotation.w);
     Vec3 forward(0, 0, -1.0f);
     forward.transformQuat(_qt);
