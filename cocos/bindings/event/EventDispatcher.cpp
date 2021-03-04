@@ -160,23 +160,18 @@ void EventDispatcher::dispatchMouseEvent(const struct MouseEvent &mouseEvent) {
         _jsMouseEventObj->setProperty("y", yVal);
     }
 
-    const char *eventName = nullptr;
     const char *jsFunctionName = nullptr;
     switch (type) {
         case MouseEvent::Type::DOWN:
-            eventName = EVENT_MOUSE_DOWN;
             jsFunctionName = "onMouseDown";
             break;
         case MouseEvent::Type::MOVE:
-            eventName = EVENT_MOUSE_MOVE;
             jsFunctionName = "onMouseMove";
             break;
         case MouseEvent::Type::UP:
-            eventName = EVENT_MOUSE_UP;
             jsFunctionName = "onMouseUp";
             break;
         case MouseEvent::Type::WHEEL:
-            eventName = EVENT_MOUSE_WHEEL;
             jsFunctionName = "onMouseWheel";
             break;
         default:
@@ -186,7 +181,7 @@ void EventDispatcher::dispatchMouseEvent(const struct MouseEvent &mouseEvent) {
 
     se::ValueArray args;
     args.push_back(se::Value(_jsMouseEventObj));
-    EventDispatcher::doDispatchEvent(eventName, jsFunctionName, args);
+    EventDispatcher::doDispatchEvent(nullptr, jsFunctionName, args);
 }
 
 void EventDispatcher::dispatchKeyboardEvent(const struct KeyboardEvent &keyboardEvent) {
