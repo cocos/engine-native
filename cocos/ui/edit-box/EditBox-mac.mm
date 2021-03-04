@@ -25,7 +25,6 @@
 #include "platform/Application.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_global.h"
-#include "cocos/bindings/event/CustomEventTypes.h"
 
 #import <AppKit/AppKit.h>
 

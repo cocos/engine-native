@@ -25,7 +25,6 @@
 
 #include <string>
 #include "base/Macros.h"
-#include "cocos/bindings/event/EventDispatcher.h"
 
 namespace cc {
 
