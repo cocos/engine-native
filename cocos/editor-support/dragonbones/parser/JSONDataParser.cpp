@@ -1365,15 +1365,17 @@ unsigned JSONDataParser::_parseZOrderFrame(const rapidjson::Value& rawData, unsi
                 if (zOrders[i] == -1) 
                 {
                     // _frameArray[frameOffset + 2 + i] = unchanged[--unchangedIndex];
-                    
-                    if(unchangedIndex > 0) {
+                    if(unchangedIndex > 0) 
+                    {
                         _frameArray[frameOffset + 2 + i] = unchanged[--unchangedIndex];
                     } 
-                    else {
+                    else 
+                    {
                         _frameArray[frameOffset + 2 + i] = 0;
                     }
                 }
-                else {
+                else 
+                {
                     _frameArray[frameOffset + 2 + i] = zOrders[i];
                 }
             }
