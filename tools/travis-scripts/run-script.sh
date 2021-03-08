@@ -68,6 +68,7 @@ function build_android()
     cat "set(CC_USE_GLES3 ON)" >> build-android/proj/cfg.cmake
     cat "set(CC_USE_VULKAN ON)" >> build-android/proj/cfg.cmake
     cat "set(CC_USE_GLES2 ON)" >> build-android/proj/cfg.cmake
+    cat "set(USE_WEBSOCKET_SERVER ON)" >> build-android/proj/cfg.cmake
     
     mkdir -p build-android/assets
 
@@ -132,6 +133,7 @@ function build_macosx()
     cat "set(CC_USE_VULKAN OFF)" >> build-mac/proj/cfg.cmake
     cat "set(CC_USE_GLES2 OFF)" >> build-mac/proj/cfg.cmake
     cat "set(CC_USE_METAL ON)" >> build-mac/proj/cfg.cmake
+    cat "set(USE_WEBSOCKET_SERVER ON)" >> build-mac/proj/cfg.cmake
     mkdir build-mac/assets
 
     RES_DIR=$COCOS2DX_ROOT/templates/mac/build-mac
@@ -159,6 +161,7 @@ function build_ios()
     cat "set(CC_USE_VULKAN OFF)" >> build-ios/proj/cfg.cmake
     cat "set(CC_USE_GLES2 OFF)" >> build-ios/proj/cfg.cmake
     cat "set(CC_USE_METAL ON)" >> build-ios/proj/cfg.cmake
+    cat "set(USE_WEBSOCKET_SERVER ON)" >> build-ios/proj/cfg.cmake
     mkdir build-ios/assets
     cd build-ios
     RES_DIR=$COCOS2DX_ROOT/templates/ios/build-ios
@@ -180,6 +183,7 @@ function build_windows()
     cat "set(CC_USE_GLES3 ON)" >> build-win32/proj/cfg.cmake
     cat "set(CC_USE_VULKAN ON)" >> build-win32/proj/cfg.cmake
     cat "set(CC_USE_GLES2 ON)" >> build-win32/proj/cfg.cmake
+    cat "set(USE_WEBSOCKET_SERVER ON)" >> build-win32/proj/cfg.cmake
     mkdir build-win32/assets
     cd build-win32
     RES_DIR=$COCOS2DX_ROOT/templates/win32/build-win32
