@@ -38,7 +38,7 @@ THE SOFTWARE.
 
 extern "C" {
 #if CC_USE_PNG
-    #if __OHOS
+    #if __OHOS__
         #include "png.h"
     #else
         #include "png/png.h"

@@ -38,6 +38,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#ifdef LOG_TAG
+    #undef LOG_TAG
+#endif
 #define LOG_TAG "AudioDecoderMp3"
 
 namespace cc {

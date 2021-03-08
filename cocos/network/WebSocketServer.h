@@ -28,19 +28,25 @@
 
     #include "uv.h"
 
-    #include <string>
-    #include <vector>
     #include <algorithm>
-    #include <functional>
-    #include <memory>
-    #include <map>
-    #include <list>
-    #include <unordered_map>
-    #include <thread>
-    #include <mutex>
     #include <atomic>
+    #include <functional>
+    #include <list>
+    #include <map>
+    #include <memory>
+    #include <mutex>
+    #include <string>
+    #include <thread>
+    #include <unordered_map>
+    #include <vector>
 
-    #include "websockets/libwebsockets.h"
+    #if CC_PLATFORM == CC_PLATFORM_OHOS
+        #include "libwebsockets.h"
+    #else
+        #include "websockets/libwebsockets.h"
+    #endif
+
+    #include "base/Macros.h"
 
 namespace cc {
 namespace network {

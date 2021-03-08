@@ -41,6 +41,9 @@ ov_callbacks ogg_callbacks = {
 } // namespace
 #endif
 
+#ifdef LOG_TAG
+    #undef LOG_TAG
+#endif
 #define LOG_TAG "AudioDecoderOgg"
 
 namespace cc {

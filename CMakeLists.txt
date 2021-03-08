@@ -28,6 +28,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "iOS")
 elseif(OHOS)
     set(OHOS TRUE)
     set(CC_PLATFORM ${CC_PLATFORM_OHOS})
+    add_definitions(-D__OHOS__=1)
     set(PLATFORM_FOLDER ohos)
 else()
     message(FATAL_ERROR "Unsupported platform '${CMAKE_SYSTEM_NAME}', CMake will exit!")
@@ -1672,9 +1673,6 @@ if(OHOS)
         z
         OpenSLES
         ${CC_EXTERNAL_LIBS}
-    )
-    target_compile_definitions(cocos2d PUBLIC
-        __OHOS
     )
 endif()
 

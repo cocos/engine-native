@@ -7,7 +7,7 @@
 #include "platform/java/jni/JniHelper.h"
 #include "platform/java/jni/JniImp.h"
 
-#if __OHOS
+#if __OHOS__
     #include <hilog/log.h>
 #endif
 

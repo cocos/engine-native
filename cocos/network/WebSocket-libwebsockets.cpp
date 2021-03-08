@@ -27,7 +27,7 @@
 (http://libwebsockets.org)"
 
  ****************************************************************************/
-#if __OHOS
+#if __OHOS__
     #include "libwebsockets.h"
 #else
     #include "websockets/libwebsockets.h"
@@ -62,6 +62,9 @@
 #define WS_RX_BUFFER_SIZE              (65536)
 #define WS_RESERVE_RECEIVE_BUFFER_SIZE (4096)
 
+#ifdef LOG_TAG
+    #undef LOG_TAG
+#endif
 #define LOG_TAG "WebSocket.cpp"
 
 struct lws;

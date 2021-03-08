@@ -61,7 +61,7 @@
     #define LOG_TAG      "jswrapper"
     #define SE_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
     #define SE_LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
-#elif __OHOS
+#elif __OHOS__
     #if 1
         #include "cocos/base/Log.h"
         #define SE_LOGD(...) CC_LOG_DEBUG(__VA_ARGS__)
