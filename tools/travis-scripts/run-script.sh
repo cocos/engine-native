@@ -161,7 +161,7 @@ function build_ios()
     echo "set(CC_USE_VULKAN OFF)" >> build-ios/proj/cfg.cmake
     echo "set(CC_USE_GLES2 OFF)" >> build-ios/proj/cfg.cmake
     echo "set(CC_USE_METAL ON)" >> build-ios/proj/cfg.cmake
-    echo "set(USE_WEBSOCKET_SERVER ON)" >> build-ios/proj/cfg.cmake
+    echo "set(USE_WEBSOCKET_SERVER OFF)" >> build-ios/proj/cfg.cmake
     mkdir build-ios/assets
     cd build-ios
     RES_DIR=$COCOS2DX_ROOT/templates/ios/build-ios
