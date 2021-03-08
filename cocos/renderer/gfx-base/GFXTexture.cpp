@@ -34,6 +34,7 @@ namespace gfx {
 Texture::Texture(Device *device)
 : GFXObject(ObjectType::TEXTURE),
   _device(device) {
+    _textureID = generateTextureID();
 }
 
 Texture::~Texture() {

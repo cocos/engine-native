@@ -43,6 +43,7 @@ public:
     virtual void resize(uint width, uint height)         = 0;
 
     CC_INLINE Device *     getDevice() const { return _device; }
+    CC_INLINE uint         getTextureID() const { return _textureID; }
     CC_INLINE TextureType  getType() const { return _type; }
     CC_INLINE TextureUsage getUsage() const { return _usage; }
     CC_INLINE Format       getFormat() const { return _format; }
@@ -58,7 +59,13 @@ public:
     CC_INLINE bool     isTextureView() const { return _isTextureView; }
 
 protected:
+    static uint generateTextureID() noexcept {
+        static uint _idGen = 0;
+        return _idGen++;
+    }
+
     Device *     _device        = nullptr;
+    uint         _textureID     = 0;
     TextureType  _type          = TextureType::TEX2D;
     TextureUsage _usage         = TextureUsageBit::NONE;
     Format       _format        = Format::UNKNOWN;
