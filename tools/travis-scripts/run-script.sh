@@ -133,7 +133,7 @@ function build_macosx()
     echo "set(CC_USE_VULKAN OFF)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_GLES2 OFF)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_METAL ON)" >> build-mac/proj/cfg.cmake
-    echo "set(USE_WEBSOCKET_SERVER ON)" >> build-mac/proj/cfg.cmake
+    echo "set(USE_WEBSOCKET_SERVER OFF)" >> build-mac/proj/cfg.cmake
     mkdir build-mac/assets
 
     RES_DIR=$COCOS2DX_ROOT/templates/mac/build-mac
