@@ -100,7 +100,7 @@ echo
 echo Comparing with origin HEAD ...
 echo
 
-git fetch origin --unshallow ${FETCH_REMOTE_BRANCH}
+git fetch origin ${FETCH_REMOTE_BRANCH}
 
 # Don't exit on non-zero return value
 set +e
