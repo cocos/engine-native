@@ -129,7 +129,7 @@ function build_macosx()
     cd  $COCOS2DX_ROOT/templates/mac
     mkdir -p build-mac/proj
     touch build-mac/proj/cfg.cmake
-    echo "set(CC_USE_GLES3 OFF)" >> build-mac/proj/cfg.cmake
+    echo "set(CC_USE_GLES3 ON)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_VULKAN OFF)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_GLES2 OFF)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_METAL ON)" >> build-mac/proj/cfg.cmake
