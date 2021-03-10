@@ -129,7 +129,6 @@ function build_macosx()
     cd  $COCOS2DX_ROOT/templates/mac
     mkdir -p build-mac/proj
     touch build-mac/proj/cfg.cmake
-    echo "set(CC_USE_GLES3 ON)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_VULKAN OFF)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_GLES2 OFF)" >> build-mac/proj/cfg.cmake
     echo "set(CC_USE_METAL ON)" >> build-mac/proj/cfg.cmake
@@ -138,13 +137,13 @@ function build_macosx()
 
     RES_DIR=$COCOS2DX_ROOT/templates/mac/build-mac
     cd build-mac
-    cmake ../ -GXcode -DCMAKE_OSX_ARCHITECTURES=x86_64 -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
+    cmake ../ -GXcode -DCC_USE_GLES3=ON -DCMAKE_OSX_ARCHITECTURES=x86_64 -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
     cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORES -arch x86_64
     echo "Compile MacOSX X86_64 Release Done!"
     cd ..
     mkdir build-mac-apple-silicon
     cd build-mac-apple-silicon
-    cmake ../ -GXcode -DCMAKE_OSX_ARCHITECTURES=arm64 -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
+    cmake ../ -GXcode -DCC_USE_GLES3=ON -DCMAKE_OSX_ARCHITECTURES=arm64 -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
     cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORES -arch arm64
     echo "Compile MacOSX ARM64 Release Done!"
 }
