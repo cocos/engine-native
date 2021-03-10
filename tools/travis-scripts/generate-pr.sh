@@ -133,7 +133,7 @@ git commit -m "$COMMITTAG"
 
 #Set remotes
 git remote add upstream "$COCOS_ROBOT_REMOTE" 2> /dev/null > /dev/null
-git fetch upstream --unshallow --no-recurse-submodules
+git fetch upstream --all --update-shallow --no-recurse-submodules -v
 
 echo "Pushing to Robot's repo ..."
 # git push -fq upstream "$COCOS_BRANCH" 2> /dev/null
