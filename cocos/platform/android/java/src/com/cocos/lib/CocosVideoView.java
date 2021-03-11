@@ -187,7 +187,6 @@ public class CocosVideoView extends SurfaceView {
         if (! (mCurrentState == State.IDLE ||
                 mCurrentState == State.ERROR ||
                 mCurrentState == State.INITIALIZED ||
-                mCurrentState == State.STOPPED ||
                 mMediaPlayer == null) ) {
             mPosition = mMediaPlayer.getCurrentPosition();
         }
@@ -198,7 +197,6 @@ public class CocosVideoView extends SurfaceView {
         if (! (mCurrentState == State.IDLE ||
                 mCurrentState == State.ERROR ||
                 mCurrentState == State.INITIALIZED ||
-                mCurrentState == State.STOPPED ||
                 mMediaPlayer == null) ) {
             mDuration = mMediaPlayer.getDuration();
         }
@@ -247,14 +245,9 @@ public class CocosVideoView extends SurfaceView {
         if (!(mCurrentState == State.IDLE || mCurrentState == State.INITIALIZED || mCurrentState == State.ERROR || mCurrentState == State.STOPPED)
                 && mMediaPlayer != null) {
             mCurrentState = State.STOPPED;
-            mMediaPlayer.stop();
+            mMediaPlayer.pause();
             this.sendEvent(EVENT_STOPPED);
-
-            // after the video is stop, it shall prepare to be playable again
-            try {
-                mMediaPlayer.prepare();
-                this.showFirstFrame();
-            } catch (Exception ex) {}
+            this.showFirstFrame();
         }
     }
 
@@ -264,9 +257,10 @@ public class CocosVideoView extends SurfaceView {
 
     public void start() {
         if ((mCurrentState == State.PREPARED ||
-                mCurrentState == State.PAUSED ||
-                mCurrentState == State.PLAYBACK_COMPLETED) &&
-                mMediaPlayer != null) {
+             mCurrentState == State.PAUSED ||
+             mCurrentState == State.STOPPED ||
+             mCurrentState == State.PLAYBACK_COMPLETED) &&
+             mMediaPlayer != null) {
 
             mCurrentState = State.STARTED;
             mMediaPlayer.start();
@@ -276,7 +270,7 @@ public class CocosVideoView extends SurfaceView {
 
     public void pause() {
         if ((mCurrentState == State.STARTED || mCurrentState == State.PLAYBACK_COMPLETED) &&
-                mMediaPlayer != null) {
+             mMediaPlayer != null) {
             mCurrentState = State.PAUSED;
             mMediaPlayer.pause();
             this.sendEvent(EVENT_PAUSED);
@@ -285,8 +279,8 @@ public class CocosVideoView extends SurfaceView {
 
     public void seekTo(int ms) {
         if (mCurrentState == State.IDLE || mCurrentState == State.INITIALIZED ||
-                mCurrentState == State.STOPPED || mCurrentState == State.ERROR ||
-                mMediaPlayer == null) {
+            mCurrentState == State.ERROR ||
+            mMediaPlayer == null) {
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
