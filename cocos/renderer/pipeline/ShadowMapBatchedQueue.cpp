@@ -175,7 +175,7 @@ void ShadowMapBatchedQueue::updateUBOs(const Light *light, gfx::CommandBuffer *c
             const auto matShadowView = matShadowCamera.getInversed();
 
             cc::Mat4 matShadowViewProj;
-            const auto projectionSinY = device->getScreenSpaceSignY() * device->getUVSpaceSignY();
+            const auto projectionSinY = device->getClipSpaceSignY();
             Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
 
             matShadowViewProj.multiply(matShadowView);

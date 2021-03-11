@@ -88,7 +88,7 @@ public:
     CC_INLINE bool hasFeature(Feature feature) const { return _features[static_cast<uint8_t>(feature)]; }
     CC_INLINE float getClipSpaceMinZ() const { return _clipSpaceMinZ; }
     CC_INLINE float getScreenSpaceSignY() const { return _screenSpaceSignY; }
-    CC_INLINE float getUVSpaceSignY() const { return _UVSpaceSignY; }
+    CC_INLINE float getClipSpaceSignY() const { return _clipSpaceSignY; }
     CC_INLINE const BindingMappingInfo &bindingMappingInfo() const { return _bindingMappingInfo; }
     CC_INLINE uint genShaderId() { return _shaderIdGen++; }
 
@@ -149,7 +149,7 @@ protected:
     unordered_map<String, String> _macros;
     float _clipSpaceMinZ = -1.0f;
     float _screenSpaceSignY = 1.0f;
-    float _UVSpaceSignY = -1.0f;
+    float _clipSpaceSignY = 1.0f;
     BindingMappingInfo _bindingMappingInfo;
 
 private:

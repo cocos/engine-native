@@ -16117,24 +16117,24 @@ static bool js_gfx_Device_getSurfaceTransform(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_Device_getSurfaceTransform)
 
-static bool js_gfx_Device_getUVSpaceSignY(se::State& s)
+static bool js_gfx_Device_getClipSpaceSignY(se::State& s)
 {
     cc::gfx::Device* cobj = SE_THIS_OBJECT<cc::gfx::Device>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_Device_getUVSpaceSignY : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_gfx_Device_getClipSpaceSignY : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        float result = cobj->getUVSpaceSignY();
+        float result = cobj->getClipSpaceSignY();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_gfx_Device_getUVSpaceSignY : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_gfx_Device_getClipSpaceSignY : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_PROP_GET(js_gfx_Device_getUVSpaceSignY)
+SE_BIND_PROP_GET(js_gfx_Device_getClipSpaceSignY)
 
 static bool js_gfx_Device_getUboOffsetAlignment(se::State& s)
 {
@@ -16306,7 +16306,6 @@ bool js_register_gfx_Device(se::Object* obj)
     cls->defineProperty("height", _SE(js_gfx_Device_getHeight), nullptr);
     cls->defineProperty("renderer", _SE(js_gfx_Device_getRenderer), nullptr);
     cls->defineProperty("maxUniformBufferBindings", _SE(js_gfx_Device_getMaxUniformBufferBindings), nullptr);
-    cls->defineProperty("UVSpaceSignY", _SE(js_gfx_Device_getUVSpaceSignY), nullptr);
     cls->defineProperty("commandBuffer", _SE(js_gfx_Device_getCommandBuffer), nullptr);
     cls->defineProperty("vendor", _SE(js_gfx_Device_getVendor), nullptr);
     cls->defineProperty("depthBits", _SE(js_gfx_Device_getDepthBits), nullptr);
@@ -16327,6 +16326,7 @@ bool js_register_gfx_Device(se::Object* obj)
     cls->defineProperty("depthStencilFormat", _SE(js_gfx_Device_getDepthStencilFormat), nullptr);
     cls->defineProperty("numTris", _SE(js_gfx_Device_getNumTris), nullptr);
     cls->defineProperty("screenSpaceSignY", _SE(js_gfx_Device_getScreenSpaceSignY), nullptr);
+    cls->defineProperty("clipSpaceSignY", _SE(js_gfx_Device_getClipSpaceSignY), nullptr);
     cls->defineProperty("stencilBits", _SE(js_gfx_Device_getStencilBits), nullptr);
     cls->defineProperty("queue", _SE(js_gfx_Device_getQueue), nullptr);
     cls->defineProperty("context", _SE(js_gfx_Device_getContext), nullptr);

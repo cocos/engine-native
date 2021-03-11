@@ -222,11 +222,7 @@ void ForwardPipeline::updateCameraUBO(Camera *camera) {
     memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
     TO_VEC3(uboCameraView, camera->position, UBOCamera::CAMERA_POS_OFFSET);
 
-    auto projectionSignY = _device->getScreenSpaceSignY();
-    if (camera->getWindow()->hasOffScreenAttachments) {
-        projectionSignY *= _device->getUVSpaceSignY(); // need flipping if drawing on render targets
-    }
-    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = projectionSignY;
+    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = (uint)(device->getScreenSpaceSignY() * 0.5 + 0.5) << 1 | (uint)(device->getClipSpaceSignY() * 0.5 + 0.5);
 
     TO_VEC4(uboCameraView, fog->fogColor, UBOCamera::GLOBAL_FOG_COLOR_OFFSET);
 
@@ -284,7 +280,7 @@ void ForwardPipeline::updateShadowUBO(Camera *camera) {
             const auto matShadowView = matShadowCamera.getInversed();
 
             Mat4 matShadowViewProj;
-            const auto projectionSinY = device->getScreenSpaceSignY() * device->getUVSpaceSignY();
+            const auto projectionSinY = device->getClipSpaceSignY();
             Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getClipSpaceMinZ(), projectionSinY, &matShadowViewProj);
 
             matShadowViewProj.multiply(matShadowView);
