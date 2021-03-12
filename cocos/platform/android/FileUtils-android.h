@@ -23,17 +23,16 @@ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#ifndef __CC_FILEUTILS_ANDROID_H__
-#define __CC_FILEUTILS_ANDROID_H__
+#pragma once
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
 
-    #include "platform/FileUtils.h"
+    #include "android/asset_manager.h"
     #include "base/Macros.h"
+    #include "jni.h"
+    #include "platform/FileUtils.h"
     #include <string>
     #include <vector>
-    #include "jni.h"
-    #include "android/asset_manager.h"
 
 namespace cc {
 
@@ -81,5 +80,3 @@ private:
 } // namespace cc
 
 #endif // CC_PLATFORM == CC_PLATFORM_ANDROID
-
-#endif // __CC_FILEUTILS_ANDROID_H__

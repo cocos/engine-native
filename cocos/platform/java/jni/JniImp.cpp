@@ -66,8 +66,8 @@ int getObbAssetFileDescriptorJNI(const std::string &path, long *startOffset, lon
             methodInfo.env->ReleaseLongArrayElements(newArray, array, 0);
         }
 
-        CC_CALL_DLR(methodInfo.env, methodInfo.classID);
-        CC_CALL_DLR(methodInfo.env, stringArg);
+        ccDeleteLocalRef(methodInfo.env, methodInfo.classID);
+        ccDeleteLocalRef(methodInfo.env, stringArg);
     }
 
     return fd;

@@ -90,15 +90,15 @@ bool localStorageGetItem(const std::string &key, std::string *outItem) {
         jstring jkey = t.env->NewStringUTF(key.c_str());
         jstring jret = (jstring)t.env->CallStaticObjectMethod(t.classID, t.methodID, jkey);
         if (jret == nullptr) {
-            CC_CALL_DLR(t.env, jret);
-            CC_CALL_DLR(t.env, jkey);
-            CC_CALL_DLR(t.env, t.classID);
+            ccDeleteLocalRef(t.env, jret);
+            ccDeleteLocalRef(t.env, jkey);
+            ccDeleteLocalRef(t.env, t.classID);
             return false;
         } else {
             outItem->assign(JniHelper::jstring2string(jret));
-            CC_CALL_DLR(t.env, jret);
-            CC_CALL_DLR(t.env, jkey);
-            CC_CALL_DLR(t.env, t.classID);
+            ccDeleteLocalRef(t.env, jret);
+            ccDeleteLocalRef(t.env, jkey);
+            ccDeleteLocalRef(t.env, t.classID);
             return true;
         }
     } else {

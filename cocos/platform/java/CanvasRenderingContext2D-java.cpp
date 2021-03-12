@@ -37,7 +37,7 @@ public:
     CanvasRenderingContext2DImpl() {
         jobject obj = JniHelper::newObject(JCLS_CANVASIMPL);
         _obj = JniHelper::getEnv()->NewGlobalRef(obj);
-        CC_CALL_DLR(JniHelper::getEnv(), obj);
+        ccDeleteLocalRef(JniHelper::getEnv(), obj);
     }
 
     ~CanvasRenderingContext2DImpl() {
@@ -187,7 +187,7 @@ public:
                                                 (const jbyte *)imageData.getBytes());
         JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "_fillImageData", arr, imageWidth,
                                         imageHeight, offsetX, offsetY);
-        CC_CALL_DLR(JniHelper::getEnv(), arr);
+        ccDeleteLocalRef(JniHelper::getEnv(), arr);
 
         fillData();
     }
@@ -226,7 +226,7 @@ public:
         JniHelper::getEnv()->GetByteArrayRegion(arr, 0, len, jbarray);
         unMultiplyAlpha((unsigned char *)jbarray, len);
         _data.fastSet((unsigned char *)jbarray, len); //IDEA: DON'T create new jbarray every time.
-        CC_CALL_DLR(JniHelper::getEnv(), arr);
+        ccDeleteLocalRef(JniHelper::getEnv(), arr);
     }
 
 private:

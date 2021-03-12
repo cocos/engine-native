@@ -110,9 +110,9 @@ DownloaderJava::DownloaderJava(const DownloaderHints &hints)
         //It's not thread-safe here, use thread-safe method instead
         //sDownloaderMap.insert(make_pair(_id, this));
         _insertDownloaderJava(_id, this);
-        CC_CALL_DLR(methodInfo.env, jStr);
-        CC_CALL_DLR(methodInfo.env, jObj);
-        CC_CALL_DLR(methodInfo.env, methodInfo.classID);
+        ccDeleteLocalRef(methodInfo.env, jStr);
+        ccDeleteLocalRef(methodInfo.env, jObj);
+        ccDeleteLocalRef(methodInfo.env, methodInfo.classID);
     }
 }
 
@@ -127,7 +127,7 @@ DownloaderJava::~DownloaderJava() {
                 methodInfo.classID,
                 methodInfo.methodID,
                 _impl);
-            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
+            ccDeleteLocalRef(methodInfo.env, methodInfo.classID);
         }
         //It's not thread-safe here, use thread-safe method instead
         //sDownloaderMap.erase(_id);
@@ -158,13 +158,13 @@ IDownloadTask *DownloaderJava::createCoTask(std::shared_ptr<const DownloadTask> 
         }
         methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, _impl, coTask->id, jstrURL, jstrPath, jarrayHeader);
         for (int i = 0; i < index; ++i) {
-            CC_CALL_DLR(methodInfo.env, methodInfo.env->GetObjectArrayElement(jarrayHeader, i));
+            ccDeleteLocalRef(methodInfo.env, methodInfo.env->GetObjectArrayElement(jarrayHeader, i));
         }
-        CC_CALL_DLR(methodInfo.env, jclassString);
-        CC_CALL_DLR(methodInfo.env, jstrURL);
-        CC_CALL_DLR(methodInfo.env, jstrPath);
-        CC_CALL_DLR(methodInfo.env, jarrayHeader);
-        CC_CALL_DLR(methodInfo.env, methodInfo.classID);
+        ccDeleteLocalRef(methodInfo.env, jclassString);
+        ccDeleteLocalRef(methodInfo.env, jstrURL);
+        ccDeleteLocalRef(methodInfo.env, jstrPath);
+        ccDeleteLocalRef(methodInfo.env, jarrayHeader);
+        ccDeleteLocalRef(methodInfo.env, methodInfo.classID);
     }
 
     DLLOG("DownloaderJava::createCoTask id: %d", coTask->id);
@@ -191,7 +191,7 @@ void DownloaderJava::abort(const std::unique_ptr<IDownloadTask> &task) {
                 methodInfo.methodID,
                 _impl,
                 iter->first);
-            CC_CALL_DLR(methodInfo.env, methodInfo.classID);
+            ccDeleteLocalRef(methodInfo.env, methodInfo.classID);
 
             DownloadTaskAndroid *coTask = iter->second;
             _taskMap.erase(iter);
