@@ -1,6 +1,6 @@
 {
   "app": {
-    "bundleName": "com.cocos.helloworld",
+    "bundleName": "com.cocos.ohos.demo1",
     "vendor": "example",
     "version": {
       "code": 1,
@@ -92,6 +92,26 @@
       },
       {
         "name": "ohos.permission.INTERNET",
+        "reason": "",
+        "usedScene": {
+          "when": "inuse",
+          "ability": [
+            "com.example.cocosdemo.MainAbility"
+          ]
+        }
+      },
+      {
+        "name": "ohos.permission.ACCELEROMETER",
+        "reason": "",
+        "usedScene": {
+          "when": "inuse",
+          "ability": [
+            "com.example.cocosdemo.MainAbility"
+          ]
+        }
+      },
+      {
+        "name": "ohos.permission.GYROSCOPE",
         "reason": "",
         "usedScene": {
           "when": "inuse",

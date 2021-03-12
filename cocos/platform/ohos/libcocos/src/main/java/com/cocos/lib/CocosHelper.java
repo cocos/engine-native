@@ -229,13 +229,18 @@ public class CocosHelper {
 
     public static int getDeviceRotation() {
         try {
-            return sAbilitySlice.getDisplayOrientation();
+            DisplayManager mgr = DisplayManager.getInstance();
+            Optional<Display> display = mgr.getDefaultDisplay(sAbilitySlice.getContext());
+            return display.map(Display::getRotation).orElse(0);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        return AbilityInfo.DisplayOrientation.UNSPECIFIED.ordinal();
+        // 0 indicates no rotation,
+        // 1 indicates 90 degrees,
+        // 2 indicates 180 degrees,
+        // 3 indicates 270 degrees.
+        return 0;
     }
-
 
     public static float[] getSafeArea() {
         return new float[]{0,0,0,0};

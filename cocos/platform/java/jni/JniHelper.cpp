@@ -34,6 +34,8 @@ THE SOFTWARE.
 
 #include "base/UTF8.h"
 
+#define CC_CACHE_CLASS_ID 0
+
 #if ANDROID
     #define LOG_TAG   "JniHelper"
     #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
@@ -65,18 +67,21 @@ public:
 private:
     jclass _globalKls = {};
 };
-
+#if CC_CACHE_CLASS_ID
 std::unordered_map<const char *, JClassWrapper> _cachedJClasses;
+#endif
 }; // namespace
 
 jclass _getClassID(const char *className) {
     if (nullptr == className) {
         return nullptr;
     }
+#if CC_CACHE_CLASS_ID
     auto it = _cachedJClasses.find(className);
     if (it != _cachedJClasses.end()) {
         return *it->second;
     }
+#endif
 
     JNIEnv *env = cc::JniHelper::getEnv();
 
@@ -97,10 +102,11 @@ jclass _getClassID(const char *className) {
 
     CC_CALL_DLR(env, _jstrClassName);
     //    LOGE("1. delete 0x%p", _jstrClassName);
-
+#if CC_CACHE_CLASS_ID
     if (_clazz) {
         _cachedJClasses.emplace(className, _clazz);
     }
+#endif
     return _clazz;
 }
 
@@ -182,7 +188,7 @@ jobject JniHelper::getActivity() {
 bool JniHelper::setClassLoaderFrom(jobject activityinstance) {
     JniMethodInfo _getclassloaderMethod;
     if (!JniHelper::getMethodInfo_DefaultClassLoader(_getclassloaderMethod,
-                                                     "ohos/app/Context",
+                                                     "ohos/app/AbilityContext",
                                                      "getClassloader", // typo ?
                                                      "()Ljava/lang/ClassLoader;")) {
         return false;

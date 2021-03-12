@@ -41,18 +41,21 @@ public class CocosOrientationHelper implements ICategoryOrientationDataCallback 
     private CategoryOrientationAgent agent;
     private CategoryOrientation orientation;
 
+    private final int matrix_length = 9;
+    private final int rotationVectorLength = 9;
+
     public CocosOrientationHelper(Context context) {
         agent = new CategoryOrientationAgent();
-        orientation = agent.getSingleSensor(CategoryOrientationAgent.SENSOR_CATEGORY_ORIENTATION);
+        orientation = agent.getSingleSensor(CategoryOrientation.SENSOR_TYPE_ORIENTATION);
         mCurrentOrientation = CocosHelper.getDeviceRotation();
     }
 
     public void onPause() {
-        agent.releaseSensorDataCallback(this);
+        agent.releaseSensorDataCallback(this, orientation);
     }
 
     public void onResume() {
-        agent.setSensorDataCallback(this, orientation, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        boolean ok = agent.setSensorDataCallback(this, orientation, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
     }
 
 
@@ -62,7 +65,6 @@ public class CocosOrientationHelper implements ICategoryOrientationDataCallback 
     public void onSensorDataModified(CategoryOrientationData data) {
         int curOrientation = CocosHelper.getDeviceRotation();
         if (curOrientation != mCurrentOrientation) {
-            mCurrentOrientation = CocosHelper.getDeviceRotation();
             CocosHelper.runOnGameThread(new Runnable() {
                 @Override
                 public void run() {

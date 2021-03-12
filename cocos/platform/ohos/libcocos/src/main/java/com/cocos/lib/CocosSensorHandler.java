@@ -27,6 +27,8 @@ package com.cocos.lib;
 
 
 import ohos.app.Context;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 import ohos.sensor.agent.CategoryMotionAgent;
 import ohos.sensor.agent.SensorAgent;
 import ohos.sensor.bean.CategoryMotion;
@@ -38,14 +40,13 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     // Constants
     // ===========================================================
 
-    private static final String TAG = "CocosSensorHandler";
+    private static final HiLogLabel TAG = new HiLogLabel(HiLog.LOG_APP, 0, "CocosSensorHandler");
     private static CocosSensorHandler mSensorHandler;
 
     private final CategoryMotionAgent mSensorManager;
     private final CategoryMotion mAcceleration;
     private final CategoryMotion mGravity;
     private final CategoryMotion mGyroscope;
-
     private static float[] sDeviceMotionValues = new float[9];
 
     // ===========================================================
@@ -55,7 +56,7 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     public CocosSensorHandler() {
         mSensorManager = new CategoryMotionAgent();
         mAcceleration = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_ACCELEROMETER);
-        mGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GRAVITY);
+        mGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_LINEAR_ACCELERATION);
         mGyroscope = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GYROSCOPE);
 
         mSensorHandler = this;
@@ -65,17 +66,38 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     // Getter & Setter
     // ===========================================================
     public void enable() {
-        mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-        mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-        mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        boolean ok;
+        ok = mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        if(!ok) {
+            HiLog.error(TAG, "failed to setSensorDataCallback Acceleration");
+        }
+        ok = mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        if(!ok) {
+            HiLog.error(TAG, "failed to setSensorDataCallback Gravity");
+        }
+        ok = mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        if(!ok) {
+            HiLog.error(TAG, "failed to setSensorDataCallback Gyroscope");
+        }
+    }
+
+    private void enableWithDelay(long delayNanoSeconds) {
+        mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME, delayNanoSeconds);
+        mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME, delayNanoSeconds);
+        mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME, delayNanoSeconds);
     }
 
     public void disable() {
-        this.mSensorManager.releaseSensorDataCallback(this);
+//        this.mSensorManager.releaseSensorDataCallback(this);
+        mSensorManager.releaseSensorDataCallback(this, mAcceleration);
+        mSensorManager.releaseSensorDataCallback(this, mGravity);
+        mSensorManager.releaseSensorDataCallback(this, mGyroscope);
     }
 
-    public void setInterval(float interval) {
-        //TODO
+    public void setInterval(float intervalSeconds) {
+        long intervalNanoSeconds = (long)(1000_000_000L * intervalSeconds);
+        disable();
+        enableWithDelay(intervalNanoSeconds);
     }
 
     public void onPause() {
@@ -96,7 +118,6 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
         } else {
             mSensorHandler.disable();
         }
-        mSensorHandler.enable();
     }
 
     public static float[] getDeviceMotionValue() {
@@ -106,17 +127,19 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     @Override
     public void onSensorDataModified(CategoryMotionData sensorEvent) {
         CategoryMotion type = sensorEvent.getSensor();
-        if (type == mAcceleration) {
+        if(type == null) return;
+        final int sensorId = type.getSensorId();
+        if (sensorId == mAcceleration.getSensorId()) {
             sDeviceMotionValues[0] = sensorEvent.values[0];
             sDeviceMotionValues[1] = sensorEvent.values[1];
             // Issue https://github.com/cocos-creator/2d-tasks/issues/2532
             // use negative event.acceleration.z to match iOS value
             sDeviceMotionValues[2] = -sensorEvent.values[2];
-        } else if (type == mGravity) {
+        } else if (sensorId == mGravity.getSensorId()) {
             sDeviceMotionValues[3] = sensorEvent.values[0];
             sDeviceMotionValues[4] = sensorEvent.values[1];
             sDeviceMotionValues[5] = sensorEvent.values[2];
-        } else if (type == mGyroscope) {
+        } else if (sensorId == mGyroscope.getSensorId()) {
             // The unit is rad/s, need to be converted to deg/s
             sDeviceMotionValues[6] = (float) Math.toDegrees(sensorEvent.values[0]);
             sDeviceMotionValues[7] = (float) Math.toDegrees(sensorEvent.values[1]);

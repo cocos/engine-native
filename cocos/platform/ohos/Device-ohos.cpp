@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "platform/FileUtils.h"
 #include "platform/java/jni/JniHelper.h"
 #include "platform/ohos/jni/JniCocosAbility.h"
+#include <cstring>
 #include <hilog/log.h>
 #include <jni.h>
 #include <native_layer.h>
@@ -78,18 +79,21 @@ void Device::setAccelerometerInterval(float interval) {
 const Device::MotionValue &Device::getDeviceMotionValue() {
     float *v = JniHelper::callStaticFloatArrayMethod(JCLS_SENSOR, "getDeviceMotionValue");
 
-    motionValue.accelerationIncludingGravityX = v[0];
-    motionValue.accelerationIncludingGravityY = v[1];
-    motionValue.accelerationIncludingGravityZ = v[2];
+    if (v) {
+        motionValue.accelerationIncludingGravityX = v[0];
+        motionValue.accelerationIncludingGravityY = v[1];
+        motionValue.accelerationIncludingGravityZ = v[2];
 
-    motionValue.accelerationX = v[3];
-    motionValue.accelerationY = v[4];
-    motionValue.accelerationZ = v[5];
+        motionValue.accelerationX = v[3];
+        motionValue.accelerationY = v[4];
+        motionValue.accelerationZ = v[5];
 
-    motionValue.rotationRateAlpha = v[6];
-    motionValue.rotationRateBeta = v[7];
-    motionValue.rotationRateGamma = v[8];
-
+        motionValue.rotationRateAlpha = v[6];
+        motionValue.rotationRateBeta = v[7];
+        motionValue.rotationRateGamma = v[8];
+    } else {
+        memset(&motionValue, 0, sizeof(motionValue));
+    }
     return motionValue;
 }
 

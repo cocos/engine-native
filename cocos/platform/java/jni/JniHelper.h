@@ -50,6 +50,14 @@ THE SOFTWARE.
     #define CC_CALL_DLR(jenv, ref) jenv->DeleteLocalRef(ref);
 #endif
 
+#define CLEAR_EXCEPTON(env)           \
+    do {                              \
+        if (env->ExceptionCheck()) {  \
+            env->ExceptionDescribe(); \
+            env->ExceptionClear();    \
+        }                             \
+    } while (false)
+
 struct android_app;
 
 namespace cc {
@@ -112,6 +120,7 @@ public:
             LocalRefMapType localRefs;
             t.env->CallVoidMethod(object, t.methodID, convert(localRefs, t, xs)...);
             // CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -130,6 +139,7 @@ public:
             LocalRefMapType localRefs;
             ret = t.env->CallFloatMethod(object, t.methodID, convert(localRefs, t, xs)...);
             // CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -149,6 +159,7 @@ public:
             LocalRefMapType localRefs;
             ret = (jbyteArray)t.env->CallObjectMethod(object, t.methodID, convert(localRefs, t, xs)...);
             // CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -166,6 +177,7 @@ public:
             LocalRefMapType localRefs;
             t.env->CallStaticVoidMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
             // CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -183,6 +195,7 @@ public:
             LocalRefMapType localRefs;
             jret = t.env->CallStaticBooleanMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
             //CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -201,6 +214,7 @@ public:
             LocalRefMapType localRefs;
             ret = t.env->CallStaticIntMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
             //CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -219,6 +233,7 @@ public:
             LocalRefMapType localRefs;
             ret = t.env->CallStaticFloatMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
             //CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -236,6 +251,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             jfloatArray array = (jfloatArray)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
+            CLEAR_EXCEPTON(t.env);
             jsize len = t.env->GetArrayLength(array);
             if (len <= 32) {
                 jfloat *elems = t.env->GetFloatArrayElements(array, 0);
@@ -244,7 +260,8 @@ public:
                     t.env->ReleaseFloatArrayElements(array, elems, 0);
                 };
             }
-            CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
+            // CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
             return &ret[0];
         } else {
@@ -263,6 +280,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             jfloatArray array = (jfloatArray)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
+            CLEAR_EXCEPTON(t.env);
             jsize len = t.env->GetArrayLength(array);
             if (len == 3) {
                 jfloat *elems = t.env->GetFloatArrayElements(array, 0);
@@ -271,6 +289,7 @@ public:
                 ret.z = elems[2];
                 t.env->ReleaseFloatArrayElements(array, elems, 0);
             }
+            CLEAR_EXCEPTON(t.env);
             //CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
@@ -289,7 +308,8 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallStaticDoubleMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            CC_CALL_DLR(t.env, t.classID);
+            CLEAR_EXCEPTON(t.env);
+            // CC_CALL_DLR(t.env, t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {
             reportError(className, methodName, signature);
@@ -308,6 +328,7 @@ public:
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             jstring jret = (jstring)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
+            CLEAR_EXCEPTON(t.env);
             ret = cc::JniHelper::jstring2string(jret);
             //CC_CALL_DLR(t.env, t.classID);
             CC_CALL_DLR(t.env, jret);
