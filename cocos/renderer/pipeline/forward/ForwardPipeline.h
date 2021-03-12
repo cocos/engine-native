@@ -62,6 +62,7 @@ public:
     void setSkybox(uint);
     void setShadows(uint);
     void destroyShadowFrameBuffers();
+    uint8_t getCombinationSignY();
 
     CC_INLINE void setShadowFramebuffer(const Light *light, gfx::Framebuffer *framebuffer) { _shadowFrameBufferMap.emplace(light, framebuffer); }
     CC_INLINE const std::unordered_map<const Light *, gfx::Framebuffer *> &getShadowFramebufferMap() const { return _shadowFrameBufferMap; }

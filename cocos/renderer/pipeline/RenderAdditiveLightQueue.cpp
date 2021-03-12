@@ -458,7 +458,7 @@ void RenderAdditiveLightQueue::updateCameraUBO(const Camera *camera, gfx::Comman
     memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
     TO_VEC3(uboCameraView, camera->position, UBOCamera::CAMERA_POS_OFFSET);
 
-    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = (uint)(device->getScreenSpaceSignY() * 0.5 + 0.5) << 1 | (uint)(device->getClipSpaceSignY() * 0.5 + 0.5);
+    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = _pipeline -> getCombinationSignY();
 
     const auto exposure = camera->exposure;
     uboCameraView[UBOCamera::EXPOSURE_OFFSET] = exposure;
