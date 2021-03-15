@@ -37,8 +37,9 @@ public:
     PipelineStateAgent(Device *device) = delete;
     ~PipelineStateAgent() override;
 
-    bool initialize(const PipelineStateInfo &info) override;
-    void destroy() override;
+protected:
+    void doInit(const PipelineStateInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

@@ -60,9 +60,6 @@ public:
     using Device::createGlobalBarrier;
     using Device::createTextureBarrier;
 
-    bool initialize(const DeviceInfo &info) override;
-    void destroy() override;
-    void resize(uint width, uint height) override;
     void acquire() override;
     void present() override;
 
@@ -84,7 +81,10 @@ public:
     CC_INLINE void *getDSSTexture() const { return _dssTex; }
 
 protected:
-    CommandBuffer *doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
+    bool doInit(const DeviceInfo &info) override;
+    void doDestroy() override;
+    void doResize(uint width, uint height) override;
+    CommandBuffer *createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *createQueue() override;
     Buffer *createBuffer() override;
     Texture *createTexture() override;
@@ -97,11 +97,10 @@ protected:
     DescriptorSetLayout *createDescriptorSetLayout() override;
     PipelineLayout *createPipelineLayout() override;
     PipelineState *createPipelineState() override;
-    virtual GlobalBarrier *createGlobalBarrier() override;
-    virtual TextureBarrier *createTextureBarrier() override;
+    GlobalBarrier *createGlobalBarrier() override;
+    TextureBarrier *createTextureBarrier() override;
     void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
 
-private:
     void onMemoryWarning();
 
     void *_autoreleasePool = nullptr;

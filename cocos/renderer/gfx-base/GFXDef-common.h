@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_CORE_GFX_DEF_COMMON_H_
-#define CC_CORE_GFX_DEF_COMMON_H_
+#pragma once
 
 #include "base/TypeDef.h"
 #include "base/memory/Memory.h"
@@ -401,8 +400,7 @@ using BufferUsage = BufferUsageBit;
 CC_ENUM_OPERATORS(BufferUsageBit);
 
 enum class BufferFlagBit : FlagBits {
-    NONE         = 0,
-    BAKUP_BUFFER = 0x4,
+    NONE = 0,
 };
 using BufferFlags = BufferFlagBit;
 CC_ENUM_OPERATORS(BufferFlagBit);
@@ -449,8 +447,7 @@ CC_ENUM_OPERATORS(TextureUsageBit);
 enum class TextureFlagBit : FlagBits {
     NONE         = 0,
     GEN_MIPMAP   = 0x1,
-    BAKUP_BUFFER = 0x2,
-    IMMUTABLE    = 0x4,
+    IMMUTABLE    = 0x2,
 };
 using TextureFlags = TextureFlagBit;
 CC_ENUM_OPERATORS(TextureFlagBit);
@@ -1237,5 +1234,3 @@ struct MemoryStatus {
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_CORE_GFX_DEF_COMMON_H_

@@ -41,7 +41,7 @@ public:
     CC_INLINE const CCVKGPUTextureBarrier *gpuBarrier() const { return _gpuBarrier; }
 
 protected:
-    bool initialize(const TextureBarrierInfo &info) override;
+    void initialize(const TextureBarrierInfo &info) override;
 
     CCVKGPUTextureBarrier *_gpuBarrier = nullptr;
 };

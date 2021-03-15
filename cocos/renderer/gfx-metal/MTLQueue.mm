@@ -36,13 +36,10 @@ CCMTLQueue::CCMTLQueue(Device *device)
 : Queue(device) {
 }
 
-bool CCMTLQueue::initialize(const QueueInfo &info) {
-    _type = info.type;
-
-    return true;
+void CCMTLQueue::doInit(const QueueInfo &info) {
 }
 
-void CCMTLQueue::destroy() {
+void CCMTLQueue::doDestroy() {
 }
 
 void CCMTLQueue::submit(CommandBuffer *const *cmdBuffs, uint count) {

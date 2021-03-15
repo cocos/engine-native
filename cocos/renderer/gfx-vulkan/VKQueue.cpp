@@ -40,17 +40,13 @@ CCVKQueue::CCVKQueue(Device *device)
 CCVKQueue::~CCVKQueue() {
 }
 
-bool CCVKQueue::initialize(const QueueInfo &info) {
-    _type = info.type;
-
+void CCVKQueue::doInit(const QueueInfo &info) {
     _gpuQueue       = CC_NEW(CCVKGPUQueue);
     _gpuQueue->type = _type;
     CCVKCmdFuncGetDeviceQueue((CCVKDevice *)_device, _gpuQueue);
-
-    return true;
 }
 
-void CCVKQueue::destroy() {
+void CCVKQueue::doDestroy() {
     if (_gpuQueue) {
         _gpuQueue->vkQueue = VK_NULL_HANDLE;
         CC_DELETE(_gpuQueue);

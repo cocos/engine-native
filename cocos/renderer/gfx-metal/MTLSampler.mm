@@ -36,18 +36,7 @@ namespace gfx {
 
 CCMTLSampler::CCMTLSampler(Device *device) : Sampler(device) {}
 
-bool CCMTLSampler::initialize(const SamplerInfo &info) {
-    _minFilter = info.minFilter;
-    _magFilter = info.magFilter;
-    _mipFilter = info.mipFilter;
-    _addressU = info.addressU;
-    _addressV = info.addressV;
-    _addressW = info.addressW;
-    _maxAnisotropy = info.maxAnisotropy;
-    _cmpFunc = info.cmpFunc;
-    _borderColor = info.borderColor;
-    _mipLODBias = info.mipLODBias;
-
+void CCMTLSampler::doInit(const SamplerInfo &info) {
     MTLSamplerDescriptor *descriptor = [[MTLSamplerDescriptor alloc] init];
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     descriptor.borderColor = (MTLSamplerBorderColor)mu::toMTLSamplerBorderColor(_borderColor);
@@ -67,11 +56,9 @@ bool CCMTLSampler::initialize(const SamplerInfo &info) {
     _mtlSamplerState = [mtlDevice newSamplerStateWithDescriptor:descriptor];
 
     [descriptor release];
-
-    return _mtlSamplerState != nil;
 }
 
-void CCMTLSampler::destroy() {
+void CCMTLSampler::doDestroy() {
     id<MTLSamplerState> samplerState = _mtlSamplerState;
     _mtlSamplerState = nil;
 

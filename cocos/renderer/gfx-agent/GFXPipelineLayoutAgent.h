@@ -37,8 +37,9 @@ public:
     PipelineLayoutAgent(Device *device) = delete;
     ~PipelineLayoutAgent() override;
 
-    bool initialize(const PipelineLayoutInfo &info) override;
-    void destroy() override;
+protected:
+    void doInit(const PipelineLayoutInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

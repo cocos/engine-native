@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_CORE_GFX_SHADER_H_
-#define CC_CORE_GFX_SHADER_H_
+#pragma once
 
 #include "GFXObject.h"
 
@@ -36,8 +35,8 @@ public:
     Shader(Device *device);
     virtual ~Shader();
 
-    virtual bool initialize(const ShaderInfo &info) = 0;
-    virtual void destroy()                          = 0;
+    void initialize(const ShaderInfo &info);
+    void destroy();
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE uint    getID() const { return _shaderID; }
@@ -58,6 +57,9 @@ protected:
         return _idGen++;
     }
 
+    virtual void doInit(const ShaderInfo &info) = 0;
+    virtual void doDestroy()                    = 0;
+
     Device *                   _device   = nullptr;
     uint                       _shaderID = 0;
     String                     _name;
@@ -74,5 +76,3 @@ protected:
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_CORE_GFX_SHADER_H_

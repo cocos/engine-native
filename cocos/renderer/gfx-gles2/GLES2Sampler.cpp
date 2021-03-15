@@ -37,18 +37,7 @@ GLES2Sampler::GLES2Sampler(Device *device)
 GLES2Sampler::~GLES2Sampler() {
 }
 
-bool GLES2Sampler::initialize(const SamplerInfo &info) {
-    _minFilter = info.minFilter;
-    _magFilter = info.magFilter;
-    _mipFilter = info.mipFilter;
-    _addressU = info.addressU;
-    _addressV = info.addressV;
-    _addressW = info.addressW;
-    _maxAnisotropy = info.maxAnisotropy;
-    _cmpFunc = info.cmpFunc;
-    _borderColor = info.borderColor;
-    _mipLODBias = info.mipLODBias;
-
+void GLES2Sampler::doInit(const SamplerInfo &info) {
     _gpuSampler = CC_NEW(GLES2GPUSampler);
     _gpuSampler->minFilter = _minFilter;
     _gpuSampler->magFilter = _magFilter;
@@ -58,11 +47,9 @@ bool GLES2Sampler::initialize(const SamplerInfo &info) {
     _gpuSampler->addressW = _addressW;
 
     GLES2CmdFuncCreateSampler((GLES2Device *)_device, _gpuSampler);
-
-    return true;
 }
 
-void GLES2Sampler::destroy() {
+void GLES2Sampler::doDestroy() {
     if (_gpuSampler) {
         GLES2CmdFuncDestroySampler((GLES2Device *)_device, _gpuSampler);
         CC_DELETE(_gpuSampler);

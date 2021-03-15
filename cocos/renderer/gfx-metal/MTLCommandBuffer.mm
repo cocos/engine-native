@@ -50,13 +50,10 @@ CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device)
     _indirectDrawSuppotred = _mtlDevice->isIndirectDrawSupported();
 }
 
-bool CCMTLCommandBuffer::initialize(const CommandBufferInfo &info) {
-    _type = info.type;
-    _queue = info.queue;
-    return true;
+void CCMTLCommandBuffer::doInit(const CommandBufferInfo &info) {
 }
 
-void CCMTLCommandBuffer::destroy() {
+void CCMTLCommandBuffer::doDestroy() {
     if (_autoreleasePool) {
         [_autoreleasePool release];
         _autoreleasePool = nullptr;

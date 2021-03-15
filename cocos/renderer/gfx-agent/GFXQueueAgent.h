@@ -39,13 +39,13 @@ public:
     QueueAgent(Device *device) = delete;
     ~QueueAgent() override;
 
-    bool initialize(const QueueInfo &info) override;
-    void destroy() override;
-
     void submit(CommandBuffer *const *cmdBuffs, uint count) override;
 
-private:
+protected:
     friend class DeviceAgent;
+
+    void doInit(const QueueInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

@@ -42,31 +42,7 @@ DescriptorSetLayoutAgent::~DescriptorSetLayoutAgent() {
         });
 }
 
-bool DescriptorSetLayoutAgent::initialize(const DescriptorSetLayoutInfo &info) {
-
-    _bindings = info.bindings;
-    uint bindingCount = _bindings.size();
-    _descriptorCount = 0u;
-
-    if (bindingCount) {
-        uint maxBinding = 0u;
-        vector<uint> flattenedIndices(bindingCount);
-        for (uint i = 0u; i < bindingCount; i++) {
-            const DescriptorSetLayoutBinding &binding = _bindings[i];
-            flattenedIndices[i] = _descriptorCount;
-            _descriptorCount += binding.count;
-            if (binding.binding > maxBinding) maxBinding = binding.binding;
-        }
-
-        _bindingIndices.resize(maxBinding + 1, GFX_INVALID_BINDING);
-        _descriptorIndices.resize(maxBinding + 1, GFX_INVALID_BINDING);
-        for (uint i = 0u; i <  bindingCount; i++) {
-            const DescriptorSetLayoutBinding &binding = _bindings[i];
-            _bindingIndices[binding.binding] = i;
-            _descriptorIndices[binding.binding] = flattenedIndices[i];
-        }
-    }
-
+void DescriptorSetLayoutAgent::doInit(const DescriptorSetLayoutInfo &info) {
     ENQUEUE_MESSAGE_2(
         ((DeviceAgent *)_device)->getMessageQueue(),
         DescriptorSetLayoutInit,
@@ -75,11 +51,9 @@ bool DescriptorSetLayoutAgent::initialize(const DescriptorSetLayoutInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void DescriptorSetLayoutAgent::destroy() {
+void DescriptorSetLayoutAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         DescriptorSetLayoutDestroy,

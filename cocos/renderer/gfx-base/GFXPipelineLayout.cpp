@@ -39,5 +39,17 @@ PipelineLayout::PipelineLayout(Device *device)
 PipelineLayout::~PipelineLayout() {
 }
 
+void PipelineLayout::initialize(const PipelineLayoutInfo& info) {
+    _setLayouts = info.setLayouts;
+
+    doInit(info);
+}
+
+void PipelineLayout::destroy() {
+    doDestroy();
+
+    _setLayouts.clear();
+}
+
 } // namespace gfx
 } // namespace cc

@@ -37,8 +37,9 @@ public:
     SamplerAgent(Device *device) = delete;
     ~SamplerAgent() override;
 
-    bool initialize(const SamplerInfo &info) override;
-    void destroy() override;
+protected:
+    void doInit(const SamplerInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

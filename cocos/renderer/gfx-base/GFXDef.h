@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_CORE_GFX_DEF_H_
-#define CC_CORE_GFX_DEF_H_
+#pragma once
 
 #include "GFXDef-common.h"
 
@@ -100,5 +99,3 @@ extern uint FormatSurfaceSize(Format format, uint width, uint height, uint depth
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_CORE_GFX_DEF_H_

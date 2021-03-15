@@ -49,21 +49,7 @@ DeviceAgent::~DeviceAgent() {
     CC_SAFE_DELETE(_actor);
 }
 
-bool DeviceAgent::initialize(const DeviceInfo &info) {
-    _width        = info.width;
-    _height       = info.height;
-    _nativeWidth  = info.nativeWidth;
-    _nativeHeight = info.nativeHeight;
-    _windowHandle = info.windowHandle;
-
-    _bindingMappingInfo = info.bindingMappingInfo;
-    if (_bindingMappingInfo.bufferOffsets.empty()) {
-        _bindingMappingInfo.bufferOffsets.push_back(0);
-    }
-    if (_bindingMappingInfo.samplerOffsets.empty()) {
-        _bindingMappingInfo.samplerOffsets.push_back(0);
-    }
-
+bool DeviceAgent::doInit(const DeviceInfo &info) {
     if (!_actor->initialize(info)) {
         return false;
     }
@@ -92,7 +78,7 @@ bool DeviceAgent::initialize(const DeviceInfo &info) {
     return true;
 }
 
-void DeviceAgent::destroy() {
+void DeviceAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         getMessageQueue(), DeviceDestroy,
         actor, getActor(),
@@ -121,10 +107,7 @@ void DeviceAgent::destroy() {
     _allocatorPools.clear();
 }
 
-void DeviceAgent::resize(uint width, uint height) {
-    _width = _nativeWidth = width;
-    _height = _nativeHeight = height;
-
+void DeviceAgent::doResize(uint width, uint height) {
     ENQUEUE_MESSAGE_3(
         getMessageQueue(), DeviceResize,
         actor, getActor(),
@@ -174,7 +157,7 @@ void DeviceAgent::setMultithreaded(bool multithreaded) {
         _actor->bindRenderContext(false);
         _mainEncoder->runConsumerThread();
         ENQUEUE_MESSAGE_1(
-            _mainEncoder, DeviceMakeCurrent,
+            _mainEncoder, DeviceMakeCurrentTrue,
             actor, _actor,
             {
                 actor->bindDeviceContext(true);
@@ -185,7 +168,7 @@ void DeviceAgent::setMultithreaded(bool multithreaded) {
         }
     } else {
         ENQUEUE_MESSAGE_1(
-            _mainEncoder, DeviceMakeCurrent,
+            _mainEncoder, DeviceMakeCurrentFalse,
             actor, _actor,
             {
                 actor->bindDeviceContext(false);
@@ -200,8 +183,8 @@ void DeviceAgent::setMultithreaded(bool multithreaded) {
     }
 }
 
-CommandBuffer *DeviceAgent::doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
-    CommandBuffer *actor = _actor->doCreateCommandBuffer(info, true);
+CommandBuffer *DeviceAgent::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
+    CommandBuffer *actor = _actor->createCommandBuffer(info, true);
     return CC_NEW(CommandBufferAgent(actor, this));
 }
 

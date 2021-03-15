@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXGLES3_DEVICE_H_
-#define CC_GFXGLES3_DEVICE_H_
+#pragma once
 
 #include "gfx-base/GFXDevice.h"
 
@@ -58,11 +57,8 @@ public:
     using Device::createTexture;
     using Device::createTextureBarrier;
 
-    virtual bool initialize(const DeviceInfo &info) override;
-    virtual void destroy() override;
-    virtual void resize(uint width, uint height) override;
-    virtual void acquire() override;
-    virtual void present() override;
+    void acquire() override;
+    void present() override;
 
     CC_INLINE GLES3GPUStateCache *stateCache() const { return _gpuStateCache; }
     CC_INLINE GLES3GPUStagingBufferPool *stagingBufferPool() const { return _gpuStagingBufferPool; }
@@ -81,27 +77,30 @@ public:
     uint           getMinorVersion() const;
 
 protected:
-    virtual CommandBuffer *      doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
-    virtual Queue *              createQueue() override;
-    virtual Buffer *             createBuffer() override;
-    virtual Texture *            createTexture() override;
-    virtual Sampler *            createSampler() override;
-    virtual Shader *             createShader() override;
-    virtual InputAssembler *     createInputAssembler() override;
-    virtual RenderPass *         createRenderPass() override;
-    virtual Framebuffer *        createFramebuffer() override;
-    virtual DescriptorSet *      createDescriptorSet() override;
-    virtual DescriptorSetLayout *createDescriptorSetLayout() override;
-    virtual PipelineLayout *     createPipelineLayout() override;
-    virtual PipelineState *      createPipelineState() override;
-    virtual GlobalBarrier *      createGlobalBarrier() override;
-    virtual TextureBarrier *     createTextureBarrier() override;
-    virtual void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
+    bool                 doInit(const DeviceInfo &info) override;
+    void                 doDestroy() override;
+    void                 doResize(uint width, uint height) override;
+    CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
+    Queue *              createQueue() override;
+    Buffer *             createBuffer() override;
+    Texture *            createTexture() override;
+    Sampler *            createSampler() override;
+    Shader *             createShader() override;
+    InputAssembler *     createInputAssembler() override;
+    RenderPass *         createRenderPass() override;
+    Framebuffer *        createFramebuffer() override;
+    DescriptorSet *      createDescriptorSet() override;
+    DescriptorSetLayout *createDescriptorSetLayout() override;
+    PipelineLayout *     createPipelineLayout() override;
+    PipelineState *      createPipelineState() override;
+    GlobalBarrier *      createGlobalBarrier() override;
+    TextureBarrier *     createTextureBarrier() override;
+    void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
 
-    virtual void bindRenderContext(bool bound) override;
-    virtual void bindDeviceContext(bool bound) override;
+    void bindRenderContext(bool bound) override;
+    void bindDeviceContext(bool bound) override;
 
-private:
+protected:
     GLES3Context *               _renderContext          = nullptr;
     GLES3Context *               _deviceContext          = nullptr;
     GLES3GPUStateCache *         _gpuStateCache          = nullptr;
@@ -115,5 +114,3 @@ private:
 
 } // namespace gfx
 } // namespace cc
-
-#endif

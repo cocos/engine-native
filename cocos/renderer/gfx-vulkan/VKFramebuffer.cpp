@@ -41,11 +41,7 @@ CCVKFramebuffer::CCVKFramebuffer(Device *device)
 CCVKFramebuffer::~CCVKFramebuffer() {
 }
 
-bool CCVKFramebuffer::initialize(const FramebufferInfo &info) {
-    _renderPass = info.renderPass;
-    _colorTextures = info.colorTextures;
-    _depthStencilTexture = info.depthStencilTexture;
-
+void CCVKFramebuffer::doInit(const FramebufferInfo &info) {
     _gpuFBO = CC_NEW(CCVKGPUFramebuffer);
     _gpuFBO->gpuRenderPass = ((CCVKRenderPass *)_renderPass)->gpuRenderPass();
 
@@ -62,11 +58,9 @@ bool CCVKFramebuffer::initialize(const FramebufferInfo &info) {
     }
 
     CCVKCmdFuncCreateFramebuffer((CCVKDevice *)_device, _gpuFBO);
-
-    return true;
 }
 
-void CCVKFramebuffer::destroy() {
+void CCVKFramebuffer::doDestroy() {
     if (_gpuFBO) {
         ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuFBO);
         _gpuFBO = nullptr;

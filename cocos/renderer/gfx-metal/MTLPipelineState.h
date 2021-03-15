@@ -44,12 +44,12 @@ public:
     CCMTLPipelineState &operator=(const CCMTLPipelineState &)=delete;
     CCMTLPipelineState &operator=(CCMTLPipelineState &&)=delete;
 
-    bool initialize(const PipelineStateInfo &info) override;
-    void destroy() override;
-
     CC_INLINE CCMTLGPUPipelineState *getGPUPipelineState() const { return _GPUPipelineState; }
 
-private:
+protected:
+    void doInit(const PipelineStateInfo &info) override;
+    void doDestroy() override;
+
     bool createMTLDepthStencilState();
     bool createGPUPipelineState();
     bool createMTLRenderPipelineState();
@@ -59,7 +59,6 @@ private:
     void setBlendStates(MTLRenderPipelineDescriptor *);
     bool createMTLRenderPipeline(MTLRenderPipelineDescriptor *);
 
-private:
     id<MTLRenderPipelineState> _mtlRenderPipelineState = nil;
     id<MTLDepthStencilState> _mtlDepthStencilState = nil;
     CCMTLGPUPipelineState *_GPUPipelineState = nullptr;

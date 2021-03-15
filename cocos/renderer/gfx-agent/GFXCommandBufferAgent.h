@@ -44,8 +44,6 @@ public:
 
     static void flushCommands(uint count, CommandBufferAgent *const *cmdBuffs, bool multiThreaded);
 
-    bool initialize(const CommandBufferInfo &info) override;
-    void destroy() override;
     void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;
     void end() override;
     void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) override;
@@ -76,8 +74,11 @@ public:
     CC_INLINE MessageQueue *getMessageQueue() { return _messageQueue; }
     LinearAllocatorPool *getAllocator();
 
-private:
+protected:
     friend class DeviceAgent;
+
+    void doInit(const CommandBufferInfo &info) override;
+    void doDestroy() override;
 
     void initMessageQueue();
     void destroyMessageQueue();

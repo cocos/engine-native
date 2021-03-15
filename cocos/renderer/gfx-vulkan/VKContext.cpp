@@ -46,7 +46,7 @@ constexpr uint FORCE_MINOR_VERSION           = 0; // 0 for default version, othe
 constexpr uint DISABLE_VALIDATION_ASSERTIONS = 1; // 0 for default behavior, otherwise assertions will be disabled
 
 #define FORCE_ENABLE_VALIDATION  0
-#define FORCE_DISABLE_VALIDATION 1
+#define FORCE_DISABLE_VALIDATION 0
 
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION
 VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
@@ -106,11 +106,7 @@ CCVKContext::CCVKContext(Device *device)
 CCVKContext::~CCVKContext() {
 }
 
-bool CCVKContext::initialize(const ContextInfo &info) {
-
-    _vsyncMode    = info.vsyncMode;
-    _windowHandle = info.windowHandle;
-
+bool CCVKContext::doInit(const ContextInfo &info) {
     if (!info.sharedCtx) {
         _isPrimaryContex = true;
 
@@ -553,7 +549,7 @@ bool CCVKContext::initialize(const ContextInfo &info) {
     return true;
 }
 
-void CCVKContext::destroy() {
+void CCVKContext::doDestroy() {
     if (_gpuContext) {
         if (_gpuContext->vkSurface != VK_NULL_HANDLE) {
             vkDestroySurfaceKHR(_gpuContext->vkInstance, _gpuContext->vkSurface, nullptr);

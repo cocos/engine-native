@@ -35,13 +35,7 @@ namespace gfx {
 
 CCMTLShader::CCMTLShader(Device *device) : Shader(device) {}
 
-bool CCMTLShader::initialize(const ShaderInfo &info) {
-    _name = info.name;
-    _stages = info.stages;
-    _attributes = info.attributes;
-    _blocks = info.blocks;
-    _samplers = info.samplers;
-
+void CCMTLShader::doInit(const ShaderInfo &info) {
     _gpuShader = CC_NEW(CCMTLGPUShader);
 
     for (const auto &stage : _stages) {
@@ -54,10 +48,9 @@ bool CCMTLShader::initialize(const ShaderInfo &info) {
     setAvailableBufferBindingIndex();
 
     CC_LOG_INFO("%s compile succeed.", _name.c_str());
-    return true;
 }
 
-void CCMTLShader::destroy() {
+void CCMTLShader::doDestroy() {
     id<MTLFunction> vertFunc = _vertexMTLFunction;
     _vertexMTLFunction = nil;
     id<MTLFunction> fragFunc = _fragmentMTLFunction;

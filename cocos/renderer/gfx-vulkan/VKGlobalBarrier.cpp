@@ -39,7 +39,7 @@ CCVKGlobalBarrier::~CCVKGlobalBarrier() {
     CC_SAFE_DELETE(_gpuBarrier);
 }
 
-bool CCVKGlobalBarrier::initialize(const GlobalBarrierInfo &info) {
+void CCVKGlobalBarrier::initialize(const GlobalBarrierInfo &info) {
     _info = info;
 
     _gpuBarrier = CC_NEW(CCVKGPUGlobalBarrier);
@@ -59,8 +59,6 @@ bool CCVKGlobalBarrier::initialize(const GlobalBarrierInfo &info) {
     _gpuBarrier->barrier.pNextAccesses   = _gpuBarrier->accessTypes.data() + info.prevAccesses.size();
 
     thsvsGetVulkanMemoryBarrier(_gpuBarrier->barrier, &_gpuBarrier->srcStageMask, &_gpuBarrier->dstStageMask, &_gpuBarrier->vkBarrier);
-
-    return true;
 }
 
 } // namespace gfx

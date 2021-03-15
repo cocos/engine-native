@@ -40,9 +40,6 @@ public:
     explicit CCMTLRenderPass(Device *device);
     ~CCMTLRenderPass() override = default;
 
-    bool initialize(const RenderPassInfo &info) override;
-    void destroy() override;
-
     void setColorAttachment(size_t slot, id<MTLTexture> texture, int level);
     void setDepthStencilAttachment(id<MTLTexture> texture, int level);
 
@@ -50,7 +47,10 @@ public:
     CC_INLINE uint getColorRenderTargetNums() const { return _colorRenderTargetNums; }
     CC_INLINE const vector<Vec2> &getRenderTargetSizes() const { return _renderTargetSizes; }
 
-private:
+protected:
+    void doInit(const RenderPassInfo &info) override;
+    void doDestroy() override;
+
     MTLRenderPassDescriptor *_mtlRenderPassDescriptor = nil;
     uint _colorRenderTargetNums = 0;
     vector<Vec2> _renderTargetSizes;

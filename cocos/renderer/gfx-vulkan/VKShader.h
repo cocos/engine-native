@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXVULKAN_SHADER_H_
-#define CC_GFXVULKAN_SHADER_H_
+#pragma once
 
 #include "gfx-base/GFXShader.h"
 
@@ -38,17 +37,14 @@ public:
     CCVKShader(Device *device);
     ~CCVKShader();
 
-public:
-    bool initialize(const ShaderInfo &info);
-    void destroy();
-
     CC_INLINE CCVKGPUShader *gpuShader() const { return _gpuShader; }
 
-private:
+protected:
+    void doInit(const ShaderInfo &info) override;
+    void doDestroy() override;
+
     CCVKGPUShader *_gpuShader = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

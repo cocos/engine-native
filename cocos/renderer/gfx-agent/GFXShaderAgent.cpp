@@ -42,18 +42,7 @@ ShaderAgent::~ShaderAgent() {
         });
 }
 
-bool ShaderAgent::initialize(const ShaderInfo &info) {
-    _name            = info.name;
-    _stages          = info.stages;
-    _attributes      = info.attributes;
-    _blocks          = info.blocks;
-    _buffers         = info.buffers;
-    _samplerTextures = info.samplerTextures;
-    _samplers        = info.samplers;
-    _textures        = info.textures;
-    _images          = info.images;
-    _subpassInputs   = info.subpassInputs;
-
+void ShaderAgent::doInit(const ShaderInfo &info) {
     ENQUEUE_MESSAGE_2(
         ((DeviceAgent *)_device)->getMessageQueue(),
         ShaderInit,
@@ -62,11 +51,9 @@ bool ShaderAgent::initialize(const ShaderInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void ShaderAgent::destroy() {
+void ShaderAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         ShaderDestroy,

@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXVULKAN_BINDING_LAYOUT_H_
-#define CC_GFXVULKAN_BINDING_LAYOUT_H_
+#pragma once
 
 #include "gfx-base/GFXDescriptorSet.h"
 
@@ -38,17 +37,16 @@ public:
     CCVKDescriptorSet(Device *device);
     ~CCVKDescriptorSet();
 
-    virtual bool initialize(const DescriptorSetInfo &info) override;
-    virtual void destroy() override;
-    virtual void update() override;
+    void update() override;
 
     CC_INLINE CCVKGPUDescriptorSet *gpuDescriptorSet() const { return _gpuDescriptorSet; }
 
-private:
+protected:
+    void doInit(const DescriptorSetInfo &info) override;
+    void doDestroy() override;
+
     CCVKGPUDescriptorSet *_gpuDescriptorSet = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

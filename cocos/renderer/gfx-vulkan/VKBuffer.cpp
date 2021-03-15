@@ -40,14 +40,7 @@ CCVKBuffer::CCVKBuffer(Device *device)
 CCVKBuffer::~CCVKBuffer() {
 }
 
-bool CCVKBuffer::initialize(const BufferInfo &info) {
-    _usage = info.usage;
-    _memUsage = info.memUsage;
-    _size = info.size;
-    _stride = std::max(info.stride, 1u);
-    _count = _size / _stride;
-    _flags = info.flags;
-
+void CCVKBuffer::doInit(const BufferInfo &info) {
     _gpuBuffer = CC_NEW(CCVKGPUBuffer);
     _gpuBuffer->usage = _usage;
     _gpuBuffer->memUsage = _memUsage;
@@ -62,31 +55,16 @@ bool CCVKBuffer::initialize(const BufferInfo &info) {
     }
 
     CCVKCmdFuncCreateBuffer((CCVKDevice *)_device, _gpuBuffer);
-    _device->getMemoryStatus().bufferSize += _size;
 
     _gpuBufferView = CC_NEW(CCVKGPUBufferView);
     createBufferView();
-
-    return true;
 }
 
-bool CCVKBuffer::initialize(const BufferViewInfo &info) {
-    _isBufferView = true;
-
+void CCVKBuffer::doInit(const BufferViewInfo &info) {
     CCVKBuffer *buffer = (CCVKBuffer *)info.buffer;
-
-    _usage = buffer->_usage;
-    _memUsage = buffer->_memUsage;
-    _size = _stride = info.range;
-    _count = 1u;
-    _flags = buffer->_flags;
-    _offset = info.offset;
-
     _gpuBuffer = ((CCVKBuffer *)info.buffer)->gpuBuffer();
     _gpuBufferView = CC_NEW(CCVKGPUBufferView);
     createBufferView();
-
-    return true;
 }
 
 void CCVKBuffer::createBufferView() {
@@ -96,7 +74,7 @@ void CCVKBuffer::createBufferView() {
     ((CCVKDevice *)_device)->gpuDescriptorHub()->update(_gpuBufferView);
 }
 
-void CCVKBuffer::destroy() {
+void CCVKBuffer::doDestroy() {
     if (_gpuBufferView) {
         ((CCVKDevice *)_device)->gpuDescriptorHub()->disengage(_gpuBufferView);
         CC_DELETE(_gpuBufferView);
@@ -115,37 +93,24 @@ void CCVKBuffer::destroy() {
     }
 }
 
-void CCVKBuffer::resize(uint size) {
-    CCASSERT(!_isBufferView, "Cannot resize buffer views");
+void CCVKBuffer::doResize(uint size) {
+    ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuBuffer);
 
-    if (_size != size) {
-        const uint oldSize = _size;
-        _size = size;
-        _count = _size / _stride;
+    _gpuBuffer->size = _size;
+    _gpuBuffer->count = _count;
+    CCVKCmdFuncCreateBuffer((CCVKDevice *)_device, _gpuBuffer);
 
-        ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuBuffer);
+    createBufferView();
 
-        _gpuBuffer->size = _size;
-        _gpuBuffer->count = _count;
-        CCVKCmdFuncCreateBuffer((CCVKDevice *)_device, _gpuBuffer);
-
-        createBufferView();
-
-        MemoryStatus &status = _device->getMemoryStatus();
-        status.bufferSize -= oldSize;
-        status.bufferSize += _size;
-
-        if (_usage & BufferUsageBit::INDIRECT) {
-            const size_t drawInfoCount = _size / sizeof(DrawInfo);
-            _gpuBuffer->indexedIndirectCmds.resize(drawInfoCount);
-            _gpuBuffer->indirectCmds.resize(drawInfoCount);
-        }
+    if (_usage & BufferUsageBit::INDIRECT) {
+        const size_t drawInfoCount = _size / sizeof(DrawInfo);
+        _gpuBuffer->indexedIndirectCmds.resize(drawInfoCount);
+        _gpuBuffer->indirectCmds.resize(drawInfoCount);
     }
 }
 
 void CCVKBuffer::update(void *buffer, uint size) {
     CCASSERT(!_isBufferView, "Cannot update through buffer views");
-    if (!size) return;
 
 #if CC_DEBUG > 0
     if (_usage & BufferUsageBit::INDIRECT) {

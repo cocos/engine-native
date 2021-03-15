@@ -39,9 +39,11 @@ public:
     CCMTLContext &operator=(const CCMTLContext &)=delete;
     CCMTLContext &operator=(CCMTLContext &&)=delete;
 
-    bool initialize(const ContextInfo &info) override;
-    void destroy() override {}
     void present() override {}
+
+protected:
+    bool doInit(const ContextInfo &info) override;
+    void doDestroy() override {}
 };
 
 } // namespace gfx

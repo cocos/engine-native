@@ -39,7 +39,7 @@ GLES3GlobalBarrier::~GLES3GlobalBarrier() {
     CC_SAFE_DELETE(_gpuBarrier);
 }
 
-bool GLES3GlobalBarrier::initialize(const GlobalBarrierInfo &info) {
+void GLES3GlobalBarrier::initialize(const GlobalBarrierInfo &info) {
     _info = info;
 
     _gpuBarrier = CC_NEW(GLES3GPUGlobalBarrier);
@@ -123,8 +123,6 @@ bool GLES3GlobalBarrier::initialize(const GlobalBarrierInfo &info) {
             }
         }
     }
-
-    return true;
 }
 
 } // namespace gfx

@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXVULKAN_INPUT_ASSEMBLER_H_
-#define CC_GFXVULKAN_INPUT_ASSEMBLER_H_
+#pragma once
 
 #include "gfx-base/GFXInputAssembler.h"
 
@@ -38,17 +37,14 @@ public:
     CCVKInputAssembler(Device *device);
     ~CCVKInputAssembler();
 
-public:
-    bool initialize(const InputAssemblerInfo &info);
-    void destroy();
-
     CC_INLINE CCVKGPUInputAssembler *gpuInputAssembler() const { return _gpuInputAssembler; }
 
-private:
+protected:
+    void doInit(const InputAssemblerInfo &info) override;
+    void doDestroy() override;
+
     CCVKGPUInputAssembler *_gpuInputAssembler = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

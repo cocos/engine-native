@@ -128,7 +128,7 @@ public:
         _freeCmds.clear();
     }
 
-private:
+protected:
     T **_frees = nullptr;
     uint _count = 0;
     CachedArray<T *> _freeCmds;

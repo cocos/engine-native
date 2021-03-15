@@ -37,21 +37,13 @@ GLES3RenderPass::GLES3RenderPass(Device *device)
 GLES3RenderPass::~GLES3RenderPass() {
 }
 
-bool GLES3RenderPass::initialize(const RenderPassInfo &info) {
-
-    _colorAttachments = info.colorAttachments;
-    _depthStencilAttachment = info.depthStencilAttachment;
-
+void GLES3RenderPass::doInit(const RenderPassInfo &info) {
     _gpuRenderPass = CC_NEW(GLES3GPURenderPass);
     _gpuRenderPass->colorAttachments = _colorAttachments;
     _gpuRenderPass->depthStencilAttachment = _depthStencilAttachment;
-
-    _hash = computeHash();
-
-    return true;
 }
 
-void GLES3RenderPass::destroy() {
+void GLES3RenderPass::doDestroy() {
     if (_gpuRenderPass) {
         CC_DELETE(_gpuRenderPass);
         _gpuRenderPass = nullptr;

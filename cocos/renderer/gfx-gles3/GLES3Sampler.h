@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXGLES3_SAMPLER_H_
-#define CC_GFXGLES3_SAMPLER_H_
+#pragma once
 
 #include "gfx-base/GFXSampler.h"
 
@@ -38,17 +37,14 @@ public:
     GLES3Sampler(Device *device);
     ~GLES3Sampler();
 
-public:
-    virtual bool initialize(const SamplerInfo &info) override;
-    virtual void destroy() override;
-
     CC_INLINE GLES3GPUSampler *gpuSampler() const { return _gpuSampler; }
 
-private:
+protected:
+    void doInit(const SamplerInfo &info) override;
+    void doDestroy() override;
+
     GLES3GPUSampler *_gpuSampler = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

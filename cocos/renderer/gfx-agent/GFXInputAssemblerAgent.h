@@ -37,9 +37,6 @@ public:
     InputAssemblerAgent(Device *device) = delete;
     ~InputAssemblerAgent() override;
 
-    bool initialize(const InputAssemblerInfo &info) override;
-    void destroy() override;
-
     void setVertexCount(uint count) override;
     void setFirstVertex(uint first) override;
     void setIndexCount(uint count) override;
@@ -47,6 +44,10 @@ public:
     void setVertexOffset(uint offset) override;
     void setInstanceCount(uint count) override;
     void setFirstInstance(uint first) override;
+
+protected:
+    void doInit(const InputAssemblerInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

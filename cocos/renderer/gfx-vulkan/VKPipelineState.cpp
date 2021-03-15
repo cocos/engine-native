@@ -42,18 +42,7 @@ CCVKPipelineState::CCVKPipelineState(Device *device)
 CCVKPipelineState::~CCVKPipelineState() {
 }
 
-bool CCVKPipelineState::initialize(const PipelineStateInfo &info) {
-    _primitive = info.primitive;
-    _shader = info.shader;
-    _inputState = info.inputState;
-    _rasterizerState = info.rasterizerState;
-    _depthStencilState = info.depthStencilState;
-    _bindPoint = info.bindPoint;
-    _blendState = info.blendState;
-    _dynamicStates = info.dynamicStates;
-    _renderPass = info.renderPass;
-    _pipelineLayout = info.pipelineLayout;
-
+void CCVKPipelineState::doInit(const PipelineStateInfo &info) {
     _gpuPipelineState = CC_NEW(CCVKGPUPipelineState);
     _gpuPipelineState->bindPoint = _bindPoint;
     _gpuPipelineState->primitive = _primitive;
@@ -76,11 +65,9 @@ bool CCVKPipelineState::initialize(const PipelineStateInfo &info) {
     } else {
         CCVKCmdFuncCreateComputePipelineState((CCVKDevice *)_device, _gpuPipelineState);
     }
-
-    return true;
 }
 
-void CCVKPipelineState::destroy() {
+void CCVKPipelineState::doDestroy() {
     if (_gpuPipelineState) {
         ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuPipelineState);
         _gpuPipelineState = nullptr;

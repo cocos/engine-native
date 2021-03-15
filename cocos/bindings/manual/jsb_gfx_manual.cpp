@@ -238,10 +238,10 @@ static bool js_gfx_Buffer_initialize(se::State &s) {
 
         if (initWithBufferViewInfo) {
             auto bufferViewInfo = (cc::gfx::BufferViewInfo *)(args[0].toObject()->getPrivateData());
-            ok &= cobj->initialize(*bufferViewInfo);
+            cobj->initialize(*bufferViewInfo);
         } else {
             auto bufferInfo = (cc::gfx::BufferInfo *)(args[0].toObject()->getPrivateData());
-            ok &= cobj->initialize(*bufferInfo);
+            cobj->initialize(*bufferInfo);
         }
 
         ok &= boolean_to_seval(ok, &s.rval());
@@ -267,10 +267,10 @@ static bool js_gfx_Texture_initialize(se::State &s) {
 
         if (initWithTextureViewInfo) {
             auto textureViewInfo = (cc::gfx::TextureViewInfo *)(args[0].toObject()->getPrivateData());
-            ok &= cobj->initialize(*textureViewInfo);
+            cobj->initialize(*textureViewInfo);
         } else {
             auto textureInfo = (cc::gfx::TextureInfo *)(args[0].toObject()->getPrivateData());
-            ok &= cobj->initialize(*textureInfo);
+            cobj->initialize(*textureInfo);
         }
 
         ok &= boolean_to_seval(ok, &s.rval());

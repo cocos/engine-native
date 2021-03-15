@@ -37,14 +37,7 @@ GLES2Shader::GLES2Shader(Device *device)
 GLES2Shader::~GLES2Shader() {
 }
 
-bool GLES2Shader::initialize(const ShaderInfo &info) {
-    _name = info.name;
-    _stages = info.stages;
-    _attributes = info.attributes;
-    _blocks = info.blocks;
-    _buffers = info.buffers;
-    _samplers = info.samplers;
-
+void GLES2Shader::doInit(const ShaderInfo &info) {
     _gpuShader = CC_NEW(GLES2GPUShader);
     _gpuShader->name = _name;
     _gpuShader->blocks = _blocks;
@@ -55,11 +48,9 @@ bool GLES2Shader::initialize(const ShaderInfo &info) {
     }
 
     GLES2CmdFuncCreateShader((GLES2Device *)_device, _gpuShader);
-
-    return true;
 }
 
-void GLES2Shader::destroy() {
+void GLES2Shader::doDestroy() {
     if (_gpuShader) {
         GLES2CmdFuncDestroyShader((GLES2Device *)_device, _gpuShader);
         CC_DELETE(_gpuShader);

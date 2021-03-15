@@ -54,7 +54,7 @@ CCMTLDevice::CCMTLDevice() {
     _caps.UVSpaceSignY = 1.0f;
 }
 
-bool CCMTLDevice::initialize(const DeviceInfo &info) {
+bool CCMTLDevice::doInit(const DeviceInfo &info) {
     _API = API::METAL;
     _deviceName = "Metal";
     _width = info.width;
@@ -187,7 +187,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     return true;
 }
 
-void CCMTLDevice::destroy() {
+void CCMTLDevice::doDestroy() {
 //    if (_memoryAlarmListenerId != 0) {
 //        EventDispatcher::removeCustomEventListener(EVENT_MEMORY_WARNING, _memoryAlarmListenerId);
 //        _memoryAlarmListenerId = 0;
@@ -219,7 +219,7 @@ void CCMTLDevice::destroy() {
     }
 }
 
-void CCMTLDevice::resize(uint /*width*/, uint /*height*/) {}
+void CCMTLDevice::doResize(uint /*width*/, uint /*height*/) {}
 
 void CCMTLDevice::acquire() {
     _inFlightSemaphore->wait();
@@ -282,7 +282,7 @@ Queue *CCMTLDevice::createQueue() {
     return CC_NEW(CCMTLQueue(this));
 }
 
-CommandBuffer *CCMTLDevice::doCreateCommandBuffer(const CommandBufferInfo &info, bool /*hasAgent*/) {
+CommandBuffer *CCMTLDevice::createCommandBuffer(const CommandBufferInfo &info, bool /*hasAgent*/) {
     return CC_NEW(CCMTLCommandBuffer(this));
 }
 

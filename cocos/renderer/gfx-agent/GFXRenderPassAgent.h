@@ -37,8 +37,9 @@ public:
     RenderPassAgent(Device *device) = delete;
     ~RenderPassAgent() override;
 
-    bool initialize(const RenderPassInfo &info) override;
-    void destroy() override;
+protected:
+    void doInit(const RenderPassInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

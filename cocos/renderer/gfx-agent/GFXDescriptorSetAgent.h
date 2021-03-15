@@ -37,13 +37,15 @@ public:
     DescriptorSetAgent(Device *device) = delete;
     ~DescriptorSetAgent() override;
 
-    bool initialize(const DescriptorSetInfo &info) override;
-    void destroy() override;
     void update() override;
 
     void bindBuffer(uint binding, Buffer *buffer, uint index) override;
     void bindTexture(uint binding, Texture *texture, uint index) override;
     void bindSampler(uint binding, Sampler *sampler, uint index) override;
+
+protected:
+    void doInit(const DescriptorSetInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

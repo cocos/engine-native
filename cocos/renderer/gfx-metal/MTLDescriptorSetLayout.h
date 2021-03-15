@@ -40,12 +40,12 @@ public:
     CCMTLDescriptorSetLayout &operator=(const CCMTLDescriptorSetLayout &)=delete;
     CCMTLDescriptorSetLayout &operator=(CCMTLDescriptorSetLayout &&)=delete;
 
-    bool initialize(const DescriptorSetLayoutInfo &info) override;
-    void destroy() override;
-
     CC_INLINE CCMTLGPUDescriptorSetLayout *gpuDescriptorSetLayout() const { return _gpuDescriptorSetLayout; }
 
-private:
+protected:
+    void doInit(const DescriptorSetLayoutInfo &info) override;
+    void doDestroy() override;
+
     CCMTLGPUDescriptorSetLayout *_gpuDescriptorSetLayout = nullptr;
 };
 

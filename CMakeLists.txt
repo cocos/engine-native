@@ -965,6 +965,31 @@ if(CC_USE_VULKAN)
     )
 endif()
 
+cocos_source_files(
+    cocos/renderer/frame-graph/Blackboard.h
+    cocos/renderer/frame-graph/CallbackPass.h
+    cocos/renderer/frame-graph/DevicePass.cpp
+    cocos/renderer/frame-graph/DevicePass.h
+    cocos/renderer/frame-graph/DevicePassResourceTable.cpp
+    cocos/renderer/frame-graph/DevicePassResourceTable.h
+    cocos/renderer/frame-graph/FrameGraph.cpp
+    cocos/renderer/frame-graph/FrameGraph.h
+    cocos/renderer/frame-graph/Handle.h
+    cocos/renderer/frame-graph/PassInsertPointManager.cpp
+    cocos/renderer/frame-graph/PassInsertPointManager.h
+    cocos/renderer/frame-graph/PassNode.cpp
+    cocos/renderer/frame-graph/PassNode.h
+    cocos/renderer/frame-graph/PassNodeBuilder.cpp
+    cocos/renderer/frame-graph/PassNodeBuilder.h
+    cocos/renderer/frame-graph/RenderTargetAttachment.h
+    cocos/renderer/frame-graph/Resource.h
+    cocos/renderer/frame-graph/ResourceAllocator.h
+    cocos/renderer/frame-graph/ResourceEntry.h
+    cocos/renderer/frame-graph/ResourceNode.h
+    cocos/renderer/frame-graph/VirtualResource.cpp
+    cocos/renderer/frame-graph/VirtualResource.h
+)
+
 ##### script bindings
 ######## dop
 cocos_source_files(

@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXGLES3_SHADER_H_
-#define CC_GFXGLES3_SHADER_H_
+#pragma once
 
 #include "gfx-base/GFXShader.h"
 
@@ -38,17 +37,14 @@ public:
     GLES3Shader(Device *device);
     ~GLES3Shader();
 
-public:
-    virtual bool initialize(const ShaderInfo &info) override;
-    virtual void destroy() override;
-
     CC_INLINE GLES3GPUShader *gpuShader() const { return _gpuShader; }
 
-private:
+protected:
+    void doInit(const ShaderInfo &info) override;
+    void doDestroy() override;
+
     GLES3GPUShader *_gpuShader = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

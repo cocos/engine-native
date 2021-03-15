@@ -45,9 +45,7 @@ QueueAgent::~QueueAgent() {
         });
 }
 
-bool QueueAgent::initialize(const QueueInfo &info) {
-    _type = info.type;
-
+void QueueAgent::doInit(const QueueInfo &info) {
     ENQUEUE_MESSAGE_2(
         ((DeviceAgent *)_device)->getMessageQueue(),
         QueueInit,
@@ -56,11 +54,9 @@ bool QueueAgent::initialize(const QueueInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void QueueAgent::destroy() {
+void QueueAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         QueueDestroy,

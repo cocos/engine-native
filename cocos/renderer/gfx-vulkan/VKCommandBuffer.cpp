@@ -50,10 +50,7 @@ CCVKCommandBuffer::CCVKCommandBuffer(Device *device)
 CCVKCommandBuffer::~CCVKCommandBuffer() {
 }
 
-bool CCVKCommandBuffer::initialize(const CommandBufferInfo &info) {
-    _type  = info.type;
-    _queue = info.queue;
-
+void CCVKCommandBuffer::doInit(const CommandBufferInfo &info) {
     _gpuCommandBuffer                   = CC_NEW(CCVKGPUCommandBuffer);
     _gpuCommandBuffer->level            = MapVkCommandBufferLevel(_type);
     _gpuCommandBuffer->queueFamilyIndex = ((CCVKQueue *)_queue)->gpuQueue()->queueFamilyIndex;
@@ -63,11 +60,9 @@ bool CCVKCommandBuffer::initialize(const CommandBufferInfo &info) {
     _curVkDescriptorSets.resize(setCount);
     _curDynamicOffsetPtrs.resize(setCount);
     _curDynamicOffsetCounts.resize(setCount);
-
-    return true;
 }
 
-void CCVKCommandBuffer::destroy() {
+void CCVKCommandBuffer::doDestroy() {
     if (_gpuCommandBuffer) {
         CC_DELETE(_gpuCommandBuffer);
         _gpuCommandBuffer = nullptr;

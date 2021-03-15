@@ -68,5 +68,38 @@ Format Device::getDepthStencilFormat() const {
     return _context->getDepthStencilFormat();
 }
 
+bool Device::initialize(const DeviceInfo &info) {
+    _width        = info.width;
+    _height       = info.height;
+    _nativeWidth  = info.nativeWidth;
+    _nativeHeight = info.nativeHeight;
+    _windowHandle = info.windowHandle;
+
+    _bindingMappingInfo = info.bindingMappingInfo;
+    if (_bindingMappingInfo.bufferOffsets.empty()) {
+        _bindingMappingInfo.bufferOffsets.push_back(0);
+    }
+    if (_bindingMappingInfo.samplerOffsets.empty()) {
+        _bindingMappingInfo.samplerOffsets.push_back(0);
+    }
+
+    return doInit(info);
+}
+
+void Device::destroy() {
+    doDestroy();
+
+    _bindingMappingInfo.bufferOffsets.clear();
+    _bindingMappingInfo.samplerOffsets.clear();
+    _width = _height = _nativeWidth = _nativeHeight = _windowHandle = 0u;
+}
+
+void Device::resize(uint width, uint height) {
+    _width = _nativeWidth = width;
+    _height = _nativeHeight = height;
+
+    doResize(width, height);
+}
+
 } // namespace gfx
 } // namespace cc

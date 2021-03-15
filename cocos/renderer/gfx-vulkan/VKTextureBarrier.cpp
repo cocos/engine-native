@@ -40,7 +40,7 @@ CCVKTextureBarrier::~CCVKTextureBarrier() {
     CC_SAFE_DELETE(_gpuBarrier);
 }
 
-bool CCVKTextureBarrier::initialize(const TextureBarrierInfo &info) {
+void CCVKTextureBarrier::initialize(const TextureBarrierInfo &info) {
     _info = info;
 
     _gpuBarrier = CC_NEW(CCVKGPUTextureBarrier);
@@ -73,8 +73,6 @@ bool CCVKTextureBarrier::initialize(const TextureBarrierInfo &info) {
                                                    : VK_QUEUE_FAMILY_IGNORED;
 
     thsvsGetVulkanImageMemoryBarrier(_gpuBarrier->barrier, &_gpuBarrier->srcStageMask, &_gpuBarrier->dstStageMask, &_gpuBarrier->vkBarrier);
-
-    return true;
 }
 
 } // namespace gfx

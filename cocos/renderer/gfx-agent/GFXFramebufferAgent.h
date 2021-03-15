@@ -37,8 +37,9 @@ public:
     FramebufferAgent(Device *device) = delete;
     ~FramebufferAgent() override;
 
-    bool initialize(const FramebufferInfo &info) override;
-    void destroy() override;
+protected:
+    void doInit(const FramebufferInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

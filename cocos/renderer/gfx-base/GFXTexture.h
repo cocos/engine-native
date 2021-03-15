@@ -37,10 +37,10 @@ public:
 
     static uint computeHash(const TextureInfo &info);
 
-    virtual bool initialize(const TextureInfo &info)     = 0;
-    virtual bool initialize(const TextureViewInfo &info) = 0;
-    virtual void destroy()                               = 0;
-    virtual void resize(uint width, uint height)         = 0;
+    void initialize(const TextureInfo &info);
+    void initialize(const TextureViewInfo &info);
+    void destroy();
+    void resize(uint width, uint height);
 
     CC_INLINE Device *     getDevice() const { return _device; }
     CC_INLINE uint         getTextureID() const { return _textureID; }
@@ -63,6 +63,11 @@ protected:
         static uint _idGen = 0;
         return _idGen++;
     }
+
+    virtual void doInit(const TextureInfo &info)     = 0;
+    virtual void doInit(const TextureViewInfo &info) = 0;
+    virtual void doDestroy()                         = 0;
+    virtual void doResize(uint width, uint height)   = 0;
 
     Device *     _device        = nullptr;
     uint         _textureID     = 0;

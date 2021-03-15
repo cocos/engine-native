@@ -45,18 +45,7 @@ PipelineStateAgent::~PipelineStateAgent() {
         });
 }
 
-bool PipelineStateAgent::initialize(const PipelineStateInfo &info) {
-    _primitive = info.primitive;
-    _shader = info.shader;
-    _inputState = info.inputState;
-    _rasterizerState = info.rasterizerState;
-    _depthStencilState = info.depthStencilState;
-    _bindPoint = info.bindPoint;
-    _blendState = info.blendState;
-    _dynamicStates = info.dynamicStates;
-    _renderPass = info.renderPass;
-    _pipelineLayout = info.pipelineLayout;
-
+void PipelineStateAgent::doInit(const PipelineStateInfo &info) {
     PipelineStateInfo actorInfo = info;
     actorInfo.shader = ((ShaderAgent *)info.shader)->getActor();
     actorInfo.pipelineLayout = ((PipelineLayoutAgent *)info.pipelineLayout)->getActor();
@@ -70,11 +59,9 @@ bool PipelineStateAgent::initialize(const PipelineStateInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void PipelineStateAgent::destroy() {
+void PipelineStateAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         PipelineStateDestroy,

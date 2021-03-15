@@ -42,10 +42,7 @@ GLES2DescriptorSet::GLES2DescriptorSet(Device *device)
 GLES2DescriptorSet::~GLES2DescriptorSet() {
 }
 
-bool GLES2DescriptorSet::initialize(const DescriptorSetInfo &info) {
-
-    _layout = info.layout;
-
+void GLES2DescriptorSet::doInit(const DescriptorSetInfo &info) {
     const GLES2GPUDescriptorSetLayout *gpuDescriptorSetLayout = ((GLES2DescriptorSetLayout *)_layout)->gpuDescriptorSetLayout();
     const size_t descriptorCount = gpuDescriptorSetLayout->descriptorCount;
     const size_t bindingCount = gpuDescriptorSetLayout->bindings.size();
@@ -64,11 +61,9 @@ bool GLES2DescriptorSet::initialize(const DescriptorSetInfo &info) {
     }
 
     _gpuDescriptorSet->descriptorIndices = &gpuDescriptorSetLayout->descriptorIndices;
-
-    return true;
 }
 
-void GLES2DescriptorSet::destroy() {
+void GLES2DescriptorSet::doDestroy() {
     if (_gpuDescriptorSet) {
         CC_DELETE(_gpuDescriptorSet);
         _gpuDescriptorSet = nullptr;

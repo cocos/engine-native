@@ -38,13 +38,12 @@ public:
     CCVKPipelineLayout(Device *device);
     ~CCVKPipelineLayout();
 
-public:
-    virtual bool initialize(const PipelineLayoutInfo &info) override;
-    virtual void destroy() override;
-
     CC_INLINE CCVKGPUPipelineLayout *gpuPipelineLayout() const { return _gpuPipelineLayout; }
 
-private:
+protected:
+    void doInit(const PipelineLayoutInfo &info) override;
+    void doDestroy() override;
+
     CCVKGPUPipelineLayout *_gpuPipelineLayout = nullptr;
 };
 

@@ -45,7 +45,7 @@ GLES2CommandBuffer::GLES2CommandBuffer(Device *device)
 GLES2CommandBuffer::~GLES2CommandBuffer() {
 }
 
-bool GLES2CommandBuffer::initialize(const CommandBufferInfo &info) {
+void GLES2CommandBuffer::doInit(const CommandBufferInfo &info) {
     _type = info.type;
     _queue = info.queue;
 
@@ -55,11 +55,9 @@ bool GLES2CommandBuffer::initialize(const CommandBufferInfo &info) {
     size_t setCount = ((GLES2Device *)_device)->bindingMappingInfo().bufferOffsets.size();
     _curGPUDescriptorSets.resize(setCount);
     _curDynamicOffsets.resize(setCount);
-
-    return true;
 }
 
-void GLES2CommandBuffer::destroy() {
+void GLES2CommandBuffer::doDestroy() {
     _cmdAllocator->clearCmds(_curCmdPackage);
     CC_SAFE_DELETE(_curCmdPackage);
 

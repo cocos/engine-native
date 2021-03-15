@@ -37,8 +37,9 @@ public:
     ShaderAgent(Device *device) = delete;
     ~ShaderAgent() override;
 
-    bool initialize(const ShaderInfo &info) override;
-    void destroy() override;
+protected:
+    void doInit(const ShaderInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

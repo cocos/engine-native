@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_CORE_GFX_PIPELINE_LAYOUT_H_
-#define CC_CORE_GFX_PIPELINE_LAYOUT_H_
+#pragma once
 
 #include "GFXObject.h"
 
@@ -36,19 +35,19 @@ public:
     PipelineLayout(Device *device);
     virtual ~PipelineLayout();
 
-public:
-    virtual bool initialize(const PipelineLayoutInfo &info) = 0;
-    virtual void destroy() = 0;
+    void initialize(const PipelineLayoutInfo &info);
+    void destroy();
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const DescriptorSetLayoutList &getSetLayouts() const { return _setLayouts; }
 
 protected:
-    Device *_device = nullptr;
+    virtual void doInit(const PipelineLayoutInfo &info) = 0;
+    virtual void doDestroy()                            = 0;
+
+    Device *                _device = nullptr;
     DescriptorSetLayoutList _setLayouts;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_CORE_GFX_PIPELINE_LAYOUT_H_

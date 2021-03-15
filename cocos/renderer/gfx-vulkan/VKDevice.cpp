@@ -72,7 +72,7 @@ CCVKGPUContext *CCVKDevice::gpuContext() const {
     return ((CCVKContext *)_context)->gpuContext();
 }
 
-bool CCVKDevice::initialize(const DeviceInfo &info) {
+bool CCVKDevice::doInit(const DeviceInfo &info) {
     _API          = API::VULKAN;
     _deviceName   = "Vulkan";
     _width        = info.width;
@@ -448,7 +448,7 @@ bool CCVKDevice::initialize(const DeviceInfo &info) {
     return true;
 }
 
-void CCVKDevice::destroy() {
+void CCVKDevice::doDestroy() {
     if (_gpuDevice && _gpuDevice->vkDevice) {
         VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
     }
@@ -536,7 +536,7 @@ void CCVKDevice::destroy() {
 }
 
 // no-op since we maintain surface size internally
-void CCVKDevice::resize(uint width, uint height) {}
+void CCVKDevice::doResize(uint width, uint height) {}
 
 void CCVKDevice::acquire() {
     CCVKQueue *queue = (CCVKQueue *)_queue;
@@ -602,7 +602,7 @@ CCVKGPUFencePool *        CCVKDevice::gpuFencePool() { return _gpuFencePools[_gp
 CCVKGPURecycleBin *       CCVKDevice::gpuRecycleBin() { return _gpuRecycleBins[_gpuDevice->curBackBufferIndex]; }
 CCVKGPUStagingBufferPool *CCVKDevice::gpuStagingBufferPool() { return _gpuStagingBufferPools[_gpuDevice->curBackBufferIndex]; }
 
-CommandBuffer *CCVKDevice::doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
+CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
     return CC_NEW(CCVKCommandBuffer(this));
 }
 

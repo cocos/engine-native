@@ -46,21 +46,16 @@ GLES3CommandBuffer::GLES3CommandBuffer(Device *device)
 GLES3CommandBuffer::~GLES3CommandBuffer() {
 }
 
-bool GLES3CommandBuffer::initialize(const CommandBufferInfo &info) {
-    _type  = info.type;
-    _queue = info.queue;
-
+void GLES3CommandBuffer::doInit(const CommandBufferInfo &info) {
     _cmdAllocator  = CC_NEW(GLES3GPUCommandAllocator);
     _curCmdPackage = CC_NEW(GLES3CmdPackage);
 
     size_t setCount = ((GLES3Device *)_device)->bindingMappingInfo().bufferOffsets.size();
     _curGPUDescriptorSets.resize(setCount);
     _curDynamicOffsets.resize(setCount);
-
-    return true;
 }
 
-void GLES3CommandBuffer::destroy() {
+void GLES3CommandBuffer::doDestroy() {
     _cmdAllocator->clearCmds(_curCmdPackage);
     CC_SAFE_DELETE(_curCmdPackage);
 

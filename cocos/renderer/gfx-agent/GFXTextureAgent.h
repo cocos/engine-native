@@ -37,10 +37,11 @@ public:
     TextureAgent(Device *device) = delete;
     ~TextureAgent() override;
 
-    bool initialize(const TextureInfo &info) override;
-    bool initialize(const TextureViewInfo &info) override;
-    void destroy() override;
-    void resize(uint width, uint height) override;
+protected:
+    void doInit(const TextureInfo &info) override;
+    void doInit(const TextureViewInfo &info) override;
+    void doDestroy() override;
+    void doResize(uint width, uint height) override;
 };
 
 } // namespace gfx

@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXVULKAN_PIPELINE_STATE_H_
-#define CC_GFXVULKAN_PIPELINE_STATE_H_
+#pragma once
 
 #include "gfx-base/GFXPipelineState.h"
 
@@ -38,17 +37,14 @@ public:
     CCVKPipelineState(Device *device);
     ~CCVKPipelineState();
 
-public:
-    bool initialize(const PipelineStateInfo &info);
-    void destroy();
-
     CC_INLINE CCVKGPUPipelineState *gpuPipelineState() const { return _gpuPipelineState; }
 
-private:
+protected:
+    void doInit(const PipelineStateInfo &info) override;
+    void doDestroy() override;
+
     CCVKGPUPipelineState *_gpuPipelineState = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

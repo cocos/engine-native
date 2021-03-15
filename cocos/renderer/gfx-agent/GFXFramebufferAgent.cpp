@@ -44,11 +44,7 @@ FramebufferAgent::~FramebufferAgent() {
         });
 }
 
-bool FramebufferAgent::initialize(const FramebufferInfo &info) {
-    _renderPass = info.renderPass;
-    _colorTextures = info.colorTextures;
-    _depthStencilTexture = info.depthStencilTexture;
-
+void FramebufferAgent::doInit(const FramebufferInfo &info) {
     FramebufferInfo actorInfo = info;
     for (uint i = 0u; i < info.colorTextures.size(); ++i) {
         if (info.colorTextures[i]) {
@@ -68,11 +64,9 @@ bool FramebufferAgent::initialize(const FramebufferInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void FramebufferAgent::destroy() {
+void FramebufferAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         FramebufferDestroy,

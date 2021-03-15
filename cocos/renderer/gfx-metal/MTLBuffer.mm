@@ -40,13 +40,7 @@ namespace gfx {
 CCMTLBuffer::CCMTLBuffer(Device *device) : Buffer(device) {
 }
 
-bool CCMTLBuffer::initialize(const BufferInfo &info) {
-    _usage = info.usage;
-    _memUsage = info.memUsage;
-    _size = info.size;
-    _stride = std::max(info.stride, 1U);
-    _count = _size / _stride;
-    _flags = info.flags;
+void CCMTLBuffer::doInit(const BufferInfo &info) {
     _isIndirectDrawSupported = static_cast<CCMTLDevice *>(_device)->isIndirectDrawSupported();
     if (_usage & BufferUsage::INDEX) {
         switch (_stride) {
@@ -71,15 +65,12 @@ bool CCMTLBuffer::initialize(const BufferInfo &info) {
             _drawInfos.resize(_count);
         }
     }
-
-    return true;
 }
 
-bool CCMTLBuffer::initialize(const BufferViewInfo &info) {
+void CCMTLBuffer::doInit(const BufferViewInfo &info) {
     *this = *static_cast<CCMTLBuffer *>(info.buffer);
     _bufferViewOffset = info.offset;
     _isBufferView = true;
-    return true;
 }
 
 bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
@@ -93,7 +84,6 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
         std::function<void(void)> destroyFunc = [=]() {
             if (mtlBuffer) {
                 [mtlBuffer release];
-                device->getMemoryStatus().bufferSize -= oldSize;
             }
         };
         //gpu object only
@@ -105,13 +95,9 @@ bool CCMTLBuffer::createMTLBuffer(uint size, MemoryUsage usage) {
     if (_mtlBuffer == nil) {
         return false;
     }
-
-    _device->getMemoryStatus().bufferSize += size;
-
-    return true;
 }
 
-void CCMTLBuffer::destroy() {
+void CCMTLBuffer::doDestroy() {
     if (_isBufferView) {
         return;
     }
@@ -143,16 +129,7 @@ void CCMTLBuffer::destroy() {
     CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
 }
 
-void CCMTLBuffer::resize(uint size) {
-    if (_isBufferView) {
-        CC_LOG_WARNING("Cannot resize a buffer view.");
-        return;
-    }
-
-    if (_size == size) {
-        return;
-    }
-
+void CCMTLBuffer::doResize(uint size) {
     if (_usage & BufferUsageBit::VERTEX ||
         _usage & BufferUsageBit::INDEX ||
         _usage & BufferUsageBit::UNIFORM) {
@@ -178,7 +155,7 @@ void CCMTLBuffer::update(void *buffer, uint size) {
         CC_LOG_WARNING("Cannot update a buffer view.");
         return;
     }
-    
+
     uint drawInfoCount = size / _stride;
     const auto *drawInfo = static_cast<const DrawInfo *>(buffer);
     if (drawInfoCount > 0) {

@@ -37,8 +37,9 @@ public:
     DescriptorSetLayoutAgent(Device *device) = delete;
     ~DescriptorSetLayoutAgent() override;
 
-    bool initialize(const DescriptorSetLayoutInfo &info) override;
-    void destroy() override;
+protected:
+    void doInit(const DescriptorSetLayoutInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

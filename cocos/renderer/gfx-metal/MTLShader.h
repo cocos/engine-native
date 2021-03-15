@@ -41,9 +41,6 @@ public:
     CCMTLShader &operator=(const CCMTLShader &)=delete;
     CCMTLShader &operator=(CCMTLShader &&)=delete;
 
-    bool initialize(const ShaderInfo &info) override;
-    void destroy() override;
-
     CC_INLINE id<MTLFunction> getVertMTLFunction() const { return _vertexMTLFunction; }
     CC_INLINE id<MTLFunction> getFragmentMTLFunction() const { return _fragmentMTLFunction; }
     CC_INLINE const unordered_map<uint, uint> &getFragmentSamplerBindings() const { return _mtlFragmentSamplerBindings; }
@@ -58,11 +55,13 @@ public:
     CC_INLINE const String &getFragMtlSahder() const { return _fragMtlShader; }
 #endif
 
-private:
+protected:
+    void doInit(const ShaderInfo &info) override;
+    void doDestroy() override;
+
     bool createMTLFunction(const ShaderStage &);
     void setAvailableBufferBindingIndex();
 
-private:
     id<MTLFunction> _vertexMTLFunction = nil;
     id<MTLFunction> _fragmentMTLFunction = nil;
     unordered_map<uint, uint> _mtlFragmentSamplerBindings;

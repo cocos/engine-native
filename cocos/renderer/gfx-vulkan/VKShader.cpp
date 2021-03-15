@@ -39,14 +39,7 @@ CCVKShader::CCVKShader(Device *device)
 CCVKShader::~CCVKShader() {
 }
 
-bool CCVKShader::initialize(const ShaderInfo &info) {
-    _name = info.name;
-    _stages = info.stages;
-    _attributes = info.attributes;
-    _blocks = info.blocks;
-    _buffers = info.buffers;
-    _samplers = info.samplers;
-
+void CCVKShader::doInit(const ShaderInfo &info) {
     _gpuShader = CC_NEW(CCVKGPUShader);
     _gpuShader->name = _name;
     _gpuShader->attributes = _attributes;
@@ -57,11 +50,9 @@ bool CCVKShader::initialize(const ShaderInfo &info) {
     }
 
     CCVKCmdFuncCreateShader((CCVKDevice *)_device, _gpuShader);
-
-    return true;
 }
 
-void CCVKShader::destroy() {
+void CCVKShader::doDestroy() {
     if (_gpuShader) {
         ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuShader);
         _gpuShader = nullptr;

@@ -42,5 +42,24 @@ Sampler::Sampler(Device *device)
 Sampler::~Sampler() {
 }
 
+void Sampler::initialize(const SamplerInfo &info) {
+    _minFilter     = info.minFilter;
+    _magFilter     = info.magFilter;
+    _mipFilter     = info.mipFilter;
+    _addressU      = info.addressU;
+    _addressV      = info.addressV;
+    _addressW      = info.addressW;
+    _maxAnisotropy = info.maxAnisotropy;
+    _cmpFunc       = info.cmpFunc;
+    _borderColor   = info.borderColor;
+    _mipLODBias    = info.mipLODBias;
+
+    doInit(info);
+}
+
+void Sampler::destroy() {
+    doDestroy();
+}
+
 } // namespace gfx
 } // namespace cc

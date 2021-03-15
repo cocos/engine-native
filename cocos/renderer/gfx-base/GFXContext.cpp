@@ -37,5 +37,16 @@ Context::Context(Device *device)
 Context::~Context() {
 }
 
+bool Context::initialize(const ContextInfo& info) {
+    _vsyncMode    = info.vsyncMode;
+    _windowHandle = info.windowHandle;
+
+    return doInit(info);
+}
+
+void Context::destroy() {
+    doDestroy();
+}
+
 } // namespace gfx
 } // namespace cc

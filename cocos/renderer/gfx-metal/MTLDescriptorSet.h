@@ -41,13 +41,14 @@ public:
     CCMTLDescriptorSet &operator=(const CCMTLDescriptorSet &)=delete;
     CCMTLDescriptorSet &operator=(CCMTLDescriptorSet &&)=delete;
 
-    bool initialize(const DescriptorSetInfo &info) override;
-    void destroy() override;
     void update() override;
 
     CC_INLINE CCMTLGPUDescriptorSet *gpuDescriptorSet() const { return _gpuDescriptorSet; }
 
-private:
+protected:
+    void doInit(const DescriptorSetInfo &info) override;
+    void doDestroy() override;
+
     CCMTLGPUDescriptorSet *_gpuDescriptorSet = nullptr;
 };
 } // namespace gfx

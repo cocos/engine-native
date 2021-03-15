@@ -39,18 +39,7 @@ CCVKSampler::CCVKSampler(Device *device)
 CCVKSampler::~CCVKSampler() {
 }
 
-bool CCVKSampler::initialize(const SamplerInfo &info) {
-    _minFilter = info.minFilter;
-    _magFilter = info.magFilter;
-    _mipFilter = info.mipFilter;
-    _addressU = info.addressU;
-    _addressV = info.addressV;
-    _addressW = info.addressW;
-    _maxAnisotropy = info.maxAnisotropy;
-    _cmpFunc = info.cmpFunc;
-    _borderColor = info.borderColor;
-    _mipLODBias = info.mipLODBias;
-
+void CCVKSampler::doInit(const SamplerInfo &info) {
     _gpuSampler = CC_NEW(CCVKGPUSampler);
     _gpuSampler->minFilter = _minFilter;
     _gpuSampler->magFilter = _magFilter;
@@ -64,11 +53,9 @@ bool CCVKSampler::initialize(const SamplerInfo &info) {
     _gpuSampler->mipLODBias = _mipLODBias;
 
     CCVKCmdFuncCreateSampler((CCVKDevice *)_device, _gpuSampler);
-
-    return true;
 }
 
-void CCVKSampler::destroy() {
+void CCVKSampler::doDestroy() {
     if (_gpuSampler) {
         ((CCVKDevice *)_device)->gpuDescriptorHub()->disengage(_gpuSampler);
         ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuSampler);

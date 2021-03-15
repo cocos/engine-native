@@ -23,17 +23,16 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_CORE_GFX_DEVICE_H_
-#define CC_CORE_GFX_DEVICE_H_
+#pragma once
 
 #include "GFXBuffer.h"
 #include "GFXCommandBuffer.h"
-#include "GFXObject.h"
 #include "GFXDescriptorSet.h"
 #include "GFXDescriptorSetLayout.h"
 #include "GFXFramebuffer.h"
 #include "GFXGlobalBarrier.h"
 #include "GFXInputAssembler.h"
+#include "GFXObject.h"
 #include "GFXPipelineLayout.h"
 #include "GFXPipelineState.h"
 #include "GFXQueue.h"
@@ -54,11 +53,12 @@ public:
     Device(Device *device) : Device() {}
     virtual ~Device();
 
-    virtual bool initialize(const DeviceInfo &info) = 0;
-    virtual void destroy()                          = 0;
-    virtual void resize(uint width, uint height)    = 0;
-    virtual void acquire()                          = 0;
-    virtual void present()                          = 0;
+    bool initialize(const DeviceInfo &info);
+    void destroy();
+    void resize(uint width, uint height);
+
+    virtual void acquire() = 0;
+    virtual void present() = 0;
 
     virtual void             flushCommands(CommandBuffer *const *cmdBuffs, uint count) {}
     virtual void             setMultithreaded(bool multithreaded) {}
@@ -73,7 +73,7 @@ public:
     virtual uint             getNumTris() const { return _numTriangles; }
 
     CC_INLINE CommandBuffer *createCommandBuffer(const CommandBufferInfo &info) {
-        CommandBuffer *res = doCreateCommandBuffer(info, false);
+        CommandBuffer *res = createCommandBuffer(info, false);
         res->initialize(info);
         return res;
     }
@@ -182,7 +182,10 @@ public:
 protected:
     friend class DeviceAgent;
 
-    virtual CommandBuffer *      doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent)                                             = 0;
+    virtual bool                 doInit(const DeviceInfo &info)                                                                                  = 0;
+    virtual void                 doDestroy()                                                                                                     = 0;
+    virtual void                 doResize(uint width, uint height)                                                                               = 0;
+    virtual CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent)                                               = 0;
     virtual Queue *              createQueue()                                                                                                   = 0;
     virtual Buffer *             createBuffer()                                                                                                  = 0;
     virtual Texture *            createTexture()                                                                                                 = 0;
@@ -224,11 +227,9 @@ protected:
     BindingMappingInfo _bindingMappingInfo;
     DeviceCaps         _caps;
 
-private:
+protected:
     static Device *_instance;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_CORE_GFX_DEVICE_H_

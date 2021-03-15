@@ -39,23 +39,15 @@ CCVKRenderPass::CCVKRenderPass(Device *device)
 CCVKRenderPass::~CCVKRenderPass() {
 }
 
-bool CCVKRenderPass::initialize(const RenderPassInfo &info) {
-    _colorAttachments = info.colorAttachments;
-    _depthStencilAttachment = info.depthStencilAttachment;
-    _subpasses = info.subpasses;
-
+void CCVKRenderPass::doInit(const RenderPassInfo &info) {
     _gpuRenderPass = CC_NEW(CCVKGPURenderPass);
     _gpuRenderPass->colorAttachments = _colorAttachments;
     _gpuRenderPass->depthStencilAttachment = _depthStencilAttachment;
     _gpuRenderPass->subpasses = _subpasses;
     CCVKCmdFuncCreateRenderPass((CCVKDevice *)_device, _gpuRenderPass);
-
-    _hash = computeHash();
-
-    return true;
 }
 
-void CCVKRenderPass::destroy() {
+void CCVKRenderPass::doDestroy() {
     if (_gpuRenderPass) {
         ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuRenderPass);
         _gpuRenderPass = nullptr;

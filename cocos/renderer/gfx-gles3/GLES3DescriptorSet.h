@@ -38,14 +38,14 @@ public:
     GLES3DescriptorSet(Device *device);
     ~GLES3DescriptorSet();
 
-public:
-    virtual bool initialize(const DescriptorSetInfo &info) override;
-    virtual void destroy() override;
-    virtual void update() override;
+    void update() override;
 
     CC_INLINE GLES3GPUDescriptorSet *gpuDescriptorSet() const { return _gpuDescriptorSet; }
 
-private:
+protected:
+    void doInit(const DescriptorSetInfo &info) override;
+    void doDestroy() override;
+
     GLES3GPUDescriptorSet *_gpuDescriptorSet = nullptr;
 };
 

@@ -37,8 +37,8 @@ public:
 
     static uint computeHash(const RenderPassInfo &info);
 
-    virtual bool initialize(const RenderPassInfo &info) = 0;
-    virtual void destroy()                              = 0;
+    void initialize(const RenderPassInfo &info);
+    void destroy();
 
     CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const ColorAttachmentList &getColorAttachments() const { return _colorAttachments; }
@@ -48,6 +48,9 @@ public:
 
 protected:
     uint computeHash();
+
+    virtual void doInit(const RenderPassInfo &info) = 0;
+    virtual void doDestroy()                        = 0;
 
     Device *               _device = nullptr;
     ColorAttachmentList    _colorAttachments;

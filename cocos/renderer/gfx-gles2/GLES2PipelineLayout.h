@@ -38,13 +38,12 @@ public:
     GLES2PipelineLayout(Device *device);
     ~GLES2PipelineLayout();
 
-public:
-    virtual bool initialize(const PipelineLayoutInfo &info) override;
-    virtual void destroy() override;
-
     CC_INLINE GLES2GPUPipelineLayout *gpuPipelineLayout() const { return _gpuPipelineLayout; }
 
-private:
+protected:
+    void doInit(const PipelineLayoutInfo &info) override;
+    void doDestroy() override;
+
     GLES2GPUPipelineLayout *_gpuPipelineLayout = nullptr;
 };
 

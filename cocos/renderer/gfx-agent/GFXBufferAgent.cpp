@@ -43,14 +43,7 @@ BufferAgent::~BufferAgent() {
         });
 }
 
-bool BufferAgent::initialize(const BufferInfo &info) {
-    _usage = info.usage;
-    _memUsage = info.memUsage;
-    _size = info.size;
-    _flags = info.flags;
-    _stride = std::max(info.stride, 1u);
-    _count = _size / _stride;
-
+void BufferAgent::doInit(const BufferInfo &info) {
     ENQUEUE_MESSAGE_2(
         ((DeviceAgent *)_device)->getMessageQueue(),
         BufferInit,
@@ -59,20 +52,11 @@ bool BufferAgent::initialize(const BufferInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-bool BufferAgent::initialize(const BufferViewInfo &info) {
-    _usage = info.buffer->getUsage();
-    _memUsage = info.buffer->getMemUsage();
-    _flags = info.buffer->getFlags();
-    _offset = info.offset;
-    _size = _stride = info.range;
-    _count = 1u;
-
+void BufferAgent::doInit(const BufferViewInfo &info) {
     BufferViewInfo actorInfo = info;
-    actorInfo.buffer = ((BufferAgent *)info.buffer)->getActor();
+    actorInfo.buffer         = ((BufferAgent *)info.buffer)->getActor();
 
     ENQUEUE_MESSAGE_2(
         ((DeviceAgent *)_device)->getMessageQueue(),
@@ -82,11 +66,20 @@ bool BufferAgent::initialize(const BufferViewInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void BufferAgent::destroy() {
+void BufferAgent::doResize(uint size) {
+    ENQUEUE_MESSAGE_2(
+        ((DeviceAgent *)_device)->getMessageQueue(),
+        BufferResize,
+        actor, getActor(),
+        size, size,
+        {
+            actor->resize(size);
+        });
+}
+
+void BufferAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         BufferDestroy,
@@ -108,20 +101,6 @@ void BufferAgent::update(void *buffer, uint size) {
         size, size,
         {
             actor->update(buffer, size);
-        });
-}
-
-void BufferAgent::resize(uint size) {
-    _size = size;
-    _count = size / _stride;
-
-    ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
-        BufferResize,
-        actor, getActor(),
-        size, size,
-        {
-            actor->resize(size);
         });
 }
 

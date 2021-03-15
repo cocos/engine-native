@@ -25,9 +25,9 @@
 
 #pragma once
 
-#include "gfx-base/GFXDevice.h"
 #include "GFXAgent.h"
 #include "base/threading/Semaphore.h"
+#include "gfx-base/GFXDevice.h"
 
 namespace cc {
 
@@ -47,13 +47,10 @@ public:
     : Agent(actor, nullptr) {}
     ~DeviceAgent() override;
 
-    bool initialize(const DeviceInfo &info) override;
-    void destroy() override;
-    void resize(uint width, uint height) override;
     void acquire() override;
     void present() override;
 
-    CommandBuffer *      doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
+    CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *              createQueue() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;
@@ -87,6 +84,10 @@ public:
 
 protected:
     friend class CommandBufferAgent;
+
+    bool doInit(const DeviceInfo &info) override;
+    void doDestroy() override;
+    void doResize(uint width, uint height) override;
 
     bool          _multithreaded{false};
     MessageQueue *_mainEncoder{nullptr};

@@ -41,11 +41,12 @@ public:
     CCMTLQueue &operator=(const CCMTLQueue &)=delete;
     CCMTLQueue &operator=(CCMTLQueue &&)=delete;
 
-    bool initialize(const QueueInfo &info) override;
-    void destroy() override;
     void submit(CommandBuffer *const *cmdBuffs, uint count) override;
 
-private:
+protected:
+    void doInit(const QueueInfo &info) override;
+    void doDestroy() override;
+
     uint _numDrawCalls = 0;
     uint _numInstances = 0;
     uint _numTriangles = 0;

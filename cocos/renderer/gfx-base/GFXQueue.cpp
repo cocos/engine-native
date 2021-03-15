@@ -39,5 +39,17 @@ Queue::Queue(Device *device)
 Queue::~Queue() {
 }
 
+void Queue::initialize(const QueueInfo& info) {
+    _type = info.type;
+
+    doInit(info);
+}
+
+void Queue::destroy() {
+    doDestroy();
+
+    _type = QueueType::GRAPHICS;
+}
+
 } // namespace gfx
 } // namespace cc

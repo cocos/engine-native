@@ -51,7 +51,7 @@ GLES2Device::GLES2Device() {
 GLES2Device::~GLES2Device() {
 }
 
-bool GLES2Device::initialize(const DeviceInfo &info) {
+bool GLES2Device::doInit(const DeviceInfo &info) {
     _API = API::GLES2;
     _deviceName = "GLES2";
     _width = info.width;
@@ -195,7 +195,7 @@ bool GLES2Device::initialize(const DeviceInfo &info) {
     return true;
 }
 
-void GLES2Device::destroy() {
+void GLES2Device::doDestroy() {
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_cmdBuff);
     CC_SAFE_DELETE(_gpuStagingBufferPool);
@@ -204,7 +204,7 @@ void GLES2Device::destroy() {
     CC_SAFE_DESTROY(_renderContext);
 }
 
-void GLES2Device::resize(uint width, uint height) {
+void GLES2Device::doResize(uint width, uint height) {
     _width = width;
     _height = height;
 }
@@ -241,7 +241,7 @@ void GLES2Device::bindDeviceContext(bool bound) {
     if (!_deviceContext) {
         ContextInfo ctxInfo;
         ctxInfo.windowHandle = _windowHandle;
-        ctxInfo.sharedCtx = _renderContext;
+        ctxInfo.sharedCtx    = _renderContext;
 
         _deviceContext = CC_NEW(GLES2Context(this));
         _deviceContext->initialize(ctxInfo);
@@ -255,7 +255,7 @@ void GLES2Device::bindDeviceContext(bool bound) {
     }
 }
 
-CommandBuffer *GLES2Device::doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
+CommandBuffer *GLES2Device::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
     if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES2PrimaryCommandBuffer(this));
     return CC_NEW(GLES2CommandBuffer(this));
 }

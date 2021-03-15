@@ -42,25 +42,11 @@ namespace gfx {
 
 CCMTLPipelineState::CCMTLPipelineState(Device *device) : PipelineState(device) {}
 
-bool CCMTLPipelineState::initialize(const PipelineStateInfo &info) {
-    _primitive = info.primitive;
-    _shader = info.shader;
-    _inputState = info.inputState;
-    _rasterizerState = info.rasterizerState;
-    _depthStencilState = info.depthStencilState;
-    _bindPoint = info.bindPoint;
-    _blendState = info.blendState;
-    _dynamicStates = info.dynamicStates;
-    _renderPass = info.renderPass;
-    _pipelineLayout = info.pipelineLayout;
-
-    if (!createGPUPipelineState()) {
-        return false;
-    }
-    return true;
+void CCMTLPipelineState::doInit(const PipelineStateInfo &info) {
+    createGPUPipelineState();
 }
 
-void CCMTLPipelineState::destroy() {
+void CCMTLPipelineState::doDestroy() {
     CC_SAFE_DELETE(_GPUPipelineState);
 
     id<MTLRenderPipelineState> renderPipelineState = _mtlRenderPipelineState;

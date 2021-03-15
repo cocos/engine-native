@@ -37,11 +37,12 @@ public:
 
     static uint computeHash(const BufferInfo &info);
 
-    virtual bool initialize(const BufferInfo &info)     = 0;
-    virtual bool initialize(const BufferViewInfo &info) = 0;
-    virtual void destroy()                              = 0;
-    virtual void resize(uint size)                      = 0;
-    virtual void update(void *buffer, uint size)        = 0;
+    void initialize(const BufferInfo &info);
+    void initialize(const BufferViewInfo &info);
+    void resize(uint size);
+    void destroy();
+
+    virtual void update(void *buffer, uint size) = 0;
 
     CC_INLINE Device *    getDevice() const { return _device; }
     CC_INLINE BufferUsage getUsage() const { return _usage; }
@@ -52,6 +53,11 @@ public:
     CC_INLINE BufferFlags getFlags() const { return _flags; }
 
 protected:
+    virtual void doInit(const BufferInfo &info)     = 0;
+    virtual void doInit(const BufferViewInfo &info) = 0;
+    virtual void doResize(uint size)                = 0;
+    virtual void doDestroy()                        = 0;
+
     Device *    _device       = nullptr;
     BufferUsage _usage        = BufferUsageBit::NONE;
     MemoryUsage _memUsage     = MemoryUsageBit::NONE;

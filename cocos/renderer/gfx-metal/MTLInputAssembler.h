@@ -33,8 +33,6 @@ namespace gfx {
 class CCMTLGPUInputAssembler;
 
 class CCMTLInputAssembler final : public InputAssembler {
-    friend class CCMTLQueue;
-
 public:
     explicit CCMTLInputAssembler(Device *device);
     ~CCMTLInputAssembler() override = default;
@@ -43,10 +41,12 @@ public:
     CCMTLInputAssembler &operator=(const CCMTLInputAssembler &)=delete;
     CCMTLInputAssembler &operator=(CCMTLInputAssembler &&)=delete;
 
-    bool initialize(const InputAssemblerInfo &info) override;
-    void destroy() override;
+protected:
+    friend class CCMTLQueue;
 
-private:
+    void doInit(const InputAssemblerInfo &info) override;
+    void doDestroy() override;
+
     CCMTLGPUInputAssembler *_GPUInputAssembler = nullptr;
 };
 

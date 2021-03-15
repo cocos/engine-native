@@ -39,12 +39,12 @@ public:
     CCMTLFramebuffer &operator=(const CCMTLFramebuffer &)=delete;
     CCMTLFramebuffer &operator=(CCMTLFramebuffer &&)=delete;
 
-    bool initialize(const FramebufferInfo &info) override;
-    void destroy() override;
-
     CC_INLINE bool isOffscreen() const { return _isOffscreen; }
 
-private:
+protected:
+    void doInit(const FramebufferInfo &info) override;
+    void doDestroy() override;
+
     bool _isOffscreen = false;
 };
 

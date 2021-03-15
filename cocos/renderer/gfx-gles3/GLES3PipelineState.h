@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXGLES3_PIPELINE_STATE_H_
-#define CC_GFXGLES3_PIPELINE_STATE_H_
+#pragma once
 
 #include "gfx-base/GFXPipelineState.h"
 
@@ -38,17 +37,14 @@ public:
     GLES3PipelineState(Device *device);
     ~GLES3PipelineState();
 
-public:
-    virtual bool initialize(const PipelineStateInfo &info) override;
-    virtual void destroy() override;
-
     CC_INLINE GLES3GPUPipelineState *gpuPipelineState() const { return _gpuPipelineState; }
 
-private:
+protected:
+    void doInit(const PipelineStateInfo &info) override;
+    void doDestroy() override;
+
     GLES3GPUPipelineState *_gpuPipelineState = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

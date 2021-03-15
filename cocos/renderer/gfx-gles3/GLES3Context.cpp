@@ -95,18 +95,18 @@ GLES3Context::~GLES3Context() {
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 
-bool GLES3Context::initialize(const ContextInfo &info) {
+bool GLES3Context::doInit(const ContextInfo &info) {
 
     _vsyncMode = info.vsyncMode;
     _windowHandle = info.windowHandle;
 
     //////////////////////////////////////////////////////////////////////////
 
-    if (!gles3wInit()) {
-        return false;
-    }
-
     if (!info.sharedCtx) {
+        if (!gles3wInit()) {
+            return false;
+        }
+
         _isPrimaryContex = true;
         _windowHandle = info.windowHandle;
 
@@ -299,10 +299,6 @@ bool GLES3Context::initialize(const ContextInfo &info) {
         });
     #endif
 
-        if (!gles3wInit()) {
-            return false;
-        }
-
     } else {
         GLES3Context *sharedCtx = (GLES3Context *)info.sharedCtx;
 
@@ -354,7 +350,7 @@ bool GLES3Context::initialize(const ContextInfo &info) {
     return true;
 }
 
-void GLES3Context::destroy() {
+void GLES3Context::doDestroy() {
     EGL_CHECK(eglMakeCurrent(_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
 
     if (_eglContext != EGL_NO_CONTEXT) {
@@ -362,21 +358,23 @@ void GLES3Context::destroy() {
         _eglContext = EGL_NO_CONTEXT;
     }
 
-    if (_isPrimaryContex && _eglSurface != EGL_NO_SURFACE) {
-        EGL_CHECK(eglDestroySurface(_eglDisplay, _eglSurface));
-        _eglSurface = EGL_NO_SURFACE;
-    }
+    if (_isPrimaryContex) {
+        if (_eglSurface != EGL_NO_SURFACE) {
+            EGL_CHECK(eglDestroySurface(_eglDisplay, _eglSurface));
+            _eglSurface = EGL_NO_SURFACE;
+        }
 
-    if (_eglDisplay != EGL_NO_DISPLAY) {
-        EGL_CHECK(eglTerminate(_eglDisplay));
-        _eglDisplay = EGL_NO_DISPLAY;
-    }
+        if (_eglDisplay != EGL_NO_DISPLAY) {
+            EGL_CHECK(eglTerminate(_eglDisplay));
+            _eglDisplay = EGL_NO_DISPLAY;
+        }
 
     #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    if (_isPrimaryContex && _nativeDisplay) {
-        ReleaseDC((HWND)_windowHandle, _nativeDisplay);
-    }
+        if (_nativeDisplay) {
+            ReleaseDC((HWND)_windowHandle, _nativeDisplay);
+        }
     #endif
+    }
 
     _isPrimaryContex = false;
     _windowHandle = 0;

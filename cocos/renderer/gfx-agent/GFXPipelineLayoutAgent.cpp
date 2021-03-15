@@ -43,10 +43,7 @@ PipelineLayoutAgent::~PipelineLayoutAgent() {
         });
 }
 
-bool PipelineLayoutAgent::initialize(const PipelineLayoutInfo &info) {
-
-    _setLayouts = info.setLayouts;
-
+void PipelineLayoutAgent::doInit(const PipelineLayoutInfo &info) {
     PipelineLayoutInfo actorInfo;
     actorInfo.setLayouts.resize(info.setLayouts.size());
     for (uint i = 0u; i < info.setLayouts.size(); i++) {
@@ -61,11 +58,9 @@ bool PipelineLayoutAgent::initialize(const PipelineLayoutInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void PipelineLayoutAgent::destroy() {
+void PipelineLayoutAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         PipelineLayoutDestroy,

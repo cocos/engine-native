@@ -39,12 +39,7 @@ GLES3Framebuffer::GLES3Framebuffer(Device *device)
 GLES3Framebuffer::~GLES3Framebuffer() {
 }
 
-bool GLES3Framebuffer::initialize(const FramebufferInfo &info) {
-
-    _renderPass = info.renderPass;
-    _colorTextures = info.colorTextures;
-    _depthStencilTexture = info.depthStencilTexture;
-
+void GLES3Framebuffer::doInit(const FramebufferInfo &info) {
     _gpuFBO = CC_NEW(GLES3GPUFramebuffer);
     _gpuFBO->gpuRenderPass = ((GLES3RenderPass *)_renderPass)->gpuRenderPass();
     _gpuFBO->depthStencilMipmapLevel = info.depthStencilMipmapLevel;
@@ -65,11 +60,9 @@ bool GLES3Framebuffer::initialize(const FramebufferInfo &info) {
     }
 
     GLES3CmdFuncCreateFramebuffer((GLES3Device *)_device, _gpuFBO);
-
-    return true;
 }
 
-void GLES3Framebuffer::destroy() {
+void GLES3Framebuffer::doDestroy() {
     if (_gpuFBO) {
         GLES3CmdFuncDestroyFramebuffer((GLES3Device *)_device, _gpuFBO);
         CC_DELETE(_gpuFBO);

@@ -39,12 +39,7 @@ GLES2Framebuffer::GLES2Framebuffer(Device *device)
 GLES2Framebuffer::~GLES2Framebuffer() {
 }
 
-bool GLES2Framebuffer::initialize(const FramebufferInfo &info) {
-
-    _renderPass = info.renderPass;
-    _colorTextures = info.colorTextures;
-    _depthStencilTexture = info.depthStencilTexture;
-
+void GLES2Framebuffer::doInit(const FramebufferInfo &info) {
     if (info.depthStencilMipmapLevel != 0) {
         CC_LOG_WARNING("Mipmap level of depth stencil attachment should be 0 in GLES2. Convert to 0.");
     }
@@ -74,11 +69,9 @@ bool GLES2Framebuffer::initialize(const FramebufferInfo &info) {
     }
 
     GLES2CmdFuncCreateFramebuffer((GLES2Device *)_device, _gpuFBO);
-
-    return true;
 }
 
-void GLES2Framebuffer::destroy() {
+void GLES2Framebuffer::doDestroy() {
     if (_gpuFBO) {
         GLES2CmdFuncDestroyFramebuffer((GLES2Device *)_device, _gpuFBO);
         CC_DELETE(_gpuFBO);

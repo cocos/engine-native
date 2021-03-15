@@ -39,7 +39,7 @@ Framebuffer::Framebuffer(Device *device)
 Framebuffer::~Framebuffer() {
 }
 
-uint Framebuffer::computeHash(const FramebufferInfo& info) {
+uint Framebuffer::computeHash(const FramebufferInfo &info) {
     uint seed = info.colorTextures.size() + info.colorMipmapLevels.size() + 2;
     for (const Texture *attachment : info.colorTextures) {
         seed ^= (uint)attachment->getTextureID() + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -50,6 +50,22 @@ uint Framebuffer::computeHash(const FramebufferInfo& info) {
     seed ^= (uint)info.depthStencilTexture->getTextureID() + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (uint)info.depthStencilMipmapLevel + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     return seed;
+}
+
+void Framebuffer::initialize(const FramebufferInfo &info) {
+    _renderPass          = info.renderPass;
+    _colorTextures       = info.colorTextures;
+    _depthStencilTexture = info.depthStencilTexture;
+
+    doInit(info);
+}
+
+void Framebuffer::destroy() {
+    doDestroy();
+
+    _renderPass = nullptr;
+    _colorTextures.clear();
+    _depthStencilTexture = nullptr;
 }
 
 } // namespace gfx

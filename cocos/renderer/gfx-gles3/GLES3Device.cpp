@@ -52,7 +52,7 @@ GLES3Device::GLES3Device() {
 GLES3Device::~GLES3Device() {
 }
 
-bool GLES3Device::initialize(const DeviceInfo &info) {
+bool GLES3Device::doInit(const DeviceInfo &info) {
     _API          = API::GLES3;
     _deviceName   = "GLES3";
     _width        = info.width;
@@ -95,7 +95,7 @@ bool GLES3Device::initialize(const DeviceInfo &info) {
     _features[(uint)Feature::INSTANCED_ARRAYS]        = true;
     _features[(uint)Feature::MULTIPLE_RENDER_TARGETS] = true;
     _features[(uint)Feature::BLEND_MINMAX]            = true;
-    _features[(int)Feature::ELEMENT_INDEX_UINT] = true;
+    _features[(uint)Feature::ELEMENT_INDEX_UINT]      = true;
 
     uint minorVersion = ((GLES3Context *)_context)->minor_ver();
     if (minorVersion)
@@ -176,7 +176,7 @@ bool GLES3Device::initialize(const DeviceInfo &info) {
     glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, (GLint *)&_caps.uboOffsetAlignment);
     glGetIntegerv(GL_DEPTH_BITS, (GLint *)&_caps.depthBits);
     glGetIntegerv(GL_STENCIL_BITS, (GLint *)&_caps.stencilBits);
-    
+
     if (minorVersion) {
         glGetIntegerv(GL_MAX_IMAGE_UNITS, (GLint *)&_caps.maxImageUnits);
         glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, (GLint *)&_caps.maxShaderStorageBlockSize);
@@ -196,7 +196,7 @@ bool GLES3Device::initialize(const DeviceInfo &info) {
     return true;
 }
 
-void GLES3Device::destroy() {
+void GLES3Device::doDestroy() {
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_cmdBuff);
     CC_SAFE_DELETE(_gpuFramebufferCacheMap);
@@ -206,7 +206,7 @@ void GLES3Device::destroy() {
     CC_SAFE_DESTROY(_renderContext);
 }
 
-void GLES3Device::resize(uint width, uint height) {
+void GLES3Device::doResize(uint width, uint height) {
     _width  = width;
     _height = height;
 }
@@ -259,7 +259,7 @@ void GLES3Device::bindDeviceContext(bool bound) {
 
 uint GLES3Device::getMinorVersion() const { return ((GLES3Context *)_context)->minor_ver(); }
 
-CommandBuffer *GLES3Device::doCreateCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
+CommandBuffer *GLES3Device::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
     if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES3PrimaryCommandBuffer(this));
     return CC_NEW(GLES3CommandBuffer(this));
 }

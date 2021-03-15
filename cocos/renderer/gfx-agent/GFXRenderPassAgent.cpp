@@ -42,13 +42,7 @@ RenderPassAgent::~RenderPassAgent() {
         });
 }
 
-bool RenderPassAgent::initialize(const RenderPassInfo &info) {
-
-    _colorAttachments       = info.colorAttachments;
-    _depthStencilAttachment = info.depthStencilAttachment;
-    _subpasses              = info.subpasses;
-    _hash                   = computeHash();
-
+void RenderPassAgent::doInit(const RenderPassInfo &info) {
     ENQUEUE_MESSAGE_2(
         ((DeviceAgent *)_device)->getMessageQueue(),
         RenderPassInit,
@@ -57,11 +51,9 @@ bool RenderPassAgent::initialize(const RenderPassInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void RenderPassAgent::destroy() {
+void RenderPassAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         RenderPassDestroy,

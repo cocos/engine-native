@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXGLES3_FRAMEBUFFER_H_
-#define CC_GFXGLES3_FRAMEBUFFER_H_
+#pragma once
 
 #include "gfx-base/GFXFramebuffer.h"
 
@@ -38,17 +37,14 @@ public:
     GLES3Framebuffer(Device *device);
     ~GLES3Framebuffer();
 
-public:
-    virtual bool initialize(const FramebufferInfo &info) override;
-    virtual void destroy() override;
-
     CC_INLINE GLES3GPUFramebuffer *gpuFBO() const { return _gpuFBO; }
 
-private:
+protected:
+    void doInit(const FramebufferInfo &info) override;
+    void doDestroy() override;
+
     GLES3GPUFramebuffer *_gpuFBO = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif

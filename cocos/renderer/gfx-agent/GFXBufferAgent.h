@@ -37,11 +37,13 @@ public:
     BufferAgent(Device *device) = delete;
     ~BufferAgent() override;
 
-    bool initialize(const BufferInfo &info) override;
-    bool initialize(const BufferViewInfo &info) override;
-    void destroy() override;
-    void resize(uint size) override;
     void update(void *buffer, uint size) override;
+
+protected:
+    void doInit(const BufferInfo &info) override;
+    void doInit(const BufferViewInfo &info) override;
+    void doResize(uint size) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

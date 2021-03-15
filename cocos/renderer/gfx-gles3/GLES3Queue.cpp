@@ -38,13 +38,10 @@ GLES3Queue::GLES3Queue(Device *device)
 GLES3Queue::~GLES3Queue() {
 }
 
-bool GLES3Queue::initialize(const QueueInfo &info) {
-    _type = info.type;
-
-    return true;
+void GLES3Queue::doInit(const QueueInfo &info) {
 }
 
-void GLES3Queue::destroy() {
+void GLES3Queue::doDestroy() {
 }
 
 void GLES3Queue::submit(CommandBuffer *const *cmdBuffs, uint count) {

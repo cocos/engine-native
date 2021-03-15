@@ -38,14 +38,14 @@ public:
     GLES2DescriptorSet(Device *device);
     ~GLES2DescriptorSet();
 
-public:
-    virtual bool initialize(const DescriptorSetInfo &info) override;
-    virtual void destroy() override;
-    virtual void update() override;
+    void update() override;
 
     CC_INLINE GLES2GPUDescriptorSet *gpuDescriptorSet() const { return _gpuDescriptorSet; }
 
-private:
+protected:
+    void doInit(const DescriptorSetInfo &info) override;
+    void doDestroy() override;
+
     GLES2GPUDescriptorSet *_gpuDescriptorSet = nullptr;
 };
 

@@ -101,10 +101,7 @@ LinearAllocatorPool *CommandBufferAgent::getAllocator() {
     return _allocatorPools[((DeviceAgent *)_device)->_currentIndex];
 }
 
-bool CommandBufferAgent::initialize(const CommandBufferInfo &info) {
-    _type  = info.type;
-    _queue = info.queue;
-
+void CommandBufferAgent::doInit(const CommandBufferInfo &info) {
     initMessageQueue();
 
     CommandBufferInfo actorInfo = info;
@@ -117,11 +114,9 @@ bool CommandBufferAgent::initialize(const CommandBufferInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void CommandBufferAgent::destroy() {
+void CommandBufferAgent::doDestroy() {
     destroyMessageQueue();
 
     ENQUEUE_MESSAGE_1(

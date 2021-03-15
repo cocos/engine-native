@@ -40,6 +40,26 @@ DescriptorSet::DescriptorSet(Device *device)
 DescriptorSet::~DescriptorSet() {
 }
 
+void DescriptorSet::initialize(const DescriptorSetInfo& info) {
+    _layout              = info.layout;
+    uint descriptorCount = _layout->getDescriptorCount();
+    _buffers.resize(descriptorCount);
+    _textures.resize(descriptorCount);
+    _samplers.resize(descriptorCount);
+
+    doInit(info);
+}
+
+void DescriptorSet::destroy() {
+    doDestroy();
+
+    _layout = nullptr;
+    // have to clear these or else it might not be properly updated when reused
+    _buffers.clear();
+    _textures.clear();
+    _samplers.clear();
+}
+
 void DescriptorSet::bindBuffer(uint binding, Buffer *buffer, uint index) {
     const vector<uint> &                  bindingIndices = _layout->getBindingIndices();
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();

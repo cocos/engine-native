@@ -38,22 +38,7 @@ GLES2InputAssembler::GLES2InputAssembler(Device *device)
 GLES2InputAssembler::~GLES2InputAssembler() {
 }
 
-bool GLES2InputAssembler::initialize(const InputAssemblerInfo &info) {
-
-    _attributes = info.attributes;
-    _vertexBuffers = info.vertexBuffers;
-    _indexBuffer = info.indexBuffer;
-    _indirectBuffer = info.indirectBuffer;
-
-    if (_indexBuffer) {
-        _indexCount = _indexBuffer->getCount();
-        _firstIndex = 0;
-    } else if (_vertexBuffers.size()) {
-        _vertexCount = _vertexBuffers[0]->getCount();
-        _firstVertex = 0;
-        _vertexOffset = 0;
-    }
-
+void GLES2InputAssembler::doInit(const InputAssemblerInfo &info) {
     _gpuInputAssembler = CC_NEW(GLES2GPUInputAssembler);
     _gpuInputAssembler->attributes = _attributes;
     _gpuInputAssembler->gpuVertexBuffers.resize(_vertexBuffers.size());
@@ -68,12 +53,9 @@ bool GLES2InputAssembler::initialize(const InputAssemblerInfo &info) {
         _gpuInputAssembler->gpuIndirectBuffer = static_cast<GLES2Buffer *>(info.indirectBuffer)->gpuBuffer();
 
     GLES2CmdFuncCreateInputAssembler((GLES2Device *)_device, _gpuInputAssembler);
-    _attributesHash = computeAttributesHash();
-
-    return true;
 }
 
-void GLES2InputAssembler::destroy() {
+void GLES2InputAssembler::doDestroy() {
     if (_gpuInputAssembler) {
         GLES2CmdFuncDestroyInputAssembler((GLES2Device *)_device, _gpuInputAssembler);
         CC_DELETE(_gpuInputAssembler);

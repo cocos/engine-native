@@ -37,18 +37,7 @@ GLES3Shader::GLES3Shader(Device *device)
 GLES3Shader::~GLES3Shader() {
 }
 
-bool GLES3Shader::initialize(const ShaderInfo &info) {
-    _name = info.name;
-    _stages = info.stages;
-    _attributes = info.attributes;
-    _blocks = info.blocks;
-    _buffers = info.buffers;
-    _samplerTextures = info.samplerTextures;
-    _samplers = info.samplers;
-    _textures = info.textures;
-    _images = info.images;
-    _subpassInputs = info.subpassInputs;
-
+void GLES3Shader::doInit(const ShaderInfo &info) {
     _gpuShader = CC_NEW(GLES3GPUShader);
     _gpuShader->name = _name;
     _gpuShader->blocks = _blocks;
@@ -64,11 +53,9 @@ bool GLES3Shader::initialize(const ShaderInfo &info) {
     }
 
     GLES3CmdFuncCreateShader((GLES3Device *)_device, _gpuShader);
-
-    return true;
 }
 
-void GLES3Shader::destroy() {
+void GLES3Shader::doDestroy() {
     if (_gpuShader) {
         GLES3CmdFuncDestroyShader((GLES3Device *)_device, _gpuShader);
         CC_DELETE(_gpuShader);

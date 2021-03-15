@@ -26,6 +26,7 @@
 #include "base/CoreStd.h"
 
 #include "GFXBuffer.h"
+#include "GFXDevice.h"
 #include "GFXObject.h"
 
 namespace cc {
@@ -46,6 +47,53 @@ uint Buffer::computeHash(const BufferInfo &info) {
     seed ^= (uint)(info.size) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (uint)(info.flags) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     return seed;
+}
+
+void Buffer::initialize(const BufferInfo &info) {
+    _usage    = info.usage;
+    _memUsage = info.memUsage;
+    _size     = info.size;
+    _flags    = info.flags;
+    _stride   = std::max(info.stride, 1u);
+    _count    = _size / _stride;
+
+    _device->getMemoryStatus().bufferSize += _size;
+
+    doInit(info);
+}
+
+void Buffer::initialize(const BufferViewInfo &info) {
+    _usage    = info.buffer->getUsage();
+    _memUsage = info.buffer->getMemUsage();
+    _flags    = info.buffer->getFlags();
+    _offset   = info.offset;
+    _size = _stride = info.range;
+    _count          = 1u;
+    _isBufferView   = true;
+
+    doInit(info);
+}
+
+void Buffer::resize(uint size) {
+    CCASSERT(!_isBufferView, "Cannot resize buffer views");
+
+    if (size != _size) {
+        doResize(size);
+        _device->getMemoryStatus().bufferSize -= _size;
+
+        _size  = size;
+        _count = size / _stride;
+
+        _device->getMemoryStatus().bufferSize += _size;
+    }
+}
+
+void Buffer::destroy() {
+    doDestroy();
+
+    _device->getMemoryStatus().bufferSize -= _size;
+
+    _offset = _size = _stride = _count = 0u;
 }
 
 } // namespace gfx

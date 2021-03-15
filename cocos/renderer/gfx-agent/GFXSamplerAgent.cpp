@@ -43,19 +43,7 @@ SamplerAgent::~SamplerAgent() {
         });
 }
 
-bool SamplerAgent::initialize(const SamplerInfo &info) {
-
-    _minFilter     = info.minFilter;
-    _magFilter     = info.magFilter;
-    _mipFilter     = info.mipFilter;
-    _addressU      = info.addressU;
-    _addressV      = info.addressV;
-    _addressW      = info.addressW;
-    _maxAnisotropy = info.maxAnisotropy;
-    _cmpFunc       = info.cmpFunc;
-    _borderColor   = info.borderColor;
-    _mipLODBias    = info.mipLODBias;
-
+void SamplerAgent::doInit(const SamplerInfo &info) {
     ENQUEUE_MESSAGE_2(
         ((DeviceAgent *)_device)->getMessageQueue(),
         SamplerInit,
@@ -64,11 +52,9 @@ bool SamplerAgent::initialize(const SamplerInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void SamplerAgent::destroy() {
+void SamplerAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         SamplerDestroy,

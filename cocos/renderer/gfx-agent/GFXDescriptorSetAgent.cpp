@@ -46,13 +46,7 @@ DescriptorSetAgent::~DescriptorSetAgent() {
         });
 }
 
-bool DescriptorSetAgent::initialize(const DescriptorSetInfo &info) {
-    _layout = info.layout;
-    uint descriptorCount = _layout->getDescriptorCount();
-    _buffers.resize(descriptorCount);
-    _textures.resize(descriptorCount);
-    _samplers.resize(descriptorCount);
-
+void DescriptorSetAgent::doInit(const DescriptorSetInfo &info) {
     DescriptorSetInfo actorInfo;
     actorInfo.layout = ((DescriptorSetLayoutAgent *)info.layout)->getActor();
 
@@ -64,16 +58,9 @@ bool DescriptorSetAgent::initialize(const DescriptorSetInfo &info) {
         {
             actor->initialize(info);
         });
-
-    return true;
 }
 
-void DescriptorSetAgent::destroy() {
-    // do remember to clear these or else it might not be properly updated when reused
-    _buffers.clear();
-    _textures.clear();
-    _samplers.clear();
-
+void DescriptorSetAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         ((DeviceAgent *)_device)->getMessageQueue(),
         DescriptorSetDestroy,
