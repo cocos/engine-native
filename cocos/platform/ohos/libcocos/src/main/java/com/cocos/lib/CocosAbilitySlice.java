@@ -80,6 +80,8 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
 
     private native void onLowMemoryNative();
 
+    private native void onOrientationChangedNative(int orientation, int width, int height);
+
     private native void onWindowFocusChangedNative(boolean hasFocus);
 
     @Override
@@ -90,7 +92,6 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
         CocosHelper.init(this);
         CanvasRenderingContext2DImpl.init(this);
         onLoadNativeLibraries();
-
 
         getWindow().setTransparent(true); // required for surface provider
 
@@ -122,7 +123,12 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
     @Override
     protected void onOrientationChanged(AbilityInfo.DisplayOrientation displayOrientation) {
         super.onOrientationChanged(displayOrientation);
-        //TODO: dispatch event?
+        CocosHelper.runOnGameThread(new Runnable() {
+            @Override
+            public void run() {
+                onOrientationChangedNative(displayOrientation.ordinal(), mSurfaceProvider.getWidth(), mSurfaceProvider.getHeight());
+            }
+        });
     }
 
     //    private void setImmersiveMode() {

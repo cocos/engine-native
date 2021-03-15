@@ -27,13 +27,12 @@ package com.cocos.lib;
 
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.Operation;
 import ohos.agp.window.service.Display;
 import ohos.agp.window.service.DisplayManager;
 import ohos.app.Context;
 import ohos.app.dispatcher.TaskDispatcher;
-import ohos.app.dispatcher.task.TaskPriority;
 import ohos.batterymanager.BatteryInfo;
-import ohos.bundle.AbilityInfo;
 import ohos.event.commonevent.*;
 import ohos.miscservices.pasteboard.PasteData;
 import ohos.miscservices.pasteboard.SystemPasteboard;
@@ -109,6 +108,7 @@ public class CocosHelper {
         }
     }
 
+    @SuppressWarnings("unused")
     static void unregisterBatteryLevelReceiver(Context context) {
         if(sBatteryReceiver.isPresent()) {
             try {
@@ -124,6 +124,7 @@ public class CocosHelper {
         sTaskOnGameThread.add(runnable);
     }
 
+    @SuppressWarnings("unused")
     static void flushTasksOnGameThread() {
         while(sTaskOnGameThread.size() > 0) {
             Runnable r = sTaskOnGameThread.remove(0);
@@ -133,6 +134,7 @@ public class CocosHelper {
         }
     }
 
+    @SuppressWarnings("unused")
     public static int getNetworkType() {
 
         NetManager netManager =  NetManager.getInstance(sAbilitySlice.getContext());
@@ -161,26 +163,37 @@ public class CocosHelper {
         }
     }
 
+    @SuppressWarnings("unused")
     public static float getBatteryLevel() {
         return sBatteryReceiver.map(x -> x.sBatteryLevel).orElse(1.0f);
     }
+
+    @SuppressWarnings("unused")
     public static String getObbFilePath() { return CocosHelper.sObbFilePath; }
     public static String getWritablePath() {
         return sAbilitySlice.getApplicationContext().getFilesDir().getAbsolutePath();
     }
+    @SuppressWarnings("unused")
     public static String getCurrentLanguage() {
         return Locale.getDefault().getLanguage();
     }
+
+    @SuppressWarnings("unused")
     public static String getCurrentLanguageCode() {
         return Locale.getDefault().toString();
     }
+
+    @SuppressWarnings("unused")
     public static String getDeviceModel(){
         return DeviceInfo.getModel();
     }
+
+    @SuppressWarnings("unused")
     public static String getSystemVersion() {
         return SystemVersion.getVersion();
     }
 
+    @SuppressWarnings("unused")
     public static void vibrate(float durSec) {
         List<Integer> vlist = sVibrateService.getVibratorIdList();
         if(vlist.isEmpty()) return;
@@ -200,18 +213,23 @@ public class CocosHelper {
         }
     }
 
+    @SuppressWarnings("unused")
     public static boolean openURL(String url) {
-        boolean ret = false;
-        try {
-            Intent i = new Intent();
-            i.formatUri(Uri.parse(url));
-            sAbilitySlice.startAbility(i);
-            ret = true;
-        } catch (Exception e) {
-        }
-        return ret;
+        runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent();
+                Operation operation =new Intent.OperationBuilder()
+                        .withUri(Uri.parse(url))
+                        .build();
+                i.setOperation(operation);
+                sAbilitySlice.startAbility(i);
+            }
+        });
+        return true;
     }
 
+    @SuppressWarnings("unused")
     public static void copyTextToClipboard(final String text){
         runOnUIThread(new Runnable() {
             @Override
@@ -246,6 +264,7 @@ public class CocosHelper {
         return new float[]{0,0,0,0};
     }
 
+    @SuppressWarnings("unused")
     public static int getDPI() {
         Optional<Display> disp = DisplayManager.getInstance().getDefaultDisplay(getContext());
         if(disp.isPresent()) {

@@ -83,6 +83,7 @@ public class CocosDownloader {
         runNextTaskIfExists();
     }
 
+    @SuppressWarnings("unused")
     public static CocosDownloader createDownloader(int id, int timeoutInSeconds, String tempFileSuffix, int maxProcessingTasks) {
         CocosDownloader downloader = new CocosDownloader();
         downloader._id = id;
@@ -106,6 +107,7 @@ public class CocosDownloader {
         return downloader;
     }
 
+    @SuppressWarnings("unused")
     public static void createTask(final CocosDownloader downloader, int id_, String url_, String path_, String []header_) {
         final int id = id_;
         final String url = url_;
@@ -322,6 +324,7 @@ public class CocosDownloader {
         });
     }
 
+    @SuppressWarnings("unused")
     public static void cancelAllRequests(final CocosDownloader downloader) {
         CocosHelper.runOnUIThread(new Runnable() {
             @Override

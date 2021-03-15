@@ -51,7 +51,7 @@ public class CocosReflectionHelper {
 
         return null;
     }
-
+    @SuppressWarnings("unused")
     public static <T> T invokeInstanceMethod(final Object instance, final String methodName,
                                              final Class[] parameterTypes, final Object[] parameters) {
 

@@ -336,6 +336,7 @@ public class CocosEditBoxAbility extends AbilitySlice {
      Functions invoked by CPP.
      **************************************************************************************/
 
+    @SuppressWarnings("unused")
     private static void showNative(String defaultValue, int maxLength, boolean isMultiline, boolean confirmHold, String confirmType, String inputType) {
 
         CocosHelper.runOnUIThread(new Runnable() {
@@ -354,6 +355,7 @@ public class CocosEditBoxAbility extends AbilitySlice {
         });
     }
 
+    @SuppressWarnings("unused")
     private static void hideNative() {
         CocosHelper.runOnUIThread(new Runnable() {
             @Override

@@ -24,5 +24,6 @@
 package com.cocos.lib;
 
 public class CocosJavascriptJavaBridge {
+    @SuppressWarnings("unused")
     public static native int evalString(String value);
 }

@@ -226,12 +226,12 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onCreateNative(JNIEn
 
 JNIEXPORT void JNICALL
 Java_com_cocos_lib_CocosAbilitySlice_onSurfaceCreatedNative(JNIEnv *env, jobject obj, jobject surface) {
-    setWindow(GetNativeLayer(env, surface));
+    //    setWindow(GetNativeLayer(env, surface));
 }
 JNIEXPORT void JNICALL
 Java_com_cocos_lib_CocosAbilitySlice_onSurfaceChangedNative(JNIEnv *env, jobject obj, jobject surface, jint x,
                                                             jint width, jint height) {
-    //    setWindow(GetNativeLayer(env, surface));
+    setWindow(GetNativeLayer(env, surface));
     tryInitGame();
 }
 
@@ -255,6 +255,10 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onStopNative(JNIEnv 
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onLowMemoryNative(JNIEnv *env, jobject obj) {
     writeCommandSync(ABILITY_CMD_LOW_MEMORY);
+}
+
+JNIEXPORT void JNICALL Java_com_cocos_lib_CocosAbilitySlice_onOrientationChangedNative(JNIEnv *env, jobject obj, jint orientation, jint width, jint height) {
+    cc::EventDispatcher::dispatchResizeEvent(width, height);
 }
 
 JNIEXPORT void JNICALL

@@ -26,7 +26,6 @@
 package com.cocos.lib;
 
 
-import ohos.app.Context;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.sensor.agent.CategoryMotionAgent;
@@ -48,7 +47,8 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     private final CategoryMotion mGravity;
     private final CategoryMotion mGyroscope;
     private static float[] sDeviceMotionValues = new float[9];
-
+    private boolean mEnabled = false;
+    private long mMaxIntervalNanoSeconds = 0;
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -58,7 +58,6 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
         mAcceleration = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_ACCELEROMETER);
         mGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_LINEAR_ACCELERATION);
         mGyroscope = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GYROSCOPE);
-
         mSensorHandler = this;
     }
 
@@ -66,38 +65,32 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     // Getter & Setter
     // ===========================================================
     public void enable() {
-        boolean ok;
-        ok = mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-        if(!ok) {
-            HiLog.error(TAG, "failed to setSensorDataCallback Acceleration");
+        if(mMaxIntervalNanoSeconds == 0) {
+            mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+            mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+            mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+        }else {
+            mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
+            mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
+            mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
         }
-        ok = mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-        if(!ok) {
-            HiLog.error(TAG, "failed to setSensorDataCallback Gravity");
-        }
-        ok = mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-        if(!ok) {
-            HiLog.error(TAG, "failed to setSensorDataCallback Gyroscope");
-        }
+        mEnabled = true;
     }
 
-    private void enableWithDelay(long delayNanoSeconds) {
-        mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME, delayNanoSeconds);
-        mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME, delayNanoSeconds);
-        mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME, delayNanoSeconds);
-    }
 
     public void disable() {
-//        this.mSensorManager.releaseSensorDataCallback(this);
         mSensorManager.releaseSensorDataCallback(this, mAcceleration);
         mSensorManager.releaseSensorDataCallback(this, mGravity);
         mSensorManager.releaseSensorDataCallback(this, mGyroscope);
+        mEnabled = false;
     }
 
     public void setInterval(float intervalSeconds) {
-        long intervalNanoSeconds = (long)(1000_000_000L * intervalSeconds);
-        disable();
-        enableWithDelay(intervalNanoSeconds);
+        mMaxIntervalNanoSeconds = (long)(1000_000_000L * intervalSeconds);
+        if(mEnabled) {
+            disable();
+            enable();
+        }
     }
 
     public void onPause() {
@@ -113,6 +106,9 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     }
 
     public static void setAccelerometerEnabled(boolean enabled) {
+        if(enabled == mSensorHandler.mEnabled) {
+            return;
+        }
         if (enabled) {
             mSensorHandler.enable();
         } else {
@@ -120,6 +116,7 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
         }
     }
 
+    @SuppressWarnings("unused")
     public static float[] getDeviceMotionValue() {
         return sDeviceMotionValues;
     }

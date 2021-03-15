@@ -26,22 +26,26 @@ THE SOFTWARE.
 
 #include "platform/FileUtils.h"
 
+#include <cstring>
 #include <stack>
 
 #include "base/Data.h"
 #include "base/Log.h"
 #include "platform/SAXParser.h"
 
-#include "tinyxml2/tinyxml2.h"
 #include "tinydir/tinydir.h"
+#include "tinyxml2/tinyxml2.h"
+
+#include <errno.h>
+#include <string.h>
 
 #ifdef MINIZIP_FROM_SYSTEM
     #include <minizip/unzip.h>
 #else // from our embedded sources
     #include "unzip/unzip.h"
 #endif
-#include <sys/stat.h>
 #include <regex>
+#include <sys/stat.h>
 
 namespace cc {
 
@@ -553,8 +557,9 @@ FileUtils::Status FileUtils::getContents(const std::string &filename, ResizableB
         return Status::NotExists;
 
     FILE *fp = fopen(fs->getSuitableFOpen(fullPath).c_str(), "rb");
-    if (!fp)
+    if (!fp) {
         return Status::OpenFailed;
+    }
 
 #if defined(_MSC_VER)
     auto descriptor = _fileno(fp);
@@ -956,9 +961,9 @@ long FileUtils::getFileSize(const std::string &filepath) {
 
 #else
     // default implements for unix like os
-    #include <sys/types.h>
-    #include <errno.h>
     #include <dirent.h>
+    #include <errno.h>
+    #include <sys/types.h>
 
     // android doesn't have ftw.h
     #if (CC_PLATFORM != CC_PLATFORM_ANDROID)

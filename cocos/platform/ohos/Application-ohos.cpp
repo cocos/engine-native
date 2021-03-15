@@ -175,7 +175,7 @@ Application::LanguageType Application::getCurrentLanguage() const {
 }
 
 Application::Platform Application::getPlatform() const {
-    return Platform::ANDROIDOS;
+    return Platform::OHOS;
 }
 
 bool Application::openURL(const std::string &url) {

@@ -28,6 +28,9 @@ THE SOFTWARE.
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "android/native_window.h"
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include <native_layer.h>
+    #include <native_layer_jni.h>
 #endif
 #if CC_PLATFORM == CC_PLATFORM_OHOS || CC_PLATFORM == CC_PLATFORM_ANDROID
     #include "cocos/bindings/event/CustomEventTypes.h"
@@ -286,10 +289,18 @@ bool GLES3Context::initialize(const ContextInfo &info) {
             uint height = _device->getHeight();
         #if ANDROID
             ANativeWindow_setBuffersGeometry((ANativeWindow *)_windowHandle, width, height, nFmt);
+        #else
+            auto retSetWH = NativeLayerHandle((NativeLayer *)_windowHandle, SET_WIDTH_AND_HEIGHT, width, height);
+                    //            if(_eglSurface != EGL_NO_SURFACE) {
+                    //                eglDestroySurface(_eglDisplay, _eglSurface);
+                    //                eglMakeCurrent(_eglSurface, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+                    //            }
         #endif
-            EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL));
+            // EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL));
+            _eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL);
             if (_eglSurface == EGL_NO_SURFACE) {
-                CC_LOG_ERROR("Recreate window surface failed.");
+                auto err = eglGetError();
+                CC_LOG_ERROR("Recreate window surface failed. code %d", err);
                 return;
             }
 

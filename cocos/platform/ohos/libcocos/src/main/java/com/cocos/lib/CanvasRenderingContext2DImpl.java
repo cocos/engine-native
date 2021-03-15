@@ -24,7 +24,6 @@
 
 package com.cocos.lib;
 
-import ohos.agp.components.ComponentContainer;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
 import ohos.agp.render.Path;
@@ -44,7 +43,6 @@ import ohos.media.image.common.Rect;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -473,6 +471,8 @@ public class CanvasRenderingContext2DImpl {
         mLineWidth = lineWidth;
     }
 
+
+    @SuppressWarnings("unused")
     public void _fillImageData(byte[] imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) {
         int fillSize = (int) (imageWidth * imageHeight);
         int[] fillColors = new int[fillSize];
@@ -515,6 +515,7 @@ public class CanvasRenderingContext2DImpl {
         return ret;
     }
 
+    @SuppressWarnings("unused")
     public byte[] getDataRef() {
         // Log.d(TAG, "this: " + this + ", getDataRef ...");
         if (mTexture != null && mTexture.getPixelMap() != null) {

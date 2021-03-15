@@ -63,8 +63,9 @@ public class CocosOrientationHelper implements ICategoryOrientationDataCallback 
 
     @Override
     public void onSensorDataModified(CategoryOrientationData data) {
-        int curOrientation = CocosHelper.getDeviceRotation();
+        final int curOrientation = CocosHelper.getDeviceRotation();
         if (curOrientation != mCurrentOrientation) {
+            mCurrentOrientation = curOrientation;
             CocosHelper.runOnGameThread(new Runnable() {
                 @Override
                 public void run() {

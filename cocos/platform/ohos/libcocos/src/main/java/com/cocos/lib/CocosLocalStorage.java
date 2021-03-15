@@ -81,7 +81,7 @@ public class CocosLocalStorage {
     public static void clear() {
         mDatabase.clear();
     }
-
+    @SuppressWarnings("unused")
     public static String getKey(int nIndex) {
         //TODO: need opt for performance
         List<String> sets = new ArrayList<String>(mDatabase.getAll().keySet());

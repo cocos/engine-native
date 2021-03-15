@@ -30,9 +30,9 @@ import ohos.multimodalinput.event.KeyEvent;
 
 public class CocosKeyCodeHandler {
     private CocosAbilitySlice mAct;
-
+    @SuppressWarnings("unused")
     public native void handleKeyDown(final int keyCode);
-
+    @SuppressWarnings("unused")
     public native void handleKeyUp(final int keyCode);
 
     public CocosKeyCodeHandler(CocosAbilitySlice act) {

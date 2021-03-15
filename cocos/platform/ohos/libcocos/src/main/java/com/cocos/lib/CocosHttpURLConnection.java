@@ -63,6 +63,7 @@ public class CocosHttpURLConnection {
     private static final String POST_METHOD = "POST";
     private static final String PUT_METHOD = "PUT";
 
+    @SuppressWarnings("unused")
     static HttpURLConnection createHttpURLConnection(String linkURL) {
         URL url;
         HttpURLConnection urlConnection;
@@ -81,11 +82,13 @@ public class CocosHttpURLConnection {
         return urlConnection;
     }
 
+    @SuppressWarnings("unused")
     static void setReadAndConnectTimeout(HttpURLConnection urlConnection, int readMiliseconds, int connectMiliseconds) {
         urlConnection.setReadTimeout(readMiliseconds);
         urlConnection.setConnectTimeout(connectMiliseconds);
     }
 
+    @SuppressWarnings("unused")
     static void setRequestMethod(HttpURLConnection urlConnection, String method) {
         try {
             urlConnection.setRequestMethod(method);
@@ -98,6 +101,7 @@ public class CocosHttpURLConnection {
 
     }
 
+    @SuppressWarnings("unused")
     static void setVerifySSL(HttpURLConnection urlConnection, String sslFilename) {
         if (!(urlConnection instanceof HttpsURLConnection))
             return;
@@ -147,11 +151,13 @@ public class CocosHttpURLConnection {
         }
     }
 
-    //Add header
+
+    @SuppressWarnings("unused")
     static void addRequestHeader(HttpURLConnection urlConnection, String key, String value) {
         urlConnection.setRequestProperty(key, value);
     }
 
+    @SuppressWarnings("unused")
     static int connect(HttpURLConnection http) {
         int suc = 0;
 
@@ -166,10 +172,12 @@ public class CocosHttpURLConnection {
         return suc;
     }
 
+    @SuppressWarnings("unused")
     static void disconnect(HttpURLConnection http) {
         http.disconnect();
     }
 
+    @SuppressWarnings("unused")
     static void sendRequest(HttpURLConnection http, byte[] byteArray) {
         try {
             OutputStream out = http.getOutputStream();
@@ -184,6 +192,7 @@ public class CocosHttpURLConnection {
         }
     }
 
+    @SuppressWarnings("unused")
     static String getResponseHeaders(HttpURLConnection http) {
         Map<String, List<String>> headers = http.getHeaderFields();
         if (null == headers) {
@@ -204,6 +213,7 @@ public class CocosHttpURLConnection {
         return header;
     }
 
+    @SuppressWarnings("unused")
     static String getResponseHeaderByIdx(HttpURLConnection http, int idx) {
         Map<String, List<String>> headers = http.getHeaderFields();
         if (null == headers) {
@@ -229,6 +239,7 @@ public class CocosHttpURLConnection {
         return header;
     }
 
+    @SuppressWarnings("unused")
     static String getResponseHeaderByKey(HttpURLConnection http, String key) {
         if (null == key) {
             return null;
@@ -255,6 +266,7 @@ public class CocosHttpURLConnection {
         return header;
     }
 
+    @SuppressWarnings("unused")
     static int getResponseHeaderByKeyInt(HttpURLConnection http, String key) {
         String value = http.getHeaderField(key);
 
@@ -265,6 +277,7 @@ public class CocosHttpURLConnection {
         }
     }
 
+    @SuppressWarnings("unused")
     static byte[] getResponseContent(HttpURLConnection http) {
         InputStream in;
         try {
@@ -303,6 +316,7 @@ public class CocosHttpURLConnection {
         return null;
     }
 
+    @SuppressWarnings("unused")
     static int getResponseCode(HttpURLConnection http) {
         int code = 0;
         try {
@@ -314,6 +328,7 @@ public class CocosHttpURLConnection {
         return code;
     }
 
+    @SuppressWarnings("unused")
     static String getResponseMessage(HttpURLConnection http) {
         String msg;
         try {

@@ -24,15 +24,15 @@ THE SOFTWARE.
 ****************************************************************************/
 #pragma once
 
-#include <string>
-#include <memory>
-#include <thread> // // std::this_thread::sleep_for
 #include "base/Macros.h"
+#include <memory>
+#include <string>
+#include <thread> // // std::this_thread::sleep_for
 
-#include "bindings/event/EventDispatcher.h"
-#include "base/Scheduler.h"
 #include "base/AutoreleasePool.h"
+#include "base/Scheduler.h"
 #include "base/TypeDef.h"
+#include "bindings/event/EventDispatcher.h"
 #include "math/Vec2.h"
 
 #define NANOSECONDS_PER_SECOND 1000000000
@@ -56,6 +56,7 @@ public:
         ANDROIDOS, /**< Android, because ANDROID is a macro, so use ANDROIDOS instead */
         IPHONE,    /**< iPhone */
         IPAD,      /**< iPad */
+        OHOS,      /**< Open Harmony OS> */
     };
 
     enum class LanguageType {

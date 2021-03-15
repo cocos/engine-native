@@ -111,7 +111,7 @@ public class CocosTouchHandler {
 
         return true;
     }
-
+    @SuppressWarnings("unused")
     public void setStopHandleTouchAndKeyEvents(boolean value) {
         mStopHandleTouchAndKeyEvents = value;
     }
