@@ -19630,25 +19630,6 @@ static bool js_gfx_Device_getCommandBuffer(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_Device_getCommandBuffer)
 
-static bool js_gfx_Device_getContext(se::State& s)
-{
-    cc::gfx::Device* cobj = SE_THIS_OBJECT<cc::gfx::Device>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_Device_getContext : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        cc::gfx::Context* result = cobj->getContext();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_gfx_Device_getContext : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_PROP_GET(js_gfx_Device_getContext)
-
 static bool js_gfx_Device_getDepthStencilFormat(se::State& s)
 {
     cc::gfx::Device* cobj = SE_THIS_OBJECT<cc::gfx::Device>(s);
@@ -20054,7 +20035,6 @@ bool js_register_gfx_Device(se::Object* obj)
     cls->defineProperty("queue", _SE(js_gfx_Device_getQueue), nullptr);
     cls->defineProperty("width", _SE(js_gfx_Device_getWidth), nullptr);
     cls->defineProperty("renderer", _SE(js_gfx_Device_getRenderer), nullptr);
-    cls->defineProperty("context", _SE(js_gfx_Device_getContext), nullptr);
     cls->defineProperty("commandBuffer", _SE(js_gfx_Device_getCommandBuffer), nullptr);
     cls->defineProperty("vendor", _SE(js_gfx_Device_getVendor), nullptr);
     cls->defineProperty("surfaceTransform", _SE(js_gfx_Device_getSurfaceTransform), nullptr);

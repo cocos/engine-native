@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -24,20 +24,18 @@
 ****************************************************************************/
 
 #pragma once
-#include "base/Config.h"
-#include "base/CoreStd.h"
-#include "bindings/auto/jsb_gfx_auto.h"
-#include "bindings/jswrapper/SeApi.h"
-#include "bindings/manual/jsb_conversions.h"
-#include "gfx-agent/DeviceAgent.h"
-#include "gfx-base/GFXDef.h"
-#include <type_traits>
 
-extern se::Object *__jsb_cc_gfx_DeviceAgent_proto;
-extern se::Class * __jsb_cc_gfx_DeviceAgent_class;
+#include "gfx-base/GFXPipelineLayout.h"
 
-bool js_register_cc_gfx_DeviceAgent(se::Object *obj);
-bool register_all_gfx_agent(se::Object *obj);
+namespace cc {
+namespace gfx {
 
-JSB_REGISTER_OBJECT_TYPE(cc::gfx::DeviceAgent);
-SE_DECLARE_FUNC(js_gfx_agent_DeviceAgent_DeviceAgent);
+class CC_DLL EmptyPipelineLayout final : public PipelineLayout {
+public:
+protected:
+    void doInit(const PipelineLayoutInfo &info) override;
+    void doDestroy() override;
+};
+
+} // namespace gfx
+} // namespace cc

@@ -26,7 +26,6 @@
 #include "cocos/bindings/manual/jsb_gfx_agent.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
-#include "gfx-agent/GFXDeviceAgent.h"
 
 #ifndef JSB_ALLOC
 #define JSB_ALLOC(kls, ...) new (std::nothrow) kls(__VA_ARGS__)
