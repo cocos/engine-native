@@ -31,9 +31,8 @@
 namespace cc {
 namespace gfx {
 
-Framebuffer::Framebuffer(Device *device)
-: GFXObject(ObjectType::FRAMEBUFFER),
-  _device(device) {
+Framebuffer::Framebuffer()
+: GFXObject(ObjectType::FRAMEBUFFER) {
 }
 
 Framebuffer::~Framebuffer() {

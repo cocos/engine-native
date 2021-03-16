@@ -31,9 +31,8 @@
 namespace cc {
 namespace gfx {
 
-PipelineLayout::PipelineLayout(Device *device)
-: GFXObject(ObjectType::PIPELINE_LAYOUT),
-  _device(device) {
+PipelineLayout::PipelineLayout()
+: GFXObject(ObjectType::PIPELINE_LAYOUT) {
 }
 
 PipelineLayout::~PipelineLayout() {

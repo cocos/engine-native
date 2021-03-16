@@ -32,8 +32,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKDescriptorSetLayout::CCVKDescriptorSetLayout(Device *device)
-: DescriptorSetLayout(device) {
+CCVKDescriptorSetLayout::CCVKDescriptorSetLayout()
+: DescriptorSetLayout() {
 }
 
 CCVKDescriptorSetLayout::~CCVKDescriptorSetLayout() {
@@ -55,12 +55,12 @@ void CCVKDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo &info) {
         }
     }
 
-    CCVKCmdFuncCreateDescriptorSetLayout((CCVKDevice *)_device, _gpuDescriptorSetLayout);
+    CCVKCmdFuncCreateDescriptorSetLayout(CCVKDevice::getInstance(), _gpuDescriptorSetLayout);
 }
 
 void CCVKDescriptorSetLayout::doDestroy() {
     if (_gpuDescriptorSetLayout) {
-        ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuDescriptorSetLayout);
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuDescriptorSetLayout);
         _gpuDescriptorSetLayout = nullptr;
     }
 }

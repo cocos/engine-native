@@ -26,18 +26,16 @@
 #pragma once
 
 #include <memory>
-#include "gfx-base/GFXDevice.h"
 
 namespace cc {
-namespace gfx {
 
 template <typename Actor>
 class CC_DLL Agent : public Actor {
 public:
     Agent() noexcept = delete;
 
-    Agent(Actor *const actor, Device *const device) noexcept
-    : Actor(device), _actor(actor) {}
+    Agent(Actor *const actor) noexcept
+    : Actor(), _actor(actor) {}
 
     ~Agent() override {}
 
@@ -55,5 +53,4 @@ protected:
     Actor *_actor{nullptr};
 };
 
-} // namespace gfx
 } // namespace cc

@@ -33,7 +33,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLTexture::CCMTLTexture(Device *device) : Texture(device) {}
+CCMTLTexture::CCMTLTexture() : Texture() {}
 
 void CCMTLTexture::doInit(const TextureInfo &info) {
     _isArray = _type == TextureType::TEX1D_ARRAY || _type == TextureType::TEX2D_ARRAY;
@@ -116,7 +116,7 @@ bool CCMTLTexture::createMTLTexture() {
         descriptor.resourceOptions = MTLResourceStorageModePrivate;
     }
 
-    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
+    id<MTLDevice> mtlDevice = id<MTLDevice>(CCMTLDevice::getInstance()->getMTLDevice());
     _mtlTexture = [mtlDevice newTextureWithDescriptor:descriptor];
 
     return _mtlTexture != nil;
@@ -132,7 +132,7 @@ void CCMTLTexture::doDestroy() {
         _buffer = nullptr;
     }
 
-    Device *device = _device;
+    Device *device = CCMTLDevice::getInstance();
     id<MTLTexture> mtlTexure = _mtlTexture;
     _mtlTexture = nil;
     uint size = _size;
@@ -165,7 +165,7 @@ void CCMTLTexture::doResize(uint width, uint height) {
     }
 
     if (oldMTLTexture) {
-        Device *device = _device;
+        Device *device = CCMTLDevice::getInstance();
         std::function<void(void)> destroyFunc = [=]() {
             if (oldMTLTexture) {
                 [oldMTLTexture release];

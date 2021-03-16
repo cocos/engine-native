@@ -36,7 +36,7 @@ class GLES3GPUCommandAllocator;
 
 class CC_GLES3_API GLES3CommandBuffer : public CommandBuffer {
 public:
-    GLES3CommandBuffer(Device *device);
+    GLES3CommandBuffer();
     ~GLES3CommandBuffer();
 
     void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;

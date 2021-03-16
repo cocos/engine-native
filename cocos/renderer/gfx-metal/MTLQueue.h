@@ -34,7 +34,7 @@ class CCMTLQueue final : public Queue {
     friend class CCMTLDevice;
 
 public:
-    explicit CCMTLQueue(Device *device);
+    explicit CCMTLQueue();
     ~CCMTLQueue() override = default;
     CCMTLQueue(const CCMTLQueue &)=delete;
     CCMTLQueue(CCMTLQueue &&)=delete;

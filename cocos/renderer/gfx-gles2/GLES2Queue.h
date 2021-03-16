@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_GLES2_API GLES2Queue final : public Queue {
 public:
-    GLES2Queue(Device *device);
+    GLES2Queue();
     ~GLES2Queue();
 
     void submit(CommandBuffer *const *cmdBuffs, uint count) override;

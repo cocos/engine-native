@@ -45,8 +45,19 @@
 namespace cc {
 namespace gfx {
 
+DeviceAgent *DeviceAgent::_instance = nullptr;
+
+DeviceAgent *DeviceAgent::getInstance() {
+    return DeviceAgent::_instance;
+}
+
+DeviceAgent::DeviceAgent(Device *device): Agent(device) {
+    DeviceAgent::_instance  = this;
+}
+
 DeviceAgent::~DeviceAgent() {
     CC_SAFE_DELETE(_actor);
+    DeviceAgent::_instance = nullptr;
 }
 
 bool DeviceAgent::doInit(const DeviceInfo &info) {
@@ -57,8 +68,8 @@ bool DeviceAgent::doInit(const DeviceInfo &info) {
     _context                                 = _actor->getContext();
     _API                                     = _actor->getGfxAPI();
     _deviceName                              = _actor->getDeviceName();
-    _queue                                   = CC_NEW(QueueAgent(_actor->getQueue(), this));
-    _cmdBuff                                 = CC_NEW(CommandBufferAgent(_actor->getCommandBuffer(), this));
+    _queue                                   = CC_NEW(QueueAgent(_actor->getQueue()));
+    _cmdBuff                                 = CC_NEW(CommandBufferAgent(_actor->getCommandBuffer()));
     ((CommandBufferAgent *)_cmdBuff)->_queue = _queue;
     _renderer                                = _actor->getRenderer();
     _vendor                                  = _actor->getVendor();
@@ -185,78 +196,78 @@ void DeviceAgent::setMultithreaded(bool multithreaded) {
 
 CommandBuffer *DeviceAgent::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
     CommandBuffer *actor = _actor->createCommandBuffer(info, true);
-    return CC_NEW(CommandBufferAgent(actor, this));
+    return CC_NEW(CommandBufferAgent(actor));
 }
 
 Queue *DeviceAgent::createQueue() {
     Queue *     actor = _actor->createQueue();
-    QueueAgent *agent = CC_NEW(QueueAgent(actor, this));
+    QueueAgent *agent = CC_NEW(QueueAgent(actor));
     return agent;
 }
 
 Buffer *DeviceAgent::createBuffer() {
     Buffer *     actor = _actor->createBuffer();
-    BufferAgent *agent = CC_NEW(BufferAgent(actor, this));
+    BufferAgent *agent = CC_NEW(BufferAgent(actor));
     return agent;
 }
 
 Texture *DeviceAgent::createTexture() {
     Texture *     actor = _actor->createTexture();
-    TextureAgent *agent = CC_NEW(TextureAgent(actor, this));
+    TextureAgent *agent = CC_NEW(TextureAgent(actor));
     return agent;
 }
 
 Sampler *DeviceAgent::createSampler() {
     Sampler *     actor = _actor->createSampler();
-    SamplerAgent *agent = CC_NEW(SamplerAgent(actor, this));
+    SamplerAgent *agent = CC_NEW(SamplerAgent(actor));
     return agent;
 }
 
 Shader *DeviceAgent::createShader() {
     Shader *     actor = _actor->createShader();
-    ShaderAgent *agent = CC_NEW(ShaderAgent(actor, this));
+    ShaderAgent *agent = CC_NEW(ShaderAgent(actor));
     return agent;
 }
 
 InputAssembler *DeviceAgent::createInputAssembler() {
     InputAssembler *     actor = _actor->createInputAssembler();
-    InputAssemblerAgent *agent = CC_NEW(InputAssemblerAgent(actor, this));
+    InputAssemblerAgent *agent = CC_NEW(InputAssemblerAgent(actor));
     return agent;
 }
 
 RenderPass *DeviceAgent::createRenderPass() {
     RenderPass *     actor = _actor->createRenderPass();
-    RenderPassAgent *agent = CC_NEW(RenderPassAgent(actor, this));
+    RenderPassAgent *agent = CC_NEW(RenderPassAgent(actor));
     return agent;
 }
 
 Framebuffer *DeviceAgent::createFramebuffer() {
     Framebuffer *     actor = _actor->createFramebuffer();
-    FramebufferAgent *agent = CC_NEW(FramebufferAgent(actor, this));
+    FramebufferAgent *agent = CC_NEW(FramebufferAgent(actor));
     return agent;
 }
 
 DescriptorSet *DeviceAgent::createDescriptorSet() {
     DescriptorSet *     actor = _actor->createDescriptorSet();
-    DescriptorSetAgent *agent = CC_NEW(DescriptorSetAgent(actor, this));
+    DescriptorSetAgent *agent = CC_NEW(DescriptorSetAgent(actor));
     return agent;
 }
 
 DescriptorSetLayout *DeviceAgent::createDescriptorSetLayout() {
     DescriptorSetLayout *     actor = _actor->createDescriptorSetLayout();
-    DescriptorSetLayoutAgent *agent = CC_NEW(DescriptorSetLayoutAgent(actor, this));
+    DescriptorSetLayoutAgent *agent = CC_NEW(DescriptorSetLayoutAgent(actor));
     return agent;
 }
 
 PipelineLayout *DeviceAgent::createPipelineLayout() {
     PipelineLayout *     actor = _actor->createPipelineLayout();
-    PipelineLayoutAgent *agent = CC_NEW(PipelineLayoutAgent(actor, this));
+    PipelineLayoutAgent *agent = CC_NEW(PipelineLayoutAgent(actor));
     return agent;
 }
 
 PipelineState *DeviceAgent::createPipelineState() {
     PipelineState *     actor = _actor->createPipelineState();
-    PipelineStateAgent *agent = CC_NEW(PipelineStateAgent(actor, this));
+    PipelineStateAgent *agent = CC_NEW(PipelineStateAgent(actor));
     return agent;
 }
 

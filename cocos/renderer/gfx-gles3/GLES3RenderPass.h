@@ -34,7 +34,7 @@ class GLES3GPURenderPass;
 
 class CC_GLES3_API GLES3RenderPass final : public RenderPass {
 public:
-    GLES3RenderPass(Device *device);
+    GLES3RenderPass();
     ~GLES3RenderPass();
 
     CC_INLINE GLES3GPURenderPass *gpuRenderPass() const { return _gpuRenderPass; }

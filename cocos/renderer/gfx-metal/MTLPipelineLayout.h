@@ -34,7 +34,7 @@ class CCMTLGPUPipelineLayout;
 
 class CCMTLPipelineLayout final : public PipelineLayout {
 public:
-    CCMTLPipelineLayout(Device *device);
+    CCMTLPipelineLayout();
     virtual ~CCMTLPipelineLayout() = default;
 
     CC_INLINE CCMTLGPUPipelineLayout *gpuPipelineLayout() const { return _gpuPipelineLayout; }

@@ -39,7 +39,7 @@ class CCMTLRenderCommandEncoder;
 
 class CCMTLBuffer final : public Buffer {
 public:
-    explicit CCMTLBuffer(Device *device);
+    explicit CCMTLBuffer();
     ~CCMTLBuffer() override = default;
     CCMTLBuffer(const CCMTLBuffer &) = delete;
     CCMTLBuffer(CCMTLBuffer &&) = delete;

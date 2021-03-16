@@ -33,7 +33,7 @@ namespace gfx {
 class CCMTLGPUDescriptorSetLayout;
 class CCMTLDescriptorSetLayout final : public DescriptorSetLayout {
 public:
-    explicit CCMTLDescriptorSetLayout(Device *device);
+    explicit CCMTLDescriptorSetLayout();
     ~CCMTLDescriptorSetLayout() override = default;
     CCMTLDescriptorSetLayout(const CCMTLDescriptorSetLayout &)=delete;
     CCMTLDescriptorSetLayout(CCMTLDescriptorSetLayout &&)=delete;

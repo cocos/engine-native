@@ -26,7 +26,7 @@
 #pragma once
 
 #include "gfx-base/GFXRenderPass.h"
-#include "GFXAgent.h"
+#include "base/Agent.h"
 
 namespace cc {
 namespace gfx {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL RenderPassAgent final : public Agent<RenderPass> {
 public:
     using Agent::Agent;
-    RenderPassAgent(Device *device) = delete;
     ~RenderPassAgent() override;
 
 protected:

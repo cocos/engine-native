@@ -35,7 +35,7 @@ class CCVKGPUPipelineLayout;
 
 class CC_VULKAN_API CCVKPipelineLayout final : public PipelineLayout {
 public:
-    CCVKPipelineLayout(Device *device);
+    CCVKPipelineLayout();
     ~CCVKPipelineLayout();
 
     CC_INLINE CCVKGPUPipelineLayout *gpuPipelineLayout() const { return _gpuPipelineLayout; }

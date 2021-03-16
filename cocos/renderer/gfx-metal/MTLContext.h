@@ -32,7 +32,7 @@ namespace gfx {
 
 class CCMTLContext final : public Context {
 public:
-    explicit CCMTLContext(Device *device);
+    explicit CCMTLContext();
     ~CCMTLContext() override = default;
     CCMTLContext(const CCMTLContext &)=delete;
     CCMTLContext(CCMTLContext &&)=delete;

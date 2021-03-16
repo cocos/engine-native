@@ -86,8 +86,8 @@ void GL_APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum
 
 #endif
 
-GLES3Context::GLES3Context(Device *device)
-: Context(device) {
+GLES3Context::GLES3Context()
+: Context() {
 }
 
 GLES3Context::~GLES3Context() {
@@ -208,8 +208,8 @@ bool GLES3Context::doInit(const ContextInfo &info) {
             return false;
         }
 
-        uint width = _device->getWidth();
-        uint height = _device->getHeight();
+        uint width = GLES3Device::getInstance()->getWidth();
+        uint height = GLES3Device::getInstance()->getHeight();
         ANativeWindow_setBuffersGeometry((ANativeWindow *)_windowHandle, width, height, nFmt);
     #endif
 
@@ -284,8 +284,8 @@ bool GLES3Context::doInit(const ContextInfo &info) {
                 CC_LOG_ERROR("Getting configuration attributes failed.");
                 return;
             }
-            uint width = _device->getWidth();
-            uint height = _device->getHeight();
+            uint width = GLES3Device::getInstance()->getWidth();
+            uint height = GLES3Device::getInstance()->getHeight();
             ANativeWindow_setBuffersGeometry((ANativeWindow *)_windowHandle, width, height, nFmt);
 
             EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL));
@@ -294,8 +294,8 @@ bool GLES3Context::doInit(const ContextInfo &info) {
                 return;
             }
 
-            ((GLES3Context *)_device->getContext())->MakeCurrent();
-            ((GLES3Device *)_device)->stateCache()->reset();
+            ((GLES3Context *)GLES3Device::getInstance()->getContext())->MakeCurrent();
+            GLES3Device::getInstance()->stateCache()->reset();
         });
     #endif
 

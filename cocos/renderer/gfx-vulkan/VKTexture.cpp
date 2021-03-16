@@ -33,8 +33,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKTexture::CCVKTexture(Device *device)
-: Texture(device) {
+CCVKTexture::CCVKTexture()
+: Texture() {
 }
 
 CCVKTexture::~CCVKTexture() {
@@ -55,7 +55,7 @@ void CCVKTexture::doInit(const TextureInfo &info) {
     _gpuTexture->flags = _flags;
     _gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
 
-    CCVKCmdFuncCreateTexture((CCVKDevice *)_device, _gpuTexture);
+    CCVKCmdFuncCreateTexture(CCVKDevice::getInstance(), _gpuTexture);
 
     _gpuTextureView = CC_NEW(CCVKGPUTextureView);
     createTextureView();
@@ -76,21 +76,21 @@ void CCVKTexture::createTextureView() {
     _gpuTextureView->levelCount = _levelCount;
     _gpuTextureView->baseLayer = _baseLayer;
     _gpuTextureView->layerCount = _layerCount;
-    CCVKCmdFuncCreateTextureView((CCVKDevice *)_device, _gpuTextureView);
+    CCVKCmdFuncCreateTextureView(CCVKDevice::getInstance(), _gpuTextureView);
 }
 
 void CCVKTexture::doDestroy() {
     if (_gpuTextureView) {
-        ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuTextureView);
-        ((CCVKDevice *)_device)->gpuDescriptorHub()->disengage(_gpuTextureView);
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuTextureView);
+        CCVKDevice::getInstance()->gpuDescriptorHub()->disengage(_gpuTextureView);
         CC_DELETE(_gpuTextureView);
         _gpuTextureView = nullptr;
     }
 
     if (_gpuTexture) {
         if (!_isTextureView) {
-            ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuTexture);
-            ((CCVKDevice *)_device)->gpuBarrierManager()->cancel(_gpuTexture);
+            CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuTexture);
+            CCVKDevice::getInstance()->gpuBarrierManager()->cancel(_gpuTexture);
             CC_DELETE(_gpuTexture);
         }
         _gpuTexture = nullptr;
@@ -98,12 +98,12 @@ void CCVKTexture::doDestroy() {
 }
 
 void CCVKTexture::doResize(uint width, uint height) {
-    ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuTextureView);
-    ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuTexture);
+    CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuTextureView);
+    CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuTexture);
 
-    CCVKCmdFuncCreateTexture((CCVKDevice *)_device, _gpuTexture);
+    CCVKCmdFuncCreateTexture(CCVKDevice::getInstance(), _gpuTexture);
 
-    CCVKCmdFuncCreateTextureView((CCVKDevice *)_device, _gpuTextureView);
+    CCVKCmdFuncCreateTextureView(CCVKDevice::getInstance(), _gpuTextureView);
 }
 
 } // namespace gfx

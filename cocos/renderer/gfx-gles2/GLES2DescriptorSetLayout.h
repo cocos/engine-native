@@ -35,7 +35,7 @@ class GLES2GPUDescriptorSetLayout;
 
 class CC_GLES2_API GLES2DescriptorSetLayout final : public DescriptorSetLayout {
 public:
-    GLES2DescriptorSetLayout(Device *device);
+    GLES2DescriptorSetLayout();
     ~GLES2DescriptorSetLayout();
 
     CC_INLINE GLES2GPUDescriptorSetLayout *gpuDescriptorSetLayout() const { return _gpuDescriptorSetLayout; }

@@ -32,13 +32,12 @@ namespace gfx {
 
 class CC_DLL Sampler : public GFXObject {
 public:
-    Sampler(Device *device);
+    Sampler();
     virtual ~Sampler();
 
     void initialize(const SamplerInfo &info);
     void destroy();
 
-    CC_INLINE Device *       getDevice() const { return _device; }
     CC_INLINE Filter         getMinFilter() const { return _minFilter; }
     CC_INLINE Filter         getMagFilter() const { return _magFilter; }
     CC_INLINE Filter         getMipFilter() const { return _mipFilter; }
@@ -54,7 +53,6 @@ protected:
     virtual void doInit(const SamplerInfo &info) = 0;
     virtual void doDestroy()                     = 0;
 
-    Device *       _device        = nullptr;
     Filter         _minFilter     = Filter::NONE;
     Filter         _magFilter     = Filter::NONE;
     Filter         _mipFilter     = Filter::NONE;

@@ -34,7 +34,7 @@ class CCMTLGPUInputAssembler;
 
 class CCMTLInputAssembler final : public InputAssembler {
 public:
-    explicit CCMTLInputAssembler(Device *device);
+    explicit CCMTLInputAssembler();
     ~CCMTLInputAssembler() override = default;
     CCMTLInputAssembler(const CCMTLInputAssembler &)=delete;
     CCMTLInputAssembler(CCMTLInputAssembler &&)=delete;

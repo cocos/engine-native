@@ -35,7 +35,7 @@ class CCVKGPUBufferView;
 
 class CC_VULKAN_API CCVKBuffer final : public Buffer {
 public:
-    CCVKBuffer(Device *device);
+    CCVKBuffer();
     ~CCVKBuffer();
 
     void update(void *buffer, uint offset) override;

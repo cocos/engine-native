@@ -36,11 +36,11 @@ namespace gfx {
 
 FramebufferAgent::~FramebufferAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         FramebufferDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
@@ -57,7 +57,7 @@ void FramebufferAgent::doInit(const FramebufferInfo &info) {
     actorInfo.renderPass = ((RenderPassAgent *)info.renderPass)->getActor();
 
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         FramebufferInit,
         actor, getActor(),
         info, actorInfo,
@@ -68,7 +68,7 @@ void FramebufferAgent::doInit(const FramebufferInfo &info) {
 
 void FramebufferAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         FramebufferDestroy,
         actor, getActor(),
         {

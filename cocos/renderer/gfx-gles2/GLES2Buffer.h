@@ -35,7 +35,7 @@ class GLES2GPUBufferView;
 
 class CC_GLES2_API GLES2Buffer final : public Buffer {
 public:
-    GLES2Buffer(Device *device);
+    GLES2Buffer();
     ~GLES2Buffer();
 
     void update(void *buffer, uint size) override;

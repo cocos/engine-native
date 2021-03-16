@@ -34,7 +34,7 @@ class CCVKGPURenderPass;
 
 class CC_VULKAN_API CCVKRenderPass final : public RenderPass {
 public:
-    CCVKRenderPass(Device *device);
+    CCVKRenderPass();
     ~CCVKRenderPass();
 
     CC_INLINE CCVKGPURenderPass *gpuRenderPass() const { return _gpuRenderPass; }

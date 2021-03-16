@@ -45,10 +45,18 @@
 namespace cc {
 namespace gfx {
 
+GLES2Device *GLES2Device::_instance = nullptr;
+
+GLES2Device *GLES2Device::getInstance() {
+    return GLES2Device::_instance;
+}
+
 GLES2Device::GLES2Device() {
+    GLES2Device::_instance = this;
 }
 
 GLES2Device::~GLES2Device() {
+    GLES2Device::_instance = nullptr;
 }
 
 bool GLES2Device::doInit(const DeviceInfo &info) {
@@ -75,7 +83,7 @@ bool GLES2Device::doInit(const DeviceInfo &info) {
     ctxInfo.windowHandle = _windowHandle;
     ctxInfo.sharedCtx = info.sharedCtx;
 
-    _renderContext = CC_NEW(GLES2Context(this));
+    _renderContext = CC_NEW(GLES2Context);
     if (!_renderContext->initialize(ctxInfo)) {
         destroy();
         return false;
@@ -243,7 +251,7 @@ void GLES2Device::bindDeviceContext(bool bound) {
         ctxInfo.windowHandle = _windowHandle;
         ctxInfo.sharedCtx    = _renderContext;
 
-        _deviceContext = CC_NEW(GLES2Context(this));
+        _deviceContext = CC_NEW(GLES2Context);
         _deviceContext->initialize(ctxInfo);
     }
     _deviceContext->MakeCurrent(bound);
@@ -256,64 +264,64 @@ void GLES2Device::bindDeviceContext(bool bound) {
 }
 
 CommandBuffer *GLES2Device::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
-    if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES2PrimaryCommandBuffer(this));
-    return CC_NEW(GLES2CommandBuffer(this));
+    if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES2PrimaryCommandBuffer);
+    return CC_NEW(GLES2CommandBuffer);
 }
 
 Queue *GLES2Device::createQueue() {
-    return CC_NEW(GLES2Queue(this));
+    return CC_NEW(GLES2Queue);
 }
 
 Buffer *GLES2Device::createBuffer() {
-    return CC_NEW(GLES2Buffer(this));
+    return CC_NEW(GLES2Buffer);
 }
 
 Texture *GLES2Device::createTexture() {
-    return CC_NEW(GLES2Texture(this));
+    return CC_NEW(GLES2Texture);
 }
 
 Sampler *GLES2Device::createSampler() {
-    return CC_NEW(GLES2Sampler(this));
+    return CC_NEW(GLES2Sampler);
 }
 
 Shader *GLES2Device::createShader() {
-    return CC_NEW(GLES2Shader(this));
+    return CC_NEW(GLES2Shader);
 }
 
 InputAssembler *GLES2Device::createInputAssembler() {
-    return CC_NEW(GLES2InputAssembler(this));
+    return CC_NEW(GLES2InputAssembler);
 }
 
 RenderPass *GLES2Device::createRenderPass() {
-    return CC_NEW(GLES2RenderPass(this));
+    return CC_NEW(GLES2RenderPass);
 }
 
 Framebuffer *GLES2Device::createFramebuffer() {
-    return CC_NEW(GLES2Framebuffer(this));
+    return CC_NEW(GLES2Framebuffer);
 }
 
 DescriptorSet *GLES2Device::createDescriptorSet() {
-    return CC_NEW(GLES2DescriptorSet(this));
+    return CC_NEW(GLES2DescriptorSet);
 }
 
 DescriptorSetLayout *GLES2Device::createDescriptorSetLayout() {
-    return CC_NEW(GLES2DescriptorSetLayout(this));
+    return CC_NEW(GLES2DescriptorSetLayout);
 }
 
 PipelineLayout *GLES2Device::createPipelineLayout() {
-    return CC_NEW(GLES2PipelineLayout(this));
+    return CC_NEW(GLES2PipelineLayout);
 }
 
 PipelineState *GLES2Device::createPipelineState() {
-    return CC_NEW(GLES2PipelineState(this));
+    return CC_NEW(GLES2PipelineState);
 }
 
 GlobalBarrier *GLES2Device::createGlobalBarrier() {
-    return CC_NEW(GlobalBarrier(this));
+    return CC_NEW(GlobalBarrier);
 }
 
 TextureBarrier *GLES2Device::createTextureBarrier() {
-    return CC_NEW(TextureBarrier(this));
+    return CC_NEW(TextureBarrier);
 }
 
 void GLES2Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

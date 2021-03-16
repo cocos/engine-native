@@ -35,7 +35,7 @@ class GLES2GPUPipelineLayout;
 
 class CC_GLES2_API GLES2PipelineLayout final : public PipelineLayout {
 public:
-    GLES2PipelineLayout(Device *device);
+    GLES2PipelineLayout();
     ~GLES2PipelineLayout();
 
     CC_INLINE GLES2GPUPipelineLayout *gpuPipelineLayout() const { return _gpuPipelineLayout; }

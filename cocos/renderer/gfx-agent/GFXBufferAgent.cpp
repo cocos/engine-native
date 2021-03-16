@@ -35,17 +35,17 @@ namespace gfx {
 
 BufferAgent::~BufferAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         BufferDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
 void BufferAgent::doInit(const BufferInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         BufferInit,
         actor, getActor(),
         info, info,
@@ -59,7 +59,7 @@ void BufferAgent::doInit(const BufferViewInfo &info) {
     actorInfo.buffer         = ((BufferAgent *)info.buffer)->getActor();
 
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         BufferViewInit,
         actor, getActor(),
         info, actorInfo,
@@ -70,7 +70,7 @@ void BufferAgent::doInit(const BufferViewInfo &info) {
 
 void BufferAgent::doResize(uint size) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         BufferResize,
         actor, getActor(),
         size, size,
@@ -81,7 +81,7 @@ void BufferAgent::doResize(uint size) {
 
 void BufferAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         BufferDestroy,
         actor, getActor(),
         {
@@ -90,11 +90,11 @@ void BufferAgent::doDestroy() {
 }
 
 void BufferAgent::update(void *buffer, uint size) {
-    uint8_t *actorBuffer = ((DeviceAgent *)_device)->getMainAllocator()->allocate<uint8_t>(size);
+    uint8_t *actorBuffer = DeviceAgent::getInstance()->getMainAllocator()->allocate<uint8_t>(size);
     memcpy(actorBuffer, buffer, size);
 
     ENQUEUE_MESSAGE_3(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         BufferUpdate,
         actor, getActor(),
         buffer, actorBuffer,

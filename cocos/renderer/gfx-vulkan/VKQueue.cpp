@@ -33,8 +33,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKQueue::CCVKQueue(Device *device)
-: Queue(device) {
+CCVKQueue::CCVKQueue()
+: Queue() {
 }
 
 CCVKQueue::~CCVKQueue() {
@@ -43,7 +43,7 @@ CCVKQueue::~CCVKQueue() {
 void CCVKQueue::doInit(const QueueInfo &info) {
     _gpuQueue       = CC_NEW(CCVKGPUQueue);
     _gpuQueue->type = _type;
-    CCVKCmdFuncGetDeviceQueue((CCVKDevice *)_device, _gpuQueue);
+    CCVKCmdFuncGetDeviceQueue(CCVKDevice::getInstance(), _gpuQueue);
 }
 
 void CCVKQueue::doDestroy() {
@@ -55,7 +55,7 @@ void CCVKQueue::doDestroy() {
 }
 
 void CCVKQueue::submit(CommandBuffer *const *cmdBuffs, uint count) {
-    CCVKDevice *device = (CCVKDevice *)_device;
+    CCVKDevice *device = CCVKDevice::getInstance();
     _gpuQueue->commandBuffers.clear();
 
 #if BARRIER_DEDUCTION_LEVEL >= BARRIER_DEDUCTION_LEVEL_BASIC

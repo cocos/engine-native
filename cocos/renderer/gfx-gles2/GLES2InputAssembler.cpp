@@ -24,26 +24,28 @@
 ****************************************************************************/
 
 #include "GLES2Std.h"
-#include "GLES2InputAssembler.h"
-#include "GLES2Commands.h"
+
 #include "GLES2Buffer.h"
+#include "GLES2Commands.h"
+#include "GLES2Device.h"
+#include "GLES2InputAssembler.h"
 
 namespace cc {
 namespace gfx {
 
-GLES2InputAssembler::GLES2InputAssembler(Device *device)
-: InputAssembler(device) {
+GLES2InputAssembler::GLES2InputAssembler()
+: InputAssembler() {
 }
 
 GLES2InputAssembler::~GLES2InputAssembler() {
 }
 
 void GLES2InputAssembler::doInit(const InputAssemblerInfo &info) {
-    _gpuInputAssembler = CC_NEW(GLES2GPUInputAssembler);
+    _gpuInputAssembler             = CC_NEW(GLES2GPUInputAssembler);
     _gpuInputAssembler->attributes = _attributes;
     _gpuInputAssembler->gpuVertexBuffers.resize(_vertexBuffers.size());
     for (size_t i = 0; i < _gpuInputAssembler->gpuVertexBuffers.size(); ++i) {
-        GLES2Buffer *vb = (GLES2Buffer *)_vertexBuffers[i];
+        GLES2Buffer *vb                         = (GLES2Buffer *)_vertexBuffers[i];
         _gpuInputAssembler->gpuVertexBuffers[i] = vb->gpuBuffer();
     }
     if (info.indexBuffer)
@@ -52,23 +54,23 @@ void GLES2InputAssembler::doInit(const InputAssemblerInfo &info) {
     if (info.indirectBuffer)
         _gpuInputAssembler->gpuIndirectBuffer = static_cast<GLES2Buffer *>(info.indirectBuffer)->gpuBuffer();
 
-    GLES2CmdFuncCreateInputAssembler((GLES2Device *)_device, _gpuInputAssembler);
+    GLES2CmdFuncCreateInputAssembler(GLES2Device::getInstance(), _gpuInputAssembler);
 }
 
 void GLES2InputAssembler::doDestroy() {
     if (_gpuInputAssembler) {
-        GLES2CmdFuncDestroyInputAssembler((GLES2Device *)_device, _gpuInputAssembler);
+        GLES2CmdFuncDestroyInputAssembler(GLES2Device::getInstance(), _gpuInputAssembler);
         CC_DELETE(_gpuInputAssembler);
         _gpuInputAssembler = nullptr;
     }
 }
 
 void GLES2InputAssembler::ExtractCmdDraw(GLES2CmdDraw *cmd) {
-    cmd->drawInfo.vertexCount = _vertexCount;
-    cmd->drawInfo.firstVertex = _firstVertex;
-    cmd->drawInfo.indexCount = _indexCount;
-    cmd->drawInfo.firstIndex = _firstIndex;
-    cmd->drawInfo.vertexOffset = _vertexOffset;
+    cmd->drawInfo.vertexCount   = _vertexCount;
+    cmd->drawInfo.firstVertex   = _firstVertex;
+    cmd->drawInfo.indexCount    = _indexCount;
+    cmd->drawInfo.firstIndex    = _firstIndex;
+    cmd->drawInfo.vertexOffset  = _vertexOffset;
     cmd->drawInfo.instanceCount = _instanceCount;
     cmd->drawInfo.firstInstance = _firstInstance;
 }

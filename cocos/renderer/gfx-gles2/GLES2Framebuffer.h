@@ -34,7 +34,7 @@ class GLES2GPUFramebuffer;
 
 class CC_GLES2_API GLES2Framebuffer final : public Framebuffer {
 public:
-    GLES2Framebuffer(Device *device);
+    GLES2Framebuffer();
     ~GLES2Framebuffer();
 
     CC_INLINE GLES2GPUFramebuffer *gpuFBO() const { return _gpuFBO; }

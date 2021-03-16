@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXTexture.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL TextureAgent final : public Agent<Texture> {
 public:
     using Agent::Agent;
-    TextureAgent(Device *device) = delete;
     ~TextureAgent() override;
 
 protected:

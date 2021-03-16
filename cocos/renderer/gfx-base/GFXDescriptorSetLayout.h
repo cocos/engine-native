@@ -32,13 +32,12 @@ namespace gfx {
 
 class CC_DLL DescriptorSetLayout : public GFXObject {
 public:
-    DescriptorSetLayout(Device *device);
+    DescriptorSetLayout();
     virtual ~DescriptorSetLayout();
 
     void initialize(const DescriptorSetLayoutInfo &info);
     void destroy();
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const DescriptorSetLayoutBindingList &getBindings() const { return _bindings; }
     CC_INLINE const vector<uint> &getBindingIndices() const { return _bindingIndices; }
     CC_INLINE const vector<uint> &getDescriptorIndices() const { return _descriptorIndices; }
@@ -48,7 +47,6 @@ protected:
     virtual void doInit(const DescriptorSetLayoutInfo &info) = 0;
     virtual void doDestroy()                                 = 0;
 
-    Device *                       _device = nullptr;
     DescriptorSetLayoutBindingList _bindings;
     uint                           _descriptorCount = 0u;
     vector<uint>                   _bindingIndices;

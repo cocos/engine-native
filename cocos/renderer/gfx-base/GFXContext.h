@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_DLL Context : public Object {
 public:
-    Context(Device *device);
+    Context();
     virtual ~Context();
 
     bool initialize(const ContextInfo &info);
@@ -40,7 +40,6 @@ public:
 
     virtual void present() = 0;
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Context * getSharedContext() const { return _sharedContext; }
     CC_INLINE VsyncMode getVsyncMode() const { return _vsyncMode; }
     CC_INLINE Format    getColorFormat() const { return _colorFmt; }
@@ -50,7 +49,6 @@ protected:
     virtual bool doInit(const ContextInfo &info) = 0;
     virtual void doDestroy()                     = 0;
 
-    Device *  _device          = nullptr;
     uintptr_t _windowHandle    = 0;
     Context * _sharedContext   = nullptr;
     VsyncMode _vsyncMode       = VsyncMode::OFF;

@@ -34,7 +34,7 @@ class CCVKGPUPipelineState;
 
 class CC_VULKAN_API CCVKPipelineState final : public PipelineState {
 public:
-    CCVKPipelineState(Device *device);
+    CCVKPipelineState();
     ~CCVKPipelineState();
 
     CC_INLINE CCVKGPUPipelineState *gpuPipelineState() const { return _gpuPipelineState; }

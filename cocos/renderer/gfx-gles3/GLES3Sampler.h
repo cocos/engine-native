@@ -34,7 +34,7 @@ class GLES3GPUSampler;
 
 class CC_GLES3_API GLES3Sampler final : public Sampler {
 public:
-    GLES3Sampler(Device *device);
+    GLES3Sampler();
     ~GLES3Sampler();
 
     CC_INLINE GLES3GPUSampler *gpuSampler() const { return _gpuSampler; }

@@ -32,8 +32,8 @@
 namespace cc {
 namespace gfx {
 
-GLES3Texture::GLES3Texture(Device *device)
-: Texture(device) {
+GLES3Texture::GLES3Texture()
+: Texture() {
 }
 
 GLES3Texture::~GLES3Texture() {
@@ -54,7 +54,7 @@ void GLES3Texture::doInit(const TextureInfo &info) {
     _gpuTexture->flags = _flags;
     _gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
 
-    GLES3CmdFuncCreateTexture((GLES3Device *)_device, _gpuTexture);
+    GLES3CmdFuncCreateTexture(GLES3Device::getInstance(), _gpuTexture);
 }
 
 void GLES3Texture::doInit(const TextureViewInfo &info) {
@@ -63,16 +63,9 @@ void GLES3Texture::doInit(const TextureViewInfo &info) {
 
 void GLES3Texture::doDestroy() {
     if (_gpuTexture) {
-        GLES3CmdFuncDestroyTexture((GLES3Device *)_device, _gpuTexture);
-        _device->getMemoryStatus().textureSize -= _size;
+        GLES3CmdFuncDestroyTexture(GLES3Device::getInstance(), _gpuTexture);
         CC_DELETE(_gpuTexture);
         _gpuTexture = nullptr;
-    }
-
-    if (_buffer) {
-        CC_FREE(_buffer);
-        _device->getMemoryStatus().textureSize -= _size;
-        _buffer = nullptr;
     }
 }
 
@@ -80,7 +73,7 @@ void GLES3Texture::doResize(uint width, uint height) {
     _gpuTexture->width = _width;
     _gpuTexture->height = _height;
     _gpuTexture->size = _size;
-    GLES3CmdFuncResizeTexture((GLES3Device *)_device, _gpuTexture);
+    GLES3CmdFuncResizeTexture(GLES3Device::getInstance(), _gpuTexture);
 }
 
 } // namespace gfx

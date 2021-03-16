@@ -37,8 +37,10 @@ class GLES3GPUFramebufferCacheMap;
 
 class CC_GLES3_API GLES3Device final : public Device {
 public:
+    static GLES3Device *getInstance();
+
     GLES3Device();
-    ~GLES3Device();
+    ~GLES3Device() override;
 
     using Device::copyBuffersToTexture;
     using Device::createBuffer;
@@ -77,6 +79,8 @@ public:
     uint           getMinorVersion() const;
 
 protected:
+    static GLES3Device *_instance;
+
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
     void                 doResize(uint width, uint height) override;
@@ -100,7 +104,6 @@ protected:
     void bindRenderContext(bool bound) override;
     void bindDeviceContext(bool bound) override;
 
-protected:
     GLES3Context *               _renderContext          = nullptr;
     GLES3Context *               _deviceContext          = nullptr;
     GLES3GPUStateCache *         _gpuStateCache          = nullptr;

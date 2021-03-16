@@ -34,7 +34,7 @@ class GLES2GPUShader;
 
 class CC_GLES2_API GLES2Shader final : public Shader {
 public:
-    GLES2Shader(Device *device);
+    GLES2Shader();
     ~GLES2Shader();
 
     CC_INLINE GLES2GPUShader *gpuShader() const { return _gpuShader; }

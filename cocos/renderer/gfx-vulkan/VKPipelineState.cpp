@@ -35,8 +35,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKPipelineState::CCVKPipelineState(Device *device)
-: PipelineState(device) {
+CCVKPipelineState::CCVKPipelineState()
+: PipelineState() {
 }
 
 CCVKPipelineState::~CCVKPipelineState() {
@@ -61,15 +61,15 @@ void CCVKPipelineState::doInit(const PipelineStateInfo &info) {
     }
 
     if (_bindPoint == PipelineBindPoint::GRAPHICS) {
-        CCVKCmdFuncCreateGraphicsPipelineState((CCVKDevice *)_device, _gpuPipelineState);
+        CCVKCmdFuncCreateGraphicsPipelineState(CCVKDevice::getInstance(), _gpuPipelineState);
     } else {
-        CCVKCmdFuncCreateComputePipelineState((CCVKDevice *)_device, _gpuPipelineState);
+        CCVKCmdFuncCreateComputePipelineState(CCVKDevice::getInstance(), _gpuPipelineState);
     }
 }
 
 void CCVKPipelineState::doDestroy() {
     if (_gpuPipelineState) {
-        ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuPipelineState);
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuPipelineState);
         _gpuPipelineState = nullptr;
     }
 }

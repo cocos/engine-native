@@ -33,8 +33,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKInputAssembler::CCVKInputAssembler(Device *device)
-: InputAssembler(device) {
+CCVKInputAssembler::CCVKInputAssembler()
+: InputAssembler() {
 }
 
 CCVKInputAssembler::~CCVKInputAssembler() {

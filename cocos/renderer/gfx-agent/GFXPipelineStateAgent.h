@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXPipelineState.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL PipelineStateAgent final : public Agent<PipelineState> {
 public:
     using Agent::Agent;
-    PipelineStateAgent(Device *device) = delete;
     ~PipelineStateAgent() override;
 
 protected:

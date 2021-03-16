@@ -46,10 +46,18 @@
 namespace cc {
 namespace gfx {
 
+GLES3Device *GLES3Device::_instance = nullptr;
+
+GLES3Device *GLES3Device::getInstance() {
+    return GLES3Device::_instance;
+}
+
 GLES3Device::GLES3Device() {
+    GLES3Device::_instance = this;
 }
 
 GLES3Device::~GLES3Device() {
+    GLES3Device::_instance = nullptr;
 }
 
 bool GLES3Device::doInit(const DeviceInfo &info) {
@@ -77,7 +85,7 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     ctxInfo.windowHandle = _windowHandle;
     ctxInfo.sharedCtx    = info.sharedCtx;
 
-    _renderContext = CC_NEW(GLES3Context(this));
+    _renderContext = CC_NEW(GLES3Context);
     if (!_renderContext->initialize(ctxInfo)) {
         destroy();
         return false;
@@ -245,7 +253,7 @@ void GLES3Device::bindDeviceContext(bool bound) {
         ctxInfo.windowHandle = _windowHandle;
         ctxInfo.sharedCtx    = _renderContext;
 
-        _deviceContext = CC_NEW(GLES3Context(this));
+        _deviceContext = CC_NEW(GLES3Context);
         _deviceContext->initialize(ctxInfo);
     }
     _deviceContext->MakeCurrent(bound);
@@ -260,64 +268,64 @@ void GLES3Device::bindDeviceContext(bool bound) {
 uint GLES3Device::getMinorVersion() const { return ((GLES3Context *)_context)->minor_ver(); }
 
 CommandBuffer *GLES3Device::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
-    if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES3PrimaryCommandBuffer(this));
-    return CC_NEW(GLES3CommandBuffer(this));
+    if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES3PrimaryCommandBuffer);
+    return CC_NEW(GLES3CommandBuffer);
 }
 
 Queue *GLES3Device::createQueue() {
-    return CC_NEW(GLES3Queue(this));
+    return CC_NEW(GLES3Queue);
 }
 
 Buffer *GLES3Device::createBuffer() {
-    return CC_NEW(GLES3Buffer(this));
+    return CC_NEW(GLES3Buffer);
 }
 
 Texture *GLES3Device::createTexture() {
-    return CC_NEW(GLES3Texture(this));
+    return CC_NEW(GLES3Texture);
 }
 
 Sampler *GLES3Device::createSampler() {
-    return CC_NEW(GLES3Sampler(this));
+    return CC_NEW(GLES3Sampler);
 }
 
 Shader *GLES3Device::createShader() {
-    return CC_NEW(GLES3Shader(this));
+    return CC_NEW(GLES3Shader);
 }
 
 InputAssembler *GLES3Device::createInputAssembler() {
-    return CC_NEW(GLES3InputAssembler(this));
+    return CC_NEW(GLES3InputAssembler);
 }
 
 RenderPass *GLES3Device::createRenderPass() {
-    return CC_NEW(GLES3RenderPass(this));
+    return CC_NEW(GLES3RenderPass);
 }
 
 Framebuffer *GLES3Device::createFramebuffer() {
-    return CC_NEW(GLES3Framebuffer(this));
+    return CC_NEW(GLES3Framebuffer);
 }
 
 DescriptorSet *GLES3Device::createDescriptorSet() {
-    return CC_NEW(GLES3DescriptorSet(this));
+    return CC_NEW(GLES3DescriptorSet);
 }
 
 DescriptorSetLayout *GLES3Device::createDescriptorSetLayout() {
-    return CC_NEW(GLES3DescriptorSetLayout(this));
+    return CC_NEW(GLES3DescriptorSetLayout);
 }
 
 PipelineLayout *GLES3Device::createPipelineLayout() {
-    return CC_NEW(GLES3PipelineLayout(this));
+    return CC_NEW(GLES3PipelineLayout);
 }
 
 PipelineState *GLES3Device::createPipelineState() {
-    return CC_NEW(GLES3PipelineState(this));
+    return CC_NEW(GLES3PipelineState);
 }
 
 GlobalBarrier *GLES3Device::createGlobalBarrier() {
-    return CC_NEW(GLES3GlobalBarrier(this));
+    return CC_NEW(GLES3GlobalBarrier);
 }
 
 TextureBarrier *GLES3Device::createTextureBarrier() {
-    return CC_NEW(TextureBarrier(this));
+    return CC_NEW(TextureBarrier);
 }
 
 void GLES3Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

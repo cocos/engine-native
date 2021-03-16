@@ -35,8 +35,8 @@
 namespace cc {
 namespace gfx {
 
-GLES2DescriptorSet::GLES2DescriptorSet(Device *device)
-: DescriptorSet(device) {
+GLES2DescriptorSet::GLES2DescriptorSet()
+: DescriptorSet() {
 }
 
 GLES2DescriptorSet::~GLES2DescriptorSet() {
@@ -68,10 +68,6 @@ void GLES2DescriptorSet::doDestroy() {
         CC_DELETE(_gpuDescriptorSet);
         _gpuDescriptorSet = nullptr;
     }
-    // do remember to clear these or else it might not be properly updated when reused
-    _buffers.clear();
-    _textures.clear();
-    _samplers.clear();
 }
 
 void GLES2DescriptorSet::update() {

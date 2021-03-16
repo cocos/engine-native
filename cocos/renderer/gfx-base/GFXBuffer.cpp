@@ -32,9 +32,8 @@
 namespace cc {
 namespace gfx {
 
-Buffer::Buffer(Device *device)
-: GFXObject(ObjectType::BUFFER),
-  _device(device) {
+Buffer::Buffer()
+: GFXObject(ObjectType::BUFFER) {
 }
 
 Buffer::~Buffer() {
@@ -57,7 +56,7 @@ void Buffer::initialize(const BufferInfo &info) {
     _stride   = std::max(info.stride, 1u);
     _count    = _size / _stride;
 
-    _device->getMemoryStatus().bufferSize += _size;
+    Device::getInstance()->getMemoryStatus().bufferSize += _size;
 
     doInit(info);
 }
@@ -74,26 +73,26 @@ void Buffer::initialize(const BufferViewInfo &info) {
     doInit(info);
 }
 
+void Buffer::destroy() {
+    doDestroy();
+
+    Device::getInstance()->getMemoryStatus().bufferSize -= _size;
+
+    _offset = _size = _stride = _count = 0u;
+}
+
 void Buffer::resize(uint size) {
     CCASSERT(!_isBufferView, "Cannot resize buffer views");
 
     if (size != _size) {
         doResize(size);
-        _device->getMemoryStatus().bufferSize -= _size;
+        Device::getInstance()->getMemoryStatus().bufferSize -= _size;
 
         _size  = size;
         _count = size / _stride;
 
-        _device->getMemoryStatus().bufferSize += _size;
+        Device::getInstance()->getMemoryStatus().bufferSize += _size;
     }
-}
-
-void Buffer::destroy() {
-    doDestroy();
-
-    _device->getMemoryStatus().bufferSize -= _size;
-
-    _offset = _size = _stride = _count = 0u;
 }
 
 } // namespace gfx

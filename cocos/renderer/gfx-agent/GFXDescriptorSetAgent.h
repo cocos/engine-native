@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXDescriptorSet.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL DescriptorSetAgent final : public Agent<DescriptorSet> {
 public:
     using Agent::Agent;
-    DescriptorSetAgent(Device *device) = delete;
     ~DescriptorSetAgent() override;
 
     void update() override;

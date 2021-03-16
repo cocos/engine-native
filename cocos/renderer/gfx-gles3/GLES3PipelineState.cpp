@@ -51,8 +51,8 @@ const GLenum GLES3Primitives[] = {
     GL_NONE,
 };
 
-GLES3PipelineState::GLES3PipelineState(Device *device)
-: PipelineState(device) {
+GLES3PipelineState::GLES3PipelineState()
+: PipelineState() {
 }
 
 GLES3PipelineState::~GLES3PipelineState() {

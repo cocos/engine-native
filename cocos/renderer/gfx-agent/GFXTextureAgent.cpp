@@ -34,17 +34,17 @@ namespace gfx {
 
 TextureAgent::~TextureAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         TextureDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
 void TextureAgent::doInit(const TextureInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         TextureInit,
         actor, getActor(),
         info, info,
@@ -55,7 +55,7 @@ void TextureAgent::doInit(const TextureInfo &info) {
 
 void TextureAgent::doInit(const TextureViewInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         TextureViewInit,
         actor, getActor(),
         info, info,
@@ -66,7 +66,7 @@ void TextureAgent::doInit(const TextureViewInfo &info) {
 
 void TextureAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         TextureDestroy,
         actor, getActor(),
         {
@@ -76,7 +76,7 @@ void TextureAgent::doDestroy() {
 
 void TextureAgent::doResize(uint width, uint height) {
     ENQUEUE_MESSAGE_3(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         TextureResize,
         actor, getActor(),
         width, width,

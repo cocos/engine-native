@@ -36,8 +36,11 @@ class CCMTLSemaphore;
 
 class CCMTLDevice final : public Device {
 public:
+    static CCMTLDevice *getInstance();
+
     CCMTLDevice();
-    ~CCMTLDevice() override = default;
+    ~CCMTLDevice() override;
+
     CCMTLDevice(const CCMTLDevice &) = delete;
     CCMTLDevice(CCMTLDevice &&) = delete;
     CCMTLDevice &operator=(const CCMTLDevice &) = delete;
@@ -81,6 +84,8 @@ public:
     CC_INLINE void *getDSSTexture() const { return _dssTex; }
 
 protected:
+    static CCMTLDevice * _instance;
+
     bool doInit(const DeviceInfo &info) override;
     void doDestroy() override;
     void doResize(uint width, uint height) override;

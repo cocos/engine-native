@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_GLES2_API GLES2PrimaryCommandBuffer final : public GLES2CommandBuffer {
 public:
-    GLES2PrimaryCommandBuffer(Device *device);
+    GLES2PrimaryCommandBuffer();
     ~GLES2PrimaryCommandBuffer();
 
     void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;

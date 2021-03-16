@@ -31,9 +31,8 @@
 namespace cc {
 namespace gfx {
 
-PipelineState::PipelineState(Device *device)
-: GFXObject(ObjectType::PIPELINE_STATE),
-  _device(device) {
+PipelineState::PipelineState()
+: GFXObject(ObjectType::PIPELINE_STATE) {
 }
 
 PipelineState::~PipelineState() {

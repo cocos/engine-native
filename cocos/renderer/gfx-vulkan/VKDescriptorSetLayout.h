@@ -35,7 +35,7 @@ class CCVKGPUDescriptorSetLayout;
 
 class CC_VULKAN_API CCVKDescriptorSetLayout final : public DescriptorSetLayout {
 public:
-    CCVKDescriptorSetLayout(Device *device);
+    CCVKDescriptorSetLayout();
     ~CCVKDescriptorSetLayout();
 
     CC_INLINE CCVKGPUDescriptorSetLayout *gpuDescriptorSetLayout() const { return _gpuDescriptorSetLayout; }

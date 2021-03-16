@@ -32,9 +32,8 @@
 namespace cc {
 namespace gfx {
 
-InputAssembler::InputAssembler(Device *device)
-: GFXObject(ObjectType::INPUT_ASSEMBLER),
-  _device(device) {
+InputAssembler::InputAssembler()
+: GFXObject(ObjectType::INPUT_ASSEMBLER) {
 }
 
 InputAssembler::~InputAssembler() {

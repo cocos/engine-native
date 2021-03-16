@@ -34,7 +34,7 @@ class GLES3GPUFramebuffer;
 
 class CC_GLES3_API GLES3Framebuffer final : public Framebuffer {
 public:
-    GLES3Framebuffer(Device *device);
+    GLES3Framebuffer();
     ~GLES3Framebuffer();
 
     CC_INLINE GLES3GPUFramebuffer *gpuFBO() const { return _gpuFBO; }

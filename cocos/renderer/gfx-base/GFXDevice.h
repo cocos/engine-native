@@ -50,7 +50,6 @@ public:
     static Device *getInstance();
 
     Device();
-    Device(Device *device) : Device() {}
     virtual ~Device();
 
     bool initialize(const DeviceInfo &info);
@@ -180,6 +179,8 @@ public:
     Format                  getDepthStencilFormat() const;
 
 protected:
+    static Device *_instance;
+
     friend class DeviceAgent;
 
     virtual bool                 doInit(const DeviceInfo &info)                                                                                  = 0;
@@ -226,9 +227,6 @@ protected:
     uint               _numTriangles = 0u;
     BindingMappingInfo _bindingMappingInfo;
     DeviceCaps         _caps;
-
-protected:
-    static Device *_instance;
 };
 
 } // namespace gfx

@@ -32,17 +32,15 @@
 namespace cc {
 namespace gfx {
 
-CCVKTextureBarrier::CCVKTextureBarrier(Device *device)
-: TextureBarrier(device) {
+CCVKTextureBarrier::CCVKTextureBarrier()
+: TextureBarrier() {
 }
 
 CCVKTextureBarrier::~CCVKTextureBarrier() {
     CC_SAFE_DELETE(_gpuBarrier);
 }
 
-void CCVKTextureBarrier::initialize(const TextureBarrierInfo &info) {
-    _info = info;
-
+void CCVKTextureBarrier::doInit(const TextureBarrierInfo &info) {
     _gpuBarrier = CC_NEW(CCVKGPUTextureBarrier);
     _gpuBarrier->accessTypes.resize(info.prevAccesses.size() + info.nextAccesses.size());
 

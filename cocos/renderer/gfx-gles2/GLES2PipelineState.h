@@ -34,7 +34,7 @@ class GLES2GPUPipelineState;
 
 class CC_GLES2_API GLES2PipelineState final : public PipelineState {
 public:
-    GLES2PipelineState(Device *device);
+    GLES2PipelineState();
     ~GLES2PipelineState();
 
     CC_INLINE GLES2GPUPipelineState *gpuPipelineState() const { return _gpuPipelineState; }

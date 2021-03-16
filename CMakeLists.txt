@@ -314,6 +314,7 @@ endif()
 
 ##### base
 cocos_source_files(
+                 cocos/base/Agent.h
     NO_WERROR    cocos/base/Array.cpp
                  cocos/base/Array.h
     NO_WERROR    cocos/base/astc.cpp
@@ -650,36 +651,35 @@ cocos_source_files(
                  cocos/renderer/gfx-base/GFXTexture.h
     NO_WERROR    cocos/renderer/gfx-base/GFXTextureBarrier.cpp
                  cocos/renderer/gfx-base/GFXTextureBarrier.h
-                 cocos/renderer/gfx-agent/GFXAgent.h
-                 cocos/renderer/gfx-agent/GFXBufferAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXBufferAgent.cpp
-                 cocos/renderer/gfx-agent/GFXCommandBufferAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXCommandBufferAgent.cpp
-                 cocos/renderer/gfx-agent/GFXDescriptorSetAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXDescriptorSetAgent.cpp
-                 cocos/renderer/gfx-agent/GFXDescriptorSetLayoutAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXDescriptorSetLayoutAgent.cpp
-                 cocos/renderer/gfx-agent/GFXDeviceAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXDeviceAgent.cpp
-                 cocos/renderer/gfx-agent/GFXFramebufferAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXFramebufferAgent.cpp
-                 cocos/renderer/gfx-agent/GFXInputAssemblerAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXInputAssemblerAgent.cpp
-                 cocos/renderer/gfx-agent/GFXLinearAllocatorPool.h
-                 cocos/renderer/gfx-agent/GFXPipelineLayoutAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXPipelineLayoutAgent.cpp
-                 cocos/renderer/gfx-agent/GFXPipelineStateAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXPipelineStateAgent.cpp
-                 cocos/renderer/gfx-agent/GFXQueueAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXQueueAgent.cpp
-                 cocos/renderer/gfx-agent/GFXRenderPassAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXRenderPassAgent.cpp
-                 cocos/renderer/gfx-agent/GFXSamplerAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXSamplerAgent.cpp
-                 cocos/renderer/gfx-agent/GFXShaderAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXShaderAgent.cpp
-                 cocos/renderer/gfx-agent/GFXTextureAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXTextureAgent.cpp
+                 cocos/renderer/gfx-agent/BufferAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/BufferAgent.cpp
+                 cocos/renderer/gfx-agent/CommandBufferAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/CommandBufferAgent.cpp
+                 cocos/renderer/gfx-agent/DescriptorSetAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/DescriptorSetAgent.cpp
+                 cocos/renderer/gfx-agent/DescriptorSetLayoutAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/DescriptorSetLayoutAgent.cpp
+                 cocos/renderer/gfx-agent/DeviceAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/DeviceAgent.cpp
+                 cocos/renderer/gfx-agent/FramebufferAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/FramebufferAgent.cpp
+                 cocos/renderer/gfx-agent/InputAssemblerAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/InputAssemblerAgent.cpp
+                 cocos/renderer/gfx-agent/LinearAllocatorPool.h
+                 cocos/renderer/gfx-agent/PipelineLayoutAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/PipelineLayoutAgent.cpp
+                 cocos/renderer/gfx-agent/PipelineStateAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/PipelineStateAgent.cpp
+                 cocos/renderer/gfx-agent/QueueAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/QueueAgent.cpp
+                 cocos/renderer/gfx-agent/RenderPassAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/RenderPassAgent.cpp
+                 cocos/renderer/gfx-agent/SamplerAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/SamplerAgent.cpp
+                 cocos/renderer/gfx-agent/ShaderAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/ShaderAgent.cpp
+                 cocos/renderer/gfx-agent/TextureAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/TextureAgent.cpp
     NO_WERROR    cocos/renderer/pipeline/BatchedBuffer.cpp
                  cocos/renderer/pipeline/BatchedBuffer.h
                  cocos/renderer/pipeline/Define.h

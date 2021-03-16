@@ -34,17 +34,17 @@ namespace gfx {
 
 DescriptorSetLayoutAgent::~DescriptorSetLayoutAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         DescriptorSetLayoutDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
 void DescriptorSetLayoutAgent::doInit(const DescriptorSetLayoutInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         DescriptorSetLayoutInit,
         actor, getActor(),
         info, info,
@@ -55,7 +55,7 @@ void DescriptorSetLayoutAgent::doInit(const DescriptorSetLayoutInfo &info) {
 
 void DescriptorSetLayoutAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         DescriptorSetLayoutDestroy,
         actor, getActor(),
         {

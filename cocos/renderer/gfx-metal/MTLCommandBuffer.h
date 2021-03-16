@@ -43,7 +43,7 @@ class CCMTLFence;
 
 class CCMTLCommandBuffer final : public CommandBuffer {
 public:
-    explicit CCMTLCommandBuffer(Device *device);
+    explicit CCMTLCommandBuffer();
     ~CCMTLCommandBuffer() override = default;
     CCMTLCommandBuffer(const CCMTLCommandBuffer &) = delete;
     CCMTLCommandBuffer(CCMTLCommandBuffer &&) = delete;

@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXSampler.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL SamplerAgent final : public Agent<Sampler> {
 public:
     using Agent::Agent;
-    SamplerAgent(Device *device) = delete;
     ~SamplerAgent() override;
 
 protected:

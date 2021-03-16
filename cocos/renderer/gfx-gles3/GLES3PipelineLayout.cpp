@@ -32,8 +32,8 @@
 namespace cc {
 namespace gfx {
 
-GLES3PipelineLayout::GLES3PipelineLayout(Device *device)
-: PipelineLayout(device) {
+GLES3PipelineLayout::GLES3PipelineLayout()
+: PipelineLayout() {
 }
 
 GLES3PipelineLayout::~GLES3PipelineLayout() {

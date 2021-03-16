@@ -26,7 +26,7 @@
 #pragma once
 
 #include "gfx-base/GFXQueue.h"
-#include "GFXAgent.h"
+#include "base/Agent.h"
 
 namespace cc {
 namespace gfx {
@@ -36,7 +36,6 @@ public:
     using Agent::Agent;
     using Queue::submit;
 
-    QueueAgent(Device *device) = delete;
     ~QueueAgent() override;
 
     void submit(CommandBuffer *const *cmdBuffs, uint count) override;

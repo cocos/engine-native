@@ -24,15 +24,17 @@
 ****************************************************************************/
 
 #include "GLES2Std.h"
-#include "GLES2Queue.h"
-#include "GLES2Commands.h"
+
 #include "GLES2CommandBuffer.h"
+#include "GLES2Commands.h"
+#include "GLES2Queue.h"
+#include "GLES2Device.h"
 
 namespace cc {
 namespace gfx {
 
-GLES2Queue::GLES2Queue(Device *device)
-: Queue(device) {
+GLES2Queue::GLES2Queue()
+: Queue() {
 }
 
 GLES2Queue::~GLES2Queue() {
@@ -51,7 +53,7 @@ void GLES2Queue::submit(CommandBuffer *const *cmdBuffs, uint count) {
         if (!cmdBuff->_pendingPackages.empty()) {
             GLES2CmdPackage *cmdPackage = cmdBuff->_pendingPackages.front();
 
-            GLES2CmdFuncExecuteCmds((GLES2Device *)_device, cmdPackage);
+            GLES2CmdFuncExecuteCmds(GLES2Device::getInstance(), cmdPackage);
 
             cmdBuff->_pendingPackages.pop();
             cmdBuff->_freePackages.push(cmdPackage);

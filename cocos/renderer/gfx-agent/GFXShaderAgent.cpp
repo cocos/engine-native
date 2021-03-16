@@ -34,17 +34,17 @@ namespace gfx {
 
 ShaderAgent::~ShaderAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         ShaderDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
 void ShaderAgent::doInit(const ShaderInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         ShaderInit,
         actor, getActor(),
         info, info,
@@ -55,7 +55,7 @@ void ShaderAgent::doInit(const ShaderInfo &info) {
 
 void ShaderAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         ShaderDestroy,
         actor, getActor(),
         {

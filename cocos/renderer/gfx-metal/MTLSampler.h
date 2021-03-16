@@ -34,7 +34,7 @@ namespace gfx {
 
 class CCMTLSampler final : public Sampler {
 public:
-    explicit CCMTLSampler(Device *device);
+    explicit CCMTLSampler();
     ~CCMTLSampler() override = default;
     CCMTLSampler(const CCMTLSampler &)=delete;
     CCMTLSampler(CCMTLSampler &&)=delete;

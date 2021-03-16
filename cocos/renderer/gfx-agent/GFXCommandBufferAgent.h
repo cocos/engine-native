@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXCommandBuffer.h"
 
 namespace cc {
@@ -39,7 +39,6 @@ class LinearAllocatorPool;
 class CC_DLL CommandBufferAgent final : public Agent<CommandBuffer> {
 public:
     using Agent::Agent;
-    CommandBufferAgent(Device *device) = delete;
     ~CommandBufferAgent() override;
 
     static void flushCommands(uint count, CommandBufferAgent *const *cmdBuffs, bool multiThreaded);

@@ -32,8 +32,8 @@
 namespace cc {
 namespace gfx {
 
-GLES2Buffer::GLES2Buffer(Device *device)
-: Buffer(device) {
+GLES2Buffer::GLES2Buffer()
+: Buffer() {
 }
 
 GLES2Buffer::~GLES2Buffer() {
@@ -51,7 +51,7 @@ void GLES2Buffer::doInit(const BufferInfo &info) {
         _gpuBuffer->indirects.resize(_count);
     }
 
-    GLES2CmdFuncCreateBuffer((GLES2Device *)_device, _gpuBuffer);
+    GLES2CmdFuncCreateBuffer(GLES2Device::getInstance(), _gpuBuffer);
 }
 
 void GLES2Buffer::doInit(const BufferViewInfo &info) {
@@ -64,7 +64,7 @@ void GLES2Buffer::doInit(const BufferViewInfo &info) {
 
 void GLES2Buffer::doDestroy() {
     if (_gpuBuffer) {
-        GLES2CmdFuncDestroyBuffer((GLES2Device *)_device, _gpuBuffer);
+        GLES2CmdFuncDestroyBuffer(GLES2Device::getInstance(), _gpuBuffer);
         CC_DELETE(_gpuBuffer);
         _gpuBuffer = nullptr;
     }
@@ -75,7 +75,7 @@ void GLES2Buffer::doDestroy() {
 void GLES2Buffer::doResize(uint size) {
     _gpuBuffer->size     = _size;
     _gpuBuffer->count    = _count;
-    GLES2CmdFuncResizeBuffer((GLES2Device *)_device, _gpuBuffer);
+    GLES2CmdFuncResizeBuffer(GLES2Device::getInstance(), _gpuBuffer);
 }
 
 void GLES2Buffer::update(void *buffer, uint size) {
@@ -83,7 +83,7 @@ void GLES2Buffer::update(void *buffer, uint size) {
     CCASSERT(size != 0, "Should not update buffer with 0 bytes of data");
     CCASSERT(buffer, "Buffer should not be nullptr");
 
-    GLES2CmdFuncUpdateBuffer((GLES2Device *)_device, _gpuBuffer, buffer, 0u, size);
+    GLES2CmdFuncUpdateBuffer(GLES2Device::getInstance(), _gpuBuffer, buffer, 0u, size);
 }
 
 } // namespace gfx

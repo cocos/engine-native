@@ -35,7 +35,7 @@ class CCVKGPUTextureView;
 
 class CC_VULKAN_API CCVKTexture final : public Texture {
 public:
-    CCVKTexture(Device *device);
+    CCVKTexture();
     ~CCVKTexture();
 
     CC_INLINE CCVKGPUTexture *gpuTexture() const { return _gpuTexture; }

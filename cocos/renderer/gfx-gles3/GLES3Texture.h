@@ -34,7 +34,7 @@ class GLES3GPUTexture;
 
 class CC_GLES3_API GLES3Texture final : public Texture {
 public:
-    GLES3Texture(Device *device);
+    GLES3Texture();
     ~GLES3Texture();
 
     CC_INLINE GLES3GPUTexture *gpuTexture() const { return _gpuTexture; }

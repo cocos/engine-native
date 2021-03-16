@@ -35,11 +35,11 @@ namespace gfx {
 
 InputAssemblerAgent::~InputAssemblerAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         InputAssemblerDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
@@ -56,7 +56,7 @@ void InputAssemblerAgent::doInit(const InputAssemblerInfo &info) {
     }
 
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         InputAssemblerInit,
         actor, getActor(),
         info, actorInfo,
@@ -67,7 +67,7 @@ void InputAssemblerAgent::doInit(const InputAssemblerInfo &info) {
 
 void InputAssemblerAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         InputAssemblerDestroy,
         actor, getActor(),
         {
@@ -78,7 +78,7 @@ void InputAssemblerAgent::doDestroy() {
 void InputAssemblerAgent::setVertexCount(uint count) {
     _vertexCount = count;
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), InputAssemblerDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), InputAssemblerDestroy,
         actor, getActor(),
         count, count,
         {
@@ -89,7 +89,7 @@ void InputAssemblerAgent::setVertexCount(uint count) {
 void InputAssemblerAgent::setFirstVertex(uint first) {
     _firstVertex = first;
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), InputAssemblerDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), InputAssemblerDestroy,
         actor, getActor(),
         first, first,
         {
@@ -100,7 +100,7 @@ void InputAssemblerAgent::setFirstVertex(uint first) {
 void InputAssemblerAgent::setIndexCount(uint count) {
     _indexCount = count;
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), InputAssemblerDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), InputAssemblerDestroy,
         actor, getActor(),
         count, count,
         {
@@ -111,7 +111,7 @@ void InputAssemblerAgent::setIndexCount(uint count) {
 void InputAssemblerAgent::setFirstIndex(uint first) {
     _firstIndex = first;
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), InputAssemblerDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), InputAssemblerDestroy,
         actor, getActor(),
         first, first,
         {
@@ -122,7 +122,7 @@ void InputAssemblerAgent::setFirstIndex(uint first) {
 void InputAssemblerAgent::setVertexOffset(uint offset) {
     _vertexOffset = offset;
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), InputAssemblerDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), InputAssemblerDestroy,
         actor, getActor(),
         offset, offset,
         {
@@ -133,7 +133,7 @@ void InputAssemblerAgent::setVertexOffset(uint offset) {
 void InputAssemblerAgent::setInstanceCount(uint count) {
     _instanceCount = count;
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), InputAssemblerDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), InputAssemblerDestroy,
         actor, getActor(),
         count, count,
         {
@@ -144,7 +144,7 @@ void InputAssemblerAgent::setInstanceCount(uint count) {
 void InputAssemblerAgent::setFirstInstance(uint first) {
     _firstInstance = first;
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), InputAssemblerDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), InputAssemblerDestroy,
         actor, getActor(),
         first, first,
         {

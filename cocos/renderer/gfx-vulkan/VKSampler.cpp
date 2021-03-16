@@ -32,8 +32,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKSampler::CCVKSampler(Device *device)
-: Sampler(device) {
+CCVKSampler::CCVKSampler()
+: Sampler() {
 }
 
 CCVKSampler::~CCVKSampler() {
@@ -52,13 +52,13 @@ void CCVKSampler::doInit(const SamplerInfo &info) {
     _gpuSampler->borderColor = _borderColor;
     _gpuSampler->mipLODBias = _mipLODBias;
 
-    CCVKCmdFuncCreateSampler((CCVKDevice *)_device, _gpuSampler);
+    CCVKCmdFuncCreateSampler(CCVKDevice::getInstance(), _gpuSampler);
 }
 
 void CCVKSampler::doDestroy() {
     if (_gpuSampler) {
-        ((CCVKDevice *)_device)->gpuDescriptorHub()->disengage(_gpuSampler);
-        ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuSampler);
+        CCVKDevice::getInstance()->gpuDescriptorHub()->disengage(_gpuSampler);
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuSampler);
         _gpuSampler = nullptr;
     }
 }

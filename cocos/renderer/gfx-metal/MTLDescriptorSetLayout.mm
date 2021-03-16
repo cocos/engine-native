@@ -31,7 +31,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLDescriptorSetLayout::CCMTLDescriptorSetLayout(Device *device) : DescriptorSetLayout(device) {
+CCMTLDescriptorSetLayout::CCMTLDescriptorSetLayout() : DescriptorSetLayout() {
 }
 
 void CCMTLDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo &info) {
@@ -41,7 +41,7 @@ void CCMTLDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo &info) {
     _gpuDescriptorSetLayout->bindingIndices = _bindingIndices;
     _gpuDescriptorSetLayout->bindings = _bindings;
 
-    for (size_t i = 0; i < bindingCount; i++) {
+    for (size_t i = 0; i < _bindings.size(); i++) {
         const auto binding = _bindings[i];
         if (binding.descriptorType & DESCRIPTOR_DYNAMIC_TYPE) {
             for (uint j = 0; j < binding.count; j++) {

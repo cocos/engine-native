@@ -32,7 +32,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLFramebuffer::CCMTLFramebuffer(Device *device) : Framebuffer(device) {}
+CCMTLFramebuffer::CCMTLFramebuffer() : Framebuffer() {}
 
 void CCMTLFramebuffer::doInit(const FramebufferInfo &info) {
     auto *mtlRenderPass = static_cast<CCMTLRenderPass *>(_renderPass);

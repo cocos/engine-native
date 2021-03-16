@@ -44,8 +44,10 @@ class GLES2GPUStagingBufferPool;
 
 class CC_GLES2_API GLES2Device final : public Device {
 public:
+    static GLES2Device *getInstance();
+
     GLES2Device();
-    ~GLES2Device();
+    ~GLES2Device() override;
 
     using Device::copyBuffersToTexture;
     using Device::createBuffer;
@@ -87,6 +89,8 @@ public:
     CC_INLINE uint getThreadID() const { return _threadID; }
 
 protected:
+    static GLES2Device * _instance;
+
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
     void                 doResize(uint width, uint height) override;

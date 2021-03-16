@@ -31,9 +31,8 @@
 namespace cc {
 namespace gfx {
 
-DescriptorSetLayout::DescriptorSetLayout(Device *device)
-: GFXObject(ObjectType::DESCRIPTOR_SET_LAYOUT),
-  _device(device) {
+DescriptorSetLayout::DescriptorSetLayout()
+: GFXObject(ObjectType::DESCRIPTOR_SET_LAYOUT) {
 }
 
 DescriptorSetLayout::~DescriptorSetLayout() {

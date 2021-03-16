@@ -31,17 +31,15 @@
 namespace cc {
 namespace gfx {
 
-CCVKGlobalBarrier::CCVKGlobalBarrier(Device *device)
-: GlobalBarrier(device) {
+CCVKGlobalBarrier::CCVKGlobalBarrier()
+: GlobalBarrier() {
 }
 
 CCVKGlobalBarrier::~CCVKGlobalBarrier() {
     CC_SAFE_DELETE(_gpuBarrier);
 }
 
-void CCVKGlobalBarrier::initialize(const GlobalBarrierInfo &info) {
-    _info = info;
-
+void CCVKGlobalBarrier::doInit(const GlobalBarrierInfo &info) {
     _gpuBarrier = CC_NEW(CCVKGPUGlobalBarrier);
     _gpuBarrier->accessTypes.resize(info.prevAccesses.size() + info.nextAccesses.size());
 

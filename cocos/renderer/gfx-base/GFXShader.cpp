@@ -32,9 +32,8 @@
 namespace cc {
 namespace gfx {
 
-Shader::Shader(Device *device)
-: GFXObject(ObjectType::SHADER),
-  _device(device) {
+Shader::Shader()
+: GFXObject(ObjectType::SHADER) {
     _shaderID = generateShaderID();
 }
 

@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_DLL DescriptorSet : public GFXObject {
 public:
-    DescriptorSet(Device *device);
+    DescriptorSet();
     virtual ~DescriptorSet();
 
 public:
@@ -54,7 +54,6 @@ public:
     Texture *getTexture(uint binding, uint index) const;
     Sampler *getSampler(uint binding, uint index) const;
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE void    bindBuffer(uint binding, Buffer *buffer) { bindBuffer(binding, buffer, 0u); }
     CC_INLINE void    bindTexture(uint binding, Texture *texture) { bindTexture(binding, texture, 0u); }
     CC_INLINE void    bindSampler(uint binding, Sampler *sampler) { bindSampler(binding, sampler, 0u); }
@@ -65,8 +64,6 @@ public:
 protected:
     virtual void doInit(const DescriptorSetInfo &info) = 0;
     virtual void doDestroy()                           = 0;
-
-    Device *_device = nullptr;
 
     DescriptorSetLayout *_layout;
     BufferList           _buffers;

@@ -34,8 +34,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKFramebuffer::CCVKFramebuffer(Device *device)
-: Framebuffer(device) {
+CCVKFramebuffer::CCVKFramebuffer()
+: Framebuffer() {
 }
 
 CCVKFramebuffer::~CCVKFramebuffer() {
@@ -57,12 +57,12 @@ void CCVKFramebuffer::doInit(const FramebufferInfo &info) {
         _gpuFBO->gpuDepthStencilView = ((CCVKTexture *)_depthStencilTexture)->gpuTextureView();
     }
 
-    CCVKCmdFuncCreateFramebuffer((CCVKDevice *)_device, _gpuFBO);
+    CCVKCmdFuncCreateFramebuffer(CCVKDevice::getInstance(), _gpuFBO);
 }
 
 void CCVKFramebuffer::doDestroy() {
     if (_gpuFBO) {
-        ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuFBO);
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuFBO);
         _gpuFBO = nullptr;
     }
 }

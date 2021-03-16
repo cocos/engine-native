@@ -33,7 +33,7 @@ namespace gfx {
 
 class CC_GLES2_API GLES2Context final : public Context {
 public:
-    GLES2Context(Device *device);
+    GLES2Context();
     ~GLES2Context();
 
     void present() override;

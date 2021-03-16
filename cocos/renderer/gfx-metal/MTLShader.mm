@@ -33,7 +33,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLShader::CCMTLShader(Device *device) : Shader(device) {}
+CCMTLShader::CCMTLShader() : Shader() {}
 
 void CCMTLShader::doInit(const ShaderInfo &info) {
     _gpuShader = CC_NEW(CCMTLGPUShader);
@@ -71,10 +71,10 @@ void CCMTLShader::doDestroy() {
 
 bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
     bool isVertexShader = stage.stage == ShaderStageFlagBit::VERTEX;
-    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
+    id<MTLDevice> mtlDevice = id<MTLDevice>(CCMTLDevice::getInstance()->getMTLDevice());
     auto mtlShader = mu::compileGLSLShader2Msl(stage.source,
                                                stage.stage,
-                                               _device,
+                                               CCMTLDevice::getInstance(),
                                                _gpuShader);
 
     NSString *shader = [NSString stringWithUTF8String:mtlShader.c_str()];
@@ -148,7 +148,7 @@ void CCMTLShader::setAvailableBufferBindingIndex() {
         }
     }
 
-    auto maxBufferBindingIndex = static_cast<CCMTLDevice *>(_device)->getMaximumBufferBindingIndex();
+    auto maxBufferBindingIndex = CCMTLDevice::getInstance()->getMaximumBufferBindingIndex();
     _availableVertexBufferBindingIndex.resize(maxBufferBindingIndex - vertexBindingCount);
     _availableFragmentBufferBindingIndex.resize(maxBufferBindingIndex - fragmentBindingCount);
     uint availableVertexBufferBit = ~usedVertexBufferBindingIndexes;

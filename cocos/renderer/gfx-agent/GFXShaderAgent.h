@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXShader.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL ShaderAgent final : public Agent<Shader> {
 public:
     using Agent::Agent;
-    ShaderAgent(Device *device) = delete;
     ~ShaderAgent() override;
 
 protected:

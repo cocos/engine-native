@@ -34,7 +34,7 @@ class CCVKGPUDescriptorSet;
 
 class CC_VULKAN_API CCVKDescriptorSet final : public DescriptorSet {
 public:
-    CCVKDescriptorSet(Device *device);
+    CCVKDescriptorSet();
     ~CCVKDescriptorSet();
 
     void update() override;

@@ -30,8 +30,7 @@
 namespace cc {
 namespace gfx {
 
-Context::Context(Device *device)
-: _device(device) {
+Context::Context() {
 }
 
 Context::~Context() {

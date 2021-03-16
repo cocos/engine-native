@@ -32,8 +32,8 @@
 namespace cc {
 namespace gfx {
 
-CCMTLQueue::CCMTLQueue(Device *device)
-: Queue(device) {
+CCMTLQueue::CCMTLQueue()
+: Queue() {
 }
 
 void CCMTLQueue::doInit(const QueueInfo &info) {
@@ -57,7 +57,7 @@ void CCMTLQueue::submit(CommandBuffer *const *cmdBuffs, uint count) {
         }
         else {
             // Must do present before commit last command buffer.
-            CCMTLDevice* device = (CCMTLDevice*)_device;
+            CCMTLDevice* device = (CCMTLDevice*)CCMTLDevice::getInstance();
             id<CAMetalDrawable> currDrawable = (id<CAMetalDrawable>)device->getCurrentDrawable();
             [mtlCmdBuffer presentDrawable:currDrawable];
             [mtlCmdBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {

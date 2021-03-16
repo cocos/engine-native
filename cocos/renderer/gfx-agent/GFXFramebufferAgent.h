@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXFramebuffer.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL FramebufferAgent final : public Agent<Framebuffer> {
 public:
     using Agent::Agent;
-    FramebufferAgent(Device *device) = delete;
     ~FramebufferAgent() override;
 
 protected:

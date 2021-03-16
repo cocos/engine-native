@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_DLL Texture : public GFXObject {
 public:
-    Texture(Device *device);
+    Texture();
     virtual ~Texture();
 
     static uint computeHash(const TextureInfo &info);
@@ -42,7 +42,6 @@ public:
     void destroy();
     void resize(uint width, uint height);
 
-    CC_INLINE Device *     getDevice() const { return _device; }
     CC_INLINE uint         getTextureID() const { return _textureID; }
     CC_INLINE TextureType  getType() const { return _type; }
     CC_INLINE TextureUsage getUsage() const { return _usage; }
@@ -55,7 +54,6 @@ public:
     CC_INLINE uint         getSize() const { return _size; }
     CC_INLINE SampleCount  getSamples() const { return _samples; }
     CC_INLINE TextureFlags getFlags() const { return _flags; }
-    CC_INLINE uint8_t *getBuffer() const { return _buffer; }
     CC_INLINE bool     isTextureView() const { return _isTextureView; }
 
 protected:
@@ -69,7 +67,6 @@ protected:
     virtual void doDestroy()                         = 0;
     virtual void doResize(uint width, uint height)   = 0;
 
-    Device *     _device        = nullptr;
     uint         _textureID     = 0;
     TextureType  _type          = TextureType::TEX2D;
     TextureUsage _usage         = TextureUsageBit::NONE;
@@ -84,7 +81,6 @@ protected:
     uint         _size          = 0u;
     SampleCount  _samples       = SampleCount::X1;
     TextureFlags _flags         = TextureFlagBit::NONE;
-    uint8_t *    _buffer        = nullptr;
     bool         _isTextureView = false;
 };
 

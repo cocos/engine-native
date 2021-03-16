@@ -34,7 +34,7 @@ class CCVKGPUQueue;
 
 class CC_VULKAN_API CCVKQueue final : public Queue {
 public:
-    CCVKQueue(Device *device);
+    CCVKQueue();
     ~CCVKQueue();
 
     void submit(CommandBuffer *const *cmdBuffs, uint count) override;

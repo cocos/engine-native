@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXInputAssembler.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL InputAssemblerAgent final : public Agent<InputAssembler> {
 public:
     using Agent::Agent;
-    InputAssemblerAgent(Device *device) = delete;
     ~InputAssemblerAgent() override;
 
     void setVertexCount(uint count) override;

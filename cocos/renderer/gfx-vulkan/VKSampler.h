@@ -34,7 +34,7 @@ class CCVKGPUSampler;
 
 class CC_VULKAN_API CCVKSampler final : public Sampler {
 public:
-    CCVKSampler(Device *device);
+    CCVKSampler();
     ~CCVKSampler();
 
     CC_INLINE CCVKGPUSampler *gpuSampler() const { return _gpuSampler; }

@@ -34,17 +34,17 @@ namespace gfx {
 
 RenderPassAgent::~RenderPassAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         RenderPassDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
 void RenderPassAgent::doInit(const RenderPassInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         RenderPassInit,
         actor, getActor(),
         info, info,
@@ -55,7 +55,7 @@ void RenderPassAgent::doInit(const RenderPassInfo &info) {
 
 void RenderPassAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         RenderPassDestroy,
         actor, getActor(),
         {

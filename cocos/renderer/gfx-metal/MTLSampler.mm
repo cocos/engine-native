@@ -34,7 +34,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLSampler::CCMTLSampler(Device *device) : Sampler(device) {}
+CCMTLSampler::CCMTLSampler() : Sampler() {}
 
 void CCMTLSampler::doInit(const SamplerInfo &info) {
     MTLSamplerDescriptor *descriptor = [[MTLSamplerDescriptor alloc] init];
@@ -48,11 +48,11 @@ void CCMTLSampler::doInit(const SamplerInfo &info) {
     descriptor.magFilter = mu::toMTLSamplerMinMagFilter(_magFilter);
     descriptor.mipFilter = mu::toMTLSamplerMipFilter(_mipFilter);
     descriptor.maxAnisotropy = _maxAnisotropy == 0 ? 1 : _maxAnisotropy;
-    if (static_cast<CCMTLDevice *>(_device)->isSamplerDescriptorCompareFunctionSupported()) {
+    if (CCMTLDevice::getInstance()->isSamplerDescriptorCompareFunctionSupported()) {
         descriptor.compareFunction = mu::toMTLCompareFunction(_cmpFunc);
     }
 
-    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
+    id<MTLDevice> mtlDevice = id<MTLDevice>(CCMTLDevice::getInstance()->getMTLDevice());
     _mtlSamplerState = [mtlDevice newSamplerStateWithDescriptor:descriptor];
 
     [descriptor release];

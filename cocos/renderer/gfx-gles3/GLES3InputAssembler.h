@@ -35,7 +35,7 @@ class GLES3CmdDraw;
 
 class CC_GLES3_API GLES3InputAssembler final : public InputAssembler {
 public:
-    GLES3InputAssembler(Device *device);
+    GLES3InputAssembler();
     ~GLES3InputAssembler();
 
     void ExtractCmdDraw(GLES3CmdDraw *cmd);

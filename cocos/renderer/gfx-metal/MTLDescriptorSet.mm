@@ -34,7 +34,7 @@
 
 namespace cc {
 namespace gfx {
-CCMTLDescriptorSet::CCMTLDescriptorSet(Device *device) : DescriptorSet(device) {
+CCMTLDescriptorSet::CCMTLDescriptorSet() : DescriptorSet() {
 }
 
 void CCMTLDescriptorSet::doInit(const DescriptorSetInfo &info) {

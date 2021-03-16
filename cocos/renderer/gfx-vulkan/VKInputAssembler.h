@@ -34,7 +34,7 @@ class CCVKGPUInputAssembler;
 
 class CC_VULKAN_API CCVKInputAssembler final : public InputAssembler {
 public:
-    CCVKInputAssembler(Device *device);
+    CCVKInputAssembler();
     ~CCVKInputAssembler();
 
     CC_INLINE CCVKGPUInputAssembler *gpuInputAssembler() const { return _gpuInputAssembler; }

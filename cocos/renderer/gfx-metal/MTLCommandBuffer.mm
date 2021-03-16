@@ -39,8 +39,8 @@
 namespace cc {
 namespace gfx {
 
-CCMTLCommandBuffer::CCMTLCommandBuffer(Device *device)
-: CommandBuffer(device),
+CCMTLCommandBuffer::CCMTLCommandBuffer()
+: CommandBuffer(),
   _mtlDevice(static_cast<CCMTLDevice *>(device)),
   _mtlCommandQueue(id<MTLCommandQueue>((static_cast<CCMTLDevice *>(device))->getMTLCommandQueue())),
   _indirectDrawSuppotred(static_cast<CCMTLDevice *>(device)->isIndirectDrawSupported()) {

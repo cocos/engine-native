@@ -34,7 +34,7 @@ class GLES2GPURenderPass;
 
 class CC_GLES2_API GLES2RenderPass final : public RenderPass {
 public:
-    GLES2RenderPass(Device *device);
+    GLES2RenderPass();
     ~GLES2RenderPass();
 
     CC_INLINE GLES2GPURenderPass *gpuRenderPass() const { return _gpuRenderPass; }

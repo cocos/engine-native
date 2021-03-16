@@ -31,9 +31,8 @@
 namespace cc {
 namespace gfx {
 
-RenderPass::RenderPass(Device *device)
-: GFXObject(ObjectType::RENDER_PASS),
-  _device(device) {
+RenderPass::RenderPass()
+: GFXObject(ObjectType::RENDER_PASS) {
 }
 
 RenderPass::~RenderPass() {

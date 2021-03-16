@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "base/threading/Semaphore.h"
 #include "gfx-base/GFXDevice.h"
 
@@ -42,9 +42,9 @@ constexpr uint MAX_CPU_FRAME_AHEAD = 1u;
 
 class CC_DLL DeviceAgent final : public Agent<Device> {
 public:
-    using Agent::Agent;
-    DeviceAgent(Device *const actor) noexcept
-    : Agent(actor, nullptr) {}
+    static DeviceAgent *getInstance();
+
+    DeviceAgent(Device *device);
     ~DeviceAgent() override;
 
     void acquire() override;
@@ -83,6 +83,8 @@ public:
     LinearAllocatorPool *getMainAllocator() const { return _allocatorPools[_currentIndex]; }
 
 protected:
+    static DeviceAgent *_instance;
+
     friend class CommandBufferAgent;
 
     bool doInit(const DeviceInfo &info) override;

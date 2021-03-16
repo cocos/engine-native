@@ -33,8 +33,8 @@
 namespace cc {
 namespace gfx {
 
-CCVKPipelineLayout::CCVKPipelineLayout(Device *device)
-: PipelineLayout(device) {
+CCVKPipelineLayout::CCVKPipelineLayout()
+: PipelineLayout() {
 }
 
 CCVKPipelineLayout::~CCVKPipelineLayout() {
@@ -56,12 +56,12 @@ void CCVKPipelineLayout::doInit(const PipelineLayoutInfo &info) {
     _gpuPipelineLayout->dynamicOffsetOffsets.push_back(offset);
     _gpuPipelineLayout->dynamicOffsetCount = offset;
 
-    CCVKCmdFuncCreatePipelineLayout((CCVKDevice *)_device, _gpuPipelineLayout);
+    CCVKCmdFuncCreatePipelineLayout(CCVKDevice::getInstance(), _gpuPipelineLayout);
 }
 
 void CCVKPipelineLayout::doDestroy() {
     if (_gpuPipelineLayout) {
-        ((CCVKDevice *)_device)->gpuRecycleBin()->collect(_gpuPipelineLayout);
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuPipelineLayout);
         _gpuPipelineLayout = nullptr;
     }
 }

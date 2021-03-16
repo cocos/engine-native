@@ -31,8 +31,8 @@
 namespace cc {
 namespace gfx {
 
-GLES3DescriptorSetLayout::GLES3DescriptorSetLayout(Device *device)
-: DescriptorSetLayout(device) {
+GLES3DescriptorSetLayout::GLES3DescriptorSetLayout()
+: DescriptorSetLayout() {
 }
 
 GLES3DescriptorSetLayout::~GLES3DescriptorSetLayout() {

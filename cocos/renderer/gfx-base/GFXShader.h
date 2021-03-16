@@ -32,13 +32,12 @@ namespace gfx {
 
 class CC_DLL Shader : public GFXObject {
 public:
-    Shader(Device *device);
+    Shader();
     virtual ~Shader();
 
     void initialize(const ShaderInfo &info);
     void destroy();
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE uint    getID() const { return _shaderID; }
     CC_INLINE const String &getName() const { return _name; }
     CC_INLINE const ShaderStageList &getStages() const { return _stages; }
@@ -60,7 +59,6 @@ protected:
     virtual void doInit(const ShaderInfo &info) = 0;
     virtual void doDestroy()                    = 0;
 
-    Device *                   _device   = nullptr;
     uint                       _shaderID = 0;
     String                     _name;
     ShaderStageList            _stages;

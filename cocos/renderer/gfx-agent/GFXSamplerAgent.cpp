@@ -35,17 +35,17 @@ namespace gfx {
 
 SamplerAgent::~SamplerAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         SamplerDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
 void SamplerAgent::doInit(const SamplerInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         SamplerInit,
         actor, getActor(),
         info, info,
@@ -56,7 +56,7 @@ void SamplerAgent::doInit(const SamplerInfo &info) {
 
 void SamplerAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         SamplerDestroy,
         actor, getActor(),
         {

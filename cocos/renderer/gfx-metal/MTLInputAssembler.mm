@@ -32,7 +32,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLInputAssembler::CCMTLInputAssembler(Device *device) : InputAssembler(device) {}
+CCMTLInputAssembler::CCMTLInputAssembler() : InputAssembler() {}
 
 void CCMTLInputAssembler::doInit(const InputAssemblerInfo &info) {
     _GPUInputAssembler = CC_NEW(CCMTLGPUInputAssembler);

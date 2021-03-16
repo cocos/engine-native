@@ -33,7 +33,7 @@ namespace gfx {
 
 class CC_DLL CommandBuffer : public GFXObject {
 public:
-    CommandBuffer(Device *device);
+    CommandBuffer();
     virtual ~CommandBuffer();
 
 public:
@@ -107,7 +107,6 @@ public:
         beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, nullptr, 0);
     }
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Queue *           getQueue() const { return _queue; }
     CC_INLINE CommandBufferType getType() const { return _type; }
 
@@ -119,7 +118,6 @@ protected:
     virtual void doInit(const CommandBufferInfo &info) = 0;
     virtual void doDestroy()                           = 0;
 
-    Device *          _device = nullptr;
     Queue *           _queue  = nullptr;
     CommandBufferType _type   = CommandBufferType::PRIMARY;
 

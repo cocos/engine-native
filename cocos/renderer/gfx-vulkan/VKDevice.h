@@ -50,8 +50,10 @@ class CCVKGPUStagingBufferPool;
 
 class CC_VULKAN_API CCVKDevice final : public Device {
 public:
+    static CCVKDevice *getInstance();
+
     CCVKDevice();
-    ~CCVKDevice();
+    ~CCVKDevice() override;
 
     friend class CCVKContext;
     using Device::copyBuffersToTexture;
@@ -96,6 +98,8 @@ public:
     CCVKGPUStagingBufferPool *gpuStagingBufferPool();
 
 protected:
+    static CCVKDevice * _instance;
+
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
     void                 doResize(uint width, uint height) override;

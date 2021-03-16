@@ -32,20 +32,18 @@ namespace gfx {
 
 class CC_DLL PipelineLayout : public GFXObject {
 public:
-    PipelineLayout(Device *device);
+    PipelineLayout();
     virtual ~PipelineLayout();
 
     void initialize(const PipelineLayoutInfo &info);
     void destroy();
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const DescriptorSetLayoutList &getSetLayouts() const { return _setLayouts; }
 
 protected:
     virtual void doInit(const PipelineLayoutInfo &info) = 0;
     virtual void doDestroy()                            = 0;
 
-    Device *                _device = nullptr;
     DescriptorSetLayoutList _setLayouts;
 };
 

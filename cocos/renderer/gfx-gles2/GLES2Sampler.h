@@ -34,7 +34,7 @@ class GLES2GPUSampler;
 
 class CC_GLES2_API GLES2Sampler final : public Sampler {
 public:
-    GLES2Sampler(Device *device);
+    GLES2Sampler();
     ~GLES2Sampler();
 
     CC_INLINE GLES2GPUSampler *gpuSampler() const { return _gpuSampler; }

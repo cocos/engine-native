@@ -30,8 +30,8 @@
 namespace cc {
 namespace gfx {
 
-GLES3RenderPass::GLES3RenderPass(Device *device)
-: RenderPass(device) {
+GLES3RenderPass::GLES3RenderPass()
+: RenderPass() {
 }
 
 GLES3RenderPass::~GLES3RenderPass() {

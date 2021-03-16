@@ -32,13 +32,12 @@ namespace gfx {
 
 class CC_DLL PipelineState : public GFXObject {
 public:
-    PipelineState(Device *device);
+    PipelineState();
     virtual ~PipelineState();
 
     void initialize(const PipelineStateInfo &info);
     void destroy();
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE Shader *          getShader() const { return _shader; }
     CC_INLINE PipelineBindPoint getBindPoint() const { return _bindPoint; }
     CC_INLINE PrimitiveMode     getPrimitive() const { return _primitive; }
@@ -54,7 +53,6 @@ protected:
     virtual void doInit(const PipelineStateInfo &info) = 0;
     virtual void doDestroy()                           = 0;
 
-    Device *          _device        = nullptr;
     Shader *          _shader        = nullptr;
     PipelineBindPoint _bindPoint     = PipelineBindPoint::GRAPHICS;
     PrimitiveMode     _primitive     = PrimitiveMode::TRIANGLE_LIST;

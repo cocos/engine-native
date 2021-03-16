@@ -24,34 +24,36 @@
 ****************************************************************************/
 
 #include "GLES2Std.h"
-#include "GLES2Sampler.h"
+
 #include "GLES2Commands.h"
+#include "GLES2Device.h"
+#include "GLES2Sampler.h"
 
 namespace cc {
 namespace gfx {
 
-GLES2Sampler::GLES2Sampler(Device *device)
-: Sampler(device) {
+GLES2Sampler::GLES2Sampler()
+: Sampler() {
 }
 
 GLES2Sampler::~GLES2Sampler() {
 }
 
 void GLES2Sampler::doInit(const SamplerInfo &info) {
-    _gpuSampler = CC_NEW(GLES2GPUSampler);
+    _gpuSampler            = CC_NEW(GLES2GPUSampler);
     _gpuSampler->minFilter = _minFilter;
     _gpuSampler->magFilter = _magFilter;
     _gpuSampler->mipFilter = _mipFilter;
-    _gpuSampler->addressU = _addressU;
-    _gpuSampler->addressV = _addressV;
-    _gpuSampler->addressW = _addressW;
+    _gpuSampler->addressU  = _addressU;
+    _gpuSampler->addressV  = _addressV;
+    _gpuSampler->addressW  = _addressW;
 
-    GLES2CmdFuncCreateSampler((GLES2Device *)_device, _gpuSampler);
+    GLES2CmdFuncCreateSampler(GLES2Device::getInstance(), _gpuSampler);
 }
 
 void GLES2Sampler::doDestroy() {
     if (_gpuSampler) {
-        GLES2CmdFuncDestroySampler((GLES2Device *)_device, _gpuSampler);
+        GLES2CmdFuncDestroySampler(GLES2Device::getInstance(), _gpuSampler);
         CC_DELETE(_gpuSampler);
         _gpuSampler = nullptr;
     }

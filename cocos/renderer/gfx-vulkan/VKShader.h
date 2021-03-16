@@ -34,7 +34,7 @@ class CCVKGPUShader;
 
 class CC_VULKAN_API CCVKShader final : public Shader {
 public:
-    CCVKShader(Device *device);
+    CCVKShader();
     ~CCVKShader();
 
     CC_INLINE CCVKGPUShader *gpuShader() const { return _gpuShader; }

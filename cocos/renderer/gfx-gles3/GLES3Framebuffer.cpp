@@ -24,24 +24,26 @@
 ****************************************************************************/
 
 #include "GLES3Std.h"
+
 #include "GLES3Framebuffer.h"
-#include "GLES3RenderPass.h"
+#include "GLES3Device.h"
 #include "GLES3Commands.h"
+#include "GLES3RenderPass.h"
 #include "GLES3Texture.h"
 
 namespace cc {
 namespace gfx {
 
-GLES3Framebuffer::GLES3Framebuffer(Device *device)
-: Framebuffer(device) {
+GLES3Framebuffer::GLES3Framebuffer()
+: Framebuffer() {
 }
 
 GLES3Framebuffer::~GLES3Framebuffer() {
 }
 
 void GLES3Framebuffer::doInit(const FramebufferInfo &info) {
-    _gpuFBO = CC_NEW(GLES3GPUFramebuffer);
-    _gpuFBO->gpuRenderPass = ((GLES3RenderPass *)_renderPass)->gpuRenderPass();
+    _gpuFBO                          = CC_NEW(GLES3GPUFramebuffer);
+    _gpuFBO->gpuRenderPass           = ((GLES3RenderPass *)_renderPass)->gpuRenderPass();
     _gpuFBO->depthStencilMipmapLevel = info.depthStencilMipmapLevel;
     for (uint mipLevel : info.colorMipmapLevels) {
         _gpuFBO->colorMipmapLevels.push_back(mipLevel);
@@ -59,12 +61,12 @@ void GLES3Framebuffer::doInit(const FramebufferInfo &info) {
         _gpuFBO->gpuDepthStencilTexture = ((GLES3Texture *)_depthStencilTexture)->gpuTexture();
     }
 
-    GLES3CmdFuncCreateFramebuffer((GLES3Device *)_device, _gpuFBO);
+    GLES3CmdFuncCreateFramebuffer(GLES3Device::getInstance(), _gpuFBO);
 }
 
 void GLES3Framebuffer::doDestroy() {
     if (_gpuFBO) {
-        GLES3CmdFuncDestroyFramebuffer((GLES3Device *)_device, _gpuFBO);
+        GLES3CmdFuncDestroyFramebuffer(GLES3Device::getInstance(), _gpuFBO);
         CC_DELETE(_gpuFBO);
         _gpuFBO = nullptr;
     }

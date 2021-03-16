@@ -66,10 +66,10 @@ void CommandBufferAgent::flushCommands(uint count, CommandBufferAgent *const *cm
 
 CommandBufferAgent::~CommandBufferAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(), CommandBufferDestruct,
+        DeviceAgent::getInstance()->getMessageQueue(), CommandBufferDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
@@ -79,7 +79,7 @@ void CommandBufferAgent::initMessageQueue() {
     for (uint i = 0u; i < MAX_CPU_FRAME_AHEAD + 1; ++i) {
         _allocatorPools[i] = CC_NEW(LinearAllocatorPool);
     }
-    DeviceAgent *device = (DeviceAgent *)_device;
+    DeviceAgent *device = DeviceAgent::getInstance();
     device->_cmdBuffRefs.insert(this);
 
     _messageQueue = CC_NEW(MessageQueue);
@@ -87,10 +87,10 @@ void CommandBufferAgent::initMessageQueue() {
 }
 
 void CommandBufferAgent::destroyMessageQueue() {
-    ((DeviceAgent *)_device)->getMessageQueue()->kickAndWait();
+    DeviceAgent::getInstance()->getMessageQueue()->kickAndWait();
     CC_SAFE_DELETE(_messageQueue);
 
-    ((DeviceAgent *)_device)->_cmdBuffRefs.erase(this);
+    DeviceAgent::getInstance()->_cmdBuffRefs.erase(this);
     for (LinearAllocatorPool *pool : _allocatorPools) {
         CC_SAFE_DELETE(pool);
     }
@@ -98,7 +98,7 @@ void CommandBufferAgent::destroyMessageQueue() {
 }
 
 LinearAllocatorPool *CommandBufferAgent::getAllocator() {
-    return _allocatorPools[((DeviceAgent *)_device)->_currentIndex];
+    return _allocatorPools[DeviceAgent::getInstance()->_currentIndex];
 }
 
 void CommandBufferAgent::doInit(const CommandBufferInfo &info) {
@@ -108,7 +108,7 @@ void CommandBufferAgent::doInit(const CommandBufferInfo &info) {
     actorInfo.queue             = ((QueueAgent *)info.queue)->getActor();
 
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(), CommandBufferInit,
+        DeviceAgent::getInstance()->getMessageQueue(), CommandBufferInit,
         actor, getActor(),
         info, actorInfo,
         {
@@ -120,7 +120,7 @@ void CommandBufferAgent::doDestroy() {
     destroyMessageQueue();
 
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(), CommandBufferDestroy,
+        DeviceAgent::getInstance()->getMessageQueue(), CommandBufferDestroy,
         actor, getActor(),
         {
             actor->destroy();

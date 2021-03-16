@@ -35,7 +35,7 @@ class GLES3GPUDescriptorSet;
 
 class CC_GLES3_API GLES3DescriptorSet final : public DescriptorSet {
 public:
-    GLES3DescriptorSet(Device *device);
+    GLES3DescriptorSet();
     ~GLES3DescriptorSet();
 
     void update() override;

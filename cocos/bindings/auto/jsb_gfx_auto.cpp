@@ -16139,25 +16139,6 @@ static bool js_gfx_Context_getDepthStencilFormat(se::State& s)
 }
 SE_BIND_PROP_GET(js_gfx_Context_getDepthStencilFormat)
 
-static bool js_gfx_Context_getDevice(se::State& s)
-{
-    cc::gfx::Context* cobj = SE_THIS_OBJECT<cc::gfx::Context>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_Context_getDevice : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        cc::gfx::Device* result = cobj->getDevice();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_gfx_Context_getDevice : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_gfx_Context_getDevice)
-
 static bool js_gfx_Context_getSharedContext(se::State& s)
 {
     cc::gfx::Context* cobj = SE_THIS_OBJECT<cc::gfx::Context>(s);
@@ -16268,7 +16249,6 @@ bool js_register_gfx_Context(se::Object* obj)
     cls->defineProperty("colorFormat", _SE(js_gfx_Context_getColorFormat), nullptr);
     cls->defineProperty("depthStencilFormat", _SE(js_gfx_Context_getDepthStencilFormat), nullptr);
     cls->defineFunction("destroy", _SE(js_gfx_Context_destroy));
-    cls->defineFunction("getDevice", _SE(js_gfx_Context_getDevice));
     cls->defineFunction("initialize", _SE(js_gfx_Context_initialize));
     cls->defineFunction("present", _SE(js_gfx_Context_present));
     cls->defineFinalizeFunction(_SE(js_cc_gfx_Context_finalize));
@@ -17053,12 +17033,7 @@ SE_DECLARE_FINALIZE_FUNC(js_cc_gfx_GlobalBarrier_finalize)
 
 static bool js_gfx_GlobalBarrier_constructor(se::State& s) // constructor.c
 {
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    cc::gfx::Device* arg0 = nullptr;
-    ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_gfx_GlobalBarrier_constructor : Error processing arguments");
-    cc::gfx::GlobalBarrier* cobj = JSB_ALLOC(cc::gfx::GlobalBarrier, arg0);
+    cc::gfx::GlobalBarrier* cobj = JSB_ALLOC(cc::gfx::GlobalBarrier);
     s.thisObject()->setPrivateData(cobj);
     se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
     return true;
@@ -18818,25 +18793,6 @@ static bool js_gfx_Texture_destroy(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_Texture_destroy)
 
-static bool js_gfx_Texture_getBuffer(se::State& s)
-{
-    cc::gfx::Texture* cobj = SE_THIS_OBJECT<cc::gfx::Texture>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_Texture_getBuffer : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        unsigned char* result = cobj->getBuffer();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_gfx_Texture_getBuffer : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_PROP_GET(js_gfx_Texture_getBuffer)
-
 static bool js_gfx_Texture_getDepth(se::State& s)
 {
     cc::gfx::Texture* cobj = SE_THIS_OBJECT<cc::gfx::Texture>(s);
@@ -19158,7 +19114,6 @@ bool js_register_gfx_Texture(se::Object* obj)
 
     cls->defineProperty("samples", _SE(js_gfx_Texture_getSamples), nullptr);
     cls->defineProperty("format", _SE(js_gfx_Texture_getFormat), nullptr);
-    cls->defineProperty("buffer", _SE(js_gfx_Texture_getBuffer), nullptr);
     cls->defineProperty("levelCount", _SE(js_gfx_Texture_getLevelCount), nullptr);
     cls->defineProperty("height", _SE(js_gfx_Texture_getHeight), nullptr);
     cls->defineProperty("width", _SE(js_gfx_Texture_getWidth), nullptr);
@@ -19230,12 +19185,7 @@ SE_DECLARE_FINALIZE_FUNC(js_cc_gfx_TextureBarrier_finalize)
 
 static bool js_gfx_TextureBarrier_constructor(se::State& s) // constructor.c
 {
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    cc::gfx::Device* arg0 = nullptr;
-    ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_gfx_TextureBarrier_constructor : Error processing arguments");
-    cc::gfx::TextureBarrier* cobj = JSB_ALLOC(cc::gfx::TextureBarrier, arg0);
+    cc::gfx::TextureBarrier* cobj = JSB_ALLOC(cc::gfx::TextureBarrier);
     s.thisObject()->setPrivateData(cobj);
     se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
     return true;

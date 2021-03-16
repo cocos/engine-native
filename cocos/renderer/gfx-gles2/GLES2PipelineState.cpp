@@ -51,8 +51,8 @@ const GLenum GLES2Primitives[] = {
     GL_NONE,
 };
 
-GLES2PipelineState::GLES2PipelineState(Device *device)
-: PipelineState(device) {
+GLES2PipelineState::GLES2PipelineState()
+: PipelineState() {
 }
 
 GLES2PipelineState::~GLES2PipelineState() {

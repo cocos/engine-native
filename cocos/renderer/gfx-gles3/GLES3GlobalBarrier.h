@@ -33,13 +33,13 @@ class GLES3GPUGlobalBarrier;
 
 class CC_DLL GLES3GlobalBarrier : public GlobalBarrier {
 public:
-    GLES3GlobalBarrier(Device *device);
+    GLES3GlobalBarrier();
     ~GLES3GlobalBarrier();
 
     CC_INLINE const GLES3GPUGlobalBarrier *gpuBarrier() const { return _gpuBarrier; }
 
 protected:
-    void initialize(const GlobalBarrierInfo &info) override;
+    void doInit(const GlobalBarrierInfo &info) override;
 
     GLES3GPUGlobalBarrier *_gpuBarrier = nullptr;
 };

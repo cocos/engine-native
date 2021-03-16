@@ -39,7 +39,7 @@ class CCVKGPUSemaphorePool;
 
 class CC_VULKAN_API CCVKContext final : public Context {
 public:
-    CCVKContext(Device *device);
+    CCVKContext();
     ~CCVKContext();
 
     void present() override {}

@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "GFXAgent.h"
+#include "base/Agent.h"
 #include "gfx-base/GFXBuffer.h"
 
 namespace cc {
@@ -34,7 +34,6 @@ namespace gfx {
 class CC_DLL BufferAgent final : public Agent<Buffer> {
 public:
     using Agent::Agent;
-    BufferAgent(Device *device) = delete;
     ~BufferAgent() override;
 
     void update(void *buffer, uint size) override;

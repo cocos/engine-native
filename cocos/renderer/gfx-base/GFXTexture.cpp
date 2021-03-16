@@ -32,9 +32,8 @@
 namespace cc {
 namespace gfx {
 
-Texture::Texture(Device *device)
-: GFXObject(ObjectType::TEXTURE),
-  _device(device) {
+Texture::Texture()
+: GFXObject(ObjectType::TEXTURE) {
     _textureID = generateTextureID();
 }
 
@@ -69,41 +68,41 @@ void Texture::initialize(const TextureInfo &info) {
     _flags      = info.flags;
     _size       = FormatSize(_format, _width, _height, _depth);
 
-#if CC_DEBUG > 0
-    switch (_format) { // device feature validation
-        case Format::D16:
-            if (_device->hasFeature(Feature::FORMAT_D16)) break;
-            CC_LOG_ERROR("D16 texture format is not supported on this backend");
-            return;
-        case Format::D16S8:
-            if (_device->hasFeature(Feature::FORMAT_D16S8)) break;
-            CC_LOG_ERROR("D16S8 texture format is not supported on this backend");
-            return;
-        case Format::D24:
-            if (_device->hasFeature(Feature::FORMAT_D24)) break;
-            CC_LOG_ERROR("D24 texture format is not supported on this backend");
-            return;
-        case Format::D24S8:
-            if (_device->hasFeature(Feature::FORMAT_D24S8)) break;
-            CC_LOG_ERROR("D24S8 texture format is not supported on this backend");
-            return;
-        case Format::D32F:
-            if (_device->hasFeature(Feature::FORMAT_D32F)) break;
-            CC_LOG_ERROR("D32F texture format is not supported on this backend");
-            return;
-        case Format::D32F_S8:
-            if (_device->hasFeature(Feature::FORMAT_D32FS8)) break;
-            CC_LOG_ERROR("D32FS8 texture format is not supported on this backend");
-            return;
-        case Format::RGB8:
-            if (_device->hasFeature(Feature::FORMAT_RGB8)) break;
-            CC_LOG_ERROR("RGB8 texture format is not supported on this backend");
-            return;
-        default: break;
-    }
-#endif
+//#if CC_DEBUG > 0
+//    switch (_format) { // device feature validation
+//        case Format::D16:
+//            if (Device::getInstance()->hasFeature(Feature::FORMAT_D16)) break;
+//            CC_LOG_ERROR("D16 texture format is not supported on this backend");
+//            return;
+//        case Format::D16S8:
+//            if (Device::getInstance()->hasFeature(Feature::FORMAT_D16S8)) break;
+//            CC_LOG_ERROR("D16S8 texture format is not supported on this backend");
+//            return;
+//        case Format::D24:
+//            if (Device::getInstance()->hasFeature(Feature::FORMAT_D24)) break;
+//            CC_LOG_ERROR("D24 texture format is not supported on this backend");
+//            return;
+//        case Format::D24S8:
+//            if (Device::getInstance()->hasFeature(Feature::FORMAT_D24S8)) break;
+//            CC_LOG_ERROR("D24S8 texture format is not supported on this backend");
+//            return;
+//        case Format::D32F:
+//            if (Device::getInstance()->hasFeature(Feature::FORMAT_D32F)) break;
+//            CC_LOG_ERROR("D32F texture format is not supported on this backend");
+//            return;
+//        case Format::D32F_S8:
+//            if (Device::getInstance()->hasFeature(Feature::FORMAT_D32FS8)) break;
+//            CC_LOG_ERROR("D32FS8 texture format is not supported on this backend");
+//            return;
+//        case Format::RGB8:
+//            if (Device::getInstance()->hasFeature(Feature::FORMAT_RGB8)) break;
+//            CC_LOG_ERROR("RGB8 texture format is not supported on this backend");
+//            return;
+//        default: break;
+//    }
+//#endif
 
-    _device->getMemoryStatus().textureSize += _size;
+    Device::getInstance()->getMemoryStatus().textureSize += _size;
 
     doInit(info);
 }
@@ -132,7 +131,7 @@ void Texture::initialize(const TextureViewInfo &info) {
 void Texture::destroy() {
     doDestroy();
 
-    _device->getMemoryStatus().textureSize -= _size;
+    Device::getInstance()->getMemoryStatus().textureSize -= _size;
 
     _format = Format::UNKNOWN;
     _width = _height = _depth = _size = 0;
@@ -144,12 +143,12 @@ void Texture::resize(uint width, uint height) {
     if (_width != width || _height != height) {
         doResize(width, height);
 
-        _device->getMemoryStatus().textureSize -= _size;
+        Device::getInstance()->getMemoryStatus().textureSize -= _size;
 
         _width  = width;
         _height = height;
         _size   = FormatSize(_format, width, height, _depth);
-        _device->getMemoryStatus().textureSize += _size;
+        Device::getInstance()->getMemoryStatus().textureSize += _size;
     }
 }
 

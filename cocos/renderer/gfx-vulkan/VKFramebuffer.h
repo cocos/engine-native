@@ -34,7 +34,7 @@ class CCVKGPUFramebuffer;
 
 class CC_VULKAN_API CCVKFramebuffer final : public Framebuffer {
 public:
-    CCVKFramebuffer(Device *device);
+    CCVKFramebuffer();
     ~CCVKFramebuffer() override;
 
     CC_INLINE CCVKGPUFramebuffer *gpuFBO() const { return _gpuFBO; }

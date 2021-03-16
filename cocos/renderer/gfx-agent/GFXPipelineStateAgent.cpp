@@ -37,11 +37,11 @@ namespace gfx {
 
 PipelineStateAgent::~PipelineStateAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         PipelineStateDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
@@ -52,7 +52,7 @@ void PipelineStateAgent::doInit(const PipelineStateInfo &info) {
     if (info.renderPass) actorInfo.renderPass = ((RenderPassAgent *)info.renderPass)->getActor();
 
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         PipelineStateInit,
         actor, getActor(),
         info, actorInfo,
@@ -63,7 +63,7 @@ void PipelineStateAgent::doInit(const PipelineStateInfo &info) {
 
 void PipelineStateAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         PipelineStateDestroy,
         actor, getActor(),
         {

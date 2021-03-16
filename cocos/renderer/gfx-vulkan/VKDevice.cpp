@@ -59,13 +59,21 @@ namespace gfx {
 
 //#define DISABLE_PRE_TRANSFORM
 
+CCVKDevice *CCVKDevice::_instance = nullptr;
+
+CCVKDevice *CCVKDevice::getInstance() {
+    return CCVKDevice::_instance;
+}
+
 CCVKDevice::CCVKDevice() {
     _caps.clipSpaceMinZ    = 0.0f;
     _caps.screenSpaceSignY = -1.0f;
     _caps.UVSpaceSignY     = 1.0f;
+    CCVKDevice::_instance = this;
 }
 
 CCVKDevice::~CCVKDevice() {
+    CCVKDevice::_instance = nullptr;
 }
 
 CCVKGPUContext *CCVKDevice::gpuContext() const {
@@ -93,7 +101,7 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     contextCreateInfo.windowHandle = _windowHandle;
     contextCreateInfo.sharedCtx    = info.sharedCtx;
 
-    _context = CC_NEW(CCVKContext(this));
+    _context = CC_NEW(CCVKContext);
     if (!_context->initialize(contextCreateInfo)) {
         destroy();
         return false;
@@ -603,63 +611,63 @@ CCVKGPURecycleBin *       CCVKDevice::gpuRecycleBin() { return _gpuRecycleBins[_
 CCVKGPUStagingBufferPool *CCVKDevice::gpuStagingBufferPool() { return _gpuStagingBufferPools[_gpuDevice->curBackBufferIndex]; }
 
 CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
-    return CC_NEW(CCVKCommandBuffer(this));
+    return CC_NEW(CCVKCommandBuffer);
 }
 
 Queue *CCVKDevice::createQueue() {
-    return CC_NEW(CCVKQueue(this));
+    return CC_NEW(CCVKQueue);
 }
 
 Buffer *CCVKDevice::createBuffer() {
-    return CC_NEW(CCVKBuffer(this));
+    return CC_NEW(CCVKBuffer);
 }
 
 Texture *CCVKDevice::createTexture() {
-    return CC_NEW(CCVKTexture(this));
+    return CC_NEW(CCVKTexture);
 }
 
 Sampler *CCVKDevice::createSampler() {
-    return CC_NEW(CCVKSampler(this));
+    return CC_NEW(CCVKSampler);
 }
 
 Shader *CCVKDevice::createShader() {
-    return CC_NEW(CCVKShader(this));
+    return CC_NEW(CCVKShader);
 }
 
 InputAssembler *CCVKDevice::createInputAssembler() {
-    return CC_NEW(CCVKInputAssembler(this));
+    return CC_NEW(CCVKInputAssembler);
 }
 
 RenderPass *CCVKDevice::createRenderPass() {
-    return CC_NEW(CCVKRenderPass(this));
+    return CC_NEW(CCVKRenderPass);
 }
 
 Framebuffer *CCVKDevice::createFramebuffer() {
-    return CC_NEW(CCVKFramebuffer(this));
+    return CC_NEW(CCVKFramebuffer);
 }
 
 DescriptorSet *CCVKDevice::createDescriptorSet() {
-    return CC_NEW(CCVKDescriptorSet(this));
+    return CC_NEW(CCVKDescriptorSet);
 }
 
 DescriptorSetLayout *CCVKDevice::createDescriptorSetLayout() {
-    return CC_NEW(CCVKDescriptorSetLayout(this));
+    return CC_NEW(CCVKDescriptorSetLayout);
 }
 
 PipelineLayout *CCVKDevice::createPipelineLayout() {
-    return CC_NEW(CCVKPipelineLayout(this));
+    return CC_NEW(CCVKPipelineLayout);
 }
 
 PipelineState *CCVKDevice::createPipelineState() {
-    return CC_NEW(CCVKPipelineState(this));
+    return CC_NEW(CCVKPipelineState);
 }
 
 GlobalBarrier *CCVKDevice::createGlobalBarrier() {
-    return CC_NEW(CCVKGlobalBarrier(this));
+    return CC_NEW(CCVKGlobalBarrier);
 }
 
 TextureBarrier *CCVKDevice::createTextureBarrier() {
-    return CC_NEW(CCVKTextureBarrier(this));
+    return CC_NEW(CCVKTextureBarrier);
 }
 
 void CCVKDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

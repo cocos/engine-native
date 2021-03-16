@@ -32,7 +32,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLRenderPass::CCMTLRenderPass(Device *device) : RenderPass(device) {}
+CCMTLRenderPass::CCMTLRenderPass() : RenderPass() {}
 
 void CCMTLRenderPass::doInit(const RenderPassInfo &info) {
     _mtlRenderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];

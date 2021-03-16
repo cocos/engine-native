@@ -99,8 +99,8 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(VkDebugReportFlagsEXT      fl
 #endif
 } // namespace
 
-CCVKContext::CCVKContext(Device *device)
-: Context(device) {
+CCVKContext::CCVKContext()
+: Context() {
 }
 
 CCVKContext::~CCVKContext() {
@@ -282,9 +282,9 @@ bool CCVKContext::doInit(const ContextInfo &info) {
         EventDispatcher::addCustomEventListener(EVENT_DESTROY_WINDOW, [this](const CustomEvent &event) -> void {
             if (_gpuContext && _gpuContext->vkSurface != VK_NULL_HANDLE) {
 
-                CCVKDevice *device = (CCVKDevice *)_device;
+                CCVKDevice *device = CCVKDevice::getInstance();
 
-                CCVKQueue *queue = (CCVKQueue *)_device->getQueue();
+                CCVKQueue *queue = (CCVKQueue *)device->getQueue();
 
                 uint fenceCount = device->gpuFencePool()->size();
                 if (fenceCount) {
@@ -310,7 +310,7 @@ bool CCVKContext::doInit(const ContextInfo &info) {
                 VK_CHECK(vkCreateAndroidSurfaceKHR(_gpuContext->vkInstance, &surfaceCreateInfo,
                                                    nullptr, &_gpuContext->vkSurface));
 
-                ((CCVKDevice *)_device)->checkSwapchainStatus();
+                CCVKDevice::getInstance()->checkSwapchainStatus();
             }
         });
 #elif defined(VK_USE_PLATFORM_WIN32_KHR)

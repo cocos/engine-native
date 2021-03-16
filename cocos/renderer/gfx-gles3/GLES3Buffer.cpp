@@ -32,8 +32,8 @@
 namespace cc {
 namespace gfx {
 
-GLES3Buffer::GLES3Buffer(Device *device)
-: Buffer(device) {
+GLES3Buffer::GLES3Buffer()
+: Buffer() {
 }
 
 GLES3Buffer::~GLES3Buffer() {
@@ -51,7 +51,7 @@ void GLES3Buffer::doInit(const BufferInfo &info) {
         _gpuBuffer->indirects.resize(_count);
     }
 
-    GLES3CmdFuncCreateBuffer((GLES3Device *)_device, _gpuBuffer);
+    GLES3CmdFuncCreateBuffer(GLES3Device::getInstance(), _gpuBuffer);
 }
 
 void GLES3Buffer::doInit(const BufferViewInfo &info) {
@@ -72,8 +72,7 @@ void GLES3Buffer::doInit(const BufferViewInfo &info) {
 void GLES3Buffer::doDestroy() {
     if (_gpuBuffer) {
         if (!_isBufferView) {
-            GLES3CmdFuncDestroyBuffer((GLES3Device *)_device, _gpuBuffer);
-            _device->getMemoryStatus().bufferSize -= _size;
+            GLES3CmdFuncDestroyBuffer(GLES3Device::getInstance(), _gpuBuffer);
         }
         CC_DELETE(_gpuBuffer);
         _gpuBuffer = nullptr;
@@ -83,13 +82,13 @@ void GLES3Buffer::doDestroy() {
 void GLES3Buffer::doResize(uint size) {
     _gpuBuffer->size = _size;
     _gpuBuffer->count = _count;
-    GLES3CmdFuncResizeBuffer((GLES3Device *)_device, _gpuBuffer);
+    GLES3CmdFuncResizeBuffer(GLES3Device::getInstance(), _gpuBuffer);
 }
 
 void GLES3Buffer::update(void *buffer, uint size) {
     CCASSERT(!_isBufferView, "Cannot update through buffer views");
 
-    GLES3CmdFuncUpdateBuffer((GLES3Device *)_device, _gpuBuffer, buffer, 0u, size);
+    GLES3CmdFuncUpdateBuffer(GLES3Device::getInstance(), _gpuBuffer, buffer, 0u, size);
 }
 
 } // namespace gfx

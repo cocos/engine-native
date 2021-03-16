@@ -37,17 +37,17 @@ namespace gfx {
 
 QueueAgent::~QueueAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         QueueDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
 void QueueAgent::doInit(const QueueInfo &info) {
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         QueueInit,
         actor, getActor(),
         info, info,
@@ -58,7 +58,7 @@ void QueueAgent::doInit(const QueueInfo &info) {
 
 void QueueAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         QueueDestroy,
         actor, getActor(),
         {
@@ -69,14 +69,14 @@ void QueueAgent::doDestroy() {
 void QueueAgent::submit(CommandBuffer *const *cmdBuffs, uint count) {
     if (!count) return;
 
-    LinearAllocatorPool *allocator     = ((DeviceAgent *)_device)->getMainAllocator();
+    LinearAllocatorPool *allocator     = DeviceAgent::getInstance()->getMainAllocator();
     CommandBuffer **     actorCmdBuffs = allocator->allocate<CommandBuffer *>(count);
     for (uint i = 0u; i < count; ++i) {
         actorCmdBuffs[i] = ((CommandBufferAgent *)cmdBuffs[i])->getActor();
     }
 
     ENQUEUE_MESSAGE_3(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         QueueSubmit,
         actor, getActor(),
         actorCmdBuffs, actorCmdBuffs,

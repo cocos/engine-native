@@ -35,11 +35,11 @@ namespace gfx {
 
 PipelineLayoutAgent::~PipelineLayoutAgent() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         PipelineLayoutDestruct,
         actor, _actor,
         {
-            CC_DELETE(actor);
+            CC_SAFE_DELETE(actor);
         });
 }
 
@@ -51,7 +51,7 @@ void PipelineLayoutAgent::doInit(const PipelineLayoutInfo &info) {
     }
 
     ENQUEUE_MESSAGE_2(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         PipelineLayoutInit,
         actor, getActor(),
         info, actorInfo,
@@ -62,7 +62,7 @@ void PipelineLayoutAgent::doInit(const PipelineLayoutInfo &info) {
 
 void PipelineLayoutAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
-        ((DeviceAgent *)_device)->getMessageQueue(),
+        DeviceAgent::getInstance()->getMessageQueue(),
         PipelineLayoutDestroy,
         actor, getActor(),
         {

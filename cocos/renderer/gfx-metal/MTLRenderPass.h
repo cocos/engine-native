@@ -37,7 +37,7 @@ namespace gfx {
 
 class CCMTLRenderPass final : public RenderPass {
 public:
-    explicit CCMTLRenderPass(Device *device);
+    explicit CCMTLRenderPass();
     ~CCMTLRenderPass() override = default;
 
     void setColorAttachment(size_t slot, id<MTLTexture> texture, int level);

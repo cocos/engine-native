@@ -31,7 +31,7 @@
 namespace cc {
 namespace gfx {
 
-CCMTLPipelineLayout::CCMTLPipelineLayout(Device *device) : PipelineLayout(device) {
+CCMTLPipelineLayout::CCMTLPipelineLayout() : PipelineLayout() {
 }
 
 void CCMTLPipelineLayout::doInit(const PipelineLayoutInfo &info) {

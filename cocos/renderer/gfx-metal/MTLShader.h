@@ -34,7 +34,7 @@ namespace gfx {
 class CCMTLGPUShader;
 class CCMTLShader final : public Shader {
 public:
-    explicit CCMTLShader(Device *device);
+    explicit CCMTLShader();
     ~CCMTLShader() override = default;
     CCMTLShader(const CCMTLShader &)=delete;
     CCMTLShader(CCMTLShader &&)=delete;

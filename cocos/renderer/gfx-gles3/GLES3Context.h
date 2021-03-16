@@ -34,7 +34,7 @@ namespace gfx {
 
 class CC_GLES3_API GLES3Context final : public Context {
 public:
-    GLES3Context(Device *device);
+    GLES3Context();
     ~GLES3Context();
 
     void present() override;

@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_DLL InputAssembler : public GFXObject {
 public:
-    InputAssembler(Device *device);
+    InputAssembler();
     virtual ~InputAssembler();
 
     void initialize(const InputAssemblerInfo &info);
@@ -40,7 +40,6 @@ public:
 
     void extractDrawInfo(DrawInfo &drawInfo) const;
 
-    CC_INLINE Device *getDevice() const { return _device; }
     CC_INLINE const AttributeList &getAttributes() const { return _attributes; }
     CC_INLINE const BufferList &getVertexBuffers() const { return _vertexBuffers; }
     CC_INLINE Buffer *getIndexBuffer() const { return _indexBuffer; }
@@ -68,7 +67,6 @@ protected:
 
     uint computeAttributesHash() const;
 
-    Device *      _device = nullptr;
     AttributeList _attributes;
     BufferList    _vertexBuffers;
     Buffer *      _indexBuffer    = nullptr;

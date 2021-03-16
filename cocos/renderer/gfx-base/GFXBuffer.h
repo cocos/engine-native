@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_DLL Buffer : public GFXObject {
 public:
-    Buffer(Device *device);
+    Buffer();
     virtual ~Buffer();
 
     static uint computeHash(const BufferInfo &info);
@@ -44,7 +44,6 @@ public:
 
     virtual void update(void *buffer, uint size) = 0;
 
-    CC_INLINE Device *    getDevice() const { return _device; }
     CC_INLINE BufferUsage getUsage() const { return _usage; }
     CC_INLINE MemoryUsage getMemUsage() const { return _memUsage; }
     CC_INLINE uint        getStride() const { return _stride; }
@@ -58,7 +57,6 @@ protected:
     virtual void doResize(uint size)                = 0;
     virtual void doDestroy()                        = 0;
 
-    Device *    _device       = nullptr;
     BufferUsage _usage        = BufferUsageBit::NONE;
     MemoryUsage _memUsage     = MemoryUsageBit::NONE;
     uint        _stride       = 0u;
@@ -66,7 +64,6 @@ protected:
     uint        _size         = 0u;
     uint        _offset       = 0u;
     BufferFlags _flags        = BufferFlagBit::NONE;
-    uint8_t *   _buffer       = nullptr;
     bool        _isBufferView = false;
 };
 
