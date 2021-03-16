@@ -1,8 +1,7 @@
 /****************************************************************************
- Copyright (c) 2013-2016 Chukong Technologies Inc.
- Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
 
- http://www.cocos2d-x.org
+ http://www.cocos.com
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,32 +23,40 @@
  ****************************************************************************/
 package com.cocos.lib;
 
-import ohos.agp.render.Paint;
 import ohos.data.DatabaseHelper;
-import ohos.data.preferences.Preferences;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import ohos.data.rdb.*;
+import ohos.data.resultset.ResultSet;
 
 public class CocosLocalStorage {
 
     private static final String TAG = "CocosLocalStorage";
 
-    private static String DATABASE_NAME = "jsb.sqlite";
+    private static String DATABASE_NAME = "jsb.storage.db";
     private static String TABLE_NAME = "data";
     private static final int DATABASE_VERSION = 1;
 
     private static DatabaseHelper mDatabaseOpenHelper = null;
-    private static Preferences mDatabase = null;
+    private static RdbStore mDatabase = null;
+
+    private static RdbOpenCallback rdbOpenCallback = new RdbOpenCallback() {
+        @Override
+        public void onCreate(RdbStore rdbStore) {
+            rdbStore.executeSql("CREATE TABLE IF NOT EXISTS "+TABLE_NAME+"(key TEXT PRIMARY KEY,value TEXT);");
+        }
+
+        @Override
+        public void onUpgrade(RdbStore rdbStore, int i, int i1) {
+
+        }
+    };
 
     public static boolean init(String dbName, String tableName) {
         if (GlobalObject.getAbilitySlice() != null) {
             DATABASE_NAME = dbName;
             TABLE_NAME = tableName;
             mDatabaseOpenHelper = new DatabaseHelper(GlobalObject.getAbilitySlice());
-            mDatabase = mDatabaseOpenHelper.getPreferences(getTableName());
+            StoreConfig cfg = StoreConfig.newDefaultConfig(DATABASE_NAME);
+            mDatabase = mDatabaseOpenHelper.getRdbStore(cfg, DATABASE_VERSION, rdbOpenCallback, null);
             return true;
         }
         return false;
@@ -61,35 +68,51 @@ public class CocosLocalStorage {
 
     public static void destroy() {
         if (mDatabase != null) {
-            mDatabase.clear();
-            mDatabaseOpenHelper.deletePreferences(getTableName());
+            mDatabaseOpenHelper.deleteRdbStore(DATABASE_NAME);
         }
     }
 
     public static void setItem(String key, String value) {
-        mDatabase.putString(key, value);
+        ValuesBucket valuesBucket = new ValuesBucket();
+        valuesBucket.putString("key", key);
+        valuesBucket.putString("value", value);
+        mDatabase.insert(TABLE_NAME, valuesBucket);
     }
 
     public static String getItem(String key) {
-        return mDatabase.getString(key, null);
+        String[] columes = new String[] {"value"};
+        RdbPredicates rdbPredicates = new RdbPredicates(TABLE_NAME).equalTo("key", key);
+        ResultSet resultSet = mDatabase.query(rdbPredicates, columes);
+        if(resultSet.goToNextRow()) {
+            return resultSet.getString(0);
+        }
+        return null;
     }
 
     public static void removeItem(String key) {
-        mDatabase.delete(key);
+        RdbPredicates rdbPredicates = new RdbPredicates(TABLE_NAME).equalTo("key", key);
+        mDatabase.delete(rdbPredicates);
     }
 
     public static void clear() {
-        mDatabase.clear();
+        RdbPredicates rdbPredicates = new RdbPredicates(TABLE_NAME);
+        mDatabase.delete(rdbPredicates);
     }
     @SuppressWarnings("unused")
     public static String getKey(int nIndex) {
-        //TODO: need opt for performance
-        List<String> sets = new ArrayList<String>(mDatabase.getAll().keySet());
-        return nIndex >= 0 && nIndex < sets.size() ? sets.get(nIndex) : null;
+
+        ResultSet result = mDatabase.querySql("SELECT key from "+TABLE_NAME + " LIMIT 1 OFFSET " + nIndex, null);
+        if(result.goToNextRow()){
+            return result.getString(result.getColumnIndexForName("key"));
+        }
+        return null;
     }
 
     public static int getLength() {
-        //TODO: need opt
-        return mDatabase.getAll().size();
+        ResultSet result = mDatabase.querySql("SELECT count(key) as cnt FROM  "+TABLE_NAME, null);
+        if(result.goToNextRow()) {
+            return result.getInt(result.getColumnIndexForName("cnt"));
+        }
+        return 0;
     }
 }
