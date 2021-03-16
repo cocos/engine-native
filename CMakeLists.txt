@@ -565,16 +565,16 @@ elseif(ANDROID)
                      cocos/platform/android/View.h
     )
     set(CC_JNI_SRC_FILES
-        NO_WERROR    ${CWD}/cocos/platform/android/jni/JniCocosActivity.cpp
-                     ${CWD}/cocos/platform/android/jni/JniCocosActivity.h
-        NO_WERROR    ${CWD}/cocos/platform/android/jni/JniCocosTouchHandler.cpp
-        NO_WERROR    ${CWD}/cocos/platform/android/jni/JniCocosKeyCodeHandler.cpp
-        NO_WERROR    ${CWD}/cocos/platform/android/jni/JniCocosSurfaceView.cpp
-        NO_WERROR    ${CWD}/cocos/platform/android/jni/JniCocosOrientationHelper.cpp
-        NO_WERROR    ${CWD}/cocos/platform/android/jni/JniHelper.cpp
-                     ${CWD}/cocos/platform/android/jni/JniHelper.h
-        NO_WERROR    ${CWD}/cocos/platform/android/jni/JniImp.cpp
-                     ${CWD}/cocos/platform/android/jni/JniImp.h
+        ${CWD}/cocos/platform/android/jni/JniCocosActivity.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosActivity.h
+        ${CWD}/cocos/platform/android/jni/JniCocosTouchHandler.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosKeyCodeHandler.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosSurfaceView.cpp
+        ${CWD}/cocos/platform/android/jni/JniCocosOrientationHelper.cpp
+        ${CWD}/cocos/platform/android/jni/JniHelper.cpp
+        ${CWD}/cocos/platform/android/jni/JniHelper.h
+        ${CWD}/cocos/platform/android/jni/JniImp.cpp
+        ${CWD}/cocos/platform/android/jni/JniImp.h
     )
 elseif(APPLE)
     cocos_source_files(
