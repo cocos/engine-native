@@ -260,20 +260,19 @@ bool GLES2Context::doInit(const ContextInfo &info) {
             return false;
         }
 
-        _eglSharedContext = _eglContext;
-
-    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
-        EventDispatcher::addCustomEventListener(EVENT_DESTROY_WINDOW, [=](const CustomEvent &) -> void {
+#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+        EventDispatcher::addCustomEventListener(EVENT_DESTROY_WINDOW, [=](const CustomEvent & /*unused*/) -> void {
             if (_eglSurface != EGL_NO_SURFACE) {
                 eglDestroySurface(_eglDisplay, _eglSurface);
                 _eglSurface = EGL_NO_SURFACE;
             }
         });
 
+        // guaranteed to be invoked in the order they were added
         EventDispatcher::addCustomEventListener(EVENT_RECREATE_WINDOW, [=](const CustomEvent &event) -> void {
             _windowHandle = (uintptr_t)event.args->ptrVal;
 
-            EGLint nFmt;
+            EGLint nFmt = 0;
             if (eglGetConfigAttrib(_eglDisplay, _eglConfig, EGL_NATIVE_VISUAL_ID, &nFmt) == EGL_FALSE) {
                 CC_LOG_ERROR("Getting configuration attributes failed.");
                 return;
@@ -291,7 +290,9 @@ bool GLES2Context::doInit(const ContextInfo &info) {
             ((GLES2Context *)GLES2Device::getInstance()->getContext())->MakeCurrent();
             GLES2Device::getInstance()->stateCache()->reset();
         });
-    #endif
+#endif
+
+        _eglSharedContext = _eglContext;
 
     } else {
         GLES2Context *sharedCtx = (GLES2Context *)info.sharedCtx;

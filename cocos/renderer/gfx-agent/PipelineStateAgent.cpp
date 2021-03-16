@@ -26,39 +26,34 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXDeviceAgent.h"
-#include "GFXFramebufferAgent.h"
-#include "GFXRenderPassAgent.h"
-#include "GFXTextureAgent.h"
+#include "DeviceAgent.h"
+#include "PipelineLayoutAgent.h"
+#include "PipelineStateAgent.h"
+#include "RenderPassAgent.h"
+#include "ShaderAgent.h"
 
 namespace cc {
 namespace gfx {
 
-FramebufferAgent::~FramebufferAgent() {
+PipelineStateAgent::~PipelineStateAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        FramebufferDestruct,
+        PipelineStateDestruct,
         actor, _actor,
         {
             CC_SAFE_DELETE(actor);
         });
 }
 
-void FramebufferAgent::doInit(const FramebufferInfo &info) {
-    FramebufferInfo actorInfo = info;
-    for (uint i = 0u; i < info.colorTextures.size(); ++i) {
-        if (info.colorTextures[i]) {
-            actorInfo.colorTextures[i] = ((TextureAgent *)info.colorTextures[i])->getActor();
-        }
-    }
-    if (info.depthStencilTexture) {
-        actorInfo.depthStencilTexture = ((TextureAgent *)info.depthStencilTexture)->getActor();
-    }
-    actorInfo.renderPass = ((RenderPassAgent *)info.renderPass)->getActor();
+void PipelineStateAgent::doInit(const PipelineStateInfo &info) {
+    PipelineStateInfo actorInfo = info;
+    actorInfo.shader = ((ShaderAgent *)info.shader)->getActor();
+    actorInfo.pipelineLayout = ((PipelineLayoutAgent *)info.pipelineLayout)->getActor();
+    if (info.renderPass) actorInfo.renderPass = ((RenderPassAgent *)info.renderPass)->getActor();
 
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
-        FramebufferInit,
+        PipelineStateInit,
         actor, getActor(),
         info, actorInfo,
         {
@@ -66,10 +61,10 @@ void FramebufferAgent::doInit(const FramebufferInfo &info) {
         });
 }
 
-void FramebufferAgent::doDestroy() {
+void PipelineStateAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        FramebufferDestroy,
+        PipelineStateDestroy,
         actor, getActor(),
         {
             actor->destroy();

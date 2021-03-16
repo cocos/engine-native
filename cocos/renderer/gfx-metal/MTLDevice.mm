@@ -55,9 +55,13 @@ CCMTLDevice *CCMTLDevice::getInstance() {
 }
 
 CCMTLDevice::CCMTLDevice() {
+    _API = API::METAL;
+    _deviceName = "Metal";
+
     _caps.clipSpaceMinZ = 0.0f;
     _caps.screenSpaceSignY = 1.0f;
     _caps.UVSpaceSignY = 1.0f;
+
     CCMTLDevice::_instance = this;
 }
 
@@ -66,22 +70,6 @@ CCMTLDevice::~CCMTLDevice() {
 }
 
 bool CCMTLDevice::doInit(const DeviceInfo &info) {
-    _API = API::METAL;
-    _deviceName = "Metal";
-    _width = info.width;
-    _height = info.height;
-    _nativeWidth = info.nativeWidth;
-    _nativeHeight = info.nativeHeight;
-    _windowHandle = info.windowHandle;
-
-    _bindingMappingInfo = info.bindingMappingInfo;
-    if (!_bindingMappingInfo.bufferOffsets.size()) {
-        _bindingMappingInfo.bufferOffsets.push_back(0);
-    }
-    if (!_bindingMappingInfo.samplerOffsets.size()) {
-        _bindingMappingInfo.samplerOffsets.push_back(0);
-    }
-
     _inFlightSemaphore = CC_NEW(CCMTLSemaphore(MAX_FRAMES_IN_FLIGHT));
     _currentFrameIndex = 0;
 
@@ -123,23 +111,24 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     _dssTex = [mtlDevice newTextureWithDescriptor:dssDescriptor];
     _caps.stencilBits = 8;
 
-    ContextInfo contextCreateInfo;
-    contextCreateInfo.windowHandle = _windowHandle;
-    contextCreateInfo.sharedCtx = info.sharedCtx;
+    ContextInfo ctxInfo;
+    ctxInfo.windowHandle = _windowHandle;
+    ctxInfo.sharedCtx    = info.sharedCtx;
+
     _context = CC_NEW(CCMTLContext);
-    if (!_context->initialize(contextCreateInfo)) {
+    if (!_context->initialize(ctxInfo)) {
         destroy();
         return false;
     }
 
-    QueueInfo queue_info;
-    queue_info.type = QueueType::GRAPHICS;
-    _queue = createQueue(queue_info);
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
+    _queue         = createQueue(queueInfo);
 
     CommandBufferInfo cmdBuffInfo;
-    cmdBuffInfo.type = CommandBufferType::PRIMARY;
+    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
     cmdBuffInfo.queue = _queue;
-    _cmdBuff = createCommandBuffer(cmdBuffInfo);
+    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
     for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
         _gpuStagingBufferPools[i] = CC_NEW(CCMTLGPUStagingBufferPool(mtlDevice));
@@ -230,7 +219,7 @@ void CCMTLDevice::doDestroy() {
     }
 }
 
-void CCMTLDevice::doResize(uint /*width*/, uint /*height*/) {}
+void CCMTLDevice::resize(uint /*width*/, uint /*height*/) {}
 
 void CCMTLDevice::acquire() {
     _inFlightSemaphore->wait();

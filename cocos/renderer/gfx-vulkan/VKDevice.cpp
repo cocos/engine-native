@@ -66,6 +66,9 @@ CCVKDevice *CCVKDevice::getInstance() {
 }
 
 CCVKDevice::CCVKDevice() {
+    _API                   = API::VULKAN;
+    _deviceName            = "Vulkan";
+
     _caps.clipSpaceMinZ    = 0.0f;
     _caps.screenSpaceSignY = -1.0f;
     _caps.UVSpaceSignY     = 1.0f;
@@ -81,31 +84,16 @@ CCVKGPUContext *CCVKDevice::gpuContext() const {
 }
 
 bool CCVKDevice::doInit(const DeviceInfo &info) {
-    _API          = API::VULKAN;
-    _deviceName   = "Vulkan";
-    _width        = info.width;
-    _height       = info.height;
-    _nativeWidth  = info.nativeWidth;
-    _nativeHeight = info.nativeHeight;
-    _windowHandle = info.windowHandle;
-
-    _bindingMappingInfo = info.bindingMappingInfo;
-    if (!_bindingMappingInfo.bufferOffsets.size()) {
-        _bindingMappingInfo.bufferOffsets.push_back(0);
-    }
-    if (!_bindingMappingInfo.samplerOffsets.size()) {
-        _bindingMappingInfo.samplerOffsets.push_back(0);
-    }
-
-    ContextInfo contextCreateInfo;
-    contextCreateInfo.windowHandle = _windowHandle;
-    contextCreateInfo.sharedCtx    = info.sharedCtx;
+    ContextInfo ctxInfo;
+    ctxInfo.windowHandle = _windowHandle;
+    ctxInfo.sharedCtx    = info.sharedCtx;
 
     _context = CC_NEW(CCVKContext);
-    if (!_context->initialize(contextCreateInfo)) {
+    if (!_context->initialize(ctxInfo)) {
         destroy();
         return false;
     }
+
     const CCVKContext *              context         = (CCVKContext *)_context;
     const CCVKGPUContext *           gpuContext      = ((CCVKContext *)_context)->gpuContext();
     const VkPhysicalDeviceFeatures2 &deviceFeatures2 = gpuContext->physicalDeviceFeatures2;
@@ -305,6 +293,15 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
 
     ///////////////////// Resource Initialization /////////////////////
 
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
+    _queue         = createQueue(queueInfo);
+
+    CommandBufferInfo cmdBuffInfo;
+    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
+    cmdBuffInfo.queue = _queue;
+    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
+
     VmaVulkanFunctions vmaVulkanFunc{};
     vmaVulkanFunc.vkAllocateMemory                    = vkAllocateMemory;
     vmaVulkanFunc.vkBindBufferMemory                  = vkBindBufferMemory;
@@ -343,10 +340,6 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
 
     VK_CHECK(vmaCreateAllocator(&allocatorInfo, &_gpuDevice->memoryAllocator));
 
-    QueueInfo queueInfo;
-    queueInfo.type = QueueType::GRAPHICS;
-    _queue         = createQueue(queueInfo);
-
     uint backBufferCount = gpuContext->swapchainCreateInfo.minImageCount;
     for (uint i = 0u; i < backBufferCount; i++) {
         _gpuFencePools.push_back(CC_NEW(CCVKGPUFencePool(_gpuDevice)));
@@ -362,11 +355,6 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     _gpuDescriptorSetHub = CC_NEW(CCVKGPUDescriptorSetHub(_gpuDevice));
 
     _gpuDescriptorHub->link(_gpuDescriptorSetHub);
-
-    CommandBufferInfo cmdBuffInfo;
-    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
-    cmdBuffInfo.queue = _queue;
-    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
     CCVKCmdFuncCreateSampler(this, &_gpuDevice->defaultSampler);
 
@@ -544,7 +532,7 @@ void CCVKDevice::doDestroy() {
 }
 
 // no-op since we maintain surface size internally
-void CCVKDevice::doResize(uint width, uint height) {}
+void CCVKDevice::resize(uint width, uint height) {}
 
 void CCVKDevice::acquire() {
     CCVKQueue *queue = (CCVKQueue *)_queue;

@@ -127,15 +127,8 @@ void CCMTLTexture::doDestroy() {
         return;
     }
 
-    if (_buffer) {
-        CC_FREE(_buffer);
-        _buffer = nullptr;
-    }
-
-    Device *device = CCMTLDevice::getInstance();
     id<MTLTexture> mtlTexure = _mtlTexture;
     _mtlTexture = nil;
-    uint size = _size;
 
     std::function<void(void)> destroyFunc = [=]() {
         if (mtlTexure) {
@@ -165,7 +158,6 @@ void CCMTLTexture::doResize(uint width, uint height) {
     }
 
     if (oldMTLTexture) {
-        Device *device = CCMTLDevice::getInstance();
         std::function<void(void)> destroyFunc = [=]() {
             if (oldMTLTexture) {
                 [oldMTLTexture release];
@@ -173,17 +165,6 @@ void CCMTLTexture::doResize(uint width, uint height) {
         };
         //gpu object only
         CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
-    }
-
-    if (_flags & TextureFlags::BAKUP_BUFFER) {
-        const uint8_t *oldBuffer = _buffer;
-        uint8_t *buffer = (uint8_t *)CC_MALLOC(_size);
-        if (!buffer) {
-            CC_LOG_ERROR("CCMTLTexture: CC_MALLOC backup buffer failed when try to resize the texture.");
-            return;
-        }
-        CC_FREE(oldBuffer);
-        _buffer = buffer;
     }
 }
 

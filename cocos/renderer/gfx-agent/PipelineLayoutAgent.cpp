@@ -26,37 +26,44 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXDeviceAgent.h"
-#include "GFXDescriptorSetLayoutAgent.h"
+#include "DescriptorSetLayoutAgent.h"
+#include "DeviceAgent.h"
+#include "PipelineLayoutAgent.h"
 
 namespace cc {
 namespace gfx {
 
-DescriptorSetLayoutAgent::~DescriptorSetLayoutAgent() {
+PipelineLayoutAgent::~PipelineLayoutAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetLayoutDestruct,
+        PipelineLayoutDestruct,
         actor, _actor,
         {
             CC_SAFE_DELETE(actor);
         });
 }
 
-void DescriptorSetLayoutAgent::doInit(const DescriptorSetLayoutInfo &info) {
+void PipelineLayoutAgent::doInit(const PipelineLayoutInfo &info) {
+    PipelineLayoutInfo actorInfo;
+    actorInfo.setLayouts.resize(info.setLayouts.size());
+    for (uint i = 0u; i < info.setLayouts.size(); i++) {
+        actorInfo.setLayouts[i] = ((DescriptorSetLayoutAgent *)info.setLayouts[i])->getActor();
+    }
+
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetLayoutInit,
+        PipelineLayoutInit,
         actor, getActor(),
-        info, info,
+        info, actorInfo,
         {
             actor->initialize(info);
         });
 }
 
-void DescriptorSetLayoutAgent::doDestroy() {
+void PipelineLayoutAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetLayoutDestroy,
+        PipelineLayoutDestroy,
         actor, getActor(),
         {
             actor->destroy();

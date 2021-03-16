@@ -59,6 +59,7 @@ public:
     using Device::createTexture;
     using Device::createTextureBarrier;
 
+    void resize(uint width, uint height) override;
     void acquire() override;
     void present() override;
 
@@ -81,9 +82,10 @@ public:
 protected:
     static GLES3Device *_instance;
 
+    friend class GLES3Context;
+
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
-    void                 doResize(uint width, uint height) override;
     CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *              createQueue() override;
     Buffer *             createBuffer() override;

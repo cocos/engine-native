@@ -62,7 +62,7 @@ void CCVKBuffer::doInit(const BufferInfo &info) {
 
 void CCVKBuffer::doInit(const BufferViewInfo &info) {
     CCVKBuffer *buffer = (CCVKBuffer *)info.buffer;
-    _gpuBuffer = ((CCVKBuffer *)info.buffer)->gpuBuffer();
+    _gpuBuffer = buffer->gpuBuffer();
     _gpuBufferView = CC_NEW(CCVKGPUBufferView);
     createBufferView();
 }

@@ -54,8 +54,8 @@ public:
 
     bool initialize(const DeviceInfo &info);
     void destroy();
-    void resize(uint width, uint height);
 
+    virtual void resize(uint width, uint height) = 0;
     virtual void acquire() = 0;
     virtual void present() = 0;
 
@@ -156,6 +156,7 @@ public:
         res->initialize(info);
         return res;
     }
+
     CC_INLINE void copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
         copyBuffersToTexture(buffers.data(), dst, regions.data(), static_cast<uint>(regions.size()));
     }
@@ -164,9 +165,9 @@ public:
 
     CC_INLINE void flushCommandsForJS(const vector<CommandBuffer *> &cmdBuffs) { flushCommands(cmdBuffs.data(), static_cast<uint>(cmdBuffs.size())); }
 
-    CC_INLINE Context *getContext() const { return _context; }
     CC_INLINE Queue *getQueue() const { return _queue; }
     CC_INLINE CommandBuffer *getCommandBuffer() const { return _cmdBuff; }
+
     CC_INLINE const DeviceCaps &getCapabilities() const { return _caps; }
     CC_INLINE bool              hasFeature(Feature feature) const { return _features[static_cast<uint8_t>(feature)]; }
     CC_INLINE const BindingMappingInfo &bindingMappingInfo() const { return _bindingMappingInfo; }
@@ -185,7 +186,6 @@ protected:
 
     virtual bool                 doInit(const DeviceInfo &info)                                                                                  = 0;
     virtual void                 doDestroy()                                                                                                     = 0;
-    virtual void                 doResize(uint width, uint height)                                                                               = 0;
     virtual CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent)                                               = 0;
     virtual Queue *              createQueue()                                                                                                   = 0;
     virtual Buffer *             createBuffer()                                                                                                  = 0;
@@ -205,6 +205,8 @@ protected:
 
     virtual void bindRenderContext(bool bound) {}
     virtual void bindDeviceContext(bool bound) {}
+
+    CC_INLINE Context *getContext() const { return _context; }
 
     API                _API       = API::UNKNOWN;
     SurfaceTransform   _transform = SurfaceTransform::IDENTITY;

@@ -47,6 +47,24 @@ public:
     DeviceAgent(Device *device);
     ~DeviceAgent() override;
 
+    using Device::copyBuffersToTexture;
+    using Device::createBuffer;
+    using Device::createCommandBuffer;
+    using Device::createDescriptorSet;
+    using Device::createDescriptorSetLayout;
+    using Device::createFramebuffer;
+    using Device::createGlobalBarrier;
+    using Device::createInputAssembler;
+    using Device::createPipelineLayout;
+    using Device::createPipelineState;
+    using Device::createQueue;
+    using Device::createRenderPass;
+    using Device::createSampler;
+    using Device::createShader;
+    using Device::createTexture;
+    using Device::createTextureBarrier;
+
+    void resize(uint width, uint height) override;
     void acquire() override;
     void present() override;
 
@@ -89,7 +107,6 @@ protected:
 
     bool doInit(const DeviceInfo &info) override;
     void doDestroy() override;
-    void doResize(uint width, uint height) override;
 
     bool          _multithreaded{false};
     MessageQueue *_mainEncoder{nullptr};

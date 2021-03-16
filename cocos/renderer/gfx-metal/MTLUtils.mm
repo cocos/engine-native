@@ -409,7 +409,7 @@ CCMTLGPUPipelineState *getClearRenderPassPipelineState(CCMTLDevice *device, Rend
     gfx::Attribute position = {"a_position", gfx::Format::RG32F, false, 0, false};
     gfx::PipelineStateInfo pipelineInfo;
     pipelineInfo.primitive = gfx::PrimitiveMode::TRIANGLE_LIST;
-    pipelineInfo.shader = createShader();
+    pipelineInfo.shader = createShader(device);
     pipelineInfo.inputState = {{position}};
     pipelineInfo.renderPass = renderPass;
 

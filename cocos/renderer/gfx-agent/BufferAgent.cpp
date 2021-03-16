@@ -26,26 +26,27 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXDeviceAgent.h"
-#include "GFXShaderAgent.h"
+#include "BufferAgent.h"
+#include "DeviceAgent.h"
+#include "LinearAllocatorPool.h"
 
 namespace cc {
 namespace gfx {
 
-ShaderAgent::~ShaderAgent() {
+BufferAgent::~BufferAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        ShaderDestruct,
+        BufferDestruct,
         actor, _actor,
         {
             CC_SAFE_DELETE(actor);
         });
 }
 
-void ShaderAgent::doInit(const ShaderInfo &info) {
+void BufferAgent::doInit(const BufferInfo &info) {
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
-        ShaderInit,
+        BufferInit,
         actor, getActor(),
         info, info,
         {
@@ -53,13 +54,53 @@ void ShaderAgent::doInit(const ShaderInfo &info) {
         });
 }
 
-void ShaderAgent::doDestroy() {
+void BufferAgent::doInit(const BufferViewInfo &info) {
+    BufferViewInfo actorInfo = info;
+    actorInfo.buffer         = ((BufferAgent *)info.buffer)->getActor();
+
+    ENQUEUE_MESSAGE_2(
+        DeviceAgent::getInstance()->getMessageQueue(),
+        BufferViewInit,
+        actor, getActor(),
+        info, actorInfo,
+        {
+            actor->initialize(info);
+        });
+}
+
+void BufferAgent::doResize(uint size) {
+    ENQUEUE_MESSAGE_2(
+        DeviceAgent::getInstance()->getMessageQueue(),
+        BufferResize,
+        actor, getActor(),
+        size, size,
+        {
+            actor->resize(size);
+        });
+}
+
+void BufferAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        ShaderDestroy,
+        BufferDestroy,
         actor, getActor(),
         {
             actor->destroy();
+        });
+}
+
+void BufferAgent::update(void *buffer, uint size) {
+    uint8_t *actorBuffer = DeviceAgent::getInstance()->getMainAllocator()->allocate<uint8_t>(size);
+    memcpy(actorBuffer, buffer, size);
+
+    ENQUEUE_MESSAGE_3(
+        DeviceAgent::getInstance()->getMessageQueue(),
+        BufferUpdate,
+        actor, getActor(),
+        buffer, actorBuffer,
+        size, size,
+        {
+            actor->update(buffer, size);
         });
 }
 

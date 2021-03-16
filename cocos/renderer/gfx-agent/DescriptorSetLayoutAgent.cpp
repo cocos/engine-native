@@ -26,26 +26,26 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXDeviceAgent.h"
-#include "GFXRenderPassAgent.h"
+#include "DeviceAgent.h"
+#include "DescriptorSetLayoutAgent.h"
 
 namespace cc {
 namespace gfx {
 
-RenderPassAgent::~RenderPassAgent() {
+DescriptorSetLayoutAgent::~DescriptorSetLayoutAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        RenderPassDestruct,
+        DescriptorSetLayoutDestruct,
         actor, _actor,
         {
             CC_SAFE_DELETE(actor);
         });
 }
 
-void RenderPassAgent::doInit(const RenderPassInfo &info) {
+void DescriptorSetLayoutAgent::doInit(const DescriptorSetLayoutInfo &info) {
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
-        RenderPassInit,
+        DescriptorSetLayoutInit,
         actor, getActor(),
         info, info,
         {
@@ -53,10 +53,10 @@ void RenderPassAgent::doInit(const RenderPassInfo &info) {
         });
 }
 
-void RenderPassAgent::doDestroy() {
+void DescriptorSetLayoutAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        RenderPassDestroy,
+        DescriptorSetLayoutDestroy,
         actor, getActor(),
         {
             actor->destroy();

@@ -26,21 +26,21 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXBufferAgent.h"
-#include "GFXCommandBufferAgent.h"
-#include "GFXDescriptorSetAgent.h"
-#include "GFXDescriptorSetLayoutAgent.h"
-#include "GFXDeviceAgent.h"
-#include "GFXFramebufferAgent.h"
-#include "GFXInputAssemblerAgent.h"
-#include "GFXLinearAllocatorPool.h"
-#include "GFXPipelineLayoutAgent.h"
-#include "GFXPipelineStateAgent.h"
-#include "GFXQueueAgent.h"
-#include "GFXRenderPassAgent.h"
-#include "GFXSamplerAgent.h"
-#include "GFXShaderAgent.h"
-#include "GFXTextureAgent.h"
+#include "BufferAgent.h"
+#include "CommandBufferAgent.h"
+#include "DescriptorSetAgent.h"
+#include "DescriptorSetLayoutAgent.h"
+#include "DeviceAgent.h"
+#include "FramebufferAgent.h"
+#include "InputAssemblerAgent.h"
+#include "LinearAllocatorPool.h"
+#include "PipelineLayoutAgent.h"
+#include "PipelineStateAgent.h"
+#include "QueueAgent.h"
+#include "RenderPassAgent.h"
+#include "SamplerAgent.h"
+#include "ShaderAgent.h"
+#include "TextureAgent.h"
 
 namespace cc {
 namespace gfx {
@@ -118,7 +118,7 @@ void DeviceAgent::doDestroy() {
     _allocatorPools.clear();
 }
 
-void DeviceAgent::doResize(uint width, uint height) {
+void DeviceAgent::resize(uint width, uint height) {
     ENQUEUE_MESSAGE_3(
         getMessageQueue(), DeviceResize,
         actor, getActor(),

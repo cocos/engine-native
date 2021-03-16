@@ -83,12 +83,5 @@ void Device::destroy() {
     _width = _height = _nativeWidth = _nativeHeight = _windowHandle = 0u;
 }
 
-void Device::resize(uint width, uint height) {
-    _width = _nativeWidth = width;
-    _height = _nativeHeight = height;
-
-    doResize(width, height);
-}
-
 } // namespace gfx
 } // namespace cc

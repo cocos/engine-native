@@ -27,17 +27,17 @@
 #include "base/threading/MessageQueue.h"
 #include "base/job-system/JobSystem.h"
 
-#include "GFXBufferAgent.h"
-#include "GFXCommandBufferAgent.h"
-#include "GFXDescriptorSetAgent.h"
-#include "GFXDeviceAgent.h"
-#include "GFXFramebufferAgent.h"
-#include "GFXInputAssemblerAgent.h"
-#include "GFXLinearAllocatorPool.h"
-#include "GFXPipelineStateAgent.h"
-#include "GFXQueueAgent.h"
-#include "GFXRenderPassAgent.h"
-#include "GFXTextureAgent.h"
+#include "BufferAgent.h"
+#include "CommandBufferAgent.h"
+#include "DescriptorSetAgent.h"
+#include "DeviceAgent.h"
+#include "FramebufferAgent.h"
+#include "InputAssemblerAgent.h"
+#include "LinearAllocatorPool.h"
+#include "PipelineStateAgent.h"
+#include "QueueAgent.h"
+#include "RenderPassAgent.h"
+#include "TextureAgent.h"
 
 namespace cc {
 namespace gfx {

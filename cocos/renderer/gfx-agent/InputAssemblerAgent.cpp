@@ -26,9 +26,9 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXBufferAgent.h"
-#include "GFXDeviceAgent.h"
-#include "GFXInputAssemblerAgent.h"
+#include "BufferAgent.h"
+#include "DeviceAgent.h"
+#include "InputAssemblerAgent.h"
 
 namespace cc {
 namespace gfx {

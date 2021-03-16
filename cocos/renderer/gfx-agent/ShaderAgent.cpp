@@ -26,27 +26,26 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXDescriptorSetLayoutAgent.h"
-#include "GFXDeviceAgent.h"
-#include "GFXSamplerAgent.h"
+#include "DeviceAgent.h"
+#include "ShaderAgent.h"
 
 namespace cc {
 namespace gfx {
 
-SamplerAgent::~SamplerAgent() {
+ShaderAgent::~ShaderAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        SamplerDestruct,
+        ShaderDestruct,
         actor, _actor,
         {
             CC_SAFE_DELETE(actor);
         });
 }
 
-void SamplerAgent::doInit(const SamplerInfo &info) {
+void ShaderAgent::doInit(const ShaderInfo &info) {
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
-        SamplerInit,
+        ShaderInit,
         actor, getActor(),
         info, info,
         {
@@ -54,10 +53,10 @@ void SamplerAgent::doInit(const SamplerInfo &info) {
         });
 }
 
-void SamplerAgent::doDestroy() {
+void ShaderAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        SamplerDestroy,
+        ShaderDestroy,
         actor, getActor(),
         {
             actor->destroy();

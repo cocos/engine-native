@@ -53,6 +53,9 @@ GLES3Device *GLES3Device::getInstance() {
 }
 
 GLES3Device::GLES3Device() {
+    _API        = API::GLES3;
+    _deviceName = "GLES3";
+
     GLES3Device::_instance = this;
 }
 
@@ -61,26 +64,6 @@ GLES3Device::~GLES3Device() {
 }
 
 bool GLES3Device::doInit(const DeviceInfo &info) {
-    _API          = API::GLES3;
-    _deviceName   = "GLES3";
-    _width        = info.width;
-    _height       = info.height;
-    _nativeWidth  = info.nativeWidth;
-    _nativeHeight = info.nativeHeight;
-    _windowHandle = info.windowHandle;
-
-    _bindingMappingInfo = info.bindingMappingInfo;
-    if (!_bindingMappingInfo.bufferOffsets.size()) {
-        _bindingMappingInfo.bufferOffsets.push_back(0);
-    }
-    if (!_bindingMappingInfo.samplerOffsets.size()) {
-        _bindingMappingInfo.samplerOffsets.push_back(0);
-    }
-
-    _gpuStateCache          = CC_NEW(GLES3GPUStateCache);
-    _gpuStagingBufferPool   = CC_NEW(GLES3GPUStagingBufferPool);
-    _gpuFramebufferCacheMap = CC_NEW(GLES3GPUFramebufferCacheMap(_gpuStateCache));
-
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
     ctxInfo.sharedCtx    = info.sharedCtx;
@@ -90,6 +73,20 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
         destroy();
         return false;
     }
+
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
+    _queue         = createQueue(queueInfo);
+
+    CommandBufferInfo cmdBuffInfo;
+    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
+    cmdBuffInfo.queue = _queue;
+    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
+
+    _gpuStateCache          = CC_NEW(GLES3GPUStateCache);
+    _gpuStagingBufferPool   = CC_NEW(GLES3GPUStagingBufferPool);
+    _gpuFramebufferCacheMap = CC_NEW(GLES3GPUFramebufferCacheMap(_gpuStateCache));
+
     bindRenderContext(true);
 
     String extStr = (const char *)glGetString(GL_EXTENSIONS);
@@ -163,15 +160,6 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressedFmts.c_str());
 
-    QueueInfo queueInfo;
-    queueInfo.type = QueueType::GRAPHICS;
-    _queue         = createQueue(queueInfo);
-
-    CommandBufferInfo cmdBuffInfo;
-    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
-    cmdBuffInfo.queue = _queue;
-    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
-
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, (GLint *)&_caps.maxVertexAttributes);
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, (GLint *)&_caps.maxVertexUniformVectors);
     glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, (GLint *)&_caps.maxFragmentUniformVectors);
@@ -205,16 +193,17 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
 }
 
 void GLES3Device::doDestroy() {
-    CC_SAFE_DESTROY(_queue);
-    CC_SAFE_DESTROY(_cmdBuff);
     CC_SAFE_DELETE(_gpuFramebufferCacheMap);
     CC_SAFE_DELETE(_gpuStagingBufferPool);
     CC_SAFE_DELETE(_gpuStateCache);
+
+    CC_SAFE_DESTROY(_cmdBuff);
+    CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_deviceContext);
     CC_SAFE_DESTROY(_renderContext);
 }
 
-void GLES3Device::doResize(uint width, uint height) {
+void GLES3Device::resize(uint width, uint height) {
     _width  = width;
     _height = height;
 }

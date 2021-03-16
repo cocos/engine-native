@@ -35,6 +35,7 @@ namespace gfx {
 CCMTLRenderPass::CCMTLRenderPass() : RenderPass() {}
 
 void CCMTLRenderPass::doInit(const RenderPassInfo &info) {
+    _renderTargetSizes.resize(_colorAttachments.size());
     _mtlRenderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
 
     uint i = 0;

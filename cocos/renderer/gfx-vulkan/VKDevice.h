@@ -23,8 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXVULKAN_DEVICE_H_
-#define CC_GFXVULKAN_DEVICE_H_
+#pragma once
 
 #include "gfx-base/GFXDevice.h"
 
@@ -73,8 +72,10 @@ public:
     using Device::createTexture;
     using Device::createTextureBarrier;
 
-    void   acquire() override;
-    void   present() override;
+    void resize(uint width, uint height) override;
+    void acquire() override;
+    void present() override;
+
     CC_INLINE bool checkExtension(const String &extension) const {
         return std::find_if(_extensions.begin(), _extensions.end(),
                             [extension](const char *device_extension) {
@@ -98,11 +99,10 @@ public:
     CCVKGPUStagingBufferPool *gpuStagingBufferPool();
 
 protected:
-    static CCVKDevice * _instance;
+    static CCVKDevice *_instance;
 
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
-    void                 doResize(uint width, uint height) override;
     CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *              createQueue() override;
     Buffer *             createBuffer() override;
@@ -146,5 +146,3 @@ protected:
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_GFXVULKAN_DEVICE_H_

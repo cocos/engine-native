@@ -26,102 +26,63 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXBufferAgent.h"
-#include "GFXDescriptorSetAgent.h"
-#include "GFXDescriptorSetLayoutAgent.h"
-#include "GFXDeviceAgent.h"
-#include "GFXSamplerAgent.h"
-#include "GFXTextureAgent.h"
+#include "DeviceAgent.h"
+#include "TextureAgent.h"
 
 namespace cc {
 namespace gfx {
 
-DescriptorSetAgent::~DescriptorSetAgent() {
+TextureAgent::~TextureAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetDestruct,
+        TextureDestruct,
         actor, _actor,
         {
             CC_SAFE_DELETE(actor);
         });
 }
 
-void DescriptorSetAgent::doInit(const DescriptorSetInfo &info) {
-    DescriptorSetInfo actorInfo;
-    actorInfo.layout = ((DescriptorSetLayoutAgent *)info.layout)->getActor();
-
+void TextureAgent::doInit(const TextureInfo &info) {
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetInit,
+        TextureInit,
         actor, getActor(),
-        info, actorInfo,
+        info, info,
         {
             actor->initialize(info);
         });
 }
 
-void DescriptorSetAgent::doDestroy() {
+void TextureAgent::doInit(const TextureViewInfo &info) {
+    ENQUEUE_MESSAGE_2(
+        DeviceAgent::getInstance()->getMessageQueue(),
+        TextureViewInit,
+        actor, getActor(),
+        info, info,
+        {
+            actor->initialize(info);
+        });
+}
+
+void TextureAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetDestroy,
+        TextureDestroy,
         actor, getActor(),
         {
             actor->destroy();
         });
 }
 
-void DescriptorSetAgent::update() {
-    ENQUEUE_MESSAGE_1(
+void TextureAgent::doResize(uint width, uint height) {
+    ENQUEUE_MESSAGE_3(
         DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetUpdate,
+        TextureResize,
         actor, getActor(),
+        width, width,
+        height, height,
         {
-            actor->update();
-        });
-}
-
-void DescriptorSetAgent::bindBuffer(uint binding, Buffer *buffer, uint index) {
-    DescriptorSet::bindBuffer(binding, buffer, index);
-
-    ENQUEUE_MESSAGE_4(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetBindBuffer,
-        actor, getActor(),
-        binding, binding,
-        buffer, ((BufferAgent *)buffer)->getActor(),
-        index, index,
-        {
-            actor->bindBuffer(binding, buffer, index);
-        });
-}
-
-void DescriptorSetAgent::bindTexture(uint binding, Texture *texture, uint index) {
-    DescriptorSet::bindTexture(binding, texture, index);
-
-    ENQUEUE_MESSAGE_4(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetBindTexture,
-        actor, getActor(),
-        binding, binding,
-        texture, ((TextureAgent *)texture)->getActor(),
-        index, index,
-        {
-            actor->bindTexture(binding, texture, index);
-        });
-}
-
-void DescriptorSetAgent::bindSampler(uint binding, Sampler *sampler, uint index) {
-    DescriptorSet::bindSampler(binding, sampler, index);
-
-    ENQUEUE_MESSAGE_4(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        DescriptorSetBindSampler,
-        actor, getActor(),
-        binding, binding,
-        sampler, ((SamplerAgent *)sampler)->getActor(),
-        index, index,
-        {
-            actor->bindSampler(binding, sampler, index);
+            actor->resize(width, height);
         });
 }
 

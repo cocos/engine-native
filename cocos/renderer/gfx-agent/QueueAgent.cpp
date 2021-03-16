@@ -27,10 +27,10 @@
 #include "base/job-system/JobSystem.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXCommandBufferAgent.h"
-#include "GFXDeviceAgent.h"
-#include "GFXLinearAllocatorPool.h"
-#include "GFXQueueAgent.h"
+#include "CommandBufferAgent.h"
+#include "DeviceAgent.h"
+#include "LinearAllocatorPool.h"
+#include "QueueAgent.h"
 
 namespace cc {
 namespace gfx {

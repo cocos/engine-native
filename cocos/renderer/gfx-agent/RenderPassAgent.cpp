@@ -26,44 +26,37 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "GFXDescriptorSetLayoutAgent.h"
-#include "GFXDeviceAgent.h"
-#include "GFXPipelineLayoutAgent.h"
+#include "DeviceAgent.h"
+#include "RenderPassAgent.h"
 
 namespace cc {
 namespace gfx {
 
-PipelineLayoutAgent::~PipelineLayoutAgent() {
+RenderPassAgent::~RenderPassAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        PipelineLayoutDestruct,
+        RenderPassDestruct,
         actor, _actor,
         {
             CC_SAFE_DELETE(actor);
         });
 }
 
-void PipelineLayoutAgent::doInit(const PipelineLayoutInfo &info) {
-    PipelineLayoutInfo actorInfo;
-    actorInfo.setLayouts.resize(info.setLayouts.size());
-    for (uint i = 0u; i < info.setLayouts.size(); i++) {
-        actorInfo.setLayouts[i] = ((DescriptorSetLayoutAgent *)info.setLayouts[i])->getActor();
-    }
-
+void RenderPassAgent::doInit(const RenderPassInfo &info) {
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
-        PipelineLayoutInit,
+        RenderPassInit,
         actor, getActor(),
-        info, actorInfo,
+        info, info,
         {
             actor->initialize(info);
         });
 }
 
-void PipelineLayoutAgent::doDestroy() {
+void RenderPassAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        PipelineLayoutDestroy,
+        RenderPassDestroy,
         actor, getActor(),
         {
             actor->destroy();
