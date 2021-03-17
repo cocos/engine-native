@@ -62,7 +62,7 @@ public:
     void setSkybox(uint);
     void setShadows(uint);
     void destroyShadowFrameBuffers();
-    uint8_t getCombinationSignY();
+    uint8_t getCombineSignY() const;
 
     CC_INLINE void setShadowFramebuffer(const Light *light, gfx::Framebuffer *framebuffer) { _shadowFrameBufferMap.emplace(light, framebuffer); }
     CC_INLINE const std::unordered_map<const Light *, gfx::Framebuffer *> &getShadowFramebufferMap() const { return _shadowFrameBufferMap; }
@@ -90,6 +90,7 @@ public:
 private:
     bool activeRenderer();
     void updateUBO(Camera *);
+    void initCombineSignY();
 
 private:
     const Fog *_fog = nullptr;
@@ -112,6 +113,7 @@ private:
     float _shadingScale = 1.0f;
     bool _isHDR = false;
     float _fpScale = 1.0f / 1024.0f;
+    uint8_t _combineSignY = 0;
 
     std::unordered_map<const Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };

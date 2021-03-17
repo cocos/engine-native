@@ -111,14 +111,18 @@ void ForwardPipeline::destroyShadowFrameBuffers() {
     _shadowFrameBufferMap.clear();
 }
 
-uint8_t ForwardPipeline::getCombinationSignY() {
+uint8_t ForwardPipeline::getCombineSignY() const {
+    return _combineSignY;
+}
+
+void ForwardPipeline::initCombineSignY() {
     auto *device = gfx::Device::getInstance();
-    return static_cast<uint8_t>(device->getScreenSpaceSignY() * 0.5 + 0.5) << 1 | static_cast<uint8_t>(device->getClipSpaceSignY() * 0.5 + 0.5);
+    _combineSignY = static_cast<uint8_t>(device->getScreenSpaceSignY() * 0.5 + 0.5) << 1 | static_cast<uint8_t>(device->getClipSpaceSignY() * 0.5 + 0.5);
 }
 
 bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
     RenderPipeline::initialize(info);
-
+    initCombineSignY();
     if (_flows.size() == 0) {
         auto shadowFlow = CC_NEW(ShadowFlow);
         shadowFlow->initialize(ShadowFlow::getInitializeInfo());
@@ -227,7 +231,7 @@ void ForwardPipeline::updateCameraUBO(Camera *camera) {
     memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
     TO_VEC3(uboCameraView, camera->position, UBOCamera::CAMERA_POS_OFFSET);
 
-    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = getCombinationSignY();
+    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = getCombineSignY();
 
     TO_VEC4(uboCameraView, fog->fogColor, UBOCamera::GLOBAL_FOG_COLOR_OFFSET);
 
