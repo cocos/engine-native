@@ -44,7 +44,6 @@ class CC_DLL DeviceAgent final : public Agent<Device> {
 public:
     static DeviceAgent *getInstance();
 
-    DeviceAgent(Device *device);
     ~DeviceAgent() override;
 
     using Device::copyBuffersToTexture;
@@ -103,7 +102,10 @@ public:
 protected:
     static DeviceAgent *_instance;
 
+    friend class DeviceCreator;
     friend class CommandBufferAgent;
+
+    DeviceAgent(Device *device);
 
     bool doInit(const DeviceInfo &info) override;
     void doDestroy() override;

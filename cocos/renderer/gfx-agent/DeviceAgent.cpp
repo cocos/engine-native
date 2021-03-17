@@ -51,8 +51,8 @@ DeviceAgent *DeviceAgent::getInstance() {
     return DeviceAgent::_instance;
 }
 
-DeviceAgent::DeviceAgent(Device *device): Agent(device) {
-    DeviceAgent::_instance  = this;
+DeviceAgent::DeviceAgent(Device *device) : Agent(device) {
+    DeviceAgent::_instance = this;
 }
 
 DeviceAgent::~DeviceAgent() {
@@ -200,75 +200,63 @@ CommandBuffer *DeviceAgent::createCommandBuffer(const CommandBufferInfo &info, b
 }
 
 Queue *DeviceAgent::createQueue() {
-    Queue *     actor = _actor->createQueue();
-    QueueAgent *agent = CC_NEW(QueueAgent(actor));
-    return agent;
+    Queue *actor = _actor->createQueue();
+    return CC_NEW(QueueAgent(actor));
 }
 
 Buffer *DeviceAgent::createBuffer() {
-    Buffer *     actor = _actor->createBuffer();
-    BufferAgent *agent = CC_NEW(BufferAgent(actor));
-    return agent;
+    Buffer *actor = _actor->createBuffer();
+    return CC_NEW(BufferAgent(actor));
 }
 
 Texture *DeviceAgent::createTexture() {
-    Texture *     actor = _actor->createTexture();
-    TextureAgent *agent = CC_NEW(TextureAgent(actor));
-    return agent;
+    Texture *actor = _actor->createTexture();
+    return CC_NEW(TextureAgent(actor));
 }
 
 Sampler *DeviceAgent::createSampler() {
-    Sampler *     actor = _actor->createSampler();
-    SamplerAgent *agent = CC_NEW(SamplerAgent(actor));
-    return agent;
+    Sampler *actor = _actor->createSampler();
+    return CC_NEW(SamplerAgent(actor));
 }
 
 Shader *DeviceAgent::createShader() {
-    Shader *     actor = _actor->createShader();
-    ShaderAgent *agent = CC_NEW(ShaderAgent(actor));
-    return agent;
+    Shader *actor = _actor->createShader();
+    return CC_NEW(ShaderAgent(actor));
 }
 
 InputAssembler *DeviceAgent::createInputAssembler() {
-    InputAssembler *     actor = _actor->createInputAssembler();
-    InputAssemblerAgent *agent = CC_NEW(InputAssemblerAgent(actor));
-    return agent;
+    InputAssembler *actor = _actor->createInputAssembler();
+    return CC_NEW(InputAssemblerAgent(actor));
 }
 
 RenderPass *DeviceAgent::createRenderPass() {
-    RenderPass *     actor = _actor->createRenderPass();
-    RenderPassAgent *agent = CC_NEW(RenderPassAgent(actor));
-    return agent;
+    RenderPass *actor = _actor->createRenderPass();
+    return CC_NEW(RenderPassAgent(actor));
 }
 
 Framebuffer *DeviceAgent::createFramebuffer() {
-    Framebuffer *     actor = _actor->createFramebuffer();
-    FramebufferAgent *agent = CC_NEW(FramebufferAgent(actor));
-    return agent;
+    Framebuffer *actor = _actor->createFramebuffer();
+    return CC_NEW(FramebufferAgent(actor));
 }
 
 DescriptorSet *DeviceAgent::createDescriptorSet() {
-    DescriptorSet *     actor = _actor->createDescriptorSet();
-    DescriptorSetAgent *agent = CC_NEW(DescriptorSetAgent(actor));
-    return agent;
+    DescriptorSet *actor = _actor->createDescriptorSet();
+    return CC_NEW(DescriptorSetAgent(actor));
 }
 
 DescriptorSetLayout *DeviceAgent::createDescriptorSetLayout() {
-    DescriptorSetLayout *     actor = _actor->createDescriptorSetLayout();
-    DescriptorSetLayoutAgent *agent = CC_NEW(DescriptorSetLayoutAgent(actor));
-    return agent;
+    DescriptorSetLayout *actor = _actor->createDescriptorSetLayout();
+    return CC_NEW(DescriptorSetLayoutAgent(actor));
 }
 
 PipelineLayout *DeviceAgent::createPipelineLayout() {
-    PipelineLayout *     actor = _actor->createPipelineLayout();
-    PipelineLayoutAgent *agent = CC_NEW(PipelineLayoutAgent(actor));
-    return agent;
+    PipelineLayout *actor = _actor->createPipelineLayout();
+    return CC_NEW(PipelineLayoutAgent(actor));
 }
 
 PipelineState *DeviceAgent::createPipelineState() {
-    PipelineState *     actor = _actor->createPipelineState();
-    PipelineStateAgent *agent = CC_NEW(PipelineStateAgent(actor));
-    return agent;
+    PipelineState *actor = _actor->createPipelineState();
+    return CC_NEW(PipelineStateAgent(actor));
 }
 
 GlobalBarrier *DeviceAgent::createGlobalBarrier() {

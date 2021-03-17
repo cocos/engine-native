@@ -86,7 +86,6 @@ CCVKGPUContext *CCVKDevice::gpuContext() const {
 bool CCVKDevice::doInit(const DeviceInfo &info) {
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
-    ctxInfo.sharedCtx    = info.sharedCtx;
 
     _context = CC_NEW(CCVKContext);
     if (!_context->initialize(ctxInfo)) {
@@ -553,9 +552,9 @@ void CCVKDevice::acquire() {
     VK_CHECK(vkAcquireNextImageKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, ~0ull,
                                    acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
-#if defined(VK_USE_PLATFORM_METAL_EXT)
+#if !defined(VK_USE_PLATFORM_METAL_EXT)
     assert(_gpuDevice->curBackBufferIndex == _gpuSwapchain->curImageIndex); // MoltenVK seems to be not consistent
-#endif                                                                      // defined(VK_USE_PLATFORM_METAL_EXT)
+#endif // defined(VK_USE_PLATFORM_METAL_EXT)
 
     queue->gpuQueue()->nextWaitSemaphore   = acquireSemaphore;
     queue->gpuQueue()->nextSignalSemaphore = _gpuSemaphorePool->alloc();

@@ -51,7 +51,6 @@ class CC_VULKAN_API CCVKDevice final : public Device {
 public:
     static CCVKDevice *getInstance();
 
-    CCVKDevice();
     ~CCVKDevice() override;
 
     friend class CCVKContext;
@@ -100,6 +99,10 @@ public:
 
 protected:
     static CCVKDevice *_instance;
+
+    friend class DeviceCreator;
+
+    CCVKDevice();
 
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;

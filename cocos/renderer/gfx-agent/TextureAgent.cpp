@@ -54,11 +54,14 @@ void TextureAgent::doInit(const TextureInfo &info) {
 }
 
 void TextureAgent::doInit(const TextureViewInfo &info) {
+    TextureViewInfo actorInfo = info;
+    actorInfo.texture         = ((TextureAgent *)info.texture)->getActor();
+
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
         TextureViewInit,
         actor, getActor(),
-        info, info,
+        info, actorInfo,
         {
             actor->initialize(info);
         });

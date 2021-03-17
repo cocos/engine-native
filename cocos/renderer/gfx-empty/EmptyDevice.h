@@ -34,7 +34,6 @@ class CC_DLL EmptyDevice final : public Device {
 public:
     static EmptyDevice *getInstance();
 
-    EmptyDevice();
     ~EmptyDevice() override;
 
     using Device::copyBuffersToTexture;
@@ -77,6 +76,10 @@ public:
 
 protected:
     static EmptyDevice *_instance;
+
+    friend class DeviceCreator;
+
+    EmptyDevice();
 
     bool doInit(const DeviceInfo &info) override;
     void doDestroy() override;

@@ -63,52 +63,35 @@ public:
     virtual void dispatch(const DispatchInfo &info)                                                                                                                                                          = 0;
     virtual void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount)                                       = 0;
 
-    CC_INLINE void begin() { begin(nullptr, 0, nullptr); }
-    // secondary command buffer specifics
-    CC_INLINE void begin(RenderPass *renderPass) { begin(renderPass, 0, nullptr); }
-    CC_INLINE void begin(RenderPass *renderPass, uint subpass) { begin(renderPass, subpass, nullptr); }
+    inline void begin();
+    inline void begin(RenderPass *renderPass);
+    inline void begin(RenderPass *renderPass, uint subpass);
 
-    CC_INLINE void updateBuffer(Buffer *buff, const void *data) { updateBuffer(buff, data, buff->getSize()); }
-    CC_INLINE void execute(CommandBufferList &cmdBuffs, uint32_t count) { execute(cmdBuffs.data(), count); }
-    CC_INLINE void bindDescriptorSet(uint set, DescriptorSet *descriptorSet) { bindDescriptorSet(set, descriptorSet, 0, nullptr); }
-    CC_INLINE void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
-        bindDescriptorSet(set, descriptorSet, static_cast<uint>(dynamicOffsets.size()), dynamicOffsets.data());
-    }
-    CC_INLINE void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs) {
-        beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), static_cast<uint>(secondaryCBs.size()));
-    }
-    CC_INLINE void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil) {
-        beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, nullptr, 0);
-    }
-    CC_INLINE void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) {
-        beginRenderPass(renderPass, fbo, renderArea, colors, depth, stencil, nullptr, 0);
-    }
-    CC_INLINE void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
-        copyBuffersToTexture(buffers.data(), texture, regions.data(), static_cast<uint>(regions.size()));
-    }
-    CC_INLINE void blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlitList &regions, Filter filter) {
-        blitTexture(srcTexture, dstTexture, regions.data(), static_cast<uint>(regions.size()), filter);
-    }
-    CC_INLINE void pipelineBarrier(const GlobalBarrier *barrier) { pipelineBarrier(barrier, nullptr, nullptr, 0u); }
-    CC_INLINE void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrierList &textureBarriers, const TextureList &textures) {
-        pipelineBarrier(barrier, textureBarriers.data(), textures.data(), static_cast<uint>(textureBarriers.size()));
-    }
+    inline void updateBuffer(Buffer *buff, const void *data);
 
-    CC_INLINE void bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet) {
-        bindDescriptorSet(set, descriptorSet, 0, nullptr);
-    }
-    CC_INLINE void bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
-        bindDescriptorSet(set, descriptorSet, static_cast<uint>(dynamicOffsets.size()), dynamicOffsets.data());
-    }
-    CC_INLINE void beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs) {
-        beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), static_cast<uint>(secondaryCBs.size()));
-    }
-    CC_INLINE void beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil) {
-        beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, nullptr, 0);
-    }
+    inline void execute(CommandBufferList &cmdBuffs, uint32_t count);
 
-    CC_INLINE Queue *           getQueue() const { return _queue; }
-    CC_INLINE CommandBufferType getType() const { return _type; }
+    inline void bindDescriptorSet(uint set, DescriptorSet *descriptorSet);
+    inline void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets);
+
+    inline void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs);
+    inline void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil);
+    inline void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil);
+
+    inline void copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions);
+
+    inline void blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlitList &regions, Filter filter);
+
+    inline void pipelineBarrier(const GlobalBarrier *barrier);
+    inline void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrierList &textureBarriers, const TextureList &textures);
+
+    inline void bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet);
+    inline void bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets);
+    inline void beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs);
+    inline void beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil);
+
+    inline Queue *           getQueue() const { return _queue; }
+    inline CommandBufferType getType() const { return _type; }
 
     virtual uint getNumDrawCalls() const { return _numDrawCalls; }
     virtual uint getNumInstances() const { return _numInstances; }
@@ -118,13 +101,87 @@ protected:
     virtual void doInit(const CommandBufferInfo &info) = 0;
     virtual void doDestroy()                           = 0;
 
-    Queue *           _queue  = nullptr;
-    CommandBufferType _type   = CommandBufferType::PRIMARY;
+    Queue *           _queue = nullptr;
+    CommandBufferType _type  = CommandBufferType::PRIMARY;
 
     uint32_t _numDrawCalls = 0;
     uint32_t _numInstances = 0;
     uint32_t _numTriangles = 0;
 };
+
+//////////////////////////////////////////////////////////////////////////
+
+void CommandBuffer::begin() {
+    begin(nullptr, 0, nullptr);
+}
+
+void CommandBuffer::begin(RenderPass *renderPass) {
+    begin(renderPass, 0, nullptr);
+}
+
+void CommandBuffer::begin(RenderPass *renderPass, uint subpass) {
+    begin(renderPass, subpass, nullptr);
+}
+
+void CommandBuffer::updateBuffer(Buffer *buff, const void *data) {
+    updateBuffer(buff, data, buff->getSize());
+}
+
+void CommandBuffer::execute(CommandBufferList &cmdBuffs, uint32_t count) {
+    execute(cmdBuffs.data(), count);
+}
+
+void CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet) {
+    bindDescriptorSet(set, descriptorSet, 0, nullptr);
+}
+
+void CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
+    bindDescriptorSet(set, descriptorSet, static_cast<uint>(dynamicOffsets.size()), dynamicOffsets.data());
+}
+
+void CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs) {
+    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), static_cast<uint>(secondaryCBs.size()));
+}
+
+void CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil) {
+    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, nullptr, 0);
+}
+
+void CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil) {
+    beginRenderPass(renderPass, fbo, renderArea, colors, depth, stencil, nullptr, 0);
+}
+
+void CommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
+    copyBuffersToTexture(buffers.data(), texture, regions.data(), static_cast<uint>(regions.size()));
+}
+
+void CommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlitList &regions, Filter filter) {
+    blitTexture(srcTexture, dstTexture, regions.data(), static_cast<uint>(regions.size()), filter);
+}
+
+void CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier) {
+    pipelineBarrier(barrier, nullptr, nullptr, 0u);
+}
+
+void CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrierList &textureBarriers, const TextureList &textures) {
+    pipelineBarrier(barrier, textureBarriers.data(), textures.data(), static_cast<uint>(textureBarriers.size()));
+}
+
+void CommandBuffer::bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet) {
+    bindDescriptorSet(set, descriptorSet, 0, nullptr);
+}
+
+void CommandBuffer::bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
+    bindDescriptorSet(set, descriptorSet, static_cast<uint>(dynamicOffsets.size()), dynamicOffsets.data());
+}
+
+void CommandBuffer::beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs) {
+    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), static_cast<uint>(secondaryCBs.size()));
+}
+
+void CommandBuffer::beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil) {
+    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, nullptr, 0);
+}
 
 } // namespace gfx
 } // namespace cc

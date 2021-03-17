@@ -58,6 +58,9 @@ public:
     CC_INLINE int  major_ver() const { return _majorVersion; }
     CC_INLINE int  minor_ver() const { return _minorVersion; }
 
+    void releaseSurface(uintptr_t windowHandle);
+    void acquireSurface(uintptr_t windowHandle);
+
 protected:
     bool MakeCurrentImpl(bool bound);
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)

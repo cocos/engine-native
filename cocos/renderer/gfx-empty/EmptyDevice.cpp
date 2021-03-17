@@ -61,7 +61,6 @@ EmptyDevice::~EmptyDevice() {
 bool EmptyDevice::doInit(const DeviceInfo &info) {
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
-    ctxInfo.sharedCtx    = info.sharedCtx;
 
     _context = CC_NEW(EmptyContext);
     if (!_context->initialize(ctxInfo)) {
@@ -77,8 +76,6 @@ bool EmptyDevice::doInit(const DeviceInfo &info) {
     cmdBuffInfo.type  = CommandBufferType::PRIMARY;
     cmdBuffInfo.queue = _queue;
     _cmdBuff          = createCommandBuffer(cmdBuffInfo);
-
-    _caps.uboOffsetAlignment = 1u;
 
     CC_LOG_INFO("Empty device initialized.");
     CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);

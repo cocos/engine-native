@@ -113,7 +113,6 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
 
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
-    ctxInfo.sharedCtx    = info.sharedCtx;
 
     _context = CC_NEW(CCMTLContext);
     if (!_context->initialize(ctxInfo)) {

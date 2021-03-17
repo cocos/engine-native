@@ -66,7 +66,6 @@ GLES3Device::~GLES3Device() {
 bool GLES3Device::doInit(const DeviceInfo &info) {
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
-    ctxInfo.sharedCtx    = info.sharedCtx;
 
     _renderContext = CC_NEW(GLES3Context);
     if (!_renderContext->initialize(ctxInfo)) {
@@ -201,6 +200,14 @@ void GLES3Device::doDestroy() {
     CC_SAFE_DESTROY(_queue);
     CC_SAFE_DESTROY(_deviceContext);
     CC_SAFE_DESTROY(_renderContext);
+}
+
+void GLES3Device::releaseSurface(const uintptr_t windowHandle) {
+    ((GLES3Context *)_context)->releaseSurface(windowHandle);
+}
+
+void GLES3Device::acquireSurface(const uintptr_t windowHandle) {
+    ((GLES3Context *)_context)->acquireSurface(windowHandle);
 }
 
 void GLES3Device::resize(uint width, uint height) {

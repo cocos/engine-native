@@ -611,6 +611,8 @@ endif()
 
 ##### renderer
 cocos_source_files(
+                 cocos/renderer/GFXDeviceCreator.h
+
                  cocos/renderer/gfx-base/GFXObject.h
     NO_WERROR    cocos/renderer/gfx-base/GFXObject.cpp
                  cocos/renderer/gfx-base/GFXBase.h
@@ -680,6 +682,36 @@ cocos_source_files(
     NO_WERROR    cocos/renderer/gfx-agent/ShaderAgent.cpp
                  cocos/renderer/gfx-agent/TextureAgent.h
     NO_WERROR    cocos/renderer/gfx-agent/TextureAgent.cpp
+                 cocos/renderer/gfx-empty/EmptyBuffer.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyBuffer.cpp
+                 cocos/renderer/gfx-empty/EmptyCommandBuffer.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyCommandBuffer.cpp
+                 cocos/renderer/gfx-empty/EmptyContext.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyContext.cpp
+                 cocos/renderer/gfx-empty/EmptyDescriptorSet.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyDescriptorSet.cpp
+                 cocos/renderer/gfx-empty/EmptyDescriptorSetLayout.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyDescriptorSetLayout.cpp
+                 cocos/renderer/gfx-empty/EmptyDevice.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyDevice.cpp
+                 cocos/renderer/gfx-empty/EmptyFramebuffer.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyFramebuffer.cpp
+                 cocos/renderer/gfx-empty/EmptyInputAssembler.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyInputAssembler.cpp
+                 cocos/renderer/gfx-empty/EmptyPipelineLayout.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyPipelineLayout.cpp
+                 cocos/renderer/gfx-empty/EmptyPipelineState.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyPipelineState.cpp
+                 cocos/renderer/gfx-empty/EmptyQueue.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyQueue.cpp
+                 cocos/renderer/gfx-empty/EmptyRenderPass.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyRenderPass.cpp
+                 cocos/renderer/gfx-empty/EmptySampler.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptySampler.cpp
+                 cocos/renderer/gfx-empty/EmptyShader.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyShader.cpp
+                 cocos/renderer/gfx-empty/EmptyTexture.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyTexture.cpp
     NO_WERROR    cocos/renderer/pipeline/BatchedBuffer.cpp
                  cocos/renderer/pipeline/BatchedBuffer.h
                  cocos/renderer/pipeline/Define.h
@@ -1337,8 +1369,6 @@ cocos_source_files(
                  cocos/bindings/manual/jsb_conversions.h
     NO_WERROR    cocos/bindings/manual/jsb_gfx_manual.cpp
                  cocos/bindings/manual/jsb_gfx_manual.h
-    NO_WERROR    cocos/bindings/manual/jsb_gfx_agent.cpp
-                 cocos/bindings/manual/jsb_gfx_agent.h
     NO_WERROR    cocos/bindings/manual/jsb_global.cpp
                  cocos/bindings/manual/jsb_global.h
     NO_WERROR    cocos/bindings/manual/jsb_global_init.cpp
@@ -1386,34 +1416,6 @@ elseif(APPLE)
 elseif(WIN32)
     cocos_source_files(
         NO_WERROR    cocos/bindings/manual/jsb_platfrom_win32.cpp
-    )
-endif()
-
-if(CC_USE_GLES2)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_gles2_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_gles2_auto.cpp
-    )
-endif()
-
-if(CC_USE_GLES3)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_gles3_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_gles3_auto.cpp
-    )
-endif()
-
-if(CC_USE_METAL)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_mtl_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_mtl_auto.cpp
-    )
-endif()
-
-if(CC_USE_VULKAN)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_vk_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_vk_auto.cpp
     )
 endif()
 

@@ -44,9 +44,7 @@ Device::Device() {
 }
 
 Device::~Device() {
-    if (Device::_instance == this) {
-        Device::_instance = nullptr;
-    }
+    Device::_instance = nullptr;
 }
 
 Format Device::getColorFormat() const {

@@ -65,7 +65,6 @@ GLES2Device::~GLES2Device() {
 bool GLES2Device::doInit(const DeviceInfo &info) {
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
-    ctxInfo.sharedCtx    = info.sharedCtx;
 
     _renderContext = CC_NEW(GLES2Context);
     if (!_renderContext->initialize(ctxInfo)) {
@@ -184,7 +183,6 @@ bool GLES2Device::doInit(const DeviceInfo &info) {
     glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, (GLint *)&_caps.maxCubeMapTextureSize);
     glGetIntegerv(GL_DEPTH_BITS, (GLint *)&_caps.depthBits);
     glGetIntegerv(GL_STENCIL_BITS, (GLint *)&_caps.stencilBits);
-    _caps.uboOffsetAlignment = 1u;
 
     _gpuStateCache->initialize(_caps.maxTextureUnits, _caps.maxVertexAttributes);
 

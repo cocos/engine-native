@@ -87,6 +87,8 @@ public:
 protected:
     static CCMTLDevice * _instance;
 
+    friend class DeviceCreator;
+
     bool doInit(const DeviceInfo &info) override;
     void doDestroy() override;
     CommandBuffer *createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;

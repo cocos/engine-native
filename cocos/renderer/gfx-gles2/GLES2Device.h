@@ -46,7 +46,6 @@ class CC_GLES2_API GLES2Device final : public Device {
 public:
     static GLES2Device *getInstance();
 
-    GLES2Device();
     ~GLES2Device() override;
 
     using Device::copyBuffersToTexture;
@@ -92,7 +91,10 @@ public:
 protected:
     static GLES2Device * _instance;
 
+    friend class DeviceCreator;
     friend class GLES2Context;
+
+    GLES2Device();
 
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;

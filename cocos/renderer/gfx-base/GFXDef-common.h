@@ -714,13 +714,15 @@ struct DeviceCaps {
     uint  maxUniformBlockSize            = 0u;
     uint  maxTextureSize                 = 0u;
     uint  maxCubeMapTextureSize          = 0u;
-    uint  uboOffsetAlignment             = 0u;
     uint  depthBits                      = 0u;
     uint  stencilBits                    = 0u;
+    uint  uboOffsetAlignment             = 1u;
+
     uint  maxComputeSharedMemorySize     = 0u;
     uint  maxComputeWorkGroupInvocations = 0u;
     Size  maxComputeWorkGroupSize;
     Size  maxComputeWorkGroupCount;
+
     float clipSpaceMinZ    = -1.0f;
     float screenSpaceSignY = 1.0f;
     float UVSpaceSignY     = -1.0f;

@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "SPIRV/GlslangToSpv.h"
+#include "glslang/SPIRV/GlslangToSpv.h"
 #include "glslang/Public/ShaderLang.h"
 #include "StandAlone/ResourceLimits.h"
 

@@ -39,7 +39,6 @@ class CC_GLES3_API GLES3Device final : public Device {
 public:
     static GLES3Device *getInstance();
 
-    GLES3Device();
     ~GLES3Device() override;
 
     using Device::copyBuffersToTexture;
@@ -63,11 +62,12 @@ public:
     void acquire() override;
     void present() override;
 
-    CC_INLINE GLES3GPUStateCache *stateCache() const { return _gpuStateCache; }
-    CC_INLINE GLES3GPUStagingBufferPool *stagingBufferPool() const { return _gpuStagingBufferPool; }
-    CC_INLINE GLES3GPUFramebufferCacheMap *framebufferCacheMap() const { return _gpuFramebufferCacheMap; }
+    inline GLES3GPUStateCache *         stateCache() const { return _gpuStateCache; }
+    inline GLES3GPUStagingBufferPool *  stagingBufferPool() const { return _gpuStagingBufferPool; }
+    inline GLES3GPUFramebufferCacheMap *framebufferCacheMap() const { return _gpuFramebufferCacheMap; }
+    inline uint                         getThreadID() const { return _threadID; }
 
-    CC_INLINE bool checkExtension(const String &extension) const {
+    inline bool checkExtension(const String &extension) const {
         for (size_t i = 0; i < _extensions.size(); ++i) {
             if (_extensions[i].find(extension) != String::npos) {
                 return true;
@@ -76,13 +76,15 @@ public:
         return false;
     }
 
-    CC_INLINE uint getThreadID() const { return _threadID; }
-    uint           getMinorVersion() const;
+    uint getMinorVersion() const;
 
 protected:
     static GLES3Device *_instance;
 
+    friend class DeviceCreator;
     friend class GLES3Context;
+
+    GLES3Device();
 
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
@@ -102,6 +104,9 @@ protected:
     GlobalBarrier *      createGlobalBarrier() override;
     TextureBarrier *     createTextureBarrier() override;
     void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
+
+    void releaseSurface(uintptr_t windowHandle) override;
+    void acquireSurface(uintptr_t windowHandle) override;
 
     void bindRenderContext(bool bound) override;
     void bindDeviceContext(bool bound) override;

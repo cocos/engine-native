@@ -56,7 +56,7 @@ public:
 
 #define INITIAL_CAPACITY 1
 
-template <typename T, typename = std::enable_if<std::is_base_of<GLESCmd, T>::value>>
+template <typename T, typename = std::enable_if_t<std::is_base_of<GLESCmd, T>::value>>
 class CommandPool {
 public:
     CommandPool() : _freeCmds(INITIAL_CAPACITY) {
