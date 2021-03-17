@@ -68,7 +68,7 @@ void BufferAgent::doInit(const BufferViewInfo &info) {
         });
 }
 
-void BufferAgent::doResize(uint size) {
+void BufferAgent::doResize(uint size, uint count) {
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
         BufferResize,

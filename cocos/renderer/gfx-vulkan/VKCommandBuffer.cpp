@@ -88,11 +88,7 @@ void CCVKCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer 
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     VkCommandBufferInheritanceInfo inheritanceInfo{VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO};
 
-    if (_type == CommandBufferType::SECONDARY) {
-        if (!renderPass) {
-            CC_LOG_ERROR("RenderPass has to be specified when beginning secondary command buffers.");
-            return;
-        }
+    if (renderPass) {
         inheritanceInfo.renderPass = ((CCVKRenderPass *)renderPass)->gpuRenderPass()->vkRenderPass;
         inheritanceInfo.subpass    = subpass;
         if (frameBuffer) {

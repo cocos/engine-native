@@ -84,7 +84,7 @@ bool DeviceAgent::doInit(const DeviceInfo &info) {
     }
     ((CommandBufferAgent *)_cmdBuff)->initMessageQueue();
 
-    setMultithreaded(true);
+    //setMultithreaded(true);
 
     return true;
 }

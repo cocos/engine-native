@@ -111,7 +111,8 @@ protected:
     static Device *_instance;
 
     friend class DeviceAgent;
-    friend class DeviceCreator;
+    friend class DeviceValidator;
+    friend class DeviceManager;
 
     Device();
 
