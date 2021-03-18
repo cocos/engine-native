@@ -25,46 +25,13 @@
 
 #pragma once
 
-#include "gfx-base/GFXPipelineState.h"
-
-#include "MTLGPUObjects.h"
-
-#import <Metal/MTLDepthStencil.h>
-#import <Metal/MTLRenderPipeline.h>
-
 namespace cc {
 namespace gfx {
 
-class CCMTLPipelineState final : public PipelineState {
+class CCMTLCommandEncoder {
 public:
-    explicit CCMTLPipelineState(Device *device);
-    ~CCMTLPipelineState() override = default;
-    CCMTLPipelineState(const CCMTLPipelineState &)=delete;
-    CCMTLPipelineState(CCMTLPipelineState &&)=delete;
-    CCMTLPipelineState &operator=(const CCMTLPipelineState &)=delete;
-    CCMTLPipelineState &operator=(CCMTLPipelineState &&)=delete;
-
-    bool initialize(const PipelineStateInfo &info) override;
-    void destroy() override;
-
-    CC_INLINE CCMTLGPUPipelineState *getGPUPipelineState() const { return _GPUPipelineState; }
-
-private:
-    bool createMTLDepthStencilState();
-    bool createGPUPipelineState();
-    bool createMTLComputePipelineState();
-    bool createMTLRenderPipelineState();
-    void setVertexDescriptor(MTLRenderPipelineDescriptor *);
-    void setMTLFunctions(MTLRenderPipelineDescriptor *);
-    void setFormats(MTLRenderPipelineDescriptor *);
-    void setBlendStates(MTLRenderPipelineDescriptor *);
-    bool createMTLRenderPipeline(MTLRenderPipelineDescriptor *);
-
-private:
-    id<MTLRenderPipelineState> _mtlRenderPipelineState = nil;
-    id<MTLDepthStencilState> _mtlDepthStencilState = nil;
-    id<MTLComputePipelineState> _mtlComputePipeline = nil;
-    CCMTLGPUPipelineState *_GPUPipelineState = nullptr;
+    CCMTLCommandEncoder()          = default;
+    virtual ~CCMTLCommandEncoder() = default;
 };
 
 } // namespace gfx

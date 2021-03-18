@@ -62,6 +62,8 @@ void CCMTLShader::destroy() {
     _vertexMTLFunction = nil;
     id<MTLFunction> fragFunc = _fragmentMTLFunction;
     _fragmentMTLFunction = nil;
+    id<MTLFunction> cmptFunc = _computeMTLFunction;
+    _computeMTLFunction = nil;
 
     CC_SAFE_DELETE(_gpuShader);
 
@@ -72,12 +74,26 @@ void CCMTLShader::destroy() {
         if (fragFunc) {
             [fragFunc release];
         }
+        if (cmptFunc) {
+            [cmptFunc release];
+        }
     };
     CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
 }
 
 bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
-    bool isVertexShader = stage.stage == ShaderStageFlagBit::VERTEX;
+    bool isVertexShader = false;
+    bool isFragmentShader = false;
+    bool isComputeShader = false;
+    
+    if (stage.stage == ShaderStageFlagBit::VERTEX) {
+        isVertexShader = true;
+    } else if (stage.stage == ShaderStageFlagBit::FRAGMENT) {
+        isFragmentShader = true;
+    } else if (stage.stage == ShaderStageFlagBit::COMPUTE) {
+        isComputeShader = true;
+    }
+    
     id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
     auto mtlShader = mu::compileGLSLShader2Msl(stage.source,
                                                stage.stage,
@@ -90,26 +106,36 @@ bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
                                                      options:nil
                                                        error:&error];
     if (!library) {
-        CC_LOG_ERROR("Can not compile %s shader: %s", isVertexShader ? "vertex" : "fragment",
-                     [error.localizedFailureReason UTF8String]);
+        CC_LOG_ERROR("Can not compile %s shader: %s", isVertexShader ? "vertex" :
+                     isFragmentShader ? "fragment" : "compute",
+                     [[error localizedDescription] UTF8String]);
         CC_LOG_ERROR("%s", stage.source.c_str());
         return false;
     }
 
-    if (stage.stage == ShaderStageFlagBit::VERTEX) {
+    if (isVertexShader) {
         _vertexMTLFunction = [library newFunctionWithName:@"main0"];
         if (!_vertexMTLFunction) {
             [library release];
             CC_LOG_ERROR("Can not create vertex function: main0");
             return false;
         }
-    } else {
+    } else if (isFragmentShader) {
         _fragmentMTLFunction = [library newFunctionWithName:@"main0"];
         if (!_fragmentMTLFunction) {
             [library release];
             CC_LOG_ERROR("Can not create fragment function: main0");
             return false;
         }
+    } else if (isComputeShader) {
+        _computeMTLFunction = [library newFunctionWithName:@"main0"];
+        if (!_computeMTLFunction) {
+            [library release];
+            CC_LOG_ERROR("Can not create compute function: main0");
+            return false;
+        }
+    } else {
+        CC_LOG_ERROR("Shader type not supported yet!");
     }
 
     [library release];
@@ -118,9 +144,12 @@ bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
     if (isVertexShader) {
         _vertGlslShader = stage.source;
         _vertMtlShader = mtlShader;
-    } else {
+    } else if (isFragmenShader) {
         _fragGlslShader = stage.source;
         _fragMtlShader = mtlShader;
+    } else if (isComputeShader) {
+        _cmptGlslShader = stage.source;
+        _cmptMtlShader = mtlShader;
     }
 #endif
     return true;

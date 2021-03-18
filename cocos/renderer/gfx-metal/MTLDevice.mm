@@ -81,6 +81,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
 #endif
     CAMetalLayer *layer = static_cast<CAMetalLayer *>(view.layer);
     _mtlLayer = layer;
+    layer.framebufferOnly = NO;
     id<MTLDevice> mtlDevice = (id<MTLDevice>)layer.device;
     _mtlDevice = mtlDevice;
     _mtlCommandQueue = [mtlDevice newCommandQueueWithMaxCommandBufferCount: MAX_COMMAND_BUFFER_COUNT];
@@ -95,6 +96,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _caps.maxCubeMapTextureSize = mu::getMaxCubeMapTextureWidthHeight(gpuFamily);
     _caps.maxColorRenderTargets = mu::getMaxColorRenderTarget(gpuFamily);
     _caps.uboOffsetAlignment = mu::getMinBufferOffsetAlignment(gpuFamily);
+    _caps.maxComputeWorkGroupInvocations = mu::getMaxThreadsPerGroup(gpuFamily);
     _maxBufferBindingIndex = mu::getMaxEntriesInBufferArgumentTable(gpuFamily);
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
     _isSamplerDescriptorCompareFunctionSupported = mu::isSamplerDescriptorCompareFunctionSupported(gpuFamily);
@@ -169,6 +171,7 @@ bool CCMTLDevice::initialize(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = false;
     _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)] = false;
     _features[static_cast<uint>(Feature::MULTITHREADED_SUBMISSION)] = true;
+    _features[static_cast<uint>(Feature::COMPUTE_SHADER)] = true;
 
     _features[static_cast<uint>(Feature::FORMAT_RGB8)] = false;
     _features[static_cast<uint>(Feature::FORMAT_D16)] = mu::isDepthStencilFormatSupported(mtlDevice, Format::D16, gpuFamily);
@@ -232,7 +235,6 @@ void CCMTLDevice::resize(uint w, uint h) {
     dssDescriptor.storageMode = MTLStorageModePrivate;
     dssDescriptor.usage = MTLTextureUsageRenderTarget;
     _dssTex = [id<MTLDevice>(this->_mtlDevice) newTextureWithDescriptor:dssDescriptor];
-    _caps.stencilBits = 8;
 }
 
 void CCMTLDevice::acquire() {
@@ -366,6 +368,10 @@ void CCMTLDevice::onMemoryWarning() {
     for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
         _gpuStagingBufferPools[i]->shrinkSize();
     }
+}
+
+uint CCMTLDevice::preferredPixelFormat() {
+    return [((CAMetalLayer*)_mtlLayer) pixelFormat];
 }
 
 } // namespace gfx
