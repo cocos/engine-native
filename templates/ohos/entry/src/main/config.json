@@ -101,6 +101,26 @@
         }
       },
       {
+        "name": "ohos.permission.READ_MEDIA",
+        "reason": "",
+        "usedScene": {
+          "when": "inuse",
+          "ability": [
+            "com.example.cocosdemo.MainAbility"
+          ]
+        }
+      },
+      {
+        "name": "ohos.permission.WRITE_MEDIA",
+        "reason": "",
+        "usedScene": {
+          "when": "inuse",
+          "ability": [
+            "com.example.cocosdemo.MainAbility"
+          ]
+        }
+      },
+      {
         "name": "ohos.permission.ACCELEROMETER",
         "reason": "",
         "usedScene": {
