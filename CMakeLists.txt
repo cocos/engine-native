@@ -526,17 +526,17 @@ endif()
 
 ##### platform
 cocos_source_files(
-                 cocos/platform/Application.h
-    NO_WERROR    cocos/platform/Application.cpp
-                 cocos/platform/CanvasRenderingContext2D.h
-                 cocos/platform/Device.h
-    NO_WERROR    cocos/platform/FileUtils.cpp
-                 cocos/platform/FileUtils.h
-    NO_WERROR    cocos/platform/Image.cpp
-                 cocos/platform/Image.h
-    NO_WERROR    cocos/platform/SAXParser.cpp
-                 cocos/platform/SAXParser.h
-                 cocos/platform/StdC.h
+    cocos/platform/Application.h
+    cocos/platform/Application.cpp
+    cocos/platform/CanvasRenderingContext2D.h
+    cocos/platform/Device.h
+    cocos/platform/FileUtils.cpp
+    cocos/platform/FileUtils.h
+    cocos/platform/Image.cpp
+    cocos/platform/Image.h
+    cocos/platform/SAXParser.cpp
+    cocos/platform/SAXParser.h
+    cocos/platform/StdC.h
 )
 if(WINDOWS)
     cocos_source_files(
