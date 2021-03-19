@@ -70,7 +70,9 @@ public:
     }
     
     CC_INLINE void dispatch(MTLSize groupsPerGrid) {
-        // nothing to do with thread count in GLSL shader
+        // GLSL -> SPIRV -> MSL
+        // GLSL shader request to specify the compute thread size,
+        // no such limit in Metal and have to set compute thread size explicity
         NSUInteger w = _pipelineState.threadExecutionWidth;
         NSUInteger h = _pipelineState.maxTotalThreadsPerThreadgroup / w;
         MTLSize threadsPerThreadgroup = MTLSizeMake(w, h, 1);
