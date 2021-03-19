@@ -591,12 +591,12 @@ elseif(APPLE)
     )
     if(MACOSX)
         cocos_source_files(
-                         cocos/platform/mac/View.h
-                         cocos/platform/mac/KeyCodeHelper.h
-            NO_WERROR    cocos/platform/mac/View.mm
-            NO_WERROR    cocos/platform/mac/Device-mac.mm
-            NO_WERROR    cocos/platform/mac/Application-mac.mm
-            NO_WERROR    cocos/platform/mac/KeyCodeHelper.cpp
+            cocos/platform/mac/View.h
+            cocos/platform/mac/KeyCodeHelper.h
+            cocos/platform/mac/View.mm
+            cocos/platform/mac/Device-mac.mm
+            cocos/platform/mac/Application-mac.mm
+            cocos/platform/mac/KeyCodeHelper.cpp
         )
     elseif(IOS)
         cocos_source_files(
