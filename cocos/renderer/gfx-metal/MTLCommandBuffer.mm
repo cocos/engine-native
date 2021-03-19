@@ -35,6 +35,7 @@
 #include "MTLRenderPass.h"
 #include "MTLSampler.h"
 #include "MTLTexture.h"
+#include <QuartzCore/CAMetalLayer.h>
 
 namespace cc {
 namespace gfx {
@@ -183,7 +184,8 @@ void CCMTLCommandBuffer::endRenderPass() {
 }
 
 void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
-    if (pso->getBindPoint() == PipelineBindPoint::GRAPHICS) {
+    PipelineBindPoint bindPoint = pso->getBindPoint();
+    if (bindPoint == PipelineBindPoint::GRAPHICS) {
         _gpuPipelineState = static_cast<CCMTLPipelineState *>(pso)->getGPUPipelineState();
         _mtlPrimitiveType = _gpuPipelineState->primitiveType;
 
@@ -197,7 +199,7 @@ void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
             _renderEncoder.setStencilFrontBackReferenceValue(_gpuPipelineState->stencilRefFront, _gpuPipelineState->stencilRefBack);
             _renderEncoder.setDepthStencilState(_gpuPipelineState->mtlDepthStencilState);
         }
-    } else if (pso->getBindPoint() == PipelineBindPoint::COMPUTE) {
+    } else if (bindPoint == PipelineBindPoint::COMPUTE) {
         if (!_computeEncoder.isInitialized()) {
             _computeEncoder.initialize(_mtlCommandBuffer);
         }
@@ -509,7 +511,6 @@ void CCMTLCommandBuffer::bindDescriptorSets() {
     }
 
     const auto &samplers = _gpuPipelineState->gpuShader->samplers;
-    auto mtlEncoder = _renderEncoder.getMTLEncoder();
     for (const auto &iter : samplers) {
         const auto &sampler = iter.second;
 
@@ -539,33 +540,35 @@ void CCMTLCommandBuffer::bindDescriptorSets() {
 }
 
 void CCMTLCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
-    id<MTLBlitCommandEncoder> encoder = [_mtlCommandBuffer blitCommandEncoder];
-    id<MTLTexture> src = ((CCMTLTexture*)srcTexture)->getMTLTexture();
-    id<MTLTexture> dst = nil;
-    CCMTLDevice* device = static_cast<CCMTLDevice*>(_device);
-    if(!dstTexture) {
-        CAMetalLayer* currentDrawable = static_cast<CAMetalLayer*>(device->getCurrentDrawable());
-        dst = [currentDrawable texture];
-    } else {
-        dst = ((CCMTLTexture*)dstTexture)->getMTLTexture();
+    if(srcTexture && regions) {
+        id<MTLBlitCommandEncoder> encoder = [_mtlCommandBuffer blitCommandEncoder];
+        id<MTLTexture> src = static_cast<CCMTLTexture*>(srcTexture)->getMTLTexture();
+        id<MTLTexture> dst = nil;
+        CCMTLDevice* device = static_cast<CCMTLDevice*>(_device);
+        if(!dstTexture) {
+            id<CAMetalDrawable> currentDrawable = (id<CAMetalDrawable>)device->getCurrentDrawable();
+            dst = [currentDrawable texture];
+        } else {
+            dst = static_cast<CCMTLTexture*>(dstTexture)->getMTLTexture();
+        }
+        
+        if([src pixelFormat] != device->preferredPixelFormat()) {
+            src = [src newTextureViewWithPixelFormat:(MTLPixelFormat)device->preferredPixelFormat()];
+        }
+        
+        for (uint i = 0; i < count; ++i) {
+            [encoder copyFromTexture:src
+                         sourceSlice:regions[i].srcSubres.baseArrayLayer
+                         sourceLevel:regions[i].srcSubres.mipLevel
+                        sourceOrigin:MTLOriginMake(regions[i].srcOffset.x, regions[i].srcOffset.y, regions[i].srcOffset.z)
+                          sourceSize:MTLSizeMake(regions[i].srcExtent.width, regions[i].srcExtent.height, regions[i].srcExtent.depth)
+                           toTexture:dst
+                    destinationSlice:regions[i].dstSubres.baseArrayLayer
+                    destinationLevel:regions[i].srcSubres.mipLevel
+                   destinationOrigin:MTLOriginMake(regions[i].dstOffset.x, regions[i].dstOffset.y, regions[i].dstOffset.z)];
+        }
+        [encoder endEncoding];
     }
-    
-    if([src pixelFormat] != device->preferredPixelFormat()) {
-        src = [src newTextureViewWithPixelFormat:(MTLPixelFormat)device->preferredPixelFormat()];
-    }
-    //
-    for (int i = 0; i < count; ++i) {
-        [encoder copyFromTexture:src
-                     sourceSlice:regions[i].srcSubres.baseArrayLayer
-                     sourceLevel:regions[i].srcSubres.mipLevel
-                    sourceOrigin:MTLOriginMake(regions[i].srcOffset.x, regions[i].srcOffset.y, regions[i].srcOffset.z)
-                      sourceSize:MTLSizeMake(regions[i].srcExtent.width, regions[i].srcExtent.height, regions[i].srcExtent.depth)
-                       toTexture:dst
-                destinationSlice:regions[i].dstSubres.baseArrayLayer
-                destinationLevel:regions[i].srcSubres.mipLevel
-               destinationOrigin:MTLOriginMake(regions[i].dstOffset.x, regions[i].dstOffset.y, regions[i].dstOffset.z)];
-    }
-    [encoder endEncoding];
 }
 
 void CCMTLCommandBuffer::dispatch(const DispatchInfo &info) {
