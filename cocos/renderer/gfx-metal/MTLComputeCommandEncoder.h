@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -49,7 +49,7 @@ public:
         _initialized = true;
     }
 
-    bool isInitialized() {
+    CC_INLINE const bool isInitialized() {
         return _initialized;
     }
 

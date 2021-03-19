@@ -92,7 +92,9 @@ bool CCMTLPipelineState::createGPUPipelineState() {
             return false;
         }
         // Application can run with wrong depth/stencil state.
-        if (!createMTLDepthStencilState()) return false;
+        if (!createMTLDepthStencilState()) {
+            return false;
+        }
 
         _GPUPipelineState->mtlDepthStencilState = _mtlDepthStencilState;
         _GPUPipelineState->mtlRenderPipelineState = _mtlRenderPipelineState;

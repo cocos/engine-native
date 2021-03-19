@@ -136,6 +136,7 @@ bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
         }
     } else {
         CC_LOG_ERROR("Shader type not supported yet!");
+        return false;
     }
 
     [library release];
