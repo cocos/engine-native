@@ -53,7 +53,7 @@ void BufferValidator::doInit(const BufferViewInfo &info) {
     CCASSERT(info.offset + info.range <= info.buffer->getSize(), "invalid range");
 
     BufferViewInfo actorInfo = info;
-    actorInfo.buffer         = ((BufferValidator *)info.buffer)->getActor();
+    actorInfo.buffer         = static_cast<BufferValidator *>(info.buffer)->getActor();
 
     _actor->initialize(actorInfo);
 }

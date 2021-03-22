@@ -152,7 +152,7 @@ protected:
     String             _renderer;
     String             _vendor;
     String             _version;
-    bool               _features[static_cast<uint8_t>(Feature::COUNT)];
+    bool               _features[static_cast<uint>(Feature::COUNT)];
     uint               _width        = 0;
     uint               _height       = 0;
     uint               _nativeWidth  = 0;

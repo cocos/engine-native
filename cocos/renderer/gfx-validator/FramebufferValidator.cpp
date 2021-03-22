@@ -42,13 +42,13 @@ void FramebufferValidator::doInit(const FramebufferInfo &info) {
     FramebufferInfo actorInfo = info;
     for (uint i = 0u; i < info.colorTextures.size(); ++i) {
         if (info.colorTextures[i]) {
-            actorInfo.colorTextures[i] = ((TextureValidator *)info.colorTextures[i])->getActor();
+            actorInfo.colorTextures[i] = static_cast<TextureValidator *>(info.colorTextures[i])->getActor();
         }
     }
     if (info.depthStencilTexture) {
-        actorInfo.depthStencilTexture = ((TextureValidator *)info.depthStencilTexture)->getActor();
+        actorInfo.depthStencilTexture = static_cast<TextureValidator *>(info.depthStencilTexture)->getActor();
     }
-    actorInfo.renderPass = ((RenderPassValidator *)info.renderPass)->getActor();
+    actorInfo.renderPass = static_cast<RenderPassValidator *>(info.renderPass)->getActor();
 
     _actor->initialize(actorInfo);
 }

@@ -68,11 +68,11 @@ bool DeviceValidator::doInit(const DeviceInfo &info) {
     _deviceName                                  = _actor->getDeviceName();
     _queue                                       = CC_NEW(QueueValidator(_actor->getQueue()));
     _cmdBuff                                     = CC_NEW(CommandBufferValidator(_actor->getCommandBuffer()));
-    ((CommandBufferValidator *)_cmdBuff)->_queue = _queue;
+    static_cast<CommandBufferValidator *>(_cmdBuff)->_queue = _queue;
     _renderer                                    = _actor->getRenderer();
     _vendor                                      = _actor->getVendor();
     _caps                                        = _actor->_caps;
-    memcpy(_features, _actor->_features, (uint)Feature::COUNT * sizeof(bool));
+    memcpy(_features, _actor->_features, static_cast<uint>(Feature::COUNT) * sizeof(bool));
 
     CC_LOG_INFO("Device validator enabled.");
 
@@ -81,12 +81,12 @@ bool DeviceValidator::doInit(const DeviceInfo &info) {
 
 void DeviceValidator::doDestroy() {
     if (_cmdBuff) {
-        ((CommandBufferValidator *)_cmdBuff)->_actor = nullptr;
+        static_cast<CommandBufferValidator *>(_cmdBuff)->_actor = nullptr;
         CC_DELETE(_cmdBuff);
         _cmdBuff = nullptr;
     }
     if (_queue) {
-        ((QueueValidator *)_queue)->_actor = nullptr;
+        static_cast<QueueValidator *>(_queue)->_actor = nullptr;
         CC_DELETE(_queue);
         _queue = nullptr;
     }
@@ -184,7 +184,7 @@ TextureBarrier *DeviceValidator::createTextureBarrier() {
 }
 
 void DeviceValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
-    _actor->copyBuffersToTexture(buffers, ((TextureValidator *)dst)->getActor(), regions, count);
+    _actor->copyBuffersToTexture(buffers, static_cast<TextureValidator *>(dst)->getActor(), regions, count);
 }
 
 void DeviceValidator::flushCommands(CommandBuffer *const *cmdBuffs, uint count) {
@@ -194,7 +194,7 @@ void DeviceValidator::flushCommands(CommandBuffer *const *cmdBuffs, uint count) 
     cmdBuffActors.resize(count);
 
     for (uint i = 0u; i < count; ++i) {
-        cmdBuffActors[i] = ((CommandBufferValidator *)cmdBuffs[i])->getActor();
+        cmdBuffActors[i] = static_cast<CommandBufferValidator *>(cmdBuffs[i])->getActor();
     }
 
     _actor->flushCommands(cmdBuffActors.data(), count);

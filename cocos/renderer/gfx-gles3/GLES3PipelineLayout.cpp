@@ -46,7 +46,7 @@ void GLES3PipelineLayout::doInit(const PipelineLayoutInfo &info) {
     _gpuPipelineLayout->dynamicOffsetIndices.resize(_setLayouts.size());
     for (uint i = 0u; i < _setLayouts.size(); i++) {
         DescriptorSetLayout *setLayout = _setLayouts[i];
-        GLES3GPUDescriptorSetLayout *gpuSetLayout = ((GLES3DescriptorSetLayout *)setLayout)->gpuDescriptorSetLayout();
+        GLES3GPUDescriptorSetLayout *gpuSetLayout = static_cast<GLES3DescriptorSetLayout *>(setLayout)->gpuDescriptorSetLayout();
         size_t dynamicCount = gpuSetLayout->dynamicBindings.size();
         vector<int> &indices = _gpuPipelineLayout->dynamicOffsetIndices[i];
         indices.assign(setLayout->getBindingIndices().size(), -1);

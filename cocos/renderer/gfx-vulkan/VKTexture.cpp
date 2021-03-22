@@ -62,7 +62,7 @@ void CCVKTexture::doInit(const TextureInfo &info) {
 }
 
 void CCVKTexture::doInit(const TextureViewInfo &info) {
-    _gpuTexture = ((CCVKTexture *)info.texture)->gpuTexture();
+    _gpuTexture = static_cast<CCVKTexture *>(info.texture)->gpuTexture();
 
     _gpuTextureView = CC_NEW(CCVKGPUTextureView);
     createTextureView();

@@ -109,8 +109,8 @@ void GLES2CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
     _isInRenderPass = true;
 
     GLES2CmdBeginRenderPass *cmd = _cmdAllocator->beginRenderPassCmdPool.alloc();
-    cmd->gpuRenderPass = ((GLES2RenderPass *)renderPass)->gpuRenderPass();
-    cmd->gpuFBO = ((GLES2Framebuffer *)fbo)->gpuFBO();
+    cmd->gpuRenderPass = static_cast<GLES2RenderPass *>(renderPass)->gpuRenderPass();
+    cmd->gpuFBO = static_cast<GLES2Framebuffer *>(fbo)->gpuFBO();
     cmd->renderArea = renderArea;
     cmd->numClearColors = cmd->gpuRenderPass->colorAttachments.size();
     for (size_t i = 0; i < cmd->numClearColors; ++i) {
@@ -128,7 +128,7 @@ void GLES2CommandBuffer::endRenderPass() {
 }
 
 void GLES2CommandBuffer::bindPipelineState(PipelineState *pso) {
-    GLES2GPUPipelineState *gpuPipelineState = ((GLES2PipelineState *)pso)->gpuPipelineState();
+    GLES2GPUPipelineState *gpuPipelineState = static_cast<GLES2PipelineState *>(pso)->gpuPipelineState();
     if (_curGPUPipelineState != gpuPipelineState) {
         _curGPUPipelineState = gpuPipelineState;
         _isStateInvalid = true;
@@ -138,7 +138,7 @@ void GLES2CommandBuffer::bindPipelineState(PipelineState *pso) {
 void GLES2CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     CCASSERT(_curGPUDescriptorSets.size() > set, "Invalid set index");
 
-    GLES2GPUDescriptorSet *gpuDescriptorSet = ((GLES2DescriptorSet *)descriptorSet)->gpuDescriptorSet();
+    GLES2GPUDescriptorSet *gpuDescriptorSet = static_cast<GLES2DescriptorSet *>(descriptorSet)->gpuDescriptorSet();
     if (_curGPUDescriptorSets[set] != gpuDescriptorSet) {
         _curGPUDescriptorSets[set] = gpuDescriptorSet;
         _isStateInvalid = true;
@@ -150,7 +150,7 @@ void GLES2CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSe
 }
 
 void GLES2CommandBuffer::bindInputAssembler(InputAssembler *ia) {
-    _curGPUInputAssember = ((GLES2InputAssembler *)ia)->gpuInputAssembler();
+    _curGPUInputAssember = static_cast<GLES2InputAssembler *>(ia)->gpuInputAssembler();
     _isStateInvalid = true;
 }
 
@@ -243,7 +243,7 @@ void GLES2CommandBuffer::draw(InputAssembler *ia) {
     }
 
     GLES2CmdDraw *cmd = _cmdAllocator->drawCmdPool.alloc();
-    ((GLES2InputAssembler *)ia)->ExtractCmdDraw(cmd);
+    static_cast<GLES2InputAssembler *>(ia)->ExtractCmdDraw(cmd);
     _curCmdPackage->drawCmds.push(cmd);
     _curCmdPackage->cmds.push(GLESCmdType::DRAW);
 
@@ -271,7 +271,7 @@ void GLES2CommandBuffer::draw(InputAssembler *ia) {
 }
 
 void GLES2CommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {
-    GLES2GPUBuffer *gpuBuffer = ((GLES2Buffer *)buff)->gpuBuffer();
+    GLES2GPUBuffer *gpuBuffer = static_cast<GLES2Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {
         GLES2CmdUpdateBuffer *cmd = _cmdAllocator->updateBufferCmdPool.alloc();
         cmd->gpuBuffer = gpuBuffer;
@@ -284,7 +284,7 @@ void GLES2CommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size)
 }
 
 void GLES2CommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
-    GLES2GPUTexture *gpuTexture = ((GLES2Texture *)texture)->gpuTexture();
+    GLES2GPUTexture *gpuTexture = static_cast<GLES2Texture *>(texture)->gpuTexture();
     if (gpuTexture) {
         GLES2CmdCopyBufferToTexture *cmd = _cmdAllocator->copyBufferToTextureCmdPool.alloc();
         cmd->gpuTexture = gpuTexture;

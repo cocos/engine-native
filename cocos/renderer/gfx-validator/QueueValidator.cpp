@@ -51,7 +51,7 @@ void QueueValidator::submit(CommandBuffer *const *cmdBuffs, uint count) {
     cmdBuffActors.resize(count);
 
     for (uint i = 0u; i < count; ++i) {
-        cmdBuffActors[i] = ((CommandBufferValidator *)cmdBuffs[i])->getActor();
+        cmdBuffActors[i] = static_cast<CommandBufferValidator *>(cmdBuffs[i])->getActor();
     }
 
     _actor->submit(cmdBuffActors.data(), count);

@@ -56,7 +56,7 @@ void BufferAgent::doInit(const BufferInfo &info) {
 
 void BufferAgent::doInit(const BufferViewInfo &info) {
     BufferViewInfo actorInfo = info;
-    actorInfo.buffer         = ((BufferAgent *)info.buffer)->getActor();
+    actorInfo.buffer         = static_cast<BufferAgent *>(info.buffer)->getActor();
 
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),

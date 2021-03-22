@@ -47,7 +47,7 @@ CommandBufferValidator::~CommandBufferValidator() {
 
 void CommandBufferValidator::doInit(const CommandBufferInfo &info) {
     CommandBufferInfo actorInfo = info;
-    actorInfo.queue             = ((QueueValidator *)info.queue)->getActor();
+    actorInfo.queue             = static_cast<QueueValidator *>(info.queue)->getActor();
 
     _actor->initialize(actorInfo);
 }
@@ -62,8 +62,8 @@ void CommandBufferValidator::begin(RenderPass *renderPass, uint subpass, Framebu
     // secondary command buffers enter the render pass right here
     _insideRenderPass = !!renderPass;
 
-    RenderPass * renderPassActor  = renderPass ? ((RenderPassValidator *)renderPass)->getActor() : nullptr;
-    Framebuffer *framebufferActor = framebuffer ? ((FramebufferValidator *)framebuffer)->getActor() : nullptr;
+    RenderPass * renderPassActor  = renderPass ? static_cast<RenderPassValidator *>(renderPass)->getActor() : nullptr;
+    Framebuffer *framebufferActor = framebuffer ? static_cast<FramebufferValidator *>(framebuffer)->getActor() : nullptr;
 
     _actor->begin(renderPassActor, subpass, framebufferActor);
 }
@@ -88,14 +88,14 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
     static vector<CommandBuffer *> secondaryCBActors;
     secondaryCBActors.resize(secondaryCBCount);
 
-    RenderPass * renderPassActor  = renderPass ? ((RenderPassValidator *)renderPass)->getActor() : nullptr;
-    Framebuffer *framebufferActor = fbo ? ((FramebufferValidator *)fbo)->getActor() : nullptr;
+    RenderPass * renderPassActor  = renderPass ? static_cast<RenderPassValidator *>(renderPass)->getActor() : nullptr;
+    Framebuffer *framebufferActor = fbo ? static_cast<FramebufferValidator *>(fbo)->getActor() : nullptr;
 
     CommandBuffer **actorSecondaryCBs = nullptr;
     if (secondaryCBCount) {
         actorSecondaryCBs = secondaryCBActors.data();
         for (uint i = 0; i < secondaryCBCount; ++i) {
-            actorSecondaryCBs[i] = ((CommandBufferValidator *)secondaryCBs[i])->getActor();
+            actorSecondaryCBs[i] = static_cast<CommandBufferValidator *>(secondaryCBs[i])->getActor();
         }
     }
 
@@ -118,22 +118,22 @@ void CommandBufferValidator::execute(CommandBuffer *const *cmdBuffs, uint32_t co
     cmdBuffActors.resize(count);
 
     for (uint i = 0u; i < count; ++i) {
-        cmdBuffActors[i] = ((CommandBufferValidator *)cmdBuffs[i])->getActor();
+        cmdBuffActors[i] = static_cast<CommandBufferValidator *>(cmdBuffs[i])->getActor();
     }
 
     _actor->execute(cmdBuffActors.data(), count);
 }
 
 void CommandBufferValidator::bindPipelineState(PipelineState *pso) {
-    _actor->bindPipelineState(((PipelineStateValidator *)pso)->getActor());
+    _actor->bindPipelineState(static_cast<PipelineStateValidator *>(pso)->getActor());
 }
 
 void CommandBufferValidator::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
-    _actor->bindDescriptorSet(set, ((DescriptorSetValidator *)descriptorSet)->getActor(), dynamicOffsetCount, dynamicOffsets);
+    _actor->bindDescriptorSet(set, static_cast<DescriptorSetValidator *>(descriptorSet)->getActor(), dynamicOffsetCount, dynamicOffsets);
 }
 
 void CommandBufferValidator::bindInputAssembler(InputAssembler *ia) {
-    _actor->bindInputAssembler(((InputAssemblerValidator *)ia)->getActor());
+    _actor->bindInputAssembler(static_cast<InputAssemblerValidator *>(ia)->getActor());
 }
 
 void CommandBufferValidator::setViewport(const Viewport &vp) {
@@ -173,21 +173,21 @@ void CommandBufferValidator::draw(InputAssembler *ia) {
         CCASSERT(false, "Command 'draw' must be recorded inside render passes.");
     }
 
-    _actor->draw(((InputAssemblerValidator *)ia)->getActor());
+    _actor->draw(static_cast<InputAssemblerValidator *>(ia)->getActor());
 }
 
 void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint size) {
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'updateBuffer' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'updateBuffer' must be recorded outside render passes.");
 
-    _actor->updateBuffer(((BufferValidator *)buff)->getActor(), data, size);
+    _actor->updateBuffer(static_cast<BufferValidator *>(buff)->getActor(), data, size);
 }
 
 void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'copyBuffersToTexture' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'copyBuffersToTexture' must be recorded outside render passes.");
 
-    _actor->copyBuffersToTexture(buffers, ((TextureValidator *)texture)->getActor(), regions, count);
+    _actor->copyBuffersToTexture(buffers, static_cast<TextureValidator *>(texture)->getActor(), regions, count);
 }
 
 void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
@@ -195,8 +195,8 @@ void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTextur
 
     Texture *actorSrcTexture = nullptr;
     Texture *actorDstTexture = nullptr;
-    if (srcTexture) actorSrcTexture = ((TextureValidator *)srcTexture)->getActor();
-    if (dstTexture) actorDstTexture = ((TextureValidator *)dstTexture)->getActor();
+    if (srcTexture) actorSrcTexture = static_cast<TextureValidator *>(srcTexture)->getActor();
+    if (dstTexture) actorDstTexture = static_cast<TextureValidator *>(dstTexture)->getActor();
 
     _actor->blitTexture(actorSrcTexture, actorDstTexture, regions, count, filter);
 }
@@ -205,7 +205,7 @@ void CommandBufferValidator::dispatch(const DispatchInfo &info) {
     CCASSERT(!_insideRenderPass, "Command 'dispatch' must be recorded outside render passes.");
 
     DispatchInfo actorInfo = info;
-    if (info.indirectBuffer) actorInfo.indirectBuffer = ((BufferValidator *)info.indirectBuffer)->getActor();
+    if (info.indirectBuffer) actorInfo.indirectBuffer = static_cast<BufferValidator *>(info.indirectBuffer)->getActor();
 
     _actor->dispatch(info);
 }
@@ -218,7 +218,7 @@ void CommandBufferValidator::pipelineBarrier(const GlobalBarrier *barrier, const
     if (textureBarrierCount) {
         actorTextures = textureActors.data();
         for (uint i = 0u; i < textureBarrierCount; ++i) {
-            actorTextures[i] = textures[i] ? ((TextureValidator *)textures[i])->getActor() : nullptr;
+            actorTextures[i] = textures[i] ? static_cast<const TextureValidator *>(textures[i])->getActor() : nullptr;
         }
     }
 

@@ -42,7 +42,7 @@ void PipelineLayoutValidator::doInit(const PipelineLayoutInfo &info) {
     actorInfo.setLayouts.resize(info.setLayouts.size());
     for (uint i = 0u; i < info.setLayouts.size(); i++) {
         CCASSERT(info.setLayouts[i], "invalid descriptor set layout");
-        actorInfo.setLayouts[i] = ((DescriptorSetLayoutValidator *)info.setLayouts[i])->getActor();
+        actorInfo.setLayouts[i] = static_cast<DescriptorSetLayoutValidator *>(info.setLayouts[i])->getActor();
     }
 
     _actor->initialize(actorInfo);

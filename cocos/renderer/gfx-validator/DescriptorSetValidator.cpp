@@ -42,7 +42,7 @@ DescriptorSetValidator::~DescriptorSetValidator() {
 
 void DescriptorSetValidator::doInit(const DescriptorSetInfo &info) {
     DescriptorSetInfo actorInfo;
-    actorInfo.layout = ((DescriptorSetLayoutValidator *)info.layout)->getActor();
+    actorInfo.layout = static_cast<DescriptorSetLayoutValidator *>(info.layout)->getActor();
 
     _actor->initialize(actorInfo);
 }
@@ -58,19 +58,19 @@ void DescriptorSetValidator::update() {
 void DescriptorSetValidator::bindBuffer(uint binding, Buffer *buffer, uint index) {
     DescriptorSet::bindBuffer(binding, buffer, index);
 
-    _actor->bindBuffer(binding, ((BufferValidator *)buffer)->getActor(), index);
+    _actor->bindBuffer(binding, static_cast<BufferValidator *>(buffer)->getActor(), index);
 }
 
 void DescriptorSetValidator::bindTexture(uint binding, Texture *texture, uint index) {
     DescriptorSet::bindTexture(binding, texture, index);
 
-    _actor->bindTexture(binding, ((TextureValidator *)texture)->getActor(), index);
+    _actor->bindTexture(binding, static_cast<TextureValidator *>(texture)->getActor(), index);
 }
 
 void DescriptorSetValidator::bindSampler(uint binding, Sampler *sampler, uint index) {
     DescriptorSet::bindSampler(binding, sampler, index);
 
-    _actor->bindSampler(binding, ((SamplerValidator *)sampler)->getActor(), index);
+    _actor->bindSampler(binding, static_cast<SamplerValidator *>(sampler)->getActor(), index);
 }
 
 } // namespace gfx

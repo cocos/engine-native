@@ -108,8 +108,8 @@ void GLES3CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
     _isInRenderPass = true;
 
     GLES3CmdBeginRenderPass *cmd = _cmdAllocator->beginRenderPassCmdPool.alloc();
-    cmd->gpuRenderPass           = ((GLES3RenderPass *)renderPass)->gpuRenderPass();
-    cmd->gpuFBO                  = ((GLES3Framebuffer *)fbo)->gpuFBO();
+    cmd->gpuRenderPass           = static_cast<GLES3RenderPass *>(renderPass)->gpuRenderPass();
+    cmd->gpuFBO                  = static_cast<GLES3Framebuffer *>(fbo)->gpuFBO();
     cmd->renderArea              = renderArea;
     cmd->numClearColors          = cmd->gpuRenderPass->colorAttachments.size();
     for (size_t i = 0; i < cmd->numClearColors; ++i) {
@@ -127,7 +127,7 @@ void GLES3CommandBuffer::endRenderPass() {
 }
 
 void GLES3CommandBuffer::bindPipelineState(PipelineState *pso) {
-    GLES3GPUPipelineState *gpuPipelineState = ((GLES3PipelineState *)pso)->gpuPipelineState();
+    GLES3GPUPipelineState *gpuPipelineState = static_cast<GLES3PipelineState *>(pso)->gpuPipelineState();
     if (_curGPUPipelineState != gpuPipelineState) {
         _curGPUPipelineState = gpuPipelineState;
         _isStateInvalid      = true;
@@ -137,7 +137,7 @@ void GLES3CommandBuffer::bindPipelineState(PipelineState *pso) {
 void GLES3CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     CCASSERT(_curGPUDescriptorSets.size() > set, "Invalid set index");
 
-    GLES3GPUDescriptorSet *gpuDescriptorSet = ((GLES3DescriptorSet *)descriptorSet)->gpuDescriptorSet();
+    GLES3GPUDescriptorSet *gpuDescriptorSet = static_cast<GLES3DescriptorSet *>(descriptorSet)->gpuDescriptorSet();
     if (_curGPUDescriptorSets[set] != gpuDescriptorSet) {
         _curGPUDescriptorSets[set] = gpuDescriptorSet;
         _isStateInvalid            = true;
@@ -149,7 +149,7 @@ void GLES3CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSe
 }
 
 void GLES3CommandBuffer::bindInputAssembler(InputAssembler *ia) {
-    _curGPUInputAssember = ((GLES3InputAssembler *)ia)->gpuInputAssembler();
+    _curGPUInputAssember = static_cast<GLES3InputAssembler *>(ia)->gpuInputAssembler();
     _isStateInvalid      = true;
 }
 
@@ -249,7 +249,7 @@ void GLES3CommandBuffer::draw(InputAssembler *ia) {
     }
 
     GLES3CmdDraw *cmd = _cmdAllocator->drawCmdPool.alloc();
-    ((GLES3InputAssembler *)ia)->ExtractCmdDraw(cmd);
+    static_cast<GLES3InputAssembler *>(ia)->ExtractCmdDraw(cmd);
     _curCmdPackage->drawCmds.push(cmd);
     _curCmdPackage->cmds.push(GLESCmdType::DRAW);
 
@@ -273,7 +273,7 @@ void GLES3CommandBuffer::draw(InputAssembler *ia) {
 }
 
 void GLES3CommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {
-    GLES3GPUBuffer *gpuBuffer = ((GLES3Buffer *)buff)->gpuBuffer();
+    GLES3GPUBuffer *gpuBuffer = static_cast<GLES3Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {
         GLES3CmdUpdateBuffer *cmd = _cmdAllocator->updateBufferCmdPool.alloc();
         cmd->gpuBuffer            = gpuBuffer;
@@ -287,8 +287,8 @@ void GLES3CommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size)
 
 void GLES3CommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
     GLES3CmdBlitTexture *cmd = _cmdAllocator->blitTextureCmdPool.alloc();
-    if (srcTexture) cmd->gpuTextureSrc = ((GLES3Texture *)srcTexture)->gpuTexture();
-    if (dstTexture) cmd->gpuTextureDst = ((GLES3Texture *)dstTexture)->gpuTexture();
+    if (srcTexture) cmd->gpuTextureSrc = static_cast<GLES3Texture *>(srcTexture)->gpuTexture();
+    if (dstTexture) cmd->gpuTextureDst = static_cast<GLES3Texture *>(dstTexture)->gpuTexture();
     cmd->regions = regions;
     cmd->count   = count;
     cmd->filter  = filter;
@@ -298,7 +298,7 @@ void GLES3CommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, c
 }
 
 void GLES3CommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
-    GLES3GPUTexture *gpuTexture = ((GLES3Texture *)texture)->gpuTexture();
+    GLES3GPUTexture *gpuTexture = static_cast<GLES3Texture *>(texture)->gpuTexture();
     if (gpuTexture) {
         GLES3CmdCopyBufferToTexture *cmd = _cmdAllocator->copyBufferToTextureCmdPool.alloc();
         cmd->gpuTexture                  = gpuTexture;
@@ -416,7 +416,7 @@ void GLES3CommandBuffer::dispatch(const DispatchInfo &info) {
 
     GLES3CmdDispatch *cmd = _cmdAllocator->dispatchCmdPool.alloc();
     if (info.indirectBuffer) {
-        cmd->dispatchInfo.indirectBuffer = ((GLES3Buffer *)info.indirectBuffer)->gpuBuffer();
+        cmd->dispatchInfo.indirectBuffer = static_cast<GLES3Buffer *>(info.indirectBuffer)->gpuBuffer();
         cmd->dispatchInfo.indirectOffset = info.indirectOffset;
     } else {
         cmd->dispatchInfo.groupCountX = info.groupCountX;
@@ -430,7 +430,7 @@ void GLES3CommandBuffer::dispatch(const DispatchInfo &info) {
 void GLES3CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) {
     if (!barrier) return;
 
-    const GLES3GPUGlobalBarrier *gpuBarrier = ((GLES3GlobalBarrier *)barrier)->gpuBarrier();
+    auto gpuBarrier = static_cast<const GLES3GlobalBarrier *>(barrier)->gpuBarrier();
 
     GLES3CmdBarrier *cmd  = _cmdAllocator->barrierCmdPool.alloc();
     cmd->barriers         = gpuBarrier->glBarriers;

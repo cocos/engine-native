@@ -40,13 +40,13 @@ InputAssemblerValidator::~InputAssemblerValidator() {
 void InputAssemblerValidator::doInit(const InputAssemblerInfo &info) {
     InputAssemblerInfo actorInfo = info;
     for (uint i = 0u; i < actorInfo.vertexBuffers.size(); ++i) {
-        actorInfo.vertexBuffers[i] = ((BufferValidator *)actorInfo.vertexBuffers[i])->getActor();
+        actorInfo.vertexBuffers[i] = static_cast<BufferValidator *>(actorInfo.vertexBuffers[i])->getActor();
     }
     if (actorInfo.indexBuffer) {
-        actorInfo.indexBuffer = ((BufferValidator *)actorInfo.indexBuffer)->getActor();
+        actorInfo.indexBuffer = static_cast<BufferValidator *>(actorInfo.indexBuffer)->getActor();
     }
     if (actorInfo.indirectBuffer) {
-        actorInfo.indirectBuffer = ((BufferValidator *)actorInfo.indirectBuffer)->getActor();
+        actorInfo.indirectBuffer = static_cast<BufferValidator *>(actorInfo.indirectBuffer)->getActor();
     }
 
     _actor->initialize(actorInfo);

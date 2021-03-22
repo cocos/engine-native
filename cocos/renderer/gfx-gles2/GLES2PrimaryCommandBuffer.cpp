@@ -64,8 +64,8 @@ void GLES2PrimaryCommandBuffer::end() {
 
 void GLES2PrimaryCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
     _isInRenderPass = true;
-    GLES2GPURenderPass *gpuRenderPass = ((GLES2RenderPass *)renderPass)->gpuRenderPass();
-    GLES2GPUFramebuffer *gpuFramebuffer = ((GLES2Framebuffer *)fbo)->gpuFBO();
+    GLES2GPURenderPass *gpuRenderPass = static_cast<GLES2RenderPass *>(renderPass)->gpuRenderPass();
+    GLES2GPUFramebuffer *gpuFramebuffer = static_cast<GLES2Framebuffer *>(fbo)->gpuFBO();
 
     GLES2CmdFuncBeginRenderPass(GLES2Device::getInstance(), gpuRenderPass, gpuFramebuffer,
                                 renderArea, gpuRenderPass->colorAttachments.size(), colors, depth, stencil);
@@ -116,14 +116,14 @@ void GLES2PrimaryCommandBuffer::draw(InputAssembler *ia) {
 }
 
 void GLES2PrimaryCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {
-    GLES2GPUBuffer *gpuBuffer = ((GLES2Buffer *)buff)->gpuBuffer();
+    GLES2GPUBuffer *gpuBuffer = static_cast<GLES2Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {
         GLES2CmdFuncUpdateBuffer(GLES2Device::getInstance(), gpuBuffer, data, 0u, size);
     }
 }
 
 void GLES2PrimaryCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
-    GLES2GPUTexture *gpuTexture = ((GLES2Texture *)texture)->gpuTexture();
+    GLES2GPUTexture *gpuTexture = static_cast<GLES2Texture *>(texture)->gpuTexture();
     if (gpuTexture) {
         GLES2CmdFuncCopyBuffersToTexture(GLES2Device::getInstance(), buffers, gpuTexture, regions, count);
     }
