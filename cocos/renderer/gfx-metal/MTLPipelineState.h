@@ -37,19 +37,19 @@ namespace gfx {
 
 class CCMTLPipelineState final : public PipelineState {
 public:
-    explicit CCMTLPipelineState(Device *device);
+    explicit CCMTLPipelineState();
     ~CCMTLPipelineState() override = default;
     CCMTLPipelineState(const CCMTLPipelineState &)=delete;
     CCMTLPipelineState(CCMTLPipelineState &&)=delete;
     CCMTLPipelineState &operator=(const CCMTLPipelineState &)=delete;
     CCMTLPipelineState &operator=(CCMTLPipelineState &&)=delete;
 
-    bool initialize(const PipelineStateInfo &info) override;
-    void destroy() override;
-
     CC_INLINE CCMTLGPUPipelineState *getGPUPipelineState() const { return _GPUPipelineState; }
 
-private:
+protected:
+    void doInit(const PipelineStateInfo &info) override;
+    void doDestroy() override;
+
     bool createMTLDepthStencilState();
     bool createGPUPipelineState();
     bool createMTLComputePipelineState();
@@ -60,7 +60,6 @@ private:
     void setBlendStates(MTLRenderPipelineDescriptor *);
     bool createMTLRenderPipeline(MTLRenderPipelineDescriptor *);
 
-private:
     id<MTLRenderPipelineState> _mtlRenderPipelineState = nil;
     id<MTLDepthStencilState> _mtlDepthStencilState = nil;
     id<MTLComputePipelineState> _mtlComputePipeline = nil;

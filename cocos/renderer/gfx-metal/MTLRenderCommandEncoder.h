@@ -275,7 +275,7 @@ public:
         return _mtlEncoder;
     }
 
-private:
+protected:
     bool _isViewportSet = false;
     bool _isScissorRectSet = false;
     bool _isCullModeSet = false;

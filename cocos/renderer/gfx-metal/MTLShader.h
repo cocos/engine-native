@@ -34,15 +34,12 @@ namespace gfx {
 class CCMTLGPUShader;
 class CCMTLShader final : public Shader {
 public:
-    explicit CCMTLShader(Device *device);
+    explicit CCMTLShader();
     ~CCMTLShader() override = default;
     CCMTLShader(const CCMTLShader &)=delete;
     CCMTLShader(CCMTLShader &&)=delete;
     CCMTLShader &operator=(const CCMTLShader &)=delete;
     CCMTLShader &operator=(CCMTLShader &&)=delete;
-
-    bool initialize(const ShaderInfo &info) override;
-    void destroy() override;
 
     CC_INLINE id<MTLFunction> getVertMTLFunction() const { return _vertexMTLFunction; }
     CC_INLINE id<MTLFunction> getFragmentMTLFunction() const { return _fragmentMTLFunction; }
@@ -61,11 +58,13 @@ public:
     CC_INLINE const String &getcompMtlSahder() const { return _cmptMtlShader; }
 #endif
 
-private:
+protected:
+    void doInit(const ShaderInfo &info) override;
+    void doDestroy() override;
+
     bool createMTLFunction(const ShaderStage &);
     void setAvailableBufferBindingIndex();
 
-private:
     id<MTLFunction> _vertexMTLFunction = nil;
     id<MTLFunction> _fragmentMTLFunction = nil;
     id<MTLFunction> _computeMTLFunction = nil;

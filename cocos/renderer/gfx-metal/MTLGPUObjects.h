@@ -219,7 +219,7 @@ public:
         }
     }
 
-private:
+protected:
     struct Buffer {
         id<MTLBuffer> mtlBuffer = nil;
         vector<id<MTLBuffer>> dynamicDataBuffers{MAX_FRAMES_IN_FLIGHT};
@@ -283,7 +283,7 @@ public:
         }
     }
 
-private:
+protected:
     //avoid cross-reference with CCMTLDevice
     std::function<uint8_t(void)> _getFrameIndex;
     std::queue<GCFunc> _releaseQueue[MAX_FRAMES_IN_FLIGHT];

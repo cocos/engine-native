@@ -314,6 +314,7 @@ endif()
 
 ##### base
 cocos_source_files(
+                 cocos/base/Agent.h
     NO_WERROR    cocos/base/Array.cpp
                  cocos/base/Array.h
     NO_WERROR    cocos/base/astc.cpp
@@ -526,17 +527,17 @@ endif()
 
 ##### platform
 cocos_source_files(
-                 cocos/platform/Application.h
-    NO_WERROR    cocos/platform/Application.cpp
-                 cocos/platform/CanvasRenderingContext2D.h
-                 cocos/platform/Device.h
-    NO_WERROR    cocos/platform/FileUtils.cpp
-                 cocos/platform/FileUtils.h
-    NO_WERROR    cocos/platform/Image.cpp
-                 cocos/platform/Image.h
-    NO_WERROR    cocos/platform/SAXParser.cpp
-                 cocos/platform/SAXParser.h
-                 cocos/platform/StdC.h
+    cocos/platform/Application.h
+    cocos/platform/Application.cpp
+    cocos/platform/CanvasRenderingContext2D.h
+    cocos/platform/Device.h
+    cocos/platform/FileUtils.cpp
+    cocos/platform/FileUtils.h
+    cocos/platform/Image.cpp
+    cocos/platform/Image.h
+    cocos/platform/SAXParser.cpp
+    cocos/platform/SAXParser.h
+    cocos/platform/StdC.h
 )
 if(WINDOWS)
     cocos_source_files(
@@ -591,12 +592,12 @@ elseif(APPLE)
     )
     if(MACOSX)
         cocos_source_files(
-                         cocos/platform/mac/View.h
-                         cocos/platform/mac/KeyCodeHelper.h
-            NO_WERROR    cocos/platform/mac/View.mm
-            NO_WERROR    cocos/platform/mac/Device-mac.mm
-            NO_WERROR    cocos/platform/mac/Application-mac.mm
-            NO_WERROR    cocos/platform/mac/KeyCodeHelper.cpp
+            cocos/platform/mac/View.h
+            cocos/platform/mac/KeyCodeHelper.h
+            cocos/platform/mac/View.mm
+            cocos/platform/mac/Device-mac.mm
+            cocos/platform/mac/Application-mac.mm
+            cocos/platform/mac/KeyCodeHelper.cpp
         )
     elseif(IOS)
         cocos_source_files(
@@ -610,6 +611,8 @@ endif()
 
 ##### renderer
 cocos_source_files(
+                 cocos/renderer/GFXDeviceCreator.h
+
                  cocos/renderer/gfx-base/GFXObject.h
     NO_WERROR    cocos/renderer/gfx-base/GFXObject.cpp
                  cocos/renderer/gfx-base/GFXBase.h
@@ -650,36 +653,65 @@ cocos_source_files(
                  cocos/renderer/gfx-base/GFXTexture.h
     NO_WERROR    cocos/renderer/gfx-base/GFXTextureBarrier.cpp
                  cocos/renderer/gfx-base/GFXTextureBarrier.h
-                 cocos/renderer/gfx-agent/GFXAgent.h
-                 cocos/renderer/gfx-agent/GFXBufferAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXBufferAgent.cpp
-                 cocos/renderer/gfx-agent/GFXCommandBufferAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXCommandBufferAgent.cpp
-                 cocos/renderer/gfx-agent/GFXDescriptorSetAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXDescriptorSetAgent.cpp
-                 cocos/renderer/gfx-agent/GFXDescriptorSetLayoutAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXDescriptorSetLayoutAgent.cpp
-                 cocos/renderer/gfx-agent/GFXDeviceAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXDeviceAgent.cpp
-                 cocos/renderer/gfx-agent/GFXFramebufferAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXFramebufferAgent.cpp
-                 cocos/renderer/gfx-agent/GFXInputAssemblerAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXInputAssemblerAgent.cpp
-                 cocos/renderer/gfx-agent/GFXLinearAllocatorPool.h
-                 cocos/renderer/gfx-agent/GFXPipelineLayoutAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXPipelineLayoutAgent.cpp
-                 cocos/renderer/gfx-agent/GFXPipelineStateAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXPipelineStateAgent.cpp
-                 cocos/renderer/gfx-agent/GFXQueueAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXQueueAgent.cpp
-                 cocos/renderer/gfx-agent/GFXRenderPassAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXRenderPassAgent.cpp
-                 cocos/renderer/gfx-agent/GFXSamplerAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXSamplerAgent.cpp
-                 cocos/renderer/gfx-agent/GFXShaderAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXShaderAgent.cpp
-                 cocos/renderer/gfx-agent/GFXTextureAgent.h
-    NO_WERROR    cocos/renderer/gfx-agent/GFXTextureAgent.cpp
+                 cocos/renderer/gfx-agent/BufferAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/BufferAgent.cpp
+                 cocos/renderer/gfx-agent/CommandBufferAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/CommandBufferAgent.cpp
+                 cocos/renderer/gfx-agent/DescriptorSetAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/DescriptorSetAgent.cpp
+                 cocos/renderer/gfx-agent/DescriptorSetLayoutAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/DescriptorSetLayoutAgent.cpp
+                 cocos/renderer/gfx-agent/DeviceAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/DeviceAgent.cpp
+                 cocos/renderer/gfx-agent/FramebufferAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/FramebufferAgent.cpp
+                 cocos/renderer/gfx-agent/InputAssemblerAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/InputAssemblerAgent.cpp
+                 cocos/renderer/gfx-agent/LinearAllocatorPool.h
+                 cocos/renderer/gfx-agent/PipelineLayoutAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/PipelineLayoutAgent.cpp
+                 cocos/renderer/gfx-agent/PipelineStateAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/PipelineStateAgent.cpp
+                 cocos/renderer/gfx-agent/QueueAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/QueueAgent.cpp
+                 cocos/renderer/gfx-agent/RenderPassAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/RenderPassAgent.cpp
+                 cocos/renderer/gfx-agent/SamplerAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/SamplerAgent.cpp
+                 cocos/renderer/gfx-agent/ShaderAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/ShaderAgent.cpp
+                 cocos/renderer/gfx-agent/TextureAgent.h
+    NO_WERROR    cocos/renderer/gfx-agent/TextureAgent.cpp
+                 cocos/renderer/gfx-empty/EmptyBuffer.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyBuffer.cpp
+                 cocos/renderer/gfx-empty/EmptyCommandBuffer.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyCommandBuffer.cpp
+                 cocos/renderer/gfx-empty/EmptyContext.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyContext.cpp
+                 cocos/renderer/gfx-empty/EmptyDescriptorSet.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyDescriptorSet.cpp
+                 cocos/renderer/gfx-empty/EmptyDescriptorSetLayout.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyDescriptorSetLayout.cpp
+                 cocos/renderer/gfx-empty/EmptyDevice.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyDevice.cpp
+                 cocos/renderer/gfx-empty/EmptyFramebuffer.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyFramebuffer.cpp
+                 cocos/renderer/gfx-empty/EmptyInputAssembler.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyInputAssembler.cpp
+                 cocos/renderer/gfx-empty/EmptyPipelineLayout.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyPipelineLayout.cpp
+                 cocos/renderer/gfx-empty/EmptyPipelineState.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyPipelineState.cpp
+                 cocos/renderer/gfx-empty/EmptyQueue.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyQueue.cpp
+                 cocos/renderer/gfx-empty/EmptyRenderPass.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyRenderPass.cpp
+                 cocos/renderer/gfx-empty/EmptySampler.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptySampler.cpp
+                 cocos/renderer/gfx-empty/EmptyShader.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyShader.cpp
+                 cocos/renderer/gfx-empty/EmptyTexture.h
+    NO_WERROR    cocos/renderer/gfx-empty/EmptyTexture.cpp
     NO_WERROR    cocos/renderer/pipeline/BatchedBuffer.cpp
                  cocos/renderer/pipeline/BatchedBuffer.h
                  cocos/renderer/pipeline/Define.h
@@ -966,6 +998,31 @@ if(CC_USE_VULKAN)
         NO_WERROR    cocos/renderer/gfx-vulkan/volk.c
     )
 endif()
+
+cocos_source_files(
+    cocos/renderer/frame-graph/Blackboard.h
+    cocos/renderer/frame-graph/CallbackPass.h
+    cocos/renderer/frame-graph/DevicePass.cpp
+    cocos/renderer/frame-graph/DevicePass.h
+    cocos/renderer/frame-graph/DevicePassResourceTable.cpp
+    cocos/renderer/frame-graph/DevicePassResourceTable.h
+    cocos/renderer/frame-graph/FrameGraph.cpp
+    cocos/renderer/frame-graph/FrameGraph.h
+    cocos/renderer/frame-graph/Handle.h
+    cocos/renderer/frame-graph/PassInsertPointManager.cpp
+    cocos/renderer/frame-graph/PassInsertPointManager.h
+    cocos/renderer/frame-graph/PassNode.cpp
+    cocos/renderer/frame-graph/PassNode.h
+    cocos/renderer/frame-graph/PassNodeBuilder.cpp
+    cocos/renderer/frame-graph/PassNodeBuilder.h
+    cocos/renderer/frame-graph/RenderTargetAttachment.h
+    cocos/renderer/frame-graph/Resource.h
+    cocos/renderer/frame-graph/ResourceAllocator.h
+    cocos/renderer/frame-graph/ResourceEntry.h
+    cocos/renderer/frame-graph/ResourceNode.h
+    cocos/renderer/frame-graph/VirtualResource.cpp
+    cocos/renderer/frame-graph/VirtualResource.h
+)
 
 ##### script bindings
 ######## dop
@@ -1314,8 +1371,6 @@ cocos_source_files(
                  cocos/bindings/manual/jsb_conversions.h
     NO_WERROR    cocos/bindings/manual/jsb_gfx_manual.cpp
                  cocos/bindings/manual/jsb_gfx_manual.h
-    NO_WERROR    cocos/bindings/manual/jsb_gfx_agent.cpp
-                 cocos/bindings/manual/jsb_gfx_agent.h
     NO_WERROR    cocos/bindings/manual/jsb_global.cpp
                  cocos/bindings/manual/jsb_global.h
     NO_WERROR    cocos/bindings/manual/jsb_global_init.cpp
@@ -1363,34 +1418,6 @@ elseif(APPLE)
 elseif(WIN32)
     cocos_source_files(
         NO_WERROR    cocos/bindings/manual/jsb_platfrom_win32.cpp
-    )
-endif()
-
-if(CC_USE_GLES2)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_gles2_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_gles2_auto.cpp
-    )
-endif()
-
-if(CC_USE_GLES3)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_gles3_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_gles3_auto.cpp
-    )
-endif()
-
-if(CC_USE_METAL)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_mtl_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_mtl_auto.cpp
-    )
-endif()
-
-if(CC_USE_VULKAN)
-    cocos_source_files(
-                     cocos/bindings/auto/jsb_vk_auto.h
-        NO_WERROR    cocos/bindings/auto/jsb_vk_auto.cpp
     )
 endif()
 
