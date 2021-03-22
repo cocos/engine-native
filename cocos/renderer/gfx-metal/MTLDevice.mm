@@ -78,7 +78,7 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
 #else
     UIView *view = (UIView *)_windowHandle;
 #endif
-    CAMetalLayer *layer = static_cast<CAMetalLayer *>(view.layer);
+    CAMetalLayer *layer = static_cast<CAMetalLayer *>(view);
     _mtlLayer = layer;
     layer.framebufferOnly = NO;
     id<MTLDevice> mtlDevice = (id<MTLDevice>)layer.device;

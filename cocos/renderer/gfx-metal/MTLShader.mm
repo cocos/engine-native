@@ -87,7 +87,7 @@ bool CCMTLShader::createMTLFunction(const ShaderStage &stage) {
         isComputeShader = true;
     }
     
-    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
+    id<MTLDevice> mtlDevice = id<MTLDevice>(CCMTLDevice::getInstance()->getMTLDevice());
 
     auto mtlShader = mu::compileGLSLShader2Msl(stage.source,
                                                stage.stage,

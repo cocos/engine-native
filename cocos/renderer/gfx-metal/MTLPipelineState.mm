@@ -110,7 +110,7 @@ bool CCMTLPipelineState::createGPUPipelineState() {
 
 bool CCMTLPipelineState::createMTLComputePipelineState() {
     //create with function
-    id<MTLDevice> mtlDevice = id<MTLDevice>(static_cast<CCMTLDevice *>(_device)->getMTLDevice());
+    id<MTLDevice> mtlDevice = id<MTLDevice>(CCMTLDevice::getInstance()->getMTLDevice());
     NSError* err;
     _mtlComputePipeline = [mtlDevice newComputePipelineStateWithFunction:((CCMTLShader *)_shader)->getComputeMTLFunction()
                                                                    error:&err];

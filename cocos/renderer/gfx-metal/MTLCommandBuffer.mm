@@ -542,7 +542,7 @@ void CCMTLCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, c
         id<MTLBlitCommandEncoder> encoder = [_mtlCommandBuffer blitCommandEncoder];
         id<MTLTexture> src = static_cast<CCMTLTexture*>(srcTexture)->getMTLTexture();
         id<MTLTexture> dst = nil;
-        CCMTLDevice* device = static_cast<CCMTLDevice*>(_device);
+        CCMTLDevice* device = CCMTLDevice::getInstance();
         if(!dstTexture) {
             id<CAMetalDrawable> currentDrawable = (id<CAMetalDrawable>)device->getCurrentDrawable();
             dst = [currentDrawable texture];
