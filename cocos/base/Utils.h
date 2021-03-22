@@ -30,6 +30,7 @@
 #include <vector>
 #include <string>
 #include "base/Macros.h"
+#include "base/TypeDef.h"
 
 /** @file ccUtils.h
 Misc free functions
@@ -53,6 +54,9 @@ Examples:
 */
 
 namespace utils {
+
+CC_DLL std::string getStacktrace(uint skip = 0, uint maxDepth = static_cast<uint>(-1));
+
 CC_DLL int nextPOT(int x);
 /** Same to ::atof, but strip the string, remain 7 numbers after '.' before call atof.
      * Why we need this? Because in android c++_static, atof ( and std::atof ) is unsupported for numbers have long decimal part and contain

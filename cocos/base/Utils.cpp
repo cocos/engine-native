@@ -36,6 +36,9 @@
 #include <cmath>
 #include <stdlib.h>
 
+#define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
+#include "boost/stacktrace.hpp"
+
 namespace cc {
 
 namespace utils {
@@ -66,6 +69,10 @@ int nextPOT(int x) {
     x = x | (x >> 8);
     x = x | (x >> 16);
     return x + 1;
+}
+
+std::string getStacktrace(uint skip, uint maxDepth) {
+    return boost::stacktrace::to_string(boost::stacktrace::stacktrace(skip, maxDepth));
 }
 
 } // namespace utils

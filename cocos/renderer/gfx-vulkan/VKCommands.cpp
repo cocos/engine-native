@@ -41,11 +41,15 @@ namespace gfx {
 
 CCVKGPUCommandBufferPool *CCVKGPUDevice::getCommandBufferPool() {
     std::thread::id threadID = std::this_thread::get_id();
-    if (!commandBufferPools.count(threadID)) {
+    if (!_commandBufferPools.count(threadID)) {
         //std::scoped_lock<std::mutex> guard(mutex);
-        commandBufferPools[threadID] = CC_NEW(CCVKGPUCommandBufferPool(this));
+        _commandBufferPools[threadID] = CC_NEW(CCVKGPUCommandBufferPool(this));
     }
-    return commandBufferPools[threadID];
+    return _commandBufferPools[threadID];
+}
+
+CCVKGPUDescriptorSetPool* CCVKGPUDevice::getDescriptorSetPool(uint layoutID) {
+    return &_descriptorSetPools[layoutID];
 }
 
 void insertVkDynamicStates(vector<VkDynamicState> &out, const vector<DynamicStateFlagBit> &dynamicStates) {
@@ -478,9 +482,10 @@ void CCVKCmdFuncCreateDescriptorSetLayout(CCVKDevice *device, CCVKGPUDescriptorS
     setCreateInfo.pBindings    = gpuDescriptorSetLayout->vkBindings.data();
     VK_CHECK(vkCreateDescriptorSetLayout(gpuDevice->vkDevice, &setCreateInfo, nullptr, &gpuDescriptorSetLayout->vkDescriptorSetLayout));
 
-    gpuDescriptorSetLayout->pool.link(gpuDevice, gpuDescriptorSetLayout->maxSetsPerPool, gpuDescriptorSetLayout->vkBindings, gpuDescriptorSetLayout->vkDescriptorSetLayout);
+    CCVKGPUDescriptorSetPool *pool = gpuDevice->getDescriptorSetPool(gpuDescriptorSetLayout->id);
+    pool->link(gpuDevice, gpuDescriptorSetLayout->maxSetsPerPool, gpuDescriptorSetLayout->vkBindings, gpuDescriptorSetLayout->vkDescriptorSetLayout);
 
-    gpuDescriptorSetLayout->defaultDescriptorSet = gpuDescriptorSetLayout->pool.request(0);
+    gpuDescriptorSetLayout->defaultDescriptorSet = pool->request(0);
 
     if (gpuDevice->useDescriptorUpdateTemplate && bindingCount) {
         const vector<VkDescriptorSetLayoutBinding> &bindings = gpuDescriptorSetLayout->vkBindings;
@@ -979,7 +984,7 @@ void CCVKCmdFuncDestroyFramebuffer(CCVKGPUDevice *gpuDevice, CCVKGPUFramebuffer 
 
 void CCVKCmdFuncDestroyDescriptorSetLayout(CCVKGPUDevice *gpuDevice, CCVKGPUDescriptorSetLayout *gpuDescriptorSetLayout) {
     if (gpuDescriptorSetLayout->defaultDescriptorSet != VK_NULL_HANDLE) {
-        gpuDescriptorSetLayout->pool.yield(gpuDescriptorSetLayout->defaultDescriptorSet, 0);
+        gpuDevice->getDescriptorSetPool(gpuDescriptorSetLayout->id)->yield(gpuDescriptorSetLayout->defaultDescriptorSet, 0);
         gpuDescriptorSetLayout->defaultDescriptorSet = VK_NULL_HANDLE;
     }
 

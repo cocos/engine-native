@@ -38,6 +38,7 @@ CCVKBuffer::CCVKBuffer()
 }
 
 CCVKBuffer::~CCVKBuffer() {
+    destroy();
 }
 
 void CCVKBuffer::doInit(const BufferInfo &info) {

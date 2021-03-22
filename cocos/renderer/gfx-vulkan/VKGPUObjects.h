@@ -281,6 +281,8 @@ public:
         vector<VkWriteDescriptorSet> descriptorUpdateEntries;
     };
     vector<Instance> instances; // per swapchain image
+
+    uint layoutID = 0u;
 };
 
 typedef vector<CCVKGPUDescriptorSetLayout *> CCVKGPUDescriptorSetLayoutList;
@@ -332,6 +334,7 @@ public:
 };
 
 class CCVKGPUCommandBufferPool;
+class CCVKGPUDescriptorSetPool;
 class CCVKGPUDevice final : public Object {
 public:
     VkDevice                      vkDevice = VK_NULL_HANDLE;
@@ -355,6 +358,12 @@ public:
 
     CCVKGPUSwapchain *swapchain = nullptr; // reference
 
+    CCVKGPUCommandBufferPool *getCommandBufferPool();
+    CCVKGPUDescriptorSetPool *getDescriptorSetPool(uint layoutID);
+
+private:
+    friend class CCVKDevice;
+
     /* */
     using CommandBufferPools = tbb::concurrent_unordered_map<
         std::thread::id, CCVKGPUCommandBufferPool *, std::hash<std::thread::id>>;
@@ -363,9 +372,9 @@ public:
     std::mutex mutex;
     /* */
 
-    CommandBufferPools commandBufferPools;
+    CommandBufferPools _commandBufferPools;
 
-    CCVKGPUCommandBufferPool *getCommandBufferPool();
+    unordered_map<uint, CCVKGPUDescriptorSetPool> _descriptorSetPools;
 };
 
 /**
@@ -603,8 +612,8 @@ public:
     vector<uint> descriptorIndices;
     uint         descriptorCount = 0u;
 
-    uint                     maxSetsPerPool = 10u;
-    CCVKGPUDescriptorSetPool pool;
+    uint id             = 0u;
+    uint maxSetsPerPool = 10u;
 };
 
 /**

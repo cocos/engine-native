@@ -26,7 +26,6 @@
 #pragma once
 
 #include "base/Agent.h"
-#include "base/threading/Semaphore.h"
 #include "gfx-base/GFXDevice.h"
 
 namespace cc {

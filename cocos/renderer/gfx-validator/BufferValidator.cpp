@@ -28,11 +28,13 @@
 
 #include "BufferValidator.h"
 #include "DeviceValidator.h"
+#include "ValidationUtils.h"
 
 namespace cc {
 namespace gfx {
 
 BufferValidator::~BufferValidator() {
+    DeviceResourceTracker<Buffer>::erase(this);
     CC_SAFE_DELETE(_actor);
 }
 
@@ -45,12 +47,16 @@ void BufferValidator::doInit(const BufferInfo &info) {
         CCASSERT(false, "invalid stride for vertex buffer");
     }
 
+    /////////// execute ///////////
+
     _actor->initialize(info);
 }
 
 void BufferValidator::doInit(const BufferViewInfo &info) {
     CCASSERT(info.buffer, "invalid source buffer");
     CCASSERT(info.offset + info.range <= info.buffer->getSize(), "invalid range");
+
+    /////////// execute ///////////
 
     BufferViewInfo actorInfo = info;
     actorInfo.buffer         = static_cast<BufferValidator *>(info.buffer)->getActor();
@@ -61,6 +67,8 @@ void BufferValidator::doInit(const BufferViewInfo &info) {
 void BufferValidator::doResize(uint size, uint count) {
     CCASSERT(!_isBufferView, "cannot resize through buffer views");
     CCASSERT(size, "invalid size");
+
+    /////////// execute ///////////
 
     _actor->resize(size);
 }
@@ -89,6 +97,8 @@ void BufferValidator::update(void *buffer, uint size) {
         _buffer.resize(_size);
         memcpy(_buffer.data(), buffer, size);
     }
+
+    /////////// execute ///////////
 
     _actor->update(buffer, size);
 }

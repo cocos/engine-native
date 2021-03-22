@@ -38,6 +38,7 @@ CCVKQueue::CCVKQueue()
 }
 
 CCVKQueue::~CCVKQueue() {
+    destroy();
 }
 
 void CCVKQueue::doInit(const QueueInfo &info) {
