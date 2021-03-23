@@ -33,7 +33,6 @@
 #include <mutex>
 
 #include "pipeline/Define.h"
-#include "renderer/GFXDeviceCreator.h"
 #include "renderer/GFXDeviceManager.h"
 
 #import <AppKit/AppKit.h>
