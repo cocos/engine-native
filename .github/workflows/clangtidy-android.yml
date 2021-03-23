@@ -8,7 +8,7 @@ jobs:
   # when a job name is not provided
   super-lint:
     # Name the Job
-    name: Lint code base
+    name: Lint code base - Android
     # Set the type of machine to run on
     runs-on: ubuntu-latest
 
