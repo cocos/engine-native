@@ -45,7 +45,11 @@ jobs:
                   CPP+=" $file"
               fi
           done
-          clang-tidy-11 -p ./build --export-fixes=clang-fixes.yaml $CPP
+          if [[ "$CPP-xxx" == "-xxx" ]]; then
+            echo "no source file found!"
+          else
+            clang-tidy-11 -p ./build --export-fixes=clang-fixes.yaml $CPP
+          fi
       - name: clang-tidy-action
         uses: PatriceJiang/clang-tidy-action@master
         with:
