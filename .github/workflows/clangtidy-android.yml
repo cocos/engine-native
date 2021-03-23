@@ -47,6 +47,7 @@ jobs:
           done
           if [[ "$CPP-xxx" == "-xxx" ]]; then
             echo "no source file found!"
+            touch clang-fixes.yaml
           else
             clang-tidy-11 -p ./build --export-fixes=clang-fixes.yaml $CPP
           fi
