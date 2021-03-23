@@ -53,6 +53,7 @@ jobs:
           fi
       - name: clang-tidy-action
         uses: PatriceJiang/clang-tidy-action@master
+        if: hashFiles('clang-fixes.yaml') != ''
         with:
           fixesFile: clang-fixes.yaml
           noFailOnIssue: true
