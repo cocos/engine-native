@@ -219,6 +219,9 @@ void Scheduler::unschedule(const std::string &key, void *target) {
         return;
     }
 
+    //CCASSERT(target);
+    //CCASSERT(selector);
+
     tHashTimerEntry *element = nullptr;
     HASH_FIND_PTR(_hashForTimers, &target, element);
 
