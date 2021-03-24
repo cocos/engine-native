@@ -548,7 +548,6 @@ private:
 
 void WebSocketImpl::closeAllConnections() {
     if (__websocketInstances != nullptr) {
-        std::lock_guard<std::mutex> lk(__instanceMutex);
         ssize_t count = __websocketInstances->size();
         for (ssize_t i = count - 1; i >= 0; i--) {
             WebSocketImpl *instance = __websocketInstances->at(i);
