@@ -1,8 +1,12 @@
+# ![][1] C++ coding style
+
+_v0.1 - Last updated March 22, 2021_
+
+_Forked from [Google's C++ coding style](https://google.github.io/styleguide/cppguide.html.md) _
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [![][1] C++ coding style](#1-c-coding-style)
 - [Header Files](#header-files)
   - [The #pragma Guard](#the-pragma-guard)
   - [Forward Declarations](#forward-declarations)
