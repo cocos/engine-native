@@ -49,7 +49,12 @@ jobs:
         if: ${{ steps.listchanged.outputs.source == 'true' }}
         run: |
           CPP="${{ steps.listchanged.outputs.source_files }}"
-          clang-tidy-11 --format-style=file -p ./build --export-fixes=clang-fixes.yaml $CPP
+          FILTERED=`node .github/workflows/filter_by_cdb.js $CPP`
+          if [[ "$FILTERED-xxx" == "-xxx" ]]; then
+            echo "no source files match target"
+          else
+            clang-tidy-11 --format-style=file -p ./build --export-fixes=clang-fixes.yaml $CPP
+          fi
       - name: clang-tidy-action
         uses: PatriceJiang/clang-tidy-action@master
         if: hashFiles('clang-fixes.yaml') != ''
