@@ -28,8 +28,8 @@
 ****************************************************************************/
 
 #include "base/Scheduler.h"
-#include "base/Array.h"
 #include "base/Macros.h"
+#include "base/Array.h"
 
 #define CC_REPEAT_FOREVER (UINT_MAX - 1)
 
@@ -40,29 +40,29 @@ namespace cc {
 // A list double-linked list used for "updates with priority"
 typedef struct _listEntry {
     struct _listEntry *prev, *next;
-    ccSchedulerFunc    callback;
-    void *             target;
-    int                priority;
-    bool               paused;
-    bool               markedForDeletion; // selector will no longer be called and entry will be removed at end of the next tick
+    ccSchedulerFunc callback;
+    void *target;
+    int priority;
+    bool paused;
+    bool markedForDeletion; // selector will no longer be called and entry will be removed at end of the next tick
 } tListEntry;
 
 typedef struct _hashUpdateEntry {
-    tListEntry **   list;  // Which list does it belong to ?
-    tListEntry *    entry; // entry in the list
-    void *          target;
+    tListEntry **list; // Which list does it belong to ?
+    tListEntry *entry; // entry in the list
+    void *target;
     ccSchedulerFunc callback;
-    UT_hash_handle  hh;
+    UT_hash_handle hh;
 } tHashUpdateEntry;
 
 // Hash Element used for "selectors with interval"
 typedef struct _hashSelectorEntry {
-    ccArray *      timers;
-    void *         target;
-    int            timerIndex;
-    Timer *        currentTimer;
-    bool           currentTimerSalvaged;
-    bool           paused;
+    ccArray *timers;
+    void *target;
+    int timerIndex;
+    Timer *currentTimer;
+    bool currentTimerSalvaged;
+    bool paused;
     UT_hash_handle hh;
 } tHashTimerEntry;
 
@@ -72,17 +72,17 @@ Timer::Timer() {
 }
 
 void Timer::setupTimerWithInterval(float seconds, unsigned int repeat, float delay) {
-    _elapsed    = -1;
-    _interval   = seconds;
-    _delay      = delay;
-    _useDelay   = (_delay > 0.0f) ? true : false;
-    _repeat     = repeat;
+    _elapsed = -1;
+    _interval = seconds;
+    _delay = delay;
+    _useDelay = (_delay > 0.0f) ? true : false;
+    _repeat = repeat;
     _runForever = (_repeat == CC_REPEAT_FOREVER) ? true : false;
 }
 
 void Timer::update(float dt) {
     if (_elapsed == -1) {
-        _elapsed       = 0;
+        _elapsed = 0;
         _timesExecuted = 0;
         return;
     }
@@ -135,9 +135,9 @@ TimerTargetCallback::TimerTargetCallback() {
 
 bool TimerTargetCallback::initWithCallback(Scheduler *scheduler, const ccSchedulerFunc &callback, void *target, const std::string &key, float seconds, unsigned int repeat, float delay) {
     _scheduler = scheduler;
-    _target    = target;
-    _callback  = callback;
-    _key       = key;
+    _target = target;
+    _callback = callback;
+    _key = key;
     setupTimerWithInterval(seconds, repeat, delay);
     return true;
 }
@@ -181,7 +181,7 @@ void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float in
     HASH_FIND_PTR(_hashForTimers, &target, element);
 
     if (!element) {
-        element         = (tHashTimerEntry *)calloc(sizeof(*element), 1);
+        element = (tHashTimerEntry *)calloc(sizeof(*element), 1);
         element->target = target;
 
         HASH_ADD_PTR(_hashForTimers, target, element);
@@ -359,7 +359,7 @@ std::set<void *> Scheduler::pauseAllTargets() {
 
     // Custom Selectors
     for (tHashTimerEntry *element = _hashForTimers; element != nullptr;
-         element                  = (tHashTimerEntry *)element->hh.next) {
+         element = (tHashTimerEntry *)element->hh.next) {
         element->paused = true;
         idsWithSelectors.insert(element->target);
     }
@@ -390,13 +390,13 @@ void Scheduler::update(float dt) {
 
     // Iterate over all the custom selectors
     for (tHashTimerEntry *elt = _hashForTimers; elt != nullptr;) {
-        _currentTarget         = elt;
+        _currentTarget = elt;
         _currentTargetSalvaged = false;
 
         if (!_currentTarget->paused) {
             // The 'timers' array may change while inside this loop
             for (elt->timerIndex = 0; elt->timerIndex < elt->timers->num; ++(elt->timerIndex)) {
-                elt->currentTimer         = (Timer *)(elt->timers->arr[elt->timerIndex]);
+                elt->currentTimer = (Timer *)(elt->timers->arr[elt->timerIndex]);
                 elt->currentTimerSalvaged = false;
 
                 elt->currentTimer->update(dt);
@@ -423,7 +423,7 @@ void Scheduler::update(float dt) {
     }
 
     _updateHashLocked = false;
-    _currentTarget    = nullptr;
+    _currentTarget = nullptr;
 
     //
     // Functions allocated from another thread
