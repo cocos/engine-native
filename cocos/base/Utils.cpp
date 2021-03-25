@@ -39,6 +39,8 @@
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 #include "boost/stacktrace.hpp"
 
+#include "bindings/jswrapper/SeApi.h"
+
 namespace cc {
 
 namespace utils {
@@ -71,8 +73,13 @@ int nextPOT(int x) {
     return x + 1;
 }
 
+// painfully slow to execute, use with caution
 std::string getStacktrace(uint skip, uint maxDepth) {
     return boost::stacktrace::to_string(boost::stacktrace::stacktrace(skip, maxDepth));
+}
+
+std::string getStacktraceJS() {
+    return se::ScriptEngine::getInstance()->getCurrentStackTrace();
 }
 
 } // namespace utils

@@ -65,7 +65,7 @@ public:
 
 private:
     struct ResourceRecord {
-        Resource *resource;
+        Resource *resource = nullptr;
         String    initStack;
     };
 

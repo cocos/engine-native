@@ -110,9 +110,7 @@ void CCVKBuffer::doResize(uint size, uint count) {
 }
 
 void CCVKBuffer::update(void *buffer, uint size) {
-    CCVKDevice::getInstance()->gpuTransportHub()->checkIn([this, buffer, size](CCVKGPUCommandBuffer *gpuCommandBuffer) {
-        CCVKCmdFuncUpdateBuffer(CCVKDevice::getInstance(), _gpuBuffer, buffer, size, gpuCommandBuffer);
-    });
+    CCVKCmdFuncUpdateBuffer(CCVKDevice::getInstance(), _gpuBuffer, buffer, size, nullptr);
 }
 
 } // namespace gfx

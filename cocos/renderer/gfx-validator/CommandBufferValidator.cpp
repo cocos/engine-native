@@ -194,18 +194,24 @@ void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint s
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'updateBuffer' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'updateBuffer' must be recorded outside render passes.");
 
+    auto bufferValidator = static_cast<BufferValidator *>(buff);
+    bufferValidator->updateRedundencyCheck();
+
     /////////// execute ///////////
 
-    _actor->updateBuffer(static_cast<BufferValidator *>(buff)->getActor(), data, size);
+    _actor->updateBuffer(bufferValidator->getActor(), data, size);
 }
 
 void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'copyBuffersToTexture' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'copyBuffersToTexture' must be recorded outside render passes.");
 
+    auto textureValidator = static_cast<TextureValidator *>(texture);
+    textureValidator->updateRedundencyCheck();
+
     /////////// execute ///////////
 
-    _actor->copyBuffersToTexture(buffers, static_cast<TextureValidator *>(texture)->getActor(), regions, count);
+    _actor->copyBuffersToTexture(buffers, textureValidator->getActor(), regions, count);
 }
 
 void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {

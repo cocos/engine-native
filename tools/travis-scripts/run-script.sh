@@ -69,7 +69,7 @@ function build_android()
     echo "set(CC_USE_VULKAN ON)" >> build-android/proj/cfg.cmake
     echo "set(CC_USE_GLES2 ON)" >> build-android/proj/cfg.cmake
     echo "set(USE_WEBSOCKET_SERVER ON)" >> build-android/proj/cfg.cmake
-    
+
     mkdir -p build-android/assets
 
     ASSET_DIR=$COCOS2DX_ROOT/templates/android/build/build-android/

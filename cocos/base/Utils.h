@@ -27,10 +27,10 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
 #include "base/Macros.h"
 #include "base/TypeDef.h"
+#include <string>
+#include <vector>
 
 /** @file ccUtils.h
 Misc free functions
@@ -55,7 +55,8 @@ Examples:
 
 namespace utils {
 
-CC_DLL std::string getStacktrace(uint skip = 0, uint maxDepth = static_cast<uint>(-1));
+CC_DLL std::string getStacktrace(uint skip = 0, uint maxDepth = UINT_MAX);
+CC_DLL std::string getStacktraceJS();
 
 CC_DLL int nextPOT(int x);
 /** Same to ::atof, but strip the string, remain 7 numbers after '.' before call atof.

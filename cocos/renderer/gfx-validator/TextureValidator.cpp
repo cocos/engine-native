@@ -72,5 +72,16 @@ void TextureValidator::doResize(uint width, uint height, uint size) {
     _actor->resize(width, height);
 }
 
+void TextureValidator::updateRedundencyCheck() {
+    uint cur = DeviceValidator::getInstance()->currentFrame();
+
+    if (cur == _lastUpdateFrame) {
+        CC_LOG_WARNING(utils::getStacktraceJS().c_str());
+        CC_LOG_WARNING("performance warning: texture updated more than once per frame");
+    }
+
+    _lastUpdateFrame = cur;
+}
+
 } // namespace gfx
 } // namespace cc

@@ -48,7 +48,7 @@ CCVKGPUCommandBufferPool *CCVKGPUDevice::getCommandBufferPool() {
     return _commandBufferPools[threadID];
 }
 
-CCVKGPUDescriptorSetPool* CCVKGPUDevice::getDescriptorSetPool(uint layoutID) {
+CCVKGPUDescriptorSetPool *CCVKGPUDevice::getDescriptorSetPool(uint layoutID) {
     return &_descriptorSetPools[layoutID];
 }
 
@@ -203,9 +203,10 @@ void CCVKCmdFuncCreateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
         allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
     } else if (gpuBuffer->memUsage == (MemoryUsage::HOST | MemoryUsage::DEVICE)) {
         /* *
-        gpuBuffer->instanceSize = roundUp(gpuBuffer->size, device->getUboOffsetAlignment());
+        gpuBuffer->instanceSize = roundUp(gpuBuffer->size, device->getCapabilities().uboOffsetAlignment);
         bufferInfo.size = gpuBuffer->instanceSize * device->gpuDevice()->backBufferCount;
         allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+        bufferInfo.usage |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         /* */
         bufferInfo.usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         /* */
@@ -801,7 +802,6 @@ void CCVKCmdFuncUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, const
     auto         upload = [&stagingBuffer, &gpuBuffer, &region](const CCVKGPUCommandBuffer *gpuCommandBuffer) {
 #if BARRIER_DEDUCTION_LEVEL >= BARRIER_DEDUCTION_LEVEL_BASIC
         if (gpuBuffer->transferAccess) {
-            CC_LOG_WARNING("updateBuffer: performance warning: buffer updated more than once per frame");
             // guard against WAW hazard
             VkMemoryBarrier vkBarrier{VK_STRUCTURE_TYPE_MEMORY_BARRIER};
             vkBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -845,7 +845,6 @@ void CCVKCmdFuncCopyBuffersToTexture(CCVKDevice *device, const uint8_t *const *b
     if (gpuTexture->transferAccess != THSVS_ACCESS_TRANSFER_WRITE) {
         CCVKCmdFuncImageMemoryBarrier(gpuCommandBuffer, barrier);
     } else {
-        CC_LOG_WARNING("copyBuffersToTexture: performance warning: texture updated more than once per frame");
         // guard against WAW hazard
         VkMemoryBarrier vkBarrier{VK_STRUCTURE_TYPE_MEMORY_BARRIER};
         vkBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -1121,7 +1120,9 @@ void CCVKGPURecycleBin::clear() {
     _count = 0;
 }
 
-void CCVKGPUBarrierManager::update(CCVKGPUCommandBuffer *gpuCommandBuffer) {
+void CCVKGPUBarrierManager::update(CCVKGPUTransportHub *transportHub) {
+    if (_buffersToBeChecked.empty() && _texturesToBeChecked.empty()) return;
+
     static vector<ThsvsAccessType>      prevAccesses;
     static vector<ThsvsAccessType>      nextAccesses;
     static vector<VkImageMemoryBarrier> vkImageBarriers;
@@ -1192,8 +1193,10 @@ void CCVKGPUBarrierManager::update(CCVKGPUCommandBuffer *gpuCommandBuffer) {
     }
 
     if (pVkBarrier || vkImageBarriers.size()) {
-        vkCmdPipelineBarrier(gpuCommandBuffer->vkCommandBuffer, srcStageMask, dstStageMask, 0,
-                             pVkBarrier ? 1 : 0, pVkBarrier, 0, nullptr, vkImageBarriers.size(), vkImageBarriers.data());
+        transportHub->checkIn([&](CCVKGPUCommandBuffer *gpuCommandBuffer) {
+            vkCmdPipelineBarrier(gpuCommandBuffer->vkCommandBuffer, srcStageMask, dstStageMask, 0,
+                                 pVkBarrier ? 1 : 0, pVkBarrier, 0, nullptr, vkImageBarriers.size(), vkImageBarriers.data());
+        });
     }
 
     _buffersToBeChecked.clear();

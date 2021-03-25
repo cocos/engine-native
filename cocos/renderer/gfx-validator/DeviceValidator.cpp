@@ -122,6 +122,7 @@ void DeviceValidator::acquire() {
 
 void DeviceValidator::present() {
     _actor->present();
+    ++_currentFrame;
 }
 
 void DeviceValidator::setMultithreaded(bool multithreaded) {
@@ -230,7 +231,10 @@ TextureBarrier *DeviceValidator::createTextureBarrier() {
 }
 
 void DeviceValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
-    _actor->copyBuffersToTexture(buffers, static_cast<TextureValidator *>(dst)->getActor(), regions, count);
+    auto textureValidator = static_cast<TextureValidator *>(dst);
+    textureValidator->updateRedundencyCheck();
+
+    _actor->copyBuffersToTexture(buffers, textureValidator->getActor(), regions, count);
 }
 
 void DeviceValidator::flushCommands(CommandBuffer *const *cmdBuffs, uint count) {
