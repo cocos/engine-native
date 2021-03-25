@@ -84,14 +84,20 @@ public:
         CC_SAFE_DESTROY(Device::_instance);
     }
 
+    static constexpr bool useAgent() { return true; }
+
+    static constexpr bool useValidator() { return CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION; }
+
 private:
     template <typename DeviceCtor, typename Enable = std::enable_if_t<std::is_base_of<Device, DeviceCtor>::value>>
     static bool tryCreate(const DeviceInfo &info, Device *&device) {
         device = CC_NEW(DeviceCtor);
 
-        device = CC_NEW(gfx::DeviceAgent(device));
+        if (useAgent()) {
+            device = CC_NEW(gfx::DeviceAgent(device));
+        }
 
-        if (CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION) {
+        if (useValidator()) {
             device = CC_NEW(gfx::DeviceValidator(device));
             //((gfx::DeviceValidator *)device)->enableRecording(true);
         }
