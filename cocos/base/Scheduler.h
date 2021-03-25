@@ -56,7 +56,7 @@ public:
     void setupTimerWithInterval(float seconds, unsigned int repeat, float delay);
 
     virtual void trigger(float dt) = 0;
-    virtual void cancel() = 0;
+    virtual void cancel()          = 0;
 
     /** triggers the timer */
     void update(float dt);
@@ -65,14 +65,14 @@ protected:
     Timer();
 
 protected:
-    Scheduler *_scheduler = nullptr;
-    float _elapsed = 0.f;
-    bool _runForever = false;
-    bool _useDelay = false;
+    Scheduler *  _scheduler     = nullptr;
+    float        _elapsed       = 0.f;
+    bool         _runForever    = false;
+    bool         _useDelay      = false;
     unsigned int _timesExecuted = 0;
-    unsigned int _repeat = 0; //0 = once, 1 is 2 x executed
-    float _delay = 0.f;
-    float _interval = 0.f;
+    unsigned int _repeat        = 0; //0 = once, 1 is 2 x executed
+    float        _delay         = 0.f;
+    float        _interval      = 0.f;
 };
 
 class CC_DLL TimerTargetCallback final : public Timer {
@@ -83,15 +83,15 @@ public:
     bool initWithCallback(Scheduler *scheduler, const ccSchedulerFunc &callback, void *target, const std::string &key, float seconds, unsigned int repeat, float delay);
 
     inline const ccSchedulerFunc &getCallback() const { return _callback; };
-    inline const std::string &getKey() const { return _key; };
+    inline const std::string &    getKey() const { return _key; };
 
     virtual void trigger(float dt) override;
     virtual void cancel() override;
 
 protected:
-    void *_target = nullptr;
+    void *          _target   = nullptr;
     ccSchedulerFunc _callback = nullptr;
-    std::string _key;
+    std::string     _key;
 };
 
 /**
@@ -292,15 +292,15 @@ private:
     // update specific
 
     // Used for "selectors with interval"
-    struct _hashSelectorEntry *_hashForTimers = nullptr;
-    struct _hashSelectorEntry *_currentTarget = nullptr;
-    bool _currentTargetSalvaged = false;
+    struct _hashSelectorEntry *_hashForTimers         = nullptr;
+    struct _hashSelectorEntry *_currentTarget         = nullptr;
+    bool                       _currentTargetSalvaged = false;
     // If true unschedule will not remove anything from a hash. Elements will only be marked for deletion.
     bool _updateHashLocked = false;
 
     // Used for "perform Function"
     std::vector<std::function<void()>> _functionsToPerform;
-    std::mutex _performMutex;
+    std::mutex                         _performMutex;
 };
 
 // end of base group

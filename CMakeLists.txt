@@ -315,8 +315,6 @@ endif()
 ##### base
 cocos_source_files(
     cocos/base/Agent.h
-    cocos/base/Array.cpp
-    cocos/base/Array.h
     cocos/base/astc.cpp
     cocos/base/astc.h
     cocos/base/AutoreleasePool.cpp
