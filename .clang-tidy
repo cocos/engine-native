@@ -39,7 +39,8 @@ Checks: >
   -readability-uppercase-literal-suffix,
   -cppcoreguidelines-no-malloc,
   -cppcoreguidelines-owning-memory,
-  -cppcoreguidelines-non-private-member-variables-in-classes
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -readability-use-anyofallof
 
 CheckOptions:
 ################## readability identifier naming ################################
