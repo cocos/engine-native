@@ -32,6 +32,7 @@ jobs:
             allChanges:
               - added|modified|deleted: '**'
             skipedDebug:
+              - added|modified|deleted: '**'
               - exclude: 'cocos/editor-support/dragonbones/**'
       - name: Install CMake & Clang Tidy
         run: |
