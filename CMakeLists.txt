@@ -600,7 +600,7 @@ elseif(APPLE)
     elseif(IOS)
         cocos_source_files(
                          cocos/platform/ios/View.h
-                         cocos/platform/ios/View.mm
+            NO_WERROR    cocos/platform/ios/View.mm     # CAMetalLayer bug for apple
                          cocos/platform/ios/Application-ios.mm
                          cocos/platform/ios/Device-ios.mm
         )
@@ -940,9 +940,9 @@ if(CC_USE_METAL)
                      cocos/renderer/gfx-metal/MTLCommandBuffer.h
                      cocos/renderer/gfx-metal/MTLCommandBuffer.mm
                      cocos/renderer/gfx-metal/MTLContext.h
-                     cocos/renderer/gfx-metal/MTLContext.mm
-                     cocos/renderer/gfx-metal/MTLDevice.h
-                     cocos/renderer/gfx-metal/MTLDevice.mm
+        NO_WERROR    cocos/renderer/gfx-metal/MTLContext.mm     # CAMetalLayer bug for apple
+                     cocos/renderer/gfx-metal/MTLDevice.h       
+        NO_WERROR    cocos/renderer/gfx-metal/MTLDevice.mm      # CAMetalLayer bug for apple
                      cocos/renderer/gfx-metal/MTLFramebuffer.mm
                      cocos/renderer/gfx-metal/MTLFramebuffer.h
                      cocos/renderer/gfx-metal/MTLGPUObjects.h
