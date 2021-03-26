@@ -31,6 +31,8 @@ jobs:
               - exclude: 'cocos/editor-support/dragonbones/**'
             allChanges:
               - added|modified|deleted: '**'
+            skipedDebug:
+              - exclude: 'cocos/editor-support/dragonbones/**'
       - name: Install CMake & Clang Tidy
         run: |
           sudo apt install -y cmake llvm clang-tidy-11
