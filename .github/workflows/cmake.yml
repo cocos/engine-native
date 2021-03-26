@@ -1,6 +1,6 @@
 name: Cmake Unit Test
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   camke-unit:
@@ -28,6 +28,7 @@ jobs:
         rm ${{github.workspace}}/external/*
         git clone --branch ${external_version} --depth 1 https://github.com/${external_repo_parent}/${external_repo_name} .
         git log --oneline -1
+
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}/unit-test/build
