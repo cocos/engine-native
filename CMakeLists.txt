@@ -354,7 +354,6 @@ cocos_source_files(
     cocos/base/TypeDef.h
     cocos/base/UTF8.cpp
     cocos/base/UTF8.h
-    cocos/base/uthash.h
     cocos/base/Utils.cpp
     cocos/base/Utils.h
     cocos/base/Value.cpp
