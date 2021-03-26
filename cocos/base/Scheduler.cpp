@@ -169,7 +169,7 @@ void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float in
         element->timers.reserve(INITIAL_TIMER_COUND);
     } else {
         for (auto &e : element->timers) {
-            auto timer = dynamic_cast<TimerTargetCallback *>(e);
+            auto *timer = dynamic_cast<TimerTargetCallback *>(e);
             if (key == timer->getKey()) {
                 CC_LOG_DEBUG("CCScheduler#scheduleSelector. Selector already scheduled. Updating interval from: %.4f to %.4f", timer->getInterval(), interval);
                 timer->setInterval(interval);
@@ -178,7 +178,7 @@ void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float in
         }
     }
 
-    auto timer = new (std::nothrow) TimerTargetCallback();
+    auto *timer = new (std::nothrow) TimerTargetCallback();
     timer->initWithCallback(this, callback, target, key, interval, repeat, delay);
     element->timers.push_back(timer);
     timer->release();
@@ -196,8 +196,8 @@ void Scheduler::unschedule(const std::string &key, void *target) {
         int             i       = 0;
         auto            timers  = element->timers;
 
-        for (auto t : timers) {
-            auto timer = dynamic_cast<TimerTargetCallback *>(t);
+        for (auto *t : timers) {
+            auto *timer = dynamic_cast<TimerTargetCallback *>(t);
 
             if (timer && key == timer->getKey()) {
                 if (timer == element->currentTimer && (!element->currentTimerSalvaged)) {
@@ -243,8 +243,8 @@ bool Scheduler::isScheduled(const std::string &key, void *target) {
         return false;
     }
 
-    for (const auto t : element->timers) {
-        auto timer = dynamic_cast<TimerTargetCallback *>(t);
+    for (const auto *t : element->timers) {
+        auto *timer = dynamic_cast<TimerTargetCallback *>(t);
 
         if (timer && key == timer->getKey()) {
             return true;
@@ -278,7 +278,7 @@ void Scheduler::unscheduleAllForTarget(void *target) {
             element->currentTimerSalvaged = true;
         }
 
-        for (auto t : timers) {
+        for (auto *t : timers) {
             t->release();
         }
         timers.clear();
