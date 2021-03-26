@@ -29,24 +29,24 @@
  ****************************************************************************/
 #include "websockets/libwebsockets.h"
 
+#include "base/Scheduler.h"
+#include "network/Uri.h"
+#include "network/WebSocket.h"
+#include "platform/Application.h"
+#include "platform/FileUtils.h"
+#include "platform/StdC.h"
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
 #include <errno.h>
 #include <list>
-#include <mutex>
 #include <memory> // for std::shared_ptr
+#include <mutex>
 #include <queue>
-#include <string>
 #include <signal.h>
+#include <string>
 #include <thread>
 #include <vector>
-#include "network/WebSocket.h"
-#include "network/Uri.h"
-#include "base/Scheduler.h"
-#include "platform/FileUtils.h"
-#include "platform/Application.h"
-#include "platform/StdC.h"
 
 #define NS_NETWORK_BEGIN \
     namespace cc {       \
@@ -372,13 +372,16 @@ public:
             return 0;
         }
         int ret = 0;
-        WebSocketImpl *ws = (WebSocketImpl *)lws_wsi_user(wsi);
-        if (ws != nullptr && __websocketInstances != nullptr) {
-            if (std::find(__websocketInstances->begin(), __websocketInstances->end(), ws) != __websocketInstances->end()) {
-                ret = ws->onSocketCallback(wsi, reason, in, len);
+        {
+            std::lock_guard<std::mutex> lk(__instanceMutex);
+            WebSocketImpl *ws = (WebSocketImpl *)lws_wsi_user(wsi);
+            if (ws != nullptr && __websocketInstances != nullptr) {
+                if (std::find(__websocketInstances->begin(), __websocketInstances->end(), ws) != __websocketInstances->end()) {
+                    ret = ws->onSocketCallback(wsi, reason, in, len);
+                }
+            } else {
+                //            LOGD("ws instance is nullptr.\n");
             }
-        } else {
-            //            LOGD("ws instance is nullptr.\n");
         }
 
         return ret;
@@ -568,11 +571,14 @@ WebSocketImpl::WebSocketImpl(cc::network::WebSocket *ws)
   _closeState(CloseState::NONE) {
     // reserve data buffer to avoid allocate memory frequently
     _receivedData.reserve(WS_RESERVE_RECEIVE_BUFFER_SIZE);
-    if (__websocketInstances == nullptr) {
-        __websocketInstances = new (std::nothrow) std::vector<WebSocketImpl *>();
-    }
 
-    __websocketInstances->push_back(this);
+    {
+        std::lock_guard<std::mutex> lk(__instanceMutex);
+        if (__websocketInstances == nullptr) {
+            __websocketInstances = new (std::nothrow) std::vector<WebSocketImpl *>();
+        }
+        __websocketInstances->push_back(this);
+    }
 
     // NOTE: !!! Be careful while merging cocos2d-x-lite back to cocos2d-x. !!!
     // 'close' is a synchronous operation which may wait some seconds to make sure connection is closed.
