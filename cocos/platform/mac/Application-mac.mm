@@ -99,8 +99,9 @@ bool setCanvasCallback(se::Object *global) {
     NSView *          view            = [[[[NSApplication sharedApplication] delegate] getWindow] contentView];
 
     std::stringstream commandBuf;
-    commandBuf << "window.innerWidth = " << viewLogicalSize.x << " window.innerHeight = "
-               << viewLogicalSize.y << " window.windowHandler = " << reinterpret_cast<uintptr_t>(view);
+    commandBuf << "window.innerWidth = " << viewLogicalSize.x
+               << " window.innerHeight = " << viewLogicalSize.y
+               << " window.windowHandler = " << reinterpret_cast<uintptr_t>(view);
     se->evalString(commandBuf.str().c_str());
 
     gfx::DeviceInfo deviceInfo;

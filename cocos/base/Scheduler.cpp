@@ -347,8 +347,8 @@ void Scheduler::update(float dt) {
 
         if (!_currentTarget->paused) {
             // The 'timers' array may change while inside this loop
-            for (elt->timerIndex = 0; elt->timerIndex < elt->timers.size(); ++(elt->timerIndex)) {
-                elt->currentTimer         = (Timer *)(elt->timers[elt->timerIndex]);
+            for (elt->timerIndex = 0; elt->timerIndex < static_cast<int>(elt->timers.size()); ++(elt->timerIndex)) {
+                elt->currentTimer         = elt->timers[elt->timerIndex];
                 elt->currentTimerSalvaged = false;
 
                 elt->currentTimer->update(dt);
