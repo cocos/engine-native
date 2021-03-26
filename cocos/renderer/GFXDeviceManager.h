@@ -118,9 +118,8 @@ private:
         return true;
     }
 
-// TODO: CI env doesn't have this?
 #ifndef CC_DEBUG
-    static constexpr int CC_DEBUG{1};
+    static constexpr int CC_DEBUG{0};
 #endif
 
     static constexpr bool FORCE_DISABLE_VALIDATION{false};

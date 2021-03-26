@@ -189,8 +189,8 @@ function build_windows()
     cmake ../ -G"Visual Studio 15 2017" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
     cmake --build . --config Debug
     echo "Compile Win32 Debug Done!"
-    # cmake --build . --config Release
-    # echo "Compile Win32 Debug Done!"
+    cmake --build . --config Release
+    echo "Compile Win32 Debug Done!"
 }
 
 
