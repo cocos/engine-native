@@ -243,7 +243,7 @@ bool Scheduler::isScheduled(const std::string &key, void *target) {
         return false;
     }
 
-    for (const auto *t : element->timers) {
+    for (auto *t : element->timers) {
         auto *timer = dynamic_cast<TimerTargetCallback *>(t);
 
         if (timer && key == timer->getKey()) {
