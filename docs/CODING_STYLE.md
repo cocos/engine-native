@@ -222,7 +222,7 @@ Exception: sometimes, system-specific code needs conditional includes. Such code
 
 ## Namespaces
 
-With few exceptions, place code in a namespace. Namespaces should have unique names based on the project name, and possibly its path. Do not use using-directives (e.g., using namespace foo). Do not use inline namespaces. For unnamed namespaces, see [Internal Linkage](#internal-linkage).
+With few exceptions, place code in a namespace. Namespaces should have unique names based on the project name, and possibly its path. Do not use using-directives (e.g., `using namespace foo`). Do not use inline namespaces. For unnamed namespaces, see [Internal Linkage](#internal-linkage).
 
 **Definition:**
 
@@ -666,7 +666,7 @@ These declarations/deletions can be omitted only if they are obvious:
 
 A type should not be copyable/movable if the meaning of copying/moving is unclear to a casual user, or if it incurs unexpected costs. Move operations for copyable types are strictly a performance optimization and are a potential source of bugs and complexity, so avoid defining them unless they are significantly more efficient than the corresponding copy operations. If your type provides copy operations, it is recommended that you design your class so that the default implementation of those operations is correct. Remember to review the correctness of any defaulted operations as you would any other code.
 
-Due to the risk of slicing, prefer to avoid providing a public assignment operator or copy/move constructor for a class that's intended to be derived from (and prefer to avoid deriving from a class with such members). If your base class needs to be copyable, provide a public virtual Clone() method, and a protected copy constructor that derived classes can use to implement it.
+Due to the risk of slicing, prefer to avoid providing a public assignment operator or copy/move constructor for a class that's intended to be derived from (and prefer to avoid deriving from a class with such members). If your base class needs to be copyable, provide a public virtual clone() method, and a protected copy constructor that derived classes can use to implement it.
 
 ## Structs vs. Classes
 
@@ -741,10 +741,10 @@ Overuse of operators can lead to obfuscated code, particularly if the overloaded
 - The hazards of function overloading apply just as much to operator overloading, if not more so.
 - Operator overloads can fool our intuition into thinking that expensive operations are cheap, built-in operations.
 - Finding the call sites for overloaded operators may require a search tool that's aware of C++ syntax, rather than e.g., grep.
-- If you get the argument type of an overloaded operator wrong, you may get a different overload rather than a compiler error. For example, foo < bar may do one thing, while &foo < &bar does something totally different.
+- If you get the argument type of an overloaded operator wrong, you may get a different overload rather than a compiler error. For example, foo < bar may do one thing, while `&foo < &bar` does something totally different.
 - Certain operator overloads are inherently hazardous. Overloading unary & can cause the same code to have different meanings depending on whether the overload declaration is visible. Overloads of &&, ||, and , (comma) cannot match the evaluation-order semantics of the built-in operators.
 - Operators are often defined outside the class, so there's a risk of different files introducing different definitions of the same operator. If both definitions are linked into the same binary, this results in undefined behavior, which can manifest as subtle run-time bugs.
-- User-defined literals (UDLs) allow the creation of new syntactic forms that are unfamiliar even to experienced C++ programmers, such as "Hello World"sv as a shorthand for std::string_view("Hello World"). Existing notations are clearer, though less terse.
+- User-defined literals (UDLs) allow the creation of new syntactic forms that are unfamiliar even to experienced C++ programmers, such as "Hello World"sv as a shorthand for `std::string_view("Hello World")`. Existing notations are clearer, though less terse.
 - Because they can't be namespace-qualified, uses of UDLs also require use of either using-directives (which we ban) or using-declarations (which we ban in header files except when the imported names are part of the interface exposed by the header file in question). Given that header files would have to avoid UDL suffixes, we prefer to avoid having conventions for literals differ between header files and source files.
 
 **Decision:**
@@ -755,7 +755,7 @@ Define operators only on your own types. More precisely, define them in the same
 
 Prefer to define non-modifying binary operators as non-member functions. If a binary operator is defined as a class member, implicit conversions will apply to the right-hand argument, but not the left-hand one. It will confuse your users if a < b compiles but b < a doesn't.
 
-Don't go out of your way to avoid defining operator overloads. For example, prefer to define ==, =, and <<, rather than Equals(), CopyFrom(), and PrintTo(). Conversely, don't define operator overloads just because other libraries expect them. For example, if your type doesn't have a natural ordering, but you want to store it in a std::set, use a custom comparator rather than overloading <.
+Don't go out of your way to avoid defining operator overloads. For example, prefer to define ==, =, and <<, rather than `equals()`, `copyFrom()`, and `printTo()`. Conversely, don't define operator overloads just because other libraries expect them. For example, if your type doesn't have a natural ordering, but you want to store it in a `std::set`, use a custom comparator rather than overloading <.
 
 Do not overload &&, ||, , (comma), or unary &. Do not overload operator"", i.e., do not introduce user-defined literals. Do not use any such literals provided by others (including the standard library).
 
@@ -765,7 +765,7 @@ Type conversion operators are covered in the section on implicit conversions. Th
 
 Make classes' data members private, unless they are constants. This simplifies reasoning about invariants, at the cost of some easy boilerplate in the form of accessors (usually const) if necessary.
 
-For technical reasons, we allow data members of a test fixture class defined in a .cc file to be protected when using Google Test). If a test fixture class is defined outside of the .cc file it is used in, for example in a .h file, make data members private.
+For technical reasons, we allow data members of a test fixture class defined in a .cpp file to be protected when using Google Test). If a test fixture class is defined outside of the .cpp file it is used in, for example in a .h file, make data members private.
 
 ## Declaration Order
 
@@ -853,7 +853,7 @@ Function pointers are confusing in the presence of default arguments, since the 
 
 **Decision:**
 
-Default arguments are banned on virtual functions, where they don't work properly, and in cases where the specified default might not evaluate to the same value depending on when it was evaluated. (For example, don't write void f(int n = counter++);.)
+Default arguments are banned on virtual functions, where they don't work properly, and in cases where the specified default might not evaluate to the same value depending on when it was evaluated. (For example, don't write `void f(int n = counter++);`.)
 
 In some other cases, default arguments can improve the readability of their function declarations enough to overcome the downsides above, so they are allowed. When in doubt, use overloads.
 
@@ -867,15 +867,15 @@ Use rvalue references only in certain special cases listed below.
 
 **Definition:** 
 
-Rvalue references are a type of reference that can only bind to temporary objects. The syntax is similar to traditional reference syntax. For example, void f(std::string&& s); declares a function whose argument is an rvalue reference to a std::string.
+Rvalue references are a type of reference that can only bind to temporary objects. The syntax is similar to traditional reference syntax. For example, `void f(std::string&& s)`; declares a function whose argument is an rvalue reference to a `std::string`.
 
 When the token '&&' is applied to an unqualified template argument in a function parameter, special template argument deduction rules apply. Such a reference is called forwarding reference.
 
 **Pros:**
 
-- Defining a move constructor (a constructor taking an rvalue reference to the class type) makes it possible to move a value instead of copying it. If v1 is a std::vector<std::string>, for example, then auto v2(std::move(v1)) will probably just result in some simple pointer manipulation instead of copying a large amount of data. In many cases this can result in a major performance improvement.
+- Defining a move constructor (a constructor taking an rvalue reference to the class type) makes it possible to move a value instead of copying it. If v1 is a `std::vector<std::string>`, for example, then `auto v2(std::move(v1))` will probably just result in some simple pointer manipulation instead of copying a large amount of data. In many cases this can result in a major performance improvement.
 - Rvalue references make it possible to implement types that are movable but not copyable, which can be useful for types that have no sensible definition of copying but where you might still want to pass them as function arguments, put them in containers, etc.
-- std::move is necessary to make effective use of some standard-library types, such as std::unique_ptr.
+- std::move is necessary to make effective use of some standard-library types, such as `std::unique_ptr`.
 - Forwarding references which use the rvalue reference token, make it possible to write a generic function wrapper that forwards its arguments to another function, and works whether or not its arguments are temporary objects and/or const. This is called 'perfect forwarding'.
 
 **Cons:**
@@ -888,7 +888,7 @@ When the token '&&' is applied to an unqualified template argument in a function
 Do not use rvalue references (or apply the && qualifier to methods), except as follows:
 - You may use them to define move constructors and move assignment operators (as described in Copyable and Movable Types).
 - You may use them to define &&-qualified methods that logically "consume" *this, leaving it in an unusable or empty state. Note that this applies only to method qualifiers (which come after the closing parenthesis of the function signature); if you want to "consume" an ordinary function parameter, prefer to pass it by value.
-- You may use forwarding references in conjunction with std::forward, to support perfect forwarding.
+- You may use forwarding references in conjunction with `std::forward`, to support perfect forwarding.
 - You may use them to define pairs of overloads, such as one taking Foo&& and the other taking const Foo&. Usually the preferred solution is just to pass by value, but an overloaded pair of functions sometimes yields better performance and is sometimes necessary in generic code that needs to support a wide variety of types. As always: if you're writing more complicated code for the sake of performance, make sure you have evidence that it actually helps.
 
 ## Friends
@@ -915,7 +915,7 @@ The noexcept operator performs a compile-time check that returns true if an expr
 
 **Pros:**
 
-- Specifying move constructors as noexcept improves performance in some cases, e.g., std::vector<T>::resize() moves rather than copies the objects if T's move constructor is noexcept.
+- Specifying move constructors as noexcept improves performance in some cases, e.g., `std::vector<T>::resize()` moves rather than copies the objects if T's move constructor is noexcept.
 - Specifying noexcept on a function can trigger compiler optimizations in environments where exceptions are enabled, e.g., compiler does not have to generate extra code for stack-unwinding, if it knows that no exceptions can be thrown due to a noexcept specifier.
 
 **Cons:**
@@ -926,11 +926,11 @@ The noexcept operator performs a compile-time check that returns true if an expr
 
 You may use noexcept when it is useful for performance if it accurately reflects the intended semantics of your function, i.e., that if an exception is somehow thrown from within the function body then it represents a fatal error. You can assume that noexcept on move constructors has a meaningful performance benefit. If you think there is significant performance benefit from specifying noexcept on some other function, please discuss it with your project leads.
 
-Prefer unconditional noexcept if exceptions are completely disabled (i.e., most Google C++ environments). Otherwise, use conditional noexcept specifiers with simple conditions, in ways that evaluate false only in the few cases where the function could potentially throw. The tests might include type traits check on whether the involved operation might throw (e.g., std::is_nothrow_move_constructible for move-constructing objects), or on whether allocation can throw (e.g., absl::default_allocator_is_nothrow for standard default allocation). Note in many cases the only possible cause for an exception is allocation failure (we believe move constructors should not throw except due to allocation failure), and there are many applications where it’s appropriate to treat memory exhaustion as a fatal error rather than an exceptional condition that your program should attempt to recover from. Even for other potential failures you should prioritize interface simplicity over supporting all possible exception throwing scenarios: instead of writing a complicated noexcept clause that depends on whether a hash function can throw, for example, simply document that your component doesn’t support hash functions throwing and make it unconditionally noexcept.
+Prefer unconditional noexcept if exceptions are completely disabled (i.e., most Google C++ environments). Otherwise, use conditional noexcept specifiers with simple conditions, in ways that evaluate false only in the few cases where the function could potentially throw. The tests might include type traits check on whether the involved operation might throw (e.g., `std::is_nothrow_move_constructible` for move-constructing objects), or on whether allocation can throw (e.g., `absl::default_allocator_is_nothrow` for standard default allocation). Note in many cases the only possible cause for an exception is allocation failure (we believe move constructors should not throw except due to allocation failure), and there are many applications where it’s appropriate to treat memory exhaustion as a fatal error rather than an exceptional condition that your program should attempt to recover from. Even for other potential failures you should prioritize interface simplicity over supporting all possible exception throwing scenarios: instead of writing a complicated noexcept clause that depends on whether a hash function can throw, for example, simply document that your component doesn’t support hash functions throwing and make it unconditionally noexcept.
 
 ## Casting
 
-Use C++-style casts like static_cast<float>(double_value), or brace initialization for conversion of arithmetic types like int64 y = int64{1} << 42. Do not use cast formats like (int)x unless the cast is to void. You may use cast formats like `T(x)` only when `T` is a class type.
+Use C++-style casts like `static_cast<float>(double_value)`, or brace initialization for conversion of arithmetic types like `int64 y = int64{1} << 42`. Do not use cast formats like `(int)x` unless the cast is to void. You may use cast formats like `T(x)` only when `T` is a class type.
 
 **Definition:**
 
@@ -948,11 +948,11 @@ The C++-style cast syntax is verbose and cumbersome.
 
 In general, do not use C-style casts. Instead, use these C++-style casts when explicit type conversion is necessary.
 
-- Use brace initialization to convert arithmetic types (e.g., int64{x}). This is the safest approach because code will not compile if conversion can result in information loss. The syntax is also concise.
+- Use brace initialization to convert arithmetic types (e.g., `int64{x}`). This is the safest approach because code will not compile if conversion can result in information loss. The syntax is also concise.
 - Use static_cast as the equivalent of a C-style cast that does value conversion, when you need to explicitly up-cast a pointer from a class to its superclass, or when you need to explicitly cast a pointer from a superclass to a subclass. In this last case, you must be sure your object is actually an instance of the subclass.
 - Use const_cast to remove the const qualifier (see const).
-- Use reinterpret_cast to do unsafe conversions of pointer types to and from integer and other pointer types, including void*. Use this only if you know what you are doing and you understand the aliasing issues. Also, consider the alternative absl::bit_cast.
-- Use absl::bit_cast to interpret the raw bits of a value using a different type of the same size (a type pun), such as interpreting the bits of a double as int64.
+- Use reinterpret_cast to do unsafe conversions of pointer types to and from integer and other pointer types, including void*. Use this only if you know what you are doing and you understand the aliasing issues. Also, consider the alternative `absl::bit_cast`.
+- Use `absl::bit_cast` to interpret the raw bits of a value using a different type of the same size (a type pun), such as interpreting the bits of a double as int64.
 
 ## Streams
 
@@ -964,9 +964,9 @@ Streams are the standard I/O abstraction in C++, as exemplified by the standard 
 
 **Pros:**
 
-The << and >> stream operators provide an API for formatted I/O that is easily learned, portable, reusable, and extensible. printf, by contrast, doesn't even support std::string, to say nothing of user-defined types, and is very difficult to use portably. printf also obliges you to choose among the numerous slightly different versions of that function, and navigate the dozens of conversion specifiers.
+The << and >> stream operators provide an API for formatted I/O that is easily learned, portable, reusable, and extensible. printf, by contrast, doesn't even support `std::string`, to say nothing of user-defined types, and is very difficult to use portably. printf also obliges you to choose among the numerous slightly different versions of that function, and navigate the dozens of conversion specifiers.
 
-Streams provide first-class support for console I/O via std::cin, std::cout, std::cerr, and std::clog. The C APIs do as well, but are hampered by the need to manually buffer the input.
+Streams provide first-class support for console I/O via `std::cin`, `std::cout`, `std::cerr`, and `std::clog`. The C APIs do as well, but are hampered by the need to manually buffer the input.
 
 **Cons:**
 
@@ -978,13 +978,13 @@ Streams provide first-class support for console I/O via std::cin, std::cout, std
 
 **Decision:**
 
-Use streams only when they are the best tool for the job. This is typically the case when the I/O is ad-hoc, local, human-readable, and targeted at other developers rather than end-users. Be consistent with the code around you, and with the codebase as a whole; if there's an established tool for your problem, use that tool instead. In particular, logging libraries are usually a better choice than std::cerr or std::clog for diagnostic output, and the libraries in absl/strings or the equivalent are usually a better choice than std::stringstream.
+Use streams only when they are the best tool for the job. This is typically the case when the I/O is ad-hoc, local, human-readable, and targeted at other developers rather than end-users. Be consistent with the code around you, and with the codebase as a whole; if there's an established tool for your problem, use that tool instead. In particular, logging libraries are usually a better choice than `std::cerr` or `std::clog` for diagnostic output, and the libraries in `absl/strings` or the equivalent are usually a better choice than `std::stringstream`.
 
 Avoid using streams for I/O that faces external users or handles untrusted data. Instead, find and use the appropriate templating libraries to handle issues like internationalization, localization, and security hardening.
 
-If you do use streams, avoid the stateful parts of the streams API (other than error state), such as imbue(), xalloc(), and register_callback(). Use explicit formatting functions (see e.g., absl/strings) rather than stream manipulators or formatting flags to control formatting details such as number base, precision, or padding.
+If you do use streams, avoid the stateful parts of the streams API (other than error state), such as `imbue()`, xalloc(), and `registerCallback()`. Use explicit formatting functions (see e.g., `absl/strings`) rather than stream manipulators or formatting flags to control formatting details such as number base, precision, or padding.
 
-Overload << as a streaming operator for your type only if your type represents a value, and << writes out a human-readable string representation of that value. Avoid exposing implementation details in the output of <<; if you need to print object internals for debugging, use named functions instead (a method named DebugString() is the most common convention).
+Overload << as a streaming operator for your type only if your type represents a value, and << writes out a human-readable string representation of that value. Avoid exposing implementation details in the output of <<; if you need to print object internals for debugging, use named functions instead (a method named `debugString()` is the most common convention).
 
 ## Preincrement and Predecrement
 
@@ -992,7 +992,7 @@ Use the prefix form (++i) of the increment and decrement operators unless you ne
 
 **Definition:**
 
-When a variable is incremented (++i or i++) or decremented (--i or i--) and the value of the expression is not used, one must decide whether to preincrement (decrement) or postincrement (decrement).
+When a variable is incremented (`++i` or `i++`) or decremented (`--i` or `i--`) and the value of the expression is not used, one must decide whether to preincrement (decrement) or postincrement (decrement).
 
 **Pros:**
 
@@ -1012,7 +1012,7 @@ In APIs, use const whenever it makes sense. constexpr is a better choice for som
 
 **Definition:**
 
-Declared variables and parameters can be preceded by the keyword const to indicate the variables are not changed (e.g., const int foo). Class functions can have the const qualifier to indicate the function does not change the state of the class member variables (e.g., class Foo { int Bar(char c) const; };).
+Declared variables and parameters can be preceded by the keyword const to indicate the variables are not changed (e.g., `const int foo`). Class functions can have the const qualifier to indicate the function does not change the state of the class member variables (e.g., `class Foo { int Bar(char c) const; };`).
 
 **Pros:**
 
@@ -1090,9 +1090,9 @@ Use care when converting integer types. Integer conversions and promotions can c
 
 Code should be 64-bit and 32-bit friendly. Bear in mind problems of printing, comparisons, and structure alignment.
 - Correct portable printf() conversion specifiers for some integral typedefs rely on macro expansions that we find unpleasant to use and impractical to require (the PRI macros from <cinttypes>). Unless there is no reasonable alternative for your particular case, try to avoid or even upgrade APIs that rely on the printf family. Instead use a library supporting typesafe numeric formatting, such as StrCat or Substitute for fast simple conversions, or std::ostream.
-- Unfortunately, the PRI macros are the only portable way to specify a conversion for the standard bitwidth typedefs (e.g., int64_t, uint64_t, int32_t, uint32_t, etc). Where possible, avoid passing arguments of types specified by bitwidth typedefs to printf-based APIs. Note that it is acceptable to use typedefs for which printf has dedicated length modifiers, such as size_t (z), ptrdiff_t (t), and maxint_t (j).
-- Remember that sizeof(void *) != sizeof(int). Use intptr_t if you want a pointer-sized integer.
-You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a int64_t/uint64_t member will by default end up being 8-byte aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use __attribute__((packed)). MSVC offers #pragma pack() and __declspec(align()).
+- Unfortunately, the PRI macros are the only portable way to specify a conversion for the standard bitwidth typedefs (e.g., int64_t, uint64_t, int32_t, uint32_t, etc). Where possible, avoid passing arguments of types specified by bitwidth typedefs to printf-based APIs. Note that it is acceptable to use typedefs for which printf has dedicated length modifiers, such as `size_t (z)`, `ptrdiff_t (t)`, and `maxint_t (j)`.
+- Remember that `sizeof(void *) != sizeof(int)`. Use intptr_t if you want a pointer-sized integer.
+You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a int64_t/uint64_t member will by default end up being 8-byte aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use `__attribute__((packed))`. MSVC offers `#pragma pack()` and `__declspec(align())`.
 - Use braced-initialization as needed to create 64-bit constants. For example:
 ```c++
 int64_t my_value{0x123456789};
@@ -1117,7 +1117,7 @@ class WOMBAT_TYPE(Foo) {
 };
 ```
 
-Luckily, macros are not nearly as necessary in C++ as they are in C. Instead of using a macro to inline performance-critical code, use an inline function. Instead of using a macro to store a constant, use a const variable. Instead of using a macro to "abbreviate" a long variable name, use a reference. Instead of using a macro to conditionally compile code ... well, don't do that at all (except, of course, for the #define guards to prevent double inclusion of header files). It makes testing much more difficult.
+Luckily, macros are not nearly as necessary in C++ as they are in C. Instead of using a macro to inline performance-critical code, use an inline function. Instead of using a macro to store a constant, use a const variable. Instead of using a macro to "abbreviate" a long variable name, use a reference. Instead of using a macro to conditionally compile code ... well, don't do that at all (except, of course, for the #pragma guards to prevent double inclusion of header files). It makes testing much more difficult.
 
 Macros can do things these other techniques cannot, and you do see them in the codebase, especially in the lower-level libraries. And some of their special features (like stringifying, concatenation, and so forth) are not available through the language proper. But before using a macro, consider carefully whether there's a non-macro way to achieve the same result. If you need to use a macro to define an interface, contact your project leads to request a waiver of this rule.
 
@@ -1386,7 +1386,7 @@ Namespace names are all lower-case, with words separated by underscores. Top-lev
 
 ## Enumerator Names
 
-Enumerators (for both scoped and unscoped enums) should be named like constants. That is, use kEnumName not ENUM_NAME.
+Enumerators (for both scoped and unscoped enums) should be named like constants. That is, ENUM_NAME.
 ```c++
 enum class AlternateUrlTableError {
   OK = 0,
