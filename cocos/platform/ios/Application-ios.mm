@@ -109,10 +109,9 @@ namespace {
                    << " window.nativeWidth= " << nativeWidth
                    << " window.nativeHeight = " << nativeHeight
                    << " window.windowHandler = " << windowHandle;
-        se->evalString(commandBuf.str().c_str());
 
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
-        se->evalString(commandBuf);
+        se->evalString(commandBuf.str().c_str());
 
         gfx::DeviceInfo deviceInfo;
         deviceInfo.windowHandle = windowHandle;
