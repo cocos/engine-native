@@ -1466,8 +1466,6 @@ void GLES3CmdFuncBeginRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRen
         if (cache->glFramebuffer != gpuFramebuffer->glFramebuffer) {
             GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, gpuFramebuffer->glFramebuffer));
             cache->glFramebuffer = gpuFramebuffer->glFramebuffer;
-            // render targets are drawn with flipped-Y
-            gfxStateCache.reverseCW = gpuFramebuffer->isOffscreen;
         }
 
         if (cache->viewport.left != renderArea.x ||
@@ -1713,7 +1711,7 @@ void GLES3CmdFuncBindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
             }
             cache->rs.cullMode = gpuPipelineState->rs.cullMode;
         }
-        bool isFrontFaceCCW = gpuPipelineState->rs.isFrontFaceCCW != gfxStateCache.reverseCW;
+        bool isFrontFaceCCW = gpuPipelineState->rs.isFrontFaceCCW;
         if (cache->rs.isFrontFaceCCW != isFrontFaceCCW) {
             GL_CHECK(glFrontFace(isFrontFaceCCW ? GL_CCW : GL_CW));
             cache->rs.isFrontFaceCCW = isFrontFaceCCW;
