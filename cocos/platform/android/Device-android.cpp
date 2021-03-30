@@ -28,7 +28,7 @@
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
 
     #include "platform/Device.h"
-    #include <string.h>
+    #include <cstring>
     #include <android/log.h>
     #include <jni.h>
     #include <android_native_app_glue.h>
@@ -40,11 +40,11 @@
     #include "platform/android/jni/JniHelper.h"
 
     #ifndef JCLS_HELPER
-        #define JCLS_HELPER "com/cocos/lib/CocosHelper"
+        constexpr char JCLS_HELPER[] = "com/cocos/lib/CocosHelper";
     #endif
 
     #ifndef JCLS_SENSOR
-        #define JCLS_SENSOR "com/cocos/lib/CocosSensorHandler"
+        constexpr char JCLS_SENSOR[] = "com/cocos/lib/CocosSensorHandler";
     #endif
 
 namespace {
