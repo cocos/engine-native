@@ -122,7 +122,6 @@ void ForwardPipeline::initCombineSignY() {
 
 bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
     RenderPipeline::initialize(info);
-    initCombineSignY();
     if (_flows.size() == 0) {
         auto shadowFlow = CC_NEW(ShadowFlow);
         shadowFlow->initialize(ShadowFlow::getInitializeInfo());
@@ -142,7 +141,7 @@ bool ForwardPipeline::activate() {
         CC_LOG_ERROR("RenderPipeline active failed.");
         return false;
     }
-
+    initCombineSignY();
     if (!activeRenderer()) {
         CC_LOG_ERROR("ForwardPipeline startup failed!");
         return false;
