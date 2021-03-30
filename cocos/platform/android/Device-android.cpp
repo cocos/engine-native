@@ -111,7 +111,10 @@ Device::Orientation Device::getDeviceOrientation() {
             return Orientation::PORTRAIT_UPSIDE_DOWN;
         case ROTATION_270:
             return Orientation::LANDSCAPE_LEFT;
+        default: 
+            break;
     }
+    return Orientation::PORTRAIT;
 }
 
 std::string Device::getDeviceModel() {
