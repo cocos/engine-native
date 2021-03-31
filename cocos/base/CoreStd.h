@@ -60,6 +60,7 @@
 #include "base/memory/Memory.h"
 #include "base/Log.h"
 #include "base/Object.h"
+#include "base/CachedArray.h"
 #include "base/StringUtil.h"
 
 #include "math/Math.h"
