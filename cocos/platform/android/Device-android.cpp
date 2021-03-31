@@ -122,10 +122,10 @@ std::string Device::getDeviceModel() {
     return JniHelper::callStaticStringMethod(JCLS_HELPER, "getDeviceModel");
 }
 
-void Device::setKeepScreenOn(bool value) {
+void Device::setKeepScreenOn(bool keepScreenOn) {
     // JniHelper::callStaticVoidMethod(JCLS_HELPER, "setKeepScreenOn", value);
     //    ANativeActivity_setWindowFlags(JniHelper::getAndroidApp()->activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
-    CC_UNUSED_PARAM(value);
+    CC_UNUSED_PARAM(keepScreenOn);
 }
 
 void Device::vibrate(float duration) {
