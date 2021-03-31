@@ -92,7 +92,10 @@ void Application::tick() {
     _scheduler->update(dt);
     cc::EventDispatcher::dispatchTickEvent(dt);
 
-    PoolManager::getInstance()->getCurrentPool()->clear();
+    AutoreleasePool *currentPool = PoolManager::getInstance()->getCurrentPool();
+    if (currentPool) {
+        currentPool->clear();
+    }
 
     now = std::chrono::steady_clock::now();
     dtNS = dtNS * 0.1 + 0.9 * std::chrono::duration_cast<std::chrono::nanoseconds>(now - prevTime).count();
