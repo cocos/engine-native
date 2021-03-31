@@ -23,19 +23,18 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_CORE_CORE_STD_H_
-#define CC_CORE_CORE_STD_H_
+#pragma once
 
 #include "base/Macros.h"
 
 // STD including
-#include <stdio.h>
-#include <stdlib.h>
-#include <wchar.h>
-#include <math.h>
-#include <float.h>
-#include <assert.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cwchar>
+#include <cmath>
+#include <cfloat>
+#include <cassert>
+#include <ctime>
 #include <limits>
 
 // STL including
@@ -61,7 +60,6 @@
 #include "base/memory/Memory.h"
 #include "base/Log.h"
 #include "base/Object.h"
-#include "base/CachedArray.h"
 #include "base/StringUtil.h"
 
 #include "math/Math.h"
@@ -70,5 +68,3 @@
 #define CC_JOB_SYSTEM_TBB      2
 
 #define CC_JOB_SYSTEM CC_JOB_SYSTEM_TASKFLOW
-
-#endif // CC_CORE_CORE_STD_H_
