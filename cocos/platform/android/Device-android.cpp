@@ -40,11 +40,11 @@
     #include "platform/android/jni/JniHelper.h"
 
     #ifndef JCLS_HELPER
-        constexpr char JCLS_HELPER[] = "com/cocos/lib/CocosHelper";
+        constexpr auto JCLS_HELPER = "com/cocos/lib/CocosHelper";
     #endif
 
     #ifndef JCLS_SENSOR
-        constexpr char JCLS_SENSOR[] = "com/cocos/lib/CocosSensorHandler";
+        constexpr auto JCLS_SENSOR = "com/cocos/lib/CocosSensorHandler";
     #endif
 
 namespace {
@@ -69,7 +69,8 @@ int Device::getDPI() {
         AConfiguration_fromAssetManager(config, cocosApp.assetManager);
         int32_t density = AConfiguration_getDensity(config);
         AConfiguration_delete(config);
-        dpi = density * 160;
+        const int stdDpi = 160;
+        dpi = density * stdDpi;
     }
     return dpi;
 }
@@ -124,6 +125,7 @@ std::string Device::getDeviceModel() {
 void Device::setKeepScreenOn(bool value) {
     // JniHelper::callStaticVoidMethod(JCLS_HELPER, "setKeepScreenOn", value);
     //    ANativeActivity_setWindowFlags(JniHelper::getAndroidApp()->activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
+    CC_UNUSED_PARAM(value);
 }
 
 void Device::vibrate(float duration) {
