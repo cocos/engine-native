@@ -78,7 +78,7 @@ void Log::setLogFile(const std::string &filename) {
         time(&ct_time);
         tm_time = localtime(&ct_time);
 
-        msg += StringUtil::Format("LOG DATE: %04d-%02d-%02d %02d:%02d:%02d\n",
+        msg += StringUtil::format("LOG DATE: %04d-%02d-%02d %02d:%02d:%02d\n",
                                   tm_time->tm_year + 1900,
                                   tm_time->tm_mon + 1,
                                   tm_time->tm_mday,
@@ -145,7 +145,7 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
 
     WORD color;
     switch (level) {
-        case LogLevel::DEBUG_: color = COLOR_DEBUG; break;
+        case LogLevel::LEVEL_DEBUG: color = COLOR_DEBUG; break;
         case LogLevel::INFO: color = COLOR_INFO; break;
         case LogLevel::WARN: color = COLOR_WARN; break;
         case LogLevel::ERR: color = COLOR_ERROR; break;

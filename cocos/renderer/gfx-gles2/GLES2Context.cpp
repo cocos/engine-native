@@ -78,7 +78,7 @@ void GL_APIENTRY GLES2EGLDebugProc(GLenum source,
         default: severityDesc = "NOTIFICATION"; break;
     }
 
-    String msg = StringUtil::Format("source: %s, type: %s, severity: %s, message: %s",
+    String msg = StringUtil::format("source: %s, type: %s, severity: %s, message: %s",
                                     sourceDesc.c_str(), typeDesc.c_str(), severityDesc.c_str(),
                                     message);
 

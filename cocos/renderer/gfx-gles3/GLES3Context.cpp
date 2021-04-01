@@ -72,7 +72,7 @@ void GL_APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum
         default: severityDesc = "NOTIFICATION";
     }
 
-    String msg = StringUtil::Format("source: %s, type: %s, severity: %s, message: %s",
+    String msg = StringUtil::format("source: %s, type: %s, severity: %s, message: %s",
                                     sourceDesc.c_str(), typeDesc.c_str(), severityDesc.c_str(), message);
 
     if (severity == GL_DEBUG_SEVERITY_HIGH_KHR) {
