@@ -44,7 +44,6 @@ constexpr bool ENABLE_LAZY_ALLOCATION = true;
 CCVKGPUCommandBufferPool *CCVKGPUDevice::getCommandBufferPool() {
     std::thread::id threadID = std::this_thread::get_id();
     if (!_commandBufferPools.count(threadID)) {
-        //std::scoped_lock<std::mutex> guard(mutex);
         _commandBufferPools[threadID] = CC_NEW(CCVKGPUCommandBufferPool(this));
     }
     return _commandBufferPools[threadID];

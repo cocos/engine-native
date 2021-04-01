@@ -196,7 +196,7 @@ void DeviceAgent::setMultithreaded(bool multithreaded) {
 
 void DeviceAgent::releaseSurface(uintptr_t windowHandle) {
     ENQUEUE_MESSAGE_2(
-        _mainEncoder, DeviceReleaseSurface,
+        _mainMessageQueue, DeviceReleaseSurface,
         actor, _actor,
         windowHandle, windowHandle,
         {
@@ -206,7 +206,7 @@ void DeviceAgent::releaseSurface(uintptr_t windowHandle) {
 
 void DeviceAgent::acquireSurface(uintptr_t windowHandle) {
     ENQUEUE_MESSAGE_2(
-        _mainEncoder, DeviceAcquireSurface,
+        _mainMessageQueue, DeviceAcquireSurface,
         actor, _actor,
         windowHandle, windowHandle,
         {

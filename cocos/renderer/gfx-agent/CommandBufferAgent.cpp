@@ -156,7 +156,7 @@ void CommandBufferAgent::end() {
         });
 }
 
-void CommandBufferAgent::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
+void CommandBufferAgent::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
     uint   attachmentCount = static_cast<uint>(renderPass->getColorAttachments().size());
     Color *actorColors     = nullptr;
     if (attachmentCount) {

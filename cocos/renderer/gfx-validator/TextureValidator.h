@@ -36,7 +36,7 @@ public:
     explicit TextureValidator(Texture *actor);
     ~TextureValidator() override;
 
-    void updateRedundencyCheck();
+    void sanityCheck();
 
 protected:
     void doInit(const TextureInfo &info) override;
@@ -44,7 +44,7 @@ protected:
     void doDestroy() override;
     void doResize(uint width, uint height, uint size) override;
 
-    uint _lastUpdateFrame = 0u;
+    uint _lastUpdateFrame = 0U;
 };
 
 } // namespace gfx

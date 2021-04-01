@@ -26,6 +26,9 @@
 #include "ValidationUtils.h"
 
 #include "bindings/jswrapper/SeApi.h"
+#include "gfx-base/GFXInputAssembler.h"
+#include "gfx-base/GFXPipelineState.h"
+#include "gfx-base/GFXRenderPass.h"
 
 namespace cc {
 
@@ -39,6 +42,58 @@ String getStacktraceJS() {
 
 namespace gfx {
 
-} // namespace gfx
+void CommandRecorder::recordBeginRenderPass(const RenderPassSnapshot &renderPass) {
+    RenderPassCommand command;
+    command.renderArea   = renderPass.renderArea;
+    command.clearColors  = renderPass.clearColors;
+    command.clearDepth   = renderPass.clearDepth;
+    command.clearStencil = renderPass.clearStencil;
 
+    command.colorAttachments       = renderPass.renderPass->getColorAttachments();
+    command.depthStencilAttachment = renderPass.renderPass->getDepthStencilAttachment();
+
+    _commands.push_back(CommandType::BEGIN_RENDER_PASS);
+    _renderPassCommands.emplace_back(std::move(command));
+}
+
+void CommandRecorder::recordDrawcall(const DrawcallSnapshot &drawcall) {
+    DrawcallCommand command;
+    command.inputState        = drawcall.pipelineState->getInputState();
+    command.rasterizerState   = drawcall.pipelineState->getRasterizerState();
+    command.depthStencilState = drawcall.pipelineState->getDepthStencilState();
+    command.blendState        = drawcall.pipelineState->getBlendState();
+    command.primitive         = drawcall.pipelineState->getPrimitive();
+    command.dynamicStates     = drawcall.pipelineState->getDynamicStates();
+    command.bindPoint         = drawcall.pipelineState->getBindPoint();
+
+    drawcall.inputAssembler->extractDrawInfo(command.drawInfo);
+
+    command.descriptorSets = drawcall.descriptorSets;
+    for (const auto &offsets : drawcall.dynamicOffsets) command.dynamicOffsets.insert(command.dynamicOffsets.end(), offsets.begin(), offsets.end());
+
+    _commands.push_back(CommandType::DRAW);
+    _drawcallCommands.emplace_back(std::move(command));
+}
+
+void CommandRecorder::recordEndRenderPass() {
+    _commands.push_back(CommandType::END_RENDER_PASS);
+}
+
+void CommandRecorder::clear() {
+    _commands.clear();
+    _renderPassCommands.clear();
+    _drawcallCommands.clear();
+}
+
+void CommandRecorder::serialize(const String &path) {
+}
+
+void CommandRecorder::deserialize(const String &path) {
+}
+
+bool CommandRecorder::compare(const CommandRecorder &/*recorder*/) {
+    return true;
+}
+
+} // namespace gfx
 } // namespace cc

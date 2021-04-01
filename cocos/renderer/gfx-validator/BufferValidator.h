@@ -38,7 +38,7 @@ public:
 
     void update(const void *buffer, uint size) override;
 
-    void updateRedundencyCheck();
+    void sanityCheck(const void *buffer, uint size);
 
 protected:
     void doInit(const BufferInfo &info) override;

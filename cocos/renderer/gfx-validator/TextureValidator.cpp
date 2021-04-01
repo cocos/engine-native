@@ -42,7 +42,7 @@ unordered_map<Format, Feature> featureCheckMap{
     {Format::D32F_S8, Feature::FORMAT_D32FS8},
     {Format::RGB8, Feature::FORMAT_RGB8},
 };
-}  // namespace
+} // namespace
 
 TextureValidator::TextureValidator(Texture *actor)
 : Agent<Texture>(actor) {
@@ -81,7 +81,7 @@ void TextureValidator::doResize(uint width, uint height, uint /*size*/) {
     _actor->resize(width, height);
 }
 
-void TextureValidator::updateRedundencyCheck() {
+void TextureValidator::sanityCheck() {
     uint cur = DeviceValidator::getInstance()->currentFrame();
 
     // FIXME: minggo: as current implementation need to update some textures more than once, so disable it.
