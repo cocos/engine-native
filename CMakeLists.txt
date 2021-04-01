@@ -136,6 +136,8 @@ set_if_undefined(USE_MIDDLEWARE           ON)
 set_if_undefined(USE_DRAGONBONES          ON)
 set_if_undefined(USE_SPINE                ON)
 set_if_undefined(USE_WEBSOCKET_SERVER     OFF)
+set_if_undefined(USE_JOB_SYSTEM_TASKFLOW  ON)
+set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 
 if(ANDROID OR WINDOWS)
     set_if_undefined(CC_USE_GLES3 ON)
@@ -173,6 +175,10 @@ if(USE_DRAGONBONES OR USE_SPINE)
 	set(USE_MIDDLEWARE ON)
 endif()
 
+if(USE_JOB_SYSTEM_TBB EQUAL USE_JOB_SYSTEM_TASKFLOW)
+    set(USE_JOB_SYSTEM_TASKFLOW ON)
+    set(USE_JOB_SYSTEM_TBB      OFF)
+endif()
 
 ################################# list all option values ##############################
 
@@ -398,18 +404,24 @@ cocos_source_files(
 
 ##### job system
 cocos_source_files(
-                 cocos/base/job-system/JobSystem.h
-
-                 cocos/base/job-system/job-system-taskflow/TFJobGraph.h
-    NO_WERROR    cocos/base/job-system/job-system-taskflow/TFJobGraph.cpp
-                 cocos/base/job-system/job-system-taskflow/TFJobSystem.h
-    NO_WERROR    cocos/base/job-system/job-system-taskflow/TFJobSystem.cpp
-
-                 cocos/base/job-system/job-system-tbb/TBBJobGraph.h
-    NO_WERROR    cocos/base/job-system/job-system-tbb/TBBJobGraph.cpp
-                 cocos/base/job-system/job-system-tbb/TBBJobSystem.h
-    NO_WERROR    cocos/base/job-system/job-system-tbb/TBBJobSystem.cpp
+    cocos/base/job-system/JobSystem.h
 )
+
+if(USE_JOB_SYSTEM_TASKFLOW)
+    cocos_source_files(
+                     cocos/base/job-system/job-system-taskflow/TFJobGraph.h
+        NO_WERROR    cocos/base/job-system/job-system-taskflow/TFJobGraph.cpp
+                     cocos/base/job-system/job-system-taskflow/TFJobSystem.h
+        NO_WERROR    cocos/base/job-system/job-system-taskflow/TFJobSystem.cpp
+    )
+elseif(USE_JOB_SYSTEM_TBB)
+    cocos_source_files(
+                     cocos/base/job-system/job-system-tbb/TBBJobGraph.h
+        NO_WERROR    cocos/base/job-system/job-system-tbb/TBBJobGraph.cpp
+                     cocos/base/job-system/job-system-tbb/TBBJobSystem.h
+        NO_WERROR    cocos/base/job-system/job-system-tbb/TBBJobSystem.cpp
+    )
+endif()
 
 ##### math
 cocos_source_files(
@@ -1668,6 +1680,8 @@ target_compile_definitions(cocos2d PUBLIC
     $<IF:$<BOOL:${USE_MIDDLEWARE}>,USE_MIDDLEWARE=1,USE_MIDDLEWARE=0>
     $<IF:$<BOOL:${USE_SPINE}>,USE_SPINE=1,USE_SPINE=0>
     $<IF:$<BOOL:${USE_DRAGONBONES}>,USE_DRAGONBONES=1,USE_DRAGONBONES=0>
+    $<IF:$<BOOL:${USE_JOB_SYSTEM_TBB}>,USE_JOB_SYSTEM_TBB=1,USE_JOB_SYSTEM_TBB=0>
+    $<IF:$<BOOL:${USE_JOB_SYSTEM_TASKFLOW}>,USE_JOB_SYSTEM_TASKFLOW=1,USE_JOB_SYSTEM_TASKFLOW=0>
     $<$<BOOL:${USE_SE_JSC}>:SCRIPT_ENGINE_TYPE=3>
     $<$<CONFIG:Debug>:CC_DEBUG=1>
 )
