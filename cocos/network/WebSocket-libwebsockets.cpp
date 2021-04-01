@@ -254,7 +254,7 @@ enum WS_MSG {
 class WsThreadHelper;
 
 static std::vector<WebSocketImpl *> *__websocketInstances = nullptr;
-static std::mutex __instanceMutex;
+static std::recursive_mutex __instanceMutex;
 static struct lws_context *__wsContext = nullptr;
 static WsThreadHelper *__wsHelper = nullptr;
 
@@ -373,7 +373,7 @@ public:
         }
         int ret = 0;
         {
-            std::lock_guard<std::mutex> lk(__instanceMutex);
+            std::lock_guard<std::recursive_mutex> lk(__instanceMutex);
             WebSocketImpl *ws = (WebSocketImpl *)lws_wsi_user(wsi);
             if (ws != nullptr && __websocketInstances != nullptr) {
                 if (std::find(__websocketInstances->begin(), __websocketInstances->end(), ws) != __websocketInstances->end()) {
@@ -554,7 +554,7 @@ void WebSocketImpl::closeAllConnections() {
             instance->close();
         }
 
-        std::lock_guard<std::mutex> lk(__instanceMutex);
+        std::lock_guard<std::recursive_mutex> lk(__instanceMutex);
         __websocketInstances->clear();
         delete __websocketInstances;
         __websocketInstances = nullptr;
@@ -573,7 +573,7 @@ WebSocketImpl::WebSocketImpl(cc::network::WebSocket *ws)
     _receivedData.reserve(WS_RESERVE_RECEIVE_BUFFER_SIZE);
 
     {
-        std::lock_guard<std::mutex> lk(__instanceMutex);
+        std::lock_guard<std::recursive_mutex> lk(__instanceMutex);
         if (__websocketInstances == nullptr) {
             __websocketInstances = new (std::nothrow) std::vector<WebSocketImpl *>();
         }
@@ -596,7 +596,7 @@ WebSocketImpl::WebSocketImpl(cc::network::WebSocket *ws)
 WebSocketImpl::~WebSocketImpl() {
     LOGD("In the destructor of WebSocket (%p)\n", this);
 
-    std::lock_guard<std::mutex> lk(__instanceMutex);
+    std::lock_guard<std::recursive_mutex> lk(__instanceMutex);
 
     if (__websocketInstances != nullptr) {
         auto iter = std::find(__websocketInstances->begin(), __websocketInstances->end(), this);
