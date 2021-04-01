@@ -24,6 +24,10 @@
 ****************************************************************************/
 
 #include "Log.h"
+
+#include <string>
+#include <vector>
+
 #include "StringUtil.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
@@ -49,13 +53,13 @@ namespace cc {
 
 #define LOG_USE_TIMESTAMP
 #if (CC_DEBUG == 1)
-LogLevel Log::logLevel = LogLevel::DEBUG_;
+LogLevel Log::_logLevel = LogLevel::LEVEL_DEBUG;
 #else
-LogLevel Log::logLevel = LogLevel::INFO;
+LogLevel Log::_logLevel = LogLevel::INFO;
 #endif
 
-FILE *Log::_logFile = nullptr;
-const char *LOG_LEVEL_DESCS[] = {"FATAL", "ERROR", "WARN", "INFO", "DEBUG"};
+FILE *                         Log::_logFile = nullptr;
+const std::vector<std::string> LOG_LEVEL_DESCS{"FATAL", "ERROR", "WARN", "INFO", "DEBUG"};
 
 void Log::setLogFile(const std::string &filename) {
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
@@ -70,7 +74,7 @@ void Log::setLogFile(const std::string &filename) {
         msg += "------------------------------------------------------\n";
 
         struct tm *tm_time;
-        time_t ct_time;
+        time_t     ct_time;
         time(&ct_time);
         tm_time = localtime(&ct_time);
 
@@ -98,27 +102,27 @@ void Log::close() {
 }
 
 void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
-    char buff[4096];
-    char *p = buff;
+    char  buff[4096];
+    char *p    = buff;
     char *last = buff + sizeof(buff) - 3;
 
 #if defined(LOG_USE_TIMESTAMP)
-    struct tm *tm_time;
-    time_t ct_time;
-    time(&ct_time);
-    tm_time = localtime(&ct_time);
+    struct tm *tmTime;
+    time_t     ctTime;
+    time(&ctTime);
+    tmTime = localtime(&ctTime);
 
-    p += sprintf(p, "%02d:%02d:%02d ", tm_time->tm_hour, tm_time->tm_min, tm_time->tm_sec);
+    p += sprintf(p, "%02d:%02d:%02d ", tmTime->tm_hour, tmTime->tm_min, tmTime->tm_sec);
 #endif
 
-    p += sprintf(p, "[%s]: ", LOG_LEVEL_DESCS[(int)level]);
+    p += sprintf(p, "[%s]: ", LOG_LEVEL_DESCS[static_cast<int>(level)].c_str());
 
     va_list args;
     va_start(args, formats);
     // p += StringUtil::VPrintf(p, last, formats, args);
 
     int count = (int)(last - p);
-    int ret = vsnprintf(p, count, formats, args);
+    int ret   = vsnprintf(p, count, formats, args);
     if (ret >= count - 1) {
         p += (count - 1);
     } else if (ret >= 0) {
@@ -128,7 +132,7 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
     va_end(args);
 
     *p++ = '\n';
-    *p = 0;
+    *p   = 0;
 
     if (_logFile) {
         fputs(buff, _logFile);
@@ -136,7 +140,7 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
     }
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    WCHAR wszBuf[4096] = { 0 };
+    WCHAR wszBuf[4096] = {0};
     MultiByteToWideChar(CP_UTF8, 0, buff, -1, wszBuf, sizeof(wszBuf));
 
     WORD color;
@@ -156,7 +160,7 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
 #elif (CC_PLATFORM == CC_PLATFORM_ANDROID)
     android_LogPriority priority;
     switch (level) {
-        case LogLevel::DEBUG_: priority = ANDROID_LOG_DEBUG; break;
+        case LogLevel::LEVEL_DEBUG: priority = ANDROID_LOG_DEBUG; break;
         case LogLevel::INFO: priority = ANDROID_LOG_INFO; break;
         case LogLevel::WARN: priority = ANDROID_LOG_WARN; break;
         case LogLevel::ERR: priority = ANDROID_LOG_ERROR; break;
