@@ -231,7 +231,7 @@ bool GLES2Context::doInit(const ContextInfo &info) {
         //String eglVendor = eglQueryString(_eglDisplay, EGL_VENDOR);
         //String eglVersion = eglQueryString(_eglDisplay, EGL_VERSION);
 
-        EGL_CHECK(_extensions = StringUtil::Split(eglQueryString(_eglDisplay, EGL_EXTENSIONS), " "));
+        EGL_CHECK(_extensions = StringUtil::split(eglQueryString(_eglDisplay, EGL_EXTENSIONS), " "));
 
         _majorVersion = 2;
         _minorVersion = 0;

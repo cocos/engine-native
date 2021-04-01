@@ -119,7 +119,7 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
 
     va_list args;
     va_start(args, formats);
-    // p += StringUtil::VPrintf(p, last, formats, args);
+    // p += StringUtil::vprintf(p, last, formats, args);
 
     int count = (int)(last - p);
     int ret   = vsnprintf(p, count, formats, args);
