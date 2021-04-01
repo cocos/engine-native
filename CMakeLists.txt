@@ -136,7 +136,7 @@ set_if_undefined(USE_MIDDLEWARE           ON)
 set_if_undefined(USE_DRAGONBONES          ON)
 set_if_undefined(USE_SPINE                ON)
 set_if_undefined(USE_WEBSOCKET_SERVER     OFF)
-set_if_undefined(USE_JOB_SYSTEM_TASKFLOW  ON)
+set_if_undefined(USE_JOB_SYSTEM_TASKFLOW  OFF)
 set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 
 if(ANDROID OR WINDOWS)
