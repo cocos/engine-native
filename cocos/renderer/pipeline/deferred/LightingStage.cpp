@@ -65,6 +65,7 @@ RenderStageInfo LightingStage::_initInfo = {
 const RenderStageInfo &LightingStage::getInitializeInfo() { return LightingStage::_initInfo; }
 
 LightingStage::LightingStage() : RenderStage() {
+    _reflectionComp = new ReflectionComp();
 }
 
 LightingStage::~LightingStage() {
@@ -72,6 +73,7 @@ LightingStage::~LightingStage() {
     _deferredLitsBufs = nullptr;
     _deferredLitsBufView->destroy();
     _deferredLitsBufView = nullptr;
+    delete _reflectionComp;
 }
 
 bool LightingStage::initialize(const RenderStageInfo &info) {
@@ -251,9 +253,9 @@ void LightingStage::destroy() {
 }
 
 void LightingStage::render(Camera *camera) {
-    auto pipeline = static_cast<DeferredPipeline *>(_pipeline);
-    const auto sceneData = _pipeline->getPipelineSceneData();
-    const auto sharedData = sceneData->getSharedData();
+    auto        pipeline      = static_cast<DeferredPipeline *>(_pipeline);
+    const auto  sceneData     = _pipeline->getPipelineSceneData();
+    const auto  sharedData    = sceneData->getSharedData();
     const auto &renderObjects = sceneData->getRenderObjects();
 
     if (renderObjects.empty()) {
@@ -273,7 +275,7 @@ void LightingStage::render(Camera *camera) {
     gfx::Rect renderArea = pipeline->getRenderArea(camera, false);
 
     gfx::Color clearColor = {0.0, 0.0, 0.0, 1.0};
-    if (camera->clearFlag & static_cast<uint>( gfx::ClearFlagBit::COLOR)) {
+    if (camera->clearFlag & static_cast<uint>(gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {
             SRGBToLinear(clearColor, camera->clearColor);
             const auto scale = sharedData->fpScale / camera->exposure;
@@ -286,22 +288,22 @@ void LightingStage::render(Camera *camera) {
     }
 
     clearColor.w = 0;
-    
+
     const auto deferredData = pipeline->getDeferredRenderData();
-    auto frameBuffer = deferredData->lightingFrameBuff;
-    auto renderPass = frameBuffer->getRenderPass();
+    auto       frameBuffer  = deferredData->lightingFrameBuff;
+    auto       renderPass   = frameBuffer->getRenderPass();
 
     cmdBuff->beginRenderPass(renderPass, frameBuffer, renderArea, &clearColor,
-       camera->clearDepth, camera->clearStencil);
+                             camera->clearDepth, camera->clearStencil);
 
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
 
     // get pso and draw quad
-    PassView *pass = sceneData->getSharedData()->getDeferredLightPass();
+    PassView *   pass   = sceneData->getSharedData()->getDeferredLightPass();
     gfx::Shader *shader = sceneData->getSharedData()->getDeferredLightPassShader();
 
-    gfx::InputAssembler* inputAssembler = pipeline->getQuadIAOffScreen();
-    gfx::PipelineState *pState = PipelineStateManager::getOrCreatePipelineState(
+    gfx::InputAssembler *inputAssembler = pipeline->getQuadIAOffScreen();
+    gfx::PipelineState * pState         = PipelineStateManager::getOrCreatePipelineState(
         pass, shader, inputAssembler, renderPass);
     assert(pState != nullptr);
 
@@ -313,6 +315,21 @@ void LightingStage::render(Camera *camera) {
     _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
 
     cmdBuff->endRenderPass();
+
+    // dispatch for reflection
+    _reflectionComp->init(_pipeline->getDevice(), pipeline->getDeferredRenderData()->lightingRenderTarget, 8, 8);
+
+    uint globalWidth  = _reflectionComp->getTextureStore()->getWidth();
+    uint globalHeight = _reflectionComp->getTextureStore()->getHeight();
+    uint groupWidth   = _reflectionComp->getGroupSizeX();
+    uint groupHeight  = _reflectionComp->getGroupSizeY();
+
+    gfx::DispatchInfo dispatchInfo{(globalWidth - 1) / groupWidth + 1, (globalHeight - 1) / groupHeight + 1, 1};
+    if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
+        cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
+        cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
+        cmdBuff->dispatch(dispatchInfo);
+    }
 }
 
 } // namespace pipeline
