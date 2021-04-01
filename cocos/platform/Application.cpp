@@ -41,7 +41,7 @@ void Application::restartVM() {
 
     cc::EventDispatcher::dispatchRestartVM();
 
-    auto scriptEngine = se::ScriptEngine::getInstance();
+    auto *scriptEngine = se::ScriptEngine::getInstance();
 
     cc::PoolManager::getInstance()->getCurrentPool()->clear();
 #if USE_AUDIO
