@@ -35,6 +35,11 @@
 namespace cc {
 namespace gfx {
 
+QueueAgent::QueueAgent(Queue *actor)
+: Agent<Queue>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 QueueAgent::~QueueAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),

@@ -39,6 +39,10 @@
 namespace cc {
 namespace gfx {
 
+GLES3CommandBuffer::GLES3CommandBuffer() {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 GLES3CommandBuffer::~GLES3CommandBuffer() {
     destroy();
 }

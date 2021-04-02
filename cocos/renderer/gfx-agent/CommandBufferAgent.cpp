@@ -42,6 +42,11 @@
 namespace cc {
 namespace gfx {
 
+CommandBufferAgent::CommandBufferAgent(CommandBuffer *actor)
+: Agent<CommandBuffer>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 void CommandBufferAgent::flushCommands(uint count, CommandBufferAgent *const *cmdBuffs, bool multiThreaded) {
     uint jobThreadCount    = JobSystem::getInstance()->threadCount();
     uint workForThisThread = (count - 1) / jobThreadCount + 1; // ceil(count / jobThreadCount)

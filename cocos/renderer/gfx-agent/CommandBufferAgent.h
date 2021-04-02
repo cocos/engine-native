@@ -38,7 +38,7 @@ class LinearAllocatorPool;
 
 class CC_DLL CommandBufferAgent final : public Agent<CommandBuffer> {
 public:
-    using Agent::Agent;
+    explicit CommandBufferAgent(CommandBuffer *actor);
     ~CommandBufferAgent() override;
 
     static void flushCommands(uint count, CommandBufferAgent *const *cmdBuffs, bool multiThreaded);

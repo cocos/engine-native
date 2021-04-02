@@ -35,7 +35,9 @@
 namespace cc {
 namespace gfx {
 
-GLES2DescriptorSet::GLES2DescriptorSet() = default;
+GLES2DescriptorSet::GLES2DescriptorSet() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 GLES2DescriptorSet::~GLES2DescriptorSet() {
     destroy();

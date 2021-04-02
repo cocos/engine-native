@@ -34,6 +34,11 @@
 namespace cc {
 namespace gfx {
 
+FramebufferAgent::FramebufferAgent(Framebuffer *actor)
+: Agent<Framebuffer>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 FramebufferAgent::~FramebufferAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),

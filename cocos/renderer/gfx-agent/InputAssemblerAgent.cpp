@@ -33,6 +33,11 @@
 namespace cc {
 namespace gfx {
 
+InputAssemblerAgent::InputAssemblerAgent(InputAssembler *actor)
+: Agent<InputAssembler>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 InputAssemblerAgent::~InputAssemblerAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),

@@ -34,6 +34,11 @@
 namespace cc {
 namespace gfx {
 
+InputAssemblerValidator::InputAssemblerValidator(InputAssembler *actor)
+: Agent<InputAssembler>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 InputAssemblerValidator::~InputAssemblerValidator() {
     DeviceResourceTracker<InputAssembler>::erase(this);
     CC_SAFE_DELETE(_actor);

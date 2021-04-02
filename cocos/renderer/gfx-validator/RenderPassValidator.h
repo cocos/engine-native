@@ -33,7 +33,7 @@ namespace gfx {
 
 class CC_DLL RenderPassValidator final : public Agent<RenderPass> {
 public:
-    using Agent::Agent;
+    explicit RenderPassValidator(RenderPass *actor);
     ~RenderPassValidator() override;
 
 protected:

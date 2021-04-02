@@ -32,6 +32,11 @@
 namespace cc {
 namespace gfx {
 
+TextureAgent::TextureAgent(Texture *actor)
+: Agent<Texture>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 TextureAgent::~TextureAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),

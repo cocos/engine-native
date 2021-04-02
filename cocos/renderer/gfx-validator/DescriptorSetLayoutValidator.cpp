@@ -33,6 +33,11 @@
 namespace cc {
 namespace gfx {
 
+DescriptorSetLayoutValidator::DescriptorSetLayoutValidator(DescriptorSetLayout *actor)
+: Agent<DescriptorSetLayout>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 DescriptorSetLayoutValidator::~DescriptorSetLayoutValidator() {
     DeviceResourceTracker<DescriptorSetLayout>::erase(this);
     CC_SAFE_DELETE(_actor);

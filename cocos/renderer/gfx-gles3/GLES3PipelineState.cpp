@@ -53,6 +53,7 @@ const GLenum GLES3Primitives[] = {
 
 GLES3PipelineState::GLES3PipelineState()
 : PipelineState() {
+    _typedID = generateObjectID<decltype(this)>();
 }
 
 GLES3PipelineState::~GLES3PipelineState() {

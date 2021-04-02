@@ -35,6 +35,11 @@
 namespace cc {
 namespace gfx {
 
+FramebufferValidator::FramebufferValidator(Framebuffer *actor)
+: Agent<Framebuffer>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 FramebufferValidator::~FramebufferValidator() {
     DeviceResourceTracker<Framebuffer>::erase(this);
     CC_SAFE_DELETE(_actor);

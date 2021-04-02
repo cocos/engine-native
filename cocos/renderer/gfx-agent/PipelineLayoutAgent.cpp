@@ -33,6 +33,11 @@
 namespace cc {
 namespace gfx {
 
+PipelineLayoutAgent::PipelineLayoutAgent(PipelineLayout *actor)
+: Agent<PipelineLayout>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 PipelineLayoutAgent::~PipelineLayoutAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),

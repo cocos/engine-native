@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "base/CoreStd.h"
+#include "base/threading/MessageQueue.h"
 
 #include "BufferValidator.h"
 #include "CommandBufferValidator.h"
@@ -78,12 +79,16 @@ bool DeviceValidator::doInit(const DeviceInfo &info) {
     DeviceResourceTracker<CommandBuffer>::push(_cmdBuff);
     DeviceResourceTracker<Queue>::push(_queue);
 
+    _mainMessageQueue = CC_NEW(MessageQueue);
+
     CC_LOG_INFO("Device validator enabled.");
 
     return true;
 }
 
 void DeviceValidator::doDestroy() {
+    CC_SAFE_DELETE(_mainMessageQueue);
+
     if (_cmdBuff) {
         static_cast<CommandBufferValidator *>(_cmdBuff)->_actor = nullptr;
         CC_DELETE(_cmdBuff);
@@ -127,6 +132,12 @@ void DeviceValidator::present() {
 
 void DeviceValidator::setMultithreaded(bool multithreaded) {
     _actor->setMultithreaded(multithreaded);
+}
+
+void DeviceValidator::startRecording() {
+}
+
+void DeviceValidator::endRecording() {
 }
 
 CommandBuffer *DeviceValidator::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {

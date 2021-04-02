@@ -44,6 +44,11 @@ unordered_map<Format, Feature> featureCheckMap{
 };
 }  // namespace
 
+TextureValidator::TextureValidator(Texture *actor)
+: Agent<Texture>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 TextureValidator::~TextureValidator() {
     DeviceResourceTracker<Texture>::erase(this);
     CC_SAFE_DELETE(_actor);

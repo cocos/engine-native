@@ -43,6 +43,7 @@ namespace gfx {
 CCMTLCommandBuffer::CCMTLCommandBuffer()
 : CommandBuffer(),
   _mtlDevice(CCMTLDevice::getInstance()) {
+    _typedID               = generateObjectID<decltype(this)>();
     _mtlCommandQueue       = id<MTLCommandQueue>(_mtlDevice->getMTLCommandQueue());
     _indirectDrawSuppotred = _mtlDevice->isIndirectDrawSupported();
 

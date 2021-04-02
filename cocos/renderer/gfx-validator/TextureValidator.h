@@ -33,7 +33,7 @@ namespace gfx {
 
 class CC_DLL TextureValidator final : public Agent<Texture> {
 public:
-    using Agent::Agent;
+    explicit TextureValidator(Texture *actor);
     ~TextureValidator() override;
 
     void updateRedundencyCheck();

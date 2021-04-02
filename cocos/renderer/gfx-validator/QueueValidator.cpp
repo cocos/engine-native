@@ -33,6 +33,11 @@
 namespace cc {
 namespace gfx {
 
+QueueValidator::QueueValidator(Queue *actor)
+: Agent<Queue>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 QueueValidator::~QueueValidator() {
     DeviceResourceTracker<Queue>::erase(this);
     CC_SAFE_DELETE(_actor);

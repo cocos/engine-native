@@ -32,6 +32,11 @@
 namespace cc {
 namespace gfx {
 
+DescriptorSetLayoutAgent::DescriptorSetLayoutAgent(DescriptorSetLayout *actor)
+: Agent<DescriptorSetLayout>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 DescriptorSetLayoutAgent::~DescriptorSetLayoutAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),

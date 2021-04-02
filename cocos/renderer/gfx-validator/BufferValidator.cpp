@@ -33,6 +33,11 @@
 namespace cc {
 namespace gfx {
 
+BufferValidator::BufferValidator(Buffer *actor)
+: Agent<Buffer>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 BufferValidator::~BufferValidator() {
     DeviceResourceTracker<Buffer>::erase(this);
     CC_SAFE_DELETE(_actor);

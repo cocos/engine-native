@@ -29,6 +29,9 @@
 #include "gfx-base/GFXDevice.h"
 
 namespace cc {
+
+class MessageQueue;
+
 namespace gfx {
 
 class CC_DLL DeviceValidator final : public Agent<Device> {

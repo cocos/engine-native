@@ -34,6 +34,7 @@ namespace gfx {
 
 GLES3PipelineLayout::GLES3PipelineLayout()
 : PipelineLayout() {
+    _typedID = generateObjectID<decltype(this)>();
 }
 
 GLES3PipelineLayout::~GLES3PipelineLayout() {

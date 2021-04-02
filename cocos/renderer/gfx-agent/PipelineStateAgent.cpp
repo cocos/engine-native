@@ -35,6 +35,11 @@
 namespace cc {
 namespace gfx {
 
+PipelineStateAgent::PipelineStateAgent(PipelineState *actor)
+: Agent<PipelineState>(actor) {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 PipelineStateAgent::~PipelineStateAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),

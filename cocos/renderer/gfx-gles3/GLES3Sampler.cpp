@@ -32,7 +32,9 @@
 namespace cc {
 namespace gfx {
 
-GLES3Sampler::GLES3Sampler() = default;
+GLES3Sampler::GLES3Sampler() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 GLES3Sampler::~GLES3Sampler() {
     destroy();

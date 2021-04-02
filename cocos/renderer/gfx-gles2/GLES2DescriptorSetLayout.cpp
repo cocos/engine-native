@@ -31,7 +31,9 @@
 namespace cc {
 namespace gfx {
 
-GLES2DescriptorSetLayout::GLES2DescriptorSetLayout() = default;
+GLES2DescriptorSetLayout::GLES2DescriptorSetLayout() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 GLES2DescriptorSetLayout::~GLES2DescriptorSetLayout() {
     destroy();

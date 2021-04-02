@@ -60,7 +60,7 @@ public:
     inline Message *    getNext() const noexcept { return _next; }
 
 private:
-    Message *_next;
+    Message *_next; // explicitly assigned beforehand, don't init the member here
 
     friend class MessageQueue;
 };

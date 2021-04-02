@@ -31,7 +31,9 @@
 namespace cc {
 namespace gfx {
 
-GLES3DescriptorSetLayout::GLES3DescriptorSetLayout() = default;
+GLES3DescriptorSetLayout::GLES3DescriptorSetLayout() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 GLES3DescriptorSetLayout::~GLES3DescriptorSetLayout() {
     destroy();

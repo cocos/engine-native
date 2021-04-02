@@ -35,7 +35,7 @@ class GLES2GPUCommandAllocator;
 
 class CC_GLES2_API GLES2CommandBuffer : public CommandBuffer {
 public:
-    GLES2CommandBuffer() = default;
+    GLES2CommandBuffer();
     ~GLES2CommandBuffer() override;
 
     friend class GLES2Queue;

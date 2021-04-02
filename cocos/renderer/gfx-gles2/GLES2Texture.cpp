@@ -32,7 +32,9 @@
 namespace cc {
 namespace gfx {
 
-GLES2Texture::GLES2Texture() = default;
+GLES2Texture::GLES2Texture() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 GLES2Texture::~GLES2Texture() {
     destroy();

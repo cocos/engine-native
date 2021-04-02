@@ -32,6 +32,7 @@ namespace cc {
 namespace gfx {
 
 CCMTLDescriptorSetLayout::CCMTLDescriptorSetLayout() : DescriptorSetLayout() {
+    _typedID = generateObjectID<decltype(this)>();
 }
 
 void CCMTLDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo &info) {

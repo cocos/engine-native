@@ -33,9 +33,9 @@ namespace gfx {
 
 class CC_DLL QueueValidator final : public Agent<Queue> {
 public:
-    using Agent::Agent;
     using Queue::submit;
 
+    explicit QueueValidator(Queue *actor);
     ~QueueValidator() override;
 
     void submit(CommandBuffer *const *cmdBuffs, uint count) override;
