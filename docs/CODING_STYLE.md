@@ -2,7 +2,7 @@
 
 _v0.1 - Last updated March 22, 2021_
 
-_Forked from [Google's C++ coding style](https://google.github.io/styleguide/cppguide.html.md) _
+_Forked from [Google's C++ coding style](https://google.github.io/styleguide/cppguide.html.md)_
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -85,8 +85,6 @@ The following rules will guide you through the various pitfalls of using header 
 ## The #pragma Guard
 
 All header files should have `#pragma once` guards to prevent multiple inclusion.
-
-To guarantee uniqueness, they should be based on the full path in a project's source tree. For example, the file `engine-native/cocos/math/Math.h` in project foo should have the following guard:
 
 ```cpp
 #pragma once
