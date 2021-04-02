@@ -1401,6 +1401,17 @@ You're not really going to define a macro, are you? If you do, they're like this
 #define PI_ROUNDED 3.0
 ```
 
+## Braced initialization
+
+C++ provides braced initialization since C++11. It is a uniform initialization. And it will prohibit implicit narrowing conversions, for example:
+```c++
+double x, y, z;
+...
+int sum1{ x + y + z}; // error! sum of doubles may not be expressible as int.
+```
+
+So use braced initialization as possible.
+
 # Formatting
 
 There is `.clang-format` file in the root of repo, please use clang format to format the codes before sending a pull request.
