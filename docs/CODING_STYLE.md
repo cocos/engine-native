@@ -70,6 +70,7 @@ _Forked from [Google's C++ coding style](https://google.github.io/styleguide/cpp
   - [Namespace Names](#namespace-names)
   - [Enumerator Names](#enumerator-names)
   - [Macro Names](#macro-names)
+  - [Braced initialization](#braced-initialization)
 - [Formatting](#formatting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
