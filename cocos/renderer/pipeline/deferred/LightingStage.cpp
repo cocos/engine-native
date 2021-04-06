@@ -40,6 +40,7 @@
 #include "gfx-base/GFXDescriptorSet.h"
 #include "../PipelineStateManager.h"
 
+
 namespace cc {
 namespace pipeline {
 namespace {
@@ -317,19 +318,46 @@ void LightingStage::render(Camera *camera) {
     cmdBuff->endRenderPass();
 
     // dispatch for reflection
-    _reflectionComp->init(_pipeline->getDevice(), pipeline->getDeferredRenderData()->lightingRenderTarget, 8, 8);
+    if (_reflectionComp->isInitlized() == false) {
+        _reflectionComp->init(_pipeline->getDevice(), pipeline->getDeferredRenderData()->lightingRenderTarget,
+                              pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1], camera->matViewProjOffscreen, 8, 8);
+    }
 
-    uint globalWidth  = _reflectionComp->getTextureStore()->getWidth();
-    uint globalHeight = _reflectionComp->getTextureStore()->getHeight();
+    uint globalWidth  = _reflectionComp->getReflectionTex()->getWidth();
+    uint globalHeight = _reflectionComp->getReflectionTex()->getHeight();
     uint groupWidth   = _reflectionComp->getGroupSizeX();
     uint groupHeight  = _reflectionComp->getGroupSizeY();
+    gfx::GlobalBarrierInfo info_pre = {        
+        {
+            gfx::AccessType::COLOR_ATTACHMENT_WRITE,
+        },
+        {
+            gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
+        }
+    };
+
+    gfx::GlobalBarrierInfo info_post = {        
+        {
+            gfx::AccessType::COMPUTE_SHADER_WRITE,
+        },
+        {
+            gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE,
+        }
+    };
+
+    gfx::GlobalBarrier * barrier_pre = _device->createGlobalBarrier(info_pre);
+    gfx::GlobalBarrier * barrier_post = _device->createGlobalBarrier(info_post);
 
     gfx::DispatchInfo dispatchInfo{(globalWidth - 1) / groupWidth + 1, (globalHeight - 1) / groupHeight + 1, 1};
     if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
+        cmdBuff->pipelineBarrier(barrier_pre);
         cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
         cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
         cmdBuff->dispatch(dispatchInfo);
+        cmdBuff->pipelineBarrier(barrier_post);
     }
+
+
 }
 
 } // namespace pipeline

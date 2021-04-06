@@ -3,8 +3,10 @@
 #include "../../base/CoreStd.h"
 #include "../../math/Vec2.h"
 #include "../../math/Vec4.h"
+#include "../../math/Mat4.h"
 #include "../../renderer/gfx-base/GFXDef.h"
 #include "../../renderer/gfx-base/GFXDevice.h"
+#include "../../base/TypeDef.h"
 
 namespace cc {
 
@@ -23,12 +25,13 @@ class ReflectionComp {
 public:
     ReflectionComp();
     ~ReflectionComp();
-    void init(gfx::Device* dev, gfx::Texture* tex, int group_size_x, int group_size_y);
+    void init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture *worldPositionTex, Mat4 cc_matViewProj, int group_size_x, int group_size_y);
     gfx::DescriptorSet* getDescriptorSet();
     gfx::PipelineState* getPipelineState();
-    gfx::Texture* getTextureStore();
+    gfx::Texture* getReflectionTex();
     int getGroupSizeX();
     int getGroupSizeY();
+    bool  isInitlized();
 
 private:
     template <typename T>
@@ -41,11 +44,14 @@ private:
     gfx::PipelineState*       _compPipelineState       = nullptr;
     gfx::DescriptorSet*       _compDescriptorSet       = nullptr;
     gfx::Buffer *             _compConstantsBuffer     = nullptr;
-    gfx::Texture*             _textureSampled          = nullptr;
+    gfx::Texture*             _lightingTex             = nullptr;
+    gfx::Texture *            _worldPositionTex        = nullptr;
     gfx::Sampler *            _sampler                 = nullptr;
-    gfx::Texture*             _textureStore            = nullptr;
+    gfx::Texture *            _reflectionTex             = nullptr;
+    Mat4                      _cc_matViewProj;
     int                       _group_size_x             = 8;
     int                       _group_size_y             = 8;
+    bool                      _initlized                = false;
 };
 
 } // namespace cc
