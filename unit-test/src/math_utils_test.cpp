@@ -24,7 +24,7 @@ THE SOFTWARE.
 #include "gtest/gtest.h"
 #include "cocos/math/Vec2.h"
 #include "cocos/math/Math.h"
-#include "cocos/math/Vertex.h"
+#include "cocos/math/MathUtil.h"
 #include "utils.h"
 #include <math.h>
 #include <vector>
@@ -32,7 +32,13 @@ THE SOFTWARE.
 TEST(mathUtilsTest, test9) {
     // smooth
     logLabel = "test the MathUtil smooth function";
-    
-    
+    float startP = 3;
+    cc::MathUtil::smooth(&startP, 10, 0.3, 0.7);
+    ExpectEq(IsEqualF(startP, 5.1), true);
+    cc::MathUtil::smooth(&startP, 10, 0.6, 0.4, 0.9);
+    ExpectEq(IsEqualF(startP, 8.039999), true);
+    // lerp
+    logLabel = "test the MathUtil lerp function";
+    float res = cc::MathUtil::lerp(2, 15, 0.8);
+    ExpectEq(IsEqualF(res, 12.3999996), true);
 }
-
