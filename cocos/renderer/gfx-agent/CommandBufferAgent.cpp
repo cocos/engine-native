@@ -335,13 +335,13 @@ void CommandBufferAgent::setStencilCompareMask(StencilFace face, int ref, uint m
         });
 }
 
-void CommandBufferAgent::draw(InputAssembler *ia) {
+void CommandBufferAgent::draw(const DrawInfo &info) {
     ENQUEUE_MESSAGE_2(
         _messageQueue, CommandBufferDraw,
         actor, getActor(),
-        ia, static_cast<InputAssemblerAgent *>(ia)->getActor(),
+        info, info,
         {
-            actor->draw(ia);
+            actor->draw(info);
         });
 }
 

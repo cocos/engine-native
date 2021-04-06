@@ -182,12 +182,12 @@ void CommandBufferValidator::setStencilCompareMask(StencilFace face, int ref, ui
     _actor->setStencilCompareMask(face, ref, mask);
 }
 
-void CommandBufferValidator::draw(InputAssembler *ia) {
+void CommandBufferValidator::draw(const DrawInfo &info) {
     CCASSERT(_insideRenderPass, "Command 'draw' must be recorded inside render passes.");
 
     /////////// execute ///////////
 
-    _actor->draw(static_cast<InputAssemblerValidator *>(ia)->getActor());
+    _actor->draw(info);
 }
 
 void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint size) {

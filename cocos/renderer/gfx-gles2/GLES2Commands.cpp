@@ -2269,7 +2269,7 @@ void GLES2CmdFuncBindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipeli
     }         // if
 }
 
-void GLES2CmdFuncDraw(GLES2Device *device, DrawInfo &drawInfo) {
+void GLES2CmdFuncDraw(GLES2Device *device, const DrawInfo &drawInfo) {
     GLES2ObjectCache &      gfxStateCache     = device->stateCache()->gfxStateCache;
     GLES2GPUPipelineState * gpuPipelineState  = gfxStateCache.gpuPipelineState;
     GLES2GPUInputAssembler *gpuInputAssembler = gfxStateCache.gpuInputAssembler;

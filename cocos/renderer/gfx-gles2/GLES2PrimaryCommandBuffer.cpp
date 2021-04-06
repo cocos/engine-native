@@ -77,7 +77,7 @@ void GLES2PrimaryCommandBuffer::endRenderPass() {
     _isInRenderPass = false;
 }
 
-void GLES2PrimaryCommandBuffer::draw(InputAssembler *ia) {
+void GLES2PrimaryCommandBuffer::draw(const DrawInfo &info) {
     if (_isStateInvalid) {
         vector<uint> &dynamicOffsetOffsets = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsetOffsets;
         vector<uint> &dynamicOffsets = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsets;
@@ -93,21 +93,20 @@ void GLES2PrimaryCommandBuffer::draw(InputAssembler *ia) {
         _isStateInvalid = false;
     }
 
-    DrawInfo drawInfo;
-    ia->extractDrawInfo(drawInfo);
-    GLES2CmdFuncDraw(GLES2Device::getInstance(), drawInfo);
+    GLES2CmdFuncDraw(GLES2Device::getInstance(), info);
 
     ++_numDrawCalls;
-    _numInstances += ia->getInstanceCount();
+    _numInstances += info.instanceCount;
+    uint indexCount = info.indexCount ? info.indexCount : info.vertexCount;
     if (_curGPUPipelineState) {
         switch (_curGPUPipelineState->glPrimitive) {
             case GL_TRIANGLES: {
-                _numTriangles += ia->getIndexCount() / 3 * std::max(ia->getInstanceCount(), 1U);
+                _numTriangles += indexCount / 3 * std::max(info.instanceCount, 1U);
                 break;
             }
             case GL_TRIANGLE_STRIP:
             case GL_TRIANGLE_FAN: {
-                _numTriangles += (ia->getIndexCount() - 2) * std::max(ia->getInstanceCount(), 1U);
+                _numTriangles += (indexCount - 2) * std::max(info.instanceCount, 1U);
                 break;
             }
             default:

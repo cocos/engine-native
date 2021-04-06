@@ -332,15 +332,12 @@ void CCVKCommandBuffer::setStencilCompareMask(StencilFace face, int reference, u
     }
 }
 
-void CCVKCommandBuffer::draw(InputAssembler *ia) {
+void CCVKCommandBuffer::draw(const DrawInfo &info) {
     if (_firstDirtyDescriptorSet < _curGPUDescriptorSets.size()) {
         bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS);
     }
 
-    CCVKGPUInputAssembler *gpuInputAssembler = static_cast<CCVKInputAssembler *>(ia)->gpuInputAssembler();
-    CCVKGPUBuffer *        gpuIndirectBuffer = gpuInputAssembler->gpuIndirectBuffer;
-
-    DrawInfo drawInfo;
+    CCVKGPUBuffer *gpuIndirectBuffer = _curGPUInputAssember->gpuIndirectBuffer;
 
     if (gpuIndirectBuffer) {
         uint           drawInfoCount = gpuIndirectBuffer->count;
@@ -380,22 +377,21 @@ void CCVKCommandBuffer::draw(InputAssembler *ia) {
             }
         }
     } else {
-        static_cast<CCVKInputAssembler *>(ia)->extractDrawInfo(drawInfo);
-        uint instanceCount  = std::max(drawInfo.instanceCount, 1u);
-        bool hasIndexBuffer = gpuInputAssembler->gpuIndexBuffer && drawInfo.indexCount > 0;
+        uint instanceCount  = std::max(info.instanceCount, 1u);
+        bool hasIndexBuffer = _curGPUInputAssember->gpuIndexBuffer && info.indexCount > 0;
 
         if (hasIndexBuffer) {
-            vkCmdDrawIndexed(_gpuCommandBuffer->vkCommandBuffer, drawInfo.indexCount, instanceCount,
-                             drawInfo.firstIndex, drawInfo.vertexOffset, drawInfo.firstInstance);
+            vkCmdDrawIndexed(_gpuCommandBuffer->vkCommandBuffer, info.indexCount, instanceCount,
+                             info.firstIndex, info.vertexOffset, info.firstInstance);
         } else {
-            vkCmdDraw(_gpuCommandBuffer->vkCommandBuffer, drawInfo.vertexCount, instanceCount,
-                      drawInfo.firstVertex, drawInfo.firstInstance);
+            vkCmdDraw(_gpuCommandBuffer->vkCommandBuffer, info.vertexCount, instanceCount,
+                      info.firstVertex, info.firstInstance);
         }
 
         ++_numDrawCalls;
-        _numInstances += drawInfo.instanceCount;
+        _numInstances += info.instanceCount;
         if (_curGPUPipelineState) {
-            uint indexCount = hasIndexBuffer ? drawInfo.indexCount : drawInfo.vertexCount;
+            uint indexCount = hasIndexBuffer ? info.indexCount : info.vertexCount;
             switch (_curGPUPipelineState->primitive) {
                 case PrimitiveMode::TRIANGLE_LIST:
                     _numTriangles += indexCount / 3 * instanceCount;

@@ -295,7 +295,7 @@ CC_GLES3_API void GLES3CmdFuncBindState(GLES3Device *device, GLES3GPUPipelineSta
                                         vector<GLES3GPUDescriptorSet *> &gpuDescriptorSets, vector<uint> &dynamicOffsets,
                                         Viewport &viewport, Rect &scissor, float lineWidth, bool depthBiasEnabled, GLES3DepthBias &depthBias, Color &blendConstants,
                                         GLES3DepthBounds &depthBounds, GLES3StencilWriteMask &stencilWriteMask, GLES3StencilCompareMask &stencilCompareMask);
-CC_GLES3_API void GLES3CmdFuncDraw(GLES3Device *device, DrawInfo &drawInfo);
+CC_GLES3_API void GLES3CmdFuncDraw(GLES3Device *device, const DrawInfo &drawInfo);
 CC_GLES3_API void GLES3CmdFuncUpdateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer, const void *buffer, uint offset, uint size);
 CC_GLES3_API void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const *buffers,
                                                    GLES3GPUTexture *gpuTexture, const BufferTextureCopy *regions, uint count);

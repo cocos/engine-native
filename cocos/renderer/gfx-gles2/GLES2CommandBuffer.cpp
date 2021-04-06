@@ -47,10 +47,10 @@ GLES2CommandBuffer::~GLES2CommandBuffer() {
 }
 
 void GLES2CommandBuffer::doInit(const CommandBufferInfo &info) {
-    _type = info.type;
+    _type  = info.type;
     _queue = info.queue;
 
-    _cmdAllocator = CC_NEW(GLES2GPUCommandAllocator);
+    _cmdAllocator  = CC_NEW(GLES2GPUCommandAllocator);
     _curCmdPackage = CC_NEW(GLES2CmdPackage);
 
     size_t setCount = GLES2Device::getInstance()->bindingMappingInfo().bufferOffsets.size();
@@ -110,14 +110,14 @@ void GLES2CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
     _isInRenderPass = true;
 
     GLES2CmdBeginRenderPass *cmd = _cmdAllocator->beginRenderPassCmdPool.alloc();
-    cmd->gpuRenderPass = static_cast<GLES2RenderPass *>(renderPass)->gpuRenderPass();
-    cmd->gpuFBO = static_cast<GLES2Framebuffer *>(fbo)->gpuFBO();
-    cmd->renderArea = renderArea;
-    cmd->numClearColors = cmd->gpuRenderPass->colorAttachments.size();
+    cmd->gpuRenderPass           = static_cast<GLES2RenderPass *>(renderPass)->gpuRenderPass();
+    cmd->gpuFBO                  = static_cast<GLES2Framebuffer *>(fbo)->gpuFBO();
+    cmd->renderArea              = renderArea;
+    cmd->numClearColors          = cmd->gpuRenderPass->colorAttachments.size();
     for (size_t i = 0; i < cmd->numClearColors; ++i) {
         cmd->clearColors[i] = colors[i];
     }
-    cmd->clearDepth = depth;
+    cmd->clearDepth   = depth;
     cmd->clearStencil = stencil;
     _curCmdPackage->beginRenderPassCmds.push(cmd);
     _curCmdPackage->cmds.push(GLESCmdType::BEGIN_RENDER_PASS);
@@ -132,7 +132,7 @@ void GLES2CommandBuffer::bindPipelineState(PipelineState *pso) {
     GLES2GPUPipelineState *gpuPipelineState = static_cast<GLES2PipelineState *>(pso)->gpuPipelineState();
     if (_curGPUPipelineState != gpuPipelineState) {
         _curGPUPipelineState = gpuPipelineState;
-        _isStateInvalid = true;
+        _isStateInvalid      = true;
     }
 }
 
@@ -142,7 +142,7 @@ void GLES2CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSe
     GLES2GPUDescriptorSet *gpuDescriptorSet = static_cast<GLES2DescriptorSet *>(descriptorSet)->gpuDescriptorSet();
     if (_curGPUDescriptorSets[set] != gpuDescriptorSet) {
         _curGPUDescriptorSets[set] = gpuDescriptorSet;
-        _isStateInvalid = true;
+        _isStateInvalid            = true;
     }
     if (dynamicOffsetCount) {
         _curDynamicOffsets[set].assign(dynamicOffsets, dynamicOffsets + dynamicOffsetCount);
@@ -152,7 +152,7 @@ void GLES2CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSe
 
 void GLES2CommandBuffer::bindInputAssembler(InputAssembler *ia) {
     _curGPUInputAssember = static_cast<GLES2InputAssembler *>(ia)->gpuInputAssembler();
-    _isStateInvalid = true;
+    _isStateInvalid      = true;
 }
 
 void GLES2CommandBuffer::setViewport(const Viewport &vp) {
@@ -163,7 +163,7 @@ void GLES2CommandBuffer::setViewport(const Viewport &vp) {
         (_curViewport.height != vp.height) ||
         math::IsNotEqualF(_curViewport.minDepth, vp.minDepth) ||
         math::IsNotEqualF(_curViewport.maxDepth, vp.maxDepth)) {
-        _curViewport = vp;
+        _curViewport    = vp;
         _isStateInvalid = true;
     }
 }
@@ -173,14 +173,14 @@ void GLES2CommandBuffer::setScissor(const Rect &rect) {
         (_curScissor.y != rect.y) ||
         (_curScissor.width != rect.width) ||
         (_curScissor.height != rect.height)) {
-        _curScissor = rect;
+        _curScissor     = rect;
         _isStateInvalid = true;
     }
 }
 
 void GLES2CommandBuffer::setLineWidth(float width) {
     if (math::IsNotEqualF(_curLineWidth, width)) {
-        _curLineWidth = width;
+        _curLineWidth   = width;
         _isStateInvalid = true;
     }
 }
@@ -190,9 +190,9 @@ void GLES2CommandBuffer::setDepthBias(float constant, float clamp, float slope) 
         math::IsNotEqualF(_curDepthBias.clamp, clamp) ||
         math::IsNotEqualF(_curDepthBias.slope, slope)) {
         _curDepthBias.constant = constant;
-        _curDepthBias.clamp = clamp;
-        _curDepthBias.slope = slope;
-        _isStateInvalid = true;
+        _curDepthBias.clamp    = clamp;
+        _curDepthBias.slope    = slope;
+        _isStateInvalid        = true;
     }
 }
 
@@ -205,7 +205,7 @@ void GLES2CommandBuffer::setBlendConstants(const Color &constants) {
         _curBlendConstants.y = constants.y;
         _curBlendConstants.z = constants.z;
         _curBlendConstants.w = constants.w;
-        _isStateInvalid = true;
+        _isStateInvalid      = true;
     }
 }
 
@@ -214,16 +214,16 @@ void GLES2CommandBuffer::setDepthBound(float minBounds, float maxBounds) {
         math::IsNotEqualF(_curDepthBounds.maxBounds, maxBounds)) {
         _curDepthBounds.minBounds = minBounds;
         _curDepthBounds.maxBounds = maxBounds;
-        _isStateInvalid = true;
+        _isStateInvalid           = true;
     }
 }
 
 void GLES2CommandBuffer::setStencilWriteMask(StencilFace face, uint mask) {
     if ((_curStencilWriteMask.face != face) ||
         (_curStencilWriteMask.writeMask != mask)) {
-        _curStencilWriteMask.face = face;
+        _curStencilWriteMask.face      = face;
         _curStencilWriteMask.writeMask = mask;
-        _isStateInvalid = true;
+        _isStateInvalid                = true;
     }
 }
 
@@ -231,38 +231,35 @@ void GLES2CommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint m
     if ((_curStencilCompareMask.face != face) ||
         (_curStencilCompareMask.refrence != ref) ||
         (_curStencilCompareMask.compareMask != mask)) {
-        _curStencilCompareMask.face = face;
-        _curStencilCompareMask.refrence = ref;
+        _curStencilCompareMask.face        = face;
+        _curStencilCompareMask.refrence    = ref;
         _curStencilCompareMask.compareMask = mask;
-        _isStateInvalid = true;
+        _isStateInvalid                    = true;
     }
 }
 
-void GLES2CommandBuffer::draw(InputAssembler *ia) {
+void GLES2CommandBuffer::draw(const DrawInfo &info) {
     if (_isStateInvalid) {
         BindStates();
     }
 
     GLES2CmdDraw *cmd = _cmdAllocator->drawCmdPool.alloc();
-    static_cast<GLES2InputAssembler *>(ia)->ExtractCmdDraw(cmd);
+    cmd->drawInfo     = info;
     _curCmdPackage->drawCmds.push(cmd);
     _curCmdPackage->cmds.push(GLESCmdType::DRAW);
 
     ++_numDrawCalls;
-    _numInstances += ia->getInstanceCount();
+    _numInstances += info.instanceCount;
+    uint indexCount = info.indexCount ? info.indexCount : info.vertexCount;
     if (_curGPUPipelineState) {
         switch (_curGPUPipelineState->glPrimitive) {
             case GL_TRIANGLES: {
-                if (ia->getIndexBuffer() == nullptr) {
-                    _numTriangles += ia->getVertexCount() / 3 * std::max(ia->getInstanceCount(), 1U);
-                } else {
-                    _numTriangles += ia->getIndexCount() / 3 * std::max(ia->getInstanceCount(), 1U);
-                }
+                _numTriangles += indexCount / 3 * std::max(info.instanceCount, 1U);
                 break;
             }
             case GL_TRIANGLE_STRIP:
             case GL_TRIANGLE_FAN: {
-                _numTriangles += (ia->getVertexCount() - 2) * std::max(ia->getInstanceCount(), 1U);
+                _numTriangles += (indexCount - 2) * std::max(info.instanceCount, 1U);
                 break;
             }
             default:
@@ -275,9 +272,9 @@ void GLES2CommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size)
     GLES2GPUBuffer *gpuBuffer = static_cast<GLES2Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {
         GLES2CmdUpdateBuffer *cmd = _cmdAllocator->updateBufferCmdPool.alloc();
-        cmd->gpuBuffer = gpuBuffer;
-        cmd->size = size;
-        cmd->buffer = (uint8_t *)data;
+        cmd->gpuBuffer            = gpuBuffer;
+        cmd->size                 = size;
+        cmd->buffer               = (uint8_t *)data;
 
         _curCmdPackage->updateBufferCmds.push(cmd);
         _curCmdPackage->cmds.push(GLESCmdType::UPDATE_BUFFER);
@@ -288,10 +285,10 @@ void GLES2CommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Tex
     GLES2GPUTexture *gpuTexture = static_cast<GLES2Texture *>(texture)->gpuTexture();
     if (gpuTexture) {
         GLES2CmdCopyBufferToTexture *cmd = _cmdAllocator->copyBufferToTextureCmdPool.alloc();
-        cmd->gpuTexture = gpuTexture;
-        cmd->regions = regions;
-        cmd->count = count;
-        cmd->buffers = buffers;
+        cmd->gpuTexture                  = gpuTexture;
+        cmd->regions                     = regions;
+        cmd->count                       = count;
+        cmd->buffers                     = buffers;
 
         _curCmdPackage->copyBufferToTextureCmds.push(cmd);
         _curCmdPackage->cmds.push(GLESCmdType::COPY_BUFFER_TO_TEXTURE);
@@ -305,8 +302,8 @@ void GLES2CommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count)
     CCASSERT(false, "Command 'execute' must be recorded in primary command buffers.");
 
     for (uint i = 0; i < count; ++i) {
-        GLES2CommandBuffer *cmdBuff = (GLES2CommandBuffer *)cmdBuffs[i];
-        GLES2CmdPackage *cmdPackage = cmdBuff->_pendingPackages.front();
+        GLES2CommandBuffer *cmdBuff    = (GLES2CommandBuffer *)cmdBuffs[i];
+        GLES2CmdPackage *   cmdPackage = cmdBuff->_pendingPackages.front();
 
         for (uint j = 0; j < cmdPackage->beginRenderPassCmds.size(); ++j) {
             GLES2CmdBeginRenderPass *cmd = cmdPackage->beginRenderPassCmds[j];
@@ -352,7 +349,7 @@ void GLES2CommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count)
 void GLES2CommandBuffer::BindStates() {
     GLES2CmdBindStates *cmd = _cmdAllocator->bindStatesCmdPool.alloc();
 
-    cmd->gpuPipelineState = _curGPUPipelineState;
+    cmd->gpuPipelineState  = _curGPUPipelineState;
     cmd->gpuInputAssembler = _curGPUInputAssember;
     cmd->gpuDescriptorSets = _curGPUDescriptorSets;
 
@@ -367,16 +364,16 @@ void GLES2CommandBuffer::BindStates() {
         }
     }
 
-    cmd->viewport = _curViewport;
-    cmd->scissor = _curScissor;
-    cmd->lineWidth = _curLineWidth;
-    cmd->depthBias = _curDepthBias;
-    cmd->blendConstants.x = _curBlendConstants.x;
-    cmd->blendConstants.y = _curBlendConstants.y;
-    cmd->blendConstants.z = _curBlendConstants.z;
-    cmd->blendConstants.w = _curBlendConstants.w;
-    cmd->depthBounds = _curDepthBounds;
-    cmd->stencilWriteMask = _curStencilWriteMask;
+    cmd->viewport           = _curViewport;
+    cmd->scissor            = _curScissor;
+    cmd->lineWidth          = _curLineWidth;
+    cmd->depthBias          = _curDepthBias;
+    cmd->blendConstants.x   = _curBlendConstants.x;
+    cmd->blendConstants.y   = _curBlendConstants.y;
+    cmd->blendConstants.z   = _curBlendConstants.z;
+    cmd->blendConstants.w   = _curBlendConstants.w;
+    cmd->depthBounds        = _curDepthBounds;
+    cmd->stencilWriteMask   = _curStencilWriteMask;
     cmd->stencilCompareMask = _curStencilCompareMask;
 
     _curCmdPackage->bindStatesCmds.push(cmd);

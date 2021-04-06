@@ -39,7 +39,7 @@ public:
     void end() override;
     void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) override;
     void endRenderPass() override;
-    void draw(InputAssembler *ia) override;
+    void draw(const DrawInfo &info) override;
     void updateBuffer(Buffer *buff, const void *data, uint size) override;
     void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) override;
     void execute(CommandBuffer *const *cmdBuffs, uint32_t count) override;

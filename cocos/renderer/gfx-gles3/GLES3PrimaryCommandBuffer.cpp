@@ -78,26 +78,25 @@ void GLES3PrimaryCommandBuffer::endRenderPass() {
     _isInRenderPass = false;
 }
 
-void GLES3PrimaryCommandBuffer::draw(InputAssembler *ia) {
+void GLES3PrimaryCommandBuffer::draw(const DrawInfo &info) {
     if (_isStateInvalid) {
         BindStates();
     }
 
-    DrawInfo drawInfo;
-    ia->extractDrawInfo(drawInfo);
-    GLES3CmdFuncDraw(GLES3Device::getInstance(), drawInfo);
+    GLES3CmdFuncDraw(GLES3Device::getInstance(), info);
 
     ++_numDrawCalls;
-    _numInstances += ia->getInstanceCount();
+    _numInstances += info.instanceCount;
     if (_curGPUPipelineState) {
+        uint indexCount = info.indexCount ? info.indexCount : info.vertexCount;
         switch (_curGPUPipelineState->glPrimitive) {
             case GL_TRIANGLES: {
-                _numTriangles += ia->getIndexCount() / 3 * std::max(ia->getInstanceCount(), 1U);
+                _numTriangles += indexCount / 3 * std::max(info.instanceCount, 1U);
                 break;
             }
             case GL_TRIANGLE_STRIP:
             case GL_TRIANGLE_FAN: {
-                _numTriangles += (ia->getIndexCount() - 2) * std::max(ia->getInstanceCount(), 1U);
+                _numTriangles += (indexCount - 2) * std::max(info.instanceCount, 1U);
                 break;
             }
             default:

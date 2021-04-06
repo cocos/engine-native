@@ -52,7 +52,7 @@ public:
     void setDepthBound(float minBounds, float maxBounds) override;
     void setStencilWriteMask(StencilFace face, uint mask) override;
     void setStencilCompareMask(StencilFace face, int reference, uint mask) override;
-    void draw(InputAssembler *ia) override;
+    void draw(const DrawInfo &info) override;
     void updateBuffer(Buffer *buffer, const void *data, uint size) override;
     void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) override;
     void blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) override;
