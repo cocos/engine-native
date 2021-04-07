@@ -104,6 +104,7 @@ PoolManager *PoolManager::_singleInstance = nullptr;
 PoolManager *PoolManager::getInstance() {
     if (_singleInstance == nullptr) {
         _singleInstance = new (std::nothrow) PoolManager();
+        _singleInstance->push(new AutoreleasePool());
     }
     return _singleInstance;
 }
