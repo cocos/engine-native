@@ -39,8 +39,8 @@ AutoreleasePool::AutoreleasePool()
     PoolManager::getInstance()->push(this);
 }
 
-AutoreleasePool::AutoreleasePool(const std::string &name)
-: _name(name)
+AutoreleasePool::AutoreleasePool(std::string name)
+: _name(std::move(name))
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
   ,
   _isClearing(false)
