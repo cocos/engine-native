@@ -258,7 +258,6 @@ bool GLES2Context::doInit(const ContextInfo &info) {
         }
 
         _eglSharedContext = _eglContext;
-
     } else {
         auto *sharedCtx = static_cast<GLES2Context *>(info.sharedCtx);
 
@@ -364,9 +363,11 @@ void GLES2Context::acquireSurface(uintptr_t windowHandle) {
         CC_LOG_ERROR("Getting configuration attributes failed.");
         return;
     }
-    uint width  = GLES2Device::getInstance()->getWidth();
-    uint height = GLES2Device::getInstance()->getHeight();
-    ANativeWindow_setBuffersGeometry(reinterpret_cast<ANativeWindow *>(_windowHandle), width, height, nFmt);
+    // Device's size will be updated after recreate window (in resize event) and is incorrect for now.
+    ANativeWindow *window = static_cast<ANativeWindow *>(_windowHandle);
+    uint width = ANativeWindow_getWidth(window);
+    uint height = ANativeWindow_getHeight(window);
+    ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
 
     EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, nullptr));
     if (_eglSurface == EGL_NO_SURFACE) {
