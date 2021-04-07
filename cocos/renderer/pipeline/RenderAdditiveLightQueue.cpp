@@ -357,6 +357,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
                 }
 
                 const auto &matShadowCamera = light->getNode()->worldMatrix;
+                memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowCamera.m, sizeof(matShadowCamera));
 
                 const auto matShadowView = matShadowCamera.getInversed();
 
@@ -366,10 +367,12 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
                 matShadowViewProj.multiply(matShadowView);
 
                 // shadow info
-                float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
-                memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
-                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
+                float shadowNFLSInfos[4] = {shadowInfo->nearValue, shadowInfo->farValue, (float)shadowInfo->linear, (float)shadowInfo->selfShadow};
+                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
+
+                float shadowWHPBInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
+                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET, &shadowWHPBInfos, sizeof(shadowWHPBInfos));
+
                 // Spot light sampler binding
                 const auto &shadowFramebufferMap = sceneData->getShadowFramebufferMap();
                 if (shadowFramebufferMap.count(light) > 0) {
@@ -385,9 +388,20 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
                     updateDirLight(shadowInfo, mainLight, _shadowUBO);
                 }
                 // Reserve sphere light shadow interface
+                float shadowNFLSInfos[4] = {0.01f, light->range, (float)shadowInfo->linear, (float)shadowInfo->selfShadow};
+                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
+
+                float shadowWHPBInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, (float)shadowInfo->pcfType, shadowInfo->bias};
+                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET, &shadowWHPBInfos, sizeof(shadowWHPBInfos));
             } break;
             default:;
         }
+
+        float shadowLPNNInfos[4] = {0.0f, (float)shadowInfo->packing, 0.0f, 0.0f};
+        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_LIGHT_PACKING_NULL_NULL_INFO_OFFSET, &shadowLPNNInfos, sizeof(shadowLPNNInfos));
+
+        memcpy(_shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
+
         descriptorSet->update();
 
         cmdBuffer->updateBuffer(descriptorSet->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);

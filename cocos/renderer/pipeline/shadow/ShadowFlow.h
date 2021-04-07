@@ -30,6 +30,7 @@ namespace pipeline {
 class ForwardPipeline;
 struct Light;
 struct Camera;
+struct Shadows;
 
 class CC_DLL ShadowFlow : public RenderFlow {
 public:
@@ -49,7 +50,7 @@ public:
 private:
     void clearShadowMap(Camera *camera);
 
-    void resizeShadowMap(const Light *light, const uint width, const uint height) const;
+    void resizeShadowMap(const Light *light, const Shadows *shadowInfo) const;
 
     void initShadowFrameBuffer(RenderPipeline *pipeline, const Light *light);
 

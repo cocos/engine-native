@@ -130,9 +130,12 @@ const gfx::UniformBlock UBOShadow::LAYOUT = {
     UBOShadow::NAME,
     {
         {"cc_matLightPlaneProj", gfx::Type::MAT4, 1},
+        {"cc_matLightView", gfx::Type::MAT4, 1},
         {"cc_matLightViewProj", gfx::Type::MAT4, 1},
+        {"cc_shadowNFLSInfo", gfx::Type::FLOAT4, 1},
+        {"cc_shadowWHPBInfo", gfx::Type::FLOAT4, 1},
+        {"cc_shadowLPNNInfo", gfx::Type::FLOAT4, 1},
         {"cc_shadowColor", gfx::Type::FLOAT4, 1},
-        {"cc_shadowInfo", gfx::Type::FLOAT4, 1},
     },
     1,
 };

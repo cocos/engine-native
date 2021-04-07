@@ -29,7 +29,6 @@
 #include "../forward/ForwardPipeline.h"
 #include "../helper/SharedMemory.h"
 #include "ShadowStage.h"
-#include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
 #include "gfx-base/GFXRenderPass.h"
@@ -84,7 +83,7 @@ void ShadowFlow::render(Camera *camera) {
 
         auto *shadowFrameBuffer = shadowFramebufferMap.at(light);
         if (shadowInfo->shadowMapDirty) {
-            resizeShadowMap(light, (uint)shadowInfo->size.x, (uint)shadowInfo->size.y);
+            resizeShadowMap(light, shadowInfo);
         }
         for (auto *_stage : _stages) {
             auto *shadowStage = static_cast<ShadowStage *>(_stage);
@@ -115,7 +114,7 @@ void ShadowFlow::clearShadowMap(Camera *camera) {
     }
 }
 
-void ShadowFlow::resizeShadowMap(const Light *light, const uint width, const uint height) const {
+void ShadowFlow::resizeShadowMap(const Light *light, const Shadows *shadowInfo) const {
     auto sceneData = _pipeline->getPipelineSceneData();
 
     if (sceneData->getShadowFramebufferMap().count(light)) {
@@ -125,14 +124,18 @@ void ShadowFlow::resizeShadowMap(const Light *light, const uint width, const uin
             return;
         }
 
-        auto &renderTargets = framebuffer->getColorTextures();
-        for (auto *renderTarget : renderTargets) {
-            renderTarget->resize(width, height);
-        }
+        vector<gfx::Texture *> renderTargets;
+        renderTargets.emplace_back(gfx::Device::getInstance()->createTexture({
+            gfx::TextureType::TEX2D,
+            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+            shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F,
+            (uint)shadowInfo->size.x,
+            (uint)shadowInfo->size.y,
+        }));
 
         auto *depth = framebuffer->getDepthStencilTexture();
         if (depth) {
-            depth->resize(width, height);
+            depth->resize((uint)shadowInfo->size.x, (uint)shadowInfo->size.y);
         }
 
         framebuffer->destroy();
