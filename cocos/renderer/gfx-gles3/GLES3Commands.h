@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "../gfx-gles-common/GLESCommandPool.h"
+#include "gfx-gles-common/GLESCommandPool.h"
 #include "GLES3GPUObjects.h"
 
 namespace cc {
@@ -34,14 +34,14 @@ namespace gfx {
 class GLES3Device;
 
 struct GLES3DepthBias final {
-    float constant = 0.0f;
-    float clamp = 0.0f;
-    float slope = 0.0f;
+    float constant = 0.0F;
+    float clamp = 0.0F;
+    float slope = 0.0F;
 };
 
 struct GLES3DepthBounds final {
-    float minBounds = 0.0f;
-    float maxBounds = 0.0f;
+    float minBounds = 0.0F;
+    float maxBounds = 0.0F;
 };
 
 struct GLES3StencilWriteMask final {
@@ -78,7 +78,7 @@ public:
     Rect renderArea;
     size_t numClearColors = 0;
     Color clearColors[GFX_MAX_ATTACHMENTS];
-    float clearDepth = 1.0f;
+    float clearDepth = 1.0F;
     int clearStencil = 0;
 
     GLES3CmdBeginRenderPass() : GLESCmd(GLESCmdType::BEGIN_RENDER_PASS) {}
@@ -109,7 +109,7 @@ public:
     vector<uint> dynamicOffsets;
     Viewport viewport;
     Rect scissor;
-    float lineWidth = 1.0f;
+    float lineWidth = 1.0F;
     bool depthBiasEnabled = false;
     GLES3DepthBias depthBias;
     Color blendConstants;
@@ -148,20 +148,20 @@ public:
 
 class GLES3CmdBarrier final : public GLESCmd {
 public:
-    GLbitfield barriers = 0u;
-    GLbitfield barriersByRegion = 0u;
+    GLbitfield barriers = 0U;
+    GLbitfield barriersByRegion = 0U;
 
     GLES3CmdBarrier() : GLESCmd(GLESCmdType::BARRIER) {}
     void clear() override {
-        barriers = 0u;
-        barriersByRegion = 0u;
+        barriers = 0U;
+        barriersByRegion = 0U;
     }
 };
 
 class GLES3CmdUpdateBuffer final : public GLESCmd {
 public:
     GLES3GPUBuffer *gpuBuffer = nullptr;
-    uint8_t *buffer = nullptr;
+    const uint8_t *buffer = nullptr;
     uint size = 0;
     uint offset = 0;
 
@@ -177,7 +177,7 @@ class GLES3CmdCopyBufferToTexture final : public GLESCmd {
 public:
     GLES3GPUTexture *gpuTexture = nullptr;
     const BufferTextureCopy *regions = nullptr;
-    uint count = 0u;
+    uint count = 0U;
     const uint8_t *const *buffers;
 
     GLES3CmdCopyBufferToTexture() : GLESCmd(GLESCmdType::COPY_BUFFER_TO_TEXTURE) {}
@@ -185,7 +185,7 @@ public:
     void clear() override {
         gpuTexture = nullptr;
         regions = nullptr;
-        count = 0u;
+        count = 0U;
         buffers = nullptr;
     }
 };
@@ -195,7 +195,7 @@ public:
     GLES3GPUTexture *gpuTextureSrc = nullptr;
     GLES3GPUTexture *gpuTextureDst = nullptr;
     const TextureBlit *regions = nullptr;
-    uint count = 0u;
+    uint count = 0U;
     Filter filter = Filter::POINT;
 
     GLES3CmdBlitTexture() : GLESCmd(GLESCmdType::BLIT_TEXTURE) {}
@@ -204,7 +204,7 @@ public:
         gpuTextureSrc = nullptr;
         gpuTextureDst = nullptr;
         regions = nullptr;
-        count = 0u;
+        count = 0U;
     }
 };
 
@@ -232,33 +232,33 @@ public:
     CommandPool<GLES3CmdCopyBufferToTexture> copyBufferToTextureCmdPool;
     CommandPool<GLES3CmdBlitTexture> blitTextureCmdPool;
 
-    void clearCmds(GLES3CmdPackage *cmd_package) {
-        if (cmd_package->beginRenderPassCmds.size()) {
-            beginRenderPassCmdPool.freeCmds(cmd_package->beginRenderPassCmds);
+    void clearCmds(GLES3CmdPackage *cmdPackage) {
+        if (cmdPackage->beginRenderPassCmds.size()) {
+            beginRenderPassCmdPool.freeCmds(cmdPackage->beginRenderPassCmds);
         }
-        if (cmd_package->bindStatesCmds.size()) {
-            bindStatesCmdPool.freeCmds(cmd_package->bindStatesCmds);
+        if (cmdPackage->bindStatesCmds.size()) {
+            bindStatesCmdPool.freeCmds(cmdPackage->bindStatesCmds);
         }
-        if (cmd_package->drawCmds.size()) {
-            drawCmdPool.freeCmds(cmd_package->drawCmds);
+        if (cmdPackage->drawCmds.size()) {
+            drawCmdPool.freeCmds(cmdPackage->drawCmds);
         }
-        if (cmd_package->dispatchCmds.size()) {
-            dispatchCmdPool.freeCmds(cmd_package->dispatchCmds);
+        if (cmdPackage->dispatchCmds.size()) {
+            dispatchCmdPool.freeCmds(cmdPackage->dispatchCmds);
         }
-        if (cmd_package->barrierCmds.size()) {
-            barrierCmdPool.freeCmds(cmd_package->barrierCmds);
+        if (cmdPackage->barrierCmds.size()) {
+            barrierCmdPool.freeCmds(cmdPackage->barrierCmds);
         }
-        if (cmd_package->updateBufferCmds.size()) {
-            updateBufferCmdPool.freeCmds(cmd_package->updateBufferCmds);
+        if (cmdPackage->updateBufferCmds.size()) {
+            updateBufferCmdPool.freeCmds(cmdPackage->updateBufferCmds);
         }
-        if (cmd_package->copyBufferToTextureCmds.size()) {
-            copyBufferToTextureCmdPool.freeCmds(cmd_package->copyBufferToTextureCmds);
+        if (cmdPackage->copyBufferToTextureCmds.size()) {
+            copyBufferToTextureCmdPool.freeCmds(cmdPackage->copyBufferToTextureCmds);
         }
-        if (cmd_package->blitTextureCmds.size()) {
-            blitTextureCmdPool.freeCmds(cmd_package->blitTextureCmds);
+        if (cmdPackage->blitTextureCmds.size()) {
+            blitTextureCmdPool.freeCmds(cmdPackage->blitTextureCmds);
         }
 
-        cmd_package->cmds.clear();
+        cmdPackage->cmds.clear();
     }
 
     CC_INLINE void reset() {
@@ -288,7 +288,7 @@ CC_GLES3_API void GLES3CmdFuncDestroyInputAssembler(GLES3Device *device, GLES3GP
 CC_GLES3_API void GLES3CmdFuncCreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO);
 CC_GLES3_API void GLES3CmdFuncDestroyFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO);
 
-CC_GLES3_API void GLES3CmdFuncBeginRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRenderPass, GLES3GPUFramebuffer *gpuFBO,
+CC_GLES3_API void GLES3CmdFuncBeginRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRenderPass, GLES3GPUFramebuffer *gpuFramebuffer,
                                               const Rect &renderArea, size_t numClearColors, const Color *clearColors, float clearDepth, int clearStencil);
 CC_GLES3_API void GLES3CmdFuncEndRenderPass(GLES3Device *device);
 CC_GLES3_API void GLES3CmdFuncBindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipelineState, GLES3GPUInputAssembler *gpuInputAssembler,

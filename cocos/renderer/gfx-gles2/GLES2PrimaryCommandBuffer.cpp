@@ -38,15 +38,11 @@
 namespace cc {
 namespace gfx {
 
-GLES2PrimaryCommandBuffer::GLES2PrimaryCommandBuffer()
-: GLES2CommandBuffer() {
-}
-
 GLES2PrimaryCommandBuffer::~GLES2PrimaryCommandBuffer() {
     destroy();
 }
 
-void GLES2PrimaryCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
+void GLES2PrimaryCommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Framebuffer * /*frameBuffer*/) {
     _curGPUPipelineState = nullptr;
     _curGPUInputAssember = nullptr;
     _curGPUDescriptorSets.assign(_curGPUDescriptorSets.size(), nullptr);
@@ -63,9 +59,9 @@ void GLES2PrimaryCommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES2PrimaryCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
-    _isInRenderPass = true;
-    GLES2GPURenderPass *gpuRenderPass = static_cast<GLES2RenderPass *>(renderPass)->gpuRenderPass();
+void GLES2PrimaryCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const * /*secondaryCBs*/, uint /*secondaryCBCount*/) {
+    _isInRenderPass                     = true;
+    GLES2GPURenderPass * gpuRenderPass  = static_cast<GLES2RenderPass *>(renderPass)->gpuRenderPass();
     GLES2GPUFramebuffer *gpuFramebuffer = static_cast<GLES2Framebuffer *>(fbo)->gpuFBO();
 
     GLES2CmdFuncBeginRenderPass(GLES2Device::getInstance(), gpuRenderPass, gpuFramebuffer,
@@ -80,15 +76,15 @@ void GLES2PrimaryCommandBuffer::endRenderPass() {
 void GLES2PrimaryCommandBuffer::draw(const DrawInfo &info) {
     if (_isStateInvalid) {
         vector<uint> &dynamicOffsetOffsets = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsetOffsets;
-        vector<uint> &dynamicOffsets = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsets;
-        for (size_t i = 0u; i < _curDynamicOffsets.size(); i++) {
+        vector<uint> &dynamicOffsets       = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsets;
+        for (size_t i = 0U; i < _curDynamicOffsets.size(); i++) {
             size_t count = dynamicOffsetOffsets[i + 1] - dynamicOffsetOffsets[i];
             //CCASSERT(_curDynamicOffsets[i].size() >= count, "missing dynamic offsets?");
             count = std::min(count, _curDynamicOffsets[i].size());
             if (count) memcpy(&dynamicOffsets[dynamicOffsetOffsets[i]], _curDynamicOffsets[i].data(), count * sizeof(uint));
         }
         GLES2CmdFuncBindState(GLES2Device::getInstance(), _curGPUPipelineState, _curGPUInputAssember, _curGPUDescriptorSets, dynamicOffsets,
-                                _curViewport, _curScissor, _curLineWidth, false, _curDepthBias, _curBlendConstants, _curDepthBounds, _curStencilWriteMask, _curStencilCompareMask);
+                              _curViewport, _curScissor, _curLineWidth, false, _curDepthBias, _curBlendConstants, _curDepthBounds, _curStencilWriteMask, _curStencilCompareMask);
 
         _isStateInvalid = false;
     }
@@ -118,7 +114,7 @@ void GLES2PrimaryCommandBuffer::draw(const DrawInfo &info) {
 void GLES2PrimaryCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {
     GLES2GPUBuffer *gpuBuffer = static_cast<GLES2Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {
-        GLES2CmdFuncUpdateBuffer(GLES2Device::getInstance(), gpuBuffer, data, 0u, size);
+        GLES2CmdFuncUpdateBuffer(GLES2Device::getInstance(), gpuBuffer, data, 0U, size);
     }
 }
 
@@ -131,7 +127,7 @@ void GLES2PrimaryCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffe
 
 void GLES2PrimaryCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
-        GLES2PrimaryCommandBuffer *cmdBuff = (GLES2PrimaryCommandBuffer *)cmdBuffs[i];
+        auto *cmdBuff = static_cast<GLES2PrimaryCommandBuffer *>(cmdBuffs[i]);
 
         if (!cmdBuff->_pendingPackages.empty()) {
             GLES2CmdPackage *cmdPackage = cmdBuff->_pendingPackages.front();

@@ -36,8 +36,8 @@ class GLES3GPUCommandAllocator;
 
 class CC_GLES3_API GLES3CommandBuffer : public CommandBuffer {
 public:
-    GLES3CommandBuffer();
-    ~GLES3CommandBuffer();
+    GLES3CommandBuffer() = default;
+    ~GLES3CommandBuffer() override;
 
     void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;
     void end() override;
@@ -81,7 +81,7 @@ protected:
     vector<vector<uint>> _curDynamicOffsets;
     Viewport _curViewport;
     Rect _curScissor;
-    float _curLineWidth = 1.0f;
+    float _curLineWidth = 1.0F;
     GLES3DepthBias _curDepthBias;
     Color _curBlendConstants;
     GLES3DepthBounds _curDepthBounds;

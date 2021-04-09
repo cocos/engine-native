@@ -25,7 +25,9 @@
 
 #pragma once
 
-#include "../gfx-gles-common/GLESCommandPool.h"
+#include "gfx-gles-common/GLESCommandPool.h"
+
+#include "GLES2Std.h"
 #include "GLES2GPUObjects.h"
 
 namespace cc {
@@ -34,14 +36,14 @@ namespace gfx {
 class GLES2Device;
 
 struct GLES2DepthBias final {
-    float constant = 0.0f;
-    float clamp = 0.0f;
-    float slope = 0.0f;
+    float constant = 0.0F;
+    float clamp = 0.0F;
+    float slope = 0.0F;
 };
 
 struct GLES2DepthBounds final {
-    float minBounds = 0.0f;
-    float maxBounds = 0.0f;
+    float minBounds = 0.0F;
+    float maxBounds = 0.0F;
 };
 
 struct GLES2StencilWriteMask final {
@@ -78,7 +80,7 @@ public:
     Rect renderArea;
     size_t numClearColors = 0;
     Color clearColors[GFX_MAX_ATTACHMENTS];
-    float clearDepth = 1.0f;
+    float clearDepth = 1.0F;
     int clearStencil = 0;
 
     GLES2CmdBeginRenderPass() : GLESCmd(GLESCmdType::BEGIN_RENDER_PASS) {}
@@ -109,7 +111,7 @@ public:
     vector<uint> dynamicOffsets;
     Viewport viewport;
     Rect scissor;
-    float lineWidth = 1.0f;
+    float lineWidth = 1.0F;
     bool depthBiasEnabled = false;
     GLES2DepthBias depthBias;
     Color blendConstants;
@@ -138,7 +140,7 @@ public:
 class GLES2CmdUpdateBuffer final : public GLESCmd {
 public:
     GLES2GPUBuffer *gpuBuffer = nullptr;
-    uint8_t *buffer = nullptr;
+    const uint8_t *buffer = nullptr;
     uint size = 0;
     uint offset = 0;
 
@@ -154,7 +156,7 @@ class GLES2CmdCopyBufferToTexture final : public GLESCmd {
 public:
     GLES2GPUTexture *gpuTexture = nullptr;
     const BufferTextureCopy *regions = nullptr;
-    uint count = 0u;
+    uint count = 0U;
     const uint8_t *const *buffers;
 
     GLES2CmdCopyBufferToTexture() : GLESCmd(GLESCmdType::COPY_BUFFER_TO_TEXTURE) {}
@@ -162,7 +164,7 @@ public:
     void clear() override {
         gpuTexture = nullptr;
         regions = nullptr;
-        count = 0u;
+        count = 0U;
         buffers = nullptr;
     }
 };
@@ -185,24 +187,24 @@ public:
     CommandPool<GLES2CmdUpdateBuffer> updateBufferCmdPool;
     CommandPool<GLES2CmdCopyBufferToTexture> copyBufferToTextureCmdPool;
 
-    void clearCmds(GLES2CmdPackage *cmd_package) {
-        if (cmd_package->beginRenderPassCmds.size()) {
-            beginRenderPassCmdPool.freeCmds(cmd_package->beginRenderPassCmds);
+    void clearCmds(GLES2CmdPackage *cmdPackage) {
+        if (cmdPackage->beginRenderPassCmds.size()) {
+            beginRenderPassCmdPool.freeCmds(cmdPackage->beginRenderPassCmds);
         }
-        if (cmd_package->bindStatesCmds.size()) {
-            bindStatesCmdPool.freeCmds(cmd_package->bindStatesCmds);
+        if (cmdPackage->bindStatesCmds.size()) {
+            bindStatesCmdPool.freeCmds(cmdPackage->bindStatesCmds);
         }
-        if (cmd_package->drawCmds.size()) {
-            drawCmdPool.freeCmds(cmd_package->drawCmds);
+        if (cmdPackage->drawCmds.size()) {
+            drawCmdPool.freeCmds(cmdPackage->drawCmds);
         }
-        if (cmd_package->updateBufferCmds.size()) {
-            updateBufferCmdPool.freeCmds(cmd_package->updateBufferCmds);
+        if (cmdPackage->updateBufferCmds.size()) {
+            updateBufferCmdPool.freeCmds(cmdPackage->updateBufferCmds);
         }
-        if (cmd_package->copyBufferToTextureCmds.size()) {
-            copyBufferToTextureCmdPool.freeCmds(cmd_package->copyBufferToTextureCmds);
+        if (cmdPackage->copyBufferToTextureCmds.size()) {
+            copyBufferToTextureCmdPool.freeCmds(cmdPackage->copyBufferToTextureCmds);
         }
 
-        cmd_package->cmds.clear();
+        cmdPackage->cmds.clear();
     }
 
     CC_INLINE void reset() {
@@ -229,7 +231,7 @@ CC_GLES2_API void GLES2CmdFuncDestroyInputAssembler(GLES2Device *device, GLES2GP
 CC_GLES2_API void GLES2CmdFuncCreateFramebuffer(GLES2Device *device, GLES2GPUFramebuffer *gpuFBO);
 CC_GLES2_API void GLES2CmdFuncDestroyFramebuffer(GLES2Device *device, GLES2GPUFramebuffer *gpuFBO);
 
-CC_GLES2_API void GLES2CmdFuncBeginRenderPass(GLES2Device *device, GLES2GPURenderPass *gpuRenderPass, GLES2GPUFramebuffer *gpuFBO,
+CC_GLES2_API void GLES2CmdFuncBeginRenderPass(GLES2Device *device, GLES2GPURenderPass *gpuRenderPass, GLES2GPUFramebuffer *gpuFramebuffer,
                                               const Rect &renderArea, size_t numClearColors, const Color *clearColors, float clearDepth, int clearStencil);
 CC_GLES2_API void GLES2CmdFuncEndRenderPass(GLES2Device *device);
 CC_GLES2_API void GLES2CmdFuncBindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipelineState, GLES2GPUInputAssembler *gpuInputAssembler,

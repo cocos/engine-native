@@ -32,8 +32,8 @@ namespace gfx {
 
 class CC_GLES3_API GLES3PrimaryCommandBuffer final : public GLES3CommandBuffer {
 public:
-    GLES3PrimaryCommandBuffer();
-    ~GLES3PrimaryCommandBuffer();
+    GLES3PrimaryCommandBuffer() = default;
+    ~GLES3PrimaryCommandBuffer() override;
 
     void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;
     void end() override;

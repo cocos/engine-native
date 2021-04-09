@@ -33,15 +33,13 @@
 namespace cc {
 namespace gfx {
 
-CCVKBuffer::CCVKBuffer()
-: Buffer() {
-}
+CCVKBuffer::CCVKBuffer() = default;
 
 CCVKBuffer::~CCVKBuffer() {
     destroy();
 }
 
-void CCVKBuffer::doInit(const BufferInfo &info) {
+void CCVKBuffer::doInit(const BufferInfo & /*info*/) {
     _gpuBuffer = CC_NEW(CCVKGPUBuffer);
     _gpuBuffer->usage = _usage;
     _gpuBuffer->memUsage = _memUsage;
@@ -62,7 +60,7 @@ void CCVKBuffer::doInit(const BufferInfo &info) {
 }
 
 void CCVKBuffer::doInit(const BufferViewInfo &info) {
-    CCVKBuffer *buffer = (CCVKBuffer *)info.buffer;
+    auto *buffer = static_cast<CCVKBuffer *>(info.buffer);
     _gpuBuffer = buffer->gpuBuffer();
     _gpuBufferView = CC_NEW(CCVKGPUBufferView);
     createBufferView();

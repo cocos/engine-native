@@ -38,10 +38,6 @@
 namespace cc {
 namespace gfx {
 
-GLES2CommandBuffer::GLES2CommandBuffer()
-: CommandBuffer() {
-}
-
 GLES2CommandBuffer::~GLES2CommandBuffer() {
     destroy();
 }
@@ -80,7 +76,7 @@ void GLES2CommandBuffer::doDestroy() {
     CC_DELETE(_cmdAllocator);
 }
 
-void GLES2CommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
+void GLES2CommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Framebuffer * /*frameBuffer*/) {
     _cmdAllocator->clearCmds(_curCmdPackage);
     _curGPUPipelineState = nullptr;
     _curGPUInputAssember = nullptr;
@@ -106,7 +102,7 @@ void GLES2CommandBuffer::end() {
     }
 }
 
-void GLES2CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
+void GLES2CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const * /*secondaryCBs*/, uint /*secondaryCBCount*/) {
     _isInRenderPass = true;
 
     GLES2CmdBeginRenderPass *cmd = _cmdAllocator->beginRenderPassCmdPool.alloc();
@@ -274,7 +270,7 @@ void GLES2CommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size)
         GLES2CmdUpdateBuffer *cmd = _cmdAllocator->updateBufferCmdPool.alloc();
         cmd->gpuBuffer            = gpuBuffer;
         cmd->size                 = size;
-        cmd->buffer               = (uint8_t *)data;
+        cmd->buffer               = static_cast<const uint8_t *>(data);
 
         _curCmdPackage->updateBufferCmds.push(cmd);
         _curCmdPackage->cmds.push(GLESCmdType::UPDATE_BUFFER);
@@ -302,8 +298,8 @@ void GLES2CommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count)
     CCASSERT(false, "Command 'execute' must be recorded in primary command buffers.");
 
     for (uint i = 0; i < count; ++i) {
-        GLES2CommandBuffer *cmdBuff    = (GLES2CommandBuffer *)cmdBuffs[i];
-        GLES2CmdPackage *   cmdPackage = cmdBuff->_pendingPackages.front();
+        auto *           cmdBuff    = static_cast<GLES2CommandBuffer *>(cmdBuffs[i]);
+        GLES2CmdPackage *cmdPackage = cmdBuff->_pendingPackages.front();
 
         for (uint j = 0; j < cmdPackage->beginRenderPassCmds.size(); ++j) {
             GLES2CmdBeginRenderPass *cmd = cmdPackage->beginRenderPassCmds[j];
@@ -356,7 +352,7 @@ void GLES2CommandBuffer::BindStates() {
     if (_curGPUPipelineState) {
         vector<uint> &dynamicOffsetOffsets = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsetOffsets;
         cmd->dynamicOffsets.resize(_curGPUPipelineState->gpuPipelineLayout->dynamicOffsetCount);
-        for (size_t i = 0u; i < _curDynamicOffsets.size(); i++) {
+        for (size_t i = 0U; i < _curDynamicOffsets.size(); i++) {
             size_t count = dynamicOffsetOffsets[i + 1] - dynamicOffsetOffsets[i];
             //CCASSERT(_curDynamicOffsets[i].size() >= count, "missing dynamic offsets?");
             count = std::min(count, _curDynamicOffsets[i].size());

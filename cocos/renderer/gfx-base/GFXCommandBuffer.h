@@ -35,9 +35,8 @@ namespace gfx {
 class CC_DLL CommandBuffer : public GFXObject {
 public:
     CommandBuffer();
-    virtual ~CommandBuffer();
+    ~CommandBuffer() override;
 
-public:
     void initialize(const CommandBufferInfo &info);
     void destroy();
 
@@ -56,7 +55,7 @@ public:
     virtual void setDepthBound(float minBounds, float maxBounds)                                                                                                                                             = 0;
     virtual void setStencilWriteMask(StencilFace face, uint mask)                                                                                                                                            = 0;
     virtual void setStencilCompareMask(StencilFace face, int ref, uint mask)                                                                                                                                 = 0;
-    virtual void draw(const DrawInfo &info)                                                                                                                                                                    = 0;
+    virtual void draw(const DrawInfo &info)                                                                                                                                                                  = 0;
     virtual void updateBuffer(Buffer *buff, const void *data, uint size)                                                                                                                                     = 0;
     virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count)                                                                         = 0;
     virtual void blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter)                                                                                = 0;
@@ -168,7 +167,7 @@ void CommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const 
 }
 
 void CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier) {
-    pipelineBarrier(barrier, nullptr, nullptr, 0u);
+    pipelineBarrier(barrier, nullptr, nullptr, 0U);
 }
 
 void CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrierList &textureBarriers, const TextureList &textures) {

@@ -39,15 +39,11 @@
 namespace cc {
 namespace gfx {
 
-GLES3PrimaryCommandBuffer::GLES3PrimaryCommandBuffer()
-: GLES3CommandBuffer() {
-}
-
 GLES3PrimaryCommandBuffer::~GLES3PrimaryCommandBuffer() {
     destroy();
 }
 
-void GLES3PrimaryCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
+void GLES3PrimaryCommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Framebuffer * /*frameBuffer*/) {
     _curGPUPipelineState = nullptr;
     _curGPUInputAssember = nullptr;
     _curGPUDescriptorSets.assign(_curGPUDescriptorSets.size(), nullptr);
@@ -64,7 +60,7 @@ void GLES3PrimaryCommandBuffer::end() {
     _isInRenderPass = false;
 }
 
-void GLES3PrimaryCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
+void GLES3PrimaryCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, int stencil, CommandBuffer *const * /*secondaryCBs*/, uint /*secondaryCBCount*/) {
     _isInRenderPass                     = true;
     GLES3GPURenderPass * gpuRenderPass  = static_cast<GLES3RenderPass *>(renderPass)->gpuRenderPass();
     GLES3GPUFramebuffer *gpuFramebuffer = static_cast<GLES3Framebuffer *>(fbo)->gpuFBO();
@@ -108,7 +104,7 @@ void GLES3PrimaryCommandBuffer::draw(const DrawInfo &info) {
 void GLES3PrimaryCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {
     GLES3GPUBuffer *gpuBuffer = static_cast<GLES3Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {
-        GLES3CmdFuncUpdateBuffer(GLES3Device::getInstance(), gpuBuffer, data, 0u, size);
+        GLES3CmdFuncUpdateBuffer(GLES3Device::getInstance(), gpuBuffer, data, 0U, size);
     }
 }
 
@@ -130,7 +126,7 @@ void GLES3PrimaryCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTex
 
 void GLES3PrimaryCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count) {
     for (uint i = 0; i < count; ++i) {
-        GLES3PrimaryCommandBuffer *cmdBuff = (GLES3PrimaryCommandBuffer *)cmdBuffs[i];
+        auto *cmdBuff = static_cast<GLES3PrimaryCommandBuffer *>(cmdBuffs[i]);
 
         if (!cmdBuff->_pendingPackages.empty()) {
             GLES3CmdPackage *cmdPackage = cmdBuff->_pendingPackages.front();
@@ -152,7 +148,7 @@ void GLES3PrimaryCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t
 void GLES3PrimaryCommandBuffer::BindStates() {
     vector<uint> &dynamicOffsetOffsets = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsetOffsets;
     vector<uint> &dynamicOffsets       = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsets;
-    for (size_t i = 0u; i < _curDynamicOffsets.size(); i++) {
+    for (size_t i = 0U; i < _curDynamicOffsets.size(); i++) {
         size_t count = dynamicOffsetOffsets[i + 1] - dynamicOffsetOffsets[i];
         //CCASSERT(_curDynamicOffsets[i].size() >= count, "missing dynamic offsets?");
         count = std::min(count, _curDynamicOffsets[i].size());
@@ -181,10 +177,10 @@ void GLES3PrimaryCommandBuffer::dispatch(const DispatchInfo &info) {
     GLES3CmdFuncDispatch(GLES3Device::getInstance(), gpuInfo);
 }
 
-void GLES3PrimaryCommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) {
+void GLES3PrimaryCommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const * /*textureBarriers*/, const Texture *const * /*textures*/, uint /*textureBarrierCount*/) {
     if (!barrier) return;
 
-    auto gpuBarrier = static_cast<const GLES3GlobalBarrier *>(barrier)->gpuBarrier();
+    const auto *gpuBarrier = static_cast<const GLES3GlobalBarrier *>(barrier)->gpuBarrier();
     GLES3CmdFuncMemoryBarrier(GLES3Device::getInstance(), gpuBarrier->glBarriers, gpuBarrier->glBarriersByRegion);
 }
 

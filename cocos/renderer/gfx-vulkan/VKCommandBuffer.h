@@ -34,8 +34,8 @@ namespace gfx {
 
 class CC_VULKAN_API CCVKCommandBuffer final : public CommandBuffer {
 public:
-    CCVKCommandBuffer();
-    ~CCVKCommandBuffer();
+    CCVKCommandBuffer() = default;
+    ~CCVKCommandBuffer() override;
 
     void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;
     void end() override;
@@ -85,7 +85,7 @@ protected:
 
     Viewport _curViewport;
     Rect _curScissor;
-    float _curLineWidth = 1.0f;
+    float _curLineWidth = 1.0F;
     CCVKDepthBias _curDepthBias;
     Color _curBlendConstants;
     CCVKDepthBounds _curDepthBounds;
