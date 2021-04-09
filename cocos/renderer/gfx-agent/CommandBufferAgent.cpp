@@ -375,7 +375,7 @@ void CommandBufferAgent::copyBuffersToTexture(const uint8_t *const *buffers, Tex
     const auto **actorBuffers = allocator->allocate<const uint8_t *>(bufferCount);
     for (uint i = 0U, n = 0U; i < count; i++) {
         const BufferTextureCopy &region = regions[i];
-        uint                     size   = FormatSize(texture->getFormat(), region.texExtent.width, region.texExtent.height, 1);
+        uint                     size   = formatSize(texture->getFormat(), region.texExtent.width, region.texExtent.height, 1);
         for (uint l = 0; l < region.texSubres.layerCount; l++) {
             auto *buffer = allocator->allocate<uint8_t>(size);
             memcpy(buffer, buffers[n], size);

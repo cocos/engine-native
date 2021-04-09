@@ -91,7 +91,7 @@ public:
     }
 
     CC_INLINE void clear() { _size = 0; }
-    [[nodiscard]] CC_INLINE uint size() const { return _size; }
+    CC_INLINE uint size() const { return _size; }
     CC_INLINE T pop() { return _array[--_size]; }
 
     void reserve(uint size) {

@@ -64,12 +64,12 @@ void GLES2PrimaryCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuf
     GLES2GPURenderPass * gpuRenderPass  = static_cast<GLES2RenderPass *>(renderPass)->gpuRenderPass();
     GLES2GPUFramebuffer *gpuFramebuffer = static_cast<GLES2Framebuffer *>(fbo)->gpuFBO();
 
-    GLES2CmdFuncBeginRenderPass(GLES2Device::getInstance(), gpuRenderPass, gpuFramebuffer,
+    cmdFuncGLES2BeginRenderPass(GLES2Device::getInstance(), gpuRenderPass, gpuFramebuffer,
                                 renderArea, gpuRenderPass->colorAttachments.size(), colors, depth, stencil);
 }
 
 void GLES2PrimaryCommandBuffer::endRenderPass() {
-    GLES2CmdFuncEndRenderPass(GLES2Device::getInstance());
+    cmdFuncGLES2EndRenderPass(GLES2Device::getInstance());
     _isInRenderPass = false;
 }
 
@@ -83,13 +83,13 @@ void GLES2PrimaryCommandBuffer::draw(const DrawInfo &info) {
             count = std::min(count, _curDynamicOffsets[i].size());
             if (count) memcpy(&dynamicOffsets[dynamicOffsetOffsets[i]], _curDynamicOffsets[i].data(), count * sizeof(uint));
         }
-        GLES2CmdFuncBindState(GLES2Device::getInstance(), _curGPUPipelineState, _curGPUInputAssember, _curGPUDescriptorSets, dynamicOffsets,
+        cmdFuncGLES2BindState(GLES2Device::getInstance(), _curGPUPipelineState, _curGPUInputAssember, _curGPUDescriptorSets, dynamicOffsets,
                               _curViewport, _curScissor, _curLineWidth, false, _curDepthBias, _curBlendConstants, _curDepthBounds, _curStencilWriteMask, _curStencilCompareMask);
 
         _isStateInvalid = false;
     }
 
-    GLES2CmdFuncDraw(GLES2Device::getInstance(), info);
+    cmdFuncGLES2Draw(GLES2Device::getInstance(), info);
 
     ++_numDrawCalls;
     _numInstances += info.instanceCount;
@@ -114,14 +114,14 @@ void GLES2PrimaryCommandBuffer::draw(const DrawInfo &info) {
 void GLES2PrimaryCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {
     GLES2GPUBuffer *gpuBuffer = static_cast<GLES2Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {
-        GLES2CmdFuncUpdateBuffer(GLES2Device::getInstance(), gpuBuffer, data, 0U, size);
+        cmdFuncGLES2UpdateBuffer(GLES2Device::getInstance(), gpuBuffer, data, 0U, size);
     }
 }
 
 void GLES2PrimaryCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
     GLES2GPUTexture *gpuTexture = static_cast<GLES2Texture *>(texture)->gpuTexture();
     if (gpuTexture) {
-        GLES2CmdFuncCopyBuffersToTexture(GLES2Device::getInstance(), buffers, gpuTexture, regions, count);
+        cmdFuncGLES2CopyBuffersToTexture(GLES2Device::getInstance(), buffers, gpuTexture, regions, count);
     }
 }
 
@@ -132,7 +132,7 @@ void GLES2PrimaryCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t
         if (!cmdBuff->_pendingPackages.empty()) {
             GLES2CmdPackage *cmdPackage = cmdBuff->_pendingPackages.front();
 
-            GLES2CmdFuncExecuteCmds(GLES2Device::getInstance(), cmdPackage);
+            cmdFuncGLES2ExecuteCmds(GLES2Device::getInstance(), cmdPackage);
 
             cmdBuff->_pendingPackages.pop();
             cmdBuff->_freePackages.push(cmdPackage);

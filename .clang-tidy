@@ -50,7 +50,7 @@ CheckOptions:
     - { key: readability-identifier-naming.ScopedEnumConstantCase, value: UPPER_CASE }
     - { key: readability-identifier-naming.EnumConstantCase,       value: UPPER_CASE }
 
-    - { key: readability-identifier-naming.FunctionCase,           value: aNy_CasE   }
+    - { key: readability-identifier-naming.FunctionCase,           value: camelBack  }
     - { key: readability-identifier-naming.GlobalConstantCase,     value: UPPER_CASE }
     - { key: readability-identifier-naming.LocalConstantCase,      value: camelBack  }
     - { key: readability-identifier-naming.LocalVariableCase,      value: camelBack  }

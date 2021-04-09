@@ -55,6 +55,8 @@ void GLES2CommandBuffer::doInit(const CommandBufferInfo &info) {
 }
 
 void GLES2CommandBuffer::doDestroy() {
+    if (!_cmdAllocator) return;
+
     _cmdAllocator->clearCmds(_curCmdPackage);
     CC_SAFE_DELETE(_curCmdPackage);
 
@@ -73,7 +75,7 @@ void GLES2CommandBuffer::doDestroy() {
     }
 
     _cmdAllocator->reset();
-    CC_DELETE(_cmdAllocator);
+    CC_SAFE_DELETE(_cmdAllocator);
 }
 
 void GLES2CommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Framebuffer * /*frameBuffer*/) {

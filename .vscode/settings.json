@@ -33,8 +33,8 @@
         "-D_USRLIBSIMSTATIC",
         "-D_MT", // TBB
     ],
-    "clang-tidy.fixOnSave": true,
-    "clang-tidy.lintOnSave": true,
+    // "clang-tidy.fixOnSave": true,
+    // "clang-tidy.lintOnSave": true,
     "C_Cpp.default.includePath": [
         ".",
         "cocos",
@@ -71,6 +71,13 @@
         "_MT", // TBB
     ],
     "files.associations": {
+        "*.inc": "cocos-effect",
+        "*.chunk": "cocos-effect",
+        "*.prefab": "json",
+        "*.mtl": "json",
+        "*.meta": "json",
+        "*.ejs": "javascript",
         ".clang-tidy": "yaml",
+        "xstring": "cpp"
     },
 }

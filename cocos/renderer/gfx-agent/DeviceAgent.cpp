@@ -66,7 +66,7 @@ bool DeviceAgent::doInit(const DeviceInfo &info) {
     }
 
     _context                                            = _actor->getContext();
-    _API                                                = _actor->getGfxAPI();
+    _api                                                = _actor->getGfxAPI();
     _deviceName                                         = _actor->getDeviceName();
     _queue                                              = CC_NEW(QueueAgent(_actor->getQueue()));
     _cmdBuff                                            = CC_NEW(CommandBufferAgent(_actor->getCommandBuffer()));
@@ -280,7 +280,7 @@ void DeviceAgent::copyBuffersToTexture(const uint8_t *const *buffers, Texture *d
     const auto **actorBuffers = allocator->allocate<const uint8_t *>(bufferCount);
     for (uint i = 0U, n = 0U; i < count; i++) {
         const BufferTextureCopy &region = regions[i];
-        uint                     size   = FormatSize(dst->getFormat(), region.texExtent.width, region.texExtent.height, 1);
+        uint                     size   = formatSize(dst->getFormat(), region.texExtent.width, region.texExtent.height, 1);
         for (uint l = 0; l < region.texSubres.layerCount; l++) {
             auto *buffer = allocator->allocate<uint8_t>(size);
             memcpy(buffer, buffers[n], size);

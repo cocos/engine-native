@@ -37,7 +37,7 @@ namespace cc {
 namespace gfx {
 
 namespace {
-GLenum MapGLInternalFormat(Format format) {
+GLenum mapGLInternalFormat(Format format) {
     switch (format) {
         case Format::A8: return GL_ALPHA;
         case Format::L8: return GL_LUMINANCE;
@@ -121,35 +121,35 @@ GLenum MapGLInternalFormat(Format format) {
         case Format::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
         case Format::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 
-        case Format::ASTC_RGBA_4x4: return GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
-        case Format::ASTC_RGBA_5x4: return GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
-        case Format::ASTC_RGBA_5x5: return GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
-        case Format::ASTC_RGBA_6x5: return GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
-        case Format::ASTC_RGBA_6x6: return GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
-        case Format::ASTC_RGBA_8x5: return GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
-        case Format::ASTC_RGBA_8x6: return GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
-        case Format::ASTC_RGBA_8x8: return GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
-        case Format::ASTC_RGBA_10x5: return GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
-        case Format::ASTC_RGBA_10x6: return GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
-        case Format::ASTC_RGBA_10x8: return GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
-        case Format::ASTC_RGBA_10x10: return GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
-        case Format::ASTC_RGBA_12x10: return GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
-        case Format::ASTC_RGBA_12x12: return GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
+        case Format::ASTC_RGBA_4X4: return GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+        case Format::ASTC_RGBA_5X4: return GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
+        case Format::ASTC_RGBA_5X5: return GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
+        case Format::ASTC_RGBA_6X5: return GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
+        case Format::ASTC_RGBA_6X6: return GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
+        case Format::ASTC_RGBA_8X5: return GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
+        case Format::ASTC_RGBA_8X6: return GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
+        case Format::ASTC_RGBA_8X8: return GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
+        case Format::ASTC_RGBA_10X5: return GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
+        case Format::ASTC_RGBA_10X6: return GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
+        case Format::ASTC_RGBA_10X8: return GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
+        case Format::ASTC_RGBA_10X10: return GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
+        case Format::ASTC_RGBA_12X10: return GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
+        case Format::ASTC_RGBA_12X12: return GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
 
-        case Format::ASTC_SRGBA_4x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
-        case Format::ASTC_SRGBA_5x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
-        case Format::ASTC_SRGBA_5x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
-        case Format::ASTC_SRGBA_6x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
-        case Format::ASTC_SRGBA_6x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
-        case Format::ASTC_SRGBA_8x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
-        case Format::ASTC_SRGBA_8x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
-        case Format::ASTC_SRGBA_8x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
-        case Format::ASTC_SRGBA_10x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
-        case Format::ASTC_SRGBA_10x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
-        case Format::ASTC_SRGBA_10x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
-        case Format::ASTC_SRGBA_10x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
-        case Format::ASTC_SRGBA_12x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
-        case Format::ASTC_SRGBA_12x12: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
+        case Format::ASTC_SRGBA_4X4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
+        case Format::ASTC_SRGBA_5X4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
+        case Format::ASTC_SRGBA_5X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
+        case Format::ASTC_SRGBA_6X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
+        case Format::ASTC_SRGBA_6X6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
+        case Format::ASTC_SRGBA_8X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
+        case Format::ASTC_SRGBA_8X6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
+        case Format::ASTC_SRGBA_8X8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
+        case Format::ASTC_SRGBA_10X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
+        case Format::ASTC_SRGBA_10X6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
+        case Format::ASTC_SRGBA_10X8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
+        case Format::ASTC_SRGBA_10X10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
+        case Format::ASTC_SRGBA_12X10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
+        case Format::ASTC_SRGBA_12X12: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
 
         default: {
             CCASSERT(false, "Unsupported Format, convert to GL internal format failed.");
@@ -158,7 +158,7 @@ GLenum MapGLInternalFormat(Format format) {
     }
 }
 
-GLenum MapGLFormat(Format format) {
+GLenum mapGLFormat(Format format) {
     switch (format) {
         case Format::A8: return GL_ALPHA;
         case Format::L8: return GL_LUMINANCE;
@@ -241,35 +241,35 @@ GLenum MapGLFormat(Format format) {
         case Format::PVRTC_RGB4: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
         case Format::PVRTC_RGBA4: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 
-        case Format::ASTC_RGBA_4x4: return GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
-        case Format::ASTC_RGBA_5x4: return GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
-        case Format::ASTC_RGBA_5x5: return GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
-        case Format::ASTC_RGBA_6x5: return GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
-        case Format::ASTC_RGBA_6x6: return GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
-        case Format::ASTC_RGBA_8x5: return GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
-        case Format::ASTC_RGBA_8x6: return GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
-        case Format::ASTC_RGBA_8x8: return GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
-        case Format::ASTC_RGBA_10x5: return GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
-        case Format::ASTC_RGBA_10x6: return GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
-        case Format::ASTC_RGBA_10x8: return GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
-        case Format::ASTC_RGBA_10x10: return GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
-        case Format::ASTC_RGBA_12x10: return GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
-        case Format::ASTC_RGBA_12x12: return GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
+        case Format::ASTC_RGBA_4X4: return GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+        case Format::ASTC_RGBA_5X4: return GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
+        case Format::ASTC_RGBA_5X5: return GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
+        case Format::ASTC_RGBA_6X5: return GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
+        case Format::ASTC_RGBA_6X6: return GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
+        case Format::ASTC_RGBA_8X5: return GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
+        case Format::ASTC_RGBA_8X6: return GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
+        case Format::ASTC_RGBA_8X8: return GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
+        case Format::ASTC_RGBA_10X5: return GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
+        case Format::ASTC_RGBA_10X6: return GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
+        case Format::ASTC_RGBA_10X8: return GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
+        case Format::ASTC_RGBA_10X10: return GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
+        case Format::ASTC_RGBA_12X10: return GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
+        case Format::ASTC_RGBA_12X12: return GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
 
-        case Format::ASTC_SRGBA_4x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
-        case Format::ASTC_SRGBA_5x4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
-        case Format::ASTC_SRGBA_5x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
-        case Format::ASTC_SRGBA_6x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
-        case Format::ASTC_SRGBA_6x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
-        case Format::ASTC_SRGBA_8x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
-        case Format::ASTC_SRGBA_8x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
-        case Format::ASTC_SRGBA_8x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
-        case Format::ASTC_SRGBA_10x5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
-        case Format::ASTC_SRGBA_10x6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
-        case Format::ASTC_SRGBA_10x8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
-        case Format::ASTC_SRGBA_10x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
-        case Format::ASTC_SRGBA_12x10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
-        case Format::ASTC_SRGBA_12x12: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
+        case Format::ASTC_SRGBA_4X4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
+        case Format::ASTC_SRGBA_5X4: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
+        case Format::ASTC_SRGBA_5X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
+        case Format::ASTC_SRGBA_6X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
+        case Format::ASTC_SRGBA_6X6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
+        case Format::ASTC_SRGBA_8X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
+        case Format::ASTC_SRGBA_8X6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
+        case Format::ASTC_SRGBA_8X8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
+        case Format::ASTC_SRGBA_10X5: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
+        case Format::ASTC_SRGBA_10X6: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
+        case Format::ASTC_SRGBA_10X8: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
+        case Format::ASTC_SRGBA_10X10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
+        case Format::ASTC_SRGBA_12X10: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
+        case Format::ASTC_SRGBA_12X12: return GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR;
 
         default: {
             CCASSERT(false, "Unsupported Format, convert to WebGL format failed.");
@@ -278,7 +278,7 @@ GLenum MapGLFormat(Format format) {
     }
 }
 
-GLenum MapGLType(Type type) {
+GLenum mapGLType(Type type) {
     switch (type) {
         case Type::BOOL: return GL_BOOL;
         case Type::BOOL2: return GL_BOOL_VEC2;
@@ -313,7 +313,7 @@ GLenum MapGLType(Type type) {
     }
 }
 
-Type MapType(GLenum glType) {
+Type mapType(GLenum glType) {
     switch (glType) {
         case GL_BOOL: return Type::BOOL;
         case GL_BOOL_VEC2: return Type::BOOL2;
@@ -351,7 +351,7 @@ Type MapType(GLenum glType) {
     }
 }
 
-GLenum FormatToGLType(Format format) {
+GLenum formatToGLType(Format format) {
     switch (format) {
         case Format::R8: return GL_UNSIGNED_BYTE;
         case Format::R8SN: return GL_BYTE;
@@ -446,34 +446,34 @@ GLenum FormatToGLType(Format format) {
         case Format::PVRTC2_2BPP:
         case Format::PVRTC2_4BPP:
 
-        case Format::ASTC_RGBA_4x4:
-        case Format::ASTC_RGBA_5x4:
-        case Format::ASTC_RGBA_5x5:
-        case Format::ASTC_RGBA_6x5:
-        case Format::ASTC_RGBA_6x6:
-        case Format::ASTC_RGBA_8x5:
-        case Format::ASTC_RGBA_8x6:
-        case Format::ASTC_RGBA_8x8:
-        case Format::ASTC_RGBA_10x5:
-        case Format::ASTC_RGBA_10x6:
-        case Format::ASTC_RGBA_10x8:
-        case Format::ASTC_RGBA_10x10:
-        case Format::ASTC_RGBA_12x10:
-        case Format::ASTC_RGBA_12x12:
-        case Format::ASTC_SRGBA_4x4:
-        case Format::ASTC_SRGBA_5x4:
-        case Format::ASTC_SRGBA_5x5:
-        case Format::ASTC_SRGBA_6x5:
-        case Format::ASTC_SRGBA_6x6:
-        case Format::ASTC_SRGBA_8x5:
-        case Format::ASTC_SRGBA_8x6:
-        case Format::ASTC_SRGBA_8x8:
-        case Format::ASTC_SRGBA_10x5:
-        case Format::ASTC_SRGBA_10x6:
-        case Format::ASTC_SRGBA_10x8:
-        case Format::ASTC_SRGBA_10x10:
-        case Format::ASTC_SRGBA_12x10:
-        case Format::ASTC_SRGBA_12x12:
+        case Format::ASTC_RGBA_4X4:
+        case Format::ASTC_RGBA_5X4:
+        case Format::ASTC_RGBA_5X5:
+        case Format::ASTC_RGBA_6X5:
+        case Format::ASTC_RGBA_6X6:
+        case Format::ASTC_RGBA_8X5:
+        case Format::ASTC_RGBA_8X6:
+        case Format::ASTC_RGBA_8X8:
+        case Format::ASTC_RGBA_10X5:
+        case Format::ASTC_RGBA_10X6:
+        case Format::ASTC_RGBA_10X8:
+        case Format::ASTC_RGBA_10X10:
+        case Format::ASTC_RGBA_12X10:
+        case Format::ASTC_RGBA_12X12:
+        case Format::ASTC_SRGBA_4X4:
+        case Format::ASTC_SRGBA_5X4:
+        case Format::ASTC_SRGBA_5X5:
+        case Format::ASTC_SRGBA_6X5:
+        case Format::ASTC_SRGBA_6X6:
+        case Format::ASTC_SRGBA_8X5:
+        case Format::ASTC_SRGBA_8X6:
+        case Format::ASTC_SRGBA_8X8:
+        case Format::ASTC_SRGBA_10X5:
+        case Format::ASTC_SRGBA_10X6:
+        case Format::ASTC_SRGBA_10X8:
+        case Format::ASTC_SRGBA_10X10:
+        case Format::ASTC_SRGBA_12X10:
+        case Format::ASTC_SRGBA_12X12:
             return GL_UNSIGNED_BYTE;
 
         default: {
@@ -482,7 +482,7 @@ GLenum FormatToGLType(Format format) {
     }
 }
 
-uint GLTypeSize(GLenum glType) {
+uint glTypeSize(GLenum glType) {
     switch (glType) {
         case GL_BOOL: return 4;
         case GL_BOOL_VEC2: return 8;
@@ -529,7 +529,7 @@ uint GLTypeSize(GLenum glType) {
     }
 }
 
-uint GLComponentCount(GLenum glType) {
+uint glComponentCount(GLenum glType) {
     switch (glType) {
         case GL_FLOAT_MAT2:
         case GL_FLOAT_MAT2x3:
@@ -615,7 +615,7 @@ const GLenum GL_MEMORY_ACCESS[] = {
 };
 } // namespace
 
-void GLES3CmdFuncCreateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
+void cmdFuncGLES3CreateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
     GLenum            glUsage       = (gpuBuffer->memUsage & MemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
 
@@ -695,7 +695,7 @@ void GLES3CmdFuncCreateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
     }
 }
 
-void GLES3CmdFuncDestroyBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
+void cmdFuncGLES3DestroyBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
 
     if (gpuBuffer->glBuffer) {
@@ -757,7 +757,7 @@ void GLES3CmdFuncDestroyBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
     CC_SAFE_FREE(gpuBuffer->buffer)
 }
 
-void GLES3CmdFuncResizeBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
+void cmdFuncGLES3ResizeBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
 
     GLenum glUsage = (gpuBuffer->memUsage & MemoryUsageBit::HOST ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
@@ -827,10 +827,10 @@ void GLES3CmdFuncResizeBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer) {
     }
 }
 
-void GLES3CmdFuncCreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
-    gpuTexture->glInternelFmt = MapGLInternalFormat(gpuTexture->format);
-    gpuTexture->glFormat      = MapGLFormat(gpuTexture->format);
-    gpuTexture->glType        = FormatToGLType(gpuTexture->format);
+void cmdFuncGLES3CreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
+    gpuTexture->glInternelFmt = mapGLInternalFormat(gpuTexture->format);
+    gpuTexture->glFormat      = mapGLFormat(gpuTexture->format);
+    gpuTexture->glType        = formatToGLType(gpuTexture->format);
 
     switch (gpuTexture->type) {
         case TextureType::TEX2D: {
@@ -855,7 +855,7 @@ void GLES3CmdFuncCreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
                         }
                     } else {
                         for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                            uint imgSize = FormatSize(gpuTexture->format, w, h, 1);
+                            uint imgSize = formatSize(gpuTexture->format, w, h, 1);
                             GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_2D, i, gpuTexture->glInternelFmt, w, h, 0, imgSize, nullptr));
                             w = std::max(1U, w >> 1);
                             h = std::max(1U, h >> 1);
@@ -889,7 +889,7 @@ void GLES3CmdFuncCreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
                         }
                     } else {
                         for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                            uint imgSize = FormatSize(gpuTexture->format, w, h, 1);
+                            uint imgSize = formatSize(gpuTexture->format, w, h, 1);
                             for (uint f = 0; f < 6; ++f) {
                                 GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternelFmt, w, h, 0, imgSize, nullptr));
                             }
@@ -907,7 +907,7 @@ void GLES3CmdFuncCreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
     }
 }
 
-void GLES3CmdFuncDestroyTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
+void cmdFuncGLES3DestroyTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
     if (gpuTexture->glTexture) {
         for (GLuint &glTexture : device->stateCache()->glTextures) {
             if (glTexture == gpuTexture->glTexture) {
@@ -921,10 +921,10 @@ void GLES3CmdFuncDestroyTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture
     }
 }
 
-void GLES3CmdFuncResizeTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
-    gpuTexture->glInternelFmt = MapGLInternalFormat(gpuTexture->format);
-    gpuTexture->glFormat      = MapGLFormat(gpuTexture->format);
-    gpuTexture->glType        = FormatToGLType(gpuTexture->format);
+void cmdFuncGLES3ResizeTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
+    gpuTexture->glInternelFmt = mapGLInternalFormat(gpuTexture->format);
+    gpuTexture->glFormat      = mapGLFormat(gpuTexture->format);
+    gpuTexture->glType        = formatToGLType(gpuTexture->format);
 
     switch (gpuTexture->type) {
         case TextureType::TEX2D: {
@@ -945,7 +945,7 @@ void GLES3CmdFuncResizeTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
                     }
                 } else {
                     for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                        uint imgSize = FormatSize(gpuTexture->format, w, h, 1);
+                        uint imgSize = formatSize(gpuTexture->format, w, h, 1);
                         GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_2D, i, gpuTexture->glInternelFmt, w, h, 0, imgSize, nullptr));
                         w = std::max(1U, w >> 1);
                         h = std::max(1U, h >> 1);
@@ -977,7 +977,7 @@ void GLES3CmdFuncResizeTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
                         uint w = gpuTexture->width;
                         uint h = gpuTexture->height;
                         for (uint i = 0; i < gpuTexture->mipLevel; ++i) {
-                            uint imgSize = FormatSize(gpuTexture->format, w, h, 1);
+                            uint imgSize = formatSize(gpuTexture->format, w, h, 1);
                             GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternelFmt, w, h, 0, imgSize, nullptr));
                             w = std::max(1U, w >> 1);
                             h = std::max(1U, h >> 1);
@@ -993,7 +993,7 @@ void GLES3CmdFuncResizeTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
     }
 }
 
-void GLES3CmdFuncCreateSampler(GLES3Device * /*device*/, GLES3GPUSampler *gpuSampler) {
+void cmdFuncGLES3CreateSampler(GLES3Device * /*device*/, GLES3GPUSampler *gpuSampler) {
     GL_CHECK(glGenSamplers(1, &gpuSampler->glSampler));
     if (gpuSampler->minFilter == Filter::LINEAR || gpuSampler->minFilter == Filter::ANISOTROPIC) {
         if (gpuSampler->mipFilter == Filter::LINEAR || gpuSampler->mipFilter == Filter::ANISOTROPIC) {
@@ -1031,7 +1031,7 @@ void GLES3CmdFuncCreateSampler(GLES3Device * /*device*/, GLES3GPUSampler *gpuSam
     GL_CHECK(glSamplerParameterf(gpuSampler->glSampler, GL_TEXTURE_MAX_LOD, 1000.F));
 }
 
-void GLES3CmdFuncDestroySampler(GLES3Device *device, GLES3GPUSampler *gpuSampler) {
+void cmdFuncGLES3DestroySampler(GLES3Device *device, GLES3GPUSampler *gpuSampler) {
     if (gpuSampler->glSampler) {
         for (GLuint &glSampler : device->stateCache()->glSamplers) {
             if (glSampler == gpuSampler->glSampler) {
@@ -1043,7 +1043,7 @@ void GLES3CmdFuncDestroySampler(GLES3Device *device, GLES3GPUSampler *gpuSampler
     }
 }
 
-void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
+void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
     GLenum glShaderStage = 0;
     String shaderStageStr;
     GLint  status;
@@ -1162,7 +1162,7 @@ void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
         GL_CHECK(gpuInput.glLoc = glGetAttribLocation(gpuShader->glProgram, glName));
         gpuInput.binding = gpuInput.glLoc;
         gpuInput.name    = glName;
-        gpuInput.type    = MapType(glType);
+        gpuInput.type    = mapType(glType);
         gpuInput.count   = glSize;
         gpuInput.size    = gpuInput.stride * gpuInput.count;
         gpuInput.glType  = glType;
@@ -1244,7 +1244,7 @@ void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
             gpuSamplerTexture.name                           = samplerTexture.name;
             gpuSamplerTexture.type                           = samplerTexture.type;
             gpuSamplerTexture.count                          = samplerTexture.count;
-            gpuSamplerTexture.glType                         = MapGLType(gpuSamplerTexture.type);
+            gpuSamplerTexture.glType                         = mapGLType(gpuSamplerTexture.type);
             gpuSamplerTexture.glLoc                          = -1;
         }
     }
@@ -1358,7 +1358,7 @@ void GLES3CmdFuncCreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
     }
 }
 
-void GLES3CmdFuncDestroyShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
+void cmdFuncGLES3DestroyShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
     if (gpuShader->glProgram) {
         if (device->stateCache()->glProgram == gpuShader->glProgram) {
@@ -1371,7 +1371,7 @@ void GLES3CmdFuncDestroyShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
     }
 }
 
-void GLES3CmdFuncCreateInputAssembler(GLES3Device *device, GLES3GPUInputAssembler *gpuInputAssembler) {
+void cmdFuncGLES3CreateInputAssembler(GLES3Device *device, GLES3GPUInputAssembler *gpuInputAssembler) {
 
     if (gpuInputAssembler->gpuIndexBuffer) {
         switch (gpuInputAssembler->gpuIndexBuffer->stride) {
@@ -1393,10 +1393,10 @@ void GLES3CmdFuncCreateInputAssembler(GLES3Device *device, GLES3GPUInputAssemble
         auto *   gpuVB        = static_cast<GLES3GPUBuffer *>(gpuInputAssembler->gpuVertexBuffers[attrib.stream]);
 
         gpuAttribute.name           = attrib.name;
-        gpuAttribute.glType         = FormatToGLType(attrib.format);
+        gpuAttribute.glType         = formatToGLType(attrib.format);
         gpuAttribute.size           = GFX_FORMAT_INFOS[static_cast<int>(attrib.format)].size;
         gpuAttribute.count          = GFX_FORMAT_INFOS[static_cast<int>(attrib.format)].count;
-        gpuAttribute.componentCount = GLComponentCount(gpuAttribute.glType);
+        gpuAttribute.componentCount = glComponentCount(gpuAttribute.glType);
         gpuAttribute.isNormalized   = attrib.isNormalized;
         gpuAttribute.isInstanced    = attrib.isInstanced;
         gpuAttribute.offset         = streamOffsets[attrib.stream];
@@ -1409,7 +1409,7 @@ void GLES3CmdFuncCreateInputAssembler(GLES3Device *device, GLES3GPUInputAssemble
     }
 }
 
-void GLES3CmdFuncDestroyInputAssembler(GLES3Device *device, GLES3GPUInputAssembler *gpuInputAssembler) {
+void cmdFuncGLES3DestroyInputAssembler(GLES3Device *device, GLES3GPUInputAssembler *gpuInputAssembler) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
     for (auto it = gpuInputAssembler->glVAOs.begin(); it != gpuInputAssembler->glVAOs.end(); ++it) {
         if (device->stateCache()->glVAO == it->second) {
@@ -1422,7 +1422,7 @@ void GLES3CmdFuncDestroyInputAssembler(GLES3Device *device, GLES3GPUInputAssembl
     gpuInputAssembler->glVAOs.clear();
 }
 
-void GLES3CmdFuncCreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO) {
+void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO) {
     size_t colorViewCount        = gpuFBO->gpuColorTextures.size();
     uint   swapchainImageIndices = 0;
     for (size_t i = 0; i < colorViewCount; ++i) {
@@ -1498,7 +1498,7 @@ void GLES3CmdFuncCreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpu
     }
 }
 
-void GLES3CmdFuncDestroyFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO) {
+void cmdFuncGLES3DestroyFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO) {
     if (gpuFBO->isOffscreen) {
         if (gpuFBO->glFramebuffer) {
             if (device->stateCache()->glDrawFramebuffer == gpuFBO->glFramebuffer) {
@@ -1511,7 +1511,7 @@ void GLES3CmdFuncDestroyFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gp
     }
 }
 
-void GLES3CmdFuncBeginRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRenderPass, GLES3GPUFramebuffer *gpuFramebuffer, const Rect &renderArea, size_t numClearColors, const Color *clearColors, float clearDepth, int clearStencil) {
+void cmdFuncGLES3BeginRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRenderPass, GLES3GPUFramebuffer *gpuFramebuffer, const Rect &renderArea, size_t numClearColors, const Color *clearColors, float clearDepth, int clearStencil) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
     gfxStateCache.gpuRenderPass     = gpuRenderPass;
     gfxStateCache.gpuFramebuffer    = gpuFramebuffer;
@@ -1672,7 +1672,7 @@ void GLES3CmdFuncBeginRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRen
     }
 }
 
-void GLES3CmdFuncEndRenderPass(GLES3Device *device) {
+void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
     GLES3ObjectCache &   gfxStateCache      = device->stateCache()->gfxStateCache;
     size_t               numClearColors     = gfxStateCache.numClearColors;
     GLES3GPURenderPass * gpuRenderPass      = gfxStateCache.gpuRenderPass;
@@ -1731,7 +1731,7 @@ void GLES3CmdFuncEndRenderPass(GLES3Device *device) {
     }
 }
 
-void GLES3CmdFuncBindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipelineState, GLES3GPUInputAssembler *gpuInputAssembler,
+void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipelineState, GLES3GPUInputAssembler *gpuInputAssembler,
                            vector<GLES3GPUDescriptorSet *> &gpuDescriptorSets, vector<uint> &dynamicOffsets, Viewport &viewport, Rect &scissor,
                            float lineWidth, bool depthBiasEnabled, GLES3DepthBias &depthBias, Color & /*blendConstants*/, GLES3DepthBounds & /*depthBounds*/,
                            GLES3StencilWriteMask &stencilWriteMask, GLES3StencilCompareMask &stencilCompareMask) {
@@ -2281,7 +2281,7 @@ void GLES3CmdFuncBindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
     }
 }
 
-void GLES3CmdFuncDraw(GLES3Device *device, const DrawInfo &drawInfo) {
+void cmdFuncGLES3Draw(GLES3Device *device, const DrawInfo &drawInfo) {
     GLES3ObjectCache &      gfxStateCache     = device->stateCache()->gfxStateCache;
     GLES3GPUPipelineState * gpuPipelineState  = gfxStateCache.gpuPipelineState;
     GLES3GPUInputAssembler *gpuInputAssembler = gfxStateCache.gpuInputAssembler;
@@ -2331,7 +2331,7 @@ void GLES3CmdFuncDraw(GLES3Device *device, const DrawInfo &drawInfo) {
     }
 }
 
-void GLES3CmdFuncDispatch(GLES3Device *device, const GLES3GPUDispatchInfo &info) {
+void cmdFuncGLES3Dispatch(GLES3Device *device, const GLES3GPUDispatchInfo &info) {
     GLES3GPUStateCache *cache = device->stateCache();
     if (info.indirectBuffer) {
         if (cache->glDispatchIndirectBuffer != info.indirectBuffer->glBuffer) {
@@ -2344,12 +2344,12 @@ void GLES3CmdFuncDispatch(GLES3Device *device, const GLES3GPUDispatchInfo &info)
     }
 }
 
-void GLES3CmdFuncMemoryBarrier(GLES3Device * /*device*/, GLbitfield barriers, GLbitfield barriersByRegion) {
+void cmdFuncGLES3MemoryBarrier(GLES3Device * /*device*/, GLbitfield barriers, GLbitfield barriersByRegion) {
     if (barriers) glMemoryBarrier(barriers);
     if (barriersByRegion) glMemoryBarrierByRegion(barriersByRegion);
 }
 
-void GLES3CmdFuncUpdateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer, const void *buffer, uint offset, uint size) {
+void cmdFuncGLES3UpdateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer, const void *buffer, uint offset, uint size) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
     if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
         memcpy(reinterpret_cast<uint8_t *>(gpuBuffer->indirects.data()) + offset, buffer, size);
@@ -2406,7 +2406,7 @@ void GLES3CmdFuncUpdateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer, co
     }
 }
 
-void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const *buffers, GLES3GPUTexture *gpuTexture, const BufferTextureCopy *regions, uint count) {
+void cmdFuncGLES3CopyBuffersToTexture(GLES3Device *device, const uint8_t *const *buffers, GLES3GPUTexture *gpuTexture, const BufferTextureCopy *regions, uint count) {
     GLuint &glTexture = device->stateCache()->glTextures[device->stateCache()->texUint];
     if (glTexture != gpuTexture->glTexture) {
         GL_CHECK(glBindTexture(gpuTexture->glTarget, gpuTexture->glTexture));
@@ -2426,7 +2426,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const 
                 h                               = region.texExtent.height;
                 const uint8_t *buff             = buffers[n++];
                 if (isCompressed) {
-                    auto memSize = static_cast<GLsizei>(FormatSize(gpuTexture->format, w, h, 1));
+                    auto memSize = static_cast<GLsizei>(formatSize(gpuTexture->format, w, h, 1));
                     GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_2D,
                                                        region.texSubres.mipLevel,
                                                        region.texOffset.x,
@@ -2461,7 +2461,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const 
                     h                   = region.texExtent.height;
                     const uint8_t *buff = buffers[n++];
                     if (isCompressed) {
-                        auto memSize = static_cast<GLsizei>(FormatSize(gpuTexture->format, w, h, 1));
+                        auto memSize = static_cast<GLsizei>(formatSize(gpuTexture->format, w, h, 1));
                         GL_CHECK(glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY,
                                                            region.texSubres.mipLevel,
                                                            region.texOffset.x,
@@ -2497,7 +2497,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const 
                 d                               = region.texExtent.depth;
                 const uint8_t *buff             = buffers[n++];
                 if (isCompressed) {
-                    auto memSize = static_cast<GLsizei>(FormatSize(gpuTexture->format, w, h, 1));
+                    auto memSize = static_cast<GLsizei>(formatSize(gpuTexture->format, w, h, 1));
                     GL_CHECK(glCompressedTexSubImage3D(GL_TEXTURE_3D,
                                                        region.texSubres.mipLevel,
                                                        region.texOffset.x,
@@ -2533,7 +2533,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const 
                     h                   = region.texExtent.height;
                     const uint8_t *buff = buffers[n++];
                     if (isCompressed) {
-                        auto memSize = static_cast<GLsizei>(FormatSize(gpuTexture->format, w, h, 1));
+                        auto memSize = static_cast<GLsizei>(formatSize(gpuTexture->format, w, h, 1));
                         GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f,
                                                            region.texSubres.mipLevel,
                                                            region.texOffset.x,
@@ -2568,7 +2568,7 @@ void GLES3CmdFuncCopyBuffersToTexture(GLES3Device *device, const uint8_t *const 
     }
 }
 
-void GLES3CmdFuncBlitTexture(GLES3Device *device, GLES3GPUTexture *gpuTextureSrc, GLES3GPUTexture *gpuTextureDst, const TextureBlit *regions, uint count, Filter filter) {
+void cmdFuncGLES3BlitTexture(GLES3Device *device, GLES3GPUTexture *gpuTextureSrc, GLES3GPUTexture *gpuTextureDst, const TextureBlit *regions, uint count, Filter filter) {
     GLES3GPUStateCache *cache = device->stateCache();
 
     GLbitfield        mask = 0U;
@@ -2612,7 +2612,7 @@ void GLES3CmdFuncBlitTexture(GLES3Device *device, GLES3GPUTexture *gpuTextureSrc
     }
 }
 
-void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
+void cmdFuncGLES3ExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
     if (!cmdPackage->cmds.size()) return;
 
     static uint cmdIndices[static_cast<int>(GLESCmdType::COUNT)] = {0};
@@ -2625,46 +2625,46 @@ void GLES3CmdFuncExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
         switch (cmdType) {
             case GLESCmdType::BEGIN_RENDER_PASS: {
                 GLES3CmdBeginRenderPass *cmd = cmdPackage->beginRenderPassCmds[cmdIdx];
-                GLES3CmdFuncBeginRenderPass(device, cmd->gpuRenderPass, cmd->gpuFBO, cmd->renderArea, cmd->numClearColors, cmd->clearColors, cmd->clearDepth, cmd->clearStencil);
+                cmdFuncGLES3BeginRenderPass(device, cmd->gpuRenderPass, cmd->gpuFBO, cmd->renderArea, cmd->numClearColors, cmd->clearColors, cmd->clearDepth, cmd->clearStencil);
                 break;
             }
             case GLESCmdType::END_RENDER_PASS: {
-                GLES3CmdFuncEndRenderPass(device);
+                cmdFuncGLES3EndRenderPass(device);
                 break;
             }
             case GLESCmdType::BIND_STATES: {
                 GLES3CmdBindStates *cmd = cmdPackage->bindStatesCmds[cmdIdx];
-                GLES3CmdFuncBindState(device, cmd->gpuPipelineState, cmd->gpuInputAssembler, cmd->gpuDescriptorSets, cmd->dynamicOffsets, cmd->viewport, cmd->scissor, cmd->lineWidth, cmd->depthBiasEnabled, cmd->depthBias, cmd->blendConstants, cmd->depthBounds, cmd->stencilWriteMask, cmd->stencilCompareMask);
+                cmdFuncGLES3BindState(device, cmd->gpuPipelineState, cmd->gpuInputAssembler, cmd->gpuDescriptorSets, cmd->dynamicOffsets, cmd->viewport, cmd->scissor, cmd->lineWidth, cmd->depthBiasEnabled, cmd->depthBias, cmd->blendConstants, cmd->depthBounds, cmd->stencilWriteMask, cmd->stencilCompareMask);
                 break;
             }
             case GLESCmdType::DRAW: {
                 GLES3CmdDraw *cmd = cmdPackage->drawCmds[cmdIdx];
-                GLES3CmdFuncDraw(device, cmd->drawInfo);
+                cmdFuncGLES3Draw(device, cmd->drawInfo);
                 break;
             }
             case GLESCmdType::DISPATCH: {
                 GLES3CmdDispatch *cmd = cmdPackage->dispatchCmds[cmdIdx];
-                GLES3CmdFuncDispatch(device, cmd->dispatchInfo);
+                cmdFuncGLES3Dispatch(device, cmd->dispatchInfo);
                 break;
             }
             case GLESCmdType::BARRIER: {
                 GLES3CmdBarrier *cmd = cmdPackage->barrierCmds[cmdIdx];
-                GLES3CmdFuncMemoryBarrier(device, cmd->barriers, cmd->barriersByRegion);
+                cmdFuncGLES3MemoryBarrier(device, cmd->barriers, cmd->barriersByRegion);
                 break;
             }
             case GLESCmdType::UPDATE_BUFFER: {
                 GLES3CmdUpdateBuffer *cmd = cmdPackage->updateBufferCmds[cmdIdx];
-                GLES3CmdFuncUpdateBuffer(device, cmd->gpuBuffer, cmd->buffer, cmd->offset, cmd->size);
+                cmdFuncGLES3UpdateBuffer(device, cmd->gpuBuffer, cmd->buffer, cmd->offset, cmd->size);
                 break;
             }
             case GLESCmdType::COPY_BUFFER_TO_TEXTURE: {
                 GLES3CmdCopyBufferToTexture *cmd = cmdPackage->copyBufferToTextureCmds[cmdIdx];
-                GLES3CmdFuncCopyBuffersToTexture(device, cmd->buffers, cmd->gpuTexture, cmd->regions, cmd->count);
+                cmdFuncGLES3CopyBuffersToTexture(device, cmd->buffers, cmd->gpuTexture, cmd->regions, cmd->count);
                 break;
             }
             case GLESCmdType::BLIT_TEXTURE: {
                 GLES3CmdBlitTexture *cmd = cmdPackage->blitTextureCmds[cmdIdx];
-                GLES3CmdFuncBlitTexture(device, cmd->gpuTextureSrc, cmd->gpuTextureDst, cmd->regions, cmd->count, cmd->filter);
+                cmdFuncGLES3BlitTexture(device, cmd->gpuTextureSrc, cmd->gpuTextureDst, cmd->regions, cmd->count, cmd->filter);
                 break;
             }
             default:

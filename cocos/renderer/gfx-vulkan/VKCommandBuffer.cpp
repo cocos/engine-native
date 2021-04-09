@@ -49,7 +49,7 @@ CCVKCommandBuffer::~CCVKCommandBuffer() {
 
 void CCVKCommandBuffer::doInit(const CommandBufferInfo & /*info*/) {
     _gpuCommandBuffer                   = CC_NEW(CCVKGPUCommandBuffer);
-    _gpuCommandBuffer->level            = MapVkCommandBufferLevel(_type);
+    _gpuCommandBuffer->level            = mapVkCommandBufferLevel(_type);
     _gpuCommandBuffer->queueFamilyIndex = static_cast<CCVKQueue *>(_queue)->gpuQueue()->queueFamilyIndex;
 
     size_t setCount = CCVKDevice::getInstance()->bindingMappingInfo().bufferOffsets.size();
@@ -427,11 +427,11 @@ void CCVKCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint count) {
 
 void CCVKCommandBuffer::updateBuffer(Buffer *buffer, const void *data, uint size) {
     CCVKGPUBuffer *gpuBuffer = static_cast<CCVKBuffer *>(buffer)->gpuBuffer();
-    CCVKCmdFuncUpdateBuffer(CCVKDevice::getInstance(), gpuBuffer, data, size, _gpuCommandBuffer);
+    cmdFuncCCVKUpdateBuffer(CCVKDevice::getInstance(), gpuBuffer, data, size, _gpuCommandBuffer);
 }
 
 void CCVKCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
-    CCVKCmdFuncCopyBuffersToTexture(CCVKDevice::getInstance(), buffers, static_cast<CCVKTexture *>(texture)->gpuTexture(), regions, count, _gpuCommandBuffer);
+    cmdFuncCCVKCopyBuffersToTexture(CCVKDevice::getInstance(), buffers, static_cast<CCVKTexture *>(texture)->gpuTexture(), regions, count, _gpuCommandBuffer);
 }
 
 void CCVKCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {

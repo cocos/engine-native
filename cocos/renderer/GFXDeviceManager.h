@@ -81,7 +81,7 @@ public:
     }
 
     static void destroy() {
-        CC_SAFE_DESTROY(Device::_instance);
+        CC_SAFE_DESTROY(Device::instance);
     }
 
 private:

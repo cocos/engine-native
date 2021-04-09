@@ -53,7 +53,7 @@ void CCVKBuffer::doInit(const BufferInfo & /*info*/) {
         _gpuBuffer->indirectCmds.resize(drawInfoCount);
     }
 
-    CCVKCmdFuncCreateBuffer(CCVKDevice::getInstance(), _gpuBuffer);
+    cmdFuncCCVKCreateBuffer(CCVKDevice::getInstance(), _gpuBuffer);
 
     _gpuBufferView = CC_NEW(CCVKGPUBufferView);
     createBufferView();
@@ -96,7 +96,7 @@ void CCVKBuffer::doResize(uint size, uint count) {
 
     _gpuBuffer->size = size;
     _gpuBuffer->count = count;
-    CCVKCmdFuncCreateBuffer(CCVKDevice::getInstance(), _gpuBuffer);
+    cmdFuncCCVKCreateBuffer(CCVKDevice::getInstance(), _gpuBuffer);
 
     createBufferView();
 
@@ -108,7 +108,7 @@ void CCVKBuffer::doResize(uint size, uint count) {
 }
 
 void CCVKBuffer::update(void *buffer, uint size) {
-    CCVKCmdFuncUpdateBuffer(CCVKDevice::getInstance(), _gpuBuffer, buffer, size, nullptr);
+    cmdFuncCCVKUpdateBuffer(CCVKDevice::getInstance(), _gpuBuffer, buffer, size, nullptr);
 }
 
 } // namespace gfx

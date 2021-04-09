@@ -49,45 +49,47 @@
 namespace cc {
 namespace gfx {
 
-extern VkFormat MapVkFormat(Format format);
-extern VkAttachmentLoadOp MapVkLoadOp(LoadOp loadOp);
-extern VkAttachmentStoreOp MapVkStoreOp(StoreOp storeOp);
-extern VkBufferUsageFlagBits MapVkBufferUsageFlagBits(BufferUsage usage);
-extern VkImageType MapVkImageType(TextureType type);
-extern VkSampleCountFlagBits MapVkSampleCount(SampleCount count);
-extern VkFormatFeatureFlags MapVkFormatFeatureFlags(TextureUsage usage);
-extern VkImageUsageFlagBits MapVkImageUsageFlagBits(TextureUsage usage);
-extern VkImageAspectFlags MapVkImageAspectFlags(Format format);
-extern VkImageCreateFlags MapVkImageCreateFlags(TextureType type);
-extern VkImageViewType MapVkImageViewType(TextureType viewType);
-extern VkCommandBufferLevel MapVkCommandBufferLevel(CommandBufferType type);
-extern VkDescriptorType MapVkDescriptorType(DescriptorType type);
-extern VkColorComponentFlags MapVkColorComponentFlags(ColorMask colorMask);
-extern VkShaderStageFlagBits MapVkShaderStageFlagBits(ShaderStageFlagBit stage);
-extern VkShaderStageFlags MapVkShaderStageFlags(ShaderStageFlagBit stages);
-extern SurfaceTransform MapSurfaceTransform(VkSurfaceTransformFlagBitsKHR transform);
-extern String MapVendorName(uint32_t vendorID);
-extern void MapDepthStencilBits(Format format, uint &depthBits, uint &stencilBits);
-extern const VkSurfaceTransformFlagsKHR TRANSFORMS_THAT_REQUIRE_FLIPPING;
-extern const VkPrimitiveTopology VK_PRIMITIVE_MODES[];
-extern const VkCullModeFlags VK_CULL_MODES[];
-extern const VkPolygonMode VK_POLYGON_MODES[];
-extern const VkCompareOp VK_CMP_FUNCS[];
-extern const VkStencilOp VK_STENCIL_OPS[];
-extern const VkBlendOp VK_BLEND_OPS[];
-extern const VkBlendFactor VK_BLEND_FACTORS[];
-extern const VkFilter VK_FILTERS[];
-extern const VkSamplerMipmapMode VK_SAMPLER_MIPMAP_MODES[];
-extern const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODES[];
-extern const VkPipelineBindPoint VK_PIPELINE_BIND_POINTS[];
-extern const ThsvsAccessType THSVS_ACCESS_TYPES[];
-extern const VkImageLayout VK_IMAGE_LAYOUTS[];
-extern const VkAccessFlags FULL_ACCESS_FLAGS;
-extern void fullPipelineBarrier(VkCommandBuffer cmdBuff);
+extern VkFormat              mapVkFormat(Format format);
+extern VkAttachmentLoadOp    mapVkLoadOp(LoadOp loadOp);
+extern VkAttachmentStoreOp   mapVkStoreOp(StoreOp storeOp);
+extern VkBufferUsageFlagBits mapVkBufferUsageFlagBits(BufferUsage usage);
+extern VkImageType           mapVkImageType(TextureType type);
+extern VkSampleCountFlagBits mapVkSampleCount(SampleCount count);
+extern VkFormatFeatureFlags  mapVkFormatFeatureFlags(TextureUsage usage);
+extern VkImageUsageFlagBits  mapVkImageUsageFlagBits(TextureUsage usage);
+extern VkImageAspectFlags    mapVkImageAspectFlags(Format format);
+extern VkImageCreateFlags    mapVkImageCreateFlags(TextureType type);
+extern VkImageViewType       mapVkImageViewType(TextureType viewType);
+extern VkCommandBufferLevel  mapVkCommandBufferLevel(CommandBufferType type);
+extern VkDescriptorType      mapVkDescriptorType(DescriptorType type);
+extern VkColorComponentFlags mapVkColorComponentFlags(ColorMask colorMask);
+extern VkShaderStageFlagBits mapVkShaderStageFlagBits(ShaderStageFlagBit stage);
+extern VkShaderStageFlags    mapVkShaderStageFlags(ShaderStageFlagBit stages);
+extern SurfaceTransform      mapSurfaceTransform(VkSurfaceTransformFlagBitsKHR transform);
+extern String                mapVendorName(uint32_t vendorID);
+extern void                  mapDepthStencilBits(Format format, uint &depthBits, uint &stencilBits);
+
+extern void         fullPipelineBarrier(VkCommandBuffer cmdBuff);
 extern VkDeviceSize roundUp(VkDeviceSize numToRound, uint multiple);
-extern uint nextPowerOf2(uint v);
-extern bool isLayerSupported(const char *required, const vector<VkLayerProperties> &available);
-extern bool isExtensionSupported(const char *required, const vector<VkExtensionProperties> &available);
+extern uint         nextPowerOf2(uint v);
+extern bool         isLayerSupported(const char *required, const vector<VkLayerProperties> &available);
+extern bool         isExtensionSupported(const char *required, const vector<VkExtensionProperties> &available);
+
+extern const VkSurfaceTransformFlagsKHR TRANSFORMS_THAT_REQUIRE_FLIPPING;
+extern const VkPrimitiveTopology        VK_PRIMITIVE_MODES[];
+extern const VkCullModeFlags            VK_CULL_MODES[];
+extern const VkPolygonMode              VK_POLYGON_MODES[];
+extern const VkCompareOp                VK_CMP_FUNCS[];
+extern const VkStencilOp                VK_STENCIL_OPS[];
+extern const VkBlendOp                  VK_BLEND_OPS[];
+extern const VkBlendFactor              VK_BLEND_FACTORS[];
+extern const VkFilter                   VK_FILTERS[];
+extern const VkSamplerMipmapMode        VK_SAMPLER_MIPMAP_MODES[];
+extern const VkSamplerAddressMode       VK_SAMPLER_ADDRESS_MODES[];
+extern const VkPipelineBindPoint        VK_PIPELINE_BIND_POINTS[];
+extern const ThsvsAccessType            THSVS_ACCESS_TYPES[];
+extern const VkImageLayout              VK_IMAGE_LAYOUTS[];
+extern const VkAccessFlags              FULL_ACCESS_FLAGS;
 
 template <typename T, size_t Size>
 char (*countofHelper(T (&array)[Size]))[Size];

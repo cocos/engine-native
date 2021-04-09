@@ -28,7 +28,7 @@
 namespace cc {
 namespace gfx {
 
-VkFormat MapVkFormat(Format format) {
+VkFormat mapVkFormat(Format format) {
     switch (format) {
         case Format::R8: return VK_FORMAT_R8_UNORM;
         case Format::R8SN: return VK_FORMAT_R8_SNORM;
@@ -122,35 +122,35 @@ VkFormat MapVkFormat(Format format) {
         case Format::PVRTC2_2BPP: return VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG;
         case Format::PVRTC2_4BPP: return VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG;
 
-        case Format::ASTC_RGBA_4x4: return VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
-        case Format::ASTC_RGBA_5x4: return VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
-        case Format::ASTC_RGBA_5x5: return VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
-        case Format::ASTC_RGBA_6x5: return VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
-        case Format::ASTC_RGBA_6x6: return VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
-        case Format::ASTC_RGBA_8x5: return VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
-        case Format::ASTC_RGBA_8x6: return VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
-        case Format::ASTC_RGBA_8x8: return VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
-        case Format::ASTC_RGBA_10x5: return VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
-        case Format::ASTC_RGBA_10x6: return VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
-        case Format::ASTC_RGBA_10x8: return VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
-        case Format::ASTC_RGBA_10x10: return VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
-        case Format::ASTC_RGBA_12x10: return VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
-        case Format::ASTC_RGBA_12x12: return VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
+        case Format::ASTC_RGBA_4X4: return VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
+        case Format::ASTC_RGBA_5X4: return VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
+        case Format::ASTC_RGBA_5X5: return VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
+        case Format::ASTC_RGBA_6X5: return VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
+        case Format::ASTC_RGBA_6X6: return VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
+        case Format::ASTC_RGBA_8X5: return VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
+        case Format::ASTC_RGBA_8X6: return VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
+        case Format::ASTC_RGBA_8X8: return VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
+        case Format::ASTC_RGBA_10X5: return VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
+        case Format::ASTC_RGBA_10X6: return VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
+        case Format::ASTC_RGBA_10X8: return VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
+        case Format::ASTC_RGBA_10X10: return VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
+        case Format::ASTC_RGBA_12X10: return VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
+        case Format::ASTC_RGBA_12X12: return VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
 
-        case Format::ASTC_SRGBA_4x4: return VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_5x4: return VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_5x5: return VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_6x5: return VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_6x6: return VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_8x5: return VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_8x6: return VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_8x8: return VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_10x5: return VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_10x6: return VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_10x8: return VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_10x10: return VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_12x10: return VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
-        case Format::ASTC_SRGBA_12x12: return VK_FORMAT_ASTC_12x12_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_4X4: return VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_5X4: return VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_5X5: return VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_6X5: return VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_6X6: return VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_8X5: return VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_8X6: return VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_8X8: return VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_10X5: return VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_10X6: return VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_10X8: return VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_10X10: return VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_12X10: return VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
+        case Format::ASTC_SRGBA_12X12: return VK_FORMAT_ASTC_12x12_SRGB_BLOCK;
 
         default: {
             CCASSERT(false, "Unsupported Format, convert to VkFormat failed.");
@@ -159,7 +159,7 @@ VkFormat MapVkFormat(Format format) {
     }
 }
 
-VkAttachmentLoadOp MapVkLoadOp(LoadOp loadOp) {
+VkAttachmentLoadOp mapVkLoadOp(LoadOp loadOp) {
     switch (loadOp) {
         case LoadOp::CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
         case LoadOp::LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
@@ -171,7 +171,7 @@ VkAttachmentLoadOp MapVkLoadOp(LoadOp loadOp) {
     }
 }
 
-VkAttachmentStoreOp MapVkStoreOp(StoreOp storeOp) {
+VkAttachmentStoreOp mapVkStoreOp(StoreOp storeOp) {
     switch (storeOp) {
         case StoreOp::STORE: return VK_ATTACHMENT_STORE_OP_STORE;
         case StoreOp::DISCARD: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -182,7 +182,7 @@ VkAttachmentStoreOp MapVkStoreOp(StoreOp storeOp) {
     }
 }
 
-VkBufferUsageFlagBits MapVkBufferUsageFlagBits(BufferUsage usage) {
+VkBufferUsageFlagBits mapVkBufferUsageFlagBits(BufferUsage usage) {
     uint flags = 0U;
     if (usage & BufferUsage::TRANSFER_SRC) flags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
     if (usage & BufferUsage::TRANSFER_DST) flags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
@@ -194,7 +194,7 @@ VkBufferUsageFlagBits MapVkBufferUsageFlagBits(BufferUsage usage) {
     return static_cast<VkBufferUsageFlagBits>(flags);
 }
 
-VkImageType MapVkImageType(TextureType type) {
+VkImageType mapVkImageType(TextureType type) {
     switch (type) {
         case TextureType::TEX1D:
         case TextureType::TEX1D_ARRAY: return VK_IMAGE_TYPE_1D;
@@ -209,7 +209,7 @@ VkImageType MapVkImageType(TextureType type) {
     }
 }
 
-VkSampleCountFlagBits MapVkSampleCount(SampleCount count) {
+VkSampleCountFlagBits mapVkSampleCount(SampleCount count) {
     switch (count) {
         case SampleCount::X1: return VK_SAMPLE_COUNT_1_BIT;
         case SampleCount::X2: return VK_SAMPLE_COUNT_2_BIT;
@@ -224,7 +224,7 @@ VkSampleCountFlagBits MapVkSampleCount(SampleCount count) {
     }
 }
 
-VkFormatFeatureFlags MapVkFormatFeatureFlags(TextureUsage usage) {
+VkFormatFeatureFlags mapVkFormatFeatureFlags(TextureUsage usage) {
     uint flags = 0U;
     if (usage & TextureUsage::TRANSFER_SRC) flags |= VK_FORMAT_FEATURE_TRANSFER_SRC_BIT;
     if (usage & TextureUsage::TRANSFER_DST) flags |= VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
@@ -237,7 +237,7 @@ VkFormatFeatureFlags MapVkFormatFeatureFlags(TextureUsage usage) {
     return static_cast<VkFormatFeatureFlags>(flags);
 }
 
-VkImageUsageFlagBits MapVkImageUsageFlagBits(TextureUsage usage) {
+VkImageUsageFlagBits mapVkImageUsageFlagBits(TextureUsage usage) {
     uint flags = 0U;
     if (usage & TextureUsage::TRANSFER_SRC) flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     if (usage & TextureUsage::TRANSFER_DST) flags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
@@ -250,7 +250,7 @@ VkImageUsageFlagBits MapVkImageUsageFlagBits(TextureUsage usage) {
     return static_cast<VkImageUsageFlagBits>(flags);
 }
 
-VkImageAspectFlags MapVkImageAspectFlags(Format format) {
+VkImageAspectFlags mapVkImageAspectFlags(Format format) {
     VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     const FormatInfo & info       = GFX_FORMAT_INFOS[static_cast<uint>(format)];
     if (info.hasDepth) {
@@ -262,7 +262,7 @@ VkImageAspectFlags MapVkImageAspectFlags(Format format) {
     return aspectMask;
 }
 
-VkImageCreateFlags MapVkImageCreateFlags(TextureType type) {
+VkImageCreateFlags mapVkImageCreateFlags(TextureType type) {
     uint res = 0U;
     switch (type) {
         case TextureType::CUBE: res |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; break;
@@ -272,7 +272,7 @@ VkImageCreateFlags MapVkImageCreateFlags(TextureType type) {
     return static_cast<VkImageCreateFlags>(res);
 }
 
-VkImageViewType MapVkImageViewType(TextureType viewType) {
+VkImageViewType mapVkImageViewType(TextureType viewType) {
     switch (viewType) {
         case TextureType::TEX1D: return VK_IMAGE_VIEW_TYPE_1D;
         case TextureType::TEX1D_ARRAY: return VK_IMAGE_VIEW_TYPE_1D_ARRAY;
@@ -287,7 +287,7 @@ VkImageViewType MapVkImageViewType(TextureType viewType) {
     }
 }
 
-VkCommandBufferLevel MapVkCommandBufferLevel(CommandBufferType type) {
+VkCommandBufferLevel mapVkCommandBufferLevel(CommandBufferType type) {
     switch (type) {
         case CommandBufferType::PRIMARY: return VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         case CommandBufferType::SECONDARY: return VK_COMMAND_BUFFER_LEVEL_SECONDARY;
@@ -298,7 +298,7 @@ VkCommandBufferLevel MapVkCommandBufferLevel(CommandBufferType type) {
     }
 }
 
-VkDescriptorType MapVkDescriptorType(DescriptorType type) {
+VkDescriptorType mapVkDescriptorType(DescriptorType type) {
     switch (type) {
         case DescriptorType::DYNAMIC_UNIFORM_BUFFER: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         case DescriptorType::UNIFORM_BUFFER: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -316,7 +316,7 @@ VkDescriptorType MapVkDescriptorType(DescriptorType type) {
     }
 }
 
-VkColorComponentFlags MapVkColorComponentFlags(ColorMask colorMask) {
+VkColorComponentFlags mapVkColorComponentFlags(ColorMask colorMask) {
     uint flags = 0U;
     if (colorMask & ColorMask::R) flags |= VK_COLOR_COMPONENT_R_BIT;
     if (colorMask & ColorMask::G) flags |= VK_COLOR_COMPONENT_G_BIT;
@@ -326,7 +326,7 @@ VkColorComponentFlags MapVkColorComponentFlags(ColorMask colorMask) {
     return static_cast<VkColorComponentFlags>(flags);
 }
 
-VkShaderStageFlagBits MapVkShaderStageFlagBits(ShaderStageFlagBit stage) {
+VkShaderStageFlagBits mapVkShaderStageFlagBits(ShaderStageFlagBit stage) {
     switch (stage) {
         case ShaderStageFlagBit::VERTEX: return VK_SHADER_STAGE_VERTEX_BIT;
         case ShaderStageFlagBit::CONTROL: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
@@ -341,7 +341,7 @@ VkShaderStageFlagBits MapVkShaderStageFlagBits(ShaderStageFlagBit stage) {
     }
 }
 
-VkShaderStageFlags MapVkShaderStageFlags(ShaderStageFlagBit stages) {
+VkShaderStageFlags mapVkShaderStageFlags(ShaderStageFlagBit stages) {
     uint flags = 0U;
     if (stages & ShaderStageFlagBit::VERTEX) flags |= VK_SHADER_STAGE_VERTEX_BIT;
     if (stages & ShaderStageFlagBit::CONTROL) flags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
@@ -352,14 +352,14 @@ VkShaderStageFlags MapVkShaderStageFlags(ShaderStageFlagBit stages) {
     return static_cast<VkShaderStageFlags>(flags);
 }
 
-SurfaceTransform MapSurfaceTransform(VkSurfaceTransformFlagBitsKHR transform) {
+SurfaceTransform mapSurfaceTransform(VkSurfaceTransformFlagBitsKHR transform) {
     if (transform & VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR) return SurfaceTransform::ROTATE_90;
     if (transform & VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR) return SurfaceTransform::ROTATE_180;
     if (transform & VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR) return SurfaceTransform::ROTATE_270;
     return SurfaceTransform::IDENTITY;
 }
 
-String MapVendorName(uint32_t vendorID) {
+String mapVendorName(uint32_t vendorID) {
     switch (vendorID) {
         case 0x1002: return "Advanced Micro Devices, Inc.";
         case 0x1010: return "Imagination Technologies";
@@ -372,7 +372,7 @@ String MapVendorName(uint32_t vendorID) {
     return StringUtil::format("Unknown VendorID %d", vendorID);
 }
 
-void MapDepthStencilBits(Format format, uint &depthBits, uint &stencilBits) {
+void mapDepthStencilBits(Format format, uint &depthBits, uint &stencilBits) {
     switch (format) {
         case Format::D16:
             depthBits   = 16;

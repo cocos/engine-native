@@ -413,7 +413,7 @@ void CCMTLCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Tex
         auto h = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
         bufferSize[i] = w * h;
         stagingRegion.sourceBytesPerRow = mu::getBytesPerRow(convertedFormat, w);
-        stagingRegion.sourceBytesPerImage = FormatSize(convertedFormat, w, h, region.texExtent.depth);
+        stagingRegion.sourceBytesPerImage = formatSize(convertedFormat, w, h, region.texExtent.depth);
         stagingRegion.sourceSize = {w, h, region.texExtent.depth};
         stagingRegion.destinationSlice = region.texSubres.baseArrayLayer;
         stagingRegion.destinationLevel = region.texSubres.mipLevel;
