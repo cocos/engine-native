@@ -435,7 +435,7 @@ Foo x(2);   // fine, 2 is a constant expression and the chosen constructor is co
 Foo a[] = { Foo(1), Foo(2), Foo(3) };  // fine
 ```
 
-Constant initialization is always allowed. Constant initialization of static storage duration variables should be marked with constexpr or where possible the [ABSL_CONST_INIT](https://github.com/abseil/abseil-cpp/blob/03c1513538584f4a04d666be5eb469e3979febba/absl/base/attributes.h#L540) attribute. Any non-local static storage duration variable that is not so marked should be presumed to have dynamic initialization, and reviewed very carefully.
+Constant initialization is always allowed. Constant initialization of static storage duration variables should be marked with constexpr. Any non-local static storage duration variable that is not so marked should be presumed to have dynamic initialization, and reviewed very carefully.
 
 By contrast, the following initializations are problematic:
 ```c++
@@ -462,14 +462,14 @@ Dynamic initialization of static local variables is allowed (and common).
 ### Common patterns
 
 - Global strings: if you require a global or static string constant, consider using a simple character array, or a char pointer to the first element of a string literal. String literals have static storage duration already and are usually sufficient.
-- Maps, sets, and other dynamic containers: if you require a static, fixed collection, such as a set to search against or a lookup table, you cannot use the dynamic containers from the standard library as a static variable, since they have non-trivial destructors. Instead, consider a simple array of trivial types, e.g., an array of arrays of ints (for a "map from int to int"), or an array of pairs (e.g., pairs of `int` and `const char*`). For small collections, linear search is entirely sufficient (and efficient, due to memory locality); consider using the facilities from absl/algorithm/container.h for the standard operations. If necessary, keep the collection in sorted order and use a binary search algorithm. If you do really prefer a dynamic container from the standard library, consider using a function-local static pointer, as described below.
+- Maps, sets, and other dynamic containers: if you require a static, fixed collection, such as a set to search against or a lookup table, you cannot use the dynamic containers from the standard library as a static variable, since they have non-trivial destructors. Instead, consider a simple array of trivial types, e.g., an array of arrays of ints (for a "map from int to int"), or an array of pairs (e.g., pairs of `int` and `const char*`). For small collections, linear search is entirely sufficient (and efficient, due to memory locality). If necessary, keep the collection in sorted order and use a binary search algorithm. If you do really prefer a dynamic container from the standard library, consider using a function-local static pointer, as described below.
 - Static variables of custom types: if you require static, constant data of a type that you need to define yourself, give the type a trivial destructor and a constexpr constructor.
 - If all else fails, you can create an object dynamically and never delete it by using a function-local static pointer or reference (e.g., `static const auto& impl = *new T(args...);`).
 
 
 ## thread_local variables
 
-thread_local variables that aren't declared inside a function must be initialized with a true compile-time constant, and this must be enforced by using the [ABSL_CONST_INIT](https://github.com/abseil/abseil-cpp/blob/master/absl/base/attributes.h) attribute. Prefer thread_local over other ways of defining thread-local data.
+thread_local variables that aren't declared inside a function must be initialized with a true compile-time constant. Prefer thread_local over other ways of defining thread-local data.
 
 **Definition:**
 
@@ -506,10 +506,7 @@ Foo& MyThreadLocalFoo() {
 }
 ```
 
-thread_local variables at class or namespace scope must be initialized with a true compile-time constant (i.e., they must have no dynamic initialization). To enforce this, thread_local variables at class or namespace scope must be annotated with [ABSL_CONST_INIT](https://github.com/abseil/abseil-cpp/blob/master/absl/base/attributes.h) (or constexpr, but that should be rare):
-```c++
-ABSL_CONST_INIT thread_local Foo foo = ...;
-```
+thread_local variables at class or namespace scope must be initialized with a true compile-time constant (i.e., they must have no dynamic initialization).
 
 thread_local should be preferred over other mechanisms for defining thread-local data.
 
@@ -786,7 +783,7 @@ Prefer using return values over output parameters: they improve readability, and
 
 Prefer to return by value or, failing that, return by reference. Avoid returning a pointer unless it can be null.
 
-Parameters are either inputs to the function, outputs from the function, or both. Non-optional input parameters should usually be values or const references, while non-optional output and input/output parameters should usually be references (which cannot be null). Generally, use absl::optional to represent optional by-value inputs, and use a const pointer when the non-optional form would have used a reference. Use non-const pointers to represent optional outputs and optional input/output parameters.
+Parameters are either inputs to the function, outputs from the function, or both. Non-optional input parameters should usually be values or const references, while non-optional output and input/output parameters should usually be references (which cannot be null).
 
 Avoid defining functions that require a const reference parameter to outlive the call, because const reference parameters bind to temporaries. Instead, find a way to eliminate the lifetime requirement (for example, by copying the parameter), or pass it by const pointer and document the lifetime and non-null requirements.
 
@@ -925,7 +922,7 @@ The noexcept operator performs a compile-time check that returns true if an expr
 
 You may use noexcept when it is useful for performance if it accurately reflects the intended semantics of your function, i.e., that if an exception is somehow thrown from within the function body then it represents a fatal error. You can assume that noexcept on move constructors has a meaningful performance benefit. If you think there is significant performance benefit from specifying noexcept on some other function, please discuss it with your project leads.
 
-Prefer unconditional noexcept if exceptions are completely disabled (i.e., most Google C++ environments). Otherwise, use conditional noexcept specifiers with simple conditions, in ways that evaluate false only in the few cases where the function could potentially throw. The tests might include type traits check on whether the involved operation might throw (e.g., `std::is_nothrow_move_constructible` for move-constructing objects), or on whether allocation can throw (e.g., `absl::default_allocator_is_nothrow` for standard default allocation). Note in many cases the only possible cause for an exception is allocation failure (we believe move constructors should not throw except due to allocation failure), and there are many applications where it’s appropriate to treat memory exhaustion as a fatal error rather than an exceptional condition that your program should attempt to recover from. Even for other potential failures you should prioritize interface simplicity over supporting all possible exception throwing scenarios: instead of writing a complicated noexcept clause that depends on whether a hash function can throw, for example, simply document that your component doesn’t support hash functions throwing and make it unconditionally noexcept.
+Prefer unconditional noexcept if exceptions are completely disabled (i.e., most Google C++ environments). Otherwise, use conditional noexcept specifiers with simple conditions, in ways that evaluate false only in the few cases where the function could potentially throw. The tests might include type traits check on whether the involved operation might throw (e.g., `std::is_nothrow_move_constructible` for move-constructing objects), or on whether allocation can throw. Note in many cases the only possible cause for an exception is allocation failure (we believe move constructors should not throw except due to allocation failure), and there are many applications where it’s appropriate to treat memory exhaustion as a fatal error rather than an exceptional condition that your program should attempt to recover from. Even for other potential failures you should prioritize interface simplicity over supporting all possible exception throwing scenarios: instead of writing a complicated noexcept clause that depends on whether a hash function can throw, for example, simply document that your component doesn’t support hash functions throwing and make it unconditionally noexcept.
 
 ## Casting
 
@@ -950,8 +947,7 @@ In general, do not use C-style casts. Instead, use these C++-style casts when ex
 - Use brace initialization to convert arithmetic types (e.g., `int64{x}`). This is the safest approach because code will not compile if conversion can result in information loss. The syntax is also concise.
 - Use static_cast as the equivalent of a C-style cast that does value conversion, when you need to explicitly up-cast a pointer from a class to its superclass, or when you need to explicitly cast a pointer from a superclass to a subclass. In this last case, you must be sure your object is actually an instance of the subclass.
 - Use const_cast to remove the const qualifier (see const).
-- Use reinterpret_cast to do unsafe conversions of pointer types to and from integer and other pointer types, including void*. Use this only if you know what you are doing and you understand the aliasing issues. Also, consider the alternative `absl::bit_cast`.
-- Use `absl::bit_cast` to interpret the raw bits of a value using a different type of the same size (a type pun), such as interpreting the bits of a double as int64.
+- Use reinterpret_cast to do unsafe conversions of pointer types to and from integer and other pointer types, including void*. Use this only if you know what you are doing and you understand the aliasing issues.
 
 ## Streams
 
@@ -977,11 +973,11 @@ Streams provide first-class support for console I/O via `std::cin`, `std::cout`,
 
 **Decision:**
 
-Use streams only when they are the best tool for the job. This is typically the case when the I/O is ad-hoc, local, human-readable, and targeted at other developers rather than end-users. Be consistent with the code around you, and with the codebase as a whole; if there's an established tool for your problem, use that tool instead. In particular, logging libraries are usually a better choice than `std::cerr` or `std::clog` for diagnostic output, and the libraries in `absl/strings` or the equivalent are usually a better choice than `std::stringstream`.
+Use streams only when they are the best tool for the job. This is typically the case when the I/O is ad-hoc, local, human-readable, and targeted at other developers rather than end-users. Be consistent with the code around you, and with the codebase as a whole; if there's an established tool for your problem, use that tool instead. In particular, logging libraries are usually a better choice than `std::cerr` or `std::clog` for diagnostic output, and the equivalent are usually a better choice than `std::stringstream`.
 
 Avoid using streams for I/O that faces external users or handles untrusted data. Instead, find and use the appropriate templating libraries to handle issues like internationalization, localization, and security hardening.
 
-If you do use streams, avoid the stateful parts of the streams API (other than error state), such as `imbue()`, xalloc(), and `registerCallback()`. Use explicit formatting functions (see e.g., `absl/strings`) rather than stream manipulators or formatting flags to control formatting details such as number base, precision, or padding.
+If you do use streams, avoid the stateful parts of the streams API (other than error state), such as `imbue()`, xalloc(), and `registerCallback()`. Use explicit formatting functions rather than stream manipulators or formatting flags to control formatting details such as number base, precision, or padding.
 
 Overload << as a streaming operator for your type only if your type represents a value, and << writes out a human-readable string representation of that value. Avoid exposing implementation details in the output of <<; if you need to print object internals for debugging, use named functions instead (a method named `debugString()` is the most common convention).
 
@@ -1078,8 +1074,6 @@ The sizes of integral types in C++ can vary based on compiler and architecture.
 We use int very often, for integers we know are not going to be too big, e.g., loop counters. Use plain old int for such things. You should assume that an int is at least 32 bits, but don't assume that it has more than 32 bits. If you need a 64-bit integer type, use int64_t or uint64_t.
 
 For integers we know can be "big", use int64_t.
-
-You should not use the unsigned integer types such as uint32_t, unless there is a valid reason such as representing a bit pattern rather than a number, or you need defined overflow modulo 2^N. In particular, do not use unsigned types to say a number will never be negative. Instead, use assertions for this.
 
 If your code is a container that returns a size, be sure to use a type that will accommodate any possible usage of your container. When in doubt, use a larger type rather than a smaller type.
 
