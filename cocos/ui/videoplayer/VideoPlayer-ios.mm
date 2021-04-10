@@ -81,7 +81,8 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
     bool _fullscreen;
     CGRect _restoreRect;
     PlayerbackState _state;
-    VideoPlayer* _videoPlayer;
+    VideoPlayer __unsafe_unretained *_videoPlayer;
+
 }
 
 -(id)init:(void*)videoPlayer
@@ -106,9 +107,20 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
     _state = PlayerbackStateUnknown;
 }
 
+-(void) destory
+{
+    if(_videoPlayer){
+        if(_playerController && _playerController.player){
+            [_playerController.player.currentItem cancelPendingSeeks];
+        }
+    }
+    _videoPlayer = nil;
+}
+
+
 -(void) dealloc
 {
-    _videoPlayer = nullptr;
+    [self destory];
     [self cleanup];
     [super dealloc];
 }
@@ -324,7 +336,8 @@ VideoPlayer::~VideoPlayer()
 {
     if(_videoView)
     {
-        [((UIVideoViewWrapperIos*)_videoView) dealloc];
+        [((UIVideoViewWrapperIos*)_videoView) destory];
+        _videoView = nil;
     }
 }
 
