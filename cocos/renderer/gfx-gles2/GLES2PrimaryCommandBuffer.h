@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "GLES2Std.h"
 #include "GLES2CommandBuffer.h"
+#include "GLES2Std.h"
 
 namespace cc {
 namespace gfx {
@@ -47,6 +47,8 @@ public:
 
 protected:
     friend class GLES2Queue;
+
+    void bindStates() override;
 };
 
 } // namespace gfx

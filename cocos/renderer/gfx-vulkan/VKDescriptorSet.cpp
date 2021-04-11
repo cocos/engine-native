@@ -219,7 +219,7 @@ void CCVKDescriptorSet::update() {
                 if (_textures[i]) {
                     CCVKGPUTextureView *textureView = static_cast<CCVKTexture *>(_textures[i])->gpuTextureView();
                     if (binding.gpuTextureView != textureView) {
-                        for (auto & instance : _gpuDescriptorSet->instances) {
+                        for (auto &instance : _gpuDescriptorSet->instances) {
                             CCVKDescriptorInfo &descriptorInfo = instance.descriptorInfos[i];
                             if (binding.gpuTextureView) {
                                 descriptorHub->disengage(binding.gpuTextureView, &descriptorInfo.image);
@@ -236,7 +236,7 @@ void CCVKDescriptorSet::update() {
                 if (_samplers[i]) {
                     CCVKGPUSampler *sampler = static_cast<CCVKSampler *>(_samplers[i])->gpuSampler();
                     if (binding.gpuSampler != sampler) {
-                        for (auto & instance : _gpuDescriptorSet->instances) {
+                        for (auto &instance : _gpuDescriptorSet->instances) {
                             CCVKDescriptorInfo &descriptorInfo = instance.descriptorInfos[i];
                             if (binding.gpuSampler) {
                                 descriptorHub->disengage(binding.gpuSampler, &descriptorInfo.image);

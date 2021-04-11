@@ -223,9 +223,9 @@ bool CCVKContext::doInit(const ContextInfo &info) {
 
         VkInstanceCreateInfo instanceInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         instanceInfo.pApplicationInfo        = &app;
-        instanceInfo.enabledExtensionCount   = toUint(_extensions.size());
+        instanceInfo.enabledExtensionCount   = utils::toUint(_extensions.size());
         instanceInfo.ppEnabledExtensionNames = _extensions.data();
-        instanceInfo.enabledLayerCount       = toUint(_layers.size());
+        instanceInfo.enabledLayerCount       = utils::toUint(_layers.size());
         instanceInfo.ppEnabledLayerNames     = _layers.data();
 
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION

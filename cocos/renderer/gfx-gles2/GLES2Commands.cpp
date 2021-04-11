@@ -1551,9 +1551,9 @@ void cmdFuncGLES2EndRenderPass(GLES2Device *device) {
 }
 
 void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipelineState, GLES2GPUInputAssembler *gpuInputAssembler,
-                           vector<GLES2GPUDescriptorSet *> &gpuDescriptorSets, vector<uint> &dynamicOffsets,
-                           Viewport &viewport, Rect &scissor, float lineWidth, bool depthBiasEnabled, GLES2DepthBias &depthBias, Color & /*blendConstants*/,
-                           GLES2DepthBounds & /*depthBounds*/, GLES2StencilWriteMask &stencilWriteMask, GLES2StencilCompareMask &stencilCompareMask) {
+                           const vector<GLES2GPUDescriptorSet *> &gpuDescriptorSets, const vector<uint> &dynamicOffsets,
+                           const Viewport &viewport, const Rect &scissor, float lineWidth, bool depthBiasEnabled, const GLES2DepthBias &depthBias, const Color & /*blendConstants*/,
+                           const GLES2DepthBounds & /*depthBounds*/, const GLES2StencilWriteMask &stencilWriteMask, const GLES2StencilCompareMask &stencilCompareMask) {
     GLES2ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
 
     GLES2GPUStateCache *cache           = device->stateCache();

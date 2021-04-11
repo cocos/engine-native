@@ -372,31 +372,31 @@ String mapVendorName(uint32_t vendorID) {
     return StringUtil::format("Unknown VendorID %d", vendorID);
 }
 
-void mapDepthStencilBits(Format format, uint &depthBits, uint &stencilBits) {
+void mapDepthStencilBits(Format format, uint *pDepthBits, uint *pStencilBits) {
     switch (format) {
         case Format::D16:
-            depthBits   = 16;
-            stencilBits = 0;
+            *pDepthBits   = 16;
+            *pStencilBits = 0;
             break;
         case Format::D16S8:
-            depthBits   = 16;
-            stencilBits = 8;
+            *pDepthBits   = 16;
+            *pStencilBits = 8;
             break;
         case Format::D24:
-            depthBits   = 24;
-            stencilBits = 0;
+            *pDepthBits   = 24;
+            *pStencilBits = 0;
             break;
         case Format::D24S8:
-            depthBits   = 24;
-            stencilBits = 8;
+            *pDepthBits   = 24;
+            *pStencilBits = 8;
             break;
         case Format::D32F:
-            depthBits   = 32;
-            stencilBits = 0;
+            *pDepthBits   = 32;
+            *pStencilBits = 0;
             break;
         case Format::D32F_S8:
-            depthBits   = 32;
-            stencilBits = 8;
+            *pDepthBits   = 32;
+            *pStencilBits = 8;
             break;
         default: break;
     }
@@ -583,16 +583,6 @@ void fullPipelineBarrier(VkCommandBuffer cmdBuff) {
 
 VkDeviceSize roundUp(VkDeviceSize numToRound, uint multiple) {
     return ((numToRound + multiple - 1) / multiple) * multiple;
-}
-
-uint nextPowerOf2(uint v) {
-    v--;
-    v |= v >> 1;
-    v |= v >> 2;
-    v |= v >> 4;
-    v |= v >> 8;
-    v |= v >> 16;
-    return ++v;
 }
 
 bool isLayerSupported(const char *required, const vector<VkLayerProperties> &available) {

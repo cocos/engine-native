@@ -27,6 +27,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include "base/Utils.h"
 #include "base/Macros.h"
 #include "base/StringUtil.h"
 #include "gfx-base/GFXDef.h"
@@ -67,11 +68,10 @@ extern VkShaderStageFlagBits mapVkShaderStageFlagBits(ShaderStageFlagBit stage);
 extern VkShaderStageFlags    mapVkShaderStageFlags(ShaderStageFlagBit stages);
 extern SurfaceTransform      mapSurfaceTransform(VkSurfaceTransformFlagBitsKHR transform);
 extern String                mapVendorName(uint32_t vendorID);
-extern void                  mapDepthStencilBits(Format format, uint &depthBits, uint &stencilBits);
+extern void                  mapDepthStencilBits(Format format, uint *pDepthBits, uint *pStencilBits);
 
 extern void         fullPipelineBarrier(VkCommandBuffer cmdBuff);
 extern VkDeviceSize roundUp(VkDeviceSize numToRound, uint multiple);
-extern uint         nextPowerOf2(uint v);
 extern bool         isLayerSupported(const char *required, const vector<VkLayerProperties> &available);
 extern bool         isExtensionSupported(const char *required, const vector<VkExtensionProperties> &available);
 
@@ -90,21 +90,6 @@ extern const VkPipelineBindPoint        VK_PIPELINE_BIND_POINTS[];
 extern const ThsvsAccessType            THSVS_ACCESS_TYPES[];
 extern const VkImageLayout              VK_IMAGE_LAYOUTS[];
 extern const VkAccessFlags              FULL_ACCESS_FLAGS;
-
-template <typename T, size_t Size>
-char (*countofHelper(T (&array)[Size]))[Size];
-
-#define COUNTOF(array) (sizeof(*countofHelper(array)) + 0)
-
-template <class T>
-uint toUint(T value) {
-    static_assert(std::is_arithmetic<T>::value, "T must be numeric");
-
-    CCASSERT(static_cast<uintmax_t>(value) <= static_cast<uintmax_t>(std::numeric_limits<uint>::max()),
-             "value is too big to be converted to uint");
-
-    return static_cast<uint>(value);
-}
 
 } // namespace gfx
 } // namespace cc

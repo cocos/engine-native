@@ -50,7 +50,7 @@ public:
 protected:
     friend class GLES3Queue;
 
-    void BindStates() override;
+    void bindStates() override;
 };
 
 } // namespace gfx

@@ -90,7 +90,7 @@ void GLES3CommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Fr
 
 void GLES3CommandBuffer::end() {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
     _isInRenderPass = false;
 
@@ -244,7 +244,7 @@ void GLES3CommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint m
 
 void GLES3CommandBuffer::draw(const DrawInfo &info) {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
 
     GLES3CmdDraw *cmd = _cmdAllocator->drawCmdPool.alloc();
@@ -375,7 +375,7 @@ void GLES3CommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count)
     }
 }
 
-void GLES3CommandBuffer::BindStates() {
+void GLES3CommandBuffer::bindStates() {
     GLES3CmdBindStates *cmd = _cmdAllocator->bindStatesCmdPool.alloc();
     cmd->gpuPipelineState   = _curGPUPipelineState;
     cmd->gpuInputAssembler  = _curGPUInputAssember;
@@ -411,7 +411,7 @@ void GLES3CommandBuffer::BindStates() {
 
 void GLES3CommandBuffer::dispatch(const DispatchInfo &info) {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
 
     GLES3CmdDispatch *cmd = _cmdAllocator->dispatchCmdPool.alloc();

@@ -91,7 +91,7 @@ void GLES2CommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Fr
 
 void GLES2CommandBuffer::end() {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
     _isInRenderPass = false;
 
@@ -238,7 +238,7 @@ void GLES2CommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint m
 
 void GLES2CommandBuffer::draw(const DrawInfo &info) {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
 
     GLES2CmdDraw *cmd = _cmdAllocator->drawCmdPool.alloc();
@@ -344,7 +344,7 @@ void GLES2CommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count)
     }
 }
 
-void GLES2CommandBuffer::BindStates() {
+void GLES2CommandBuffer::bindStates() {
     GLES2CmdBindStates *cmd = _cmdAllocator->bindStatesCmdPool.alloc();
 
     cmd->gpuPipelineState  = _curGPUPipelineState;

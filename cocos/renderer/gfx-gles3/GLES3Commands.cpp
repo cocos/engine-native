@@ -1390,7 +1390,7 @@ void cmdFuncGLES3CreateInputAssembler(GLES3Device *device, GLES3GPUInputAssemble
     for (size_t i = 0; i < gpuInputAssembler->glAttribs.size(); ++i) {
         GLES3GPUAttribute &gpuAttribute = gpuInputAssembler->glAttribs[i];
         const Attribute &  attrib       = gpuInputAssembler->attributes[i];
-        auto *   gpuVB        = static_cast<GLES3GPUBuffer *>(gpuInputAssembler->gpuVertexBuffers[attrib.stream]);
+        auto *             gpuVB        = static_cast<GLES3GPUBuffer *>(gpuInputAssembler->gpuVertexBuffers[attrib.stream]);
 
         gpuAttribute.name           = attrib.name;
         gpuAttribute.glType         = formatToGLType(attrib.format);
@@ -1732,9 +1732,9 @@ void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
 }
 
 void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipelineState, GLES3GPUInputAssembler *gpuInputAssembler,
-                           vector<GLES3GPUDescriptorSet *> &gpuDescriptorSets, vector<uint> &dynamicOffsets, Viewport &viewport, Rect &scissor,
-                           float lineWidth, bool depthBiasEnabled, GLES3DepthBias &depthBias, Color & /*blendConstants*/, GLES3DepthBounds & /*depthBounds*/,
-                           GLES3StencilWriteMask &stencilWriteMask, GLES3StencilCompareMask &stencilCompareMask) {
+                           const vector<GLES3GPUDescriptorSet *> &gpuDescriptorSets, const vector<uint> &dynamicOffsets,
+                           const Viewport &viewport, const Rect &scissor, float lineWidth, bool depthBiasEnabled, const GLES3DepthBias &depthBias, const Color & /*blendConstants*/,
+                           const GLES3DepthBounds & /*depthBounds*/, const GLES3StencilWriteMask &stencilWriteMask, const GLES3StencilCompareMask &stencilCompareMask) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;
 
     GLES3GPUStateCache *cache           = device->stateCache();
@@ -2074,7 +2074,7 @@ void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
                 GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
                 GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
-                for (auto & gpuInput : gpuPipelineState->gpuShader->glInputs) {
+                for (auto &gpuInput : gpuPipelineState->gpuShader->glInputs) {
                     for (size_t a = 0; a < gpuInputAssembler->attributes.size(); ++a) {
                         const GLES3GPUAttribute &gpuAttribute = gpuInputAssembler->glAttribs[a];
                         if (gpuAttribute.name == gpuInput.name) {
@@ -2111,11 +2111,11 @@ void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
                 cache->glVAO = glVAO;
             }
         } else {
-            for (auto && glCurrentAttribLoc : cache->glCurrentAttribLocs) {
+            for (auto &&glCurrentAttribLoc : cache->glCurrentAttribLocs) {
                 glCurrentAttribLoc = false;
             }
 
-            for (auto & gpuInput : gpuPipelineState->gpuShader->glInputs) {
+            for (auto &gpuInput : gpuPipelineState->gpuShader->glInputs) {
                 for (size_t a = 0; a < gpuInputAssembler->attributes.size(); ++a) {
                     const GLES3GPUAttribute &gpuAttribute = gpuInputAssembler->glAttribs[a];
                     if (gpuAttribute.name == gpuInput.name) {
@@ -2181,7 +2181,7 @@ void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
                             GL_CHECK(glEnable(GL_POLYGON_OFFSET_FILL));
                         } else {
                             GL_CHECK(glDisable(GL_POLYGON_OFFSET_FILL));
-}
+                        }
 
                         cache->rs.depthBiasEnabled = depthBiasEnabled;
                     }

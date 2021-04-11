@@ -68,7 +68,7 @@ protected:
     void doInit(const CommandBufferInfo &info) override;
     void doDestroy() override;
 
-    virtual void BindStates();
+    virtual void bindStates();
 
     GLES3GPUCommandAllocator *_cmdAllocator = nullptr;
     GLES3CmdPackage *_curCmdPackage = nullptr;

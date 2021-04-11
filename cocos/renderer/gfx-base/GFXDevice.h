@@ -274,15 +274,15 @@ TextureBarrier *Device::createTextureBarrier(const TextureBarrierInfo &info) {
 }
 
 void Device::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {
-    copyBuffersToTexture(buffers.data(), dst, regions.data(), static_cast<uint>(regions.size()));
+    copyBuffersToTexture(buffers.data(), dst, regions.data(), utils::toUint(regions.size()));
 }
 
 void Device::flushCommands(const vector<CommandBuffer *> &cmdBuffs) {
-    flushCommands(cmdBuffs.data(), static_cast<uint>(cmdBuffs.size()));
+    flushCommands(cmdBuffs.data(), utils::toUint(cmdBuffs.size()));
 }
 
 void Device::flushCommandsForJS(const vector<CommandBuffer *> &cmdBuffs) {
-    flushCommands(cmdBuffs.data(), static_cast<uint>(cmdBuffs.size()));
+    flushCommands(cmdBuffs.data(), utils::toUint(cmdBuffs.size()));
 }
 
 } // namespace gfx

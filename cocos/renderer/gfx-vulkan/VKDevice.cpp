@@ -164,7 +164,7 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     }
 
     // prepare the device queues
-    uint                            queueFamilyPropertiesCount = toUint(gpuContext->queueFamilyProperties.size());
+    uint                            queueFamilyPropertiesCount = utils::toUint(gpuContext->queueFamilyProperties.size());
     vector<VkDeviceQueueCreateInfo> queueCreateInfos(queueFamilyPropertiesCount, {VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO});
     vector<vector<float>>           queuePriorities(queueFamilyPropertiesCount);
 
@@ -182,11 +182,11 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
 
     VkDeviceCreateInfo deviceCreateInfo{VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO};
 
-    deviceCreateInfo.queueCreateInfoCount    = toUint(queueCreateInfos.size());
+    deviceCreateInfo.queueCreateInfoCount    = utils::toUint(queueCreateInfos.size());
     deviceCreateInfo.pQueueCreateInfos       = queueCreateInfos.data();
-    deviceCreateInfo.enabledLayerCount       = toUint(_layers.size());
+    deviceCreateInfo.enabledLayerCount       = utils::toUint(_layers.size());
     deviceCreateInfo.ppEnabledLayerNames     = _layers.data();
-    deviceCreateInfo.enabledExtensionCount   = toUint(_extensions.size());
+    deviceCreateInfo.enabledExtensionCount   = utils::toUint(_extensions.size());
     deviceCreateInfo.ppEnabledExtensionNames = _extensions.data();
     if (_gpuDevice->minorVersion < 1 &&
         !context->checkExtension(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)) {
@@ -280,7 +280,7 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     _caps.maxTextureSize                 = limits.maxImageDimension2D;
     _caps.maxCubeMapTextureSize          = limits.maxImageDimensionCube;
     _caps.uboOffsetAlignment             = static_cast<uint>(limits.minUniformBufferOffsetAlignment);
-    mapDepthStencilBits(_context->getDepthStencilFormat(), _caps.depthBits, _caps.stencilBits);
+    mapDepthStencilBits(_context->getDepthStencilFormat(), &_caps.depthBits, &_caps.stencilBits);
     // compute shaders
     _caps.maxComputeSharedMemorySize     = limits.maxComputeSharedMemorySize;
     _caps.maxComputeWorkGroupInvocations = limits.maxComputeWorkGroupInvocations;

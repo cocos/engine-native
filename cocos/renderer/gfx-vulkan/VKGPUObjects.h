@@ -503,14 +503,14 @@ public:
         _pools.clear();
     }
 
-    void link(CCVKGPUDevice *device, uint maxSetsPerPool, vector<VkDescriptorSetLayoutBinding> &bindings, VkDescriptorSetLayout setLayout) {
+    void link(CCVKGPUDevice *device, uint maxSetsPerPool, const vector<VkDescriptorSetLayoutBinding> &bindings, VkDescriptorSetLayout setLayout) {
         _device         = device;
         _maxSetsPerPool = maxSetsPerPool;
         _setLayouts.insert(_setLayouts.cbegin(), _maxSetsPerPool, setLayout);
         _fleaMarkets.resize(device->backBufferCount);
 
         unordered_map<VkDescriptorType, uint> typeMap;
-        for (auto &vkBinding : bindings) {
+        for (const auto &vkBinding : bindings) {
             typeMap[vkBinding.descriptorType] += maxSetsPerPool * vkBinding.descriptorCount;
         }
 
@@ -548,7 +548,7 @@ public:
         if (idx >= size) {
             VkDescriptorPoolCreateInfo createInfo{VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO};
             createInfo.maxSets       = _maxSetsPerPool;
-            createInfo.poolSizeCount = toUint(_poolSizes.size());
+            createInfo.poolSizeCount = utils::toUint(_poolSizes.size());
             createInfo.pPoolSizes    = _poolSizes.data();
 
             VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
@@ -838,7 +838,7 @@ private:
                       gpuDescriptorSet->gpuLayout->vkDescriptorUpdateTemplate, instance.descriptorInfos.data());
         } else {
             const vector<VkWriteDescriptorSet> &entries = instance.descriptorUpdateEntries;
-            vkUpdateDescriptorSets(_device->vkDevice, toUint(entries.size()), entries.data(), 0, nullptr);
+            vkUpdateDescriptorSets(_device->vkDevice, utils::toUint(entries.size()), entries.data(), 0, nullptr);
         }
     }
 

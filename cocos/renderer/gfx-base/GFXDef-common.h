@@ -742,9 +742,9 @@ struct Rect {
 
     bool operator==(const Rect &rs) const {
         return x == rs.x &&
-            y == rs.y &&
-            width == rs.width &&
-            height == rs.height;
+               y == rs.y &&
+               width == rs.width &&
+               height == rs.height;
     }
 
     bool operator!=(const Rect &rs) const {

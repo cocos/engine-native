@@ -55,7 +55,7 @@ void GLES3PrimaryCommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpas
 
 void GLES3PrimaryCommandBuffer::end() {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
     _isInRenderPass = false;
 }
@@ -76,7 +76,7 @@ void GLES3PrimaryCommandBuffer::endRenderPass() {
 
 void GLES3PrimaryCommandBuffer::draw(const DrawInfo &info) {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
 
     cmdFuncGLES3Draw(GLES3Device::getInstance(), info);
@@ -145,7 +145,7 @@ void GLES3PrimaryCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t
     }
 }
 
-void GLES3PrimaryCommandBuffer::BindStates() {
+void GLES3PrimaryCommandBuffer::bindStates() {
     vector<uint> &dynamicOffsetOffsets = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsetOffsets;
     vector<uint> &dynamicOffsets       = _curGPUPipelineState->gpuPipelineLayout->dynamicOffsets;
     for (size_t i = 0U; i < _curDynamicOffsets.size(); i++) {
@@ -162,7 +162,7 @@ void GLES3PrimaryCommandBuffer::BindStates() {
 
 void GLES3PrimaryCommandBuffer::dispatch(const DispatchInfo &info) {
     if (_isStateInvalid) {
-        BindStates();
+        bindStates();
     }
 
     GLES3GPUDispatchInfo gpuInfo;

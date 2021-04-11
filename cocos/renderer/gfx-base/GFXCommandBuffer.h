@@ -28,6 +28,7 @@
 #include "GFXBuffer.h"
 #include "GFXInputAssembler.h"
 #include "GFXObject.h"
+#include "base/Utils.h"
 
 namespace cc {
 namespace gfx {
@@ -69,7 +70,7 @@ public:
 
     inline void updateBuffer(Buffer *buff, const void *data);
 
-    inline void execute(CommandBufferList &cmdBuffs, uint32_t count);
+    inline void execute(const CommandBufferList &cmdBuffs, uint32_t count);
 
     inline void bindDescriptorSet(uint set, DescriptorSet *descriptorSet);
     inline void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets);
@@ -128,7 +129,7 @@ void CommandBuffer::updateBuffer(Buffer *buff, const void *data) {
     updateBuffer(buff, data, buff->getSize());
 }
 
-void CommandBuffer::execute(CommandBufferList &cmdBuffs, uint32_t count) {
+void CommandBuffer::execute(const CommandBufferList &cmdBuffs, uint32_t count) {
     execute(cmdBuffs.data(), count);
 }
 
@@ -137,11 +138,11 @@ void CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet) {
 }
 
 void CommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
-    bindDescriptorSet(set, descriptorSet, static_cast<uint>(dynamicOffsets.size()), dynamicOffsets.data());
+    bindDescriptorSet(set, descriptorSet, utils::toUint(dynamicOffsets.size()), dynamicOffsets.data());
 }
 
 void CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs) {
-    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), static_cast<uint>(secondaryCBs.size()));
+    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), utils::toUint(secondaryCBs.size()));
 }
 
 void CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil) {
@@ -159,11 +160,11 @@ void CommandBuffer::draw(InputAssembler *ia) {
 }
 
 void CommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {
-    copyBuffersToTexture(buffers.data(), texture, regions.data(), static_cast<uint>(regions.size()));
+    copyBuffersToTexture(buffers.data(), texture, regions.data(), utils::toUint(regions.size()));
 }
 
 void CommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlitList &regions, Filter filter) {
-    blitTexture(srcTexture, dstTexture, regions.data(), static_cast<uint>(regions.size()), filter);
+    blitTexture(srcTexture, dstTexture, regions.data(), utils::toUint(regions.size()), filter);
 }
 
 void CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier) {
@@ -171,7 +172,7 @@ void CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier) {
 }
 
 void CommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrierList &textureBarriers, const TextureList &textures) {
-    pipelineBarrier(barrier, textureBarriers.data(), textures.data(), static_cast<uint>(textureBarriers.size()));
+    pipelineBarrier(barrier, textureBarriers.data(), textures.data(), utils::toUint(textureBarriers.size()));
 }
 
 void CommandBuffer::bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet) {
@@ -179,11 +180,11 @@ void CommandBuffer::bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSe
 }
 
 void CommandBuffer::bindDescriptorSetForJS(uint set, DescriptorSet *descriptorSet, const vector<uint> &dynamicOffsets) {
-    bindDescriptorSet(set, descriptorSet, static_cast<uint>(dynamicOffsets.size()), dynamicOffsets.data());
+    bindDescriptorSet(set, descriptorSet, utils::toUint(dynamicOffsets.size()), dynamicOffsets.data());
 }
 
 void CommandBuffer::beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil, const CommandBufferList &secondaryCBs) {
-    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), static_cast<uint>(secondaryCBs.size()));
+    beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil, secondaryCBs.data(), utils::toUint(secondaryCBs.size()));
 }
 
 void CommandBuffer::beginRenderPassForJS(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, int stencil) {
