@@ -64,7 +64,7 @@ public:
 private:
     void clear();
     void gatherValidLights(const Camera *camera);
-    bool cullingLight(const Light *light, const ModelView *model);
+    static bool         cullingLight(const Light *light, const ModelView *model);
     void addRenderQueue(const PassView *pass, const SubModelView *subModel, const ModelView *model, uint lightPassIdx);
     void updateUBOs(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     void updateCameraUBO(const Camera *camera, gfx::CommandBuffer *cmdBuffer, bool hasOffScreenAttachments);
