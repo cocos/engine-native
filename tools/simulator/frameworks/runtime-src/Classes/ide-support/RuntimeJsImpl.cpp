@@ -29,6 +29,10 @@
 //
 //
 
+#ifdef WIN32
+#define _HAS_STD_BYTE 0
+#endif
+
 #include "RuntimeJsImpl.h"
 
 #if (CC_CODE_IDE_DEBUG_SUPPORT > 0)
