@@ -77,7 +77,7 @@ void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel
     if (!shader) { shader = subModel->getShader(passIdx); }
 
     auto descriptorSet = subModel->getDescriptorSet();
-    for (int i = 0; i < _instances.size(); i++) {
+    for (uint i = 0; i < _instances.size(); i++) {
         auto &instance = _instances[i];
         if (instance.ia->getIndexBuffer() != sourceIA->getIndexBuffer() || instance.count >= MAX_CAPACITY) {
             continue;
@@ -126,7 +126,7 @@ void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel
 
     const auto attributesID = model->getInstancedAttributeID();
     const auto lenght       = attributesID[0];
-    for (auto i = 1; i <= lenght; i++) {
+    for (uint i = 1; i <= lenght; i++) {
         const auto     attribute = model->getInstancedAttribute(attributesID[i]);
         gfx::Attribute newAttr   = {attribute->name, attribute->format, attribute->isNormalized, static_cast<uint>(vertexBuffers.size()), true, attribute->location};
         attributes.emplace_back(std::move(newAttr));

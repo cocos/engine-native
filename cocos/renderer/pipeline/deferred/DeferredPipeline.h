@@ -42,8 +42,8 @@ struct Ambient;
 struct Skybox;
 struct Shadows;
 struct Sphere;
+struct Camera;
 class Framebuffer;
-class Camera;
 
 struct CC_DLL DeferredRenderData {
     gfx::TextureList gbufferRenderTargets;

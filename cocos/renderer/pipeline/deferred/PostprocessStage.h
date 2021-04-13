@@ -30,7 +30,7 @@
 namespace cc {
 namespace pipeline {
 
-class Camera;
+struct Camera;
 class UIPhase;
 
 class CC_DLL PostprocessStage : public RenderStage {

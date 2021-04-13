@@ -94,6 +94,7 @@ void ForwardStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
                 break;
             case RenderQueueSortMode::FRONT_TO_BACK:
                 sortFunc = opaqueCompareFn;
+                break;
             default:
                 break;
         }
@@ -171,10 +172,10 @@ void ForwardStage::render(Camera *camera) {
     // render area is not oriented
     uint w = camera->getWindow()->hasOnScreenAttachments && (uint)_device->getSurfaceTransform() % 2 ? camera->height : camera->width;
     uint h = camera->getWindow()->hasOnScreenAttachments && (uint)_device->getSurfaceTransform() % 2 ? camera->width : camera->height;
-    _renderArea.x = camera->viewportX * w;
-    _renderArea.y = camera->viewportY * h;
-    _renderArea.width = camera->viewportWidth * w * sharedData->shadingScale;
-    _renderArea.height = camera->viewportHeight * h * sharedData->shadingScale;
+    _renderArea.x = static_cast<int>(camera->viewportX * w);
+    _renderArea.y = static_cast<int>(camera->viewportY * h);
+    _renderArea.width = static_cast<uint>(camera->viewportWidth * w * sharedData->shadingScale);
+    _renderArea.height = static_cast<uint>(camera->viewportHeight * h * sharedData->shadingScale);
 
     if (static_cast<gfx::ClearFlags>(camera->clearFlag) & gfx::ClearFlagBit::COLOR) {
         if (sharedData->isHDR) {

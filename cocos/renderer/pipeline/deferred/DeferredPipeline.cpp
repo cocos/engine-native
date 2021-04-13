@@ -277,10 +277,10 @@ gfx::Rect DeferredPipeline::getRenderArea(Camera *camera, bool onScreen) {
         h = camera->height;
     }
 
-    renderArea.x      = camera->viewportX * w;
-    renderArea.y      = camera->viewportY * h;
-    renderArea.width  = camera->viewportWidth * w * _pipelineSceneData->getSharedData()->shadingScale;
-    renderArea.height = camera->viewportHeight * h * _pipelineSceneData->getSharedData()->shadingScale;
+    renderArea.x      = static_cast<int>(camera->viewportX * w);
+    renderArea.y      = static_cast<int>(camera->viewportY * h);
+    renderArea.width  = static_cast<uint>(camera->viewportWidth * w * _pipelineSceneData->getSharedData()->shadingScale);
+    renderArea.height = static_cast<uint>(camera->viewportHeight * h * _pipelineSceneData->getSharedData()->shadingScale);
     return renderArea;
 }
 

@@ -56,15 +56,15 @@ void PipelineUBO::updateGlobalUBOView(const RenderPipeline *pipeline, std::array
     // update UBOGlobal
     uboGlobalView[UBOGlobal::TIME_OFFSET]     = root->cumulativeTime;
     uboGlobalView[UBOGlobal::TIME_OFFSET + 1] = root->frameTime;
-    uboGlobalView[UBOGlobal::TIME_OFFSET + 2] = Application::getInstance()->getTotalFrames();
+    uboGlobalView[UBOGlobal::TIME_OFFSET + 2] = static_cast<float> (Application::getInstance()->getTotalFrames());
 
-    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET]     = device->getWidth();
-    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 1] = device->getHeight();
+    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET]     = static_cast<float>(device->getWidth());
+    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 1] = static_cast<float>(device->getHeight());
     uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 2] = 1.0f / uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET];
     uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 3] = 1.0f / uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 1];
 
-    uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET]     = shadingWidth;
-    uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1] = shadingHeight;
+    uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET]     = static_cast<float>(shadingWidth);
+    uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1] = static_cast<float>(shadingHeight);
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 2] = 1.0f / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET];
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 3] = 1.0f / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1];
 }
@@ -89,15 +89,15 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     const auto shadingWidth  = std::floor(device->getWidth());
     const auto shadingHeight = std::floor(device->getHeight());
 
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET]     = camera->width / shadingWidth * shadingScale;
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1] = camera->height / shadingHeight * shadingScale;
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 2] = 1.0 / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET];
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 3] = 1.0 / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1];
+    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET]     = static_cast<float>(camera->width / shadingWidth * shadingScale);
+    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height / shadingHeight * shadingScale);
+    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 2] = 1.0f / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET];
+    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 3] = 1.0f / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1];
 
     const auto exposure                           = camera->exposure;
     uboCameraView[UBOCamera::EXPOSURE_OFFSET]     = exposure;
     uboCameraView[UBOCamera::EXPOSURE_OFFSET + 1] = 1.0f / exposure;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 2] = isHDR ? 1.0f : 0.0;
+    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 2] = isHDR ? 1.0f : 0.0f;
     uboCameraView[UBOCamera::EXPOSURE_OFFSET + 3] = fpScale / exposure;
 
     if (mainLight) {
@@ -132,7 +132,9 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
     uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
     const auto envmap                                   = descriptorSet->getTexture((uint)PipelineGlobalBindings::SAMPLER_ENVIRONMENT);
-    if (envmap) uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 3] = envmap->getLevelCount();
+    if (envmap) {
+        uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 3] = static_cast<float>(envmap->getLevelCount());
+    }
 
     memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_OFFSET, camera->matView.m, sizeof(cc::Mat4));
     memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_INV_OFFSET, camera->getNode()->worldMatrix.m, sizeof(cc::Mat4));

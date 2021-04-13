@@ -99,13 +99,13 @@ void LightingStage::gatherLights(Camera *camera) {
 
     Sphere sphere;
     auto exposure = camera->exposure;
-    int idx = 0;
+    uint idx = 0;
     int elementLen = sizeof(cc::Vec4) / sizeof(float);
     int fieldLen = elementLen * _maxDeferredLights;
     uint offset = 0;
     cc::Vec4 tmpArray;
 
-    for (int i = 1; i <= sphereCount && idx < _maxDeferredLights; i++, idx++) {
+    for (uint i = 1; i <= sphereCount && idx < _maxDeferredLights; i++, idx++) {
         const auto light = scene->getSphereLight(sphereLightArrayID[i]);
         sphere.setCenter(light->position);
         sphere.setRadius(light->range);
@@ -146,7 +146,7 @@ void LightingStage::gatherLights(Camera *camera) {
         _lightBufferData[offset + 2] = 0;
     }
 
-    for (int i = 1; i <= spotCount && idx < _maxDeferredLights; i++, idx++) {
+    for (uint i = 1; i <= spotCount && idx < _maxDeferredLights; i++, idx++) {
         const auto light = scene->getSpotLight(spotLightArrayID[i]);
         sphere.setCenter(light->position);
         sphere.setRadius(light->range);
@@ -194,7 +194,7 @@ void LightingStage::gatherLights(Camera *camera) {
     }
 
     // the count of lights is set to cc_lightDir[0].w
-    _lightBufferData[fieldLen * 3 + 3] = idx;
+    _lightBufferData[fieldLen * 3 + 3] = static_cast<float>(idx);
     cmdBuf->updateBuffer(_deferredLitsBufs, _lightBufferData.data());
 }
 
@@ -203,7 +203,7 @@ void LightingStage::initLightingBuffer() {
 
     // color/pos/dir/angle 都是vec4存储, 最后一个vec4只要x存储光源个数
     uint totalSize = sizeof(Vec4) * 4 * _maxDeferredLights;
-    totalSize      = std::ceil((float)totalSize / device->getCapabilities().uboOffsetAlignment) * device->getCapabilities().uboOffsetAlignment;
+    totalSize      = static_cast<uint>(std::ceil(static_cast<float>(totalSize) / device->getCapabilities().uboOffsetAlignment) * device->getCapabilities().uboOffsetAlignment);
 
     // create lighting buffer and view
     if (_deferredLitsBufs == nullptr) {

@@ -32,11 +32,11 @@ namespace cc {
 namespace pipeline {
 
 class RenderFlow;
-class Camera;
 class RenderBatchedQueue;
 class RenderInstancedQueue;
 class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
+struct Camera;
 struct DeferredRenderData;
 
 class CC_DLL GbufferStage : public RenderStage {
