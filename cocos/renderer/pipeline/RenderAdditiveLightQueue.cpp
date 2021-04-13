@@ -266,7 +266,7 @@ void RenderAdditiveLightQueue::updateUBOs(const Camera *camera, gfx::CommandBuff
     if (validLightCount > _lightBufferCount) {
         _firstLightBufferView->destroy();
 
-        _lightBufferCount = nextPow2(validLightCount);
+        _lightBufferCount = nextPow2(static_cast<uint>(validLightCount));
         _lightBuffer->resize(_lightBufferStride * _lightBufferCount);
         _lightBufferData.resize(_lightBufferElementCount * _lightBufferCount);
         _firstLightBufferView->initialize({_lightBuffer, 0, UBOForwardLight::SIZE});
@@ -321,7 +321,7 @@ void RenderAdditiveLightQueue::updateUBOs(const Camera *camera, gfx::CommandBuff
         }
     }
 
-    cmdBuffer->updateBuffer(_lightBuffer, _lightBufferData.data(), _lightBufferData.size() * sizeof(float));
+    cmdBuffer->updateBuffer(_lightBuffer, _lightBufferData.data(), static_cast<uint>(_lightBufferData.size() * sizeof(float)));
 }
 
 void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer) {

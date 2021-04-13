@@ -196,7 +196,7 @@ void BatchedBuffer::merge(const SubModelView *subModel, uint passIdx, const Mode
     });
     float *    indexData       = static_cast<float *>(CC_MALLOC(indexBufferSize));
     memset(indexData, 0, indexBufferSize);
-    indexBuffer->update(indexData, indexBufferSize);
+    indexBuffer->update(indexData, static_cast<uint>(indexBufferSize));
     totalVBs[flatBuffersCount] = indexBuffer;
 
     vector<gfx::Attribute> attributes = subModel->getInputAssembler()->getAttributes();
