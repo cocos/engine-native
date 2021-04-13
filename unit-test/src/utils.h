@@ -1,12 +1,4 @@
-//
-//  utils.h
-//  CocosTest
-//
-//  Created by rosa on 2021/3/22.
-//
-
-#ifndef utils_h
-#define utils_h
+#pragma once
 #include "cocos/math/Math.h"
 static std::string logLabel;
 static bool IsEqualF(float l, float r) {
@@ -15,5 +7,3 @@ static bool IsEqualF(float l, float r) {
 static void ExpectEq(bool lf, bool rt) {
     EXPECT_EQ(lf, rt) << "ERROR in: " <<logLabel;
 }
-
-#endif /* utils_h */
