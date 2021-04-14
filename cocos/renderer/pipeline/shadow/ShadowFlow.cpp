@@ -48,7 +48,7 @@ ShadowFlow::~ShadowFlow() = default;
 bool ShadowFlow::initialize(const RenderFlowInfo &info) {
     RenderFlow::initialize(info);
     if (_stages.empty()) {
-        auto shadowStage = CC_NEW(ShadowStage);
+        auto *shadowStage = CC_NEW(ShadowStage);
         shadowStage->initialize(ShadowStage::getInitializeInfo());
         _stages.emplace_back(shadowStage);
     }
@@ -96,7 +96,7 @@ void ShadowFlow::render(Camera *camera) {
 }
 
 void ShadowFlow::clearShadowMap(Camera *camera) {
-    const auto sceneData = _pipeline->getPipelineSceneData();
+    auto *sceneData = _pipeline->getPipelineSceneData();
     const auto &shadowFramebufferMap = sceneData->getShadowFramebufferMap();
     for (const auto *light : _validLights) {
         if (!shadowFramebufferMap.count(light)) {
@@ -122,7 +122,7 @@ void ShadowFlow::resizeShadowMap(const Light *light, const uint width, const uin
             return;
         }
 
-        auto &renderTargets = framebuffer->getColorTextures();
+        const auto &renderTargets = framebuffer->getColorTextures();
         for (auto *renderTarget : renderTargets) {
             renderTarget->resize(width, height);
         }
