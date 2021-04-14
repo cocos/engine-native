@@ -29,7 +29,7 @@
 //
 //
 
-// NOTE: fix the conflict typedef between C++17 and one Windows header named 'rpcndr.h'
+// NOTE: fix the conflict typedef 'byte' between C++17 and one Windows header named 'rpcndr.h'
 #ifdef WIN32
 #define _HAS_STD_BYTE 0
 #endif
