@@ -151,19 +151,25 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const Light *li
     const auto height = static_cast<uint>(shadowMapSize.y);
 
     if (!_renderPass) {
-        gfx::ColorAttachment colorAttachment;
-        colorAttachment.format      = gfx::Format::RGBA8;
-        colorAttachment.loadOp      = gfx::LoadOp::CLEAR;
-        colorAttachment.storeOp     = gfx::StoreOp::STORE;
-        colorAttachment.sampleCount = gfx::SampleCount::X1;
+        const gfx::ColorAttachment colorAttachment = {
+            gfx::Format::RGBA8,
+            gfx::SampleCount::X1,
+            gfx::LoadOp::CLEAR,
+            gfx::StoreOp::STORE,
+            {},
+            {},
+        };
 
-        gfx::DepthStencilAttachment depthStencilAttachment;
-        depthStencilAttachment.format         = device->getDepthStencilFormat();
-        depthStencilAttachment.depthLoadOp    = gfx::LoadOp::CLEAR;
-        depthStencilAttachment.depthStoreOp   = gfx::StoreOp::DISCARD;
-        depthStencilAttachment.stencilLoadOp  = gfx::LoadOp::CLEAR;
-        depthStencilAttachment.stencilStoreOp = gfx::StoreOp::DISCARD;
-        depthStencilAttachment.sampleCount    = gfx::SampleCount::X1;
+        const gfx::DepthStencilAttachment depthStencilAttachment = {
+            device->getDepthStencilFormat(),
+            gfx::SampleCount::X1,
+            gfx::LoadOp::CLEAR,
+            gfx::StoreOp::DISCARD,
+            gfx::LoadOp::CLEAR,
+            gfx::StoreOp::DISCARD,
+            {},
+            {},
+        };
 
         gfx::RenderPassInfo rpInfo;
         rpInfo.colorAttachments.emplace_back(colorAttachment);
