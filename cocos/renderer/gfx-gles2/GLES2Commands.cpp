@@ -1041,18 +1041,18 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
     } // if
 
     // create uniform samplers
-    if (!gpuShader->samplers.empty()) {
-        gpuShader->glSamplers.resize(gpuShader->samplers.size());
+    if (!gpuShader->samplerTextures.empty()) {
+        gpuShader->glSamplers.resize(gpuShader->samplerTextures.size());
 
         for (size_t i = 0; i < gpuShader->glSamplers.size(); ++i) {
-            UniformSamplerTexture & sampler    = gpuShader->samplers[i];
-            GLES2GPUUniformSampler &gpuSampler = gpuShader->glSamplers[i];
-            gpuSampler.set                     = sampler.set;
-            gpuSampler.binding                 = sampler.binding;
-            gpuSampler.name                    = sampler.name;
-            gpuSampler.count                   = sampler.count;
-            gpuSampler.glType                  = mapGLType(sampler.type);
-            gpuSampler.glLoc                   = -1;
+            UniformSamplerTexture & samplerTexture = gpuShader->samplerTextures[i];
+            GLES2GPUUniformSampler &gpuSampler     = gpuShader->glSamplers[i];
+            gpuSampler.set                         = samplerTexture.set;
+            gpuSampler.binding                     = samplerTexture.binding;
+            gpuSampler.name                        = samplerTexture.name;
+            gpuSampler.count                       = samplerTexture.count;
+            gpuSampler.glType                      = mapGLType(samplerTexture.type);
+            gpuSampler.glLoc                       = -1;
         }
     }
 
@@ -1110,18 +1110,18 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
 
     uint arrayOffset = 0U;
 
-    for (uint i = 0U; i < gpuShader->samplers.size(); i++) {
-        const UniformSamplerTexture &sampler = gpuShader->samplers[i];
-        GLint                        glLoc   = glGetUniformLocation(gpuShader->glProgram, sampler.name.c_str());
+    for (uint i = 0U; i < gpuShader->samplerTextures.size(); i++) {
+        const UniformSamplerTexture &samplerTexture = gpuShader->samplerTextures[i];
+        GLint                        glLoc          = glGetUniformLocation(gpuShader->glProgram, samplerTexture.name.c_str());
         if (glLoc >= 0) {
             glActiveSamplers.push_back(gpuShader->glSamplers[i]);
             glActiveSamplerLocations.push_back(glLoc);
         }
-        if (!texUnitCacheMap.count(sampler.name)) {
-            uint binding = sampler.binding + bindingMappingInfo.samplerOffsets[sampler.set] + arrayOffset;
-            if (sampler.set == bindingMappingInfo.flexibleSet) binding -= flexibleSetBaseOffset;
-            texUnitCacheMap[sampler.name] = binding % device->getCapabilities().maxTextureUnits;
-            arrayOffset += sampler.count - 1;
+        if (!texUnitCacheMap.count(samplerTexture.name)) {
+            uint binding = samplerTexture.binding + bindingMappingInfo.samplerOffsets[samplerTexture.set] + arrayOffset;
+            if (samplerTexture.set == bindingMappingInfo.flexibleSet) binding -= flexibleSetBaseOffset;
+            texUnitCacheMap[samplerTexture.name] = binding % device->getCapabilities().maxTextureUnits;
+            arrayOffset += samplerTexture.count - 1;
         }
     }
 
