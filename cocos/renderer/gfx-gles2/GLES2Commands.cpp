@@ -1042,17 +1042,17 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
 
     // create uniform samplers
     if (!gpuShader->samplerTextures.empty()) {
-        gpuShader->glSamplers.resize(gpuShader->samplerTextures.size());
+        gpuShader->glSamplerTextures.resize(gpuShader->samplerTextures.size());
 
-        for (size_t i = 0; i < gpuShader->glSamplers.size(); ++i) {
-            UniformSamplerTexture & samplerTexture = gpuShader->samplerTextures[i];
-            GLES2GPUUniformSampler &gpuSampler     = gpuShader->glSamplers[i];
-            gpuSampler.set                         = samplerTexture.set;
-            gpuSampler.binding                     = samplerTexture.binding;
-            gpuSampler.name                        = samplerTexture.name;
-            gpuSampler.count                       = samplerTexture.count;
-            gpuSampler.glType                      = mapGLType(samplerTexture.type);
-            gpuSampler.glLoc                       = -1;
+        for (size_t i = 0; i < gpuShader->glSamplerTextures.size(); ++i) {
+            UniformSamplerTexture &        samplerTexture    = gpuShader->samplerTextures[i];
+            GLES2GPUUniformSamplerTexture &gpuSamplerTexture = gpuShader->glSamplerTextures[i];
+            gpuSamplerTexture.set                            = samplerTexture.set;
+            gpuSamplerTexture.binding                        = samplerTexture.binding;
+            gpuSamplerTexture.name                           = samplerTexture.name;
+            gpuSamplerTexture.count                          = samplerTexture.count;
+            gpuSamplerTexture.glType                         = mapGLType(samplerTexture.type);
+            gpuSamplerTexture.glLoc                          = -1;
         }
     }
 
@@ -1094,10 +1094,10 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
     } // for
 
     // texture unit index mapping optimization
-    vector<GLES2GPUUniformSampler> glActiveSamplers;
-    vector<GLint>                  glActiveSamplerLocations;
-    const BindingMappingInfo &     bindingMappingInfo = device->bindingMappingInfo();
-    unordered_map<String, uint> &  texUnitCacheMap    = device->stateCache()->texUnitCacheMap;
+    vector<GLES2GPUUniformSamplerTexture> glActiveSamplerTextures;
+    vector<GLint>                         glActiveSamplerLocations;
+    const BindingMappingInfo &            bindingMappingInfo = device->bindingMappingInfo();
+    unordered_map<String, uint> &         texUnitCacheMap    = device->stateCache()->texUnitCacheMap;
 
     // sampler bindings in the flexible set comes strictly after buffer bindings
     // so we need to subtract the buffer count for these samplers
@@ -1114,7 +1114,7 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
         const UniformSamplerTexture &samplerTexture = gpuShader->samplerTextures[i];
         GLint                        glLoc          = glGetUniformLocation(gpuShader->glProgram, samplerTexture.name.c_str());
         if (glLoc >= 0) {
-            glActiveSamplers.push_back(gpuShader->glSamplers[i]);
+            glActiveSamplerTextures.push_back(gpuShader->glSamplerTextures[i]);
             glActiveSamplerLocations.push_back(glLoc);
         }
         if (!texUnitCacheMap.count(samplerTexture.name)) {
@@ -1125,36 +1125,36 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
         }
     }
 
-    if (!glActiveSamplers.empty()) {
+    if (!glActiveSamplerTextures.empty()) {
         vector<bool> usedTexUnits(device->getCapabilities().maxTextureUnits, false);
         // try to reuse existing mappings first
-        for (uint i = 0U; i < glActiveSamplers.size(); i++) {
-            GLES2GPUUniformSampler &glSampler = glActiveSamplers[i];
+        for (uint i = 0U; i < glActiveSamplerTextures.size(); i++) {
+            GLES2GPUUniformSamplerTexture &glSamplerTexture = glActiveSamplerTextures[i];
 
-            if (texUnitCacheMap.count(glSampler.name)) {
-                uint cachedUnit = texUnitCacheMap[glSampler.name];
-                glSampler.glLoc = glActiveSamplerLocations[i];
-                for (uint t = 0U, offset = 0U; t < glSampler.count; t++) {
+            if (texUnitCacheMap.count(glSamplerTexture.name)) {
+                uint cachedUnit        = texUnitCacheMap[glSamplerTexture.name];
+                glSamplerTexture.glLoc = glActiveSamplerLocations[i];
+                for (uint t = 0U, offset = 0U; t < glSamplerTexture.count; t++) {
                     while (usedTexUnits[cachedUnit + t + offset]) offset++;
-                    glSampler.units.push_back(cachedUnit + t + offset);
+                    glSamplerTexture.units.push_back(cachedUnit + t + offset);
                     usedTexUnits[cachedUnit + t + offset] = true;
                 }
             }
         }
         // fill in the rest sequencially
         uint unitIdx = 0U;
-        for (uint i = 0U; i < glActiveSamplers.size(); i++) {
-            GLES2GPUUniformSampler &glSampler = glActiveSamplers[i];
+        for (uint i = 0U; i < glActiveSamplerTextures.size(); i++) {
+            GLES2GPUUniformSamplerTexture &glSamplerTexture = glActiveSamplerTextures[i];
 
-            if (glSampler.glLoc < 0) {
-                glSampler.glLoc = glActiveSamplerLocations[i];
-                for (uint t = 0U; t < glSampler.count; t++) {
+            if (glSamplerTexture.glLoc < 0) {
+                glSamplerTexture.glLoc = glActiveSamplerLocations[i];
+                for (uint t = 0U; t < glSamplerTexture.count; t++) {
                     while (usedTexUnits[unitIdx + t]) unitIdx++;
-                    glSampler.units.push_back(unitIdx + t);
+                    glSamplerTexture.units.push_back(unitIdx + t);
                     usedTexUnits[unitIdx + t] = true;
                 }
-                if (!texUnitCacheMap.count(glSampler.name)) {
-                    texUnitCacheMap[glSampler.name] = unitIdx;
+                if (!texUnitCacheMap.count(glSamplerTexture.name)) {
+                    texUnitCacheMap[glSamplerTexture.name] = unitIdx;
                 }
             }
         }
@@ -1163,8 +1163,8 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
             GL_CHECK(glUseProgram(gpuShader->glProgram));
         }
 
-        for (auto &gpuSampler : glActiveSamplers) {
-            GL_CHECK(glUniform1iv(gpuSampler.glLoc, (GLsizei)gpuSampler.units.size(), gpuSampler.units.data()));
+        for (auto &gpuSamplerTexture : glActiveSamplerTextures) {
+            GL_CHECK(glUniform1iv(gpuSamplerTexture.glLoc, (GLsizei)gpuSamplerTexture.units.size(), gpuSamplerTexture.units.data()));
         }
 
         if (device->stateCache()->glProgram != gpuShader->glProgram) {
@@ -1181,7 +1181,7 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
             gpuShader->glBlocks.pop_back();
         }
     }
-    gpuShader->glSamplers = glActiveSamplers;
+    gpuShader->glSamplerTextures = glActiveSamplerTextures;
 }
 
 void cmdFuncGLES2DestroyShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
@@ -1895,22 +1895,22 @@ void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipeli
             }
         }
 
-        size_t samplerLen = gpuPipelineState->gpuShader->glSamplers.size();
+        size_t samplerLen = gpuPipelineState->gpuShader->glSamplerTextures.size();
         for (size_t j = 0; j < samplerLen; j++) {
-            const GLES2GPUUniformSampler &glSampler = gpuPipelineState->gpuShader->glSamplers[j];
+            const GLES2GPUUniformSamplerTexture &glSamplerTexture = gpuPipelineState->gpuShader->glSamplerTextures[j];
 
-            CCASSERT(gpuDescriptorSets.size() > glSampler.set, "Invalid set index");
-            const GLES2GPUDescriptorSet *gpuDescriptorSet = gpuDescriptorSets[glSampler.set];
-            const uint                   descriptorIndex  = gpuDescriptorSet->descriptorIndices->at(glSampler.binding);
+            CCASSERT(gpuDescriptorSets.size() > glSamplerTexture.set, "Invalid set index");
+            const GLES2GPUDescriptorSet *gpuDescriptorSet = gpuDescriptorSets[glSamplerTexture.set];
+            const uint                   descriptorIndex  = gpuDescriptorSet->descriptorIndices->at(glSamplerTexture.binding);
             const GLES2GPUDescriptor *   gpuDescriptor    = &gpuDescriptorSet->gpuDescriptors[descriptorIndex];
 
-            for (size_t u = 0; u < glSampler.units.size(); u++, gpuDescriptor++) {
-                uint unit = static_cast<uint>(glSampler.units[u]);
+            for (size_t u = 0; u < glSamplerTexture.units.size(); u++, gpuDescriptor++) {
+                uint unit = static_cast<uint>(glSamplerTexture.units[u]);
 
                 if (!gpuDescriptor->gpuTexture || !gpuDescriptor->gpuSampler) {
                     CC_LOG_ERROR(
                         "Sampler binding '%s' at set %d binding %d index %d is not bounded",
-                        glSampler.name.c_str(), glSampler.set, glSampler.binding, u);
+                        glSamplerTexture.name.c_str(), glSamplerTexture.set, glSamplerTexture.binding, u);
                     continue;
                 }
 
