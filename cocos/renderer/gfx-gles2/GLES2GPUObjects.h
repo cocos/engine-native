@@ -192,7 +192,7 @@ class GLES2GPUShader final : public Object {
 public:
     String name;
     UniformBlockList blocks;
-    UniformSamplerList samplers;
+    UniformSamplerTextureList samplers;
     GLuint glProgram = 0;
     GLES2GPUShaderStageList gpuStages;
     GLES2GPUInputList glInputs;

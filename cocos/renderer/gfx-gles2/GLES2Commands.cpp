@@ -1009,7 +1009,6 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
 
     // create uniform blocks
     if (!gpuShader->blocks.empty()) {
-
         gpuShader->glBlocks.resize(gpuShader->blocks.size());
 
         for (size_t i = 0; i < gpuShader->glBlocks.size(); ++i) {
@@ -1046,13 +1045,13 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
         gpuShader->glSamplers.resize(gpuShader->samplers.size());
 
         for (size_t i = 0; i < gpuShader->glSamplers.size(); ++i) {
-            UniformSampler &        sampler    = gpuShader->samplers[i];
+            UniformSamplerTexture & sampler    = gpuShader->samplers[i];
             GLES2GPUUniformSampler &gpuSampler = gpuShader->glSamplers[i];
             gpuSampler.set                     = sampler.set;
             gpuSampler.binding                 = sampler.binding;
             gpuSampler.name                    = sampler.name;
             gpuSampler.count                   = sampler.count;
-            gpuSampler.glType                  = mapGLType(gpuSampler.type);
+            gpuSampler.glType                  = mapGLType(sampler.type);
             gpuSampler.glLoc                   = -1;
         }
     }
@@ -1112,8 +1111,8 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
     uint arrayOffset = 0U;
 
     for (uint i = 0U; i < gpuShader->samplers.size(); i++) {
-        const UniformSampler &sampler = gpuShader->samplers[i];
-        GLint                 glLoc   = glGetUniformLocation(gpuShader->glProgram, sampler.name.c_str());
+        const UniformSamplerTexture &sampler = gpuShader->samplers[i];
+        GLint                        glLoc   = glGetUniformLocation(gpuShader->glProgram, sampler.name.c_str());
         if (glLoc >= 0) {
             glActiveSamplers.push_back(gpuShader->glSamplers[i]);
             glActiveSamplerLocations.push_back(glLoc);
@@ -1199,7 +1198,6 @@ void cmdFuncGLES2DestroyShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
 }
 
 void cmdFuncGLES2CreateInputAssembler(GLES2Device *device, GLES2GPUInputAssembler *gpuInputAssembler) {
-
     if (gpuInputAssembler->gpuIndexBuffer) {
         switch (gpuInputAssembler->gpuIndexBuffer->stride) {
             case 1: gpuInputAssembler->glIndexType = GL_UNSIGNED_BYTE; break;
@@ -1715,7 +1713,6 @@ void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipeli
             cache->bs.blendColor.y != gpuPipelineState->bs.blendColor.y ||
             cache->bs.blendColor.z != gpuPipelineState->bs.blendColor.z ||
             cache->bs.blendColor.w != gpuPipelineState->bs.blendColor.w) {
-
             GL_CHECK(glBlendColor(gpuPipelineState->bs.blendColor.x,
                                   gpuPipelineState->bs.blendColor.y,
                                   gpuPipelineState->bs.blendColor.z,
@@ -1764,7 +1761,6 @@ void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipeli
 
     // bind descriptor sets
     if (gpuPipelineState && gpuPipelineState->gpuShader && gpuPipelineState->gpuPipelineLayout) {
-
         size_t                     blockLen             = gpuPipelineState->gpuShader->glBlocks.size();
         const vector<vector<int>> &dynamicOffsetIndices = gpuPipelineState->gpuPipelineLayout->dynamicOffsetIndices;
         uint8_t *                  uniformBuffBase      = nullptr;
@@ -2268,7 +2264,6 @@ void cmdFuncGLES2Draw(GLES2Device *device, const DrawInfo &drawInfo) {
 
     if (gpuInputAssembler && gpuPipelineState) {
         if (!gpuInputAssembler->gpuIndirectBuffer) {
-
             if (gpuInputAssembler->gpuIndexBuffer) {
                 if (drawInfo.indexCount > 0) {
                     uint8_t *offset = nullptr;
