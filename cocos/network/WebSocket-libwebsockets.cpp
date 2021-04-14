@@ -209,7 +209,6 @@ private:
 
     struct lws_vhost *createVhost(struct lws_protocols *protocols, int *sslConnection);
 
-private:
     cc::network::WebSocket *      _ws;
     cc::network::WebSocket::State _readyState;
     std::mutex                    _readyStateMutex;
@@ -332,7 +331,7 @@ public:
     void quitWebSocketThread();
 
     // Sends message to Cocos thread. It's needed to be invoked in Websocket thread.
-    void sendMessageToCocosThread(const std::function<void()> &cb);
+    static void sendMessageToCocosThread(const std::function<void()> &cb);
 
     // Sends message to Websocket thread. It's needs to be invoked in Cocos thread.
     void sendMessageToWebSocketThread(WsMessage *msg);
@@ -340,14 +339,14 @@ public:
     size_t countBufferdBytes(const WebSocketImpl *ws);
 
     // Waits the sub-thread (websocket thread) to exit,
-    void joinWebSocketThread();
+    void joinWebSocketThread() const;
 
-    void onSubThreadStarted();
-    void onSubThreadLoop();
-    void onSubThreadEnded();
+    static void onSubThreadStarted();
+    static void onSubThreadLoop();
+    static void onSubThreadEnded();
 
 protected:
-    void wsThreadEntryFunc();
+    void wsThreadEntryFunc() const;
 
 public:
     std::list<WsMessage *> *_subThreadWsMessageQueue;
@@ -415,8 +414,8 @@ void WsThreadHelper::onSubThreadLoop() {
         if (!isEmpty) {
             auto iter = wsHelper->_subThreadWsMessageQueue->begin();
             for (; iter != wsHelper->_subThreadWsMessageQueue->end();) {
-                auto msg = (*iter);
-                auto ws  = static_cast<WebSocketImpl *>(msg->user);
+                auto *msg = (*iter);
+                auto *ws  = static_cast<WebSocketImpl *>(msg->user);
                 // REFINE: ws may be a invalid pointer
                 if (msg->what == WS_MSG_TO_SUBTHREAD_CREATE_CONNECTION) {
                     ws->onClientOpenConnectionRequest();
@@ -454,7 +453,7 @@ void WsThreadHelper::onSubThreadEnded() {
     }
 }
 
-void WsThreadHelper::wsThreadEntryFunc() {
+void WsThreadHelper::wsThreadEntryFunc() const {
     LOGD("WebSocket thread start, helper instance: %p\n", this);
     onSubThreadStarted();
 
@@ -479,7 +478,7 @@ void WsThreadHelper::sendMessageToWebSocketThread(WsMessage *msg) {
 size_t WsThreadHelper::countBufferdBytes(const WebSocketImpl *ws) {
     std::lock_guard<std::mutex> lk(_subThreadWsMessageQueueMutex);
     size_t                      total = 0;
-    for (auto msg : *_subThreadWsMessageQueue) {
+    for (auto *msg : *_subThreadWsMessageQueue) {
         if (msg->user == ws && msg->data && (msg->what == WS_MSG_TO_SUBTRHEAD_SENDING_STRING || msg->what == WS_MSG_TO_SUBTRHEAD_SENDING_BINARY)) {
             total += msg->data->getRemain();
         }
@@ -487,7 +486,7 @@ size_t WsThreadHelper::countBufferdBytes(const WebSocketImpl *ws) {
     return total;
 }
 
-void WsThreadHelper::joinWebSocketThread() {
+void WsThreadHelper::joinWebSocketThread() const {
     if (_subThreadInstance->joinable()) {
         _subThreadInstance->join();
     }
@@ -803,7 +802,7 @@ cc::network::WebSocket::Delegate *WebSocketImpl::getDelegate() const {
 }
 
 struct lws_vhost *WebSocketImpl::createVhost(struct lws_protocols *protocols, int *sslConnectionOut) {
-    auto fileUtils     = cc::FileUtils::getInstance();
+    auto *fileUtils     = cc::FileUtils::getInstance();
     bool isCAFileExist = fileUtils->isFileExist(_caFilePath);
     if (isCAFileExist) {
         _caFilePath = fileUtils->fullPathForFilename(_caFilePath);
@@ -1209,6 +1208,7 @@ int WebSocketImpl::onConnectionClosed() {
 
                 return 0;
             }
+
             if (_closeState == CloseState::ASYNC_CLOSING) {
                 LOGD("onConnectionClosed, WebSocket (%p) is closing by client asynchronously.\n", this);
             } else {
