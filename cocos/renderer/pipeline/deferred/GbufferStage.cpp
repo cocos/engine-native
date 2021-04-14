@@ -163,7 +163,8 @@ void GbufferStage::render(Camera *camera) {
 
     // render area is not oriented
     _renderArea = pipeline->getRenderArea(camera, false);
-    
+    pipeline->updateQuadVertexData(_renderArea);
+
     const auto deferredData = pipeline->getDeferredRenderData();
     auto framebuffer = deferredData->gbufferFrameBuffer;
     auto renderPass = framebuffer->getRenderPass();
