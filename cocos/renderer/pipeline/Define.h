@@ -384,8 +384,8 @@ struct CC_DLL UBOShadow : public Object {
     static constexpr uint                        MAT_LIGHT_VIEW_PROJ_OFFSET                 = UBOShadow::MAT_LIGHT_VIEW_OFFSET + 16;
     static constexpr uint                        SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET    = UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET + 16;
     static constexpr uint                        SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET   = UBOShadow::SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET + 4;
-    static constexpr uint                        SHADOW_LIGHT_PACKING_NULL_NULL_INFO_OFFSET = UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET + 4;
-    static constexpr uint                        SHADOW_COLOR_OFFSET                        = UBOShadow::SHADOW_LIGHT_PACKING_NULL_NULL_INFO_OFFSET + 4; 
+    static constexpr uint                        SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET = UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET + 4;
+    static constexpr uint                        SHADOW_COLOR_OFFSET                         = UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET + 4; 
     static constexpr uint                        COUNT                                      = UBOShadow::SHADOW_COLOR_OFFSET + 4;
     static constexpr uint                        SIZE                                       = UBOShadow::COUNT * 4;
     static constexpr uint                        BINDING                                    = static_cast<uint>(PipelineGlobalBindings::UBO_SHADOW);

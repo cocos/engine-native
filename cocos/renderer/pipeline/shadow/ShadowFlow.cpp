@@ -106,8 +106,8 @@ void ShadowFlow::clearShadowMap(Camera *camera) {
         }
 
         auto *shadowFrameBuffer = shadowFramebufferMap.at(light);
-        for (auto *_stage : _stages) {
-            auto *shadowStage = static_cast<ShadowStage *>(_stage);
+        for (auto *stage : _stages) {
+            auto *shadowStage = static_cast<ShadowStage *>(stage);
             shadowStage->setUseData(light, shadowFrameBuffer);
             shadowStage->clearFramebuffer(camera);
         }
@@ -128,14 +128,14 @@ void ShadowFlow::resizeShadowMap(const Light *light, const Shadows *shadowInfo) 
         renderTargets.emplace_back(gfx::Device::getInstance()->createTexture({
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-            shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F,
-            (uint)shadowInfo->size.x,
-            (uint)shadowInfo->size.y,
+            static_cast<bool>(shadowInfo->packing) ? gfx::Format::RGBA8 : gfx::Format::RGBA16F,
+            static_cast<uint>(shadowInfo->size.x),
+            static_cast<uint>(shadowInfo->size.y),
         }));
 
         auto *depth = framebuffer->getDepthStencilTexture();
         if (depth) {
-            depth->resize((uint)shadowInfo->size.x, (uint)shadowInfo->size.y);
+            depth->resize(static_cast<uint>(shadowInfo->size.x), static_cast<uint>(shadowInfo->size.y));
         }
 
         framebuffer->destroy();
@@ -153,13 +153,27 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const Light *li
     const auto sceneData = _pipeline->getPipelineSceneData();
     const auto *shadowInfo = sceneData->getSharedData()->getShadows();
     const auto shadowMapSize = shadowInfo->size;
-    const auto width = (uint)shadowMapSize.x;
-    const auto height = (uint)shadowMapSize.y;
+    const auto width = static_cast<uint>(shadowMapSize.x);
+    const auto height = static_cast<uint>(shadowMapSize.y);
 
     if (!_renderPass) {
+        gfx::ColorAttachment colorAttachment;
+        colorAttachment.format     = static_cast<bool>(shadowInfo->packing) ? gfx::Format::RGBA8 : gfx::Format::RGBA16F;
+        colorAttachment.loadOp = gfx::LoadOp::CLEAR;
+        colorAttachment.storeOp    = gfx::StoreOp::STORE;
+        colorAttachment.sampleCount = gfx::SampleCount::X1;
+
+        gfx::DepthStencilAttachment depthStencilAttachment;
+        depthStencilAttachment.format         = device->getDepthStencilFormat();
+        depthStencilAttachment.depthLoadOp    = gfx::LoadOp::CLEAR;
+        depthStencilAttachment.depthStoreOp   = gfx::StoreOp::DISCARD;
+        depthStencilAttachment.stencilLoadOp  = gfx::LoadOp::CLEAR;
+        depthStencilAttachment.stencilStoreOp = gfx::StoreOp::DISCARD;
+        depthStencilAttachment.sampleCount    = gfx::SampleCount::X1;
+
         gfx::RenderPassInfo rpInfo;
-        rpInfo.depthStencilAttachment.depthStoreOp = gfx::StoreOp::DISCARD;
-        rpInfo.depthStencilAttachment.stencilStoreOp = gfx::StoreOp::DISCARD;
+        rpInfo.colorAttachments.emplace_back(colorAttachment);
+        rpInfo.depthStencilAttachment = depthStencilAttachment;
         _renderPass = device->createRenderPass(rpInfo);
     }
 
@@ -167,7 +181,7 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const Light *li
     renderTargets.emplace_back(device->createTexture({
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA8,
+        static_cast<bool>(shadowInfo->packing) ? gfx::Format::RGBA8 : gfx::Format::RGBA16F,
         width,
         height,
     }));
