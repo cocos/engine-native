@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "Define.h"
 #include "base/CoreStd.h"
 #include "helper/SharedMemory.h"
 
@@ -38,11 +39,8 @@ class RenderPipeline;
 class DefineMap;
 class RenderInstancedQueue;
 class RenderBatchedQueue;
-class Device;
 struct Sphere;
-class Shader;
 class ForwardPipeline;
-class DescriptorSet;
 
 struct AdditiveLightPass {
     const SubModelView *subModel = nullptr;
@@ -54,8 +52,8 @@ struct AdditiveLightPass {
 
 class RenderAdditiveLightQueue : public Object {
 public:
-    RenderAdditiveLightQueue(RenderPipeline *pipeline);
-    ~RenderAdditiveLightQueue();
+    explicit RenderAdditiveLightQueue(RenderPipeline *pipeline);
+    ~RenderAdditiveLightQueue() override;
 
     void recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer);
     void gatherLightPasses(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
@@ -70,10 +68,10 @@ private:
     void updateCameraUBO(const Camera *camera, gfx::CommandBuffer *cmdBuffer, bool hasOffScreenAttachments);
     void updateLightDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     void updateGlobalDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
-    bool getLightPassIndex(const ModelView *model, vector<uint> &lightPassIndices) const;
+    bool getLightPassIndex(const ModelView *model, vector<uint> *lightPassIndices) const;
     gfx::DescriptorSet *getOrCreateDescriptorSet(const Light *);
 
-private:
+
     ForwardPipeline *_pipeline = nullptr;
     vector<vector<SubModelView *>> _sortedSubModelsArray;
     vector<vector<uint>> _sortedPSOCIArray;
@@ -96,7 +94,7 @@ private:
     uint _lightBufferStride = 0;
     uint _lightBufferElementCount = 0;
     uint _lightBufferCount = 16;
-    float _lightMeterScale = 10000.0f;
+    float _lightMeterScale = 10000.0F;
     uint _phaseID = 0;
 };
 

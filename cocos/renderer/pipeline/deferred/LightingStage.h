@@ -43,20 +43,19 @@ public:
     static const RenderStageInfo &getInitializeInfo();
 
     LightingStage();
-    ~LightingStage();
+    ~LightingStage() override;
 
-    virtual bool initialize(const RenderStageInfo &info) override;
-    virtual void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
-    virtual void destroy() override;
-    virtual void render(Camera *camera) override;
+    bool initialize(const RenderStageInfo &info) override;
+    void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
+    void destroy() override;
+    void render(Camera *camera) override;
 
     void initLightingBuffer();
 
 private:
     void gatherLights(Camera *camera);
-
-private:
-    static RenderStageInfo _initInfo;
+    
+    static RenderStageInfo initInfo;
     PlanarShadowQueue *_planarShadowQueue = nullptr;
     gfx::Rect _renderArea;
     uint _phaseID = 0;

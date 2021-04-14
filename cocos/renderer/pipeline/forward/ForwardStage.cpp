@@ -42,26 +42,26 @@
 namespace cc {
 namespace pipeline {
 namespace {
-void srgbToLinear(gfx::Color &out, const gfx::Color &gamma) {
-    out.x = gamma.x * gamma.x;
-    out.y = gamma.y * gamma.y;
-    out.z = gamma.z * gamma.z;
+void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
+    out->x = gamma.x * gamma.x;
+    out->y = gamma.y * gamma.y;
+    out->z = gamma.z * gamma.z;
 }
 
-void linearToSrgb(gfx::Color &out, const gfx::Color &linear) {
-    out.x = std::sqrt(linear.x);
-    out.y = std::sqrt(linear.y);
-    out.z = std::sqrt(linear.z);
+void linearToSrgb(gfx::Color *out, const gfx::Color &linear) {
+    out->x = std::sqrt(linear.x);
+    out->y = std::sqrt(linear.y);
+    out->z = std::sqrt(linear.z);
 }
 } // namespace
 
-RenderStageInfo ForwardStage::_initInfo = {
+RenderStageInfo ForwardStage::initInfo = {
     "ForwardStage",
     static_cast<uint>(ForwardStagePriority::FORWARD),
     static_cast<uint>(RenderFlowTag::SCENE),
     {{false, RenderQueueSortMode::FRONT_TO_BACK, {"default"}},
      {true, RenderQueueSortMode::BACK_TO_FRONT, {"default", "planarShadow"}}}};
-const RenderStageInfo &ForwardStage::getInitializeInfo() { return ForwardStage::_initInfo; }
+const RenderStageInfo &ForwardStage::getInitializeInfo() { return ForwardStage::initInfo; }
 
 ForwardStage::ForwardStage()  {
     _batchedQueue = CC_NEW(RenderBatchedQueue);
@@ -178,7 +178,7 @@ void ForwardStage::render(Camera *camera) {
 
     if (static_cast<gfx::ClearFlags>(camera->clearFlag) & gfx::ClearFlagBit::COLOR) {
         if (sharedData->isHDR) {
-            srgbToLinear(_clearColors[0], camera->clearColor);
+            srgbToLinear(&_clearColors[0], camera->clearColor);
             auto scale = sharedData->fpScale / camera->exposure;
             _clearColors[0].x *= scale;
             _clearColors[0].y *= scale;

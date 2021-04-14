@@ -132,7 +132,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const Camera *camera, gfx::Comm
     const auto &renderObjects = _pipeline->getPipelineSceneData()->getRenderObjects();
     for (const auto &renderObject : renderObjects) {
         const auto *const model = renderObject.model;
-        if (!getLightPassIndex(model, lightPassIndices)) continue;
+        if (!getLightPassIndex(model, &lightPassIndices)) continue;
 
         _lightIndices.clear();
         for (size_t i = 0; i < _validLights.size(); i++) {
@@ -368,7 +368,8 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
                 // shadow info
                 float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, static_cast<float>(shadowInfo->pcfType), shadowInfo->bias};
                 memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
+                const float color[4] = {shadowInfo->color.x, shadowInfo->color.y, shadowInfo->color.z, shadowInfo->color.w};
+                memcpy(_shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, color, sizeof(float) * 4);
                 memcpy(_shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
                 // Spot light sampler binding
                 const auto &shadowFramebufferMap = sceneData->getShadowFramebufferMap();
@@ -396,8 +397,8 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
     }
 }
 
-bool RenderAdditiveLightQueue::getLightPassIndex(const ModelView *model, vector<uint> &lightPassIndices) const {
-    lightPassIndices.clear();
+bool RenderAdditiveLightQueue::getLightPassIndex(const ModelView *model, vector<uint> *lightPassIndices) const {
+    lightPassIndices->clear();
     bool hasValidLightPass = false;
 
     const auto *const subModelArrayID = model->getSubModelID();
@@ -413,7 +414,7 @@ bool RenderAdditiveLightQueue::getLightPassIndex(const ModelView *model, vector<
                 break;
             }
         }
-        lightPassIndices.push_back(lightPassIndex);
+        lightPassIndices->push_back(lightPassIndex);
     }
 
     return hasValidLightPass;

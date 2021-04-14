@@ -143,7 +143,7 @@ void DeferredPipeline::render(const vector<uint> &cameras) {
     _device->getQueue()->submit(_commandBuffers);
 }
 
-bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer *&quadIB, gfx::Buffer *&quadVB, gfx::InputAssembler *&quadIA, gfx::SurfaceTransform surfaceTransform) {
+bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer *quadVB, gfx::InputAssembler *quadIA, gfx::SurfaceTransform surfaceTransform) {
     // step 1 create vertex buffer
     uint vbStride = sizeof(float) * 4;
     uint vbSize   = vbStride * 4;

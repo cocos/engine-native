@@ -43,29 +43,28 @@
 namespace cc {
 namespace pipeline {
 namespace {
-void srgbToLinear(gfx::Color &out, const gfx::Color &gamma) {
-    out.x = gamma.x * gamma.x;
-    out.y = gamma.y * gamma.y;
-    out.z = gamma.z * gamma.z;
+void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
+    out->x = gamma.x * gamma.x;
+    out->y = gamma.y * gamma.y;
+    out->z = gamma.z * gamma.z;
 }
 
-void linearToSrgb(gfx::Color &out, const gfx::Color &linear) {
-    out.x = std::sqrt(linear.x);
-    out.y = std::sqrt(linear.y);
-    out.z = std::sqrt(linear.z);
+void linearToSrgb(gfx::Color *out, const gfx::Color &linear) {
+    out->x = std::sqrt(linear.x);
+    out->y = std::sqrt(linear.y);
+    out->z = std::sqrt(linear.z);
 }
 } // namespace
 
-RenderStageInfo LightingStage::_initInfo = {
+RenderStageInfo LightingStage::initInfo = {
     "LightingStage",
     static_cast<uint>(DeferredStagePriority::LIGHTING),
     static_cast<uint>(RenderFlowTag::SCENE),
 };
 
-const RenderStageInfo &LightingStage::getInitializeInfo() { return LightingStage::_initInfo; }
+const RenderStageInfo &LightingStage::getInitializeInfo() { return LightingStage::initInfo; }
 
-LightingStage::LightingStage()  {
-}
+LightingStage::LightingStage()  = default;
 
 LightingStage::~LightingStage() {
     _deferredLitsBufs->destroy();
@@ -275,7 +274,7 @@ void LightingStage::render(Camera *camera) {
     gfx::Color clearColor = {0.0, 0.0, 0.0, 1.0};
     if (camera->clearFlag & static_cast<uint>( gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {
-            srgbToLinear(clearColor, camera->clearColor);
+            srgbToLinear(&clearColor, camera->clearColor);
             const auto scale = sharedData->fpScale / camera->exposure;
             clearColor.x *= scale;
             clearColor.y *= scale;

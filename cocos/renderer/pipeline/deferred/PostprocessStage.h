@@ -36,16 +36,16 @@ class UIPhase;
 class CC_DLL PostprocessStage : public RenderStage {
 public:
     PostprocessStage();
-    ~PostprocessStage() {};
+    ~PostprocessStage() override = default;;
 
-    virtual bool initialize(const RenderStageInfo &info) override;
-    virtual void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
-    virtual void destroy() override;
-    virtual void render(Camera *camera) override;
+    bool initialize(const RenderStageInfo &info) override;
+    void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
+    void destroy() override;
+    void render(Camera *camera) override;
 
 private:
     gfx::Rect _renderArea;
-    static RenderStageInfo _initInfo;
+    static RenderStageInfo initInfo;
     UIPhase *_uiPhase = nullptr;
     
     uint _phaseID = 0;

@@ -43,7 +43,6 @@ struct Skybox;
 struct Shadows;
 struct Sphere;
 struct Camera;
-class Framebuffer;
 
 struct CC_DLL DeferredRenderData {
     gfx::TextureList gbufferRenderTargets;
@@ -78,7 +77,7 @@ public:
 
 private:
     bool activeRenderer();
-    bool createQuadInputAssembler(gfx::Buffer* &quadIB, gfx::Buffer* &quadVB, gfx::InputAssembler* &quadIA,
+    bool createQuadInputAssembler(gfx::Buffer* quadIB, gfx::Buffer* quadVB, gfx::InputAssembler* quadIA,
         gfx::SurfaceTransform surfaceTransform);
     void destroyQuadInputAssembler();
     void destroyDeferredData();
