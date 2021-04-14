@@ -100,7 +100,7 @@ void LightingStage::gatherLights(Camera *camera) {
     auto exposure = camera->exposure;
     uint idx = 0;
     int elementLen = sizeof(cc::Vec4) / sizeof(float);
-    int fieldLen = elementLen * _maxDeferredLights;
+    uint fieldLen = elementLen * _maxDeferredLights;
     uint offset = 0;
     cc::Vec4 tmpArray;
 

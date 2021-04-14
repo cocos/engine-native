@@ -183,9 +183,9 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
             cc::Mat4   matShadowCamera;
 
             // light proj
-            float x = 0.0f;
-            float y = 0.0f;
-            float farClamp = 0.0f;
+            float x = 0.0F;
+            float y = 0.0F;
+            float farClamp = 0.0F;
             if (shadowInfo->autoAdapt) {
                 Vec3 tmpCenter;
                 getShadowWorldMatrix(sphere, node->worldRotation, mainLight->direction, matShadowCamera, tmpCenter);
@@ -215,9 +215,9 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
         } else if (mainLight && shadowInfo->getShadowType() == ShadowType::PLANAR) {
             updateDirLight(shadowInfo, mainLight, shadowUBO);
-        }
-
-        memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
+        }    
+        const float color[4] = {shadowInfo->color.x, shadowInfo->color.y, shadowInfo->color.z, shadowInfo->color.w};
+        memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, color, sizeof(float) * 4);
     }
 }
 
@@ -231,9 +231,9 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
         case LightType::DIRECTIONAL: {
             cc::Mat4 matShadowCamera;
 
-            float x = 0.0f;
-            float y = 0.0f;
-            float farClamp = 0.0f;
+            float x = 0.0F;
+            float y = 0.0F;
+            float farClamp = 0.0F;
             if (shadowInfo->autoAdapt) {
                 Vec3 tmpCenter;
                 getShadowWorldMatrix(sphere, light->getNode()->worldRotation, light->direction, matShadowCamera, tmpCenter);
@@ -273,7 +273,8 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
     }
 
     float shadowInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, static_cast<float>(shadowInfo->pcfType), shadowInfo->bias};
-    memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &shadowInfo->color, sizeof(Vec4));
+    const float color[4] = {shadowInfo->color.x, shadowInfo->color.y, shadowInfo->color.z, shadowInfo->color.w};
+    memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, color, sizeof(float) * 4);
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_INFO_OFFSET, &shadowInfos, sizeof(shadowInfos));
 }
 
@@ -367,7 +368,7 @@ void PipelineUBO::updateShadowUBOLight(const Light *light) {
 }
 
 void PipelineUBO::updateShadowUBORange(uint offset, const Mat4 *data) {
-    memcpy(_shadowUBO.data() + offset, data->m, sizeof(data));
+    memcpy(_shadowUBO.data() + offset, data->m, sizeof(*data));
 }
 
 } // namespace pipeline

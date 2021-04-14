@@ -495,7 +495,7 @@ gfx::Sampler *SamplerLib::getSampler(uint hash) {
     info.cmpFunc       = static_cast<gfx::ComparisonFunc>((hash >> 16) & 15);
     info.mipLODBias    = static_cast<float>((hash >> 28) & 15);
 
-    return _samplerCache[hash] = gfx::Device::getInstance()->createSampler(std::move(info));
+    return _samplerCache[hash] = gfx::Device::getInstance()->createSampler(info);
 }
 
 void SamplerLib::destroyAll() {
