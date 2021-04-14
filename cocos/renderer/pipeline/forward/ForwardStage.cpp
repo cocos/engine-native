@@ -42,13 +42,13 @@
 namespace cc {
 namespace pipeline {
 namespace {
-void SRGBToLinear(gfx::Color &out, const gfx::Color &gamma) {
+void srgbToLinear(gfx::Color &out, const gfx::Color &gamma) {
     out.x = gamma.x * gamma.x;
     out.y = gamma.y * gamma.y;
     out.z = gamma.z * gamma.z;
 }
 
-void LinearToSRGB(gfx::Color &out, const gfx::Color &linear) {
+void linearToSrgb(gfx::Color &out, const gfx::Color &linear) {
     out.x = std::sqrt(linear.x);
     out.y = std::sqrt(linear.y);
     out.z = std::sqrt(linear.z);
@@ -63,14 +63,13 @@ RenderStageInfo ForwardStage::_initInfo = {
      {true, RenderQueueSortMode::BACK_TO_FRONT, {"default", "planarShadow"}}}};
 const RenderStageInfo &ForwardStage::getInitializeInfo() { return ForwardStage::_initInfo; }
 
-ForwardStage::ForwardStage() : RenderStage() {
+ForwardStage::ForwardStage()  {
     _batchedQueue = CC_NEW(RenderBatchedQueue);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
     _uiPhase = CC_NEW(UIPhase);
 }
 
-ForwardStage::~ForwardStage() {
-}
+ForwardStage::~ForwardStage() = default;
 
 bool ForwardStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
@@ -120,34 +119,34 @@ void ForwardStage::destroy() {
 void ForwardStage::render(Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
-    auto pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    const auto sceneData = _pipeline->getPipelineSceneData();
-    const auto sharedData = sceneData->getSharedData();
+    auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
+    auto *const sceneData = _pipeline->getPipelineSceneData();
+    auto *const sharedData = sceneData->getSharedData();
     const auto &renderObjects = sceneData->getRenderObjects();
 
-    for (auto queue : _renderQueues) {
+    for (auto *queue : _renderQueues) {
         queue->clear();
     }
 
-    uint m = 0, p = 0;
+    uint m = 0;
+    uint p = 0;
     size_t k = 0;
-    for (size_t i = 0; i < renderObjects.size(); ++i) {
-        const auto &ro = renderObjects[i];
-        const auto model = ro.model;
-        const auto subModelID = model->getSubModelID();
+    for (auto ro : renderObjects) {
+        const auto *const model = ro.model;
+        const auto *const subModelID = model->getSubModelID();
         const auto subModelCount = subModelID[0];
         for (m = 1; m <= subModelCount; ++m) {
-            auto subModel = model->getSubModelView(subModelID[m]);
+            const auto *subModel = model->getSubModelView(subModelID[m]);
             for (p = 0; p < subModel->passCount; ++p) {
                 const PassView *pass = subModel->getPassView(p);
 
                 if (pass->phase != _phaseID) continue;
                 if (pass->getBatchingScheme() == BatchingSchemes::INSTANCING) {
-                    auto instancedBuffer = InstancedBuffer::get(subModel->passID[p]);
+                    auto *instancedBuffer = InstancedBuffer::get(subModel->passID[p]);
                     instancedBuffer->merge(model, subModel, p);
                     _instancedQueue->add(instancedBuffer);
                 } else if (pass->getBatchingScheme() == BatchingSchemes::VB_MERGING) {
-                    auto batchedBuffer = BatchedBuffer::get(subModel->passID[p]);
+                    auto *batchedBuffer = BatchedBuffer::get(subModel->passID[p]);
                     batchedBuffer->merge(subModel, p, model);
                     _batchedQueue->add(batchedBuffer);
                 } else {
@@ -158,11 +157,11 @@ void ForwardStage::render(Camera *camera) {
             }
         }
     }
-    for (auto queue : _renderQueues) {
+    for (auto *queue : _renderQueues) {
         queue->sort();
     }
 
-    auto cmdBuff = pipeline->getCommandBuffers()[0];
+    auto *cmdBuff = pipeline->getCommandBuffers()[0];
 
     _instancedQueue->uploadBuffers(cmdBuff);
     _batchedQueue->uploadBuffers(cmdBuff);
@@ -170,8 +169,8 @@ void ForwardStage::render(Camera *camera) {
     _planarShadowQueue->gatherShadowPasses(camera, cmdBuff);
 
     // render area is not oriented
-    uint w = camera->getWindow()->hasOnScreenAttachments && (uint)_device->getSurfaceTransform() % 2 ? camera->height : camera->width;
-    uint h = camera->getWindow()->hasOnScreenAttachments && (uint)_device->getSurfaceTransform() % 2 ? camera->width : camera->height;
+    uint w = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
+    uint h = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
     _renderArea.x = static_cast<int>(camera->viewportX * w);
     _renderArea.y = static_cast<int>(camera->viewportY * h);
     _renderArea.width = static_cast<uint>(camera->viewportWidth * w * sharedData->shadingScale);
@@ -179,7 +178,7 @@ void ForwardStage::render(Camera *camera) {
 
     if (static_cast<gfx::ClearFlags>(camera->clearFlag) & gfx::ClearFlagBit::COLOR) {
         if (sharedData->isHDR) {
-            SRGBToLinear(_clearColors[0], camera->clearColor);
+            srgbToLinear(_clearColors[0], camera->clearColor);
             auto scale = sharedData->fpScale / camera->exposure;
             _clearColors[0].x *= scale;
             _clearColors[0].y *= scale;
@@ -193,10 +192,10 @@ void ForwardStage::render(Camera *camera) {
 
     _clearColors[0].w = camera->clearColor.w;
 
-    auto framebuffer = camera->getWindow()->getFramebuffer();
+    auto *framebuffer = camera->getWindow()->getFramebuffer();
     const auto &colorTextures = framebuffer->getColorTextures();
 
-    auto renderPass = colorTextures.size() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
+    auto *renderPass = !colorTextures.empty() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
 
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
     cmdBuff->bindDescriptorSet(GLOBAL_SET, _pipeline->getDescriptorSet());
