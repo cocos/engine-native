@@ -35,8 +35,7 @@
 #include "gfx-base/GFXTexture.h"
 #include "../SceneCulling.h"
 
-namespace cc {
-namespace pipeline {
+namespace cc::pipeline {
 RenderFlowInfo ShadowFlow::_initInfo = {
     "ShadowFlow",
     static_cast<uint>(ForwardFlowPriority::SHADOW),
@@ -44,13 +43,12 @@ RenderFlowInfo ShadowFlow::_initInfo = {
     {}};
 const RenderFlowInfo &ShadowFlow::getInitializeInfo() { return ShadowFlow::_initInfo; }
 
-ShadowFlow::~ShadowFlow() {
-}
+ShadowFlow::~ShadowFlow() = default;
 
 bool ShadowFlow::initialize(const RenderFlowInfo &info) {
     RenderFlow::initialize(info);
     if (_stages.empty()) {
-        auto shadowStage = CC_NEW(ShadowStage);
+        auto *shadowStage = CC_NEW(ShadowStage);
         shadowStage->initialize(ShadowStage::getInitializeInfo());
         _stages.emplace_back(shadowStage);
     }
@@ -63,7 +61,7 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
 }
 
 void ShadowFlow::render(Camera *camera) {
-    const auto sceneData = _pipeline->getPipelineSceneData();
+    const auto *sceneData = _pipeline->getPipelineSceneData();
     const auto *shadowInfo = sceneData->getSharedData()->getShadows();
     if (!shadowInfo->enabled || shadowInfo->getShadowType() != ShadowType::SHADOWMAP) return;
 
@@ -85,8 +83,8 @@ void ShadowFlow::render(Camera *camera) {
         if (shadowInfo->shadowMapDirty) {
             resizeShadowMap(light, shadowInfo);
         }
-        for (auto *_stage : _stages) {
-            auto *shadowStage = static_cast<ShadowStage *>(_stage);
+        for (auto *stage : _stages) {
+            auto *shadowStage = dynamic_cast<ShadowStage *>(stage);
             shadowStage->setUseData(light, shadowFrameBuffer);
             shadowStage->render(camera);
         }
@@ -98,7 +96,7 @@ void ShadowFlow::render(Camera *camera) {
 }
 
 void ShadowFlow::clearShadowMap(Camera *camera) {
-    const auto sceneData = _pipeline->getPipelineSceneData();
+    auto *sceneData = _pipeline->getPipelineSceneData();
     const auto &shadowFramebufferMap = sceneData->getShadowFramebufferMap();
     for (const auto *light : _validLights) {
         if (!shadowFramebufferMap.count(light)) {
@@ -107,7 +105,7 @@ void ShadowFlow::clearShadowMap(Camera *camera) {
 
         auto *shadowFrameBuffer = shadowFramebufferMap.at(light);
         for (auto *stage : _stages) {
-            auto *shadowStage = static_cast<ShadowStage *>(stage);
+            auto *shadowStage = dynamic_cast<ShadowStage *>(stage);
             shadowStage->setUseData(light, shadowFrameBuffer);
             shadowStage->clearFramebuffer(camera);
         }
@@ -149,32 +147,38 @@ void ShadowFlow::resizeShadowMap(const Light *light, const Shadows *shadowInfo) 
 }
 
 void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const Light *light) {
-    const auto device = gfx::Device::getInstance();
-    const auto sceneData = _pipeline->getPipelineSceneData();
+    auto *device = gfx::Device::getInstance();
+    const auto *sceneData = _pipeline->getPipelineSceneData();
     const auto *shadowInfo = sceneData->getSharedData()->getShadows();
     const auto shadowMapSize = shadowInfo->size;
-    const auto width = static_cast<uint>(shadowMapSize.x);
+    const auto width         = static_cast<uint>(shadowMapSize.x);
     const auto height = static_cast<uint>(shadowMapSize.y);
 
     if (!_renderPass) {
-        gfx::ColorAttachment colorAttachment;
-        colorAttachment.format     = static_cast<bool>(shadowInfo->packing) ? gfx::Format::RGBA8 : gfx::Format::RGBA16F;
-        colorAttachment.loadOp = gfx::LoadOp::CLEAR;
-        colorAttachment.storeOp    = gfx::StoreOp::STORE;
-        colorAttachment.sampleCount = gfx::SampleCount::X1;
+        const gfx::ColorAttachment colorAttachment = {
+            gfx::Format::RGBA8,
+            gfx::SampleCount::X1,
+            gfx::LoadOp::CLEAR,
+            gfx::StoreOp::STORE,
+            {},
+            {},
+        };
 
-        gfx::DepthStencilAttachment depthStencilAttachment;
-        depthStencilAttachment.format         = device->getDepthStencilFormat();
-        depthStencilAttachment.depthLoadOp    = gfx::LoadOp::CLEAR;
-        depthStencilAttachment.depthStoreOp   = gfx::StoreOp::DISCARD;
-        depthStencilAttachment.stencilLoadOp  = gfx::LoadOp::CLEAR;
-        depthStencilAttachment.stencilStoreOp = gfx::StoreOp::DISCARD;
-        depthStencilAttachment.sampleCount    = gfx::SampleCount::X1;
+        const gfx::DepthStencilAttachment depthStencilAttachment = {
+            device->getDepthStencilFormat(),
+            gfx::SampleCount::X1,
+            gfx::LoadOp::CLEAR,
+            gfx::StoreOp::DISCARD,
+            gfx::LoadOp::CLEAR,
+            gfx::StoreOp::DISCARD,
+            {},
+            {},
+        };
 
         gfx::RenderPassInfo rpInfo;
         rpInfo.colorAttachments.emplace_back(colorAttachment);
         rpInfo.depthStencilAttachment = depthStencilAttachment;
-        _renderPass = device->createRenderPass(rpInfo);
+        _renderPass                   = device->createRenderPass(rpInfo);
     }
 
     vector<gfx::Texture *> renderTargets;
@@ -215,5 +219,4 @@ void ShadowFlow::destroy() {
     RenderFlow::destroy();
 }
 
-} // namespace pipeline
-} // namespace cc
+} // namespace cc::pipeline
