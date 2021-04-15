@@ -27,7 +27,7 @@
 #include "base/Macros.h"
 #include "base/memory/Memory.h"
 
-using namespace se;
+namespace se {
 
 cc::vector<BufferPool *> BufferPool::_poolMap(BUFFER_POOL_SIZE);
 
@@ -59,3 +59,5 @@ Object *BufferPool::allocateNewChunk() {
 
     return jsObj;
 }
+
+} // namespace se
