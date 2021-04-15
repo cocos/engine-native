@@ -113,7 +113,7 @@ void ShadowFlow::clearShadowMap(Camera *camera) {
 }
 
 void ShadowFlow::resizeShadowMap(const Light *light, const Shadows *shadowInfo) const {
-    auto sceneData = _pipeline->getPipelineSceneData();
+    auto *sceneData = _pipeline->getPipelineSceneData();
 
     if (sceneData->getShadowFramebufferMap().count(light)) {
         auto *framebuffer = sceneData->getShadowFramebufferMap().at(light);
