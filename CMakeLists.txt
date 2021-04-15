@@ -807,7 +807,7 @@ cocos_source_files(
                  cocos/renderer/gfx-gles-common/GLESCommandPool.h
     NO_WERROR    cocos/renderer/gfx-gles-common/eglw.cpp
     NO_WERROR    cocos/renderer/gfx-gles-common/gles2w.cpp
-    NO_WERROR    cocos/renderer/gfx-gles-common/gles3w.cpp
+                 cocos/renderer/gfx-gles-common/gles3w.cpp
 )
 endif()
 
@@ -920,7 +920,7 @@ if(CC_USE_GLES3)
         )
     else()
         cocos_source_files(
-            NO_WERROR    cocos/renderer/gfx-gles3/GLES3Wrangler.cpp
+                         cocos/renderer/gfx-gles3/GLES3Wrangler.cpp
         )
     endif()
     if(IOS)
