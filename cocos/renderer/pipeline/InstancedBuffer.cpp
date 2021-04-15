@@ -72,11 +72,13 @@ void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel
 
     if (!stride) return; // we assume per-instance attributes are always present
     auto sourceIA      = subModel->getInputAssembler();
-    auto lightingMap   = subModel->getDescriptorSet()->getTexture(LIGHTMAP_TEXTURE::BINDING);
-    auto shader        = shaderImplant;
-    if (!shader) { shader = subModel->getShader(passIdx); }
-
     auto descriptorSet = subModel->getDescriptorSet();
+    auto lightingMap   = descriptorSet->getTexture(LIGHTMAP_TEXTURE::BINDING);
+    auto shader        = shaderImplant;
+    if (!shader) {
+        shader = subModel->getShader(passIdx);
+    }
+
     for (int i = 0; i < _instances.size(); i++) {
         auto &instance = _instances[i];
         if (instance.ia->getIndexBuffer() != sourceIA->getIndexBuffer() || instance.count >= MAX_CAPACITY) {

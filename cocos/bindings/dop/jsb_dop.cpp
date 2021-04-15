@@ -25,12 +25,12 @@
 
 #include "jsb_dop.h"
 
+#include "BufferAllocator.h"
 #include "BufferPool.h"
 #include "ObjectPool.h"
-#include "BufferAllocator.h"
-#include "cocos/bindings/manual/jsb_global.h"
 #include "cocos/bindings/manual/jsb_classtype.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
+#include "cocos/bindings/manual/jsb_global.h"
 
 /********************************************************
        BufferPool binding
@@ -49,10 +49,10 @@ SE_DECLARE_FINALIZE_FUNC(jsb_BufferPool_finalize)
 
 static bool jsb_BufferPool_constructor(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 3) {
-        uint poolType = 0;
-        uint entryBits = 0;
+        uint poolType      = 0;
+        uint entryBits     = 0;
         uint bytesPerEntry = 0;
 
         bool ok = true;
@@ -108,10 +108,10 @@ SE_DECLARE_FINALIZE_FUNC(jsb_ObjectPool_finalize)
 
 static bool jsb_ObjectPool_constructor(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 2) {
         uint poolType = 0;
-        bool ok = true;
+        bool ok       = true;
         ok &= seval_to_uint(args[0], &poolType);
 
         if (!args[1].isObject()) {
@@ -142,8 +142,33 @@ static bool jsb_ObjectPool_finalize(se::State &s) {
 }
 SE_BIND_FINALIZE_FUNC(jsb_ObjectPool_finalize)
 
+static bool js_ObjectPool_bind(se::State &s) {
+    se::ObjectPool *cobj = SE_THIS_OBJECT<se::ObjectPool>(s);
+    SE_PRECONDITION2(cobj, false, "js_ObjectPool_bind : Invalid Native Object");
+    const auto &   args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
+    if (argc == 2) {
+        bool ok = true;
+        uint id = 0;
+        ok &= seval_to_uint(args[0], &id);
+        SE_PRECONDITION2(ok, false, "jsb_ObjectPool_bind : Error processing arguments");
+
+        if (!args[1].isObject()) {
+            SE_REPORT_ERROR("jsb_ObjectPool_bind: parameter 2 wants a Object");
+            return false;
+        }
+        se::Object *value = args[1].toObject();
+        cobj->bind(id, value);
+        return true;
+    }
+    SE_REPORT_ERROR("jsb_ObjectPool_bind: wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+}
+SE_BIND_FUNC(js_ObjectPool_bind)
+
 static bool js_register_se_ObjectPool(se::Object *obj) {
     se::Class *cls = se::Class::create("NativeObjectPool", obj, nullptr, _SE(jsb_ObjectPool_constructor));
+    cls->defineFunction("bind", _SE(js_ObjectPool_bind));
     cls->install();
     JSBClassType::registerClass<se::ObjectPool>(cls);
 
@@ -162,10 +187,10 @@ SE_DECLARE_FINALIZE_FUNC(jsb_BufferAllocator_finalize)
 
 static bool jsb_BufferAllocator_constructor(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 1) {
         uint type = 0;
-        bool ok = seval_to_uint(args[0], &type);
+        bool ok   = seval_to_uint(args[0], &type);
 
         se::BufferAllocator *BufferAllocator = JSB_ALLOC(se::BufferAllocator, static_cast<se::PoolType>(type));
         s.thisObject()->setPrivateData(BufferAllocator);
@@ -194,7 +219,7 @@ static bool jsb_BufferAllocator_alloc(se::State &s) {
     SE_PRECONDITION2(bufferAllocator, false, "jsb_Array_alloc : Invalid Native Object");
 
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 2) {
         uint index = 0;
         seval_to_uint(args[0], &index);
@@ -214,7 +239,7 @@ static bool jsb_BufferAllocator_free(se::State &s) {
     SE_PRECONDITION2(bufferAllocator, false, "jsb_Array_alloc : Invalid Native Object");
 
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 1) {
         uint index = 0;
         seval_to_uint(args[0], &index);
