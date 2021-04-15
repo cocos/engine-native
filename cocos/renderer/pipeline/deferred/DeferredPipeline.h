@@ -79,8 +79,7 @@ public:
 
 private:
     bool activeRenderer();
-    bool createQuadInputAssembler(gfx::Buffer* quadIB, gfx::Buffer* quadVB, gfx::InputAssembler* quadIA,
-        gfx::SurfaceTransform surfaceTransform);
+    bool createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA);
     void destroyQuadInputAssembler();
     void destroyDeferredData();
     void generateDeferredRenderData();
