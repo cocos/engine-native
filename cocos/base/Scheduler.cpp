@@ -47,7 +47,7 @@ void Timer::setupTimerWithInterval(float seconds, unsigned int repeat, float del
     _elapsed    = -1;
     _interval   = seconds;
     _delay      = delay;
-    _useDelay   = _delay > 0.0f;
+    _useDelay   = _delay > 0.0F;
     _repeat     = repeat;
     _runForever = _repeat == CC_REPEAT_FOREVER;
 }
@@ -90,7 +90,7 @@ void Timer::update(float dt) {
             break;
         }
 
-        if (_elapsed <= 0.f) {
+        if (_elapsed <= 0.F) {
             break;
         }
 
@@ -145,7 +145,7 @@ void Scheduler::removeHashElement(HashTimerEntry *element) {
 }
 
 void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float interval, bool paused, const std::string &key) {
-    this->schedule(callback, target, interval, CC_REPEAT_FOREVER, 0.0f, paused, key);
+    this->schedule(callback, target, interval, CC_REPEAT_FOREVER, 0.0F, paused, key);
 }
 
 void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float interval, unsigned int repeat, float delay, bool paused, const std::string &key) {
@@ -244,15 +244,11 @@ bool Scheduler::isScheduled(const std::string &key, void *target) {
         return false;
     }
 
-    for (auto *t : element->timers) {
+    const auto &timers = element->timers;
+    return std::any_of(timers.begin(), timers.end(), [&key](Timer *t) {
         auto *timer = dynamic_cast<TimerTargetCallback *>(t);
-
-        if (timer && key == timer->getKey()) {
-            return true;
-        }
-    }
-
-    return false; // should never get here
+        return (timer && key == timer->getKey());
+    });
 }
 
 void Scheduler::unscheduleAll() {
