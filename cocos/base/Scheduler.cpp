@@ -30,6 +30,7 @@
 #include "base/Scheduler.h"
 
 #include <vector>
+#include <algorithm>
 
 #include "base/Macros.h"
 #include "base/Log.h"
