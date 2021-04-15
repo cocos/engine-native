@@ -272,7 +272,7 @@ void Scheduler::unscheduleAllForTarget(void *target) {
     auto iter = _hashForTimers.find(target);
     if (iter != _hashForTimers.end()) {
         HashTimerEntry *element = iter->second;
-        auto            timers  = element->timers;
+        auto            &timers = element->timers;
         if (std::find(timers.begin(), timers.end(), element->currentTimer) != timers.end() &&
             (!element->currentTimerSalvaged)) {
             element->currentTimer->retain();
