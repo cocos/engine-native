@@ -805,8 +805,8 @@ cocos_source_files(
 if(CC_USE_GLES2 OR CC_USE_GLES3)
 cocos_source_files(
                  cocos/renderer/gfx-gles-common/GLESCommandPool.h
-    NO_WERROR    cocos/renderer/gfx-gles-common/eglw.cpp
-    NO_WERROR    cocos/renderer/gfx-gles-common/gles2w.cpp
+                 cocos/renderer/gfx-gles-common/eglw.cpp
+                 cocos/renderer/gfx-gles-common/gles2w.cpp
     NO_WERROR    cocos/renderer/gfx-gles-common/gles3w.cpp
 )
 endif()
@@ -814,42 +814,42 @@ endif()
 if(CC_USE_GLES2)
     cocos_source_files(
                      cocos/renderer/gfx-gles2/GFXGLES2.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Buffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2Buffer.cpp
                      cocos/renderer/gfx-gles2/GLES2Buffer.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2CommandBuffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2CommandBuffer.cpp
                      cocos/renderer/gfx-gles2/GLES2CommandBuffer.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Commands.cpp
+                     cocos/renderer/gfx-gles2/GLES2Commands.cpp
                      cocos/renderer/gfx-gles2/GLES2Commands.h
                      cocos/renderer/gfx-gles2/GLES2Context.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Context.cpp
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Device.cpp
+                     cocos/renderer/gfx-gles2/GLES2Context.cpp
+                     cocos/renderer/gfx-gles2/GLES2Device.cpp
                      cocos/renderer/gfx-gles2/GLES2Device.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Framebuffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2Framebuffer.cpp
                      cocos/renderer/gfx-gles2/GLES2Framebuffer.h
                      cocos/renderer/gfx-gles2/GLES2GPUObjects.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2InputAssembler.cpp
+                     cocos/renderer/gfx-gles2/GLES2InputAssembler.cpp
                      cocos/renderer/gfx-gles2/GLES2InputAssembler.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2DescriptorSet.cpp
+                     cocos/renderer/gfx-gles2/GLES2DescriptorSet.cpp
                      cocos/renderer/gfx-gles2/GLES2DescriptorSet.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.cpp
+                     cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.cpp
                      cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2PipelineLayout.cpp
+                     cocos/renderer/gfx-gles2/GLES2PipelineLayout.cpp
                      cocos/renderer/gfx-gles2/GLES2PipelineLayout.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2PipelineState.cpp
+                     cocos/renderer/gfx-gles2/GLES2PipelineState.cpp
                      cocos/renderer/gfx-gles2/GLES2PipelineState.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2PrimaryCommandBuffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2PrimaryCommandBuffer.cpp
                      cocos/renderer/gfx-gles2/GLES2PrimaryCommandBuffer.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Queue.cpp
+                     cocos/renderer/gfx-gles2/GLES2Queue.cpp
                      cocos/renderer/gfx-gles2/GLES2Queue.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2RenderPass.cpp
+                     cocos/renderer/gfx-gles2/GLES2RenderPass.cpp
                      cocos/renderer/gfx-gles2/GLES2RenderPass.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Sampler.cpp
+                     cocos/renderer/gfx-gles2/GLES2Sampler.cpp
                      cocos/renderer/gfx-gles2/GLES2Sampler.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Shader.cpp
+                     cocos/renderer/gfx-gles2/GLES2Shader.cpp
                      cocos/renderer/gfx-gles2/GLES2Shader.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Std.cpp
+                     cocos/renderer/gfx-gles2/GLES2Std.cpp
                      cocos/renderer/gfx-gles2/GLES2Std.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Texture.cpp
+                     cocos/renderer/gfx-gles2/GLES2Texture.cpp
                      cocos/renderer/gfx-gles2/GLES2Texture.h
                      cocos/renderer/gfx-gles2/GLES2Wrangler.h
     )
@@ -860,7 +860,7 @@ if(CC_USE_GLES2)
         )
     else()
         cocos_source_files(
-            NO_WERROR    cocos/renderer/gfx-gles2/GLES2Wrangler.cpp
+                         cocos/renderer/gfx-gles2/GLES2Wrangler.cpp
         )
     endif()
     if(IOS)
