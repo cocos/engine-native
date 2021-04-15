@@ -44,7 +44,8 @@
 #include "gfx-base/GFXTexture.h"
 #include "helper/SharedMemory.h"
 
-namespace cc::pipeline {
+namespace cc {
+namespace pipeline {
 
 RenderAdditiveLightQueue::RenderAdditiveLightQueue(RenderPipeline *pipeline) : _pipeline(dynamic_cast<ForwardPipeline *>(pipeline)),
                                                                                _instancedQueue(CC_NEW(RenderInstancedQueue)),
@@ -450,4 +451,5 @@ gfx::DescriptorSet *RenderAdditiveLightQueue::getOrCreateDescriptorSet(const Lig
     return _descriptorSetMap.at(light);
 }
 
-} // namespace cc::pipeline
+} // namespace pipeline
+} // namespace cc
