@@ -232,68 +232,68 @@ if(USE_AUDIO)
         )
     elseif(ANDROID)
         cocos_source_files(
-            NO_WERROR    cocos/audio/android/AssetFd.cpp
+                         cocos/audio/android/AssetFd.cpp
                          cocos/audio/android/AssetFd.h
                          cocos/audio/android/audio.h
                          cocos/audio/android/AudioBufferProvider.h
-            NO_WERROR    cocos/audio/android/AudioDecoder.cpp
+                         cocos/audio/android/AudioDecoder.cpp
                          cocos/audio/android/AudioDecoder.h
-            NO_WERROR    cocos/audio/android/AudioDecoderMp3.cpp
+                         cocos/audio/android/AudioDecoderMp3.cpp
                          cocos/audio/android/AudioDecoderMp3.h
-            NO_WERROR    cocos/audio/android/AudioDecoderOgg.cpp
+                         cocos/audio/android/AudioDecoderOgg.cpp
                          cocos/audio/android/AudioDecoderOgg.h
-            NO_WERROR    cocos/audio/android/AudioDecoderProvider.cpp
+                         cocos/audio/android/AudioDecoderProvider.cpp
                          cocos/audio/android/AudioDecoderProvider.h
-            NO_WERROR    cocos/audio/android/AudioDecoderSLES.cpp
+                         cocos/audio/android/AudioDecoderSLES.cpp
                          cocos/audio/android/AudioDecoderSLES.h
-            NO_WERROR    cocos/audio/android/AudioDecoderWav.cpp
+                         cocos/audio/android/AudioDecoderWav.cpp
                          cocos/audio/android/AudioDecoderWav.h
-            NO_WERROR    cocos/audio/android/AudioEngine-inl.cpp
+                         cocos/audio/android/AudioEngine-inl.cpp
                          cocos/audio/android/AudioEngine-inl.h
-            NO_WERROR    cocos/audio/android/AudioMixer.cpp
+                         cocos/audio/android/AudioMixer.cpp
                          cocos/audio/android/AudioMixer.h
-            NO_WERROR    cocos/audio/android/AudioMixerController.cpp
+                         cocos/audio/android/AudioMixerController.cpp
                          cocos/audio/android/AudioMixerController.h
                          cocos/audio/android/AudioMixerOps.h
-            NO_WERROR    cocos/audio/android/AudioPlayerProvider.cpp
+                         cocos/audio/android/AudioPlayerProvider.cpp
                          cocos/audio/android/AudioPlayerProvider.h
-            NO_WERROR    cocos/audio/android/AudioResampler.cpp
+                         cocos/audio/android/AudioResampler.cpp
                          cocos/audio/android/AudioResampler.h
-            NO_WERROR    cocos/audio/android/AudioResamplerCubic.cpp
+                         cocos/audio/android/AudioResamplerCubic.cpp
                          cocos/audio/android/AudioResamplerCubic.h
                          cocos/audio/android/AudioResamplerPublic.h
-            NO_WERROR    cocos/audio/android/audio_utils/format.c
+                         cocos/audio/android/audio_utils/format.c
                          cocos/audio/android/audio_utils/include/audio_utils/format.h
                          cocos/audio/android/audio_utils/include/audio_utils/minifloat.h
                          cocos/audio/android/audio_utils/include/audio_utils/primitives.h
-            NO_WERROR    cocos/audio/android/audio_utils/minifloat.cpp
-            NO_WERROR    cocos/audio/android/audio_utils/primitives.c
+                         cocos/audio/android/audio_utils/minifloat.cpp
+                         cocos/audio/android/audio_utils/primitives.c
                          cocos/audio/android/audio_utils/private/private.h
                          cocos/audio/android/cutils/bitops.h
                          cocos/audio/android/cutils/log.h
                          cocos/audio/android/IAudioPlayer.h
                          cocos/audio/android/ICallerThreadUtils.h
                          cocos/audio/android/IVolumeProvider.h
-            NO_WERROR    cocos/audio/android/mp3reader.cpp
+                         cocos/audio/android/mp3reader.cpp
                          cocos/audio/android/mp3reader.h
                          cocos/audio/android/OpenSLHelper.h
-            NO_WERROR    cocos/audio/android/PcmAudioPlayer.cpp
+                         cocos/audio/android/PcmAudioPlayer.cpp
                          cocos/audio/android/PcmAudioPlayer.h
-            NO_WERROR    cocos/audio/android/PcmAudioService.cpp
+                         cocos/audio/android/PcmAudioService.cpp
                          cocos/audio/android/PcmAudioService.h
-            NO_WERROR    cocos/audio/android/PcmBufferProvider.cpp
+                         cocos/audio/android/PcmBufferProvider.cpp
                          cocos/audio/android/PcmBufferProvider.h
-            NO_WERROR    cocos/audio/android/PcmData.cpp
+                         cocos/audio/android/PcmData.cpp
                          cocos/audio/android/PcmData.h
-            NO_WERROR    cocos/audio/android/tinysndfile.cpp
+                         cocos/audio/android/tinysndfile.cpp
                          cocos/audio/android/tinysndfile.h
-            NO_WERROR    cocos/audio/android/Track.cpp
+                         cocos/audio/android/Track.cpp
                          cocos/audio/android/Track.h
-            NO_WERROR    cocos/audio/android/UrlAudioPlayer.cpp
+                         cocos/audio/android/UrlAudioPlayer.cpp
                          cocos/audio/android/UrlAudioPlayer.h
                          cocos/audio/android/utils/Compat.h
                          cocos/audio/android/utils/Errors.h
-            NO_WERROR    cocos/audio/android/utils/Utils.cpp
+                         cocos/audio/android/utils/Utils.cpp
                          cocos/audio/android/utils/Utils.h
         )
     elseif(APPLE)
@@ -1434,8 +1434,8 @@ endif()
 
 if(ANDROID)
     cocos_source_files(
-        NO_WERROR    cocos/bindings/manual/jsb_platform_android.cpp
-        NO_WERROR    cocos/bindings/manual/JavaScriptJavaBridge.cpp
+                     cocos/bindings/manual/jsb_platform_android.cpp
+                     cocos/bindings/manual/JavaScriptJavaBridge.cpp
                      cocos/bindings/manual/JavaScriptJavaBridge.h
     )
 elseif(APPLE)
@@ -1549,7 +1549,7 @@ cocos_source_files(
 
 if(ANDROID)
     cocos_source_files(
-        NO_WERROR    cocos/storage/local-storage/LocalStorage-android.cpp
+                     cocos/storage/local-storage/LocalStorage-android.cpp
     )
 endif()
 
@@ -1579,17 +1579,17 @@ endif()
 if(ANDROID)
     if(USE_EDIT_BOX)
         cocos_source_files(
-            NO_WERROR    cocos/ui/edit-box/EditBox-android.cpp
+                         cocos/ui/edit-box/EditBox-android.cpp
         )
     endif()
     if(USE_VIDEO)
         cocos_source_files(
-            NO_WERROR    cocos/ui/videoplayer/VideoPlayer-android.cpp
+                         cocos/ui/videoplayer/VideoPlayer-android.cpp
         )
     endif()
     if(USE_WEBVIEW)
         cocos_source_files(
-            NO_WERROR    cocos/ui/webview/WebViewImpl-android.cpp
+                         cocos/ui/webview/WebViewImpl-android.cpp
         )
     endif()
 elseif(MACOSX)
