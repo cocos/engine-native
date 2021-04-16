@@ -26,8 +26,7 @@
 #include "ObjectPool.h"
 #include "base/memory/Memory.h"
 
-using namespace se;
-
+namespace se {
 cc::vector<ObjectPool *> ObjectPool::poolMap(CAST_POOL_TYPE(PoolType::FRAMEBUFFER));
 
 ObjectPool::ObjectPool(PoolType type, Object *jsArr)
@@ -36,7 +35,7 @@ ObjectPool::ObjectPool(PoolType type, Object *jsArr)
     CCASSERT(jsArr->isArray(), "ObjectPool: It must be initialized with a JavaScript array");
 
     _jsArr->incRef();
-    _indexMask                                     = 0xffffffff & ~_poolFlag;
+    _indexMask                                    = 0xffffffff & ~_poolFlag;
     ObjectPool::poolMap[GET_OBJECT_POOL_ID(type)] = this;
 }
 
@@ -52,3 +51,4 @@ void ObjectPool::bind(uint id, Object *obj) {
         _array[id] = obj;
     }
 }
+} // namespace se
