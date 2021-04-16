@@ -365,9 +365,10 @@ void GLES3Context::acquireSurface(uintptr_t windowHandle) {
         CC_LOG_ERROR("Getting configuration attributes failed.");
         return;
     }
-    uint width  = GLES3Device::getInstance()->getWidth();
-    uint height = GLES3Device::getInstance()->getHeight();
-    ANativeWindow_setBuffersGeometry(reinterpret_cast<ANativeWindow *>(_windowHandle), width, height, nFmt);
+    ANativeWindow *window = reinterpret_cast<ANativeWindow *>(_windowHandle);
+    uint           width  = ANativeWindow_getWidth(window);
+    uint           height = ANativeWindow_getHeight(window);
+    ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
 
     EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, reinterpret_cast<EGLNativeWindowType>(_windowHandle), nullptr));
     if (_eglSurface == EGL_NO_SURFACE) {
