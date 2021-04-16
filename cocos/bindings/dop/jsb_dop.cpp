@@ -35,10 +35,10 @@
 /********************************************************
        BufferPool binding
    *******************************************************/
-se::Class *jsb_BufferPool_class = nullptr;
+se::Class *jsb_BufferPool_class = nullptr; // NOLINT
 
-static bool jsb_BufferPool_allocateNewChunk(se::State &s) {
-    se::BufferPool *pool = (se::BufferPool *)s.nativeThisObject();
+static bool jsb_BufferPool_allocateNewChunk(se::State &s) { // NOLINT
+    auto *pool = static_cast<se::BufferPool *>(s.nativeThisObject());
     SE_PRECONDITION2(pool, false, "jsb_BufferPool_allocateNewChunk : Invalid Native Object");
     s.rval().setObject(pool->allocateNewChunk());
     return true;
@@ -47,7 +47,7 @@ SE_BIND_FUNC(jsb_BufferPool_allocateNewChunk);
 
 SE_DECLARE_FINALIZE_FUNC(jsb_BufferPool_finalize)
 
-static bool jsb_BufferPool_constructor(se::State &s) {
+static bool jsb_BufferPool_constructor(se::State &s) { // NOLINT
     const auto &args = s.args();
     size_t      argc = args.size();
     if (argc == 3) {
@@ -73,27 +73,27 @@ static bool jsb_BufferPool_constructor(se::State &s) {
     SE_REPORT_ERROR("jsb_BufferPool_constructor: wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_CTOR(jsb_BufferPool_constructor, jsb_BufferPool_class, jsb_BufferPool_finalize)
+SE_BIND_CTOR(jsb_BufferPool_constructor, jsb_BufferPool_class, jsb_BufferPool_finalize) // NOLINT
 
-static bool jsb_BufferPool_finalize(se::State &s) {
+static bool jsb_BufferPool_finalize(se::State &s) { // NOLINT
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end()) {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        se::BufferPool *cobj = (se::BufferPool *)s.nativeThisObject();
+        auto *cobj = static_cast<se::BufferPool *>(s.nativeThisObject());
         JSB_FREE(cobj);
     }
     return true;
 }
 SE_BIND_FINALIZE_FUNC(jsb_BufferPool_finalize)
 
-static bool js_register_se_BufferPool(se::Object *obj) {
+static bool js_register_se_BufferPool(se::Object *obj) { // NOLINT
     se::Class *cls = se::Class::create("NativeBufferPool", obj, nullptr, _SE(jsb_BufferPool_constructor));
 
     cls->defineFunction("allocateNewChunk", _SE(jsb_BufferPool_allocateNewChunk));
     cls->install();
     JSBClassType::registerClass<se::BufferPool>(cls);
 
-    jsb_BufferPool_class = cls;
+    jsb_BufferPool_class = cls; // NOLINT
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -102,11 +102,11 @@ static bool js_register_se_BufferPool(se::Object *obj) {
 /***************************************************
    ObjectPool binding
   *****************************************************/
-static se::Class *jsb_ObjectPool_class = nullptr;
+static se::Class *jsb_ObjectPool_class = nullptr; // NOLINT
 
 SE_DECLARE_FINALIZE_FUNC(jsb_ObjectPool_finalize)
 
-static bool jsb_ObjectPool_constructor(se::State &s) {
+static bool jsb_ObjectPool_constructor(se::State &s) { // NOLINT
     const auto &args = s.args();
     size_t      argc = args.size();
     if (argc == 2) {
@@ -131,19 +131,19 @@ static bool jsb_ObjectPool_constructor(se::State &s) {
 }
 SE_BIND_CTOR(jsb_ObjectPool_constructor, jsb_ObjectPool_class, jsb_ObjectPool_finalize)
 
-static bool jsb_ObjectPool_finalize(se::State &s) {
+static bool jsb_ObjectPool_finalize(se::State &s) { // NOLINT
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end()) {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        se::ObjectPool *cobj = (se::ObjectPool *)s.nativeThisObject();
+        auto *cobj = static_cast<se::ObjectPool *>(s.nativeThisObject());
         JSB_FREE(cobj);
     }
     return true;
 }
 SE_BIND_FINALIZE_FUNC(jsb_ObjectPool_finalize)
 
-static bool js_ObjectPool_bind(se::State &s) {
-    se::ObjectPool *cobj = SE_THIS_OBJECT<se::ObjectPool>(s);
+static bool js_ObjectPool_bind(se::State &s) { // NOLINT
+    auto *cobj = SE_THIS_OBJECT<se::ObjectPool>(s);
     SE_PRECONDITION2(cobj, false, "js_ObjectPool_bind : Invalid Native Object");
     const auto &   args = s.args();
     size_t         argc = args.size();
@@ -166,13 +166,13 @@ static bool js_ObjectPool_bind(se::State &s) {
 }
 SE_BIND_FUNC(js_ObjectPool_bind)
 
-static bool js_register_se_ObjectPool(se::Object *obj) {
+static bool js_register_se_ObjectPool(se::Object *obj) { // NOLINT
     se::Class *cls = se::Class::create("NativeObjectPool", obj, nullptr, _SE(jsb_ObjectPool_constructor));
     cls->defineFunction("bind", _SE(js_ObjectPool_bind));
     cls->install();
     JSBClassType::registerClass<se::ObjectPool>(cls);
 
-    jsb_ObjectPool_class = cls;
+    jsb_ObjectPool_class = cls; // NOLINT
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -181,20 +181,20 @@ static bool js_register_se_ObjectPool(se::Object *obj) {
 /*****************************************************
    Array binding
   ******************************************************/
-static se::Class *jsb_BufferAllocator_class = nullptr;
+static se::Class *jsb_BufferAllocator_class = nullptr; // NOLINT
 
 SE_DECLARE_FINALIZE_FUNC(jsb_BufferAllocator_finalize)
 
-static bool jsb_BufferAllocator_constructor(se::State &s) {
+static bool jsb_BufferAllocator_constructor(se::State &s) { // NOLINT
     const auto &args = s.args();
     size_t      argc = args.size();
     if (argc == 1) {
         uint type = 0;
         bool ok   = seval_to_uint(args[0], &type);
 
-        se::BufferAllocator *BufferAllocator = JSB_ALLOC(se::BufferAllocator, static_cast<se::PoolType>(type));
-        s.thisObject()->setPrivateData(BufferAllocator);
-        se::NonRefNativePtrCreatedByCtorMap::emplace(BufferAllocator);
+        se::BufferAllocator *bufferAllocator = JSB_ALLOC(se::BufferAllocator, static_cast<se::PoolType>(type));
+        s.thisObject()->setPrivateData(bufferAllocator);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(bufferAllocator);
         return true;
     }
 
@@ -203,19 +203,19 @@ static bool jsb_BufferAllocator_constructor(se::State &s) {
 }
 SE_BIND_CTOR(jsb_BufferAllocator_constructor, jsb_BufferAllocator_class, jsb_BufferAllocator_finalize)
 
-static bool jsb_BufferAllocator_finalize(se::State &s) {
+static bool jsb_BufferAllocator_finalize(se::State &s) { // NOLINT
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(s.nativeThisObject());
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end()) {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        se::BufferAllocator *cobj = (se::BufferAllocator *)s.nativeThisObject();
+        auto *cobj = static_cast<se::BufferAllocator *>(s.nativeThisObject());
         JSB_FREE(cobj);
     }
     return true;
 }
 SE_BIND_FINALIZE_FUNC(jsb_BufferAllocator_finalize)
 
-static bool jsb_BufferAllocator_alloc(se::State &s) {
-    se::BufferAllocator *bufferAllocator = (se::BufferAllocator *)s.nativeThisObject();
+static bool jsb_BufferAllocator_alloc(se::State &s) { // NOLINT
+    auto *bufferAllocator = static_cast<se::BufferAllocator *>(s.nativeThisObject());
     SE_PRECONDITION2(bufferAllocator, false, "jsb_Array_alloc : Invalid Native Object");
 
     const auto &args = s.args();
@@ -234,8 +234,8 @@ static bool jsb_BufferAllocator_alloc(se::State &s) {
 }
 SE_BIND_FUNC(jsb_BufferAllocator_alloc);
 
-static bool jsb_BufferAllocator_free(se::State &s) {
-    se::BufferAllocator *bufferAllocator = (se::BufferAllocator *)s.nativeThisObject();
+static bool jsb_BufferAllocator_free(se::State &s) { // NOLINT
+    auto *bufferAllocator = static_cast<se::BufferAllocator *>(s.nativeThisObject());
     SE_PRECONDITION2(bufferAllocator, false, "jsb_Array_alloc : Invalid Native Object");
 
     const auto &args = s.args();
@@ -252,21 +252,21 @@ static bool jsb_BufferAllocator_free(se::State &s) {
 }
 SE_BIND_FUNC(jsb_BufferAllocator_free);
 
-static bool js_register_se_BufferAllocator(se::Object *obj) {
+static bool js_register_se_BufferAllocator(se::Object *obj) { // NOLINT
     se::Class *cls = se::Class::create("NativeBufferAllocator", obj, nullptr, _SE(jsb_BufferAllocator_constructor));
     cls->defineFunction("alloc", _SE(jsb_BufferAllocator_alloc));
     cls->defineFunction("free", _SE(jsb_BufferAllocator_free));
     cls->install();
     JSBClassType::registerClass<se::BufferAllocator>(cls);
 
-    jsb_BufferAllocator_class = cls;
+    jsb_BufferAllocator_class = cls; // NOLINT
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
 
-bool register_all_dop_bindings(se::Object *obj) {
-    // TODO: Don't make dop into jsb namespace. Currently put it into jsb namesapce just to test codes.
+bool register_all_dop_bindings(se::Object *obj) { // NOLINT
+    // TODO(liuhang): Don't make dop into jsb namespace. Currently put it into jsb namesapce just to test codes.
     se::Value nsVal;
     if (!obj->getProperty("jsb", &nsVal)) {
         se::HandleObject jsobj(se::Object::createPlainObject());
@@ -275,8 +275,8 @@ bool register_all_dop_bindings(se::Object *obj) {
     }
     se::Object *ns = nsVal.toObject();
 
-    js_register_se_BufferAllocator(ns);
-    js_register_se_BufferPool(ns);
-    js_register_se_ObjectPool(ns);
+    js_register_se_BufferAllocator(ns); // NOLINT
+    js_register_se_BufferPool(ns);      // NOLINT
+    js_register_se_ObjectPool(ns);      // NOLINT
     return true;
 }

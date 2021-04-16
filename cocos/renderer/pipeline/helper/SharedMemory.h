@@ -92,15 +92,15 @@ extern gfx::BlendState *getBlendStateImpl(uint index);
 // Get raw buffer or gfx object.
 #define GET_RAW_BUFFER(index, size) SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
 
-static const float SHADOW_CAMERA_MAX_FAR    = 2000.0f;
-static const float COEFFICIENT_OF_EXPANSION = 2.0f * std::sqrtf(3.0f);
+static const float SHADOW_CAMERA_MAX_FAR    = 2000.0F;
+static const float COEFFICIENT_OF_EXPANSION = 2.0F * std::sqrtf(3.0F);
 
 class CC_DLL SharedMemory : public Object {
 public:
     template <typename T>
     static T *getBuffer(uint index) {
         const auto &bufferMap = se::BufferPool::getPoolMap();
-        const auto  type      = GET_BUFFER_POOL_ID(T::type);
+        const auto  type      = GET_BUFFER_POOL_ID(T::TYPE);
 
 #ifdef CC_DEBUG
         CCASSERT(bufferMap[type] != nullptr, "BufferPool: Invalid buffer pool type");
@@ -159,19 +159,19 @@ struct CC_DLL Node {
     cc::Vec4 worldRotation;
     cc::Mat4 worldMatrix;
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL AABB {
     cc::Vec3 center;
     cc::Vec3 halfExtents;
 
-    void getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const;
+    void getBoundary(cc::Vec3 &minPos, cc::Vec3 &maxPos) const; // NOLINT
     void merge(const AABB &aabb);
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
-bool aabb_aabb(const AABB *, const AABB *);
+bool aabb_aabb(const AABB *, const AABB *); // NOLINT
 
 struct CC_DLL Plane {
     cc::Vec3 normal;
@@ -183,9 +183,9 @@ struct CC_DLL  Frustum {
     cc::Vec3 vertices[8];
     Plane    planes[PLANE_LENGTH];
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
-bool aabb_frustum(const AABB *, const Frustum *);
+bool aabb_frustum(const AABB *, const Frustum *); // NOLINT
 
 enum class LightType {
     DIRECTIONAL,
@@ -201,9 +201,9 @@ struct CC_DLL Light {
     uint32_t lightType           = 0;
     uint32_t aabbID              = 0;
     uint32_t frustumID           = 0;
-    float    size                = 0.15f;
-    float    spotAngle           = 0.0f;
-    float    aspect              = 1.0f;
+    float    size                = 0.15F;
+    float    spotAngle           = 0.0F;
+    float    aspect              = 1.0F;
     cc::Vec3 direction;
     cc::Vec3 color;
     cc::Vec3 colorTemperatureRGB;
@@ -214,7 +214,7 @@ struct CC_DLL Light {
     CC_INLINE const AABB *getAABB() const { return GET_AABB(aabbID); }
     CC_INLINE const Frustum *getFrustum() const { return GET_FRUSTUM(frustumID); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL FlatBufferView {
@@ -224,7 +224,7 @@ struct CC_DLL FlatBufferView {
 
     CC_INLINE uint8_t *getBuffer(uint *size) const { return GET_RAW_BUFFER(bufferID, size); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL InstancedAttributeView {
@@ -235,16 +235,16 @@ struct CC_DLL InstancedAttributeView {
 
     CC_INLINE const uint8_t *getBuffer(uint *size) const { return GET_RAW_BUFFER(bufferID, size); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL RenderingSubMesh {
     uint32_t flatBuffersID = 0; // array pool id
 
-    CC_INLINE const uint *getFlatBufferArrayID() const { return GET_FLAT_BUFFER_ARRAY(flatBuffersID); }
-    CC_INLINE const FlatBufferView *getFlatBuffer(uint idx) const { return GET_FLAT_BUFFER(idx); }
+    CC_INLINE const uint * getFlatBufferArrayID() const { return GET_FLAT_BUFFER_ARRAY(flatBuffersID); }
+    static CC_INLINE const FlatBufferView *getFlatBuffer(uint idx) { return GET_FLAT_BUFFER(idx); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 enum class CC_DLL BatchingSchemes {
@@ -275,7 +275,7 @@ struct CC_DLL PassView {
     CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return GET_DESCRIPTOR_SET(descriptorSetID); }
     CC_INLINE gfx::PipelineLayout *getPipelineLayout() const { return GET_PIPELINE_LAYOUT(pipelineLayoutID); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL SubModelView {
@@ -297,7 +297,7 @@ struct CC_DLL SubModelView {
     CC_INLINE gfx::InputAssembler *getInputAssembler() const { return GET_IA(inputAssemblerID); }
     CC_INLINE const RenderingSubMesh *getSubMesh() const { return GET_RENDER_SUBMESH(subMeshID); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL ModelView {
@@ -315,12 +315,12 @@ struct CC_DLL ModelView {
     CC_INLINE const AABB *getWorldBounds() const { return GET_AABB(worldBoundsID); }
     CC_INLINE const Node *getNode() const { return GET_NODE(nodeID); }
     CC_INLINE const Node *getTransform() const { return GET_NODE(transformID); }
-    CC_INLINE const uint *getSubModelID() const { return GET_SUBMODEL_ARRAY(subModelsID); }
-    CC_INLINE const SubModelView *getSubModelView(uint idx) const { return GET_SUBMODEL(idx); }
+    CC_INLINE const uint * getSubModelID() const { return GET_SUBMODEL_ARRAY(subModelsID); }
+    static CC_INLINE const SubModelView *getSubModelView(uint idx) { return GET_SUBMODEL(idx); }
     CC_INLINE const uint8_t *getInstancedBuffer(uint *size) const { return GET_RAW_BUFFER(instancedBufferID, size); }
     CC_INLINE const uint *getInstancedAttributeID() const { return GET_ATTRIBUTE_ARRAY(instancedAttrsID); }
-    CC_INLINE gfx::Attribute *getInstancedAttribute(uint idx) const { return GET_ATTRIBUTE(idx); }
-    const static se::PoolType type;
+    static CC_INLINE gfx::Attribute *getInstancedAttribute(uint idx) { return GET_ATTRIBUTE(idx); }
+    const static se::PoolType        TYPE;
 };
 
 struct CC_DLL UIBatch {
@@ -336,7 +336,7 @@ struct CC_DLL UIBatch {
     CC_INLINE gfx::DescriptorSet *getDescriptorSet() const { return GET_DESCRIPTOR_SET(descriptorSetID); }
     CC_INLINE gfx::InputAssembler *getInputAssembler() const { return GET_IA(inputAssemblerID); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL Scene {
@@ -347,15 +347,15 @@ struct CC_DLL Scene {
     uint32_t uiBatches;       // array pool
 
     CC_INLINE const Light *getMainLight() const { return GET_LIGHT(mainLightID); }
-    CC_INLINE const uint *getSphereLightArrayID() const { return GET_LIGHT_ARRAY(sphereLights); }
-    CC_INLINE const Light *getSphereLight(uint idx) const { return GET_LIGHT(idx); }
-    CC_INLINE const uint *getSpotLightArrayID() const { return GET_LIGHT_ARRAY(spotLights); }
-    CC_INLINE const Light *getSpotLight(uint idx) const { return GET_LIGHT(idx); }
-    CC_INLINE const uint *getModels() const { return GET_MODEL_ARRAY(modelsID); }
-    CC_INLINE const ModelView *getModelView(uint idx) const { return GET_MODEL(idx); }
+    CC_INLINE const uint * getSphereLightArrayID() const { return GET_LIGHT_ARRAY(sphereLights); }
+    static CC_INLINE const Light *getSphereLight(uint idx) { return GET_LIGHT(idx); }
+    CC_INLINE const uint * getSpotLightArrayID() const { return GET_LIGHT_ARRAY(spotLights); }
+    static CC_INLINE const Light *getSpotLight(uint idx) { return GET_LIGHT(idx); }
+    CC_INLINE const uint * getModels() const { return GET_MODEL_ARRAY(modelsID); }
+    static CC_INLINE const ModelView *getModelView(uint idx) { return GET_MODEL(idx); }
     CC_INLINE const uint *getUIBatches() const { return GET_UI_BATCH_ARRAY(uiBatches); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL RenderWindow {
@@ -365,7 +365,7 @@ struct CC_DLL RenderWindow {
 
     CC_INLINE gfx::Framebuffer *getFramebuffer() const { return GET_FRAMEBUFFER(framebufferID); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL Camera {
@@ -402,7 +402,7 @@ struct CC_DLL Camera {
     CC_INLINE const Frustum *getFrustum() const { return GET_FRUSTUM(frustumID); }
     CC_INLINE const RenderWindow *getWindow() const { return GET_WINDOW(windowID); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL Ambient {
@@ -411,7 +411,7 @@ struct CC_DLL Ambient {
     cc::Vec4 skyColor;
     cc::Vec4 groundAlbedo;
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL Fog {
@@ -425,7 +425,7 @@ struct CC_DLL Fog {
     float    fogRange   = 0;
     cc::Vec4 fogColor;
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL Sphere {
@@ -440,9 +440,9 @@ struct CC_DLL Sphere {
     bool           interset(const Frustum &frustum) const;
     int            interset(const Plane &plane) const;
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
-bool sphere_frustum(const Sphere *sphere, const Frustum *frustum);
+bool sphere_frustum(const Sphere *sphere, const Frustum *frustum); //NOLINT
 
 enum class CC_DLL ShadowType {
     PLANAR    = 0,
@@ -453,16 +453,16 @@ struct CC_DLL Shadows {
     uint32_t enabled        = 0;
     uint32_t dirty          = 0;
     uint32_t shadowType     = 0;
-    float    distance       = 0.0f;
+    float    distance       = 0.0F;
     uint32_t instancePass   = 0;
     uint32_t planarPass     = 0;
-    float    nearValue      = 0.0f;
-    float    farValue       = 0.0f;
-    float    aspect         = 0.0f;
+    float    nearValue      = 0.0F;
+    float    farValue       = 0.0F;
+    float    aspect         = 0.0F;
     uint32_t pcfType        = 0;
     uint32_t shadowMapDirty = 0;
-    float    bias           = 0.0f;
-    float    orthoSize      = 0.0f;
+    float    bias           = 0.0F;
+    float    orthoSize      = 0.0F;
     uint32_t autoAdapt      = 0;
 
     cc::Vec4 color;
@@ -474,7 +474,7 @@ struct CC_DLL Shadows {
     CC_INLINE PassView *getPlanarShadowPass() const { return GET_PASS(planarPass); }
     CC_INLINE PassView *getInstancePass() const { return GET_PASS(instancePass); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL Skybox {
@@ -485,7 +485,7 @@ struct CC_DLL Skybox {
 
     CC_INLINE const ModelView *getModel() const { return GET_MODEL(modelID); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL PipelineSharedSceneData {
@@ -510,14 +510,14 @@ struct CC_DLL PipelineSharedSceneData {
     CC_INLINE PassView *getDeferredPostPass() const { return GET_PASS(deferredPostPass); }
     CC_INLINE gfx::Shader *getDeferredPostPassShader() const { return GET_SHADER(deferredPostPassShader); }
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 struct CC_DLL Root {
     float cumulativeTime = 0;
     float frameTime      = 0;
 
-    const static se::PoolType type;
+    const static se::PoolType TYPE;
 };
 
 } //namespace pipeline

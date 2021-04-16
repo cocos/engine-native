@@ -29,25 +29,23 @@
 
 namespace se {
 
-cc::vector<BufferPool *> BufferPool::_poolMap(BUFFER_POOL_SIZE);
+cc::vector<BufferPool *> BufferPool::poolMap(BUFFER_POOL_SIZE);
 
 BufferPool::BufferPool(PoolType type, uint entryBits, uint bytesPerEntry)
 : _allocator(type),
   _entryBits(entryBits),
   _bytesPerEntry(bytesPerEntry),
   _type(type) {
-
     _entriesPerChunk = 1 << entryBits;
     _entryMask       = _entriesPerChunk - 1;
-    _chunkMask       = 0xffffffff & ~(_entryMask | _poolFlag);
+    _chunkMask       = 0xffffffff & ~(_entryMask | POOL_FLAG);
 
     _bytesPerChunk = _bytesPerEntry * _entriesPerChunk;
 
-    BufferPool::_poolMap[GET_BUFFER_POOL_ID(type)] = this;
+    BufferPool::poolMap[GET_BUFFER_POOL_ID(type)] = this;
 }
 
-BufferPool::~BufferPool() {
-}
+BufferPool::~BufferPool() = default;
 
 Object *BufferPool::allocateNewChunk() {
     Object *jsObj = _allocator.alloc(static_cast<uint>(_chunks.size()), _bytesPerChunk);

@@ -38,14 +38,14 @@ class CC_DLL BufferAllocator final : public cc::Object {
 public:
     template <class T>
     static T *getBuffer(PoolType type, uint index) {
-        index &= _bufferMask;
+        index &= BUFFER_MASK;
         const auto p = GET_ARRAY_POOL_ID(type);
 
 #ifdef CC_DEBUG
-        CCASSERT(BufferAllocator::_pools[p] != nullptr, "BufferPool: Invalid buffer pool type");
+        CCASSERT(BufferAllocator::pools[p] != nullptr, "BufferPool: Invalid buffer pool type");
 #endif
 
-        const auto pool = BufferAllocator::_pools[p];
+        auto *const pool = BufferAllocator::pools[p];
 
 #ifdef CC_DEBUG
         CCASSERT(pool->_caches.count(index) != 0, "BufferPool: Invalid buffer pool index");
@@ -56,14 +56,14 @@ public:
 
     template <class T>
     static T *getBuffer(PoolType type, uint index, uint *size) {
-        index &= _bufferMask;
+        index &= BUFFER_MASK;
         const auto p = GET_ARRAY_POOL_ID(type);
 
 #ifdef CC_DEBUG
-        CCASSERT(BufferAllocator::_pools[p] != nullptr, "BufferPool: Invalid buffer pool type");
+        CCASSERT(BufferAllocator::pools[p] != nullptr, "BufferPool: Invalid buffer pool type");
 #endif
 
-        const auto pool = BufferAllocator::_pools[p];
+        auto *const pool = BufferAllocator::pools[p];
 
 #ifdef CC_DEBUG
         CCASSERT(pool->_buffers.count(index) != 0, "BufferPool: Invalid buffer pool index");
@@ -71,20 +71,20 @@ public:
 
         T *    ret = nullptr;
         size_t len;
-        pool->_buffers[index]->getArrayBufferData((uint8_t **)&ret, &len);
-        *size = (uint)len;
+        pool->_buffers[index]->getArrayBufferData(static_cast<uint8_t **>(&ret), &len);
+        *size = static_cast<uint>(len);
         return ret;
     }
 
-    BufferAllocator(PoolType type);
-    ~BufferAllocator();
+    explicit BufferAllocator(PoolType type);
+    ~BufferAllocator() override;
 
     Object *alloc(uint index, uint bytes);
     void    free(uint index);
 
 private:
-    static cc::vector<BufferAllocator *> _pools;
-    static constexpr uint                _bufferMask = ~(1 << 30);
+    static cc::vector<BufferAllocator *> pools;
+    static constexpr uint                BUFFER_MASK = ~(1 << 30);
 
     cc::map<uint, Object *>  _buffers;
     cc::map<uint, uint8_t *> _caches;

@@ -28,7 +28,7 @@
 
 using namespace se;
 
-cc::vector<ObjectPool *> ObjectPool::_poolMap(static_cast<uint>(PoolType::FRAMEBUFFER));
+cc::vector<ObjectPool *> ObjectPool::poolMap(CAST_POOL_TYPE(PoolType::FRAMEBUFFER));
 
 ObjectPool::ObjectPool(PoolType type, Object *jsArr)
 : _type(type),
@@ -37,7 +37,7 @@ ObjectPool::ObjectPool(PoolType type, Object *jsArr)
 
     _jsArr->incRef();
     _indexMask                                     = 0xffffffff & ~_poolFlag;
-    ObjectPool::_poolMap[GET_OBJECT_POOL_ID(type)] = this;
+    ObjectPool::poolMap[GET_OBJECT_POOL_ID(type)] = this;
 }
 
 ObjectPool::~ObjectPool() {

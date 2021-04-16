@@ -36,10 +36,10 @@ namespace se {
 
 class CC_DLL ObjectPool final : public cc::Object {
 public:
-    CC_INLINE static const cc::vector<ObjectPool *> &getPoolMap() { return ObjectPool::_poolMap; }
+    CC_INLINE static const cc::vector<ObjectPool *> &getPoolMap() { return ObjectPool::poolMap; }
 
     ObjectPool(PoolType type, Object *jsArr);
-    ~ObjectPool();
+    ~ObjectPool() override;
 
     template <class Type>
     Type *getTypedObject(uint id) const {
@@ -49,14 +49,13 @@ public:
         CCASSERT(id < _array.size(), "ObjectPool: Invalid buffer pool entry id");
 #endif
 
-        return (Type *)_array[id]->getPrivateData();
+        return static_cast<Type *>(_array[id]->getPrivateData());
     }
 
-public:
     void bind(uint id, Object *);
 
 private:
-    static cc::vector<ObjectPool *> _poolMap;
+    static cc::vector<ObjectPool *> poolMap;
 
     cc::vector<Object *> _array;
     PoolType             _type      = PoolType::SHADER;
