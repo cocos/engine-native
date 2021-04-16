@@ -17,10 +17,10 @@ For now, **Visual Studio Code** is our first recommended IDE for the job, while 
 * Open terminal (or git-bash/MSYS2 if you are on windows), navigate to `engine-native` folder and run:
 
     ```bash
-    utils/generate_compile_commands_android.sh
+    utils/generate_compile_commands_android.sh # other platforms
+    utils/generate_compile_commands_android_windows.sh # if using git-bash on windows
     ```
 
-    You may need to have `make` in your environment path for it to work.
     If it succeeds, you should see a `compile_commands.json` generated in the same folder, and ignored by git.
 
     ![](imgs/compile_commands.png)
