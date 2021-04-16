@@ -43,14 +43,14 @@
 namespace cc {
 namespace pipeline {
 namespace {
-#define TO_VEC3(dst, src, offset) \
-    dst[offset]     = (src).x;      \
-    (dst)[(offset) + 1] = (src).y;      \
+#define TO_VEC3(dst, src, offset)  \
+    dst[offset]         = (src).x; \
+    (dst)[(offset) + 1] = (src).y; \
     (dst)[(offset) + 2] = (src).z;
-#define TO_VEC4(dst, src, offset) \
-    dst[offset]     = (src).x;      \
-    (dst)[(offset) + 1] = (src).y;      \
-    (dst)[(offset) + 2] = (src).z;      \
+#define TO_VEC4(dst, src, offset)  \
+    dst[offset]         = (src).x; \
+    (dst)[(offset) + 1] = (src).y; \
+    (dst)[(offset) + 2] = (src).z; \
     (dst)[(offset) + 3] = (src).w;
 } // namespace
 
@@ -59,7 +59,7 @@ gfx::RenderPass *DeferredPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFl
         return _renderPasses[clearFlags];
     }
 
-    auto *                        device = gfx::Device::getInstance();
+    auto *                      device = gfx::Device::getInstance();
     gfx::ColorAttachment        colorAttachment;
     gfx::DepthStencilAttachment depthStencilAttachment;
     colorAttachment.format                = device->getColorFormat();
@@ -82,7 +82,7 @@ gfx::RenderPass *DeferredPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFl
         depthStencilAttachment.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
     }
 
-    auto *renderPass           = device->createRenderPass({
+    auto *renderPass          = device->createRenderPass({
         {colorAttachment},
         depthStencilAttachment,
     });
@@ -143,12 +143,12 @@ void DeferredPipeline::render(const vector<uint> &cameras) {
     _device->getQueue()->submit(_commandBuffers);
 }
 
-bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer *quadVB, gfx::InputAssembler *quadIA, gfx::SurfaceTransform surfaceTransform) {
+bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA, gfx::SurfaceTransform surfaceTransform) {
     // step 1 create vertex buffer
     uint vbStride = sizeof(float) * 4;
     uint vbSize   = vbStride * 4;
-    quadVB        = _device->createBuffer({gfx::BufferUsageBit::VERTEX | gfx::BufferUsageBit::TRANSFER_DST,
-                                    gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, vbSize, vbStride});
+    *quadVB       = _device->createBuffer({gfx::BufferUsageBit::VERTEX | gfx::BufferUsageBit::TRANSFER_DST,
+                                     gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, vbSize, vbStride});
     if (!quadVB) {
         return false;
     }
@@ -236,30 +236,30 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer
             break;
     }
 
-    quadVB->update(vbData, sizeof(vbData));
+    (*quadVB)->update(vbData, sizeof(vbData));
 
     // step 2 create index buffer
     uint ibStride = 4;
     uint ibSize   = ibStride * 6;
 
-    quadIB = _device->createBuffer({gfx::BufferUsageBit::INDEX | gfx::BufferUsageBit::TRANSFER_DST,
-                                    gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, ibSize, ibStride});
+    *quadIB = _device->createBuffer({gfx::BufferUsageBit::INDEX | gfx::BufferUsageBit::TRANSFER_DST,
+                                     gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, ibSize, ibStride});
 
-    if (!quadIB) {
+    if (*quadIB == nullptr) {
         return false;
     }
 
     unsigned int ibData[] = {0, 1, 2, 1, 3, 2};
-    quadIB->update(ibData, sizeof(ibData));
+    (*quadIB)->update(ibData, sizeof(ibData));
 
     // step 3 create input assembler
     gfx::InputAssemblerInfo info;
     info.attributes.push_back({"a_position", gfx::Format::RG32F});
     info.attributes.push_back({"a_texCoord", gfx::Format::RG32F});
-    info.vertexBuffers.push_back(quadVB);
-    info.indexBuffer = quadIB;
-    quadIA           = _device->createInputAssembler(info);
-    return quadIA != nullptr;
+    info.vertexBuffers.push_back(*quadVB);
+    info.indexBuffer = *quadIB;
+    *quadIA          = _device->createInputAssembler(info);
+    return *quadIA != nullptr;
 }
 
 gfx::Rect DeferredPipeline::getRenderArea(Camera *camera, bool onScreen) {
@@ -320,7 +320,7 @@ bool DeferredPipeline::activeRenderer() {
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
     };
-    const auto samplerHash = SamplerLib::genSamplerHash(info);
+    const auto  samplerHash = SamplerLib::genSamplerHash(info);
     auto *const sampler     = SamplerLib::getSampler(samplerHash);
 
     // Main light sampler binding
@@ -337,11 +337,11 @@ bool DeferredPipeline::activeRenderer() {
     _macros.setValue("CC_USE_HDR", static_cast<bool>(sharedData->isHDR));
     _macros.setValue("CC_SUPPORT_FLOAT_TEXTURE", _device->hasFeature(gfx::Feature::TEXTURE_FLOAT));
 
-    if (!createQuadInputAssembler(_quadIB, _quadVBOffscreen, _quadIAOffscreen, gfx::SurfaceTransform::IDENTITY)) {
+    if (!createQuadInputAssembler(&_quadIB, &_quadVBOffscreen, &_quadIAOffscreen, gfx::SurfaceTransform::IDENTITY)) {
         return false;
     }
 
-    if (!createQuadInputAssembler(_quadIB, _quadVBOnscreen, _quadIAOnscreen, _device->getSurfaceTransform())) {
+    if (!createQuadInputAssembler(&_quadIB, &_quadVBOnscreen, &_quadIAOnscreen, _device->getSurfaceTransform())) {
         return false;
     }
 

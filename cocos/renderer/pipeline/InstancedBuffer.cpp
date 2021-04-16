@@ -127,7 +127,7 @@ void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel
     const auto *const attributesID = model->getInstancedAttributeID();
     const auto        lenght       = attributesID[0];
     for (uint i = 1; i <= lenght; i++) {
-        auto *const    attribute = model->getInstancedAttribute(attributesID[i]);
+        auto *const    attribute = ModelView::getInstancedAttribute(attributesID[i]);
         gfx::Attribute newAttr   = {attribute->name, attribute->format, attribute->isNormalized, static_cast<uint>(vertexBuffers.size()), true, attribute->location};
         attributes.emplace_back(std::move(newAttr));
     }

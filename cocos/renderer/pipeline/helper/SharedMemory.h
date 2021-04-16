@@ -171,7 +171,7 @@ struct CC_DLL AABB {
 
     const static se::PoolType TYPE;
 };
-bool aabb_aabb(const AABB *, const AABB *); // NOLINT
+bool aabbAabb(const AABB *, const AABB *);
 
 struct CC_DLL Plane {
     cc::Vec3 normal;
@@ -185,7 +185,7 @@ struct CC_DLL  Frustum {
 
     const static se::PoolType TYPE;
 };
-bool aabb_frustum(const AABB *, const Frustum *); // NOLINT
+bool aabbFrustum(const AABB *, const Frustum *);
 
 enum class LightType {
     DIRECTIONAL,

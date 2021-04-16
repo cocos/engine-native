@@ -141,7 +141,7 @@ void Sphere::mergeAABB(const AABB *aabb) {
     mergePoint(maxPos);
 }
 
-int sphere_plane(const Sphere *sphere, const Plane *plane) { // NOLINT
+int spherePlane(const Sphere *sphere, const Plane *plane) {
     const auto dot = cc::Vec3::dot(plane->normal, sphere->center);
     const auto r   = sphere->radius * plane->normal.length();
     if (dot + r < plane->distance) {
@@ -156,14 +156,14 @@ int sphere_plane(const Sphere *sphere, const Plane *plane) { // NOLINT
 bool sphere_frustum(const Sphere *sphere, const Frustum *frustum) { // NOLINT
     for (const auto &plane : frustum->planes) {
         // frustum plane normal points to the inside
-        if (sphere_plane(sphere, &plane) == -1) { // NOLINT
+        if (spherePlane(sphere, &plane) == -1) {
             return false;
         }
     } // completely outside
     return true;
 }
 
-bool aabb_aabb(const AABB *aabb1, const AABB *aabb2) { // NOLINT
+bool aabbAabb(const AABB *aabb1, const AABB *aabb2) {
     cc::Vec3 aMin;
     cc::Vec3 aMax;
     cc::Vec3 bMin;
@@ -177,7 +177,7 @@ bool aabb_aabb(const AABB *aabb1, const AABB *aabb2) { // NOLINT
            (aMin.z <= bMax.z && aMax.z >= bMin.z);
 }
 
-int aabb_plane(const AABB *aabb, const Plane *plane) { // NOLINT
+int aabbPlane(const AABB *aabb, const Plane *plane) {
     const auto &halfExtents = aabb->halfExtents;
     auto        r           = halfExtents.x * std::abs(plane->normal.x) +
              halfExtents.y * std::abs(plane->normal.y) +
@@ -192,10 +192,10 @@ int aabb_plane(const AABB *aabb, const Plane *plane) { // NOLINT
     return 1;
 };
 
-bool aabb_frustum(const AABB *aabb, const Frustum *frustum) { // NOLINT
+bool aabbFrustum(const AABB *aabb, const Frustum *frustum) {
     for (const auto &plane : frustum->planes) {
         // frustum plane normal points to the inside
-        if (aabb_plane(aabb, &plane) == -1) { // NOLINT
+        if (aabbPlane(aabb, &plane) == -1) {
             return false;
         }
     } // completely outside
