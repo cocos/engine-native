@@ -232,68 +232,68 @@ if(USE_AUDIO)
         )
     elseif(ANDROID)
         cocos_source_files(
-            NO_WERROR    cocos/audio/android/AssetFd.cpp
+                         cocos/audio/android/AssetFd.cpp
                          cocos/audio/android/AssetFd.h
                          cocos/audio/android/audio.h
                          cocos/audio/android/AudioBufferProvider.h
-            NO_WERROR    cocos/audio/android/AudioDecoder.cpp
+                         cocos/audio/android/AudioDecoder.cpp
                          cocos/audio/android/AudioDecoder.h
-            NO_WERROR    cocos/audio/android/AudioDecoderMp3.cpp
+                         cocos/audio/android/AudioDecoderMp3.cpp
                          cocos/audio/android/AudioDecoderMp3.h
-            NO_WERROR    cocos/audio/android/AudioDecoderOgg.cpp
+                         cocos/audio/android/AudioDecoderOgg.cpp
                          cocos/audio/android/AudioDecoderOgg.h
-            NO_WERROR    cocos/audio/android/AudioDecoderProvider.cpp
+                         cocos/audio/android/AudioDecoderProvider.cpp
                          cocos/audio/android/AudioDecoderProvider.h
-            NO_WERROR    cocos/audio/android/AudioDecoderSLES.cpp
+                         cocos/audio/android/AudioDecoderSLES.cpp
                          cocos/audio/android/AudioDecoderSLES.h
-            NO_WERROR    cocos/audio/android/AudioDecoderWav.cpp
+                         cocos/audio/android/AudioDecoderWav.cpp
                          cocos/audio/android/AudioDecoderWav.h
-            NO_WERROR    cocos/audio/android/AudioEngine-inl.cpp
+                         cocos/audio/android/AudioEngine-inl.cpp
                          cocos/audio/android/AudioEngine-inl.h
-            NO_WERROR    cocos/audio/android/AudioMixer.cpp
+                         cocos/audio/android/AudioMixer.cpp
                          cocos/audio/android/AudioMixer.h
-            NO_WERROR    cocos/audio/android/AudioMixerController.cpp
+                         cocos/audio/android/AudioMixerController.cpp
                          cocos/audio/android/AudioMixerController.h
                          cocos/audio/android/AudioMixerOps.h
-            NO_WERROR    cocos/audio/android/AudioPlayerProvider.cpp
+                         cocos/audio/android/AudioPlayerProvider.cpp
                          cocos/audio/android/AudioPlayerProvider.h
-            NO_WERROR    cocos/audio/android/AudioResampler.cpp
+                         cocos/audio/android/AudioResampler.cpp
                          cocos/audio/android/AudioResampler.h
-            NO_WERROR    cocos/audio/android/AudioResamplerCubic.cpp
+                         cocos/audio/android/AudioResamplerCubic.cpp
                          cocos/audio/android/AudioResamplerCubic.h
                          cocos/audio/android/AudioResamplerPublic.h
-            NO_WERROR    cocos/audio/android/audio_utils/format.c
+                         cocos/audio/android/audio_utils/format.c
                          cocos/audio/android/audio_utils/include/audio_utils/format.h
                          cocos/audio/android/audio_utils/include/audio_utils/minifloat.h
                          cocos/audio/android/audio_utils/include/audio_utils/primitives.h
-            NO_WERROR    cocos/audio/android/audio_utils/minifloat.cpp
-            NO_WERROR    cocos/audio/android/audio_utils/primitives.c
+                         cocos/audio/android/audio_utils/minifloat.cpp
+                         cocos/audio/android/audio_utils/primitives.c
                          cocos/audio/android/audio_utils/private/private.h
                          cocos/audio/android/cutils/bitops.h
                          cocos/audio/android/cutils/log.h
                          cocos/audio/android/IAudioPlayer.h
                          cocos/audio/android/ICallerThreadUtils.h
                          cocos/audio/android/IVolumeProvider.h
-            NO_WERROR    cocos/audio/android/mp3reader.cpp
+                         cocos/audio/android/mp3reader.cpp
                          cocos/audio/android/mp3reader.h
                          cocos/audio/android/OpenSLHelper.h
-            NO_WERROR    cocos/audio/android/PcmAudioPlayer.cpp
+                         cocos/audio/android/PcmAudioPlayer.cpp
                          cocos/audio/android/PcmAudioPlayer.h
-            NO_WERROR    cocos/audio/android/PcmAudioService.cpp
+                         cocos/audio/android/PcmAudioService.cpp
                          cocos/audio/android/PcmAudioService.h
-            NO_WERROR    cocos/audio/android/PcmBufferProvider.cpp
+                         cocos/audio/android/PcmBufferProvider.cpp
                          cocos/audio/android/PcmBufferProvider.h
-            NO_WERROR    cocos/audio/android/PcmData.cpp
+                         cocos/audio/android/PcmData.cpp
                          cocos/audio/android/PcmData.h
-            NO_WERROR    cocos/audio/android/tinysndfile.cpp
+                         cocos/audio/android/tinysndfile.cpp
                          cocos/audio/android/tinysndfile.h
-            NO_WERROR    cocos/audio/android/Track.cpp
+                         cocos/audio/android/Track.cpp
                          cocos/audio/android/Track.h
-            NO_WERROR    cocos/audio/android/UrlAudioPlayer.cpp
+                         cocos/audio/android/UrlAudioPlayer.cpp
                          cocos/audio/android/UrlAudioPlayer.h
                          cocos/audio/android/utils/Compat.h
                          cocos/audio/android/utils/Errors.h
-            NO_WERROR    cocos/audio/android/utils/Utils.cpp
+                         cocos/audio/android/utils/Utils.cpp
                          cocos/audio/android/utils/Utils.h
         )
     elseif(APPLE)
@@ -805,8 +805,8 @@ cocos_source_files(
 if(CC_USE_GLES2 OR CC_USE_GLES3)
 cocos_source_files(
                  cocos/renderer/gfx-gles-common/GLESCommandPool.h
-    NO_WERROR    cocos/renderer/gfx-gles-common/eglw.cpp
-    NO_WERROR    cocos/renderer/gfx-gles-common/gles2w.cpp
+                 cocos/renderer/gfx-gles-common/eglw.cpp
+                 cocos/renderer/gfx-gles-common/gles2w.cpp
                  cocos/renderer/gfx-gles-common/gles3w.cpp
 )
 endif()
@@ -814,42 +814,42 @@ endif()
 if(CC_USE_GLES2)
     cocos_source_files(
                      cocos/renderer/gfx-gles2/GFXGLES2.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Buffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2Buffer.cpp
                      cocos/renderer/gfx-gles2/GLES2Buffer.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2CommandBuffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2CommandBuffer.cpp
                      cocos/renderer/gfx-gles2/GLES2CommandBuffer.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Commands.cpp
+                     cocos/renderer/gfx-gles2/GLES2Commands.cpp
                      cocos/renderer/gfx-gles2/GLES2Commands.h
                      cocos/renderer/gfx-gles2/GLES2Context.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Context.cpp
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Device.cpp
+                     cocos/renderer/gfx-gles2/GLES2Context.cpp
+                     cocos/renderer/gfx-gles2/GLES2Device.cpp
                      cocos/renderer/gfx-gles2/GLES2Device.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Framebuffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2Framebuffer.cpp
                      cocos/renderer/gfx-gles2/GLES2Framebuffer.h
                      cocos/renderer/gfx-gles2/GLES2GPUObjects.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2InputAssembler.cpp
+                     cocos/renderer/gfx-gles2/GLES2InputAssembler.cpp
                      cocos/renderer/gfx-gles2/GLES2InputAssembler.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2DescriptorSet.cpp
+                     cocos/renderer/gfx-gles2/GLES2DescriptorSet.cpp
                      cocos/renderer/gfx-gles2/GLES2DescriptorSet.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.cpp
+                     cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.cpp
                      cocos/renderer/gfx-gles2/GLES2DescriptorSetLayout.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2PipelineLayout.cpp
+                     cocos/renderer/gfx-gles2/GLES2PipelineLayout.cpp
                      cocos/renderer/gfx-gles2/GLES2PipelineLayout.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2PipelineState.cpp
+                     cocos/renderer/gfx-gles2/GLES2PipelineState.cpp
                      cocos/renderer/gfx-gles2/GLES2PipelineState.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2PrimaryCommandBuffer.cpp
+                     cocos/renderer/gfx-gles2/GLES2PrimaryCommandBuffer.cpp
                      cocos/renderer/gfx-gles2/GLES2PrimaryCommandBuffer.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Queue.cpp
+                     cocos/renderer/gfx-gles2/GLES2Queue.cpp
                      cocos/renderer/gfx-gles2/GLES2Queue.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2RenderPass.cpp
+                     cocos/renderer/gfx-gles2/GLES2RenderPass.cpp
                      cocos/renderer/gfx-gles2/GLES2RenderPass.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Sampler.cpp
+                     cocos/renderer/gfx-gles2/GLES2Sampler.cpp
                      cocos/renderer/gfx-gles2/GLES2Sampler.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Shader.cpp
+                     cocos/renderer/gfx-gles2/GLES2Shader.cpp
                      cocos/renderer/gfx-gles2/GLES2Shader.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Std.cpp
+                     cocos/renderer/gfx-gles2/GLES2Std.cpp
                      cocos/renderer/gfx-gles2/GLES2Std.h
-        NO_WERROR    cocos/renderer/gfx-gles2/GLES2Texture.cpp
+                     cocos/renderer/gfx-gles2/GLES2Texture.cpp
                      cocos/renderer/gfx-gles2/GLES2Texture.h
                      cocos/renderer/gfx-gles2/GLES2Wrangler.h
     )
@@ -860,7 +860,7 @@ if(CC_USE_GLES2)
         )
     else()
         cocos_source_files(
-            NO_WERROR    cocos/renderer/gfx-gles2/GLES2Wrangler.cpp
+                         cocos/renderer/gfx-gles2/GLES2Wrangler.cpp
         )
     endif()
     if(IOS)
@@ -1104,20 +1104,20 @@ endif()
 
 if(USE_MIDDLEWARE)
     cocos_source_files(
-        NO_WERROR    cocos/editor-support/IOBuffer.cpp
+                     cocos/editor-support/IOBuffer.cpp
                      cocos/editor-support/IOBuffer.h
-        NO_WERROR    cocos/editor-support/IOTypedArray.cpp
+                     cocos/editor-support/IOTypedArray.cpp
                      cocos/editor-support/IOTypedArray.h
-        NO_WERROR    cocos/editor-support/MeshBuffer.cpp
+                     cocos/editor-support/MeshBuffer.cpp
                      cocos/editor-support/MeshBuffer.h
-        NO_WERROR    cocos/editor-support/middleware-adapter.cpp
+                     cocos/editor-support/middleware-adapter.cpp
                      cocos/editor-support/middleware-adapter.h
                      cocos/editor-support/MiddlewareMacro.h
-        NO_WERROR    cocos/editor-support/MiddlewareManager.cpp
+                     cocos/editor-support/MiddlewareManager.cpp
                      cocos/editor-support/MiddlewareManager.h
-        NO_WERROR    cocos/editor-support/SharedBufferManager.cpp
+                     cocos/editor-support/SharedBufferManager.cpp
                      cocos/editor-support/SharedBufferManager.h
-        NO_WERROR    cocos/editor-support/TypedArrayPool.cpp
+                     cocos/editor-support/TypedArrayPool.cpp
                      cocos/editor-support/TypedArrayPool.h
         NO_WERROR    cocos/bindings/auto/jsb_editor_support_auto.cpp
                      cocos/bindings/auto/jsb_editor_support_auto.h
@@ -1434,8 +1434,8 @@ endif()
 
 if(ANDROID)
     cocos_source_files(
-        NO_WERROR    cocos/bindings/manual/jsb_platform_android.cpp
-        NO_WERROR    cocos/bindings/manual/JavaScriptJavaBridge.cpp
+                     cocos/bindings/manual/jsb_platform_android.cpp
+                     cocos/bindings/manual/JavaScriptJavaBridge.cpp
                      cocos/bindings/manual/JavaScriptJavaBridge.h
     )
 elseif(APPLE)
@@ -1453,17 +1453,17 @@ endif()
 if(USE_SE_V8)
     cocos_source_files(
                      cocos/bindings/jswrapper/v8/Base.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/Class.cpp
+                     cocos/bindings/jswrapper/v8/Class.cpp
                      cocos/bindings/jswrapper/v8/Class.h
                      cocos/bindings/jswrapper/v8/HelperMacros.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/Object.cpp
+                     cocos/bindings/jswrapper/v8/Object.cpp
                      cocos/bindings/jswrapper/v8/Object.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/ObjectWrap.cpp
+                     cocos/bindings/jswrapper/v8/ObjectWrap.cpp
                      cocos/bindings/jswrapper/v8/ObjectWrap.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/ScriptEngine.cpp
+                     cocos/bindings/jswrapper/v8/ScriptEngine.cpp
                      cocos/bindings/jswrapper/v8/ScriptEngine.h
                      cocos/bindings/jswrapper/v8/SeApi.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/Utils.cpp
+                     cocos/bindings/jswrapper/v8/Utils.cpp
                      cocos/bindings/jswrapper/v8/Utils.h
     )
     if(USE_V8_DEBUGGER)
@@ -1519,37 +1519,37 @@ if(USE_SE_JSC)
 endif()
 
 cocos_source_files(
-    NO_WERROR    cocos/bindings/jswrapper/config.cpp
+                 cocos/bindings/jswrapper/config.cpp
                  cocos/bindings/jswrapper/config.h
-    NO_WERROR    cocos/bindings/jswrapper/HandleObject.cpp
+                 cocos/bindings/jswrapper/HandleObject.cpp
                  cocos/bindings/jswrapper/HandleObject.h
-    NO_WERROR    cocos/bindings/jswrapper/MappingUtils.cpp
+                 cocos/bindings/jswrapper/MappingUtils.cpp
                  cocos/bindings/jswrapper/MappingUtils.h
                  cocos/bindings/jswrapper/Object.h
-    NO_WERROR    cocos/bindings/jswrapper/RefCounter.cpp
+                 cocos/bindings/jswrapper/RefCounter.cpp
                  cocos/bindings/jswrapper/RefCounter.h
                  cocos/bindings/jswrapper/SeApi.h
-    NO_WERROR    cocos/bindings/jswrapper/State.cpp
+                 cocos/bindings/jswrapper/State.cpp
                  cocos/bindings/jswrapper/State.h
-    NO_WERROR    cocos/bindings/jswrapper/Value.cpp
+                 cocos/bindings/jswrapper/Value.cpp
                  cocos/bindings/jswrapper/Value.h
 )
 
 cocos_source_files(
                  cocos/bindings/event/CustomEventTypes.h
-    NO_WERROR    cocos/bindings/event/EventDispatcher.cpp
+                 cocos/bindings/event/EventDispatcher.cpp
                  cocos/bindings/event/EventDispatcher.h
 )
 
 #### storage
 cocos_source_files(
-    NO_WERROR    cocos/storage/local-storage/LocalStorage.cpp
+                 cocos/storage/local-storage/LocalStorage.cpp
                  cocos/storage/local-storage/LocalStorage.h
 )
 
 if(ANDROID)
     cocos_source_files(
-        NO_WERROR    cocos/storage/local-storage/LocalStorage-android.cpp
+                     cocos/storage/local-storage/LocalStorage-android.cpp
     )
 endif()
 
@@ -1579,17 +1579,17 @@ endif()
 if(ANDROID)
     if(USE_EDIT_BOX)
         cocos_source_files(
-            NO_WERROR    cocos/ui/edit-box/EditBox-android.cpp
+                         cocos/ui/edit-box/EditBox-android.cpp
         )
     endif()
     if(USE_VIDEO)
         cocos_source_files(
-            NO_WERROR    cocos/ui/videoplayer/VideoPlayer-android.cpp
+                         cocos/ui/videoplayer/VideoPlayer-android.cpp
         )
     endif()
     if(USE_WEBVIEW)
         cocos_source_files(
-            NO_WERROR    cocos/ui/webview/WebViewImpl-android.cpp
+                         cocos/ui/webview/WebViewImpl-android.cpp
         )
     endif()
 elseif(MACOSX)
@@ -1743,6 +1743,10 @@ if(WIN32)
 endif()
 
 if(ANDROID)
+    target_compile_options(cocos2d PRIVATE
+        -Wno-comment # nested block comments are actually useful sometimes
+    )
+
     find_library(LIB_EGL NAMES EGL)
     find_library(LIB_GLESv2 NAMES GLESv2)
     target_link_libraries(cocos2d PUBLIC
