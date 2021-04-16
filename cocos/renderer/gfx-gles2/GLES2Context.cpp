@@ -364,12 +364,12 @@ void GLES2Context::acquireSurface(uintptr_t windowHandle) {
         return;
     }
     // Device's size will be updated after recreate window (in resize event) and is incorrect for now.
-    ANativeWindow *window = static_cast<ANativeWindow *>(_windowHandle);
+    ANativeWindow *window = reinterpret_cast<ANativeWindow *>(_windowHandle);
     uint width = ANativeWindow_getWidth(window);
     uint height = ANativeWindow_getHeight(window);
     ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
 
-    EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, nullptr));
+    EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, reinterpret_cast<EGLNativeWindowType>(_windowHandle), nullptr));
     if (_eglSurface == EGL_NO_SURFACE) {
         CC_LOG_ERROR("Recreate window surface failed.");
         return;

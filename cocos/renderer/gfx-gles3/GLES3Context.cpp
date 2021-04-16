@@ -365,7 +365,7 @@ void GLES3Context::acquireSurface(uintptr_t windowHandle) {
         return;
     }
     // Device's size will be updated after recreate window (in resize event) and is incorrect for now.
-    ANativeWindow *window = static_cast<ANativeWindow *>(_windowHandle);
+    ANativeWindow *window = reinterpret_cast<ANativeWindow *>(_windowHandle);
     uint width = ANativeWindow_getWidth(window);
     uint height = ANativeWindow_getHeight(window);
     ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
