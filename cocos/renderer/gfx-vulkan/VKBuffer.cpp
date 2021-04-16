@@ -107,7 +107,7 @@ void CCVKBuffer::doResize(uint size, uint count) {
     }
 }
 
-void CCVKBuffer::update(void *buffer, uint size) {
+void CCVKBuffer::update(const void *buffer, uint size) {
     cmdFuncCCVKUpdateBuffer(CCVKDevice::getInstance(), _gpuBuffer, buffer, size, nullptr);
 }
 

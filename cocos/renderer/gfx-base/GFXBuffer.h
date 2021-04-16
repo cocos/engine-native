@@ -42,7 +42,7 @@ public:
     void resize(uint size);
     void destroy();
 
-    virtual void update(void *buffer, uint size) = 0;
+    virtual void update(const void *buffer, uint size) = 0;
 
     CC_INLINE BufferUsage getUsage() const { return _usage; }
     CC_INLINE MemoryUsage getMemUsage() const { return _memUsage; }

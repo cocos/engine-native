@@ -37,7 +37,7 @@ public:
     GLES3Buffer();
     ~GLES3Buffer();
 
-    void update(void *buffer, uint size) override;
+    void update(const void *buffer, uint size) override;
 
     CC_INLINE GLES3GPUBuffer *gpuBuffer() const { return _gpuBuffer; }
 

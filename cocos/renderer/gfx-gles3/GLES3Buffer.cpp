@@ -84,7 +84,7 @@ void GLES3Buffer::doResize(uint size, uint count) {
     cmdFuncGLES3ResizeBuffer(GLES3Device::getInstance(), _gpuBuffer);
 }
 
-void GLES3Buffer::update(void *buffer, uint size) {
+void GLES3Buffer::update(const void *buffer, uint size) {
     cmdFuncGLES3UpdateBuffer(GLES3Device::getInstance(), _gpuBuffer, buffer, 0U, size);
 }
 

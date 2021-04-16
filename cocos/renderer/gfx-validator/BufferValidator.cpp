@@ -77,13 +77,13 @@ void BufferValidator::doDestroy() {
     _actor->destroy();
 }
 
-void BufferValidator::update(void *buffer, uint size) {
+void BufferValidator::update(const void *buffer, uint size) {
     CCASSERT(!_isBufferView, "cannot update through buffer views");
     CCASSERT(size && size <= _size, "invalid size");
     CCASSERT(buffer, "invalid buffer data");
 
     if (_usage & BufferUsageBit::INDIRECT) {
-        DrawInfo *   drawInfo      = static_cast<DrawInfo *>(buffer);
+        const DrawInfo *   drawInfo      = static_cast<const DrawInfo *>(buffer);
         const size_t drawInfoCount = size / sizeof(DrawInfo);
         const bool   isIndexed     = drawInfoCount > 0 && drawInfo->indexCount > 0;
         for (size_t i = 1u; i < drawInfoCount; ++i) {

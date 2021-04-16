@@ -89,7 +89,7 @@ void BufferAgent::doDestroy() {
         });
 }
 
-void BufferAgent::update(void *buffer, uint size) {
+void BufferAgent::update(const void *buffer, uint size) {
     uint8_t *actorBuffer = DeviceAgent::getInstance()->getMainAllocator()->allocate<uint8_t>(size);
     memcpy(actorBuffer, buffer, size);
 
