@@ -366,13 +366,12 @@ public:
 private:
     friend class CCVKDevice;
 
-    /* */
     using CommandBufferPools = tbb::concurrent_unordered_map<
         std::thread::id, CCVKGPUCommandBufferPool *, std::hash<std::thread::id>>;
-    /* *
+    /*
     using CommandBufferPools = unordered_map<std::thread::id, CCVKGPUCommandBufferPool *>;
     std::mutex mutex;
-    /* */
+    */
 
     CommandBufferPools _commandBufferPools;
 
@@ -1222,6 +1221,8 @@ public:
 
     void flush(CCVKGPUTransportHub *transportHub) {
         auto &buffers = _buffersToBeUpdated[_device->curBackBufferIndex];
+        if (buffers.empty()) return;
+
         transportHub->checkIn([&](const CCVKGPUCommandBuffer *gpuCommandBuffer) {
             VkBufferCopy region;
             for (auto &buffer : buffers) {
