@@ -196,7 +196,7 @@ void Scheduler::unschedule(const std::string &key, void *target) {
     if (iter != _hashForTimers.end()) {
         HashTimerEntry *element = iter->second;
         int             i       = 0;
-        auto            timers  = element->timers;
+        auto            &timers  = element->timers;
 
         for (auto *t : timers) {
             auto *timer = dynamic_cast<TimerTargetCallback *>(t);
@@ -338,7 +338,7 @@ void Scheduler::update(float dt) {
 
     // Iterate over all the custom selectors
     HashTimerEntry *elt = nullptr;
-    for (auto iter = _hashForTimers.begin(); iter != _hashForTimers.end(); ++iter) {
+    for (auto iter = _hashForTimers.begin(); iter != _hashForTimers.end();) {
         elt                    = iter->second;
         _currentTarget         = elt;
         _currentTargetSalvaged = false;
@@ -364,7 +364,12 @@ void Scheduler::update(float dt) {
 
         // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
         if (_currentTargetSalvaged && _currentTarget->timers.empty()) {
+            ++iter;
             removeHashElement(_currentTarget);
+            if (iter != _hashForTimers.end()) {
+                ++iter;
+            }
+        } else {
             ++iter;
         }
     }
