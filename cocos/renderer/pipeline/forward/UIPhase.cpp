@@ -60,8 +60,8 @@ void UIPhase::render(Camera *camera, gfx::RenderPass *renderPass){
             const auto ds = batch->getDescriptorSet();
             auto *pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, renderPass);
             cmdBuff->bindPipelineState(pso);
-            cmdBuff->bindDescriptorSet(MATERIAL_SET, pass->getDescriptorSet());
-            cmdBuff->bindDescriptorSet(LOCAL_SET, ds);
+            cmdBuff->bindDescriptorSet(materialSet, pass->getDescriptorSet());
+            cmdBuff->bindDescriptorSet(localSet, ds);
             cmdBuff->bindInputAssembler(inputAssembler);
             cmdBuff->draw(inputAssembler);
         }

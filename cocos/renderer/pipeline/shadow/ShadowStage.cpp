@@ -87,7 +87,7 @@ void ShadowStage::render(Camera *camera) {
 
     cmdBuffer->beginRenderPass(renderPass, _framebuffer, _renderArea,
                                _clearColors, camera->clearDepth, camera->clearStencil);
-    cmdBuffer->bindDescriptorSet(GLOBAL_SET, _pipeline->getDescriptorSet());
+    cmdBuffer->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet());
     _additiveShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuffer);
 
     cmdBuffer->endRenderPass();

@@ -66,11 +66,11 @@ void RenderBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPas
             if (!boundPSO) {
                 auto pso = PipelineStateManager::getOrCreatePipelineState(batch.pass, batch.shader, batch.ia, renderPass);
                 cmdBuffer->bindPipelineState(pso);
-                cmdBuffer->bindDescriptorSet(MATERIAL_SET, batch.pass->getDescriptorSet());
+                cmdBuffer->bindDescriptorSet(materialSet, batch.pass->getDescriptorSet());
                 boundPSO = true;
             }
 
-            cmdBuffer->bindDescriptorSet(LOCAL_SET, batch.descriptorSet, batchedBuffer->getDynamicOffset());
+            cmdBuffer->bindDescriptorSet(localSet, batch.descriptorSet, batchedBuffer->getDynamicOffset());
             cmdBuffer->bindInputAssembler(batch.ia);
             cmdBuffer->draw(batch.ia);
         }

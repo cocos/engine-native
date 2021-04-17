@@ -209,7 +209,7 @@ void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
     if (scene->mainLightID) mainLight = scene->getMainLight();
     RenderObjectList renderObjects;
 
-    if (skyBox->enabled && skyBox->modelID && (camera->clearFlag & SKYBOX_FLAG)) {
+    if (skyBox->enabled && skyBox->modelID && (camera->clearFlag & skyboxFlag)) {
         renderObjects.emplace_back(genRenderObject(skyBox->getModel(), camera));
     }
 

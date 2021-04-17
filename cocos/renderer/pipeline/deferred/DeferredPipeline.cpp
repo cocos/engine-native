@@ -68,7 +68,7 @@ gfx::RenderPass *DeferredPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFl
     depthStencilAttachment.depthStoreOp   = gfx::StoreOp::DISCARD;
 
     if (!(clearFlags & gfx::ClearFlagBit::COLOR)) {
-        if (clearFlags & static_cast<gfx::ClearFlagBit>(SKYBOX_FLAG)) {
+        if (clearFlags & static_cast<gfx::ClearFlagBit>(skyboxFlag)) {
             colorAttachment.loadOp = gfx::LoadOp::DISCARD;
         } else {
             colorAttachment.loadOp        = gfx::LoadOp::LOAD;

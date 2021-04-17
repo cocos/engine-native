@@ -53,7 +53,7 @@ void RenderInstancedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderP
 
         const auto &instances = instanceBuffer->getInstances();
         const auto pass = instanceBuffer->getPass();
-        cmdBuffer->bindDescriptorSet(MATERIAL_SET, pass->getDescriptorSet());
+        cmdBuffer->bindDescriptorSet(materialSet, pass->getDescriptorSet());
         gfx::PipelineState *lastPSO = nullptr;
         for (size_t b = 0; b < instances.size(); ++b) {
             const auto &instance = instances[b];
@@ -65,7 +65,7 @@ void RenderInstancedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderP
                 cmdBuffer->bindPipelineState(pso);
                 lastPSO = pso;
             }
-            cmdBuffer->bindDescriptorSet(LOCAL_SET, instance.descriptorSet, instanceBuffer->dynamicOffsets());
+            cmdBuffer->bindDescriptorSet(localSet, instance.descriptorSet, instanceBuffer->dynamicOffsets());
             cmdBuffer->bindInputAssembler(instance.ia);
             cmdBuffer->draw(instance.ia);
         }

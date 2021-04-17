@@ -215,8 +215,8 @@ enum class CC_DLL ModelLocalBindings {
     COUNT,
 };
 
-extern CC_DLL int LOCAL_UBO_COUNT;
-extern CC_DLL int LOCAL_SAMPLER_COUNT;
+extern CC_DLL int localUBOCount;
+extern CC_DLL int localSamplerCount;
 
 enum class CC_DLL SetIndex {
     GLOBAL,
@@ -224,9 +224,9 @@ enum class CC_DLL SetIndex {
     LOCAL,
 };
 
-extern CC_DLL uint GLOBAL_SET;
-extern CC_DLL uint MATERIAL_SET;
-extern CC_DLL uint LOCAL_SET;
+extern CC_DLL uint globalSet;
+extern CC_DLL uint materialSet;
+extern CC_DLL uint localSet;
 
 extern CC_DLL gfx::BindingMappingInfo bindingMappingInfo;
 
@@ -408,9 +408,9 @@ public:
     static void          destroyAll();
 
 protected:
-    static uint _defaultSamplerHash;
+    static uint defaultSamplerHash;
 
-    static unordered_map<uint, gfx::Sampler *> _samplerCache;
+    static unordered_map<uint, gfx::Sampler *> samplerCache;
 };
 
 struct CC_DLL DescriptorSetLayoutInfos {
@@ -435,16 +435,13 @@ enum class LayerList : uint {
     ALL      = 0xffffffff,
 };
 
-//TODO
 const uint CAMERA_DEFAULT_MASK = ~static_cast<uint>(LayerList::UI_2D) & ~static_cast<uint>(LayerList::PROFILER);
 //constexpr CAMERA_DEFAULT_MASK = Layers.makeMaskExclude([Layers.BitMask.UI_2D, Layers.BitMask.GIZMOS, Layers.BitMask.EDITOR,
 //                                                           Layers.BitMask.SCENE_GIZMO, Layers.BitMask.PROFILER]);
 
 uint nextPow2(uint val);
 
-extern CC_DLL uint                     SKYBOX_FLAG;
-extern CC_DLL DescriptorSetLayoutInfos globalDescriptorSetLayout;
-extern CC_DLL DescriptorSetLayoutInfos localDescriptorSetLayout;
+extern CC_DLL uint                     skyboxFlag;
 
 struct CC_DLL SHADOWMAP : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);

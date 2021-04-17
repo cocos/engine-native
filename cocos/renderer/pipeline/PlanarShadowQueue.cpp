@@ -113,7 +113,7 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
     if (_pendingModels.empty()) { return; }
 
     const auto *pass = shadowInfo->getPlanarShadowPass();
-    cmdBuffer->bindDescriptorSet(MATERIAL_SET, pass->getDescriptorSet());
+    cmdBuffer->bindDescriptorSet(materialSet, pass->getDescriptorSet());
 
     for (auto model : _pendingModels) {
         const auto subModelID = model->getSubModelID();
@@ -125,7 +125,7 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
             const auto pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
 
             cmdBuffer->bindPipelineState(pso);
-            cmdBuffer->bindDescriptorSet(LOCAL_SET, subModel->getDescriptorSet());
+            cmdBuffer->bindDescriptorSet(localSet, subModel->getDescriptorSet());
             cmdBuffer->bindInputAssembler(ia);
             cmdBuffer->draw(ia);
         }
