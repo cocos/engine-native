@@ -95,11 +95,11 @@ void ShadowMapBatchedQueue::add(const ModelView *model, gfx::CommandBuffer *cmdB
         return;
     }
 
-    const auto subModelID = model->getSubModelID();
+    const auto *subModelID = model->getSubModelID();
     const auto subModelCount = subModelID[0];
     for (unsigned m = 1; m <= subModelCount; ++m) {
-        const auto subModel = model->getSubModelView(subModelID[m]);
-        const auto pass = subModel->getPassView(shadowPassIdx);
+        const auto *subModel = model->getSubModelView(subModelID[m]);
+        const auto *pass = subModel->getPassView(shadowPassIdx);
         const auto batchingScheme = pass->getBatchingScheme();
 
         if (batchingScheme == BatchingSchemes::INSTANCING) {
@@ -126,11 +126,11 @@ void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::Render
     _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
 
     for (size_t i = 0; i < _subModels.size(); i++) {
-        const auto subModel = _subModels[i];
-        const auto shader = _shaders[i];
-        const auto pass = _passes[i];
-        const auto ia = subModel->getInputAssembler();
-        const auto pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
+        const auto *subModel = _subModels[i];
+        auto *const shader   = _shaders[i];
+        const auto *pass     = _passes[i];
+        auto *const ia       = subModel->getInputAssembler();
+        auto *const pso      = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
 
         cmdBuffer->bindPipelineState(pso);
         cmdBuffer->bindDescriptorSet(materialSet, pass->getDescriptorSet());
@@ -149,10 +149,10 @@ void ShadowMapBatchedQueue::destroy() {
 }
 
 int ShadowMapBatchedQueue::getShadowPassIndex(const ModelView *model) const {
-    const auto subModelArrayID = model->getSubModelID();
+    const auto *subModelArrayID = model->getSubModelID();
     const auto count = subModelArrayID[0];
     for (unsigned i = 1; i <= count; i++) {
-        const auto subModel = model->getSubModelView(subModelArrayID[i]);
+        const auto *subModel = model->getSubModelView(subModelArrayID[i]);
         for (unsigned passIdx = 0; passIdx < subModel->passCount; passIdx++) {
             const auto pass = subModel->getPassView(passIdx);
             if (pass->phase == _phaseID) {
