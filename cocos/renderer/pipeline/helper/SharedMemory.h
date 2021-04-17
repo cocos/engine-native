@@ -91,8 +91,8 @@ extern gfx::BlendState *getBlendStateImpl(uint index);
 // Get raw buffer or gfx object.
 #define GET_RAW_BUFFER(index, size) SharedMemory::getRawBuffer<uint8_t>(se::PoolType::RAW_BUFFER, index, size)
 
-static const float SHADOW_CAMERA_MAX_FAR = 2000.0f;
-static const float COEFFICIENT_OF_EXPANSION = 2.0f * std::sqrtf(3.0f);
+static const float SHADOW_CAMERA_MAX_FAR = 2000.0F;
+static const float COEFFICIENT_OF_EXPANSION = 2.0F * std::sqrtf(3.0F);
 
 class CC_DLL SharedMemory : public Object {
 public:
@@ -102,9 +102,8 @@ public:
         if (bufferMap.count(T::type) != 0) {
             const se::BufferPool *bufferPool = bufferMap.at(T::type);
             return bufferPool->getTypedObject<T>(index);
-        } else {
-            return nullptr;
         }
+        return nullptr;
     }
 
     template <typename T>
@@ -113,9 +112,8 @@ public:
         if (bufferMap.count(poolType) != 0) {
             const se::BufferPool *bufferPool = bufferMap.at(poolType);
             return bufferPool->getTypedObject<T>(index);
-        } else {
-            return nullptr;
         }
+        return nullptr;
     }
 
     template <typename T, se::PoolType p>
@@ -124,9 +122,8 @@ public:
         if (poolMap.count(p) != 0) {
             const se::ObjectPool *objectPool = poolMap.at(p);
             return objectPool->getTypedObject<T>(index);
-        } else {
-            return nullptr;
         }
+        return nullptr;
     }
 
     static uint32_t *getHandleArray(se::PoolType type, uint index) {
@@ -194,9 +191,9 @@ struct CC_DLL Light {
     uint32_t lightType = 0;
     uint32_t aabbID = 0;
     uint32_t frustumID = 0;
-    float size = 0.15f;
-    float spotAngle = 0.0f;
-    float aspect = 1.0f;
+    float size = 0.15F;
+    float spotAngle = 0.0F;
+    float aspect = 1.0F;
     cc::Vec3 direction;
     cc::Vec3 color;
     cc::Vec3 colorTemperatureRGB;
@@ -335,9 +332,9 @@ struct CC_DLL UIBatch {
 struct CC_DLL Scene {
     uint32_t mainLightID = 0;
     uint32_t modelsID = 0; // array pool
-    uint32_t sphereLights; // array pool
-    uint32_t spotLights;   // array pool
-    uint32_t uiBatches; // array pool
+    uint32_t sphereLights = 0; // array pool
+    uint32_t spotLights   = 0; // array pool
+    uint32_t uiBatches    = 0; // array pool
 
     CC_INLINE const Light *getMainLight() const { return GET_LIGHT(mainLightID); }
     CC_INLINE const uint *getSphereLightArrayID() const { return GET_LIGHT_ARRAY(sphereLights); }
@@ -446,20 +443,20 @@ struct CC_DLL Shadows {
     uint32_t enabled = 0;
     uint32_t dirty = 0;
     uint32_t shadowType = 0;
-    float distance = 0.0f;
+    float distance = 0.0F;
     uint32_t instancePass = 0;
     uint32_t planarPass = 0;
-    float nearValue = 0.0f;
-    float farValue = 0.0f;
-    float aspect = 0.0f;
+    float nearValue = 0.0F;
+    float farValue = 0.0F;
+    float aspect = 0.0F;
     uint32_t pcfType = 0;
     uint32_t shadowMapDirty = 0;
-    float bias = 0.0f;
+    float bias = 0.0F;
     uint32_t packing = 0;
     uint32_t linear = 0;
     uint32_t selfShadow = 0;
-    float normalBias = 0.0f;
-    float orthoSize = 0.0f;
+    float normalBias = 0.0F;
+    float orthoSize = 0.0F;
     uint32_t autoAdapt = 0;
 
     cc::Vec4 color;

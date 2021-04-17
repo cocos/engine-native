@@ -40,7 +40,8 @@ RenderFlowInfo ShadowFlow::_initInfo = {
     "ShadowFlow",
     static_cast<uint>(ForwardFlowPriority::SHADOW),
     static_cast<uint>(RenderFlowTag::SCENE),
-    {}};
+    {},
+};
 const RenderFlowInfo &ShadowFlow::getInitializeInfo() { return ShadowFlow::_initInfo; }
 
 ShadowFlow::~ShadowFlow() = default;

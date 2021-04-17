@@ -55,6 +55,7 @@ const gfx::DescriptorSetLayoutBinding UBOGlobal::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::ALL,
+    {},
 };
 const gfx::UniformBlock UBOGlobal::LAYOUT = {
     GLOBAL_SET,
@@ -74,6 +75,7 @@ const gfx::DescriptorSetLayoutBinding UBOLocalBatched::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformBlock UBOLocalBatched::LAYOUT = {
     LOCAL_SET,
@@ -91,6 +93,7 @@ const gfx::DescriptorSetLayoutBinding UBOCamera::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::ALL,
+    {},
 };
 const gfx::UniformBlock UBOCamera::LAYOUT = {
     GLOBAL_SET,
@@ -123,6 +126,7 @@ const gfx::DescriptorSetLayoutBinding UBOShadow::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::ALL,
+    {},
 };
 const gfx::UniformBlock UBOShadow::LAYOUT = {
     GLOBAL_SET,
@@ -146,6 +150,7 @@ const gfx::DescriptorSetLayoutBinding UBOLocal::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformBlock UBOLocal::LAYOUT = {
     LOCAL_SET,
@@ -165,6 +170,7 @@ const gfx::DescriptorSetLayoutBinding UBOForwardLight::DESCRIPTOR = {
     gfx::DescriptorType::DYNAMIC_UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformBlock UBOForwardLight::LAYOUT = {
     LOCAL_SET,
@@ -185,6 +191,7 @@ const gfx::DescriptorSetLayoutBinding UBOSkinningTexture::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformBlock UBOSkinningTexture::LAYOUT = {
     LOCAL_SET,
@@ -202,6 +209,7 @@ const gfx::DescriptorSetLayoutBinding UBOSkinningAnimation::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformBlock UBOSkinningAnimation::LAYOUT = {
     LOCAL_SET,
@@ -219,6 +227,7 @@ const gfx::DescriptorSetLayoutBinding UBOSkinning::DESCRIPTOR = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformBlock UBOSkinning::LAYOUT = {
     LOCAL_SET,
@@ -238,6 +247,7 @@ const gfx::DescriptorSetLayoutBinding UBOMorph::DESCRIPTOR         = {
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformBlock UBOMorph::LAYOUT = {
     LOCAL_SET,
@@ -256,6 +266,7 @@ const gfx::DescriptorSetLayoutBinding SHADOWMAP::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SHADOWMAP::LAYOUT = {
     GLOBAL_SET,
@@ -271,6 +282,7 @@ const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFERALBEDOMAP::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SAMPLERGBUFFERALBEDOMAP::LAYOUT = {
     GLOBAL_SET,
@@ -286,6 +298,7 @@ const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFERPOSITIONMAP::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SAMPLERGBUFFERPOSITIONMAP::LAYOUT = {
     GLOBAL_SET,
@@ -301,6 +314,7 @@ const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFERNORMALMAP::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SAMPLERGBUFFERNORMALMAP::LAYOUT = {
     GLOBAL_SET,
@@ -316,6 +330,7 @@ const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFEREMISSIVEMAP::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SAMPLERGBUFFEREMISSIVEMAP::LAYOUT = {
     GLOBAL_SET,
@@ -331,6 +346,7 @@ const gfx::DescriptorSetLayoutBinding SAMPLERLIGHTINGRESULTMAP::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SAMPLERLIGHTINGRESULTMAP::LAYOUT = {
     GLOBAL_SET,
@@ -346,6 +362,7 @@ const gfx::DescriptorSetLayoutBinding ENVIRONMENT::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture ENVIRONMENT::LAYOUT = {
     GLOBAL_SET,
@@ -361,6 +378,7 @@ const gfx::DescriptorSetLayoutBinding SPOT_LIGHTING_MAP::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SPOT_LIGHTING_MAP::LAYOUT = {
     GLOBAL_SET,
@@ -376,6 +394,7 @@ const gfx::DescriptorSetLayoutBinding JOINT_TEXTURE::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformSamplerTexture JOINT_TEXTURE::LAYOUT = {
     LOCAL_SET,
@@ -391,6 +410,7 @@ const gfx::DescriptorSetLayoutBinding POSITION_MORPH::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformSamplerTexture POSITION_MORPH::LAYOUT = {
     LOCAL_SET,
@@ -406,6 +426,7 @@ const gfx::DescriptorSetLayoutBinding NORMAL_MORPH::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformSamplerTexture NORMAL_MORPH::LAYOUT = {
     LOCAL_SET,
@@ -421,6 +442,7 @@ const gfx::DescriptorSetLayoutBinding TANGENT_MORPH::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::VERTEX,
+    {},
 };
 const gfx::UniformSamplerTexture TANGENT_MORPH::LAYOUT = {
     LOCAL_SET,
@@ -436,6 +458,7 @@ const gfx::DescriptorSetLayoutBinding LIGHTMAP_TEXTURE::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture LIGHTMAP_TEXTURE::LAYOUT = {
     LOCAL_SET,
@@ -451,6 +474,7 @@ const gfx::DescriptorSetLayoutBinding SPRITE_TEXTURE::DESCRIPTOR = {
     gfx::DescriptorType::SAMPLER_TEXTURE,
     1,
     gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
 };
 const gfx::UniformSamplerTexture SPRITE_TEXTURE::LAYOUT = {
     LOCAL_SET,

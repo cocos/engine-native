@@ -39,13 +39,13 @@ public:
 
     static const RenderFlowInfo &getInitializeInfo();
 
-    virtual bool initialize(const RenderFlowInfo &info) override;
+    bool initialize(const RenderFlowInfo &info) override;
 
-    virtual void activate(RenderPipeline *pipeline) override;
+    void activate(RenderPipeline *pipeline) override;
 
-    virtual void render(Camera *camera) override;
+    void render(Camera *camera) override;
 
-    virtual void destroy() override;
+    void destroy() override;
 
 private:
     void clearShadowMap(Camera *camera);
