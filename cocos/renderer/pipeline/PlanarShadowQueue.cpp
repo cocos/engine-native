@@ -33,7 +33,6 @@
 #include "RenderInstancedQueue.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "helper/SharedMemory.h"
-#include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXShader.h"
 
@@ -45,30 +44,29 @@ PlanarShadowQueue::PlanarShadowQueue(RenderPipeline *pipeline)
     _instancedQueue = CC_NEW(RenderInstancedQueue);
 }
 
-void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *cmdBufferer) {
+void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *cmdBuffer) {
     clear();
-    const auto sceneData = _pipeline->getPipelineSceneData();
-    const auto sharedData = sceneData->getSharedData();
+    const auto *sceneData = _pipeline->getPipelineSceneData();
+    const auto *sharedData = sceneData->getSharedData();
     const auto *shadowInfo = sharedData->getShadows();
     if (!shadowInfo->enabled || shadowInfo->getShadowType() != ShadowType::PLANAR) { return; }
 
-    const auto pipelineUBO = _pipeline->getPipelineUBO();
+    auto *const pipelineUBO = _pipeline->getPipelineUBO();
     pipelineUBO->updateShadowUBO(camera);
     const auto *scene = camera->getScene();
     const bool shadowVisible = camera->visibility & static_cast<uint>(LayerList::DEFAULT);
 
     if (!scene->getMainLight() || !shadowVisible) { return; }
 
-    const auto models = scene->getModels();
+    const auto *models          = scene->getModels();
     const auto modelCount = models[0];
     auto *instancedBuffer = InstancedBuffer::get(shadowInfo->instancePass);
 
-    uint visibility = 0, lenght = 0;
     for (uint i = 1; i <= modelCount; i++) {
         const auto *model = scene->getModelView(models[i]);
         const auto *node = model->getNode();
         if (model->enabled && model->castShadow) {
-            visibility = camera->visibility;
+            const auto visibility = camera->visibility;
             if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
                 (visibility & model->visFlags)) {
 
@@ -78,8 +76,8 @@ void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *c
                 }
 
                 const auto *attributesID = model->getInstancedAttributeID();
-                lenght = attributesID[0];
-                if (lenght > 0) {
+                const auto length = attributesID[0];
+                if (length > 0) {
                     const auto *subModelID = model->getSubModelID();
                     const auto subModelCount = subModelID[0];
                     for (uint m = 1; m <= subModelCount; ++m) {
@@ -94,7 +92,7 @@ void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *c
         }
     }
 
-    _instancedQueue->uploadBuffers(cmdBufferer);
+    _instancedQueue->uploadBuffers(cmdBuffer);
 }
 
 void PlanarShadowQueue::clear() {
@@ -103,8 +101,8 @@ void PlanarShadowQueue::clear() {
 }
 
 void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
-    const auto sceneData = _pipeline->getPipelineSceneData();
-    const auto sharedData = sceneData->getSharedData();
+    const auto *sceneData  = _pipeline->getPipelineSceneData();
+    const auto *sharedData = sceneData->getSharedData();
     const auto *shadowInfo = sharedData->getShadows();
     if (!shadowInfo->enabled || shadowInfo->getShadowType() != ShadowType::PLANAR) { return; }
 
@@ -115,8 +113,8 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
     const auto *pass = shadowInfo->getPlanarShadowPass();
     cmdBuffer->bindDescriptorSet(materialSet, pass->getDescriptorSet());
 
-    for (auto model : _pendingModels) {
-        const auto subModelID = model->getSubModelID();
+    for (const auto *model : _pendingModels) {
+        const auto *subModelID = model->getSubModelID();
         const auto subModelCount = subModelID[0];
         for (unsigned m = 1; m <= subModelCount; ++m) {
             const auto subModel = model->getSubModelView(subModelID[m]);

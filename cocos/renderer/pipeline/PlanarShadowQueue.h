@@ -57,7 +57,7 @@ public:
     ~PlanarShadowQueue() = default;
 
     void clear();
-    void gatherShadowPasses(Camera *camera , gfx::CommandBuffer *cmdBufferer);
+    void gatherShadowPasses(Camera *camera , gfx::CommandBuffer *cmdBuffer);
     void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *);
     void destroy();
 

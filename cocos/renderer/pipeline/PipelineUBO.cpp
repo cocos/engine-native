@@ -386,7 +386,7 @@ void PipelineUBO::updateShadowUBO(const Camera *camera) {
 }
 
 void PipelineUBO::updateShadowUBOLight(const Light *light) {
-    const auto ds        = _pipeline->getDescriptorSet();
+    auto *const ds = _pipeline->getDescriptorSet();
     updateShadowUBOLightView(_pipeline, _shadowUBO, light);
     ds->getBuffer(UBOShadow::BINDING)->update(_shadowUBO.data(), UBOShadow::SIZE);
 }
