@@ -31,8 +31,8 @@
 namespace cc {
 namespace pipeline {
 
-int global_ubo_count     = static_cast<int>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);
-int global_sampler_count = static_cast<int>(PipelineGlobalBindings::COUNT) - global_ubo_count;
+int globalUBOCount     = static_cast<int>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);
+int globalSamplerCount = static_cast<int>(PipelineGlobalBindings::COUNT) - globalUBOCount;
 
 int LOCAL_UBO_COUNT     = static_cast<int>(ModelLocalBindings::SAMPLER_JOINTS);
 int LOCAL_SAMPLER_COUNT = static_cast<int>(ModelLocalBindings::COUNT) - LOCAL_UBO_COUNT;
@@ -42,8 +42,8 @@ uint MATERIAL_SET = static_cast<uint>(SetIndex::MATERIAL);
 uint LOCAL_SET    = static_cast<uint>(SetIndex::LOCAL);
 
 gfx::BindingMappingInfo bindingMappingInfo = {
-    {0, global_ubo_count + LOCAL_UBO_COUNT, global_ubo_count},
-    {-global_ubo_count, global_sampler_count + LOCAL_SAMPLER_COUNT, global_sampler_count - LOCAL_UBO_COUNT},
+    {0, globalUBOCount + LOCAL_UBO_COUNT, globalUBOCount},
+    {-globalUBOCount, globalSamplerCount + LOCAL_SAMPLER_COUNT, globalSamplerCount - LOCAL_UBO_COUNT},
     1,
 };
 

@@ -195,8 +195,8 @@ enum class CC_DLL PipelineGlobalBindings {
     COUNT,
 };
 
-extern CC_DLL int global_ubo_count;
-extern CC_DLL int global_sampler_count;
+extern CC_DLL int globalUBOCount;
+extern CC_DLL int globalSamplerCount;
 
 enum class CC_DLL ModelLocalBindings {
     UBO_LOCAL,
