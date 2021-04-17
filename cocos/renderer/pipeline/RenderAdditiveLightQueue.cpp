@@ -170,8 +170,8 @@ void RenderAdditiveLightQueue::destroy() {
         descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
         descriptorSet->getSampler(SHADOWMAP::BINDING)->destroy();
         descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
-        descriptorSet->getSampler(SPOT_LIGHTING_MAP::BINDING)->destroy();
-        descriptorSet->getTexture(SPOT_LIGHTING_MAP::BINDING)->destroy();
+        descriptorSet->getSampler(SPOTLIGHTINGMAP::BINDING)->destroy();
+        descriptorSet->getTexture(SPOTLIGHTINGMAP::BINDING)->destroy();
         descriptorSet->destroy();
     }
     _descriptorSetMap.clear();
@@ -339,7 +339,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
         }
 
         descriptorSet->bindSampler(SHADOWMAP::BINDING, _sampler);
-        descriptorSet->bindSampler(SPOT_LIGHTING_MAP::BINDING, _sampler);
+        descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, _sampler);
         // Main light sampler binding
         descriptorSet->bindTexture(SHADOWMAP::BINDING, _pipeline->getDefaultTexture());
         descriptorSet->update();
@@ -375,7 +375,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const Camera *camera, gf
                 if (shadowFramebufferMap.count(light) > 0) {
                     auto *texture = shadowFramebufferMap.at(light)->getColorTextures()[0];
                     if (texture) {
-                        descriptorSet->bindTexture(SPOT_LIGHTING_MAP::BINDING, texture);
+                        descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, texture);
                     }
                 }
             } break;
@@ -452,8 +452,8 @@ gfx::DescriptorSet *RenderAdditiveLightQueue::getOrCreateDescriptorSet(const Lig
         descriptorSet->bindSampler(SHADOWMAP::BINDING, _sampler);
         descriptorSet->bindTexture(SHADOWMAP::BINDING, _pipeline->getDefaultTexture());
         // Spot light sampler binding
-        descriptorSet->bindSampler(SPOT_LIGHTING_MAP::BINDING, _sampler);
-        descriptorSet->bindTexture(SPOT_LIGHTING_MAP::BINDING, _pipeline->getDefaultTexture());
+        descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, _sampler);
+        descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, _pipeline->getDefaultTexture());
 
         descriptorSet->update();
 

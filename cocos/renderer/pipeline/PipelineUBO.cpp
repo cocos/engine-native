@@ -183,7 +183,9 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
             cc::Mat4   matShadowCamera;
 
             // light proj
-            float x, y, farClamp;
+            float x;
+            float y;
+            float farClamp;
             if (shadowInfo->autoAdapt) {
                 Vec3 tmpCenter;
                 getShadowWorldMatrix(sphere, node->worldRotation, mainLight->direction, matShadowCamera, tmpCenter);
@@ -238,7 +240,9 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
         case LightType::DIRECTIONAL: {
             cc::Mat4 matShadowCamera;
 
-            float x, y, farClamp;
+            float x;
+            float y;
+            float farClamp;
             if (shadowInfo->autoAdapt) {
                 Vec3 tmpCenter;
                 getShadowWorldMatrix(sphere, light->getNode()->worldRotation, light->direction, matShadowCamera, tmpCenter);

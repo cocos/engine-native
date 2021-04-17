@@ -492,49 +492,49 @@ struct CC_DLL ENVIRONMENT : public Object {
     static const String                          NAME;
 };
 
-struct CC_DLL SPOT_LIGHTING_MAP : public Object {
+struct CC_DLL SPOTLIGHTINGMAP : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_SPOT_LIGHTING_MAP);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;
 };
 
-struct CC_DLL JOINT_TEXTURE : public Object {
+struct CC_DLL JOINTTEXTURE : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(ModelLocalBindings::SAMPLER_JOINTS);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;
 };
 
-struct CC_DLL POSITION_MORPH : public Object {
+struct CC_DLL POSITIONMORPH : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_POSITION);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;
 };
 
-struct CC_DLL NORMAL_MORPH : public Object {
+struct CC_DLL NORMALMORPH : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_NORMAL);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;
 };
 
-struct CC_DLL TANGENT_MORPH : public Object {
+struct CC_DLL TANGENTMORPH : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(ModelLocalBindings::SAMPLER_MORPH_TANGENT);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;
 };
 
-struct CC_DLL LIGHTMAP_TEXTURE : public Object {
+struct CC_DLL LIGHTMAPTEXTURE : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(ModelLocalBindings::SAMPLER_LIGHTMAP);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;
 };
 
-struct CC_DLL SPRITE_TEXTURE : public Object {
+struct CC_DLL SPRITETEXTURE : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(ModelLocalBindings::SAMPLER_SPRITE);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;

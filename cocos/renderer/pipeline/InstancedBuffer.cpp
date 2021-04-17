@@ -71,7 +71,7 @@ void InstancedBuffer::merge(const ModelView *model, const SubModelView *subModel
 
     if (!stride) return; // we assume per-instance attributes are always present
     auto *sourceIA      = subModel->getInputAssembler();
-    auto *lightingMap   = subModel->getDescriptorSet()->getTexture(LIGHTMAP_TEXTURE::BINDING);
+    auto *lightingMap   = subModel->getDescriptorSet()->getTexture(LIGHTMAPTEXTURE::BINDING);
     auto *shader        = shaderImplant;
     if (!shader) { shader = subModel->getShader(passIdx); }
 

@@ -154,8 +154,8 @@ bool ForwardPipeline::activeRenderer() {
     this->_descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
 
     // Spot light sampler binding
-    this->_descriptorSet->bindSampler(SPOT_LIGHTING_MAP::BINDING, shadowMapSampler);
-    this->_descriptorSet->bindTexture(SPOT_LIGHTING_MAP::BINDING, getDefaultTexture());
+    this->_descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, shadowMapSampler);
+    this->_descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
 
     _descriptorSet->update();
     // update global defines when all states initialized.
@@ -172,8 +172,8 @@ void ForwardPipeline::destroy() {
         _descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
         _descriptorSet->getSampler(SHADOWMAP::BINDING)->destroy();
         _descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
-        _descriptorSet->getSampler(SPOT_LIGHTING_MAP::BINDING)->destroy();
-        _descriptorSet->getTexture(SPOT_LIGHTING_MAP::BINDING)->destroy();
+        _descriptorSet->getSampler(SPOTLIGHTINGMAP::BINDING)->destroy();
+        _descriptorSet->getTexture(SPOTLIGHTINGMAP::BINDING)->destroy();
     }
 
     for (auto &it : _renderPasses) {
