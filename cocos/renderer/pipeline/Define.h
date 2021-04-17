@@ -155,21 +155,27 @@ using RenderQueueDescList = std::vector<RenderQueueDesc>;
 uint getPhaseID(const String &phase);
 
 CC_INLINE bool opaqueCompareFn(const RenderPass &a, const RenderPass &b) {
-    if (a.hash != b.hash)
+    if (a.hash != b.hash) {
         return a.hash < b.hash;
-    else if (math::IsNotEqualF(a.depth, b.depth))
+    }
+
+    if (math::IsNotEqualF(a.depth, b.depth)) {
         return a.depth < b.depth;
-    else
-        return a.shaderID < b.shaderID;
+    }
+
+    return a.shaderID < b.shaderID;
 }
 
 CC_INLINE bool transparentCompareFn(const RenderPass &a, const RenderPass &b) {
-    if (a.hash != b.hash)
+    if (a.hash != b.hash) {
         return a.hash < b.hash;
-    else if (math::IsNotEqualF(a.depth, b.depth))
+    }
+
+    if (math::IsNotEqualF(a.depth, b.depth)) {
         return b.depth < a.depth;
-    else
-        return a.shaderID < b.shaderID;
+    }
+
+    return a.shaderID < b.shaderID;
 }
 
 enum class CC_DLL PipelineGlobalBindings {
@@ -189,8 +195,8 @@ enum class CC_DLL PipelineGlobalBindings {
     COUNT,
 };
 
-extern CC_DLL int GLOBAL_UBO_COUNT;
-extern CC_DLL int GLOBAL_SAMPLER_COUNT;
+extern CC_DLL int global_ubo_count;
+extern CC_DLL int global_sampler_count;
 
 enum class CC_DLL ModelLocalBindings {
     UBO_LOCAL,

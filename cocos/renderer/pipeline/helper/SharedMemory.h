@@ -102,9 +102,9 @@ public:
         if (bufferMap.count(T::type) != 0) {
             const se::BufferPool *bufferPool = bufferMap.at(T::type);
             return bufferPool->getTypedObject<T>(index);
-        } else {
-            return nullptr;
         }
+
+        return nullptr;
     }
 
     template <typename T>
@@ -113,9 +113,9 @@ public:
         if (bufferMap.count(poolType) != 0) {
             const se::BufferPool *bufferPool = bufferMap.at(poolType);
             return bufferPool->getTypedObject<T>(index);
-        } else {
-            return nullptr;
         }
+
+        return nullptr;
     }
 
     template <typename T, se::PoolType p>
@@ -124,9 +124,9 @@ public:
         if (poolMap.count(p) != 0) {
             const se::ObjectPool *objectPool = poolMap.at(p);
             return objectPool->getTypedObject<T>(index);
-        } else {
-            return nullptr;
         }
+
+        return nullptr;
     }
 
     static uint32_t *getHandleArray(se::PoolType type, uint index) {
