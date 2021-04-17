@@ -53,7 +53,7 @@ struct ShadowRenderData {
 
 class CC_DLL PlanarShadowQueue : public Object {
 public:
-    PlanarShadowQueue(RenderPipeline *pipeline);
+    explicit PlanarShadowQueue(RenderPipeline *pipeline);
     ~PlanarShadowQueue() override = default;
 
     void clear();
