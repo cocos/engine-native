@@ -47,7 +47,7 @@ void RenderInstancedQueue::uploadBuffers(gfx::CommandBuffer *cmdBuffer) {
     }
 }
 
-void RenderInstancedQueue::recordCommandBuffer(gfx::Device */*device*/, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
+void RenderInstancedQueue::recordCommandBuffer(gfx::Device * /*device*/, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
     for (auto *instanceBuffer : _queues) {
         if (!instanceBuffer->hasPendingModels()) continue;
 
