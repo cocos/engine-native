@@ -44,6 +44,8 @@ PlanarShadowQueue::PlanarShadowQueue(RenderPipeline *pipeline)
     _instancedQueue = CC_NEW(RenderInstancedQueue);
 }
 
+PlanarShadowQueue::~PlanarShadowQueue() = default;
+
 void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *cmdBuffer) {
     clear();
     const auto *sceneData = _pipeline->getPipelineSceneData();
@@ -117,10 +119,10 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
         const auto *subModelID = model->getSubModelID();
         const auto subModelCount = subModelID[0];
         for (unsigned m = 1; m <= subModelCount; ++m) {
-            const auto subModel = model->getSubModelView(subModelID[m]);
-            const auto shader = subModel->getPlanarShader();
-            const auto ia = subModel->getInputAssembler();
-            const auto pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
+            const auto *const subModel = model->getSubModelView(subModelID[m]);
+            auto *const       shader   = subModel->getPlanarShader();
+            auto *const       ia       = subModel->getInputAssembler();
+            auto *const       pso      = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
 
             cmdBuffer->bindPipelineState(pso);
             cmdBuffer->bindDescriptorSet(localSet, subModel->getDescriptorSet());
@@ -133,5 +135,6 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
 void PlanarShadowQueue::destroy() {
     CC_SAFE_DELETE(_instancedQueue);
 }
-}
+
+} // namespace pipeline
 } // namespace cc

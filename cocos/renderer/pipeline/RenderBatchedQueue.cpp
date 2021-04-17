@@ -35,15 +35,15 @@ namespace cc {
 namespace pipeline {
 
 void RenderBatchedQueue::clear() {
-    for (auto it : _queues) {
+    for (auto *it : _queues) {
         it->clear();
     }
     _queues.clear();
 }
 
 void RenderBatchedQueue::uploadBuffers(gfx::CommandBuffer *cmdBuffer) {
-    for (auto batchedBuffer : _queues) {
-        auto &batches = batchedBuffer->getBatches();
+    for (auto *batchedBuffer : _queues) {
+        const auto &batches = batchedBuffer->getBatches();
         for (auto &batch : batches) {
             if (!batch.mergeCount) continue;
 
@@ -58,13 +58,13 @@ void RenderBatchedQueue::uploadBuffers(gfx::CommandBuffer *cmdBuffer) {
 }
 
 void RenderBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
-    for (auto batchedBuffer : _queues) {
+    for (auto *batchedBuffer : _queues) {
         bool boundPSO = false;
         const auto &batches = batchedBuffer->getBatches();
         for (const auto &batch : batches) {
             if (!batch.mergeCount) continue;
             if (!boundPSO) {
-                auto pso = PipelineStateManager::getOrCreatePipelineState(batch.pass, batch.shader, batch.ia, renderPass);
+                auto *pso = PipelineStateManager::getOrCreatePipelineState(batch.pass, batch.shader, batch.ia, renderPass);
                 cmdBuffer->bindPipelineState(pso);
                 cmdBuffer->bindDescriptorSet(materialSet, batch.pass->getDescriptorSet());
                 boundPSO = true;
