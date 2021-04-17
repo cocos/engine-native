@@ -44,8 +44,6 @@ PlanarShadowQueue::PlanarShadowQueue(RenderPipeline *pipeline)
     _instancedQueue = CC_NEW(RenderInstancedQueue);
 }
 
-PlanarShadowQueue::~PlanarShadowQueue() = default;
-
 void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *cmdBuffer) {
     clear();
     const auto *sceneData = _pipeline->getPipelineSceneData();

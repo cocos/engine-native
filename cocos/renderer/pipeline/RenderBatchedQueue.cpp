@@ -44,11 +44,11 @@ void RenderBatchedQueue::clear() {
 void RenderBatchedQueue::uploadBuffers(gfx::CommandBuffer *cmdBuffer) {
     for (auto *batchedBuffer : _queues) {
         const auto &batches = batchedBuffer->getBatches();
-        for (auto &batch : batches) {
+        for (const auto &batch : batches) {
             if (!batch.mergeCount) continue;
 
-            auto i = 0u;
-            for (auto vb : batch.vbs) {
+            auto i = 0U;
+            for (auto *vb : batch.vbs) {
                 cmdBuffer->updateBuffer(vb, batch.vbDatas[i++], vb->getSize());
             }
             cmdBuffer->updateBuffer(batch.indexBuffer, batch.indexData, batch.indexBuffer->getSize());
@@ -57,7 +57,7 @@ void RenderBatchedQueue::uploadBuffers(gfx::CommandBuffer *cmdBuffer) {
     }
 }
 
-void RenderBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
+void RenderBatchedQueue::recordCommandBuffer(gfx::Device */*device*/, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
     for (auto *batchedBuffer : _queues) {
         bool boundPSO = false;
         const auto &batches = batchedBuffer->getBatches();
