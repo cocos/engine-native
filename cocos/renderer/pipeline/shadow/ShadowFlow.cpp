@@ -36,13 +36,13 @@
 #include "../SceneCulling.h"
 
 namespace cc::pipeline {
-RenderFlowInfo ShadowFlow::_initInfo = {
+RenderFlowInfo ShadowFlow::initInfo = {
     "ShadowFlow",
     static_cast<uint>(ForwardFlowPriority::SHADOW),
     static_cast<uint>(RenderFlowTag::SCENE),
     {},
 };
-const RenderFlowInfo &ShadowFlow::getInitializeInfo() { return ShadowFlow::_initInfo; }
+const RenderFlowInfo &ShadowFlow::getInitializeInfo() { return ShadowFlow::initInfo; }
 
 ShadowFlow::~ShadowFlow() = default;
 

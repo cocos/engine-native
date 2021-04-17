@@ -55,7 +55,7 @@ private:
     void initShadowFrameBuffer(RenderPipeline *pipeline, const Light *light);
 
 private:
-    static RenderFlowInfo _initInfo;
+    static RenderFlowInfo initInfo;
 
     gfx::RenderPass *_renderPass = nullptr;
 
