@@ -402,7 +402,7 @@ public:
     static void          destroyAll();
 
 protected:
-    static uint _defaultSamplerHash;
+    static uint default_sampler_hash_;
 
     static unordered_map<uint, gfx::Sampler *> _samplerCache;
 };
