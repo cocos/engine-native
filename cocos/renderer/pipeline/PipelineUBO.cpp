@@ -377,7 +377,7 @@ void PipelineUBO::updateShadowUBO(const Camera *camera) {
             }
         }
     }
-    updateShadowUBOView(_pipeline, _shadowUBO, camera);
+    PipelineUBO::updateShadowUBOView(_pipeline, _shadowUBO, camera);
     cmdBuffer->updateBuffer(ds->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
 }
 

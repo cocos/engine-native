@@ -484,7 +484,7 @@ const gfx::UniformSamplerTexture SPRITE_TEXTURE::LAYOUT = {
     1,
 };
 
-uint SamplerLib::_defaultSamplerHash{genSamplerHash(gfx::SamplerInfo())};
+uint SamplerLib::default_sampler_hash_{genSamplerHash(gfx::SamplerInfo())};
 
 unordered_map<uint, gfx::Sampler *> SamplerLib::_samplerCache{};
 
@@ -504,7 +504,7 @@ uint SamplerLib::genSamplerHash(const gfx::SamplerInfo &info) {
 
 gfx::Sampler *SamplerLib::getSampler(uint hash) {
     if (hash == 0) {
-        hash = _defaultSamplerHash;
+        hash = default_sampler_hash_;
     }
 
     if (_samplerCache.count(hash)) {
