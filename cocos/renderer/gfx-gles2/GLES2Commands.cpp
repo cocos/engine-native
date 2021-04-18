@@ -1293,6 +1293,10 @@ void cmdFuncGLES2CreateFramebuffer(GLES2Device *device, GLES2GPUFramebuffer *gpu
             }
         }
 
+        if (device->hasFeature(Feature::MULTIPLE_RENDER_TARGETS)) {
+            GL_CHECK(glDrawBuffersEXT(attachmentCount, attachments));
+        }
+
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE) {
             switch (status) {
@@ -1390,6 +1394,11 @@ void cmdFuncGLES2BeginRenderPass(GLES2Device *device, GLES2GPURenderPass *gpuRen
                 switch (colorAttachment.loadOp) {
                     case LoadOp::LOAD: break; // GL default behaviour
                     case LoadOp::CLEAR: {
+                        // `glClearColor` clears all the attachments to the same value
+                        // here we fallback to the load op of the first attachment
+                        // to avoid clearing multiple times
+                        if (j) break; 
+
                         if (cache->bs.targets[0].blendColorMask != ColorMask::ALL) {
                             GL_CHECK(glColorMask(true, true, true, true));
                         }
