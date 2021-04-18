@@ -1024,7 +1024,7 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
                 GLES2GPUUniform &gpuUniform = gpuBlock.glUniforms[j];
                 Uniform &        uniform    = block.members[j];
 
-                gpuUniform.binding = GFX_INVALID_BINDING;
+                gpuUniform.binding = INVALID_BINDING;
                 gpuUniform.name    = uniform.name;
                 gpuUniform.type    = uniform.type;
                 gpuUniform.stride  = GFX_TYPE_SIZES[static_cast<int>(uniform.type)];
@@ -1269,7 +1269,7 @@ void cmdFuncGLES2CreateFramebuffer(GLES2Device *device, GLES2GPUFramebuffer *gpu
             device->stateCache()->glFramebuffer = gpuFBO->glFramebuffer;
         }
 
-        GLenum attachments[GFX_MAX_ATTACHMENTS] = {0};
+        GLenum attachments[MAX_ATTACHMENTS] = {0};
         uint   attachmentCount                  = 0;
 
         for (size_t i = 0; i < gpuFBO->gpuColorTextures.size(); ++i) {

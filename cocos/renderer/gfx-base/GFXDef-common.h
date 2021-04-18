@@ -74,8 +74,9 @@ using TextureBarrierList = vector<TextureBarrier *>;
 using BufferDataList     = vector<const uint8_t *>;
 using CommandBufferList  = vector<CommandBuffer *>;
 
-#define GFX_MAX_ATTACHMENTS 4
-#define GFX_INVALID_BINDING ((uint)-1)
+constexpr uint MAX_ATTACHMENTS  = 4U;
+constexpr uint INVALID_BINDING  = static_cast<uint>(-1);
+constexpr uint SUBPASS_EXTERNAL = static_cast<uint>(-1);
 
 using BufferList              = vector<Buffer *>;
 using TextureList             = vector<Texture *>;
@@ -438,8 +439,7 @@ enum class TextureUsageBit : FlagBits {
     STORAGE                  = 0x8,
     COLOR_ATTACHMENT         = 0x10,
     DEPTH_STENCIL_ATTACHMENT = 0x20,
-    TRANSIENT_ATTACHMENT     = 0x40,
-    INPUT_ATTACHMENT         = 0x80,
+    INPUT_ATTACHMENT         = 0x40,
 };
 using TextureUsage = TextureUsageBit;
 CC_ENUM_OPERATORS(TextureUsageBit);
@@ -1071,15 +1071,25 @@ struct SubpassInfo {
     std::vector<uint> colors;
     std::vector<uint> resolves;
     std::vector<uint> preserves;
-    uint              depthStencil = GFX_INVALID_BINDING;
+    uint              depthStencil = INVALID_BINDING;
 };
 
 using SubpassInfoList = vector<SubpassInfo>;
+
+struct SubpassDependency {
+    uint                    srcSubpass = 0U;
+    uint                    dstSubpass = 0U;
+    std::vector<AccessType> srcAccesses;
+    std::vector<AccessType> dstAccesses;
+};
+
+using SubpassDependencyList = vector<SubpassDependency>;
 
 struct RenderPassInfo {
     ColorAttachmentList    colorAttachments;
     DepthStencilAttachment depthStencilAttachment;
     SubpassInfoList        subpasses;
+    SubpassDependencyList  dependencies;
 };
 
 struct GlobalBarrierInfo {
@@ -1108,7 +1118,7 @@ struct FramebufferInfo {
 };
 
 struct DescriptorSetLayoutBinding {
-    uint             binding        = GFX_INVALID_BINDING;
+    uint             binding        = INVALID_BINDING;
     DescriptorType   descriptorType = DescriptorType::UNKNOWN;
     uint             count          = 0;
     ShaderStageFlags stageFlags     = ShaderStageFlagBit::NONE;
@@ -1197,6 +1207,7 @@ struct PipelineStateInfo {
     Shader *          shader         = nullptr;
     PipelineLayout *  pipelineLayout = nullptr;
     RenderPass *      renderPass     = nullptr;
+    uint              subpass        = 0U;
     InputState        inputState;
     RasterizerState   rasterizerState;
     DepthStencilState depthStencilState;

@@ -62,6 +62,7 @@ protected:
     DepthStencilState _depthStencilState;
     BlendState        _blendState;
     RenderPass *      _renderPass     = nullptr;
+    uint              _subpass        = 0U;
     PipelineLayout *  _pipelineLayout = nullptr;
 };
 

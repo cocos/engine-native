@@ -1190,8 +1190,8 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
         }
 
         glBlock.name    = glName;
-        glBlock.set     = GFX_INVALID_BINDING;
-        glBlock.binding = GFX_INVALID_BINDING;
+        glBlock.set     = INVALID_BINDING;
+        glBlock.binding = INVALID_BINDING;
         for (size_t b = 0; b < gpuShader->blocks.size(); ++b) {
             UniformBlock &block = gpuShader->blocks[b];
             if (block.name == glBlock.name) {
@@ -1215,8 +1215,8 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
         }
 
         glBuffer.name      = glName;
-        glBuffer.set       = GFX_INVALID_BINDING;
-        glBuffer.binding   = GFX_INVALID_BINDING;
+        glBuffer.set       = INVALID_BINDING;
+        glBuffer.binding   = INVALID_BINDING;
         glBuffer.isStorage = true;
         for (size_t b = 0; b < gpuShader->blocks.size(); ++b) {
             UniformStorageBuffer &buffer = gpuShader->buffers[b];
@@ -1442,7 +1442,7 @@ void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpu
             device->stateCache()->glDrawFramebuffer = gpuFBO->glFramebuffer;
         }
 
-        GLenum attachments[GFX_MAX_ATTACHMENTS] = {0};
+        GLenum attachments[MAX_ATTACHMENTS] = {0};
         uint   attachmentCount                  = 0;
 
         size_t colorMipmapLevelCount = gpuFBO->colorMipmapLevels.size();

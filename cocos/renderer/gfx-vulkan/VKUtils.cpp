@@ -232,7 +232,6 @@ VkFormatFeatureFlags mapVkFormatFeatureFlags(TextureUsage usage) {
     if (usage & TextureUsage::STORAGE) flags |= VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT;
     if (usage & TextureUsage::COLOR_ATTACHMENT) flags |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
     if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    if (usage & TextureUsage::TRANSIENT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
     if (usage & TextureUsage::INPUT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
     return static_cast<VkFormatFeatureFlags>(flags);
 }
@@ -245,7 +244,6 @@ VkImageUsageFlagBits mapVkImageUsageFlagBits(TextureUsage usage) {
     if (usage & TextureUsage::STORAGE) flags |= VK_IMAGE_USAGE_STORAGE_BIT;
     if (usage & TextureUsage::COLOR_ATTACHMENT) flags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    if (usage & TextureUsage::TRANSIENT_ATTACHMENT) flags |= VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
     if (usage & TextureUsage::INPUT_ATTACHMENT) flags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     return static_cast<VkImageUsageFlagBits>(flags);
 }
@@ -253,12 +251,8 @@ VkImageUsageFlagBits mapVkImageUsageFlagBits(TextureUsage usage) {
 VkImageAspectFlags mapVkImageAspectFlags(Format format) {
     VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     const FormatInfo & info       = GFX_FORMAT_INFOS[static_cast<uint>(format)];
-    if (info.hasDepth) {
-        aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-    }
-    if (info.hasStencil) {
-        aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
-    }
+    if (info.hasDepth) aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    if (info.hasStencil) aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
     return aspectMask;
 }
 
@@ -410,16 +404,16 @@ const VkPrimitiveTopology VK_PRIMITIVE_MODES[] = {
     VK_PRIMITIVE_TOPOLOGY_POINT_LIST,                    // POINT_LIST
     VK_PRIMITIVE_TOPOLOGY_LINE_LIST,                     // LINE_LIST
     VK_PRIMITIVE_TOPOLOGY_LINE_STRIP,                    // LINE_STRIP
-    static_cast<VkPrimitiveTopology>(0),                              // LINE_LOOP
+    static_cast<VkPrimitiveTopology>(0),                 // LINE_LOOP
     VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY,      // LINE_LIST_ADJACENCY
     VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY,     // LINE_STRIP_ADJACENCY
-    static_cast<VkPrimitiveTopology>(0),                              // ISO_LINE_LIST
+    static_cast<VkPrimitiveTopology>(0),                 // ISO_LINE_LIST
     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,                 // TRIANGLE_LIST
     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP,                // TRIANGLE_STRIP
     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN,                  // TRIANGLE_FAN
     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY,  // TRIANGLE_LIST_ADJACENCY
     VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY, // TRIANGLE_STRIP_ADJACENCY,
-    static_cast<VkPrimitiveTopology>(0),                              // TRIANGLE_PATCH_ADJACENCY,
+    static_cast<VkPrimitiveTopology>(0),                 // TRIANGLE_PATCH_ADJACENCY,
     VK_PRIMITIVE_TOPOLOGY_PATCH_LIST,                    // QUAD_PATCH_LIST,
 };
 
@@ -484,17 +478,17 @@ const VkBlendFactor VK_BLEND_FACTORS[] = {
 };
 
 const VkFilter VK_FILTERS[] = {
-    static_cast<VkFilter>(0),       // NONE
-    VK_FILTER_NEAREST, // POINT
-    VK_FILTER_LINEAR,  // LINEAR
-    static_cast<VkFilter>(0),       // ANISOTROPIC
+    static_cast<VkFilter>(0), // NONE
+    VK_FILTER_NEAREST,        // POINT
+    VK_FILTER_LINEAR,         // LINEAR
+    static_cast<VkFilter>(0), // ANISOTROPIC
 };
 
 const VkSamplerMipmapMode VK_SAMPLER_MIPMAP_MODES[] = {
-    static_cast<VkSamplerMipmapMode>(0),         // NONE
-    VK_SAMPLER_MIPMAP_MODE_NEAREST, // POINT
-    VK_SAMPLER_MIPMAP_MODE_LINEAR,  // LINEAR
-    VK_SAMPLER_MIPMAP_MODE_LINEAR,  // ANISOTROPIC
+    static_cast<VkSamplerMipmapMode>(0), // NONE
+    VK_SAMPLER_MIPMAP_MODE_NEAREST,      // POINT
+    VK_SAMPLER_MIPMAP_MODE_LINEAR,       // LINEAR
+    VK_SAMPLER_MIPMAP_MODE_LINEAR,       // ANISOTROPIC
 };
 
 const VkSamplerAddressMode VK_SAMPLER_ADDRESS_MODES[] = {

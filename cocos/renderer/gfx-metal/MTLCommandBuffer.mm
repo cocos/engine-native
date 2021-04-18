@@ -262,6 +262,9 @@ void CCMTLCommandBuffer::setStencilCompareMask(StencilFace /*face*/, int /*ref*/
     CC_LOG_ERROR("Don't support change stencil compare mask here.");
 }
 
+void CCMTLCommandBuffer::nextSubpass() {
+}
+
 void CCMTLCommandBuffer::draw(const DrawInfo &info) {
     if (_firstDirtyDescriptorSet < _GPUDescriptorSets.size()) {
         bindDescriptorSets();
