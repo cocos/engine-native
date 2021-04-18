@@ -64,7 +64,6 @@ class DescriptorSetLayout;
 class PipelineLayout;
 class PipelineState;
 class DescriptorSet;
-class CommandAllocator;
 class CommandBuffer;
 class Queue;
 class Window;
@@ -420,7 +419,7 @@ enum class MemoryUsageBit : FlagBits {
     HOST   = 0x2,
 };
 using MemoryUsage = MemoryUsageBit;
-CC_ENUM_OPERATORS(MemoryUsageBit);
+CC_ENUM_OPERATORS(MemoryUsageBit)
 
 enum class TextureType {
     TEX1D,
@@ -442,7 +441,7 @@ enum class TextureUsageBit : FlagBits {
     INPUT_ATTACHMENT         = 0x40,
 };
 using TextureUsage = TextureUsageBit;
-CC_ENUM_OPERATORS(TextureUsageBit);
+CC_ENUM_OPERATORS(TextureUsageBit)
 
 enum class TextureFlagBit : FlagBits {
     NONE       = 0,
@@ -450,7 +449,7 @@ enum class TextureFlagBit : FlagBits {
     IMMUTABLE  = 0x2,
 };
 using TextureFlags = TextureFlagBit;
-CC_ENUM_OPERATORS(TextureFlagBit);
+CC_ENUM_OPERATORS(TextureFlagBit)
 
 enum class SampleCount {
     X1,
@@ -532,7 +531,7 @@ enum class ColorMask : FlagBits {
     A    = 0x8,
     ALL  = R | G | B | A,
 };
-CC_ENUM_OPERATORS(ColorMask);
+CC_ENUM_OPERATORS(ColorMask)
 
 enum class ShaderStageFlagBit : FlagBits {
     NONE       = 0x0,
@@ -545,7 +544,7 @@ enum class ShaderStageFlagBit : FlagBits {
     ALL        = 0x3f,
 };
 using ShaderStageFlags = ShaderStageFlagBit;
-CC_ENUM_OPERATORS(ShaderStageFlagBit);
+CC_ENUM_OPERATORS(ShaderStageFlagBit)
 
 enum class LoadOp {
     LOAD,    // Load the contents from the fbo from previous
@@ -648,7 +647,7 @@ enum class DynamicStateFlagBit : FlagBits {
     STENCIL_COMPARE_MASK = 0x80,
 };
 using DynamicStateFlags = DynamicStateFlagBit;
-CC_ENUM_OPERATORS(DynamicStateFlagBit);
+CC_ENUM_OPERATORS(DynamicStateFlagBit)
 
 using DynamicStateList = vector<DynamicStateFlagBit>;
 
@@ -670,7 +669,7 @@ enum class DescriptorType : FlagBits {
     STORAGE_IMAGE          = 0x80,
     INPUT_ATTACHMENT       = 0x100,
 };
-CC_ENUM_OPERATORS(DescriptorType);
+CC_ENUM_OPERATORS(DescriptorType)
 
 enum class QueueType {
     GRAPHICS,
@@ -692,7 +691,7 @@ enum class ClearFlagBit : FlagBits {
     ALL           = COLOR | DEPTH | STENCIL,
 };
 using ClearFlags = ClearFlagBit;
-CC_ENUM_OPERATORS(ClearFlagBit);
+CC_ENUM_OPERATORS(ClearFlagBit)
 
 struct Size {
     uint x = 0U;
@@ -1207,7 +1206,6 @@ struct PipelineStateInfo {
     Shader *          shader         = nullptr;
     PipelineLayout *  pipelineLayout = nullptr;
     RenderPass *      renderPass     = nullptr;
-    uint              subpass        = 0U;
     InputState        inputState;
     RasterizerState   rasterizerState;
     DepthStencilState depthStencilState;
@@ -1215,6 +1213,7 @@ struct PipelineStateInfo {
     PrimitiveMode     primitive     = PrimitiveMode::TRIANGLE_LIST;
     DynamicStateFlags dynamicStates = DynamicStateFlagBit::NONE;
     PipelineBindPoint bindPoint     = PipelineBindPoint::GRAPHICS;
+    uint              subpass       = 0U;
 };
 
 struct CommandBufferInfo {

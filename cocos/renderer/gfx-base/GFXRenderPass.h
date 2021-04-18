@@ -33,7 +33,7 @@ namespace gfx {
 class CC_DLL RenderPass : public GFXObject {
 public:
     RenderPass();
-    virtual ~RenderPass();
+    ~RenderPass() override;
 
     static uint computeHash(const RenderPassInfo &info);
 

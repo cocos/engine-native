@@ -184,13 +184,13 @@ VkAttachmentStoreOp mapVkStoreOp(StoreOp storeOp) {
 
 VkBufferUsageFlagBits mapVkBufferUsageFlagBits(BufferUsage usage) {
     uint flags = 0U;
-    if (usage & BufferUsage::TRANSFER_SRC) flags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-    if (usage & BufferUsage::TRANSFER_DST) flags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-    if (usage & BufferUsage::INDEX) flags |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-    if (usage & BufferUsage::VERTEX) flags |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    if (usage & BufferUsage::UNIFORM) flags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-    if (usage & BufferUsage::STORAGE) flags |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-    if (usage & BufferUsage::INDIRECT) flags |= VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
+    if (hasFlag(usage, BufferUsage::TRANSFER_SRC)) flags |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    if (hasFlag(usage, BufferUsage::TRANSFER_DST)) flags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+    if (hasFlag(usage, BufferUsage::INDEX)) flags |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+    if (hasFlag(usage, BufferUsage::VERTEX)) flags |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    if (hasFlag(usage, BufferUsage::UNIFORM)) flags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    if (hasFlag(usage, BufferUsage::STORAGE)) flags |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+    if (hasFlag(usage, BufferUsage::INDIRECT)) flags |= VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
     return static_cast<VkBufferUsageFlagBits>(flags);
 }
 
@@ -226,25 +226,25 @@ VkSampleCountFlagBits mapVkSampleCount(SampleCount count) {
 
 VkFormatFeatureFlags mapVkFormatFeatureFlags(TextureUsage usage) {
     uint flags = 0U;
-    if (usage & TextureUsage::TRANSFER_SRC) flags |= VK_FORMAT_FEATURE_TRANSFER_SRC_BIT;
-    if (usage & TextureUsage::TRANSFER_DST) flags |= VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
-    if (usage & TextureUsage::SAMPLED) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
-    if (usage & TextureUsage::STORAGE) flags |= VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT;
-    if (usage & TextureUsage::COLOR_ATTACHMENT) flags |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    if (usage & TextureUsage::INPUT_ATTACHMENT) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+    if (hasFlag(usage, TextureUsage::TRANSFER_SRC)) flags |= VK_FORMAT_FEATURE_TRANSFER_SRC_BIT;
+    if (hasFlag(usage, TextureUsage::TRANSFER_DST)) flags |= VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
+    if (hasFlag(usage, TextureUsage::SAMPLED)) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+    if (hasFlag(usage, TextureUsage::STORAGE)) flags |= VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT;
+    if (hasFlag(usage, TextureUsage::COLOR_ATTACHMENT)) flags |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+    if (hasFlag(usage, TextureUsage::DEPTH_STENCIL_ATTACHMENT)) flags |= VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if (hasFlag(usage, TextureUsage::INPUT_ATTACHMENT)) flags |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
     return static_cast<VkFormatFeatureFlags>(flags);
 }
 
 VkImageUsageFlagBits mapVkImageUsageFlagBits(TextureUsage usage) {
     uint flags = 0U;
-    if (usage & TextureUsage::TRANSFER_SRC) flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-    if (usage & TextureUsage::TRANSFER_DST) flags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-    if (usage & TextureUsage::SAMPLED) flags |= VK_IMAGE_USAGE_SAMPLED_BIT;
-    if (usage & TextureUsage::STORAGE) flags |= VK_IMAGE_USAGE_STORAGE_BIT;
-    if (usage & TextureUsage::COLOR_ATTACHMENT) flags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-    if (usage & TextureUsage::DEPTH_STENCIL_ATTACHMENT) flags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    if (usage & TextureUsage::INPUT_ATTACHMENT) flags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+    if (hasFlag(usage, TextureUsage::TRANSFER_SRC)) flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+    if (hasFlag(usage, TextureUsage::TRANSFER_DST)) flags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    if (hasFlag(usage, TextureUsage::SAMPLED)) flags |= VK_IMAGE_USAGE_SAMPLED_BIT;
+    if (hasFlag(usage, TextureUsage::STORAGE)) flags |= VK_IMAGE_USAGE_STORAGE_BIT;
+    if (hasFlag(usage, TextureUsage::COLOR_ATTACHMENT)) flags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    if (hasFlag(usage, TextureUsage::DEPTH_STENCIL_ATTACHMENT)) flags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if (hasFlag(usage, TextureUsage::INPUT_ATTACHMENT)) flags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     return static_cast<VkImageUsageFlagBits>(flags);
 }
 
@@ -312,11 +312,10 @@ VkDescriptorType mapVkDescriptorType(DescriptorType type) {
 
 VkColorComponentFlags mapVkColorComponentFlags(ColorMask colorMask) {
     uint flags = 0U;
-    if (colorMask & ColorMask::R) flags |= VK_COLOR_COMPONENT_R_BIT;
-    if (colorMask & ColorMask::G) flags |= VK_COLOR_COMPONENT_G_BIT;
-    if (colorMask & ColorMask::B) flags |= VK_COLOR_COMPONENT_B_BIT;
-    if (colorMask & ColorMask::A) flags |= VK_COLOR_COMPONENT_A_BIT;
-    if (colorMask & ColorMask::ALL) flags |= VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    if (hasFlag(colorMask, ColorMask::R)) flags |= VK_COLOR_COMPONENT_R_BIT;
+    if (hasFlag(colorMask, ColorMask::G)) flags |= VK_COLOR_COMPONENT_G_BIT;
+    if (hasFlag(colorMask, ColorMask::B)) flags |= VK_COLOR_COMPONENT_B_BIT;
+    if (hasFlag(colorMask, ColorMask::A)) flags |= VK_COLOR_COMPONENT_A_BIT;
     return static_cast<VkColorComponentFlags>(flags);
 }
 
@@ -337,12 +336,12 @@ VkShaderStageFlagBits mapVkShaderStageFlagBits(ShaderStageFlagBit stage) {
 
 VkShaderStageFlags mapVkShaderStageFlags(ShaderStageFlagBit stages) {
     uint flags = 0U;
-    if (stages & ShaderStageFlagBit::VERTEX) flags |= VK_SHADER_STAGE_VERTEX_BIT;
-    if (stages & ShaderStageFlagBit::CONTROL) flags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-    if (stages & ShaderStageFlagBit::EVALUATION) flags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-    if (stages & ShaderStageFlagBit::GEOMETRY) flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-    if (stages & ShaderStageFlagBit::FRAGMENT) flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-    if (stages & ShaderStageFlagBit::COMPUTE) flags |= VK_SHADER_STAGE_COMPUTE_BIT;
+    if (hasFlag(stages, ShaderStageFlagBit::VERTEX)) flags |= VK_SHADER_STAGE_VERTEX_BIT;
+    if (hasFlag(stages, ShaderStageFlagBit::CONTROL)) flags |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+    if (hasFlag(stages, ShaderStageFlagBit::EVALUATION)) flags |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+    if (hasFlag(stages, ShaderStageFlagBit::GEOMETRY)) flags |= VK_SHADER_STAGE_GEOMETRY_BIT;
+    if (hasFlag(stages, ShaderStageFlagBit::FRAGMENT)) flags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+    if (hasFlag(stages, ShaderStageFlagBit::COMPUTE)) flags |= VK_SHADER_STAGE_COMPUTE_BIT;
     return static_cast<VkShaderStageFlags>(flags);
 }
 

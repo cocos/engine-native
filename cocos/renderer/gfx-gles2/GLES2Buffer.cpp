@@ -46,7 +46,7 @@ void GLES2Buffer::doInit(const BufferInfo & /*info*/) {
     _gpuBuffer->stride   = _stride;
     _gpuBuffer->count    = _count;
 
-    if (_usage & BufferUsageBit::INDIRECT) {
+    if (hasFlag(_usage, BufferUsageBit::INDIRECT)) {
         _gpuBuffer->indirects.resize(_count);
     }
 

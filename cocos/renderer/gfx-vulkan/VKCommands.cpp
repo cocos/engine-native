@@ -38,7 +38,7 @@ namespace cc {
 namespace gfx {
 
 namespace {
-constexpr bool ENABLE_LAZY_ALLOCATION = false;
+constexpr bool ENABLE_LAZY_ALLOCATION = true;
 }
 
 CCVKGPUCommandBufferPool *CCVKGPUDevice::getCommandBufferPool() {
@@ -118,7 +118,7 @@ void cmdFuncCCVKCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
     }
 
     VkImageUsageFlags usageFlags = mapVkImageUsageFlagBits(gpuTexture->usage);
-    if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
+    if (hasFlag(gpuTexture->flags, TextureFlags::GEN_MIPMAP)) {
         usageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     }
 
@@ -139,12 +139,15 @@ void cmdFuncCCVKCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
 
     VmaAllocationInfo res;
 
-    TextureUsage transientUsages = static_cast<TextureUsage>(gpuTexture->usage & TEXTURE_USAGE_TRANSIENT);
+    TextureUsage transientUsages = gpuTexture->usage & TEXTURE_USAGE_TRANSIENT;
     if (ENABLE_LAZY_ALLOCATION && transientUsages != TextureUsage::NONE && transientUsages == gpuTexture->usage) {
         createInfo.usage = usageFlags | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
         allocInfo.usage  = VMA_MEMORY_USAGE_GPU_LAZILY_ALLOCATED;
         VkResult result  = vmaCreateImage(device->gpuDevice()->memoryAllocator, &createInfo, &allocInfo, &gpuTexture->vkImage, &gpuTexture->vmaAllocation, &res);
         if (!result) {
+            CC_LOG_INFO("Created memoryless texture: %s-%dx%d",
+                        GFX_FORMAT_INFOS[static_cast<uint>(gpuTexture->format)].name.c_str(),
+                        gpuTexture->width, gpuTexture->height);
             return;
         }
 
@@ -236,9 +239,9 @@ void cmdFuncCCVKCreateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
     gpuBuffer->startOffset = 0; // we are creating one VkBuffer each for now
 
     // add special access types directly from usage
-    if (gpuBuffer->usage & BufferUsageBit::VERTEX) gpuBuffer->renderAccessTypes.push_back(THSVS_ACCESS_VERTEX_BUFFER);
-    if (gpuBuffer->usage & BufferUsageBit::INDEX) gpuBuffer->renderAccessTypes.push_back(THSVS_ACCESS_INDEX_BUFFER);
-    if (gpuBuffer->usage & BufferUsageBit::INDIRECT) gpuBuffer->renderAccessTypes.push_back(THSVS_ACCESS_INDIRECT_BUFFER);
+    if (hasFlag(gpuBuffer->usage, BufferUsageBit::VERTEX)) gpuBuffer->renderAccessTypes.push_back(THSVS_ACCESS_VERTEX_BUFFER);
+    if (hasFlag(gpuBuffer->usage, BufferUsageBit::INDEX)) gpuBuffer->renderAccessTypes.push_back(THSVS_ACCESS_INDEX_BUFFER);
+    if (hasFlag(gpuBuffer->usage, BufferUsageBit::INDIRECT)) gpuBuffer->renderAccessTypes.push_back(THSVS_ACCESS_INDIRECT_BUFFER);
 }
 
 void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRenderPass) {
@@ -316,17 +319,20 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
     attachmentReferences.clear();
 
     if (subpassCount) { // pass on user-specified subpasses
-        for (const auto &subpassInfo : gpuRenderPass->subpasses) {
-            for (size_t j = 0U; j < subpassInfo.inputs.size(); ++j) {
-                attachmentReferences.push_back({static_cast<uint32_t>(subpassInfo.inputs[j]), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL});
+        for (auto &subpassInfo : gpuRenderPass->subpasses) {
+            for (uint input : subpassInfo.inputs) {
+                attachmentReferences.push_back({input, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL});
             }
-            for (size_t j = 0U; j < subpassInfo.colors.size(); ++j) {
-                attachmentReferences.push_back({static_cast<uint32_t>(subpassInfo.colors[j]), VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL});
+            for (uint color : subpassInfo.colors) {
+                attachmentReferences.push_back({color, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL});
             }
-            for (size_t j = 0U; j < subpassInfo.resolves.size(); ++j) {
-                attachmentReferences.push_back({static_cast<uint32_t>(subpassInfo.resolves[j]), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL});
+            for (uint resolve : subpassInfo.resolves) {
+                attachmentReferences.push_back({resolve, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL});
             }
-            attachmentReferences.push_back({static_cast<uint32_t>(subpassInfo.depthStencil), VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
+            if (hasDepth && subpassInfo.depthStencil == INVALID_BINDING) {
+                subpassInfo.depthStencil = static_cast<uint>(colorAttachmentCount);
+            }
+            attachmentReferences.push_back({subpassInfo.depthStencil, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
         }
 
         uint offset{0U};
@@ -337,23 +343,23 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
             VkSubpassDescription &desc = subpassDescriptions[i];
             desc.pipelineBindPoint     = VK_PIPELINE_BIND_POINT_GRAPHICS;
 
-            if (subpassInfo.inputs.size()) {
+            if (!subpassInfo.inputs.empty()) {
                 desc.inputAttachmentCount = subpassInfo.inputs.size();
                 desc.pInputAttachments    = attachmentReferences.data() + offset;
                 offset += subpassInfo.inputs.size();
             }
 
-            if (subpassInfo.colors.size()) {
+            if (!subpassInfo.colors.empty()) {
                 desc.colorAttachmentCount = subpassInfo.colors.size();
                 desc.pColorAttachments    = attachmentReferences.data() + offset;
                 offset += subpassInfo.colors.size();
-                if (subpassInfo.resolves.size()) {
+                if (!subpassInfo.resolves.empty()) {
                     desc.pResolveAttachments = attachmentReferences.data() + offset;
                     offset += subpassInfo.resolves.size();
                 }
             }
 
-            if (subpassInfo.preserves.size()) {
+            if (!subpassInfo.preserves.empty()) {
                 desc.preserveAttachmentCount = subpassInfo.preserves.size();
                 desc.pPreserveAttachments    = subpassInfo.preserves.data();
             }
@@ -488,7 +494,7 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
 void cmdFuncCCVKCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFramebuffer) {
     size_t              colorViewCount = gpuFramebuffer->gpuColorViews.size();
     bool                depthSpecified = gpuFramebuffer->gpuDepthStencilView;
-    bool                hasDepth       = gpuFramebuffer->gpuRenderPass->depthStencilAttachment.format == device->getDepthStencilFormat();
+    bool                hasDepth       = gpuFramebuffer->gpuRenderPass->depthStencilAttachment.format != Format::UNKNOWN;
     vector<VkImageView> attachments(colorViewCount + (depthSpecified || hasDepth ? 1 : 0));
     uint                swapchainImageIndices = 0;
     CCVKGPUTexture *    gpuTexture            = nullptr;
@@ -856,7 +862,7 @@ void cmdFuncCCVKUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, const
     const void *dataToUpload = nullptr;
     size_t      sizeToUpload = 0U;
 
-    if (gpuBuffer->usage & BufferUsageBit::INDIRECT) {
+    if (hasFlag(gpuBuffer->usage, BufferUsageBit::INDIRECT)) {
         size_t      drawInfoCount = size / sizeof(DrawInfo);
         const auto *drawInfo      = static_cast<const DrawInfo *>(buffer);
         if (drawInfoCount > 0) {
@@ -991,7 +997,7 @@ void cmdFuncCCVKCopyBuffersToTexture(CCVKDevice *device, const uint8_t *const *b
     vkCmdCopyBufferToImage(gpuCommandBuffer->vkCommandBuffer, stagingBuffer.vkBuffer, gpuTexture->vkImage,
                            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, stagingRegions.size(), stagingRegions.data());
 
-    if (gpuTexture->flags & TextureFlags::GEN_MIPMAP) {
+    if (hasFlag(gpuTexture->flags, TextureFlags::GEN_MIPMAP)) {
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(device->gpuContext()->physicalDevice, mapVkFormat(gpuTexture->format), &formatProperties);
         VkFormatFeatureFlags mipmapFeatures = VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;

@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "GLES3Std.h"
 #include "gfx-base/GFXBuffer.h"
 
 namespace cc {
@@ -35,7 +36,7 @@ class GLES3GPUBuffer;
 class CC_GLES3_API GLES3Buffer final : public Buffer {
 public:
     GLES3Buffer();
-    ~GLES3Buffer();
+    ~GLES3Buffer() override;
 
     void update(const void *buffer, uint size) override;
 

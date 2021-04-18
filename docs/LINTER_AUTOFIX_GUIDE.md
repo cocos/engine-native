@@ -105,9 +105,9 @@ Also, you can install the `Command Runner` extension in VSCode:
 
 ![](imgs/command-runner.png)
 
-And assign a suitable key binding for fixing the current file:
+And assign a suitable key binding for fixing the current file (See the extension doc on how to do this):
 ```bash
-clang-tidy -fix ${file}
+clang-tidy -fix '${file}'
 ```
 
 ## Other IDEs

@@ -33,7 +33,7 @@ namespace gfx {
 class CC_DLL PipelineState : public GFXObject {
 public:
     PipelineState();
-    virtual ~PipelineState();
+    ~PipelineState() override;
 
     void initialize(const PipelineStateInfo &info);
     void destroy();

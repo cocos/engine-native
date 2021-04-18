@@ -48,7 +48,7 @@ protected:
 
     vector<uint8_t> _buffer;
 
-    uint _lastUpdateFrame = 0u;
+    uint _lastUpdateFrame = 0U;
 };
 
 } // namespace gfx
