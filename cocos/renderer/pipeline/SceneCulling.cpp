@@ -161,49 +161,19 @@ void lightCollecting(Camera *camera, std::vector<const Light *> &validLights) {
     CC_SAFE_DELETE(sphere);
 }
 
-void shadowCollecting(RenderPipeline *pipeline, Camera *camera) {
-    const auto scene = camera->getScene();
-    const auto sceneData = pipeline->getPipelineSceneData();
-
-    castBoundsInitialized = false;
-
-    RenderObjectList shadowObjects;
-
-    const auto models = scene->getModels();
-    const auto modelCount = models[0];
-    for (size_t i = 1; i <= modelCount; i++) {
-        const auto model = scene->getModelView(models[i]);
-
-        // filter model by view visibility
-        if (model->enabled) {
-            const auto visibility = camera->visibility;
-            const auto node = model->getNode();
-            if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
-                (visibility & model->visFlags)) {
-                // shadow render Object
-                if (model->castShadow && model->getWorldBounds()) {
-                    if (!castBoundsInitialized) {
-                        castWorldBounds = *model->getWorldBounds();
-                        castBoundsInitialized = true;
-                    }
-                    castWorldBounds.merge(*model->getWorldBounds());
-                    shadowObjects.emplace_back(genRenderObject(model, camera));
-                }
-            }
-        }
-    }
-
-    sceneData->getSphere()->define(castWorldBounds);
-
-    sceneData->setShadowObjects(std::move(shadowObjects));
-}
-
 void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
     const auto sceneData = pipeline->getPipelineSceneData();
     const auto sharedData = sceneData->getSharedData();
     const auto shadows = sharedData->getShadows();
     const auto skyBox = sharedData->getSkybox();
     const auto scene = camera->getScene();
+
+    castBoundsInitialized = false;
+    RenderObjectList shadowObjects;
+    bool isShadowMap = false;
+    if(shadows->enabled && shadows->getShadowType() == ShadowType::SHADOWMAP) {
+        isShadowMap = true;
+    }
 
     const Light *mainLight = nullptr;
     if (scene->mainLightID) mainLight = scene->getMainLight();
@@ -224,7 +194,15 @@ void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
             const auto node = model->getNode();
             if ((model->nodeID && ((visibility & node->layer) == node->layer)) ||
                 (visibility & model->visFlags)) {
-
+                // shadow render Object
+                if (isShadowMap && model->castShadow && model->getWorldBounds()) {
+                    if (!castBoundsInitialized) {
+                        castWorldBounds = *model->getWorldBounds();
+                        castBoundsInitialized = true;
+                    }
+                    castWorldBounds.merge(*model->getWorldBounds());
+                    shadowObjects.emplace_back(genRenderObject(model, camera));
+                }
                 // frustum culling
                 if ((model->worldBoundsID) && !aabb_frustum(model->getWorldBounds(), camera->getFrustum())) {
                     continue;
@@ -233,6 +211,11 @@ void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
                 renderObjects.emplace_back(genRenderObject(model, camera));
             }
         }
+    }
+
+    if(isShadowMap) {
+        sceneData->getSphere()->define(castWorldBounds);
+        sceneData->setShadowObjects(std::move(shadowObjects));
     }
 
     sceneData->setRenderObjects(std::move(renderObjects));

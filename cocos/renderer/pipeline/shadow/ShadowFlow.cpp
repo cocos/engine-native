@@ -66,7 +66,6 @@ void ShadowFlow::render(Camera *camera) {
     if (!shadowInfo->enabled || shadowInfo->getShadowType() != ShadowType::SHADOWMAP) return;
 
     lightCollecting(camera, _validLights);
-    shadowCollecting(_pipeline, camera);
 
     if (sceneData->getShadowObjects().empty()) {
         clearShadowMap(camera);
