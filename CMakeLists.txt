@@ -150,6 +150,11 @@ elseif(MACOSX OR IOS)
     set_if_undefined(CC_USE_GLES2 OFF)
 endif()
 
+if (ANDROID AND CMAKE_ANDROID_ARCH_ABI MATCHES x86)
+    set(USE_PHYSICS_PHYSX OFF)
+    message(AUTHOR_WARNING "PhysX does not support Google Android X86")
+endif()
+
 if(USE_SE_JSC)
     set(USE_SE_V8 OFF)
     set(USE_V8_DEBUGGER OFF)
