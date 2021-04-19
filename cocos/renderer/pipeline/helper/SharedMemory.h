@@ -462,6 +462,9 @@ struct CC_DLL Shadows {
     uint32_t pcfType        = 0;
     uint32_t shadowMapDirty = 0;
     float    bias           = 0.0F;
+    uint32_t packing        = 0;
+    uint32_t linear         = 0;
+    uint32_t selfShadow     = 0;
     float    orthoSize      = 0.0F;
     uint32_t autoAdapt      = 0;
 
