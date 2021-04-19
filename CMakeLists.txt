@@ -136,6 +136,7 @@ set_if_undefined(USE_MIDDLEWARE           ON)
 set_if_undefined(USE_DRAGONBONES          ON)
 set_if_undefined(USE_SPINE                ON)
 set_if_undefined(USE_WEBSOCKET_SERVER     OFF)
+set_if_undefined(USE_PHYSICS_PHYSX        ON)
 
 if(ANDROID OR WINDOWS)
     set_if_undefined(CC_USE_GLES3 ON)
@@ -194,6 +195,7 @@ inspect_values(
     USE_WEBSOCKET_SERVER
     USE_SE_V8
     USE_V8_DEBUGGER
+    USE_PHYSICS_PHYSX
 )
 
 ################################# external source code ################################
@@ -1053,64 +1055,69 @@ cocos_source_files(
                  cocos/renderer/frame-graph/VirtualResource.h
 )
 
-cocos_source_files(
-    cocos/physics/PhysXBindings.h
-    cocos/physics/PhysXBindings.cpp
-    cocos/physics/PhysicsSDK.h
-    cocos/physics/PhysicsSelector.h
-    cocos/physics/sdk/World.h
-    cocos/physics/sdk/World.cpp
-    cocos/physics/sdk/Shape.h
-    cocos/physics/sdk/Shape.cpp
-    cocos/physics/sdk/RigidBody.h
-    cocos/physics/sdk/RigidBody.cpp
-    cocos/physics/sdk/Joint.h
-    cocos/physics/sdk/Joint.cpp
-    cocos/physics/spec/IBody.h
-    cocos/physics/spec/IJoint.h
-    cocos/physics/spec/ILifecycle.h
-    cocos/physics/spec/IShape.h
-    cocos/physics/spec/IWorld.h
-    cocos/physics/physx/PhysX.h
-    cocos/physics/physx/PhysXUtils.h
-    cocos/physics/physx/PhysXUtils.cpp
-    cocos/physics/physx/PhysXWorld.h
-    cocos/physics/physx/PhysXWorld.cpp
-    cocos/physics/physx/PhysXFilterShader.h
-    cocos/physics/physx/PhysXFilterShader.cpp
-    cocos/physics/physx/PhysXEventManager.h
-    cocos/physics/physx/PhysXEventManager.cpp
-    cocos/physics/physx/PhysXSharedBody.h
-    cocos/physics/physx/PhysXSharedBody.cpp
-    cocos/physics/physx/PhysXRigidBody.h
-    cocos/physics/physx/PhysXRigidBody.cpp
-    cocos/physics/physx/shapes/PhysXShape.h
-    cocos/physics/physx/shapes/PhysXShape.cpp
-    cocos/physics/physx/shapes/PhysXSphere.h
-    cocos/physics/physx/shapes/PhysXSphere.cpp
-    cocos/physics/physx/shapes/PhysXBox.h
-    cocos/physics/physx/shapes/PhysXBox.cpp
-    cocos/physics/physx/shapes/PhysXPlane.h
-    cocos/physics/physx/shapes/PhysXPlane.cpp
-    cocos/physics/physx/shapes/PhysXCapsule.h
-    cocos/physics/physx/shapes/PhysXCapsule.cpp
-    cocos/physics/physx/shapes/PhysXCone.h
-    cocos/physics/physx/shapes/PhysXCone.cpp
-    cocos/physics/physx/shapes/PhysXCylinder.h
-    cocos/physics/physx/shapes/PhysXCylinder.cpp
-    cocos/physics/physx/shapes/PhysXTerrain.h
-    cocos/physics/physx/shapes/PhysXTerrain.cpp
-    cocos/physics/physx/shapes/PhysXTrimesh.h
-    cocos/physics/physx/shapes/PhysXTrimesh.cpp
-    cocos/physics/physx/joints/PhysXJoint.h
-    cocos/physics/physx/joints/PhysXJoint.cpp
-    cocos/physics/physx/joints/PhysXRevolute.h
-    cocos/physics/physx/joints/PhysXRevolute.cpp
-    cocos/physics/physx/joints/PhysXDistance.h
-    cocos/physics/physx/joints/PhysXDistance.cpp
-    cocos/bindings/auto/jsb_physics_auto.cpp
-    cocos/bindings/auto/jsb_physics_auto.h
-)
+##### physics
+
+if(USE_PHYSICS_PHYSX)
+    cocos_source_files(
+        cocos/physics/PhysXBindings.h
+        cocos/physics/PhysXBindings.cpp
+        cocos/physics/PhysicsSDK.h
+        cocos/physics/PhysicsSelector.h
+        cocos/physics/sdk/World.h
+        cocos/physics/sdk/World.cpp
+        cocos/physics/sdk/Shape.h
+        cocos/physics/sdk/Shape.cpp
+        cocos/physics/sdk/RigidBody.h
+        cocos/physics/sdk/RigidBody.cpp
+        cocos/physics/sdk/Joint.h
+        cocos/physics/sdk/Joint.cpp
+        cocos/physics/spec/IBody.h
+        cocos/physics/spec/IJoint.h
+        cocos/physics/spec/ILifecycle.h
+        cocos/physics/spec/IShape.h
+        cocos/physics/spec/IWorld.h
+        cocos/physics/physx/PhysX.h
+        cocos/physics/physx/PhysXInc.h
+        cocos/physics/physx/PhysXUtils.h
+        cocos/physics/physx/PhysXUtils.cpp
+        cocos/physics/physx/PhysXWorld.h
+        cocos/physics/physx/PhysXWorld.cpp
+        cocos/physics/physx/PhysXFilterShader.h
+        cocos/physics/physx/PhysXFilterShader.cpp
+        cocos/physics/physx/PhysXEventManager.h
+        cocos/physics/physx/PhysXEventManager.cpp
+        cocos/physics/physx/PhysXSharedBody.h
+        cocos/physics/physx/PhysXSharedBody.cpp
+        cocos/physics/physx/PhysXRigidBody.h
+        cocos/physics/physx/PhysXRigidBody.cpp
+        cocos/physics/physx/shapes/PhysXShape.h
+        cocos/physics/physx/shapes/PhysXShape.cpp
+        cocos/physics/physx/shapes/PhysXSphere.h
+        cocos/physics/physx/shapes/PhysXSphere.cpp
+        cocos/physics/physx/shapes/PhysXBox.h
+        cocos/physics/physx/shapes/PhysXBox.cpp
+        cocos/physics/physx/shapes/PhysXPlane.h
+        cocos/physics/physx/shapes/PhysXPlane.cpp
+        cocos/physics/physx/shapes/PhysXCapsule.h
+        cocos/physics/physx/shapes/PhysXCapsule.cpp
+        cocos/physics/physx/shapes/PhysXCone.h
+        cocos/physics/physx/shapes/PhysXCone.cpp
+        cocos/physics/physx/shapes/PhysXCylinder.h
+        cocos/physics/physx/shapes/PhysXCylinder.cpp
+        cocos/physics/physx/shapes/PhysXTerrain.h
+        cocos/physics/physx/shapes/PhysXTerrain.cpp
+        cocos/physics/physx/shapes/PhysXTrimesh.h
+        cocos/physics/physx/shapes/PhysXTrimesh.cpp
+        cocos/physics/physx/joints/PhysXJoint.h
+        cocos/physics/physx/joints/PhysXJoint.cpp
+        cocos/physics/physx/joints/PhysXRevolute.h
+        cocos/physics/physx/joints/PhysXRevolute.cpp
+        cocos/physics/physx/joints/PhysXDistance.h
+        cocos/physics/physx/joints/PhysXDistance.cpp
+        cocos/bindings/auto/jsb_physics_auto.cpp
+        cocos/bindings/auto/jsb_physics_auto.h
+    )
+endif()
 
 ##### script bindings
 ######## dop
@@ -1727,6 +1734,7 @@ target_compile_definitions(cocos2d PUBLIC
     $<IF:$<BOOL:${USE_MIDDLEWARE}>,USE_MIDDLEWARE=1,USE_MIDDLEWARE=0>
     $<IF:$<BOOL:${USE_SPINE}>,USE_SPINE=1,USE_SPINE=0>
     $<IF:$<BOOL:${USE_DRAGONBONES}>,USE_DRAGONBONES=1,USE_DRAGONBONES=0>
+    $<IF:$<BOOL:${USE_PHYSICS_PHYSX}>,USE_PHYSICS_PHYSX=1,USE_PHYSICS_PHYSX=0>
     $<$<BOOL:${USE_SE_JSC}>:SCRIPT_ENGINE_TYPE=3>
     $<$<CONFIG:Debug>:CC_DEBUG=1>
 )

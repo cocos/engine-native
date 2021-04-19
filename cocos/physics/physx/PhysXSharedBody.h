@@ -42,7 +42,6 @@ public:
 	CC_INLINE const uint getNodeHandle() const { return mNodeHandle; }
     CC_INLINE Node &getNode() const { return *mNode; }
     CC_INLINE PhysXWorld &getWorld() const { return *mWrappedWorld; }
-    CC_INLINE void setType(ERigidBodyType v) { mType = v; }
     union UActor {
         intptr_t ptr;
         PxRigidActor *rigidActor;
@@ -50,6 +49,7 @@ public:
         PxRigidDynamic *rigidDynamic;
     };
     UActor getImpl();
+	void setType(ERigidBodyType v);
     void setMass(float v);
     void syncScale();
     void syncSceneToPhysics();

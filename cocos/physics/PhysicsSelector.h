@@ -16,4 +16,5 @@
     #define WrappedConeShape PhysXCone
     #define WrappedCylinderShape PhysXCylinder
     #define WrappedRevoluteJoint PhysXRevolute
+    #define WrappedDistanceJoint PhysXDistance
 #endif

@@ -92,8 +92,8 @@
 
 #endif // USE_MIDDLEWARE
 
-#if CC_PLATFORM == CC_PLATFORM_WINDOWS
-#include "cocos/bindings/auto/jsb_physics_auto.h"
+#if USE_PHYSICS_PHYSX
+    #include "cocos/bindings/auto/jsb_physics_auto.h"
 #endif
 
 using namespace cc;

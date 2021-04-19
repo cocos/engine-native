@@ -46,7 +46,7 @@ PhysXSharedBody *PhysXSharedBody::getSharedBody(const uint handle, PhysXWorld *c
     if (body != nullptr) {
         int g = body->getInitialGroup();
         newSB->mFilterData.word0 = g;
-        newSB->mFilterData.word1 = world->getMaskByIndex(log2(g));
+        newSB->mFilterData.word1 = world->getMaskByIndex((uint32_t)log2(g));
     }
     return newSB;
 }
@@ -60,6 +60,13 @@ PhysXSharedBody::UActor PhysXSharedBody::getImpl() {
     initActor();
     mImpl.ptr = isStatic() ? (intptr_t)mStaticActor : (intptr_t)mDynamicActor;
     return mImpl;
+}
+
+void PhysXSharedBody::setType(ERigidBodyType v) {
+	if (mType == v) return;
+	mType = v; 
+	initActor();
+	mImpl.ptr = isStatic() ? (intptr_t)mStaticActor : (intptr_t)mDynamicActor;
 }
 
 void PhysXSharedBody::reference(bool v) {
@@ -77,7 +84,7 @@ void PhysXSharedBody::enabled(bool v) {
         auto wb = mWrappedBody;
         auto ws = mWrappedShapes;
         auto isRemove = ws.size() == 0 && (wb == nullptr || (wb != nullptr && !wb->isEnabled()));
-        if (mIndex >= 0) {
+        if (isRemove) {
             mIndex = -1;
             mWrappedWorld->removeActor(*this);
         }
@@ -109,6 +116,7 @@ void PhysXSharedBody::switchActor(const bool isStaticBefore) {
         a1.attachShape(ws->getShape());
     }
     if (isStaticBefore) {
+		if (isDynamic()) mDynamicActor->wakeUp();
         mDynamicActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, isKinematic());
         PxRigidBodyExt::setMassAndUpdateInertia(*mDynamicActor, mMass);
         PxTransform com{PxIdentity};
@@ -229,7 +237,7 @@ void PhysXSharedBody::removeShape(PhysXShape &shape) {
     auto iter = find(beg, end, &shape);
     if (iter != end) {
         mWrappedShapes.erase(iter);
-        getImpl().rigidActor->detachShape(shape.getShape());
+        getImpl().rigidActor->detachShape(shape.getShape(), true);
         if (!shape.isTrigger()) {
             if (!shape.getCenter().isZero()) updateCenterOfMass();
             if (isDynamic()) PxRigidBodyExt::setMassAndUpdateInertia(*getImpl().rigidDynamic, mMass);
@@ -266,7 +274,7 @@ void PhysXSharedBody::removeJoint(PhysXJoint &joint, const PxJointActorIndex::En
 }
 
 void PhysXSharedBody::setMass(float v) {
-    if (v <= 0) v = 1e-7;
+    if (v <= 0) v = 1e-7f;
     mMass = v;
     if (isDynamic()) PxRigidBodyExt::setMassAndUpdateInertia(*getImpl().rigidDynamic, mMass);
 }

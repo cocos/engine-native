@@ -232,7 +232,7 @@ bool PhysXWorld::raycast(RaycastOptions &opt) {
     if (nbTouches == 0 || nbTouches == -1) return false;
     auto &r = raycastResult();
     r.resize(nbTouches);
-    for (size_t i = 0; i < nbTouches; i++) {
+    for (PxI32 i = 0; i < nbTouches; i++) {
         const auto &shapeIter = getPxShapeMap().find((intptr_t)hitBuffer[i].shape);
         if (shapeIter == getPxShapeMap().end()) return false;
         r[i].shape = shapeIter->second;

@@ -1,5 +1,4 @@
 #include "cocos/bindings/auto/jsb_physics_auto.h"
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
 #include "physics/PhysicsSDK.h"
@@ -4598,6 +4597,227 @@ bool js_register_physics_RevoluteJoint(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_cc_physics_DistanceJoint_proto = nullptr;
+se::Class* __jsb_cc_physics_DistanceJoint_class = nullptr;
+
+static bool js_physics_DistanceJoint_getImpl(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_DistanceJoint_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_getImpl)
+
+static bool js_physics_DistanceJoint_initialize(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_DistanceJoint_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_initialize)
+
+static bool js_physics_DistanceJoint_onDestroy(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_onDestroy)
+
+static bool js_physics_DistanceJoint_onDisable(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_onDisable)
+
+static bool js_physics_DistanceJoint_onEnable(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_onEnable)
+
+static bool js_physics_DistanceJoint_setConnectedBody(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_setConnectedBody : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_DistanceJoint_setConnectedBody : Error processing arguments");
+        cobj->setConnectedBody(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_setConnectedBody)
+
+static bool js_physics_DistanceJoint_setEnableCollision(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_setEnableCollision : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_DistanceJoint_setEnableCollision : Error processing arguments");
+        cobj->setEnableCollision(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_setEnableCollision)
+
+static bool js_physics_DistanceJoint_setPivotA(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_setPivotA : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_DistanceJoint_setPivotA : Error processing arguments");
+        cobj->setPivotA(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_setPivotA)
+
+static bool js_physics_DistanceJoint_setPivotB(se::State& s)
+{
+    cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_DistanceJoint_setPivotB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_DistanceJoint_setPivotB : Error processing arguments");
+        cobj->setPivotB(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_DistanceJoint_setPivotB)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_DistanceJoint_finalize)
+
+static bool js_physics_DistanceJoint_constructor(se::State& s) // constructor.c
+{
+    cc::physics::DistanceJoint* cobj = JSB_ALLOC(cc::physics::DistanceJoint);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_DistanceJoint_constructor, __jsb_cc_physics_DistanceJoint_class, js_cc_physics_DistanceJoint_finalize)
+
+
+
+
+static bool js_cc_physics_DistanceJoint_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::DistanceJoint>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::DistanceJoint* cobj = SE_THIS_OBJECT<cc::physics::DistanceJoint>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_DistanceJoint_finalize)
+
+bool js_register_physics_DistanceJoint(se::Object* obj)
+{
+    auto cls = se::Class::create("DistanceJoint", obj, nullptr, _SE(js_physics_DistanceJoint_constructor));
+
+    cls->defineFunction("getImpl", _SE(js_physics_DistanceJoint_getImpl));
+    cls->defineFunction("initialize", _SE(js_physics_DistanceJoint_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_DistanceJoint_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_DistanceJoint_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_DistanceJoint_onEnable));
+    cls->defineFunction("setConnectedBody", _SE(js_physics_DistanceJoint_setConnectedBody));
+    cls->defineFunction("setEnableCollision", _SE(js_physics_DistanceJoint_setEnableCollision));
+    cls->defineFunction("setPivotA", _SE(js_physics_DistanceJoint_setPivotA));
+    cls->defineFunction("setPivotB", _SE(js_physics_DistanceJoint_setPivotB));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_DistanceJoint_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::DistanceJoint>(cls);
+
+    __jsb_cc_physics_DistanceJoint_proto = cls->getProto();
+    __jsb_cc_physics_DistanceJoint_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 se::Object* __jsb_cc_physics_PhysXBindings_proto = nullptr;
 se::Class* __jsb_cc_physics_PhysXBindings_class = nullptr;
 
@@ -4826,6 +5046,7 @@ bool register_all_physics(se::Object* obj)
     js_register_physics_CylinderShape(ns);
     js_register_physics_TrimeshShape(ns);
     js_register_physics_PlaneShape(ns);
+    js_register_physics_DistanceJoint(ns);
     js_register_physics_RevoluteJoint(ns);
     js_register_physics_CapsuleShape(ns);
     js_register_physics_BoxShape(ns);
@@ -4835,4 +5056,3 @@ bool register_all_physics(se::Object* obj)
     return true;
 }
 
-#endif //#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

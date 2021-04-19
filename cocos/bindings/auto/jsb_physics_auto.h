@@ -1,6 +1,5 @@
 #pragma once
 #include "base/Config.h"
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include <type_traits>
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
@@ -305,6 +304,24 @@ SE_DECLARE_FUNC(js_physics_RevoluteJoint_setPivotA);
 SE_DECLARE_FUNC(js_physics_RevoluteJoint_setPivotB);
 SE_DECLARE_FUNC(js_physics_RevoluteJoint_RevoluteJoint);
 
+extern se::Object* __jsb_cc_physics_DistanceJoint_proto;
+extern se::Class* __jsb_cc_physics_DistanceJoint_class;
+
+bool js_register_cc_physics_DistanceJoint(se::Object* obj);
+bool register_all_physics(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::physics::DistanceJoint);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_getImpl);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_initialize);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_onDestroy);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_onDisable);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_onEnable);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_setConnectedBody);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_setEnableCollision);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_setPivotA);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_setPivotB);
+SE_DECLARE_FUNC(js_physics_DistanceJoint_DistanceJoint);
+
 extern se::Object* __jsb_cc_physics_PhysXBindings_proto;
 extern se::Class* __jsb_cc_physics_PhysXBindings_class;
 
@@ -322,4 +339,3 @@ SE_DECLARE_FUNC(js_physics_PhysXBindings_getTestStructVec);
 SE_DECLARE_FUNC(js_physics_PhysXBindings_getPtr);
 SE_DECLARE_FUNC(js_physics_PhysXBindings_setTestStruct);
 
-#endif //#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

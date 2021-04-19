@@ -89,7 +89,7 @@ void PhysXRigidBody::setAngularFactor(float x, float y, float z) {
 void PhysXRigidBody::setAllowSleep(bool v) {
     if (!getSharedBody().isDynamic()) return;
     PxReal st = getSharedBody().getImpl().rigidDynamic->getSleepThreshold();
-    PxReal wc = v ? std::max(0., st - 0.001) : FLT_MAX;
+    PxReal wc = v ? std::max(0.f, st - 0.001f) : FLT_MAX;
     getSharedBody().getImpl().rigidDynamic->setWakeCounter(wc);
 }
 

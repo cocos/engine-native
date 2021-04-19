@@ -45,7 +45,18 @@ namespace physics {
 
 /// COMMON ///
 
+CC_PHYSICS_JOINT_DEFINITION(DistanceJoint, WrappedDistanceJoint)
 CC_PHYSICS_JOINT_DEFINITION(RevoluteJoint, WrappedRevoluteJoint)
+
+/// EXTRAS ///
+
+void DistanceJoint::setPivotA(float x, float y, float z) {
+    _impl->setPivotA(x, y, z);
+}
+
+void DistanceJoint::setPivotB(float x, float y, float z) {
+    _impl->setPivotB(x, y, z);
+}
 
 void RevoluteJoint::setPivotA(float x, float y, float z) {
     _impl->setPivotA(x, y, z);
@@ -58,6 +69,7 @@ void RevoluteJoint::setPivotB(float x, float y, float z) {
 void RevoluteJoint::setAxis(float x, float y, float z) {
     _impl->setAxis(x, y, z);
 }
+
 
 } // namespace physics
 } // namespace cc
