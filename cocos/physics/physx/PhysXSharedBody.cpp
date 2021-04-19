@@ -29,7 +29,7 @@ PhysXSharedBody::PhysXSharedBody(
                                   mDynamicActor(nullptr),
                                   mWrappedWorld(world),
                                   mWrappedBody(body) {
-    mImpl.ptr = NULL;
+    mImpl.ptr = 0;
     mNode = GET_NODE(mNodeHandle);
 };
 

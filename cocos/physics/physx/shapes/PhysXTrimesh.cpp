@@ -8,7 +8,7 @@
 namespace cc {
 namespace physics {
 
-PhysXTrimesh::PhysXTrimesh() : mMeshHandle(NULL),
+PhysXTrimesh::PhysXTrimesh() : mMeshHandle(0),
                                mConvex(false),
                                PhysXShape(){};
 

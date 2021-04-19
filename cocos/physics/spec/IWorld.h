@@ -79,7 +79,7 @@ struct RaycastResult {
     cc::Vec3 hitPoint;
     float distance;
     cc::Vec3 hitNormal;
-    RaycastResult() : shape(NULL) {}
+    RaycastResult() : shape(0) {}
 };
 
 class IPhysicsWorld {
