@@ -1,5 +1,5 @@
-#ifndef SRC_BASE64_H_
-#define SRC_BASE64_H_
+#ifndef SRC_BASE64_H
+#define SRC_BASE64_H
 
 #if defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
@@ -69,7 +69,6 @@ bool base64_decode_group_slow(char *const dst, const size_t dstlen,
         if (*k >= dstlen)                          \
             return false;                          \
         hi = lo;
-    V(/* Nothing. */);
     V(dst[(*k)++] = ((hi & 0x3F) << 2) | ((lo & 0x30) >> 4));
     V(dst[(*k)++] = ((hi & 0x0F) << 4) | ((lo & 0x3C) >> 2));
     V(dst[(*k)++] = ((hi & 0x03) << 6) | ((lo & 0x3F) >> 0));

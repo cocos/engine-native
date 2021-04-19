@@ -586,12 +586,12 @@ elseif(APPLE)
     )
     if(MACOSX)
         cocos_source_files(
-            cocos/platform/mac/View.h
-            cocos/platform/mac/KeyCodeHelper.h
-            cocos/platform/mac/View.mm
-            cocos/platform/mac/Device-mac.mm
-            cocos/platform/mac/Application-mac.mm
-            cocos/platform/mac/KeyCodeHelper.cpp
+                    cocos/platform/mac/View.h
+                    cocos/platform/mac/KeyCodeHelper.h
+                    cocos/platform/mac/View.mm
+                    cocos/platform/mac/Device-mac.mm
+                    cocos/platform/mac/Application-mac.mm
+                    cocos/platform/mac/KeyCodeHelper.cpp
         )
     elseif(IOS)
         cocos_source_files(
@@ -1469,27 +1469,27 @@ if(USE_SE_V8)
     if(USE_V8_DEBUGGER)
     cocos_source_files(
                      cocos/bindings/jswrapper/v8/debugger/base64.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/env.cpp
+                     cocos/bindings/jswrapper/v8/debugger/env.cpp
                      cocos/bindings/jswrapper/v8/debugger/env.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/http_parser.c
+                     cocos/bindings/jswrapper/v8/debugger/http_parser.c
                      cocos/bindings/jswrapper/v8/debugger/http_parser.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/inspector_agent.cpp
+                     cocos/bindings/jswrapper/v8/debugger/inspector_agent.cpp
                      cocos/bindings/jswrapper/v8/debugger/inspector_agent.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/inspector_io.cpp
+                     cocos/bindings/jswrapper/v8/debugger/inspector_io.cpp
                      cocos/bindings/jswrapper/v8/debugger/inspector_io.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/inspector_socket.cpp
+                     cocos/bindings/jswrapper/v8/debugger/inspector_socket.cpp
                      cocos/bindings/jswrapper/v8/debugger/inspector_socket.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/inspector_socket_server.cpp
+                     cocos/bindings/jswrapper/v8/debugger/inspector_socket_server.cpp
                      cocos/bindings/jswrapper/v8/debugger/inspector_socket_server.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/node.cpp
+                     cocos/bindings/jswrapper/v8/debugger/node.cpp
                      cocos/bindings/jswrapper/v8/debugger/node.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/node_debug_options.cpp
+                     cocos/bindings/jswrapper/v8/debugger/node_debug_options.cpp
                      cocos/bindings/jswrapper/v8/debugger/node_debug_options.h
                      cocos/bindings/jswrapper/v8/debugger/node_mutex.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/SHA1.cpp
+                     cocos/bindings/jswrapper/v8/debugger/SHA1.cpp
                      cocos/bindings/jswrapper/v8/debugger/SHA1.h
                      cocos/bindings/jswrapper/v8/debugger/util-inl.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/debugger/util.cpp
+                     cocos/bindings/jswrapper/v8/debugger/util.cpp
                      cocos/bindings/jswrapper/v8/debugger/util.h
                      cocos/bindings/jswrapper/v8/debugger/v8_inspector_protocol_json.h
     )
