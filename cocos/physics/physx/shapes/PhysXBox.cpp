@@ -26,9 +26,9 @@ void PhysXBox::onComponentSet() {
 }
 
 void PhysXBox::updateScale() {
-    updateCenter();
     updateGeometry();
     getShape().setGeometry(getPxGeometry<PxBoxGeometry>());
+    updateCenter();
 }
 
 void PhysXBox::updateGeometry() {

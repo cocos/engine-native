@@ -1,4 +1,6 @@
 
+#pragma once
+
 #if defined(CC_PHYSICS_BULLET)
     #include "bullet/Bullet.h"
 #else
@@ -7,4 +9,6 @@
     #define WrappedRigidBody PhysXRigidBody
     #define WrappedSphereShape PhysXSphere
 	#define WrappedBoxShape PhysXBox
+	#define WrappedPlaneShape PhysXPlane
+	#define WrappedCapsuleShape PhysXCapsule
 #endif

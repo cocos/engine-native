@@ -1,7 +1,3 @@
-
-#ifndef __PHYSX_WORLD_H__
-#define __PHYSX_WORLD_H__
-
 #include "PhysXWorld.h"
 #include "PhysXUtils.h"
 #include <PhysX/extensions/PxDefaultAllocator.h>
@@ -167,5 +163,3 @@ void PhysXWorld::removeActor(PhysXSharedBody &sb) {
 
 } // namespace physics
 } // namespace cc
-
-#endif

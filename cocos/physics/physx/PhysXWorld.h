@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "../spec/IWorld.h"
@@ -27,8 +28,8 @@ public:
     virtual void syncSceneWithCheck() override;
     virtual void destroy() override;
     PhysXSharedBody *getSharedBody(const uint &handle, PhysXRigidBody *const body = nullptr);
-	CC_INLINE PxScene& getScene() const { return *mScene; }
-	void syncPhysicsToScene();
+    CC_INLINE PxScene &getScene() const { return *mScene; }
+    void syncPhysicsToScene();
     void addActor(PhysXSharedBody &sb);
     void removeActor(PhysXSharedBody &sb);
 

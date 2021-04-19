@@ -13,12 +13,12 @@ public:
     PhysXBox();
     virtual ~PhysXBox();
     virtual void setSize(float x, float y, float z) override;
-    virtual void onComponentSet() override;
     virtual void updateScale() override;
 
 private:
     PxVec3 mHalfExtents;
     void updateGeometry();
+    virtual void onComponentSet() override;
 };
 
 } // namespace physics

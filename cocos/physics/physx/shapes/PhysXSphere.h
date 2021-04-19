@@ -13,12 +13,12 @@ public:
     PhysXSphere();
     virtual ~PhysXSphere();
     virtual void setRadius(float r) override;
-    virtual void onComponentSet() override;
     virtual void updateScale() override;
 
 private:
     float mRadius;
-    void updateGeometry();    
+    void updateGeometry();
+    virtual void onComponentSet() override;
 };
 
 } // namespace physics

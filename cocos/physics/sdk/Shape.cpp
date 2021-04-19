@@ -16,7 +16,7 @@
         return _impl->getImpl();                          \
     }                                                     \
                                                           \
-    void Class::initialize(const uint& uuid) {            \
+    void Class::initialize(const uint &uuid) {            \
         _impl->initialize(uuid);                          \
     }                                                     \
                                                           \
@@ -67,6 +67,10 @@ namespace physics {
 
 CC_PHYSICS_SHAPE_DEFINITION(SphereShape, WrappedSphereShape)
 CC_PHYSICS_SHAPE_DEFINITION(BoxShape, WrappedBoxShape)
+CC_PHYSICS_SHAPE_DEFINITION(PlaneShape, WrappedPlaneShape)
+CC_PHYSICS_SHAPE_DEFINITION(CapsuleShape, WrappedCapsuleShape)
+// CC_PHYSICS_SHAPE_DEFINITION(CylinderShape, WrappedCylinderShape)
+// CC_PHYSICS_SHAPE_DEFINITION(ConeShape, WrappedConeShape)
 
 /// EXTRAS ///
 
@@ -76,6 +80,50 @@ void SphereShape::setRadius(float v) {
 
 void BoxShape::setSize(float x, float y, float z) {
     _impl->setSize(x, y, z);
+}
+
+void CapsuleShape::setRadius(float v) {
+    _impl->setRadius(v);
+}
+
+void CapsuleShape::setCylinderHeight(float v) {
+    _impl->setCylinderHeight(v);
+}
+
+void CapsuleShape::setDirection(EAxisDirection v) {
+    _impl->setDirection(v);
+}
+
+void PlaneShape::setConstant(float v) {
+    _impl->setConstant(v);
+}
+
+void PlaneShape::setNormal(float x, float y, float z) {
+    _impl->setNormal(x, y, z);
+}
+
+void CylinderShape::setRadius(float v) {
+    _impl->setRadius(v);
+}
+
+void CylinderShape::setHeight(float v) {
+    _impl->setHeight(v);
+}
+
+void CylinderShape::setDirection(EAxisDirection v) {
+    _impl->setDirection(v);
+}
+
+void ConeShape::setRadius(float v) {
+    _impl->setRadius(v);
+}
+
+void ConeShape::setHeight(float v) {
+    _impl->setHeight(v);
+}
+
+void ConeShape::setDirection(EAxisDirection v) {
+    _impl->setDirection(v);
 }
 
 } // namespace physics

@@ -78,7 +78,7 @@ void PhysXShape::updateFilterData(PxFilterData &data) {
 
 void PhysXShape::updateCenter() {
     auto &node = getSharedBody().getNode();
-    PxTransform local{mCenter * node.worldScale, PxQuat{PxIdentity}};
+    PxTransform local{mCenter * node.worldScale, mRotation};
     getShape().setLocalPose(local);
 }
 

@@ -1557,6 +1557,676 @@ bool js_register_physics_BoxShape(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_cc_physics_CapsuleShape_proto = nullptr;
+se::Class* __jsb_cc_physics_CapsuleShape_class = nullptr;
+
+static bool js_physics_CapsuleShape_getAABB(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_getAABB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::AABB result = cobj->getAABB();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_getAABB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_getAABB)
+
+static bool js_physics_CapsuleShape_getBoundingSphere(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_getBoundingSphere : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::Sphere result = cobj->getBoundingSphere();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_getBoundingSphere : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_getBoundingSphere)
+
+static bool js_physics_CapsuleShape_getImpl(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_getImpl)
+
+static bool js_physics_CapsuleShape_initialize(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_initialize)
+
+static bool js_physics_CapsuleShape_onDestroy(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_onDestroy)
+
+static bool js_physics_CapsuleShape_onDisable(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_onDisable)
+
+static bool js_physics_CapsuleShape_onEnable(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_onEnable)
+
+static bool js_physics_CapsuleShape_setAsTrigger(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setAsTrigger : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setAsTrigger : Error processing arguments");
+        cobj->setAsTrigger(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setAsTrigger)
+
+static bool js_physics_CapsuleShape_setCenter(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setCenter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setCenter : Error processing arguments");
+        cobj->setCenter(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setCenter)
+
+static bool js_physics_CapsuleShape_setCollisionFilter(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setCollisionFilter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<int, false> arg0 = {};
+        HolderType<int, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setCollisionFilter : Error processing arguments");
+        cobj->setCollisionFilter(arg0.value(), arg1.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setCollisionFilter)
+
+static bool js_physics_CapsuleShape_setCylinderHeight(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setCylinderHeight : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<float, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setCylinderHeight : Error processing arguments");
+        cobj->setCylinderHeight(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setCylinderHeight)
+
+static bool js_physics_CapsuleShape_setDirection(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setDirection : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::EAxisDirection, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setDirection : Error processing arguments");
+        cobj->setDirection(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setDirection)
+
+static bool js_physics_CapsuleShape_setMaterial(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setMaterial : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setMaterial : Error processing arguments");
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setMaterial)
+
+static bool js_physics_CapsuleShape_setRadius(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setRadius : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<float, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setRadius : Error processing arguments");
+        cobj->setRadius(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setRadius)
+
+static bool js_physics_CapsuleShape_updateEventListener(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_updateEventListener : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::EShapeFilterFlag, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_updateEventListener : Error processing arguments");
+        cobj->updateEventListener(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_updateEventListener)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_CapsuleShape_finalize)
+
+static bool js_physics_CapsuleShape_constructor(se::State& s) // constructor.c
+{
+    cc::physics::CapsuleShape* cobj = JSB_ALLOC(cc::physics::CapsuleShape);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_CapsuleShape_constructor, __jsb_cc_physics_CapsuleShape_class, js_cc_physics_CapsuleShape_finalize)
+
+
+
+
+static bool js_cc_physics_CapsuleShape_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::CapsuleShape>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_CapsuleShape_finalize)
+
+bool js_register_physics_CapsuleShape(se::Object* obj)
+{
+    auto cls = se::Class::create("CapsuleShape", obj, nullptr, _SE(js_physics_CapsuleShape_constructor));
+
+    cls->defineFunction("getAABB", _SE(js_physics_CapsuleShape_getAABB));
+    cls->defineFunction("getBoundingSphere", _SE(js_physics_CapsuleShape_getBoundingSphere));
+    cls->defineFunction("getImpl", _SE(js_physics_CapsuleShape_getImpl));
+    cls->defineFunction("initialize", _SE(js_physics_CapsuleShape_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_CapsuleShape_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_CapsuleShape_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_CapsuleShape_onEnable));
+    cls->defineFunction("setAsTrigger", _SE(js_physics_CapsuleShape_setAsTrigger));
+    cls->defineFunction("setCenter", _SE(js_physics_CapsuleShape_setCenter));
+    cls->defineFunction("setCollisionFilter", _SE(js_physics_CapsuleShape_setCollisionFilter));
+    cls->defineFunction("setCylinderHeight", _SE(js_physics_CapsuleShape_setCylinderHeight));
+    cls->defineFunction("setDirection", _SE(js_physics_CapsuleShape_setDirection));
+    cls->defineFunction("setMaterial", _SE(js_physics_CapsuleShape_setMaterial));
+    cls->defineFunction("setRadius", _SE(js_physics_CapsuleShape_setRadius));
+    cls->defineFunction("updateEventListener", _SE(js_physics_CapsuleShape_updateEventListener));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_CapsuleShape_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::CapsuleShape>(cls);
+
+    __jsb_cc_physics_CapsuleShape_proto = cls->getProto();
+    __jsb_cc_physics_CapsuleShape_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_cc_physics_PlaneShape_proto = nullptr;
+se::Class* __jsb_cc_physics_PlaneShape_class = nullptr;
+
+static bool js_physics_PlaneShape_getAABB(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_getAABB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::AABB result = cobj->getAABB();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_getAABB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_getAABB)
+
+static bool js_physics_PlaneShape_getBoundingSphere(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_getBoundingSphere : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::Sphere result = cobj->getBoundingSphere();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_getBoundingSphere : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_getBoundingSphere)
+
+static bool js_physics_PlaneShape_getImpl(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_getImpl)
+
+static bool js_physics_PlaneShape_initialize(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_initialize)
+
+static bool js_physics_PlaneShape_onDestroy(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_onDestroy)
+
+static bool js_physics_PlaneShape_onDisable(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_onDisable)
+
+static bool js_physics_PlaneShape_onEnable(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_onEnable)
+
+static bool js_physics_PlaneShape_setAsTrigger(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setAsTrigger : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setAsTrigger : Error processing arguments");
+        cobj->setAsTrigger(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setAsTrigger)
+
+static bool js_physics_PlaneShape_setCenter(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setCenter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setCenter : Error processing arguments");
+        cobj->setCenter(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setCenter)
+
+static bool js_physics_PlaneShape_setCollisionFilter(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setCollisionFilter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<int, false> arg0 = {};
+        HolderType<int, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setCollisionFilter : Error processing arguments");
+        cobj->setCollisionFilter(arg0.value(), arg1.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setCollisionFilter)
+
+static bool js_physics_PlaneShape_setConstant(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setConstant : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<float, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setConstant : Error processing arguments");
+        cobj->setConstant(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setConstant)
+
+static bool js_physics_PlaneShape_setMaterial(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setMaterial : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setMaterial : Error processing arguments");
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setMaterial)
+
+static bool js_physics_PlaneShape_setNormal(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setNormal : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setNormal : Error processing arguments");
+        cobj->setNormal(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setNormal)
+
+static bool js_physics_PlaneShape_updateEventListener(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_updateEventListener : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::EShapeFilterFlag, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_updateEventListener : Error processing arguments");
+        cobj->updateEventListener(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_updateEventListener)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_PlaneShape_finalize)
+
+static bool js_physics_PlaneShape_constructor(se::State& s) // constructor.c
+{
+    cc::physics::PlaneShape* cobj = JSB_ALLOC(cc::physics::PlaneShape);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_PlaneShape_constructor, __jsb_cc_physics_PlaneShape_class, js_cc_physics_PlaneShape_finalize)
+
+
+
+
+static bool js_cc_physics_PlaneShape_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::PlaneShape>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_PlaneShape_finalize)
+
+bool js_register_physics_PlaneShape(se::Object* obj)
+{
+    auto cls = se::Class::create("PlaneShape", obj, nullptr, _SE(js_physics_PlaneShape_constructor));
+
+    cls->defineFunction("getAABB", _SE(js_physics_PlaneShape_getAABB));
+    cls->defineFunction("getBoundingSphere", _SE(js_physics_PlaneShape_getBoundingSphere));
+    cls->defineFunction("getImpl", _SE(js_physics_PlaneShape_getImpl));
+    cls->defineFunction("initialize", _SE(js_physics_PlaneShape_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_PlaneShape_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_PlaneShape_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_PlaneShape_onEnable));
+    cls->defineFunction("setAsTrigger", _SE(js_physics_PlaneShape_setAsTrigger));
+    cls->defineFunction("setCenter", _SE(js_physics_PlaneShape_setCenter));
+    cls->defineFunction("setCollisionFilter", _SE(js_physics_PlaneShape_setCollisionFilter));
+    cls->defineFunction("setConstant", _SE(js_physics_PlaneShape_setConstant));
+    cls->defineFunction("setMaterial", _SE(js_physics_PlaneShape_setMaterial));
+    cls->defineFunction("setNormal", _SE(js_physics_PlaneShape_setNormal));
+    cls->defineFunction("updateEventListener", _SE(js_physics_PlaneShape_updateEventListener));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_PlaneShape_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::PlaneShape>(cls);
+
+    __jsb_cc_physics_PlaneShape_proto = cls->getProto();
+    __jsb_cc_physics_PlaneShape_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 se::Object* __jsb_cc_physics_PhysXBindings_proto = nullptr;
 se::Class* __jsb_cc_physics_PhysXBindings_class = nullptr;
 
@@ -1683,10 +2353,12 @@ bool register_all_physics(se::Object* obj)
     se::Object* ns = nsVal.toObject();
 
     js_register_physics_RigidBody(ns);
-    js_register_physics_World(ns);
     js_register_physics_PhysXBindings(ns);
-    js_register_physics_BoxShape(ns);
     js_register_physics_SphereShape(ns);
+    js_register_physics_PlaneShape(ns);
+    js_register_physics_CapsuleShape(ns);
+    js_register_physics_BoxShape(ns);
+    js_register_physics_World(ns);
     return true;
 }
 

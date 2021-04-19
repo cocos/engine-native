@@ -28,6 +28,7 @@ void PhysXSphere::onComponentSet() {
 void PhysXSphere::updateScale() {
     updateGeometry();
     getShape().setGeometry(getPxGeometry<PxSphereGeometry>());
+    updateCenter();
 }
 
 void PhysXSphere::updateGeometry() {

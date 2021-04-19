@@ -1,5 +1,5 @@
-#ifndef _CC_PHYSICS_PHYSX_UTILS_H_
-#define _CC_PHYSICS_PHYSX_UTILS_H_
+
+#pragma once
 
 #include "base/Macros.h"
 #include "math/Vec3.h"
@@ -82,7 +82,12 @@ CC_INLINE void PxSetQuatExt(T1 &p, const T2 &cp) {
     p = T1(cp.x, cp.y, cp.z, cp.w);
 }
 
+template <typename T>
+CC_INLINE T PxAbsMax(const T &a, const T &b) {
+    return PxAbs(a) > PxAbs(b) ? a : b;
+}
+
+void PxSetFromTwoVectors(PxQuat &out, const PxVec3 &a, const PxVec3 &b);
+
 } // namespace physics
 } // namespace cc
-
-#endif

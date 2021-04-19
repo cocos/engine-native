@@ -1071,6 +1071,7 @@ cocos_source_files(
     cocos/physics/spec/IWorld.h
     cocos/physics/physx/PhysX.h
     cocos/physics/physx/PhysXUtils.h
+    cocos/physics/physx/PhysXUtils.cpp
     cocos/physics/physx/PhysXWorld.h
     cocos/physics/physx/PhysXWorld.cpp
     cocos/physics/physx/PhysXSharedBody.h
@@ -1083,6 +1084,18 @@ cocos_source_files(
     cocos/physics/physx/shapes/PhysXSphere.cpp
     cocos/physics/physx/shapes/PhysXBox.h
     cocos/physics/physx/shapes/PhysXBox.cpp
+    cocos/physics/physx/shapes/PhysXPlane.h
+    cocos/physics/physx/shapes/PhysXPlane.cpp
+    cocos/physics/physx/shapes/PhysXCapsule.h
+    cocos/physics/physx/shapes/PhysXCapsule.cpp
+    cocos/physics/physx/shapes/PhysXCone.h
+    cocos/physics/physx/shapes/PhysXCone.cpp
+    cocos/physics/physx/shapes/PhysXCylinder.h
+    cocos/physics/physx/shapes/PhysXCylinder.cpp
+    cocos/physics/physx/shapes/PhysXTerrain.h
+    cocos/physics/physx/shapes/PhysXTerrain.cpp
+    cocos/physics/physx/shapes/PhysXTrimesh.h
+    cocos/physics/physx/shapes/PhysXTrimesh.cpp
     cocos/bindings/auto/jsb_physics_auto.cpp
     cocos/bindings/auto/jsb_physics_auto.h
 )

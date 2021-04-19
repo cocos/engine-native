@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "../../spec/IShape.h"
@@ -22,7 +23,8 @@ class PhysXShape : virtual public IBaseShape {
     PX_NOCOPY(PhysXShape)
     PhysXShape() : mIndex(-1),
                    mFlag(0),
-                   mCenter(PxIdentity){};
+                   mCenter(PxIdentity),
+                   mRotation(PxIdentity){};
 
 public:
     virtual ~PhysXShape(){};
@@ -38,19 +40,20 @@ public:
     virtual cc::pipeline::AABB getAABB() override;
     virtual cc::pipeline::Sphere getBoundingSphere() override;
     virtual void updateEventListener(EShapeFilterFlag flag) override;
-    virtual void onComponentSet() = 0;
-    virtual void updateScale() = 0;
     CC_INLINE PxShape &getShape() const { return *mShape; }
     CC_INLINE PhysXSharedBody &getSharedBody() const { return *mSharedBody; }
     void updateFilterData(PxFilterData &data);
+    virtual void updateScale() = 0;
 
 protected:
     PhysXSharedBody *mSharedBody;
     PxShape *mShape;
     PxVec3 mCenter;
+    PxQuat mRotation;
     int8_t mIndex;
     uint8_t mFlag;
-    void updateCenter();
+    virtual void updateCenter();
+    virtual void onComponentSet() = 0;
 };
 
 } // namespace physics
