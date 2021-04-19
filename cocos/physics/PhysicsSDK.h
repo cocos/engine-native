@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "sdk/World.h"
-#include "sdk/RigidBody.h"
-#include "sdk/Shape.h"
-#include "sdk/Joint.h"
+#include "physics/sdk/World.h"
+#include "physics/sdk/RigidBody.h"
+#include "physics/sdk/Shape.h"
+#include "physics/sdk/Joint.h"

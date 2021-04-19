@@ -1,7 +1,7 @@
 
-#include "PhysXDistance.h"
-#include "../PhysXSharedBody.h"
-#include "../PhysXUtils.h"
+#include "physics/physx/joints/PhysXDistance.h"
+#include "physics/physx/PhysXSharedBody.h"
+#include "physics/physx/PhysXUtils.h"
 #include "math/Quaternion.h"
 
 namespace cc {

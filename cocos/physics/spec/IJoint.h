@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "ILifecycle.h"
+#include "physics/spec/ILifecycle.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 #include <cstdint>
 

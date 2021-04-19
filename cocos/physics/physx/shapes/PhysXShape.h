@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../PhysXInc.h"
-#include "../../spec/IShape.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/spec/IShape.h"
 #include "base/Macros.h"
 
 namespace cc {

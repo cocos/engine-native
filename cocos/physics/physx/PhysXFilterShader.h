@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "./PhysXInc.h"
+#include "physics/physx/PhysXInc.h"
 
 namespace cc {
 namespace physics {

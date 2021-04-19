@@ -1,8 +1,8 @@
 
-#include "PhysXShape.h"
-#include "PhysXCapsule.h"
-#include "../PhysXUtils.h"
-#include "../PhysXWorld.h"
+#include "physics/physx/shapes/PhysXShape.h"
+#include "physics/physx/shapes/PhysXCapsule.h"
+#include "physics/physx/PhysXUtils.h"
+#include "physics/physx/PhysXWorld.h"
 
 namespace cc {
 namespace physics {

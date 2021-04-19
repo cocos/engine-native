@@ -1,8 +1,8 @@
 
-#include "PhysXShape.h"
-#include "PhysXCylinder.h"
-#include "../PhysXUtils.h"
-#include "../PhysXWorld.h"
+#include "physics/physx/shapes/PhysXShape.h"
+#include "physics/physx/shapes/PhysXCylinder.h"
+#include "physics/physx/PhysXUtils.h"
+#include "physics/physx/PhysXWorld.h"
 #include "math/Quaternion.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 #include <algorithm>

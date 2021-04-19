@@ -1,6 +1,6 @@
 
-#include "PhysXInc.h"
-#include "PhysXFilterShader.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/physx/PhysXFilterShader.h"
 
 namespace cc {
 namespace physics {

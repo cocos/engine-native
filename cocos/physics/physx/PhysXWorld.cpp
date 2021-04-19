@@ -1,9 +1,9 @@
 
-#include "PhysXInc.h"
-#include "PhysXWorld.h"
-#include "../spec/IWorld.h"
-#include "PhysXUtils.h"
-#include "PhysXFilterShader.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/physx/PhysXWorld.h"
+#include "physics/spec/IWorld.h"
+#include "physics/physx/PhysXUtils.h"
+#include "physics/physx/PhysXFilterShader.h"
 
 namespace cc {
 namespace physics {

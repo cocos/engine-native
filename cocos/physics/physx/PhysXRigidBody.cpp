@@ -1,8 +1,8 @@
 
-#include "PhysXInc.h"
-#include "PhysXRigidBody.h"
-#include "PhysXUtils.h"
-#include "PhysXWorld.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/physx/PhysXRigidBody.h"
+#include "physics/physx/PhysXUtils.h"
+#include "physics/physx/PhysXWorld.h"
 
 using physx::PxReal;
 using physx::PxVec3;

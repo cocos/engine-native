@@ -1,9 +1,9 @@
 
-#include "PhysXInc.h"
-#include "PhysXEventManager.h"
-#include "../spec/IWorld.h"
-#include "PhysXUtils.h"
-#include "shapes/PhysXShape.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/physx/PhysXEventManager.h"
+#include "physics/spec/IWorld.h"
+#include "physics/physx/PhysXUtils.h"
+#include "physics/physx/shapes/PhysXShape.h"
 #include <algorithm>
 
 namespace cc {

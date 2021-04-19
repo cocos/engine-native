@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "PhysXJoint.h"
+#include "physics/physx/joints/PhysXJoint.h"
 
 namespace cc {
 namespace physics {

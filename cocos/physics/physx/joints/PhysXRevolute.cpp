@@ -1,7 +1,7 @@
 
-#include "PhysXRevolute.h"
-#include "../PhysXSharedBody.h"
-#include "../PhysXUtils.h"
+#include "physics/physx/joints/PhysXRevolute.h"
+#include "physics/physx/PhysXSharedBody.h"
+#include "physics/physx/PhysXUtils.h"
 #include "math/Quaternion.h"
 
 namespace cc {

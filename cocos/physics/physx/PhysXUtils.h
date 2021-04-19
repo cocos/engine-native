@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "PhysXInc.h"
-#include "PhysXFilterShader.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/physx/PhysXFilterShader.h"
 #include "base/Macros.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"

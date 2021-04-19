@@ -1,10 +1,10 @@
 
-#include "PhysXInc.h"
-#include "PhysXSharedBody.h"
-#include "PhysXUtils.h"
-#include "PhysXWorld.h"
-#include "shapes/PhysXShape.h"
-#include "joints/PhysXJoint.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/physx/PhysXSharedBody.h"
+#include "physics/physx/PhysXUtils.h"
+#include "physics/physx/PhysXWorld.h"
+#include "physics/physx/shapes/PhysXShape.h"
+#include "physics/physx/joints/PhysXJoint.h"
 #include <cmath>
 
 using physx::PxVec3;

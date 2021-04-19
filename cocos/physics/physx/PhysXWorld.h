@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "./PhysXInc.h"
-#include "../spec/IWorld.h"
-#include "PhysXEventManager.h"
-#include "PhysXFilterShader.h"
-#include "PhysXRigidBody.h"
-#include "PhysXSharedBody.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/spec/IWorld.h"
+#include "physics/physx/PhysXEventManager.h"
+#include "physics/physx/PhysXFilterShader.h"
+#include "physics/physx/PhysXRigidBody.h"
+#include "physics/physx/PhysXSharedBody.h"
 #include "base/Macros.h"
 #include <memory>
 

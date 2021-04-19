@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "ILifecycle.h"
+#include "physics/spec/ILifecycle.h"
 #include "math/Vec3.h"
 
 namespace cc {

@@ -1,8 +1,8 @@
 
-#include "PhysXJoint.h"
-#include "../PhysXSharedBody.h"
-#include "../PhysXUtils.h"
-#include "../PhysXWorld.h"
+#include "physics/physx/joints/PhysXJoint.h"
+#include "physics/physx/PhysXSharedBody.h"
+#include "physics/physx/PhysXUtils.h"
+#include "physics/physx/PhysXWorld.h"
 
 namespace cc {
 namespace physics {

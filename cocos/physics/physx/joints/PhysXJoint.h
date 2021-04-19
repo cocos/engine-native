@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../../spec/IJoint.h"
-#include "../PhysXInc.h"
+#include "physics/physx/PhysXInc.h"
+#include "physics/spec/IJoint.h"
 #include "base/Macros.h"
 
 namespace cc {

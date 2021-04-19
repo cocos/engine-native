@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../spec/IWorld.h"
-#include "./PhysXInc.h"
+#include "physics/spec/IWorld.h"
+#include "physics/physx/PhysXInc.h"
 #include "base/Macros.h"
 #include <memory>
 #include <vector>

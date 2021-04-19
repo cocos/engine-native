@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../spec/IBody.h"
-#include "./PhysXInc.h"
+#include "physics/spec/IBody.h"
+#include "physics/physx/PhysXInc.h"
 #include "base/Macros.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 #include <map>

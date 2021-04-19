@@ -2,7 +2,7 @@
 #pragma once
 
 #include "bindings/manual/jsb_conversions.h"
-#include "ILifecycle.h"
+#include "physics/spec/ILifecycle.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 #include <cstdint>
 

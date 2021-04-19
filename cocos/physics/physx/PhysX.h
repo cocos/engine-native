@@ -1,18 +1,18 @@
 
 #pragma once
 
-#include "PhysXWorld.h"
+#include "physics/physx/PhysXWorld.h"
 
-#include "PhysXRigidBody.h"
+#include "physics/physx/PhysXRigidBody.h"
 
-#include "./shapes/PhysXBox.h"
-#include "./shapes/PhysXCapsule.h"
-#include "./shapes/PhysXCone.h"
-#include "./shapes/PhysXCylinder.h"
-#include "./shapes/PhysXPlane.h"
-#include "./shapes/PhysXSphere.h"
-#include "./shapes/PhysXTerrain.h"
-#include "./shapes/PhysXTrimesh.h"
+#include "physics/physx/shapes/PhysXBox.h"
+#include "physics/physx/shapes/PhysXCapsule.h"
+#include "physics/physx/shapes/PhysXCone.h"
+#include "physics/physx/shapes/PhysXCylinder.h"
+#include "physics/physx/shapes/PhysXPlane.h"
+#include "physics/physx/shapes/PhysXSphere.h"
+#include "physics/physx/shapes/PhysXTerrain.h"
+#include "physics/physx/shapes/PhysXTrimesh.h"
 
-#include "./joints/PhysXDistance.h"
-#include "./joints/PhysXRevolute.h"
+#include "physics/physx/joints/PhysXDistance.h"
+#include "physics/physx/joints/PhysXRevolute.h"

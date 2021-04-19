@@ -2,9 +2,9 @@
 #pragma once
 
 #if defined(USE_PHYSICS_BULLET)
-    #include "bullet/Bullet.h"
+    #include "physics/bullet/Bullet.h"
 #else
-    #include "physx/PhysX.h"
+    #include "physics/physx/PhysX.h"
     #define WrappedWorld PhysXWorld
     #define WrappedRigidBody PhysXRigidBody
     #define WrappedSphereShape PhysXSphere
