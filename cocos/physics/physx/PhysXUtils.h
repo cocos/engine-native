@@ -90,8 +90,13 @@ CC_INLINE T PxAbsMax(const T &a, const T &b) {
 
 void PxSetFromTwoVectors(PxQuat &out, const PxVec3 &a, const PxVec3 &b);
 
-CC_INLINE std::unordered_map<intptr_t, intptr_t> &getPxObjMap() {
+CC_INLINE std::unordered_map<intptr_t, intptr_t> &getPxEventPairMap() {
     static std::unordered_map<intptr_t, intptr_t> m;
+    return m;
+}
+
+CC_INLINE std::unordered_map<uint16_t, intptr_t> &getPxMaterialMap() {
+    static std::unordered_map<uint16_t, intptr_t> m;
     return m;
 }
 

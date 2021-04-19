@@ -18,7 +18,7 @@ void PhysXShape::initialize(const uint &handle) {
     mSharedBody = ins.getSharedBody(handle);
     getSharedBody().reference(true);
     onComponentSet();
-    getPxObjMap().insert(std::pair<intptr_t, intptr_t>((intptr_t)&getShape(), getImpl()));
+    getPxEventPairMap().insert(std::pair<intptr_t, intptr_t>((intptr_t)&getShape(), getImpl()));
 }
 
 void PhysXShape::onEnable() {
@@ -35,28 +35,14 @@ void PhysXShape::onDisable() {
 
 void PhysXShape::onDestroy() {
     getSharedBody().reference(false);
-    getPxObjMap().erase((intptr_t)&getShape());
+    getPxEventPairMap().erase((intptr_t)&getShape());
 }
 
 void PhysXShape::setMaterial(const uint16_t ID, float f, float df, float r,
                              uint8_t m0, uint8_t m1) {
-    static std::unordered_map<uint16_t, intptr_t> m;
-    if (m.find(ID) == m.end()) {
-        PhysXWorld &ins = PhysXWorld::getInstance();
-        auto mat = PxGetPhysics().createMaterial(f, df, r);
-        m[ID] = (intptr_t)mat;
-        mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
-        mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
-        getShape().setMaterials(&mat, 1);
-    } else {
-        auto mat = (PxMaterial *)m[ID];
-        mat->setStaticFriction(f);
-        mat->setDynamicFriction(df);
-        mat->setRestitution(r);
-        mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
-        mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
-        getShape().setMaterials(&mat, 1);
-    }
+    auto &m = getPxMaterialMap();
+    PxMaterial *mat = (PxMaterial *)getSharedBody().getWorld().createMaterial(ID, f, df, r, m0, m1);
+    getShape().setMaterials(&mat, 1);
 }
 
 void PhysXShape::setAsTrigger(bool v) {

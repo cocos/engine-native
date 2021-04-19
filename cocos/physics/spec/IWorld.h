@@ -67,7 +67,6 @@ public:
     virtual ~IPhysicsWorld(){};
     virtual void setGravity(float x, float y, float z) = 0;
     virtual void setAllowSleep(bool v) = 0;
-    virtual void setDefaultMaterial(float f, float dy, float r) = 0;
     virtual void step(float fixedTimeStep) = 0;
     // virtual bool raycast (worldRay: Ray, options: IRaycastOptions, pool: RecyclePool<PhysicsRayResult>, results: PhysicsRayResult[])=0;
     // virtual bool raycastClosest (worldRay: Ray, options: IRaycastOptions, out: PhysicsRayResult)=0;
@@ -80,6 +79,8 @@ public:
     virtual void setCollisionMatrix(uint32_t index, uint32_t mask) = 0;
     virtual intptr_t createConvex(ConvexDesc &desc) = 0;
     virtual intptr_t createTrimesh(TrimeshDesc &desc) = 0;
+    virtual intptr_t createMaterial(const uint16_t ID, float f, float df, float r,
+                                    uint8_t m0, uint8_t m1) = 0;
 };
 
 } // namespace physics
@@ -178,8 +179,8 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::ConvexDesc *to
 
 template <>
 inline bool sevalue_to_native(const se::Value &from, cc::physics::TrimeshDesc *to, se::Object *ctx) {
-	if (!sevalue_to_native(from, (cc::physics::ConvexDesc *)to, ctx))
-		return false;
+    if (!sevalue_to_native(from, (cc::physics::ConvexDesc *)to, ctx))
+        return false;
 
     assert(from.isObject());
     se::Object *json = from.toObject();

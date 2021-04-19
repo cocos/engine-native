@@ -41,7 +41,7 @@ bool PhysXRigidBody::isAwake() {
 }
 
 bool PhysXRigidBody::isSleepy() {
-    return true;
+    return false;
 }
 
 bool PhysXRigidBody::isSleeping() {

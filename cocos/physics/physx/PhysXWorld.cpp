@@ -1,8 +1,8 @@
 #include "PhysXWorld.h"
 #include "../spec/IWorld.h"
 #include "PhysXFilterShader.h"
-#include "PhysXUtils.h"
 #include "PhysXInc.h"
+#include "PhysXUtils.h"
 
 using namespace physx;
 
@@ -51,6 +51,8 @@ PhysXWorld::PhysXWorld() {
     mScene = mPhysics->createScene(sceneDesc);
 
     mCollisionMatrix[0] = 1;
+
+    createMaterial(0, 0.6f, 0.6f, 0.1f, 2, 2);
 }
 
 PhysXWorld::~PhysXWorld() {
@@ -108,6 +110,26 @@ intptr_t PhysXWorld::createTrimesh(TrimeshDesc &desc) {
     return (intptr_t)triangleMesh;
 }
 
+intptr_t PhysXWorld::createMaterial(const uint16_t ID, float f, float df, float r,
+                                    uint8_t m0, uint8_t m1) {
+    PxMaterial *mat;
+    auto &m = getPxMaterialMap();
+    if (m.find(ID) == m.end()) {
+        mat = PxGetPhysics().createMaterial(f, df, r);
+        m[ID] = (intptr_t)mat;
+        mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
+        mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
+    } else {
+        mat = (PxMaterial *)m[ID];
+        mat->setStaticFriction(f);
+        mat->setDynamicFriction(df);
+        mat->setRestitution(r);
+        mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
+        mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
+    }
+    return intptr_t(mat);
+}
+
 void PhysXWorld::emitEvents() {
     mEventMgr->refreshPairs();
 }
@@ -136,9 +158,6 @@ void PhysXWorld::syncSceneWithCheck() {
 }
 
 void PhysXWorld::setAllowSleep(bool val) {
-}
-
-void PhysXWorld::setDefaultMaterial(float f, float dy, float r) {
 }
 
 void PhysXWorld::addActor(PhysXSharedBody &sb) {

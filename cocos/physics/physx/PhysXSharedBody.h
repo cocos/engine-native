@@ -2,9 +2,9 @@
 #pragma once
 
 #include "../spec/IRigidBody.h"
+#include "./PhysXInc.h"
 #include "base/Macros.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
-#include "./PhysXInc.h"
 #include <map>
 #include <vector>
 
@@ -39,6 +39,7 @@ public:
     CC_INLINE bool isStaticOrKinematic() { return (int)mType & (int)ERigidBodyType::STATIC || (int)mType & (int)ERigidBodyType::KINEMATIC; }
     CC_INLINE bool isDynamic() { return !isStaticOrKinematic(); }
     CC_INLINE Node &getNode() const { return *mNode; }
+    CC_INLINE PhysXWorld &getWorld() const { return *mWrappedWorld; }
     CC_INLINE void setType(ERigidBodyType v) { mType = v; }
     union UActor {
         intptr_t ptr;
@@ -69,7 +70,7 @@ private:
     uint8_t mRef;
     bool mIsStatic;
     ERigidBodyType mType;
-	float mMass;
+    float mMass;
     int mIndex;
     PxFilterData mFilterData;
     Node *mNode;

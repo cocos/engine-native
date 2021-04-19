@@ -11,8 +11,6 @@ namespace cc {
 namespace physics {
 class PhysXSharedBody;
 
-PxMaterial &getSharedMaterial();
-
 template <typename T>
 T &getPxGeometry() {
     static T geo;

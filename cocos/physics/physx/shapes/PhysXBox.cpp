@@ -19,10 +19,9 @@ void PhysXBox::setSize(float x, float y, float z) {
 }
 
 void PhysXBox::onComponentSet() {
-    auto &phy = PxGetPhysics();
-    static auto mat = phy.createMaterial(0.5, 0.5, 0.1);
     updateGeometry();
-    mShape = phy.createShape(getPxGeometry<PxBoxGeometry>(), *mat, true);
+    auto mat = (PxMaterial *)getPxMaterialMap()[0];
+    mShape = PxGetPhysics().createShape(getPxGeometry<PxBoxGeometry>(), *mat, true);
 }
 
 void PhysXBox::updateScale() {

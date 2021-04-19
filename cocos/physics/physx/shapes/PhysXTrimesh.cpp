@@ -32,18 +32,17 @@ void PhysXTrimesh::useConvex(bool v) {
 
 void PhysXTrimesh::onComponentSet() {
     if (mMeshHandle) {
-        auto &phy = PxGetPhysics();
-        static auto const mat = phy.createMaterial(0.5, 0.5, 0.1);
+        auto mat = (PxMaterial *)getPxMaterialMap()[0];
         if (mConvex) {
             PxConvexMeshGeometry geom;
             geom.convexMesh = (PxConvexMesh *)mMeshHandle;
             // geom.meshFlags = PxConvexMeshGeometryFlags::eTIGHT_BOUNDS;
-            mShape = phy.createShape(geom, *mat, true);
+            mShape = PxGetPhysics().createShape(geom, *mat, true);
         } else {
             PxTriangleMeshGeometry geom;
             geom.triangleMesh = (PxTriangleMesh *)mMeshHandle;
             // geom.meshFlags = PxMeshGeometryFlag::eDOUBLE_SIDED;
-            mShape = phy.createShape(geom, *mat, true);
+            mShape = PxGetPhysics().createShape(geom, *mat, true);
         }
         updateGeometry();
     }
@@ -63,13 +62,13 @@ void PhysXTrimesh::updateGeometry() {
         PxConvexMeshGeometry geom;
         if (getShape().getConvexMeshGeometry(geom)) {
             geom.scale = scale;
-			getShape().setGeometry(geom);
+            getShape().setGeometry(geom);
         }
     } else if (type == PxGeometryType::eTRIANGLEMESH) {
         PxTriangleMeshGeometry geom;
         if (getShape().getTriangleMeshGeometry(geom)) {
             geom.scale = scale;
-			getShape().setGeometry(geom);
+            getShape().setGeometry(geom);
         }
     }
 }

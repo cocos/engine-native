@@ -13,7 +13,6 @@ public:
     virtual ~World();
     virtual void setGravity(float x, float y, float z) override;
     virtual void setAllowSleep(bool v) override;
-    virtual void setDefaultMaterial(float f, float dy, float r) override;
     virtual void step(float fixedTimeStep) override;
     // virtual bool raycast (worldRay: Ray, options: IRaycastOptions, pool: RecyclePool<PhysicsRayResult>, results: PhysicsRayResult[])=0;
     // virtual bool raycastClosest (worldRay: Ray, options: IRaycastOptions, out: PhysicsRayResult)=0;
@@ -25,6 +24,8 @@ public:
     virtual void setCollisionMatrix(uint32_t i, uint32_t m) override;
     virtual intptr_t createConvex(ConvexDesc &desc) override;
     virtual intptr_t createTrimesh(TrimeshDesc &desc) override;
+    virtual intptr_t createMaterial(const uint16_t ID, float f, float df, float r,
+                                    uint8_t m0, uint8_t m1) override;
     virtual void destroy() override;
 
 private:

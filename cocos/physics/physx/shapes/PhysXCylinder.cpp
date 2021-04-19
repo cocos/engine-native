@@ -25,12 +25,11 @@ void PhysXCylinder::setConvex(intptr_t handle) {
 
 void PhysXCylinder::onComponentSet() {
     if (mMeshHandle) {
-        auto &phy = PxGetPhysics();
-        static auto const mat = phy.createMaterial(0.5, 0.5, 0.1);
         PxConvexMeshGeometry geom;
         geom.convexMesh = (PxConvexMesh *)mMeshHandle;
         // geom.meshFlags = PxConvexMeshGeometryFlags::eTIGHT_BOUNDS;
-        mShape = phy.createShape(geom, *mat, true);
+        auto mat = (PxMaterial *)getPxMaterialMap()[0];
+        mShape = PxGetPhysics().createShape(geom, *mat, true);
         updateGeometry();
     }
 }

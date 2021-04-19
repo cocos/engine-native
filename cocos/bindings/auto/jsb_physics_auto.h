@@ -14,6 +14,7 @@ bool register_all_physics(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::physics::World);
 SE_DECLARE_FUNC(js_physics_World_createConvex);
+SE_DECLARE_FUNC(js_physics_World_createMaterial);
 SE_DECLARE_FUNC(js_physics_World_createTrimesh);
 SE_DECLARE_FUNC(js_physics_World_destroy);
 SE_DECLARE_FUNC(js_physics_World_emitEvents);
@@ -21,7 +22,6 @@ SE_DECLARE_FUNC(js_physics_World_getContactEventPairs);
 SE_DECLARE_FUNC(js_physics_World_getTriggerEventPairs);
 SE_DECLARE_FUNC(js_physics_World_setAllowSleep);
 SE_DECLARE_FUNC(js_physics_World_setCollisionMatrix);
-SE_DECLARE_FUNC(js_physics_World_setDefaultMaterial);
 SE_DECLARE_FUNC(js_physics_World_setGravity);
 SE_DECLARE_FUNC(js_physics_World_step);
 SE_DECLARE_FUNC(js_physics_World_syncSceneToPhysics);

@@ -29,8 +29,9 @@ void World::setGravity(float x, float y, float z) {
     _impl->setGravity(x, y, z);
 }
 
-void World::setDefaultMaterial(float f, float df, float r) {
-    _impl->setDefaultMaterial(f, df, r);
+intptr_t World::createMaterial(const uint16_t ID, float f, float df, float r,
+                               uint8_t m0, uint8_t m1) {
+    return _impl->createMaterial(ID, f, df, r, m0, m1);
 }
 
 void World::syncSceneToPhysics() {
@@ -58,11 +59,11 @@ void World::setCollisionMatrix(uint32_t i, uint32_t m) {
 }
 
 intptr_t World::createConvex(ConvexDesc &desc) {
-    return (intptr_t)_impl->createConvex(desc);
+    return _impl->createConvex(desc);
 }
 
 intptr_t World::createTrimesh(TrimeshDesc &desc) {
-    return (intptr_t)_impl->createTrimesh(desc);
+    return _impl->createTrimesh(desc);
 }
 
 } // namespace physics

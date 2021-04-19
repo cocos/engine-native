@@ -36,6 +36,38 @@ static bool js_physics_World_createConvex(se::State& s)
 }
 SE_BIND_FUNC(js_physics_World_createConvex)
 
+static bool js_physics_World_createMaterial(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_createMaterial : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_World_createMaterial : Error processing arguments");
+        int result = cobj->createMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_createMaterial : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_createMaterial)
+
 static bool js_physics_World_createTrimesh(se::State& s)
 {
     cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
@@ -166,29 +198,6 @@ static bool js_physics_World_setCollisionMatrix(se::State& s)
 }
 SE_BIND_FUNC(js_physics_World_setCollisionMatrix)
 
-static bool js_physics_World_setDefaultMaterial(se::State& s)
-{
-    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
-    SE_PRECONDITION2(cobj, false, "js_physics_World_setDefaultMaterial : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 3) {
-        HolderType<float, false> arg0 = {};
-        HolderType<float, false> arg1 = {};
-        HolderType<float, false> arg2 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_physics_World_setDefaultMaterial : Error processing arguments");
-        cobj->setDefaultMaterial(arg0.value(), arg1.value(), arg2.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
-    return false;
-}
-SE_BIND_FUNC(js_physics_World_setDefaultMaterial)
-
 static bool js_physics_World_setGravity(se::State& s)
 {
     cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
@@ -293,6 +302,7 @@ bool js_register_physics_World(se::Object* obj)
     auto cls = se::Class::create("World", obj, nullptr, _SE(js_physics_World_constructor));
 
     cls->defineFunction("createConvex", _SE(js_physics_World_createConvex));
+    cls->defineFunction("createMaterial", _SE(js_physics_World_createMaterial));
     cls->defineFunction("createTrimesh", _SE(js_physics_World_createTrimesh));
     cls->defineFunction("destroy", _SE(js_physics_World_destroy));
     cls->defineFunction("emitEvents", _SE(js_physics_World_emitEvents));
@@ -300,7 +310,6 @@ bool js_register_physics_World(se::Object* obj)
     cls->defineFunction("getTriggerEventPairs", _SE(js_physics_World_getTriggerEventPairs));
     cls->defineFunction("setAllowSleep", _SE(js_physics_World_setAllowSleep));
     cls->defineFunction("setCollisionMatrix", _SE(js_physics_World_setCollisionMatrix));
-    cls->defineFunction("setDefaultMaterial", _SE(js_physics_World_setDefaultMaterial));
     cls->defineFunction("setGravity", _SE(js_physics_World_setGravity));
     cls->defineFunction("step", _SE(js_physics_World_step));
     cls->defineFunction("syncSceneToPhysics", _SE(js_physics_World_syncSceneToPhysics));
