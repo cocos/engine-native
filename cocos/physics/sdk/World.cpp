@@ -49,5 +49,9 @@ std::vector<TriggerEventPair> &World::getTriggerEventPairs() {
     return _impl->getTriggerEventPairs();
 }
 
+std::vector<ContactEventPair> &World::getContactEventPairs() {
+    return _impl->getContactEventPairs();
+}
+
 } // namespace physics
 } // namespace cc

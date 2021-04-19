@@ -36,10 +36,12 @@ public:
 
     CC_INLINE SimulationEventCallback &getEventCallback() { return *mCallback; }
     CC_INLINE std::vector<TriggerEventPair> &getTriggerPairs() { return mTriggerPairs; }
+    CC_INLINE std::vector<ContactEventPair> &getConatctPairs() { return mConatctPairs; }
     void refreshPairs();
 
 private:
     std::vector<TriggerEventPair> mTriggerPairs;
+    std::vector<ContactEventPair> mConatctPairs;
     SimulationEventCallback *mCallback;
 };
 

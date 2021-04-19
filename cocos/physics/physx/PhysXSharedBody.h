@@ -35,6 +35,7 @@ public:
     void reference(bool v);
     void enabled(bool v);
     CC_INLINE bool isStatic() { return (int)mType & (int)ERigidBodyType::STATIC; }
+    CC_INLINE bool isKinematic() { return (int)mType & (int)ERigidBodyType::KINEMATIC; }
     CC_INLINE bool isStaticOrKinematic() { return (int)mType & (int)ERigidBodyType::STATIC || (int)mType & (int)ERigidBodyType::KINEMATIC; }
     CC_INLINE bool isDynamic() { return !isStaticOrKinematic(); }
     CC_INLINE Node &getNode() const { return *mNode; }
@@ -51,7 +52,7 @@ public:
     void syncPhysicsToScene();
     void addShape(PhysXShape &shape);
     void removeShape(PhysXShape &shape);
-	void setCollisionFilter(PxFilterData &data);
+    void setCollisionFilter(PxFilterData &data);
     void clearForces();
     void clearVelocity();
 
@@ -78,7 +79,7 @@ private:
     PhysXSharedBody(const uint &handle, PhysXWorld *const world, PhysXRigidBody *const body);
     ~PhysXSharedBody();
     void initActor();
-    void switchActor(bool &&isStaticBefore);
+    void switchActor(const bool isStaticBefore);
     void initStaticActor();
     void initDynamicActor();
 };

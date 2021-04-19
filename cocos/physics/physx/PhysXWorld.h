@@ -28,6 +28,9 @@ public:
     CC_INLINE virtual std::vector<TriggerEventPair> &getTriggerEventPairs() override {
         return mEventMgr->getTriggerPairs();
     }
+    CC_INLINE virtual std::vector<ContactEventPair> &getContactEventPairs() override {
+        return mEventMgr->getConatctPairs();
+    }
     virtual void syncSceneToPhysics() override;
     virtual void syncSceneWithCheck() override;
     virtual void destroy() override;

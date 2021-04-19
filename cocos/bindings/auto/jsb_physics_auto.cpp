@@ -44,6 +44,25 @@ static bool js_physics_World_emitEvents(se::State& s)
 }
 SE_BIND_FUNC(js_physics_World_emitEvents)
 
+static bool js_physics_World_getContactEventPairs(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_getContactEventPairs : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::vector<cc::physics::ContactEventPair>& result = cobj->getContactEventPairs();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_getContactEventPairs : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_getContactEventPairs)
+
 static bool js_physics_World_getTriggerEventPairs(se::State& s)
 {
     cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
@@ -210,6 +229,7 @@ bool js_register_physics_World(se::Object* obj)
 
     cls->defineFunction("destroy", _SE(js_physics_World_destroy));
     cls->defineFunction("emitEvents", _SE(js_physics_World_emitEvents));
+    cls->defineFunction("getContactEventPairs", _SE(js_physics_World_getContactEventPairs));
     cls->defineFunction("getTriggerEventPairs", _SE(js_physics_World_getTriggerEventPairs));
     cls->defineFunction("setAllowSleep", _SE(js_physics_World_setAllowSleep));
     cls->defineFunction("setDefaultMaterial", _SE(js_physics_World_setDefaultMaterial));

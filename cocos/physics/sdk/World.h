@@ -19,6 +19,7 @@ public:
     // virtual bool raycastClosest (worldRay: Ray, options: IRaycastOptions, out: PhysicsRayResult)=0;
     virtual void emitEvents() override;
     virtual std::vector<TriggerEventPair> &getTriggerEventPairs() override;
+    virtual std::vector<ContactEventPair> &getContactEventPairs() override;
     virtual void syncSceneToPhysics() override;
     virtual void syncSceneWithCheck() override;
     virtual void destroy() override;
