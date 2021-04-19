@@ -35,7 +35,7 @@ struct Camera;
 class CC_DLL ShadowStage : public RenderStage {
 public:
     ShadowStage() = default;
-    virtual ~ShadowStage() = default;
+    ~ShadowStage() override = default;
 
     static const RenderStageInfo &getInitializeInfo();
 
