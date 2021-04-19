@@ -151,7 +151,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const Camera *camera, gfx::Comm
         for (unsigned j = 1; j <= subModelCount; j++) {
             const auto lightPassIdx = lightPassIndices[j - 1];
             if (lightPassIdx == UINT_MAX) continue;
-            const auto *const subModel      = model->getSubModelView(subModelArrayID[j]);
+            const auto *const subModel      = cc::pipeline::ModelView::getSubModelView(subModelArrayID[j]);
             const auto *const pass          = subModel->getPassView(lightPassIdx);
             auto *            descriptorSet = subModel->getDescriptorSet();
             descriptorSet->bindBuffer(UBOForwardLight::BINDING, _firstLightBufferView);
@@ -195,7 +195,7 @@ void RenderAdditiveLightQueue::gatherValidLights(const Camera *camera) {
     auto              count              = sphereLightArrayID ? sphereLightArrayID[0] : 0;
     Sphere            sphere;
     for (unsigned i = 1; i <= count; i++) {
-        const auto *const light = scene->getSphereLight(sphereLightArrayID[i]);
+        const auto *const light = cc::pipeline::Scene::getSphereLight(sphereLightArrayID[i]);
         sphere.setCenter(light->position);
         sphere.setRadius(light->range);
         if (sphere_frustum(&sphere, camera->getFrustum())) {
@@ -206,7 +206,7 @@ void RenderAdditiveLightQueue::gatherValidLights(const Camera *camera) {
     const auto *const spotLightArrayID = scene->getSpotLightArrayID();
     count                              = spotLightArrayID ? spotLightArrayID[0] : 0;
     for (unsigned i = 1; i <= count; i++) {
-        const auto *const light = scene->getSpotLight(spotLightArrayID[i]);
+        const auto *const light = cc::pipeline::Scene::getSpotLight(spotLightArrayID[i]);
         sphere.setCenter(light->position);
         sphere.setRadius(light->range);
         if (sphere_frustum(&sphere, camera->getFrustum())) {
@@ -414,7 +414,7 @@ bool RenderAdditiveLightQueue::getLightPassIndex(const ModelView *model, vector<
     const auto *const subModelArrayID = model->getSubModelID();
     const auto        count           = subModelArrayID[0];
     for (unsigned i = 1; i <= count; i++) {
-        const auto *const subModel       = model->getSubModelView(subModelArrayID[i]);
+        const auto *const subModel       = cc::pipeline::ModelView::getSubModelView(subModelArrayID[i]);
         uint              lightPassIndex = UINT_MAX;
         for (unsigned passIdx = 0; passIdx < subModel->passCount; passIdx++) {
             const auto *const pass = subModel->getPassView(passIdx);
