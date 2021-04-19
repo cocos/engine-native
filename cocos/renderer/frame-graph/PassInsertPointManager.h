@@ -25,9 +25,9 @@
 
 #pragma once
 
+#include <vector>
 #include "Handle.h"
 #include "base/Macros.h"
-#include <vector>
 
 namespace cc {
 namespace framegraph {
@@ -47,8 +47,8 @@ public:
     PassInsertPoint get(const char *const name) const noexcept;
 
 private:
-    PassInsertPointManager() noexcept = default;
-    ~PassInsertPointManager()         = default;
+    PassInsertPointManager()  = default;
+    ~PassInsertPointManager() = default;
 
     CC_INLINE PassInsertPoint get(const StringHandle name) const noexcept;
 
