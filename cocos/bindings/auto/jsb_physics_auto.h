@@ -202,6 +202,58 @@ SE_DECLARE_FUNC(js_physics_TrimeshShape_updateEventListener);
 SE_DECLARE_FUNC(js_physics_TrimeshShape_useConvex);
 SE_DECLARE_FUNC(js_physics_TrimeshShape_TrimeshShape);
 
+extern se::Object* __jsb_cc_physics_CylinderShape_proto;
+extern se::Class* __jsb_cc_physics_CylinderShape_class;
+
+bool js_register_cc_physics_CylinderShape(se::Object* obj);
+bool register_all_physics(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::physics::CylinderShape);
+SE_DECLARE_FUNC(js_physics_CylinderShape_getAABB);
+SE_DECLARE_FUNC(js_physics_CylinderShape_getBoundingSphere);
+SE_DECLARE_FUNC(js_physics_CylinderShape_getGroup);
+SE_DECLARE_FUNC(js_physics_CylinderShape_getImpl);
+SE_DECLARE_FUNC(js_physics_CylinderShape_getMask);
+SE_DECLARE_FUNC(js_physics_CylinderShape_initialize);
+SE_DECLARE_FUNC(js_physics_CylinderShape_onDestroy);
+SE_DECLARE_FUNC(js_physics_CylinderShape_onDisable);
+SE_DECLARE_FUNC(js_physics_CylinderShape_onEnable);
+SE_DECLARE_FUNC(js_physics_CylinderShape_setAsTrigger);
+SE_DECLARE_FUNC(js_physics_CylinderShape_setCenter);
+SE_DECLARE_FUNC(js_physics_CylinderShape_setConvex);
+SE_DECLARE_FUNC(js_physics_CylinderShape_setCylinder);
+SE_DECLARE_FUNC(js_physics_CylinderShape_setGroup);
+SE_DECLARE_FUNC(js_physics_CylinderShape_setMask);
+SE_DECLARE_FUNC(js_physics_CylinderShape_setMaterial);
+SE_DECLARE_FUNC(js_physics_CylinderShape_updateEventListener);
+SE_DECLARE_FUNC(js_physics_CylinderShape_CylinderShape);
+
+extern se::Object* __jsb_cc_physics_ConeShape_proto;
+extern se::Class* __jsb_cc_physics_ConeShape_class;
+
+bool js_register_cc_physics_ConeShape(se::Object* obj);
+bool register_all_physics(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::physics::ConeShape);
+SE_DECLARE_FUNC(js_physics_ConeShape_getAABB);
+SE_DECLARE_FUNC(js_physics_ConeShape_getBoundingSphere);
+SE_DECLARE_FUNC(js_physics_ConeShape_getGroup);
+SE_DECLARE_FUNC(js_physics_ConeShape_getImpl);
+SE_DECLARE_FUNC(js_physics_ConeShape_getMask);
+SE_DECLARE_FUNC(js_physics_ConeShape_initialize);
+SE_DECLARE_FUNC(js_physics_ConeShape_onDestroy);
+SE_DECLARE_FUNC(js_physics_ConeShape_onDisable);
+SE_DECLARE_FUNC(js_physics_ConeShape_onEnable);
+SE_DECLARE_FUNC(js_physics_ConeShape_setAsTrigger);
+SE_DECLARE_FUNC(js_physics_ConeShape_setCenter);
+SE_DECLARE_FUNC(js_physics_ConeShape_setCone);
+SE_DECLARE_FUNC(js_physics_ConeShape_setConvex);
+SE_DECLARE_FUNC(js_physics_ConeShape_setGroup);
+SE_DECLARE_FUNC(js_physics_ConeShape_setMask);
+SE_DECLARE_FUNC(js_physics_ConeShape_setMaterial);
+SE_DECLARE_FUNC(js_physics_ConeShape_updateEventListener);
+SE_DECLARE_FUNC(js_physics_ConeShape_ConeShape);
+
 extern se::Object* __jsb_cc_physics_PhysXBindings_proto;
 extern se::Class* __jsb_cc_physics_PhysXBindings_class;
 

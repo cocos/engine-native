@@ -53,20 +53,6 @@ virtual void setCylinderHeight(float v) override;
 virtual void setDirection(EAxisDirection v) override;
 };
 
-CC_PHYSICS_SHAPE_CLASS(CylinderShape)
-public:
-virtual void setRadius(float v) override;
-virtual void setHeight(float v) override;
-virtual void setDirection(EAxisDirection v) override;
-};
-
-CC_PHYSICS_SHAPE_CLASS(ConeShape)
-public:
-virtual void setRadius(float v) override;
-virtual void setHeight(float v) override;
-virtual void setDirection(EAxisDirection v) override;
-};
-
 CC_PHYSICS_SHAPE_CLASS(PlaneShape)
 public:
 virtual void setConstant(float v) override;
@@ -77,6 +63,18 @@ CC_PHYSICS_SHAPE_CLASS(TrimeshShape)
 public:
 virtual void setMesh(intptr_t v) override;
 virtual void useConvex(bool v) override;
+};
+
+CC_PHYSICS_SHAPE_CLASS(CylinderShape)
+public:
+virtual void setConvex(intptr_t v) override;
+virtual void setCylinder(float r, float h, EAxisDirection d) override;
+};
+
+CC_PHYSICS_SHAPE_CLASS(ConeShape)
+public:
+virtual void setConvex(intptr_t v) override;
+virtual void setCone(float r, float h, EAxisDirection d) override;
 };
 
 } // namespace physics

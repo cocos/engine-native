@@ -82,8 +82,8 @@ CC_PHYSICS_SHAPE_DEFINITION(SphereShape, WrappedSphereShape)
 CC_PHYSICS_SHAPE_DEFINITION(BoxShape, WrappedBoxShape)
 CC_PHYSICS_SHAPE_DEFINITION(PlaneShape, WrappedPlaneShape)
 CC_PHYSICS_SHAPE_DEFINITION(CapsuleShape, WrappedCapsuleShape)
-// CC_PHYSICS_SHAPE_DEFINITION(CylinderShape, WrappedCylinderShape)
-// CC_PHYSICS_SHAPE_DEFINITION(ConeShape, WrappedConeShape)
+CC_PHYSICS_SHAPE_DEFINITION(CylinderShape, WrappedCylinderShape)
+CC_PHYSICS_SHAPE_DEFINITION(ConeShape, WrappedConeShape)
 CC_PHYSICS_SHAPE_DEFINITION(TrimeshShape, WrappedTrimeshShape)
 // CC_PHYSICS_SHAPE_DEFINITION(TerrainShape, WrappedTerrainShape)
 
@@ -117,36 +117,28 @@ void PlaneShape::setNormal(float x, float y, float z) {
     _impl->setNormal(x, y, z);
 }
 
-void CylinderShape::setRadius(float v) {
-    _impl->setRadius(v);
-}
-
-void CylinderShape::setHeight(float v) {
-    _impl->setHeight(v);
-}
-
-void CylinderShape::setDirection(EAxisDirection v) {
-    _impl->setDirection(v);
-}
-
-void ConeShape::setRadius(float v) {
-    _impl->setRadius(v);
-}
-
-void ConeShape::setHeight(float v) {
-    _impl->setHeight(v);
-}
-
-void ConeShape::setDirection(EAxisDirection v) {
-    _impl->setDirection(v);
-}
-
 void TrimeshShape::setMesh(intptr_t v) {
     _impl->setMesh(v);
 }
 
 void TrimeshShape::useConvex(bool v) {
     _impl->useConvex(v);
+}
+
+void CylinderShape::setConvex(intptr_t v) {
+    _impl->setConvex(v);
+}
+
+void CylinderShape::setCylinder(float r, float h, EAxisDirection d) {
+    _impl->setCylinder(r, h, d);
+}
+
+void ConeShape::setConvex(intptr_t v) {
+    _impl->setConvex(v);
+}
+
+void ConeShape::setCone(float r, float h, EAxisDirection d) {
+    _impl->setCone(r, h, d);
 }
 
 } // namespace physics

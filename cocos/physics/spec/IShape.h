@@ -63,17 +63,15 @@ public:
 class ICylinderShape : virtual public IBaseShape {
 public:
     virtual ~ICylinderShape(){};
-    virtual void setRadius(float v) = 0;
-    virtual void setHeight(float v) = 0;
-    virtual void setDirection(EAxisDirection v) = 0;
+    virtual void setConvex(intptr_t v) = 0;
+    virtual void setCylinder(float r, float h, EAxisDirection d) = 0;
 };
 
 class IConeShape : virtual public IBaseShape {
 public:
     virtual ~IConeShape(){};
-    virtual void setRadius(float v) = 0;
-    virtual void setHeight(float v) = 0;
-    virtual void setDirection(EAxisDirection v) = 0;
+    virtual void setConvex(intptr_t v) = 0;
+    virtual void setCone(float r, float h, EAxisDirection d) = 0;
 };
 
 class IPlaneShape : virtual public IBaseShape {

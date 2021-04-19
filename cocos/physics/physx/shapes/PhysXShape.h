@@ -25,7 +25,9 @@ class PhysXShape : virtual public IBaseShape {
                    mFlag(0),
                    mEnabled(false),
                    mCenter(PxIdentity),
-                   mRotation(PxIdentity){};
+                   mRotation(PxIdentity),
+                   mShape(nullptr),
+                   mSharedBody(nullptr){};
 
 public:
     virtual ~PhysXShape(){};

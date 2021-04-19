@@ -17,8 +17,8 @@ public:
     virtual void updateScale() override;
 
 private:
-    uint mMeshHandle;
     bool mConvex;
+    intptr_t mMeshHandle;
     void updateGeometry();
     virtual void onComponentSet() override;
 };

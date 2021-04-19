@@ -3040,6 +3040,788 @@ bool js_register_physics_TrimeshShape(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_cc_physics_CylinderShape_proto = nullptr;
+se::Class* __jsb_cc_physics_CylinderShape_class = nullptr;
+
+static bool js_physics_CylinderShape_getAABB(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_getAABB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::AABB result = cobj->getAABB();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_getAABB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_getAABB)
+
+static bool js_physics_CylinderShape_getBoundingSphere(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_getBoundingSphere : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::Sphere result = cobj->getBoundingSphere();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_getBoundingSphere : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_getBoundingSphere)
+
+static bool js_physics_CylinderShape_getGroup(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_getGroup)
+
+static bool js_physics_CylinderShape_getImpl(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_getImpl)
+
+static bool js_physics_CylinderShape_getMask(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_getMask)
+
+static bool js_physics_CylinderShape_initialize(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_initialize)
+
+static bool js_physics_CylinderShape_onDestroy(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_onDestroy)
+
+static bool js_physics_CylinderShape_onDisable(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_onDisable)
+
+static bool js_physics_CylinderShape_onEnable(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_onEnable)
+
+static bool js_physics_CylinderShape_setAsTrigger(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_setAsTrigger : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setAsTrigger : Error processing arguments");
+        cobj->setAsTrigger(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_setAsTrigger)
+
+static bool js_physics_CylinderShape_setCenter(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_setCenter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setCenter : Error processing arguments");
+        cobj->setCenter(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_setCenter)
+
+static bool js_physics_CylinderShape_setConvex(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_setConvex : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setConvex : Error processing arguments");
+        cobj->setConvex(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_setConvex)
+
+static bool js_physics_CylinderShape_setCylinder(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_setCylinder : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<cc::physics::EAxisDirection, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setCylinder : Error processing arguments");
+        cobj->setCylinder(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_setCylinder)
+
+static bool js_physics_CylinderShape_setGroup(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_setGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_setGroup)
+
+static bool js_physics_CylinderShape_setMask(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_setMask)
+
+static bool js_physics_CylinderShape_setMaterial(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_setMaterial : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setMaterial : Error processing arguments");
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_setMaterial)
+
+static bool js_physics_CylinderShape_updateEventListener(se::State& s)
+{
+    cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CylinderShape_updateEventListener : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::EShapeFilterFlag, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_updateEventListener : Error processing arguments");
+        cobj->updateEventListener(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CylinderShape_updateEventListener)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_CylinderShape_finalize)
+
+static bool js_physics_CylinderShape_constructor(se::State& s) // constructor.c
+{
+    cc::physics::CylinderShape* cobj = JSB_ALLOC(cc::physics::CylinderShape);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_CylinderShape_constructor, __jsb_cc_physics_CylinderShape_class, js_cc_physics_CylinderShape_finalize)
+
+
+
+
+static bool js_cc_physics_CylinderShape_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::CylinderShape>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::CylinderShape* cobj = SE_THIS_OBJECT<cc::physics::CylinderShape>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_CylinderShape_finalize)
+
+bool js_register_physics_CylinderShape(se::Object* obj)
+{
+    auto cls = se::Class::create("CylinderShape", obj, nullptr, _SE(js_physics_CylinderShape_constructor));
+
+    cls->defineFunction("getAABB", _SE(js_physics_CylinderShape_getAABB));
+    cls->defineFunction("getBoundingSphere", _SE(js_physics_CylinderShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_CylinderShape_getGroup));
+    cls->defineFunction("getImpl", _SE(js_physics_CylinderShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_CylinderShape_getMask));
+    cls->defineFunction("initialize", _SE(js_physics_CylinderShape_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_CylinderShape_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_CylinderShape_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_CylinderShape_onEnable));
+    cls->defineFunction("setAsTrigger", _SE(js_physics_CylinderShape_setAsTrigger));
+    cls->defineFunction("setCenter", _SE(js_physics_CylinderShape_setCenter));
+    cls->defineFunction("setConvex", _SE(js_physics_CylinderShape_setConvex));
+    cls->defineFunction("setCylinder", _SE(js_physics_CylinderShape_setCylinder));
+    cls->defineFunction("setGroup", _SE(js_physics_CylinderShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_CylinderShape_setMask));
+    cls->defineFunction("setMaterial", _SE(js_physics_CylinderShape_setMaterial));
+    cls->defineFunction("updateEventListener", _SE(js_physics_CylinderShape_updateEventListener));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_CylinderShape_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::CylinderShape>(cls);
+
+    __jsb_cc_physics_CylinderShape_proto = cls->getProto();
+    __jsb_cc_physics_CylinderShape_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_cc_physics_ConeShape_proto = nullptr;
+se::Class* __jsb_cc_physics_ConeShape_class = nullptr;
+
+static bool js_physics_ConeShape_getAABB(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_getAABB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::AABB result = cobj->getAABB();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_getAABB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_getAABB)
+
+static bool js_physics_ConeShape_getBoundingSphere(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_getBoundingSphere : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::Sphere result = cobj->getBoundingSphere();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_getBoundingSphere : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_getBoundingSphere)
+
+static bool js_physics_ConeShape_getGroup(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_getGroup)
+
+static bool js_physics_ConeShape_getImpl(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_getImpl)
+
+static bool js_physics_ConeShape_getMask(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_getMask)
+
+static bool js_physics_ConeShape_initialize(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_initialize)
+
+static bool js_physics_ConeShape_onDestroy(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_onDestroy)
+
+static bool js_physics_ConeShape_onDisable(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_onDisable)
+
+static bool js_physics_ConeShape_onEnable(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_onEnable)
+
+static bool js_physics_ConeShape_setAsTrigger(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_setAsTrigger : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setAsTrigger : Error processing arguments");
+        cobj->setAsTrigger(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_setAsTrigger)
+
+static bool js_physics_ConeShape_setCenter(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_setCenter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setCenter : Error processing arguments");
+        cobj->setCenter(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_setCenter)
+
+static bool js_physics_ConeShape_setCone(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_setCone : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<cc::physics::EAxisDirection, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setCone : Error processing arguments");
+        cobj->setCone(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_setCone)
+
+static bool js_physics_ConeShape_setConvex(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_setConvex : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setConvex : Error processing arguments");
+        cobj->setConvex(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_setConvex)
+
+static bool js_physics_ConeShape_setGroup(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_setGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_setGroup)
+
+static bool js_physics_ConeShape_setMask(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_setMask)
+
+static bool js_physics_ConeShape_setMaterial(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_setMaterial : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setMaterial : Error processing arguments");
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_setMaterial)
+
+static bool js_physics_ConeShape_updateEventListener(se::State& s)
+{
+    cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_ConeShape_updateEventListener : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::EShapeFilterFlag, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_ConeShape_updateEventListener : Error processing arguments");
+        cobj->updateEventListener(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_ConeShape_updateEventListener)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_ConeShape_finalize)
+
+static bool js_physics_ConeShape_constructor(se::State& s) // constructor.c
+{
+    cc::physics::ConeShape* cobj = JSB_ALLOC(cc::physics::ConeShape);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_ConeShape_constructor, __jsb_cc_physics_ConeShape_class, js_cc_physics_ConeShape_finalize)
+
+
+
+
+static bool js_cc_physics_ConeShape_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::ConeShape>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::ConeShape* cobj = SE_THIS_OBJECT<cc::physics::ConeShape>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_ConeShape_finalize)
+
+bool js_register_physics_ConeShape(se::Object* obj)
+{
+    auto cls = se::Class::create("ConeShape", obj, nullptr, _SE(js_physics_ConeShape_constructor));
+
+    cls->defineFunction("getAABB", _SE(js_physics_ConeShape_getAABB));
+    cls->defineFunction("getBoundingSphere", _SE(js_physics_ConeShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_ConeShape_getGroup));
+    cls->defineFunction("getImpl", _SE(js_physics_ConeShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_ConeShape_getMask));
+    cls->defineFunction("initialize", _SE(js_physics_ConeShape_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_ConeShape_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_ConeShape_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_ConeShape_onEnable));
+    cls->defineFunction("setAsTrigger", _SE(js_physics_ConeShape_setAsTrigger));
+    cls->defineFunction("setCenter", _SE(js_physics_ConeShape_setCenter));
+    cls->defineFunction("setCone", _SE(js_physics_ConeShape_setCone));
+    cls->defineFunction("setConvex", _SE(js_physics_ConeShape_setConvex));
+    cls->defineFunction("setGroup", _SE(js_physics_ConeShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_ConeShape_setMask));
+    cls->defineFunction("setMaterial", _SE(js_physics_ConeShape_setMaterial));
+    cls->defineFunction("updateEventListener", _SE(js_physics_ConeShape_updateEventListener));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_ConeShape_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::ConeShape>(cls);
+
+    __jsb_cc_physics_ConeShape_proto = cls->getProto();
+    __jsb_cc_physics_ConeShape_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 se::Object* __jsb_cc_physics_PhysXBindings_proto = nullptr;
 se::Class* __jsb_cc_physics_PhysXBindings_class = nullptr;
 
@@ -3229,11 +4011,13 @@ bool register_all_physics(se::Object* obj)
     js_register_physics_RigidBody(ns);
     js_register_physics_PhysXBindings(ns);
     js_register_physics_SphereShape(ns);
+    js_register_physics_CylinderShape(ns);
     js_register_physics_TrimeshShape(ns);
     js_register_physics_PlaneShape(ns);
     js_register_physics_CapsuleShape(ns);
     js_register_physics_BoxShape(ns);
     js_register_physics_World(ns);
+    js_register_physics_ConeShape(ns);
     return true;
 }
 
