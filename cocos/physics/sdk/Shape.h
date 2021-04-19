@@ -16,7 +16,7 @@
     public:                                                                     \
         CLASS();                                                                \
         virtual ~CLASS();                                                       \
-        virtual intptr_t getImpl() override;                                    \
+        virtual uintptr_t getImpl() override;                                   \
         virtual void initialize(const uint uuid) override;                      \
         virtual void onEnable() override;                                       \
         virtual void onDisable() override;                                      \
@@ -56,22 +56,22 @@ virtual void setNormal(float x, float y, float z) override;
 };
 
 CC_PHYSICS_SHAPE_CLASS(TrimeshShape)
-virtual void setMesh(intptr_t v) override;
+virtual void setMesh(uintptr_t v) override;
 virtual void useConvex(bool v) override;
 };
 
 CC_PHYSICS_SHAPE_CLASS(CylinderShape)
-virtual void setConvex(intptr_t v) override;
+virtual void setConvex(uintptr_t v) override;
 virtual void setCylinder(float r, float h, EAxisDirection d) override;
 };
 
 CC_PHYSICS_SHAPE_CLASS(ConeShape)
-virtual void setConvex(intptr_t v) override;
+virtual void setConvex(uintptr_t v) override;
 virtual void setCone(float r, float h, EAxisDirection d) override;
 };
 
 CC_PHYSICS_SHAPE_CLASS(TerrainShape)
-virtual void setTerrain(intptr_t v, float rs, float cs, float hs) override;
+virtual void setTerrain(uintptr_t v, float rs, float cs, float hs) override;
 };
 
 } // namespace physics

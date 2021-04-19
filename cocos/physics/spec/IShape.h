@@ -27,7 +27,7 @@ class IBaseShape : virtual public ILifecycle {
 public:
     virtual ~IBaseShape(){};
     virtual void initialize(const uint h) = 0;
-    virtual intptr_t getImpl() = 0;
+    virtual uintptr_t getImpl() = 0;
     virtual void setMaterial(const uint16_t ID, float f, float df, float r,
                              uint8_t m0, uint8_t m1) = 0;
     virtual void setAsTrigger(bool v) = 0;
@@ -64,14 +64,14 @@ public:
 class ICylinderShape : virtual public IBaseShape {
 public:
     virtual ~ICylinderShape(){};
-    virtual void setConvex(intptr_t v) = 0;
+    virtual void setConvex(uintptr_t v) = 0;
     virtual void setCylinder(float r, float h, EAxisDirection d) = 0;
 };
 
 class IConeShape : virtual public IBaseShape {
 public:
     virtual ~IConeShape(){};
-    virtual void setConvex(intptr_t v) = 0;
+    virtual void setConvex(uintptr_t v) = 0;
     virtual void setCone(float r, float h, EAxisDirection d) = 0;
 };
 
@@ -85,13 +85,13 @@ public:
 class ITrimeshShape : virtual public IBaseShape {
 public:
     virtual ~ITrimeshShape(){};
-    virtual void setMesh(intptr_t v) = 0;
+    virtual void setMesh(uintptr_t v) = 0;
     virtual void useConvex(bool v) = 0;
 };
 
 class ITerrainShape : virtual public IBaseShape {
 public:
-    virtual void setTerrain(intptr_t v, float rs, float cs, float hs) = 0;
+    virtual void setTerrain(uintptr_t v, float rs, float cs, float hs) = 0;
 };
 
 } // namespace physics

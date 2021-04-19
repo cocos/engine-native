@@ -20,7 +20,7 @@ class PhysXJoint : virtual public IBaseJoint {
 
 public:
     virtual ~PhysXJoint(){};
-    virtual CC_INLINE const intptr_t getImpl() override { return (intptr_t)this; }
+    virtual CC_INLINE const uintptr_t getImpl() override { return (uintptr_t)this; }
     virtual void initialize(const uint handle) override;
     virtual void onEnable() override;
     virtual void onDisable() override;

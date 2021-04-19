@@ -12,7 +12,7 @@ class PhysXCone final : public PhysXShape, public IConeShape {
 public:
     PhysXCone();
     virtual ~PhysXCone(){};
-    virtual void setConvex(intptr_t v) override;
+    virtual void setConvex(uintptr_t v) override;
     virtual void setCone(float r, float h, EAxisDirection d) override;
     virtual void updateScale() override;
 

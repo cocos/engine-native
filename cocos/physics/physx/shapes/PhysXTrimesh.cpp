@@ -12,7 +12,7 @@ PhysXTrimesh::PhysXTrimesh() : mMeshHandle(NULL),
                                mConvex(false),
                                PhysXShape(){};
 
-void PhysXTrimesh::setMesh(intptr_t handle) {
+void PhysXTrimesh::setMesh(uintptr_t handle) {
     if (mMeshHandle == handle) return;
     mMeshHandle = handle;
     if (mShape) {

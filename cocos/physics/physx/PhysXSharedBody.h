@@ -43,7 +43,7 @@ public:
     CC_INLINE Node &getNode() const { return *mNode; }
     CC_INLINE PhysXWorld &getWorld() const { return *mWrappedWorld; }
     union UActor {
-        intptr_t ptr;
+        uintptr_t ptr;
         PxRigidActor *rigidActor;
         PxRigidStatic *rigidStatic;
         PxRigidDynamic *rigidDynamic;

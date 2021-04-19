@@ -17,8 +17,8 @@ void PhysXEventManager::SimulationEventCallback::onTrigger(PxTriggerPair *pairs,
         if (tp.flags & (PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER | PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
             continue;
 
-        const auto &selfIter = getPxShapeMap().find((intptr_t)tp.triggerShape);
-        const auto &otherIter = getPxShapeMap().find((intptr_t)tp.otherShape);
+        const auto &selfIter = getPxShapeMap().find((uintptr_t)tp.triggerShape);
+        const auto &otherIter = getPxShapeMap().find((uintptr_t)tp.otherShape);
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end())
             continue;
 
@@ -42,8 +42,8 @@ void PhysXEventManager::SimulationEventCallback::onContact(const PxContactPairHe
         if (cp.flags & (PxContactPairFlag::eREMOVED_SHAPE_0 | PxContactPairFlag::eREMOVED_SHAPE_1))
             continue;
 
-        const auto &selfIter = getPxShapeMap().find((intptr_t)cp.shapes[0]);
-        const auto &otherIter = getPxShapeMap().find((intptr_t)cp.shapes[1]);
+        const auto &selfIter = getPxShapeMap().find((uintptr_t)cp.shapes[0]);
+        const auto &otherIter = getPxShapeMap().find((uintptr_t)cp.shapes[1]);
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end())
             continue;
 
@@ -76,8 +76,8 @@ void PhysXEventManager::SimulationEventCallback::onContact(const PxContactPairHe
 
 void PhysXEventManager::refreshPairs() {
     for (auto iter = getTriggerPairs().begin(); iter != getTriggerPairs().end();) {
-        const auto &selfIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
-        const auto &otherIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
+        const auto &selfIter = getPxShapeMap().find((uintptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
+        const auto &otherIter = getPxShapeMap().find((uintptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end()) {
             iter = getTriggerPairs().erase(iter);
         } else if (iter->get()->state == ETouchState::EXIT) {
@@ -89,8 +89,8 @@ void PhysXEventManager::refreshPairs() {
     }
 
     for (auto iter = getConatctPairs().begin(); iter != getConatctPairs().end();) {
-        const auto &selfIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
-        const auto &otherIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
+        const auto &selfIter = getPxShapeMap().find((uintptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
+        const auto &otherIter = getPxShapeMap().find((uintptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end()) {
             iter = getConatctPairs().erase(iter);
         } else if (iter->get()->state == ETouchState::EXIT) {

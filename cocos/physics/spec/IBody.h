@@ -16,7 +16,7 @@ enum class ERigidBodyType : uint8_t {
 class IRigidBody : public ILifecycle {
 public:
     virtual ~IRigidBody(){};
-    virtual const intptr_t getImpl() = 0;
+    virtual const uintptr_t getImpl() = 0;
     virtual const uint getNodeHandle() = 0;
     virtual void initialize(const uint h, const ERigidBodyType t, const uint32_t g) = 0;
     virtual bool isAwake() = 0;

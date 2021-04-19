@@ -12,7 +12,7 @@
         _impl.reset(nullptr);                       \
     }                                               \
                                                     \
-    const intptr_t CLASS::getImpl() {               \
+    const uintptr_t CLASS::getImpl() {              \
         return _impl->getImpl();                    \
     }                                               \
                                                     \

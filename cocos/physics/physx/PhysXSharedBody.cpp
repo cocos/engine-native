@@ -59,7 +59,7 @@ PhysXSharedBody::~PhysXSharedBody() {
 
 PhysXSharedBody::UActor PhysXSharedBody::getImpl() {
     initActor();
-    mImpl.ptr = isStatic() ? (intptr_t)mStaticActor : (intptr_t)mDynamicActor;
+    mImpl.ptr = isStatic() ? (uintptr_t)mStaticActor : (uintptr_t)mDynamicActor;
     return mImpl;
 }
 
@@ -67,7 +67,7 @@ void PhysXSharedBody::setType(ERigidBodyType v) {
 	if (mType == v) return;
 	mType = v; 
 	initActor();
-	mImpl.ptr = isStatic() ? (intptr_t)mStaticActor : (intptr_t)mDynamicActor;
+	mImpl.ptr = isStatic() ? (uintptr_t)mStaticActor : (uintptr_t)mDynamicActor;
 }
 
 void PhysXSharedBody::reference(bool v) {

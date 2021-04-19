@@ -93,17 +93,17 @@ void PhysXWorld::setCollisionMatrix(uint32_t index, uint32_t mask) {
     mCollisionMatrix[index] = mask;
 }
 
-intptr_t PhysXWorld::createConvex(ConvexDesc &desc) {
+uintptr_t PhysXWorld::createConvex(ConvexDesc &desc) {
     PxConvexMeshDesc convexDesc;
     convexDesc.points.count = desc.positionLength;
     convexDesc.points.stride = sizeof(PxVec3);
     convexDesc.points.data = (PxVec3 *)desc.positions;
     convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
     PxConvexMesh *convexMesh = getCooking().createConvexMesh(convexDesc, PxGetPhysics().getPhysicsInsertionCallback());
-    return (intptr_t)convexMesh;
+    return (uintptr_t)convexMesh;
 }
 
-intptr_t PhysXWorld::createTrimesh(TrimeshDesc &desc) {
+uintptr_t PhysXWorld::createTrimesh(TrimeshDesc &desc) {
     PxTriangleMeshDesc meshDesc;
     meshDesc.points.count = desc.positionLength;
     meshDesc.points.stride = sizeof(PxVec3);
@@ -118,10 +118,10 @@ intptr_t PhysXWorld::createTrimesh(TrimeshDesc &desc) {
         meshDesc.triangles.data = (PxU32 *)desc.triangles;
     }
     PxTriangleMesh *triangleMesh = getCooking().createTriangleMesh(meshDesc, PxGetPhysics().getPhysicsInsertionCallback());
-    return (intptr_t)triangleMesh;
+    return (uintptr_t)triangleMesh;
 }
 
-intptr_t PhysXWorld::createHeightField(HeightFieldDesc &desc) {
+uintptr_t PhysXWorld::createHeightField(HeightFieldDesc &desc) {
     const auto rows = desc.rows;
     const auto columns = desc.columns;
     const PxU32 counts = rows * columns;
@@ -140,16 +140,16 @@ intptr_t PhysXWorld::createHeightField(HeightFieldDesc &desc) {
     hfDesc.samples.stride = sizeof(PxHeightFieldSample);
     PxHeightField *hf = getCooking().createHeightField(hfDesc, PxGetPhysics().getPhysicsInsertionCallback());
     delete[] samples;
-    return (intptr_t)hf;
+    return (uintptr_t)hf;
 }
 
-intptr_t PhysXWorld::createMaterial(const uint16_t ID, float f, float df, float r,
+uintptr_t PhysXWorld::createMaterial(const uint16_t ID, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) {
     PxMaterial *mat;
     auto &m = getPxMaterialMap();
     if (m.find(ID) == m.end()) {
         mat = PxGetPhysics().createMaterial(f, df, r);
-        m[ID] = (intptr_t)mat;
+        m[ID] = (uintptr_t)mat;
         mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
         mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
     } else {
@@ -160,7 +160,7 @@ intptr_t PhysXWorld::createMaterial(const uint16_t ID, float f, float df, float 
         mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
         mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
     }
-    return intptr_t(mat);
+    return uintptr_t(mat);
 }
 
 void PhysXWorld::emitEvents() {
@@ -234,7 +234,7 @@ bool PhysXWorld::raycast(RaycastOptions &opt) {
     auto &r = raycastResult();
     r.resize(nbTouches);
     for (PxI32 i = 0; i < nbTouches; i++) {
-        const auto &shapeIter = getPxShapeMap().find((intptr_t)hitBuffer[i].shape);
+        const auto &shapeIter = getPxShapeMap().find((uintptr_t)hitBuffer[i].shape);
         if (shapeIter == getPxShapeMap().end()) return false;
         r[i].shape = shapeIter->second;
         r[i].distance = hitBuffer[i].distance;
@@ -267,7 +267,7 @@ bool PhysXWorld::raycastClosest(RaycastOptions &opt) {
         hit, filterData, &getQueryFilterShader(), cache);
     if (result) {
         auto &r = raycastClosestResult();
-        const auto &shapeIter = getPxShapeMap().find((intptr_t)hit.shape);
+        const auto &shapeIter = getPxShapeMap().find((uintptr_t)hit.shape);
         if (shapeIter == getPxShapeMap().end()) return false;
         r.shape = shapeIter->second;
         r.distance = hit.distance;

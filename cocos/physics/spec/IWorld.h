@@ -2,6 +2,7 @@
 #pragma once
 
 #include "bindings/manual/jsb_conversions.h"
+#include "base/TypeDef.h"
 #include <memory>
 #include <stdint.h>
 #include <vector>
@@ -16,11 +17,11 @@ enum class ETouchState : uint8_t {
 };
 
 struct TriggerEventPair {
-    intptr_t shapeA;
-    intptr_t shapeB;
+    uintptr_t shapeA;
+    uintptr_t shapeB;
     ETouchState state;
     static constexpr uint8_t COUNT = 3;
-    TriggerEventPair(const intptr_t a, const intptr_t b)
+    TriggerEventPair(const uintptr_t a, const uintptr_t b)
     : shapeA(a),
       shapeB(b),
       state(ETouchState::ENTER) {}
@@ -37,12 +38,12 @@ struct ContactPoint {
 };
 
 struct ContactEventPair {
-    intptr_t shapeA;
-    intptr_t shapeB;
+    uintptr_t shapeA;
+    uintptr_t shapeB;
     ETouchState state;
     std::vector<ContactPoint> contacts;
     static constexpr uint8_t COUNT = 4;
-    ContactEventPair(const intptr_t a, const intptr_t b)
+    ContactEventPair(const uintptr_t a, const uintptr_t b)
     : shapeA(a),
       shapeB(b),
       state(ETouchState::ENTER) {}
@@ -74,7 +75,7 @@ struct RaycastOptions {
 };
 
 struct RaycastResult {
-    intptr_t shape;
+    uintptr_t shape;
     cc::Vec3 hitPoint;
     float distance;
     cc::Vec3 hitNormal;
@@ -98,10 +99,10 @@ public:
     virtual bool raycastClosest(RaycastOptions &opt) = 0;
     virtual std::vector<RaycastResult> &raycastResult() = 0;
     virtual RaycastResult &raycastClosestResult() = 0;
-    virtual intptr_t createConvex(ConvexDesc &desc) = 0;
-    virtual intptr_t createTrimesh(TrimeshDesc &desc) = 0;
-    virtual intptr_t createHeightField(HeightFieldDesc &desc) = 0;
-    virtual intptr_t createMaterial(const uint16_t ID, float f, float df, float r,
+    virtual uintptr_t createConvex(ConvexDesc &desc) = 0;
+    virtual uintptr_t createTrimesh(TrimeshDesc &desc) = 0;
+    virtual uintptr_t createHeightField(HeightFieldDesc &desc) = 0;
+    virtual uintptr_t createMaterial(const uint16_t ID, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) = 0;
 };
 
@@ -113,8 +114,8 @@ inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::Tri
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::TriggerEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         auto t = i * cc::physics::TriggerEventPair::COUNT;
-        array->setArrayElement((uint)(t + 0), se::Value((intptr_t)from[i]->shapeA));
-        array->setArrayElement((uint)(t + 1), se::Value((intptr_t)from[i]->shapeB));
+        array->setArrayElement((uint)(t + 0), se::Value((uintptr_t)from[i]->shapeA));
+        array->setArrayElement((uint)(t + 1), se::Value((uintptr_t)from[i]->shapeB));
         array->setArrayElement((uint)(t + 2), se::Value((uint8_t)from[i]->state));
     }
     to.setObject(array);
@@ -150,8 +151,8 @@ inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::Con
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::ContactEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         auto t = i * cc::physics::ContactEventPair::COUNT;
-        array->setArrayElement((uint)(t + 0), se::Value((intptr_t)from[i]->shapeA));
-        array->setArrayElement((uint)(t + 1), se::Value((intptr_t)from[i]->shapeB));
+        array->setArrayElement((uint)(t + 0), se::Value((uintptr_t)from[i]->shapeA));
+        array->setArrayElement((uint)(t + 1), se::Value((uintptr_t)from[i]->shapeB));
         array->setArrayElement((uint)(t + 2), se::Value((uint8_t)from[i]->state));
         array->setArrayElement((uint)(t + 3), [&]() -> se::Value {
             auto obj = se::Value();

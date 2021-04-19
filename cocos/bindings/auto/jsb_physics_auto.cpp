@@ -3089,7 +3089,7 @@ static bool js_physics_TrimeshShape_setMesh(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<intptr_t, false> arg0 = {};
+        HolderType<uintptr_t, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_setMesh : Error processing arguments");
         cobj->setMesh(arg0.value());
@@ -3409,7 +3409,7 @@ static bool js_physics_CylinderShape_setConvex(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<intptr_t, false> arg0 = {};
+        HolderType<uintptr_t, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_setConvex : Error processing arguments");
         cobj->setConvex(arg0.value());
@@ -3823,7 +3823,7 @@ static bool js_physics_ConeShape_setConvex(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<intptr_t, false> arg0 = {};
+        HolderType<uintptr_t, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_ConeShape_setConvex : Error processing arguments");
         cobj->setConvex(arg0.value());
@@ -4258,7 +4258,7 @@ static bool js_physics_TerrainShape_setTerrain(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 4) {
-        HolderType<intptr_t, false> arg0 = {};
+        HolderType<uintptr_t, false> arg0 = {};
         HolderType<float, false> arg1 = {};
         HolderType<float, false> arg2 = {};
         HolderType<float, false> arg3 = {};

@@ -12,7 +12,7 @@ class IBaseJoint : virtual public ILifecycle {
 public:
     virtual ~IBaseJoint(){};
     virtual void initialize(const uint h) = 0;
-    virtual const intptr_t getImpl() = 0;
+    virtual const uintptr_t getImpl() = 0;
     virtual void setEnableCollision(const bool v) = 0;
     virtual void setConnectedBody(const uint v) = 0;
 };

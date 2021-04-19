@@ -12,7 +12,7 @@
         _impl.reset(nullptr);                                              \
     }                                                                      \
                                                                            \
-    intptr_t CLASS::getImpl() {                                            \
+    uintptr_t CLASS::getImpl() {                                           \
         return _impl->getImpl();                                           \
     }                                                                      \
                                                                            \
@@ -117,7 +117,7 @@ void PlaneShape::setNormal(float x, float y, float z) {
     _impl->setNormal(x, y, z);
 }
 
-void TrimeshShape::setMesh(intptr_t v) {
+void TrimeshShape::setMesh(uintptr_t v) {
     _impl->setMesh(v);
 }
 
@@ -125,11 +125,11 @@ void TrimeshShape::useConvex(bool v) {
     _impl->useConvex(v);
 }
 
-void TerrainShape::setTerrain(intptr_t v, float rs, float cs, float hs) {
+void TerrainShape::setTerrain(uintptr_t v, float rs, float cs, float hs) {
     _impl->setTerrain(v, rs, cs, hs);
 }
 
-void CylinderShape::setConvex(intptr_t v) {
+void CylinderShape::setConvex(uintptr_t v) {
     _impl->setConvex(v);
 }
 
@@ -137,7 +137,7 @@ void CylinderShape::setCylinder(float r, float h, EAxisDirection d) {
     _impl->setCylinder(r, h, d);
 }
 
-void ConeShape::setConvex(intptr_t v) {
+void ConeShape::setConvex(uintptr_t v) {
     _impl->setConvex(v);
 }
 

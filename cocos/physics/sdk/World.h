@@ -24,10 +24,10 @@ public:
     virtual bool raycastClosest(RaycastOptions &opt) override;
     virtual std::vector<RaycastResult> &raycastResult() override;
     virtual RaycastResult &raycastClosestResult() override;
-    virtual intptr_t createConvex(ConvexDesc &desc) override;
-    virtual intptr_t createTrimesh(TrimeshDesc &desc) override;
-    virtual intptr_t createHeightField(HeightFieldDesc &desc) override;
-    virtual intptr_t createMaterial(const uint16_t ID, float f, float df, float r,
+    virtual uintptr_t createConvex(ConvexDesc &desc) override;
+    virtual uintptr_t createTrimesh(TrimeshDesc &desc) override;
+    virtual uintptr_t createHeightField(HeightFieldDesc &desc) override;
+    virtual uintptr_t createMaterial(const uint16_t ID, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) override;
     virtual void destroy() override;
 

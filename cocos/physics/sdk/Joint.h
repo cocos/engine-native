@@ -16,7 +16,7 @@
     public:                                                     \
         CLASS();                                                \
         virtual ~CLASS();                                       \
-        virtual const intptr_t getImpl() override;              \
+        virtual const uintptr_t getImpl() override;             \
         virtual void initialize(const uint h) override;         \
         virtual void onEnable() override;                       \
         virtual void onDisable() override;                      \
