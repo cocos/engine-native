@@ -153,7 +153,7 @@ endif()
 if(USE_PHYSICS_PHYSX)
     if (ANDROID AND CMAKE_ANDROID_ARCH_ABI MATCHES x86)
         set(USE_PHYSICS_PHYSX OFF)
-        message(AUTHOR_WARNING "PhysX does not support Google Android X86")
+        message(AUTHOR_WARNING "Native PhysX does not support Google Android X86")
     endif()
 endif()
 
