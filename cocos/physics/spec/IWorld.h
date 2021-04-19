@@ -112,10 +112,10 @@ template <>
 inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::TriggerEventPair>> &from, se::Value &to, se::Object *ctx) {
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::TriggerEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
-        uint32_t t = i * cc::physics::TriggerEventPair::COUNT;
-        array->setArrayElement(t + 0, se::Value((intptr_t)from[i]->shapeA));
-        array->setArrayElement(t + 1, se::Value((intptr_t)from[i]->shapeB));
-        array->setArrayElement(t + 2, se::Value((uint8_t)from[i]->state));
+        auto t = i * cc::physics::TriggerEventPair::COUNT;
+        array->setArrayElement((uint)(t + 0), se::Value((intptr_t)from[i]->shapeA));
+        array->setArrayElement((uint)(t + 1), se::Value((intptr_t)from[i]->shapeB));
+        array->setArrayElement((uint)(t + 2), se::Value((uint8_t)from[i]->state));
     }
     to.setObject(array);
     return true;
@@ -126,20 +126,20 @@ inline bool nativevalue_to_se(const std::vector<cc::physics::ContactPoint> &from
     const auto contactCount = from.size();
     se::HandleObject array(se::Object::createArrayObject(contactCount));
     for (size_t i = 0; i < contactCount; i++) {
-        uint32_t t = i * cc::physics::ContactPoint::COUNT;
-        uint8_t j = 0;
-        array->setArrayElement(t + j++, se::Value(from[i].position.x));
-        array->setArrayElement(t + j++, se::Value(from[i].position.y));
-        array->setArrayElement(t + j++, se::Value(from[i].position.z));
-        array->setArrayElement(t + j++, se::Value(from[i].normal.x));
-        array->setArrayElement(t + j++, se::Value(from[i].normal.y));
-        array->setArrayElement(t + j++, se::Value(from[i].normal.z));
-        array->setArrayElement(t + j++, se::Value(from[i].impulse.x));
-        array->setArrayElement(t + j++, se::Value(from[i].impulse.y));
-        array->setArrayElement(t + j++, se::Value(from[i].impulse.z));
-        array->setArrayElement(t + j++, se::Value(from[i].separation));
-        array->setArrayElement(t + j++, se::Value(from[i].internalFaceIndex0));
-        array->setArrayElement(t + j++, se::Value(from[i].internalFaceIndex1));
+        auto t = i * cc::physics::ContactPoint::COUNT;
+        uint32_t j = 0;
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].position.x));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].position.y));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].position.z));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].normal.x));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].normal.y));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].normal.z));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].impulse.x));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].impulse.y));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].impulse.z));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].separation));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].internalFaceIndex0));
+        array->setArrayElement((uint)(t + j++), se::Value(from[i].internalFaceIndex1));
     }
     to.setObject(array);
     return true;
@@ -149,11 +149,11 @@ template <>
 inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::ContactEventPair>> &from, se::Value &to, se::Object *ctx) {
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::ContactEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
-        uint32_t t = i * cc::physics::ContactEventPair::COUNT;
-        array->setArrayElement(t + 0, se::Value((intptr_t)from[i]->shapeA));
-        array->setArrayElement(t + 1, se::Value((intptr_t)from[i]->shapeB));
-        array->setArrayElement(t + 2, se::Value((uint8_t)from[i]->state));
-        array->setArrayElement(t + 3, [&]() -> se::Value {
+        auto t = i * cc::physics::ContactEventPair::COUNT;
+        array->setArrayElement((uint)(t + 0), se::Value((intptr_t)from[i]->shapeA));
+        array->setArrayElement((uint)(t + 1), se::Value((intptr_t)from[i]->shapeB));
+        array->setArrayElement((uint)(t + 2), se::Value((uint8_t)from[i]->state));
+        array->setArrayElement((uint)(t + 3), [&]() -> se::Value {
             auto obj = se::Value();
             nativevalue_to_se(from[i]->contacts, obj, ctx);
             return obj;

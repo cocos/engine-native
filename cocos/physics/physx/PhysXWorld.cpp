@@ -229,7 +229,7 @@ bool PhysXWorld::raycast(RaycastOptions &opt) {
     bool result = false;
     const auto nbTouches = PxSceneQueryExt::raycastMultiple(
         getScene(), origin, unitDir, opt.distance, flags, hitBuffer.data(),
-        hitBuffer.size(), result, filterData, &getQueryFilterShader(), cache);
+        (PxU32)hitBuffer.size(), result, filterData, &getQueryFilterShader(), cache);
     if (nbTouches == 0 || nbTouches == -1) return false;
     auto &r = raycastResult();
     r.resize(nbTouches);
