@@ -9,19 +9,19 @@ namespace physics {
 class PhysXRevolute final : public PhysXJoint, public IRevoluteJoint {
 public:
     PhysXRevolute();
-    virtual ~PhysXRevolute(){};
-    virtual void setPivotA(float x, float y, float z) override;
-    virtual void setPivotB(float x, float y, float z) override;
-    virtual void setAxis(float x, float y, float z) override;
-    virtual void updateScale0() override;
-    virtual void updateScale1() override;
+    ~PhysXRevolute() override= default;;
+    void setPivotA(float x, float y, float z) override;
+    void setPivotB(float x, float y, float z) override;
+    void setAxis(float x, float y, float z) override;
+    void updateScale0() override;
+    void updateScale1() override;
 
 private:
-    virtual void onComponentSet() override;
+    void onComponentSet() override;
     void updatePose();
-    PxVec3 mPivotA;
-    PxVec3 mPivotB;
-    PxVec3 mAxis;
+    physx::PxVec3 _mPivotA;
+    physx::PxVec3 _mPivotB;
+    physx::PxVec3 _mAxis;
 };
 
 } // namespace physics

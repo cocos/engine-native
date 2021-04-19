@@ -15,10 +15,10 @@ enum class ERigidBodyType : uint8_t {
 
 class IRigidBody : public ILifecycle {
 public:
-    virtual ~IRigidBody(){};
-    virtual const uintptr_t getImpl() = 0;
-    virtual const uint getNodeHandle() = 0;
-    virtual void initialize(const uint h, const ERigidBodyType t, const uint32_t g) = 0;
+    ~IRigidBody() override = default;
+    virtual uintptr_t getImpl() = 0;
+    virtual uint getNodeHandle() = 0;
+    virtual void initialize(uint h, ERigidBodyType t, uint32_t g) = 0;
     virtual bool isAwake() = 0;
     virtual bool isSleepy() = 0;
     virtual bool isSleeping() = 0;
@@ -52,5 +52,6 @@ public:
     virtual uint32_t getMask() = 0;
     virtual void setMask(uint32_t m) = 0;
 };
+
 } // namespace physics
 } // namespace cc

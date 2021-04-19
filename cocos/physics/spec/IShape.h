@@ -4,7 +4,7 @@
 #include "bindings/manual/jsb_conversions.h"
 #include "ILifecycle.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
-#include <stdint.h>
+#include <cstdint>
 
 namespace cc {
 namespace physics {
@@ -25,10 +25,10 @@ enum class EShapeFilterFlag : uint8_t {
 
 class IBaseShape : virtual public ILifecycle {
 public:
-    virtual ~IBaseShape(){};
-    virtual void initialize(const uint h) = 0;
+    ~IBaseShape() override= default;;
+    virtual void initialize(uint h) = 0;
     virtual uintptr_t getImpl() = 0;
-    virtual void setMaterial(const uint16_t ID, float f, float df, float r,
+    virtual void setMaterial(uint16_t id, float f, float df, float r,
                              uint8_t m0, uint8_t m1) = 0;
     virtual void setAsTrigger(bool v) = 0;
     virtual void setCenter(float x, float y, float z) = 0;
@@ -43,19 +43,19 @@ public:
 
 class ISphereShape : virtual public IBaseShape {
 public:
-    virtual ~ISphereShape(){};
+    ~ISphereShape() override= default;;
     virtual void setRadius(float v) = 0;
 };
 
 class IBoxShape : virtual public IBaseShape {
 public:
-    virtual ~IBoxShape(){};
+    ~IBoxShape() override= default;;
     virtual void setSize(float x, float y, float z) = 0;
 };
 
 class ICapsuleShape : virtual public IBaseShape {
 public:
-    virtual ~ICapsuleShape(){};
+    ~ICapsuleShape() override= default;;
     virtual void setRadius(float v) = 0;
     virtual void setCylinderHeight(float v) = 0;
     virtual void setDirection(EAxisDirection v) = 0;
@@ -63,28 +63,28 @@ public:
 
 class ICylinderShape : virtual public IBaseShape {
 public:
-    virtual ~ICylinderShape(){};
+    ~ICylinderShape() override= default;;
     virtual void setConvex(uintptr_t v) = 0;
     virtual void setCylinder(float r, float h, EAxisDirection d) = 0;
 };
 
 class IConeShape : virtual public IBaseShape {
 public:
-    virtual ~IConeShape(){};
+    ~IConeShape() override= default;;
     virtual void setConvex(uintptr_t v) = 0;
     virtual void setCone(float r, float h, EAxisDirection d) = 0;
 };
 
 class IPlaneShape : virtual public IBaseShape {
 public:
-    virtual ~IPlaneShape(){};
+    ~IPlaneShape() override= default;;
     virtual void setConstant(float v) = 0;
     virtual void setNormal(float x, float y, float z) = 0;
 };
 
 class ITrimeshShape : virtual public IBaseShape {
 public:
-    virtual ~ITrimeshShape(){};
+    ~ITrimeshShape() override= default;;
     virtual void setMesh(uintptr_t v) = 0;
     virtual void useConvex(bool v) = 0;
 };

@@ -10,26 +10,26 @@ namespace physics {
 class CC_DLL World final : public IPhysicsWorld {
 public:
     World();
-    virtual ~World();
-    virtual void setGravity(float x, float y, float z) override;
-    virtual void setAllowSleep(bool v) override;
-    virtual void step(float fixedTimeStep) override;
-    virtual void emitEvents() override;
-    virtual void syncSceneToPhysics() override;
-    virtual void syncSceneWithCheck() override;
-    virtual void setCollisionMatrix(uint32_t i, uint32_t m) override;
-    virtual std::vector<std::shared_ptr<TriggerEventPair>> &getTriggerEventPairs() override;
-    virtual std::vector<std::shared_ptr<ContactEventPair>> &getContactEventPairs() override;
-    virtual bool raycast(RaycastOptions &opt) override;
-    virtual bool raycastClosest(RaycastOptions &opt) override;
-    virtual std::vector<RaycastResult> &raycastResult() override;
-    virtual RaycastResult &raycastClosestResult() override;
-    virtual uintptr_t createConvex(ConvexDesc &desc) override;
-    virtual uintptr_t createTrimesh(TrimeshDesc &desc) override;
-    virtual uintptr_t createHeightField(HeightFieldDesc &desc) override;
-    virtual uintptr_t createMaterial(const uint16_t ID, float f, float df, float r,
+    ~World() override;
+    void setGravity(float x, float y, float z) override;
+    void setAllowSleep(bool v) override;
+    void step(float fixedTimeStep) override;
+    void emitEvents() override;
+    void syncSceneToPhysics() override;
+    void syncSceneWithCheck() override;
+    void setCollisionMatrix(uint32_t i, uint32_t m) override;
+    std::vector<std::shared_ptr<TriggerEventPair>> &getTriggerEventPairs() override;
+    std::vector<std::shared_ptr<ContactEventPair>> &getContactEventPairs() override;
+    bool raycast(RaycastOptions &opt) override;
+    bool raycastClosest(RaycastOptions &opt) override;
+    std::vector<RaycastResult> &raycastResult() override;
+    RaycastResult &raycastClosestResult() override;
+    uintptr_t createConvex(ConvexDesc &desc) override;
+    uintptr_t createTrimesh(TrimeshDesc &desc) override;
+    uintptr_t createHeightField(HeightFieldDesc &desc) override;
+    uintptr_t createMaterial(uint16_t id, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) override;
-    virtual void destroy() override;
+    void destroy() override;
 
 private:
     std::unique_ptr<IPhysicsWorld> _impl;

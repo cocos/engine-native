@@ -5,37 +5,36 @@
 #include "base/Macros.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 #include <memory>
-#include <stdint.h>
+#include <cstdint>
 
-#define CC_PHYSICS_JOINT_CLASS(CLASS)                           \
-    class CC_DLL CLASS final : virtual public I##CLASS {        \
-                                                                \
-    protected:                                                  \
-        std::unique_ptr<I##CLASS> _impl;                        \
-                                                                \
-    public:                                                     \
-        CLASS();                                                \
-        virtual ~CLASS();                                       \
-        virtual const uintptr_t getImpl() override;             \
-        virtual void initialize(const uint h) override;         \
-        virtual void onEnable() override;                       \
-        virtual void onDisable() override;                      \
-        virtual void onDestroy() override;                      \
-        virtual void setEnableCollision(const bool v) override; \
-        virtual void setConnectedBody(const uint v) override;
+#define CC_PHYSICS_JOINT_CLASS(CLASS)                    \
+    class CC_DLL CLASS final : virtual public I##CLASS { \
+    protected:                                           \
+        std::unique_ptr<I##CLASS> _impl;                 \
+                                                         \
+    public:                                              \
+        CLASS();                                         \
+        ~CLASS() override;                               \
+        uintptr_t getImpl() override;                    \
+        void      initialize(uint h) override;           \
+        void      onEnable() override;                   \
+        void      onDisable() override;                  \
+        void      onDestroy() override;                  \
+        void      setEnableCollision(bool v) override;   \
+        void      setConnectedBody(uint v) override;
 
 namespace cc {
 namespace physics {
 
 CC_PHYSICS_JOINT_CLASS(RevoluteJoint)
-virtual void setPivotA(float x, float y, float z) override;
-virtual void setPivotB(float x, float y, float z) override;
-virtual void setAxis(float x, float y, float z) override;
+void setPivotA(float x, float y, float z) override;
+void setPivotB(float x, float y, float z) override;
+void setAxis(float x, float y, float z) override;
 };
 
 CC_PHYSICS_JOINT_CLASS(DistanceJoint)
-virtual void setPivotA(float x, float y, float z) override;
-virtual void setPivotB(float x, float y, float z) override;
+void setPivotA(float x, float y, float z) override;
+void setPivotB(float x, float y, float z) override;
 };
 
 } // namespace physics

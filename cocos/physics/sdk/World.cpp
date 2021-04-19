@@ -1,12 +1,13 @@
 
 #include "../PhysicsSelector.h"
 #include "./World.h"
+#include <memory>
 
 namespace cc {
 namespace physics {
 
 World::World() {
-    _impl.reset(new WrappedWorld());
+    _impl = std::make_unique<WrappedWorld>();
 }
 
 World::~World() {
@@ -29,9 +30,9 @@ void World::setGravity(float x, float y, float z) {
     _impl->setGravity(x, y, z);
 }
 
-uintptr_t World::createMaterial(const uint16_t ID, float f, float df, float r,
+uintptr_t World::createMaterial(uint16_t id, float f, float df, float r,
                                uint8_t m0, uint8_t m1) {
-    return _impl->createMaterial(ID, f, df, r, m0, m1);
+    return _impl->createMaterial(id, f, df, r, m0, m1);
 }
 
 void World::syncSceneToPhysics() {

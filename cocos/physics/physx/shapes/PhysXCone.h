@@ -3,30 +3,28 @@
 
 #include "PhysXShape.h"
 
-using namespace physx;
-
 namespace cc {
 namespace physics {
 
 class PhysXCone final : public PhysXShape, public IConeShape {
 public:
     PhysXCone();
-    virtual ~PhysXCone(){};
-    virtual void setConvex(uintptr_t v) override;
-    virtual void setCone(float r, float h, EAxisDirection d) override;
-    virtual void updateScale() override;
+    ~PhysXCone() override = default;
+    void setConvex(uintptr_t handle) override;
+    void setCone(float r, float h, EAxisDirection d) override;
+    void updateScale() override;
 
     struct Cone {
-        float radius;
-        float height;
+        float          radius;
+        float          height;
         EAxisDirection direction;
     };
 
 private:
-    PxConvexMesh *mMesh;
-    Cone mData;
-    void updateGeometry();
-    virtual void onComponentSet() override;
+    physx::PxConvexMesh *_mMesh;
+    Cone                 _mData;
+    void                 updateGeometry();
+    void         onComponentSet() override;
 };
 
 } // namespace physics

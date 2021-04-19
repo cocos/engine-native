@@ -8,53 +8,53 @@
 namespace cc {
 namespace physics {
 
-void PhysXShape::initialize(const uint handle) {
+void PhysXShape::initialize(uint handle) {
     PhysXWorld &ins = PhysXWorld::getInstance();
-    mSharedBody = ins.getSharedBody(handle);
+    _mSharedBody = ins.getSharedBody(handle);
     getSharedBody().reference(true);
     onComponentSet();
-    getPxShapeMap().insert(std::pair<uintptr_t, uintptr_t>((uintptr_t)&getShape(), getImpl()));
+    getPxShapeMap().insert(std::pair<uintptr_t, uintptr_t>(reinterpret_cast<uintptr_t>(&getShape()), getImpl()));
 }
 
 void PhysXShape::onEnable() {
-    mEnabled = true;
+    _mEnabled = true;
     getSharedBody().addShape(*this);
     getSharedBody().enabled(true);
 }
 
 void PhysXShape::onDisable() {
-    mEnabled = false;
+    _mEnabled = false;
     getSharedBody().removeShape(*this);
     getSharedBody().enabled(false);
 }
 
 void PhysXShape::onDestroy() {
     getSharedBody().reference(false);
-    getPxShapeMap().erase((uintptr_t)&getShape());
+    getPxShapeMap().erase(reinterpret_cast<uintptr_t>(&getShape()));
 }
 
-void PhysXShape::setMaterial(const uint16_t ID, float f, float df, float r,
+void PhysXShape::setMaterial(uint16_t id, float f, float df, float r,
                              uint8_t m0, uint8_t m1) {    
-    PxMaterial *mat = (PxMaterial *)getSharedBody().getWorld().createMaterial(ID, f, df, r, m0, m1);
+    auto *mat = reinterpret_cast<physx::PxMaterial *>(getSharedBody().getWorld().createMaterial(id, f, df, r, m0, m1));
     getShape().setMaterials(&mat, 1);
 }
 
 void PhysXShape::setAsTrigger(bool v) {
     if (v) {
-        getShape().setFlag(PxShapeFlag::eSIMULATION_SHAPE, !v);
-        getShape().setFlag(PxShapeFlag::eTRIGGER_SHAPE, v);
+        getShape().setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !v);
+        getShape().setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, v);
     } else {
-        getShape().setFlag(PxShapeFlag::eTRIGGER_SHAPE, v);
-        getShape().setFlag(PxShapeFlag::eSIMULATION_SHAPE, !v);
+        getShape().setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, v);
+        getShape().setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !v);
     }
-    if (mIndex >= 0) {
+    if (_mIndex >= 0) {
         getSharedBody().removeShape(*this);
         getSharedBody().addShape(*this);
     }
 }
 
 void PhysXShape::setCenter(float x, float y, float z) {
-    mCenter = PxVec3{x, y, z};
+    _mCenter = physx::PxVec3{x, y, z};
     updateCenter();
 }
 
@@ -87,15 +87,15 @@ cc::pipeline::Sphere& PhysXShape::getBoundingSphere() {
     return s;
 }
 
-void PhysXShape::updateFilterData(PxFilterData &data) {
+void PhysXShape::updateFilterData(physx::PxFilterData &data) {
 }
 
 void PhysXShape::updateCenter() {
     auto &sb = getSharedBody();
     auto &node = sb.getNode();
-    PxTransform local{mCenter * node.worldScale, mRotation};
+    physx::PxTransform local{_mCenter * node.worldScale, _mRotation};
     getShape().setLocalPose(local);
-    if (mEnabled && !isTrigger()) sb.updateCenterOfMass();
+    if (_mEnabled && !isTrigger()) sb.updateCenterOfMass();
 }
 
 } // namespace physics

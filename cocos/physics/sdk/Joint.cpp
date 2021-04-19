@@ -12,11 +12,11 @@
         _impl.reset(nullptr);                       \
     }                                               \
                                                     \
-    const uintptr_t CLASS::getImpl() {              \
+    uintptr_t CLASS::getImpl() {                    \
         return _impl->getImpl();                    \
     }                                               \
                                                     \
-    void CLASS::initialize(const uint h) {          \
+    void CLASS::initialize(uint h) {                \
         _impl->initialize(h);                       \
     }                                               \
                                                     \
@@ -32,11 +32,11 @@
         _impl->onDestroy();                         \
     }                                               \
                                                     \
-    void CLASS::setConnectedBody(const uint v) {    \
+    void CLASS::setConnectedBody(uint v) {          \
         _impl->setConnectedBody(v);                 \
     }                                               \
                                                     \
-    void CLASS::setEnableCollision(const bool v) {  \
+    void CLASS::setEnableCollision(bool v) {        \
         _impl->setEnableCollision(v);               \
     }
 
@@ -69,7 +69,6 @@ void RevoluteJoint::setPivotB(float x, float y, float z) {
 void RevoluteJoint::setAxis(float x, float y, float z) {
     _impl->setAxis(x, y, z);
 }
-
 
 } // namespace physics
 } // namespace cc

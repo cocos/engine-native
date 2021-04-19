@@ -5,36 +5,31 @@
 #include "../PhysXInc.h"
 #include "base/Macros.h"
 
-using namespace physx;
-
 namespace cc {
 namespace physics {
 class PhysXSharedBody;
 
 class PhysXJoint : virtual public IBaseJoint {
     PX_NOCOPY(PhysXJoint)
-    PhysXJoint() : mJoint(nullptr),
-                   mSharedBody(nullptr),
-                   mConnectedBody(nullptr),
-                   mEnableCollision(false){};
+    PhysXJoint() = default;
 
 public:
-    virtual ~PhysXJoint(){};
-    virtual CC_INLINE const uintptr_t getImpl() override { return (uintptr_t)this; }
-    virtual void initialize(const uint handle) override;
-    virtual void onEnable() override;
-    virtual void onDisable() override;
-    virtual void onDestroy() override;
-    virtual void setConnectedBody(const uint handle) override;
-    virtual void setEnableCollision(const bool v) override;
+    ~PhysXJoint() override = default;
+    CC_INLINE uintptr_t getImpl() override { return reinterpret_cast<uintptr_t>(this); }
+    void initialize(uint handle) override;
+    void onEnable() override;
+    void onDisable() override;
+    void onDestroy() override;
+    void setConnectedBody(uint handle) override;
+    void setEnableCollision(bool v) override;
     virtual void updateScale0() = 0;
     virtual void updateScale1() = 0;
 
 protected:
-    PxJoint *mJoint;
-    PhysXSharedBody *mSharedBody;
-    PhysXSharedBody *mConnectedBody;
-    bool mEnableCollision;
+    physx::PxJoint *_mJoint{nullptr};
+    PhysXSharedBody *_mSharedBody{nullptr};
+    PhysXSharedBody *_mConnectedBody{nullptr};
+    bool _mEnableCollision{false};
     virtual void onComponentSet() = 0;
 };
 

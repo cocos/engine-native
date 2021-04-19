@@ -7,31 +7,31 @@
 namespace cc {
 namespace physics {
 
-PhysXSphere::PhysXSphere() : mRadius(0.5f),
+PhysXSphere::PhysXSphere() : _mRadius(0.5F),
                              PhysXShape(){};
 
 void PhysXSphere::setRadius(float r) {
-    mRadius = r;
+    _mRadius = r;
     updateGeometry();
-    getShape().setGeometry(getPxGeometry<PxSphereGeometry>());
+    getShape().setGeometry(getPxGeometry<physx::PxSphereGeometry>());
 }
 
 void PhysXSphere::onComponentSet() {
     updateGeometry();
-    mShape = PxGetPhysics().createShape(getPxGeometry<PxSphereGeometry>(), getDefaultMaterial(), true);
+    _mShape = PxGetPhysics().createShape(getPxGeometry<physx::PxSphereGeometry>(), getDefaultMaterial(), true);
 }
 
 void PhysXSphere::updateScale() {
     updateGeometry();
-    getShape().setGeometry(getPxGeometry<PxSphereGeometry>());
+    getShape().setGeometry(getPxGeometry<physx::PxSphereGeometry>());
     updateCenter();
 }
 
 void PhysXSphere::updateGeometry() {
-    PxVec3 scale;
-    PxSetVec3Ext(scale, getSharedBody().getNode().worldScale);
-    auto &geo = getPxGeometry<PxSphereGeometry>();
-    geo.radius = PxMax(mRadius * scale.abs().maxElement(), PX_NORMALIZATION_EPSILON);
+    physx::PxVec3 scale;
+    pxSetVec3Ext(scale, getSharedBody().getNode().worldScale);
+    auto &geo = getPxGeometry<physx::PxSphereGeometry>();
+    geo.radius = physx::PxMax(_mRadius * scale.abs().maxElement(), PX_NORMALIZATION_EPSILON);
 }
 
 } // namespace physics

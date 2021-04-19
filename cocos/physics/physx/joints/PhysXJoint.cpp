@@ -9,47 +9,47 @@ namespace physics {
 
 void PhysXJoint::initialize(const uint handle) {
     auto &ins = PhysXWorld::getInstance();
-    mSharedBody = ins.getSharedBody(handle);
-    mSharedBody->reference(true);
+    _mSharedBody = ins.getSharedBody(handle);
+    _mSharedBody->reference(true);
     onComponentSet();
 }
 
 void PhysXJoint::onEnable() {
-    mSharedBody->addJoint(*this, PxJointActorIndex::eACTOR0);
-    if (mConnectedBody) {
-        mConnectedBody->addJoint(*this, PxJointActorIndex::eACTOR1);
-        mJoint->setActors(mSharedBody->getImpl().rigidActor, mConnectedBody->getImpl().rigidActor);
+    _mSharedBody->addJoint(*this, physx::PxJointActorIndex::eACTOR0);
+    if (_mConnectedBody) {
+        _mConnectedBody->addJoint(*this, physx::PxJointActorIndex::eACTOR1);
+        _mJoint->setActors(_mSharedBody->getImpl().rigidActor, _mConnectedBody->getImpl().rigidActor);
     } else {
-        mJoint->setActors(mSharedBody->getImpl().rigidActor, nullptr);
+        _mJoint->setActors(_mSharedBody->getImpl().rigidActor, nullptr);
     }
 }
 
 void PhysXJoint::onDisable() {
-    mJoint->setActors(&getTempRigidActor(), nullptr);
-    mSharedBody->removeJoint(*this, PxJointActorIndex::eACTOR0);
-    if (mConnectedBody) mConnectedBody->removeJoint(*this, PxJointActorIndex::eACTOR1);
+    _mJoint->setActors(&getTempRigidActor(), nullptr);
+    _mSharedBody->removeJoint(*this, physx::PxJointActorIndex::eACTOR0);
+    if (_mConnectedBody) _mConnectedBody->removeJoint(*this, physx::PxJointActorIndex::eACTOR1);
 }
 
 void PhysXJoint::onDestroy() {
-    mSharedBody->reference(false);
+    _mSharedBody->reference(false);
 }
 
 void PhysXJoint::setConnectedBody(const uint handle) {
     if (handle) {
         auto &ins = PhysXWorld::getInstance();
-        mConnectedBody = ins.getSharedBody(handle);
+        _mConnectedBody = ins.getSharedBody(handle);
     } else {
-        mConnectedBody = nullptr;
+        _mConnectedBody = nullptr;
     }
-    if (mJoint) {
-        mJoint->setActors(mSharedBody->getImpl().rigidActor, mConnectedBody ? mConnectedBody->getImpl().rigidActor : nullptr);
+    if (_mJoint) {
+        _mJoint->setActors(_mSharedBody->getImpl().rigidActor, _mConnectedBody ? _mConnectedBody->getImpl().rigidActor : nullptr);
     }
 }
 
 void PhysXJoint::setEnableCollision(const bool v) {
-    mEnableCollision = v;
-    if (mJoint) {
-        mJoint->setConstraintFlag(PxConstraintFlag::eCOLLISION_ENABLED, mEnableCollision);
+    _mEnableCollision = v;
+    if (_mJoint) {
+        _mJoint->setConstraintFlag(physx::PxConstraintFlag::eCOLLISION_ENABLED, _mEnableCollision);
     }
 }
 

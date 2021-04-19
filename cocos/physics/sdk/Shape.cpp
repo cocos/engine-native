@@ -2,75 +2,76 @@
 #include "../PhysicsSelector.h"
 #include "Shape.h"
 
-#define CC_PHYSICS_SHAPE_DEFINITION(CLASS, WRAPPED)                        \
-                                                                           \
-    CLASS::CLASS() {                                                       \
-        _impl.reset(new WRAPPED());                                        \
-    }                                                                      \
-                                                                           \
-    CLASS::~CLASS() {                                                      \
-        _impl.reset(nullptr);                                              \
-    }                                                                      \
-                                                                           \
-    uintptr_t CLASS::getImpl() {                                           \
-        return _impl->getImpl();                                           \
-    }                                                                      \
-                                                                           \
-    void CLASS::initialize(const uint uuid) {                              \
-        _impl->initialize(uuid);                                           \
-    }                                                                      \
-                                                                           \
-    void CLASS::onEnable() {                                               \
-        _impl->onEnable();                                                 \
-    }                                                                      \
-                                                                           \
-    void CLASS::onDisable() {                                              \
-        _impl->onDisable();                                                \
-    }                                                                      \
-                                                                           \
-    void CLASS::onDestroy() {                                              \
-        _impl->onDestroy();                                                \
-    }                                                                      \
-                                                                           \
-    void CLASS::setMaterial(const uint16_t ID, float f, float df, float r, \
-                            uint8_t m0, uint8_t m1) {                      \
-        _impl->setMaterial(ID, f, df, r, m0, m1);                          \
-    }                                                                      \
-                                                                           \
-    void CLASS::setAsTrigger(bool v) {                                     \
-        _impl->setAsTrigger(v);                                            \
-    }                                                                      \
-                                                                           \
-    void CLASS::setCenter(float x, float y, float z) {                     \
-        _impl->setCenter(x, y, z);                                         \
-    }                                                                      \
-                                                                           \
-    void CLASS::setGroup(uint32_t g) {                                     \
-        _impl->setGroup(g);                                                \
-    }                                                                      \
-                                                                           \
-    uint32_t CLASS::getGroup() {                                           \
-        return _impl->getGroup();                                          \
-    }                                                                      \
-                                                                           \
-    void CLASS::setMask(uint32_t m) {                                      \
-        _impl->setMask(m);                                                 \
-    }                                                                      \
-                                                                           \
-    uint32_t CLASS::getMask() {                                            \
-        return _impl->getMask();                                           \
-    }                                                                      \
-                                                                           \
-    void CLASS::updateEventListener(EShapeFilterFlag v) {                  \
-        _impl->updateEventListener(v);                                     \
-    }                                                                      \
-                                                                           \
-    cc::pipeline::AABB& CLASS::getAABB() {                                 \
-        return _impl->getAABB();                                           \
-    }                                                                      \
-                                                                           \
-    cc::pipeline::Sphere& CLASS::getBoundingSphere() {                     \
-        return _impl->getBoundingSphere();                                 \
+
+#define CC_PHYSICS_SHAPE_DEFINITION(CLASS, WRAPPED)                  \
+                                                                     \
+    CLASS::CLASS() {                                                 \
+        _impl.reset(new WRAPPED());                                  \
+    }                                                                \
+                                                                     \
+    CLASS::~CLASS() {                                                \
+        _impl.reset(nullptr);                                        \
+    }                                                                \
+                                                                     \
+    uintptr_t CLASS::getImpl() {                                     \
+        return _impl->getImpl();                                     \
+    }                                                                \
+                                                                     \
+    void CLASS::initialize(uint uuid) {                              \
+        _impl->initialize(uuid);                                     \
+    }                                                                \
+                                                                     \
+    void CLASS::onEnable() {                                         \
+        _impl->onEnable();                                           \
+    }                                                                \
+                                                                     \
+    void CLASS::onDisable() {                                        \
+        _impl->onDisable();                                          \
+    }                                                                \
+                                                                     \
+    void CLASS::onDestroy() {                                        \
+        _impl->onDestroy();                                          \
+    }                                                                \
+                                                                     \
+    void CLASS::setMaterial(uint16_t ID, float f, float df, float r, \
+                            uint8_t m0, uint8_t m1) {                \
+        _impl->setMaterial(ID, f, df, r, m0, m1);                    \
+    }                                                                \
+                                                                     \
+    void CLASS::setAsTrigger(bool v) {                               \
+        _impl->setAsTrigger(v);                                      \
+    }                                                                \
+                                                                     \
+    void CLASS::setCenter(float x, float y, float z) {               \
+        _impl->setCenter(x, y, z);                                   \
+    }                                                                \
+                                                                     \
+    void CLASS::setGroup(uint32_t g) {                               \
+        _impl->setGroup(g);                                          \
+    }                                                                \
+                                                                     \
+    uint32_t CLASS::getGroup() {                                     \
+        return _impl->getGroup();                                    \
+    }                                                                \
+                                                                     \
+    void CLASS::setMask(uint32_t m) {                                \
+        _impl->setMask(m);                                           \
+    }                                                                \
+                                                                     \
+    uint32_t CLASS::getMask() {                                      \
+        return _impl->getMask();                                     \
+    }                                                                \
+                                                                     \
+    void CLASS::updateEventListener(EShapeFilterFlag v) {            \
+        _impl->updateEventListener(v);                               \
+    }                                                                \
+                                                                     \
+    cc::pipeline::AABB& CLASS::getAABB() {                           \
+        return _impl->getAABB();                                     \
+    }                                                                \
+                                                                     \
+    cc::pipeline::Sphere& CLASS::getBoundingSphere() {               \
+        return _impl->getBoundingSphere();                           \
     }
 
 namespace cc {

@@ -4,7 +4,7 @@
 #include "bindings/manual/jsb_conversions.h"
 #include "base/TypeDef.h"
 #include <memory>
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 namespace cc {
@@ -75,16 +75,16 @@ struct RaycastOptions {
 };
 
 struct RaycastResult {
-    uintptr_t shape;
+    uintptr_t shape{0};
     cc::Vec3 hitPoint;
     float distance;
     cc::Vec3 hitNormal;
-    RaycastResult() : shape(0) {}
+    RaycastResult() = default;
 };
 
 class IPhysicsWorld {
 public:
-    virtual ~IPhysicsWorld(){};
+    virtual ~IPhysicsWorld()= default;;
     virtual void setGravity(float x, float y, float z) = 0;
     virtual void setAllowSleep(bool v) = 0;
     virtual void step(float s) = 0;
@@ -102,7 +102,7 @@ public:
     virtual uintptr_t createConvex(ConvexDesc &desc) = 0;
     virtual uintptr_t createTrimesh(TrimeshDesc &desc) = 0;
     virtual uintptr_t createHeightField(HeightFieldDesc &desc) = 0;
-    virtual uintptr_t createMaterial(const uint16_t ID, float f, float df, float r,
+    virtual uintptr_t createMaterial(uint16_t id, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) = 0;
 };
 
@@ -110,37 +110,37 @@ public:
 } // namespace cc
 
 template <>
-inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::TriggerEventPair>> &from, se::Value &to, se::Object *ctx) {
+inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::TriggerEventPair>> &from, se::Value &to, se::Object * /*ctx*/) {
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::TriggerEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         auto t = i * cc::physics::TriggerEventPair::COUNT;
-        array->setArrayElement((uint)(t + 0), se::Value((uintptr_t)from[i]->shapeA));
-        array->setArrayElement((uint)(t + 1), se::Value((uintptr_t)from[i]->shapeB));
-        array->setArrayElement((uint)(t + 2), se::Value((uint8_t)from[i]->state));
+        array->setArrayElement(static_cast<uint>(t + 0), se::Value(from[i]->shapeA));
+        array->setArrayElement(static_cast<uint>(t + 1), se::Value(from[i]->shapeB));
+        array->setArrayElement(static_cast<uint>(t + 2), se::Value(static_cast<uint8_t>(from[i]->state)));
     }
     to.setObject(array);
     return true;
 }
 
 template <>
-inline bool nativevalue_to_se(const std::vector<cc::physics::ContactPoint> &from, se::Value &to, se::Object *ctx) {
+inline bool nativevalue_to_se(const std::vector<cc::physics::ContactPoint> &from, se::Value &to, se::Object * /*ctx*/) {
     const auto contactCount = from.size();
     se::HandleObject array(se::Object::createArrayObject(contactCount));
     for (size_t i = 0; i < contactCount; i++) {
         auto t = i * cc::physics::ContactPoint::COUNT;
         uint32_t j = 0;
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].position.x));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].position.y));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].position.z));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].normal.x));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].normal.y));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].normal.z));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].impulse.x));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].impulse.y));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].impulse.z));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].separation));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].internalFaceIndex0));
-        array->setArrayElement((uint)(t + j++), se::Value(from[i].internalFaceIndex1));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].position.x));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].position.y));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].position.z));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].normal.x));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].normal.y));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].normal.z));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].impulse.x));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].impulse.y));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].impulse.z));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].separation));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].internalFaceIndex0));
+        array->setArrayElement(static_cast<uint>(t + j++), se::Value(from[i].internalFaceIndex1));
     }
     to.setObject(array);
     return true;
@@ -151,10 +151,10 @@ inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::Con
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::ContactEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         auto t = i * cc::physics::ContactEventPair::COUNT;
-        array->setArrayElement((uint)(t + 0), se::Value((uintptr_t)from[i]->shapeA));
-        array->setArrayElement((uint)(t + 1), se::Value((uintptr_t)from[i]->shapeB));
-        array->setArrayElement((uint)(t + 2), se::Value((uint8_t)from[i]->state));
-        array->setArrayElement((uint)(t + 3), [&]() -> se::Value {
+        array->setArrayElement(static_cast<uint>(t + 0), se::Value(from[i]->shapeA));
+        array->setArrayElement(static_cast<uint>(t + 1), se::Value(from[i]->shapeB));
+        array->setArrayElement(static_cast<uint>(t + 2), se::Value(static_cast<uint8_t>(from[i]->state)));
+        array->setArrayElement(static_cast<uint>(t + 3), [&]() -> se::Value {
             auto obj = se::Value();
             nativevalue_to_se(from[i]->contacts, obj, ctx);
             return obj;
@@ -180,7 +180,7 @@ template <>
 inline bool sevalue_to_native(const se::Value &from, cc::physics::ConvexDesc *to, se::Object *ctx) {
     assert(from.isObject());
     se::Object *json = from.toObject();
-    auto *data = (cc::physics::ConvexDesc *)json->getPrivateData();
+    auto *data = static_cast<cc::physics::ConvexDesc *>(json->getPrivateData());
     if (data) {
         *to = *data;
         return true;
@@ -197,10 +197,10 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::ConvexDesc *to
     if (!field.isNullOrUndefined()) {
         se::Object *obj = field.toObject();
         if (obj->isArrayBuffer()) {
-            ok &= obj->getArrayBufferData((uint8_t **)&to->positions, &dataLength);
+            ok &= obj->getArrayBufferData(reinterpret_cast<uint8_t **>(&to->positions), &dataLength);
             SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
         } else if (obj->isTypedArray()) {
-            ok &= obj->getTypedArrayData((uint8_t **)&to->positions, &dataLength);
+            ok &= obj->getTypedArrayData(reinterpret_cast<uint8_t **>(&to->positions), &dataLength);
             SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
         } else {
             ok &= false;
@@ -211,12 +211,13 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::ConvexDesc *to
 
 template <>
 inline bool sevalue_to_native(const se::Value &from, cc::physics::TrimeshDesc *to, se::Object *ctx) {
-    if (!sevalue_to_native(from, (cc::physics::ConvexDesc *)to, ctx))
+    if (!sevalue_to_native(from, reinterpret_cast<cc::physics::ConvexDesc *>(to), ctx)) {
         return false;
+    }
 
     assert(from.isObject());
     se::Object *json = from.toObject();
-    auto *data = (cc::physics::TrimeshDesc *)json->getPrivateData();
+    auto *data = static_cast<cc::physics::TrimeshDesc *>(json->getPrivateData());
     if (data) {
         *to = *data;
         return true;
@@ -235,10 +236,10 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::TrimeshDesc *t
     if (!field.isNullOrUndefined()) {
         se::Object *obj = field.toObject();
         if (obj->isArrayBuffer()) {
-            ok &= obj->getArrayBufferData((uint8_t **)&to->triangles, &dataLength);
+            ok &= obj->getArrayBufferData(reinterpret_cast<uint8_t **>(&to->triangles), &dataLength);
             SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
         } else if (obj->isTypedArray()) {
-            ok &= obj->getTypedArrayData((uint8_t **)&to->triangles, &dataLength);
+            ok &= obj->getTypedArrayData(reinterpret_cast<uint8_t **>(&to->triangles), &dataLength);
             SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
         } else {
             ok &= false;
@@ -252,7 +253,7 @@ template <>
 inline bool sevalue_to_native(const se::Value &from, cc::physics::HeightFieldDesc *to, se::Object *ctx) {
     assert(from.isObject());
     se::Object *json = from.toObject();
-    auto *data = (cc::physics::HeightFieldDesc *)json->getPrivateData();
+    auto *data = static_cast<cc::physics::HeightFieldDesc *>(json->getPrivateData());
     if (data) {
         *to = *data;
         return true;
@@ -272,10 +273,10 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::HeightFieldDes
     if (!field.isNullOrUndefined()) {
         se::Object *obj = field.toObject();
         if (obj->isArrayBuffer()) {
-            ok &= obj->getArrayBufferData((uint8_t **)&to->samples, &dataLength);
+            ok &= obj->getArrayBufferData(reinterpret_cast<uint8_t **>(&to->samples), &dataLength);
             SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
         } else if (obj->isTypedArray()) {
-            ok &= obj->getTypedArrayData((uint8_t **)&to->samples, &dataLength);
+            ok &= obj->getTypedArrayData(reinterpret_cast<uint8_t **>(&to->samples), &dataLength);
             SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
         } else {
             ok &= false;
@@ -288,7 +289,7 @@ template <>
 inline bool sevalue_to_native(const se::Value &from, cc::physics::RaycastOptions *to, se::Object *ctx) {
     assert(from.isObject());
     se::Object *json = from.toObject();
-    auto *data = (cc::physics::RaycastOptions *)json->getPrivateData();
+    auto *data = static_cast<cc::physics::RaycastOptions *>(json->getPrivateData());
     if (data) {
         *to = *data;
         return true;

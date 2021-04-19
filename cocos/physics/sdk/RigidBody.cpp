@@ -1,12 +1,13 @@
 
 #include "../PhysicsSelector.h"
 #include "RigidBody.h"
+#include <memory>
 
 namespace cc {
 namespace physics {
 
 RigidBody::RigidBody() {
-    _impl.reset(new WrappedRigidBody());
+    _impl = std::make_unique<WrappedRigidBody>();
 }
 
 RigidBody::~RigidBody() {

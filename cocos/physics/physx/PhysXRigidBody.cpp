@@ -4,31 +4,33 @@
 #include "PhysXUtils.h"
 #include "PhysXWorld.h"
 
-using namespace physx;
+using physx::PxReal;
+using physx::PxVec3;
+using physx::PxTransform;
+using physx::PxForceMode;
+using physx::PxActorFlag;
 
 namespace cc {
 namespace physics {
 
-PhysXRigidBody::PhysXRigidBody() : mEnabled(false),
-                                   mGroup(1) {}
+PhysXRigidBody::PhysXRigidBody() : _mEnabled(false),
+                                   _mGroup(1) {}
 
-PhysXRigidBody::~PhysXRigidBody() {}
-
-void PhysXRigidBody::initialize(const uint h, const ERigidBodyType t, const uint32_t g) {
-    mGroup = g;
+void PhysXRigidBody::initialize(uint h, ERigidBodyType t, uint32_t g) {
+    _mGroup = g;
     PhysXWorld &ins = PhysXWorld::getInstance();
-    mSharedBody = ins.getSharedBody(h, this);
+    _mSharedBody = ins.getSharedBody(h, this);
     getSharedBody().reference(true);
     getSharedBody().setType(t);
 }
 
 void PhysXRigidBody::onEnable() {
-    mEnabled = true;
+    _mEnabled = true;
     getSharedBody().enabled(true);
 }
 
 void PhysXRigidBody::onDisable() {
-    mEnabled = false;
+    _mEnabled = false;
     getSharedBody().enabled(false);
 }
 
@@ -75,22 +77,22 @@ void PhysXRigidBody::useGravity(bool v) {
 
 void PhysXRigidBody::setLinearFactor(float x, float y, float z) {
     if (getSharedBody().isStatic()) return;
-    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_X, !x);
-    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_Y, !y);
-    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, !z);
+    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X, x == 0.);
+    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y, y == 0.);
+    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, z == 0.);
 }
 
 void PhysXRigidBody::setAngularFactor(float x, float y, float z) {
     if (getSharedBody().isStatic()) return;
-    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, !x);
-    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, !y);
-    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, !z);
+    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, x == 0.);
+    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, y == 0.);
+    getSharedBody().getImpl().rigidDynamic->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, z == 0.);
 }
 
 void PhysXRigidBody::setAllowSleep(bool v) {
     if (!getSharedBody().isDynamic()) return;
     PxReal st = getSharedBody().getImpl().rigidDynamic->getSleepThreshold();
-    PxReal wc = v ? std::max(0.f, st - 0.001f) : FLT_MAX;
+    PxReal wc = v ? std::max(0.F, st - 0.001F) : FLT_MAX;
     getSharedBody().getImpl().rigidDynamic->setWakeCounter(wc);
 }
 
@@ -129,7 +131,7 @@ float PhysXRigidBody::getSleepThreshold() {
 cc::Vec3 PhysXRigidBody::getLinearVelocity() {
     if (getSharedBody().isStatic()) return cc::Vec3::ZERO;
     cc::Vec3 cv;
-    PxSetVec3Ext(cv, getSharedBody().getImpl().rigidDynamic->getLinearVelocity());
+    pxSetVec3Ext(cv, getSharedBody().getImpl().rigidDynamic->getLinearVelocity());
     return cv;
 }
 
@@ -141,7 +143,7 @@ void PhysXRigidBody::setLinearVelocity(float x, float y, float z) {
 cc::Vec3 PhysXRigidBody::getAngularVelocity() {
     if (getSharedBody().isStatic()) return cc::Vec3::ZERO;
     cc::Vec3 cv;
-    PxSetVec3Ext(cv, getSharedBody().getImpl().rigidDynamic->getAngularVelocity());
+    pxSetVec3Ext(cv, getSharedBody().getImpl().rigidDynamic->getAngularVelocity());
     return cv;
 }
 
@@ -154,7 +156,7 @@ void PhysXRigidBody::applyForce(float x, float y, float z, float rx, float ry, f
     if (getSharedBody().isStatic()) return;
     const PxVec3 force{x, y, z};
     if (force.isZero()) return;
-    auto body = getSharedBody().getImpl().rigidDynamic;
+    auto *body = getSharedBody().getImpl().rigidDynamic;
     body->addForce(force, PxForceMode::eFORCE, true);
     const PxVec3 torque = (PxVec3{rx, ry, rz}).cross(force);
     if (!torque.isZero()) body->addTorque(torque, PxForceMode::eFORCE, true);
@@ -164,7 +166,7 @@ void PhysXRigidBody::applyLocalForce(float x, float y, float z, float rx, float 
     if (getSharedBody().isStatic()) return;
     const PxVec3 force{x, y, z};
     if (force.isZero()) return;
-    auto body = getSharedBody().getImpl().rigidDynamic;
+    auto *body = getSharedBody().getImpl().rigidDynamic;
     const PxTransform bodyPose = body->getGlobalPose();
     const PxVec3 worldForce = bodyPose.rotate(force);
     const PxVec3 worldPos = bodyPose.rotate(PxVec3{rx, ry, rz});
@@ -177,7 +179,7 @@ void PhysXRigidBody::applyImpulse(float x, float y, float z, float rx, float ry,
     if (getSharedBody().isStatic()) return;
     const PxVec3 impulse{x, y, z};
     if (impulse.isZero()) return;
-    auto body = getSharedBody().getImpl().rigidDynamic;
+    auto *body = getSharedBody().getImpl().rigidDynamic;
     const PxVec3 torque = (PxVec3{rx, ry, rz}).cross(impulse);
     body->addForce(impulse, PxForceMode::eIMPULSE, true);
     if (!torque.isZero()) body->addTorque(torque, PxForceMode::eIMPULSE, true);
@@ -187,7 +189,7 @@ void PhysXRigidBody::applyLocalImpulse(float x, float y, float z, float rx, floa
     if (getSharedBody().isStatic()) return;
     const PxVec3 impulse{x, y, z};
     if (impulse.isZero()) return;
-    auto body = getSharedBody().getImpl().rigidDynamic;
+    auto *body = getSharedBody().getImpl().rigidDynamic;
     const PxTransform bodyPose = body->getGlobalPose();
     const PxVec3 worldImpulse = bodyPose.rotate(impulse);
     const PxVec3 worldPos = bodyPose.rotate(PxVec3{rx, ry, rz});
@@ -207,7 +209,7 @@ void PhysXRigidBody::applyLocalTorque(float x, float y, float z) {
     if (getSharedBody().isStatic()) return;
     PxVec3 torque{x, y, z};
     if (torque.isZero()) return;
-    auto body = getSharedBody().getImpl().rigidDynamic;
+    auto *body = getSharedBody().getImpl().rigidDynamic;
     const PxTransform bodyPose = body->getGlobalPose();
     body->addTorque(bodyPose.rotate(PxVec3{x, y, z}), PxForceMode::eFORCE, true);
 }

@@ -8,31 +8,29 @@
 namespace cc {
 namespace physics {
 
-PhysXTerrain::PhysXTerrain() : mTerrain(nullptr),
-                               mRowScale(1.f),
-                               mColScale(1.f),
-                               mHeightScale(1.f),
-                               PhysXShape(){};
+PhysXTerrain::PhysXTerrain() : _mTerrain(nullptr),
+                               _mRowScale(1.F),
+                               _mColScale(1.F),
+                               _mHeightScale(1.F){};
 
 void PhysXTerrain::setTerrain(uintptr_t handle, float rs, float cs, float hs) {
-    if ((uintptr_t)mTerrain == handle) return;
-    mTerrain = (PxHeightField *)handle;
-    mRowScale = rs;
-    mColScale = cs;
-    mHeightScale = hs;
-    if (mShape) {
-        // TODO: ...
+    if (reinterpret_cast<uintptr_t>(_mTerrain) == handle) return;
+    _mTerrain     = reinterpret_cast<physx::PxHeightField *>(handle);
+    _mRowScale    = rs;
+    _mColScale    = cs;
+    _mHeightScale = hs;
+    if (_mShape) {
     }
 }
 
 void PhysXTerrain::onComponentSet() {
-    if (mTerrain) {
-        PxHeightFieldGeometry geom;
-        geom.rowScale = mRowScale;
-        geom.columnScale = mColScale;
-        geom.heightScale = mHeightScale;
-        geom.heightField = mTerrain;
-        mShape = PxGetPhysics().createShape(geom, getDefaultMaterial(), true);
+    if (_mTerrain) {
+        physx::PxHeightFieldGeometry geom;
+        geom.rowScale    = _mRowScale;
+        geom.columnScale = _mColScale;
+        geom.heightScale = _mHeightScale;
+        geom.heightField = _mTerrain;
+        _mShape          = PxGetPhysics().createShape(geom, getDefaultMaterial(), true);
     }
 }
 
@@ -41,7 +39,7 @@ void PhysXTerrain::updateScale() {
 }
 
 void PhysXTerrain::updateCenter() {
-    getShape().setLocalPose(PxTransform{mCenter, mRotation});
+    getShape().setLocalPose(physx::PxTransform{_mCenter, _mRotation});
 }
 
 } // namespace physics

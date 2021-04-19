@@ -3,25 +3,23 @@
 
 #include "PhysXShape.h"
 
-using namespace physx;
-
 namespace cc {
 namespace physics {
 
 class PhysXTerrain final : public PhysXShape, public ITerrainShape {
 public:
     PhysXTerrain();
-    virtual ~PhysXTerrain(){};
-    virtual void setTerrain(uintptr_t v, float rs, float cs, float hs) override;
-    virtual void updateScale() override;
-    virtual void updateCenter() override;
+    ~PhysXTerrain() override = default;
+    void setTerrain(uintptr_t handle, float rs, float cs, float hs) override;
+    void updateScale() override;
+    void updateCenter() override;
 
 private:
-    PxHeightField *mTerrain;
-    float mRowScale;
-    float mColScale;
-    float mHeightScale;
-    virtual void onComponentSet() override;
+    physx::PxHeightField *_mTerrain;
+    float                 _mRowScale;
+    float                 _mColScale;
+    float                 _mHeightScale;
+    void          onComponentSet() override;
 };
 
 } // namespace physics

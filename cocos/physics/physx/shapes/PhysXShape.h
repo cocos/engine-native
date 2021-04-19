@@ -5,8 +5,6 @@
 #include "../../spec/IShape.h"
 #include "base/Macros.h"
 
-using namespace physx;
-
 namespace cc {
 namespace physics {
 class PhysXSharedBody;
@@ -19,51 +17,46 @@ CC_INLINE T &getPxGeometry() {
 
 class PhysXShape : virtual public IBaseShape {
     PX_NOCOPY(PhysXShape)
-    PhysXShape() : mIndex(-1),
-                   mFlag(0),
-                   mEnabled(false),
-                   mCenter(PxIdentity),
-                   mRotation(PxIdentity),
-                   mShape(nullptr),
-                   mSharedBody(nullptr){};
+    PhysXShape() : _mCenter(physx::PxIdentity),
+                   _mRotation(physx::PxIdentity){};
 
 public:
-    virtual ~PhysXShape(){};
-    virtual CC_INLINE uintptr_t getImpl() override { return (uintptr_t)this; }
-    virtual void initialize(const uint handle) override;
-    virtual void onEnable() override;
-    virtual void onDisable() override;
-    virtual void onDestroy() override;
-    virtual void setMaterial(const uint16_t ID, float f, float df, float r,
-                             uint8_t m0, uint8_t m1) override;
-    virtual void setAsTrigger(bool v) override;
-    virtual void setCenter(float x, float y, float z) override;
-    virtual cc::pipeline::AABB& getAABB() override;
-    virtual cc::pipeline::Sphere& getBoundingSphere() override;
-    virtual void updateEventListener(EShapeFilterFlag flag) override;
-    virtual uint32_t getGroup() override;
-    virtual void setGroup(uint32_t g) override;
-    virtual uint32_t getMask() override;
-    virtual void setMask(uint32_t m) override;
-    virtual void updateScale() = 0;
-    CC_INLINE PxVec3 &getCenter() { return mCenter; }
-    CC_INLINE PxShape &getShape() const { return *mShape; }
-    CC_INLINE PhysXSharedBody &getSharedBody() const { return *mSharedBody; }
-    CC_INLINE const bool isTrigger() const {
-        return getShape().getFlags().isSet(PxShapeFlag::eTRIGGER_SHAPE);
+    ~PhysXShape() override = default;
+    CC_INLINE uintptr_t   getImpl() override { return reinterpret_cast<uintptr_t>(this); }
+    void                  initialize(uint handle) override;
+    void                  onEnable() override;
+    void                  onDisable() override;
+    void                  onDestroy() override;
+    void                  setMaterial(uint16_t id, float f, float df, float r,
+                                      uint8_t m0, uint8_t m1) override;
+    void                  setAsTrigger(bool v) override;
+    void                  setCenter(float x, float y, float z) override;
+    cc::pipeline::AABB &  getAABB() override;
+    cc::pipeline::Sphere &getBoundingSphere() override;
+    void                  updateEventListener(EShapeFilterFlag flag) override;
+    uint32_t              getGroup() override;
+    void                  setGroup(uint32_t g) override;
+    uint32_t              getMask() override;
+    void                  setMask(uint32_t m) override;
+    virtual void          updateScale() = 0;
+    CC_INLINE physx::PxVec3 &getCenter() { return _mCenter; }
+    CC_INLINE physx::PxShape &getShape() const { return *_mShape; }
+    CC_INLINE PhysXSharedBody &getSharedBody() const { return *_mSharedBody; }
+    CC_INLINE bool             isTrigger() const {
+        return getShape().getFlags().isSet(physx::PxShapeFlag::eTRIGGER_SHAPE);
     }
-    void updateFilterData(PxFilterData &data);
+    void updateFilterData(physx::PxFilterData &data);
 
 protected:
-    PhysXSharedBody *mSharedBody;
-    PxShape *mShape;
-    PxVec3 mCenter;
-    PxQuat mRotation;
-    int8_t mIndex;
-    uint8_t mFlag;
-    bool mEnabled;
-    virtual void updateCenter();
-    virtual void onComponentSet() = 0;
+    PhysXSharedBody *_mSharedBody{nullptr};
+    physx::PxShape * _mShape{nullptr};
+    physx::PxVec3    _mCenter;
+    physx::PxQuat    _mRotation;
+    int8_t           _mIndex{-1};
+    uint8_t          _mFlag{0};
+    bool             _mEnabled{false};
+    virtual void     updateCenter();
+    virtual void     onComponentSet() = 0;
 };
 
 } // namespace physics

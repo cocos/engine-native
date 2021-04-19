@@ -3,22 +3,20 @@
 
 #include "PhysXShape.h"
 
-using namespace physx;
-
 namespace cc {
 namespace physics {
 
 class PhysXSphere final : public PhysXShape, public ISphereShape {
 public:
     PhysXSphere();
-    virtual ~PhysXSphere(){};
-    virtual void setRadius(float r) override;
-    virtual void updateScale() override;
+    ~PhysXSphere() override = default;
+    void setRadius(float r) override;
+    void updateScale() override;
 
 private:
-    float mRadius;
+    float _mRadius;
     void updateGeometry();
-    virtual void onComponentSet() override;
+    void onComponentSet() override;
 };
 
 } // namespace physics

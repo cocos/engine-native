@@ -3,24 +3,22 @@
 
 #include "PhysXShape.h"
 
-using namespace physx;
-
 namespace cc {
 namespace physics {
 
 class PhysXTrimesh final : public PhysXShape, public ITrimeshShape {
 public:
     PhysXTrimesh();
-    virtual ~PhysXTrimesh(){};
-    virtual void setMesh(uintptr_t v) override;
-    virtual void useConvex(bool v) override;
-    virtual void updateScale() override;
+    ~PhysXTrimesh() override = default;
+    void setMesh(uintptr_t handle) override;
+    void useConvex(bool v) override;
+    void updateScale() override;
 
 private:
-    bool mConvex;
-    uintptr_t mMeshHandle;
-    void updateGeometry();
-    virtual void onComponentSet() override;
+    bool         _mConvex;
+    uintptr_t    _mMeshHandle;
+    void         updateGeometry();
+    void onComponentSet() override;
 };
 
 } // namespace physics

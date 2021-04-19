@@ -3,24 +3,22 @@
 
 #include "PhysXShape.h"
 
-using namespace physx;
-
 namespace cc {
 namespace physics {
 
 class PhysXPlane final : public PhysXShape, public IPlaneShape {
 public:
     PhysXPlane();
-    virtual ~PhysXPlane(){};
-    virtual void setConstant(float v) override;
-    virtual void setNormal(float x, float y, float z) override;
-    virtual void updateScale() override;
+    ~PhysXPlane() override = default;
+    void setConstant(float x) override;
+    void setNormal(float x, float y, float z) override;
+    void updateScale() override;
 
 private:
-    PxVec3 mNormal;
-    PxReal mConstant;
-    virtual void updateCenter() override;
-    virtual void onComponentSet() override;
+    physx::PxVec3 _mNormal;
+    physx::PxReal _mConstant;
+    void  updateCenter() override;
+    void  onComponentSet() override;
 };
 
 } // namespace physics

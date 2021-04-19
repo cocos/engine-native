@@ -1,7 +1,7 @@
 
 #pragma once
 
-#if defined(CC_PHYSICS_BULLET)
+#if defined(USE_PHYSICS_BULLET)
     #include "bullet/Bullet.h"
 #else
     #include "physx/PhysX.h"

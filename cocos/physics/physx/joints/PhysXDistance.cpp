@@ -7,20 +7,20 @@
 namespace cc {
 namespace physics {
 
-PhysXDistance::PhysXDistance() : mPivotA(PxZero),
-                                 mPivotB(PxZero) {}
+PhysXDistance::PhysXDistance() : _mPivotA(physx::PxZero),
+                                 _mPivotB(physx::PxZero) {}
 
 void PhysXDistance::onComponentSet() {
-    mJoint = PxDistanceJointCreate(PxGetPhysics(), &getTempRigidActor(), PxTransform{PxIdentity}, nullptr, PxTransform{PxIdentity});
+    _mJoint = PxDistanceJointCreate(PxGetPhysics(), &getTempRigidActor(), physx::PxTransform{physx::PxIdentity}, nullptr, physx::PxTransform{physx::PxIdentity});
 }
 
 void PhysXDistance::setPivotA(float x, float y, float z) {
-    mPivotA = PxVec3{x, y, z};
+    _mPivotA = physx::PxVec3{x, y, z};
     updatePose();
 }
 
 void PhysXDistance::setPivotB(float x, float y, float z) {
-    mPivotB = PxVec3{x, y, z};
+    _mPivotB = physx::PxVec3{x, y, z};
     updatePose();
 }
 
@@ -33,21 +33,21 @@ void PhysXDistance::updateScale1() {
 }
 
 void PhysXDistance::updatePose() {
-    PxTransform pose0{PxIdentity};
-    PxTransform pose1{PxIdentity};
-    auto &node0 = mSharedBody->getNode();
-    pose0.p = mPivotA * node0.worldScale;
-    mJoint->setLocalPose(PxJointActorIndex::eACTOR0, pose0);
-    if (mConnectedBody) {
-        auto &node1 = mConnectedBody->getNode();
-        pose1.p = mPivotB * node1.worldScale;
+    physx::PxTransform pose0{physx::PxIdentity};
+    physx::PxTransform pose1{physx::PxIdentity};
+    auto &node0 = _mSharedBody->getNode();
+    pose0.p = _mPivotA * node0.worldScale;
+    _mJoint->setLocalPose(physx::PxJointActorIndex::eACTOR0, pose0);
+    if (_mConnectedBody) {
+        auto &node1 = _mConnectedBody->getNode();
+        pose1.p = _mPivotB * node1.worldScale;
     } else {
-        pose1.p = mPivotA * node0.worldScale;
-        pose1.p += mPivotB + node0.worldPosition;
+        pose1.p = _mPivotA * node0.worldScale;
+        pose1.p += _mPivotB + node0.worldPosition;
         const auto &wr = node0.worldRotation;
-        pose1.q *= PxQuat{wr.x, wr.y, wr.z, wr.w};
+        pose1.q *= physx::PxQuat{wr.x, wr.y, wr.z, wr.w};
     }
-    mJoint->setLocalPose(PxJointActorIndex::eACTOR1, pose1);
+    _mJoint->setLocalPose(physx::PxJointActorIndex::eACTOR1, pose1);
 }
 
 } // namespace physics
