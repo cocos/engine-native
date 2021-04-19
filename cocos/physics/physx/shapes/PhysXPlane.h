@@ -19,7 +19,6 @@ public:
 private:
     PxVec3 mNormal;
     PxReal mConstant;
-    void updateGeometry();
     virtual void updateCenter() override;
     virtual void onComponentSet() override;
 };

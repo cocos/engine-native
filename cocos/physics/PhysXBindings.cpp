@@ -27,6 +27,7 @@ THE SOFTWARE.
 
 #include "./PhysXBindings.h"
 #include "./PhysX/PhysXInc.h"
+#include <stdlib.h>
 
 namespace cc {
 namespace physics {
@@ -67,6 +68,18 @@ void PhysXBindings::setTestStruct(TestStruct &ts, size_t i) {
     if (i >= 0 && tsv.size() > i) {
         tsv[i] = ts;
     }
+}
+
+TestResult &PhysXBindings::getTestResult() {
+    static TestResult ts;
+    ts = TestResult{rand() * 0.1f};
+    return ts;
+}
+
+std::vector<TestResult> &PhysXBindings::getTestResultVec() {
+    static std::vector<TestResult> vec;
+    vec.push_back(TestResult{rand() * 0.1f});
+    return vec;
 }
 
 } // namespace physics

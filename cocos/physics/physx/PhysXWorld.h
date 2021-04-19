@@ -6,6 +6,7 @@
 #include "PhysXEventManager.h"
 #include "PhysXRigidBody.h"
 #include "PhysXSharedBody.h"
+#include "PhysXFilterShader.h"
 #include "base/Macros.h"
 
 using namespace physx;
@@ -19,6 +20,8 @@ public:
     static PxFoundation &getFundation();
     static PxCooking &getCooking();
     static PxPhysics &getPhysics();
+    static QueryFilterShader &getQueryFilterShader();
+    
     PhysXWorld();
     virtual ~PhysXWorld();
     virtual void step(float fixedTimeStep) override;
@@ -26,6 +29,10 @@ public:
     virtual void setAllowSleep(bool v) override;
     virtual void emitEvents() override;
     virtual void setCollisionMatrix(uint32_t index, uint32_t mask) override;
+    virtual bool raycast(RaycastOptions &opt) override;
+    virtual bool raycastClosest(RaycastOptions &opt) override;
+    virtual std::vector<RaycastResult> &raycastResult() override;
+    virtual RaycastResult &raycastClosestResult() override;
     virtual intptr_t createConvex(ConvexDesc &desc) override;
     virtual intptr_t createTrimesh(TrimeshDesc &desc) override;
     virtual intptr_t createHeightField(HeightFieldDesc &desc) override;

@@ -180,6 +180,88 @@ static bool js_physics_World_getTriggerEventPairs(se::State& s)
 }
 SE_BIND_FUNC(js_physics_World_getTriggerEventPairs)
 
+static bool js_physics_World_raycast(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_raycast : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::RaycastOptions, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_World_raycast : Error processing arguments");
+        bool result = cobj->raycast(arg0.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_raycast : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_raycast)
+
+static bool js_physics_World_raycastClosest(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_raycastClosest : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::RaycastOptions, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_World_raycastClosest : Error processing arguments");
+        bool result = cobj->raycastClosest(arg0.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_raycastClosest : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_raycastClosest)
+
+static bool js_physics_World_raycastClosestResult(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_raycastClosestResult : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::physics::RaycastResult& result = cobj->raycastClosestResult();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_raycastClosestResult : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_raycastClosestResult)
+
+static bool js_physics_World_raycastResult(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_raycastResult : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::vector<cc::physics::RaycastResult>& result = cobj->raycastResult();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_raycastResult : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_raycastResult)
+
 static bool js_physics_World_setAllowSleep(se::State& s)
 {
     cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
@@ -331,6 +413,10 @@ bool js_register_physics_World(se::Object* obj)
     cls->defineFunction("emitEvents", _SE(js_physics_World_emitEvents));
     cls->defineFunction("getContactEventPairs", _SE(js_physics_World_getContactEventPairs));
     cls->defineFunction("getTriggerEventPairs", _SE(js_physics_World_getTriggerEventPairs));
+    cls->defineFunction("raycast", _SE(js_physics_World_raycast));
+    cls->defineFunction("raycastClosest", _SE(js_physics_World_raycastClosest));
+    cls->defineFunction("raycastClosestResult", _SE(js_physics_World_raycastClosestResult));
+    cls->defineFunction("raycastResult", _SE(js_physics_World_raycastResult));
     cls->defineFunction("setAllowSleep", _SE(js_physics_World_setAllowSleep));
     cls->defineFunction("setCollisionMatrix", _SE(js_physics_World_setCollisionMatrix));
     cls->defineFunction("setGravity", _SE(js_physics_World_setGravity));
@@ -4271,6 +4357,23 @@ static bool js_physics_PhysXBindings_getArrayBuffer(se::State& s)
 }
 SE_BIND_FUNC(js_physics_PhysXBindings_getArrayBuffer)
 
+static bool js_physics_PhysXBindings_getTestResult(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::physics::TestResult& result = cc::physics::PhysXBindings::getTestResult();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getTestResult : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PhysXBindings_getTestResult)
+
 static bool js_physics_PhysXBindings_getLength(se::State& s)
 {
     const auto& args = s.args();
@@ -4310,6 +4413,23 @@ static bool js_physics_PhysXBindings_modifyByPtr(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_PhysXBindings_modifyByPtr)
+
+static bool js_physics_PhysXBindings_getTestResultVec(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::vector<cc::physics::TestResult>& result = cc::physics::PhysXBindings::getTestResultVec();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getTestResultVec : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PhysXBindings_getTestResultVec)
 
 static bool js_physics_PhysXBindings_getTestStructVec(se::State& s)
 {
@@ -4385,8 +4505,10 @@ bool js_register_physics_PhysXBindings(se::Object* obj)
 
     cls->defineFunction("testAPI", _SE(js_physics_PhysXBindings_testAPI));
     cls->defineStaticFunction("getArrayBuffer", _SE(js_physics_PhysXBindings_getArrayBuffer));
+    cls->defineStaticFunction("getTestResult", _SE(js_physics_PhysXBindings_getTestResult));
     cls->defineStaticFunction("getLength", _SE(js_physics_PhysXBindings_getLength));
     cls->defineStaticFunction("modifyByPtr", _SE(js_physics_PhysXBindings_modifyByPtr));
+    cls->defineStaticFunction("getTestResultVec", _SE(js_physics_PhysXBindings_getTestResultVec));
     cls->defineStaticFunction("getTestStructVec", _SE(js_physics_PhysXBindings_getTestStructVec));
     cls->defineStaticFunction("getPtr", _SE(js_physics_PhysXBindings_getPtr));
     cls->defineStaticFunction("setTestStruct", _SE(js_physics_PhysXBindings_setTestStruct));

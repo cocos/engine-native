@@ -1,6 +1,5 @@
 #include "PhysXWorld.h"
 #include "../spec/IWorld.h"
-#include "PhysXFilterShader.h"
 #include "PhysXInc.h"
 #include "PhysXUtils.h"
 
@@ -26,6 +25,11 @@ PxPhysics &PhysXWorld::getPhysics() {
     return *getInstance().mPhysics;
 }
 
+QueryFilterShader &PhysXWorld::getQueryFilterShader() {
+    static QueryFilterShader shader;
+    return shader;
+}
+
 PhysXWorld::PhysXWorld() {
     instance = this; // TODO
     static PxDefaultAllocator gAllocator;
@@ -34,10 +38,10 @@ PhysXWorld::PhysXWorld() {
     PxTolerancesScale scale{};
     mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, PxCookingParams(scale));
 
-    PxPvd* pvd = nullptr;
+    PxPvd *pvd = nullptr;
 #ifdef CC_DEBUG
     pvd = mPvd = PxCreatePvd(*mFoundation);
-    PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+    PxPvdTransport *transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
     mPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 #endif
     mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale, true, pvd);
@@ -65,9 +69,9 @@ PhysXWorld::~PhysXWorld() {
     delete mEventMgr;
     PX_RELEASE(mScene);
     PX_RELEASE(mDispatcher);
-	PX_RELEASE(mPhysics);
+    PX_RELEASE(mPhysics);
 #ifdef CC_DEBUG
-	PxPvdTransport* transport = mPvd->getTransport();
+    PxPvdTransport *transport = mPvd->getTransport();
     PX_RELEASE(mPvd);
     PX_RELEASE(transport);
 #endif
@@ -128,11 +132,9 @@ intptr_t PhysXWorld::createHeightField(HeightFieldDesc &desc) {
     auto samples = new PxHeightFieldSample[counts];
     for (PxU32 r = 0; r < rows; r++) {
         for (PxU32 c = 0; c < columns; c++) {
-			 const auto index = c + r * columns;
-             auto v = ((int16_t *)desc.samples)[index];
-			 samples[index].height = v;
-			 //samples[index].materialIndex0 = 0;
-			 //samples[index].materialIndex1 = 0;
+            const auto index = c + r * columns;
+            auto v = ((int16_t *)desc.samples)[index];
+            samples[index].height = v;
         }
     }
     PxHeightFieldDesc hfDesc;
@@ -213,6 +215,75 @@ void PhysXWorld::removeActor(PhysXSharedBody &sb) {
         mScene->removeActor(*sb.getImpl().rigidActor, true);
         mSharedBodies.erase(iter);
     }
+}
+
+bool PhysXWorld::raycast(RaycastOptions &opt) {
+    PxQueryCache *cache = nullptr;
+    const auto o = opt.origin;
+    const auto ud = opt.unitDir;
+    PxVec3 origin{o.x, o.y, o.z};
+    PxVec3 unitDir{ud.x, ud.y, ud.z};
+    unitDir.normalize();
+    PxHitFlags flags = PxHitFlag::ePOSITION | PxHitFlag::eNORMAL;
+    PxSceneQueryFilterData filterData;
+    filterData.data.word0 = opt.mask;
+    filterData.data.word3 = QUERY_FILTER | (opt.queryTrigger ? 0 : QUERY_CHECK_TRIGGER);
+    filterData.flags = PxQueryFlag::eSTATIC | PxQueryFlag::eDYNAMIC | PxQueryFlag::ePREFILTER;
+    auto &hitBuffer = getPxRaycastHitBuffer();
+    bool result = false;
+    const auto nbTouches = PxSceneQueryExt::raycastMultiple(
+        getScene(), origin, unitDir, opt.distance, flags, hitBuffer.data(),
+        hitBuffer.size(), result, filterData, &getQueryFilterShader(), cache);
+	if (nbTouches == 0 || nbTouches == -1) return false;
+    auto &r = raycastResult();
+    r.resize(nbTouches);
+    for (size_t i = 0; i < nbTouches; i++) {
+        const auto &shapeIter = getPxShapeMap().find((intptr_t)hitBuffer[i].shape);
+        if (shapeIter == getPxShapeMap().end()) return false;
+        r[i].shape = shapeIter->second;
+        r[i].distance = hitBuffer[i].distance;
+        PxSetVec3Ext(r[i].hitNormal, hitBuffer[i].normal);
+        PxSetVec3Ext(r[i].hitPoint, hitBuffer[i].position);
+    }
+    return true;
+}
+
+std::vector<RaycastResult> &PhysXWorld::raycastResult() {
+    static std::vector<RaycastResult> hits;
+    return hits;
+}
+
+bool PhysXWorld::raycastClosest(RaycastOptions &opt) {
+    PxRaycastHit hit;
+    PxQueryCache *cache = nullptr;
+    const auto o = opt.origin;
+    const auto ud = opt.unitDir;
+    PxVec3 origin{o.x, o.y, o.z};
+    PxVec3 unitDir{ud.x, ud.y, ud.z};
+    unitDir.normalize();
+    PxHitFlags flags = PxHitFlag::ePOSITION | PxHitFlag::eNORMAL;
+    PxSceneQueryFilterData filterData;
+    filterData.data.word0 = opt.mask;
+    filterData.data.word3 = QUERY_FILTER | (opt.queryTrigger ? 0 : QUERY_CHECK_TRIGGER) | QUERY_SINGLE_HIT;
+    filterData.flags = PxQueryFlag::eSTATIC | PxQueryFlag::eDYNAMIC | PxQueryFlag::ePREFILTER;
+    const auto result = PxSceneQueryExt::raycastSingle(
+        getScene(), origin, unitDir, opt.distance, flags,
+        hit, filterData, &getQueryFilterShader(), cache);
+    if (result) {
+        auto &r = raycastClosestResult();
+        const auto &shapeIter = getPxShapeMap().find((intptr_t)hit.shape);
+        if (shapeIter == getPxShapeMap().end()) return false;
+        r.shape = shapeIter->second;
+        r.distance = hit.distance;
+        PxSetVec3Ext(r.hitPoint, hit.position);
+        PxSetVec3Ext(r.hitNormal, hit.normal);
+    }
+    return result;
+}
+
+RaycastResult &PhysXWorld::raycastClosestResult() {
+    static RaycastResult hit;
+    return hit;
 }
 
 } // namespace physics

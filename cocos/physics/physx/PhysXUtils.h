@@ -90,7 +90,7 @@ CC_INLINE T PxAbsMax(const T &a, const T &b) {
 
 void PxSetFromTwoVectors(PxQuat &out, const PxVec3 &a, const PxVec3 &b);
 
-CC_INLINE std::unordered_map<intptr_t, intptr_t> &getPxEventPairMap() {
+CC_INLINE std::unordered_map<intptr_t, intptr_t> &getPxShapeMap() {
     static std::unordered_map<intptr_t, intptr_t> m;
     return m;
 }
@@ -101,7 +101,12 @@ CC_INLINE std::unordered_map<uint16_t, intptr_t> &getPxMaterialMap() {
 }
 
 CC_INLINE PxMaterial &getDefaultMaterial() {
-	return *(PxMaterial *)getPxMaterialMap()[0];
+    return *(PxMaterial *)getPxMaterialMap()[0];
+}
+
+CC_INLINE std::vector<PxRaycastHit> &getPxRaycastHitBuffer() {
+    static std::vector<PxRaycastHit> m{12};
+    return m;
 }
 
 } // namespace physics

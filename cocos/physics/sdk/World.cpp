@@ -70,5 +70,21 @@ intptr_t World::createHeightField(HeightFieldDesc &desc) {
     return _impl->createHeightField(desc);
 }
 
+bool World::raycast(RaycastOptions &opt) {
+    return _impl->raycast(opt);
+}
+
+std::vector<RaycastResult> &World::raycastResult() {
+    return _impl->raycastResult();
+}
+
+bool World::raycastClosest(RaycastOptions &opt) {
+    return _impl->raycastClosest(opt);
+}
+
+RaycastResult &World::raycastClosestResult() {
+    return _impl->raycastClosestResult();
+}
+
 } // namespace physics
 } // namespace cc

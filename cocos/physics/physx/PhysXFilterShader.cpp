@@ -16,12 +16,12 @@ PxFilterFlags SimpleFilterShader(
         pairFlags |= PxPairFlag::eTRIGGER_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_CCD;
         return PxFilterFlag::eDEFAULT;
     }
-	if (!PxFilterObjectIsKinematic(attributes0) || !PxFilterObjectIsKinematic(attributes1)) {
-		pairFlags |= PxPairFlag::eSOLVE_CONTACT;
-	}
+    if (!PxFilterObjectIsKinematic(attributes0) || !PxFilterObjectIsKinematic(attributes1)) {
+        pairFlags |= PxPairFlag::eSOLVE_CONTACT;
+    }
     pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT |
-                PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST | PxPairFlag::eNOTIFY_TOUCH_PERSISTS |
-                PxPairFlag::eDETECT_CCD_CONTACT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
+                 PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST | PxPairFlag::eNOTIFY_TOUCH_PERSISTS |
+                 PxPairFlag::eDETECT_CCD_CONTACT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
     return PxFilterFlag::eDEFAULT;
 }
 
@@ -29,13 +29,6 @@ PxFilterFlags AdvanceFilterShader(
     PxFilterObjectAttributes attributes0, PxFilterData fd0,
     PxFilterObjectAttributes attributes1, PxFilterData fd1,
     PxPairFlags &pairFlags, const void *, PxU32) {
-    // constexpr PxU32 QUERY_FILTER = 1 << 0;
-    // constexpr PxU32 QUERY_CHECK_TRIGGER = 1 << 1;
-    // constexpr PxU32 QUERY_SINGLE_HIT = 1 << 2;
-    constexpr PxU32 DETECT_TRIGGER_EVENT = 1 << 3;
-    constexpr PxU32 DETECT_CONTACT_EVENT = 1 << 4;
-    constexpr PxU32 DETECT_CONTACT_POINT = 1 << 5;
-    constexpr PxU32 DETECT_CONTACT_CCD = 1 << 6;
     // group mask filter
     if (!(fd0.word0 & fd1.word1) || !(fd0.word1 & fd1.word0)) {
         return PxFilterFlag::eSUPPRESS;
@@ -61,9 +54,9 @@ PxFilterFlags AdvanceFilterShader(
     const PxU16 needDetectCCD = (fd0.word3 & DETECT_CONTACT_CCD) | (fd1.word3 & DETECT_CONTACT_CCD);
     if (needDetectCCD) pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT;
 
-	if (!PxFilterObjectIsKinematic(attributes0) || !PxFilterObjectIsKinematic(attributes1)) {
-		pairFlags |= PxPairFlag::eSOLVE_CONTACT;
-	}
+    if (!PxFilterObjectIsKinematic(attributes0) || !PxFilterObjectIsKinematic(attributes1)) {
+        pairFlags |= PxPairFlag::eSOLVE_CONTACT;
+    }
 
     // simple collision process
     pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT;
@@ -77,6 +70,15 @@ PxFilterFlags AdvanceFilterShader(
     if (needContactPoint) pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS;
 
     return PxFilterFlag::eDEFAULT;
+}
+
+PxQueryHitType::Enum QueryFilterShader::preFilter(const PxFilterData &filterData, const PxShape *shape,
+                                                  const PxRigidActor *actor, PxHitFlags &queryFlags) {
+
+    if ((filterData.word3 & QUERY_CHECK_TRIGGER) && shape->getFlags().isSet(PxShapeFlag::eTRIGGER_SHAPE)) {
+        return PxQueryHitType::eNONE;
+    }
+    return filterData.word3 & QUERY_SINGLE_HIT ? PxQueryHitType::eBLOCK : PxQueryHitType::eTOUCH;
 }
 
 } // namespace physics

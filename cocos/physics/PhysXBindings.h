@@ -44,6 +44,14 @@ public:
 private:
 };
 
+struct TestResult {
+    cc::Vec3 hitPoint;
+    float distance;
+    cc::Vec3 hitNormal;
+    TestResult() {}
+    TestResult(float rand) : distance(rand) {}
+};
+
 class CC_DLL PhysXBindings final {
 public:
     bool testAPI();
@@ -53,6 +61,8 @@ public:
     static std::vector<float> &getArrayBuffer(uint32_t, float);
     static std::vector<TestStruct> &getTestStructVec();
     static void setTestStruct(TestStruct &, size_t);
+    static TestResult &getTestResult();
+    static std::vector<TestResult> &getTestResultVec();
 };
 } // namespace physics
 } // namespace cc
@@ -68,6 +78,21 @@ inline bool nativevalue_to_se(const std::vector<cc::physics::TestStruct> &from, 
     }
     to.setObject(array);
     array->decRef();
+    return true;
+}
+
+template <>
+inline bool nativevalue_to_se(const cc::physics::TestResult &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("distance", se::Value(from.distance));
+    se::Value obj0;
+    if (nativevalue_to_se(from.hitPoint, obj0, ctx)) {
+        obj->setProperty("hitPoint", obj0);
+    }
+    if (nativevalue_to_se(from.hitNormal, obj0, ctx)) {
+        obj->setProperty("hitNormal", obj0);
+    }
+	to.setObject(obj);
     return true;
 }
 

@@ -19,9 +19,7 @@ struct TriggerEventPair {
     intptr_t shapeB;
     ETouchState state;
     static constexpr uint8_t COUNT = 3;
-
-public:
-    CC_INLINE TriggerEventPair(const intptr_t a, const intptr_t b)
+    TriggerEventPair(const intptr_t a, const intptr_t b)
     : shapeA(a),
       shapeB(b),
       state(ETouchState::ENTER) {}
@@ -43,9 +41,7 @@ struct ContactEventPair {
     ETouchState state;
     std::vector<ContactPoint> contacts;
     static constexpr uint8_t COUNT = 4;
-
-public:
-    CC_INLINE ContactEventPair(const intptr_t a, const intptr_t b)
+    ContactEventPair(const intptr_t a, const intptr_t b)
     : shapeA(a),
       shapeB(b),
       state(ETouchState::ENTER) {}
@@ -68,21 +64,39 @@ struct HeightFieldDesc {
     void *samples;
 };
 
+struct RaycastOptions {
+    cc::Vec3 origin;
+    float distance;
+    cc::Vec3 unitDir;
+    uint32_t mask;
+    bool queryTrigger;
+};
+
+struct RaycastResult {
+    intptr_t shape;
+    cc::Vec3 hitPoint;
+    float distance;
+    cc::Vec3 hitNormal;
+    RaycastResult() : shape(NULL) {}
+};
+
 class IPhysicsWorld {
 public:
     virtual ~IPhysicsWorld(){};
     virtual void setGravity(float x, float y, float z) = 0;
     virtual void setAllowSleep(bool v) = 0;
-    virtual void step(float fixedTimeStep) = 0;
-    // virtual bool raycast (worldRay: Ray, options: IRaycastOptions, pool: RecyclePool<PhysicsRayResult>, results: PhysicsRayResult[])=0;
-    // virtual bool raycastClosest (worldRay: Ray, options: IRaycastOptions, out: PhysicsRayResult)=0;
+    virtual void step(float s) = 0;
     virtual void emitEvents() = 0;
     virtual void syncSceneToPhysics() = 0;
     virtual void syncSceneWithCheck() = 0;
     virtual void destroy() = 0;
+    virtual void setCollisionMatrix(uint32_t i, uint32_t m) = 0;
     virtual std::vector<TriggerEventPair> &getTriggerEventPairs() = 0;
     virtual std::vector<ContactEventPair> &getContactEventPairs() = 0;
-    virtual void setCollisionMatrix(uint32_t index, uint32_t mask) = 0;
+    virtual bool raycast(RaycastOptions &opt) = 0;
+    virtual bool raycastClosest(RaycastOptions &opt) = 0;
+    virtual std::vector<RaycastResult> &raycastResult() = 0;
+    virtual RaycastResult &raycastClosestResult() = 0;
     virtual intptr_t createConvex(ConvexDesc &desc) = 0;
     virtual intptr_t createTrimesh(TrimeshDesc &desc) = 0;
     virtual intptr_t createHeightField(HeightFieldDesc &desc) = 0;
@@ -95,7 +109,7 @@ public:
 
 template <>
 inline bool nativevalue_to_se(const std::vector<cc::physics::TriggerEventPair> &from, se::Value &to, se::Object *ctx) {
-    se::Object *array = se::Object::createArrayObject(from.size() * cc::physics::TriggerEventPair::COUNT);
+    se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::TriggerEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         uint32_t t = i * cc::physics::TriggerEventPair::COUNT;
         array->setArrayElement(t + 0, se::Value((intptr_t)from[i].shapeA));
@@ -103,14 +117,13 @@ inline bool nativevalue_to_se(const std::vector<cc::physics::TriggerEventPair> &
         array->setArrayElement(t + 2, se::Value((uint8_t)from[i].state));
     }
     to.setObject(array);
-    array->decRef();
     return true;
 }
 
 template <>
 inline bool nativevalue_to_se(const std::vector<cc::physics::ContactPoint> &from, se::Value &to, se::Object *ctx) {
     const auto contactCount = from.size();
-    auto array = se::Object::createArrayObject(contactCount);
+    se::HandleObject array(se::Object::createArrayObject(contactCount));
     for (size_t i = 0; i < contactCount; i++) {
         uint32_t t = i * cc::physics::ContactPoint::COUNT;
         uint8_t j = 0;
@@ -128,13 +141,12 @@ inline bool nativevalue_to_se(const std::vector<cc::physics::ContactPoint> &from
         array->setArrayElement(t + j++, se::Value(from[i].internalFaceIndex1));
     }
     to.setObject(array);
-    array->decRef();
     return true;
 }
 
 template <>
 inline bool nativevalue_to_se(const std::vector<cc::physics::ContactEventPair> &from, se::Value &to, se::Object *ctx) {
-    se::Object *array = se::Object::createArrayObject(from.size() * cc::physics::ContactEventPair::COUNT);
+    se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::ContactEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         uint32_t t = i * cc::physics::ContactEventPair::COUNT;
         array->setArrayElement(t + 0, se::Value((intptr_t)from[i].shapeA));
@@ -147,7 +159,18 @@ inline bool nativevalue_to_se(const std::vector<cc::physics::ContactEventPair> &
         }());
     }
     to.setObject(array);
-    array->decRef();
+    return true;
+}
+
+template <>
+inline bool nativevalue_to_se(const cc::physics::RaycastResult &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("shape", se::Value(from.shape));
+    obj->setProperty("distance", se::Value(from.distance));
+    se::Value tmp;
+    if (nativevalue_to_se(from.hitPoint, tmp, ctx)) obj->setProperty("hitPoint", tmp);
+    if (nativevalue_to_se(from.hitNormal, tmp, ctx)) obj->setProperty("hitNormal", tmp);
+    to.setObject(obj);
     return true;
 }
 
@@ -259,3 +282,33 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::HeightFieldDes
     return ok;
 }
 
+template <>
+inline bool sevalue_to_native(const se::Value &from, cc::physics::RaycastOptions *to, se::Object *ctx) {
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto *data = (cc::physics::RaycastOptions *)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
+
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("origin", &field);
+    if (!field.isNullOrUndefined()) ok &= seval_to_Vec3(field, &to->origin);
+
+    json->getProperty("unitDir", &field);
+    if (!field.isNullOrUndefined()) ok &= seval_to_Vec3(field, &to->unitDir);
+    
+    json->getProperty("mask", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->mask, ctx);
+    
+    json->getProperty("distance", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->distance, ctx);
+
+    json->getProperty("queryTrigger", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->queryTrigger, ctx);
+
+    return ok;
+}
