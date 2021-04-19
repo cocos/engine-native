@@ -41,15 +41,15 @@
 namespace cc {
 namespace pipeline {
 namespace {
-#define TO_VEC3(dst, src, offset) \
-    dst[offset] = src.x;          \
-    dst[offset + 1] = src.y;      \
-    dst[offset + 2] = src.z;
-#define TO_VEC4(dst, src, offset) \
-    dst[offset] = src.x;          \
-    dst[offset + 1] = src.y;      \
-    dst[offset + 2] = src.z;      \
-    dst[offset + 3] = src.w;
+#define TO_VEC3(dst, src, offset)  \
+    (dst)[(offset) + 0] = (src).x; \
+    (dst)[(offset) + 1] = (src).y; \
+    (dst)[(offset) + 2] = (src).z;
+#define TO_VEC4(dst, src, offset)  \
+    (dst)[(offset) + 0] = (src).x; \
+    (dst)[(offset) + 1] = (src).y; \
+    (dst)[(offset) + 2] = (src).z; \
+    (dst)[(offset) + 3] = (src).w;
 } // namespace
 
 gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags) {
