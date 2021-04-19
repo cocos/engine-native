@@ -22,12 +22,12 @@ class PhysXShape : virtual public IBaseShape {
     PX_NOCOPY(PhysXShape)
     PhysXShape() : mIndex(-1),
                    mFlag(0),
-                   mLocal(PxIdentity){};
+                   mCenter(PxIdentity){};
 
 public:
     virtual ~PhysXShape(){};
     virtual intptr_t getImpl() override;
-    virtual void initialize(const uint& handle) override;
+    virtual void initialize(const uint &handle) override;
     virtual void onEnable() override;
     virtual void onDisable() override;
     virtual void onDestroy() override;
@@ -47,9 +47,10 @@ public:
 protected:
     PhysXSharedBody *mSharedBody;
     PxShape *mShape;
-    PxTransform mLocal;
+    PxVec3 mCenter;
     int8_t mIndex;
     uint8_t mFlag;
+    void updateCenter();
 };
 
 } // namespace physics

@@ -1,32 +1,40 @@
 
 #include "PhysXSphere.h"
+#include "../PhysXUtils.h"
 #include "../PhysXWorld.h"
 #include "PhysXShape.h"
 
 namespace cc {
 namespace physics {
 
-PhysXSphere::PhysXSphere() : PhysXShape(){};
+PhysXSphere::PhysXSphere() : mRadius(0.5f),
+                             PhysXShape(){};
 
 PhysXSphere::~PhysXSphere(){};
 
-void PhysXSphere::setRadius(float r){};
+void PhysXSphere::setRadius(float r) {
+    mRadius = r;
+    updateGeometry();
+    getShape().setGeometry(getPxGeometry<PxSphereGeometry>());
+}
 
 void PhysXSphere::onComponentSet() {
-	updateGeometry();
     auto &phy = PhysXWorld::getPhysics();
-    static auto const mat = phy.createMaterial(0.5, 0.5, 0.1);    
-    auto &geo = getPxGeometry<PxSphereGeometry>();
-    mShape = phy.createShape(geo, *mat);
+    static auto const mat = phy.createMaterial(0.5, 0.5, 0.1);
+    updateGeometry();
+    mShape = phy.createShape(getPxGeometry<PxSphereGeometry>(), *mat);
 }
 
 void PhysXSphere::updateScale() {
-	updateGeometry();
+    updateGeometry();
+    getShape().setGeometry(getPxGeometry<PxSphereGeometry>());
 }
 
 void PhysXSphere::updateGeometry() {
-	auto &geo = getPxGeometry<PxSphereGeometry>();
-	geo.radius = 0.5;
+    PxVec3 scale;
+    PxSetVec3Ext(scale, getSharedBody().getNode().worldScale);
+    auto &geo = getPxGeometry<PxSphereGeometry>();
+    geo.radius = PxMax(mRadius * scale.abs().maxElement(), PX_NORMALIZATION_EPSILON);
 }
 
 } // namespace physics

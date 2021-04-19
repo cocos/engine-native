@@ -17,6 +17,7 @@ public:
     virtual void updateScale() override;
 
 private:
+    float mRadius;
     void updateGeometry();    
 };
 

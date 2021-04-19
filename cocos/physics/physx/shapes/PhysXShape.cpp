@@ -12,7 +12,7 @@ intptr_t PhysXShape::getImpl() {
     return (intptr_t)this;
 }
 
-void PhysXShape::initialize(const uint& handle) {
+void PhysXShape::initialize(const uint &handle) {
     PhysXWorld &ins = PhysXWorld::getInstance();
     mSharedBody = ins.getSharedBody(handle);
     getSharedBody().reference(true);
@@ -51,11 +51,8 @@ void PhysXShape::setAsTrigger(bool v) {
 }
 
 void PhysXShape::setCenter(float x, float y, float z) {
-    auto &node = getSharedBody().getNode();
-    mLocal.p = PxVec3{x, y, z};
-    mLocal.p *= node.worldScale;
-    mLocal.q = PxQuat{PxIdentity};
-    getShape().setLocalPose(mLocal);
+    mCenter = PxVec3{x, y, z};
+    updateCenter();
 }
 
 void PhysXShape::setCollisionFilter(int g, int m) {
@@ -77,6 +74,12 @@ cc::pipeline::Sphere PhysXShape::getBoundingSphere() {
 }
 
 void PhysXShape::updateFilterData(PxFilterData &data) {
+}
+
+void PhysXShape::updateCenter() {
+    auto &node = getSharedBody().getNode();
+    PxTransform local{mCenter * node.worldScale, PxQuat{PxIdentity}};
+    getShape().setLocalPose(local);
 }
 
 } // namespace physics

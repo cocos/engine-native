@@ -34,6 +34,14 @@ CC_INLINE bool operator==(const Vec3 &a, const PxVec3 &b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
+CC_INLINE PxVec3 operator*(const PxVec3 &a, const Vec3 &b) {
+    return PxVec3{a.x * b.x, a.y * b.y, a.z * b.z};
+}
+
+CC_INLINE Vec3 operator*(const Vec3 &a, const PxVec3 &b) {
+    return Vec3{a.x * b.x, a.y * b.y, a.z * b.z};
+}
+
 CC_INLINE PxVec3 &operator*=(PxVec3 &a, const Vec3 &b) {
     a.x *= b.x;
     a.y *= b.y;

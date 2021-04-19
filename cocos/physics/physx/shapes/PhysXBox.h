@@ -17,7 +17,7 @@ public:
     virtual void updateScale() override;
 
 private:
-    PxVec3 mSize;
+    PxVec3 mHalfExtents;
     void updateGeometry();
 };
 
