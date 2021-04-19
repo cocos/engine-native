@@ -1,6 +1,6 @@
 
 
-#include <PhysX/PxPhysicsAPI.h>
+#include "./PhysXInc.h"
 
 using namespace physx;
 

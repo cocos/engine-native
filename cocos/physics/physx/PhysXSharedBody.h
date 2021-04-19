@@ -4,7 +4,7 @@
 #include "../spec/IRigidBody.h"
 #include "base/Macros.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
-#include <PhysX/PxPhysicsAPI.h>
+#include "./PhysXInc.h"
 #include <map>
 #include <vector>
 
@@ -47,14 +47,20 @@ public:
         PxRigidDynamic *rigidDynamic;
     };
     UActor getImpl();
+    void setMass(float v);
     void syncSceneToPhysics();
     void syncSceneWithCheck();
     void syncPhysicsToScene();
+    void updateCenterOfMass();
     void addShape(PhysXShape &shape);
     void removeShape(PhysXShape &shape);
     void setCollisionFilter(PxFilterData &data);
     void clearForces();
     void clearVelocity();
+    void setGroup(uint32_t v);
+    void setMask(uint32_t v);
+    CC_INLINE uint32_t getGroup() const { return mFilterData.word0; }
+    CC_INLINE uint32_t getMask() const { return mFilterData.word1; }
 
 private:
     static std::map<uint, PhysXSharedBody *> sharedBodesMap;
@@ -63,6 +69,7 @@ private:
     uint8_t mRef;
     bool mIsStatic;
     ERigidBodyType mType;
+	float mMass;
     int mIndex;
     PxFilterData mFilterData;
     Node *mNode;

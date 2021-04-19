@@ -11,4 +11,5 @@
 	#define WrappedBoxShape PhysXBox
 	#define WrappedPlaneShape PhysXPlane
 	#define WrappedCapsuleShape PhysXCapsule
+    #define WrappedTrimeshShape PhysXTrimesh
 #endif

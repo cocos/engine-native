@@ -4,6 +4,7 @@
 #include "../PhysXSharedBody.h"
 #include "../PhysXUtils.h"
 #include "../PhysXWorld.h"
+#include <unordered_map>
 
 namespace cc {
 namespace physics {
@@ -21,11 +22,13 @@ void PhysXShape::initialize(const uint &handle) {
 }
 
 void PhysXShape::onEnable() {
+    mEnabled = true;
     getSharedBody().addShape(*this);
     getSharedBody().enabled(true);
 }
 
 void PhysXShape::onDisable() {
+    mEnabled = false;
     getSharedBody().removeShape(*this);
     getSharedBody().enabled(false);
 }
@@ -35,7 +38,25 @@ void PhysXShape::onDestroy() {
     getPxObjMap().erase((intptr_t)&getShape());
 }
 
-void PhysXShape::setMaterial(float f, float df, float r) {
+void PhysXShape::setMaterial(const uint16_t ID, float f, float df, float r,
+                             uint8_t m0, uint8_t m1) {
+    static std::unordered_map<uint16_t, intptr_t> m;
+    if (m.find(ID) == m.end()) {
+        PhysXWorld &ins = PhysXWorld::getInstance();
+        auto mat = PxGetPhysics().createMaterial(f, df, r);
+        m[ID] = (intptr_t)mat;
+        mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
+        mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
+        getShape().setMaterials(&mat, 1);
+    } else {
+        auto mat = (PxMaterial *)m[ID];
+        mat->setStaticFriction(f);
+        mat->setDynamicFriction(df);
+        mat->setRestitution(r);
+        mat->setFrictionCombineMode(PxCombineMode::Enum(m0));
+        mat->setRestitutionCombineMode(PxCombineMode::Enum(m1));
+        getShape().setMaterials(&mat, 1);
+    }
 }
 
 void PhysXShape::setAsTrigger(bool v) {
@@ -57,9 +78,20 @@ void PhysXShape::setCenter(float x, float y, float z) {
     updateCenter();
 }
 
-void PhysXShape::setCollisionFilter(int g, int m) {
-    PxFilterData data{(PxU32)g, (PxU32)m, 0, 0};
-    getSharedBody().setCollisionFilter(data);
+uint32_t PhysXShape::getGroup() {
+    return getSharedBody().getGroup();
+}
+
+void PhysXShape::setGroup(uint32_t g) {
+    getSharedBody().setGroup(g);
+}
+
+uint32_t PhysXShape::getMask() {
+    return getSharedBody().getMask();
+}
+
+void PhysXShape::setMask(uint32_t m) {
+    getSharedBody().setMask(m);
 }
 
 void PhysXShape::updateEventListener(EShapeFilterFlag flag) {
@@ -79,9 +111,11 @@ void PhysXShape::updateFilterData(PxFilterData &data) {
 }
 
 void PhysXShape::updateCenter() {
-    auto &node = getSharedBody().getNode();
+    auto &sb = getSharedBody();
+    auto &node = sb.getNode();
     PxTransform local{mCenter * node.worldScale, mRotation};
     getShape().setLocalPose(local);
+    if (mEnabled && !isTrigger()) sb.updateCenterOfMass();
 }
 
 } // namespace physics

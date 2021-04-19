@@ -3,7 +3,7 @@
 
 #include "../spec/IWorld.h"
 #include "base/Macros.h"
-#include <PhysX/PxPhysicsAPI.h>
+#include "./PhysXInc.h"
 #include <vector>
 
 using namespace physx;

@@ -6,7 +6,7 @@
 #include "PhysXRigidBody.h"
 #include "PhysXSharedBody.h"
 #include "base/Macros.h"
-#include <PhysX/PxPhysicsAPI.h>
+#include "./PhysXInc.h"
 
 using namespace physx;
 
@@ -17,6 +17,7 @@ class PhysXWorld final : virtual public IPhysicsWorld {
 public:
     static PhysXWorld &getInstance();
     static PxFoundation &getFundation();
+    static PxCooking &getCooking();
     static PxPhysics &getPhysics();
     PhysXWorld();
     virtual ~PhysXWorld();
@@ -25,6 +26,9 @@ public:
     virtual void setAllowSleep(bool v) override;
     virtual void setDefaultMaterial(float f, float dy, float r) override;
     virtual void emitEvents() override;
+    virtual void setCollisionMatrix(uint32_t index, uint32_t mask) override;
+    virtual intptr_t createConvex(ConvexDesc &desc) override;
+    virtual intptr_t createTrimesh(TrimeshDesc &desc) override;
     CC_INLINE virtual std::vector<TriggerEventPair> &getTriggerEventPairs() override {
         return mEventMgr->getTriggerPairs();
     }
@@ -42,6 +46,7 @@ public:
     }
 
     CC_INLINE PxScene &getScene() const { return *mScene; }
+	int getMaskByIndex(uint32_t i);
     void syncPhysicsToScene();
     void addActor(PhysXSharedBody &sb);
     void removeActor(PhysXSharedBody &sb);
@@ -49,11 +54,13 @@ public:
 private:
     static PhysXWorld *instance;
     PxFoundation *mFoundation;
+    PxCooking *mCooking;
     PxPhysics *mPhysics;
     PxDefaultCpuDispatcher *mDispatcher;
 
     PxScene *mScene;
     PhysXEventManager *mEventMgr;
+    int mCollisionMatrix[31];
     std::vector<PhysXSharedBody *> mSharedBodies;
 };
 

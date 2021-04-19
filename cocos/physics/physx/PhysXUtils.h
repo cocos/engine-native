@@ -4,7 +4,7 @@
 #include "base/Macros.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-#include <PhysX/PxPhysicsAPI.h>
+#include "./PhysXInc.h"
 #include <unordered_map>
 
 #define PX_RELEASE(x) \

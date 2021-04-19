@@ -7,3 +7,4 @@
 #include "./shapes/PhysXBox.h"
 #include "./shapes/PhysXPlane.h"
 #include "./shapes/PhysXCapsule.h"
+#include "./shapes/PhysXTrimesh.h"

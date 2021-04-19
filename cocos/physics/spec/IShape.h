@@ -25,14 +25,19 @@ enum class EShapeFilterFlag : uint8_t {
 class IBaseShape : virtual public ILifecycle {
 public:
     virtual ~IBaseShape(){};
+    virtual void initialize(const uint &h) = 0;
     virtual intptr_t getImpl() = 0;
-    virtual void setMaterial(float f, float df, float r) = 0;
+    virtual void setMaterial(const uint16_t ID, float f, float df, float r,
+                             uint8_t m0, uint8_t m1) = 0;
     virtual void setAsTrigger(bool v) = 0;
     virtual void setCenter(float x, float y, float z) = 0;
-    virtual void setCollisionFilter(int g, int m) = 0;
     virtual cc::pipeline::AABB getAABB() = 0;
     virtual cc::pipeline::Sphere getBoundingSphere() = 0;
     virtual void updateEventListener(EShapeFilterFlag flag) = 0;
+    virtual uint32_t getGroup() = 0;
+    virtual void setGroup(uint32_t g) = 0;
+    virtual uint32_t getMask() = 0;
+    virtual void setMask(uint32_t m) = 0;
 };
 
 class ISphereShape : virtual public IBaseShape {
@@ -76,6 +81,13 @@ public:
     virtual ~IPlaneShape(){};
     virtual void setConstant(float v) = 0;
     virtual void setNormal(float x, float y, float z) = 0;
+};
+
+class ITrimeshShape : virtual public IBaseShape {
+public:
+    virtual ~ITrimeshShape(){};
+    virtual void setMesh(intptr_t v) = 0;
+    virtual void useConvex(bool v) = 0;
 };
 
 } // namespace physics

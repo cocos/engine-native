@@ -53,5 +53,17 @@ std::vector<ContactEventPair> &World::getContactEventPairs() {
     return _impl->getContactEventPairs();
 }
 
+void World::setCollisionMatrix(uint32_t i, uint32_t m) {
+    _impl->setCollisionMatrix(i, m);
+}
+
+intptr_t World::createConvex(ConvexDesc &desc) {
+    return (intptr_t)_impl->createConvex(desc);
+}
+
+intptr_t World::createTrimesh(TrimeshDesc &desc) {
+    return (intptr_t)_impl->createTrimesh(desc);
+}
+
 } // namespace physics
 } // namespace cc

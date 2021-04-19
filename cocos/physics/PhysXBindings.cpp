@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define __PHYSX_BINDINGS_H__
 
 #include "./PhysXBindings.h"
-#include <PhysX/PxPhysicsAPI.h>
+#include "./PhysX/PhysXInc.h"
 
 namespace cc {
 namespace physics {
@@ -57,9 +57,16 @@ std::vector<float> &PhysXBindings::getArrayBuffer(uint32_t size, float val) {
 }
 
 std::vector<TestStruct> &PhysXBindings::getTestStructVec() {
-	static std::vector<TestStruct> vec;
+    static std::vector<TestStruct> vec;
     vec.push_back(TestStruct{(intptr_t)&vec, (intptr_t)vec.size()});
     return vec;
+}
+
+void PhysXBindings::setTestStruct(TestStruct &ts, size_t i) {
+    auto &tsv = getTestStructVec();
+    if (i >= 0 && tsv.size() > i) {
+        tsv[i] = ts;
+    }
 }
 
 } // namespace physics

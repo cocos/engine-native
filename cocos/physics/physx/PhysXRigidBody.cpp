@@ -8,14 +8,17 @@ using namespace physx;
 namespace cc {
 namespace physics {
 
-PhysXRigidBody::PhysXRigidBody() : mEnabled(false) {}
+PhysXRigidBody::PhysXRigidBody() : mEnabled(false),
+                                   mGroup(1) {}
 
 PhysXRigidBody::~PhysXRigidBody() {}
 
-void PhysXRigidBody::initialize(const uint& handle) {
+void PhysXRigidBody::initialize(const uint &h, const ERigidBodyType &t, const uint32_t &g) {
+    mGroup = g;
     PhysXWorld &ins = PhysXWorld::getInstance();
-    mSharedBody = ins.getSharedBody(std::move(handle), this);
+    mSharedBody = ins.getSharedBody(h, this);
     getSharedBody().reference(true);
+    getSharedBody().setType(t);
 }
 
 void PhysXRigidBody::onEnable() {
@@ -51,9 +54,7 @@ void PhysXRigidBody::setType(ERigidBodyType v) {
 }
 
 void PhysXRigidBody::setMass(float v) {
-    auto &sb = getSharedBody();
-    if (!sb.isDynamic()) return;
-    PxRigidBodyExt::setMassAndUpdateInertia(*sb.getImpl().rigidDynamic, v);
+    getSharedBody().setMass(v);
 }
 
 void PhysXRigidBody::setLinearDamping(float v) {
@@ -210,9 +211,20 @@ void PhysXRigidBody::applyLocalTorque(float x, float y, float z) {
     body->addTorque(bodyPose.rotate(PxVec3{x, y, z}), PxForceMode::eFORCE, true);
 }
 
-void PhysXRigidBody::setCollisionFilter(int g, int m) {
-    PxFilterData data{(PxU32)g, (PxU32)m, 0, 0};
-    getSharedBody().setCollisionFilter(data);
+uint32_t PhysXRigidBody::getGroup() {
+    return getSharedBody().getGroup();
+}
+
+void PhysXRigidBody::setGroup(uint32_t g) {
+    getSharedBody().setGroup(g);
+}
+
+uint32_t PhysXRigidBody::getMask() {
+    return getSharedBody().getMask();
+}
+
+void PhysXRigidBody::setMask(uint32_t m) {
+    getSharedBody().setMask(m);
 }
 
 } // namespace physics

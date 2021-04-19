@@ -1,9 +1,8 @@
-#include "../spec/IWorld.h"
 #include "PhysXWorld.h"
+#include "../spec/IWorld.h"
 #include "PhysXFilterShader.h"
 #include "PhysXUtils.h"
-#include <PhysX/extensions/PxDefaultAllocator.h>
-#include <PhysX/extensions/PxDefaultErrorCallback.h>
+#include "PhysXInc.h"
 
 using namespace physx;
 
@@ -19,6 +18,10 @@ PxFoundation &PhysXWorld::getFundation() {
     return *getInstance().mFoundation;
 }
 
+PxCooking &PhysXWorld::getCooking() {
+    return *getInstance().mCooking;
+}
+
 PxPhysics &PhysXWorld::getPhysics() {
     return *getInstance().mPhysics;
 }
@@ -28,7 +31,9 @@ PhysXWorld::PhysXWorld() {
     static PxDefaultAllocator gAllocator;
     static PxDefaultErrorCallback gErrorCallback;
     mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
-    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, PxTolerancesScale(), true, nullptr);
+    PxTolerancesScale scale{};
+    mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, PxCookingParams(scale));
+    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale, true, nullptr);
     mDispatcher = PxDefaultCpuDispatcherCreate(0);
 
     PxInitExtensions(*mPhysics, nullptr);
@@ -44,6 +49,8 @@ PhysXWorld::PhysXWorld() {
     sceneDesc.filterShader = SimpleFilterShader;
     sceneDesc.simulationEventCallback = &mEventMgr->getEventCallback();
     mScene = mPhysics->createScene(sceneDesc);
+
+    mCollisionMatrix[0] = 1;
 }
 
 PhysXWorld::~PhysXWorld() {
@@ -68,6 +75,39 @@ void PhysXWorld::setGravity(float x, float y, float z) {
 void PhysXWorld::destroy() {
 }
 
+void PhysXWorld::setCollisionMatrix(uint32_t index, uint32_t mask) {
+    if (index < 0 || index > 31) return;
+    mCollisionMatrix[index] = mask;
+}
+
+intptr_t PhysXWorld::createConvex(ConvexDesc &desc) {
+    PxConvexMeshDesc convexDesc;
+    convexDesc.points.count = desc.positionLength;
+    convexDesc.points.stride = sizeof(PxVec3);
+    convexDesc.points.data = (PxVec3 *)desc.positions;
+    convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+    PxConvexMesh *convexMesh = getCooking().createConvexMesh(convexDesc, PxGetPhysics().getPhysicsInsertionCallback());
+    return (intptr_t)convexMesh;
+}
+
+intptr_t PhysXWorld::createTrimesh(TrimeshDesc &desc) {
+    PxTriangleMeshDesc meshDesc;
+    meshDesc.points.count = desc.positionLength;
+    meshDesc.points.stride = sizeof(PxVec3);
+    meshDesc.points.data = (PxVec3 *)desc.positions;
+    meshDesc.triangles.count = desc.triangleLength;
+    if (desc.isU16) {
+        meshDesc.triangles.stride = 3 * sizeof(PxU16);
+        meshDesc.triangles.data = (PxU16 *)desc.triangles;
+        meshDesc.flags = PxMeshFlag::e16_BIT_INDICES;
+    } else {
+        meshDesc.triangles.stride = 3 * sizeof(PxU32);
+        meshDesc.triangles.data = (PxU32 *)desc.triangles;
+    }
+    PxTriangleMesh *triangleMesh = getCooking().createTriangleMesh(meshDesc, PxGetPhysics().getPhysicsInsertionCallback());
+    return (intptr_t)triangleMesh;
+}
+
 void PhysXWorld::emitEvents() {
     mEventMgr->refreshPairs();
 }
@@ -76,6 +116,11 @@ void PhysXWorld::syncSceneToPhysics() {
     for (auto const &sb : mSharedBodies) {
         sb->syncSceneToPhysics();
     }
+}
+
+int PhysXWorld::getMaskByIndex(uint32_t i) {
+    if (i < 0 || i > 31) i = 0;
+    return mCollisionMatrix[i];
 }
 
 void PhysXWorld::syncPhysicsToScene() {

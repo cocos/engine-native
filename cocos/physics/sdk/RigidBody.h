@@ -11,7 +11,7 @@ class CC_DLL RigidBody final : public IRigidBody {
 public:
     RigidBody();
     virtual ~RigidBody();
-    virtual void initialize(const uint& uuid) override;
+    virtual void initialize(const uint &h, const ERigidBodyType& t, const uint32_t& g) override;
     virtual void onEnable() override;
     virtual void onDisable() override;
     virtual void onDestroy() override;
@@ -43,7 +43,10 @@ public:
     virtual void applyLocalImpulse(float x, float y, float z, float rx, float ry, float rz) override;
     virtual void applyTorque(float x, float y, float z) override;
     virtual void applyLocalTorque(float x, float y, float z) override;
-    virtual void setCollisionFilter(int g, int m) override;
+    virtual uint32_t getGroup() override;
+    virtual void setGroup(uint32_t g) override;
+    virtual uint32_t getMask() override;
+    virtual void setMask(uint32_t m) override;
 
 private:
     std::unique_ptr<IRigidBody> _impl;

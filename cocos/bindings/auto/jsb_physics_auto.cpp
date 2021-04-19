@@ -14,6 +14,50 @@
 se::Object* __jsb_cc_physics_World_proto = nullptr;
 se::Class* __jsb_cc_physics_World_class = nullptr;
 
+static bool js_physics_World_createConvex(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_createConvex : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::ConvexDesc, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_World_createConvex : Error processing arguments");
+        int result = cobj->createConvex(arg0.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_createConvex : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_createConvex)
+
+static bool js_physics_World_createTrimesh(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_createTrimesh : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::TrimeshDesc, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_World_createTrimesh : Error processing arguments");
+        int result = cobj->createTrimesh(arg0.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_createTrimesh : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_createTrimesh)
+
 static bool js_physics_World_destroy(se::State& s)
 {
     cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
@@ -100,6 +144,27 @@ static bool js_physics_World_setAllowSleep(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_World_setAllowSleep)
+
+static bool js_physics_World_setCollisionMatrix(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_setCollisionMatrix : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<unsigned int, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_World_setCollisionMatrix : Error processing arguments");
+        cobj->setCollisionMatrix(arg0.value(), arg1.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_setCollisionMatrix)
 
 static bool js_physics_World_setDefaultMaterial(se::State& s)
 {
@@ -227,11 +292,14 @@ bool js_register_physics_World(se::Object* obj)
 {
     auto cls = se::Class::create("World", obj, nullptr, _SE(js_physics_World_constructor));
 
+    cls->defineFunction("createConvex", _SE(js_physics_World_createConvex));
+    cls->defineFunction("createTrimesh", _SE(js_physics_World_createTrimesh));
     cls->defineFunction("destroy", _SE(js_physics_World_destroy));
     cls->defineFunction("emitEvents", _SE(js_physics_World_emitEvents));
     cls->defineFunction("getContactEventPairs", _SE(js_physics_World_getContactEventPairs));
     cls->defineFunction("getTriggerEventPairs", _SE(js_physics_World_getTriggerEventPairs));
     cls->defineFunction("setAllowSleep", _SE(js_physics_World_setAllowSleep));
+    cls->defineFunction("setCollisionMatrix", _SE(js_physics_World_setCollisionMatrix));
     cls->defineFunction("setDefaultMaterial", _SE(js_physics_World_setDefaultMaterial));
     cls->defineFunction("setGravity", _SE(js_physics_World_setGravity));
     cls->defineFunction("step", _SE(js_physics_World_step));
@@ -477,6 +545,25 @@ static bool js_physics_RigidBody_getAngularVelocity(se::State& s)
 }
 SE_BIND_FUNC(js_physics_RigidBody_getAngularVelocity)
 
+static bool js_physics_RigidBody_getGroup(se::State& s)
+{
+    cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RigidBody_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_RigidBody_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RigidBody_getGroup)
+
 static bool js_physics_RigidBody_getLinearVelocity(se::State& s)
 {
     cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
@@ -495,6 +582,25 @@ static bool js_physics_RigidBody_getLinearVelocity(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_RigidBody_getLinearVelocity)
+
+static bool js_physics_RigidBody_getMask(se::State& s)
+{
+    cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RigidBody_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_RigidBody_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RigidBody_getMask)
 
 static bool js_physics_RigidBody_getSleepThreshold(se::State& s)
 {
@@ -522,14 +628,18 @@ static bool js_physics_RigidBody_initialize(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 1) {
+    if (argc == 3) {
         HolderType<unsigned int, true> arg0 = {};
+        HolderType<cc::physics::ERigidBodyType, true> arg1 = {};
+        HolderType<unsigned int, true> arg2 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_RigidBody_initialize : Error processing arguments");
-        cobj->initialize(arg0.value());
+        cobj->initialize(arg0.value(), arg1.value(), arg2.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
     return false;
 }
 SE_BIND_FUNC(js_physics_RigidBody_initialize)
@@ -720,26 +830,24 @@ static bool js_physics_RigidBody_setAngularVelocity(se::State& s)
 }
 SE_BIND_FUNC(js_physics_RigidBody_setAngularVelocity)
 
-static bool js_physics_RigidBody_setCollisionFilter(se::State& s)
+static bool js_physics_RigidBody_setGroup(se::State& s)
 {
     cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
-    SE_PRECONDITION2(cobj, false, "js_physics_RigidBody_setCollisionFilter : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_physics_RigidBody_setGroup : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<int, false> arg0 = {};
-        HolderType<int, false> arg1 = {};
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_physics_RigidBody_setCollisionFilter : Error processing arguments");
-        cobj->setCollisionFilter(arg0.value(), arg1.value());
+        SE_PRECONDITION2(ok, false, "js_physics_RigidBody_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_physics_RigidBody_setCollisionFilter)
+SE_BIND_FUNC(js_physics_RigidBody_setGroup)
 
 static bool js_physics_RigidBody_setLinearDamping(se::State& s)
 {
@@ -805,6 +913,25 @@ static bool js_physics_RigidBody_setLinearVelocity(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_RigidBody_setLinearVelocity)
+
+static bool js_physics_RigidBody_setMask(se::State& s)
+{
+    cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RigidBody_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_RigidBody_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RigidBody_setMask)
 
 static bool js_physics_RigidBody_setMass(se::State& s)
 {
@@ -953,7 +1080,9 @@ bool js_register_physics_RigidBody(se::Object* obj)
     cls->defineFunction("clearState", _SE(js_physics_RigidBody_clearState));
     cls->defineFunction("clearVelocity", _SE(js_physics_RigidBody_clearVelocity));
     cls->defineFunction("getAngularVelocity", _SE(js_physics_RigidBody_getAngularVelocity));
+    cls->defineFunction("getGroup", _SE(js_physics_RigidBody_getGroup));
     cls->defineFunction("getLinearVelocity", _SE(js_physics_RigidBody_getLinearVelocity));
+    cls->defineFunction("getMask", _SE(js_physics_RigidBody_getMask));
     cls->defineFunction("getSleepThreshold", _SE(js_physics_RigidBody_getSleepThreshold));
     cls->defineFunction("initialize", _SE(js_physics_RigidBody_initialize));
     cls->defineFunction("isAwake", _SE(js_physics_RigidBody_isAwake));
@@ -966,10 +1095,11 @@ bool js_register_physics_RigidBody(se::Object* obj)
     cls->defineFunction("setAngularDamping", _SE(js_physics_RigidBody_setAngularDamping));
     cls->defineFunction("setAngularFactor", _SE(js_physics_RigidBody_setAngularFactor));
     cls->defineFunction("setAngularVelocity", _SE(js_physics_RigidBody_setAngularVelocity));
-    cls->defineFunction("setCollisionFilter", _SE(js_physics_RigidBody_setCollisionFilter));
+    cls->defineFunction("setGroup", _SE(js_physics_RigidBody_setGroup));
     cls->defineFunction("setLinearDamping", _SE(js_physics_RigidBody_setLinearDamping));
     cls->defineFunction("setLinearFactor", _SE(js_physics_RigidBody_setLinearFactor));
     cls->defineFunction("setLinearVelocity", _SE(js_physics_RigidBody_setLinearVelocity));
+    cls->defineFunction("setMask", _SE(js_physics_RigidBody_setMask));
     cls->defineFunction("setMass", _SE(js_physics_RigidBody_setMass));
     cls->defineFunction("setSleepThreshold", _SE(js_physics_RigidBody_setSleepThreshold));
     cls->defineFunction("setType", _SE(js_physics_RigidBody_setType));
@@ -1028,6 +1158,25 @@ static bool js_physics_SphereShape_getBoundingSphere(se::State& s)
 }
 SE_BIND_FUNC(js_physics_SphereShape_getBoundingSphere)
 
+static bool js_physics_SphereShape_getGroup(se::State& s)
+{
+    cc::physics::SphereShape* cobj = SE_THIS_OBJECT<cc::physics::SphereShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_SphereShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_SphereShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_SphereShape_getGroup)
+
 static bool js_physics_SphereShape_getImpl(se::State& s)
 {
     cc::physics::SphereShape* cobj = SE_THIS_OBJECT<cc::physics::SphereShape>(s);
@@ -1046,6 +1195,25 @@ static bool js_physics_SphereShape_getImpl(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_SphereShape_getImpl)
+
+static bool js_physics_SphereShape_getMask(se::State& s)
+{
+    cc::physics::SphereShape* cobj = SE_THIS_OBJECT<cc::physics::SphereShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_SphereShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_SphereShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_SphereShape_getMask)
 
 static bool js_physics_SphereShape_initialize(se::State& s)
 {
@@ -1153,26 +1321,43 @@ static bool js_physics_SphereShape_setCenter(se::State& s)
 }
 SE_BIND_FUNC(js_physics_SphereShape_setCenter)
 
-static bool js_physics_SphereShape_setCollisionFilter(se::State& s)
+static bool js_physics_SphereShape_setGroup(se::State& s)
 {
     cc::physics::SphereShape* cobj = SE_THIS_OBJECT<cc::physics::SphereShape>(s);
-    SE_PRECONDITION2(cobj, false, "js_physics_SphereShape_setCollisionFilter : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_physics_SphereShape_setGroup : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<int, false> arg0 = {};
-        HolderType<int, false> arg1 = {};
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_physics_SphereShape_setCollisionFilter : Error processing arguments");
-        cobj->setCollisionFilter(arg0.value(), arg1.value());
+        SE_PRECONDITION2(ok, false, "js_physics_SphereShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_physics_SphereShape_setCollisionFilter)
+SE_BIND_FUNC(js_physics_SphereShape_setGroup)
+
+static bool js_physics_SphereShape_setMask(se::State& s)
+{
+    cc::physics::SphereShape* cobj = SE_THIS_OBJECT<cc::physics::SphereShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_SphereShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_SphereShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_SphereShape_setMask)
 
 static bool js_physics_SphereShape_setMaterial(se::State& s)
 {
@@ -1181,18 +1366,24 @@ static bool js_physics_SphereShape_setMaterial(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 3) {
-        HolderType<float, false> arg0 = {};
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
         HolderType<float, false> arg1 = {};
         HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_SphereShape_setMaterial : Error processing arguments");
-        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value());
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
     return false;
 }
 SE_BIND_FUNC(js_physics_SphereShape_setMaterial)
@@ -1268,14 +1459,17 @@ bool js_register_physics_SphereShape(se::Object* obj)
 
     cls->defineFunction("getAABB", _SE(js_physics_SphereShape_getAABB));
     cls->defineFunction("getBoundingSphere", _SE(js_physics_SphereShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_SphereShape_getGroup));
     cls->defineFunction("getImpl", _SE(js_physics_SphereShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_SphereShape_getMask));
     cls->defineFunction("initialize", _SE(js_physics_SphereShape_initialize));
     cls->defineFunction("onDestroy", _SE(js_physics_SphereShape_onDestroy));
     cls->defineFunction("onDisable", _SE(js_physics_SphereShape_onDisable));
     cls->defineFunction("onEnable", _SE(js_physics_SphereShape_onEnable));
     cls->defineFunction("setAsTrigger", _SE(js_physics_SphereShape_setAsTrigger));
     cls->defineFunction("setCenter", _SE(js_physics_SphereShape_setCenter));
-    cls->defineFunction("setCollisionFilter", _SE(js_physics_SphereShape_setCollisionFilter));
+    cls->defineFunction("setGroup", _SE(js_physics_SphereShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_SphereShape_setMask));
     cls->defineFunction("setMaterial", _SE(js_physics_SphereShape_setMaterial));
     cls->defineFunction("setRadius", _SE(js_physics_SphereShape_setRadius));
     cls->defineFunction("updateEventListener", _SE(js_physics_SphereShape_updateEventListener));
@@ -1331,6 +1525,25 @@ static bool js_physics_BoxShape_getBoundingSphere(se::State& s)
 }
 SE_BIND_FUNC(js_physics_BoxShape_getBoundingSphere)
 
+static bool js_physics_BoxShape_getGroup(se::State& s)
+{
+    cc::physics::BoxShape* cobj = SE_THIS_OBJECT<cc::physics::BoxShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_BoxShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_BoxShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_BoxShape_getGroup)
+
 static bool js_physics_BoxShape_getImpl(se::State& s)
 {
     cc::physics::BoxShape* cobj = SE_THIS_OBJECT<cc::physics::BoxShape>(s);
@@ -1349,6 +1562,25 @@ static bool js_physics_BoxShape_getImpl(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_BoxShape_getImpl)
+
+static bool js_physics_BoxShape_getMask(se::State& s)
+{
+    cc::physics::BoxShape* cobj = SE_THIS_OBJECT<cc::physics::BoxShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_BoxShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_BoxShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_BoxShape_getMask)
 
 static bool js_physics_BoxShape_initialize(se::State& s)
 {
@@ -1456,26 +1688,43 @@ static bool js_physics_BoxShape_setCenter(se::State& s)
 }
 SE_BIND_FUNC(js_physics_BoxShape_setCenter)
 
-static bool js_physics_BoxShape_setCollisionFilter(se::State& s)
+static bool js_physics_BoxShape_setGroup(se::State& s)
 {
     cc::physics::BoxShape* cobj = SE_THIS_OBJECT<cc::physics::BoxShape>(s);
-    SE_PRECONDITION2(cobj, false, "js_physics_BoxShape_setCollisionFilter : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_physics_BoxShape_setGroup : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<int, false> arg0 = {};
-        HolderType<int, false> arg1 = {};
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_physics_BoxShape_setCollisionFilter : Error processing arguments");
-        cobj->setCollisionFilter(arg0.value(), arg1.value());
+        SE_PRECONDITION2(ok, false, "js_physics_BoxShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_physics_BoxShape_setCollisionFilter)
+SE_BIND_FUNC(js_physics_BoxShape_setGroup)
+
+static bool js_physics_BoxShape_setMask(se::State& s)
+{
+    cc::physics::BoxShape* cobj = SE_THIS_OBJECT<cc::physics::BoxShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_BoxShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_BoxShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_BoxShape_setMask)
 
 static bool js_physics_BoxShape_setMaterial(se::State& s)
 {
@@ -1484,18 +1733,24 @@ static bool js_physics_BoxShape_setMaterial(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 3) {
-        HolderType<float, false> arg0 = {};
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
         HolderType<float, false> arg1 = {};
         HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_BoxShape_setMaterial : Error processing arguments");
-        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value());
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
     return false;
 }
 SE_BIND_FUNC(js_physics_BoxShape_setMaterial)
@@ -1575,14 +1830,17 @@ bool js_register_physics_BoxShape(se::Object* obj)
 
     cls->defineFunction("getAABB", _SE(js_physics_BoxShape_getAABB));
     cls->defineFunction("getBoundingSphere", _SE(js_physics_BoxShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_BoxShape_getGroup));
     cls->defineFunction("getImpl", _SE(js_physics_BoxShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_BoxShape_getMask));
     cls->defineFunction("initialize", _SE(js_physics_BoxShape_initialize));
     cls->defineFunction("onDestroy", _SE(js_physics_BoxShape_onDestroy));
     cls->defineFunction("onDisable", _SE(js_physics_BoxShape_onDisable));
     cls->defineFunction("onEnable", _SE(js_physics_BoxShape_onEnable));
     cls->defineFunction("setAsTrigger", _SE(js_physics_BoxShape_setAsTrigger));
     cls->defineFunction("setCenter", _SE(js_physics_BoxShape_setCenter));
-    cls->defineFunction("setCollisionFilter", _SE(js_physics_BoxShape_setCollisionFilter));
+    cls->defineFunction("setGroup", _SE(js_physics_BoxShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_BoxShape_setMask));
     cls->defineFunction("setMaterial", _SE(js_physics_BoxShape_setMaterial));
     cls->defineFunction("setSize", _SE(js_physics_BoxShape_setSize));
     cls->defineFunction("updateEventListener", _SE(js_physics_BoxShape_updateEventListener));
@@ -1638,6 +1896,25 @@ static bool js_physics_CapsuleShape_getBoundingSphere(se::State& s)
 }
 SE_BIND_FUNC(js_physics_CapsuleShape_getBoundingSphere)
 
+static bool js_physics_CapsuleShape_getGroup(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_getGroup)
+
 static bool js_physics_CapsuleShape_getImpl(se::State& s)
 {
     cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
@@ -1656,6 +1933,25 @@ static bool js_physics_CapsuleShape_getImpl(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_CapsuleShape_getImpl)
+
+static bool js_physics_CapsuleShape_getMask(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_getMask)
 
 static bool js_physics_CapsuleShape_initialize(se::State& s)
 {
@@ -1763,27 +2059,6 @@ static bool js_physics_CapsuleShape_setCenter(se::State& s)
 }
 SE_BIND_FUNC(js_physics_CapsuleShape_setCenter)
 
-static bool js_physics_CapsuleShape_setCollisionFilter(se::State& s)
-{
-    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
-    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setCollisionFilter : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<int, false> arg0 = {};
-        HolderType<int, false> arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setCollisionFilter : Error processing arguments");
-        cobj->setCollisionFilter(arg0.value(), arg1.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-    return false;
-}
-SE_BIND_FUNC(js_physics_CapsuleShape_setCollisionFilter)
-
 static bool js_physics_CapsuleShape_setCylinderHeight(se::State& s)
 {
     cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
@@ -1822,6 +2097,44 @@ static bool js_physics_CapsuleShape_setDirection(se::State& s)
 }
 SE_BIND_FUNC(js_physics_CapsuleShape_setDirection)
 
+static bool js_physics_CapsuleShape_setGroup(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setGroup)
+
+static bool js_physics_CapsuleShape_setMask(se::State& s)
+{
+    cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_CapsuleShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_CapsuleShape_setMask)
+
 static bool js_physics_CapsuleShape_setMaterial(se::State& s)
 {
     cc::physics::CapsuleShape* cobj = SE_THIS_OBJECT<cc::physics::CapsuleShape>(s);
@@ -1829,18 +2142,24 @@ static bool js_physics_CapsuleShape_setMaterial(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 3) {
-        HolderType<float, false> arg0 = {};
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
         HolderType<float, false> arg1 = {};
         HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_setMaterial : Error processing arguments");
-        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value());
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
     return false;
 }
 SE_BIND_FUNC(js_physics_CapsuleShape_setMaterial)
@@ -1916,16 +2235,19 @@ bool js_register_physics_CapsuleShape(se::Object* obj)
 
     cls->defineFunction("getAABB", _SE(js_physics_CapsuleShape_getAABB));
     cls->defineFunction("getBoundingSphere", _SE(js_physics_CapsuleShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_CapsuleShape_getGroup));
     cls->defineFunction("getImpl", _SE(js_physics_CapsuleShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_CapsuleShape_getMask));
     cls->defineFunction("initialize", _SE(js_physics_CapsuleShape_initialize));
     cls->defineFunction("onDestroy", _SE(js_physics_CapsuleShape_onDestroy));
     cls->defineFunction("onDisable", _SE(js_physics_CapsuleShape_onDisable));
     cls->defineFunction("onEnable", _SE(js_physics_CapsuleShape_onEnable));
     cls->defineFunction("setAsTrigger", _SE(js_physics_CapsuleShape_setAsTrigger));
     cls->defineFunction("setCenter", _SE(js_physics_CapsuleShape_setCenter));
-    cls->defineFunction("setCollisionFilter", _SE(js_physics_CapsuleShape_setCollisionFilter));
     cls->defineFunction("setCylinderHeight", _SE(js_physics_CapsuleShape_setCylinderHeight));
     cls->defineFunction("setDirection", _SE(js_physics_CapsuleShape_setDirection));
+    cls->defineFunction("setGroup", _SE(js_physics_CapsuleShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_CapsuleShape_setMask));
     cls->defineFunction("setMaterial", _SE(js_physics_CapsuleShape_setMaterial));
     cls->defineFunction("setRadius", _SE(js_physics_CapsuleShape_setRadius));
     cls->defineFunction("updateEventListener", _SE(js_physics_CapsuleShape_updateEventListener));
@@ -1981,6 +2303,25 @@ static bool js_physics_PlaneShape_getBoundingSphere(se::State& s)
 }
 SE_BIND_FUNC(js_physics_PlaneShape_getBoundingSphere)
 
+static bool js_physics_PlaneShape_getGroup(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_getGroup)
+
 static bool js_physics_PlaneShape_getImpl(se::State& s)
 {
     cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
@@ -1999,6 +2340,25 @@ static bool js_physics_PlaneShape_getImpl(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_PlaneShape_getImpl)
+
+static bool js_physics_PlaneShape_getMask(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_getMask)
 
 static bool js_physics_PlaneShape_initialize(se::State& s)
 {
@@ -2106,27 +2466,6 @@ static bool js_physics_PlaneShape_setCenter(se::State& s)
 }
 SE_BIND_FUNC(js_physics_PlaneShape_setCenter)
 
-static bool js_physics_PlaneShape_setCollisionFilter(se::State& s)
-{
-    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
-    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setCollisionFilter : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<int, false> arg0 = {};
-        HolderType<int, false> arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setCollisionFilter : Error processing arguments");
-        cobj->setCollisionFilter(arg0.value(), arg1.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-    return false;
-}
-SE_BIND_FUNC(js_physics_PlaneShape_setCollisionFilter)
-
 static bool js_physics_PlaneShape_setConstant(se::State& s)
 {
     cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
@@ -2146,6 +2485,44 @@ static bool js_physics_PlaneShape_setConstant(se::State& s)
 }
 SE_BIND_FUNC(js_physics_PlaneShape_setConstant)
 
+static bool js_physics_PlaneShape_setGroup(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setGroup)
+
+static bool js_physics_PlaneShape_setMask(se::State& s)
+{
+    cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_PlaneShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PlaneShape_setMask)
+
 static bool js_physics_PlaneShape_setMaterial(se::State& s)
 {
     cc::physics::PlaneShape* cobj = SE_THIS_OBJECT<cc::physics::PlaneShape>(s);
@@ -2153,18 +2530,24 @@ static bool js_physics_PlaneShape_setMaterial(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 3) {
-        HolderType<float, false> arg0 = {};
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
         HolderType<float, false> arg1 = {};
         HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_setMaterial : Error processing arguments");
-        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value());
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
     return false;
 }
 SE_BIND_FUNC(js_physics_PlaneShape_setMaterial)
@@ -2244,15 +2627,18 @@ bool js_register_physics_PlaneShape(se::Object* obj)
 
     cls->defineFunction("getAABB", _SE(js_physics_PlaneShape_getAABB));
     cls->defineFunction("getBoundingSphere", _SE(js_physics_PlaneShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_PlaneShape_getGroup));
     cls->defineFunction("getImpl", _SE(js_physics_PlaneShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_PlaneShape_getMask));
     cls->defineFunction("initialize", _SE(js_physics_PlaneShape_initialize));
     cls->defineFunction("onDestroy", _SE(js_physics_PlaneShape_onDestroy));
     cls->defineFunction("onDisable", _SE(js_physics_PlaneShape_onDisable));
     cls->defineFunction("onEnable", _SE(js_physics_PlaneShape_onEnable));
     cls->defineFunction("setAsTrigger", _SE(js_physics_PlaneShape_setAsTrigger));
     cls->defineFunction("setCenter", _SE(js_physics_PlaneShape_setCenter));
-    cls->defineFunction("setCollisionFilter", _SE(js_physics_PlaneShape_setCollisionFilter));
     cls->defineFunction("setConstant", _SE(js_physics_PlaneShape_setConstant));
+    cls->defineFunction("setGroup", _SE(js_physics_PlaneShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_PlaneShape_setMask));
     cls->defineFunction("setMaterial", _SE(js_physics_PlaneShape_setMaterial));
     cls->defineFunction("setNormal", _SE(js_physics_PlaneShape_setNormal));
     cls->defineFunction("updateEventListener", _SE(js_physics_PlaneShape_updateEventListener));
@@ -2262,6 +2648,393 @@ bool js_register_physics_PlaneShape(se::Object* obj)
 
     __jsb_cc_physics_PlaneShape_proto = cls->getProto();
     __jsb_cc_physics_PlaneShape_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
+se::Object* __jsb_cc_physics_TrimeshShape_proto = nullptr;
+se::Class* __jsb_cc_physics_TrimeshShape_class = nullptr;
+
+static bool js_physics_TrimeshShape_getAABB(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_getAABB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::AABB result = cobj->getAABB();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_getAABB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_getAABB)
+
+static bool js_physics_TrimeshShape_getBoundingSphere(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_getBoundingSphere : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::Sphere result = cobj->getBoundingSphere();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_getBoundingSphere : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_getBoundingSphere)
+
+static bool js_physics_TrimeshShape_getGroup(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_getGroup)
+
+static bool js_physics_TrimeshShape_getImpl(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_getImpl)
+
+static bool js_physics_TrimeshShape_getMask(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_getMask)
+
+static bool js_physics_TrimeshShape_initialize(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_initialize)
+
+static bool js_physics_TrimeshShape_onDestroy(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_onDestroy)
+
+static bool js_physics_TrimeshShape_onDisable(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_onDisable)
+
+static bool js_physics_TrimeshShape_onEnable(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_onEnable)
+
+static bool js_physics_TrimeshShape_setAsTrigger(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_setAsTrigger : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_setAsTrigger : Error processing arguments");
+        cobj->setAsTrigger(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_setAsTrigger)
+
+static bool js_physics_TrimeshShape_setCenter(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_setCenter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_setCenter : Error processing arguments");
+        cobj->setCenter(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_setCenter)
+
+static bool js_physics_TrimeshShape_setGroup(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_setGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_setGroup)
+
+static bool js_physics_TrimeshShape_setMask(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_setMask)
+
+static bool js_physics_TrimeshShape_setMaterial(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_setMaterial : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_setMaterial : Error processing arguments");
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_setMaterial)
+
+static bool js_physics_TrimeshShape_setMesh(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_setMesh : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_setMesh : Error processing arguments");
+        cobj->setMesh(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_setMesh)
+
+static bool js_physics_TrimeshShape_updateEventListener(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_updateEventListener : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::EShapeFilterFlag, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_updateEventListener : Error processing arguments");
+        cobj->updateEventListener(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_updateEventListener)
+
+static bool js_physics_TrimeshShape_useConvex(se::State& s)
+{
+    cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TrimeshShape_useConvex : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_useConvex : Error processing arguments");
+        cobj->useConvex(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TrimeshShape_useConvex)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_TrimeshShape_finalize)
+
+static bool js_physics_TrimeshShape_constructor(se::State& s) // constructor.c
+{
+    cc::physics::TrimeshShape* cobj = JSB_ALLOC(cc::physics::TrimeshShape);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_TrimeshShape_constructor, __jsb_cc_physics_TrimeshShape_class, js_cc_physics_TrimeshShape_finalize)
+
+
+
+
+static bool js_cc_physics_TrimeshShape_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::TrimeshShape>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::TrimeshShape* cobj = SE_THIS_OBJECT<cc::physics::TrimeshShape>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_TrimeshShape_finalize)
+
+bool js_register_physics_TrimeshShape(se::Object* obj)
+{
+    auto cls = se::Class::create("TrimeshShape", obj, nullptr, _SE(js_physics_TrimeshShape_constructor));
+
+    cls->defineFunction("getAABB", _SE(js_physics_TrimeshShape_getAABB));
+    cls->defineFunction("getBoundingSphere", _SE(js_physics_TrimeshShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_TrimeshShape_getGroup));
+    cls->defineFunction("getImpl", _SE(js_physics_TrimeshShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_TrimeshShape_getMask));
+    cls->defineFunction("initialize", _SE(js_physics_TrimeshShape_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_TrimeshShape_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_TrimeshShape_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_TrimeshShape_onEnable));
+    cls->defineFunction("setAsTrigger", _SE(js_physics_TrimeshShape_setAsTrigger));
+    cls->defineFunction("setCenter", _SE(js_physics_TrimeshShape_setCenter));
+    cls->defineFunction("setGroup", _SE(js_physics_TrimeshShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_TrimeshShape_setMask));
+    cls->defineFunction("setMaterial", _SE(js_physics_TrimeshShape_setMaterial));
+    cls->defineFunction("setMesh", _SE(js_physics_TrimeshShape_setMesh));
+    cls->defineFunction("updateEventListener", _SE(js_physics_TrimeshShape_updateEventListener));
+    cls->defineFunction("useConvex", _SE(js_physics_TrimeshShape_useConvex));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_TrimeshShape_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::TrimeshShape>(cls);
+
+    __jsb_cc_physics_TrimeshShape_proto = cls->getProto();
+    __jsb_cc_physics_TrimeshShape_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -2288,6 +3061,28 @@ static bool js_physics_PhysXBindings_testAPI(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_PhysXBindings_testAPI)
+
+static bool js_physics_PhysXBindings_getArrayBuffer(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr);
+        ok &= sevalue_to_native(args[1], &arg1, nullptr);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getArrayBuffer : Error processing arguments");
+        std::vector<float>& result = cc::physics::PhysXBindings::getArrayBuffer(arg0.value(), arg1.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getArrayBuffer : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PhysXBindings_getArrayBuffer)
 
 static bool js_physics_PhysXBindings_getLength(se::State& s)
 {
@@ -2329,27 +3124,22 @@ static bool js_physics_PhysXBindings_modifyByPtr(se::State& s)
 }
 SE_BIND_FUNC(js_physics_PhysXBindings_modifyByPtr)
 
-static bool js_physics_PhysXBindings_getArrayBuffer(se::State& s)
+static bool js_physics_PhysXBindings_getTestStructVec(se::State& s)
 {
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<unsigned int, false> arg0 = {};
-        HolderType<float, false> arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0, nullptr);
-        ok &= sevalue_to_native(args[1], &arg1, nullptr);
-        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getArrayBuffer : Error processing arguments");
-        std::vector<float>& result = cc::physics::PhysXBindings::getArrayBuffer(arg0.value(), arg1.value());
+    if (argc == 0) {
+        std::vector<cc::physics::TestStruct>& result = cc::physics::PhysXBindings::getTestStructVec();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getArrayBuffer : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getTestStructVec : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_physics_PhysXBindings_getArrayBuffer)
+SE_BIND_FUNC(js_physics_PhysXBindings_getTestStructVec)
 
 static bool js_physics_PhysXBindings_getPtr(se::State& s)
 {
@@ -2368,22 +3158,24 @@ static bool js_physics_PhysXBindings_getPtr(se::State& s)
 }
 SE_BIND_FUNC(js_physics_PhysXBindings_getPtr)
 
-static bool js_physics_PhysXBindings_getTestStructVec(se::State& s)
+static bool js_physics_PhysXBindings_setTestStruct(se::State& s)
 {
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        std::vector<cc::physics::TestStruct>& result = cc::physics::PhysXBindings::getTestStructVec();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getTestStructVec : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+    if (argc == 2) {
+        HolderType<cc::physics::TestStruct, true> arg0 = {};
+        HolderType<size_t, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr);
+        ok &= sevalue_to_native(args[1], &arg1, nullptr);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_setTestStruct : Error processing arguments");
+        cc::physics::PhysXBindings::setTestStruct(arg0.value(), arg1.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
-SE_BIND_FUNC(js_physics_PhysXBindings_getTestStructVec)
+SE_BIND_FUNC(js_physics_PhysXBindings_setTestStruct)
 
 
 
@@ -2405,11 +3197,12 @@ bool js_register_physics_PhysXBindings(se::Object* obj)
     auto cls = se::Class::create("PhysXBindings", obj, nullptr, nullptr);
 
     cls->defineFunction("testAPI", _SE(js_physics_PhysXBindings_testAPI));
+    cls->defineStaticFunction("getArrayBuffer", _SE(js_physics_PhysXBindings_getArrayBuffer));
     cls->defineStaticFunction("getLength", _SE(js_physics_PhysXBindings_getLength));
     cls->defineStaticFunction("modifyByPtr", _SE(js_physics_PhysXBindings_modifyByPtr));
-    cls->defineStaticFunction("getArrayBuffer", _SE(js_physics_PhysXBindings_getArrayBuffer));
-    cls->defineStaticFunction("getPtr", _SE(js_physics_PhysXBindings_getPtr));
     cls->defineStaticFunction("getTestStructVec", _SE(js_physics_PhysXBindings_getTestStructVec));
+    cls->defineStaticFunction("getPtr", _SE(js_physics_PhysXBindings_getPtr));
+    cls->defineStaticFunction("setTestStruct", _SE(js_physics_PhysXBindings_setTestStruct));
     cls->defineFinalizeFunction(_SE(js_cc_physics_PhysXBindings_finalize));
     cls->install();
     JSBClassType::registerClass<cc::physics::PhysXBindings>(cls);
@@ -2436,6 +3229,7 @@ bool register_all_physics(se::Object* obj)
     js_register_physics_RigidBody(ns);
     js_register_physics_PhysXBindings(ns);
     js_register_physics_SphereShape(ns);
+    js_register_physics_TrimeshShape(ns);
     js_register_physics_PlaneShape(ns);
     js_register_physics_CapsuleShape(ns);
     js_register_physics_BoxShape(ns);

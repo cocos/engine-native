@@ -13,8 +13,8 @@ RigidBody::~RigidBody() {
     _impl.reset(nullptr);
 }
 
-void RigidBody::initialize(const uint& uuid) {
-    _impl->initialize(uuid);
+void RigidBody::initialize(const uint &h, const ERigidBodyType &t, const uint32_t &g) {
+    _impl->initialize(h, t, g);
 }
 
 void RigidBody::onEnable() {
@@ -141,8 +141,20 @@ void RigidBody::applyLocalTorque(float x, float y, float z) {
     _impl->applyLocalTorque(x, y, z);
 }
 
-void RigidBody::setCollisionFilter(int g, int m) {
-    _impl->setCollisionFilter(g, m);
+uint32_t RigidBody::getGroup() {
+    return _impl->getGroup();
+}
+
+void RigidBody::setGroup(uint32_t g) {
+    _impl->setGroup(g);
+}
+
+uint32_t RigidBody::getMask() {
+    return _impl->getMask();
+}
+
+void RigidBody::setMask(uint32_t m) {
+    _impl->setMask(m);
 }
 
 } // namespace physics

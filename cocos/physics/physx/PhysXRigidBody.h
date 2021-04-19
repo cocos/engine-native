@@ -3,7 +3,7 @@
 
 #include "../spec/IRigidBody.h"
 #include "base/Macros.h"
-#include <PhysX/PxPhysicsAPI.h>
+#include "./PhysXInc.h"
 
 using namespace physx;
 
@@ -18,7 +18,7 @@ public:
     CC_INLINE const bool isEnabled() const { return mEnabled; }
     CC_INLINE const PhysXSharedBody &getSharedBody() const { return *mSharedBody; }
     CC_INLINE PhysXSharedBody &getSharedBody() { return *mSharedBody; }
-    virtual void initialize(const uint& uuid) override;
+    virtual void initialize(const uint &h, const ERigidBodyType& t, const uint32_t& g) override;
     virtual void onEnable() override;
     virtual void onDisable() override;
     virtual void onDestroy() override;
@@ -50,12 +50,17 @@ public:
     virtual void applyLocalImpulse(float x, float y, float z, float rx, float ry, float rz) override;
     virtual void applyTorque(float x, float y, float z) override;
     virtual void applyLocalTorque(float x, float y, float z) override;
-    virtual void setCollisionFilter(int g, int m) override;
+    virtual uint32_t getGroup() override;
+    virtual uint32_t getMask() override;
+    virtual void setGroup(uint32_t g) override;
+    virtual void setMask(uint32_t m) override;
+    CC_INLINE const uint32_t getInitialGroup() const { return mGroup; }
 
 protected:
-    bool mEnabled;
     // PhysXWorld* mWrappedWorld;
     PhysXSharedBody *mSharedBody;
+    uint32_t mGroup;
+    bool mEnabled;
 };
 
 } // namespace physics

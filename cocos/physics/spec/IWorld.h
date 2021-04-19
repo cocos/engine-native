@@ -51,6 +51,17 @@ public:
       state(ETouchState::ENTER) {}
 };
 
+struct ConvexDesc {
+    void *positions;
+    uint32_t positionLength;
+};
+
+struct TrimeshDesc : ConvexDesc {
+    void *triangles;
+    uint32_t triangleLength;
+    bool isU16;
+};
+
 class IPhysicsWorld {
 public:
     virtual ~IPhysicsWorld(){};
@@ -61,11 +72,14 @@ public:
     // virtual bool raycast (worldRay: Ray, options: IRaycastOptions, pool: RecyclePool<PhysicsRayResult>, results: PhysicsRayResult[])=0;
     // virtual bool raycastClosest (worldRay: Ray, options: IRaycastOptions, out: PhysicsRayResult)=0;
     virtual void emitEvents() = 0;
-    virtual std::vector<TriggerEventPair> &getTriggerEventPairs() = 0;
-    virtual std::vector<ContactEventPair> &getContactEventPairs() = 0;
     virtual void syncSceneToPhysics() = 0;
     virtual void syncSceneWithCheck() = 0;
     virtual void destroy() = 0;
+    virtual std::vector<TriggerEventPair> &getTriggerEventPairs() = 0;
+    virtual std::vector<ContactEventPair> &getContactEventPairs() = 0;
+    virtual void setCollisionMatrix(uint32_t index, uint32_t mask) = 0;
+    virtual intptr_t createConvex(ConvexDesc &desc) = 0;
+    virtual intptr_t createTrimesh(TrimeshDesc &desc) = 0;
 };
 
 } // namespace physics
@@ -127,4 +141,76 @@ inline bool nativevalue_to_se(const std::vector<cc::physics::ContactEventPair> &
     to.setObject(array);
     array->decRef();
     return true;
+}
+
+template <>
+inline bool sevalue_to_native(const se::Value &from, cc::physics::ConvexDesc *to, se::Object *ctx) {
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto *data = (cc::physics::ConvexDesc *)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
+
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("positionLength", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->positionLength, ctx);
+
+    CC_UNUSED size_t dataLength = 0;
+    json->getProperty("positions", &field);
+    if (!field.isNullOrUndefined()) {
+        se::Object *obj = field.toObject();
+        if (obj->isArrayBuffer()) {
+            ok &= obj->getArrayBufferData((uint8_t **)&to->positions, &dataLength);
+            SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
+        } else if (obj->isTypedArray()) {
+            ok &= obj->getTypedArrayData((uint8_t **)&to->positions, &dataLength);
+            SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
+        } else {
+            ok &= false;
+        }
+    }
+    return ok;
+}
+
+template <>
+inline bool sevalue_to_native(const se::Value &from, cc::physics::TrimeshDesc *to, se::Object *ctx) {
+	if (!sevalue_to_native(from, (cc::physics::ConvexDesc *)to, ctx))
+		return false;
+
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto *data = (cc::physics::TrimeshDesc *)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("triangleLength", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &(to->triangleLength), ctx);
+
+    json->getProperty("isU16", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &(to->isU16), ctx);
+
+    CC_UNUSED size_t dataLength = 0;
+    json->getProperty("triangles", &field);
+    if (!field.isNullOrUndefined()) {
+        se::Object *obj = field.toObject();
+        if (obj->isArrayBuffer()) {
+            ok &= obj->getArrayBufferData((uint8_t **)&to->triangles, &dataLength);
+            SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
+        } else if (obj->isTypedArray()) {
+            ok &= obj->getTypedArrayData((uint8_t **)&to->triangles, &dataLength);
+            SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
+        } else {
+            ok &= false;
+        }
+    }
+
+    return ok;
 }

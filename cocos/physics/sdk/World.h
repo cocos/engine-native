@@ -22,6 +22,9 @@ public:
     virtual std::vector<ContactEventPair> &getContactEventPairs() override;
     virtual void syncSceneToPhysics() override;
     virtual void syncSceneWithCheck() override;
+    virtual void setCollisionMatrix(uint32_t i, uint32_t m) override;
+    virtual intptr_t createConvex(ConvexDesc &desc) override;
+    virtual intptr_t createTrimesh(TrimeshDesc &desc) override;
     virtual void destroy() override;
 
 private:
