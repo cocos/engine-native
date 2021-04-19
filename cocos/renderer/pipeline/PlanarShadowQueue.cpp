@@ -32,7 +32,6 @@
 #include "RenderInstancedQueue.h"
 #include "RenderPipeline.h"
 #include "gfx-base/GFXCommandBuffer.h"
-#include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXShader.h"
 #include "helper/SharedMemory.h"
@@ -80,8 +79,8 @@ void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *c
                 }
 
                 const auto *attributesID = model->getInstancedAttributeID();
-                lenght                   = attributesID[0];
-                if (lenght > 0) {
+                const auto length                   = attributesID[0];
+                if (length > 0) {
                     const auto *subModelID    = model->getSubModelID();
                     const auto  subModelCount = subModelID[0];
                     for (uint m = 1; m <= subModelCount; ++m) {
