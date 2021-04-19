@@ -136,7 +136,7 @@ set_if_undefined(USE_MIDDLEWARE           ON)
 set_if_undefined(USE_DRAGONBONES          ON)
 set_if_undefined(USE_SPINE                ON)
 set_if_undefined(USE_WEBSOCKET_SERVER     OFF)
-set_if_undefined(USE_PHYSICS_PHYSX        ON)
+set_if_undefined(USE_PHYSICS_PHYSX        OFF)
 
 if(ANDROID OR WINDOWS)
     set_if_undefined(CC_USE_GLES3 ON)
