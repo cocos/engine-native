@@ -31,7 +31,6 @@
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
-#include "gfx-base/GFXFramebuffer.h"
 #include "gfx-base/GFXQueue.h"
 #include "gfx-base/GFXRenderPass.h"
 #include "gfx-base/GFXSampler.h"
@@ -57,7 +56,7 @@ gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFla
         return _renderPasses[clearFlags];
     }
 
-    auto device = gfx::Device::getInstance();
+    auto *device = gfx::Device::getInstance();
     gfx::ColorAttachment colorAttachment;
     gfx::DepthStencilAttachment depthStencilAttachment;
     colorAttachment.format = device->getColorFormat();
@@ -80,9 +79,11 @@ gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFla
         depthStencilAttachment.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
     }
 
-    auto renderPass = device->createRenderPass({
+    auto *renderPass = device->createRenderPass({
         {colorAttachment},
         depthStencilAttachment,
+                                                 {},
+
     });
     _renderPasses[clearFlags] = renderPass;
 
@@ -92,12 +93,12 @@ gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFla
 bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
     RenderPipeline::initialize(info);
 
-    if (_flows.size() == 0) {
-        auto shadowFlow = CC_NEW(ShadowFlow);
+    if (_flows.empty()) {
+        auto *shadowFlow = CC_NEW(ShadowFlow);
         shadowFlow->initialize(ShadowFlow::getInitializeInfo());
         _flows.emplace_back(shadowFlow);
 
-        auto forwardFlow = CC_NEW(ForwardFlow);
+        auto *forwardFlow = CC_NEW(ForwardFlow);
         forwardFlow->initialize(ForwardFlow::getInitializeInfo());
         _flows.emplace_back(forwardFlow);
     }
@@ -123,9 +124,9 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
     for (const auto cameraId : cameras) {
-        Camera *camera = GET_CAMERA(cameraId);
+        auto *camera = GET_CAMERA(cameraId);
         _pipelineUBO->updateCameraUBO(camera, camera->getWindow()->hasOffScreenAttachments);
-        for (const auto flow : _flows) {
+        for (auto *const flow : _flows) {
             flow->render(camera);
         }
     }
@@ -136,7 +137,7 @@ void ForwardPipeline::render(const vector<uint> &cameras) {
 
 bool ForwardPipeline::activeRenderer() {
     _commandBuffers.push_back(_device->getCommandBuffer());
-    const auto sharedData = _pipelineSceneData->getSharedData();
+    auto *const sharedData = _pipelineSceneData->getSharedData();
 
     gfx::SamplerInfo info{
         gfx::Filter::LINEAR,
@@ -145,9 +146,13 @@ bool ForwardPipeline::activeRenderer() {
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
+        {},
+        {},
+        {},
+        {},
     };
-    const auto shadowMapSamplerHash = SamplerLib::genSamplerHash(std::move(info));
-    const auto shadowMapSampler = SamplerLib::getSampler(shadowMapSamplerHash);
+    const auto shadowMapSamplerHash = SamplerLib::genSamplerHash(info);
+    auto *const shadowMapSampler     = SamplerLib::getSampler(shadowMapSamplerHash);
 
     // Main light sampler binding
     this->_descriptorSet->bindSampler(SHADOWMAP::BINDING, shadowMapSampler);

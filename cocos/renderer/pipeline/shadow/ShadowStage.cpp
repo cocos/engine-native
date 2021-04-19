@@ -65,7 +65,7 @@ void ShadowStage::render(Camera *camera) {
         return;
     }
 
-    auto cmdBuffer = _pipeline->getCommandBuffers()[0];
+    auto *cmdBuffer = _pipeline->getCommandBuffers()[0];
 
     _additiveShadowQueue->gatherLightPasses(_light, cmdBuffer);
 
@@ -93,13 +93,13 @@ void ShadowStage::destroy() {
 }
 
 void ShadowStage::clearFramebuffer(Camera *camera) {
-    const auto pipeline = dynamic_cast<ForwardPipeline *>(_pipeline);
+    auto *pipeline = dynamic_cast<ForwardPipeline *>(_pipeline);
 
     if (!_light || !_framebuffer) {
         return;
     }
 
-    auto cmdBuffer = pipeline->getCommandBuffers()[0];
+    auto *cmdBuffer = pipeline->getCommandBuffers()[0];
 
     _clearColors[0] = {1.0F, 1.0F, 1.0F, 1.0F};
     auto *renderPass = _framebuffer->getRenderPass();
