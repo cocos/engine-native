@@ -5,6 +5,7 @@
 #include "math/Vec3.h"
 #include "math/Vec4.h"
 #include <PhysX/PxPhysicsAPI.h>
+#include <unordered_map>
 
 #define PX_RELEASE(x) \
     if (x) {          \
@@ -88,6 +89,11 @@ CC_INLINE T PxAbsMax(const T &a, const T &b) {
 }
 
 void PxSetFromTwoVectors(PxQuat &out, const PxVec3 &a, const PxVec3 &b);
+
+CC_INLINE std::unordered_map<intptr_t, intptr_t> &getPxObjMap() {
+    static std::unordered_map<intptr_t, intptr_t> m;
+    return m;
+}
 
 } // namespace physics
 } // namespace cc

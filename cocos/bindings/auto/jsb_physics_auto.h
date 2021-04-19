@@ -15,6 +15,7 @@ bool register_all_physics(se::Object* obj);
 JSB_REGISTER_OBJECT_TYPE(cc::physics::World);
 SE_DECLARE_FUNC(js_physics_World_destroy);
 SE_DECLARE_FUNC(js_physics_World_emitEvents);
+SE_DECLARE_FUNC(js_physics_World_getTriggerEventPairs);
 SE_DECLARE_FUNC(js_physics_World_setAllowSleep);
 SE_DECLARE_FUNC(js_physics_World_setDefaultMaterial);
 SE_DECLARE_FUNC(js_physics_World_setGravity);
@@ -166,6 +167,8 @@ JSB_REGISTER_OBJECT_TYPE(cc::physics::PhysXBindings);
 SE_DECLARE_FUNC(js_physics_PhysXBindings_testAPI);
 SE_DECLARE_FUNC(js_physics_PhysXBindings_getLength);
 SE_DECLARE_FUNC(js_physics_PhysXBindings_modifyByPtr);
+SE_DECLARE_FUNC(js_physics_PhysXBindings_getArrayBuffer);
 SE_DECLARE_FUNC(js_physics_PhysXBindings_getPtr);
+SE_DECLARE_FUNC(js_physics_PhysXBindings_getTestStructVec);
 
 #endif //#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

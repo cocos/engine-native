@@ -22,7 +22,7 @@ void PhysXSphere::onComponentSet() {
     auto &phy = PhysXWorld::getPhysics();
     static auto const mat = phy.createMaterial(0.5, 0.5, 0.1);
     updateGeometry();
-    mShape = phy.createShape(getPxGeometry<PxSphereGeometry>(), *mat);
+    mShape = phy.createShape(getPxGeometry<PxSphereGeometry>(), *mat, true);
 }
 
 void PhysXSphere::updateScale() {

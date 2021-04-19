@@ -17,6 +17,7 @@ void PhysXShape::initialize(const uint &handle) {
     mSharedBody = ins.getSharedBody(handle);
     getSharedBody().reference(true);
     onComponentSet();
+    getPxObjMap().insert(std::pair<intptr_t, intptr_t>((intptr_t)&getShape(), getImpl()));
 }
 
 void PhysXShape::onEnable() {
@@ -31,6 +32,7 @@ void PhysXShape::onDisable() {
 
 void PhysXShape::onDestroy() {
     getSharedBody().reference(false);
+    getPxObjMap().erase((intptr_t)&getShape());
 }
 
 void PhysXShape::setMaterial(float f, float df, float r) {

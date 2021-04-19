@@ -20,5 +20,7 @@ void PxSetFromTwoVectors(PxQuat &out, const PxVec3 &a, const PxVec3 &b) {
     }
 }
 
+// std::unordered_map<intptr_t, intptr_t>& getPxObjMap();
+
 } // namespace physics
 } // namespace cc

@@ -22,7 +22,7 @@ void PhysXBox::onComponentSet() {
     auto &phy = PhysXWorld::getPhysics();
     static auto mat = phy.createMaterial(0.5, 0.5, 0.1);
     updateGeometry();
-    mShape = phy.createShape(getPxGeometry<PxBoxGeometry>(), *mat);
+    mShape = phy.createShape(getPxGeometry<PxBoxGeometry>(), *mat, true);
 }
 
 void PhysXBox::updateScale() {

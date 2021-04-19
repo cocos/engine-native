@@ -9,9 +9,8 @@ World::World() {
     _impl.reset(new WrappedWorld());
 }
 
-World::~World()
-{
-	_impl.reset(nullptr);
+World::~World() {
+    _impl.reset(nullptr);
 }
 
 void World::emitEvents() {
@@ -44,6 +43,10 @@ void World::syncSceneWithCheck() {
 
 void World::destroy() {
     _impl->destroy();
+}
+
+std::vector<TriggerEventPair> &World::getTriggerEventPairs() {
+    return _impl->getTriggerEventPairs();
 }
 
 } // namespace physics

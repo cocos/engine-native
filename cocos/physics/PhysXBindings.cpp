@@ -50,6 +50,18 @@ void PhysXBindings::modifyByPtr(int ptr, float x, float y, float z) {
     v3->z = z;
 }
 
+std::vector<float> &PhysXBindings::getArrayBuffer(uint32_t size, float val) {
+    static std::vector<float> vec;
+    vec.resize(size, val);
+    return vec;
+}
+
+std::vector<TestStruct> &PhysXBindings::getTestStructVec() {
+	static std::vector<TestStruct> vec;
+    vec.push_back(TestStruct{(intptr_t)&vec, (intptr_t)vec.size()});
+    return vec;
+}
+
 } // namespace physics
 } // namespace cc
 

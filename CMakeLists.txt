@@ -1074,6 +1074,10 @@ cocos_source_files(
     cocos/physics/physx/PhysXUtils.cpp
     cocos/physics/physx/PhysXWorld.h
     cocos/physics/physx/PhysXWorld.cpp
+    cocos/physics/physx/PhysXFilterShader.h
+    cocos/physics/physx/PhysXFilterShader.cpp
+    cocos/physics/physx/PhysXEventManager.h
+    cocos/physics/physx/PhysXEventManager.cpp
     cocos/physics/physx/PhysXSharedBody.h
     cocos/physics/physx/PhysXSharedBody.cpp
     cocos/physics/physx/PhysXRigidBody.h

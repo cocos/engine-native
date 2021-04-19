@@ -44,6 +44,25 @@ static bool js_physics_World_emitEvents(se::State& s)
 }
 SE_BIND_FUNC(js_physics_World_emitEvents)
 
+static bool js_physics_World_getTriggerEventPairs(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_getTriggerEventPairs : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::vector<cc::physics::TriggerEventPair>& result = cobj->getTriggerEventPairs();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_getTriggerEventPairs : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_getTriggerEventPairs)
+
 static bool js_physics_World_setAllowSleep(se::State& s)
 {
     cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
@@ -191,6 +210,7 @@ bool js_register_physics_World(se::Object* obj)
 
     cls->defineFunction("destroy", _SE(js_physics_World_destroy));
     cls->defineFunction("emitEvents", _SE(js_physics_World_emitEvents));
+    cls->defineFunction("getTriggerEventPairs", _SE(js_physics_World_getTriggerEventPairs));
     cls->defineFunction("setAllowSleep", _SE(js_physics_World_setAllowSleep));
     cls->defineFunction("setDefaultMaterial", _SE(js_physics_World_setDefaultMaterial));
     cls->defineFunction("setGravity", _SE(js_physics_World_setGravity));
@@ -2289,6 +2309,28 @@ static bool js_physics_PhysXBindings_modifyByPtr(se::State& s)
 }
 SE_BIND_FUNC(js_physics_PhysXBindings_modifyByPtr)
 
+static bool js_physics_PhysXBindings_getArrayBuffer(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, nullptr);
+        ok &= sevalue_to_native(args[1], &arg1, nullptr);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getArrayBuffer : Error processing arguments");
+        std::vector<float>& result = cc::physics::PhysXBindings::getArrayBuffer(arg0.value(), arg1.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getArrayBuffer : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PhysXBindings_getArrayBuffer)
+
 static bool js_physics_PhysXBindings_getPtr(se::State& s)
 {
     const auto& args = s.args();
@@ -2305,6 +2347,23 @@ static bool js_physics_PhysXBindings_getPtr(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_physics_PhysXBindings_getPtr)
+
+static bool js_physics_PhysXBindings_getTestStructVec(se::State& s)
+{
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::vector<cc::physics::TestStruct>& result = cc::physics::PhysXBindings::getTestStructVec();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_PhysXBindings_getTestStructVec : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_PhysXBindings_getTestStructVec)
 
 
 
@@ -2328,7 +2387,9 @@ bool js_register_physics_PhysXBindings(se::Object* obj)
     cls->defineFunction("testAPI", _SE(js_physics_PhysXBindings_testAPI));
     cls->defineStaticFunction("getLength", _SE(js_physics_PhysXBindings_getLength));
     cls->defineStaticFunction("modifyByPtr", _SE(js_physics_PhysXBindings_modifyByPtr));
+    cls->defineStaticFunction("getArrayBuffer", _SE(js_physics_PhysXBindings_getArrayBuffer));
     cls->defineStaticFunction("getPtr", _SE(js_physics_PhysXBindings_getPtr));
+    cls->defineStaticFunction("getTestStructVec", _SE(js_physics_PhysXBindings_getTestStructVec));
     cls->defineFinalizeFunction(_SE(js_cc_physics_PhysXBindings_finalize));
     cls->install();
     JSBClassType::registerClass<cc::physics::PhysXBindings>(cls);

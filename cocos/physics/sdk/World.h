@@ -18,6 +18,7 @@ public:
     // virtual bool raycast (worldRay: Ray, options: IRaycastOptions, pool: RecyclePool<PhysicsRayResult>, results: PhysicsRayResult[])=0;
     // virtual bool raycastClosest (worldRay: Ray, options: IRaycastOptions, out: PhysicsRayResult)=0;
     virtual void emitEvents() override;
+    virtual std::vector<TriggerEventPair> &getTriggerEventPairs() override;
     virtual void syncSceneToPhysics() override;
     virtual void syncSceneWithCheck() override;
     virtual void destroy() override;
