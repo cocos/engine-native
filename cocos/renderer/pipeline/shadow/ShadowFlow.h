@@ -35,7 +35,7 @@ struct Shadows;
 class CC_DLL ShadowFlow : public RenderFlow {
 public:
     ShadowFlow() = default;
-    virtual ~ShadowFlow();
+    ~ShadowFlow() override;
 
     static const RenderFlowInfo &getInitializeInfo();
 
@@ -54,7 +54,6 @@ private:
 
     void initShadowFrameBuffer(RenderPipeline *pipeline, const Light *light);
 
-private:
     static RenderFlowInfo initInfo;
 
     gfx::RenderPass *_renderPass = nullptr;

@@ -68,5 +68,5 @@ void UIPhase::render(Camera *camera, gfx::RenderPass *renderPass){
     }
 }
 
-}
-}
+} // namespace pipeline
+} // namespace cc

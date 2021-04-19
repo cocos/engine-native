@@ -136,7 +136,7 @@ void ForwardStage::render(Camera *camera) {
         const auto *const subModelID = model->getSubModelID();
         const auto subModelCount = subModelID[0];
         for (m = 1; m <= subModelCount; ++m) {
-            const auto *subModel = model->getSubModelView(subModelID[m]);
+            const auto *subModel = cc::pipeline::ModelView::getSubModelView(subModelID[m]);
             for (p = 0; p < subModel->passCount; ++p) {
                 const PassView *pass = subModel->getPassView(p);
 
