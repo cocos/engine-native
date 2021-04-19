@@ -53,7 +53,7 @@ public:
     void clearFramebuffer(Camera *camera);
 
 private:
-    static RenderStageInfo _initInfo;
+    static RenderStageInfo initInfo;
 
     gfx::Rect _renderArea;
     const Light *_light = nullptr;
