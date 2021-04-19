@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../../spec/IShape.h"
 #include "../PhysXInc.h"
+#include "../../spec/IShape.h"
 #include "base/Macros.h"
 
 using namespace physx;

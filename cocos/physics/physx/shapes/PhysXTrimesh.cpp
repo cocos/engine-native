@@ -1,8 +1,8 @@
 
+#include "PhysXShape.h"
 #include "PhysXTrimesh.h"
 #include "../PhysXUtils.h"
 #include "../PhysXWorld.h"
-#include "PhysXShape.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 
 namespace cc {

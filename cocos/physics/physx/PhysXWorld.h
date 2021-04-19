@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../spec/IWorld.h"
 #include "./PhysXInc.h"
+#include "../spec/IWorld.h"
 #include "PhysXEventManager.h"
 #include "PhysXFilterShader.h"
 #include "PhysXRigidBody.h"

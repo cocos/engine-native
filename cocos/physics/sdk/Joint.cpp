@@ -1,6 +1,6 @@
 
-#include "Joint.h"
 #include "../PhysicsSelector.h"
+#include "Joint.h"
 
 #define CC_PHYSICS_JOINT_DEFINITION(CLASS, WRAPPED) \
                                                     \

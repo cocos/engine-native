@@ -1,3 +1,5 @@
+
+#include "PhysXInc.h"
 #include "PhysXEventManager.h"
 #include "../spec/IWorld.h"
 #include "PhysXUtils.h"

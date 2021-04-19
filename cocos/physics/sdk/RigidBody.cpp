@@ -1,6 +1,6 @@
 
-#include "RigidBody.h"
 #include "../PhysicsSelector.h"
+#include "RigidBody.h"
 
 namespace cc {
 namespace physics {

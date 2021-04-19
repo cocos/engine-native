@@ -1,6 +1,6 @@
 
-#include "Shape.h"
 #include "../PhysicsSelector.h"
+#include "Shape.h"
 
 #define CC_PHYSICS_SHAPE_DEFINITION(CLASS, WRAPPED)                        \
                                                                            \

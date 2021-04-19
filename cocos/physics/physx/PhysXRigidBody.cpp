@@ -1,4 +1,5 @@
 
+#include "PhysXInc.h"
 #include "PhysXRigidBody.h"
 #include "PhysXUtils.h"
 #include "PhysXWorld.h"
