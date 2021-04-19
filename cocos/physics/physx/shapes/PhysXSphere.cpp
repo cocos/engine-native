@@ -20,8 +20,7 @@ void PhysXSphere::setRadius(float r) {
 
 void PhysXSphere::onComponentSet() {
     updateGeometry();
-    auto mat = (PxMaterial *)getPxMaterialMap()[0];
-    mShape = PxGetPhysics().createShape(getPxGeometry<PxSphereGeometry>(), *mat, true);
+    mShape = PxGetPhysics().createShape(getPxGeometry<PxSphereGeometry>(), getDefaultMaterial(), true);
 }
 
 void PhysXSphere::updateScale() {

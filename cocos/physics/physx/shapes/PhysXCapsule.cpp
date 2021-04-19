@@ -34,8 +34,7 @@ void PhysXCapsule::setDirection(EAxisDirection v) {
 
 void PhysXCapsule::onComponentSet() {
     updateGeometry();
-    auto mat = (PxMaterial *)getPxMaterialMap()[0];
-    mShape = PxGetPhysics().createShape(getPxGeometry<PxCapsuleGeometry>(), *mat, true);
+    mShape = PxGetPhysics().createShape(getPxGeometry<PxCapsuleGeometry>(), getDefaultMaterial(), true);
 }
 
 void PhysXCapsule::updateScale() {

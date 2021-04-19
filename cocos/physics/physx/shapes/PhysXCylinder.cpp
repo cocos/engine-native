@@ -3,33 +3,32 @@
 #include "../PhysXUtils.h"
 #include "../PhysXWorld.h"
 #include "PhysXShape.h"
-#include "renderer/pipeline/helper/SharedMemory.h"
 #include "math/Quaternion.h"
+#include "renderer/pipeline/helper/SharedMemory.h"
 #include <algorithm>
 
 namespace cc {
 namespace physics {
 
-PhysXCylinder::PhysXCylinder() : mMeshHandle(0),
+PhysXCylinder::PhysXCylinder() : mMesh(nullptr),
                                  PhysXShape(){};
 
 PhysXCylinder::~PhysXCylinder(){};
 
 void PhysXCylinder::setConvex(intptr_t handle) {
-    if (mMeshHandle == handle) return;
-    mMeshHandle = handle;
+    if ((intptr_t)mMesh == handle) return;
+    mMesh = (PxConvexMesh *)handle;
     if (mShape) {
         // TODO: ...
     }
 }
 
 void PhysXCylinder::onComponentSet() {
-    if (mMeshHandle) {
+    if (mMesh) {
         PxConvexMeshGeometry geom;
-        geom.convexMesh = (PxConvexMesh *)mMeshHandle;
+        geom.convexMesh = mMesh;
         // geom.meshFlags = PxConvexMeshGeometryFlags::eTIGHT_BOUNDS;
-        auto mat = (PxMaterial *)getPxMaterialMap()[0];
-        mShape = PxGetPhysics().createShape(geom, *mat, true);
+        mShape = PxGetPhysics().createShape(geom, getDefaultMaterial(), true);
         updateGeometry();
     }
 }
@@ -49,7 +48,7 @@ void PhysXCylinder::updateGeometry() {
     const auto xz = std::max(0.0001f, mData.radius / 0.5f);
     scale.scale.x *= xz;
     scale.scale.z *= xz;
-	Quaternion quat;
+    Quaternion quat;
     switch (mData.direction) {
         case EAxisDirection::X_AXIS:
             quat.set(Vec3::UNIT_Z, PxPiDivTwo);

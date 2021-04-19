@@ -11,26 +11,25 @@
 namespace cc {
 namespace physics {
 
-PhysXCone::PhysXCone() : mMeshHandle(0),
+PhysXCone::PhysXCone() : mMesh(nullptr),
                          PhysXShape(){};
 
 PhysXCone::~PhysXCone(){};
 
 void PhysXCone::setConvex(intptr_t handle) {
-    if (mMeshHandle == handle) return;
-    mMeshHandle = handle;
+    if ((intptr_t)mMesh == handle) return;
+    mMesh = (PxConvexMesh *)handle;
     if (mShape) {
         // TODO: ...
     }
 }
 
 void PhysXCone::onComponentSet() {
-    if (mMeshHandle) {
+    if (mMesh) {
         PxConvexMeshGeometry geom;
-        geom.convexMesh = (PxConvexMesh *)mMeshHandle;
+        geom.convexMesh = mMesh;
         // geom.meshFlags = PxConvexMeshGeometryFlags::eTIGHT_BOUNDS;
-        auto mat = (PxMaterial *)getPxMaterialMap()[0];
-        mShape = PxGetPhysics().createShape(geom, *mat, true);
+        mShape = PxGetPhysics().createShape(geom, getDefaultMaterial(), true);
         updateGeometry();
     }
 }

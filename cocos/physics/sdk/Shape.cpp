@@ -85,7 +85,7 @@ CC_PHYSICS_SHAPE_DEFINITION(CapsuleShape, WrappedCapsuleShape)
 CC_PHYSICS_SHAPE_DEFINITION(CylinderShape, WrappedCylinderShape)
 CC_PHYSICS_SHAPE_DEFINITION(ConeShape, WrappedConeShape)
 CC_PHYSICS_SHAPE_DEFINITION(TrimeshShape, WrappedTrimeshShape)
-// CC_PHYSICS_SHAPE_DEFINITION(TerrainShape, WrappedTerrainShape)
+CC_PHYSICS_SHAPE_DEFINITION(TerrainShape, WrappedTerrainShape)
 
 /// EXTRAS ///
 
@@ -123,6 +123,10 @@ void TrimeshShape::setMesh(intptr_t v) {
 
 void TrimeshShape::useConvex(bool v) {
     _impl->useConvex(v);
+}
+
+void TerrainShape::setTerrain(intptr_t v, float rs, float cs, float hs) {
+    _impl->setTerrain(v, rs, cs, hs);
 }
 
 void CylinderShape::setConvex(intptr_t v) {

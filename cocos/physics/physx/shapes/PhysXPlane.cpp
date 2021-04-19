@@ -24,8 +24,7 @@ void PhysXPlane::setNormal(float x, float y, float z) {
 }
 
 void PhysXPlane::onComponentSet() {
-    auto mat = (PxMaterial *)getPxMaterialMap()[0];
-    mShape = PxGetPhysics().createShape(getPxGeometry<PxPlaneGeometry>(), *mat);
+    mShape = PxGetPhysics().createShape(getPxGeometry<PxPlaneGeometry>(), getDefaultMaterial(), true);
     updateCenter();
 }
 

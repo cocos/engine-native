@@ -12,6 +12,7 @@
 	#define WrappedPlaneShape PhysXPlane
 	#define WrappedCapsuleShape PhysXCapsule
     #define WrappedTrimeshShape PhysXTrimesh
+    #define WrappedTerrainShape PhysXTerrain
     #define WrappedConeShape PhysXCone
     #define WrappedCylinderShape PhysXCylinder
 #endif

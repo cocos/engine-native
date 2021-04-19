@@ -8,7 +8,7 @@
 namespace cc {
 namespace physics {
 
-PhysXTrimesh::PhysXTrimesh() : mMeshHandle(0),
+PhysXTrimesh::PhysXTrimesh() : mMeshHandle(NULL),
                                mConvex(false),
                                PhysXShape(){};
 
@@ -32,17 +32,17 @@ void PhysXTrimesh::useConvex(bool v) {
 
 void PhysXTrimesh::onComponentSet() {
     if (mMeshHandle) {
-        auto mat = (PxMaterial *)getPxMaterialMap()[0];
+        const auto &mat = getDefaultMaterial();
         if (mConvex) {
             PxConvexMeshGeometry geom;
             geom.convexMesh = (PxConvexMesh *)mMeshHandle;
             // geom.meshFlags = PxConvexMeshGeometryFlags::eTIGHT_BOUNDS;
-            mShape = PxGetPhysics().createShape(geom, *mat, true);
+            mShape = PxGetPhysics().createShape(geom, mat, true);
         } else {
             PxTriangleMeshGeometry geom;
             geom.triangleMesh = (PxTriangleMesh *)mMeshHandle;
             // geom.meshFlags = PxMeshGeometryFlag::eDOUBLE_SIDED;
-            mShape = PxGetPhysics().createShape(geom, *mat, true);
+            mShape = PxGetPhysics().createShape(geom, mat, true);
         }
         updateGeometry();
     }

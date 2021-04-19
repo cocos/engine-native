@@ -14,6 +14,7 @@ bool register_all_physics(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::physics::World);
 SE_DECLARE_FUNC(js_physics_World_createConvex);
+SE_DECLARE_FUNC(js_physics_World_createHeightField);
 SE_DECLARE_FUNC(js_physics_World_createMaterial);
 SE_DECLARE_FUNC(js_physics_World_createTrimesh);
 SE_DECLARE_FUNC(js_physics_World_destroy);
@@ -253,6 +254,31 @@ SE_DECLARE_FUNC(js_physics_ConeShape_setMask);
 SE_DECLARE_FUNC(js_physics_ConeShape_setMaterial);
 SE_DECLARE_FUNC(js_physics_ConeShape_updateEventListener);
 SE_DECLARE_FUNC(js_physics_ConeShape_ConeShape);
+
+extern se::Object* __jsb_cc_physics_TerrainShape_proto;
+extern se::Class* __jsb_cc_physics_TerrainShape_class;
+
+bool js_register_cc_physics_TerrainShape(se::Object* obj);
+bool register_all_physics(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::physics::TerrainShape);
+SE_DECLARE_FUNC(js_physics_TerrainShape_getAABB);
+SE_DECLARE_FUNC(js_physics_TerrainShape_getBoundingSphere);
+SE_DECLARE_FUNC(js_physics_TerrainShape_getGroup);
+SE_DECLARE_FUNC(js_physics_TerrainShape_getImpl);
+SE_DECLARE_FUNC(js_physics_TerrainShape_getMask);
+SE_DECLARE_FUNC(js_physics_TerrainShape_initialize);
+SE_DECLARE_FUNC(js_physics_TerrainShape_onDestroy);
+SE_DECLARE_FUNC(js_physics_TerrainShape_onDisable);
+SE_DECLARE_FUNC(js_physics_TerrainShape_onEnable);
+SE_DECLARE_FUNC(js_physics_TerrainShape_setAsTrigger);
+SE_DECLARE_FUNC(js_physics_TerrainShape_setCenter);
+SE_DECLARE_FUNC(js_physics_TerrainShape_setGroup);
+SE_DECLARE_FUNC(js_physics_TerrainShape_setMask);
+SE_DECLARE_FUNC(js_physics_TerrainShape_setMaterial);
+SE_DECLARE_FUNC(js_physics_TerrainShape_setTerrain);
+SE_DECLARE_FUNC(js_physics_TerrainShape_updateEventListener);
+SE_DECLARE_FUNC(js_physics_TerrainShape_TerrainShape);
 
 extern se::Object* __jsb_cc_physics_PhysXBindings_proto;
 extern se::Class* __jsb_cc_physics_PhysXBindings_class;

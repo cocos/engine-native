@@ -88,5 +88,10 @@ public:
     virtual void useConvex(bool v) = 0;
 };
 
+class ITerrainShape : virtual public IBaseShape {
+public:
+    virtual void setTerrain(intptr_t v, float rs, float cs, float hs) = 0;
+};
+
 } // namespace physics
 } // namespace cc

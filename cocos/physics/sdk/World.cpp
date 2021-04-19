@@ -66,5 +66,9 @@ intptr_t World::createTrimesh(TrimeshDesc &desc) {
     return _impl->createTrimesh(desc);
 }
 
+intptr_t World::createHeightField(HeightFieldDesc &desc) {
+    return _impl->createHeightField(desc);
+}
+
 } // namespace physics
 } // namespace cc

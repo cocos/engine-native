@@ -62,6 +62,12 @@ struct TrimeshDesc : ConvexDesc {
     bool isU16;
 };
 
+struct HeightFieldDesc {
+    uint32_t rows;
+    uint32_t columns;
+    void *samples;
+};
+
 class IPhysicsWorld {
 public:
     virtual ~IPhysicsWorld(){};
@@ -79,6 +85,7 @@ public:
     virtual void setCollisionMatrix(uint32_t index, uint32_t mask) = 0;
     virtual intptr_t createConvex(ConvexDesc &desc) = 0;
     virtual intptr_t createTrimesh(TrimeshDesc &desc) = 0;
+    virtual intptr_t createHeightField(HeightFieldDesc &desc) = 0;
     virtual intptr_t createMaterial(const uint16_t ID, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) = 0;
 };
@@ -215,3 +222,40 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::TrimeshDesc *t
 
     return ok;
 }
+
+template <>
+inline bool sevalue_to_native(const se::Value &from, cc::physics::HeightFieldDesc *to, se::Object *ctx) {
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto *data = (cc::physics::HeightFieldDesc *)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
+
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("rows", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->rows, ctx);
+
+    json->getProperty("columns", &field);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->columns, ctx);
+
+    CC_UNUSED size_t dataLength = 0;
+    json->getProperty("samples", &field);
+    if (!field.isNullOrUndefined()) {
+        se::Object *obj = field.toObject();
+        if (obj->isArrayBuffer()) {
+            ok &= obj->getArrayBufferData((uint8_t **)&to->samples, &dataLength);
+            SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
+        } else if (obj->isTypedArray()) {
+            ok &= obj->getTypedArrayData((uint8_t **)&to->samples, &dataLength);
+            SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
+        } else {
+            ok &= false;
+        }
+    }
+    return ok;
+}
+

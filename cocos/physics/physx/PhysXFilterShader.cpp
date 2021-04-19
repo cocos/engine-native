@@ -13,10 +13,15 @@ PxFilterFlags SimpleFilterShader(
     }
 
     if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1)) {
-        pairFlags = PxPairFlag::eTRIGGER_DEFAULT | PxPairFlag::eDETECT_CCD_CONTACT;
+        pairFlags |= PxPairFlag::eTRIGGER_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_CCD;
         return PxFilterFlag::eDEFAULT;
     }
-    pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST | PxPairFlag::eNOTIFY_TOUCH_PERSISTS | PxPairFlag::eDETECT_CCD_CONTACT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
+	if (!PxFilterObjectIsKinematic(attributes0) || !PxFilterObjectIsKinematic(attributes1)) {
+		pairFlags |= PxPairFlag::eSOLVE_CONTACT;
+	}
+    pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT |
+                PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST | PxPairFlag::eNOTIFY_TOUCH_PERSISTS |
+                PxPairFlag::eDETECT_CCD_CONTACT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
     return PxFilterFlag::eDEFAULT;
 }
 
@@ -56,8 +61,12 @@ PxFilterFlags AdvanceFilterShader(
     const PxU16 needDetectCCD = (fd0.word3 & DETECT_CONTACT_CCD) | (fd1.word3 & DETECT_CONTACT_CCD);
     if (needDetectCCD) pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT;
 
+	if (!PxFilterObjectIsKinematic(attributes0) || !PxFilterObjectIsKinematic(attributes1)) {
+		pairFlags |= PxPairFlag::eSOLVE_CONTACT;
+	}
+
     // simple collision process
-    pairFlags |= PxPairFlag::eCONTACT_DEFAULT;
+    pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT;
 
     // need contact event?
     const PxU16 needContactEvent = (fd0.word3 & DETECT_CONTACT_EVENT) | (fd1.word3 & DETECT_CONTACT_EVENT);

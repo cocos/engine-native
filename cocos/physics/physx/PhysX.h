@@ -8,5 +8,6 @@
 #include "./shapes/PhysXPlane.h"
 #include "./shapes/PhysXCapsule.h"
 #include "./shapes/PhysXTrimesh.h"
+#include "./shapes/PhysXTerrain.h"
 #include "./shapes/PhysXCylinder.h"
 #include "./shapes/PhysXCone.h"

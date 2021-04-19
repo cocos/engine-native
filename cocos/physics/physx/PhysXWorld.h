@@ -28,6 +28,7 @@ public:
     virtual void setCollisionMatrix(uint32_t index, uint32_t mask) override;
     virtual intptr_t createConvex(ConvexDesc &desc) override;
     virtual intptr_t createTrimesh(TrimeshDesc &desc) override;
+    virtual intptr_t createHeightField(HeightFieldDesc &desc) override;
     virtual intptr_t createMaterial(const uint16_t ID, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) override;
     CC_INLINE virtual std::vector<TriggerEventPair> &getTriggerEventPairs() override {
@@ -57,6 +58,9 @@ private:
     PxFoundation *mFoundation;
     PxCooking *mCooking;
     PxPhysics *mPhysics;
+#ifdef CC_DEBUG
+    PxPvd *mPvd;
+#endif
     PxDefaultCpuDispatcher *mDispatcher;
     PxScene *mScene;
     PhysXEventManager *mEventMgr;

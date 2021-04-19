@@ -33,10 +33,16 @@ PhysXWorld::PhysXWorld() {
     mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
     PxTolerancesScale scale{};
     mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, PxCookingParams(scale));
-    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale, true, nullptr);
-    mDispatcher = PxDefaultCpuDispatcherCreate(0);
 
-    PxInitExtensions(*mPhysics, nullptr);
+    PxPvd* pvd = nullptr;
+#ifdef CC_DEBUG
+    pvd = mPvd = PxCreatePvd(*mFoundation);
+    PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+    mPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+#endif
+    mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale, true, pvd);
+    PxInitExtensions(*mPhysics, pvd);
+    mDispatcher = PxDefaultCpuDispatcherCreate(0);
 
     mEventMgr = new PhysXEventManager();
 
@@ -59,8 +65,13 @@ PhysXWorld::~PhysXWorld() {
     delete mEventMgr;
     PX_RELEASE(mScene);
     PX_RELEASE(mDispatcher);
+	PX_RELEASE(mPhysics);
+#ifdef CC_DEBUG
+	PxPvdTransport* transport = mPvd->getTransport();
+    PX_RELEASE(mPvd);
+    PX_RELEASE(transport);
+#endif
     PxCloseExtensions();
-    PX_RELEASE(mPhysics);
     PX_RELEASE(mFoundation);
 }
 
@@ -108,6 +119,30 @@ intptr_t PhysXWorld::createTrimesh(TrimeshDesc &desc) {
     }
     PxTriangleMesh *triangleMesh = getCooking().createTriangleMesh(meshDesc, PxGetPhysics().getPhysicsInsertionCallback());
     return (intptr_t)triangleMesh;
+}
+
+intptr_t PhysXWorld::createHeightField(HeightFieldDesc &desc) {
+    const auto rows = desc.rows;
+    const auto columns = desc.columns;
+    const PxU32 counts = rows * columns;
+    auto samples = new PxHeightFieldSample[counts];
+    for (PxU32 r = 0; r < rows; r++) {
+        for (PxU32 c = 0; c < columns; c++) {
+			 const auto index = c + r * columns;
+             auto v = ((int16_t *)desc.samples)[index];
+			 samples[index].height = v;
+			 //samples[index].materialIndex0 = 0;
+			 //samples[index].materialIndex1 = 0;
+        }
+    }
+    PxHeightFieldDesc hfDesc;
+    hfDesc.nbRows = rows;
+    hfDesc.nbColumns = columns;
+    hfDesc.samples.data = samples;
+    hfDesc.samples.stride = sizeof(PxHeightFieldSample);
+    PxHeightField *hf = getCooking().createHeightField(hfDesc, PxGetPhysics().getPhysicsInsertionCallback());
+    delete[] samples;
+    return (intptr_t)hf;
 }
 
 intptr_t PhysXWorld::createMaterial(const uint16_t ID, float f, float df, float r,

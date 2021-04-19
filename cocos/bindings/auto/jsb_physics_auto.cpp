@@ -36,6 +36,28 @@ static bool js_physics_World_createConvex(se::State& s)
 }
 SE_BIND_FUNC(js_physics_World_createConvex)
 
+static bool js_physics_World_createHeightField(se::State& s)
+{
+    cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_World_createHeightField : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::HeightFieldDesc, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_World_createHeightField : Error processing arguments");
+        int result = cobj->createHeightField(arg0.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_World_createHeightField : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_World_createHeightField)
+
 static bool js_physics_World_createMaterial(se::State& s)
 {
     cc::physics::World* cobj = SE_THIS_OBJECT<cc::physics::World>(s);
@@ -302,6 +324,7 @@ bool js_register_physics_World(se::Object* obj)
     auto cls = se::Class::create("World", obj, nullptr, _SE(js_physics_World_constructor));
 
     cls->defineFunction("createConvex", _SE(js_physics_World_createConvex));
+    cls->defineFunction("createHeightField", _SE(js_physics_World_createHeightField));
     cls->defineFunction("createMaterial", _SE(js_physics_World_createMaterial));
     cls->defineFunction("createTrimesh", _SE(js_physics_World_createTrimesh));
     cls->defineFunction("destroy", _SE(js_physics_World_destroy));
@@ -3831,6 +3854,379 @@ bool js_register_physics_ConeShape(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_cc_physics_TerrainShape_proto = nullptr;
+se::Class* __jsb_cc_physics_TerrainShape_class = nullptr;
+
+static bool js_physics_TerrainShape_getAABB(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_getAABB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::AABB result = cobj->getAABB();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_getAABB : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_getAABB)
+
+static bool js_physics_TerrainShape_getBoundingSphere(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_getBoundingSphere : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::Sphere result = cobj->getBoundingSphere();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_getBoundingSphere : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_getBoundingSphere)
+
+static bool js_physics_TerrainShape_getGroup(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_getGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getGroup();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_getGroup : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_getGroup)
+
+static bool js_physics_TerrainShape_getImpl(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_getImpl)
+
+static bool js_physics_TerrainShape_getMask(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_getMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getMask();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_getMask : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_getMask)
+
+static bool js_physics_TerrainShape_initialize(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_initialize)
+
+static bool js_physics_TerrainShape_onDestroy(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_onDestroy)
+
+static bool js_physics_TerrainShape_onDisable(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_onDisable)
+
+static bool js_physics_TerrainShape_onEnable(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_onEnable)
+
+static bool js_physics_TerrainShape_setAsTrigger(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_setAsTrigger : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_setAsTrigger : Error processing arguments");
+        cobj->setAsTrigger(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_setAsTrigger)
+
+static bool js_physics_TerrainShape_setCenter(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_setCenter : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_setCenter : Error processing arguments");
+        cobj->setCenter(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_setCenter)
+
+static bool js_physics_TerrainShape_setGroup(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_setGroup : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_setGroup : Error processing arguments");
+        cobj->setGroup(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_setGroup)
+
+static bool js_physics_TerrainShape_setMask(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_setMask : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_setMask : Error processing arguments");
+        cobj->setMask(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_setMask)
+
+static bool js_physics_TerrainShape_setMaterial(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_setMaterial : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 6) {
+        HolderType<unsigned short, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        HolderType<uint8_t, false> arg4 = {};
+        HolderType<uint8_t, false> arg5 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
+        ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_setMaterial : Error processing arguments");
+        cobj->setMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 6);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_setMaterial)
+
+static bool js_physics_TerrainShape_setTerrain(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_setTerrain : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 4) {
+        HolderType<int, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        HolderType<float, false> arg3 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        ok &= sevalue_to_native(args[3], &arg3, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_setTerrain : Error processing arguments");
+        cobj->setTerrain(arg0.value(), arg1.value(), arg2.value(), arg3.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_setTerrain)
+
+static bool js_physics_TerrainShape_updateEventListener(se::State& s)
+{
+    cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_TerrainShape_updateEventListener : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::physics::EShapeFilterFlag, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_updateEventListener : Error processing arguments");
+        cobj->updateEventListener(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_TerrainShape_updateEventListener)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_TerrainShape_finalize)
+
+static bool js_physics_TerrainShape_constructor(se::State& s) // constructor.c
+{
+    cc::physics::TerrainShape* cobj = JSB_ALLOC(cc::physics::TerrainShape);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_TerrainShape_constructor, __jsb_cc_physics_TerrainShape_class, js_cc_physics_TerrainShape_finalize)
+
+
+
+
+static bool js_cc_physics_TerrainShape_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::TerrainShape>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::TerrainShape* cobj = SE_THIS_OBJECT<cc::physics::TerrainShape>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_TerrainShape_finalize)
+
+bool js_register_physics_TerrainShape(se::Object* obj)
+{
+    auto cls = se::Class::create("TerrainShape", obj, nullptr, _SE(js_physics_TerrainShape_constructor));
+
+    cls->defineFunction("getAABB", _SE(js_physics_TerrainShape_getAABB));
+    cls->defineFunction("getBoundingSphere", _SE(js_physics_TerrainShape_getBoundingSphere));
+    cls->defineFunction("getGroup", _SE(js_physics_TerrainShape_getGroup));
+    cls->defineFunction("getImpl", _SE(js_physics_TerrainShape_getImpl));
+    cls->defineFunction("getMask", _SE(js_physics_TerrainShape_getMask));
+    cls->defineFunction("initialize", _SE(js_physics_TerrainShape_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_TerrainShape_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_TerrainShape_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_TerrainShape_onEnable));
+    cls->defineFunction("setAsTrigger", _SE(js_physics_TerrainShape_setAsTrigger));
+    cls->defineFunction("setCenter", _SE(js_physics_TerrainShape_setCenter));
+    cls->defineFunction("setGroup", _SE(js_physics_TerrainShape_setGroup));
+    cls->defineFunction("setMask", _SE(js_physics_TerrainShape_setMask));
+    cls->defineFunction("setMaterial", _SE(js_physics_TerrainShape_setMaterial));
+    cls->defineFunction("setTerrain", _SE(js_physics_TerrainShape_setTerrain));
+    cls->defineFunction("updateEventListener", _SE(js_physics_TerrainShape_updateEventListener));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_TerrainShape_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::TerrainShape>(cls);
+
+    __jsb_cc_physics_TerrainShape_proto = cls->getProto();
+    __jsb_cc_physics_TerrainShape_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 se::Object* __jsb_cc_physics_PhysXBindings_proto = nullptr;
 se::Class* __jsb_cc_physics_PhysXBindings_class = nullptr;
 
@@ -4027,6 +4423,7 @@ bool register_all_physics(se::Object* obj)
     js_register_physics_BoxShape(ns);
     js_register_physics_World(ns);
     js_register_physics_ConeShape(ns);
+    js_register_physics_TerrainShape(ns);
     return true;
 }
 

@@ -23,7 +23,7 @@ public:
     };
 
 private:
-    intptr_t mMeshHandle;
+    PxConvexMesh *mMesh;
     Cone mData;
     void updateGeometry();
     virtual void onComponentSet() override;

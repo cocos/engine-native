@@ -39,8 +39,7 @@ void PhysXShape::onDestroy() {
 }
 
 void PhysXShape::setMaterial(const uint16_t ID, float f, float df, float r,
-                             uint8_t m0, uint8_t m1) {
-    auto &m = getPxMaterialMap();
+                             uint8_t m0, uint8_t m1) {    
     PxMaterial *mat = (PxMaterial *)getSharedBody().getWorld().createMaterial(ID, f, df, r, m0, m1);
     getShape().setMaterials(&mat, 1);
 }

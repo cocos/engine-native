@@ -1,10 +1,10 @@
 
 #pragma once
 
+#include "./PhysXInc.h"
 #include "base/Macros.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-#include "./PhysXInc.h"
 #include <unordered_map>
 
 #define PX_RELEASE(x) \
@@ -98,6 +98,10 @@ CC_INLINE std::unordered_map<intptr_t, intptr_t> &getPxEventPairMap() {
 CC_INLINE std::unordered_map<uint16_t, intptr_t> &getPxMaterialMap() {
     static std::unordered_map<uint16_t, intptr_t> m;
     return m;
+}
+
+CC_INLINE PxMaterial &getDefaultMaterial() {
+	return *(PxMaterial *)getPxMaterialMap()[0];
 }
 
 } // namespace physics
