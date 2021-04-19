@@ -29,8 +29,8 @@ class PhysXShape : virtual public IBaseShape {
 
 public:
     virtual ~PhysXShape(){};
-    virtual intptr_t getImpl() override;
-    virtual void initialize(const uint &handle) override;
+    virtual CC_INLINE intptr_t getImpl() override { return (intptr_t)this; }
+    virtual void initialize(const uint handle) override;
     virtual void onEnable() override;
     virtual void onDisable() override;
     virtual void onDestroy() override;

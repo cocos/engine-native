@@ -3,6 +3,7 @@
 #include "PhysXUtils.h"
 #include "PhysXWorld.h"
 #include "shapes/PhysXShape.h"
+#include "joints/PhysXJoint.h"
 #include <math.h>
 
 using namespace physx;
@@ -21,7 +22,7 @@ PhysXSharedBody::PhysXSharedBody(
                                   mType(ERigidBodyType::STATIC),
                                   mIsStatic(true),
                                   mIndex(-1),
-                                  mFilterData(1, 1, 0, 1),
+                                  mFilterData(1, 1, 0, 0),
                                   mNodeHandle(handle),
                                   mStaticActor(nullptr),
                                   mDynamicActor(nullptr),
@@ -31,7 +32,7 @@ PhysXSharedBody::PhysXSharedBody(
     mNode = GET_NODE(mNodeHandle);
 };
 
-PhysXSharedBody *PhysXSharedBody::getSharedBody(const uint &handle, PhysXWorld *const world, PhysXRigidBody *const body) {
+PhysXSharedBody *PhysXSharedBody::getSharedBody(const uint handle, PhysXWorld *const world, PhysXRigidBody *const body) {
     auto iter = sharedBodesMap.find(handle);
     PhysXSharedBody *newSB;
     if (iter != sharedBodesMap.end()) {
@@ -153,12 +154,20 @@ void PhysXSharedBody::updateCenterOfMass() {
     mDynamicActor->setCMassLocalPose(com);
 }
 
+void PhysXSharedBody::syncScale() {
+    for (auto const &sb : mWrappedShapes)
+        sb->updateScale();
+
+    for (auto const &sb : mWrappedJoints0)
+        sb->updateScale0();
+
+    for (auto const &sb : mWrappedJoints1)
+        sb->updateScale1();
+}
+
 void PhysXSharedBody::syncSceneToPhysics() {
     if (getNode().flagsChanged) {
-        if (getNode().flagsChanged & TransformBit::SCALE) {
-            for (auto const &sb : mWrappedShapes)
-                sb->updateScale();
-        }
+        if (getNode().flagsChanged & TransformBit::SCALE) syncScale();
         PxTransform &wp = getImpl().rigidActor->getGlobalPose();
         if (getNode().flagsChanged & TransformBit::POSITION)
             PxSetVec3Ext(wp.p, getNode().worldPosition);
@@ -173,10 +182,7 @@ void PhysXSharedBody::syncSceneToPhysics() {
 }
 
 void PhysXSharedBody::syncSceneWithCheck() {
-    if (getNode().flagsChanged & TransformBit::SCALE) {
-        for (auto const &sb : mWrappedShapes)
-            sb->updateScale();
-    }
+    if (getNode().flagsChanged & TransformBit::SCALE) syncScale();
     PxTransform &wp = getImpl().rigidActor->getGlobalPose();
     bool needUpdate = false;
     if (wp.p != getNode().worldPosition) {
@@ -228,6 +234,34 @@ void PhysXSharedBody::removeShape(PhysXShape &shape) {
             if (!shape.getCenter().isZero()) updateCenterOfMass();
             if (isDynamic()) PxRigidBodyExt::setMassAndUpdateInertia(*getImpl().rigidDynamic, mMass);
         }
+    }
+}
+
+void PhysXSharedBody::addJoint(PhysXJoint &joint, const PxJointActorIndex::Enum index) {
+    if (index == PxJointActorIndex::eACTOR1) {
+        auto beg = mWrappedJoints1.begin();
+        auto end = mWrappedJoints1.end();
+        auto iter = find(beg, end, &joint);
+        if (iter == end) mWrappedJoints1.push_back(&joint);
+    } else {
+        auto beg = mWrappedJoints0.begin();
+        auto end = mWrappedJoints0.end();
+        auto iter = find(beg, end, &joint);
+        if (iter == end) mWrappedJoints0.push_back(&joint);
+    }
+}
+
+void PhysXSharedBody::removeJoint(PhysXJoint &joint, const PxJointActorIndex::Enum index) {
+    if (index == PxJointActorIndex::eACTOR1) {
+        auto beg = mWrappedJoints1.begin();
+        auto end = mWrappedJoints1.end();
+        auto iter = find(beg, end, &joint);
+        if (iter != end) mWrappedJoints1.erase(iter);
+    } else {
+        auto beg = mWrappedJoints0.begin();
+        auto end = mWrappedJoints0.end();
+        auto iter = find(beg, end, &joint);
+        if (iter != end) mWrappedJoints0.erase(iter);
     }
 }
 

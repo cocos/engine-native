@@ -20,7 +20,12 @@ void PxSetFromTwoVectors(PxQuat &out, const PxVec3 &a, const PxVec3 &b) {
     }
 }
 
-// std::unordered_map<intptr_t, intptr_t>& getPxEventPairMap();
+PxRigidActor &getTempRigidActor() {
+    static PxRigidActor *tempRigidActor = nullptr;
+    if (!tempRigidActor)
+        tempRigidActor = PxGetPhysics().createRigidDynamic(PxTransform{PxIdentity});
+    return *tempRigidActor;
+}
 
 } // namespace physics
 } // namespace cc

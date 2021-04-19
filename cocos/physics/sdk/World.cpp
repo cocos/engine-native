@@ -46,11 +46,11 @@ void World::destroy() {
     _impl->destroy();
 }
 
-std::vector<TriggerEventPair> &World::getTriggerEventPairs() {
+std::vector<std::shared_ptr<TriggerEventPair>> &World::getTriggerEventPairs() {
     return _impl->getTriggerEventPairs();
 }
 
-std::vector<ContactEventPair> &World::getContactEventPairs() {
+std::vector<std::shared_ptr<ContactEventPair>> &World::getContactEventPairs() {
     return _impl->getContactEventPairs();
 }
 

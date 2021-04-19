@@ -2,13 +2,14 @@
 #pragma once
 
 #include "bindings/manual/jsb_conversions.h"
+#include <memory>
 #include <stdint.h>
 #include <vector>
 
 namespace cc {
 namespace physics {
 
-enum ETouchState : uint8_t {
+enum class ETouchState : uint8_t {
     ENTER = 0,
     STAY = 1,
     EXIT = 2,
@@ -91,8 +92,8 @@ public:
     virtual void syncSceneWithCheck() = 0;
     virtual void destroy() = 0;
     virtual void setCollisionMatrix(uint32_t i, uint32_t m) = 0;
-    virtual std::vector<TriggerEventPair> &getTriggerEventPairs() = 0;
-    virtual std::vector<ContactEventPair> &getContactEventPairs() = 0;
+    virtual std::vector<std::shared_ptr<TriggerEventPair>> &getTriggerEventPairs() = 0;
+    virtual std::vector<std::shared_ptr<ContactEventPair>> &getContactEventPairs() = 0;
     virtual bool raycast(RaycastOptions &opt) = 0;
     virtual bool raycastClosest(RaycastOptions &opt) = 0;
     virtual std::vector<RaycastResult> &raycastResult() = 0;
@@ -108,13 +109,13 @@ public:
 } // namespace cc
 
 template <>
-inline bool nativevalue_to_se(const std::vector<cc::physics::TriggerEventPair> &from, se::Value &to, se::Object *ctx) {
+inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::TriggerEventPair>> &from, se::Value &to, se::Object *ctx) {
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::TriggerEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         uint32_t t = i * cc::physics::TriggerEventPair::COUNT;
-        array->setArrayElement(t + 0, se::Value((intptr_t)from[i].shapeA));
-        array->setArrayElement(t + 1, se::Value((intptr_t)from[i].shapeB));
-        array->setArrayElement(t + 2, se::Value((uint8_t)from[i].state));
+        array->setArrayElement(t + 0, se::Value((intptr_t)from[i]->shapeA));
+        array->setArrayElement(t + 1, se::Value((intptr_t)from[i]->shapeB));
+        array->setArrayElement(t + 2, se::Value((uint8_t)from[i]->state));
     }
     to.setObject(array);
     return true;
@@ -145,16 +146,16 @@ inline bool nativevalue_to_se(const std::vector<cc::physics::ContactPoint> &from
 }
 
 template <>
-inline bool nativevalue_to_se(const std::vector<cc::physics::ContactEventPair> &from, se::Value &to, se::Object *ctx) {
+inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::ContactEventPair>> &from, se::Value &to, se::Object *ctx) {
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::ContactEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         uint32_t t = i * cc::physics::ContactEventPair::COUNT;
-        array->setArrayElement(t + 0, se::Value((intptr_t)from[i].shapeA));
-        array->setArrayElement(t + 1, se::Value((intptr_t)from[i].shapeB));
-        array->setArrayElement(t + 2, se::Value((uint8_t)from[i].state));
+        array->setArrayElement(t + 0, se::Value((intptr_t)from[i]->shapeA));
+        array->setArrayElement(t + 1, se::Value((intptr_t)from[i]->shapeB));
+        array->setArrayElement(t + 2, se::Value((uint8_t)from[i]->state));
         array->setArrayElement(t + 3, [&]() -> se::Value {
             auto obj = se::Value();
-            nativevalue_to_se(from[i].contacts, obj, ctx);
+            nativevalue_to_se(from[i]->contacts, obj, ctx);
             return obj;
         }());
     }
@@ -300,10 +301,10 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::RaycastOptions
 
     json->getProperty("unitDir", &field);
     if (!field.isNullOrUndefined()) ok &= seval_to_Vec3(field, &to->unitDir);
-    
+
     json->getProperty("mask", &field);
     if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->mask, ctx);
-    
+
     json->getProperty("distance", &field);
     if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->distance, ctx);
 

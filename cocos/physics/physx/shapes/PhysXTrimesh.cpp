@@ -12,8 +12,6 @@ PhysXTrimesh::PhysXTrimesh() : mMeshHandle(NULL),
                                mConvex(false),
                                PhysXShape(){};
 
-PhysXTrimesh::~PhysXTrimesh(){};
-
 void PhysXTrimesh::setMesh(intptr_t handle) {
     if (mMeshHandle == handle) return;
     mMeshHandle = handle;

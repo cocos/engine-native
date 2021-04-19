@@ -14,8 +14,6 @@ PhysXTerrain::PhysXTerrain() : mTerrain(nullptr),
                                mHeightScale(1.f),
                                PhysXShape(){};
 
-PhysXTerrain::~PhysXTerrain(){};
-
 void PhysXTerrain::setTerrain(intptr_t handle, float rs, float cs, float hs) {
     if ((intptr_t)mTerrain == handle) return;
     mTerrain = (PxHeightField *)handle;

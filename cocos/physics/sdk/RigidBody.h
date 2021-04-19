@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../spec/IRigidBody.h"
+#include "../spec/IBody.h"
 #include "base/Macros.h"
 #include <memory>
 
@@ -11,7 +11,9 @@ class CC_DLL RigidBody final : public IRigidBody {
 public:
     RigidBody();
     virtual ~RigidBody();
-    virtual void initialize(const uint &h, const ERigidBodyType& t, const uint32_t& g) override;
+    virtual CC_INLINE const intptr_t getImpl() { return _impl->getImpl(); };
+    virtual CC_INLINE const uint getNodeHandle() { return _impl->getNodeHandle(); }
+    virtual void initialize(const uint h, const ERigidBodyType t, const uint32_t g) override;
     virtual void onEnable() override;
     virtual void onDisable() override;
     virtual void onDestroy() override;

@@ -15,4 +15,5 @@
     #define WrappedTerrainShape PhysXTerrain
     #define WrappedConeShape PhysXCone
     #define WrappedCylinderShape PhysXCylinder
+    #define WrappedRevoluteJoint PhysXRevolute
 #endif

@@ -9,11 +9,7 @@
 namespace cc {
 namespace physics {
 
-intptr_t PhysXShape::getImpl() {
-    return (intptr_t)this;
-}
-
-void PhysXShape::initialize(const uint &handle) {
+void PhysXShape::initialize(const uint handle) {
     PhysXWorld &ins = PhysXWorld::getInstance();
     mSharedBody = ins.getSharedBody(handle);
     getSharedBody().reference(true);

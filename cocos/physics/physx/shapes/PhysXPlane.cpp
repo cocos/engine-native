@@ -11,8 +11,6 @@ PhysXPlane::PhysXPlane() : mConstant(0.f),
                            mNormal(0.f, 1.f, 0.f),
                            PhysXShape(){};
 
-PhysXPlane::~PhysXPlane(){};
-
 void PhysXPlane::setConstant(float x) {
     mConstant = x;
     updateCenter();

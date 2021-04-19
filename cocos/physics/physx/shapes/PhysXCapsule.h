@@ -11,7 +11,7 @@ namespace physics {
 class PhysXCapsule final : public PhysXShape, public ICapsuleShape {
 public:
     PhysXCapsule();
-    virtual ~PhysXCapsule();
+    virtual ~PhysXCapsule(){};
     virtual void setRadius(float v) override;
     virtual void setCylinderHeight(float v) override;
     virtual void setDirection(EAxisDirection v) override;

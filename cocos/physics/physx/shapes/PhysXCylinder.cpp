@@ -13,8 +13,6 @@ namespace physics {
 PhysXCylinder::PhysXCylinder() : mMesh(nullptr),
                                  PhysXShape(){};
 
-PhysXCylinder::~PhysXCylinder(){};
-
 void PhysXCylinder::setConvex(intptr_t handle) {
     if ((intptr_t)mMesh == handle) return;
     mMesh = (PxConvexMesh *)handle;

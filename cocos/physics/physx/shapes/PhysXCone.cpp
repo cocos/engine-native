@@ -14,8 +14,6 @@ namespace physics {
 PhysXCone::PhysXCone() : mMesh(nullptr),
                          PhysXShape(){};
 
-PhysXCone::~PhysXCone(){};
-
 void PhysXCone::setConvex(intptr_t handle) {
     if ((intptr_t)mMesh == handle) return;
     mMesh = (PxConvexMesh *)handle;

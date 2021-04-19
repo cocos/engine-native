@@ -25,7 +25,7 @@ enum class EShapeFilterFlag : uint8_t {
 class IBaseShape : virtual public ILifecycle {
 public:
     virtual ~IBaseShape(){};
-    virtual void initialize(const uint &h) = 0;
+    virtual void initialize(const uint h) = 0;
     virtual intptr_t getImpl() = 0;
     virtual void setMaterial(const uint16_t ID, float f, float df, float r,
                              uint8_t m0, uint8_t m1) = 0;

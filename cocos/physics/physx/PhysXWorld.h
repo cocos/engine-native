@@ -4,10 +4,11 @@
 #include "../spec/IWorld.h"
 #include "./PhysXInc.h"
 #include "PhysXEventManager.h"
+#include "PhysXFilterShader.h"
 #include "PhysXRigidBody.h"
 #include "PhysXSharedBody.h"
-#include "PhysXFilterShader.h"
 #include "base/Macros.h"
+#include <memory>
 
 using namespace physx;
 
@@ -20,8 +21,6 @@ public:
     static PxFoundation &getFundation();
     static PxCooking &getCooking();
     static PxPhysics &getPhysics();
-    static QueryFilterShader &getQueryFilterShader();
-    
     PhysXWorld();
     virtual ~PhysXWorld();
     virtual void step(float fixedTimeStep) override;
@@ -38,10 +37,10 @@ public:
     virtual intptr_t createHeightField(HeightFieldDesc &desc) override;
     virtual intptr_t createMaterial(const uint16_t ID, float f, float df, float r,
                                     uint8_t m0, uint8_t m1) override;
-    CC_INLINE virtual std::vector<TriggerEventPair> &getTriggerEventPairs() override {
+    CC_INLINE virtual std::vector<std::shared_ptr<TriggerEventPair>> &getTriggerEventPairs() override {
         return mEventMgr->getTriggerPairs();
     }
-    CC_INLINE virtual std::vector<ContactEventPair> &getContactEventPairs() override {
+    CC_INLINE virtual std::vector<std::shared_ptr<ContactEventPair>> &getContactEventPairs() override {
         return mEventMgr->getConatctPairs();
     }
     virtual void syncSceneToPhysics() override;
@@ -49,7 +48,7 @@ public:
     virtual void destroy() override;
 
     CC_INLINE PhysXSharedBody *getSharedBody(
-        const uint &handle,
+        const uint handle,
         PhysXRigidBody *const body = nullptr) {
         return PhysXSharedBody::getSharedBody(handle, this, body);
     }

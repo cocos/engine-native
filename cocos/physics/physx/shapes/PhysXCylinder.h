@@ -11,7 +11,7 @@ namespace physics {
 class PhysXCylinder final : public PhysXShape, public ICylinderShape {
 public:
     PhysXCylinder();
-    virtual ~PhysXCylinder();
+    virtual ~PhysXCylinder(){};
     virtual void setConvex(intptr_t v) override;
     virtual void setCylinder(float r, float h, EAxisDirection d) override;
     virtual void updateScale() override;

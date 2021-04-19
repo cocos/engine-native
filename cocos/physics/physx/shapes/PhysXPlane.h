@@ -11,7 +11,7 @@ namespace physics {
 class PhysXPlane final : public PhysXShape, public IPlaneShape {
 public:
     PhysXPlane();
-    virtual ~PhysXPlane();
+    virtual ~PhysXPlane(){};
     virtual void setConstant(float v) override;
     virtual void setNormal(float x, float y, float z) override;
     virtual void updateScale() override;

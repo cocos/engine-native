@@ -10,8 +10,6 @@ namespace physics {
 PhysXSphere::PhysXSphere() : mRadius(0.5f),
                              PhysXShape(){};
 
-PhysXSphere::~PhysXSphere(){};
-
 void PhysXSphere::setRadius(float r) {
     mRadius = r;
     updateGeometry();

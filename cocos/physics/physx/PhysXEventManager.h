@@ -2,8 +2,9 @@
 #pragma once
 
 #include "../spec/IWorld.h"
-#include "base/Macros.h"
 #include "./PhysXInc.h"
+#include "base/Macros.h"
+#include <memory>
 #include <vector>
 
 using namespace physx;
@@ -35,13 +36,13 @@ public:
     };
 
     CC_INLINE SimulationEventCallback &getEventCallback() { return *mCallback; }
-    CC_INLINE std::vector<TriggerEventPair> &getTriggerPairs() { return mTriggerPairs; }
-    CC_INLINE std::vector<ContactEventPair> &getConatctPairs() { return mConatctPairs; }
+    CC_INLINE std::vector<std::shared_ptr<TriggerEventPair>> &getTriggerPairs() { return mTriggerPairs; }
+    CC_INLINE std::vector<std::shared_ptr<ContactEventPair>> &getConatctPairs() { return mConatctPairs; }
     void refreshPairs();
 
 private:
-    std::vector<TriggerEventPair> mTriggerPairs;
-    std::vector<ContactEventPair> mConatctPairs;
+    std::vector<std::shared_ptr<TriggerEventPair>> mTriggerPairs;
+    std::vector<std::shared_ptr<ContactEventPair>> mConatctPairs;
     SimulationEventCallback *mCallback;
 };
 

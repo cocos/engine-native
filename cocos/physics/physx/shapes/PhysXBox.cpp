@@ -10,8 +10,6 @@ namespace physics {
 PhysXBox::PhysXBox() : mHalfExtents(0.5f),
                        PhysXShape(){};
 
-PhysXBox::~PhysXBox(){};
-
 void PhysXBox::setSize(float x, float y, float z) {
     mHalfExtents = PxVec3{x / 2, y / 2, z / 2};
     updateGeometry();

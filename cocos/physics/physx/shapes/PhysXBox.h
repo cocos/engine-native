@@ -11,7 +11,7 @@ namespace physics {
 class PhysXBox final : public PhysXShape, public IBoxShape {
 public:
     PhysXBox();
-    virtual ~PhysXBox();
+    virtual ~PhysXBox(){};
     virtual void setSize(float x, float y, float z) override;
     virtual void updateScale() override;
 

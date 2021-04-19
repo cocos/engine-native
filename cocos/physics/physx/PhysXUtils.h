@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include "./PhysXInc.h"
+#include "PhysXFilterShader.h"
+#include "PhysXInc.h"
 #include "base/Macros.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
@@ -41,6 +42,14 @@ CC_INLINE PxVec3 operator*(const PxVec3 &a, const Vec3 &b) {
 
 CC_INLINE Vec3 operator*(const Vec3 &a, const PxVec3 &b) {
     return Vec3{a.x * b.x, a.y * b.y, a.z * b.z};
+}
+
+CC_INLINE PxVec3 operator+(const PxVec3 &a, const Vec3 &b) {
+    return PxVec3{a.x + b.x, a.y + b.y, a.z + b.z};
+}
+
+CC_INLINE Vec3 operator+(const Vec3 &a, const PxVec3 &b) {
+    return Vec3{a.x + b.x, a.y + b.y, a.z + b.z};
 }
 
 CC_INLINE PxVec3 &operator*=(PxVec3 &a, const Vec3 &b) {
@@ -108,6 +117,13 @@ CC_INLINE std::vector<PxRaycastHit> &getPxRaycastHitBuffer() {
     static std::vector<PxRaycastHit> m{12};
     return m;
 }
+
+CC_INLINE QueryFilterShader &getQueryFilterShader() {
+    static QueryFilterShader shader;
+    return shader;
+}
+
+PxRigidActor &getTempRigidActor();
 
 } // namespace physics
 } // namespace cc

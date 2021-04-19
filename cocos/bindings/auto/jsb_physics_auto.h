@@ -51,8 +51,10 @@ SE_DECLARE_FUNC(js_physics_RigidBody_clearState);
 SE_DECLARE_FUNC(js_physics_RigidBody_clearVelocity);
 SE_DECLARE_FUNC(js_physics_RigidBody_getAngularVelocity);
 SE_DECLARE_FUNC(js_physics_RigidBody_getGroup);
+SE_DECLARE_FUNC(js_physics_RigidBody_getImpl);
 SE_DECLARE_FUNC(js_physics_RigidBody_getLinearVelocity);
 SE_DECLARE_FUNC(js_physics_RigidBody_getMask);
+SE_DECLARE_FUNC(js_physics_RigidBody_getNodeHandle);
 SE_DECLARE_FUNC(js_physics_RigidBody_getSleepThreshold);
 SE_DECLARE_FUNC(js_physics_RigidBody_initialize);
 SE_DECLARE_FUNC(js_physics_RigidBody_isAwake);
@@ -283,6 +285,25 @@ SE_DECLARE_FUNC(js_physics_TerrainShape_setMaterial);
 SE_DECLARE_FUNC(js_physics_TerrainShape_setTerrain);
 SE_DECLARE_FUNC(js_physics_TerrainShape_updateEventListener);
 SE_DECLARE_FUNC(js_physics_TerrainShape_TerrainShape);
+
+extern se::Object* __jsb_cc_physics_RevoluteJoint_proto;
+extern se::Class* __jsb_cc_physics_RevoluteJoint_class;
+
+bool js_register_cc_physics_RevoluteJoint(se::Object* obj);
+bool register_all_physics(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::physics::RevoluteJoint);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_getImpl);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_initialize);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_onDestroy);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_onDisable);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_onEnable);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_setAxis);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_setConnectedBody);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_setEnableCollision);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_setPivotA);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_setPivotB);
+SE_DECLARE_FUNC(js_physics_RevoluteJoint_RevoluteJoint);
 
 extern se::Object* __jsb_cc_physics_PhysXBindings_proto;
 extern se::Class* __jsb_cc_physics_PhysXBindings_class;

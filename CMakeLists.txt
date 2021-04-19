@@ -1064,7 +1064,9 @@ cocos_source_files(
     cocos/physics/sdk/Shape.cpp
     cocos/physics/sdk/RigidBody.h
     cocos/physics/sdk/RigidBody.cpp
-    cocos/physics/spec/IRigidBody.h
+    cocos/physics/sdk/Joint.h
+    cocos/physics/sdk/Joint.cpp
+    cocos/physics/spec/IBody.h
     cocos/physics/spec/IJoint.h
     cocos/physics/spec/ILifecycle.h
     cocos/physics/spec/IShape.h
@@ -1100,6 +1102,12 @@ cocos_source_files(
     cocos/physics/physx/shapes/PhysXTerrain.cpp
     cocos/physics/physx/shapes/PhysXTrimesh.h
     cocos/physics/physx/shapes/PhysXTrimesh.cpp
+    cocos/physics/physx/joints/PhysXJoint.h
+    cocos/physics/physx/joints/PhysXJoint.cpp
+    cocos/physics/physx/joints/PhysXRevolute.h
+    cocos/physics/physx/joints/PhysXRevolute.cpp
+    cocos/physics/physx/joints/PhysXDistance.h
+    cocos/physics/physx/joints/PhysXDistance.cpp
     cocos/bindings/auto/jsb_physics_auto.cpp
     cocos/bindings/auto/jsb_physics_auto.h
 )

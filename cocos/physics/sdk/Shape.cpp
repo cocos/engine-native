@@ -2,74 +2,74 @@
 #include "Shape.h"
 #include "../PhysicsSelector.h"
 
-#define CC_PHYSICS_SHAPE_DEFINITION(Class, Wrapped)                        \
+#define CC_PHYSICS_SHAPE_DEFINITION(CLASS, WRAPPED)                        \
                                                                            \
-    Class::Class() {                                                       \
-        _impl.reset(new Wrapped());                                        \
+    CLASS::CLASS() {                                                       \
+        _impl.reset(new WRAPPED());                                        \
     }                                                                      \
                                                                            \
-    Class::~Class() {                                                      \
+    CLASS::~CLASS() {                                                      \
         _impl.reset(nullptr);                                              \
     }                                                                      \
                                                                            \
-    intptr_t Class::getImpl() {                                            \
+    intptr_t CLASS::getImpl() {                                            \
         return _impl->getImpl();                                           \
     }                                                                      \
                                                                            \
-    void Class::initialize(const uint &uuid) {                             \
+    void CLASS::initialize(const uint uuid) {                              \
         _impl->initialize(uuid);                                           \
     }                                                                      \
                                                                            \
-    void Class::onEnable() {                                               \
+    void CLASS::onEnable() {                                               \
         _impl->onEnable();                                                 \
     }                                                                      \
                                                                            \
-    void Class::onDisable() {                                              \
+    void CLASS::onDisable() {                                              \
         _impl->onDisable();                                                \
     }                                                                      \
                                                                            \
-    void Class::onDestroy() {                                              \
+    void CLASS::onDestroy() {                                              \
         _impl->onDestroy();                                                \
     }                                                                      \
                                                                            \
-    void Class::setMaterial(const uint16_t ID, float f, float df, float r, \
+    void CLASS::setMaterial(const uint16_t ID, float f, float df, float r, \
                             uint8_t m0, uint8_t m1) {                      \
         _impl->setMaterial(ID, f, df, r, m0, m1);                          \
     }                                                                      \
                                                                            \
-    void Class::setAsTrigger(bool v) {                                     \
+    void CLASS::setAsTrigger(bool v) {                                     \
         _impl->setAsTrigger(v);                                            \
     }                                                                      \
                                                                            \
-    void Class::setCenter(float x, float y, float z) {                     \
+    void CLASS::setCenter(float x, float y, float z) {                     \
         _impl->setCenter(x, y, z);                                         \
     }                                                                      \
                                                                            \
-    void Class::setGroup(uint32_t g) {                                     \
+    void CLASS::setGroup(uint32_t g) {                                     \
         _impl->setGroup(g);                                                \
     }                                                                      \
                                                                            \
-    uint32_t Class::getGroup() {                                           \
+    uint32_t CLASS::getGroup() {                                           \
         return _impl->getGroup();                                          \
     }                                                                      \
                                                                            \
-    void Class::setMask(uint32_t m) {                                      \
+    void CLASS::setMask(uint32_t m) {                                      \
         _impl->setMask(m);                                                 \
     }                                                                      \
                                                                            \
-    uint32_t Class::getMask() {                                            \
+    uint32_t CLASS::getMask() {                                            \
         return _impl->getMask();                                           \
     }                                                                      \
                                                                            \
-    void Class::updateEventListener(EShapeFilterFlag v) {                  \
+    void CLASS::updateEventListener(EShapeFilterFlag v) {                  \
         _impl->updateEventListener(v);                                     \
     }                                                                      \
                                                                            \
-    cc::pipeline::AABB Class::getAABB() {                                  \
+    cc::pipeline::AABB CLASS::getAABB() {                                  \
         return _impl->getAABB();                                           \
     }                                                                      \
                                                                            \
-    cc::pipeline::Sphere Class::getBoundingSphere() {                      \
+    cc::pipeline::Sphere CLASS::getBoundingSphere() {                      \
         return _impl->getBoundingSphere();                                 \
     }
 

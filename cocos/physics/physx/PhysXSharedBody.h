@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../spec/IRigidBody.h"
+#include "../spec/IBody.h"
 #include "./PhysXInc.h"
 #include "base/Macros.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
@@ -27,17 +27,19 @@ namespace physics {
 
 class PhysXWorld;
 class PhysXShape;
+class PhysXJoint;
 class PhysXRigidBody;
 
 class PhysXSharedBody final {
 public:
-    static PhysXSharedBody *getSharedBody(const uint &handle, PhysXWorld *const World, PhysXRigidBody *const Body);
+    static PhysXSharedBody *getSharedBody(const uint handle, PhysXWorld *const World, PhysXRigidBody *const Body);
     void reference(bool v);
     void enabled(bool v);
     CC_INLINE bool isStatic() { return (int)mType & (int)ERigidBodyType::STATIC; }
     CC_INLINE bool isKinematic() { return (int)mType & (int)ERigidBodyType::KINEMATIC; }
     CC_INLINE bool isStaticOrKinematic() { return (int)mType & (int)ERigidBodyType::STATIC || (int)mType & (int)ERigidBodyType::KINEMATIC; }
     CC_INLINE bool isDynamic() { return !isStaticOrKinematic(); }
+	CC_INLINE const uint getNodeHandle() const { return mNodeHandle; }
     CC_INLINE Node &getNode() const { return *mNode; }
     CC_INLINE PhysXWorld &getWorld() const { return *mWrappedWorld; }
     CC_INLINE void setType(ERigidBodyType v) { mType = v; }
@@ -49,12 +51,15 @@ public:
     };
     UActor getImpl();
     void setMass(float v);
+    void syncScale();
     void syncSceneToPhysics();
     void syncSceneWithCheck();
     void syncPhysicsToScene();
     void updateCenterOfMass();
     void addShape(PhysXShape &shape);
     void removeShape(PhysXShape &shape);
+    void addJoint(PhysXJoint &joint, const PxJointActorIndex::Enum index);
+    void removeJoint(PhysXJoint &joint, const PxJointActorIndex::Enum index);
     void setCollisionFilter(PxFilterData &data);
     void clearForces();
     void clearVelocity();
@@ -80,8 +85,8 @@ private:
     PhysXWorld *mWrappedWorld;
     PhysXRigidBody *mWrappedBody;
     std::vector<PhysXShape *> mWrappedShapes;
-    // std::vector<PhysXJoint *> mWrappedJoints0;
-    // std::vector<PhysXJoint *> mWrappedJoints1;
+    std::vector<PhysXJoint *> mWrappedJoints0;
+    std::vector<PhysXJoint *> mWrappedJoints1;
     PhysXSharedBody() = delete;
     PhysXSharedBody(const PhysXSharedBody &other) = delete;
     PhysXSharedBody(const uint &handle, PhysXWorld *const world, PhysXRigidBody *const body);

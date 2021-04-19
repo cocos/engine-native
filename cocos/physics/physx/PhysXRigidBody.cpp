@@ -13,7 +13,7 @@ PhysXRigidBody::PhysXRigidBody() : mEnabled(false),
 
 PhysXRigidBody::~PhysXRigidBody() {}
 
-void PhysXRigidBody::initialize(const uint &h, const ERigidBodyType &t, const uint32_t &g) {
+void PhysXRigidBody::initialize(const uint h, const ERigidBodyType t, const uint32_t g) {
     mGroup = g;
     PhysXWorld &ins = PhysXWorld::getInstance();
     mSharedBody = ins.getSharedBody(h, this);

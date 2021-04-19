@@ -13,7 +13,7 @@ RigidBody::~RigidBody() {
     _impl.reset(nullptr);
 }
 
-void RigidBody::initialize(const uint &h, const ERigidBodyType &t, const uint32_t &g) {
+void RigidBody::initialize(const uint h, const ERigidBodyType t, const uint32_t g) {
     _impl->initialize(h, t, g);
 }
 

@@ -1,15 +1,15 @@
 
 #pragma once
 
-#include "../spec/IRigidBody.h"
-#include "base/Macros.h"
+#include "../spec/IBody.h"
 #include "./PhysXInc.h"
+#include "base/Macros.h"
+#include "PhysXSharedBody.h"
 
 using namespace physx;
 
 namespace cc {
 namespace physics {
-class PhysXSharedBody;
 
 class PhysXRigidBody final : public IRigidBody {
 public:
@@ -18,7 +18,9 @@ public:
     CC_INLINE const bool isEnabled() const { return mEnabled; }
     CC_INLINE const PhysXSharedBody &getSharedBody() const { return *mSharedBody; }
     CC_INLINE PhysXSharedBody &getSharedBody() { return *mSharedBody; }
-    virtual void initialize(const uint &h, const ERigidBodyType& t, const uint32_t& g) override;
+    virtual CC_INLINE const intptr_t getImpl() { return (intptr_t)this; }
+    virtual CC_INLINE const uint getNodeHandle() { return mSharedBody->getNodeHandle(); }
+    virtual void initialize(const uint h, const ERigidBodyType t, const uint32_t g) override;
     virtual void onEnable() override;
     virtual void onDisable() override;
     virtual void onDestroy() override;

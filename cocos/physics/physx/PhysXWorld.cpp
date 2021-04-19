@@ -25,11 +25,6 @@ PxPhysics &PhysXWorld::getPhysics() {
     return *getInstance().mPhysics;
 }
 
-QueryFilterShader &PhysXWorld::getQueryFilterShader() {
-    static QueryFilterShader shader;
-    return shader;
-}
-
 PhysXWorld::PhysXWorld() {
     instance = this; // TODO
     static PxDefaultAllocator gAllocator;
@@ -234,7 +229,7 @@ bool PhysXWorld::raycast(RaycastOptions &opt) {
     const auto nbTouches = PxSceneQueryExt::raycastMultiple(
         getScene(), origin, unitDir, opt.distance, flags, hitBuffer.data(),
         hitBuffer.size(), result, filterData, &getQueryFilterShader(), cache);
-	if (nbTouches == 0 || nbTouches == -1) return false;
+    if (nbTouches == 0 || nbTouches == -1) return false;
     auto &r = raycastResult();
     r.resize(nbTouches);
     for (size_t i = 0; i < nbTouches; i++) {

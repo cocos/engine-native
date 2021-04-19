@@ -150,7 +150,7 @@ static bool js_physics_World_getContactEventPairs(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        std::vector<cc::physics::ContactEventPair>& result = cobj->getContactEventPairs();
+        std::vector<std::shared_ptr<cc::physics::ContactEventPair>>& result = cobj->getContactEventPairs();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_World_getContactEventPairs : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -169,7 +169,7 @@ static bool js_physics_World_getTriggerEventPairs(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        std::vector<cc::physics::TriggerEventPair>& result = cobj->getTriggerEventPairs();
+        std::vector<std::shared_ptr<cc::physics::TriggerEventPair>>& result = cobj->getTriggerEventPairs();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_World_getTriggerEventPairs : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -682,6 +682,25 @@ static bool js_physics_RigidBody_getGroup(se::State& s)
 }
 SE_BIND_FUNC(js_physics_RigidBody_getGroup)
 
+static bool js_physics_RigidBody_getImpl(se::State& s)
+{
+    cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RigidBody_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_RigidBody_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RigidBody_getImpl)
+
 static bool js_physics_RigidBody_getLinearVelocity(se::State& s)
 {
     cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
@@ -720,6 +739,25 @@ static bool js_physics_RigidBody_getMask(se::State& s)
 }
 SE_BIND_FUNC(js_physics_RigidBody_getMask)
 
+static bool js_physics_RigidBody_getNodeHandle(se::State& s)
+{
+    cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RigidBody_getNodeHandle : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const unsigned int result = cobj->getNodeHandle();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_RigidBody_getNodeHandle : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RigidBody_getNodeHandle)
+
 static bool js_physics_RigidBody_getSleepThreshold(se::State& s)
 {
     cc::physics::RigidBody* cobj = SE_THIS_OBJECT<cc::physics::RigidBody>(s);
@@ -747,9 +785,9 @@ static bool js_physics_RigidBody_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 3) {
-        HolderType<unsigned int, true> arg0 = {};
-        HolderType<cc::physics::ERigidBodyType, true> arg1 = {};
-        HolderType<unsigned int, true> arg2 = {};
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<cc::physics::ERigidBodyType, false> arg1 = {};
+        HolderType<unsigned int, false> arg2 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
@@ -1199,8 +1237,10 @@ bool js_register_physics_RigidBody(se::Object* obj)
     cls->defineFunction("clearVelocity", _SE(js_physics_RigidBody_clearVelocity));
     cls->defineFunction("getAngularVelocity", _SE(js_physics_RigidBody_getAngularVelocity));
     cls->defineFunction("getGroup", _SE(js_physics_RigidBody_getGroup));
+    cls->defineFunction("getImpl", _SE(js_physics_RigidBody_getImpl));
     cls->defineFunction("getLinearVelocity", _SE(js_physics_RigidBody_getLinearVelocity));
     cls->defineFunction("getMask", _SE(js_physics_RigidBody_getMask));
+    cls->defineFunction("getNodeHandle", _SE(js_physics_RigidBody_getNodeHandle));
     cls->defineFunction("getSleepThreshold", _SE(js_physics_RigidBody_getSleepThreshold));
     cls->defineFunction("initialize", _SE(js_physics_RigidBody_initialize));
     cls->defineFunction("isAwake", _SE(js_physics_RigidBody_isAwake));
@@ -1341,7 +1381,7 @@ static bool js_physics_SphereShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_SphereShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -1708,7 +1748,7 @@ static bool js_physics_BoxShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_BoxShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -2079,7 +2119,7 @@ static bool js_physics_CapsuleShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -2486,7 +2526,7 @@ static bool js_physics_PlaneShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -2877,7 +2917,7 @@ static bool js_physics_TrimeshShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -3264,7 +3304,7 @@ static bool js_physics_CylinderShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -3655,7 +3695,7 @@ static bool js_physics_ConeShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_ConeShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -4046,7 +4086,7 @@ static bool js_physics_TerrainShape_initialize(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<unsigned int, true> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_initialize : Error processing arguments");
         cobj->initialize(arg0.value());
@@ -4313,6 +4353,251 @@ bool js_register_physics_TerrainShape(se::Object* obj)
     return true;
 }
 
+se::Object* __jsb_cc_physics_RevoluteJoint_proto = nullptr;
+se::Class* __jsb_cc_physics_RevoluteJoint_class = nullptr;
+
+static bool js_physics_RevoluteJoint_getImpl(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_getImpl : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        const int result = cobj->getImpl();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_getImpl : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_getImpl)
+
+static bool js_physics_RevoluteJoint_initialize(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_initialize : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_initialize : Error processing arguments");
+        cobj->initialize(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_initialize)
+
+static bool js_physics_RevoluteJoint_onDestroy(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_onDestroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDestroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_onDestroy)
+
+static bool js_physics_RevoluteJoint_onDisable(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_onDisable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onDisable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_onDisable)
+
+static bool js_physics_RevoluteJoint_onEnable(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_onEnable : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->onEnable();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_onEnable)
+
+static bool js_physics_RevoluteJoint_setAxis(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_setAxis : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_setAxis : Error processing arguments");
+        cobj->setAxis(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_setAxis)
+
+static bool js_physics_RevoluteJoint_setConnectedBody(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_setConnectedBody : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_setConnectedBody : Error processing arguments");
+        cobj->setConnectedBody(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_setConnectedBody)
+
+static bool js_physics_RevoluteJoint_setEnableCollision(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_setEnableCollision : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_setEnableCollision : Error processing arguments");
+        cobj->setEnableCollision(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_setEnableCollision)
+
+static bool js_physics_RevoluteJoint_setPivotA(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_setPivotA : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_setPivotA : Error processing arguments");
+        cobj->setPivotA(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_setPivotA)
+
+static bool js_physics_RevoluteJoint_setPivotB(se::State& s)
+{
+    cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+    SE_PRECONDITION2(cobj, false, "js_physics_RevoluteJoint_setPivotB : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 3) {
+        HolderType<float, false> arg0 = {};
+        HolderType<float, false> arg1 = {};
+        HolderType<float, false> arg2 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_setPivotB : Error processing arguments");
+        cobj->setPivotB(arg0.value(), arg1.value(), arg2.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
+    return false;
+}
+SE_BIND_FUNC(js_physics_RevoluteJoint_setPivotB)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_physics_RevoluteJoint_finalize)
+
+static bool js_physics_RevoluteJoint_constructor(se::State& s) // constructor.c
+{
+    cc::physics::RevoluteJoint* cobj = JSB_ALLOC(cc::physics::RevoluteJoint);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_physics_RevoluteJoint_constructor, __jsb_cc_physics_RevoluteJoint_class, js_cc_physics_RevoluteJoint_finalize)
+
+
+
+
+static bool js_cc_physics_RevoluteJoint_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::physics::RevoluteJoint* cobj = SE_THIS_OBJECT<cc::physics::RevoluteJoint>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_physics_RevoluteJoint_finalize)
+
+bool js_register_physics_RevoluteJoint(se::Object* obj)
+{
+    auto cls = se::Class::create("RevoluteJoint", obj, nullptr, _SE(js_physics_RevoluteJoint_constructor));
+
+    cls->defineFunction("getImpl", _SE(js_physics_RevoluteJoint_getImpl));
+    cls->defineFunction("initialize", _SE(js_physics_RevoluteJoint_initialize));
+    cls->defineFunction("onDestroy", _SE(js_physics_RevoluteJoint_onDestroy));
+    cls->defineFunction("onDisable", _SE(js_physics_RevoluteJoint_onDisable));
+    cls->defineFunction("onEnable", _SE(js_physics_RevoluteJoint_onEnable));
+    cls->defineFunction("setAxis", _SE(js_physics_RevoluteJoint_setAxis));
+    cls->defineFunction("setConnectedBody", _SE(js_physics_RevoluteJoint_setConnectedBody));
+    cls->defineFunction("setEnableCollision", _SE(js_physics_RevoluteJoint_setEnableCollision));
+    cls->defineFunction("setPivotA", _SE(js_physics_RevoluteJoint_setPivotA));
+    cls->defineFunction("setPivotB", _SE(js_physics_RevoluteJoint_setPivotB));
+    cls->defineFinalizeFunction(_SE(js_cc_physics_RevoluteJoint_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::physics::RevoluteJoint>(cls);
+
+    __jsb_cc_physics_RevoluteJoint_proto = cls->getProto();
+    __jsb_cc_physics_RevoluteJoint_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+
 se::Object* __jsb_cc_physics_PhysXBindings_proto = nullptr;
 se::Class* __jsb_cc_physics_PhysXBindings_class = nullptr;
 
@@ -4541,6 +4826,7 @@ bool register_all_physics(se::Object* obj)
     js_register_physics_CylinderShape(ns);
     js_register_physics_TrimeshShape(ns);
     js_register_physics_PlaneShape(ns);
+    js_register_physics_RevoluteJoint(ns);
     js_register_physics_CapsuleShape(ns);
     js_register_physics_BoxShape(ns);
     js_register_physics_World(ns);

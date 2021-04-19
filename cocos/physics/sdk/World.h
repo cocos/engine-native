@@ -18,8 +18,8 @@ public:
     virtual void syncSceneToPhysics() override;
     virtual void syncSceneWithCheck() override;
     virtual void setCollisionMatrix(uint32_t i, uint32_t m) override;
-    virtual std::vector<TriggerEventPair> &getTriggerEventPairs() override;
-    virtual std::vector<ContactEventPair> &getContactEventPairs() override;
+    virtual std::vector<std::shared_ptr<TriggerEventPair>> &getTriggerEventPairs() override;
+    virtual std::vector<std::shared_ptr<ContactEventPair>> &getContactEventPairs() override;
     virtual bool raycast(RaycastOptions &opt) override;
     virtual bool raycastClosest(RaycastOptions &opt) override;
     virtual std::vector<RaycastResult> &raycastResult() override;

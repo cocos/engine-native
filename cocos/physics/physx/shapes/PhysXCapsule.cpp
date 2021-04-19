@@ -12,8 +12,6 @@ PhysXCapsule::PhysXCapsule() : mRadius(0.5f),
                                mDirection(EAxisDirection::Y_AXIS),
                                PhysXShape(){};
 
-PhysXCapsule::~PhysXCapsule(){};
-
 void PhysXCapsule::setRadius(float r) {
     mRadius = r;
     updateGeometry();
