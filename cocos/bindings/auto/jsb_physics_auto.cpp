@@ -24,7 +24,7 @@ static bool js_physics_World_createConvex(se::State& s)
         HolderType<cc::physics::ConvexDesc, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_World_createConvex : Error processing arguments");
-        auto result = cobj->createConvex(arg0.value());
+        uintptr_t result = cobj->createConvex(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_World_createConvex : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -46,7 +46,7 @@ static bool js_physics_World_createHeightField(se::State& s)
         HolderType<cc::physics::HeightFieldDesc, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_World_createHeightField : Error processing arguments");
-        auto result = cobj->createHeightField(arg0.value());
+        uintptr_t result = cobj->createHeightField(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_World_createHeightField : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -78,7 +78,7 @@ static bool js_physics_World_createMaterial(se::State& s)
         ok &= sevalue_to_native(args[4], &arg4, s.thisObject());
         ok &= sevalue_to_native(args[5], &arg5, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_World_createMaterial : Error processing arguments");
-        auto result = cobj->createMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
+        uintptr_t result = cobj->createMaterial(arg0.value(), arg1.value(), arg2.value(), arg3.value(), arg4.value(), arg5.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_World_createMaterial : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -100,7 +100,7 @@ static bool js_physics_World_createTrimesh(se::State& s)
         HolderType<cc::physics::TrimeshDesc, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_physics_World_createTrimesh : Error processing arguments");
-        auto result = cobj->createTrimesh(arg0.value());
+        uintptr_t result = cobj->createTrimesh(arg0.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_World_createTrimesh : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -432,7 +432,6 @@ bool js_register_physics_World(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_RigidBody_proto = nullptr;
 se::Class* __jsb_cc_physics_RigidBody_class = nullptr;
 
@@ -689,7 +688,7 @@ static bool js_physics_RigidBody_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        const auto result = cobj->getImpl();
+        const uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_RigidBody_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1273,7 +1272,6 @@ bool js_register_physics_RigidBody(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_SphereShape_proto = nullptr;
 se::Class* __jsb_cc_physics_SphereShape_class = nullptr;
 
@@ -1342,7 +1340,7 @@ static bool js_physics_SphereShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_SphereShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1640,7 +1638,6 @@ bool js_register_physics_SphereShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_BoxShape_proto = nullptr;
 se::Class* __jsb_cc_physics_BoxShape_class = nullptr;
 
@@ -1709,7 +1706,7 @@ static bool js_physics_BoxShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_BoxShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -2011,7 +2008,6 @@ bool js_register_physics_BoxShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_CapsuleShape_proto = nullptr;
 se::Class* __jsb_cc_physics_CapsuleShape_class = nullptr;
 
@@ -2080,7 +2076,7 @@ static bool js_physics_CapsuleShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_CapsuleShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -2418,7 +2414,6 @@ bool js_register_physics_CapsuleShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_PlaneShape_proto = nullptr;
 se::Class* __jsb_cc_physics_PlaneShape_class = nullptr;
 
@@ -2487,7 +2482,7 @@ static bool js_physics_PlaneShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_PlaneShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -2809,7 +2804,6 @@ bool js_register_physics_PlaneShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_TrimeshShape_proto = nullptr;
 se::Class* __jsb_cc_physics_TrimeshShape_class = nullptr;
 
@@ -2878,7 +2872,7 @@ static bool js_physics_TrimeshShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_TrimeshShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -3196,7 +3190,6 @@ bool js_register_physics_TrimeshShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_CylinderShape_proto = nullptr;
 se::Class* __jsb_cc_physics_CylinderShape_class = nullptr;
 
@@ -3265,7 +3258,7 @@ static bool js_physics_CylinderShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_CylinderShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -3587,7 +3580,6 @@ bool js_register_physics_CylinderShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_ConeShape_proto = nullptr;
 se::Class* __jsb_cc_physics_ConeShape_class = nullptr;
 
@@ -3656,7 +3648,7 @@ static bool js_physics_ConeShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_ConeShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -3978,7 +3970,6 @@ bool js_register_physics_ConeShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_TerrainShape_proto = nullptr;
 se::Class* __jsb_cc_physics_TerrainShape_class = nullptr;
 
@@ -4047,7 +4038,7 @@ static bool js_physics_TerrainShape_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = cobj->getImpl();
+        uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_TerrainShape_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -4351,7 +4342,6 @@ bool js_register_physics_TerrainShape(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_RevoluteJoint_proto = nullptr;
 se::Class* __jsb_cc_physics_RevoluteJoint_class = nullptr;
 
@@ -4363,7 +4353,7 @@ static bool js_physics_RevoluteJoint_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        const auto result = cobj->getImpl();
+        const uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_RevoluteJoint_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -4596,7 +4586,6 @@ bool js_register_physics_RevoluteJoint(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 se::Object* __jsb_cc_physics_DistanceJoint_proto = nullptr;
 se::Class* __jsb_cc_physics_DistanceJoint_class = nullptr;
 
@@ -4608,7 +4597,7 @@ static bool js_physics_DistanceJoint_getImpl(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        const auto result = cobj->getImpl();
+        const uintptr_t result = cobj->getImpl();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_physics_DistanceJoint_getImpl : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -4817,7 +4806,6 @@ bool js_register_physics_DistanceJoint(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-
 bool register_all_physics(se::Object* obj)
 {
     // Get the ns
