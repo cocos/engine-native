@@ -1053,6 +1053,40 @@ cocos_source_files(
                  cocos/renderer/frame-graph/VirtualResource.h
 )
 
+cocos_source_files(
+    cocos/physics/PhysXBindings.h
+    cocos/physics/PhysXBindings.cpp
+    cocos/physics/PhysicsSDK.h
+    cocos/physics/PhysicsSelector.h
+    cocos/physics/sdk/World.h
+    cocos/physics/sdk/World.cpp
+    cocos/physics/sdk/Shape.h
+    cocos/physics/sdk/Shape.cpp
+    cocos/physics/sdk/RigidBody.h
+    cocos/physics/sdk/RigidBody.cpp
+    cocos/physics/spec/IRigidBody.h
+    cocos/physics/spec/IJoint.h
+    cocos/physics/spec/ILifecycle.h
+    cocos/physics/spec/IShape.h
+    cocos/physics/spec/IWorld.h
+    cocos/physics/physx/PhysX.h
+    cocos/physics/physx/PhysXUtils.h
+    cocos/physics/physx/PhysXWorld.h
+    cocos/physics/physx/PhysXWorld.cpp
+    cocos/physics/physx/PhysXSharedBody.h
+    cocos/physics/physx/PhysXSharedBody.cpp
+    cocos/physics/physx/PhysXRigidBody.h
+    cocos/physics/physx/PhysXRigidBody.cpp
+    cocos/physics/physx/shapes/PhysXShape.h
+    cocos/physics/physx/shapes/PhysXShape.cpp
+    cocos/physics/physx/shapes/PhysXSphere.h
+    cocos/physics/physx/shapes/PhysXSphere.cpp
+    cocos/physics/physx/shapes/PhysXBox.h
+    cocos/physics/physx/shapes/PhysXBox.cpp
+    cocos/bindings/auto/jsb_physics_auto.cpp
+    cocos/bindings/auto/jsb_physics_auto.h
+)
+
 ##### script bindings
 ######## dop
 cocos_source_files(
