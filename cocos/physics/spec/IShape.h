@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "bindings/manual/jsb_conversions.h"
 #include "ILifecycle.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 #include <stdint.h>
@@ -31,8 +32,8 @@ public:
                              uint8_t m0, uint8_t m1) = 0;
     virtual void setAsTrigger(bool v) = 0;
     virtual void setCenter(float x, float y, float z) = 0;
-    virtual cc::pipeline::AABB getAABB() = 0;
-    virtual cc::pipeline::Sphere getBoundingSphere() = 0;
+    virtual cc::pipeline::AABB& getAABB() = 0;
+    virtual cc::pipeline::Sphere& getBoundingSphere() = 0;
     virtual void updateEventListener(EShapeFilterFlag flag) = 0;
     virtual uint32_t getGroup() = 0;
     virtual void setGroup(uint32_t g) = 0;
@@ -95,3 +96,23 @@ public:
 
 } // namespace physics
 } // namespace cc
+
+template <>
+inline bool nativevalue_to_se(const cc::pipeline::AABB &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    se::Value tmp;
+    if (nativevalue_to_se(from.center, tmp, ctx)) obj->setProperty("center", tmp);
+    if (nativevalue_to_se(from.halfExtents, tmp, ctx)) obj->setProperty("halfExtents", tmp);
+    to.setObject(obj);
+    return true;
+}
+
+template <>
+inline bool nativevalue_to_se(const cc::pipeline::Sphere &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    se::Value tmp(from.radius);
+    obj->setProperty("radius", tmp);
+    if (nativevalue_to_se(from.center, tmp, ctx)) obj->setProperty("center", tmp);
+    to.setObject(obj);
+    return true;
+}

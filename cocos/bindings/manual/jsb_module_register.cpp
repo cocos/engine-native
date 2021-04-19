@@ -160,7 +160,7 @@ bool jsb_register_all_modules() {
 
 #endif // USE_MIDDLEWARE
 
-#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+#if USE_PHYSICS_PHYSX
     se->addRegisterCallback(register_all_physics);
 #endif
 

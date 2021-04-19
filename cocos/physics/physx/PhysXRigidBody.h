@@ -18,8 +18,8 @@ public:
     CC_INLINE const bool isEnabled() const { return mEnabled; }
     CC_INLINE const PhysXSharedBody &getSharedBody() const { return *mSharedBody; }
     CC_INLINE PhysXSharedBody &getSharedBody() { return *mSharedBody; }
-    virtual CC_INLINE const intptr_t getImpl() { return (intptr_t)this; }
-    virtual CC_INLINE const uint getNodeHandle() { return mSharedBody->getNodeHandle(); }
+    virtual CC_INLINE const intptr_t getImpl() override { return (intptr_t)this; }
+    virtual CC_INLINE const uint getNodeHandle() override { return mSharedBody->getNodeHandle(); }
     virtual void initialize(const uint h, const ERigidBodyType t, const uint32_t g) override;
     virtual void onEnable() override;
     virtual void onDisable() override;

@@ -11,8 +11,8 @@ class CC_DLL RigidBody final : public IRigidBody {
 public:
     RigidBody();
     virtual ~RigidBody();
-    virtual CC_INLINE const intptr_t getImpl() { return _impl->getImpl(); };
-    virtual CC_INLINE const uint getNodeHandle() { return _impl->getNodeHandle(); }
+    virtual CC_INLINE const intptr_t getImpl() override { return _impl->getImpl(); };
+    virtual CC_INLINE const uint getNodeHandle() override { return _impl->getNodeHandle(); }
     virtual void initialize(const uint h, const ERigidBodyType t, const uint32_t g) override;
     virtual void onEnable() override;
     virtual void onDisable() override;

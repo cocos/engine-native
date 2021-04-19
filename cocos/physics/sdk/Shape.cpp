@@ -65,11 +65,11 @@
         _impl->updateEventListener(v);                                     \
     }                                                                      \
                                                                            \
-    cc::pipeline::AABB CLASS::getAABB() {                                  \
+    cc::pipeline::AABB& CLASS::getAABB() {                                 \
         return _impl->getAABB();                                           \
     }                                                                      \
                                                                            \
-    cc::pipeline::Sphere CLASS::getBoundingSphere() {                      \
+    cc::pipeline::Sphere& CLASS::getBoundingSphere() {                     \
         return _impl->getBoundingSphere();                                 \
     }
 

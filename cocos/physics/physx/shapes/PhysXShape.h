@@ -12,7 +12,7 @@ namespace physics {
 class PhysXSharedBody;
 
 template <typename T>
-T &getPxGeometry() {
+CC_INLINE T &getPxGeometry() {
     static T geo;
     return geo;
 }
@@ -38,8 +38,8 @@ public:
                              uint8_t m0, uint8_t m1) override;
     virtual void setAsTrigger(bool v) override;
     virtual void setCenter(float x, float y, float z) override;
-    virtual cc::pipeline::AABB getAABB() override;
-    virtual cc::pipeline::Sphere getBoundingSphere() override;
+    virtual cc::pipeline::AABB& getAABB() override;
+    virtual cc::pipeline::Sphere& getBoundingSphere() override;
     virtual void updateEventListener(EShapeFilterFlag flag) override;
     virtual uint32_t getGroup() override;
     virtual void setGroup(uint32_t g) override;

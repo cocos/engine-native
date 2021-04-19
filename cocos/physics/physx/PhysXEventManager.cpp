@@ -15,15 +15,15 @@ void PhysXEventManager::SimulationEventCallback::onTrigger(PxTriggerPair *pairs,
         if (tp.flags & (PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER | PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
             continue;
 
-        auto &selfIter = getPxShapeMap().find((intptr_t)tp.triggerShape);
-        auto &otherIter = getPxShapeMap().find((intptr_t)tp.otherShape);
+        const auto &selfIter = getPxShapeMap().find((intptr_t)tp.triggerShape);
+        const auto &otherIter = getPxShapeMap().find((intptr_t)tp.otherShape);
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end())
             continue;
 
-        auto &self = selfIter->second;
-        auto &other = otherIter->second;
+        const auto &self = selfIter->second;
+        const auto &other = otherIter->second;
         auto &pairs = mManager->getTriggerPairs();
-        auto &iter = std::find_if(pairs.begin(), pairs.end(), [self, other](std::shared_ptr<TriggerEventPair> &pair) {
+        const auto &iter = std::find_if(pairs.begin(), pairs.end(), [self, other](std::shared_ptr<TriggerEventPair> &pair) {
             return (pair->shapeA == self || pair->shapeA == other) && (pair->shapeB == self || pair->shapeB == other);
         });
         if (tp.status & PxPairFlag::eNOTIFY_TOUCH_FOUND) {
@@ -40,13 +40,13 @@ void PhysXEventManager::SimulationEventCallback::onContact(const PxContactPairHe
         if (cp.flags & (PxContactPairFlag::eREMOVED_SHAPE_0 | PxContactPairFlag::eREMOVED_SHAPE_1))
             continue;
 
-        auto &selfIter = getPxShapeMap().find((intptr_t)cp.shapes[0]);
-        auto &otherIter = getPxShapeMap().find((intptr_t)cp.shapes[1]);
+        const auto &selfIter = getPxShapeMap().find((intptr_t)cp.shapes[0]);
+        const auto &otherIter = getPxShapeMap().find((intptr_t)cp.shapes[1]);
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end())
             continue;
 
-        auto &self = selfIter->second;
-        auto &other = otherIter->second;
+        const auto &self = selfIter->second;
+        const auto &other = otherIter->second;
         auto &pairs = mManager->getConatctPairs();
         auto iter = std::find_if(pairs.begin(), pairs.end(), [self, other](std::shared_ptr<ContactEventPair> &pair) {
             return (pair->shapeA == self || pair->shapeA == other) && (pair->shapeB == self || pair->shapeB == other);
@@ -74,8 +74,8 @@ void PhysXEventManager::SimulationEventCallback::onContact(const PxContactPairHe
 
 void PhysXEventManager::refreshPairs() {
     for (auto iter = getTriggerPairs().begin(); iter != getTriggerPairs().end();) {
-        auto &selfIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
-        auto &otherIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
+        const auto &selfIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
+        const auto &otherIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end()) {
             iter = getTriggerPairs().erase(iter);
         } else if (iter->get()->state == ETouchState::EXIT) {
@@ -87,8 +87,8 @@ void PhysXEventManager::refreshPairs() {
     }
 
     for (auto iter = getConatctPairs().begin(); iter != getConatctPairs().end();) {
-        auto &selfIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
-        auto &otherIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
+        const auto &selfIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeA)->getShape()));
+        const auto &otherIter = getPxShapeMap().find((intptr_t)(&((PhysXShape *)iter->get()->shapeB)->getShape()));
         if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end()) {
             iter = getConatctPairs().erase(iter);
         } else if (iter->get()->state == ETouchState::EXIT) {

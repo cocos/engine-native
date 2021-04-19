@@ -1,4 +1,3 @@
-#pragma once
 
 #include "PhysXShape.h"
 #include "../PhysXSharedBody.h"
@@ -78,12 +77,12 @@ void PhysXShape::setMask(uint32_t m) {
 void PhysXShape::updateEventListener(EShapeFilterFlag flag) {
 }
 
-cc::pipeline::AABB PhysXShape::getAABB() {
+cc::pipeline::AABB& PhysXShape::getAABB() {
     static cc::pipeline::AABB aabb;
     return aabb;
 }
 
-cc::pipeline::Sphere PhysXShape::getBoundingSphere() {
+cc::pipeline::Sphere& PhysXShape::getBoundingSphere() {
     static cc::pipeline::Sphere s;
     return s;
 }

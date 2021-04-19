@@ -322,20 +322,3 @@ SE_DECLARE_FUNC(js_physics_DistanceJoint_setPivotA);
 SE_DECLARE_FUNC(js_physics_DistanceJoint_setPivotB);
 SE_DECLARE_FUNC(js_physics_DistanceJoint_DistanceJoint);
 
-extern se::Object* __jsb_cc_physics_PhysXBindings_proto;
-extern se::Class* __jsb_cc_physics_PhysXBindings_class;
-
-bool js_register_cc_physics_PhysXBindings(se::Object* obj);
-bool register_all_physics(se::Object* obj);
-
-JSB_REGISTER_OBJECT_TYPE(cc::physics::PhysXBindings);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_testAPI);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_getArrayBuffer);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_getTestResult);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_getLength);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_modifyByPtr);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_getTestResultVec);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_getTestStructVec);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_getPtr);
-SE_DECLARE_FUNC(js_physics_PhysXBindings_setTestStruct);
-

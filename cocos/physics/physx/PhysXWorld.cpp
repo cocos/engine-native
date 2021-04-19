@@ -88,7 +88,7 @@ void PhysXWorld::destroy() {
 }
 
 void PhysXWorld::setCollisionMatrix(uint32_t index, uint32_t mask) {
-    if (index < 0 || index > 31) return;
+    if (index > 31) return;
     mCollisionMatrix[index] = mask;
 }
 
@@ -173,7 +173,7 @@ void PhysXWorld::syncSceneToPhysics() {
 }
 
 int PhysXWorld::getMaskByIndex(uint32_t i) {
-    if (i < 0 || i > 31) i = 0;
+    if (i > 31) i = 0;
     return mCollisionMatrix[i];
 }
 

@@ -176,7 +176,7 @@ void PhysXSharedBody::syncScale() {
 void PhysXSharedBody::syncSceneToPhysics() {
     if (getNode().flagsChanged) {
         if (getNode().flagsChanged & TransformBit::SCALE) syncScale();
-        PxTransform &wp = getImpl().rigidActor->getGlobalPose();
+        auto wp = getImpl().rigidActor->getGlobalPose();
         if (getNode().flagsChanged & TransformBit::POSITION)
             PxSetVec3Ext(wp.p, getNode().worldPosition);
         if (getNode().flagsChanged & TransformBit::ROTATION)
@@ -191,7 +191,7 @@ void PhysXSharedBody::syncSceneToPhysics() {
 
 void PhysXSharedBody::syncSceneWithCheck() {
     if (getNode().flagsChanged & TransformBit::SCALE) syncScale();
-    PxTransform &wp = getImpl().rigidActor->getGlobalPose();
+    auto wp = getImpl().rigidActor->getGlobalPose();
     bool needUpdate = false;
     if (wp.p != getNode().worldPosition) {
         PxSetVec3Ext(wp.p, getNode().worldPosition);

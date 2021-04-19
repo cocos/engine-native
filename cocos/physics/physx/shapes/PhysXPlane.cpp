@@ -34,9 +34,7 @@ void PhysXPlane::updateCenter() {
     auto &node = getSharedBody().getNode();
     auto &geo = getPxGeometry<PxPlaneGeometry>();
     PxTransform local;
-    PxVec3 a{PxIdentity};
-    PxSetVec3Ext(a, mNormal);
-    PxSetFromTwoVectors(local.q, PxVec3{1.f, 0.f, 0.f}, a);
+    PxSetFromTwoVectors(local.q, PxVec3{1.f, 0.f, 0.f}, mNormal);
     local.p = mNormal * mConstant + mCenter;
     getShape().setLocalPose(local);
 }

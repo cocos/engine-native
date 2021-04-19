@@ -6,6 +6,7 @@
 #include "base/Macros.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
+#include <vector>
 #include <unordered_map>
 
 #define PX_RELEASE(x) \
@@ -82,12 +83,15 @@ CC_INLINE bool operator==(const cc::Vec4 &a, const PxQuat &b) {
     return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
 }
 
-template <typename T1, typename T2>
-CC_INLINE void PxSetVec3Ext(T1 &v, const T2 &cv) {
-    v = T1(cv.x, cv.y, cv.z);
+CC_INLINE void PxSetVec3Ext(PxVec3 &v, const cc::Vec3 &cv) {
+    v = PxVec3(cv.x, cv.y, cv.z);
 }
 
-template <typename T1, typename T2>
+CC_INLINE void PxSetVec3Ext(cc::Vec3 &v, const PxVec3 &cv) {
+    v = cc::Vec3(cv.x, cv.y, cv.z);
+}
+
+template <typename T1 = PxQuat, typename T2 = cc::Vec4>
 CC_INLINE void PxSetQuatExt(T1 &p, const T2 &cp) {
     p = T1(cp.x, cp.y, cp.z, cp.w);
 }

@@ -26,8 +26,8 @@
         virtual void setAsTrigger(bool v) override;                             \
         virtual void setCenter(float x, float y, float z) override;             \
         virtual void updateEventListener(EShapeFilterFlag v) override;          \
-        virtual cc::pipeline::AABB getAABB() override;                          \
-        virtual cc::pipeline::Sphere getBoundingSphere() override;              \
+        virtual cc::pipeline::AABB& getAABB() override;                         \
+        virtual cc::pipeline::Sphere& getBoundingSphere() override;             \
         virtual uint32_t getGroup() override;                                   \
         virtual void setGroup(uint32_t g) override;                             \
         virtual uint32_t getMask() override;                                    \
