@@ -25,7 +25,8 @@ class ReflectionComp {
 public:
     ReflectionComp();
     ~ReflectionComp();
-    void init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture *worldPositionTex, Mat4 cc_matViewProj, int group_size_x, int group_size_y);
+    void init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture *worldPositionTex, gfx::Texture* reflectionTex, 
+        Mat4 cc_matViewProj, int group_size_x, int group_size_y);
     gfx::DescriptorSet* getDescriptorSet();
     gfx::PipelineState* getPipelineState();
     gfx::Texture* getReflectionTex();

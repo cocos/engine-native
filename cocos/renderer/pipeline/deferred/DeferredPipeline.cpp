@@ -420,6 +420,8 @@ bool DeferredPipeline::activeRenderer() {
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP), sampler);
     _descriptorSet->bindSampler(
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
+    _descriptorSet->bindSampler(
+        static_cast<uint>(PipelineGlobalBindings::SAMPLER_REFLECTION_RESULTMAP), sampler);
 
     return true;
 }
@@ -471,6 +473,16 @@ void DeferredPipeline::generateDeferredRenderData() {
     };
     _deferredRenderData->lightingRenderTarget = _device->createTexture(rtInfo);
 
+    gfx::TextureInfo reflectionRtInfo = {
+        gfx::TextureType::TEX2D,
+        gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC | gfx::TextureUsageBit::SAMPLED,
+        gfx::Format::RGBA8,
+        _width,
+        _height,
+    };
+    _deferredRenderData->reflectionRenderTarget = _device->createTexture(reflectionRtInfo);
+
+
     gfx::FramebufferInfo lightingInfo;
     lightingInfo.renderPass = _lightingRenderPass;
     lightingInfo.colorTextures.push_back(_deferredRenderData->lightingRenderTarget);
@@ -485,10 +497,10 @@ void DeferredPipeline::generateDeferredRenderData() {
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_NORMALMAP), _deferredRenderData->gbufferFrameBuffer->getColorTextures()[2]);
     _descriptorSet->bindTexture(
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP), _deferredRenderData->gbufferFrameBuffer->getColorTextures()[3]);
-
     _descriptorSet->bindTexture(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP),
-        _deferredRenderData->lightingFrameBuff->getColorTextures()[0]);
+        static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), _deferredRenderData->lightingFrameBuff->getColorTextures()[0]);
+    _descriptorSet->bindTexture(
+        static_cast<uint>(PipelineGlobalBindings::SAMPLER_REFLECTION_RESULTMAP), _deferredRenderData->reflectionRenderTarget);
 }
 
 void DeferredPipeline::destroy() {
@@ -528,6 +540,10 @@ void DeferredPipeline::destroyDeferredData() {
 
     if (_deferredRenderData->lightingRenderTarget) {
         _deferredRenderData->lightingRenderTarget->destroy();
+    }
+
+    if (_deferredRenderData->reflectionRenderTarget) {
+        _deferredRenderData->reflectionRenderTarget->destroy();
     }
 
     _deferredRenderData->gbufferRenderTargets.clear();

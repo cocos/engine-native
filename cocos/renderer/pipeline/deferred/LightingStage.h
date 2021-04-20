@@ -72,6 +72,8 @@ private:
     gfx::DescriptorSetLayout *_descLayout = nullptr;
 	uint _maxDeferredLights = UBODeferredLight::LIGHTS_PER_PASS;
     ReflectionComp * _reflectionComp = nullptr;
+    RenderQueue * _relfectionRenderQueue = nullptr;
+    uint _reflectionPhaseID = 0;
 };
 
 } // namespace pipeline

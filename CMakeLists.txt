@@ -793,6 +793,8 @@ cocos_source_files(
                  cocos/renderer/pipeline/deferred/LightingStage.h
     NO_WERROR    cocos/renderer/pipeline/deferred/PostprocessStage.cpp
                  cocos/renderer/pipeline/deferred/PostprocessStage.h
+    NO_WERROR    cocos/renderer/pipeline/deferred/ReflectionComp.cpp
+                 cocos/renderer/pipeline/deferred/ReflectionComp.h
     NO_WERROR    cocos/renderer/pipeline/shadow/ShadowFlow.cpp
                  cocos/renderer/pipeline/shadow/ShadowFlow.h
     NO_WERROR    cocos/renderer/pipeline/shadow/ShadowStage.cpp

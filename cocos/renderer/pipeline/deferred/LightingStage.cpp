@@ -81,6 +81,7 @@ bool LightingStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
     _phaseID = getPhaseID("default");
+    _reflectionPhaseID = getPhaseID("reflection");
     return true;
 }
 
@@ -246,6 +247,9 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     initLightingBuffer();
 
     _planarShadowQueue = CC_NEW(PlanarShadowQueue(_pipeline));
+
+    RenderQueueCreateInfo info = {true, _reflectionPhaseID, transparentCompareFn};
+    _relfectionRenderQueue = CC_NEW(RenderQueue(std::move(info)));
 }
 
 void LightingStage::destroy() {
@@ -300,12 +304,12 @@ void LightingStage::render(Camera *camera) {
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
 
     // get pso and draw quad
-    PassView *   pass   = sceneData->getSharedData()->getDeferredLightPass();
+    PassView *   lightPass   = sceneData->getSharedData()->getDeferredLightPass();
     gfx::Shader *shader = sceneData->getSharedData()->getDeferredLightPassShader();
 
     gfx::InputAssembler *inputAssembler = pipeline->getQuadIAOffScreen();
     gfx::PipelineState * pState         = PipelineStateManager::getOrCreatePipelineState(
-        pass, shader, inputAssembler, renderPass);
+        lightPass, shader, inputAssembler, renderPass);
     assert(pState != nullptr);
 
     cmdBuff->bindPipelineState(pState);
@@ -319,8 +323,11 @@ void LightingStage::render(Camera *camera) {
 
     // dispatch for reflection
     if (_reflectionComp->isInitlized() == false) {
-        _reflectionComp->init(_pipeline->getDevice(), pipeline->getDeferredRenderData()->lightingRenderTarget,
-                              pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1], camera->matViewProjOffscreen, 8, 8);
+        _reflectionComp->init(_pipeline->getDevice(), 
+                              pipeline->getDeferredRenderData()->lightingRenderTarget,
+                              pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1], 
+                              pipeline->getDeferredRenderData()->reflectionRenderTarget, 
+                              camera->matViewProjOffscreen, 8, 8);
     }
 
     uint globalWidth  = _reflectionComp->getReflectionTex()->getWidth();
@@ -357,7 +364,59 @@ void LightingStage::render(Camera *camera) {
         cmdBuff->pipelineBarrier(barrier_post);
     }
 
+    gfx::ColorAttachment cAttch = {
+        gfx::Format::RGBA16F,
+        gfx::SampleCount::X1,
+        gfx::LoadOp::LOAD,
+        gfx::StoreOp::STORE,
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+    };
 
+    gfx::RenderPassInfo reflectionPassInfo;
+    reflectionPassInfo.colorAttachments.push_back(cAttch);
+
+    reflectionPassInfo.depthStencilAttachment = {
+        _device->getDepthStencilFormat(),
+        gfx::SampleCount::X1,
+        gfx::LoadOp::LOAD,
+        gfx::StoreOp::DISCARD,
+        gfx::LoadOp::DISCARD,
+        gfx::StoreOp::DISCARD,
+        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
+    };
+
+    gfx::RenderPass * reflectionPass = _device->createRenderPass(reflectionPassInfo);
+
+    cmdBuff->beginRenderPass(reflectionPass, frameBuffer, renderArea, &clearColor,
+        camera->clearDepth, camera->clearStencil);
+    
+    // transparent
+    _relfectionRenderQueue->clear();
+
+
+    uint m = 0, p = 0;
+    size_t k = 0;
+    for (size_t i = 0; i < renderObjects.size(); ++i) {
+        const auto &ro = renderObjects[i];
+        const auto model = ro.model;
+        const auto subModelID = model->getSubModelID();
+        const auto subModelCount = subModelID[0];
+        for (m = 1; m <= subModelCount; ++m) {
+            auto subModel = model->getSubModelView(subModelID[m]);
+            for (p = 0; p < subModel->passCount; ++p) {
+                const PassView *pass = subModel->getPassView(p);
+                // TODO: need fallback of ulit and gizmo material.
+                if (pass->phase != _reflectionPhaseID) continue;
+                _relfectionRenderQueue->insertRenderPass(ro, m, p);
+            }
+        }
+    }
+    
+    _relfectionRenderQueue->sort();
+    _relfectionRenderQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+
+    cmdBuff->endRenderPass();
 }
 
 } // namespace pipeline

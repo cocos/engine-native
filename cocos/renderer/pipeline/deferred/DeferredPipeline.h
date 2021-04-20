@@ -50,6 +50,7 @@ struct CC_DLL DeferredRenderData {
     gfx::Framebuffer *gbufferFrameBuffer = nullptr;
     gfx::Framebuffer *lightingFrameBuff = nullptr;
     gfx::Texture *lightingRenderTarget = nullptr;
+    gfx::Texture *reflectionRenderTarget = nullptr;
     gfx::Texture *depthTex = nullptr;
 };
 

@@ -185,6 +185,7 @@ enum class CC_DLL PipelineGlobalBindings {
     SAMPLER_GBUFFER_NORMALMAP,
     SAMPLER_GBUFFER_EMISSIVEMAP,
     SAMPLER_LIGHTING_RESULTMAP,
+    SAMPLER_REFLECTION_RESULTMAP,
 
     COUNT,
 };
@@ -474,6 +475,13 @@ struct CC_DLL SAMPLERGBUFFEREMISSIVEMAP : public Object {
 
 struct CC_DLL SAMPLERLIGHTINGRESULTMAP : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP);
+    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
+    static const gfx::UniformSamplerTexture      LAYOUT;
+    static const String                          NAME;
+};
+
+struct CC_DLL SAMPLERREFLECTIONRESULTMAP : public Object {
+    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_REFLECTION_RESULTMAP);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;

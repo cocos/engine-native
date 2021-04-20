@@ -337,6 +337,21 @@ const gfx::UniformSamplerTexture SAMPLERLIGHTINGRESULTMAP::LAYOUT = {
     1,
 };
 
+const String                          SAMPLERREFLECTIONRESULTMAP::NAME       = "cc_reflection_resultMap";
+const gfx::DescriptorSetLayoutBinding SAMPLERREFLECTIONRESULTMAP::DESCRIPTOR = {
+    SAMPLERREFLECTIONRESULTMAP::BINDING,
+    gfx::DescriptorType::SAMPLER_TEXTURE,
+    1,
+    gfx::ShaderStageFlagBit::FRAGMENT,
+};
+const gfx::UniformSamplerTexture SAMPLERREFLECTIONRESULTMAP::LAYOUT = {
+    GLOBAL_SET,
+    SAMPLERREFLECTIONRESULTMAP::BINDING,
+    SAMPLERREFLECTIONRESULTMAP::NAME,
+    gfx::Type::SAMPLER2D,
+    1,
+};
+
 const String                          ENVIRONMENT::NAME       = "cc_environment";
 const gfx::DescriptorSetLayoutBinding ENVIRONMENT::DESCRIPTOR = {
     ENVIRONMENT::BINDING,

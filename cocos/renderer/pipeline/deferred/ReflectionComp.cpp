@@ -11,7 +11,6 @@ ReflectionComp::~ReflectionComp() {
     CC_SAFE_DESTROY(_compPipelineLayout);
     CC_SAFE_DESTROY(_compPipelineState);
     CC_SAFE_DESTROY(_compConstantsBuffer);
-    CC_SAFE_DESTROY(_reflectionTex);
     CC_SAFE_DESTROY(_sampler);
 }
 
@@ -20,7 +19,7 @@ struct ConstantBuffer {
     Vec2 texSize;
 };
 
-void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture* worldPositionTex, Mat4 cc_matViewProj, 
+void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture* worldPositionTex, gfx::Texture* reflectionTex, Mat4 cc_matViewProj, 
     int group_size_x, int group_size_y) {
     _initlized      = true;
     _device         = dev;
@@ -30,14 +29,7 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
     _group_size_x   = group_size_x;
     _group_size_y   = group_size_y;
 
-    _reflectionTex = _device->createTexture({
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC,
-        gfx::Format::RGBA8,
-        _lightingTex->getWidth(),
-        _lightingTex->getHeight(),
-        gfx::TextureFlagBit::IMMUTABLE,
-    });
+    _reflectionTex = reflectionTex;
 
     _compConstantsBuffer = _device->createBuffer({
         gfx::BufferUsage::UNIFORM,
