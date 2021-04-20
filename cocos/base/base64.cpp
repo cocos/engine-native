@@ -47,7 +47,7 @@ int doBase64Decode(const unsigned char *input, unsigned int inputLen, unsigned c
     unsigned int inputIdx = 0;
     unsigned int outputIdx = 0;
 
-    for (i = (sizeof alphabet) - 1; i >= 0; i--) {
+    for (i = alphabet.length() - 1; i >= 0; i--) {
         inalphabet[alphabet[i]] = 1;
         decoder[alphabet[i]] = i;
     }
