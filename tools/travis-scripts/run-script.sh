@@ -137,9 +137,8 @@ function build_macosx()
 
     RES_DIR=$COCOS2DX_ROOT/templates/mac/build-mac
     cd build-mac
-    cmake ../ -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCC_USE_GLES3=ON -DCMAKE_OSX_ARCHITECTURES=x86_64 -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
-    cmake --build . -- -j $NUM_OF_CORES
-    echo "Compile MacOSX X86_64 Release Done!"
+    cmake ../ -GXcode -DCC_USE_GLES3=ON -DCMAKE_OSX_ARCHITECTURES=x86_64 -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
+    cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORES -arch x86_64
     # cd ..
     # mkdir build-mac-apple-silicon
     # cd build-mac-apple-silicon
