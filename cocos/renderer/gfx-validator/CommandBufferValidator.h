@@ -71,6 +71,7 @@ protected:
     void doDestroy() override;
 
     bool _insideRenderPass{false};
+    uint _curSubpass{0U};
 };
 
 } // namespace gfx

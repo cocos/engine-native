@@ -92,6 +92,7 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'endRenderPass' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Already inside an render pass?");
     _insideRenderPass = true;
+    _curSubpass       = 0U;
 
     static vector<CommandBuffer *> secondaryCBActors;
     secondaryCBActors.resize(secondaryCBCount);
@@ -110,6 +111,14 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
     }
 
     _actor->beginRenderPass(renderPassActor, framebufferActor, renderArea, colors, depth, stencil, actorSecondaryCBs, secondaryCBCount);
+}
+
+void CommandBufferValidator::nextSubpass() {
+    ++_curSubpass;
+
+    /////////// execute ///////////
+
+    _actor->nextSubpass();
 }
 
 void CommandBufferValidator::endRenderPass() {
@@ -180,10 +189,6 @@ void CommandBufferValidator::setStencilWriteMask(StencilFace face, uint mask) {
 
 void CommandBufferValidator::setStencilCompareMask(StencilFace face, int ref, uint mask) {
     _actor->setStencilCompareMask(face, ref, mask);
-}
-
-void CommandBufferValidator::nextSubpass() {
-    _actor->nextSubpass();
 }
 
 void CommandBufferValidator::draw(const DrawInfo &info) {
