@@ -18,7 +18,6 @@ How to start a new game
 --------------------------------
 You can refer to [the documentation](https://docs.cocos.com/creator/3.0/manual/en/getting-started/) to start a new game.
 
-
 Build Requirements
 --------------------------------
 - macOS 10.14+, Xcode 11.5+ to build mac games
