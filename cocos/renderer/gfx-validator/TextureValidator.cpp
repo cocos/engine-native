@@ -61,7 +61,7 @@ void TextureValidator::doInit(const TextureInfo &info) {
 
 void TextureValidator::doInit(const TextureViewInfo &info) {
     TextureViewInfo actorInfo = info;
-    actorInfo.texture         = static_cast<TextureValidator *>(info.texture)->getActor();
+    // actorInfo.texture         = static_cast<TextureValidator *>(info.texture)->getActor();
 
     _actor->initialize(actorInfo);
 }
@@ -79,10 +79,12 @@ void TextureValidator::doResize(uint width, uint height, uint /*size*/) {
 void TextureValidator::updateRedundencyCheck() {
     uint cur = DeviceValidator::getInstance()->currentFrame();
 
-    if (cur == _lastUpdateFrame) {
-        CC_LOG_WARNING(utils::getStacktraceJS().c_str());
-        CC_LOG_WARNING("performance warning: texture updated more than once per frame");
-    }
+    // FIXME: minggo: as current implementation need to update some textures more than once, so disable it.
+    // Should enable it when it is fixed.
+    // if (cur == _lastUpdateFrame) {
+    //     CC_LOG_WARNING(utils::getStacktraceJS().c_str());
+    //     CC_LOG_WARNING("performance warning: texture updated more than once per frame");
+    // }
 
     _lastUpdateFrame = cur;
 }
