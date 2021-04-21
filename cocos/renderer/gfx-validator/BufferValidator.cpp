@@ -112,8 +112,6 @@ void BufferValidator::updateRedundencyCheck() {
         // FIXME: minggo: as current implementation need to update some buffers more than once, so disable it.
         // Should enable it when it is fixed.
         // CC_LOG_WARNING(utils::getStacktraceJS().c_str());
-        // FIXME: minggo: as current implementation need to update some buffers more than once, so disable it.
-        // Should enable it when it is fixed.
         // CC_LOG_WARNING("performance warning: buffer updated more than once per frame");
     }
 
