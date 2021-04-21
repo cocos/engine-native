@@ -35,36 +35,35 @@
 namespace cc {
 namespace gfx {
 
-CCVKPipelineState::CCVKPipelineState()
-: PipelineState() {
-}
+CCVKPipelineState::CCVKPipelineState() = default;
 
 CCVKPipelineState::~CCVKPipelineState() {
     destroy();
 }
 
-void CCVKPipelineState::doInit(const PipelineStateInfo &info) {
-    _gpuPipelineState = CC_NEW(CCVKGPUPipelineState);
-    _gpuPipelineState->bindPoint = _bindPoint;
-    _gpuPipelineState->primitive = _primitive;
-    _gpuPipelineState->gpuShader = static_cast<CCVKShader *>(_shader)->gpuShader();
-    _gpuPipelineState->inputState = _inputState;
-    _gpuPipelineState->rs = _rasterizerState;
-    _gpuPipelineState->dss = _depthStencilState;
-    _gpuPipelineState->bs = _blendState;
+void CCVKPipelineState::doInit(const PipelineStateInfo & /*info*/) {
+    _gpuPipelineState                    = CC_NEW(CCVKGPUPipelineState);
+    _gpuPipelineState->bindPoint         = _bindPoint;
+    _gpuPipelineState->primitive         = _primitive;
+    _gpuPipelineState->gpuShader         = static_cast<CCVKShader *>(_shader)->gpuShader();
+    _gpuPipelineState->inputState        = _inputState;
+    _gpuPipelineState->rs                = _rasterizerState;
+    _gpuPipelineState->dss               = _depthStencilState;
+    _gpuPipelineState->bs                = _blendState;
+    _gpuPipelineState->subpass           = _subpass;
     _gpuPipelineState->gpuPipelineLayout = static_cast<CCVKPipelineLayout *>(_pipelineLayout)->gpuPipelineLayout();
     if (_renderPass) _gpuPipelineState->gpuRenderPass = static_cast<CCVKRenderPass *>(_renderPass)->gpuRenderPass();
 
     for (uint i = 0; i < 31; i++) {
-        if ((uint)_dynamicStates & (1 << i)) {
-            _gpuPipelineState->dynamicStates.push_back((DynamicStateFlagBit)(1 << i));
+        if (static_cast<uint>(_dynamicStates) & (1 << i)) {
+            _gpuPipelineState->dynamicStates.push_back(static_cast<DynamicStateFlagBit>(1 << i));
         }
     }
 
     if (_bindPoint == PipelineBindPoint::GRAPHICS) {
-        CCVKCmdFuncCreateGraphicsPipelineState(CCVKDevice::getInstance(), _gpuPipelineState);
+        cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice::getInstance(), _gpuPipelineState);
     } else {
-        CCVKCmdFuncCreateComputePipelineState(CCVKDevice::getInstance(), _gpuPipelineState);
+        cmdFuncCCVKCreateComputePipelineState(CCVKDevice::getInstance(), _gpuPipelineState);
     }
 }
 

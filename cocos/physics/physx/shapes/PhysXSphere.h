@@ -1,7 +1,5 @@
 /****************************************************************************
- Copyright (c) 2010 cocos2d-x.org
- Copyright (c) 2013-2016 Chukong Technologies Inc.
- Copyright (c) 2017-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -25,4 +23,25 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/Random.h"
+#pragma once
+
+#include "physics/physx/shapes/PhysXShape.h"
+
+namespace cc {
+namespace physics {
+
+class PhysXSphere final : public PhysXShape, public ISphereShape {
+public:
+    PhysXSphere();
+    ~PhysXSphere() override = default;
+    void setRadius(float r) override;
+    void updateScale() override;
+
+private:
+    float _mRadius;
+    void updateGeometry();
+    void onComponentSet() override;
+};
+
+} // namespace physics
+} // namespace cc

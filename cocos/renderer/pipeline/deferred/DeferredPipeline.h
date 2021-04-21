@@ -27,10 +27,10 @@
 
 #include <array>
 
-#include "pipeline/RenderPipeline.h"
-#include "pipeline/helper/SharedMemory.h"
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXInputAssembler.h"
+#include "pipeline/RenderPipeline.h"
+#include "pipeline/helper/SharedMemory.h"
 
 namespace cc {
 namespace pipeline {
@@ -42,28 +42,27 @@ struct Ambient;
 struct Skybox;
 struct Shadows;
 struct Sphere;
-class Framebuffer;
-class Camera;
+struct Camera;
 
 struct CC_DLL DeferredRenderData {
-    gfx::TextureList gbufferRenderTargets;
-    gfx::Framebuffer *gbufferFrameBuffer = nullptr;
-    gfx::Framebuffer *lightingFrameBuff = nullptr;
-    gfx::Texture *lightingRenderTarget = nullptr;
-    gfx::Texture *reflectionRenderTarget = nullptr;
-    gfx::Texture *depthTex = nullptr;
+    gfx::TextureList  gbufferRenderTargets;
+    gfx::Framebuffer *gbufferFrameBuffer   = nullptr;
+    gfx::Framebuffer *lightingFrameBuff    = nullptr;
+    gfx::Texture *    lightingRenderTarget = nullptr;
+    gfx::Texture *    depthTex             = nullptr;
+    gfx::Texture *    reflectionRenderTarget   = nullptr;
 };
 
 class CC_DLL DeferredPipeline : public RenderPipeline {
 public:
-    DeferredPipeline() = default;
-    ~DeferredPipeline() = default;
+    DeferredPipeline()           = default;
+    ~DeferredPipeline() override = default;
 
-    virtual bool initialize(const RenderPipelineInfo &info) override;
-    virtual void destroy() override;
-    virtual bool activate() override;
-    virtual void render(const vector<uint> &cameras) override;
-    virtual void resize(uint width, uint height) override;
+    bool initialize(const RenderPipelineInfo &info) override;
+    void destroy() override;
+    bool activate() override;
+    void render(const vector<uint> &cameras) override;
+    void resize(uint width, uint height) override;
 
     gfx::RenderPass *getOrCreateRenderPass(gfx::ClearFlags clearFlags);
 
@@ -72,39 +71,40 @@ public:
     CC_INLINE const gfx::BufferList &getLightBuffers() const { return _lightBuffers; }
     CC_INLINE const UintList &getLightIndexOffsets() const { return _lightIndexOffsets; }
     CC_INLINE const UintList &getLightIndices() const { return _lightIndices; }
-    gfx::InputAssembler *getQuadIAOnScreen(){return _quadIAOnscreen;}
-    gfx::InputAssembler *getQuadIAOffScreen(){return _quadIAOffscreen;}
-    gfx::Rect getRenderArea(Camera *view, bool onScreen);
-    CC_INLINE DeferredRenderData *getDeferredRenderData(){return _deferredRenderData; };
+    gfx::InputAssembler *     getQuadIAOnScreen() { return _quadIAOnscreen; }
+    gfx::InputAssembler *     getQuadIAOffScreen() { return _quadIAOffscreen; }
+    gfx::Rect                 getRenderArea(Camera *camera, bool onScreen);
+    CC_INLINE DeferredRenderData *getDeferredRenderData() { return _deferredRenderData; };
+    void                          updateQuadVertexData(const gfx::Rect &renderArea);
+    void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
 private:
     bool activeRenderer();
-    bool createQuadInputAssembler(gfx::Buffer* &quadIB, gfx::Buffer* &quadVB, gfx::InputAssembler* &quadIA,
-        gfx::SurfaceTransform surfaceTransform);
+    bool createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA);
     void destroyQuadInputAssembler();
     void destroyDeferredData();
     void generateDeferredRenderData();
 
-private:
-    gfx::Buffer *_lightsUBO = nullptr;
-    LightList _validLights;
-    gfx::BufferList _lightBuffers;
-    UintList _lightIndexOffsets;
-    UintList _lightIndices;
+    gfx::Buffer *                           _lightsUBO = nullptr;
+    LightList                               _validLights;
+    gfx::BufferList                         _lightBuffers;
+    UintList                                _lightIndexOffsets;
+    UintList                                _lightIndices;
     map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
+    gfx::Rect                               _lastUsedRenderArea;
 
     // light stage
-    gfx::Buffer *_quadIB = nullptr;
-    gfx::Buffer *_quadVBOnscreen = nullptr;
-    gfx::Buffer *_quadVBOffscreen = nullptr;
-    gfx::InputAssembler *_quadIAOnscreen = nullptr;
+    gfx::Buffer *        _quadIB          = nullptr;
+    gfx::Buffer *        _quadVBOnscreen  = nullptr;
+    gfx::Buffer *        _quadVBOffscreen = nullptr;
+    gfx::InputAssembler *_quadIAOnscreen  = nullptr;
     gfx::InputAssembler *_quadIAOffscreen = nullptr;
-    
+
     DeferredRenderData *_deferredRenderData = nullptr;
-    gfx::RenderPass *_gbufferRenderPass = nullptr;
-    gfx::RenderPass *_lightingRenderPass = nullptr;
-    uint _width;
-    uint _height;
+    gfx::RenderPass *   _gbufferRenderPass  = nullptr;
+    gfx::RenderPass *   _lightingRenderPass = nullptr;
+    uint                _width;
+    uint                _height;
 };
 
 } // namespace pipeline

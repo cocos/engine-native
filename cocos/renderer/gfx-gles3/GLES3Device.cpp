@@ -46,26 +46,28 @@
 namespace cc {
 namespace gfx {
 
-GLES3Device *GLES3Device::_instance = nullptr;
+GLES3Device *GLES3Device::instance = nullptr;
 
 GLES3Device *GLES3Device::getInstance() {
-    return GLES3Device::_instance;
+    return GLES3Device::instance;
 }
 
 GLES3Device::GLES3Device() {
-    _API        = API::GLES3;
+    _api        = API::GLES3;
     _deviceName = "GLES3";
 
-    GLES3Device::_instance = this;
+    GLES3Device::instance = this;
 }
 
 GLES3Device::~GLES3Device() {
-    GLES3Device::_instance = nullptr;
+    GLES3Device::instance = nullptr;
 }
 
-bool GLES3Device::doInit(const DeviceInfo &info) {
+bool GLES3Device::doInit(const DeviceInfo & info) {
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
+    ctxInfo.msaaEnabled  = info.isAntiAlias;
+    ctxInfo.performance  = Performance::HIGH_QUALITY;
 
     _renderContext = CC_NEW(GLES3Context);
     if (!_renderContext->initialize(ctxInfo)) {
@@ -88,34 +90,39 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
 
     bindRenderContext(true);
 
-    String extStr = (const char *)glGetString(GL_EXTENSIONS);
-    _extensions   = StringUtil::Split(extStr, " ");
+    String extStr = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
+    _extensions   = StringUtil::split(extStr, " ");
 
+    _features[static_cast<uint>(Feature::MSAA)]                    = _renderContext->multiSampleCount() > 0;
     _features[static_cast<uint>(Feature::TEXTURE_FLOAT)]           = true;
     _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT)]      = true;
     _features[static_cast<uint>(Feature::FORMAT_R11G11B10F)]       = true;
     _features[static_cast<uint>(Feature::FORMAT_D24S8)]            = true;
-    _features[static_cast<uint>(Feature::MSAA)]                    = true;
     _features[static_cast<uint>(Feature::INSTANCED_ARRAYS)]        = true;
     _features[static_cast<uint>(Feature::MULTIPLE_RENDER_TARGETS)] = true;
     _features[static_cast<uint>(Feature::BLEND_MINMAX)]            = true;
     _features[static_cast<uint>(Feature::ELEMENT_INDEX_UINT)]      = true;
 
-    uint minorVersion = static_cast<GLES3Context *>(_context)->minor_ver();
-    if (minorVersion)
+    uint minorVersion = static_cast<GLES3Context *>(_context)->minorVer();
+    if (minorVersion) {
         _features[static_cast<uint>(Feature::COMPUTE_SHADER)] = true;
+    }
 
-    if (checkExtension("color_buffer_float"))
+    if (checkExtension("color_buffer_float")) {
         _features[static_cast<uint>(Feature::COLOR_FLOAT)] = true;
+    }
 
-    if (checkExtension("color_buffer_half_float"))
+    if (checkExtension("color_buffer_half_float")) {
         _features[static_cast<uint>(Feature::COLOR_HALF_FLOAT)] = true;
+    }
 
-    if (checkExtension("texture_float_linear"))
+    if (checkExtension("texture_float_linear")) {
         _features[static_cast<uint>(Feature::TEXTURE_FLOAT_LINEAR)] = true;
+    }
 
-    if (checkExtension("texture_half_float_linear"))
+    if (checkExtension("texture_half_float_linear")) {
         _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT_LINEAR)] = true;
+    }
 
     String compressedFmts;
 
@@ -147,9 +154,9 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::FORMAT_D24S8)]         = true;
     _features[static_cast<uint>(Feature::FORMAT_D32FS8)]        = true;
 
-    _renderer = (const char *)glGetString(GL_RENDERER);
-    _vendor   = (const char *)glGetString(GL_VENDOR);
-    _version  = (const char *)glGetString(GL_VERSION);
+    _renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
+    _vendor   = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
+    _version  = reinterpret_cast<const char *>(glGetString(GL_VERSION));
 
     CC_LOG_INFO("GLES3 device initialized.");
     CC_LOG_INFO("RENDERER: %s", _renderer.c_str());
@@ -159,31 +166,32 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressedFmts.c_str());
 
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, (GLint *)&_caps.maxVertexAttributes);
-    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, (GLint *)&_caps.maxVertexUniformVectors);
-    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, (GLint *)&_caps.maxFragmentUniformVectors);
-    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, (GLint *)&_caps.maxUniformBufferBindings);
-    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, (GLint *)&_caps.maxUniformBlockSize);
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, (GLint *)&_caps.maxTextureUnits);
-    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, (GLint *)&_caps.maxVertexTextureUnits);
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, (GLint *)&_caps.maxTextureSize);
-    glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, (GLint *)&_caps.maxCubeMapTextureSize);
-    glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, (GLint *)&_caps.uboOffsetAlignment);
-    glGetIntegerv(GL_DEPTH_BITS, (GLint *)&_caps.depthBits);
-    glGetIntegerv(GL_STENCIL_BITS, (GLint *)&_caps.stencilBits);
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, reinterpret_cast<GLint *>(&_caps.maxVertexAttributes));
+    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, reinterpret_cast<GLint *>(&_caps.maxVertexUniformVectors));
+    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, reinterpret_cast<GLint *>(&_caps.maxFragmentUniformVectors));
+    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, reinterpret_cast<GLint *>(&_caps.maxUniformBufferBindings));
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, reinterpret_cast<GLint *>(&_caps.maxUniformBlockSize));
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, reinterpret_cast<GLint *>(&_caps.maxColorRenderTargets));
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, reinterpret_cast<GLint *>(&_caps.maxTextureUnits));
+    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, reinterpret_cast<GLint *>(&_caps.maxVertexTextureUnits));
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, reinterpret_cast<GLint *>(&_caps.maxTextureSize));
+    glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, reinterpret_cast<GLint *>(&_caps.maxCubeMapTextureSize));
+    glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, reinterpret_cast<GLint *>(&_caps.uboOffsetAlignment));
+    glGetIntegerv(GL_DEPTH_BITS, reinterpret_cast<GLint *>(&_caps.depthBits));
+    glGetIntegerv(GL_STENCIL_BITS, reinterpret_cast<GLint *>(&_caps.stencilBits));
 
     if (minorVersion) {
-        glGetIntegerv(GL_MAX_IMAGE_UNITS, (GLint *)&_caps.maxImageUnits);
-        glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, (GLint *)&_caps.maxShaderStorageBlockSize);
-        glGetIntegerv(GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, (GLint *)&_caps.maxShaderStorageBufferBindings);
-        glGetIntegerv(GL_MAX_COMPUTE_SHARED_MEMORY_SIZE, (GLint *)&_caps.maxComputeSharedMemorySize);
-        glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, (GLint *)&_caps.maxComputeWorkGroupInvocations);
-        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, (GLint *)&_caps.maxComputeWorkGroupSize.x);
-        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, (GLint *)&_caps.maxComputeWorkGroupSize.y);
-        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, (GLint *)&_caps.maxComputeWorkGroupSize.z);
-        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, (GLint *)&_caps.maxComputeWorkGroupCount.x);
-        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, (GLint *)&_caps.maxComputeWorkGroupCount.y);
-        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, (GLint *)&_caps.maxComputeWorkGroupCount.z);
+        glGetIntegerv(GL_MAX_IMAGE_UNITS, reinterpret_cast<GLint *>(&_caps.maxImageUnits));
+        glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, reinterpret_cast<GLint *>(&_caps.maxShaderStorageBlockSize));
+        glGetIntegerv(GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, reinterpret_cast<GLint *>(&_caps.maxShaderStorageBufferBindings));
+        glGetIntegerv(GL_MAX_COMPUTE_SHARED_MEMORY_SIZE, reinterpret_cast<GLint *>(&_caps.maxComputeSharedMemorySize));
+        glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupInvocations));
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupSize.x));
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupSize.y));
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupSize.z));
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupCount.x));
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupCount.y));
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupCount.z));
     }
 
     _gpuStateCache->initialize(_caps.maxTextureUnits, _caps.maxImageUnits, _caps.maxUniformBufferBindings, _caps.maxShaderStorageBufferBindings, _caps.maxVertexAttributes);
@@ -192,14 +200,14 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
 }
 
 void GLES3Device::doDestroy() {
-    CC_SAFE_DELETE(_gpuFramebufferCacheMap);
-    CC_SAFE_DELETE(_gpuStagingBufferPool);
-    CC_SAFE_DELETE(_gpuStateCache);
+    CC_SAFE_DELETE(_gpuFramebufferCacheMap)
+    CC_SAFE_DELETE(_gpuStagingBufferPool)
+    CC_SAFE_DELETE(_gpuStateCache)
 
-    CC_SAFE_DESTROY(_cmdBuff);
-    CC_SAFE_DESTROY(_queue);
-    CC_SAFE_DESTROY(_deviceContext);
-    CC_SAFE_DESTROY(_renderContext);
+    CC_SAFE_DESTROY(_cmdBuff)
+    CC_SAFE_DESTROY(_queue)
+    CC_SAFE_DESTROY(_deviceContext)
+    CC_SAFE_DESTROY(_renderContext)
 }
 
 void GLES3Device::releaseSurface(const uintptr_t windowHandle) {
@@ -220,10 +228,10 @@ void GLES3Device::acquire() {
 }
 
 void GLES3Device::present() {
-    GLES3Queue *queue = (GLES3Queue *)_queue;
-    _numDrawCalls     = queue->_numDrawCalls;
-    _numInstances     = queue->_numInstances;
-    _numTriangles     = queue->_numTriangles;
+    auto *queue   = static_cast<GLES3Queue *>(_queue);
+    _numDrawCalls = queue->_numDrawCalls;
+    _numInstances = queue->_numInstances;
+    _numTriangles = queue->_numTriangles;
 
     _context->present();
 
@@ -234,7 +242,7 @@ void GLES3Device::present() {
 }
 
 void GLES3Device::bindRenderContext(bool bound) {
-    _renderContext->MakeCurrent(bound);
+    _renderContext->makeCurrent(bound);
     _context = bound ? _renderContext : nullptr;
 
     if (bound) {
@@ -252,7 +260,7 @@ void GLES3Device::bindDeviceContext(bool bound) {
         _deviceContext = CC_NEW(GLES3Context);
         _deviceContext->initialize(ctxInfo);
     }
-    _deviceContext->MakeCurrent(bound);
+    _deviceContext->makeCurrent(bound);
     _context = bound ? _deviceContext : nullptr;
 
     if (bound) {
@@ -261,7 +269,7 @@ void GLES3Device::bindDeviceContext(bool bound) {
     }
 }
 
-uint GLES3Device::getMinorVersion() const { return static_cast<GLES3Context *>(_context)->minor_ver(); }
+uint GLES3Device::getMinorVersion() const { return static_cast<GLES3Context *>(_context)->minorVer(); }
 
 CommandBuffer *GLES3Device::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
     if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES3PrimaryCommandBuffer);
@@ -325,7 +333,7 @@ TextureBarrier *GLES3Device::createTextureBarrier() {
 }
 
 void GLES3Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
-    GLES3CmdFuncCopyBuffersToTexture(this, buffers, static_cast<GLES3Texture *>(dst)->gpuTexture(), regions, count);
+    cmdFuncGLES3CopyBuffersToTexture(this, buffers, static_cast<GLES3Texture *>(dst)->gpuTexture(), regions, count);
 }
 
 } // namespace gfx

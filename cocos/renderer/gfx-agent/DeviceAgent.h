@@ -38,7 +38,7 @@ namespace gfx {
 class LinearAllocatorPool;
 class CommandBuffer;
 class CommandBufferAgent;
-constexpr uint MAX_CPU_FRAME_AHEAD = 1u;
+constexpr uint MAX_CPU_FRAME_AHEAD = 1U;
 
 class CC_DLL DeviceAgent final : public Agent<Device> {
 public:
@@ -100,26 +100,23 @@ public:
     LinearAllocatorPool *getMainAllocator() const { return _allocatorPools[_currentIndex]; }
 
 protected:
-    static DeviceAgent *_instance;
+    static DeviceAgent *instance;
 
     friend class DeviceManager;
     friend class CommandBufferAgent;
 
-    DeviceAgent(Device *device);
+    explicit DeviceAgent(Device *device);
 
     bool doInit(const DeviceInfo &info) override;
     void doDestroy() override;
 
-    void releaseSurface(uintptr_t windowHandle) override { _actor->releaseSurface(windowHandle); }
-    void acquireSurface(uintptr_t windowHandle) override { _actor->acquireSurface(windowHandle); }
-
-    void bindRenderContext(bool bound) override { _actor->bindRenderContext(bound); }
-    void bindDeviceContext(bool bound) override { _actor->bindDeviceContext(bound); }
+    void releaseSurface(uintptr_t windowHandle) override;
+    void acquireSurface(uintptr_t windowHandle) override;
 
     bool          _multithreaded{false};
     MessageQueue *_mainEncoder{nullptr};
 
-    uint                          _currentIndex = 0u;
+    uint                          _currentIndex = 0U;
     vector<LinearAllocatorPool *> _allocatorPools;
     Semaphore                     _frameBoundarySemaphore{MAX_CPU_FRAME_AHEAD};
 

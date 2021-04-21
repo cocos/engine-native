@@ -60,44 +60,38 @@ public:
         Device *device = nullptr;
 
 #ifdef CC_USE_VULKAN
-        if (tryCreate<CCVKDevice>(info, device)) return device;
+        if (tryCreate<CCVKDevice>(info, &device)) return device;
 #endif
 
 #ifdef CC_USE_METAL
-        if (tryCreate<CCMTLDevice>(info, device)) return device;
+        if (tryCreate<CCMTLDevice>(info, &device)) return device;
 #endif
 
 #ifdef CC_USE_GLES3
-        if (tryCreate<GLES3Device>(info, device)) return device;
+        if (tryCreate<GLES3Device>(info, &device)) return device;
 #endif
 
 #ifdef CC_USE_GLES2
-        if (tryCreate<GLES2Device>(info, device)) return device;
+        if (tryCreate<GLES2Device>(info, &device)) return device;
 #endif
 
-        if (tryCreate<EmptyDevice>(info, device)) return device;
+        if (tryCreate<EmptyDevice>(info, &device)) return device;
 
         return nullptr;
     }
 
     static void destroy() {
-        CC_SAFE_DESTROY(Device::_instance);
+        CC_SAFE_DESTROY(Device::instance);
     }
-
-    static constexpr bool useAgent() { return true; }
-
-    static constexpr bool useValidator() { return CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION; }
 
 private:
     template <typename DeviceCtor, typename Enable = std::enable_if_t<std::is_base_of<Device, DeviceCtor>::value>>
-    static bool tryCreate(const DeviceInfo &info, Device *&device) {
-        device = CC_NEW(DeviceCtor);
+    static bool tryCreate(const DeviceInfo &info, Device **pDevice) {
+        Device *device = CC_NEW(DeviceCtor);
 
-        if (useAgent()) {
-            device = CC_NEW(gfx::DeviceAgent(device));
-        }
+        device = CC_NEW(gfx::DeviceAgent(device));
 
-        if (useValidator()) {
+        if (CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION) {
             device = CC_NEW(gfx::DeviceValidator(device));
             //((gfx::DeviceValidator *)device)->enableRecording(true);
         }
@@ -114,6 +108,8 @@ private:
         EventDispatcher::addCustomEventListener(EVENT_RECREATE_WINDOW, [device](const CustomEvent &e) -> void {
             device->acquireSurface(reinterpret_cast<uintptr_t>(e.args->ptrVal));
         });
+
+        *pDevice = device;
 
         return true;
     }

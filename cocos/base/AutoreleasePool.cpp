@@ -31,18 +31,16 @@
 namespace cc {
 
 AutoreleasePool::AutoreleasePool()
-: _name("")
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
-  ,
-  _isClearing(false)
+: _isClearing(false)
 #endif
 {
     _managedObjectArray.reserve(150);
     PoolManager::getInstance()->push(this);
 }
 
-AutoreleasePool::AutoreleasePool(const std::string &name)
-: _name(name)
+AutoreleasePool::AutoreleasePool(std::string name)
+: _name(std::move(name))
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
   ,
   _isClearing(false)
@@ -79,8 +77,9 @@ void AutoreleasePool::clear() {
 
 bool AutoreleasePool::contains(Ref *object) const {
     for (const auto &obj : _managedObjectArray) {
-        if (obj == object)
+        if (obj == object) {
             return true;
+        }
     }
     return false;
 }
@@ -100,20 +99,19 @@ void AutoreleasePool::dump() {
 //
 //--------------------------------------------------------------------
 
-PoolManager *PoolManager::s_singleInstance = nullptr;
+PoolManager *PoolManager::_singleInstance = nullptr;
 
 PoolManager *PoolManager::getInstance() {
-    if (s_singleInstance == nullptr) {
-        s_singleInstance = new (std::nothrow) PoolManager();
-        // Add the first auto release pool
-        new (std::nothrow) AutoreleasePool("autorelease pool");
+    if (_singleInstance == nullptr) {
+        _singleInstance = new (std::nothrow) PoolManager();
+        _singleInstance->push(new AutoreleasePool());
     }
-    return s_singleInstance;
+    return _singleInstance;
 }
 
 void PoolManager::destroyInstance() {
-    delete s_singleInstance;
-    s_singleInstance = nullptr;
+    delete _singleInstance;
+    _singleInstance = nullptr;
 }
 
 PoolManager::PoolManager() {
@@ -131,13 +129,17 @@ PoolManager::~PoolManager() {
 }
 
 AutoreleasePool *PoolManager::getCurrentPool() const {
+    if (_releasePoolStack.empty()) {
+        return nullptr;
+    }
     return _releasePoolStack.back();
 }
 
 bool PoolManager::isObjectInPools(Ref *obj) const {
     for (const auto &pool : _releasePoolStack) {
-        if (pool->contains(obj))
+        if (pool->contains(obj)) {
             return true;
+        }
     }
     return false;
 }
