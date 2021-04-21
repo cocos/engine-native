@@ -24,9 +24,7 @@
 ****************************************************************************/
 
 #pragma once
-#include <algorithm>
 
-#include "base/CoreStd.h"
 #include "Define.h"
 
 namespace cc {
@@ -37,7 +35,6 @@ struct RenderObject;
 class RenderInstancedQueue;
 class RenderBatchedQueue;
 class ForwardPipeline;
-class Device;
 struct Shadows;
 struct Light;
 struct ModelView;
@@ -58,7 +55,6 @@ public:
 private:
     int getShadowPassIndex(const ModelView *model) const;
 
-private:
     ForwardPipeline *_pipeline = nullptr;
     vector<const SubModelView *> _subModels;
     vector<const PassView *> _passes;
@@ -68,5 +64,6 @@ private:
     gfx::Buffer *_buffer = nullptr;
     uint _phaseID = 0;
 };
+
 } // namespace pipeline
 } // namespace cc
