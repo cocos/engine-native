@@ -61,7 +61,7 @@ void TextureValidator::doInit(const TextureInfo &info) {
 
 void TextureValidator::doInit(const TextureViewInfo &info) {
     TextureViewInfo actorInfo = info;
-    // actorInfo.texture         = static_cast<TextureValidator *>(info.texture)->getActor();
+    actorInfo.texture         = static_cast<TextureValidator *>(info.texture)->getActor();
 
     _actor->initialize(actorInfo);
 }
