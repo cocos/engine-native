@@ -32,12 +32,10 @@
 namespace cc {
 
 class Mat4;
-class Color;
 
 namespace pipeline {
 
 class RenderPipeline;
-class Device;
 
 class CC_DLL PipelineUBO : public Object  {
 public:
@@ -56,7 +54,6 @@ public:
     void updateShadowUBO(const Camera *camera);
     void updateShadowUBOLight(const Light *light);
     void updateShadowUBORange(uint offset, const Mat4* data);
-    void destroyShadowFrameBuffers();
     
 private:
     RenderPipeline *_pipeline = nullptr;
@@ -67,7 +64,7 @@ private:
     std::array<float, UBOShadow::COUNT> _shadowUBO;
 
     std::vector<gfx::Buffer *> _ubos;
-    void initCombineSignY();
+    void initCombineSignY() const;
 };
 
 } // namespace pipeline

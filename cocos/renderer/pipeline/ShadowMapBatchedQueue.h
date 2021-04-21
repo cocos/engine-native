@@ -43,8 +43,8 @@ struct ModelView;
 
 class CC_DLL ShadowMapBatchedQueue : public Object {
 public:
-    ShadowMapBatchedQueue(ForwardPipeline *);
-    ~ShadowMapBatchedQueue() = default;
+    explicit ShadowMapBatchedQueue(ForwardPipeline *);
+    ~ShadowMapBatchedQueue() override = default;
     void destroy();
 
     void clear();

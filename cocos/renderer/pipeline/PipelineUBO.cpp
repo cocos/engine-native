@@ -303,20 +303,22 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
     memcpy(shadowUBO.data() + UBOShadow::SHADOW_COLOR_OFFSET, &color, sizeof(float) * 4);
 }
 
-static uint8_t _combineSignY = 0;
+static uint8_t combineSignY = 0;
 uint8_t PipelineUBO::getCombineSignY() {
-    return _combineSignY;
+    return combineSignY;
 }
 
-void PipelineUBO::initCombineSignY() {
-    _combineSignY = static_cast<uint8_t>(_device->getCapabilities().screenSpaceSignY * 0.5F + 0.5F) << 1 | static_cast<uint8_t>(_device->getCapabilities().clipSpaceSignY * 0.5F + 0.5F);
+void PipelineUBO::initCombineSignY() const {
+    const float screenSpaceSignY = _device->getCapabilities().screenSpaceSignY * 0.5F + 0.5F;
+    const float clipSpaceSignY   = _device->getCapabilities().clipSpaceSignY * 0.5F + 0.5F;
+    combineSignY                 = static_cast<uint8_t>(screenSpaceSignY) << 1 | static_cast<uint8_t>(clipSpaceSignY);
 }
 
 void PipelineUBO::activate(gfx::Device *device, RenderPipeline *pipeline) {
     _device   = device;
     _pipeline = pipeline;
 
-    const auto descriptorSet = pipeline->getDescriptorSet();
+    auto *descriptorSet = pipeline->getDescriptorSet();
     initCombineSignY();
     auto *globalUBO = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
