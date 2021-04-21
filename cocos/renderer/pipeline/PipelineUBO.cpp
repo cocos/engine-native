@@ -308,7 +308,7 @@ uint8_t PipelineUBO::getCombineSignY() {
     return combineSignY;
 }
 
-void PipelineUBO::initCombineSignY() const {
+void PipelineUBO::initCombineSignY() {
     const float screenSpaceSignY = _device->getCapabilities().screenSpaceSignY * 0.5F + 0.5F;
     const float clipSpaceSignY   = _device->getCapabilities().clipSpaceSignY * 0.5F + 0.5F;
     combineSignY                 = static_cast<uint8_t>(screenSpaceSignY) << 1 | static_cast<uint8_t>(clipSpaceSignY);
