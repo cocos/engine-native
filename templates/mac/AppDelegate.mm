@@ -12,9 +12,8 @@
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification {
-    int    pixelRatio = [[NSScreen mainScreen] backingScaleFactor];
-    NSRect rect       = NSMakeRect(200, 200, 960 * pixelRatio, 640 * pixelRatio);
-    _window           = [[NSWindow alloc] initWithContentRect:rect
+    NSRect rect = NSMakeRect(200, 200, 960, 640);
+    _window     = [[NSWindow alloc] initWithContentRect:rect
                                           styleMask:NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
                                             backing:NSBackingStoreBuffered
                                               defer:NO];
