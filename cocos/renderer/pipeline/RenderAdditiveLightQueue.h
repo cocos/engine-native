@@ -69,7 +69,7 @@ private:
     void                updateUBOs(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     void                updateLightDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     bool                getLightPassIndex(const ModelView *model, vector<uint> *lightPassIndices) const;
-    void                lightCulling(const ModelView *model, vector<const Light *> &validLights);
+    void                lightCulling(const ModelView *model);
     gfx::DescriptorSet *getOrCreateDescriptorSet(const Light *light);
 
     ForwardPipeline *              _pipeline = nullptr;

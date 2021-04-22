@@ -138,7 +138,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const Camera *camera, gfx::Comm
 
         _lightIndices.clear();
 
-        lightCulling(model, _validLights);
+        lightCulling(model);
 
         if (_lightIndices.empty()) continue;
         const auto *const subModelArrayID = model->getSubModelID();
@@ -420,11 +420,11 @@ bool RenderAdditiveLightQueue::getLightPassIndex(const ModelView *model, vector<
     return hasValidLightPass;
 }
 
-void RenderAdditiveLightQueue::lightCulling(const ModelView *model, vector<const Light *> &validLights){
+void RenderAdditiveLightQueue::lightCulling(const ModelView *model) {
     bool isCulled = false;
     for (size_t i = 0; i < _validLights.size(); i++) {
-        const auto *const light    = _validLights[i];
-        switch(light->getType()){
+        const auto *const light = _validLights[i];
+        switch (light->getType()) {
             case LightType::SPHERE:
                 isCulled = cullSphereLight(light, model);
                 break;
