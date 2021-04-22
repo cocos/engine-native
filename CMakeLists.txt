@@ -186,10 +186,12 @@ if(USE_DRAGONBONES OR USE_SPINE)
 	set(USE_MIDDLEWARE ON)
 endif()
 
-if(USE_JOB_SYSTEM_TBB EQUAL USE_JOB_SYSTEM_TASKFLOW)
+message(STATUS "JOB_SYSTEM ${USE_JOB_SYSTEM_TBB} / ${USE_JOB_SYSTEM_TASKFLOW}")
+if("${USE_JOB_SYSTEM_TBB}" STREQUAL "${USE_JOB_SYSTEM_TASKFLOW}")
     set(USE_JOB_SYSTEM_TASKFLOW ON)
     set(USE_JOB_SYSTEM_TBB      OFF)
 endif()
+message(STATUS "2 JOB_SYSTEM ${USE_JOB_SYSTEM_TBB} / ${USE_JOB_SYSTEM_TASKFLOW}")
 
 ################################# list all option values ##############################
 
