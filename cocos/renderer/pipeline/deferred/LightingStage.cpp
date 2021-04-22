@@ -343,7 +343,16 @@ void LightingStage::render(Camera *camera) {
         }
     };
 
-    gfx::GlobalBarrierInfo info_post = {        
+    gfx::GlobalBarrierInfo info_before_denoise = {        
+        {
+            gfx::AccessType::COMPUTE_SHADER_WRITE,
+        },
+        {
+            gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
+        }
+    };
+
+    gfx::GlobalBarrierInfo info_after_denoise = {        
         {
             gfx::AccessType::COMPUTE_SHADER_WRITE,
         },
@@ -353,16 +362,27 @@ void LightingStage::render(Camera *camera) {
     };
 
     gfx::GlobalBarrier * barrier_pre = _device->createGlobalBarrier(info_pre);
-    gfx::GlobalBarrier * barrier_post = _device->createGlobalBarrier(info_post);
+    gfx::GlobalBarrier * barrier_before_denoise = _device->createGlobalBarrier(info_before_denoise);
+    gfx::GlobalBarrier * barrier_after_denoise = _device->createGlobalBarrier(info_after_denoise);
 
     gfx::DispatchInfo dispatchInfo{(globalWidth - 1) / groupWidth + 1, (globalHeight - 1) / groupHeight + 1, 1};
+    gfx::DispatchInfo denoiseDispatchInfo{((globalWidth - 1 )/ 2) / groupWidth + 1, ((globalHeight - 1)/ 2) / groupHeight + 1, 1};
+
     if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
         cmdBuff->pipelineBarrier(barrier_pre);
         cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
         cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
         cmdBuff->dispatch(dispatchInfo);
-        cmdBuff->pipelineBarrier(barrier_post);
+
+        cmdBuff->pipelineBarrier(barrier_before_denoise);
+
+        cmdBuff->bindPipelineState(_reflectionComp->getDenoisePipelineState());
+        cmdBuff->bindDescriptorSet(0, _reflectionComp->getDenoiseDescriptorSet());
+        cmdBuff->dispatch(denoiseDispatchInfo);
+        cmdBuff->pipelineBarrier(barrier_after_denoise);
     }
+
+
 
     gfx::ColorAttachment cAttch = {
         gfx::Format::RGBA16F,

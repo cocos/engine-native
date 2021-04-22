@@ -26,9 +26,14 @@ public:
     ReflectionComp();
     ~ReflectionComp();
     void init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture *worldPositionTex, gfx::Texture* reflectionTex, 
-        Mat4 cc_matViewProj, int group_size_x, int group_size_y);
+        Mat4 cc_matViewProj, uint group_size_x, uint group_size_y);
+    void initFirstComp();
+    void initDenoiseComp();
+
     gfx::DescriptorSet* getDescriptorSet();
     gfx::PipelineState* getPipelineState();
+    gfx::DescriptorSet* getDenoiseDescriptorSet();
+    gfx::PipelineState* getDenoisePipelineState();
     gfx::Texture* getReflectionTex();
     int getGroupSizeX();
     int getGroupSizeY();
@@ -39,19 +44,29 @@ private:
     T &                       getAppropriateShaderSource(ShaderSources<T> &sources);
 
     gfx::Device*              _device                  = nullptr;
+
     gfx::Shader*              _compShader              = nullptr;
     gfx::DescriptorSetLayout* _compDescriptorSetLayout = nullptr;
-    gfx::PipelineLayout*      _compPipelineLayout      = nullptr;
+    gfx::PipelineLayout*      _compPipelineLayout      = nullptr;    
     gfx::PipelineState*       _compPipelineState       = nullptr;
     gfx::DescriptorSet*       _compDescriptorSet       = nullptr;
+
+    gfx::Shader*              _compDenoiseShader                = nullptr;
+    gfx::DescriptorSetLayout* _compDenoiseDescriptorSetLayout   = nullptr;
+    gfx::PipelineLayout*      _compDenoisePipelineLayout        = nullptr;
+    gfx::PipelineState*       _compDenoisePipelineState          = nullptr;
+    gfx::DescriptorSet*       _compDenoiseDescriptorSet          = nullptr;
+
     gfx::Buffer *             _compConstantsBuffer     = nullptr;
     gfx::Texture*             _lightingTex             = nullptr;
-    gfx::Texture *            _worldPositionTex        = nullptr;
-    gfx::Sampler *            _sampler                 = nullptr;
-    gfx::Texture *            _reflectionTex             = nullptr;
+    gfx::Texture*             _worldPositionTex        = nullptr;
+    gfx::Sampler*             _sampler                 = nullptr;
+    gfx::Texture*             _reflectionTex           = nullptr;
+    gfx::Texture*             _denoiseTex              = nullptr;
     Mat4                      _cc_matViewProj;
-    int                       _group_size_x             = 8;
-    int                       _group_size_y             = 8;
+
+    uint                      _group_size_x             = 8;
+    uint                      _group_size_y             = 8;
     bool                      _initlized                = false;
 };
 

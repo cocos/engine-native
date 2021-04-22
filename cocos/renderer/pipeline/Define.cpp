@@ -364,7 +364,7 @@ const gfx::DescriptorSetLayoutBinding SAMPLERREFLECTIONRESULTMAP::DESCRIPTOR = {
     gfx::ShaderStageFlagBit::FRAGMENT,
 };
 const gfx::UniformSamplerTexture SAMPLERREFLECTIONRESULTMAP::LAYOUT = {
-    GLOBAL_SET,
+    globalSet,
     SAMPLERREFLECTIONRESULTMAP::BINDING,
     SAMPLERREFLECTIONRESULTMAP::NAME,
     gfx::Type::SAMPLER2D,

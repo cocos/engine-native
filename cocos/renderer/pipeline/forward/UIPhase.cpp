@@ -37,7 +37,7 @@ void UIPhase::activate(RenderPipeline *pipeline){
 };
 
 void UIPhase::render(Camera *camera, gfx::RenderPass *renderPass){
-    auto *pipeline = dynamic_cast<ForwardPipeline *>(_pipeline);
+    auto *pipeline = dynamic_cast<RenderPipeline *>(_pipeline);
     auto *cmdBuff  = pipeline->getCommandBuffers()[0];
 
     const auto *batches    = camera->getScene()->getUIBatches();
