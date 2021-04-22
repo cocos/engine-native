@@ -221,7 +221,7 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
             float shadowWHPBInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, static_cast<float>(shadowInfo->pcfType), shadowInfo->bias};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET, &shadowWHPBInfos, sizeof(shadowWHPBInfos));
 
-            const auto packing            = static_cast<float>(shadowInfo->packing) ? 1.0F : (isHalfFloatPrecision ? 0.0F : 1.0F);
+            const auto packing            = static_cast<bool>(shadowInfo->packing) ? 1.0F : (isHalfFloatPrecision ? 0.0F : 1.0F);
             float shadowLPNNInfos[4] = {0.0F, packing, shadowInfo->normalBias, 0.0F};            
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET, &shadowLPNNInfos, sizeof(shadowLPNNInfos));
         } else if (mainLight && shadowInfo->getShadowType() == ShadowType::PLANAR) {
@@ -241,7 +241,7 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
     auto &     shadowUBO  = bufferView;
     const auto   isHalfFloatPrecision = device->hasFeature(cc::gfx::Feature::COLOR_HALF_FLOAT) && device->hasFeature(cc::gfx::Feature::TEXTURE_HALF_FLOAT);
     const auto   linear               = (static_cast<bool>(shadowInfo->linear) && isHalfFloatPrecision) ? 1.0F : 0.0F;
-    const auto   packing              = static_cast<float>(shadowInfo->packing) ? 1.0F : (isHalfFloatPrecision ? 0.0F : 1.0F);
+    const auto   packing              = static_cast<bool>(shadowInfo->packing) ? 1.0F : (isHalfFloatPrecision ? 0.0F : 1.0F);
     switch (light->getType()) {
         case LightType::DIRECTIONAL: {
             cc::Mat4 matShadowCamera;
