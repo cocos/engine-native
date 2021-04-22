@@ -43,7 +43,6 @@ BufferAllocator::~BufferAllocator() {
         buffer.second->decRef();
     }
     _buffers.clear();
-    _array.clear();
 }
 
 Object *BufferAllocator::alloc(uint index, uint bytes) {
@@ -60,17 +59,17 @@ Object *BufferAllocator::alloc(uint index, uint bytes) {
     obj->getArrayBufferData(static_cast<uint8_t **>(&ret), &len);
 
     // cache data
-    if (index >= _array.size()) {
-        _array.push_back(ret);
+    if (index >= _bufferDatas.size()) {
+        _bufferDatas.push_back(ret);
     } else {
-        _array[index] = ret;
+        _bufferDatas[index] = ret;
     }
 
     // cache size
-    if (index >= _sizes.size()) {
-        _sizes.push_back(bytes);
+    if (index >= _bufferDataSizes.size()) {
+        _bufferDataSizes.push_back(bytes);
     } else {
-        _sizes[index] = bytes;
+        _bufferDataSizes[index] = bytes;
     }
 
     return obj;
