@@ -60,7 +60,8 @@ public:
     void destroy();
 
 private:
-    static bool cullingLight(const Light *light, const ModelView *model);
+    static bool cullSphereLight(const Light *light, const ModelView *model);
+    static bool cullSpotLight(const Light *light, const ModelView *model);
 
     void                clear();
     void                gatherValidLights(const Camera *camera);
@@ -68,6 +69,7 @@ private:
     void                updateUBOs(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     void                updateLightDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     bool                getLightPassIndex(const ModelView *model, vector<uint> *lightPassIndices) const;
+    void                lightCulling(const ModelView *model, vector<const Light *> &validLights);
     gfx::DescriptorSet *getOrCreateDescriptorSet(const Light *light);
 
     ForwardPipeline *              _pipeline = nullptr;
