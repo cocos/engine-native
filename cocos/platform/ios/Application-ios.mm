@@ -93,9 +93,8 @@ namespace {
     bool setCanvasCallback(se::Object* global) {
         auto viewLogicalSize = cc::Application::getInstance()->getViewLogicalSize();
 
-        CGRect nativeBounds = [[UIScreen mainScreen] nativeBounds];
-        int nativeWidth = static_cast<int>(nativeBounds.size.width);
-        int nativeHeight = static_cast<int>(nativeBounds.size.height);
+        int nativeWidth = static_cast<int>(viewLogicalSize.y * Device::getDevicePixelRatio());
+        int nativeHeight = static_cast<int>(viewLogicalSize.x * Device::getDevicePixelRatio());
         auto orientation = cc::Device::getDeviceOrientation();
         bool isLandscape = (orientation == cc::Device::Orientation::LANDSCAPE_RIGHT || orientation == cc::Device::Orientation::LANDSCAPE_LEFT);
         if (isLandscape) std::swap(nativeWidth, nativeHeight);

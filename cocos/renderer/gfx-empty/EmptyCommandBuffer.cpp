@@ -82,7 +82,10 @@ void EmptyCommandBuffer::setStencilWriteMask(StencilFace face, uint mask) {
 void EmptyCommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint mask) {
 }
 
-void EmptyCommandBuffer::draw(InputAssembler *ia) {
+void EmptyCommandBuffer::nextSubpass() {
+}
+
+void EmptyCommandBuffer::draw(const DrawInfo &info) {
 }
 
 void EmptyCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {

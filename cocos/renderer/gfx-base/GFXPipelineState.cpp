@@ -35,8 +35,7 @@ PipelineState::PipelineState()
 : GFXObject(ObjectType::PIPELINE_STATE) {
 }
 
-PipelineState::~PipelineState() {
-}
+PipelineState::~PipelineState() = default;
 
 void PipelineState::initialize(const PipelineStateInfo &info) {
     _primitive         = info.primitive;
@@ -48,6 +47,7 @@ void PipelineState::initialize(const PipelineStateInfo &info) {
     _blendState        = info.blendState;
     _dynamicStates     = info.dynamicStates;
     _renderPass        = info.renderPass;
+    _subpass           = info.subpass;
     _pipelineLayout    = info.pipelineLayout;
 
     doInit(info);

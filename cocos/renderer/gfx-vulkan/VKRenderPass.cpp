@@ -32,20 +32,19 @@
 namespace cc {
 namespace gfx {
 
-CCVKRenderPass::CCVKRenderPass()
-: RenderPass() {
-}
+CCVKRenderPass::CCVKRenderPass() = default;
 
 CCVKRenderPass::~CCVKRenderPass() {
     destroy();
 }
 
-void CCVKRenderPass::doInit(const RenderPassInfo &info) {
-    _gpuRenderPass = CC_NEW(CCVKGPURenderPass);
-    _gpuRenderPass->colorAttachments = _colorAttachments;
+void CCVKRenderPass::doInit(const RenderPassInfo& /*info*/) {
+    _gpuRenderPass                         = CC_NEW(CCVKGPURenderPass);
+    _gpuRenderPass->colorAttachments       = _colorAttachments;
     _gpuRenderPass->depthStencilAttachment = _depthStencilAttachment;
-    _gpuRenderPass->subpasses = _subpasses;
-    CCVKCmdFuncCreateRenderPass(CCVKDevice::getInstance(), _gpuRenderPass);
+    _gpuRenderPass->subpasses              = _subpasses;
+    _gpuRenderPass->dependencies           = _dependencies;
+    cmdFuncCCVKCreateRenderPass(CCVKDevice::getInstance(), _gpuRenderPass);
 }
 
 void CCVKRenderPass::doDestroy() {

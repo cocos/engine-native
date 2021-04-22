@@ -78,7 +78,7 @@ void GL_APIENTRY GLES2EGLDebugProc(GLenum source,
         default: severityDesc = "NOTIFICATION"; break;
     }
 
-    String msg = StringUtil::Format("source: %s, type: %s, severity: %s, message: %s",
+    String msg = StringUtil::format("source: %s, type: %s, severity: %s, message: %s",
                                     sourceDesc.c_str(), typeDesc.c_str(), severityDesc.c_str(),
                                     message);
 
@@ -91,17 +91,13 @@ void GL_APIENTRY GLES2EGLDebugProc(GLenum source,
 
 #endif
 
-GLES2Context::GLES2Context()
-: Context() {
-}
+GLES2Context::GLES2Context() = default;
 
-GLES2Context::~GLES2Context() {
-}
+GLES2Context::~GLES2Context() = default;
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 
 bool GLES2Context::doInit(const ContextInfo &info) {
-
     _vsyncMode    = info.vsyncMode;
     _windowHandle = info.windowHandle;
 
@@ -150,17 +146,91 @@ bool GLES2Context::doInit(const ContextInfo &info) {
         _colorFmt        = Format::RGBA8;
         _depthStencilFmt = Format::D24S8;
 
-        const EGLint attribs[] = {
+        bool   msaaEnabled = info.msaaEnabled;
+        EGLint redSize{8}, greenSize{8}, blueSize{8}, alphaSize{8}, depthSize{24}, stencilSize{8}, sampleBufferSize{msaaEnabled ? EGL_DONT_CARE : 0}, sampleSize{msaaEnabled ? EGL_DONT_CARE : 0};
+
+        EGLint defaultAttribs[] = {
             EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
             EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
             // EGL_BUFFER_SIZE, colorBuffSize,
-            EGL_BLUE_SIZE, 8,
-            EGL_GREEN_SIZE, 8,
-            EGL_RED_SIZE, 8,
-            EGL_ALPHA_SIZE, 8,
-            EGL_DEPTH_SIZE, 24,
-            EGL_STENCIL_SIZE, 8,
+            EGL_BLUE_SIZE, blueSize,
+            EGL_GREEN_SIZE, greenSize,
+            EGL_RED_SIZE, redSize,
+            EGL_ALPHA_SIZE, alphaSize,
+            EGL_DEPTH_SIZE, depthSize,
+            EGL_STENCIL_SIZE, stencilSize,
+            EGL_SAMPLE_BUFFERS, sampleBufferSize,
+            EGL_SAMPLES, sampleSize,
             EGL_NONE};
+
+        int numConfig = 0;
+
+        EGLConfig cfgs[128];
+
+        eglGetConfigs(_eglDisplay, cfgs, 128, &numConfig);
+        if (eglChooseConfig(_eglDisplay, defaultAttribs, NULL, 0, &numConfig)) {
+            _vecEGLConfig.resize(numConfig);
+        } else {
+            CC_LOG_ERROR("Query configuration failed.");
+            return false;
+        }
+
+        int count = numConfig;
+        if (eglChooseConfig(_eglDisplay, defaultAttribs, _vecEGLConfig.data(), count, &numConfig) == EGL_FALSE || !numConfig) {
+            CC_LOG_ERROR("eglChooseConfig configuration failed.");
+            return false;
+        }
+
+        EGLint depth{0}, stencil{0};
+
+        const uint8_t attrNums = 8;
+        uint64_t      lastScore{0};
+        int           params[attrNums] = {0};
+
+        const bool performancePreferred = info.performance == Performance::HIGH_QUALITY;
+        for (int i = 0; i < numConfig; i++) {
+            int depthValue{0};
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_RED_SIZE, &params[0]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_GREEN_SIZE, &params[1]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_BLUE_SIZE, &params[2]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_ALPHA_SIZE, &params[3]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_DEPTH_SIZE, &params[4]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_STENCIL_SIZE, &params[5]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_SAMPLE_BUFFERS, &params[6]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_SAMPLES, &params[7]);
+            eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_DEPTH_ENCODING_NV, &depthValue);
+
+            int bNonLinearDepth = (depthValue == EGL_DEPTH_ENCODING_NONLINEAR_NV) ? 1 : 0;
+
+            /*------------------------------------------ANGLE's priority-----------------------------------------------*/
+            // Favor EGLConfigLists by RGB, then Depth, then Non-linear Depth, then Stencil, then Alpha
+            uint64_t currScore{0};
+            currScore |= ((uint64_t)std::min(std::max(params[6], 0), 15)) << 29;
+            currScore |= ((uint64_t)std::min(std::max(params[7], 0), 31)) << 24;
+            currScore |= std::min(std::abs(params[0] - redSize) +
+                                      std::abs(params[1] - greenSize) +
+                                      std::abs(params[2] - blueSize),
+                                  127)
+                         << 17;
+            currScore |= std::min(std::abs(params[4] - depthSize), 63) << 11;
+            currScore |= std::min(std::abs(1 - bNonLinearDepth), 1) << 10;
+            currScore |= std::min(std::abs(params[5] - stencilSize), 31) << 6;
+            currScore |= std::min(std::abs(params[3] - alphaSize), 31) << 0;
+            /*------------------------------------------ANGLE's priority-----------------------------------------------*/
+
+            // if msaaEnabled, sampleBuffers and sampleCount should be greater than 0, until iterate to the last one(can't find).
+            bool msaaLimit = msaaEnabled ? (params[6] > 0 && params[7] > 0) || (i == numConfig - 1) : (params[6] == 0 && params[7] == 0);
+            // performancePreferred ? [>=] : [<] , egl configurations store in "ascending order"
+            bool filter = (currScore < lastScore) ^ performancePreferred;
+            if ((filter || lastScore == 0) && msaaLimit) {
+                _eglConfig     = _vecEGLConfig[i];
+                depth          = params[4];
+                stencil        = params[5];
+                _sampleBuffers = params[6];
+                _sampleCount   = params[7];
+                lastScore      = currScore;
+            }
+        }
 
         //    Find a suitable EGLConfig
         //    eglChooseConfig is provided by EGL to provide an easy way to select an appropriate configuration. It takes in the capabilities
@@ -171,16 +241,7 @@ bool GLES2Context::doInit(const ContextInfo &info) {
         //    advanced applications choose to do. For this application however, taking the first EGLConfig that the function returns suits
         //    its needs perfectly, so we limit it to returning a single EGLConfig.
 
-        EGLint numConfigs;
-        if (eglChooseConfig(_eglDisplay, attribs, &_eglConfig, 1, &numConfigs) == EGL_FALSE ||
-            numConfigs <= 0) {
-            CC_LOG_ERROR("Choosing configuration failed.");
-            return false;
-        }
-
-        EGLint depth   = attribs[13];
-        EGLint stencil = attribs[15];
-        CC_LOG_INFO("Setup EGLConfig: depth [%d] stencil [%d]", depth, stencil);
+        CC_LOG_INFO("Setup EGLConfig: depth [%d] stencil [%d] sampleBuffer [%d] sampleCount [%d]", depth, stencil, _sampleBuffers, _sampleCount);
 
         if (depth == 16 && stencil == 0) {
             _depthStencilFmt = Format::D16;
@@ -219,10 +280,10 @@ bool GLES2Context::doInit(const ContextInfo &info) {
 
         uint width  = GLES2Device::getInstance()->getWidth();
         uint height = GLES2Device::getInstance()->getHeight();
-        ANativeWindow_setBuffersGeometry((ANativeWindow *)_windowHandle, width, height, nFmt);
+        ANativeWindow_setBuffersGeometry(reinterpret_cast<ANativeWindow *>(_windowHandle), width, height, nFmt);
     #endif
 
-        EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, reinterpret_cast<EGLNativeWindowType>(_windowHandle), NULL));
+        EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, reinterpret_cast<EGLNativeWindowType>(_windowHandle), nullptr));
         if (_eglSurface == EGL_NO_SURFACE) {
             CC_LOG_ERROR("Window surface created failed.");
             return false;
@@ -231,14 +292,14 @@ bool GLES2Context::doInit(const ContextInfo &info) {
         //String eglVendor = eglQueryString(_eglDisplay, EGL_VENDOR);
         //String eglVersion = eglQueryString(_eglDisplay, EGL_VERSION);
 
-        EGL_CHECK(_extensions = StringUtil::Split(eglQueryString(_eglDisplay, EGL_EXTENSIONS), " "));
+        EGL_CHECK(_extensions = StringUtil::split(eglQueryString(_eglDisplay, EGL_EXTENSIONS), " "));
 
         _majorVersion = 2;
         _minorVersion = 0;
         EGLint ctxAttribs[32];
         uint   n = 0;
 
-        bool hasKHRCreateCtx = CheckExtension(CC_TOSTR(EGL_KHR_create_context));
+        bool hasKHRCreateCtx = checkExtension(CC_TOSTR(EGL_KHR_create_context));
         if (hasKHRCreateCtx) {
     #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION
             ctxAttribs[n++] = EGL_CONTEXT_FLAGS_KHR;
@@ -255,64 +316,31 @@ bool GLES2Context::doInit(const ContextInfo &info) {
             ctxAttribs[n]   = EGL_NONE;
         }
 
-        EGL_CHECK(_eglContext = eglCreateContext(_eglDisplay, _eglConfig, NULL, ctxAttribs));
+        EGL_CHECK(_eglContext = eglCreateContext(_eglDisplay, _eglConfig, nullptr, ctxAttribs));
         if (!_eglContext) {
             CC_LOG_ERROR("Create EGL context failed.");
             return false;
         }
 
-    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
-        EventDispatcher::addCustomEventListener(EVENT_DESTROY_WINDOW, [=](const CustomEvent & /*unused*/) -> void {
-            if (_eglSurface != EGL_NO_SURFACE) {
-                eglDestroySurface(_eglDisplay, _eglSurface);
-                _eglSurface = EGL_NO_SURFACE;
-            }
-        });
-
-        // guaranteed to be invoked in the order they were added
-        EventDispatcher::addCustomEventListener(EVENT_RECREATE_WINDOW, [=](const CustomEvent &event) -> void {
-            _windowHandle = (uintptr_t)event.args->ptrVal;
-
-            EGLint nFmt = 0;
-            if (eglGetConfigAttrib(_eglDisplay, _eglConfig, EGL_NATIVE_VISUAL_ID, &nFmt) == EGL_FALSE) {
-                CC_LOG_ERROR("Getting configuration attributes failed.");
-                return;
-            }
-            uint width  = GLES2Device::getInstance()->getWidth();
-            uint height = GLES2Device::getInstance()->getHeight();
-            ANativeWindow_setBuffersGeometry((ANativeWindow *)_windowHandle, width, height, nFmt);
-
-            EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, (EGLNativeWindowType)_windowHandle, NULL));
-            if (_eglSurface == EGL_NO_SURFACE) {
-                CC_LOG_ERROR("Recreate window surface failed.");
-                return;
-            }
-
-            ((GLES2Context *)GLES2Device::getInstance()->getContext())->MakeCurrent();
-            GLES2Device::getInstance()->stateCache()->reset();
-        });
-    #endif
-
         _eglSharedContext = _eglContext;
-
     } else {
-        GLES2Context *sharedCtx = static_cast<GLES2Context *>(info.sharedCtx);
+        auto *sharedCtx = static_cast<GLES2Context *>(info.sharedCtx);
 
-        _majorVersion     = sharedCtx->major_ver();
-        _minorVersion     = sharedCtx->minor_ver();
-        _nativeDisplay    = sharedCtx->native_display();
-        _eglDisplay       = sharedCtx->egl_display();
-        _eglConfig        = sharedCtx->egl_config();
-        _eglSharedContext = sharedCtx->egl_shared_ctx();
-        _eglSurface       = sharedCtx->egl_surface();
+        _majorVersion     = sharedCtx->majorVer();
+        _minorVersion     = sharedCtx->minorVer();
+        _nativeDisplay    = sharedCtx->nativeDisplay();
+        _eglDisplay       = sharedCtx->eglDisplay();
+        _eglConfig        = sharedCtx->eglConfig();
+        _eglSharedContext = sharedCtx->eglSharedCtx();
+        _eglSurface       = sharedCtx->eglSurface();
         _colorFmt         = sharedCtx->getColorFormat();
         _depthStencilFmt  = sharedCtx->getDepthStencilFormat();
-        _majorVersion     = sharedCtx->major_ver();
-        _minorVersion     = sharedCtx->minor_ver();
+        _majorVersion     = sharedCtx->majorVer();
+        _minorVersion     = sharedCtx->minorVer();
         _extensions       = sharedCtx->_extensions;
         _isInitialized    = sharedCtx->_isInitialized;
 
-        bool hasKHRCreateCtx = CheckExtension(CC_TOSTR(EGL_KHR_create_context));
+        bool hasKHRCreateCtx = checkExtension(CC_TOSTR(EGL_KHR_create_context));
         if (!hasKHRCreateCtx) {
             CC_LOG_INFO(
                 "EGL context creation: EGL_KHR_create_context not supported. Minor version will be discarded, and debug disabled.");
@@ -352,6 +380,10 @@ bool GLES2Context::doInit(const ContextInfo &info) {
 void GLES2Context::doDestroy() {
     EGL_CHECK(eglMakeCurrent(_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
 
+    if (!_vecEGLConfig.empty()) {
+        _vecEGLConfig.clear();
+    }
+
     if (_eglContext != EGL_NO_CONTEXT) {
         EGL_CHECK(eglDestroyContext(_eglDisplay, _eglContext));
         _eglContext = EGL_NO_CONTEXT;
@@ -377,12 +409,47 @@ void GLES2Context::doDestroy() {
 
     _isPrimaryContex = false;
     _windowHandle    = 0;
-    _nativeDisplay   = 0;
+    _nativeDisplay   = 0; // NOLINT(modernize-use-nullptr) portability issues
     _vsyncMode       = VsyncMode::OFF;
     _isInitialized   = false;
 }
 
-bool GLES2Context::MakeCurrentImpl(bool bound) {
+void GLES2Context::releaseSurface(uintptr_t /*windowHandle*/) {
+    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+    if (_eglSurface != EGL_NO_SURFACE) {
+        eglDestroySurface(_eglDisplay, _eglSurface);
+        _eglSurface = EGL_NO_SURFACE;
+    }
+    #endif
+}
+
+void GLES2Context::acquireSurface(uintptr_t windowHandle) {
+    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+    _windowHandle = windowHandle;
+
+    EGLint nFmt = 0;
+    if (eglGetConfigAttrib(_eglDisplay, _eglConfig, EGL_NATIVE_VISUAL_ID, &nFmt) == EGL_FALSE) {
+        CC_LOG_ERROR("Getting configuration attributes failed.");
+        return;
+    }
+    // Device's size will be updated after recreate window (in resize event) and is incorrect for now.
+    auto *window = reinterpret_cast<ANativeWindow *>(_windowHandle);
+    uint  width  = ANativeWindow_getWidth(window);
+    uint  height = ANativeWindow_getHeight(window);
+    ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
+
+    EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, reinterpret_cast<EGLNativeWindowType>(_windowHandle), nullptr));
+    if (_eglSurface == EGL_NO_SURFACE) {
+        CC_LOG_ERROR("Recreate window surface failed.");
+        return;
+    }
+
+    static_cast<GLES2Context *>(GLES2Device::getInstance()->getContext())->makeCurrent();
+    GLES2Device::getInstance()->stateCache()->reset();
+    #endif
+}
+
+bool GLES2Context::makeCurrentImpl(bool bound) {
     bool succeeded;
     EGL_CHECK(succeeded = eglMakeCurrent(_eglDisplay,
                                          bound ? _eglSurface : EGL_NO_SURFACE,
@@ -397,21 +464,20 @@ void GLES2Context::present() {
 
 #endif
 
-bool GLES2Context::MakeCurrent(bool bound) {
+bool GLES2Context::makeCurrent(bool bound) {
     if (!bound) {
         CC_LOG_DEBUG("eglMakeCurrent() - UNBOUNDED, Context: 0x%p", this);
-        return MakeCurrentImpl(false);
+        return makeCurrentImpl(false);
     }
 
-    if (MakeCurrentImpl(bound)) {
+    if (makeCurrentImpl(bound)) {
         if (!_isInitialized) {
-
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID)
             // Turn on or off the vertical sync depending on the input bool value.
             int interval = 1;
             switch (_vsyncMode) {
                 case VsyncMode::OFF: interval = 0; break;
-                case VsyncMode::ON: interval = 1; break;
+                case VsyncMode::ON:
                 case VsyncMode::RELAXED: interval = 1; break;
                 case VsyncMode::MAILBOX: interval = 0; break;
                 case VsyncMode::HALF: interval = 2; break;
@@ -428,8 +494,12 @@ bool GLES2Context::MakeCurrent(bool bound) {
 
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION && CC_PLATFORM != CC_PLATFORM_MAC_IOS
         GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR));
-        GL_CHECK(glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE));
-        GL_CHECK(glDebugMessageCallbackKHR(GLES2EGLDebugProc, NULL));
+        if (glDebugMessageControlKHR) {
+            GL_CHECK(glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE));
+        }
+        if (glDebugMessageCallbackKHR) {
+            GL_CHECK(glDebugMessageCallbackKHR(GLES2EGLDebugProc, NULL));
+        }
 #endif
 
         //////////////////////////////////////////////////////////////////////////
@@ -471,17 +541,16 @@ bool GLES2Context::MakeCurrent(bool bound) {
         GL_CHECK(glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD));
         GL_CHECK(glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO));
         GL_CHECK(glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE));
-        GL_CHECK(glBlendColor(0.0f, 0.0f, 0.0f, 0.0f));
+        GL_CHECK(glBlendColor(0.0F, 0.0F, 0.0F, 0.0F));
 
         CC_LOG_DEBUG("eglMakeCurrent() - SUCCEEDED, Context: 0x%p", this);
         return true;
-    } else {
-        CC_LOG_ERROR("MakeCurrent() - FAILED, Context: 0x%p", this);
-        return false;
     }
+    CC_LOG_ERROR("MakeCurrent() - FAILED, Context: 0x%p", this);
+    return false;
 }
 
-bool GLES2Context::CheckExtension(const String &extension) const {
+bool GLES2Context::checkExtension(const String &extension) const {
     return (std::find(_extensions.begin(), _extensions.end(), extension) != _extensions.end());
 }
 

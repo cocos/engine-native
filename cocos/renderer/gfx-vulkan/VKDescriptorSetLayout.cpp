@@ -25,6 +25,8 @@
 
 #include "VKStd.h"
 
+#include "gfx-base/GFXDef.h"
+
 #include "VKCommands.h"
 #include "VKDescriptorSetLayout.h"
 #include "VKDevice.h"
@@ -32,16 +34,13 @@
 namespace cc {
 namespace gfx {
 
-CCVKDescriptorSetLayout::CCVKDescriptorSetLayout()
-: DescriptorSetLayout() {
-}
+CCVKDescriptorSetLayout::CCVKDescriptorSetLayout() = default;
 
 CCVKDescriptorSetLayout::~CCVKDescriptorSetLayout() {
     destroy();
 }
 
-void CCVKDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo &info) {
-
+void CCVKDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& /*info*/) {
     _gpuDescriptorSetLayout                    = CC_NEW(CCVKGPUDescriptorSetLayout);
     _gpuDescriptorSetLayout->id                = generateID();
     _gpuDescriptorSetLayout->descriptorCount   = _descriptorCount;
@@ -49,16 +48,15 @@ void CCVKDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo &info) {
     _gpuDescriptorSetLayout->descriptorIndices = _descriptorIndices;
     _gpuDescriptorSetLayout->bindings          = _bindings;
 
-    for (uint i = 0u; i < _bindings.size(); i++) {
-        const DescriptorSetLayoutBinding &binding = _bindings[i];
-        if (binding.descriptorType & DESCRIPTOR_DYNAMIC_TYPE) {
-            for (uint j = 0u; j < binding.count; j++) {
+    for (auto& binding : _bindings) {
+        if (hasAnyFlags(binding.descriptorType, DESCRIPTOR_DYNAMIC_TYPE)) {
+            for (uint j = 0U; j < binding.count; j++) {
                 _gpuDescriptorSetLayout->dynamicBindings.push_back(binding.binding);
             }
         }
     }
 
-    CCVKCmdFuncCreateDescriptorSetLayout(CCVKDevice::getInstance(), _gpuDescriptorSetLayout);
+    cmdFuncCCVKCreateDescriptorSetLayout(CCVKDevice::getInstance(), _gpuDescriptorSetLayout);
 }
 
 void CCVKDescriptorSetLayout::doDestroy() {

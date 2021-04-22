@@ -30,8 +30,10 @@
 #include "base/Scheduler.h"
 
 #include <vector>
+#include <algorithm>
 
 #include "base/Macros.h"
+#include "base/Log.h"
 
 namespace {
 constexpr unsigned CC_REPEAT_FOREVER{UINT_MAX - 1};
@@ -46,7 +48,7 @@ void Timer::setupTimerWithInterval(float seconds, unsigned int repeat, float del
     _elapsed    = -1;
     _interval   = seconds;
     _delay      = delay;
-    _useDelay   = _delay > 0.0f;
+    _useDelay   = _delay > 0.0F;
     _repeat     = repeat;
     _runForever = _repeat == CC_REPEAT_FOREVER;
 }
@@ -89,7 +91,7 @@ void Timer::update(float dt) {
             break;
         }
 
-        if (_elapsed <= 0.f) {
+        if (_elapsed <= 0.F) {
             break;
         }
 
@@ -144,16 +146,17 @@ void Scheduler::removeHashElement(HashTimerEntry *element) {
 }
 
 void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float interval, bool paused, const std::string &key) {
-    this->schedule(callback, target, interval, CC_REPEAT_FOREVER, 0.0f, paused, key);
+    this->schedule(callback, target, interval, CC_REPEAT_FOREVER, 0.0F, paused, key);
 }
 
 void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float interval, unsigned int repeat, float delay, bool paused, const std::string &key) {
     CCASSERT(target, "Argument target must be non-nullptr");
     CCASSERT(!key.empty(), "key should not be empty!");
 
+    auto iter = _hashForTimers.find(target);
     HashTimerEntry *element = nullptr;
-    if (_hashForTimers.count(target) > 0) {
-        element         = static_cast<HashTimerEntry *>(calloc(sizeof(*element), 1));
+    if (iter == _hashForTimers.end()) {
+        element         = new HashTimerEntry();
         element->target = target;
 
         _hashForTimers[target] = element;
@@ -161,6 +164,7 @@ void Scheduler::schedule(const ccSchedulerFunc &callback, void *target, float in
         // Is this the 1st element ? Then set the pause level to all the selectors of this target
         element->paused = paused;
     } else {
+        element = iter->second;
         CCASSERT(element->paused == paused, "element's paused should be paused!");
     }
 
@@ -192,7 +196,7 @@ void Scheduler::unschedule(const std::string &key, void *target) {
     if (iter != _hashForTimers.end()) {
         HashTimerEntry *element = iter->second;
         int             i       = 0;
-        auto            timers  = element->timers;
+        auto            &timers  = element->timers;
 
         for (auto *t : timers) {
             auto *timer = dynamic_cast<TimerTargetCallback *>(t);
@@ -241,15 +245,11 @@ bool Scheduler::isScheduled(const std::string &key, void *target) {
         return false;
     }
 
-    for (auto *t : element->timers) {
+    const auto &timers = element->timers;
+    return std::any_of(timers.begin(), timers.end(), [&key](Timer *t) {
         auto *timer = dynamic_cast<TimerTargetCallback *>(t);
-
-        if (timer && key == timer->getKey()) {
-            return true;
-        }
-    }
-
-    return false; // should never get here
+        return (timer && key == timer->getKey());
+    });
 }
 
 void Scheduler::unscheduleAll() {
@@ -269,7 +269,7 @@ void Scheduler::unscheduleAllForTarget(void *target) {
     auto iter = _hashForTimers.find(target);
     if (iter != _hashForTimers.end()) {
         HashTimerEntry *element = iter->second;
-        auto            timers  = element->timers;
+        auto            &timers = element->timers;
         if (std::find(timers.begin(), timers.end(), element->currentTimer) != timers.end() &&
             (!element->currentTimerSalvaged)) {
             element->currentTimer->retain();
@@ -338,7 +338,7 @@ void Scheduler::update(float dt) {
 
     // Iterate over all the custom selectors
     HashTimerEntry *elt = nullptr;
-    for (auto iter = _hashForTimers.begin(); iter != _hashForTimers.end(); ++iter) {
+    for (auto iter = _hashForTimers.begin(); iter != _hashForTimers.end();) {
         elt                    = iter->second;
         _currentTarget         = elt;
         _currentTargetSalvaged = false;
@@ -364,7 +364,12 @@ void Scheduler::update(float dt) {
 
         // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
         if (_currentTargetSalvaged && _currentTarget->timers.empty()) {
+            ++iter;
             removeHashElement(_currentTarget);
+            if (iter != _hashForTimers.end()) {
+                ++iter;
+            }
+        } else {
             ++iter;
         }
     }
