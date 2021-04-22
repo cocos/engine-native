@@ -61,7 +61,7 @@ void dispatchEvents(cc::TouchEvent &touchEvent, NSSet *touches) {
     if (self = [super initWithFrame:frame]) {
         self.preventTouch = FALSE;
         
-        int pixelRatio = [[UIScreen mainScreen] scale];
+        float pixelRatio = [[UIScreen mainScreen] scale];
         CGSize size = CGSizeMake(frame.size.width * pixelRatio, frame.size.height * pixelRatio);
         self.contentScaleFactor = pixelRatio;
         // Config metal layer
