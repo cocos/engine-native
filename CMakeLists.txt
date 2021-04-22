@@ -1853,7 +1853,7 @@ if(APPLE)
         "-framework Metal"
         "-framework MetalKit"
         "-framework QuartzCore"
-        "-lSQLite3"
+        "-lsqlite3"
         "-framework Security"
         "-framework SystemConfiguration"
         ${CC_EXTERNAL_LIBS}
