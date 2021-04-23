@@ -115,8 +115,7 @@ void ShadowFlow::clearShadowMap(Camera *camera) {
 void ShadowFlow::resizeShadowMap(const Light *light, const Shadows *shadowInfo) const {
     auto *sceneData = _pipeline->getPipelineSceneData();
     auto *     device    = gfx::Device::getInstance();
-    const auto format    = (device->hasFeature(gfx::Feature::COLOR_HALF_FLOAT) &&
-                         device->hasFeature(gfx::Feature::TEXTURE_HALF_FLOAT))
+    const auto format    = device->hasFeature(gfx::Feature::TEXTURE_HALF_FLOAT)
                             ? (shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F)
                             : gfx::Format::RGBA8;
 
