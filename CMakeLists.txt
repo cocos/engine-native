@@ -186,12 +186,10 @@ if(USE_DRAGONBONES OR USE_SPINE)
 	set(USE_MIDDLEWARE ON)
 endif()
 
-message(STATUS "JOB_SYSTEM ${USE_JOB_SYSTEM_TBB} / ${USE_JOB_SYSTEM_TASKFLOW}")
 if("${USE_JOB_SYSTEM_TBB}" STREQUAL "${USE_JOB_SYSTEM_TASKFLOW}")
     set(USE_JOB_SYSTEM_TASKFLOW ON)
     set(USE_JOB_SYSTEM_TBB      OFF)
 endif()
-message(STATUS "2 JOB_SYSTEM ${USE_JOB_SYSTEM_TBB} / ${USE_JOB_SYSTEM_TASKFLOW}")
 
 ################################# list all option values ##############################
 
@@ -214,6 +212,8 @@ inspect_values(
     USE_SE_V8
     USE_V8_DEBUGGER
     USE_PHYSICS_PHYSX
+    USE_JOB_SYSTEM_TBB
+    USE_JOB_SYSTEM_TASKFLOW
 )
 
 ################################# external source code ################################
