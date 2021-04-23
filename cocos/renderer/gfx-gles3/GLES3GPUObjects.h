@@ -354,7 +354,7 @@ public:
         glBindSSBOs.assign(glBindSSBOs.size(), 0U);
         glBindSSBOOffsets.assign(glBindSSBOOffsets.size(), 0U);
         glDispatchIndirectBuffer = 0;
-        glVAO                    = 0;
+        glVAO                    = static_cast<GLuint>(-1);
         texUint                  = 0;
         glTextures.assign(glTextures.size(), 0U);
         glImages.assign(glImages.size(), 0U);
