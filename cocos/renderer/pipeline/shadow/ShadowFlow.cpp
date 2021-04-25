@@ -130,8 +130,7 @@ void ShadowFlow::resizeShadowMap(const Light *light, const Shadows *shadowInfo){
 
         auto renderTargets = framebuffer->getColorTextures();
         for (auto *renderTarget : renderTargets) {
-            CC_SAFE_DESTROY(renderTarget);
-            CC_SAFE_DELETE(renderTarget);
+            CC_DELETE(renderTarget);
         }
         renderTargets.clear();
         renderTargets.emplace_back(gfx::Device::getInstance()->createTexture({
@@ -146,8 +145,7 @@ void ShadowFlow::resizeShadowMap(const Light *light, const Shadows *shadowInfo){
         }
 
         auto *depth = framebuffer->getDepthStencilTexture();
-        CC_SAFE_DESTROY(depth);
-        CC_SAFE_DELETE(depth);
+        CC_DELETE(depth);
         depth = device->createTexture({
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
@@ -243,8 +241,7 @@ void ShadowFlow::destroy() {
     }
 
     for (auto *texture : _usedTextures) {
-        CC_SAFE_DESTROY(texture);
-        CC_SAFE_DELETE(texture);
+        CC_DELETE(texture);
     }
     _usedTextures.clear();
 
