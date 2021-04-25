@@ -337,7 +337,7 @@ public:
         glArrayBuffer        = 0;
         glElementArrayBuffer = 0;
         glUniformBuffer      = 0;
-        glVAO                = static_cast<GLuint>(-1);
+        glVAO                = 0;
         texUint              = 0;
         glTextures.assign(glTextures.size(), 0U);
         glProgram = 0;
