@@ -34,7 +34,7 @@ _Forked from [Google's C++ coding style](https://google.github.io/styleguide/cpp
   - [Operator Overloading](#operator-overloading)
   - [Access Control](#access-control)
   - [Declaration Order](#declaration-order)
-  - [Explicitly declare all constructors and assignment operators](#explicitly-declare-all-constructors-and-assignment-operators)
+  - [Explicitly declare all constructors, destructor and assignment operators](#explicitly-declare-all-constructors-destructor-and-assignment-operators)
 - [Functions](#functions)
   - [Inputs and Outputs](#inputs-and-outputs)
   - [Write Short Functions](#write-short-functions)
