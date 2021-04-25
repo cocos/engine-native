@@ -160,8 +160,8 @@ void DeferredPipeline::updateQuadVertexData(const gfx::Rect &renderArea) {
 void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *vbData) {
     float minX = float(renderArea.x) / _device->getWidth();
     float maxX = float(renderArea.x + renderArea.width) / _device->getWidth();
-    float minY = float(renderArea.y) / _device->getHeight();
-    float maxY = float(renderArea.y + renderArea.height) / _device->getHeight();
+    float maxY = float(renderArea.y) / _device->getHeight();
+    float minY = float(renderArea.y + renderArea.height) / _device->getHeight();
 
     int n = 0;
     switch (surfaceTransform) {
