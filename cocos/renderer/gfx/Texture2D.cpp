@@ -40,8 +40,11 @@ Texture2D::~Texture2D()
 //    RENDERER_LOGD("Destruct Texture2D: %p", this);
 }
 
+std::map<int, Texture2D*> Texture2D::_texidMap = std::map<int, Texture2D*>();
+
 bool Texture2D::init(DeviceGraphics* device, Options& options)
 {
+    static int curTexId = 0;
     bool ok = Texture::init(device);
     if (ok)
     {
@@ -52,6 +55,10 @@ bool Texture2D::init(DeviceGraphics* device, Options& options)
             options.images.push_back(Image());
 
         update(options);
+
+        _textureid = curTexId;
+        Texture2D::_texidMap[_textureid] = this;
+        curTexId++;
     }
     return ok;
 }

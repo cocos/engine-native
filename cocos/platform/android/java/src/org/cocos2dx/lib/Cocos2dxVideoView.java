@@ -23,16 +23,32 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.media.Image;
+import android.media.ImageReader;
 import android.media.MediaPlayer;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.PixelCopy;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.widget.FrameLayout;
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
 import java.io.IOException;
 import java.util.Map;
+import java.nio.ByteBuffer;
 
 public class Cocos2dxVideoView extends SurfaceView {
 
@@ -107,6 +123,15 @@ public class Cocos2dxVideoView extends SurfaceView {
     private boolean mKeepRatio = false;
     private boolean mMetaUpdated = false;
 
+    private MediaMetadataRetriever mRetriever = null;
+    private ByteBuffer frameBuf = null;
+    private byte pixels[] = null;
+    private Bitmap mFrame = null;
+    private Bitmap mCurFrame = null;
+    private boolean mShowRaw = true;
+
+    private Surface mSurface = null;
+
     // MediaPlayer will be released when surface view is destroyed, so should record the position,
     // and use it to play after MedialPlayer is created again.
     private int mPositionBeforeRelease = 0;
@@ -121,6 +146,7 @@ public class Cocos2dxVideoView extends SurfaceView {
         mViewTag = tag;
         mCocos2dxActivity = activity;
         initVideoView();
+        setShowRawFrame(true); // Show mediaplayer window.
     }
 
     // ===========================================================
@@ -368,6 +394,77 @@ public class Cocos2dxVideoView extends SurfaceView {
         return result;
     }
 
+    public byte[] getFrame() {
+        if(mRetriever == null) 
+            return null;
+        else {
+            try {
+                if (Build.VERSION.SDK_INT >= 24) {
+                    PixelCopy.request(this, mFrame, new PixelCopy.OnPixelCopyFinishedListener() {
+                        @Override
+                        public void onPixelCopyFinished(int copyResult) {
+                        }
+                    }, this.getHandler());
+                } else {
+                    mFrame = mRetriever.getFrameAtTime(mMediaPlayer.getCurrentPosition() * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+                }
+            } catch (Exception e) {
+                return pixels;
+            }
+
+            if(mFrame != null)
+                mCurFrame = mFrame;
+            else
+                return pixels;
+
+            if(frameBuf == null) {
+                frameBuf = ByteBuffer.allocate(mCurFrame.getByteCount());
+            }
+            frameBuf.position(0);
+            mCurFrame.copyPixelsToBuffer(frameBuf);
+            pixels = frameBuf.array();
+
+            return pixels;
+        }
+    }
+
+    public int getFrameChannel() {
+        if(mCurFrame == null) return 0;
+        else {
+            Bitmap.Config cfg = mCurFrame.getConfig();
+            if(Build.VERSION.SDK_INT > 26) {
+                if(cfg == Bitmap.Config.HARDWARE) return 4;
+                else if(cfg == Bitmap.Config.RGBA_F16) return 5;
+            }
+            if(cfg == Bitmap.Config.ALPHA_8) return 1;
+            else if(cfg == Bitmap.Config.ARGB_4444) return 2;
+            else if(cfg == Bitmap.Config.ARGB_8888) return 3;
+            else if(cfg == Bitmap.Config.RGB_565) return 6;
+            else return 0;
+        }
+    }
+
+    public int getFrameWidth() {
+        if(mCurFrame != null) return mCurFrame.getWidth();
+        else return 0;
+    }
+
+    public int getFrameHeight() {
+        if(mCurFrame != null) return mCurFrame.getHeight();
+        else return 0;
+    }
+
+    public void setShowRawFrame(boolean show) {
+        boolean before = mShowRaw;
+        mShowRaw = show;
+        if(before && !mShowRaw)
+            setTranslationY(-1000);
+        else if(!before && mShowRaw)
+            setTranslationY(0);
+        else if(before == mShowRaw)
+            return;
+    }
+
     // ===========================================================
     // Private functions
     // ===========================================================
@@ -415,11 +512,20 @@ public class Cocos2dxVideoView extends SurfaceView {
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setScreenOnWhilePlaying(true);
 
+            mRetriever = new MediaMetadataRetriever();
+            frameBuf = null;
+            pixels = null;
+            mCurFrame = null;
+            mFrame = null;
+            mFrame = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);
+
             if (mIsAssetRouse) {
                 AssetFileDescriptor afd = mCocos2dxActivity.getAssets().openFd(mVideoFilePath);
                 mMediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                mRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
             } else {
                 mMediaPlayer.setDataSource(mVideoUri.toString());
+                mRetriever.setDataSource(mVideoUri.toString());
             }
             mCurrentState = State.INITIALIZED;
 

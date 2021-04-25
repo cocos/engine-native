@@ -78,12 +78,24 @@ public:
      */
     void updateImage(const ImageOption& option);
 
+    int getTextureId() const { return _textureid; }
+
+    static Texture2D* findTextureById(int id) {
+        auto res = Texture2D::_texidMap.find(id);
+        if (res != Texture2D::_texidMap.end()) return res->second;
+        else return nullptr;
+    }
 private:
     void setSubImage(const SubImageOption& options);
     void setImage(const ImageOption& options);
     void setMipmap(const std::vector<Image>& images, bool isFlipY, bool isPremultiplyAlpha);
     void setTexInfo();
 
+private:
+    int _textureid;
+
+protected:
+    static std::map<int, Texture2D*> _texidMap;
 };
 
 // end of gfx group

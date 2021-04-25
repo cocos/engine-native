@@ -33,9 +33,12 @@ USING_NS_CC;
 
 #import <AVKit/AVPlayerViewController.h>
 #import <CoreMedia/CMTime.h>
+#import <CoreVideo/CVPixelBuffer.h>
+
 #include "platform/CCApplication.h"
 #include "platform/ios/CCEAGLView-ios.h"
 #include "platform/CCFileUtils.h"
+#include "renderer/gfx/Texture2D.h"
 
 @interface UIVideoViewWrapperIos : NSObject
 
@@ -67,6 +70,15 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
 - (void) cleanup;
 -(id) init:(void*) videoPlayer;
 
+- (unsigned char*) getFrame;
+- (bool) copyFinished;
+- (int) getFrameWidth;
+- (int) getFrameHeight;
+- (int) getFrameDataSize;
+- (int) getBitCount;
+- (void) setShowRaw:(BOOL) show;
+- (void) clearBuffers;
+
 -(void) videoFinished:(NSNotification*) notification;
 
 @end
@@ -82,6 +94,13 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
     CGRect _restoreRect;
     PlayerbackState _state;
     VideoPlayer* _videoPlayer;
+    
+    int _frameWidth;
+    int _frameHeight;
+    int _frameDataSize;
+    int _frameBitCount;
+    unsigned char* _videoPixels;
+    bool _finishCopy;
 }
 
 -(id)init:(void*)videoPlayer
@@ -104,10 +123,21 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
     [self showPlaybackControls:TRUE];
     [self setKeepRatioEnabled:_keepRatioEnabled];
     _state = PlayerbackStateUnknown;
+    
+    _frameWidth = 0;
+    _frameHeight = 0;
+    _frameDataSize = 0;
+    _frameBitCount = 1;
+    _videoPixels = nullptr;
+    _finishCopy = false;
+    
+    [self setShowRaw:YES];
 }
 
 -(void) dealloc
 {
+    if(_videoPixels != nullptr) free(_videoPixels);
+    
     _videoPlayer = nullptr;
     [self cleanup];
     [super dealloc];
@@ -123,6 +153,74 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
     _top = top;
     _height = height;
     [self.playerController.view setFrame:CGRectMake(left, top, width, height)];
+}
+
+-(unsigned char*) getFrame
+{
+    UInt32 type = kCVPixelFormatType_32BGRA;
+    AVPlayerItem* item = self.playerController.player.currentItem;
+    if(item.outputs.count == 0) {
+        NSDictionary* settings = @{ (id)kCVPixelBufferPixelFormatTypeKey : @(type) };
+        AVPlayerItemVideoOutput* output = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:settings];
+        [item addOutput:output];
+    }
+    AVPlayerItemOutput* output = item.outputs[0];
+    
+    CMTime time = self.playerController.player.currentTime;
+    CVPixelBufferRef pixelBuffer = [output copyPixelBufferForItemTime:time itemTimeForDisplay:nil];
+    
+    _frameBitCount = 4;
+    _frameHeight = (int)CVPixelBufferGetHeight(pixelBuffer);
+    _frameWidth = (int)CVPixelBufferGetBytesPerRow(pixelBuffer) / _frameBitCount;
+    _frameDataSize = (int)CVPixelBufferGetDataSize(pixelBuffer);
+    
+    if(_videoPixels == nullptr && _frameWidth > 0 && _frameHeight > 0) {
+        _videoPixels = (unsigned char*)calloc(_frameDataSize, 1);
+    }
+    
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    void* pixels = CVPixelBufferGetBaseAddress(pixelBuffer);
+    if(_videoPixels != nullptr && pixels != nullptr) {
+        memcpy(_videoPixels, pixels, _frameDataSize);
+        _finishCopy = true;
+    }
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    
+    return _videoPixels;
+}
+
+-(bool) copyFinished
+{
+    return _finishCopy;
+}
+
+-(int) getFrameWidth
+{
+    return _frameWidth;
+}
+
+-(int) getFrameHeight
+{
+    return _frameHeight;
+}
+
+-(int) getFrameDataSize
+{
+    return _frameDataSize;
+}
+
+-(int) getBitCount
+{
+    return _frameBitCount;
+}
+
+-(void) setShowRaw:(BOOL) show
+{
+    if(show == YES) {
+        self.playerController.view.alpha = 1;
+    } else {
+        self.playerController.view.alpha = 0;
+    }
 }
 
 -(void) setFullScreenEnabled:(BOOL) enabled
@@ -143,6 +241,7 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
 
 -(void) setURL:(int)videoSource :(std::string &)videoUrl
 {
+    [self clearBuffers];
     [self cleanup];
     [self initPlayerController];
 
@@ -233,6 +332,20 @@ typedef NS_ENUM(NSInteger, PlayerbackState) {
 }
 
 // Private functions
+-(void) clearBuffers
+{
+    if(_videoPixels != nullptr) {
+        free(_videoPixels);
+        _videoPixels = nullptr;
+    }
+    
+    AVPlayerItem* item = self.playerController.player.currentItem;
+    if(item.outputs.count > 0) {
+        AVPlayerItemOutput* output = item.outputs[0];
+        [item removeOutput:output];
+        [output dealloc];
+    }
+}
 
 -(void) cleanup
 {
@@ -318,6 +431,10 @@ VideoPlayer::VideoPlayer()
     _debugDrawNode = DrawNode::create();
     addChild(_debugDrawNode);
 #endif
+    
+    _videoPixels = nullptr;
+    _texDataSize = 0;
+    _maxDataLen = 0;
 }
 
 VideoPlayer::~VideoPlayer()
@@ -456,6 +573,64 @@ void VideoPlayer::setFrame(float x, float y, float width, float height)
                                                   :y/scaleFactor
                                                   :width/scaleFactor
                                                   :height/scaleFactor];
+}
+
+void VideoPlayer::getFrame()
+{
+    _videoPixels = [((UIVideoViewWrapperIos*)_videoView) getFrame];
+}
+
+int VideoPlayer::getFrameChannel() const
+{
+    int res = 0;
+    int rgb565 = 6;
+    int rgba = 3;
+    int bgra = 7;
+    
+    res = bgra;
+    return res;
+}
+
+int VideoPlayer::getFrameWidth() const
+{
+    return [((UIVideoViewWrapperIos*)_videoView) getFrameWidth];
+}
+
+int VideoPlayer::getFrameHeight() const
+{
+    return [((UIVideoViewWrapperIos*)_videoView) getFrameHeight];
+}
+
+int VideoPlayer::getVideoTexDataSize() const
+{
+    return [((UIVideoViewWrapperIos*)_videoView) getFrameDataSize];
+}
+
+void VideoPlayer::update()
+{
+    
+}
+
+void VideoPlayer::pushFrameDataToTexture2D(int texid) const
+{
+    renderer::Texture2D* tex = renderer::Texture2D::findTextureById(texid);
+    if(tex == nullptr) printf("Can't find texture!\n");
+    else {
+        bool finshCopy = [((UIVideoViewWrapperIos*)_videoView) copyFinished];
+        if(_videoPixels != nullptr && getFrameWidth() > 0 && getFrameHeight() > 0 && finshCopy) {
+            renderer::Texture::SubImageOption opt(0, 0, getFrameWidth(), getFrameHeight(), 0, false, false);
+            opt.imageData = _videoPixels;
+            tex->updateSubImage(opt);
+        }
+    }
+}
+
+void VideoPlayer::setShowRawFrame(bool show) const
+{
+    if(show)
+        [((UIVideoViewWrapperIos*)_videoView) setShowRaw: YES];
+    else
+        [((UIVideoViewWrapperIos*)_videoView) setShowRaw: NO];
 }
 
 #endif

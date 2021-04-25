@@ -736,13 +736,13 @@ getTarget : function (
 gfx.Texture2D = {
 
 /**
- * @method updateImage
- * @param {cc.renderer::Texture::ImageOption} arg0
+ * @method getTextureId
+ * @return {int}
  */
-updateImage : function (
-imageoption 
+getTextureId : function (
 )
 {
+    return 0;
 },
 
 /**
@@ -760,11 +760,11 @@ options
 },
 
 /**
- * @method updateSubImage
- * @param {cc.renderer::Texture::SubImageOption} arg0
+ * @method updateImage
+ * @param {cc.renderer::Texture::ImageOption} arg0
  */
-updateSubImage : function (
-subimageoption 
+updateImage : function (
+imageoption 
 )
 {
 },
@@ -777,6 +777,28 @@ update : function (
 options 
 )
 {
+},
+
+/**
+ * @method updateSubImage
+ * @param {cc.renderer::Texture::SubImageOption} arg0
+ */
+updateSubImage : function (
+subimageoption 
+)
+{
+},
+
+/**
+ * @method findTextureById
+ * @param {int} arg0
+ * @return {cc.renderer::Texture2D}
+ */
+findTextureById : function (
+int 
+)
+{
+    return cc.renderer::Texture2D;
 },
 
 /**

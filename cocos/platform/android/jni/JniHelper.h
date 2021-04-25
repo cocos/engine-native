@@ -139,7 +139,7 @@ public:
         std::string signature = "(" + std::string(getJNISignature(xs...)) + ")[B";
         if (cocos2d::JniHelper::getMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
-            ret = (jbyteArray)t.env->CallObjectMethod(object, t.methodID, convert(t, xs)...);
+            ret = (jbyteArray)t.env->CallObjectMethod(object, t.methodID, convert(localRefs, t, xs)...);
             t.env->DeleteLocalRef(t.classID);
             deleteLocalRefs(t.env, localRefs);
         } else {

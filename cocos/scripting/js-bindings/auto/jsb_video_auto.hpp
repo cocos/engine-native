@@ -9,20 +9,28 @@ extern se::Class* __jsb_cocos2d_VideoPlayer_class;
 
 bool js_register_cocos2d_VideoPlayer(se::Object* obj);
 bool register_all_video(se::Object* obj);
-SE_DECLARE_FUNC(js_video_VideoPlayer_setFrame);
-SE_DECLARE_FUNC(js_video_VideoPlayer_play);
-SE_DECLARE_FUNC(js_video_VideoPlayer_pause);
-SE_DECLARE_FUNC(js_video_VideoPlayer_setKeepAspectRatioEnabled);
-SE_DECLARE_FUNC(js_video_VideoPlayer_currentTime);
 SE_DECLARE_FUNC(js_video_VideoPlayer_setFullScreenEnabled);
+SE_DECLARE_FUNC(js_video_VideoPlayer_getFrameWidth);
+SE_DECLARE_FUNC(js_video_VideoPlayer_duration);
+SE_DECLARE_FUNC(js_video_VideoPlayer_pause);
+SE_DECLARE_FUNC(js_video_VideoPlayer_getFrame);
+SE_DECLARE_FUNC(js_video_VideoPlayer_setShowRawFrame);
+SE_DECLARE_FUNC(js_video_VideoPlayer_onPlayEvent);
 SE_DECLARE_FUNC(js_video_VideoPlayer_addEventListener);
+SE_DECLARE_FUNC(js_video_VideoPlayer_seekTo);
+SE_DECLARE_FUNC(js_video_VideoPlayer_play);
+SE_DECLARE_FUNC(js_video_VideoPlayer_getFrameHeight);
 SE_DECLARE_FUNC(js_video_VideoPlayer_stop);
 SE_DECLARE_FUNC(js_video_VideoPlayer_setURL);
+SE_DECLARE_FUNC(js_video_VideoPlayer_update);
+SE_DECLARE_FUNC(js_video_VideoPlayer_pushFrameDataToTexture2D);
 SE_DECLARE_FUNC(js_video_VideoPlayer_isKeepAspectRatioEnabled);
-SE_DECLARE_FUNC(js_video_VideoPlayer_onPlayEvent);
-SE_DECLARE_FUNC(js_video_VideoPlayer_duration);
+SE_DECLARE_FUNC(js_video_VideoPlayer_getFrameChannel);
+SE_DECLARE_FUNC(js_video_VideoPlayer_getVideoTexDataSize);
+SE_DECLARE_FUNC(js_video_VideoPlayer_setKeepAspectRatioEnabled);
+SE_DECLARE_FUNC(js_video_VideoPlayer_currentTime);
+SE_DECLARE_FUNC(js_video_VideoPlayer_setFrame);
 SE_DECLARE_FUNC(js_video_VideoPlayer_setVisible);
-SE_DECLARE_FUNC(js_video_VideoPlayer_seekTo);
 SE_DECLARE_FUNC(js_video_VideoPlayer_VideoPlayer);
 
 #endif //#if (USE_VIDEO > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && !defined(CC_TARGET_OS_TVOS)

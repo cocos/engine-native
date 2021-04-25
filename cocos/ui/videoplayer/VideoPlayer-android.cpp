@@ -23,6 +23,7 @@
  ****************************************************************************/
 
 #include "VideoPlayer.h"
+#include "base/CCLog.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include <unordered_map>
@@ -32,6 +33,7 @@
 #include "platform/CCApplication.h"
 #include "platform/android/jni/JniHelper.h"
 #include "platform/CCFileUtils.h"
+#include "renderer/gfx/Texture2D.h"
 
 //-----------------------------------------------------------------------------------------------------------
 
@@ -65,6 +67,7 @@ int createVideoWidgetJNI()
 //-----------------------------------------------------------------------------------------------------------
 
 static std::unordered_map<int, VideoPlayer*> s_allVideoPlayers;
+static jobject jobj;
 
 VideoPlayer::VideoPlayer()
 : _videoPlayerIndex(-1)
@@ -79,12 +82,23 @@ VideoPlayer::VideoPlayer()
     _debugDrawNode = DrawNode::create();
     addChild(_debugDrawNode);
 #endif
+
+	jobject obj = JniHelper::newObject(videoHelperClassName.c_str());
+	jobj = JniHelper::getEnv()->NewGlobalRef(obj);
+	JniHelper::getEnv()->DeleteLocalRef(obj);
+
+    _videoPixels = nullptr;
+    _texDataSize = 0;
+    _maxDataLen = 0;
 }
 
 VideoPlayer::~VideoPlayer()
 {
     s_allVideoPlayers.erase(_videoPlayerIndex);
     JniHelper::callStaticVoidMethod(videoHelperClassName, "removeVideoWidget", _videoPlayerIndex);
+
+    if (_videoPixels != nullptr) free(_videoPixels);
+    JniHelper::getEnv()->DeleteGlobalRef(jobj);
 }
 
 void VideoPlayer::setURL(const std::string& videoUrl)
@@ -226,6 +240,60 @@ float VideoPlayer::currentTime() const
 float VideoPlayer::duration() const
 {
     return JniHelper::callStaticFloatMethod(videoHelperClassName, "getDuration", _videoPlayerIndex);
+}
+
+void VideoPlayer::getFrame() {
+	jbyteArray arr = JniHelper::callObjectByteArrayMethod(jobj, videoHelperClassName, "getFrame", _videoPlayerIndex);
+	if (arr == nullptr) return;
+	jsize len = JniHelper::getEnv()->GetArrayLength(arr);
+    _texDataSize = len;
+    if (len == 0) return;
+    if (len > _maxDataLen) {
+        _maxDataLen = len;
+
+        if(_videoPixels != nullptr) free(_videoPixels);
+        _videoPixels = (unsigned char*)malloc(len * sizeof(unsigned char));
+    }
+
+	JniHelper::getEnv()->GetByteArrayRegion(arr, 0, len, reinterpret_cast<jbyte*>(_videoPixels));
+    JniHelper::getEnv()->DeleteLocalRef(arr);
+}
+
+int VideoPlayer::getFrameChannel() const {
+    return (int)JniHelper::callObjectFloatMethod(jobj, videoHelperClassName, "getFrameChannel", _videoPlayerIndex);
+}
+
+int VideoPlayer::getFrameWidth() const {
+    return (int)JniHelper::callObjectFloatMethod(jobj, videoHelperClassName, "getFrameWidth", _videoPlayerIndex);
+}
+
+int VideoPlayer::getFrameHeight() const {
+    return (int)JniHelper::callObjectFloatMethod(jobj, videoHelperClassName, "getFrameHeight", _videoPlayerIndex);
+}
+
+int VideoPlayer::getVideoTexDataSize() const {
+    return _texDataSize;
+}
+
+void VideoPlayer::pushFrameDataToTexture2D(int texid) const {
+    renderer::Texture2D* tex = renderer::Texture2D::findTextureById(texid);
+    if(tex == nullptr) log("Can't find texture!");
+    else {
+        if(_videoPixels != nullptr && getFrameWidth() > 0 && getFrameHeight() > 0) {
+            renderer::Texture::SubImageOption opt(0, 0, getFrameWidth(), getFrameHeight(), 0, false,
+                                                  false);
+            opt.imageData = _videoPixels;
+            tex->updateSubImage(opt);
+        }
+    }
+}
+
+void VideoPlayer::setShowRawFrame(bool show) const {
+    JniHelper::callObjectVoidMethod(jobj, videoHelperClassName, "setShowRawFrame", _videoPlayerIndex, show);
+}
+
+void VideoPlayer::update() {
+    //test
 }
 
 #endif

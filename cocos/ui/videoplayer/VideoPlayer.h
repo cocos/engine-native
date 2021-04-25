@@ -25,6 +25,7 @@
 #pragma once
 
 #include "base/ccMacros.h"
+#include "base/CCData.h"
 #include "base/CCRef.h"
 #include <functional>
 #include <string>
@@ -107,6 +108,25 @@ class VideoPlayer : public Ref
 
     float duration() const;
 
+	/**
+	 * Get frame rgba pixel as bytes
+	 */
+	void getFrame();
+
+  int getFrameChannel() const;
+
+  int getFrameWidth() const;
+
+  int getFrameHeight() const;
+
+  int getVideoTexDataSize() const;
+
+  void update();
+
+  void pushFrameDataToTexture2D(int texid) const;
+
+  void setShowRawFrame(bool show) const;
+
     /**
      * Causes the video player to keep aspect ratio or no when displaying the video.
      *
@@ -175,6 +195,12 @@ class VideoPlayer : public Ref
     std::map<std::string, ccVideoPlayerCallback> _eventCallback;
 
     void *_videoView;
+
+    int _texDataSize;
+
+private:
+    unsigned char* _videoPixels;
+    int _maxDataLen;
 };
 
 NS_CC_END

@@ -321,6 +321,104 @@ getDownloadedFiles : function (
 },
 
 /**
+ * @method setEventCallback
+ * @param {function} arg0
+ */
+setEventCallback : function (
+func 
+)
+{
+},
+
+/**
+ * @method downloadFailedAssets
+ */
+downloadFailedAssets : function (
+)
+{
+},
+
+/**
+ * @method getTotalFiles
+ * @return {int}
+ */
+getTotalFiles : function (
+)
+{
+    return 0;
+},
+
+/**
+ * @method checkUpdate
+ */
+checkUpdate : function (
+)
+{
+},
+
+/**
+ * @method loadLocalManifest
+* @param {String|cc.Manifest} str
+* @param {String} str
+* @return {bool|bool}
+*/
+loadLocalManifest : function(
+manifest,
+str 
+)
+{
+    return false;
+},
+
+/**
+ * @method setMaxConcurrentTask
+ * @param {int} arg0
+ */
+setMaxConcurrentTask : function (
+int 
+)
+{
+},
+
+/**
+ * @method getLocalManifest
+ * @return {cc.Manifest}
+ */
+getLocalManifest : function (
+)
+{
+    return cc.Manifest;
+},
+
+/**
+ * @method getRemoteManifest
+ * @return {cc.Manifest}
+ */
+getRemoteManifest : function (
+)
+{
+    return cc.Manifest;
+},
+
+/**
+ * @method cancelUpdate
+ */
+cancelUpdate : function (
+)
+{
+},
+
+/**
+ * @method isResuming
+ * @return {bool}
+ */
+isResuming : function (
+)
+{
+    return false;
+},
+
+/**
  * @method getState
  * @return {cc.AssetsManagerEx::State}
  */
@@ -341,31 +439,11 @@ getMaxConcurrentTask : function (
 },
 
 /**
- * @method getTotalFiles
- * @return {int}
+ * @method setVersionCompareHandle
+ * @param {function} arg0
  */
-getTotalFiles : function (
-)
-{
-    return 0;
-},
-
-/**
- * @method loadRemoteManifest
- * @param {cc.Manifest} arg0
- * @return {bool}
- */
-loadRemoteManifest : function (
-manifest 
-)
-{
-    return false;
-},
-
-/**
- * @method checkUpdate
- */
-checkUpdate : function (
+setVersionCompareHandle : function (
+func 
 )
 {
 },
@@ -409,36 +487,6 @@ update : function (
 },
 
 /**
- * @method setEventCallback
- * @param {function} arg0
- */
-setEventCallback : function (
-func 
-)
-{
-},
-
-/**
- * @method setVersionCompareHandle
- * @param {function} arg0
- */
-setVersionCompareHandle : function (
-func 
-)
-{
-},
-
-/**
- * @method setMaxConcurrentTask
- * @param {int} arg0
- */
-setMaxConcurrentTask : function (
-int 
-)
-{
-},
-
-/**
  * @method getDownloadedBytes
  * @return {double}
  */
@@ -446,40 +494,6 @@ getDownloadedBytes : function (
 )
 {
     return 0;
-},
-
-/**
- * @method getLocalManifest
- * @return {cc.Manifest}
- */
-getLocalManifest : function (
-)
-{
-    return cc.Manifest;
-},
-
-/**
- * @method loadLocalManifest
-* @param {String|cc.Manifest} str
-* @param {String} str
-* @return {bool|bool}
-*/
-loadLocalManifest : function(
-manifest,
-str 
-)
-{
-    return false;
-},
-
-/**
- * @method getRemoteManifest
- * @return {cc.Manifest}
- */
-getRemoteManifest : function (
-)
-{
-    return cc.Manifest;
 },
 
 /**
@@ -491,18 +505,12 @@ prepareUpdate : function (
 },
 
 /**
- * @method downloadFailedAssets
- */
-downloadFailedAssets : function (
-)
-{
-},
-
-/**
- * @method isResuming
+ * @method loadRemoteManifest
+ * @param {cc.Manifest} arg0
  * @return {bool}
  */
-isResuming : function (
+loadRemoteManifest : function (
+manifest 
 )
 {
     return false;
