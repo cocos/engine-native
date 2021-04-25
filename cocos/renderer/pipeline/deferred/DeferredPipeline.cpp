@@ -163,9 +163,7 @@ void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform surfaceTransform,
     float minY = float(renderArea.y) / _device->getHeight();
     float maxY = float(renderArea.y + renderArea.height) / _device->getHeight();
     if (_device->getCapabilities().clipSpaceSignY > 0) {
-        float temp = maxY;
-        maxY       = minY;
-        minY       = temp;
+        std::swap(minY, maxY);
     }
     int n = 0;
     switch (surfaceTransform) {
