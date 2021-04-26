@@ -17,6 +17,7 @@ jobs:
 
     - name: before_install
       run: |
+        wget https://bootstrap.pypa.io/ez_setup.py -O - | python
         ./tools/travis-scripts/before-install.sh
     
     - name: run script
