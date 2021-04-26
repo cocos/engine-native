@@ -38,6 +38,9 @@ Texture2D::Texture2D()
 Texture2D::~Texture2D()
 {
 //    RENDERER_LOGD("Destruct Texture2D: %p", this);
+    auto texit = Texture2D::_texidMap.find(_textureid);
+    if(texit != Texture2D::_texidMap.end())
+        Texture2D::_texidMap.erase(texit);
 }
 
 std::map<int, Texture2D*> Texture2D::_texidMap = std::map<int, Texture2D*>();

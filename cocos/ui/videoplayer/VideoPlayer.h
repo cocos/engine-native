@@ -108,24 +108,24 @@ class VideoPlayer : public Ref
 
     float duration() const;
 
-	/**
-	 * Get frame rgba pixel as bytes
-	 */
-	void getFrame();
+    /**
+     * Get frame rgba pixel as bytes
+     */
+    void getFrame();
 
-  int getFrameChannel() const;
+    int getFrameChannel() const;
 
-  int getFrameWidth() const;
+    int getFrameWidth() const;
 
-  int getFrameHeight() const;
+    int getFrameHeight() const;
 
-  int getVideoTexDataSize() const;
+    int getVideoTexDataSize() const;
 
-  void update();
+    void update();
 
-  void pushFrameDataToTexture2D(int texid) const;
+    void pushFrameDataToTexture2D(int texid) const;
 
-  void setShowRawFrame(bool show) const;
+    void setShowRawFrame(bool show) const;
 
     /**
      * Causes the video player to keep aspect ratio or no when displaying the video.
