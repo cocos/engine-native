@@ -1,8 +1,11 @@
 name: build
 on: [push, pull_request]
+
 jobs:
   windows_cmake:
     runs-on: windows-2016
+    env:
+      BUILD_TARGET: windows_cmake
 
     steps:
     - uses: actions/checkout@v2
@@ -17,4 +20,11 @@ jobs:
       with:
         node-version: '12.8.0'
     
+    - name: before_install
+      run: |
+        ./tools/travis-scripts/before-install.sh
+        
+    - name: run script
+      run: |
+        ./tools/travis-scripts/run-script.sh
 
