@@ -1,8 +1,10 @@
 name: build
 on: [push, pull_request]
 jobs:
-  windows_cmake:
+  windows_build:
     runs-on: windows-2016
+    env:
+      BUILD_TARGET: windows_cmake
 
     steps:
     - uses: actions/checkout@v2
