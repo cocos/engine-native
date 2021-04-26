@@ -15,6 +15,18 @@ jobs:
       with:
         node-version: '12.8.0'
     
+    - name: Downlad external libraties
+      shell: bash
+      working-directory: ${{github.workspace}}/external
+      run: |
+        cd ${{github.workspace}}/external
+        external_version=`grep version config.json  |awk -F'"' '{print $4}'`
+        external_repo_name=`grep name config.json  |awk -F'"' '{print $4}'`
+        external_repo_parent=`grep owner config.json  |awk -F'"' '{print $4}'`
+        rm ${{github.workspace}}/external/*
+        git clone --branch ${external_version} --depth 1 https://github.com/${external_repo_parent}/${external_repo_name} .
+        git log --oneline -1
+        
     - name: install_android_ndk
       shell: bash
       working-directory: ${{github.workspace}}
