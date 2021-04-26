@@ -23,30 +23,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.media.AudioManager;
-import android.media.Image;
-import android.media.ImageReader;
 import android.media.MediaPlayer;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.PixelCopy;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.TextureView;
 import android.widget.FrameLayout;
 import android.graphics.Bitmap;
-import android.widget.ImageView;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.nio.ByteBuffer;
 
@@ -399,14 +394,20 @@ public class Cocos2dxVideoView extends SurfaceView {
             return null;
         else {
             try {
-                if (Build.VERSION.SDK_INT >= 24) {
-                    PixelCopy.request(this, mFrame, new PixelCopy.OnPixelCopyFinishedListener() {
-                        @Override
-                        public void onPixelCopyFinished(int copyResult) {
-                        }
-                    }, this.getHandler());
-                } else {
+                if (Build.VERSION.SDK_INT < 24) {
                     mFrame = mRetriever.getFrameAtTime(mMediaPlayer.getCurrentPosition() * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+                } else {
+                    Object listener = Proxy.newProxyInstance(Class.forName("android.view.PixelCopy$OnPixelCopyFinishedListener").getClassLoader(),
+                            new Class<?>[]{Class.forName("android.view.PixelCopy$OnPixelCopyFinishedListener")}, new InvocationHandler() {
+                                @Override
+                                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                                    return null;
+                                }
+                    });
+
+                    Class clazz = Class.forName("android.view.PixelCopy");
+                    Method method = clazz.getMethod("request", SurfaceView.class, Bitmap.class, Class.forName("android.view.PixelCopy$OnPixelCopyFinishedListener"), Handler.class);
+                    method.invoke(null, this, mFrame, listener, this.getHandler());
                 }
             } catch (Exception e) {
                 return mPixels;
@@ -428,13 +429,15 @@ public class Cocos2dxVideoView extends SurfaceView {
         }
     }
 
-    public int getFrameChannel() {
+    public int getFrameChannel() throws NoSuchFieldException, IllegalAccessException {
         if(mCurFrame == null) return 0;
         else {
             Bitmap.Config cfg = mCurFrame.getConfig();
             if(Build.VERSION.SDK_INT > 26) {
-                if(cfg == Bitmap.Config.HARDWARE) return 4;
-                else if(cfg == Bitmap.Config.RGBA_F16) return 5;
+                Field hardware = Bitmap.Config.class.getDeclaredField("HARDWARE");
+                Field rgba_f16 = Bitmap.Config.class.getDeclaredField("RGBA_F16");
+                if(hardware != null && cfg == hardware.get(null)) return 4;
+                else if(rgba_f16 != null && cfg == rgba_f16.get(null)) return 5;
             }
             if(cfg == Bitmap.Config.ALPHA_8) return 1;
             else if(cfg == Bitmap.Config.ARGB_4444) return 2;
