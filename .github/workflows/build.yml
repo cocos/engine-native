@@ -17,9 +17,4 @@ jobs:
       with:
         node-version: '12.8.0'
     
-    - name: before_install
-      run: |
-        ./tools/travis-scripts/before-install.sh
-    - name: run script
-      run: |
-        ./tools/travis-scripts/run-script.sh
+
