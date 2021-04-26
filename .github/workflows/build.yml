@@ -26,7 +26,7 @@ jobs:
         rm ${{github.workspace}}/external/*
         git clone --branch ${external_version} --depth 1 https://github.com/${external_repo_parent}/${external_repo_name} .
         git log --oneline -1
-		
+	
     - name: install_android_ndk
       shell: bash
       working-directory: ${{github.workspace}}
