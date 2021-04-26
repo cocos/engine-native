@@ -14,7 +14,7 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '12.8.0'
-	
+    
     - name: install_android_ndk
       shell: bash
       working-directory: ${{github.workspace}}
