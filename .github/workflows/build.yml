@@ -1,10 +1,10 @@
 name: build
 on: [push, pull_request]
 jobs:
-  windows_build:
-    runs-on: windows-2016
+  android_build:
+    runs-on: ubuntu-18.04
     env:
-      BUILD_TARGET: windows_cmake
+      BUILD_TARGET: android_cmake
 
     steps:
     - uses: actions/checkout@v2
