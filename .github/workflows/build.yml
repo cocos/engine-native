@@ -14,12 +14,33 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '12.8.0'
-
-    - name: before_install
+		
+    - name: Downlad external libraties
+      shell: bash
+      working-directory: ${{github.workspace}}/external
       run: |
-        wget https://bootstrap.pypa.io/ez_setup.py -O - | python
-        ./tools/travis-scripts/before-install.sh
+        cd ${{github.workspace}}/external
+        external_version=`grep version config.json  |awk -F'"' '{print $4}'`
+        external_repo_name=`grep name config.json  |awk -F'"' '{print $4}'`
+        external_repo_parent=`grep owner config.json  |awk -F'"' '{print $4}'`
+        rm ${{github.workspace}}/external/*
+        git clone --branch ${external_version} --depth 1 https://github.com/${external_repo_parent}/${external_repo_name} .
+        git log --oneline -1
+		
+    - name: install_android_ndk
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: |
+         curl -O http://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
+         unzip -q android-ndk-r16b-linux-x86_64.zip
+         mv android-ndk-r16b android-ndk
     
+    - name: install_python_module
+      run: |
+        python -m easy_install pip 
+        python -m pip install PyYAML
+        python -m pip install Cheetah
+
     - name: run script
       run: |
         ./tools/travis-scripts/run-script.sh
