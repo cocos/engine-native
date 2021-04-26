@@ -1,0 +1,20 @@
+name: build
+on: [push, pull_request]
+jobs:
+  windows_cmake:
+    runs-on: windows-2016
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: environment configuration 
+      run: |
+        choco install nodejs.install --version=12.8.0 
+        choco install --forcex86 -y python2
+        export PATH="/C/Program Files/nodejs":$PATH
+        export PATH="/C/Python27":$PATH
+        ./tools/travis-scripts/before-install.sh
+    - name: build
+      run: |
+        ./tools/travis-scripts/run-script.sh
+   
