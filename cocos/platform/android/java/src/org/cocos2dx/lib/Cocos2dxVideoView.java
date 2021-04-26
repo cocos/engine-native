@@ -124,8 +124,8 @@ public class Cocos2dxVideoView extends SurfaceView {
     private boolean mMetaUpdated = false;
 
     private MediaMetadataRetriever mRetriever = null;
-    private ByteBuffer frameBuf = null;
-    private byte pixels[] = null;
+    private ByteBuffer mFrameBuf = null;
+    private byte mPixels[] = null;
     private Bitmap mFrame = null;
     private Bitmap mCurFrame = null;
     private boolean mShowRaw = true;
@@ -409,22 +409,22 @@ public class Cocos2dxVideoView extends SurfaceView {
                     mFrame = mRetriever.getFrameAtTime(mMediaPlayer.getCurrentPosition() * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
                 }
             } catch (Exception e) {
-                return pixels;
+                return mPixels;
             }
 
             if(mFrame != null)
                 mCurFrame = mFrame;
             else
-                return pixels;
+                return mPixels;
 
-            if(frameBuf == null) {
-                frameBuf = ByteBuffer.allocate(mCurFrame.getByteCount());
+            if(mFrameBuf == null) {
+                mFrameBuf = ByteBuffer.allocate(mCurFrame.getByteCount());
             }
-            frameBuf.position(0);
-            mCurFrame.copyPixelsToBuffer(frameBuf);
-            pixels = frameBuf.array();
+            mFrameBuf.position(0);
+            mCurFrame.copyPixelsToBuffer(mFrameBuf);
+            mPixels = mFrameBuf.array();
 
-            return pixels;
+            return mPixels;
         }
     }
 
@@ -513,8 +513,8 @@ public class Cocos2dxVideoView extends SurfaceView {
             mMediaPlayer.setScreenOnWhilePlaying(true);
 
             mRetriever = new MediaMetadataRetriever();
-            frameBuf = null;
-            pixels = null;
+            mFrameBuf = null;
+            mPixels = null;
             mCurFrame = null;
             mFrame = null;
             mFrame = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);

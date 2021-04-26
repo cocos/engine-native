@@ -205,7 +205,7 @@ public class Cocos2dxVideoHelper {
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
         mLayout.addView(videoView, lParams);
-//        videoView.setZOrderOnTop(true);
+        videoView.setZOrderOnTop(true);
         videoView.setVideoViewEventListener(videoEventListener);
     }
 
@@ -473,9 +473,7 @@ public class Cocos2dxVideoHelper {
                 Cocos2dxVideoView video = sVideoViews.get(index);
                 byte datas[] = null;
                 if (video != null) datas = video.getFrame();
-                if (datas != null) {
-                    // log
-                } else {
+                if (datas == null) {
                     Log.w("Cocos2dxVideoHelper", "Video player's frame is not ready to get now!");
                 }
                 return datas;
