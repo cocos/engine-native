@@ -327,7 +327,7 @@ void LightingStage::render(Camera *camera) {
                               pipeline->getDeferredRenderData()->lightingRenderTarget,
                               pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1], 
                               pipeline->getDeferredRenderData()->reflectionRenderTarget, 
-                              camera->matViewProjOffscreen, 8, 8);
+                              camera->matViewProj, 8, 8);
     }
 
     uint globalWidth  = _reflectionComp->getReflectionTex()->getWidth();
