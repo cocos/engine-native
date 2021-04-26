@@ -6,15 +6,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: environment configuration 
+    
+    - name: Set Python
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '2'
+    
+    - name: Set Node
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12.8.0'
+    
+    - name: before_install
       run: |
-        choco install nodejs.install --version=12.8.0 
-        choco install --forcex86 -y python2
-        export PATH="/C/Program Files/nodejs":$PATH
-        export PATH="/C/Python27":$PATH
         ./tools/travis-scripts/before-install.sh
-    - name: build
+    - name: run script
       run: |
         ./tools/travis-scripts/run-script.sh
-   
