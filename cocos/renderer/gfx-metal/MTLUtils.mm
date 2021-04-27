@@ -1635,7 +1635,7 @@ void mu::clearUtilResource() {
         for (auto pass : renderPassMap) {
             //TODO: create and destroy not in the same level
             pass.second->destroy();
-            delete pass.second;
+            CC_DELETE(pass.second);
         }
         renderPassMap.clear();
     }
