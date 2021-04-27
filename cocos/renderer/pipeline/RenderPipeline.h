@@ -52,7 +52,7 @@ public:
     static RenderPipeline *getInstance();
 
     RenderPipeline();
-    ~RenderPipeline() override;
+    virtual ~RenderPipeline() override;
 
     virtual bool activate();
     virtual void destroy();
