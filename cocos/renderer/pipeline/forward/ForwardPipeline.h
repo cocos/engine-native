@@ -45,8 +45,8 @@ class Framebuffer;
 
 class CC_DLL ForwardPipeline : public RenderPipeline {
 public:
-    ForwardPipeline()          = default;
-    virtual ~ForwardPipeline() = default;
+    ForwardPipeline()  = default;
+    ~ForwardPipeline() = default;
 
     virtual bool initialize(const RenderPipelineInfo &info) override;
     virtual void destroy() override;
