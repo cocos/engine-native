@@ -44,8 +44,8 @@ struct Camera;
 
 class CC_DLL ForwardPipeline : public RenderPipeline {
 public:
-    ForwardPipeline()  = default;
-    ~ForwardPipeline() = default;
+    ForwardPipeline()           = default;
+    ~ForwardPipeline() override = default;
 
     bool initialize(const RenderPipelineInfo &info) override;
     void destroy() override;
