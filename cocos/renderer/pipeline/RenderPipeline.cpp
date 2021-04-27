@@ -56,8 +56,6 @@ RenderPipeline::~RenderPipeline() {
     RenderPipeline::instance = nullptr;
 }
 
-//RenderPipeline::~RenderPipeline() = default;
-
 #define INIT_GLOBAL_DESCSET_LAYOUT(info)                                      \
     do {                                                                      \
         globalDescriptorSetLayout.samplers[info::NAME]    = info::LAYOUT;     \
