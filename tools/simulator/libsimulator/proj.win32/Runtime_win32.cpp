@@ -30,7 +30,7 @@
 #include <ws2tcpip.h>
 #include <string>
 #include <vector>
-     #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "ws2_32.lib")
 
 #include "runtime/ConfigParser.h"
 using namespace std;
