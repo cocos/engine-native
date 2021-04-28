@@ -494,9 +494,9 @@ void DeferredPipeline::destroyDeferredData() {
         _deferredRenderData->depthTex = nullptr;
     }
 
-    for (size_t i = 0; i < _deferredRenderData->gbufferRenderTargets.size(); i++) {
-        _deferredRenderData->gbufferRenderTargets[i]->destroy();
-        CC_DELETE(_deferredRenderData->gbufferRenderTargets[i]);
+    for (auto *target : _deferredRenderData->gbufferRenderTargets) {
+        target->destroy();
+        CC_DELETE(target);
     }
     _deferredRenderData->gbufferRenderTargets.clear();
 
