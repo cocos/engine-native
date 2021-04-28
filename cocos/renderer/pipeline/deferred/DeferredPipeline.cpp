@@ -152,9 +152,6 @@ void DeferredPipeline::updateQuadVertexData(const gfx::Rect &renderArea) {
     float vbData[16]    = {0};
     genQuadVertexData(gfx::SurfaceTransform::IDENTITY, renderArea, vbData);
     _commandBuffers[0]->updateBuffer(_quadVBOffscreen, vbData);
-
-    genQuadVertexData(_device->getSurfaceTransform(), renderArea, vbData);
-    _commandBuffers[0]->updateBuffer(_quadVBOnscreen, vbData);
 }
 
 void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform /*surfaceTransform*/, const gfx::Rect &renderArea, float *vbData) {
@@ -248,19 +245,9 @@ void DeferredPipeline::destroyQuadInputAssembler() {
         _quadIB = nullptr;
     }
 
-    if (_quadVBOnscreen) {
-        _quadVBOnscreen->destroy();
-        _quadVBOnscreen = nullptr;
-    }
-
     if (_quadVBOffscreen) {
         _quadVBOffscreen->destroy();
         _quadVBOffscreen = nullptr;
-    }
-
-    if (_quadIAOnscreen) {
-        _quadIAOnscreen->destroy();
-        _quadIAOnscreen = nullptr;
     }
 
     if (_quadIAOffscreen) {
@@ -299,10 +286,6 @@ bool DeferredPipeline::activeRenderer() {
     _macros.setValue("CC_SUPPORT_FLOAT_TEXTURE", _device->hasFeature(gfx::Feature::TEXTURE_FLOAT));
 
     if (!createQuadInputAssembler(&_quadIB, &_quadVBOffscreen, &_quadIAOffscreen)) {
-        return false;
-    }
-
-    if (!createQuadInputAssembler(&_quadIB, &_quadVBOnscreen, &_quadIAOnscreen)) {
         return false;
     }
 
