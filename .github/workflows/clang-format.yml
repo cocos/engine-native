@@ -1,4 +1,4 @@
-name: commit clang format
+name: Apply Clang Format
 
 #on: [push, pull_request]
 on:
