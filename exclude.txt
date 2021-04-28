@@ -1,0 +1,2 @@
+cocos/bindings/auto
+tools/simulator
