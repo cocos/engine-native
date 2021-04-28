@@ -110,6 +110,8 @@ void RenderPipeline::setDescriptorSetLayout() {
     localDescriptorSetLayout.bindings[LIGHTMAPTEXTURE::BINDING]     = LIGHTMAPTEXTURE::DESCRIPTOR;
     localDescriptorSetLayout.samplers[SPRITETEXTURE::NAME]          = SPRITETEXTURE::LAYOUT;
     localDescriptorSetLayout.bindings[SPRITETEXTURE::BINDING]       = SPRITETEXTURE::DESCRIPTOR;
+    localDescriptorSetLayout.samplers[REFLECTIONTEXTURE::NAME]      = REFLECTIONTEXTURE::LAYOUT;
+    localDescriptorSetLayout.bindings[REFLECTIONTEXTURE::BINDING]   = REFLECTIONTEXTURE::DESCRIPTOR;
 }
 
 bool RenderPipeline::initialize(const RenderPipelineInfo &info) {

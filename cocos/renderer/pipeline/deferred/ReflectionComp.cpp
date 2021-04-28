@@ -92,7 +92,10 @@ void ReflectionComp::initFirstComp() {
             if(posWS.y <= _HorizontalPlaneHeightWS) return;
 
             vec3 reflectedPosWS = posWS;
+            reflectedPosWS.y = reflectedPosWS.y - _HorizontalPlaneHeightWS;
             reflectedPosWS.y = reflectedPosWS.y * -1.0;
+            reflectedPosWS.y = reflectedPosWS.y + _HorizontalPlaneHeightWS;
+
 
             vec4 reflectedPosCS = cc_matViewProj * vec4(reflectedPosWS, 1);
             vec2 reflectedPosNDCxy = reflectedPosCS.xy / reflectedPosCS.w;//posCS -> posNDC
@@ -182,7 +185,9 @@ void ReflectionComp::initDenoiseComp() {
         layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 
         layout(set = 0, binding = 0) uniform sampler2D reflectionTex;
-        layout(set = 0, binding = 1, rgba8) writeonly uniform lowp image2D denoiseTex;
+        // layout(set = 0, binding = 1, rgba8) writeonly uniform lowp image2D denoiseTexLod;
+        layout(set = 2, binding = 11, rgba8) writeonly uniform lowp image2D denoiseTex;
+
 
         void main() {
             ivec2 id = ivec2(gl_GlobalInvocationID.xy) * 2;

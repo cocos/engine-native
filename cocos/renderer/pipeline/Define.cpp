@@ -499,6 +499,22 @@ const gfx::UniformSamplerTexture SPRITETEXTURE::LAYOUT = {
     1,
 };
 
+const String                          REFLECTIONTEXTURE::NAME       = "cc_reflectionTexture";
+const gfx::DescriptorSetLayoutBinding REFLECTIONTEXTURE::DESCRIPTOR = {
+    REFLECTIONTEXTURE::BINDING,
+    gfx::DescriptorType::SAMPLER_TEXTURE,
+    1,
+    gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
+};
+const gfx::UniformSamplerTexture REFLECTIONTEXTURE::LAYOUT = {
+    localSet,
+    static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION),
+    "cc_reflectionTexture",
+    gfx::Type::SAMPLER2D,
+    1,
+};
+
 uint SamplerLib::defaultSamplerHash{genSamplerHash(gfx::SamplerInfo())};
 
 unordered_map<uint, gfx::Sampler *> SamplerLib::samplerCache{};

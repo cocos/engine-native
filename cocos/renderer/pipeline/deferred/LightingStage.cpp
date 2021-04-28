@@ -369,17 +369,35 @@ void LightingStage::render(Camera *camera) {
     gfx::DispatchInfo denoiseDispatchInfo{((globalWidth - 1 )/ 2) / groupWidth + 1, ((globalHeight - 1)/ 2) / groupHeight + 1, 1};
 
     if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
-        cmdBuff->pipelineBarrier(barrier_pre);
-        cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
-        cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
-        cmdBuff->dispatch(dispatchInfo);
+        uint   m = 0, p = 0;
+        size_t k = 0;
+        for (size_t i = 0; i < renderObjects.size(); ++i) {
+            const auto &ro            = renderObjects[i];
+            const auto  model         = ro.model;
+            const auto  subModelID    = model->getSubModelID();
+            const auto  subModelCount = subModelID[0];
+            for (m = 1; m <= subModelCount; ++m) {
+                auto subModel = model->getSubModelView(subModelID[m]);
+                for (p = 0; p < subModel->passCount; ++p) {
+                    const PassView *pass = subModel->getPassView(p);
+                    // TODO: need fallback of ulit and gizmo material.
+                    if (pass->phase != _reflectionPhaseID) continue;
 
-        cmdBuff->pipelineBarrier(barrier_before_denoise);
+                    cmdBuff->pipelineBarrier(barrier_pre);
+                    cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
+                    cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
+                    cmdBuff->dispatch(dispatchInfo);
 
-        cmdBuff->bindPipelineState(_reflectionComp->getDenoisePipelineState());
-        cmdBuff->bindDescriptorSet(0, _reflectionComp->getDenoiseDescriptorSet());
-        cmdBuff->dispatch(denoiseDispatchInfo);
-        cmdBuff->pipelineBarrier(barrier_after_denoise);
+                    cmdBuff->pipelineBarrier(barrier_before_denoise);
+
+                    cmdBuff->bindPipelineState(_reflectionComp->getDenoisePipelineState());
+                    cmdBuff->bindDescriptorSet(0, _reflectionComp->getDenoiseDescriptorSet());
+                    cmdBuff->bindDescriptorSet(2, subModel->getDescriptorSet());
+                    // cmdBuff->dispatch(denoiseDispatchInfo);
+                    cmdBuff->pipelineBarrier(barrier_after_denoise);
+                }
+            }
+        }
     }
 
 
