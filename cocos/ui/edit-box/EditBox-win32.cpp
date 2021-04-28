@@ -23,16 +23,16 @@
  THE SOFTWARE.
 ****************************************************************************/
 
+#include <stdlib.h>
+#include <windows.h>
+#include <codecvt>
+#include <locale>
+#include <memory>
 #include "EditBox.h"
-#include "platform/Application.h"
-#include "platform/win32/View-win32.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_global.h"
-#include <windows.h>
-#include <locale>
-#include <codecvt>
-#include <stdlib.h>
-#include <memory>
+#include "platform/Application.h"
+#include "platform/win32/View-win32.h"
 
 extern std::shared_ptr<cc::View> cc_get_application_view();
 
@@ -43,10 +43,10 @@ namespace cc {
 ************************************************************************/
 
 namespace {
-bool g_isMultiline = false;
-HWND g_hwndEditBox = nullptr;
-WNDPROC g_prevMainWindowProc = nullptr;
-WNDPROC g_prevEditWindowProc = nullptr;
+bool      g_isMultiline        = false;
+HWND      g_hwndEditBox        = nullptr;
+WNDPROC   g_prevMainWindowProc = nullptr;
+WNDPROC   g_prevEditWindowProc = nullptr;
 se::Value g_textInputCallback;
 
 int getCocosWindowHeight() {
@@ -60,7 +60,7 @@ void getTextInputCallback() {
     if (!g_textInputCallback.isUndefined())
         return;
 
-    auto global = se::ScriptEngine::getInstance()->getGlobalObject();
+    auto      global = se::ScriptEngine::getInstance()->getGlobalObject();
     se::Value jsbVal;
     if (global->getProperty("jsb", &jsbVal) && jsbVal.isObject()) {
         jsbVal.toObject()->getProperty("onTextInput", &g_textInputCallback);
@@ -75,19 +75,19 @@ void callJSFunc(const std::string &type, const std::string &text) {
     getTextInputCallback();
 
     se::AutoHandleScope scope;
-    se::ValueArray args;
+    se::ValueArray      args;
     args.push_back(se::Value(type));
     args.push_back(se::Value(text));
     g_textInputCallback.toObject()->call(args, nullptr);
 }
 
 std::string getText(HWND hwnd) {
-    int length = GetWindowTextLength(hwnd);
-    LPWSTR str = (LPWSTR)malloc(sizeof(WCHAR) * (length + 1));
+    int    length = GetWindowTextLength(hwnd);
+    LPWSTR str    = (LPWSTR)malloc(sizeof(WCHAR) * (length + 1));
     GetWindowText(hwnd, str, length + 1);
 
     std::wstring_convert<std::codecvt_utf8<wchar_t>> convert;
-    std::string ret(convert.to_bytes(str));
+    std::string                                      ret(convert.to_bytes(str));
     free(str);
 
     return ret;
@@ -97,7 +97,7 @@ std::wstring str2ws(const std::string &text) {
     if (text.empty())
         return std::wstring();
 
-    int sz = MultiByteToWideChar(CP_UTF8, 0, &text[0], (int)text.size(), 0, 0);
+    int          sz = MultiByteToWideChar(CP_UTF8, 0, &text[0], (int)text.size(), 0, 0);
     std::wstring res(sz, 0);
     MultiByteToWideChar(CP_UTF8, 0, &text[0], (int)text.size(), &res[0], sz);
     return res;
@@ -134,7 +134,7 @@ LRESULT editWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         default:
             break;
     }
-    
+
     return CallWindowProc(g_prevEditWindowProc, hwnd, msg, wParam, lParam);
 }
 } // namespace
@@ -147,7 +147,7 @@ void EditBox::show(const EditBox::ShowInfo &showInfo) {
     if (!g_hwndEditBox) {
         HWND parent = cc_get_application_view()->getWindowHandler();
 
-        UINT32 flags = WS_CHILD | ES_LEFT | WS_TABSTOP | ES_AUTOHSCROLL;
+        UINT32 flags  = WS_CHILD | ES_LEFT | WS_TABSTOP | ES_AUTOHSCROLL;
         g_isMultiline = showInfo.isMultiline;
         if (g_isMultiline) {
             flags |= ES_MULTILINE;

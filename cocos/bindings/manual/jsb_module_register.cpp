@@ -23,21 +23,21 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_module_register.h"
-#include "cocos/bindings/auto/jsb_cocos_auto.h"
 #include "cocos/base/AutoreleasePool.h"
-#include "cocos/bindings/dop/jsb_dop.h"
+#include "cocos/bindings/auto/jsb_cocos_auto.h"
 #include "cocos/bindings/auto/jsb_extension_auto.h"
-#include "cocos/bindings/auto/jsb_network_auto.h"
 #include "cocos/bindings/auto/jsb_gfx_auto.h"
+#include "cocos/bindings/auto/jsb_network_auto.h"
 #include "cocos/bindings/auto/jsb_pipeline_auto.h"
-#include "cocos/bindings/manual/jsb_pipeline_manual.h"
+#include "cocos/bindings/dop/jsb_dop.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_cocos_manual.h"
-#include "cocos/bindings/manual/jsb_network_manual.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_gfx_manual.h"
 #include "cocos/bindings/manual/jsb_global.h"
+#include "cocos/bindings/manual/jsb_network_manual.h"
+#include "cocos/bindings/manual/jsb_pipeline_manual.h"
 #include "cocos/bindings/manual/jsb_platform.h"
 #include "cocos/bindings/manual/jsb_xmlhttprequest.h"
 

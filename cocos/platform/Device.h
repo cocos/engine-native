@@ -28,8 +28,8 @@
 #ifndef __CCDEVICE_H__
 #define __CCDEVICE_H__
 
-#include "base/Macros.h"
 #include "base/Data.h"
+#include "base/Macros.h"
 #include "math/Vec4.h"
 
 namespace cc {
@@ -49,10 +49,10 @@ class CC_DLL Device {
 public:
     // https://developer.mozilla.org/en-US/docs/Web/API/Window/orientation
     enum class Orientation {
-        PORTRAIT = 0,
-        LANDSCAPE_LEFT = -90,
+        PORTRAIT             = 0,
+        LANDSCAPE_LEFT       = -90,
         PORTRAIT_UPSIDE_DOWN = 180,
-        LANDSCAPE_RIGHT = 90
+        LANDSCAPE_RIGHT      = 90
     };
 
     struct MotionValue {
@@ -65,7 +65,7 @@ public:
         float accelerationIncludingGravityZ = 0.0f;
 
         float rotationRateAlpha = 0.0f;
-        float rotationRateBeta = 0.0f;
+        float rotationRateBeta  = 0.0f;
         float rotationRateGamma = 0.0f;
     };
 

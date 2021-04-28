@@ -24,9 +24,9 @@
  ****************************************************************************/
 
 #include "EventAssetsManagerEx.h"
-#include "base/Macros.h"
 #include <functional>
 #include "AssetsManagerEx.h"
+#include "base/Macros.h"
 
 NS_CC_EXT_BEGIN
 

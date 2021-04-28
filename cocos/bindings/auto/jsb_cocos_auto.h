@@ -24,17 +24,17 @@
 ****************************************************************************/
 
 #pragma once
-#include "base/Config.h"
 #include <type_traits>
+#include "base/Config.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
-#include "cocos/platform/FileUtils.h"
 #include "cocos/platform/CanvasRenderingContext2D.h"
 #include "cocos/platform/Device.h"
+#include "cocos/platform/FileUtils.h"
 #include "cocos/platform/SAXParser.h"
 
 extern se::Object* __jsb_cc_FileUtils_proto;
-extern se::Class* __jsb_cc_FileUtils_class;
+extern se::Class*  __jsb_cc_FileUtils_class;
 
 bool js_register_cc_FileUtils(se::Object* obj);
 bool register_all_engine(se::Object* obj);
@@ -78,7 +78,7 @@ SE_DECLARE_FUNC(js_engine_FileUtils_setDelegate);
 SE_DECLARE_FUNC(js_engine_FileUtils_getInstance);
 
 extern se::Object* __jsb_cc_CanvasGradient_proto;
-extern se::Class* __jsb_cc_CanvasGradient_class;
+extern se::Class*  __jsb_cc_CanvasGradient_class;
 
 bool js_register_cc_CanvasGradient(se::Object* obj);
 bool register_all_engine(se::Object* obj);
@@ -88,7 +88,7 @@ SE_DECLARE_FUNC(js_engine_CanvasGradient_addColorStop);
 SE_DECLARE_FUNC(js_engine_CanvasGradient_CanvasGradient);
 
 extern se::Object* __jsb_cc_CanvasRenderingContext2D_proto;
-extern se::Class* __jsb_cc_CanvasRenderingContext2D_class;
+extern se::Class*  __jsb_cc_CanvasRenderingContext2D_class;
 
 bool js_register_cc_CanvasRenderingContext2D(se::Object* obj);
 bool register_all_engine(se::Object* obj);
@@ -114,7 +114,7 @@ SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_translate);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_CanvasRenderingContext2D);
 
 extern se::Object* __jsb_cc_Device_proto;
-extern se::Class* __jsb_cc_Device_class;
+extern se::Class*  __jsb_cc_Device_class;
 
 bool js_register_cc_Device(se::Object* obj);
 bool register_all_engine(se::Object* obj);
@@ -133,11 +133,10 @@ SE_DECLARE_FUNC(js_engine_Device_getSafeAreaEdge);
 SE_DECLARE_FUNC(js_engine_Device_getDeviceModel);
 
 extern se::Object* __jsb_cc_SAXParser_proto;
-extern se::Class* __jsb_cc_SAXParser_class;
+extern se::Class*  __jsb_cc_SAXParser_class;
 
 bool js_register_cc_SAXParser(se::Object* obj);
 bool register_all_engine(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::SAXParser);
 SE_DECLARE_FUNC(js_engine_SAXParser_init);
-

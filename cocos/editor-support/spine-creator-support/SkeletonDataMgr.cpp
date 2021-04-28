@@ -56,10 +56,10 @@ public:
         }
     }
 
-    SkeletonData *data = nullptr;
-    Atlas *atlas = nullptr;
+    SkeletonData *    data             = nullptr;
+    Atlas *           atlas            = nullptr;
     AttachmentLoader *attachmentLoader = nullptr;
-    std::vector<int> texturesIndex;
+    std::vector<int>  texturesIndex;
 };
 
 } // namespace spine
@@ -77,11 +77,11 @@ void SkeletonDataMgr::setSkeletonData(const std::string &uuid, SkeletonData *dat
         releaseByUUID(uuid);
     }
     SkeletonDataInfo *info = new SkeletonDataInfo();
-    info->data = data;
-    info->atlas = atlas;
+    info->data             = data;
+    info->atlas            = atlas;
     info->attachmentLoader = attachmentLoader;
-    info->texturesIndex = texturesIndex;
-    _dataMap[uuid] = info;
+    info->texturesIndex    = texturesIndex;
+    _dataMap[uuid]         = info;
 }
 
 SkeletonData *SkeletonDataMgr::retainByUUID(const std::string &uuid) {

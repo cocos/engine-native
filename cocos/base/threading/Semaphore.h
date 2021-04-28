@@ -25,9 +25,9 @@
 
 #pragma once
 
+#include <cassert>
 #include "concurrentqueue/concurrentqueue.h"
 #include "concurrentqueue/lightweightsemaphore.h"
-#include <cassert>
 
 namespace cc {
 

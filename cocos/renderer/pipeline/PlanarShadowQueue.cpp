@@ -63,8 +63,8 @@ void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *c
     }
 
     const auto *models          = scene->getModels();
-    const auto modelCount = models[0];
-    auto *instancedBuffer = InstancedBuffer::get(shadowInfo->instancePass);
+    const auto  modelCount      = models[0];
+    auto *      instancedBuffer = InstancedBuffer::get(shadowInfo->instancePass);
 
     for (uint i = 1; i <= modelCount; i++) {
         const auto *model = cc::pipeline::Scene::getModelView(models[i]);
@@ -79,7 +79,7 @@ void PlanarShadowQueue::gatherShadowPasses(Camera *camera, gfx::CommandBuffer *c
                 }
 
                 const auto *attributesID = model->getInstancedAttributeID();
-                const auto length                   = attributesID[0];
+                const auto  length       = attributesID[0];
                 if (length > 0) {
                     const auto *subModelID    = model->getSubModelID();
                     const auto  subModelCount = subModelID[0];

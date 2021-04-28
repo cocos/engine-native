@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 #include "base/threading/ThreadSafeLinearAllocator.h"
 
 namespace cc {
@@ -44,11 +44,11 @@ uint nextPowerOf2(uint v) {
     v |= v >> 16;
     return ++v;
 }
-}
+} // namespace
 
 class CC_DLL LinearAllocatorPool final {
 public:
-    LinearAllocatorPool(size_t defaultBlockSize = DEFAULT_BLOCK_SIZE): _defaultBlockSize(defaultBlockSize) {
+    LinearAllocatorPool(size_t defaultBlockSize = DEFAULT_BLOCK_SIZE) : _defaultBlockSize(defaultBlockSize) {
         _allocators.emplace_back(CC_NEW(ThreadSafeLinearAllocator(static_cast<uint32_t>(_defaultBlockSize))));
     }
 
@@ -59,19 +59,19 @@ public:
         _allocators.clear();
     }
 
-    template<typename T>
-    T* allocate(const uint count, uint alignment = 64u) noexcept {
+    template <typename T>
+    T *allocate(const uint count, uint alignment = 64u) noexcept {
         if (!count) return nullptr;
 
-        T* res = nullptr;
+        T *    res  = nullptr;
         size_t size = count * sizeof(T);
         for (ThreadSafeLinearAllocator *allocator : _allocators) {
-            res = reinterpret_cast<T*>(allocator->allocate(size, alignment));
+            res = reinterpret_cast<T *>(allocator->allocate(size, alignment));
             if (res) return res;
         }
         uint capacity = nextPowerOf2(static_cast<uint>(std::max(DEFAULT_BLOCK_SIZE, size + static_cast<size_t>(alignment)))); // reserve enough padding space for alignment
         _allocators.emplace_back(CC_NEW(ThreadSafeLinearAllocator(static_cast<uint32_t>(capacity))));
-        return reinterpret_cast<T*>(_allocators.back()->allocate(size, alignment));
+        return reinterpret_cast<T *>(_allocators.back()->allocate(size, alignment));
     }
 
     inline void reset() {
@@ -82,7 +82,7 @@ public:
 
 protected:
     vector<ThreadSafeLinearAllocator *> _allocators;
-    size_t _defaultBlockSize = DEFAULT_BLOCK_SIZE;
+    size_t                              _defaultBlockSize = DEFAULT_BLOCK_SIZE;
 };
 
 } // namespace gfx

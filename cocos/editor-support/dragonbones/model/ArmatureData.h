@@ -24,10 +24,10 @@
 #define DRAGONBONES_ARMATURE_DATA_H
 
 #include "../core/BaseObject.h"
-#include "../geom/Matrix.h"
-#include "../geom/Transform.h"
 #include "../geom/ColorTransform.h"
+#include "../geom/Matrix.h"
 #include "../geom/Rectangle.h"
+#include "../geom/Transform.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 /**
@@ -40,8 +40,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class ArmatureData : public BaseObject
-{
+class ArmatureData : public BaseObject {
     BIND_CLASS_TYPE_B(ArmatureData);
 
 public:
@@ -164,19 +163,16 @@ public:
      * @private
      */
     DragonBonesData* parent;
-    ArmatureData() :
-        canvas(nullptr),
-        userData(nullptr)
-    {
+    ArmatureData() : canvas(nullptr),
+                     userData(nullptr) {
         _onClear();
     }
-    ~ArmatureData()
-    {
+    ~ArmatureData() {
         _onClear();
     }
 
 protected:
-virtual void _onClear() override;
+    virtual void _onClear() override;
 
 public:
     /**
@@ -231,8 +227,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline BoneData* getBone(const std::string& boneName) const
-    {
+    inline BoneData* getBone(const std::string& boneName) const {
         return mapFind<BoneData>(bones, boneName);
     }
     /**
@@ -247,15 +242,13 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline SlotData* getSlot(const std::string& slotName) const
-    {
+    inline SlotData* getSlot(const std::string& slotName) const {
         return mapFind<SlotData>(slots, slotName);
     }
     /**
      * @private
      */
-    inline ConstraintData* getConstraint(const std::string& constraintName) const
-    {
+    inline ConstraintData* getConstraint(const std::string& constraintName) const {
         return mapFind<ConstraintData>(constraints, constraintName);
     }
     /**
@@ -270,8 +263,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline SkinData* getSkin(const std::string& skinName) const
-    {
+    inline SkinData* getSkin(const std::string& skinName) const {
         return mapFind(skins, skinName);
     }
     /**
@@ -290,33 +282,32 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline AnimationData* getAnimation(const std::string& animationName) const
-    {
+    inline AnimationData* getAnimation(const std::string& animationName) const {
         return mapFind(animations, animationName);
     }
 
 public: // For WebAssembly.
-    int getType() const { return (int)type; }
+    int  getType() const { return (int)type; }
     void setType(int value) { type = (ArmatureType)value; }
 
-    Rectangle* getAABB() { return &aabb; }
+    Rectangle*                      getAABB() { return &aabb; }
     const std::vector<std::string>& getAnimationNames() const { return animationNames; }
-    const std::vector<BoneData*>& getSortedBones() const { return sortedBones; }
-    const std::vector<SlotData*>& getSortedSlots() const { return sortedSlots; }
+    const std::vector<BoneData*>&   getSortedBones() const { return sortedBones; }
+    const std::vector<SlotData*>&   getSortedSlots() const { return sortedSlots; }
     const std::vector<ActionData*>& getDefaultActions() const { return defaultActions; }
     const std::vector<ActionData*>& getActions() const { return actions; }
 
     SkinData* getDefaultSkin() const { return defaultSkin; }
-    void setDefaultSkin(SkinData* value) { defaultSkin = value; }
+    void      setDefaultSkin(SkinData* value) { defaultSkin = value; }
 
     AnimationData* getDefaultAnimation() const { return defaultAnimation; }
-    void setDefaultAnimation(AnimationData* value) { defaultAnimation = value; }
+    void           setDefaultAnimation(AnimationData* value) { defaultAnimation = value; }
 
     const UserData* getUserData() const { return userData; }
-    void setUserData(UserData* value) { userData = value; }
+    void            setUserData(UserData* value) { userData = value; }
 
     const DragonBonesData* getParent() const { return parent; }
-    void setParent(DragonBonesData* value) { parent = value; }
+    void                   setParent(DragonBonesData* value) { parent = value; }
 };
 /**
  * - The bone data.
@@ -328,8 +319,7 @@ public: // For WebAssembly.
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class BoneData : public BaseObject 
-{
+class BoneData : public BaseObject {
     BIND_CLASS_TYPE_B(BoneData);
 
 public:
@@ -390,13 +380,10 @@ public:
      * @language zh_CN
      */
     BoneData* parent;
-    BoneData() :
-        userData(nullptr)
-    {
+    BoneData() : userData(nullptr) {
         _onClear();
     }
-    ~BoneData()
-    {
+    ~BoneData() {
         _onClear();
     }
 
@@ -407,10 +394,10 @@ public: // For WebAssembly.
     Transform* getTransfrom() { return &transform; }
 
     const UserData* getUserData() const { return userData; }
-    void setUserData(UserData* value) { userData = value; }
+    void            setUserData(UserData* value) { userData = value; }
 
     const BoneData* getParent() const { return parent; }
-    void setParent(BoneData* value) { parent = value; }
+    void            setParent(BoneData* value) { parent = value; }
 };
 /**
  * - The slot data.
@@ -422,8 +409,7 @@ public: // For WebAssembly.
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class SlotData : public BaseObject
-{
+class SlotData : public BaseObject {
     BIND_CLASS_TYPE_B(SlotData);
 
 public:
@@ -479,14 +465,11 @@ public:
      * @language zh_CN
      */
     BoneData* parent;
-    SlotData() :
-        color(nullptr),
-        userData(nullptr)
-    {
+    SlotData() : color(nullptr),
+                 userData(nullptr) {
         _onClear();
     }
-    ~SlotData()
-    {
+    ~SlotData() {
         _onClear();
     }
 
@@ -496,17 +479,17 @@ protected:
 public: // For WebAssembly.
     static ColorTransform* getDefaultColor() { return &DEFAULT_COLOR; }
 
-    int getBlendMode() const { return (int)blendMode; }
+    int  getBlendMode() const { return (int)blendMode; }
     void setBlendMode(int value) { blendMode = (BlendMode)value; }
 
     ColorTransform* getColor() const { return color; }
-    void setColor(ColorTransform* value) { color = value; }
+    void            setColor(ColorTransform* value) { color = value; }
 
     const BoneData* getParent() const { return parent; }
-    void setParent(BoneData* value) { parent = value; }
+    void            setParent(BoneData* value) { parent = value; }
 
     const UserData* getUserData() const { return userData; }
-    void setUserData(UserData* value) { userData = value; }
+    void            setUserData(UserData* value) { userData = value; }
 };
 
 DRAGONBONES_NAMESPACE_END

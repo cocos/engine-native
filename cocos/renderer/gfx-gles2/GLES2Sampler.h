@@ -44,19 +44,19 @@ protected:
     void doDestroy() override;
 
     GLES2GPUSampler *_gpuSampler = nullptr;
-    String _name;
-    Filter _minFilter = Filter::LINEAR;
-    Filter _magFilter = Filter::LINEAR;
-    Filter _mipFilter = Filter::NONE;
-    Address _addressU = Address::WRAP;
-    Address _addressV = Address::WRAP;
-    Address _addressW = Address::WRAP;
-    uint _maxAnisotropy = 16;
-    ComparisonFunc _cmpFunc = ComparisonFunc::NEVER;
-    Color _borderColor;
-    uint _minLOD = 0;
-    uint _maxLOD = 1000;
-    float _mipLODBias = 0.0f;
+    String           _name;
+    Filter           _minFilter     = Filter::LINEAR;
+    Filter           _magFilter     = Filter::LINEAR;
+    Filter           _mipFilter     = Filter::NONE;
+    Address          _addressU      = Address::WRAP;
+    Address          _addressV      = Address::WRAP;
+    Address          _addressW      = Address::WRAP;
+    uint             _maxAnisotropy = 16;
+    ComparisonFunc   _cmpFunc       = ComparisonFunc::NEVER;
+    Color            _borderColor;
+    uint             _minLOD     = 0;
+    uint             _maxLOD     = 1000;
+    float            _mipLODBias = 0.0f;
 };
 
 } // namespace gfx

@@ -78,7 +78,7 @@ private:
 
 private:
     std::mutex mutex_;
-    size_t total_memory_allocated_;
+    size_t     total_memory_allocated_;
     //tommy_hashdyn  m_allocations;
     void *allocations_;
 };

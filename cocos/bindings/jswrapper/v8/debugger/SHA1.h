@@ -45,17 +45,17 @@ namespace se {
 class SHA1Sum {
     union {
         uint32_t mW[16]; /* input buffer */
-        uint8_t mB[64];
+        uint8_t  mB[64];
     } mU;
     uint64_t mSize;  /* count of hashed bytes. */
     unsigned mH[22]; /* 5 state variables, 16 tmp values, 1 extra */
-    bool mDone;
+    bool     mDone;
 
 public:
     MFBT_API SHA1Sum();
 
     static const size_t kHashSize = 20;
-    typedef uint8_t Hash[kHashSize];
+    typedef uint8_t     Hash[kHashSize];
 
     /* Add len bytes of dataIn to the data sequence being hashed. */
     MFBT_API void update(const void *aData, uint32_t aLength);

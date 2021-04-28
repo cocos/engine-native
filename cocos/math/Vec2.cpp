@@ -21,8 +21,8 @@
  */
 
 #include "math/Vec2.h"
-#include "math/MathUtil.h"
 #include "base/Macros.h"
+#include "math/MathUtil.h"
 
 NS_CC_MATH_BEGIN
 
@@ -149,8 +149,8 @@ void Vec2::rotate(const Vec2 &point, float angle) {
 
     if (point.isZero()) {
         float tempX = x * cosAngle - y * sinAngle;
-        y = y * cosAngle + x * sinAngle;
-        x = tempX;
+        y           = y * cosAngle + x * sinAngle;
+        x           = tempX;
     } else {
         float tempX = x - point.x;
         float tempY = y - point.y;
@@ -186,8 +186,8 @@ bool Vec2::fuzzyEquals(const Vec2 &b, float var) const {
 }
 
 float Vec2::getAngle(const Vec2 &other) const {
-    Vec2 a2 = getNormalized();
-    Vec2 b2 = other.getNormalized();
+    Vec2  a2    = getNormalized();
+    Vec2  b2    = other.getNormalized();
     float angle = atan2f(a2.cross(b2), a2.dot(b2));
     if (std::abs(angle) < FLT_EPSILON) return 0.f;
     return angle;
@@ -253,7 +253,6 @@ bool Vec2::isLineOverlap(const Vec2 &A, const Vec2 &B,
 }
 
 bool Vec2::isSegmentOverlap(const Vec2 &A, const Vec2 &B, const Vec2 &C, const Vec2 &D, Vec2 *S, Vec2 *E) {
-
     if (isLineOverlap(A, B, C, D)) {
         return isOneDimensionSegmentOverlap(A.x, B.x, C.x, D.x, &S->x, &E->x) &&
                isOneDimensionSegmentOverlap(A.y, B.y, C.y, D.y, &S->y, &E->y);

@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/PhysicsSelector.h"
 #include "physics/sdk/RigidBody.h"
 #include <memory>
+#include "physics/PhysicsSelector.h"
 
 namespace cc {
 namespace physics {

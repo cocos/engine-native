@@ -28,15 +28,15 @@
 
 #define LOG_TAG "mp3reader"
 
-#include <stdlib.h>
 #include <assert.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h> // Resolves that memset, memcpy aren't found while APP_PLATFORM >= 22 on Android
 #include <vector>
 #include "audio/android/cutils/log.h"
 
-#include "pvmp3decoder_api.h"
 #include "audio/android/mp3reader.h"
+#include "pvmp3decoder_api.h"
 
 static uint32_t U32_AT(const uint8_t *ptr) {
     return ptr[0] << 24 | ptr[1] << 16 | ptr[2] << 8 | ptr[3];
@@ -94,7 +94,7 @@ static bool parseHeader(
     }
 
     static const int kSamplingRateV1[] = {44100, 48000, 32000};
-    int sampling_rate = kSamplingRateV1[sampling_rate_index];
+    int              sampling_rate     = kSamplingRateV1[sampling_rate_index];
     if (version == 2 /* V2 */) {
         sampling_rate /= 2;
     } else if (version == 0 /* V2.5 */) {
@@ -169,7 +169,7 @@ static bool parseHeader(
             *frame_size = 144000 * bitrate / sampling_rate + padding;
         } else {
             // V2 or V2.5
-            size_t tmp = (layer == 1 /* L3 */) ? 72000 : 144000;
+            size_t tmp  = (layer == 1 /* L3 */) ? 72000 : 144000;
             *frame_size = tmp * bitrate / sampling_rate + padding;
         }
     }
@@ -204,14 +204,13 @@ static ssize_t sourceReadAt(mp3_callbacks *callback, void *source, off64_t offse
 static bool resync(
     mp3_callbacks *callback, void *source, uint32_t match_header,
     off64_t *inout_pos, uint32_t *out_header) {
-
     if (*inout_pos == 0) {
         // Skip an optional ID3 header if syncing at the very beginning
         // of the datasource.
 
         for (;;) {
             uint8_t id3header[10];
-            int retVal = sourceReadAt(callback, source, *inout_pos, id3header,
+            int     retVal = sourceReadAt(callback, source, *inout_pos, id3header,
                                       sizeof(id3header));
             if (retVal < (ssize_t)sizeof(id3header)) {
                 // If we can't even read these 10 bytes, we might as well bail
@@ -237,17 +236,17 @@ static bool resync(
         }
     }
 
-    off64_t pos = *inout_pos;
-    bool valid = false;
+    off64_t pos   = *inout_pos;
+    bool    valid = false;
 
-    const int32_t kMaxReadBytes = 1024;
+    const int32_t kMaxReadBytes    = 1024;
     const int32_t kMaxBytesChecked = 128 * 1024;
-    uint8_t buf[kMaxReadBytes];
-    ssize_t bytesToRead = kMaxReadBytes;
-    ssize_t totalBytesRead = 0;
-    ssize_t remainingBytes = 0;
-    bool reachEOS = false;
-    uint8_t *tmp = buf;
+    uint8_t       buf[kMaxReadBytes];
+    ssize_t       bytesToRead    = kMaxReadBytes;
+    ssize_t       totalBytesRead = 0;
+    ssize_t       remainingBytes = 0;
+    bool          reachEOS       = false;
+    uint8_t *     tmp            = buf;
 
     do {
         if (pos >= (off64_t)(*inout_pos + kMaxBytesChecked)) {
@@ -290,7 +289,7 @@ static bool resync(
             continue;
         }
 
-        size_t frame_size;
+        size_t   frame_size;
         uint32_t sample_rate, num_channels, bitrate;
         if (!parseHeader(
                 header, &frame_size,
@@ -307,7 +306,7 @@ static bool resync(
 
         off64_t test_pos = pos + frame_size;
 
-        valid = true;
+        valid                          = true;
         const int FRAME_MATCH_REQUIRED = 3;
         for (int j = 0; j < FRAME_MATCH_REQUIRED; ++j) {
             uint8_t tmp[4];
@@ -359,23 +358,22 @@ Mp3Reader::Mp3Reader() : mSource(NULL), mCallback(NULL) {
 
 // Initialize the MP3 reader.
 bool Mp3Reader::init(mp3_callbacks *callback, void *source) {
-
-    mSource = source;
+    mSource   = source;
     mCallback = callback;
     // Open the file.
     // mFp = fopen(file, "rb");
     // if (mFp == NULL) return false;
 
     // Sync to the first valid frame.
-    off64_t pos = 0;
+    off64_t  pos = 0;
     uint32_t header;
-    bool success = resync(callback, source, 0 /*match_header*/, &pos, &header);
+    bool     success = resync(callback, source, 0 /*match_header*/, &pos, &header);
     if (!success) {
         ALOGE("%s, resync failed", __FUNCTION__);
         return false;
     }
 
-    mCurrentPos = pos;
+    mCurrentPos  = pos;
     mFixedHeader = header;
 
     size_t frame_size;
@@ -385,8 +383,7 @@ bool Mp3Reader::init(mp3_callbacks *callback, void *source) {
 
 // Get the next valid MP3 frame.
 bool Mp3Reader::getFrame(void *buffer, uint32_t *size) {
-
-    size_t frame_size;
+    size_t   frame_size;
     uint32_t bitrate;
     uint32_t num_samples;
     uint32_t sample_rate;
@@ -435,7 +432,7 @@ Mp3Reader::~Mp3Reader() {
 }
 
 enum {
-    kInputBufferSize = 10 * 1024,
+    kInputBufferSize  = 10 * 1024,
     kOutputBufferSize = 4608 * 2,
 };
 
@@ -443,11 +440,11 @@ int decodeMP3(mp3_callbacks *cb, void *source, std::vector<char> &pcmBuffer, int
     // Initialize the config.
     tPVMP3DecoderExternal config;
     config.equalizerType = flat;
-    config.crcEnabled = false;
+    config.crcEnabled    = false;
 
     // Allocate the decoder memory.
     uint32_t memRequirements = pvmp3_decoderMemRequirements();
-    void *decoderBuf = malloc(memRequirements);
+    void *   decoderBuf      = malloc(memRequirements);
     assert(decoderBuf != NULL);
 
     // Initialize the decoder.
@@ -455,7 +452,7 @@ int decodeMP3(mp3_callbacks *cb, void *source, std::vector<char> &pcmBuffer, int
 
     // Open the input file.
     Mp3Reader mp3Reader;
-    bool success = mp3Reader.init(cb, source);
+    bool      success = mp3Reader.init(cb, source);
     if (!success) {
         ALOGE("mp3Reader.init: Encountered error reading\n");
         free(decoderBuf);
@@ -489,19 +486,19 @@ int decodeMP3(mp3_callbacks *cb, void *source, std::vector<char> &pcmBuffer, int
     while (1) {
         // Read input from the file.
         uint32_t bytesRead;
-        bool success = mp3Reader.getFrame(inputBuf, &bytesRead);
+        bool     success = mp3Reader.getFrame(inputBuf, &bytesRead);
         if (!success) break;
 
         *numChannels = mp3Reader.getNumChannels();
-        *sampleRate = mp3Reader.getSampleRate();
+        *sampleRate  = mp3Reader.getSampleRate();
 
         // Set the input config.
         config.inputBufferCurrentLength = bytesRead;
-        config.inputBufferMaxLength = 0;
-        config.inputBufferUsedLength = 0;
-        config.pInputBuffer = inputBuf;
-        config.pOutputBuffer = outputBuf;
-        config.outputFrameSize = kOutputBufferSize / sizeof(int16_t);
+        config.inputBufferMaxLength     = 0;
+        config.inputBufferUsedLength    = 0;
+        config.pInputBuffer             = inputBuf;
+        config.pOutputBuffer            = outputBuf;
+        config.outputFrameSize          = kOutputBufferSize / sizeof(int16_t);
 
         ERROR_CODE decoderErr;
         decoderErr = pvmp3_framedecoder(&config, decoderBuf);

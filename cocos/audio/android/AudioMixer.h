@@ -17,9 +17,9 @@
 
 #pragma once
 
+#include <pthread.h>
 #include <stdint.h>
 #include <sys/types.h>
-#include <pthread.h>
 
 #include "audio/android/AudioBufferProvider.h"
 #include "audio/android/AudioResamplerPublic.h"
@@ -48,11 +48,11 @@ public:
 
     // This mixer has a hard-coded upper limit of 8 channels for output.
     static const uint32_t MAX_NUM_CHANNELS = 8;
-    static const uint32_t MAX_NUM_VOLUMES = 2; // stereo volume only
+    static const uint32_t MAX_NUM_VOLUMES  = 2; // stereo volume only
     // maximum number of channels supported for the content
     static const uint32_t MAX_NUM_CHANNELS_TO_DOWNMIX = AUDIO_CHANNEL_COUNT_MAX;
 
-    static const uint16_t UNITY_GAIN_INT = 0x1000;
+    static const uint16_t        UNITY_GAIN_INT   = 0x1000;
     static const CONSTEXPR float UNITY_GAIN_FLOAT = 1.0f;
 
     enum { // names
@@ -63,20 +63,20 @@ public:
         // 0x2000 is unused
 
         // setParameter targets
-        TRACK = 0x3000,
-        RESAMPLE = 0x3001,
+        TRACK       = 0x3000,
+        RESAMPLE    = 0x3001,
         RAMP_VOLUME = 0x3002, // ramp to new volume
-        VOLUME = 0x3003,      // don't ramp
+        VOLUME      = 0x3003, // don't ramp
         TIMESTRETCH = 0x3004,
 
         // set Parameter names
         // for target TRACK
-        CHANNEL_MASK = 0x4000,
-        FORMAT = 0x4001,
-        MAIN_BUFFER = 0x4002,
-        AUX_BUFFER = 0x4003,
-        DOWNMIX_TYPE = 0X4004,
-        MIXER_FORMAT = 0x4005,       // AUDIO_FORMAT_PCM_(FLOAT|16_BIT)
+        CHANNEL_MASK       = 0x4000,
+        FORMAT             = 0x4001,
+        MAIN_BUFFER        = 0x4002,
+        AUX_BUFFER         = 0x4003,
+        DOWNMIX_TYPE       = 0X4004,
+        MIXER_FORMAT       = 0x4005, // AUDIO_FORMAT_PCM_(FLOAT|16_BIT)
         MIXER_CHANNEL_MASK = 0x4006, // Channel mask for mixer output
         // for target RESAMPLE
         SAMPLE_RATE = 0x4100, // Configure sample rate conversion on this track name;
@@ -92,8 +92,8 @@ public:
                               // the track is restored to the mix sample rate.
         // for target RAMP_VOLUME and VOLUME (8 channels max)
         // IDEA: use float for these 3 to improve the dynamic range
-        VOLUME0 = 0x4200,
-        VOLUME1 = 0x4201,
+        VOLUME0  = 0x4200,
+        VOLUME1  = 0x4201,
         AUXLEVEL = 0x4210,
         // for target TIMESTRETCH
         PLAYBACK_RATE = 0x4300, // Configure timestretch on this track name;
@@ -149,9 +149,9 @@ private:
 
         // sample format is not explicitly specified, and is assumed to be AUDIO_FORMAT_PCM_16_BIT
 
-        NEEDS_MUTE = 0x00000100,
+        NEEDS_MUTE     = 0x00000100,
         NEEDS_RESAMPLE = 0x00001000,
-        NEEDS_AUX = 0x00010000,
+        NEEDS_AUX      = 0x00010000,
     };
 
     struct state_t;
@@ -180,12 +180,12 @@ private:
 
         // 16-byte boundary
 
-        int16_t auxLevel; // 0 <= auxLevel <= MAX_GAIN_INT, but signed for mul performance
+        int16_t  auxLevel; // 0 <= auxLevel <= MAX_GAIN_INT, but signed for mul performance
         uint16_t frameCount;
 
-        uint8_t channelCount;   // 1 or 2, redundant with (needs & NEEDS_CHANNEL_COUNT__MASK)
-        uint8_t unused_padding; // formerly format, was always 16
-        uint16_t enabled;       // actually bool
+        uint8_t              channelCount;   // 1 or 2, redundant with (needs & NEEDS_CHANNEL_COUNT__MASK)
+        uint8_t              unused_padding; // formerly format, was always 16
+        uint16_t             enabled;        // actually bool
         audio_channel_mask_t channelMask;
 
         // actual buffer provider used by the track hooks, see DownmixerBufferProvider below
@@ -196,15 +196,15 @@ private:
 
         mutable AudioBufferProvider::Buffer buffer; // 8 bytes
 
-        hook_t hook;
+        hook_t      hook;
         const void *in; // current location in buffer
 
         // 16-byte boundary
 
         AudioResampler *resampler;
-        uint32_t sampleRate;
-        int32_t *mainBuffer;
-        int32_t *auxBuffer;
+        uint32_t        sampleRate;
+        int32_t *       mainBuffer;
+        int32_t *       auxBuffer;
 
         // 16-byte boundary
 
@@ -249,7 +249,7 @@ private:
         float mAuxInc;       // floating point aux increment
 
         audio_channel_mask_t mMixerChannelMask;
-        uint32_t mMixerChannelCount;
+        uint32_t             mMixerChannelCount;
 
         AudioPlaybackRate mPlaybackRate;
 
@@ -259,27 +259,27 @@ private:
         void resetResampler() {
             if (resampler != NULL) resampler->reset();
         }
-        void adjustVolumeRamp(bool aux, bool useFloat = false);
+        void   adjustVolumeRamp(bool aux, bool useFloat = false);
         size_t getUnreleasedFrames() const { return resampler != NULL ? resampler->getUnreleasedFrames() : 0; };
 
         status_t prepareForDownmix();
-        void unprepareForDownmix();
+        void     unprepareForDownmix();
         status_t prepareForReformat();
-        void unprepareForReformat();
-        bool setPlaybackRate(const AudioPlaybackRate &playbackRate);
-        void reconfigureBufferProviders();
+        void     unprepareForReformat();
+        bool     setPlaybackRate(const AudioPlaybackRate &playbackRate);
+        void     reconfigureBufferProviders();
     };
 
     typedef void (*process_hook_t)(state_t *state, int64_t pts);
 
     // pad to 32-bytes to fill cache line
     struct state_t {
-        uint32_t enabledTracks;
-        uint32_t needsChanged;
-        size_t frameCount;
+        uint32_t       enabledTracks;
+        uint32_t       needsChanged;
+        size_t         frameCount;
         process_hook_t hook; // one of process__*, never NULL
-        int32_t *outputTemp;
-        int32_t *resampleTemp;
+        int32_t *      outputTemp;
+        int32_t *      resampleTemp;
         //cjh        NBLog::Writer*  mLog;
         int32_t reserved[1];
         // IDEA: allocate dynamically to save some memory when maxNumTracks < MAX_NUM_TRACKS
@@ -305,7 +305,7 @@ private:
     // OK to call more often than that, but unnecessary.
     void invalidateState(uint32_t mask);
 
-    bool setChannelMasks(int name,
+    bool setChannelMasks(int                  name,
                          audio_channel_mask_t trackChannelMask, audio_channel_mask_t mixerChannelMask);
 
     static void track__genericResample(track_t *t, int32_t *out, size_t numFrames, int32_t *temp,
@@ -325,14 +325,14 @@ private:
     static void process__genericNoResampling(state_t *state, int64_t pts);
     static void process__genericResampling(state_t *state, int64_t pts);
     static void process__OneTrack16BitsStereoNoResampling(state_t *state,
-                                                          int64_t pts);
+                                                          int64_t  pts);
 
     static int64_t calculateOutputPTS(const track_t &t, int64_t basePTS,
                                       int outputFrameIndex);
 
-    static uint64_t sLocalTimeFreq;
+    static uint64_t       sLocalTimeFreq;
     static pthread_once_t sOnceControl;
-    static void sInitRoutine();
+    static void           sInitRoutine();
 
     /* multi-format volume mixing function (calls template functions
      * in AudioMixerOps.h).  The template parameters are as follows:
@@ -378,8 +378,8 @@ private:
     // functions for determining the proper process and track hooks.
     static process_hook_t getProcessHook(int processType, uint32_t channelCount,
                                          audio_format_t mixerInFormat, audio_format_t mixerOutFormat);
-    static hook_t getTrackHook(int trackType, uint32_t channelCount,
-                               audio_format_t mixerInFormat, audio_format_t mixerOutFormat);
+    static hook_t         getTrackHook(int trackType, uint32_t channelCount,
+                                       audio_format_t mixerInFormat, audio_format_t mixerOutFormat);
 };
 
 // ----------------------------------------------------------------------------

@@ -6,26 +6,23 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-Matrix TransformObject::_helpMatrix;
+Matrix    TransformObject::_helpMatrix;
 Transform TransformObject::_helpTransform;
-Point TransformObject::_helpPoint;
+Point     TransformObject::_helpPoint;
 
-void TransformObject::_onClear()
-{
+void TransformObject::_onClear() {
     globalTransformMatrix.identity();
     global.identity();
     offset.identity();
-    origin = nullptr;
+    origin   = nullptr;
     userData = nullptr;
 
     _globalDirty = false;
-    _armature = nullptr;
+    _armature    = nullptr;
 }
 
-void TransformObject::updateGlobalTransform()
-{
-    if (_globalDirty)
-    {
+void TransformObject::updateGlobalTransform() {
+    if (_globalDirty) {
         _globalDirty = false;
         global.fromMatrix(globalTransformMatrix);
     }

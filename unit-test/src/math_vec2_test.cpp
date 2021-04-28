@@ -21,10 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "gtest/gtest.h"
-#include "cocos/math/Vec2.h"
-#include "utils.h"
 #include <math.h>
+#include "cocos/math/Vec2.h"
+#include "gtest/gtest.h"
+#include "utils.h"
 
 TEST(mathVec2Test, test1) {
     cc::Vec2 vec2(1, 2);
@@ -71,7 +71,7 @@ TEST(mathVec2Test, test1) {
     // distance
     logLabel = "test the vec2 distance function";
     cc::Vec2 distVec(10, 2);
-    float dist = vec2.distance(distVec);
+    float    dist = vec2.distance(distVec);
     ExpectEq(IsEqualF(dist, 3), true);
     dist = vec2.getDistance(distVec);
     ExpectEq(IsEqualF(dist, 3), true);
@@ -82,7 +82,7 @@ TEST(mathVec2Test, test1) {
     // dot
     logLabel = "test the vec2 dot function";
     cc::Vec2 dotVec2(2, 3);
-    float dotRes = vec2.dot(dotVec2);
+    float    dotRes = vec2.dot(dotVec2);
     ExpectEq(IsEqualF(dotRes, 20), true);
     dotRes = cc::Vec2::dot(vec2, dotVec2);
     ExpectEq(IsEqualF(dotRes, 20), true);

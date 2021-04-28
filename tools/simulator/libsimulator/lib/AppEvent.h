@@ -57,15 +57,15 @@ public:
     /** Gets event name */
     inline const std::string &getEventName() const { return _eventName; };
 
-    void setEventType(int type);
-    int getEventType();
-    void setDataString(std::string data);
+    void        setEventType(int type);
+    int         getEventType();
+    void        setDataString(std::string data);
     std::string getDataString();
 
 protected:
     std::string _eventName;
     std::string _dataString;
-    int _eventType;
+    int         _eventType;
 };
 
 #endif /* defined(__Simulator__AppEvent__) */

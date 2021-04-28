@@ -46,9 +46,9 @@ struct Camera;
 struct AABB;
 
 struct ShadowRenderData {
-    const ModelView *model = nullptr;
-    vector<gfx::Shader*> shaders;
-    InstanceBuffer *instancedBuffer = nullptr;
+    const ModelView *     model = nullptr;
+    vector<gfx::Shader *> shaders;
+    InstanceBuffer *      instancedBuffer = nullptr;
 };
 
 class CC_DLL PlanarShadowQueue : public Object {
@@ -57,13 +57,13 @@ public:
     ~PlanarShadowQueue() override = default;
 
     void clear();
-    void gatherShadowPasses(Camera *camera , gfx::CommandBuffer *cmdBuffer);
+    void gatherShadowPasses(Camera *camera, gfx::CommandBuffer *cmdBuffer);
     void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *);
     void destroy();
 
 private:
-    RenderPipeline *_pipeline = nullptr;
-    RenderInstancedQueue *_instancedQueue = nullptr;
+    RenderPipeline *               _pipeline       = nullptr;
+    RenderInstancedQueue *         _instancedQueue = nullptr;
     std::vector<const ModelView *> _pendingModels;
 };
 } // namespace pipeline

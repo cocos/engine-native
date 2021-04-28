@@ -23,8 +23,8 @@
 #ifndef QUATERNION_H_
 #define QUATERNION_H_
 
-#include "math/Vec3.h"
 #include "math/Mat4.h"
+#include "math/Vec3.h"
 //#include "Plane.h"
 
 /**

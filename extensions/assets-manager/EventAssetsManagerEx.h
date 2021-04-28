@@ -28,8 +28,8 @@
 
 #include <string>
 #include "base/Ref.h"
-#include "extensions/ExtensionMacros.h"
 #include "extensions/ExtensionExport.h"
+#include "extensions/ExtensionMacros.h"
 
 NS_CC_EXT_BEGIN
 

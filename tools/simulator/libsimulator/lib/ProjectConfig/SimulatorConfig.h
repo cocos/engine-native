@@ -44,27 +44,27 @@ using namespace std;
 
 typedef struct _SimulatorScreenSize {
     string title;
-    int width;
-    int height;
+    int    width;
+    int    height;
 
     _SimulatorScreenSize(const string &title_, int width_, int height_) {
-        title = title_;
-        width = width_;
+        title  = title_;
+        width  = width_;
         height = height_;
     }
 } SimulatorScreenSize;
 
 typedef vector<SimulatorScreenSize> ScreenSizeArray;
-typedef ScreenSizeArray::iterator ScreenSizeArrayIterator;
+typedef ScreenSizeArray::iterator   ScreenSizeArrayIterator;
 
 class CC_LIBSIM_DLL SimulatorConfig {
 public:
     static SimulatorConfig *getInstance();
 
     // predefined screen size
-    int getScreenSizeCount() const;
+    int                 getScreenSizeCount() const;
     SimulatorScreenSize getScreenSize(int index) const;
-    int checkScreenSize(const cc::Size &size) const;
+    int                 checkScreenSize(const cc::Size &size) const;
 
     // helper
     static void makeNormalizePath(string *path, const char *directorySeparator = NULL);

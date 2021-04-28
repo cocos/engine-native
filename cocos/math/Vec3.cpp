@@ -21,9 +21,9 @@
  */
 
 #include "math/Vec3.h"
+#include "base/Macros.h"
 #include "math/Mat3.h"
 #include "math/MathUtil.h"
-#include "base/Macros.h"
 #include "math/Quaternion.h"
 
 NS_CC_MATH_BEGIN
@@ -54,7 +54,7 @@ Vec3::Vec3(const Vec3 &copy) {
 
 Vec3 Vec3::fromColor(unsigned int color) {
     float components[3];
-    int componentIndex = 0;
+    int   componentIndex = 0;
     for (int i = 2; i >= 0; --i) {
         int component = (color >> i * 8) & 0x0000ff;
 
@@ -167,7 +167,7 @@ void Vec3::transformMat3(const Vec3 &v, const Mat3 &m) {
 void Vec3::transformMat4(const Vec3 &v, const Mat4 &m) {
     float ix = v.x, iy = v.y, iz = v.z;
     float rhw = m.m[3] * ix + m.m[7] * iy + m.m[11] * iz + m.m[15];
-    rhw = rhw ? 1 / rhw : 1;
+    rhw       = rhw ? 1 / rhw : 1;
 
     x = (m.m[0] * ix + m.m[4] * iy + m.m[8] * iz + m.m[12]) * rhw;
     y = (m.m[1] * ix + m.m[5] * iy + m.m[9] * iz + m.m[13]) * rhw;
@@ -245,7 +245,6 @@ void Vec3::subtract(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
 }
 
 void Vec3::max(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
-
     GP_ASSERT(dst);
 
     dst->x = std::fmaxf(v1.x, v2.x);
@@ -254,7 +253,6 @@ void Vec3::max(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
 }
 
 void Vec3::min(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
-
     GP_ASSERT(dst);
 
     dst->x = std::fminf(v1.x, v2.x);

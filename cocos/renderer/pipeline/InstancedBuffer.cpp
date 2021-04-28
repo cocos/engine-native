@@ -24,13 +24,13 @@
 ****************************************************************************/
 
 #include "InstancedBuffer.h"
+#include "Define.h"
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXInputAssembler.h"
 #include "helper/SharedMemory.h"
-#include "Define.h"
 
 namespace cc {
 namespace pipeline {

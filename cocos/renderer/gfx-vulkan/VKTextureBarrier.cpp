@@ -61,7 +61,7 @@ void CCVKTextureBarrier::doInit(const TextureBarrierInfo &info) {
     _gpuBarrier->barrier.subresourceRange.levelCount                  = VK_REMAINING_MIP_LEVELS;
     _gpuBarrier->barrier.subresourceRange.baseArrayLayer              = 0U;
     _gpuBarrier->barrier.subresourceRange.layerCount                  = VK_REMAINING_ARRAY_LAYERS;
-    _gpuBarrier->barrier.srcQueueFamilyIndex = info.srcQueue
+    _gpuBarrier->barrier.srcQueueFamilyIndex                          = info.srcQueue
                                                    ? static_cast<CCVKQueue *>(info.srcQueue)->gpuQueue()->queueFamilyIndex
                                                    : VK_QUEUE_FAMILY_IGNORED;
     _gpuBarrier->barrier.dstQueueFamilyIndex = info.dstQueue

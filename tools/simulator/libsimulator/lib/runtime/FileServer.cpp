@@ -63,9 +63,9 @@ void FileServer::purge() {
 
 void FileServer::readResFileFinfo() {
     std::string filecfg = _writePath + "/fileinfo_debug.json";
-    FILE *pFile = fopen(filecfg.c_str(), "r");
+    FILE *      pFile   = fopen(filecfg.c_str(), "r");
     if (pFile) {
-        char readBuffer[65536];
+        char                      readBuffer[65536];
         rapidjson::FileReadStream inputStream(pFile, readBuffer, sizeof(readBuffer));
         _filecfgjson.ParseStream<0>(inputStream);
         fclose(pFile);
@@ -122,17 +122,17 @@ void FileServer::setTransingFileName(const std::string &filename) {
 }
 
 bool FileServer::listenOnTCP(int port) {
-    int listenfd, n;
-    const int on = 1;
+    int             listenfd, n;
+    const int       on = 1;
     struct addrinfo hints, *res, *ressave;
-    char serv[30];
+    char            serv[30];
 
     snprintf(serv, sizeof(serv) - 1, "%d", port);
     serv[sizeof(serv) - 1] = 0;
 
     bzero(&hints, sizeof(struct addrinfo));
-    hints.ai_flags = AI_PASSIVE;
-    hints.ai_family = AF_INET; // AF_UNSPEC: Do we need IPv6 ?
+    hints.ai_flags    = AI_PASSIVE;
+    hints.ai_family   = AF_INET; // AF_UNSPEC: Do we need IPv6 ?
     hints.ai_socktype = SOCK_STREAM;
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
@@ -187,31 +187,31 @@ bool FileServer::listenOnTCP(int port) {
     listen(listenfd, 1);
 
     if (res->ai_family == AF_INET) {
-        char buf[INET_ADDRSTRLEN] = "";
-        struct sockaddr_in *sin = (struct sockaddr_in *)res->ai_addr;
+        char                buf[INET_ADDRSTRLEN] = "";
+        struct sockaddr_in *sin                  = (struct sockaddr_in *)res->ai_addr;
         if (inet_ntop(res->ai_family, &sin->sin_addr, buf, sizeof(buf)) != NULL)
             CC_LOG_DEBUG("Console: listening on  %s : %d", buf, ntohs(sin->sin_port));
         else
             perror("inet_ntop");
     } else if (res->ai_family == AF_INET6) {
-        char buf[INET6_ADDRSTRLEN] = "";
-        struct sockaddr_in6 *sin = (struct sockaddr_in6 *)res->ai_addr;
+        char                 buf[INET6_ADDRSTRLEN] = "";
+        struct sockaddr_in6 *sin                   = (struct sockaddr_in6 *)res->ai_addr;
         if (inet_ntop(res->ai_family, &sin->sin6_addr, buf, sizeof(buf)) != NULL)
             CC_LOG_DEBUG("Console: listening on  %s : %d", buf, ntohs(sin->sin6_port));
         else
             perror("inet_ntop");
     }
     freeaddrinfo(ressave);
-    _listenfd = listenfd;
-    _receiveThread = std::thread(std::bind(&FileServer::loopReceiveFile, this));
-    _writeThread = std::thread(std::bind(&FileServer::loopWriteFile, this));
+    _listenfd       = listenfd;
+    _receiveThread  = std::thread(std::bind(&FileServer::loopReceiveFile, this));
+    _writeThread    = std::thread(std::bind(&FileServer::loopWriteFile, this));
     _responseThread = std::thread(std::bind(&FileServer::loopResponse, this));
     return true;
 }
 
 void FileServer::stop() {
-    _receiveEndThread = true;
-    _writeEndThread = true;
+    _receiveEndThread  = true;
+    _writeEndThread    = true;
     _responseEndThread = true;
 
     if (_receiveRunning && _receiveThread.joinable()) {
@@ -263,15 +263,14 @@ FileServer::~FileServer() {
 
 void FileServer::loopReceiveFile() {
     struct sockaddr client;
-    socklen_t client_len;
+    socklen_t       client_len;
 
     /* new client */
-    client_len = sizeof(client);
-    int fd = accept(_listenfd, (struct sockaddr *)&client, &client_len);
+    client_len     = sizeof(client);
+    int   fd       = accept(_listenfd, (struct sockaddr *)&client, &client_len);
     char *protoBuf = new char[MAXPROTOLENGTH];
 
     while (!_receiveEndThread) {
-
         // recv start flag
         char startflag[13] = {0};
         recvBuf(fd, startflag, sizeof(startflag) - 1);
@@ -281,13 +280,13 @@ void FileServer::loopReceiveFile() {
 
         // recv proto num
         union {
-            char char_type[3];
+            char           char_type[3];
             unsigned short uint16_type;
         } protonum;
         recvBuf(fd, protonum.char_type, sizeof(protonum.char_type) - 1);
         //recv protobuf length
         union {
-            char char_type[3];
+            char           char_type[3];
             unsigned short uint16_type;
         } protolength;
         recvBuf(fd, protolength.char_type, sizeof(protolength.char_type) - 1);
@@ -334,7 +333,7 @@ void FileServer::loopReceiveFile() {
 
             if (recvDataBuf.fileProto.compress_type() == runtime::FileSendProtos_CompressType::FileSendProtos_CompressType_ZIP) {
                 unsigned long uncompressSize = recvDataBuf.fileProto.uncompress_size();
-                Bytef *buff = new Bytef[uncompressSize * sizeof(Bytef)];
+                Bytef *       buff           = new Bytef[uncompressSize * sizeof(Bytef)];
                 memset(buff, 0, uncompressSize * sizeof(Bytef));
                 int err = ::uncompress(buff, &uncompressSize, contentbuf, contentSize * sizeof(Bytef));
                 if (err != Z_OK) {
@@ -344,7 +343,7 @@ void FileServer::loopReceiveFile() {
                     continue;
                 }
                 CC_SAFE_DELETE_ARRAY(contentbuf);
-                contentbuf = buff;
+                contentbuf  = buff;
                 contentSize = uncompressSize;
             }
             recvDataBuf.contentBuf.assign((const char *)contentbuf, contentSize);
@@ -376,7 +375,7 @@ void FileServer::loopWriteFile() {
         RecvBufStruct recvDataBuf = _recvBufList.front();
         _recvBufList.pop_front();
         _recvBufListMutex.unlock();
-        std::string filename = recvDataBuf.fileProto.file_name();
+        std::string filename     = recvDataBuf.fileProto.file_name();
         std::string fullfilename = _writePath;
         fullfilename += filename;
         _fileNameMutex.lock();
@@ -388,7 +387,7 @@ void FileServer::loopWriteFile() {
         FILE *fp = nullptr;
         if (1 == recvDataBuf.fileProto.package_seq()) {
             _writeErrorFile = "";
-            fp = fopen(fullfilename.c_str(), "wb");
+            fp              = fopen(fullfilename.c_str(), "wb");
         } else {
             if (_writeErrorFile == filename) {
                 continue;
@@ -461,7 +460,7 @@ void FileServer::loopResponse() {
         _responseBufList.pop_front();
         _responseBufListMutex.unlock();
         //send response
-        std::string responseString;
+        std::string               responseString;
         runtime::FileSendComplete fileSendProtoComplete;
         fileSendProtoComplete.set_file_name(responseBuf.fileResponseProto.file_name());
         fileSendProtoComplete.set_result(responseBuf.fileResponseProto.result());
@@ -469,13 +468,13 @@ void FileServer::loopResponse() {
         fileSendProtoComplete.SerializeToString(&responseString);
         char dataBuf[1024] = {0};
         struct ResponseHeaderStruct {
-            char startFlag[13]; // needs to store PROTO_START, which is 12+NULL long
+            char           startFlag[13]; // needs to store PROTO_START, which is 12+NULL long
             unsigned short protoNum;
             unsigned short protoBufLen;
         };
         ResponseHeaderStruct responseHeader;
         strcpy(responseHeader.startFlag, PROTO_START);
-        responseHeader.protoNum = PROTONUM::FILESENDCOMPLETE;
+        responseHeader.protoNum    = PROTONUM::FILESENDCOMPLETE;
         responseHeader.protoBufLen = (unsigned short)responseString.size();
         memcpy(dataBuf, &responseHeader, sizeof(responseHeader));
         memcpy(dataBuf + sizeof(responseHeader), responseString.c_str(), responseString.size());

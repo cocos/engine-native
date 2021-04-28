@@ -28,14 +28,14 @@
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
 
     #include "platform/android/FileUtils-android.h"
-    #include "platform/android/jni/JniHelper.h"
-    #include "platform/android/jni/JniImp.h"
-    #include "android/asset_manager.h"
-    #include "android/asset_manager_jni.h"
-    #include "base/ZipUtils.h"
-    #include "base/Log.h"
     #include <stdlib.h>
     #include <sys/stat.h>
+    #include "android/asset_manager.h"
+    #include "android/asset_manager_jni.h"
+    #include "base/Log.h"
+    #include "base/ZipUtils.h"
+    #include "platform/android/jni/JniHelper.h"
+    #include "platform/android/jni/JniImp.h"
 
     #define LOG_TAG   "FileUtils-android.cpp"
     #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
@@ -49,7 +49,7 @@
 namespace cc {
 
 AAssetManager *FileUtilsAndroid::assetmanager = nullptr;
-ZipFile *FileUtilsAndroid::obbfile = nullptr;
+ZipFile *      FileUtilsAndroid::obbfile      = nullptr;
 
 void FileUtilsAndroid::setassetmanager(AAssetManager *a) {
     if (nullptr == a) {
@@ -187,7 +187,7 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string &filename, Res
         return FileUtils::getContents(fullPath, buffer);
 
     std::string relativePath;
-    size_t position = fullPath.find(ASSETS_FOLDER_NAME);
+    size_t      position = fullPath.find(ASSETS_FOLDER_NAME);
     if (0 == position) {
         // "@assets/" is at the beginning of the path and we don't want it
         relativePath += fullPath.substr(strlen(ASSETS_FOLDER_NAME));

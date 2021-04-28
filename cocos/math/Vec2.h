@@ -24,8 +24,8 @@
 #define MATH_VEC2_H
 
 #include <algorithm>
-#include <functional>
 #include <cmath>
+#include <functional>
 #include "math/MathBase.h"
 
 /**

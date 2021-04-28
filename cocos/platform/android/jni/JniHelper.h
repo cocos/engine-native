@@ -29,10 +29,10 @@
 #define __ANDROID_JNI_HELPER_H__
 
 #include <jni.h>
-#include <string>
-#include <vector>
-#include <unordered_map>
 #include <functional>
+#include <string>
+#include <unordered_map>
+#include <vector>
 #include "base/Macros.h"
 #include "math/Vec3.h"
 
@@ -45,8 +45,8 @@ struct android_app;
 namespace cc {
 
 typedef struct JniMethodInfo_ {
-    JNIEnv *env;
-    jclass classID;
+    JNIEnv *  env;
+    jclass    classID;
     jmethodID methodID;
 } JniMethodInfo;
 
@@ -57,29 +57,29 @@ public:
     static JavaVM *getJavaVM();
     static JNIEnv *getEnv();
     static jobject getActivity();
-    static void init(JNIEnv *env, jobject activity);
+    static void    init(JNIEnv *env, jobject activity);
 
     static bool getStaticMethodInfo(JniMethodInfo &methodinfo,
-                                    const char *className,
-                                    const char *methodName,
-                                    const char *paramCode);
+                                    const char *   className,
+                                    const char *   methodName,
+                                    const char *   paramCode);
     static bool getMethodInfo(JniMethodInfo &methodinfo,
-                              const char *className,
-                              const char *methodName,
-                              const char *paramCode);
+                              const char *   className,
+                              const char *   methodName,
+                              const char *   paramCode);
 
     static std::string jstring2string(jstring str);
 
-    static jmethodID loadclassMethod_methodID;
-    static jobject classloader;
+    static jmethodID             loadclassMethod_methodID;
+    static jobject               classloader;
     static std::function<void()> classloaderCallback;
 
     template <typename... Ts>
     static jobject newObject(const std::string &className, Ts... xs) {
-        jobject ret = nullptr;
+        jobject            ret        = nullptr;
         static const char *methodName = "<init>";
-        cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")V";
+        cc::JniMethodInfo  t;
+        std::string        signature = "(" + std::string(getJNISignature(xs...)) + ")V";
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName, signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->NewObject(t.classID, t.methodID, convert(localRefs, t, xs)...);
@@ -92,12 +92,12 @@ public:
     }
 
     template <typename... Ts>
-    static void callObjectVoidMethod(jobject object,
+    static void callObjectVoidMethod(jobject            object,
                                      const std::string &className,
                                      const std::string &methodName,
                                      Ts... xs) {
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")V";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")V";
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             t.env->CallVoidMethod(object, t.methodID, convert(localRefs, t, xs)...);
@@ -109,13 +109,13 @@ public:
     }
 
     template <typename... Ts>
-    static float callObjectFloatMethod(jobject object,
+    static float callObjectFloatMethod(jobject            object,
                                        const std::string &className,
                                        const std::string &methodName,
                                        Ts... xs) {
-        float ret = 0.0f;
+        float             ret = 0.0f;
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")F";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")F";
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallFloatMethod(object, t.methodID, convert(localRefs, t, xs)...);
@@ -128,13 +128,13 @@ public:
     }
 
     template <typename... Ts>
-    static jbyteArray callObjectByteArrayMethod(jobject object,
+    static jbyteArray callObjectByteArrayMethod(jobject            object,
                                                 const std::string &className,
                                                 const std::string &methodName,
                                                 Ts... xs) {
-        jbyteArray ret = nullptr;
+        jbyteArray        ret = nullptr;
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")[B";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")[B";
         if (cc::JniHelper::getMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = (jbyteArray)t.env->CallObjectMethod(object, t.methodID, convert(localRefs, t, xs)...);
@@ -151,7 +151,7 @@ public:
                                      const std::string &methodName,
                                      Ts... xs) {
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")V";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")V";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             t.env->CallStaticVoidMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
@@ -166,9 +166,9 @@ public:
     static bool callStaticBooleanMethod(const std::string &className,
                                         const std::string &methodName,
                                         Ts... xs) {
-        jboolean jret = JNI_FALSE;
+        jboolean          jret = JNI_FALSE;
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")Z";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")Z";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             jret = t.env->CallStaticBooleanMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
@@ -184,9 +184,9 @@ public:
     static int callStaticIntMethod(const std::string &className,
                                    const std::string &methodName,
                                    Ts... xs) {
-        jint ret = 0;
+        jint              ret = 0;
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")I";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")I";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallStaticIntMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
@@ -202,9 +202,9 @@ public:
     static float callStaticFloatMethod(const std::string &className,
                                        const std::string &methodName,
                                        Ts... xs) {
-        jfloat ret = 0.0;
+        jfloat            ret = 0.0;
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")F";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")F";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallStaticFloatMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
@@ -220,13 +220,13 @@ public:
     static float *callStaticFloatArrayMethod(const std::string &className,
                                              const std::string &methodName,
                                              Ts... xs) {
-        static float ret[32];
+        static float      ret[32];
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")[F";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")[F";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
-            jfloatArray array = (jfloatArray)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            jsize len = t.env->GetArrayLength(array);
+            jfloatArray     array = (jfloatArray)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
+            jsize           len   = t.env->GetArrayLength(array);
             if (len <= 32) {
                 jfloat *elems = t.env->GetFloatArrayElements(array, 0);
                 if (elems) {
@@ -247,18 +247,18 @@ public:
     static Vec3 callStaticVec3Method(const std::string &className,
                                      const std::string &methodName,
                                      Ts... xs) {
-        Vec3 ret;
+        Vec3              ret;
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")[F";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")[F";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
-            jfloatArray array = (jfloatArray)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            jsize len = t.env->GetArrayLength(array);
+            jfloatArray     array = (jfloatArray)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
+            jsize           len   = t.env->GetArrayLength(array);
             if (len == 3) {
                 jfloat *elems = t.env->GetFloatArrayElements(array, 0);
-                ret.x = elems[0];
-                ret.y = elems[1];
-                ret.z = elems[2];
+                ret.x         = elems[0];
+                ret.y         = elems[1];
+                ret.z         = elems[2];
                 t.env->ReleaseFloatArrayElements(array, elems, 0);
             }
             t.env->DeleteLocalRef(t.classID);
@@ -273,9 +273,9 @@ public:
     static double callStaticDoubleMethod(const std::string &className,
                                          const std::string &methodName,
                                          Ts... xs) {
-        jdouble ret = 0.0;
+        jdouble           ret = 0.0;
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")D";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")D";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
             ret = t.env->CallStaticDoubleMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
@@ -294,11 +294,11 @@ public:
         std::string ret;
 
         cc::JniMethodInfo t;
-        std::string signature = "(" + std::string(getJNISignature(xs...)) + ")Ljava/lang/String;";
+        std::string       signature = "(" + std::string(getJNISignature(xs...)) + ")Ljava/lang/String;";
         if (cc::JniHelper::getStaticMethodInfo(t, className.c_str(), methodName.c_str(), signature.c_str())) {
             LocalRefMapType localRefs;
-            jstring jret = (jstring)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
-            ret = cc::JniHelper::jstring2string(jret);
+            jstring         jret = (jstring)t.env->CallStaticObjectMethod(t.classID, t.methodID, convert(localRefs, t, xs)...);
+            ret                  = cc::JniHelper::jstring2string(jret);
             t.env->DeleteLocalRef(t.classID);
             t.env->DeleteLocalRef(jret);
             deleteLocalRefs(t.env, localRefs);
@@ -314,10 +314,10 @@ private:
     static JavaVM *_javaVM;
 
     static JNIEnv *cacheEnv();
-    static bool getMethodInfo_DefaultClassLoader(JniMethodInfo &methodinfo,
-                                                 const char *className,
-                                                 const char *methodName,
-                                                 const char *paramCode);
+    static bool    getMethodInfo_DefaultClassLoader(JniMethodInfo &methodinfo,
+                                                    const char *   className,
+                                                    const char *   methodName,
+                                                    const char *   paramCode);
 
     static jstring convert(LocalRefMapType &localRefs, cc::JniMethodInfo &t, const char *x);
 

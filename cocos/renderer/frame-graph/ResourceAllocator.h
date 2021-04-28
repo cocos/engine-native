@@ -45,7 +45,7 @@ public:
     static ResourceAllocator &getInstance() noexcept;
     DeviceResourceType *      alloc(const DescriptorType &desc, DescriptorHash const key) noexcept;
     void                      free(const DescriptorType &desc, DescriptorHash const key, DeviceResourceType *const resource) noexcept;
-    CC_INLINE void               tick() noexcept;
+    CC_INLINE void            tick() noexcept;
     void                      gc(uint32_t const unusedFrameCount) noexcept;
 
 private:

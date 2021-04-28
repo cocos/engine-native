@@ -38,7 +38,7 @@ static const std::string className = "com/cocos/lib/CocosWebViewHelper";
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "", __VA_ARGS__)
 
 static const std::string s_defaultBaseUrl = "file:///android_asset/";
-static const std::string s_sdRootBaseUrl = "file://";
+static const std::string s_sdRootBaseUrl  = "file://";
 
 static std::string getFixedBaseUrl(const std::string &baseUrl) {
     std::string fixedBaseUrl;
@@ -72,8 +72,8 @@ extern "C" {
 JNIEXPORT jboolean JNICALL
 Java_com_cocos_lib_CocosWebViewHelper_shouldStartLoading(JNIEnv *env, jclass, jint index,
                                                          jstring jurl) {
-    auto charUrl = env->GetStringUTFChars(jurl, NULL);
-    std::string url = charUrl;
+    auto        charUrl = env->GetStringUTFChars(jurl, NULL);
+    std::string url     = charUrl;
     env->ReleaseStringUTFChars(jurl, charUrl);
     return cc::WebViewImpl::shouldStartLoading(index, url);
 }
@@ -87,8 +87,8 @@ JNIEXPORT void JNICALL
 Java_com_cocos_lib_CocosWebViewHelper_didFinishLoading(JNIEnv *env, jclass, jint index,
                                                        jstring jurl) {
     // LOGD("didFinishLoading");
-    auto charUrl = env->GetStringUTFChars(jurl, NULL);
-    std::string url = charUrl;
+    auto        charUrl = env->GetStringUTFChars(jurl, NULL);
+    std::string url     = charUrl;
     env->ReleaseStringUTFChars(jurl, charUrl);
     cc::WebViewImpl::didFinishLoading(index, url);
 }
@@ -102,8 +102,8 @@ JNIEXPORT void JNICALL
 Java_com_cocos_lib_CocosWebViewHelper_didFailLoading(JNIEnv *env, jclass, jint index,
                                                      jstring jurl) {
     // LOGD("didFailLoading");
-    auto charUrl = env->GetStringUTFChars(jurl, NULL);
-    std::string url = charUrl;
+    auto        charUrl = env->GetStringUTFChars(jurl, NULL);
+    std::string url     = charUrl;
     env->ReleaseStringUTFChars(jurl, charUrl);
     cc::WebViewImpl::didFailLoading(index, url);
 }
@@ -117,8 +117,8 @@ JNIEXPORT void JNICALL
 Java_com_cocos_lib_CocosWebViewHelper_onJsCallback(JNIEnv *env, jclass, jint index,
                                                    jstring jmessage) {
     // LOGD("jsCallback");
-    auto charMessage = env->GetStringUTFChars(jmessage, NULL);
-    std::string message = charMessage;
+    auto        charMessage = env->GetStringUTFChars(jmessage, NULL);
+    std::string message     = charMessage;
     env->ReleaseStringUTFChars(jmessage, charMessage);
     cc::WebViewImpl::onJsCallback(index, message);
 }
@@ -140,7 +140,7 @@ int createWebViewJNI() {
 std::string getUrlStringByFileName(const std::string &fileName) {
     // LOGD("error: %s,%d",__func__,__LINE__);
     const std::string basePath("file:///android_asset/");
-    std::string fullPath = cc::FileUtils::getInstance()->fullPathForFilename(fileName);
+    std::string       fullPath = cc::FileUtils::getInstance()->fullPathForFilename(fileName);
     const std::string assetsPath("assets/");
 
     std::string urlString;
@@ -161,7 +161,7 @@ static std::unordered_map<int, WebViewImpl *> s_WebViewImpls;
 
 WebViewImpl::WebViewImpl(WebView *webView) : _viewTag(-1),
                                              _webView(webView) {
-    _viewTag = createWebViewJNI();
+    _viewTag                 = createWebViewJNI();
     s_WebViewImpls[_viewTag] = this;
 }
 
@@ -230,7 +230,7 @@ void WebViewImpl::setScalesPageToFit(const bool scalesPageToFit) {
 
 bool WebViewImpl::shouldStartLoading(const int viewTag, const std::string &url) {
     bool allowLoad = true;
-    auto it = s_WebViewImpls.find(viewTag);
+    auto it        = s_WebViewImpls.find(viewTag);
     if (it != s_WebViewImpls.end()) {
         auto webView = it->second->_webView;
         if (webView->_onShouldStartLoading) {

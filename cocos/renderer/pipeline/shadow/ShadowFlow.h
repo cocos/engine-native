@@ -58,7 +58,7 @@ private:
 
     gfx::RenderPass *_renderPass = nullptr;
 
-    vector<const Light *> _validLights;
+    vector<const Light *>  _validLights;
     vector<gfx::Texture *> _usedTextures;
 };
 } // namespace pipeline

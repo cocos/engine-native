@@ -27,24 +27,24 @@
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
 
-    #include "platform/Device.h"
-    #include <cstring>
     #include <android/log.h>
-    #include <jni.h>
-    #include <android_native_app_glue.h>
-    #include <android/window.h>
     #include <android/sensor.h>
-    #include "platform/android/jni/JniCocosActivity.h"
-    #include "platform/FileUtils.h"
+    #include <android/window.h>
+    #include <android_native_app_glue.h>
+    #include <jni.h>
+    #include <cstring>
     #include "base/UTF8.h"
+    #include "platform/Device.h"
+    #include "platform/FileUtils.h"
+    #include "platform/android/jni/JniCocosActivity.h"
     #include "platform/android/jni/JniHelper.h"
 
     #ifndef JCLS_HELPER
-        constexpr auto JCLS_HELPER = "com/cocos/lib/CocosHelper";
+constexpr auto JCLS_HELPER = "com/cocos/lib/CocosHelper";
     #endif
 
     #ifndef JCLS_SENSOR
-        constexpr auto JCLS_SENSOR = "com/cocos/lib/CocosSensorHandler";
+constexpr auto JCLS_SENSOR = "com/cocos/lib/CocosSensorHandler";
     #endif
 
 namespace {
@@ -70,7 +70,7 @@ int Device::getDPI() {
         int32_t density = AConfiguration_getDensity(config);
         AConfiguration_delete(config);
         const int stdDpi = 160;
-        dpi = density * stdDpi;
+        dpi              = density * stdDpi;
     }
     return dpi;
 }
@@ -95,7 +95,7 @@ const Device::MotionValue &Device::getDeviceMotionValue() {
     motionValue.accelerationZ = v[5];
 
     motionValue.rotationRateAlpha = v[6];
-    motionValue.rotationRateBeta = v[7];
+    motionValue.rotationRateBeta  = v[7];
     motionValue.rotationRateGamma = v[8];
 
     return motionValue;
@@ -112,7 +112,7 @@ Device::Orientation Device::getDeviceOrientation() {
             return Orientation::PORTRAIT_UPSIDE_DOWN;
         case ROTATION_270:
             return Orientation::LANDSCAPE_LEFT;
-        default: 
+        default:
             break;
     }
     return Orientation::PORTRAIT;

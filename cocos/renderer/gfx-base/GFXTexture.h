@@ -54,7 +54,7 @@ public:
     CC_INLINE uint         getSize() const { return _size; }
     CC_INLINE SampleCount  getSamples() const { return _samples; }
     CC_INLINE TextureFlags getFlags() const { return _flags; }
-    CC_INLINE bool     isTextureView() const { return _isTextureView; }
+    CC_INLINE bool         isTextureView() const { return _isTextureView; }
 
 protected:
     static uint generateTextureID() noexcept {

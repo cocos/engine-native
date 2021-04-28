@@ -46,10 +46,10 @@ public:
     inline bool isValid() const noexcept;
     inline void clear() noexcept;
 
-    inline bool     operator<(IndexHandle const &rhs) const noexcept;
-    inline bool     operator==(IndexHandle const &rhs) const noexcept;
-    inline bool     operator!=(IndexHandle const &rhs) const noexcept;
-    inline operator IndexType() const noexcept;
+    inline bool operator<(IndexHandle const &rhs) const noexcept;
+    inline bool operator==(IndexHandle const &rhs) const noexcept;
+    inline bool operator!=(IndexHandle const &rhs) const noexcept;
+    inline      operator IndexType() const noexcept;
 
     static IndexType constexpr UNINITIALIZED{std::numeric_limits<IndexType>::max()};
 

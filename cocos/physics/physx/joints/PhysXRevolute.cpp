@@ -24,9 +24,9 @@
 ****************************************************************************/
 
 #include "physics/physx/joints/PhysXRevolute.h"
+#include "math/Quaternion.h"
 #include "physics/physx/PhysXSharedBody.h"
 #include "physics/physx/PhysXUtils.h"
-#include "math/Quaternion.h"
 
 namespace cc {
 namespace physics {
@@ -55,24 +55,24 @@ void PhysXRevolute::setAxis(float x, float y, float z) {
 }
 
 void PhysXRevolute::updateScale0() {
-	updatePose();
+    updatePose();
 }
 
 void PhysXRevolute::updateScale1() {
-	updatePose();
+    updatePose();
 }
 
 void PhysXRevolute::updatePose() {
     physx::PxTransform pose0{physx::PxIdentity};
     physx::PxTransform pose1{physx::PxIdentity};
-    auto &node0 = _mSharedBody->getNode();
-    pose0.p = _mPivotA * node0.worldScale;
+    auto &             node0 = _mSharedBody->getNode();
+    pose0.p                  = _mPivotA * node0.worldScale;
     pxSetFromTwoVectors(pose0.q, physx::PxVec3{1.F, 0.F, 0.F}, _mAxis);
     _mJoint->setLocalPose(physx::PxJointActorIndex::eACTOR0, pose0);
     pose1.q = pose0.q;
     if (_mConnectedBody) {
         auto &node1 = _mConnectedBody->getNode();
-        pose1.p = _mPivotB * node1.worldScale;
+        pose1.p     = _mPivotB * node1.worldScale;
     } else {
         pose1.p = _mPivotA * node0.worldScale;
         pose1.p += _mPivotB + node0.worldPosition;

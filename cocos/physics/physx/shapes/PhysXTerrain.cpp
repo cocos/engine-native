@@ -23,10 +23,10 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/physx/shapes/PhysXShape.h"
 #include "physics/physx/shapes/PhysXTerrain.h"
 #include "physics/physx/PhysXUtils.h"
 #include "physics/physx/PhysXWorld.h"
+#include "physics/physx/shapes/PhysXShape.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 
 namespace cc {

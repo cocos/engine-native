@@ -45,7 +45,7 @@ class Framebuffer;
 
 class CC_DLL ForwardPipeline : public RenderPipeline {
 public:
-    ForwardPipeline() = default;
+    ForwardPipeline()  = default;
     ~ForwardPipeline() = default;
 
     virtual bool initialize(const RenderPipelineInfo &info) override;
@@ -66,11 +66,11 @@ private:
     void updateUBO(Camera *);
 
 private:
-    gfx::Buffer *_lightsUBO = nullptr;
-    LightList _validLights;
-    gfx::BufferList _lightBuffers;
-    UintList _lightIndexOffsets;
-    UintList _lightIndices;
+    gfx::Buffer *                                     _lightsUBO = nullptr;
+    LightList                                         _validLights;
+    gfx::BufferList                                   _lightBuffers;
+    UintList                                          _lightIndexOffsets;
+    UintList                                          _lightIndices;
     unordered_map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
 };
 

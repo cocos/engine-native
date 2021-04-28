@@ -27,8 +27,8 @@ THE SOFTWARE.
 
 // ----------------------------------------------------------------------------
 
-#include <stdint.h>
 #include <android/log.h>
+#include <stdint.h>
 #include "audio/android/cutils/bitops.h"
 
 #define PROPERTY_VALUE_MAX 256
@@ -70,11 +70,11 @@ typedef enum {
 /* PCM sub formats */
 typedef enum {
     /* All of these are in native byte order */
-    AUDIO_FORMAT_PCM_SUB_16_BIT = 0x1,        /* DO NOT CHANGE - PCM signed 16 bits */
-    AUDIO_FORMAT_PCM_SUB_8_BIT = 0x2,         /* DO NOT CHANGE - PCM unsigned 8 bits */
-    AUDIO_FORMAT_PCM_SUB_32_BIT = 0x3,        /* PCM signed .31 fixed point */
-    AUDIO_FORMAT_PCM_SUB_8_24_BIT = 0x4,      /* PCM signed 8.23 fixed point */
-    AUDIO_FORMAT_PCM_SUB_FLOAT = 0x5,         /* PCM single-precision floating point */
+    AUDIO_FORMAT_PCM_SUB_16_BIT        = 0x1, /* DO NOT CHANGE - PCM signed 16 bits */
+    AUDIO_FORMAT_PCM_SUB_8_BIT         = 0x2, /* DO NOT CHANGE - PCM unsigned 8 bits */
+    AUDIO_FORMAT_PCM_SUB_32_BIT        = 0x3, /* PCM signed .31 fixed point */
+    AUDIO_FORMAT_PCM_SUB_8_24_BIT      = 0x4, /* PCM signed 8.23 fixed point */
+    AUDIO_FORMAT_PCM_SUB_FLOAT         = 0x5, /* PCM single-precision floating point */
     AUDIO_FORMAT_PCM_SUB_24_BIT_PACKED = 0x6, /* PCM signed .23 fixed point packed in 3 bytes */
 } audio_format_pcm_sub_fmt_t;
 
@@ -96,16 +96,16 @@ typedef enum {
 
 /* AAC sub format field definition: specify profile or bitrate for recording... */
 typedef enum {
-    AUDIO_FORMAT_AAC_SUB_MAIN = 0x1,
-    AUDIO_FORMAT_AAC_SUB_LC = 0x2,
-    AUDIO_FORMAT_AAC_SUB_SSR = 0x4,
-    AUDIO_FORMAT_AAC_SUB_LTP = 0x8,
-    AUDIO_FORMAT_AAC_SUB_HE_V1 = 0x10,
+    AUDIO_FORMAT_AAC_SUB_MAIN     = 0x1,
+    AUDIO_FORMAT_AAC_SUB_LC       = 0x2,
+    AUDIO_FORMAT_AAC_SUB_SSR      = 0x4,
+    AUDIO_FORMAT_AAC_SUB_LTP      = 0x8,
+    AUDIO_FORMAT_AAC_SUB_HE_V1    = 0x10,
     AUDIO_FORMAT_AAC_SUB_SCALABLE = 0x20,
-    AUDIO_FORMAT_AAC_SUB_ERLC = 0x40,
-    AUDIO_FORMAT_AAC_SUB_LD = 0x80,
-    AUDIO_FORMAT_AAC_SUB_HE_V2 = 0x100,
-    AUDIO_FORMAT_AAC_SUB_ELD = 0x200,
+    AUDIO_FORMAT_AAC_SUB_ERLC     = 0x40,
+    AUDIO_FORMAT_AAC_SUB_LD       = 0x80,
+    AUDIO_FORMAT_AAC_SUB_HE_V2    = 0x100,
+    AUDIO_FORMAT_AAC_SUB_ELD      = 0x200,
 } audio_format_aac_sub_fmt_t;
 
 /* VORBIS sub format field definition: specify quality for recording... */
@@ -123,104 +123,104 @@ typedef enum {
  * the encoded audio stream (e.g. octet alignment for AMR).
  */
 typedef enum {
-    AUDIO_FORMAT_INVALID = 0xFFFFFFFFUL,
-    AUDIO_FORMAT_DEFAULT = 0,
-    AUDIO_FORMAT_PCM = 0x00000000UL, /* DO NOT CHANGE */
-    AUDIO_FORMAT_MP3 = 0x01000000UL,
-    AUDIO_FORMAT_AMR_NB = 0x02000000UL,
-    AUDIO_FORMAT_AMR_WB = 0x03000000UL,
-    AUDIO_FORMAT_AAC = 0x04000000UL,
+    AUDIO_FORMAT_INVALID   = 0xFFFFFFFFUL,
+    AUDIO_FORMAT_DEFAULT   = 0,
+    AUDIO_FORMAT_PCM       = 0x00000000UL, /* DO NOT CHANGE */
+    AUDIO_FORMAT_MP3       = 0x01000000UL,
+    AUDIO_FORMAT_AMR_NB    = 0x02000000UL,
+    AUDIO_FORMAT_AMR_WB    = 0x03000000UL,
+    AUDIO_FORMAT_AAC       = 0x04000000UL,
     AUDIO_FORMAT_HE_AAC_V1 = 0x05000000UL, /* Deprecated, Use AUDIO_FORMAT_AAC_HE_V1*/
     AUDIO_FORMAT_HE_AAC_V2 = 0x06000000UL, /* Deprecated, Use AUDIO_FORMAT_AAC_HE_V2*/
-    AUDIO_FORMAT_VORBIS = 0x07000000UL,
-    AUDIO_FORMAT_OPUS = 0x08000000UL,
-    AUDIO_FORMAT_AC3 = 0x09000000UL,
-    AUDIO_FORMAT_E_AC3 = 0x0A000000UL,
-    AUDIO_FORMAT_DTS = 0x0B000000UL,
-    AUDIO_FORMAT_DTS_HD = 0x0C000000UL,
+    AUDIO_FORMAT_VORBIS    = 0x07000000UL,
+    AUDIO_FORMAT_OPUS      = 0x08000000UL,
+    AUDIO_FORMAT_AC3       = 0x09000000UL,
+    AUDIO_FORMAT_E_AC3     = 0x0A000000UL,
+    AUDIO_FORMAT_DTS       = 0x0B000000UL,
+    AUDIO_FORMAT_DTS_HD    = 0x0C000000UL,
     AUDIO_FORMAT_MAIN_MASK = 0xFF000000UL,
-    AUDIO_FORMAT_SUB_MASK = 0x00FFFFFFUL,
+    AUDIO_FORMAT_SUB_MASK  = 0x00FFFFFFUL,
 
     /* Aliases */
     /* note != AudioFormat.ENCODING_PCM_16BIT */
     AUDIO_FORMAT_PCM_16_BIT = (AUDIO_FORMAT_PCM |
                                AUDIO_FORMAT_PCM_SUB_16_BIT),
     /* note != AudioFormat.ENCODING_PCM_8BIT */
-    AUDIO_FORMAT_PCM_8_BIT = (AUDIO_FORMAT_PCM |
+    AUDIO_FORMAT_PCM_8_BIT         = (AUDIO_FORMAT_PCM |
                               AUDIO_FORMAT_PCM_SUB_8_BIT),
-    AUDIO_FORMAT_PCM_32_BIT = (AUDIO_FORMAT_PCM |
+    AUDIO_FORMAT_PCM_32_BIT        = (AUDIO_FORMAT_PCM |
                                AUDIO_FORMAT_PCM_SUB_32_BIT),
-    AUDIO_FORMAT_PCM_8_24_BIT = (AUDIO_FORMAT_PCM |
+    AUDIO_FORMAT_PCM_8_24_BIT      = (AUDIO_FORMAT_PCM |
                                  AUDIO_FORMAT_PCM_SUB_8_24_BIT),
-    AUDIO_FORMAT_PCM_FLOAT = (AUDIO_FORMAT_PCM |
+    AUDIO_FORMAT_PCM_FLOAT         = (AUDIO_FORMAT_PCM |
                               AUDIO_FORMAT_PCM_SUB_FLOAT),
     AUDIO_FORMAT_PCM_24_BIT_PACKED = (AUDIO_FORMAT_PCM |
                                       AUDIO_FORMAT_PCM_SUB_24_BIT_PACKED),
-    AUDIO_FORMAT_AAC_MAIN = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_MAIN          = (AUDIO_FORMAT_AAC |
                              AUDIO_FORMAT_AAC_SUB_MAIN),
-    AUDIO_FORMAT_AAC_LC = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_LC            = (AUDIO_FORMAT_AAC |
                            AUDIO_FORMAT_AAC_SUB_LC),
-    AUDIO_FORMAT_AAC_SSR = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_SSR           = (AUDIO_FORMAT_AAC |
                             AUDIO_FORMAT_AAC_SUB_SSR),
-    AUDIO_FORMAT_AAC_LTP = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_LTP           = (AUDIO_FORMAT_AAC |
                             AUDIO_FORMAT_AAC_SUB_LTP),
-    AUDIO_FORMAT_AAC_HE_V1 = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_HE_V1         = (AUDIO_FORMAT_AAC |
                               AUDIO_FORMAT_AAC_SUB_HE_V1),
-    AUDIO_FORMAT_AAC_SCALABLE = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_SCALABLE      = (AUDIO_FORMAT_AAC |
                                  AUDIO_FORMAT_AAC_SUB_SCALABLE),
-    AUDIO_FORMAT_AAC_ERLC = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_ERLC          = (AUDIO_FORMAT_AAC |
                              AUDIO_FORMAT_AAC_SUB_ERLC),
-    AUDIO_FORMAT_AAC_LD = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_LD            = (AUDIO_FORMAT_AAC |
                            AUDIO_FORMAT_AAC_SUB_LD),
-    AUDIO_FORMAT_AAC_HE_V2 = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_HE_V2         = (AUDIO_FORMAT_AAC |
                               AUDIO_FORMAT_AAC_SUB_HE_V2),
-    AUDIO_FORMAT_AAC_ELD = (AUDIO_FORMAT_AAC |
+    AUDIO_FORMAT_AAC_ELD           = (AUDIO_FORMAT_AAC |
                             AUDIO_FORMAT_AAC_SUB_ELD),
 } audio_format_t;
 
 /* For the channel mask for position assignment representation */
 enum {
     /* These can be a complete audio_channel_mask_t. */
-    AUDIO_CHANNEL_NONE = 0x0,
+    AUDIO_CHANNEL_NONE    = 0x0,
     AUDIO_CHANNEL_INVALID = 0xC0000000,
     /* These can be the bits portion of an audio_channel_mask_t
  * with representation AUDIO_CHANNEL_REPRESENTATION_POSITION.
  * Using these bits as a complete audio_channel_mask_t is deprecated.
  */
     /* output channels */
-    AUDIO_CHANNEL_OUT_FRONT_LEFT = 0x1,
-    AUDIO_CHANNEL_OUT_FRONT_RIGHT = 0x2,
-    AUDIO_CHANNEL_OUT_FRONT_CENTER = 0x4,
-    AUDIO_CHANNEL_OUT_LOW_FREQUENCY = 0x8,
-    AUDIO_CHANNEL_OUT_BACK_LEFT = 0x10,
-    AUDIO_CHANNEL_OUT_BACK_RIGHT = 0x20,
-    AUDIO_CHANNEL_OUT_FRONT_LEFT_OF_CENTER = 0x40,
+    AUDIO_CHANNEL_OUT_FRONT_LEFT            = 0x1,
+    AUDIO_CHANNEL_OUT_FRONT_RIGHT           = 0x2,
+    AUDIO_CHANNEL_OUT_FRONT_CENTER          = 0x4,
+    AUDIO_CHANNEL_OUT_LOW_FREQUENCY         = 0x8,
+    AUDIO_CHANNEL_OUT_BACK_LEFT             = 0x10,
+    AUDIO_CHANNEL_OUT_BACK_RIGHT            = 0x20,
+    AUDIO_CHANNEL_OUT_FRONT_LEFT_OF_CENTER  = 0x40,
     AUDIO_CHANNEL_OUT_FRONT_RIGHT_OF_CENTER = 0x80,
-    AUDIO_CHANNEL_OUT_BACK_CENTER = 0x100,
-    AUDIO_CHANNEL_OUT_SIDE_LEFT = 0x200,
-    AUDIO_CHANNEL_OUT_SIDE_RIGHT = 0x400,
-    AUDIO_CHANNEL_OUT_TOP_CENTER = 0x800,
-    AUDIO_CHANNEL_OUT_TOP_FRONT_LEFT = 0x1000,
-    AUDIO_CHANNEL_OUT_TOP_FRONT_CENTER = 0x2000,
-    AUDIO_CHANNEL_OUT_TOP_FRONT_RIGHT = 0x4000,
-    AUDIO_CHANNEL_OUT_TOP_BACK_LEFT = 0x8000,
-    AUDIO_CHANNEL_OUT_TOP_BACK_CENTER = 0x10000,
-    AUDIO_CHANNEL_OUT_TOP_BACK_RIGHT = 0x20000,
+    AUDIO_CHANNEL_OUT_BACK_CENTER           = 0x100,
+    AUDIO_CHANNEL_OUT_SIDE_LEFT             = 0x200,
+    AUDIO_CHANNEL_OUT_SIDE_RIGHT            = 0x400,
+    AUDIO_CHANNEL_OUT_TOP_CENTER            = 0x800,
+    AUDIO_CHANNEL_OUT_TOP_FRONT_LEFT        = 0x1000,
+    AUDIO_CHANNEL_OUT_TOP_FRONT_CENTER      = 0x2000,
+    AUDIO_CHANNEL_OUT_TOP_FRONT_RIGHT       = 0x4000,
+    AUDIO_CHANNEL_OUT_TOP_BACK_LEFT         = 0x8000,
+    AUDIO_CHANNEL_OUT_TOP_BACK_CENTER       = 0x10000,
+    AUDIO_CHANNEL_OUT_TOP_BACK_RIGHT        = 0x20000,
     /* REFINE: should these be considered complete channel masks, or only bits? */
-    AUDIO_CHANNEL_OUT_MONO = AUDIO_CHANNEL_OUT_FRONT_LEFT,
-    AUDIO_CHANNEL_OUT_STEREO = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
+    AUDIO_CHANNEL_OUT_MONO      = AUDIO_CHANNEL_OUT_FRONT_LEFT,
+    AUDIO_CHANNEL_OUT_STEREO    = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
                                 AUDIO_CHANNEL_OUT_FRONT_RIGHT),
-    AUDIO_CHANNEL_OUT_QUAD = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
+    AUDIO_CHANNEL_OUT_QUAD      = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
                               AUDIO_CHANNEL_OUT_FRONT_RIGHT |
                               AUDIO_CHANNEL_OUT_BACK_LEFT |
                               AUDIO_CHANNEL_OUT_BACK_RIGHT),
     AUDIO_CHANNEL_OUT_QUAD_BACK = AUDIO_CHANNEL_OUT_QUAD,
     /* like AUDIO_CHANNEL_OUT_QUAD_BACK with *_SIDE_* instead of *_BACK_* */
-    AUDIO_CHANNEL_OUT_QUAD_SIDE = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
+    AUDIO_CHANNEL_OUT_QUAD_SIDE    = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
                                    AUDIO_CHANNEL_OUT_FRONT_RIGHT |
                                    AUDIO_CHANNEL_OUT_SIDE_LEFT |
                                    AUDIO_CHANNEL_OUT_SIDE_RIGHT),
-    AUDIO_CHANNEL_OUT_5POINT1 = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
+    AUDIO_CHANNEL_OUT_5POINT1      = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
                                  AUDIO_CHANNEL_OUT_FRONT_RIGHT |
                                  AUDIO_CHANNEL_OUT_FRONT_CENTER |
                                  AUDIO_CHANNEL_OUT_LOW_FREQUENCY |
@@ -243,7 +243,7 @@ enum {
                                  AUDIO_CHANNEL_OUT_BACK_RIGHT |
                                  AUDIO_CHANNEL_OUT_SIDE_LEFT |
                                  AUDIO_CHANNEL_OUT_SIDE_RIGHT),
-    AUDIO_CHANNEL_OUT_ALL = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
+    AUDIO_CHANNEL_OUT_ALL     = (AUDIO_CHANNEL_OUT_FRONT_LEFT |
                              AUDIO_CHANNEL_OUT_FRONT_RIGHT |
                              AUDIO_CHANNEL_OUT_FRONT_CENTER |
                              AUDIO_CHANNEL_OUT_LOW_FREQUENCY |
@@ -263,25 +263,25 @@ enum {
                              AUDIO_CHANNEL_OUT_TOP_BACK_RIGHT),
     /* These are bits only, not complete values */
     /* input channels */
-    AUDIO_CHANNEL_IN_LEFT = 0x4,
-    AUDIO_CHANNEL_IN_RIGHT = 0x8,
-    AUDIO_CHANNEL_IN_FRONT = 0x10,
-    AUDIO_CHANNEL_IN_BACK = 0x20,
-    AUDIO_CHANNEL_IN_LEFT_PROCESSED = 0x40,
+    AUDIO_CHANNEL_IN_LEFT            = 0x4,
+    AUDIO_CHANNEL_IN_RIGHT           = 0x8,
+    AUDIO_CHANNEL_IN_FRONT           = 0x10,
+    AUDIO_CHANNEL_IN_BACK            = 0x20,
+    AUDIO_CHANNEL_IN_LEFT_PROCESSED  = 0x40,
     AUDIO_CHANNEL_IN_RIGHT_PROCESSED = 0x80,
     AUDIO_CHANNEL_IN_FRONT_PROCESSED = 0x100,
-    AUDIO_CHANNEL_IN_BACK_PROCESSED = 0x200,
-    AUDIO_CHANNEL_IN_PRESSURE = 0x400,
-    AUDIO_CHANNEL_IN_X_AXIS = 0x800,
-    AUDIO_CHANNEL_IN_Y_AXIS = 0x1000,
-    AUDIO_CHANNEL_IN_Z_AXIS = 0x2000,
-    AUDIO_CHANNEL_IN_VOICE_UPLINK = 0x4000,
-    AUDIO_CHANNEL_IN_VOICE_DNLINK = 0x8000,
+    AUDIO_CHANNEL_IN_BACK_PROCESSED  = 0x200,
+    AUDIO_CHANNEL_IN_PRESSURE        = 0x400,
+    AUDIO_CHANNEL_IN_X_AXIS          = 0x800,
+    AUDIO_CHANNEL_IN_Y_AXIS          = 0x1000,
+    AUDIO_CHANNEL_IN_Z_AXIS          = 0x2000,
+    AUDIO_CHANNEL_IN_VOICE_UPLINK    = 0x4000,
+    AUDIO_CHANNEL_IN_VOICE_DNLINK    = 0x8000,
     /* REFINE: should these be considered complete channel masks, or only bits, or deprecated? */
-    AUDIO_CHANNEL_IN_MONO = AUDIO_CHANNEL_IN_FRONT,
-    AUDIO_CHANNEL_IN_STEREO = (AUDIO_CHANNEL_IN_LEFT | AUDIO_CHANNEL_IN_RIGHT),
+    AUDIO_CHANNEL_IN_MONO       = AUDIO_CHANNEL_IN_FRONT,
+    AUDIO_CHANNEL_IN_STEREO     = (AUDIO_CHANNEL_IN_LEFT | AUDIO_CHANNEL_IN_RIGHT),
     AUDIO_CHANNEL_IN_FRONT_BACK = (AUDIO_CHANNEL_IN_FRONT | AUDIO_CHANNEL_IN_BACK),
-    AUDIO_CHANNEL_IN_ALL = (AUDIO_CHANNEL_IN_LEFT |
+    AUDIO_CHANNEL_IN_ALL        = (AUDIO_CHANNEL_IN_LEFT |
                             AUDIO_CHANNEL_IN_RIGHT |
                             AUDIO_CHANNEL_IN_FRONT |
                             AUDIO_CHANNEL_IN_BACK |

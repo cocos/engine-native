@@ -44,11 +44,11 @@ bool AudioDecoderOgg::open(const char *path) {
     if (0 == ov_fopen(FileUtils::getInstance()->getSuitableFOpen(fullPath).c_str(), &_vf)) {
         // header
         vorbis_info *vi = ov_info(&_vf, -1);
-        _sampleRate = static_cast<uint32_t>(vi->rate);
-        _channelCount = vi->channels;
-        _bytesPerFrame = vi->channels * sizeof(short);
-        _totalFrames = static_cast<uint32_t>(ov_pcm_total(&_vf, -1));
-        _isOpened = true;
+        _sampleRate     = static_cast<uint32_t>(vi->rate);
+        _channelCount   = vi->channels;
+        _bytesPerFrame  = vi->channels * sizeof(short);
+        _totalFrames    = static_cast<uint32_t>(ov_pcm_total(&_vf, -1));
+        _isOpened       = true;
         return true;
     }
     return false;
@@ -62,9 +62,9 @@ void AudioDecoderOgg::close() {
 }
 
 uint32_t AudioDecoderOgg::read(uint32_t framesToRead, char *pcmBuf) {
-    int currentSection = 0;
-    int bytesToRead = framesToRead * _bytesPerFrame;
-    long bytesRead = ov_read(&_vf, pcmBuf, bytesToRead, 0, 2, 1, &currentSection);
+    int  currentSection = 0;
+    int  bytesToRead    = framesToRead * _bytesPerFrame;
+    long bytesRead      = ov_read(&_vf, pcmBuf, bytesToRead, 0, 2, 1, &currentSection);
     return static_cast<uint32_t>(bytesRead / _bytesPerFrame);
 }
 

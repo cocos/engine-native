@@ -1118,9 +1118,9 @@ enum class DataType {
 };
 
 void toVec2(void *data, DataType type, se::Value *ret) {
-    auto *intptr                                   = static_cast<int32_t *>(data);
-    auto *                                floatptr = static_cast<float *>(data);
-    cc::Vec2                              vec2;
+    auto *   intptr   = static_cast<int32_t *>(data);
+    auto *   floatptr = static_cast<float *>(data);
+    cc::Vec2 vec2;
     if (DataType::INT == type) {
         vec2.x = static_cast<float>(intptr[0]);
         vec2.y = static_cast<float>(intptr[1]);

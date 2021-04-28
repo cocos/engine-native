@@ -29,9 +29,9 @@
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS
     #include "audio/win32/AudioPlayer.h"
     #include "audio/win32/AudioCache.h"
-    #include "platform/FileUtils.h"
     #include "audio/win32/AudioDecoderManager.h"
     #include "audio/win32/Audiodecoder.h"
+    #include "platform/FileUtils.h"
 
     #define VERY_VERY_VERBOSE_LOGGING
     #ifdef VERY_VERY_VERBOSE_LOGGING
@@ -196,7 +196,7 @@ bool AudioPlayer::play2d() {
             break;
         }
         _ready = true;
-        ret = true;
+        ret    = true;
     } while (false);
 
     if (!ret) {
@@ -208,15 +208,15 @@ bool AudioPlayer::play2d() {
 }
 
 void AudioPlayer::rotateBufferThread(int offsetFrame) {
-    char *tmpBuffer = nullptr;
-    AudioDecoder *decoder = AudioDecoderManager::createDecoder(_audioCache->_fileFullPath.c_str());
+    char *        tmpBuffer = nullptr;
+    AudioDecoder *decoder   = AudioDecoderManager::createDecoder(_audioCache->_fileFullPath.c_str());
     do {
         BREAK_IF(decoder == nullptr || !decoder->open(_audioCache->_fileFullPath.c_str()));
 
-        uint32_t framesRead = 0;
+        uint32_t       framesRead   = 0;
         const uint32_t framesToRead = _audioCache->_queBufferFrames;
-        const uint32_t bufferSize = framesToRead * decoder->getBytesPerFrame();
-        tmpBuffer = (char *)malloc(bufferSize);
+        const uint32_t bufferSize   = framesToRead * decoder->getBytesPerFrame();
+        tmpBuffer                   = (char *)malloc(bufferSize);
         memset(tmpBuffer, 0, bufferSize);
 
         if (offsetFrame != 0) {
@@ -224,8 +224,8 @@ void AudioPlayer::rotateBufferThread(int offsetFrame) {
         }
 
         ALint sourceState;
-        ALint bufferProcessed = 0;
-        bool needToExitThread = false;
+        ALint bufferProcessed  = 0;
+        bool  needToExitThread = false;
 
         while (!_isDestroyed) {
             alGetSourcei(_alSource, AL_SOURCE_STATE, &sourceState);
@@ -234,7 +234,7 @@ void AudioPlayer::rotateBufferThread(int offsetFrame) {
                 while (bufferProcessed > 0) {
                     bufferProcessed--;
                     if (_timeDirty) {
-                        _timeDirty = false;
+                        _timeDirty  = false;
                         offsetFrame = static_cast<int>(_currTime * decoder->getSampleRate());
                         decoder->seek(offsetFrame);
                     } else {
@@ -298,8 +298,7 @@ bool AudioPlayer::setLoop(bool loop) {
 
 bool AudioPlayer::setTime(float time) {
     if (!_isDestroyed && time >= 0.0f && time < _audioCache->_duration) {
-
-        _currTime = time;
+        _currTime  = time;
         _timeDirty = true;
 
         return true;

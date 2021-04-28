@@ -23,9 +23,9 @@
 #ifndef DRAGONBONES_BONE_H
 #define DRAGONBONES_BONE_H
 
-#include "TransformObject.h"
-#include "../model/ArmatureData.h"
 #include "../animation/AnimationState.h"
+#include "../model/ArmatureData.h"
+#include "TransformObject.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 /**
@@ -47,8 +47,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class Bone final : public TransformObject
-{
+class Bone final : public TransformObject {
     BIND_CLASS_TYPE_A(Bone);
 
 public:
@@ -97,7 +96,7 @@ public:
 protected:
     bool _localDirty;
     bool _visible;
-    int _cachedFrameIndex;
+    int  _cachedFrameIndex;
     /**
      * @private
      */
@@ -147,8 +146,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline void invalidUpdate()
-    {
+    inline void invalidUpdate() {
         _transformDirty = true;
     }
     /**
@@ -174,8 +172,7 @@ public:
      * @version DragonBones 4.5
      * @language zh_CN
      */
-    inline const BoneData* getBoneData() const
-    {
+    inline const BoneData* getBoneData() const {
         return _boneData;
     }
     /**
@@ -192,8 +189,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline bool getVisible() const
-    {
+    inline bool getVisible() const {
         return _visible;
     }
     void setVisible(bool value);
@@ -207,8 +203,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline const std::string& getName() const
-    {
+    inline const std::string& getName() const {
         return _boneData->name;
     }
     /**
@@ -221,13 +216,12 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline Bone* getParent() const
-    {
+    inline Bone* getParent() const {
         return _parent;
     }
 
 public: // For WebAssembly.
-    inline int getOffsetMode() const { return (int)offsetMode; }
+    inline int  getOffsetMode() const { return (int)offsetMode; }
     inline void setOffsetMode(int value) { offsetMode = (OffsetMode)value; }
 };
 

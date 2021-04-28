@@ -39,20 +39,20 @@ typedef std::array<uint8_t, 3> Color3B;
 
 class PlayerEditBoxServiceProtocol : public PlayerServiceProtocol {
 public:
-    static const int FORMAT_NONE = 0;
+    static const int FORMAT_NONE   = 0;
     static const int FORMAT_NUMBER = 1;
 
     virtual void showSingleLineEditBox(const cc::Rect &rect) = 0;
-    virtual void showMultiLineEditBox(const cc::Rect &rect) = 0;
-    virtual void hide() = 0;
+    virtual void showMultiLineEditBox(const cc::Rect &rect)  = 0;
+    virtual void hide()                                      = 0;
 
-    virtual void setText(const std::string &text) = 0;
+    virtual void setText(const std::string &text)           = 0;
     virtual void setFont(const std::string &name, int size) = 0;
-    virtual void setFontColor(const Color3B &color) = 0;
-    virtual void setFormator(int formator) = 0;
+    virtual void setFontColor(const Color3B &color)         = 0;
+    virtual void setFormator(int formator)                  = 0;
 
     void registerHandler(int handler) { _handler = handler; }
-    int getHandler() { return _handler; }
+    int  getHandler() { return _handler; }
 
 protected:
     int _handler;

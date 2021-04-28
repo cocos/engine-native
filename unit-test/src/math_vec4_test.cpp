@@ -21,13 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "gtest/gtest.h"
-#include "cocos/math/Vec4.h"
-#include "utils.h"
 #include <math.h>
+#include "cocos/math/Vec4.h"
+#include "gtest/gtest.h"
+#include "utils.h"
 
 TEST(mathVec4Test, test3) {
-	cc::Vec4 vec4(1, 2, 3, 1);
+    cc::Vec4 vec4(1, 2, 3, 1);
     // isZero
     logLabel = "test whether vec4 is 0";
     ExpectEq(vec4.isZero(), false);
@@ -65,7 +65,7 @@ TEST(mathVec4Test, test3) {
     logLabel = "test the vec4 distance function";
     vec4.set(7, 2, 0, 1);
     cc::Vec4 distVec(10, 2, 0, 1);
-    float dist = vec4.distance(distVec);
+    float    dist = vec4.distance(distVec);
     ExpectEq(IsEqualF(dist, 3), true);
     dist = vec4.distanceSquared(distVec);
     ExpectEq(IsEqualF(dist, 9), true);
@@ -73,7 +73,7 @@ TEST(mathVec4Test, test3) {
     logLabel = "test the vec4 dot function";
     vec4.set(3, 5, 0, 0);
     cc::Vec4 dotVec4(2, 3, 0, 0);
-    float dotRes = vec4.dot(dotVec4);
+    float    dotRes = vec4.dot(dotVec4);
     ExpectEq(IsEqualF(dotRes, 21), true);
     dotRes = cc::Vec4::dot(vec4, dotVec4);
     ExpectEq(IsEqualF(dotRes, 21), true);
@@ -103,7 +103,6 @@ TEST(mathVec4Test, test3) {
     ExpectEq(vec4 == cc::Vec4(3, 3, 0, 0), true);
     // fromColor
     logLabel = "test whether vec3 fromColor function";
-    vec4 = cc::Vec4::fromColor(255);
+    vec4     = cc::Vec4::fromColor(255);
     ExpectEq(vec4.w == 1, true);
 }
-

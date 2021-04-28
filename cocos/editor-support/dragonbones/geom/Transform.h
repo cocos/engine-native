@@ -37,8 +37,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class Transform final
-{
+class Transform final {
 public:
     /**
      * @private
@@ -68,8 +67,7 @@ public:
     /**
      * @private
      */
-    static float normalizeRadian(float value)
-    {
+    static float normalizeRadian(float value) {
         value = fmod(value + Transform::PI, Transform::PI * 2.0f);
         value += value > 0.0f ? -Transform::PI : Transform::PI;
 
@@ -144,37 +142,32 @@ public:
      */
     float scaleY;
 
-    Transform():
-        x(0.0f),
-        y(0.0f),
-        skew(0.0f),
-        rotation(0.0f),
-        scaleX(1.0f),
-        scaleY(1.0f)
-    {}
+    Transform() : x(0.0f),
+                  y(0.0f),
+                  skew(0.0f),
+                  rotation(0.0f),
+                  scaleX(1.0f),
+                  scaleY(1.0f) {}
     /**
      * @private
      */
-    Transform(const Transform& value)
-    {
+    Transform(const Transform& value) {
         operator=(value);
     }
     ~Transform() {}
 
-    inline void operator=(const Transform& value)
-    {
-        x = value.x;
-        y = value.y;
-        skew = value.skew;
+    inline void operator=(const Transform& value) {
+        x        = value.x;
+        y        = value.y;
+        skew     = value.skew;
         rotation = value.rotation;
-        scaleX = value.scaleX;
-        scaleY = value.scaleY;
+        scaleX   = value.scaleX;
+        scaleY   = value.scaleY;
     }
     /**
      * @private
      */
-    inline Transform& identity()
-    {
+    inline Transform& identity() {
         x = y = skew = rotation = 0.0f;
         scaleX = scaleY = 1.0f;
 
@@ -183,8 +176,7 @@ public:
     /**
      * @private
      */
-    inline Transform& add(const Transform& value)
-    {
+    inline Transform& add(const Transform& value) {
         x += value.x;
         y += value.y;
         skew += value.skew;
@@ -197,8 +189,7 @@ public:
     /**
      * @private
      */
-    inline Transform& minus(const Transform& value)
-    {
+    inline Transform& minus(const Transform& value) {
         x -= value.x;
         y -= value.y;
         skew -= value.skew;
@@ -211,29 +202,26 @@ public:
     /**
      * @private
      */
-    inline Transform& fromMatrix(const Matrix& matrix)
-    {
+    inline Transform& fromMatrix(const Matrix& matrix) {
         const auto backupScaleX = scaleX, backupScaleY = scaleY;
 
         x = matrix.tx;
         y = matrix.ty;
 
-        rotation = std::atan(matrix.b / matrix.a);
+        rotation   = std::atan(matrix.b / matrix.a);
         auto skewX = std::atan(-matrix.c / matrix.d);
 
         scaleX = (rotation > -PI_Q && rotation < PI_Q) ? matrix.a / std::cos(rotation) : matrix.b / std::sin(rotation);
         scaleY = (skewX > -PI_Q && skewX < PI_Q) ? matrix.d / std::cos(skewX) : -matrix.c / std::sin(skewX);
 
-        if (backupScaleX >= 0.0f && scaleX < 0.0f) 
-        {
-            scaleX = -scaleX;
+        if (backupScaleX >= 0.0f && scaleX < 0.0f) {
+            scaleX   = -scaleX;
             rotation = rotation - PI;
         }
 
-        if (backupScaleY >= 0.0f && scaleY < 0.0f) 
-        {
+        if (backupScaleY >= 0.0f && scaleY < 0.0f) {
             scaleY = -scaleY;
-            skewX = skewX - PI;
+            skewX  = skewX - PI;
         }
 
         skew = skewX - rotation;
@@ -243,37 +231,29 @@ public:
     /**
      * @private
      */
-    inline Transform& toMatrix(Matrix& matrix)
-    {
-        if (rotation == 0.0f)
-        {
+    inline Transform& toMatrix(Matrix& matrix) {
+        if (rotation == 0.0f) {
             matrix.a = 1.0f;
             matrix.b = 0.0f;
-        }
-        else 
-        {
+        } else {
             matrix.a = std::cos(rotation);
             matrix.b = std::sin(rotation);
         }
 
-        if (skew == 0.0f) 
-        {
+        if (skew == 0.0f) {
             matrix.c = -matrix.b;
             matrix.d = matrix.a;
-        }
-        else {
+        } else {
             matrix.c = -std::sin(skew + rotation);
             matrix.d = std::cos(skew + rotation);
         }
 
-        if (scaleX != 1.0f) 
-        {
+        if (scaleX != 1.0f) {
             matrix.a *= scaleX;
             matrix.b *= scaleX;
         }
 
-        if (scaleY != 1.0f) 
-        {
+        if (scaleY != 1.0f) {
             matrix.c *= scaleY;
             matrix.d *= scaleY;
         }

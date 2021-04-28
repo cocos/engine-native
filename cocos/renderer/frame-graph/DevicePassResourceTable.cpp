@@ -25,9 +25,9 @@
 
 #include "DevicePassResourceTable.h"
 
+#include <algorithm>
 #include "FrameGraph.h"
 #include "PassNode.h"
-#include <algorithm>
 
 namespace cc {
 namespace framegraph {

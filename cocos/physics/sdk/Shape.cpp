@@ -23,9 +23,8 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/PhysicsSelector.h"
 #include "physics/sdk/Shape.h"
-
+#include "physics/PhysicsSelector.h"
 
 #define CC_PHYSICS_SHAPE_DEFINITION(CLASS, WRAPPED)                  \
                                                                      \

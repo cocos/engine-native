@@ -24,23 +24,22 @@
 #define DRAGONBONES_DATA_PARSER_H
 
 #include "../core/DragonBones.h"
-#include "../model/UserData.h"
-#include "../model/DragonBonesData.h"
+#include "../model/AnimationData.h"
 #include "../model/ArmatureData.h"
+#include "../model/BoundingBoxData.h"
 #include "../model/CanvasData.h"
 #include "../model/ConstraintData.h"
-#include "../model/SkinData.h"
 #include "../model/DisplayData.h"
-#include "../model/BoundingBoxData.h"
-#include "../model/AnimationData.h"
+#include "../model/DragonBonesData.h"
+#include "../model/SkinData.h"
 #include "../model/TextureAtlasData.h"
+#include "../model/UserData.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @internal
  */
-class DataParser
-{
+class DataParser {
     ABSTRACT_CLASS(DataParser)
 
 protected:
@@ -166,16 +165,16 @@ protected:
 
     static const char* DEFAULT_NAME;
 
-    static TextureFormat _getTextureFormat(const std::string& value);
-    static ArmatureType _getArmatureType(const std::string& value);
-    static DisplayType _getDisplayType(const std::string& value);
+    static TextureFormat   _getTextureFormat(const std::string& value);
+    static ArmatureType    _getArmatureType(const std::string& value);
+    static DisplayType     _getDisplayType(const std::string& value);
     static BoundingBoxType _getBoundingBoxType(const std::string& value);
-    static ActionType _getActionType(const std::string& value);
-    static BlendMode _getBlendMode(const std::string& value);
+    static ActionType      _getActionType(const std::string& value);
+    static BlendMode       _getBlendMode(const std::string& value);
 
 public:
-    virtual DragonBonesData* parseDragonBonesData(const char* rawData, float scale = 1.0f) = 0;
-    virtual bool parseTextureAtlasData(const char* rawData, TextureAtlasData& textureAtlasData, float scale = 1.0f) = 0;
+    virtual DragonBonesData* parseDragonBonesData(const char* rawData, float scale = 1.0f)                                      = 0;
+    virtual bool             parseTextureAtlasData(const char* rawData, TextureAtlasData& textureAtlasData, float scale = 1.0f) = 0;
 };
 
 DRAGONBONES_NAMESPACE_END

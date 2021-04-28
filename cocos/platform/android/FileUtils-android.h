@@ -30,12 +30,12 @@
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
 
-    #include "platform/FileUtils.h"
-    #include "base/Macros.h"
     #include <string>
     #include <vector>
-    #include "jni.h"
     #include "android/asset_manager.h"
+    #include "base/Macros.h"
+    #include "jni.h"
+    #include "platform/FileUtils.h"
 
 namespace cc {
 
@@ -58,23 +58,23 @@ public:
      */
     virtual ~FileUtilsAndroid();
 
-    static void setassetmanager(AAssetManager *a);
+    static void           setassetmanager(AAssetManager *a);
     static AAssetManager *getAssetManager() { return assetmanager; }
-    static ZipFile *getObbFile() { return obbfile; }
+    static ZipFile *      getObbFile() { return obbfile; }
 
     /* override functions */
-    bool init() override;
+    bool                      init() override;
     virtual FileUtils::Status getContents(const std::string &filename, ResizableBuffer *buffer) override;
 
     virtual std::string getWritablePath() const override;
-    virtual bool isAbsolutePath(const std::string &strPath) const override;
+    virtual bool        isAbsolutePath(const std::string &strPath) const override;
 
 private:
     virtual bool isFileExistInternal(const std::string &strFilePath) const override;
     virtual bool isDirectoryExistInternal(const std::string &dirPath) const override;
 
     static AAssetManager *assetmanager;
-    static ZipFile *obbfile;
+    static ZipFile *      obbfile;
 };
 
 // end of platform group

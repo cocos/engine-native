@@ -26,17 +26,17 @@
 
 #pragma once
 
-#include "base/Macros.h"
 #include "audio/include/Export.h"
+#include "base/Macros.h"
 
-#include "bindings/event/EventDispatcher.h"
 #include "bindings/event/CustomEventTypes.h"
+#include "bindings/event/EventDispatcher.h"
 
+#include <chrono>
 #include <functional>
 #include <list>
 #include <string>
 #include <unordered_map>
-#include <chrono>
 
 #ifdef ERROR
     #undef ERROR
@@ -329,11 +329,11 @@ protected:
 
     struct AudioInfo {
         const std::string *filePath;
-        ProfileHelper *profileHelper;
+        ProfileHelper *    profileHelper;
 
-        float volume;
-        bool loop;
-        float duration;
+        float      volume;
+        bool       loop;
+        float      duration;
         AudioState state;
 
         AudioInfo();
@@ -367,8 +367,8 @@ protected:
     static bool _isEnabled;
 
 private:
-    static uint32_t _onPauseListenerID;
-    static uint32_t _onResumeListenerID;
+    static uint32_t         _onPauseListenerID;
+    static uint32_t         _onResumeListenerID;
     static std::vector<int> _breakAudioID;
 
     static void onEnterBackground(const CustomEvent &);

@@ -30,14 +30,13 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @internal
  */
-class DeformVertices : public BaseObject
-{
+class DeformVertices : public BaseObject {
     BIND_CLASS_TYPE_A(DeformVertices);
 
 public:
-    bool verticesDirty;
-    std::vector<float> vertices;
-    std::vector<Bone*> bones;
+    bool                verticesDirty;
+    std::vector<float>  vertices;
+    std::vector<Bone*>  bones;
     const VerticesData* verticesData;
 
 protected:

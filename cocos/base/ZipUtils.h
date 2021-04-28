@@ -29,9 +29,9 @@
 #define __SUPPORT_ZIPUTILS_H__
 /// @cond DO_NOT_SHOW
 
+#include <string>
 #include "base/Macros.h"
 #include "platform/FileUtils.h"
-#include <string>
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "platform/android/FileUtils-android.h"
@@ -53,11 +53,11 @@ typedef struct unz_file_info_s unz_file_info;
      * @struct CCZHeader
      */
 struct CCZHeader {
-    unsigned char sig[4];            /** Signature. Should be 'CCZ!' 4 bytes. */
+    unsigned char  sig[4];           /** Signature. Should be 'CCZ!' 4 bytes. */
     unsigned short compression_type; /** Should be 0. */
     unsigned short version;          /** Should be 2 (although version type==1 is also supported). */
-    unsigned int reserved;           /** Reserved for users. */
-    unsigned int len;                /** Size of the uncompressed file. */
+    unsigned int   reserved;         /** Reserved for users. */
+    unsigned int   len;              /** Size of the uncompressed file. */
 };
 
 enum {
@@ -196,13 +196,13 @@ public:
     static void setPvrEncryptionKey(unsigned int keyPart1, unsigned int keyPart2, unsigned int keyPart3, unsigned int keyPart4);
 
 private:
-    static int inflateMemoryWithHint(unsigned char *in, ssize_t inLength, unsigned char **out, ssize_t *outLength, ssize_t outLengthHint);
-    static inline void decodeEncodedPvr(unsigned int *data, ssize_t len);
+    static int                 inflateMemoryWithHint(unsigned char *in, ssize_t inLength, unsigned char **out, ssize_t *outLength, ssize_t outLengthHint);
+    static inline void         decodeEncodedPvr(unsigned int *data, ssize_t len);
     static inline unsigned int checksumPvr(const unsigned int *data, ssize_t len);
 
     static unsigned int s_uEncryptedPvrKeyParts[4];
     static unsigned int s_uEncryptionKey[1024];
-    static bool s_bEncryptionKeyIsValid;
+    static bool         s_bEncryptionKeyIsValid;
 };
 
 // forward declaration
@@ -281,7 +281,7 @@ private:
     ZipFile();
 
     bool initWithBuffer(const void *buffer, unsigned long size);
-    int getCurrentFileInfo(std::string *filename, unz_file_info *info);
+    int  getCurrentFileInfo(std::string *filename, unz_file_info *info);
 
     /** Internal data like zip file pointer / file list array and so on */
     ZipFilePrivate *_data;

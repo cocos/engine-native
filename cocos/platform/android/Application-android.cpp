@@ -25,16 +25,16 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/Application.h"
-#include <cstring>
 #include <android_native_app_glue.h>
-#include "platform/android/jni/JniImp.h"
-#include "base/Scheduler.h"
+#include <cstring>
 #include "audio/include/AudioEngine.h"
-#include "cocos/bindings/jswrapper/SeApi.h"
+#include "base/Scheduler.h"
 #include "cocos/bindings/event/EventDispatcher.h"
-#include "platform/android/jni/JniHelper.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
+#include "platform/Application.h"
 #include "platform/android/jni/JniCocosActivity.h"
+#include "platform/android/jni/JniHelper.h"
+#include "platform/android/jni/JniImp.h"
 
 #include "pipeline/Define.h"
 #include "pipeline/RenderPipeline.h"
@@ -56,10 +56,10 @@ namespace cc {
 namespace {
 
 bool setCanvasCallback(se::Object *global) {
-    auto viewLogicalSize = cc::Application::getInstance()->getViewLogicalSize();
+    auto                viewLogicalSize = cc::Application::getInstance()->getViewLogicalSize();
     se::AutoHandleScope scope;
-    se::ScriptEngine *se = se::ScriptEngine::getInstance();
-    char commandBuf[200] = {0};
+    se::ScriptEngine *  se              = se::ScriptEngine::getInstance();
+    char                commandBuf[200] = {0};
     sprintf(commandBuf, "window.innerWidth = %d; window.innerHeight = %d; window.windowHandler = 0x%" PRIxPTR ";",
             (int)(viewLogicalSize.x),
             (int)(viewLogicalSize.y),
@@ -67,11 +67,11 @@ bool setCanvasCallback(se::Object *global) {
     se->evalString(commandBuf);
 
     gfx::DeviceInfo deviceInfo;
-    deviceInfo.windowHandle = (uintptr_t)cc::cocosApp.window;
-    deviceInfo.width        = viewLogicalSize.x;
-    deviceInfo.height       = viewLogicalSize.y;
-    deviceInfo.nativeWidth  = viewLogicalSize.x;
-    deviceInfo.nativeHeight = viewLogicalSize.y;
+    deviceInfo.windowHandle       = (uintptr_t)cc::cocosApp.window;
+    deviceInfo.width              = viewLogicalSize.x;
+    deviceInfo.height             = viewLogicalSize.y;
+    deviceInfo.nativeWidth        = viewLogicalSize.x;
+    deviceInfo.nativeHeight       = viewLogicalSize.y;
     deviceInfo.bindingMappingInfo = pipeline::bindingMappingInfo;
 
     gfx::DeviceManager::create(deviceInfo);
@@ -81,14 +81,14 @@ bool setCanvasCallback(se::Object *global) {
 
 } // namespace
 
-Application *Application::_instance = nullptr;
+Application *              Application::_instance  = nullptr;
 std::shared_ptr<Scheduler> Application::_scheduler = nullptr;
 
 Application::Application(int width, int height) {
     Application::_instance = this;
-    _scheduler = std::make_shared<Scheduler>();
-    _viewLogicalSize.x = width;
-    _viewLogicalSize.y = height;
+    _scheduler             = std::make_shared<Scheduler>();
+    _viewLogicalSize.x     = width;
+    _viewLogicalSize.y     = height;
 }
 
 Application::~Application() {
@@ -125,7 +125,7 @@ void Application::setPreferredFramesPerSecond(int fps) {
     if (fps == 0)
         return;
 
-    _fps = fps;
+    _fps                            = fps;
     _prefererredNanosecondsPerFrame = (long)(1.0 / _fps * NANOSECONDS_PER_SECOND);
 }
 
@@ -135,15 +135,15 @@ std::string Application::getCurrentLanguageCode() const {
 
 bool Application::isDisplayStats() {
     se::AutoHandleScope hs;
-    se::Value ret;
-    char commandBuf[100] = "cc.debug.isDisplayStats();";
+    se::Value           ret;
+    char                commandBuf[100] = "cc.debug.isDisplayStats();";
     se::ScriptEngine::getInstance()->evalString(commandBuf, 100, &ret);
     return ret.toBoolean();
 }
 
 void Application::setDisplayStats(bool isShow) {
     se::AutoHandleScope hs;
-    char commandBuf[100] = {0};
+    char                commandBuf[100] = {0};
     sprintf(commandBuf, "cc.debug.setDisplayStats(%s);", isShow ? "true" : "false");
     se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
@@ -152,9 +152,9 @@ void Application::setCursorEnabled(bool value) {
 }
 
 Application::LanguageType Application::getCurrentLanguage() const {
-    std::string languageName = getCurrentLanguageJNI();
-    const char *pLanguageName = languageName.c_str();
-    LanguageType ret = LanguageType::ENGLISH;
+    std::string  languageName  = getCurrentLanguageJNI();
+    const char * pLanguageName = languageName.c_str();
+    LanguageType ret           = LanguageType::ENGLISH;
 
     if (0 == strcmp("zh", pLanguageName)) {
         ret = LanguageType::CHINESE;

@@ -23,7 +23,6 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-
 #ifndef __PLAYER_MessageBoxServiceMac_h
 #define __PLAYER_MessageBoxServiceMac_h
 
@@ -34,15 +33,14 @@
 
 PLAYER_NS_BEGIN
 
-class PlayerMessageBoxServiceMac : public PlayerMessageBoxServiceProtocol
-{
+class PlayerMessageBoxServiceMac : public PlayerMessageBoxServiceProtocol {
 public:
     virtual int showMessageBox(const std::string &title,
                                const std::string &message,
-                               int buttonsType = BUTTONS_OK);
+                               int                buttonsType = BUTTONS_OK);
+
 protected:
-    struct MessageBoxInfo
-    {
+    struct MessageBoxInfo {
         std::string title;
         const int   buttonId;
     };

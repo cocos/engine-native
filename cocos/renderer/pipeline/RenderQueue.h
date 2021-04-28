@@ -40,7 +40,7 @@ public:
     void sort();
 
 private:
-    RenderPassList _queue;
+    RenderPassList        _queue;
     RenderQueueCreateInfo _passDesc;
 };
 

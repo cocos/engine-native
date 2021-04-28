@@ -32,14 +32,14 @@
  Works on cocos2d-iphone and cocos2d-x.
  */
 
-#include "storage/local-storage/LocalStorage.h"
 #include "base/Macros.h"
+#include "storage/local-storage/LocalStorage.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
 
+    #include <assert.h>
     #include <stdio.h>
     #include <stdlib.h>
-    #include <assert.h>
     #include "jni.h"
     #include "platform/android/jni/JniHelper.h"
 
@@ -52,7 +52,7 @@ static int _initialized = 0;
 
 static void splitFilename(std::string &str) {
     size_t found = 0;
-    found = str.find_last_of("/\\");
+    found        = str.find_last_of("/\\");
     if (found != std::string::npos) {
         str = str.substr(found + 1);
     }

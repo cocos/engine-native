@@ -63,7 +63,7 @@ void WebView::setJavascriptInterfaceScheme(const std::string &scheme) {
     _impl->setJavascriptInterfaceScheme(scheme);
 }
 
-void WebView::loadData(const cc::Data &data,
+void WebView::loadData(const cc::Data &   data,
                        const std::string &MIMEType,
                        const std::string &encoding,
                        const std::string &baseURL) {
@@ -148,7 +148,7 @@ void WebView::setOnJSCallback(const ccWebViewCallback &callback) {
 }
 
 std::function<bool(WebView
-                       *sender,
+                       *              sender,
                    const std::string &url)>
 
 WebView::getOnShouldStartLoading() const {

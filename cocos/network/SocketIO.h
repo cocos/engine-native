@@ -27,9 +27,9 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
 #include <unordered_map>
-#include <functional>
 #include "base/Macros.h"
 #include "base/Map.h"
 
@@ -59,7 +59,7 @@ public:
      * @return SocketIO* the instance of SocketIO.
      */
     static SocketIO *getInstance();
-    static void destroyInstance();
+    static void      destroyInstance();
 
     /**
      * The delegate class to process socket.io events.
@@ -147,8 +147,8 @@ private:
     cc::Map<std::string, SIOClientImpl *> _sockets;
 
     SIOClientImpl *getSocket(const std::string &uri);
-    void addSocket(const std::string &uri, SIOClientImpl *socket);
-    void removeSocket(const std::string &uri);
+    void           addSocket(const std::string &uri, SIOClientImpl *socket);
+    void           removeSocket(const std::string &uri);
 
     friend class SIOClientImpl;
 
@@ -171,14 +171,14 @@ class CC_DLL SIOClient
 private:
     friend class SocketIO; // Only SocketIO class could contruct a SIOClient instance.
 
-    std::string _path, _tag;
-    bool _connected;
+    std::string    _path, _tag;
+    bool           _connected;
     SIOClientImpl *_socket;
 
     SocketIO::SIODelegate *_delegate;
 
     EventRegistry _eventRegistry;
-    uint32_t _instanceId;
+    uint32_t      _instanceId;
 
     void fireEvent(const std::string &eventName, const std::string &data);
 

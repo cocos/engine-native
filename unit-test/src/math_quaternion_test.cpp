@@ -21,20 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "gtest/gtest.h"
-#include "cocos/math/Vec3.h"
-#include "cocos/math/Vec4.h"
+#include <math.h>
 #include "cocos/math/Mat3.h"
 #include "cocos/math/Mat4.h"
 #include "cocos/math/Math.h"
 #include "cocos/math/Quaternion.h"
+#include "cocos/math/Vec3.h"
+#include "cocos/math/Vec4.h"
+#include "gtest/gtest.h"
 #include "utils.h"
-#include <math.h>
 
 TEST(mathQuaternionTest, test6) {
     // identity
     logLabel = "test the quaternion identity function";
-    cc::Quaternion quat(1,2,1,1);
+    cc::Quaternion quat(1, 2, 1, 1);
     quat = cc::Quaternion::identity();
     ExpectEq(quat.x == 0 && quat.y == 0 && quat.z == 0 && quat.w == 1, true);
     // isIdentity
@@ -44,7 +44,7 @@ TEST(mathQuaternionTest, test6) {
     ExpectEq(quat.isIdentity(), true);
     // zero
     logLabel = "test the quaternion zero function";
-    cc::Quaternion zero(1,2,1,1);
+    cc::Quaternion zero(1, 2, 1, 1);
     zero = cc::Quaternion::zero();
     ExpectEq(zero.x == 0 && zero.y == 0 && zero.z == 0 && zero.w == 0, true);
     // isZero
@@ -53,9 +53,9 @@ TEST(mathQuaternionTest, test6) {
     // createFromRotationMatrix
     logLabel = "test the quaternion createFromRotationMatrix function";
     cc::Mat4 rotMat;
-    rotMat.m[0] = cos(cc::math::PI_DIV2);
-    rotMat.m[2] = sin(cc::math::PI_DIV2);
-    rotMat.m[8] = -sin(cc::math::PI_DIV2);
+    rotMat.m[0]  = cos(cc::math::PI_DIV2);
+    rotMat.m[2]  = sin(cc::math::PI_DIV2);
+    rotMat.m[8]  = -sin(cc::math::PI_DIV2);
     rotMat.m[10] = cos(cc::math::PI_DIV2);
     cc::Quaternion::createFromRotationMatrix(rotMat, &quat);
     ExpectEq(IsEqualF(-0.707106, quat.y), true);
@@ -105,7 +105,4 @@ TEST(mathQuaternionTest, test6) {
     q2.set(30, 10, 20, 1);
     cc::Quaternion::slerp(q1, q2, 0, &quat);
     ExpectEq(IsEqualF(1, quat.x) && IsEqualF(10, quat.z), true);
-    
-    
 }
-

@@ -41,7 +41,7 @@ public:
     AttachmentVertices(cc::middleware::Texture2D *texture, int verticesCount, unsigned short *triangles, int trianglesCount);
     virtual ~AttachmentVertices();
 
-    cc::middleware::Texture2D *_texture = nullptr;
+    cc::middleware::Texture2D *_texture   = nullptr;
     cc::middleware::Triangles *_triangles = nullptr;
 };
 } // namespace spine

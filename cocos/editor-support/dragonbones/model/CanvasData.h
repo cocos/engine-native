@@ -30,13 +30,12 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @internal
  */
-class CanvasData : public BaseObject
-{
+class CanvasData : public BaseObject {
     BIND_CLASS_TYPE_A(CanvasData);
 
 public:
-    bool hasBackground;
-    unsigned color;
+    bool      hasBackground;
+    unsigned  color;
     Rectangle aabb;
 
 protected:

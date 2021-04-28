@@ -340,8 +340,8 @@ struct CC_DLL UIBatch {
 };
 
 struct CC_DLL Scene {
-    uint32_t mainLightID = 0;
-    uint32_t modelsID = 0; // array pool
+    uint32_t mainLightID  = 0;
+    uint32_t modelsID     = 0; // array pool
     uint32_t sphereLights = 0; // array pool
     uint32_t spotLights   = 0; // array pool
     uint32_t uiBatches    = 0; // array pool

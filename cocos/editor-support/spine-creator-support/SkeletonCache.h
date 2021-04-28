@@ -29,10 +29,10 @@
 
 #pragma once
 
+#include <vector>
 #include "IOBuffer.h"
 #include "SkeletonAnimation.h"
 #include "middleware-adapter.h"
-#include <vector>
 
 namespace spine {
 class SkeletonCache : public SkeletonAnimation {
@@ -43,13 +43,13 @@ public:
         SegmentData();
         ~SegmentData();
 
-        void setTexture(cc::middleware::Texture2D *value);
+        void                       setTexture(cc::middleware::Texture2D *value);
         cc::middleware::Texture2D *getTexture() const;
 
     public:
-        int indexCount = 0;
+        int indexCount       = 0;
         int vertexFloatCount = 0;
-        int blendMode = 0;
+        int blendMode        = 0;
 
     private:
         cc::middleware::Texture2D *_texture = nullptr;
@@ -62,7 +62,7 @@ public:
     struct ColorData {
         cc::middleware::Color4F finalColor;
         cc::middleware::Color4F darkColor;
-        int vertexFloatOffset = 0;
+        int                     vertexFloatOffset = 0;
     };
 
     struct FrameData {
@@ -94,8 +94,8 @@ public:
         // if bone data is empty, it will build new one.
         BoneData *buildBoneData(std::size_t index);
 
-        std::vector<BoneData *> _bones;
-        std::vector<ColorData *> _colors;
+        std::vector<BoneData *>    _bones;
+        std::vector<ColorData *>   _colors;
         std::vector<SegmentData *> _segments;
 
     public:
@@ -110,7 +110,7 @@ public:
         ~AnimationData();
         void reset();
 
-        FrameData *getFrameData(std::size_t frameIdx) const;
+        FrameData * getFrameData(std::size_t frameIdx) const;
         std::size_t getFrameCount() const;
 
         bool isComplete() const { return _isComplete; }
@@ -121,9 +121,9 @@ public:
         FrameData *buildFrameData(std::size_t frameIdx);
 
     private:
-        std::string _animationName = "";
-        bool _isComplete = false;
-        float _totalTime = 0.0f;
+        std::string              _animationName = "";
+        bool                     _isComplete    = false;
+        float                    _totalTime     = 0.0f;
         std::vector<FrameData *> _frames;
     };
 
@@ -140,8 +140,8 @@ public:
     // if animation data is empty, it will build new one.
     AnimationData *buildAnimationData(const std::string &animationName);
     AnimationData *getAnimationData(const std::string &animationName);
-    void resetAllAnimationData();
-    void resetAnimationData(const std::string &animationName);
+    void           resetAllAnimationData();
+    void           resetAnimationData(const std::string &animationName);
 
 private:
     void renderAnimationFrame(AnimationData *animationData);
@@ -151,7 +151,7 @@ public:
     static float MaxCacheTime;
 
 private:
-    std::string _curAnimationName = "";
+    std::string                            _curAnimationName = "";
     std::map<std::string, AnimationData *> _animationCaches;
 };
 } // namespace spine

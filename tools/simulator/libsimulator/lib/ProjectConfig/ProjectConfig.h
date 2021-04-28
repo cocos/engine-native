@@ -66,36 +66,36 @@ class CC_LIBSIM_DLL ProjectConfig {
 public:
     ProjectConfig();
 
-    static const int DEFAULT_WIDTH = 640;
+    static const int DEFAULT_WIDTH  = 640;
     static const int DEFAULT_HEIGHT = 960;
 
     string getProjectDir() const;
-    void setProjectDir(const string &projectDir);
+    void   setProjectDir(const string &projectDir);
 
     string getScriptFile() const;
     string getScriptFileRealPath() const;
-    void setScriptFile(const string &scriptFile);
+    void   setScriptFile(const string &scriptFile);
 
     string getWritablePath() const;
     string getWritableRealPath() const;
-    void setWritablePath(const string &writablePath);
+    void   setWritablePath(const string &writablePath);
 
-    string getPackagePath() const;
-    string getNormalizedPackagePath() const;
-    void setPackagePath(const string &packagePath);
-    void addPackagePath(const string &packagePath);
+    string              getPackagePath() const;
+    string              getNormalizedPackagePath() const;
+    void                setPackagePath(const string &packagePath);
+    void                addPackagePath(const string &packagePath);
     std::vector<string> getPackagePathArray() const;
 
     cc::Size getFrameSize() const;
-    void setFrameSize(const cc::Size &frameSize);
-    bool isLandscapeFrame() const;
-    bool isPortraitFrame() const;
-    void changeFrameOrientation();
-    void changeFrameOrientationToPortait();
-    void changeFrameOrientationToLandscape();
+    void     setFrameSize(const cc::Size &frameSize);
+    bool     isLandscapeFrame() const;
+    bool     isPortraitFrame() const;
+    void     changeFrameOrientation();
+    void     changeFrameOrientationToPortait();
+    void     changeFrameOrientationToLandscape();
 
     float getFrameScale() const;
-    void setFrameScale(float frameScale);
+    void  setFrameScale(float frameScale);
 
     bool isShowConsole() const;
     void setShowConsole(bool showConsole);
@@ -103,29 +103,29 @@ public:
     bool isLoadPrecompiledFramework() const;
     void setLoadPrecompiledFramework(bool load);
 
-    bool isWriteDebugLogToFile() const;
-    void setWriteDebugLogToFile(bool writeDebugLogToFile);
-    void setDebugLogFilePath(const std::string &logFile);
+    bool   isWriteDebugLogToFile() const;
+    void   setWriteDebugLogToFile(bool writeDebugLogToFile);
+    void   setDebugLogFilePath(const std::string &logFile);
     string getDebugLogFilePath() const;
 
     cc::Vec2 getWindowOffset() const;
-    void setWindowOffset(const cc::Vec2 &windowOffset);
+    void     setWindowOffset(const cc::Vec2 &windowOffset);
 
-    int getDebuggerType() const;
+    int  getDebuggerType() const;
     void setDebuggerType(int debuggerType);
 
-    void parseCommandLine(const vector<string> &args);
-    string makeCommandLine(unsigned int mask = kProjectConfigAll) const;
+    void           parseCommandLine(const vector<string> &args);
+    string         makeCommandLine(unsigned int mask = kProjectConfigAll) const;
     vector<string> makeCommandLineVector(unsigned int mask = kProjectConfigAll) const;
 
     void setConsolePort(int port);
-    int getConsolePort();
+    int  getConsolePort();
     void setFileUploadPort(int port);
-    int getFileUploadPort();
+    int  getFileUploadPort();
     // @address: 127.0.0.1
-    void setBindAddress(const std::string &address);
-    const std::string &getBindAddress() const;
-    void setSearchPath(const vector<string> &args);
+    void                  setBindAddress(const std::string &address);
+    const std::string &   getBindAddress() const;
+    void                  setSearchPath(const vector<string> &args);
     const vector<string> &getSearchPath() const;
 
     bool isAppMenu() const;
@@ -136,31 +136,31 @@ public:
     void dump();
 
 private:
-    string _projectDir;
-    string _scriptFile;
-    string _packagePath;
-    string _writablePath;
-    cc::Size _frameSize;
-    float _frameScale;
-    bool _showConsole;
-    bool _loadPrecompiledFramework;
-    bool _writeDebugLogToFile;
-    bool _restartProcess;
-    cc::Vec2 _windowOffset;
-    int _debuggerType;
-    bool _isAppMenu;
-    bool _isResizeWindow;
-    bool _isRetinaDisplay;
-    string _debugLogFile;
-    int _consolePort;
-    int _fileUploadPort;
-    string _bindAddress;
+    string         _projectDir;
+    string         _scriptFile;
+    string         _packagePath;
+    string         _writablePath;
+    cc::Size       _frameSize;
+    float          _frameScale;
+    bool           _showConsole;
+    bool           _loadPrecompiledFramework;
+    bool           _writeDebugLogToFile;
+    bool           _restartProcess;
+    cc::Vec2       _windowOffset;
+    int            _debuggerType;
+    bool           _isAppMenu;
+    bool           _isResizeWindow;
+    bool           _isRetinaDisplay;
+    string         _debugLogFile;
+    int            _consolePort;
+    int            _fileUploadPort;
+    string         _bindAddress;
     vector<string> _searchPath;
 
-    void normalize();
+    void   normalize();
     string replaceProjectDirToMacro(const string &path) const;
     string replaceProjectDirToFullPath(const string &path) const;
-    bool isAbsolutePath(const string &path) const;
+    bool   isAbsolutePath(const string &path) const;
 
     /**
      * windows : Y:\Documents\CocosProjects\Cocos Project\ -> "Y:\Documents\CocosProjects\Cocos Project\\"

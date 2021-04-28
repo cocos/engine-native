@@ -25,6 +25,9 @@
 
 #pragma once
 
+#include <cstdint>
+#include <string>
+#include <vector>
 #include "Blackboard.h"
 #include "CallbackPass.h"
 #include "DevicePass.h"
@@ -32,9 +35,6 @@
 #include "PassNodeBuilder.h"
 #include "ResourceEntry.h"
 #include "ResourceNode.h"
-#include <cstdint>
-#include <string>
-#include <vector>
 
 namespace cc {
 namespace framegraph {

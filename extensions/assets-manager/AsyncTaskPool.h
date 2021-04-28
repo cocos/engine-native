@@ -26,17 +26,17 @@ THE SOFTWARE.
 #ifndef __CCSYNC_TASK_POOL_H_
 #define __CCSYNC_TASK_POOL_H_
 
-#include "platform/Application.h"
-#include "base/Scheduler.h"
-#include <vector>
-#include <queue>
-#include <memory>
-#include <thread>
-#include <mutex>
 #include <condition_variable>
-#include <future>
 #include <functional>
+#include <future>
+#include <memory>
+#include <mutex>
+#include <queue>
 #include <stdexcept>
+#include <thread>
+#include <vector>
+#include "base/Scheduler.h"
+#include "platform/Application.h"
 
 /**
 * @addtogroup base
@@ -97,7 +97,7 @@ protected:
     class ThreadTasks {
         struct AsyncTaskCallBack {
             TaskCallBack callback;
-            void *callbackParam;
+            void *       callbackParam;
         };
 
     public:
@@ -107,14 +107,14 @@ protected:
                 [this] {
                     for (;;) {
                         std::function<void()> task;
-                        AsyncTaskCallBack callback;
+                        AsyncTaskCallBack     callback;
                         {
                             std::unique_lock<std::mutex> lock(this->_queueMutex);
                             this->_condition.wait(lock,
                                                   [this] { return this->_stop || !this->_tasks.empty(); });
                             if (this->_stop && this->_tasks.empty())
                                 return;
-                            task = std::move(this->_tasks.front());
+                            task     = std::move(this->_tasks.front());
                             callback = std::move(this->_taskCallBacks.front());
                             this->_tasks.pop();
                             this->_taskCallBacks.pop();
@@ -159,7 +159,7 @@ protected:
                 }
 
                 AsyncTaskCallBack taskCallBack;
-                taskCallBack.callback = callback;
+                taskCallBack.callback      = callback;
                 taskCallBack.callbackParam = callbackParam;
                 _tasks.emplace([task]() { task(); });
                 _taskCallBacks.emplace(taskCallBack);
@@ -172,12 +172,12 @@ protected:
         std::thread _thread;
         // the task queue
         std::queue<std::function<void()>> _tasks;
-        std::queue<AsyncTaskCallBack> _taskCallBacks;
+        std::queue<AsyncTaskCallBack>     _taskCallBacks;
 
         // synchronization
-        std::mutex _queueMutex;
+        std::mutex              _queueMutex;
         std::condition_variable _condition;
-        bool _stop;
+        bool                    _stop;
     };
 
     //tasks

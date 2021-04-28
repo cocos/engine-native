@@ -25,8 +25,8 @@ THE SOFTWARE.
 
 #define LOG_TAG "PcmBufferProvider"
 
-#include "audio/android/cutils/log.h"
 #include "audio/android/PcmBufferProvider.h"
+#include "audio/android/cutils/log.h"
 
 //#define VERY_VERY_VERBOSE_LOGGING
 #ifdef VERY_VERY_VERBOSE_LOGGING
@@ -44,11 +44,11 @@ PcmBufferProvider::PcmBufferProvider()
 }
 
 bool PcmBufferProvider::init(const void *addr, size_t frames, size_t frameSize) {
-    _addr = addr;
+    _addr      = addr;
     _numFrames = frames;
     _frameSize = frameSize;
     _nextFrame = 0;
-    _unrel = 0;
+    _unrel     = 0;
     return true;
 }
 
@@ -60,9 +60,10 @@ status_t PcmBufferProvider::getNextBuffer(Buffer *buffer,
         buffer->frameCount = _numFrames - _nextFrame;
     }
 
-    ALOGVV("getNextBuffer() requested %zu frames out of %zu frames available,"
-           " and returned %zu frames",
-           requestedFrames, (size_t)(_numFrames - _nextFrame), buffer->frameCount);
+    ALOGVV(
+        "getNextBuffer() requested %zu frames out of %zu frames available,"
+        " and returned %zu frames",
+        requestedFrames, (size_t)(_numFrames - _nextFrame), buffer->frameCount);
 
     _unrel = buffer->frameCount;
     if (buffer->frameCount > 0) {
@@ -76,20 +77,22 @@ status_t PcmBufferProvider::getNextBuffer(Buffer *buffer,
 
 void PcmBufferProvider::releaseBuffer(Buffer *buffer) {
     if (buffer->frameCount > _unrel) {
-        ALOGVV("ERROR releaseBuffer() released %zu frames but only %zu available "
-               "to release",
-               buffer->frameCount, _unrel);
+        ALOGVV(
+            "ERROR releaseBuffer() released %zu frames but only %zu available "
+            "to release",
+            buffer->frameCount, _unrel);
         _nextFrame += _unrel;
         _unrel = 0;
     } else {
-        ALOGVV("releaseBuffer() released %zu frames out of %zu frames available "
-               "to release",
-               buffer->frameCount, _unrel);
+        ALOGVV(
+            "releaseBuffer() released %zu frames out of %zu frames available "
+            "to release",
+            buffer->frameCount, _unrel);
         _nextFrame += buffer->frameCount;
         _unrel -= buffer->frameCount;
     }
     buffer->frameCount = 0;
-    buffer->raw = NULL;
+    buffer->raw        = NULL;
 }
 
 void PcmBufferProvider::reset() {

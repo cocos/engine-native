@@ -40,7 +40,7 @@ void ccVertexLineToPolygon(Vec2 *points, float stroke, Vec2 *vertices, unsigned 
     unsigned int nuPointsMinus = nuPoints - 1;
 
     for (unsigned int i = offset; i < nuPoints; i++) {
-        idx = i * 2;
+        idx     = i * 2;
         Vec2 p1 = points[i];
         Vec2 perpVector;
 
@@ -74,7 +74,7 @@ void ccVertexLineToPolygon(Vec2 *points, float stroke, Vec2 *vertices, unsigned 
     // Validate vertexes
     offset = (offset == 0) ? 0 : offset - 1;
     for (unsigned int i = offset; i < nuPointsMinus; i++) {
-        idx = i * 2;
+        idx                     = i * 2;
         const unsigned int idx1 = idx + 2;
 
         Vec2 p1 = vertices[idx];
@@ -90,7 +90,7 @@ void ccVertexLineToPolygon(Vec2 *points, float stroke, Vec2 *vertices, unsigned 
                 fixVertex = true;
 
         if (fixVertex) {
-            vertices[idx1] = p4;
+            vertices[idx1]     = p4;
             vertices[idx1 + 1] = p3;
         }
     }
@@ -119,12 +119,12 @@ bool ccVertexLineIntersect(float Ax, float Ay,
     // Rotate the system so that point B is on the positive X axis.
     theCos = Bx / distAB;
     theSin = By / distAB;
-    newX = Cx * theCos + Cy * theSin;
-    Cy = Cy * theCos - Cx * theSin;
-    Cx = newX;
-    newX = Dx * theCos + Dy * theSin;
-    Dy = Dy * theCos - Dx * theSin;
-    Dx = newX;
+    newX   = Cx * theCos + Cy * theSin;
+    Cy     = Cy * theCos - Cx * theSin;
+    Cx     = newX;
+    newX   = Dx * theCos + Dy * theSin;
+    Dy     = Dy * theCos - Dx * theSin;
+    Dx     = newX;
 
     // FAIL: Lines are parallel.
     if (Cy == Dy) return false;

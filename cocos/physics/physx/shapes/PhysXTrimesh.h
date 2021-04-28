@@ -39,10 +39,10 @@ public:
     void updateScale() override;
 
 private:
-    bool         _mConvex;
-    uintptr_t    _mMeshHandle;
-    void         updateGeometry();
-    void onComponentSet() override;
+    bool      _mConvex;
+    uintptr_t _mMeshHandle;
+    void      updateGeometry();
+    void      onComponentSet() override;
 };
 
 } // namespace physics

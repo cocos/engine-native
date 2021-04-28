@@ -41,8 +41,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class DragonBonesData : public BaseObject
-{
+class DragonBonesData : public BaseObject {
     BIND_CLASS_TYPE_B(DragonBonesData);
 
 public:
@@ -140,14 +139,11 @@ public:
      * @private
      */
     UserData* userData;
-    DragonBonesData() :
-        binary(nullptr),
-        userData(nullptr)
-    {
+    DragonBonesData() : binary(nullptr),
+                        userData(nullptr) {
         _onClear();
     }
-    ~DragonBonesData()
-    {
+    ~DragonBonesData() {
         _onClear();
     }
     /**
@@ -166,8 +162,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline ArmatureData* getArmature(const std::string& armatureName) const
-    {
+    inline ArmatureData* getArmature(const std::string& armatureName) const {
         return mapFind<ArmatureData>(armatures, armatureName);
     }
 
@@ -175,18 +170,17 @@ protected:
     virtual void _onClear() override;
 
 public: // For WebAssembly.
-    std::vector<unsigned>* getFrameIndices() { return &frameIndices; }
+    std::vector<unsigned>*          getFrameIndices() { return &frameIndices; }
     const std::vector<std::string>& getArmatureNames() const { return armatureNames; }
 
 #if EGRET_WASM
-    unsigned getBinary() const
-    {
+    unsigned getBinary() const {
         return (unsigned)binary;
     }
 #endif // EGRET_WASM
 
     const UserData* getUserData() const { return userData; }
-    void setUserData(UserData* value) { userData = value; }
+    void            setUserData(UserData* value) { userData = value; }
 };
 
 DRAGONBONES_NAMESPACE_END

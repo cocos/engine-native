@@ -25,10 +25,10 @@
 
 #include "jsb_cocos_manual.h"
 
+#include "cocos/bindings/auto/jsb_cocos_auto.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global_init.h"
-#include "cocos/bindings/auto/jsb_cocos_auto.h"
 
 #include "storage/local-storage/LocalStorage.h"
 
@@ -65,15 +65,15 @@ public:
 
 private:
     cc::SAXParser _parser;
-    std::string _result;
-    bool _isStoringCharacters;
-    std::string _currentValue;
+    std::string   _result;
+    bool          _isStoringCharacters;
+    std::string   _currentValue;
 };
 
 // cc.PlistParser.getInstance()
 static bool js_PlistParser_getInstance(se::State &s) {
     __JSPlistDelegator *delegator = __JSPlistDelegator::getInstance();
-    SAXParser *parser = delegator->getParser();
+    SAXParser *         parser    = delegator->getParser();
 
     if (parser) {
         native_ptr_to_rooted_seval<SAXParser>(parser, __jsb_cc_SAXParser_class, &s.rval());
@@ -85,8 +85,8 @@ SE_BIND_FUNC(js_PlistParser_getInstance)
 
 // cc.PlistParser.getInstance().parse(text)
 static bool js_PlistParser_parse(se::State &s) {
-    const auto &args = s.args();
-    size_t argc = args.size();
+    const auto &        args      = s.args();
+    size_t              argc      = args.size();
     __JSPlistDelegator *delegator = __JSPlistDelegator::getInstance();
 
     bool ok = true;
@@ -161,7 +161,7 @@ void __JSPlistDelegator::startElement(void *ctx, const char *name, const char **
 }
 
 void __JSPlistDelegator::endElement(void *ctx, const char *name) {
-    _isStoringCharacters = false;
+    _isStoringCharacters    = false;
     std::string elementName = (char *)name;
 
     if (elementName == "dict") {
@@ -204,10 +204,10 @@ static bool register_plist_parser(se::Object *obj) {
 
 static bool JSB_localStorageGetItem(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 1) {
         std::string ret_val;
-        bool ok = true;
+        bool        ok = true;
         std::string key;
         ok = seval_to_std_string(args[0], &key);
         SE_PRECONDITION2(ok, false, "Error processing arguments");
@@ -228,9 +228,9 @@ SE_BIND_FUNC(JSB_localStorageGetItem)
 
 static bool JSB_localStorageRemoveItem(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 1) {
-        bool ok = true;
+        bool        ok = true;
         std::string key;
         ok = seval_to_std_string(args[0], &key);
         SE_PRECONDITION2(ok, false, "Error processing arguments");
@@ -245,9 +245,9 @@ SE_BIND_FUNC(JSB_localStorageRemoveItem)
 
 static bool JSB_localStorageSetItem(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 2) {
-        bool ok = true;
+        bool        ok = true;
         std::string key;
         ok = seval_to_std_string(args[0], &key);
         SE_PRECONDITION2(ok, false, "Error processing arguments");
@@ -266,7 +266,7 @@ SE_BIND_FUNC(JSB_localStorageSetItem)
 
 static bool JSB_localStorageClear(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 0) {
         localStorageClear();
         return true;
@@ -279,11 +279,11 @@ SE_BIND_FUNC(JSB_localStorageClear)
 
 static bool JSB_localStorageKey(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 1) {
-        bool ok = true;
-        int nIndex = 0;
-        ok = seval_to_int32(args[0], &nIndex);
+        bool ok     = true;
+        int  nIndex = 0;
+        ok          = seval_to_int32(args[0], &nIndex);
         SE_PRECONDITION2(ok, false, "Error processing arguments");
         std::string value;
         localStorageGetKey(nIndex, &value);
@@ -298,7 +298,7 @@ SE_BIND_FUNC(JSB_localStorageKey)
 
 static bool JSB_localStorage_getLength(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 0) {
         int nLength = 0;
 
@@ -348,8 +348,8 @@ static bool register_sys_localStorage(se::Object *obj) {
         cc::cls *cobj = (cc::cls *)s.nativeThisObject();                                       \
         SE_PRECONDITION2(cobj, false, "js_#cls_set_#property : Invalid Native Object");        \
         const auto &args = s.args();                                                           \
-        size_t argc = args.size();                                                             \
-        bool ok = true;                                                                        \
+        size_t      argc = args.size();                                                        \
+        bool        ok   = true;                                                               \
         if (argc == 1) {                                                                       \
             type arg0;                                                                         \
             ok &= convertFunc(args[0], &arg0);                                                 \
@@ -380,9 +380,9 @@ BIND_PROP_WITH_TYPE__CONV_FUNC__RETURN(CanvasRenderingContext2D, height, float, 
 static bool js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback(se::State &s) {
     cc::CanvasRenderingContext2D *cobj = (cc::CanvasRenderingContext2D *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto &   args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         std::function<void(const cc::Data &)> arg0;
         do {
@@ -398,10 +398,10 @@ static bool js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback(se::State
                     se::ValueArray args;
                     args.resize(1);
                     ok &= Data_to_seval(larg0, &args[0]);
-                    se::Value rval;
+                    se::Value   rval;
                     se::Object *thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     se::Object *funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(args, thisObj, &rval);
+                    bool        succeed = funcObj->call(args, thisObj, &rval);
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
                     }
@@ -427,7 +427,7 @@ SE_BIND_FUNC(js_CanvasRenderingContext2D_setCanvasBufferUpdatedCallback)
 
 static void setCanvasRenderingContext2DProps(cc::CanvasRenderingContext2D *context, const se::Value &val) {
     se::Object *props = val.toObject();
-    se::Value propVal;
+    se::Value   propVal;
 
     props->getProperty("lineWidth", &propVal);
     if (!propVal.isUndefined()) context->set_lineWidth(propVal.toFloat());
@@ -460,9 +460,9 @@ static void setCanvasRenderingContext2DProps(cc::CanvasRenderingContext2D *conte
 static bool js_engine_CanvasRenderingContext2D_measureText(se::State &s) {
     cc::CanvasRenderingContext2D *cobj = (cc::CanvasRenderingContext2D *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_engine_CanvasRenderingContext2D_measureText : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto &   args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 2) {
         std::string arg0;
         ok &= seval_to_std_string(args[0], &arg0);
@@ -482,9 +482,9 @@ SE_BIND_FUNC(js_engine_CanvasRenderingContext2D_measureText)
 static bool js_engine_CanvasRenderingContext2D_fillRect(se::State &s) {
     cc::CanvasRenderingContext2D *cobj = (cc::CanvasRenderingContext2D *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_engine_CanvasRenderingContext2D_fillRect : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto &   args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 5) {
         float arg0 = 0;
         float arg1 = 0;
@@ -508,14 +508,14 @@ SE_BIND_FUNC(js_engine_CanvasRenderingContext2D_fillRect)
 static bool js_engine_CanvasRenderingContext2D_fillText(se::State &s) {
     cc::CanvasRenderingContext2D *cobj = (cc::CanvasRenderingContext2D *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_engine_CanvasRenderingContext2D_fillText : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto &   args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 5) {
         std::string arg0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
+        float       arg1 = 0;
+        float       arg2 = 0;
+        float       arg3 = 0;
         ok &= seval_to_std_string(args[0], &arg0);
         ok &= seval_to_float(args[1], &arg1);
         ok &= seval_to_float(args[2], &arg2);
@@ -539,14 +539,14 @@ SE_BIND_FUNC(js_engine_CanvasRenderingContext2D_fillText)
 static bool js_engine_CanvasRenderingContext2D_strokeText(se::State &s) {
     cc::CanvasRenderingContext2D *cobj = (cc::CanvasRenderingContext2D *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_engine_CanvasRenderingContext2D_strokeText : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto &   args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 5) {
         std::string arg0;
-        float arg1 = 0;
-        float arg2 = 0;
-        float arg3 = 0;
+        float       arg1 = 0;
+        float       arg2 = 0;
+        float       arg3 = 0;
         ok &= seval_to_std_string(args[0], &arg0);
         ok &= seval_to_float(args[1], &arg1);
         ok &= seval_to_float(args[2], &arg2);
@@ -569,7 +569,7 @@ static bool js_engine_CanvasRenderingContext2D_strokeText(se::State &s) {
 SE_BIND_FUNC(js_engine_CanvasRenderingContext2D_strokeText)
 
 static se::Object *__deviceMotionObject = nullptr;
-static bool JSB_getDeviceMotionValue(se::State &s) {
+static bool        JSB_getDeviceMotionValue(se::State &s) {
     if (__deviceMotionObject == nullptr) {
         __deviceMotionObject = se::Object::createArrayObject(9);
         __deviceMotionObject->root();
@@ -628,11 +628,11 @@ static bool register_canvas_context2d(se::Object *obj) {
 static bool js_engine_FileUtils_listFilesRecursively(se::State &s) {
     auto *cobj = (cc::FileUtils *)s.nativeThisObject();
     SE_PRECONDITION2(cobj, false, "js_engine_FileUtils_listFilesRecursively : Invalid Native Object");
-    const auto &args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto &   args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 2) {
-        std::string arg0;
+        std::string              arg0;
         std::vector<std::string> arg1;
         ok &= seval_to_std_string(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_engine_FileUtils_listFilesRecursively : Error processing arguments");

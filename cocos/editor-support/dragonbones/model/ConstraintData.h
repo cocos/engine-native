@@ -33,13 +33,12 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @internal
  */
-class ConstraintData : public BaseObject 
-{
+class ConstraintData : public BaseObject {
     ABSTRACT_CLASS(ConstraintData)
 
 public:
-    int order;
-    std::string name;
+    int             order;
+    std::string     name;
     const BoneData* target;
     const BoneData* root;
     const BoneData* bone;
@@ -48,25 +47,24 @@ protected:
     virtual void _onClear() override;
 
 public: // For WebAssembly.
-    const BoneData* getTarget() const { return  target; }
-    void setTarget(const BoneData* value) { target = value; }
+    const BoneData* getTarget() const { return target; }
+    void            setTarget(const BoneData* value) { target = value; }
 
     const BoneData* getBone() const { return bone; }
-    void setBone(const BoneData* value) { bone = value; }
+    void            setBone(const BoneData* value) { bone = value; }
 
     const BoneData* getRoot() const { return root; }
-    void setRoot(const BoneData* value) { root = value; }
+    void            setRoot(const BoneData* value) { root = value; }
 };
 /**
  * @internal
  */
-class IKConstraintData : public ConstraintData 
-{
+class IKConstraintData : public ConstraintData {
     BIND_CLASS_TYPE_A(IKConstraintData);
 
 public:
-    bool scaleEnabled;
-    bool bendPositive;
+    bool  scaleEnabled;
+    bool  bendPositive;
     float weight;
 
 protected:

@@ -23,12 +23,12 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "cocos/bindings/event/EventDispatcher.h"
-#include "platform/Application.h"
 #include "EditBox.h"
-#include "platform/android/jni/JniHelper.h"
+#include "cocos/bindings/event/EventDispatcher.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_global.h"
+#include "platform/Application.h"
+#include "platform/android/jni/JniHelper.h"
 
 #ifndef JCLS_EDITBOX
     #define JCLS_EDITBOX "com/cocos/lib/CocosEditBoxActivity"
@@ -46,7 +46,7 @@ void getTextInputCallback() {
     if (!textInputCallback.isUndefined())
         return;
 
-    auto global = se::ScriptEngine::getInstance()->getGlobalObject();
+    auto      global = se::ScriptEngine::getInstance()->getGlobalObject();
     se::Value jsbVal;
     if (global->getProperty("jsb", &jsbVal) && jsbVal.isObject()) {
         jsbVal.toObject()->getProperty("onTextInput", &textInputCallback);
@@ -61,7 +61,7 @@ void callJSFunc(const std::string &type, const std::string &text) {
     getTextInputCallback();
 
     se::AutoHandleScope scope;
-    se::ValueArray args;
+    se::ValueArray      args;
     args.push_back(se::Value(type));
     args.push_back(se::Value(text));
     textInputCallback.toObject()->call(args, nullptr);

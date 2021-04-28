@@ -24,19 +24,19 @@
 ****************************************************************************/
 
 #include "JniCocosActivity.h"
-#include "platform/android/jni/JniHelper.h"
-#include "platform/android/FileUtils-android.h"
-#include "platform/Application.h"
-#include "platform/android/View.h"
-#include <jni.h>
-#include <android/log.h>
 #include <android/asset_manager_jni.h>
+#include <android/log.h>
 #include <android/native_window_jni.h>
 #include <android_native_app_glue.h>
-#include <thread>
-#include <unistd.h>
 #include <fcntl.h>
+#include <jni.h>
+#include <unistd.h>
+#include <thread>
 #include <vector>
+#include "platform/Application.h"
+#include "platform/android/FileUtils-android.h"
+#include "platform/android/View.h"
+#include "platform/android/jni/JniHelper.h"
 
 #define LOGV(...) __android_log_print(ANDROID_LOG_INFO, "CocosActivity JNI", __VA_ARGS__)
 
@@ -47,15 +47,15 @@ CocosApp cocosApp;
 }
 
 namespace {
-int messagePipe[2];
-int pipeRead = 0;
-int pipeWrite = 0;
-cc::Application *game = nullptr;
+int              messagePipe[2];
+int              pipeRead  = 0;
+int              pipeWrite = 0;
+cc::Application *game      = nullptr;
 
 void createGame(ANativeWindow *window) {
-    int width = ANativeWindow_getWidth(window);
+    int width  = ANativeWindow_getWidth(window);
     int height = ANativeWindow_getHeight(window);
-    game = cocos_main(width, height);
+    game       = cocos_main(width, height);
     game->init();
 }
 
@@ -190,14 +190,14 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosActivity_onCreateNative(JNIEnv *e
 
     cc::cocosApp.sdkVersion = sdkVersion;
     cc::JniHelper::init(env, activity);
-    cc::cocosApp.obbPath = cc::JniHelper::jstring2string(obbPath);
+    cc::cocosApp.obbPath      = cc::JniHelper::jstring2string(obbPath);
     cc::cocosApp.assetManager = AAssetManager_fromJava(env, assetMgr);
     static_cast<cc::FileUtilsAndroid *>(cc::FileUtils::getInstance())->setassetmanager(cc::cocosApp.assetManager);
 
     if (pipe(messagePipe)) {
         LOGV("Can not create pipe: %s", strerror(errno));
     }
-    pipeRead = messagePipe[0];
+    pipeRead  = messagePipe[0];
     pipeWrite = messagePipe[1];
     if (fcntl(pipeRead, F_SETFL, O_NONBLOCK) < 0) {
         LOGV("Can not make pipe read to non blocking mode.");

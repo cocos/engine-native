@@ -24,6 +24,8 @@
 #ifndef DRAGONBONES_CC_ARMATURE_DISPLAY_CONTAINER_H
 #define DRAGONBONES_CC_ARMATURE_DISPLAY_CONTAINER_H
 
+#include <map>
+#include <vector>
 #include "IOTypedArray.h"
 #include "MiddlewareManager.h"
 #include "base/Map.h"
@@ -32,8 +34,6 @@
 #include "dragonbones-creator-support/CCSlot.h"
 #include "dragonbones/DragonBonesHeaders.h"
 #include "middleware-adapter.h"
-#include <map>
-#include <vector>
 
 DRAGONBONES_NAMESPACE_BEGIN
 
@@ -55,8 +55,8 @@ private:
     void traverseArmature(Armature *armature, float parentOpacity = 1.0f);
 
 protected:
-    bool _debugDraw = false;
-    Armature *_armature = nullptr;
+    bool      _debugDraw = false;
+    Armature *_armature  = nullptr;
 
 public:
     CCArmatureDisplay();
@@ -104,7 +104,7 @@ public:
     virtual uint32_t getRenderOrder() const override;
 
     typedef std::function<void(EventObject *)> dbEventCallback;
-    void setDBEventCallback(dbEventCallback callback) {
+    void                                       setDBEventCallback(dbEventCallback callback) {
         _dbEventCallback = callback;
     }
 
@@ -170,26 +170,26 @@ public:
 
 private:
     std::map<std::string, bool> _listenerIDMap;
-    int _preBlendMode = -1;
-    int _preTextureIndex = -1;
-    int _curTextureIndex = -1;
-    int _curBlendSrc = -1;
-    int _curBlendDst = -1;
+    int                         _preBlendMode    = -1;
+    int                         _preTextureIndex = -1;
+    int                         _curTextureIndex = -1;
+    int                         _curBlendSrc     = -1;
+    int                         _curBlendDst     = -1;
 
     int _preISegWritePos = -1;
-    int _curISegLen = 0;
+    int _curISegLen      = 0;
 
     int _debugSlotsLen = 0;
-    int _materialLen = 0;
+    int _materialLen   = 0;
 
-    bool _batch = true;
-    bool _useAttach = false;
-    bool _premultipliedAlpha = false;
-    cc::middleware::Color4F _nodeColor = cc::middleware::Color4F::WHITE;
-    dbEventCallback _dbEventCallback = nullptr;
+    bool                    _batch              = true;
+    bool                    _useAttach          = false;
+    bool                    _premultipliedAlpha = false;
+    cc::middleware::Color4F _nodeColor          = cc::middleware::Color4F::WHITE;
+    dbEventCallback         _dbEventCallback    = nullptr;
 
     cc::middleware::IOTypedArray *_sharedBufferOffset = nullptr;
-    cc::middleware::IOTypedArray *_debugBuffer = nullptr;
+    cc::middleware::IOTypedArray *_debugBuffer        = nullptr;
     // Js fill this buffer to send parameter to cpp, avoid to call jsb function.
     cc::middleware::IOTypedArray *_paramsBuffer = nullptr;
 };

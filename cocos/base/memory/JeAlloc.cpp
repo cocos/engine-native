@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
 #include "JeAlloc.h"
 #include "MemTracker.h"
+#include "base/CoreStd.h"
 
 #if (CC_MEMORY_ALLOCATOR == CC_MEMORY_ALLOCATOR_JEMALLOC)
 
@@ -40,15 +40,15 @@ namespace cc {
 
 CC_INLINE static void CheckOverflowAlloc(void *ptr) {
     size_t size = je_malloc_usable_size(ptr);
-    char *p = (char *)ptr + size - MEM_CHECKTAG_SIZE;
-    uint tag = MEM_CHECKTAG;
+    char * p    = (char *)ptr + size - MEM_CHECKTAG_SIZE;
+    uint   tag  = MEM_CHECKTAG;
     memcpy(p, &tag, MEM_CHECKTAG_SIZE);
 }
 
 CC_INLINE static void CheckOverflowFree(void *ptr) {
     size_t size = je_malloc_usable_size(ptr);
-    char *p = (char *)ptr + size - MEM_CHECKTAG_SIZE;
-    uint tag;
+    char * p    = (char *)ptr + size - MEM_CHECKTAG_SIZE;
+    uint   tag;
     memcpy(&tag, p, MEM_CHECKTAG_SIZE);
     CCASSERT(tag == MEM_CHECKTAG);
 }
@@ -140,7 +140,7 @@ void JeAllocImpl::DeallocBytes(void *ptr) {
 
 struct JeDumpData {
     char *buf;
-    int size;
+    int   size;
 };
 
 static void JeStatsPrint(void *param, const char *msg) {
@@ -157,14 +157,14 @@ static void JeStatsPrint(void *param, const char *msg) {
 
 void JeAllocImpl::DumpStats(char *buf, int bufsize) {
     JeDumpData jd;
-    jd.buf = buf;
+    jd.buf  = buf;
     jd.size = bufsize - 1;
     je_malloc_stats_print(JeStatsPrint, &jd, "ma");
 }
 
 void JeAllocImpl::TrimAlloc() {
-    int narenas = 0;
-    size_t sz = sizeof(narenas);
+    int    narenas = 0;
+    size_t sz      = sizeof(narenas);
     je_mallctl("arenas.narenas", (void *)&narenas, &sz, nullptr, 0);
     char buf[24];
     sprintf(buf, "arena.%d.purge", narenas);

@@ -25,13 +25,13 @@
 
 #pragma once
 
+#include <memory>
 #include "CallbackPass.h"
 #include "Handle.h"
 #include "PassInsertPointManager.h"
 #include "RenderTargetAttachment.h"
 #include "VirtualResource.h"
 #include "gfx-base/GFXDef.h"
-#include <memory>
 
 namespace cc {
 namespace framegraph {

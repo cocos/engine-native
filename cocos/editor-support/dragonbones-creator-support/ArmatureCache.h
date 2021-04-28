@@ -37,12 +37,12 @@ public:
         SegmentData();
         ~SegmentData();
 
-        void setTexture(cc::middleware::Texture2D *value);
+        void                       setTexture(cc::middleware::Texture2D *value);
         cc::middleware::Texture2D *getTexture() const;
 
     public:
-        int blendMode = 0;
-        std::size_t indexCount = 0;
+        int         blendMode        = 0;
+        std::size_t indexCount       = 0;
         std::size_t vertexFloatCount = 0;
 
     private:
@@ -55,7 +55,7 @@ public:
 
     struct ColorData {
         cc::middleware::Color4F color;
-        std::size_t vertexFloatOffset = 0;
+        std::size_t             vertexFloatOffset = 0;
     };
 
     struct FrameData {
@@ -87,8 +87,8 @@ public:
         // if bone data is empty, it will build new one.
         BoneData *buildBoneData(std::size_t index);
 
-        std::vector<BoneData *> _bones;
-        std::vector<ColorData *> _colors;
+        std::vector<BoneData *>    _bones;
+        std::vector<ColorData *>   _colors;
         std::vector<SegmentData *> _segments;
 
     public:
@@ -103,7 +103,7 @@ public:
         ~AnimationData();
         void reset();
 
-        FrameData *getFrameData(std::size_t frameIdx) const;
+        FrameData * getFrameData(std::size_t frameIdx) const;
         std::size_t getFrameCount() const;
 
         bool isComplete() const { return _isComplete; }
@@ -114,9 +114,9 @@ public:
         FrameData *buildFrameData(std::size_t frameIdx);
 
     private:
-        std::string _animationName = "";
-        bool _isComplete = false;
-        float _totalTime = 0.0f;
+        std::string              _animationName = "";
+        bool                     _isComplete    = false;
+        float                    _totalTime     = 0.0f;
         std::vector<FrameData *> _frames;
     };
 
@@ -125,8 +125,8 @@ public:
 
     void updateToFrame(const std::string &animationName, int toFrameIdx = -1);
     // if animation data is empty, it will build new one.
-    AnimationData *buildAnimationData(const std::string &animationName);
-    AnimationData *getAnimationData(const std::string &animationName);
+    AnimationData *    buildAnimationData(const std::string &animationName);
+    AnimationData *    getAnimationData(const std::string &animationName);
     CCArmatureDisplay *getArmatureDisplay();
 
     void resetAllAnimationData();
@@ -141,18 +141,18 @@ public:
     static float MaxCacheTime;
 
 private:
-    FrameData *_frameData = nullptr;
-    cc::middleware::Color4F _preColor = cc::middleware::Color4F(-1.0f, -1.0f, -1.0f, -1.0f);
-    cc::middleware::Color4F _color = cc::middleware::Color4F(1.0f, 1.0f, 1.0f, 1.0f);
-    CCArmatureDisplay *_armatureDisplay = nullptr;
-    int _preBlendMode = -1;
-    int _preTextureIndex = -1;
-    int _curTextureIndex = -1;
-    int _preISegWritePos = -1;
-    int _curISegLen = 0;
-    int _curVSegLen = 0;
-    int _materialLen = 0;
-    std::string _curAnimationName = "";
+    FrameData *                            _frameData        = nullptr;
+    cc::middleware::Color4F                _preColor         = cc::middleware::Color4F(-1.0f, -1.0f, -1.0f, -1.0f);
+    cc::middleware::Color4F                _color            = cc::middleware::Color4F(1.0f, 1.0f, 1.0f, 1.0f);
+    CCArmatureDisplay *                    _armatureDisplay  = nullptr;
+    int                                    _preBlendMode     = -1;
+    int                                    _preTextureIndex  = -1;
+    int                                    _curTextureIndex  = -1;
+    int                                    _preISegWritePos  = -1;
+    int                                    _curISegLen       = 0;
+    int                                    _curVSegLen       = 0;
+    int                                    _materialLen      = 0;
+    std::string                            _curAnimationName = "";
     std::map<std::string, AnimationData *> _animationCaches;
 };
 

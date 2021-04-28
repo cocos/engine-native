@@ -1443,7 +1443,7 @@ void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpu
         }
 
         GLenum attachments[MAX_ATTACHMENTS] = {0};
-        uint   attachmentCount                  = 0;
+        uint   attachmentCount              = 0;
 
         size_t colorMipmapLevelCount = gpuFBO->colorMipmapLevels.size();
         for (size_t i = 0; i < gpuFBO->gpuColorTextures.size(); ++i) {

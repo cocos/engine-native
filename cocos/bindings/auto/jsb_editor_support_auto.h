@@ -24,16 +24,16 @@
 ****************************************************************************/
 
 #pragma once
-#include "base/Config.h"
 #include <type_traits>
+#include "base/Config.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
-#include "cocos/editor-support/middleware-adapter.h"
 #include "cocos/editor-support/MiddlewareManager.h"
 #include "cocos/editor-support/SharedBufferManager.h"
+#include "cocos/editor-support/middleware-adapter.h"
 
 extern se::Object* __jsb_cc_middleware_Texture2D_proto;
-extern se::Class* __jsb_cc_middleware_Texture2D_class;
+extern se::Class*  __jsb_cc_middleware_Texture2D_class;
 
 bool js_register_cc_middleware_Texture2D(se::Object* obj);
 bool register_all_editor_support(se::Object* obj);
@@ -50,7 +50,7 @@ SE_DECLARE_FUNC(js_editor_support_Texture2D_setTexParameters);
 SE_DECLARE_FUNC(js_editor_support_Texture2D_Texture2D);
 
 extern se::Object* __jsb_cc_middleware_SharedBufferManager_proto;
-extern se::Class* __jsb_cc_middleware_SharedBufferManager_class;
+extern se::Class*  __jsb_cc_middleware_SharedBufferManager_class;
 
 bool js_register_cc_middleware_SharedBufferManager(se::Object* obj);
 bool register_all_editor_support(se::Object* obj);
@@ -61,7 +61,7 @@ SE_DECLARE_FUNC(js_editor_support_SharedBufferManager_setResizeCallback);
 SE_DECLARE_FUNC(js_editor_support_SharedBufferManager_SharedBufferManager);
 
 extern se::Object* __jsb_cc_middleware_MiddlewareManager_proto;
-extern se::Class* __jsb_cc_middleware_MiddlewareManager_class;
+extern se::Class*  __jsb_cc_middleware_MiddlewareManager_class;
 
 bool js_register_cc_middleware_MiddlewareManager(se::Object* obj);
 bool register_all_editor_support(se::Object* obj);
@@ -80,4 +80,3 @@ SE_DECLARE_FUNC(js_editor_support_MiddlewareManager_destroyInstance);
 SE_DECLARE_FUNC(js_editor_support_MiddlewareManager_generateModuleID);
 SE_DECLARE_FUNC(js_editor_support_MiddlewareManager_getInstance);
 SE_DECLARE_FUNC(js_editor_support_MiddlewareManager_MiddlewareManager);
-

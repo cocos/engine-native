@@ -25,14 +25,14 @@
 ****************************************************************************/
 
 #include "cocos/bindings/manual/JavaScriptJavaBridge.h"
-#include "platform/android/jni/JniHelper.h"
+#include "cocos/base/UTF8.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
-#include "cocos/base/UTF8.h"
+#include "platform/android/jni/JniHelper.h"
 
 #include <android/log.h>
-#include <vector>
 #include <string>
+#include <vector>
 
 #ifdef LOG_TAG
     #undef LOG_TAG
@@ -54,8 +54,8 @@ JNIEXPORT jint JNICALL JNI_JSJAVABRIDGE(evalString)(JNIEnv *env, jclass cls, jst
     }
 
     se::AutoHandleScope hs;
-    bool strFlag = false;
-    std::string strValue = cc::StringUtils::getStringUTFCharsJNI(env, value, &strFlag);
+    bool                strFlag  = false;
+    std::string         strValue = cc::StringUtils::getStringUTFCharsJNI(env, value, &strFlag);
     if (!strFlag) {
         CC_LOG_DEBUG("JavaScriptJavaBridge_evalString error, invalid string code");
         return 0;
@@ -92,10 +92,10 @@ public:
     typedef std::vector<ValueType> ValueTypes;
 
     typedef union {
-        int intValue;
-        long longValue;
-        float floatValue;
-        int boolValue;
+        int          intValue;
+        long         longValue;
+        float        floatValue;
+        int          boolValue;
         std::string *stringValue;
     } ReturnValue;
 
@@ -151,24 +151,24 @@ public:
 
     private:
         bool m_valid;
-        int m_error;
+        int  m_error;
 
         std::string m_className;
         std::string m_methodName;
         std::string m_methodSig;
-        int m_argumentsCount;
-        ValueTypes m_argumentsType;
-        ValueType m_returnType;
+        int         m_argumentsCount;
+        ValueTypes  m_argumentsType;
+        ValueType   m_returnType;
 
         ReturnValue m_ret;
-        jstring m_retjstring;
+        jstring     m_retjstring;
 
-        JNIEnv *m_env;
-        jclass m_classID;
+        JNIEnv *  m_env;
+        jclass    m_classID;
         jmethodID m_methodID;
 
-        bool validateMethodSig();
-        bool getMethodInfo();
+        bool      validateMethodSig();
+        bool      getMethodInfo();
         ValueType checkType(const std::string &sig, size_t *pos);
     };
 
@@ -207,7 +207,7 @@ bool JavaScriptJavaBridge::CallInfo::execute() {
             m_retjstring = (jstring)m_env->CallStaticObjectMethod(m_classID, m_methodID);
             if (m_retjstring) {
                 std::string strValue = cc::StringUtils::getStringUTFCharsJNI(m_env, m_retjstring);
-                m_ret.stringValue = new std::string(strValue);
+                m_ret.stringValue    = new std::string(strValue);
             } else
                 m_ret.stringValue = nullptr;
 
@@ -253,9 +253,9 @@ bool JavaScriptJavaBridge::CallInfo::executeWithArgs(jvalue *args) {
             break;
 
         case JavaScriptJavaBridge::ValueType::STRING: {
-            m_retjstring = (jstring)m_env->CallStaticObjectMethodA(m_classID, m_methodID, args);
+            m_retjstring         = (jstring)m_env->CallStaticObjectMethodA(m_classID, m_methodID, args);
             std::string strValue = cc::StringUtils::getStringUTFCharsJNI(m_env, m_retjstring);
-            m_ret.stringValue = new std::string(strValue);
+            m_ret.stringValue    = new std::string(strValue);
             break;
         }
 
@@ -341,10 +341,10 @@ JavaScriptJavaBridge::ValueType JavaScriptJavaBridge::CallInfo::checkType(const 
 
 bool JavaScriptJavaBridge::CallInfo::getMethodInfo() {
     m_methodID = 0;
-    m_env = 0;
+    m_env      = 0;
 
     JavaVM *jvm = cc::JniHelper::getJavaVM();
-    jint ret = jvm->GetEnv((void **)&m_env, JNI_VERSION_1_4);
+    jint    ret = jvm->GetEnv((void **)&m_env, JNI_VERSION_1_4);
     switch (ret) {
         case JNI_OK:
             break;
@@ -364,7 +364,7 @@ bool JavaScriptJavaBridge::CallInfo::getMethodInfo() {
             return false;
     }
     jstring _jstrClassName = m_env->NewStringUTF(m_className.c_str());
-    m_classID = (jclass)m_env->CallObjectMethod(cc::JniHelper::classloader,
+    m_classID              = (jclass)m_env->CallObjectMethod(cc::JniHelper::classloader,
                                                 cc::JniHelper::loadclassMethod_methodID,
                                                 _jstrClassName);
 
@@ -438,10 +438,10 @@ SE_BIND_CTOR(JavaScriptJavaBridge_constructor, __jsb_JavaScriptJavaBridge_class,
 
 static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
 
     if (argc == 3) {
-        bool ok = false;
+        bool        ok = false;
         std::string clsName, methodName, methodSig;
         ok = seval_to_std_string(args[0], &clsName);
         SE_PRECONDITION2(ok, false, "Converting class name failed!");
@@ -454,7 +454,7 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) {
 
         JavaScriptJavaBridge::CallInfo call(clsName.c_str(), methodName.c_str(), methodSig.c_str());
         if (call.isValid()) {
-            ok = call.execute();
+            ok            = call.execute();
             int errorCode = call.getErrorCode();
             if (!ok || errorCode < 0) {
                 SE_REPORT_ERROR("call result code: %d", call.getErrorCode());
@@ -466,7 +466,7 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) {
         SE_REPORT_ERROR("JavaScriptJavaBridge::CallInfo isn't valid!");
         return false;
     } else if (argc > 3) {
-        bool ok = false;
+        bool        ok = false;
         std::string clsName, methodName, methodSig;
         ok = seval_to_std_string(args[0], &clsName);
         SE_PRECONDITION2(ok, false, "Converting class name failed!");
@@ -479,8 +479,8 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) {
 
         JavaScriptJavaBridge::CallInfo call(clsName.c_str(), methodName.c_str(), methodSig.c_str());
         if (call.isValid() && call.getArgumentsCount() == (argc - 3)) {
-            int count = argc - 3;
-            jvalue *jargs = new jvalue[count];
+            int                  count = argc - 3;
+            jvalue *             jargs = new jvalue[count];
             std::vector<jobject> toReleaseObjects;
             for (int i = 0; i < count; ++i) {
                 int index = i + 3;

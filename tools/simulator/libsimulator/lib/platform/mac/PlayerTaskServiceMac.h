@@ -41,15 +41,15 @@ PLAYER_NS_END
 @interface PlayerTaskPrivate : NSObject {
     NSFileHandle *fileHandle;
 
-    NSTask *_buildTask;
-    BOOL _isRunning;
-    int _exitCode;
+    NSTask *  _buildTask;
+    BOOL      _isRunning;
+    int       _exitCode;
     NSString *_output;
 }
 
-@property (assign) NSTask *buildTask;
-@property (assign) BOOL isRunning;
-@property (assign) int exitCode;
+@property (assign) NSTask *  buildTask;
+@property (assign) BOOL      isRunning;
+@property (assign) int       exitCode;
 @property (retain) NSString *output;
 
 - (void)runScriptAsyn:(NSString *)absScriptPath withArguments:(NSArray *)arguments;
@@ -79,7 +79,7 @@ protected:
                   const std::string &executePath,
                   const std::string &commandLineArguments);
 
-    void cleanup();
+    void           cleanup();
     std::u16string makeCommandLine() const;
 
     PlayerTaskPrivate *_taskPrivate;
@@ -94,7 +94,7 @@ public:
                                    const std::string &executePath,
                                    const std::string &commandLineArguments);
     virtual PlayerTask *getTask(const std::string &name);
-    virtual void removeTask(const std::string &name);
+    virtual void        removeTask(const std::string &name);
 
 protected:
     cc::Map<std::string, PlayerTaskMac *> _tasks;

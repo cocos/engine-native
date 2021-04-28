@@ -24,12 +24,12 @@
 ****************************************************************************/
 
 #include "DevicePass.h"
+#include <algorithm>
 #include "CallbackPass.h"
 #include "FrameGraph.h"
 #include "PassNode.h"
 #include "ResourceNode.h"
 #include "gfx-base/GFXCommandBuffer.h"
-#include <algorithm>
 
 namespace cc {
 namespace framegraph {
@@ -68,7 +68,6 @@ void DevicePass::execute() noexcept {
 
     for (Subpass &subPass : _subpasses) {
         for (LogicPass &pass : subPass.logicPasses) {
-
             gfx::Viewport &viewport = pass.customViewport ? pass.viewport : _viewport;
             gfx::Rect &    scissor  = pass.customViewport ? pass.scissor : _scissor;
 

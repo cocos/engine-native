@@ -47,8 +47,8 @@ void AppLang::readLocalizationFile() {
             CC_LOG_DEBUG("[WARNING]:not find %s", _localizationFileName.c_str());
             return;
         }
-        auto fullFilePath = fileUtils->fullPathForFilename(_localizationFileName);
-        std::string fileContent = cc::FileUtils::getInstance()->getStringFromFile(fullFilePath);
+        auto        fullFilePath = fileUtils->fullPathForFilename(_localizationFileName);
+        std::string fileContent  = cc::FileUtils::getInstance()->getStringFromFile(fullFilePath);
         if (fileContent.empty())
             return;
 
@@ -70,7 +70,7 @@ AppLang *AppLang::getInstance() {
 
 std::string AppLang::getString(const std::string &lang, const std::string &key) {
     std::string tmpKey = key;
-    const char *ckey = tmpKey.c_str();
+    const char *ckey   = tmpKey.c_str();
 
     std::string tmpLang = lang;
     const char *langKey = tmpLang.c_str();

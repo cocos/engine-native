@@ -30,8 +30,8 @@
 #include "platform/android/jni/JniHelper.h"
 #include "platform/android/jni/JniImp.h"
 
-#include <mutex>
 #include <platform/Application.h>
+#include <mutex>
 
 #ifndef JCLS_DOWNLOADER
     #define JCLS_DOWNLOADER "com/cocos/lib/CocosDownloader"
@@ -45,7 +45,7 @@
 #define JNI_DOWNLOADER(FUNC) JNI_METHOD1(ORG_DOWNLOADER_CLASS_NAME, FUNC)
 
 std::unordered_map<int, cc::network::DownloaderAndroid *> sDownloaderMap;
-std::mutex sDownloaderMutex;
+std::mutex                                                sDownloaderMutex;
 
 static void _insertDownloaderAndroid(int id, cc::network::DownloaderAndroid *downloaderPtr) {
     std::lock_guard<std::mutex> guard(sDownloaderMutex);
@@ -62,7 +62,7 @@ static void _eraseDownloaderAndroid(int id) {
  */
 static cc::network::DownloaderAndroid *_findDownloaderAndroid(int id) {
     std::lock_guard<std::mutex> guard(sDownloaderMutex);
-    auto iter = sDownloaderMap.find(id);
+    auto                        iter = sDownloaderMap.find(id);
     if (sDownloaderMap.end() == iter) {
         return nullptr;
     } else {
@@ -73,7 +73,7 @@ static cc::network::DownloaderAndroid *_findDownloaderAndroid(int id) {
 namespace cc {
 namespace network {
 
-static int sTaskCounter = 0;
+static int sTaskCounter       = 0;
 static int sDownloaderCounter = 0;
 
 struct DownloadTaskAndroid : public IDownloadTask {
@@ -85,7 +85,7 @@ struct DownloadTaskAndroid : public IDownloadTask {
         DLLOG("Destruct DownloadTaskAndroid: %p", this);
     }
 
-    int id;
+    int                                 id;
     std::shared_ptr<const DownloadTask> task; // reference to DownloadTask, when task finish, release
 };
 
@@ -140,19 +140,19 @@ DownloaderAndroid::~DownloaderAndroid() {
 
 IDownloadTask *DownloaderAndroid::createCoTask(std::shared_ptr<const DownloadTask> &task) {
     DownloadTaskAndroid *coTask = new DownloadTaskAndroid;
-    coTask->task = task;
+    coTask->task                = task;
 
     JniMethodInfo methodInfo;
     if (JniHelper::getStaticMethodInfo(methodInfo,
                                        JCLS_DOWNLOADER,
                                        "createTask",
                                        "(" JARG_DOWNLOADER "I" JARG_STR JARG_STR "[" JARG_STR ")V")) {
-        jclass jclassString = methodInfo.env->FindClass("java/lang/String");
-        jstring jstrURL = methodInfo.env->NewStringUTF(task->requestURL.c_str());
-        jstring jstrPath = methodInfo.env->NewStringUTF(task->storagePath.c_str());
-        jobjectArray jarrayHeader = methodInfo.env->NewObjectArray(task->header.size() * 2, jclassString, NULL);
-        const std::map<std::string, std::string> &headMap = task->header;
-        int index = 0;
+        jclass                                    jclassString = methodInfo.env->FindClass("java/lang/String");
+        jstring                                   jstrURL      = methodInfo.env->NewStringUTF(task->requestURL.c_str());
+        jstring                                   jstrPath     = methodInfo.env->NewStringUTF(task->storagePath.c_str());
+        jobjectArray                              jarrayHeader = methodInfo.env->NewObjectArray(task->header.size() * 2, jclassString, NULL);
+        const std::map<std::string, std::string> &headMap      = task->header;
+        int                                       index        = 0;
         for (auto it = headMap.cbegin(); it != headMap.cend(); ++it) {
             methodInfo.env->SetObjectArrayElement(jarrayHeader, index++, methodInfo.env->NewStringUTF(it->first.c_str()));
             methodInfo.env->SetObjectArrayElement(jarrayHeader, index++, methodInfo.env->NewStringUTF(it->second.c_str()));
@@ -215,7 +215,7 @@ void DownloaderAndroid::_onProcess(int taskId, int64_t dl, int64_t dlNow, int64_
         DLLOG("DownloaderAndroid::onProgress can't find task with id: %d", taskId);
         return;
     }
-    DownloadTaskAndroid *coTask = iter->second;
+    DownloadTaskAndroid *                   coTask = iter->second;
     std::function<int64_t(void *, int64_t)> transferDataToBuffer;
     onTaskProgress(*coTask->task, dl, dlNow, dlTotal, transferDataToBuffer);
 }
@@ -228,7 +228,7 @@ void DownloaderAndroid::_onFinish(int taskId, int errCode, const char *errStr, c
         return;
     }
     DownloadTaskAndroid *coTask = iter->second;
-    std::string str = (errStr ? errStr : "");
+    std::string          str    = (errStr ? errStr : "");
     _taskMap.erase(iter);
     onTaskFinish(*coTask->task,
                  errStr ? DownloadTask::ERROR_IMPL_INTERNAL : DownloadTask::ERROR_NO_ERROR,
@@ -257,11 +257,11 @@ JNIEXPORT void JNICALL JNI_DOWNLOADER(nativeOnProgress)(JNIEnv *env, jclass claz
 }
 
 JNIEXPORT void JNICALL JNI_DOWNLOADER(nativeOnFinish)(JNIEnv *env, jclass clazz, jint id, jint taskId, jint errCode, jstring errStr, jbyteArray data) {
-    std::string errStrTmp;
+    std::string          errStrTmp;
     std::vector<uint8_t> dataTmp;
     if (errStr) {
         const char *nativeErrStr = env->GetStringUTFChars(errStr, JNI_FALSE);
-        errStrTmp = nativeErrStr;
+        errStrTmp                = nativeErrStr;
         env->ReleaseStringUTFChars(errStr, nativeErrStr);
     }
     if (data && env->GetArrayLength(data) > 0) {

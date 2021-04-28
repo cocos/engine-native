@@ -28,63 +28,61 @@
 
 #include <string>
 #include <vector>
-#include "json/document.h"
-#include "ProjectConfig/SimulatorConfig.h"
 #include "ProjectConfig/ProjectConfig.h"
+#include "ProjectConfig/SimulatorConfig.h"
 #include "SimulatorExport.h"
+#include "json/document.h"
 
 using namespace std;
 
 #define CONFIG_FILE "config.json"
 
 typedef vector<SimulatorScreenSize> ScreenSizeArray;
-class CC_LIBSIM_DLL ConfigParser
-{
+class CC_LIBSIM_DLL                 ConfigParser {
 public:
     static ConfigParser *getInstance(void);
-    static void purge();
+    static void          purge();
 
     void readConfig(const string &filepath = "");
 
     // predefined screen size
-    int getScreenSizeCount(void);
-    cc::Size getInitViewSize();
-    string getInitViewName();
-    string getEntryFile();
-    rapidjson::Document& getConfigJsonRoot();
+    int                       getScreenSizeCount(void);
+    cc::Size                  getInitViewSize();
+    string                    getInitViewName();
+    string                    getEntryFile();
+    rapidjson::Document &     getConfigJsonRoot();
     const SimulatorScreenSize getScreenSize(int index);
-    void setConsolePort(int port);
-    void setUploadPort(int port);
-    int getConsolePort();
-    int getUploadPort();
-    int getDebugPort();
-    bool isLanscape();
-    bool isWindowTop();
-    bool isWaitForConnect();
-    
-    void setEntryFile(const std::string &file);
-    void setInitViewSize(const cc::Size &size);
-    void setBindAddress(const std::string &address);
+    void                      setConsolePort(int port);
+    void                      setUploadPort(int port);
+    int                       getConsolePort();
+    int                       getUploadPort();
+    int                       getDebugPort();
+    bool                      isLanscape();
+    bool                      isWindowTop();
+    bool                      isWaitForConnect();
+
+    void               setEntryFile(const std::string &file);
+    void               setInitViewSize(const cc::Size &size);
+    void               setBindAddress(const std::string &address);
     const std::string &getBindAddress();
-    
+
 private:
     ConfigParser(void);
-    void setDebugPort(int port);
+    void                 setDebugPort(int port);
     static ConfigParser *s_sharedConfigParserInstance;
-    ScreenSizeArray _screenSizeArray;
-    cc::Size _initViewSize;
-    string _viewName;
-    string _entryfile;
-    bool _isLandscape;
-    bool _isWindowTop;
-    bool _isWaitForConnect;
-    int _consolePort;
-    int _uploadPort;
-    int _debugPort;
-    string _bindAddress;
-    
+    ScreenSizeArray      _screenSizeArray;
+    cc::Size             _initViewSize;
+    string               _viewName;
+    string               _entryfile;
+    bool                 _isLandscape;
+    bool                 _isWindowTop;
+    bool                 _isWaitForConnect;
+    int                  _consolePort;
+    int                  _uploadPort;
+    int                  _debugPort;
+    string               _bindAddress;
+
     rapidjson::Document _docRootjson;
 };
 
-#endif  // __CONFIG_PARSER_H__
-
+#endif // __CONFIG_PARSER_H__

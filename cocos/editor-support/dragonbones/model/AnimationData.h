@@ -36,8 +36,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class AnimationData : public BaseObject
-{
+class AnimationData : public BaseObject {
     BIND_CLASS_TYPE_B(AnimationData);
 
 public:
@@ -155,14 +154,11 @@ public:
      * @private
      */
     ArmatureData* parent;
-    AnimationData() :
-        actionTimeline(nullptr),
-        zOrderTimeline(nullptr)
-    {
+    AnimationData() : actionTimeline(nullptr),
+                      zOrderTimeline(nullptr) {
         _onClear();
     }
-    ~AnimationData()
-    {
+    ~AnimationData() {
         _onClear();
     }
 
@@ -189,66 +185,60 @@ public:
     /**
      * @private
      */
-    std::vector<TimelineData*>* getBoneTimelines(const std::string& timelineName)
-    {
+    std::vector<TimelineData*>* getBoneTimelines(const std::string& timelineName) {
         return mapFindB(boneTimelines, timelineName);
     }
     /**
      * @private
      */
-    inline std::vector<TimelineData*>* getSlotTimelines(const std::string& timelineName)
-    {
+    inline std::vector<TimelineData*>* getSlotTimelines(const std::string& timelineName) {
         return mapFindB(slotTimelines, timelineName);
     }
     /**
      * @private
      */
-    inline std::vector<TimelineData*>* getConstraintTimelines(const std::string& timelineName)
-    {
+    inline std::vector<TimelineData*>* getConstraintTimelines(const std::string& timelineName) {
         return mapFindB(constraintTimelines, timelineName);
     }
     /**
      * @private
      */
-    inline std::vector<int>* getBoneCachedFrameIndices(const std::string& boneName)
-    {
+    inline std::vector<int>* getBoneCachedFrameIndices(const std::string& boneName) {
         return mapFindB(boneCachedFrameIndices, boneName);
     }
     /**
      * @private
      */
-    inline std::vector<int>* getSlotCachedFrameIndices(const std::string& slotName)
-    {
+    inline std::vector<int>* getSlotCachedFrameIndices(const std::string& slotName) {
         return mapFindB(slotCachedFrameIndices, slotName);
     }
 
 public: // For WebAssembly.
     TimelineData* getActionTimeline() const { return actionTimeline; }
-    void setActionTimeline(TimelineData* pactionTimeline) { actionTimeline = pactionTimeline; }
+    void          setActionTimeline(TimelineData* pactionTimeline) { actionTimeline = pactionTimeline; }
 
     TimelineData* getZOrderTimeline() const { return zOrderTimeline; }
-    void setZOrderTimeline(TimelineData* value) { zOrderTimeline = value; }
+    void          setZOrderTimeline(TimelineData* value) { zOrderTimeline = value; }
 
     ArmatureData* getParent() const { return parent; }
-    void setParent(ArmatureData* value) { parent = value; }
+    void          setParent(ArmatureData* value) { parent = value; }
 };
 /**
  * @internal
  */
-class TimelineData : public BaseObject
-{
+class TimelineData : public BaseObject {
     BIND_CLASS_TYPE_A(TimelineData);
 
 public:
     TimelineType type;
-    unsigned offset;
-    int frameIndicesOffset;
+    unsigned     offset;
+    int          frameIndicesOffset;
 
 protected:
     virtual void _onClear() override;
 
 public: // For WebAssembly.
-    int getType() const { return (int)type; }
+    int  getType() const { return (int)type; }
     void setType(int value) { type = (TimelineType)value; }
 };
 

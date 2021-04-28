@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "GLES3Std.h"
 #include "GLES3RenderPass.h"
 #include "GLES3Commands.h"
+#include "GLES3Std.h"
 
 namespace cc {
 namespace gfx {
@@ -39,8 +39,8 @@ GLES3RenderPass::~GLES3RenderPass() {
 }
 
 void GLES3RenderPass::doInit(const RenderPassInfo &info) {
-    _gpuRenderPass = CC_NEW(GLES3GPURenderPass);
-    _gpuRenderPass->colorAttachments = _colorAttachments;
+    _gpuRenderPass                         = CC_NEW(GLES3GPURenderPass);
+    _gpuRenderPass->colorAttachments       = _colorAttachments;
     _gpuRenderPass->depthStencilAttachment = _depthStencilAttachment;
 }
 

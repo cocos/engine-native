@@ -23,8 +23,8 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/Config.h"
 #include "jsb_websocket.h"
+#include "base/Config.h"
 #if (USE_SOCKET > 0)
     #include "cocos/bindings/jswrapper/SeApi.h"
     #include "cocos/bindings/manual/jsb_conversions.h"
@@ -92,7 +92,7 @@ void JSB_WebSocketDelegate::onOpen(WebSocket *ws) {
     jsObj->setProperty("target", target);
 
     se::Value func;
-    bool ok = _JSDelegate.toObject()->getProperty("onopen", &func);
+    bool      ok = _JSDelegate.toObject()->getProperty("onopen", &func);
     if (ok && func.isObject() && func.toObject()->isFunction()) {
         se::ValueArray args;
         args.push_back(se::Value(jsObj));
@@ -113,7 +113,7 @@ void JSB_WebSocketDelegate::onMessage(WebSocket *ws, const WebSocket::Data &data
     if (iter == se::NativePtrToObjectMap::end())
         return;
 
-    se::Object *wsObj = iter->second;
+    se::Object *     wsObj = iter->second;
     se::HandleObject jsObj(se::Object::createPlainObject());
     jsObj->setProperty("type", se::Value("message"));
     se::Value target;
@@ -121,7 +121,7 @@ void JSB_WebSocketDelegate::onMessage(WebSocket *ws, const WebSocket::Data &data
     jsObj->setProperty("target", target);
 
     se::Value func;
-    bool ok = _JSDelegate.toObject()->getProperty("onmessage", &func);
+    bool      ok = _JSDelegate.toObject()->getProperty("onmessage", &func);
     if (ok && func.isObject() && func.toObject()->isFunction()) {
         se::ValueArray args;
         args.push_back(se::Value(jsObj));
@@ -165,7 +165,7 @@ void JSB_WebSocketDelegate::onClose(WebSocket *ws) {
             break;
         }
 
-        se::Object *wsObj = iter->second;
+        se::Object *     wsObj = iter->second;
         se::HandleObject jsObj(se::Object::createPlainObject());
         jsObj->setProperty("type", se::Value("close"));
         se::Value target;
@@ -173,7 +173,7 @@ void JSB_WebSocketDelegate::onClose(WebSocket *ws) {
         jsObj->setProperty("target", target);
 
         se::Value func;
-        bool ok = _JSDelegate.toObject()->getProperty("onclose", &func);
+        bool      ok = _JSDelegate.toObject()->getProperty("onclose", &func);
         if (ok && func.isObject() && func.toObject()->isFunction()) {
             se::ValueArray args;
             args.push_back(se::Value(jsObj));
@@ -206,7 +206,7 @@ void JSB_WebSocketDelegate::onError(WebSocket *ws, const WebSocket::ErrorCode &e
     if (iter == se::NativePtrToObjectMap::end())
         return;
 
-    se::Object *wsObj = iter->second;
+    se::Object *     wsObj = iter->second;
     se::HandleObject jsObj(se::Object::createPlainObject());
     jsObj->setProperty("type", se::Value("error"));
     se::Value target;
@@ -214,7 +214,7 @@ void JSB_WebSocketDelegate::onError(WebSocket *ws, const WebSocket::ErrorCode &e
     jsObj->setProperty("target", target);
 
     se::Value func;
-    bool ok = _JSDelegate.toObject()->getProperty("onerror", &func);
+    bool      ok = _JSDelegate.toObject()->getProperty("onerror", &func);
     if (ok && func.isObject() && func.toObject()->isFunction()) {
         se::ValueArray args;
         args.push_back(se::Value(jsObj));
@@ -252,7 +252,7 @@ SE_BIND_FINALIZE_FUNC(WebSocket_finalize)
 
 static bool WebSocket_constructor(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
 
     if (argc == 1 || argc == 2 || argc == 3) {
         std::string url;
@@ -260,10 +260,10 @@ static bool WebSocket_constructor(se::State &s) {
         bool ok = seval_to_std_string(args[0], &url);
         SE_PRECONDITION2(ok, false, "Error processing url argument");
 
-        se::Object *obj = s.thisObject();
-        WebSocket *cobj = nullptr;
+        se::Object *obj  = s.thisObject();
+        WebSocket * cobj = nullptr;
         if (argc >= 2) {
-            std::string caFilePath;
+            std::string              caFilePath;
             std::vector<std::string> protocols;
 
             if (args[1].isString()) {
@@ -273,8 +273,8 @@ static bool WebSocket_constructor(se::State &s) {
                 protocols.push_back(protocol);
             } else if (args[1].isObject() && args[1].toObject()->isArray()) {
                 se::Object *protocolArr = args[1].toObject();
-                uint32_t len = 0;
-                ok = protocolArr->getArrayLength(&len);
+                uint32_t    len         = 0;
+                ok                      = protocolArr->getArrayLength(&len);
                 SE_PRECONDITION2(ok, false, "getArrayLength failed!");
 
                 se::Value tmp;
@@ -294,7 +294,7 @@ static bool WebSocket_constructor(se::State &s) {
                 SE_PRECONDITION2(ok, false, "Error processing caFilePath");
             }
 
-            cobj = new (std::nothrow) WebSocket();
+            cobj                            = new (std::nothrow) WebSocket();
             JSB_WebSocketDelegate *delegate = new (std::nothrow) JSB_WebSocketDelegate();
             if (cobj->init(*delegate, url, &protocols, caFilePath)) {
                 delegate->setJSDelegate(se::Value(obj, true));
@@ -307,7 +307,7 @@ static bool WebSocket_constructor(se::State &s) {
                 return false;
             }
         } else {
-            cobj = new (std::nothrow) WebSocket();
+            cobj                            = new (std::nothrow) WebSocket();
             JSB_WebSocketDelegate *delegate = new (std::nothrow) JSB_WebSocketDelegate();
             if (cobj->init(*delegate, url)) {
                 delegate->setJSDelegate(se::Value(obj, true));
@@ -343,11 +343,11 @@ SE_BIND_CTOR(WebSocket_constructor, __jsb_WebSocket_class, WebSocket_finalize)
 
 static bool WebSocket_send(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
 
     if (argc == 1) {
         WebSocket *cobj = (WebSocket *)s.nativeThisObject();
-        bool ok = false;
+        bool       ok   = false;
         if (args[0].isString()) {
             std::string data;
             ok = seval_to_std_string(args[0], &data);
@@ -364,8 +364,8 @@ static bool WebSocket_send(se::State &s) {
             cobj->send(data);
         } else if (args[0].isObject()) {
             se::Object *dataObj = args[0].toObject();
-            uint8_t *ptr = nullptr;
-            size_t length = 0;
+            uint8_t *   ptr     = nullptr;
+            size_t      length  = 0;
             if (dataObj->isArrayBuffer()) {
                 ok = dataObj->getArrayBufferData(&ptr, &length);
                 SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
@@ -390,7 +390,7 @@ SE_BIND_FUNC(WebSocket_send)
 
 static bool WebSocket_close(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
 
     WebSocket *cobj = (WebSocket *)s.nativeThisObject();
     if (argc == 0) {
@@ -410,7 +410,7 @@ static bool WebSocket_close(se::State &s) {
     } else if (argc == 2) {
         assert(args[0].isNumber());
         assert(args[1].isString());
-        int reasonCode;
+        int         reasonCode;
         std::string reasonString;
         seval_to_int32(args[0], &reasonCode);
         seval_to_std_string(args[1], &reasonString);
@@ -433,7 +433,7 @@ SE_BIND_FUNC(WebSocket_close)
 
 static bool WebSocket_getReadyState(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
 
     if (argc == 0) {
         WebSocket *cobj = (WebSocket *)s.nativeThisObject();
@@ -447,7 +447,7 @@ SE_BIND_PROP_GET(WebSocket_getReadyState)
 
 static bool WebSocket_getBufferedAmount(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
 
     if (argc == 0) {
         WebSocket *cobj = (WebSocket *)s.nativeThisObject();
@@ -461,7 +461,7 @@ SE_BIND_PROP_GET(WebSocket_getBufferedAmount)
 
 static bool WebSocket_getExtensions(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
 
     if (argc == 0) {
         WebSocket *cobj = (WebSocket *)s.nativeThisObject();
@@ -476,7 +476,7 @@ SE_BIND_PROP_GET(WebSocket_getExtensions)
     #define WEBSOCKET_DEFINE_READONLY_INT_FIELD(full_name, value)                    \
         static bool full_name(se::State &s) {                                        \
             const auto &args = s.args();                                             \
-            int argc = (int)args.size();                                             \
+            int         argc = (int)args.size();                                     \
             if (argc == 0) {                                                         \
                 s.rval().setInt32(value);                                            \
                 return true;                                                         \

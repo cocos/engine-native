@@ -45,7 +45,8 @@ protected:
     virtual void doInit(const GlobalBarrierInfo &info) {}
 
     void initialize(const GlobalBarrierInfo &info) {
-        _info = info; doInit(info);
+        _info = info;
+        doInit(info);
     }
 
     GlobalBarrierInfo _info;

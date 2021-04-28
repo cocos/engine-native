@@ -32,9 +32,7 @@ using namespace cc;
 // uncomment below line, open debug console
 // #define USE_WIN32_CONSOLE
 
-int SDL_main(int argc, char *argv[])
-{
-
+int SDL_main(int argc, char *argv[]) {
 #ifdef USE_WIN32_CONSOLE
     AllocConsole();
     freopen("CONIN$", "r", stdin);

@@ -24,9 +24,9 @@
 ****************************************************************************/
 
 #include "PassNode.h"
+#include <algorithm>
 #include "FrameGraph.h"
 #include "ResourceNode.h"
-#include <algorithm>
 
 namespace cc {
 namespace framegraph {

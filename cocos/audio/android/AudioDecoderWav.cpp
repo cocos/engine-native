@@ -61,14 +61,14 @@ bool AudioDecoderWav::decodeToPcm() {
     SF_INFO info;
 
     snd_callbacks cb;
-    cb.open = onWavOpen;
-    cb.read = AudioDecoder::fileRead;
-    cb.seek = onWavSeek;
+    cb.open  = onWavOpen;
+    cb.read  = AudioDecoder::fileRead;
+    cb.seek  = onWavSeek;
     cb.close = onWavClose;
-    cb.tell = AudioDecoder::fileTell;
+    cb.tell  = AudioDecoder::fileTell;
 
     SNDFILE *handle = NULL;
-    bool ret = false;
+    bool     ret    = false;
     do {
         handle = sf_open_read(_url.c_str(), &info, &cb, this);
         if (handle == nullptr)
@@ -78,20 +78,20 @@ bool AudioDecoderWav::decodeToPcm() {
             break;
 
         ALOGD("wav info: frames: %d, samplerate: %d, channels: %d, format: %d", info.frames, info.samplerate, info.channels, info.format);
-        size_t bufSize = sizeof(short) * info.frames * info.channels;
-        unsigned char *buf = (unsigned char *)malloc(bufSize);
-        sf_count_t readFrames = sf_readf_short(handle, (short *)buf, info.frames);
+        size_t         bufSize    = sizeof(short) * info.frames * info.channels;
+        unsigned char *buf        = (unsigned char *)malloc(bufSize);
+        sf_count_t     readFrames = sf_readf_short(handle, (short *)buf, info.frames);
         assert(readFrames == info.frames);
 
         _result.pcmBuffer->insert(_result.pcmBuffer->end(), buf, buf + bufSize);
-        _result.numChannels = info.channels;
-        _result.sampleRate = info.samplerate;
+        _result.numChannels   = info.channels;
+        _result.sampleRate    = info.samplerate;
         _result.bitsPerSample = SL_PCMSAMPLEFORMAT_FIXED_16;
         _result.containerSize = SL_PCMSAMPLEFORMAT_FIXED_16;
-        _result.channelMask = _result.numChannels == 1 ? SL_SPEAKER_FRONT_CENTER : (SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT);
-        _result.endianness = SL_BYTEORDER_LITTLEENDIAN;
-        _result.numFrames = info.frames;
-        _result.duration = 1.0f * info.frames / _result.sampleRate;
+        _result.channelMask   = _result.numChannels == 1 ? SL_SPEAKER_FRONT_CENTER : (SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT);
+        _result.endianness    = SL_BYTEORDER_LITTLEENDIAN;
+        _result.numFrames     = info.frames;
+        _result.duration      = 1.0f * info.frames / _result.sampleRate;
 
         free(buf);
         ret = true;

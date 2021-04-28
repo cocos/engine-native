@@ -23,12 +23,12 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/physx/PhysXInc.h"
 #include "physics/physx/PhysXEventManager.h"
-#include "physics/spec/IWorld.h"
+#include <algorithm>
+#include "physics/physx/PhysXInc.h"
 #include "physics/physx/PhysXUtils.h"
 #include "physics/physx/shapes/PhysXShape.h"
-#include <algorithm>
+#include "physics/spec/IWorld.h"
 
 namespace cc {
 namespace physics {

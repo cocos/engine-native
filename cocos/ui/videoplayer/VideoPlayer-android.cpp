@@ -27,14 +27,14 @@
 #include "VideoPlayer.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
-    #include <unordered_map>
-    #include <stdlib.h>
     #include <jni.h>
+    #include <stdlib.h>
     #include <string>
-    #include "platform/Application.h"
-    #include "platform/android/jni/JniHelper.h"
-    #include "platform/FileUtils.h"
+    #include <unordered_map>
     #include "../../platform/Application.h"
+    #include "platform/Application.h"
+    #include "platform/FileUtils.h"
+    #include "platform/android/jni/JniHelper.h"
 
 //-----------------------------------------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ void Java_com_cocos_lib_CocosVideoHelper_nativeExecuteVideoCallback(JNIEnv *env,
 
 int createVideoWidgetJNI() {
     JniMethodInfo t;
-    int ret = -1;
+    int           ret = -1;
     if (JniHelper::getStaticMethodInfo(t, videoHelperClassName.c_str(), "createVideoWidget", "()I")) {
         ret = t.env->CallStaticIntMethod(t.classID, t.methodID);
 
@@ -73,7 +73,7 @@ VideoPlayer::VideoPlayer()
   _fullScreenEnabled(false),
   _fullScreenDirty(false),
   _keepAspectRatioEnabled(false) {
-    _videoPlayerIndex = createVideoWidgetJNI();
+    _videoPlayerIndex                    = createVideoWidgetJNI();
     s_allVideoPlayers[_videoPlayerIndex] = this;
 
     #if CC_VIDEOPLAYER_DEBUG_DRAW
@@ -89,10 +89,10 @@ VideoPlayer::~VideoPlayer() {
 
 void VideoPlayer::setURL(const std::string &videoUrl) {
     if (videoUrl.find("://") == std::string::npos) {
-        _videoURL = FileUtils::getInstance()->fullPathForFilename(videoUrl);
+        _videoURL    = FileUtils::getInstance()->fullPathForFilename(videoUrl);
         _videoSource = VideoPlayer::Source::FILENAME;
     } else {
-        _videoURL = videoUrl;
+        _videoURL    = videoUrl;
         _videoSource = VideoPlayer::Source::URL;
     }
 

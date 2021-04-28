@@ -53,8 +53,8 @@ public:
     cc::middleware::Triangles triangles;
     // Slot vertex transform to World vertex
     cc::middleware::V2F_T2F_C4F *worldVerts = nullptr;
-    cc::middleware::Color4B color;
-    cc::Rect boundsRect;
+    cc::middleware::Color4B      color;
+    cc::Rect                     boundsRect;
 
 private:
     cc::Mat4 _localMatrix;
@@ -75,10 +75,10 @@ protected:
     virtual void _updateZOrder() override;
 
 public:
-    virtual void _updateVisible() override;
-    virtual void _updateBlendMode() override;
-    virtual void _updateColor() override;
-    void updateWorldMatrix();
+    virtual void               _updateVisible() override;
+    virtual void               _updateBlendMode() override;
+    virtual void               _updateColor() override;
+    void                       updateWorldMatrix();
     cc::middleware::Texture2D *getTexture() const;
 
 protected:

@@ -28,9 +28,9 @@
 
 #include <unordered_map>
 
-#include "base/Ref.h"
 #include "audio/win32/AudioCache.h"
 #include "audio/win32/AudioPlayer.h"
+#include "base/Ref.h"
 
 namespace cc {
 
@@ -43,24 +43,24 @@ public:
     AudioEngineImpl();
     ~AudioEngineImpl();
 
-    bool init();
-    int play2d(const std::string &fileFullPath, bool loop, float volume);
-    void setVolume(int audioID, float volume);
-    void setLoop(int audioID, bool loop);
-    bool pause(int audioID);
-    bool resume(int audioID);
-    void stop(int audioID);
-    void stopAll();
+    bool  init();
+    int   play2d(const std::string &fileFullPath, bool loop, float volume);
+    void  setVolume(int audioID, float volume);
+    void  setLoop(int audioID, bool loop);
+    bool  pause(int audioID);
+    bool  resume(int audioID);
+    void  stop(int audioID);
+    void  stopAll();
     float getDuration(int audioID);
     float getDurationFromFile(const std::string &fileFullPath);
     float getCurrentTime(int audioID);
-    bool setCurrentTime(int audioID, float time);
-    void setFinishCallback(int audioID, const std::function<void(int, const std::string &)> &callback);
+    bool  setCurrentTime(int audioID, float time);
+    void  setFinishCallback(int audioID, const std::function<void(int, const std::string &)> &callback);
 
-    void uncache(const std::string &filePath);
-    void uncacheAll();
+    void        uncache(const std::string &filePath);
+    void        uncacheAll();
     AudioCache *preload(const std::string &filePath, std::function<void(bool)> callback);
-    void update(float dt);
+    void        update(float dt);
 
 private:
     bool _checkAudioIdValid(int audioID);
@@ -76,11 +76,11 @@ private:
 
     //audioID,AudioInfo
     std::unordered_map<int, AudioPlayer *> _audioPlayers;
-    std::mutex _threadMutex;
+    std::mutex                             _threadMutex;
 
     bool _lazyInitLoop;
 
-    int _currentAudioID;
+    int                      _currentAudioID;
     std::weak_ptr<Scheduler> _scheduler;
 };
 } // namespace cc

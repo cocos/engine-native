@@ -37,8 +37,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 4.5
  * @language zh_CN
  */
-class EventObject : public BaseObject
-{
+class EventObject : public BaseObject {
     BIND_CLASS_TYPE_A(EventObject);
 
 public:
@@ -257,11 +256,11 @@ protected:
     virtual void _onClear() override;
 
 public: // For WebAssembly.
-    Armature* getArmature() const { return armature; }
-    Bone* getBone() const { return bone; }
-    Slot* getSlot() const { return slot; }
+    Armature*       getArmature() const { return armature; }
+    Bone*           getBone() const { return bone; }
+    Slot*           getSlot() const { return slot; }
     AnimationState* getAnimationState() const { return animationState; }
-    UserData* getData() const { return data; }
+    UserData*       getData() const { return data; }
 };
 DRAGONBONES_NAMESPACE_END
 #endif // DRAGONBONES_EVENT_OBJECT_H

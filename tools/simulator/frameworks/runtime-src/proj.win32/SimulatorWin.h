@@ -25,17 +25,16 @@
 
 #pragma once
 
-#include "stdafx.h"
-#include "Resource.h"
 #include "Game.h"
 #include "ProjectConfig/ProjectConfig.h"
 #include "ProjectConfig/SimulatorConfig.h"
+#include "Resource.h"
 #include "cocos/platform/win32/View-win32.h"
+#include "stdafx.h"
 
 #include <memory>
 
-class SimulatorWin
-{
+class SimulatorWin {
 public:
     static SimulatorWin *getInstance();
     virtual ~SimulatorWin();
@@ -49,22 +48,23 @@ public:
 
     virtual int getPositionX();
     virtual int getPositionY();
+
 protected:
     SimulatorWin();
 
     static SimulatorWin *_instance;
-    ProjectConfig _project;
-    HWND _hwnd;
-    HWND _hwndConsole;
-    
+    ProjectConfig        _project;
+    HWND                 _hwnd;
+    HWND                 _hwndConsole;
+
     FILE *_writeDebugLogFile;
 
-    std::shared_ptr<Game> _app;
+    std::shared_ptr<Game>     _app;
     std::shared_ptr<cc::View> _view;
 
     bool _quit = false;
 
-    // 
+    //
     void setupUI();
     void setZoom(float frameScale);
     void updateWindowTitle();
@@ -79,12 +79,11 @@ protected:
     void onDrop(const std::string &path);
 
     // helper
-    std::string convertPathFormatToUnixStyle(const std::string& path);
-    std::string getUserDocumentPath();
-    std::string getApplicationExePath();
-    std::string getApplicationPath();
-    static char* convertTCharToUtf8(const TCHAR* src);
+    std::string  convertPathFormatToUnixStyle(const std::string &path);
+    std::string  getUserDocumentPath();
+    std::string  getApplicationExePath();
+    std::string  getApplicationPath();
+    static char *convertTCharToUtf8(const TCHAR *src);
 
     static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
-

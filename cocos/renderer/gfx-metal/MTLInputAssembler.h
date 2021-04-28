@@ -35,11 +35,11 @@ class CCMTLGPUInputAssembler;
 class CCMTLInputAssembler final : public InputAssembler {
 public:
     explicit CCMTLInputAssembler();
-    ~CCMTLInputAssembler() override = default;
-    CCMTLInputAssembler(const CCMTLInputAssembler &)=delete;
-    CCMTLInputAssembler(CCMTLInputAssembler &&)=delete;
-    CCMTLInputAssembler &operator=(const CCMTLInputAssembler &)=delete;
-    CCMTLInputAssembler &operator=(CCMTLInputAssembler &&)=delete;
+    ~CCMTLInputAssembler() override                  = default;
+    CCMTLInputAssembler(const CCMTLInputAssembler &) = delete;
+    CCMTLInputAssembler(CCMTLInputAssembler &&)      = delete;
+    CCMTLInputAssembler &operator=(const CCMTLInputAssembler &) = delete;
+    CCMTLInputAssembler &operator=(CCMTLInputAssembler &&) = delete;
 
 protected:
     friend class CCMTLQueue;

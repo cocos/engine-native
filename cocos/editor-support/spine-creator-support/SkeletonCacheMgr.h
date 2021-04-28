@@ -49,11 +49,11 @@ public:
         }
     }
 
-    void removeSkeletonCache(const std::string &uuid);
+    void           removeSkeletonCache(const std::string &uuid);
     SkeletonCache *buildSkeletonCache(const std::string &uuid);
 
 private:
-    static SkeletonCacheMgr *_instance;
+    static SkeletonCacheMgr *             _instance;
     cc::Map<std::string, SkeletonCache *> _caches;
 };
 

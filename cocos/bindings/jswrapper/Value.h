@@ -26,8 +26,8 @@
 
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "HandleObject.h"
 
@@ -416,10 +416,10 @@ private:
     void reset(Type type);
 
     union {
-        bool _boolean;
-        double _number;
+        bool         _boolean;
+        double       _number;
         std::string *_string;
-        Object *_object;
+        Object *     _object;
     } _u;
 
     Type _type;

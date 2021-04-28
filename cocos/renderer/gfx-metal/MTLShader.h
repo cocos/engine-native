@@ -35,11 +35,11 @@ class CCMTLGPUShader;
 class CCMTLShader final : public Shader {
 public:
     explicit CCMTLShader();
-    ~CCMTLShader() override = default;
-    CCMTLShader(const CCMTLShader &)=delete;
-    CCMTLShader(CCMTLShader &&)=delete;
-    CCMTLShader &operator=(const CCMTLShader &)=delete;
-    CCMTLShader &operator=(CCMTLShader &&)=delete;
+    ~CCMTLShader() override          = default;
+    CCMTLShader(const CCMTLShader &) = delete;
+    CCMTLShader(CCMTLShader &&)      = delete;
+    CCMTLShader &operator=(const CCMTLShader &) = delete;
+    CCMTLShader &operator=(CCMTLShader &&) = delete;
 
     CC_INLINE id<MTLFunction> getVertMTLFunction() const { return _vertexMTLFunction; }
     CC_INLINE id<MTLFunction> getFragmentMTLFunction() const { return _fragmentMTLFunction; }
@@ -65,12 +65,12 @@ protected:
     bool createMTLFunction(const ShaderStage &);
     void setAvailableBufferBindingIndex();
 
-    id<MTLFunction> _vertexMTLFunction = nil;
-    id<MTLFunction> _fragmentMTLFunction = nil;
-    id<MTLFunction> _computeMTLFunction = nil;
+    id<MTLFunction>           _vertexMTLFunction   = nil;
+    id<MTLFunction>           _fragmentMTLFunction = nil;
+    id<MTLFunction>           _computeMTLFunction  = nil;
     unordered_map<uint, uint> _mtlFragmentSamplerBindings;
-    vector<uint> _availableVertexBufferBindingIndex;
-    vector<uint> _availableFragmentBufferBindingIndex;
+    vector<uint>              _availableVertexBufferBindingIndex;
+    vector<uint>              _availableFragmentBufferBindingIndex;
 
     CCMTLGPUShader *_gpuShader = nullptr;
 

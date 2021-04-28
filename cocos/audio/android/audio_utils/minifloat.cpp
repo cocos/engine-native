@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include <cmath>
 #include "audio/android/audio_utils/include/audio_utils/minifloat.h"
+#include <cmath>
 
 #define EXPONENT_BITS 3
 #define EXPONENT_MAX  ((1 << EXPONENT_BITS) - 1)
@@ -41,7 +41,7 @@ gain_minifloat_t gain_from_float(float v) {
     if (v >= 2.0f) {
         return MINIFLOAT_MAX;
     }
-    int exp;
+    int   exp;
     float r = frexpf(v, &exp);
     if ((exp += EXCESS) > EXPONENT_MAX) {
         return MINIFLOAT_MAX;

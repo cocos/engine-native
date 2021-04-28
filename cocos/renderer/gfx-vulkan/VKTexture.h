@@ -49,7 +49,7 @@ protected:
 
     void createTextureView();
 
-    CCVKGPUTexture *_gpuTexture = nullptr;
+    CCVKGPUTexture *    _gpuTexture     = nullptr;
     CCVKGPUTextureView *_gpuTextureView = nullptr;
 };
 

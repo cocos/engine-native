@@ -23,19 +23,18 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/physx/shapes/PhysXShape.h"
 #include "physics/physx/shapes/PhysXCone.h"
+#include <algorithm>
+#include "math/Quaternion.h"
 #include "physics/physx/PhysXUtils.h"
 #include "physics/physx/PhysXWorld.h"
-#include "math/Quaternion.h"
+#include "physics/physx/shapes/PhysXShape.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
-#include <algorithm>
 
 namespace cc {
 namespace physics {
 
-PhysXCone::PhysXCone() : _mMesh(nullptr)
-                         {};
+PhysXCone::PhysXCone() : _mMesh(nullptr){};
 
 void PhysXCone::setConvex(uintptr_t handle) {
     if (reinterpret_cast<uintptr_t>(_mMesh) == handle) return;

@@ -24,11 +24,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef  _RUNTIME__H_
-#define  _RUNTIME__H_
+#ifndef _RUNTIME__H_
+#define _RUNTIME__H_
 
-#include <string>
 #include <functional>
+#include <string>
 #include <unordered_map>
 #include "SimulatorExport.h"
 
@@ -38,58 +38,56 @@ void sendBuf(int fd, const char *pbuf, unsigned long bufsize);
 
 CC_LIBSIM_DLL extern std::string g_projectPath;
 
-CC_LIBSIM_DLL std::string& replaceAll(std::string& str, const std::string& old_value, const std::string& new_value);
+CC_LIBSIM_DLL std::string &replaceAll(std::string &str, const std::string &old_value, const std::string &new_value);
 
 CC_LIBSIM_DLL std::string getIPAddress();
 
-const char* getRuntimeVersion();
+const char *getRuntimeVersion();
 
 //
-void resetDesignResolution();
-const char* getRuntimeVersion();
+void        resetDesignResolution();
+const char *getRuntimeVersion();
 
 //
 // RuntimeEngine
 //
 #include "ProjectConfig/ProjectConfig.h"
 
-#define kRuntimeEngineJs  2
+#define kRuntimeEngineJs 2
 
 class RuntimeProtocol;
-class CC_LIBSIM_DLL RuntimeEngine
-{
+class CC_LIBSIM_DLL RuntimeEngine {
 public:
-    static RuntimeEngine* getInstance();
-    
+    static RuntimeEngine *getInstance();
+
     //
-    void setupRuntime();
-    void setProjectConfig(const ProjectConfig &config);
-    void setProjectPath(const std::string &path);
+    void                 setupRuntime();
+    void                 setProjectConfig(const ProjectConfig &config);
+    void                 setProjectPath(const std::string &path);
     const ProjectConfig &getProjectConfig();
-    void startScript(const std::string &args);
-    void start();
-    void end();
-    void setEventTrackingEnable(bool enable);
-    
-    void addRuntime(RuntimeProtocol *runtime, int type);
+    void                 startScript(const std::string &args);
+    void                 start();
+    void                 end();
+    void                 setEventTrackingEnable(bool enable);
+
+    void             addRuntime(RuntimeProtocol *runtime, int type);
     RuntimeProtocol *getRuntime();
-    
+
 private:
     RuntimeEngine();
     bool startNetwork();
     void showUI();
     void updateConfigParser();
-    
-    // 
+
+    //
     void trackEvent(const std::string &eventName);
     void trackLaunchEvent();
-    
-    RuntimeProtocol *_runtime;  // weak ref
-    ProjectConfig _project;
-    bool _eventTrackingEnable;  // false default
-    std::string _launchEvent;
-    std::unordered_map<int,RuntimeProtocol*> _runtimes;
+
+    RuntimeProtocol *                          _runtime; // weak ref
+    ProjectConfig                              _project;
+    bool                                       _eventTrackingEnable; // false default
+    std::string                                _launchEvent;
+    std::unordered_map<int, RuntimeProtocol *> _runtimes;
 };
 
 #endif // _RUNTIME__H_
-

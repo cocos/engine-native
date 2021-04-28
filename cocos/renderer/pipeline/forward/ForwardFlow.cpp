@@ -24,9 +24,9 @@
 ****************************************************************************/
 
 #include "ForwardFlow.h"
+#include "../SceneCulling.h"
 #include "ForwardPipeline.h"
 #include "ForwardStage.h"
-#include "../SceneCulling.h"
 
 namespace cc {
 namespace pipeline {

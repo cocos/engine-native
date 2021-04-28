@@ -28,6 +28,12 @@
 #include "platform/Application.h"
 #include "platform/StdC.h" // need it to include Windows.h
 
+#include <MMSystem.h>
+#include <shellapi.h>
+#include <algorithm>
+#include <array>
+#include <memory>
+#include <sstream>
 #include "audio/include/AudioEngine.h"
 #include "base/AutoreleasePool.h"
 #include "base/Scheduler.h"
@@ -35,12 +41,6 @@
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "platform/FileUtils.h"
 #include "platform/win32/View-win32.h"
-#include <MMSystem.h>
-#include <algorithm>
-#include <array>
-#include <memory>
-#include <shellapi.h>
-#include <sstream>
 
 #include "pipeline/Define.h"
 #include "pipeline/RenderPipeline.h"
@@ -64,7 +64,6 @@ Application::Application(int width, int height) {
 }
 
 Application::~Application() {
-
 #if USE_AUDIO
     AudioEngine::end();
 #endif

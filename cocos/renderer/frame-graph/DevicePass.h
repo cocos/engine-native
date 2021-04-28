@@ -25,12 +25,12 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
 #include "CallbackPass.h"
 #include "DevicePassResourceTable.h"
 #include "RenderTargetAttachment.h"
 #include "gfx-base/GFXDef.h"
-#include <string>
-#include <vector>
 
 namespace cc {
 namespace framegraph {
@@ -60,8 +60,8 @@ private:
     };
 
     struct Attachment final {
-        RenderTargetAttachment       attachment;
-        gfx::Texture *               renderTarget{nullptr};
+        RenderTargetAttachment attachment;
+        gfx::Texture *         renderTarget{nullptr};
     };
 
     void append(const FrameGraph &graph, const PassNode *passNode, std::vector<RenderTargetAttachment> &attachments) noexcept;

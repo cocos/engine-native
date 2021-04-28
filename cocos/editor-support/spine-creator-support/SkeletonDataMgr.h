@@ -29,13 +29,13 @@
 
 #pragma once
 
-#include "base/Ref.h"
-#include "spine/SkeletonData.h"
-#include "spine/spine.h"
 #include <functional>
 #include <map>
 #include <string>
 #include <vector>
+#include "base/Ref.h"
+#include "spine/SkeletonData.h"
+#include "spine/spine.h"
 
 namespace spine {
 
@@ -65,19 +65,19 @@ public:
     virtual ~SkeletonDataMgr() {
         _destroyCallback = NULL;
     }
-    bool hasSkeletonData(const std::string &uuid);
-    void setSkeletonData(const std::string &uuid, SkeletonData *data, Atlas *atlas, AttachmentLoader *attachmentLoader, const std::vector<int> &texturesIndex);
+    bool          hasSkeletonData(const std::string &uuid);
+    void          setSkeletonData(const std::string &uuid, SkeletonData *data, Atlas *atlas, AttachmentLoader *attachmentLoader, const std::vector<int> &texturesIndex);
     SkeletonData *retainByUUID(const std::string &uuid);
-    void releaseByUUID(const std::string &uuid);
+    void          releaseByUUID(const std::string &uuid);
 
     typedef std::function<void(int)> destroyCallback;
-    void setDestroyCallback(destroyCallback callback) {
+    void                             setDestroyCallback(destroyCallback callback) {
         _destroyCallback = callback;
     }
 
 private:
-    static SkeletonDataMgr *_instance;
-    destroyCallback _destroyCallback = nullptr;
+    static SkeletonDataMgr *                  _instance;
+    destroyCallback                           _destroyCallback = nullptr;
     std::map<std::string, SkeletonDataInfo *> _dataMap;
 };
 

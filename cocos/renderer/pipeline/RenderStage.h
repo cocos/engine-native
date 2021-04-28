@@ -41,9 +41,9 @@ class RenderQueue;
 struct Camera;
 
 struct CC_DLL RenderStageInfo {
-    String name;
-    uint priority = 0;
-    uint tag = 0;
+    String              name;
+    uint                priority = 0;
+    uint                tag      = 0;
     RenderQueueDescList renderQueues;
 };
 
@@ -59,20 +59,20 @@ public:
     virtual void render(Camera *camera) = 0;
 
     inline const String &getName() const { return _name; }
-    inline uint getPriority() const { return _priority; }
-    inline uint getTag() const { return _tag; }
-    inline RenderFlow *getFlow() const {return _flow;}
+    inline uint          getPriority() const { return _priority; }
+    inline uint          getTag() const { return _tag; }
+    inline RenderFlow *  getFlow() const { return _flow; }
 
 protected:
-    RenderQueueDescList _renderQueueDescriptors;
+    RenderQueueDescList   _renderQueueDescriptors;
     vector<RenderQueue *> _renderQueues;
-    RenderPipeline *_pipeline = nullptr;
-    RenderFlow *_flow = nullptr;
-    gfx::Device *_device = nullptr;
-    String _name;
-    uint _priority = 0;
-    uint _tag = 0;
-    gfx::ColorList _clearColors = {{0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}};
+    RenderPipeline *      _pipeline = nullptr;
+    RenderFlow *          _flow     = nullptr;
+    gfx::Device *         _device   = nullptr;
+    String                _name;
+    uint                  _priority    = 0;
+    uint                  _tag         = 0;
+    gfx::ColorList        _clearColors = {{0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}};
 };
 
 } // namespace pipeline

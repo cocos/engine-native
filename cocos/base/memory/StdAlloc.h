@@ -28,9 +28,9 @@
 
 #if (CC_MEMORY_ALLOCATOR == CC_MEMORY_ALLOCATOR_STD)
 
-    #include "base/Macros.h"
-    #include <limits>
     #include <stdlib.h>
+    #include <limits>
+    #include "base/Macros.h"
 
 namespace cc {
 
@@ -119,10 +119,10 @@ public:
         void *ptr = _aligned_malloc(count, alignment);
     #elif defined(__ANDROID__)
         //void* ptr = memalign(alignment, count);
-        unsigned char *p = (unsigned char *)malloc(count + alignment);
-        size_t offset = alignment - (size_t(p) & (alignment - 1));
-        unsigned char *ptr = p + offset;
-        ptr[-1] = (unsigned char)offset;
+        unsigned char *p      = (unsigned char *)malloc(count + alignment);
+        size_t         offset = alignment - (size_t(p) & (alignment - 1));
+        unsigned char *ptr    = p + offset;
+        ptr[-1]               = (unsigned char)offset;
     #else
         void *ptr = NULL;
         posix_memalign(&ptr, alignment, count);
@@ -144,7 +144,7 @@ public:
     #elif defined(__ANDROID__)
         if (ptr) {
             unsigned char *mem = (unsigned char *)ptr;
-            mem = mem - mem[-1];
+            mem                = mem - mem[-1];
             free(mem);
         }
     #else

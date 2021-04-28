@@ -24,18 +24,18 @@
  ****************************************************************************/
 #pragma once
 
-    #include <SLES/OpenSLES.h>
-    #include <SLES/OpenSLES_Android.h>
-    #include <string>
-    #include <unordered_map>
-    #include <functional>
+#include <SLES/OpenSLES.h>
+#include <SLES/OpenSLES_Android.h>
+#include <functional>
+#include <string>
+#include <unordered_map>
 
-    #include "base/Ref.h"
-    #include "base/Utils.h"
+#include "base/Ref.h"
+#include "base/Utils.h"
 
-    #define MAX_AUDIOINSTANCES 13
+#define MAX_AUDIOINSTANCES 13
 
-    #define ERRORLOG(msg) log("fun:%s,line:%d,msg:%s", __func__, __LINE__, #msg)
+#define ERRORLOG(msg) log("fun:%s,line:%d,msg:%s", __func__, __LINE__, #msg)
 
 namespace cc {
 
@@ -51,19 +51,19 @@ public:
     AudioEngineImpl();
     ~AudioEngineImpl();
 
-    bool init();
-    int play2d(const std::string &fileFullPath, bool loop, float volume);
-    void setVolume(int audioID, float volume);
-    void setLoop(int audioID, bool loop);
-    void pause(int audioID);
-    void resume(int audioID);
-    void stop(int audioID);
-    void stopAll();
+    bool  init();
+    int   play2d(const std::string &fileFullPath, bool loop, float volume);
+    void  setVolume(int audioID, float volume);
+    void  setLoop(int audioID, bool loop);
+    void  pause(int audioID);
+    void  resume(int audioID);
+    void  stop(int audioID);
+    void  stopAll();
     float getDuration(int audioID);
     float getDurationFromFile(const std::string &fileFullPath);
     float getCurrentTime(int audioID);
-    bool setCurrentTime(int audioID, float time);
-    void setFinishCallback(int audioID, const std::function<void(int, const std::string &)> &callback);
+    bool  setCurrentTime(int audioID, float time);
+    void  setFinishCallback(int audioID, const std::function<void(int, const std::string &)> &callback);
 
     void uncache(const std::string &filePath);
     void uncacheAll();
@@ -83,7 +83,7 @@ private:
     SLObjectItf _outputMixObject;
 
     //audioID,AudioInfo
-    std::unordered_map<int, IAudioPlayer *> _audioPlayers;
+    std::unordered_map<int, IAudioPlayer *>                                _audioPlayers;
     std::unordered_map<int, std::function<void(int, const std::string &)>> _callbackMap;
 
     // UrlAudioPlayers which need to resumed while entering foreground
@@ -96,4 +96,4 @@ private:
     bool _lazyInitLoop;
 };
 
-}
+} // namespace cc

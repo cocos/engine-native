@@ -19,8 +19,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-#include "audio/android/AudioResampler.h"
 #include "audio/android/AudioBufferProvider.h"
+#include "audio/android/AudioResampler.h"
 
 namespace cc {
 // ----------------------------------------------------------------------------
@@ -41,11 +41,11 @@ private:
     typedef struct {
         int32_t a, b, c, y0, y1, y2, y3;
     } state;
-    void init();
-    size_t resampleMono16(int32_t *out, size_t outFrameCount,
-                          AudioBufferProvider *provider);
-    size_t resampleStereo16(int32_t *out, size_t outFrameCount,
-                            AudioBufferProvider *provider);
+    void                  init();
+    size_t                resampleMono16(int32_t *out, size_t outFrameCount,
+                                         AudioBufferProvider *provider);
+    size_t                resampleStereo16(int32_t *out, size_t outFrameCount,
+                                           AudioBufferProvider *provider);
     static inline int32_t interp(state *p, int32_t x) {
         return (((((p->a * x >> 14) + p->b) * x >> 14) + p->c) * x >> 14) + p->y1;
     }
@@ -54,9 +54,9 @@ private:
         p->y1 = p->y2;
         p->y2 = p->y3;
         p->y3 = in;
-        p->a = (3 * (p->y1 - p->y2) - p->y0 + p->y3) >> 1;
-        p->b = (p->y2 << 1) + p->y0 - (((5 * p->y1 + p->y3)) >> 1);
-        p->c = (p->y2 - p->y0) >> 1;
+        p->a  = (3 * (p->y1 - p->y2) - p->y0 + p->y3) >> 1;
+        p->b  = (p->y2 << 1) + p->y0 - (((5 * p->y1 + p->y3)) >> 1);
+        p->c  = (p->y2 - p->y0) >> 1;
     }
     state left, right;
 };

@@ -153,14 +153,12 @@ void GLES3CommandBuffer::bindInputAssembler(InputAssembler *ia) {
 }
 
 void GLES3CommandBuffer::setViewport(const Viewport &vp) {
-
     if ((_curViewport.left != vp.left) ||
         (_curViewport.top != vp.top) ||
         (_curViewport.width != vp.width) ||
         (_curViewport.height != vp.height) ||
         math::IsNotEqualF(_curViewport.minDepth, vp.minDepth) ||
         math::IsNotEqualF(_curViewport.maxDepth, vp.maxDepth)) {
-
         _curViewport    = vp;
         _isStateInvalid = true;
     }
@@ -171,7 +169,6 @@ void GLES3CommandBuffer::setScissor(const Rect &rect) {
         (_curScissor.y != rect.y) ||
         (_curScissor.width != rect.width) ||
         (_curScissor.height != rect.height)) {
-
         _curScissor     = rect;
         _isStateInvalid = true;
     }
@@ -188,7 +185,6 @@ void GLES3CommandBuffer::setDepthBias(float constant, float clamp, float slope) 
     if (math::IsNotEqualF(_curDepthBias.constant, constant) ||
         math::IsNotEqualF(_curDepthBias.clamp, clamp) ||
         math::IsNotEqualF(_curDepthBias.slope, slope)) {
-
         _curDepthBias.constant = constant;
         _curDepthBias.clamp    = clamp;
         _curDepthBias.slope    = slope;
@@ -201,7 +197,6 @@ void GLES3CommandBuffer::setBlendConstants(const Color &constants) {
         math::IsNotEqualF(_curBlendConstants.y, constants.y) ||
         math::IsNotEqualF(_curBlendConstants.z, constants.z) ||
         math::IsNotEqualF(_curBlendConstants.w, constants.w)) {
-
         _curBlendConstants.x = constants.x;
         _curBlendConstants.y = constants.y;
         _curBlendConstants.z = constants.z;
@@ -213,7 +208,6 @@ void GLES3CommandBuffer::setBlendConstants(const Color &constants) {
 void GLES3CommandBuffer::setDepthBound(float minBounds, float maxBounds) {
     if (math::IsNotEqualF(_curDepthBounds.minBounds, minBounds) ||
         math::IsNotEqualF(_curDepthBounds.maxBounds, maxBounds)) {
-
         _curDepthBounds.minBounds = minBounds;
         _curDepthBounds.maxBounds = maxBounds;
         _isStateInvalid           = true;
@@ -223,7 +217,6 @@ void GLES3CommandBuffer::setDepthBound(float minBounds, float maxBounds) {
 void GLES3CommandBuffer::setStencilWriteMask(StencilFace face, uint mask) {
     if ((_curStencilWriteMask.face != face) ||
         (_curStencilWriteMask.writeMask != mask)) {
-
         _curStencilWriteMask.face      = face;
         _curStencilWriteMask.writeMask = mask;
         _isStateInvalid                = true;
@@ -234,7 +227,6 @@ void GLES3CommandBuffer::setStencilCompareMask(StencilFace face, int ref, uint m
     if ((_curStencilCompareMask.face != face) ||
         (_curStencilCompareMask.refrence != ref) ||
         (_curStencilCompareMask.compareMask != mask)) {
-
         _curStencilCompareMask.face        = face;
         _curStencilCompareMask.refrence    = ref;
         _curStencilCompareMask.compareMask = mask;

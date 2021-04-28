@@ -27,11 +27,11 @@
 #define LOG_TAG "AudioDecoderManager"
 
 #include "audio/win32/AudioDecoderManager.h"
-#include "audio/win32/AudioDecoderOgg.h"
 #include "audio/win32/AudioDecoderMp3.h"
+#include "audio/win32/AudioDecoderOgg.h"
 #include "audio/win32/AudioMacros.h"
-#include "platform/FileUtils.h"
 #include "mpg123/mpg123.h"
+#include "platform/FileUtils.h"
 
 namespace cc {
 

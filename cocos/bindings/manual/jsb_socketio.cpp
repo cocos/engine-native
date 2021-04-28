@@ -29,8 +29,8 @@
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
 
-#include "cocos/network/SocketIO.h"
 #include "base/UTF8.h"
+#include "cocos/network/SocketIO.h"
 #include "platform/Application.h"
 
 using namespace cc;
@@ -108,7 +108,7 @@ public:
             const se::ValueArray &cbStruct = it->second;
             assert(cbStruct.size() == 2);
             const se::Value &callback = cbStruct[0];
-            const se::Value &target = cbStruct[1];
+            const se::Value &target   = cbStruct[1];
             if (callback.isObject() && callback.toObject()->isFunction() && target.isObject()) {
                 se::ValueArray args;
                 args.push_back(dataVal);
@@ -165,12 +165,12 @@ SE_BIND_PROP_SET(SocketIO_prop_setTag)
 
 static bool SocketIO_send(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
-    SIOClient *cobj = (SIOClient *)s.nativeThisObject();
+    int         argc = (int)args.size();
+    SIOClient * cobj = (SIOClient *)s.nativeThisObject();
 
     if (argc == 1) {
         std::string payload;
-        bool ok = seval_to_std_string(args[0], &payload);
+        bool        ok = seval_to_std_string(args[0], &payload);
         SE_PRECONDITION2(ok, false, "Converting payload failed!");
 
         cobj->send(payload);
@@ -184,11 +184,11 @@ SE_BIND_FUNC(SocketIO_send)
 
 static bool SocketIO_emit(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
-    SIOClient *cobj = (SIOClient *)s.nativeThisObject();
+    int         argc = (int)args.size();
+    SIOClient * cobj = (SIOClient *)s.nativeThisObject();
 
     if (argc >= 1) {
-        bool ok = false;
+        bool        ok = false;
         std::string eventName;
         ok = seval_to_std_string(args[0], &eventName);
         SE_PRECONDITION2(ok, false, "Converting eventName failed!");
@@ -217,8 +217,8 @@ SE_BIND_FUNC(SocketIO_emit)
 
 static bool SocketIO_disconnect(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
-    SIOClient *cobj = (SIOClient *)s.nativeThisObject();
+    int         argc = (int)args.size();
+    SIOClient * cobj = (SIOClient *)s.nativeThisObject();
 
     if (argc == 0) {
         cobj->disconnect();
@@ -232,11 +232,11 @@ SE_BIND_FUNC(SocketIO_disconnect)
 
 static bool SocketIO_on(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
-    SIOClient *cobj = (SIOClient *)s.nativeThisObject();
+    int         argc = (int)args.size();
+    SIOClient * cobj = (SIOClient *)s.nativeThisObject();
 
     if (argc == 2) {
-        bool ok = false;
+        bool        ok = false;
         std::string eventName;
         ok = seval_to_std_string(args[0], &eventName);
         SE_PRECONDITION2(ok, false, "Converting eventName failed!");
@@ -255,13 +255,13 @@ SE_BIND_FUNC(SocketIO_on)
 // static
 static bool SocketIO_connect(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
     CC_LOG_DEBUG("JSB SocketIO.connect method called");
 
     if (argc >= 1 && argc <= 3) {
         std::string url;
         std::string caFilePath;
-        bool ok = false;
+        bool        ok = false;
 
         ok = seval_to_std_string(args[0], &url);
         SE_PRECONDITION2(ok, false, "Error processing arguments");
@@ -315,7 +315,7 @@ SE_BIND_FUNC(SocketIO_connect)
 // static
 static bool SocketIO_close(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
     if (argc == 0) {
         return true;
     }

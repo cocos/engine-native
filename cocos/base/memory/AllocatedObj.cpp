@@ -23,8 +23,8 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "MemDef.h"
 #include "AllocatedObj.h"
+#include "MemDef.h"
 
 namespace cc {
 

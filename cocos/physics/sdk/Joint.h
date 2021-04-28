@@ -25,11 +25,11 @@
 
 #pragma once
 
-#include "physics/spec/IJoint.h"
-#include "base/Macros.h"
-#include "renderer/pipeline/helper/SharedMemory.h"
-#include <memory>
 #include <cstdint>
+#include <memory>
+#include "base/Macros.h"
+#include "physics/spec/IJoint.h"
+#include "renderer/pipeline/helper/SharedMemory.h"
 
 #define CC_PHYSICS_JOINT_CLASS(CLASS)                    \
     class CC_DLL CLASS final : virtual public I##CLASS { \
@@ -54,12 +54,12 @@ CC_PHYSICS_JOINT_CLASS(RevoluteJoint)
 void setPivotA(float x, float y, float z) override;
 void setPivotB(float x, float y, float z) override;
 void setAxis(float x, float y, float z) override;
-};
+}; // namespace physics
 
 CC_PHYSICS_JOINT_CLASS(DistanceJoint)
 void setPivotA(float x, float y, float z) override;
 void setPivotB(float x, float y, float z) override;
-};
+}; // namespace cc
 
 } // namespace physics
 } // namespace cc

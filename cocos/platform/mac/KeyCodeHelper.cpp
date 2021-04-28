@@ -287,7 +287,7 @@ int translateKeycode(int keyCode) {
     if (keyCode < 0 || keyCode > 0xff)
         return -1;
 
-    int key = keyCodes[keyCode];
+    int key      = keyCodes[keyCode];
     int keyInWeb = -1;
     if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9)
         keyInWeb = key;

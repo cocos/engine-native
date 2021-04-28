@@ -69,10 +69,10 @@ AudioDecoderMp3::~AudioDecoderMp3() {
 bool AudioDecoderMp3::open(const char *path) {
     std::string fullPath = FileUtils::getInstance()->fullPathForFilename(path);
 
-    long rate = 0;
-    int error = MPG123_OK;
-    int mp3Encoding = 0;
-    int channel = 0;
+    long rate        = 0;
+    int  error       = MPG123_OK;
+    int  mp3Encoding = 0;
+    int  channel     = 0;
     do {
         _mpg123handle = mpg123_new(nullptr, &error);
         if (nullptr == _mpg123handle) {
@@ -86,7 +86,7 @@ bool AudioDecoderMp3::open(const char *path) {
         }
 
         _channelCount = channel;
-        _sampleRate = rate;
+        _sampleRate   = rate;
 
         if (mp3Encoding == MPG123_ENC_SIGNED_16) {
             _bytesPerFrame = 2 * _channelCount;
@@ -129,9 +129,9 @@ void AudioDecoderMp3::close() {
 }
 
 uint32_t AudioDecoderMp3::read(uint32_t framesToRead, char *pcmBuf) {
-    int bytesToRead = framesToRead * _bytesPerFrame;
-    size_t bytesRead = 0;
-    int err = mpg123_read(_mpg123handle, (unsigned char *)pcmBuf, bytesToRead, &bytesRead);
+    int    bytesToRead = framesToRead * _bytesPerFrame;
+    size_t bytesRead   = 0;
+    int    err         = mpg123_read(_mpg123handle, (unsigned char *)pcmBuf, bytesToRead, &bytesRead);
     if (err == MPG123_ERR) {
         ALOGE("Trouble with mpg123: %s\n", mpg123_strerror(_mpg123handle));
         return 0;

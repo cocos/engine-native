@@ -42,8 +42,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 5.0
  * @language zh_CN
  */
-class AnimationConfig : public BaseObject
-{
+class AnimationConfig : public BaseObject {
     BIND_CLASS_TYPE_A(AnimationConfig);
 
 public:
@@ -306,13 +305,13 @@ public:
     void removeBoneMask(Armature* armature, const std::string& boneName, bool recursive);
 
 public: // For WebAssembly.
-    int getFadeOutMode() const { return (int)fadeOutMode; }
+    int  getFadeOutMode() const { return (int)fadeOutMode; }
     void setFadeOutMode(int value) { fadeOutMode = (AnimationFadeOutMode)value; }
 
-    int getFadeOutTweenType() const { return (int)fadeOutTweenType; }
+    int  getFadeOutTweenType() const { return (int)fadeOutTweenType; }
     void setFadeOutTweenType(int value) { fadeOutTweenType = (TweenType)value; }
 
-    int getFadeInTweenType() const { return (int)fadeInTweenType; }
+    int  getFadeInTweenType() const { return (int)fadeInTweenType; }
     void setFadeInTweenType(int value) { fadeInTweenType = (TweenType)value; }
 };
 

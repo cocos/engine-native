@@ -30,8 +30,8 @@
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-    #include "Base.h"
     #include "../Value.h"
+    #include "Base.h"
 
     #include <thread>
 
@@ -302,10 +302,10 @@ public:
     uint32_t getVMId() const { return _vmId; }
 
     // Private API used in wrapper
-    void _retainScriptObject(void *owner, void *target);
-    void _releaseScriptObject(void *owner, void *target);
+    void                   _retainScriptObject(void *owner, void *target);
+    void                   _releaseScriptObject(void *owner, void *target);
     v8::Local<v8::Context> _getContext() const;
-    void _setGarbageCollecting(bool isGarbageCollecting);
+    void                   _setGarbageCollecting(bool isGarbageCollecting);
     //
 private:
     ScriptEngine();
@@ -327,24 +327,24 @@ private:
     void callExceptionCallback(const char *, const char *, const char *);
 
     std::chrono::steady_clock::time_point _startTime;
-    std::vector<RegisterCallback> _registerCallbackArray;
-    std::vector<RegisterCallback> _permRegisterCallbackArray;
-    std::vector<std::function<void()>> _beforeInitHookArray;
-    std::vector<std::function<void()>> _afterInitHookArray;
-    std::vector<std::function<void()>> _beforeCleanupHookArray;
-    std::vector<std::function<void()>> _afterCleanupHookArray;
+    std::vector<RegisterCallback>         _registerCallbackArray;
+    std::vector<RegisterCallback>         _permRegisterCallbackArray;
+    std::vector<std::function<void()>>    _beforeInitHookArray;
+    std::vector<std::function<void()>>    _afterInitHookArray;
+    std::vector<std::function<void()>>    _beforeCleanupHookArray;
+    std::vector<std::function<void()>>    _afterCleanupHookArray;
 
     v8::Persistent<v8::Context> _context;
 
-    v8::Isolate *_isolate;
+    v8::Isolate *    _isolate;
     v8::HandleScope *_handleScope;
-    Object *_globalObj;
-    Value _gcFuncValue;
-    Object *_gcFunc = nullptr;
+    Object *         _globalObj;
+    Value            _gcFuncValue;
+    Object *         _gcFunc = nullptr;
 
     FileOperationDelegate _fileOperationDelegate;
-    ExceptionCallback _nativeExceptionCallback = nullptr;
-    ExceptionCallback _jsExceptionCallback = nullptr;
+    ExceptionCallback     _nativeExceptionCallback = nullptr;
+    ExceptionCallback     _jsExceptionCallback     = nullptr;
 
     #if SE_ENABLE_INSPECTOR
     node::Environment *_env;
@@ -354,8 +354,8 @@ private:
     std::thread::id _engineThreadId;
 
     std::string _debuggerServerAddr;
-    uint32_t _debuggerServerPort;
-    bool _isWaitForConnect;
+    uint32_t    _debuggerServerPort;
+    bool        _isWaitForConnect;
 
     uint32_t _vmId;
 

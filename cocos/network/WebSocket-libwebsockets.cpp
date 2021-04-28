@@ -121,7 +121,7 @@ static void wsLog(const char *format, ...) {
 #endif
 
 #define DO_QUOTEME(x) #x
-#define QUOTEME(x) DO_QUOTEME(x)
+#define QUOTEME(x)    DO_QUOTEME(x)
 
 // Since CC_LOG_DEBUG isn't thread safe, we uses LOGD for multi-thread logging.
 #ifdef ANDROID
@@ -804,7 +804,7 @@ cc::network::WebSocket::Delegate *WebSocketImpl::getDelegate() const {
 
 struct lws_vhost *WebSocketImpl::createVhost(struct lws_protocols *protocols, int *sslConnectionOut) {
     auto *fileUtils     = cc::FileUtils::getInstance();
-    bool isCAFileExist = fileUtils->isFileExist(_caFilePath);
+    bool  isCAFileExist = fileUtils->isFileExist(_caFilePath);
     if (isCAFileExist) {
         _caFilePath = fileUtils->fullPathForFilename(_caFilePath);
     }

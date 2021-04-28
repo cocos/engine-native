@@ -28,17 +28,17 @@
  *****************************************************************************/
 
 #include "spine-creator-support/SkeletonRenderer.h"
+#include <algorithm>
 #include "MiddlewareMacro.h"
 #include "SharedBufferManager.h"
 #include "SkeletonDataMgr.h"
 #include "base/TypeDef.h"
 #include "base/memory/Memory.h"
+#include "gfx-base/GFXDef.h"
 #include "math/Math.h"
 #include "math/Vec3.h"
-#include "gfx-base/GFXDef.h"
 #include "spine-creator-support/AttachmentVertices.h"
 #include "spine-creator-support/spine-cocos2dx.h"
-#include <algorithm>
 
 USING_NS_MW;
 using std::max;
@@ -47,7 +47,7 @@ using namespace spine;
 using namespace cc;
 using namespace cc::gfx;
 
-static const std::string techStage = "opaque";
+static const std::string techStage  = "opaque";
 static const std::string textureKey = "texture";
 
 static Cocos2dTextureLoader textureLoader;
@@ -132,7 +132,7 @@ void SkeletonRenderer::stopSchedule() {
 }
 
 void SkeletonRenderer::setSkeletonData(SkeletonData *skeletonData, bool ownsSkeletonData) {
-    _skeleton = new (__FILE__, __LINE__) Skeleton(skeletonData);
+    _skeleton         = new (__FILE__, __LINE__) Skeleton(skeletonData);
     _ownsSkeletonData = ownsSkeletonData;
 }
 
@@ -179,8 +179,8 @@ SkeletonRenderer::~SkeletonRenderer() {
 }
 
 void SkeletonRenderer::initWithUUID(const std::string &uuid) {
-    _ownsSkeleton = true;
-    _uuid = uuid;
+    _ownsSkeleton              = true;
+    _uuid                      = uuid;
     SkeletonData *skeletonData = SkeletonDataMgr::getInstance()->retainByUUID(uuid);
     CCASSERT(skeletonData, "Skeleton data is is null");
 
@@ -189,10 +189,10 @@ void SkeletonRenderer::initWithUUID(const std::string &uuid) {
 }
 
 void SkeletonRenderer::initWithSkeleton(Skeleton *skeleton, bool ownsSkeleton, bool ownsSkeletonData, bool ownsAtlas) {
-    _skeleton = skeleton;
-    _ownsSkeleton = ownsSkeleton;
+    _skeleton         = skeleton;
+    _ownsSkeleton     = ownsSkeleton;
     _ownsSkeletonData = ownsSkeletonData;
-    _ownsAtlas = ownsAtlas;
+    _ownsAtlas        = ownsAtlas;
 
     initialize();
 }
@@ -204,7 +204,7 @@ void SkeletonRenderer::initWithData(SkeletonData *skeletonData, bool ownsSkeleto
 }
 
 void SkeletonRenderer::initWithJsonFile(const std::string &skeletonDataFile, Atlas *atlas, float scale) {
-    _atlas = atlas;
+    _atlas            = atlas;
     _attachmentLoader = new (__FILE__, __LINE__) Cocos2dAtlasAttachmentLoader(_atlas);
 
     SkeletonJson json(_attachmentLoader);
@@ -230,14 +230,14 @@ void SkeletonRenderer::initWithJsonFile(const std::string &skeletonDataFile, con
     CCASSERT(skeletonData, !json.getError().isEmpty() ? json.getError().buffer() : "Error reading skeleton data.");
 
     _ownsSkeleton = true;
-    _ownsAtlas = true;
+    _ownsAtlas    = true;
     setSkeletonData(skeletonData, true);
 
     initialize();
 }
 
 void SkeletonRenderer::initWithBinaryFile(const std::string &skeletonDataFile, Atlas *atlas, float scale) {
-    _atlas = atlas;
+    _atlas            = atlas;
     _attachmentLoader = new (__FILE__, __LINE__) Cocos2dAtlasAttachmentLoader(_atlas);
 
     SkeletonBinary binary(_attachmentLoader);
@@ -263,7 +263,7 @@ void SkeletonRenderer::initWithBinaryFile(const std::string &skeletonDataFile, c
     CCASSERT(skeletonData, !binary.getError().isEmpty() ? binary.getError().buffer() : "Error reading skeleton data.");
 
     _ownsSkeleton = true;
-    _ownsAtlas = true;
+    _ownsAtlas    = true;
     setSkeletonData(skeletonData, true);
 
     initialize();
@@ -279,11 +279,11 @@ void SkeletonRenderer::render(float deltaTime) {
     auto mgr = MiddlewareManager::getInstance();
     if (!mgr->isRendering) return;
 
-    auto renderMgr = mgr->getRenderInfoMgr();
+    auto renderMgr  = mgr->getRenderInfoMgr();
     auto renderInfo = renderMgr->getBuffer();
     if (!renderInfo) return;
 
-    auto attachMgr = mgr->getAttachInfoMgr();
+    auto attachMgr  = mgr->getAttachInfoMgr();
     auto attachInfo = attachMgr->getBuffer();
     if (!attachInfo) return;
 
@@ -307,14 +307,14 @@ void SkeletonRenderer::render(float deltaTime) {
     }
 
     // color range is [0.0, 1.0]
-    Color4F color;
-    Color4F darkColor;
-    AttachmentVertices *attachmentVertices = nullptr;
-    bool inRange = _startSlotIndex != -1 || _endSlotIndex != -1 ? false : true;
-    auto vertexFormat = _useTint ? VF_XYZUVCC : VF_XYZUVC;
-    middleware::MeshBuffer *mb = mgr->getMeshBuffer(vertexFormat);
-    middleware::IOBuffer &vb = mb->getVB();
-    middleware::IOBuffer &ib = mb->getIB();
+    Color4F                 color;
+    Color4F                 darkColor;
+    AttachmentVertices *    attachmentVertices = nullptr;
+    bool                    inRange            = _startSlotIndex != -1 || _endSlotIndex != -1 ? false : true;
+    auto                    vertexFormat       = _useTint ? VF_XYZUVCC : VF_XYZUVC;
+    middleware::MeshBuffer *mb                 = mgr->getMeshBuffer(vertexFormat);
+    middleware::IOBuffer &  vb                 = mb->getVB();
+    middleware::IOBuffer &  ib                 = mb->getIB();
 
     // vertex size int bytes with one color
     int vbs1 = sizeof(V2F_T2F_C4F);
@@ -337,19 +337,19 @@ void SkeletonRenderer::render(float deltaTime) {
     int vbSize = 0;
     int ibSize = 0;
 
-    int curBlendSrc = -1;
-    int curBlendDst = -1;
-    int curBlendMode = -1;
-    int preBlendMode = -1;
+    int curBlendSrc     = -1;
+    int curBlendDst     = -1;
+    int curBlendMode    = -1;
+    int preBlendMode    = -1;
     int preTextureIndex = -1;
     int curTextureIndex = -1;
 
     int preISegWritePos = -1;
-    int curISegLen = 0;
+    int curISegLen      = 0;
 
-    int materialLen = 0;
-    Slot *slot = nullptr;
-    int isFull = 0;
+    int   materialLen = 0;
+    Slot *slot        = nullptr;
+    int   isFull      = 0;
 
     if (_debugSlots || _debugBones || _debugMesh) {
         // If enable debug draw,then init debug buffer.
@@ -426,7 +426,7 @@ void SkeletonRenderer::render(float deltaTime) {
     auto &drawOrder = _skeleton->getDrawOrder();
     for (size_t i = 0, n = drawOrder.size(); i < n; ++i) {
         isFull = 0;
-        slot = drawOrder[i];
+        slot   = drawOrder[i];
         if (_startSlotIndex >= 0 && _startSlotIndex == slot->getData().getIndex()) {
             inRange = true;
         }
@@ -451,12 +451,12 @@ void SkeletonRenderer::render(float deltaTime) {
             continue;
         }
 
-        Triangles triangles;
+        Triangles         triangles;
         TwoColorTriangles trianglesTwoColor;
 
         if (slot->getAttachment()->getRTTI().isExactly(RegionAttachment::rtti)) {
             RegionAttachment *attachment = (RegionAttachment *)slot->getAttachment();
-            attachmentVertices = (AttachmentVertices *)attachment->getRendererObject();
+            attachmentVertices           = (AttachmentVertices *)attachment->getRendererObject();
 
             // Early exit if attachment is invisible
             if (attachment->getColor().a == 0) {
@@ -466,20 +466,20 @@ void SkeletonRenderer::render(float deltaTime) {
 
             if (!_useTint) {
                 triangles.vertCount = attachmentVertices->_triangles->vertCount;
-                vbSize = triangles.vertCount * sizeof(V2F_T2F_C4F);
+                vbSize              = triangles.vertCount * sizeof(V2F_T2F_C4F);
                 isFull |= vb.checkSpace(vbSize, true);
                 triangles.verts = (V2F_T2F_C4F *)vb.getCurBuffer();
                 memcpy(triangles.verts, attachmentVertices->_triangles->verts, vbSize);
                 attachment->computeWorldVertices(slot->getBone(), (float *)triangles.verts, 0, vs1);
 
                 triangles.indexCount = attachmentVertices->_triangles->indexCount;
-                ibSize = triangles.indexCount * sizeof(unsigned short);
+                ibSize               = triangles.indexCount * sizeof(unsigned short);
                 ib.checkSpace(ibSize, true);
                 triangles.indices = (unsigned short *)ib.getCurBuffer();
                 memcpy(triangles.indices, attachmentVertices->_triangles->indices, ibSize);
             } else {
                 trianglesTwoColor.vertCount = attachmentVertices->_triangles->vertCount;
-                vbSize = trianglesTwoColor.vertCount * sizeof(V2F_T2F_C4F_C4F);
+                vbSize                      = trianglesTwoColor.vertCount * sizeof(V2F_T2F_C4F_C4F);
                 isFull |= vb.checkSpace(vbSize, true);
                 trianglesTwoColor.verts = (V2F_T2F_C4F_C4F *)vb.getCurBuffer();
                 for (int ii = 0; ii < trianglesTwoColor.vertCount; ii++) {
@@ -488,7 +488,7 @@ void SkeletonRenderer::render(float deltaTime) {
                 attachment->computeWorldVertices(slot->getBone(), (float *)trianglesTwoColor.verts, 0, vs2);
 
                 trianglesTwoColor.indexCount = attachmentVertices->_triangles->indexCount;
-                ibSize = trianglesTwoColor.indexCount * sizeof(unsigned short);
+                ibSize                       = trianglesTwoColor.indexCount * sizeof(unsigned short);
                 ib.checkSpace(ibSize, true);
                 trianglesTwoColor.indices = (unsigned short *)ib.getCurBuffer();
                 memcpy(trianglesTwoColor.indices, attachmentVertices->_triangles->indices, ibSize);
@@ -503,7 +503,7 @@ void SkeletonRenderer::render(float deltaTime) {
                 _debugBuffer->writeFloat32(DebugType::Slots);
                 _debugBuffer->writeFloat32(8);
                 float *vertices = _useTint ? (float *)trianglesTwoColor.verts : (float *)triangles.verts;
-                int stride = _useTint ? vs2 : vs1;
+                int    stride   = _useTint ? vs2 : vs1;
                 // Quadrangle has 4 vertex.
                 for (int ii = 0; ii < 4; ii++) {
                     _debugBuffer->writeFloat32(vertices[0]);
@@ -512,9 +512,8 @@ void SkeletonRenderer::render(float deltaTime) {
                 }
             }
         } else if (slot->getAttachment()->getRTTI().isExactly(MeshAttachment::rtti)) {
-
             MeshAttachment *attachment = (MeshAttachment *)slot->getAttachment();
-            attachmentVertices = (AttachmentVertices *)attachment->getRendererObject();
+            attachmentVertices         = (AttachmentVertices *)attachment->getRendererObject();
 
             // Early exit if attachment is invisible
             if (attachment->getColor().a == 0) {
@@ -524,20 +523,20 @@ void SkeletonRenderer::render(float deltaTime) {
 
             if (!_useTint) {
                 triangles.vertCount = attachmentVertices->_triangles->vertCount;
-                vbSize = triangles.vertCount * sizeof(V2F_T2F_C4F);
+                vbSize              = triangles.vertCount * sizeof(V2F_T2F_C4F);
                 isFull |= vb.checkSpace(vbSize, true);
                 triangles.verts = (V2F_T2F_C4F *)vb.getCurBuffer();
                 memcpy(triangles.verts, attachmentVertices->_triangles->verts, vbSize);
                 attachment->computeWorldVertices(*slot, 0, attachment->getWorldVerticesLength(), (float *)triangles.verts, 0, vs1);
 
                 triangles.indexCount = attachmentVertices->_triangles->indexCount;
-                ibSize = triangles.indexCount * sizeof(unsigned short);
+                ibSize               = triangles.indexCount * sizeof(unsigned short);
                 ib.checkSpace(ibSize, true);
                 triangles.indices = (unsigned short *)ib.getCurBuffer();
                 memcpy(triangles.indices, attachmentVertices->_triangles->indices, ibSize);
             } else {
                 trianglesTwoColor.vertCount = attachmentVertices->_triangles->vertCount;
-                vbSize = trianglesTwoColor.vertCount * sizeof(V2F_T2F_C4F_C4F);
+                vbSize                      = trianglesTwoColor.vertCount * sizeof(V2F_T2F_C4F_C4F);
                 isFull |= vb.checkSpace(vbSize, true);
                 trianglesTwoColor.verts = (V2F_T2F_C4F_C4F *)vb.getCurBuffer();
                 for (int ii = 0; ii < trianglesTwoColor.vertCount; ii++) {
@@ -546,7 +545,7 @@ void SkeletonRenderer::render(float deltaTime) {
                 attachment->computeWorldVertices(*slot, 0, attachment->getWorldVerticesLength(), (float *)trianglesTwoColor.verts, 0, vs2);
 
                 trianglesTwoColor.indexCount = attachmentVertices->_triangles->indexCount;
-                ibSize = trianglesTwoColor.indexCount * sizeof(unsigned short);
+                ibSize                       = trianglesTwoColor.indexCount * sizeof(unsigned short);
                 ib.checkSpace(ibSize, true);
                 trianglesTwoColor.indices = (unsigned short *)ib.getCurBuffer();
                 memcpy(trianglesTwoColor.indices, attachmentVertices->_triangles->indices, ibSize);
@@ -558,9 +557,9 @@ void SkeletonRenderer::render(float deltaTime) {
             color.a = attachment->getColor().a;
 
             if (_debugMesh) {
-                int indexCount = _useTint ? trianglesTwoColor.indexCount : triangles.indexCount;
-                unsigned short *indices = _useTint ? (unsigned short *)trianglesTwoColor.indices : (unsigned short *)triangles.indices;
-                float *vertices = _useTint ? (float *)trianglesTwoColor.verts : (float *)triangles.verts;
+                int             indexCount = _useTint ? trianglesTwoColor.indexCount : triangles.indexCount;
+                unsigned short *indices    = _useTint ? (unsigned short *)trianglesTwoColor.indices : (unsigned short *)triangles.indices;
+                float *         vertices   = _useTint ? (float *)trianglesTwoColor.verts : (float *)triangles.verts;
 
                 int stride = _useTint ? vs2 : vs1;
                 _debugBuffer->writeFloat32(DebugType::Mesh);
@@ -595,9 +594,9 @@ void SkeletonRenderer::render(float deltaTime) {
         }
 
         float multiplier = _premultipliedAlpha ? color.a : 255;
-        float red = _nodeColor.r * _skeleton->getColor().r * color.r * multiplier;
-        float green = _nodeColor.g * _skeleton->getColor().g * color.g * multiplier;
-        float blue = _nodeColor.b * _skeleton->getColor().b * color.b * multiplier;
+        float red        = _nodeColor.r * _skeleton->getColor().r * color.r * multiplier;
+        float green      = _nodeColor.g * _skeleton->getColor().g * color.g * multiplier;
+        float blue       = _nodeColor.b * _skeleton->getColor().b * color.b * multiplier;
 
         color.r = red * slot->getColor().r;
         color.g = green * slot->getColor().g;
@@ -626,18 +625,18 @@ void SkeletonRenderer::render(float deltaTime) {
                 }
 
                 triangles.vertCount = (int)_clipper->getClippedVertices().size() >> 1;
-                vbSize = triangles.vertCount * sizeof(V2F_T2F_C4F);
+                vbSize              = triangles.vertCount * sizeof(V2F_T2F_C4F);
                 isFull |= vb.checkSpace(vbSize, true);
                 triangles.verts = (V2F_T2F_C4F *)vb.getCurBuffer();
 
                 triangles.indexCount = (int)_clipper->getClippedTriangles().size();
-                ibSize = triangles.indexCount * sizeof(unsigned short);
+                ibSize               = triangles.indexCount * sizeof(unsigned short);
                 ib.checkSpace(ibSize, true);
                 triangles.indices = (unsigned short *)ib.getCurBuffer();
                 memcpy(triangles.indices, _clipper->getClippedTriangles().buffer(), sizeof(unsigned short) * _clipper->getClippedTriangles().size());
 
                 float *verts = _clipper->getClippedVertices().buffer();
-                float *uvs = _clipper->getClippedUVs().buffer();
+                float *uvs   = _clipper->getClippedUVs().buffer();
 
                 Color light;
                 Color dark;
@@ -649,13 +648,13 @@ void SkeletonRenderer::render(float deltaTime) {
 
                 if (effect) {
                     for (int v = 0, vn = triangles.vertCount, vv = 0; v < vn; ++v, vv += 2) {
-                        V2F_T2F_C4F *vertex = triangles.verts + v;
-                        Color lightCopy = light;
-                        Color darkCopy = dark;
-                        vertex->vertex.x = verts[vv];
-                        vertex->vertex.y = verts[vv + 1];
-                        vertex->texCoord.u = uvs[vv];
-                        vertex->texCoord.v = uvs[vv + 1];
+                        V2F_T2F_C4F *vertex    = triangles.verts + v;
+                        Color        lightCopy = light;
+                        Color        darkCopy  = dark;
+                        vertex->vertex.x       = verts[vv];
+                        vertex->vertex.y       = verts[vv + 1];
+                        vertex->texCoord.u     = uvs[vv];
+                        vertex->texCoord.v     = uvs[vv + 1];
                         effect->transform(vertex->vertex.x, vertex->vertex.y, vertex->texCoord.u, vertex->texCoord.v, lightCopy, darkCopy);
                         vertex->color.r = lightCopy.r;
                         vertex->color.g = lightCopy.g;
@@ -665,19 +664,18 @@ void SkeletonRenderer::render(float deltaTime) {
                 } else {
                     for (int v = 0, vn = triangles.vertCount, vv = 0; v < vn; ++v, vv += 2) {
                         V2F_T2F_C4F *vertex = triangles.verts + v;
-                        vertex->vertex.x = verts[vv];
-                        vertex->vertex.y = verts[vv + 1];
-                        vertex->texCoord.u = uvs[vv];
-                        vertex->texCoord.v = uvs[vv + 1];
-                        vertex->color.r = light.r;
-                        vertex->color.g = light.g;
-                        vertex->color.b = light.b;
-                        vertex->color.a = light.a;
+                        vertex->vertex.x    = verts[vv];
+                        vertex->vertex.y    = verts[vv + 1];
+                        vertex->texCoord.u  = uvs[vv];
+                        vertex->texCoord.v  = uvs[vv + 1];
+                        vertex->color.r     = light.r;
+                        vertex->color.g     = light.g;
+                        vertex->color.b     = light.b;
+                        vertex->color.a     = light.a;
                     }
                 }
                 // No cliping logic
             } else {
-
                 Color light;
                 light.r = color.r / 255.0f;
                 light.g = color.g / 255.0f;
@@ -688,9 +686,9 @@ void SkeletonRenderer::render(float deltaTime) {
                     Color dark;
                     dark.r = dark.g = dark.b = dark.a = 0;
                     for (int v = 0, vn = triangles.vertCount; v < vn; ++v) {
-                        V2F_T2F_C4F *vertex = triangles.verts + v;
-                        Color lightCopy = light;
-                        Color darkCopy = dark;
+                        V2F_T2F_C4F *vertex    = triangles.verts + v;
+                        Color        lightCopy = light;
+                        Color        darkCopy  = dark;
                         effect->transform(vertex->vertex.x, vertex->vertex.y, vertex->texCoord.u, vertex->texCoord.v, lightCopy, darkCopy);
                         vertex->color.r = lightCopy.r;
                         vertex->color.g = lightCopy.g;
@@ -700,10 +698,10 @@ void SkeletonRenderer::render(float deltaTime) {
                 } else {
                     for (int v = 0, vn = triangles.vertCount; v < vn; ++v) {
                         V2F_T2F_C4F *vertex = triangles.verts + v;
-                        vertex->color.r = light.r;
-                        vertex->color.g = light.g;
-                        vertex->color.b = light.b;
-                        vertex->color.a = light.a;
+                        vertex->color.r     = light.r;
+                        vertex->color.g     = light.g;
+                        vertex->color.b     = light.b;
+                        vertex->color.a     = light.a;
                     }
                 }
             }
@@ -719,17 +717,17 @@ void SkeletonRenderer::render(float deltaTime) {
                 }
 
                 trianglesTwoColor.vertCount = (int)_clipper->getClippedVertices().size() >> 1;
-                vbSize = trianglesTwoColor.vertCount * sizeof(V2F_T2F_C4F_C4F);
+                vbSize                      = trianglesTwoColor.vertCount * sizeof(V2F_T2F_C4F_C4F);
                 isFull |= vb.checkSpace(vbSize, true);
                 trianglesTwoColor.verts = (V2F_T2F_C4F_C4F *)vb.getCurBuffer();
 
                 trianglesTwoColor.indexCount = (int)_clipper->getClippedTriangles().size();
-                ibSize = trianglesTwoColor.indexCount * sizeof(unsigned short);
-                trianglesTwoColor.indices = (unsigned short *)ib.getCurBuffer();
+                ibSize                       = trianglesTwoColor.indexCount * sizeof(unsigned short);
+                trianglesTwoColor.indices    = (unsigned short *)ib.getCurBuffer();
                 memcpy(trianglesTwoColor.indices, _clipper->getClippedTriangles().buffer(), sizeof(unsigned short) * _clipper->getClippedTriangles().size());
 
                 float *verts = _clipper->getClippedVertices().buffer();
-                float *uvs = _clipper->getClippedUVs().buffer();
+                float *uvs   = _clipper->getClippedUVs().buffer();
 
                 Color light;
                 Color dark;
@@ -737,25 +735,25 @@ void SkeletonRenderer::render(float deltaTime) {
                 light.g = color.g / 255.0f;
                 light.b = color.b / 255.0f;
                 light.a = color.a / 255.0f;
-                dark.r = darkColor.r / 255.0f;
-                dark.g = darkColor.g / 255.0f;
-                dark.b = darkColor.b / 255.0f;
-                dark.a = darkColor.a / 255.0f;
+                dark.r  = darkColor.r / 255.0f;
+                dark.g  = darkColor.g / 255.0f;
+                dark.b  = darkColor.b / 255.0f;
+                dark.a  = darkColor.a / 255.0f;
 
                 if (effect) {
                     for (int v = 0, vn = trianglesTwoColor.vertCount, vv = 0; v < vn; ++v, vv += 2) {
-                        V2F_T2F_C4F_C4F *vertex = trianglesTwoColor.verts + v;
-                        Color lightCopy = light;
-                        Color darkCopy = dark;
-                        vertex->vertex.x = verts[vv];
-                        vertex->vertex.y = verts[vv + 1];
-                        vertex->texCoord.u = uvs[vv];
-                        vertex->texCoord.v = uvs[vv + 1];
+                        V2F_T2F_C4F_C4F *vertex    = trianglesTwoColor.verts + v;
+                        Color            lightCopy = light;
+                        Color            darkCopy  = dark;
+                        vertex->vertex.x           = verts[vv];
+                        vertex->vertex.y           = verts[vv + 1];
+                        vertex->texCoord.u         = uvs[vv];
+                        vertex->texCoord.v         = uvs[vv + 1];
                         effect->transform(vertex->vertex.x, vertex->vertex.y, vertex->texCoord.u, vertex->texCoord.v, lightCopy, darkCopy);
-                        vertex->color.r = lightCopy.r;
-                        vertex->color.g = lightCopy.g;
-                        vertex->color.b = lightCopy.b;
-                        vertex->color.a = lightCopy.a;
+                        vertex->color.r  = lightCopy.r;
+                        vertex->color.g  = lightCopy.g;
+                        vertex->color.b  = lightCopy.b;
+                        vertex->color.a  = lightCopy.a;
                         vertex->color2.r = darkCopy.r;
                         vertex->color2.g = darkCopy.g;
                         vertex->color2.b = darkCopy.b;
@@ -764,43 +762,42 @@ void SkeletonRenderer::render(float deltaTime) {
                 } else {
                     for (int v = 0, vn = trianglesTwoColor.vertCount, vv = 0; v < vn; ++v, vv += 2) {
                         V2F_T2F_C4F_C4F *vertex = trianglesTwoColor.verts + v;
-                        vertex->vertex.x = verts[vv];
-                        vertex->vertex.y = verts[vv + 1];
-                        vertex->texCoord.u = uvs[vv];
-                        vertex->texCoord.v = uvs[vv + 1];
-                        vertex->color.r = light.r;
-                        vertex->color.g = light.g;
-                        vertex->color.b = light.b;
-                        vertex->color.a = light.a;
-                        vertex->color2.r = dark.r;
-                        vertex->color2.g = dark.g;
-                        vertex->color2.b = dark.b;
-                        vertex->color2.a = dark.a;
+                        vertex->vertex.x        = verts[vv];
+                        vertex->vertex.y        = verts[vv + 1];
+                        vertex->texCoord.u      = uvs[vv];
+                        vertex->texCoord.v      = uvs[vv + 1];
+                        vertex->color.r         = light.r;
+                        vertex->color.g         = light.g;
+                        vertex->color.b         = light.b;
+                        vertex->color.a         = light.a;
+                        vertex->color2.r        = dark.r;
+                        vertex->color2.g        = dark.g;
+                        vertex->color2.b        = dark.b;
+                        vertex->color2.a        = dark.a;
                     }
                 }
             } else {
-
                 Color light;
                 Color dark;
                 light.r = color.r / 255.0f;
                 light.g = color.g / 255.0f;
                 light.b = color.b / 255.0f;
                 light.a = color.a / 255.0f;
-                dark.r = darkColor.r / 255.0f;
-                dark.g = darkColor.g / 255.0f;
-                dark.b = darkColor.b / 255.0f;
-                dark.a = darkColor.a / 255.0f;
+                dark.r  = darkColor.r / 255.0f;
+                dark.g  = darkColor.g / 255.0f;
+                dark.b  = darkColor.b / 255.0f;
+                dark.a  = darkColor.a / 255.0f;
 
                 if (effect) {
                     for (int v = 0, vn = trianglesTwoColor.vertCount; v < vn; ++v) {
-                        V2F_T2F_C4F_C4F *vertex = trianglesTwoColor.verts + v;
-                        Color lightCopy = light;
-                        Color darkCopy = dark;
+                        V2F_T2F_C4F_C4F *vertex    = trianglesTwoColor.verts + v;
+                        Color            lightCopy = light;
+                        Color            darkCopy  = dark;
                         effect->transform(vertex->vertex.x, vertex->vertex.y, vertex->texCoord.u, vertex->texCoord.v, lightCopy, darkCopy);
-                        vertex->color.r = lightCopy.r;
-                        vertex->color.g = lightCopy.g;
-                        vertex->color.b = lightCopy.b;
-                        vertex->color.a = lightCopy.a;
+                        vertex->color.r  = lightCopy.r;
+                        vertex->color.g  = lightCopy.g;
+                        vertex->color.b  = lightCopy.b;
+                        vertex->color.a  = lightCopy.a;
                         vertex->color2.r = darkCopy.r;
                         vertex->color2.g = darkCopy.g;
                         vertex->color2.b = darkCopy.b;
@@ -809,14 +806,14 @@ void SkeletonRenderer::render(float deltaTime) {
                 } else {
                     for (int v = 0, vn = trianglesTwoColor.vertCount; v < vn; ++v) {
                         V2F_T2F_C4F_C4F *vertex = trianglesTwoColor.verts + v;
-                        vertex->color.r = light.r;
-                        vertex->color.g = light.g;
-                        vertex->color.b = light.b;
-                        vertex->color.a = light.a;
-                        vertex->color2.r = dark.r;
-                        vertex->color2.g = dark.g;
-                        vertex->color2.b = dark.b;
-                        vertex->color2.a = dark.a;
+                        vertex->color.r         = light.r;
+                        vertex->color.g         = light.g;
+                        vertex->color.b         = light.b;
+                        vertex->color.a         = light.a;
+                        vertex->color2.r        = dark.r;
+                        vertex->color2.g        = dark.g;
+                        vertex->color2.b        = dark.b;
+                        vertex->color2.a        = dark.a;
                     }
                 }
             }
@@ -832,8 +829,8 @@ void SkeletonRenderer::render(float deltaTime) {
 
         if (vbSize > 0 && ibSize > 0) {
             if (_batch) {
-                uint8_t *vbBuffer = vb.getCurBuffer();
-                cc::Vec3 *point = nullptr;
+                uint8_t * vbBuffer = vb.getCurBuffer();
+                cc::Vec3 *point    = nullptr;
                 for (int ii = 0, nn = vbSize; ii < nn; ii += vbs) {
                     point = (cc::Vec3 *)(vbBuffer + ii);
                     // force z value to zero
@@ -869,7 +866,7 @@ void SkeletonRenderer::render(float deltaTime) {
     }
 
     if (_useAttach || _debugBones) {
-        auto &bones = _skeleton->getBones();
+        auto & bones      = _skeleton->getBones();
         size_t bonesCount = bones.size();
 
         cc::Mat4 boneMat = cc::Mat4::IDENTITY;
@@ -882,10 +879,10 @@ void SkeletonRenderer::render(float deltaTime) {
         for (size_t i = 0, n = bonesCount; i < n; i++) {
             Bone *bone = bones[i];
 
-            boneMat.m[0] = bone->getA();
-            boneMat.m[1] = bone->getC();
-            boneMat.m[4] = bone->getB();
-            boneMat.m[5] = bone->getD();
+            boneMat.m[0]  = bone->getA();
+            boneMat.m[1]  = bone->getC();
+            boneMat.m[4]  = bone->getB();
+            boneMat.m[5]  = bone->getD();
             boneMat.m[12] = bone->getWorldX();
             boneMat.m[13] = bone->getWorldY();
             attachInfo->checkSpace(sizeof(boneMat), true);
@@ -893,8 +890,8 @@ void SkeletonRenderer::render(float deltaTime) {
 
             if (_debugBones) {
                 float boneLength = bone->getData().getLength();
-                float x = boneLength * bone->getA() + bone->getWorldX();
-                float y = boneLength * bone->getC() + bone->getWorldY();
+                float x          = boneLength * bone->getA() + bone->getWorldX();
+                float y          = boneLength * bone->getC() + bone->getWorldY();
                 _debugBuffer->writeFloat32(bone->getWorldX());
                 _debugBuffer->writeFloat32(bone->getWorldY());
                 _debugBuffer->writeFloat32(x);
@@ -916,8 +913,8 @@ void SkeletonRenderer::render(float deltaTime) {
 
 cc::Rect SkeletonRenderer::getBoundingBox() const {
     static IOBuffer buffer(1024);
-    float *worldVertices = nullptr;
-    float minX = 999999.0f, minY = 999999.0f, maxX = -999999.0f, maxY = -999999.0;
+    float *         worldVertices = nullptr;
+    float           minX = 999999.0f, minY = 999999.0f, maxX = -999999.0f, maxY = -999999.0;
     for (int i = 0; i < _skeleton->getSlots().size(); ++i) {
         Slot *slot = _skeleton->getSlots()[i];
         if (!slot->getAttachment()) continue;
@@ -1040,7 +1037,7 @@ void SkeletonRenderer::setVertexEffectDelegate(VertexEffectDelegate *effectDeleg
 
 void SkeletonRenderer::setSlotsRange(int startSlotIndex, int endSlotIndex) {
     this->_startSlotIndex = startSlotIndex;
-    this->_endSlotIndex = endSlotIndex;
+    this->_endSlotIndex   = endSlotIndex;
 }
 
 Skeleton *SkeletonRenderer::getSkeleton() const {

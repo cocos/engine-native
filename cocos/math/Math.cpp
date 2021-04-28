@@ -1,36 +1,36 @@
 #include "math/Math.h"
 #include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <cstring>
-#include <cctype>
 
 namespace cc {
 namespace math {
 
 const float PI = (float)(3.14159265358979323846264338327950288419716939937511);
 ;
-const float PI_2 = math::PI * 2.0f;
-const float PI_DIV2 = math::PI * 0.5f;
-const float PI_DIV3 = math::PI / 3.0f;
-const float PI_DIV4 = math::PI / 4.0f;
-const float PI_DIV5 = math::PI / 5.0f;
-const float PI_DIV6 = math::PI / 6.0f;
-const float PI_DIV8 = math::PI / 8.0f;
-const float PI_SQR = (float)(9.86960440108935861883449099987615113531369940724079);
-const float PI_INV = (float)(0.31830988618379067153776752674502872406891929148091);
-const float EPSILON = std::numeric_limits<float>::epsilon();
-const float LOW_EPSILON = (float)(1e-04);
+const float PI_2         = math::PI * 2.0f;
+const float PI_DIV2      = math::PI * 0.5f;
+const float PI_DIV3      = math::PI / 3.0f;
+const float PI_DIV4      = math::PI / 4.0f;
+const float PI_DIV5      = math::PI / 5.0f;
+const float PI_DIV6      = math::PI / 6.0f;
+const float PI_DIV8      = math::PI / 8.0f;
+const float PI_SQR       = (float)(9.86960440108935861883449099987615113531369940724079);
+const float PI_INV       = (float)(0.31830988618379067153776752674502872406891929148091);
+const float EPSILON      = std::numeric_limits<float>::epsilon();
+const float LOW_EPSILON  = (float)(1e-04);
 const float POS_INFINITY = std::numeric_limits<float>::infinity();
 const float NEG_INFINITY = -std::numeric_limits<float>::infinity();
 ;
-const float LN2 = std::log(2.0f);
-const float LN10 = std::log(10.0f);
-const float LN2_INV = 1.0f / LN2;
-const float LN10_INV = 1.0f / LN10;
+const float LN2        = std::log(2.0f);
+const float LN10       = std::log(10.0f);
+const float LN2_INV    = 1.0f / LN2;
+const float LN10_INV   = 1.0f / LN10;
 const float DEG_TO_RAD = (float)0.01745329;
 const float RAD_TO_DEG = (float)57.29577;
-const float MIN_FLOAT = 1.175494351e-38F;
-const float MAX_FLOAT = 3.402823466e+38F;
+const float MIN_FLOAT  = 1.175494351e-38F;
+const float MAX_FLOAT  = 3.402823466e+38F;
 
 const uint16_t CRC16_TABLE[256] = {
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
@@ -125,8 +125,8 @@ CC_INLINE void CRCUpdateB(uint32_t &crc, uint8_t b) {
 }
 
 uint32_t CRC32(const char *str) {
-    uint32_t crc = 0xFFFFFFFF;
-    size_t length = strlen(str);
+    uint32_t crc    = 0xFFFFFFFF;
+    size_t   length = strlen(str);
 
     for (size_t i = 0; i < length; ++i) {
         CRCUpdateB(crc, (uint8_t)str[i]);
@@ -137,8 +137,8 @@ uint32_t CRC32(const char *str) {
 }
 
 uint32_t CRC32NoCase(const char *str) {
-    uint32_t crc = 0xFFFFFFFF;
-    size_t length = strlen(str);
+    uint32_t crc    = 0xFFFFFFFF;
+    size_t   length = strlen(str);
 
     for (size_t i = 0; i < length; ++i) {
         CRCUpdateB(crc, (uint8_t)tolower((char)str[i]));
@@ -149,8 +149,8 @@ uint32_t CRC32NoCase(const char *str) {
 }
 
 uint16_t CRC16(const char *str) {
-    size_t length = strlen(str);
-    uint16_t crc = 0;
+    size_t   length = strlen(str);
+    uint16_t crc    = 0;
     for (size_t i = 0; i < length; ++i) {
         crc = (crc << 8) ^ CRC16_TABLE[((crc >> 8) ^ *str++) & 0x00FF];
     }

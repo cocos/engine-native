@@ -25,17 +25,17 @@
 
 #pragma once
 
-#include "bindings/jswrapper/SeApi.h"
-#include "bindings/manual/jsb_classtype.h"
-#include "cocos/base/Vector.h"
-#include "cocos/base/Map.h"
-#include "cocos/math/Vec2.h"
-#include "cocos/math/Vec3.h"
-#include "cocos/math/Geometry.h"
-#include "extensions/cocos-ext.h"
-#include "network/Downloader.h"
 #include <assert.h>
 #include <type_traits>
+#include "bindings/jswrapper/SeApi.h"
+#include "bindings/manual/jsb_classtype.h"
+#include "cocos/base/Map.h"
+#include "cocos/base/Vector.h"
+#include "cocos/math/Geometry.h"
+#include "cocos/math/Vec2.h"
+#include "cocos/math/Vec3.h"
+#include "extensions/cocos-ext.h"
+#include "network/Downloader.h"
 #if USE_SPINE
     #include "cocos/editor-support/spine-creator-support/spine-cocos2dx.h"
 #endif
@@ -228,7 +228,7 @@ seval_to_type(const se::Value &v, bool &ok) {
         return T();
     }
     T *nativeObj = (T *)v.toObject()->getPrivateData();
-    ok = true;
+    ok           = true;
     return *nativeObj;
 }
 template <typename T>
@@ -283,9 +283,9 @@ seval_to_std_vector(const se::Value &v, std::vector<T> *ret) {
     se::Object *obj = v.toObject();
     assert(obj->isArray());
 
-    bool ok = true;
+    bool     ok  = true;
     uint32_t len = 0;
-    ok = obj->getArrayLength(&len);
+    ok           = obj->getArrayLength(&len);
     if (!ok) {
         ret->clear();
         return false;
@@ -303,7 +303,7 @@ seval_to_std_vector(const se::Value &v, std::vector<T> *ret) {
 
         if (tmp.isObject()) {
             T nativeObj = (T)tmp.toObject()->getPrivateData();
-            (*ret)[i] = nativeObj;
+            (*ret)[i]   = nativeObj;
         } else if (tmp.isNullOrUndefined()) {
             (*ret)[i] = nullptr;
         } else {
@@ -323,9 +323,9 @@ seval_to_std_vector(const se::Value &v, std::vector<T> *ret) {
     se::Object *obj = v.toObject();
     assert(obj->isArray());
 
-    bool ok = true;
+    bool     ok  = true;
     uint32_t len = 0;
-    ok = obj->getArrayLength(&len);
+    ok           = obj->getArrayLength(&len);
     if (!ok) {
         ret->clear();
         return false;
@@ -356,7 +356,7 @@ bool seval_to_Map_string_key(const se::Value &v, cc::Map<std::string, T> *ret) {
     se::Object *obj = v.toObject();
 
     std::vector<std::string> allKeys;
-    bool ok = obj->getAllKeys(&allKeys);
+    bool                     ok = obj->getAllKeys(&allKeys);
     if (!ok) {
         ret->clear();
         return false;
@@ -426,15 +426,15 @@ template <typename T>
 typename std::enable_if<!std::is_base_of<cc::Ref, T>::value, bool>::type
 native_ptr_to_seval(T *v_c, se::Value *ret, bool *isReturnCachedValue = nullptr) {
     typedef typename std::decay<typename std::remove_const<T>::type>::type DecayT;
-    DecayT *v = const_cast<DecayT *>(v_c);
+    DecayT *                                                               v = const_cast<DecayT *>(v_c);
     assert(ret != nullptr);
     if (v == nullptr) {
         ret->setNull();
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find(v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find(v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
         // CC_LOG_DEBUGWARN("WARNING: non-Ref type: (%s) isn't catched!", typeid(*v).name());
         se::Class *cls = JSBClassType::findClass<T>(v);
@@ -461,7 +461,7 @@ template <typename T>
 typename std::enable_if<!std::is_base_of<cc::Ref, T>::value && !std::is_pointer<T>::value, bool>::type
 native_ptr_to_seval(T &v_ref, se::Value *ret, bool *isReturnCachedValue = nullptr) {
     typedef typename std::decay<typename std::remove_const<decltype(v_ref)>::type>::type DecayT;
-    DecayT *v = const_cast<DecayT *>(&v_ref);
+    DecayT *                                                                             v = const_cast<DecayT *>(&v_ref);
 
     assert(ret != nullptr);
     if (v == nullptr) {
@@ -469,8 +469,8 @@ native_ptr_to_seval(T &v_ref, se::Value *ret, bool *isReturnCachedValue = nullpt
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find(v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find(v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
         // CC_LOG_DEBUGWARN("WARNING: non-Ref type: (%s) isn't catched!", typeid(*v).name());
         se::Class *cls = JSBClassType::findClass<DecayT>(v);
@@ -500,8 +500,8 @@ bool native_ptr_to_rooted_seval(const typename std::enable_if<!std::is_base_of<c
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find((void *)v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find((void *)v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
         se::Class *cls = JSBClassType::findClass<T>(v);
         assert(cls != nullptr);
@@ -530,15 +530,15 @@ template <typename T>
 typename std::enable_if<!std::is_base_of<cc::Ref, T>::value, bool>::type
 native_ptr_to_seval(T *vp, se::Class *cls, se::Value *ret, bool *isReturnCachedValue = nullptr) {
     typedef typename std::decay<typename std::remove_const<T>::type>::type DecayT;
-    DecayT *v = const_cast<DecayT *>(vp);
+    DecayT *                                                               v = const_cast<DecayT *>(vp);
     assert(ret != nullptr);
     if (v == nullptr) {
         ret->setNull();
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find(v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find(v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
                                                    //        CC_LOG_DEBUGWARN("WARNING: Ref type: (%s) isn't catched!", typeid(*v).name());
         assert(cls != nullptr);
@@ -565,7 +565,7 @@ template <typename T>
 typename std::enable_if<!std::is_base_of<cc::Ref, T>::value, bool>::type
 native_ptr_to_seval(T &v_ref, se::Class *cls, se::Value *ret, bool *isReturnCachedValue = nullptr) {
     typedef typename std::decay<typename std::remove_const<decltype(v_ref)>::type>::type DecayT;
-    DecayT *v = const_cast<DecayT *>(&v_ref);
+    DecayT *                                                                             v = const_cast<DecayT *>(&v_ref);
 
     assert(ret != nullptr);
     if (v == nullptr) {
@@ -573,8 +573,8 @@ native_ptr_to_seval(T &v_ref, se::Class *cls, se::Value *ret, bool *isReturnCach
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find(v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find(v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
         //        CC_LOG_DEBUGWARN("WARNING: Ref type: (%s) isn't catched!", typeid(*v).name());
         assert(cls != nullptr);
@@ -604,8 +604,8 @@ bool native_ptr_to_rooted_seval(typename std::enable_if<!std::is_base_of<cc::Ref
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find(v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find(v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
         assert(cls != nullptr);
         obj = se::Object::createObjectWithClass(cls);
@@ -633,15 +633,15 @@ template <typename T>
 typename std::enable_if<std::is_base_of<cc::Ref, T>::value, bool>::type
 native_ptr_to_seval(T *vp, se::Value *ret, bool *isReturnCachedValue = nullptr) {
     typedef typename std::decay<typename std::remove_const<T>::type>::type DecayT;
-    DecayT *v = const_cast<DecayT *>(vp);
+    DecayT *                                                               v = const_cast<DecayT *>(vp);
     assert(ret != nullptr);
     if (v == nullptr) {
         ret->setNull();
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find(v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find(v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
                                                    //        CC_LOG_DEBUGWARN("WARNING: Ref type: (%s) isn't catched!", typeid(*v).name());
         se::Class *cls = JSBClassType::findClass<T>(v);
@@ -669,15 +669,15 @@ template <typename T>
 typename std::enable_if<std::is_base_of<cc::Ref, T>::value, bool>::type
 native_ptr_to_seval(T *vp, se::Class *cls, se::Value *ret, bool *isReturnCachedValue = nullptr) {
     typedef typename std::decay<typename std::remove_const<T>::type>::type DecayT;
-    DecayT *v = const_cast<DecayT *>(vp);
+    DecayT *                                                               v = const_cast<DecayT *>(vp);
     assert(ret != nullptr);
     if (v == nullptr) {
         ret->setNull();
         return true;
     }
 
-    se::Object *obj = nullptr;
-    auto iter = se::NativePtrToObjectMap::find(v);
+    se::Object *obj  = nullptr;
+    auto        iter = se::NativePtrToObjectMap::find(v);
     if (iter == se::NativePtrToObjectMap::end()) { // If we couldn't find native object in map, then the native object is created from native code. e.g. TMXLayer::getTileAt
                                                    //        CC_LOG_DEBUGWARN("WARNING: Ref type: (%s) isn't catched!", typeid(*v).name());
         assert(cls != nullptr);
@@ -702,10 +702,10 @@ native_ptr_to_seval(T *vp, se::Class *cls, se::Value *ret, bool *isReturnCachedV
 template <typename T>
 bool std_vector_to_seval(const std::vector<T> &v, se::Value *ret) {
     assert(ret != nullptr);
-    bool ok = true;
+    bool             ok = true;
     se::HandleObject obj(se::Object::createArrayObject(v.size()));
 
-    uint32_t i = 0;
+    uint32_t  i = 0;
     se::Value tmp;
     for (const auto &e : v) {
         native_ptr_to_seval(e, &tmp);
@@ -760,10 +760,10 @@ holder_convert_to(In &input) {
 
 template <typename T, bool is_reference>
 struct HolderType {
-    using type = typename std::remove_const<T>::type;
+    using type       = typename std::remove_const<T>::type;
     using local_type = typename std::conditional_t<is_reference && is_jsb_object_v<T>, std::add_pointer_t<type>, type>;
-    local_type data;
-    type *ptr = nullptr;
+    local_type             data;
+    type *                 ptr = nullptr;
     constexpr inline type &value() {
         if (ptr) return *ptr;
         return holder_convert_to<type, local_type>(data);
@@ -775,20 +775,20 @@ struct HolderType {
 
 template <>
 struct HolderType<const char *, false> {
-    using type = const char *;
+    using type       = const char *;
     using local_type = std::string;
-    local_type data;
+    local_type                 data;
     std::remove_const_t<type> *ptr = nullptr;
-    inline type value() { return data.c_str(); }
+    inline type                value() { return data.c_str(); }
 };
 
 template <typename R, typename... ARGS>
 struct HolderType<std::function<R(ARGS...)>, true> {
-    using type = std::function<R(ARGS...)>;
+    using type       = std::function<R(ARGS...)>;
     using local_type = std::function<R(ARGS...)>;
-    local_type data;
+    local_type                 data;
     std::remove_const_t<type> *ptr = nullptr;
-    inline type value() { return data; }
+    inline type                value() { return data; }
 };
 
 ///////////////////////////////////convertion//////////////////////////////////////////////////////////
@@ -805,7 +805,7 @@ template <typename T>
 inline typename std::enable_if_t<std::is_enum<T>::value, bool>
 sevalue_to_native(const se::Value &from, T *to, se::Object *ctx) {
     typename std::underlying_type_t<T> tmp;
-    bool ret = sevalue_to_native(from, &tmp, ctx);
+    bool                               ret = sevalue_to_native(from, &tmp, ctx);
     if (ret) *to = static_cast<T>(tmp);
     return ret;
 }
@@ -835,14 +835,14 @@ bool sevalue_to_native(const se::Value &from, std::array<uint8_t, CNT> *to, se::
     assert(array->isArray() || array->isArrayBuffer() || array->isTypedArray());
     if (array->isTypedArray()) {
         uint8_t *data = nullptr;
-        size_t size = 0;
+        size_t   size = 0;
         array->getTypedArrayData(&data, &size);
         for (size_t i = 0; i < std::min(size, CNT); i++) {
             (*to)[i] = data[i];
         }
     } else if (array->isArrayBuffer()) {
         uint8_t *data = nullptr;
-        size_t size = 0;
+        size_t   size = 0;
         array->getArrayBufferData(&data, &size);
         for (size_t i = 0; i < std::min(size, CNT); i++) {
             (*to)[i] = data[i];
@@ -1044,15 +1044,15 @@ inline bool sevalue_to_native(const se::Value &from, std::vector<unsigned char> 
     assert(from.isObject());
     se::Object *in = from.toObject();
     if (in->isTypedArray()) {
-        uint8_t *data = nullptr;
-        size_t dataLen = 0;
+        uint8_t *data    = nullptr;
+        size_t   dataLen = 0;
         in->getTypedArrayData(&data, &dataLen);
         to->resize(dataLen);
         to->assign(data, data + dataLen);
         return true;
     } else if (in->isArrayBuffer()) {
-        uint8_t *data = nullptr;
-        size_t dataLen = 0;
+        uint8_t *data    = nullptr;
+        size_t   dataLen = 0;
         in->getArrayBufferData(&data, &dataLen);
         to->resize(dataLen);
         to->assign(data, data + dataLen);
@@ -1079,13 +1079,13 @@ inline bool sevalue_to_native(const se::Value &from, std::function<R(Args...)> *
         self->attachObject(callback);
         *func = [callback, self](Args... inargs) {
             se::AutoHandleScope hs;
-            bool ok = true;
-            se::ValueArray args;
-            int idx = 0;
+            bool                ok = true;
+            se::ValueArray      args;
+            int                 idx = 0;
             args.resize(sizeof...(Args));
             nativevalue_to_se_args_v(args, inargs...);
             se::Value rval;
-            bool succeed = callback->call(args, self, &rval);
+            bool      succeed = callback->call(args, self, &rval);
             if (!succeed) {
                 se::ScriptEngine::getInstance()->clearException();
             }
@@ -1129,7 +1129,6 @@ inline bool sevalue_to_native(const se::Value &from, HolderType<T, is_reference>
 #else
 template <typename T>
 inline typename std::enable_if<is_jsb_object_v<T>, bool>::type sevalue_to_native(const se::Value &from, HolderType<T, true> *holder, se::Object *ctx) {
-
     void *ptr = from.toObject()->getPrivateData();
     if (ptr) {
         holder->data = static_cast<T *>(ptr);
@@ -1254,7 +1253,7 @@ nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) {
 template <typename T, typename allocator>
 inline bool nativevalue_to_se(const std::vector<T, allocator> &from, se::Value &to, se::Object *ctx) {
     se::Object *array = se::Object::createArrayObject(from.size());
-    se::Value tmp;
+    se::Value   tmp;
     for (size_t i = 0; i < from.size(); i++) {
         nativevalue_to_se(from[i], tmp, ctx);
         array->setArrayElement((uint32_t)i, tmp);
@@ -1283,7 +1282,7 @@ inline bool nativevalue_to_se(const std::vector<uint8_t> &from, se::Value &to, s
 template <typename T, size_t N>
 inline bool nativevalue_to_se(const std::array<T, N> &from, se::Value &to, se::Object *ctx) {
     se::Object *array = se::Object::createArrayObject(N);
-    se::Value tmp;
+    se::Value   tmp;
     for (size_t i = 0; i < N; i++) {
         nativevalue_to_se(from[i], tmp, ctx);
         array->setArrayElement((uint32_t)i, tmp);
@@ -1414,12 +1413,12 @@ bool nativevalue_to_se_args(se::ValueArray &array, T &x) {
     return nativevalue_to_se(x, array[i], (se::Object *)nullptr);
 }
 template <int i, typename T, typename... Args>
-bool nativevalue_to_se_args(se::ValueArray &array, T &x, Args &...args) {
+bool nativevalue_to_se_args(se::ValueArray &array, T &x, Args &... args) {
     return nativevalue_to_se_args<i, T>(array, x) && nativevalue_to_se_args<i + 1, Args...>(array, args...);
 }
 
 template <typename... Args>
-bool nativevalue_to_se_args_v(se::ValueArray &array, Args &...args) {
+bool nativevalue_to_se_args_v(se::ValueArray &array, Args &... args) {
     return nativevalue_to_se_args<0, Args...>(array, args...);
 }
 
@@ -1478,7 +1477,7 @@ inline bool nativevalue_to_se(const cc::network::DownloadTask &v, se::Value &ret
 template <typename T>
 bool nativevalue_to_se(const spine::Vector<T> &v, se::Value &ret, se::Object *) {
     se::HandleObject obj(se::Object::createArrayObject(v.size()));
-    bool ok = true;
+    bool             ok = true;
 
     spine::Vector<T> tmpv = v;
     for (uint32_t i = 0, count = (uint32_t)tmpv.size(); i < count; i++) {
@@ -1500,7 +1499,7 @@ bool nativevalue_to_se(const spine::Vector<T> &v, se::Value &ret, se::Object *) 
 template <typename T>
 bool nativevalue_to_se(const spine::Vector<T *> &v, se::Value &ret, se::Object *) {
     se::HandleObject obj(se::Object::createArrayObject(v.size()));
-    bool ok = true;
+    bool             ok = true;
 
     spine::Vector<T *> tmpv = v;
     for (uint32_t i = 0, count = (uint32_t)tmpv.size(); i < count; i++) {
@@ -1524,9 +1523,9 @@ bool sevalue_to_native(const se::Value &v, spine::Vector<T *> *ret, se::Object *
     se::Object *obj = v.toObject();
     assert(obj->isArray());
 
-    bool ok = true;
+    bool     ok  = true;
     uint32_t len = 0;
-    ok = obj->getArrayLength(&len);
+    ok           = obj->getArrayLength(&len);
     if (!ok) {
         ret->clear();
         return false;

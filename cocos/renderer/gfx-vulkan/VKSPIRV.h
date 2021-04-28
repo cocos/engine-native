@@ -25,9 +25,9 @@
 
 #pragma once
 
-#include "glslang/SPIRV/GlslangToSpv.h"
-#include "glslang/Public/ShaderLang.h"
 #include "StandAlone/ResourceLimits.h"
+#include "glslang/Public/ShaderLang.h"
+#include "glslang/SPIRV/GlslangToSpv.h"
 
 namespace cc {
 namespace gfx {
@@ -80,14 +80,14 @@ const vector<unsigned int> GLSL2SPIRV(ShaderStageFlagBit type, const String &sou
         glslangInitialized = true;
     }
 
-    EShLanguage stage = getShaderStage(type);
-    const char *string = source.c_str();
+    EShLanguage      stage  = getShaderStage(type);
+    const char *     string = source.c_str();
     glslang::TShader shader(stage);
     shader.setStrings(&string, 1);
 
-    int clientInputSemanticsVersion = 100 + vulkanMinorVersion * 10;
-    glslang::EShTargetClientVersion clientVersion = getClientVersion(vulkanMinorVersion);
-    glslang::EShTargetLanguageVersion targetVersion = getTargetVersion(vulkanMinorVersion);
+    int                               clientInputSemanticsVersion = 100 + vulkanMinorVersion * 10;
+    glslang::EShTargetClientVersion   clientVersion               = getClientVersion(vulkanMinorVersion);
+    glslang::EShTargetLanguageVersion targetVersion               = getTargetVersion(vulkanMinorVersion);
 
     shader.setEnvInput(glslang::EShSourceGlsl, stage, glslang::EShClientVulkan, clientInputSemanticsVersion);
     shader.setEnvClient(glslang::EShClientVulkan, clientVersion);
@@ -107,8 +107,8 @@ const vector<unsigned int> GLSL2SPIRV(ShaderStageFlagBit type, const String &sou
     }
 
     vector<unsigned int> spirv;
-    spv::SpvBuildLogger logger;
-    glslang::SpvOptions spvOptions;
+    spv::SpvBuildLogger  logger;
+    glslang::SpvOptions  spvOptions;
     glslang::GlslangToSpv(*program.getIntermediate(stage), spirv, &logger, &spvOptions);
 
     return spirv;

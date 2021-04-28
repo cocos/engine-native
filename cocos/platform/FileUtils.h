@@ -29,13 +29,13 @@
 #define __CC_FILEUTILS_H__
 
 #include <string>
-#include <vector>
-#include <unordered_map>
 #include <type_traits>
+#include <unordered_map>
+#include <vector>
 
+#include "base/Data.h"
 #include "base/Macros.h"
 #include "base/Value.h"
-#include "base/Data.h"
 
 namespace cc {
 
@@ -47,8 +47,8 @@ namespace cc {
 class ResizableBuffer {
 public:
     virtual ~ResizableBuffer() {}
-    virtual void resize(size_t size) = 0;
-    virtual void *buffer() const = 0;
+    virtual void  resize(size_t size) = 0;
+    virtual void *buffer() const      = 0;
 };
 
 template <typename T>
@@ -57,7 +57,7 @@ class ResizableBufferAdapter {};
 template <typename CharT, typename Traits, typename Allocator>
 class ResizableBufferAdapter<std::basic_string<CharT, Traits, Allocator>> : public ResizableBuffer {
     typedef std::basic_string<CharT, Traits, Allocator> BufferType;
-    BufferType *_buffer;
+    BufferType *                                        _buffer;
 
 public:
     explicit ResizableBufferAdapter(BufferType *buffer) : _buffer(buffer) {}
@@ -77,7 +77,7 @@ public:
 template <typename T, typename Allocator>
 class ResizableBufferAdapter<std::vector<T, Allocator>> : public ResizableBuffer {
     typedef std::vector<T, Allocator> BufferType;
-    BufferType *_buffer;
+    BufferType *                      _buffer;
 
 public:
     explicit ResizableBufferAdapter(BufferType *buffer) : _buffer(buffer) {}
@@ -97,7 +97,7 @@ public:
 template <>
 class ResizableBufferAdapter<Data> : public ResizableBuffer {
     typedef Data BufferType;
-    BufferType *_buffer;
+    BufferType * _buffer;
 
 public:
     explicit ResizableBufferAdapter(BufferType *buffer) : _buffer(buffer) {}
@@ -105,7 +105,7 @@ public:
         size_t oldSize = static_cast<size_t>(_buffer->getSize());
         if (oldSize != size) {
             // need to take buffer ownership for outer memory control
-            auto old = _buffer->takeBuffer();
+            auto  old    = _buffer->takeBuffer();
             void *buffer = realloc(old, size);
             if (buffer)
                 _buffer->fastSet((unsigned char *)buffer, size);
@@ -168,13 +168,13 @@ public:
     virtual Data getDataFromFile(const std::string &filename);
 
     enum class Status {
-        OK = 0,
-        NotExists = 1,       // File not exists
-        OpenFailed = 2,      // Open file failed.
-        ReadFailed = 3,      // Read failed
-        NotInitialized = 4,  // FileUtils is not initializes
-        TooLarge = 5,        // The file is too large (great than 2^32-1)
-        ObtainSizeFailed = 6 // Failed to obtain the file size.
+        OK               = 0,
+        NotExists        = 1, // File not exists
+        OpenFailed       = 2, // Open file failed.
+        ReadFailed       = 3, // Read failed
+        NotInitialized   = 4, // FileUtils is not initializes
+        TooLarge         = 5, // The file is too large (great than 2^32-1)
+        ObtainSizeFailed = 6  // Failed to obtain the file size.
     };
 
     /**

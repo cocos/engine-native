@@ -26,8 +26,8 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "DeviceValidator.h"
 #include "DescriptorSetLayoutValidator.h"
+#include "DeviceValidator.h"
 #include "ValidationUtils.h"
 
 namespace cc {

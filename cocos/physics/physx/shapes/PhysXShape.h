@@ -25,9 +25,9 @@
 
 #pragma once
 
+#include "base/Macros.h"
 #include "physics/physx/PhysXInc.h"
 #include "physics/spec/IShape.h"
-#include "base/Macros.h"
 
 namespace cc {
 namespace physics {

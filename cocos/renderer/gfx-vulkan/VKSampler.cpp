@@ -38,18 +38,18 @@ CCVKSampler::~CCVKSampler() {
     destroy();
 }
 
-void CCVKSampler::doInit(const SamplerInfo & /*info*/) {
-    _gpuSampler = CC_NEW(CCVKGPUSampler);
-    _gpuSampler->minFilter = _minFilter;
-    _gpuSampler->magFilter = _magFilter;
-    _gpuSampler->mipFilter = _mipFilter;
-    _gpuSampler->addressU = _addressU;
-    _gpuSampler->addressV = _addressV;
-    _gpuSampler->addressW = _addressW;
+void CCVKSampler::doInit(const SamplerInfo& /*info*/) {
+    _gpuSampler                = CC_NEW(CCVKGPUSampler);
+    _gpuSampler->minFilter     = _minFilter;
+    _gpuSampler->magFilter     = _magFilter;
+    _gpuSampler->mipFilter     = _mipFilter;
+    _gpuSampler->addressU      = _addressU;
+    _gpuSampler->addressV      = _addressV;
+    _gpuSampler->addressW      = _addressW;
     _gpuSampler->maxAnisotropy = _maxAnisotropy;
-    _gpuSampler->cmpFunc = _cmpFunc;
-    _gpuSampler->borderColor = _borderColor;
-    _gpuSampler->mipLODBias = _mipLODBias;
+    _gpuSampler->cmpFunc       = _cmpFunc;
+    _gpuSampler->borderColor   = _borderColor;
+    _gpuSampler->mipLODBias    = _mipLODBias;
 
     cmdFuncCCVKCreateSampler(CCVKDevice::getInstance(), _gpuSampler);
 }

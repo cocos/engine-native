@@ -26,11 +26,11 @@
 
 #pragma once
 
+#include <functional>
+#include <map>
+#include <string>
 #include "base/Macros.h"
 #include "base/Ref.h"
-#include <functional>
-#include <string>
-#include <map>
 
 #ifndef OBJC_CLASS
     #ifdef __OBJC__
@@ -165,9 +165,9 @@ protected:
     bool _keepAspectRatioEnabled;
 
     std::string _videoURL;
-    Source _videoSource;
+    Source      _videoSource;
 
-    int _videoPlayerIndex;
+    int                                          _videoPlayerIndex;
     std::map<std::string, ccVideoPlayerCallback> _eventCallback;
 
     void *_videoView;

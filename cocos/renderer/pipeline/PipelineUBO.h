@@ -26,8 +26,8 @@
 #pragma once
 
 #include <array>
-#include "helper/SharedMemory.h"
 #include "Define.h"
+#include "helper/SharedMemory.h"
 
 namespace cc {
 
@@ -39,15 +39,16 @@ namespace pipeline {
 class RenderPipeline;
 class Device;
 
-class CC_DLL PipelineUBO : public Object  {
+class CC_DLL PipelineUBO : public Object {
 public:
-    static void updateGlobalUBOView(const RenderPipeline *pipeline, std::array<float, UBOGlobal::COUNT> &bufferView);
-    static void updateCameraUBOView(const RenderPipeline *pipeline, std::array<float, UBOCamera::COUNT> &bufferView, const Camera *camera);
-    static void updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> &bufferView, const Camera *camera);
-    static void updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> &bufferView, const Light *light);
+    static void    updateGlobalUBOView(const RenderPipeline *pipeline, std::array<float, UBOGlobal::COUNT> &bufferView);
+    static void    updateCameraUBOView(const RenderPipeline *pipeline, std::array<float, UBOCamera::COUNT> &bufferView, const Camera *camera);
+    static void    updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> &bufferView, const Camera *camera);
+    static void    updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> &bufferView, const Light *light);
     static uint8_t getCombineSignY();
+
 public:
-    PipelineUBO() = default;
+    PipelineUBO()          = default;
     virtual ~PipelineUBO() = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
     void destroy();
@@ -55,19 +56,19 @@ public:
     void updateCameraUBO(const Camera *camera);
     void updateShadowUBO(const Camera *camera);
     void updateShadowUBOLight(const Light *light);
-    void updateShadowUBORange(uint offset, const Mat4* data);
+    void updateShadowUBORange(uint offset, const Mat4 *data);
     void destroyShadowFrameBuffers();
-    
+
 private:
     RenderPipeline *_pipeline = nullptr;
-    gfx::Device *_device = nullptr;
+    gfx::Device *   _device   = nullptr;
 
     std::array<float, UBOGlobal::COUNT> _globalUBO;
     std::array<float, UBOCamera::COUNT> _cameraUBO;
     std::array<float, UBOShadow::COUNT> _shadowUBO;
 
     std::vector<gfx::Buffer *> _ubos;
-    void initCombineSignY();
+    void                       initCombineSignY();
 };
 
 } // namespace pipeline

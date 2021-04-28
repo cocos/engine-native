@@ -32,7 +32,7 @@ namespace cc {
 namespace physics {
 
 void PhysXJoint::initialize(const uint handle) {
-    auto &ins = PhysXWorld::getInstance();
+    auto &ins    = PhysXWorld::getInstance();
     _mSharedBody = ins.getSharedBody(handle);
     _mSharedBody->reference(true);
     onComponentSet();
@@ -60,7 +60,7 @@ void PhysXJoint::onDestroy() {
 
 void PhysXJoint::setConnectedBody(const uint handle) {
     if (handle) {
-        auto &ins = PhysXWorld::getInstance();
+        auto &ins       = PhysXWorld::getInstance();
         _mConnectedBody = ins.getSharedBody(handle);
     } else {
         _mConnectedBody = nullptr;

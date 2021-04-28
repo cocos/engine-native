@@ -21,27 +21,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "gtest/gtest.h"
-#include "cocos/math/Vec2.h"
+#include <math.h>
 #include "cocos/math/Mat3.h"
 #include "cocos/math/Mat4.h"
 #include "cocos/math/Math.h"
 #include "cocos/math/Quaternion.h"
+#include "cocos/math/Vec2.h"
+#include "gtest/gtest.h"
 #include "utils.h"
-#include <math.h>
 
 TEST(mathMat3Test, test4) {
-    cc::Mat3 mat3(0,2,3, 4,5,6, 7,8,9);
+    cc::Mat3 mat3(0, 2, 3, 4, 5, 6, 7, 8, 9);
     // identity
     logLabel = "test the mat3 identity function";
     cc::Mat3::identity(mat3);
     ExpectEq(mat3.m[0] == 1 && mat3.m[4] == 1 && mat3.m[8] == 1, true);
     // transpose
     logLabel = "test the mat3 transpose function";
-    mat3.set(11,21,31,  12,22,32,  13,23,33);
+    mat3.set(11, 21, 31, 12, 22, 32, 13, 23, 33);
     mat3.transpose();
     ExpectEq(mat3.m[1] == 21 && mat3.m[4] == 22 && mat3.m[7] == 23, true);
-    cc::Mat3 matTemp(11,21,31,  12,22,32,  13,23,33);
+    cc::Mat3 matTemp(11, 21, 31, 12, 22, 32, 13, 23, 33);
     cc::Mat3::transpose(mat3, matTemp);
     ExpectEq(mat3.m[1] == 21 && mat3.m[4] == 22 && mat3.m[7] == 23, true);
     // inverse
@@ -104,14 +104,14 @@ TEST(mathMat3Test, test4) {
     ExpectEq(copyMat.m[0] == 3 && copyMat.m[3] == 6 && copyMat.m[4] == 7, true);
     // fromQuat
     logLabel = "test the mat3 fromQuat function";
-    cc::Mat3 fromQuat;
+    cc::Mat3       fromQuat;
     cc::Quaternion quat(0, 0, 3, 1);
     cc::Mat3::fromQuat(fromQuat, quat);
     ExpectEq(copyMat.m[0] == 3 && copyMat.m[3] == 6 && copyMat.m[4] == 7, true);
     // add
     logLabel = "test the mat3 add function";
-    cc::Mat3 lAdd(9,0,0, 3,8,0, 9,0,0);
-    cc::Mat3 rAdd(1,0,0, 5,2,0, 1,0,0);
+    cc::Mat3 lAdd(9, 0, 0, 3, 8, 0, 9, 0, 0);
+    cc::Mat3 rAdd(1, 0, 0, 5, 2, 0, 1, 0, 0);
     cc::Mat3 addOut;
     cc::Mat3::add(addOut, lAdd, rAdd);
     ExpectEq(addOut.m[0] == 10 && addOut.m[2] == 10 && addOut.m[4] == 10, true);
@@ -121,4 +121,3 @@ TEST(mathMat3Test, test4) {
     cc::Mat3::subtract(subOut, lAdd, rAdd);
     ExpectEq(subOut.m[0] == 8 && subOut.m[2] == 8 && subOut.m[4] == 6, true);
 }
-

@@ -26,10 +26,10 @@
 ****************************************************************************/
 
 #include "Image.h"
-#include "base/Config.h" // CC_USE_JPEG, CC_USE_WEBP
 #include <cassert>
 #include <cctype>
 #include <string>
+#include "base/Config.h" // CC_USE_JPEG, CC_USE_WEBP
 #if CC_USE_JPEG
     #include "jpeg/jpeglib.h"
 #endif // CC_USE_JPEG

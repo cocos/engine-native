@@ -27,11 +27,9 @@
 
 @class ViewController;
 
-@interface AppDelegate : NSObject <UIApplicationDelegate>
-{
+@interface AppDelegate : NSObject <UIApplicationDelegate> {
 }
 
-@property(nonatomic, readonly) ViewController* viewController;
+@property (nonatomic, readonly) ViewController* viewController;
 
 @end
-

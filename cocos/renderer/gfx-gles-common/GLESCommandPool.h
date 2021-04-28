@@ -48,7 +48,7 @@ enum class GLESCmdType : uint8_t {
 class GLESCmd : public Object {
 public:
     GLESCmdType type;
-    uint refCount = 0;
+    uint        refCount = 0;
 
     explicit GLESCmd(GLESCmdType type) : type(type) {}
     ~GLESCmd() override = default;
@@ -62,8 +62,8 @@ template <typename T, typename = std::enable_if_t<std::is_base_of<GLESCmd, T>::v
 class CommandPool {
 public:
     CommandPool() : _freeCmds(INITIAL_CAPACITY) {
-        _frees = new T *[INITIAL_CAPACITY];
-        _count = INITIAL_CAPACITY;
+        _frees   = new T *[INITIAL_CAPACITY];
+        _count   = INITIAL_CAPACITY;
         _freeIdx = INITIAL_CAPACITY - 1;
         for (uint i = 0; i < _count; ++i) {
             _frees[i] = CC_NEW(T);
@@ -84,10 +84,10 @@ public:
 
     T *alloc() {
         if (_freeIdx < 0) {
-            T **old_frees = _frees;
-            uint size = _count * 2;
-            _frees = new T *[size];
-            uint increase = size - _count;
+            T ** old_frees = _frees;
+            uint size      = _count * 2;
+            _frees         = new T *[size];
+            uint increase  = size - _count;
             for (uint i = 0; i < increase; ++i) {
                 _frees[i] = CC_NEW(T);
             }
@@ -100,7 +100,7 @@ public:
             _freeIdx += (int)increase;
         }
 
-        T *cmd = _frees[_freeIdx];
+        T *cmd             = _frees[_freeIdx];
         _frees[_freeIdx--] = nullptr;
         ++cmd->refCount;
         return cmd;
@@ -131,10 +131,10 @@ public:
     }
 
 protected:
-    T **_frees = nullptr;
-    uint _count = 0;
+    T **             _frees = nullptr;
+    uint             _count = 0;
     CachedArray<T *> _freeCmds;
-    int _freeIdx = 0;
+    int              _freeIdx = 0;
 };
 
 } // namespace gfx

@@ -30,9 +30,9 @@
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-    #include "Base.h"
     #include "../RefCounter.h"
     #include "../Value.h"
+    #include "Base.h"
     #include "ObjectWrap.h"
 
     #include <memory>
@@ -378,10 +378,10 @@ public:
     std::string toString() const;
 
     // Private API used in wrapper
-    static Object *_createJSObject(Class *cls, v8::Local<v8::Object> obj);
+    static Object *       _createJSObject(Class *cls, v8::Local<v8::Object> obj);
     v8::Local<v8::Object> _getJSObject() const;
-    ObjectWrap &_getWrap();
-    Class *_getClass() const;
+    ObjectWrap &          _getWrap();
+    Class *               _getClass() const;
 
     void _setFinalizeCallback(V8FinalizeFunc finalizeCb);
     bool _isNativeFunction() const;
@@ -402,12 +402,12 @@ private:
 
     bool init(Class *cls, v8::Local<v8::Object> obj);
 
-    Class *_cls;
+    Class *    _cls;
     ObjectWrap _obj;
-    uint32_t _rootCount;
+    uint32_t   _rootCount;
 
-    void *_privateData;
-    V8FinalizeFunc _finalizeCb;
+    void *                 _privateData;
+    V8FinalizeFunc         _finalizeCb;
     internal::PrivateData *_internalData;
 
     #if CC_DEBUG

@@ -24,13 +24,13 @@
 ****************************************************************************/
 
 #pragma once
-#include "MiddlewareMacro.h"
-#include "base/Macros.h"
+#include <math.h>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
-#include <math.h>
 #include <string>
+#include "MiddlewareMacro.h"
+#include "base/Macros.h"
 
 MIDDLEWARE_BEGIN
 /**
@@ -42,7 +42,7 @@ class IOBuffer {
 public:
     IOBuffer(std::size_t defaultSize) {
         _bufferSize = defaultSize;
-        _buffer = new uint8_t[_bufferSize];
+        _buffer     = new uint8_t[_bufferSize];
     }
 
     IOBuffer() {}
@@ -60,7 +60,7 @@ public:
             return;
         }
         uint32_t *buffer = (uint32_t *)(_buffer + pos);
-        *buffer = val;
+        *buffer          = val;
     }
 
     inline void writeFloat32(std::size_t pos, float val) {
@@ -69,7 +69,7 @@ public:
             return;
         }
         float *buffer = (float *)(_buffer + pos);
-        *buffer = val;
+        *buffer       = val;
     }
 
     inline void writeBytes(const char *bytes, std::size_t bytesLen) {
@@ -87,7 +87,7 @@ public:
             return;
         }
         uint32_t *buffer = (uint32_t *)(_buffer + _curPos);
-        *buffer = val;
+        *buffer          = val;
         _curPos += sizeof(val);
     }
 
@@ -97,7 +97,7 @@ public:
             return;
         }
         float *buffer = (float *)(_buffer + _curPos);
-        *buffer = val;
+        *buffer       = val;
         _curPos += sizeof(val);
     }
 
@@ -107,7 +107,7 @@ public:
             return;
         }
         uint16_t *buffer = (uint16_t *)(_buffer + _curPos);
-        *buffer = val;
+        *buffer          = val;
         _curPos += sizeof(val);
     }
 
@@ -136,7 +136,7 @@ public:
     }
 
     inline void reset() {
-        _curPos = 0;
+        _curPos  = 0;
         _readPos = 0;
     }
 
@@ -178,7 +178,7 @@ public:
 
     inline int checkSpace(std::size_t needSize, bool needCopy = false) {
         auto needLen = _curPos + needSize;
-        auto isFull = 0;
+        auto isFull  = 0;
         if (_maxSize > 0 && needLen > _maxSize) {
             isFull = 1;
             if (_fullCallback) {
@@ -203,12 +203,12 @@ public:
     }
 
     typedef std::function<void()> fullCallback;
-    void setFullCallback(fullCallback callback) {
+    void                          setFullCallback(fullCallback callback) {
         _fullCallback = callback;
     }
 
     typedef std::function<void()> resizeCallback;
-    void setResizeCallback(resizeCallback callback) {
+    void                          setResizeCallback(resizeCallback callback) {
         _resizeCallback = callback;
     }
 
@@ -220,13 +220,13 @@ public:
     virtual void resize(std::size_t newLen, bool needCopy = false);
 
 protected:
-    uint8_t *_buffer = nullptr;
-    std::size_t _bufferSize = 0;
-    std::size_t _curPos = 0;
-    std::size_t _readPos = 0;
-    bool _outRange = false;
-    std::size_t _maxSize = 0;
-    fullCallback _fullCallback = nullptr;
+    uint8_t *      _buffer         = nullptr;
+    std::size_t    _bufferSize     = 0;
+    std::size_t    _curPos         = 0;
+    std::size_t    _readPos        = 0;
+    bool           _outRange       = false;
+    std::size_t    _maxSize        = 0;
+    fullCallback   _fullCallback   = nullptr;
     resizeCallback _resizeCallback = nullptr;
 };
 

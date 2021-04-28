@@ -30,17 +30,17 @@
 //  Created by James Chen on 5/15/17.
 //
 //
-#include "base/Config.h"
 #include "jsb_xmlhttprequest.h"
-#include <unordered_map>
-#include <string>
-#include <functional>
 #include <algorithm>
+#include <functional>
 #include <sstream>
+#include <string>
+#include <unordered_map>
+#include "base/Config.h"
+#include "cocos/base/Data.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/network/HttpClient.h"
-#include "cocos/base/Data.h"
 #include "platform/Application.h"
 
 using namespace cc;
@@ -117,11 +117,11 @@ class XMLHttpRequest : public Ref {
 public:
     // Ready States: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState
     enum class ReadyState : char {
-        UNSENT = 0,           // Client has been created. open() not called yet.
-        OPENED = 1,           // open() has been called.
+        UNSENT           = 0, // Client has been created. open() not called yet.
+        OPENED           = 1, // open() has been called.
         HEADERS_RECEIVED = 2, // send() has been called, and headers and status are available.
-        LOADING = 3,          // Downloading; responseText holds partial data.
-        DONE = 4              // The operation is complete.
+        LOADING          = 3, // Downloading; responseText holds partial data.
+        DONE             = 4  // The operation is complete.
     };
 
     enum class ResponseType : char {
@@ -147,22 +147,22 @@ public:
     void sendString(const std::string &str);
     void sendBinary(const cc::Data &data);
 
-    void setRequestHeader(const std::string &key, const std::string &value);
+    void        setRequestHeader(const std::string &key, const std::string &value);
     std::string getAllResponseHeaders() const;
     std::string getResonpseHeader(const std::string &key) const;
 
-    ReadyState getReadyState() const { return _readyState; }
-    uint16_t getStatus() const { return _status; }
+    ReadyState         getReadyState() const { return _readyState; }
+    uint16_t           getStatus() const { return _status; }
     const std::string &getStatusText() const { return _statusText; }
     const std::string &getResponseText() const { return _responseText; }
-    const cc::Data &getResponseData() const { return _responseData; }
-    ResponseType getResponseType() const { return _responseType; }
-    void setResponseType(ResponseType type) { _responseType = type; }
+    const cc::Data &   getResponseData() const { return _responseData; }
+    ResponseType       getResponseType() const { return _responseType; }
+    void               setResponseType(ResponseType type) { _responseType = type; }
 
-    void overrideMimeType(const std::string &mimeType);
+    void        overrideMimeType(const std::string &mimeType);
     std::string getMimeType() const;
 
-    void setTimeout(unsigned long timeoutInMilliseconds);
+    void          setTimeout(unsigned long timeoutInMilliseconds);
     unsigned long getTimeout() const;
 
     void abort();
@@ -196,10 +196,10 @@ private:
     //    cc::EventListenerCustom* _resetDirectorListener;
 
     unsigned long _timeoutInMilliseconds;
-    uint16_t _status;
+    uint16_t      _status;
 
     ResponseType _responseType;
-    ReadyState _readyState;
+    ReadyState   _readyState;
 
     bool _withCredentialsValue;
     bool _errorFlag;
@@ -246,7 +246,7 @@ bool XMLHttpRequest::open(const std::string &method, const std::string &url) {
         return false;
 
     _method = method;
-    _url = url;
+    _url    = url;
 
     HttpRequest::Type requestType = HttpRequest::Type::UNKNOWN;
 
@@ -266,7 +266,7 @@ bool XMLHttpRequest::open(const std::string &method, const std::string &url) {
     _httpRequest->setRequestType(requestType);
     _httpRequest->setUrl(_url);
 
-    _status = 0;
+    _status    = 0;
     _isAborted = false;
     _isTimeout = false;
 
@@ -362,7 +362,7 @@ void XMLHttpRequest::getHeader(const std::string &header) {
         // Get Header and Set StatusText
         // Split String into Tokens
         if (header.find("HTTP") == 0) {
-            int _v1, _v2, code = 0;
+            int  _v1, _v2, code = 0;
             char statusText[64] = {0};
             sscanf(header.c_str(), "HTTP/%d.%d %d %63[^\n]", &_v1, &_v2, &code, statusText);
             _statusText = statusText;
@@ -399,7 +399,7 @@ void XMLHttpRequest::onResponse(HttpClient *client, HttpResponse *response) {
         SE_LOGD("XMLHttpRequest::onResponse, %s completed\n", tag.c_str());
     }
 
-    long statusCode = response->getResponseCode();
+    long statusCode       = response->getResponseCode();
     char statusString[64] = {0};
     sprintf(statusString, "HTTP Status Code: %ld, tag = %s", statusCode, tag.c_str());
 
@@ -411,7 +411,7 @@ void XMLHttpRequest::onResponse(HttpClient *client, HttpResponse *response) {
         SE_LOGD("Response failed, error buffer: %s\n", errorBuffer.c_str());
         if (statusCode == 0 || statusCode == -1) {
             _errorFlag = true;
-            _status = 0;
+            _status    = 0;
             _statusText.clear();
             if (onerror != nullptr) {
                 onerror();
@@ -431,7 +431,7 @@ void XMLHttpRequest::onResponse(HttpClient *client, HttpResponse *response) {
     std::string header(headers->begin(), headers->end());
 
     std::istringstream stream(header);
-    std::string line;
+    std::string        line;
     while (std::getline(stream, line)) {
         getHeader(line);
     }
@@ -483,7 +483,7 @@ void XMLHttpRequest::sendRequest() {
         Application::getInstance()->getScheduler()->schedule([this](float dt) {
             if (ontimeout != nullptr)
                 ontimeout();
-            _isTimeout = true;
+            _isTimeout  = true;
             _readyState = ReadyState::UNSENT;
         },
                                                              this, _timeoutInMilliseconds / 1000.0f, 0, 0.0f, false, "XMLHttpRequest");
@@ -510,7 +510,7 @@ void XMLHttpRequest::setHttpRequestData(const char *data, size_t len) {
 void XMLHttpRequest::setRequestHeader(const std::string &key, const std::string &value) {
     std::stringstream header_s;
     std::stringstream value_s;
-    std::string header;
+    std::string       header;
 
     auto iter = _requestHeader.find(key);
 
@@ -526,7 +526,7 @@ void XMLHttpRequest::setRequestHeader(const std::string &key, const std::string 
 
 std::string XMLHttpRequest::getAllResponseHeaders() const {
     std::stringstream responseheaders;
-    std::string responseheader;
+    std::string       responseheader;
 
     for (auto it = _httpHeader.begin(); it != _httpHeader.end(); ++it) {
         responseheaders << it->first << ": " << it->second << "\n";
@@ -552,10 +552,10 @@ void XMLHttpRequest::setHttpRequestHeader() {
     std::vector<std::string> header;
 
     for (auto it = _requestHeader.begin(); it != _requestHeader.end(); ++it) {
-        const char *first = it->first.c_str();
+        const char *first  = it->first.c_str();
         const char *second = it->second.c_str();
-        size_t len = sizeof(char) * (strlen(first) + 3 + strlen(second));
-        char *test = (char *)malloc(len);
+        size_t      len    = sizeof(char) * (strlen(first) + 3 + strlen(second));
+        char *      test   = (char *)malloc(len);
         memset(test, 0, len);
 
         strcpy(test, first);
@@ -651,11 +651,11 @@ SE_BIND_CTOR(XMLHttpRequest_constructor, __jsb_XMLHttpRequest_class, XMLHttpRequ
 
 static bool XMLHttpRequest_open(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
     if (argc >= 2) {
         XMLHttpRequest *request = (XMLHttpRequest *)s.nativeThisObject();
-        bool ok = false;
-        std::string method;
+        bool            ok      = false;
+        std::string     method;
         ok = seval_to_std_string(args[0], &method);
         SE_PRECONDITION2(ok, false, "args[0] isn't a string.");
         std::string url;
@@ -679,8 +679,8 @@ static bool XMLHttpRequest_abort(se::State &s) {
 SE_BIND_FUNC(XMLHttpRequest_abort)
 
 static bool XMLHttpRequest_send(se::State &s) {
-    const auto &args = s.args();
-    size_t argc = args.size();
+    const auto &    args    = s.args();
+    size_t          argc    = args.size();
     XMLHttpRequest *request = (XMLHttpRequest *)s.nativeThisObject();
 
     if (argc == 0) {
@@ -696,7 +696,7 @@ static bool XMLHttpRequest_send(se::State &s) {
 
             if (obj->isTypedArray()) {
                 uint8_t *ptr = nullptr;
-                size_t len = 0;
+                size_t   len = 0;
                 if (obj->getTypedArrayData(&ptr, &len)) {
                     Data data;
                     data.copy(ptr, len);
@@ -707,7 +707,7 @@ static bool XMLHttpRequest_send(se::State &s) {
                 }
             } else if (obj->isArrayBuffer()) {
                 uint8_t *ptr = nullptr;
-                size_t len = 0;
+                size_t   len = 0;
                 if (obj->getArrayBufferData(&ptr, &len)) {
                     Data data;
                     data.copy(ptr, len);
@@ -738,12 +738,12 @@ SE_BIND_FUNC(XMLHttpRequest_send)
 
 static bool XMLHttpRequest_setRequestHeader(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
 
     if (argc >= 2) {
         XMLHttpRequest *xhr = (XMLHttpRequest *)s.nativeThisObject();
-        std::string key;
-        bool ok = seval_to_std_string(args[0], &key);
+        std::string     key;
+        bool            ok = seval_to_std_string(args[0], &key);
         SE_PRECONDITION2(ok, false, "args[0] couldn't be converted to string.");
         std::string value;
         ok = seval_to_std_string(args[1], &value);
@@ -758,8 +758,8 @@ static bool XMLHttpRequest_setRequestHeader(se::State &s) {
 SE_BIND_FUNC(XMLHttpRequest_setRequestHeader)
 
 static bool XMLHttpRequest_getAllResponseHeaders(se::State &s) {
-    XMLHttpRequest *xhr = (XMLHttpRequest *)s.nativeThisObject();
-    std::string headers = xhr->getAllResponseHeaders();
+    XMLHttpRequest *xhr     = (XMLHttpRequest *)s.nativeThisObject();
+    std::string     headers = xhr->getAllResponseHeaders();
     s.rval().setString(headers);
     return true;
 }
@@ -767,11 +767,11 @@ SE_BIND_FUNC(XMLHttpRequest_getAllResponseHeaders)
 
 static bool XMLHttpRequest_getResonpseHeader(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc > 0) {
         XMLHttpRequest *xhr = (XMLHttpRequest *)s.nativeThisObject();
-        std::string key;
-        bool ok = seval_to_std_string(args[0], &key);
+        std::string     key;
+        bool            ok = seval_to_std_string(args[0], &key);
         SE_PRECONDITION2(ok, false, "args[0] couldn't be converted to string.");
         std::string header = xhr->getResonpseHeader(key);
         s.rval().setString(header);
@@ -785,7 +785,7 @@ SE_BIND_FUNC(XMLHttpRequest_getResonpseHeader)
 
 static bool XMLHttpRequest_overrideMimeType(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
     if (argc > 0 && args[0].isString()) {
         std::string mimeType;
         seval_to_std_string(args[0], &mimeType);
@@ -797,8 +797,8 @@ static bool XMLHttpRequest_overrideMimeType(se::State &s) {
 SE_BIND_FUNC(XMLHttpRequest_overrideMimeType)
 
 static bool XMLHttpRequest_getMIMEType(se::State &s) {
-    XMLHttpRequest *xhr = (XMLHttpRequest *)s.nativeThisObject();
-    auto type = xhr->getMimeType();
+    XMLHttpRequest *xhr  = (XMLHttpRequest *)s.nativeThisObject();
+    auto            type = xhr->getMimeType();
     s.rval().setString(type);
     return true;
 }
@@ -853,14 +853,14 @@ static bool XMLHttpRequest_getResponse(se::State &s) {
         } else {
             if (xhr->getResponseType() == XMLHttpRequest::ResponseType::JSON) {
                 const std::string &jsonText = xhr->getResponseText();
-                se::HandleObject seObj(se::Object::createJSONObject(jsonText));
+                se::HandleObject   seObj(se::Object::createJSONObject(jsonText));
                 if (!seObj.isEmpty()) {
                     s.rval().setObject(seObj);
                 } else {
                     s.rval().setNull();
                 }
             } else if (xhr->getResponseType() == XMLHttpRequest::ResponseType::ARRAY_BUFFER) {
-                const Data &data = xhr->getResponseData();
+                const Data &     data = xhr->getResponseData();
                 se::HandleObject seObj(se::Object::createArrayBufferObject(data.getBytes(), data.getSize()));
                 if (!seObj.isEmpty()) {
                     s.rval().setObject(seObj);
@@ -885,11 +885,11 @@ SE_BIND_PROP_GET(XMLHttpRequest_getTimeout)
 
 static bool XMLHttpRequest_setTimeout(se::State &s) {
     const auto &args = s.args();
-    int argc = (int)args.size();
+    int         argc = (int)args.size();
     if (argc > 0) {
-        XMLHttpRequest *cobj = (XMLHttpRequest *)s.nativeThisObject();
-        unsigned long timeoutInMilliseconds = 0;
-        bool ok = seval_to_ulong(args[0], &timeoutInMilliseconds);
+        XMLHttpRequest *cobj                  = (XMLHttpRequest *)s.nativeThisObject();
+        unsigned long   timeoutInMilliseconds = 0;
+        bool            ok                    = seval_to_ulong(args[0], &timeoutInMilliseconds);
         SE_PRECONDITION2(ok, false, "args[0] isn't a number");
         if (timeoutInMilliseconds < 50) {
             SE_LOGE("The timeout value (%lu ms) is too small, please note that timeout unit is milliseconds!", timeoutInMilliseconds);
@@ -924,11 +924,11 @@ SE_BIND_PROP_GET(XMLHttpRequest_getResponseType)
 
 static bool XMLHttpRequest_setResponseType(se::State &s) {
     const auto &args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
 
     if (argc > 0) {
         std::string type;
-        bool ok = seval_to_std_string(args[0], &type);
+        bool        ok = seval_to_std_string(args[0], &type);
         SE_PRECONDITION2(ok, false, "args[0] couldn't be converted to string!");
 
         XMLHttpRequest *xhr = (XMLHttpRequest *)s.nativeThisObject();

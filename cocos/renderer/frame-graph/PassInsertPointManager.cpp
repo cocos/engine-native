@@ -34,7 +34,7 @@ PassInsertPointManager &PassInsertPointManager::getInstance() noexcept {
     return instance;
 }
 
-PassInsertPoint PassInsertPointManager::record(const char *const name, const PassInsertPoint  point) noexcept {
+PassInsertPoint PassInsertPointManager::record(const char *const name, const PassInsertPoint point) noexcept {
     StringHandle nameHandle = _stringPool.find(name);
 
     if (nameHandle.isValid()) {

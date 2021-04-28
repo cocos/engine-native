@@ -36,8 +36,8 @@ public:
     virtual ~DescriptorSet();
 
 public:
-    void         initialize(const DescriptorSetInfo &info);
-    void         destroy();
+    void initialize(const DescriptorSetInfo &info);
+    void destroy();
 
     virtual void update() = 0;
 
@@ -54,9 +54,9 @@ public:
     Texture *getTexture(uint binding, uint index) const;
     Sampler *getSampler(uint binding, uint index) const;
 
-    CC_INLINE void    bindBuffer(uint binding, Buffer *buffer) { bindBuffer(binding, buffer, 0u); }
-    CC_INLINE void    bindTexture(uint binding, Texture *texture) { bindTexture(binding, texture, 0u); }
-    CC_INLINE void    bindSampler(uint binding, Sampler *sampler) { bindSampler(binding, sampler, 0u); }
+    CC_INLINE void bindBuffer(uint binding, Buffer *buffer) { bindBuffer(binding, buffer, 0u); }
+    CC_INLINE void bindTexture(uint binding, Texture *texture) { bindTexture(binding, texture, 0u); }
+    CC_INLINE void bindSampler(uint binding, Sampler *sampler) { bindSampler(binding, sampler, 0u); }
     CC_INLINE Buffer *getBuffer(uint binding) const { return getBuffer(binding, 0u); }
     CC_INLINE Texture *getTexture(uint binding) const { return getTexture(binding, 0u); }
     CC_INLINE Sampler *getSampler(uint binding) const { return getSampler(binding, 0u); }

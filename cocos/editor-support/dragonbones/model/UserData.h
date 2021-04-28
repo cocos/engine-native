@@ -36,8 +36,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 5.0
  * @language zh_CN
  */
-class UserData : public BaseObject
-{
+class UserData : public BaseObject {
     BIND_CLASS_TYPE_A(UserData);
 
 public:
@@ -126,31 +125,27 @@ public:
     std::string getString(unsigned index) const;
 
 public: // For WebAssembly.
-    const std::vector<int>& getInts() const { return ints; }
-    const std::vector<float>& getFloats() const { return floats; }
+    const std::vector<int>&         getInts() const { return ints; }
+    const std::vector<float>&       getFloats() const { return floats; }
     const std::vector<std::string>& getStrings() const { return strings; }
 };
 /**
  * @internal
  */
-class ActionData : public BaseObject
-{
+class ActionData : public BaseObject {
     BIND_CLASS_TYPE_B(ActionData);
 
 public:
-    ActionType type;
-    std::string name;
+    ActionType      type;
+    std::string     name;
     const BoneData* bone;
     const SlotData* slot;
-    UserData* data;
+    UserData*       data;
 
-    ActionData() :
-        data(nullptr)
-    {
+    ActionData() : data(nullptr) {
         _onClear();
     }
-    virtual ~ActionData()
-    {
+    virtual ~ActionData() {
         _onClear();
     }
 
@@ -158,17 +153,17 @@ protected:
     virtual void _onClear() override;
 
 public: // For WebAssembly.
-    int getType() const { return (int)type; }
+    int  getType() const { return (int)type; }
     void setType(int value) { type = (ActionType)value; }
 
     const BoneData* getBone() const { return bone; }
-    void setBone(const BoneData* value) { bone = value; }
+    void            setBone(const BoneData* value) { bone = value; }
 
     const SlotData* getSlot() const { return slot; }
-    void setSlot(const SlotData* value) { slot = value; }
+    void            setSlot(const SlotData* value) { slot = value; }
 
     const UserData* getData() const { return data; }
-    void setData(UserData* value) { data = value; }
+    void            setData(UserData* value) { data = value; }
 };
 
 DRAGONBONES_NAMESPACE_END

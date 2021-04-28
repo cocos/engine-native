@@ -33,11 +33,11 @@ namespace gfx {
 class CCMTLContext final : public Context {
 public:
     explicit CCMTLContext();
-    ~CCMTLContext() override = default;
-    CCMTLContext(const CCMTLContext &)=delete;
-    CCMTLContext(CCMTLContext &&)=delete;
-    CCMTLContext &operator=(const CCMTLContext &)=delete;
-    CCMTLContext &operator=(CCMTLContext &&)=delete;
+    ~CCMTLContext() override           = default;
+    CCMTLContext(const CCMTLContext &) = delete;
+    CCMTLContext(CCMTLContext &&)      = delete;
+    CCMTLContext &operator=(const CCMTLContext &) = delete;
+    CCMTLContext &operator=(CCMTLContext &&) = delete;
 
     void present() override {}
 

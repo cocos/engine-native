@@ -8,12 +8,12 @@ using namespace v8;
 
 namespace node {
 
-void Environment::Start(int argc,
+void Environment::Start(int                argc,
                         const char *const *argv,
-                        int exec_argc,
+                        int                exec_argc,
                         const char *const *exec_argv,
-                        bool start_profiler_idle_notifier) {
-    HandleScope handle_scope(isolate());
+                        bool               start_profiler_idle_notifier) {
+    HandleScope    handle_scope(isolate());
     Context::Scope context_scope(context());
 
     //        uv_check_init(event_loop(), immediate_check_handle());

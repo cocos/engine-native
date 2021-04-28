@@ -47,19 +47,19 @@ std::string getObbFilePathJNI() {
 
 int getObbAssetFileDescriptorJNI(const std::string &path, long *startOffset, long *size) {
     JniMethodInfo methodInfo;
-    int fd = 0;
+    int           fd = 0;
 
     if (JniHelper::getStaticMethodInfo(methodInfo, JCLS_HELPER, "getObbAssetFileDescriptor", "(Ljava/lang/String;)[J")) {
-        jstring stringArg = methodInfo.env->NewStringUTF(path.c_str());
-        jlongArray newArray = (jlongArray)methodInfo.env->CallStaticObjectMethod(methodInfo.classID, methodInfo.methodID, stringArg);
-        jsize theArrayLen = methodInfo.env->GetArrayLength(newArray);
+        jstring    stringArg   = methodInfo.env->NewStringUTF(path.c_str());
+        jlongArray newArray    = (jlongArray)methodInfo.env->CallStaticObjectMethod(methodInfo.classID, methodInfo.methodID, stringArg);
+        jsize      theArrayLen = methodInfo.env->GetArrayLength(newArray);
 
         if (3 == theArrayLen) {
-            jboolean copy = JNI_FALSE;
-            jlong *array = methodInfo.env->GetLongArrayElements(newArray, &copy);
-            fd = static_cast<int>(array[0]);
-            *startOffset = array[1];
-            *size = array[2];
+            jboolean copy  = JNI_FALSE;
+            jlong *  array = methodInfo.env->GetLongArrayElements(newArray, &copy);
+            fd             = static_cast<int>(array[0]);
+            *startOffset   = array[1];
+            *size          = array[2];
             methodInfo.env->ReleaseLongArrayElements(newArray, array, 0);
         }
 

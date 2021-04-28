@@ -48,7 +48,6 @@ CommandBufferValidator::~CommandBufferValidator() {
 }
 
 void CommandBufferValidator::doInit(const CommandBufferInfo &info) {
-
     /////////// execute ///////////
 
     CommandBufferInfo actorInfo = info;
@@ -244,7 +243,6 @@ void CommandBufferValidator::dispatch(const DispatchInfo &info) {
 }
 
 void CommandBufferValidator::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) {
-
     /////////// execute ///////////
 
     static vector<Texture *> textureActors;

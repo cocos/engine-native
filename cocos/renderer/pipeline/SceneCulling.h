@@ -43,10 +43,10 @@ struct Shadows;
 
 RenderObject genRenderObject(Model *, const Camera *);
 
-void lightCollecting(Camera *, std::vector<const Light *>&);
+void lightCollecting(Camera *, std::vector<const Light *> &);
 void sceneCulling(RenderPipeline *, Camera *);
 void updateSphereLight(Shadows *shadows, const Light *light, std::array<float, UBOShadow::COUNT> &);
-void updateDirLight(Shadows *shadows, const Light *light, std::array<float, UBOShadow::COUNT>&);
+void updateDirLight(Shadows *shadows, const Light *light, std::array<float, UBOShadow::COUNT> &);
 void getShadowWorldMatrix(const Sphere *sphere, const cc::Vec4 &rotation, const cc::Vec3 &dir, cc::Mat4 &shadowWorldMat, cc::Vec3 &out);
 } // namespace pipeline
 } // namespace cc

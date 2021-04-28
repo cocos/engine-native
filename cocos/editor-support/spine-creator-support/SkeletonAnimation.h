@@ -33,11 +33,11 @@
 
 namespace spine {
 
-typedef std::function<void(TrackEntry *entry)> StartListener;
-typedef std::function<void(TrackEntry *entry)> InterruptListener;
-typedef std::function<void(TrackEntry *entry)> EndListener;
-typedef std::function<void(TrackEntry *entry)> DisposeListener;
-typedef std::function<void(TrackEntry *entry)> CompleteListener;
+typedef std::function<void(TrackEntry *entry)>               StartListener;
+typedef std::function<void(TrackEntry *entry)>               InterruptListener;
+typedef std::function<void(TrackEntry *entry)>               EndListener;
+typedef std::function<void(TrackEntry *entry)>               DisposeListener;
+typedef std::function<void(TrackEntry *entry)>               CompleteListener;
 typedef std::function<void(TrackEntry *entry, Event *event)> EventListener;
 
 /** Draws an animated skeleton, providing an AnimationState for applying one or more animations and queuing animations to be
@@ -48,7 +48,7 @@ public:
     static SkeletonAnimation *createWithData(SkeletonData *skeletonData, bool ownsSkeletonData = false);
     static SkeletonAnimation *createWithJsonFile(const std::string &skeletonJsonFile, const std::string &atlasFile, float scale = 1);
     static SkeletonAnimation *createWithBinaryFile(const std::string &skeletonBinaryFile, const std::string &atlasFile, float scale = 1);
-    static void setGlobalTimeScale(float timeScale);
+    static void               setGlobalTimeScale(float timeScale);
 
     virtual void update(float deltaTime) override;
 
@@ -58,12 +58,12 @@ public:
     TrackEntry *setAnimation(int trackIndex, const std::string &name, bool loop);
     TrackEntry *addAnimation(int trackIndex, const std::string &name, bool loop, float delay = 0);
     TrackEntry *setEmptyAnimation(int trackIndex, float mixDuration);
-    void setEmptyAnimations(float mixDuration);
+    void        setEmptyAnimations(float mixDuration);
     TrackEntry *addEmptyAnimation(int trackIndex, float mixDuration, float delay = 0);
-    Animation *findAnimation(const std::string &name) const;
+    Animation * findAnimation(const std::string &name) const;
     TrackEntry *getCurrent(int trackIndex = 0);
-    void clearTracks();
-    void clearTrack(int trackIndex = 0);
+    void        clearTracks();
+    void        clearTrack(int trackIndex = 0);
 
     void setStartListener(const StartListener &listener);
     void setInterruptListener(const InterruptListener &listener);
@@ -92,14 +92,14 @@ public:
     static float GlobalTimeScale;
 
 protected:
-    AnimationState *_state = nullptr;
-    bool _ownsAnimationStateData = false;
-    StartListener _startListener = nullptr;
-    InterruptListener _interruptListener = nullptr;
-    EndListener _endListener = nullptr;
-    DisposeListener _disposeListener = nullptr;
-    CompleteListener _completeListener = nullptr;
-    EventListener _eventListener = nullptr;
+    AnimationState *  _state                  = nullptr;
+    bool              _ownsAnimationStateData = false;
+    StartListener     _startListener          = nullptr;
+    InterruptListener _interruptListener      = nullptr;
+    EndListener       _endListener            = nullptr;
+    DisposeListener   _disposeListener        = nullptr;
+    CompleteListener  _completeListener       = nullptr;
+    EventListener     _eventListener          = nullptr;
 
 private:
     typedef SkeletonRenderer super;

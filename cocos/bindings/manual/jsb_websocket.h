@@ -39,12 +39,12 @@ public:
 
     virtual void onOpen(cc::network::WebSocket *ws) override;
 
-    virtual void onMessage(cc::network::WebSocket *ws,
+    virtual void onMessage(cc::network::WebSocket *            ws,
                            const cc::network::WebSocket::Data &data) override;
 
     virtual void onClose(cc::network::WebSocket *ws) override;
 
-    virtual void onError(cc::network::WebSocket *ws,
+    virtual void onError(cc::network::WebSocket *                 ws,
                          const cc::network::WebSocket::ErrorCode &error) override;
 
     void setJSDelegate(const se::Value &jsDelegate);

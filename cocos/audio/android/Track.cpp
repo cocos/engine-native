@@ -25,8 +25,8 @@ THE SOFTWARE.
 
 #define LOG_TAG "Track"
 
-#include "audio/android/cutils/log.h"
 #include "audio/android/Track.h"
+#include "audio/android/cutils/log.h"
 
 #include <math.h>
 
@@ -42,14 +42,14 @@ Track::~Track() {
 }
 
 gain_minifloat_packed_t Track::getVolumeLR() {
-    float volume = _isAudioFocus ? _volume : 0.0f;
-    gain_minifloat_t v = gain_from_float(volume);
+    float            volume = _isAudioFocus ? _volume : 0.0f;
+    gain_minifloat_t v      = gain_from_float(volume);
     return gain_minifloat_pack(v, v);
 }
 
 bool Track::setPosition(float pos) {
     _nextFrame = (size_t)(pos * _numFrames / _pcmData.duration);
-    _unrel = 0;
+    _unrel     = 0;
     return true;
 }
 
@@ -78,7 +78,7 @@ void Track::setState(State state) {
     std::lock_guard<std::mutex> lk(_stateMutex);
     if (_state != state) {
         _prevState = _state;
-        _state = state;
+        _state     = state;
         onStateChanged(_state);
     }
 };

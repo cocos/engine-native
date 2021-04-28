@@ -62,7 +62,7 @@ GLES2Device::~GLES2Device() {
     GLES2Device::instance = nullptr;
 }
 
-bool GLES2Device::doInit(const DeviceInfo & info) {
+bool GLES2Device::doInit(const DeviceInfo &info) {
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
     ctxInfo.msaaEnabled  = info.isAntiAlias;

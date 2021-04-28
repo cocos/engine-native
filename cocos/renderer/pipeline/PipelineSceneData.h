@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "helper/SharedMemory.h"
 #include "Define.h"
+#include "helper/SharedMemory.h"
 
 namespace cc {
 
@@ -40,28 +40,29 @@ class RenderPipeline;
 
 class CC_DLL PipelineSceneData : public Object {
 public:
-    PipelineSceneData() = default;
+    PipelineSceneData()          = default;
     virtual ~PipelineSceneData() = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
-    void setPipelineSharedSceneData (uint handle);
+    void setPipelineSharedSceneData(uint handle);
     void destroy();
 
-    CC_INLINE void setShadowFramebuffer(const Light *light, gfx::Framebuffer *framebuffer) { _shadowFrameBufferMap.emplace(light, framebuffer); }
+    CC_INLINE void  setShadowFramebuffer(const Light *light, gfx::Framebuffer *framebuffer) { _shadowFrameBufferMap.emplace(light, framebuffer); }
     CC_INLINE const std::unordered_map<const Light *, gfx::Framebuffer *> &getShadowFramebufferMap() const { return _shadowFrameBufferMap; }
-    CC_INLINE PipelineSharedSceneData* getSharedData() const { return _sharedSceneData; }
+    CC_INLINE PipelineSharedSceneData *getSharedData() const { return _sharedSceneData; }
     CC_INLINE const RenderObjectList &getRenderObjects() const { return _renderObjects; }
     CC_INLINE const RenderObjectList &getShadowObjects() const { return _shadowObjects; }
-    CC_INLINE void setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
-    CC_INLINE void setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
-    CC_INLINE Sphere* getSphere() const {return _sphere; }
+    CC_INLINE void                    setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
+    CC_INLINE void                    setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
+    CC_INLINE Sphere *getSphere() const { return _sphere; }
+
 private:
     RenderObjectList _renderObjects;
     RenderObjectList _shadowObjects;
 
     PipelineSharedSceneData *_sharedSceneData = nullptr;
-    RenderPipeline *_pipeline = nullptr;
-    gfx::Device *_device = nullptr;
-    Sphere *_sphere = nullptr;
+    RenderPipeline *         _pipeline        = nullptr;
+    gfx::Device *            _device          = nullptr;
+    Sphere *                 _sphere          = nullptr;
 
     std::unordered_map<const Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };

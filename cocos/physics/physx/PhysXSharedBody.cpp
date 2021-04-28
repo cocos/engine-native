@@ -23,25 +23,25 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/physx/PhysXInc.h"
 #include "physics/physx/PhysXSharedBody.h"
+#include <cmath>
+#include "physics/physx/PhysXInc.h"
 #include "physics/physx/PhysXUtils.h"
 #include "physics/physx/PhysXWorld.h"
-#include "physics/physx/shapes/PhysXShape.h"
 #include "physics/physx/joints/PhysXJoint.h"
-#include <cmath>
+#include "physics/physx/shapes/PhysXShape.h"
 
-using physx::PxVec3;
-using physx::PxQuat;
-using physx::PxIdentity;
-using physx::PxPhysics;
 using physx::PxFilterData;
-using physx::PxJointActorIndex;
-using physx::PxTransform;
 using physx::PxForceMode;
-using physx::PxRigidBodyFlag;
+using physx::PxIdentity;
+using physx::PxJointActorIndex;
+using physx::PxPhysics;
+using physx::PxQuat;
 using physx::PxRigidActor;
 using physx::PxRigidBodyExt;
+using physx::PxRigidBodyFlag;
+using physx::PxTransform;
+using physx::PxVec3;
 
 namespace cc {
 namespace physics {

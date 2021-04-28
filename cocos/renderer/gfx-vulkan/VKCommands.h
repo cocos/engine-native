@@ -34,8 +34,8 @@ class CCVKDevice;
 
 struct CCVKDepthBias {
     float constant = 0.0F;
-    float clamp = 0.0F;
-    float slope = 0.0F;
+    float clamp    = 0.0F;
+    float slope    = 0.0F;
 };
 
 struct CCVKDepthBounds {
@@ -44,14 +44,14 @@ struct CCVKDepthBounds {
 };
 
 struct CCVKStencilWriteMask {
-    StencilFace face = StencilFace::FRONT;
-    uint32_t write_mask = 0;
+    StencilFace face       = StencilFace::FRONT;
+    uint32_t    write_mask = 0;
 };
 
 struct CCVKStencilCompareMask {
-    StencilFace face = StencilFace::FRONT;
-    int reference = 0;
-    uint32_t compareMask = 0;
+    StencilFace face        = StencilFace::FRONT;
+    int         reference   = 0;
+    uint32_t    compareMask = 0;
 };
 
 CC_VULKAN_API void cmdFuncCCVKGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue);

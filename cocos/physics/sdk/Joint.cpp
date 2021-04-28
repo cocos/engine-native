@@ -23,8 +23,8 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/PhysicsSelector.h"
 #include "physics/sdk/Joint.h"
+#include "physics/PhysicsSelector.h"
 
 #define CC_PHYSICS_JOINT_DEFINITION(CLASS, WRAPPED) \
                                                     \

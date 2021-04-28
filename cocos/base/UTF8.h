@@ -27,10 +27,10 @@
 
 #pragma once
 
-#include "base/Macros.h"
 #include <sstream>
 #include <string>
 #include <vector>
+#include "base/Macros.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "platform/android/jni/JniHelper.h"

@@ -34,7 +34,6 @@ void AudioResamplerCubic::init() {
 
 size_t AudioResamplerCubic::resample(int32_t *out, size_t outFrameCount,
                                      AudioBufferProvider *provider) {
-
     // should never happen, but we overflow if it does
     // ALOG_ASSERT(outFrameCount < 32767);
 
@@ -52,16 +51,15 @@ size_t AudioResamplerCubic::resample(int32_t *out, size_t outFrameCount,
 
 size_t AudioResamplerCubic::resampleStereo16(int32_t *out, size_t outFrameCount,
                                              AudioBufferProvider *provider) {
-
     int32_t vl = mVolume[0];
     int32_t vr = mVolume[1];
 
-    size_t inputIndex = mInputIndex;
-    uint32_t phaseFraction = mPhaseFraction;
-    uint32_t phaseIncrement = mPhaseIncrement;
-    size_t outputIndex = 0;
-    size_t outputSampleCount = outFrameCount * 2;
-    size_t inFrameCount = getInFrameCountRequired(outFrameCount);
+    size_t   inputIndex        = mInputIndex;
+    uint32_t phaseFraction     = mPhaseFraction;
+    uint32_t phaseIncrement    = mPhaseIncrement;
+    size_t   outputIndex       = 0;
+    size_t   outputSampleCount = outFrameCount * 2;
+    size_t   inFrameCount      = getInFrameCountRequired(outFrameCount);
 
     // fetch first buffer
     if (mBuffer.frameCount == 0) {
@@ -91,7 +89,6 @@ size_t AudioResamplerCubic::resampleStereo16(int32_t *out, size_t outFrameCount,
 
         // time to fetch another sample
         while (indexIncrement--) {
-
             inputIndex++;
             if (inputIndex == mBuffer.frameCount) {
                 inputIndex = 0;
@@ -114,23 +111,22 @@ size_t AudioResamplerCubic::resampleStereo16(int32_t *out, size_t outFrameCount,
 
 save_state:
     // ALOGW("Done: index=%d, fraction=%u", inputIndex, phaseFraction);
-    mInputIndex = inputIndex;
+    mInputIndex    = inputIndex;
     mPhaseFraction = phaseFraction;
     return outputIndex / 2 /* channels for stereo */;
 }
 
 size_t AudioResamplerCubic::resampleMono16(int32_t *out, size_t outFrameCount,
                                            AudioBufferProvider *provider) {
-
     int32_t vl = mVolume[0];
     int32_t vr = mVolume[1];
 
-    size_t inputIndex = mInputIndex;
-    uint32_t phaseFraction = mPhaseFraction;
-    uint32_t phaseIncrement = mPhaseIncrement;
-    size_t outputIndex = 0;
-    size_t outputSampleCount = outFrameCount * 2;
-    size_t inFrameCount = getInFrameCountRequired(outFrameCount);
+    size_t   inputIndex        = mInputIndex;
+    uint32_t phaseFraction     = mPhaseFraction;
+    uint32_t phaseIncrement    = mPhaseIncrement;
+    size_t   outputIndex       = 0;
+    size_t   outputSampleCount = outFrameCount * 2;
+    size_t   inFrameCount      = getInFrameCountRequired(outFrameCount);
 
     // fetch first buffer
     if (mBuffer.frameCount == 0) {
@@ -148,7 +144,7 @@ size_t AudioResamplerCubic::resampleMono16(int32_t *out, size_t outFrameCount,
         int32_t x;
 
         // calculate output sample
-        x = phaseFraction >> kPreInterpShift;
+        x      = phaseFraction >> kPreInterpShift;
         sample = interp(&left, x);
         out[outputIndex++] += vl * sample;
         out[outputIndex++] += vr * sample;
@@ -160,7 +156,6 @@ size_t AudioResamplerCubic::resampleMono16(int32_t *out, size_t outFrameCount,
 
         // time to fetch another sample
         while (indexIncrement--) {
-
             inputIndex++;
             if (inputIndex == mBuffer.frameCount) {
                 inputIndex = 0;
@@ -182,7 +177,7 @@ size_t AudioResamplerCubic::resampleMono16(int32_t *out, size_t outFrameCount,
 
 save_state:
     // ALOGW("Done: index=%d, fraction=%u", inputIndex, phaseFraction);
-    mInputIndex = inputIndex;
+    mInputIndex    = inputIndex;
     mPhaseFraction = phaseFraction;
     return outputIndex;
 }

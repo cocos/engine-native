@@ -51,7 +51,7 @@ void CCSlot::disposeTriangles() {
         triangles.indices = nullptr;
     }
     triangles.indexCount = 0;
-    triangles.vertCount = 0;
+    triangles.vertCount  = 0;
 }
 
 void CCSlot::adjustTriangles(const unsigned vertexCount, const unsigned indicesCount) {
@@ -114,48 +114,48 @@ middleware::Texture2D *CCSlot::getTexture() const {
 
 void CCSlot::_updateFrame() {
     const auto currentVerticesData = (_deformVertices != nullptr && _display == _meshDisplay) ? _deformVertices->verticesData : nullptr;
-    const auto currentTextureData = static_cast<CCTextureData *>(_textureData);
+    const auto currentTextureData  = static_cast<CCTextureData *>(_textureData);
 
     if (_displayIndex >= 0 && _display != nullptr && currentTextureData != nullptr) {
         if (currentTextureData->spriteFrame != nullptr) {
-            const auto &region = currentTextureData->region;
-            const auto texture = currentTextureData->spriteFrame->getTexture();
-            const auto textureWidth = texture->getPixelsWide();
-            const auto textureHeight = texture->getPixelsHigh();
+            const auto &region        = currentTextureData->region;
+            const auto  texture       = currentTextureData->spriteFrame->getTexture();
+            const auto  textureWidth  = texture->getPixelsWide();
+            const auto  textureHeight = texture->getPixelsHigh();
 
             if (currentVerticesData != nullptr) // Mesh.
             {
-                const auto data = currentVerticesData->data;
-                const auto intArray = data->intArray;
-                const auto floatArray = data->floatArray;
-                const unsigned vertexCount = intArray[currentVerticesData->offset + (unsigned)BinaryOffset::MeshVertexCount];
+                const auto     data          = currentVerticesData->data;
+                const auto     intArray      = data->intArray;
+                const auto     floatArray    = data->floatArray;
+                const unsigned vertexCount   = intArray[currentVerticesData->offset + (unsigned)BinaryOffset::MeshVertexCount];
                 const unsigned triangleCount = intArray[currentVerticesData->offset + (unsigned)BinaryOffset::MeshTriangleCount];
-                int vertexOffset = intArray[currentVerticesData->offset + (unsigned)BinaryOffset::MeshFloatOffset];
+                int            vertexOffset  = intArray[currentVerticesData->offset + (unsigned)BinaryOffset::MeshFloatOffset];
 
                 if (vertexOffset < 0) {
                     vertexOffset += 65536; // Fixed out of bouds bug.
                 }
 
-                const unsigned uvOffset = vertexOffset + vertexCount * 2;
+                const unsigned uvOffset     = vertexOffset + vertexCount * 2;
                 const unsigned indicesCount = triangleCount * 3;
                 adjustTriangles(vertexCount, indicesCount);
-                auto vertices = triangles.verts;
+                auto vertices      = triangles.verts;
                 auto vertexIndices = triangles.indices;
 
-                boundsRect.origin.x = 999999.0f;
-                boundsRect.origin.y = 999999.0f;
-                boundsRect.size.width = -999999.0f;
+                boundsRect.origin.x    = 999999.0f;
+                boundsRect.origin.y    = 999999.0f;
+                boundsRect.size.width  = -999999.0f;
                 boundsRect.size.height = -999999.0f;
 
                 for (std::size_t i = 0, l = vertexCount * 2; i < l; i += 2) {
-                    const auto iH = i / 2;
-                    const auto x = floatArray[vertexOffset + i];
-                    const auto y = floatArray[vertexOffset + i + 1];
-                    auto u = floatArray[uvOffset + i];
-                    auto v = floatArray[uvOffset + i + 1];
+                    const auto               iH         = i / 2;
+                    const auto               x          = floatArray[vertexOffset + i];
+                    const auto               y          = floatArray[vertexOffset + i + 1];
+                    auto                     u          = floatArray[uvOffset + i];
+                    auto                     v          = floatArray[uvOffset + i + 1];
                     middleware::V2F_T2F_C4F &vertexData = vertices[iH];
-                    vertexData.vertex.x = x;
-                    vertexData.vertex.y = -y;
+                    vertexData.vertex.x                 = x;
+                    vertexData.vertex.y                 = -y;
 
                     if (currentTextureData->rotated) {
                         vertexData.texCoord.u = (region.x + (1.0f - v) * region.width) / textureWidth;
@@ -198,7 +198,7 @@ void CCSlot::_updateFrame() {
             } else {
                 adjustTriangles(4, 6);
 
-                auto vertices = triangles.verts;
+                auto vertices      = triangles.verts;
                 auto vertexIndices = triangles.indices;
 
                 float l = region.x / textureWidth;
@@ -230,9 +230,9 @@ void CCSlot::_updateFrame() {
 
             memcpy(worldVerts, triangles.verts, triangles.vertCount * sizeof(middleware::V2F_T2F_C4F));
 
-            _visibleDirty = true;
+            _visibleDirty   = true;
             _blendModeDirty = true; // Relpace texture will override blendMode and color.
-            _colorDirty = true;
+            _colorDirty     = true;
 
             return;
         }
@@ -240,19 +240,19 @@ void CCSlot::_updateFrame() {
 }
 
 void CCSlot::_updateMesh() {
-    const auto scale = _armature->_armatureData->scale;
+    const auto  scale          = _armature->_armatureData->scale;
     const auto &deformVertices = _deformVertices->vertices;
-    const auto &bones = _deformVertices->bones;
-    const auto verticesData = _deformVertices->verticesData;
-    const auto weightData = verticesData->weight;
+    const auto &bones          = _deformVertices->bones;
+    const auto  verticesData   = _deformVertices->verticesData;
+    const auto  weightData     = verticesData->weight;
 
-    const auto hasFFD = !deformVertices.empty();
+    const auto hasFFD      = !deformVertices.empty();
     const auto textureData = static_cast<CCTextureData *>(_textureData);
-    const auto vertices = triangles.verts;
+    const auto vertices    = triangles.verts;
 
-    boundsRect.origin.x = 999999.0f;
-    boundsRect.origin.y = 999999.0f;
-    boundsRect.size.width = -999999.0f;
+    boundsRect.origin.x    = 999999.0f;
+    boundsRect.origin.y    = 999999.0f;
+    boundsRect.size.width  = -999999.0f;
     boundsRect.size.height = -999999.0f;
 
     if (!textureData) {
@@ -260,11 +260,11 @@ void CCSlot::_updateMesh() {
     }
 
     if (weightData != nullptr) {
-        const auto data = verticesData->data;
-        const auto intArray = data->intArray;
-        const auto floatArray = data->floatArray;
-        const auto vertexCount = (std::size_t)intArray[verticesData->offset + (unsigned)BinaryOffset::MeshVertexCount];
-        int weightFloatOffset = intArray[weightData->offset + (unsigned)BinaryOffset::WeigthFloatOffset];
+        const auto data              = verticesData->data;
+        const auto intArray          = data->intArray;
+        const auto floatArray        = data->floatArray;
+        const auto vertexCount       = (std::size_t)intArray[verticesData->offset + (unsigned)BinaryOffset::MeshVertexCount];
+        int        weightFloatOffset = intArray[weightData->offset + (unsigned)BinaryOffset::WeigthFloatOffset];
 
         if (vertexCount > triangles.vertCount) {
             return;
@@ -279,15 +279,15 @@ void CCSlot::_updateMesh() {
             i < vertexCount;
             ++i) {
             const auto boneCount = (std::size_t)intArray[iB++];
-            auto xG = 0.0f, yG = 0.0f;
+            auto       xG = 0.0f, yG = 0.0f;
             for (std::size_t j = 0; j < boneCount; ++j) {
                 const auto boneIndex = (unsigned)intArray[iB++];
-                const auto bone = bones[boneIndex];
+                const auto bone      = bones[boneIndex];
                 if (bone != nullptr) {
                     const auto &matrix = bone->globalTransformMatrix;
-                    const auto weight = floatArray[iV++];
-                    auto xL = floatArray[iV++] * scale;
-                    auto yL = floatArray[iV++] * scale;
+                    const auto  weight = floatArray[iV++];
+                    auto        xL     = floatArray[iV++] * scale;
+                    auto        yL     = floatArray[iV++] * scale;
 
                     if (hasFFD) {
                         xL += deformVertices[iF++];
@@ -299,7 +299,7 @@ void CCSlot::_updateMesh() {
                 }
             }
 
-            auto &vertex = vertices[i];
+            auto &vertex         = vertices[i];
             auto &vertexPosition = vertex.vertex;
 
             vertexPosition.x = xG;
@@ -322,10 +322,10 @@ void CCSlot::_updateMesh() {
             }
         }
     } else if (hasFFD) {
-        const auto data = verticesData->data;
-        const auto intArray = data->intArray;
-        const auto floatArray = data->floatArray;
-        const auto vertexCount = (std::size_t)intArray[verticesData->offset + (unsigned)BinaryOffset::MeshVertexCount];
+        const auto  data         = verticesData->data;
+        const auto  intArray     = data->intArray;
+        const auto  floatArray   = data->floatArray;
+        const auto  vertexCount  = (std::size_t)intArray[verticesData->offset + (unsigned)BinaryOffset::MeshVertexCount];
         std::size_t vertexOffset = (std::size_t)intArray[verticesData->offset + (unsigned)BinaryOffset::MeshFloatOffset];
 
         if (vertexCount > triangles.vertCount) {
@@ -341,7 +341,7 @@ void CCSlot::_updateMesh() {
             const auto xG = floatArray[vertexOffset + i] * scale + deformVertices[i];
             const auto yG = floatArray[vertexOffset + i + 1] * scale + deformVertices[i + 1];
 
-            auto &vertex = vertices[iH];
+            auto &vertex         = vertices[iH];
             auto &vertexPosition = vertex.vertex;
 
             vertexPosition.x = xG;
@@ -406,7 +406,7 @@ void CCSlot::updateWorldMatrix() {
 
         auto &slots = childArmature->getSlots();
         for (int i = 0; i < slots.size(); i++) {
-            CCSlot *slot = (CCSlot *)slots[i];
+            CCSlot *slot         = (CCSlot *)slots[i];
             slot->_worldMatDirty = true;
         }
     }
@@ -424,10 +424,10 @@ void CCSlot::calculWorldMatrix() {
 }
 
 void CCSlot::_identityTransform() {
-    _localMatrix.m[0] = 1.0f;
-    _localMatrix.m[1] = 0.0f;
-    _localMatrix.m[4] = -0.0f;
-    _localMatrix.m[5] = -1.0f;
+    _localMatrix.m[0]  = 1.0f;
+    _localMatrix.m[1]  = 0.0f;
+    _localMatrix.m[4]  = -0.0f;
+    _localMatrix.m[5]  = -1.0f;
     _localMatrix.m[12] = 0.0f;
     _localMatrix.m[13] = 0.0f;
 

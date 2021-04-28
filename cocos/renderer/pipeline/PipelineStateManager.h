@@ -34,15 +34,15 @@ struct PassView;
 
 class CC_DLL PipelineStateManager {
 public:
-    static gfx::PipelineState *getOrCreatePipelineState(const PassView *pass,
-                                                        gfx::Shader *shader,
+    static gfx::PipelineState *getOrCreatePipelineState(const PassView *     pass,
+                                                        gfx::Shader *        shader,
                                                         gfx::InputAssembler *inputAssembler,
-                                                        gfx::RenderPass *renderPass);
+                                                        gfx::RenderPass *    renderPass);
 
-    static gfx::PipelineState *getOrCreatePipelineStateByJS(uint32_t passHandle,
-                                                            gfx::Shader *shader,
+    static gfx::PipelineState *getOrCreatePipelineStateByJS(uint32_t             passHandle,
+                                                            gfx::Shader *        shader,
                                                             gfx::InputAssembler *inputAssembler,
-                                                            gfx::RenderPass *renderPass);
+                                                            gfx::RenderPass *    renderPass);
 
     static void destroyAll();
 

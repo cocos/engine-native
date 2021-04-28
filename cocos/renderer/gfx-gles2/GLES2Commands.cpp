@@ -1270,7 +1270,7 @@ void cmdFuncGLES2CreateFramebuffer(GLES2Device *device, GLES2GPUFramebuffer *gpu
         }
 
         GLenum attachments[MAX_ATTACHMENTS] = {0};
-        uint   attachmentCount                  = 0;
+        uint   attachmentCount              = 0;
 
         for (size_t i = 0; i < gpuFBO->gpuColorTextures.size(); ++i) {
             GLES2GPUTexture *gpuColorTexture = gpuFBO->gpuColorTextures[i];

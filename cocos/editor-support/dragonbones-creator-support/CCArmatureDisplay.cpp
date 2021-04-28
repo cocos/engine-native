@@ -27,15 +27,15 @@
 #include "base/TypeDef.h"
 #include "base/memory/Memory.h"
 #include "dragonbones-creator-support/CCSlot.h"
+#include "gfx-base/GFXDef.h"
 #include "math/Math.h"
 #include "math/Vec3.h"
-#include "gfx-base/GFXDef.h"
 
 USING_NS_MW;
 using namespace cc;
 using namespace cc::gfx;
 
-static const std::string techStage = "opaque";
+static const std::string techStage  = "opaque";
 static const std::string textureKey = "texture";
 
 DRAGONBONES_NAMESPACE_BEGIN
@@ -108,11 +108,11 @@ void CCArmatureDisplay::dbRender() {
     auto mgr = MiddlewareManager::getInstance();
     if (!mgr->isRendering) return;
 
-    auto renderMgr = mgr->getRenderInfoMgr();
+    auto renderMgr  = mgr->getRenderInfoMgr();
     auto renderInfo = renderMgr->getBuffer();
     if (!renderInfo) return;
 
-    auto attachMgr = mgr->getAttachInfoMgr();
+    auto attachMgr  = mgr->getAttachInfoMgr();
     auto attachInfo = attachMgr->getBuffer();
     if (!attachInfo) return;
 
@@ -131,20 +131,20 @@ void CCArmatureDisplay::dbRender() {
     renderInfo->writeUint32(0);
 
     // render not ready
-    auto paramsBuffer = _paramsBuffer->getBuffer();
-    float renderOrder = *(float *)paramsBuffer;
+    auto  paramsBuffer = _paramsBuffer->getBuffer();
+    float renderOrder  = *(float *)paramsBuffer;
     if (renderOrder < 0) {
         return;
     }
 
-    _preBlendMode = -1;
+    _preBlendMode    = -1;
     _preTextureIndex = -1;
     _curTextureIndex = -1;
     _preISegWritePos = -1;
-    _curISegLen = 0;
+    _curISegLen      = 0;
 
     _debugSlotsLen = 0;
-    _materialLen = 0;
+    _materialLen   = 0;
 
     // Traverse all aramture to fill vertex and index buffer.
     traverseArmature(_armature);
@@ -155,7 +155,7 @@ void CCArmatureDisplay::dbRender() {
     }
 
     if (_useAttach || _debugDraw) {
-        auto &bones = _armature->getBones();
+        auto &      bones = _armature->getBones();
         std::size_t count = bones.size();
 
         cc::Mat4 boneMat = cc::Mat4::IDENTITY;
@@ -177,18 +177,18 @@ void CCArmatureDisplay::dbRender() {
                 boneLen = bone->_boneData->length;
             }
 
-            boneMat.m[0] = bone->globalTransformMatrix.a;
-            boneMat.m[1] = bone->globalTransformMatrix.b;
-            boneMat.m[4] = -bone->globalTransformMatrix.c;
-            boneMat.m[5] = -bone->globalTransformMatrix.d;
+            boneMat.m[0]  = bone->globalTransformMatrix.a;
+            boneMat.m[1]  = bone->globalTransformMatrix.b;
+            boneMat.m[4]  = -bone->globalTransformMatrix.c;
+            boneMat.m[5]  = -bone->globalTransformMatrix.d;
             boneMat.m[12] = bone->globalTransformMatrix.tx;
             boneMat.m[13] = bone->globalTransformMatrix.ty;
             attachInfo->checkSpace(sizeof(boneMat), true);
             attachInfo->writeBytes((const char *)&boneMat, sizeof(boneMat));
 
             if (_debugDraw) {
-                float bx = bone->globalTransformMatrix.tx;
-                float by = bone->globalTransformMatrix.ty;
+                float bx   = bone->globalTransformMatrix.tx;
+                float by   = bone->globalTransformMatrix.ty;
                 float endx = bx + bone->globalTransformMatrix.a * boneLen;
                 float endy = by + bone->globalTransformMatrix.b * boneLen;
                 _debugBuffer->writeFloat32(bx);
@@ -214,8 +214,8 @@ cc::Vec2 CCArmatureDisplay::convertToRootSpace(float x, float y) const {
     cc::Vec2 newPos;
     slot->updateWorldMatrix();
     cc::Mat4 &worldMatrix = slot->worldMatrix;
-    newPos.x = x * worldMatrix.m[0] + y * worldMatrix.m[4] + worldMatrix.m[12];
-    newPos.y = x * worldMatrix.m[1] + y * worldMatrix.m[5] + worldMatrix.m[13];
+    newPos.x              = x * worldMatrix.m[0] + y * worldMatrix.m[4] + worldMatrix.m[12];
+    newPos.y              = x * worldMatrix.m[1] + y * worldMatrix.m[5] + worldMatrix.m[13];
     return newPos;
 }
 
@@ -227,7 +227,7 @@ CCArmatureDisplay *CCArmatureDisplay::getRootDisplay() {
 
     Slot *parentSlot = slot->_armature->getParent();
     while (parentSlot) {
-        slot = parentSlot;
+        slot       = parentSlot;
         parentSlot = parentSlot->_armature->getParent();
     }
     return (CCArmatureDisplay *)slot->_armature->getDisplay();
@@ -241,26 +241,26 @@ void CCArmatureDisplay::traverseArmature(Armature *armature, float parentOpacity
     const cc::Mat4 &nodeWorldMat = *(cc::Mat4 *)&paramsBuffer[4];
 
     auto &slots = armature->getSlots();
-    auto mgr = MiddlewareManager::getInstance();
+    auto  mgr   = MiddlewareManager::getInstance();
 
     middleware::MeshBuffer *mb = mgr->getMeshBuffer(VF_XYZUVC);
-    IOBuffer &vb = mb->getVB();
-    IOBuffer &ib = mb->getIB();
+    IOBuffer &              vb = mb->getVB();
+    IOBuffer &              ib = mb->getIB();
 
     float realOpacity = _nodeColor.a;
-    auto renderMgr = mgr->getRenderInfoMgr();
-    auto renderInfo = renderMgr->getBuffer();
+    auto  renderMgr   = mgr->getRenderInfoMgr();
+    auto  renderInfo  = renderMgr->getBuffer();
     if (!renderInfo) return;
 
-    auto attachMgr = mgr->getAttachInfoMgr();
+    auto attachMgr  = mgr->getAttachInfoMgr();
     auto attachInfo = attachMgr->getBuffer();
     if (!attachInfo) return;
 
     // range [0.0, 255.0]
-    float r, g, b, a;
-    CCSlot *slot = nullptr;
+    float                  r, g, b, a;
+    CCSlot *               slot    = nullptr;
     middleware::Texture2D *texture = nullptr;
-    int isFull = 0;
+    int                    isFull  = 0;
 
     auto flush = [&]() {
         // fill pre segment count field
@@ -323,7 +323,7 @@ void CCArmatureDisplay::traverseArmature(Armature *armature, float parentOpacity
 
     for (std::size_t i = 0, len = slots.size(); i < len; i++) {
         isFull = 0;
-        slot = (CCSlot *)slots[i];
+        slot   = (CCSlot *)slots[i];
         if (!slot->getVisible()) {
             continue;
         }
@@ -340,7 +340,7 @@ void CCArmatureDisplay::traverseArmature(Armature *armature, float parentOpacity
         texture = slot->getTexture();
         if (!texture) continue;
         _curTextureIndex = texture->getRealTextureIndex();
-        auto vbSize = slot->triangles.vertCount * sizeof(middleware::V2F_T2F_C4F);
+        auto vbSize      = slot->triangles.vertCount * sizeof(middleware::V2F_T2F_C4F);
         isFull |= vb.checkSpace(vbSize, true);
 
         // If texture or blendMode change,will change material.
@@ -349,15 +349,15 @@ void CCArmatureDisplay::traverseArmature(Armature *armature, float parentOpacity
         }
 
         // Calculation vertex color.
-        a = realOpacity * slot->color.a * parentOpacity / 255.0f;
+        a                = realOpacity * slot->color.a * parentOpacity / 255.0f;
         float multiplier = _premultipliedAlpha ? a / 255.0f : 1.0f / 255.0f;
-        r = _nodeColor.r * slot->color.r * multiplier;
-        g = _nodeColor.g * slot->color.g * multiplier;
-        b = _nodeColor.b * slot->color.b * multiplier;
+        r                = _nodeColor.r * slot->color.r * multiplier;
+        g                = _nodeColor.g * slot->color.g * multiplier;
+        b                = _nodeColor.b * slot->color.b * multiplier;
 
         // Transform component matrix to global matrix
-        middleware::Triangles &triangles = slot->triangles;
-        cc::Mat4 *worldMatrix = &slot->worldMatrix;
+        middleware::Triangles &triangles   = slot->triangles;
+        cc::Mat4 *             worldMatrix = &slot->worldMatrix;
         if (_batch) {
             cc::Mat4::multiply(nodeWorldMat, *worldMatrix, &matrixTemp);
             worldMatrix = &matrixTemp;
@@ -366,10 +366,10 @@ void CCArmatureDisplay::traverseArmature(Armature *armature, float parentOpacity
         middleware::V2F_T2F_C4F *worldTriangles = slot->worldVerts;
 
         for (int v = 0, w = 0, vn = triangles.vertCount; v < vn; ++v, w += 2) {
-            middleware::V2F_T2F_C4F *vertex = triangles.verts + v;
+            middleware::V2F_T2F_C4F *vertex      = triangles.verts + v;
             middleware::V2F_T2F_C4F *worldVertex = worldTriangles + v;
-            worldVertex->vertex.x = vertex->vertex.x * worldMatrix->m[0] + vertex->vertex.y * worldMatrix->m[4] + worldMatrix->m[12];
-            worldVertex->vertex.y = vertex->vertex.x * worldMatrix->m[1] + vertex->vertex.y * worldMatrix->m[5] + worldMatrix->m[13];
+            worldVertex->vertex.x                = vertex->vertex.x * worldMatrix->m[0] + vertex->vertex.y * worldMatrix->m[4] + worldMatrix->m[12];
+            worldVertex->vertex.y                = vertex->vertex.x * worldMatrix->m[1] + vertex->vertex.y * worldMatrix->m[5] + worldMatrix->m[13];
 
             worldVertex->color.r = r;
             worldVertex->color.g = g;

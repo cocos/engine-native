@@ -40,9 +40,9 @@ class CCMTLCommandEncoder;
 class CCMTLBuffer final : public Buffer {
 public:
     explicit CCMTLBuffer();
-    ~CCMTLBuffer() override = default;
+    ~CCMTLBuffer() override          = default;
     CCMTLBuffer(const CCMTLBuffer &) = delete;
-    CCMTLBuffer(CCMTLBuffer &&) = delete;
+    CCMTLBuffer(CCMTLBuffer &&)      = delete;
     CCMTLBuffer &operator=(const CCMTLBuffer &) = default;
     CCMTLBuffer &operator=(CCMTLBuffer &&) = delete;
 
@@ -51,8 +51,8 @@ public:
     void encodeBuffer(CCMTLCommandEncoder &encoder, uint offset, uint binding, ShaderStageFlags stages);
 
     CC_INLINE id<MTLBuffer> getMTLBuffer() const { return _mtlBuffer; }
-    CC_INLINE MTLIndexType getIndexType() const { return _indexType; }
-    CC_INLINE bool isDrawIndirectByIndex() const { return _isDrawIndirectByIndex; }
+    CC_INLINE MTLIndexType  getIndexType() const { return _indexType; }
+    CC_INLINE bool          isDrawIndirectByIndex() const { return _isDrawIndirectByIndex; }
     CC_INLINE const DrawInfoList &getDrawInfos() const { return _drawInfos; }
 
 protected:
@@ -64,16 +64,16 @@ protected:
     bool createMTLBuffer(uint size, MemoryUsage usage);
     void updateMTLBuffer(const void *buffer, uint offset, uint size);
 
-    id<MTLBuffer> _mtlBuffer = nullptr;
-    MTLIndexType _indexType = MTLIndexTypeUInt16;
-    MTLResourceOptions _mtlResourceOptions = MTLResourceStorageModePrivate;
-    bool _isIndirectDrawSupported = false;
-    uint _bufferViewOffset = 0;
+    id<MTLBuffer>      _mtlBuffer               = nullptr;
+    MTLIndexType       _indexType               = MTLIndexTypeUInt16;
+    MTLResourceOptions _mtlResourceOptions      = MTLResourceStorageModePrivate;
+    bool               _isIndirectDrawSupported = false;
+    uint               _bufferViewOffset        = 0;
 
-    bool _isDrawIndirectByIndex = false;
+    bool                                              _isDrawIndirectByIndex = false;
     vector<MTLDrawIndexedPrimitivesIndirectArguments> _indexedPrimitivesIndirectArguments;
-    vector<MTLDrawPrimitivesIndirectArguments> _primitiveIndirectArguments;
-    DrawInfoList _drawInfos;
+    vector<MTLDrawPrimitivesIndirectArguments>        _primitiveIndirectArguments;
+    DrawInfoList                                      _drawInfos;
 };
 
 } // namespace gfx

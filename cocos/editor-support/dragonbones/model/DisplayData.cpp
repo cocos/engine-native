@@ -3,42 +3,37 @@
 //
 
 #include "DisplayData.h"
-#include "UserData.h"
 #include "BoundingBoxData.h"
+#include "UserData.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-void VerticesData::clear()
-{
-    if (!isShared && weight != nullptr)
-    {
+void VerticesData::clear() {
+    if (!isShared && weight != nullptr) {
         weight->returnToPool();
     }
 
-    isShared = false;
+    isShared      = false;
     inheritDeform = false;
-    offset = 0;
-    data = nullptr;
-    weight = nullptr;
+    offset        = 0;
+    data          = nullptr;
+    weight        = nullptr;
 }
 
-void VerticesData::shareFrom(const VerticesData& value)
-{
+void VerticesData::shareFrom(const VerticesData& value) {
     isShared = true;
-    offset = value.offset;
-    weight = value.weight;
+    offset   = value.offset;
+    weight   = value.weight;
 }
 
-void DisplayData::_onClear()
-{
+void DisplayData::_onClear() {
     name = "";
     path = "";
     transform.identity();
     parent = nullptr;
 }
 
-void ImageDisplayData::_onClear()
-{
+void ImageDisplayData::_onClear() {
     DisplayData::_onClear();
 
     type = DisplayType::Image;
@@ -46,28 +41,24 @@ void ImageDisplayData::_onClear()
     texture = nullptr;
 }
 
-void ArmatureDisplayData::_onClear()
-{
+void ArmatureDisplayData::_onClear() {
     DisplayData::_onClear();
 
-    for(const auto action : actions)
-    {
+    for (const auto action : actions) {
         action->returnToPool();
     }
 
-    type = DisplayType::Armature;
+    type             = DisplayType::Armature;
     inheritAnimation = false;
     actions.clear();
     armature = nullptr;
 }
 
-void ArmatureDisplayData::addAction(ActionData* value)
-{
+void ArmatureDisplayData::addAction(ActionData* value) {
     actions.push_back(value);
 }
 
-void MeshDisplayData::_onClear()
-{
+void MeshDisplayData::_onClear() {
     DisplayData::_onClear();
 
     type = DisplayType::Mesh;
@@ -75,28 +66,24 @@ void MeshDisplayData::_onClear()
     texture = nullptr;
 }
 
-void BoundingBoxDisplayData::_onClear()
-{
+void BoundingBoxDisplayData::_onClear() {
     DisplayData::_onClear();
 
-    if(boundingBox != nullptr)
-    {
+    if (boundingBox != nullptr) {
         boundingBox->returnToPool();
     }
 
-    type = DisplayType::BoundingBox;
+    type        = DisplayType::BoundingBox;
     boundingBox = nullptr;
 }
 
-void WeightData::_onClear()
-{
-    count = 0;
+void WeightData::_onClear() {
+    count  = 0;
     offset = 0;
     bones.clear();
 }
 
-void WeightData::addBone(BoneData* value)
-{
+void WeightData::addBone(BoneData* value) {
     bones.push_back(value);
 }
 

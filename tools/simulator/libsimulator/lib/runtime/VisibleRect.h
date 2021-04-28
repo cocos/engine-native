@@ -43,7 +43,7 @@ public:
     static cc::Vec2 rightBottom();
 
 private:
-    static void lazyInit();
+    static void     lazyInit();
     static cc::Rect s_visibleRect;
 };
 

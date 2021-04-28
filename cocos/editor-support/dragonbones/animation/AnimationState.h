@@ -41,8 +41,7 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class AnimationState : public BaseObject
-{
+class AnimationState : public BaseObject {
     BIND_CLASS_TYPE_B(AnimationState);
 
 private:
@@ -241,27 +240,24 @@ public:
     ActionTimelineState* _actionTimeline;
 
 private:
-    unsigned _timelineDirty;
-    float _fadeTime;
-    float _time;
-    std::vector<std::string> _boneMask;
-    std::vector<BoneTimelineState*> _boneTimelines;
-    std::vector<SlotTimelineState*> _slotTimelines;
-    std::vector<ConstraintTimelineState*> _constraintTimelines;
+    unsigned                                                 _timelineDirty;
+    float                                                    _fadeTime;
+    float                                                    _time;
+    std::vector<std::string>                                 _boneMask;
+    std::vector<BoneTimelineState*>                          _boneTimelines;
+    std::vector<SlotTimelineState*>                          _slotTimelines;
+    std::vector<ConstraintTimelineState*>                    _constraintTimelines;
     std::vector<std::pair<TimelineState*, BaseTimelineType>> _poseTimelines;
-    std::map<std::string, BonePose*> _bonePoses;
-    Armature* _armature;
-    ZOrderTimelineState* _zOrderTimeline;
+    std::map<std::string, BonePose*>                         _bonePoses;
+    Armature*                                                _armature;
+    ZOrderTimelineState*                                     _zOrderTimeline;
 
 public:
-    AnimationState() :
-        _actionTimeline(nullptr),
-        _zOrderTimeline(nullptr)
-    {
+    AnimationState() : _actionTimeline(nullptr),
+                       _zOrderTimeline(nullptr) {
         _onClear();
     }
-    virtual ~AnimationState()
-    {
+    virtual ~AnimationState() {
         _onClear();
     }
 
@@ -383,8 +379,7 @@ public:
      * @version DragonBones 5.1
      * @language zh_CN
      */
-    inline bool isFadeIn() const 
-    {
+    inline bool isFadeIn() const {
         return _fadeState < 0;
     }
     /**
@@ -397,8 +392,7 @@ public:
      * @version DragonBones 5.1
      * @language zh_CN
      */
-    inline bool isFadeOut() const
-    {
+    inline bool isFadeOut() const {
         return _fadeState > 0;
     }
     /**
@@ -411,8 +405,7 @@ public:
      * @version DragonBones 5.1
      * @language zh_CN
      */
-    inline bool isFadeComplete() const
-    {
+    inline bool isFadeComplete() const {
         return _fadeState == 0;
     }
     /**
@@ -458,8 +451,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline float getTotalTime() const
-    {
+    inline float getTotalTime() const {
         return _duration;
     }
     /**
@@ -472,10 +464,9 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    float getCurrentTime() const;
-    void setCurrentTime(float value);
-    inline const std::string& getName() const
-    {
+    float                     getCurrentTime() const;
+    void                      setCurrentTime(float value);
+    inline const std::string& getName() const {
         return name;
     }
 
@@ -491,16 +482,14 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline const AnimationData* getAnimationData() const
-    { 
-        return _animationData; 
+    inline const AnimationData* getAnimationData() const {
+        return _animationData;
     }
 };
 /**
  * @internal
  */
-class BonePose : public BaseObject
-{
+class BonePose : public BaseObject {
     BIND_CLASS_TYPE_A(BonePose);
 
 public:
@@ -514,11 +503,10 @@ protected:
 /**
  * @internal
  */
-class BlendState
-{
+class BlendState {
 public:
-    bool dirty;
-    int layer;
+    bool  dirty;
+    int   layer;
     float leftWeight;
     float layerWeight;
     float blendWeight;
@@ -526,9 +514,9 @@ public:
     /**
      * -1: First blending, 0: No blending, 1: Blending.
      */
-    int update(float weight, int p_layer);
+    int  update(float weight, int p_layer);
     void clear();
 };
 
 DRAGONBONES_NAMESPACE_END
-#endif  // DRAGONBONES_ANIMATION_STATE_H
+#endif // DRAGONBONES_ANIMATION_STATE_H

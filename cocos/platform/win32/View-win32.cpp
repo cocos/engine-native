@@ -24,8 +24,8 @@
 ****************************************************************************/
 
 #include "View-win32.h"
-#include "base/Log.h"
 #include <unordered_map>
+#include "base/Log.h"
 
 using namespace cc;
 
@@ -35,7 +35,6 @@ std::unordered_map<int, KeyCode> gKeyMap = {
     {SDLK_ESCAPE, KeyCode::Escape}, {SDLK_MINUS, KeyCode::Minus}, {SDLK_LSHIFT, KeyCode::ShiftLeft}, {SDLK_RSHIFT, KeyCode::ShiftRight}, {SDLK_EQUALS, KeyCode::Equal}, {SDLK_BACKSLASH, KeyCode::Backslash}, {SDLK_BACKQUOTE, KeyCode::Backquote}, {SDLK_BACKSPACE, KeyCode::Backspace}, {SDLK_RETURN, KeyCode::Enter}, {SDLK_RETURN2, KeyCode::Enter}, {SDLK_LEFTBRACKET, KeyCode::BracketLeft}, {SDLK_RIGHTBRACKET, KeyCode::BracketRight}, {SDLK_SEMICOLON, KeyCode::Semicolon}, {SDLK_QUOTE, KeyCode::Quote}, {SDLK_TAB, KeyCode::Tab}, {SDLK_LCTRL, KeyCode::ControlLeft}, {SDLK_RCTRL, KeyCode::ControlRight}, {SDLK_LALT, KeyCode::AltLeft}, {SDLK_RALT, KeyCode::AltRight}, {SDLK_LEFT, KeyCode::ArrowLeft}, {SDLK_RIGHT, KeyCode::ArrowRight}, {SDLK_UP, KeyCode::ArrowUp}, {SDLK_DOWN, KeyCode::ArrowDown}, {SDLK_KP_ENTER, KeyCode::NumpadEnter}, {SDLK_KP_PLUS, KeyCode::NumpadPlus}, {SDLK_KP_MULTIPLY, KeyCode::NumpadMultiply}, {SDLK_KP_DIVIDE, KeyCode::NumpadDivide}, {SDLK_KP_MINUS, KeyCode::NumpadMinus}, {SDLK_KP_PERIOD, KeyCode::NumpadDecimal}, {SDLK_KP_BACKSPACE, KeyCode::Backspace}, {SDLK_NUMLOCKCLEAR, KeyCode::NumLock}, {SDLK_HOME, KeyCode::Home}, {SDLK_PAGEUP, KeyCode::PageUp}, {SDLK_PAGEDOWN, KeyCode::PageDown}, {SDLK_END, KeyCode::End}, {SDLK_COMMA, KeyCode::Comma}, {SDLK_PERIOD, KeyCode::Period}, {SDLK_SLASH, KeyCode::Slash}, {SDLK_SPACE, KeyCode::Space}, {SDLK_DELETE, KeyCode::Delete}, {SDLK_CAPSLOCK, KeyCode::CapsLock}, {SDLK_KP_0, KeyCode::NUMPAD_0}, {SDLK_KP_1, KeyCode::NUMPAD_1}, {SDLK_KP_2, KeyCode::NUMPAD_2}, {SDLK_KP_3, KeyCode::NUMPAD_3}, {SDLK_KP_4, KeyCode::NUMPAD_4}, {SDLK_KP_5, KeyCode::NUMPAD_5}, {SDLK_KP_6, KeyCode::NUMPAD_6}, {SDLK_KP_7, KeyCode::NUMPAD_7}, {SDLK_KP_8, KeyCode::NUMPAD_8}, {SDLK_KP_9, KeyCode::NUMPAD_9}};
 
 int sdl_keycode_to_cocos_code(int code_, int mode) {
-
     auto it = gKeyMap.find(code_);
     if (it != gKeyMap.end()) {
         return static_cast<int>(it->second);

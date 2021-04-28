@@ -28,10 +28,10 @@
 
 #include <functional>
 
+#include "base/Config.h"
+#include "base/Data.h"
 #include "base/Macros.h"
 #include "base/Ref.h"
-#include "base/Data.h"
-#include "base/Config.h"
 
 /**
  * @addtogroup ui
@@ -71,7 +71,7 @@ public:
          * @param encoding The encoding of the data.
          * @param baseURL The base URL for the content.
          */
-    void loadData(const cc::Data &data,
+    void loadData(const cc::Data &   data,
                   const std::string &MIMEType,
                   const std::string &encoding,
                   const std::string &baseURL);

@@ -25,12 +25,12 @@
  ****************************************************************************/
 
 #include "Manifest.h"
+#include "base/Log.h"
 #include "json/prettywriter.h"
 #include "json/stringbuffer.h"
-#include "base/Log.h"
 
-#include <fstream>
 #include <stdio.h>
+#include <fstream>
 
 #define KEY_VERSION          "version"
 #define KEY_PACKAGE_URL      "packageUrl"
@@ -189,7 +189,7 @@ bool Manifest::versionEquals(const Manifest *b) const {
     }
     // Check group versions
     else {
-        std::vector<std::string> bGroups = b->getGroups();
+        std::vector<std::string>                     bGroups   = b->getGroups();
         std::unordered_map<std::string, std::string> bGroupVer = b->getGroupVerions();
         // Check group size
         if (bGroups.size() != _groups.size())
@@ -211,8 +211,8 @@ bool Manifest::versionEquals(const Manifest *b) const {
 
 bool Manifest::versionGreaterOrEquals(const Manifest *b, const std::function<int(const std::string &versionA, const std::string &versionB)> &handle) const {
     std::string localVersion = getVersion();
-    std::string bVersion = b->getVersion();
-    bool greater;
+    std::string bVersion     = b->getVersion();
+    bool        greater;
     if (handle) {
         greater = handle(localVersion, bVersion) >= 0;
     } else {
@@ -223,8 +223,8 @@ bool Manifest::versionGreaterOrEquals(const Manifest *b, const std::function<int
 
 bool Manifest::versionGreater(const Manifest *b, const std::function<int(const std::string &versionA, const std::string &versionB)> &handle) const {
     std::string localVersion = getVersion();
-    std::string bVersion = b->getVersion();
-    bool greater;
+    std::string bVersion     = b->getVersion();
+    bool        greater;
     if (handle) {
         greater = handle(localVersion, bVersion) > 0;
     } else {
@@ -234,16 +234,16 @@ bool Manifest::versionGreater(const Manifest *b, const std::function<int(const s
 }
 
 std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Manifest *b) const {
-    std::unordered_map<std::string, AssetDiff> diff_map;
+    std::unordered_map<std::string, AssetDiff>    diff_map;
     const std::unordered_map<std::string, Asset> &bAssets = b->getAssets();
 
     std::string key;
-    Asset valueA;
-    Asset valueB;
+    Asset       valueA;
+    Asset       valueB;
 
     std::unordered_map<std::string, Asset>::const_iterator valueIt, it;
     for (it = _assets.begin(); it != _assets.end(); ++it) {
-        key = it->first;
+        key    = it->first;
         valueA = it->second;
 
         // Deleted
@@ -251,7 +251,7 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
         if (valueIt == bAssets.cend()) {
             AssetDiff diff;
             diff.asset = valueA;
-            diff.type = DiffType::DELETED;
+            diff.type  = DiffType::DELETED;
             diff_map.emplace(key, diff);
             continue;
         }
@@ -261,13 +261,13 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
         if (valueA.md5 != valueB.md5) {
             AssetDiff diff;
             diff.asset = valueB;
-            diff.type = DiffType::MODIFIED;
+            diff.type  = DiffType::MODIFIED;
             diff_map.emplace(key, diff);
         }
     }
 
     for (it = bAssets.begin(); it != bAssets.end(); ++it) {
-        key = it->first;
+        key    = it->first;
         valueB = it->second;
 
         // Added
@@ -275,7 +275,7 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
         if (valueIt == _assets.cend()) {
             AssetDiff diff;
             diff.asset = valueB;
-            diff.type = DiffType::ADDED;
+            diff.type  = DiffType::ADDED;
             diff_map.emplace(key, diff);
         }
     }
@@ -289,10 +289,10 @@ void Manifest::genResumeAssetsList(DownloadUnits *units) const {
 
         if (asset.downloadState != DownloadState::SUCCESSED && asset.downloadState != DownloadState::UNMARKED) {
             DownloadUnit unit;
-            unit.customId = it->first;
-            unit.srcUrl = _packageUrl + asset.path;
+            unit.customId    = it->first;
+            unit.srcUrl      = _packageUrl + asset.path;
             unit.storagePath = _manifestRoot + asset.path;
-            unit.size = asset.size;
+            unit.size        = asset.size;
             units->emplace(unit.customId, unit);
         }
     }
@@ -313,9 +313,9 @@ std::vector<std::string> Manifest::getSearchPaths() const {
 }
 
 void Manifest::prependSearchPaths() {
-    std::vector<std::string> searchPaths = FileUtils::getInstance()->getSearchPaths();
-    std::vector<std::string>::iterator iter = searchPaths.begin();
-    bool needChangeSearchPaths = false;
+    std::vector<std::string>           searchPaths           = FileUtils::getInstance()->getSearchPaths();
+    std::vector<std::string>::iterator iter                  = searchPaths.begin();
+    bool                               needChangeSearchPaths = false;
     if (std::find(searchPaths.begin(), searchPaths.end(), _manifestRoot) == searchPaths.end()) {
         searchPaths.insert(iter, _manifestRoot);
         needChangeSearchPaths = true;
@@ -397,9 +397,9 @@ void Manifest::clear() {
         _groupVer.clear();
 
         _remoteManifestUrl = "";
-        _remoteVersionUrl = "";
-        _version = "";
-        _engineVer = "";
+        _remoteVersionUrl  = "";
+        _version           = "";
+        _engineVer         = "";
 
         _versionLoaded = false;
     }
@@ -463,7 +463,7 @@ void Manifest::loadVersion(const rapidjson::Document &json) {
         const rapidjson::Value &groupVers = json[KEY_GROUP_VERSIONS];
         if (groupVers.IsObject()) {
             for (rapidjson::Value::ConstMemberIterator itr = groupVers.MemberBegin(); itr != groupVers.MemberEnd(); ++itr) {
-                std::string group = itr->name.GetString();
+                std::string group   = itr->name.GetString();
                 std::string version = "0";
                 if (itr->value.IsString()) {
                     version = itr->value.GetString();
@@ -504,8 +504,8 @@ void Manifest::loadManifest(const rapidjson::Document &json) {
         const rapidjson::Value &assets = json[KEY_ASSETS];
         if (assets.IsObject()) {
             for (rapidjson::Value::ConstMemberIterator itr = assets.MemberBegin(); itr != assets.MemberEnd(); ++itr) {
-                std::string key = itr->name.GetString();
-                Asset asset = parseAsset(key, itr->value);
+                std::string key   = itr->name.GetString();
+                Asset       asset = parseAsset(key, itr->value);
                 _assets.emplace(key, asset);
             }
         }
@@ -527,7 +527,7 @@ void Manifest::loadManifest(const rapidjson::Document &json) {
 }
 
 void Manifest::saveToFile(const std::string &filepath) {
-    rapidjson::StringBuffer buffer;
+    rapidjson::StringBuffer                          buffer;
     rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
     _json.Accept(writer);
 

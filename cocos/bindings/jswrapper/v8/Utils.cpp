@@ -28,8 +28,8 @@
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-    #include "Object.h"
     #include "Class.h"
+    #include "Object.h"
     #include "ScriptEngine.h"
 
 namespace se {
@@ -113,8 +113,8 @@ void jsToSeValue(v8::Isolate *isolate, v8::Local<v8::Value> jsval, Value *v) {
     } else if (jsval->IsObject()) {
         v8::MaybeLocal<v8::Object> jsObj = jsval->ToObject(isolate->GetCurrentContext());
         if (!jsObj.IsEmpty()) {
-            void *nativePtr = internal::getPrivate(isolate, jsObj.ToLocalChecked());
-            Object *obj = nullptr;
+            void *  nativePtr = internal::getPrivate(isolate, jsObj.ToLocalChecked());
+            Object *obj       = nullptr;
             if (nativePtr != nullptr) {
                 obj = Object::getObjectWithPtr(nativePtr);
             }
@@ -161,7 +161,7 @@ const char *KEY_PRIVATE_DATA = "__cc_private_data";
 
 bool hasPrivate(v8::Isolate *isolate, v8::Local<v8::Value> value) {
     v8::Local<v8::Object> obj = v8::Local<v8::Object>::Cast(value);
-    int c = obj->InternalFieldCount();
+    int                   c   = obj->InternalFieldCount();
     if (c > 0)
         return true;
 
@@ -176,17 +176,17 @@ bool hasPrivate(v8::Isolate *isolate, v8::Local<v8::Value> value) {
 
 void setPrivate(v8::Isolate *isolate, ObjectWrap &wrap, void *data, PrivateData **outInternalData) {
     v8::Local<v8::Object> obj = wrap.handle(isolate);
-    int c = obj->InternalFieldCount();
+    int                   c   = obj->InternalFieldCount();
     if (c > 0) {
         wrap.wrap(data);
         //                SE_LOGD("setPrivate1: %p\n", data);
         if (outInternalData != nullptr)
             *outInternalData = nullptr;
     } else {
-        Object *privateObj = Object::createObjectWithClass(__jsb_CCPrivateData_class);
+        Object *     privateObj  = Object::createObjectWithClass(__jsb_CCPrivateData_class);
         PrivateData *privateData = (PrivateData *)malloc(sizeof(PrivateData));
-        privateData->data = data;
-        privateData->seObj = privateObj;
+        privateData->data        = data;
+        privateData->seObj       = privateObj;
 
         privateObj->_getWrap().setFinalizeCallback(__jsb_CCPrivateData_class->_getFinalizeFunction());
         privateObj->_getWrap().wrap(privateData);
@@ -204,13 +204,13 @@ void setPrivate(v8::Isolate *isolate, ObjectWrap &wrap, void *data, PrivateData 
 }
 
 void *getPrivate(v8::Isolate *isolate, v8::Local<v8::Value> value) {
-    v8::Local<v8::Context> context = isolate->GetCurrentContext();
-    v8::MaybeLocal<v8::Object> obj = value->ToObject(context);
+    v8::Local<v8::Context>     context = isolate->GetCurrentContext();
+    v8::MaybeLocal<v8::Object> obj     = value->ToObject(context);
     if (obj.IsEmpty())
         return nullptr;
 
     v8::Local<v8::Object> objChecked = obj.ToLocalChecked();
-    int c = objChecked->InternalFieldCount();
+    int                   c          = objChecked->InternalFieldCount();
     if (c > 0) {
         void *nativeObj = ObjectWrap::unwrap(objChecked);
         //                SE_LOGD("getPrivate1: %p\n", nativeObj);
@@ -223,7 +223,7 @@ void *getPrivate(v8::Isolate *isolate, v8::Local<v8::Value> value) {
         return nullptr;
 
     v8::Local<v8::String> keyChecked = key.ToLocalChecked();
-    v8::Maybe<bool> mbHas = objChecked->Has(context, keyChecked);
+    v8::Maybe<bool>       mbHas      = objChecked->Has(context, keyChecked);
     if (mbHas.IsNothing() || !mbHas.FromJust())
         return nullptr;
 
@@ -241,7 +241,7 @@ void *getPrivate(v8::Isolate *isolate, v8::Local<v8::Value> value) {
 
 void clearPrivate(v8::Isolate *isolate, ObjectWrap &wrap) {
     v8::Local<v8::Object> obj = wrap.handle(isolate);
-    int c = obj->InternalFieldCount();
+    int                   c   = obj->InternalFieldCount();
     if (c > 0) {
         wrap.wrap(nullptr);
     } else {
@@ -252,7 +252,7 @@ void clearPrivate(v8::Isolate *isolate, ObjectWrap &wrap) {
             return;
 
         v8::Local<v8::String> keyChecked = key.ToLocalChecked();
-        v8::Maybe<bool> mbHas = obj->Has(context, keyChecked);
+        v8::Maybe<bool>       mbHas      = obj->Has(context, keyChecked);
         if (mbHas.IsNothing() || !mbHas.FromJust())
             return;
 

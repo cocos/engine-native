@@ -24,7 +24,6 @@
 ****************************************************************************/
 
 #include "GbufferStage.h"
-#include "GbufferFlow.h"
 #include "../BatchedBuffer.h"
 #include "../InstancedBuffer.h"
 #include "../PlanarShadowQueue.h"
@@ -33,6 +32,7 @@
 #include "../RenderQueue.h"
 #include "../helper/SharedMemory.h"
 #include "DeferredPipeline.h"
+#include "GbufferFlow.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
@@ -63,7 +63,7 @@ RenderStageInfo GbufferStage::initInfo = {
 const RenderStageInfo &GbufferStage::getInitializeInfo() { return GbufferStage::initInfo; }
 
 GbufferStage::GbufferStage() {
-    _batchedQueue = CC_NEW(RenderBatchedQueue);
+    _batchedQueue   = CC_NEW(RenderBatchedQueue);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
 }
 
@@ -72,7 +72,7 @@ GbufferStage::~GbufferStage() = default;
 bool GbufferStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
-    _phaseID = getPhaseID("deferred");
+    _phaseID                = getPhaseID("deferred");
     return true;
 }
 
@@ -112,7 +112,7 @@ void GbufferStage::destroy() {
 void GbufferStage::render(Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
-    auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
+    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
     const auto &renderObjects = _pipeline->getPipelineSceneData()->getRenderObjects();
     if (renderObjects.empty()) {
         return;
@@ -122,13 +122,13 @@ void GbufferStage::render(Camera *camera) {
         queue->clear();
     }
 
-    uint m = 0;
-    uint p = 0;
+    uint   m = 0;
+    uint   p = 0;
     size_t k = 0;
     for (auto ro : renderObjects) {
-        const auto *const model = ro.model;
-        const auto *const subModelID = model->getSubModelID();
-        const auto subModelCount = subModelID[0];
+        const auto *const model         = ro.model;
+        const auto *const subModelID    = model->getSubModelID();
+        const auto        subModelCount = subModelID[0];
         for (m = 1; m <= subModelCount; ++m) {
             const auto *const subModel = cc::pipeline::ModelView::getSubModelView(subModelID[m]);
             for (p = 0; p < subModel->passCount; ++p) {
@@ -164,8 +164,8 @@ void GbufferStage::render(Camera *camera) {
     _renderArea = pipeline->getRenderArea(camera, false);
     pipeline->updateQuadVertexData(_renderArea);
     auto *const deferredData = pipeline->getDeferredRenderData();
-    auto *framebuffer = deferredData->gbufferFrameBuffer;
-    auto *renderPass = framebuffer->getRenderPass();
+    auto *      framebuffer  = deferredData->gbufferFrameBuffer;
+    auto *      renderPass   = framebuffer->getRenderPass();
 
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
     cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet());

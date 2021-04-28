@@ -25,5 +25,5 @@
 
 #pragma once
 
-#include "GLES3Std.h"
 #include "GLES3Device.h"
+#include "GLES3Std.h"

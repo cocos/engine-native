@@ -49,8 +49,8 @@
 
 #pragma once
 
-#include <string>
 #include <cmath>
+#include <string>
 
 namespace CSSColorParser {
 
@@ -60,7 +60,7 @@ struct Color {
     : r(red), g(green), b(blue), a(alpha > 1 ? 1 : alpha < 0 ? 0 : alpha) {
     }
     unsigned char r = 0, g = 0, b = 0;
-    float a = 1.0f;
+    float         a = 1.0f;
 };
 
 inline bool operator==(const Color &lhs, const Color &rhs) {

@@ -16,7 +16,7 @@ class MutexBase;
 struct LibuvMutexTraits;
 
 using ConditionVariable = ConditionVariableBase<LibuvMutexTraits>;
-using Mutex = MutexBase<LibuvMutexTraits>;
+using Mutex             = MutexBase<LibuvMutexTraits>;
 
 template <typename Traits>
 class MutexBase {
@@ -78,7 +78,7 @@ private:
 };
 
 struct LibuvMutexTraits {
-    using CondT = uv_cond_t;
+    using CondT  = uv_cond_t;
     using MutexT = uv_mutex_t;
 
     static inline int cond_init(CondT *cond) {

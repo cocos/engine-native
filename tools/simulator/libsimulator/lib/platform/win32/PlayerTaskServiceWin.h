@@ -23,7 +23,6 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-
 #ifndef __PLAYER_TASK_SERVICE_WIN_H_
 #define __PLAYER_TASK_SERVICE_WIN_H_
 
@@ -34,8 +33,7 @@
 
 PLAYER_NS_BEGIN
 
-class PlayerTaskWin : public PlayerTask
-{
+class PlayerTaskWin : public PlayerTask {
 public:
     static PlayerTaskWin *create(const std::string &name,
                                  const std::string &executePath,
@@ -55,22 +53,21 @@ protected:
                   const std::string &executePath,
                   const std::string &commandLineArguments);
 
-    void cleanup();
+    void           cleanup();
     std::u16string makeCommandLine() const;
 
-    HANDLE _childStdInRead;
-    HANDLE _childStdInWrite;
-    HANDLE _childStdOutRead;
-    HANDLE _childStdOutWrite;
+    HANDLE              _childStdInRead;
+    HANDLE              _childStdInWrite;
+    HANDLE              _childStdOutRead;
+    HANDLE              _childStdOutWrite;
     PROCESS_INFORMATION _pi;
 
     static const size_t BUFF_SIZE = 4096;
-    CHAR *_outputBuff;
-    WCHAR *_outputBuffWide;
+    CHAR *              _outputBuff;
+    WCHAR *             _outputBuffWide;
 };
 
-class PlayerTaskServiceWin : public PlayerTaskServiceProtocol
-{
+class PlayerTaskServiceWin : public PlayerTaskServiceProtocol {
 public:
     PlayerTaskServiceWin(HWND hwnd);
     virtual ~PlayerTaskServiceWin();
@@ -79,11 +76,11 @@ public:
                                    const std::string &executePath,
                                    const std::string &commandLineArguments);
     virtual PlayerTask *getTask(const std::string &name);
-    virtual void removeTask(const std::string &name);
+    virtual void        removeTask(const std::string &name);
 
 protected:
-    HWND _hwnd;
-    cc::Map<std::string, PlayerTaskWin*> _tasks;
+    HWND                                  _hwnd;
+    cc::Map<std::string, PlayerTaskWin *> _tasks;
 };
 
 PLAYER_NS_END

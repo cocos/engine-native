@@ -40,14 +40,13 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 4.5
  * @language zh_CN
  */
-class TransformObject : public BaseObject
-{
+class TransformObject : public BaseObject {
     ABSTRACT_CLASS(TransformObject);
 
 protected:
-    static Matrix _helpMatrix;
+    static Matrix    _helpMatrix;
     static Transform _helpTransform;
-    static Point _helpPoint;
+    static Point     _helpPoint;
 
 public:
     /**
@@ -145,15 +144,14 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline Armature* getArmature() const
-    {
+    inline Armature* getArmature() const {
         return _armature;
     }
 
 public: // For WebAssembly.
-    Matrix* getGlobalTransformMatrix() { return &globalTransformMatrix; }
-    Transform* getGlobal() { return &global; }
-    Transform* getOffset() { return &offset; }
+    Matrix*          getGlobalTransformMatrix() { return &globalTransformMatrix; }
+    Transform*       getGlobal() { return &global; }
+    Transform*       getOffset() { return &offset; }
     const Transform* getOrigin() const { return origin; }
 };
 

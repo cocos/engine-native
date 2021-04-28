@@ -28,47 +28,47 @@
 
 #include <unistd.h>
 // for native asset manager
-#include <sys/types.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include <unordered_map>
 #include <android/log.h>
-#include <thread>
+#include <sys/types.h>
 #include <mutex>
+#include <thread>
+#include <unordered_map>
 
 #include "audio/include/AudioEngine.h"
-#include "platform/Application.h"
+#include "base/Log.h"
 #include "base/Scheduler.h"
 #include "base/UTF8.h"
-#include "base/Log.h"
+#include "platform/Application.h"
 #include "platform/android/FileUtils-android.h"
-#include "platform/android/jni/JniImp.h"
 #include "platform/android/jni/JniHelper.h"
+#include "platform/android/jni/JniImp.h"
 
+#include "audio/android/AudioPlayerProvider.h"
 #include "audio/android/IAudioPlayer.h"
 #include "audio/android/ICallerThreadUtils.h"
-#include "audio/android/AudioPlayerProvider.h"
-#include "audio/android/cutils/log.h"
 #include "audio/android/UrlAudioPlayer.h"
+#include "audio/android/cutils/log.h"
 
-#include "cocos/bindings/event/EventDispatcher.h"
 #include "cocos/bindings/event/CustomEventTypes.h"
+#include "cocos/bindings/event/EventDispatcher.h"
 
 using namespace cc;
 
 // Audio focus values synchronized with which in cocos/platform/android/java/src/com/cocos/lib/CocosNativeActivity.java
 namespace {
-AudioEngineImpl *__impl = nullptr;
-int outputSampleRate = 44100;
-int bufferSizeInFrames = 192;
+AudioEngineImpl *__impl             = nullptr;
+int              outputSampleRate   = 44100;
+int              bufferSizeInFrames = 192;
 
 void getAudioInfo() {
-    JNIEnv *env = JniHelper::getEnv();
-    jclass audioSystem = env->FindClass("android/media/AudioSystem");
-    jmethodID method = env->GetStaticMethodID(audioSystem, "getPrimaryOutputSamplingRate", "()I");
-    outputSampleRate = env->CallStaticIntMethod(audioSystem, method);
-    method = env->GetStaticMethodID(audioSystem, "getPrimaryOutputFrameCount", "()I");
-    bufferSizeInFrames = env->CallStaticIntMethod(audioSystem, method);
+    JNIEnv *  env         = JniHelper::getEnv();
+    jclass    audioSystem = env->FindClass("android/media/AudioSystem");
+    jmethodID method      = env->GetStaticMethodID(audioSystem, "getPrimaryOutputSamplingRate", "()I");
+    outputSampleRate      = env->CallStaticIntMethod(audioSystem, method);
+    method                = env->GetStaticMethodID(audioSystem, "getPrimaryOutputFrameCount", "()I");
+    bufferSizeInFrames    = env->CallStaticIntMethod(audioSystem, method);
 }
 } // namespace
 
@@ -138,7 +138,6 @@ AudioEngineImpl::~AudioEngineImpl() {
 bool AudioEngineImpl::init() {
     bool ret = false;
     do {
-
         // create engine
         auto result = slCreateEngine(&_engineObject, 0, nullptr, 0, nullptr, nullptr);
         if (SL_RESULT_SUCCESS != result) {
@@ -162,8 +161,8 @@ bool AudioEngineImpl::init() {
 
         // create output mix
         const SLInterfaceID outputMixIIDs[] = {};
-        const SLboolean outputMixReqs[] = {};
-        result = (*_engineEngine)->CreateOutputMix(_engineEngine, &_outputMixObject, 0, outputMixIIDs, outputMixReqs);
+        const SLboolean     outputMixReqs[] = {};
+        result                              = (*_engineEngine)->CreateOutputMix(_engineEngine, &_outputMixObject, 0, outputMixIIDs, outputMixReqs);
         if (SL_RESULT_SUCCESS != result) {
             CC_LOG_ERROR("create output mix fail");
             break;

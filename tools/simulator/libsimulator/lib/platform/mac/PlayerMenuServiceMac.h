@@ -28,10 +28,10 @@
 
 #include <unordered_map>
 
+#import <AppKit/AppKit.h>
 #include "PlayerMacros.h"
 #include "PlayerMenuServiceProtocol.h"
 #include "cocos/base/Vector.h"
-#import <AppKit/AppKit.h>
 
 //
 // Menu item Helper
@@ -42,10 +42,10 @@ class PlayerMenuItemMac;
 PLAYER_NS_END
 
 @interface NNMenuItem : NSMenuItem <NSMenuDelegate> {
-    int scriptHandler;
+    int                        scriptHandler;
     player::PlayerMenuItemMac *macMenuItem;
 }
-@property (nonatomic) int scriptHandler;
+@property (nonatomic) int                              scriptHandler;
 @property (nonatomic) const player::PlayerMenuItemMac *macMenuItem;
 
 + (id)createMenuItem:(const player::PlayerMenuItemMac *)macMenuItem;
@@ -70,9 +70,9 @@ public:
 protected:
     PlayerMenuItemMac();
 
-    PlayerMenuItemMac *_parent;
-    NNMenuItem *_menuItem;
-    NSMenu *_menu;
+    PlayerMenuItemMac *             _parent;
+    NNMenuItem *                    _menuItem;
+    NSMenu *                        _menu;
     cc::Vector<PlayerMenuItemMac *> _children;
 
     friend class PlayerMenuServiceMac;
@@ -86,15 +86,15 @@ public:
     virtual PlayerMenuItem *addItem(const std::string &menuId, const std::string &title, const std::string &parentId, int order = MAX_ORDER);
     virtual PlayerMenuItem *addItem(const std::string &menuId, const std::string &title);
     virtual PlayerMenuItem *getItem(const std::string &menuId);
-    virtual bool removeItem(const std::string &menuId);
-    virtual void setMenuBarEnabled(bool enabled);
+    virtual bool            removeItem(const std::string &menuId);
+    virtual void            setMenuBarEnabled(bool enabled);
 
 private:
     bool removeItemInternal(const std::string &menuId, bool isUpdateChildrenOrder);
     void updateChildrenOrder(PlayerMenuItemMac *parent);
 
 private:
-    PlayerMenuItemMac _root;
+    PlayerMenuItemMac                                    _root;
     std::unordered_map<std::string, PlayerMenuItemMac *> _items;
 };
 

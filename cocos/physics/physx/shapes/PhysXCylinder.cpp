@@ -23,13 +23,13 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/physx/shapes/PhysXShape.h"
 #include "physics/physx/shapes/PhysXCylinder.h"
+#include <algorithm>
+#include "math/Quaternion.h"
 #include "physics/physx/PhysXUtils.h"
 #include "physics/physx/PhysXWorld.h"
-#include "math/Quaternion.h"
+#include "physics/physx/shapes/PhysXShape.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
-#include <algorithm>
 
 namespace cc {
 namespace physics {

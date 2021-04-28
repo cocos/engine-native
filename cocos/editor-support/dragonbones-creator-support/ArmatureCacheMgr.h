@@ -45,11 +45,11 @@ public:
         }
     }
 
-    void removeArmatureCache(const std::string &armatureKey);
+    void           removeArmatureCache(const std::string &armatureKey);
     ArmatureCache *buildArmatureCache(const std::string &armatureName, const std::string &armatureKey, const std::string &atlasUUID);
 
 private:
-    static ArmatureCacheMgr *_instance;
+    static ArmatureCacheMgr *             _instance;
     cc::Map<std::string, ArmatureCache *> _caches;
 };
 

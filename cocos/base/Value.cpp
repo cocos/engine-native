@@ -26,11 +26,11 @@
 
 #include "base/Value.h"
 
+#include <memory.h>
 #include <cfloat>
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
-#include <memory.h>
 #include <sstream>
 
 #include "base/Utils.h"

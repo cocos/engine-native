@@ -24,9 +24,9 @@
 ****************************************************************************/
 
 #include "physics/physx/joints/PhysXDistance.h"
+#include "math/Quaternion.h"
 #include "physics/physx/PhysXSharedBody.h"
 #include "physics/physx/PhysXUtils.h"
-#include "math/Quaternion.h"
 
 namespace cc {
 namespace physics {
@@ -59,12 +59,12 @@ void PhysXDistance::updateScale1() {
 void PhysXDistance::updatePose() {
     physx::PxTransform pose0{physx::PxIdentity};
     physx::PxTransform pose1{physx::PxIdentity};
-    auto &node0 = _mSharedBody->getNode();
-    pose0.p = _mPivotA * node0.worldScale;
+    auto &             node0 = _mSharedBody->getNode();
+    pose0.p                  = _mPivotA * node0.worldScale;
     _mJoint->setLocalPose(physx::PxJointActorIndex::eACTOR0, pose0);
     if (_mConnectedBody) {
         auto &node1 = _mConnectedBody->getNode();
-        pose1.p = _mPivotB * node1.worldScale;
+        pose1.p     = _mPivotB * node1.worldScale;
     } else {
         pose1.p = _mPivotA * node0.worldScale;
         pose1.p += _mPivotB + node0.worldPosition;

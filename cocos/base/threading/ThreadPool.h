@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include "Event.h"
-#include "concurrentqueue/concurrentqueue.h"
 #include <atomic>
 #include <cassert>
 #include <cstdint>
@@ -35,6 +33,8 @@
 #include <list>
 #include <queue>
 #include <thread>
+#include "Event.h"
+#include "concurrentqueue/concurrentqueue.h"
 
 namespace cc {
 

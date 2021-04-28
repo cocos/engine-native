@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXObject.h"
 #include "Handle.h"
+#include "renderer/gfx-base/GFXObject.h"
 
 namespace cc {
 namespace framegraph {

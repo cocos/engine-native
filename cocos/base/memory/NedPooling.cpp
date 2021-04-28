@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
 #include "NedPooling.h"
 #include "MemTracker.h"
+#include "base/CoreStd.h"
 
 #if (CC_MEMORY_ALLOCATOR == CC_MEMORY_ALLOCATOR_NEDPOOLING)
 
@@ -48,7 +48,7 @@ void *ned_poolFootprint = reinterpret_cast<void *>(0xBB1AA45A);
     #else
 void *ned_poolFootprint = reinterpret_cast<void *>((ui64)0xBB1AA45A);
     #endif
-nedalloc::nedpool *ned_pools[ned_poolCount + 1] = {0};
+nedalloc::nedpool *ned_pools[ned_poolCount + 1]        = {0};
 nedalloc::nedpool *ned_poolsAligned[ned_poolCount + 1] = {0};
 
 size_t PoolIDFromSize(size_t a_reqSize) {
@@ -72,7 +72,7 @@ size_t PoolIDFromSize(size_t a_reqSize) {
 }
 
 CC_DECL_MALLOC void *InternalAlloc(size_t a_reqSize) {
-    size_t poolID = PoolIDFromSize(a_reqSize);
+    size_t             poolID = PoolIDFromSize(a_reqSize);
     nedalloc::nedpool *pool(0); // A pool pointer of 0 means the default pool.
 
     if (poolID < ned_poolCount) {
@@ -90,7 +90,7 @@ CC_DECL_MALLOC void *InternalAlloc(size_t a_reqSize) {
 }
 
 CC_DECL_MALLOC void *InternalRealloc(void *ptr, size_t a_reqSize) {
-    size_t poolID = PoolIDFromSize(a_reqSize);
+    size_t             poolID = PoolIDFromSize(a_reqSize);
     nedalloc::nedpool *pool(0); // A pool pointer of 0 means the default pool.
 
     if (poolID < ned_poolCount) {
@@ -108,7 +108,7 @@ CC_DECL_MALLOC void *InternalRealloc(void *ptr, size_t a_reqSize) {
 }
 
 CC_DECL_MALLOC void *InternalAllocAligned(size_t a_align, size_t a_reqSize) {
-    size_t poolID = PoolIDFromSize(a_reqSize);
+    size_t             poolID = PoolIDFromSize(a_reqSize);
     nedalloc::nedpool *pool(0); // A pool pointer of 0 means the default pool.
 
     if (poolID < ned_poolCount) {

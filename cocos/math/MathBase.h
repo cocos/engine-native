@@ -26,8 +26,8 @@
 #ifndef __CCMATHBASE_H__
 #define __CCMATHBASE_H__
 
-#include <memory>
 #include <string.h>
+#include <memory>
 #include "base/Macros.h"
 /**
  * @addtogroup base

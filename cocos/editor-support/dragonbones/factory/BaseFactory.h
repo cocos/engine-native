@@ -23,13 +23,13 @@
 #ifndef DRAGONBONES_BASE_FACTORY_H
 #define DRAGONBONES_BASE_FACTORY_H
 
-#include "../parser/JSONDataParser.h"
-#include "../parser/BinaryDataParser.h"
+#include "../animation/Animation.h"
 #include "../armature/Armature.h"
 #include "../armature/Bone.h"
-#include "../armature/Slot.h"
 #include "../armature/Constraint.h"
-#include "../animation/Animation.h"
+#include "../armature/Slot.h"
+#include "../parser/BinaryDataParser.h"
+#include "../parser/JSONDataParser.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 /**
@@ -54,10 +54,9 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class BaseFactory
-{
+class BaseFactory {
 protected:
-    static JSONDataParser _jsonParser;
+    static JSONDataParser   _jsonParser;
     static BinaryDataParser _binaryParser;
 
 public:
@@ -67,10 +66,10 @@ public:
     bool autoSearch;
 
 protected:
-    std::map<std::string, DragonBonesData*> _dragonBonesDataMap;
+    std::map<std::string, DragonBonesData*>               _dragonBonesDataMap;
     std::map<std::string, std::vector<TextureAtlasData*>> _textureAtlasDataMap;
-    DragonBones* _dragonBones;
-    DataParser* _dataParser;
+    DragonBones*                                          _dragonBones;
+    DataParser*                                           _dataParser;
 
 public:
     /**
@@ -83,43 +82,38 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    BaseFactory(DataParser* dataParser = nullptr) :
-        autoSearch(false),
-        _dragonBonesDataMap(),
-        _textureAtlasDataMap(),
-        _dragonBones(nullptr),
-        _dataParser(nullptr)
-    {
+    BaseFactory(DataParser* dataParser = nullptr) : autoSearch(false),
+                                                    _dragonBonesDataMap(),
+                                                    _textureAtlasDataMap(),
+                                                    _dragonBones(nullptr),
+                                                    _dataParser(nullptr) {
         _dataParser = dataParser != nullptr ? dataParser : &BaseFactory::_jsonParser;
     }
-    virtual ~BaseFactory()
-    {
+    virtual ~BaseFactory() {
         clear();
 
         _dragonBones = nullptr;
-        _dataParser = nullptr;
+        _dataParser  = nullptr;
     }
 
 protected:
-    virtual inline bool _isSupportMesh() const
-    {
+    virtual inline bool _isSupportMesh() const {
         return true;
     }
     virtual TextureData* _getTextureData(const std::string& textureAtlasName, const std::string& textureName) const;
-    virtual bool _fillBuildArmaturePackage(
-        BuildArmaturePackage& dataPackage,
-        const std::string& dragonBonesName, const std::string& armatureName, const std::string& skinName, const std::string& textureAtlasName
-    ) const;
+    virtual bool         _fillBuildArmaturePackage(
+                BuildArmaturePackage& dataPackage,
+                const std::string& dragonBonesName, const std::string& armatureName, const std::string& skinName, const std::string& textureAtlasName) const;
     virtual void _buildBones(const BuildArmaturePackage& dataPackage, Armature* armature) const;
     /**
      * @private
      */
-    virtual void _buildSlots(const BuildArmaturePackage& dataPackage, Armature* armature) const;
-    virtual Armature* _buildChildArmature(const BuildArmaturePackage* dataPackage, Slot* slot, DisplayData* displayData) const;
+    virtual void                          _buildSlots(const BuildArmaturePackage& dataPackage, Armature* armature) const;
+    virtual Armature*                     _buildChildArmature(const BuildArmaturePackage* dataPackage, Slot* slot, DisplayData* displayData) const;
     virtual std::pair<void*, DisplayType> _getSlotDisplay(const BuildArmaturePackage* dataPackage, DisplayData* displayData, DisplayData* rawDisplayData, Slot* slot) const;
-    virtual TextureAtlasData* _buildTextureAtlasData(TextureAtlasData* textureAtlasData, void* textureAtlas) const = 0;
-    virtual Armature* _buildArmature(const BuildArmaturePackage& dataPackage) const = 0;
-    virtual Slot* _buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const = 0;
+    virtual TextureAtlasData*             _buildTextureAtlasData(TextureAtlasData* textureAtlasData, void* textureAtlas) const                    = 0;
+    virtual Armature*                     _buildArmature(const BuildArmaturePackage& dataPackage) const                                           = 0;
+    virtual Slot*                         _buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const = 0;
 
 public:
     /**
@@ -200,8 +194,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline DragonBonesData* getDragonBonesData(const std::string& name) const
-    {
+    inline DragonBonesData* getDragonBonesData(const std::string& name) const {
         return mapFind(_dragonBonesDataMap, name);
     }
     /**
@@ -270,8 +263,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    inline std::vector<TextureAtlasData*>* getTextureAtlasData(const std::string& name)
-    {
+    inline std::vector<TextureAtlasData*>* getTextureAtlasData(const std::string& name) {
         return mapFindB(_textureAtlasDataMap, name);
     }
     /**
@@ -386,7 +378,7 @@ public:
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    virtual Armature* buildArmature(const std::string& armatureName, const std::string& dragonBonesName = "", const std::string& skinName = "", const std::string & textureAtlasName = "") const;
+    virtual Armature* buildArmature(const std::string& armatureName, const std::string& dragonBonesName = "", const std::string& skinName = "", const std::string& textureAtlasName = "") const;
     /**
      * @private
      */
@@ -429,15 +421,13 @@ public:
      */
     virtual bool replaceSlotDisplay(
         const std::string& dragonBonesName, const std::string& armatureName, const std::string& slotName, const std::string& displayName,
-        Slot* slot, int displayIndex = -1
-    ) const;
+        Slot* slot, int displayIndex = -1) const;
     /**
      * @private
      */
     virtual bool replaceSlotDisplayList(
         const std::string& dragonBonesName, const std::string& armatureName, const std::string& slotName,
-        Slot* slot
-    ) const;
+        Slot* slot) const;
     /**
      * - Share specific skin data with specific armature.
      * @param armature - The armature.
@@ -523,15 +513,13 @@ public:
     /**
      * @private
      */
-    inline const std::map<std::string, std::vector<TextureAtlasData*>>& getAllTextureAtlasData() const
-    {
+    inline const std::map<std::string, std::vector<TextureAtlasData*>>& getAllTextureAtlasData() const {
         return _textureAtlasDataMap;
     }
     /**
      * @private
      */
-    inline const std::map<std::string, DragonBonesData*>& getAllDragonBonesData() const
-    {
+    inline const std::map<std::string, DragonBonesData*>& getAllDragonBonesData() const {
         return _dragonBonesDataMap;
     }
     /**
@@ -544,8 +532,7 @@ public:
      * @version DragonBones 5.7
      * @language zh_CN
      */
-    inline WorldClock* getClock() const 
-    {
+    inline WorldClock* getClock() const {
         return _dragonBones->getClock();
     }
 
@@ -559,32 +546,28 @@ public:
      * @deprecated
      * @language zh_CN
      */
-    inline bool changeSkin(Armature* armature, SkinData* skin, const std::vector<std::string>& exclude) const
-    {
+    inline bool changeSkin(Armature* armature, SkinData* skin, const std::vector<std::string>& exclude) const {
         return replaceSkin(armature, skin, false, exclude);
     }
 };
 /**
  * @internal
  */
-class BuildArmaturePackage
-{
+class BuildArmaturePackage {
     DRAGONBONES_DISALLOW_COPY_AND_ASSIGN(BuildArmaturePackage)
 
 public:
-    std::string dataName;
-    std::string textureAtlasName;
+    std::string      dataName;
+    std::string      textureAtlasName;
     DragonBonesData* data;
-    ArmatureData* armature;
-    SkinData* skin;
+    ArmatureData*    armature;
+    SkinData*        skin;
 
-    BuildArmaturePackage() :
-        dataName(),
-        textureAtlasName(),
-        data(nullptr),
-        armature(nullptr),
-        skin(nullptr)
-    {}
+    BuildArmaturePackage() : dataName(),
+                             textureAtlasName(),
+                             data(nullptr),
+                             armature(nullptr),
+                             skin(nullptr) {}
     ~BuildArmaturePackage() {}
 };
 

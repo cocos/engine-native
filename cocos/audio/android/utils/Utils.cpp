@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "audio/android/utils/Utils.h"
-#include "platform/android/jni/JniCocosActivity.h"
 #include <android_native_app_glue.h>
+#include "platform/android/jni/JniCocosActivity.h"
 
 namespace cc {
 

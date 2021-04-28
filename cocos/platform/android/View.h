@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "base/Macros.h"
 #include <cstdint>
+#include "base/Macros.h"
 
 struct android_app;
 struct AInputEvent;
@@ -37,7 +37,7 @@ class TouchEvent;
 
 class View {
 public:
-    static void engineHandleCmd(int cmd);
+    static void    engineHandleCmd(int cmd);
     static int32_t engineHandleInput(struct android_app *app, AInputEvent *event);
 };
 

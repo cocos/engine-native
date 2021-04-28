@@ -26,7 +26,6 @@
 #ifndef CC_CORE_STL_ALLOC_H_
 #define CC_CORE_STL_ALLOC_H_
 
-#include "MemDef.h"
 #include <deque>
 #include <list>
 #include <map>
@@ -35,6 +34,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include "MemDef.h"
 
 namespace cc {
 
@@ -56,14 +56,14 @@ template <typename T, typename AllocPolicy>
 class SA : public STLAllocatorBase<T> {
 public:
     /// define our types, as per ISO C++
-    typedef STLAllocatorBase<T> Base;
+    typedef STLAllocatorBase<T>       Base;
     typedef typename Base::value_type value_type;
-    typedef value_type *pointer;
-    typedef const value_type *const_pointer;
-    typedef value_type &reference;
-    typedef const value_type &const_reference;
-    typedef std::size_t size_type;
-    typedef std::ptrdiff_t difference_type;
+    typedef value_type *              pointer;
+    typedef const value_type *        const_pointer;
+    typedef value_type &              reference;
+    typedef const value_type &        const_reference;
+    typedef std::size_t               size_type;
+    typedef std::ptrdiff_t            difference_type;
 
     /// the standard rebind mechanism
     template <typename U>
@@ -278,7 +278,7 @@ using multimap = std::multimap<K, V, P, A>;
 template <typename K, typename V, typename H = std::hash<K>, typename P = std::equal_to<K>, typename A = SA<std::pair<const K, V>, STLAP>>
 using unordered_map = std::unordered_map<K, V, H, P, A>;
 
-typedef std::basic_string<char, std::char_traits<char>, SA<char, STLAP>> String;
+typedef std::basic_string<char, std::char_traits<char>, SA<char, STLAP>>          String;
 typedef std::basic_string<wchar_t, std::char_traits<wchar_t>, SA<wchar_t, STLAP>> WString;
 #else
 template <typename T>

@@ -21,13 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#include "gtest/gtest.h"
-#include "cocos/math/Vec2.h"
-#include "cocos/math/Math.h"
-#include "cocos/math/Vertex.h"
-#include "utils.h"
 #include <math.h>
 #include <vector>
+#include "cocos/math/Math.h"
+#include "cocos/math/Vec2.h"
+#include "cocos/math/Vertex.h"
+#include "gtest/gtest.h"
+#include "utils.h"
 
 TEST(mathVertexTest, test8) {
     // ccVertexLineToPolygon
@@ -47,8 +47,6 @@ TEST(mathVertexTest, test8) {
     // ccVertexLineIntersect
     logLabel = "test the vertex ccVertexLineIntersect function";
     float res;
-    bool isFind = cc::ccVertexLineIntersect(5, 5, 1, 10, 12, 20, 12, 40, &res);
+    bool  isFind = cc::ccVertexLineIntersect(5, 5, 1, 10, 12, 20, 12, 40, &res);
     ExpectEq(isFind, true);
-    
 }
-

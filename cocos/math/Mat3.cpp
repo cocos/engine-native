@@ -25,9 +25,9 @@
 #include "math/Mat3.h"
 
 #include <cmath>
-#include "math/Quaternion.h"
-#include "math/MathUtil.h"
 #include "base/Macros.h"
+#include "math/MathUtil.h"
+#include "math/Quaternion.h"
 
 NS_CC_MATH_BEGIN
 
@@ -118,7 +118,7 @@ void Mat3::inverse() {
     // Calculate the determinant
     float det = a00 * b01 + a01 * b11 + a02 * b21;
 
-    det = 1.0f / det;
+    det  = 1.0f / det;
     m[0] = b01 * det;
     m[1] = (-a22 * a01 + a02 * a21) * det;
     m[2] = (a12 * a01 - a02 * a11) * det;

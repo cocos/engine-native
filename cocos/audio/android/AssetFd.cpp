@@ -25,8 +25,8 @@ THE SOFTWARE.
 
 #define LOG_TAG "AssetFd"
 
-#include "audio/android/cutils/log.h"
 #include "audio/android/AssetFd.h"
+#include "audio/android/cutils/log.h"
 
 namespace cc {
 

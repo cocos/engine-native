@@ -28,17 +28,17 @@
 #include "SharedBufferManager.h"
 #include "base/TypeDef.h"
 #include "base/memory/Memory.h"
-#include "math/Math.h"
 #include "gfx-base/GFXDef.h"
+#include "math/Math.h"
 
 using namespace cc;
 using namespace cc::gfx;
 
-static const std::string techStage = "opaque";
-static const std::string textureKey = "texture";
-static const std::string startEvent = "start";
+static const std::string techStage         = "opaque";
+static const std::string textureKey        = "texture";
+static const std::string startEvent        = "start";
 static const std::string loopCompleteEvent = "loopComplete";
-static const std::string completeEvent = "complete";
+static const std::string completeEvent     = "complete";
 
 DRAGONBONES_NAMESPACE_BEGIN
 
@@ -83,7 +83,6 @@ CCArmatureCacheDisplay::~CCArmatureCacheDisplay() {
 }
 
 void CCArmatureCacheDisplay::dispose() {
-
     if (_armatureCache) {
         _armatureCache->release();
         _armatureCache = nullptr;
@@ -123,8 +122,8 @@ void CCArmatureCacheDisplay::update(float dt) {
         _playCount++;
         _accTime = 0.0f;
         if (_playTimes > 0 && _playCount >= _playTimes) {
-            frameIdx = finalFrameIndex;
-            _playCount = 0;
+            frameIdx       = finalFrameIndex;
+            _playCount     = 0;
             _isAniComplete = true;
         } else {
             frameIdx = 0;
@@ -140,7 +139,6 @@ void CCArmatureCacheDisplay::update(float dt) {
 }
 
 void CCArmatureCacheDisplay::render(float dt) {
-
     if (!_animationData) return;
     ArmatureCache::FrameData *frameData = _animationData->getFrameData(_curFrameIndex);
     if (!frameData) return;
@@ -149,16 +147,16 @@ void CCArmatureCacheDisplay::render(float dt) {
     if (!mgr->isRendering) return;
 
     auto &segments = frameData->getSegments();
-    auto &colors = frameData->getColors();
+    auto &colors   = frameData->getColors();
 
     _sharedBufferOffset->reset();
     _sharedBufferOffset->clear();
 
-    auto renderMgr = mgr->getRenderInfoMgr();
+    auto renderMgr  = mgr->getRenderInfoMgr();
     auto renderInfo = renderMgr->getBuffer();
     if (!renderInfo) return;
 
-    auto attachMgr = mgr->getAttachInfoMgr();
+    auto attachMgr  = mgr->getAttachInfoMgr();
     auto attachInfo = attachMgr->getBuffer();
     if (!attachInfo) return;
 
@@ -177,37 +175,37 @@ void CCArmatureCacheDisplay::render(float dt) {
 
     if (segments.size() == 0 || colors.size() == 0) return;
 
-    middleware::MeshBuffer *mb = mgr->getMeshBuffer(VF_XYZUVC);
-    middleware::IOBuffer &vb = mb->getVB();
-    middleware::IOBuffer &ib = mb->getIB();
-    const auto &srcVB = frameData->vb;
-    const auto &srcIB = frameData->ib;
+    middleware::MeshBuffer *mb    = mgr->getMeshBuffer(VF_XYZUVC);
+    middleware::IOBuffer &  vb    = mb->getVB();
+    middleware::IOBuffer &  ib    = mb->getIB();
+    const auto &            srcVB = frameData->vb;
+    const auto &            srcIB = frameData->ib;
 
-    auto paramsBuffer = _paramsBuffer->getBuffer();
+    auto            paramsBuffer = _paramsBuffer->getBuffer();
     const cc::Mat4 &nodeWorldMat = *(cc::Mat4 *)&paramsBuffer[4];
 
-    int colorOffset = 0;
-    ArmatureCache::ColorData *nowColor = colors[colorOffset++];
-    auto maxVFOffset = nowColor->vertexFloatOffset;
+    int                       colorOffset = 0;
+    ArmatureCache::ColorData *nowColor    = colors[colorOffset++];
+    auto                      maxVFOffset = nowColor->vertexFloatOffset;
 
     Color4F color;
 
-    float tempR = 0.0f, tempG = 0.0f, tempB = 0.0f, tempA = 0.0f;
-    float multiplier = 1.0f;
-    std::size_t srcVertexBytesOffset = 0;
-    std::size_t srcIndexBytesOffset = 0;
-    std::size_t vertexBytes = 0;
-    std::size_t indexBytes = 0;
-    int curTextureIndex = 0;
-    BlendMode blendMode = BlendMode::Normal;
-    std::size_t dstVertexOffset = 0;
-    std::size_t dstIndexOffset = 0;
-    float *dstVertexBuffer = nullptr;
-    unsigned int *dstColorBuffer = nullptr;
-    unsigned short *dstIndexBuffer = nullptr;
-    bool needColor = false;
-    int curBlendSrc = -1;
-    int curBlendDst = -1;
+    float           tempR = 0.0f, tempG = 0.0f, tempB = 0.0f, tempA = 0.0f;
+    float           multiplier           = 1.0f;
+    std::size_t     srcVertexBytesOffset = 0;
+    std::size_t     srcIndexBytesOffset  = 0;
+    std::size_t     vertexBytes          = 0;
+    std::size_t     indexBytes           = 0;
+    int             curTextureIndex      = 0;
+    BlendMode       blendMode            = BlendMode::Normal;
+    std::size_t     dstVertexOffset      = 0;
+    std::size_t     dstIndexOffset       = 0;
+    float *         dstVertexBuffer      = nullptr;
+    unsigned int *  dstColorBuffer       = nullptr;
+    unsigned short *dstIndexBuffer       = nullptr;
+    bool            needColor            = false;
+    int             curBlendSrc          = -1;
+    int             curBlendDst          = -1;
 
     if (abs(_nodeColor.r - 1.0f) > 0.0001f ||
         abs(_nodeColor.g - 1.0f) > 0.0001f ||
@@ -218,11 +216,11 @@ void CCArmatureCacheDisplay::render(float dt) {
     }
 
     auto handleColor = [&](ArmatureCache::ColorData *colorData) {
-        tempA = colorData->color.a * _nodeColor.a;
+        tempA      = colorData->color.a * _nodeColor.a;
         multiplier = _premultipliedAlpha ? tempA / 255.0f : 1.0f;
-        tempR = _nodeColor.r * multiplier;
-        tempG = _nodeColor.g * multiplier;
-        tempB = _nodeColor.b * multiplier;
+        tempR      = _nodeColor.r * multiplier;
+        tempG      = _nodeColor.g * multiplier;
+        tempB      = _nodeColor.b * multiplier;
 
         color.a = tempA;
         color.r = colorData->color.r * tempR;
@@ -234,7 +232,7 @@ void CCArmatureCacheDisplay::render(float dt) {
 
     for (std::size_t segIndex = 0, segLen = segments.size(); segIndex < segLen; segIndex++) {
         auto segment = segments[segIndex];
-        vertexBytes = segment->vertexFloatCount * sizeof(float);
+        vertexBytes  = segment->vertexFloatCount * sizeof(float);
 
         // check enough space
         renderInfo->checkSpace(sizeof(uint32_t) * 6, true);
@@ -270,7 +268,7 @@ void CCArmatureCacheDisplay::render(float dt) {
         vb.checkSpace(vertexBytes, true);
         dstVertexOffset = vb.getCurPos() / sizeof(V2F_T2F_C4F);
         dstVertexBuffer = (float *)vb.getCurBuffer();
-        dstColorBuffer = (unsigned int *)vb.getCurBuffer();
+        dstColorBuffer  = (unsigned int *)vb.getCurBuffer();
         vb.writeBytes((char *)srcVB.getBuffer() + srcVertexBytesOffset, vertexBytes);
 
         // batch handle
@@ -325,7 +323,7 @@ void CCArmatureCacheDisplay::render(float dt) {
 
     if (_useAttach) {
         auto &bonesData = frameData->getBones();
-        auto boneCount = frameData->getBoneCount();
+        auto  boneCount = frameData->getBoneCount();
 
         for (int i = 0, n = boneCount; i < n; i++) {
             auto bone = bonesData[i];
@@ -366,12 +364,12 @@ Animation *CCArmatureCacheDisplay::getAnimation() const {
 }
 
 void CCArmatureCacheDisplay::playAnimation(const std::string &name, int playTimes) {
-    _playTimes = playTimes;
+    _playTimes     = playTimes;
     _animationName = name;
     _animationData = _armatureCache->buildAnimationData(_animationName);
     _isAniComplete = false;
-    _accTime = 0.0f;
-    _playCount = 0;
+    _accTime       = 0.0f;
+    _playCount     = 0;
     _curFrameIndex = 0;
 }
 

@@ -38,7 +38,7 @@ public:
     static CC_DECL_MALLOC void *AllocBytes(size_t count, const char *file, int line, const char *func);
     static CC_DECL_MALLOC void *ReallocBytes(void *ptr, size_t count, const char *file, int line, const char *func);
     static CC_DECL_MALLOC void *AllocBytesAligned(size_t align, size_t count, const char *file, int line, const char *func);
-    static void DeallocBytes(void *ptr);
+    static void                 DeallocBytes(void *ptr);
 };
 
 /**	An allocation policy for use with AllocatedObject and

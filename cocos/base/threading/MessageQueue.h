@@ -25,9 +25,9 @@
 
 #pragma once
 
+#include <cstdint>
 #include "Event.h"
 #include "concurrentqueue/concurrentqueue.h"
-#include <cstdint>
 
 namespace cc {
 
@@ -272,7 +272,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param1, Value1,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
                                                                     \
         class MessageName final : public Message {                  \
@@ -298,7 +297,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param2, Value2,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
                                                                     \
@@ -329,7 +327,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param3, Value3,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
         using Type3 = std::decay<decltype(Value3)>::type;           \
@@ -369,7 +366,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param4, Value4,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
         using Type3 = std::decay<decltype(Value3)>::type;           \
@@ -415,7 +411,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param5, Value5,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
         using Type3 = std::decay<decltype(Value3)>::type;           \
@@ -467,7 +462,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param6, Value6,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
         using Type3 = std::decay<decltype(Value3)>::type;           \
@@ -525,7 +519,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param7, Value7,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
         using Type3 = std::decay<decltype(Value3)>::type;           \
@@ -589,7 +582,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param8, Value8,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
         using Type3 = std::decay<decltype(Value3)>::type;           \
@@ -658,7 +650,6 @@ T *MessageQueue::allocateAndZero(uint32_t const count) noexcept {
                           Param9, Value9,                           \
                           Code)                                     \
     {                                                               \
-                                                                    \
         using Type1 = std::decay<decltype(Value1)>::type;           \
         using Type2 = std::decay<decltype(Value2)>::type;           \
         using Type3 = std::decay<decltype(Value3)>::type;           \

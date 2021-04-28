@@ -27,11 +27,11 @@
 
 #include "gfx-base/GFXCommandBuffer.h"
 
-#include "MTLGPUObjects.h"
-#include "MTLRenderCommandEncoder.h"
-#include "MTLComputeCommandEncoder.h"
 #import <Metal/MTLCommandQueue.h>
 #import <MetalKit/MTKView.h>
+#include "MTLComputeCommandEncoder.h"
+#include "MTLGPUObjects.h"
+#include "MTLRenderCommandEncoder.h"
 
 namespace cc {
 namespace gfx {
@@ -45,9 +45,9 @@ class CCMTLFence;
 class CCMTLCommandBuffer final : public CommandBuffer {
 public:
     explicit CCMTLCommandBuffer();
-    ~CCMTLCommandBuffer() override = default;
+    ~CCMTLCommandBuffer() override                 = default;
     CCMTLCommandBuffer(const CCMTLCommandBuffer &) = delete;
-    CCMTLCommandBuffer(CCMTLCommandBuffer &&) = delete;
+    CCMTLCommandBuffer(CCMTLCommandBuffer &&)      = delete;
     CCMTLCommandBuffer &operator=(const CCMTLCommandBuffer &) = delete;
     CCMTLCommandBuffer &operator=(CCMTLCommandBuffer &&) = delete;
 
@@ -84,27 +84,27 @@ protected:
     void doInit(const CommandBufferInfo &info) override;
     void doDestroy() override;
 
-    void bindDescriptorSets();
+    void        bindDescriptorSets();
     static bool isRenderingEntireDrawable(const Rect &rect, const CCMTLRenderPass *renderPass);
 
     CCMTLGPUPipelineState *_gpuPipelineState = nullptr;
 
     vector<CCMTLGPUDescriptorSet *> _GPUDescriptorSets;
-    vector<vector<uint>> _dynamicOffsets;
-    uint _firstDirtyDescriptorSet = UINT_MAX;
+    vector<vector<uint>>            _dynamicOffsets;
+    uint                            _firstDirtyDescriptorSet = UINT_MAX;
 
-    bool _indirectDrawSuppotred = false;
-    bool _commandBufferBegan = false;
-    bool _isSecondary = false;
-    NSAutoreleasePool *_autoreleasePool = nullptr;
-    CCMTLDevice *_mtlDevice = nullptr;
-    id<MTLCommandQueue> _mtlCommandQueue = nil;
-    id<MTLCommandBuffer> _mtlCommandBuffer = nil;
-    CCMTLRenderCommandEncoder _renderEncoder;
-    CCMTLComputeCommandEncoder _computeEncoder;
-    id<MTLParallelRenderCommandEncoder> _parallelEncoder = nil;
-    CCMTLInputAssembler *_inputAssembler = nullptr;
-    MTLPrimitiveType _mtlPrimitiveType = MTLPrimitiveType::MTLPrimitiveTypeTriangle;
+    bool                                _indirectDrawSuppotred = false;
+    bool                                _commandBufferBegan    = false;
+    bool                                _isSecondary           = false;
+    NSAutoreleasePool *                 _autoreleasePool       = nullptr;
+    CCMTLDevice *                       _mtlDevice             = nullptr;
+    id<MTLCommandQueue>                 _mtlCommandQueue       = nil;
+    id<MTLCommandBuffer>                _mtlCommandBuffer      = nil;
+    CCMTLRenderCommandEncoder           _renderEncoder;
+    CCMTLComputeCommandEncoder          _computeEncoder;
+    id<MTLParallelRenderCommandEncoder> _parallelEncoder  = nil;
+    CCMTLInputAssembler *               _inputAssembler   = nullptr;
+    MTLPrimitiveType                    _mtlPrimitiveType = MTLPrimitiveType::MTLPrimitiveTypeTriangle;
 };
 
 } // namespace gfx

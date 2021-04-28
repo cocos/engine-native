@@ -44,7 +44,7 @@ public:
     void setDepthStencilAttachment(id<MTLTexture> texture, int level);
 
     CC_INLINE MTLRenderPassDescriptor *getMTLRenderPassDescriptor() const { return _mtlRenderPassDescriptor; }
-    CC_INLINE uint getColorRenderTargetNums() const { return _colorRenderTargetNums; }
+    CC_INLINE uint                     getColorRenderTargetNums() const { return _colorRenderTargetNums; }
     CC_INLINE const vector<Vec2> &getRenderTargetSizes() const { return _renderTargetSizes; }
 
 protected:
@@ -52,8 +52,8 @@ protected:
     void doDestroy() override;
 
     MTLRenderPassDescriptor *_mtlRenderPassDescriptor = nil;
-    uint _colorRenderTargetNums = 0;
-    vector<Vec2> _renderTargetSizes;
+    uint                     _colorRenderTargetNums   = 0;
+    vector<Vec2>             _renderTargetSizes;
 };
 
 } // namespace gfx

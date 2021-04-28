@@ -23,11 +23,11 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/android/jni/JniHelper.h"
-#include "platform/Application.h"
-#include <jni.h>
-#include <android/log.h>
 #include <android/keycodes.h>
+#include <android/log.h>
+#include <jni.h>
+#include "platform/Application.h"
+#include "platform/android/jni/JniHelper.h"
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "JniCocosSurfaceView JNI", __VA_ARGS__)
 

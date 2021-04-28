@@ -43,7 +43,7 @@ private:
     float                 _mRowScale;
     float                 _mColScale;
     float                 _mHeightScale;
-    void          onComponentSet() override;
+    void                  onComponentSet() override;
 };
 
 } // namespace physics

@@ -38,11 +38,11 @@ namespace gfx {
 class CCMTLPipelineState final : public PipelineState {
 public:
     explicit CCMTLPipelineState();
-    ~CCMTLPipelineState() override = default;
-    CCMTLPipelineState(const CCMTLPipelineState &)=delete;
-    CCMTLPipelineState(CCMTLPipelineState &&)=delete;
-    CCMTLPipelineState &operator=(const CCMTLPipelineState &)=delete;
-    CCMTLPipelineState &operator=(CCMTLPipelineState &&)=delete;
+    ~CCMTLPipelineState() override                 = default;
+    CCMTLPipelineState(const CCMTLPipelineState &) = delete;
+    CCMTLPipelineState(CCMTLPipelineState &&)      = delete;
+    CCMTLPipelineState &operator=(const CCMTLPipelineState &) = delete;
+    CCMTLPipelineState &operator=(CCMTLPipelineState &&) = delete;
 
     CC_INLINE CCMTLGPUPipelineState *getGPUPipelineState() const { return _GPUPipelineState; }
 
@@ -60,10 +60,10 @@ protected:
     void setBlendStates(MTLRenderPipelineDescriptor *);
     bool createMTLRenderPipeline(MTLRenderPipelineDescriptor *);
 
-    id<MTLRenderPipelineState> _mtlRenderPipelineState = nil;
-    id<MTLDepthStencilState> _mtlDepthStencilState = nil;
-    id<MTLComputePipelineState> _mtlComputePipeline = nil;
-    CCMTLGPUPipelineState *_GPUPipelineState = nullptr;
+    id<MTLRenderPipelineState>  _mtlRenderPipelineState = nil;
+    id<MTLDepthStencilState>    _mtlDepthStencilState   = nil;
+    id<MTLComputePipelineState> _mtlComputePipeline     = nil;
+    CCMTLGPUPipelineState *     _GPUPipelineState       = nullptr;
 };
 
 } // namespace gfx

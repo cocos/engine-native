@@ -53,7 +53,7 @@ struct CC_DLL RenderObject {
     float            depth = 0;
     const ModelView *model = nullptr;
 };
-using  RenderObjectList = vector<struct RenderObject>;
+using RenderObjectList = vector<struct RenderObject>;
 
 struct CC_DLL RenderTargetInfo {
     uint width  = 0;
@@ -69,7 +69,7 @@ struct CC_DLL RenderPass {
 };
 using RenderPassList = vector<RenderPass>;
 
-using ColorDesc = gfx::ColorAttachment;
+using ColorDesc     = gfx::ColorAttachment;
 using ColorDescList = vector<ColorDesc>;
 
 using DepthStencilDesc = gfx::DepthStencilAttachment;
@@ -106,9 +106,9 @@ enum class RenderFlowType : uint8_t {
 };
 
 using RenderStageList = vector<RenderStage *>;
-using RenderFlowList = vector<RenderFlow *>;
-using LightList = vector<Light *>;
-using UintList = vector<uint>;
+using RenderFlowList  = vector<RenderFlow *>;
+using LightList       = vector<Light *>;
+using UintList        = vector<uint>;
 
 enum class CC_DLL RenderPassStage {
     DEFAULT = 100,
@@ -385,16 +385,16 @@ struct CC_DLL UBOCamera : public Object {
 };
 
 struct CC_DLL UBOShadow : public Object {
-    static constexpr uint                        MAT_LIGHT_PLANE_PROJ_OFFSET                = 0;
-    static constexpr uint                        MAT_LIGHT_VIEW_OFFSET                      = MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
-    static constexpr uint                        MAT_LIGHT_VIEW_PROJ_OFFSET                 = UBOShadow::MAT_LIGHT_VIEW_OFFSET + 16;
-    static constexpr uint                        SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET    = UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET + 16;
-    static constexpr uint                        SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET   = UBOShadow::SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET + 4;
+    static constexpr uint                        MAT_LIGHT_PLANE_PROJ_OFFSET                 = 0;
+    static constexpr uint                        MAT_LIGHT_VIEW_OFFSET                       = MAT_LIGHT_PLANE_PROJ_OFFSET + 16;
+    static constexpr uint                        MAT_LIGHT_VIEW_PROJ_OFFSET                  = UBOShadow::MAT_LIGHT_VIEW_OFFSET + 16;
+    static constexpr uint                        SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET     = UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET + 16;
+    static constexpr uint                        SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET    = UBOShadow::SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET + 4;
     static constexpr uint                        SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET = UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET + 4;
-    static constexpr uint                        SHADOW_COLOR_OFFSET                         = UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET + 4; 
-    static constexpr uint                        COUNT                                      = UBOShadow::SHADOW_COLOR_OFFSET + 4;
-    static constexpr uint                        SIZE                                       = UBOShadow::COUNT * 4;
-    static constexpr uint                        BINDING                                    = static_cast<uint>(PipelineGlobalBindings::UBO_SHADOW);
+    static constexpr uint                        SHADOW_COLOR_OFFSET                         = UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET + 4;
+    static constexpr uint                        COUNT                                       = UBOShadow::SHADOW_COLOR_OFFSET + 4;
+    static constexpr uint                        SIZE                                        = UBOShadow::COUNT * 4;
+    static constexpr uint                        BINDING                                     = static_cast<uint>(PipelineGlobalBindings::UBO_SHADOW);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformBlock               LAYOUT;
     static const String                          NAME;
@@ -405,7 +405,7 @@ public:
     static gfx::Sampler *getSampler(uint hash);
     static uint          genSamplerHash(const gfx::SamplerInfo &info);
 
-    static void          destroyAll();
+    static void destroyAll();
 
 protected:
     static uint defaultSamplerHash;
@@ -441,7 +441,7 @@ const uint CAMERA_DEFAULT_MASK = ~static_cast<uint>(LayerList::UI_2D) & ~static_
 
 uint nextPow2(uint val);
 
-extern CC_DLL uint                     skyboxFlag;
+extern CC_DLL uint skyboxFlag;
 
 struct CC_DLL SHADOWMAP : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);

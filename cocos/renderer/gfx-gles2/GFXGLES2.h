@@ -25,5 +25,5 @@
 
 #pragma once
 
-#include "GLES2Std.h"
 #include "GLES2Device.h"
+#include "GLES2Std.h"

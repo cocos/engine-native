@@ -22,10 +22,10 @@
 
 #include "math/Mat4.h"
 
+#include <cmath>
 #include "base/Log.h"
 #include "math/MathUtil.h"
 #include "math/Quaternion.h"
-#include <cmath>
 
 NS_CC_MATH_BEGIN
 
@@ -86,8 +86,8 @@ void Mat4::createLookAt(float eyePositionX, float eyePositionY, float eyePositio
     dst->m[6] = zaxis.y;
     dst->m[7] = 0.0f;
 
-    dst->m[8] = xaxis.z;
-    dst->m[9] = yaxis.z;
+    dst->m[8]  = xaxis.z;
+    dst->m[9]  = yaxis.z;
     dst->m[10] = zaxis.z;
     dst->m[11] = 0.0f;
 
@@ -103,10 +103,10 @@ void Mat4::createPerspective(float fieldOfView, float aspectRatio,
     GP_ASSERT(zFarPlane != zNearPlane);
     GP_ASSERT(fieldOfView != 0.0f);
 
-    const float minClipZ = -1.0f;
+    const float minClipZ        = -1.0f;
     const float projectionSignY = 1.0f;
 
-    const float f = 1.0f / std::tanf(fieldOfView / 2.0f);
+    const float f  = 1.0f / std::tanf(fieldOfView / 2.0f);
     const float nf = 1.0f / (zNearPlane - zFarPlane);
 
     const float x = f / aspectRatio;
@@ -114,16 +114,16 @@ void Mat4::createPerspective(float fieldOfView, float aspectRatio,
 
     float const preTransform[] = {1.0, 0.0f, 0.0f, 1.0f};
 
-    dst->m[0] = x * preTransform[0];
-    dst->m[1] = x * preTransform[1];
-    dst->m[2] = 0.0f;
-    dst->m[3] = 0.0f;
-    dst->m[4] = y * preTransform[2];
-    dst->m[5] = y * preTransform[3];
-    dst->m[6] = 0.0f;
-    dst->m[7] = 0.0f;
-    dst->m[8] = 0.0f;
-    dst->m[9] = 0.0f;
+    dst->m[0]  = x * preTransform[0];
+    dst->m[1]  = x * preTransform[1];
+    dst->m[2]  = 0.0f;
+    dst->m[3]  = 0.0f;
+    dst->m[4]  = y * preTransform[2];
+    dst->m[5]  = y * preTransform[3];
+    dst->m[6]  = 0.0f;
+    dst->m[7]  = 0.0f;
+    dst->m[8]  = 0.0f;
+    dst->m[9]  = 0.0f;
     dst->m[10] = (zFarPlane - minClipZ * zNearPlane) * nf;
     dst->m[11] = -1.0f;
     dst->m[12] = 0.0f;
@@ -148,8 +148,8 @@ void Mat4::createOrthographicOffCenter(float left, float right, float bottom, fl
     GP_ASSERT(zFarPlane != zNearPlane);
 
     memset(dst, 0, MATRIX_SIZE);
-    dst->m[0] = 2.0f / (right - left);
-    dst->m[5] = 2.0f / (top - bottom) * projectionSignY;
+    dst->m[0]  = 2.0f / (right - left);
+    dst->m[5]  = 2.0f / (top - bottom) * projectionSignY;
     dst->m[10] = (1.0f - minClipZ) / (zNearPlane - zFarPlane);
     dst->m[12] = (left + right) / (left - right);
     dst->m[13] = (top + bottom) / (bottom - top);
@@ -175,8 +175,8 @@ void Mat4::createBillboardHelper(const Vec3 &objectPosition, const Vec3 &cameraP
     bool isSufficientDelta = delta.lengthSquared() > MATH_EPSILON;
 
     dst->setIdentity();
-    dst->m[3] = objectPosition.x;
-    dst->m[7] = objectPosition.y;
+    dst->m[3]  = objectPosition.x;
+    dst->m[7]  = objectPosition.y;
     dst->m[11] = objectPosition.z;
 
     // As per the contracts for the 2 variants of createBillboard, we need
@@ -187,14 +187,14 @@ void Mat4::createBillboardHelper(const Vec3 &objectPosition, const Vec3 &cameraP
         // A billboard is the inverse of a lookAt rotation
         Mat4 lookAt;
         createLookAt(objectPosition, target, cameraUpVector, &lookAt);
-        dst->m[0] = lookAt.m[0];
-        dst->m[1] = lookAt.m[4];
-        dst->m[2] = lookAt.m[8];
-        dst->m[4] = lookAt.m[1];
-        dst->m[5] = lookAt.m[5];
-        dst->m[6] = lookAt.m[9];
-        dst->m[8] = lookAt.m[2];
-        dst->m[9] = lookAt.m[6];
+        dst->m[0]  = lookAt.m[0];
+        dst->m[1]  = lookAt.m[4];
+        dst->m[2]  = lookAt.m[8];
+        dst->m[4]  = lookAt.m[1];
+        dst->m[5]  = lookAt.m[5];
+        dst->m[6]  = lookAt.m[9];
+        dst->m[8]  = lookAt.m[2];
+        dst->m[9]  = lookAt.m[6];
         dst->m[10] = lookAt.m[10];
     }
 }
@@ -223,8 +223,8 @@ void Mat4::createScale(const Vec3 &scale, Mat4 *dst) {
 
     memcpy(dst, &IDENTITY, MATRIX_SIZE);
 
-    dst->m[0] = scale.x;
-    dst->m[5] = scale.y;
+    dst->m[0]  = scale.x;
+    dst->m[5]  = scale.y;
     dst->m[10] = scale.z;
 }
 
@@ -233,8 +233,8 @@ void Mat4::createScale(float xScale, float yScale, float zScale, Mat4 *dst) {
 
     memcpy(dst, &IDENTITY, MATRIX_SIZE);
 
-    dst->m[0] = xScale;
-    dst->m[5] = yScale;
+    dst->m[0]  = xScale;
+    dst->m[5]  = yScale;
     dst->m[10] = zScale;
 }
 
@@ -265,8 +265,8 @@ void Mat4::createRotation(const Quaternion &q, Mat4 *dst) {
     dst->m[6] = yz2 + wx2;
     dst->m[7] = 0.0f;
 
-    dst->m[8] = xz2 + wy2;
-    dst->m[9] = yz2 - wx2;
+    dst->m[8]  = xz2 + wy2;
+    dst->m[9]  = yz2 - wx2;
     dst->m[10] = 1.0f - xx2 - yy2;
     dst->m[11] = 0.0f;
 
@@ -300,16 +300,16 @@ void Mat4::createRotation(const Vec3 &axis, float angle, Mat4 *dst) {
     float c = std::cos(angle);
     float s = std::sin(angle);
 
-    float t = 1.0f - c;
-    float tx = t * x;
-    float ty = t * y;
-    float tz = t * z;
+    float t   = 1.0f - c;
+    float tx  = t * x;
+    float ty  = t * y;
+    float tz  = t * z;
     float txy = tx * y;
     float txz = tx * z;
     float tyz = ty * z;
-    float sx = s * x;
-    float sy = s * y;
-    float sz = s * z;
+    float sx  = s * x;
+    float sy  = s * y;
+    float sz  = s * z;
 
     dst->m[0] = c + tx * x;
     dst->m[1] = txy + sz;
@@ -321,8 +321,8 @@ void Mat4::createRotation(const Vec3 &axis, float angle, Mat4 *dst) {
     dst->m[6] = tyz + sx;
     dst->m[7] = 0.0f;
 
-    dst->m[8] = txz + sy;
-    dst->m[9] = tyz - sx;
+    dst->m[8]  = txz + sy;
+    dst->m[9]  = tyz - sx;
     dst->m[10] = c + tz * z;
     dst->m[11] = 0.0f;
 
@@ -340,9 +340,9 @@ void Mat4::createRotationX(float angle, Mat4 *dst) {
     float c = std::cos(angle);
     float s = std::sin(angle);
 
-    dst->m[5] = c;
-    dst->m[6] = s;
-    dst->m[9] = -s;
+    dst->m[5]  = c;
+    dst->m[6]  = s;
+    dst->m[9]  = -s;
     dst->m[10] = c;
 }
 
@@ -354,9 +354,9 @@ void Mat4::createRotationY(float angle, Mat4 *dst) {
     float c = std::cos(angle);
     float s = std::sin(angle);
 
-    dst->m[0] = c;
-    dst->m[2] = -s;
-    dst->m[8] = s;
+    dst->m[0]  = c;
+    dst->m[2]  = -s;
+    dst->m[8]  = s;
     dst->m[10] = c;
 }
 
@@ -436,16 +436,16 @@ void Mat4::fromRT(const Vec4 &rotation, const Vec3 &translation, Mat4 *dst) {
     const auto wy = w * y2;
     const auto wz = w * z2;
 
-    dst->m[0] = 1 - (yy + zz);
-    dst->m[1] = xy + wz;
-    dst->m[2] = xz - wy;
-    dst->m[3] = 0;
-    dst->m[4] = xy - wz;
-    dst->m[5] = 1 - (xx + zz);
-    dst->m[6] = yz + wx;
-    dst->m[7] = 0;
-    dst->m[8] = xz + wy;
-    dst->m[9] = yz - wx;
+    dst->m[0]  = 1 - (yy + zz);
+    dst->m[1]  = xy + wz;
+    dst->m[2]  = xz - wy;
+    dst->m[3]  = 0;
+    dst->m[4]  = xy - wz;
+    dst->m[5]  = 1 - (xx + zz);
+    dst->m[6]  = yz + wx;
+    dst->m[7]  = 0;
+    dst->m[8]  = xz + wy;
+    dst->m[9]  = yz - wx;
     dst->m[10] = 1 - (xx + yy);
     dst->m[11] = 0;
     dst->m[12] = translation.x;
@@ -468,13 +468,13 @@ bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const
 
     // Extract the scale.
     // This is simply the length of each axis (row/column) in the matrix.
-    Vec3 xaxis(m[0], m[1], m[2]);
+    Vec3  xaxis(m[0], m[1], m[2]);
     float scaleX = xaxis.length();
 
-    Vec3 yaxis(m[4], m[5], m[6]);
+    Vec3  yaxis(m[4], m[5], m[6]);
     float scaleY = yaxis.length();
 
-    Vec3 zaxis(m[8], m[9], m[10]);
+    Vec3  zaxis(m[8], m[9], m[10]);
     float scaleZ = zaxis.length();
 
     // Determine if we have a negative scale (true if determinant is less than zero).
@@ -519,7 +519,7 @@ bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const
     float trace = xaxis.x + yaxis.y + zaxis.z + 1.0f;
 
     if (trace > MATH_EPSILON) {
-        float s = 0.5f / std::sqrt(trace);
+        float s     = 0.5f / std::sqrt(trace);
         rotation->w = 0.25f / s;
         rotation->x = (yaxis.z - zaxis.y) * s;
         rotation->y = (zaxis.x - xaxis.z) * s;
@@ -528,19 +528,19 @@ bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const
         // Note: since xaxis, yaxis, and zaxis are normalized,
         // we will never divide by zero in the code below.
         if (xaxis.x > yaxis.y && xaxis.x > zaxis.z) {
-            float s = 0.5f / std::sqrt(1.0f + xaxis.x - yaxis.y - zaxis.z);
+            float s     = 0.5f / std::sqrt(1.0f + xaxis.x - yaxis.y - zaxis.z);
             rotation->w = (yaxis.z - zaxis.y) * s;
             rotation->x = 0.25f / s;
             rotation->y = (yaxis.x + xaxis.y) * s;
             rotation->z = (zaxis.x + xaxis.z) * s;
         } else if (yaxis.y > zaxis.z) {
-            float s = 0.5f / std::sqrt(1.0f + yaxis.y - xaxis.x - zaxis.z);
+            float s     = 0.5f / std::sqrt(1.0f + yaxis.y - xaxis.x - zaxis.z);
             rotation->w = (zaxis.x - xaxis.z) * s;
             rotation->x = (yaxis.x + xaxis.y) * s;
             rotation->y = 0.25f / s;
             rotation->z = (zaxis.y + yaxis.z) * s;
         } else {
-            float s = 0.5f / std::sqrt(1.0f + zaxis.z - xaxis.x - yaxis.y);
+            float s     = 0.5f / std::sqrt(1.0f + zaxis.z - xaxis.x - yaxis.y);
             rotation->w = (xaxis.y - yaxis.x) * s;
             rotation->x = (zaxis.x + xaxis.z) * s;
             rotation->y = (zaxis.y + yaxis.z) * s;
@@ -668,8 +668,8 @@ bool Mat4::inverse() {
     inverse.m[6] = -m[12] * a5 + m[14] * a2 - m[15] * a1;
     inverse.m[7] = m[8] * a5 - m[10] * a2 + m[11] * a1;
 
-    inverse.m[8] = m[4] * b4 - m[5] * b2 + m[7] * b0;
-    inverse.m[9] = -m[0] * b4 + m[1] * b2 - m[3] * b0;
+    inverse.m[8]  = m[4] * b4 - m[5] * b2 + m[7] * b0;
+    inverse.m[9]  = -m[0] * b4 + m[1] * b2 - m[3] * b0;
     inverse.m[10] = m[12] * a4 - m[13] * a2 + m[15] * a0;
     inverse.m[11] = -m[8] * a4 + m[9] * a2 - m[11] * a0;
 
@@ -809,16 +809,16 @@ void Mat4::scale(const Vec3 &s, Mat4 *dst) const {
 
 void Mat4::set(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24,
                float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44) {
-    m[0] = m11;
-    m[1] = m21;
-    m[2] = m31;
-    m[3] = m41;
-    m[4] = m12;
-    m[5] = m22;
-    m[6] = m32;
-    m[7] = m42;
-    m[8] = m13;
-    m[9] = m23;
+    m[0]  = m11;
+    m[1]  = m21;
+    m[2]  = m31;
+    m[3]  = m41;
+    m[4]  = m12;
+    m[5]  = m22;
+    m[6]  = m32;
+    m[7]  = m42;
+    m[8]  = m13;
+    m[9]  = m23;
     m[10] = m33;
     m[11] = m43;
     m[12] = m14;

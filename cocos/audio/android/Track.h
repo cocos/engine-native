@@ -25,9 +25,9 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "audio/android/PcmData.h"
 #include "audio/android/IVolumeProvider.h"
 #include "audio/android/PcmBufferProvider.h"
+#include "audio/android/PcmData.h"
 
 #include <functional>
 #include <mutex>
@@ -50,20 +50,20 @@ public:
     virtual ~Track();
 
     inline State getState() const { return _state; };
-    void setState(State state);
+    void         setState(State state);
 
     inline State getPrevState() const { return _prevState; };
 
     inline bool isPlayOver() const { return _state == State::PLAYING && _nextFrame >= _numFrames; };
     inline void setName(int name) { _name = name; };
-    inline int getName() const { return _name; };
+    inline int  getName() const { return _name; };
 
-    void setVolume(float volume);
+    void  setVolume(float volume);
     float getVolume() const;
 
     void setAudioFocus(bool isFocus);
 
-    bool setPosition(float pos);
+    bool  setPosition(float pos);
     float getPosition() const;
 
     virtual gain_minifloat_packed_t getVolumeLR() override;
@@ -83,17 +83,17 @@ private:
     inline void setInitialized(bool isInitialized) { _isInitialized = isInitialized; };
 
 private:
-    PcmData _pcmData;
-    State _prevState;
-    State _state;
+    PcmData    _pcmData;
+    State      _prevState;
+    State      _state;
     std::mutex _stateMutex;
-    int _name;
-    float _volume;
-    bool _isVolumeDirty;
+    int        _name;
+    float      _volume;
+    bool       _isVolumeDirty;
     std::mutex _volumeDirtyMutex;
-    bool _isLoop;
-    bool _isInitialized;
-    bool _isAudioFocus;
+    bool       _isLoop;
+    bool       _isInitialized;
+    bool       _isAudioFocus;
 
     friend class AudioMixerController;
 };

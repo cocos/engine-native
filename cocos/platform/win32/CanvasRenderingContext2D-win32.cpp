@@ -23,16 +23,16 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/CanvasRenderingContext2D.h"
+#include <Windows.h>
 #include <stdint.h>
+#include <array>
+#include <regex>
 #include "base/csscolorparser.h"
-#include "math/Math.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_platform.h"
+#include "math/Math.h"
+#include "platform/CanvasRenderingContext2D.h"
 #include "platform/FileUtils.h"
-#include <regex>
-#include <array>
-#include <Windows.h>
 
 typedef std::array<float, 2> Point;
 typedef std::array<float, 2> Vec2;
@@ -62,7 +62,7 @@ void fillRectWithColor(uint8_t *buf, uint32_t totalWidth, uint32_t totalHeight, 
     uint8_t *p;
     for (uint32_t offsetY = y0; offsetY < y1; ++offsetY) {
         for (uint32_t offsetX = x; offsetX < (x + width); ++offsetX) {
-            p = buf + (totalWidth * offsetY + offsetX) * 4;
+            p    = buf + (totalWidth * offsetY + offsetX) * 4;
             *p++ = r;
             *p++ = g;
             *p++ = b;
@@ -79,9 +79,9 @@ public:
                                      _font((HFONT)GetStockObject(DEFAULT_GUI_FONT)),
                                      _wnd(nullptr),
                                      _savedDC(0) {
-        _wnd = nullptr;
+        _wnd    = nullptr;
         HDC hdc = GetDC(_wnd);
-        _DC = CreateCompatibleDC(hdc);
+        _DC     = CreateCompatibleDC(hdc);
         ReleaseDC(_wnd, hdc);
     }
 
@@ -93,15 +93,15 @@ public:
     }
 
     void recreateBuffer(float w, float h) {
-        _bufferWidth = w;
+        _bufferWidth  = w;
         _bufferHeight = h;
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f) {
             _deleteBitmap();
             return;
         }
 
-        int textureSize = _bufferWidth * _bufferHeight * 4;
-        uint8_t *data = (uint8_t *)malloc(sizeof(uint8_t) * textureSize);
+        int      textureSize = _bufferWidth * _bufferHeight * 4;
+        uint8_t *data        = (uint8_t *)malloc(sizeof(uint8_t) * textureSize);
         memset(data, 0x00, textureSize);
         _imageData.fastSet(data, textureSize);
 
@@ -177,7 +177,7 @@ public:
         if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
 
-        SIZE textSize = {0, 0};
+        SIZE  textSize    = {0, 0};
         Point offsetPoint = _convertDrawPoint(Point{x, y}, text);
 
         _drawText(text, (int)offsetPoint[0], (int)offsetPoint[1]);
@@ -194,9 +194,9 @@ public:
         if (text.empty())
             return std::array<float, 2>{0.0f, 0.0f};
 
-        int bufferLen = 0;
+        int      bufferLen  = 0;
         wchar_t *pwszBuffer = _utf8ToUtf16(text, &bufferLen);
-        Size size = _sizeWithText(pwszBuffer, bufferLen);
+        Size     size       = _sizeWithText(pwszBuffer, bufferLen);
         //SE_LOGD("CanvasRenderingContext2DImpl::measureText: %s, %d, %d\n", text.c_str(), size.cx, size.cy);
         CC_SAFE_DELETE_ARRAY(pwszBuffer);
         return size;
@@ -207,17 +207,17 @@ public:
             _fontName = fontName;
             _fontSize = fontSize;
             std::string fontPath;
-            LOGFONTA tFont = {0};
+            LOGFONTA    tFont = {0};
             if (!_fontName.empty()) {
                 // firstly, try to create font from ttf file
                 const auto &fontInfoMap = getFontFamilyNameMap();
-                auto iter = fontInfoMap.find(_fontName);
+                auto        iter        = fontInfoMap.find(_fontName);
                 if (iter != fontInfoMap.end()) {
-                    fontPath = iter->second;
+                    fontPath                = iter->second;
                     std::string tmpFontPath = fontPath;
-                    int nFindPos = tmpFontPath.rfind("/");
-                    tmpFontPath = &tmpFontPath[nFindPos + 1];
-                    nFindPos = tmpFontPath.rfind(".");
+                    int         nFindPos    = tmpFontPath.rfind("/");
+                    tmpFontPath             = &tmpFontPath[nFindPos + 1];
+                    nFindPos                = tmpFontPath.rfind(".");
                     // IDEA: draw ttf failed if font file name not equal font face name
                     // for example: "DejaVuSansMono-Oblique" not equal "DejaVu Sans Mono"  when using DejaVuSansMono-Oblique.ttf
                     _fontName = tmpFontPath.substr(0, nFindPos);
@@ -250,7 +250,7 @@ public:
             _removeCustomFont();
 
             if (fontPath.size() > 0) {
-                _curFontPath = fontPath;
+                _curFontPath        = fontPath;
                 wchar_t *pwszBuffer = _utf8ToUtf16(_curFontPath);
                 if (pwszBuffer) {
                     if (AddFontResource(pwszBuffer)) {
@@ -299,28 +299,28 @@ public:
         return _imageData;
     }
 
-    HDC _DC;
+    HDC     _DC;
     HBITMAP _bmp;
 
 private:
-    cc::Data _imageData;
-    HFONT _font;
-    HWND _wnd;
-    HPEN _hpen;
+    cc::Data    _imageData;
+    HFONT       _font;
+    HWND        _wnd;
+    HPEN        _hpen;
     PAINTSTRUCT _paintStruct;
     std::string _curFontPath;
-    int _savedDC;
-    float _lineWidth = 0.0f;
-    float _bufferWidth = 0.0f;
-    float _bufferHeight = 0.0f;
+    int         _savedDC;
+    float       _lineWidth    = 0.0f;
+    float       _bufferWidth  = 0.0f;
+    float       _bufferHeight = 0.0f;
 
-    std::string _fontName;
-    int _fontSize;
-    Size _textSize;
-    CanvasTextAlign _textAlign;
+    std::string        _fontName;
+    int                _fontSize;
+    Size               _textSize;
+    CanvasTextAlign    _textAlign;
     CanvasTextBaseline _textBaseLine;
-    Color4F _fillStyle;
-    Color4F _strokeStyle;
+    Color4F            _fillStyle;
+    Color4F            _strokeStyle;
 
     TEXTMETRIC _tm;
 
@@ -331,9 +331,9 @@ private:
             if (str.empty()) {
                 break;
             }
-            int nLen = str.size();
+            int nLen    = str.size();
             int nBufLen = nLen + 1;
-            pwszBuffer = new wchar_t[nBufLen];
+            pwszBuffer  = new wchar_t[nBufLen];
             CC_BREAK_IF(!pwszBuffer);
             memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
             // str.size() not equal actuallyLen for Chinese char
@@ -366,7 +366,7 @@ private:
 
     // x, y offset value
     int _drawText(const std::string &text, int x, int y) {
-        int nRet = 0;
+        int      nRet       = 0;
         wchar_t *pwszBuffer = nullptr;
         do {
             CC_BREAK_IF(text.empty());
@@ -374,7 +374,7 @@ private:
             DWORD dwFmt = DT_SINGLELINE | DT_NOPREFIX;
 
             int bufferLen = 0;
-            pwszBuffer = _utf8ToUtf16(text, &bufferLen);
+            pwszBuffer    = _utf8ToUtf16(text, &bufferLen);
 
             Size newSize = _sizeWithText(pwszBuffer, bufferLen);
 
@@ -382,7 +382,7 @@ private:
 
             RECT rcText = {0};
 
-            rcText.right = newSize[0];
+            rcText.right  = newSize[0];
             rcText.bottom = newSize[1];
 
             LONG offsetX = x;
@@ -409,7 +409,7 @@ private:
         do {
             CC_BREAK_IF(!pszText || nLen <= 0);
 
-            RECT rc = {0, 0, 0, 0};
+            RECT  rc        = {0, 0, 0, 0};
             DWORD dwCalcFmt = DT_CALCRECT | DT_NOPREFIX;
 
             // measure text size
@@ -441,7 +441,7 @@ private:
 
     void _fillTextureData() {
         do {
-            int dataLen = _bufferWidth * _bufferHeight * 4;
+            int            dataLen = _bufferWidth * _bufferHeight * 4;
             unsigned char *dataBuf = (unsigned char *)malloc(sizeof(unsigned char) * dataLen);
             CC_BREAK_IF(!dataBuf);
             unsigned char *imageBuf = _imageData.getBytes();
@@ -450,8 +450,8 @@ private:
             struct
             {
                 BITMAPINFOHEADER bmiHeader;
-                int mask[4];
-            } bi = {0};
+                int              mask[4];
+            } bi                = {0};
             bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
             CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0,
                                    nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
@@ -461,12 +461,12 @@ private:
             GetDIBits(_DC, _bmp, 0, _bufferHeight, dataBuf,
                       (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
 
-            uint8_t r = static_cast<uint8_t>(round(_fillStyle[0] * 255));
-            uint8_t g = static_cast<uint8_t>(round(_fillStyle[1] * 255));
-            uint8_t b = static_cast<uint8_t>(round(_fillStyle[2] * 255));
-            COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
-            COLORREF *pPixel = nullptr;
-            COLORREF *pImage = nullptr;
+            uint8_t   r         = static_cast<uint8_t>(round(_fillStyle[0] * 255));
+            uint8_t   g         = static_cast<uint8_t>(round(_fillStyle[1] * 255));
+            uint8_t   b         = static_cast<uint8_t>(round(_fillStyle[2] * 255));
+            COLORREF  textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
+            COLORREF *pPixel    = nullptr;
+            COLORREF *pImage    = nullptr;
             for (int y = 0; y < _bufferHeight; ++y) {
                 pPixel = (COLORREF *)dataBuf + y * (int)_bufferWidth;
                 pImage = (COLORREF *)imageBuf + y * (int)_bufferWidth;
@@ -644,7 +644,7 @@ void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBuffer
 void CanvasRenderingContext2D::set_width(float width) {
     //SE_LOGD("CanvasRenderingContext2D::set__width: %f\n", width);
     if (math::IsEqualF(width, _width)) return;
-    _width = width;
+    _width             = width;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
 }
@@ -652,7 +652,7 @@ void CanvasRenderingContext2D::set_width(float width) {
 void CanvasRenderingContext2D::set_height(float height) {
     //SE_LOGD("CanvasRenderingContext2D::set__height: %f\n", height);
     if (math::IsEqualF(height, _height)) return;
-    _height = height;
+    _height            = height;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
 }
@@ -683,16 +683,16 @@ void CanvasRenderingContext2D::set_font(const std::string &font) {
         _font = font;
 
         std::string boldStr;
-        std::string fontName = "Arial";
+        std::string fontName    = "Arial";
         std::string fontSizeStr = "30";
 
         // support get font name from `60px American` or `60px "American abc-abc_abc"`
-        std::regex re("(bold)?\\s*((\\d+)([\\.]\\d+)?)px\\s+([\\w-]+|\"[\\w -]+\"$)");
+        std::regex                                      re("(bold)?\\s*((\\d+)([\\.]\\d+)?)px\\s+([\\w-]+|\"[\\w -]+\"$)");
         std::match_results<std::string::const_iterator> results;
         if (std::regex_search(_font.cbegin(), _font.cend(), results, re)) {
-            boldStr = results[1].str();
+            boldStr     = results[1].str();
             fontSizeStr = results[2].str();
-            fontName = results[5].str();
+            fontName    = results[5].str();
         }
 
         float fontSize = atof(fontSizeStr.c_str());

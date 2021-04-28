@@ -26,18 +26,17 @@
 
 #pragma once
 
-#include <iosfwd>
 #include <stdint.h>
+#include <iosfwd>
 
-#include "base/Macros.h"
 #include "base/Data.h"
+#include "base/Macros.h"
 
 namespace cc {
 
 class WebView;
 
 class WebViewImpl {
-
 public:
     WebViewImpl(WebView *webView);
 
@@ -87,7 +86,7 @@ public:
     static void onJsCallback(const int viewTag, const std::string &message);
 
 private:
-    int _viewTag;
+    int      _viewTag;
     WebView *_webView;
 };
 

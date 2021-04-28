@@ -9,9 +9,9 @@
     #include "node_mutex.h"
     #include "uv.h"
 
+    #include <stddef.h>
     #include <deque>
     #include <memory>
-    #include <stddef.h>
 
     #if !HAVE_INSPECTOR
         #error("This header can only be used when inspector is enabled")
@@ -32,7 +32,7 @@ namespace inspector {
 
 std::string FormatWsAddress(const std::string &host, int port,
                             const std::string &target_id,
-                            bool include_protocol);
+                            bool               include_protocol);
 
 class InspectorIoDelegate;
 
@@ -77,8 +77,8 @@ public:
         uv_close(reinterpret_cast<uv_handle_t *>(&thread_req_), nullptr);
     }
 
-    int port() const { return port_; }
-    std::string host() const { return options_.host_name(); }
+    int                      port() const { return port_; }
+    std::string              host() const { return options_.host_name(); }
     std::vector<std::string> GetTargetIds() const;
 
 private:
@@ -118,7 +118,7 @@ private:
     // used to be empty.
     template <typename ActionType>
     bool AppendMessage(MessageQueue<ActionType> *vector, ActionType action,
-                       int session_id,
+                       int                                         session_id,
                        std::unique_ptr<v8_inspector::StringBuffer> buffer);
     // Used as equivalent of a thread-safe "pop" of an entire queue's content.
     template <typename ActionType>
@@ -139,31 +139,31 @@ private:
     uv_sem_t thread_start_sem_;
 
     InspectorIoDelegate *delegate_;
-    State state_;
-    node::Environment *parent_env_;
+    State                state_;
+    node::Environment *  parent_env_;
 
     // Attached to the uv_loop in ThreadMain()
     uv_async_t thread_req_;
     // Note that this will live while the async is being closed - likely, past
     // the parent object lifespan
-    std::pair<uv_async_t, Agent *> *main_thread_req_;
+    std::pair<uv_async_t, Agent *> *          main_thread_req_;
     std::unique_ptr<InspectorSessionDelegate> session_delegate_;
-    v8::Platform *platform_;
+    v8::Platform *                            platform_;
 
     // Message queues
-    ConditionVariable incoming_message_cond_;
-    Mutex state_lock_; // Locked before mutating either queue.
+    ConditionVariable             incoming_message_cond_;
+    Mutex                         state_lock_; // Locked before mutating either queue.
     MessageQueue<InspectorAction> incoming_message_queue_;
     MessageQueue<TransportAction> outgoing_message_queue_;
     MessageQueue<InspectorAction> dispatching_message_queue_;
 
     bool dispatching_messages_;
-    int session_id_;
+    int  session_id_;
 
     std::string script_name_;
     std::string script_path_;
-    const bool wait_for_connect_;
-    int port_;
+    const bool  wait_for_connect_;
+    int         port_;
 
     friend class DispatchMessagesTask;
     friend class IoSessionDelegate;

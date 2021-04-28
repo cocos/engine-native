@@ -23,29 +23,27 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(linker, "\"/manifestdependency:type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='X86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-#include "cocos/base/UTF8.h"
-#include "stdafx.h"
-#include <io.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <stdio.h>
-#include <fcntl.h>
 #include <Commdlg.h>
+#include <MMSystem.h>
 #include <Shlobj.h>
-#include <winnls.h>
-#include <shobjidl.h>
+#include <Winuser.h>
+#include <fcntl.h>
+#include <io.h>
+#include <malloc.h>
 #include <objbase.h>
 #include <objidl.h>
+#include <shellapi.h>
 #include <shlguid.h>
-#include <shellapi.h>
-#include <Winuser.h>
-#include <shellapi.h>
-#include <MMSystem.h>
+#include <shobjidl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <winnls.h>
 #include <sstream>
+#include "cocos/base/UTF8.h"
+#include "stdafx.h"
 
 #include "SimulatorWin.h"
 
@@ -55,208 +53,179 @@
 #include "runtime/Runtime.h"
 
 #include "platform/Application.h"
-#include "platform/win32/PlayerWin.h"
-#include "platform/win32/PlayerMenuServiceWin.h"
 #include "platform/FileUtils.h"
+#include "platform/win32/PlayerMenuServiceWin.h"
+#include "platform/win32/PlayerWin.h"
 
-#include "platform/StdC.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
+#include "platform/StdC.h"
 #include "resource.h"
 
-namespace
-{
-    std::weak_ptr<cc::View> gView;
-    /**
+namespace {
+std::weak_ptr<cc::View> gView;
+/**
     @brief  This function changes the PVRFrame show/hide setting in register.
     @param  bEnable If true show the PVRFrame window, otherwise hide.
     */
-    void PVRFrameEnableControlWindow(bool bEnable)
-    {
-        HKEY hKey = 0;
+void PVRFrameEnableControlWindow(bool bEnable) {
+    HKEY hKey = 0;
 
-        // Open PVRFrame control key, if not exist create it.
-        if (ERROR_SUCCESS != RegCreateKeyExW(HKEY_CURRENT_USER,
-            L"Software\\Imagination Technologies\\PVRVFRame\\STARTUP\\",
-            0,
-            0,
-            REG_OPTION_NON_VOLATILE,
-            KEY_ALL_ACCESS,
-            0,
-            &hKey,
-            nullptr))
-        {
-            return;
-        }
-
-        const WCHAR* wszValue = L"hide_gui";
-        const WCHAR* wszNewData = (bEnable) ? L"NO" : L"YES";
-        WCHAR wszOldData[256] = { 0 };
-        DWORD   dwSize = sizeof(wszOldData);
-        LSTATUS status = RegQueryValueExW(hKey, wszValue, 0, nullptr, (LPBYTE)wszOldData, &dwSize);
-        if (ERROR_FILE_NOT_FOUND == status              // the key not exist
-            || (ERROR_SUCCESS == status                 // or the hide_gui value is exist
-                && 0 != wcscmp(wszNewData, wszOldData)))    // but new data and old data not equal
-        {
-            dwSize = sizeof(WCHAR) * (wcslen(wszNewData) + 1);
-            RegSetValueEx(hKey, wszValue, 0, REG_SZ, (const BYTE*)wszNewData, dwSize);
-        }
-
-        RegCloseKey(hKey);
+    // Open PVRFrame control key, if not exist create it.
+    if (ERROR_SUCCESS != RegCreateKeyExW(HKEY_CURRENT_USER,
+                                         L"Software\\Imagination Technologies\\PVRVFRame\\STARTUP\\",
+                                         0,
+                                         0,
+                                         REG_OPTION_NON_VOLATILE,
+                                         KEY_ALL_ACCESS,
+                                         0,
+                                         &hKey,
+                                         nullptr)) {
+        return;
     }
 
-    bool setCanvasCallback(se::Object* global)
+    const WCHAR* wszValue        = L"hide_gui";
+    const WCHAR* wszNewData      = (bEnable) ? L"NO" : L"YES";
+    WCHAR        wszOldData[256] = {0};
+    DWORD        dwSize          = sizeof(wszOldData);
+    LSTATUS      status          = RegQueryValueExW(hKey, wszValue, 0, nullptr, (LPBYTE)wszOldData, &dwSize);
+    if (ERROR_FILE_NOT_FOUND == status               // the key not exist
+        || (ERROR_SUCCESS == status                  // or the hide_gui value is exist
+            && 0 != wcscmp(wszNewData, wszOldData))) // but new data and old data not equal
     {
-        std::stringstream ss;
-        se::ScriptEngine* se = se::ScriptEngine::getInstance();
-        auto view = gView.lock();
-        auto handler = view->getWindowHandler();
-        auto viewSize = view->getViewSize();
-        char commandBuf[200] = { 0 };
-        ss << "window.innerWidth = " << viewSize[0] << "; "
-            << "window.innerHeight = " << viewSize[1] << "; "
-            << "window.windowHandler = "
-            << reinterpret_cast<intptr_t>(handler)
-            << ";";
-
-        se->evalString(ss.str().c_str());
-        return true;
+        dwSize = sizeof(WCHAR) * (wcslen(wszNewData) + 1);
+        RegSetValueEx(hKey, wszValue, 0, REG_SZ, (const BYTE*)wszNewData, dwSize);
     }
+
+    RegCloseKey(hKey);
 }
+
+bool setCanvasCallback(se::Object* global) {
+    std::stringstream ss;
+    se::ScriptEngine* se              = se::ScriptEngine::getInstance();
+    auto              view            = gView.lock();
+    auto              handler         = view->getWindowHandler();
+    auto              viewSize        = view->getViewSize();
+    char              commandBuf[200] = {0};
+    ss << "window.innerWidth = " << viewSize[0] << "; "
+       << "window.innerHeight = " << viewSize[1] << "; "
+       << "window.windowHandler = "
+       << reinterpret_cast<intptr_t>(handler)
+       << ";";
+
+    se->evalString(ss.str().c_str());
+    return true;
+}
+} // namespace
 
 //exported function
 std::shared_ptr<cc::View> cc_get_application_view() {
     return gView.lock();
 }
 
-
 using namespace cc;
 
-static WNDPROC g_oldWindowProc = NULL;
-INT_PTR CALLBACK AboutDialogCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
+static WNDPROC   g_oldWindowProc = NULL;
+INT_PTR CALLBACK AboutDialogCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     LOGFONT lf;
-    HFONT hFont;
+    HFONT   hFont;
 
     UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        ZeroMemory(&lf, sizeof(LOGFONT));
-        lf.lfHeight = 24;
-        lf.lfWeight = 200;
-        _tcscpy(lf.lfFaceName, _T("Arial"));
+    switch (message) {
+        case WM_INITDIALOG:
+            ZeroMemory(&lf, sizeof(LOGFONT));
+            lf.lfHeight = 24;
+            lf.lfWeight = 200;
+            _tcscpy(lf.lfFaceName, _T("Arial"));
 
-        hFont = CreateFontIndirect(&lf);
-        if ((HFONT)0 != hFont)
-        {
-            SendMessage(GetDlgItem(hDlg, IDC_ABOUT_TITLE), WM_SETFONT, (WPARAM)hFont, (LPARAM)TRUE);
-        }
-        return (INT_PTR)TRUE;
-
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
+            hFont = CreateFontIndirect(&lf);
+            if ((HFONT)0 != hFont) {
+                SendMessage(GetDlgItem(hDlg, IDC_ABOUT_TITLE), WM_SETFONT, (WPARAM)hFont, (LPARAM)TRUE);
+            }
             return (INT_PTR)TRUE;
-        }
-        break;
+
+        case WM_COMMAND:
+            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
+                EndDialog(hDlg, LOWORD(wParam));
+                return (INT_PTR)TRUE;
+            }
+            break;
     }
     return (INT_PTR)FALSE;
 }
 
-
-void onHelpAbout()
-{
+void onHelpAbout() {
     DialogBox(GetModuleHandle(NULL),
               MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
               cc_get_application_view()->getWindowHandler(),
               AboutDialogCallback);
 }
 
-
-void shutDownApp()
-{
-    
+void shutDownApp() {
     ::SendMessage(cc_get_application_view()->getWindowHandler(), WM_CLOSE, NULL, NULL);
 }
 
-std::string getCurAppPath(void)
-{
+std::string getCurAppPath(void) {
     TCHAR szAppDir[MAX_PATH] = {0};
     if (!GetModuleFileName(NULL, szAppDir, MAX_PATH))
         return "";
     int nEnd = 0;
-    for (int i = 0; szAppDir[i]; i++)
-    {
+    for (int i = 0; szAppDir[i]; i++) {
         if (szAppDir[i] == '\\')
             nEnd = i;
     }
     szAppDir[nEnd] = 0;
-    int iLen = 2 * wcslen(szAppDir);
-    char* chRtn = new char[iLen + 1];
+    int   iLen     = 2 * wcslen(szAppDir);
+    char* chRtn    = new char[iLen + 1];
     wcstombs(chRtn, szAppDir, iLen + 1);
     std::string strPath = chRtn;
     delete[] chRtn;
-    chRtn = NULL;
+    chRtn                 = NULL;
     char fuldir[MAX_PATH] = {0};
     _fullpath(fuldir, strPath.c_str(), MAX_PATH);
     return fuldir;
 }
 
-static bool stringEndWith(const std::string str, const std::string needle)
-{
-    if (str.length() >= needle.length())
-    {
+static bool stringEndWith(const std::string str, const std::string needle) {
+    if (str.length() >= needle.length()) {
         return (0 == str.compare(str.length() - needle.length(), needle.length(), needle));
     }
     return false;
 }
 
-SimulatorWin *SimulatorWin::_instance = nullptr;
+SimulatorWin* SimulatorWin::_instance = nullptr;
 
-SimulatorWin *SimulatorWin::getInstance()
-{
-    if (!_instance)
-    {
+SimulatorWin* SimulatorWin::getInstance() {
+    if (!_instance) {
         _instance = new SimulatorWin();
     }
     return _instance;
 }
 
 SimulatorWin::SimulatorWin()
-    : _hwnd(NULL)
-    , _hwndConsole(NULL)
-    , _writeDebugLogFile(nullptr)
-{
+: _hwnd(NULL), _hwndConsole(NULL), _writeDebugLogFile(nullptr) {
 }
 
-SimulatorWin::~SimulatorWin()
-{
-    if (_writeDebugLogFile)
-    {
+SimulatorWin::~SimulatorWin() {
+    if (_writeDebugLogFile) {
         fclose(_writeDebugLogFile);
     }
 }
 
-void SimulatorWin::quit()
-{
+void SimulatorWin::quit() {
     _quit = true;
 }
 
-void SimulatorWin::relaunch()
-{
+void SimulatorWin::relaunch() {
     _project.setWindowOffset(cc::Vec2(getPositionX(), getPositionY()));
-	openProjectWithProjectConfig(_project);
+    openProjectWithProjectConfig(_project);
 }
 
-void SimulatorWin::openNewPlayer()
-{
+void SimulatorWin::openNewPlayer() {
     openNewPlayerWithProjectConfig(_project);
 }
 
-void SimulatorWin::openNewPlayerWithProjectConfig(const ProjectConfig &config)
-{
-    static long taskid = 100;
+void SimulatorWin::openNewPlayerWithProjectConfig(const ProjectConfig& config) {
+    static long  taskid = 100;
     stringstream buf;
     buf << taskid++;
 
@@ -269,11 +238,11 @@ void SimulatorWin::openNewPlayerWithProjectConfig(const ProjectConfig &config)
 
     // http://msdn.microsoft.com/en-us/library/windows/desktop/ms682499(v=vs.85).aspx
     SECURITY_ATTRIBUTES sa = {0};
-    sa.nLength = sizeof(sa);
+    sa.nLength             = sizeof(sa);
 
     PROCESS_INFORMATION pi = {0};
-    STARTUPINFO si = {0};
-    si.cb = sizeof(STARTUPINFO);
+    STARTUPINFO         si = {0};
+    si.cb                  = sizeof(STARTUPINFO);
 
 #define MAX_COMMAND 1024 // lenth of commandLine is always beyond MAX_PATH
 
@@ -282,66 +251,58 @@ void SimulatorWin::openNewPlayerWithProjectConfig(const ProjectConfig &config)
     MultiByteToWideChar(CP_UTF8, 0, commandLine.c_str(), -1, command, MAX_COMMAND);
 
     BOOL success = CreateProcess(NULL,
-                                 command,   // command line
-                                 NULL,      // process security attributes
-                                 NULL,      // primary thread security attributes
-                                 FALSE,     // handles are inherited
-                                 0,         // creation flags
-                                 NULL,      // use parent's environment
-                                 NULL,      // use parent's current directory
-                                 &si,       // STARTUPINFO pointer
-                                 &pi);      // receives PROCESS_INFORMATION
+                                 command, // command line
+                                 NULL,    // process security attributes
+                                 NULL,    // primary thread security attributes
+                                 FALSE,   // handles are inherited
+                                 0,       // creation flags
+                                 NULL,    // use parent's environment
+                                 NULL,    // use parent's current directory
+                                 &si,     // STARTUPINFO pointer
+                                 &pi);    // receives PROCESS_INFORMATION
 
-    if (!success)
-    {
+    if (!success) {
         CC_LOG_DEBUG("PlayerTaskWin::run() - create process failed, for execute %s", commandLine.c_str());
     }
 }
 
-void SimulatorWin::openProjectWithProjectConfig(const ProjectConfig &config)
-{
+void SimulatorWin::openProjectWithProjectConfig(const ProjectConfig& config) {
     quit();
     openNewPlayerWithProjectConfig(config);
 }
 
-int SimulatorWin::getPositionX()
-{
+int SimulatorWin::getPositionX() {
     RECT rect;
     GetWindowRect(_hwnd, &rect);
     return rect.left;
 }
 
-int SimulatorWin::getPositionY()
-{
+int SimulatorWin::getPositionY() {
     RECT rect;
     GetWindowRect(_hwnd, &rect);
     return rect.top;
 }
 
-int SimulatorWin::run()
-{
+int SimulatorWin::run() {
     INITCOMMONCONTROLSEX InitCtrls;
     InitCtrls.dwSize = sizeof(InitCtrls);
-    InitCtrls.dwICC = ICC_WIN95_CLASSES;
+    InitCtrls.dwICC  = ICC_WIN95_CLASSES;
     InitCommonControlsEx(&InitCtrls);
 
     parseCocosProjectConfig(_project);
 
     // load project config from command line args
     std::vector<string> args;
-    for (int i = 0; i < __argc; ++i)
-    {
+    for (int i = 0; i < __argc; ++i) {
         wstring ws(__wargv[i]);
-        string s;
+        string  s;
         s.assign(ws.begin(), ws.end());
         args.push_back(s);
     }
     _project.parseCommandLine(args);
 
-    if (_project.getProjectDir().empty())
-    {
-        if (args.size() == 2)
-        {
+    if (_project.getProjectDir().empty()) {
+        if (args.size() == 2) {
             // for Code IDE before RC2
             _project.setProjectDir(args.at(1));
             _project.setDebuggerType(kCCRuntimeDebuggerCodeIDE);
@@ -352,32 +313,27 @@ int SimulatorWin::run()
     RuntimeEngine::getInstance()->setProjectConfig(_project);
 
     // create console window
-    if (_project.isShowConsole())
-    {
+    if (_project.isShowConsole()) {
         AllocConsole();
         _hwndConsole = GetConsoleWindow();
-        if (_hwndConsole != NULL)
-        {
+        if (_hwndConsole != NULL) {
             ShowWindow(_hwndConsole, SW_SHOW);
             BringWindowToTop(_hwndConsole);
             freopen("CONOUT$", "wt", stdout);
             freopen("CONOUT$", "wt", stderr);
 
             HMENU hmenu = GetSystemMenu(_hwndConsole, FALSE);
-            if (hmenu != NULL)
-            {
+            if (hmenu != NULL) {
                 DeleteMenu(hmenu, SC_CLOSE, MF_BYCOMMAND);
             }
         }
     }
 
     // log file
-    if (_project.isWriteDebugLogToFile())
-    {
+    if (_project.isWriteDebugLogToFile()) {
         const string debugLogFilePath = _project.getDebugLogFilePath();
-        _writeDebugLogFile = fopen(debugLogFilePath.c_str(), "w");
-        if (!_writeDebugLogFile)
-        {
+        _writeDebugLogFile            = fopen(debugLogFilePath.c_str(), "w");
+        if (!_writeDebugLogFile) {
             CC_LOG_DEBUG("Cannot create debug log file %s", debugLogFilePath.c_str());
         }
     }
@@ -389,7 +345,7 @@ int SimulatorWin::run()
 
     // check screen DPI
     HDC screen = GetDC(0);
-    int dpi = GetDeviceCaps(screen, LOGPIXELSX);
+    int dpi    = GetDeviceCaps(screen, LOGPIXELSX);
     ReleaseDC(0, screen);
 
     // set scale with DPI
@@ -402,52 +358,39 @@ int SimulatorWin::run()
     // enable DPI-Aware with DeclareDPIAware.manifest
     // http://msdn.microsoft.com/en-us/library/windows/desktop/dn469266%28v=vs.85%29.aspx#declaring_dpi_awareness
     float screenScale = 1.0f;
-    if (dpi >= 120 && dpi < 144)
-    {
+    if (dpi >= 120 && dpi < 144) {
         screenScale = 1.25f;
-    }
-    else if (dpi >= 144 && dpi < 192)
-    {
+    } else if (dpi >= 144 && dpi < 192) {
         screenScale = 1.5f;
-    }
-    else if (dpi >= 192)
-    {
+    } else if (dpi >= 192) {
         screenScale = 2.0f;
     }
     CC_LOG_DEBUG("SCREEN DPI = %d, SCREEN SCALE = %0.2f", dpi, screenScale);
 
     // check scale
-    cc::Size frameSize = _project.getFrameSize();
-    float frameScale = _project.getFrameScale();
-    if (_project.isRetinaDisplay())
-    {
+    cc::Size frameSize  = _project.getFrameSize();
+    float    frameScale = _project.getFrameScale();
+    if (_project.isRetinaDisplay()) {
         frameSize.width *= screenScale;
         frameSize.height *= screenScale;
-    }
-    else
-    {
+    } else {
         frameScale *= screenScale;
     }
 
     // check screen workarea
     RECT workareaSize;
-    if (SystemParametersInfo(SPI_GETWORKAREA, NULL, &workareaSize, NULL))
-    {
-        float workareaWidth = fabsf(workareaSize.right - workareaSize.left);
+    if (SystemParametersInfo(SPI_GETWORKAREA, NULL, &workareaSize, NULL)) {
+        float workareaWidth  = fabsf(workareaSize.right - workareaSize.left);
         float workareaHeight = fabsf(workareaSize.bottom - workareaSize.top);
-        float frameBorderCX = GetSystemMetrics(SM_CXSIZEFRAME);
-        float frameBorderCY = GetSystemMetrics(SM_CYSIZEFRAME);
+        float frameBorderCX  = GetSystemMetrics(SM_CXSIZEFRAME);
+        float frameBorderCY  = GetSystemMetrics(SM_CYSIZEFRAME);
         workareaWidth -= frameBorderCX * 2;
         workareaHeight -= (frameBorderCY * 2 + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYMENU));
         CC_LOG_DEBUG("WORKAREA WIDTH %0.2f, HEIGHT %0.2f", workareaWidth, workareaHeight);
-        while (true && frameScale > 0.25f)
-        {
-            if (frameSize.width * frameScale > workareaWidth || frameSize.height * frameScale > workareaHeight)
-            {
+        while (true && frameScale > 0.25f) {
+            if (frameSize.width * frameScale > workareaWidth || frameSize.height * frameScale > workareaHeight) {
                 frameScale = frameScale - 0.25f;
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
@@ -460,12 +403,12 @@ int SimulatorWin::run()
     // create opengl view
     const Rect frameRect = Rect(0, 0, frameSize.width, frameSize.height);
     ConfigParser::getInstance()->setInitViewSize(frameSize);
-    const bool isResize = _project.isResizeWindow();
+    const bool        isResize = _project.isResizeWindow();
     std::stringstream title;
     title << "Cocos Simulator (" << _project.getFrameScale() * 100 << "%)";
-    
-    auto frameWidth = (int) (_project.getFrameScale() * frameSize.width);
-    auto frameHeight = (int) (_project.getFrameScale() * frameSize.height);
+
+    auto frameWidth  = (int)(_project.getFrameScale() * frameSize.width);
+    auto frameHeight = (int)(_project.getFrameScale() * frameSize.height);
 
     _view = std::make_shared<cc::View>(title.str(), frameWidth, frameHeight);
 
@@ -490,13 +433,11 @@ int SimulatorWin::run()
     FileUtils::getInstance()->addSearchPath(getApplicationPath().c_str());
 
     // set window position
-    if (_project.getProjectDir().length())
-    {
+    if (_project.getProjectDir().length()) {
         setZoom(_project.getFrameScale());
     }
     Vec2 pos = _project.getWindowOffset();
-    if (pos.x != 0 && pos.y != 0)
-    {
+    if (pos.x != 0 && pos.y != 0) {
         RECT rect;
         GetWindowRect(_hwnd, &rect);
         if (pos.x < 0)
@@ -530,16 +471,15 @@ int SimulatorWin::run()
     ///////////////////////////////////////////////////////////////////////////
     /////////////// changing timer resolution
     ///////////////////////////////////////////////////////////////////////////
-    UINT TARGET_RESOLUTION = 1; // 1 millisecond target resolution
+    UINT     TARGET_RESOLUTION = 1; // 1 millisecond target resolution
     TIMECAPS tc;
-    UINT wTimerRes = 0;
-    if (TIMERR_NOERROR == timeGetDevCaps(&tc, sizeof(TIMECAPS)))
-    {
+    UINT     wTimerRes = 0;
+    if (TIMERR_NOERROR == timeGetDevCaps(&tc, sizeof(TIMECAPS))) {
         wTimerRes = std::min(std::max(tc.wPeriodMin, TARGET_RESOLUTION), tc.wPeriodMax);
         timeBeginPeriod(wTimerRes);
     }
 
-    float dt = 0.f;
+    float       dt    = 0.f;
     const DWORD _16ms = 16;
 
     // Main message loop:
@@ -547,38 +487,34 @@ int SimulatorWin::run()
     LARGE_INTEGER nLast;
     LARGE_INTEGER nNow;
 
-    LONGLONG actualInterval = 0LL; // actual frame internal
+    LONGLONG actualInterval  = 0LL; // actual frame internal
     LONGLONG desiredInterval = 0LL; // desired frame internal, 1 / fps
-    LONG waitMS = 0L;
+    LONG     waitMS          = 0L;
 
     QueryPerformanceCounter(&nLast);
     QueryPerformanceFrequency(&nFreq);
     se::ScriptEngine* se = se::ScriptEngine::getInstance();
 
-
     _app->onResume();
 
-    while (!_quit)
-    {
+    while (!_quit) {
         desiredInterval = (LONGLONG)(1.0 / _app->getPreferredFramesPerSecond() * nFreq.QuadPart);
 
         resume = false;
-        pause = false;
-        while (_view->pollEvent(&_quit, &resume, &pause)) {}
+        pause  = false;
+        while (_view->pollEvent(&_quit, &resume, &pause)) {
+        }
 
         if (pause) _app->onPause();
         if (resume) _app->onResume();
 
         QueryPerformanceCounter(&nNow);
         actualInterval = nNow.QuadPart - nLast.QuadPart;
-        if (actualInterval >= desiredInterval)
-        {
+        if (actualInterval >= desiredInterval) {
             nLast.QuadPart = nNow.QuadPart;
             _app->tick();
             _view->swapbuffer();
-        }
-        else
-        {
+        } else {
             // The precision of timer on Windows is set to highest (1ms) by 'timeBeginPeriod' from above code,
             // but it's still not precise enough. For example, if the precision of timer is 1ms,
             // Sleep(3) may make a sleep of 2ms or 4ms. Therefore, we subtract 1ms here to make Sleep time shorter.
@@ -590,7 +526,6 @@ int SimulatorWin::run()
         }
     }
 
-
     if (wTimerRes != 0)
         timeEndPeriod(wTimerRes);
 
@@ -599,8 +534,7 @@ int SimulatorWin::run()
 
 // services
 
-void SimulatorWin::setupUI()
-{
+void SimulatorWin::setupUI() {
     auto menuBar = player::PlayerProtocol::getInstance()->getMenuService();
 
     // FILE
@@ -609,24 +543,22 @@ void SimulatorWin::setupUI()
 
     // VIEW
     menuBar->addItem("VIEW_MENU", tr("View"));
-    SimulatorConfig *config = SimulatorConfig::getInstance();
-    int current = config->checkScreenSize(_project.getFrameSize());
-    for (int i = 0; i < config->getScreenSizeCount(); i++)
-    {
+    SimulatorConfig* config  = SimulatorConfig::getInstance();
+    int              current = config->checkScreenSize(_project.getFrameSize());
+    for (int i = 0; i < config->getScreenSizeCount(); i++) {
         SimulatorScreenSize size = config->getScreenSize(i);
-        std::stringstream menuId;
+        std::stringstream   menuId;
         menuId << "VIEWSIZE_ITEM_MENU_" << i;
         auto menuItem = menuBar->addItem(menuId.str(), size.title.c_str(), "VIEW_MENU");
 
-        if (i == current)
-        {
+        if (i == current) {
             menuItem->setChecked(true);
         }
     }
 
-    // show FPs 
-    bool displayStats = true; // asume creator default show FPS
-    string fpsItemName = displayStats ? tr("Hide FPS") : tr("Show FPS");
+    // show FPs
+    bool   displayStats = true; // asume creator default show FPS
+    string fpsItemName  = displayStats ? tr("Hide FPS") : tr("Show FPS");
     menuBar->addItem("FPS_MENU", fpsItemName);
 
     // About
@@ -641,30 +573,21 @@ void SimulatorWin::setupUI()
 
     menuBar->addItem("VIEW_SCALE_MENU_SEP", "-", "VIEW_MENU");
     std::vector<player::PlayerMenuItem*> scaleMenuVector;
-    auto scale100Menu = menuBar->addItem("VIEW_SCALE_MENU_100", tr("Zoom Out").append(" (100%)"), "VIEW_MENU");
-    auto scale75Menu = menuBar->addItem("VIEW_SCALE_MENU_75", tr("Zoom Out").append(" (75%)"), "VIEW_MENU");
-    auto scale50Menu = menuBar->addItem("VIEW_SCALE_MENU_50", tr("Zoom Out").append(" (50%)"), "VIEW_MENU");
-    auto scale25Menu = menuBar->addItem("VIEW_SCALE_MENU_25", tr("Zoom Out").append(" (25%)"), "VIEW_MENU");
-    int frameScale = int(_project.getFrameScale() * 100);
+    auto                                 scale100Menu = menuBar->addItem("VIEW_SCALE_MENU_100", tr("Zoom Out").append(" (100%)"), "VIEW_MENU");
+    auto                                 scale75Menu  = menuBar->addItem("VIEW_SCALE_MENU_75", tr("Zoom Out").append(" (75%)"), "VIEW_MENU");
+    auto                                 scale50Menu  = menuBar->addItem("VIEW_SCALE_MENU_50", tr("Zoom Out").append(" (50%)"), "VIEW_MENU");
+    auto                                 scale25Menu  = menuBar->addItem("VIEW_SCALE_MENU_25", tr("Zoom Out").append(" (25%)"), "VIEW_MENU");
+    int                                  frameScale   = int(_project.getFrameScale() * 100);
 
-    if (frameScale == 100)
-    {
+    if (frameScale == 100) {
         scale100Menu->setChecked(true);
-    }
-    else if (frameScale == 75)
-    {
+    } else if (frameScale == 75) {
         scale75Menu->setChecked(true);
-    }
-    else if (frameScale == 50)
-    {
+    } else if (frameScale == 50) {
         scale50Menu->setChecked(true);
-    }
-    else if (frameScale == 25)
-    {
+    } else if (frameScale == 25) {
         scale25Menu->setChecked(true);
-    }
-    else
-    {
+    } else {
         scale100Menu->setChecked(true);
     }
 
@@ -676,93 +599,73 @@ void SimulatorWin::setupUI()
     menuBar->addItem("REFRESH_MENU_SEP", "-", "VIEW_MENU");
     menuBar->addItem("REFRESH_MENU", tr("Refresh"), "VIEW_MENU");
 
-    HWND &hwnd = _hwnd;
-    ProjectConfig &project = _project;
+    HWND&                                hwnd     = _hwnd;
+    ProjectConfig&                       project  = _project;
     EventDispatcher::CustomEventListener listener = [this, &hwnd, &project, scaleMenuVector](const CustomEvent& event) {
-        auto menuEvent = dynamic_cast<const AppEvent&>(event);
-            rapidjson::Document dArgParse;
-            dArgParse.Parse<0>(menuEvent.getDataString().c_str());
-            if (dArgParse.HasMember("name"))
-            {
-                string strcmd = dArgParse["name"].GetString();
+        auto                menuEvent = dynamic_cast<const AppEvent&>(event);
+        rapidjson::Document dArgParse;
+        dArgParse.Parse<0>(menuEvent.getDataString().c_str());
+        if (dArgParse.HasMember("name")) {
+            string strcmd = dArgParse["name"].GetString();
 
-                if (strcmd == "menuClicked")
-                {
-                    player::PlayerMenuItem *menuItem = static_cast<player::PlayerMenuItem*>(menuEvent.args[0].ptrVal);
-                    if (menuItem)
+            if (strcmd == "menuClicked") {
+                player::PlayerMenuItem* menuItem = static_cast<player::PlayerMenuItem*>(menuEvent.args[0].ptrVal);
+                if (menuItem) {
+                    if (menuItem->isChecked()) {
+                        return;
+                    }
+
+                    string data = dArgParse["data"].GetString();
+
+                    if ((data == "CLOSE_MENU") || (data == "EXIT_MENU")) {
+                        _instance->quit();
+                    } else if (data == "REFRESH_MENU") {
+                        _instance->relaunch();
+                    } else if (data.find("VIEW_SCALE_MENU_") == 0) // begin with VIEW_SCALE_MENU_
                     {
-                        if (menuItem->isChecked())
-                        {
-                            return;
+                        string tmp   = data.erase(0, strlen("VIEW_SCALE_MENU_"));
+                        float  scale = atof(tmp.c_str()) / 100.0f;
+                        project.setFrameScale(scale);
+
+                        _instance->openProjectWithProjectConfig(project);
+                    } else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
+                    {
+                        string              tmp   = data.erase(0, strlen("VIEWSIZE_ITEM_MENU_"));
+                        int                 index = atoi(tmp.c_str());
+                        SimulatorScreenSize size  = SimulatorConfig::getInstance()->getScreenSize(index);
+
+                        if (project.isLandscapeFrame()) {
+                            std::swap(size.width, size.height);
                         }
 
-                        string data = dArgParse["data"].GetString();
-
-                        if ((data == "CLOSE_MENU") || (data == "EXIT_MENU"))
-                        {
-                            _instance->quit();
-                        }
-                        else if (data == "REFRESH_MENU")
-                        {
-                            _instance->relaunch();
-                        }
-                        else if (data.find("VIEW_SCALE_MENU_") == 0) // begin with VIEW_SCALE_MENU_
-                        {
-                            string tmp = data.erase(0, strlen("VIEW_SCALE_MENU_"));
-                            float scale = atof(tmp.c_str()) / 100.0f;
-                            project.setFrameScale(scale);
-
-                            _instance->openProjectWithProjectConfig(project);
-                        }
-                        else if (data.find("VIEWSIZE_ITEM_MENU_") == 0) // begin with VIEWSIZE_ITEM_MENU_
-                        {
-                            string tmp = data.erase(0, strlen("VIEWSIZE_ITEM_MENU_"));
-                            int index = atoi(tmp.c_str());
-                            SimulatorScreenSize size = SimulatorConfig::getInstance()->getScreenSize(index);
-
-                            if (project.isLandscapeFrame())
-                            {
-                                std::swap(size.width, size.height);
-                            }
-
-                            project.setFrameSize(cc::Size(size.width, size.height));
-                            project.setWindowOffset(cc::Vec2(_instance->getPositionX(), _instance->getPositionY()));
-                            _instance->openProjectWithProjectConfig(project);
-                        }
-                        else if (data == "DIRECTION_PORTRAIT_MENU")
-                        {
-                            project.changeFrameOrientationToPortait();
-                            _instance->openProjectWithProjectConfig(project);
-                        }
-                        else if (data == "DIRECTION_LANDSCAPE_MENU")
-                        {
-                            project.changeFrameOrientationToLandscape();
-                            _instance->openProjectWithProjectConfig(project);
-                        }
-                        else if (data == "ABOUT_MENUITEM")
-                        {
-                            onHelpAbout();
-                        }
-                        else if (data == "FPS_MENU")
-                        {
-                            bool displayStats = !_app->isDisplayStats();
-                            _app->setDisplayStats(displayStats);
-                            menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
-                        }
+                        project.setFrameSize(cc::Size(size.width, size.height));
+                        project.setWindowOffset(cc::Vec2(_instance->getPositionX(), _instance->getPositionY()));
+                        _instance->openProjectWithProjectConfig(project);
+                    } else if (data == "DIRECTION_PORTRAIT_MENU") {
+                        project.changeFrameOrientationToPortait();
+                        _instance->openProjectWithProjectConfig(project);
+                    } else if (data == "DIRECTION_LANDSCAPE_MENU") {
+                        project.changeFrameOrientationToLandscape();
+                        _instance->openProjectWithProjectConfig(project);
+                    } else if (data == "ABOUT_MENUITEM") {
+                        onHelpAbout();
+                    } else if (data == "FPS_MENU") {
+                        bool displayStats = !_app->isDisplayStats();
+                        _app->setDisplayStats(displayStats);
+                        menuItem->setTitle(displayStats ? tr("Hide FPS") : tr("Show FPS"));
                     }
                 }
             }
+        }
     };
     EventDispatcher::addCustomEventListener(kAppEventName, listener);
 }
 
-void SimulatorWin::setZoom(float frameScale)
-{
+void SimulatorWin::setZoom(float frameScale) {
     _project.setFrameScale(frameScale);
 }
 
-void SimulatorWin::updateWindowTitle()
-{
+void SimulatorWin::updateWindowTitle() {
     std::stringstream title;
     title << "Cocos " << tr("Simulator") << " (" << _project.getFrameScale() * 100 << "%)";
     std::u16string u16title;
@@ -771,8 +674,7 @@ void SimulatorWin::updateWindowTitle()
 }
 
 // debug log
-void SimulatorWin::writeDebugLog(const char *log)
-{
+void SimulatorWin::writeDebugLog(const char* log) {
     if (!_writeDebugLogFile) return;
 
     fputs(log, _writeDebugLogFile);
@@ -780,24 +682,20 @@ void SimulatorWin::writeDebugLog(const char *log)
     fflush(_writeDebugLogFile);
 }
 
-void SimulatorWin::parseCocosProjectConfig(ProjectConfig &config)
-{
+void SimulatorWin::parseCocosProjectConfig(ProjectConfig& config) {
     // get project directory
     ProjectConfig tmpConfig;
     // load project config from command line args
     std::vector<string> args;
-    for (int i = 0; i < __argc; ++i)
-    {
+    for (int i = 0; i < __argc; ++i) {
         wstring ws(__wargv[i]);
-        string s;
+        string  s;
         s.assign(ws.begin(), ws.end());
         args.push_back(s);
     }
 
-    if (args.size() >= 2)
-    {
-        if (args.size() && args.at(1).at(0) == '/')
-        {
+    if (args.size() >= 2) {
+        if (args.size() && args.at(1).at(0) == '/') {
             // IDEA:
             // for Code IDE before RC2
             tmpConfig.setProjectDir(args.at(1));
@@ -808,12 +706,9 @@ void SimulatorWin::parseCocosProjectConfig(ProjectConfig &config)
 
     // set project directory as search root path
     string solutionDir = tmpConfig.getProjectDir();
-    if (!solutionDir.empty())
-    {
-        for (int i = 0; i < solutionDir.size(); ++i)
-        {
-            if (solutionDir[i] == '\\')
-            {
+    if (!solutionDir.empty()) {
+        for (int i = 0; i < solutionDir.size(); ++i) {
+            if (solutionDir[i] == '\\') {
                 solutionDir[i] = '/';
             }
         }
@@ -827,9 +722,7 @@ void SimulatorWin::parseCocosProjectConfig(ProjectConfig &config)
         FileUtils::getInstance()->setDefaultResourceRootPath(solutionDir);
         FileUtils::getInstance()->addSearchPath(solutionDir);
         FileUtils::getInstance()->addSearchPath(tmpConfig.getProjectDir().c_str());
-    }
-    else
-    {
+    } else {
         FileUtils::getInstance()->setDefaultResourceRootPath(tmpConfig.getProjectDir().c_str());
     }
 
@@ -840,12 +733,9 @@ void SimulatorWin::parseCocosProjectConfig(ProjectConfig &config)
     config.setConsolePort(parser->getConsolePort());
     config.setFileUploadPort(parser->getUploadPort());
     config.setFrameSize(parser->getInitViewSize());
-    if (parser->isLanscape())
-    {
+    if (parser->isLanscape()) {
         config.changeFrameOrientationToLandscape();
-    }
-    else
-    {
+    } else {
         config.changeFrameOrientationToPortait();
     }
     config.setScriptFile(parser->getEntryFile());
@@ -854,14 +744,11 @@ void SimulatorWin::parseCocosProjectConfig(ProjectConfig &config)
 //
 // D:\aaa\bbb\ccc\ddd\abc.txt --> D:/aaa/bbb/ccc/ddd/abc.txt
 //
-std::string SimulatorWin::convertPathFormatToUnixStyle(const std::string& path)
-{
+std::string SimulatorWin::convertPathFormatToUnixStyle(const std::string& path) {
     std::string ret = path;
-    int len = ret.length();
-    for (int i = 0; i < len; ++i)
-    {
-        if (ret[i] == '\\')
-        {
+    int         len = ret.length();
+    for (int i = 0; i < len; ++i) {
+        if (ret[i] == '\\') {
             ret[i] = '/';
         }
     }
@@ -871,15 +758,14 @@ std::string SimulatorWin::convertPathFormatToUnixStyle(const std::string& path)
 //
 // @return: C:/Users/win8/Documents/
 //
-std::string SimulatorWin::getUserDocumentPath()
-{
+std::string SimulatorWin::getUserDocumentPath() {
     TCHAR filePath[MAX_PATH];
     SHGetSpecialFolderPath(NULL, filePath, CSIDL_PERSONAL, FALSE);
-    int length = 2 * wcslen(filePath);
+    int   length     = 2 * wcslen(filePath);
     char* tempstring = new char[length + 1];
     wcstombs(tempstring, filePath, length + 1);
     string userDocumentPath(tempstring);
-    delete [] tempstring;
+    delete[] tempstring;
 
     userDocumentPath = convertPathFormatToUnixStyle(userDocumentPath);
     userDocumentPath.append("/");
@@ -890,23 +776,22 @@ std::string SimulatorWin::getUserDocumentPath()
 //
 // convert Unicode/LocalCode TCHAR to Utf8 char
 //
-char* SimulatorWin::convertTCharToUtf8(const TCHAR* src)
-{
+char* SimulatorWin::convertTCharToUtf8(const TCHAR* src) {
 #ifdef UNICODE
-    WCHAR* tmp = (WCHAR*)src;
+    WCHAR* tmp  = (WCHAR*)src;
     size_t size = wcslen(src) * 3 + 1;
-    char* dest = new char[size];
+    char*  dest = new char[size];
     memset(dest, 0, size);
     WideCharToMultiByte(CP_UTF8, 0, tmp, -1, dest, size, NULL, NULL);
     return dest;
 #else
-    char* tmp = (char*)src;
+    char*  tmp  = (char*)src;
     uint32 size = strlen(tmp) + 1;
     WCHAR* dest = new WCHAR[size];
-    memset(dest, 0, sizeof(WCHAR)*size);
+    memset(dest, 0, sizeof(WCHAR) * size);
     MultiByteToWideChar(CP_ACP, 0, src, -1, dest, (int)size); // convert local code to unicode.
 
-    size = wcslen(dest) * 3 + 1;
+    size        = wcslen(dest) * 3 + 1;
     char* dest2 = new char[size];
     memset(dest2, 0, size);
     WideCharToMultiByte(CP_UTF8, 0, dest, -1, dest2, size, NULL, NULL); // convert unicode to utf8.
@@ -916,129 +801,108 @@ char* SimulatorWin::convertTCharToUtf8(const TCHAR* src)
 }
 
 //
-std::string SimulatorWin::getApplicationExePath()
-{
+std::string SimulatorWin::getApplicationExePath() {
     TCHAR szFileName[MAX_PATH];
     GetModuleFileName(NULL, szFileName, MAX_PATH);
     std::u16string u16ApplicationName;
-    char *applicationExePath = convertTCharToUtf8(szFileName);
-    std::string path(applicationExePath);
+    char*          applicationExePath = convertTCharToUtf8(szFileName);
+    std::string    path(applicationExePath);
     CC_SAFE_FREE(applicationExePath);
 
     return path;
 }
 
-std::string SimulatorWin::getApplicationPath()
-{
+std::string SimulatorWin::getApplicationPath() {
     std::string path = getApplicationExePath();
-    size_t pos;
-    while ((pos = path.find_first_of("\\")) != std::string::npos)
-    {
+    size_t      pos;
+    while ((pos = path.find_first_of("\\")) != std::string::npos) {
         path.replace(pos, 1, "/");
     }
     size_t p = path.find_last_of("/");
     string workdir;
-    if (p != path.npos)
-    {
+    if (p != path.npos) {
         workdir = path.substr(0, p);
     }
 
     return workdir;
 }
 
-LRESULT CALLBACK SimulatorWin::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT CALLBACK SimulatorWin::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (!_instance) return 0;
 
-    switch (uMsg)
-    {
-    case WM_SYSCOMMAND:
-    case WM_COMMAND:
-    {
-        if (HIWORD(wParam) == 0)
-        {
-            // menu
-            WORD menuId = LOWORD(wParam);
-            auto menuService = dynamic_cast<player::PlayerMenuServiceWin*> (player::PlayerProtocol::getInstance()->getMenuService());
-            auto menuItem = menuService->getItemByCommandId(menuId);
-            if (menuItem)
-            {
-                AppEvent event(kAppEventName, APP_EVENT_MENU);
+    switch (uMsg) {
+        case WM_SYSCOMMAND:
+        case WM_COMMAND: {
+            if (HIWORD(wParam) == 0) {
+                // menu
+                WORD menuId      = LOWORD(wParam);
+                auto menuService = dynamic_cast<player::PlayerMenuServiceWin*>(player::PlayerProtocol::getInstance()->getMenuService());
+                auto menuItem    = menuService->getItemByCommandId(menuId);
+                if (menuItem) {
+                    AppEvent event(kAppEventName, APP_EVENT_MENU);
 
-                std::stringstream buf;
-                buf << "{\"data\":\"" << menuItem->getMenuId().c_str() << "\"";
-                buf << ",\"name\":" << "\"menuClicked\"" << "}";
-                event.setDataString(buf.str());
-                event.args[0].ptrVal = (void*)menuItem;
-                cc::EventDispatcher::dispatchCustomEvent(event);
+                    std::stringstream buf;
+                    buf << "{\"data\":\"" << menuItem->getMenuId().c_str() << "\"";
+                    buf << ",\"name\":"
+                        << "\"menuClicked\""
+                        << "}";
+                    event.setDataString(buf.str());
+                    event.args[0].ptrVal = (void*)menuItem;
+                    cc::EventDispatcher::dispatchCustomEvent(event);
+                }
+
+                if (menuId == ID_HELP_ABOUT) {
+                    onHelpAbout();
+                }
             }
-
-            if (menuId == ID_HELP_ABOUT)
-            {
-                onHelpAbout();
-            }
-        }
-        break;
-    }
-    case WM_KEYDOWN:
-    {
-        if (wParam == VK_F5)
-        {
-            _instance->relaunch();
-        }
-        break;
-    }
-
-    case WM_COPYDATA:
-    {
-        PCOPYDATASTRUCT pMyCDS = (PCOPYDATASTRUCT)lParam;
-        if (pMyCDS->dwData == 1)
-        {
-            const char *szBuf = (const char*)(pMyCDS->lpData);
-            SimulatorWin::getInstance()->writeDebugLog(szBuf);
             break;
         }
-    }
+        case WM_KEYDOWN: {
+            if (wParam == VK_F5) {
+                _instance->relaunch();
+            }
+            break;
+        }
 
-    case WM_DESTROY:
-    {
-        DragAcceptFiles(hWnd, FALSE);
-        break;
-    }
+        case WM_COPYDATA: {
+            PCOPYDATASTRUCT pMyCDS = (PCOPYDATASTRUCT)lParam;
+            if (pMyCDS->dwData == 1) {
+                const char* szBuf = (const char*)(pMyCDS->lpData);
+                SimulatorWin::getInstance()->writeDebugLog(szBuf);
+                break;
+            }
+        }
 
+        case WM_DESTROY: {
+            DragAcceptFiles(hWnd, FALSE);
+            break;
+        }
     }
     return g_oldWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-void SimulatorWin::onOpenFile(const std::string &filePath)
-{
+void SimulatorWin::onOpenFile(const std::string& filePath) {
     string entry = filePath;
     if (entry.empty()) return;
 
-    if (stringEndWith(entry, "config.json") || stringEndWith(entry, ".csb") || stringEndWith(entry, ".csd"))
-    {
+    if (stringEndWith(entry, "config.json") || stringEndWith(entry, ".csb") || stringEndWith(entry, ".csd")) {
         replaceAll(entry, "\\", "/");
         size_t p = entry.find_last_of("/");
-        if (p != entry.npos)
-        {
+        if (p != entry.npos) {
             string workdir = entry.substr(0, p);
             _project.setProjectDir(workdir);
         }
 
         _project.setScriptFile(entry);
-        if (stringEndWith(entry, CONFIG_FILE))
-        {
+        if (stringEndWith(entry, CONFIG_FILE)) {
             ConfigParser::getInstance()->readConfig(entry);
             _project.setScriptFile(ConfigParser::getInstance()->getEntryFile());
         }
         openProjectWithProjectConfig(_project);
-    }
-    else
-    {
-        auto title = tr("Open File") + tr("Error");
-        auto msg = tr("Only support") + " config.json;*.csb;*.csd";
+    } else {
+        auto title  = tr("Open File") + tr("Error");
+        auto msg    = tr("Only support") + " config.json;*.csb;*.csd";
         auto msgBox = player::PlayerProtocol::getInstance()->getMessageBoxService();
         msgBox->showMessageBox(title, msg);
     }
 }
-

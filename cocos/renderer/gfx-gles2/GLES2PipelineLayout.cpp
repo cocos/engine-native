@@ -46,10 +46,10 @@ void GLES2PipelineLayout::doInit(const PipelineLayoutInfo &info) {
     uint offset = 0u;
     _gpuPipelineLayout->dynamicOffsetIndices.resize(_setLayouts.size());
     for (uint i = 0u; i < _setLayouts.size(); i++) {
-        DescriptorSetLayout *setLayout = _setLayouts[i];
+        DescriptorSetLayout *        setLayout    = _setLayouts[i];
         GLES2GPUDescriptorSetLayout *gpuSetLayout = static_cast<GLES2DescriptorSetLayout *>(setLayout)->gpuDescriptorSetLayout();
-        size_t dynamicCount = gpuSetLayout->dynamicBindings.size();
-        vector<int> &indices = _gpuPipelineLayout->dynamicOffsetIndices[i];
+        size_t                       dynamicCount = gpuSetLayout->dynamicBindings.size();
+        vector<int> &                indices      = _gpuPipelineLayout->dynamicOffsetIndices[i];
         indices.assign(setLayout->getBindingIndices().size(), -1);
 
         for (uint j = 0u; j < dynamicCount; j++) {
@@ -66,7 +66,6 @@ void GLES2PipelineLayout::doInit(const PipelineLayoutInfo &info) {
 }
 
 void GLES2PipelineLayout::doDestroy() {
-
     if (_gpuPipelineLayout) {
         CC_DELETE(_gpuPipelineLayout);
         _gpuPipelineLayout = nullptr;

@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
 #include "MemTracker.h"
 #include "../StringUtil.h"
+#include "base/CoreStd.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include <android/log.h>
@@ -58,11 +58,11 @@ namespace cc {
 
 struct AllocHashNode {
     tommy_hashdyn_node node;
-    void *key;
-    unsigned int bytes;
-    const char *filename;
-    const char *function;
-    unsigned int line;
+    void *             key;
+    unsigned int       bytes;
+    const char *       filename;
+    const char *       function;
+    unsigned int       line;
 };
 
 struct AllocListParam {
@@ -83,19 +83,19 @@ static int HashNodeCompare(const void *arg, const void *obj) {
 }
 
 static void HashNodeListAndFree(void *arg, void *obj) {
-    AllocHashNode *node = (AllocHashNode *)obj;
+    AllocHashNode * node  = (AllocHashNode *)obj;
     AllocListParam *param = (AllocListParam *)arg;
-    int len = StringUtil::printf(param->buf, param->last, "%s(%u): {%u bytes} functions: %s\n", (node->filename ? node->filename : "(unknown source)"),
+    int             len   = StringUtil::printf(param->buf, param->last, "%s(%u): {%u bytes} functions: %s\n", (node->filename ? node->filename : "(unknown source)"),
                                  node->line, node->bytes, (node->function ? node->function : ""));
     param->buf += len;
     FreeHashNode(node);
 }
 
 static void HashNodeListAndDump(void *arg, void *obj) {
-    AllocHashNode *node = (AllocHashNode *)obj;
-    AllocDumpParam *param = (AllocDumpParam *)arg;
-    const char *key = node->filename ? node->filename : "null";
-    std::map<std::string, unsigned int>::iterator ptr = param->allocMap.find(key);
+    AllocHashNode *                               node  = (AllocHashNode *)obj;
+    AllocDumpParam *                              param = (AllocDumpParam *)arg;
+    const char *                                  key   = node->filename ? node->filename : "null";
+    std::map<std::string, unsigned int>::iterator ptr   = param->allocMap.find(key);
     if (ptr == param->allocMap.end()) {
         param->allocMap[key] = node->bytes;
     } else {
@@ -129,12 +129,12 @@ void MemTracker::RecordAlloc(void *ptr, size_t sz, const char *file, size_t ln, 
     if (node) {
         CCASSERT(0, "Double allocation with same address - this probably means you have a mismatched allocation / deallocation style.");
     } else {
-        node = (AllocHashNode *)malloc(sizeof(AllocHashNode));
-        node->key = ptr;
-        node->bytes = (unsigned int)sz;
+        node           = (AllocHashNode *)malloc(sizeof(AllocHashNode));
+        node->key      = ptr;
+        node->bytes    = (unsigned int)sz;
         node->filename = file;
         node->function = func;
-        node->line = (unsigned int)ln;
+        node->line     = (unsigned int)ln;
         tommy_hashdyn_insert((tommy_hashdyn *)allocations_, &node->node, node, hash);
         total_memory_allocated_ += sz;
     }
@@ -160,11 +160,11 @@ void MemTracker::RecordReAlloc(void *oldptr, void *ptr, size_t sz, const char *f
 
     AllocHashNode *node = (AllocHashNode *)tommy_hashdyn_search((tommy_hashdyn *)allocations_, HashNodeCompare, ptr, hash);
     if (node) {
-        int oldsize = (int)node->bytes;
-        node->bytes = (unsigned int)sz;
+        int oldsize    = (int)node->bytes;
+        node->bytes    = (unsigned int)sz;
         node->filename = file;
         node->function = func;
-        node->line = (unsigned int)ln;
+        node->line     = (unsigned int)ln;
         total_memory_allocated_ += ((int)sz - oldsize);
     } else {
         CCASSERT(0, "Reallocation address not found.");
@@ -194,7 +194,7 @@ void MemTracker::RecordFree(void *ptr) {
 }
 
 int MemTracker::GetAllocSize(void *ptr) {
-    int sz = -1;
+    int          sz   = -1;
     tommy_hash_t hash = tommy_inthash_u32((tommy_uint32_t) reinterpret_cast<size_t>(ptr));
 
     mutex_.lock();
@@ -214,17 +214,18 @@ void MemTracker::ReportLeaks() {
         buffer = (char *)malloc(256);
         strcpy(buffer, "MemoryTracker: No memory leaks.\n");
     } else {
-        int len = 768 * 1024;
-        buffer = (char *)malloc(len);
+        int len    = 768 * 1024;
+        buffer     = (char *)malloc(len);
         char *last = buffer + len - 3;
-        char *buf = buffer;
-        buf += sprintf(buffer, "MemoryTracker: Detected memory leaks !!!\n"
-                               "MemoryTracker: (%u) Allocation(s) with total %u bytes.\n"
-                               "MemoryTracker: Dumping allocations ->\n",
+        char *buf  = buffer;
+        buf += sprintf(buffer,
+                       "MemoryTracker: Detected memory leaks !!!\n"
+                       "MemoryTracker: (%u) Allocation(s) with total %u bytes.\n"
+                       "MemoryTracker: Dumping allocations ->\n",
                        count, (unsigned int)total_memory_allocated_);
 
         AllocListParam param;
-        param.buf = buf;
+        param.buf  = buf;
         param.last = last;
         tommy_hashdyn_foreach_arg((tommy_hashdyn *)allocations_, HashNodeListAndFree, &param);
     }
@@ -239,7 +240,7 @@ void MemTracker::ReportLeaks() {
 }
 
 struct AllocDumpNode {
-    std::string name;
+    std::string  name;
     unsigned int bytes;
 };
 
@@ -253,13 +254,13 @@ void MemTracker::DumpMemoryAllocation() {
     std::priority_queue<AllocDumpNode> q;
     for (std::map<std::string, unsigned int>::iterator ptr = param.allocMap.begin(); ptr != param.allocMap.end(); ++ptr) {
         AllocDumpNode node;
-        node.name = ptr->first;
+        node.name  = ptr->first;
         node.bytes = ptr->second;
         q.push(std::move(node));
     }
 
     unsigned int total = 0;
-    char tmpbuf[1024];
+    char         tmpbuf[1024];
     sprintf(tmpbuf, "total memory: %u\n", (unsigned int)total_memory_allocated_);
     std::string str = tmpbuf;
     while (!q.empty()) {

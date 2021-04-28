@@ -24,10 +24,10 @@
  ****************************************************************************/
 
 #include "ProjectConfig/ProjectConfig.h"
+#include <sstream>
 #include "ProjectConfig/SimulatorConfig.h"
 #include "cocos/base/Log.h"
 #include "cocos/platform/FileUtils.h"
-#include <sstream>
 
 #ifdef _MSC_VER
     #define strcasecmp _stricmp
@@ -43,7 +43,7 @@
 
 static std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
     std::stringstream ss(s);
-    std::string item;
+    std::string       item;
     while (std::getline(ss, item, delim)) {
         elems.push_back(item);
     }
@@ -119,7 +119,7 @@ string ProjectConfig::getPackagePath() const {
 string ProjectConfig::getNormalizedPackagePath() const {
     // replace $(PROJDIR)
     auto path = _packagePath;
-    auto pos = string::npos;
+    auto pos  = string::npos;
     while ((pos = path.find("$(PROJDIR)")) != string::npos) {
         path = path.substr(0, pos) + _projectDir + path.substr(pos + 10);
     }
@@ -149,7 +149,7 @@ void ProjectConfig::addPackagePath(const string &packagePath) {
 vector<string> ProjectConfig::getPackagePathArray() const {
     vector<string> arr;
 
-    size_t pos = string::npos;
+    size_t pos  = string::npos;
     size_t prev = 0;
     while ((pos = _packagePath.find_first_of(";", pos + 1)) != string::npos) {
         auto path = _packagePath.substr(prev, pos - prev);
@@ -180,8 +180,8 @@ bool ProjectConfig::isPortraitFrame() const {
 }
 
 void ProjectConfig::changeFrameOrientation() {
-    float w = _frameSize.width;
-    _frameSize.width = _frameSize.height;
+    float w           = _frameSize.width;
+    _frameSize.width  = _frameSize.height;
     _frameSize.height = w;
 }
 
@@ -280,14 +280,14 @@ void ProjectConfig::parseCommandLine(const vector<string> &args) {
             ++it;
             if (it == args.end()) break;
             const string &sizeStr(*it);
-            size_t pos = sizeStr.find('x');
-            int width = 0;
-            int height = 0;
+            size_t        pos    = sizeStr.find('x');
+            int           width  = 0;
+            int           height = 0;
             if (pos != sizeStr.npos && pos > 0) {
                 string widthStr, heightStr;
                 widthStr.assign(sizeStr, 0, pos);
                 heightStr.assign(sizeStr, pos + 1, sizeStr.length() - pos);
-                width = atoi(widthStr.c_str());
+                width  = atoi(widthStr.c_str());
                 height = atoi(heightStr.c_str());
                 setFrameSize(cc::Size(width, height));
             }
@@ -313,9 +313,9 @@ void ProjectConfig::parseCommandLine(const vector<string> &args) {
             ++it;
             if (it == args.end()) break;
             const string &posStr(*it);
-            size_t pos = posStr.find(',');
-            int x = 0;
-            int y = 0;
+            size_t        pos = posStr.find(',');
+            int           x   = 0;
+            int           y   = 0;
             if (pos != posStr.npos && pos > 0) {
                 string xStr, yStr;
                 xStr.assign(posStr, 0, pos);
@@ -475,7 +475,7 @@ vector<string> ProjectConfig::makeCommandLineVector(unsigned int mask /* = kProj
             for (auto &path : _searchPath) {
                 pathbuff << dealWithSpaceWithPath(path) << ";";
             }
-            string pathArgs = pathbuff.str();
+            string pathArgs                 = pathbuff.str();
             pathArgs[pathArgs.length() - 1] = '\0';
 
             ret.push_back("-search-path");
@@ -596,7 +596,7 @@ void ProjectConfig::normalize() {
 
     // package.path
     vector<string> arr = getPackagePathArray();
-    _packagePath = string("");
+    _packagePath       = string("");
     for (auto it = arr.begin(); it != arr.end(); ++it) {
         string path = replaceProjectDirToMacro(*it);
         _packagePath.append(path);
@@ -617,7 +617,7 @@ string ProjectConfig::replaceProjectDirToMacro(const string &path) const {
     }
 
     string result = path;
-    size_t len = _projectDir.length();
+    size_t len    = _projectDir.length();
     if (len > 0 && result.compare(0, len, _projectDir) == 0) {
         result = "$(PROJDIR)";
         result.append(DIRECTORY_SEPARATOR);
@@ -633,7 +633,7 @@ string ProjectConfig::replaceProjectDirToFullPath(const string &path) const {
 
     string result = path;
     if (path.compare(0, 10, "$(PROJDIR)") == 0) {
-        result = _projectDir;
+        result        = _projectDir;
         string suffix = path.substr(10);
         if (suffix[0] == DIRECTORY_SEPARATOR_CHAR) {
             suffix = suffix.substr(1);

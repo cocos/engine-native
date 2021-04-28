@@ -17,16 +17,16 @@
 #define LOG_TAG "AudioResampler"
 //#define LOG_NDEBUG 0
 
+#include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <pthread.h>
 #include <new>
 #include "audio/android/cutils/log.h"
 #include "audio/android/utils/Utils.h"
 //#include <cutils/properties.h>
-#include "audio/android/audio_utils/include/audio_utils/primitives.h"
 #include "audio/android/AudioResampler.h"
+#include "audio/android/audio_utils/include/audio_utils/primitives.h"
 //#include "audio/android/AudioResamplerSinc.h"
 #include "audio/android/AudioResamplerCubic.h"
 
@@ -54,7 +54,7 @@ private:
     // bits to shift the phase fraction down to avoid overflow
     static const int kPreInterpShift = kNumPhaseBits - kNumInterpBits;
 
-    void init() {}
+    void   init() {}
     size_t resampleMono16(int32_t *out, size_t outFrameCount,
                           AudioBufferProvider *provider);
     size_t resampleStereo16(int32_t *out, size_t outFrameCount,
@@ -98,7 +98,7 @@ bool AudioResampler::qualityIsSupported(src_quality quality) {
 
 // ----------------------------------------------------------------------------
 
-static pthread_once_t once_control = PTHREAD_ONCE_INIT;
+static pthread_once_t              once_control   = PTHREAD_ONCE_INIT;
 static AudioResampler::src_quality defaultQuality = AudioResampler::DEFAULT_QUALITY;
 
 void AudioResampler::init_routine() {
@@ -133,13 +133,12 @@ uint32_t AudioResampler::qualityMHz(src_quality quality) {
     }
 }
 
-static const uint32_t maxMHz = 130; // an arbitrary number that permits 3 VHQ, should be tunable
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static uint32_t currentMHz = 0;
+static const uint32_t  maxMHz     = 130; // an arbitrary number that permits 3 VHQ, should be tunable
+static pthread_mutex_t mutex      = PTHREAD_MUTEX_INITIALIZER;
+static uint32_t        currentMHz = 0;
 
 AudioResampler *AudioResampler::create(audio_format_t format, int inChannelCount,
                                        int32_t sampleRate, src_quality quality) {
-
     bool atFinalQuality;
     if (quality == DEFAULT_QUALITY) {
         // read the resampler default quality property the first time it is needed
@@ -147,7 +146,7 @@ AudioResampler *AudioResampler::create(audio_format_t format, int inChannelCount
         if (ok != 0) {
             ALOGE("%s pthread_once failed: %d", __func__, ok);
         }
-        quality = defaultQuality;
+        quality        = defaultQuality;
         atFinalQuality = false;
     } else {
         atFinalQuality = true;
@@ -167,7 +166,7 @@ AudioResampler *AudioResampler::create(audio_format_t format, int inChannelCount
     pthread_mutex_lock(&mutex);
     for (;;) {
         uint32_t deltaMHz = qualityMHz(quality);
-        uint32_t newMHz = currentMHz + deltaMHz;
+        uint32_t newMHz   = currentMHz + deltaMHz;
         if ((qualityIsSupported(quality) && newMHz <= maxMHz) || atFinalQuality) {
             ALOGV("resampler load %u -> %u MHz due to delta +%u MHz from quality %d",
                   currentMHz, newMHz, deltaMHz, quality);
@@ -237,7 +236,7 @@ AudioResampler *AudioResampler::create(audio_format_t format, int inChannelCount
     return resampler;
 }
 
-AudioResampler::AudioResampler(int inChannelCount,
+AudioResampler::AudioResampler(int     inChannelCount,
                                int32_t sampleRate, src_quality quality) : mChannelCount(inChannelCount),
                                                                           mSampleRate(sampleRate),
                                                                           mInSampleRate(sampleRate),
@@ -246,7 +245,6 @@ AudioResampler::AudioResampler(int inChannelCount,
                                                                           mLocalTimeFreq(0),
                                                                           mPTS(AudioBufferProvider::kInvalidPTS),
                                                                           mQuality(quality) {
-
     const int maxChannels = 2; //cjh quality < DYN_LOW_QUALITY ? 2 : 8;
     if (inChannelCount < 1 || inChannelCount > maxChannels) {
         LOG_ALWAYS_FATAL("Unsupported sample format %d quality %d channels",
@@ -258,14 +256,14 @@ AudioResampler::AudioResampler(int inChannelCount,
 
     // initialize common members
     mVolume[0] = mVolume[1] = 0;
-    mBuffer.frameCount = 0;
+    mBuffer.frameCount      = 0;
 }
 
 AudioResampler::~AudioResampler() {
     pthread_mutex_lock(&mutex);
-    src_quality quality = getQuality();
-    uint32_t deltaMHz = qualityMHz(quality);
-    int32_t newMHz = currentMHz - deltaMHz;
+    src_quality quality  = getQuality();
+    uint32_t    deltaMHz = qualityMHz(quality);
+    int32_t     newMHz   = currentMHz - deltaMHz;
     ALOGV("resampler load %u -> %d MHz due to delta -%u MHz from quality %d",
           currentMHz, newMHz, deltaMHz, quality);
     LOG_ALWAYS_FATAL_IF(newMHz < 0, "negative resampler load %d MHz", newMHz);
@@ -274,7 +272,7 @@ AudioResampler::~AudioResampler() {
 }
 
 void AudioResampler::setSampleRate(int32_t inSampleRate) {
-    mInSampleRate = inSampleRate;
+    mInSampleRate   = inSampleRate;
     mPhaseIncrement = (uint32_t)((kPhaseMultiplier * inSampleRate) / mSampleRate);
 }
 
@@ -295,7 +293,6 @@ void AudioResampler::setPTS(int64_t pts) {
 }
 
 int64_t AudioResampler::calculateOutputPTS(int outputFrameIndex) {
-
     if (mPTS == AudioBufferProvider::kInvalidPTS) {
         return AudioBufferProvider::kInvalidPTS;
     } else {
@@ -304,8 +301,8 @@ int64_t AudioResampler::calculateOutputPTS(int outputFrameIndex) {
 }
 
 void AudioResampler::reset() {
-    mInputIndex = 0;
-    mPhaseFraction = 0;
+    mInputIndex        = 0;
+    mPhaseFraction     = 0;
     mBuffer.frameCount = 0;
 }
 
@@ -313,7 +310,6 @@ void AudioResampler::reset() {
 
 size_t AudioResamplerOrder1::resample(int32_t *out, size_t outFrameCount,
                                       AudioBufferProvider *provider) {
-
     // should never happen, but we overflow if it does
     // ALOG_ASSERT(outFrameCount < 32767);
 
@@ -331,22 +327,20 @@ size_t AudioResamplerOrder1::resample(int32_t *out, size_t outFrameCount,
 
 size_t AudioResamplerOrder1::resampleStereo16(int32_t *out, size_t outFrameCount,
                                               AudioBufferProvider *provider) {
-
     int32_t vl = mVolume[0];
     int32_t vr = mVolume[1];
 
-    size_t inputIndex = mInputIndex;
-    uint32_t phaseFraction = mPhaseFraction;
-    uint32_t phaseIncrement = mPhaseIncrement;
-    size_t outputIndex = 0;
-    size_t outputSampleCount = outFrameCount * 2;
-    size_t inFrameCount = getInFrameCountRequired(outFrameCount);
+    size_t   inputIndex        = mInputIndex;
+    uint32_t phaseFraction     = mPhaseFraction;
+    uint32_t phaseIncrement    = mPhaseIncrement;
+    size_t   outputIndex       = 0;
+    size_t   outputSampleCount = outFrameCount * 2;
+    size_t   inFrameCount      = getInFrameCountRequired(outFrameCount);
 
     // ALOGE("starting resample %d frames, inputIndex=%d, phaseFraction=%d, phaseIncrement=%d",
     //      outFrameCount, inputIndex, phaseFraction, phaseIncrement);
 
     while (outputIndex < outputSampleCount) {
-
         // buffer is empty, fetch a new one
         while (mBuffer.frameCount == 0) {
             mBuffer.frameCount = inFrameCount;
@@ -385,7 +379,7 @@ size_t AudioResamplerOrder1::resampleStereo16(int32_t *out, size_t outFrameCount
 #ifdef ASM_ARM_RESAMP1 // asm optimisation for ResamplerOrder1
         if (inputIndex + 2 < mBuffer.frameCount) {
             int32_t *maxOutPt;
-            int32_t maxInIdx;
+            int32_t  maxInIdx;
 
             maxOutPt = out + (outputSampleCount - 2); // 2 because 2 frames per loop
             maxInIdx = mBuffer.frameCount - 2;
@@ -423,23 +417,22 @@ size_t AudioResamplerOrder1::resampleStereo16(int32_t *out, size_t outFrameCount
 
 resampleStereo16_exit:
     // save state
-    mInputIndex = inputIndex;
+    mInputIndex    = inputIndex;
     mPhaseFraction = phaseFraction;
     return outputIndex / 2 /* channels for stereo */;
 }
 
 size_t AudioResamplerOrder1::resampleMono16(int32_t *out, size_t outFrameCount,
                                             AudioBufferProvider *provider) {
-
     int32_t vl = mVolume[0];
     int32_t vr = mVolume[1];
 
-    size_t inputIndex = mInputIndex;
-    uint32_t phaseFraction = mPhaseFraction;
-    uint32_t phaseIncrement = mPhaseIncrement;
-    size_t outputIndex = 0;
-    size_t outputSampleCount = outFrameCount * 2;
-    size_t inFrameCount = getInFrameCountRequired(outFrameCount);
+    size_t   inputIndex        = mInputIndex;
+    uint32_t phaseFraction     = mPhaseFraction;
+    uint32_t phaseIncrement    = mPhaseIncrement;
+    size_t   outputIndex       = 0;
+    size_t   outputSampleCount = outFrameCount * 2;
+    size_t   inFrameCount      = getInFrameCountRequired(outFrameCount);
 
     // ALOGE("starting resample %d frames, inputIndex=%d, phaseFraction=%d, phaseIncrement=%d",
     //      outFrameCount, inputIndex, phaseFraction, phaseIncrement);
@@ -450,7 +443,7 @@ size_t AudioResamplerOrder1::resampleMono16(int32_t *out, size_t outFrameCount,
             provider->getNextBuffer(&mBuffer,
                                     calculateOutputPTS(outputIndex / 2));
             if (mBuffer.raw == NULL) {
-                mInputIndex = inputIndex;
+                mInputIndex    = inputIndex;
                 mPhaseFraction = phaseFraction;
                 goto resampleMono16_exit;
             }
@@ -482,7 +475,7 @@ size_t AudioResamplerOrder1::resampleMono16(int32_t *out, size_t outFrameCount,
 #ifdef ASM_ARM_RESAMP1 // asm optimisation for ResamplerOrder1
         if (inputIndex + 2 < mBuffer.frameCount) {
             int32_t *maxOutPt;
-            int32_t maxInIdx;
+            int32_t  maxInIdx;
 
             maxOutPt = out + (outputSampleCount - 2);
             maxInIdx = (int32_t)mBuffer.frameCount - 2;
@@ -519,7 +512,7 @@ size_t AudioResamplerOrder1::resampleMono16(int32_t *out, size_t outFrameCount,
 
 resampleMono16_exit:
     // save state
-    mInputIndex = inputIndex;
+    mInputIndex    = inputIndex;
     mPhaseFraction = phaseFraction;
     return outputIndex;
 }
@@ -565,17 +558,24 @@ __attribute__((noinline)) void AudioResamplerOrder1::AsmMono16Loop(int16_t *in, 
     asm(
         "stmfd  sp!, {r4, r5, r6, r7, r8, r9, r10, r11, lr}\n"
         // get parameters
-        "   ldr r6, [sp, #" MO_PARAM5 " + 20]\n"  // &phaseFraction
-        "   ldr r6, [r6]\n"                       // phaseFraction
-        "   ldr r7, [sp, #" MO_PARAM5 " + 8]\n"   // &inputIndex
-        "   ldr r7, [r7]\n"                       // inputIndex
-        "   ldr r8, [sp, #" MO_PARAM5 " + 4]\n"   // out
-        "   ldr r0, [sp, #" MO_PARAM5 " + 0]\n"   // &outputIndex
-        "   ldr r0, [r0]\n"                       // outputIndex
-        "   add r8, r8, r0, asl #2\n"             // curOut
-        "   ldr r9, [sp, #" MO_PARAM5 " + 24]\n"  // phaseIncrement
-        "   ldr r10, [sp, #" MO_PARAM5 " + 12]\n" // vl
-        "   ldr r11, [sp, #" MO_PARAM5 " + 16]\n" // vr
+        "   ldr r6, [sp, #" MO_PARAM5
+        " + 20]\n"          // &phaseFraction
+        "   ldr r6, [r6]\n" // phaseFraction
+        "   ldr r7, [sp, #" MO_PARAM5
+        " + 8]\n"           // &inputIndex
+        "   ldr r7, [r7]\n" // inputIndex
+        "   ldr r8, [sp, #" MO_PARAM5
+        " + 4]\n" // out
+        "   ldr r0, [sp, #" MO_PARAM5
+        " + 0]\n"                     // &outputIndex
+        "   ldr r0, [r0]\n"           // outputIndex
+        "   add r8, r8, r0, asl #2\n" // curOut
+        "   ldr r9, [sp, #" MO_PARAM5
+        " + 24]\n" // phaseIncrement
+        "   ldr r10, [sp, #" MO_PARAM5
+        " + 12]\n" // vl
+        "   ldr r11, [sp, #" MO_PARAM5
+        " + 16]\n" // vr
 
         // r0 pin, x0, Samp
 
@@ -631,15 +631,19 @@ __attribute__((noinline)) void AudioResamplerOrder1::AsmMono16Loop(int16_t *in, 
 
         "   bic r6, r6, #0xC0000000\n" // phaseFraction & ...
         // save modified values
-        "   ldr r0, [sp, #" MO_PARAM5 " + 20]\n" // &phaseFraction
-        "   str r6, [r0]\n"                      // phaseFraction
-        "   ldr r0, [sp, #" MO_PARAM5 " + 8]\n"  // &inputIndex
-        "   str r7, [r0]\n"                      // inputIndex
-        "   ldr r0, [sp, #" MO_PARAM5 " + 4]\n"  // out
-        "   sub r8, r0\n"                        // curOut - out
-        "   asr r8, #2\n"                        // new outputIndex
-        "   ldr r0, [sp, #" MO_PARAM5 " + 0]\n"  // &outputIndex
-        "   str r8, [r0]\n"                      // save outputIndex
+        "   ldr r0, [sp, #" MO_PARAM5
+        " + 20]\n"          // &phaseFraction
+        "   str r6, [r0]\n" // phaseFraction
+        "   ldr r0, [sp, #" MO_PARAM5
+        " + 8]\n"           // &inputIndex
+        "   str r7, [r0]\n" // inputIndex
+        "   ldr r0, [sp, #" MO_PARAM5
+        " + 4]\n"         // out
+        "   sub r8, r0\n" // curOut - out
+        "   asr r8, #2\n" // new outputIndex
+        "   ldr r0, [sp, #" MO_PARAM5
+        " + 0]\n"           // &outputIndex
+        "   str r8, [r0]\n" // save outputIndex
 
         "   ldmfd   sp!, {r4, r5, r6, r7, r8, r9, r10, r11, pc}\n");
 }
@@ -682,17 +686,24 @@ __attribute__((noinline)) void AudioResamplerOrder1::AsmStereo16Loop(int16_t *in
     asm(
         "stmfd  sp!, {r4, r5, r6, r7, r8, r9, r10, r11, r12, lr}\n"
         // get parameters
-        "   ldr r6, [sp, #" ST_PARAM5 " + 20]\n"  // &phaseFraction
-        "   ldr r6, [r6]\n"                       // phaseFraction
-        "   ldr r7, [sp, #" ST_PARAM5 " + 8]\n"   // &inputIndex
-        "   ldr r7, [r7]\n"                       // inputIndex
-        "   ldr r8, [sp, #" ST_PARAM5 " + 4]\n"   // out
-        "   ldr r0, [sp, #" ST_PARAM5 " + 0]\n"   // &outputIndex
-        "   ldr r0, [r0]\n"                       // outputIndex
-        "   add r8, r8, r0, asl #2\n"             // curOut
-        "   ldr r9, [sp, #" ST_PARAM5 " + 24]\n"  // phaseIncrement
-        "   ldr r10, [sp, #" ST_PARAM5 " + 12]\n" // vl
-        "   ldr r11, [sp, #" ST_PARAM5 " + 16]\n" // vr
+        "   ldr r6, [sp, #" ST_PARAM5
+        " + 20]\n"          // &phaseFraction
+        "   ldr r6, [r6]\n" // phaseFraction
+        "   ldr r7, [sp, #" ST_PARAM5
+        " + 8]\n"           // &inputIndex
+        "   ldr r7, [r7]\n" // inputIndex
+        "   ldr r8, [sp, #" ST_PARAM5
+        " + 4]\n" // out
+        "   ldr r0, [sp, #" ST_PARAM5
+        " + 0]\n"                     // &outputIndex
+        "   ldr r0, [r0]\n"           // outputIndex
+        "   add r8, r8, r0, asl #2\n" // curOut
+        "   ldr r9, [sp, #" ST_PARAM5
+        " + 24]\n" // phaseIncrement
+        "   ldr r10, [sp, #" ST_PARAM5
+        " + 12]\n" // vl
+        "   ldr r11, [sp, #" ST_PARAM5
+        " + 16]\n" // vr
 
         // r0 pin, x0, Samp
 
@@ -756,15 +767,19 @@ __attribute__((noinline)) void AudioResamplerOrder1::AsmStereo16Loop(int16_t *in
 
         "   bic r6, r6, #0xC0000000\n" // phaseFraction & ...
         // save modified values
-        "   ldr r0, [sp, #" ST_PARAM5 " + 20]\n" // &phaseFraction
-        "   str r6, [r0]\n"                      // phaseFraction
-        "   ldr r0, [sp, #" ST_PARAM5 " + 8]\n"  // &inputIndex
-        "   str r7, [r0]\n"                      // inputIndex
-        "   ldr r0, [sp, #" ST_PARAM5 " + 4]\n"  // out
-        "   sub r8, r0\n"                        // curOut - out
-        "   asr r8, #2\n"                        // new outputIndex
-        "   ldr r0, [sp, #" ST_PARAM5 " + 0]\n"  // &outputIndex
-        "   str r8, [r0]\n"                      // save outputIndex
+        "   ldr r0, [sp, #" ST_PARAM5
+        " + 20]\n"          // &phaseFraction
+        "   str r6, [r0]\n" // phaseFraction
+        "   ldr r0, [sp, #" ST_PARAM5
+        " + 8]\n"           // &inputIndex
+        "   str r7, [r0]\n" // inputIndex
+        "   ldr r0, [sp, #" ST_PARAM5
+        " + 4]\n"         // out
+        "   sub r8, r0\n" // curOut - out
+        "   asr r8, #2\n" // new outputIndex
+        "   ldr r0, [sp, #" ST_PARAM5
+        " + 0]\n"           // &outputIndex
+        "   str r8, [r0]\n" // save outputIndex
 
         "   ldmfd   sp!, {r4, r5, r6, r7, r8, r9, r10, r11, r12, pc}\n");
 }

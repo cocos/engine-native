@@ -25,14 +25,14 @@
 ****************************************************************************/
 
 #include "audio/include/AudioEngine.h"
-#include "platform/FileUtils.h"
-#include "base/Utils.h"
 #include "base/Log.h"
+#include "base/Utils.h"
+#include "platform/FileUtils.h"
 
 #include <condition_variable>
+#include <mutex>
 #include <queue>
 #include <thread>
-#include <mutex>
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
     #include "audio/android/AudioEngine-inl.h"
@@ -56,24 +56,24 @@
 
 using namespace cc;
 
-const int AudioEngine::INVALID_AUDIO_ID = -1;
-const float AudioEngine::TIME_UNKNOWN = -1.0f;
+const int   AudioEngine::INVALID_AUDIO_ID = -1;
+const float AudioEngine::TIME_UNKNOWN     = -1.0f;
 
 //audio file path,audio IDs
 std::unordered_map<std::string, std::list<int>> AudioEngine::_audioPathIDMap;
 //profileName,ProfileHelper
 std::unordered_map<std::string, AudioEngine::ProfileHelper> AudioEngine::_audioPathProfileHelperMap;
-unsigned int AudioEngine::_maxInstances = MAX_AUDIOINSTANCES;
-AudioEngine::ProfileHelper *AudioEngine::_defaultProfileHelper = nullptr;
-std::unordered_map<int, AudioEngine::AudioInfo> AudioEngine::_audioIDInfoMap;
-AudioEngineImpl *AudioEngine::_audioEngineImpl = nullptr;
+unsigned int                                                AudioEngine::_maxInstances         = MAX_AUDIOINSTANCES;
+AudioEngine::ProfileHelper *                                AudioEngine::_defaultProfileHelper = nullptr;
+std::unordered_map<int, AudioEngine::AudioInfo>             AudioEngine::_audioIDInfoMap;
+AudioEngineImpl *                                           AudioEngine::_audioEngineImpl = nullptr;
 
-uint32_t AudioEngine::_onPauseListenerID = 0;
-uint32_t AudioEngine::_onResumeListenerID = 0;
+uint32_t         AudioEngine::_onPauseListenerID  = 0;
+uint32_t         AudioEngine::_onResumeListenerID = 0;
 std::vector<int> AudioEngine::_breakAudioID;
 
 AudioEngine::AudioEngineThreadPool *AudioEngine::s_threadPool = nullptr;
-bool AudioEngine::_isEnabled = true;
+bool                                AudioEngine::_isEnabled   = true;
 
 AudioEngine::AudioInfo::AudioInfo()
 : filePath(nullptr), profileHelper(nullptr), volume(1.0f), loop(false), duration(TIME_UNKNOWN), state(AudioState::INITIALIZING) {
@@ -131,12 +131,12 @@ private:
         }
     }
 
-    std::vector<std::thread> _workers;
+    std::vector<std::thread>          _workers;
     std::queue<std::function<void()>> _taskQueue;
 
-    std::mutex _queueMutex;
+    std::mutex              _queueMutex;
     std::condition_variable _taskCondition;
-    bool _stop;
+    bool                    _stop;
 };
 
 void AudioEngine::end() {
@@ -172,7 +172,7 @@ bool AudioEngine::lazyInit() {
             _audioEngineImpl = nullptr;
             return false;
         }
-        _onPauseListenerID = EventDispatcher::addCustomEventListener(EVENT_COME_TO_BACKGROUND, AudioEngine::onEnterBackground);
+        _onPauseListenerID  = EventDispatcher::addCustomEventListener(EVENT_COME_TO_BACKGROUND, AudioEngine::onEnterBackground);
         _onResumeListenerID = EventDispatcher::addCustomEventListener(EVENT_COME_TO_FOREGROUND, AudioEngine::onEnterForeground);
     }
 
@@ -204,7 +204,7 @@ int AudioEngine::play2d(const std::string &filePath, bool loop, float volume, co
         auto profileHelper = _defaultProfileHelper;
         if (profile && profile != &profileHelper->profile) {
             CC_ASSERT(!profile->name.empty());
-            profileHelper = &_audioPathProfileHelperMap[profile->name];
+            profileHelper          = &_audioPathProfileHelperMap[profile->name];
             profileHelper->profile = *profile;
         }
 
@@ -219,7 +219,7 @@ int AudioEngine::play2d(const std::string &filePath, bool loop, float volume, co
             }
             if (profileHelper->profile.minDelay > TIME_DELAY_PRECISION) {
                 auto currTime = std::chrono::high_resolution_clock::now();
-                auto delay = (float)std::chrono::duration_cast<std::chrono::microseconds>(currTime - profileHelper->lastPlayTime).count() / 1000000.0;
+                auto delay    = (float)std::chrono::duration_cast<std::chrono::microseconds>(currTime - profileHelper->lastPlayTime).count() / 1000000.0;
                 if (profileHelper->lastPlayTime.time_since_epoch().count() != 0 && delay <= profileHelper->profile.minDelay) {
                     CC_LOG_INFO("Fail to play %s cause by limited minimum delay", filePath.c_str());
                     break;
@@ -238,9 +238,9 @@ int AudioEngine::play2d(const std::string &filePath, bool loop, float volume, co
             _audioPathIDMap[filePath].push_back(ret);
             auto it = _audioPathIDMap.find(filePath);
 
-            auto &audioRef = _audioIDInfoMap[ret];
-            audioRef.volume = volume;
-            audioRef.loop = loop;
+            auto &audioRef    = _audioIDInfoMap[ret];
+            audioRef.volume   = volume;
+            audioRef.loop     = loop;
             audioRef.filePath = &it->first;
 
             if (profileHelper) {

@@ -34,7 +34,7 @@ struct Camera;
 
 class CC_DLL ShadowStage : public RenderStage {
 public:
-    ShadowStage() = default;
+    ShadowStage()           = default;
     ~ShadowStage() override = default;
 
     static const RenderStageInfo &getInitializeInfo();
@@ -46,7 +46,7 @@ public:
 
     CC_INLINE void setFramebuffer(gfx::Framebuffer *framebuffer) { _framebuffer = framebuffer; }
     CC_INLINE void setUseData(const Light *light, gfx::Framebuffer *framebuffer) {
-        _light = light;
+        _light       = light;
         _framebuffer = framebuffer;
     };
 
@@ -55,8 +55,8 @@ public:
 private:
     static RenderStageInfo initInfo;
 
-    gfx::Rect _renderArea;
-    const Light *_light = nullptr;
+    gfx::Rect         _renderArea;
+    const Light *     _light       = nullptr;
     gfx::Framebuffer *_framebuffer = nullptr;
 
     ShadowMapBatchedQueue *_additiveShadowQueue = nullptr;

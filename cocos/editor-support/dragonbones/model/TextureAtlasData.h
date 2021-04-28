@@ -37,15 +37,14 @@ DRAGONBONES_NAMESPACE_BEGIN
  * @version DragonBones 3.0
  * @language zh_CN
  */
-class TextureAtlasData : public BaseObject
-{
+class TextureAtlasData : public BaseObject {
     ABSTRACT_CLASS(TextureAtlasData);
 
 public:
     /**
      * @private
      */
-    bool autoSearch;
+    bool          autoSearch;
     TextureFormat format;
     /**
      * @private
@@ -100,8 +99,7 @@ public:
     /**
      * @private
      */
-    inline TextureData* getTexture(const std::string& textureName) const
-    {
+    inline TextureData* getTexture(const std::string& textureName) const {
         return mapFind(textures, textureName);
     }
 
@@ -114,21 +112,18 @@ public: // For WebAssembly.
 /**
  * @internal
  */
-class TextureData : public BaseObject
-{
+class TextureData : public BaseObject {
 public:
     static Rectangle* createRectangle();
 
 public:
-    bool rotated;
-    std::string name;
-    Rectangle region;
-    Rectangle* frame;
+    bool              rotated;
+    std::string       name;
+    Rectangle         region;
+    Rectangle*        frame;
     TextureAtlasData* parent;
 
-    TextureData() :
-        frame(nullptr)
-    {}
+    TextureData() : frame(nullptr) {}
     virtual ~TextureData() = 0;
 
     void copyFrom(const TextureData& value);
@@ -137,11 +132,11 @@ protected:
     virtual void _onClear() override;
 
 public: // For WebAssembly.
-    Rectangle* getRegion() { return &region; }
-    const Rectangle* getFrame() const { return frame; }
-    void setFrame(Rectangle* value) { frame = value; }
+    Rectangle*              getRegion() { return &region; }
+    const Rectangle*        getFrame() const { return frame; }
+    void                    setFrame(Rectangle* value) { frame = value; }
     const TextureAtlasData* getParent() const { return parent; }
-    void setParent(TextureAtlasData* value) { parent = value; }
+    void                    setParent(TextureAtlasData* value) { parent = value; }
 };
 
 DRAGONBONES_NAMESPACE_END

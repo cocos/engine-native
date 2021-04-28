@@ -47,8 +47,8 @@ protected:
     AppLang();
     void readLocalizationFile();
 
-    bool _hasInit;
-    std::string _localizationFileName;
+    bool                _hasInit;
+    std::string         _localizationFileName;
     rapidjson::Document _docRootjson;
 };
 

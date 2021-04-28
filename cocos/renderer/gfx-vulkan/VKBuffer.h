@@ -52,7 +52,7 @@ protected:
 
     void createBufferView();
 
-    CCVKGPUBuffer *_gpuBuffer = nullptr;
+    CCVKGPUBuffer *    _gpuBuffer     = nullptr;
     CCVKGPUBufferView *_gpuBufferView = nullptr;
 };
 

@@ -26,17 +26,17 @@
 
 #pragma once
 
-#include "../config.h"
-#include "base/Log.h"
 #include <map>
 #include <string>
+#include "../config.h"
+#include "base/Log.h"
 
 //#define RECORD_JSB_INVOKING
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
     #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
-extern unsigned int __jsbInvocationCount;
+extern unsigned int                        __jsbInvocationCount;
 extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
     #endif
 
@@ -113,14 +113,14 @@ void printJSBInvoke() {
     #define SE_BIND_FUNC(funcName)                                                                        \
         void funcName##Registry(const v8::FunctionCallbackInfo<v8::Value> &_v8args) {                     \
             recordJSBInvoke(#funcName);                                                                   \
-            bool ret = false;                                                                             \
-            v8::Isolate *_isolate = _v8args.GetIsolate();                                                 \
-            v8::HandleScope _hs(_isolate);                                                                \
+            bool               ret      = false;                                                          \
+            v8::Isolate *      _isolate = _v8args.GetIsolate();                                           \
+            v8::HandleScope    _hs(_isolate);                                                             \
             SE_UNUSED unsigned argc = (unsigned)_v8args.Length();                                         \
-            se::ValueArray args;                                                                          \
+            se::ValueArray     args;                                                                      \
             args.reserve(10);                                                                             \
             se::internal::jsToSeArgs(_v8args, &args);                                                     \
-            void *nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This());                  \
+            void *    nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This());              \
             se::State state(nativeThisObject, args);                                                      \
             ret = funcName(state);                                                                        \
             if (!ret) {                                                                                   \
@@ -137,7 +137,7 @@ void printJSBInvoke() {
             auto se = se::ScriptEngine::getInstance();                                                    \
             se->_setGarbageCollecting(true);                                                              \
             se::State state(nativeThisObject);                                                            \
-            bool ret = funcName(state);                                                                   \
+            bool      ret = funcName(state);                                                              \
             if (!ret) {                                                                                   \
                 SE_LOGE("[ERROR] Failed to invoke %s, location: %s:%d\n", #funcName, __FILE__, __LINE__); \
             }                                                                                             \
@@ -151,10 +151,10 @@ void printJSBInvoke() {
     #define SE_BIND_CTOR(funcName, cls, finalizeCb)                                                       \
         void funcName##Registry(const v8::FunctionCallbackInfo<v8::Value> &_v8args) {                     \
             recordJSBInvoke(#funcName);                                                                   \
-            v8::Isolate *_isolate = _v8args.GetIsolate();                                                 \
+            v8::Isolate *   _isolate = _v8args.GetIsolate();                                              \
             v8::HandleScope _hs(_isolate);                                                                \
-            bool ret = true;                                                                              \
-            se::ValueArray args;                                                                          \
+            bool            ret = true;                                                                   \
+            se::ValueArray  args;                                                                         \
             args.reserve(10);                                                                             \
             se::internal::jsToSeArgs(_v8args, &args);                                                     \
             se::Object *thisObject = se::Object::_createJSObject(cls, _v8args.This());                    \
@@ -165,8 +165,8 @@ void printJSBInvoke() {
                 SE_LOGE("[ERROR] Failed to invoke %s, location: %s:%d\n", #funcName, __FILE__, __LINE__); \
             }                                                                                             \
             se::Value _property;                                                                          \
-            bool _found = false;                                                                          \
-            _found = thisObject->getProperty("_ctor", &_property);                                        \
+            bool      _found = false;                                                                     \
+            _found           = thisObject->getProperty("_ctor", &_property);                              \
             if (_found) _property.toObject()->call(args, thisObject);                                     \
         }
 
@@ -175,11 +175,11 @@ void printJSBInvoke() {
     #define SE_BIND_PROP_GET(funcName)                                                                               \
         void funcName##Registry(v8::Local<v8::Name> _property, const v8::PropertyCallbackInfo<v8::Value> &_v8args) { \
             recordJSBInvoke(#funcName);                                                                              \
-            v8::Isolate *_isolate = _v8args.GetIsolate();                                                            \
+            v8::Isolate *   _isolate = _v8args.GetIsolate();                                                         \
             v8::HandleScope _hs(_isolate);                                                                           \
-            bool ret = true;                                                                                         \
-            void *nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This());                             \
-            se::State state(nativeThisObject);                                                                       \
+            bool            ret              = true;                                                                 \
+            void *          nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This());                   \
+            se::State       state(nativeThisObject);                                                                 \
             ret = funcName(state);                                                                                   \
             if (!ret) {                                                                                              \
                 SE_LOGE("[ERROR] Failed to invoke %s, location: %s:%d\n", #funcName, __FILE__, __LINE__);            \
@@ -190,11 +190,11 @@ void printJSBInvoke() {
     #define SE_BIND_PROP_SET(funcName)                                                                                                       \
         void funcName##Registry(v8::Local<v8::Name> _property, v8::Local<v8::Value> _value, const v8::PropertyCallbackInfo<void> &_v8args) { \
             recordJSBInvoke(#funcName);                                                                                                      \
-            v8::Isolate *_isolate = _v8args.GetIsolate();                                                                                    \
+            v8::Isolate *   _isolate = _v8args.GetIsolate();                                                                                 \
             v8::HandleScope _hs(_isolate);                                                                                                   \
-            bool ret = true;                                                                                                                 \
-            void *nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This());                                                     \
-            se::Value data;                                                                                                                  \
+            bool            ret              = true;                                                                                         \
+            void *          nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This());                                           \
+            se::Value       data;                                                                                                            \
             se::internal::jsToSeValue(_isolate, _value, &data);                                                                              \
             se::ValueArray args;                                                                                                             \
             args.reserve(10);                                                                                                                \

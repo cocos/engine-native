@@ -23,10 +23,10 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/android/jni/JniHelper.h"
-#include "platform/Application.h"
-#include <jni.h>
 #include <android/log.h>
+#include <jni.h>
+#include "platform/Application.h"
+#include "platform/android/jni/JniHelper.h"
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "CocosTouchHandler JNI", __VA_ARGS__)
 
@@ -51,13 +51,12 @@ JNIEXPORT void JNICALL Java_com_cocos_lib_CocosTouchHandler_handleActionUp(JNIEn
 }
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosTouchHandler_handleActionMove(JNIEnv *env, jobject obj,
-                                                                             jintArray ids,
+                                                                             jintArray   ids,
                                                                              jfloatArray xs,
                                                                              jfloatArray ys) {
-
     touchEvent.type = cc::TouchEvent::Type::MOVED;
-    int size = env->GetArrayLength(ids);
-    jint id[size];
+    int    size     = env->GetArrayLength(ids);
+    jint   id[size];
     jfloat x[size];
     jfloat y[size];
 
@@ -74,12 +73,12 @@ cc:
 }
 
 JNIEXPORT void JNICALL Java_com_cocos_lib_CocosTouchHandler_handleActionCancel(JNIEnv *env, jobject obj,
-                                                                               jintArray ids,
+                                                                               jintArray   ids,
                                                                                jfloatArray xs,
                                                                                jfloatArray ys) {
     touchEvent.type = cc::TouchEvent::Type::CANCELLED;
-    int size = env->GetArrayLength(ids);
-    jint id[size];
+    int    size     = env->GetArrayLength(ids);
+    jint   id[size];
     jfloat x[size];
     jfloat y[size];
 

@@ -38,7 +38,7 @@ public:
     void initialize(const ShaderInfo &info);
     void destroy();
 
-    CC_INLINE uint    getID() const { return _shaderID; }
+    CC_INLINE uint  getID() const { return _shaderID; }
     CC_INLINE const String &getName() const { return _name; }
     CC_INLINE const ShaderStageList &getStages() const { return _stages; }
     CC_INLINE const AttributeList &getAttributes() const { return _attributes; }

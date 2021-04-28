@@ -154,7 +154,6 @@ void GLES2CommandBuffer::bindInputAssembler(InputAssembler *ia) {
 }
 
 void GLES2CommandBuffer::setViewport(const Viewport &vp) {
-
     if ((_curViewport.left != vp.left) ||
         (_curViewport.top != vp.top) ||
         (_curViewport.width != vp.width) ||

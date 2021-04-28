@@ -33,8 +33,8 @@ class ICallerThreadUtils {
 public:
     virtual ~ICallerThreadUtils(){};
 
-    virtual void performFunctionInCallerThread(const std::function<void()> &func) = 0;
-    virtual std::thread::id getCallerThreadId() = 0;
+    virtual void            performFunctionInCallerThread(const std::function<void()> &func) = 0;
+    virtual std::thread::id getCallerThreadId()                                              = 0;
 };
 
 } // namespace cc

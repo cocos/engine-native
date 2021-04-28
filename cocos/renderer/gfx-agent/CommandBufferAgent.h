@@ -72,7 +72,7 @@ public:
     uint getNumTris() const override { return _actor->getNumTris(); }
 
     CC_INLINE MessageQueue *getMessageQueue() { return _messageQueue; }
-    LinearAllocatorPool *getAllocator();
+    LinearAllocatorPool *   getAllocator();
 
 protected:
     friend class DeviceAgent;
@@ -80,9 +80,9 @@ protected:
     void doInit(const CommandBufferInfo &info) override;
     void doDestroy() override;
 
-    void initMessageQueue();
-    void destroyMessageQueue();
-    MessageQueue *_messageQueue = nullptr;
+    void                          initMessageQueue();
+    void                          destroyMessageQueue();
+    MessageQueue *                _messageQueue = nullptr;
     vector<LinearAllocatorPool *> _allocatorPools;
 };
 

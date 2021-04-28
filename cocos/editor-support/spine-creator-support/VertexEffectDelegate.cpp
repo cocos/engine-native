@@ -52,23 +52,23 @@ void VertexEffectDelegate::clear() {
 JitterVertexEffect *VertexEffectDelegate::initJitter(float jitterX, float jitterY) {
     clear();
     _vertexEffect = new JitterVertexEffect(jitterX, jitterY);
-    _effectType = "jitter";
+    _effectType   = "jitter";
     return (JitterVertexEffect *)_vertexEffect;
 }
 
 SwirlVertexEffect *VertexEffectDelegate::initSwirlWithPow(float radius, int power) {
     clear();
     _interpolation = new PowInterpolation(power);
-    _vertexEffect = new SwirlVertexEffect(radius, *_interpolation);
-    _effectType = "swirl";
+    _vertexEffect  = new SwirlVertexEffect(radius, *_interpolation);
+    _effectType    = "swirl";
     return (SwirlVertexEffect *)_vertexEffect;
 }
 
 SwirlVertexEffect *VertexEffectDelegate::initSwirlWithPowOut(float radius, int power) {
     clear();
     _interpolation = new PowOutInterpolation(power);
-    _vertexEffect = new SwirlVertexEffect(radius, *_interpolation);
-    _effectType = "swirl";
+    _vertexEffect  = new SwirlVertexEffect(radius, *_interpolation);
+    _effectType    = "swirl";
     return (SwirlVertexEffect *)_vertexEffect;
 }
 

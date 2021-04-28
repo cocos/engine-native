@@ -43,17 +43,17 @@ void RenderQueue::clear() {
 }
 
 bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelIdx, uint passIdx) {
-    const auto *const subModelID = renderObj.model->getSubModelID();
+    const auto *const subModelID    = renderObj.model->getSubModelID();
     const auto *const subModel      = cc::pipeline::ModelView::getSubModelView(subModelID[subModelIdx]);
-    const auto *const pass = subModel->getPassView(passIdx);
-    const bool isTransparent = pass->getBlendState()->targets[0].blend;
+    const auto *const pass          = subModel->getPassView(passIdx);
+    const bool        isTransparent = pass->getBlendState()->targets[0].blend;
 
     if (isTransparent != _passDesc.isTransparent || !(pass->phase & _passDesc.phases)) {
         return false;
     }
 
-    const auto hash = (0 << 30) | (pass->priority << 16) | (subModel->priority << 8) | passIdx;
-    uint shaderID = subModel->shaderID[passIdx];
+    const auto hash       = (0 << 30) | (pass->priority << 16) | (subModel->priority << 8) | passIdx;
+    uint       shaderID   = subModel->shaderID[passIdx];
     RenderPass renderPass = {hash, renderObj.depth, shaderID, passIdx, subModel};
     _queue.emplace_back(renderPass);
     return true;
@@ -64,13 +64,13 @@ void RenderQueue::sort() {
 }
 
 void RenderQueue::recordCommandBuffer(gfx::Device * /*device*/, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuff) {
-    for (auto & i : _queue) {
-        const auto *const subModel = i.subModel;
-        const auto passIdx = i.passIndex;
-        auto *inputAssembler = subModel->getInputAssembler();
+    for (auto &i : _queue) {
+        const auto *const subModel       = i.subModel;
+        const auto        passIdx        = i.passIndex;
+        auto *            inputAssembler = subModel->getInputAssembler();
 
-        const auto *const pass = subModel->getPassView(passIdx);
-        auto *shader = subModel->getShader(passIdx);
+        const auto *const pass   = subModel->getPassView(passIdx);
+        auto *            shader = subModel->getShader(passIdx);
 
         auto *pso = PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, renderPass);
         cmdBuff->bindPipelineState(pso);

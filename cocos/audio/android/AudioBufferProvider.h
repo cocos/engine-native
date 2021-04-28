@@ -29,8 +29,8 @@ public:
     struct Buffer {
         Buffer() : raw(NULL), frameCount(0) {}
         union {
-            void *raw;
-            short *i16;
+            void *  raw;
+            short * i16;
             int8_t *i8;
         };
         size_t frameCount;

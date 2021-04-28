@@ -162,7 +162,6 @@ void lightCollecting(Camera *camera, std::vector<const Light *> &validLights) {
     CC_SAFE_DELETE(sphere);
 }
 
-
 void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
     auto *const       sceneData  = pipeline->getPipelineSceneData();
     auto *const       sharedData = sceneData->getSharedData();
@@ -172,8 +171,8 @@ void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
 
     castBoundsInitialized = false;
     RenderObjectList shadowObjects;
-    bool isShadowMap = false;
-    if(shadows->enabled && shadows->getShadowType() == ShadowType::SHADOWMAP) {
+    bool             isShadowMap = false;
+    if (shadows->enabled && shadows->getShadowType() == ShadowType::SHADOWMAP) {
         isShadowMap = true;
     }
 
@@ -199,7 +198,7 @@ void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
                 // shadow render Object
                 if (isShadowMap && model->castShadow && model->getWorldBounds()) {
                     if (!castBoundsInitialized) {
-                        castWorldBounds = *model->getWorldBounds();
+                        castWorldBounds       = *model->getWorldBounds();
                         castBoundsInitialized = true;
                     }
                     castWorldBounds.merge(*model->getWorldBounds());
@@ -215,7 +214,7 @@ void sceneCulling(RenderPipeline *pipeline, Camera *camera) {
         }
     }
 
-    if(isShadowMap) {
+    if (isShadowMap) {
         sceneData->getSphere()->define(castWorldBounds);
         sceneData->setShadowObjects(std::move(shadowObjects));
     }

@@ -24,8 +24,8 @@
 ****************************************************************************/
 
 #include "StringUtil.h"
-#include "memory/Memory.h"
 #include <string>
+#include "memory/Memory.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     #ifndef WIN32_LEAN_AND_MEAN

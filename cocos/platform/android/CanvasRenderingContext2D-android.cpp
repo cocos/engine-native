@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/CanvasRenderingContext2D.h"
 #include "base/csscolorparser.h"
 #include "math/Math.h"
+#include "platform/CanvasRenderingContext2D.h"
 
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "platform/android/jni/JniHelper.h"
@@ -56,7 +56,7 @@ class CanvasRenderingContext2DImpl {
 public:
     CanvasRenderingContext2DImpl() {
         jobject obj = JniHelper::newObject(JCLS_CANVASIMPL);
-        _obj = JniHelper::getEnv()->NewGlobalRef(obj);
+        _obj        = JniHelper::getEnv()->NewGlobalRef(obj);
         JniHelper::getEnv()->DeleteLocalRef(obj);
     }
 
@@ -65,7 +65,7 @@ public:
     }
 
     void recreateBuffer(float w, float h) {
-        _bufferWidth = w;
+        _bufferWidth  = w;
         _bufferHeight = h;
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
@@ -228,7 +228,7 @@ public:
         for (int i = 0; i < size; i += 4) {
             alpha = (float)ptr[i + 3];
             if (alpha > 0) {
-                ptr[i] = CLAMP((int)((float)ptr[i] / alpha * 255), 255);
+                ptr[i]     = CLAMP((int)((float)ptr[i] / alpha * 255), 255);
                 ptr[i + 1] = CLAMP((int)((float)ptr[i + 1] / alpha * 255), 255);
                 ptr[i + 2] = CLAMP((int)((float)ptr[i + 2] / alpha * 255), 255);
             }
@@ -236,9 +236,9 @@ public:
     }
 
     void fillData() {
-        jbyteArray arr = JniHelper::callObjectByteArrayMethod(_obj, JCLS_CANVASIMPL, "getDataRef");
-        jsize len = JniHelper::getEnv()->GetArrayLength(arr);
-        jbyte *jbarray = (jbyte *)malloc(len * sizeof(jbyte));
+        jbyteArray arr     = JniHelper::callObjectByteArrayMethod(_obj, JCLS_CANVASIMPL, "getDataRef");
+        jsize      len     = JniHelper::getEnv()->GetArrayLength(arr);
+        jbyte *    jbarray = (jbyte *)malloc(len * sizeof(jbyte));
         JniHelper::getEnv()->GetByteArrayRegion(arr, 0, len, jbarray);
         unMultiplyAlpha((unsigned char *)jbarray, len);
         _data.fastSet((unsigned char *)jbarray, len); //IDEA: DON'T create new jbarray every time.
@@ -247,9 +247,9 @@ public:
 
 private:
     jobject _obj = nullptr;
-    Data _data;
-    float _bufferWidth = 0.0f;
-    float _bufferHeight = 0.0f;
+    Data    _data;
+    float   _bufferWidth  = 0.0f;
+    float   _bufferHeight = 0.0f;
 };
 
 namespace {
@@ -262,7 +262,7 @@ void fillRectWithColor(uint8_t *buf, uint32_t totalWidth, uint32_t totalHeight, 
     uint8_t *p;
     for (uint32_t offsetY = y0; offsetY < y1; ++offsetY) {
         for (uint32_t offsetX = x; offsetX < (x + width); ++offsetX) {
-            p = buf + (totalWidth * offsetY + offsetX) * 3;
+            p    = buf + (totalWidth * offsetY + offsetX) * 3;
             *p++ = r;
             *p++ = g;
             *p++ = b;
@@ -407,7 +407,7 @@ void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBuffer
 void CanvasRenderingContext2D::set_width(float width) {
     //    SE_LOGD("CanvasRenderingContext2D::set__width: %f\n", width);
     if (math::IsEqualF(width, _width)) return;
-    _width = width;
+    _width             = width;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
 }
@@ -415,7 +415,7 @@ void CanvasRenderingContext2D::set_width(float width) {
 void CanvasRenderingContext2D::set_height(float height) {
     //    SE_LOGD("CanvasRenderingContext2D::set__height: %f\n", height);
     if (math::IsEqualF(height, _height)) return;
-    _height = height;
+    _height            = height;
     _isBufferSizeDirty = true;
     recreateBufferIfNeeded();
 }
@@ -442,10 +442,10 @@ void CanvasRenderingContext2D::set_lineCap(const std::string &lineCap) {
  * */
 void CanvasRenderingContext2D::set_font(const std::string &font) {
     if (_font != font) {
-        _font = font;
-        std::string fontName = "sans-serif";
-        std::string fontSizeStr = "30";
-        std::regex re("\\s*((\\d+)([\\.]\\d+)?)px\\s+([^\\r\\n]*)");
+        _font                                                       = font;
+        std::string                                     fontName    = "sans-serif";
+        std::string                                     fontSizeStr = "30";
+        std::regex                                      re("\\s*((\\d+)([\\.]\\d+)?)px\\s+([^\\r\\n]*)");
         std::match_results<std::string::const_iterator> results;
         if (std::regex_search(_font.cbegin(), _font.cend(), results, re)) {
             fontSizeStr = results[2].str();
@@ -453,18 +453,18 @@ void CanvasRenderingContext2D::set_font(const std::string &font) {
             // support get font name contain space,example `times new roman`
             // if regex rule that does not conform to the rules,such as Chinese,it defaults to sans-serif
             std::match_results<std::string::const_iterator> fontResults;
-            std::regex fontRe("([\\w\\s-]+|\"[\\w\\s-]+\"$)");
-            std::string tmp(results[4].str());
+            std::regex                                      fontRe("([\\w\\s-]+|\"[\\w\\s-]+\"$)");
+            std::string                                     tmp(results[4].str());
             if (std::regex_match(tmp, fontResults, fontRe)) {
                 fontName = results[4].str();
             }
         }
 
-        float fontSize = atof(fontSizeStr.c_str());
-        bool isBold = font.find("bold", 0) != std::string::npos;
-        bool isItalic = font.find("italic", 0) != std::string::npos;
-        bool isSmallCaps = font.find("small-caps", 0) != std::string::npos;
-        bool isOblique = font.find("oblique", 0) != std::string::npos;
+        float fontSize    = atof(fontSizeStr.c_str());
+        bool  isBold      = font.find("bold", 0) != std::string::npos;
+        bool  isItalic    = font.find("italic", 0) != std::string::npos;
+        bool  isSmallCaps = font.find("small-caps", 0) != std::string::npos;
+        bool  isOblique   = font.find("oblique", 0) != std::string::npos;
         //font-style: italic, oblique, normal
         //font-weight: normal, bold
         //font-variant: normal, small-caps

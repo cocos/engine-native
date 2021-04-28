@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "base/Macros.h"
 #include "base/Data.h"
+#include "base/Macros.h"
 #include "math/Geometry.h"
 
 #include <string>
@@ -60,11 +60,11 @@ public:
     void clearRect(float x, float y, float width, float height);
     void fillRect(float x, float y, float width, float height);
 
-    void fillText(const std::string &text, float x, float y, float maxWidth = -1.0f);
-    void strokeText(const std::string &text, float x, float y, float maxWidth = -1.0f);
-    Size measureText(const std::string &text);
+    void            fillText(const std::string &text, float x, float y, float maxWidth = -1.0f);
+    void            strokeText(const std::string &text, float x, float y, float maxWidth = -1.0f);
+    Size            measureText(const std::string &text);
     CanvasGradient *createLinearGradient(float x0, float y0, float x1, float y1);
-    void save();
+    void            save();
     // Paths
     void beginPath();
     void closePath();
@@ -106,29 +106,29 @@ private:
     void recreateBufferIfNeeded();
 
 public:
-    float _width = 0.0f;
+    float _width  = 0.0f;
     float _height = 0.0f;
 
     // Line styles
-    float _lineWidth = 1.0f;
-    std::string _lineJoin = "miter";
-    std::string _lineCap = "butt";
+    float       _lineWidth = 1.0f;
+    std::string _lineJoin  = "miter";
+    std::string _lineCap   = "butt";
 
     // Text styles
-    std::string _font = "10px sans-serif";
-    std::string _textAlign = "start";
+    std::string _font         = "10px sans-serif";
+    std::string _textAlign    = "start";
     std::string _textBaseline = "alphabetic";
 
     // Fill and stroke styles
-    std::string _fillStyle = "#000";
+    std::string _fillStyle   = "#000";
     std::string _strokeStyle = "#000";
 
     // Compositing
     std::string _globalCompositeOperation = "source-over";
 
 private:
-    CanvasBufferUpdatedCallback _canvasBufferUpdatedCB = nullptr;
-    CanvasRenderingContext2DImpl *_impl = nullptr;
+    CanvasBufferUpdatedCallback   _canvasBufferUpdatedCB = nullptr;
+    CanvasRenderingContext2DImpl *_impl                  = nullptr;
 
     bool _isBufferSizeDirty = true;
 };

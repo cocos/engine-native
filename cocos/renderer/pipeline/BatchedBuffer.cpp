@@ -72,19 +72,19 @@ void BatchedBuffer::destroy() {
 void BatchedBuffer::merge(const SubModelView *subModel, uint passIdx, const ModelView *model) {
     const auto *const subMesh          = subModel->getSubMesh();
     const auto *const flatBuffersID    = subMesh->getFlatBufferArrayID();
-    const auto flatBuffersCount = flatBuffersID ? flatBuffersID[0] : 0;
+    const auto        flatBuffersCount = flatBuffersID ? flatBuffersID[0] : 0;
     if (flatBuffersCount == 0) {
         return;
     }
 
     const auto *const flatBuffer    = subMesh->getFlatBuffer(flatBuffersID[1]);
-    uint       vbSize        = 0;
-    uint       indexSize     = 0;
-    const auto vbCount       = flatBuffer->count;
+    uint              vbSize        = 0;
+    uint              indexSize     = 0;
+    const auto        vbCount       = flatBuffer->count;
     const auto *const pass          = subModel->getPassView(passIdx);
     auto *const       shader        = subModel->getShader(passIdx);
     auto *const       descriptorSet = subModel->getDescriptorSet();
-    bool       isBatchExist  = false;
+    bool              isBatchExist  = false;
 
     for (auto &batch : _batches) {
         if (batch.vbs.size() == flatBuffersCount && batch.mergeCount < UBOLocalBatched::BATCHING_COUNT) {
@@ -102,8 +102,8 @@ void BatchedBuffer::merge(const SubModelView *subModel, uint passIdx, const Mode
                     const auto *const flatBuffer   = subMesh->getFlatBuffer(flatBuffersID[j + 1]);
                     auto *            batchVB      = batch.vbs[j];
                     auto *            vbData       = batch.vbDatas[j];
-                    const uint vbBufSizeOld = batchVB->getSize();
-                    vbSize                  = (vbCount + batch.vbCount) * flatBuffer->stride;
+                    const uint        vbBufSizeOld = batchVB->getSize();
+                    vbSize                         = (vbCount + batch.vbCount) * flatBuffer->stride;
                     if (vbSize > vbBufSizeOld) {
                         auto *vbDataNew = static_cast<uint8_t *>(CC_MALLOC(vbSize));
                         memcpy(vbDataNew, vbData, vbBufSizeOld);
@@ -114,13 +114,13 @@ void BatchedBuffer::merge(const SubModelView *subModel, uint passIdx, const Mode
                     }
 
                     auto        size   = 0U;
-                    auto       offset = batch.vbCount * flatBuffer->stride;
+                    auto        offset = batch.vbCount * flatBuffer->stride;
                     auto *const data   = flatBuffer->getBuffer(&size);
                     memcpy(vbData + offset, data, size);
                 }
 
                 auto *indexData = batch.indexData;
-                indexSize      = (vbCount + batch.vbCount) * sizeof(float);
+                indexSize       = (vbCount + batch.vbCount) * sizeof(float);
                 if (indexSize > batch.indexBuffer->getSize()) {
                     auto *newIndexData = static_cast<float *>(CC_MALLOC(indexSize));
                     memcpy(newIndexData, indexData, batch.indexBuffer->getSize());

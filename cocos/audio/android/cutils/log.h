@@ -28,12 +28,12 @@
 #ifndef COCOS_CUTILS_LOG_H
 #define COCOS_CUTILS_LOG_H
 
+#include <android/log.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-#include <android/log.h>
 
 #ifdef __cplusplus
 extern "C" {

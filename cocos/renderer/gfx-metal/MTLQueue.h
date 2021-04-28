@@ -35,11 +35,11 @@ class CCMTLQueue final : public Queue {
 
 public:
     explicit CCMTLQueue();
-    ~CCMTLQueue() override = default;
-    CCMTLQueue(const CCMTLQueue &)=delete;
-    CCMTLQueue(CCMTLQueue &&)=delete;
-    CCMTLQueue &operator=(const CCMTLQueue &)=delete;
-    CCMTLQueue &operator=(CCMTLQueue &&)=delete;
+    ~CCMTLQueue() override         = default;
+    CCMTLQueue(const CCMTLQueue &) = delete;
+    CCMTLQueue(CCMTLQueue &&)      = delete;
+    CCMTLQueue &operator=(const CCMTLQueue &) = delete;
+    CCMTLQueue &operator=(CCMTLQueue &&) = delete;
 
     void submit(CommandBuffer *const *cmdBuffs, uint count) override;
 

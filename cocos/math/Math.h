@@ -24,8 +24,8 @@
  ****************************************************************************/
 #pragma once
 
-#include "base/Macros.h"
 #include <cstdint>
+#include "base/Macros.h"
 
 namespace cc {
 namespace math {

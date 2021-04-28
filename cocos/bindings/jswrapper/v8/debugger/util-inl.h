@@ -28,8 +28,8 @@
 
 #if defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
-    #include "util.h"
     #include <cstring>
+    #include "util.h"
 
     #if defined(_MSC_VER)
         #include <intrin.h>
@@ -69,8 +69,8 @@ template <typename T>
 void ListNode<T>::Remove() {
     prev_->next_ = next_;
     next_->prev_ = prev_;
-    prev_ = this;
-    next_ = this;
+    prev_        = this;
+    next_        = this;
 }
 
 template <typename T>
@@ -108,31 +108,31 @@ template <typename T, ListNode<T>(T::*M)>
 void ListHead<T, M>::MoveBack(ListHead *that) {
     if (IsEmpty())
         return;
-    ListNode<T> *to = &that->head_;
+    ListNode<T> *to    = &that->head_;
     head_.next_->prev_ = to->prev_;
-    to->prev_->next_ = head_.next_;
+    to->prev_->next_   = head_.next_;
     head_.prev_->next_ = to;
-    to->prev_ = head_.prev_;
-    head_.prev_ = &head_;
-    head_.next_ = &head_;
+    to->prev_          = head_.prev_;
+    head_.prev_        = &head_;
+    head_.next_        = &head_;
 }
 
 template <typename T, ListNode<T>(T::*M)>
 void ListHead<T, M>::PushBack(T *element) {
-    ListNode<T> *that = &(element->*M);
+    ListNode<T> *that  = &(element->*M);
     head_.prev_->next_ = that;
-    that->prev_ = head_.prev_;
-    that->next_ = &head_;
-    head_.prev_ = that;
+    that->prev_        = head_.prev_;
+    that->next_        = &head_;
+    head_.prev_        = that;
 }
 
 template <typename T, ListNode<T>(T::*M)>
 void ListHead<T, M>::PushFront(T *element) {
-    ListNode<T> *that = &(element->*M);
+    ListNode<T> *that  = &(element->*M);
     head_.next_->prev_ = that;
-    that->prev_ = &head_;
-    that->next_ = head_.next_;
-    head_.next_ = that;
+    that->prev_        = &head_;
+    that->next_        = head_.next_;
+    head_.next_        = that;
 }
 
 template <typename T, ListNode<T>(T::*M)>
@@ -161,7 +161,7 @@ typename ListHead<T, M>::Iterator ListHead<T, M>::end() const {
 
 template <typename Inner, typename Outer>
 ContainerOfHelper<Inner, Outer>::ContainerOfHelper(Inner Outer::*field,
-                                                   Inner *pointer)
+                                                   Inner *       pointer)
 : pointer_(reinterpret_cast<Outer *>(
       reinterpret_cast<uintptr_t>(pointer) -
       reinterpret_cast<uintptr_t>(&(static_cast<Outer *>(0)->*field)))) {
@@ -175,13 +175,13 @@ ContainerOfHelper<Inner, Outer>::operator TypeName *() const {
 
 template <typename Inner, typename Outer>
 inline ContainerOfHelper<Inner, Outer> ContainerOf(Inner Outer::*field,
-                                                   Inner *pointer) {
+                                                   Inner *       pointer) {
     return ContainerOfHelper<Inner, Outer>(field, pointer);
 }
 
 template <class TypeName>
 inline v8::Local<TypeName> PersistentToLocal(
-    v8::Isolate *isolate,
+    v8::Isolate *                   isolate,
     const v8::Persistent<TypeName> &persistent) {
     if (persistent.IsWeak()) {
         return WeakPersistentToLocal(isolate, persistent);
@@ -199,14 +199,14 @@ inline v8::Local<TypeName> StrongPersistentToLocal(
 
 template <class TypeName>
 inline v8::Local<TypeName> WeakPersistentToLocal(
-    v8::Isolate *isolate,
+    v8::Isolate *                   isolate,
     const v8::Persistent<TypeName> &persistent) {
     return v8::Local<TypeName>::New(isolate, persistent);
 }
 
 inline v8::Local<v8::String> OneByteString(v8::Isolate *isolate,
-                                           const char *data,
-                                           int length) {
+                                           const char * data,
+                                           int          length) {
     return v8::String::NewFromOneByte(isolate,
                                       reinterpret_cast<const uint8_t *>(data),
                                       v8::NewStringType::kNormal,
@@ -214,9 +214,9 @@ inline v8::Local<v8::String> OneByteString(v8::Isolate *isolate,
         .ToLocalChecked();
 }
 
-inline v8::Local<v8::String> OneByteString(v8::Isolate *isolate,
+inline v8::Local<v8::String> OneByteString(v8::Isolate *      isolate,
                                            const signed char *data,
-                                           int length) {
+                                           int                length) {
     return v8::String::NewFromOneByte(isolate,
                                       reinterpret_cast<const uint8_t *>(data),
                                       v8::NewStringType::kNormal,
@@ -224,9 +224,9 @@ inline v8::Local<v8::String> OneByteString(v8::Isolate *isolate,
         .ToLocalChecked();
 }
 
-inline v8::Local<v8::String> OneByteString(v8::Isolate *isolate,
+inline v8::Local<v8::String> OneByteString(v8::Isolate *        isolate,
                                            const unsigned char *data,
-                                           int length) {
+                                           int                  length) {
     return v8::String::NewFromOneByte(isolate,
                                       reinterpret_cast<const uint8_t *>(data),
                                       v8::NewStringType::kNormal,
@@ -261,7 +261,7 @@ void SwapBytes16(char *data, size_t nbytes) {
     if (align == 0) {
         // MSVC has no strict aliasing, and is able to highly optimize this case.
         uint16_t *data16 = reinterpret_cast<uint16_t *>(data);
-        size_t len16 = nbytes / sizeof(*data16);
+        size_t    len16  = nbytes / sizeof(*data16);
         for (size_t i = 0; i < len16; i++) {
             data16[i] = BSWAP_2(data16[i]);
         }
@@ -285,7 +285,7 @@ void SwapBytes32(char *data, size_t nbytes) {
     // MSVC has no strict aliasing, and is able to highly optimize this case.
     if (align == 0) {
         uint32_t *data32 = reinterpret_cast<uint32_t *>(data);
-        size_t len32 = nbytes / sizeof(*data32);
+        size_t    len32  = nbytes / sizeof(*data32);
         for (size_t i = 0; i < len32; i++) {
             data32[i] = BSWAP_4(data32[i]);
         }
@@ -309,7 +309,7 @@ void SwapBytes64(char *data, size_t nbytes) {
     if (align == 0) {
         // MSVC has no strict aliasing, and is able to highly optimize this case.
         uint64_t *data64 = reinterpret_cast<uint64_t *>(data);
-        size_t len64 = nbytes / sizeof(*data64);
+        size_t    len64  = nbytes / sizeof(*data64);
         for (size_t i = 0; i < len64; i++) {
             data64[i] = BSWAP_8(data64[i]);
         }

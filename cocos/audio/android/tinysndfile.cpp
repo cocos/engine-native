@@ -24,8 +24,8 @@
 // #include <stdio.h>
 // #endif
 
-#include <string.h>
 #include <errno.h>
+#include <string.h>
 
 #ifndef HAVE_STDERR
     #define HAVE_STDERR
@@ -36,14 +36,14 @@
 #define WAVE_FORMAT_EXTENSIBLE 0xFFFE
 
 static snd_callbacks __defaultCallback;
-static int __inited = 0;
+static int           __inited = 0;
 
 struct SNDFILE_ {
-    uint8_t *temp; // realloc buffer used for shrinking 16 bits to 8 bits and byte-swapping
-    void *stream;
-    size_t bytesPerFrame;
-    size_t remaining; // frames unread for SFM_READ, frames written for SFM_WRITE
-    SF_INFO info;
+    uint8_t *     temp; // realloc buffer used for shrinking 16 bits to 8 bits and byte-swapping
+    void *        stream;
+    size_t        bytesPerFrame;
+    size_t        remaining; // frames unread for SFM_READ, frames written for SFM_WRITE
+    SF_INFO       info;
     snd_callbacks callback;
 };
 
@@ -91,12 +91,12 @@ static long tell_func(void *datasource) {
 
 static void lazyInit() {
     if (__inited == 0) {
-        __defaultCallback.open = open_func;
-        __defaultCallback.read = read_func;
-        __defaultCallback.seek = seek_func;
+        __defaultCallback.open  = open_func;
+        __defaultCallback.read  = read_func;
+        __defaultCallback.seek  = seek_func;
         __defaultCallback.close = close_func;
-        __defaultCallback.tell = tell_func;
-        __inited = 1;
+        __defaultCallback.tell  = tell_func;
+        __inited                = 1;
     }
 }
 
@@ -111,7 +111,7 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
     }
 
     SNDFILE *handle = (SNDFILE *)malloc(sizeof(SNDFILE));
-    handle->temp = NULL;
+    handle->temp    = NULL;
 
     handle->info.format = SF_FORMAT_WAV;
     if (cb != NULL) {
@@ -132,12 +132,12 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
 
     // don't attempt to parse all valid forms, just the most common ones
     unsigned char wav[12];
-    size_t actual;
-    unsigned riffSize;
-    size_t remaining;
-    int hadFmt = 0;
-    int hadData = 0;
-    long dataTell = 0L;
+    size_t        actual;
+    unsigned      riffSize;
+    size_t        remaining;
+    int           hadFmt   = 0;
+    int           hadData  = 0;
+    long          dataTell = 0L;
 
     actual = handle->callback.read(wav, sizeof(char), sizeof(wav), stream);
     if (actual < 12) {
@@ -205,8 +205,8 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
 #endif
                 goto close;
             }
-            unsigned format = little2u(&fmt[0]);
-            size_t minSize = 0;
+            unsigned format  = little2u(&fmt[0]);
+            size_t   minSize = 0;
             switch (format) {
                 case WAVE_FORMAT_PCM:
                 case WAVE_FORMAT_IEEE_FLOAT:
@@ -262,10 +262,10 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
 #endif
                 goto close;
             }
-            unsigned bytesPerFrame = (bitsPerSample >> 3) * channels;
-            handle->bytesPerFrame = bytesPerFrame;
+            unsigned bytesPerFrame  = (bitsPerSample >> 3) * channels;
+            handle->bytesPerFrame   = bytesPerFrame;
             handle->info.samplerate = samplerate;
-            handle->info.channels = channels;
+            handle->info.channels   = channels;
             switch (bitsPerSample) {
                 case 8:
                     handle->info.format |= SF_FORMAT_PCM_U8;
@@ -297,9 +297,9 @@ SNDFILE *sf_open_read(const char *path, SF_INFO *info, snd_callbacks *cb, void *
 #endif
                 goto close;
             }
-            handle->remaining = chunkSize / handle->bytesPerFrame;
+            handle->remaining   = chunkSize / handle->bytesPerFrame;
             handle->info.frames = handle->remaining;
-            dataTell = handle->callback.tell(stream);
+            dataTell            = handle->callback.tell(stream);
             if (chunkSize > 0) {
                 handle->callback.seek(stream, (long)chunkSize, SEEK_CUR);
             }
@@ -360,12 +360,12 @@ sf_count_t sf_readf_short(SNDFILE *handle, short *ptr, sf_count_t desiredFrames)
         desiredFrames = handle->remaining;
     }
     // does not check for numeric overflow
-    size_t desiredBytes = desiredFrames * handle->bytesPerFrame;
-    size_t actualBytes;
-    void *temp = NULL;
+    size_t   desiredBytes = desiredFrames * handle->bytesPerFrame;
+    size_t   actualBytes;
+    void *   temp   = NULL;
     unsigned format = handle->info.format & SF_FORMAT_SUBMASK;
     if (format == SF_FORMAT_PCM_32 || format == SF_FORMAT_FLOAT || format == SF_FORMAT_PCM_24) {
-        temp = malloc(desiredBytes);
+        temp        = malloc(desiredBytes);
         actualBytes = handle->callback.read(temp, sizeof(char), desiredBytes, handle->stream);
     } else {
         actualBytes = handle->callback.read(ptr, sizeof(char), desiredBytes, handle->stream);

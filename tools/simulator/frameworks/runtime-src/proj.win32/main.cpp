@@ -24,17 +24,16 @@
  ****************************************************************************/
 
 #include "main.h"
-#include "SimulatorWin.h"
 #include <shellapi.h>
+#include "SimulatorWin.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
-	HINSTANCE hPrevInstance,
-	LPTSTR    lpCmdLine,
-	int       nCmdShow)
-{
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
+                       HINSTANCE hPrevInstance,
+                       LPTSTR    lpCmdLine,
+                       int       nCmdShow) {
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
     int mainResult = SimulatorWin::getInstance()->run();
     se::ScriptEngine::getInstance()->destroyInstance();
     return mainResult;

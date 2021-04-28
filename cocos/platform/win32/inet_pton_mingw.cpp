@@ -22,10 +22,10 @@
 
 #if defined(__MINGW32__)
 
-    #include <errno.h>
-    #include <assert.h>
     #include <WS2tcpip.h>
     #include <Winsock2.h>
+    #include <assert.h>
+    #include <errno.h>
 
     #define ERRNO        ((int)GetLastError())
     #define SET_ERRNO(x) (SetLastError((DWORD)(x)))
@@ -93,13 +93,13 @@ int inet_pton(int af, const char *src, void *dst) {
 static int
 inet_pton4(const char *src, unsigned char *dst) {
     static const char digits[] = "0123456789";
-    int saw_digit, octets, ch;
-    unsigned char tmp[INADDRSZ], *tp;
+    int               saw_digit, octets, ch;
+    unsigned char     tmp[INADDRSZ], *tp;
 
     saw_digit = 0;
-    octets = 0;
-    tp = tmp;
-    *tp = 0;
+    octets    = 0;
+    tp        = tmp;
+    *tp       = 0;
     while ((ch = *src++) != '\0') {
         const char *pch;
 
@@ -119,7 +119,7 @@ inet_pton4(const char *src, unsigned char *dst) {
         } else if (ch == '.' && saw_digit) {
             if (octets == 4)
                 return (0);
-            *++tp = 0;
+            *++tp     = 0;
             saw_digit = 0;
         } else
             return (0);
@@ -149,20 +149,20 @@ inet_pton6(const char *src, unsigned char *dst) {
     static const char xdigits_l[] = "0123456789abcdef",
                       xdigits_u[] = "0123456789ABCDEF";
     unsigned char tmp[IN6ADDRSZ], *tp, *endp, *colonp;
-    const char *xdigits, *curtok;
-    int ch, saw_xdigit;
-    size_t val;
+    const char *  xdigits, *curtok;
+    int           ch, saw_xdigit;
+    size_t        val;
 
     memset((tp = tmp), 0, IN6ADDRSZ);
-    endp = tp + IN6ADDRSZ;
+    endp   = tp + IN6ADDRSZ;
     colonp = NULL;
     /* Leading :: requires some special handling. */
     if (*src == ':')
         if (*++src != ':')
             return (0);
-    curtok = src;
+    curtok     = src;
     saw_xdigit = 0;
-    val = 0;
+    val        = 0;
     while ((ch = *src++) != '\0') {
         const char *pch;
 
@@ -185,10 +185,10 @@ inet_pton6(const char *src, unsigned char *dst) {
             }
             if (tp + INT16SZ > endp)
                 return (0);
-            *tp++ = (unsigned char)(val >> 8) & 0xff;
-            *tp++ = (unsigned char)val & 0xff;
+            *tp++      = (unsigned char)(val >> 8) & 0xff;
+            *tp++      = (unsigned char)val & 0xff;
             saw_xdigit = 0;
-            val = 0;
+            val        = 0;
             continue;
         }
         if (ch == '.' && ((tp + INADDRSZ) <= endp) &&
@@ -211,12 +211,12 @@ inet_pton6(const char *src, unsigned char *dst) {
      * overlapping regions, we'll do the shift by hand.
      */
         const ssize_t n = tp - colonp;
-        ssize_t i;
+        ssize_t       i;
 
         if (tp == endp)
             return (0);
         for (i = 1; i <= n; i++) {
-            *(endp - i) = *(colonp + n - i);
+            *(endp - i)       = *(colonp + n - i);
             *(colonp + n - i) = 0;
         }
         tp = endp;

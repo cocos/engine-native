@@ -51,7 +51,7 @@ EmptyDevice *EmptyDevice::getInstance() {
 }
 
 EmptyDevice::EmptyDevice() {
-    EmptyDevice::_instance  = this;
+    EmptyDevice::_instance = this;
 }
 
 EmptyDevice::~EmptyDevice() {

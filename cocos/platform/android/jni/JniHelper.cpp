@@ -26,11 +26,11 @@
 ****************************************************************************/
 
 #include "platform/android/jni/JniHelper.h"
-#include "platform/android/FileUtils-android.h"
 #include <android/log.h>
-#include <string.h>
-#include <pthread.h>
 #include <android_native_app_glue.h>
+#include <pthread.h>
+#include <string.h>
+#include "platform/android/FileUtils-android.h"
 
 #include "base/UTF8.h"
 
@@ -69,11 +69,11 @@ void _detachCurrentThread(void *a) {
 }
 
 namespace cc {
-jmethodID JniHelper::loadclassMethod_methodID = nullptr;
-jobject JniHelper::classloader = nullptr;
-std::function<void()> JniHelper::classloaderCallback = nullptr;
-jobject JniHelper::_activity = nullptr;
-JavaVM *JniHelper::_javaVM = nullptr;
+jmethodID             JniHelper::loadclassMethod_methodID = nullptr;
+jobject               JniHelper::classloader              = nullptr;
+std::function<void()> JniHelper::classloaderCallback      = nullptr;
+jobject               JniHelper::_activity                = nullptr;
+JavaVM *              JniHelper::_javaVM                  = nullptr;
 
 JavaVM *JniHelper::getJavaVM() {
     pthread_t thisthread = pthread_self();
@@ -90,7 +90,7 @@ void JniHelper::init(JNIEnv *env, jobject activity) {
 }
 
 JNIEnv *JniHelper::cacheEnv() {
-    JavaVM *jvm = JniHelper::_javaVM;
+    JavaVM *jvm  = JniHelper::_javaVM;
     JNIEnv *_env = nullptr;
     // get jni environment
     jint ret = jvm->GetEnv((void **)&_env, JNI_VERSION_1_4);
@@ -157,9 +157,9 @@ bool JniHelper::setClassLoaderFrom(jobject activityinstance) {
         return false;
     }
 
-    JniHelper::classloader = cc::JniHelper::getEnv()->NewGlobalRef(_c);
+    JniHelper::classloader              = cc::JniHelper::getEnv()->NewGlobalRef(_c);
     JniHelper::loadclassMethod_methodID = _m.methodID;
-    JniHelper::_activity = cc::JniHelper::getEnv()->NewGlobalRef(activityinstance);
+    JniHelper::_activity                = cc::JniHelper::getEnv()->NewGlobalRef(activityinstance);
     if (JniHelper::classloaderCallback != nullptr) {
         JniHelper::classloaderCallback();
     }
@@ -168,9 +168,9 @@ bool JniHelper::setClassLoaderFrom(jobject activityinstance) {
 }
 
 bool JniHelper::getStaticMethodInfo(JniMethodInfo &methodinfo,
-                                    const char *className,
-                                    const char *methodName,
-                                    const char *paramCode) {
+                                    const char *   className,
+                                    const char *   methodName,
+                                    const char *   paramCode) {
     if ((nullptr == className) ||
         (nullptr == methodName) ||
         (nullptr == paramCode)) {
@@ -197,16 +197,16 @@ bool JniHelper::getStaticMethodInfo(JniMethodInfo &methodinfo,
         return false;
     }
 
-    methodinfo.classID = classID;
-    methodinfo.env = env;
+    methodinfo.classID  = classID;
+    methodinfo.env      = env;
     methodinfo.methodID = methodID;
     return true;
 }
 
 bool JniHelper::getMethodInfo_DefaultClassLoader(JniMethodInfo &methodinfo,
-                                                 const char *className,
-                                                 const char *methodName,
-                                                 const char *paramCode) {
+                                                 const char *   className,
+                                                 const char *   methodName,
+                                                 const char *   paramCode) {
     if ((nullptr == className) ||
         (nullptr == methodName) ||
         (nullptr == paramCode)) {
@@ -232,17 +232,17 @@ bool JniHelper::getMethodInfo_DefaultClassLoader(JniMethodInfo &methodinfo,
         return false;
     }
 
-    methodinfo.classID = classID;
-    methodinfo.env = env;
+    methodinfo.classID  = classID;
+    methodinfo.env      = env;
     methodinfo.methodID = methodID;
 
     return true;
 }
 
 bool JniHelper::getMethodInfo(JniMethodInfo &methodinfo,
-                              const char *className,
-                              const char *methodName,
-                              const char *paramCode) {
+                              const char *   className,
+                              const char *   methodName,
+                              const char *   paramCode) {
     if ((nullptr == className) ||
         (nullptr == methodName) ||
         (nullptr == paramCode)) {
@@ -268,8 +268,8 @@ bool JniHelper::getMethodInfo(JniMethodInfo &methodinfo,
         return false;
     }
 
-    methodinfo.classID = classID;
-    methodinfo.env = env;
+    methodinfo.classID  = classID;
+    methodinfo.env      = env;
     methodinfo.methodID = methodID;
 
     return true;

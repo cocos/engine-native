@@ -25,57 +25,52 @@
 
 #include "cocos/bindings/auto/jsb_video_auto.h"
 #if (USE_VIDEO > 0)
-#include "cocos/bindings/manual/jsb_conversions.h"
-#include "cocos/bindings/manual/jsb_global.h"
-#include "ui/videoplayer/VideoPlayer.h"
+    #include "cocos/bindings/manual/jsb_conversions.h"
+    #include "cocos/bindings/manual/jsb_global.h"
+    #include "ui/videoplayer/VideoPlayer.h"
 
-#ifndef JSB_ALLOC
-#define JSB_ALLOC(kls, ...) new (std::nothrow) kls(__VA_ARGS__)
-#endif
+    #ifndef JSB_ALLOC
+        #define JSB_ALLOC(kls, ...) new (std::nothrow) kls(__VA_ARGS__)
+    #endif
 
-#ifndef JSB_FREE
-#define JSB_FREE(ptr) delete ptr
-#endif
+    #ifndef JSB_FREE
+        #define JSB_FREE(ptr) delete ptr
+    #endif
 se::Object* __jsb_cc_VideoPlayer_proto = nullptr;
-se::Class* __jsb_cc_VideoPlayer_class = nullptr;
+se::Class*  __jsb_cc_VideoPlayer_class = nullptr;
 
-static bool js_video_VideoPlayer_addEventListener(se::State& s)
-{
+static bool js_video_VideoPlayer_addEventListener(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_addEventListener : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 2) {
-        HolderType<std::string, true> arg0 = {};
-        HolderType<std::function<void ()>, true> arg1 = {};
+        HolderType<std::string, true>           arg0 = {};
+        HolderType<std::function<void()>, true> arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         do {
-            if (args[1].isObject() && args[1].toObject()->isFunction())
-            {
+            if (args[1].isObject() && args[1].toObject()->isFunction()) {
                 se::Value jsThis(s.thisObject());
                 se::Value jsFunc(args[1]);
                 jsThis.toObject()->attachObject(jsFunc.toObject());
                 auto lambda = [=]() -> void {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
-        
-                    se::Value rval;
+
+                    se::Value   rval;
                     se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     se::Object* funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(se::EmptyValueArray, thisObj, &rval);
+                    bool        succeed = funcObj->call(se::EmptyValueArray, thisObj, &rval);
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
                     }
                 };
                 arg1.data = lambda;
-            }
-            else
-            {
+            } else {
                 arg1.data = nullptr;
             }
-        } while(false)
-        ;
+        } while (false);
         SE_PRECONDITION2(ok, false, "js_video_VideoPlayer_addEventListener : Error processing arguments");
         cobj->addEventListener(arg0.value(), arg1.value());
         return true;
@@ -85,13 +80,12 @@ static bool js_video_VideoPlayer_addEventListener(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_addEventListener)
 
-static bool js_video_VideoPlayer_currentTime(se::State& s)
-{
+static bool js_video_VideoPlayer_currentTime(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_currentTime : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         float result = cobj->currentTime();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -104,13 +98,12 @@ static bool js_video_VideoPlayer_currentTime(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_currentTime)
 
-static bool js_video_VideoPlayer_duration(se::State& s)
-{
+static bool js_video_VideoPlayer_duration(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_duration : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         float result = cobj->duration();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -123,13 +116,12 @@ static bool js_video_VideoPlayer_duration(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_duration)
 
-static bool js_video_VideoPlayer_isKeepAspectRatioEnabled(se::State& s)
-{
+static bool js_video_VideoPlayer_isKeepAspectRatioEnabled(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_isKeepAspectRatioEnabled : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         bool result = cobj->isKeepAspectRatioEnabled();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -142,13 +134,12 @@ static bool js_video_VideoPlayer_isKeepAspectRatioEnabled(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_isKeepAspectRatioEnabled)
 
-static bool js_video_VideoPlayer_onPlayEvent(se::State& s)
-{
+static bool js_video_VideoPlayer_onPlayEvent(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_onPlayEvent : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -161,12 +152,11 @@ static bool js_video_VideoPlayer_onPlayEvent(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_onPlayEvent)
 
-static bool js_video_VideoPlayer_pause(se::State& s)
-{
+static bool js_video_VideoPlayer_pause(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_pause : Invalid Native Object");
     const auto& args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 0) {
         cobj->pause();
         return true;
@@ -176,12 +166,11 @@ static bool js_video_VideoPlayer_pause(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_pause)
 
-static bool js_video_VideoPlayer_play(se::State& s)
-{
+static bool js_video_VideoPlayer_play(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_play : Invalid Native Object");
     const auto& args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 0) {
         cobj->play();
         return true;
@@ -191,13 +180,12 @@ static bool js_video_VideoPlayer_play(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_play)
 
-static bool js_video_VideoPlayer_seekTo(se::State& s)
-{
+static bool js_video_VideoPlayer_seekTo(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_seekTo : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<float, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -210,13 +198,12 @@ static bool js_video_VideoPlayer_seekTo(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_seekTo)
 
-static bool js_video_VideoPlayer_setFrame(se::State& s)
-{
+static bool js_video_VideoPlayer_setFrame(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setFrame : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 4) {
         HolderType<float, false> arg0 = {};
         HolderType<float, false> arg1 = {};
@@ -235,13 +222,12 @@ static bool js_video_VideoPlayer_setFrame(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_setFrame)
 
-static bool js_video_VideoPlayer_setFullScreenEnabled(se::State& s)
-{
+static bool js_video_VideoPlayer_setFullScreenEnabled(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setFullScreenEnabled : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<bool, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -254,13 +240,12 @@ static bool js_video_VideoPlayer_setFullScreenEnabled(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_setFullScreenEnabled)
 
-static bool js_video_VideoPlayer_setKeepAspectRatioEnabled(se::State& s)
-{
+static bool js_video_VideoPlayer_setKeepAspectRatioEnabled(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setKeepAspectRatioEnabled : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<bool, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -273,13 +258,12 @@ static bool js_video_VideoPlayer_setKeepAspectRatioEnabled(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_setKeepAspectRatioEnabled)
 
-static bool js_video_VideoPlayer_setURL(se::State& s)
-{
+static bool js_video_VideoPlayer_setURL(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setURL : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<std::string, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -292,13 +276,12 @@ static bool js_video_VideoPlayer_setURL(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_setURL)
 
-static bool js_video_VideoPlayer_setVisible(se::State& s)
-{
+static bool js_video_VideoPlayer_setVisible(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_setVisible : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<bool, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -311,12 +294,11 @@ static bool js_video_VideoPlayer_setVisible(se::State& s)
 }
 SE_BIND_FUNC(js_video_VideoPlayer_setVisible)
 
-static bool js_video_VideoPlayer_stop(se::State& s)
-{
+static bool js_video_VideoPlayer_stop(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     SE_PRECONDITION2(cobj, false, "js_video_VideoPlayer_stop : Invalid Native Object");
     const auto& args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 0) {
         cobj->stop();
         return true;
@@ -336,31 +318,24 @@ static bool js_video_VideoPlayer_constructor(se::State& s) // constructor.c
 }
 SE_BIND_CTOR(js_video_VideoPlayer_constructor, __jsb_cc_VideoPlayer_class, js_cc_VideoPlayer_finalize)
 
-
-
-
-static bool js_cc_VideoPlayer_finalize(se::State& s)
-{
+static bool js_cc_VideoPlayer_finalize(se::State& s) {
     // destructor is skipped
     return true;
 }
 SE_BIND_FINALIZE_FUNC(js_cc_VideoPlayer_finalize)
 
-static bool js_cc_VideoPlayer_destroy(se::State& s)
-{
+static bool js_cc_VideoPlayer_destroy(se::State& s) {
     cc::VideoPlayer* cobj = SE_THIS_OBJECT<cc::VideoPlayer>(s);
     cobj->release();
     auto objIter = se::NativePtrToObjectMap::find(SE_THIS_OBJECT<cc::VideoPlayer>(s));
-    if(objIter != se::NativePtrToObjectMap::end())
-    {
+    if (objIter != se::NativePtrToObjectMap::end()) {
         objIter->second->clearPrivateData(true);
     }
     return true;
 }
 SE_BIND_FUNC(js_cc_VideoPlayer_destroy)
 
-bool js_register_video_VideoPlayer(se::Object* obj)
-{
+bool js_register_video_VideoPlayer(se::Object* obj) {
     auto cls = se::Class::create("VideoPlayer", obj, nullptr, _SE(js_video_VideoPlayer_constructor));
 
     cls->defineFunction("addEventListener", _SE(js_video_VideoPlayer_addEventListener));
@@ -388,12 +363,10 @@ bool js_register_video_VideoPlayer(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-bool register_all_video(se::Object* obj)
-{
+bool register_all_video(se::Object* obj) {
     // Get the ns
     se::Value nsVal;
-    if (!obj->getProperty("jsb", &nsVal))
-    {
+    if (!obj->getProperty("jsb", &nsVal)) {
         se::HandleObject jsobj(se::Object::createPlainObject());
         nsVal.setObject(jsobj);
         obj->setProperty("jsb", nsVal);

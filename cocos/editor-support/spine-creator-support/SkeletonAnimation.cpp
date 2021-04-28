@@ -28,10 +28,10 @@
  *****************************************************************************/
 
 #include "spine-creator-support/SkeletonAnimation.h"
+#include <algorithm>
 #include "base/Log.h"
 #include "spine-creator-support/spine-cocos2dx.h"
 #include "spine/Extension.h"
-#include <algorithm>
 
 using std::max;
 using std::min;
@@ -41,12 +41,12 @@ using namespace cc;
 namespace spine {
 
 typedef struct _TrackEntryListeners {
-    StartListener startListener;
+    StartListener     startListener;
     InterruptListener interruptListener;
-    EndListener endListener;
-    DisposeListener disposeListener;
-    CompleteListener completeListener;
-    EventListener eventListener;
+    EndListener       endListener;
+    DisposeListener   disposeListener;
+    CompleteListener  completeListener;
+    EventListener     eventListener;
 } _TrackEntryListeners;
 
 void animationCallback(AnimationState *state, EventType type, TrackEntry *entry, Event *event) {
@@ -72,7 +72,7 @@ static _TrackEntryListeners *getListeners(TrackEntry *entry) {
 }
 
 float SkeletonAnimation::GlobalTimeScale = 1.0f;
-void SkeletonAnimation::setGlobalTimeScale(float timeScale) {
+void  SkeletonAnimation::setGlobalTimeScale(float timeScale) {
     GlobalTimeScale = timeScale;
 }
 
@@ -107,7 +107,7 @@ void SkeletonAnimation::initialize() {
     super::initialize();
 
     _ownsAnimationStateData = true;
-    _state = new (__FILE__, __LINE__) AnimationState(new (__FILE__, __LINE__) AnimationStateData(_skeleton->getData()));
+    _state                  = new (__FILE__, __LINE__) AnimationState(new (__FILE__, __LINE__) AnimationStateData(_skeleton->getData()));
     _state->setRendererObject(this);
     _state->setListener(animationCallback);
 }
@@ -117,12 +117,12 @@ SkeletonAnimation::SkeletonAnimation()
 }
 
 SkeletonAnimation::~SkeletonAnimation() {
-    _startListener = nullptr;
+    _startListener     = nullptr;
     _interruptListener = nullptr;
-    _endListener = nullptr;
-    _disposeListener = nullptr;
-    _completeListener = nullptr;
-    _eventListener = nullptr;
+    _endListener       = nullptr;
+    _disposeListener   = nullptr;
+    _completeListener  = nullptr;
+    _eventListener     = nullptr;
 
     if (_state) {
         clearTracks();
@@ -151,7 +151,7 @@ void SkeletonAnimation::setAnimationStateData(AnimationStateData *stateData) {
     }
 
     _ownsAnimationStateData = false;
-    _state = new (__FILE__, __LINE__) AnimationState(stateData);
+    _state                  = new (__FILE__, __LINE__) AnimationState(stateData);
     _state->setRendererObject(this);
     _state->setListener(animationCallback);
 }

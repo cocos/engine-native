@@ -60,12 +60,12 @@ GLES2PipelineState::~GLES2PipelineState() {
 }
 
 void GLES2PipelineState::doInit(const PipelineStateInfo &info) {
-    _gpuPipelineState = CC_NEW(GLES2GPUPipelineState);
-    _gpuPipelineState->glPrimitive = GLES2Primitives[(int)_primitive];
-    _gpuPipelineState->gpuShader = static_cast<GLES2Shader *>(_shader)->gpuShader();
-    _gpuPipelineState->rs = _rasterizerState;
-    _gpuPipelineState->dss = _depthStencilState;
-    _gpuPipelineState->bs = _blendState;
+    _gpuPipelineState                    = CC_NEW(GLES2GPUPipelineState);
+    _gpuPipelineState->glPrimitive       = GLES2Primitives[(int)_primitive];
+    _gpuPipelineState->gpuShader         = static_cast<GLES2Shader *>(_shader)->gpuShader();
+    _gpuPipelineState->rs                = _rasterizerState;
+    _gpuPipelineState->dss               = _depthStencilState;
+    _gpuPipelineState->bs                = _blendState;
     _gpuPipelineState->gpuPipelineLayout = static_cast<GLES2PipelineLayout *>(_pipelineLayout)->gpuPipelineLayout();
     if (_renderPass) _gpuPipelineState->gpuRenderPass = static_cast<GLES2RenderPass *>(_renderPass)->gpuRenderPass();
 

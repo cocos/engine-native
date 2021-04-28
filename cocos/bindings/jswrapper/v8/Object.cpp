@@ -27,10 +27,10 @@
 #include "Object.h"
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
-    #include "Utils.h"
+    #include "../MappingUtils.h"
     #include "Class.h"
     #include "ScriptEngine.h"
-    #include "../MappingUtils.h"
+    #include "Utils.h"
 
     #include <memory>
     #include <unordered_map>
@@ -40,8 +40,8 @@ namespace se {
 std::unique_ptr<std::unordered_map<Object *, void *>> __objectMap; // Currently, the value `void*` is always nullptr
 
 namespace {
-v8::Isolate *__isolate = nullptr;
-uint32_t _nativeObjectId = 0;
+v8::Isolate *__isolate       = nullptr;
+uint32_t     _nativeObjectId = 0;
 } // namespace
 
 Object::Object()
@@ -95,14 +95,14 @@ void Object::setup() {
 
 /* static */
 void Object::cleanup() {
-    void *nativeObj = nullptr;
-    Object *obj = nullptr;
-    Class *cls = nullptr;
+    void *  nativeObj = nullptr;
+    Object *obj       = nullptr;
+    Class * cls       = nullptr;
 
     const auto &nativePtrToObjectMap = NativePtrToObjectMap::instance();
     for (const auto &e : nativePtrToObjectMap) {
         nativeObj = e.first;
-        obj = e.second;
+        obj       = e.second;
 
         if (obj->_finalizeCb != nullptr) {
             obj->_finalizeCb(nativeObj);
@@ -147,13 +147,13 @@ void Object::cleanup() {
 
 Object *Object::createPlainObject() {
     v8::Local<v8::Object> jsobj = v8::Object::New(__isolate);
-    Object *obj = _createJSObject(nullptr, jsobj);
+    Object *              obj   = _createJSObject(nullptr, jsobj);
     return obj;
 }
 
 Object *Object::getObjectWithPtr(void *ptr) {
-    Object *obj = nullptr;
-    auto iter = NativePtrToObjectMap::find(ptr);
+    Object *obj  = nullptr;
+    auto    iter = NativePtrToObjectMap::find(ptr);
     if (iter != NativePtrToObjectMap::end()) {
         obj = iter->second;
         obj->incRef();
@@ -172,13 +172,13 @@ Object *Object::_createJSObject(Class *cls, v8::Local<v8::Object> obj) {
 
 Object *Object::createObjectWithClass(Class *cls) {
     v8::Local<v8::Object> jsobj = Class::_createJSObjectWithClass(cls);
-    Object *obj = Object::_createJSObject(cls, jsobj);
+    Object *              obj   = Object::_createJSObject(cls, jsobj);
     return obj;
 }
 
 Object *Object::createArrayObject(size_t length) {
     v8::Local<v8::Array> jsobj = v8::Array::New(__isolate, (int)length);
-    Object *obj = Object::_createJSObject(nullptr, jsobj);
+    Object *             obj   = Object::_createJSObject(nullptr, jsobj);
     return obj;
 }
 
@@ -253,11 +253,11 @@ Object *Object::createUint8TypedArray(uint8_t *data, size_t dataCount) {
 
 Object *Object::createJSONObject(const std::string &jsonStr) {
     v8::Local<v8::Context> context = __isolate->GetCurrentContext();
-    Value strVal(jsonStr);
-    v8::Local<v8::Value> jsStr;
+    Value                  strVal(jsonStr);
+    v8::Local<v8::Value>   jsStr;
     internal::seToJsValue(__isolate, strVal, &jsStr);
-    v8::Local<v8::String> v8Str = v8::Local<v8::String>::Cast(jsStr);
-    v8::MaybeLocal<v8::Value> ret = v8::JSON::Parse(context, v8Str);
+    v8::Local<v8::String>     v8Str = v8::Local<v8::String>::Cast(jsStr);
+    v8::MaybeLocal<v8::Value> ret   = v8::JSON::Parse(context, v8Str);
     if (ret.IsEmpty())
         return nullptr;
 
@@ -299,9 +299,9 @@ bool Object::getProperty(const char *name, Value *data) {
     if (nameValue.IsEmpty())
         return false;
 
-    v8::Local<v8::String> nameValToLocal = nameValue.ToLocalChecked();
-    v8::Local<v8::Context> context = __isolate->GetCurrentContext();
-    v8::Maybe<bool> maybeExist = _obj.handle(__isolate)->Has(context, nameValToLocal);
+    v8::Local<v8::String>  nameValToLocal = nameValue.ToLocalChecked();
+    v8::Local<v8::Context> context        = __isolate->GetCurrentContext();
+    v8::Maybe<bool>        maybeExist     = _obj.handle(__isolate)->Has(context, nameValToLocal);
     if (maybeExist.IsNothing())
         return false;
 
@@ -318,7 +318,6 @@ bool Object::getProperty(const char *name, Value *data) {
 }
 
 bool Object::deleteProperty(const char *name) {
-
     v8::HandleScope handle_scope(__isolate);
 
     if (_obj.persistent().IsEmpty()) {
@@ -329,9 +328,9 @@ bool Object::deleteProperty(const char *name) {
     if (nameValue.IsEmpty())
         return false;
 
-    v8::Local<v8::String> nameValToLocal = nameValue.ToLocalChecked();
-    v8::Local<v8::Context> context = __isolate->GetCurrentContext();
-    v8::Maybe<bool> maybeExist = _obj.handle(__isolate)->Delete(context, nameValToLocal);
+    v8::Local<v8::String>  nameValToLocal = nameValue.ToLocalChecked();
+    v8::Local<v8::Context> context        = __isolate->GetCurrentContext();
+    v8::Maybe<bool>        maybeExist     = _obj.handle(__isolate)->Delete(context, nameValToLocal);
     if (maybeExist.IsNothing())
         return false;
 
@@ -362,8 +361,8 @@ bool Object::defineProperty(const char *name, v8::AccessorNameGetterCallback get
         return false;
 
     v8::Local<v8::String> nameValChecked = nameValue.ToLocalChecked();
-    v8::Local<v8::Name> jsName = v8::Local<v8::Name>::Cast(nameValChecked);
-    v8::Maybe<bool> ret = _obj.handle(__isolate)->SetAccessor(__isolate->GetCurrentContext(), jsName, getter, setter);
+    v8::Local<v8::Name>   jsName         = v8::Local<v8::Name>::Cast(nameValChecked);
+    v8::Maybe<bool>       ret            = _obj.handle(__isolate)->SetAccessor(__isolate->GetCurrentContext(), jsName, getter, setter);
     return ret.IsJust() && ret.FromJust();
 }
 
@@ -387,7 +386,7 @@ bool Object::isTypedArray() const {
 
 Object::TypedArrayType Object::getTypedArrayType() const {
     v8::Local<v8::Value> value = const_cast<Object *>(this)->_obj.handle(__isolate);
-    TypedArrayType ret = TypedArrayType::NONE;
+    TypedArrayType       ret   = TypedArrayType::NONE;
     if (value->IsInt8Array())
         ret = TypedArrayType::INT8;
     else if (value->IsInt16Array())
@@ -412,11 +411,11 @@ Object::TypedArrayType Object::getTypedArrayType() const {
 
 bool Object::getTypedArrayData(uint8_t **ptr, size_t *length) const {
     assert(isTypedArray());
-    v8::Local<v8::Object> obj = const_cast<Object *>(this)->_obj.handle(__isolate);
-    v8::Local<v8::TypedArray> arr = v8::Local<v8::TypedArray>::Cast(obj);
-    const auto &backingStore = arr->Buffer()->GetBackingStore();
-    *ptr = (uint8_t *)backingStore->Data() + arr->ByteOffset();
-    *length = arr->ByteLength();
+    v8::Local<v8::Object>     obj          = const_cast<Object *>(this)->_obj.handle(__isolate);
+    v8::Local<v8::TypedArray> arr          = v8::Local<v8::TypedArray>::Cast(obj);
+    const auto &              backingStore = arr->Buffer()->GetBackingStore();
+    *ptr                                   = (uint8_t *)backingStore->Data() + arr->ByteOffset();
+    *length                                = arr->ByteLength();
     return true;
 }
 
@@ -427,11 +426,11 @@ bool Object::isArrayBuffer() const {
 
 bool Object::getArrayBufferData(uint8_t **ptr, size_t *length) const {
     assert(isArrayBuffer());
-    v8::Local<v8::Object> obj = const_cast<Object *>(this)->_obj.handle(__isolate);
-    v8::Local<v8::ArrayBuffer> arrBuf = v8::Local<v8::ArrayBuffer>::Cast(obj);
-    const auto &backingStore = arrBuf->GetBackingStore();
-    *ptr = (uint8_t *)backingStore->Data();
-    *length = backingStore->ByteLength();
+    v8::Local<v8::Object>      obj          = const_cast<Object *>(this)->_obj.handle(__isolate);
+    v8::Local<v8::ArrayBuffer> arrBuf       = v8::Local<v8::ArrayBuffer>::Cast(obj);
+    const auto &               backingStore = arrBuf->GetBackingStore();
+    *ptr                                    = (uint8_t *)backingStore->Data();
+    *length                                 = backingStore->ByteLength();
     return true;
 }
 
@@ -472,7 +471,7 @@ bool Object::call(const ValueArray &args, Object *thisObject, Value *rval /* = n
         SE_LOGD("Function object is released!\n");
         return false;
     }
-    size_t argc = 0;
+    size_t                            argc = 0;
     std::vector<v8::Local<v8::Value>> argv;
     argv.reserve(10);
     argc = args.size();
@@ -494,8 +493,8 @@ bool Object::call(const ValueArray &args, Object *thisObject, Value *rval /* = n
         }
     }
 
-    v8::Local<v8::Context> context = se::ScriptEngine::getInstance()->_getContext();
-    v8::MaybeLocal<v8::Value> result = _obj.handle(__isolate)->CallAsFunction(context, thiz, (int)argc, argv.data());
+    v8::Local<v8::Context>    context = se::ScriptEngine::getInstance()->_getContext();
+    v8::MaybeLocal<v8::Value> result  = _obj.handle(__isolate)->CallAsFunction(context, thiz, (int)argc, argv.data());
 
     if (!result.IsEmpty()) {
         if (rval != nullptr) {
@@ -517,7 +516,7 @@ bool Object::defineFunction(const char *funcName, void (*func)(const v8::Functio
     if (maybeFuncName.IsEmpty())
         return false;
 
-    v8::Local<v8::Context> context = __isolate->GetCurrentContext();
+    v8::Local<v8::Context>       context   = __isolate->GetCurrentContext();
     v8::MaybeLocal<v8::Function> maybeFunc = v8::FunctionTemplate::New(__isolate, func)->GetFunction(context);
     if (maybeFunc.IsEmpty())
         return false;
@@ -564,7 +563,7 @@ bool Object::getArrayLength(uint32_t *length) const {
 bool Object::getArrayElement(uint32_t index, Value *data) const {
     assert(isArray());
     assert(data != nullptr);
-    Object *thiz = const_cast<Object *>(this);
+    Object *                  thiz   = const_cast<Object *>(this);
     v8::MaybeLocal<v8::Value> result = thiz->_obj.handle(__isolate)->Get(__isolate->GetCurrentContext(), index);
 
     if (result.IsEmpty())
@@ -586,14 +585,14 @@ bool Object::setArrayElement(uint32_t index, const Value &data) {
 
 bool Object::getAllKeys(std::vector<std::string> *allKeys) const {
     assert(allKeys != nullptr);
-    Object *thiz = const_cast<Object *>(this);
-    v8::Local<v8::Context> context = __isolate->GetCurrentContext();
-    v8::MaybeLocal<v8::Array> keys = thiz->_obj.handle(__isolate)->GetOwnPropertyNames(context);
+    Object *                  thiz    = const_cast<Object *>(this);
+    v8::Local<v8::Context>    context = __isolate->GetCurrentContext();
+    v8::MaybeLocal<v8::Array> keys    = thiz->_obj.handle(__isolate)->GetOwnPropertyNames(context);
     if (keys.IsEmpty())
         return false;
 
     v8::Local<v8::Array> keysChecked = keys.ToLocalChecked();
-    Value keyVal;
+    Value                keyVal;
     for (uint32_t i = 0, len = keysChecked->Length(); i < len; ++i) {
         v8::MaybeLocal<v8::Value> key = keysChecked->Get(context, i);
         if (key.IsEmpty()) {
@@ -652,7 +651,7 @@ bool Object::attachObject(Object *obj) {
     assert(obj);
 
     Object *global = ScriptEngine::getInstance()->getGlobalObject();
-    Value jsbVal;
+    Value   jsbVal;
     if (!global->getProperty("jsb", &jsbVal))
         return false;
     Object *jsbObj = jsbVal.toObject();
@@ -673,7 +672,7 @@ bool Object::detachObject(Object *obj) {
     assert(obj);
 
     Object *global = ScriptEngine::getInstance()->getGlobalObject();
-    Value jsbVal;
+    Value   jsbVal;
     if (!global->getProperty("jsb", &jsbVal))
         return false;
     Object *jsbObj = jsbVal.toObject();

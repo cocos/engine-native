@@ -32,28 +32,22 @@
 #include "AppEvent.h"
 
 AppEvent::AppEvent(const std::string& eventName, int type)
-: CustomEvent()
-, _eventName(eventName)
-{
+: CustomEvent(), _eventName(eventName) {
     name = eventName;
     setEventType(type);
 }
 
-void AppEvent::setEventType(int type)
-{
+void AppEvent::setEventType(int type) {
     _eventType = type;
 }
-int  AppEvent::getEventType()
-{
+int AppEvent::getEventType() {
     return _eventType;
 }
 
-void AppEvent::setDataString(std::string data)
-{
+void AppEvent::setDataString(std::string data) {
     _dataString = data;
 }
 
-std::string AppEvent::getDataString()
-{
+std::string AppEvent::getDataString() {
     return _dataString;
 }

@@ -29,8 +29,8 @@ THE SOFTWARE.
 #include "audio/android/OpenSLHelper.h"
 #include "audio/android/PcmData.h"
 
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
 
 namespace cc {
 
@@ -60,9 +60,9 @@ private:
     SLEngineItf _engineItf;
     SLObjectItf _outputMixObj;
 
-    SLObjectItf _playObj;
-    SLPlayItf _playItf;
-    SLVolumeItf _volumeItf;
+    SLObjectItf                   _playObj;
+    SLPlayItf                     _playItf;
+    SLVolumeItf                   _volumeItf;
     SLAndroidSimpleBufferQueueItf _bufferQueueItf;
 
     int _numChannels;

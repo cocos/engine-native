@@ -34,23 +34,23 @@ public:
     ReadWriteLock() = default;
 
     template <typename Function, typename... Args>
-    auto lockRead(Function &&func, Args &&...args) noexcept -> decltype(func(std::forward<Args>(args)...));
+    auto lockRead(Function &&func, Args &&... args) noexcept -> decltype(func(std::forward<Args>(args)...));
 
     template <typename Function, typename... Args>
-    auto lockWrite(Function &&func, Args &&...args) noexcept -> decltype(func(std::forward<Args>(args)...));
+    auto lockWrite(Function &&func, Args &&... args) noexcept -> decltype(func(std::forward<Args>(args)...));
 
 private:
     std::shared_mutex _mutex;
 };
 
 template <typename Function, typename... Args>
-auto ReadWriteLock::lockRead(Function &&func, Args &&...args) noexcept -> decltype(func(std::forward<Args>(args)...)) {
+auto ReadWriteLock::lockRead(Function &&func, Args &&... args) noexcept -> decltype(func(std::forward<Args>(args)...)) {
     std::shared_lock<std::shared_mutex> lock(_mutex);
     return func(std::forward<Args>(args)...);
 }
 
 template <typename Function, typename... Args>
-auto ReadWriteLock::lockWrite(Function &&func, Args &&...args) noexcept -> decltype(func(std::forward<Args>(args)...)) {
+auto ReadWriteLock::lockWrite(Function &&func, Args &&... args) noexcept -> decltype(func(std::forward<Args>(args)...)) {
     std::lock_guard<std::shared_mutex> lock(_mutex);
     return func(std::forward<Args>(args)...);
 }

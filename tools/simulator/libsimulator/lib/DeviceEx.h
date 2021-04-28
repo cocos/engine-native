@@ -31,8 +31,7 @@
 
 PLAYER_NS_BEGIN
 
-class CC_LIBSIM_DLL DeviceEx
-{
+class CC_LIBSIM_DLL DeviceEx {
 public:
     static DeviceEx *getInstance();
 
@@ -41,8 +40,8 @@ public:
 
 private:
     DeviceEx();
-    void init();
-    void makeUILangName();
+    void        init();
+    void        makeUILangName();
     std::string makeUserGUID();
 
     std::string _uiLangName;

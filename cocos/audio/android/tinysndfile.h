@@ -32,9 +32,9 @@ typedef int sf_count_t;
 
 typedef struct {
     sf_count_t frames;
-    int samplerate;
-    int channels;
-    int format;
+    int        samplerate;
+    int        channels;
+    int        format;
 } SF_INFO;
 
 // opaque to clients

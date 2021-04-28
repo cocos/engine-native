@@ -37,8 +37,8 @@ int Device::getDPI() {
     static int dpi = -1;
     if (dpi == -1) {
         HDC hScreenDC = GetDC(nullptr);
-        int PixelsX = GetDeviceCaps(hScreenDC, HORZRES);
-        int MMX = GetDeviceCaps(hScreenDC, HORZSIZE);
+        int PixelsX   = GetDeviceCaps(hScreenDC, HORZRES);
+        int MMX       = GetDeviceCaps(hScreenDC, HORZSIZE);
         ReleaseDC(nullptr, hScreenDC);
         dpi = static_cast<int>(254.0f * PixelsX / MMX / 10);
     }

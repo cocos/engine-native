@@ -26,27 +26,26 @@
 #include "cocos/bindings/auto/jsb_editor_support_auto.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
-#include "editor-support/middleware-adapter.h"
 #include "editor-support/MiddlewareManager.h"
 #include "editor-support/SharedBufferManager.h"
+#include "editor-support/middleware-adapter.h"
 
 #ifndef JSB_ALLOC
-#define JSB_ALLOC(kls, ...) new (std::nothrow) kls(__VA_ARGS__)
+    #define JSB_ALLOC(kls, ...) new (std::nothrow) kls(__VA_ARGS__)
 #endif
 
 #ifndef JSB_FREE
-#define JSB_FREE(ptr) delete ptr
+    #define JSB_FREE(ptr) delete ptr
 #endif
 se::Object* __jsb_cc_middleware_Texture2D_proto = nullptr;
-se::Class* __jsb_cc_middleware_Texture2D_class = nullptr;
+se::Class*  __jsb_cc_middleware_Texture2D_class = nullptr;
 
-static bool js_editor_support_Texture2D_getPixelsHigh(se::State& s)
-{
+static bool js_editor_support_Texture2D_getPixelsHigh(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_getPixelsHigh : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         int result = cobj->getPixelsHigh();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -59,13 +58,12 @@ static bool js_editor_support_Texture2D_getPixelsHigh(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_Texture2D_getPixelsHigh)
 
-static bool js_editor_support_Texture2D_getPixelsWide(se::State& s)
-{
+static bool js_editor_support_Texture2D_getPixelsWide(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_getPixelsWide : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         int result = cobj->getPixelsWide();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -78,13 +76,12 @@ static bool js_editor_support_Texture2D_getPixelsWide(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_Texture2D_getPixelsWide)
 
-static bool js_editor_support_Texture2D_getRealTextureIndex(se::State& s)
-{
+static bool js_editor_support_Texture2D_getRealTextureIndex(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_getRealTextureIndex : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         int result = cobj->getRealTextureIndex();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -97,13 +94,12 @@ static bool js_editor_support_Texture2D_getRealTextureIndex(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_Texture2D_getRealTextureIndex)
 
-static bool js_editor_support_Texture2D_setPixelsHigh(se::State& s)
-{
+static bool js_editor_support_Texture2D_setPixelsHigh(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_setPixelsHigh : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -116,13 +112,12 @@ static bool js_editor_support_Texture2D_setPixelsHigh(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_Texture2D_setPixelsHigh)
 
-static bool js_editor_support_Texture2D_setPixelsWide(se::State& s)
-{
+static bool js_editor_support_Texture2D_setPixelsWide(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_setPixelsWide : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -135,13 +130,12 @@ static bool js_editor_support_Texture2D_setPixelsWide(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_Texture2D_setPixelsWide)
 
-static bool js_editor_support_Texture2D_setRealTextureIndex(se::State& s)
-{
+static bool js_editor_support_Texture2D_setRealTextureIndex(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_setRealTextureIndex : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -154,25 +148,23 @@ static bool js_editor_support_Texture2D_setRealTextureIndex(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_Texture2D_setRealTextureIndex)
 
-static bool js_editor_support_Texture2D_setTexParamCallback(se::State& s)
-{
+static bool js_editor_support_Texture2D_setTexParamCallback(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_setTexParamCallback : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
-        HolderType<std::function<void (int, unsigned int, unsigned int, unsigned int, unsigned int)>, true> arg0 = {};
+        HolderType<std::function<void(int, unsigned int, unsigned int, unsigned int, unsigned int)>, true> arg0 = {};
         do {
-            if (args[0].isObject() && args[0].toObject()->isFunction())
-            {
+            if (args[0].isObject() && args[0].toObject()->isFunction()) {
                 se::Value jsThis(s.thisObject());
                 se::Value jsFunc(args[0]);
                 jsThis.toObject()->attachObject(jsFunc.toObject());
                 auto lambda = [=](int larg0, unsigned int larg1, unsigned int larg2, unsigned int larg3, unsigned int larg4) -> void {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
-        
+
                     CC_UNUSED bool ok = true;
                     se::ValueArray args;
                     args.resize(5);
@@ -181,22 +173,19 @@ static bool js_editor_support_Texture2D_setTexParamCallback(se::State& s)
                     ok &= nativevalue_to_se(larg2, args[2], nullptr /*ctx*/);
                     ok &= nativevalue_to_se(larg3, args[3], nullptr /*ctx*/);
                     ok &= nativevalue_to_se(larg4, args[4], nullptr /*ctx*/);
-                    se::Value rval;
+                    se::Value   rval;
                     se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     se::Object* funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(args, thisObj, &rval);
+                    bool        succeed = funcObj->call(args, thisObj, &rval);
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
                     }
                 };
                 arg0.data = lambda;
-            }
-            else
-            {
+            } else {
                 arg0.data = nullptr;
             }
-        } while(false)
-        ;
+        } while (false);
         SE_PRECONDITION2(ok, false, "js_editor_support_Texture2D_setTexParamCallback : Error processing arguments");
         cobj->setTexParamCallback(arg0.value());
         return true;
@@ -206,13 +195,12 @@ static bool js_editor_support_Texture2D_setTexParamCallback(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_Texture2D_setTexParamCallback)
 
-static bool js_editor_support_Texture2D_setTexParameters(se::State& s)
-{
+static bool js_editor_support_Texture2D_setTexParameters(se::State& s) {
     cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_Texture2D_setTexParameters : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<cc::middleware::Texture2D::_TexParams, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -235,19 +223,14 @@ static bool js_editor_support_Texture2D_constructor(se::State& s) // constructor
 }
 SE_BIND_CTOR(js_editor_support_Texture2D_constructor, __jsb_cc_middleware_Texture2D_class, js_cc_middleware_Texture2D_finalize)
 
-
-
-
-static bool js_cc_middleware_Texture2D_finalize(se::State& s)
-{
-    cc::middleware::Texture2D* cobj =SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
+static bool js_cc_middleware_Texture2D_finalize(se::State& s) {
+    cc::middleware::Texture2D* cobj = SE_THIS_OBJECT<cc::middleware::Texture2D>(s);
     cobj->release();
     return true;
 }
 SE_BIND_FINALIZE_FUNC(js_cc_middleware_Texture2D_finalize)
 
-bool js_register_editor_support_Texture2D(se::Object* obj)
-{
+bool js_register_editor_support_Texture2D(se::Object* obj) {
     auto cls = se::Class::create("Texture2D", obj, nullptr, _SE(js_editor_support_Texture2D_constructor));
 
     cls->defineFunction("getPixelsHigh", _SE(js_editor_support_Texture2D_getPixelsHigh));
@@ -269,15 +252,14 @@ bool js_register_editor_support_Texture2D(se::Object* obj)
     return true;
 }
 se::Object* __jsb_cc_middleware_SharedBufferManager_proto = nullptr;
-se::Class* __jsb_cc_middleware_SharedBufferManager_class = nullptr;
+se::Class*  __jsb_cc_middleware_SharedBufferManager_class = nullptr;
 
-static bool js_editor_support_SharedBufferManager_getSharedBuffer(se::State& s)
-{
+static bool js_editor_support_SharedBufferManager_getSharedBuffer(se::State& s) {
     cc::middleware::SharedBufferManager* cobj = SE_THIS_OBJECT<cc::middleware::SharedBufferManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_SharedBufferManager_getSharedBuffer : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         se_object_ptr result = cobj->getSharedBuffer();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -290,41 +272,36 @@ static bool js_editor_support_SharedBufferManager_getSharedBuffer(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_SharedBufferManager_getSharedBuffer)
 
-static bool js_editor_support_SharedBufferManager_setResizeCallback(se::State& s)
-{
+static bool js_editor_support_SharedBufferManager_setResizeCallback(se::State& s) {
     cc::middleware::SharedBufferManager* cobj = SE_THIS_OBJECT<cc::middleware::SharedBufferManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_SharedBufferManager_setResizeCallback : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
-        HolderType<std::function<void ()>, false> arg0 = {};
+        HolderType<std::function<void()>, false> arg0 = {};
         do {
-            if (args[0].isObject() && args[0].toObject()->isFunction())
-            {
+            if (args[0].isObject() && args[0].toObject()->isFunction()) {
                 se::Value jsThis(s.thisObject());
                 se::Value jsFunc(args[0]);
                 jsThis.toObject()->attachObject(jsFunc.toObject());
                 auto lambda = [=]() -> void {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
-        
-                    se::Value rval;
+
+                    se::Value   rval;
                     se::Object* thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     se::Object* funcObj = jsFunc.toObject();
-                    bool succeed = funcObj->call(se::EmptyValueArray, thisObj, &rval);
+                    bool        succeed = funcObj->call(se::EmptyValueArray, thisObj, &rval);
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
                     }
                 };
                 arg0.data = lambda;
-            }
-            else
-            {
+            } else {
                 arg0.data = nullptr;
             }
-        } while(false)
-        ;
+        } while (false);
         SE_PRECONDITION2(ok, false, "js_editor_support_SharedBufferManager_setResizeCallback : Error processing arguments");
         cobj->setResizeCallback(arg0.value());
         return true;
@@ -338,8 +315,8 @@ SE_DECLARE_FINALIZE_FUNC(js_cc_middleware_SharedBufferManager_finalize)
 
 static bool js_editor_support_SharedBufferManager_constructor(se::State& s) // constructor.c
 {
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
+    CC_UNUSED bool             ok   = true;
+    const auto&                args = s.args();
     se::Object::TypedArrayType arg0;
     ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
     SE_PRECONDITION2(ok, false, "js_editor_support_SharedBufferManager_constructor : Error processing arguments");
@@ -350,14 +327,9 @@ static bool js_editor_support_SharedBufferManager_constructor(se::State& s) // c
 }
 SE_BIND_CTOR(js_editor_support_SharedBufferManager_constructor, __jsb_cc_middleware_SharedBufferManager_class, js_cc_middleware_SharedBufferManager_finalize)
 
-
-
-
-static bool js_cc_middleware_SharedBufferManager_finalize(se::State& s)
-{
+static bool js_cc_middleware_SharedBufferManager_finalize(se::State& s) {
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::middleware::SharedBufferManager>(s));
-    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
-    {
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end()) {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
         cc::middleware::SharedBufferManager* cobj = SE_THIS_OBJECT<cc::middleware::SharedBufferManager>(s);
         JSB_FREE(cobj);
@@ -366,8 +338,7 @@ static bool js_cc_middleware_SharedBufferManager_finalize(se::State& s)
 }
 SE_BIND_FINALIZE_FUNC(js_cc_middleware_SharedBufferManager_finalize)
 
-bool js_register_editor_support_SharedBufferManager(se::Object* obj)
-{
+bool js_register_editor_support_SharedBufferManager(se::Object* obj) {
     auto cls = se::Class::create("SharedBufferManager", obj, nullptr, _SE(js_editor_support_SharedBufferManager_constructor));
 
     cls->defineFunction("getSharedBuffer", _SE(js_editor_support_SharedBufferManager_getSharedBuffer));
@@ -383,15 +354,14 @@ bool js_register_editor_support_SharedBufferManager(se::Object* obj)
     return true;
 }
 se::Object* __jsb_cc_middleware_MiddlewareManager_proto = nullptr;
-se::Class* __jsb_cc_middleware_MiddlewareManager_class = nullptr;
+se::Class*  __jsb_cc_middleware_MiddlewareManager_class = nullptr;
 
-static bool js_editor_support_MiddlewareManager_getAttachInfoMgr(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_getAttachInfoMgr(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_getAttachInfoMgr : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         cc::middleware::SharedBufferManager* result = cobj->getAttachInfoMgr();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -404,13 +374,12 @@ static bool js_editor_support_MiddlewareManager_getAttachInfoMgr(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_getAttachInfoMgr)
 
-static bool js_editor_support_MiddlewareManager_getBufferCount(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_getBufferCount(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_getBufferCount : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -426,13 +395,12 @@ static bool js_editor_support_MiddlewareManager_getBufferCount(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_getBufferCount)
 
-static bool js_editor_support_MiddlewareManager_getIBTypedArray(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_getIBTypedArray(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_getIBTypedArray : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 2) {
         HolderType<int, false> arg0 = {};
         HolderType<int, false> arg1 = {};
@@ -450,15 +418,14 @@ static bool js_editor_support_MiddlewareManager_getIBTypedArray(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_getIBTypedArray)
 
-static bool js_editor_support_MiddlewareManager_getIBTypedArrayLength(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_getIBTypedArrayLength(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_getIBTypedArrayLength : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 2) {
-        HolderType<int, false> arg0 = {};
+        HolderType<int, false>    arg0 = {};
         HolderType<size_t, false> arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
@@ -474,13 +441,12 @@ static bool js_editor_support_MiddlewareManager_getIBTypedArrayLength(se::State&
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_getIBTypedArrayLength)
 
-static bool js_editor_support_MiddlewareManager_getRenderInfoMgr(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_getRenderInfoMgr(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_getRenderInfoMgr : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         cc::middleware::SharedBufferManager* result = cobj->getRenderInfoMgr();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -493,13 +459,12 @@ static bool js_editor_support_MiddlewareManager_getRenderInfoMgr(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_getRenderInfoMgr)
 
-static bool js_editor_support_MiddlewareManager_getVBTypedArray(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_getVBTypedArray(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_getVBTypedArray : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 2) {
         HolderType<int, false> arg0 = {};
         HolderType<int, false> arg1 = {};
@@ -517,15 +482,14 @@ static bool js_editor_support_MiddlewareManager_getVBTypedArray(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_getVBTypedArray)
 
-static bool js_editor_support_MiddlewareManager_getVBTypedArrayLength(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_getVBTypedArrayLength(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_getVBTypedArrayLength : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 2) {
-        HolderType<int, false> arg0 = {};
+        HolderType<int, false>    arg0 = {};
         HolderType<size_t, false> arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
@@ -541,13 +505,12 @@ static bool js_editor_support_MiddlewareManager_getVBTypedArrayLength(se::State&
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_getVBTypedArrayLength)
 
-static bool js_editor_support_MiddlewareManager_render(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_render(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_render : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<float, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -560,13 +523,12 @@ static bool js_editor_support_MiddlewareManager_render(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_render)
 
-static bool js_editor_support_MiddlewareManager_update(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_update(se::State& s) {
     cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
     SE_PRECONDITION2(cobj, false, "js_editor_support_MiddlewareManager_update : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 1) {
         HolderType<float, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
@@ -579,10 +541,9 @@ static bool js_editor_support_MiddlewareManager_update(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_update)
 
-static bool js_editor_support_MiddlewareManager_destroyInstance(se::State& s)
-{
+static bool js_editor_support_MiddlewareManager_destroyInstance(se::State& s) {
     const auto& args = s.args();
-    size_t argc = args.size();
+    size_t      argc = args.size();
     if (argc == 0) {
         cc::middleware::MiddlewareManager::destroyInstance();
         return true;
@@ -592,11 +553,10 @@ static bool js_editor_support_MiddlewareManager_destroyInstance(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_destroyInstance)
 
-static bool js_editor_support_MiddlewareManager_generateModuleID(se::State& s)
-{
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+static bool js_editor_support_MiddlewareManager_generateModuleID(se::State& s) {
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         uint8_t result = cc::middleware::MiddlewareManager::generateModuleID();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -609,11 +569,10 @@ static bool js_editor_support_MiddlewareManager_generateModuleID(se::State& s)
 }
 SE_BIND_FUNC(js_editor_support_MiddlewareManager_generateModuleID)
 
-static bool js_editor_support_MiddlewareManager_getInstance(se::State& s)
-{
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+static bool js_editor_support_MiddlewareManager_getInstance(se::State& s) {
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
     if (argc == 0) {
         cc::middleware::MiddlewareManager* result = cc::middleware::MiddlewareManager::getInstance();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
@@ -637,14 +596,9 @@ static bool js_editor_support_MiddlewareManager_constructor(se::State& s) // con
 }
 SE_BIND_CTOR(js_editor_support_MiddlewareManager_constructor, __jsb_cc_middleware_MiddlewareManager_class, js_cc_middleware_MiddlewareManager_finalize)
 
-
-
-
-static bool js_cc_middleware_MiddlewareManager_finalize(se::State& s)
-{
+static bool js_cc_middleware_MiddlewareManager_finalize(se::State& s) {
     auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s));
-    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
-    {
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end()) {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
         cc::middleware::MiddlewareManager* cobj = SE_THIS_OBJECT<cc::middleware::MiddlewareManager>(s);
         JSB_FREE(cobj);
@@ -653,8 +607,7 @@ static bool js_cc_middleware_MiddlewareManager_finalize(se::State& s)
 }
 SE_BIND_FINALIZE_FUNC(js_cc_middleware_MiddlewareManager_finalize)
 
-bool js_register_editor_support_MiddlewareManager(se::Object* obj)
-{
+bool js_register_editor_support_MiddlewareManager(se::Object* obj) {
     auto cls = se::Class::create("MiddlewareManager", obj, nullptr, _SE(js_editor_support_MiddlewareManager_constructor));
 
     cls->defineFunction("getAttachInfoMgr", _SE(js_editor_support_MiddlewareManager_getAttachInfoMgr));
@@ -679,12 +632,10 @@ bool js_register_editor_support_MiddlewareManager(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-bool register_all_editor_support(se::Object* obj)
-{
+bool register_all_editor_support(se::Object* obj) {
     // Get the ns
     se::Value nsVal;
-    if (!obj->getProperty("middleware", &nsVal))
-    {
+    if (!obj->getProperty("middleware", &nsVal)) {
         se::HandleObject jsobj(se::Object::createPlainObject());
         nsVal.setObject(jsobj);
         obj->setProperty("middleware", nsVal);
@@ -696,4 +647,3 @@ bool register_all_editor_support(se::Object* obj)
     js_register_editor_support_Texture2D(ns);
     return true;
 }
-
