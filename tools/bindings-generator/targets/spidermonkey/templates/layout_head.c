@@ -10,7 +10,7 @@
 \#include "${replace_headers[include_header]}"
     #else
         #set relative = os.path.relpath(header, $search_path)
-        #if not '..' in relative
+        #if not'..' in relative
 \#include "${relative.replace(os.path.sep, '/')}"
         #else
 \#include "${include_header}"
