@@ -157,95 +157,31 @@ void DeferredPipeline::updateQuadVertexData(const gfx::Rect &renderArea) {
     _commandBuffers[0]->updateBuffer(_quadVBOnscreen, vbData);
 }
 
-void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *vbData) {
-    float minX = float(renderArea.x) / _device->getWidth();
-    float maxX = float(renderArea.x + renderArea.width) / _device->getWidth();
-    float minY = float(renderArea.y) / _device->getHeight();
-    float maxY = float(renderArea.y + renderArea.height) / _device->getHeight();
+void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform /*surfaceTransform*/, const gfx::Rect &renderArea, float *vbData) {
+    float minX = float(renderArea.x) / _width;
+    float maxX = float(renderArea.x + renderArea.width) / _width;
+    float minY = float(renderArea.y) / _height;
+    float maxY = float(renderArea.y + renderArea.height) / _height;
     if (_device->getCapabilities().screenSpaceSignY > 0) {
         std::swap(minY, maxY);
     }
-    int n = 0;
-    switch (surfaceTransform) {
-        case (gfx::SurfaceTransform::IDENTITY):
-            n           = 0;
-            vbData[n++] = -1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = minX; // uv
-            vbData[n++] = maxY;
-            vbData[n++] = 1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = maxX;
-            vbData[n++] = maxY;
-            vbData[n++] = -1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = minX;
-            vbData[n++] = minY;
-            vbData[n++] = 1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = maxX;
-            vbData[n++] = minY;
-            break;
-        case (gfx::SurfaceTransform::ROTATE_90):
-            n           = 0;
-            vbData[n++] = -1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = maxX; // uv
-            vbData[n++] = maxY;
-            vbData[n++] = 1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = maxX;
-            vbData[n++] = minY;
-            vbData[n++] = -1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = minX;
-            vbData[n++] = maxY;
-            vbData[n++] = 1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = minX;
-            vbData[n++] = minY;
-            break;
-        case (gfx::SurfaceTransform::ROTATE_180):
-            n           = 0;
-            vbData[n++] = -1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = minX; // uv
-            vbData[n++] = minY;
-            vbData[n++] = 1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = maxX;
-            vbData[n++] = minY;
-            vbData[n++] = -1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = minX;
-            vbData[n++] = maxY;
-            vbData[n++] = 1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = maxX;
-            vbData[n++] = maxY;
-            break;
-        case (gfx::SurfaceTransform::ROTATE_270):
-            n           = 0;
-            vbData[n++] = -1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = minX; // uv
-            vbData[n++] = minY;
-            vbData[n++] = 1.0;
-            vbData[n++] = -1.0;
-            vbData[n++] = minX;
-            vbData[n++] = maxY;
-            vbData[n++] = -1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = maxX;
-            vbData[n++] = minY;
-            vbData[n++] = 1.0;
-            vbData[n++] = 1.0;
-            vbData[n++] = maxX;
-            vbData[n++] = maxY;
-            break;
-        default:
-            break;
-    }
+    int n       = 0;
+    vbData[n++] = -1.0;
+    vbData[n++] = -1.0;
+    vbData[n++] = minX; // uv
+    vbData[n++] = maxY;
+    vbData[n++] = 1.0;
+    vbData[n++] = -1.0;
+    vbData[n++] = maxX;
+    vbData[n++] = maxY;
+    vbData[n++] = -1.0;
+    vbData[n++] = 1.0;
+    vbData[n++] = minX;
+    vbData[n++] = minY;
+    vbData[n++] = 1.0;
+    vbData[n++] = 1.0;
+    vbData[n++] = maxX;
+    vbData[n++] = minY;
 }
 
 bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA) {
@@ -421,14 +357,8 @@ bool DeferredPipeline::activeRenderer() {
 
     _lightingRenderPass = _device->createRenderPass(lightPass);
 
-    if (_device->getSurfaceTransform() == gfx::SurfaceTransform::IDENTITY ||
-        _device->getSurfaceTransform() == gfx::SurfaceTransform::ROTATE_180) {
-        _width  = _device->getWidth();
-        _height = _device->getHeight();
-    } else {
-        _width  = _device->getHeight();
-        _height = _device->getWidth();
-    }
+    _width  = _device->getWidth();
+    _height = _device->getHeight();
 
     generateDeferredRenderData();
 
