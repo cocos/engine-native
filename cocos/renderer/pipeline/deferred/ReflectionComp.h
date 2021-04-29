@@ -57,6 +57,8 @@ private:
     gfx::PipelineState*       _compDenoisePipelineState          = nullptr;
     gfx::DescriptorSet*       _compDenoiseDescriptorSet          = nullptr;
 
+    gfx::DescriptorSetLayout* _localDescriptorSetLayout = nullptr;
+
     gfx::Buffer *             _compConstantsBuffer     = nullptr;
     gfx::Texture*             _lightingTex             = nullptr;
     gfx::Texture*             _worldPositionTex        = nullptr;

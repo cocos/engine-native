@@ -386,14 +386,16 @@ void LightingStage::render(Camera *camera) {
                     cmdBuff->pipelineBarrier(barrier_pre);
                     cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
                     cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
+                    cmdBuff->bindDescriptorSet(1, subModel->getDescriptorSet());
+
                     cmdBuff->dispatch(dispatchInfo);
 
                     cmdBuff->pipelineBarrier(barrier_before_denoise);
 
                     cmdBuff->bindPipelineState(_reflectionComp->getDenoisePipelineState());
                     cmdBuff->bindDescriptorSet(0, _reflectionComp->getDenoiseDescriptorSet());
-                    cmdBuff->bindDescriptorSet(2, subModel->getDescriptorSet());
-                    // cmdBuff->dispatch(denoiseDispatchInfo);
+                    cmdBuff->bindDescriptorSet(1, subModel->getDescriptorSet());
+                    cmdBuff->dispatch(denoiseDispatchInfo);
                     cmdBuff->pipelineBarrier(barrier_after_denoise);
                 }
             }

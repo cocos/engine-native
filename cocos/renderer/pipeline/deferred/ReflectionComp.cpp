@@ -1,5 +1,5 @@
 #include "ReflectionComp.h"
-
+#include "../Define.h"
 
 namespace cc {
 
@@ -16,6 +16,8 @@ ReflectionComp::~ReflectionComp() {
     CC_SAFE_DESTROY(_compDenoiseDescriptorSetLayout);
     CC_SAFE_DESTROY(_compDenoisePipelineLayout);
     CC_SAFE_DESTROY(_compDenoisePipelineState);
+
+    CC_SAFE_DESTROY(_localDescriptorSetLayout);
 
     CC_SAFE_DESTROY(_compConstantsBuffer);
     CC_SAFE_DESTROY(_sampler);
@@ -58,6 +60,8 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
     CCASSERT(_group_size_x * _group_size_y <= maxInvocations, "maxInvocations is too small");
     CC_LOG_INFO(" work group size: %dx%d", _group_size_x, _group_size_y);
 
+    gfx::DescriptorSetLayoutInfo layoutInfo = {pipeline::localDescriptorSetLayout.bindings};
+    _localDescriptorSetLayout               = _device->createDescriptorSetLayout(layoutInfo);
 
     initFirstComp();
     initDenoiseComp();
@@ -85,8 +89,16 @@ void ReflectionComp::initFirstComp() {
         layout(set = 0, binding = 2) uniform sampler2D worldPositionTex;
         layout(set = 0, binding = 3, rgba8) writeonly uniform lowp image2D reflectionTex;
 
+        layout(set = 1, binding = 0, std140) uniform CCLocal
+        {
+            mat4 cc_matWorld;
+            mat4 cc_matWorldIT;
+            vec4 cc_lightingMapUVParam;
+        };
+
         void main() {
             float _HorizontalPlaneHeightWS = 0.01;
+            _HorizontalPlaneHeightWS = (cc_matWorld * vec4(0,0,0,1)).y;
             vec2 uv = vec2(gl_GlobalInvocationID.xy) / texSize;
             vec3 posWS = texture(worldPositionTex, uv).xyz;
             if(posWS.y <= _HorizontalPlaneHeightWS) return;
@@ -146,7 +158,9 @@ void ReflectionComp::initFirstComp() {
     gfx::ShaderInfo shaderInfo;
     shaderInfo.name   = "Compute ";
     shaderInfo.stages = {{gfx::ShaderStageFlagBit::COMPUTE, getAppropriateShaderSource(sources)}};
-    shaderInfo.blocks = {{0, 0, "Constants", {{"cc_matViewProj", gfx::Type::MAT4, 1}, {"texSize", gfx::Type::FLOAT2, 1}}, 1}};
+    shaderInfo.blocks = {
+        {0, 0, "Constants", {{"cc_matViewProj", gfx::Type::MAT4, 1}, {"texSize", gfx::Type::FLOAT2, 1}}, 1},
+        {1, 0, "CCLocal", {{"cc_matWorld", gfx::Type::MAT4, 1}, {"cc_matWorldIT", gfx::Type::MAT4, 1}, {"cc_lightingMapUVParam", gfx::Type::FLOAT4, 1}}, 1}};
     shaderInfo.images = {
         {0, 1, "lightingTex", gfx::Type::SAMPLER2D, 1, gfx::MemoryAccessBit::READ_ONLY},
         {0, 2, "worldPositionTex", gfx::Type::SAMPLER2D, 1, gfx::MemoryAccessBit::READ_ONLY},
@@ -158,9 +172,8 @@ void ReflectionComp::initFirstComp() {
     dslInfo.bindings.push_back({1, gfx::DescriptorType::SAMPLER_TEXTURE, 1, gfx::ShaderStageFlagBit::COMPUTE});
     dslInfo.bindings.push_back({2, gfx::DescriptorType::SAMPLER_TEXTURE, 1, gfx::ShaderStageFlagBit::COMPUTE});
     dslInfo.bindings.push_back({3, gfx::DescriptorType::STORAGE_IMAGE, 1, gfx::ShaderStageFlagBit::COMPUTE});
-    
+
     _compDescriptorSetLayout = _device->createDescriptorSetLayout(dslInfo);
-    _compPipelineLayout = _device->createPipelineLayout({{_compDescriptorSetLayout}});
     _compDescriptorSet = _device->createDescriptorSet({_compDescriptorSetLayout});
     _compDescriptorSet->bindBuffer(0, _compConstantsBuffer);
     _compDescriptorSet->bindTexture(1, _lightingTex);
@@ -169,6 +182,8 @@ void ReflectionComp::initFirstComp() {
     _compDescriptorSet->bindSampler(2, _sampler);
     _compDescriptorSet->bindTexture(3, _reflectionTex);
     _compDescriptorSet->update();
+
+    _compPipelineLayout = _device->createPipelineLayout({{_compDescriptorSetLayout, _localDescriptorSetLayout}});
 
     gfx::PipelineStateInfo pipelineInfo;
     pipelineInfo.shader         = _compShader;
@@ -186,7 +201,7 @@ void ReflectionComp::initDenoiseComp() {
 
         layout(set = 0, binding = 0) uniform sampler2D reflectionTex;
         // layout(set = 0, binding = 1, rgba8) writeonly uniform lowp image2D denoiseTexLod;
-        layout(set = 2, binding = 11, rgba8) writeonly uniform lowp image2D denoiseTex;
+        layout(set = 1, binding = 12, rgba8) writeonly uniform lowp image2D denoiseTex;
 
 
         void main() {
@@ -247,7 +262,7 @@ void ReflectionComp::initDenoiseComp() {
     shaderInfo.blocks = {};
     shaderInfo.images = {
         {0, 0, "reflectionTex", gfx::Type::SAMPLER2D, 1, gfx::MemoryAccessBit::READ_ONLY},
-        {0, 1, "denoiseTex", gfx::Type::IMAGE2D, 1, gfx::MemoryAccessBit::WRITE_ONLY}};
+        {1, 12, "denoiseTex", gfx::Type::IMAGE2D, 1, gfx::MemoryAccessBit::WRITE_ONLY}};
     _compDenoiseShader     = _device->createShader(shaderInfo);
 
     gfx::DescriptorSetLayoutInfo dslInfo;
@@ -255,7 +270,7 @@ void ReflectionComp::initDenoiseComp() {
     dslInfo.bindings.push_back({1, gfx::DescriptorType::STORAGE_IMAGE, 1, gfx::ShaderStageFlagBit::COMPUTE});
     _compDenoiseDescriptorSetLayout = _device->createDescriptorSetLayout(dslInfo);
 
-    _compDenoisePipelineLayout = _device->createPipelineLayout({{_compDenoiseDescriptorSetLayout}});
+    _compDenoisePipelineLayout = _device->createPipelineLayout({{_compDenoiseDescriptorSetLayout, _localDescriptorSetLayout}});
 
     _compDenoiseDescriptorSet = _device->createDescriptorSet({_compDenoiseDescriptorSetLayout});
 
