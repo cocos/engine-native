@@ -25,38 +25,15 @@
 
 #pragma once
 
-#include "math/Mat4.h"
-#include "math/Vec3.h"
-#include "math/Quaternion.h"
+#include "renderer/gfx-base/GFXFrameBuffer.h"
 
 namespace cc {
 namespace scene {
 
-class Node final {
-public:
-    Node()             = default;
-    Node(const Node &) = delete;
-    Node(Node &&)      = delete;
-    ~Node()            = default;
-    Node &operator=(const Node &) = delete;
-    Node &operator=(Node &&) = delete;
-
-    void updateWorldTransform();
-
-    //TODO
-
-private:
-    uint32_t   layer{0};
-    bool       _flagsChanges{false};
-    bool       _dirtyFlags{false};
-    bool       _hasChangeFlags{false};
-    Node *     _parent{nullptr};
-    Vec3       _lPos;
-    Quaternion _lScale;
-    Vec3       _pos;
-    Quaternion _rot;
-    Vec3       _scale;
-    Mat4       _mat;
+struct RenderWindow final {
+    bool              hasOnScreenAttachments{false};
+    bool              hasOffScreenAttachments{false};
+    gfx::FrameBuffer *frameBuffer{nullptr};
 };
 
 } // namespace scene

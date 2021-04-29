@@ -26,14 +26,15 @@
 #pragma once
 
 #include <vector>
+#include "scene/Camera.h"
+#include "scene/DirectionalLight.h"
+#include "scene/DrawBatch2D.h"
+#include "scene/Model.h"
+#include "scene/SpotLight.h"
+#include "scene/SphereLight.h"
 
 namespace cc {
 namespace scene {
-
-class DirectionalLight;
-class Model;
-class SphereLight;
-class Camera;
 
 class RenderScene final {
 public:

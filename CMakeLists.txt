@@ -837,9 +837,11 @@ cocos_source_files(
 ##### scene
 cocos_source_files(
                  cocos/scene/AABB.h
+                 cocos/scene/Camera.h
                  cocos/scene/Define.h
                  cocos/scene/DirectionalLight.h
                  cocos/scene/DirectionalLight.cpp
+                 cocos/scene/DrawBatch2D.h
                  cocos/scene/Frustum.h
                  cocos/scene/Light.h
                  cocos/scene/Light.cpp
@@ -851,6 +853,7 @@ cocos_source_files(
                  cocos/scene/Pass.cpp
                  cocos/scene/RenderScene.h
                  cocos/scene/RenderScene.cpp
+                 cocos/scenne/RenderWindow.h
                  cocos/scene/SphereLight.h
                  cocos/scene/SphereLight.cpp
                  cocos/scene/SpotLight.h

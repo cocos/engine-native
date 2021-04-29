@@ -25,38 +25,20 @@
 
 #pragma once
 
-#include "math/Mat4.h"
-#include "math/Vec3.h"
-#include "math/Quaternion.h"
+#include <vector>
+#include "renderer/gfx-base/GFXDescriptorSet.h"
+#include "renderer/gfx-base/GFXInputAssembler.h"
 
 namespace cc {
 namespace scene {
 
-class Node final {
-public:
-    Node()             = default;
-    Node(const Node &) = delete;
-    Node(Node &&)      = delete;
-    ~Node()            = default;
-    Node &operator=(const Node &) = delete;
-    Node &operator=(Node &&) = delete;
+class Pass;
 
-    void updateWorldTransform();
-
-    //TODO
-
-private:
-    uint32_t   layer{0};
-    bool       _flagsChanges{false};
-    bool       _dirtyFlags{false};
-    bool       _hasChangeFlags{false};
-    Node *     _parent{nullptr};
-    Vec3       _lPos;
-    Quaternion _lScale;
-    Vec3       _pos;
-    Quaternion _rot;
-    Vec3       _scale;
-    Mat4       _mat;
+struct DrawBatch2D final {
+    uint32_t             visFlags{0};
+    gfx::DescriptorSet * descriptSet{nullptr};
+    gfx::InputAssembler *inputAssembler{nullptr};
+    std::vector<Pass *>  passes;
 };
 
 } // namespace scene
