@@ -32,10 +32,10 @@ namespace scene {
 
 class SpotLight : public Light {
 public:
-    SpotLight()                             = default;
-    ~SpotLight() override                   = default;
-    SpotLight &SpotLight(const SpotLight &) = delete;
-    SpotLight &SpotLight(SpotLight &&)      = delete;
+    SpotLight()                  = default;
+    SpotLight(const SpotLight &) = delete;
+    SpotLight(SpotLight &&)      = delete;
+    ~SpotLight() override        = default;
     SpotLight &operator=(const SpotLight &) = delete;
     SpotLight &operator=(SpotLight &&) = delete;
 

@@ -37,10 +37,10 @@ class Camera;
 
 class RenderScene final {
 public:
-    RenderScene()                                 = default;
-    ~RenderScene()                                = default;
-    RenderScene &RenderScene(const RenderScene &) = delete;
-    RenderScene &RenderScene(RenderScene &&)      = delete;
+    RenderScene()                    = default;
+    RenderScene(const RenderScene &) = delete;
+    RenderScene(RenderScene &&)      = delete;
+    ~RenderScene()                   = default;
     RenderScene &operator=(const RenderScene &) = delete;
     RenderScene &operator=(RenderScene &&) = delete;
 

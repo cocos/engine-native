@@ -23,46 +23,10 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#pragma once
-
-#include "math/Vec3.h"
+#include "scene/SpotLight.h"
 
 namespace cc {
 namespace scene {
-
-class Node;
-
-enum class LightType {
-    DIRECTIONAL,
-    SPHERE,
-    SPOT,
-    UNKNOWN,
-};
-
-class Light {
-public:
-    Light()              = default;
-    Light(const Light &) = delete;
-    Light(Light &&)      = delete;
-    virtual ~Light()     = default;
-    Light &operator=(const Light &) = delete;
-    Light &operator=(const Light &&) = delete;
-
-    void setColorTemperatureRGB(Vec3);
-    void setNode(Node *);
-    void setUseColorTemperature(bool);
-
-    inline const Vec3 &getColor() const { return _color; }
-    inline Node *      getNode() const { return _node; }
-    inline LightType   getType() const { return _type; }
-    inline bool        getUseColorTemperature() const { return _useColorTemperature; }
-
-protected:
-    bool      _useColorTemperature{false};
-    Node *    _node{nullptr};
-    LightType _type{LightType::UNKNOWN};
-    Vec3      _color;
-};
 
 } // namespace scene
 } // namespace cc

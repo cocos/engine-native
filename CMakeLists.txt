@@ -834,6 +834,16 @@ cocos_source_files(
                  cocos/renderer/pipeline/helper/SharedMemory.cpp
 )
 
+##### scene
+cocos_source_files(
+                 cocos/scene/Light.h
+                 cocos/scene/Light.cpp
+                 cocos/scene/RenderScene.h
+                 cocos/scene/RenderScene.cpp
+                 cocos/SpotLight.h
+                 cocos/SpotLight.cpp
+)
+
 if(CC_USE_GLES2 OR CC_USE_GLES3)
 cocos_source_files(
                  cocos/renderer/gfx-gles-common/GLESCommandPool.h
