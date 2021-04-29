@@ -27,31 +27,31 @@
 
 #include "math/Vec3.h"
 #include "scene/Light.h"
+#include "scene/AABB.h"
 
 namespace cc {
 namespace scene {
 
-class DirectionalLight : public Light {
+class SphereLight : public Light {
 public:
-    DirectionalLight()                         = default;
-    DirectionalLight(const DirectionalLight &) = delete;
-    DirectionalLight(DirectionalLight &&)      = delete;
-    ~DirectionalLight() override               = default;
-    DirectionalLight &operator=(const DirectionalLight &) = delete;
-    DirectionalLight &operator=(DirectionalLight &&) = delete;
-
+    SphereLight() = default;
+    SphereLight(const SphereLight &) = delete;
+    SphereLight(SphereLight &&) = delete;
+    ~SphereLight() override =  default;
+    SphereLight &operator=(const SphereLight &) = delete;
+    SphereLight &operator=(SphereLight &&) = delete;
+    
     void update();
-
-    void setDir(Vec3);
-    void setIlluminance(float);
-
-    inline const Vec3 &getDir() const { return _dir; }
-    inline float       getIlluminance() const { return _illuminance; }
-
+    
+    //TODO
+    
 private:
     float _illuminance{0.f};
-    Vec3  _dir;
+    float _range{0.f};
+    float _size{0.f};
+    Vec3 _pos;
+    AABB _aabb;
 };
 
-} // namespace scene
-} // namespace cc
+}
+}

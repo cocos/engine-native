@@ -25,32 +25,11 @@
 
 #pragma once
 
-#include "math/Vec3.h"
-#include "scene/Light.h"
-
 namespace cc {
 namespace scene {
 
-class DirectionalLight : public Light {
-public:
-    DirectionalLight()                         = default;
-    DirectionalLight(const DirectionalLight &) = delete;
-    DirectionalLight(DirectionalLight &&)      = delete;
-    ~DirectionalLight() override               = default;
-    DirectionalLight &operator=(const DirectionalLight &) = delete;
-    DirectionalLight &operator=(DirectionalLight &&) = delete;
-
-    void update();
-
-    void setDir(Vec3);
-    void setIlluminance(float);
-
-    inline const Vec3 &getDir() const { return _dir; }
-    inline float       getIlluminance() const { return _illuminance; }
-
-private:
-    float _illuminance{0.f};
-    Vec3  _dir;
+struct Frustum final {
+    //TODO
 };
 
 } // namespace scene

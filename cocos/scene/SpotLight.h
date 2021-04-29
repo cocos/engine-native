@@ -25,7 +25,9 @@
 
 #pragma once
 
-#include "scene/RenderScene.h"
+#include "scene/Light.h"
+#include "scene/AABB.h"
+#include "scene/Frustum.h"
 
 namespace cc {
 namespace scene {
@@ -52,16 +54,16 @@ public:
     void setPos(Vec3);
     void setSize(float);
 
-    inline const const AABB &getAABB() const { return _aabb; }
-    inline float             getAngle() const { return _angle; }
-    inline float             getAspect() const { return _aspect; }
-    inline const const Vec3 &getDir() const { return _dir; }
-    inline const Frustum &   getFrustum() const { return _frustum; }
-    inline float             getIlluminance() const { return _illuminance; }
-    inline bool              getNeedUpdate() const { return _needUpdate; }
-    inline float             getRange() const { return _range; }
-    inline const Vec3 &      getPos() const { return _pos; }
-    inline float             getSize() const { return _size; }
+    inline const AABB &   getAABB() const { return _aabb; }
+    inline float          getAngle() const { return _angle; }
+    inline float          getAspect() const { return _aspect; }
+    inline const Vec3 &   getDir() const { return _dir; }
+    inline const Frustum &getFrustum() const { return _frustum; }
+    inline float          getIlluminance() const { return _illuminance; }
+    inline bool           getNeedUpdate() const { return _needUpdate; }
+    inline float          getRange() const { return _range; }
+    inline const Vec3 &   getPos() const { return _pos; }
+    inline float          getSize() const { return _size; }
 
 private:
     bool    _needUpdate{false};
