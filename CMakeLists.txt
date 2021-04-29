@@ -836,6 +836,8 @@ cocos_source_files(
 
 ##### scene
 cocos_source_files(
+                 cocos/scene/DirectionalLight.h
+                 cocos/scene/DirectionalLight.cpp
                  cocos/scene/Light.h
                  cocos/scene/Light.cpp
                  cocos/scene/RenderScene.h
