@@ -826,6 +826,7 @@ SE_DECLARE_FUNC(js_gfx_Device_destroy);
 SE_DECLARE_FUNC(js_gfx_Device_flushCommandsForJS);
 SE_DECLARE_FUNC(js_gfx_Device_hasFeature);
 SE_DECLARE_FUNC(js_gfx_Device_initialize);
+SE_DECLARE_FUNC(js_gfx_Device_isSupportHalfFloat);
 SE_DECLARE_FUNC(js_gfx_Device_present);
 SE_DECLARE_FUNC(js_gfx_Device_resize);
 SE_DECLARE_FUNC(js_gfx_Device_setMultithreaded);
