@@ -837,17 +837,26 @@ cocos_source_files(
 ##### scene
 cocos_source_files(
                  cocos/scene/AABB.h
+                 cocos/scene/Define.h
                  cocos/scene/DirectionalLight.h
                  cocos/scene/DirectionalLight.cpp
                  cocos/scene/Frustum.h
                  cocos/scene/Light.h
                  cocos/scene/Light.cpp
+                 cocos/scene/Model.h
+                 cocos/scene/Model.cpp
+                 cocos/scene/Node.h
+                 cocos/scene/Node.cpp
+                 cocos/scene/Pass.h
+                 cocos/scene/Pass.cpp
                  cocos/scene/RenderScene.h
                  cocos/scene/RenderScene.cpp
                  cocos/scene/SphereLight.h
                  cocos/scene/SphereLight.cpp
-                 cocos/SpotLight.h
-                 cocos/SpotLight.cpp
+                 cocos/scene/SpotLight.h
+                 cocos/scene/SpotLight.cpp
+                 cocos/scene/SubModel.h
+                 cocos/scene/SubModel.cpp
 )
 
 if(CC_USE_GLES2 OR CC_USE_GLES3)
