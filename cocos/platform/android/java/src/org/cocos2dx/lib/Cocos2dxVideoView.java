@@ -453,7 +453,7 @@ public class Cocos2dxVideoView extends SurfaceView {
                 Field hardware = Bitmap.Config.class.getDeclaredField("HARDWARE");
                 Field rgba_f16 = Bitmap.Config.class.getDeclaredField("RGBA_F16");
                 if(hardware != null && cfg == hardware.get(null)) return PX_HARDWARE;
-                else if(rgba_f16 != null && cfg == rgba_f16.get(null)) return PX_RGBA_F16;
+                if(rgba_f16 != null && cfg == rgba_f16.get(null)) return PX_RGBA_F16;
             }
 
             switch (cfg) {
@@ -490,12 +490,10 @@ public class Cocos2dxVideoView extends SurfaceView {
     public void setShowRawFrame(boolean show) {
         if(mShowRaw == show) { // Now show state == Before show state
             return; // Do nothing
-        } else {
-            if(!show) {
-                setTranslationY(-1000); // Hide view
-            } else {
-                setTranslationY(0); // Show view
-            }
+        }
+        setTranslationY(0); // Show view
+        if(!show) {
+            setTranslationY(-1000); // Hide view
         }
         mShowRaw = show;
     }

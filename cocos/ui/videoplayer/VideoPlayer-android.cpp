@@ -67,13 +67,16 @@ int createVideoWidgetJNI()
 //-----------------------------------------------------------------------------------------------------------
 
 static std::unordered_map<int, VideoPlayer*> s_allVideoPlayers;
-static jobject jobj;
+static jobject jobj = nullptr;
 
 VideoPlayer::VideoPlayer()
 : _videoPlayerIndex(-1)
 , _fullScreenEnabled(false)
 , _fullScreenDirty(false)
 , _keepAspectRatioEnabled(false)
+, _videoPixels(nullptr)
+, _texDataSize(0)
+, _maxDataLen(0)
 {
     _videoPlayerIndex = createVideoWidgetJNI();
     s_allVideoPlayers[_videoPlayerIndex] = this;
@@ -83,13 +86,9 @@ VideoPlayer::VideoPlayer()
     addChild(_debugDrawNode);
 #endif
 
-	jobject obj = JniHelper::newObject(videoHelperClassName.c_str());
-	jobj = JniHelper::getEnv()->NewGlobalRef(obj);
-	JniHelper::getEnv()->DeleteLocalRef(obj);
-
-    _videoPixels = nullptr;
-    _texDataSize = 0;
-    _maxDataLen = 0;
+    if(jobj == nullptr) {
+        jobj = JniHelper::getEnv()->NewGlobalRef(JniHelper::newObject(videoHelperClassName.c_str()));
+    }
 }
 
 VideoPlayer::~VideoPlayer()
@@ -98,7 +97,6 @@ VideoPlayer::~VideoPlayer()
     JniHelper::callStaticVoidMethod(videoHelperClassName, "removeVideoWidget", _videoPlayerIndex);
 
     if (_videoPixels != nullptr) free(_videoPixels);
-    JniHelper::getEnv()->DeleteGlobalRef(jobj);
 }
 
 void VideoPlayer::setURL(const std::string& videoUrl)
@@ -246,8 +244,8 @@ void VideoPlayer::getFrame() {
 	jbyteArray arr = JniHelper::callObjectByteArrayMethod(jobj, videoHelperClassName, "getFrame", _videoPlayerIndex);
 	if (arr == nullptr) return;
 	jsize len = JniHelper::getEnv()->GetArrayLength(arr);
-    _texDataSize = len;
     if (len == 0) return;
+	_texDataSize = len;
     if (len > _maxDataLen) {
         _maxDataLen = len;
 
