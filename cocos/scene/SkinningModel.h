@@ -50,7 +50,7 @@ public:
     SkinningModel(const SkinningModel &) = delete;
     SkinningModel(SkinningModel &&)      = delete;
     ~SkinningModel() override            = default;
-    SkinningModel &operator=(const SkinninngModel &) = delete;
+    SkinningModel &operator=(const SkinningModel &) = delete;
     SkinningModel &operator=(SkinningModel &&) = delete;
 
     void updateTransform() override;
