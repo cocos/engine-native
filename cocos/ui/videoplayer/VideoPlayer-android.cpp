@@ -67,7 +67,7 @@ int createVideoWidgetJNI()
 //-----------------------------------------------------------------------------------------------------------
 
 static std::unordered_map<int, VideoPlayer*> s_allVideoPlayers;
-static jobject jobj = nullptr;
+static jobject s_jobj = nullptr;
 
 VideoPlayer::VideoPlayer()
 : _videoPlayerIndex(-1)
@@ -86,8 +86,8 @@ VideoPlayer::VideoPlayer()
     addChild(_debugDrawNode);
 #endif
 
-    if(jobj == nullptr) {
-        jobj = JniHelper::getEnv()->NewGlobalRef(JniHelper::newObject(videoHelperClassName.c_str()));
+    if(s_jobj == nullptr) {
+        s_jobj = JniHelper::getEnv()->NewGlobalRef(JniHelper::newObject(videoHelperClassName.c_str()));
     }
 }
 
@@ -241,7 +241,7 @@ float VideoPlayer::duration() const
 }
 
 void VideoPlayer::getFrame() {
-	jbyteArray arr = JniHelper::callObjectByteArrayMethod(jobj, videoHelperClassName, "getFrame", _videoPlayerIndex);
+	jbyteArray arr = JniHelper::callObjectByteArrayMethod(s_jobj, videoHelperClassName, "getFrame", _videoPlayerIndex);
 	if (arr == nullptr) return;
 	jsize len = JniHelper::getEnv()->GetArrayLength(arr);
     if (len == 0) return;
@@ -258,15 +258,15 @@ void VideoPlayer::getFrame() {
 }
 
 int VideoPlayer::getFrameChannel() const {
-    return (int)JniHelper::callObjectFloatMethod(jobj, videoHelperClassName, "getFrameChannel", _videoPlayerIndex);
+    return (int)JniHelper::callObjectFloatMethod(s_jobj, videoHelperClassName, "getFrameChannel", _videoPlayerIndex);
 }
 
 int VideoPlayer::getFrameWidth() const {
-    return (int)JniHelper::callObjectFloatMethod(jobj, videoHelperClassName, "getFrameWidth", _videoPlayerIndex);
+    return (int)JniHelper::callObjectFloatMethod(s_jobj, videoHelperClassName, "getFrameWidth", _videoPlayerIndex);
 }
 
 int VideoPlayer::getFrameHeight() const {
-    return (int)JniHelper::callObjectFloatMethod(jobj, videoHelperClassName, "getFrameHeight", _videoPlayerIndex);
+    return (int)JniHelper::callObjectFloatMethod(s_jobj, videoHelperClassName, "getFrameHeight", _videoPlayerIndex);
 }
 
 int VideoPlayer::getVideoTexDataSize() const {
@@ -287,7 +287,7 @@ void VideoPlayer::pushFrameDataToTexture2D(int texid) const {
 }
 
 void VideoPlayer::setShowRawFrame(bool show) const {
-    JniHelper::callObjectVoidMethod(jobj, videoHelperClassName, "setShowRawFrame", _videoPlayerIndex, show);
+    JniHelper::callObjectVoidMethod(s_jobj, videoHelperClassName, "setShowRawFrame", _videoPlayerIndex, show);
 }
 
 void VideoPlayer::update() {
