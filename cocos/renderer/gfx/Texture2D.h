@@ -81,8 +81,8 @@ public:
     int getTextureId() const { return _textureid; }
 
     static Texture2D* findTextureById(int id) {
-        auto res = Texture2D::_texidMap.find(id);
-        if (res != Texture2D::_texidMap.end()) return res->second;
+        auto res = Texture2D::TexidMap.find(id);
+        if (res != Texture2D::TexidMap.end()) return res->second;
         else return nullptr;
     }
 private:
@@ -95,7 +95,8 @@ private:
     int _textureid;
 
 protected:
-    static std::map<int, Texture2D*> _texidMap;
+    static std::map<int, Texture2D*> TexidMap;
+    static int CurTexId;
 };
 
 // end of gfx group

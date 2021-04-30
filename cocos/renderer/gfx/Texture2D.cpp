@@ -38,16 +38,16 @@ Texture2D::Texture2D()
 Texture2D::~Texture2D()
 {
 //    RENDERER_LOGD("Destruct Texture2D: %p", this);
-    auto texit = Texture2D::_texidMap.find(_textureid);
-    if(texit != Texture2D::_texidMap.end())
-        Texture2D::_texidMap.erase(texit);
+    auto texit = Texture2D::TexidMap.find(_textureid);
+    if(texit != Texture2D::TexidMap.end())
+        Texture2D::TexidMap.erase(texit);
 }
 
-std::map<int, Texture2D*> Texture2D::_texidMap = std::map<int, Texture2D*>();
+std::map<int, Texture2D*> Texture2D::TexidMap = std::map<int, Texture2D*>();
+int Texture2D::CurTexId = 0;
 
 bool Texture2D::init(DeviceGraphics* device, Options& options)
 {
-    static int curTexId = 0;
     bool ok = Texture::init(device);
     if (ok)
     {
@@ -59,9 +59,9 @@ bool Texture2D::init(DeviceGraphics* device, Options& options)
 
         update(options);
 
-        _textureid = curTexId;
-        Texture2D::_texidMap[_textureid] = this;
-        curTexId++;
+        _textureid = Texture2D::CurTexId;
+        Texture2D::TexidMap[_textureid] = this;
+        Texture2D::CurTexId++;
     }
     return ok;
 }

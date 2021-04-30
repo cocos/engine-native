@@ -27,8 +27,10 @@ package org.cocos2dx.lib;
 
 import android.util.Log;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 public class Cocos2dxReflectionHelper {
     public static <T> T getConstantValue(final Class aClass, final String constantName) {
@@ -70,6 +72,63 @@ public class Cocos2dxReflectionHelper {
             Log.e("error", "an exception was thrown by the invoked method when invoking " + methodName);
         }
 
+        return null;
+    }
+
+    public static <T> T invokeInterfaceMethod(final Class clazz, final String methodName,
+                                             final Class[] parameterTypes, final Object[] parameters) {
+
+        try {
+            final Method method = clazz.getMethod(methodName, parameterTypes);
+            return (T)method.invoke(null, parameters);
+        } catch (NoSuchMethodException e) {
+            Log.e("error", "can not find " + methodName + " in " + clazz.getName());
+        }
+        catch (IllegalAccessException e) {
+            Log.e("error", methodName + " is not accessible");
+        }
+        catch (IllegalArgumentException e) {
+            Log.e("error", "arguments are error when invoking " + methodName);
+        }
+        catch (InvocationTargetException e) {
+            Log.e("error", "an exception was thrown by the invoked method when invoking " + methodName);
+        }
+
+        return null;
+    }
+
+    public static Object createInstanceInterface(final String className, final String interfaceName) {
+        try {
+            final Class clazz = Class.forName(className + "$" + interfaceName);
+            return Proxy.newProxyInstance(clazz.getClassLoader(),
+                    new Class<?>[]{clazz}, new InvocationHandler() {
+                        @Override
+                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                            return null;
+                        }
+                    });
+        } catch (ClassNotFoundException ex) {
+            Log.e("error", "can not find " + className + "." + interfaceName);
+        }
+
+        return null;
+    }
+
+    public static Class getClassByName(final String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException ex) {
+            Log.e("error", "can not find " + className);
+        }
+        return null;
+    }
+
+    public static Class getInterfaceByName(final String className, final String interfaceName) {
+        try {
+            return Class.forName(className + "$" + interfaceName);
+        } catch (ClassNotFoundException ex) {
+            Log.e("error", "can not find " + className + "." + interfaceName);
+        }
         return null;
     }
 }

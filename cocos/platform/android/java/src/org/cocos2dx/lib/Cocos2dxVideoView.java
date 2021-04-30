@@ -124,8 +124,17 @@ public class Cocos2dxVideoView extends SurfaceView {
     private Bitmap mFrame = null;
     private Bitmap mCurFrame = null;
     private boolean mShowRaw = true;
+    private Object mCopyListener = null;
 
     private Surface mSurface = null;
+
+    private static final int PX_INVALID = 0;
+    private static final int PX_ALPHA = 1;
+    private static final int PX_ARGB_4444 = 2;
+    private static final int PX_ARGB_8888 = 3;
+    private static final int PX_HARDWARE = 4;
+    private static final int PX_RGBA_F16 = 5;
+    private static final int PX_RGB_565 = 6;
 
     // MediaPlayer will be released when surface view is destroyed, so should record the position,
     // and use it to play after MedialPlayer is created again.
@@ -390,33 +399,39 @@ public class Cocos2dxVideoView extends SurfaceView {
     }
 
     public byte[] getFrame() {
-        if(mRetriever == null) 
+        if(mRetriever == null) {
             return null;
-        else {
+        } else {
             try {
                 if (Build.VERSION.SDK_INT < 24) {
                     mFrame = mRetriever.getFrameAtTime(mMediaPlayer.getCurrentPosition() * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
                 } else {
-                    Object listener = Proxy.newProxyInstance(Class.forName("android.view.PixelCopy$OnPixelCopyFinishedListener").getClassLoader(),
-                            new Class<?>[]{Class.forName("android.view.PixelCopy$OnPixelCopyFinishedListener")}, new InvocationHandler() {
-                                @Override
-                                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                                    return null;
-                                }
-                    });
+                    if(mFrame == null) {
+                        Bitmap firstFrame = mRetriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST);
+                        mFrame = Bitmap.createBitmap(getWidth(), getHeight(), firstFrame.getConfig());
+                    }
 
-                    Class clazz = Class.forName("android.view.PixelCopy");
-                    Method method = clazz.getMethod("request", SurfaceView.class, Bitmap.class, Class.forName("android.view.PixelCopy$OnPixelCopyFinishedListener"), Handler.class);
-                    method.invoke(null, this, mFrame, listener, this.getHandler());
+                    if (mCopyListener == null) {
+                        mCopyListener = Cocos2dxReflectionHelper.createInstanceInterface("android.view.PixelCopy", "OnPixelCopyFinishedListener");
+                    }
+
+                    final Class clazz = Cocos2dxReflectionHelper.getClassByName("android.view.PixelCopy");
+                    final Class intef = Cocos2dxReflectionHelper.getInterfaceByName("android.view.PixelCopy", "OnPixelCopyFinishedListener");
+                    final Class types[] =  {SurfaceView.class, Bitmap.class, intef, Handler.class};
+                    final Object params[] = {this, mFrame, mCopyListener, this.getHandler()};
+
+                    Cocos2dxReflectionHelper.invokeInterfaceMethod(clazz, "request", types, params);
                 }
             } catch (Exception e) {
+                Log.e("Grab error", e.getStackTrace().toString());
                 return mPixels;
             }
 
-            if(mFrame != null)
-                mCurFrame = mFrame;
-            else
+            if(mFrame == null) {
                 return mPixels;
+            }
+
+            mCurFrame = mFrame;
 
             if(mFrameBuf == null) {
                 mFrameBuf = ByteBuffer.allocate(mCurFrame.getByteCount());
@@ -430,42 +445,59 @@ public class Cocos2dxVideoView extends SurfaceView {
     }
 
     public int getFrameChannel() throws NoSuchFieldException, IllegalAccessException {
-        if(mCurFrame == null) return 0;
-        else {
+        if (mCurFrame == null) {
+            return 0;
+        } else {
             Bitmap.Config cfg = mCurFrame.getConfig();
             if(Build.VERSION.SDK_INT > 26) {
                 Field hardware = Bitmap.Config.class.getDeclaredField("HARDWARE");
                 Field rgba_f16 = Bitmap.Config.class.getDeclaredField("RGBA_F16");
-                if(hardware != null && cfg == hardware.get(null)) return 4;
-                else if(rgba_f16 != null && cfg == rgba_f16.get(null)) return 5;
+                if(hardware != null && cfg == hardware.get(null)) return PX_HARDWARE;
+                else if(rgba_f16 != null && cfg == rgba_f16.get(null)) return PX_RGBA_F16;
             }
-            if(cfg == Bitmap.Config.ALPHA_8) return 1;
-            else if(cfg == Bitmap.Config.ARGB_4444) return 2;
-            else if(cfg == Bitmap.Config.ARGB_8888) return 3;
-            else if(cfg == Bitmap.Config.RGB_565) return 6;
-            else return 0;
+
+            switch (cfg) {
+                case ALPHA_8:
+                    return PX_ALPHA;
+                case ARGB_4444:
+                    return PX_ARGB_4444;
+                case ARGB_8888:
+                    return PX_ARGB_8888;
+                case RGB_565:
+                    return PX_RGB_565;
+                default:
+                    return PX_INVALID;
+            }
         }
     }
 
     public int getFrameWidth() {
-        if(mCurFrame != null) return mCurFrame.getWidth();
-        else return 0;
+        if (mCurFrame != null) {
+            return mCurFrame.getWidth();
+        } else {
+            return 0;
+        }
     }
 
     public int getFrameHeight() {
-        if(mCurFrame != null) return mCurFrame.getHeight();
-        else return 0;
+        if(mCurFrame != null) {
+            return mCurFrame.getHeight();
+        } else {
+            return 0;
+        }
     }
 
     public void setShowRawFrame(boolean show) {
-        boolean before = mShowRaw;
+        if(mShowRaw == show) { // Now show state == Before show state
+            return; // Do nothing
+        } else {
+            if(!show) {
+                setTranslationY(-1000); // Hide view
+            } else {
+                setTranslationY(0); // Show view
+            }
+        }
         mShowRaw = show;
-        if(before && !mShowRaw)
-            setTranslationY(-1000);
-        else if(!before && mShowRaw)
-            setTranslationY(0);
-        else if(before == mShowRaw)
-            return;
     }
 
     // ===========================================================
@@ -520,7 +552,6 @@ public class Cocos2dxVideoView extends SurfaceView {
             mPixels = null;
             mCurFrame = null;
             mFrame = null;
-            mFrame = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);
 
             if (mIsAssetRouse) {
                 AssetFileDescriptor afd = mCocos2dxActivity.getAssets().openFd(mVideoFilePath);

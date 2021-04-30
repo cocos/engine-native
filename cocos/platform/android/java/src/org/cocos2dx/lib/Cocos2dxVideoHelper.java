@@ -510,16 +510,16 @@ public class Cocos2dxVideoHelper {
         try {
             return callInMainThread(callable);
         } catch (ExecutionException e) {
-            return -1;
+            return -1.0f;
         } catch (InterruptedException e) {
-            return -1;
+            return -1.0f;
         }
     }
 
     private float getFrameWidth(final int index) {
         Callable<Float> callable = new Callable<Float>() {
             @Override
-            public Float call() throws Exception {
+            public Float call() {
                 Cocos2dxVideoView video = sVideoViews.get(index);
                 int width = 0;
                 if (video != null) {
@@ -535,16 +535,16 @@ public class Cocos2dxVideoHelper {
         try {
             return callInMainThread(callable);
         } catch (ExecutionException e) {
-            return -1;
+            return -1.0f;
         } catch (InterruptedException e) {
-            return -1;
+            return -1.0f;
         }
     }
 
     private float getFrameHeight(final int index) {
         Callable<Float> callable = new Callable<Float>() {
             @Override
-            public Float call() throws Exception {
+            public Float call() {
                 Cocos2dxVideoView video = sVideoViews.get(index);
                 int height = 0;
                 if (video != null) {
@@ -560,9 +560,9 @@ public class Cocos2dxVideoHelper {
         try {
             return callInMainThread(callable);
         } catch (ExecutionException e) {
-            return -1;
+            return -1.0f;
         } catch (InterruptedException e) {
-            return -1;
+            return -1.0f;
         }
     }
 

@@ -582,12 +582,7 @@ void VideoPlayer::getFrame()
 
 int VideoPlayer::getFrameChannel() const
 {
-    int res = 0;
-    int rgb565 = 6;
-    int rgba = 3;
-    int bgra = 7;
-    
-    res = bgra;
+    int res = VideoPlayer::PX_BGRA;
     return res;
 }
 
@@ -614,8 +609,9 @@ void VideoPlayer::update()
 void VideoPlayer::pushFrameDataToTexture2D(int texid) const
 {
     renderer::Texture2D* tex = renderer::Texture2D::findTextureById(texid);
-    if(tex == nullptr) printf("Can't find texture!\n");
-    else {
+    if(tex == nullptr) {
+        printf("Can't find texture!\n");
+    } else {
         bool finshCopy = [((UIVideoViewWrapperIos*)_videoView) copyFinished];
         if(_videoPixels != nullptr && getFrameWidth() > 0 && getFrameHeight() > 0 && finshCopy) {
             renderer::Texture::SubImageOption opt(0, 0, getFrameWidth(), getFrameHeight(), 0, false, false);

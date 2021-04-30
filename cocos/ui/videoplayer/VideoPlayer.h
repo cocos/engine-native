@@ -201,6 +201,10 @@ class VideoPlayer : public Ref
 private:
     unsigned char* _videoPixels;
     int _maxDataLen;
+
+    static const int PX_RGBA = 3;
+    static const int PX_RGB565 = 6;
+    static const int PX_BGRA = 7;
 };
 
 NS_CC_END
