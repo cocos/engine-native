@@ -837,6 +837,8 @@ cocos_source_files(
 ##### scene
 cocos_source_files(
                  cocos/scene/AABB.h
+                 cocos/scene/BakedSkinningModel.h
+                 cocos/scene/BakedSkinningModel.cpp
                  cocos/scene/Camera.h
                  cocos/scene/Define.h
                  cocos/scene/DirectionalLight.h
@@ -853,7 +855,9 @@ cocos_source_files(
                  cocos/scene/Pass.cpp
                  cocos/scene/RenderScene.h
                  cocos/scene/RenderScene.cpp
-                 cocos/scenne/RenderWindow.h
+                 cocos/scene/RenderWindow.h
+                 cocos/scene/SkinningModel.h
+                 cocos/scene/SkinningModel.cpp
                  cocos/scene/SphereLight.h
                  cocos/scene/SphereLight.cpp
                  cocos/scene/SpotLight.h

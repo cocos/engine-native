@@ -22,19 +22,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
-#pragma once
-
-#include "renderer/gfx-base/GFXFramebuffer.h"
+#include "scene/BakedSkinningModel.h"
 
 namespace cc {
 namespace scene {
-
-struct RenderWindow final {
-    bool              hasOnScreenAttachments{false};
-    bool              hasOffScreenAttachments{false};
-    gfx::Framebuffer *frameBuffer{nullptr};
-};
 
 } // namespace scene
 } // namespace cc

@@ -25,15 +25,24 @@
 
 #pragma once
 
-#include "renderer/gfx-base/GFXFramebuffer.h"
+#include "scene/Model.h"
 
 namespace cc {
 namespace scene {
 
-struct RenderWindow final {
-    bool              hasOnScreenAttachments{false};
-    bool              hasOffScreenAttachments{false};
-    gfx::Framebuffer *frameBuffer{nullptr};
+class BakedSkinningModel : public Model {
+public:
+    BakedSkinningModel()                           = default;
+    BakedSkinningModel(const BakedSkinningModel &) = delete;
+    BakedSkinningModel(BakedSkinningModel &&)      = delete;
+    ~BakedSkinningModel() override                 = default;
+    BakedSkinningModel &operator=(const BakedSkinningModel &) = delete;
+    BakedSkinningModel &operator=(BakedSkinningModel &&) = delete;
+
+    void updateTransform() override;
+    void updateUBOs(uint32_t) override;
+
+    //TODO
 };
 
 } // namespace scene

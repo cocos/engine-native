@@ -28,44 +28,47 @@
 #include <vector>
 #include "renderer/gfx-base/GFXBuffer.h"
 #include "scene/AABB.h"
+#include "scene/Node.h"
+#include "scene/SubModel.h"
 
 namespace cc {
 namespace scene {
 
-class Node;
-class SubModel;
+struct InstancedAttributeBlock {
+    std::vector<uint8_t *> views;
+};
 
-class Model final {
+class Model {
 public:
     Model()              = default;
     Model(const Model &) = delete;
     Model(Model &&)      = delete;
-    ~Model()             = default;
+    virtual ~Model()     = default;
     Model &operator=(const Model &) = delete;
     Model &operator=(Model &&) = delete;
 
-    void updateTransform();
-    void updateUBOs();
+    virtual void updateTransform();
+    virtual void updateUBOs(uint32_t);
 
     //TODO
 
 private:
-    bool                    _dirtyFlags{false};
-    bool                    _enabled{false};
-    bool                    _castShadow{false};
-    bool                    _receiveShadow{false};
-    bool                    _transformUpdated{false};
-    uint32_t                _instmatWorldIdx{0};
-    uint32_t                _visFlags;
-    uint32_t                _updateStamp{0};
-    Node *                  _transform{nullptr};
-    uint8_t *               _localData{nullptr};
-    gfx::Buffer *           _instanceBuffer{nullptr};
-    gfx::Buffer *           _localBuffer{nullptr};
-    AABB                    _worldBounds;
-    AABB                    _modelBounds;
-    std::vector<SubModel *> _subModels;
-    // TODO _instanceAttributes
+    bool                     _dirtyFlags{false};
+    bool                     _enabled{false};
+    bool                     _castShadow{false};
+    bool                     _receiveShadow{false};
+    bool                     _transformUpdated{false};
+    uint32_t                 _instmatWorldIdx{0};
+    uint32_t                 _visFlags;
+    uint32_t                 _updateStamp{0};
+    Node *                   _transform{nullptr};
+    uint8_t *                _localData{nullptr};
+    gfx::Buffer *            _instanceBuffer{nullptr};
+    gfx::Buffer *            _localBuffer{nullptr};
+    AABB                     _worldBounds;
+    AABB                     _modelBounds;
+    InstancedAttributeBlock *_instanceAttributeBlock{nullptr};
+    std::vector<SubModel *>  _subModels;
 };
 
 } // namespace scene
