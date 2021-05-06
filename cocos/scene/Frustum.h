@@ -31,7 +31,7 @@
 namespace cc {
 namespace scene {
 
-struct Plane {
+struct Plane final {
     float d{0.F};
     Vec3  n;
 };
