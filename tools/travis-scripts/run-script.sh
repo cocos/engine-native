@@ -196,7 +196,7 @@ function build_windows()
     # cmake --build . --config Debug
     # echo "Compile Win32 Debug Done!"
     cmake --build . --config Release
-    echo "Compile Win32 Debug Done!"
+    echo "Compile Win32 Release Done!"
 }
 
 
