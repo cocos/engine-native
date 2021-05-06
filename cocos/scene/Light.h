@@ -26,11 +26,10 @@
 #pragma once
 
 #include "math/Vec3.h"
+#include "scene/Node.h"
 
 namespace cc {
 namespace scene {
-
-class Node;
 
 enum class LightType {
     DIRECTIONAL,

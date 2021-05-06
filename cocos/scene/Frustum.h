@@ -25,11 +25,20 @@
 
 #pragma once
 
+#include <array>
+#include "math/Vec3.h"
+
 namespace cc {
 namespace scene {
 
-struct Frustum final {
+struct Plane {
+    float d{0.F};
+    Vec3  n;
+};
 
+struct Frustum final {
+    Vec3                 vertices;
+    std::array<Plane, 6> planes;
 };
 
 } // namespace scene
