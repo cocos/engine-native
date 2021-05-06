@@ -89,7 +89,7 @@ function build_android()
     sed -i "s@^PROP_APP_ABI.*@PROP_APP_ABI=arm64-v8a@g" gradle.properties
 
     #echo "Compile Android - ndk-build ..."
-    #./gradlew assembleDebug --quietß
+    #./gradlew assembleDebug --quiet
 
     echo "Compile Android - cmake ..."
     echo "ANDORID_NDK ${ANDROID_NDK} or ${ANDROID_NDK_HOME}"
