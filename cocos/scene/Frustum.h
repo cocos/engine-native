@@ -29,7 +29,7 @@ namespace cc {
 namespace scene {
 
 struct Frustum final {
-    //TODO
+
 };
 
 } // namespace scene

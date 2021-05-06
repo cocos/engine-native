@@ -54,9 +54,7 @@ public:
     SkinningModel &operator=(SkinningModel &&) = delete;
 
     void updateTransform() override;
-    void updateUBOs(uint32_t) override;
-
-    //TODO
+    void updateUBOs(uint32_t /*unused*/) override;
 
 private:
     std::vector<gfx::Buffer *> _buffers;

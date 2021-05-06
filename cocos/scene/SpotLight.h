@@ -67,11 +67,11 @@ public:
 
 private:
     bool    _needUpdate{false};
-    float   _illuminance{0.f};
-    float   _range{0.f};
-    float   _size{0.f};
-    float   _angle{0.f};
-    float   _aspect{0.f};
+    float   _illuminance{0.F};
+    float   _range{0.F};
+    float   _size{0.F};
+    float   _angle{0.F};
+    float   _aspect{0.F};
     Vec3    _dir;
     Vec3    _pos;
     AABB    _aabb;

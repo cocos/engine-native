@@ -48,8 +48,6 @@ public:
 
     void update();
 
-    //TODO
-
 private:
     RenderPriority       _priority{RenderPriority::DEFAULT};
     gfx::Shader *        _planarShader{nullptr};

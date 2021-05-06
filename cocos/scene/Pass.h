@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include "renderer/gfx-base/GFXDef-common.h"
 #include "renderer/gfx-base/GFXDescriptorSet.h"
 #include "renderer/gfx-base/GFXBuffer.h"
@@ -45,8 +45,6 @@ public:
 
     void update();
 
-    //TODO
-
 private:
     bool                     _rootBufferDirty{false};
     uint32_t                 _phase{0};
@@ -62,7 +60,7 @@ private:
     gfx::DescriptorSet *     _descriptorSet{nullptr};
     gfx::PipelineLayout *    _pipelineLayout{nullptr};
     gfx::Buffer *            _rootBuffer{nullptr};
-    //TODO: rootBlock
+    // TODO(minggo): rootBlock
 };
 
 } // namespace scene

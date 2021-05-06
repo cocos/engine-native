@@ -43,10 +43,8 @@ public:
 
     void updateWorldTransform();
 
-    //TODO
-
 private:
-    uint32_t   layer{0};
+    uint32_t   _layer{0};
     bool       _flagsChanges{false};
     bool       _dirtyFlags{false};
     bool       _hasChangeFlags{false};

@@ -50,8 +50,6 @@ public:
     virtual void updateTransform();
     virtual void updateUBOs(uint32_t);
 
-    //TODO
-
 private:
     bool                     _dirtyFlags{false};
     bool                     _enabled{false};

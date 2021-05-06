@@ -43,15 +43,13 @@ public:
     
     void update();
     
-    //TODO
-    
 private:
-    float _illuminance{0.f};
-    float _range{0.f};
-    float _size{0.f};
+    float _illuminance{0.F};
+    float _range{0.F};
+    float _size{0.F};
     Vec3 _pos;
     AABB _aabb;
 };
 
-}
-}
+}  // namespace scene
+}  // namespace cc

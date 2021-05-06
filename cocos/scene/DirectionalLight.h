@@ -49,7 +49,7 @@ public:
     inline float       getIlluminance() const { return _illuminance; }
 
 private:
-    float _illuminance{0.f};
+    float _illuminance{0.F};
     Vec3  _dir;
 };
 
