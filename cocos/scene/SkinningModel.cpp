@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "scene/SKinningModel.h"
+#include "scene/SkinningModel.h"
 
 namespace cc {
 namespace scene {
