@@ -35,6 +35,16 @@ public:
     gfx::DescriptorSet* getDenoiseDescriptorSet();
     gfx::PipelineState* getDenoisePipelineState();
     gfx::Texture* getReflectionTex();
+
+    gfx::RenderPass* getClearPass();
+    gfx::Framebuffer* getClearFramebuffer();
+    gfx::GlobalBarrier* getBarrierPre();
+    gfx::GlobalBarrier* getBarrierBeforeDenoise();
+    gfx::GlobalBarrier* getBarrierAfterDenoise();
+
+    gfx::DispatchInfo getDispatchInfo();
+    gfx::DispatchInfo getDenioseDispatchInfo();
+
     int getGroupSizeX();
     int getGroupSizeY();
     bool  isInitlized();
@@ -44,6 +54,9 @@ private:
     T &                       getAppropriateShaderSource(ShaderSources<T> &sources);
 
     gfx::Device*              _device                  = nullptr;
+
+    gfx::RenderPass* _clearPass = nullptr;
+    gfx::Framebuffer* _clearFramebuffer = nullptr;
 
     gfx::Shader*              _compShader              = nullptr;
     gfx::DescriptorSetLayout* _compDescriptorSetLayout = nullptr;
@@ -66,6 +79,13 @@ private:
     gfx::Texture*             _reflectionTex           = nullptr;
     gfx::Texture*             _denoiseTex              = nullptr;
     Mat4                      _cc_matViewProj;
+
+    gfx::GlobalBarrier* _barrier_pre            = nullptr;
+    gfx::GlobalBarrier* _barrier_before_denoise = nullptr;
+    gfx::GlobalBarrier* _barrier_after_denoise  = nullptr;
+
+    gfx::DispatchInfo _dispatchInfo;
+    gfx::DispatchInfo _denoiseDispatchInfo;
 
     uint                      _group_size_x             = 8;
     uint                      _group_size_y             = 8;

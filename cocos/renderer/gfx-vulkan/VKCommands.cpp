@@ -378,7 +378,10 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
         subpassDescriptions[0].pipelineBindPoint    = VK_PIPELINE_BIND_POINT_GRAPHICS;
         subpassDescriptions[0].colorAttachmentCount = attachmentReferences.size() - 1;
         subpassDescriptions[0].pColorAttachments    = attachmentReferences.data();
-        if (hasDepth) subpassDescriptions[0].pDepthStencilAttachment = &attachmentReferences.back();
+        if (hasDepth)
+            subpassDescriptions[0].pDepthStencilAttachment = &attachmentReferences.back();
+        else
+            subpassDescriptions[0].pDepthStencilAttachment = nullptr;
     }
 
     size_t dependencyCount = gpuRenderPass->dependencies.size();

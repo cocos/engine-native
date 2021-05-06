@@ -330,43 +330,7 @@ void LightingStage::render(Camera *camera) {
                               camera->matViewProj, 8, 8);
     }
 
-    uint globalWidth  = _reflectionComp->getReflectionTex()->getWidth();
-    uint globalHeight = _reflectionComp->getReflectionTex()->getHeight();
-    uint groupWidth   = _reflectionComp->getGroupSizeX();
-    uint groupHeight  = _reflectionComp->getGroupSizeY();
-    gfx::GlobalBarrierInfo info_pre = {        
-        {
-            gfx::AccessType::COLOR_ATTACHMENT_WRITE,
-        },
-        {
-            gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
-        }
-    };
-
-    gfx::GlobalBarrierInfo info_before_denoise = {        
-        {
-            gfx::AccessType::COMPUTE_SHADER_WRITE,
-        },
-        {
-            gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
-        }
-    };
-
-    gfx::GlobalBarrierInfo info_after_denoise = {        
-        {
-            gfx::AccessType::COMPUTE_SHADER_WRITE,
-        },
-        {
-            gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE,
-        }
-    };
-
-    gfx::GlobalBarrier * barrier_pre = _device->createGlobalBarrier(info_pre);
-    gfx::GlobalBarrier * barrier_before_denoise = _device->createGlobalBarrier(info_before_denoise);
-    gfx::GlobalBarrier * barrier_after_denoise = _device->createGlobalBarrier(info_after_denoise);
-
-    gfx::DispatchInfo dispatchInfo{(globalWidth - 1) / groupWidth + 1, (globalHeight - 1) / groupHeight + 1, 1};
-    gfx::DispatchInfo denoiseDispatchInfo{((globalWidth - 1 )/ 2) / groupWidth + 1, ((globalHeight - 1)/ 2) / groupHeight + 1, 1};
+    gfx::Rect clearRenderArea = {0, 0, _reflectionComp->getReflectionTex()->getWidth(), _reflectionComp->getReflectionTex()->getHeight()};
 
     if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
         uint   m = 0, p = 0;
@@ -383,20 +347,23 @@ void LightingStage::render(Camera *camera) {
                     // TODO: need fallback of ulit and gizmo material.
                     if (pass->phase != _reflectionPhaseID) continue;
 
-                    cmdBuff->pipelineBarrier(barrier_pre);
+                    cmdBuff->beginRenderPass(_reflectionComp->getClearPass(), _reflectionComp->getClearFramebuffer(), clearRenderArea, &clearColor, 0, 0);
+                    cmdBuff->endRenderPass();
+
+                    cmdBuff->pipelineBarrier(_reflectionComp->getBarrierPre());
                     cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
                     cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
                     cmdBuff->bindDescriptorSet(1, subModel->getDescriptorSet());
 
-                    cmdBuff->dispatch(dispatchInfo);
+                    cmdBuff->dispatch(_reflectionComp->getDispatchInfo());
 
-                    cmdBuff->pipelineBarrier(barrier_before_denoise);
+                    cmdBuff->pipelineBarrier(_reflectionComp->getBarrierBeforeDenoise());
 
                     cmdBuff->bindPipelineState(_reflectionComp->getDenoisePipelineState());
                     cmdBuff->bindDescriptorSet(0, _reflectionComp->getDenoiseDescriptorSet());
                     cmdBuff->bindDescriptorSet(1, subModel->getDescriptorSet());
-                    cmdBuff->dispatch(denoiseDispatchInfo);
-                    cmdBuff->pipelineBarrier(barrier_after_denoise);
+                    cmdBuff->dispatch(_reflectionComp->getDenioseDispatchInfo());
+                    cmdBuff->pipelineBarrier(_reflectionComp->getBarrierAfterDenoise());
                 }
             }
         }
@@ -405,7 +372,7 @@ void LightingStage::render(Camera *camera) {
 
 
     gfx::ColorAttachment cAttch = {
-        gfx::Format::RGBA16F,
+        gfx::Format::RGBA8,
         gfx::SampleCount::X1,
         gfx::LoadOp::LOAD,
         gfx::StoreOp::STORE,

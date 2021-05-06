@@ -398,7 +398,7 @@ bool DeferredPipeline::activeRenderer() {
     _gbufferRenderPass                 = _device->createRenderPass(gbufferPass);
 
     gfx::ColorAttachment cAttch = {
-        gfx::Format::RGBA16F,
+        gfx::Format::RGBA8,
         gfx::SampleCount::X1,
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::STORE,
@@ -489,7 +489,7 @@ void DeferredPipeline::generateDeferredRenderData() {
     gfx::TextureInfo rtInfo = {
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA16F,
+        gfx::Format::RGBA8,
         _width,
         _height,
     };
@@ -499,8 +499,8 @@ void DeferredPipeline::generateDeferredRenderData() {
         gfx::TextureType::TEX2D,
         gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC | gfx::TextureUsageBit::SAMPLED,
         gfx::Format::RGBA8,
-        _width,
-        _height,
+        512 * _width / _height,
+        512,
     };
     _deferredRenderData->reflectionRenderTarget = _device->createTexture(reflectionRtInfo);
 

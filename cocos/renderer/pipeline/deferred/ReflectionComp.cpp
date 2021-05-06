@@ -22,6 +22,8 @@ ReflectionComp::~ReflectionComp() {
     CC_SAFE_DESTROY(_compConstantsBuffer);
     CC_SAFE_DESTROY(_sampler);
     CC_SAFE_DESTROY(_reflectionTex);
+    CC_SAFE_DESTROY(_clearPass);
+    CC_SAFE_DESTROY(_clearFramebuffer);
 }
 
 struct ConstantBuffer {
@@ -42,7 +44,7 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
 
     gfx::TextureInfo reflectionRtInfo = {
         _denoiseTex->getType(),
-        gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC | gfx::TextureUsageBit::SAMPLED,
+        gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC | gfx::TextureUsageBit::SAMPLED | gfx::TextureUsageBit::TRANSFER_DST,
         _denoiseTex->getFormat(),
         _denoiseTex->getWidth(),
         _denoiseTex->getHeight(),
@@ -62,6 +64,61 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
 
     gfx::DescriptorSetLayoutInfo layoutInfo = {pipeline::localDescriptorSetLayout.bindings};
     _localDescriptorSetLayout               = _device->createDescriptorSetLayout(layoutInfo);
+
+    gfx::ColorAttachment cAttch = {
+        _reflectionTex->getFormat(),
+        gfx::SampleCount::X1,
+        gfx::LoadOp::CLEAR,
+        gfx::StoreOp::STORE,
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+    };
+
+    gfx::RenderPassInfo clearPassInfo;
+    clearPassInfo.colorAttachments.push_back(cAttch);
+    _clearPass = _device->createRenderPass(clearPassInfo);
+
+    gfx::FramebufferInfo clearFramebufferInfo;
+    clearFramebufferInfo.renderPass = _clearPass;
+    clearFramebufferInfo.colorTextures.push_back(_reflectionTex);
+    _clearFramebuffer = _device->createFramebuffer(clearFramebufferInfo);
+
+
+    gfx::GlobalBarrierInfo info_pre     = {
+        {
+            gfx::AccessType::COLOR_ATTACHMENT_WRITE,
+        },
+        {
+            gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
+        }};
+
+    gfx::GlobalBarrierInfo info_before_denoise = {
+        {
+            gfx::AccessType::COMPUTE_SHADER_WRITE,
+        },
+        {
+            gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
+        }};
+
+    gfx::GlobalBarrierInfo info_after_denoise = {
+        {
+            gfx::AccessType::COMPUTE_SHADER_WRITE,
+        },
+        {
+            gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE,
+        }};
+
+    _barrier_pre            = _device->createGlobalBarrier(info_pre);
+    _barrier_before_denoise = _device->createGlobalBarrier(info_before_denoise);
+    _barrier_after_denoise  = _device->createGlobalBarrier(info_after_denoise);
+
+    uint  globalWidth  = this->getReflectionTex()->getWidth();
+    uint  globalHeight = this->getReflectionTex()->getHeight();
+    uint  groupWidth   = this->getGroupSizeX();
+    uint  groupHeight  = this->getGroupSizeY();
+
+    _dispatchInfo = {(globalWidth - 1) / groupWidth + 1, (globalHeight - 1) / groupHeight + 1, 1};
+    _denoiseDispatchInfo = {((globalWidth - 1) / 2) / groupWidth + 1, ((globalHeight - 1) / 2) / groupHeight + 1, 1};
 
     initFirstComp();
     initDenoiseComp();
@@ -114,8 +171,7 @@ void ReflectionComp::initFirstComp() {
             vec2 reflectedScreenUV = reflectedPosNDCxy * 0.5 + 0.5; //posNDC
 
             vec2 earlyExitTest = abs(reflectedScreenUV - 0.5);
-            if (earlyExitTest.x >= 0.5 || earlyExitTest.y >= 0.5) 
-                return;
+            if (earlyExitTest.x >= 0.5 || earlyExitTest.y >= 0.5) return;
 
             vec4 inputPixelSceneColor = texture(lightingTex, uv);
             imageStore(reflectionTex, ivec2(reflectedScreenUV * texSize), inputPixelSceneColor);
@@ -332,6 +388,34 @@ int ReflectionComp::getGroupSizeY() {
 
 bool ReflectionComp::isInitlized() {
     return _initlized;
+}
+
+gfx::RenderPass *ReflectionComp::getClearPass() {
+    return _clearPass;
+}
+
+gfx::Framebuffer *ReflectionComp::getClearFramebuffer() {
+    return _clearFramebuffer;
+}
+
+gfx::GlobalBarrier *ReflectionComp::getBarrierPre() {
+    return _barrier_pre;
+}
+
+gfx::GlobalBarrier *ReflectionComp::getBarrierBeforeDenoise() {
+    return _barrier_before_denoise;
+}
+
+gfx::GlobalBarrier *ReflectionComp::getBarrierAfterDenoise() {
+    return _barrier_after_denoise;
+}
+
+gfx::DispatchInfo ReflectionComp::getDispatchInfo() {
+    return _dispatchInfo;
+}
+
+gfx::DispatchInfo ReflectionComp::getDenioseDispatchInfo() {
+    return _denoiseDispatchInfo;
 }
 
 } // namespace cc
