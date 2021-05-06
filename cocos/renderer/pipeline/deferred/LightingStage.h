@@ -73,6 +73,8 @@ private:
     ReflectionComp * _reflectionComp = nullptr;
     RenderQueue * _relfectionRenderQueue = nullptr;
     uint _reflectionPhaseID = 0;
+
+    gfx::RenderPass *_reflectionPass = nullptr;
 };
 
 } // namespace pipeline

@@ -67,6 +67,30 @@ const RenderStageInfo &LightingStage::getInitializeInfo() { return LightingStage
 
 LightingStage::LightingStage() : RenderStage() {
     _reflectionComp = new ReflectionComp();
+
+    gfx::ColorAttachment cAttch = {
+        gfx::Format::RGBA8,
+        gfx::SampleCount::X1,
+        gfx::LoadOp::LOAD,
+        gfx::StoreOp::STORE,
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+    };
+
+    gfx::RenderPassInfo reflectionPassInfo;
+    reflectionPassInfo.colorAttachments.push_back(cAttch);
+
+    reflectionPassInfo.depthStencilAttachment = {
+        _device->getDepthStencilFormat(),
+        gfx::SampleCount::X1,
+        gfx::LoadOp::LOAD,
+        gfx::StoreOp::DISCARD,
+        gfx::LoadOp::DISCARD,
+        gfx::StoreOp::DISCARD,
+        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
+    };
+
+    _reflectionPass = _device->createRenderPass(reflectionPassInfo);
 }
 
 LightingStage::~LightingStage() {
@@ -74,6 +98,8 @@ LightingStage::~LightingStage() {
     _deferredLitsBufs = nullptr;
     _deferredLitsBufView->destroy();
     _deferredLitsBufView = nullptr;
+    _reflectionPass->destroy();
+    _reflectionPass = nullptr;
     delete _reflectionComp;
 }
 
@@ -369,33 +395,7 @@ void LightingStage::render(Camera *camera) {
         }
     }
 
-
-
-    gfx::ColorAttachment cAttch = {
-        gfx::Format::RGBA8,
-        gfx::SampleCount::X1,
-        gfx::LoadOp::LOAD,
-        gfx::StoreOp::STORE,
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
-    };
-
-    gfx::RenderPassInfo reflectionPassInfo;
-    reflectionPassInfo.colorAttachments.push_back(cAttch);
-
-    reflectionPassInfo.depthStencilAttachment = {
-        _device->getDepthStencilFormat(),
-        gfx::SampleCount::X1,
-        gfx::LoadOp::LOAD,
-        gfx::StoreOp::DISCARD,
-        gfx::LoadOp::DISCARD,
-        gfx::StoreOp::DISCARD,
-        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
-    };
-
-    gfx::RenderPass * reflectionPass = _device->createRenderPass(reflectionPassInfo);
-
-    cmdBuff->beginRenderPass(reflectionPass, frameBuffer, renderArea, &clearColor,
+    cmdBuff->beginRenderPass(_reflectionPass, frameBuffer, renderArea, &clearColor,
         camera->clearDepth, camera->clearStencil);
     
     // transparent
