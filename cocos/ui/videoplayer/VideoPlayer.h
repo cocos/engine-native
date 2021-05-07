@@ -30,6 +30,7 @@
 #include <functional>
 #include <string>
 #include <map>
+#include "renderer/gfx/Texture2D.h"
 
 #ifndef OBJC_CLASS
 #ifdef __OBJC__
@@ -123,7 +124,7 @@ class VideoPlayer : public Ref
 
     void update();
 
-    void pushFrameDataToTexture2D(int texid) const;
+    void pushFrameDataToTexture2D(cocos2d::renderer::Texture* tex) const;
 
     void setShowRawFrame(bool show) const;
 

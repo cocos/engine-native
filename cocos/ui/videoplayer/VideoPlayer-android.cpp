@@ -273,15 +273,14 @@ int VideoPlayer::getVideoTexDataSize() const {
     return _texDataSize;
 }
 
-void VideoPlayer::pushFrameDataToTexture2D(int texid) const {
-    renderer::Texture2D* tex = renderer::Texture2D::findTextureById(texid);
+void VideoPlayer::pushFrameDataToTexture2D(cocos2d::renderer::Texture* tex) const {
     if(tex == nullptr) log("Can't find texture!");
     else {
         if(_videoPixels != nullptr && getFrameWidth() > 0 && getFrameHeight() > 0) {
             renderer::Texture::SubImageOption opt(0, 0, getFrameWidth(), getFrameHeight(), 0, false,
                                                   false);
             opt.imageData = _videoPixels;
-            tex->updateSubImage(opt);
+            ((cocos2d::renderer::Texture2D*)tex)->updateSubImage(opt);
         }
     }
 }

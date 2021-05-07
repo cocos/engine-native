@@ -285,8 +285,8 @@ static bool js_video_VideoPlayer_pushFrameDataToTexture2D(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        int arg0 = 0;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (int)tmp; } while(false);
+        cocos2d::renderer::Texture* arg0 = nullptr;
+        ok &= seval_to_native_ptr(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "js_video_VideoPlayer_pushFrameDataToTexture2D : Error processing arguments");
         cobj->pushFrameDataToTexture2D(arg0);
         return true;
