@@ -142,10 +142,10 @@ update : function (
 
 /**
  * @method pushFrameDataToTexture2D
- * @param {int} arg0
+ * @param {cc.renderer::Texture} arg0
  */
 pushFrameDataToTexture2D : function (
-int 
+texture 
 )
 {
 },

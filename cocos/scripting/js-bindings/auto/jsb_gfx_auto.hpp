@@ -118,12 +118,10 @@ extern se::Class* __jsb_cocos2d_renderer_Texture2D_class;
 
 bool js_register_cocos2d_renderer_Texture2D(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
-SE_DECLARE_FUNC(js_gfx_Texture2D_getTextureId);
-SE_DECLARE_FUNC(js_gfx_Texture2D_init);
 SE_DECLARE_FUNC(js_gfx_Texture2D_updateImage);
-SE_DECLARE_FUNC(js_gfx_Texture2D_update);
+SE_DECLARE_FUNC(js_gfx_Texture2D_init);
 SE_DECLARE_FUNC(js_gfx_Texture2D_updateSubImage);
-SE_DECLARE_FUNC(js_gfx_Texture2D_findTextureById);
+SE_DECLARE_FUNC(js_gfx_Texture2D_update);
 SE_DECLARE_FUNC(js_gfx_Texture2D_Texture2D);
 
 extern se::Object* __jsb_cocos2d_renderer_Program_proto;

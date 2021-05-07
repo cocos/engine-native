@@ -1466,23 +1466,24 @@ bool js_register_gfx_Texture(se::Object* obj)
 se::Object* __jsb_cocos2d_renderer_Texture2D_proto = nullptr;
 se::Class* __jsb_cocos2d_renderer_Texture2D_class = nullptr;
 
-static bool js_gfx_Texture2D_getTextureId(se::State& s)
+static bool js_gfx_Texture2D_updateImage(se::State& s)
 {
     cocos2d::renderer::Texture2D* cobj = (cocos2d::renderer::Texture2D*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_Texture2D_getTextureId : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_gfx_Texture2D_updateImage : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        int result = cobj->getTextureId();
-        ok &= int32_to_seval(result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_Texture2D_getTextureId : Error processing arguments");
+    if (argc == 1) {
+        cocos2d::renderer::Texture::ImageOption arg0;
+        ok &= seval_to_TextureImageOption(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_gfx_Texture2D_updateImage : Error processing arguments");
+        cobj->updateImage(arg0);
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_gfx_Texture2D_getTextureId)
+SE_BIND_FUNC(js_gfx_Texture2D_updateImage)
 
 static bool js_gfx_Texture2D_init(se::State& s)
 {
@@ -1507,44 +1508,6 @@ static bool js_gfx_Texture2D_init(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_Texture2D_init)
 
-static bool js_gfx_Texture2D_updateImage(se::State& s)
-{
-    cocos2d::renderer::Texture2D* cobj = (cocos2d::renderer::Texture2D*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_Texture2D_updateImage : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        cocos2d::renderer::Texture::ImageOption arg0;
-        ok &= seval_to_TextureImageOption(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_gfx_Texture2D_updateImage : Error processing arguments");
-        cobj->updateImage(arg0);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_gfx_Texture2D_updateImage)
-
-static bool js_gfx_Texture2D_update(se::State& s)
-{
-    cocos2d::renderer::Texture2D* cobj = (cocos2d::renderer::Texture2D*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_gfx_Texture2D_update : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        cocos2d::renderer::Texture::Options arg0;
-        ok &= seval_to_TextureOptions(args[0], &arg0);
-        SE_PRECONDITION2(ok, false, "js_gfx_Texture2D_update : Error processing arguments");
-        cobj->update(arg0);
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_gfx_Texture2D_update)
-
 static bool js_gfx_Texture2D_updateSubImage(se::State& s)
 {
     cocos2d::renderer::Texture2D* cobj = (cocos2d::renderer::Texture2D*)s.nativeThisObject();
@@ -1564,24 +1527,24 @@ static bool js_gfx_Texture2D_updateSubImage(se::State& s)
 }
 SE_BIND_FUNC(js_gfx_Texture2D_updateSubImage)
 
-static bool js_gfx_Texture2D_findTextureById(se::State& s)
+static bool js_gfx_Texture2D_update(se::State& s)
 {
+    cocos2d::renderer::Texture2D* cobj = (cocos2d::renderer::Texture2D*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_gfx_Texture2D_update : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        int arg0 = 0;
-        do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (int)tmp; } while(false);
-        SE_PRECONDITION2(ok, false, "js_gfx_Texture2D_findTextureById : Error processing arguments");
-        cocos2d::renderer::Texture2D* result = cocos2d::renderer::Texture2D::findTextureById(arg0);
-        ok &= native_ptr_to_seval<cocos2d::renderer::Texture2D>((cocos2d::renderer::Texture2D*)result, &s.rval());
-        SE_PRECONDITION2(ok, false, "js_gfx_Texture2D_findTextureById : Error processing arguments");
+        cocos2d::renderer::Texture::Options arg0;
+        ok &= seval_to_TextureOptions(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "js_gfx_Texture2D_update : Error processing arguments");
+        cobj->update(arg0);
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_gfx_Texture2D_findTextureById)
+SE_BIND_FUNC(js_gfx_Texture2D_update)
 
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_renderer_Texture2D_finalize)
 
@@ -1610,12 +1573,10 @@ bool js_register_gfx_Texture2D(se::Object* obj)
 {
     auto cls = se::Class::create("Texture2D", obj, __jsb_cocos2d_renderer_Texture_proto, _SE(js_gfx_Texture2D_constructor));
 
-    cls->defineFunction("getTextureIdNative", _SE(js_gfx_Texture2D_getTextureId));
-    cls->defineFunction("init", _SE(js_gfx_Texture2D_init));
     cls->defineFunction("updateImage", _SE(js_gfx_Texture2D_updateImage));
-    cls->defineFunction("updateNative", _SE(js_gfx_Texture2D_update));
+    cls->defineFunction("init", _SE(js_gfx_Texture2D_init));
     cls->defineFunction("updateSubImageNative", _SE(js_gfx_Texture2D_updateSubImage));
-    cls->defineStaticFunction("findTextureById", _SE(js_gfx_Texture2D_findTextureById));
+    cls->defineFunction("updateNative", _SE(js_gfx_Texture2D_update));
     cls->defineFinalizeFunction(_SE(js_cocos2d_renderer_Texture2D_finalize));
     cls->install();
     JSBClassType::registerClass<cocos2d::renderer::Texture2D>(cls);

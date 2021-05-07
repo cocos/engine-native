@@ -38,13 +38,7 @@ Texture2D::Texture2D()
 Texture2D::~Texture2D()
 {
 //    RENDERER_LOGD("Destruct Texture2D: %p", this);
-    auto texit = Texture2D::TexidMap.find(_textureid);
-    if(texit != Texture2D::TexidMap.end())
-        Texture2D::TexidMap.erase(texit);
 }
-
-std::map<int, Texture2D*> Texture2D::TexidMap = std::map<int, Texture2D*>();
-int Texture2D::CurTexId = 0;
 
 bool Texture2D::init(DeviceGraphics* device, Options& options)
 {
@@ -58,10 +52,6 @@ bool Texture2D::init(DeviceGraphics* device, Options& options)
             options.images.push_back(Image());
 
         update(options);
-
-        _textureid = Texture2D::CurTexId;
-        Texture2D::TexidMap[_textureid] = this;
-        Texture2D::CurTexId++;
     }
     return ok;
 }

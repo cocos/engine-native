@@ -606,9 +606,8 @@ void VideoPlayer::update()
     
 }
 
-void VideoPlayer::pushFrameDataToTexture2D(int texid) const
+void VideoPlayer::pushFrameDataToTexture2D(cocos2d::renderer::Texture* tex) const
 {
-    renderer::Texture2D* tex = renderer::Texture2D::findTextureById(texid);
     if(tex == nullptr) {
         printf("Can't find texture!\n");
     } else {
@@ -616,7 +615,7 @@ void VideoPlayer::pushFrameDataToTexture2D(int texid) const
         if(_videoPixels != nullptr && getFrameWidth() > 0 && getFrameHeight() > 0 && finshCopy) {
             renderer::Texture::SubImageOption opt(0, 0, getFrameWidth(), getFrameHeight(), 0, false, false);
             opt.imageData = _videoPixels;
-            tex->updateSubImage(opt);
+            ((cocos2d::renderer::Texture2D*)tex)->updateSubImage(opt);
         }
     }
 }
