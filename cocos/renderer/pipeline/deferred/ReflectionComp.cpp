@@ -44,7 +44,7 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
 
     gfx::TextureInfo reflectionRtInfo = {
         _denoiseTex->getType(),
-        gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC | gfx::TextureUsageBit::SAMPLED | gfx::TextureUsageBit::TRANSFER_DST,
+        gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC | gfx::TextureUsageBit::SAMPLED | gfx::TextureUsageBit::TRANSFER_DST | gfx::TextureUsageBit::COLOR_ATTACHMENT,
         _denoiseTex->getFormat(),
         _denoiseTex->getWidth(),
         _denoiseTex->getHeight(),

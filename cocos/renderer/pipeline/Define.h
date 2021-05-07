@@ -420,6 +420,7 @@ struct CC_DLL DescriptorSetLayoutInfos {
     gfx::DescriptorSetLayoutBindingList               bindings;
     unordered_map<String, gfx::UniformBlock>          blocks;
     unordered_map<String, gfx::UniformSamplerTexture> samplers;
+    unordered_map<String, gfx::UniformStorageImage>   storeImages;
 };
 extern CC_DLL DescriptorSetLayoutInfos globalDescriptorSetLayout;
 extern CC_DLL DescriptorSetLayoutInfos localDescriptorSetLayout;
@@ -561,7 +562,7 @@ struct CC_DLL REFLECTIONTEXTURE : public Object {
 struct CC_DLL REFLECTIONSTORAGE : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(ModelLocalBindings::STORAGE_REFLECTION);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
-    static const gfx::UniformSamplerTexture      LAYOUT;
+    static const gfx::UniformStorageImage        LAYOUT;
     static const String                          NAME;
 };
 

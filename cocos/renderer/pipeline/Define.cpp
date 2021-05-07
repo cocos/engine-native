@@ -523,7 +523,7 @@ const gfx::DescriptorSetLayoutBinding REFLECTIONSTORAGE::DESCRIPTOR = {
     gfx::ShaderStageFlagBit::COMPUTE,
     {},
 };
-const gfx::UniformSamplerTexture REFLECTIONSTORAGE::LAYOUT = {
+const gfx::UniformStorageImage REFLECTIONSTORAGE::LAYOUT = {
     localSet,
     static_cast<uint>(ModelLocalBindings::STORAGE_REFLECTION),
     "cc_reflectionStorage",
