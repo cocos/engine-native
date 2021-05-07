@@ -273,6 +273,7 @@ int VideoPlayer::getVideoTexDataSize() const {
     return _texDataSize;
 }
 
+// Push pixels to Texture
 void VideoPlayer::pushFrameDataToTexture2D(cocos2d::renderer::Texture* tex) const {
     if(tex == nullptr) log("Can't find texture!");
     else {
