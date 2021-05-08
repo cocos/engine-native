@@ -179,36 +179,48 @@ void ReflectionComp::initFirstComp() {
             // imageStore(reflectionTex, ivec2(gl_GlobalInvocationID.xy), vec4(reflectedPosWS, 1.0));
         })",
         _group_size_x, _group_size_y);
-    // sources.glsl3 = StringUtil::format(
-    //     R"(
-    //     layout(local_size_x = %d, local_size_y = %d, local_size_z = 1) in;
+    sources.glsl3 = StringUtil::format(
+        R"(
+        layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 
-    //     layout(std140) uniform Constants { mat4 cc_matViewProj; vec2 texSize; };
-    //     uniform sampler2D lightingTex;
-    //     uniform sampler2D worldPositionTex;
-    //     layout(rgba8) writeonly uniform lowp image2D reflectionTex;
+        layout(std140) uniform Constants {  mat4 cc_matViewProj; vec2 texSize; };
+        uniform sampler2D lightingTex;
+        uniform sampler2D worldPositionTex;
+        layout(rgba8) writeonly uniform lowp image2D reflectionTex;
 
-    //     void main() {
-    //         float _HorizontalPlaneHeightWS = 0.0;
-    //         vec2 uv = vec2(gl_GlobalInvocationID.xy) / texSize;
-    //         vec3 posWS = texture(worldPositionTex, uv).xyz;
-    //         if(posWS.y <= _HorizontalPlaneHeightWS) return;
+        layout(std140) uniform CCLocal
+        {
+            mat4 cc_matWorld;
+            mat4 cc_matWorldIT;
+            vec4 cc_lightingMapUVParam;
+        };
 
-    //         vec3 reflectedPosWS = posWS;
-    //         reflectedPosWS.y = reflectedPosWS.y * -1.0;
+        void main() {
+            float _HorizontalPlaneHeightWS = 0.01;
+            _HorizontalPlaneHeightWS = (cc_matWorld * vec4(0,0,0,1)).y;
+            vec2 uv = vec2(gl_GlobalInvocationID.xy) / texSize;
+            vec3 posWS = texture(worldPositionTex, uv).xyz;
+            if(posWS.y <= _HorizontalPlaneHeightWS) return;
 
-    //         vec4 reflectedPosCS = cc_matViewProj * vec4(reflectedPosWS, 1);
-    //         vec2 reflectedPosNDCxy = reflectedPosCS.xy / reflectedPosCS.w;//posCS -> posNDC
-    //         vec2 reflectedScreenUV = reflectedPosNDCxy * 0.5 + 0.5; //posNDC
+            vec3 reflectedPosWS = posWS;
+            reflectedPosWS.y = reflectedPosWS.y - _HorizontalPlaneHeightWS;
+            reflectedPosWS.y = reflectedPosWS.y * -1.0;
+            reflectedPosWS.y = reflectedPosWS.y + _HorizontalPlaneHeightWS;
 
-    //         vec2 earlyExitTest = abs(reflectedScreenUV - 0.5);
-    //         if (earlyExitTest.x >= 0.5 || earlyExitTest.y >= 0.5) 
-    //             return;
 
-    //         vec4 inputPixelSceneColor = texture(lightingTex, uv);
-    //         imageStore(reflectionTex, ivec2(reflectedScreenUV * texSize), inputPixelSceneColor);
-    //     })",
-    //     _group_size_x, _group_size_y);
+            vec4 reflectedPosCS = cc_matViewProj * vec4(reflectedPosWS, 1);
+            vec2 reflectedPosNDCxy = reflectedPosCS.xy / reflectedPosCS.w;//posCS -> posNDC
+            vec2 reflectedScreenUV = reflectedPosNDCxy * 0.5 + 0.5; //posNDC
+
+            vec2 earlyExitTest = abs(reflectedScreenUV - 0.5);
+            if (earlyExitTest.x >= 0.5 || earlyExitTest.y >= 0.5) return;
+
+            vec4 inputPixelSceneColor = texture(lightingTex, uv);
+            imageStore(reflectionTex, ivec2(reflectedScreenUV * texSize), inputPixelSceneColor);
+            // imageStore(reflectionTex, ivec2(gl_GlobalInvocationID.xy), vec4(reflectedScreenUV * texSize, 0.0, 1.0));
+            // imageStore(reflectionTex, ivec2(gl_GlobalInvocationID.xy), vec4(reflectedPosWS, 1.0));
+        })",
+        _group_size_x, _group_size_y);
     // no compute support in GLES2
 
     gfx::ShaderInfo shaderInfo;
@@ -254,11 +266,8 @@ void ReflectionComp::initDenoiseComp() {
     sources.glsl4 = StringUtil::format(
         R"(
         layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
-
         layout(set = 0, binding = 0) uniform sampler2D reflectionTex;
-        // layout(set = 0, binding = 1, rgba8) writeonly uniform lowp image2D denoiseTexLod;
         layout(set = 1, binding = 12, rgba8) writeonly uniform lowp image2D denoiseTex;
-
 
         void main() {
             ivec2 id = ivec2(gl_GlobalInvocationID.xy) * 2;
@@ -280,36 +289,32 @@ void ReflectionComp::initDenoiseComp() {
 
         })",
         _group_size_x, _group_size_y);
-    // sources.glsl3 = StringUtil::format(
-    //     R"(
-    //     layout(local_size_x = %d, local_size_y = %d, local_size_z = 1) in;
+    sources.glsl3 = StringUtil::format(
+        R"(
+        layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+        uniform sampler2D reflectionTex;
+        layout(rgba8) writeonly uniform lowp image2D denoiseTex;
 
-    //     layout(std140) uniform Constants { mat4 cc_matViewProj; vec2 texSize; };
-    //     uniform sampler2D lightingTex;
-    //     uniform sampler2D worldPositionTex;
-    //     layout(rgba8) writeonly uniform lowp image2D reflectionTex;
+        void main() {
+            ivec2 id = ivec2(gl_GlobalInvocationID.xy) * 2;
 
-    //     void main() {
-    //         float _HorizontalPlaneHeightWS = 0.0;
-    //         vec2 uv = vec2(gl_GlobalInvocationID.xy) / texSize;
-    //         vec3 posWS = texture(worldPositionTex, uv).xyz;
-    //         if(posWS.y <= _HorizontalPlaneHeightWS) return;
+            vec4 center = texelFetch(reflectionTex, id + ivec2(0, 0), 0);
+            vec4 right = texelFetch(reflectionTex, id + ivec2(0, 1), 0);
+            vec4 bottom = texelFetch(reflectionTex, id + ivec2(1, 0), 0);
+            vec4 bottomRight = texelFetch(reflectionTex, id + ivec2(1, 1), 0);
 
-    //         vec3 reflectedPosWS = posWS;
-    //         reflectedPosWS.y = reflectedPosWS.y * -1.0;
+            vec4 best = center;
+            best = right.a > best.a + 0.1 ? right : best;
+            best = bottom.a > best.a + 0.1 ? bottom : best;
+            best = bottomRight.a > best.a + 0.1 ? bottomRight : best;
 
-    //         vec4 reflectedPosCS = cc_matViewProj * vec4(reflectedPosWS, 1);
-    //         vec2 reflectedPosNDCxy = reflectedPosCS.xy / reflectedPosCS.w;//posCS -> posNDC
-    //         vec2 reflectedScreenUV = reflectedPosNDCxy * 0.5 + 0.5; //posNDC
+            imageStore(denoiseTex, id + ivec2(0, 0), best.a > center.a + 0.1 ? best : center);
+            imageStore(denoiseTex, id + ivec2(0, 1), best.a > right.a + 0.1 ? best : right);
+            imageStore(denoiseTex, id + ivec2(1, 0), best.a > bottom.a + 0.1 ? best : bottom);
+            imageStore(denoiseTex, id + ivec2(1, 1), best.a > bottomRight.a + 0.1 ? best : bottomRight);
 
-    //         vec2 earlyExitTest = abs(reflectedScreenUV - 0.5);
-    //         if (earlyExitTest.x >= 0.5 || earlyExitTest.y >= 0.5) 
-    //             return;
-
-    //         vec4 inputPixelSceneColor = texture(lightingTex, uv);
-    //         imageStore(reflectionTex, ivec2(reflectedScreenUV * texSize), inputPixelSceneColor);
-    //     })",
-    //     _group_size_x, _group_size_y);
+        })",
+        _group_size_x, _group_size_y);
     // no compute support in GLES2
 
     gfx::ShaderInfo shaderInfo;
