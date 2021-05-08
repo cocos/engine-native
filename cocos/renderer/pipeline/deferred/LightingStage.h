@@ -55,25 +55,26 @@ public:
 
 private:
     void gatherLights(Camera *camera);
-    
-    static RenderStageInfo initInfo;
-    PlanarShadowQueue *_planarShadowQueue = nullptr;
-    gfx::Rect _renderArea;
-    uint _phaseID = 0;
 
-    gfx::Buffer *_deferredLitsBufs = nullptr;
-    gfx::Buffer *_deferredLitsBufView = nullptr;
-    std::vector<float> _lightBufferData;
-    uint _lightBufferStride = 0;
-    uint _lightBufferElementCount = 0;
-    float _lightMeterScale = 10000.0;
-    gfx::DescriptorSet *_descriptorSet = nullptr;
-    gfx::DescriptorSetLayout *_descLayout = nullptr;
-	uint _maxDeferredLights = UBODeferredLight::LIGHTS_PER_PASS;
+    static RenderStageInfo initInfo;
+    PlanarShadowQueue *    _planarShadowQueue = nullptr;
+    gfx::Rect              _renderArea;
+    uint                   _phaseID    = 0;
+    uint                   _defPhaseID = 0;
+
+    gfx::Buffer *             _deferredLitsBufs    = nullptr;
+    gfx::Buffer *             _deferredLitsBufView = nullptr;
+    std::vector<float>        _lightBufferData;
+    uint                      _lightBufferStride       = 0;
+    uint                      _lightBufferElementCount = 0;
+    float                     _lightMeterScale         = 10000.0;
+    gfx::DescriptorSet *      _descriptorSet           = nullptr;
+    gfx::DescriptorSetLayout *_descLayout              = nullptr;
+    uint                      _maxDeferredLights       = UBODeferredLight::LIGHTS_PER_PASS;
+
     ReflectionComp * _reflectionComp = nullptr;
     RenderQueue * _relfectionRenderQueue = nullptr;
     uint _reflectionPhaseID = 0;
-
     gfx::RenderPass *_reflectionPass = nullptr;
 };
 
