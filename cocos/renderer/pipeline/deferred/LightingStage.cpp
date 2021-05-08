@@ -440,8 +440,9 @@ void LightingStage::render(Camera *camera) {
     _relfectionRenderQueue->clear();
 
 
-    uint m = 0, p = 0;
-    size_t k = 0;
+    m = 0;
+    p = 0;
+    k = 0;
     for (size_t i = 0; i < renderObjects.size(); ++i) {
         const auto &ro = renderObjects[i];
         const auto model = ro.model;
