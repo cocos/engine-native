@@ -43,21 +43,20 @@ String getStacktraceJS() {
 namespace gfx {
 
 void CommandRecorder::recordBeginRenderPass(const RenderPassSnapshot &renderPass) {
-    RenderPassCommand command;
-    command.renderArea   = renderPass.renderArea;
-    command.clearColors  = renderPass.clearColors;
-    command.clearDepth   = renderPass.clearDepth;
-    command.clearStencil = renderPass.clearStencil;
+    RenderPassCommand &command = _renderPassCommands.emplace_back();
+    command.renderArea         = renderPass.renderArea;
+    command.clearColors        = renderPass.clearColors;
+    command.clearDepth         = renderPass.clearDepth;
+    command.clearStencil       = renderPass.clearStencil;
 
     command.colorAttachments       = renderPass.renderPass->getColorAttachments();
     command.depthStencilAttachment = renderPass.renderPass->getDepthStencilAttachment();
 
     _commands.push_back(CommandType::BEGIN_RENDER_PASS);
-    _renderPassCommands.emplace_back(std::move(command));
 }
 
 void CommandRecorder::recordDrawcall(const DrawcallSnapshot &drawcall) {
-    DrawcallCommand command;
+    DrawcallCommand &command  = _drawcallCommands.emplace_back();
     command.inputState        = drawcall.pipelineState->getInputState();
     command.rasterizerState   = drawcall.pipelineState->getRasterizerState();
     command.depthStencilState = drawcall.pipelineState->getDepthStencilState();
@@ -72,7 +71,6 @@ void CommandRecorder::recordDrawcall(const DrawcallSnapshot &drawcall) {
     for (const auto &offsets : drawcall.dynamicOffsets) command.dynamicOffsets.insert(command.dynamicOffsets.end(), offsets.begin(), offsets.end());
 
     _commands.push_back(CommandType::DRAW);
-    _drawcallCommands.emplace_back(std::move(command));
 }
 
 void CommandRecorder::recordEndRenderPass() {
@@ -85,14 +83,20 @@ void CommandRecorder::clear() {
     _drawcallCommands.clear();
 }
 
-void CommandRecorder::serialize(const String &path) {
+vector<uint32_t> CommandRecorder::serialize(const CommandRecorder &recorder) {
+    vector<uint32_t> bytes;
+    bytes.push_back(static_cast<uint32_t>(recorder._commands.size()));
+    return bytes;
 }
 
-void CommandRecorder::deserialize(const String &path) {
+CommandRecorder CommandRecorder::deserialize(const vector<uint32_t> &bytes) {
+    CommandRecorder recorder;
+    recorder._commands.resize(bytes[0]);
+    return recorder;
 }
 
-bool CommandRecorder::compare(const CommandRecorder &/*recorder*/) {
-    return true;
+bool CommandRecorder::compare(const CommandRecorder &test, const CommandRecorder &baseline) {
+    return test._commands.empty() && baseline._commands.empty();
 }
 
 } // namespace gfx

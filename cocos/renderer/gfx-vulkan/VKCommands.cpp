@@ -553,7 +553,7 @@ void cmdFuncCCVKCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFra
 
 void cmdFuncCCVKCreateShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {
     for (CCVKGPUShaderStage &stage : gpuShader->gpuStages) {
-        vector<unsigned int>     spirv = GLSL2SPIRV(stage.type, "#version 450\n" + stage.source, device->gpuDevice()->minorVersion);
+        vector<unsigned int>     spirv = glsl2spirv(stage.type, "#version 450\n" + stage.source, device->gpuDevice()->minorVersion);
         VkShaderModuleCreateInfo createInfo{VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO};
         createInfo.codeSize = spirv.size() * sizeof(unsigned int);
         createInfo.pCode    = spirv.data();

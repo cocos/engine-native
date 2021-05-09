@@ -25,8 +25,8 @@
 
 #include "GLES3Std.h"
 
-#include "GLES3RenderPass.h"
 #include "GLES3Commands.h"
+#include "GLES3RenderPass.h"
 
 namespace cc {
 namespace gfx {

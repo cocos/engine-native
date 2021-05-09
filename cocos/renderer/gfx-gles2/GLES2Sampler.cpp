@@ -40,7 +40,7 @@ GLES2Sampler::~GLES2Sampler() {
     destroy();
 }
 
-void GLES2Sampler::doInit(const SamplerInfo & /*info*/) {
+void GLES2Sampler::doInit(const SamplerInfo& /*info*/) {
     _gpuSampler            = CC_NEW(GLES2GPUSampler);
     _gpuSampler->minFilter = _minFilter;
     _gpuSampler->magFilter = _magFilter;

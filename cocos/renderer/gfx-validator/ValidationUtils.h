@@ -64,9 +64,9 @@ public:
     void recordEndRenderPass();
     void clear();
 
-    void        serialize(const String &path);
-    void        deserialize(const String &path);
-    static bool compare(const CommandRecorder &recorder);
+    static vector<uint32_t> serialize(const CommandRecorder &recorder);
+    static CommandRecorder  deserialize(const vector<uint32_t> &bytes);
+    static bool             compare(const CommandRecorder &test, const CommandRecorder &baseline);
 
 private:
     enum class CommandType {

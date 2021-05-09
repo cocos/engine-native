@@ -46,8 +46,8 @@ InputAssemblerValidator::~InputAssemblerValidator() {
 
 void InputAssemblerValidator::doInit(const InputAssemblerInfo &info) {
     InputAssemblerInfo actorInfo = info;
-    for (uint i = 0u; i < actorInfo.vertexBuffers.size(); ++i) {
-        actorInfo.vertexBuffers[i] = static_cast<BufferValidator *>(actorInfo.vertexBuffers[i])->getActor();
+    for (auto &vertexBuffer : actorInfo.vertexBuffers) {
+        vertexBuffer = static_cast<BufferValidator *>(vertexBuffer)->getActor();
     }
     if (actorInfo.indexBuffer) {
         actorInfo.indexBuffer = static_cast<BufferValidator *>(actorInfo.indexBuffer)->getActor();

@@ -26,8 +26,8 @@
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 
-#include "DeviceAgent.h"
 #include "DescriptorSetLayoutAgent.h"
+#include "DeviceAgent.h"
 
 namespace cc {
 namespace gfx {

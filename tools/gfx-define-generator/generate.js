@@ -127,11 +127,9 @@ const structMemberRE = /^\s*(const\w*\s*)?([\w\[\]]+)\s+?(\w+)(?:\s*=?\s*(.*?))?
 const structMap = {};
 const replaceConstants = (() => {
     const strMap = {
-        GFX_MAX_DESCRIPTOR_SETS: 4,
-        GFX_MAX_DYNAMIC_UBO: 8,
-        GFX_MAX_DYNAMIC_SSBO: 4,
-        GFX_MAX_ATTACHMENTS: 4,
-        GFX_INVALID_BINDING: -1,
+        MAX_ATTACHMENTS: 4,
+        INVALID_BINDING: -1,
+        SUBPASS_EXTERNAL: -1,
         nullptr: 'null!',
         '::': '.',
     };

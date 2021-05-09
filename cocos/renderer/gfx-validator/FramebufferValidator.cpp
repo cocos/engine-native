@@ -47,7 +47,7 @@ FramebufferValidator::~FramebufferValidator() {
 
 void FramebufferValidator::doInit(const FramebufferInfo &info) {
     FramebufferInfo actorInfo = info;
-    for (uint i = 0u; i < info.colorTextures.size(); ++i) {
+    for (uint i = 0U; i < info.colorTextures.size(); ++i) {
         if (info.colorTextures[i]) {
             actorInfo.colorTextures[i] = static_cast<TextureValidator *>(info.colorTextures[i])->getActor();
         }

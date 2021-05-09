@@ -47,7 +47,7 @@ CommandBufferValidator::~CommandBufferValidator() {
 }
 
 void CommandBufferValidator::initValidator() {
-    uint descriptorSetCount = DeviceValidator::getInstance()->bindingMappingInfo().bufferOffsets.size();
+    size_t descriptorSetCount = DeviceValidator::getInstance()->bindingMappingInfo().bufferOffsets.size();
     _curStates.descriptorSets.resize(descriptorSetCount);
     _curStates.dynamicOffsets.resize(descriptorSetCount);
 }
@@ -68,7 +68,7 @@ void CommandBufferValidator::doDestroy() {
 }
 
 void CommandBufferValidator::begin(RenderPass *renderPass, uint subpass, Framebuffer *framebuffer) {
-    CCASSERT(!_insideRenderPass, "Already inside an render pass?");
+    CCASSERT(!_insideRenderPass, "Already inside a render pass?");
     CCASSERT(_type != CommandBufferType::PRIMARY || !renderPass, "Primary command buffer cannot inherit render passes");
 
     // secondary command buffers enter the render pass right here
@@ -86,7 +86,7 @@ void CommandBufferValidator::begin(RenderPass *renderPass, uint subpass, Framebu
 }
 
 void CommandBufferValidator::end() {
-    CCASSERT(_type != CommandBufferType::PRIMARY || !_insideRenderPass, "Still inside an render pass?");
+    CCASSERT(_type != CommandBufferType::PRIMARY || !_insideRenderPass, "Still inside a render pass?");
     _insideRenderPass = false;
 
     /////////// execute ///////////
@@ -99,7 +99,7 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
     CCASSERT(fbo, "invalid framebuffer");
 
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'endRenderPass' must be recorded in primary command buffers.");
-    CCASSERT(!_insideRenderPass, "Already inside an render pass?");
+    CCASSERT(!_insideRenderPass, "Already inside a render pass?");
     _insideRenderPass = true;
     _curSubpass       = 0U;
 
@@ -108,7 +108,7 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
     _curStates.renderArea   = renderArea;
     _curStates.clearDepth   = depth;
     _curStates.clearStencil = stencil;
-    uint clearColorCount    = renderPass->getColorAttachments().size();
+    size_t clearColorCount  = renderPass->getColorAttachments().size();
     if (clearColorCount) {
         _curStates.clearColors.assign(colors, colors + clearColorCount);
     }
@@ -185,7 +185,7 @@ void CommandBufferValidator::bindPipelineState(PipelineState *pso) {
 void CommandBufferValidator::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
     CCASSERT(set < DeviceValidator::getInstance()->bindingMappingInfo().bufferOffsets.size(), "invalid set index");
     CCASSERT(descriptorSet, "invalid descriptor set");
-    CCASSERT(descriptorSet->getLayout()->getDynamicBindings().size() == dynamicOffsetCount, "wrong number of dynamic offsets");
+    //CCASSERT(descriptorSet->getLayout()->getDynamicBindings().size() == dynamicOffsetCount, "wrong number of dynamic offsets"); // be more lenient on this
 
     _curStates.descriptorSets[set] = descriptorSet;
     _curStates.dynamicOffsets[set].assign(dynamicOffsets, dynamicOffsets + dynamicOffsetCount);

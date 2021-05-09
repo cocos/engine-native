@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "gfx-base/GFXRenderPass.h"
 #include "base/Agent.h"
+#include "gfx-base/GFXRenderPass.h"
 
 namespace cc {
 namespace gfx {

@@ -40,7 +40,7 @@ GLES3Sampler::~GLES3Sampler() {
     destroy();
 }
 
-void GLES3Sampler::doInit(const SamplerInfo & /*info*/) {
+void GLES3Sampler::doInit(const SamplerInfo& /*info*/) {
     _gpuSampler            = CC_NEW(GLES3GPUSampler);
     _gpuSampler->minFilter = _minFilter;
     _gpuSampler->magFilter = _magFilter;
