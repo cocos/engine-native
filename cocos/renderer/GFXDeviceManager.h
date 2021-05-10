@@ -89,7 +89,7 @@ private:
     static bool tryCreate(const DeviceInfo &info, Device **pDevice) {
         Device *device = CC_NEW(DeviceCtor);
 
-        device = CC_NEW(gfx::DeviceAgent(device));
+        //device = CC_NEW(gfx::DeviceAgent(device));
 
         if (CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION) {
             device = CC_NEW(gfx::DeviceValidator(device));

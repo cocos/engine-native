@@ -436,9 +436,10 @@ void LightingStage::render(Camera *camera) {
     cmdBuff->beginRenderPass(_reflectionPass, frameBuffer, renderArea, &clearColor,
         camera->clearDepth, camera->clearStencil);
     
-    // transparent
-    _relfectionRenderQueue->clear();
+    cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
 
+    // reflection
+    _relfectionRenderQueue->clear();
 
     m = 0;
     p = 0;

@@ -229,9 +229,10 @@ void ReflectionComp::initFirstComp() {
     shaderInfo.blocks = {
         {0, 0, "Constants", {{"cc_matViewProj", gfx::Type::MAT4, 1}, {"texSize", gfx::Type::FLOAT2, 1}}, 1},
         {1, 0, "CCLocal", {{"cc_matWorld", gfx::Type::MAT4, 1}, {"cc_matWorldIT", gfx::Type::MAT4, 1}, {"cc_lightingMapUVParam", gfx::Type::FLOAT4, 1}}, 1}};
+    shaderInfo.samplerTextures = {
+        {0, 1, "lightingTex", gfx::Type::SAMPLER2D, 1},
+        {0, 2, "worldPositionTex", gfx::Type::SAMPLER2D, 1}};
     shaderInfo.images = {
-        {0, 1, "lightingTex", gfx::Type::SAMPLER2D, 1, gfx::MemoryAccessBit::READ_ONLY},
-        {0, 2, "worldPositionTex", gfx::Type::SAMPLER2D, 1, gfx::MemoryAccessBit::READ_ONLY},
         {0, 3, "reflectionTex", gfx::Type::IMAGE2D, 1, gfx::MemoryAccessBit::WRITE_ONLY}};
     _compShader     = _device->createShader(shaderInfo);
 
@@ -321,8 +322,9 @@ void ReflectionComp::initDenoiseComp() {
     shaderInfo.name   = "Compute ";
     shaderInfo.stages = {{gfx::ShaderStageFlagBit::COMPUTE, getAppropriateShaderSource(sources)}};
     shaderInfo.blocks = {};
-    shaderInfo.images = {
-        {0, 0, "reflectionTex", gfx::Type::SAMPLER2D, 1, gfx::MemoryAccessBit::READ_ONLY},
+    shaderInfo.samplerTextures = {
+        {0, 0, "reflectionTex", gfx::Type::SAMPLER2D, 1}};
+    shaderInfo.images = { 
         {1, 12, "denoiseTex", gfx::Type::IMAGE2D, 1, gfx::MemoryAccessBit::WRITE_ONLY}};
     _compDenoiseShader     = _device->createShader(shaderInfo);
 
@@ -337,7 +339,7 @@ void ReflectionComp::initDenoiseComp() {
 
     _compDenoiseDescriptorSet->bindTexture(0, _reflectionTex);
     _compDenoiseDescriptorSet->bindSampler(0, _sampler);
-    _compDenoiseDescriptorSet->bindTexture(1, _denoiseTex);
+    //_compDenoiseDescriptorSet->bindTexture(1, _denoiseTex);
     _compDenoiseDescriptorSet->update();
 
     gfx::PipelineStateInfo pipelineInfo;

@@ -218,7 +218,7 @@ bool GLES3Context::doInit(const ContextInfo &info) {
             bool msaaLimit = msaaEnabled ? (params[6] > 0 && params[7] > 0) || (i == numConfig - 1) : (params[6] == 0 && params[7] == 0);
             // performancePreferred ? [>=] : [<] , egl configurations store in "ascending order"
             bool filter = (currScore < lastScore) ^ performancePreferred;
-            if ((filter || lastScore == 0) && msaaLimit) {
+            if (filter || lastScore == 0 || msaaLimit) {
                 _eglConfig     = _vecEGLConfig[i];
                 depth          = params[4];
                 stencil        = params[5];
