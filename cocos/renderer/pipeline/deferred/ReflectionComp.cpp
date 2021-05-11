@@ -70,8 +70,8 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
         gfx::SampleCount::X1,
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::STORE,
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::NONE},
+        {gfx::AccessType::COMPUTE_SHADER_WRITE},
     };
 
     gfx::RenderPassInfo clearPassInfo;
@@ -92,7 +92,7 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
             gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
         }};
 
-    gfx::GlobalBarrierInfo info_before_denoise = {
+    gfx::TextureBarrierInfo info_before_denoise = {
         {
             gfx::AccessType::COMPUTE_SHADER_WRITE,
         },
@@ -100,7 +100,15 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
             gfx::AccessType::COMPUTE_SHADER_READ_TEXTURE,
         }};
 
-    gfx::GlobalBarrierInfo info_after_denoise = {
+    gfx::TextureBarrierInfo info2_before_denoise = {
+        {
+            gfx::AccessType::NONE,
+        },
+        {
+            gfx::AccessType::COMPUTE_SHADER_WRITE,
+        }};
+
+    gfx::TextureBarrierInfo info_after_denoise = {
         {
             gfx::AccessType::COMPUTE_SHADER_WRITE,
         },
@@ -109,8 +117,9 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
         }};
 
     _barrier_pre            = _device->createGlobalBarrier(info_pre);
-    _barrier_before_denoise = _device->createGlobalBarrier(info_before_denoise);
-    _barrier_after_denoise  = _device->createGlobalBarrier(info_after_denoise);
+    _barrier_before_denoise.push_back(_device->createTextureBarrier(info_before_denoise));
+    _barrier_before_denoise.push_back(_device->createTextureBarrier(info2_before_denoise));
+    _barrier_after_denoise.push_back(_device->createTextureBarrier(info_after_denoise));
 
     uint  globalWidth  = this->getReflectionTex()->getWidth();
     uint  globalHeight = this->getReflectionTex()->getHeight();
@@ -409,11 +418,11 @@ gfx::GlobalBarrier *ReflectionComp::getBarrierPre() {
     return _barrier_pre;
 }
 
-gfx::GlobalBarrier *ReflectionComp::getBarrierBeforeDenoise() {
+gfx::TextureBarrierList& ReflectionComp::getBarrierBeforeDenoise() {
     return _barrier_before_denoise;
 }
 
-gfx::GlobalBarrier *ReflectionComp::getBarrierAfterDenoise() {
+gfx::TextureBarrierList& ReflectionComp::getBarrierAfterDenoise() {
     return _barrier_after_denoise;
 }
 

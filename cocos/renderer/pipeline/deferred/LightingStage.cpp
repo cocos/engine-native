@@ -406,6 +406,7 @@ void LightingStage::render(Camera *camera) {
             const auto  subModelCount = subModelID[0];
             for (m = 1; m <= subModelCount; ++m) {
                 auto subModel = model->getSubModelView(subModelID[m]);
+                gfx::Texture* denoiseTex = subModel->getDescriptorSet()->getTexture(uint(ModelLocalBindings::STORAGE_REFLECTION));
                 for (p = 0; p < subModel->passCount; ++p) {
                     const PassView *pass = subModel->getPassView(p);
                     // TODO: need fallback of ulit and gizmo material.
@@ -421,13 +422,13 @@ void LightingStage::render(Camera *camera) {
 
                     cmdBuff->dispatch(_reflectionComp->getDispatchInfo());
 
-                    cmdBuff->pipelineBarrier(_reflectionComp->getBarrierBeforeDenoise());
+                    cmdBuff->pipelineBarrier(nullptr, _reflectionComp->getBarrierBeforeDenoise(), {_reflectionComp->getReflectionTex(), denoiseTex});
 
                     cmdBuff->bindPipelineState(_reflectionComp->getDenoisePipelineState());
                     cmdBuff->bindDescriptorSet(0, _reflectionComp->getDenoiseDescriptorSet());
                     cmdBuff->bindDescriptorSet(1, subModel->getDescriptorSet());
                     cmdBuff->dispatch(_reflectionComp->getDenioseDispatchInfo());
-                    cmdBuff->pipelineBarrier(_reflectionComp->getBarrierAfterDenoise());
+                    cmdBuff->pipelineBarrier(nullptr, _reflectionComp->getBarrierAfterDenoise(), {denoiseTex});
                 }
             }
         }

@@ -39,8 +39,8 @@ public:
     gfx::RenderPass* getClearPass();
     gfx::Framebuffer* getClearFramebuffer();
     gfx::GlobalBarrier* getBarrierPre();
-    gfx::GlobalBarrier* getBarrierBeforeDenoise();
-    gfx::GlobalBarrier* getBarrierAfterDenoise();
+    gfx::TextureBarrierList& getBarrierBeforeDenoise();
+    gfx::TextureBarrierList& getBarrierAfterDenoise();
 
     gfx::DispatchInfo getDispatchInfo();
     gfx::DispatchInfo getDenioseDispatchInfo();
@@ -81,8 +81,9 @@ private:
     Mat4                      _cc_matViewProj;
 
     gfx::GlobalBarrier* _barrier_pre            = nullptr;
-    gfx::GlobalBarrier* _barrier_before_denoise = nullptr;
-    gfx::GlobalBarrier* _barrier_after_denoise  = nullptr;
+
+    gfx::TextureBarrierList _barrier_before_denoise = {};
+    gfx::TextureBarrierList _barrier_after_denoise = {};
 
     gfx::DispatchInfo _dispatchInfo;
     gfx::DispatchInfo _denoiseDispatchInfo;
