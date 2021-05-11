@@ -184,7 +184,7 @@ static bool js_scene_Node_setWorldMatrix(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Mat4, false> arg0 = {};
+        HolderType<cc::Mat4, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Node_setWorldMatrix : Error processing arguments");
         cobj->setWorldMatrix(arg0.value());
@@ -203,7 +203,7 @@ static bool js_scene_Node_setWorldPosition(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Vec3, false> arg0 = {};
+        HolderType<cc::Vec3, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Node_setWorldPosition : Error processing arguments");
         cobj->setWorldPosition(arg0.value());
@@ -222,7 +222,7 @@ static bool js_scene_Node_setWorldRotation(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Quaternion, false> arg0 = {};
+        HolderType<cc::Quaternion, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Node_setWorldRotation : Error processing arguments");
         cobj->setWorldRotation(arg0.value());
@@ -241,7 +241,7 @@ static bool js_scene_Node_setWorldScale(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Vec3, false> arg0 = {};
+        HolderType<cc::Vec3, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Node_setWorldScale : Error processing arguments");
         cobj->setWorldScale(arg0.value());
@@ -370,7 +370,7 @@ static bool js_scene_DirectionalLight_setDir(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Vec3, false> arg0 = {};
+        HolderType<cc::Vec3, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_DirectionalLight_setDir : Error processing arguments");
         cobj->setDir(arg0.value());
@@ -719,7 +719,7 @@ static bool js_scene_SpotLight_setDir(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Vec3, false> arg0 = {};
+        HolderType<cc::Vec3, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_SpotLight_setDir : Error processing arguments");
         cobj->setDir(arg0.value());
@@ -795,7 +795,7 @@ static bool js_scene_SpotLight_setPos(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Vec3, false> arg0 = {};
+        HolderType<cc::Vec3, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_SpotLight_setPos : Error processing arguments");
         cobj->setPos(arg0.value());
@@ -1065,7 +1065,7 @@ static bool js_scene_SphereLight_setPos(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::Vec3, false> arg0 = {};
+        HolderType<cc::Vec3, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_SphereLight_setPos : Error processing arguments");
         cobj->setPos(arg0.value());

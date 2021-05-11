@@ -18924,6 +18924,8 @@
         "cocos/bindings/auto/jsb_physics_auto.h", 
         "cocos/bindings/auto/jsb_pipeline_auto.cpp", 
         "cocos/bindings/auto/jsb_pipeline_auto.h", 
+        "cocos/bindings/auto/jsb_scene_auto.cpp", 
+        "cocos/bindings/auto/jsb_scene_auto.h", 
         "cocos/bindings/auto/jsb_spine_auto.cpp", 
         "cocos/bindings/auto/jsb_spine_auto.h", 
         "cocos/bindings/auto/jsb_video_auto.cpp", 
