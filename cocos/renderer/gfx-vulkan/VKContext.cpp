@@ -108,7 +108,7 @@ bool CCVKContext::doInit(const ContextInfo &info) {
 
         // only enable the absolute essentials for now
         vector<const char *> requestedLayers{
-
+            "VK_LAYER_LUNARG_api_dump"
         };
         vector<const char *> requestedExtensions{
             VK_KHR_SURFACE_EXTENSION_NAME,

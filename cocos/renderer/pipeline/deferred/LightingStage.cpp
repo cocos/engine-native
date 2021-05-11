@@ -73,8 +73,8 @@ LightingStage::LightingStage() : RenderStage() {
         gfx::SampleCount::X1,
         gfx::LoadOp::LOAD,
         gfx::StoreOp::STORE,
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
+        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
     };
 
     gfx::RenderPassInfo reflectionPassInfo;

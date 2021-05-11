@@ -297,7 +297,7 @@ bool DeferredPipeline::activeRenderer() {
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::STORE,
         {},
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
     };
 
     for (int i = 0; i < 4; i++) {
@@ -322,7 +322,7 @@ bool DeferredPipeline::activeRenderer() {
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::STORE,
         {},
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
     };
 
     gfx::RenderPassInfo lightPass;
