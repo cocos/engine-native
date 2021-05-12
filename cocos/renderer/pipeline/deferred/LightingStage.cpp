@@ -311,7 +311,7 @@ void LightingStage::render(Camera *camera) {
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::LOCAL), _descriptorSet, dynamicOffsets);
 
     // draw quad
-    gfx::Rect renderArea = pipeline->getRenderArea(camera, false);
+    gfx::Rect renderArea = pipeline->getRenderArea(camera);
 
     gfx::Color clearColor = {0.0, 0.0, 0.0, 1.0};
     if (camera->clearFlag & static_cast<uint>(gfx::ClearFlagBit::COLOR)) {
@@ -385,17 +385,6 @@ void LightingStage::render(Camera *camera) {
 
     cmdBuff->endRenderPass();
 
-    // dispatch for reflection
-    if (_reflectionComp->isInitlized() == false) {
-        _reflectionComp->init(_pipeline->getDevice(), 
-                              pipeline->getDeferredRenderData()->lightingRenderTarget,
-                              pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1], 
-                              pipeline->getDeferredRenderData()->reflectionRenderTarget, 
-                              camera->matViewProj, 8, 8);
-    }
-
-    gfx::Rect clearRenderArea = {0, 0, _reflectionComp->getReflectionTex()->getWidth(), _reflectionComp->getReflectionTex()->getHeight()};
-
     if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
         uint   m = 0, p = 0;
         size_t k = 0;
@@ -407,11 +396,20 @@ void LightingStage::render(Camera *camera) {
             for (m = 1; m <= subModelCount; ++m) {
                 auto subModel = model->getSubModelView(subModelID[m]);
                 gfx::Texture* denoiseTex = subModel->getDescriptorSet()->getTexture(uint(ModelLocalBindings::STORAGE_REFLECTION));
+                // dispatch for reflection
+                if (_reflectionComp->isInitlized() == false) {
+                    _reflectionComp->init(_pipeline->getDevice(),
+                                          pipeline->getDeferredRenderData()->lightingRenderTarget,
+                                          pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1],
+                                          denoiseTex,
+                                          camera->matViewProj, 8, 8);
+                }
                 for (p = 0; p < subModel->passCount; ++p) {
                     const PassView *pass = subModel->getPassView(p);
                     // TODO: need fallback of ulit and gizmo material.
                     if (pass->phase != _reflectionPhaseID) continue;
 
+                    gfx::Rect clearRenderArea = {0, 0, _reflectionComp->getReflectionTex()->getWidth(), _reflectionComp->getReflectionTex()->getHeight()};
                     cmdBuff->beginRenderPass(_reflectionComp->getClearPass(), _reflectionComp->getClearFramebuffer(), clearRenderArea, &clearColor, 0, 0);
                     cmdBuff->endRenderPass();
 

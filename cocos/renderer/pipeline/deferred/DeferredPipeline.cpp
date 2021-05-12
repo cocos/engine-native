@@ -220,18 +220,11 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffe
     return (*quadIA) != nullptr;
 }
 
-gfx::Rect DeferredPipeline::getRenderArea(Camera *camera, bool onScreen) {
+gfx::Rect DeferredPipeline::getRenderArea(Camera *camera) {
     gfx::Rect renderArea;
-    uint      w;
-    uint      h;
-    if (onScreen) {
-        w = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
-        h = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
-    } else {
-        w = camera->width;
-        h = camera->height;
-    }
 
+    uint w = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
+    uint h = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
     renderArea.x      = static_cast<int>(camera->viewportX * w);
     renderArea.y      = static_cast<int>(camera->viewportY * h);
     renderArea.width  = static_cast<uint>(camera->viewportWidth * w * _pipelineSceneData->getSharedData()->shadingScale);
@@ -359,16 +352,6 @@ bool DeferredPipeline::activeRenderer() {
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_REFLECTION_RESULTMAP), sampler);
 
     return true;
-}
-
-void DeferredPipeline::resize(uint width, uint height) {
-    if (_width == width && _height == height) {
-        return;
-    }
-    _width  = width;
-    _height = height;
-    destroyDeferredData();
-    generateDeferredRenderData();
 }
 
 void DeferredPipeline::generateDeferredRenderData() {
