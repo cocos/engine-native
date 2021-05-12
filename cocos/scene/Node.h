@@ -27,13 +27,26 @@
 
 #include "math/Mat4.h"
 #include "math/Vec3.h"
+#include "math/Vec4.h"
 #include "math/Quaternion.h"
 
 namespace cc {
 namespace scene {
 
+// This struct defines the memory layout shared between JS and C++.
+// TODO(minggo) add more data.
+struct NodeLayout {
+    uint32_t flagsChanged{0};
+    uint32_t layer{0};
+    cc::Vec3 worldScale;
+    cc::Vec3 worldPosition;
+    cc::Vec4 worldRotation;
+    cc::Mat4 worldMatrix;
+};
+
 class Node final {
 public:
+    explicit Node(void *, uint32_t length);
     Node()             = default;
     Node(const Node &) = delete;
     Node(Node &&)      = delete;
@@ -43,32 +56,29 @@ public:
 
     void updateWorldTransform();
 
-    inline void setFlagsChanged(bool value) { _flagsChanged = value; }
-    inline void setLayer(uint32_t layer) { _layer = layer; }
-    inline void setWorldMatrix(const Mat4& matrix) { _worldMatrix = matrix; }
-    inline void setWorldPosition(const Vec3& pos) { _worldPosition = pos; }
-    inline void setWorldRotation(const Quaternion& rotation) { _worldRotation = rotation; }
-    inline void setWorldScale(const Vec3& scale) { _worldScale = scale; }
+    //    inline void setFlagsChanged(bool value) { _flagsChanged = value; }
+    //    inline void setLayer(uint32_t layer) { _layer = layer; }
+    //    inline void setWorldMatrix(const Mat4 &matrix) { _worldMatrix = matrix; }
+    //    inline void setWorldPosition(const Vec3 &pos) { _worldPosition = pos; }
+    //    inline void setWorldRotation(const Quaternion &rotation) { _worldRotation = rotation; }
+    //    inline void setWorldScale(const Vec3 &scale) { _worldScale = scale; }
 
-    inline bool              getFlagsChanged() const { return _flagsChanged; }
-    inline uint32_t          getLayer() const { return _layer; }
-    inline const Mat4 &      getWorldMatrix() const { return _worldMatrix; }
-    inline const Vec3 &      getWorldPosition() const { return _worldPosition; }
-    inline const Quaternion &getWorldRotation() const { return _worldRotation; }
-    inline const Vec3 &      getWorldScale() const { return _worldScale; }
+    inline bool        getFlagsChanged() const { return _nodeLayout->flagsChanged != 0; }
+    inline uint32_t    getLayer() const { return _nodeLayout->layer; }
+    inline const Mat4 &getWorldMatrix() const { return _nodeLayout->worldMatrix; }
+    inline const Vec3 &getWorldPosition() const { return _nodeLayout->worldPosition; }
+    inline const Vec4 &getWorldRotation() const { return _nodeLayout->worldRotation; }
+    inline const Vec3 &getWorldScale() const { return _nodeLayout->worldScale; }
 
 private:
-    bool       _flagsChanged{false};
+    void initWithData(void *);
+
+    NodeLayout *_nodeLayout{nullptr};
     bool       _dirtyFlags{false};
     bool       _hasChangeFlags{false};
     Node *     _parent{nullptr};
-    uint32_t   _layer{0};
     Vec3       _lPos;
     Quaternion _lScale;
-    Vec3       _worldPosition;
-    Quaternion _worldRotation;
-    Vec3       _worldScale;
-    Mat4       _worldMatrix;
 };
 
 } // namespace scene
