@@ -81,7 +81,6 @@ void RenderPipeline::setDescriptorSetLayout() {
     INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERGBUFFEREMISSIVEMAP);
     INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERGBUFFERNORMALMAP);
     INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERLIGHTINGRESULTMAP);
-    INIT_GLOBAL_DESCSET_LAYOUT(SAMPLERREFLECTIONRESULTMAP);
 
     localDescriptorSetLayout.bindings.resize(static_cast<size_t>(ModelLocalBindings::COUNT));
     localDescriptorSetLayout.blocks[UBOLocalBatched::NAME]           = UBOLocalBatched::LAYOUT;

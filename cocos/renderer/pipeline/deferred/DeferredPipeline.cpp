@@ -348,8 +348,6 @@ bool DeferredPipeline::activeRenderer() {
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP), sampler);
     _descriptorSet->bindSampler(
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
-    _descriptorSet->bindSampler(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_REFLECTION_RESULTMAP), sampler);
 
     return true;
 }
@@ -391,16 +389,6 @@ void DeferredPipeline::generateDeferredRenderData() {
     };
     _deferredRenderData->lightingRenderTarget = _device->createTexture(rtInfo);
 
-    gfx::TextureInfo reflectionRtInfo = {
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsage::STORAGE | gfx::TextureUsage::TRANSFER_SRC | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA8,
-        512 * _width / _height,
-        512,
-    };
-    _deferredRenderData->reflectionRenderTarget = _device->createTexture(reflectionRtInfo);
-
-
     gfx::FramebufferInfo lightingInfo;
     lightingInfo.renderPass = _lightingRenderPass;
     lightingInfo.colorTextures.push_back(_deferredRenderData->lightingRenderTarget);
@@ -417,8 +405,6 @@ void DeferredPipeline::generateDeferredRenderData() {
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP), _deferredRenderData->gbufferFrameBuffer->getColorTextures()[3]);
     _descriptorSet->bindTexture(
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), _deferredRenderData->lightingFrameBuff->getColorTextures()[0]);
-    _descriptorSet->bindTexture(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_REFLECTION_RESULTMAP), _deferredRenderData->reflectionRenderTarget);
 }
 
 void DeferredPipeline::destroy() {
@@ -464,10 +450,6 @@ void DeferredPipeline::destroyDeferredData() {
         _deferredRenderData->lightingRenderTarget->destroy();
         CC_DELETE(_deferredRenderData->lightingRenderTarget);
         _deferredRenderData->lightingRenderTarget = nullptr;
-    }
-
-    if (_deferredRenderData->reflectionRenderTarget) {
-        _deferredRenderData->reflectionRenderTarget->destroy();
     }
 
     if (_deferredRenderData->depthTex) {
