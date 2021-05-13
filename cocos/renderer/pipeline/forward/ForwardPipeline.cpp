@@ -123,6 +123,7 @@ bool ForwardPipeline::activate() {
 void ForwardPipeline::render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
+    int i = 0;
     for (const auto cameraId : cameras) {
         auto *camera = GET_CAMERA(cameraId);
         auto *frustum = GET_FRUSTUM(camera->frustumID);
@@ -131,6 +132,7 @@ void ForwardPipeline::render(const vector<uint> &cameras, const vector<scene::Ca
         for (auto *const flow : _flows) {
             flow->render(camera, newCameras[i]);
         }
+        ++i;
     }
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);
