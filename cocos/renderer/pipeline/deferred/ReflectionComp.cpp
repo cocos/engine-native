@@ -48,6 +48,7 @@ void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture
         _denoiseTex->getFormat(),
         _denoiseTex->getWidth(),
         _denoiseTex->getHeight(),
+        gfx::TextureFlagBit::IMMUTABLE
     };
     _reflectionTex = _device->createTexture(reflectionRtInfo);
 
@@ -184,8 +185,6 @@ void ReflectionComp::initFirstComp() {
 
             vec4 inputPixelSceneColor = texture(lightingTex, uv);
             imageStore(reflectionTex, ivec2(reflectedScreenUV * texSize), inputPixelSceneColor);
-            // imageStore(reflectionTex, ivec2(gl_GlobalInvocationID.xy), vec4(reflectedScreenUV * texSize, 0.0, 1.0));
-            // imageStore(reflectionTex, ivec2(gl_GlobalInvocationID.xy), vec4(reflectedPosWS, 1.0));
         })",
         _group_size_x, _group_size_y);
     sources.glsl3 = StringUtil::format(
@@ -226,8 +225,6 @@ void ReflectionComp::initFirstComp() {
 
             vec4 inputPixelSceneColor = texture(lightingTex, uv);
             imageStore(reflectionTex, ivec2(reflectedScreenUV * texSize), inputPixelSceneColor);
-            // imageStore(reflectionTex, ivec2(gl_GlobalInvocationID.xy), vec4(reflectedScreenUV * texSize, 0.0, 1.0));
-            // imageStore(reflectionTex, ivec2(gl_GlobalInvocationID.xy), vec4(reflectedPosWS, 1.0));
         })",
         _group_size_x, _group_size_y);
     // no compute support in GLES2
