@@ -2149,14 +2149,16 @@ static bool js_pipeline_RenderPipeline_render(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 1) {
+    if (argc == 2) {
         HolderType<std::vector<unsigned int>, true> arg0 = {};
+        HolderType<std::vector<cc::scene::Camera *>, true> arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_render : Error processing arguments");
-        cobj->render(arg0.value());
+        cobj->render(arg0.value(), arg1.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
 SE_BIND_FUNC(js_pipeline_RenderPipeline_render)

@@ -34,6 +34,7 @@
 #include "cocos/math/Geometry.h"
 #include "extensions/cocos-ext.h"
 #include "network/Downloader.h"
+#include "renderer/gfx-base/GFXDef-common.h"
 #include <assert.h>
 #include <type_traits>
 #if USE_SPINE
@@ -172,9 +173,6 @@ bool seval_to_longlong(const se::Value &v, long long *ret);
 bool seval_to_size(const se::Value &v, size_t *ret);
 bool seval_to_std_string(const se::Value &v, std::string *ret);
 bool seval_to_Vec2(const se::Value &v, cc::Vec2 *pt);
-bool seval_to_Vec3(const se::Value &v, cc::Vec3 *pt);
-bool seval_to_Vec4(const se::Value &v, cc::Vec4 *pt);
-bool seval_to_Mat4(const se::Value &v, cc::Mat4 *mat);
 bool seval_to_Size(const se::Value &v, cc::Size *size);
 bool seval_to_ccvalue(const se::Value &v, cc::Value *ret);
 bool seval_to_ccvaluemap(const se::Value &v, cc::ValueMap *ret);
@@ -796,8 +794,8 @@ struct HolderType<std::function<R(ARGS...)>, true> {
 template <typename T>
 inline typename std::enable_if_t<!std::is_enum<T>::value && !std::is_pointer<T>::value, bool>
 sevalue_to_native(const se::Value &from, T *to, se::Object *) {
-    // CC_STATIC_ASSERT(std::is_same<T, never_t>::value, "sevalue_to_native not implemented for type");
-    SE_LOGE("Can not convert type ???\n - [[ %s ]]\n", typeid(T).name());
+//    CC_STATIC_ASSERT(std::is_same<T, never_t>::value, "sevalue_to_native not implemented for type");
+    SE_LOGE("Can not convert type ???\n - [[ %s ]]", typeid(T).name());
     return false;
 }
 
@@ -1040,37 +1038,16 @@ inline bool sevalue_to_native(const se::Value &from, cc::ValueMap *to, se::Objec
 }
 
 template <>
-inline bool sevalue_to_native(const se::Value &from, std::vector<unsigned char> *to, se::Object *) {
-    assert(from.isObject());
-    se::Object *in = from.toObject();
-    if (in->isTypedArray()) {
-        uint8_t *data = nullptr;
-        size_t dataLen = 0;
-        in->getTypedArrayData(&data, &dataLen);
-        to->resize(dataLen);
-        to->assign(data, data + dataLen);
-        return true;
-    } else if (in->isArrayBuffer()) {
-        uint8_t *data = nullptr;
-        size_t dataLen = 0;
-        in->getArrayBufferData(&data, &dataLen);
-        to->resize(dataLen);
-        to->assign(data, data + dataLen);
-        return true;
-    } else if (in->isArray()) {
-        uint32_t len = 0;
-        in->getArrayLength(&len);
-        to->resize(len);
-        se::Value ele;
-        for (uint32_t i = 0; i < len; i++) {
-            in->getArrayElement(i, &ele);
-            (*to)[i] = ele.toUint8();
-        }
-        return true;
-    }
-    SE_LOGE("type error, ArrayBuffer/TypedArray/Array expected!");
-    return false;
-}
+bool sevalue_to_native(const se::Value &from, cc::Vec4 *to, se::Object *);
+
+template <>
+bool sevalue_to_native(const se::Value &from, cc::Vec3 *to, se::Object *);
+
+template <>
+bool sevalue_to_native(const se::Value &from, cc::Mat4 *to, se::Object *);
+
+template <>
+bool sevalue_to_native(const se::Value &from, std::vector<unsigned char> *to, se::Object *);
 
 template <typename R, typename... Args>
 inline bool sevalue_to_native(const se::Value &from, std::function<R(Args...)> *func, se::Object *self) {

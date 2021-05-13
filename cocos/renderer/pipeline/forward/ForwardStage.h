@@ -49,7 +49,7 @@ public:
     bool initialize(const RenderStageInfo &info) override;
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
     void destroy() override;
-    void render(Camera *camera) override;
+    void render(Camera *camera, scene::Camera *newCamera) override;
 
 private:
     static RenderStageInfo initInfo;

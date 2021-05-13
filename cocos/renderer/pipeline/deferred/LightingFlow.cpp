@@ -61,9 +61,9 @@ void LightingFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 }
 
-void LightingFlow::render(Camera *camera) {
+void LightingFlow::render(Camera *camera, scene::Camera *newCamera) {
     auto pipeline = dynamic_cast<DeferredPipeline *>(_pipeline);
-    RenderFlow::render(camera);
+    RenderFlow::render(camera, newCamera);
 }
 
 void LightingFlow::destroy() {

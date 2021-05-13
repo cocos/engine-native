@@ -57,8 +57,8 @@ void ForwardFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 }
 
-void ForwardFlow::render(Camera *camera) {
-    RenderFlow::render(camera);
+void ForwardFlow::render(Camera *camera, scene::Camera *newCamera) {
+    RenderFlow::render(camera, newCamera);
 }
 
 void ForwardFlow::destroy() {

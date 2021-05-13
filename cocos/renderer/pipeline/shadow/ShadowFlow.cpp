@@ -61,7 +61,7 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 }
 
-void ShadowFlow::render(Camera *camera) {
+void ShadowFlow::render(Camera *camera, scene::Camera *newCamera) {
     const auto *sceneData = _pipeline->getPipelineSceneData();
     const auto *shadowInfo = sceneData->getSharedData()->getShadows();
     if (!shadowInfo->enabled || shadowInfo->getShadowType() != ShadowType::SHADOWMAP) return;
@@ -86,7 +86,7 @@ void ShadowFlow::render(Camera *camera) {
         for (auto *stage : _stages) {
             auto *shadowStage = dynamic_cast<ShadowStage *>(stage);
             shadowStage->setUseData(light, shadowFrameBuffer);
-            shadowStage->render(camera);
+            shadowStage->render(camera, newCamera);
         }
     }
 

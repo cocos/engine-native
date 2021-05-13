@@ -249,7 +249,7 @@ void LightingStage::destroy() {
     RenderStage::destroy();
 }
 
-void LightingStage::render(Camera *camera) {
+void LightingStage::render(Camera *camera, scene::Camera *newCamera) {
     auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
     auto *const sceneData = _pipeline->getPipelineSceneData();
     auto *const sharedData = sceneData->getSharedData();

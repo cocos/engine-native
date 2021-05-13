@@ -47,7 +47,7 @@ public:
     Light &operator=(const Light &) = delete;
     Light &operator=(const Light &&) = delete;
     
-    virtual void update() {}
+    virtual void update() = 0;
 
     inline void setColor(const Vec3 &color) { _color = color; }
     inline void setColorTemperatureRGB(const Vec3& value) { _colorTemperatureRGB = value; }

@@ -116,7 +116,7 @@ void ForwardStage::destroy() {
     RenderStage::destroy();
 }
 
-void ForwardStage::render(Camera *camera) {
+void ForwardStage::render(Camera *camera, scene::Camera *newCamera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
     auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
@@ -169,12 +169,12 @@ void ForwardStage::render(Camera *camera) {
     _planarShadowQueue->gatherShadowPasses(camera, cmdBuff);
 
     // render area is not oriented
-    uint w = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
-    uint h = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
-    _renderArea.x = static_cast<int>(camera->viewportX * w);
-    _renderArea.y = static_cast<int>(camera->viewportY * h);
-    _renderArea.width = static_cast<uint>(camera->viewportWidth * w * sharedData->shadingScale);
-    _renderArea.height = static_cast<uint>(camera->viewportHeight * h * sharedData->shadingScale);
+    uint w = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? newCamera->height : newCamera->width;
+    uint h = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? newCamera->width : newCamera->height;
+    _renderArea.x = static_cast<int>(newCamera->viewPort.x * w);
+    _renderArea.y = static_cast<int>(newCamera->viewPort.y * h);
+    _renderArea.width = static_cast<uint>(newCamera->viewPort.z * w * sharedData->shadingScale);
+    _renderArea.height = static_cast<uint>(newCamera->viewPort.w * h * sharedData->shadingScale);
 
     if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {

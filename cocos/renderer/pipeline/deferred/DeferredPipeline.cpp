@@ -127,15 +127,16 @@ bool DeferredPipeline::activate() {
     return true;
 }
 
-void DeferredPipeline::render(const vector<uint> &cameras) {
+void DeferredPipeline::render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
     for (const auto cameraId : cameras) {
         auto *camera = GET_CAMERA(cameraId);
         sceneCulling(this, camera);
         _pipelineUBO->updateCameraUBO(camera);
+        int i = 0;
         for (auto *const flow : _flows) {
-            flow->render(camera);
+            flow->render(camera, newCameras[i]);
         }
     }
     _commandBuffers[0]->end();

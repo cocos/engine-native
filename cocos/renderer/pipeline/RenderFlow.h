@@ -26,6 +26,7 @@
 #pragma once
 
 #include "Define.h"
+#include "scene/Camera.h"
 
 namespace cc {
 namespace pipeline {
@@ -48,7 +49,7 @@ public:
 
     virtual bool initialize(const RenderFlowInfo &info);
     virtual void activate(RenderPipeline *pipeline);
-    virtual void render(Camera *camera);
+    virtual void render(Camera *camera, scene::Camera *newCamera);
     virtual void destroy();
 
     inline const String &getName() const { return _name; }

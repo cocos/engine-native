@@ -37,7 +37,7 @@ struct Plane final {
 };
 
 struct Frustum final {
-    Vec3                 vertices;
+    std::array<Vec3, 8>  vertices;
     std::array<Plane, 6> planes;
 };
 

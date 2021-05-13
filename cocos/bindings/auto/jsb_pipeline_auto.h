@@ -29,6 +29,7 @@
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/auto/jsb_gfx_auto.h"
+#include "cocos/bindings/auto/jsb_scene_auto.h"
 #include "cocos/renderer/pipeline/forward/ForwardPipeline.h"
 #include "cocos/renderer/pipeline/forward/ForwardFlow.h"
 #include "cocos/renderer/pipeline/forward/ForwardStage.h"

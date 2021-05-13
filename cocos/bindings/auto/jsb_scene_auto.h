@@ -30,14 +30,27 @@ SE_DECLARE_FUNC(js_scene_Node_getWorldMatrix);
 SE_DECLARE_FUNC(js_scene_Node_getWorldPosition);
 SE_DECLARE_FUNC(js_scene_Node_getWorldRotation);
 SE_DECLARE_FUNC(js_scene_Node_getWorldScale);
-SE_DECLARE_FUNC(js_scene_Node_setFlagsChanged);
-SE_DECLARE_FUNC(js_scene_Node_setLayer);
-SE_DECLARE_FUNC(js_scene_Node_setWorldMatrix);
-SE_DECLARE_FUNC(js_scene_Node_setWorldPosition);
-SE_DECLARE_FUNC(js_scene_Node_setWorldRotation);
-SE_DECLARE_FUNC(js_scene_Node_setWorldScale);
 SE_DECLARE_FUNC(js_scene_Node_updateWorldTransform);
 SE_DECLARE_FUNC(js_scene_Node_Node);
+
+extern se::Object* __jsb_cc_scene_Light_proto;
+extern se::Class* __jsb_cc_scene_Light_class;
+
+bool js_register_cc_scene_Light(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::scene::Light);
+SE_DECLARE_FUNC(js_scene_Light_getColor);
+SE_DECLARE_FUNC(js_scene_Light_getColorTemperatureRGB);
+SE_DECLARE_FUNC(js_scene_Light_getNode);
+SE_DECLARE_FUNC(js_scene_Light_getType);
+SE_DECLARE_FUNC(js_scene_Light_getUseColorTemperature);
+SE_DECLARE_FUNC(js_scene_Light_setColor);
+SE_DECLARE_FUNC(js_scene_Light_setColorTemperatureRGB);
+SE_DECLARE_FUNC(js_scene_Light_setNode);
+SE_DECLARE_FUNC(js_scene_Light_setType);
+SE_DECLARE_FUNC(js_scene_Light_setUseColorTemperature);
+SE_DECLARE_FUNC(js_scene_Light_update);
 
 extern se::Object* __jsb_cc_scene_DirectionalLight_proto;
 extern se::Class* __jsb_cc_scene_DirectionalLight_class;
@@ -50,8 +63,27 @@ SE_DECLARE_FUNC(js_scene_DirectionalLight_getDir);
 SE_DECLARE_FUNC(js_scene_DirectionalLight_getIlluminance);
 SE_DECLARE_FUNC(js_scene_DirectionalLight_setDir);
 SE_DECLARE_FUNC(js_scene_DirectionalLight_setIlluminance);
-SE_DECLARE_FUNC(js_scene_DirectionalLight_update);
 SE_DECLARE_FUNC(js_scene_DirectionalLight_DirectionalLight);
+
+extern se::Object* __jsb_cc_scene_Plane_proto;
+extern se::Class* __jsb_cc_scene_Plane_class;
+
+bool js_register_cc_scene_Plane(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::Plane *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::Plane);
+
+extern se::Object* __jsb_cc_scene_Frustum_proto;
+extern se::Class* __jsb_cc_scene_Frustum_class;
+
+bool js_register_cc_scene_Frustum(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::Frustum *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::Frustum);
 
 extern se::Object* __jsb_cc_scene_SpotLight_proto;
 extern se::Class* __jsb_cc_scene_SpotLight_class;
@@ -80,7 +112,6 @@ SE_DECLARE_FUNC(js_scene_SpotLight_setNeedUpdate);
 SE_DECLARE_FUNC(js_scene_SpotLight_setPos);
 SE_DECLARE_FUNC(js_scene_SpotLight_setRange);
 SE_DECLARE_FUNC(js_scene_SpotLight_setSize);
-SE_DECLARE_FUNC(js_scene_SpotLight_update);
 SE_DECLARE_FUNC(js_scene_SpotLight_SpotLight);
 
 extern se::Object* __jsb_cc_scene_SphereLight_proto;
@@ -100,7 +131,6 @@ SE_DECLARE_FUNC(js_scene_SphereLight_setIllumiance);
 SE_DECLARE_FUNC(js_scene_SphereLight_setPos);
 SE_DECLARE_FUNC(js_scene_SphereLight_setRange);
 SE_DECLARE_FUNC(js_scene_SphereLight_setSize);
-SE_DECLARE_FUNC(js_scene_SphereLight_update);
 SE_DECLARE_FUNC(js_scene_SphereLight_SphereLight);
 
 extern se::Object* __jsb_cc_scene_SubModel_proto;

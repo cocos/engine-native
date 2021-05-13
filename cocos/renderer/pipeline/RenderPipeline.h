@@ -31,6 +31,7 @@
 #include "base/CoreStd.h"
 #include "helper/DefineMap.h"
 #include "helper/SharedMemory.h"
+#include "scene/Camera.h"
 
 namespace cc {
 namespace gfx {
@@ -57,7 +58,7 @@ public:
     virtual bool activate();
     virtual void destroy();
     virtual bool initialize(const RenderPipelineInfo &info);
-    virtual void render(const vector<uint> &cameras);
+    virtual void render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras);
     virtual void resize(uint width, uint height){};
 
     void setPipelineSharedSceneData(uint handle);

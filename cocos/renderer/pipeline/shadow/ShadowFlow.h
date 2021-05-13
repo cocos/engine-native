@@ -43,7 +43,7 @@ public:
 
     void activate(RenderPipeline *pipeline) override;
 
-    void render(Camera *camera) override;
+    void render(Camera *camera, scene::Camera *newCamera) override;
 
     void destroy() override;
 

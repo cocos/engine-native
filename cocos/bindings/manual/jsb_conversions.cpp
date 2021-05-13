@@ -236,49 +236,6 @@ bool seval_to_Vec2(const se::Value &v, cc::Vec2 *pt) {
     return true;
 }
 
-bool seval_to_Vec3(const se::Value &v, cc::Vec3 *pt) {
-    assert(pt != nullptr);
-    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to Vec3 failed!");
-    se::Object *obj = v.toObject();
-    se::Value   x;
-    se::Value   y;
-    se::Value   z;
-    bool        ok = obj->getProperty("x", &x);
-    SE_PRECONDITION3(ok && x.isNumber(), false, *pt = cc::Vec3::ZERO);
-    ok = obj->getProperty("y", &y);
-    SE_PRECONDITION3(ok && y.isNumber(), false, *pt = cc::Vec3::ZERO);
-    ok = obj->getProperty("z", &z);
-    SE_PRECONDITION3(ok && z.isNumber(), false, *pt = cc::Vec3::ZERO);
-    pt->x = x.toFloat();
-    pt->y = y.toFloat();
-    pt->z = z.toFloat();
-    return true;
-}
-
-bool seval_to_Vec4(const se::Value &v, cc::Vec4 *pt) {
-    assert(pt != nullptr);
-    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to Vec4 failed!");
-    pt->x = pt->y = pt->z = pt->w = 0.0f;
-    se::Object *obj               = v.toObject();
-    se::Value   x;
-    se::Value   y;
-    se::Value   z;
-    se::Value   w;
-    bool        ok = obj->getProperty("x", &x);
-    SE_PRECONDITION3(ok && x.isNumber(), false, *pt = cc::Vec4::ZERO);
-    ok = obj->getProperty("y", &y);
-    SE_PRECONDITION3(ok && y.isNumber(), false, *pt = cc::Vec4::ZERO);
-    ok = obj->getProperty("z", &z);
-    SE_PRECONDITION3(ok && z.isNumber(), false, *pt = cc::Vec4::ZERO);
-    ok = obj->getProperty("w", &w);
-    SE_PRECONDITION3(ok && w.isNumber(), false, *pt = cc::Vec4::ZERO);
-    pt->x = x.toFloat();
-    pt->y = y.toFloat();
-    pt->z = z.toFloat();
-    pt->w = w.toFloat();
-    return true;
-}
-
 bool seval_to_mat(const se::Value &v, int length, float *out) {
     assert(out != nullptr);
     SE_PRECONDITION2(v.isObject(), false, "Convert parameter to Matrix failed!");
@@ -290,49 +247,6 @@ bool seval_to_mat(const se::Value &v, int length, float *out) {
         snprintf(propName, 3, "m%2d", i);
         obj->getProperty(propName, &tmp);
         *(out + i) = tmp.toFloat();
-    }
-
-    return true;
-}
-
-bool seval_to_Mat4(const se::Value &v, cc::Mat4 *mat) {
-    assert(mat != nullptr);
-    SE_PRECONDITION2(v.isObject(), false, "Convert parameter to Matrix4 failed!");
-    se::Object *obj = v.toObject();
-
-    if (obj->isTypedArray()) {
-        // typed array
-        SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to Matrix4 failed!");
-
-        size_t   length = 0;
-        uint8_t *ptr    = nullptr;
-        obj->getTypedArrayData(&ptr, &length);
-
-        memcpy(mat->m, ptr, length);
-    } else {
-        bool        ok = false;
-        se::Value   tmp;
-        std::string prefix = "m";
-        for (uint32_t i = 0; i < 16; ++i) {
-            std::string name;
-            if (i < 10) {
-                name = prefix + "0" + std::to_string(i);
-            } else {
-                name = prefix + std::to_string(i);
-            }
-            ok = obj->getProperty(name.c_str(), &tmp);
-            SE_PRECONDITION3(ok, false, *mat = cc::Mat4::IDENTITY);
-
-            if (tmp.isNumber()) {
-                mat->m[i] = tmp.toFloat();
-            } else {
-                SE_REPORT_ERROR("%u, not supported type in matrix", i);
-                *mat = cc::Mat4::IDENTITY;
-                return false;
-            }
-
-            tmp.setUndefined();
-        }
     }
 
     return true;
@@ -1301,6 +1215,127 @@ bool sevalue_to_native(const se::Value &v, spine::Vector<spine::String> *ret, se
     }
 
     return true;
+}
+
+template <>
+bool sevalue_to_native(const se::Value &from, cc::Vec4 *to, se::Object *) {
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Vec4 failed!");
+    se::Object *obj               = from.toObject();
+    se::Value   x;
+    se::Value   y;
+    se::Value   z;
+    se::Value   w;
+    bool        ok = obj->getProperty("x", &x);
+    SE_PRECONDITION3(ok && x.isNumber(), false, *to = cc::Vec4::ZERO);
+    ok = obj->getProperty("y", &y);
+    SE_PRECONDITION3(ok && y.isNumber(), false, *to = cc::Vec4::ZERO);
+    ok = obj->getProperty("z", &z);
+    SE_PRECONDITION3(ok && z.isNumber(), false, *to = cc::Vec4::ZERO);
+    ok = obj->getProperty("w", &w);
+    SE_PRECONDITION3(ok && w.isNumber(), false, *to = cc::Vec4::ZERO);
+    to->x = x.toFloat();
+    to->y = y.toFloat();
+    to->z = z.toFloat();
+    to->w = w.toFloat();
+    return true;
+}
+
+template <>
+bool sevalue_to_native(const se::Value &from, cc::Mat4 *to, se::Object *) {
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Matrix4 failed!");
+    se::Object *obj = from.toObject();
+    
+    if (obj->isTypedArray()) {
+        // typed array
+        SE_PRECONDITION2(obj->isTypedArray(), false, "Convert parameter to Matrix4 failed!");
+        
+        size_t   length = 0;
+        uint8_t *ptr    = nullptr;
+        obj->getTypedArrayData(&ptr, &length);
+        
+        memcpy(to->m, ptr, length);
+    } else {
+        bool        ok = false;
+        se::Value   tmp;
+        std::string prefix = "m";
+        for (uint32_t i = 0; i < 16; ++i) {
+            std::string name;
+            if (i < 10) {
+                name = prefix + "0" + std::to_string(i);
+            } else {
+                name = prefix + std::to_string(i);
+            }
+            ok = obj->getProperty(name.c_str(), &tmp);
+            SE_PRECONDITION3(ok, false, *to = cc::Mat4::IDENTITY);
+            
+            if (tmp.isNumber()) {
+                to->m[i] = tmp.toFloat();
+            } else {
+                SE_REPORT_ERROR("%u, not supported type in matrix", i);
+                *to = cc::Mat4::IDENTITY;
+                return false;
+            }
+            
+            tmp.setUndefined();
+        }
+    }
+    
+    return true;
+}
+
+template <>
+bool sevalue_to_native(const se::Value &from, cc::Vec3 *to, se::Object *) {
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Vec3 failed!");
+    if (!from.isObject()){
+        
+    }
+    se::Object *obj = from.toObject();
+    se::Value   x;
+    se::Value   y;
+    se::Value   z;
+    bool        ok = obj->getProperty("x", &x);
+    SE_PRECONDITION3(ok && x.isNumber(), false, *to = cc::Vec3::ZERO);
+    ok = obj->getProperty("y", &y);
+    SE_PRECONDITION3(ok && y.isNumber(), false, *to = cc::Vec3::ZERO);
+    ok = obj->getProperty("z", &z);
+    SE_PRECONDITION3(ok && z.isNumber(), false, *to = cc::Vec3::ZERO);
+    to->x = x.toFloat();
+    to->y = y.toFloat();
+    to->z = z.toFloat();
+    return true;
+}
+
+template <>
+bool sevalue_to_native(const se::Value &from, std::vector<unsigned char> *to, se::Object *) {
+    assert(from.isObject());
+    se::Object *in = from.toObject();
+    if (in->isTypedArray()) {
+        uint8_t *data = nullptr;
+        size_t dataLen = 0;
+        in->getTypedArrayData(&data, &dataLen);
+        to->resize(dataLen);
+        to->assign(data, data + dataLen);
+        return true;
+    } else if (in->isArrayBuffer()) {
+        uint8_t *data = nullptr;
+        size_t dataLen = 0;
+        in->getArrayBufferData(&data, &dataLen);
+        to->resize(dataLen);
+        to->assign(data, data + dataLen);
+        return true;
+    } else if (in->isArray()) {
+        uint32_t len = 0;
+        in->getArrayLength(&len);
+        to->resize(len);
+        se::Value ele;
+        for (uint32_t i = 0; i < len; i++) {
+            in->getArrayElement(i, &ele);
+            (*to)[i] = ele.toUint8();
+        }
+        return true;
+    }
+    SE_LOGE("type error, ArrayBuffer/TypedArray/Array expected!");
+    return false;
 }
 
 template <>

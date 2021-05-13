@@ -82,7 +82,7 @@ void PostprocessStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 void PostprocessStage::destroy() {
 }
 
-void PostprocessStage::render(Camera *camera) {
+void PostprocessStage::render(Camera *camera, scene::Camera *newCamera) {
     auto *pp = dynamic_cast<DeferredPipeline *>(_pipeline);
     assert(pp != nullptr);
     gfx::Device *device = pp->getDevice();
