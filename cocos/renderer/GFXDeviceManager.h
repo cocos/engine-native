@@ -95,7 +95,6 @@ private:
 
         if (CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION) {
             device = CC_NEW(gfx::DeviceValidator(device));
-            //((gfx::DeviceValidator *)device)->enableRecording(true);
         }
 
         if (!device->initialize(info)) {
