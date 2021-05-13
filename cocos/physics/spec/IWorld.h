@@ -323,10 +323,10 @@ inline bool sevalue_to_native(const se::Value &from, cc::physics::RaycastOptions
     bool ok = true;
 
     json->getProperty("origin", &field);
-    if (!field.isNullOrUndefined()) ok &= seval_to_Vec3(field, &to->origin);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->origin);
 
     json->getProperty("unitDir", &field);
-    if (!field.isNullOrUndefined()) ok &= seval_to_Vec3(field, &to->unitDir);
+    if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->unitDir);
 
     json->getProperty("mask", &field);
     if (!field.isNullOrUndefined()) ok &= sevalue_to_native(field, &to->mask, ctx);
