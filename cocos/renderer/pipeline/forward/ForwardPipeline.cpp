@@ -36,6 +36,7 @@
 #include "gfx-base/GFXSampler.h"
 #include "gfx-base/GFXTexture.h"
 #include "platform/Application.h"
+#include "scene/RenderScene.h"
 
 namespace cc {
 namespace pipeline {
@@ -126,7 +127,6 @@ void ForwardPipeline::render(const vector<uint> &cameras, const vector<scene::Ca
     int i = 0;
     for (const auto cameraId : cameras) {
         auto *camera = GET_CAMERA(cameraId);
-        auto *frustum = GET_FRUSTUM(camera->frustumID);
         sceneCulling(this, camera);
         _pipelineUBO->updateCameraUBO(camera);
         for (auto *const flow : _flows) {
