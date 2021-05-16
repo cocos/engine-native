@@ -352,6 +352,16 @@ bool DeferredPipeline::activeRenderer() {
     return true;
 }
 
+void DeferredPipeline::resize(uint width, uint height) {
+    if (_width == width && _height == height) {
+        return;
+    }
+    _width  = width;
+    _height = height;
+    destroyDeferredData();
+    generateDeferredRenderData();
+}
+
 void DeferredPipeline::generateDeferredRenderData() {
     _deferredRenderData = CC_NEW(DeferredRenderData);
 
