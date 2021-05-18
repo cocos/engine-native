@@ -44,14 +44,14 @@ public:
     void update() override;
 
     inline void setAABB(AABB aabb) { _aabb = std::move(aabb); }
-    inline void setIllumiance(float illum) { _illuminance = illum; }
-    inline void setPos(const Vec3& pos) { _pos = pos; }
+    inline void setIlluminance(float illum) { _illuminance = illum; }
+    inline void setPosition(const Vec3& pos) { _pos = pos; }
     inline void setRange(float range) { _range = range; }
     inline void setSize(float size) { _size = size; }
 
     inline const AABB &getAABB() const { return _aabb; }
-    inline float       getIllumiance() const { return _illuminance; }
-    inline const Vec3 &getPos() const { return _pos; }
+    inline float       getIlluminance() const { return _illuminance; }
+    inline const Vec3 &getPosition() const { return _pos; }
     inline float       getRange() const { return _range; }
     inline float       getSize() const { return _size; }
 

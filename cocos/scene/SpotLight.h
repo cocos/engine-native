@@ -46,23 +46,23 @@ public:
     inline void setAABB(AABB aabb) { _aabb = std::move(aabb); }
     inline void setAngle(float angle) { _angle = angle; }
     inline void setAspect(float aspect) { _aspect = aspect; }
-    inline void setDir(const Vec3& dir) { _dir = dir; }
+    inline void setDirection(const Vec3& dir) { _dir = dir; }
     inline void setFrustum(Frustum frustum) { _frustum = std::move(frustum); }
-    inline void setIlluminace(float illu) { _illuminance = illu; }
+    inline void setIlluminance(float illu) { _illuminance = illu; }
     inline void setNeedUpdate(bool value) { _needUpdate = value; }
     inline void setRange(float range) { _range = range; }
-    inline void setPos(const Vec3& pos) { _pos = pos; }
+    inline void setPosition(const Vec3& pos) { _pos = pos; }
     inline void setSize(float size) { _size = size; }
 
     inline const AABB &   getAABB() const { return _aabb; }
     inline float          getAngle() const { return _angle; }
     inline float          getAspect() const { return _aspect; }
-    inline const Vec3 &   getDir() const { return _dir; }
+    inline const Vec3 &   getDirection() const { return _dir; }
     inline const Frustum &getFrustum() const { return _frustum; }
     inline float          getIlluminance() const { return _illuminance; }
     inline bool           getNeedUpdate() const { return _needUpdate; }
     inline float          getRange() const { return _range; }
-    inline const Vec3 &   getPos() const { return _pos; }
+    inline const Vec3 &   getPosition() const { return _pos; }
     inline float          getSize() const { return _size; }
 
 private:

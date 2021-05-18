@@ -25,8 +25,77 @@
 
 #pragma once
 
+#include "math/Vec4.h"
+#include "math/Vec3.h"
+#include "math/Vec2.h"
+#include "math/Mat4.h"
+#include "scene/Model.h"
+#include "renderer/gfx-base/GFXShader.h"
+
 namespace cc {
 namespace scene {
+
+// As Pass.h will include Define.h, so use forward declaration.
+class Pass;
+
+struct Fog {
+    bool     enabled{false};
+    uint32_t type{0};
+    float    density{0};
+    float    start{0};
+    float    end{0};
+    float    atten{0};
+    float    top{0};
+    float    range{0};
+    Vec4     color;
+};
+
+struct Shadow {
+    bool     enabled{false};
+    bool     dirty{false};
+    bool     shadowMapDirty{false};
+    bool     selfShadow{false};
+    bool     autoAdapt{false};
+    uint32_t shadowType{0};
+    float    distance{0};
+    uint32_t instancePass{0};
+    uint32_t planarPass{0};
+    float    nearValue{0};
+    float    farValue{0};
+    float    aspect{0};
+    uint32_t pcfType{0};
+    float    bias{0};
+    uint32_t packing{0};
+    uint32_t linear{0};
+    float    normalBias{0};
+    float    orthoSize{0};
+
+    Vec4 color;
+    Vec2 size;
+    Vec3 normal;
+    Mat4 matLight;
+};
+
+struct SkyBox {
+    bool   enabled{false};
+    bool   isRGBE{false};
+    bool   useIBL{false};
+    Model *model{nullptr};
+};
+
+struct PipelineSharedSceneData {
+    bool         isHDR{false};
+    uint32_t     shadingScale{0};
+    uint32_t     fpScale{0};
+    uint32_t     ambient{0};
+    Shadow *     shadow{nullptr};
+    SkyBox *     skybox{nullptr};
+    Fog *        fog{nullptr};
+    Pass *       deferredLightPass{nullptr};
+    gfx::Shader *deferredLightPassShader{nullptr};
+    Pass *       deferredPostPass{nullptr};
+    gfx::Shader *deferredPostPassShader{nullptr};
+};
 
 enum class RenderPriority {
     MIN     = 0,

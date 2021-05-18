@@ -26,6 +26,7 @@
 #pragma once
 
 #include "math/Vec3.h"
+#include "scene/Frustum.h"
 
 namespace cc {
 namespace scene {
@@ -33,6 +34,12 @@ namespace scene {
 struct AABB final {
     Vec3 center;
     Vec3 halfExtents;
+    
+    bool aabbAabb(const AABB &aabb) const;
+    bool aabbFrustum(const Frustum &) const;
+    int  aabbPlane(const Plane &) const;
+    void getBoundary(cc::Vec3 *minPos, cc::Vec3 *maxPos) const;
+    void merge(const AABB &aabb);
 };
 
 } // namespace scene

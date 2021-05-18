@@ -28,6 +28,10 @@
 namespace cc {
 namespace scene {
 
+Model::~Model() {
+    delete _worldBounds;
+}
+
 void Model::updateTransform() {
 }
 

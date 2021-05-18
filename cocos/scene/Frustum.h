@@ -32,8 +32,8 @@ namespace cc {
 namespace scene {
 
 struct Plane final {
-    float d{0.F};
-    Vec3  n;
+    float distance{0.F};
+    Vec3  normal;
 };
 
 struct Frustum final {

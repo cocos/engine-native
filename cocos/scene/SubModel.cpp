@@ -30,5 +30,9 @@ namespace scene {
 void SubModel::update() {
 }
 
+const Pass *SubModel::getPass(int) const {
+	
+}
+
 } // namespace scene
 } // namespace cc

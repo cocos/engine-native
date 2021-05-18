@@ -65,10 +65,10 @@ public:
     inline gfx::DynamicStateFlagBit getDynamicState() const { return _dynamicState; }
     inline uint32_t                 getHash() const { return _hash; }
     inline uint32_t                 getPhase() const { return _phase; }
-    inline gfx::PipelineLayout *    getPipelineState() const { return _pipelineLayout; }
+    inline gfx::PipelineLayout *    getPipelineLayout() const { return _pipelineLayout; }
     inline gfx::PrimitiveMode       getPrimitive() const { return _primitive; }
     inline RenderPriority           getPriority() const { return _priority; }
-    inline gfx::RasterizerState *   getRasterizerStage() const { return _rasterizerState; }
+    inline gfx::RasterizerState *   getRasterizerState() const { return _rasterizerState; }
     inline RenderPassStage          getStage() const { return _stage; }
 
 private:

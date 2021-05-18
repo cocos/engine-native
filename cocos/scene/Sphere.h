@@ -25,43 +25,38 @@
 
 #pragma once
 
-#include <vector>
-#include "renderer/gfx-base/GFXShader.h"
-#include "renderer/gfx-base/GFXDescriptorSet.h"
-#include "renderer/gfx-base/GFXInputAssembler.h"
-#include "scene/Define.h"
+#include "math/Vec3.h"
+#include "scene/AABB.h"
+#include "scene/Frustum.h"
 
 namespace cc {
 namespace scene {
 
-class Pass;
-class RenderingSubMesh;
-
-class SubModel final {
+class Sphere {
 public:
-    SubModel()                 = default;
-    SubModel(const SubModel &) = delete;
-    SubModel(SubModel &&)      = delete;
-    ~SubModel()                = default;
-    SubModel &operator=(const SubModel &) = delete;
-    SubModel &operator=(SubModel &&) = delete;
+    Sphere()               = default;
+    Sphere(const Sphere &) = delete;
+    Sphere(Sphere &&)      = delete;
+    ~Sphere()              = default;
+    Sphere &operator=(const Sphere &) = delete;
+    Sphere &operator=(Sphere &&) = delete;
 
-    void update();
+    inline float       getRadius() const { return _radius; }
+    inline const Vec3 &getCenter() const { return _center; }
+    inline void        setCenter(const Vec3 &val) { _center = val; }
+    inline void        setRadius(float val) { _radius = val; }
 
-    const Pass *getPass(int) const;
-
-    inline gfx::DescriptorSet *getDescriptorSet() const { return _descriptSet; }
-    inline gfx::InputAssembler *getInputAssembler() const { return _ia; }
-    inline RenderingSubMesh *getSubMesh() const { return _subMesh; }
+    void define(const AABB &aabb);
+    void mergeAABB(const AABB *aabb);
+    void mergePoint(const Vec3 &point);
+    bool interset(const Frustum &frustum) const;
+    int  interset(const Plane &plane) const;
+    int  spherePlane(const Plane &plane);
+    bool sphereFrustum(const Frustum &frustum);
 
 private:
-    RenderPriority       _priority{RenderPriority::DEFAULT};
-    gfx::Shader *        _planarShader{nullptr};
-    gfx::Shader *        _planarInstanceShader{nullptr};
-    gfx::DescriptorSet * _descriptSet{nullptr};
-    gfx::InputAssembler *_ia{nullptr};
-    RenderingSubMesh *   _subMesh{nullptr};
-    std::vector<Pass *>  _passes;
+    float _radius{0};
+    Vec3  _center;
 };
 
 } // namespace scene
