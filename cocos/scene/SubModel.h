@@ -35,7 +35,6 @@ namespace cc {
 namespace scene {
 
 class Pass;
-class RenderingSubMesh;
 
 class SubModel final {
 public:

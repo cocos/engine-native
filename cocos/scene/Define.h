@@ -97,6 +97,11 @@ struct PipelineSharedSceneData {
     gfx::Shader *deferredPostPassShader{nullptr};
 };
 
+// TODO(mingo)
+struct RenderingSubMesh {
+    uint32_t flatBuffersID = 0; // array pool id
+};
+
 enum class RenderPriority {
     MIN     = 0,
     MAX     = 0xff,
