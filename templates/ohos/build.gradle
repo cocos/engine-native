@@ -13,9 +13,9 @@ ohos {
             certpath file('/Users/pt/ohos_store.cer')
         }
     }
-    compileSdkVersion 4
+    compileSdkVersion 5
     defaultConfig {
-        compatibleSdkVersion 3
+        compatibleSdkVersion 5
     }
 }
 	

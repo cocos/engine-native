@@ -21,9 +21,9 @@ ohos {
             certpath file('/Users/pt/ohos_release.cer')
         }
     }
-    compileSdkVersion 4
+    compileSdkVersion 5
     defaultConfig {
-        compatibleSdkVersion 3
+        compatibleSdkVersion 5
     }
     externalNativeBuild {
         path "../CMakeLists.txt"
