@@ -47,6 +47,8 @@
 
 #elif (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include <android/log.h>
+#elif CC_PLATFORM == CC_PLATFORM_OHOS
+    #include <hilog/log.h>
 #endif
 
 namespace cc {
@@ -169,6 +171,27 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
     }
 
     __android_log_write(priority, (type == LogType::KERNEL ? "Cocos" : "CocosScript"), buff);
+#elif (CC_PLATFORM == CC_PLATFORM_OHOS)
+    const char *typeStr = (type == LogType::KERNEL ? "Cocos %{public}s" : "CocosScript %{public}s");
+    switch (level) {
+        case LogLevel::LEVEL_DEBUG:
+            HILOG_DEBUG(LOG_APP, typeStr, (const char *)buff);
+            break;
+        case LogLevel::INFO:
+            HILOG_INFO(LOG_APP, typeStr, buff);
+            break;
+        case LogLevel::WARN:
+            HILOG_WARN(LOG_APP, typeStr, buff);
+            break;
+        case LogLevel::ERR:
+            HILOG_ERROR(LOG_APP, typeStr, buff);
+            break;
+        case LogLevel::FATAL:
+            HILOG_FATAL(LOG_APP, typeStr, buff);
+            break;
+        default:
+            HILOG_DEBUG(LOG_APP, typeStr, buff);
+    }
 #else
     fputs(buff, stdout);
 #endif

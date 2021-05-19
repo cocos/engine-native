@@ -32,16 +32,16 @@
  Works on cocos2d-iphone and cocos2d-x.
  */
 
-#include "storage/local-storage/LocalStorage.h"
 #include "base/Macros.h"
+#include "storage/local-storage/LocalStorage.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
 
+    #include "jni.h"
+    #include "platform/java/jni/JniHelper.h"
+    #include <assert.h>
     #include <stdio.h>
     #include <stdlib.h>
-    #include <assert.h>
-    #include "jni.h"
-    #include "platform/android/jni/JniHelper.h"
 
     #ifndef JCLS_LOCALSTORAGE
         #define JCLS_LOCALSTORAGE "com/cocos/lib/CocosLocalStorage"
@@ -93,15 +93,15 @@ bool localStorageGetItem(const std::string &key, std::string *outItem) {
         jstring jkey = t.env->NewStringUTF(key.c_str());
         jstring jret = (jstring)t.env->CallStaticObjectMethod(t.classID, t.methodID, jkey);
         if (jret == nullptr) {
-            t.env->DeleteLocalRef(jret);
-            t.env->DeleteLocalRef(jkey);
-            t.env->DeleteLocalRef(t.classID);
+            ccDeleteLocalRef(t.env, jret);
+            ccDeleteLocalRef(t.env, jkey);
+            ccDeleteLocalRef(t.env, t.classID);
             return false;
         } else {
             outItem->assign(JniHelper::jstring2string(jret));
-            t.env->DeleteLocalRef(jret);
-            t.env->DeleteLocalRef(jkey);
-            t.env->DeleteLocalRef(t.classID);
+            ccDeleteLocalRef(t.env, jret);
+            ccDeleteLocalRef(t.env, jkey);
+            ccDeleteLocalRef(t.env, t.classID);
             return true;
         }
     } else {
