@@ -367,7 +367,7 @@ void ScriptEngine::onPromiseRejectCallback(v8::PromiseRejectMessage msg) {
                     if (!attrNames.IsEmpty()) {
                         uint32_t size = attrNames->Length();
 
-                        for (auto i = 0; i < size; i++) {
+                        for (uint32_t i = 0; i < size; i++) {
                             se::Value             e;
                             v8::Local<v8::String> attrName = attrNames->Get(isolate->GetCurrentContext(), i)
                                                                  .ToLocalChecked()
