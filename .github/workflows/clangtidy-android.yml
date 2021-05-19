@@ -1,6 +1,6 @@
 name: Clang Tidy - Android
 
-on: pull_request
+on: pull_request_target
 
 jobs:
   # Set the job key. The key is displayed as the job name
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Get changed files
-        uses: PatriceJiang/paths-filter@master
+        uses: PatriceJiang/paths-filter@github-api
         id: listchanged
         with:
           list-files: shell
