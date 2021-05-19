@@ -92,12 +92,15 @@ static void _winLog(const char *format, va_list args) {
     delete[] buf;
 }
 
+#ifndef audioLog
 void audioLog(const char *format, ...) {
     va_list args;
     va_start(args, format);
     _winLog(format, args);
     va_end(args);
 }
+#endif
+
 #else
 
     #define audioLog(...) CC_LOG_DEBUG(__VA_ARGS__)
@@ -150,7 +153,7 @@ bool AudioEngineImpl::init() {
             alGenSources(MAX_AUDIOINSTANCES, _alSources);
             auto alError = alGetError();
             if (alError != AL_NO_ERROR) {
-                ALOGE("%s:generating sources failed! error = %x\n", __FUNCTION__, alError);
+                CC_LOG_ERROR("%s:generating sources failed! error = %x\n", __FUNCTION__, alError);
                 break;
             }
 
@@ -160,7 +163,7 @@ bool AudioEngineImpl::init() {
 
             _scheduler = Application::getInstance()->getScheduler();
             ret        = AudioDecoderManager::init();
-            ALOGI("OpenAL was initialized successfully!");
+            CC_LOG_DEBUG("OpenAL was initialized successfully!");
         }
     } while (false);
 
@@ -263,7 +266,7 @@ void AudioEngineImpl::play2dImpl(AudioCache *cache, int audioID) {
         }
         _threadMutex.unlock();
     } else {
-        ALOGD("AudioEngineImpl::play2dImpl, cache was destroyed or not ready!");
+        CC_LOG_DEBUG("AudioEngineImpl::play2dImpl, cache was destroyed or not ready!");
         auto iter = _audioPlayers.find(audioID);
         if (iter != _audioPlayers.end()) {
             iter->second->_removeByAudioEngine = true;

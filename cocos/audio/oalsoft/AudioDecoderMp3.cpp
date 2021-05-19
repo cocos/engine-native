@@ -32,10 +32,10 @@
 #elif CC_PLATFORM == CC_PLATFORM_OHOS
     #include "cocos/platform/ohos/FileUtils-ohos.h"
     #include "mpg123.h"
+    #include <unistd.h>
 #endif
 
 #include <sys/stat.h>
-#include <unistd.h>
 #include <cstdlib>
 
 #ifdef LOG_TAG

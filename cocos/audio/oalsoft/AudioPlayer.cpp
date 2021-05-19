@@ -31,14 +31,7 @@
 #include "audio/oalsoft/AudioDecoder.h"
 #include "audio/oalsoft/AudioDecoderManager.h"
 
-#define VERY_VERY_VERBOSE_LOGGING
-#ifdef VERY_VERY_VERBOSE_LOGGING
-    #define ALOGVV ALOGV
-#else
-    #define ALOGVV(...) \
-        do {            \
-        } while (false)
-#endif
+#include "base/Log.h"
 
 using namespace cc; //NOLINT
 
@@ -62,7 +55,7 @@ AudioPlayer::AudioPlayer()
 }
 
 AudioPlayer::~AudioPlayer() {
-    ALOGVV("~AudioPlayer() (%p), id=%u", this, _id);
+    CC_LOG_DEBUG("~AudioPlayer() (%p), id=%u", this, _id);
     destroy();
 
     if (_streamingSource) {
@@ -75,14 +68,14 @@ void AudioPlayer::destroy() {
         return;
     }
 
-    ALOGVV("AudioPlayer::destroy begin, id=%u", _id);
+    CC_LOG_DEBUG("AudioPlayer::destroy begin, id=%u", _id);
 
     _isDestroyed = true;
 
     do {
         if (_audioCache != nullptr) {
             if (_audioCache->_state == AudioCache::State::INITIAL) {
-                ALOGV("AudioPlayer::destroy, id=%u, cache isn't ready!", _id);
+                CC_LOG_INFO("AudioPlayer::destroy, id=%u, cache isn't ready!", _id);
                 break;
             }
 
@@ -108,22 +101,22 @@ void AudioPlayer::destroy() {
 
                 delete _rotateBufferThread;
                 _rotateBufferThread = nullptr;
-                ALOGVV("rotateBufferThread exited!");
+                CC_LOG_DEBUG("rotateBufferThread exited!");
             }
         }
     } while (false);
 
-    ALOGVV("Before alSourceStop");
+    CC_LOG_DEBUG("Before alSourceStop");
     alSourceStop(_alSource);
     CHECK_AL_ERROR_DEBUG();
-    ALOGVV("Before alSourcei");
+    CC_LOG_DEBUG("Before alSourcei");
     alSourcei(_alSource, AL_BUFFER, 0);
     CHECK_AL_ERROR_DEBUG();
 
     _removeByAudioEngine = true;
 
     _ready = false;
-    ALOGVV("AudioPlayer::destroy end, id=%u", _id);
+    CC_LOG_DEBUG("AudioPlayer::destroy end, id=%u", _id);
 }
 
 void AudioPlayer::setCache(AudioCache *cache) {
@@ -132,7 +125,7 @@ void AudioPlayer::setCache(AudioCache *cache) {
 
 bool AudioPlayer::play2d() {
     _play2dMutex.lock();
-    ALOGV("AudioPlayer::play2d, _alSource: %u, player id=%u", _alSource, _id);
+    CC_LOG_INFO("AudioPlayer::play2d, _alSource: %u, player id=%u", _alSource, _id);
 
     /*********************************************************************/
     /*       Note that it may be in sub thread or in main thread.       **/
@@ -140,7 +133,7 @@ bool AudioPlayer::play2d() {
     bool ret = false;
     do {
         if (_audioCache->_state != AudioCache::State::READY) {
-            ALOGE("alBuffer isn't ready for play!");
+            CC_LOG_ERROR("alBuffer isn't ready for play!");
             break;
         }
 
@@ -291,14 +284,14 @@ void AudioPlayer::rotateBufferThread(int offsetFrame) {
 
     } while (false);
 
-    ALOGV("Exit rotate buffer thread ...");
+    CC_LOG_INFO("Exit rotate buffer thread ...");
     if (decoder != nullptr) {
         decoder->close();
     }
     AudioDecoderManager::destroyDecoder(decoder);
     free(tmpBuffer);
     _isRotateThreadExited = true;
-    ALOGV("%s exited.\n", __FUNCTION__);
+    CC_LOG_INFO("%s exited.\n", __FUNCTION__);
 }
 
 bool AudioPlayer::setLoop(bool loop) {

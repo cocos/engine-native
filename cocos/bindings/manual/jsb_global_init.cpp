@@ -22,13 +22,6 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-//clang-format: off
-#if __OHOS__
-    #include "uv.h"
-#else
-    #include "uv/uv.h"
-#endif
-//clang-format: on
 
 #include "base/CoreStd.h"
 #include "base/Scheduler.h"

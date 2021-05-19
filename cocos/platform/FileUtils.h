@@ -33,9 +33,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "base/Data.h"
 #include "base/Macros.h"
 #include "base/Value.h"
+#include "base/Data.h"
 
 namespace cc {
 
@@ -87,8 +87,8 @@ public:
 };
 
 template <>
-class ResizableBufferAdapter<Data> : public ResizableBuffer {
-    using BufferType = Data;
+class ResizableBufferAdapter<cc::Data> : public ResizableBuffer {
+    using BufferType = cc::Data;
     BufferType *_buffer;
 
 public:

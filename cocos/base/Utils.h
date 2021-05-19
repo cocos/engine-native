@@ -31,7 +31,7 @@
 #include <string>
 #include <vector>
 #include "base/Macros.h"
-
+#include "base/TypeDef.h"
 /** @file ccUtils.h
 Misc free functions
 */
