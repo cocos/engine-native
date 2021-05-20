@@ -35,20 +35,12 @@ jobs:
               - exclude: 'cocos/editor-support/dragonbones/**'
               - exclude: 'cocos/base/etc1.*'
               - exclude: 'cocos/base/etc2.*'
+              - exclude: 'cocos/bindings/auto/**'
             allChanges:
               - added|modified|deleted: '**'
             skipedDebug:
               - added|modified|deleted: '**'
               - exclude: 'cocos/editor-support/dragonbones/**'
-      - name: Install CMake & Clang Tidy
-        run: |
-          sudo apt install -y cmake llvm clang-tidy-11
-      - name: Install Android NDK 21
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r21e
-          add-to-path: false
       - name: Generate Compile database
         shell: bash
         run: |
@@ -67,8 +59,6 @@ jobs:
           else
             $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-tidy --format-style=file --export-fixes=clang-fixes.yaml $FILTERED
           fi
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: clang-tidy-action
         #uses: PatriceJiang/clang-tidy-action@github-api
         uses: PatriceJiang/clang-tidy-action@master
