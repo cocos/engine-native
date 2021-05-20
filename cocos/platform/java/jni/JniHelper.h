@@ -47,7 +47,7 @@
             CC_LOG_DEBUG("deleteLocalRef file: %s, func: %s, line: %d", __FILE__, __FUNCTION__, __LINE__); \
         } while (0)
 #else
-    #define ccDeleteLocalRef(jenv, ref) jenv->DeleteLocalRef(ref);
+    #define ccDeleteLocalRef(jenv, ref) jenv->DeleteLocalRef(ref); //NOLINT
 #endif
 
 #define CLEAR_EXCEPTON(env)           \

@@ -44,7 +44,7 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
 
     private final CategoryMotionAgent mSensorManager;
     private final CategoryMotion mAcceleration;
-    private final CategoryMotion mGravity;
+    private final CategoryMotion mAccelerationIncludingGravity;
     private final CategoryMotion mGyroscope;
     private static float[] sDeviceMotionValues = new float[9];
     private boolean mEnabled = false;
@@ -55,8 +55,8 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
 
     public CocosSensorHandler() {
         mSensorManager = new CategoryMotionAgent();
-        mAcceleration = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_LINEAR_ACCELERATION);
-        mGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GRAVITY);
+        mAcceleration = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_ACCELEROMETER);
+        mAccelerationIncludingGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_LINEAR_ACCELERATION);
         mGyroscope = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GYROSCOPE);
         mSensorHandler = this;
     }
@@ -67,11 +67,11 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     public void enable() {
         if(mMaxIntervalNanoSeconds == 0) {
             mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-            mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+            mSensorManager.setSensorDataCallback(this, mAccelerationIncludingGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
             mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
         }else {
             mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
-            mSensorManager.setSensorDataCallback(this, mGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
+            mSensorManager.setSensorDataCallback(this, mAccelerationIncludingGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
             mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
         }
         mEnabled = true;
@@ -80,7 +80,7 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
 
     public void disable() {
         mSensorManager.releaseSensorDataCallback(this, mAcceleration);
-        mSensorManager.releaseSensorDataCallback(this, mGravity);
+        mSensorManager.releaseSensorDataCallback(this, mAccelerationIncludingGravity);
         mSensorManager.releaseSensorDataCallback(this, mGyroscope);
         mEnabled = false;
     }
@@ -132,7 +132,7 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
             // Issue https://github.com/cocos-creator/2d-tasks/issues/2532
             // use negative event.acceleration.z to match iOS value
             sDeviceMotionValues[2] = -sensorEvent.values[2];
-        } else if (sensorId == mGravity.getSensorId()) {
+        } else if (sensorId == mAccelerationIncludingGravity.getSensorId()) {
             sDeviceMotionValues[3] = sensorEvent.values[0];
             sDeviceMotionValues[4] = sensorEvent.values[1];
             sDeviceMotionValues[5] = sensorEvent.values[2];
