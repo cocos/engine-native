@@ -317,6 +317,9 @@ public class CocosHelper {
         File fontTmpFile;
         FileOutputStream fontOutputStream=null;
         Resource resource = null;
+        if(!path.startsWith("resources/rawfile/")){
+            path = "resources/rawfile/" + path;
+        }
         RawFileEntry entry = ctx.getResourceManager().getRawFileEntry(path);
         try {
             fontTmpFile = File.createTempFile(tmpName, "-tmp");
