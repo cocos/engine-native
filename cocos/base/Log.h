@@ -25,8 +25,9 @@
 
 #pragma once
 
-#include "Macros.h"
 #include <string>
+#include "Macros.h"
+
 
 namespace cc {
 
@@ -47,16 +48,16 @@ enum class LogLevel {
 
 class CC_DLL Log {
 public:
-    static LogLevel _logLevel; // for read only
+    static LogLevel slogLevel; // for read only
 
-    static CC_INLINE void setLogLevel(LogLevel level) { _logLevel = level; }
-    static CC_INLINE FILE *getLogFile() { return _logFile; }
+    static CC_INLINE void setLogLevel(LogLevel level) { slogLevel = level; }
+    static CC_INLINE FILE *getLogFile() { return slogFile; }
     static void            setLogFile(const std::string &filename);
     static void            close();
     static void            logMessage(LogType type, LogLevel level, const char *formats, ...);
 
 private:
-    static FILE *_logFile;
+    static FILE *slogFile;
 };
 
 } // namespace cc

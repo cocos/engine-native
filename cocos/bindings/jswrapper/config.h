@@ -106,7 +106,7 @@ void seLogE(const char *format, ...);
 
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
 
-    #define __POSIX__
+    #define __POSIX__ //NOLINT
 
 #endif
 
@@ -117,7 +117,7 @@ void seLogE(const char *format, ...);
         #define __SSIZE_T
 typedef SSIZE_T ssize_t;
         #define _SSIZE_T_DEFINED // libuv also defines ssize_t, use the one defined here.
-    #endif                       // __SSIZE_T
+    #endif // __SSIZE_T
 
 #endif // #if defined(_WIN32) && defined(_WINDOWS)
 

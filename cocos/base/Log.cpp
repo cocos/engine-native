@@ -55,23 +55,23 @@ namespace cc {
 
 #define LOG_USE_TIMESTAMP
 #if (CC_DEBUG == 1)
-LogLevel Log::_logLevel = LogLevel::LEVEL_DEBUG;
+LogLevel Log::slogLevel = LogLevel::LEVEL_DEBUG;
 #else
-LogLevel Log::_logLevel = LogLevel::INFO;
+LogLevel Log::slogLevel = LogLevel::INFO;
 #endif
 
-FILE *                         Log::_logFile = nullptr;
+FILE *                         Log::slogFile = nullptr;
 const std::vector<std::string> LOG_LEVEL_DESCS{"FATAL", "ERROR", "WARN", "INFO", "DEBUG"};
 
 void Log::setLogFile(const std::string &filename) {
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    if (_logFile) {
-        fclose(_logFile);
+    if (slogFile) {
+        fclose(slogFile);
     }
 
-    _logFile = fopen(filename.c_str(), "w");
+    slogFile = fopen(filename.c_str(), "w");
 
-    if (_logFile) {
+    if (slogFile) {
         String msg;
         msg += "------------------------------------------------------\n";
 
@@ -90,16 +90,16 @@ void Log::setLogFile(const std::string &filename) {
 
         msg += "------------------------------------------------------\n";
 
-        fputs(msg.c_str(), _logFile);
-        fflush(_logFile);
+        fputs(msg.c_str(), slogFile);
+        fflush(slogFile);
     }
 #endif
 }
 
 void Log::close() {
-    if (_logFile) {
-        fclose(_logFile);
-        _logFile = nullptr;
+    if (slogFile) {
+        fclose(slogFile);
+        slogFile = nullptr;
     }
 }
 
@@ -123,8 +123,8 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
     va_start(args, formats);
     // p += StringUtil::vprintf(p, last, formats, args);
 
-    int count = (int)(last - p);
-    int ret   = vsnprintf(p, count, formats, args);
+    ptrdiff_t count = (last - p);
+    int       ret   = vsnprintf(p, count, formats, args);
     if (ret >= count - 1) {
         p += (count - 1);
     } else if (ret >= 0) {
@@ -136,9 +136,9 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
     *p++ = '\n';
     *p   = 0;
 
-    if (_logFile) {
-        fputs(buff, _logFile);
-        fflush(_logFile);
+    if (slogFile) {
+        fputs(buff, slogFile);
+        fflush(slogFile);
     }
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)

@@ -135,7 +135,7 @@ float Device::getBatteryLevel() {
 }
 
 Device::NetworkType Device::getNetworkType() {
-    return (Device::NetworkType)JniHelper::callStaticIntMethod(JCLS_HELPER, "getNetworkType");
+    return static_cast<Device::NetworkType>(JniHelper::callStaticIntMethod(JCLS_HELPER, "getNetworkType"));
 }
 
 cc::Vec4 Device::getSafeAreaEdge() {

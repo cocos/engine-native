@@ -87,7 +87,7 @@ static int close_func(void *datasource) { //NOLINT(readability-identifier-naming
     return fclose(static_cast<FILE *>(datasource));
 }
 
-static long tell_func(void *datasource) { //NOLINT(google-runtime-int)
+static long tell_func(void *datasource) { //NOLINT(google-runtime-int,readability-identifier-naming)
     return ftell(static_cast<FILE *>(datasource));
 }
 
