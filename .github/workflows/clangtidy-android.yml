@@ -36,6 +36,8 @@ jobs:
               - exclude: 'cocos/base/etc1.*'
               - exclude: 'cocos/base/etc2.*'
               - exclude: 'cocos/bindings/auto/**'
+              - exclude: 'cocos/bindings/manual/**'
+              - exclude: 'cocos/renderer/gfx-gles-common/**'
             allChanges:
               - added|modified|deleted: '**'
             skipedDebug:
