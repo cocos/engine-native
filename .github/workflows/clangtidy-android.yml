@@ -1,8 +1,10 @@
 name: Clang Tidy - Android
 
-on:
-  pull_request_target: 
-    types: [assigned, opened, edited, synchronize, reopened ,ready_for_review]
+# on:
+#   pull_request_target: 
+#     types: [assigned, opened, edited, synchronize, reopened ,ready_for_review]
+
+on: pull_request
 
 jobs:
   # Set the job key. The key is displayed as the job name
@@ -68,7 +70,8 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: clang-tidy-action
-        uses: PatriceJiang/clang-tidy-action@github-api
+        #uses: PatriceJiang/clang-tidy-action@github-api
+        uses: PatriceJiang/clang-tidy-action@master
         if: hashFiles('clang-fixes.yaml') != ''
         with:
           fixesFile: clang-fixes.yaml
