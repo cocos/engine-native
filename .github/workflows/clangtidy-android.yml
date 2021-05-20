@@ -1,6 +1,6 @@
 name: Clang Tidy - Android
 
-on: pull_request_target
+on: pull_request
 
 jobs:
   # Set the job key. The key is displayed as the job name
