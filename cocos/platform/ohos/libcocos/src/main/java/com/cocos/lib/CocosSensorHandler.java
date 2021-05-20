@@ -66,13 +66,13 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     // ===========================================================
     public void enable() {
         if(mMaxIntervalNanoSeconds == 0) {
-            mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-            mSensorManager.setSensorDataCallback(this, mAccelerationIncludingGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
-            mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME);
+            mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_FASTEST);
+            mSensorManager.setSensorDataCallback(this, mAccelerationIncludingGravity, SensorAgent.SENSOR_SAMPLING_RATE_FASTEST);
+            mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_FASTEST);
         }else {
-            mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
-            mSensorManager.setSensorDataCallback(this, mAccelerationIncludingGravity, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
-            mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_GAME, mMaxIntervalNanoSeconds);
+            mSensorManager.setSensorDataCallback(this, mAcceleration, SensorAgent.SENSOR_SAMPLING_RATE_FASTEST, mMaxIntervalNanoSeconds);
+            mSensorManager.setSensorDataCallback(this, mAccelerationIncludingGravity, SensorAgent.SENSOR_SAMPLING_RATE_FASTEST, mMaxIntervalNanoSeconds);
+            mSensorManager.setSensorDataCallback(this, mGyroscope, SensorAgent.SENSOR_SAMPLING_RATE_FASTEST, mMaxIntervalNanoSeconds);
         }
         mEnabled = true;
     }

@@ -420,6 +420,7 @@ ScriptEngine *ScriptEngine::getInstance() {
 }
 
 void ScriptEngine::destroyInstance() {
+    gSriptEngineInstance->cleanup();
     delete gSriptEngineInstance;
     gSriptEngineInstance = nullptr;
 }
@@ -446,9 +447,7 @@ ScriptEngine::ScriptEngine()
     }
 }
 
-ScriptEngine::~ScriptEngine() {
-    cleanup();
-}
+ScriptEngine::~ScriptEngine() = default;
 
 bool ScriptEngine::init() {
     cleanup();
