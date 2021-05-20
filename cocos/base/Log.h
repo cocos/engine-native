@@ -28,7 +28,6 @@
 #include <string>
 #include "Macros.h"
 
-
 namespace cc {
 
 enum class LogType {
@@ -63,15 +62,15 @@ private:
 } // namespace cc
 
 #define CC_LOG_DEBUG(formats, ...) \
-    if (cc::Log::_logLevel >= cc::LogLevel::LEVEL_DEBUG) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, formats, ##__VA_ARGS__)
+    if (cc::Log::slogLevel >= cc::LogLevel::LEVEL_DEBUG) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, formats, ##__VA_ARGS__)
 #define CC_LOG_INFO(formats, ...) \
-    if (cc::Log::_logLevel >= cc::LogLevel::INFO) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::INFO, formats, ##__VA_ARGS__)
+    if (cc::Log::slogLevel >= cc::LogLevel::INFO) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::INFO, formats, ##__VA_ARGS__)
 #define CC_LOG_WARNING(formats, ...) \
-    if (cc::Log::_logLevel >= cc::LogLevel::WARN) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::WARN, formats, ##__VA_ARGS__)
+    if (cc::Log::slogLevel >= cc::LogLevel::WARN) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::WARN, formats, ##__VA_ARGS__)
 #define DO_CC_LOG_ERROR(formats, ...) \
-    if (cc::Log::_logLevel >= cc::LogLevel::ERR) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::ERR, formats, ##__VA_ARGS__)
+    if (cc::Log::slogLevel >= cc::LogLevel::ERR) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::ERR, formats, ##__VA_ARGS__)
 #define CC_LOG_FATAL(formats, ...) \
-    if (cc::Log::_logLevel >= cc::LogLevel::FATAL) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::FATAL, formats, ##__VA_ARGS__)
+    if (cc::Log::slogLevel >= cc::LogLevel::FATAL) cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::FATAL, formats, ##__VA_ARGS__)
 
 #define CC_LOG_ERROR(formats, ...)                                        \
     do {                                                                  \
