@@ -1057,10 +1057,7 @@ bool FileUtils::removeDirectory(const std::string &path) {
     std::string command = "rm -r ";
     // Path may include space.
     command += "\"" + path + "\"";
-    if (system(command.c_str()) >= 0)
-        return true;
-    else
-        return false;
+    return system(command.c_str()) >= 0;
         #endif // (CC_PLATFORM != CC_PLATFORM_ANDROID)
 
     #else
@@ -1117,7 +1114,7 @@ long FileUtils::getFileSize(const std::string &filepath) { //NOLINT(google-runti
         // Failed
         return -1;
     }
-    return info.st_size;
+    return static_cast<long>(info.st_size); //NOLINT(google-runtime-int)
 }
 #endif
 

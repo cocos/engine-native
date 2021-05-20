@@ -33,17 +33,17 @@
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_MAC_IOS)
 
     #include "network/DownloaderImpl-apple.h"
-    #define DownloaderImpl DownloaderApple
+    #define DownloaderImpl DownloaderApple //NOLINT(readability-identifier-naming)
 
 #elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
 
     #include "network/Downloader-java.h"
-    #define DownloaderImpl DownloaderJava
+    #define DownloaderImpl DownloaderJava //NOLINT(readability-identifier-naming)
 
 #else
 
     #include "network/Downloader-curl.h"
-    #define DownloaderImpl DownloaderCURL
+    #define DownloaderImpl DownloaderCURL //NOLINT(readability-identifier-naming)
 
 #endif
 
