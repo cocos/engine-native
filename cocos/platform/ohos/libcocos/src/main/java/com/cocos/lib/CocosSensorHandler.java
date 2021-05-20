@@ -56,7 +56,7 @@ public class CocosSensorHandler implements ICategoryMotionDataCallback {
     public CocosSensorHandler() {
         mSensorManager = new CategoryMotionAgent();
         mAcceleration = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_ACCELEROMETER);
-        mGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_LINEAR_ACCELERATION);
+        mGravity = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GRAVITY);
         mGyroscope = mSensorManager.getSingleSensor(CategoryMotion.SENSOR_TYPE_GYROSCOPE);
         mSensorHandler = this;
     }

@@ -702,7 +702,6 @@ static bool js_destroyImage(se::State &s) { //NOLINT
         ok &= seval_to_ulong(args[0], &data);
         SE_PRECONDITION2(ok, false, "js_destroyImage : Error processing arguments");
         free(reinterpret_cast<char *>(data));
-
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);

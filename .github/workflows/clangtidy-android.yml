@@ -1,6 +1,6 @@
 name: Clang Tidy - Android
 
-on: pull_request
+on: pull_request_target
 
 jobs:
   # Set the job key. The key is displayed as the job name
@@ -39,7 +39,12 @@ jobs:
       - name: Install CMake & Clang Tidy
         run: |
           sudo apt install -y cmake llvm clang-tidy-11
-
+      - name: Install Android NDK 21
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r21e
+          add-to-path: false
       - name: Generate Compile database
         shell: bash
         run: |
@@ -47,7 +52,6 @@ jobs:
           rm external/config.json
           git clone --branch $EXT_VERSION --depth 1 https://github.com/cocos-creator/engine-native-external external
           utils/generate_compile_commands_android.sh
-
       - name: Generate clang-fix.yaml
         shell: bash
         if: ${{ steps.listchanged.outputs.source == 'true' }}
@@ -57,8 +61,10 @@ jobs:
           if [[ "$FILTERED-xxx" == "-xxx" ]]; then
             echo "no source files match"
           else
-            clang-tidy-11 --format-style=file --export-fixes=clang-fixes.yaml $FILTERED
+            $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-tidy --format-style=file --export-fixes=clang-fixes.yaml $FILTERED
           fi
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: clang-tidy-action
         uses: PatriceJiang/clang-tidy-action@github-api
         if: hashFiles('clang-fixes.yaml') != ''
