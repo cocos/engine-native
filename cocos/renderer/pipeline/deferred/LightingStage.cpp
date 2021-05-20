@@ -395,20 +395,19 @@ void LightingStage::render(Camera *camera) {
             const auto  subModelCount = subModelID[0];
             for (m = 1; m <= subModelCount; ++m) {
                 auto subModel = model->getSubModelView(subModelID[m]);
-                gfx::Texture* denoiseTex = subModel->getDescriptorSet()->getTexture(uint(ModelLocalBindings::STORAGE_REFLECTION));
-                // dispatch for reflection
-                if (_reflectionComp->isInitlized() == false) {
-                    _reflectionComp->init(_pipeline->getDevice(),
-                                          pipeline->getDeferredRenderData()->lightingRenderTarget,
-                                          pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1],
-                                          denoiseTex,
-                                          camera->matViewProj, 8, 8);
-                }
                 for (p = 0; p < subModel->passCount; ++p) {
                     const PassView *pass = subModel->getPassView(p);
                     // TODO: need fallback of ulit and gizmo material.
                     if (pass->phase != _reflectionPhaseID) continue;
-
+                    // dispatch for reflection
+                    gfx::Texture* denoiseTex = subModel->getDescriptorSet()->getTexture(uint(ModelLocalBindings::STORAGE_REFLECTION));
+                    if (_reflectionComp->isInitlized() == false) {
+                        _reflectionComp->init(_pipeline->getDevice(),
+                        pipeline->getDeferredRenderData()->lightingRenderTarget,
+                        pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1],
+                        denoiseTex,
+                        camera->matViewProj, 8, 8);
+                    }
                     gfx::Rect clearRenderArea = {0, 0, _reflectionComp->getReflectionTex()->getWidth(), _reflectionComp->getReflectionTex()->getHeight()};
                     cmdBuff->beginRenderPass(_reflectionComp->getClearPass(), _reflectionComp->getClearFramebuffer(), clearRenderArea, &clearColor, 0, 0);
                     cmdBuff->endRenderPass();
