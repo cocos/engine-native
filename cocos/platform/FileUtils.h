@@ -25,17 +25,16 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __CC_FILEUTILS_H__
-#define __CC_FILEUTILS_H__
+#pragma once
 
 #include <string>
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
 
+#include "base/Data.h"
 #include "base/Macros.h"
 #include "base/Value.h"
-#include "base/Data.h"
 
 namespace cc {
 
@@ -649,5 +648,3 @@ protected:
 /** @} */
 
 } // namespace cc
-
-#endif // __CC_FILEUTILS_H__
