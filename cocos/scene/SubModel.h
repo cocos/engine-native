@@ -47,20 +47,33 @@ public:
 
     void update();
 
-    const Pass *getPass(int) const;
+    gfx::Shader *getShader(int) const;
+    Pass *       getPass(int) const;
 
-    inline gfx::DescriptorSet *getDescriptorSet() const { return _descriptSet; }
-    inline gfx::InputAssembler *getInputAssembler() const { return _ia; }
-    inline RenderingSubMesh *getSubMesh() const { return _subMesh; }
+    inline void setDescriptorSet(gfx::DescriptorSet *descriptorSet) { _descriptSet = descriptorSet; }
+    inline void setInputAssembler(gfx::InputAssembler *ia) { _ia = ia; }
+    inline void setPlanarInstanceShader(gfx::Shader *shader) { _planarInstanceShader = shader; }
+    inline void setPlanarShader(gfx::Shader *shader) { _planarShader = shader; }
+    inline void setRenderPriority(RenderPriority priority) { _priority = priority; }
+    inline void setRenderingSubMesh(RenderingSubMesh *mesh) { _subMesh = mesh; }
+
+    inline gfx::DescriptorSet *       getDescriptorSet() const { return _descriptSet; }
+    inline gfx::InputAssembler *      getInputAssembler() const { return _ia; }
+    inline const std::vector<Pass *> &getPasses() const { return _passes; }
+    inline gfx::Shader *              getPlanarInstanceShader() const { return _planarInstanceShader; }
+    inline gfx::Shader *              getPlanarShader() const { return _planarShader; }
+    inline RenderPriority             getPriority() const { return _priority; }
+    inline RenderingSubMesh *         getSubMesh() const { return _subMesh; }
 
 private:
-    RenderPriority       _priority{RenderPriority::DEFAULT};
-    gfx::Shader *        _planarShader{nullptr};
-    gfx::Shader *        _planarInstanceShader{nullptr};
-    gfx::DescriptorSet * _descriptSet{nullptr};
-    gfx::InputAssembler *_ia{nullptr};
-    RenderingSubMesh *   _subMesh{nullptr};
-    std::vector<Pass *>  _passes;
+    RenderPriority             _priority{RenderPriority::DEFAULT};
+    gfx::Shader *              _planarShader{nullptr};
+    gfx::Shader *              _planarInstanceShader{nullptr};
+    gfx::DescriptorSet *       _descriptSet{nullptr};
+    gfx::InputAssembler *      _ia{nullptr};
+    RenderingSubMesh *         _subMesh{nullptr};
+    std::vector<Pass *>        _passes;
+    std::vector<gfx::Shader *> _shaders;
 };
 
 } // namespace scene

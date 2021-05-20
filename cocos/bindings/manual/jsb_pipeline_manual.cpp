@@ -54,13 +54,13 @@ static bool JSB_getOrCreatePipelineState(se::State &s) {
     size_t argc = args.size();
     if (argc == 4) {
         bool ok = true;
-        uint32_t passHandle = 0;
-        ok &= seval_to_uint32(args[0], &passHandle);
+        uintptr_t pass = 0;
+        ok &= seval_to_uintptr_t(args[0], &pass);
         SE_PRECONDITION2(ok, false, "JSB_getOrCreatePipelineState : Error getting pass handle.");
         auto shader = static_cast<cc::gfx::Shader *>(args[1].toObject()->getPrivateData());
         auto renderPass = static_cast<cc::gfx::RenderPass *>(args[2].toObject()->getPrivateData());
         auto inputAssembler = static_cast<cc::gfx::InputAssembler *>(args[3].toObject()->getPrivateData());
-        auto pipelineState = cc::pipeline::PipelineStateManager::getOrCreatePipelineStateByJS(passHandle, shader, inputAssembler, renderPass);
+        auto pipelineState = cc::pipeline::PipelineStateManager::getOrCreatePipelineState(reinterpret_cast<cc::scene::Pass *>(pass), shader, inputAssembler, renderPass);
         native_ptr_to_seval<cc::gfx::PipelineState>(pipelineState, &s.rval());
         return true;
     }

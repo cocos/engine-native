@@ -57,12 +57,15 @@ int AABB::aabbPlane(const Plane &plane) const {
 }
 
 bool AABB::aabbFrustum(const Frustum &frustum) const {
-    for (const auto &plane : frustum.planes) {
-        // frustum plane normal points to the inside
-        if (aabbPlane(plane) == -1) {
-            return false;
-        }
-    } // completely outside
+    const auto &planes = frustum.planes;
+    const auto *self = this;
+    if (std::all_of(planes.begin(),
+                    planes.end(),
+                    // frustum plane normal points to the inside
+                    [self](const Plane &plane) { return self->aabbPlane(plane) == -1; })) {
+        return false;
+    }
+
     return true;
 }
 

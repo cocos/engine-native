@@ -37,12 +37,12 @@ public:
     static const RenderFlowInfo &getInitializeInfo();
 
     LightingFlow() = default;
-    virtual ~LightingFlow();
+    ~LightingFlow() override;
 
-    virtual bool initialize(const RenderFlowInfo &info) override;
-    virtual void activate(RenderPipeline *pipeline) override;
-    virtual void destroy() override;
-    virtual void render(Camera *camera, scene::Camera *newCamera) override;
+    bool initialize(const RenderFlowInfo &info) override;
+    void activate(RenderPipeline *pipeline) override;
+    void destroy() override;
+    void render(Camera *camera, scene::Camera *newCamera) override;
 
 private:
     static RenderFlowInfo _initInfo;

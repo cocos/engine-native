@@ -39,6 +39,7 @@ struct DrawBatch2D final {
     gfx::DescriptorSet * descriptSet{nullptr};
     gfx::InputAssembler *inputAssembler{nullptr};
     std::vector<Pass *>  passes;
+    std::vector<gfx::Shader *> shaders;
 };
 
 } // namespace scene

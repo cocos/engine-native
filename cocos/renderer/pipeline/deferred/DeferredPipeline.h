@@ -30,19 +30,12 @@
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXInputAssembler.h"
 #include "pipeline/RenderPipeline.h"
-#include "pipeline/helper/SharedMemory.h"
 
 namespace cc {
 namespace pipeline {
 struct UBOGlobal;
 struct UBOCamera;
 struct UBOShadow;
-struct Fog;
-struct Ambient;
-struct Skybox;
-struct Shadows;
-struct Sphere;
-struct Camera;
 
 struct CC_DLL DeferredRenderData {
     gfx::TextureList  gbufferRenderTargets;
@@ -72,7 +65,7 @@ public:
     CC_INLINE const UintList &getLightIndices() const { return _lightIndices; }
     gfx::InputAssembler *     getQuadIAOnScreen() { return _quadIAOnscreen; }
     gfx::InputAssembler *     getQuadIAOffScreen() { return _quadIAOffscreen; }
-    gfx::Rect                 getRenderArea(Camera *camera, bool onScreen);
+    gfx::Rect                 getRenderArea(scene::Camera *camera, bool onScreen);
     CC_INLINE DeferredRenderData *getDeferredRenderData() { return _deferredRenderData; };
     void                          updateQuadVertexData(const gfx::Rect &renderArea);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);

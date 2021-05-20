@@ -31,7 +31,6 @@
 #include "../RenderBatchedQueue.h"
 #include "../RenderInstancedQueue.h"
 #include "../RenderQueue.h"
-#include "../helper/SharedMemory.h"
 #include "ForwardPipeline.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDevice.h"
@@ -116,7 +115,7 @@ void ForwardStage::destroy() {
     RenderStage::destroy();
 }
 
-void ForwardStage::render(Camera *camera, scene::Camera *newCamera) {
+void ForwardStage::render(Camera */*unused*/, scene::Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
     auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
@@ -133,20 +132,15 @@ void ForwardStage::render(Camera *camera, scene::Camera *newCamera) {
     size_t k = 0;
     for (auto ro : renderObjects) {
         const auto *const model = ro.model;
-        const auto *const subModelID = model->getSubModelID();
-        const auto subModelCount = subModelID[0];
-        for (m = 1; m <= subModelCount; ++m) {
-            const auto *subModel = cc::pipeline::ModelView::getSubModelView(subModelID[m]);
-            for (p = 0; p < subModel->passCount; ++p) {
-                const PassView *pass = subModel->getPassView(p);
-
-                if (pass->phase != _phaseID) continue;
-                if (pass->getBatchingScheme() == BatchingSchemes::INSTANCING) {
-                    auto *instancedBuffer = InstancedBuffer::get(subModel->passID[p]);
+        for (auto *subModel : model->getSubModels()) {
+            for (auto *pass : subModel->getPasses()) {
+                if (pass->getPhase() != _phaseID) continue;
+                if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
+                    auto *instancedBuffer = InstancedBuffer::get(pass);
                     instancedBuffer->merge(model, subModel, p);
                     _instancedQueue->add(instancedBuffer);
-                } else if (pass->getBatchingScheme() == BatchingSchemes::VB_MERGING) {
-                    auto *batchedBuffer = BatchedBuffer::get(subModel->passID[p]);
+                } else if (pass->getBatchingScheme() == scene::BatchingSchemes::VB_MERGING) {
+                    auto *batchedBuffer = BatchedBuffer::get(pass);
                     batchedBuffer->merge(subModel, p, model);
                     _batchedQueue->add(batchedBuffer);
                 } else {
@@ -169,35 +163,35 @@ void ForwardStage::render(Camera *camera, scene::Camera *newCamera) {
     _planarShadowQueue->gatherShadowPasses(camera, cmdBuff);
 
     // render area is not oriented
-    uint w = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? newCamera->height : newCamera->width;
-    uint h = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? newCamera->width : newCamera->height;
-    _renderArea.x = static_cast<int>(newCamera->viewPort.x * w);
-    _renderArea.y = static_cast<int>(newCamera->viewPort.y * h);
-    _renderArea.width = static_cast<uint>(newCamera->viewPort.z * w * sharedData->shadingScale);
-    _renderArea.height = static_cast<uint>(newCamera->viewPort.w * h * sharedData->shadingScale);
+    uint w = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
+    uint h = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
+    _renderArea.x = static_cast<int>(camera->viewPort.x * w);
+    _renderArea.y = static_cast<int>(camera->viewPort.y * h);
+    _renderArea.width = static_cast<uint>(camera->viewPort.z * w * sharedData->shadingScale);
+    _renderArea.height = static_cast<uint>(camera->viewPort.w * h * sharedData->shadingScale);
 
-    if (hasFlag(static_cast<gfx::ClearFlags>(newCamera->clearFlag), gfx::ClearFlagBit::COLOR)) {
+    if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {
-            srgbToLinear(&_clearColors[0], newCamera->clearColor);
-            auto scale = sharedData->fpScale / newCamera->exposure;
+            srgbToLinear(&_clearColors[0], camera->clearColor);
+            auto scale = sharedData->fpScale / camera->exposure;
             _clearColors[0].x *= scale;
             _clearColors[0].y *= scale;
             _clearColors[0].z *= scale;
         } else {
-            _clearColors[0].x = newCamera->clearColor.x;
-            _clearColors[0].y = newCamera->clearColor.y;
-            _clearColors[0].z = newCamera->clearColor.z;
+            _clearColors[0].x = camera->clearColor.x;
+            _clearColors[0].y = camera->clearColor.y;
+            _clearColors[0].z = camera->clearColor.z;
         }
     }
 
-    _clearColors[0].w = newCamera->clearColor.w;
+    _clearColors[0].w = camera->clearColor.w;
 
-    auto *framebuffer = camera->getWindow()->getFramebuffer();
+    auto *framebuffer = camera->window->frameBuffer;
     const auto &colorTextures = framebuffer->getColorTextures();
 
-    auto *renderPass = !colorTextures.empty() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(newCamera->clearFlag));
+    auto *renderPass = !colorTextures.empty() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
 
-    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, newCamera->clearDepth, newCamera->clearStencil);
+    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
     cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet());
 
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);

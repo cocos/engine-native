@@ -39,7 +39,6 @@
 #include "cocos/renderer/pipeline/RenderFlow.h"
 #include "cocos/renderer/pipeline/RenderStage.h"
 #include "cocos/renderer/pipeline/Define.h"
-#include "cocos/renderer/pipeline/helper/SharedMemory.h"
 #include "cocos/renderer/pipeline/InstancedBuffer.h"
 #include "cocos/renderer/pipeline/deferred/DeferredPipeline.h"
 #include "cocos/renderer/pipeline/deferred/GbufferFlow.h"
@@ -57,49 +56,6 @@ bool register_all_pipeline(se::Object* obj);
 template<>
 bool sevalue_to_native(const se::Value &, cc::pipeline::RenderQueueDesc *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::RenderQueueDesc);
-
-extern se::Object* __jsb_cc_pipeline_Light_proto;
-extern se::Class* __jsb_cc_pipeline_Light_class;
-
-bool js_register_cc_pipeline_Light(se::Object* obj);
-bool register_all_pipeline(se::Object* obj);
-
-template<>
-bool sevalue_to_native(const se::Value &, cc::pipeline::Light *, se::Object *ctx);
-JSB_REGISTER_OBJECT_TYPE(cc::pipeline::Light);
-SE_DECLARE_FUNC(js_pipeline_Light_getAABB);
-SE_DECLARE_FUNC(js_pipeline_Light_getFrustum);
-SE_DECLARE_FUNC(js_pipeline_Light_getNode);
-SE_DECLARE_FUNC(js_pipeline_Light_getType);
-
-extern se::Object* __jsb_cc_pipeline_PassView_proto;
-extern se::Class* __jsb_cc_pipeline_PassView_class;
-
-bool js_register_cc_pipeline_PassView(se::Object* obj);
-bool register_all_pipeline(se::Object* obj);
-
-template<>
-bool sevalue_to_native(const se::Value &, cc::pipeline::PassView *, se::Object *ctx);
-JSB_REGISTER_OBJECT_TYPE(cc::pipeline::PassView);
-SE_DECLARE_FUNC(js_pipeline_PassView_getBatchingScheme);
-SE_DECLARE_FUNC(js_pipeline_PassView_getBlendState);
-SE_DECLARE_FUNC(js_pipeline_PassView_getDepthStencilState);
-SE_DECLARE_FUNC(js_pipeline_PassView_getDescriptorSet);
-SE_DECLARE_FUNC(js_pipeline_PassView_getDynamicState);
-SE_DECLARE_FUNC(js_pipeline_PassView_getPipelineLayout);
-SE_DECLARE_FUNC(js_pipeline_PassView_getPrimitive);
-SE_DECLARE_FUNC(js_pipeline_PassView_getRasterizerState);
-
-extern se::Object* __jsb_cc_pipeline_RenderWindow_proto;
-extern se::Class* __jsb_cc_pipeline_RenderWindow_class;
-
-bool js_register_cc_pipeline_RenderWindow(se::Object* obj);
-bool register_all_pipeline(se::Object* obj);
-
-template<>
-bool sevalue_to_native(const se::Value &, cc::pipeline::RenderWindow *, se::Object *ctx);
-JSB_REGISTER_OBJECT_TYPE(cc::pipeline::RenderWindow);
-SE_DECLARE_FUNC(js_pipeline_RenderWindow_getFramebuffer);
 
 extern se::Object* __jsb_cc_pipeline_RenderPipelineInfo_proto;
 extern se::Class* __jsb_cc_pipeline_RenderPipelineInfo_class;

@@ -29,7 +29,6 @@
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXRenderPass.h"
-#include "helper/SharedMemory.h"
 
 namespace cc {
 namespace pipeline {

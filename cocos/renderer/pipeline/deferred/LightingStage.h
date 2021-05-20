@@ -26,6 +26,7 @@
 #pragma once
 
 #include "../RenderStage.h"
+#include "scene/Camera.h"
 
 namespace cc {
 namespace pipeline {
@@ -35,7 +36,6 @@ class RenderBatchedQueue;
 class RenderInstancedQueue;
 class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
-struct Camera;
 struct DeferredRenderData;
 
 class CC_DLL LightingStage : public RenderStage {
@@ -53,7 +53,7 @@ public:
     void initLightingBuffer();
 
 private:
-    void gatherLights(Camera *camera);
+    void gatherLights(scene::Camera *camera);
     
     static RenderStageInfo initInfo;
     PlanarShadowQueue *_planarShadowQueue = nullptr;

@@ -24,13 +24,14 @@
 ****************************************************************************/
 
 #pragma once
+
 #include "../RenderFlow.h"
+#include "scene/Light.h"
+#include "scene/Define.h"
+
 namespace cc {
 namespace pipeline {
 class ForwardPipeline;
-struct Light;
-struct Camera;
-struct Shadows;
 
 class CC_DLL ShadowFlow : public RenderFlow {
 public:
@@ -48,18 +49,18 @@ public:
     void destroy() override;
 
 private:
-    void clearShadowMap(Camera *camera);
+    void clearShadowMap(scene::Camera *camera);
 
-    void resizeShadowMap(const Light *light, const Shadows *shadowInfo);
+    void resizeShadowMap(const scene::Light *light, const scene::Shadow *shadowInfo);
 
-    void initShadowFrameBuffer(RenderPipeline *pipeline, const Light *light);
+    void initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Light *light);
 
     static RenderFlowInfo initInfo;
 
     gfx::RenderPass *_renderPass = nullptr;
 
-    vector<const Light *> _validLights;
-    vector<gfx::Texture *> _usedTextures;
+    vector<const scene::Light *> _validLights;
+    vector<gfx::Texture *>       _usedTextures;
 };
 } // namespace pipeline
 } // namespace cc

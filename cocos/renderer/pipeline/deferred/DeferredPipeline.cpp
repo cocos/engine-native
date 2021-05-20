@@ -25,7 +25,6 @@
 
 #include "DeferredPipeline.h"
 #include "../SceneCulling.h"
-#include "../helper/SharedMemory.h"
 #include "../shadow/ShadowFlow.h"
 #include "GbufferFlow.h"
 #include "LightingFlow.h"
@@ -127,16 +126,15 @@ bool DeferredPipeline::activate() {
     return true;
 }
 
-void DeferredPipeline::render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) {
+void DeferredPipeline::render(const vector<uint> &/*unused*/, const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
-    for (const auto cameraId : cameras) {
-        auto *camera = GET_CAMERA(cameraId);
+
+    for (auto *camera: cameras) {
         sceneCulling(this, camera);
         _pipelineUBO->updateCameraUBO(camera);
-        int i = 0;
         for (auto *const flow : _flows) {
-            flow->render(camera, newCameras[i]);
+            flow->render(nullptr, camera);
         }
     }
     _commandBuffers[0]->end();
@@ -288,22 +286,23 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffe
     return (*quadIA) != nullptr;
 }
 
-gfx::Rect DeferredPipeline::getRenderArea(Camera *camera, bool onScreen) {
+gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera, bool onScreen) {
     gfx::Rect renderArea;
     uint      w;
     uint      h;
     if (onScreen) {
-        w = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
-        h = camera->getWindow()->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
+        w = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
+        h = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
     } else {
         w = camera->width;
         h = camera->height;
     }
 
-    renderArea.x      = static_cast<int>(camera->viewportX * w);
-    renderArea.y      = static_cast<int>(camera->viewportY * h);
-    renderArea.width  = static_cast<uint>(camera->viewportWidth * w * _pipelineSceneData->getSharedData()->shadingScale);
-    renderArea.height = static_cast<uint>(camera->viewportHeight * h * _pipelineSceneData->getSharedData()->shadingScale);
+    const auto &viewport = camera->viewPort;
+    renderArea.x         = static_cast<int>(viewport.x * w);
+    renderArea.y         = static_cast<int>(viewport.y * h);
+    renderArea.width     = static_cast<uint>(viewport.z * w * _pipelineSceneData->getSharedData()->shadingScale);
+    renderArea.height    = static_cast<uint>(viewport.w * h * _pipelineSceneData->getSharedData()->shadingScale);
     return renderArea;
 }
 
@@ -565,9 +564,9 @@ void DeferredPipeline::destroyDeferredData() {
         _deferredRenderData->depthTex = nullptr;
     }
 
-    for (size_t i = 0; i < _deferredRenderData->gbufferRenderTargets.size(); i++) {
-        _deferredRenderData->gbufferRenderTargets[i]->destroy();
-        CC_DELETE(_deferredRenderData->gbufferRenderTargets[i]);
+    for (auto *renderTarget : _deferredRenderData->gbufferRenderTargets) {
+        renderTarget->destroy();
+        CC_DELETE(renderTarget);
     }
     _deferredRenderData->gbufferRenderTargets.clear();
 

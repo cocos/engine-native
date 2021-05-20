@@ -121,18 +121,16 @@ bool ForwardPipeline::activate() {
     return true;
 }
 
-void ForwardPipeline::render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) {
+
+void ForwardPipeline::render(const vector<uint> &/*unused*/, const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
-    int i = 0;
-    for (const auto cameraId : cameras) {
-        auto *camera = GET_CAMERA(cameraId);
+    for (auto *camera : cameras) {
         sceneCulling(this, camera);
         _pipelineUBO->updateCameraUBO(camera);
         for (auto *const flow : _flows) {
-            flow->render(camera, newCameras[i]);
+            flow->render(nullptr, camera);
         }
-        ++i;
     }
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);

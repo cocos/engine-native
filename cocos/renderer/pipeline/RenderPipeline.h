@@ -26,11 +26,10 @@
 #pragma once
 
 #include "Define.h"
-#include "PipelineSceneData.h"
 #include "PipelineUBO.h"
+#include "PipelineSceneData.h"
 #include "base/CoreStd.h"
 #include "helper/DefineMap.h"
-#include "helper/SharedMemory.h"
 #include "scene/Camera.h"
 
 namespace cc {
@@ -41,7 +40,6 @@ class DescriptorSetLayout;
 } // namespace gfx
 namespace pipeline {
 class DefineMap;
-struct Camera;
 
 struct CC_DLL RenderPipelineInfo {
     uint           tag = 0;
@@ -61,7 +59,7 @@ public:
     virtual void render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras);
     virtual void resize(uint width, uint height){};
 
-    void setPipelineSharedSceneData(uint handle);
+    void setPipelineSharedSceneData(scene::PipelineSharedSceneData *data);
 
     inline const RenderFlowList &                  getFlows() const { return _flows; }
     inline uint                                    getTag() const { return _tag; }

@@ -30,8 +30,20 @@ namespace scene {
 void SubModel::update() {
 }
 
-const Pass *SubModel::getPass(int) const {
-	
+gfx::Shader *SubModel::getShader(int index) const {
+    if (index >= _shaders.size()) {
+        return nullptr;
+    }
+
+    return _shaders[index];
+}
+
+Pass *SubModel::getPass(int index) const {
+    if (index >= _passes.size()) {
+        return nullptr;
+    }
+
+    return _passes[index];
 }
 
 } // namespace scene
