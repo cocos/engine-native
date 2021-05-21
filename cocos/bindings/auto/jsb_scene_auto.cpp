@@ -1392,7 +1392,7 @@ static bool js_scene_Model_getModelBounds(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        const cc::scene::AABB& result = cobj->getModelBounds();
+        const cc::scene::AABB* result = cobj->getModelBounds();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_scene_Model_getModelBounds : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1718,13 +1718,31 @@ static bool js_scene_Model_setWolrdBounds(se::State& s)
         HolderType<cc::scene::AABB, true> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Model_setWolrdBounds : Error processing arguments");
-        cobj->setWolrdBounds(arg0.value());
+        cobj->setWolrdBounds(&arg0.value());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
 SE_BIND_FUNC(js_scene_Model_setWolrdBounds)
+
+static bool js_scene_Model_setModelBounds(se::State& s) {
+    cc::scene::Model* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Model_setWolrdBounds : Invalid Native Object");
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
+    if (argc == 1) {
+        HolderType<cc::scene::AABB, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_Model_setWolrdBounds : Error processing arguments");
+        cobj->setModelBounds(&arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_Model_setModelBounds)
 
 static bool js_scene_Model_updateTransform(se::State& s)
 {
@@ -1817,6 +1835,7 @@ bool js_register_scene_Model(se::Object* obj)
     cls->defineFunction("setReceiveShadow", _SE(js_scene_Model_setReceiveShadow));
     cls->defineFunction("setTransform", _SE(js_scene_Model_setTransform));
     cls->defineFunction("setWolrdBounds", _SE(js_scene_Model_setWolrdBounds));
+    cls->defineFunction("setModelBounds", _SE(js_scene_Model_setModelBounds));
     cls->defineFunction("updateTransform", _SE(js_scene_Model_updateTransform));
     cls->defineFunction("updateUBOs", _SE(js_scene_Model_updateUBOs));
     cls->defineFinalizeFunction(_SE(js_cc_scene_Model_finalize));

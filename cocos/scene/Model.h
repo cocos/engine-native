@@ -64,12 +64,8 @@ public:
     inline void setReceiveShadow(bool value) { _receiveShadow = value; }
     inline void setTransform(Node *node) { _transform = node; }
     inline void seVisFlag(uint32_t flags) { _visFlags = flags; }
-    inline void setWolrdBounds(const AABB &aabb) {
-        if (!_worldBounds) {
-            _worldBounds = new AABB();
-        }
-        *_worldBounds = aabb;
-    }
+    inline void setWolrdBounds(AABB *aabb) { _worldBounds = aabb; }
+    inline void setModelBounds(AABB *aabb) { _modelBounds = aabb; }
 
     inline bool                               getCastShadow() const { return _castShadow; }
     inline bool                               getEnabled() const { return _enabled; }
@@ -79,7 +75,7 @@ public:
     inline uint8_t *                          getInstancedBuffer() const { return _instancedBuffer; }
     inline gfx::Buffer *                      getLocalBuffer() const { return _localBuffer; }
     inline float *                            getLocalData() const { return _localData; }
-    inline const AABB &                       getModelBounds() const { return _modelBounds; }
+    inline AABB *                       getModelBounds() const { return _modelBounds; }
     inline Node *                             getNode() const { return _node; }
     inline bool                               getReceiveShadow() const { return _receiveShadow; }
     inline const std::vector<SubModel *> &    getSubModels() const { return _subModels; }
@@ -87,7 +83,7 @@ public:
     inline bool                               getTransformUpdated() const { return _transformUpdated; }
     inline uint32_t                           getUpdatStamp() const { return _updateStamp; }
     inline uint32_t                           getVisFlags() const { return _visFlags; }
-    inline const AABB *                       getWorldBounds() const { return _worldBounds; }
+    inline AABB *                       getWorldBounds() const { return _worldBounds; }
 
 private:
     bool                        _enabled{false};
@@ -103,7 +99,7 @@ private:
     uint8_t *                   _instancedBuffer{nullptr};
     gfx::Buffer *               _localBuffer{nullptr};
     AABB *                      _worldBounds{nullptr};
-    AABB                        _modelBounds;
+    AABB *                      _modelBounds;
     InstancedAttributeBlock *   _instanceAttributeBlock{nullptr};
     std::vector<SubModel *>     _subModels;
     std::vector<gfx::Attribute> _instanceAttributes;
