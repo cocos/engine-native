@@ -31,7 +31,7 @@ void SubModel::update() {
 }
 
 gfx::Shader *SubModel::getShader(int index) const {
-    if (index >= _shaders.size()) {
+    if (index >= static_cast<int>(_shaders.size())) {
         return nullptr;
     }
 
@@ -39,7 +39,7 @@ gfx::Shader *SubModel::getShader(int index) const {
 }
 
 Pass *SubModel::getPass(int index) const {
-    if (index >= _passes.size()) {
+    if (index >= static_cast<int>(_passes.size())) {
         return nullptr;
     }
 

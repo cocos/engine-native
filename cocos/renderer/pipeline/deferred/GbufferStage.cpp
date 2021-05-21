@@ -62,7 +62,7 @@ RenderStageInfo GbufferStage::initInfo = {
 const RenderStageInfo &GbufferStage::getInitializeInfo() { return GbufferStage::initInfo; }
 
 GbufferStage::GbufferStage() {
-    _batchedQueue = CC_NEW(RenderBatchedQueue);
+    _batchedQueue   = CC_NEW(RenderBatchedQueue);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
 }
 
@@ -71,7 +71,7 @@ GbufferStage::~GbufferStage() = default;
 bool GbufferStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
-    _phaseID = getPhaseID("deferred");
+    _phaseID                = getPhaseID("deferred");
     return true;
 }
 
@@ -108,10 +108,10 @@ void GbufferStage::destroy() {
     RenderStage::destroy();
 }
 
-void GbufferStage::render(Camera */*unused*/, scene::Camera *camera) {
+void GbufferStage::render(Camera * /*unused*/, scene::Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
-    auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
+    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
     const auto &renderObjects = _pipeline->getPipelineSceneData()->getRenderObjects();
     if (renderObjects.empty()) {
         return;
@@ -121,9 +121,9 @@ void GbufferStage::render(Camera */*unused*/, scene::Camera *camera) {
         queue->clear();
     }
 
-    uint subModelIdx = 0;
-    uint passIdx = 0;
-    size_t k = 0;
+    uint   subModelIdx = 0;
+    uint   passIdx     = 0;
+    size_t k           = 0;
     for (auto ro : renderObjects) {
         const auto *const model = ro.model;
 
@@ -165,8 +165,8 @@ void GbufferStage::render(Camera */*unused*/, scene::Camera *camera) {
     _renderArea = pipeline->getRenderArea(camera, false);
     pipeline->updateQuadVertexData(_renderArea);
     auto *const deferredData = pipeline->getDeferredRenderData();
-    auto *framebuffer = deferredData->gbufferFrameBuffer;
-    auto *renderPass = framebuffer->getRenderPass();
+    auto *      framebuffer  = deferredData->gbufferFrameBuffer;
+    auto *      renderPass   = framebuffer->getRenderPass();
 
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
     cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet());

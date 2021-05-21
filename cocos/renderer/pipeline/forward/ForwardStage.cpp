@@ -62,10 +62,10 @@ RenderStageInfo ForwardStage::initInfo = {
      {true, RenderQueueSortMode::BACK_TO_FRONT, {"default", "planarShadow"}}}};
 const RenderStageInfo &ForwardStage::getInitializeInfo() { return ForwardStage::initInfo; }
 
-ForwardStage::ForwardStage()  {
-    _batchedQueue = CC_NEW(RenderBatchedQueue);
+ForwardStage::ForwardStage() {
+    _batchedQueue   = CC_NEW(RenderBatchedQueue);
     _instancedQueue = CC_NEW(RenderInstancedQueue);
-    _uiPhase = CC_NEW(UIPhase);
+    _uiPhase        = CC_NEW(UIPhase);
 }
 
 ForwardStage::~ForwardStage() = default;
@@ -73,7 +73,7 @@ ForwardStage::~ForwardStage() = default;
 bool ForwardStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
-    _phaseID = getPhaseID("default");
+    _phaseID                = getPhaseID("default");
     return true;
 }
 
@@ -102,7 +102,7 @@ void ForwardStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     }
 
     _additiveLightQueue = CC_NEW(RenderAdditiveLightQueue(_pipeline));
-    _planarShadowQueue = CC_NEW(PlanarShadowQueue(_pipeline));
+    _planarShadowQueue  = CC_NEW(PlanarShadowQueue(_pipeline));
     _uiPhase->activate(pipeline);
 }
 
@@ -115,20 +115,20 @@ void ForwardStage::destroy() {
     RenderStage::destroy();
 }
 
-void ForwardStage::render(Camera */*unused*/, scene::Camera *camera) {
+void ForwardStage::render(Camera * /*unused*/, scene::Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
-    auto *pipeline = static_cast<ForwardPipeline *>(_pipeline);
-    auto *const sceneData = _pipeline->getPipelineSceneData();
-    auto *const sharedData = sceneData->getSharedData();
+    auto *      pipeline      = static_cast<ForwardPipeline *>(_pipeline);
+    auto *const sceneData     = _pipeline->getPipelineSceneData();
+    auto *const sharedData    = sceneData->getSharedData();
     const auto &renderObjects = sceneData->getRenderObjects();
 
     for (auto *queue : _renderQueues) {
         queue->clear();
     }
 
-    uint m = 0;
-    uint p = 0;
+    uint   m = 0;
+    uint   p = 0;
     size_t k = 0;
     for (auto ro : renderObjects) {
         const auto *const model = ro.model;
@@ -163,11 +163,11 @@ void ForwardStage::render(Camera */*unused*/, scene::Camera *camera) {
     _planarShadowQueue->gatherShadowPasses(camera, cmdBuff);
 
     // render area is not oriented
-    uint w = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
-    uint h = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
-    _renderArea.x = static_cast<int>(camera->viewPort.x * w);
-    _renderArea.y = static_cast<int>(camera->viewPort.y * h);
-    _renderArea.width = static_cast<uint>(camera->viewPort.z * w * sharedData->shadingScale);
+    uint w             = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
+    uint h             = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
+    _renderArea.x      = static_cast<int>(camera->viewPort.x * w);
+    _renderArea.y      = static_cast<int>(camera->viewPort.y * h);
+    _renderArea.width  = static_cast<uint>(camera->viewPort.z * w * sharedData->shadingScale);
     _renderArea.height = static_cast<uint>(camera->viewPort.w * h * sharedData->shadingScale);
 
     if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
@@ -186,7 +186,7 @@ void ForwardStage::render(Camera */*unused*/, scene::Camera *camera) {
 
     _clearColors[0].w = camera->clearColor.w;
 
-    auto *framebuffer = camera->window->frameBuffer;
+    auto *      framebuffer   = camera->window->frameBuffer;
     const auto &colorTextures = framebuffer->getColorTextures();
 
     auto *renderPass = !colorTextures.empty() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
