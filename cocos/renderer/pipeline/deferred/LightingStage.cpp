@@ -102,7 +102,7 @@ void LightingStage::gatherLights(scene::Camera *camera) {
     uint          offset     = 0;
     cc::Vec4      tmpArray;
 
-    int i = 0;
+    uint i = 0;
     for (auto *light : scene->getSphereLights()) {
         if (i >= _maxDeferredLights) {
             break;
@@ -154,6 +154,10 @@ void LightingStage::gatherLights(scene::Camera *camera) {
 
     i = 0;
     for (auto *light : scene->getSpotLights()) {
+        if (i >= _maxDeferredLights) {
+            break;
+        }
+
         const auto &position = light->getPosition();
         sphere.setCenter(position);
         sphere.setRadius(light->getRange());
@@ -201,6 +205,8 @@ void LightingStage::gatherLights(scene::Camera *camera) {
         _lightBufferData[offset]     = direction.x;
         _lightBufferData[offset + 1] = direction.y;
         _lightBufferData[offset + 2] = direction.z;
+        
+        ++i;
     }
 
     // the count of lights is set to cc_lightDir[0].w

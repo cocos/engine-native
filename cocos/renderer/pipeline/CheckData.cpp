@@ -109,8 +109,8 @@ static void checkSphereLight(const Light *light1, scene::SphereLight *light2) {
 }
 
 static void checkSpotLights(const uint *lightArrayID, const std::vector<scene::SpotLight *> &spotLights) {
-    const auto        count            = lightArrayID ? lightArrayID[0] : 0;
-    assert(count == spotLights.size());
+    const uint32_t        count            = lightArrayID ? lightArrayID[0] : 0;
+    assert(count == static_cast<uint32_t>(spotLights.size()));
     for (uint32_t i = 1; i <= count; ++i) {
         auto *spotLight = cc::pipeline::Scene::getSpotLight(lightArrayID[i]);
         checkSpotLight(spotLight, spotLights[i-1]);
@@ -118,8 +118,8 @@ static void checkSpotLights(const uint *lightArrayID, const std::vector<scene::S
 }
 
 static void checkSphereLights(const uint *lightArrayID, const std::vector<scene::SphereLight *> &sphereoLights) {
-    const auto        count            = lightArrayID ? lightArrayID[0] : 0;
-    assert(count == sphereoLights.size());
+    const uint32_t        count            = lightArrayID ? lightArrayID[0] : 0;
+    assert(count == static_cast<uint32_t>(sphereoLights.size()));
     for (uint32_t i = 1; i <= count; ++i) {
         auto *spotLight = cc::pipeline::Scene::getSpotLight(lightArrayID[i]);
         checkSphereLight(spotLight, sphereoLights[i-1]);
@@ -142,16 +142,43 @@ static void checkUIBatch(const UIBatch *batch1, const scene::DrawBatch2D *batch2
 }
 
 static void checkUIBatches(const uint *uiBaches, const std::vector<scene::DrawBatch2D *> &drawBatches) {
-    const auto count = uiBaches ? uiBaches[0] : 0;
-    assert(count == drawBatches.size());
+    const uint32_t count = uiBaches ? uiBaches[0] : 0;
+    assert(count == static_cast<uint32_t>(drawBatches.size()));
     for (uint32_t i = 1; i <= count; ++i) {
         auto *uiBatch = GET_UI_BATCH(uiBaches[i]);
         checkUIBatch(uiBatch, drawBatches[i-1]);
     }
 }
 
+static void checkSubModel(SubModelView *subModel1, const scene::SubModel *subModel2) {
+    //TODO
+}
+
+static void checkSubModles(const uint *subModles1, const std::vector<scene::SubModel *> &subModles2) {
+    const uint32_t count = subModles1 ? subModles1[0] : 0;
+    assert(count == static_cast<uint32_t>(subModles2.size()));
+    for (uint32_t i = 1; i < count; ++i) {
+        checkSubModel(GET_SUBMODEL(subModles1[i]), subModles2[i-1]);
+    }
+}
+
+static void checkAttribute(const gfx::Attribute *attr1, const gfx::Attribute &attr2) {
+    assert(attr1->format == attr2.format);
+    assert(attr1->name == attr2.name);
+    assert(attr1->isNormalized == attr2.isNormalized);
+    assert(attr1->isInstanced == attr2.isInstanced);
+    assert(attr1->location == attr2.location);
+}
+
+static void checkInstancedAttributes(const uint *attrs1, const std::vector<gfx::Attribute> &attrs2) {
+    const uint32_t count = attrs1 ? attrs1[0] : 0;
+    assert(count == static_cast<uint32_t>(attrs2.size()));
+    for (uint32_t i = 1; i < count; ++i) {
+        checkAttribute(GET_ATTRIBUTE(attrs1[i]), attrs2[i-1]);
+    }
+}
+
 static void checkModel(const ModelView *model1, const scene::Model *model2) {
-    //TODO(minggo)
     checkBool(model1->enabled, model2->getEnabled());
     assert(model1->visFlags == model2->getVisFlags());
     checkBool(model1->castShadow, model2->getCastShadow());
@@ -159,11 +186,14 @@ static void checkModel(const ModelView *model1, const scene::Model *model2) {
     checkAABB(GET_AABB(model1->worldBoundsID), *model2->getWorldBounds());
     checkNode(GET_NODE(model1->nodeID), model2->getNode());
     checkNode(GET_NODE(model1->transformID), model2->getTransform());
+    checkSubModles(model1->getSubModelID(), model2->getSubModels());
+    checkInstancedAttributes(model1->getInstancedAttributeID(), model2->getInstanceAttributes());
+    // TODO(minggo): check instance buffer
 }
 
 static void checkModels(const uint *models1, const std::vector<scene::Model *> &models2) {
-    const auto count = models1 ? models1[0] : 0;
-    assert(count == models2.size());
+    const uint32_t count = models1 ? models1[0] : 0;
+    assert(count == static_cast<uint32_t>(models2.size()));
     for (uint32_t i = 1; i <= count; ++i) {
         auto *model = GET_MODEL(models1[i]);
         checkModel(model, models2[i-1]);
