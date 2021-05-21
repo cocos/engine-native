@@ -368,6 +368,8 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
 
         if (subpassInfo.depthStencil != INVALID_BINDING) {
             desc.pDepthStencilAttachment = attachmentReferences.data() + offset++;
+        } else {
+            desc.pDepthStencilAttachment = nullptr;
         }
     }
 

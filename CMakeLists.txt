@@ -832,6 +832,8 @@ cocos_source_files(
                  cocos/renderer/pipeline/helper/DefineMap.cpp
                  cocos/renderer/pipeline/helper/SharedMemory.h
                  cocos/renderer/pipeline/helper/SharedMemory.cpp
+                 cocos/renderer/pipeline/deferred/ReflectionComp.cpp
+                 cocos/renderer/pipeline/deferred/ReflectionComp.h
 )
 
 if(CC_USE_GLES2 OR CC_USE_GLES3)

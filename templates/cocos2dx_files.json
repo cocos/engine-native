@@ -1026,6 +1026,8 @@
         "cocos/renderer/pipeline/deferred/LightingStage.h", 
         "cocos/renderer/pipeline/deferred/PostprocessStage.cpp", 
         "cocos/renderer/pipeline/deferred/PostprocessStage.h", 
+        "cocos/renderer/pipeline/deferred/ReflectionComp.cpp", 
+        "cocos/renderer/pipeline/deferred/ReflectionComp.h",
         "cocos/renderer/pipeline/forward/ForwardFlow.cpp", 
         "cocos/renderer/pipeline/forward/ForwardFlow.h", 
         "cocos/renderer/pipeline/forward/ForwardPipeline.cpp", 

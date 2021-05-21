@@ -26,6 +26,7 @@
 #pragma once
 
 #include "../RenderStage.h"
+#include "ReflectionComp.h"
 
 namespace cc {
 namespace pipeline {
@@ -70,6 +71,11 @@ private:
     gfx::DescriptorSet *      _descriptorSet           = nullptr;
     gfx::DescriptorSetLayout *_descLayout              = nullptr;
     uint                      _maxDeferredLights       = UBODeferredLight::LIGHTS_PER_PASS;
+
+    ReflectionComp * _reflectionComp = nullptr;
+    RenderQueue * _relfectionRenderQueue = nullptr;
+    uint _reflectionPhaseID = 0;
+    gfx::RenderPass *_reflectionPass = nullptr;
 };
 
 } // namespace pipeline
