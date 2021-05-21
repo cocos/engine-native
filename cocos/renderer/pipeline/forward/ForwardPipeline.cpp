@@ -38,6 +38,8 @@
 #include "platform/Application.h"
 #include "scene/RenderScene.h"
 
+#include "../CheckData.h"
+
 namespace cc {
 namespace pipeline {
 namespace {
@@ -122,7 +124,10 @@ bool ForwardPipeline::activate() {
 }
 
 
-void ForwardPipeline::render(const vector<uint> &/*unused*/, const vector<scene::Camera *> &cameras) {
+void ForwardPipeline::render(const vector<uint> &oldCameras, const vector<scene::Camera *> &cameras) {
+    
+    checkData(oldCameras, cameras);
+    
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
     for (auto *camera : cameras) {
