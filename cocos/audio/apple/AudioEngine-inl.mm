@@ -135,8 +135,9 @@ void AudioEngineInterruptionListenerCallback(void *user_data, UInt32 interruptio
                 ALOGD("AVAudioSessionInterruptionTypeEnded, application == UIApplicationStateActive, alcMakeContextCurrent(s_ALContext)");
                 NSError *error = nil;
                 [[AVAudioSession sharedInstance] setActive:YES error:&error];
-                if (alcGetCurrentContext() != nullptr)
+                if (alcGetCurrentContext() != nullptr) {
                     alcMakeContextCurrent(nullptr);
+                }
                 alcMakeContextCurrent(s_ALContext);
                 //IDEA:                if (Director::getInstance()->isPaused())
                 {
