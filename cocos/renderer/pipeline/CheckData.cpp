@@ -14,6 +14,7 @@
 #include "scene/AABB.h"
 #include "scene/Pass.h"
 #include "scene/Model.h"
+#include "scene/SubModel.h"
 
 namespace cc {
 namespace pipeline {
@@ -150,8 +151,40 @@ static void checkUIBatches(const uint *uiBaches, const std::vector<scene::DrawBa
     }
 }
 
+static void checkBuffer(uint8_t *b1, uint8_t *b2, uint32_t size) {
+    for (uint32_t i = 0; i < size; ++i) {
+        assert(b1[i] == b2[i]);
+    }
+}
+
+static void checkRenderingSubMesh(const RenderingSubMesh *subMesh1, const scene::RenderingSubMesh *subMesh2) {
+    const uint *flatBuffers1 = subMesh1->getFlatBufferArrayID();
+    const auto &flatBuffers2 = subMesh2->flatBuffers;
+    const uint32_t count = flatBuffers1 ? flatBuffers1[0] : 0;
+    assert(count == static_cast<uint32_t>(flatBuffers2.size()));
+    uint32_t size = 0;
+    for (uint32_t i = 1; i < count; ++i) {
+        auto *f1 = GET_FLAT_BUFFER(i);
+        const auto &f2 = flatBuffers2[i-1];
+        assert(f1->stride == f2.stride);
+        assert(f1->count == f2.count);
+        checkBuffer(f1->getBuffer(&size), f2.data, f2.size);
+    }
+}
+
 static void checkSubModel(SubModelView *subModel1, const scene::SubModel *subModel2) {
-    //TODO
+    assert(subModel1->priority == static_cast<uint32_t>(subModel2->getPriority()));
+    assert(subModel1->passCount == static_cast<uint32_t>(subModel2->getPasses().size()));
+    
+    for (uint32_t i = 0; i < subModel1->passCount; ++i) {
+        checkPass(subModel1->getPassView(subModel1->passID[i]), subModel2->getPass(i));
+        assert(subModel1->getShader(subModel1->shaderID[i]) == subModel2->getShader(i));
+    }
+    assert(subModel1->getPlanarShader() == subModel2->getPlanarShader());
+    assert(subModel1->getPlanarInstanceShader() == subModel2->getPlanarInstanceShader());
+    assert(subModel1->getDescriptorSet() == subModel2->getDescriptorSet());
+    assert(subModel1->getInputAssembler() == subModel2->getInputAssembler());
+    checkRenderingSubMesh(subModel1->getSubMesh(), subModel2->getSubMesh());
 }
 
 static void checkSubModles(const uint *subModles1, const std::vector<scene::SubModel *> &subModles2) {
