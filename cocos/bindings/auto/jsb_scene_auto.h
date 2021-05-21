@@ -213,9 +213,15 @@ bool register_all_scene(se::Object* obj);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::SubModel);
 SE_DECLARE_FUNC(js_scene_SubModel_getPass);
 SE_DECLARE_FUNC(js_scene_SubModel_getPasses);
+SE_DECLARE_FUNC(js_scene_SubModel_getPlanarInstanceShader);
 SE_DECLARE_FUNC(js_scene_SubModel_getPlanarShader);
 SE_DECLARE_FUNC(js_scene_SubModel_getPriority);
 SE_DECLARE_FUNC(js_scene_SubModel_getShader);
+SE_DECLARE_FUNC(js_scene_SubModel_setDescriptorSet);
+SE_DECLARE_FUNC(js_scene_SubModel_setInputAssembler);
+SE_DECLARE_FUNC(js_scene_SubModel_setPlanarInstanceShader);
+SE_DECLARE_FUNC(js_scene_SubModel_setPlanarShader);
+SE_DECLARE_FUNC(js_scene_SubModel_setRenderPriority);
 SE_DECLARE_FUNC(js_scene_SubModel_update);
 SE_DECLARE_FUNC(js_scene_SubModel_SubModel);
 
