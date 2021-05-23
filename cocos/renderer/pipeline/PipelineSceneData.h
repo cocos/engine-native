@@ -45,7 +45,8 @@ public:
     PipelineSceneData()          = default;
     ~PipelineSceneData() override = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
-    void setPipelineSharedSceneData(scene::PipelineSharedSceneData *data);
+    // TODO(minggo):remove handle
+    void setPipelineSharedSceneData(uint32_t handle, scene::PipelineSharedSceneData *data);
     void destroy();
 
     CC_INLINE void  setShadowFramebuffer(const scene::Light *light, gfx::Framebuffer *framebuffer) { _shadowFrameBufferMap.emplace(light, framebuffer); }
@@ -56,7 +57,9 @@ public:
     CC_INLINE void                    setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
     CC_INLINE void                    setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
     CC_INLINE scene::Sphere *getSphere() const { return _sphere; }
-
+    CC_INLINE uint32_t getSharedSceneDataHandle() const { return _sharedSceneDataHandle; }
+    
+    
 private:
     RenderObjectList _renderObjects;
     RenderObjectList _shadowObjects;
@@ -67,6 +70,9 @@ private:
     scene::Sphere *                 _sphere          = nullptr;
 
     std::unordered_map<const scene::Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
+    
+    // TODO(minggo): remove it.
+    uint32_t _sharedSceneDataHandle{0};
 };
 
 } // namespace pipeline

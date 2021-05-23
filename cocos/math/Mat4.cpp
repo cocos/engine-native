@@ -30,7 +30,8 @@
 NS_CC_MATH_BEGIN
 
 Mat4::Mat4() {
-    *this = IDENTITY;
+    // As JS defautl mat4 is zero, so change it to zero.
+    *this = ZERO;
 }
 
 Mat4::Mat4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24,

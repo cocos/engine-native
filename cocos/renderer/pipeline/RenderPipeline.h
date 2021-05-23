@@ -59,7 +59,7 @@ public:
     virtual void render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras);
     virtual void resize(uint width, uint height){};
 
-    void setPipelineSharedSceneData(scene::PipelineSharedSceneData *data);
+    void setPipelineSharedSceneData(uint32_t handle, scene::PipelineSharedSceneData *data);
 
     inline const RenderFlowList &                  getFlows() const { return _flows; }
     inline uint                                    getTag() const { return _tag; }

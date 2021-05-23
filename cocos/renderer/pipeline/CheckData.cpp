@@ -234,7 +234,10 @@ static void checkModels(const uint *models1, const std::vector<scene::Model *> &
 }
 
 static void checkScene(Scene *scene, scene::RenderScene *newScene) {
-    checkMainLight(GET_LIGHT(scene->modelsID), newScene->getMainLight());
+    if (scene->mainLightID) {
+        checkMainLight(GET_LIGHT(scene->mainLightID), newScene->getMainLight());
+    }
+    
     checkSpotLights(scene->getSpotLightArrayID(), newScene->getSpotLights());
     checkSphereLights(scene->getSphereLightArrayID(), newScene->getSphereLights());
     checkUIBatches(scene->getUIBatches(), newScene->getDrawBatch2Ds());
