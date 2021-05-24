@@ -43,14 +43,14 @@ bool AABB::aabbAabb(const AABB &aabb) const {
 }
 
 int AABB::aabbPlane(const Plane &plane) const {
-    auto r = halfExtents.x * std::abs(plane.normal.x) +
-             halfExtents.y * std::abs(plane.normal.y) +
-             halfExtents.z * std::abs(plane.normal.z);
-    auto dot = Vec3::dot(plane.normal, center);
-    if (dot + r < plane.distance) {
+    auto r = halfExtents.x * std::abs(plane.n.x) +
+             halfExtents.y * std::abs(plane.n.y) +
+             halfExtents.z * std::abs(plane.n.z);
+    auto dot = Vec3::dot(plane.n, center);
+    if (dot + r < plane.d) {
         return -1;
     }
-    if (dot - r > plane.distance) {
+    if (dot - r > plane.d) {
         return 0;
     }
     return 1;

@@ -29,13 +29,13 @@ namespace cc {
 namespace scene {
 
 int Sphere::interset(const Plane &plane) const {
-    const float dot = plane.normal.dot(_center);
-    const float r   = _radius * plane.normal.length();
-    if (dot + r < plane.distance) {
+    const float dot = plane.n.dot(_center);
+    const float r   = _radius * plane.n.length();
+    if (dot + r < plane.d) {
         return -1;
     }
 
-    if (dot - r > plane.distance) {
+    if (dot - r > plane.d) {
         return 0;
     }
 
@@ -100,12 +100,12 @@ void Sphere::mergeAABB(const AABB *aabb) {
 }
 
 int Sphere::spherePlane(const Plane &plane) {
-    const auto dot = cc::Vec3::dot(plane.normal, _center);
-    const auto r   = _radius * plane.normal.length();
-    if (dot + r < plane.distance) {
+    const auto dot = cc::Vec3::dot(plane.n, _center);
+    const auto r   = _radius * plane.n.length();
+    if (dot + r < plane.d) {
         return -1;
     }
-    if (dot - r > plane.distance) {
+    if (dot - r > plane.d) {
         return 0;
     }
     return 1;
