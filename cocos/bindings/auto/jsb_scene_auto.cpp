@@ -329,59 +329,59 @@ bool js_register_scene_DirectionalLight(se::Object* obj)
 se::Object* __jsb_cc_scene_Plane_proto = nullptr;
 se::Class* __jsb_cc_scene_Plane_class = nullptr;
 
-static bool js_scene_Plane_get_distance(se::State& s)
+static bool js_scene_Plane_get_d(se::State& s)
 {
     cc::scene::Plane* cobj = SE_THIS_OBJECT<cc::scene::Plane>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Plane_get_distance : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_Plane_get_d : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->distance, jsret, s.thisObject() /*ctx*/);
+    ok &= nativevalue_to_se(cobj->d, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->distance, s.thisObject(), s.rval());
+    SE_HOLD_RETURN_VALUE(cobj->d, s.thisObject(), s.rval());
     return true;
 }
-SE_BIND_PROP_GET(js_scene_Plane_get_distance)
+SE_BIND_PROP_GET(js_scene_Plane_get_d)
 
-static bool js_scene_Plane_set_distance(se::State& s)
+static bool js_scene_Plane_set_d(se::State& s)
 {
     const auto& args = s.args();
     cc::scene::Plane* cobj = SE_THIS_OBJECT<cc::scene::Plane>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Plane_set_distance : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_Plane_set_d : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->distance, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_Plane_set_distance : Error processing new value");
+    ok &= sevalue_to_native(args[0], &cobj->d, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_Plane_set_d : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_scene_Plane_set_distance)
+SE_BIND_PROP_SET(js_scene_Plane_set_d)
 
-static bool js_scene_Plane_get_normal(se::State& s)
+static bool js_scene_Plane_get_n(se::State& s)
 {
     cc::scene::Plane* cobj = SE_THIS_OBJECT<cc::scene::Plane>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Plane_get_normal : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_Plane_get_n : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->normal, jsret, s.thisObject() /*ctx*/);
+    ok &= nativevalue_to_se(cobj->n, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->normal, s.thisObject(), s.rval());
+    SE_HOLD_RETURN_VALUE(cobj->n, s.thisObject(), s.rval());
     return true;
 }
-SE_BIND_PROP_GET(js_scene_Plane_get_normal)
+SE_BIND_PROP_GET(js_scene_Plane_get_n)
 
-static bool js_scene_Plane_set_normal(se::State& s)
+static bool js_scene_Plane_set_n(se::State& s)
 {
     const auto& args = s.args();
     cc::scene::Plane* cobj = SE_THIS_OBJECT<cc::scene::Plane>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Plane_set_normal : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_Plane_set_n : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->normal, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_Plane_set_normal : Error processing new value");
+    ok &= sevalue_to_native(args[0], &cobj->n, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_Plane_set_n : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_scene_Plane_set_normal)
+SE_BIND_PROP_SET(js_scene_Plane_set_n)
 
 
 template<>
@@ -396,13 +396,13 @@ bool sevalue_to_native(const se::Value &from, cc::scene::Plane * to, se::Object 
     }
     se::Value field;
     bool ok = true;
-    json->getProperty("distance", &field);
+    json->getProperty("d", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->distance), ctx);
+        ok &= sevalue_to_native(field, &(to->d), ctx);
     }
-    json->getProperty("normal", &field);
+    json->getProperty("n", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->normal), ctx);
+        ok &= sevalue_to_native(field, &(to->n), ctx);
     }
     return ok;
 }
@@ -443,10 +443,10 @@ static bool js_scene_Plane_constructor(se::State& s)
     {
         cc::scene::Plane* cobj = JSB_ALLOC(cc::scene::Plane);
         if (argc > 0 && !args[0].isUndefined()) {
-            ok &= sevalue_to_native(args[0], &(cobj->distance), nullptr);
+            ok &= sevalue_to_native(args[0], &(cobj->d), nullptr);
         }
         if (argc > 1 && !args[1].isUndefined()) {
-            ok &= sevalue_to_native(args[1], &(cobj->normal), nullptr);
+            ok &= sevalue_to_native(args[1], &(cobj->n), nullptr);
         }
 
         if(!ok) {
@@ -485,8 +485,8 @@ bool js_register_scene_Plane(se::Object* obj)
 {
     auto cls = se::Class::create("Plane", obj, nullptr, _SE(js_scene_Plane_constructor));
 
-    cls->defineProperty("distance", _SE(js_scene_Plane_get_distance), _SE(js_scene_Plane_set_distance));
-    cls->defineProperty("normal", _SE(js_scene_Plane_get_normal), _SE(js_scene_Plane_set_normal));
+    cls->defineProperty("d", _SE(js_scene_Plane_get_d), _SE(js_scene_Plane_set_d));
+    cls->defineProperty("n", _SE(js_scene_Plane_get_n), _SE(js_scene_Plane_set_n));
     cls->defineFinalizeFunction(_SE(js_cc_scene_Plane_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::Plane>(cls);
