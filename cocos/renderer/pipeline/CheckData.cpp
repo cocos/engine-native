@@ -3,6 +3,8 @@
 #include "helper/SharedMemory.h"
 #include "math/Mat4.h"
 #include "math/Vec3.h"
+#include "math/Vec4.h"
+#include "math/Vec2.h"
 #include "scene/RenderScene.h"
 #include "scene/RenderWindow.h"
 #include "scene/Frustum.h"
@@ -15,6 +17,7 @@
 #include "scene/Pass.h"
 #include "scene/Model.h"
 #include "scene/SubModel.h"
+#include "renderer/pipeline/RenderPipeline.h"
 
 namespace cc {
 namespace pipeline {
@@ -42,10 +45,22 @@ static void checkBool(uint32_t value, bool b) {
     assert((value == 1) == b);
 }
 
+static void checkVec2(const Vec2 &vec1, const Vec2 &vec2) {
+    assert(vec1.x == vec2.x);
+    assert(vec1.y == vec2.y);
+}
+
 static void checkVec3(const Vec3 &vec1, const Vec3 &vec2) {
     assert(vec1.x == vec2.x);
     assert(vec1.y == vec2.y);
     assert(vec1.z == vec2.z);
+}
+
+static void checkVec4(const Vec4 &vec1, const Vec4 &vec2) {
+    assert(vec1.x == vec2.x);
+    assert(vec1.y == vec2.y);
+    assert(vec1.z == vec2.z);
+    assert(vec1.w == vec2.w);
 }
 
 static void checkFrustum(const Frustum *frustum, const scene::Frustum &newFrustum) {
@@ -53,8 +68,8 @@ static void checkFrustum(const Frustum *frustum, const scene::Frustum &newFrustu
         checkVec3(frustum->vertices[i], newFrustum.vertices[i]);
     }
     for (int i = 0; i < 6; ++i) {
-        checkVec3(frustum->planes[i].normal, newFrustum.planes[i].normal);
-        assert(frustum->planes[i].distance == newFrustum.planes[i].distance);
+        checkVec3(frustum->planes[i].normal, newFrustum.planes[i].n);
+        assert(frustum->planes[i].distance == newFrustum.planes[i].d);
     }
 }
 
@@ -240,8 +255,8 @@ static void checkScene(Scene *scene, scene::RenderScene *newScene) {
     
     checkSpotLights(scene->getSpotLightArrayID(), newScene->getSpotLights());
     checkSphereLights(scene->getSphereLightArrayID(), newScene->getSphereLights());
-    checkUIBatches(scene->getUIBatches(), newScene->getDrawBatch2Ds());
-    checkModels(scene->getModels(), newScene->getModels());
+//    checkUIBatches(scene->getUIBatches(), newScene->getDrawBatch2Ds());
+//    checkModels(scene->getModels(), newScene->getModels());
 }
 
 static void checkCamera(Camera *camera, scene::Camera *newCamera) {
@@ -275,6 +290,77 @@ static void checkCamera(Camera *camera, scene::Camera *newCamera) {
     checkFrustum(GET_FRUSTUM(camera->frustumID), newCamera->frustum);
 }
 
+static void checkFog(const Fog *fog1, const scene::Fog *fog2) {
+    checkBool(fog1->enabled, fog2->enabled);
+    assert(fog1->fogType == fog2->type);
+    assert(fog1->fogDensity == fog2->density);
+    assert(fog1->fogStart == fog2->start);
+    assert(fog1->fogEnd == fog2->end);
+    assert(fog1->fogAtten == fog2->atten);
+    assert(fog1->fogTop == fog2->top);
+    assert(fog1->fogRange == fog2->range);
+    checkVec4(fog1->fogColor, fog2->color);
+}
+
+static void checkAmbient(const Ambient *ambient1, const scene::Ambient *ambient2) {
+    checkBool(ambient1->enabled, ambient2->enabled);
+    assert(ambient1->skyIllum == ambient2->skyIllum);
+    checkVec4(ambient1->skyColor, ambient2->skyColor);
+    checkVec4(ambient1->groundAlbedo, ambient2->groundAlbedo);
+}
+
+static void checkSkyBox(const Skybox *skyBox1, const scene::SkyBox *skyBox2) {
+    checkBool(skyBox1->enabled, skyBox2->enabled);
+    checkBool(skyBox1->isRGBE, skyBox2->isRGBE);
+    checkBool(skyBox1->useIBL, skyBox2->useIBL);
+    checkModel(GET_MODEL(skyBox1->modelID), skyBox2->model);
+}
+
+static void checkShadow(const Shadows *shadow1, const scene::Shadow *shadow2) {
+    checkBool(shadow1->enabled, shadow2->enabled);
+    checkBool(shadow1->dirty, shadow2->dirty);
+    checkBool(shadow1->shadowMapDirty, shadow2->shadowMapDirty);
+    checkBool(shadow1->selfShadow, shadow2->selfShadow);
+    checkBool(shadow1->autoAdapt, shadow2->autoAdapt);
+    assert(shadow1->shadowType == static_cast<uint32_t>(shadow2->shadowType));
+    assert(shadow1->distance == shadow2->distance);
+    checkPass(GET_PASS(shadow1->instancePass), shadow2->instancePass);
+    checkPass(GET_PASS(shadow1->planarPass), shadow2->planarPass);
+    assert(shadow1->nearValue == shadow2->nearValue);
+    assert(shadow1->farValue == shadow2->farValue);
+    assert(shadow1->aspect == shadow2->aspect);
+    assert(shadow1->pcfType == shadow2->pcfType);
+    assert(shadow1->bias == shadow2->bias);
+    assert(shadow1->packing == shadow2->packing);
+    assert(shadow1->linear == shadow2->linear);
+    assert(shadow1->normalBias == shadow2->normalBias);
+    assert(shadow1->orthoSize == shadow2->orthoSize);
+    checkVec4(shadow1->color, shadow2->color);
+    checkVec2(shadow1->size, shadow2->size);
+    checkVec3(shadow1->normal, shadow2->normal);
+    checkMat4(shadow1->matLight, shadow2->matLight);
+}
+
+static void checkPipelineSceneData() {
+    auto *sceneData = RenderPipeline::getInstance()->getPipelineSceneData();
+    auto *sharedData = sceneData->getSharedData();
+    
+    auto handle = sceneData->getSharedSceneDataHandle();
+    auto *oldSharedData = GET_PIPELINE_SHARED_SCENE_DATA(handle);
+    
+    checkBool(oldSharedData->isHDR, sharedData->isHDR);
+    assert(oldSharedData->shadingScale == sharedData->shadingScale);
+    assert(oldSharedData->fpScale == sharedData->fpScale);
+    assert(GET_SHADER(oldSharedData->deferredPostPassShader) == sharedData->deferredPostPassShader);
+    assert(GET_SHADER(oldSharedData->deferredLightPassShader) == sharedData->deferredLightPassShader);
+    checkPass(GET_PASS(oldSharedData->deferredLightPass), sharedData->deferredLightPass);
+    checkPass(GET_PASS(oldSharedData->deferredPostPass), sharedData->deferredPostPass);
+    checkFog(GET_FOG(oldSharedData->fog), sharedData->fog);
+    checkAmbient(GET_AMBIENT(oldSharedData->ambient), sharedData->ambient);
+    checkSkyBox(GET_SKYBOX(oldSharedData->skybox), sharedData->skybox);
+    checkShadow(GET_SHADOWS(oldSharedData->shadow), sharedData->shadow);
+}
+
 void checkData(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) {
     assert(cameras.size() == newCameras.size());
     
@@ -284,6 +370,8 @@ void checkData(const vector<uint> &cameras, const vector<scene::Camera *> &newCa
         checkCamera(camera, newCameras[i]);
         ++i;
     }
+    
+    checkPipelineSceneData();
 }
 
 }
