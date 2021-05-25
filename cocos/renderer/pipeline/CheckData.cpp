@@ -231,7 +231,10 @@ static void checkModel(const ModelView *model1, const scene::Model *model2) {
     assert(model1->visFlags == model2->getVisFlags());
     checkBool(model1->castShadow, model2->getCastShadow());
     checkBool(model1->receiveShadow, model2->getReceiveShadow());
-    checkAABB(GET_AABB(model1->worldBoundsID), *model2->getWorldBounds());
+    if (model1->worldBoundsID) {
+        checkAABB(GET_AABB(model1->worldBoundsID), *model2->getWorldBounds());
+    }
+    
     checkNode(GET_NODE(model1->nodeID), model2->getNode());
     checkNode(GET_NODE(model1->transformID), model2->getTransform());
     checkSubModles(model1->getSubModelID(), model2->getSubModels());
