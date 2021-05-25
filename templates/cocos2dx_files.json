@@ -19086,6 +19086,8 @@
         "cocos/bindings/manual/jsb_platform_android.cpp", 
         "cocos/bindings/manual/jsb_platfrom_apple.mm", 
         "cocos/bindings/manual/jsb_platfrom_win32.cpp", 
+        "cocos/bindings/manual/jsb_scene_manual.cpp", 
+        "cocos/bindings/manual/jsb_scene_manual.h", 
         "cocos/bindings/manual/jsb_socketio.cpp", 
         "cocos/bindings/manual/jsb_socketio.h", 
         "cocos/bindings/manual/jsb_spine_manual.cpp", 
