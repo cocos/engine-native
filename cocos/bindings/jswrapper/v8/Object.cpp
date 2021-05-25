@@ -431,7 +431,10 @@ bool Object::getArrayBufferData(uint8_t **ptr, size_t *length) const {
     v8::Local<v8::ArrayBuffer> arrBuf = v8::Local<v8::ArrayBuffer>::Cast(obj);
     const auto &backingStore = arrBuf->GetBackingStore();
     *ptr = (uint8_t *)backingStore->Data();
-    *length = backingStore->ByteLength();
+    if (length) {
+        *length = backingStore->ByteLength();
+    }
+
     return true;
 }
 

@@ -27,6 +27,7 @@
 
 #include <vector>
 #include "renderer/gfx-base/GFXBuffer.h"
+#include "renderer/gfx-base/GFXDef-common.h"
 #include "scene/AABB.h"
 #include "scene/Node.h"
 
@@ -56,9 +57,9 @@ public:
     
     inline void setCastShadow(bool value) { _castShadow = value; }
     inline void setEnabled(bool value) { _enabled = value; }
+    inline void setInstanceAttributes(const std::vector<gfx::Attribute> attributes) { _instanceAttributes = attributes; }
     inline void setInstmatWorldIdx(uint32_t idx) { _instmatWorldIdx = idx; }
     inline void setInstancedAttributeBlock(InstancedAttributeBlock *block) { _instanceAttributeBlock = block; }
-    //TODO: manual binding
     inline void setInstancedBuffer(uint8_t *buffer) { _instancedBuffer = buffer; }
     inline void setLocalBuffer(gfx::Buffer *buffer) { _localBuffer = buffer; }
     inline void setLocalData(float *data) { _localData = data; }

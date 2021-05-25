@@ -1631,6 +1631,25 @@ static bool js_scene_Model_setEnabled(se::State& s)
 }
 SE_BIND_FUNC(js_scene_Model_setEnabled)
 
+static bool js_scene_Model_setInstanceAttributes(se::State& s)
+{
+    cc::scene::Model* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Model_setInstanceAttributes : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<std::vector<cc::gfx::Attribute>, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_Model_setInstanceAttributes : Error processing arguments");
+        cobj->setInstanceAttributes(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_Model_setInstanceAttributes)
+
 static bool js_scene_Model_setInstmatWorldIdx(se::State& s)
 {
     cc::scene::Model* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1831,6 +1850,7 @@ bool js_register_scene_Model(se::Object* obj)
     cls->defineFunction("seVisFlag", _SE(js_scene_Model_seVisFlag));
     cls->defineFunction("setCastShadow", _SE(js_scene_Model_setCastShadow));
     cls->defineFunction("setEnabled", _SE(js_scene_Model_setEnabled));
+    cls->defineFunction("setInstanceAttributes", _SE(js_scene_Model_setInstanceAttributes));
     cls->defineFunction("setInstmatWorldIdx", _SE(js_scene_Model_setInstmatWorldIdx));
     cls->defineFunction("setLocalBuffer", _SE(js_scene_Model_setLocalBuffer));
     cls->defineFunction("setNode", _SE(js_scene_Model_setNode));

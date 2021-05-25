@@ -166,7 +166,7 @@ static void checkUIBatches(const uint *uiBaches, const std::vector<scene::DrawBa
     }
 }
 
-static void checkBuffer(uint8_t *b1, uint8_t *b2, uint32_t size) {
+static void checkBuffer(const uint8_t *b1, const uint8_t *b2, uint32_t size) {
     for (uint32_t i = 0; i < size; ++i) {
         assert(b1[i] == b2[i]);
     }
@@ -239,7 +239,10 @@ static void checkModel(const ModelView *model1, const scene::Model *model2) {
     checkNode(GET_NODE(model1->transformID), model2->getTransform());
     checkSubModles(model1->getSubModelID(), model2->getSubModels());
     checkInstancedAttributes(model1->getInstancedAttributeID(), model2->getInstanceAttributes());
-    // TODO(minggo): check instance buffer
+    
+    uint size{0};
+    const uint8_t *instanceBuffer = model1->getInstancedBuffer(&size);
+    checkBuffer(instanceBuffer, model2->getInstancedBuffer(), size);
 }
 
 static void checkModels(const uint *models1, const std::vector<scene::Model *> &models2) {
