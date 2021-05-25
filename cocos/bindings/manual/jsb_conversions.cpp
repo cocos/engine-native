@@ -1306,6 +1306,24 @@ bool sevalue_to_native(const se::Value &from, cc::Vec3 *to, se::Object *) {
 }
 
 template <>
+bool sevalue_to_native(const se::Value &from, cc::Vec2 *to, se::Object *) {
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Vec2 failed!");
+    if (!from.isObject()){
+        
+    }
+    se::Object *obj = from.toObject();
+    se::Value   x;
+    se::Value   y;
+    bool        ok = obj->getProperty("x", &x);
+    SE_PRECONDITION3(ok && x.isNumber(), false, *to = cc::Vec2::ZERO);
+    ok = obj->getProperty("y", &y);
+    SE_PRECONDITION3(ok && y.isNumber(), false, *to = cc::Vec2::ZERO);
+    to->x = x.toFloat();
+    to->y = y.toFloat();
+    return true;
+}
+
+template <>
 bool sevalue_to_native(const se::Value &from, std::vector<unsigned char> *to, se::Object *) {
     assert(from.isObject());
     se::Object *in = from.toObject();
