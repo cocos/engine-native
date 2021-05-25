@@ -1773,7 +1773,7 @@ void cmdFuncGLES3DestroyFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gp
 
 void cmdFuncGLES3BeginRenderPass(GLES3Device *device, uint subpassIdx, GLES3GPURenderPass *gpuRenderPass,
                                  GLES3GPUFramebuffer *gpuFramebuffer, const Rect *renderArea,
-                                 const Color *clearColors, float clearDepth, int clearStencil) {
+                                 const Color *clearColors, float clearDepth, uint clearStencil) {
     static uint attachmentLoadOpRecord = 0U;
 
     GLES3GPUStateCache *cache         = device->stateCache();
@@ -2505,8 +2505,8 @@ void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
                     }
                     break;
                 case DynamicStateFlagBit::STENCIL_WRITE_MASK: {
-                    const auto &front = dynamicStates->stencilStates[static_cast<uint>(StencilFace::FRONT)];
-                    const auto &back  = dynamicStates->stencilStates[static_cast<uint>(StencilFace::BACK)];
+                    const auto &front = dynamicStates->stencilStatesFront;
+                    const auto &back  = dynamicStates->stencilStatesBack;
                     if (cache->dss.stencilWriteMaskFront != front.writeMask) {
                         GL_CHECK(glStencilMaskSeparate(GL_FRONT, front.writeMask));
                         cache->dss.stencilWriteMaskFront = front.writeMask;
@@ -2517,8 +2517,8 @@ void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
                     }
                 } break;
                 case DynamicStateFlagBit::STENCIL_COMPARE_MASK: {
-                    const auto &front = dynamicStates->stencilStates[static_cast<uint>(StencilFace::FRONT)];
-                    const auto &back  = dynamicStates->stencilStates[static_cast<uint>(StencilFace::BACK)];
+                    const auto &front = dynamicStates->stencilStatesFront;
+                    const auto &back  = dynamicStates->stencilStatesBack;
                     if ((cache->dss.stencilRefFront != front.reference) ||
                         (cache->dss.stencilReadMaskFront != front.compareMask)) {
                         GL_CHECK(glStencilFuncSeparate(GL_FRONT,
