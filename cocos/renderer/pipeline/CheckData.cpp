@@ -259,7 +259,7 @@ static void checkScene(Scene *scene, scene::RenderScene *newScene) {
     checkSpotLights(scene->getSpotLightArrayID(), newScene->getSpotLights());
     checkSphereLights(scene->getSphereLightArrayID(), newScene->getSphereLights());
 //    checkUIBatches(scene->getUIBatches(), newScene->getDrawBatch2Ds());
-//    checkModels(scene->getModels(), newScene->getModels());
+    checkModels(scene->getModels(), newScene->getModels());
 }
 
 static void checkCamera(Camera *camera, scene::Camera *newCamera) {

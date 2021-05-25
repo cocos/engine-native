@@ -38,5 +38,9 @@ void Model::updateTransform() {
 void Model::updateUBOs(uint32_t /*stamp*/) {
 }
 
+void Model::addSubModel(SubModel *subModel) {
+    _subModels.push_back(subModel);
+}
+
 } // namespace scene
 } // namespace cc

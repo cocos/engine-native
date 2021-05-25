@@ -52,6 +52,8 @@ public:
     virtual void updateTransform();
     virtual void updateUBOs(uint32_t);
 
+    void addSubModel(SubModel *subModel);
+    
     inline void setCastShadow(bool value) { _castShadow = value; }
     inline void setEnabled(bool value) { _enabled = value; }
     inline void setInstmatWorldIdx(uint32_t idx) { _instmatWorldIdx = idx; }

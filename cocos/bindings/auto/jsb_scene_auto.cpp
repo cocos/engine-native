@@ -1232,6 +1232,25 @@ bool js_register_scene_SphereLight(se::Object* obj)
 se::Object* __jsb_cc_scene_Model_proto = nullptr;
 se::Class* __jsb_cc_scene_Model_class = nullptr;
 
+static bool js_scene_Model_addSubModel(se::State& s)
+{
+    cc::scene::Model* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Model_addSubModel : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::scene::SubModel*, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_Model_addSubModel : Error processing arguments");
+        cobj->addSubModel(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_Model_addSubModel)
+
 static bool js_scene_Model_getCastShadow(se::State& s)
 {
     cc::scene::Model* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1791,6 +1810,7 @@ bool js_register_scene_Model(se::Object* obj)
 {
     auto cls = se::Class::create("Model", obj, nullptr, _SE(js_scene_Model_constructor));
 
+    cls->defineFunction("addSubModel", _SE(js_scene_Model_addSubModel));
     cls->defineFunction("getCastShadow", _SE(js_scene_Model_getCastShadow));
     cls->defineFunction("getEnabled", _SE(js_scene_Model_getEnabled));
     cls->defineFunction("getInstanceAttributes", _SE(js_scene_Model_getInstanceAttributes));
