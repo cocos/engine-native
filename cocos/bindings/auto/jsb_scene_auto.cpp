@@ -23,89 +23,6 @@
 #ifndef JSB_FREE
 #define JSB_FREE(ptr) delete ptr
 #endif
-se::Object* __jsb_cc_scene_Node_proto = nullptr;
-se::Class* __jsb_cc_scene_Node_class = nullptr;
-
-static bool js_scene_Node_updateWorldTransform(se::State& s)
-{
-    cc::scene::Node* cobj = SE_THIS_OBJECT<cc::scene::Node>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Node_updateWorldTransform : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        cobj->updateWorldTransform();
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Node_updateWorldTransform)
-
-SE_DECLARE_FINALIZE_FUNC(js_cc_scene_Node_finalize)
-
-static bool js_scene_Node_constructor(se::State& s)  // constructor_overloaded.c
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    do {
-        if (argc == 0) {
-            cc::scene::Node* cobj = JSB_ALLOC(cc::scene::Node);
-            s.thisObject()->setPrivateData(cobj);
-            se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
-            return true;
-        }
-    } while(false);
-    do {
-        if (argc == 2) {
-            HolderType<void*, false> arg0 = {};
-            ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-            if (!ok) { ok = true; break; }
-            HolderType<unsigned int, false> arg1 = {};
-            ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-            if (!ok) { ok = true; break; }
-            cc::scene::Node* cobj = JSB_ALLOC(cc::scene::Node, arg0.value(), arg1.value());
-            s.thisObject()->setPrivateData(cobj);
-            se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
-            return true;
-        }
-    } while(false);
-    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
-    return false;
-}
-SE_BIND_CTOR(js_scene_Node_constructor, __jsb_cc_scene_Node_class, js_cc_scene_Node_finalize)
-
-
-
-
-static bool js_cc_scene_Node_finalize(se::State& s)
-{
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::scene::Node>(s));
-    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
-    {
-        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cc::scene::Node* cobj = SE_THIS_OBJECT<cc::scene::Node>(s);
-        JSB_FREE(cobj);
-    }
-    return true;
-}
-SE_BIND_FINALIZE_FUNC(js_cc_scene_Node_finalize)
-
-bool js_register_scene_Node(se::Object* obj)
-{
-    auto cls = se::Class::create("Node", obj, nullptr, _SE(js_scene_Node_constructor));
-
-    cls->defineFunction("updateWorldTransform", _SE(js_scene_Node_updateWorldTransform));
-    cls->defineFinalizeFunction(_SE(js_cc_scene_Node_finalize));
-    cls->install();
-    JSBClassType::registerClass<cc::scene::Node>(cls);
-
-    __jsb_cc_scene_Node_proto = cls->getProto();
-    __jsb_cc_scene_Node_class = cls;
-
-    se::ScriptEngine::getInstance()->clearException();
-    return true;
-}
 se::Object* __jsb_cc_scene_Light_proto = nullptr;
 se::Class* __jsb_cc_scene_Light_class = nullptr;
 
@@ -6975,7 +6892,6 @@ bool register_all_scene(se::Object* obj)
     }
     se::Object* ns = nsVal.toObject();
 
-    js_register_scene_Node(ns);
     js_register_scene_RenderWindow(ns);
     js_register_scene_DrawBatch2D(ns);
     js_register_scene_Fog(ns);
