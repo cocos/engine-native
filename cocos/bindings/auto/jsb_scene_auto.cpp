@@ -4456,6 +4456,25 @@ static bool js_scene_SubModel_setInputAssembler(se::State& s)
 }
 SE_BIND_FUNC(js_scene_SubModel_setInputAssembler)
 
+static bool js_scene_SubModel_setPasses(se::State& s)
+{
+    cc::scene::SubModel* cobj = SE_THIS_OBJECT<cc::scene::SubModel>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setPasses : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<std::vector<cc::scene::Pass *>, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_SubModel_setPasses : Error processing arguments");
+        cobj->setPasses(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_SubModel_setPasses)
+
 static bool js_scene_SubModel_setPlanarInstanceShader(se::State& s)
 {
     cc::scene::SubModel* cobj = SE_THIS_OBJECT<cc::scene::SubModel>(s);
@@ -4513,6 +4532,25 @@ static bool js_scene_SubModel_setRenderPriority(se::State& s)
 }
 SE_BIND_FUNC(js_scene_SubModel_setRenderPriority)
 
+static bool js_scene_SubModel_setShaders(se::State& s)
+{
+    cc::scene::SubModel* cobj = SE_THIS_OBJECT<cc::scene::SubModel>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setShaders : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<std::vector<cc::gfx::Shader *>, true> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_SubModel_setShaders : Error processing arguments");
+        cobj->setShaders(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_SubModel_setShaders)
+
 static bool js_scene_SubModel_update(se::State& s)
 {
     cc::scene::SubModel* cobj = SE_THIS_OBJECT<cc::scene::SubModel>(s);
@@ -4555,43 +4593,6 @@ static bool js_cc_scene_SubModel_finalize(se::State& s)
 }
 SE_BIND_FINALIZE_FUNC(js_cc_scene_SubModel_finalize)
 
-static bool js_scene_SubModel_setPasses(se::State& s) {
-    cc::scene::SubModel* cobj = SE_THIS_OBJECT<cc::scene::SubModel>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setPasses : Invalid Native Object");
-    const auto&    args = s.args();
-    size_t         argc = args.size();
-    CC_UNUSED bool ok   = true;
-    if (argc == 1) {
-        HolderType<std::vector<cc::scene::Pass*>, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_SubModel_setPasses : Error processing arguments");
-        cobj->setPasses(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_scene_SubModel_setPasses)
-
-static bool js_scene_SubModel_setShaders(se::State& s) {
-    cc::scene::SubModel* cobj = SE_THIS_OBJECT<cc::scene::SubModel>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setShaders : Invalid Native Object");
-    const auto&    args = s.args();
-    size_t         argc = args.size();
-    CC_UNUSED bool ok   = true;
-    if (argc == 1) {
-        HolderType<std::vector<cc::gfx::Shader*>, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_SubModel_setShaders : Error processing arguments");
-        cobj->setShaders(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_scene_SubModel_setShaders)
-
-
 bool js_register_scene_SubModel(se::Object* obj)
 {
     auto cls = se::Class::create("SubModel", obj, nullptr, _SE(js_scene_SubModel_constructor));
@@ -4604,10 +4605,10 @@ bool js_register_scene_SubModel(se::Object* obj)
     cls->defineFunction("getShader", _SE(js_scene_SubModel_getShader));
     cls->defineFunction("setDescriptorSet", _SE(js_scene_SubModel_setDescriptorSet));
     cls->defineFunction("setInputAssembler", _SE(js_scene_SubModel_setInputAssembler));
+    cls->defineFunction("setPasses", _SE(js_scene_SubModel_setPasses));
     cls->defineFunction("setPlanarInstanceShader", _SE(js_scene_SubModel_setPlanarInstanceShader));
     cls->defineFunction("setPlanarShader", _SE(js_scene_SubModel_setPlanarShader));
     cls->defineFunction("setRenderPriority", _SE(js_scene_SubModel_setRenderPriority));
-    cls->defineFunction("setPasses", _SE(js_scene_SubModel_setPasses));
     cls->defineFunction("setShaders", _SE(js_scene_SubModel_setShaders));
     cls->defineFunction("update", _SE(js_scene_SubModel_update));
     cls->defineFinalizeFunction(_SE(js_cc_scene_SubModel_finalize));
