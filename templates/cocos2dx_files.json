@@ -1049,6 +1049,7 @@
         "cocos/scene/BakedSkinningModel.cpp", 
         "cocos/scene/BakedSkinningModel.h", 
         "cocos/scene/Camera.h", 
+        "cocos/scene/Define.cpp", 
         "cocos/scene/Define.h", 
         "cocos/scene/DirectionalLight.cpp", 
         "cocos/scene/DirectionalLight.h", 
