@@ -149,11 +149,11 @@ static void checkPass(const PassView *pass1, const scene::Pass *pass2) {
 static void checkUIBatch(const UIBatch *batch1, const scene::DrawBatch2D *batch2) {
     assert(batch1->visFlags == batch2->visFlags);
     assert(batch1->passCount == batch2->passes.size());
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < batch1->passCount; ++i) {
         checkPass(batch1->getPassView(i), batch2->passes[i]);
         assert(batch1->getShader(i) == batch2->shaders[i]);
     }
-    assert(batch1->getDescriptorSet() == batch2->descriptSet);
+    assert(batch1->getDescriptorSet() == batch2->descriptorSet);
     assert(batch1->getInputAssembler() == batch2->inputAssembler);
 }
 
@@ -261,8 +261,8 @@ static void checkScene(Scene *scene, scene::RenderScene *newScene) {
     
     checkSpotLights(scene->getSpotLightArrayID(), newScene->getSpotLights());
     checkSphereLights(scene->getSphereLightArrayID(), newScene->getSphereLights());
-//    checkUIBatches(scene->getUIBatches(), newScene->getDrawBatch2Ds());
-    checkModels(scene->getModels(), newScene->getModels());
+    checkUIBatches(scene->getUIBatches(), newScene->getDrawBatch2Ds());
+//    checkModels(scene->getModels(), newScene->getModels());
 }
 
 static void checkCamera(Camera *camera, scene::Camera *newCamera) {

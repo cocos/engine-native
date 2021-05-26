@@ -36,7 +36,7 @@ class Pass;
 
 struct DrawBatch2D final {
     uint32_t             visFlags{0};
-    gfx::DescriptorSet * descriptSet{nullptr};
+    gfx::DescriptorSet * descriptorSet{nullptr};
     gfx::InputAssembler *inputAssembler{nullptr};
     std::vector<Pass *>  passes;
     std::vector<gfx::Shader *> shaders;

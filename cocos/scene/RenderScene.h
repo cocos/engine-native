@@ -60,6 +60,7 @@ public:
 
     void addBatch(DrawBatch2D *);
     void removeBatch(DrawBatch2D *);
+    void removeBatch(uint32_t index);
     void removeBatches();
 
     inline void setMainLight(DirectionalLight *light) { _directionalLight = light; }

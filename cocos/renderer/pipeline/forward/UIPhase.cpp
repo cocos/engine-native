@@ -53,7 +53,7 @@ void UIPhase::render(scene::Camera *camera, gfx::RenderPass *renderPass) {
             if (pass->getPhase() != _phaseID) continue;
             auto *const shader         = batch->shaders[i];
             auto *const inputAssembler = batch->inputAssembler;
-            auto *const ds             = batch->descriptSet;
+            auto *const ds             = batch->descriptorSet;
             auto *      pso            = cc::pipeline::PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, renderPass);
             cmdBuff->bindPipelineState(pso);
             cmdBuff->bindDescriptorSet(materialSet, pass->getDescriptorSet());

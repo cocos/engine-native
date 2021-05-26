@@ -96,6 +96,14 @@ void RenderScene::removeBatch(DrawBatch2D *drawBatch2D) {
     }
 }
 
+void RenderScene::removeBatch(uint32_t index) {
+    if (index >= static_cast<uint32_t>(_drawBatch2Ds.size())) {
+        return;
+    }
+
+    removeBatch(_drawBatch2Ds[index]);
+}
+
 void RenderScene::removeBatches() {
     _drawBatch2Ds.clear();
 }

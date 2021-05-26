@@ -4980,32 +4980,32 @@ static bool js_scene_DrawBatch2D_set_visFlags(se::State& s)
 }
 SE_BIND_PROP_SET(js_scene_DrawBatch2D_set_visFlags)
 
-static bool js_scene_DrawBatch2D_get_descriptSet(se::State& s)
+static bool js_scene_DrawBatch2D_get_descriptorSet(se::State& s)
 {
     cc::scene::DrawBatch2D* cobj = SE_THIS_OBJECT<cc::scene::DrawBatch2D>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_DrawBatch2D_get_descriptSet : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_DrawBatch2D_get_descriptorSet : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
-    ok &= nativevalue_to_se(cobj->descriptSet, jsret, s.thisObject() /*ctx*/);
+    ok &= nativevalue_to_se(cobj->descriptorSet, jsret, s.thisObject() /*ctx*/);
     s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->descriptSet, s.thisObject(), s.rval());
+    SE_HOLD_RETURN_VALUE(cobj->descriptorSet, s.thisObject(), s.rval());
     return true;
 }
-SE_BIND_PROP_GET(js_scene_DrawBatch2D_get_descriptSet)
+SE_BIND_PROP_GET(js_scene_DrawBatch2D_get_descriptorSet)
 
-static bool js_scene_DrawBatch2D_set_descriptSet(se::State& s)
+static bool js_scene_DrawBatch2D_set_descriptorSet(se::State& s)
 {
     const auto& args = s.args();
     cc::scene::DrawBatch2D* cobj = SE_THIS_OBJECT<cc::scene::DrawBatch2D>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_DrawBatch2D_set_descriptSet : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_DrawBatch2D_set_descriptorSet : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->descriptSet, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_DrawBatch2D_set_descriptSet : Error processing new value");
+    ok &= sevalue_to_native(args[0], &cobj->descriptorSet, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_DrawBatch2D_set_descriptorSet : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_scene_DrawBatch2D_set_descriptSet)
+SE_BIND_PROP_SET(js_scene_DrawBatch2D_set_descriptorSet)
 
 static bool js_scene_DrawBatch2D_get_inputAssembler(se::State& s)
 {
@@ -5105,9 +5105,9 @@ bool sevalue_to_native(const se::Value &from, cc::scene::DrawBatch2D * to, se::O
     if(!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->visFlags), ctx);
     }
-    json->getProperty("descriptSet", &field);
+    json->getProperty("descriptorSet", &field);
     if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->descriptSet), ctx);
+        ok &= sevalue_to_native(field, &(to->descriptorSet), ctx);
     }
     json->getProperty("inputAssembler", &field);
     if(!field.isNullOrUndefined()) {
@@ -5163,7 +5163,7 @@ static bool js_scene_DrawBatch2D_constructor(se::State& s)
             ok &= sevalue_to_native(args[0], &(cobj->visFlags), nullptr);
         }
         if (argc > 1 && !args[1].isUndefined()) {
-            ok &= sevalue_to_native(args[1], &(cobj->descriptSet), nullptr);
+            ok &= sevalue_to_native(args[1], &(cobj->descriptorSet), nullptr);
         }
         if (argc > 2 && !args[2].isUndefined()) {
             ok &= sevalue_to_native(args[2], &(cobj->inputAssembler), nullptr);
@@ -5212,7 +5212,7 @@ bool js_register_scene_DrawBatch2D(se::Object* obj)
     auto cls = se::Class::create("DrawBatch2D", obj, nullptr, _SE(js_scene_DrawBatch2D_constructor));
 
     cls->defineProperty("visFlags", _SE(js_scene_DrawBatch2D_get_visFlags), _SE(js_scene_DrawBatch2D_set_visFlags));
-    cls->defineProperty("descriptSet", _SE(js_scene_DrawBatch2D_get_descriptSet), _SE(js_scene_DrawBatch2D_set_descriptSet));
+    cls->defineProperty("descriptorSet", _SE(js_scene_DrawBatch2D_get_descriptorSet), _SE(js_scene_DrawBatch2D_set_descriptorSet));
     cls->defineProperty("inputAssembler", _SE(js_scene_DrawBatch2D_get_inputAssembler), _SE(js_scene_DrawBatch2D_set_inputAssembler));
     cls->defineProperty("passes", _SE(js_scene_DrawBatch2D_get_passes), _SE(js_scene_DrawBatch2D_set_passes));
     cls->defineProperty("shaders", _SE(js_scene_DrawBatch2D_get_shaders), _SE(js_scene_DrawBatch2D_set_shaders));
@@ -5402,19 +5402,34 @@ SE_BIND_FUNC(js_scene_RenderScene_getSpotLights)
 
 static bool js_scene_RenderScene_removeBatch(se::State& s)
 {
+    CC_UNUSED bool ok = true;
     cc::scene::RenderScene* cobj = SE_THIS_OBJECT<cc::scene::RenderScene>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_RenderScene_removeBatch : Invalid Native Object");
+    SE_PRECONDITION2( cobj, false, "js_scene_RenderScene_removeBatch : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<cc::scene::DrawBatch2D*, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_RenderScene_removeBatch : Error processing arguments");
-        cobj->removeBatch(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    do {
+        if (argc == 1) {
+            HolderType<unsigned int, false> arg0 = {};
+
+            ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+            if (!ok) { ok = true; break; }
+            cobj->removeBatch(arg0.value());
+            return true;
+        }
+    } while(false);
+
+    do {
+        if (argc == 1) {
+            HolderType<cc::scene::DrawBatch2D*, false> arg0 = {};
+
+            ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+            if (!ok) { ok = true; break; }
+            cobj->removeBatch(arg0.value());
+            return true;
+        }
+    } while(false);
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_scene_RenderScene_removeBatch)
