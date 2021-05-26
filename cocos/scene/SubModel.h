@@ -50,6 +50,8 @@ public:
     gfx::Shader *getShader(int) const;
     Pass *       getPass(int) const;
 
+    inline void setShaders(std::vector<gfx::Shader *> shaders) { _shaders = shaders; }
+    inline void setPasses(std::vector<Pass *> passes) { _passes = passes; }
     inline void setDescriptorSet(gfx::DescriptorSet *descriptorSet) { _descriptSet = descriptorSet; }
     inline void setInputAssembler(gfx::InputAssembler *ia) { _ia = ia; }
     inline void setPlanarInstanceShader(gfx::Shader *shader) { _planarInstanceShader = shader; }

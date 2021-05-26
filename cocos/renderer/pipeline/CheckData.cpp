@@ -193,8 +193,8 @@ static void checkSubModel(SubModelView *subModel1, const scene::SubModel *subMod
     assert(subModel1->passCount == static_cast<uint32_t>(subModel2->getPasses().size()));
     
     for (uint32_t i = 0; i < subModel1->passCount; ++i) {
-        checkPass(subModel1->getPassView(subModel1->passID[i]), subModel2->getPass(i));
-        assert(subModel1->getShader(subModel1->shaderID[i]) == subModel2->getShader(i));
+        checkPass(subModel1->getPassView(i), subModel2->getPass(i));
+        assert(subModel1->getShader(i) == subModel2->getShader(i));
     }
     assert(subModel1->getPlanarShader() == subModel2->getPlanarShader());
     assert(subModel1->getPlanarInstanceShader() == subModel2->getPlanarInstanceShader());
