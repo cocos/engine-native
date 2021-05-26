@@ -2,23 +2,23 @@
 #include <vector>
 #include "helper/SharedMemory.h"
 #include "math/Mat4.h"
+#include "math/Vec2.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-#include "math/Vec2.h"
+#include "renderer/pipeline/RenderPipeline.h"
+#include "scene/AABB.h"
+#include "scene/Define.h"
+#include "scene/DirectionalLight.h"
+#include "scene/Frustum.h"
+#include "scene/Light.h"
+#include "scene/Model.h"
+#include "scene/Node.h"
+#include "scene/Pass.h"
 #include "scene/RenderScene.h"
 #include "scene/RenderWindow.h"
-#include "scene/Frustum.h"
-#include "scene/Node.h"
-#include "scene/Light.h"
-#include "scene/DirectionalLight.h"
-#include "scene/SpotLight.h"
 #include "scene/SphereLight.h"
-#include "scene/AABB.h"
-#include "scene/Pass.h"
-#include "scene/Model.h"
+#include "scene/SpotLight.h"
 #include "scene/SubModel.h"
-#include "scene/Define.h"
-#include "renderer/pipeline/RenderPipeline.h"
 
 namespace cc {
 namespace pipeline {
@@ -80,7 +80,12 @@ static void checkAABB(const AABB *aabb1, const scene::AABB &aabb2) {
 }
 
 static void checkNode(Node *node, scene::Node *newNode) {
-    //TODO(minggo)
+    assert(node->flagsChanged == newNode->getFlagsChanged());
+    assert(node->layer == newNode->getLayer());
+    checkVec3(node->worldScale, newNode->getWorldScale());
+    checkVec3(node->worldPosition, newNode->getWorldPosition());
+    checkVec4(node->worldRotation, newNode->getWorldRotation());
+    checkMat4(node->worldMatrix, newNode->getWorldMatrix());
 }
 
 static void checkWindow(RenderWindow *window, scene::RenderWindow *newWindow) {
@@ -126,20 +131,20 @@ static void checkSphereLight(const Light *light1, scene::SphereLight *light2) {
 }
 
 static void checkSpotLights(const uint *lightArrayID, const std::vector<scene::SpotLight *> &spotLights) {
-    const uint32_t        count            = lightArrayID ? lightArrayID[0] : 0;
+    const uint32_t count = lightArrayID ? lightArrayID[0] : 0;
     assert(count == static_cast<uint32_t>(spotLights.size()));
     for (uint32_t i = 1; i <= count; ++i) {
-        auto *spotLight = cc::pipeline::Scene::getSpotLight(lightArrayID[i]);
-        checkSpotLight(spotLight, spotLights[i-1]);
+        const auto *spotLight = cc::pipeline::Scene::getSpotLight(lightArrayID[i]);
+        checkSpotLight(spotLight, spotLights[i - 1]);
     }
 }
 
 static void checkSphereLights(const uint *lightArrayID, const std::vector<scene::SphereLight *> &sphereoLights) {
-    const uint32_t        count            = lightArrayID ? lightArrayID[0] : 0;
+    const uint32_t count = lightArrayID ? lightArrayID[0] : 0;
     assert(count == static_cast<uint32_t>(sphereoLights.size()));
     for (uint32_t i = 1; i <= count; ++i) {
-        auto *spotLight = cc::pipeline::Scene::getSpotLight(lightArrayID[i]);
-        checkSphereLight(spotLight, sphereoLights[i-1]);
+        const auto *spotLight = cc::pipeline::Scene::getSpotLight(lightArrayID[i]);
+        checkSphereLight(spotLight, sphereoLights[i - 1]);
     }
 }
 
@@ -163,7 +168,7 @@ static void checkUIBatches(const uint *uiBaches, const std::vector<scene::DrawBa
     assert(count == static_cast<uint32_t>(drawBatches.size()));
     for (uint32_t i = 1; i <= count; ++i) {
         auto *uiBatch = GET_UI_BATCH(uiBaches[i]);
-        checkUIBatch(uiBatch, drawBatches[i-1]);
+        checkUIBatch(uiBatch, drawBatches[i - 1]);
     }
 }
 
@@ -174,14 +179,14 @@ static void checkBuffer(const uint8_t *b1, const uint8_t *b2, uint32_t size) {
 }
 
 static void checkRenderingSubMesh(const RenderingSubMesh *subMesh1, const scene::RenderingSubMesh *subMesh2) {
-    const uint *flatBuffers1 = subMesh1->getFlatBufferArrayID();
-    const auto &flatBuffers2 = subMesh2->flatBuffers;
-    const uint32_t count = flatBuffers1 ? flatBuffers1[0] : 0;
+    const uint *   flatBuffers1 = subMesh1->getFlatBufferArrayID();
+    const auto &   flatBuffers2 = subMesh2->flatBuffers;
+    const uint32_t count        = flatBuffers1 ? flatBuffers1[0] : 0;
     assert(count == static_cast<uint32_t>(flatBuffers2.size()));
     uint32_t size = 0;
     for (uint32_t i = 1; i < count; ++i) {
-        auto *f1 = GET_FLAT_BUFFER(i);
-        const auto &f2 = flatBuffers2[i-1];
+        auto *      f1 = GET_FLAT_BUFFER(i);
+        const auto &f2 = flatBuffers2[i - 1];
         assert(f1->stride == f2.stride);
         assert(f1->count == f2.count);
         checkBuffer(f1->getBuffer(&size), f2.data, f2.size);
@@ -191,7 +196,7 @@ static void checkRenderingSubMesh(const RenderingSubMesh *subMesh1, const scene:
 static void checkSubModel(SubModelView *subModel1, const scene::SubModel *subModel2) {
     assert(subModel1->priority == static_cast<uint32_t>(subModel2->getPriority()));
     assert(subModel1->passCount == static_cast<uint32_t>(subModel2->getPasses().size()));
-    
+
     for (uint32_t i = 0; i < subModel1->passCount; ++i) {
         checkPass(subModel1->getPassView(subModel1->passID[i]), subModel2->getPass(i));
         assert(subModel1->getShader(subModel1->shaderID[i]) == subModel2->getShader(i));
@@ -207,7 +212,7 @@ static void checkSubModles(const uint *subModles1, const std::vector<scene::SubM
     const uint32_t count = subModles1 ? subModles1[0] : 0;
     assert(count == static_cast<uint32_t>(subModles2.size()));
     for (uint32_t i = 1; i < count; ++i) {
-        checkSubModel(GET_SUBMODEL(subModles1[i]), subModles2[i-1]);
+        checkSubModel(GET_SUBMODEL(subModles1[i]), subModles2[i - 1]);
     }
 }
 
@@ -223,7 +228,7 @@ static void checkInstancedAttributes(const uint *attrs1, const std::vector<gfx::
     const uint32_t count = attrs1 ? attrs1[0] : 0;
     assert(count == static_cast<uint32_t>(attrs2.size()));
     for (uint32_t i = 1; i < count; ++i) {
-        checkAttribute(GET_ATTRIBUTE(attrs1[i]), attrs2[i-1]);
+        checkAttribute(GET_ATTRIBUTE(attrs1[i]), attrs2[i - 1]);
     }
 }
 
@@ -235,13 +240,13 @@ static void checkModel(const ModelView *model1, const scene::Model *model2) {
     if (model1->worldBoundsID) {
         checkAABB(GET_AABB(model1->worldBoundsID), *model2->getWorldBounds());
     }
-    
+
     checkNode(GET_NODE(model1->nodeID), model2->getNode());
     checkNode(GET_NODE(model1->transformID), model2->getTransform());
     checkSubModles(model1->getSubModelID(), model2->getSubModels());
     checkInstancedAttributes(model1->getInstancedAttributeID(), model2->getInstanceAttributes());
-    
-    uint size{0};
+
+    uint           size{0};
     const uint8_t *instanceBuffer = model1->getInstancedBuffer(&size);
     checkBuffer(instanceBuffer, model2->getInstancedBuffer(), size);
 }
@@ -251,7 +256,7 @@ static void checkModels(const uint *models1, const std::vector<scene::Model *> &
     assert(count == static_cast<uint32_t>(models2.size()));
     for (uint32_t i = 1; i <= count; ++i) {
         auto *model = GET_MODEL(models1[i]);
-        checkModel(model, models2[i-1]);
+        checkModel(model, models2[i - 1]);
     }
 }
 
@@ -259,11 +264,11 @@ static void checkScene(Scene *scene, scene::RenderScene *newScene) {
     if (scene->mainLightID) {
         checkMainLight(GET_LIGHT(scene->mainLightID), newScene->getMainLight());
     }
-    
+
     checkSpotLights(scene->getSpotLightArrayID(), newScene->getSpotLights());
     checkSphereLights(scene->getSphereLightArrayID(), newScene->getSphereLights());
     checkUIBatches(scene->getUIBatches(), newScene->getDrawBatch2Ds());
-//    checkModels(scene->getModels(), newScene->getModels());
+    checkModels(scene->getModels(), newScene->getModels());
 }
 
 static void checkCamera(Camera *camera, scene::Camera *newCamera) {
@@ -290,7 +295,7 @@ static void checkCamera(Camera *camera, scene::Camera *newCamera) {
     checkMat4(camera->matViewProjInvOffscreen, newCamera->matViewProjInvOffscreen);
     checkMat4(camera->matProjOffscreen, newCamera->matProjOffscreen);
     checkMat4(camera->matProjInvOffscreen, newCamera->matProjInvOffscreen);
-    
+
     checkNode(GET_NODE(camera->nodeID), newCamera->node);
     checkScene(GET_SCENE(camera->sceneID), newCamera->scene);
     checkWindow(GET_WINDOW(camera->windowID), newCamera->window);
@@ -349,12 +354,12 @@ static void checkShadow(const Shadows *shadow1, const scene::Shadow *shadow2) {
 }
 
 static void checkPipelineSceneData() {
-    auto *sceneData = RenderPipeline::getInstance()->getPipelineSceneData();
+    auto *sceneData  = RenderPipeline::getInstance()->getPipelineSceneData();
     auto *sharedData = sceneData->getSharedData();
-    
-    auto handle = sceneData->getSharedSceneDataHandle();
+
+    auto  handle        = sceneData->getSharedSceneDataHandle();
     auto *oldSharedData = GET_PIPELINE_SHARED_SCENE_DATA(handle);
-    
+
     checkBool(oldSharedData->isHDR, sharedData->isHDR);
     assert(oldSharedData->shadingScale == sharedData->shadingScale);
     assert(oldSharedData->fpScale == sharedData->fpScale);
@@ -376,16 +381,16 @@ void checkRoot() {
 
 void checkData(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) {
     assert(cameras.size() == newCameras.size());
-    
+
     int i = 0;
     for (uint cameraID : cameras) {
         auto *camera = GET_CAMERA(cameraID);
         checkCamera(camera, newCameras[i]);
         ++i;
     }
-    
+
     checkPipelineSceneData();
 }
 
-}
-}
+} // namespace pipeline
+} // namespace cc
