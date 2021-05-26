@@ -206,6 +206,16 @@ template<>
 bool sevalue_to_native(const se::Value &, cc::scene::PipelineSharedSceneData *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::PipelineSharedSceneData);
 
+extern se::Object* __jsb_cc_scene_Root_proto;
+extern se::Class* __jsb_cc_scene_Root_class;
+
+bool js_register_cc_scene_Root(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::Root *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::Root);
+
 extern se::Object* __jsb_cc_scene_SubModel_proto;
 extern se::Class* __jsb_cc_scene_SubModel_class;
 

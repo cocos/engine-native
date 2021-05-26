@@ -4124,6 +4124,177 @@ bool js_register_scene_PipelineSharedSceneData(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
+se::Object* __jsb_cc_scene_Root_proto = nullptr;
+se::Class* __jsb_cc_scene_Root_class = nullptr;
+
+static bool js_scene_Root_get_cumulativeTime(se::State& s)
+{
+    cc::scene::Root* cobj = SE_THIS_OBJECT<cc::scene::Root>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Root_get_cumulativeTime : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->cumulativeTime, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->cumulativeTime, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_Root_get_cumulativeTime)
+
+static bool js_scene_Root_set_cumulativeTime(se::State& s)
+{
+    const auto& args = s.args();
+    cc::scene::Root* cobj = SE_THIS_OBJECT<cc::scene::Root>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Root_set_cumulativeTime : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->cumulativeTime, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_Root_set_cumulativeTime : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_Root_set_cumulativeTime)
+
+static bool js_scene_Root_get_frameTime(se::State& s)
+{
+    cc::scene::Root* cobj = SE_THIS_OBJECT<cc::scene::Root>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Root_get_frameTime : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->frameTime, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->frameTime, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_Root_get_frameTime)
+
+static bool js_scene_Root_set_frameTime(se::State& s)
+{
+    const auto& args = s.args();
+    cc::scene::Root* cobj = SE_THIS_OBJECT<cc::scene::Root>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Root_set_frameTime : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->frameTime, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_Root_set_frameTime : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_Root_set_frameTime)
+
+
+template<>
+bool sevalue_to_native(const se::Value &from, cc::scene::Root * to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto* data = (cc::scene::Root*)json->getPrivateData();
+    if (data) {
+        *to = *data;
+        return true;
+    }
+    se::Value field;
+    bool ok = true;
+    json->getProperty("cumulativeTime", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cumulativeTime), ctx);
+    }
+    json->getProperty("frameTime", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frameTime), ctx);
+    }
+    return ok;
+}
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_scene_Root_finalize)
+
+static bool js_scene_Root_constructor(se::State& s)
+{
+    CC_UNUSED bool ok = true;
+    const auto& args = s.args();
+    size_t argc = args.size();
+
+    if(argc == 0) 
+    {
+        cc::scene::Root* cobj = JSB_ALLOC(cc::scene::Root);
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+    else if(argc == 1 && args[0].isObject())
+    {
+        se::Object *json = args[0].toObject();
+        se::Value field;
+
+        cc::scene::Root* cobj = JSB_ALLOC(cc::scene::Root);
+        ok &= sevalue_to_native(args[0], cobj, s.thisObject());
+        if(!ok) {
+            JSB_FREE(cobj);
+            SE_REPORT_ERROR("argument convertion error");
+            return false;
+        }
+
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+    else
+    {
+        cc::scene::Root* cobj = JSB_ALLOC(cc::scene::Root);
+        if (argc > 0 && !args[0].isUndefined()) {
+            ok &= sevalue_to_native(args[0], &(cobj->cumulativeTime), nullptr);
+        }
+        if (argc > 1 && !args[1].isUndefined()) {
+            ok &= sevalue_to_native(args[1], &(cobj->frameTime), nullptr);
+        }
+
+        if(!ok) {
+            JSB_FREE(cobj);
+            SE_REPORT_ERROR("Argument convertion error");
+            return false;
+        }
+
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
+}
+SE_BIND_CTOR(js_scene_Root_constructor, __jsb_cc_scene_Root_class, js_cc_scene_Root_finalize)
+
+
+
+
+static bool js_cc_scene_Root_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::scene::Root>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::scene::Root* cobj = SE_THIS_OBJECT<cc::scene::Root>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_scene_Root_finalize)
+
+bool js_register_scene_Root(se::Object* obj)
+{
+    auto cls = se::Class::create("Root", obj, nullptr, _SE(js_scene_Root_constructor));
+
+    cls->defineProperty("cumulativeTime", _SE(js_scene_Root_get_cumulativeTime), _SE(js_scene_Root_set_cumulativeTime));
+    cls->defineProperty("frameTime", _SE(js_scene_Root_get_frameTime), _SE(js_scene_Root_set_frameTime));
+    cls->defineFinalizeFunction(_SE(js_cc_scene_Root_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::scene::Root>(cls);
+
+    __jsb_cc_scene_Root_proto = cls->getProto();
+    __jsb_cc_scene_Root_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
 se::Object* __jsb_cc_scene_SubModel_proto = nullptr;
 se::Class* __jsb_cc_scene_SubModel_class = nullptr;
 
@@ -6809,6 +6980,7 @@ bool register_all_scene(se::Object* obj)
     js_register_scene_DrawBatch2D(ns);
     js_register_scene_Fog(ns);
     js_register_scene_Frustum(ns);
+    js_register_scene_Root(ns);
     js_register_scene_Light(ns);
     js_register_scene_AABB(ns);
     js_register_scene_Pass(ns);

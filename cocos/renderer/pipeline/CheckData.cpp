@@ -17,6 +17,7 @@
 #include "scene/Pass.h"
 #include "scene/Model.h"
 #include "scene/SubModel.h"
+#include "scene/Define.h"
 #include "renderer/pipeline/RenderPipeline.h"
 
 namespace cc {
@@ -365,6 +366,12 @@ static void checkPipelineSceneData() {
     checkAmbient(GET_AMBIENT(oldSharedData->ambient), sharedData->ambient);
     checkSkyBox(GET_SKYBOX(oldSharedData->skybox), sharedData->skybox);
     checkShadow(GET_SHADOWS(oldSharedData->shadow), sharedData->shadow);
+}
+
+void checkRoot() {
+    const auto *root1 = GET_ROOT();
+    const auto *root2 = scene::Root::instance;
+    assert(root1->cumulativeTime == root2->cumulativeTime);
 }
 
 void checkData(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) {

@@ -113,7 +113,7 @@ struct FlatBuffer {
     uint32_t stride{0};
     uint32_t count{0};
     uint32_t size{0};
-    uint8_t  *data{nullptr};
+    uint8_t *data{nullptr};
 };
 
 struct RenderingSubMesh {
@@ -121,8 +121,18 @@ struct RenderingSubMesh {
 };
 
 struct Root {
+    Root() {
+        Root::instance = this;
+    }
+
+    ~Root() {
+        Root::instance = nullptr;
+    }
+
     float cumulativeTime{0};
     float frameTime{0};
+
+    static Root *instance;
 };
 
 enum class RenderPriority {

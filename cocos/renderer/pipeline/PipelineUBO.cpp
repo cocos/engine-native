@@ -47,8 +47,7 @@ namespace pipeline {
 Mat4 matShadowViewProj;
 
 void PipelineUBO::updateGlobalUBOView(const RenderPipeline * /*pipeline*/, std::array<float, UBOGlobal::COUNT> *bufferView) {
-    //TODO(minggo): add root
-//    auto *const root          = GET_ROOT();
+    auto *const root          = scene::Root::instance;
     auto *      device        = gfx::Device::getInstance();
     auto &      uboGlobalView = *bufferView;
 
@@ -56,8 +55,8 @@ void PipelineUBO::updateGlobalUBOView(const RenderPipeline * /*pipeline*/, std::
     const auto shadingHeight = std::floor(device->getHeight());
 
     // update UBOGlobal
-//    uboGlobalView[UBOGlobal::TIME_OFFSET + 0] = root->cumulativeTime;
-//    uboGlobalView[UBOGlobal::TIME_OFFSET + 1] = root->frameTime;
+    uboGlobalView[UBOGlobal::TIME_OFFSET + 0] = root->cumulativeTime;
+    uboGlobalView[UBOGlobal::TIME_OFFSET + 1] = root->frameTime;
     uboGlobalView[UBOGlobal::TIME_OFFSET + 2] = static_cast<float>(Application::getInstance()->getTotalFrames());
 
     uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 0] = static_cast<float>(device->getWidth());
