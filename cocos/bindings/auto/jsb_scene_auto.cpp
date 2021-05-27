@@ -3133,13 +3133,13 @@ bool js_register_scene_Shadow(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
-se::Object* __jsb_cc_scene_SkyBox_proto = nullptr;
-se::Class* __jsb_cc_scene_SkyBox_class = nullptr;
+se::Object* __jsb_cc_scene_Skybox_proto = nullptr;
+se::Class* __jsb_cc_scene_Skybox_class = nullptr;
 
-static bool js_scene_SkyBox_get_enabled(se::State& s)
+static bool js_scene_Skybox_get_enabled(se::State& s)
 {
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_get_enabled : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_get_enabled : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
@@ -3148,25 +3148,25 @@ static bool js_scene_SkyBox_get_enabled(se::State& s)
     SE_HOLD_RETURN_VALUE(cobj->enabled, s.thisObject(), s.rval());
     return true;
 }
-SE_BIND_PROP_GET(js_scene_SkyBox_get_enabled)
+SE_BIND_PROP_GET(js_scene_Skybox_get_enabled)
 
-static bool js_scene_SkyBox_set_enabled(se::State& s)
+static bool js_scene_Skybox_set_enabled(se::State& s)
 {
     const auto& args = s.args();
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_set_enabled : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_set_enabled : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= sevalue_to_native(args[0], &cobj->enabled, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_SkyBox_set_enabled : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_scene_Skybox_set_enabled : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_scene_SkyBox_set_enabled)
+SE_BIND_PROP_SET(js_scene_Skybox_set_enabled)
 
-static bool js_scene_SkyBox_get_isRGBE(se::State& s)
+static bool js_scene_Skybox_get_isRGBE(se::State& s)
 {
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_get_isRGBE : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_get_isRGBE : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
@@ -3175,25 +3175,25 @@ static bool js_scene_SkyBox_get_isRGBE(se::State& s)
     SE_HOLD_RETURN_VALUE(cobj->isRGBE, s.thisObject(), s.rval());
     return true;
 }
-SE_BIND_PROP_GET(js_scene_SkyBox_get_isRGBE)
+SE_BIND_PROP_GET(js_scene_Skybox_get_isRGBE)
 
-static bool js_scene_SkyBox_set_isRGBE(se::State& s)
+static bool js_scene_Skybox_set_isRGBE(se::State& s)
 {
     const auto& args = s.args();
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_set_isRGBE : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_set_isRGBE : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= sevalue_to_native(args[0], &cobj->isRGBE, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_SkyBox_set_isRGBE : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_scene_Skybox_set_isRGBE : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_scene_SkyBox_set_isRGBE)
+SE_BIND_PROP_SET(js_scene_Skybox_set_isRGBE)
 
-static bool js_scene_SkyBox_get_useIBL(se::State& s)
+static bool js_scene_Skybox_get_useIBL(se::State& s)
 {
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_get_useIBL : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_get_useIBL : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
@@ -3202,25 +3202,25 @@ static bool js_scene_SkyBox_get_useIBL(se::State& s)
     SE_HOLD_RETURN_VALUE(cobj->useIBL, s.thisObject(), s.rval());
     return true;
 }
-SE_BIND_PROP_GET(js_scene_SkyBox_get_useIBL)
+SE_BIND_PROP_GET(js_scene_Skybox_get_useIBL)
 
-static bool js_scene_SkyBox_set_useIBL(se::State& s)
+static bool js_scene_Skybox_set_useIBL(se::State& s)
 {
     const auto& args = s.args();
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_set_useIBL : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_set_useIBL : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= sevalue_to_native(args[0], &cobj->useIBL, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_SkyBox_set_useIBL : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_scene_Skybox_set_useIBL : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_scene_SkyBox_set_useIBL)
+SE_BIND_PROP_SET(js_scene_Skybox_set_useIBL)
 
-static bool js_scene_SkyBox_get_model(se::State& s)
+static bool js_scene_Skybox_get_model(se::State& s)
 {
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_get_model : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_get_model : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     se::Value jsret;
@@ -3229,28 +3229,28 @@ static bool js_scene_SkyBox_get_model(se::State& s)
     SE_HOLD_RETURN_VALUE(cobj->model, s.thisObject(), s.rval());
     return true;
 }
-SE_BIND_PROP_GET(js_scene_SkyBox_get_model)
+SE_BIND_PROP_GET(js_scene_Skybox_get_model)
 
-static bool js_scene_SkyBox_set_model(se::State& s)
+static bool js_scene_Skybox_set_model(se::State& s)
 {
     const auto& args = s.args();
-    cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkyBox_set_model : Invalid Native Object");
+    cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Skybox_set_model : Invalid Native Object");
 
     CC_UNUSED bool ok = true;
     ok &= sevalue_to_native(args[0], &cobj->model, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_SkyBox_set_model : Error processing new value");
+    SE_PRECONDITION2(ok, false, "js_scene_Skybox_set_model : Error processing new value");
     return true;
 }
-SE_BIND_PROP_SET(js_scene_SkyBox_set_model)
+SE_BIND_PROP_SET(js_scene_Skybox_set_model)
 
 
 template<>
-bool sevalue_to_native(const se::Value &from, cc::scene::SkyBox * to, se::Object *ctx)
+bool sevalue_to_native(const se::Value &from, cc::scene::Skybox * to, se::Object *ctx)
 {
     assert(from.isObject());
     se::Object *json = from.toObject();
-    auto* data = (cc::scene::SkyBox*)json->getPrivateData();
+    auto* data = (cc::scene::Skybox*)json->getPrivateData();
     if (data) {
         *to = *data;
         return true;
@@ -3276,9 +3276,9 @@ bool sevalue_to_native(const se::Value &from, cc::scene::SkyBox * to, se::Object
     return ok;
 }
 
-SE_DECLARE_FINALIZE_FUNC(js_cc_scene_SkyBox_finalize)
+SE_DECLARE_FINALIZE_FUNC(js_cc_scene_Skybox_finalize)
 
-static bool js_scene_SkyBox_constructor(se::State& s)
+static bool js_scene_Skybox_constructor(se::State& s)
 {
     CC_UNUSED bool ok = true;
     const auto& args = s.args();
@@ -3286,7 +3286,7 @@ static bool js_scene_SkyBox_constructor(se::State& s)
 
     if(argc == 0) 
     {
-        cc::scene::SkyBox* cobj = JSB_ALLOC(cc::scene::SkyBox);
+        cc::scene::Skybox* cobj = JSB_ALLOC(cc::scene::Skybox);
         s.thisObject()->setPrivateData(cobj);
         se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
         return true;
@@ -3296,7 +3296,7 @@ static bool js_scene_SkyBox_constructor(se::State& s)
         se::Object *json = args[0].toObject();
         se::Value field;
 
-        cc::scene::SkyBox* cobj = JSB_ALLOC(cc::scene::SkyBox);
+        cc::scene::Skybox* cobj = JSB_ALLOC(cc::scene::Skybox);
         ok &= sevalue_to_native(args[0], cobj, s.thisObject());
         if(!ok) {
             JSB_FREE(cobj);
@@ -3310,7 +3310,7 @@ static bool js_scene_SkyBox_constructor(se::State& s)
     }
     else
     {
-        cc::scene::SkyBox* cobj = JSB_ALLOC(cc::scene::SkyBox);
+        cc::scene::Skybox* cobj = JSB_ALLOC(cc::scene::Skybox);
         if (argc > 0 && !args[0].isUndefined()) {
             ok &= sevalue_to_native(args[0], &(cobj->enabled), nullptr);
         }
@@ -3338,38 +3338,38 @@ static bool js_scene_SkyBox_constructor(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_CTOR(js_scene_SkyBox_constructor, __jsb_cc_scene_SkyBox_class, js_cc_scene_SkyBox_finalize)
+SE_BIND_CTOR(js_scene_Skybox_constructor, __jsb_cc_scene_Skybox_class, js_cc_scene_Skybox_finalize)
 
 
 
 
-static bool js_cc_scene_SkyBox_finalize(se::State& s)
+static bool js_cc_scene_Skybox_finalize(se::State& s)
 {
-    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::scene::SkyBox>(s));
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::scene::Skybox>(s));
     if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
     {
         se::NonRefNativePtrCreatedByCtorMap::erase(iter);
-        cc::scene::SkyBox* cobj = SE_THIS_OBJECT<cc::scene::SkyBox>(s);
+        cc::scene::Skybox* cobj = SE_THIS_OBJECT<cc::scene::Skybox>(s);
         JSB_FREE(cobj);
     }
     return true;
 }
-SE_BIND_FINALIZE_FUNC(js_cc_scene_SkyBox_finalize)
+SE_BIND_FINALIZE_FUNC(js_cc_scene_Skybox_finalize)
 
-bool js_register_scene_SkyBox(se::Object* obj)
+bool js_register_scene_Skybox(se::Object* obj)
 {
-    auto cls = se::Class::create("SkyBox", obj, nullptr, _SE(js_scene_SkyBox_constructor));
+    auto cls = se::Class::create("Skybox", obj, nullptr, _SE(js_scene_Skybox_constructor));
 
-    cls->defineProperty("enabled", _SE(js_scene_SkyBox_get_enabled), _SE(js_scene_SkyBox_set_enabled));
-    cls->defineProperty("isRGBE", _SE(js_scene_SkyBox_get_isRGBE), _SE(js_scene_SkyBox_set_isRGBE));
-    cls->defineProperty("useIBL", _SE(js_scene_SkyBox_get_useIBL), _SE(js_scene_SkyBox_set_useIBL));
-    cls->defineProperty("model", _SE(js_scene_SkyBox_get_model), _SE(js_scene_SkyBox_set_model));
-    cls->defineFinalizeFunction(_SE(js_cc_scene_SkyBox_finalize));
+    cls->defineProperty("enabled", _SE(js_scene_Skybox_get_enabled), _SE(js_scene_Skybox_set_enabled));
+    cls->defineProperty("isRGBE", _SE(js_scene_Skybox_get_isRGBE), _SE(js_scene_Skybox_set_isRGBE));
+    cls->defineProperty("useIBL", _SE(js_scene_Skybox_get_useIBL), _SE(js_scene_Skybox_set_useIBL));
+    cls->defineProperty("model", _SE(js_scene_Skybox_get_model), _SE(js_scene_Skybox_set_model));
+    cls->defineFinalizeFunction(_SE(js_cc_scene_Skybox_finalize));
     cls->install();
-    JSBClassType::registerClass<cc::scene::SkyBox>(cls);
+    JSBClassType::registerClass<cc::scene::Skybox>(cls);
 
-    __jsb_cc_scene_SkyBox_proto = cls->getProto();
-    __jsb_cc_scene_SkyBox_class = cls;
+    __jsb_cc_scene_Skybox_proto = cls->getProto();
+    __jsb_cc_scene_Skybox_class = cls;
 
     se::ScriptEngine::getInstance()->clearException();
     return true;
@@ -7003,7 +7003,7 @@ bool register_all_scene(se::Object* obj)
     js_register_scene_Pass(ns);
     js_register_scene_SphereLight(ns);
     js_register_scene_SubModel(ns);
-    js_register_scene_SkyBox(ns);
+    js_register_scene_Skybox(ns);
     js_register_scene_RenderScene(ns);
     js_register_scene_Plane(ns);
     js_register_scene_Camera(ns);

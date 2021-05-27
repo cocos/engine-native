@@ -81,7 +81,7 @@ struct Shadow {
     Mat4 matLight;
 };
 
-struct SkyBox {
+struct Skybox {
     bool   enabled{false};
     bool   isRGBE{false};
     bool   useIBL{false};
@@ -101,7 +101,7 @@ struct PipelineSharedSceneData {
     float        fpScale{0};
     Ambient *    ambient{nullptr};
     Shadow *     shadow{nullptr};
-    SkyBox *     skybox{nullptr};
+    Skybox *     skybox{nullptr};
     Fog *        fog{nullptr};
     Pass *       deferredLightPass{nullptr};
     gfx::Shader *deferredLightPassShader{nullptr};

@@ -321,7 +321,7 @@ static void checkAmbient(const Ambient *ambient1, const scene::Ambient *ambient2
     checkVec4(ambient1->groundAlbedo, ambient2->groundAlbedo);
 }
 
-static void checkSkyBox(const Skybox *skyBox1, const scene::SkyBox *skyBox2) {
+static void checkSkyBox(const Skybox *skyBox1, const scene::Skybox *skyBox2) {
     checkBool(skyBox1->enabled, skyBox2->enabled);
     checkBool(skyBox1->isRGBE, skyBox2->isRGBE);
     checkBool(skyBox1->useIBL, skyBox2->useIBL);

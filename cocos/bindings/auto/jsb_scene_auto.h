@@ -176,15 +176,15 @@ template<>
 bool sevalue_to_native(const se::Value &, cc::scene::Shadow *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::Shadow);
 
-extern se::Object* __jsb_cc_scene_SkyBox_proto;
-extern se::Class* __jsb_cc_scene_SkyBox_class;
+extern se::Object* __jsb_cc_scene_Skybox_proto;
+extern se::Class* __jsb_cc_scene_Skybox_class;
 
-bool js_register_cc_scene_SkyBox(se::Object* obj);
+bool js_register_cc_scene_Skybox(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 template<>
-bool sevalue_to_native(const se::Value &, cc::scene::SkyBox *, se::Object *ctx);
-JSB_REGISTER_OBJECT_TYPE(cc::scene::SkyBox);
+bool sevalue_to_native(const se::Value &, cc::scene::Skybox *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::Skybox);
 
 extern se::Object* __jsb_cc_scene_Ambient_proto;
 extern se::Class* __jsb_cc_scene_Ambient_class;
