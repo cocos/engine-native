@@ -54,5 +54,3 @@ function ensureRemove(clearDirectory) {
         console.log(error);
     }
 }
-
-
