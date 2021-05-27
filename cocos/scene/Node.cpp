@@ -28,11 +28,6 @@
 namespace cc {
 namespace scene {
 
-Node::Node(uint8_t *data, uint32_t offset, uint32_t length) {
-    CC_ASSERT(length == sizeof(NodeLayout));
-    initWithData(data + offset);
-}
-
 void Node::updateWorldTransform() {
 }
 

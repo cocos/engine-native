@@ -46,14 +46,14 @@ struct NodeLayout {
 
 class Node final {
 public:
-    explicit Node(uint8_t *, uint32_t offset, uint32_t length);
     Node()             = default;
     Node(const Node &) = delete;
     Node(Node &&)      = delete;
     ~Node()            = default;
     Node &operator=(const Node &) = delete;
     Node &operator=(Node &&) = delete;
-
+    
+    void initWithData(uint8_t *data);
     void updateWorldTransform();
 
     //    inline void setFlagsChanged(bool value) { _flagsChanged = value; }
@@ -71,8 +71,6 @@ public:
     inline const Vec3 &getWorldScale() const { return _nodeLayout->worldScale; }
 
 private:
-    void initWithData(uint8_t *);
-
     NodeLayout *_nodeLayout{nullptr};
     bool       _dirtyFlags{false};
     bool       _hasChangeFlags{false};
