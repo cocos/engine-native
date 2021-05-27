@@ -5,7 +5,6 @@ const path = require("path");
 const { existsSync, removeSync } = require('fs-extra');
 
 // npm run clear-platform
-// 清理仓库内的与平台无关的第三方库
 let externalDir = path.join(__dirname, "../external");
 let failed = false;
 
@@ -16,26 +15,26 @@ function main() {
 }
 
 function clearUselessPlatform() {
-    console.log(chalk.magenta(`==== 移除平台无关第三方库 ====`));
-    console.log(`  ${chalk.green('当前平台: ')} ${process.platform}`);
-    console.log(`  ${chalk.green('第三方库目录: ')} ${externalDir}`);
+    console.log(chalk.magenta(`==== Remove useless 3rd-libs for current platform ====`));
+    console.log(`  ${chalk.green('current platform: ')} ${process.platform}`);
+    console.log(`  ${chalk.green('3rd-libs directory: ')} ${externalDir}`);
     if (process.platform === 'darwin') {
         // remove win32 related 3rd-libs
-        console.log(chalk.magenta(`==== 移除win32第三方库 ====`));
+        console.log(chalk.magenta(`==== Remove win32 related 3rd-libs ====`));
         let clearDirectory = path.join(externalDir, "./win32");
-        console.log(`  ${chalk.green('清理目录: ')} ${clearDirectory}`);
+        console.log(`  ${chalk.green('Remove directory: ')} ${clearDirectory}`);
         ensureRemove(clearDirectory);
     } else {
         // remove apple related 3rd-libs
-        console.log(chalk.magenta(`==== 移除apple第三方库 ====`));
+        console.log(chalk.magenta(`==== Remove apple related 3rd-libs ====`));
         let clearDirectory = path.join(externalDir, "./mac");
-        console.log(`  ${chalk.green('清理目录: ')} ${clearDirectory}`);
+        console.log(`  ${chalk.green('Remove directory: ')} ${clearDirectory}`);
         ensureRemove(clearDirectory);
         clearDirectory = path.join(externalDir, "./ios");
-        console.log(`  ${chalk.green('清理目录: ')} ${clearDirectory}`);
+        console.log(`  ${chalk.green('Remove directory: ')} ${clearDirectory}`);
         ensureRemove(clearDirectory);
     }
-    // 异常退出
+    // abnormal exit 
     if (failed) {
         process.exit(-1);
     }
@@ -45,13 +44,13 @@ function ensureRemove(clearDirectory) {
     try {
         if (existsSync(clearDirectory)) {
             removeSync(clearDirectory);
-            console.log(`  ${chalk.green('成功')}`);
+            console.log(`  ${chalk.green('Success')}`);
         } else {
-            console.log(`  ${chalk.yellow('目录不存在: 跳过')}`);
+            console.log(`  ${chalk.yellow('Directory does not exist: skip')}`);
         }
     } catch (error) {
         failed = true;
-        console.log(`  ${chalk.red('失败')}`);
+        console.log(`  ${chalk.red('Failure')}`);
         console.log(error);
     }
 }
