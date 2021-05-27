@@ -79,7 +79,12 @@ static bool js_scene_Node_initWithData(se::State& s) // constructor_overloaded.c
 }
 SE_BIND_FUNC(js_scene_Node_initWithData)
 
-bool register_all_scene_manual(se::Object* obj) {
+static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
+    return false;
+}
+SE_BIND_FUNC(js_scene_SubModel_setRenderingSubMesh)
+
+bool register_all_scene_manual(se::Object *obj) {
     // Get the ns
     se::Value nsVal;
     if (!obj->getProperty("ns", &nsVal)) {
@@ -92,5 +97,6 @@ bool register_all_scene_manual(se::Object* obj) {
     __jsb_cc_scene_Model_proto->defineFunction("setInstancedBuffer", _SE(js_scene_Model_setInstancedBuffer));
     __jsb_cc_scene_Node_proto->defineFunction("initWithData", _SE(js_scene_Node_initWithData));
 
+    __jsb_cc_scene_SubModel_proto->defineFunction("setRenderingSubMesh", _SE(js_scene_SubModel_setRenderingSubMesh));
     return true;
 }

@@ -148,8 +148,78 @@ static void checkSphereLights(const uint *lightArrayID, const std::vector<scene:
     }
 }
 
+static void checkRasterizerState(cc::gfx::RasterizerState* r1, cc::gfx::RasterizerState* r2) {
+    assert(r1->cullMode == r2->cullMode);
+    assert(r1->depthBias == r2->depthBias);
+    assert(r1->depthBiasClamp == r2->depthBiasClamp);
+    assert(r1->depthBiasEnabled == r2->depthBiasEnabled);
+    assert(r1->depthBiasSlop == r2->depthBiasSlop);
+    assert(r1->isDepthClip == r2->isDepthClip);
+    assert(r1->isDiscard == r2->isDiscard);
+    assert(r1->isFrontFaceCCW == r2->isFrontFaceCCW);
+    assert(r1->isMultisample == r2->isMultisample);
+    assert(r1->lineWidth == r2->lineWidth);
+    assert(r1->polygonMode == r2->polygonMode);
+    assert(r1->shadeModel == r2->shadeModel);
+}
+
+static void checkDepthStencilState(cc::gfx::DepthStencilState *ds1, cc::gfx::DepthStencilState *ds2) {
+    assert(ds1->depthFunc == ds2->depthFunc);
+    assert(ds1->depthTest == ds2->depthTest);
+    assert(ds1->depthWrite == ds2->depthWrite);
+    assert(ds1->stencilFailOpBack == ds2->stencilFailOpBack);
+    assert(ds1->stencilFailOpFront == ds2->stencilFailOpFront);
+    assert(ds1->stencilFuncBack == ds2->stencilFuncBack);
+    assert(ds1->stencilFuncFront == ds2->stencilFuncFront);
+    assert(ds1->stencilPassOpBack == ds2->stencilPassOpBack);
+    assert(ds1->stencilPassOpFront == ds2->stencilPassOpFront);
+    assert(ds1->stencilReadMaskBack == ds2->stencilReadMaskBack);
+    assert(ds1->stencilReadMaskFront == ds2->stencilReadMaskFront);
+    assert(ds1->stencilRefBack == ds2->stencilRefBack);
+    assert(ds1->stencilRefFront == ds2->stencilRefFront);
+    assert(ds1->stencilTestBack == ds2->stencilTestBack);
+    assert(ds1->stencilTestFront == ds2->stencilTestFront);
+    assert(ds1->stencilWriteMaskBack == ds2->stencilWriteMaskBack);
+    assert(ds1->stencilWriteMaskFront == ds2->stencilWriteMaskFront);
+    assert(ds1->stencilZFailOpBack == ds2->stencilZFailOpBack);
+    assert(ds1->stencilZFailOpFront == ds2->stencilZFailOpFront);
+}
+
+static void checkBlendTarget(cc::gfx::BlendTarget bt1, cc::gfx::BlendTarget bt2) {
+    assert(bt1.blend == bt2.blend);
+    assert(bt1.blendAlphaEq == bt2.blendAlphaEq);
+    assert(bt1.blendColorMask == bt2.blendColorMask);
+    assert(bt1.blendDst == bt2.blendDst);
+    assert(bt1.blendDstAlpha == bt2.blendDstAlpha);
+    assert(bt1.blendEq == bt2.blendEq);
+    assert(bt1.blendSrc == bt2.blendSrc);
+    assert(bt1.blendSrcAlpha == bt2.blendSrcAlpha);
+}
+
+static void checkBlendState(cc::gfx::BlendState* bs1, cc::gfx::BlendState* bs2) {
+    assert(bs1->isA2C == bs2->isA2C);
+    assert(bs1->isIndepend == bs2->isIndepend);
+    assert(bs1->blendColor == bs2->blendColor);
+    const size_t blendTarCount = bs1->targets.size();
+    assert(blendTarCount == bs2->targets.size());
+    for (int i = 0; i < blendTarCount; ++i) {
+        checkBlendTarget(bs1->targets[i], bs2->targets[i]);
+    }
+}
+
 static void checkPass(const PassView *pass1, const scene::Pass *pass2) {
-    //TODO(minggo)
+    assert(pass1->priority == static_cast<uint32_t>(pass2->getPriority()));
+    assert(pass1->stage == static_cast<uint32_t>(pass2->getStage()));
+    assert(pass1->phase == static_cast<uint32_t>(pass2->getPhase()));
+    assert(pass1->batchingScheme == static_cast<uint32_t>(pass2->getBatchingScheme()));
+    assert(pass1->primitive == static_cast<uint32_t>(pass2->getPrimitive()));
+    assert(pass1->dynamicState == static_cast<uint32_t>(pass2->getDynamicState()));
+    assert(pass1->hash == pass2->getHash());
+    checkRasterizerState(pass1->getRasterizerState(), pass2->getRasterizerState());
+    checkDepthStencilState(pass1->getDepthStencilState(), pass2->getDepthStencilState());
+    checkBlendState(pass1->getBlendState(), pass2->getBlendState());
+    assert(pass1->getDescriptorSet() == pass2->getDescriptorSet());
+    assert(pass1->getPipelineLayout() == pass2->getPipelineLayout());
 }
 
 static void checkUIBatch(const UIBatch *batch1, const scene::DrawBatch2D *batch2) {
@@ -205,7 +275,7 @@ static void checkSubModel(SubModelView *subModel1, const scene::SubModel *subMod
     assert(subModel1->getPlanarInstanceShader() == subModel2->getPlanarInstanceShader());
     assert(subModel1->getDescriptorSet() == subModel2->getDescriptorSet());
     assert(subModel1->getInputAssembler() == subModel2->getInputAssembler());
-    checkRenderingSubMesh(subModel1->getSubMesh(), subModel2->getSubMesh());
+    // checkRenderingSubMesh(subModel1->getSubMesh(), subModel2->getSubMesh());
 }
 
 static void checkSubModles(const uint *subModles1, const std::vector<scene::SubModel *> &subModles2) {
