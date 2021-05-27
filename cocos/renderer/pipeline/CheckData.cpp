@@ -240,9 +240,15 @@ static void checkModel(const ModelView *model1, const scene::Model *model2) {
     if (model1->worldBoundsID) {
         checkAABB(GET_AABB(model1->worldBoundsID), *model2->getWorldBounds());
     }
-
-    checkNode(GET_NODE(model1->nodeID), model2->getNode());
-    checkNode(GET_NODE(model1->transformID), model2->getTransform());
+    
+    if (model1->nodeID) {
+        checkNode(GET_NODE(model1->nodeID), model2->getNode());
+    }
+    
+    if (model1->transformID) {
+        checkNode(GET_NODE(model1->transformID), model2->getTransform());
+    }
+    
     checkSubModles(model1->getSubModelID(), model2->getSubModels());
     checkInstancedAttributes(model1->getInstancedAttributeID(), model2->getInstanceAttributes());
 
