@@ -8,6 +8,7 @@ const { existsSync, removeSync } = require('fs-extra');
 // 清理仓库内的与平台无关的第三方库
 let externalDir = path.join(__dirname, "../external");
 let failed = false;
+
 main();
 
 function main() {
