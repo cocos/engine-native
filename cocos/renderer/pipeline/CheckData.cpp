@@ -202,7 +202,7 @@ static void checkBlendState(cc::gfx::BlendState* bs1, cc::gfx::BlendState* bs2) 
     assert(bs1->blendColor == bs2->blendColor);
     const size_t blendTarCount = bs1->targets.size();
     assert(blendTarCount == bs2->targets.size());
-    for (int i = 0; i < blendTarCount; ++i) {
+    for (size_t i = 0; i < blendTarCount; ++i) {
         checkBlendTarget(bs1->targets[i], bs2->targets[i]);
     }
 }
@@ -225,7 +225,7 @@ static void checkPass(const PassView *pass1, const scene::Pass *pass2) {
 static void checkUIBatch(const UIBatch *batch1, const scene::DrawBatch2D *batch2) {
     assert(batch1->visFlags == batch2->visFlags);
     assert(batch1->passCount == batch2->passes.size());
-    for (int i = 0; i < batch1->passCount; ++i) {
+    for (uint32_t i = 0; i < batch1->passCount; ++i) {
         checkPass(batch1->getPassView(i), batch2->passes[i]);
         assert(batch1->getShader(i) == batch2->shaders[i]);
     }
