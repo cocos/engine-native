@@ -275,7 +275,7 @@ static void checkSubModel(SubModelView *subModel1, const scene::SubModel *subMod
     assert(subModel1->getPlanarInstanceShader() == subModel2->getPlanarInstanceShader());
     assert(subModel1->getDescriptorSet() == subModel2->getDescriptorSet());
     assert(subModel1->getInputAssembler() == subModel2->getInputAssembler());
-    // checkRenderingSubMesh(subModel1->getSubMesh(), subModel2->getSubMesh());
+    checkRenderingSubMesh(subModel1->getSubMesh(), subModel2->getSubMesh());
 }
 
 static void checkSubModles(const uint *subModles1, const std::vector<scene::SubModel *> &subModles2) {
