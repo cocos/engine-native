@@ -63,7 +63,7 @@ public:
     //    inline void setWorldRotation(const Quaternion &rotation) { _worldRotation = rotation; }
     //    inline void setWorldScale(const Vec3 &scale) { _worldScale = scale; }
 
-    inline uint32_t        getFlagsChanged() const { return _nodeLayout->flagsChanged; }
+    inline uint32_t    getFlagsChanged() const { return _nodeLayout->flagsChanged; }
     inline uint32_t    getLayer() const { return _nodeLayout->layer; }
     inline const Mat4 &getWorldMatrix() const { return _nodeLayout->worldMatrix; }
     inline const Vec3 &getWorldPosition() const { return _nodeLayout->worldPosition; }
