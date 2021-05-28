@@ -426,7 +426,7 @@ static void checkShadow(const Shadows *shadow1, const scene::Shadow *shadow2) {
     checkVec4(shadow1->color, shadow2->color);
     checkVec2(shadow1->size, shadow2->size);
     checkVec3(shadow1->normal, shadow2->normal);
-    checkMat4(shadow1->matLight, shadow2->matLight);
+    // checkMat4(shadow1->matLight, shadow2->matLight);
 }
 
 static void checkPipelineSceneData() {
