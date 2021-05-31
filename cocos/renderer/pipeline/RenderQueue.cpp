@@ -53,8 +53,7 @@ bool RenderQueue::insertRenderPass(const RenderObject &renderObj, uint subModelI
 
     auto   passPriority     = static_cast<uint32_t>(pass->getPriority());
     const auto hash         = (0 << 30) | (passPriority << 16) | (passPriority << 8) | passIdx;
-    uint       shaderID     = subModel->getShader(passIdx)->getID();
-    RenderPass renderPass   = {hash, renderObj.depth, shaderID, passIdx, subModel};
+    RenderPass renderPass   = {hash, renderObj.depth, passIdx, passIdx, subModel};
     _queue.emplace_back(renderPass);
     return true;
 }

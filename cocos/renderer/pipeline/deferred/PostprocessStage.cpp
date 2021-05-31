@@ -114,7 +114,7 @@ void PostprocessStage::render(scene::Camera *camera) {
     const auto & renderObjects = sceneData->getRenderObjects();
 
     if (!renderObjects.empty()) {
-        gfx::InputAssembler *ia  = camera->window->hasOffScreenAttachments ? pp->getQuadIAOffScreen() : pp->getQuadIAOnScreen();
+        gfx::InputAssembler *ia  = pp->getQuadIAOffScreen();
         gfx::PipelineState * pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, rp);
         assert(pso != nullptr);
 

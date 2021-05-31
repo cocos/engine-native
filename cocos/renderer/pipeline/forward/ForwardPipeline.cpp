@@ -130,7 +130,7 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
         sceneCulling(this, camera);
         _pipelineUBO->updateCameraUBO(camera);
         for (auto *const flow : _flows) {
-            flow->render(nullptr, camera);
+            flow->render(camera);
         }
     }
     _commandBuffers[0]->end();
