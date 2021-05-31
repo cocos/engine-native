@@ -39,15 +39,18 @@ int sdlKeycodeToCocosCode(int code_, int mode) {
     if (it != gKeyMap.end()) {
         return static_cast<int>(it->second);
     }
-
-    int code = code_ & (~(1 << 30));
-    //F1 ~ F12
-    if (code >= SDLK_F1 && code <= SDLK_F12) {
-        return 112 + (code - SDLK_F1);
-    } else if (code >= SDLK_a && code <= SDLK_z) {
-        return 'A' + (code - SDLK_a);
+    
+    if (code_ >= SDLK_F1 && code_ <= SDLK_F12) {
+        // F1 ~ F12
+        return 112 + (code_ - SDLK_F1);
+    } else {
+        int code = code_ & (~(1 << 30));
+        if (code >= SDLK_a && code <= SDLK_z) {
+            return 'A' + (code - SDLK_a);
+        } else {
+            return code;
+        }
     }
-    return code;
 }
 } // namespace
 
