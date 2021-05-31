@@ -26,8 +26,8 @@
 #pragma once
 
 #include "../RenderFlow.h"
-#include "scene/Light.h"
 #include "scene/Define.h"
+#include "scene/Light.h"
 
 namespace cc {
 namespace pipeline {

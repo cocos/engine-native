@@ -32,11 +32,11 @@
 #include "../RenderInstancedQueue.h"
 #include "../RenderQueue.h"
 #include "ForwardPipeline.h"
+#include "UIPhase.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
 #include "gfx-base/GFXQueue.h"
-#include "UIPhase.h"
 
 namespace cc {
 namespace pipeline {
@@ -79,25 +79,11 @@ bool ForwardStage::initialize(const RenderStageInfo &info) {
 
 void ForwardStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
+
     for (const auto &descriptor : _renderQueueDescriptors) {
-        uint phase = 0;
-        for (const auto &stage : descriptor.stages) {
-            phase |= getPhaseID(stage);
-        }
-
-        std::function<int(const RenderPass &, const RenderPass &)> sortFunc = opaqueCompareFn;
-        switch (descriptor.sortMode) {
-            case RenderQueueSortMode::BACK_TO_FRONT:
-                sortFunc = transparentCompareFn;
-                break;
-            case RenderQueueSortMode::FRONT_TO_BACK:
-                sortFunc = opaqueCompareFn;
-                break;
-            default:
-                break;
-        }
-
-        RenderQueueCreateInfo info = {descriptor.isTransparent, phase, sortFunc};
+        uint                  phase    = convertPhase(descriptor.stages);
+        RenderQueueSortFunc   sortFunc = convertQueueSortFunc(descriptor.sortMode);
+        RenderQueueCreateInfo info     = {descriptor.isTransparent, phase, sortFunc};
         _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
     }
 

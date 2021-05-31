@@ -31,7 +31,8 @@ jobs:
               - exclude: 'cocos/editor-support/dragonbones/**'
               - exclude: 'cocos/base/etc1.*'
               - exclude: 'cocos/base/etc2.*'
-              - exclude: 'cocos/bindings/auto/**'
+              - exclude: 'cocos/bindings/manual/jsb_global.cpp'
+              - exclude: 'cocos/bindings/manual/jsb_conversions.h'
             allChanges:
               - added|modified|deleted: '**'
             skipedDebug:

@@ -33,7 +33,9 @@
 namespace cc {
 namespace gfx {
 
-CCMTLTexture::CCMTLTexture() : Texture() {}
+CCMTLTexture::CCMTLTexture() : Texture() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 void CCMTLTexture::doInit(const TextureInfo &info) {
     _isArray = _type == TextureType::TEX1D_ARRAY || _type == TextureType::TEX2D_ARRAY;
@@ -50,6 +52,8 @@ void CCMTLTexture::doInit(const TextureInfo &info) {
         CC_LOG_ERROR("CCMTLTexture: create MTLTexture failed.");
         return;
     }
+
+    CCMTLDevice::getInstance()->getMemoryStatus().textureSize += _size;
 }
 
 void CCMTLTexture::doInit(const TextureViewInfo &info) {
@@ -126,6 +130,8 @@ void CCMTLTexture::doDestroy() {
         return;
     }
 
+    CCMTLDevice::getInstance()->getMemoryStatus().textureSize -= _size;
+
     id<MTLTexture> mtlTexure = _mtlTexture;
     _mtlTexture = nil;
 
@@ -156,6 +162,8 @@ void CCMTLTexture::doResize(uint width, uint height, uint size) {
         return;
     }
 
+    CCMTLDevice::getInstance()->getMemoryStatus().textureSize += size;
+
     if (oldMTLTexture) {
         std::function<void(void)> destroyFunc = [=]() {
             if (oldMTLTexture) {
@@ -164,6 +172,7 @@ void CCMTLTexture::doResize(uint width, uint height, uint size) {
         };
         //gpu object only
         CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
+        CCMTLDevice::getInstance()->getMemoryStatus().textureSize -= oldSize;
     }
 }
 

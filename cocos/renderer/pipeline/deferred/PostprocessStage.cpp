@@ -24,13 +24,14 @@
 ****************************************************************************/
 
 #include "PostprocessStage.h"
-#include "DeferredPipeline.h"
-#include "gfx-base/GFXFramebuffer.h"
-#include "gfx-base/GFXCommandBuffer.h"
 #include "../PipelineStateManager.h"
-#include "gfx-base/GFXDevice.h"
-#include "../forward/UIPhase.h"
 #include "../RenderQueue.h"
+#include "../forward/UIPhase.h"
+#include "../helper/SharedMemory.h"
+#include "DeferredPipeline.h"
+#include "gfx-base/GFXCommandBuffer.h"
+#include "gfx-base/GFXDevice.h"
+#include "gfx-base/GFXFramebuffer.h"
 #include "scene/SubModel.h"
 
 namespace cc {

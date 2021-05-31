@@ -140,7 +140,14 @@ bool GLES3Context::doInit(const ContextInfo &info) {
         _depthStencilFmt = Format::D24S8;
 
         bool   msaaEnabled = info.msaaEnabled;
-        EGLint redSize{8}, greenSize{8}, blueSize{8}, alphaSize{8}, depthSize{24}, stencilSize{8}, sampleBufferSize{msaaEnabled ? EGL_DONT_CARE : 0}, sampleSize{msaaEnabled ? EGL_DONT_CARE : 0};
+        EGLint redSize{8};
+        EGLint greenSize{8};
+        EGLint blueSize{8};
+        EGLint alphaSize{8};
+        EGLint depthSize{24};
+        EGLint stencilSize{8};
+        EGLint sampleBufferSize{msaaEnabled ? EGL_DONT_CARE : 0};
+        EGLint sampleSize{msaaEnabled ? EGL_DONT_CARE : 0};
 
         EGLint defaultAttribs[] = {
             EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
@@ -159,8 +166,8 @@ bool GLES3Context::doInit(const ContextInfo &info) {
         int          numConfig = 0;
         unsigned int success   = false;
         do {
-            EGL_CHECK(success = eglChooseConfig(_eglDisplay, defaultAttribs, NULL, 0, &numConfig));
-        } while (0);
+            EGL_CHECK(success = eglChooseConfig(_eglDisplay, defaultAttribs, nullptr, 0, &numConfig));
+        } while (false);
         if (success) {
             _vecEGLConfig.resize(numConfig);
         } else {
@@ -171,19 +178,20 @@ bool GLES3Context::doInit(const ContextInfo &info) {
         int count = numConfig;
         do {
             EGL_CHECK(success = eglChooseConfig(_eglDisplay, defaultAttribs, _vecEGLConfig.data(), count, &numConfig));
-        } while (0);
+        } while (false);
         if (success == EGL_FALSE || !numConfig) {
             CC_LOG_ERROR("eglChooseConfig configuration failed.");
             return false;
         }
 
-        EGLint depth{0}, stencil{0};
+        EGLint        depth{0};
+        EGLint        stencil{0};
+        const uint8_t attrNums             = 8;
+        int           params[attrNums]     = {0};
+        bool          matched              = false;
+        const bool    performancePreferred = info.performance == Performance::HIGH_QUALITY;
+        uint64_t      lastScore            = performancePreferred ? std::numeric_limits<uint64_t>::min() : std::numeric_limits<uint64_t>::max();
 
-        const uint8_t attrNums = 8;
-        uint64_t      lastScore{0};
-        int           params[attrNums] = {0};
-
-        const bool performancePreferred = info.performance == Performance::HIGH_QUALITY;
         for (int i = 0; i < numConfig; i++) {
             int depthValue{0};
             eglGetConfigAttrib(_eglDisplay, _vecEGLConfig[i], EGL_RED_SIZE, &params[0]);
@@ -201,8 +209,8 @@ bool GLES3Context::doInit(const ContextInfo &info) {
             /*------------------------------------------ANGLE's priority-----------------------------------------------*/
             // Favor EGLConfigLists by RGB, then Depth, then Non-linear Depth, then Stencil, then Alpha
             uint64_t currScore{0};
-            currScore |= ((uint64_t)std::min(std::max(params[6], 0), 15)) << 29;
-            currScore |= ((uint64_t)std::min(std::max(params[7], 0), 31)) << 24;
+            currScore |= (static_cast<uint64_t>(std::min(std::max(params[6], 0), 15))) << 29;
+            currScore |= (static_cast<uint64_t>(std::min(std::max(params[7], 0), 31))) << 24;
             currScore |= std::min(std::abs(params[0] - redSize) +
                                       std::abs(params[1] - greenSize) +
                                       std::abs(params[2] - blueSize),
@@ -215,16 +223,17 @@ bool GLES3Context::doInit(const ContextInfo &info) {
             /*------------------------------------------ANGLE's priority-----------------------------------------------*/
 
             // if msaaEnabled, sampleBuffers and sampleCount should be greater than 0, until iterate to the last one(can't find).
-            bool msaaLimit = msaaEnabled ? (params[6] > 0 && params[7] > 0) || (i == numConfig - 1) : (params[6] == 0 && params[7] == 0);
+            bool msaaLimit = (msaaEnabled ? (params[6] > 0 && params[7] > 0) : (params[6] == 0 && params[7] == 0));
             // performancePreferred ? [>=] : [<] , egl configurations store in "ascending order"
             bool filter = (currScore < lastScore) ^ performancePreferred;
-            if ((filter || lastScore == 0) && msaaLimit) {
+            if ((filter && msaaLimit) || (!matched && i == numConfig - 1)) {
                 _eglConfig     = _vecEGLConfig[i];
                 depth          = params[4];
                 stencil        = params[5];
-                _sampleBuffers = params[6];
-                _sampleCount   = params[7];
+                _sampleBuffers = static_cast<uint8_t>(params[6]);
+                _sampleCount   = static_cast<uint8_t>(params[7]);
                 lastScore      = currScore;
+                matched        = true;
             }
         }
 
@@ -442,6 +451,7 @@ void GLES3Context::acquireSurface(uintptr_t windowHandle) {
     uint  width  = ANativeWindow_getWidth(window);
     uint  height = ANativeWindow_getHeight(window);
     ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
+    GLES3Device::getInstance()->resize(width, height);
 
     EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, reinterpret_cast<EGLNativeWindowType>(_windowHandle), nullptr));
     if (_eglSurface == EGL_NO_SURFACE) {
@@ -574,6 +584,10 @@ bool GLES3Context::makeCurrent(bool bound) {
         GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, 0));
         GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
         GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+
+        if (GLES3Device::getInstance()->extensionRegistry()->mFBF == FBFSupportLevel::NON_COHERENT_QCOM) {
+            GL_CHECK(glEnable(GL_FRAMEBUFFER_FETCH_NONCOHERENT_QCOM));
+        }
 
         CC_LOG_DEBUG("eglMakeCurrent() - SUCCEEDED, Context: 0x%p", this);
         return true;

@@ -35,6 +35,7 @@ class GLES3Context;
 class GLES3GPUStateCache;
 class GLES3GPUStagingBufferPool;
 class GLES3GPUFramebufferCacheMap;
+class GLES3GPUExtensionRegistry;
 
 class CC_GLES3_API GLES3Device final : public Device {
 public:
@@ -65,14 +66,16 @@ public:
 
     inline GLES3GPUStateCache *         stateCache() const { return _gpuStateCache; }
     inline GLES3GPUStagingBufferPool *  stagingBufferPool() const { return _gpuStagingBufferPool; }
+    inline GLES3GPUExtensionRegistry *  extensionRegistry() const { return _gpuExtensionRegistry; }
     inline GLES3GPUFramebufferCacheMap *framebufferCacheMap() const { return _gpuFramebufferCacheMap; }
-    inline uint                         getThreadID() const { return _threadID; }
 
     inline bool checkExtension(const String &extension) const {
         return std::any_of(_extensions.begin(), _extensions.end(), [&extension](auto &ext) {
             return ext.find(extension) != String::npos;
         });
     }
+
+    inline uint getThreadID() const { return _threadID; }
 
     uint getMinorVersion() const;
 
@@ -113,6 +116,7 @@ protected:
     GLES3Context *               _deviceContext          = nullptr;
     GLES3GPUStateCache *         _gpuStateCache          = nullptr;
     GLES3GPUStagingBufferPool *  _gpuStagingBufferPool   = nullptr;
+    GLES3GPUExtensionRegistry *  _gpuExtensionRegistry   = nullptr;
     GLES3GPUFramebufferCacheMap *_gpuFramebufferCacheMap = nullptr;
 
     StringArray _extensions;

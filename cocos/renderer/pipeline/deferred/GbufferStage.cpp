@@ -24,7 +24,6 @@
 ****************************************************************************/
 
 #include "GbufferStage.h"
-#include "GbufferFlow.h"
 #include "../BatchedBuffer.h"
 #include "../InstancedBuffer.h"
 #include "../PlanarShadowQueue.h"
@@ -32,6 +31,7 @@
 #include "../RenderInstancedQueue.h"
 #include "../RenderQueue.h"
 #include "DeferredPipeline.h"
+#include "GbufferFlow.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
@@ -77,27 +77,13 @@ bool GbufferStage::initialize(const RenderStageInfo &info) {
 
 void GbufferStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
+
     for (const auto &descriptor : _renderQueueDescriptors) {
-        uint phase = 0;
-        for (const auto &stage : descriptor.stages) {
-            phase |= getPhaseID(stage);
-        }
-
-        std::function<int(const RenderPass &, const RenderPass &)> sortFunc = opaqueCompareFn;
-        switch (descriptor.sortMode) {
-            case RenderQueueSortMode::BACK_TO_FRONT:
-                sortFunc = transparentCompareFn;
-                break;
-            case RenderQueueSortMode::FRONT_TO_BACK:
-                sortFunc = opaqueCompareFn;
-            default:
-                break;
-        }
-
-        RenderQueueCreateInfo info = {descriptor.isTransparent, phase, sortFunc};
+        uint                  phase    = convertPhase(descriptor.stages);
+        RenderQueueSortFunc   sortFunc = convertQueueSortFunc(descriptor.sortMode);
+        RenderQueueCreateInfo info     = {descriptor.isTransparent, phase, sortFunc};
         _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
     }
-
     _planarShadowQueue = CC_NEW(PlanarShadowQueue(_pipeline));
 }
 

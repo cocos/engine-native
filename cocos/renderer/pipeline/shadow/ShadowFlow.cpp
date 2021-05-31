@@ -26,13 +26,13 @@
 #include "ShadowFlow.h"
 
 #include "../Define.h"
+#include "../SceneCulling.h"
 #include "../forward/ForwardPipeline.h"
 #include "ShadowStage.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
 #include "gfx-base/GFXRenderPass.h"
 #include "gfx-base/GFXTexture.h"
-#include "../SceneCulling.h"
 
 namespace cc::pipeline {
 RenderFlowInfo ShadowFlow::initInfo = {
@@ -116,9 +116,9 @@ void ShadowFlow::resizeShadowMap(const scene::Light *light, const scene::Shadow 
     auto *     device    = gfx::Device::getInstance();
     const auto width     = static_cast<uint>(shadowInfo->size.x);
     const auto height    = static_cast<uint>(shadowInfo->size.y);
-    const auto format    = device->hasFeature(gfx::Feature::TEXTURE_HALF_FLOAT)
-                            ? (shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F)
-                            : gfx::Format::RGBA8;
+    const auto format    = supportsHalfFloatTexture(device)
+                               ? (shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F)
+                               : gfx::Format::RGBA8;
 
     if (sceneData->getShadowFramebufferMap().count(light)) {
         auto *framebuffer = sceneData->getShadowFramebufferMap().at(light);
@@ -162,6 +162,8 @@ void ShadowFlow::resizeShadowMap(const scene::Light *light, const scene::Shadow 
             {},
         });
     }
+
+    shadowInfo->shadowMapDirty = false;
 }
 
 void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Light *light) {
@@ -171,9 +173,9 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
     const auto  shadowMapSize = shadowInfo->size;
     const auto  width         = static_cast<uint>(shadowMapSize.x);
     const auto  height        = static_cast<uint>(shadowMapSize.y);
-    const auto  format        = device->hasFeature(gfx::Feature::TEXTURE_HALF_FLOAT)
-                            ? (shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F)
-                            : gfx::Format::RGBA8;
+    const auto  format        = supportsHalfFloatTexture(device)
+                                    ? (shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F)
+                                    : gfx::Format::RGBA8;
 
     if (!_renderPass) {
         const gfx::ColorAttachment colorAttachment = {

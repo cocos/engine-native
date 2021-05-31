@@ -28,12 +28,27 @@
 #include <utility>
 
 #include "gfx-base/GFXDef.h"
+#include "gfx-gles-common/GLESCommandPool.h"
 
 #include "GLES3Std.h"
 #include "GLES3Wrangler.h"
 
 namespace cc {
 namespace gfx {
+
+enum class PLSSupportLevel {
+    NONE,
+    LEVEL1,
+    LEVEL2,
+};
+
+class GLES3GPUExtensionRegistry {
+public:
+    FBFSupportLevel mFBF = FBFSupportLevel::NONE;
+
+    PLSSupportLevel mPLS     = PLSSupportLevel::NONE;
+    uint            mPLSsize = 0U;
+};
 
 class GLES3GPUBuffer final : public Object {
 public:
@@ -64,6 +79,7 @@ public:
     SampleCount  samples       = SampleCount::X1;
     TextureFlags flags         = TextureFlagBit::NONE;
     bool         isPowerOf2    = false;
+    bool         memoryless    = false;
     GLenum       glTarget      = 0;
     GLenum       glInternelFmt = 0;
     GLenum       glFormat      = 0;
@@ -214,6 +230,7 @@ class GLES3GPURenderPass final : public Object {
 public:
     ColorAttachmentList    colorAttachments;
     DepthStencilAttachment depthStencilAttachment;
+    SubpassInfoList        subpasses;
 };
 
 class GLES3GPUFramebuffer final : public Object {
@@ -223,8 +240,18 @@ public:
     vector<GLint>       colorMipmapLevels;
     GLES3GPUTexture *   gpuDepthStencilTexture  = nullptr;
     GLint               depthStencilMipmapLevel = 0;
-    GLuint              glFramebuffer           = 0;
-    bool                isOffscreen             = false;
+    bool                usesPLS                 = false;
+    bool                usesFBF                 = false;
+
+    struct GLFramebuffer {
+        GLuint glFramebuffer = 0U;
+        bool   isOffscreen   = false;
+    };
+    // one per subpass, if not using FBF or PLS
+    vector<GLFramebuffer> instances;
+
+    vector<uint>  uberColorAttachmentIndices;
+    GLFramebuffer uberInstance;
 };
 
 class GLES3GPUDescriptorSetLayout final : public Object {
@@ -292,13 +319,17 @@ struct GLES3GPUDispatchInfo final : public Object {
 };
 
 struct GLES3ObjectCache final {
-    size_t                  numClearColors    = 0U;
+    uint                    subpassIdx        = 0U;
     GLES3GPURenderPass *    gpuRenderPass     = nullptr;
     GLES3GPUFramebuffer *   gpuFramebuffer    = nullptr;
     GLES3GPUPipelineState * gpuPipelineState  = nullptr;
     GLES3GPUInputAssembler *gpuInputAssembler = nullptr;
     GLenum                  glPrimitive       = 0;
     GLenum                  invalidAttachments[MAX_ATTACHMENTS];
+    Rect                    renderArea;
+    ColorList               clearColors;
+    float                   clearDepth   = 1.F;
+    int                     clearStencil = 0;
 };
 
 class GLES3GPUStateCache final : public Object {
@@ -329,6 +360,7 @@ public:
     BlendState                  bs;
     bool                        isCullFaceEnabled    = true;
     bool                        isStencilTestEnabled = false;
+    bool                        isPLSEnabled         = false;
     unordered_map<String, uint> texUnitCacheMap;
     GLES3ObjectCache            gfxStateCache;
 
@@ -366,6 +398,7 @@ public:
         glDrawFramebuffer    = 0;
         isCullFaceEnabled    = true;
         isStencilTestEnabled = false;
+        isPLSEnabled         = false;
 
         viewport = Viewport();
         scissor  = Rect();
@@ -373,12 +406,12 @@ public:
         dss      = DepthStencilState();
         bs       = BlendState();
 
-        gfxStateCache.numClearColors    = 0U;
         gfxStateCache.gpuRenderPass     = nullptr;
         gfxStateCache.gpuFramebuffer    = nullptr;
         gfxStateCache.gpuPipelineState  = nullptr;
         gfxStateCache.gpuInputAssembler = nullptr;
         gfxStateCache.glPrimitive       = 0U;
+        gfxStateCache.subpassIdx        = 0U;
     }
 };
 

@@ -39,7 +39,7 @@ gfx::PipelineState *PipelineStateManager::getOrCreatePipelineState(const scene::
     const auto passHash       = pass->getHash();
     const auto renderPassHash = renderPass->getHash();
     const auto iaHash         = inputAssembler->getAttributesHash();
-    const auto shaderID       = shader->getID();
+    const auto shaderID       = shader->getTypedID();
     const auto hash           = passHash ^ renderPassHash ^ iaHash ^ shaderID;
 
     auto *pso = psoHashMap[hash];

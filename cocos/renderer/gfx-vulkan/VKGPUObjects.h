@@ -99,6 +99,7 @@ public:
     SampleCount        samples     = SampleCount::X1;
     TextureFlags       flags       = TextureFlagBit::NONE;
     VkImageAspectFlags aspectMask  = VK_IMAGE_ASPECT_COLOR_BIT;
+    bool               memoryless  = false;
 
     VkImage       vkImage       = VK_NULL_HANDLE;
     VmaAllocation vmaAllocation = VK_NULL_HANDLE;
@@ -370,11 +371,8 @@ private:
 
     using CommandBufferPools = tbb::concurrent_unordered_map<
         std::thread::id, CCVKGPUCommandBufferPool *, std::hash<std::thread::id>>;
-    /*
-    using CommandBufferPools = unordered_map<std::thread::id, CCVKGPUCommandBufferPool *>;
-    std::mutex mutex;
-    */
 
+    // cannot use thread_local here because we need explicit control over their destruction
     CommandBufferPools _commandBufferPools;
 
     unordered_map<uint, CCVKGPUDescriptorSetPool> _descriptorSetPools;
@@ -980,6 +978,11 @@ private:
 
     static void doUpdate(const CCVKGPUTextureView *texture, VkDescriptorImageInfo *descriptor) {
         descriptor->imageView = texture->vkImageView;
+        if (hasFlag(texture->gpuTexture->flags, TextureFlagBit::GENERAL_LAYOUT)) {
+            descriptor->imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+        } else {
+            descriptor->imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        }
     }
 
     static void doUpdate(const CCVKGPUSampler *sampler, VkDescriptorImageInfo *descriptor) {

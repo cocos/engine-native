@@ -30,8 +30,8 @@
 #include "base/Object.h"
 #include "base/Value.h"
 #include "renderer/gfx-base/GFXDef.h"
-#include "scene/Model.h"
 #include "scene/Light.h"
+#include "scene/Model.h"
 
 namespace cc {
 namespace pipeline {
@@ -44,10 +44,10 @@ class RenderFlow;
 // Skinning models with number of bones more than this capacity will be automatically switched to texture skinning.
 // But still, you can tweak this for your own need by changing the number below
 // and the JOINT_UNIFORM_CAPACITY macro in cc-skinning shader header.
-constexpr int JOINT_UNIFORM_CAPACITY  = 30;
+constexpr int JOINT_UNIFORM_CAPACITY = 30;
 
 constexpr float SHADOW_CAMERA_MAX_FAR    = 2000.0F;
-const float COEFFICIENT_OF_EXPANSION = 2.0F * std::sqrtf(3.0F);
+const float     COEFFICIENT_OF_EXPANSION = 2.0F * std::sqrtf(3.0F);
 
 struct CC_DLL RenderObject {
     float               depth = 0;
@@ -176,6 +176,31 @@ CC_INLINE bool transparentCompareFn(const RenderPass &a, const RenderPass &b) {
     }
 
     return a.shaderID < b.shaderID;
+}
+
+CC_INLINE uint convertPhase(const StringArray &stages) {
+    uint phase = 0;
+    for (const auto &stage : stages) {
+        phase |= getPhaseID(stage);
+    }
+    return phase;
+}
+
+using RenderQueueSortFunc = std::function<int(const RenderPass &, const RenderPass &)>;
+
+CC_INLINE RenderQueueSortFunc convertQueueSortFunc(const RenderQueueSortMode &mode) {
+    std::function<int(const RenderPass &, const RenderPass &)> sortFunc = opaqueCompareFn;
+    switch (mode) {
+        case RenderQueueSortMode::BACK_TO_FRONT:
+            sortFunc = transparentCompareFn;
+            break;
+        case RenderQueueSortMode::FRONT_TO_BACK:
+            sortFunc = opaqueCompareFn;
+        default:
+            break;
+    }
+
+    return sortFunc;
 }
 
 enum class CC_DLL PipelineGlobalBindings {
@@ -440,6 +465,8 @@ const uint CAMERA_DEFAULT_MASK = ~static_cast<uint>(LayerList::UI_2D) & ~static_
 //                                                           Layers.BitMask.SCENE_GIZMO, Layers.BitMask.PROFILER]);
 
 uint nextPow2(uint val);
+
+bool supportsHalfFloatTexture(gfx::Device *device);
 
 extern CC_DLL uint skyboxFlag;
 

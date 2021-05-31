@@ -24,23 +24,23 @@
 ****************************************************************************/
 
 #include "LightingStage.h"
-#include "LightingFlow.h"
 #include "../BatchedBuffer.h"
 #include "../InstancedBuffer.h"
+#include "../PipelineStateManager.h"
 #include "../PlanarShadowQueue.h"
 #include "../RenderBatchedQueue.h"
 #include "../RenderInstancedQueue.h"
 #include "../RenderQueue.h"
 #include "DeferredPipeline.h"
+#include "LightingFlow.h"
 #include "gfx-base/GFXCommandBuffer.h"
+#include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
 #include "gfx-base/GFXQueue.h"
-#include "gfx-base/GFXDescriptorSet.h"
-#include "../PipelineStateManager.h"
-#include "scene/SphereLight.h"
-#include "scene/Sphere.h"
 #include "scene/RenderScene.h"
+#include "scene/Sphere.h"
+#include "scene/SphereLight.h"
 
 namespace cc {
 namespace pipeline {
@@ -79,6 +79,10 @@ bool LightingStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
     _phaseID                = getPhaseID("default");
+<<<<<<< HEAD
+=======
+    _defPhaseID = getPhaseID("deferred");
+>>>>>>> upstream/v3.3
     return true;
 }
 
@@ -205,7 +209,7 @@ void LightingStage::gatherLights(scene::Camera *camera) {
         _lightBufferData[offset]     = direction.x;
         _lightBufferData[offset + 1] = direction.y;
         _lightBufferData[offset + 2] = direction.z;
-        
+
         ++i;
     }
 
@@ -247,6 +251,13 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
 
     auto *const device = pipeline->getDevice();
+
+    for (const auto &descriptor : _renderQueueDescriptors) {
+        uint                  phase    = convertPhase(descriptor.stages);
+        RenderQueueSortFunc   sortFunc = convertQueueSortFunc(descriptor.sortMode);
+        RenderQueueCreateInfo info     = {descriptor.isTransparent, phase, sortFunc};
+        _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
+    }
 
     // create descriptorset/layout
     gfx::DescriptorSetLayoutInfo layoutInfo = {localDescriptorSetLayout.bindings};
@@ -324,6 +335,36 @@ void LightingStage::render(Camera * /*unused*/, scene::Camera *camera) {
     cmdBuff->bindPipelineState(pState);
     cmdBuff->bindInputAssembler(inputAssembler);
     cmdBuff->draw(inputAssembler);
+
+    // transparent
+    for (auto *queue : _renderQueues) {
+        queue->clear();
+    }
+
+    uint   m = 0;
+    uint   p = 0;
+    size_t k = 0;
+    for (auto ro : renderObjects) {
+        const auto *const model         = ro.model;
+        const auto *const subModelID    = model->getSubModelID();
+        const auto        subModelCount = subModelID[0];
+        for (m = 1; m <= subModelCount; ++m) {
+            const auto *subModel = cc::pipeline::ModelView::getSubModelView(subModelID[m]);
+            for (p = 0; p < subModel->passCount; ++p) {
+                const PassView *pass = subModel->getPassView(p);
+                // TODO(xwx): need fallback of unlit and gizmo material.
+                if (pass->phase != _phaseID && pass->phase != _defPhaseID) continue;
+                for (k = 0; k < _renderQueues.size(); k++) {
+                    _renderQueues[k]->insertRenderPass(ro, m, p);
+                }
+            }
+        }
+    }
+
+    for (auto *queue : _renderQueues) {
+        queue->sort();
+        queue->recordCommandBuffer(_device, renderPass, cmdBuff);
+    }
 
     // planerQueue
     _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);

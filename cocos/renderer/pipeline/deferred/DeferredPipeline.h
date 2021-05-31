@@ -63,7 +63,6 @@ public:
     CC_INLINE const gfx::BufferList &getLightBuffers() const { return _lightBuffers; }
     CC_INLINE const UintList &getLightIndexOffsets() const { return _lightIndexOffsets; }
     CC_INLINE const UintList &getLightIndices() const { return _lightIndices; }
-    gfx::InputAssembler *     getQuadIAOnScreen() { return _quadIAOnscreen; }
     gfx::InputAssembler *     getQuadIAOffScreen() { return _quadIAOffscreen; }
     gfx::Rect                 getRenderArea(scene::Camera *camera, bool onScreen);
     CC_INLINE DeferredRenderData *getDeferredRenderData() { return _deferredRenderData; };
@@ -87,9 +86,7 @@ private:
 
     // light stage
     gfx::Buffer *        _quadIB          = nullptr;
-    gfx::Buffer *        _quadVBOnscreen  = nullptr;
     gfx::Buffer *        _quadVBOffscreen = nullptr;
-    gfx::InputAssembler *_quadIAOnscreen  = nullptr;
     gfx::InputAssembler *_quadIAOffscreen = nullptr;
 
     DeferredRenderData *_deferredRenderData = nullptr;
