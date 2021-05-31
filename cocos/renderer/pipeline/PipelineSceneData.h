@@ -46,7 +46,7 @@ public:
     ~PipelineSceneData() override = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
     // TODO(minggo):remove handle
-    void setPipelineSharedSceneData(uint32_t handle, scene::PipelineSharedSceneData *data);
+    void setPipelineSharedSceneData(scene::PipelineSharedSceneData *data);
     void destroy();
 
     CC_INLINE void  setShadowFramebuffer(const scene::Light *light, gfx::Framebuffer *framebuffer) { _shadowFrameBufferMap.emplace(light, framebuffer); }

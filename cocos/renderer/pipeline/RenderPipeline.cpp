@@ -185,8 +185,8 @@ void RenderPipeline::destroy() {
     PipelineStateManager::destroyAll();
 }
 
-void RenderPipeline::setPipelineSharedSceneData(uint32_t handle, scene::PipelineSharedSceneData *data) {
-    _pipelineSceneData->setPipelineSharedSceneData(handle, data);
+void RenderPipeline::setPipelineSharedSceneData(scene::PipelineSharedSceneData *data) {
+    _pipelineSceneData->setPipelineSharedSceneData(data);
 }
 
 void RenderPipeline::generateConstantMacros() {

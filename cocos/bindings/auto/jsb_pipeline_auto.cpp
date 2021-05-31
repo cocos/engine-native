@@ -577,16 +577,14 @@ static bool js_pipeline_RenderPipeline_setPipelineSharedSceneData(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<unsigned int, false> arg0 = {};
-        HolderType<cc::scene::PipelineSharedSceneData*, false> arg1 = {};
+    if (argc == 1) {
+        HolderType<cc::scene::PipelineSharedSceneData*, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_setPipelineSharedSceneData : Error processing arguments");
-        cobj->setPipelineSharedSceneData(arg0.value(), arg1.value());
+        cobj->setPipelineSharedSceneData(arg0.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
 SE_BIND_FUNC(js_pipeline_RenderPipeline_setPipelineSharedSceneData)
