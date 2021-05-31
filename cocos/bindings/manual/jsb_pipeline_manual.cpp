@@ -63,8 +63,7 @@ static bool JSB_getOrCreatePipelineState(se::State &s) {
         auto shader = static_cast<cc::gfx::Shader *>(args[1].toObject()->getPrivateData());
         auto renderPass = static_cast<cc::gfx::RenderPass *>(args[2].toObject()->getPrivateData());
         auto inputAssembler = static_cast<cc::gfx::InputAssembler *>(args[3].toObject()->getPrivateData());
-        auto pipelineState = cc::pipeline::PipelineStateManager::getOrCreatePipelineStateByJS(passHandle, shader, inputAssembler, renderPass);
-//        auto pipelineState = cc::pipeline::PipelineStateManager::getOrCreatePipelineState(reinterpret_cast<cc::scene::Pass *>(&pass), shader, inputAssembler, renderPass);
+        auto pipelineState = cc::pipeline::PipelineStateManager::getOrCreatePipelineState(reinterpret_cast<cc::scene::Pass *>(&pass), shader, inputAssembler, renderPass);
         native_ptr_to_seval<cc::gfx::PipelineState>(pipelineState, &s.rval());
         return true;
     }

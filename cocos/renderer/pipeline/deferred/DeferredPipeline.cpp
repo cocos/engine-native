@@ -126,7 +126,7 @@ bool DeferredPipeline::activate() {
     return true;
 }
 
-void DeferredPipeline::render(const vector<uint> &/*unused*/, const vector<scene::Camera *> &cameras) {
+void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
 

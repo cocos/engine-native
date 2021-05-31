@@ -64,42 +64,6 @@ gfx::PipelineState *PipelineStateManager::getOrCreatePipelineState(const scene::
     return pso;
 }
 
-gfx::PipelineState *PipelineStateManager::getOrCreatePipelineStateByJS(uint32_t             passHandle,
-                                                                       gfx::Shader *        shader,
-                                                                       gfx::InputAssembler *inputAssembler,
-                                                                       gfx::RenderPass *    renderPass) {
-    const auto *pass = GET_PASS(passHandle);
-    CC_ASSERT(pass);
-    
-    const auto passHash       = pass->hash;
-    const auto renderPassHash = renderPass->getHash();
-    const auto iaHash         = inputAssembler->getAttributesHash();
-    const auto shaderID       = shader->getID();
-    const auto hash           = passHash ^ renderPassHash ^ iaHash ^ shaderID;
-    
-    auto *pso = psoHashMap[hash];
-    if (!pso) {
-        auto *pipelineLayout = pass->getPipelineLayout();
-        
-        pso = gfx::Device::getInstance()->createPipelineState({
-            shader,
-            pipelineLayout,
-            renderPass,
-            {inputAssembler->getAttributes()},
-            *(pass->getRasterizerState()),
-            *(pass->getDepthStencilState()),
-            *(pass->getBlendState()),
-            pass->getPrimitive(),
-            pass->getDynamicState(),
-        });
-        
-        psoHashMap[hash] = pso;
-    }
-    
-    return pso;
-}
-
-
 void PipelineStateManager::destroyAll() {
     for (auto &pair : psoHashMap) {
         CC_SAFE_DESTROY(pair.second);

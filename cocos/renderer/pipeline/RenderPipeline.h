@@ -56,7 +56,7 @@ public:
     virtual bool activate();
     virtual void destroy();
     virtual bool initialize(const RenderPipelineInfo &info);
-    virtual void render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras);
+    virtual void render(const vector<scene::Camera *> &cameras);
     virtual void resize(uint width, uint height){};
 
     void setPipelineSharedSceneData(uint32_t handle, scene::PipelineSharedSceneData *data);

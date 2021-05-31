@@ -37,11 +37,6 @@ public:
                                                         gfx::Shader *        shader,
                                                         gfx::InputAssembler *inputAssembler,
                                                         gfx::RenderPass *    renderPass);
-    static gfx::PipelineState *getOrCreatePipelineStateByJS(uint32_t             passHandle,
-                                                            gfx::Shader *        shader,
-                                                            gfx::InputAssembler *inputAssembler,
-                                                            gfx::RenderPass *    renderPass);
-
     static void destroyAll();
 
 private:

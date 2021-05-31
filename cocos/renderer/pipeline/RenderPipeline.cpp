@@ -153,7 +153,7 @@ bool RenderPipeline::activate() {
     return true;
 }
 
-void RenderPipeline::render(const vector<uint> &/*cameras*/, const vector<scene::Camera *> &cameras) {
+void RenderPipeline::render(const vector<scene::Camera *> &cameras) {
     for (auto *const flow : _flows) {
         for (auto *camera : cameras) {
             flow->render(nullptr, camera);

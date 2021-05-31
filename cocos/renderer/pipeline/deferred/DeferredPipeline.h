@@ -53,7 +53,7 @@ public:
     bool initialize(const RenderPipelineInfo &info) override;
     void destroy() override;
     bool activate() override;
-    void render(const vector<uint> &cameras, const vector<scene::Camera *> &newCameras) override;
+    void render(const vector<scene::Camera *> &cameras) override;
     void resize(uint width, uint height) override;
 
     gfx::RenderPass *getOrCreateRenderPass(gfx::ClearFlags clearFlags);
