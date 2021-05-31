@@ -1,3 +1,28 @@
+/****************************************************************************
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+
+ http://www.cocos.com
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated engine source code (the "Software"), a limited,
+ worldwide, royalty-free, non-assignable, revocable and non-exclusive license
+ to use Cocos Creator solely to develop games on your target platforms. You shall
+ not use Cocos Creator software for developing other software or tools that's
+ used for developing games. You are not granted to publish, distribute,
+ sublicense, and/or sell copies of Cocos Creator.
+
+ The software or tools in this License Agreement are licensed, not sold.
+ Xiamen Yaji Software Co., Ltd. reserves all rights not expressly granted to you.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+****************************************************************************/
+
 #include "cocos/bindings/auto/jsb_extension_auto.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
@@ -135,7 +160,7 @@ static bool js_extension_EventAssetsManagerEx_getEventCode(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = static_cast<int>(cobj->getEventCode());
+        int result = (int)cobj->getEventCode();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_extension_EventAssetsManagerEx_getEventCode : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -765,7 +790,7 @@ static bool js_extension_AssetsManagerEx_getState(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        auto result = static_cast<int>(cobj->getState());
+        int result = (int)cobj->getState();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_extension_AssetsManagerEx_getState : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1007,14 +1032,14 @@ static bool js_extension_AssetsManagerEx_setVerifyCallback(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<std::function<bool (const std::string, cc::extension::ManifestAsset)>, true> arg0 = {};
+        HolderType<std::function<bool (const std::string&, cc::extension::ManifestAsset)>, true> arg0 = {};
         do {
             if (args[0].isObject() && args[0].toObject()->isFunction())
             {
                 se::Value jsThis(s.thisObject());
                 se::Value jsFunc(args[0]);
                 jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](const std::string larg0, cc::extension::ManifestAsset larg1) -> bool {
+                auto lambda = [=](const std::string& larg0, cc::extension::ManifestAsset larg1) -> bool {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
         
@@ -1060,14 +1085,14 @@ static bool js_extension_AssetsManagerEx_setVersionCompareHandle(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<std::function<int (const std::string, const std::string)>, true> arg0 = {};
+        HolderType<std::function<int (const std::string&, const std::string&)>, true> arg0 = {};
         do {
             if (args[0].isObject() && args[0].toObject()->isFunction())
             {
                 se::Value jsThis(s.thisObject());
                 se::Value jsFunc(args[0]);
                 jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](const std::string larg0, const std::string larg1) -> int {
+                auto lambda = [=](const std::string& larg0, const std::string& larg1) -> int {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
         
@@ -1158,14 +1183,14 @@ static bool js_extension_AssetsManagerEx_constructor(se::State& s)  // construct
             HolderType<std::string, true> arg1 = {};
             ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
             if (!ok) { ok = true; break; }
-            HolderType<std::function<int (const std::string, const std::string)>, true> arg2 = {};
+            HolderType<std::function<int (const std::string&, const std::string&)>, true> arg2 = {};
             do {
                 if (args[2].isObject() && args[2].toObject()->isFunction())
                 {
                     se::Value jsThis(s.thisObject());
                     se::Value jsFunc(args[2]);
                     jsThis.toObject()->attachObject(jsFunc.toObject());
-                    auto lambda = [=](const std::string larg0, const std::string larg1) -> int {
+                    auto lambda = [=](const std::string& larg0, const std::string& larg1) -> int {
                         se::ScriptEngine::getInstance()->clearException();
                         se::AutoHandleScope hs;
             
