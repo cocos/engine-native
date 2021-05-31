@@ -774,8 +774,6 @@ cocos_source_files(
 
                  cocos/renderer/pipeline/BatchedBuffer.cpp
                  cocos/renderer/pipeline/BatchedBuffer.h
-                 cocos/renderer/pipeline/CheckData.h
-                 cocos/renderer/pipeline/CheckData.cpp
                  cocos/renderer/pipeline/Define.h
                  cocos/renderer/pipeline/Define.cpp
                  cocos/renderer/pipeline/InstancedBuffer.cpp
