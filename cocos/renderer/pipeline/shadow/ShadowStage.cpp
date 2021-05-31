@@ -55,7 +55,7 @@ void ShadowStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     _additiveShadowQueue = CC_NEW(ShadowMapBatchedQueue(pipeline));
 }
 
-void ShadowStage::render(Camera * /*unused*/, scene::Camera *camera) {
+void ShadowStage::render(scene::Camera *camera) {
     const auto *sceneData  = _pipeline->getPipelineSceneData();
     const auto *sharedData = sceneData->getSharedData();
     const auto *shadowInfo = sceneData->getSharedData()->shadow;

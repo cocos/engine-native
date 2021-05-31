@@ -101,7 +101,7 @@ void ForwardStage::destroy() {
     RenderStage::destroy();
 }
 
-void ForwardStage::render(Camera * /*unused*/, scene::Camera *camera) {
+void ForwardStage::render(scene::Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
     auto *      pipeline      = static_cast<ForwardPipeline *>(_pipeline);

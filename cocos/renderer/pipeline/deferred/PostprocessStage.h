@@ -41,7 +41,7 @@ public:
     bool initialize(const RenderStageInfo &info) override;
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
     void destroy() override;
-    void render(Camera *camera, scene::Camera *newCamera) override;
+    void render(scene::Camera *camera) override;
 
 private:
     gfx::Rect _renderArea;

@@ -43,7 +43,7 @@ public:
     virtual bool initialize(const RenderFlowInfo &info) override;
     virtual void activate(RenderPipeline *pipeline) override;
     virtual void destroy() override;
-    virtual void render(Camera *camera, scene::Camera *newCamera) override;
+    virtual void render(scene::Camera *camera) override;
 
 private:
     static RenderFlowInfo _initInfo;

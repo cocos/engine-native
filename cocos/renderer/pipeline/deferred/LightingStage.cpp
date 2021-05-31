@@ -78,11 +78,7 @@ LightingStage::~LightingStage() {
 bool LightingStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
-    _phaseID                = getPhaseID("default");
-<<<<<<< HEAD
-=======
-    _defPhaseID = getPhaseID("deferred");
->>>>>>> upstream/v3.3
+    _phaseID                = getPhaseID("deferred");
     return true;
 }
 
@@ -277,7 +273,7 @@ void LightingStage::destroy() {
     RenderStage::destroy();
 }
 
-void LightingStage::render(Camera * /*unused*/, scene::Camera *camera) {
+void LightingStage::render(scene::Camera *camera) {
     auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
     auto *const sceneData     = _pipeline->getPipelineSceneData();
     auto *const sharedData    = sceneData->getSharedData();

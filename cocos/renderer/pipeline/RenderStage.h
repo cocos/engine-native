@@ -57,7 +57,7 @@ public:
     virtual bool initialize(const RenderStageInfo &info);
 
     virtual void destroy();
-    virtual void render(Camera *camera, scene::Camera *newCamera) = 0;
+    virtual void render(scene::Camera *camera) = 0;
 
     inline const String &getName() const { return _name; }
     inline uint getPriority() const { return _priority; }

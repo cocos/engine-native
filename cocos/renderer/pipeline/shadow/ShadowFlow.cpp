@@ -60,15 +60,15 @@ void ShadowFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 }
 
-void ShadowFlow::render(Camera *camera, scene::Camera *newCamera) {
+void ShadowFlow::render(scene::Camera *camera) {
     const auto *sceneData  = _pipeline->getPipelineSceneData();
     const auto *shadowInfo = sceneData->getSharedData()->shadow;
     if (!shadowInfo->enabled || shadowInfo->shadowType != scene::ShadowType::SHADOWMAP) return;
 
-    lightCollecting(newCamera, &_validLights);
+    lightCollecting(camera, &_validLights);
 
     if (sceneData->getShadowObjects().empty()) {
-        clearShadowMap(newCamera);
+        clearShadowMap(camera);
         return;
     }
 
@@ -85,13 +85,13 @@ void ShadowFlow::render(Camera *camera, scene::Camera *newCamera) {
         for (auto *stage : _stages) {
             auto *shadowStage = dynamic_cast<ShadowStage *>(stage);
             shadowStage->setUseData(light, shadowFrameBuffer);
-            shadowStage->render(camera, newCamera);
+            shadowStage->render(camera);
         }
     }
 
     // After the shadowMap rendering of all lights is completed,
     // restore the ShadowUBO data of the main light.
-    _pipeline->getPipelineUBO()->updateShadowUBO(newCamera);
+    _pipeline->getPipelineUBO()->updateShadowUBO(camera);
 }
 
 void ShadowFlow::clearShadowMap(scene::Camera *camera) {
@@ -111,7 +111,7 @@ void ShadowFlow::clearShadowMap(scene::Camera *camera) {
     }
 }
 
-void ShadowFlow::resizeShadowMap(const scene::Light *light, const scene::Shadow *shadowInfo) {
+void ShadowFlow::resizeShadowMap(const scene::Light *light, scene::Shadow *shadowInfo) {
     auto *     sceneData = _pipeline->getPipelineSceneData();
     auto *     device    = gfx::Device::getInstance();
     const auto width     = static_cast<uint>(shadowInfo->size.x);

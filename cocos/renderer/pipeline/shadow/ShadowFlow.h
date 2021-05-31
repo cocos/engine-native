@@ -44,14 +44,14 @@ public:
 
     void activate(RenderPipeline *pipeline) override;
 
-    void render(Camera *camera, scene::Camera *newCamera) override;
+    void render(scene::Camera *camera) override;
 
     void destroy() override;
 
 private:
     void clearShadowMap(scene::Camera *camera);
 
-    void resizeShadowMap(const scene::Light *light, const scene::Shadow *shadowInfo);
+    void resizeShadowMap(const scene::Light *light, scene::Shadow *shadowInfo);
 
     void initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Light *light);
 

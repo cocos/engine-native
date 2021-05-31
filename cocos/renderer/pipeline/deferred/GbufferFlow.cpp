@@ -60,8 +60,8 @@ void GbufferFlow::activate(RenderPipeline *pipeline) {
     RenderFlow::activate(pipeline);
 }
 
-void GbufferFlow::render(Camera *camera, scene::Camera *newCamera) {
-    RenderFlow::render(camera, newCamera);
+void GbufferFlow::render(scene::Camera *camera) {
+    RenderFlow::render(camera);
 }
 
 void GbufferFlow::destroy() {

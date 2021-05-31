@@ -49,7 +49,7 @@ public:
 
     virtual bool initialize(const RenderFlowInfo &info);
     virtual void activate(RenderPipeline *pipeline);
-    virtual void render(Camera *camera, scene::Camera *newCamera);
+    virtual void render(scene::Camera *camera);
     virtual void destroy();
 
     inline const String &getName() const { return _name; }

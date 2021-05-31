@@ -94,7 +94,7 @@ void GbufferStage::destroy() {
     RenderStage::destroy();
 }
 
-void GbufferStage::render(Camera * /*unused*/, scene::Camera *camera) {
+void GbufferStage::render(scene::Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
     auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);

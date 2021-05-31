@@ -51,9 +51,9 @@ void RenderFlow::activate(RenderPipeline *pipeline) {
     }
 }
 
-void RenderFlow::render(Camera *camera, scene::Camera *newCamera) {
+void RenderFlow::render(scene::Camera *camera) {
     for (auto *const stage : _stages) {
-        stage->render(camera, newCamera);
+        stage->render(camera);
     }
 }
 

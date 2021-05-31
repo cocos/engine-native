@@ -42,7 +42,7 @@ public:
 
     bool initialize(const RenderStageInfo &info) override;
     void destroy() override;
-    void render(Camera *camera, scene::Camera *newCamera) override;
+    void render(scene::Camera *camera) override;
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
 
     CC_INLINE void setFramebuffer(gfx::Framebuffer *framebuffer) { _framebuffer = framebuffer; }
