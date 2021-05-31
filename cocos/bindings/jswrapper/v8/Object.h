@@ -107,7 +107,7 @@ public:
          *  @return A Array Buffer Object whose backing store is the same as the one pointed to data, or nullptr if there is an error.
          *  @note The return value (non-null) has to be released manually.
          */
-    static Object *createArrayBufferObject(void *bytes, size_t byteLength);
+    static Object *createArrayBufferObject(void *data, size_t byteLength);
 
     /**
          *  @brief Creates a JavaScript Object from a JSON formatted string.
@@ -139,7 +139,7 @@ public:
          *  @param[out] value The property's value if object has the property, otherwise the undefined value.
          *  @return true if object has the property, otherwise false.
          */
-    bool getProperty(const char *name, Value *value);
+    bool getProperty(const char *name, Value *data);
 
     inline bool getProperty(const std::string &name, Value *value) {
         return getProperty(name.c_str(), value);
@@ -151,7 +151,7 @@ public:
          *  @param[in] value A value to be used as the property's value.
          *  @return true if the property is set successfully, otherwise false.
          */
-    bool setProperty(const char *name, const Value &value);
+    bool setProperty(const char *name, const Value &data);
 
     inline bool setProperty(const std::string &name, const Value &value) {
         return setProperty(name.c_str(), value);

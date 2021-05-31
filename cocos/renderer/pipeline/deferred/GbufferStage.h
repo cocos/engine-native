@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include "pipeline/RenderStage.h"
 #include "gfx-base/GFXFramebuffer.h"
+#include "pipeline/RenderStage.h"
 
 namespace cc {
 namespace pipeline {
@@ -36,7 +36,6 @@ class RenderBatchedQueue;
 class RenderInstancedQueue;
 class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
-struct Camera;
 struct DeferredRenderData;
 
 class CC_DLL GbufferStage : public RenderStage {
@@ -53,11 +52,11 @@ public:
 
 private:
     static RenderStageInfo initInfo;
-    PlanarShadowQueue *_planarShadowQueue = nullptr;
-    RenderBatchedQueue *_batchedQueue = nullptr;
-    RenderInstancedQueue *_instancedQueue = nullptr;
-    gfx::Rect _renderArea;
-    uint _phaseID = 0;
+    PlanarShadowQueue *    _planarShadowQueue = nullptr;
+    RenderBatchedQueue *   _batchedQueue      = nullptr;
+    RenderInstancedQueue * _instancedQueue    = nullptr;
+    gfx::Rect              _renderArea;
+    uint                   _phaseID = 0;
 };
 
 } // namespace pipeline

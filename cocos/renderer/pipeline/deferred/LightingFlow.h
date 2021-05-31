@@ -45,7 +45,7 @@ public:
     void render(scene::Camera *camera) override;
 
 private:
-    static RenderFlowInfo _initInfo;
+    static RenderFlowInfo initInfo;
 };
 
 } // namespace pipeline

@@ -341,7 +341,7 @@ void LightingStage::render(scene::Camera *camera) {
     uint   p = 0;
     size_t k = 0;
     for (auto ro : renderObjects) {
-        const auto *const model         = ro.model;
+        const auto *const model = ro.model;
         for (auto *subModel : model->getSubModels()) {
             for (auto *pass : subModel->getPasses()) {
                 // TODO(xwx): need fallback of unlit and gizmo material.
