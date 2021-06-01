@@ -138,7 +138,9 @@ void glThreadEntry() {
             postExecCmd(cmd);
         }
 
-        if (!cc::cocosApp.animating) continue;
+        if (!cc::cocosApp.animating || APP_CMD_PAUSE == cc::cocosApp.activityState) {
+            std::this_thread::yield();
+        }
 
         if (game) {
             // Handle java events send by UI thread. Input events are handled here too.
