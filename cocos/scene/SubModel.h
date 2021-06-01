@@ -26,9 +26,9 @@
 #pragma once
 
 #include <vector>
-#include "renderer/gfx-base/GFXShader.h"
 #include "renderer/gfx-base/GFXDescriptorSet.h"
 #include "renderer/gfx-base/GFXInputAssembler.h"
+#include "renderer/gfx-base/GFXShader.h"
 #include "scene/Define.h"
 
 namespace cc {
