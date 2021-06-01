@@ -70,7 +70,7 @@ int readCommand(int8_t &cmd) { //NOLINT(google-runtime-references)
 void handlePauseResume(int8_t cmd) {
     LOGV("activityState=%d", cmd);
     std::unique_lock<std::mutex> lk(cc::cocosApp.mutex);
-    cc::cocosApp.activityState = cmd;
+    cc::cocosApp.activityState = static_cast<uint8_t>(cmd);
     lk.unlock();
     cc::cocosApp.cond.notify_all();
 }
