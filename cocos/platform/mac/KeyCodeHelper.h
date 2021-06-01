@@ -24,7 +24,6 @@
 ****************************************************************************/
 
 #import "cocos/bindings/event/EventDispatcher.h"
-#include "platform/Application.h"
 #pragma once
 
 extern int translateKeycode(int);
