@@ -52,7 +52,6 @@ SE_BIND_PROP_GET(js_pipeline_RenderPipeline_getMacros)
 static bool JSB_getOrCreatePipelineState(se::State &s) {
     const auto &args = s.args();
     size_t      argc = args.size();
-    // TODO(minggo): do not handle pass handle.
     if (argc == 4) {
         auto *pass           = static_cast<cc::scene::Pass *>(args[0].toObject()->getPrivateData());
         auto *shader         = static_cast<cc::gfx::Shader *>(args[1].toObject()->getPrivateData());

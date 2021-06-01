@@ -57,7 +57,6 @@ public:
     inline void setPlanarInstanceShader(gfx::Shader *shader) { _planarInstanceShader = shader; }
     inline void setPlanarShader(gfx::Shader *shader) { _planarShader = shader; }
     inline void setPriority(RenderPriority priority) { _priority = priority; }
-    // TODO(minggo): manually bind this function.
     inline void setRenderingSubMesh(RenderingSubMesh *mesh) { _subMesh = mesh; }
 
     inline gfx::DescriptorSet *       getDescriptorSet() const { return _descriptSet; }

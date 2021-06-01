@@ -26,9 +26,9 @@
 #pragma once
 
 #include "Define.h"
+#include "scene/Define.h"
 #include "scene/Light.h"
 #include "scene/Sphere.h"
-#include "scene/Define.h"
 
 namespace cc {
 
@@ -42,10 +42,9 @@ class RenderPipeline;
 
 class CC_DLL PipelineSceneData : public Object {
 public:
-    PipelineSceneData()          = default;
+    PipelineSceneData()           = default;
     ~PipelineSceneData() override = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
-    // TODO(minggo):remove handle
     void setPipelineSharedSceneData(scene::PipelineSharedSceneData *data);
     void destroy();
 
@@ -57,9 +56,7 @@ public:
     CC_INLINE void                    setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
     CC_INLINE void                    setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
     CC_INLINE scene::Sphere *getSphere() const { return _sphere; }
-    CC_INLINE uint32_t getSharedSceneDataHandle() const { return _sharedSceneDataHandle; }
-    
-    
+
 private:
     RenderObjectList _renderObjects;
     RenderObjectList _shadowObjects;
@@ -70,9 +67,6 @@ private:
     scene::Sphere *                 _sphere          = nullptr;
 
     std::unordered_map<const scene::Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
-    
-    // TODO(minggo): remove it.
-    uint32_t _sharedSceneDataHandle{0};
 };
 
 } // namespace pipeline
