@@ -37,7 +37,6 @@ class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
 class ForwardPipeline;
 class UIPhase;
-struct Camera;
 
 class CC_DLL ForwardStage : public RenderStage {
 public:

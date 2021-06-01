@@ -45,14 +45,10 @@ int Sphere::interset(const Plane &plane) const {
 bool Sphere::interset(const Frustum &frustum) const {
     const auto &planes = frustum.planes;
     const auto *self   = this;
-    if (std::all_of(planes.begin(),
-                    planes.end(),
-                    // frustum plane normal points to the inside
-                    [self](const Plane &plane) { return self->interset(plane) == -1; })) {
-        return false;
-    }
-
-    return true;
+    return std::all_of(planes.begin(),
+                       planes.end(),
+                       // frustum plane normal points to the inside
+                       [self](const Plane &plane) { return self->interset(plane) != -1; });
 }
 
 void Sphere::mergePoint(const Vec3 &point) {
@@ -112,13 +108,12 @@ int Sphere::spherePlane(const Plane &plane) {
 }
 
 bool Sphere::sphereFrustum(const Frustum &frustum) {
-    for (const auto &plane : frustum.planes) {
-        // frustum plane normal points to the inside
-        if (spherePlane(plane) == -1) {
-            return false;
-        }
-    } // completely outside
-    return true;
+    const auto &planes = frustum.planes;
+    const auto *self   = this;
+    return std::all_of(planes.begin(),
+                       planes.end(),
+                       // frustum plane normal points to the inside
+                       [self](const Plane &plane) { return self->interset(plane) != -1; });
 }
 
 } // namespace scene

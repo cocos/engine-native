@@ -30,7 +30,6 @@
 namespace cc {
 namespace pipeline {
 
-struct Camera;
 class GbufferStage;
 
 class CC_DLL GbufferFlow : public RenderFlow {

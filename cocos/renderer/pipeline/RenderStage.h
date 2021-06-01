@@ -39,7 +39,6 @@ namespace pipeline {
 class RenderFlow;
 class RenderPipeline;
 class RenderQueue;
-struct Camera;
 
 struct CC_DLL RenderStageInfo {
     String              name;

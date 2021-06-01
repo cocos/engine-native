@@ -31,7 +31,6 @@ namespace cc {
 namespace pipeline {
 class RenderQueue;
 class ShadowMapBatchedQueue;
-struct Camera;
 
 class CC_DLL ShadowStage : public RenderStage {
 public:

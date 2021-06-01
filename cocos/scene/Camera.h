@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include "math/Mat4.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"

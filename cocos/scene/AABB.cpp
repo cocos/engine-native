@@ -59,14 +59,10 @@ int AABB::aabbPlane(const Plane &plane) const {
 bool AABB::aabbFrustum(const Frustum &frustum) const {
     const auto &planes = frustum.planes;
     const auto *self   = this;
-    if (std::all_of(planes.begin(),
-                    planes.end(),
-                    // frustum plane normal points to the inside
-                    [self](const Plane &plane) { return self->aabbPlane(plane) == -1; })) {
-        return false;
-    }
-
-    return true;
+    return std::all_of(planes.begin(),
+                       planes.end(),
+                       // frustum plane normal points to the inside
+                       [self](const Plane &plane) { return self->aabbPlane(plane) != -1; });
 }
 
 void AABB::getBoundary(cc::Vec3 *minPos, cc::Vec3 *maxPos) const {
