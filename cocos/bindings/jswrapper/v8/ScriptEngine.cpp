@@ -984,6 +984,13 @@ void ScriptEngine::clearException() {
     //IDEA:
 }
 
+void ScriptEngine::throwException(const std::string &errorMessage) {
+    v8::HandleScope       scope(_isolate);
+    v8::Local<v8::String> message = v8::String::NewFromUtf8(_isolate, errorMessage.data()).ToLocalChecked();
+    v8::Local<v8::Value>  error   = v8::Exception::Error(message);
+    _isolate->ThrowException(error);
+}
+
 void ScriptEngine::setExceptionCallback(const ExceptionCallback &cb) {
     _nativeExceptionCallback = cb;
 }

@@ -253,6 +253,11 @@ public:
     bool isValid() const;
 
     /**
+     * @brief Throw JS exception
+     */
+    void throwException(const std::string &errorMessage);
+
+    /**
          *  @brief Clears all exceptions.
          */
     void clearException();
