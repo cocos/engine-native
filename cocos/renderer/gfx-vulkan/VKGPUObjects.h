@@ -370,7 +370,7 @@ private:
     friend class CCVKDevice;
 
     // cannot use thread_local here because we need explicit control over their destruction
-    using CommandBufferPools = tbb::concurrent_unordered_map<size_t, CCVKGPUCommandBufferPool *>;
+    using CommandBufferPools = tbb::concurrent_unordered_map<size_t, CCVKGPUCommandBufferPool *, std::hash<size_t>>;
     CommandBufferPools _commandBufferPools;
 
     unordered_map<uint, CCVKGPUDescriptorSetPool> _descriptorSetPools;

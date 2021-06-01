@@ -373,7 +373,7 @@ bool seval_to_Map_string_key(const se::Value &v, cc::Map<std::string, T> *ret) {
             return false;
         }
 
-        T nativeObj = (T)tmp.toObject()->getPrivateData();
+        T nativeObj = static_cast<T>(tmp.toObject()->getPrivateData());
         ret->insert(key, nativeObj);
     }
 
@@ -948,7 +948,7 @@ inline bool sevalue_to_native(const se::Value & /*from*/, void * /*to*/, se::Obj
 }
 
 template<>
-inline bool sevalue_to_native(const se::Value &from, cc::Data *to, se::Object *) {
+inline bool sevalue_to_native(const se::Value &from, cc::Data *to, se::Object * /*ctx*/) {
     return seval_to_Data(from, to);
 }
 
