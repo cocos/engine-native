@@ -26,9 +26,9 @@
 #pragma once
 
 #include "math/Mat4.h"
+#include "math/Quaternion.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-#include "math/Quaternion.h"
 
 namespace cc {
 namespace scene {
@@ -52,7 +52,7 @@ public:
     ~Node()            = default;
     Node &operator=(const Node &) = delete;
     Node &operator=(Node &&) = delete;
-    
+
     void initWithData(uint8_t *data);
     void updateWorldTransform();
 
@@ -72,11 +72,11 @@ public:
 
 private:
     NodeLayout *_nodeLayout{nullptr};
-    bool       _dirtyFlags{false};
-    bool       _hasChangeFlags{false};
-    Node *     _parent{nullptr};
-    Vec3       _lPos;
-    Quaternion _lScale;
+    bool        _dirtyFlags{false};
+    bool        _hasChangeFlags{false};
+    Node *      _parent{nullptr};
+    Vec3        _lPos;
+    Quaternion  _lScale;
 };
 
 } // namespace scene

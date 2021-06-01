@@ -46,8 +46,7 @@ public:
     static void    updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light);
     static uint8_t getCombineSignY();
 
-
-    PipelineUBO()          = default;
+    PipelineUBO()           = default;
     ~PipelineUBO() override = default;
     void activate(gfx::Device *device, RenderPipeline *pipeline);
     void destroy();

@@ -43,11 +43,11 @@ public:
     void render(scene::Camera *camera) override;
 
 private:
-    gfx::Rect              _renderArea;
-    static RenderStageInfo initInfo;
-    UIPhase *              _uiPhase = nullptr;
+    gfx::Rect _renderArea;
+    UIPhase * _uiPhase = nullptr;
+    uint      _phaseID = 0;
 
-    uint _phaseID = 0;
+    static RenderStageInfo initInfo;
 };
 } // namespace pipeline
 } // namespace cc

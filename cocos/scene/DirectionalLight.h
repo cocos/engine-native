@@ -42,7 +42,7 @@ public:
 
     void update() override;
 
-    inline void setDirection(const Vec3& dir) { _dir = dir; }
+    inline void setDirection(const Vec3 &dir) { _dir = dir; }
     inline void setIlluminance(float illum) { _illuminance = illum; }
 
     inline const Vec3 &getDirection() const { return _dir; }

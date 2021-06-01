@@ -34,7 +34,7 @@ namespace scene {
 struct AABB final {
     Vec3 center;
     Vec3 halfExtents;
-    
+
     bool aabbAabb(const AABB &aabb) const;
     bool aabbFrustum(const Frustum &) const;
     int  aabbPlane(const Plane &) const;

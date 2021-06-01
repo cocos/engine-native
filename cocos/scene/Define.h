@@ -25,12 +25,12 @@
 
 #pragma once
 
-#include "math/Vec4.h"
-#include "math/Vec3.h"
-#include "math/Vec2.h"
 #include "math/Mat4.h"
-#include "scene/Model.h"
+#include "math/Vec2.h"
+#include "math/Vec3.h"
+#include "math/Vec4.h"
 #include "renderer/gfx-base/GFXShader.h"
+#include "scene/Model.h"
 
 namespace cc {
 namespace scene {

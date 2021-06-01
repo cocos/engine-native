@@ -26,9 +26,9 @@
 #pragma once
 
 #include <cstdint>
+#include "renderer/gfx-base/GFXBuffer.h"
 #include "renderer/gfx-base/GFXDef-common.h"
 #include "renderer/gfx-base/GFXDescriptorSet.h"
-#include "renderer/gfx-base/GFXBuffer.h"
 #include "scene/Define.h"
 
 namespace cc {

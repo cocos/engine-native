@@ -36,9 +36,9 @@ class RenderStage;
 struct Camera;
 
 struct CC_DLL RenderFlowInfo {
-    String name;
-    uint priority = 0;
-    uint tag = 0;
+    String          name;
+    uint            priority = 0;
+    uint            tag      = 0;
     RenderStageList stages;
 };
 
@@ -53,15 +53,15 @@ public:
     virtual void destroy();
 
     inline const String &getName() const { return _name; }
-    inline uint getPriority() const { return _priority; }
-    inline uint getTag() const { return _tag; }
+    inline uint          getPriority() const { return _priority; }
+    inline uint          getTag() const { return _tag; }
 
 protected:
     RenderStageList _stages;
-    String _name;
+    String          _name;
     RenderPipeline *_pipeline = nullptr;
-    uint _priority = 0;
-    uint _tag = 0;
+    uint            _priority = 0;
+    uint            _tag      = 0;
 };
 
 } // namespace pipeline

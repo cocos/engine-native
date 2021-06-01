@@ -29,7 +29,6 @@ namespace cc {
 namespace scene {
 
 void SpotLight::update() {
-    
 }
 
 } // namespace scene

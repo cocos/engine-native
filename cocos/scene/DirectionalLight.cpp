@@ -31,5 +31,5 @@ namespace scene {
 void DirectionalLight::update() {
 }
 
-} // namesapce scene
+} // namespace scene
 } // namespace cc

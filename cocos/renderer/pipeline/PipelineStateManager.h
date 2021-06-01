@@ -37,7 +37,7 @@ public:
                                                         gfx::Shader *        shader,
                                                         gfx::InputAssembler *inputAssembler,
                                                         gfx::RenderPass *    renderPass);
-    static void destroyAll();
+    static void                destroyAll();
 
 private:
     static unordered_map<uint, gfx::PipelineState *> psoHashMap;

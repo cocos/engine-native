@@ -26,9 +26,9 @@
 #pragma once
 #include "pipeline/Define.h"
 #include "scene/Camera.h"
+#include "scene/Define.h"
 #include "scene/Light.h"
 #include "scene/Sphere.h"
-#include "scene/Define.h"
 
 namespace cc {
 class Mat4;

@@ -85,9 +85,9 @@ void PlanarShadowQueue::gatherShadowPasses(scene::Camera *camera, gfx::CommandBu
                 _instancedQueue->add(instancedBuffer);
                 ++i;
             }
-    } else {
-        _pendingModels.emplace_back(model);
-    }
+        } else {
+            _pendingModels.emplace_back(model);
+        }
     }
 
     _instancedQueue->uploadBuffers(cmdBuffer);

@@ -29,8 +29,8 @@
 #include "scene/DirectionalLight.h"
 #include "scene/DrawBatch2D.h"
 #include "scene/Model.h"
-#include "scene/SpotLight.h"
 #include "scene/SphereLight.h"
+#include "scene/SpotLight.h"
 
 namespace cc {
 namespace scene {

@@ -54,10 +54,10 @@ public:
     virtual void updateUBOs(uint32_t);
 
     void addSubModel(SubModel *subModel);
-    
+
     inline void setCastShadow(bool value) { _castShadow = value; }
     inline void setEnabled(bool value) { _enabled = value; }
-    inline void setInstanceAttributes(const std::vector<gfx::Attribute> attributes) { _instanceAttributes = attributes; }
+    inline void setInstanceAttributes(const std::vector<gfx::Attribute>& attributes) { _instanceAttributes = attributes; }
     inline void setInstmatWorldIdx(uint32_t idx) { _instmatWorldIdx = idx; }
     inline void setInstancedAttributeBlock(InstancedAttributeBlock *block) { _instanceAttributeBlock = block; }
     inline void setInstancedBuffer(uint8_t *buffer) { _instancedBuffer = buffer; }

@@ -44,14 +44,14 @@ int Sphere::interset(const Plane &plane) const {
 
 bool Sphere::interset(const Frustum &frustum) const {
     const auto &planes = frustum.planes;
-    const auto *self = this;
+    const auto *self   = this;
     if (std::all_of(planes.begin(),
                     planes.end(),
                     // frustum plane normal points to the inside
                     [self](const Plane &plane) { return self->interset(plane) == -1; })) {
         return false;
     }
-    
+
     return true;
 }
 

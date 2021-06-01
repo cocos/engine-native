@@ -33,11 +33,11 @@
 #include "gfx-base/GFXDescriptorSet.h"
 #include "math/Quaternion.h"
 #include "platform/Application.h"
+#include "scene/AABB.h"
 #include "scene/Light.h"
-#include "scene/SpotLight.h"
 #include "scene/RenderScene.h"
 #include "scene/Sphere.h"
-#include "scene/AABB.h"
+#include "scene/SpotLight.h"
 
 namespace cc {
 namespace pipeline {
@@ -107,7 +107,7 @@ void updateSphereLight(scene::Shadow *shadows, const scene::Light *light, std::a
 
 void updateDirLight(scene::Shadow *shadows, const scene::Light *light, std::array<float, UBOShadow::COUNT> *shadowUBO) {
     const auto *const node     = light->getNode();
-    const auto       &rotation = node->getWorldRotation();
+    const auto &      rotation = node->getWorldRotation();
     Quaternion        qt(rotation.x, rotation.y, rotation.z, rotation.w);
     Vec3              forward(0, 0, -1.0F);
     forward.transformQuat(qt);

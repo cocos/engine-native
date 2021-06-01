@@ -29,9 +29,9 @@
 #include "base/CoreStd.h"
 #include "scene/Camera.h"
 #include "scene/Light.h"
+#include "scene/Pass.h"
 #include "scene/SphereLight.h"
 #include "scene/SpotLight.h"
-#include "scene/Pass.h"
 
 namespace cc {
 namespace pipeline {
