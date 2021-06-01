@@ -23,6 +23,10 @@
  THE SOFTWARE.
 ****************************************************************************/
 
+#import "cocos/bindings/event/EventDispatcher.h"
+#include "platform/Application.h"
 #pragma once
 
 extern int translateKeycode(int);
+extern void updateModifierKeyState (int keyCodeInWeb);
+extern cc::KeyboardEvent::Action getModifierKeyAction (int keyCodeInWeb);
